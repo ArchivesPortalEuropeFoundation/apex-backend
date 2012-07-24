@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?><ead xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" audience="external" xsi:schemaLocation="urn:isbn:1-931666-22-9 ead.xsd">
+    <eadheader countryencoding="iso3166-1" dateencoding="iso8601" langencoding="iso639-2b" relatedencoding="MARC21" repositoryencoding="iso15511" scriptencoding="iso15924">
+        <eadid countrycode="ES" identifier="ape_archival_landscape" mainagencycode="ES-APEnet"/>
+        <filedesc>
+            <titlestmt>
+                <titleproper encodinganalog="245" type="eng">Archives Portal Europe - Archival Landscape</titleproper>
+            </titlestmt>
+        </filedesc>
+    </eadheader>
+    <archdesc encodinganalog="3.1.4" level="fonds" relatedencoding="ISAD(G)v2" type="inventory">
+        <did>
+            <unittitle encodinganalog="3.1.2" type="eng">European countries</unittitle>
+            <unittitle encodinganalog="3.1.2" type="fre">Pays européens</unittitle>
+            <unittitle encodinganalog="3.1.2" type="ger">Europäische Länder</unittitle>
+        </did>
+        <dsc type="othertype">
+            <c encodinganalog="3.1.4" level="fonds">
+                <did>
+                    <unittitle encodinganalog="3.1.2" type="bul">Белгия</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="cze">Belgie</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="dan">Belgien</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="dut">België</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="eng">Belgium</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="est">Belgia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="fin">Belgia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="fre">Belgique</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="ger">Belgien</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="gle">An Bheilg</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="gre">Βέλγιο</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="hun">Belgium</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="ita">Belgio</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="lav">Beļģija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="lit">Belgija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="mlt">Belġju</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="pol">Belgia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="por">Bélgica</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="rum">Belgia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="slo">Belgicko</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="slv">Belgija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="spa">Bélgica</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="swe">Belgien</unittitle>
+                </did>
+            </c>
+            <c encodinganalog="3.1.4" id="d1e33" level="fonds">
+                <did>
+                   <unittitle encodinganalog="3.1.2" type="bul">Германия</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="cze">Německo</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="dan">Tyskland</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="dut">Duitsland</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="eng">Germany</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="est">Saksamaa</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="fin">Saksa</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="fre">Allemagne</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="ger">Deutschland</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="gle">An Ghearmáin</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="gre">Γερμανία</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="hun">Németország</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="ita">Germania</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="lav">Vācija</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="lit">Vokietija</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="mlt">Ġermanja</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="pol">Niemcy</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="por">Alemanha</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="rum">Germania</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="slo">Nemecko</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="slv">Nemčija</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="spa">Alemania</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="swe">Tyskland</unittitle>
+                </did>
+            </c>
+            <c encodinganalog="3.1.4" level="fonds">
+                <did>
+                    <unittitle encodinganalog="3.1.2" type="bul">Ирландия</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="cze">Irsko</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="dan">Irland</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="dut">Ierland</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="eng">Ireland</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="est">Iirimaa</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="fin">Irlanti</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="fre">Irlande</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="ger">Irland</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="gle">Éire</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="gre">Ιρλανδίας</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="hun">Írország</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="ita">Irlanda</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="lav">Īrija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="lit">Airija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="mlt">Irlanda</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="pol">Irlandia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="por">Irlanda</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="rum">Irlanda</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="slo">Írsko</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="slv">Irska</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="spa">Irlanda</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="swe">Irland</unittitle>
+                </did>
+            </c>
+            <c encodinganalog="3.1.4" level="fonds">
+                <did>
+                    <unittitle encodinganalog="3.1.2" type="bul">Испания</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="cze">Španělsko</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="dan">Spanien</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="dut">Spanje</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="eng">Spain</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="est">Hispaania</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="fin">Espanja</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="fre">Espagne</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="ger">Spanien</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="gle">An Spáinn</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="gre">Ισπανία</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="hun">Spanyolország</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="ita">Spagna</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="lav">Spānija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="lit">Ispanija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="mlt">Spanja</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="pol">Hiszpania</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="por">Espanha</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="rum">Spania</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="slo">Španielsko</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="slv">Španija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="spa">España</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="swe">Spanien</unittitle>
+                </did>
+            </c>
+            <c encodinganalog="3.1.4" level="fonds">
+                <did>
+                    <unittitle encodinganalog="3.1.2" type="bul">Франция</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="cze">Francie</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="dan">Frankrig</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="dut">Frankrijk</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="eng">France</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="est">Prantsusmaa</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="fin">Ranska</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="fre">France</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="ger">Frankreich</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="gle">An Fhrainc</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="gre">Γαλλία</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="hun">Franciaország</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="ita">Francia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="lav">Francija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="lit">Prancūzija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="mlt">Franza</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="pol">Francja</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="por">França</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="rum">Franţa</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="slo">Francúzsko</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="slv">Francija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="spa">Francia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="swe">Frankrike</unittitle>
+                </did>
+            </c>
+            <c encodinganalog="3.1.4" level="fonds">
+                <did>
+                    <unittitle encodinganalog="3.1.2" type="bul">Гърция</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="cze">Řecko</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="dan">Grækenland</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="dut">Griekenland</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="eng">Greece</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="est">Kreeka</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="fin">Kreikka</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="fre">Grèce</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="ger">Griechenland</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="gle">An Ghréig</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="gre">Ελλάς</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="hun">Görögország</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="ita">Grecia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="lav">Grieķija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="lit">Graikija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="mlt">Greċja</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="pol">Grecja</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="por">Grécia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="rum">Grecia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="slo">Grécko</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="slv">Grčija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="spa">Grecia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="swe">Grekland</unittitle>
+                </did>
+            </c>
+            <c encodinganalog="3.1.4" level="fonds">
+                <did>
+                    <unittitle encodinganalog="3.1.2" type="bul">Латвия</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="cze">Lotyšsko</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="dan">Letland</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="dut">Letland</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="eng">Latvia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="est">Läti</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="fin">Latvia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="fre">Lettonie</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="ger">Lettland</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="gle">An Laitvia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="gre">Λεττονία</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="hun">Lettország</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="ita">Lettonia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="lav">Latvija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="lit">Latvija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="mlt">Latvja</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="pol">Łotwa</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="por">Letónia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="rum">Letonia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="slo">Lotyšsko</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="slv">Latvija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="spa">Letonia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="swe">Lettland</unittitle>
+                </did>
+            </c>
+            <c encodinganalog="3.1.4" level="fonds">
+                <did>
+                    <unittitle encodinganalog="3.1.2" type="bul">Малта</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="cze">Malta</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="dan">Malta</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="dut">Malta</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="eng">Malta</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="est">Malta</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="fin">Malta</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="fre">Malte</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="ger">Malta</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="gle">Málta</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="gre">Μάλτα</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="hun">Málta</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="ita">Malta</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="lav">Malta</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="lit">Malta</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="mlt">Malta</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="pol">Malta</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="por">Malta</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="rum">Malta</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="slo">Malta</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="slv">Malta</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="spa">Malta</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="swe">Malta</unittitle>
+                </did>
+            </c>
+            <c encodinganalog="3.1.4" id="d1e33" level="fonds">
+                <did>
+                   <unittitle encodinganalog="3.1.2" type="bul">Нидерландия</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="cze">Nizozemsko</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="dan">Holland</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="dut">Nederland</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="eng">Netherlands</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="est">Holland</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="fin">Alankomaat</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="fre">Pays-Bas</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="ger">Niederlande</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="gle">An Ísiltír</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="gre">Ολλανδία</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="hun">Hollandia</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="ita">Paesi Bassi</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="lav">Nīderlande</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="lit">Nyderlandai</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="mlt">Olanda</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="pol">Holandia</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="por">Países Baixos</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="rum">Olanda</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="slo">Holandsko</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="slv">Nizozemska</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="spa">Países Bajos</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="swe">Nederländerna</unittitle>
+                </did>
+            </c>
+            <c encodinganalog="3.1.4" id="d1e33" level="fonds">
+                <did>
+                   <unittitle encodinganalog="3.1.2" type="bul">Полша</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="cze">Polsko</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="dan">Polen</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="dut">Polen</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="eng">Poland</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="est">Poola</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="fin">Puola</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="fre">Pologne</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="ger">Polen</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="gle">An Pholainn</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="gre">Πολωνία</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="hun">Lengyelország</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="ita">Polonia</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="lav">Polija</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="lit">Lenkija</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="mlt">Polonja</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="pol">Polska</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="por">Polónia</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="rum">Polonia</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="slo">Poľsko</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="slv">Poljska</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="spa">Polonia</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="swe">Polen</unittitle>
+                </did>
+            </c>
+            <c encodinganalog="3.1.4" level="fonds">
+                <did>
+                    <unittitle encodinganalog="3.1.2" type="bul">Португалия</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="cze">Portugalsko</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="dan">Portugal</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="dut">Portugal</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="eng">Portugal</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="est">Portugal</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="fin">Portugali</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="fre">Portugal</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="ger">Portugal</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="gle">An Phortaingéil</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="gre">Πορτογαλία</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="hun">Portugália</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="ita">Portogallo</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="lav">Portugāle</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="lit">Portugalija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="mlt">Portugall</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="pol">Portugalia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="por">Portugal</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="rum">Portugalia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="slo">Portugalsko</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="slv">Portugalska</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="spa">Portugal</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="swe">Portugal</unittitle>
+                </did>
+            </c>
+            <c encodinganalog="3.1.4" level="fonds">
+                <did>
+                    <unittitle encodinganalog="3.1.2" type="bul">Словения</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="cze">Slovinsko</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="dan">Slovenien</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="dut">Slovenië</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="eng">Slovenia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="est">Sloveenia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="fin">Slovenia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="fre">Slovénie</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="ger">Slowenien</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="gle">An tSlóivéin</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="gre">Σλοβενία</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="hun">Szlovénia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="ita">Slovenia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="lav">Slovēnija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="lit">Slovėnija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="mlt">Slovenja</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="pol">Słowenia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="por">Eslovénia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="rum">Slovenia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="slo">Slovinsko</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="slv">Slovenija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="spa">Eslovenia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="swe">Slovenien</unittitle>
+                </did>
+            </c>
+            <c encodinganalog="3.1.4" level="fonds">
+                <did>
+                    <unittitle encodinganalog="3.1.2" type="bul">Финландия</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="cze">Finsko</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="dan">Finland</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="dut">Finland</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="eng">Finland</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="est">Soome</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="fin">Suomi</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="fre">Finlande</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="ger">Finnland</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="gle">An Fhionlainn</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="gre">Φινλανδία</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="hun">Finnország</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="ita">Finlandia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="lav">Somija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="lit">Suomija</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="mlt">Finlandja</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="pol">Finlandia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="por">Finlândia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="rum">Finlanda</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="slo">Fínsko</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="slv">Finska</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="spa">Finlandia</unittitle>
+                    <unittitle encodinganalog="3.1.2" type="swe">Finland</unittitle>
+                </did>
+            </c>
+            <c encodinganalog="3.1.4" id="d1e33" level="fonds">
+                <did>
+                   <unittitle encodinganalog="3.1.2" type="bul">Швеция</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="cze">Švédsko</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="dan">Sverige</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="dut">Zweden</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="eng">Sweden</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="est">Rootsi</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="fin">Ruotsi</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="fre">Suède</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="ger">Schweden</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="gle">An tSualainn</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="gre">Σουηδία</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="hun">Svédország</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="ita">Svezia</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="lav">Zviedrija</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="lit">Švedija</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="mlt">Żvezja</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="pol">Szwecja</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="por">Suécia</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="rum">Suedia</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="slo">Švédsko</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="slv">Švedska</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="spa">Suecia</unittitle>
+                   <unittitle encodinganalog="3.1.2" type="swe">Sverige</unittitle>
+                </did>
+            </c>
+        </dsc>
+    </archdesc>
+</ead>

@@ -1,0 +1,16 @@
+Dear ${name},
+
+I created an account for you to manage the country ${country}.
+
+E-mail address: ${emailAddress}
+Password: ${password}
+
+Secret question: ${secretQuestion}
+Secret answer: ${secretAnswer}
+
+Please go to ${dashboardUrl} to access to your account. We recommend to change your password and secret question/answer.
+
+Best wishes,
+
+${userManager}
+Administrator of the Dashboard

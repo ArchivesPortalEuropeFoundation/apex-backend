@@ -1,0 +1,34 @@
+package eu.apenet.dashboard.actions;
+
+import org.apache.commons.lang.StringUtils;
+
+import eu.apenet.commons.seconddisplay.SecondDisplayAction;
+import eu.apenet.commons.types.XmlType;
+import eu.apenet.dashboard.manual.contentmanager.ContentManager;
+
+public class PreviewSecondDisplayAction extends SecondDisplayAction {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1953305569537661585L;
+
+	@Override
+	public String execute() throws Exception {
+		dashboard = true;
+		try {
+			XmlType xmlType = XmlType.getType(Integer.parseInt(getXmlTypeId()));
+			if (StringUtils.isNotBlank(getId()) && StringUtils.isNumeric(getId())) {
+				ContentManager.preview(Integer.parseInt(getId()), xmlType);
+			}
+			
+
+		}catch (Exception e){
+			logger.error("Unable to preview (id,xmlType): (" + getId() + "," + getXmlTypeId() + "): " + e.getMessage() ,e);
+			addActionError(getText("error.user.second.display.notindexed"));
+			return ERROR;
+		}
+		return super.execute();
+	}
+
+}
