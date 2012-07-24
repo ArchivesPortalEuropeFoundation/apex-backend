@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Just some unused values to be changed if needed by somebody using the maven tomcat plugin -->
+<Context path="/Dashboard">
+    <Parameter name="TMP_DIR_PATH" value="/Users/yoannmoranville/Work/APEnet/portal_tmp/" override="false" />
+    <Parameter name="REPOSITORY_DIR_PATH" value="/Users/yoannmoranville/Work/APEnet/portal_tmp/repo/" override="false" />
+    <Parameter name="AL_DIR_PATH" value="/Users/yoannmoranville/Work/APEnet/portal_tmp/al/" override="false" />
+    <Parameter name="XSL_DIR_PATH" value="/Users/yoannmoranville/Work/APEnet/Projects/apenet_wp4/xsl/" override="false" />
+    <Parameter name="EUROPEANA_DIR_PATH" value="/Users/yoannmoranville/Work/APEnet/portal_tmp/europeana/" override="false" />
+    <Parameter name="SOLR_INDEX_URL" value="http://80.38.128.242:8989/solr/core0" override="false" />
+    <Parameter name="SOLR_SEARCH_URL" value="http://80.38.128.242:8989/solr/core0" override="false" />
+</Context>
