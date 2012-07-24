@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 09-sep-2010 13:57:53 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="eu.apenet.persistence.vo.HoldingsGuide" table="holdings_guide" schema="public">
+        <id name="id" type="int">
+            <column name="hg_id" />
+<!--             <generator class="assigned" />  -->
+            <generator class="increment" />
+        </id>
+        <many-to-one name="fileState" class="eu.apenet.persistence.vo.FileState" fetch="select">
+            <column name="fs_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="uploadMethod" class="eu.apenet.persistence.vo.UploadMethod" fetch="select">
+            <column name="um_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="archivalInstitution" class="eu.apenet.persistence.vo.ArchivalInstitution" fetch="select">
+            <column name="ai_id" not-null="true" />
+        </many-to-one>
+        <property name="title" type="text">
+            <column name="hg_tittle" not-null="true" />
+        </property>
+        <property name="uploadDate" type="timestamp">
+            <column name="upload_date" length="13" not-null="true" />
+        </property>
+        <property name="pathApenetead" type="string">
+            <column name="path_apenetead" length="255" not-null="true" />
+        </property>
+        <property name="aiId" type="int" insert="false" update="false">
+            <column name="ai_id"/>
+        </property>    
+        <property name="eadid" type="string">
+            <column name="hg_eadid" length="255" />
+        </property>
+        <property name="totalNumberOfDaos" column="totalnumberofdaos" />
+        <property name="totalNumberOfUnits" column="totalnumberofunits" />
+        <property name="totalNumberOfUnitsWithDao" column="totalnumberofunitswithdao" />
+        <set name="warningses" inverse="true" lazy="true" table="warnings" fetch="select">
+            <key>
+                <column name="hg_id" />
+            </key>
+            <one-to-many class="eu.apenet.persistence.vo.Warnings" />
+        </set>
+                <set name="eadContents" inverse="true" lazy="true" table="ead_content" fetch="select">
+            <key>
+                <column name="hg_id" not-null="false" />
+            </key>
+            <one-to-many class="eu.apenet.persistence.vo.EadContent" />
+        </set>
+          <set name="indexQueues" inverse="true" lazy="true" table="index_queue" fetch="select">
+            <key>
+                <column name="hg_id" />
+            </key>
+            <one-to-many class="eu.apenet.persistence.vo.IndexQueue" />
+        </set>      
+    </class>
+</hibernate-mapping>

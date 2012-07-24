@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 09-sep-2010 13:57:53 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="eu.apenet.persistence.vo.UpFile" table="up_file" schema="public">
+        <id name="ufId" type="int">
+            <column name="uf_id" />
+<!--             <generator class="assigned" />  -->
+            <generator class="increment" />
+        </id>
+        <many-to-one name="upFileState" class="eu.apenet.persistence.vo.UpFileState" fetch="select">
+            <column name="ufs_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="uploadMethod" class="eu.apenet.persistence.vo.UploadMethod" fetch="select">
+            <column name="um_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="archivalInstitution" class="eu.apenet.persistence.vo.ArchivalInstitution" fetch="select">
+            <column name="ai_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="fileType" class="eu.apenet.persistence.vo.FileType" fetch="select">
+            <column name="ft_id" not-null="true" />
+        </many-to-one>
+        <property name="path" type="string">
+            <column name="path" length="255" not-null="true" />
+        </property>
+        <property name="fname" type="string">
+            <column name="fname" length="255" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

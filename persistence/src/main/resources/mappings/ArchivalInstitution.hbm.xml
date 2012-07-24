@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 22-feb-2011 13:01:10 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="eu.apenet.persistence.vo.ArchivalInstitution" table="archival_institution" schema="public">
+        <id name="aiId" type="int">
+            <column name="ai_id" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="archivalInstitution" class="eu.apenet.persistence.vo.ArchivalInstitution" fetch="select">
+            <column name="parent_ai_id" />
+        </many-to-one>
+        <many-to-one name="partner" class="eu.apenet.persistence.vo.User" fetch="select"  update="false" insert="false">
+            <column name="user_id"/>
+        </many-to-one>
+         <many-to-one name="country" class="eu.apenet.persistence.vo.Country" fetch="select"  update="false" insert="false">
+            <column name="country_id" not-null="true" />
+        </many-to-one>
+        <property name="countryId" type="int" >
+            <column name="country_id" not-null="true" />
+        </property>  
+        <property name="partnerId" type="int" >
+            <column name="user_id" />
+        </property>  
+        <property name="ainame" type="string">
+            <column name="ainame" length="255" not-null="true" />
+        </property>
+        <property name="registrationDate" type="date">
+            <column name="registration_date" length="13" />
+        </property>
+        <property name="eagPath" type="string">
+            <column name="eag_path" length="255" />
+        </property>
+        <property name="repositorycode" type="string">
+            <column name="repositorycode" length="20" />
+        </property>
+        <property name="autform" type="string">
+            <column name="autform" length="255" />
+        </property>
+        <property name="isgroup" type="java.lang.Boolean">
+            <column name="isgroup" />
+        </property>
+        <property name="alorder" type="int">
+            <column name="alorder" not-null="true" />
+        </property>  
+        <property name="internalAlId" type="string">
+            <column name="internal_al_id" length="100" not-null="true" />
+        </property>      
+        <set name="upFiles" inverse="true" lazy="true" table="up_file" fetch="select">
+            <key>
+                <column name="ai_id" not-null="true" />
+            </key>
+            <one-to-many class="eu.apenet.persistence.vo.UpFile" />
+        </set>
+        <set name="holdingsGuides" inverse="true" lazy="true" table="holdings_guide" fetch="select">
+            <key>
+                <column name="ai_id" not-null="true" />
+            </key>
+            <one-to-many class="eu.apenet.persistence.vo.HoldingsGuide" />
+        </set>
+        <set name="sourceGuides" inverse="true" lazy="true" table="source_guide" fetch="select">
+            <key>
+                <column name="ai_id" not-null="true" />
+            </key>
+            <one-to-many class="eu.apenet.persistence.vo.SourceGuide" />
+        </set>
+        <set name="archivalInstitutionOaiPmhs" inverse="true" lazy="true" table="archival_institution_oai_pmh" fetch="select">
+            <key>
+                <column name="ai_id" not-null="true" />
+            </key>
+            <one-to-many class="eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh" />
+        </set>
+        <set name="aiAlternativeNames" inverse="true" lazy="true" table="ai_alternative_name" fetch="select">
+            <key>
+                <column name="ai_id" not-null="true" />
+            </key>
+            <one-to-many class="eu.apenet.persistence.vo.AiAlternativeName" />
+        </set>
+        <set name="findingAids" inverse="true" lazy="true" table="finding_aid" fetch="select">
+            <key>
+                <column name="ai_id" not-null="true" />
+            </key>
+            <one-to-many class="eu.apenet.persistence.vo.FindingAid" />
+        </set>
+        <set name="archivalInstitutions" inverse="true" lazy="true" table="archival_institution" fetch="select">
+            <key>
+                <column name="parent_ai_id" />
+            </key>
+            <one-to-many class="eu.apenet.persistence.vo.ArchivalInstitution" />
+        </set>
+    </class>
+</hibernate-mapping>
+

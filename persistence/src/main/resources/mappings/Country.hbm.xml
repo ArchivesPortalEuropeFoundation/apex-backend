@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 22-oct-2010 12:56:18 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="eu.apenet.persistence.vo.Country" table="country" schema="public">
+        <id name="couId" type="int">
+            <column name="cou_id" />
+            <generator class="increment" />
+        </id>
+        <property name="cname" type="string">
+            <column name="cname" length="20" not-null="true" />
+        </property>
+        <property name="isoname" type="string">
+            <column name="isoname" length="2" not-null="true">
+                <comment>iso3166-1</comment>
+            </column>
+        </property>
+        <property name="alOrder" type="int">
+            <column name="al_order" not-null="true" />
+        </property>
+        <set name="couAlternativeNames" inverse="true" lazy="true" table="cou_alternative_name" fetch="select">
+            <key>
+                <column name="cou_id" not-null="true" />
+            </key>
+            <one-to-many class="eu.apenet.persistence.vo.CouAlternativeName" />
+        </set>
+        <set name="archivalInstitutions" inverse="true" lazy="true" table="archival_institution" fetch="select">
+            <key>
+                <column name="country_id" />
+            </key>
+            <one-to-many class="eu.apenet.persistence.vo.ArchivalInstitution" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 25-may-2011 10:17:22 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="eu.apenet.persistence.vo.SentMailRegister" table="sent_mail_register" schema="public">
+        <id name="smrId" type="int">
+            <column name="smr_id" />
+            <!--             <generator class="assigned" />  -->
+            <generator class="increment" />
+        </id>
+        <many-to-one name="user" class="eu.apenet.persistence.vo.User" fetch="select">
+            <column name="user_id" />
+        </many-to-one>
+        <many-to-one name="archivalInstitution" class="eu.apenet.persistence.vo.ArchivalInstitution" fetch="select">
+            <column name="ai_id" />
+        </many-to-one>
+        <property name="validationLink" type="string">
+            <column name="validation_link" length="100" not-null="true" />
+        </property>
+        <property name="date" type="date">
+            <column name="date" length="13" not-null="true" />
+        </property>
+        <property name="emailAddress" type="string">
+            <column name="email_address" length="100" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

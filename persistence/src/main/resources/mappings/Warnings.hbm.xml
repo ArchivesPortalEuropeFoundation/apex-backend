@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 15-oct-2010 13:00:41 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="eu.apenet.persistence.vo.Warnings" table="warnings" schema="public">
+        <id name="warId" type="int">
+            <column name="war_id" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="holdingsGuide" class="eu.apenet.persistence.vo.HoldingsGuide" fetch="select">
+            <column name="hg_id" />
+        </many-to-one>
+        <many-to-one name="findingAid" class="eu.apenet.persistence.vo.FindingAid" fetch="select">
+            <column name="fa_id" />
+        </many-to-one>
+        <many-to-one name="sourceGuide" class="eu.apenet.persistence.vo.SourceGuide" fetch="select">
+            <column name="sg_id" />
+        </many-to-one>
+        <property name="abstract_" type="text">
+            <column name="abstract" not-null="true" />
+        </property>
+        <property name="iswarning" type="java.lang.Boolean">
+            <column name="iswarning" />
+        </property>
+    </class>
+</hibernate-mapping>

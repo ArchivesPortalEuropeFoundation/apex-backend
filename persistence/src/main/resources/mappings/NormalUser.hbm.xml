@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 22-oct-2010 13:45:44 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="eu.apenet.persistence.vo.NormalUser" table="normal_user" schema="public">
+        <!-- 
+        <id name="UId" type="long">
+            <column name="u_id" />
+            <generator class="increment" />
+        </id>
+         -->
+        
+        <id name="UId" column="u_id">
+			<generator class="sequence">
+				<param name="sequence">normal_user_u_id_seq</param>
+			</generator>
+		</id>
+        
+        <many-to-one name="userState" class="eu.apenet.persistence.vo.UserState" fetch="select">
+            <column name="us_id" not-null="true" />
+        </many-to-one>
+        <property name="nick" type="string">
+            <column name="nick" length="30" not-null="true" />
+        </property>
+        <property name="emailAddress" type="string">
+            <column name="email_address" length="60" not-null="true" />
+        </property>
+        <property name="pwd" type="string">
+            <column name="pwd" length="60" not-null="true" />
+        </property>
+        <property name="secretQuestion" type="string">
+            <column name="secret_question" length="200" />
+        </property>
+        <property name="secretAnswer" type="string">
+            <column name="secret_answer" length="200" />
+        </property>
+        <set name="sentMailRegisters" inverse="true" lazy="true" table="sent_mail_register" fetch="select">
+            <key>
+                <column name="u_id" />
+            </key>
+            <one-to-many class="eu.apenet.persistence.vo.SentMailRegister" />
+        </set>
+        <set name="searcheses" inverse="true" lazy="true" table="searches" fetch="select">
+            <key>
+                <column name="u_id" not-null="true" />
+            </key>
+            <one-to-many class="eu.apenet.persistence.vo.Searches" />
+        </set>
+        <set name="items" inverse="true" lazy="true" table="item" fetch="select">
+            <key>
+                <column name="u_id" not-null="true" />
+            </key>
+            <one-to-many class="eu.apenet.persistence.vo.Item" />
+        </set>
+    </class>
+</hibernate-mapping>

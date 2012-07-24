@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 09-sep-2010 13:57:53 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="eu.apenet.persistence.vo.Ese" table="ese" schema="public">
+        <id name="eseId" type="int">
+            <column name="ese_id" />
+<!--             <generator class="assigned" />  -->
+            <generator class="increment" />
+        </id>
+        <many-to-one name="metadataFormat" class="eu.apenet.persistence.vo.MetadataFormat" fetch="select">
+            <column name="mf_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="eseState" class="eu.apenet.persistence.vo.EseState" fetch="select">
+            <column name="es_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="findingAid" class="eu.apenet.persistence.vo.FindingAid" fetch="select">
+            <column name="fa_id" />
+        </many-to-one>
+        <property name="creationDate" type="timestamp">
+            <column name="creation_date" length="35" not-null="true" />
+        </property>
+        <property name="modificationDate" type="timestamp">
+            <column name="modification_date" length="35" />
+        </property>
+        <property name="eset" type="text">
+            <column name="eset" not-null="true" />
+        </property>
+        <property name="path" type="string">
+            <column name="path" length="255" />
+        </property>
+        <property name="numberOfRecords" column="number_of_records" not-null="true"/>
+        <property name="pathHtml" type="string">
+            <column name="path_html" length="200" />
+        </property>
+        <property name="oaiIdentifier" type="string">
+            <column name="oai_identifier" length="255" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

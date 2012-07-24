@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 09-sep-2010 13:57:53 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="eu.apenet.persistence.vo.LevelType" table="level_type" schema="public">
+        <id name="ltId" type="int">
+            <column name="lt_id" />
+<!--             <generator class="assigned" />  -->
+            <generator class="increment" />
+        </id>
+        <property name="ltype" type="string">
+            <column name="ltype" length="40" not-null="true" />
+        </property>
+        <set name="items" inverse="true" lazy="true" table="item" fetch="select">
+            <key>
+                <column name="lt_id" not-null="true" />
+            </key>
+            <one-to-many class="eu.apenet.persistence.vo.Item" />
+        </set>
+    </class>
+</hibernate-mapping>
