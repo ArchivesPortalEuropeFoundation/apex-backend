@@ -1,0 +1,1496 @@
+Stopword;Language;English translation;Source
+tinhas;PORTUGUESE;;stopwords-new-PT-20110831.csv
+joita;FINNISH;(pl);stopwords-original.csv
+damit;GERMAN;with it;stopwords-original.csv
+tätä;FINNISH;this;stopwords-original.csv
+contudo;PORTUGUESE;however;stopwords-new-PT-20110831.csv
+fûtes;FRENCH;;stopwords-original.csv
+miltä;FINNISH;which what;stopwords-original.csv
+vuestra;SPANISH;;stopwords-original.csv
+estaríamos;SPANISH;;stopwords-original.csv
+niitä;FINNISH;they;stopwords-original.csv
+när;SWEDISH;when;stopwords-original.csv
+noin;FINNISH;about;stopwords-original.csv
+joka;FINNISH;who which;stopwords-original.csv
+nuestros;SPANISH;;stopwords-original.csv
+τῶν;GREEK;;stopwords-original.csv
+annat;SWEDISH;;stopwords-new-SW-20111107.csv
+vuestro;SPANISH;yours;stopwords-original.csv
+tuvierais;SPANISH;;stopwords-original.csv
+keine;GERMAN;;stopwords-original.csv
+estuvieran;SPANISH;;stopwords-original.csv
+theirs;ENGLISH;possessive pronoun;stopwords-original.csv
+meer;DUTCH;(1) more, (2) lake;stopwords-original.csv
+τοῦ;GREEK;;stopwords-original.csv
+few;ENGLISH;;stopwords-original.csv
+andere;DUTCH|GERMAN;other|;stopwords-original.csv
+anderm;GERMAN;;stopwords-original.csv
+tinham;PORTUGUESE;;stopwords-original.csv
+haveremos;PORTUGUESE;;stopwords-new-PT-20110831.csv
+häntä;FINNISH;he she;stopwords-original.csv
+andern;GERMAN;;stopwords-original.csv
+häri;SWEDISH;;stopwords-new-SW-20111107.csv
+não;PORTUGUESE;not, no;stopwords-original.csv
+niets;DUTCH;nothing;stopwords-original.csv
+annan;SWEDISH;;stopwords-new-SW-20111107.csv
+anderr;GERMAN;;stopwords-original.csv
+habría;SPANISH;;stopwords-original.csv
+porém;PORTUGUESE;;stopwords-new-PT-20110831.csv
+meiltä;FINNISH;we;stopwords-original.csv
+nem;PORTUGUESE;nor;stopwords-original.csv
+esto;SPANISH;this;stopwords-original.csv
+estuvieras;SPANISH;;stopwords-original.csv
+olisi;FINNISH;;stopwords-original.csv
+aqueles;PORTUGUESE;those;stopwords-original.csv
+hubierais;SPANISH;;stopwords-original.csv
+d;FRENCH;d';stopwords-original.csv
+e;PORTUGUESE|SPANISH;and|and (variant of y);stopwords-original.csv
+olisimme;FINNISH;;stopwords-original.csv
+hubieran;SPANISH;;stopwords-original.csv
+c;FRENCH;c';stopwords-original.csv
+οὖν;GREEK;;stopwords-original.csv
+a;ENGLISH|PORTUGUESE|SPANISH;|the, to, at, her|to;stopwords-original.csv
+n;FRENCH;n';stopwords-original.csv
+o;PORTUGUESE|SPANISH;the, him|or;stopwords-original.csv
+suyas;SPANISH;;stopwords-original.csv
+l;FRENCH;l';stopwords-original.csv
+m;FRENCH;m';stopwords-original.csv
+j;FRENCH;j';stopwords-original.csv
+dessas;PORTUGUESE;de + essas;stopwords-new-PT-20110831.csv
+i;ENGLISH|SWEDISH;subject, always in upper case of course|in, at;stopwords-original.csv
+nichts;GERMAN;nothing;stopwords-original.csv
+τούσ;GREEK;;stopwords-original.csv
+u;DUTCH;you;stopwords-original.csv
+t;FRENCH;t';stopwords-original.csv
+zelf;DUTCH;self;stopwords-original.csv
+s;FRENCH;s';stopwords-original.csv
+hubieras;SPANISH;;stopwords-original.csv
+ἀλλά;GREEK;;stopwords-original.csv
+having;ENGLISH;-ing form;stopwords-original.csv
+τοιοῦτοσ;GREEK;;stopwords-original.csv
+y;FRENCH|SPANISH;there|and;stopwords-original.csv
+nestas;PORTUGUESE;em + estas;stopwords-new-PT-20110831.csv
+here's;ENGLISH;;stopwords-original.csv
+esta;PORTUGUESE|SPANISH;this|this;stopwords-original.csv
+vossas;PORTUGUESE;your, yours;stopwords-new-PT-20110831.csv
+teillä;FINNISH;you;stopwords-original.csv
+étés;FRENCH;;stopwords-original.csv
+celà ;FRENCH;that;stopwords-original.csv
+estiverdes;PORTUGUESE;;stopwords-new-PT-20110831.csv
+sollte;GERMAN;should;stopwords-original.csv
+essa;PORTUGUESE;that;stopwords-original.csv
+jag;SWEDISH;I;stopwords-original.csv
+estais;PORTUGUESE;;stopwords-new-PT-20110831.csv
+vaan;FINNISH;but;stopwords-original.csv
+keinä;FINNISH;(pl);stopwords-original.csv
+fussent;FRENCH;;stopwords-original.csv
+tuona;FINNISH;that;stopwords-original.csv
+sinulle;FINNISH;you;stopwords-original.csv
+fuéramos;SPANISH;;stopwords-original.csv
+teitä;FINNISH;you;stopwords-original.csv
+tänä;FINNISH;this;stopwords-original.csv
+through;ENGLISH;;stopwords-original.csv
+sinulla;FINNISH;you;stopwords-original.csv
+estuvisteis;SPANISH;;stopwords-original.csv
+någon;SWEDISH;some etc;stopwords-original.csv
+före;SWEDISH;;stopwords-new-SW-20111107.csv
+mais;FRENCH|PORTUGUESE;but|more;stopwords-original.csv
+tämä;FINNISH;this;stopwords-original.csv
+μή;GREEK;;stopwords-original.csv
+à;FRENCH|PORTUGUESE;to, at|a + a;stopwords-original.csv
+jona;FINNISH;who which;stopwords-original.csv
+cada;PORTUGUESE;each;stopwords-new-PT-20110831.csv
+which;ENGLISH;;stopwords-original.csv
+tenéis;SPANISH;;stopwords-original.csv
+dina;SWEDISH;thy;stopwords-original.csv
+nas;PORTUGUESE;em + as;stopwords-original.csv
+något;SWEDISH;some etc;stopwords-original.csv
+tuviese;SPANISH;;stopwords-original.csv
+ó;IRISH;from;stopwords-new-IE-20110906.csv
+esos;SPANISH;those;stopwords-original.csv
+keitä;FINNISH;(pl);stopwords-original.csv
+estaríais;SPANISH;;stopwords-original.csv
+tenho;PORTUGUESE;;stopwords-original.csv
+millä;FINNISH;which what;stopwords-original.csv
+haverá;PORTUGUESE;;stopwords-new-PT-20110831.csv
+omfattar;SWEDISH;;stopwords-new-SW-20111107.csv
+niistä;FINNISH;they;stopwords-original.csv
+hasta;SPANISH;until;stopwords-original.csv
+tengo;SPANISH;;stopwords-original.csv
+toch;DUTCH;yet, still;stopwords-original.csv
+einiger;GERMAN;;stopwords-original.csv
+einigem;GERMAN;;stopwords-original.csv
+estaré;SPANISH;;stopwords-original.csv
+några;SWEDISH;some etc;stopwords-original.csv
+kenet;FINNISH;who;stopwords-original.csv
+tenha;PORTUGUESE;;stopwords-original.csv
+estará;SPANISH;;stopwords-original.csv
+estava;PORTUGUESE;;stopwords-original.csv
+sejais;PORTUGUESE;;stopwords-new-PT-20110831.csv
+οὐκ;GREEK;;stopwords-original.csv
+toda;PORTUGUESE;all;stopwords-new-PT-20110831.csv
+joina;FINNISH;(pl);stopwords-original.csv
+tenga;SPANISH;;stopwords-original.csv
+γάρ;GREEK;;stopwords-original.csv
+fuésemos;SPANISH;;stopwords-original.csv
+aviez;FRENCH;;stopwords-original.csv
+fostes;PORTUGUESE;;stopwords-new-PT-20110831.csv
+toen;DUTCH;then, when;stopwords-original.csv
+niissä;FINNISH;they;stopwords-original.csv
+denselben;GERMAN;;stopwords-original.csv
+denna;SWEDISH;this/that;stopwords-original.csv
+iets;DUTCH;something, somewhat;stopwords-original.csv
+même;FRENCH;same, as in moi-même (myself) etc;stopwords-original.csv
+maar;DUTCH;but, only;stopwords-original.csv
+teiltä;FINNISH;you;stopwords-original.csv
+êtes;FRENCH;;stopwords-original.csv
+where;ENGLISH;;stopwords-original.csv
+tened;SPANISH;;stopwords-original.csv
+estejamos;PORTUGUESE;;stopwords-original.csv
+gewesen;GERMAN;p.p. of sein;stopwords-original.csv
+tuotä;FINNISH;that;stopwords-original.csv
+niiksi;FINNISH;they;stopwords-original.csv
+hers;ENGLISH;possessive pronoun;stopwords-original.csv
+here;ENGLISH;;stopwords-original.csv
+auriez;FRENCH;;stopwords-original.csv
+saknas;SWEDISH;;stopwords-new-SW-20111107.csv
+mucho;SPANISH;much, many;stopwords-original.csv
+niinä;FINNISH;they;stopwords-original.csv
+daqueles;PORTUGUESE;de + aqueles;stopwords-new-PT-20110831.csv
+quantos;PORTUGUESE;how many;stopwords-new-PT-20110831.csv
+aquelas;PORTUGUESE;those;stopwords-original.csv
+while;ENGLISH;;stopwords-original.csv
+avaient;FRENCH;;stopwords-original.csv
+μέν;GREEK;;stopwords-original.csv
+below;ENGLISH;;stopwords-original.csv
+ditt;SWEDISH;thy;stopwords-original.csv
+inte;SWEDISH;inte någon = no one;stopwords-original.csv
+into;ENGLISH;;stopwords-original.csv
+derselben;GERMAN;;stopwords-original.csv
+desses;PORTUGUESE;de + esses;stopwords-new-PT-20110831.csv
+alguém;PORTUGUESE;someone;stopwords-new-PT-20110831.csv
+dessen;GERMAN;of him;stopwords-original.csv
+γε;GREEK;;stopwords-original.csv
+δέ;GREEK;;stopwords-original.csv
+δή;GREEK;;stopwords-original.csv
+habrán;SPANISH;;stopwords-original.csv
+tendes;PORTUGUESE;;stopwords-new-PT-20110831.csv
+habrás;SPANISH;;stopwords-original.csv
+olisitte;FINNISH;;stopwords-original.csv
+nenhum;PORTUGUESE;any;stopwords-new-PT-20110831.csv
+mitt;SWEDISH;my;stopwords-original.csv
+hubiese;SPANISH;;stopwords-original.csv
+serais;FRENCH;;stopwords-original.csv
+its;ENGLISH;possessive adjective;stopwords-original.csv
+blev;SWEDISH;from bli;stopwords-original.csv
+nós;PORTUGUESE;we;stopwords-original.csv
+serait;FRENCH;;stopwords-original.csv
+vossos;PORTUGUESE;your, yours;stopwords-new-PT-20110831.csv
+eso;SPANISH;that;stopwords-original.csv
+eivät;FINNISH;;stopwords-original.csv
+nesse;PORTUGUESE;em + esse;stopwords-new-PT-20110831.csv
+eue;FRENCH;;stopwords-original.csv
+fôsseis;PORTUGUESE;;stopwords-new-PT-20110831.csv
+hubiera;SPANISH;;stopwords-original.csv
+nessa;PORTUGUESE;em + essa;stopwords-new-PT-20110831.csv
+under;ENGLISH|SWEDISH;|under (also: wonder);stopwords-original.csv
+ὑμόσ;GREEK;;stopwords-original.csv
+olette;FINNISH;;stopwords-original.csv
+ett;SWEDISH;a;stopwords-original.csv|stopwords-new-SW-20111107.csv
+koska;FINNISH;because;stopwords-original.csv
+πρόσ;GREEK;;stopwords-original.csv
+nuestras;SPANISH;;stopwords-original.csv
+mihin;FINNISH;which what;stopwords-original.csv
+eut;FRENCH;;stopwords-original.csv
+eux;FRENCH;them;stopwords-original.csv
+estáveis;PORTUGUESE;;stopwords-new-PT-20110831.csv
+musste;GERMAN;had to;stopwords-original.csv
+keiksi;FINNISH;(pl);stopwords-original.csv
+num;PORTUGUESE;em + um;stopwords-original.csv
+inom;SWEDISH;within;stopwords-original.csv|stopwords-new-SW-20111107.csv
+nuo;FINNISH;those;stopwords-original.csv
+meus;PORTUGUESE;my;stopwords-original.csv
+hubieron;SPANISH;;stopwords-original.csv
+vara;SWEDISH;be;stopwords-original.csv
+kanssa;FINNISH;with;stopwords-original.csv
+you'll;ENGLISH;;stopwords-original.csv
+blir;SWEDISH;from bli;stopwords-original.csv
+τῆσ;GREEK;;stopwords-original.csv
+derer;GERMAN;of those;stopwords-original.csv
+muss;GERMAN;must;stopwords-original.csv
+who's;ENGLISH;;stopwords-original.csv
+noina;FINNISH;those;stopwords-original.csv
+mitä;FINNISH;which what;stopwords-original.csv
+esas;SPANISH;those;stopwords-original.csv
+vart;SWEDISH;each;stopwords-original.csv
+vars;SWEDISH;whose;stopwords-original.csv
+étiez;FRENCH;;stopwords-original.csv
+serão;PORTUGUESE;;stopwords-original.csv
+foste;PORTUGUESE;;stopwords-new-PT-20110831.csv
+ihres;GERMAN;;stopwords-original.csv
+siksi;FINNISH;it;stopwords-original.csv
+olla;FINNISH;;stopwords-original.csv
+tivéssemos;PORTUGUESE;;stopwords-original.csv
+werde;GERMAN;will;stopwords-original.csv
+yours;ENGLISH;possessive pronoun;stopwords-original.csv
+kenen;FINNISH;who;stopwords-original.csv
+περί;GREEK;;stopwords-original.csv
+ese;SPANISH;that;stopwords-original.csv
+serás;SPANISH|PORTUGUESE;|;stopwords-original.csv|stopwords-new-PT-20110831.csv
+esa;SPANISH;that;stopwords-original.csv
+estejas;PORTUGUESE;;stopwords-new-PT-20110831.csv
+serán;SPANISH;;stopwords-original.csv
+jonka;FINNISH;who which;stopwords-original.csv
+sont;FRENCH;;stopwords-original.csv
+suyos;SPANISH;;stopwords-original.csv
+deras;SWEDISH;their;stopwords-original.csv
+hubimos;SPANISH;;stopwords-original.csv
+estejam;PORTUGUESE;;stopwords-original.csv
+ert;SWEDISH;your;stopwords-original.csv
+ihrem;GERMAN;;stopwords-original.csv
+tämän;FINNISH;this;stopwords-original.csv
+very;ENGLISH;;stopwords-original.csv
+jota;FINNISH;who which;stopwords-original.csv
+vilket;SWEDISH;who, that;stopwords-original.csv
+vossa;PORTUGUESE;your, yours;stopwords-new-PT-20110831.csv
+hajais;PORTUGUESE;;stopwords-new-PT-20110831.csv
+vosso;PORTUGUESE;your, yours;stopwords-new-PT-20110831.csv
+hubiste;SPANISH;;stopwords-original.csv
+can't;ENGLISH;;stopwords-original.csv
+soll;GERMAN;shall;stopwords-original.csv
+teniendo;SPANISH;;stopwords-original.csv
+yourself;ENGLISH;reflexive (singular);stopwords-original.csv
+ela;PORTUGUESE;he;stopwords-original.csv
+ele;PORTUGUESE;he;stopwords-original.csv
+nog;DUTCH;yet, still;stopwords-original.csv
+olleet;FINNISH;;stopwords-original.csv
+again;ENGLISH;;stopwords-original.csv
+fuerais;SPANISH;;stopwords-original.csv
+notre;FRENCH;our;stopwords-original.csv
+nor;ENGLISH;;stopwords-original.csv
+haven't;ENGLISH;;stopwords-original.csv
+hubisteis;SPANISH;;stopwords-original.csv
+estiveste;PORTUGUESE;;stopwords-new-PT-20110831.csv
+myself;ENGLISH;reflexive;stopwords-original.csv
+vilken;SWEDISH;who, that;stopwords-original.csv
+kunde;SWEDISH;could;stopwords-original.csv
+some;ENGLISH;;stopwords-original.csv
+hubiéramos;SPANISH;;stopwords-original.csv
+mina;SWEDISH;my;stopwords-original.csv
+sois;FRENCH|SPANISH|PORTUGUESE;||;stopwords-original.csv|stopwords-new-PT-20110831.csv
+soit;FRENCH;;stopwords-original.csv
+eût;FRENCH;;stopwords-original.csv
+wezen;DUTCH;(1) to be, (2) 'been' as in 'been fishing', (3) orphans;stopwords-original.csv
+wordt;DUTCH;present third person sing. of 'become';stopwords-original.csv
+iemand;DUTCH;somebody;stopwords-original.csv
+estivesse;PORTUGUESE;;stopwords-original.csv
+suya;SPANISH;;stopwords-original.csv
+houvesse;PORTUGUESE;;stopwords-original.csv
+houvera;PORTUGUESE;;stopwords-original.csv
+suyo;SPANISH;his, hers, theirs;stopwords-original.csv
+mikä;FINNISH;which what;stopwords-original.csv
+estaremos;SPANISH;;stopwords-original.csv
+estaba;SPANISH;;stopwords-original.csv
+derselbe;GERMAN;the same;stopwords-original.csv
+vilkas;SWEDISH;whose;stopwords-original.csv
+alguma;PORTUGUESE;some;stopwords-new-PT-20110831.csv
+teriam;PORTUGUESE;;stopwords-original.csv
+there's;ENGLISH;;stopwords-original.csv
+houveste;PORTUGUESE;;stopwords-new-PT-20110831.csv
+οὕτωσ;GREEK;;stopwords-original.csv
+terias;PORTUGUESE;;stopwords-new-PT-20110831.csv
+sería;SPANISH;;stopwords-original.csv
+haveis;PORTUGUESE;;stopwords-new-PT-20110831.csv
+perante;PORTUGUESE;;stopwords-new-PT-20110831.csv
+hennes;SWEDISH;her;stopwords-original.csv
+noita;FINNISH;those;stopwords-original.csv
+meidät;FINNISH;we;stopwords-original.csv
+ὥστε;GREEK;;stopwords-original.csv
+ein;GERMAN;a;stopwords-original.csv
+tenías;SPANISH;;stopwords-original.csv
+mellan;SWEDISH;between;stopwords-original.csv
+estada;SPANISH;;stopwords-original.csv
+let's;ENGLISH;;stopwords-original.csv
+because;ENGLISH;;stopwords-original.csv
+minä;FINNISH;I;stopwords-original.csv
+tivéreis;PORTUGUESE;;stopwords-new-PT-20110831.csv
+nesta;PORTUGUESE;em + esta;stopwords-new-PT-20110831.csv
+meihin;FINNISH;we;stopwords-original.csv
+estivéreis;PORTUGUESE;;stopwords-new-PT-20110831.csv
+samma;SWEDISH;(the) same;stopwords-original.csv
+houverá;PORTUGUESE;;stopwords-original.csv
+estado;SPANISH;;stopwords-original.csv
+alguns;PORTUGUESE;some;stopwords-new-PT-20110831.csv
+haveríeis;PORTUGUESE;;stopwords-new-PT-20110831.csv
+onder;DUTCH;under, beneath;stopwords-original.csv
+tenían;SPANISH;;stopwords-original.csv
+habré;SPANISH;;stopwords-original.csv
+onde;PORTUGUESE;where;stopwords-new-PT-20110831.csv
+blivit;SWEDISH;from bli;stopwords-original.csv
+serei;PORTUGUESE;;stopwords-original.csv
+over;DUTCH|ENGLISH;over, across|;stopwords-original.csv
+mutta;FINNISH;but;stopwords-original.csv
+heistä;FINNISH;they;stopwords-original.csv
+she;ENGLISH;subject;stopwords-original.csv
+olitte;FINNISH;;stopwords-original.csv
+serez;FRENCH;;stopwords-original.csv
+hayas;SPANISH;;stopwords-original.csv
+hänestä;FINNISH;he she;stopwords-original.csv
+ninguém;PORTUGUESE;no one;stopwords-new-PT-20110831.csv
+further;ENGLISH;;stopwords-original.csv
+eûmes;FRENCH;;stopwords-original.csv
+veel;DUTCH;much, many;stopwords-original.csv
+selbst;GERMAN;self;stopwords-original.csv
+hayan;SPANISH;;stopwords-original.csv
+houveremos;PORTUGUESE;;stopwords-original.csv
+estadas;SPANISH;;stopwords-original.csv
+étées;FRENCH;;stopwords-original.csv
+she's;ENGLISH;;stopwords-original.csv
+before;ENGLISH;;stopwords-original.csv
+pois;PORTUGUESE;because;stopwords-new-PT-20110831.csv
+διά;GREEK;;stopwords-original.csv
+tendrás;SPANISH;;stopwords-original.csv
+welcher;GERMAN;;stopwords-original.csv
+welches;GERMAN;;stopwords-original.csv
+tendrán;SPANISH;;stopwords-original.csv
+sejamos;PORTUGUESE;;stopwords-original.csv
+häneltä;FINNISH;he she;stopwords-original.csv
+welchen;GERMAN;;stopwords-original.csv
+she'd;ENGLISH;;stopwords-original.csv
+could;ENGLISH;;stopwords-original.csv
+welchem;GERMAN;;stopwords-original.csv
+furent;FRENCH;;stopwords-original.csv
+esteja;PORTUGUESE;;stopwords-original.csv
+παρά;GREEK;;stopwords-original.csv
+häfte;SWEDISH;;stopwords-new-SW-20111107.csv
+niillä;FINNISH;they;stopwords-original.csv
+hubiesen;SPANISH;;stopwords-original.csv
+serie;SWEDISH;;stopwords-new-SW-20111107.csv
+vuestras;SPANISH;;stopwords-original.csv
+seria;PORTUGUESE;;stopwords-original.csv
+keiden;FINNISH;(pl);stopwords-original.csv
+sin;SPANISH|SWEDISH;without|his;stopwords-original.csv
+enquanto;PORTUGUESE;while;stopwords-new-PT-20110831.csv
+hubieses;SPANISH;;stopwords-original.csv
+quienes;SPANISH;who;stopwords-original.csv
+sig;SWEDISH;him(self) etc;stopwords-original.csv
+och;SWEDISH;and;stopwords-original.csv|stopwords-new-SW-20111107.csv
+connosco;PORTUGUESE;with us;stopwords-new-PT-20110831.csv
+same;ENGLISH;;stopwords-original.csv
+who;ENGLISH;;stopwords-original.csv
+fueseis;SPANISH;;stopwords-original.csv
+ovat;FINNISH;;stopwords-original.csv
+deste;PORTUGUESE;de + este;stopwords-new-PT-20110831.csv
+hemos;SPANISH;;stopwords-original.csv
+mijn;DUTCH;possessive and noun 'mine';stopwords-original.csv
+samt;SWEDISH;;stopwords-new-SW-20111107.csv
+también;SPANISH;also;stopwords-original.csv
+são;PORTUGUESE;;stopwords-original.csv
+todas;PORTUGUESE;all;stopwords-new-PT-20110831.csv
+i'd;ENGLISH;;stopwords-original.csv
+emme;FINNISH;;stopwords-original.csv
+houvéreis;PORTUGUESE;;stopwords-new-PT-20110831.csv
+against;ENGLISH;;stopwords-original.csv
+i'm;ENGLISH;;stopwords-original.csv
+hänessä;FINNISH;he she;stopwords-original.csv
+houvéssemos;PORTUGUESE;;stopwords-original.csv
+trás;PORTUGUESE;back;stopwords-new-PT-20110831.csv
+ses;FRENCH;his (pl);stopwords-original.csv
+seu;PORTUGUESE;his;stopwords-original.csv
+keihin;FINNISH;(pl);stopwords-original.csv
+aient;FRENCH;;stopwords-original.csv
+från;SWEDISH;from, off;stopwords-original.csv|stopwords-new-SW-20111107.csv
+ἀπό;GREEK;;stopwords-original.csv
+muchos;SPANISH;many;stopwords-original.csv
+niille;FINNISH;they;stopwords-original.csv
+fomos;PORTUGUESE;;stopwords-original.csv
+she'll;ENGLISH;;stopwords-original.csv
+sea;SPANISH;;stopwords-original.csv
+wil;DUTCH;(1) present tense of 'want', (2) 'will', noun, (3) fender;stopwords-original.csv
+wij;DUTCH;we;stopwords-new-NL-20110901.csv
+cuando;SPANISH;when;stopwords-original.csv
+off;ENGLISH;;stopwords-original.csv
+suis;FRENCH;;stopwords-original.csv
+sem;PORTUGUESE;without;stopwords-original.csv
+why;ENGLISH;;stopwords-original.csv
+heihin;FINNISH;they;stopwords-original.csv
+they;ENGLISH;subject;stopwords-original.csv
+heidän;FINNISH;they;stopwords-original.csv
+zwar;GERMAN;indeed;stopwords-original.csv
+you've;ENGLISH;;stopwords-original.csv
+heidät;FINNISH;they;stopwords-original.csv
+formos;PORTUGUESE;;stopwords-original.csv
+joissa;FINNISH;(pl);stopwords-original.csv
+only;ENGLISH;;stopwords-original.csv
+habido;SPANISH;;stopwords-original.csv
+havereis;PORTUGUESE;;stopwords-new-PT-20110831.csv
+siltä;FINNISH;it;stopwords-original.csv
+soy;SPANISH;;stopwords-original.csv
+som;SWEDISH;who, that;stopwords-original.csv|stopwords-new-SW-20111107.csv
+aurez;FRENCH;;stopwords-original.csv
+avais;FRENCH;;stopwords-original.csv
+avait;FRENCH;;stopwords-original.csv
+soi;FRENCH;oneself;stopwords-original.csv
+them;ENGLISH;object;stopwords-original.csv
+then;ENGLISH;;stopwords-original.csv
+hubiésemos;SPANISH;;stopwords-original.csv
+aurais;FRENCH;;stopwords-original.csv
+aurait;FRENCH;;stopwords-original.csv
+comigo;PORTUGUESE;with me;stopwords-new-PT-20110831.csv
+sob;PORTUGUESE;under;stopwords-new-PT-20110831.csv
+eusse;FRENCH;;stopwords-original.csv
+wirst;GERMAN;willst;stopwords-original.csv
+será;PORTUGUESE|SPANISH;|;stopwords-original.csv
+nossos;PORTUGUESE;;stopwords-original.csv
+δαί;GREEK;;stopwords-original.csv
+seré;SPANISH;;stopwords-original.csv
+where's;ENGLISH;;stopwords-original.csv
+hänellä;FINNISH;he she;stopwords-original.csv
+aren't;ENGLISH;;stopwords-original.csv
+kod;SWEDISH;;stopwords-new-SW-20111107.csv
+niiltä;FINNISH;they;stopwords-original.csv
+niihin;FINNISH;they;stopwords-original.csv
+fossem;PORTUGUESE;;stopwords-original.csv
+fosses;PORTUGUESE;;stopwords-new-PT-20110831.csv
+don't;ENGLISH;;stopwords-original.csv
+it's;ENGLISH;;stopwords-original.csv
+soyez;FRENCH;;stopwords-original.csv
+joista;FINNISH;(pl);stopwords-original.csv
+seras;FRENCH;;stopwords-original.csv
+you're;ENGLISH;;stopwords-original.csv
+estados;SPANISH;;stopwords-original.csv
+nyt;FINNISH;now;stopwords-original.csv
+minusta;FINNISH;I;stopwords-original.csv
+hatte;GERMAN;had;stopwords-original.csv
+poco;SPANISH;few;stopwords-original.csv
+zonder;DUTCH;without;stopwords-original.csv
+serai;FRENCH;;stopwords-original.csv
+jossa;FINNISH;who which;stopwords-original.csv
+keneksi;FINNISH;who;stopwords-original.csv
+über;GERMAN;over;stopwords-original.csv
+niin;FINNISH;so;stopwords-original.csv
+isn't;ENGLISH;;stopwords-original.csv
+auras;FRENCH;;stopwords-original.csv
+such;ENGLISH;;stopwords-original.csv
+ἀλλ’;GREEK;;stopwords-original.csv
+outro;PORTUGUESE;other;stopwords-new-PT-20110831.csv
+nummer;SWEDISH;;stopwords-new-SW-20111107.csv
+eres;SPANISH;;stopwords-original.csv
+siihen;FINNISH;it;stopwords-original.csv
+aurai;FRENCH;;stopwords-original.csv
+tendría;SPANISH;;stopwords-original.csv
+efter;SWEDISH;after, behind;stopwords-original.csv|stopwords-new-SW-20111107.csv
+joiksi;FINNISH;(pl);stopwords-original.csv
+seus;PORTUGUESE;his;stopwords-original.csv
+josta;FINNISH;who which;stopwords-original.csv
+this;ENGLISH;;stopwords-original.csv
+from;ENGLISH;;stopwords-original.csv
+fueron;SPANISH;;stopwords-original.csv
+sera;FRENCH;;stopwords-original.csv
+wat;DUTCH;what, something, anything;stopwords-original.csv
+war;GERMAN;was;stopwords-original.csv
+estiver;PORTUGUESE;;stopwords-original.csv
+between;ENGLISH;;stopwords-original.csv
+teríamos;PORTUGUESE;;stopwords-original.csv
+habrá;SPANISH;;stopwords-original.csv
+habida;SPANISH;;stopwords-original.csv
+ourselves;ENGLISH;reflexive;stopwords-original.csv
+δαίσ;GREEK;;stopwords-original.csv
+minussa;FINNISH;I;stopwords-original.csv
+suas;PORTUGUESE;her;stopwords-original.csv
+sejam;PORTUGUESE;;stopwords-original.csv
+sejas;PORTUGUESE;;stopwords-new-PT-20110831.csv
+themselves;ENGLISH;reflexive;stopwords-original.csv
+ainda;PORTUGUESE;still, yet;stopwords-new-PT-20110831.csv
+jener;GERMAN;;stopwords-original.csv
+vuestros;SPANISH;;stopwords-original.csv
+jenes;GERMAN;;stopwords-original.csv
+tuviste;SPANISH;;stopwords-original.csv
+they'll;ENGLISH;;stopwords-original.csv
+tivessem;PORTUGUESE;;stopwords-original.csv
+debaixo;PORTUGUESE;under;stopwords-new-PT-20110831.csv
+hänet;FINNISH;he she;stopwords-original.csv
+eram;PORTUGUESE;;stopwords-original.csv
+eran;SPANISH;;stopwords-original.csv
+tivesses;PORTUGUESE;;stopwords-new-PT-20110831.csv
+eras;SPANISH|PORTUGUESE;|;stopwords-original.csv|stopwords-new-PT-20110831.csv
+keissä;FINNISH;(pl);stopwords-original.csv
+disso;PORTUGUESE;de + isso;stopwords-new-PT-20110831.csv
+sillä;FINNISH;it;stopwords-original.csv
+estéis;SPANISH;;stopwords-original.csv
+hänen;FINNISH;he she;stopwords-original.csv
+ἐμόσ;GREEK;;stopwords-original.csv
+honom;SWEDISH;him;stopwords-original.csv
+seríais;SPANISH;;stopwords-original.csv
+angående;SWEDISH;;stopwords-new-SW-20111107.csv
+noissa;FINNISH;those;stopwords-original.csv
+own;ENGLISH;;stopwords-original.csv
+tuas;PORTUGUESE;;stopwords-original.csv
+seríeis;PORTUGUESE;;stopwords-new-PT-20110831.csv
+keistä;FINNISH;(pl);stopwords-original.csv
+kenessä;FINNISH;who;stopwords-original.csv
+nunca;PORTUGUESE;never;stopwords-new-PT-20110831.csv
+estuvimos;SPANISH;;stopwords-original.csv
+solcher;GERMAN;;stopwords-original.csv
+solches;GERMAN;;stopwords-original.csv
+fueses;SPANISH;;stopwords-original.csv
+lucka;SWEDISH;;stopwords-new-SW-20111107.csv
+estáis;SPANISH;;stopwords-original.csv
+fuesen;SPANISH;;stopwords-original.csv
+haja;PORTUGUESE;;stopwords-original.csv
+noista;FINNISH;those;stopwords-original.csv
+heillä;FINNISH;they;stopwords-original.csv
+estivera;PORTUGUESE;;stopwords-original.csv
+tenhais;PORTUGUESE;;stopwords-new-PT-20110831.csv
+fus;FRENCH;;stopwords-original.csv
+fut;FRENCH;;stopwords-original.csv
+houverdes;PORTUGUESE;;stopwords-new-PT-20110831.csv
+kenestä;FINNISH;who;stopwords-original.csv
+οὔτε;GREEK;;stopwords-original.csv
+outra;PORTUGUESE;other;stopwords-new-PT-20110831.csv
+ὅσ;GREEK;;stopwords-original.csv
+habréis;SPANISH;;stopwords-original.csv
+quaisquer;PORTUGUESE;any;stopwords-new-PT-20110831.csv
+tuon;FINNISH;that;stopwords-original.csv
+solchen;GERMAN;;stopwords-original.csv
+solchem;GERMAN;;stopwords-original.csv
+varför;SWEDISH;why;stopwords-original.csv
+estuve;SPANISH;;stopwords-original.csv
+both;ENGLISH;;stopwords-original.csv
+tudo;PORTUGUESE;all;stopwords-new-PT-20110831.csv
+hade;SWEDISH;had;stopwords-original.csv
+ἄρα;GREEK;;stopwords-original.csv
+after;ENGLISH;;stopwords-original.csv
+altijd;DUTCH;always;stopwords-original.csv
+minkä;FINNISH;which what;stopwords-original.csv
+tivera;PORTUGUESE;;stopwords-original.csv
+tuosta;FINNISH;that;stopwords-original.csv
+inneh;SWEDISH;;stopwords-new-SW-20111107.csv
+what's;ENGLISH;;stopwords-original.csv
+fue;SPANISH;;stopwords-original.csv
+seamos;SPANISH;;stopwords-original.csv
+tuve;SPANISH;;stopwords-original.csv
+fui;PORTUGUESE|SPANISH;|;stopwords-original.csv
+tuvo;SPANISH;;stopwords-original.csv
+that;ENGLISH;;stopwords-original.csv
+estuvo;SPANISH;;stopwords-original.csv
+indem;GERMAN;while;stopwords-original.csv
+zum;GERMAN;zu + dem;stopwords-original.csv
+than;ENGLISH;;stopwords-original.csv
+sua;PORTUGUESE;her;stopwords-original.csv
+oss;SWEDISH;us;stopwords-original.csv
+olisivat;FINNISH;;stopwords-original.csv
+about;ENGLISH;;stopwords-original.csv
+keiltä;FINNISH;(pl);stopwords-original.csv
+estuviésemos;SPANISH;;stopwords-original.csv
+disto;PORTUGUESE;de + isto;stopwords-new-PT-20110831.csv
+sus;SPANISH;su plural;stopwords-original.csv
+sur;FRENCH;on;stopwords-original.csv
+heille;FINNISH;they;stopwords-original.csv
+jedes;GERMAN;;stopwords-original.csv
+jeder;GERMAN;;stopwords-original.csv
+above;ENGLISH;;stopwords-original.csv
+tiverdes;PORTUGUESE;;stopwords-new-PT-20110831.csv
+jeden;GERMAN;;stopwords-original.csv
+jedem;GERMAN;;stopwords-original.csv
+ihnen;GERMAN;to them;stopwords-original.csv
+hänelle;FINNISH;he she;stopwords-original.csv
+meines;GERMAN;;stopwords-original.csv
+meinem;GERMAN;;stopwords-original.csv
+jenen;GERMAN;;stopwords-original.csv
+tuviésemos;SPANISH;;stopwords-original.csv
+tenía;SPANISH;;stopwords-original.csv
+jenem;GERMAN;;stopwords-original.csv
+algum;PORTUGUESE;some;stopwords-new-PT-20110831.csv
+tuossa;FINNISH;that;stopwords-original.csv
+μετά;GREEK;;stopwords-original.csv
+our;ENGLISH;possessive adjective;stopwords-original.csv
+out;ENGLISH;;stopwords-original.csv
+tai;FINNISH;or;stopwords-original.csv
+tal;PORTUGUESE;such;stopwords-new-PT-20110831.csv
+kartong;SWEDISH;;stopwords-new-SW-20111107.csv
+tuya;SPANISH;;stopwords-original.csv
+ὅστισ;GREEK;;stopwords-original.csv
+foi;PORTUGUESE;;stopwords-original.csv
+fol;SWEDISH;;stopwords-new-SW-20111107.csv
+flera;SWEDISH;;stopwords-new-SW-20111107.csv
+cual;SPANISH;who;stopwords-original.csv
+wenn;GERMAN;when;stopwords-original.csv
+över;SWEDISH;over;stopwords-original.csv
+tuyo;SPANISH;thine;stopwords-original.csv
+fuera;SPANISH;;stopwords-original.csv
+vid;SWEDISH;at, by, on (also: vast);stopwords-original.csv
+für;GERMAN;for;stopwords-original.csv
+ook;DUTCH;also, too;stopwords-original.csv
+kan;DUTCH|SWEDISH;noun 'can' and present form of 'to be able'|can;stopwords-original.csv
+pouca;PORTUGUESE;few;stopwords-new-PT-20110831.csv
+why's;ENGLISH;;stopwords-original.csv
+dessa;SWEDISH;these/those;stopwords-original.csv
+heiltä;FINNISH;they;stopwords-original.csv
+desse;PORTUGUESE;de + esse;stopwords-new-PT-20110831.csv
+haar;DUTCH;(1) her, their, them, (2) hair;stopwords-original.csv
+keille;FINNISH;(pl);stopwords-original.csv
+pouco;PORTUGUESE;few;stopwords-new-PT-20110831.csv
+teihin;FINNISH;you;stopwords-original.csv
+they've;ENGLISH;;stopwords-original.csv
+habe;GERMAN;have;stopwords-original.csv
+había;SPANISH;;stopwords-original.csv
+want;DUTCH;(1) for, (2) mitten, (3) rigging;stopwords-original.csv
+desta;PORTUGUESE;de + esta;stopwords-new-PT-20110831.csv
+leurs;FRENCH;their (pl);stopwords-original.csv
+teidät;FINNISH;you;stopwords-original.csv
+teille;FINNISH;you;stopwords-original.csv
+depois;PORTUGUESE;after;stopwords-original.csv
+teidän;FINNISH;you;stopwords-original.csv
+näiksi;FINNISH;these;stopwords-original.csv
+tuviera;SPANISH;;stopwords-original.csv
+fuese;SPANISH;;stopwords-original.csv
+acerca;PORTUGUESE;about;stopwords-new-PT-20110831.csv
+dies;GERMAN;this;stopwords-original.csv
+ordnade;SWEDISH;;stopwords-new-SW-20111107.csv
+sommes;FRENCH;;stopwords-original.csv
+sinulta;FINNISH;you;stopwords-original.csv
+oli;FINNISH;;stopwords-original.csv
+quels;FRENCH;which;stopwords-original.csv
+ole;FINNISH;negative form;stopwords-original.csv
+heitä;FINNISH;they;stopwords-original.csv
+were;ENGLISH;past;stopwords-original.csv
+werd;DUTCH;imperfect third person sing. of 'become';stopwords-original.csv
+κατά;GREEK;;stopwords-original.csv
+tendrá;SPANISH;;stopwords-original.csv
+terei;PORTUGUESE;;stopwords-original.csv
+tendré;SPANISH;;stopwords-original.csv
+näissä;FINNISH;these;stopwords-original.csv
+wird;GERMAN;will;stopwords-original.csv
+votre;FRENCH;your;stopwords-original.csv
+tivermos;PORTUGUESE;;stopwords-original.csv
+meitä;FINNISH;we;stopwords-original.csv
+resp;SWEDISH;;stopwords-new-SW-20111107.csv
+sille;FINNISH;it;stopwords-original.csv
+estuvieseis;SPANISH;;stopwords-original.csv
+keillä;FINNISH;(pl);stopwords-original.csv
+esteve;PORTUGUESE;;stopwords-original.csv
+haben;GERMAN;have;stopwords-original.csv
+vol;SWEDISH;;stopwords-new-SW-20111107.csv
+för;SWEDISH;for;stopwords-original.csv|stopwords-new-SW-20111107.csv
+lhes;PORTUGUESE;to them;stopwords-original.csv
+ons;DUTCH;us/our;stopwords-original.csv
+von;GERMAN;from;stopwords-original.csv
+during;ENGLISH;;stopwords-original.csv
+vom;GERMAN;von + dem;stopwords-original.csv
+entre;PORTUGUESE|SPANISH;between|between;stopwords-original.csv
+fuisteis;SPANISH;;stopwords-original.csv
+vos;FRENCH|PORTUGUESE;your (pl)|you;stopwords-original.csv
+they're;ENGLISH;;stopwords-original.csv
+weren't;ENGLISH;;stopwords-original.csv
+dich;GERMAN;thee;stopwords-original.csv
+with;ENGLISH;;stopwords-original.csv
+hajamos;PORTUGUESE;;stopwords-original.csv
+vaikka;FINNISH;although;stopwords-original.csv
+estivéramos;PORTUGUESE;;stopwords-original.csv
+teria;PORTUGUESE;;stopwords-original.csv
+minha;PORTUGUESE;my;stopwords-original.csv
+näistä;FINNISH;these;stopwords-original.csv
+minuun;FINNISH;I;stopwords-original.csv
+muitos;PORTUGUESE;many;stopwords-new-PT-20110831.csv
+he'd;ENGLISH;;stopwords-original.csv
+poucos;PORTUGUESE;few;stopwords-new-PT-20110831.csv
+joksi;FINNISH;who which;stopwords-original.csv
+tendrías;SPANISH;;stopwords-original.csv
+tenhamos;PORTUGUESE;;stopwords-original.csv
+tendrían;SPANISH;;stopwords-original.csv
+eussions;FRENCH;;stopwords-original.csv
+tens;PORTUGUESE;;stopwords-new-PT-20110831.csv
+tivemos;PORTUGUESE;;stopwords-original.csv
+näihin;FINNISH;these;stopwords-original.csv
+these;ENGLISH;;stopwords-original.csv
+tallä;FINNISH;this;stopwords-original.csv
+bist;GERMAN;art;stopwords-original.csv
+tienen;SPANISH;;stopwords-original.csv
+erais;SPANISH;;stopwords-original.csv
+τόν;GREEK;;stopwords-original.csv
+tienes;SPANISH;;stopwords-original.csv
+joiden;FINNISH;(pl);stopwords-original.csv
+he's;ENGLISH;;stopwords-original.csv
+unses;GERMAN;;stopwords-original.csv
+unser;GERMAN;;stopwords-original.csv
+herself;ENGLISH;reflexive;stopwords-original.csv
+each;ENGLISH;;stopwords-original.csv
+daquele;PORTUGUESE;de + aquele;stopwords-new-PT-20110831.csv
+unsen;GERMAN;;stopwords-original.csv
+fûmes;FRENCH;;stopwords-original.csv
+unsem;GERMAN;;stopwords-original.csv
+bij;DUTCH;(1) a bee, (2) by, near, at;stopwords-original.csv
+sich;GERMAN;herself;stopwords-original.csv
+consigo;PORTUGUESE;with you;stopwords-new-PT-20110831.csv
+então;PORTUGUESE;then, so;stopwords-new-PT-20110831.csv
+nosotros;SPANISH;we;stopwords-original.csv
+mancher;GERMAN;;stopwords-original.csv
+ketä;FINNISH;who;stopwords-original.csv
+manchem;GERMAN;;stopwords-original.csv
+tinheis;PORTUGUESE;;stopwords-new-PT-20110831.csv
+hebben;DUTCH;'to have' and various parts thereof;stopwords-original.csv
+sido;SPANISH;;stopwords-original.csv
+καί;GREEK;;stopwords-original.csv
+hajas;PORTUGUESE;;stopwords-new-PT-20110831.csv
+bli;SWEDISH;to be, become;stopwords-original.csv
+omdat;DUTCH;because;stopwords-original.csv
+till;SWEDISH;to;stopwords-original.csv|stopwords-new-SW-20111107.csv
+heeft;DUTCH;present third person sing. of 'to have';stopwords-original.csv
+vem;SWEDISH;who;stopwords-original.csv
+sådan;SWEDISH;such a;stopwords-original.csv
+näiltä;FINNISH;these;stopwords-original.csv
+olemme;FINNISH;;stopwords-original.csv
+you'd;ENGLISH;;stopwords-original.csv
+har;SWEDISH;have;stopwords-original.csv|stopwords-new-SW-20111107.csv
+havemos;PORTUGUESE;;stopwords-original.csv
+algunas;SPANISH;some;stopwords-original.csv
+sådana;SWEDISH;such a;stopwords-original.csv
+siitä;FINNISH;it;stopwords-original.csv
+habrían;SPANISH;;stopwords-original.csv
+band;SWEDISH;;stopwords-new-SW-20111107.csv
+hinter;GERMAN;behind;stopwords-original.csv
+houvésseis;PORTUGUESE;;stopwords-new-PT-20110831.csv
+hajam;PORTUGUESE;;stopwords-original.csv
+habrías;SPANISH;;stopwords-original.csv
+sådant;SWEDISH;such a;stopwords-original.csv
+had;DUTCH|ENGLISH;had, past tense all persons sing. of 'hebben' (have)|past;stopwords-original.csv
+fussions;FRENCH;;stopwords-original.csv
+fordes;PORTUGUESE;;stopwords-new-PT-20110831.csv
+eines;GERMAN;;stopwords-original.csv
+einen;GERMAN;;stopwords-original.csv
+pelos;PORTUGUESE;per + os;stopwords-original.csv
+dat;DUTCH;that, which;stopwords-original.csv
+täksi;FINNISH;this;stopwords-original.csv
+kenenä;FINNISH;who;stopwords-original.csv
+dan;DUTCH;then;stopwords-original.csv
+während;GERMAN;while;stopwords-original.csv
+hay;SPANISH;there is/are;stopwords-original.csv
+geweest;DUTCH;been, past participle of 'be';stopwords-original.csv
+wollen;GERMAN;want;stopwords-original.csv
+fores;PORTUGUESE;;stopwords-new-PT-20110831.csv
+forem;PORTUGUESE;;stopwords-original.csv
+shan't;ENGLISH;;stopwords-original.csv
+houverão;PORTUGUESE;;stopwords-original.csv
+otras;SPANISH;other;stopwords-original.csv
+kartonger;SWEDISH;;stopwords-new-SW-20111107.csv
+alla;SWEDISH;all;stopwords-original.csv
+vosotros;SPANISH;you;stopwords-original.csv
+par;FRENCH;by;stopwords-original.csv
+allt;SWEDISH;all;stopwords-original.csv
+eurent;FRENCH;;stopwords-original.csv
+zal;DUTCH;'shall', first and third person sing. of verb 'zullen' (will);stopwords-original.csv
+there;ENGLISH;;stopwords-original.csv
+box;SWEDISH;;stopwords-new-SW-20111107.csv
+ἄλλοσ;GREEK;;stopwords-original.csv
+vad;SWEDISH;what;stopwords-original.csv
+vai;FINNISH;or;stopwords-original.csv
+mesma;PORTUGUESE;same;stopwords-new-PT-20110831.csv
+tuoksi;FINNISH;that;stopwords-original.csv
+hei;PORTUGUESE;;stopwords-original.csv
+estarían;SPANISH;;stopwords-original.csv
+kuka;FINNISH;who;stopwords-original.csv
+estuviese;SPANISH;;stopwords-original.csv
+nämä;FINNISH;these;stopwords-original.csv
+heb;DUTCH;present first person sing. of 'to have';stopwords-original.csv
+estarías;SPANISH;;stopwords-original.csv
+mesmo;PORTUGUESE;same;stopwords-original.csv
+terão;PORTUGUESE;;stopwords-original.csv
+otros;SPANISH;other;stopwords-original.csv
+het;DUTCH;the, it;stopwords-original.csv
+convosco;PORTUGUESE;with you;stopwords-new-PT-20110831.csv
+her;ENGLISH;object and possessive adjective;stopwords-original.csv
+αὐτόσ;GREEK;;stopwords-original.csv
+kun;FINNISH;when;stopwords-original.csv
+icke;SWEDISH;not, no;stopwords-original.csv
+itself;ENGLISH;reflexive;stopwords-original.csv
+hem;DUTCH;him;stopwords-original.csv
+foram;PORTUGUESE;;stopwords-original.csv
+houveram;PORTUGUESE;;stopwords-original.csv|stopwords-new-PT-20110831.csv
+tive;PORTUGUESE;;stopwords-original.csv
+volym;SWEDISH;;stopwords-new-SW-20111107.csv
+houveras;PORTUGUESE;;stopwords-new-PT-20110831.csv
+zou;DUTCH;should/would, past tense all persons sing. of 'zullen';stopwords-original.csv
+foras;PORTUGUESE;;stopwords-new-PT-20110831.csv
+fôreis;PORTUGUESE;;stopwords-new-PT-20110831.csv
+sitta;SWEDISH;his;stopwords-original.csv
+ought;ENGLISH;;stopwords-original.csv
+seremos;PORTUGUESE|SPANISH;|;stopwords-original.csv
+innehåller;SWEDISH;;stopwords-new-SW-20111107.csv
+teríeis;PORTUGUESE;;stopwords-new-PT-20110831.csv
+kuin;FINNISH;than;stopwords-original.csv
+terás;PORTUGUESE;;stopwords-new-PT-20110831.csv
+noihin;FINNISH;those;stopwords-original.csv
+houverem;PORTUGUESE;;stopwords-original.csv
+ella;SPANISH;she;stopwords-original.csv
+houverei;PORTUGUESE;;stopwords-original.csv
+teissä;FINNISH;you;stopwords-original.csv
+varje;SWEDISH;each;stopwords-original.csv
+aquilo;PORTUGUESE;that;stopwords-original.csv
+varit;SWEDISH;was;stopwords-original.csv
+algunos;SPANISH;some;stopwords-original.csv
+elle;FRENCH;she;stopwords-original.csv
+unos;SPANISH;a;stopwords-original.csv
+éreis;PORTUGUESE;;stopwords-new-PT-20110831.csv
+how's;ENGLISH;;stopwords-original.csv
+eens;DUTCH;once, one day;stopwords-original.csv
+där;SWEDISH;there;stopwords-original.csv
+him;ENGLISH;object;stopwords-original.csv
+hij;DUTCH;he;stopwords-original.csv
+minua;FINNISH;I;stopwords-original.csv
+quelles;FRENCH;which;stopwords-original.csv
+olivat;FINNISH;;stopwords-original.csv
+você;PORTUGUESE;you;stopwords-original.csv
+his;ENGLISH;possessive adjective and pronoun;stopwords-original.csv
+seríamos;PORTUGUESE|SPANISH;|;stopwords-original.csv
+joihin;FINNISH;(pl);stopwords-original.csv
+års;SWEDISH;;stopwords-new-SW-20111107.csv
+ὅδε;GREEK;;stopwords-original.csv
+ἑαυτοῦ;GREEK;;stopwords-original.csv
+houvessem;PORTUGUESE;;stopwords-original.csv
+houvesses;PORTUGUESE;;stopwords-new-PT-20110831.csv
+muitas;PORTUGUESE;many;stopwords-new-PT-20110831.csv
+durch;GERMAN;through;stopwords-original.csv
+minun;FINNISH;I;stopwords-original.csv
+teistä;FINNISH;you;stopwords-original.csv
+tiveres;PORTUGUESE;;stopwords-new-PT-20110831.csv
+dasselbe;GERMAN;;stopwords-original.csv
+siinä;FINNISH;it;stopwords-original.csv
+demselben;GERMAN;;stopwords-original.csv
+tiverem;PORTUGUESE;;stopwords-original.csv
+åren;SWEDISH;;stopwords-new-SW-20111107.csv
+zij;DUTCH;she, they;stopwords-original.csv
+étaient;FRENCH;;stopwords-original.csv
+estuviera;SPANISH;;stopwords-original.csv
+keneltä;FINNISH;who;stopwords-original.csv
+fusses;FRENCH;;stopwords-original.csv
+vår;SWEDISH;our;stopwords-original.csv
+your;ENGLISH;possessive adjective;stopwords-original.csv
+noiksi;FINNISH;those;stopwords-original.csv
+houvermos;PORTUGUESE;;stopwords-original.csv
+unse;GERMAN;;stopwords-original.csv
+εἰμί;GREEK;;stopwords-original.csv
+haveríamos;PORTUGUESE;;stopwords-new-PT-20110831.csv
+tiveras;PORTUGUESE;;stopwords-new-PT-20110831.csv
+euer;GERMAN;your;stopwords-original.csv
+eues;FRENCH;;stopwords-original.csv
+por;PORTUGUESE|SPANISH;for|for, by, etc;stopwords-original.csv
+yourselves;ENGLISH;reflexive (plural);stopwords-original.csv
+houver;PORTUGUESE;;stopwords-original.csv
+meistä;FINNISH;we;stopwords-original.csv
+seas;SPANISH;;stopwords-original.csv
+ὡσ;GREEK;;stopwords-original.csv
+εἰ;GREEK;;stopwords-original.csv
+às;PORTUGUESE;a + as;stopwords-original.csv
+bunt;SWEDISH;;stopwords-new-SW-20111107.csv
+eurem;GERMAN;;stopwords-original.csv
+eurer;GERMAN;;stopwords-original.csv
+sinä;FINNISH;you;stopwords-original.csv
+quien;SPANISH;whom, that;stopwords-original.csv
+mías;SPANISH;;stopwords-original.csv
+meissä;FINNISH;we;stopwords-original.csv
+seréis;SPANISH;;stopwords-original.csv
+i've;ENGLISH;;stopwords-original.csv
+deine;GERMAN;;stopwords-original.csv
+anderes;GERMAN;;stopwords-original.csv
+anderer;GERMAN;;stopwords-original.csv
+kunnen;DUTCH;to be able;stopwords-original.csv
+houvestes;PORTUGUESE;;stopwords-new-PT-20110831.csv
+anderem;GERMAN;;stopwords-original.csv
+anderen;GERMAN;;stopwords-original.csv
+poikki;FINNISH;across;stopwords-original.csv
+eusses;FRENCH;;stopwords-original.csv
+como;PORTUGUESE|SPANISH;as, like|how;stopwords-original.csv
+fueran;SPANISH;;stopwords-original.csv
+fueras;SPANISH;;stopwords-original.csv
+we'll;ENGLISH;;stopwords-original.csv
+sonst;GERMAN;else;stopwords-original.csv
+agus;IRISH;and;stopwords-new-IE-20110906.csv
+they'd;ENGLISH;;stopwords-original.csv
+down;ENGLISH;;stopwords-original.csv
+qual;PORTUGUESE;which;stopwords-original.csv
+tiveram;PORTUGUESE;;stopwords-original.csv|stopwords-new-PT-20110831.csv
+con;SPANISH;with;stopwords-original.csv
+näiden;FINNISH;these;stopwords-original.csv
+com;PORTUGUESE;with;stopwords-original.csv
+tivestes;PORTUGUESE;;stopwords-new-PT-20110831.csv
+voor;DUTCH;(1) before, in front of, (2) furrow;stopwords-original.csv
+estén;SPANISH;;stopwords-original.csv
+itse;FINNISH;self;stopwords-original.csv
+ellas;SPANISH;they;stopwords-original.csv
+estés;SPANISH;;stopwords-original.csv
+whom;ENGLISH;;stopwords-original.csv
+estoy;SPANISH;;stopwords-original.csv
+haveriam;PORTUGUESE;;stopwords-new-PT-20110831.csv
+dieser;GERMAN;;stopwords-original.csv
+dieses;GERMAN;;stopwords-original.csv
+kenellä;FINNISH;who;stopwords-original.csv
+tenida;SPANISH;;stopwords-original.csv
+tenido;SPANISH;;stopwords-original.csv
+haverias;PORTUGUESE;;stopwords-new-PT-20110831.csv
+zich;DUTCH;oneself;stopwords-original.csv
+﻿μή;GREEK;;stopwords-original.csv
+nosotras;SPANISH;we;stopwords-original.csv
+seáis;SPANISH;;stopwords-original.csv
+estou;PORTUGUESE;;stopwords-original.csv
+dort;GERMAN;(over) there;stopwords-original.csv
+estos;SPANISH;these;stopwords-original.csv
+poucas;PORTUGUESE;few;stopwords-new-PT-20110831.csv
+können;GERMAN;can;stopwords-original.csv
+δ’;GREEK;;stopwords-original.csv
+sitä;FINNISH;it;stopwords-original.csv
+einige;GERMAN;;stopwords-original.csv
+you;ENGLISH;subject and object;stopwords-original.csv
+keneen;FINNISH;who;stopwords-original.csv
+diesem;GERMAN;;stopwords-original.csv
+niet;DUTCH;not, nothing, naught;stopwords-original.csv
+quem;PORTUGUESE;whom;stopwords-original.csv
+upp;SWEDISH;up;stopwords-original.csv
+quel;FRENCH;which;stopwords-original.csv
+diesen;GERMAN;;stopwords-original.csv
+noille;FINNISH;those;stopwords-original.csv
+soient;FRENCH;;stopwords-original.csv
+noilla;FINNISH;those;stopwords-original.csv
+estad;SPANISH;;stopwords-original.csv
+haverei;PORTUGUESE;;stopwords-new-PT-20110831.csv
+estábamos;SPANISH;;stopwords-original.csv
+hän;FINNISH;he she;stopwords-original.csv
+seja;PORTUGUESE;;stopwords-original.csv
+haverão;PORTUGUESE;;stopwords-new-PT-20110831.csv
+houveriam;PORTUGUESE;;stopwords-original.csv
+här;SWEDISH;here;stopwords-original.csv
+lhe;PORTUGUESE;to him, her;stopwords-original.csv
+uma;PORTUGUESE;a;stopwords-original.csv
+ketkä;FINNISH;(pl);stopwords-original.csv
+estas;PORTUGUESE|SPANISH;these|these;stopwords-original.csv
+tendréis;SPANISH;;stopwords-original.csv
+avez;FRENCH;;stopwords-original.csv
+pour;FRENCH;for;stopwords-original.csv
+habiendo;SPANISH;;stopwords-original.csv
+estivessem;PORTUGUESE;;stopwords-original.csv
+estar;SPANISH;to be;stopwords-original.csv
+avec;FRENCH;with;stopwords-original.csv
+we're;ENGLISH;;stopwords-original.csv
+estivesses;PORTUGUESE;;stopwords-new-PT-20110831.csv
+jolle;FINNISH;who which;stopwords-original.csv
+uno;SPANISH;a;stopwords-original.csv
+hão;PORTUGUESE;;stopwords-original.csv
+una;SPANISH;a;stopwords-original.csv
+une;FRENCH;a;stopwords-original.csv
+haverás;PORTUGUESE;;stopwords-new-PT-20110831.csv
+aqui;PORTUGUESE;here;stopwords-new-PT-20110831.csv
+habíamos;SPANISH;;stopwords-original.csv
+naar;DUTCH;(1) unpleasant, unwell etc, (2) towards, (3) as;stopwords-original.csv
+ὅτι;GREEK;;stopwords-original.csv
+οἱ;GREEK;;stopwords-original.csv
+wollte;GERMAN;wanted;stopwords-original.csv
+dieselben;GERMAN;;stopwords-original.csv
+ces;FRENCH;these;stopwords-original.csv
+mistä;FINNISH;which what;stopwords-original.csv
+cet;FRENCH;this;stopwords-original.csv
+kenelle;FINNISH;who;stopwords-original.csv
+houve;PORTUGUESE;;stopwords-original.csv
+näillä;FINNISH;these;stopwords-original.csv
+atrás;PORTUGUESE;behind;stopwords-new-PT-20110831.csv
+henne;SWEDISH;her;stopwords-original.csv
+lev;SWEDISH;;stopwords-new-SW-20111107.csv
+hás;PORTUGUESE;;stopwords-new-PT-20110831.csv
+les;FRENCH|SPANISH;the (pl)|to them;stopwords-original.csv
+finns;SWEDISH;;stopwords-new-SW-20111107.csv
+siendo;SPANISH;;stopwords-original.csv
+οὐ;GREEK;;stopwords-original.csv
+wouldn't;ENGLISH;;stopwords-original.csv
+serían;SPANISH;;stopwords-original.csv
+bland;SWEDISH;;stopwords-new-SW-20111107.csv
+serías;SPANISH;;stopwords-original.csv
+haveria;PORTUGUESE;;stopwords-new-PT-20110831.csv
+hube;SPANISH;;stopwords-original.csv
+tästä;FINNISH;this;stopwords-original.csv
+hubo;SPANISH;;stopwords-original.csv
+também;PORTUGUESE;also;stopwords-original.csv
+been;ENGLISH;past participle;stopwords-original.csv
+ingen;SWEDISH;no;stopwords-original.csv
+hayamos;SPANISH;;stopwords-original.csv
+estes;PORTUGUESE;these;stopwords-original.csv
+ingår;SWEDISH;;stopwords-new-SW-20111107.csv
+jotka;FINNISH;(pl);stopwords-original.csv
+houvemos;PORTUGUESE;;stopwords-original.csv
+tässä;FINNISH;this;stopwords-original.csv
+sekä;FINNISH;and;stopwords-original.csv
+desselben;GERMAN;;stopwords-original.csv
+we've;ENGLISH;;stopwords-original.csv
+missä;FINNISH;which what;stopwords-original.csv
+sina;SWEDISH;his;stopwords-original.csv
+uit;DUTCH;out of, from;stopwords-original.csv
+sind;GERMAN;are;stopwords-original.csv
+fuimos;SPANISH;;stopwords-original.csv
+inbunden;SWEDISH;;stopwords-new-SW-20111107.csv
+habéis;SPANISH;;stopwords-original.csv
+detta;SWEDISH;this/that;stopwords-original.csv
+vous;FRENCH;you;stopwords-original.csv
+zwischen;GERMAN;between;stopwords-original.csv
+näille;FINNISH;these;stopwords-original.csv
+jolla;FINNISH;who which;stopwords-original.csv
+nossas;PORTUGUESE;;stopwords-original.csv
+tuvieses;SPANISH;;stopwords-original.csv
+fôssemos;PORTUGUESE;;stopwords-original.csv
+εἴμι;GREEK;;stopwords-original.csv
+tuviesen;SPANISH;;stopwords-original.csv
+eussent;FRENCH;;stopwords-original.csv
+their;ENGLISH;possessive adjective;stopwords-original.csv
+keinem;GERMAN;;stopwords-original.csv
+dieselbe;GERMAN;;stopwords-original.csv
+keines;GERMAN;;stopwords-original.csv
+ge;DUTCH;'thou', still used in Belgium and south Netherlands;stopwords-original.csv
+tivesse;PORTUGUESE;;stopwords-original.csv
+míos;SPANISH;;stopwords-original.csv
+näinä;FINNISH;these;stopwords-original.csv
+until;ENGLISH;;stopwords-original.csv
+keinen;GERMAN;;stopwords-original.csv
+ollut;FINNISH;;stopwords-original.csv
+estavam;PORTUGUESE;;stopwords-original.csv
+fr;SWEDISH;;stopwords-new-SW-20111107.csv
+estuviéramos;SPANISH;;stopwords-original.csv
+estavas;PORTUGUESE;;stopwords-new-PT-20110831.csv
+geen;DUTCH;none;stopwords-original.csv
+niiden;FINNISH;they;stopwords-original.csv
+tuohon;FINNISH;that;stopwords-original.csv
+tiene;SPANISH;;stopwords-original.csv
+he;ENGLISH|FINNISH|SPANISH;subject|they|;stopwords-original.csv
+σόσ;GREEK;;stopwords-original.csv
+houveríamos;PORTUGUESE;;stopwords-original.csv
+estando;SPANISH;;stopwords-original.csv
+ha;SPANISH|SWEDISH;|have;stopwords-original.csv
+tuvisteis;SPANISH;;stopwords-original.csv
+εἰσ;GREEK;;stopwords-original.csv
+ait;FRENCH;;stopwords-original.csv
+sinussa;FINNISH;you;stopwords-original.csv
+du;FRENCH|GERMAN|SWEDISH;de + le|thou|you;stopwords-original.csv
+mesmos;PORTUGUESE;same;stopwords-new-PT-20110831.csv
+aurions;FRENCH;;stopwords-original.csv
+seront;FRENCH;;stopwords-original.csv
+serons;FRENCH;;stopwords-original.csv
+aie;FRENCH;;stopwords-original.csv
+tendremos;SPANISH;;stopwords-original.csv
+de;DUTCH|FRENCH|PORTUGUESE|SPANISH|SWEDISH;the|of|of, from|from, of|they, these/those;stopwords-original.csv|stopwords-new-SW-20111107.csv
+tereis;PORTUGUESE;;stopwords-new-PT-20110831.csv
+ette;FINNISH;;stopwords-original.csv
+estemos;SPANISH;;stopwords-original.csv
+meille;FINNISH;we;stopwords-original.csv
+ellos;SPANISH;they;stopwords-original.csv
+sinusta;FINNISH;you;stopwords-original.csv
+warst;GERMAN;wast;stopwords-original.csv
+habríais;SPANISH;;stopwords-original.csv
+quando;PORTUGUESE;when;stopwords-original.csv
+tiveste;PORTUGUESE;;stopwords-new-PT-20110831.csv
+won't;ENGLISH;;stopwords-original.csv
+el;SPANISH;the;stopwords-original.csv
+what;ENGLISH;;stopwords-original.csv
+ej;SWEDISH;nor;stopwords-original.csv|stopwords-new-SW-20111107.csv
+ei;FINNISH;;stopwords-original.csv
+tuolla;FINNISH;that;stopwords-original.csv
+em;PORTUGUESE;in;stopwords-original.csv
+et;FINNISH|FRENCH;|and;stopwords-original.csv
+tuolle;FINNISH;that;stopwords-original.csv
+ὑπό;GREEK;;stopwords-original.csv
+reeds;DUTCH;already;stopwords-original.csv
+destas;PORTUGUESE;de + estas;stopwords-new-PT-20110831.csv
+tältä;FINNISH;this;stopwords-original.csv
+algumas;PORTUGUESE;some;stopwords-new-PT-20110831.csv
+auraient;FRENCH;;stopwords-original.csv
+bx;SWEDISH;;stopwords-new-SW-20111107.csv
+doch;DUTCH|GERMAN;yet, but etc|(several meanings);stopwords-original.csv
+mukaan;FINNISH;according to;stopwords-original.csv
+bt;SWEDISH;;stopwords-new-SW-20111107.csv
+couldn't;ENGLISH;;stopwords-original.csv
+would;ENGLISH;;stopwords-original.csv
+bl;SWEDISH;;stopwords-new-SW-20111107.csv
+any;ENGLISH;;stopwords-original.csv
+habríamos;SPANISH;;stopwords-original.csv
+tinha;PORTUGUESE;;stopwords-original.csv
+bd;SWEDISH;;stopwords-new-SW-20111107.csv
+be;ENGLISH;infinitive;stopwords-original.csv
+ang;SWEDISH;;stopwords-new-SW-20111107.csv
+houvéramos;PORTUGUESE;;stopwords-original.csv
+een;DUTCH;a, an, one;stopwords-original.csv
+daar;DUTCH;(1) there, (2) because;stopwords-original.csv
+ἐάν;GREEK;;stopwords-original.csv
+tiver;PORTUGUESE;;stopwords-original.csv
+jolta;FINNISH;who which;stopwords-original.csv
+οὐδείσ;GREEK;;stopwords-original.csv
+estuviesen;SPANISH;;stopwords-original.csv
+estuvieses;SPANISH;;stopwords-original.csv
+doing;ENGLISH;-ing form;stopwords-original.csv
+ce;FRENCH;this;stopwords-original.csv
+does;ENGLISH;-s form;stopwords-original.csv
+med;SWEDISH;with;stopwords-original.csv|stopwords-new-SW-20111107.csv
+tengamos;SPANISH;;stopwords-original.csv
+könnte;GERMAN;could;stopwords-original.csv
+doen;DUTCH;to do, to make;stopwords-original.csv
+σύν;GREEK;;stopwords-original.csv
+τήν;GREEK;;stopwords-original.csv
+tuvimos;SPANISH;;stopwords-original.csv
+meu;PORTUGUESE;my;stopwords-original.csv
+étions;FRENCH;;stopwords-original.csv
+met;DUTCH;with, by;stopwords-original.csv
+ici;FRENCH;here;stopwords-original.csv
+meillä;FINNISH;we;stopwords-original.csv
+ich;GERMAN;I;stopwords-original.csv
+outras;PORTUGUESE;others;stopwords-new-PT-20110831.csv
+τῷ;GREEK;;stopwords-original.csv
+men;DUTCH|SWEDISH;people, 'one'|but;stopwords-original.csv
+vårt;SWEDISH;our;stopwords-original.csv
+γα^;GREEK;;stopwords-original.csv
+all;ENGLISH;;stopwords-original.csv
+más;SPANISH;more;stopwords-original.csv
+ali;PORTUGUESE;there;stopwords-new-PT-20110831.csv
+τίσ;GREEK;;stopwords-original.csv
+että;FINNISH;that;stopwords-original.csv
+at;ENGLISH;;stopwords-original.csv
+habías;SPANISH;;stopwords-original.csv
+ar;IRISH;on;stopwords-new-IE-20110906.csv
+τῇ;GREEK;;stopwords-original.csv
+habían;SPANISH;;stopwords-original.csv
+av;SWEDISH;of;stopwords-original.csv|stopwords-new-SW-20111107.csv
+estivésseis;PORTUGUESE;;stopwords-new-PT-20110831.csv
+våra;SWEDISH;our;stopwords-original.csv
+destes;PORTUGUESE;de + estes;stopwords-new-PT-20110831.csv
+ao;PORTUGUESE;a + o;stopwords-original.csv
+i'll;ENGLISH;;stopwords-original.csv
+ayons;FRENCH;;stopwords-original.csv
+heissä;FINNISH;they;stopwords-original.csv
+nu;DUTCH|SWEDISH;now|now;stopwords-original.csv
+tivéramos;PORTUGUESE;;stopwords-original.csv
+nr;SWEDISH;;stopwords-new-SW-20111107.csv
+no;ENGLISH|PORTUGUESE|SPANISH;|em + o|no;stopwords-original.csv
+door;DUTCH;through by;stopwords-original.csv
+muito;PORTUGUESE;much;stopwords-original.csv
+deinem;GERMAN;;stopwords-original.csv
+deinen;GERMAN;;stopwords-original.csv
+estabais;SPANISH;;stopwords-original.csv
+tendríamos;SPANISH;;stopwords-original.csv
+eller;SWEDISH;or (else);stopwords-original.csv|stopwords-new-SW-20111107.csv
+of;DUTCH|ENGLISH;or, whether, if|;stopwords-original.csv
+lui;FRENCH;him;stopwords-original.csv
+outros;PORTUGUESE;others;stopwords-new-PT-20110831.csv
+deiner;GERMAN;;stopwords-original.csv
+johon;FINNISH;who which;stopwords-original.csv
+om;DUTCH|SWEDISH;round, about, for etc|if, around, about;stopwords-original.csv|stopwords-new-SW-20111107.csv
+tuvieron;SPANISH;;stopwords-original.csv
+on;ENGLISH|FINNISH|FRENCH;||one;stopwords-original.csv
+muita;PORTUGUESE;much;stopwords-new-PT-20110831.csv
+that's;ENGLISH;;stopwords-original.csv
+ou;FRENCH|PORTUGUESE;where|or;stopwords-original.csv
+op;DUTCH;on, upon, at, in, up, used up;stopwords-original.csv
+aan;DUTCH;on, upon, to (as dative);stopwords-original.csv
+seraient;FRENCH;;stopwords-original.csv
+yli;FINNISH;over, across;stopwords-original.csv
+weiter;GERMAN;further;stopwords-original.csv
+estivermos;PORTUGUESE;;stopwords-original.csv
+serions;FRENCH;;stopwords-original.csv
+numa;PORTUGUESE;em + uma;stopwords-original.csv
+serien;SWEDISH;;stopwords-new-SW-20111107.csv
+tenemos;SPANISH;;stopwords-original.csv
+deles;PORTUGUESE;of them;stopwords-original.csv
+seriez;FRENCH;;stopwords-original.csv
+most;ENGLISH;;stopwords-original.csv
+minulla;FINNISH;I;stopwords-original.csv
+él;SPANISH;he;stopwords-original.csv
+näitä;FINNISH;these;stopwords-original.csv
+tivésseis;PORTUGUESE;;stopwords-new-PT-20110831.csv
+ma;FRENCH;my (fem);stopwords-original.csv
+és;PORTUGUESE;;stopwords-new-PT-20110831.csv
+me;DUTCH|ENGLISH|FINNISH|FRENCH|PORTUGUESE|SPANISH;me|object|we|me|me|me;stopwords-original.csv
+dele;PORTUGUESE;of him;stopwords-original.csv
+tendríais;SPANISH;;stopwords-original.csv
+ayez;FRENCH;;stopwords-original.csv
+olet;FINNISH;;stopwords-original.csv
+olen;FINNISH;;stopwords-original.csv
+my;ENGLISH;possessive adjective;stopwords-original.csv
+minulle;FINNISH;I;stopwords-original.csv
+tuolta;FINNISH;that;stopwords-original.csv
+ἐκ;GREEK;;stopwords-original.csv
+na;DUTCH|PORTUGUESE|IRISH;after, near|em + a|the;stopwords-original.csv|stopwords-new-IE-20110906.csv
+vilka;SWEDISH;who, that;stopwords-original.csv
+ἐν;GREEK;;stopwords-original.csv
+ihr;GERMAN;you, to her;stopwords-original.csv
+estaban;SPANISH;;stopwords-original.csv
+ne;FINNISH|FRENCH;they|not;stopwords-original.csv
+dus;DUTCH;so, consequently;stopwords-original.csv
+já;PORTUGUESE;already, now;stopwords-original.csv
+arkivkartong;SWEDISH;;stopwords-new-SW-20111107.csv
+ni;SPANISH|SWEDISH;nor|you;stopwords-original.csv
+estabas;SPANISH;;stopwords-original.csv
+οὐδέ;GREEK;;stopwords-original.csv
+ju;SWEDISH;why;stopwords-original.csv
+being;ENGLISH;-ing form;stopwords-original.csv
+noilta;FINNISH;those;stopwords-original.csv
+estão;PORTUGUESE;;stopwords-original.csv
+dein;GERMAN;thy;stopwords-original.csv
+leur;FRENCH;their;stopwords-original.csv
+aies;FRENCH;;stopwords-original.csv
+we'd;ENGLISH;;stopwords-original.csv
+inb;SWEDISH;;stopwords-new-SW-20111107.csv
+when;ENGLISH;;stopwords-original.csv
+ἐγώ;GREEK;;stopwords-original.csv
+unter;GERMAN;under;stopwords-original.csv
+τισ;GREEK;;stopwords-original.csv
+tus;SPANISH;tu plural;stopwords-original.csv
+habidos;SPANISH;;stopwords-original.csv
+le;FRENCH|SPANISH|IRISH;the|to him, her|with;stopwords-original.csv|stopwords-new-IE-20110906.csv
+há;PORTUGUESE;;stopwords-original.csv
+tuo;FINNISH;that;stopwords-original.csv
+tua;PORTUGUESE;;stopwords-original.csv
+agora;PORTUGUESE;now;stopwords-new-PT-20110831.csv
+estás;SPANISH|PORTUGUESE;|;stopwords-original.csv|stopwords-new-PT-20110831.csv
+ht;SWEDISH;;stopwords-new-SW-20111107.csv
+fuiste;SPANISH;;stopwords-original.csv
+delar;SWEDISH;;stopwords-new-SW-20111107.csv
+ἔτι;GREEK;;stopwords-original.csv
+då;SWEDISH;then, when;stopwords-original.csv
+zijn;DUTCH;(1) to be, being, (2) his, one's, its;stopwords-original.csv
+están;SPANISH;;stopwords-original.csv
+jede;GERMAN;each, every;stopwords-original.csv
+åt;SWEDISH;to;stopwords-original.csv|stopwords-new-SW-20111107.csv
+år;SWEDISH;;stopwords-new-SW-20111107.csv
+olin;FINNISH;;stopwords-original.csv
+sereis;PORTUGUESE;;stopwords-new-PT-20110831.csv
+those;ENGLISH;;stopwords-original.csv
+is;DUTCH|ENGLISH;is|-s form (3rd person, present);stopwords-original.csv
+it;ENGLISH;subject and object;stopwords-original.csv
+ik;DUTCH;I, the ego;stopwords-original.csv
+il;FRENCH;he;stopwords-original.csv
+olit;FINNISH;;stopwords-original.csv
+je;DUTCH|FRENCH;you|I;stopwords-original.csv
+än;SWEDISH;than;stopwords-original.csv
+är;SWEDISH;is;stopwords-original.csv|stopwords-new-SW-20111107.csv
+ils;FRENCH;they;stopwords-original.csv
+meidän;FINNISH;we;stopwords-original.csv
+ja;DUTCH|FINNISH;yes, of course|and;stopwords-original.csv
+kein;GERMAN;no;stopwords-original.csv
+don;IRISH;for;stopwords-new-IE-20110906.csv
+tuvieseis;SPANISH;;stopwords-original.csv
+só;PORTUGUESE;only, just;stopwords-original.csv
+miksi;FINNISH;which what;stopwords-original.csv
+nesses;PORTUGUESE;em + esses;stopwords-new-PT-20110831.csv
+vosotras;SPANISH;you;stopwords-original.csv
+estaría;SPANISH;;stopwords-original.csv
+skulle;SWEDISH;'sake';stopwords-original.csv
+tuyas;SPANISH;;stopwords-original.csv
+moi;FRENCH;me;stopwords-original.csv
+så;SWEDISH;so (also: seed);stopwords-original.csv|stopwords-new-SW-20111107.csv
+gegen;GERMAN;towards;stopwords-original.csv
+how;ENGLISH;;stopwords-original.csv
+mon;FRENCH;my (masc);stopwords-original.csv
+sí;SPANISH;himself etc;stopwords-original.csv
+eussiez;FRENCH;;stopwords-original.csv
+vocês;PORTUGUESE;you (plural);stopwords-original.csv
+nosso;PORTUGUESE;our;stopwords-original.csv
+estaréis;SPANISH;;stopwords-original.csv
+estiveres;PORTUGUESE;;stopwords-new-PT-20110831.csv
+hon;SWEDISH;she;stopwords-original.csv
+estiverem;PORTUGUESE;;stopwords-original.csv
+tälle;FINNISH;this;stopwords-original.csv
+hos;SWEDISH;;stopwords-new-SW-20111107.csv
+minhas;PORTUGUESE;;stopwords-original.csv
+teníais;SPANISH;;stopwords-original.csv
+estávamos;PORTUGUESE;;stopwords-original.csv
+we;ENGLISH;subject;stopwords-original.csv
+nossa;PORTUGUESE;;stopwords-original.csv
+através;PORTUGUESE;through;stopwords-new-PT-20110831.csv
+vi;SWEDISH;we;stopwords-original.csv
+tähän;FINNISH;this;stopwords-original.csv
+até;PORTUGUESE;up to;stopwords-original.csv
+vt;SWEDISH;;stopwords-new-SW-20111107.csv
+hoe;DUTCH;how, why;stopwords-original.csv
+pero;SPANISH;pero;stopwords-original.csv
+tengan;SPANISH;;stopwords-original.csv
+mía;SPANISH;;stopwords-original.csv
+when's;ENGLISH;;stopwords-original.csv
+uw;DUTCH;your;stopwords-original.csv
+minulta;FINNISH;I;stopwords-original.csv
+tengas;SPANISH;;stopwords-original.csv
+mío;SPANISH;mine;stopwords-original.csv
+quanto;PORTUGUESE;how much, as;stopwords-new-PT-20110831.csv
+häneen;FINNISH;he she;stopwords-original.csv
+worden;DUTCH;to become, grow, get;stopwords-original.csv
+estamos;PORTUGUESE|SPANISH;|;stopwords-original.csv
+estejais;PORTUGUESE;;stopwords-new-PT-20110831.csv
+ur;SWEDISH;;stopwords-new-SW-20111107.csv
+dnr;SWEDISH;;stopwords-new-SW-20111107.csv
+auront;FRENCH;;stopwords-original.csv
+aurons;FRENCH;;stopwords-original.csv
+un;FRENCH|SPANISH;a|a;stopwords-original.csv
+cannot;ENGLISH;;stopwords-original.csv
+somos;PORTUGUESE|SPANISH;|;stopwords-original.csv
+fussiez;FRENCH;;stopwords-original.csv
+para;PORTUGUESE|SPANISH;for|for;stopwords-original.csv
+elas;PORTUGUESE;they;stopwords-original.csv
+up;ENGLISH;;stopwords-original.csv
+οὗτοσ;GREEK;;stopwords-original.csv
+dess;SWEDISH;its;stopwords-original.csv|stopwords-new-SW-20111107.csv
+eûtes;FRENCH;;stopwords-original.csv
+tu;FRENCH|PORTUGUESE|SPANISH;thou|thou|thy;stopwords-original.csv
+doesn't;ENGLISH;;stopwords-original.csv
+pelas;PORTUGUESE;per + as;stopwords-original.csv
+to;ENGLISH;;stopwords-original.csv
+têm;PORTUGUESE;;stopwords-new-PT-20110831.csv
+pelo;PORTUGUESE;per + o;stopwords-original.csv
+ὁ;GREEK;;stopwords-original.csv
+olisin;FINNISH;;stopwords-original.csv
+estuviste;SPANISH;;stopwords-original.csv
+på;SWEDISH;on;stopwords-original.csv|stopwords-new-SW-20111107.csv
+didn't;ENGLISH;;stopwords-original.csv
+était;FRENCH;;stopwords-original.csv
+otro;SPANISH;other;stopwords-original.csv
+olisit;FINNISH;;stopwords-original.csv
+ta;FRENCH;thy (fem);stopwords-original.csv
+su;SPANISH;his, her;stopwords-original.csv
+pela;PORTUGUESE;per + a;stopwords-original.csv
+mesmas;PORTUGUESE;same;stopwords-new-PT-20110831.csv
+st;SWEDISH;;stopwords-new-SW-20111107.csv
+fusse;FRENCH;;stopwords-original.csv
+sn;SWEDISH;;stopwords-new-SW-20111107.csv
+finnes;SWEDISH;;stopwords-new-SW-20111107.csv
+tém;PORTUGUESE;;stopwords-original.csv
+estiveras;PORTUGUESE;;stopwords-new-PT-20110831.csv
+otra;SPANISH;other;stopwords-original.csv
+após;PORTUGUESE;after;stopwords-new-PT-20110831.csv
+mitkä;FINNISH;(pl);stopwords-original.csv
+teníamos;SPANISH;;stopwords-original.csv
+joilta;FINNISH;(pl);stopwords-original.csv
+ὦ;GREEK;;stopwords-original.csv
+tenhas;PORTUGUESE;;stopwords-new-PT-20110831.csv
+sa;FRENCH|IRISH;his, her (fem)|in;stopwords-original.csv|stopwords-new-IE-20110906.csv
+houveria;PORTUGUESE;;stopwords-original.csv
+estiveram;PORTUGUESE;;stopwords-original.csv|stopwords-new-PT-20110831.csv
+tengáis;SPANISH;;stopwords-original.csv
+tenham;PORTUGUESE;;stopwords-original.csv
+toi;FRENCH;thee;stopwords-original.csv
+tot;DUTCH;till, until;stopwords-original.csv
+även;SWEDISH;;stopwords-new-SW-20111107.csv
+ἐπί;GREEK;;stopwords-original.csv
+que;FRENCH|PORTUGUESE|SPANISH;that|who, that|who, that;stopwords-original.csv
+qu;FRENCH;que before vowel;stopwords-original.csv
+seines;GERMAN;;stopwords-original.csv
+denn;GERMAN;because;stopwords-original.csv
+seiner;GERMAN;;stopwords-original.csv
+qui;FRENCH;who;stopwords-original.csv
+too;ENGLISH;;stopwords-original.csv
+mí;SPANISH;me;stopwords-original.csv
+houveres;PORTUGUESE;;stopwords-new-PT-20110831.csv
+seinen;GERMAN;;stopwords-original.csv
+ἄν;GREEK;;stopwords-original.csv
+seinem;GERMAN;;stopwords-original.csv
+tenidas;SPANISH;;stopwords-original.csv
+ἤ;GREEK;;stopwords-original.csv
+eles;PORTUGUESE;they;stopwords-original.csv
+ἡ;GREEK;;stopwords-original.csv
+τοί;GREEK;;stopwords-original.csv
+serias;PORTUGUESE;;stopwords-new-PT-20110831.csv
+muy;SPANISH;very;stopwords-original.csv
+seriam;PORTUGUESE;;stopwords-original.csv
+estivemos;PORTUGUESE;;stopwords-original.csv
+τε;GREEK;;stopwords-original.csv
+τι;GREEK;;stopwords-original.csv
+tenidos;SPANISH;;stopwords-original.csv
+essas;PORTUGUESE;those;stopwords-original.csv
+temos;PORTUGUESE;;stopwords-original.csv
+shouldn't;ENGLISH;;stopwords-original.csv
+étant;FRENCH;;stopwords-original.csv
+está;PORTUGUESE|SPANISH;|;stopwords-original.csv
+τά;GREEK;;stopwords-original.csv
+kapsel;SWEDISH;;stopwords-new-SW-20111107.csv
+τί;GREEK;;stopwords-original.csv
+estivéssemos;PORTUGUESE;;stopwords-original.csv
+σύ;GREEK;;stopwords-original.csv
+estuvieron;SPANISH;;stopwords-original.csv
+ceci;FRENCH;this;stopwords-original.csv
+habíais;SPANISH;;stopwords-original.csv
+esté;SPANISH;;stopwords-original.csv
+mycket;SWEDISH;much;stopwords-original.csv
+did;ENGLISH;past;stopwords-original.csv
+wasn't;ENGLISH;;stopwords-original.csv
+he'll;ENGLISH;;stopwords-original.csv
+hayáis;SPANISH;;stopwords-original.csv
+olimme;FINNISH;;stopwords-original.csv
+ὑπέρ;GREEK;;stopwords-original.csv
+moet;DUTCH;noun 'spot/mote' and present form of 'to must';stopwords-original.csv
+det;SWEDISH;it, this/that;stopwords-original.csv|stopwords-new-SW-20111107.csv
+tuviéramos;SPANISH;;stopwords-original.csv
+qué;SPANISH;what?;stopwords-original.csv
+talvez;PORTUGUESE;perhaps;stopwords-new-PT-20110831.csv
+quê;PORTUGUESE;"what;stopwords-new-PT-20110831.csv
+isso;PORTUGUESE;that;stopwords-original.csv
+aos;PORTUGUESE;a + os;stopwords-original.csv
+habidas;SPANISH;;stopwords-original.csv
+contigo;PORTUGUESE;with you;stopwords-new-PT-20110831.csv
+daß;GERMAN;that;stopwords-original.csv
+del;SPANISH|SWEDISH;de + el|;stopwords-original.csv|stopwords-new-SW-20111107.csv
+teus;PORTUGUESE;;stopwords-original.csv
+fora;PORTUGUESE;;stopwords-original.csv
+min;SWEDISH;my;stopwords-original.csv
+mim;PORTUGUESE;me;stopwords-new-PT-20110831.csv
+mis;SPANISH;mi plural;stopwords-original.csv
+isto;PORTUGUESE;this;stopwords-original.csv
+diese;GERMAN;;stopwords-original.csv
+haya;SPANISH;;stopwords-original.csv
+hur;SWEDISH;how;stopwords-original.csv
+should;ENGLISH;;stopwords-original.csv
+terá;PORTUGUESE;;stopwords-original.csv
+teremos;PORTUGUESE;;stopwords-original.csv
+nous;FRENCH;we;stopwords-original.csv
+aquela;PORTUGUESE;that;stopwords-original.csv
+mig;SWEDISH;me;stopwords-original.csv
+mustn't;ENGLISH;;stopwords-original.csv
+aquele;PORTUGUESE;that;stopwords-original.csv
+mij;DUTCH;me;stopwords-original.csv
+själv;SWEDISH;myself, yourself etc;stopwords-original.csv
+utan;SWEDISH;without;stopwords-original.csv
+tem;PORTUGUESE;;stopwords-original.csv
+nessas;PORTUGUESE;em + essas;stopwords-new-PT-20110831.csv
+hadn't;ENGLISH;;stopwords-original.csv
+joille;FINNISH;(pl);stopwords-original.csv
+estuvierais;SPANISH;;stopwords-original.csv
+soyons;FRENCH;;stopwords-original.csv
+hasn't;ENGLISH;;stopwords-original.csv
+tuyos;SPANISH;;stopwords-original.csv
+einmal;GERMAN;once;stopwords-original.csv
+todavia;PORTUGUESE;;stopwords-new-PT-20110831.csv
+noiden;FINNISH;those;stopwords-original.csv
+esses;PORTUGUESE;those;stopwords-original.csv
+qualquer;PORTUGUESE;any;stopwords-new-PT-20110831.csv
+sinuun;FINNISH;you;stopwords-original.csv
+estivestes;PORTUGUESE;;stopwords-new-PT-20110831.csv
+hubieseis;SPANISH;;stopwords-original.csv
+deze;DUTCH;this;stopwords-original.csv
+estarás;SPANISH;;stopwords-original.csv
+sinun;FINNISH;you;stopwords-original.csv
+estarán;SPANISH;;stopwords-original.csv
+himself;ENGLISH;reflexive;stopwords-original.csv
+sinut;FINNISH;you;stopwords-original.csv
+joilla;FINNISH;(pl);stopwords-original.csv
+teu;PORTUGUESE;thy;stopwords-original.csv
+sinua;FINNISH;you;stopwords-original.csv
+other;ENGLISH;;stopwords-original.csv
+habremos;SPANISH;;stopwords-original.csv
+have;ENGLISH;simple;stopwords-original.csv
+fôramos;PORTUGUESE;;stopwords-original.csv
+ze;DUTCH;she, her, they, them;stopwords-original.csv
+nuestro;SPANISH;ours;stopwords-original.csv
+din;SWEDISH;thy;stopwords-original.csv
+dir;GERMAN;to thee;stopwords-original.csv
+dit;DUTCH;this;stopwords-original.csv
+zo;DUTCH;so, thus, in this way;stopwords-original.csv
+nuestra;SPANISH;;stopwords-original.csv
+dig;SWEDISH;you;stopwords-original.csv
+tuvieras;SPANISH;;stopwords-original.csv
+ya;SPANISH;already;stopwords-original.csv
+tú;SPANISH;thou;stopwords-original.csv
+att;SWEDISH;to (with infinitive);stopwords-original.csv|stopwords-new-SW-20111107.csv
+the;ENGLISH;;stopwords-original.csv
+éramos;PORTUGUESE|SPANISH;|;stopwords-original.csv
+tínhamos;PORTUGUESE;;stopwords-original.csv
+τό;GREEK;;stopwords-original.csv
+yo;SPANISH;I;stopwords-original.csv
+tuvieran;SPANISH;;stopwords-original.csv
