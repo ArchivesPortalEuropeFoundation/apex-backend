@@ -36,19 +36,19 @@ public class APEnetConfigListener implements ServletContextListener {
 
 	@Override
 	public final void contextInitialized(ServletContextEvent servletContextEvent) {
-		initLog4j(servletContextEvent.getServletContext());
-		contextInitializedInternal(servletContextEvent.getServletContext());
-	}
-	public void contextInitializedInternal(ServletContext servletContext) {
 		try {
-			ApeConfig apeConfig = new ApeConfig();
-			init(servletContext,apeConfig);
-			apeConfig.finalizeConfigPhase();
-			APEnetUtilities.setConfig(apeConfig);
+			initLog4j(servletContextEvent.getServletContext());
+			contextInitializedInternal(servletContextEvent.getServletContext());
 		} catch (RuntimeException e){
 			log.fatal("Fatal error while initializing: " + e.getMessage(), e);
 			throw e;
 		}
+	}
+	public void contextInitializedInternal(ServletContext servletContext) {
+			ApeConfig apeConfig = new ApeConfig();
+			init(servletContext,apeConfig);
+			apeConfig.finalizeConfigPhase();
+			APEnetUtilities.setConfig(apeConfig);
 	}
 	
 	protected void init(ServletContext servletContext, ApeConfig config){
