@@ -53,7 +53,7 @@ public enum XmlType {
     }
     public static XmlType getTypeBySolrPrefix(String solrPrefix){
         for(XmlType type : XmlType.values()){
-            if(type.getSolrPrefix().equals(solrPrefix))
+            if(type.getSolrPrefix() != null && type.getSolrPrefix().equals(solrPrefix))
                 return type;
         }
         return null;
