@@ -95,6 +95,14 @@ public final class DisplayUtils {
 
 	public static String encodeHtml(String string) {
 		return StringEscapeUtils.escapeHtml(string);
+		
+		
+	}
+	public static String escapeJavascript(String string){
+		if (string != null){
+			return StringEscapeUtils.escapeHtml(string).replaceAll("'", "\\\\'");
+		}
+		return null;		
 	}
 
 }
