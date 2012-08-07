@@ -76,7 +76,12 @@ public final class DisplayUtils {
 			return source;
 		}
 	}
-
+	public static String encodeHtmlWithHighlighting(String source) {
+		if (source != null) {
+			return StringEscapeUtils.escapeHtml(source).replaceAll(EM_START_REPLACED, EM_START).replaceAll(EM_END_REPLACED, EM_END);
+		}
+		return null;
+	}
 	public static String substring(String string, int max) {
 		if (string != null && (string.length() > max) && (max - DOTS_LENGTH > MIN_SIZE)) {
 			return string.substring(ZERO, max - DOTS_LENGTH) + DOTS;
