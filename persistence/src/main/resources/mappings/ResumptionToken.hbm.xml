@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 04-abr-2011 10:01:29 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="eu.apenet.persistence.vo.ResumptionToken" table="resumption_token" schema="public">

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 02-ago-2011 11:52:35 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="eu.apenet.persistence.vo.User" table="user" schema="public">
