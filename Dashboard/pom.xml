@@ -98,7 +98,7 @@
 					<dependency>
 						<groupId>postgresql</groupId>
 						<artifactId>postgresql</artifactId>
-						<version>8.3-603.jdbc4</version>
+						<version>${postgresql.version}</version>
 					</dependency>
 				</dependencies>
 			</plugin>
