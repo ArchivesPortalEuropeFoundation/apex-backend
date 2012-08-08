@@ -24,7 +24,7 @@ public abstract class AbstractHibernateTestCase {
 
 	public AbstractHibernateTestCase(String hibernateConfigurationLocation, boolean isDashboard) {
         if(System.getProperty("db_url") == null) {
-            System.setProperty("db_url", "jdbc:postgresql:apexv1-test");
+            System.setProperty("db_url", "jdbc:postgresql:apexv1");
             System.setProperty("db_username_dash", "apenet_dashboard");
             System.setProperty("db_pwd_dash", "AP3n3tSQLD4sh");
         }
