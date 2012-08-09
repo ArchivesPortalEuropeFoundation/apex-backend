@@ -14,6 +14,7 @@ import eu.apenet.persistence.hibernate.HibernateUtil;
  * @author bverhoef
  * 
  */
+@Deprecated
 public class HibernateListener implements ServletContextListener {
 	private static final Logger log = Logger.getLogger(HibernateListener.class);
 	private static final String CONFIG_PATH = "/hibernate.cfg.xml";

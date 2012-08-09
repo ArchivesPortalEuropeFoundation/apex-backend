@@ -19,6 +19,7 @@ import eu.apenet.persistence.hibernate.HibernateUtil;
  * @author bverhoef
  *
  */
+@Deprecated
 public class HibernateFilter implements Filter {
 
     private static final Logger log = Logger.getLogger(HibernateFilter.class);

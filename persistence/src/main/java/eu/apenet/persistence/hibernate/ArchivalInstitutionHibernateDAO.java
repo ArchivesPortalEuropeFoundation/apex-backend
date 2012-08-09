@@ -43,21 +43,7 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 
 	
 
-	
-	@SuppressWarnings("unchecked")
-	public List<ArchivalInstitution> getGroupsAndArchivalInstitutions(Integer pId, String sortValue,
-			boolean ascending) {
-		long startTime = System.currentTimeMillis();
-		List<ArchivalInstitution> results = new ArrayList<ArchivalInstitution>();
-		Criteria criteria = createGroupsArchivalInstitutionCriteria(pId, sortValue, ascending);
-		results = criteria.list();
-		long endTime = System.currentTimeMillis();
-		if (log.isDebugEnabled()) {
-			log.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
-		}
-				
-		return results;
-	}
+
 	
 	@SuppressWarnings("unchecked")
 	public List<ArchivalInstitution> getGroupsAndArchivalInstitutionsByCountryId(Integer countryId, String sortValue,
@@ -252,48 +238,6 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 		
 		return criteria;
 	}
-	
-	
-	private Criteria createGroupsArchivalInstitutionCriteria(Integer pId, String sortValue, boolean ascending ) {
-		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
-		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		criteria = criteria.createAlias("archivalInstitution.partner", "partner");
-
-		if (pId != null) {
-			criteria.add(Restrictions.eq("partner.PId", pId.intValue()));
-		}		
-		
-		if ("pId".equals(sortValue)) {
-			if (ascending) {
-				criteria.addOrder(Order.asc("partner.PId"));
-			} else {
-				criteria.addOrder(Order.desc("partner.PId"));
-			}
-		}
-		if ("ainame".equals(sortValue)) {
-			if (ascending) {
-				criteria.addOrder(Order.asc("archivalInstitution.ainame"));
-			} else {
-				criteria.addOrder(Order.desc("archivalInstitution.ainame"));
-			}
-		}
-		if ("aiId".equals(sortValue)) {
-			if (ascending) {
-				criteria.addOrder(Order.asc("archivalInstitution.aiId"));
-			} else {
-				criteria.addOrder(Order.desc("archivalInstitution.aiId"));
-			}
-		}	
-		if ("alorder".equals(sortValue)) {
-			if (ascending) {
-				criteria.addOrder(Order.asc("archivalInstitution.alorder"));
-			} else {
-				criteria.addOrder(Order.desc("archivalInstitution.alorder"));
-			}
-		}	
-		
-		return criteria;
-	}
 
 	
 	
@@ -302,8 +246,8 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 	public List<ArchivalInstitution> getRootArchivalInstitutionsByCountryId(Integer countryId) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		criteria.add(Restrictions.eq("archivalInstitution.countryId",countryId));
-		criteria.add(Restrictions.isNull("archivalInstitution.archivalInstitution.aiId"));
+		criteria.add(Restrictions.eq("countryId",countryId));
+		criteria.add(Restrictions.isNull("archivalInstitution"));
 		return criteria.list();
 	}
 

@@ -13,6 +13,7 @@ import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Restrictions;
 
 import eu.apenet.persistence.dao.GenericAbstractDAO;
+import eu.archivesportaleurope.persistence.jpa.dao.AbstractJpaDAO;
 /**
  * 
  * The abstract DAO that implements the basic CRUD operations and other nice features based in Criteria API.
@@ -22,72 +23,10 @@ import eu.apenet.persistence.dao.GenericAbstractDAO;
  * @param <T>
  * @param <ID>
  */
-public abstract class AbstractHibernateDAO <T, ID extends Serializable> extends GenericAbstractDAO <T,ID> {
-	
-	 public void storeAndDeleteBatch(Collection entitiesToBeStored, Collection entitiesToBeDeleted) {
-         try {
-                 HibernateUtil.beginDatabaseTransaction();
-                 for (Object entity : entitiesToBeStored) {
-                         getSession().saveOrUpdate(entity);
-                 }
-                 for (Object entity : entitiesToBeDeleted) {
-                         getSession().delete(entity);
-                 }                        
-                 HibernateUtil.commitDatabaseTransaction();
-         } catch (HibernateException de) {
-                 HibernateUtil.rollbackDatabaseTransaction();
-                 throw de;
-         }
-	 }
-
-    /*
-     * This behavior is refactoring and go up to GenericAbstractDAO class
-     * 
-     * 
-	private Class<T> persistentClass;
-
-	@SuppressWarnings("unchecked")
-	public AbstractHibernateDAO() {
-		this.persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
-				.getActualTypeArguments()[0];
-	}
+@Deprecated
+public abstract class AbstractHibernateDAO <T, ID extends Serializable> extends AbstractJpaDAO<T, ID> {
 
 
-	protected Class<T> getPersistentClass() {
-		return persistentClass;
-	}*/
-
-	
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	public T findById(ID id) {
-		return (T) getSession().get(getPersistentClass(), id);
-	}
-
-    @Override
-    @SuppressWarnings("unchecked")
-	public T findById(ID id, Class clazz){
-        return (T) getSession().get(clazz, id);
-    }
-
-	/*
-	 * This method looks like deprecated in respect to the lockMode. Pending of debate
-	 * That's the reason because is commented in 
-	 * 
-	
-    @Override
-    @SuppressWarnings("unchecked")
-    public T findById(ID id, boolean lock) {
-        T entity;
-        if (lock)
-            //entity = (T) getSession().load(getPersistentClass(), id, LockMode.UPGRADE);
-        	entity = (T) getSession().get(getPersistentClass(), id, LockMode.UPGRADE);
-        	
-        else
-            entity = (T) getSession().load(getPersistentClass(), id);
-        return entity;
-    }*/
 	
 	
 	@Override
@@ -130,92 +69,7 @@ public abstract class AbstractHibernateDAO <T, ID extends Serializable> extends 
 		return findByCriteria((Class<? extends T>) exampleInstance.getClass(), example);
 	}
 
-	@Override
-	public void store(T entity) {
-		try {
-			HibernateUtil.beginDatabaseTransaction();
-			getSession().saveOrUpdate(entity);
-			HibernateUtil.commitDatabaseTransaction();
-		} catch (HibernateException de) {
-			HibernateUtil.rollbackDatabaseTransaction();
-			throw de;
-		}
-	}
 
-	
-	@Override
-	public void store(Collection<T> entities) {
-		try {
-			HibernateUtil.beginDatabaseTransaction();
-			for (T entity : entities) {
-				getSession().saveOrUpdate(entity);
-			}
-			HibernateUtil.commitDatabaseTransaction();
-		} catch (HibernateException de) {
-			HibernateUtil.rollbackDatabaseTransaction();
-			throw de;
-		}
-	}
-
-	@Override
-	public void delete(T entity) {
-		try {
-			HibernateUtil.beginDatabaseTransaction();
-			getSession().delete(entity);
-			HibernateUtil.commitDatabaseTransaction();
-		} catch (HibernateException de) {
-			HibernateUtil.rollbackDatabaseTransaction();
-			throw de;
-		}
-	}
-	
-	
-	
-	
-	//public void delete(Class theClass, Serializable id) throws HibernateException {
-	
-	//	public void deleteById(Class theClass, Serializable id) {
-	//		getSession().delete(theClass, new Integer((id));
-	//	}
-	//	
-	
-    @Override
-    public T update (T entity) {
-    	try {
-			HibernateUtil.beginDatabaseTransaction();
-			getSession().update(entity);
-			HibernateUtil.commitDatabaseTransaction();
-		} catch (HibernateException de) {
-			HibernateUtil.rollbackDatabaseTransaction();
-			throw de;
-		}
-		return entity;
-    }
-	
-	
-	
-	/*Simple methods. This methods are here to do easy the transition to the new structure of class.
-	 * Pending of discussion about structure of HibernateUtil...*/
-	
-    @Override
-    public T insertSimple (T entity) {
-        getSession().save(entity);
-        return entity;
-    }
-    
-  
-    @Override
-    public T updateSimple (T entity) {
-        getSession().update(entity);
-        return entity;
-    }
-
-    
-    @Override
-    public void deleteSimple (T entity) {
-        getSession().delete(entity);
-    }
-	
 
 
 	/**
@@ -246,11 +100,5 @@ public abstract class AbstractHibernateDAO <T, ID extends Serializable> extends 
 	protected Session getSession() {
 		return HibernateUtil.getDatabaseSession();
 	}
-	public void flush() {
-		getSession().flush();
-	}
 
-	public void clear() {
-		getSession().clear();
-	}
 }
