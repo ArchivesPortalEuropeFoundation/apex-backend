@@ -12,15 +12,17 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.NamingException;
+
 import eu.apenet.dashboard.infraestructure.PasswordGenerator;
 import eu.apenet.dashboard.security.cipher.BasicDigestPwd;
 import eu.apenet.persistence.dao.CountryDAO;
 import eu.apenet.persistence.dao.UserStateDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.hibernate.HibernateConfigurator;
 import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.UserRole;
 import eu.apenet.persistence.vo.UserState;
+import eu.archivesportaleurope.database.mock.DatabaseConfigurator;
 
 public class GenerateUsers {
 	private static final String URL = "jdbc:postgresql:apenet-november";
@@ -28,15 +30,13 @@ public class GenerateUsers {
 	private static final String PASSWORD = "apenet";
 	private static final String SEPARATOR = ";";
 
-	public static void main(String[] args) throws UnsupportedEncodingException, FileNotFoundException, NoSuchAlgorithmException {
+	public static void main(String[] args) throws UnsupportedEncodingException, FileNotFoundException, NoSuchAlgorithmException, NamingException {
 		if (args == null || args.length != 1) {
 			System.err.println("CSV file needed");
 			System.exit(1);
 		}
-		System.setProperty("db_url", URL);
-		System.setProperty("db_username_dash", USERNAME);
-		System.setProperty("db_pwd_dash", PASSWORD);
-		HibernateConfigurator.getInstance().init("hibernate.cfg.xml", true);
+		DatabaseConfigurator.getInstance().init();
+
 		UserStateDAO userStateDAO = DAOFactory.instance().getUserStateDAO();
 		UserState userState = userStateDAO.getUserStateByState("Actived");
 		UserRole roleType = DAOFactory.instance().getUserRoleDAO().getUserRole("countryManager");

@@ -4,31 +4,28 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import javax.naming.NamingException;
+
 import eu.apenet.dashboard.security.cipher.BasicDigestPwd;
 import eu.apenet.persistence.dao.UserStateDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.hibernate.HibernateConfigurator;
 import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.User;
 import eu.apenet.persistence.vo.UserRole;
 import eu.apenet.persistence.vo.UserState;
+import eu.archivesportaleurope.database.mock.DatabaseConfigurator;
 
 public class PopulateUsers {
-	private static final String URL = "jdbc:postgresql:apenet-november";
-	private static final String USERNAME = "apenet_dashboard";
-	private static final String PASSWORD = "apenet";
 
 	/**
 	 * @param args
 	 * @throws NoSuchAlgorithmException
 	 * @throws UnsupportedEncodingException
+	 * @throws NamingException 
 	 */
 	public static void main(String[] args) throws UnsupportedEncodingException,
-			NoSuchAlgorithmException {
-		System.setProperty("db_url", URL);
-		System.setProperty("db_username_dash", USERNAME);
-		System.setProperty("db_pwd_dash", PASSWORD);
-		HibernateConfigurator.getInstance().init("hibernate.cfg.xml", true);
+			NoSuchAlgorithmException, NamingException {
+		DatabaseConfigurator.getInstance().init();
 //		// addUser("wim", "NETHERLANDS", "Nationaal Archief");
 //		// addUser("lucile", "FRANCE", "Archives de France");
 //		// addUser("kerstin", "GERMANY", "Bundesarchive");
