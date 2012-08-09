@@ -68,10 +68,6 @@
 		</plugins>
 	</build>
 	<dependencies>
-	    <dependency>
-        	<groupId>org.hibernate</groupId>
-        	<artifactId>hibernate-core</artifactId>
-        </dependency>
        <dependency>
             <groupId>commons-net</groupId>
             <artifactId>commons-net</artifactId>

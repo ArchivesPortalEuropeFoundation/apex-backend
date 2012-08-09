@@ -5,11 +5,11 @@
          id="WebApp_ID" version="2.5">
     <display-name>Struts2 ArchivePortalEurope-Dashboard</display-name>
     <filter>
-        <filter-name>HibernateFilter</filter-name>
-        <filter-class>eu.apenet.persistence.hibernate.web.HibernateFilter</filter-class>
+        <filter-name>JpaFilter</filter-name>
+        <filter-class>eu.archivesportaleurope.persistence.jpa.web.JpaFilter</filter-class>
     </filter>
     <filter-mapping>
-        <filter-name>HibernateFilter</filter-name>
+        <filter-name>JpaFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     <filter>
@@ -45,7 +45,7 @@
         <session-timeout>180</session-timeout>
     </session-config>
     <listener>
-        <listener-class>eu.apenet.persistence.hibernate.web.HibernateListener</listener-class>
+        <listener-class>eu.archivesportaleurope.persistence.jpa.web.JpaListener</listener-class>
     </listener>
     <listener>
         <listener-class>org.apache.struts2.tiles.StrutsTilesListener</listener-class>
