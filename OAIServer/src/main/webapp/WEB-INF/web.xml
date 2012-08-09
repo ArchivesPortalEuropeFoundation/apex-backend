@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
 	<display-name>OAIServer</display-name>
-	<!-- Hibernate filter -->
+	<!-- JPA filter -->
 	<filter>
-    	<filter-name>HibernateFilter</filter-name>
-    	<filter-class>eu.apenet.persistence.hibernate.web.HibernateFilter</filter-class>
+    	<filter-name>JpaFilter</filter-name>
+    	<filter-class>eu.archivesportaleurope.persistence.jpa.web.JpaFilter</filter-class>
 	</filter>
 	<filter-mapping>
-    	<filter-name>HibernateFilter</filter-name>
+    	<filter-name>JpaFilter</filter-name>
     	<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<!-- UTF8 Filter -->
@@ -29,7 +29,7 @@
 	    <url-pattern>*</url-pattern>
 	</filter-mapping>
 	<listener>
-    	<listener-class>eu.apenet.persistence.hibernate.web.HibernateListener</listener-class>
+    	<listener-class>eu.archivesportaleurope.persistence.jpa.web.JpaListener</listener-class>
 	</listener>
 	<listener>
 		<listener-class>eu.apenet.commons.listener.APEnetConfigListener</listener-class>
