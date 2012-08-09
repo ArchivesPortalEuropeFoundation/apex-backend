@@ -41,6 +41,5 @@
         <mapping resource="mappings/IndexQueue.hbm.xml" />
         <mapping resource="mappings/UserRole.hbm.xml" />
         <mapping resource="mappings/SourceGuide.hbm.xml" />
-
     </session-factory>
 </hibernate-configuration>
