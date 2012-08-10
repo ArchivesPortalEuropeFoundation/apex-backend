@@ -1,5 +1,13 @@
 package eu.apenet.persistence.vo;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "user_role")
 public class UserRole implements java.io.Serializable {
 
     /**
@@ -9,20 +17,18 @@ public class UserRole implements java.io.Serializable {
 	public final static String ROLE_COUNTRY_MANAGER = "countryManager";
     public final static String ROLE_INSTITUTION_MANAGER = "institutionManager";
     public final static String ROLE_ADMIN = "admin";
-
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
+
 	private String role;
 
 	public UserRole() {
 	}
+	public UserRole(String role) {
+		this.role = role;
+	}
 
-	public UserRole(int roleId, String roletype) {
-		this.id = roleId;
-		this.role = roletype;
-	}
-	public UserRole(String roletype) {
-		this.role = roletype;
-	}
 	public int getId() {
 		return this.id;
 	}

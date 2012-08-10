@@ -1,6 +1,5 @@
 package eu.archivesportaleurope.persistence.jpa;
 
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.apache.log4j.ConsoleAppender;
@@ -13,7 +12,6 @@ import org.junit.BeforeClass;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import eu.archivesportaleurope.database.mock.DatabaseConfigurator;
-import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public abstract class AbstractJpaTestCase {
 	private static final Logger LOGGER = Logger.getLogger(AbstractJpaTestCase.class);
@@ -26,13 +24,14 @@ public abstract class AbstractJpaTestCase {
 	public AbstractJpaTestCase(){
 		try {
 			DatabaseConfigurator.getInstance().init();
-		} catch (NamingException e) {
+			dataSource = DatabaseConfigurator.getInstance().getCurrentDataSource();
+			jdbcTemplate = DatabaseConfigurator.getInstance().getCurrenJdbcTemplate();
+			JpaUtil.init();
+		} catch (Exception e) {
 			LOGGER.fatal(e.getMessage(),e);
 			throw new RuntimeException(e);
 		}
-		dataSource = DatabaseConfigurator.getInstance().getCurrentDataSource();
-		jdbcTemplate = DatabaseConfigurator.getInstance().getCurrenJdbcTemplate();
-		JpaUtil.init();
+
 	}
 
 	

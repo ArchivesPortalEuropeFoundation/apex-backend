@@ -111,7 +111,6 @@ public abstract class DAOFactory {
         }
     }
     
-    public abstract NormalUserDAO getNormalUserDAO();
     public abstract SentMailRegisterDAO getSentMailRegisterDAO();
     public abstract FindingAidDAO getFindingAidDAO();
     public abstract UserStateDAO getUserStateDAO();

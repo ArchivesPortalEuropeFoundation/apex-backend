@@ -12,10 +12,6 @@ import eu.apenet.persistence.hibernate.*;
 
 public class HibernateDAOFactory extends DAOFactory {
     
-    @Override
-    public NormalUserDAO getNormalUserDAO() {
-        return (NormalUserDAO) instantiateDAO(NormalUserHibernateDAO.class);
-    }
    
     @Override
     public SentMailRegisterDAO getSentMailRegisterDAO() {

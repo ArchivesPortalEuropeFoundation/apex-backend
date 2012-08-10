@@ -2,22 +2,49 @@ package eu.apenet.persistence.vo;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "c_level")
 public class CLevel implements Serializable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2806155070360797061L;
-	private Long parentClId;
+	
+
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Long clId;
+	@Column(name = "order_id")
 	private Integer orderId;
 	private boolean leaf;
+	@Column(name = "ec_id")
 	private Long ecId;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="parent_cl_id", insertable=false, updatable=false)
 	private EadContent eadContent;
 	private String unittitle;
 	private String unitid;
 	private String level;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="parent_cl_id", insertable=false, updatable=false)
 	private CLevel parent;
+	
+	@Column(name = "parent_cl_id")
+	private Long parentClId;
+	@Column(name = "href_eadid")
 	private String hrefEadid;
 
 	private String xml;

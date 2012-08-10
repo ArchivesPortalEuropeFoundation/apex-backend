@@ -12,10 +12,10 @@ public class Item implements java.io.Serializable {
 	private NormalUser normalUser;
 	private String label;
 
-	public Item() {
+	private Item() {
 	}
 
-	public Item(ItemId id, LevelType levelType, NormalUser normalUser,
+	private Item(ItemId id, LevelType levelType, NormalUser normalUser,
 			String label) {
 		this.id = id;
 		this.levelType = levelType;

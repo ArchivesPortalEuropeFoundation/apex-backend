@@ -2,25 +2,52 @@ package eu.apenet.persistence.vo;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
+
+@Entity
+@Table(name = "ead_content")
 public class EadContent implements Serializable{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7231712945693944551L;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Long ecId;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="fa_id",insertable=false, updatable=false)
 	private FindingAid findingAid;
+	@Column(name = "fa_id")
 	private Integer faId;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="hg_id",insertable=false, updatable=false)
 	private HoldingsGuide holdingsGuide;
+	@Column(name = "hg_id")
 	private Integer hgId;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="sg_id",insertable=false, updatable=false)
 	private SourceGuide sourceGuide;
+	@Column(name = "sg_id")
 	private Integer sgId;
 	private String titleproper;
 	private String eadid;
 	private String unittitle;
 	private String xml;
 	private boolean visible;
+	@Column(name = "display_intro")
 	private boolean displayIntro;
+	@Column(name = "display_did")
 	private boolean displayDid;
 
 	public Ead getEad(){

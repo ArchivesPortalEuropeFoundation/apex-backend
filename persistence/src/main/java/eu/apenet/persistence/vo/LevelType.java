@@ -14,15 +14,15 @@ public class LevelType implements java.io.Serializable {
 	private String ltype;
 	private Set<Item> items = new HashSet<Item>(0);
 
-	public LevelType() {
+	private LevelType() {
 	}
 
-	public LevelType(int ltId, String ltype) {
+	private LevelType(int ltId, String ltype) {
 		this.ltId = ltId;
 		this.ltype = ltype;
 	}
 
-	public LevelType(int ltId, String ltype, Set<Item> items) {
+	private LevelType(int ltId, String ltype, Set<Item> items) {
 		this.ltId = ltId;
 		this.ltype = ltype;
 		this.items = items;

@@ -10,10 +10,10 @@ public class ItemId implements java.io.Serializable {
 	private int itId;
 	private int UId;
 
-	public ItemId() {
+	private ItemId() {
 	}
 
-	public ItemId(int itId, int UId) {
+	private ItemId(int itId, int UId) {
 		this.itId = itId;
 		this.UId = UId;
 	}

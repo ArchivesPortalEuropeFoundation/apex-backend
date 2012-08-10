@@ -21,10 +21,10 @@ public class NormalUser implements java.io.Serializable {
 	private Set<Searches> searcheses = new HashSet<Searches>(0);
 	private Set<Item> items = new HashSet<Item>(0);
 
-	public NormalUser() {
+	private NormalUser() {
 	}
 
-	public NormalUser(Long UId, UserState userState, String nick,
+	private NormalUser(Long UId, UserState userState, String nick,
 			String emailAddress, String pwd) {
 		this.UId = UId;
 		this.userState = userState;
@@ -34,7 +34,7 @@ public class NormalUser implements java.io.Serializable {
 	}
 	
 	
-	public NormalUser(UserState userState, String nick,
+	private NormalUser(UserState userState, String nick,
 			String emailAddress, String pwd) {
 		this.userState = userState;
 		this.nick = nick;
@@ -42,7 +42,7 @@ public class NormalUser implements java.io.Serializable {
 		this.pwd = pwd;
 	}
 
-	public NormalUser(Long UId, UserState userState, String nick,
+	private NormalUser(Long UId, UserState userState, String nick,
 			String emailAddress, String pwd, String secretQuestion,
 			String secretAnswer, Set<SentMailRegister> sentMailRegisters,
 			Set<Searches> searcheses,
@@ -145,7 +145,7 @@ public class NormalUser implements java.io.Serializable {
 		StringBuffer ret = new StringBuffer();
 		ret.append("persistencia.vo.NormalUser:");
 		ret.append("u_id='"+UId+"'");
-		ret.append("us_id='"+userState.getUsId()+"'");
+		//ret.append("us_id='"+userState.getUsId()+"'");
 		ret.append(", nick='"+nick+"'");
 		ret.append(", password='"+pwd+"'");
 		ret.append(", email_address='"+emailAddress+"'");

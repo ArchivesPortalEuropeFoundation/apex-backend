@@ -36,10 +36,10 @@ public class Searches implements java.io.Serializable {
 	private String country;
 	private String pagenumber;
 
-	public Searches() {
+	private Searches() {
 	}
 
-	public Searches(Long seaId, NormalUser normalUser, String searchString,
+	private Searches(Long seaId, NormalUser normalUser, String searchString,
 			Date date, String view) {
 		this.seaId = seaId;
 		this.normalUser = normalUser;
@@ -114,7 +114,7 @@ public class Searches implements java.io.Serializable {
 	
 
 
-	public Searches(Long seaId, NormalUser normalUser, String searchString,
+	private Searches(Long seaId, NormalUser normalUser, String searchString,
 			String label, Date date, String view, String navTreeLang,
 			Integer resultsperpage, String searchButton, String element,
 			String fromDate, String toDate, String typedocument, String dao,

@@ -2,18 +2,34 @@ package eu.apenet.persistence.vo;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 /**
  * User: Yoann Moranville
  * Date: Mar 7, 2011
  *
  * @author Yoann Moranville
  */
+@Entity
+@Table(name = "cpf_content")
 public class CpfContent implements Serializable {
     private static final long serialVersionUID = -3382264689231110834L;
-    
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="ai_id")
     private ArchivalInstitution archivalInstitution;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-    private String cpfId;
+    @Column(name = "cpf_id")
+	private String cpfId;
     private String xml;
 
     public ArchivalInstitution getArchivalInstitution() {
