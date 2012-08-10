@@ -188,6 +188,7 @@
 			<groupId>eu.archivesportaleurope</groupId>
 			<artifactId>database-mock</artifactId>
 			<version>${project.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>eu.archivesportaleurope</groupId>
