@@ -127,6 +127,7 @@
 		<module>OAIServer</module>
 		<module>stopwords</module>
 		<module>database-mock</module>
+		<module>migrate-to-jpa</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
