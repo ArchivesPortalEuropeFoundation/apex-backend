@@ -2,8 +2,13 @@ package eu.archivesportaleurope.persistence.jpa.dao;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.hibernate.HibernateException;
 
@@ -39,7 +44,7 @@ public abstract class AbstractJpaDAO <T, ID extends Serializable> extends Generi
 
 	
 	@Override
-	@SuppressWarnings("unchecked")
+
 	public final T findById(ID id) {
 		return (T)  getEntityManager().find(getPersistentClass(), id);
 	}
@@ -50,6 +55,15 @@ public abstract class AbstractJpaDAO <T, ID extends Serializable> extends Generi
         return (T) getEntityManager().find(clazz, id);
     }
 
+	@Override
+	public List<T> findAll() {
+		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(getPersistentClass());
+		Root<T> from = criteriaQuery.from(getPersistentClass());
+		CriteriaQuery<T> select = criteriaQuery.select(from);
+		TypedQuery<T> typedQuery = getEntityManager().createQuery(select);
+		return typedQuery.getResultList();
+	}
 
 
 

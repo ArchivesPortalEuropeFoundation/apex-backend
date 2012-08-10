@@ -18,7 +18,7 @@ import eu.archivesportaleurope.persistence.jpa.dao.AbstractJpaDAO;
  * 
  * The abstract DAO that implements the basic CRUD operations and other nice features based in Criteria API.
  * 
- * @author bverhoef, Christian Bauer, Paul
+ * @author bverhoef, Paul
  *
  * @param <T>
  * @param <ID>
@@ -38,10 +38,6 @@ public abstract class AbstractHibernateDAO <T, ID extends Serializable> extends 
 		return findByCriteria(disjunction);
 	}
 	
-	@Override
-	public List<T> findAll() {
-		return findByCriteria();
-	}
 
 	@Override
 	public List<T> findByExample(T exampleInstance, Collection<String> excludeProperty) {
