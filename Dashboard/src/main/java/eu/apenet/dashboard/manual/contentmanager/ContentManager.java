@@ -619,31 +619,6 @@ public class ContentManager extends ContentManagerIndexer{
         }
 	}
 
-	/**
-	 * This method get all finding aids of a holdings guide into system linked into DDBB
-	 * and return a Map<String(EADID),String(Finding Aid Title)>
-	 */
-	public static Map<String,String> getSummaryOfFindingAidsLinkedByHoldingsGuide(Integer id, Integer aiId) {
-		Map<String,String> findingsAidsToBeShown = null;
-		try{
-			HoldingsGuide holdingsGuide = DAOFactory.instance().getHoldingsGuideDAO().findById(id);
-			if(holdingsGuide!=null && holdingsGuide.getArchivalInstitution().getAiId()==aiId){
-				Set<FindingAid> findingAids = holdingsGuide.getFindingAids();
-				if(findingAids.size()>0){
-					findingsAidsToBeShown = new HashMap<String, String>();
-					Iterator<FindingAid> iteratorFAs = findingAids.iterator();
-					findingAids=null;
-					while(iteratorFAs.hasNext()){
-						FindingAid findingAid = iteratorFAs.next();
-						findingsAidsToBeShown.put(findingAid.getEadid(),findingAid.getTitle());
-					}
-				}
-			}
-		}catch(Exception e){
-			log.error("Error getting a holdings guide with id"+id+"::"+e.getCause(),e);
-		}
-		return findingsAidsToBeShown;
-	}
 	
 	/**
 	 * This method checks if Europeana (or any client) is harvesting APEnet OAI-PMH repository

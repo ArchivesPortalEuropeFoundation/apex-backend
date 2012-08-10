@@ -159,7 +159,7 @@ public class CreateCountryAction extends ActionSupport{
 					    file.mkdir();
 			        log.debug("Directory "+this.getIsoCountryName() +" created");
 			        
-			        insertNodeinAL("dsc", newCountry, language.getLngId(), null);
+			        insertNodeinAL("dsc", newCountry, language.getId(), null);
 			        
 			        HibernateUtil.commitDatabaseTransaction();
 					result= SUCCESS;
