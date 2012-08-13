@@ -33,7 +33,7 @@ public class CLevel implements Serializable{
 	@Column(name = "ec_id")
 	private Long ecId;
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="parent_cl_id", insertable=false, updatable=false)
+	@JoinColumn(name="ec_id", insertable=false, updatable=false)
 	private EadContent eadContent;
 	private String unittitle;
 	private String unitid;
