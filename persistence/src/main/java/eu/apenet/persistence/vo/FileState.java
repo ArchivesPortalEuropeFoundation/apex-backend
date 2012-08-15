@@ -47,10 +47,6 @@ public class FileState implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Deprecated
-	public int getFsId(){
-		return id;
-	}
 	public String getState() {
 		return this.state;
 	}

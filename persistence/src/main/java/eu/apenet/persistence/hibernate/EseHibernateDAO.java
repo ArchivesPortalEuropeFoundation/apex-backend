@@ -125,7 +125,7 @@ public class EseHibernateDAO extends AbstractHibernateDAO<Ese, Integer> implemen
 	public List<String> getSetsOfEses(Date startDate,Date endDate,String eset,Integer start,Integer maxResults) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(),"ese");
 		//criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		criteria.add(Restrictions.eq("eseState.esId",2));//Published
+		criteria.add(Restrictions.eq("eseState.id",2));//Published
 		if(startDate!=null && endDate!=null){
 			criteria.add(Restrictions.between("modificationDate", startDate, endDate));
 		}else if(startDate!=null){
@@ -196,10 +196,10 @@ public class EseHibernateDAO extends AbstractHibernateDAO<Ese, Integer> implemen
 			criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			DetachedCriteria subQuery = DetachedCriteria.forClass(FindingAid.class,"findingAid");
 			subQuery.setProjection(Property.forName("findingAid.id"));
-			subQuery.add(Restrictions.between("fileState.fsId",9,14));
+			subQuery.add(Restrictions.between("fileState.id",9,14));
 			subQuery.add(Restrictions.eq("archivalInstitution.aiId", aiId));
 			criteria.setProjection(Projections.sum("ese.numberOfRecords"));
-			criteria.add(Restrictions.between("ese.eseState.esId",1,3));
+			criteria.add(Restrictions.between("ese.eseState.id",1,3));
 			criteria.add(Subqueries.propertyIn("ese.findingAid.id",subQuery));
 			return (Long)criteria.uniqueResult();
 		}
@@ -215,7 +215,7 @@ public class EseHibernateDAO extends AbstractHibernateDAO<Ese, Integer> implemen
 			subQuery.setProjection(Property.forName("findingAid.id"));
 			subQuery.add(Restrictions.eq("archivalInstitution.aiId", aiId));
 			criteria.setProjection(Projections.sum("ese.numberOfRecords"));
-			criteria.add(Restrictions.eq("ese.eseState.esId",2));
+			criteria.add(Restrictions.eq("ese.eseState.id",2));
 			criteria.add(Subqueries.propertyIn("ese.findingAid.id",subQuery));
 			return (Long)criteria.uniqueResult();
 		}
@@ -229,7 +229,7 @@ public class EseHibernateDAO extends AbstractHibernateDAO<Ese, Integer> implemen
 			criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			DetachedCriteria subQuery = getSubQueryRestrictions(searchTerms,aiId,option,convertedToESEFileStates);
 			criteria.setProjection(Projections.sum("ese.numberOfRecords"));
-			criteria.add(Restrictions.between("ese.eseState.esId",1,3));
+			criteria.add(Restrictions.between("ese.eseState.id",1,3));
 			criteria.add(Subqueries.propertyIn("ese.findingAid.id",subQuery));
 			return (Long)criteria.uniqueResult();
 		}
@@ -243,7 +243,7 @@ public class EseHibernateDAO extends AbstractHibernateDAO<Ese, Integer> implemen
 			criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			DetachedCriteria subQuery = getSubQueryRestrictions(searchTerms,aiId,option,deliveredToEuropeanaFileStates);
 			criteria.setProjection(Projections.sum("ese.numberOfRecords"));
-			criteria.add(Restrictions.eq("ese.eseState.esId",2));
+			criteria.add(Restrictions.eq("ese.eseState.id",2));
 			criteria.add(Subqueries.propertyIn("ese.findingAid.id",subQuery));
 			return (Long)criteria.uniqueResult();
 		}
