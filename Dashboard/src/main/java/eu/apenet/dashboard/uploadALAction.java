@@ -591,7 +591,7 @@ public class uploadALAction extends ActionSupport implements Preparable{
 										}
 										
 										//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-										if ((Arrays.asList(FileState.INDEXED_FILE_STATES).contains(this.fasDeleted.get(i).getFileState().getState()) &&(this.fasDeleted.get(i).getFileState().getFsId()!=8))) {
+										if ((Arrays.asList(FileState.INDEXED_FILE_STATES).contains(this.fasDeleted.get(i).getFileState().getState()) &&(this.fasDeleted.get(i).getFileState().getId()!=8))) {
 
 											try {
 												ContentUtils.restoreOriginalStateOfEAD(this.fasDeleted.get(i));
@@ -613,7 +613,7 @@ public class uploadALAction extends ActionSupport implements Preparable{
 										}
 										
 										//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-										if ((Arrays.asList(FileState.INDEXED_FILE_STATES).contains(this.hgsDeleted.get(i).getFileState().getState())&&(this.hgsDeleted.get(i).getFileState().getFsId()!=8))) {
+										if ((Arrays.asList(FileState.INDEXED_FILE_STATES).contains(this.hgsDeleted.get(i).getFileState().getState())&&(this.hgsDeleted.get(i).getFileState().getId()!=8))) {
 
 											try {
 												ContentUtils.restoreOriginalStateOfEAD(this.hgsDeleted.get(i));

@@ -139,7 +139,7 @@ public class ContentManager extends ContentManagerIndexer{
 			eadcmUnit.setEadCMUnitTitle(ead.getTitle());
 
 		eadcmUnit.setEadCMUnitListWarnings(ead.getWarningses());
-		eadcmUnit.setEadCMUnitState(ead.getFileState().getFsId());
+		eadcmUnit.setEadCMUnitState(ead.getFileState().getId());
 		eadcmUnit.setEadCMUnitUpDate(ead.getUploadDate());
         eadcmUnit.setEadCMUnitUpMeth(ead.getUploadMethod().getMethod());
         eadcmUnit.setNumberOfDAOs(ead.getTotalNumberOfDaos());

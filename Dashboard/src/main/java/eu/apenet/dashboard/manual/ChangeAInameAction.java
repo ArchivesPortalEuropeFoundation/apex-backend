@@ -446,7 +446,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				for (int i=0; i< findingAidListdeleted.size();i++)
 				{
 						
-					if ((findingAidListdeleted.get(i).getFileState().getFsId()>7)&&(findingAidListdeleted.get(i).getFileState().getFsId()<15)) {
+					if ((findingAidListdeleted.get(i).getFileState().getId()>7)&&(findingAidListdeleted.get(i).getFileState().getId()<15)) {
 						try {
 							ContentUtils.indexRollback(XmlType.EAD_FA, findingAidListdeleted.get(i).getId());
 							log.info("Index rollback of FA succeed");
@@ -455,7 +455,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 						}
 							
 						//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-						if ((findingAidListdeleted.get(i).getFileState().getFsId()>8)&&(findingAidListdeleted.get(i).getFileState().getFsId()<15)) {
+						if ((findingAidListdeleted.get(i).getFileState().getId()>8)&&(findingAidListdeleted.get(i).getFileState().getId()<15)) {
 							try {
 								ContentUtils.restoreOriginalStateOfEAD(findingAidListdeleted.get(i));
 								}
@@ -497,7 +497,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				//Re-index again the holdings guides deleted
 				for (int i=0; i< holdingsGuideListdeleted.size();i++)
 				{
-					if ((holdingsGuideListdeleted.get(i).getFileState().getFsId()>7)&&(holdingsGuideListdeleted.get(i).getFileState().getFsId()<15)) {
+					if ((holdingsGuideListdeleted.get(i).getFileState().getId()>7)&&(holdingsGuideListdeleted.get(i).getFileState().getId()<15)) {
 						try {
 							ContentUtils.indexRollback(XmlType.EAD_HG, holdingsGuideListdeleted.get(i).getId());
 							log.info("Index rollback of FA succeed");
@@ -507,7 +507,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 						}
 							
 						//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-						if ((holdingsGuideListdeleted.get(i).getFileState().getFsId()>8)&&(holdingsGuideListdeleted.get(i).getFileState().getFsId()<15)) {
+						if ((holdingsGuideListdeleted.get(i).getFileState().getId()>8)&&(holdingsGuideListdeleted.get(i).getFileState().getId()<15)) {
 							try {
 								ContentUtils.restoreOriginalStateOfEAD(holdingsGuideListdeleted.get(i));
 							}
@@ -535,7 +535,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				for (int i=0; i< findingAidListdeleted.size();i++)
 				{
 						
-					if ((findingAidListdeleted.get(i).getFileState().getFsId()>7)&&(findingAidListdeleted.get(i).getFileState().getFsId()<15)) {
+					if ((findingAidListdeleted.get(i).getFileState().getId()>7)&&(findingAidListdeleted.get(i).getFileState().getId()<15)) {
 						try {
 							ContentUtils.indexRollback(XmlType.EAD_FA, findingAidListdeleted.get(i).getId());
 							log.info("Index rollback of FA succeed");
@@ -544,7 +544,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 						}
 							
 						//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-						if ((findingAidListdeleted.get(i).getFileState().getFsId()>8)&&(findingAidListdeleted.get(i).getFileState().getFsId()<15)) {
+						if ((findingAidListdeleted.get(i).getFileState().getId()>8)&&(findingAidListdeleted.get(i).getFileState().getId()<15)) {
 							try {
 								ContentUtils.restoreOriginalStateOfEAD(findingAidListdeleted.get(i));
 								}
@@ -573,7 +573,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				//Re-index again the holdings guides deleted
 				for (int i=0; i< holdingsGuideListdeleted.size();i++)
 				{
-					if ((holdingsGuideListdeleted.get(i).getFileState().getFsId()>7)&&(holdingsGuideListdeleted.get(i).getFileState().getFsId()<15)) {
+					if ((holdingsGuideListdeleted.get(i).getFileState().getId()>7)&&(holdingsGuideListdeleted.get(i).getFileState().getId()<15)) {
 						try {
 							ContentUtils.indexRollback(XmlType.EAD_HG, holdingsGuideListdeleted.get(i).getId());
 							log.info("Index rollback of HG succeed");
@@ -582,7 +582,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 						}
 							
 						//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-						if ((holdingsGuideListdeleted.get(i).getFileState().getFsId()>8)&&(holdingsGuideListdeleted.get(i).getFileState().getFsId()<15)) {
+						if ((holdingsGuideListdeleted.get(i).getFileState().getId()>8)&&(holdingsGuideListdeleted.get(i).getFileState().getId()<15)) {
 							try {
 								ContentUtils.restoreOriginalStateOfEAD(holdingsGuideListdeleted.get(i));
 							}
@@ -610,7 +610,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				for (int i=0; i< findingAidListdeleted.size();i++)
 				{
 						
-					if ((findingAidListdeleted.get(i).getFileState().getFsId()>7)&&(findingAidListdeleted.get(i).getFileState().getFsId()<15)) {
+					if ((findingAidListdeleted.get(i).getFileState().getId()>7)&&(findingAidListdeleted.get(i).getFileState().getId()<15)) {
 						try {
 							ContentUtils.indexRollback(XmlType.EAD_FA, findingAidListdeleted.get(i).getId());
 							log.info("Index rollback of FA succeed");
@@ -619,7 +619,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 						}
 							
 						//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-						if ((findingAidListdeleted.get(i).getFileState().getFsId()>8)&&(findingAidListdeleted.get(i).getFileState().getFsId()<15)) {
+						if ((findingAidListdeleted.get(i).getFileState().getId()>8)&&(findingAidListdeleted.get(i).getFileState().getId()<15)) {
 							try {
 								ContentUtils.restoreOriginalStateOfEAD(findingAidListdeleted.get(i));
 								}
@@ -660,7 +660,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				for (int i=0; i< findingAidListdeleted.size();i++)
 				{
 						
-					if ((findingAidListdeleted.get(i).getFileState().getFsId()>7)&&(findingAidListdeleted.get(i).getFileState().getFsId()<15)) {
+					if ((findingAidListdeleted.get(i).getFileState().getId()>7)&&(findingAidListdeleted.get(i).getFileState().getId()<15)) {
 						try {
 							ContentUtils.indexRollback(XmlType.EAD_FA, findingAidListdeleted.get(i).getId());
 							log.info("Index rollback of FA succeed");
@@ -669,7 +669,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 						}
 							
 						//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-						if ((findingAidListdeleted.get(i).getFileState().getFsId()>8)&&(findingAidListdeleted.get(i).getFileState().getFsId()<15)) {
+						if ((findingAidListdeleted.get(i).getFileState().getId()>8)&&(findingAidListdeleted.get(i).getFileState().getId()<15)) {
 							try {
 								ContentUtils.restoreOriginalStateOfEAD(findingAidListdeleted.get(i));
 								}
@@ -695,7 +695,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				//Re-index again the holdings guides deleted
 				for (int i=0; i< holdingsGuideListdeleted.size();i++)
 				{
-					if ((holdingsGuideListdeleted.get(i).getFileState().getFsId()>7)&&(holdingsGuideListdeleted.get(i).getFileState().getFsId()<15)) {
+					if ((holdingsGuideListdeleted.get(i).getFileState().getId()>7)&&(holdingsGuideListdeleted.get(i).getFileState().getId()<15)) {
 						try {
 							ContentUtils.indexRollback(XmlType.EAD_HG, holdingsGuideListdeleted.get(i).getId());
 							log.info("Index rollback of HG succeed");
@@ -704,7 +704,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 						}
 							
 						//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-						if ((holdingsGuideListdeleted.get(i).getFileState().getFsId()>8)&&(holdingsGuideListdeleted.get(i).getFileState().getFsId()<15)) {
+						if ((holdingsGuideListdeleted.get(i).getFileState().getId()>8)&&(holdingsGuideListdeleted.get(i).getFileState().getId()<15)) {
 							try {
 								ContentUtils.restoreOriginalStateOfEAD(holdingsGuideListdeleted.get(i));
 							}
@@ -743,7 +743,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 					for (int i=0; i< findingAidListdeleted.size();i++)
 					{
 							
-						if ((findingAidListdeleted.get(i).getFileState().getFsId()>7)&&(findingAidListdeleted.get(i).getFileState().getFsId()<15)) {
+						if ((findingAidListdeleted.get(i).getFileState().getId()>7)&&(findingAidListdeleted.get(i).getFileState().getId()<15)) {
 							try {
 								ContentUtils.indexRollback(XmlType.EAD_FA, findingAidListdeleted.get(i).getId());
 								log.info("Index rollback of FA succeed");
@@ -752,7 +752,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 							}
 								
 							//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-							if ((findingAidListdeleted.get(i).getFileState().getFsId()>8)&&(findingAidListdeleted.get(i).getFileState().getFsId()<15)) {
+							if ((findingAidListdeleted.get(i).getFileState().getId()>8)&&(findingAidListdeleted.get(i).getFileState().getId()<15)) {
 								try {
 									ContentUtils.restoreOriginalStateOfEAD(findingAidListdeleted.get(i));
 									}
@@ -779,7 +779,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 					//Re-index again the holdings guides deleted
 					for (int i=0; i< holdingsGuideListdeleted.size();i++)
 					{
-						if ((holdingsGuideListdeleted.get(i).getFileState().getFsId()>7)&&(holdingsGuideListdeleted.get(i).getFileState().getFsId()<15)) {
+						if ((holdingsGuideListdeleted.get(i).getFileState().getId()>7)&&(holdingsGuideListdeleted.get(i).getFileState().getId()<15)) {
 							try {
 								ContentUtils.indexRollback(XmlType.EAD_HG, holdingsGuideListdeleted.get(i).getId());
 								log.info("Index rollback of HG succeed");
@@ -788,7 +788,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 							}
 								
 							//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-							if ((holdingsGuideListdeleted.get(i).getFileState().getFsId()>8)&&(holdingsGuideListdeleted.get(i).getFileState().getFsId()<15)) {
+							if ((holdingsGuideListdeleted.get(i).getFileState().getId()>8)&&(holdingsGuideListdeleted.get(i).getFileState().getId()<15)) {
 								try {
 									ContentUtils.restoreOriginalStateOfEAD(holdingsGuideListdeleted.get(i));
 								}

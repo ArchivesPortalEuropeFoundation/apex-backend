@@ -105,7 +105,7 @@ public abstract class EadLogicAbstract {
                 eadDAO.deleteSimple(ead);
 
                 FileState fileState = ead.getFileState();
-                if ((fileState.getFsId() > 7) && (fileState.getFsId() < 15)) {
+                if ((fileState.getId() > 7) && (fileState.getId() < 15)) {
                     log.debug("Removing the EAD which eadid is " + ead.getEadid() + " from the index");
                     ContentUtils.deleteFromIndex(ead.getEadid(), ead.getArchivalInstitution().getAiId());
                     if(ead instanceof HoldingsGuide)
@@ -191,7 +191,7 @@ public abstract class EadLogicAbstract {
                 HibernateUtil.rollbackDatabaseTransaction();
 
                 FileState fileState = ead.getFileState();
-                if((fileState.getFsId() > 7) && (fileState.getFsId() < 15)) {
+                if((fileState.getId() > 7) && (fileState.getId() < 15)) {
                     try {
                         ContentUtils.indexRollback(XmlType.getEadType(ead), ead.getId());
                     } catch (Exception ex) {
@@ -207,7 +207,7 @@ public abstract class EadLogicAbstract {
                     }
 
                     //Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-                    if(fileState.getFsId() != 8) {
+                    if(fileState.getId() != 8) {
                         try {
                             ContentUtils.restoreOriginalStateOfEAD(ead);
                         } catch (Exception ex) {
