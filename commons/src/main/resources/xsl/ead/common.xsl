@@ -29,7 +29,7 @@
 		<xsl:apply-templates mode="#current" />
 	</xsl:template>	
 	<xsl:template match="ead:lb" mode="#all">
-		<br />
+		<xsl:text disable-output-escaping="yes">&lt;br&gt;</xsl:text>
 	</xsl:template>
 	<xsl:template match="ead:emph[@render='bold']" mode="#all">
 		<b>
