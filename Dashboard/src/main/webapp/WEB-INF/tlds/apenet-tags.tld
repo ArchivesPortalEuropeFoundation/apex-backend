@@ -13,12 +13,6 @@
 		<body-content>JSP</body-content>
 	</tag>
 	<tag>
-		<description>Generates recaptha</description>
-		<name>recaptha</name>
-		<tag-class>eu.apenet.commons.view.jsp.RecapthaTag</tag-class>
-		<body-content>empty</body-content>
-	</tag>
-	<tag>
 		<name>context</name>
 		<tag-class>eu.apenet.commons.seconddisplay.jsp.ContextTag</tag-class>
 		<body-content>empty</body-content>
