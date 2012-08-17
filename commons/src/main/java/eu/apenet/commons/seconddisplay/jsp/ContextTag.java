@@ -39,12 +39,7 @@ public class ContextTag extends SimpleTagSupport{
 			hierarchy.add(eadContent.getTitleproper());
 		}
 		
-		ArchivalInstitution ai = null;
-		if (eadContent.getFaId() == null){
-			ai = eadContent.getHoldingsGuide().getArchivalInstitution();
-		}else {
-			ai = eadContent.getFindingAid().getArchivalInstitution();
-		}
+		ArchivalInstitution ai  = eadContent.getEad().getArchivalInstitution();
 		while (ai != null){
 			hierarchy.add(ai.getAiname());
 			ai = ai.getArchivalInstitution();
