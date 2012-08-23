@@ -159,7 +159,7 @@ private final Logger log = Logger.getLogger(getClass());
 
 	
 	@SuppressWarnings("unchecked")
-	public List<Country> getCountriesWithArchivalInstitutionsWithEAGOrderByCName() {
+	public List<Country> getCountriesWithArchivalInstitutionsWithEAG() {
 		long startTime = System.currentTimeMillis();
 		List<Country> results = new ArrayList<Country>();
 		
@@ -167,7 +167,6 @@ private final Logger log = Logger.getLogger(getClass());
 		 * INNER JOIN with createCriteria [Only Country objects will be retrieved from database]. DISTINCT is made on memory
 		*/
 		Criteria criteria = getSession().createCriteria(Country.class);
-		criteria.addOrder(Order.asc("cname"));
 		criteria = criteria.createCriteria("archivalInstitutions");
 		criteria.add(Restrictions.isNotNull("eagPath"));
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
