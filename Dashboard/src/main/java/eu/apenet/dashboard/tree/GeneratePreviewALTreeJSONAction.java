@@ -160,7 +160,7 @@ public class GeneratePreviewALTreeJSONAction extends ActionSupport implements Se
 				buffer.append(COMMA);
 				buffer.append(NO_LINK);
 				buffer.append(COMMA);
-				addKey(buffer, countryUnit.getCouId(), "country");
+				addKey(buffer, countryUnit.getCountry().getCouId(), "country");
 				buffer.append(END_ITEM);
 			}
 			else {
@@ -176,7 +176,7 @@ public class GeneratePreviewALTreeJSONAction extends ActionSupport implements Se
 				buffer.append(COMMA);
 				buffer.append(NOT_SELECTABLE);
 				buffer.append(COMMA);
-				addKey(buffer, countryUnit.getCouId(), "country");
+				addKey(buffer, countryUnit.getCountry().getCouId(), "country");
 				buffer.append(END_ITEM);
 			}
 			if (i!=countryList.size()-1){
