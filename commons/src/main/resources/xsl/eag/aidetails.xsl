@@ -25,7 +25,7 @@
 					<td class="header">
 						<xsl:value-of select="ape:resource('directory.text.address')" />
 					</td>
-					<td>
+					<td id="address">
 						<xsl:value-of select="./eag:street" />
 						<xsl:text> - </xsl:text>
 						<xsl:value-of select="./eag:postalcode" />
