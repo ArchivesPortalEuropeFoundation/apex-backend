@@ -43,7 +43,7 @@ public class NavigationTree {
 			List<Country> cos = DAOFactory.instance().getCountryDAO().getCountriesWithContentIndexedOrderByCName();
 			for (Country co : cos) {
                 String otherCountryName = resourceBundleSource.getString("country." + co.getCname().toLowerCase(), co.getCname());
-                countries.add(new CountryUnit(co.getCouId(), co.getCname(), otherCountryName));
+                countries.add(new CountryUnit(co, otherCountryName));
             }
 			
 		}catch (Exception e) {
@@ -56,10 +56,10 @@ public class NavigationTree {
 	public List<CountryUnit> getALCountriesWithArchivalInstitutionsWithEAG() throws APEnetException {
 		List<CountryUnit> countries = new ArrayList<CountryUnit>();
 		try {
-			List<Country> cos = DAOFactory.instance().getCountryDAO().getCountriesWithArchivalInstitutionsWithEAGOrderByCName();
+			List<Country> cos = DAOFactory.instance().getCountryDAO().getCountriesWithArchivalInstitutionsWithEAG();
             for (Country co : cos) {
                 String otherCountryName = resourceBundleSource.getString("country." + co.getCname().toLowerCase(), co.getCname());
-                countries.add(new CountryUnit( co.getCouId(), co.getCname(), otherCountryName));
+                countries.add(new CountryUnit(co, otherCountryName));
             }
 			
 		} catch (Exception e) {
@@ -75,9 +75,9 @@ public class NavigationTree {
 			Country cos = DAOFactory.instance().getCountryDAO().findById(couId);
 			if (cos != null) {
                 String otherCountryName = resourceBundleSource.getString("country." + cos.getCname().toLowerCase(), cos.getCname());
-                return new CountryUnit(cos.getCname(), otherCountryName);
+                return new CountryUnit(cos, otherCountryName);
 			} else {
-                return new CountryUnit("No Country", "No Country");
+                return new CountryUnit(null, "No Country");
 			}
 		} catch (Exception e) {
 			log.error("Error retrieving all the countries within the Archival Landscape.", e);
