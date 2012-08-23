@@ -59,7 +59,9 @@ public final class SecurityContextContainer implements HttpSessionListener {
 		synchronized (securityContexts) {
 			otherSecurityContext = securityContexts.get(securityContext.getPartnerId());
 		}
-		dropSession(otherSecurityContext.getSessionId());
+		if (otherSecurityContext != null){
+			dropSession(otherSecurityContext.getSessionId());
+		}
 	}
 
 	protected static void dropSession(String sessionId) {
