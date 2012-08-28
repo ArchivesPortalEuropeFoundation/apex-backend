@@ -5,9 +5,9 @@
 
 	<xsl:output method="html" indent="yes" version="4.0" encoding="UTF-8" />
 	<xsl:template match="/">
-		<div class="aiTitle">
+		<h2 class="blockHeader">
 			<xsl:value-of select="./eag:eag/eag:archguide/eag:identity/eag:autform"></xsl:value-of>
-		</div>
+		</h2>
 		<xsl:apply-templates select="./eag:eag/eag:archguide/eag:desc"></xsl:apply-templates>
 
 	</xsl:template>
