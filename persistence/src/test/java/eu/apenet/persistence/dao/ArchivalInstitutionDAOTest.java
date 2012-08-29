@@ -2,6 +2,7 @@ package eu.apenet.persistence.dao;
 
 import java.util.Date;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import eu.apenet.persistence.factory.DAOFactory;

@@ -81,7 +81,7 @@ public class GoDashboardAction extends AbstractAction {
             }
             return SUCCESS;
     	}
-    	log.info("GoDashboardAction: execute() There is no archival landscape definition. User can't go to the Dashboard");
+    	log.info("GoDashboardAction: execute() There is no archival landscape definition in ('" + pathCountry + "'). User can't go to the Dashboard");
     	return ERROR;
 	}
 	public String selectArchive(){
