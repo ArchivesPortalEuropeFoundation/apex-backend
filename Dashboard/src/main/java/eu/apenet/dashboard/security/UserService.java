@@ -214,7 +214,7 @@ public final class UserService {
 					partner.setSecretAnswer(PasswordGenerator.getRandomString());
 					userTypedPassword = partner.getPassword();
 					partner.setPassword(BasicDigestPwd.generateDigest(userTypedPassword));
-					partnerDao.store(partner);
+					partner = partnerDao.store(partner);
 				} else {
 					partner = partnerDao.findById(existingUserId);
 					if (!archivalInstitution.getCountryId().equals(partner.getCountryId())) {
