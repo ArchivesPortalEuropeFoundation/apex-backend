@@ -4,6 +4,7 @@
 <%@page import="com.opensymphony.xwork2.ActionContext"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+    <div id="hasElementChanged" style="visibility:hidden;"><s:property value="hasElementChanged"/></div>
     <div id="aLandscape" class="aLandscape">
 		<div id="divCountry">
 			<p style="text-align: center;"><s:property value="country"/> <s:property value="getText('al.message.archivallandscape')" /></p><hr/>
@@ -84,7 +85,11 @@
 						$.post('editAL.action','&selectedLang='+selectedLang+'&element='+element+'&textAL='+textAL,function(response){
 							$("body").html(response);
 							$("select[name=ALElement] option[value="+elementValue+"]").attr('selected','selected');
-							updateStatusWindow('<span style="font-weight:bold;">'+textAL+"</span> <s:property value="getText('al.message.elementEdited')" />");
+                            if($("#hasElementChanged:contains('true')").length > 0) {
+							    updateStatusWindow('<span style="font-weight:bold;">'+textAL+"</span> <s:property value="getText('al.message.elementEdited')" />");
+                            } else {
+                                updateStatusWindow('<span style="font-weight:bold;">'+textAL+"</span> <s:property value="getText('al.message.existsAlready')" />");
+                            }
 						});
 					}
 				});

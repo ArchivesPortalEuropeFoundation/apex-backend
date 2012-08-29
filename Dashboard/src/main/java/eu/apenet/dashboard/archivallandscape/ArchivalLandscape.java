@@ -126,6 +126,9 @@ public class ArchivalLandscape extends ActionSupport{
 	public String getmyCountryName() {
         return this.country.getCname();
     }
+    public int getCountryId() {
+        return this.country.getCouId();
+    }
 	
 	public List<ArchivalInstitution> getArchivalInstitutionsToDelete() {
 		return archivalInstitutionsToDelete;

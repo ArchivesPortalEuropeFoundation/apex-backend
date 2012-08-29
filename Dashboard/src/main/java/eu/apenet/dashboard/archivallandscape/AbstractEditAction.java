@@ -55,6 +55,7 @@ public abstract class AbstractEditAction extends AbstractAction{
 	private List<Institution> groupList;
 	private String father;
 	private List<Lang> langList;
+    private boolean hasElementChanged = false;
 
 	private boolean edit;
 	
@@ -159,8 +160,16 @@ public abstract class AbstractEditAction extends AbstractAction{
 	public String getTextAL() {
 		return textAL;
 	}
-	
-	/**
+
+    public boolean isHasElementChanged() {
+        return hasElementChanged;
+    }
+
+    public void setHasElementChanged(boolean hasElementChanged) {
+        this.hasElementChanged = hasElementChanged;
+    }
+
+    /**
 	 * Replace the old node with the info written into a institution.
 	 * 
 	 * @param oldNode

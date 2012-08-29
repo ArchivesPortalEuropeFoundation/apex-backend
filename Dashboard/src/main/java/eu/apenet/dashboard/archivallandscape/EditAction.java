@@ -18,6 +18,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import eu.apenet.commons.types.XmlType;
+import eu.apenet.persistence.factory.DAOFactory;
 import org.apache.commons.io.FileUtils;
 import org.hibernate.HibernateException;
 import org.w3c.dom.Document;
@@ -215,10 +216,22 @@ public class EditAction extends eu.apenet.dashboard.archivallandscape.AbstractEd
 		}else if(getALElement()!=null && !state){
 			return ERROR; //NOT SAVED
 		}else if((getALElement()!=null && state) || (getList()!=null && getList().size()==0) || (getALElement()==null && getTextAL()!=null && getTextAL().length()>0) ){ //AL should be distinct of null
+            boolean archivalInstitutionNameExists = false;
+            List<ArchivalInstitution> archivalInstitutions = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionsByCountryId(a.getCountryId(), false);
+            for(ArchivalInstitution archivalInstitution : archivalInstitutions) {
+                if(getTextAL().equals(archivalInstitution.getAiname()) || getTextAL().equals(archivalInstitution.getAutform())) {
+                    archivalInstitutionNameExists = true;
+                    break;
+                }
+            }
+
 			List<Institution> tempAL = getAL();
 			tempAL.clear();
 			setAL(tempAL);
-			writeList(getList(),path);
+            if(!archivalInstitutionNameExists) {
+                writeList(getList(),path);
+                setHasElementChanged(true);
+            }
 			setList(EditArchivalLandscapeLogic.navigate(false)); //It has to be here because write is the last writer 
 		}
 		parseList(getList(),null); //Cipher is the start number(1.x in this case)
