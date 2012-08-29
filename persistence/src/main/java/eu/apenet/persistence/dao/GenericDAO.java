@@ -50,7 +50,7 @@ public interface GenericDAO<T, ID extends Serializable> {
 	
 	public abstract List<T> findByExample(T exampleInstance);
 	
-	public abstract void store(T entity);
+	public abstract T store(T entity);
 	
 	public abstract void store(Collection<T> entities);
 	
