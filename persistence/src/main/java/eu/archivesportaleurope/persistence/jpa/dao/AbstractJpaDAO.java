@@ -68,11 +68,12 @@ public abstract class AbstractJpaDAO <T, ID extends Serializable> extends Generi
 
 
 	@Override
-	public final void store(T entity) {
+	public final T store(T entity) {
 		try {
 			JpaUtil.beginDatabaseTransaction();
-			getEntityManager().merge(entity);
+			T result =  getEntityManager().merge(entity);
 			JpaUtil.commitDatabaseTransaction();
+			return result;
 		} catch (HibernateException de) {
 			JpaUtil.rollbackDatabaseTransaction();
 			throw de;

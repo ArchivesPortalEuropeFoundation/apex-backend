@@ -106,7 +106,7 @@ public class JpaUtil {
 			}
 			threadTransaction.remove();
 		}catch (Exception ex) {
-			log.error(ex);
+			log.error(ex.getMessage(), ex);
 			rollbackDatabaseTransaction();
 			throw new PersistenceException(ex);
 		}
