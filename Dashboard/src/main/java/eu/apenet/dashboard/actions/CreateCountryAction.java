@@ -130,7 +130,6 @@ public class CreateCountryAction extends ActionSupport{
 		if ((this.getEnglishCountryName()!= null) && (this.getIsoCountryName()!= null) && (this.getIsoCountryName() != null))
 		{				
 			CountryDAO countryDAO = DAOFactory.instance().getCountryDAO();
-			Country newCountry = new Country();
 			CouAlternativeNameDAO couAltNamesDAO = DAOFactory.instance().getCouAlternativeNameDAO();
 			CouAlternativeName newCouAltName = new CouAlternativeName();
 			
@@ -142,7 +141,7 @@ public class CreateCountryAction extends ActionSupport{
 				if ((countryDAO.getCountryByCname(this.getEnglishCountryName().trim()) == null)) 
 				{
 					HibernateUtil.beginDatabaseTransaction();
-					newCountry = new Country();
+                    Country newCountry = new Country();
 					newCountry.setCname(this.getEnglishCountryName().toUpperCase());
 					newCountry.setIsoname(this.getIsoCountryName().toUpperCase());
 					newCountry.setAlOrder(0);					
