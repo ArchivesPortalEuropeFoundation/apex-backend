@@ -104,7 +104,6 @@
 			<xsl:value-of select="ape:resource('eadcontent.dao')" />
 		</h2>
 		<div class="collapse">
-			<!-- <xsl:for-each select='ead:dao[@xlink:role!="THUMBNAIL" or not(@xlink:role)]'>-->
 			<xsl:for-each select='ead:dao[@xlink:title!="thumbnail" or not(@xlink:title)]'>
 				<xsl:variable name="linkPosition" select="position()" />
 				<xsl:variable name="thumbnail" select='parent::node()/ead:dao[@xlink:title="thumbnail"]' />
@@ -336,7 +335,7 @@
 		</h2>
 		<div class="collapse">
 			<xsl:for-each select="ead:otherfindaid">
-				<xsl:apply-templates  mode="other"/>
+				<xsl:apply-templates  mode="otherfindingaids"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>

@@ -94,7 +94,108 @@
 		<img width="200px" src="{$href}" />
 	</xsl:template>
 
-	<xsl:template match="ead:extref" mode="#all">
+	<xsl:template match="ead:extref" mode="otherfindingaids">
+		<xsl:variable name="href" select="./@xlink:href" />
+		<xsl:variable name="prefix" select="$eadcontent.extref.prefix" />
+		<xsl:choose>
+			<xsl:when test="starts-with($href,'http')">
+			<div class="linkButton">
+				<a href="{$href}" target="_blank">
+					<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+					<xsl:choose>
+						<xsl:when test="./@xlink:title">
+							<xsl:text> '</xsl:text>
+							<xsl:value-of select="./@xlink:title" />
+							<xsl:text>' </xsl:text>
+						</xsl:when>
+						<xsl:when test="text()">
+							<xsl:text> '</xsl:text>
+							<xsl:value-of select="text()" />
+							<xsl:text>' </xsl:text>
+						</xsl:when>						
+						<xsl:otherwise>
+						</xsl:otherwise>
+					</xsl:choose>				
+					<span class="icon_new_window"><xsl:text> </xsl:text></span>
+				</a>
+				</div>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:choose>
+					<xsl:when test="ape:linked($href) = 'indexed'">
+						<div class="linkButton">
+						<a href="{$prefix}&amp;eadid={$href}" target="{$href}">
+						<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+						<xsl:choose>
+							<xsl:when test="./@xlink:title">
+								<xsl:text> '</xsl:text>
+								<xsl:value-of select="./@xlink:title" />
+								<xsl:text>' </xsl:text>
+							</xsl:when>
+							<xsl:when test="text()">
+								<xsl:text> '</xsl:text>
+								<xsl:value-of select="text()" />
+								<xsl:text>' </xsl:text>
+							</xsl:when>						
+							<xsl:otherwise>
+							</xsl:otherwise>
+						</xsl:choose>				
+						<span class="icon_new_window"><xsl:text> </xsl:text></span>
+						</a>
+						</div>
+					</xsl:when>
+					<xsl:when test="ape:linked($href) = 'notindexed' ">
+						<xsl:variable name="extref.warning" select="ape:resource('error.user.second.display.notindexed')"/>
+						<div class="linkButton">
+						<a href="javascript:void(0)" onclick="window.alert('{$extref.warning}')" class="notIndexed">
+							<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+							<xsl:choose>
+								<xsl:when test="./@xlink:title">
+									<xsl:text> '</xsl:text>
+									<xsl:value-of select="./@xlink:title" />
+									<xsl:text>' </xsl:text>
+								</xsl:when>
+								<xsl:when test="text()">
+									<xsl:text> '</xsl:text>
+									<xsl:value-of select="text()" />
+									<xsl:text>' </xsl:text>
+								</xsl:when>						
+								<xsl:otherwise>
+								</xsl:otherwise>
+							</xsl:choose>				
+							
+						</a>
+						</div>
+					</xsl:when>
+					<xsl:otherwise>
+						<div class="linkButton">
+							<div class="nolink">
+							<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+							<xsl:choose>
+								<xsl:when test="./@xlink:title">
+									<xsl:text> '</xsl:text>
+									<xsl:value-of select="./@xlink:title" />
+									<xsl:text>' </xsl:text>
+								</xsl:when>
+								<xsl:when test="text()">
+									<xsl:text> '</xsl:text>
+									<xsl:value-of select="text()" />
+									<xsl:text>' </xsl:text>
+								</xsl:when>						
+								<xsl:otherwise>
+								</xsl:otherwise>
+							</xsl:choose>				
+							
+							</div>
+						</div>					
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
+
+	</xsl:template>
+
+	<xsl:template match="ead:extref" mode="other notsearchable scopecontent">
 		<xsl:variable name="href" select="./@xlink:href" />
 		<xsl:variable name="prefix" select="$eadcontent.extref.prefix" />
 		<xsl:choose>
