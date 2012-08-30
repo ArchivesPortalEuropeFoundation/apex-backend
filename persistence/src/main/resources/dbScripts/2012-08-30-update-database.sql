@@ -6,5 +6,6 @@ DROP TABLE normal_user;
 ALTER TABLE dashboard_user DROP CONSTRAINT partner_us_id_fkey;
 ALTER TABLE dashboard_user DROP COLUMN user_state_id;
 ALTER TABLE dashboard_user ADD COLUMN is_active boolean DEFAULT true;
+ALTER TABLE dashboard_user ALTER COLUMN is_active SET NOT NULL;
 
 DROP TABLE user_state;
