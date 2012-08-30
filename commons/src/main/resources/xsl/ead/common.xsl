@@ -77,12 +77,12 @@
 						<xsl:when test="./@xlink:role">
 							<xsl:variable name="type" select="fn:lower-case(./@xlink:role)"/>
 							<span class="icon_dao_type_{$type}" title="{$dao.title}">
-								{$dao.title}
+								<xsl:value-of select="$dao.title" />
 							</span>
 						</xsl:when>
 						<xsl:otherwise>
 							<span class="icon_dao_type_unspecified" title="{$dao.title}">
-								{$dao.title}
+								<xsl:value-of select="$dao.title" />
 							</span>
 						</xsl:otherwise>
 					</xsl:choose>
@@ -113,7 +113,7 @@
 								<xsl:otherwise>
 									<xsl:variable name="extref.notitle" select="ape:resource('eadcontent.extref.notitle')" />
 									<span class="icon_notitle" title="{$extref.notitle}">
-										{$extref.notitle}
+										<xsl:value-of select="$extref.notitle" />
 									</span>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -135,7 +135,7 @@
 								<xsl:otherwise>
 									<xsl:variable name="extref.notitle" select="ape:resource('eadcontent.extref.notitle')" />
 									<span class="icon_notitle"  title="{$extref.notitle}">
-										{$extref.notitle}
+										<xsl:value-of select="$extref.notitle" />
 									</span>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -154,7 +154,7 @@
 								<xsl:otherwise>
 									<xsl:variable name="extref.notitle" select="ape:resource('eadcontent.extref.notitle')" />
 									<span class="icon_notitle" title="{$extref.notitle}">
-										{$extref.notitle}
+										<xsl:value-of select="$extref.notitle" />
 									</span>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -171,7 +171,7 @@
 								<xsl:otherwise>
 									<xsl:variable name="extref.notitle" select="ape:resource('eadcontent.extref.notitle')" />
 									<span class="icon_notitle" title="{$extref.notitle}">
-										{$extref.notitle}
+										<xsl:value-of select="$extref.notitle" />
 									</span>
 								</xsl:otherwise>
 							</xsl:choose>
