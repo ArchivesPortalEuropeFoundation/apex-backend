@@ -30,9 +30,8 @@ public class User implements java.io.Serializable {
 	private Country country;
 	@Column(name = "country_id", insertable = false, updatable = false)
 	private Integer countryId;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_state_id")
-	private UserState userState;
+    @Column(name = "is_active")
+	private boolean isActive;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_role_id")
 	private UserRole userRole;
@@ -53,17 +52,16 @@ public class User implements java.io.Serializable {
 	public User() {
 	}
 
-	public User(int PId, Country country, UserState userState, UserRole roleType, String emailAddress, String pwd) {
+	public User(int PId, Country country, UserRole roleType, String emailAddress, String pwd) {
 		this.id = PId;
 		this.country = country;
-		this.userState = userState;
 		this.userRole = roleType;
 		this.emailAddress = emailAddress;
 		this.password = pwd;
 	}
 
-	public User(UserState userState, String emailAddress, String pwd) {
-		this.userState = userState;
+	public User(boolean isActive, String emailAddress, String pwd) {
+		this.isActive = isActive;
 		this.emailAddress = emailAddress;
 		this.password = pwd;
 	}
@@ -73,24 +71,24 @@ public class User implements java.io.Serializable {
 		this.password = pwd;
 	}
 
-	public User(Country country, UserState userState, String emailAddress, String pwd) {
+	public User(Country country, boolean isActive, String emailAddress, String pwd) {
 		this.country = country;
-		this.userState = userState;
+		this.isActive = isActive;
 		this.emailAddress = emailAddress;
 		this.password = pwd;
 	}
 
-	public User(Country country, UserState userState, UserRole roleType, String emailAddress, String pwd) {
+	public User(Country country, boolean isActive, UserRole roleType, String emailAddress, String pwd) {
 		this.country = country;
-		this.userState = userState;
+		this.isActive = isActive;
 		this.userRole = roleType;
 		this.emailAddress = emailAddress;
 		this.password = pwd;
 	}
 
-	public User(UserState userState, UserRole roleType, String firstName, String lastName, String emailAddress,
+	public User(boolean isActive, UserRole roleType, String firstName, String lastName, String emailAddress,
 			String pwd) {
-		this.userState = userState;
+		this.isActive = isActive;
 		this.userRole = roleType;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -113,14 +111,6 @@ public class User implements java.io.Serializable {
 
 	public void setCountry(Country country) {
 		this.country = country;
-	}
-
-	public UserState getUserState() {
-		return this.userState;
-	}
-
-	public void setUserState(UserState userState) {
-		this.userState = userState;
 	}
 
 	public UserRole getUserRole() {
@@ -200,7 +190,11 @@ public class User implements java.io.Serializable {
 		return firstName + " " + lastName;
 	}
 
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
 	public boolean isActive() {
-		return UserState.ACTIVATED.equals(this.getUserState().getState());
+		return this.isActive;
 	}
 }

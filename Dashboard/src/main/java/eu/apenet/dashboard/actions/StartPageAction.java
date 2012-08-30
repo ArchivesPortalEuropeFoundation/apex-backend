@@ -7,7 +7,6 @@ import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.User;
 import eu.apenet.persistence.vo.UserRole;
-import eu.apenet.persistence.vo.UserState;
 import org.apache.log4j.Logger;
 
 import java.util.Map;
@@ -63,8 +62,7 @@ public class StartPageAction extends ActionSupport {
         HibernateUtil.beginDatabaseTransaction();
         try {
             UserRole roleType = DAOFactory.instance().getUserRoleDAO().getUserRole(UserRole.ROLE_ADMIN);
-            UserState userState = DAOFactory.instance().getUserStateDAO().getUserStateByState(UserState.ACTIVATED);
-            User partner = new User(userState, roleType, "admin", "admin", emailAddress, digestedPwd);
+            User partner = new User(true, roleType, "admin", "admin", emailAddress, digestedPwd);
             DAOFactory.instance().getUserDAO().insertSimple(partner);
             HibernateUtil.commitDatabaseTransaction();
         } catch (Exception e){

@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import eu.apenet.persistence.exception.SentMailRegisterException;
-import eu.apenet.persistence.vo.ArchivalInstitution;
-import eu.apenet.persistence.vo.NormalUser;
 import eu.apenet.persistence.vo.User;
 import eu.apenet.persistence.vo.SentMailRegister;
 

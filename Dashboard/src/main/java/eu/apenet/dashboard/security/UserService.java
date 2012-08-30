@@ -18,14 +18,12 @@ import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.SentMailRegisterDAO;
 import eu.apenet.persistence.dao.UserDAO;
 import eu.apenet.persistence.dao.UserRoleDAO;
-import eu.apenet.persistence.dao.UserStateDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.SentMailRegister;
 import eu.apenet.persistence.vo.User;
 import eu.apenet.persistence.vo.UserRole;
-import eu.apenet.persistence.vo.UserState;
 
 /**
  * Service for manage users in the Dashboard
@@ -104,7 +102,6 @@ public final class UserService {
 		SecurityContext securityContext = SecurityContext.get();
 		if (securityContext.isAdmin() || securityContext.isCountryManager()) {
 			UserDAO partnerDao = DAOFactory.instance().getUserDAO();
-			UserStateDAO userStateDAO = DAOFactory.instance().getUserStateDAO();
 			User partner = partnerDao.findById(id);
 			boolean authorized = false;
 			if (securityContext.isAdmin()) {
@@ -115,21 +112,19 @@ public final class UserService {
 			}
 			if (authorized) {
 				ChangeControl.logOperation("Partner: " + partner.getName() + " is enabled");
-				UserState userState = userStateDAO.findByExample(new UserState(UserState.ACTIVATED)).get(0);
-				partner.setUserState(userState);
+				partner.setActive(true);
 				partnerDao.update(partner);
 			}
 		}
 	}
 	/**
 	 * Disable an user
-	 * @param id id of User
+	 * @param partnerId id of User
 	 */
 	public static void disableUser(Integer partnerId) {
 		SecurityContext securityContext = SecurityContext.get();
 		if (securityContext.isAdmin() || securityContext.isCountryManager()) {
 			UserDAO partnerDao = DAOFactory.instance().getUserDAO();
-			UserStateDAO userStateDAO = DAOFactory.instance().getUserStateDAO();
 			User partner = partnerDao.findById(partnerId);
 			boolean authorized = false;
 			if (securityContext.isAdmin()) {
@@ -140,8 +135,7 @@ public final class UserService {
 			}
 			if (authorized) {
 				ChangeControl.logOperation("Partner: " + partner.getName() + " is disabled");
-				UserState userState = userStateDAO.findByExample(new UserState(UserState.BLOCKED)).get(0);
-				partner.setUserState(userState);
+				partner.setActive(false);
 				partnerDao.update(partner);
 			}
 		}
@@ -155,10 +149,8 @@ public final class UserService {
 	public static void createCountryManager(User user, Integer countryId) {
 		if (SecurityContext.get().isAdmin()) {
 			UserDAO partnerDao = DAOFactory.instance().getUserDAO();
-			UserStateDAO userStateDAO = DAOFactory.instance().getUserStateDAO();
 			UserRoleDAO roleTypeDAO = DAOFactory.instance().getUserRoleDAO();
-			UserState userState = userStateDAO.findByExample(new UserState(UserState.ACTIVATED)).get(0);
-			user.setUserState(userState);
+			user.setActive(true);
 			user.setUserRole(roleTypeDAO.findByExample(new UserRole(UserRole.ROLE_COUNTRY_MANAGER)).get(0));
 			Country country = DAOFactory.instance().getCountryDAO().findById(countryId);
 			user.setCountry(country);
@@ -200,11 +192,8 @@ public final class UserService {
 				String userTypedPassword = null;
 				if (existingUserId == null) {
 					partner = inputUser;
-					UserStateDAO userStateDAO = DAOFactory.instance().getUserStateDAO();
 					UserRoleDAO roleTypeDAO = DAOFactory.instance().getUserRoleDAO();
-
-					UserState userState = userStateDAO.findByExample(new UserState(UserState.ACTIVATED)).get(0);
-					partner.setUserState(userState);
+					partner.setActive(true);
 					partner.setUserRole(roleTypeDAO.findByExample(new UserRole(UserRole.ROLE_INSTITUTION_MANAGER)).get(
 							0));
 					partner.setCountry(archivalInstitution.getCountry());

@@ -28,7 +28,6 @@ import eu.apenet.persistence.dao.LangDAO;
 import eu.apenet.persistence.dao.UserRoleDAO;
 import eu.apenet.persistence.dao.UpFileStateDAO;
 import eu.apenet.persistence.dao.UploadMethodDAO;
-import eu.apenet.persistence.dao.UserStateDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.CouAlternativeNameHibernateDAO;
 import eu.apenet.persistence.hibernate.CountryHibernateDAO;
@@ -38,7 +37,6 @@ import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.hibernate.LangHibernateDAO;
 import eu.apenet.persistence.hibernate.UpFileStateHibernateDAO;
 import eu.apenet.persistence.hibernate.UploadMethodHibernateDAO;
-import eu.apenet.persistence.hibernate.UserStateHibernateDAO;
 
 /**
  * User: Yoann Moranville
@@ -153,7 +151,6 @@ public class StartingProjectInterceptor extends AbstractInterceptor {
 
         createRoleTypeInformation();
         createCountryInformation();
-        createUserStateInformation();
         createLangInformation();
         createFileStateInformation();
         createFileTypeInformation();
@@ -205,30 +202,6 @@ public class StartingProjectInterceptor extends AbstractInterceptor {
             HibernateUtil.closeDatabaseSession();
         } catch (Exception e) {
             LOG.error("Could not create country information");
-            HibernateUtil.rollbackDatabaseTransaction();
-            HibernateUtil.closeDatabaseSession();
-        }
-    }
-
-    private void createUserStateInformation() {
-        LOG.info("Insert UserState information...");
-
-        UserStateDAO userStateDAO = new UserStateHibernateDAO();
-        UserState userState;
-
-        HibernateUtil.beginDatabaseTransaction();
-        try {
-            userState = new UserState();
-            userState.setState("Blocked");
-            userStateDAO.insertSimple(userState);
-            userState = new UserState();
-            userState.setState("Actived");
-            userStateDAO.insertSimple(userState);
-
-            HibernateUtil.commitDatabaseTransaction();
-            HibernateUtil.closeDatabaseSession();
-        } catch (Exception e) {
-            LOG.error("Could not create user state information");
             HibernateUtil.rollbackDatabaseTransaction();
             HibernateUtil.closeDatabaseSession();
         }

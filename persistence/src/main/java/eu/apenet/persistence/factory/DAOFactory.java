@@ -23,16 +23,13 @@ import eu.apenet.persistence.dao.HoldingsGuideDAO;
 import eu.apenet.persistence.dao.IndexQueueDAO;
 import eu.apenet.persistence.dao.LangDAO;
 import eu.apenet.persistence.dao.MetadataFormatDAO;
-import eu.apenet.persistence.dao.NormalUserDAO;
 import eu.apenet.persistence.dao.ResumptionTokenDAO;
-import eu.apenet.persistence.dao.SearchesDAO;
 import eu.apenet.persistence.dao.SentMailRegisterDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.dao.UpFileStateDAO;
 import eu.apenet.persistence.dao.UploadMethodDAO;
 import eu.apenet.persistence.dao.UserDAO;
 import eu.apenet.persistence.dao.UserRoleDAO;
-import eu.apenet.persistence.dao.UserStateDAO;
 import eu.apenet.persistence.dao.WarningsDAO;
 import eu.apenet.persistence.exception.PersistenceException;
 
@@ -113,7 +110,6 @@ public abstract class DAOFactory {
     
     public abstract SentMailRegisterDAO getSentMailRegisterDAO();
     public abstract FindingAidDAO getFindingAidDAO();
-    public abstract UserStateDAO getUserStateDAO();
     public abstract UpFileDAO getUpFileDAO();
     public abstract HoldingsGuideDAO getHoldingsGuideDAO();
     public abstract WarningsDAO getWarningsDAO();
@@ -130,7 +126,6 @@ public abstract class DAOFactory {
     public abstract ArchivalInstitutionOaiPmhDAO getArchivalInstitutionOaiPmhDAO();
     public abstract CLevelDAO getCLevelDAO();
     public abstract EadContentDAO getEadContentDAO();    
-    public abstract SearchesDAO getSearchesDAO();
 	public abstract AiAlternativeNameDAO getAiAlternativeNameDAO();
 	public abstract CouAlternativeNameDAO getCouAlternativeNameDAO();
 	public abstract CpfContentDAO getCpfContentDAO();

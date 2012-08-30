@@ -25,11 +25,6 @@ public class HibernateDAOFactory extends DAOFactory {
 	}
 
 	@Override
-	public UserStateDAO getUserStateDAO() {
-		return (UserStateDAO) instantiateDAO(UserStateHibernateDAO.class);
-	}
-
-	@Override
 	public UpFileDAO getUpFileDAO() {
 		return (UpFileDAO) instantiateDAO(UpFileHibernateDAO.class);
 	}
@@ -109,11 +104,6 @@ public class HibernateDAOFactory extends DAOFactory {
 		return (EadContentDAO) instantiateDAO(EadContentHibernateDAO.class);
 	}
 
-	@Override
-	public SearchesDAO getSearchesDAO() {
-		return (SearchesDAO) instantiateDAO(SearchesHibernateDAO.class);
-	}
-	
 	@Override
 	public AiAlternativeNameDAO getAiAlternativeNameDAO(){
 		return (AiAlternativeNameDAO) instantiateDAO(AiAlternativeNameHibernateDAO.class);
