@@ -99,7 +99,7 @@ public class ExistingFilesChecker {
 
 		String eadType = "";
 		// Retrieving all XML files uploaded
-		List<UpFile> listXml = upFileDao.getUpFiles(this.archivalInstitutionId, UpFileState.NEW, FileType.XML);
+		List<UpFile> listXml = upFileDao.getUpFiles(this.archivalInstitutionId, FileType.XML);
 		for (UpFile aListXml : listXml) {
 			FileUnit fileUnit = new FileUnit();
 			fileUnit.setFileId(aListXml.getUfId());
@@ -130,7 +130,7 @@ public class ExistingFilesChecker {
 		}
 
 		// Retrieving all XSL files uploaded
-		List<UpFile> listXsl = upFileDao.getUpFiles(this.archivalInstitutionId, "New", "xsl");
+		List<UpFile> listXsl = upFileDao.getUpFiles(this.archivalInstitutionId, FileType.XSL);
 		for (UpFile aListXsl : listXsl) {
 			FileUnit fileUnit = new FileUnit();
 			fileUnit.setFileId(aListXsl.getUfId());

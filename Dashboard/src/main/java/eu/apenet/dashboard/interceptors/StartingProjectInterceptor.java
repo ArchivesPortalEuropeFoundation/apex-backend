@@ -26,7 +26,6 @@ import eu.apenet.persistence.dao.FileStateDAO;
 import eu.apenet.persistence.dao.FileTypeDAO;
 import eu.apenet.persistence.dao.LangDAO;
 import eu.apenet.persistence.dao.UserRoleDAO;
-import eu.apenet.persistence.dao.UpFileStateDAO;
 import eu.apenet.persistence.dao.UploadMethodDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.CouAlternativeNameHibernateDAO;
@@ -35,7 +34,6 @@ import eu.apenet.persistence.hibernate.FileStateHibernateDAO;
 import eu.apenet.persistence.hibernate.FileTypeHibernateDAO;
 import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.hibernate.LangHibernateDAO;
-import eu.apenet.persistence.hibernate.UpFileStateHibernateDAO;
 import eu.apenet.persistence.hibernate.UploadMethodHibernateDAO;
 
 /**
@@ -155,7 +153,6 @@ public class StartingProjectInterceptor extends AbstractInterceptor {
         createFileStateInformation();
         createFileTypeInformation();
         createUploadMethodInformation();
-        createUpFileStateInformation();
 
     }
 
@@ -394,28 +391,6 @@ public class StartingProjectInterceptor extends AbstractInterceptor {
             HibernateUtil.closeDatabaseSession();
         }
     }
-
-    private void createUpFileStateInformation() {
-        LOG.info("Insert Up File State information...");
-        UpFileStateDAO upFileStateDAO = new UpFileStateHibernateDAO();
-        UpFileState upFileState;
-
-        HibernateUtil.beginDatabaseTransaction();
-        try {
-            upFileState = new UpFileState();
-            upFileState.setState("New");
-            upFileStateDAO.insertSimple(upFileState);
-
-            HibernateUtil.commitDatabaseTransaction();
-            HibernateUtil.closeDatabaseSession();
-        } catch (Exception e) {
-            LOG.error("Could not create Up File State information");
-            HibernateUtil.rollbackDatabaseTransaction();
-            HibernateUtil.closeDatabaseSession();
-        }
-    }
-
-
 
     public void populateCountryAlternativeName() throws APEnetException {
         Map<String, String> countryMap = new HashMap<String, String>();

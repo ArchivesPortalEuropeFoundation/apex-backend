@@ -32,9 +32,6 @@ public class UpFile implements java.io.Serializable {
 	@JoinColumn(name="ft_id")
 	private FileType fileType;
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="ufs_id")
-	private UpFileState upFileState;
-	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="um_id")
 	private UploadMethod uploadMethod;
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -46,12 +43,10 @@ public class UpFile implements java.io.Serializable {
 	public UpFile() {
 	}
 
-	public UpFile(int ufId, FileType fileType, UpFileState upFileState,
-			UploadMethod uploadMethod, ArchivalInstitution archivalInstitution,
+	public UpFile(int ufId, FileType fileType, UploadMethod uploadMethod, ArchivalInstitution archivalInstitution,
 			String path) {
 		this.ufId = ufId;
 		this.fileType = fileType;
-		this.upFileState = upFileState;
 		this.uploadMethod = uploadMethod;
 		this.archivalInstitution = archivalInstitution;
 		this.path = path;
@@ -71,14 +66,6 @@ public class UpFile implements java.io.Serializable {
 
 	public void setFileType(FileType fileType) {
 		this.fileType = fileType;
-	}
-
-	public UpFileState getUpFileState() {
-		return this.upFileState;
-	}
-
-	public void setUpFileState(UpFileState upFileState) {
-		this.upFileState = upFileState;
 	}
 
 	public UploadMethod getUploadMethod() {

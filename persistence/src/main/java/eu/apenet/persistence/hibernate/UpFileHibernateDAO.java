@@ -21,10 +21,10 @@ public class UpFileHibernateDAO extends AbstractHibernateDAO<UpFile, Integer> im
 	private final Logger log = Logger.getLogger(getClass());
 	
 	@SuppressWarnings("unchecked")
-	public List<UpFile> getUpFiles(Integer aiId, String upFileState, String fileType) {
+	public List<UpFile> getUpFiles(Integer aiId, String fileType) {
 		long startTime = System.currentTimeMillis();
 		List<UpFile> results = new ArrayList<UpFile>();
-		Criteria criteria = createUpFilesCriteria(aiId, upFileState, fileType);
+		Criteria criteria = createUpFilesCriteria(aiId, fileType);
 		results = criteria.list();
 		long endTime = System.currentTimeMillis();
 		if (log.isDebugEnabled()) {
@@ -34,18 +34,14 @@ public class UpFileHibernateDAO extends AbstractHibernateDAO<UpFile, Integer> im
 		return results;
 	}
 
-	private Criteria createUpFilesCriteria(Integer aiId, String upFileState, String fileType) {
+	private Criteria createUpFilesCriteria(Integer aiId, String fileType) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "upFile");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		criteria = criteria.createAlias("upFile.archivalInstitution", "archivalInstitution");
-		criteria = criteria.createAlias("upFile.upFileState", "upFileState");
 		criteria = criteria.createAlias("upFile.fileType", "fileType");
 
 		if (aiId != null) {
 			criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId.intValue()));
-		}
-		if (StringUtils.isNotBlank(upFileState)) {
-			criteria.add(Restrictions.like("upFileState.state", upFileState, MatchMode.ANYWHERE));
 		}
 		if (StringUtils.isNotBlank(fileType)) {
 			criteria.add(Restrictions.like("fileType.ftype", fileType, MatchMode.ANYWHERE));

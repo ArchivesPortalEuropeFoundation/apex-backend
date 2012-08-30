@@ -26,7 +26,6 @@ import eu.apenet.persistence.dao.MetadataFormatDAO;
 import eu.apenet.persistence.dao.ResumptionTokenDAO;
 import eu.apenet.persistence.dao.SentMailRegisterDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
-import eu.apenet.persistence.dao.UpFileStateDAO;
 import eu.apenet.persistence.dao.UploadMethodDAO;
 import eu.apenet.persistence.dao.UserDAO;
 import eu.apenet.persistence.dao.UserRoleDAO;
@@ -120,7 +119,6 @@ public abstract class DAOFactory {
     public abstract EseDAO getEseDAO();
     public abstract FileStateDAO getFileStateDAO();
     public abstract UploadMethodDAO getUploadMethodDAO();
-    public abstract UpFileStateDAO getUpFileStateDAO();
     public abstract FileTypeDAO getFileTypeDAO();
     public abstract EseStateDAO getEseStateDAO();
     public abstract ArchivalInstitutionOaiPmhDAO getArchivalInstitutionOaiPmhDAO();

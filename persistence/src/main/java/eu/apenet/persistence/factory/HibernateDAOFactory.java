@@ -73,12 +73,6 @@ public class HibernateDAOFactory extends DAOFactory {
 		return (UploadMethodDAO) instantiateDAO(UploadMethodHibernateDAO.class);
 	}
 
-
-	@Override
-	public UpFileStateDAO getUpFileStateDAO() {
-		return (UpFileStateDAO) instantiateDAO(UpFileStateHibernateDAO.class);
-	}
-
 	@Override
 	public FileTypeDAO getFileTypeDAO() {
 		return (FileTypeDAO) instantiateDAO(FileTypeHibernateDAO.class);

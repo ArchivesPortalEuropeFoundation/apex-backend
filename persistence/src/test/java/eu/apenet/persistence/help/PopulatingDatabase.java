@@ -44,7 +44,6 @@ public class PopulatingDatabase {
             conn = DriverManager.getConnection(url, username, password);
             /****DO NOT MODIFY THIS ORDER***/
             createCountryEntries();
-            createUserStateEntries();
             createPartnerEntries();
             createArchivalInstitutionEntries();
             createFileStateEntries();
@@ -53,7 +52,6 @@ public class PopulatingDatabase {
             createHoldingsGuideEntries();
             createFindingAidEntries();
             createFileTypeEntries();
-            createUpFileStateEntries();
             createUpFileEntries();
             createOperationTypeEntries();
             /*******/
@@ -131,22 +129,11 @@ public class PopulatingDatabase {
         st.execute("INSERT INTO upload_method (um_id, method) VALUES (3, 'HTTP')");
     }
 
-    private void createUserStateEntries() throws SQLException {
-        Statement st = conn.createStatement();
-        st.execute("INSERT INTO user_state (us_id, state) VALUES (0, 'Blocked')");
-        st.execute("INSERT INTO user_state (us_id, state) VALUES (1, 'Actived')");
-    }
-
     private void createFileTypeEntries() throws SQLException {
         Statement st = conn.createStatement();
         st.execute("INSERT INTO file_type (ft_id, ftype) VALUES (0, 'zip')");
         st.execute("INSERT INTO file_type (ft_id, ftype) VALUES (1, 'xml')");
         st.execute("INSERT INTO file_type (ft_id, ftype) VALUES (2, 'xsl')");
-    }
-
-    private void createUpFileStateEntries() throws SQLException {
-        Statement st = conn.createStatement();
-        st.execute("INSERT INTO up_file_state (ufs_id, state) VALUES (0, 'New')");
     }
 
     private void createUpFileEntries() throws SQLException {

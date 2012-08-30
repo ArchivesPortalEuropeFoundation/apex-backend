@@ -297,7 +297,6 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
             upFile.setFname(fileName);
             upFile.setPath(filePath);
             upFile.setUploadMethod(DAOFactory.instance().getUploadMethodDAO().getUploadMethodByMethod(UploadMethod.HTTP));
-            upFile.setUpFileState(DAOFactory.instance().getUpFileStateDAO().getUpFileStateByState(UpFileState.NEW));
 
             HibernateUtil.beginDatabaseTransaction();
             DAOFactory.instance().getUpFileDAO().insertSimple(upFile);

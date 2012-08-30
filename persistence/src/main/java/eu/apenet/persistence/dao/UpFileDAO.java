@@ -11,7 +11,7 @@ import eu.apenet.persistence.vo.UpFile;
  */
 
 public interface UpFileDAO extends GenericDAO<UpFile, Integer> {
-	public List<UpFile> getUpFiles(Integer aiId, String upFileState, String fileType);
+	public List<UpFile> getUpFiles(Integer aiId, String fileType);
 	public List<UpFile> getUpFiles(Integer aiId);
 	public UpFile getUpFile(Integer fileId);
 }

@@ -33,13 +33,11 @@ import eu.apenet.dashboard.utils.ZipManager;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.FileTypeDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
-import eu.apenet.persistence.dao.UpFileStateDAO;
 import eu.apenet.persistence.dao.UploadMethodDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.FileType;
 import eu.apenet.persistence.vo.UpFile;
-import eu.apenet.persistence.vo.UpFileState;
 import eu.apenet.persistence.vo.UploadMethod;
 
 /**
@@ -432,10 +430,6 @@ public class UploadContentAction extends AbstractInstitutionAction implements Se
         UploadMethodDAO uploadMethodDao = DAOFactory.instance().getUploadMethodDAO();
         UploadMethod uploadMethod = uploadMethodDao.getUploadMethodByMethod(uploadMethodString);
         upFile.setUploadMethod(uploadMethod);
-
-        UpFileStateDAO upFileStateDao = DAOFactory.instance().getUpFileStateDAO();
-        UpFileState upFileState = upFileStateDao.getUpFileStateByState("New");
-        upFile.setUpFileState(upFileState);
 
         ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
         ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(aiId);

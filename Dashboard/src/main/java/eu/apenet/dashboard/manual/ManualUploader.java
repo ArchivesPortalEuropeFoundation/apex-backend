@@ -600,9 +600,6 @@ public abstract class ManualUploader {
         UploadMethod uploadMethod = DAOFactory.instance().getUploadMethodDAO().getUploadMethodByMethod(uploadMethodString);
         upFile.setUploadMethod(uploadMethod);
 
-        UpFileState upFileState = DAOFactory.instance().getUpFileStateDAO().getUpFileStateByState(UpFileState.NEW);
-        upFile.setUpFileState(upFileState);
-
         ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
         upFile.setArchivalInstitution(archivalInstitution);
 
