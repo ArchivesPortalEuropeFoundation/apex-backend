@@ -49,11 +49,11 @@ public class HoldingsGuide extends Ead {
 	private Long totalNumberOfDaos;
 	private Long totalNumberOfUnits;
 	private Long totalNumberOfUnitsWithDao;
-	@OneToMany(mappedBy="findingAid")
+	@OneToMany(mappedBy="holdingsGuide")
 	private Set<IndexQueue> indexQueues = new HashSet<IndexQueue>(0);
-	@OneToMany(mappedBy="findingAid")
+	@OneToMany(mappedBy="holdingsGuide")
 	private Set<Warnings> warningses = new HashSet<Warnings>(0);
-	@OneToMany(mappedBy="findingAid")
+	@OneToMany(mappedBy="holdingsGuide")
 	private Set<EadContent> eadContents = new HashSet<EadContent>(0);
 	public Integer getId() {
 		return id;
