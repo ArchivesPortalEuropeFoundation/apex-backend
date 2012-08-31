@@ -1,5 +1,5 @@
+﻿DROP TABLE item;
 DROP TABLE level_type;
-DROP TABLE item;
 DROP TABLE searches;
 DROP TABLE normal_user;
 
