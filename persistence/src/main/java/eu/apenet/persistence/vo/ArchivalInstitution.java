@@ -32,7 +32,7 @@ public class ArchivalInstitution implements java.io.Serializable {
 	private int aiId;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="parent_ai_id")
-	private ArchivalInstitution archivalInstitution;
+	private ArchivalInstitution parent;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="user_id", insertable = false, updatable = false)
 	private User partner;
@@ -52,10 +52,13 @@ public class ArchivalInstitution implements java.io.Serializable {
 	private String eagPath;
 	private String repositorycode;
 	private String autform;
-	private Boolean isgroup;
+	@Column(name = "isgroup")
+	private boolean group;
 	@Column(name = "internal_al_id")
 	private String internalAlId;
 	private int alorder;
+	@Column(name = "contain_searchable_items")
+	private boolean containSearchableItems;
 
 	@OneToMany(mappedBy="archivalInstitution")
 	private Set<ArchivalInstitutionOaiPmh> archivalInstitutionOaiPmhs = new HashSet<ArchivalInstitutionOaiPmh>(0);
@@ -63,8 +66,8 @@ public class ArchivalInstitution implements java.io.Serializable {
 	@OneToMany(mappedBy="archivalInstitution")
 	private Set<AiAlternativeName> aiAlternativeNames = new HashSet<AiAlternativeName>(0);
 
-	@OneToMany(mappedBy="archivalInstitution")
-	private Set<ArchivalInstitution> archivalInstitutions = new HashSet<ArchivalInstitution>(0);
+	@OneToMany(mappedBy="parent")
+	private Set<ArchivalInstitution> childArchivalInstitutions = new HashSet<ArchivalInstitution>(0);
 
 	@OneToMany(mappedBy="archivalInstitution")
 	private Set<FindingAid> findingAids = new HashSet<FindingAid>(0);
@@ -79,15 +82,12 @@ public class ArchivalInstitution implements java.io.Serializable {
 	public void setAiId(int aiId) {
 		this.aiId = aiId;
 	}
-
-	public ArchivalInstitution getArchivalInstitution() {
-		return this.archivalInstitution;
+	public ArchivalInstitution getParent() {
+		return this.parent;
 	}
-
-	public void setArchivalInstitution(ArchivalInstitution archivalInstitution) {
-		this.archivalInstitution = archivalInstitution;
+	public void setParent(ArchivalInstitution archivalInstitution) {
+		this.parent = archivalInstitution;
 	}
-
 	public User getPartner() {
 		return this.partner;
 	}
@@ -128,6 +128,14 @@ public class ArchivalInstitution implements java.io.Serializable {
 		this.repositorycode = repositorycode;
 	}
 
+	public boolean isContainSearchableItems() {
+		return containSearchableItems;
+	}
+
+	public void setContainSearchableItems(boolean containSearchableItems) {
+		this.containSearchableItems = containSearchableItems;
+	}
+
 	public String getAutform() {
 		return this.autform;
 	}
@@ -136,12 +144,12 @@ public class ArchivalInstitution implements java.io.Serializable {
 		this.autform = autform;
 	}
 
-	public Boolean getIsgroup() {
-		return this.isgroup;
+	public boolean isGroup() {
+		return this.group;
 	}
 
-	public void setIsgroup(Boolean isgroup) {
-		this.isgroup = isgroup;
+	public void setGroup(boolean group) {
+		this.group = group;
 	}
 
 //	public Set<UpFile> getUpFiles() {
@@ -193,14 +201,15 @@ public class ArchivalInstitution implements java.io.Serializable {
 		this.findingAids = findingAids;
 	}
 
-	public Set<ArchivalInstitution> getArchivalInstitutions() {
-		return this.archivalInstitutions;
+
+	public Set<ArchivalInstitution> getChildArchivalInstitutions() {
+		return childArchivalInstitutions;
 	}
 
-	public void setArchivalInstitutions(
-			Set<ArchivalInstitution> archivalInstitutions) {
-		this.archivalInstitutions = archivalInstitutions;
+	public void setChildArchivalInstitutions(Set<ArchivalInstitution> childArchivalInstitutions) {
+		this.childArchivalInstitutions = childArchivalInstitutions;
 	}
+
 	@Override
         public String toString() {
         return "ArchivalInstitution{" +

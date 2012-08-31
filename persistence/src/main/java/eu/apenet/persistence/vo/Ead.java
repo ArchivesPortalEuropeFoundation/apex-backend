@@ -35,7 +35,8 @@ public abstract class Ead  implements Serializable{
 	public abstract void setTotalNumberOfUnits(Long totalNumberOfUnits) ;
 	public abstract Long getTotalNumberOfUnitsWithDao();
 	public abstract void setTotalNumberOfUnitsWithDao(Long totalNumberOfUnitsWithDao);
-
+	public abstract boolean isSearchable();
+	public abstract void setSearchable(boolean searchable);
     @Deprecated
 	public abstract Set<IndexQueue> getIndexQueues();
 	public abstract void setIndexQueues(Set<IndexQueue> indexQueues);

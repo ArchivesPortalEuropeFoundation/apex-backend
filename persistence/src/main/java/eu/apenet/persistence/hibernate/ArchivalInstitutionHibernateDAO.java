@@ -121,7 +121,7 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 	public Long countTotalArchivalInstitutions(){
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		criteria.add(Restrictions.eq("isgroup", false));
+		criteria.add(Restrictions.eq("group", false));
 		criteria.add(Restrictions.isNotNull("eagPath"));
 		criteria.setProjection(Projections.countDistinct("archivalInstitution.aiId")); //select count(aiId)
 		return (Long) criteria.uniqueResult();
@@ -159,7 +159,7 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 		long startTime = System.currentTimeMillis();
 		List<ArchivalInstitution> results = new ArrayList<ArchivalInstitution>();
 		Criteria criteria = createArchivalInstitutionCriteria( false, "ainame", true);
-		criteria.add(Restrictions.eq("archivalInstitution.partnerId", pId));
+		criteria.add(Restrictions.eq("partnerId", pId));
 		results = criteria.list();
 		long endTime = System.currentTimeMillis();
 		if (log.isDebugEnabled()) {
@@ -193,13 +193,11 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 
 	
 	private Criteria createArchivalInstitutionCriteria(
-			Boolean is_group, String sortValue, boolean ascending) {
+			boolean group, String sortValue, boolean ascending) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 
-		if (is_group != null) {
-			criteria.add(Restrictions.eq("archivalInstitution.isgroup", is_group.booleanValue()));
-		}	
+		criteria.add(Restrictions.eq("group", group));
 		if ("countryId".equals(sortValue)) {
 			if (ascending) {
 				criteria.addOrder(Order.asc("archivalInstitution.countryId"));
@@ -247,7 +245,7 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		criteria.add(Restrictions.eq("countryId",countryId));
-		criteria.add(Restrictions.isNull("archivalInstitution"));
+		criteria.add(Restrictions.isNull("parent"));
 		return criteria.list();
 	}
 
@@ -259,10 +257,10 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		
 		if (parentAiId != null){
-			criteria.add(Restrictions.eq("archivalInstitution.archivalInstitution.aiId", parentAiId.intValue()));
+			criteria.add(Restrictions.eq("archivalInstitution.parent.aiId", parentAiId.intValue()));
 		}
 		else {
-			criteria.add(Restrictions.isNull("archivalInstitution.archivalInstitution.aiId"));
+			criteria.add(Restrictions.isNull("archivalInstitution.parent.aiId"));
 		}
 		
 		return criteria;
@@ -273,7 +271,7 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		if (parentAiId != null) {
-			criteria.add(Restrictions.eq("archivalInstitution.archivalInstitution.aiId", parentAiId.intValue()));
+			criteria.add(Restrictions.eq("archivalInstitution.parent.aiId", parentAiId.intValue()));
 		}
 		return criteria;
 	}

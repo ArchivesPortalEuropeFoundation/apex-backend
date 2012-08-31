@@ -1,7 +1,13 @@
 package eu.apenet.persistence.hibernate;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -13,45 +19,67 @@ import org.hibernate.criterion.Restrictions;
 
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.vo.Ead;
-import eu.apenet.persistence.vo.FileState;
-import eu.apenet.persistence.vo.FindingAid;
-import eu.apenet.persistence.vo.HoldingsGuide;
-import eu.apenet.persistence.vo.SourceGuide;
 
 public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implements EadDAO {
 
 	private static final Logger LOG = Logger.getLogger(EadHibernateDAO.class);
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Integer isEadidIndexed(String eadid, Integer aiId, Class<? extends Ead> clazz) {
-		Criteria criteria = getSession().createCriteria(clazz, "ead").setProjection(Projections.property("id"));
-		criteria.createAlias("ead.archivalInstitution", "archivalInstitution");
-		criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
-		criteria.add(Restrictions.eq("eadid", eadid));
-		criteria = criteria.createAlias("ead.fileState", "fileState");
-		Disjunction disjunction = Restrictions.disjunction();
-		for (String fileState : FileState.INDEXED_FILE_STATES) {
-			disjunction.add(Restrictions.eq("fileState.state", fileState));
+		Ead eadExample;
+		try {
+			eadExample = clazz.newInstance();
+		} catch (Exception e) {
+			return null;
 		}
-		criteria.add(disjunction);
-		List<Integer> result = criteria.list();
-		if (result.size() > 0)
-			return result.get(0);
-		return null;
+		eadExample.setAiId(aiId);
+		eadExample.setEadid(eadid);
+		eadExample.setSearchable(true);
+		Long numberOfEads = countEads(eadExample, false);
+		if (numberOfEads > 0){
+			return numberOfEads.intValue();
+		}else {
+			return null;
+		}
 	}
-
 	@Override
-	@SuppressWarnings("unchecked")
+	public Long countEads(Ead eadExample) {
+		return countEads(eadExample, false);
+	}
+	private Long countEads(Ead eadExample, boolean allStates) {
+		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
+		Root<? extends Ead> from = cq.from(eadExample.getClass());
+		cq.select(criteriaBuilder.countDistinct(from));
+		List<Predicate> whereClause = new ArrayList<Predicate>();
+		if (!allStates){
+			whereClause.add(criteriaBuilder.equal(from.get("searchable"), eadExample.isSearchable()));
+		}
+		if (eadExample.getAiId() != null){
+			whereClause.add(criteriaBuilder.equal(from.get("aiId"), eadExample.getAiId()));		 
+		}
+		if (eadExample.getEadid() != null){
+			whereClause.add(criteriaBuilder.equal(from.get("eadid"), eadExample.getEadid()));		 
+		}
+		cq.where(criteriaBuilder.and(whereClause.toArray(new Predicate[0])));
+		return getEntityManager().createQuery(cq).getSingleResult();
+	}
+	@Override
 	public Integer isEadidUsed(String eadid, Integer aiId, Class<? extends Ead> clazz) {
-		Criteria criteria = getSession().createCriteria(clazz, "ead").setProjection(Projections.property("id"));
-		criteria.createAlias("ead.archivalInstitution", "archivalInstitution");
-		criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
-		criteria.add(Restrictions.eq("eadid", eadid));
-		List<Integer> result = criteria.list();
-		if (result.size() > 0)
-			return result.get(0);
-		return null;
+		Ead eadExample;
+		try {
+			eadExample = clazz.newInstance();
+		} catch (Exception e) {
+			return null;
+		}
+		eadExample.setAiId(aiId);
+		eadExample.setEadid(eadid);
+		Long numberOfEads = countEads(eadExample, true);
+		if (numberOfEads > 0){
+			return numberOfEads.intValue();
+		}else {
+			return null;
+		}
 	}
 
     @Override

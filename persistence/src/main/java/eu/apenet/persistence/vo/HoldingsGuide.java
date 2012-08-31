@@ -37,7 +37,7 @@ public class HoldingsGuide extends Ead {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="upload_date")
 	private Date uploadDate;
-	
+	private boolean searchable;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="um_id")
 	private UploadMethod uploadMethod;
@@ -85,6 +85,14 @@ public class HoldingsGuide extends Ead {
 
 	public void setUploadDate(Date uploadDate) {
 		this.uploadDate = uploadDate;
+	}
+
+	public boolean isSearchable() {
+		return searchable;
+	}
+
+	public void setSearchable(boolean searchable) {
+		this.searchable = searchable;
 	}
 
 	public String getPathApenetead() {

@@ -40,6 +40,8 @@ public class FindingAid extends Ead {
 	@Column(name="upload_date")
 	private Date uploadDate;
 	
+	private boolean searchable;
+	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="um_id")
 	private UploadMethod uploadMethod;
@@ -57,6 +59,8 @@ public class FindingAid extends Ead {
 	private Set<Warnings> warningses = new HashSet<Warnings>(0);
 	@OneToMany(mappedBy="findingAid")
 	private Set<EadContent> eadContents = new HashSet<EadContent>(0);
+
+	
 	public Integer getId() {
 		return id;
 	}
@@ -155,6 +159,14 @@ public class FindingAid extends Ead {
 
 	
 	
+	public boolean isSearchable() {
+		return searchable;
+	}
+
+	public void setSearchable(boolean searchable) {
+		this.searchable = searchable;
+	}
+
 	public Set<IndexQueue> getIndexQueues() {
 		return indexQueues;
 	}
