@@ -82,7 +82,7 @@ public class SuperUserAction extends AjaxControllerAbstractAction {
                         }
                         totalFaNumberCounter += archivalInstitution.getFindingAids().size();
                         totalHgNumberCounter += archivalInstitution.getHoldingsGuides().size();
-                        if(!archivalInstitution.getIsgroup())
+                        if(!archivalInstitution.isGroup())
                             totalArchivalInstitutionNoGroupsNumberCounter++;
                     }
                    totalArchivalInstitutionNumberCounter += country.getArchivalInstitutions().size();

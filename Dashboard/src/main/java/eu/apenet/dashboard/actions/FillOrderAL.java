@@ -309,13 +309,13 @@ public class FillOrderAL extends ActionSupport {
 			            	{	
 		            		this.ai = ais.get(i);
 		            		//If the item stored in database has the same parent in the archival landscape, check the languages
-		            		if ((alNodes.get(h).getParent_internal_al_id()== null) && (ais.get(i).getArchivalInstitution() ==null))
+		            		if ((alNodes.get(h).getParent_internal_al_id()== null) && (ais.get(i).getParent() ==null))
 		            		{
 		            			checkAlternativeNames(ais.get(i), alNodes.get(h));
 		            		}		            		
-		            		else if  ((alNodes.get(h).getParent_internal_al_id()!= null) && (ais.get(i).getArchivalInstitution() != null))
+		            		else if  ((alNodes.get(h).getParent_internal_al_id()!= null) && (ais.get(i).getParent() != null))
 		            		{
-		            			if ((alNodes.get(h).getParent_internal_al_id().equals(ais.get(i).getArchivalInstitution().getInternalAlId())))
+		            			if ((alNodes.get(h).getParent_internal_al_id().equals(ais.get(i).getParent().getInternalAlId())))
 					            	{
 				            		checkAlternativeNames(ais.get(i), alNodes.get(h));
 				            	}
@@ -325,18 +325,18 @@ public class FillOrderAL extends ActionSupport {
 		            			{		  
 		            			
 			            			if (alNodes.get(h).getParent_internal_al_id()== null)
-			    		            	this.ai.setArchivalInstitution(null);
+			    		            	this.ai.setParent(null);
 			    		            else {
 			    		            	ai_parent = aiDao.getArchivalInstitutionsByCountryIdandAlIdentifier( country.getCouId() , alNodes.get(h).getParent_internal_al_id());
-			    		            	this.ai.setArchivalInstitution(ai_parent);			    		            	
+			    		            	this.ai.setParent(ai_parent);			    		            	
 			    		            }
 		            			}
 			            	}
 		            		//Discrepancies in parents to solve (unless the parent is the node of the country=fonds)
-		            		else if ((ais.get(i).getArchivalInstitution() == null) && (alNodes.get(h).getParent_internal_al_id()!= null))	            				
+		            		else if ((ais.get(i).getParent() == null) && (alNodes.get(h).getParent_internal_al_id()!= null))	            				
 		            		{
 		            				ai_parent = aiDao.getArchivalInstitutionsByCountryIdandAlIdentifier( country.getCouId() , alNodes.get(h).getParent_internal_al_id());
-		    		            	this.ai.setArchivalInstitution(ai_parent);	
+		    		            	this.ai.setParent(ai_parent);	
 		            		}
 		            		//Update always the order of the archival landscape
 		            		this.ai.setAlorder(alNodes.get(h).getNodeId());

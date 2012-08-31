@@ -38,6 +38,7 @@ import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.solr.UpdateSolrServerHolder;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.CountryDAO;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.FileStateDAO;
@@ -596,6 +597,7 @@ public class Indexer {
         }else{ //HG or SG
             changeState(FileState.INDEXED_LINKED);
         }
+        ContentUtils.changeSearchable(ead, true);
 	}
 
 	public void rollback() throws SolrServerException, IOException {
@@ -610,6 +612,7 @@ public class Indexer {
         UpdateSolrServerHolder.getInstance().deleteByQuery(SolrFields.FOND_ID + ":" + solrPrefix + ead.getId());
         Ead rollBackEad = eadDao.findById(ead.getId(), xmlType.getClazz());
         rollBackEad.setFileState(initialstate);
+        ContentUtils.changeSearchable(rollBackEad, false);
         eadDao.store(rollBackEad);
 
 		UpdateSolrServerHolder.getInstance().commit();

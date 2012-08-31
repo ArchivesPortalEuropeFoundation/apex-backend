@@ -358,11 +358,11 @@ public class EditArchivalLandscapeLogic {
 		Long counter = new Long(0);
 		ArchivalInstitution aiTemp = new ArchivalInstitution();
 		aiTemp = (ArchivalInstitution) DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionByInternalAlId(identifier);
-		Set<ArchivalInstitution> archivalInstitutions = aiTemp.getArchivalInstitutions();
+		Set<ArchivalInstitution> archivalInstitutions = aiTemp.getChildArchivalInstitutions();
 		Iterator<ArchivalInstitution> iteratorArchivalInstitutions = archivalInstitutions.iterator();
 		while(iteratorArchivalInstitutions.hasNext()){
 			aiTemp = iteratorArchivalInstitutions.next();
-			if(aiTemp.getIsgroup()){
+			if(aiTemp.isGroup()){
 				counter += recursiveCountIndexedContentByInstitutionGroup(aiTemp.getInternalAlId());
 			}else{
 				counter += DAOFactory.instance().getFindingAidDAO().countFindingAidsIndexedByInternalArchivalInstitutionId(aiTemp.getInternalAlId());

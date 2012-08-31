@@ -101,14 +101,14 @@ public class EADParser extends AbstractParser {
 			List<ArchivalInstitution> ais = new ArrayList<ArchivalInstitution>();
 			while (ai != null) {
 				ais.add(ai);
-				ai = ai.getArchivalInstitution();
+				ai = ai.getParent();
 			}
 			int depth = 0;
 			for (int i = ais.size() - 1; i >= 0; i--) {
 				ArchivalInstitution currentAi = ais.get(i);
 				String id = SolrValues.AI_PREFIX + currentAi.getAiId();
 				String newFacetField = currentAi.getAiname();
-				if (currentAi.getIsgroup()) {
+				if (currentAi.isGroup()) {
 					newFacetField += Indexer.COLON + SolrValues.TYPE_GROUP;
 				} else {
 					newFacetField += Indexer.COLON + SolrValues.TYPE_LEAF;

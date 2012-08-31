@@ -622,7 +622,7 @@ public class ArchivalLandscape extends ActionSupport{
         					//If it's the primary name, we have to check if this item is indexed somewhere 
         					else{
         						// If yes, update the list to inform the user that the name can't be changed
-        						Long numFilesIndexed = EditArchivalLandscapeLogic.countIndexedContentByInstitutionGroupId(arch_inst.getInternalAlId(),arch_inst.getIsgroup());
+        						Long numFilesIndexed = EditArchivalLandscapeLogic.countIndexedContentByInstitutionGroupId(arch_inst.getInternalAlId(),arch_inst.isGroup());
         						if ((numFilesIndexed != null) && (numFilesIndexed > 0))
         							this.getArchivalInstitutionsNameNotChanged().add(aiNames.get(m));        						
         						//Change the name in archival institution name too.
@@ -790,13 +790,13 @@ public class ArchivalLandscape extends ActionSupport{
                             this.ai.setAiname(archivalLandscapeNode.getNames().get(item.getKey()));
                     }
 
-		            this.ai.setIsgroup(archivalLandscapeNode.getIs_group());
+		            this.ai.setGroup(archivalLandscapeNode.getIs_group());
 		            
 		            if (archivalLandscapeNode.getParent_name()== null)
-		            	this.ai.setArchivalInstitution(null);
+		            	this.ai.setParent(null);
 		            else {
 		            	ai_parent = aiDao.getArchivalInstitutionsByCountryIdandAlIdentifier(this.country.getCouId(), archivalLandscapeNode.getParent_internal_al_id());
-		            	this.ai.setArchivalInstitution(ai_parent);
+		            	this.ai.setParent(ai_parent);
 		            }
 		            this.ai.setCountryId(this.country.getCouId());
 		            this.ai.setCountry(this.country);
@@ -833,13 +833,13 @@ public class ArchivalLandscape extends ActionSupport{
 		            	if (archivalLandscapeNode.getInternal_al_id().equals(archivalInstitution.getInternalAlId())) {
 		            		this.ai = archivalInstitution;
 		            		//If the item stored in database has the same parent in the archival landscape, check the languages
-		            		if ((archivalLandscapeNode.getParent_internal_al_id()== null) && (archivalInstitution.getArchivalInstitution() ==null))
+		            		if ((archivalLandscapeNode.getParent_internal_al_id()== null) && (archivalInstitution.getParent() ==null))
 		            		{
 		            			checkAlternativeNames(archivalInstitution, archivalLandscapeNode);
 		            		}
-		            		else if  ((archivalLandscapeNode.getParent_internal_al_id()!= null) && (archivalInstitution.getArchivalInstitution() != null))
+		            		else if  ((archivalLandscapeNode.getParent_internal_al_id()!= null) && (archivalInstitution.getParent() != null))
 		            		{
-				            	if ((archivalLandscapeNode.getParent_internal_al_id().equals(archivalInstitution.getArchivalInstitution().getInternalAlId())))
+				            	if ((archivalLandscapeNode.getParent_internal_al_id().equals(archivalInstitution.getParent().getInternalAlId())))
 				            	{
 				            		checkAlternativeNames(archivalInstitution, archivalLandscapeNode);
 				            	}
@@ -847,42 +847,42 @@ public class ArchivalLandscape extends ActionSupport{
 				            	else 
 				            	{
 				            		//Check if the item is in the index
-				            		Long numFilesIndexed = EditArchivalLandscapeLogic.countIndexedContentByInstitutionGroupId(archivalInstitution.getInternalAlId(), archivalInstitution.getIsgroup());
+				            		Long numFilesIndexed = EditArchivalLandscapeLogic.countIndexedContentByInstitutionGroupId(archivalInstitution.getInternalAlId(), archivalInstitution.isGroup());
 	        						if ((numFilesIndexed != null) && (numFilesIndexed > 0))
 	        						{
 	        							this.getArchivalInstitutionsParentNotChanged().add(ais.get(h));
 	        						}
 	        						else{
 	        							if (archivalLandscapeNode.getParent_internal_al_id()== null)
-				    		            	this.ai.setArchivalInstitution(null);
+				    		            	this.ai.setParent(null);
 				    		            else {
 				    		            	ai_parent = aiDao.getArchivalInstitutionsByCountryIdandAlIdentifier(this.country.getCouId() , archivalLandscapeNode.getParent_internal_al_id());
-				    		            	this.ai.setArchivalInstitution(ai_parent);
+				    		            	this.ai.setParent(ai_parent);
 				    		            }
 	        							this.getArchivalInstitutionsParentChanged().add(this.ai);
 	        						}
 				            	}
 		            		}
 		            		//Discrepancies in parents to solve (unless the parent is the node of the country=fonds)
-		            		else if ((archivalInstitution.getArchivalInstitution() == null) && (archivalLandscapeNode.getParent_internal_al_id()!= null))
+		            		else if ((archivalInstitution.getParent() == null) && (archivalLandscapeNode.getParent_internal_al_id()!= null))
 		            		{
 		            			//Check if the item is in the index
-			            		Long numFilesIndexed = EditArchivalLandscapeLogic.countIndexedContentByInstitutionGroupId(archivalInstitution.getInternalAlId(), archivalInstitution.getIsgroup());
+			            		Long numFilesIndexed = EditArchivalLandscapeLogic.countIndexedContentByInstitutionGroupId(archivalInstitution.getInternalAlId(), archivalInstitution.isGroup());
         						if ((numFilesIndexed != null) && (numFilesIndexed > 0)) {
 		            				this.getArchivalInstitutionsParentNotChanged().add(this.ai);
         						} else {
         							ai_parent = aiDao.getArchivalInstitutionsByCountryIdandAlIdentifier(this.country.getCouId() , archivalLandscapeNode.getParent_internal_al_id());
-		    		            	this.ai.setArchivalInstitution(ai_parent);
+		    		            	this.ai.setParent(ai_parent);
 		    		            	this.getArchivalInstitutionsParentChanged().add(this.ai);
         						}
-		            		}else if (((archivalInstitution.getArchivalInstitution() != null) && (archivalLandscapeNode.getParent_internal_al_id()== null)))
+		            		}else if (((archivalInstitution.getParent() != null) && (archivalLandscapeNode.getParent_internal_al_id()== null)))
 		            		{
 		            			//Check if the item is in the index
-			            		Long numFilesIndexed = EditArchivalLandscapeLogic.countIndexedContentByInstitutionGroupId(archivalInstitution.getInternalAlId(), archivalInstitution.getIsgroup());
+			            		Long numFilesIndexed = EditArchivalLandscapeLogic.countIndexedContentByInstitutionGroupId(archivalInstitution.getInternalAlId(), archivalInstitution.isGroup());
         						if ((numFilesIndexed != null) && (numFilesIndexed > 0)) {
         							this.getArchivalInstitutionsParentNotChanged().add(this.ai);
         						} else {
-        							this.ai.setArchivalInstitution(null);
+        							this.ai.setParent(null);
         							this.getArchivalInstitutionsParentChanged().add(this.ai);
         						}
 		            		}	
@@ -903,13 +903,13 @@ public class ArchivalLandscape extends ActionSupport{
                          }
 				        	
 				         //this.ai.setPartnerId(this.partnerId);		            
-				         this.ai.setIsgroup(archivalLandscapeNode.getIs_group());
+				         this.ai.setGroup(archivalLandscapeNode.getIs_group());
 				            
 				         if (archivalLandscapeNode.getParent_name()== null)
-				            this.ai.setArchivalInstitution(null);
+				            this.ai.setParent(null);
 				         else {
 				        	 ai_parent = aiDao.getArchivalInstitutionsByCountryIdandAlIdentifier(this.country.getCouId() , archivalLandscapeNode.getParent_internal_al_id());
-				             this.ai.setArchivalInstitution(ai_parent);
+				             this.ai.setParent(ai_parent);
 				         }
 				         this.ai.setCountryId(this.country.getCouId());
 				         this.ai.setCountry(this.country);

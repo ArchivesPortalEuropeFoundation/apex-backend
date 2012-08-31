@@ -102,7 +102,7 @@ public class EAD2ESEConverter {
 				String eset =  "";
 				while (ai != null){
 					eset = COLON + ai.getAiId() + eset; 
-					ai = ai.getArchivalInstitution();
+					ai = ai.getParent();
 				}
 				eset = findingAid.getArchivalInstitution().getCountry().getIsoname() + eset;
 				ese.setEseState(eseState);

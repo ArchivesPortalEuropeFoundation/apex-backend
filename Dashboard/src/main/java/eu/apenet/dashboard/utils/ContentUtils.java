@@ -335,6 +335,56 @@ public class ContentUtils {
 	public void storeOperation(String op){
 		ChangeControl.logOperation(op);		
 	}
+	public static void changeSearchable(Ead ead, boolean searchable){
+		changeContainsSearchableItems(ead.getArchivalInstitution(), searchable);
+		ead.setSearchable(searchable);
+		
+	}
+	private static void changeContainsSearchableItems(ArchivalInstitution ai, boolean searchable){
+		if (searchable != ai.isContainSearchableItems()){
+			if (searchable == true){
+				LOGGER.info("AI: '" + ai.getAiname() + "' has now searchable items");
+				ai.setContainSearchableItems(searchable);
+				ArchivalInstitution parent = ai.getParent();
+				if (parent == null){
+					DAOFactory.instance().getArchivalInstitutionDAO().insertSimple(ai);
+				}else {
+					changeContainsSearchableItems(parent, searchable);
+				}
+			}else {
+				EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+				Ead eadExample = new FindingAid();
+				eadExample.setAiId(ai.getAiId());
+				eadExample.setSearchable(true);
+				long numberOfEads = eadDAO.countEads(eadExample);
+				if (numberOfEads <= 1){
+					eadExample = new HoldingsGuide();
+					eadExample.setAiId(ai.getAiId());
+					eadExample.setSearchable(true);
+					numberOfEads += eadDAO.countEads(eadExample);
+					if (numberOfEads <= 1){
+						eadExample = new SourceGuide();
+						eadExample.setAiId(ai.getAiId());
+						eadExample.setSearchable(true);
+						numberOfEads += eadDAO.countEads(eadExample);
+						if (numberOfEads <= 1){
+							LOGGER.info("AI: '" + ai.getAiname() + "' has now no searchable items left");
+							ai.setContainSearchableItems(searchable);
+							ArchivalInstitution parent = ai.getParent();
+							if (parent == null){
+								DAOFactory.instance().getArchivalInstitutionDAO().insertSimple(ai);
+							}else {
+								changeContainsSearchableItems(parent, searchable);
+							}
+						}
+					}
+				}
+				
+				//long numberOfEads = DAOFactory.instance().getEadDAO().e
+			}
+		}
+
+	}
 	
 	//This method deletes an ead from the Index using its identifier eadid
 	public static void deleteFromIndex(String eadid, int aiId) throws SolrServerException, IOException {

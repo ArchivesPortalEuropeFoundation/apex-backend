@@ -102,6 +102,7 @@ public abstract class EadLogicAbstract {
                 }
 
                 log.debug("Removing EAD which EADID is " + ead.getEadid());
+                ContentUtils.changeSearchable(ead,false);
                 eadDAO.deleteSimple(ead);
 
                 FileState fileState = ead.getFileState();

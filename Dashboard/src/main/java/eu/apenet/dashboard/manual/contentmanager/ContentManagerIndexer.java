@@ -316,11 +316,10 @@ public abstract class ContentManagerIndexer {
 					.getFileStateByState(FileState.VALIDATED_NOT_CONVERTED);
 			log.debug("Changing EAD (" + xmlType.getName() + ") state of the EAD with eadid " + eadid);
 			ead.setFileState(fileState);
+			ContentUtils.changeSearchable(ead, false);
 			ead.setTotalNumberOfDaos(0l);
 			ead.setTotalNumberOfUnits(0l);
 			ead.setTotalNumberOfUnitsWithDao(0l);
-
-			String countryIso = ead.getArchivalInstitution().getCountry().getIsoname().trim();
 
 			eadDAO.updateSimple(ead);
 
@@ -416,6 +415,7 @@ public abstract class ContentManagerIndexer {
 				if (!oldFileState.getState().equals(FileState.INDEXED)) {
 					try {
 						ead.setFileState(oldFileState);
+						ContentUtils.changeSearchable(ead, true);
 						DAOFactory.instance().getEadDAO().update(ead);
 					} catch (Exception ex) {
 						log.error("Error restoring the original state of the Finding Aid. Check Database");
