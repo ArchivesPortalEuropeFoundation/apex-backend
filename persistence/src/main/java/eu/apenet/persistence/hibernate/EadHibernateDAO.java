@@ -19,6 +19,7 @@ import org.hibernate.criterion.Restrictions;
 
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.FileState;
 
 public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implements EadDAO {
 
@@ -26,21 +27,20 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 
 	@Override
 	public Integer isEadidIndexed(String eadid, Integer aiId, Class<? extends Ead> clazz) {
-		Ead eadExample;
-		try {
-			eadExample = clazz.newInstance();
-		} catch (Exception e) {
-			return null;
+		Criteria criteria = getSession().createCriteria(clazz, "ead").setProjection(Projections.property("id"));
+		criteria.createAlias("ead.archivalInstitution", "archivalInstitution");
+		criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
+		criteria.add(Restrictions.eq("eadid", eadid));
+		criteria = criteria.createAlias("ead.fileState", "fileState");
+		Disjunction disjunction = Restrictions.disjunction();
+		for (String fileState : FileState.INDEXED_FILE_STATES) {
+			disjunction.add(Restrictions.eq("fileState.state", fileState));
 		}
-		eadExample.setAiId(aiId);
-		eadExample.setEadid(eadid);
-		eadExample.setSearchable(true);
-		Long numberOfEads = countEads(eadExample, false);
-		if (numberOfEads > 0){
-			return numberOfEads.intValue();
-		}else {
-			return null;
-		}
+		criteria.add(disjunction);
+		List<Integer> result = criteria.list();
+		if (result.size() > 0)
+			return result.get(0);
+		return null;
 	}
 	@Override
 	public Long countEads(Ead eadExample) {
@@ -66,20 +66,14 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 	}
 	@Override
 	public Integer isEadidUsed(String eadid, Integer aiId, Class<? extends Ead> clazz) {
-		Ead eadExample;
-		try {
-			eadExample = clazz.newInstance();
-		} catch (Exception e) {
-			return null;
-		}
-		eadExample.setAiId(aiId);
-		eadExample.setEadid(eadid);
-		Long numberOfEads = countEads(eadExample, true);
-		if (numberOfEads > 0){
-			return numberOfEads.intValue();
-		}else {
-			return null;
-		}
+		Criteria criteria = getSession().createCriteria(clazz, "ead").setProjection(Projections.property("id"));
+		criteria.createAlias("ead.archivalInstitution", "archivalInstitution");
+		criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
+		criteria.add(Restrictions.eq("eadid", eadid));
+		List<Integer> result = criteria.list();
+		if (result.size() > 0)
+			return result.get(0);
+		return null;
 	}
 
     @Override

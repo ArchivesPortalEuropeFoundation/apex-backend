@@ -33,6 +33,8 @@ public class ArchivalInstitution implements java.io.Serializable {
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="parent_ai_id")
 	private ArchivalInstitution parent;
+	@Column(name = "parent_ai_id", insertable = false, updatable = false)
+	private Integer parentAiId;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="user_id", insertable = false, updatable = false)
 	private User partner;
@@ -88,6 +90,15 @@ public class ArchivalInstitution implements java.io.Serializable {
 	public void setParent(ArchivalInstitution archivalInstitution) {
 		this.parent = archivalInstitution;
 	}
+	
+	public Integer getParentAiId() {
+		return parentAiId;
+	}
+
+	public void setParentAiId(Integer parentAiId) {
+		this.parentAiId = parentAiId;
+	}
+
 	public User getPartner() {
 		return this.partner;
 	}

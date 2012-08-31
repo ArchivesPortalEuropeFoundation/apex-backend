@@ -509,7 +509,7 @@ public class FindingAidHibernateDAO extends AbstractHibernateDAO<FindingAid, Int
 		}
 		return (Long)criteria.uniqueResult();
 	}
-	
+
 	@Override
 	public Long countFindingAidsNotLinkedByArchivalInstitution(Integer aiId, Collection<String> fileStates){
 		Criteria criteria = createFindingAidsNotLinkedCriteria(aiId, fileStates, "", false);

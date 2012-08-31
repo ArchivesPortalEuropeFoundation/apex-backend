@@ -54,9 +54,9 @@ private final Logger log = Logger.getLogger(getClass());
 	}
 	public List<Country> getCountriesWithSearchableItems(){
 		long startTime = System.currentTimeMillis();	
-		long endTime = System.currentTimeMillis();
 		TypedQuery<Country> query = getEntityManager().createQuery("SELECT DISTINCT country FROM ArchivalInstitution ai JOIN ai.country country WHERE ai.containSearchableItems = true", Country.class);
 		List<Country> results = query.getResultList();
+		long endTime = System.currentTimeMillis();
 		if (log.isDebugEnabled()) {
 			log.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
 		}
