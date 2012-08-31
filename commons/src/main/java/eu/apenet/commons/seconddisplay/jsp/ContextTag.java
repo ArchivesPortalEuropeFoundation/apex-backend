@@ -42,7 +42,7 @@ public class ContextTag extends SimpleTagSupport{
 		ArchivalInstitution ai  = eadContent.getEad().getArchivalInstitution();
 		while (ai != null){
 			hierarchy.add(ai.getAiname());
-			ai = ai.getArchivalInstitution();
+			ai = ai.getParent();
 		}
 		hierarchy.add((String) country);
 		int numberOfWhitespaces = 0;
