@@ -5,28 +5,29 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.TypedQuery;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
-//import org.hibernate.FetchMode;
-//import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
-import org.hibernate.criterion.Subqueries;
-//import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-//import org.hibernate.transform.Transformers;
+import org.hibernate.criterion.Subqueries;
+
+import eu.apenet.persistence.dao.CountryDAO;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.FileState;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
-import eu.apenet.persistence.vo.User;
-import eu.apenet.persistence.vo.SourceGuide;
-import eu.apenet.persistence.dao.CountryDAO;
+//import org.hibernate.FetchMode;
+//import org.hibernate.Query;
+//import org.hibernate.criterion.Projections;
+//import org.hibernate.transform.Transformers;
 
 /**
  * @author Patricia
@@ -51,37 +52,17 @@ private final Logger log = Logger.getLogger(getClass());
 
 		return results;
 	}
-
-	@SuppressWarnings("unchecked")
-	public List<Country> getCountriesOrderByCName() {
-		long startTime = System.currentTimeMillis();
-		List<Country> results = new ArrayList<Country>();
-		Criteria criteria = getSession().createCriteria(getPersistentClass(), "country");
-		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		//criteria.addOrder(Order.desc("country.cname"));
-		criteria.addOrder(Order.asc("country.cname"));
-		results = criteria.list();
+	public List<Country> getCountriesWithSearchableItems(){
+		long startTime = System.currentTimeMillis();	
 		long endTime = System.currentTimeMillis();
+		TypedQuery<Country> query = getEntityManager().createQuery("SELECT DISTINCT country FROM ArchivalInstitution ai JOIN ai.country country WHERE ai.containSearchableItems = true", Country.class);
+		List<Country> results = query.getResultList();
 		if (log.isDebugEnabled()) {
 			log.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
 		}
 		return results;
 	}
-	
-	
-	/* Query with several SELECT nested
-	 SELECT cname FROM country WHERE cou_id IN 
-	 	(SELECT cou_id FROM partner WHERE p_id IN 
-	 		(SELECT p_id FROM archival_institution WHERE ai_id IN 
-	 			(SELECT DISTINCT ai_id FROM finding_aid WHERE (finding_aid.fs_id > 7 AND finding_aid.fs_id < 15)
-	 			)
-	 		OR ai_id IN
-	 			(SELECT DISTINCT ai_id FROM holdings_guide WHERE (holdings_guide.fs_id > 7 AND holdings_guide.fs_id < 15)
-	 			)
 
-	 		)
-	 	)
-	 */
 	@SuppressWarnings("unchecked")
 	public List<Country> getCountriesWithContentIndexedOrderByCName() {
 		long startTime = System.currentTimeMillis();
@@ -122,41 +103,6 @@ private final Logger log = Logger.getLogger(getClass());
 		return results;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<Country> getCountriesWithFindingAidsIndexedOrderByCName() {
-		long startTime = System.currentTimeMillis();
-		List<Country> results = new ArrayList<Country>();
-		
-		/* Query with several SELECT nested
-		 SELECT cname FROM country WHERE cou_id IN 
-		 	(SELECT cou_id FROM partner WHERE p_id IN 
-		 		(SELECT p_id FROM archival_institution WHERE ai_id IN 
-		 			(SELECT ai_id FROM finding_aid WHERE (finding_aid.fs_id > 7 AND finding_aid.fs_id < 15)
-		 			)
-		 		)
-		 	)
-		 */
-		Criteria criteria = getSession().createCriteria(Country.class);
-		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		criteria.addOrder(Order.asc("cname"));
-				DetachedCriteria subQuery2 = DetachedCriteria.forClass(ArchivalInstitution.class,"archivalInstitution");
-				subQuery2.setProjection(Property.forName("archivalInstitution.countryId"));
-					DetachedCriteria subQuery3 = DetachedCriteria.forClass(FindingAid.class,"findingAid");
-					subQuery3.setProjection(Property.forName("findingAid.archivalInstitution.aiId"));
-					subQuery3.add(Restrictions.gt("findingAid.fileState.id", 7));
-					subQuery3.add(Restrictions.lt("findingAid.fileState.id", 15));
-				subQuery2.add(Subqueries.propertyIn("archivalInstitution.aiId", subQuery3));
-		criteria.add(Subqueries.propertyIn("couId", subQuery2));
-		results = criteria.list();
-		
-
-		long endTime = System.currentTimeMillis();
-		if (log.isDebugEnabled()) {
-			log.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
-		}
-		return results;
-	}
-
 	
 	@SuppressWarnings("unchecked")
 	public List<Country> getCountriesWithArchivalInstitutionsWithEAG() {
