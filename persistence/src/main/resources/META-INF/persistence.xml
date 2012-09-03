@@ -5,9 +5,7 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<non-jta-data-source>java:comp/env/jdbc/APEnetDatabaseDashboard</non-jta-data-source>
 		<class>eu.apenet.persistence.vo.UserRole</class>
-		<class>eu.apenet.persistence.vo.UserState</class>
 		<class>eu.apenet.persistence.vo.UploadMethod</class>
-		<class>eu.apenet.persistence.vo.UpFileState</class>
 		<class>eu.apenet.persistence.vo.FileType</class>
 		<class>eu.apenet.persistence.vo.EseState</class>
 		<class>eu.apenet.persistence.vo.FileState</class>
@@ -34,7 +32,8 @@
 		<class>eu.apenet.persistence.vo.DptUpdate</class>
 		<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
 		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
+			<!--<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />-->
+			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL82Dialect" />
 			<property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
 			<property name="hibernate.cache.use_second_level_cache" value="false" />
 			<property name="hibernate.cache.use_query_cache" value="false" />
