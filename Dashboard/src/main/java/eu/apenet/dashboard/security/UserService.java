@@ -157,7 +157,7 @@ public final class UserService {
 			user.setPassword(PasswordGenerator.getRandomString());
 			user.setSecretQuestion(DEFAULT_SECRET_QUESTION);
 			user.setSecretAnswer(PasswordGenerator.getRandomString());
-			user.setCountryId(country.getCouId());
+			user.setCountryId(country.getId());
 			String userTypedPassword = user.getPassword();
 			user.setPassword(BasicDigestPwd.generateDigest(userTypedPassword));
 			partnerDao.store(user);

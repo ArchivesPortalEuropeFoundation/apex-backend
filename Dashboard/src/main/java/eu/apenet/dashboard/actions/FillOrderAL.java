@@ -272,7 +272,7 @@ public class FillOrderAL extends ActionSupport {
 		AiAltNameDao = DAOFactory.instance().getAiAlternativeNameDAO();
 		this.ai_parent = new ArchivalInstitution();
 		this.aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
-		ais = this.aiDao.getGroupsAndArchivalInstitutionsByCountryId(country.getCouId(), "alorder", false);
+		ais = this.aiDao.getGroupsAndArchivalInstitutionsByCountryId(country.getId(), "alorder", false);
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder;
         
@@ -327,7 +327,7 @@ public class FillOrderAL extends ActionSupport {
 			            			if (alNodes.get(h).getParent_internal_al_id()== null)
 			    		            	this.ai.setParent(null);
 			    		            else {
-			    		            	ai_parent = aiDao.getArchivalInstitutionsByCountryIdandAlIdentifier( country.getCouId() , alNodes.get(h).getParent_internal_al_id());
+			    		            	ai_parent = aiDao.getArchivalInstitutionsByCountryIdandAlIdentifier( country.getId() , alNodes.get(h).getParent_internal_al_id());
 			    		            	this.ai.setParent(ai_parent);			    		            	
 			    		            }
 		            			}
@@ -335,7 +335,7 @@ public class FillOrderAL extends ActionSupport {
 		            		//Discrepancies in parents to solve (unless the parent is the node of the country=fonds)
 		            		else if ((ais.get(i).getParent() == null) && (alNodes.get(h).getParent_internal_al_id()!= null))	            				
 		            		{
-		            				ai_parent = aiDao.getArchivalInstitutionsByCountryIdandAlIdentifier( country.getCouId() , alNodes.get(h).getParent_internal_al_id());
+		            				ai_parent = aiDao.getArchivalInstitutionsByCountryIdandAlIdentifier( country.getId() , alNodes.get(h).getParent_internal_al_id());
 		    		            	this.ai.setParent(ai_parent);	
 		            		}
 		            		//Update always the order of the archival landscape

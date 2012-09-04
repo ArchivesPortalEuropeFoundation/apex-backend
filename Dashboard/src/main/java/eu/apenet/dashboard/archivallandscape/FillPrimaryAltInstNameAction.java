@@ -95,7 +95,7 @@ public class FillPrimaryAltInstNameAction extends ActionSupport {
 			                                	if (attributeLang.getNodeValue().equals("eng")) {
 			                                		CountryDAO couDao = DAOFactory.instance().getCountryDAO();
 			                                		Country cou = couDao.getCountryByCname(listUnitTitle.item(j).getTextContent().toUpperCase());
-			                                		countryId = cou.getCouId();
+			                                		countryId = cou.getId();
 			                                	}
 			                                }
 			                            }

@@ -44,7 +44,7 @@ public class UserManagementAction extends AbstractAction  implements ServletRequ
 		List<CountryAndManager> countryAndManagers = new ArrayList<CountryAndManager>();
 		for (Country country: countries){
 			
-			List<User> partners = partnerDAO.getPartnersByCountryAndByRoleType(country.getCouId(), UserRole.ROLE_COUNTRY_MANAGER);
+			List<User> partners = partnerDAO.getPartnersByCountryAndByRoleType(country.getId(), UserRole.ROLE_COUNTRY_MANAGER);
 			if (partners.size() > 0){
 				User partner = partners.get(0);
 				countryAndManagers.add(new CountryAndManager(country, partner, !SecurityContextContainer.checkAvailability(partner.getId())));

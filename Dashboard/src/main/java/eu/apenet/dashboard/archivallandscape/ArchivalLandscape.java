@@ -127,7 +127,7 @@ public class ArchivalLandscape extends ActionSupport{
         return this.country.getCname();
     }
     public int getCountryId() {
-        return this.country.getCouId();
+        return this.country.getId();
     }
 	
 	public List<ArchivalInstitution> getArchivalInstitutionsToDelete() {
@@ -762,7 +762,7 @@ public class ArchivalLandscape extends ActionSupport{
 		Lang lang = null;		
 		this.ai_parent = new ArchivalInstitution();
 		this.aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
-		List <ArchivalInstitution> ais = this.aiDao.getGroupsAndArchivalInstitutionsByCountryId(this.country.getCouId(), "alorder", false);
+		List <ArchivalInstitution> ais = this.aiDao.getGroupsAndArchivalInstitutionsByCountryId(this.country.getId(), "alorder", false);
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder;
         
@@ -795,10 +795,10 @@ public class ArchivalLandscape extends ActionSupport{
 		            if (archivalLandscapeNode.getParent_name()== null)
 		            	this.ai.setParent(null);
 		            else {
-		            	ai_parent = aiDao.getArchivalInstitutionsByCountryIdandAlIdentifier(this.country.getCouId(), archivalLandscapeNode.getParent_internal_al_id());
+		            	ai_parent = aiDao.getArchivalInstitutionsByCountryIdandAlIdentifier(this.country.getId(), archivalLandscapeNode.getParent_internal_al_id());
 		            	this.ai.setParent(ai_parent);
 		            }
-		            this.ai.setCountryId(this.country.getCouId());
+		            this.ai.setCountryId(this.country.getId());
 		            this.ai.setCountry(this.country);
 		            this.ai.setAlorder(archivalLandscapeNode.getNodeId());
 		            this.ai.setInternalAlId(archivalLandscapeNode.getInternal_al_id());
@@ -856,7 +856,7 @@ public class ArchivalLandscape extends ActionSupport{
 	        							if (archivalLandscapeNode.getParent_internal_al_id()== null)
 				    		            	this.ai.setParent(null);
 				    		            else {
-				    		            	ai_parent = aiDao.getArchivalInstitutionsByCountryIdandAlIdentifier(this.country.getCouId() , archivalLandscapeNode.getParent_internal_al_id());
+				    		            	ai_parent = aiDao.getArchivalInstitutionsByCountryIdandAlIdentifier(this.country.getId() , archivalLandscapeNode.getParent_internal_al_id());
 				    		            	this.ai.setParent(ai_parent);
 				    		            }
 	        							this.getArchivalInstitutionsParentChanged().add(this.ai);
@@ -871,7 +871,7 @@ public class ArchivalLandscape extends ActionSupport{
         						if ((numFilesIndexed != null) && (numFilesIndexed > 0)) {
 		            				this.getArchivalInstitutionsParentNotChanged().add(this.ai);
         						} else {
-        							ai_parent = aiDao.getArchivalInstitutionsByCountryIdandAlIdentifier(this.country.getCouId() , archivalLandscapeNode.getParent_internal_al_id());
+        							ai_parent = aiDao.getArchivalInstitutionsByCountryIdandAlIdentifier(this.country.getId() , archivalLandscapeNode.getParent_internal_al_id());
 		    		            	this.ai.setParent(ai_parent);
 		    		            	this.getArchivalInstitutionsParentChanged().add(this.ai);
         						}
@@ -908,10 +908,10 @@ public class ArchivalLandscape extends ActionSupport{
 				         if (archivalLandscapeNode.getParent_name()== null)
 				            this.ai.setParent(null);
 				         else {
-				        	 ai_parent = aiDao.getArchivalInstitutionsByCountryIdandAlIdentifier(this.country.getCouId() , archivalLandscapeNode.getParent_internal_al_id());
+				        	 ai_parent = aiDao.getArchivalInstitutionsByCountryIdandAlIdentifier(this.country.getId() , archivalLandscapeNode.getParent_internal_al_id());
 				             this.ai.setParent(ai_parent);
 				         }
-				         this.ai.setCountryId(this.country.getCouId());
+				         this.ai.setCountryId(this.country.getId());
 				         this.ai.setCountry(this.country);
 				         this.ai.setAlorder(archivalLandscapeNode.getNodeId());
 				         this.ai.setInternalAlId(archivalLandscapeNode.getInternal_al_id());

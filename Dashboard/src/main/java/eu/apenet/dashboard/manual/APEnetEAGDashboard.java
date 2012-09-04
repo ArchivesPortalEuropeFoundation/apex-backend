@@ -1307,8 +1307,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
 			//It is necessary to check if this EAG has been updated before for another archival institution			
 			if (this.isEagAlreadyUploaded()){
 				value = "error_eagalreadyuploaded";
-			}
-			else {
+			} else {
 				this.eagPath = APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + this.aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + this.getId() + ".xml";
 				String storagePath = APEnetUtilities.getConfig().getRepoDirPath() + this.eagPath;
 				String oldEAGPath = APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + this.aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + "_remove" + this.getId() + ".xml";
@@ -1362,8 +1361,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
 
 			        value = "correct";	                			
 
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					
 					value = "error_eagnotstored";
 					
@@ -1411,21 +1409,14 @@ public class APEnetEAGDashboard extends APEnetEAG {
 						//There were errors during Database, Index or File system commit
 						HibernateUtil.closeDatabaseSession();
 						log.error("FATAL ERROR. Error during Database or File System commits when an EAG file was uploading via HTTP protocol. Please, check inconsistencies in Database and File system for archival institution which id is: " + this.getAiId(), e);
-						
 					}
-				} 
-				
+				}
 			}
-						
 			if (value.equals("correct")){
-				//It is necessary to insert eagPath in the local Archival Landscape for the current country
-				//and rebuild the global Archival Landscape
+				//It is necessary to insert eagPath in the local Archival Landscape for the current country and rebuild the global Archival Landscape
 				value = this.modifyArchivalLandscape();
 			}
-			
-		}
-		else {
-			
+		} else {
 			if (!gArchivalLandscape.exists()){
 				log.error("gArchivalLandscape does not exist: " + gArchivalLandscape.getAbsolutePath());
 			}
@@ -1437,12 +1428,6 @@ public class APEnetEAGDashboard extends APEnetEAG {
 			}
 			value = "error_archivallandscape";
 		}
-		
-		archivalInstitutionDao = null;
-		archivalInstitution = null;
-		gArchivalLandscape = null;
-		lArchivalLandscape = null;
-		
 		return value;
 	}
 	

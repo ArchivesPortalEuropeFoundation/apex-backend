@@ -30,8 +30,7 @@ import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
 
-public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<ArchivalInstitution, Integer> implements
-		ArchivalInstitutionDAO {
+public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<ArchivalInstitution, Integer> implements ArchivalInstitutionDAO {
 
 	private final Logger log = Logger.getLogger(getClass());
 
@@ -193,6 +192,12 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 
 		return results;
 	}
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<ArchivalInstitution> getArchivalInstitutionsByCountryId(Integer countryId) {
+        return  getArchivalInstitutionsByCountryId(countryId, false);
+    }
 
 	private Criteria createArchivalInstitutionCriteria(boolean group, String sortValue, boolean ascending) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");

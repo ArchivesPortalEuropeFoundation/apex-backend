@@ -117,7 +117,7 @@ public class ChangeAlIdentifiersAction extends ActionSupport implements Preparab
 		this.setCountry(countryDao.findById(SecurityContext.get().getCountryId()));
 		ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
 		
-		this.setInstitutionList(aiDao.getGroupsAndArchivalInstitutionsByCountryId(this.getCountry().getCouId(),"alorder", true ));
+		this.setInstitutionList(aiDao.getGroupsAndArchivalInstitutionsByCountryId(this.getCountry().getId(),"alorder", true ));
 	}
 	
 	public String storeIdentifier(){

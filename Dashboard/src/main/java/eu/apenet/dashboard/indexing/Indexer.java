@@ -503,8 +503,8 @@ public class Indexer {
 				add(doc1, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NORMALIZED);
 			}
 		}
-		add(doc1, SolrFields.COUNTRY, country.getCname()+ COLON +  SolrValues.TYPE_GROUP +  COLON +  country.getCouId() );
-		doc1.addField(SolrFields.COUNTRY_ID, country.getCouId());
+		add(doc1, SolrFields.COUNTRY, country.getCname()+ COLON +  SolrValues.TYPE_GROUP +  COLON +  country.getId() );
+		doc1.addField(SolrFields.COUNTRY_ID, country.getId());
 		add(doc1, SolrFields.LANGUAGE, language);
 		add(doc1, SolrFields.LANGMATERIAL, langmaterial);
 		//deprecated

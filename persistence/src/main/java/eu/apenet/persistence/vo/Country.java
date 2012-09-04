@@ -25,7 +25,7 @@ public class Country implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "id")
-	private int couId;
+	private int id;
 	private String cname;
 	private String isoname;
 	@Column(name = "al_order")
@@ -37,8 +37,8 @@ public class Country implements java.io.Serializable {
 	public Country() {
 	}
 
-	public Country(int couId, String cname, String isoname,int alOrder) {
-		this.couId = couId;
+	public Country(int id, String cname, String isoname,int alOrder) {
+		this.id = id;
 		this.cname = cname;
 		this.isoname = isoname;
 		this.alOrder = alOrder;
@@ -60,12 +60,12 @@ public class Country implements java.io.Serializable {
 	}
 
 	
-	public int getCouId() {
-		return this.couId;
+	public int getId() {
+		return this.id;
 	}
 
-	public void setCouId(int couId) {
-		this.couId = couId;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getCname() {

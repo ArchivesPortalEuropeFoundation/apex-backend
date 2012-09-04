@@ -33,7 +33,7 @@ public class CountryUnit implements Comparable<CountryUnit>{
 	public boolean isHasArchivalInstitutions() {
 		if (hasArchivalInstitutions == null){
 			if (country != null){
-				hasArchivalInstitutions = DAOFactory.instance().getArchivalInstitutionDAO().countArchivalInstitutionsByCountryId(country.getCouId()) > 0;
+				hasArchivalInstitutions = DAOFactory.instance().getArchivalInstitutionDAO().countArchivalInstitutionsByCountryId(country.getId()) > 0;
 			}else {
 				hasArchivalInstitutions = false;
 			}

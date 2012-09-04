@@ -59,44 +59,49 @@ public class DownloadGeneralALAction extends ActionSupport {
 		this.httpFileFileName = httpFileFileName;
 	}
 
-	public String execute(){
-		   
-		   String result=null;
-   		   		   
-			try {
-				String path = APEnetUtilities.getDashboardConfig().getArchivalLandscapeDirPath() + APEnetUtilities.FILESEPARATOR + "AL.xml";		        	
-		    	File file = new File  (path);
-	            
-	            //if the xml does not exist, error
-	        	if (!file.exists()) 
-	        	{ 
-	        		addActionMessage("Error");
-	        		result= ERROR;
-	        	}
-				else
-				{
-					this.setInputStream(new FileInputStream(file));
-					this.setHttpFileFileName(file.getName());
-					this.setFileName("AL.xml");
-	                this.setFileSize(file.length());
-				}
+	public String execute() {
+        String result=null;
+		try {
+		    String path = APEnetUtilities.getDashboardConfig().getArchivalLandscapeDirPath() + APEnetUtilities.FILESEPARATOR + "AL.xml";
+		    File file = new File  (path);
+	        if (!file.exists()) {
+	            addActionMessage("Error");
+	        	result= ERROR;
+            } else {
+			    this.setInputStream(new FileInputStream(file));
+				this.setHttpFileFileName(file.getName());
+				this.setFileName("AL.xml");
+	            this.setFileSize(file.length());
+		    }
 	        	
-	    		if(this.inputStream==null){
-	    			addActionMessage("Error");
-	    			result= ERROR;
-	            } else{
-	    			try {
-	    				if(this.inputStream.available()>0){
-	    					result= "download";
-	    				}
-	    			} catch (IOException e) {
-	    				log.error("The general archival landscape could not be downloaded");
-	    			}
-	            }
-	        	
-			} catch (Exception e){
-				log.error(e.getMessage());
-			}
-			return result;		   
-	   }
+	    	if(this.inputStream==null){
+	    	    addActionMessage("Error");
+	    		result= ERROR;
+            } else{
+	    	    try {
+	    		    if(this.inputStream.available()>0){
+	    			    result= "download";
+	    		    }
+	    		} catch (IOException e) {
+	    		    log.error("The general archival landscape could not be downloaded");
+	    		}
+	        }
+		} catch (Exception e){
+		    log.error(e.getMessage());
+		}
+		return result;
+	}
+
+//    public void createArchivalLandscapeFromDatabase() {
+//        CountryDAO countryDAO = DAOFactory.instance().getCountryDAO();
+//        List<Country> countries = countryDAO.findAll();
+//        ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
+//
+//        for(Country country : countries) {
+//            List<ArchivalInstitution> archivalInstitutions = archivalInstitutionDAO.getArchivalInstitutionsByCountryId(country.getId(), true);
+//            for(ArchivalInstitution archivalInstitution : archivalInstitutions) {
+//                archivalInstitutionDAO.getArchivalInstitutionsByParentAiId(archivalInstitution.getAiId());
+//            }
+//        }
+//    }
 }
