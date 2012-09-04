@@ -1645,8 +1645,9 @@ public class APEnetEAGDashboard extends APEnetEAG {
 
 		try {
 	    	DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-	    	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();     	
-	    	InputStream sfile = new FileInputStream(APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + "AL" + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + "AL.xml");
+	    	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            String alPath = APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + "AL" + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + "AL.xml";
+	    	InputStream sfile = new FileInputStream(alPath);
 	    	Document doc = dBuilder.parse(sfile);
 	    	doc.getDocumentElement().normalize();
 	    	
@@ -1663,9 +1664,8 @@ public class APEnetEAGDashboard extends APEnetEAG {
 	    	}
 	    	
 	    	if (found){
-		    	
-	    		nodeList = null;
-	    		sfile = new FileInputStream(APEnetUtilities.getDashboardConfig().getArchivalLandscapeDirPath() + APEnetUtilities.FILESEPARATOR + "AL.xml");
+                String archivalLandscapePath = APEnetUtilities.getDashboardConfig().getArchivalLandscapeDirPath() + APEnetUtilities.FILESEPARATOR + "AL.xml";
+	    		sfile = new FileInputStream(archivalLandscapePath);
 		    	doc = dBuilder.parse(sfile);
 		    	doc.getDocumentElement().normalize();
 		    	found = false;
@@ -1685,26 +1685,19 @@ public class APEnetEAGDashboard extends APEnetEAG {
 		    	
 		    	if (found) {
 		    		value = true;
-		    	}
-		    	else {
-                    log.info("Archival institution '" + archivalInstitution.getAiname() + "' was not found in archival landscape");
+		    	} else {
+                    log.info("Archival institution '" + archivalInstitution.getAiname() + "' was not found in archival landscape ('"+ archivalLandscapePath +"')");
 		    		value = false;
 		    	}
-	    	}
-	    	else {
-                log.info("Archival institution '" + archivalInstitution.getAiname() + "' was not found in archival landscape");
+	    	} else {
+                log.info("Archival institution '" + archivalInstitution.getAiname() + "' was not found in archival landscape ('"+ alPath +"')");
 	    		value = false;
 	    	}
-		}
-        catch (Exception e) {
+		} catch (Exception e) {
 			log.error("The Archival Landscape (local, global or both) doesn't include this Archival Institution " + archivalInstitution.getAiname(), e);
         	value = false;
         }
 
-		archivalInstitutionDao = null;
-		archivalInstitution = null;
-		nodeList = null;
-		
 		return value;
 	}
 	
