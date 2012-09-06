@@ -64,6 +64,30 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		cq.where(criteriaBuilder.and(whereClause.toArray(new Predicate[0])));
 		return getEntityManager().createQuery(cq).getSingleResult();
 	}
+	
+	@Override
+	public boolean existEads(Ead eadExample) {
+		return existEads(eadExample, false);
+	}
+	private boolean existEads(Ead eadExample, boolean allStates) {
+		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Object> cq = criteriaBuilder.createQuery(Object.class);
+		Root<? extends Ead> from = cq.from(eadExample.getClass());
+		cq.select(from.get("id"));
+		List<Predicate> whereClause = new ArrayList<Predicate>();
+		if (!allStates){
+			whereClause.add(criteriaBuilder.equal(from.get("searchable"), eadExample.isSearchable()));
+		}
+		if (eadExample.getAiId() != null){
+			whereClause.add(criteriaBuilder.equal(from.get("aiId"), eadExample.getAiId()));		 
+		}
+		if (eadExample.getEadid() != null){
+			whereClause.add(criteriaBuilder.equal(from.get("eadid"), eadExample.getEadid()));		 
+		}
+		cq.where(criteriaBuilder.and(whereClause.toArray(new Predicate[0])));
+		Object object =  getEntityManager().createQuery(cq).setMaxResults(1);
+		return object != null;
+	}
 	@Override
 	public Integer isEadidUsed(String eadid, Integer aiId, Class<? extends Ead> clazz) {
 		Criteria criteria = getSession().createCriteria(clazz, "ead").setProjection(Projections.property("id"));

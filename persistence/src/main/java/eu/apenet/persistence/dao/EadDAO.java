@@ -8,6 +8,7 @@ import eu.apenet.persistence.vo.Ead;
 public interface EadDAO extends GenericDAO<Ead, Integer> {
 	
 	public Long countEads(Ead eadExample );
+	public boolean existEads(Ead eadExample );
 	public Integer isEadidIndexed(String eadid, Integer aiId, Class<? extends Ead> clazz);
 
 	public Integer isEadidUsed(String eadid, Integer aiId, Class<? extends Ead> clazz);
