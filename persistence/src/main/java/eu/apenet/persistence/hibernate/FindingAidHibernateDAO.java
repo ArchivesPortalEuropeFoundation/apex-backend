@@ -5,7 +5,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import eu.apenet.persistence.vo.FileState;
+import javax.persistence.Query;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
@@ -22,6 +23,7 @@ import eu.apenet.persistence.dao.FindingAidDAO;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.EadContent;
+import eu.apenet.persistence.vo.FileState;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 
@@ -619,6 +621,16 @@ public class FindingAidHibernateDAO extends AbstractHibernateDAO<FindingAid, Int
 	}
 	
 	
+	@Override
+	public boolean existFindingAidsNotLinkedByArchivalInstitution(Integer aiId) {
+		Query query = getEntityManager().createQuery(
+		        "SELECT fa.id FROM FindingAid fa WHERE fa.aiId = :aiId AND fa.searchable = true AND fa.eadid NOT IN (SELECT c.hrefEadid FROM CLevel c WHERE c.hrefEadid IS NOT NULL AND c.ecId IN (SELECT ec.ecId FROM EadContent ec WHERE ec.hgId IN (SELECT hg.id FROM HoldingsGuide hg WHERE hg.searchable = true AND hg.aiId = :aiId) OR ec.sgId IN (SELECT sg.id FROM SourceGuide sg WHERE sg.searchable = true AND sg.aiId = :aiId)))");
+		query.setParameter("aiId", aiId);
+		query.setMaxResults(1);
+		List<Object> objects = query.getResultList();
+		return objects.size() > 0;
+	}
+
 	/*
 	SELECT fa_title FROM finding_aid 
 	WHERE fa_eadid NOT IN 

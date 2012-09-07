@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -85,8 +86,10 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 			whereClause.add(criteriaBuilder.equal(from.get("eadid"), eadExample.getEadid()));		 
 		}
 		cq.where(criteriaBuilder.and(whereClause.toArray(new Predicate[0])));
-		Object object =  getEntityManager().createQuery(cq).setMaxResults(1);
-		return object != null;
+		TypedQuery<Object> query = getEntityManager().createQuery(cq);
+		query.setMaxResults(1);
+		List<Object> result = query.getResultList();
+		return result.size()> 0;
 	}
 	@Override
 	public Integer isEadidUsed(String eadid, Integer aiId, Class<? extends Ead> clazz) {
