@@ -29,6 +29,7 @@ public interface FindingAidDAO extends GenericDAO<FindingAid, Integer> {
 	public Long getTotalCountOfUnits();
 	public Long getTotalCountOfUnits(Integer aiId);
 	public Long countFindingAidsNotLinkedByArchivalInstitution(Integer aiId, Collection<String> fileStates);
+	public boolean existFindingAidsNotLinkedByArchivalInstitution(Integer aiId);
 	public Long getFindingAidsLinkedByHoldingsGuide(HoldingsGuide hgvo);
 	public Long countFindingAids(List<ArchivalInstitution> archivalInstitutions, Collection<String> fileStates);
 	public Long countSearchFindingAidsUnits(String queries, Integer ai, int option, Collection<String> fileStates, List<String> statuses,Boolean isLinkedToHoldingsGuide);
