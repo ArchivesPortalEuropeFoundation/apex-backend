@@ -93,7 +93,7 @@ private final Logger log = Logger.getLogger(getClass());
 
 
 				subQuery2.add(disjunction);
-			criteria.add(Subqueries.propertyIn("couId", subQuery2));
+			criteria.add(Subqueries.propertyIn("id", subQuery2));
 		results = criteria.list();
 		
 		long endTime = System.currentTimeMillis();
