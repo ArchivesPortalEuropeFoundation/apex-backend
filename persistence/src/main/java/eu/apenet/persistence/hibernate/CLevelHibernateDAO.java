@@ -2,11 +2,12 @@ package eu.apenet.persistence.hibernate;
 
 import java.util.List;
 
+import javax.persistence.TypedQuery;
+
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
@@ -28,8 +29,18 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 	private final static Logger LOG = Logger.getLogger(CLevelHibernateDAO.class);
 	
 	
-	
-
+    public List<CLevel> getTopClevelsByFileId(Integer fileId, Class<? extends Ead> clazz, int firstResult, int maxResult) {
+    	String propertyName = "faId";
+    	if(clazz.equals(HoldingsGuide.class))
+    		propertyName = "hgId";
+        else
+        	propertyName = "sgId";
+		TypedQuery<CLevel> query = getEntityManager().createQuery("SELECT clevel FROM CLevel clevel WHERE clevel.eadContent." + propertyName + " = :fileId AND clevel.parentClId IS NULL ORDER BY clevel.orderId ASC", CLevel.class);
+		query.setParameter("fileId", fileId);
+		query.setMaxResults(maxResult);
+		query.setFirstResult(firstResult);
+		return query.getResultList();   
+    }
 
 	@SuppressWarnings("unchecked")
 	@Override

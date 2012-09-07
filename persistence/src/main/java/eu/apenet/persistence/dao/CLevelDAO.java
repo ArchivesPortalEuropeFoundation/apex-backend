@@ -24,6 +24,7 @@ public interface CLevelDAO extends GenericDAO<CLevel, Long> {
 
 	public Long countTopCLevels(Long eadContentId);
 	
+    public List<CLevel> getTopClevelsByFileId(Integer fileId, Class<? extends Ead> clazz, int firstResult, int maxResult);
 	public List<CLevel> findTopCLevels(Long eadContentId, Integer orderId, Integer maxNumberOfItems);
 
 	public List<String> findChildrenLevels(Long parentId);

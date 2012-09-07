@@ -32,12 +32,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		criteria.createAlias("ead.archivalInstitution", "archivalInstitution");
 		criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
 		criteria.add(Restrictions.eq("eadid", eadid));
-		criteria = criteria.createAlias("ead.fileState", "fileState");
-		Disjunction disjunction = Restrictions.disjunction();
-		for (String fileState : FileState.INDEXED_FILE_STATES) {
-			disjunction.add(Restrictions.eq("fileState.state", fileState));
-		}
-		criteria.add(disjunction);
+		criteria.add(Restrictions.eq("searchable", true));
 		List<Integer> result = criteria.list();
 		if (result.size() > 0)
 			return result.get(0);
@@ -91,6 +86,32 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		List<Object> result = query.getResultList();
 		return result.size()> 0;
 	}
+	@Override
+	public List<Ead> getEads(Ead eadExample, int firstResult, int maxResult) {
+		return getEads(eadExample, false, firstResult, maxResult);
+	}
+	private List<Ead> getEads(Ead eadExample, boolean allStates, int firstResult, int maxResult) {
+		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Ead> cq = criteriaBuilder.createQuery(Ead.class);
+		Root<? extends Ead> from = cq.from(eadExample.getClass());
+		cq.select(from);
+		List<Predicate> whereClause = new ArrayList<Predicate>();
+		if (!allStates){
+			whereClause.add(criteriaBuilder.equal(from.get("searchable"), eadExample.isSearchable()));
+		}
+		if (eadExample.getAiId() != null){
+			whereClause.add(criteriaBuilder.equal(from.get("aiId"), eadExample.getAiId()));		 
+		}
+		if (eadExample.getEadid() != null){
+			whereClause.add(criteriaBuilder.equal(from.get("eadid"), eadExample.getEadid()));		 
+		}
+		cq.where(criteriaBuilder.and(whereClause.toArray(new Predicate[0])));
+		TypedQuery<Ead> query = getEntityManager().createQuery(cq);
+		query.setMaxResults(maxResult);
+		query.setFirstResult(firstResult);
+		return query.getResultList();
+	}
+
 	@Override
 	public Integer isEadidUsed(String eadid, Integer aiId, Class<? extends Ead> clazz) {
 		Criteria criteria = getSession().createCriteria(clazz, "ead").setProjection(Projections.property("id"));
