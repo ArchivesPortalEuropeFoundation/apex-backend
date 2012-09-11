@@ -123,14 +123,6 @@ public class NavigationTree {
         return archivalInstitutionUnitList;
 	}
 
-	public List<ArchivalInstitutionUnit> filterArchivalInstitutionsWithContent(List<ArchivalInstitutionUnit> archivalInstitutionList) {
-		List<ArchivalInstitutionUnit> archivalInstitutionListTmp = new ArrayList<ArchivalInstitutionUnit>();
-        for (ArchivalInstitutionUnit anArchivalInstitutionList : archivalInstitutionList) {
-            if (anArchivalInstitutionList.getNumberOfFindingAids() + anArchivalInstitutionList.getNumberOfHoldingsGuide() > 0)
-                archivalInstitutionListTmp.add(anArchivalInstitutionList);
-        }
-		return archivalInstitutionListTmp;
-	}
 
 	public List<ArchivalInstitutionUnit> filterArchivalInstitutionsWithEAG(List<ArchivalInstitutionUnit> archivalInstitutionList) {
 		List<ArchivalInstitutionUnit> archivalInstitutionListTmp = new ArrayList<ArchivalInstitutionUnit>();

@@ -39,8 +39,6 @@ public class ArchivalInstitutionUnit implements Comparable<ArchivalInstitutionUn
 	private List<HoldingsGuideUnit> holdingsGuideList;	//A list with all the holdings guide which belong to this Archival Institution
 	private String couName;	//The country name which this Archival Institution belongs to
 	private String pathEAG; //The EAG path of an institution
-	private Integer numberOfFindingAids; //Number of Finding Aids which belong to an archival institution
-	private Integer numberOfHoldingsGuide; //Number of holdings guide which belong to an archival institution
 	private Boolean isgroup; //This variable indicates whether the archival institution is a group or not
 	private Integer numberOfArchivalInstitutions; //This variable only has sense if the Archival Institution is a group and stores the number of Archival Institutions define within it
 	private boolean hasArchivalInstitutions = false;
@@ -104,21 +102,7 @@ public class ArchivalInstitutionUnit implements Comparable<ArchivalInstitutionUn
 		this.pathEAG = pathEAG;
 	}
 	
-	public void setNumberOfFindingAids(Integer numberOfFindingAids) {
-		this.numberOfFindingAids = numberOfFindingAids;
-	}
 
-	public Integer getNumberOfFindingAids() {
-		return numberOfFindingAids;
-	}
-
-	public void setNumberOfHoldingsGuide(Integer numberOfHoldingsGuide) {
-		this.numberOfHoldingsGuide = numberOfHoldingsGuide;
-	}
-
-	public Integer getNumberOfHoldingsGuide() {
-		return numberOfHoldingsGuide;
-	}
 
 	public Boolean getIsgroup() {
 		return isgroup;
@@ -165,17 +149,12 @@ public class ArchivalInstitutionUnit implements Comparable<ArchivalInstitutionUn
 		this.aiScndname = getArchivalInstitutionScndName(language);
 		this.alorder = alorder;
 
-        FindingAidDAO findingAidDao = DAOFactory.instance().getFindingAidDAO();
-        HoldingsGuideDAO holdingsGuideDao = DAOFactory.instance().getHoldingsGuideDAO();
 		if (this.isgroup){
             // It is necessary to count all the finding aids and holdings guide indexed within all the final archival institutions which belongs to this group
             // First, it is necessary to retrieve all the final archival institutions which belongs to this group
             List<ArchivalInstitution> finalArchivalInstitutionList = new ArrayList<ArchivalInstitution>();
             retrieveFinalArchivalInstitutions(finalArchivalInstitutionList, this.getAiId(), true);
 
-            // Second, it is necessary to count all the finding aids and holdings guide indexed for every final archival institution which belongs to this group
-            setNumberOfFindingAids(findingAidDao.countFindingAids(finalArchivalInstitutionList, Arrays.asList(FileState.INDEXED_FILE_STATES)).intValue());
-            setNumberOfHoldingsGuide(holdingsGuideDao.countHoldingsGuide(finalArchivalInstitutionList, Arrays.asList(FileState.INDEXED_FILE_STATES)).intValue());
 
             // It is necessary to check if some of the final archival institutions which belong to this group have EAG files uploaded into the System
             for(ArchivalInstitution archivalInstitution : finalArchivalInstitutionList) {
@@ -185,8 +164,6 @@ public class ArchivalInstitutionUnit implements Comparable<ArchivalInstitutionUn
                 }
             }
         } else {
-            setNumberOfFindingAids(findingAidDao.countFindingAids(this.aiId, Arrays.asList(FileState.INDEXED_FILE_STATES), null, null).intValue());
-            setNumberOfHoldingsGuide(holdingsGuideDao.countHoldingsGuide(this.aiId, Arrays.asList(FileState.INDEXED_FILE_STATES)).intValue());
             this.findingAidList = null;
             this.holdingsGuideList = null;
 		}
