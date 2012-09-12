@@ -36,22 +36,6 @@ public class NavigationTree {
 		return resourceBundleSource.getLocale().getLanguage().substring(0,2);
 	}
 
-	//This method obtains all the countries within the Archival Landscape which have EAD files indexed
-	public List<CountryUnit> getALCountriesWithContent() throws APEnetException {
-		List<CountryUnit> countries = new ArrayList<CountryUnit>();
-		try{
-			List<Country> cos = DAOFactory.instance().getCountryDAO().getCountriesWithContentIndexedOrderByCName();
-			for (Country co : cos) {
-                String otherCountryName = resourceBundleSource.getString("country." + co.getCname().toLowerCase(), co.getCname());
-                countries.add(new CountryUnit(co, otherCountryName));
-            }
-			
-		}catch (Exception e) {
-			log.error("Error retrieving all the countries within the Archival Landscape.", e);
-        	throw new APEnetException(e.getMessage(), e);
-        }
-        return countries;
-	}
 	
 	public List<CountryUnit> getALCountriesWithArchivalInstitutionsWithEAG() throws APEnetException {
 		List<CountryUnit> countries = new ArrayList<CountryUnit>();

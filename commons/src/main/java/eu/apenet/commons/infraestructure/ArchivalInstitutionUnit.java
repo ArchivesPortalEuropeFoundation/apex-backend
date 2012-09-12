@@ -35,14 +35,12 @@ public class ArchivalInstitutionUnit implements Comparable<ArchivalInstitutionUn
 	private Integer aiId;		//Identifier in archival_institution table
 	private String ainame;		//Archival Institution name
 	private String aiScndname;  //Archival Institution name in other language
-	private List<FindingAidUnit> findingAidList;	//A list with all the finding aids which belong to this Archival Institution
-	private List<HoldingsGuideUnit> holdingsGuideList;	//A list with all the holdings guide which belong to this Archival Institution
 	private String couName;	//The country name which this Archival Institution belongs to
 	private String pathEAG; //The EAG path of an institution
 	private Boolean isgroup; //This variable indicates whether the archival institution is a group or not
 	private Integer numberOfArchivalInstitutions; //This variable only has sense if the Archival Institution is a group and stores the number of Archival Institutions define within it
 	private boolean hasArchivalInstitutions = false;
-	
+	private String language;
 	private Integer alorder; //The order of the archival institution within the Archival Landscape	
 	
 	//Getters and Setters
@@ -63,6 +61,9 @@ public class ArchivalInstitutionUnit implements Comparable<ArchivalInstitutionUn
 	}
 
 	public String getAiScndname() {
+		if (aiScndname != null){
+			this.aiScndname = getArchivalInstitutionScndName(language);
+		}
 		return aiScndname;
 	}
 
@@ -70,14 +71,7 @@ public class ArchivalInstitutionUnit implements Comparable<ArchivalInstitutionUn
 		this.aiScndname = aiScndname;
 	}
 
-	public void setFindingAidList(List<FindingAidUnit> findingAidList) {
-		this.findingAidList = findingAidList;
-	}
 
-	public List<FindingAidUnit> getFindingAidList() {
-		return findingAidList;
-	}
-	
 	public void setCouName(String countryName) {
 		this.couName = countryName;
 	}
@@ -86,13 +80,7 @@ public class ArchivalInstitutionUnit implements Comparable<ArchivalInstitutionUn
 		return couName;
 	}
 	
-	public void setHoldingsGuideList(List<HoldingsGuideUnit> holdingsGuideList) {
-		this.holdingsGuideList = holdingsGuideList;
-	}
 
-	public List<HoldingsGuideUnit> getHoldingsGuideList() {
-		return holdingsGuideList;
-	}
 
 	public String getPathEAG() {
 		return pathEAG;
@@ -141,13 +129,12 @@ public class ArchivalInstitutionUnit implements Comparable<ArchivalInstitutionUn
 		this.aiId = aiId;
 		this.ainame = ainame;
 		this.couName = couName;
-		this.findingAidList = new ArrayList<FindingAidUnit>();
-		this.holdingsGuideList = new ArrayList<HoldingsGuideUnit>();
 		this.pathEAG=pathEAG;
 		this.isgroup = isgroup;
 		this.numberOfArchivalInstitutions = numberOfArchivalInstitutions;
-		this.aiScndname = getArchivalInstitutionScndName(language);
+		
 		this.alorder = alorder;
+		this.language = language;
 
 		if (this.isgroup){
             // It is necessary to count all the finding aids and holdings guide indexed within all the final archival institutions which belongs to this group
@@ -163,10 +150,7 @@ public class ArchivalInstitutionUnit implements Comparable<ArchivalInstitutionUn
                     break;
                 }
             }
-        } else {
-            this.findingAidList = null;
-            this.holdingsGuideList = null;
-		}
+        } 
 	}
 
 	/**
@@ -213,22 +197,22 @@ public class ArchivalInstitutionUnit implements Comparable<ArchivalInstitutionUn
 		return alorder.compareTo(aiu.getAlorder());
 	}
 
-	public static Long countHoldingsGuide (Integer aiId) {
+	private static Long countHoldingsGuide (Integer aiId) {
 		return DAOFactory.instance().getHoldingsGuideDAO().countHoldingsGuideByArchivalInstitution(aiId, Arrays.asList(FileState.INDEXED_FILE_STATES));
 	}
 
-	public static Long countFindingAidsNotLinked (Integer aiId) {
+	private static Long countFindingAidsNotLinked (Integer aiId) {
 		return DAOFactory.instance().getFindingAidDAO().countFindingAidsNotLinkedByArchivalInstitution(aiId, Arrays.asList(FileState.INDEXED_FILE_STATES));
 	}
 	
 	//This method obtains all the finding aids not linked and indexed related to an Archival Insititution using pagination
-	public static List<FindingAidUnit> getFindingAidsNotLinkedBySegment (Integer aiId, Integer from, Integer maxNumberOfItems) {
+	private static List<FindingAidUnit> getFindingAidsNotLinkedBySegment (Integer aiId, Integer from, Integer maxNumberOfItems) {
 		List<FindingAid> findingAidList = DAOFactory.instance().getFindingAidDAO().getFindingAidsNotLinkedBySegment(aiId, Arrays.asList(FileState.INDEXED_FILE_STATES), "faTitle", true, from, maxNumberOfItems);
         return createFindingAidUnits(findingAidList);
 	}
 
 	//This method obtains all the finding aids not linked and indexed related to an Archival Insititution
-	public static List<FindingAidUnit> getFindingAidsNotLinked (Integer aiId){
+	private static List<FindingAidUnit> getFindingAidsNotLinked (Integer aiId){
 		List<FindingAid> findingAidList = DAOFactory.instance().getFindingAidDAO().getFindingAidsNotLinked(aiId, Arrays.asList(FileState.INDEXED_FILE_STATES), "faTitle", true);
         return createFindingAidUnits(findingAidList);
 	}
