@@ -11,13 +11,13 @@
 		</tr>
 	<c:forEach var="countryAndManager" items="${countryAndManagers}">
 		<tr>
-			<td><a href="institutionManagerManagement.action?countryId=${countryAndManager.country.couId}" ><c:out value="${countryAndManager.country.cname}"/></a></td>
+			<td><a href="institutionManagerManagement.action?countryId=${countryAndManager.country.id}" ><c:out value="${countryAndManager.country.cname}"/></a></td>
 			<c:choose>
 				<c:when test="${empty countryAndManager.countryManager}">
 					<td colspan="2"></td>
 					<td>
 						<s:form action="displayCreateCountryManager" theme="simple" method="GET">
-							<input type="hidden" name="countryId" value="${countryAndManager.country.couId}"/>
+							<input type="hidden" name="countryId" value="${countryAndManager.country.id}"/>
 							<s:submit key="usermanagement.create.countrymanager" name="createCountryManager"/>
 						</s:form>
 					</td>				
