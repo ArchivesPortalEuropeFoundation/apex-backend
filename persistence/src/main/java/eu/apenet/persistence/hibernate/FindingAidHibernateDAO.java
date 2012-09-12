@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -627,10 +628,17 @@ public class FindingAidHibernateDAO extends AbstractHibernateDAO<FindingAid, Int
 		        "SELECT fa.id FROM FindingAid fa WHERE fa.aiId = :aiId AND fa.searchable = true AND fa.eadid NOT IN (SELECT c.hrefEadid FROM CLevel c WHERE c.hrefEadid IS NOT NULL AND c.ecId IN (SELECT ec.ecId FROM EadContent ec WHERE ec.hgId IN (SELECT hg.id FROM HoldingsGuide hg WHERE hg.searchable = true AND hg.aiId = :aiId) OR ec.sgId IN (SELECT sg.id FROM SourceGuide sg WHERE sg.searchable = true AND sg.aiId = :aiId)))");
 		query.setParameter("aiId", aiId);
 		query.setMaxResults(1);
-		List<Object> objects = query.getResultList();
-		return objects.size() > 0;
+		return query.getResultList().size() > 0;
 	}
-
+	@Override
+	public List<FindingAid> getFindingAidsNotLinkedByArchivalInstitution(Integer aiId, Integer start, Integer maxResults ) {
+		TypedQuery<FindingAid> query = getEntityManager().createQuery(
+		        "SELECT fa FROM FindingAid fa WHERE fa.aiId = :aiId AND fa.searchable = true AND fa.eadid NOT IN (SELECT c.hrefEadid FROM CLevel c WHERE c.hrefEadid IS NOT NULL AND c.ecId IN (SELECT ec.ecId FROM EadContent ec WHERE ec.hgId IN (SELECT hg.id FROM HoldingsGuide hg WHERE hg.searchable = true AND hg.aiId = :aiId) OR ec.sgId IN (SELECT sg.id FROM SourceGuide sg WHERE sg.searchable = true AND sg.aiId = :aiId))) ORDER BY fa.title", FindingAid.class);
+		query.setParameter("aiId", aiId);
+		query.setFirstResult(start);
+		query.setMaxResults(maxResults);
+		return query.getResultList();
+	}
 	/*
 	SELECT fa_title FROM finding_aid 
 	WHERE fa_eadid NOT IN 
