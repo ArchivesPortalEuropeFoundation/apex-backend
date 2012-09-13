@@ -19,9 +19,6 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 	private static final String XSL_DIR_PATH_DEFAULT = "/mnt/xsl/";
 	private static final String TMP_DIR_PATH = "TMP_DIR_PATH";
 	private static final String TMP_DIR_PATH_DEFAULT = "/mnt/tmp/";
-	private static final String SECURITY_LEVEL = "SECURITY_LEVEL";
-	private static final String PUBLIC_RE_CAPTCHA_KEY = "PUBLIC_RE_CAPTCHA_KEY";
-	private static final String PRIVATE_RE_CAPTCHA_KEY = "PRIVATE_RE_CAPTCHA_KEY";
 	private static final String BATCH_PROCESSING_ENABLED = "BATCH_PROCESSING_ENABLED";
 
 	private static final String DOMAIN_NAME_MAIN_SERVER = "DOMAIN_NAME_MAIN_SERVER";
@@ -94,24 +91,8 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 		tmpDirPath = checkPath(TMP_DIR_PATH, tmpDirPath);
 		config.setTempDirPath(tmpDirPath);
 
-		config.setSecurityLevel(SecurityLevel.getLevel(servletContext.getInitParameter(SECURITY_LEVEL)));
-		log.info(SECURITY_LEVEL + ": " + config.getSecurityLevel());
-		
-		String publicReCaptchaKey =servletContext.getInitParameter(PUBLIC_RE_CAPTCHA_KEY);
-		String privateReCaptchaKey = servletContext.getInitParameter(PRIVATE_RE_CAPTCHA_KEY);
-		if (StringUtils.isBlank(publicReCaptchaKey)) {
-			log.warn("No " + PUBLIC_RE_CAPTCHA_KEY + " specified.");
-		} else {
-			log.info(PUBLIC_RE_CAPTCHA_KEY + ": " + publicReCaptchaKey);
-		}
-		if (StringUtils.isBlank(privateReCaptchaKey)) {
-			log.warn("No " + PRIVATE_RE_CAPTCHA_KEY + " specified.");
-		} else {
-			log.info(PRIVATE_RE_CAPTCHA_KEY + ": " + privateReCaptchaKey);
-		}
-		config.setPublicReCaptchaKey(publicReCaptchaKey);
-		config.setPrivateReCaptchaKey(privateReCaptchaKey);
-		
+	
+	
 		String domainNameMainServer = servletContext.getInitParameter(DOMAIN_NAME_MAIN_SERVER);
 		if (StringUtils.isBlank(domainNameMainServer)) {
 			log.warn("No " + DOMAIN_NAME_MAIN_SERVER + " specified. Using the default: "
