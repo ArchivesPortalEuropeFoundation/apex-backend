@@ -11,9 +11,6 @@ import eu.apenet.commons.utils.SecurityLevel;
 public class DashboardConfig extends ApePortalAndDashboardConfig{
     protected static final String EMAIL_SEPARATOR = ";";
 	private String tempDirPath;
-	private SecurityLevel securityLevel;
-    private String publicReCaptchaKey;
-    private String privateReCaptchaKey;
     private String domainNameMainServer;
     
 	private String europeanaDirPath;
@@ -101,30 +98,6 @@ public class DashboardConfig extends ApePortalAndDashboardConfig{
 		this.tempDirPath = tempDirPath;
 	}
 
-	public SecurityLevel getSecurityLevel() {
-		return securityLevel;
-	}
-	public void setSecurityLevel(SecurityLevel securityLevel) {
-		checkConfigured();
-		this.securityLevel = securityLevel;
-	}
-    public String getPublicReCaptchaKey() {
-		return publicReCaptchaKey;
-	}
-
-
-	public String getPrivateReCaptchaKey() {
-		return privateReCaptchaKey;
-	}
-	public void setPublicReCaptchaKey(String publicReCaptchaKey) {
-		checkConfigured();
-		this.publicReCaptchaKey = publicReCaptchaKey;
-	}
-
-	public void setPrivateReCaptchaKey(String privateReCaptchaKey) {
-		checkConfigured();
-		this.privateReCaptchaKey = privateReCaptchaKey;
-	}
 
 	public boolean isBatchProcessingEnabled() {
 		return batchProcessingEnabled;
