@@ -9,7 +9,7 @@
   			<br></br>
   			<select id="countrySelected" name="countrySelected" >
 			<s:iterator value="countriesList" var="row">
-				<option value="<s:property value="#row.couId" />"><s:property value="#row.cname" /></option>
+				<option value="<s:property value="#row.id" />"><s:property value="#row.cname" /></option>
 			</s:iterator>
 			</select>  		
 			&nbsp;  &nbsp; 
