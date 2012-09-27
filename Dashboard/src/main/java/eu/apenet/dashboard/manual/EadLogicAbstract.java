@@ -71,7 +71,10 @@ public abstract class EadLogicAbstract {
         List<String> eseHtmlRenamed = new ArrayList<String>();
 
         Set<Ese> eseList = null;
-        
+
+        ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(archivalInstitutionId);
+        String countryIso = archivalInstitution.getCountry().getIsoname().trim();
+
         try {
             try {
                 /// DELETE FROM DATABASE ///
@@ -130,10 +133,7 @@ public abstract class EadLogicAbstract {
                     else if(ead instanceof SourceGuide)
                         newEad = new SourceGuide();
 
-                    ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(archivalInstitutionId);
                     newEad.setArchivalInstitution(archivalInstitution);
-                    String countryIso = archivalInstitution.getCountry().getIsoname().trim();
-
                     newEad.setEadid(fileUnit.getEadid());
                     newEad.setTitle(title);
                     newEad.setUploadDate(new Date());
@@ -181,7 +181,10 @@ public abstract class EadLogicAbstract {
 
                 if(isOverwrite) {
                     /// STORING THE NEW FINDING AID IN THE FILE SYSTEM ///
-                    File destFile = new File(APEnetUtilities.getDashboardConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitutionId + APEnetUtilities.FILESEPARATOR + fileUnit.getFileName());
+                    String startPath = APEnetUtilities.getDashboardConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + countryIso + APEnetUtilities.FILESEPARATOR + archivalInstitutionId + APEnetUtilities.FILESEPARATOR;
+                    String destFilePath = instantiateCorrectDirPath(startPath, XmlType.getEadType(ead));
+                    File destFile = new File(destFilePath + fileUnit.getFileName());
+
                     File srcFile = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitutionId + APEnetUtilities.FILESEPARATOR + fileUnit.getFileName());
 
                     // Copy the file from up repository to temp repository and rename the file in up repository to _remove...
@@ -320,5 +323,17 @@ public abstract class EadLogicAbstract {
             return false;
         }
         return true;
+    }
+
+
+    public static String instantiateCorrectDirPath(String startPath, XmlType xmlType) {
+        if(xmlType == XmlType.EAD_FA){
+            return startPath + "FA" + APEnetUtilities.FILESEPARATOR;
+        } else if(xmlType == XmlType.EAD_HG){
+            return startPath + "HG" + APEnetUtilities.FILESEPARATOR;
+        } else if(xmlType == XmlType.EAD_SG){
+            return startPath + "HG" + APEnetUtilities.FILESEPARATOR;
+        }
+        return null;
     }
 }
