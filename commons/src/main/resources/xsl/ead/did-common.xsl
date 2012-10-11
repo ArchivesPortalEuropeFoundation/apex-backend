@@ -6,20 +6,20 @@
 	<xsl:include href="common.xsl" />
 	<xsl:output method="html" indent="yes" version="4.0" encoding="UTF-8" />
 	<xsl:template name="langmaterial">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.language')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:langmaterial">
 				<xsl:apply-templates mode="other"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="repository">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.repository')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:repository">
 				<p>
 					<xsl:apply-templates  mode="other"/><xsl:text> </xsl:text>
@@ -28,82 +28,82 @@
 		</div>
 	</xsl:template>
 	<xsl:template name="physloc-label">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.physloc')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:value-of select="ead:physloc/@label" />
 		</div>
 	</xsl:template>
 	<xsl:template name="materialspec">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.materialspec')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:materialspec">
 				<xsl:apply-templates  mode="other"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="physfacet">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.physfacet')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:physfacet">
 				<xsl:apply-templates  mode="other" />
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="extent">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.extent')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:apply-templates select="ead:extent"  mode="other"/>
 		</div>
 	</xsl:template>
 	<xsl:template name="genreform">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.genreform')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:genreform">
 				<xsl:apply-templates  mode="other"/><xsl:text> </xsl:text>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="dimensions">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.dimensions')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:apply-templates select="ead:dimensions"  mode="other"/>
 		</div>
 	</xsl:template>
     <xsl:template name="physdescText">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.physdesc')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:apply-templates  mode="other"/>
 		</div>
 	</xsl:template>
 	<xsl:template name="note">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.note')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:note">
 				<xsl:apply-templates  mode="other"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="dao" >
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.dao')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select='ead:dao[@xlink:title!="thumbnail" or not(@xlink:title)]'>
 				<xsl:variable name="linkPosition" select="position()" />
 				<xsl:variable name="thumbnail" select='parent::node()/ead:dao[@xlink:title="thumbnail"]' />
@@ -154,10 +154,10 @@
 		</div>
 	</xsl:template>
 	<xsl:template name="origination">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.origination')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:if test="ead:origination[@label='pre']">
 				<p>
 					<b>
@@ -220,220 +220,220 @@
 	</xsl:template>
 
 	<xsl:template name="scopecontent">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.scopecontent')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:scopecontent">
 				<xsl:apply-templates mode="scopecontent"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="bioghist">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.bioghist')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:bioghist">
 				<xsl:apply-templates  mode="other"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="custodhist">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.custodhist')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:custodhist">
 				<xsl:apply-templates  mode="other"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="appraisal">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.appraisal')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:appraisal">
 				<xsl:apply-templates  mode="other"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="processinfo">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.processinfo')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:processinfo">
 				<xsl:apply-templates  mode="other"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="accruals">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.accruals')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:accruals">
 				<xsl:apply-templates  mode="other"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="arrangement">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.arrangement')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:arrangement">
 				<xsl:apply-templates  mode="other"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="fileplan">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.fileplan')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:fileplan">
 				<xsl:apply-templates  mode="other"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="accessrestrict">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.accessrestrict')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:accessrestrict">
 				<xsl:apply-templates  mode="other"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="userestrict">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.userestrict')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:userestrict">
 				<xsl:apply-templates  mode="other"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="phystech">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.phystech')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:phystech">
 				<xsl:apply-templates  mode="other"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="otherfindaid">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.otherfindaid')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:otherfindaid">
 				<xsl:apply-templates  mode="otherfindingaids"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="relatedmaterial">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.relatedmaterial')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:relatedmaterial">
 				<xsl:apply-templates  mode="other"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="separatedmaterial">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.separatedmaterial')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:separatedmaterial">
 				<xsl:apply-templates  mode="other"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="altformavail">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.altformavail')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:altformavail">
 				<xsl:apply-templates  mode="other"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="originalsloc">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.originalsloc')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:originalsloc">
 				<xsl:apply-templates  mode="other"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="bibliography">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.bibliography')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:bibliography">
 				<xsl:apply-templates  mode="other"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="prefercite">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.prefercite')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:prefercite">
 				<xsl:apply-templates  mode="other"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="odd">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.odd')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:odd">
 				<xsl:apply-templates  mode="other"/>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="acqinfo">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.acqinfo')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:acqinfo">
 				<xsl:apply-templates mode="other" />
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="controlaccess">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.controlaccess')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:controlaccess">
 				<xsl:apply-templates mode="other" />
 			</xsl:for-each>
 		</div>
 	</xsl:template>
 	<xsl:template name="container">
-		<h2 class="expand">
+		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.container')" />
 		</h2>
-		<div class="collapse">
+		<div class="ead-content">
 			<xsl:for-each select="ead:container">
 				<xsl:apply-templates mode="other" />
 			</xsl:for-each>
