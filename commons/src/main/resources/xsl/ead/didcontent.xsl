@@ -18,16 +18,9 @@
                 <xsl:apply-templates  select="ead:unitdate" mode="alterdate"/>
             </div>
 			<div id="content">
-				<div class="expandContent">
+				<div id="expandableContent">
 					<xsl:if test="ead:langmaterial">
-						<h2 class="expand">
-							<xsl:value-of select="ape:resource('eadcontent.language')" />
-						</h2>
-						<div class="collapse">
-							<xsl:for-each select="ead:langmaterial">
-								<xsl:apply-templates />
-							</xsl:for-each>
-						</div>
+						<xsl:call-template name="langmaterial" />
 					</xsl:if>
 					<xsl:if test="ead:origination">
 						<xsl:call-template name="origination" />

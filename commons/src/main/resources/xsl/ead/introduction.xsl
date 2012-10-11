@@ -19,7 +19,7 @@
 			<xsl:value-of select="ape:resource('eadcontent.introduction')" />
 		</div>
 		<div id="content">
-			<div class="expandContent">
+			<div id="expandableContent">
 				<xsl:apply-templates select="/ead:ead/ead:archdesc" mode="notsearchable"/>
 
 			</div>
