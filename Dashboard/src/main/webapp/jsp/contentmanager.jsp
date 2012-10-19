@@ -166,6 +166,7 @@
                             <option value="<s:property value="#orderByTitle" />"><s:property value="getText('content.message.title')"/></option>
                             <option value="<s:property value="#orderByEadid" />"><s:property value="getText('content.message.id')"/></option>
                         </select>
+                        <input type="hidden" name="orderDecreasing" value="true"/>
 					<%--</label>--%>
 				</p>
             <s:if test="xmlTypeId == #xmlTypeIdEAD_FA">
