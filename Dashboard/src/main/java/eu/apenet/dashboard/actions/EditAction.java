@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.security.PasswordValidator;
 import eu.apenet.dashboard.security.PasswordValidator.ValidationResult;
+import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.security.SecurityService;
 import eu.apenet.dashboard.security.UserService;
 import eu.apenet.dashboard.security.cipher.BasicDigestPwd;
@@ -40,7 +41,8 @@ public class EditAction extends AbstractAction {
 	 */
 	public String execute() throws Exception {
 		// checkUserRoleToBuildBreadcrumbs();
-		User userToUpdate = SecurityService.getCurrentPartner();
+		User userToUpdate = new User();
+		userToUpdate.setId( SecurityService.getCurrentPartner().getId());
 		boolean changePwd = false;
 
 		if ((this.getNewPassword() != null || this.getCurrentPassword() != null || this.getRePassword() != null)
@@ -49,7 +51,7 @@ public class EditAction extends AbstractAction {
 			if (!validateChangePwd()) {
 				return INPUT;
 			} else {
-				userToUpdate.setPassword(BasicDigestPwd.generateDigest(this.getNewPassword()));
+				userToUpdate.setPassword(this.getNewPassword());
 				changePwd = true;
 			}
 		}
