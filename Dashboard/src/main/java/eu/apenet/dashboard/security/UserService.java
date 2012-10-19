@@ -254,8 +254,9 @@ public final class UserService {
 		user.setEmailAddress(inputUser.getEmailAddress());
 		user.setSecretAnswer(inputUser.getSecretAnswer());
 		user.setSecretQuestion(inputUser.getSecretQuestion());
-		if (!user.getPassword().equals(inputUser.getPassword())){
-			user.setPassword(BasicDigestPwd.generateDigest(inputUser.getPassword()));
+		String newPassword = BasicDigestPwd.generateDigest(inputUser.getPassword());
+		if (!user.getPassword().equals(newPassword)){
+			user.setPassword(newPassword);
 		}
 		userDAO.store(user);
 		ChangeControl.logOperation(ChangeControl.MODIFY_REGISTRATION_DATA_OPERATION);
