@@ -1,5 +1,6 @@
 package eu.apenet.dashboard.actions;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import eu.apenet.dashboard.AbstractAction;
@@ -45,9 +46,7 @@ public class EditAction extends AbstractAction {
 		userToUpdate.setId( SecurityService.getCurrentPartner().getId());
 		boolean changePwd = false;
 
-		if ((this.getNewPassword() != null || this.getCurrentPassword() != null || this.getRePassword() != null)
-				&& (this.getNewPassword().length() >= 1 || this.getCurrentPassword().length() >= 1 || this
-						.getRePassword().length() >= 1)) {
+		if (StringUtils.isNotBlank(this.newPassword) || StringUtils.isNotBlank(this.rePassword) || StringUtils.isNotBlank(this.currentPassword)) {
 			if (!validateChangePwd()) {
 				return INPUT;
 			} else {
@@ -80,40 +79,36 @@ public class EditAction extends AbstractAction {
 	}
 
 	public boolean validateChangePwd() {
-
 		boolean result = true;
-		if (this.getNewPassword() != null) {
-			if (this.getNewPassword().length() == 0) {
-				addFieldError("newPassword", getText("password.required"));
+		if (StringUtils.isBlank(getCurrentPassword())){
+			addFieldError("currentPassword", getText("currentPassword.required"));
+			result = false;
+		}else {
+			String currentPassword = this.getCurrentPassword().trim();
+			User userToUpdate = SecurityService.getCurrentPartner();
+			if (!(BasicDigestPwd.generateDigest(currentPassword).equals(userToUpdate.getPassword()))) {
+				addFieldError("oldPassword", getText("currentPassword.notEquals"));
 				result = false;
-			} else {
-				if (!this.getNewPassword().equals(this.getRePassword())) {
-					addFieldError("rePassword", getText("reNewpassword.notEquals"));
-					result = false;
-				}
-				ValidationResult validationResult = PasswordValidator.validate(this.getNewPassword());
-				if (!validationResult.isValid()) {
-					if (validationResult.isTooShort()) {
-						addFieldError("newPassword", getText("password.tooShort"));
-					} else {
-						addFieldError("newPassword", getText("password.notStrong"));
-
-					}
-					return false;
-				}
 			}
 		}
-
-		if (this.getCurrentPassword() != null) {
-			if (this.getCurrentPassword().length() == 0) {
-				addFieldError("currentPassword", getText("currentPassword.required"));
+		if (StringUtils.isBlank(getNewPassword())){
+			addFieldError("newPassword", getText("password.required"));
+			result = false;			
+		}else {
+			String newPassword = this.getNewPassword().trim();
+			if (rePassword == null || !newPassword.equals(this.getRePassword().trim())) {
+				addFieldError("rePassword", getText("reNewpassword.notEquals"));
 				result = false;
-			} else {
-				User userToUpdate = SecurityService.getCurrentPartner();
-				if (!(BasicDigestPwd.generateDigest(this.getCurrentPassword()).equals(userToUpdate.getPassword()))) {
-					addFieldError("oldPassword", getText("currentPassword.notEquals"));
-					result = false;
+			}
+			ValidationResult validationResult = PasswordValidator.validate(newPassword);
+			if (!validationResult.isValid()) {
+				if (validationResult.isTooShort()) {
+					addFieldError("newPassword", getText("password.tooShort"));
+				} else {
+					addFieldError("newPassword", getText("password.notStrong"));
+
 				}
+				return false;
 			}
 		}
 		return result;
