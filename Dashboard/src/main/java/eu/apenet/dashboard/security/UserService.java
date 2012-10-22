@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 
 import eu.apenet.commons.infraestructure.EmailComposer;
@@ -29,15 +30,16 @@ import eu.apenet.persistence.vo.UserRole;
  * Service for manage users in the Dashboard
  * 
  * @author bastiaan
- *
+ * 
  */
 public final class UserService {
 	private static final String DEFAULT_SECRET_QUESTION = "What is your generated security answer?";
-	
-	
+
 	/**
 	 * Delete Country Manager by id
-	 * @param id id of User
+	 * 
+	 * @param id
+	 *            id of User
 	 */
 	public static void deleteCountryManager(Integer id) {
 		if (SecurityContext.get().isAdmin()) {
@@ -57,8 +59,10 @@ public final class UserService {
 	/**
 	 * Delete Institution Manager
 	 * 
-	 * @param aiId id of Archival Institution
-	 * @param id id of User
+	 * @param aiId
+	 *            id of Archival Institution
+	 * @param id
+	 *            id of User
 	 */
 	public static void deleteInstitutionManager(Integer aiId, Integer id) {
 		SecurityContext securityContext = SecurityContext.get();
@@ -96,7 +100,9 @@ public final class UserService {
 
 	/**
 	 * Enable an user
-	 * @param id id of User
+	 * 
+	 * @param id
+	 *            id of User
 	 */
 	public static void enableUser(Integer id) {
 		SecurityContext securityContext = SecurityContext.get();
@@ -117,9 +123,12 @@ public final class UserService {
 			}
 		}
 	}
+
 	/**
 	 * Disable an user
-	 * @param partnerId id of User
+	 * 
+	 * @param partnerId
+	 *            id of User
 	 */
 	public static void disableUser(Integer partnerId) {
 		SecurityContext securityContext = SecurityContext.get();
@@ -143,8 +152,11 @@ public final class UserService {
 
 	/**
 	 * Create a Country Manager
-	 * @param user User template with input field values
-	 * @param countryId Id of the selected country
+	 * 
+	 * @param user
+	 *            User template with input field values
+	 * @param countryId
+	 *            Id of the selected country
 	 */
 	public static void createCountryManager(User user, Integer countryId) {
 		if (SecurityContext.get().isAdmin()) {
@@ -166,12 +178,15 @@ public final class UserService {
 		}
 	}
 
-
 	/**
 	 * Create a new Institution Manager or associate an existing one
-	 * @param inputUser User template with input field values
-	 * @param aiId Id of Archival Institution that need to be associated
-	 * @param existingUserId Id of existing user
+	 * 
+	 * @param inputUser
+	 *            User template with input field values
+	 * @param aiId
+	 *            Id of Archival Institution that need to be associated
+	 * @param existingUserId
+	 *            Id of existing user
 	 */
 	public static void createOrAssociateInstitutionManager(User inputUser, Integer aiId, Integer existingUserId) {
 		SecurityContext securityContext = SecurityContext.get();
@@ -226,27 +241,31 @@ public final class UserService {
 
 		}
 	}
+
 	/**
 	 * Change password
 	 * 
-	 * @param password New password
-	 * @param validationLink validation Link
+	 * @param password
+	 *            New password
+	 * @param validationLink
+	 *            validation Link
 	 */
-	public static void changePassword(String password, String validationLink)  {
-			UserDAO partnerdao = DAOFactory.instance().getUserDAO();
-			SentMailRegisterDAO daoSentMailRegister = DAOFactory.instance().getSentMailRegisterDAO();
-			SentMailRegister sentmailregister = daoSentMailRegister
-					.exitsValidationLinkSentMailRegister(validationLink);
-			User partner = sentmailregister.getUser();
-			partner.setPassword(BasicDigestPwd.generateDigest(password));
-			partnerdao.store(partner);
-			daoSentMailRegister.delete(sentmailregister);
+	public static void changePassword(String password, String validationLink) {
+		UserDAO partnerdao = DAOFactory.instance().getUserDAO();
+		SentMailRegisterDAO daoSentMailRegister = DAOFactory.instance().getSentMailRegisterDAO();
+		SentMailRegister sentmailregister = daoSentMailRegister.exitsValidationLinkSentMailRegister(validationLink);
+		User partner = sentmailregister.getUser();
+		partner.setPassword(BasicDigestPwd.generateDigest(password));
+		partnerdao.store(partner);
+		daoSentMailRegister.delete(sentmailregister);
 	}
+
 	/**
 	 * Update User
+	 * 
 	 * @param inputUser
 	 */
-	public static void updateUser(User inputUser)  {
+	public static void updateUser(User inputUser) {
 		UserDAO userDAO = DAOFactory.instance().getUserDAO();
 		User user = userDAO.findById(inputUser.getId());
 		user.setFirstName(inputUser.getFirstName());
@@ -254,9 +273,11 @@ public final class UserService {
 		user.setEmailAddress(inputUser.getEmailAddress());
 		user.setSecretAnswer(inputUser.getSecretAnswer());
 		user.setSecretQuestion(inputUser.getSecretQuestion());
-		String newPassword = BasicDigestPwd.generateDigest(inputUser.getPassword());
-		if (!user.getPassword().equals(newPassword)){
-			user.setPassword(newPassword);
+		if (StringUtils.isNotBlank(inputUser.getPassword())) {
+			String newPassword = BasicDigestPwd.generateDigest(inputUser.getPassword());
+			if (!user.getPassword().equals(newPassword)) {
+				user.setPassword(newPassword);
+			}
 		}
 		userDAO.store(user);
 		ChangeControl.logOperation(ChangeControl.MODIFY_REGISTRATION_DATA_OPERATION);
@@ -271,9 +292,6 @@ public final class UserService {
 		}
 		return result;
 	}
-
-
-
 
 	public static boolean exitsValidationLinkBefore(String validationLink) {
 		boolean result = false;
@@ -296,10 +314,11 @@ public final class UserService {
 		return result;
 	}
 
-	public static User getForgetUserByEmail(String email){
+	public static User getForgetUserByEmail(String email) {
 		UserDAO partnerdao = DAOFactory.instance().getUserDAO();
-		return  partnerdao.exitsEmailUser(email);
-	}	
+		return partnerdao.exitsEmailUser(email);
+	}
+
 	public static void sendChangePasswordLink(String emailAddress) throws DashboardAPEnetException {
 
 		String errorMessage = "The process failed. It was not possible to send a recover pwd mail to the normal user";
@@ -333,7 +352,7 @@ public final class UserService {
 			}
 
 		} catch (Exception e) {
-			throw new DashboardAPEnetException(e.getMessage() + errorMessage,e);
+			throw new DashboardAPEnetException(e.getMessage() + errorMessage, e);
 		}
 	}
 
@@ -345,17 +364,20 @@ public final class UserService {
 		emailComposer.setProperty("name", partner.getName());
 		emailComposer.setProperty("validation-link", url);
 		Emailer emailer = new Emailer();
-		emailer.sendMessage(partner.getEmailAddress(), null,null, null, emailComposer);
-		
+		emailer.sendMessage(partner.getEmailAddress(), null, null, null, emailComposer);
+
 	}
+
 	public static void sendEmailFeedback(String email, String body) throws DashboardAPEnetException {
 		EmailComposer emailComposer = new EmailComposer("emails/feedback.txt",
 				"Dashboard feedback comments and suggestions", true, false);
 		emailComposer.setProperty("email", email);
 		emailComposer.setProperty("body", body);
 		Emailer emailer = new Emailer();
-		emailer.sendMessage(APEnetUtilities.getDashboardConfig().getEmailDashboardFeedbackDestiny(), null,null, email, emailComposer);		
+		emailer.sendMessage(APEnetUtilities.getDashboardConfig().getEmailDashboardFeedbackDestiny(), null, null, email,
+				emailComposer);
 	}
+
 	private static void sendEmailCreateCountryManager(User partner, String password) {
 		User currentPartner = SecurityService.getCurrentPartner();
 		EmailComposer emailComposer = new EmailComposer("emails/createCountryManager.txt",
@@ -370,7 +392,8 @@ public final class UserService {
 		emailComposer.setProperty("dashboardUrl", getBasePath());
 		emailComposer.addAttachment("emails/termsofuse.txt", true, "plain/text");
 		Emailer emailer = new Emailer();
-		emailer.sendMessage(partner.getEmailAddress(), null, currentPartner.getEmailAddress(), currentPartner.getEmailAddress(), emailComposer);
+		emailer.sendMessage(partner.getEmailAddress(), null, currentPartner.getEmailAddress(),
+				currentPartner.getEmailAddress(), emailComposer);
 
 	}
 
@@ -384,20 +407,22 @@ public final class UserService {
 		emailComposer.setProperty("password", password);
 		emailComposer.setProperty("country", partner.getCountry().getCname());
 		emailComposer.setProperty("secretQuestion", partner.getSecretQuestion());
-		emailComposer.setProperty("secretAnswer", partner.getSecretAnswer());		
+		emailComposer.setProperty("secretAnswer", partner.getSecretAnswer());
 		emailComposer.setProperty("archivalInstitution", archivalInstitution.getAiname());
 		emailComposer.setProperty("userManager", currentPartner.getName());
 		emailComposer.setProperty("dashboardUrl", getBasePath());
 		emailComposer.addAttachment("emails/termsofuse.txt", true, "plain/text");
 		Emailer emailer = new Emailer();
-		emailer.sendMessage(partner.getEmailAddress(), null, currentPartner.getEmailAddress(), currentPartner.getEmailAddress(), emailComposer);
+		emailer.sendMessage(partner.getEmailAddress(), null, currentPartner.getEmailAddress(),
+				currentPartner.getEmailAddress(), emailComposer);
 
 	}
 
 	private static void sendEmailAssociateInstitutionManager(User partner, ArchivalInstitution archivalInstitution) {
 		User currentPartner = SecurityService.getCurrentPartner();
 		EmailComposer emailComposer = new EmailComposer("emails/associateInstitutionManager.txt",
-				"New Institution associated to your Institution Manager account for Archives Portal Europe.", true, false);
+				"New Institution associated to your Institution Manager account for Archives Portal Europe.", true,
+				false);
 		emailComposer.setProperty("name", partner.getName());
 		emailComposer.setProperty("emailAddress", partner.getEmailAddress());
 		emailComposer.setProperty("country", partner.getCountry().getCname());
@@ -406,7 +431,8 @@ public final class UserService {
 		emailComposer.setProperty("dashboardUrl", getBasePath());
 		emailComposer.addAttachment("emails/termsofuse.txt", true, "plain/text");
 		Emailer emailer = new Emailer();
-		emailer.sendMessage(partner.getEmailAddress(), null, currentPartner.getEmailAddress(), currentPartner.getEmailAddress(), emailComposer);
+		emailer.sendMessage(partner.getEmailAddress(), null, currentPartner.getEmailAddress(),
+				currentPartner.getEmailAddress(), emailComposer);
 
 	}
 
@@ -419,7 +445,8 @@ public final class UserService {
 		emailComposer.setProperty("country", partner.getCountry().getCname());
 		emailComposer.setProperty("userManager", currentPartner.getName());
 		Emailer emailer = new Emailer();
-		emailer.sendMessage(partner.getEmailAddress(), null, currentPartner.getEmailAddress(), currentPartner.getEmailAddress(), emailComposer);
+		emailer.sendMessage(partner.getEmailAddress(), null, currentPartner.getEmailAddress(),
+				currentPartner.getEmailAddress(), emailComposer);
 
 	}
 
@@ -432,7 +459,8 @@ public final class UserService {
 		emailComposer.setProperty("archivalInstitution", archivalInstitution.getAiname());
 		emailComposer.setProperty("userManager", currentPartner.getName());
 		Emailer emailer = new Emailer();
-		emailer.sendMessage(partner.getEmailAddress(), null, currentPartner.getEmailAddress(), currentPartner.getEmailAddress(), emailComposer);
+		emailer.sendMessage(partner.getEmailAddress(), null, currentPartner.getEmailAddress(),
+				currentPartner.getEmailAddress(), emailComposer);
 
 	}
 
@@ -445,9 +473,11 @@ public final class UserService {
 		emailComposer.setProperty("archivalInstitution", archivalInstitution.getAiname());
 		emailComposer.setProperty("userManager", currentPartner.getName());
 		Emailer emailer = new Emailer();
-		emailer.sendMessage(partner.getEmailAddress(), null, currentPartner.getEmailAddress(), currentPartner.getEmailAddress(), emailComposer);
+		emailer.sendMessage(partner.getEmailAddress(), null, currentPartner.getEmailAddress(),
+				currentPartner.getEmailAddress(), emailComposer);
 
 	}
+
 	public static String getBasePath() {
 
 		HttpServletRequest requestHttp = ServletActionContext.getRequest();
