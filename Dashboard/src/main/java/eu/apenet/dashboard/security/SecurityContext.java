@@ -202,7 +202,11 @@ public final class SecurityContext implements HttpSessionBindingListener{
 	public void checkAuthorized(Ead ead) {
 		checkAuthorized(ead.getAiId());
 	}
-
+	public void checkAuthorizedToIndexFromQueue() {
+		if (!isAdmin()){
+			throw new NotAuthorizedException("To index from queue you need to be admin");
+		}
+	}
 	public void checkAuthorized(Integer id) {
 		if (selectedInstitution == null|| !selectedInstitution.getId().equals(id)) {
 			throw new NotAuthorizedException("This institution is not selected");
