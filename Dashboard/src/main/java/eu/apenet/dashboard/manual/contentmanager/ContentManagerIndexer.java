@@ -46,100 +46,7 @@ public abstract class ContentManagerIndexer {
 
 	// Build the indexing queue accordingly with the algorithm required
 	private static void queueFile(Ead ead, FileState previousState) throws Exception {
-		Integer position = null;
-		IndexQueueDAO indexqueueDAO = DAOFactory.instance().getIndexQueueDAO();
-		int oneDay = (24 * 60 * 60 * 1000);
-		List<IndexQueue> indexQueueListYesterday = indexqueueDAO.getFilesbeforeDate(new Date(new Date().getTime()
-				- oneDay), "position", true);
-		List<IndexQueue> indexQueueList = indexqueueDAO.findAll();
-
-		// The queue for today is empty
-		if (indexQueueList.size() == indexQueueListYesterday.size()) {
-			// Put this file to the end of the indexing queue
-			position = indexqueueDAO.getMaxPosition();
-			if (position == null)
-				position = 0;
-			else
-				position++;
-			insertQueueFile(ead, position, previousState);
-		} else {
-			if (ead instanceof HoldingsGuide) {
-				// If there are more Hgs in the queue
-				if (indexqueueDAO.getHgs().size() > 0) {
-					position = indexqueueDAO.getMaxPositionofHgs();
-					int aiId = indexqueueDAO.getFilebyPosition(position).getHoldingsGuide().getArchivalInstitution()
-							.getAiId();
-					for (IndexQueue iq : indexqueueDAO.getFas()) {
-						if (iq.getFindingAid().getArchivalInstitution().getAiId() == aiId) {
-							if (position < iq.getPosition())
-								position = iq.getPosition();
-						}
-					}
-					insertQueueFile(ead, ++position, previousState);
-
-					// Re-ordering the rest of the queue
-					for (IndexQueue iq : indexqueueDAO.getFilesFromPosition(position)) {
-						if (iq.getHoldingsGuide() == null || !iq.getHoldingsGuide().getId().equals(ead.getId())) {
-							iq.setPosition(++position);
-							indexqueueDAO.update(iq);
-						}
-					}
-				} else {
-					// Put the file at the beginning of the queue of today
-					if (indexQueueListYesterday.size() == 0)
-						position = 0;
-					else
-						position = indexQueueListYesterday.get(indexQueueListYesterday.size() - 1).getPosition() + 1;
-
-					insertQueueFile(ead, position, previousState);
-
-					// Re-ordering the rest of the queue
-					for (IndexQueue iq : indexqueueDAO.getFilesFromPosition(position)) {
-						if (iq.getHoldingsGuide() == null) {
-							iq.setPosition(++position);
-							indexqueueDAO.update(iq);
-						}
-					}
-				}
-			} else if (ead instanceof FindingAid) { // It's a FA, put this
-													// file just after
-													// the last FA of
-													// its institution
-													// if there are any,
-													// if there's not,
-													// put it at the end
-													// in the indexing
-													// queue
-				int aiId = ead.getAiId();
-
-				// Find the MAX of position of all FAs for one institution
-				position = indexqueueDAO.getLastPositionOfFas(aiId);
-
-				if (position == -1)
-					position = indexqueueDAO.getLastPositionOfHgs(aiId);
-
-				if (position == -1)
-					position = indexqueueDAO.getMaxPosition();
-
-				insertQueueFile(ead, ++position, previousState);
-
-				// Re-ordering the rest of the queue
-				for (IndexQueue iq : indexqueueDAO.getFilesFromPosition(position)) {
-					if (iq.getFindingAid() == null || !iq.getFindingAid().getId().equals(ead.getId())) {
-						iq.setPosition(++position);
-						indexqueueDAO.update(iq);
-					}
-				}
-			} else if (ead instanceof SourceGuide) { // Simply put the SG at
-														// the end of the
-														// queue (todo:
-														// change if testers
-														// decide it's not
-														// good)
-				position = indexqueueDAO.getMaxPosition() + 1;
-				insertQueueFile(ead, position, previousState);
-			}
-		}
+		insertQueueFile(ead, 0, previousState);
 	}
 
 	// Insert in the indexing queue
@@ -229,17 +136,6 @@ public abstract class ContentManagerIndexer {
 		EADParser.parseEadAndIndex(ead);
 	}
 
-	// Re-organize the queue positions
-	public static void reOrganizeQueue() {
-		IndexQueueDAO indexqueueDAO = DAOFactory.instance().getIndexQueueDAO();
-		List<IndexQueue> filesStillToIndex = indexqueueDAO.getFilesbeforeDate(new Date(), "position", true);
-		int i = 0;
-		for (IndexQueue indexqueue : filesStillToIndex) {
-			indexqueue.setPosition(i);
-			indexqueueDAO.update(indexqueue);
-			i++;
-		}
-	}
 
 	public static void deletefromIndexQueue(XmlType xmltype, int id) {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
@@ -249,21 +145,15 @@ public abstract class ContentManagerIndexer {
 		try {
 
 			IndexQueue indexQueue = ead.getIndexQueue();
+			int queueId = indexQueue.getId();
 			FileState previousState = indexQueue.getFileState();
 			ead.setFileState(previousState);
 			eadDAO.update(ead);
 			IndexQueueDAO indexqueueDAO = DAOFactory.instance().getIndexQueueDAO();
-			IndexQueue iq;
-			if (xmltype.equals(XmlType.EAD_FA))
-				iq = indexqueueDAO.getIndexQueueByFa(id);
-			else if (xmltype.equals(XmlType.EAD_HG))
-				iq = indexqueueDAO.getIndexQueueByHg(id);
-			else
-				iq = indexqueueDAO.getIndexQueueBySg(id);
+			IndexQueue iq = indexqueueDAO.findById(queueId);
 
 			if (iq != null) {
 				indexqueueDAO.delete(iq);
-				reOrganizeQueue();
 			}
 		} catch (Exception e) {
 			log.info(ead + " unable to delete from index queue");

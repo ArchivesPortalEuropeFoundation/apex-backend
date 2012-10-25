@@ -93,7 +93,7 @@ public class QueueTask extends TimerTask {
 			boolean filesLeft = true;
 			while (active && filesLeft && System.currentTimeMillis() < endTime){
 				//LOGGER.info("Looking for files in queue");
-				List<IndexQueue> filesToIndex = indexqueueDAO.getFirstItems(20);
+				List<IndexQueue> filesToIndex = indexqueueDAO.getFirstItems();
 				if (filesToIndex.size() == 0){
 					//LOGGER.info("No files in queue");
 					filesLeft = false;
