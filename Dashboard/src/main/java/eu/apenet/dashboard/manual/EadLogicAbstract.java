@@ -72,8 +72,7 @@ public abstract class EadLogicAbstract {
 
         Set<Ese> eseList = null;
 
-        ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(archivalInstitutionId);
-        String countryIso = archivalInstitution.getCountry().getIsoname().trim();
+
 
         try {
             try {
@@ -117,6 +116,8 @@ public abstract class EadLogicAbstract {
                 }
 
                 if(isOverwrite) {
+                    ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(archivalInstitutionId);
+                    String countryIso = archivalInstitution.getCountry().getIsoname().trim();
                     UpFileDAO upFileDAO = DAOFactory.instance().getUpFileDAO();
                     //Remove new finding aid recently uploaded from up_file table
                     log.debug("Removing recently uploaded EAD which EADID is " + fileUnit.getEadid() + " from up_table");
@@ -180,6 +181,8 @@ public abstract class EadLogicAbstract {
                 }
 
                 if(isOverwrite) {
+                    ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(archivalInstitutionId);
+                    String countryIso = archivalInstitution.getCountry().getIsoname().trim();
                     /// STORING THE NEW FINDING AID IN THE FILE SYSTEM ///
                     String startPath = APEnetUtilities.getDashboardConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + countryIso + APEnetUtilities.FILESEPARATOR + archivalInstitutionId + APEnetUtilities.FILESEPARATOR;
                     String destFilePath = instantiateCorrectDirPath(startPath, XmlType.getEadType(ead));
