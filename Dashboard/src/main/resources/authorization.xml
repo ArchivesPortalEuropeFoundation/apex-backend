@@ -1,7 +1,7 @@
 <authorization>
 	<groups>
 		<group name="publicActions">
-			FillOrderAL,changeForgetPwd,changeLanguage,contact,currentState,error-404,error-500,forgetPwd,index,login,startpage,indexing,termsOfUse,logout
+			FillOrderAL,changeForgetPwd,changeLanguage,contact,currentState,error-404,error-500,forgetPwd,index,login,startpage,termsOfUse,logout
 		</group>
 		<group name="institutionManagerActions">
 			showHome,selectArchive,
@@ -58,7 +58,7 @@
 			storeAlternativeCountryNames,storeCountry,storeLanguage,viewAdmin,
 			superUser,superUserIndexAll,sessionManagement,deleteSession,userManagement,
 			changeToCountryManager,createCountryManager,displayCreateCountryManager,disableCountryManager,enableCountryManager,deleteCountryManager,
-            viewDptVersions, addVersion, deleteVersion 
+            viewDptVersions, addVersion, deleteVersion,indexing
 		</group>
 	</groups>
 	<role-mappings>
