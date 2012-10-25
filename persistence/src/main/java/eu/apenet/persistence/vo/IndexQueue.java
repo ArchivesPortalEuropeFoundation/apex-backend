@@ -28,8 +28,7 @@ public class IndexQueue implements java.io.Serializable {
 	private static final long serialVersionUID = -4266955613706066708L;
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name = "id")
-	private int iqId;
+	private int id;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="hg_id")
 	private HoldingsGuide holdingsGuide;
@@ -51,28 +50,22 @@ public class IndexQueue implements java.io.Serializable {
 	public IndexQueue() {
 	}
 
-	public IndexQueue(int iqId) {
-		this.iqId = iqId;
+
+
+
+	public int getId() {
+		return id;
 	}
 
-	public IndexQueue(int iqId, HoldingsGuide holdingsGuide,
-			FindingAid findingAid, int position, Date queueDate, FileState fileState, String errors) {
-		this.iqId = iqId;
-		this.holdingsGuide = holdingsGuide;
-		this.findingAid = findingAid;
-		this.position = position;
-		this.queueDate = queueDate;
-		this.setFileState(fileState);
-		this.setErrors(errors);
+
+
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
-	public int getIqId() {
-		return this.iqId;
-	}
 
-	public void setIqId(int iqId) {
-		this.iqId = iqId;
-	}
+
 
 	public HoldingsGuide getHoldingsGuide() {
 		return this.holdingsGuide;
