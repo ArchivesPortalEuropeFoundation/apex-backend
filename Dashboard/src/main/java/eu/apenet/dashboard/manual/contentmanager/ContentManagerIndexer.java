@@ -215,9 +215,8 @@ public abstract class ContentManagerIndexer {
 		}
 	}
 
-	public static void index(XmlType xmlType, int id) throws Exception {
-		Ead ead = DAOFactory.instance().getEadDAO().findById(id, xmlType.getClazz());
-		SecurityContext.get().checkAuthorized(ead);
+	public static void indexFromQueue(Ead ead) throws Exception {
+		SecurityContext.get().checkAuthorizedToIndexFromQueue();
 		if (ead.getFileState().getState().equals(FileState.READY_TO_INDEX)) {
 			// Parsing and Indexing
 			EADParser.parseEadAndIndex(ead);
