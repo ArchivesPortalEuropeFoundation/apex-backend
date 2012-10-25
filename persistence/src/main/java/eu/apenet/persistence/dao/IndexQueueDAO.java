@@ -29,5 +29,6 @@ public interface IndexQueueDAO extends GenericDAO<IndexQueue, Integer> {
 	public List<IndexQueue> getFas();
 	public List<IndexQueue> getFilesFromPosition(Integer position);
 	public List<IndexQueue> getFilesWithErrors();
+	List<IndexQueue> getFirstItems(int limit);
 }
 
