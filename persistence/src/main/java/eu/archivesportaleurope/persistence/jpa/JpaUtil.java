@@ -28,7 +28,9 @@ public class JpaUtil {
 	
 
 	public static void init() {
-		entityManagerFactory = Persistence.createEntityManagerFactory("ape-database");
+		if (entityManagerFactory == null){
+			entityManagerFactory = Persistence.createEntityManagerFactory("ape-database");
+		}
 	}
 
 
