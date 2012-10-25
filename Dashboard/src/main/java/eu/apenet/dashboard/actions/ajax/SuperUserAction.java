@@ -128,7 +128,7 @@ public class SuperUserAction extends AjaxControllerAbstractAction {
                     }
                     try {
                         LOG.info("Indexing and updating units/daos: FA id: " + ead.getId() + ", state: " + ead.getFileState().getState() + ", eadid: " + ead.getEadid() + ", aiId: " + ead.getArchivalInstitution().getAiId() + ", file path: " + ead.getPathApenetead());
-                        ContentManager.index(XmlType.EAD_FA, ead.getId());
+                        ContentManager.indexFromQueue(ead);
                     } catch (Exception e){
                         String err = "eadid: " + ead.getEadid() + " - faId: " + ead.getId();
                         LOG.error("Error indexing: " + err);
@@ -155,7 +155,7 @@ public class SuperUserAction extends AjaxControllerAbstractAction {
                     }
                     try {
                         LOG.info("Indexing and updating units/daos: HG id: " + ead.getId() + ", state: " + ead.getFileState().getState() + ", eadid: " + ead.getEadid() + ", aiId: " + ead.getArchivalInstitution().getAiId() + ", file path: " + ead.getPathApenetead());
-                        ContentManager.index(XmlType.EAD_HG, ead.getId());
+                        ContentManager.indexFromQueue(ead);
                     } catch (Exception e){
                         String err = "eadid: " + ead.getEadid() + " - hgId: " + ead.getId();
                         LOG.error("Error indexing: " + err);
@@ -183,7 +183,7 @@ public class SuperUserAction extends AjaxControllerAbstractAction {
                     }
                     try {
                         LOG.info("Indexing and updating units/daos: SG id: " + ead.getId() + ", state: " + ead.getFileState().getState() + ", eadid: " + ead.getEadid() + ", aiId: " + ead.getArchivalInstitution().getAiId() + ", file path: " + ead.getPathApenetead());
-                        ContentManager.index(XmlType.EAD_SG, ead.getId());
+                        ContentManager.indexFromQueue(ead);
                     } catch (Exception e){
                         String err = "eadid: " + ead.getEadid() + " - sgId: " + ead.getId();
                         LOG.error("Error indexing: " + err);
