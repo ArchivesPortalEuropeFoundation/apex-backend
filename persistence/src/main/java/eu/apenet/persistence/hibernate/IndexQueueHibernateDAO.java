@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.TypedQuery;
+
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
@@ -11,6 +13,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import eu.apenet.persistence.dao.IndexQueueDAO;
+import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.IndexQueue;
 
 
@@ -151,6 +154,12 @@ public class IndexQueueHibernateDAO extends AbstractHibernateDAO<IndexQueue, Int
 		}
 		
 		return criteria.list() ;
+	}
+	public List<IndexQueue> getFirstItems(int limit){
+		TypedQuery<IndexQueue> query = getEntityManager().createQuery(
+		        "SELECT indexQueue FROM IndexQueue indexQueue ORDER BY indexQueue.iqId", IndexQueue.class);
+		query.setMaxResults(limit);
+		return query.getResultList();
 	}
 	
 	@SuppressWarnings("unchecked")
