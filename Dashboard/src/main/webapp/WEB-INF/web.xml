@@ -51,7 +51,7 @@
         <listener-class>org.apache.struts2.tiles.StrutsTilesListener</listener-class>
     </listener>
     <listener>
-        <listener-class>eu.apenet.commons.listener.DashboardConfigListener</listener-class>
+        <listener-class>eu.apenet.dashboard.listener.DashboardConfigListener</listener-class>
     </listener>
     <listener>
         <listener-class>eu.apenet.dashboard.security.SecurityContextContainer</listener-class>
@@ -81,16 +81,7 @@
 		<param-value>localhost:8443</param-value>        
     </context-param>
     
-   <context-param>
-        <param-name>PUBLIC_RE_CAPTCHA_KEY</param-name>
-		<param-value>6Ld_kMISAAAAAHn-b8Ds2U_14kMykzAbTFW9kqX1</param-value>        
-    </context-param>
-    
-   <context-param>
-        <param-name>PRIVATE_RE_CAPTCHA_KEY</param-name>
-		<param-value>6Ld_kMISAAAAAD9J_JbdcuV_pHBYMxGVJ6dHBkzh</param-value>        
-    </context-param>
-    
+   
     <context-param>
         <param-name>EMAIL_DASHBOARD_FEEDBACK_DESTINY</param-name>
 		<param-value>jara.alvarez@mcu.es;yoann.moranville@gmail.com;paul.developer.web@gmail.com</param-value>        

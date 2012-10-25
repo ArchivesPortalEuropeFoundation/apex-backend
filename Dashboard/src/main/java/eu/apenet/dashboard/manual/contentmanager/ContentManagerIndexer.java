@@ -216,7 +216,7 @@ public abstract class ContentManagerIndexer {
 	}
 
 	public static void indexFromQueue(Ead ead) throws Exception {
-		SecurityContext.get().checkAuthorizedToIndexFromQueue();
+		//SecurityContext.get().checkAuthorizedToIndexFromQueue();
 		if (ead.getFileState().getState().equals(FileState.READY_TO_INDEX)) {
 			// Parsing and Indexing
 			EADParser.parseEadAndIndex(ead);

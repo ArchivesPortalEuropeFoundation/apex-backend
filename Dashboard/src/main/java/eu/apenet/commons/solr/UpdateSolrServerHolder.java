@@ -2,6 +2,7 @@ package eu.apenet.commons.solr;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -12,8 +13,6 @@ import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
 import org.apache.solr.client.solrj.impl.XMLResponseParser;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
-
-import com.opensymphony.xwork2.ActionContext;
 
 import eu.apenet.commons.utils.APEnetUtilities;
 
@@ -98,9 +97,9 @@ public class UpdateSolrServerHolder {
 //	}
 
 	private CommonsHttpSolrServer getSolrServer() {
-		Map<String, Object> session = ActionContext.getContext().getSession();
-		HolderInfo notAvailableObject = (HolderInfo) session.get(SOLR_NOT_AVAILABLE);
-		if (notAvailableObject == null) {
+		//Map<String, Object> session = ActionContext.getContext().getSession();
+		//HolderInfo notAvailableObject = (HolderInfo) session.get(SOLR_NOT_AVAILABLE);
+//		if (notAvailableObject == null) {
 			if (solrServer == null) {
 				try {
 					LOGGER.debug("Create new solr client");
@@ -113,17 +112,17 @@ public class UpdateSolrServerHolder {
 					solrServer.setRequestWriter(new BinaryRequestWriter());
 					available = true;
 				} catch (Exception e) {
-					session.put(SOLR_NOT_AVAILABLE, new HolderInfo(System.currentTimeMillis()));
+					//session.put(SOLR_NOT_AVAILABLE, new HolderInfo(System.currentTimeMillis()));
 					available = false;
 					LOGGER.error("Solr server " + solrIndexUrl + " is not available",e);
 				}
 			}
-		} else {
-			if (notAvailableObject.time == null || (System.currentTimeMillis() - notAvailableObject.time) > WAIT_TIME) {
-				session.remove(SOLR_NOT_AVAILABLE);
-				return getSolrServer();
-			}
-		}
+//		} else {
+//			if (notAvailableObject.time == null || (System.currentTimeMillis() - notAvailableObject.time) > WAIT_TIME) {
+//				//session.remove(SOLR_NOT_AVAILABLE);
+//				return getSolrServer();
+//			}
+//		}
 		return solrServer;
 	}
 
