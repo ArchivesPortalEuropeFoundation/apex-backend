@@ -58,7 +58,7 @@ background : #fff;
 	font: bold 2em "Lucida Sans Unicode", "Bitstream Vera Sans",
 		"Trebuchet Unicode MS", "Lucida Grande", "Lucida Sans Unicode",
 		Verdana, Helvetica, sans-serif;
-	color: #d40000;
+	color: #00A0DF;
 	font-size: 2em;
 }
 
@@ -119,8 +119,6 @@ a:hover {
 
 #menuv {
 	float: left;
-	border: 1px solid #C60E0E;
-	border-width: 0px 0px 0 0px;
 	width: 30%;
 	font: 125% "Trebuchet MS", Arial, Helvetica, sans-serif;
 }
@@ -141,7 +139,7 @@ a:hover {
 }
 
 #menuv li {
-	border-bottom: 1px solid #C60E0E;
+	border-bottom: 1px solid #00A0DF;;
 }
 
 #menuv a {
@@ -154,9 +152,15 @@ a:hover {
 }
 
 #menuv a:hover {
-	background-color: #C60E0E;
+	background-color: #00A0DF;
 	color: #fff;
 	padding-top: 8px;
+}
+#menuv .subTitle {
+    color: #2A4862;
+    font-family: Arial,sans-serif;
+    font-size: 1.5em;
+    font-weight: bold;
 }
 
 #menuv a enlace1:hover {
