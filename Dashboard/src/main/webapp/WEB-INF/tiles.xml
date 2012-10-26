@@ -150,6 +150,23 @@
             <add-attribute type="string" value="/css/colorbox.css"/>
         </put-list-attribute>
 	</definition>
+	<definition name="contentmanager-new" extends="DefaultLayout">
+		<put-attribute name="title" value="dashboard.contentmanager.title" />
+		<put-attribute name="body" value="/jsp/contentmanager/contentmanager.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery_1.4.2.min.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery-ui-1.8.9.custom.min.js"/>
+            <add-attribute type="string" value="/js/help.js"/>
+            <add-attribute type="string" value="/js/colorbox/jquery.colorbox-min.js"/>
+            <add-attribute type="string" value="/js/breadcrumb.js"/>
+                        <add-attribute type="string" value="/js/contentmanager.js"/>
+        </put-list-attribute>
+        <put-list-attribute name="cssfilesInternal">
+            <add-attribute type="string" value="/css/colorbox.css"/>
+            <add-attribute type="string" value="/css/contentmanager.css"/>
+        </put-list-attribute>
+	</definition>
+
 	<definition name="uploadcontent" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.uploadcontent.title" />
 		<put-attribute name="body" value="/jsp/uploadcontent.jsp" />
