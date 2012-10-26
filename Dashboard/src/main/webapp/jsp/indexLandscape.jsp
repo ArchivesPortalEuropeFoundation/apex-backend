@@ -5,7 +5,7 @@
 <dashboard:securityContext var="securityContext" />
          <div >
 			<c:if test="${securityContext.countryManager}">
-				  <span class="texto" style="color:#0040FF"><s:property value="getText('al.menu.header')"/> <c:out value="${securityContext.localizedCountryName }"></c:out> </span>
+				  <span class="subTitle"><s:property value="getText('al.menu.header')"/> <c:out value="${securityContext.localizedCountryName }"></c:out> </span>
 			</c:if>
                   <ul>
 				<c:if test="${securityContext.countryManager}">
