@@ -56,9 +56,9 @@
 			createCountry,createLanguage,downloadGeneralAL,goCountryAccount,
 			insertAlternativeCountryNames,showFilesFailed,
 			storeAlternativeCountryNames,storeCountry,storeLanguage,viewAdmin,
-			superUser,superUserIndexAll,sessionManagement,deleteSession,userManagement,
+			sessionManagement,deleteSession,userManagement,
 			changeToCountryManager,createCountryManager,displayCreateCountryManager,disableCountryManager,enableCountryManager,deleteCountryManager,
-            viewDptVersions, addVersion, deleteVersion,indexing
+            viewDptVersions, addVersion, deleteVersion
 		</group>
 	</groups>
 	<role-mappings>
