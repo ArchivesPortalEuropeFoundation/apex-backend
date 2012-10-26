@@ -5,7 +5,7 @@
 		</group>
 		<group name="institutionManagerActions">
 			showHome,selectArchive,
-						view, edit,			
+						view, edit,contentmanager,contentmanagerResults,			
 						validatechangeainame, changeainame, createsimpleeagwithmenu, uploadowneagwithmenu, downloadeag, upload, checkfilesuploaded, uploadsimpleeag, uploadsimpleeagwithmenu,
 						eaghttpuploadwithmenu, httpUpload, checkexistingfiles, cancelCheckexistingfiles, content, overwriteexistingfiles, canceloverwriteexistingfiles
 						eaghttpupload,indexingLaunched,
