@@ -19,6 +19,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import eu.apenet.persistence.dao.EadDAO;
+import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FileState;
 
@@ -112,6 +113,41 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		return query.getResultList();
 	}
 
+	@Override
+	public List<Ead> getEads(EadSearchOptions eadSearchOptions) {
+		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Ead> cq = criteriaBuilder.createQuery(Ead.class);
+		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClazz());
+		buildFromQuery(from, eadSearchOptions);
+		cq.select(from);
+		TypedQuery<Ead> query = getEntityManager().createQuery(cq);
+		query.setMaxResults(eadSearchOptions.getPageSize());
+		query.setFirstResult(eadSearchOptions.getPageSize()* (eadSearchOptions.getPageNumber()-1));
+		return query.getResultList();
+	}
+	
+	@Override
+	public Long countEads(EadSearchOptions eadSearchOptions) {
+		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
+		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClazz());
+		buildFromQuery(from, eadSearchOptions);
+		cq.select(criteriaBuilder.countDistinct(from));
+		return getEntityManager().createQuery(cq).getSingleResult();
+	}
+	private void buildFromQuery(Root<? extends Ead> from, EadSearchOptions eadSearchOptions) {
+//		List<Predicate> whereClause = new ArrayList<Predicate>();
+//		if (!allStates){
+//			whereClause.add(criteriaBuilder.equal(from.get("searchable"), eadExample.isSearchable()));
+//		}
+//		if (eadExample.getAiId() != null){
+//			whereClause.add(criteriaBuilder.equal(from.get("aiId"), eadExample.getAiId()));		 
+//		}
+//		if (eadExample.getEadid() != null){
+//			whereClause.add(criteriaBuilder.equal(from.get("eadid"), eadExample.getEadid()));		 
+//		}
+//		cq.where(criteriaBuilder.and(whereClause.toArray(new Predicate[0])));
+	}
 	@Override
 	public Integer isEadidUsed(String eadid, Integer aiId, Class<? extends Ead> clazz) {
 		Criteria criteria = getSession().createCriteria(clazz, "ead").setProjection(Projections.property("id"));

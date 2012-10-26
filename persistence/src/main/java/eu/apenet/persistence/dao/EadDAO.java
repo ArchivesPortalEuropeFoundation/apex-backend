@@ -22,7 +22,8 @@ public interface EadDAO extends GenericDAO<Ead, Integer> {
 	public List<Ead> getMatchEads(String queries, Integer ai, Integer page,
 			Integer pageSize, String orderBy, Boolean orderDecreasing,
 			Class<? extends Ead> clazz);
-
+	public List<Ead> getEads(EadSearchOptions eadSearchOptions);
+	public Long countEads(EadSearchOptions eadSearchOptions);
 	public Long getMatchCountEads(String queries, Integer ai, Class<? extends Ead> clazz);
 	
 	List<Ead> getEadsByAiId(Class<? extends Ead> clazz, Integer aiId);
