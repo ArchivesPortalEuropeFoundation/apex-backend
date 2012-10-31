@@ -23,7 +23,6 @@ background : #fff;
 }
 
 #wrap {
-	padding-top: 15px;
 	width: 90%;
 	text-align: left;
 	/*Added to fix footer problem*/
@@ -32,7 +31,20 @@ background : #fff;
 	height: 100%;
 	margin: 0 auto 50px;
 }
+select#selectLanguage  {
+    font-size: 10px;
+       border-color: #BFBFBF #DEDEDE #DEDEDE #BFBFBF;
+    border-image: none;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 3px 3px 3px 3px;
 
+}
+#language {
+	float:right;
+	margin-right:5px;
+	margin-bottom:4px;
+}
 #cab_dashboard {
 	float: left;
 	width: 100%;
@@ -50,18 +62,31 @@ background : #fff;
 
 #titledashboard {
 	float: left;
-	/*margin: 100px;*/
-	background: #fff;
+	
 	/*width : 50%;*/
 	width: 50%;
 	height: auto;
-	font: bold 2em "Lucida Sans Unicode", "Bitstream Vera Sans",
-		"Trebuchet Unicode MS", "Lucida Grande", "Lucida Sans Unicode",
-		Verdana, Helvetica, sans-serif;
-	color: #00A0DF;
+	font-weight: bold;
 	font-size: 2em;
+
+	color: #00A0DF;
+	margin-top: 45px;
 }
 
+#left-header {
+    background-image: url("../images/headerimage.jpg");
+    background-repeat: no-repeat;
+    float: left;
+    height: 111px;
+    width: 1049px;
+}
+
+#header {
+    background: url("../images/bg.jpg") repeat scroll 0 0 transparent;
+    height: 111px;
+    overflow: hidden;
+    width: 100%;
+}
 #idioma {
 	position: relative;
 	/*float : left;*/
@@ -89,15 +114,14 @@ background : #fff;
 	color: #8c0808;
 }
 
-#bread {
+#menubar {
 	float: left;
 	background: #fff;
 	width: 100%;
 	height: auto;
 	text-align: left;
-	border-bottom: 2px dotted #777;
+	border-bottom: 2px solid #79B7E7;
 	margin-bottom: 5px;
-	padding-top: 10px;
 }
 
 #main {

@@ -23,10 +23,39 @@
         <div id="principal">
             <div id="wrap">
                 <div id="dashboard">
-                    <div id="titledashboard">
-                        <p><apenet:resource><tiles:getAsString name="title"/></apenet:resource></p>
-                    </div>
-                    	    <div id="Language" align="right">
+              			<div id="header"> <div id="left-header"><div id="titledashboard"><apenet:resource><tiles:getAsString name="title"/></apenet:resource></div> </div> </div>
+
+				                   
+                   <div id="menubar" >
+                   		<div id="breadcrumb">
+                   			<c:if test="${!empty securityContext}">
+                   				<span class="linkBread" ><a href="index.action" ><s:text name="breadcrumb.section.home"/></a></span>
+
+	                   			<s:iterator var="breadcrumb" value="breadcrumbRoute" status="breadcrumbStatus">&nbsp;-&nbsp;
+	                   				<c:choose>
+	                   					<c:when test="${breadcrumbStatus.last or empty breadcrumb.href}">
+	                   						<span class="withoutLinkBread" >${breadcrumb.place}</span>
+	                   					</c:when>
+	                   					<c:otherwise>
+	                   						<span class="linkBread" ><a href="${breadcrumb.href}" >${breadcrumb.place}</a></span>
+	                   					</c:otherwise>
+	                   				</c:choose>
+	                   			</s:iterator>
+	                   		</c:if>
+                   		</div>
+                
+	                    <div id="userFeatures">
+	                    <c:choose>
+	                    	<c:when test="${empty securityContext}">
+								  <s:a action="login" namespace="/"><s:property value="getText('label.login.login')"/></s:a>	                 			
+	                    	</c:when>
+	                    	<c:otherwise>
+								<c:out value="${securityContext.name}"/>&nbsp;|&nbsp;<c:if test="${securityContext.child}"><a href="logout.action?parent=true"><s:property value="getText('label.login.logout.toparent')"/><c:out value="${securityContext.parentName}"/></a>&nbsp;|&nbsp;</c:if>					
+								<s:a action="logout"  namespace="/"><s:property value="getText('label.login.logout')"/></s:a>&nbsp;|&nbsp;<s:a action="view"  namespace="/"><s:property value="getText('label.edit.user')"/></s:a>	              
+	                    	</c:otherwise>
+	                    </c:choose>    
+						</div>
+                     	    <div id="language">
 								<s:form name="languageSelection" id="languageSelection" action="changeLanguage" theme="simple" method="post">
 									<select title="<s:property value="getText('header.chooselanguage')"/>" name="request_locale" id="selectLanguage" onchange="sendLanguageSelectionForm();" >
 										<option title="Deutsch" value="de" ${selectedLanguage['de']}>Deutsch</option>				
@@ -55,38 +84,7 @@
 										<s:submit key="label.ok"></s:submit>
 									</noscript>
 								</s:form>
-						    </div>
-				                   
-                   <div id="bread" >
-                   		<div id="breadcrumb">
-                   			<c:if test="${!empty securityContext}">
-                   				<span class="linkBread" ><a href="index.action" ><s:text name="breadcrumb.section.home"/></a></span>
-
-	                   			<s:iterator var="breadcrumb" value="breadcrumbRoute" status="breadcrumbStatus">&nbsp;-&nbsp;
-	                   				<c:choose>
-	                   					<c:when test="${breadcrumbStatus.last or empty breadcrumb.href}">
-	                   						<span class="withoutLinkBread" >${breadcrumb.place}</span>
-	                   					</c:when>
-	                   					<c:otherwise>
-	                   						<span class="linkBread" ><a href="${breadcrumb.href}" >${breadcrumb.place}</a></span>
-	                   					</c:otherwise>
-	                   				</c:choose>
-	                   			</s:iterator>
-	                   		</c:if>
-                   		</div>
-                   
-	                    <p><div id="userFeatures">
-	                    <c:choose>
-	                    	<c:when test="${empty securityContext}">
-								  <s:a action="login" namespace="/"><s:property value="getText('label.login.login')"/></s:a>	                 			
-	                    	</c:when>
-	                    	<c:otherwise>
-								<c:out value="${securityContext.name}"/>&nbsp;|&nbsp;<c:if test="${securityContext.child}"><a href="logout.action?parent=true"><s:property value="getText('label.login.logout.toparent')"/><c:out value="${securityContext.parentName}"/></a>&nbsp;|&nbsp;</c:if>					
-								<s:a action="logout"  namespace="/"><s:property value="getText('label.login.logout')"/></s:a>&nbsp;|&nbsp;<s:a action="view"  namespace="/"><s:property value="getText('label.edit.user')"/></s:a>	              
-	                    	</c:otherwise>
-	                    </c:choose>    
-						</div>
-	                    </p>
+						    </div>  	                    
 	                </div>
 			    
 			    </div>
