@@ -62,6 +62,7 @@ import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.IndexQueue;
 import eu.apenet.persistence.vo.ResumptionToken;
 import eu.apenet.persistence.vo.SourceGuide;
+import eu.apenet.persistence.vo.ValidatedState;
 import eu.apenet.persistence.vo.Warnings;
 
 

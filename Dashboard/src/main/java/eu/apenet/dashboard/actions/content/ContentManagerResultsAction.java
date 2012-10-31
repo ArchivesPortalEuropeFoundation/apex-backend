@@ -40,10 +40,9 @@ public class ContentManagerResultsAction extends AbstractInstitutionAction imple
 		eadSearchOptions.setOrderByAscending(orderByAscending);
 		eadSearchOptions.setOrderByField(orderByField);
 		eadSearchOptions.setArchivalInstitionId(getAiId());
-		ContentManagerResults results = new ContentManagerResults();
+		ContentManagerResults results = new ContentManagerResults(eadSearchOptions);
 		results.setEads(DAOFactory.instance().getEadDAO().getEads(eadSearchOptions));
 		results.setTotalNumberOfResults(DAOFactory.instance().getEadDAO().countEads(eadSearchOptions));
-		results.setEadSearchOptions(eadSearchOptions);
 		request.setAttribute("results", results);
 	}
 	public Integer getPageNumber() {

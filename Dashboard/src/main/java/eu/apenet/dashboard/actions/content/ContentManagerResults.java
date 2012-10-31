@@ -3,6 +3,7 @@ package eu.apenet.dashboard.actions.content;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.apenet.commons.types.XmlType;
 import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.vo.Ead;
 
@@ -11,6 +12,12 @@ public class ContentManagerResults {
 	private List<EadResult> eadResults = new ArrayList<EadResult>();
 	private long totalNumberOfResults;
 	private EadSearchOptions eadSearchOptions;
+	private XmlType xmlType;
+	
+	public ContentManagerResults (EadSearchOptions eadSearchOptions){
+		this.eadSearchOptions = eadSearchOptions;
+		xmlType = XmlType.getType(eadSearchOptions.getEadClazz());
+	}
 	public List<EadResult> getEadResults() {
 		return eadResults;
 	}
@@ -20,7 +27,12 @@ public class ContentManagerResults {
 	}
 	public void setEads(List<Ead> eads) {
 		for (Ead ead: eads){
-			this.eadResults.add(new EadResult(ead));
+			if (XmlType.EAD_FA.equals(xmlType)){
+				this.eadResults.add(new FindingAidResult(ead));
+			}else {
+				this.eadResults.add(new EadResult(ead));
+			}
+			
 		}
 	}
 
@@ -39,7 +51,11 @@ public class ContentManagerResults {
 	public void setTotalNumberOfResults(long totalNumberOfResults) {
 		this.totalNumberOfResults = totalNumberOfResults;
 	}
-
-
+	public int getXmlTypeId(){
+		return xmlType.getIdentifier();
+	}
+	public boolean isFindingAid(){
+		return XmlType.EAD_FA.equals(xmlType);
+	}
 	
 }
