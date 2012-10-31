@@ -71,13 +71,15 @@ Only selected
 								alt="down" /></a> <a class="order" href="javascript:changeOrder('validated','false')"><img class="noStyle"
 								src="images/expand/arrow-up.gif" alt="up" /></a></th>
 						<th><s:text name="content.message.indexed" /> <a class="order"
-							href="javascript:changeOrder('totalNumberOfUnits','true')"><img class="noStyle" src="images/expand/arrow-down.gif"
-								alt="down" /></a> <a class="order" href="javascript:changeOrder('totalNumberOfUnits','false')"><img class="noStyle"
+							href="javascript:changeOrder('totalNumberOfUnits','true')"><img class="noStyle"
+								src="images/expand/arrow-down.gif" alt="down" /></a> <a class="order"
+							href="javascript:changeOrder('totalNumberOfUnits','false')"><img class="noStyle"
 								src="images/expand/arrow-up.gif" alt="up" /></a></th>
 						<c:if test="${results.findingAid}">
 							<th><s:text name="content.message.convert2" /> <a class="order"
-								href="javascript:changeOrder('totalNumberOfDaos','true')"><img class="noStyle" src="images/expand/arrow-down.gif"
-									alt="down" /></a> <a class="order" href="javascript:changeOrder('totalNumberOfDaos','false')"><img class="noStyle"
+								href="javascript:changeOrder('totalNumberOfDaos','true')"><img class="noStyle"
+									src="images/expand/arrow-down.gif" alt="down" /></a> <a class="order"
+								href="javascript:changeOrder('totalNumberOfDaos','false')"><img class="noStyle"
 									src="images/expand/arrow-up.gif" alt="up" /></a></th>
 							<th><s:text name="content.message.deliver" /> <a class="order"
 								href="javascript:changeOrder('europeana','true')"><img class="noStyle" src="images/expand/arrow-down.gif"
@@ -141,33 +143,64 @@ Only selected
 										<span class="status_no"><s:text name="content.message.no" /></span>
 									</c:otherwise>
 								</c:choose></td>
-								<td class="actions"><select>
-									<c:if test="${not eadResult.validated and not eadResult.validatedFatalError}">
-										<option value="validate.action"><s:text name="content.message.validate"/></option>
-									</c:if>
-									<c:if test="${not eadResult.converted}">
-										<option value="validate.action"><s:text name="content.message.convert"/></option>
-									</c:if>
-									<c:if test="${eadResult.validated and not eadResult.searchable}">
-										<option value="validate.action"><s:text name="content.message.index"/></option>
-									</c:if>
-									<c:if test="${eadResult.validated and not eadResult.convertedToEuropeana}">
-										<option value="validate.action"><s:text name="content.message.convert.ese"/></option>
-									</c:if>
-									<c:if test="${eadResult.convertedToEuropeana and eadResult.totalNumberOfDaos > 0 and not eadResult.deliveredToEuropeana}">
-										<option value="validate.action"><s:text name="content.message.deliver.europeana"/></option>
-									</c:if>
-									<c:if test="${eadResult.deliveredToEuropeana}">
-										<option value="validate.action"><s:text name="content.message.delete.europeana"/></option>
-									</c:if>
-									<c:if test="${eadResult.convertedToEuropeana}">
-										<option value="validate.action"><s:text name="content.message.delete.ese"/></option>
-									</c:if>
-									<option value="validate.action"><s:text name="content.message.delete2"/></option>
-									<option value="validate.action"><s:text name="content.message.deletefromIndexqueue"/></option>
-									<option value="validate.action"><s:text name="content.message.delete"/></option>
-									
-								</select><input type="button" value="Go"/></td>
+							<td class="actions"><c:choose>
+									<c:when test="${eadResult.queueProcessing}">
+										<s:text name="content.message.queueprocessing" />
+									</c:when>
+									<c:otherwise>
+										<select>
+											<c:if test="${not eadResult.validated and not eadResult.validatedFatalError}">
+												<option value="validate.action">
+													<s:text name="content.message.validate" />
+												</option>
+											</c:if>
+											<c:if test="${not eadResult.converted}">
+												<option value="validate.action">
+													<s:text name="content.message.convert" />
+												</option>
+											</c:if>
+											<c:if test="${eadResult.validated and not eadResult.searchable}">
+												<option value="validate.action">
+													<s:text name="content.message.index" />
+												</option>
+											</c:if>
+											<c:if test="${eadResult.validated and not eadResult.convertedToEuropeana}">
+												<option value="validate.action">
+													<s:text name="content.message.convert.ese" />
+												</option>
+											</c:if>
+											<c:if
+												test="${eadResult.convertedToEuropeana and eadResult.totalNumberOfDaos > 0 and not eadResult.deliveredToEuropeana}">
+												<option value="validate.action">
+													<s:text name="content.message.deliver.europeana" />
+												</option>
+											</c:if>
+											<c:if test="${eadResult.deliveredToEuropeana}">
+												<option value="validate.action">
+													<s:text name="content.message.delete.europeana" />
+												</option>
+											</c:if>
+											<c:if test="${eadResult.convertedToEuropeana}">
+												<option value="validate.action">
+													<s:text name="content.message.delete.ese" />
+												</option>
+											</c:if>
+											<option value="validate.action">
+												<s:text name="content.message.delete2" />
+											</option>
+											<c:if test="${eadResult.readyForQueueProcessing}">
+												<option value="validate.action">
+													<s:text name="content.message.deletefromIndexqueue" />
+												</option>
+											</c:if>
+											<option value="validate.action">
+												<s:text name="content.message.delete" />
+											</option>
+
+										</select>
+										<input type="button" value="Go" />
+									</c:otherwise>
+								</c:choose></td>
 						</c:if>
 					</tr>
 				</c:forEach>

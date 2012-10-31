@@ -3,6 +3,7 @@ package eu.apenet.dashboard.actions.content;
 import java.text.SimpleDateFormat;
 
 import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.QueingState;
 import eu.apenet.persistence.vo.ValidatedState;
 
 public class EadResult {
@@ -16,6 +17,8 @@ public class EadResult {
 	private boolean searchable;
 	private boolean validated;
 	private boolean validatedFatalError;
+	private boolean readyForQueueProcessing;
+	private boolean queueProcessing;
 	private long units;
 	public EadResult(Ead ead){
 		this.eadid = ead.getEadid();
@@ -30,6 +33,8 @@ public class EadResult {
         this.validated = ValidatedState.VALIDATED.equals(ead.getValidated());
         this.validatedFatalError = ValidatedState.FATAL_ERROR.equals(ead.getValidated());
         this.units = ead.getTotalNumberOfUnits();
+        this.readyForQueueProcessing = QueingState.READY.equals(ead.getQueuing());
+        this.queueProcessing = QueingState.BUSY.equals(ead.getQueuing());
 	}
 	public Integer getId() {
 		return id;
@@ -57,6 +62,12 @@ public class EadResult {
 	}
 	public long getUnits() {
 		return units;
+	}
+	public boolean isReadyForQueueProcessing() {
+		return readyForQueueProcessing;
+	}
+	public boolean isQueueProcessing() {
+		return queueProcessing;
 	}
 
 
