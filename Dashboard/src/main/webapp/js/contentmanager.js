@@ -16,8 +16,9 @@ function updateCurrentSearchResults(){
 		document.getElementById("ead-results-container").scrollIntoView(true);
 	});
 }
-function updateSorting(fieldValue, fieldSorting) {
-	$("#updateCurrentSearch_order").attr("value", fieldValue);
+function changeOrder(fieldValue, fieldSorting) {
+	$("#updateCurrentSearch_orderByField").attr("value", fieldValue);
+	$("#updateCurrentSearch_orderByAscending").attr("value", fieldSorting);
 	updateCurrentSearchResults();
 }
 

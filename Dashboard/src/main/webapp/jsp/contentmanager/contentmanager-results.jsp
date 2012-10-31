@@ -14,6 +14,8 @@
 <div id="ead-results" class="box">
 	<s:form id="updateCurrentSearch" action="contentmanagerResults" theme="simple">
 		<s:hidden name="pageNumber" />
+		<s:hidden name="orderByField" />
+		<s:hidden name="orderByAscending" />
 		<div id="ead-results-header" class="boxtitle">
 			<div id="numberOfResults">
 				<span class="bold">Resultaten:</span><ape:pageDescription numberOfItems="${results.totalNumberOfResults}" pageSize="${results.eadSearchOptions.pageSize}" pageNumber="${results.eadSearchOptions.pageNumber}" />
@@ -35,14 +37,18 @@
 								name="content.message.select.all" />]
 					</span> - <span class="linkList" id="selectNone">[<s:text name="content.message.select.none" />]
 					</span></th>
-					<th><s:text name="content.message.id" /> <a class="order" href="javascript:changeOrder('id','asc')"><img
+					<th><s:text name="content.message.id" /> <a class="order" href="javascript:changeOrder('id','true')"><img
 							class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> <a class="order"
-						href="javascript:changeOrder('id','desc')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
+						href="javascript:changeOrder('id','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
 					</th>
-					<th><s:text name="content.message.title" /> <a class="order" href="javascript:changeOrder('title','asc')"><img
+					<th><s:text name="content.message.title" /> <a class="order" href="javascript:changeOrder('title','true')"><img
 							class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> <a class="order"
-						href="javascript:changeOrder('title','desc')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
+						href="javascript:changeOrder('title','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
 					</th>
+					<th><s:text name="content.message.date"/> <a class="order" href="javascript:changeOrder('uploadDate','true')"><img
+							class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> <a class="order"
+						href="javascript:changeOrder('uploadDate','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></th>
+
 				</tr>
 			</thead>
 			<c:forEach var="result" items="${results.eadResults}">
@@ -50,6 +56,7 @@
 					<td><input class="checkboxSave" type="checkbox" name="check" id="check_${result.id}" value="${result.id}" /></td>
 					<td class="nocenter">${result.eadid}</td>
 					<td  class="title">${result.title}</td>
+					<td  class="title">${result.date}</td>
 				</tr>
 			</c:forEach>
 

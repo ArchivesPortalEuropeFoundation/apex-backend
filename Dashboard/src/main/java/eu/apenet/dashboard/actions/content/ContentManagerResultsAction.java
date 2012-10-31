@@ -14,6 +14,8 @@ public class ContentManagerResultsAction extends AbstractInstitutionAction imple
 	private HttpServletRequest request;
 	private Integer pageNumber = 1;
 	private Integer resultPerPage = 20;
+	private String orderByField = "id";
+	private boolean orderByAscending = true;
 	@Override
 	public void setServletRequest(HttpServletRequest request) {
 		this.request= request;
@@ -35,6 +37,9 @@ public class ContentManagerResultsAction extends AbstractInstitutionAction imple
 		eadSearchOptions.setEadClazz(FindingAid.class);
 		eadSearchOptions.setPageNumber(pageNumber);
 		eadSearchOptions.setPageSize(resultPerPage);
+		eadSearchOptions.setOrderByAscending(orderByAscending);
+		eadSearchOptions.setOrderByField(orderByField);
+		eadSearchOptions.setArchivalInstitionId(getAiId());
 		ContentManagerResults results = new ContentManagerResults();
 		results.setEads(DAOFactory.instance().getEadDAO().getEads(eadSearchOptions));
 		results.setTotalNumberOfResults(DAOFactory.instance().getEadDAO().countEads(eadSearchOptions));
@@ -52,6 +57,18 @@ public class ContentManagerResultsAction extends AbstractInstitutionAction imple
 	}
 	public void setResultPerPage(Integer resultPerPage) {
 		this.resultPerPage = resultPerPage;
+	}
+	public String getOrderByField() {
+		return orderByField;
+	}
+	public void setOrderByField(String orderByField) {
+		this.orderByField = orderByField;
+	}
+	public boolean isOrderByAscending() {
+		return orderByAscending;
+	}
+	public void setOrderByAscending(boolean orderByAscending) {
+		this.orderByAscending = orderByAscending;
 	}
 
 	
