@@ -41,7 +41,8 @@ public abstract class Ead  implements Serializable{
 	public abstract void setValidated(ValidatedState validated);
 	public abstract boolean isConverted();
 	public abstract void setConverted(boolean converted);
-	
+	public abstract QueingState getQueuing();
+	public abstract void setQueuing(QueingState queingState);	
     @Deprecated
 	public abstract Set<IndexQueue> getIndexQueues();
 	public abstract void setIndexQueues(Set<IndexQueue> indexQueues);

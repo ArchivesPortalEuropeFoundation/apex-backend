@@ -6,8 +6,6 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -46,10 +44,10 @@ public class FindingAid extends Ead {
 	 * states
 	 */
 	private boolean converted;
-	@Enumerated (EnumType.ORDINAL)
 	private ValidatedState validated;
 	private boolean searchable;
 	private EuropeanaState europeana;
+	private QueingState queuing;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="um_id")
 	private UploadMethod uploadMethod;
@@ -237,6 +235,17 @@ public class FindingAid extends Ead {
 	public void setEuropeana(EuropeanaState europeana) {
 		this.europeana = europeana;
 	}
+
+	public QueingState getQueuing() {
+		return queuing;
+	}
+
+	public void setQueuing(QueingState queuing) {
+		this.queuing = queuing;
+	}
+
+
+
 
 
 

@@ -43,10 +43,9 @@ public class HoldingsGuide extends Ead {
 	 * states
 	 */
 	private boolean converted;
-	@Enumerated (EnumType.ORDINAL)
 	private ValidatedState validated;
 	private boolean searchable;
-	
+	private QueingState queuing;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="um_id")
 	private UploadMethod uploadMethod;
@@ -224,6 +223,14 @@ public class HoldingsGuide extends Ead {
 
 	public void setValidated(ValidatedState validated) {
 		this.validated = validated;
+	}
+
+	public QueingState getQueuing() {
+		return queuing;
+	}
+
+	public void setQueuing(QueingState queuing) {
+		this.queuing = queuing;
 	}
 
 

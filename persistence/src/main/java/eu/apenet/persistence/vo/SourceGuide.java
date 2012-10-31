@@ -6,8 +6,6 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,9 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Table;
 @Entity
 @Table(name = "source_guide")
 public class SourceGuide extends Ead {
@@ -43,9 +41,9 @@ public class SourceGuide extends Ead {
 	 * states
 	 */
 	private boolean converted;
-	@Enumerated (EnumType.ORDINAL)
 	private ValidatedState validated;
 	private boolean searchable;
+	private QueingState queuing;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="um_id")
 	private UploadMethod uploadMethod;
@@ -207,6 +205,14 @@ public class SourceGuide extends Ead {
 
 	public void setValidated(ValidatedState validated) {
 		this.validated = validated;
+	}
+
+	public QueingState getQueuing() {
+		return queuing;
+	}
+
+	public void setQueuing(QueingState queuing) {
+		this.queuing = queuing;
 	}
 
 
