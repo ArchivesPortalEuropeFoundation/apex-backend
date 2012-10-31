@@ -3,6 +3,7 @@ package eu.apenet.persistence.hibernate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -21,7 +22,6 @@ import org.hibernate.criterion.Restrictions;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.vo.Ead;
-import eu.apenet.persistence.vo.FileState;
 
 public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implements EadDAO {
 
@@ -118,12 +118,24 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Ead> cq = criteriaBuilder.createQuery(Ead.class);
 		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClazz());
-		buildFromQuery(from, eadSearchOptions);
+		cq.where(buildWhere(from, eadSearchOptions));
 		cq.select(from);
+		/*
+		 * add ordering
+		 */
+		if (eadSearchOptions.isOrderByAscending()){
+			cq.orderBy(criteriaBuilder.asc(from.get(eadSearchOptions.getOrderByField())));
+		}else {
+			cq.orderBy(criteriaBuilder.desc(from.get(eadSearchOptions.getOrderByField())));
+		}
+		
+		/*
+		 * add pagination
+		 */
 		TypedQuery<Ead> query = getEntityManager().createQuery(cq);
 		query.setMaxResults(eadSearchOptions.getPageSize());
 		query.setFirstResult(eadSearchOptions.getPageSize()* (eadSearchOptions.getPageNumber()-1));
-		return query.getResultList();
+			return query.getResultList();
 	}
 	
 	@Override
@@ -131,22 +143,47 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
 		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClazz());
-		buildFromQuery(from, eadSearchOptions);
+		cq.where(buildWhere(from, eadSearchOptions));
 		cq.select(criteriaBuilder.countDistinct(from));
+		
 		return getEntityManager().createQuery(cq).getSingleResult();
 	}
-	private void buildFromQuery(Root<? extends Ead> from, EadSearchOptions eadSearchOptions) {
-//		List<Predicate> whereClause = new ArrayList<Predicate>();
-//		if (!allStates){
-//			whereClause.add(criteriaBuilder.equal(from.get("searchable"), eadExample.isSearchable()));
-//		}
-//		if (eadExample.getAiId() != null){
-//			whereClause.add(criteriaBuilder.equal(from.get("aiId"), eadExample.getAiId()));		 
-//		}
-//		if (eadExample.getEadid() != null){
-//			whereClause.add(criteriaBuilder.equal(from.get("eadid"), eadExample.getEadid()));		 
-//		}
-//		cq.where(criteriaBuilder.and(whereClause.toArray(new Predicate[0])));
+	private Predicate buildWhere(Root<? extends Ead> from, EadSearchOptions eadSearchOptions) {
+		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+		List<Predicate> whereClause = new ArrayList<Predicate>();
+		if (eadSearchOptions.getArchivalInstitionId() != null){
+			whereClause.add(criteriaBuilder.equal(from.get("aiId"), eadSearchOptions.getArchivalInstitionId()));		 
+		}
+		if (eadSearchOptions.getSearchable() != null){
+			whereClause.add(criteriaBuilder.equal(from.get("searchable"), eadSearchOptions.getSearchable()));		 
+		}
+		if (eadSearchOptions.getConverted() != null){
+			whereClause.add(criteriaBuilder.equal(from.get("converted"), eadSearchOptions.getConverted()));		 
+		}
+		if (eadSearchOptions.getValidated() != null){
+			whereClause.add(criteriaBuilder.equal(from.get("validated"), eadSearchOptions.getValidated()));		 
+		}
+		if (StringUtils.isNotBlank(eadSearchOptions.getSearchTerms())) {
+			
+			String[] searchTerms = StringUtils.split(eadSearchOptions.getSearchTerms(), " ");
+			 if ("eadid".equals(eadSearchOptions.getSearchTermsField())) {
+				for (String searchTerm: searchTerms) {
+					whereClause.add(criteriaBuilder.like(from.<String>get("eadid"),"%"+searchTerm+"%"));
+				}
+			} else if ("title".equals(eadSearchOptions.getSearchTermsField())) {
+				for (String searchTerm: searchTerms) {
+					whereClause.add(criteriaBuilder.like(from.<String>get("title"),"%"+searchTerm+"%"));
+				}
+			}else {
+				for (String searchTerm: searchTerms) {
+					Predicate titlePredicate = criteriaBuilder.like(from.<String>get("title"),"%"+searchTerm+"%");
+					Predicate eadidPredicate = criteriaBuilder.like(from.<String>get("eadid"),"%"+searchTerm+"%");
+					whereClause.add(criteriaBuilder.or(titlePredicate, eadidPredicate));
+				}				
+			
+			}
+		}
+		return criteriaBuilder.and(whereClause.toArray(new Predicate[0]));
 	}
 	@Override
 	public Integer isEadidUsed(String eadid, Integer aiId, Class<? extends Ead> clazz) {

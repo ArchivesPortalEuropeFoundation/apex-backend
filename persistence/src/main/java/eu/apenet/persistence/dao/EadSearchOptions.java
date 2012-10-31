@@ -1,12 +1,29 @@
 package eu.apenet.persistence.dao;
 
-import eu.apenet.persistence.vo.Ead;
+import java.io.Serializable;
 
-public class EadSearchOptions {
+import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.EuropeanaState;
+import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.ValidatedState;
+
+public class EadSearchOptions implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7670523402797168198L;
 	private int pageNumber = 1;
 	private int pageSize = 20;
-	private Class<? extends Ead> eadClazz;
-
+	private String searchTerms;
+	private String searchTermsField;
+	private String orderByField = "id";
+	private boolean orderByAscending = true;
+	private Class<? extends Ead> eadClazz = FindingAid.class;
+	private Integer archivalInstitionId = null;
+	private Boolean searchable = null;
+	private Boolean converted = null;
+	private ValidatedState validated = null;
+	private EuropeanaState europeana = null;
 
 	public Class<? extends Ead> getEadClazz() {
 		return eadClazz;
@@ -31,5 +48,78 @@ public class EadSearchOptions {
 	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
 	}
+
+	public String getOrderByField() {
+		return orderByField;
+	}
+
+	public void setOrderByField(String orderByField) {
+		this.orderByField = orderByField;
+	}
+
+	public boolean isOrderByAscending() {
+		return orderByAscending;
+	}
+
+	public void setOrderByAscending(boolean orderByAscending) {
+		this.orderByAscending = orderByAscending;
+	}
+
+	public Integer getArchivalInstitionId() {
+		return archivalInstitionId;
+	}
+
+	public void setArchivalInstitionId(Integer archivalInstitionId) {
+		this.archivalInstitionId = archivalInstitionId;
+	}
+
+	public Boolean getSearchable() {
+		return searchable;
+	}
+
+	public void setSearchable(Boolean searchable) {
+		this.searchable = searchable;
+	}
+
+	public Boolean getConverted() {
+		return converted;
+	}
+
+	public void setConverted(Boolean converted) {
+		this.converted = converted;
+	}
+
+	public ValidatedState getValidated() {
+		return validated;
+	}
+
+	public void setValidated(ValidatedState validated) {
+		this.validated = validated;
+	}
+
+	public EuropeanaState getEuropeana() {
+		return europeana;
+	}
+
+	public void setEuropeana(EuropeanaState europeana) {
+		this.europeana = europeana;
+	}
+
+	public String getSearchTerms() {
+		return searchTerms;
+	}
+
+	public void setSearchTerms(String searchTerms) {
+		this.searchTerms = searchTerms;
+	}
+
+	public String getSearchTermsField() {
+		return searchTermsField;
+	}
+
+	public void setSearchTermsField(String searchTermsField) {
+		this.searchTermsField = searchTermsField;
+	}
+	
 	
 }

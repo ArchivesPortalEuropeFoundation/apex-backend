@@ -6,6 +6,8 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -40,8 +42,14 @@ public class FindingAid extends Ead {
 	@Column(name="upload_date")
 	private Date uploadDate;
 	
+	/*
+	 * states
+	 */
+	private boolean converted;
+	@Enumerated (EnumType.ORDINAL)
+	private ValidatedState validated;
 	private boolean searchable;
-	
+	private EuropeanaState europeana;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="um_id")
 	private UploadMethod uploadMethod;
@@ -196,24 +204,6 @@ public class FindingAid extends Ead {
 	@OneToMany(mappedBy="findingAid")
 	private Set<Ese> eses = new HashSet<Ese>(0);
 
-    @Deprecated
-	public int getFaId() {
-		if (this.getId() == null){
-			return -1;
-		}
-		return this.getId();
-	}
-
-    @Deprecated
-	public String getFaTitle() {
-		return this.getTitle();
-	}
-
-
-	@Deprecated
-	public String getFaEadid() {
-		return this.getEadid();
-	}
 
 
 	public Set<Ese> getEses() {
@@ -222,6 +212,30 @@ public class FindingAid extends Ead {
 
 	public void setEses(Set<Ese> eses) {
 		this.eses = eses;
+	}
+
+	public ValidatedState getValidated() {
+		return validated;
+	}
+
+	public void setValidated(ValidatedState validated) {
+		this.validated = validated;
+	}
+
+	public boolean isConverted() {
+		return converted;
+	}
+
+	public void setConverted(boolean converted) {
+		this.converted = converted;
+	}
+
+	public EuropeanaState getEuropeana() {
+		return europeana;
+	}
+
+	public void setEuropeana(EuropeanaState europeana) {
+		this.europeana = europeana;
 	}
 
 

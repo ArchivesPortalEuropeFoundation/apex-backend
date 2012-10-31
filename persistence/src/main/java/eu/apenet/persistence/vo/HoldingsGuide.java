@@ -5,6 +5,8 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -37,7 +39,14 @@ public class HoldingsGuide extends Ead {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="upload_date")
 	private Date uploadDate;
+	/*
+	 * states
+	 */
+	private boolean converted;
+	@Enumerated (EnumType.ORDINAL)
+	private ValidatedState validated;
 	private boolean searchable;
+	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="um_id")
 	private UploadMethod uploadMethod;
@@ -201,23 +210,22 @@ public class HoldingsGuide extends Ead {
 		this.setPathApenetead(pathApenetead);
 	}
 
-	@Deprecated
-	public int getHgId() {
-		if (this.getId() == null){
-			return -1;
-		}
-		return this.getId();
+	public boolean isConverted() {
+		return converted;
 	}
 
-	@Deprecated
-	public String getHgTittle() {
-		return this.getTitle();
+	public void setConverted(boolean converted) {
+		this.converted = converted;
 	}
 
-	@Deprecated
-	public String getHgEadid() {
-		return this.getEadid();
+	public ValidatedState getValidated() {
+		return validated;
 	}
+
+	public void setValidated(ValidatedState validated) {
+		this.validated = validated;
+	}
+
 
 
 }
