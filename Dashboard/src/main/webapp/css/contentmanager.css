@@ -37,7 +37,7 @@
 	color: gray;
 	background-color: white;
 	/* for IE */
-	filter: alpha(opacity =           70);
+	filter: alpha(opacity =             70);
 	/* CSS3 standard */
 	opacity: 0.7;
 }
@@ -50,7 +50,7 @@
 .paging li a {
 	background-color: white;
 	/* for IE */
-	filter: alpha(opacity =           70);
+	filter: alpha(opacity =             70);
 	/* CSS3 standard */
 	opacity: 0.7;
 }
@@ -72,7 +72,7 @@
 	color: #00384D;
 	background-color: white;
 	/* for IE */
-	filter: alpha(opacity =           80);
+	filter: alpha(opacity =             80);
 	/* CSS3 standard */
 	opacity: 0.8;
 	text-decoration: none;
@@ -131,6 +131,18 @@
 	font-weight: bold;
 }
 
+#contentmanager .status_queue {
+	background-color: yellow;
+	color: #B23062;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+#contentmanager .status_queue_processing {
+	background-color: #E9F3FA;
+	color: gray;
+}
+
 #contentmanager .status_error {
 	color: red;
 	font-weight: bold;
@@ -142,10 +154,10 @@
 	width: 400px;
 	text-overflow: ellipsis;
 	display: inline-block;
-    overflow: hidden;
-    text-overflow: ellipsis;
+	overflow: hidden;
+	text-overflow: ellipsis;
 	white-space: nowrap;
-	text-align:left;
+	text-align: left;
 }
 
 #contentmanager .units {
@@ -159,16 +171,19 @@
 #contentmanager .right {
 	float: right;
 }
+
 #contentmanager #content_div_table td.actions {
-    padding-bottom: 2px;
-    padding-top: 2px;
-    text-align: left;
-    width: 150px;
+	padding-bottom: 2px;
+	padding-top: 2px;
+	text-align: left;
+	width: 150px;
 }
-#contentmanager #content_div_table td.actions select{
-    font-size: 11px;
-    width: 120px;
+
+#contentmanager #content_div_table td.actions select {
+	font-size: 11px;
+	width: 120px;
 }
-#contentmanager #content_div_table td.actions input{
-    font-size: 11px;
+
+#contentmanager #content_div_table td.actions input {
+	font-size: 11px;
 }
