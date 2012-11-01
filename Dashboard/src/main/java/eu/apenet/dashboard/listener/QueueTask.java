@@ -9,10 +9,10 @@ import org.apache.log4j.Logger;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.IndexUtils;
 import eu.apenet.dashboard.manual.contentmanager.ContentManager;
-import eu.apenet.persistence.dao.IndexQueueDAO;
+import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead;
-import eu.apenet.persistence.vo.IndexQueue;
+import eu.apenet.persistence.vo.QueueItem;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class QueueTask extends TimerTask {
@@ -89,11 +89,11 @@ public class QueueTask extends TimerTask {
 		IndexUtils.setIndexing(true);
 		try
 		{
-			IndexQueueDAO indexqueueDAO =  DAOFactory.instance().getIndexQueueDAO();	
+			QueueItemDAO indexqueueDAO =  DAOFactory.instance().getQueueItemDAO();	
 			boolean filesLeft = true;
 			while (active && filesLeft && System.currentTimeMillis() < endTime){
 				//LOGGER.info("Looking for files in queue");
-				List<IndexQueue> filesToIndex = indexqueueDAO.getFirstItems();
+				List<QueueItem> filesToIndex = indexqueueDAO.getFirstItems();
 				if (filesToIndex.size() == 0){
 					//LOGGER.info("No files in queue");
 					filesLeft = false;
@@ -107,10 +107,10 @@ public class QueueTask extends TimerTask {
 		}
 	    
 	}
-	public int indexSub(List<IndexQueue> filesToIndex, long endTime) throws Exception {
+	public int indexSub(List<QueueItem> filesToIndex, long endTime) throws Exception {
 		int indexed = 0;
-		IndexQueueDAO indexqueueDAO =  DAOFactory.instance().getIndexQueueDAO();	
-		for(IndexQueue indexQueue : filesToIndex) {
+		QueueItemDAO indexqueueDAO =  DAOFactory.instance().getQueueItemDAO();	
+		for(QueueItem indexQueue : filesToIndex) {
             Ead ead;
             if(indexQueue.getHoldingsGuide() != null) {
                 ead = indexQueue.getHoldingsGuide();
