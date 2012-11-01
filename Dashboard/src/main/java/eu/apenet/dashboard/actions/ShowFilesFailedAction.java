@@ -8,28 +8,28 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import com.opensymphony.xwork2.ActionSupport;
 
-import eu.apenet.persistence.dao.IndexQueueDAO;
+import eu.apenet.persistence.dao.QueueItemDAO;
 
 import eu.apenet.persistence.factory.DAOFactory;
 
-import eu.apenet.persistence.vo.IndexQueue;
+import eu.apenet.persistence.vo.QueueItem;
 
 
 
 public class ShowFilesFailedAction extends ActionSupport{
 	
-	List<IndexQueue> filesFailed;
+	List<QueueItem> filesFailed;
 	private String idSelected;
 
 	private final Logger log = Logger.getLogger(getClass());
 	
 	
-	public List<IndexQueue> getFilesFailed() {
+	public List<QueueItem> getFilesFailed() {
 		return filesFailed;
 	}
 	
 
-	public void setFilesFailed(List<IndexQueue> filesFailed) {
+	public void setFilesFailed(List<QueueItem> filesFailed) {
 		this.filesFailed = filesFailed;
 	}
 
@@ -47,8 +47,8 @@ public class ShowFilesFailedAction extends ActionSupport{
 
 	public String execute(){
 
-		IndexQueueDAO indexqueueDAO =  DAOFactory.instance().getIndexQueueDAO();			
-		filesFailed = new ArrayList<IndexQueue>(); 
+		QueueItemDAO indexqueueDAO =  DAOFactory.instance().getQueueItemDAO();			
+		filesFailed = new ArrayList<QueueItem>(); 
 		this.setFilesFailed(indexqueueDAO.getFilesWithErrors());
 		
 		return SUCCESS;
