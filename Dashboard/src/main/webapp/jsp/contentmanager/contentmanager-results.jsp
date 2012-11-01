@@ -99,19 +99,19 @@ Only selected
 						<td>${eadResult.date}</td>
 						<td class="${eadResult.convertedCssClass}"><apenet:resource>${eadResult.convertedText}</apenet:resource></td>
 						<td class="${eadResult.validatedCssClass}"><apenet:resource>${eadResult.validatedText}</apenet:resource></td>
-						<td class="${eadResult.indexedCssClass}">
-						<c:choose>
+						<td class="${eadResult.indexedCssClass}"><c:choose>
 								<c:when test="${eadResult.searchable}">${eadResult.units}</c:when>
-								<c:otherwise><apenet:resource>${eadResult.indexedText}</apenet:resource></c:otherwise>
-							</c:choose>
-						</td>
+								<c:otherwise>
+									<apenet:resource>${eadResult.indexedText}</apenet:resource>
+								</c:otherwise>
+							</c:choose></td>
 						<c:if test="${results.findingAid}">
-							<td class="${eadResult.eseEdmCssClass}">
-							<c:choose>
+							<td class="${eadResult.eseEdmCssClass}"><c:choose>
 									<c:when test="${eadResult.convertedToEseEdm}">${eadResult.totalNumberOfDaos}</c:when>
-									<c:otherwise><apenet:resource>${eadResult.eseEdmText}</apenet:resource></c:otherwise>
-								</c:choose>
-							</td>
+									<c:otherwise>
+										<apenet:resource>${eadResult.eseEdmText}</apenet:resource>
+									</c:otherwise>
+								</c:choose></td>
 							<td class="${eadResult.europeanaCssClass}"><apenet:resource>${eadResult.europeanaText}</apenet:resource></td>
 
 							<td class="actions"><c:choose>
@@ -119,52 +119,54 @@ Only selected
 										<s:text name="content.message.queueprocessing" />
 									</c:when>
 									<c:otherwise>
-										<select>
+										<select class="selectedAction" name="selectedAction">
 											<c:if test="${not eadResult.validated and not eadResult.validatedFatalError}">
 												<option value="validate.action">
 													<s:text name="content.message.validate" />
 												</option>
 											</c:if>
 											<c:if test="${not eadResult.converted}">
-												<option value="validate.action">
+												<option value="convert.action">
 													<s:text name="content.message.convert" />
 												</option>
 											</c:if>
 											<c:if test="${eadResult.validated and not eadResult.searchable}">
-												<option value="validate.action">
+												<option value="index.action">
 													<s:text name="content.message.index" />
 												</option>
 											</c:if>
 											<c:if test="${eadResult.validated and eadResult.units > 0 and not eadResult.convertedToEseEdm}">
-												<option value="validate.action">
+												<option value="convertToEseEdm.action">
 													<s:text name="content.message.convert.ese" />
 												</option>
 											</c:if>
 											<c:if
 												test="${eadResult.convertedToEseEdm and eadResult.totalNumberOfDaos > 0 and not eadResult.deliveredToEuropeana}">
-												<option value="validate.action">
+												<option value="deliverToEuropeana.action">
 													<s:text name="content.message.deliver.europeana" />
 												</option>
 											</c:if>
 											<c:if test="${eadResult.deliveredToEuropeana}">
-												<option value="validate.action">
+												<option value="deleteFromEuropeana.action">
 													<s:text name="content.message.delete.europeana" />
 												</option>
 											</c:if>
-											<c:if test="${eadResult.convertedToEseEdm}">
-												<option value="validate.action">
+											<c:if test="${eadResult.convertedToEseEdm and not eadResult.deliveredToEuropeana}">
+												<option value="deleteEseEdm.action">
 													<s:text name="content.message.delete.ese" />
 												</option>
 											</c:if>
-											<option value="validate.action">
-												<s:text name="content.message.delete2" />
-											</option>
-											<c:if test="${eadResult.readyForQueueProcessing}">
-												<option value="validate.action">
-													<s:text name="content.message.deletefromIndexqueue" />
+											<c:if test="${eadResult.searchable}">
+												<option value="deleteFromIndex.action">
+													<s:text name="content.message.delete.index" />
 												</option>
 											</c:if>
-											<option value="validate.action">
+											<c:if test="${eadResult.readyForQueueProcessing}">
+												<option value="deleteQueue.action">
+													<s:text name="content.message.delete.queue" />
+												</option>
+											</c:if>
+											<option value="delete.action">
 												<s:text name="content.message.delete" />
 											</option>
 

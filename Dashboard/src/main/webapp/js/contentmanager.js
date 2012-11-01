@@ -3,16 +3,37 @@ function initContentManager() {
 		event.preventDefault();
 		performNewSearch();
 	});
+
+}
+function initSubpage(){
+	$(".actions input").click(function(event) {
+		event.preventDefault();
+		performAction($(this).parent().find(".selectedAction").val(),$(this).parent().parent().find(".checkboxSave").val(), "0" );
+
+	});
+}
+function performAction(selectedAction, id, type){
+	$.post(selectedAction, { id: id, type: type }, function(data) {
+		updateCurrentSearchResults();
+	}).success(function() { alert("second success"); })
+    .error(function() { alert("error"); })
+    .complete(function() { alert("complete"); });;	
 }
 function performNewSearch() {
+	$("#ead-results-container").html("<div class='icon_waiting'></div>");
 	$.post("contentmanagerResults.action", $("#newSearchForm").serialize(), function(data) {
 		$("#ead-results-container").html(data);
+		initSubpage();
 		document.getElementById("ead-results-container").scrollIntoView(true);
+		
 	});
 }
 function updateCurrentSearchResults(){
-	$.post("contentmanagerResults.action", $("#updateCurrentSearch").serialize(), function(data) {
+	var formData = $("#updateCurrentSearch").serialize();
+	$("#ead-results-container").html("<div class='icon_waiting'></div>");
+	$.post("contentmanagerResults.action", formData, function(data) {
 		$("#ead-results-container").html(data);
+		initSubpage();
 		document.getElementById("ead-results-container").scrollIntoView(true);
 	});
 }
@@ -33,3 +54,4 @@ function initResultsHandlers(){
 		updateCurrentSearchResults();
 	});
 }
+

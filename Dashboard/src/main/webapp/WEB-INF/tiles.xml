@@ -12,7 +12,7 @@
 		<put-attribute name="body" value="/jsp/templates/blank.jsp" />			
         <put-attribute name="maincss" value="/css/cssnew.css"/>
         <put-list-attribute name="jsfilesInternal">
-            <add-attribute type="string" value="/js/jquery/jquery_1.4.2.min.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal"/>
@@ -25,7 +25,7 @@
 		<put-attribute name="body" value="/jsp/initialImage.jsp" />
 		<put-attribute name="maincss" value="/css/cssnew.css"/>		
 		<put-list-attribute name="jsfilesInternal">
-            <add-attribute type="string" value="/js/jquery/jquery_1.4.2.min.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal"/>        
@@ -37,7 +37,7 @@
 		<put-attribute name="body" value="/jsp/templates/blank.jsp" />
 		<put-attribute name="maincss" value="/css/cssnew.css"/>
         <put-list-attribute name="jsfilesInternal">
-            <add-attribute type="string" value="/js/jquery/jquery_1.4.2.min.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal"/>
@@ -50,7 +50,7 @@
 		<put-attribute name="body" value="/jsp/templates/blank.jsp" />
 		<put-attribute name="maincss" value="/css/cssnew.css"/>
         <put-list-attribute name="jsfilesInternal">
-            <add-attribute type="string" value="/js/jquery/jquery_1.4.2.min.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
             <add-attribute type="string" value="/js/help.js"/>
         </put-list-attribute>
@@ -124,7 +124,7 @@
 		<put-attribute name="title" value="dashboard.checkexistingfiles.title" />
 		<put-attribute name="body" value="/jsp/checkexistingfiles.jsp" />
         <put-list-attribute name="jsfilesInternal">
-            <add-attribute type="string" value="/js/jquery/jquery_1.4.2.min.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
         </put-list-attribute>
 	</definition>
@@ -132,7 +132,7 @@
 		<put-attribute name="title" value="dashboard.checkexistingfiles.title" />
 		<put-attribute name="body" value="/jsp/checkuploadedfiles.jsp" />
         <put-list-attribute name="jsfilesInternal">
-            <add-attribute type="string" value="/js/jquery/jquery_1.4.2.min.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
         </put-list-attribute>
 	</definition>	
@@ -140,7 +140,7 @@
 		<put-attribute name="title" value="dashboard.contentmanager.title" />
 		<put-attribute name="body" value="/jsp/contentmanager.jsp" />
         <put-list-attribute name="jsfilesInternal">
-            <add-attribute type="string" value="/js/jquery/jquery_1.4.2.min.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/jquery/jquery-ui-1.8.9.custom.min.js"/>
             <add-attribute type="string" value="/js/help.js"/>
             <add-attribute type="string" value="/js/colorbox/jquery.colorbox-min.js"/>
@@ -154,7 +154,7 @@
 		<put-attribute name="title" value="dashboard.contentmanager.title" />
 		<put-attribute name="body" value="/jsp/contentmanager/contentmanager.jsp" />
         <put-list-attribute name="jsfilesInternal">
-            <add-attribute type="string" value="/js/jquery/jquery_1.4.2.min.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/jquery/jquery-ui-1.8.9.custom.min.js"/>
             <add-attribute type="string" value="/js/help.js"/>
             <add-attribute type="string" value="/js/colorbox/jquery.colorbox-min.js"/>
@@ -171,7 +171,7 @@
 		<put-attribute name="title" value="dashboard.uploadcontent.title" />
 		<put-attribute name="body" value="/jsp/uploadcontent.jsp" />
 		<put-list-attribute name="jsfilesInternal">
-            <add-attribute type="string" value="/js/jquery/jquery_1.4.2.min.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/httpupload.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
         </put-list-attribute>	
@@ -180,7 +180,7 @@
 		<put-attribute name="title" value="dashboard.viewftpfiles.title" />
 		<put-attribute name="body" value="/jsp/viewftpfiles.jsp" />
         <put-list-attribute name="jsfilesInternal">
-            <add-attribute type="string" value="/js/jquery/jquery_1.4.2.min.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/jquery/jquery-ui.custom.min.js"/>
 	        <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
 	        <add-attribute type="string" value="/js/dynatree/jquery.dynatree.min.js"/>
@@ -206,7 +206,7 @@
 		<put-attribute name="title" value="dashboard.viewharvest.title" />
 		<put-attribute name="body" value="/jsp/harvest.jsp" />
         <put-list-attribute name="jsfilesInternal">
-            <add-attribute type="string" value="/js/jquery/jquery_1.4.2.min.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 	        <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
             <add-attribute type="string" value="/js/help.js"/>
         </put-list-attribute>
@@ -378,7 +378,7 @@
         <put-attribute name="title" value="dashboard.superuser.titl"/>
         <put-attribute name="body" value="/jsp/superuser.jsp"/>
         <put-list-attribute name="jsfilesInternal">
-            <add-attribute type="string" value="/js/jquery/jquery_1.4.2.min.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
         </put-list-attribute>
     </definition>
 
@@ -386,7 +386,7 @@
         <put-attribute name="title" value="dashboard.eadedition.title"/>
         <put-attribute name="body" value="/jsp/eadEdition/index.jsp"/>
         <put-list-attribute name="jsfilesInternal">
-            <add-attribute type="string" value="/js/jquery/jquery_1.4.2.min.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/jquery/jquery-ui-1.8.9.custom.min.js"/>
 	        <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
             <add-attribute type="string" value="/js/jquery/splitter.js"/>
@@ -401,7 +401,7 @@
         <put-attribute name="title" value="dashboard.viewthreads.title"/>
         <put-attribute name="body" value="/jsp/viewThreads.jsp"/>
         <put-list-attribute name="jsfilesInternal">
-            <add-attribute type="string" value="/js/jquery/jquery_1.4.2.min.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/jquery/jquery-ui-1.8.9.custom.min.js"/>
 	        <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
         </put-list-attribute>
@@ -410,7 +410,7 @@
 		<put-attribute name="title" value="dashboard.convert.title" />	
 		<put-attribute name="body" value="/jsp/ead2ese/convert.jsp" />	
         <put-list-attribute name="jsfilesInternal">
-            <add-attribute type="string" value="/js/jquery/jquery_1.4.2.min.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/jquery/jquery-ui-1.8.9.custom.min.js"/>
 	        <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
 	        <add-attribute type="string" value="/js/breadcrumb.js"/>
@@ -424,7 +424,7 @@
         <put-attribute name="title" value="dashboard.hgCreation.title"/>
         <put-attribute name="body" value="/jsp/hgTreeCreation.jsp" />
         <put-list-attribute name="jsfilesInternal">
-            <add-attribute type="string" value="/js/jquery/jquery_1.4.2.min.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/jquery/jquery-ui-1.8.9.custom.min.js"/>
 	        <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
             <add-attribute type="string" value="/js/dynatree/jquery.dynatree.js"/>

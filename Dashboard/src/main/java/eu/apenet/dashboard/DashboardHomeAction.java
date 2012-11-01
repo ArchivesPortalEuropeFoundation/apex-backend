@@ -8,10 +8,10 @@ import com.opensymphony.xwork2.ActionContext;
 
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.dao.IndexQueueDAO;
+import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
-import eu.apenet.persistence.vo.IndexQueue;
+import eu.apenet.persistence.vo.QueueItem;
 
 /**
  * Paul
@@ -59,8 +59,8 @@ public class DashboardHomeAction extends AbstractInstitutionAction {
 	 * */
 	public Boolean isThereErrorFiles(){    	
    	 		
-		IndexQueueDAO iqDao = DAOFactory.instance().getIndexQueueDAO();
-		List<IndexQueue> iqList = new ArrayList<IndexQueue>(); 
+		QueueItemDAO iqDao = DAOFactory.instance().getQueueItemDAO();
+		List<QueueItem> iqList = new ArrayList<QueueItem>(); 
 		iqList = iqDao.getFilesWithErrors();
 		
 		if (iqList.size()==0)

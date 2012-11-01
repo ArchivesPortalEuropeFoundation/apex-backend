@@ -917,6 +917,7 @@ h2 {
 #content_div_table th, table.defaultlayout th {
 	 border: 1px solid white;
 	 background-color: #DBDBDB;
+	 vertical-align: top;
 }
 #content_div_table input[type="submit"], , table.defaultlayout input[type="submit"] {
 	padding:0px;
@@ -968,4 +969,13 @@ h2 {
 	font-weight: bold;
 	text-align: center;
 	padding-bottom:10px;
+}
+.icon_waiting {
+	height:48px;
+	width:48px;
+	background-image: url("../images/icons/waiting.gif");
+	background-repeat: no-repeat;
+	clear: both;
+	margin: auto;
+	display:inline-block;
 }
