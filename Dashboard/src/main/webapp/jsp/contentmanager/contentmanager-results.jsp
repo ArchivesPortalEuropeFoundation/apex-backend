@@ -2,6 +2,7 @@
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="ape" uri="http://commons.archivesportaleurope.eu/tags"%>
+<%@ taglib prefix="apenet" uri="http://commons.apenet.eu/tags"%>
 <script type="text/javascript">
 	$(document).ready(function() {
 		initResultsHandlers();
@@ -76,12 +77,12 @@ Only selected
 							href="javascript:changeOrder('totalNumberOfUnits','false')"><img class="noStyle"
 								src="images/expand/arrow-up.gif" alt="up" /></a></th>
 						<c:if test="${results.findingAid}">
-							<th><s:text name="content.message.convert2" /> <a class="order"
+							<th><s:text name="content.message.eseedm" /> <a class="order"
 								href="javascript:changeOrder('totalNumberOfDaos','true')"><img class="noStyle"
 									src="images/expand/arrow-down.gif" alt="down" /></a> <a class="order"
 								href="javascript:changeOrder('totalNumberOfDaos','false')"><img class="noStyle"
 									src="images/expand/arrow-up.gif" alt="up" /></a></th>
-							<th><s:text name="content.message.deliver" /> <a class="order"
+							<th><s:text name="content.message.europeana" /> <a class="order"
 								href="javascript:changeOrder('europeana','true')"><img class="noStyle" src="images/expand/arrow-down.gif"
 									alt="down" /></a> <a class="order" href="javascript:changeOrder('europeana','false')"><img class="noStyle"
 									src="images/expand/arrow-up.gif" alt="up" /></a></th>
@@ -90,59 +91,29 @@ Only selected
 					</tr>
 				</thead>
 				<c:forEach var="eadResult" items="${results.eadResults}">
-					<tr>
+					<tr class="${eadResult.cssClass}">
 						<td><input class="checkboxSave" type="checkbox" name="check" id="check_${eadResult.id}"
 							value="${eadResult.id}" /></td>
 						<td class="nocenter">${eadResult.eadid}</td>
 						<td><span class="title">${eadResult.title}</span></td>
 						<td>${eadResult.date}</td>
-						<td><c:choose>
-								<c:when test="${eadResult.converted}">
-									<span class="status_ok"><s:text name="content.message.ok" /></span>
-								</c:when>
-								<c:otherwise>
-									<span class="status_no"><s:text name="content.message.no" /></span>
-								</c:otherwise>
-							</c:choose></td>
-						<td><c:choose>
-								<c:when test="${eadResult.validated}">
-									<span class="status_ok"><s:text name="content.message.ok" /></span>
-								</c:when>
-								<c:when test="${eadResult.validatedFatalError}">
-									<span class="status_error"><s:text name="content.message.fatalerror" /></span>
-								</c:when>
-								<c:otherwise>
-									<span class="status_no"><s:text name="content.message.no" /></span>
-								</c:otherwise>
-							</c:choose></td>
-						<td><c:choose>
-								<c:when test="${eadResult.searchable}">
-									<span class="status_ok">${eadResult.units}</span>
-								</c:when>
-								<c:otherwise>
-									<span class="status_no"><s:text name="content.message.no" /></span>
-								</c:otherwise>
-							</c:choose></td>
+						<td class="${eadResult.convertedCssClass}"><apenet:resource>${eadResult.convertedText}</apenet:resource></td>
+						<td class="${eadResult.validatedCssClass}"><apenet:resource>${eadResult.validatedText}</apenet:resource></td>
+						<td class="${eadResult.indexedCssClass}">
+						<c:choose>
+								<c:when test="${eadResult.searchable}">${eadResult.units}</c:when>
+								<c:otherwise><apenet:resource>${eadResult.indexedText}</apenet:resource></c:otherwise>
+							</c:choose>
+						</td>
 						<c:if test="${results.findingAid}">
-							<td><c:choose>
-									<c:when test="${eadResult.convertedToEuropeana}">
-										<span class="status_ok">${eadResult.totalNumberOfDaos}</span>
-									</c:when>
-									<c:otherwise>
-										<span class="status_no"><s:text name="content.message.no" /></span>
-									</c:otherwise>
-								</c:choose></td>
-							<td><c:choose>
-									<c:when test="${eadResult.harvestedByEuropeana}">
-										<span class="status_ok"><s:text name="content.message.europeana.harvested" /></span>
-									</c:when>
-									<c:when test="${eadResult.deliveredToEuropeana}">
-										<span class="status_ok"><s:text name="content.message.europeana.delivered" /></span>
-									</c:when>
-									<c:otherwise>
-										<span class="status_no"><s:text name="content.message.no" /></span>
-									</c:otherwise>
-								</c:choose></td>
+							<td class="${eadResult.eseEdmCssClass}">
+							<c:choose>
+									<c:when test="${eadResult.convertedToEseEdm}">${eadResult.totalNumberOfDaos}</c:when>
+									<c:otherwise><apenet:resource>${eadResult.eseEdmText}</apenet:resource></c:otherwise>
+								</c:choose>
+							</td>
+							<td class="${eadResult.europeanaCssClass}"><apenet:resource>${eadResult.europeanaText}</apenet:resource></td>
+
 							<td class="actions"><c:choose>
 									<c:when test="${eadResult.queueProcessing}">
 										<s:text name="content.message.queueprocessing" />
@@ -164,13 +135,13 @@ Only selected
 													<s:text name="content.message.index" />
 												</option>
 											</c:if>
-											<c:if test="${eadResult.validated and not eadResult.convertedToEuropeana}">
+											<c:if test="${eadResult.validated and eadResult.units > 0 and not eadResult.convertedToEseEdm}">
 												<option value="validate.action">
 													<s:text name="content.message.convert.ese" />
 												</option>
 											</c:if>
 											<c:if
-												test="${eadResult.convertedToEuropeana and eadResult.totalNumberOfDaos > 0 and not eadResult.deliveredToEuropeana}">
+												test="${eadResult.convertedToEseEdm and eadResult.totalNumberOfDaos > 0 and not eadResult.deliveredToEuropeana}">
 												<option value="validate.action">
 													<s:text name="content.message.deliver.europeana" />
 												</option>
@@ -180,7 +151,7 @@ Only selected
 													<s:text name="content.message.delete.europeana" />
 												</option>
 											</c:if>
-											<c:if test="${eadResult.convertedToEuropeana}">
+											<c:if test="${eadResult.convertedToEseEdm}">
 												<option value="validate.action">
 													<s:text name="content.message.delete.ese" />
 												</option>
