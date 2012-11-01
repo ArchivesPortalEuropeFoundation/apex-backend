@@ -56,7 +56,7 @@ public class SourceGuide extends Ead {
 	private Long totalNumberOfUnits;
 	private Long totalNumberOfUnitsWithDao;
 	@OneToMany(mappedBy="sourceGuide")
-	private Set<IndexQueue> indexQueues = new HashSet<IndexQueue>(0);
+	private Set<QueueItem> indexQueues = new HashSet<QueueItem>(0);
 	@OneToMany(mappedBy="sourceGuide")
 	private Set<Warnings> warningses = new HashSet<Warnings>(0);
 	@OneToMany(mappedBy="sourceGuide")
@@ -167,11 +167,11 @@ public class SourceGuide extends Ead {
 
 	
 	
-	public Set<IndexQueue> getIndexQueues() {
+	public Set<QueueItem> getIndexQueues() {
 		return indexQueues;
 	}
 
-	public void setIndexQueues(Set<IndexQueue> indexQueues) {
+	public void setIndexQueues(Set<QueueItem> indexQueues) {
 		this.indexQueues = indexQueues;
 	}
 

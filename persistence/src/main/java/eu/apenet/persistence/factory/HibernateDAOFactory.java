@@ -129,8 +129,8 @@ public class HibernateDAOFactory extends DAOFactory {
 	}
 	
 	@Override
-	public IndexQueueDAO getIndexQueueDAO() {		
-		return (IndexQueueDAO) instantiateDAO(IndexQueueHibernateDAO.class) ;
+	public QueueItemDAO getQueueItemDAO() {		
+		return (QueueItemDAO) instantiateDAO(QueueItemHibernateDAO.class) ;
 	}
 	
 	@Override

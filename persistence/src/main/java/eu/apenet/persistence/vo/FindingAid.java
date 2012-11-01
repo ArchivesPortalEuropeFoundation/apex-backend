@@ -60,7 +60,7 @@ public class FindingAid extends Ead {
 	private Long totalNumberOfUnits;
 	private Long totalNumberOfUnitsWithDao;
 	@OneToMany(mappedBy="findingAid")
-	private Set<IndexQueue> indexQueues = new HashSet<IndexQueue>(0);
+	private Set<QueueItem> indexQueues = new HashSet<QueueItem>(0);
 	@OneToMany(mappedBy="findingAid")
 	private Set<Warnings> warningses = new HashSet<Warnings>(0);
 	@OneToMany(mappedBy="findingAid")
@@ -173,11 +173,11 @@ public class FindingAid extends Ead {
 		this.searchable = searchable;
 	}
 
-	public Set<IndexQueue> getIndexQueues() {
+	public Set<QueueItem> getIndexQueues() {
 		return indexQueues;
 	}
 
-	public void setIndexQueues(Set<IndexQueue> indexQueues) {
+	public void setIndexQueues(Set<QueueItem> indexQueues) {
 		this.indexQueues = indexQueues;
 	}
 

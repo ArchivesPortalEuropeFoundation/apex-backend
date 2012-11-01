@@ -8,19 +8,19 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
-import eu.apenet.persistence.dao.IndexQueueDAO;
-import eu.apenet.persistence.vo.IndexQueue;
+import eu.apenet.persistence.dao.QueueItemDAO;
+import eu.apenet.persistence.vo.QueueItem;
 
 
 
-public class IndexQueueHibernateDAO extends AbstractHibernateDAO<IndexQueue, Integer> implements IndexQueueDAO{
+public class QueueItemHibernateDAO extends AbstractHibernateDAO<QueueItem, Integer> implements QueueItemDAO{
 
 	private final Logger log = Logger.getLogger(getClass());
 	
 
-	public List<IndexQueue> getFirstItems(){
-		TypedQuery<IndexQueue> query = getEntityManager().createQuery(
-		        "SELECT indexQueue FROM IndexQueue indexQueue ORDER BY indexQueue.id", IndexQueue.class);
+	public List<QueueItem> getFirstItems(){
+		TypedQuery<QueueItem> query = getEntityManager().createQuery(
+		        "SELECT queueItem FROM QueueItem queueItem ORDER BY priority, id", QueueItem.class);
 		query.setMaxResults(10);
 		return query.getResultList();
 	}
@@ -28,9 +28,9 @@ public class IndexQueueHibernateDAO extends AbstractHibernateDAO<IndexQueue, Int
 
 
 	@SuppressWarnings("unchecked")
-	public List<IndexQueue> getFilesWithErrors() {
+	public List<QueueItem> getFilesWithErrors() {
 		
-		Criteria criteria = getSession().createCriteria(getPersistentClass(), "indexqueue");
+		Criteria criteria = getSession().createCriteria(getPersistentClass(), "queueItem");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		criteria = criteria.add(Restrictions.isNotNull("errors"));
 		

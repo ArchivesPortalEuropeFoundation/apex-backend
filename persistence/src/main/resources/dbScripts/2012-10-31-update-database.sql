@@ -29,3 +29,9 @@ UPDATE finding_aid SET europeana = 3 FROM file_state WHERE finding_aid.fs_id = f
 ALTER TABLE finding_aid ADD COLUMN queuing smallint DEFAULT 0;
 ALTER TABLE holdings_guide ADD COLUMN queuing smallint DEFAULT 0;
 ALTER TABLE source_guide ADD COLUMN queuing smallint DEFAULT 0;
+
+ALTER TABLE index_queue RENAME TO queue;
+ALTER TABLE queue ADD COLUMN priority smallint NOT NULL;
+ALTER TABLE queue ADD COLUMN action character varying(255) NOT NULL;
+ALTER TABLE queue DROP COLUMN position;
+ALTER TABLE queue DROP COLUMN fs_id;

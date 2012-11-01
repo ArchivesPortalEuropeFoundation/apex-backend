@@ -44,8 +44,8 @@ public abstract class Ead  implements Serializable{
 	public abstract QueingState getQueuing();
 	public abstract void setQueuing(QueingState queingState);	
     @Deprecated
-	public abstract Set<IndexQueue> getIndexQueues();
-	public abstract void setIndexQueues(Set<IndexQueue> indexQueues);
+	public abstract Set<QueueItem> getIndexQueues();
+	public abstract void setIndexQueues(Set<QueueItem> indexQueues);
 	public abstract Set<Warnings> getWarningses();
 	public abstract void setWarningses(Set<Warnings> warningses);
     @Deprecated
@@ -58,8 +58,8 @@ public abstract class Ead  implements Serializable{
             return null;
         return set.iterator().next();
     }
-    public IndexQueue getIndexQueue() {
-        Set<IndexQueue> set = getIndexQueues();
+    public QueueItem getIndexQueue() {
+        Set<QueueItem> set = getIndexQueues();
         if(set == null || set.isEmpty())
             return null;
         return set.iterator().next();

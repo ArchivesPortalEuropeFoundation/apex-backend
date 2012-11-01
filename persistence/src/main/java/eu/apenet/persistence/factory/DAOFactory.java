@@ -20,7 +20,7 @@ import eu.apenet.persistence.dao.FileTypeDAO;
 import eu.apenet.persistence.dao.FindingAidDAO;
 import eu.apenet.persistence.dao.GenericDAO;
 import eu.apenet.persistence.dao.HoldingsGuideDAO;
-import eu.apenet.persistence.dao.IndexQueueDAO;
+import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.dao.LangDAO;
 import eu.apenet.persistence.dao.MetadataFormatDAO;
 import eu.apenet.persistence.dao.ResumptionTokenDAO;
@@ -130,7 +130,7 @@ public abstract class DAOFactory {
 	public abstract DptUpdateDAO getDptUpdateDAO();
 	public abstract MetadataFormatDAO getMetadataFormatDAO();
 	public abstract ResumptionTokenDAO getResumptionTokenDAO();
-	public abstract IndexQueueDAO getIndexQueueDAO();
+	public abstract QueueItemDAO getQueueItemDAO();
 	public abstract UserRoleDAO getUserRoleDAO();
     public abstract EadDAO getEadDAO();
 }

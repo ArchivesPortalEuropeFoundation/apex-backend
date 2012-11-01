@@ -58,7 +58,7 @@ public class HoldingsGuide extends Ead {
 	private Long totalNumberOfUnits;
 	private Long totalNumberOfUnitsWithDao;
 	@OneToMany(mappedBy="holdingsGuide")
-	private Set<IndexQueue> indexQueues = new HashSet<IndexQueue>(0);
+	private Set<QueueItem> indexQueues = new HashSet<QueueItem>(0);
 	@OneToMany(mappedBy="holdingsGuide")
 	private Set<Warnings> warningses = new HashSet<Warnings>(0);
 	@OneToMany(mappedBy="holdingsGuide")
@@ -169,11 +169,11 @@ public class HoldingsGuide extends Ead {
 
 	
 	
-	public Set<IndexQueue> getIndexQueues() {
+	public Set<QueueItem> getIndexQueues() {
 		return indexQueues;
 	}
 
-	public void setIndexQueues(Set<IndexQueue> indexQueues) {
+	public void setIndexQueues(Set<QueueItem> indexQueues) {
 		this.indexQueues = indexQueues;
 	}
 
