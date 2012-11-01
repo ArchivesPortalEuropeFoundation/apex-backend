@@ -20,7 +20,7 @@
 		<class>eu.apenet.persistence.vo.SentMailRegister</class>
 		<class>eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh</class>
 		<class>eu.apenet.persistence.vo.Warnings</class>
-		<class>eu.apenet.persistence.vo.IndexQueue</class>
+		<class>eu.apenet.persistence.vo.QueueItem</class>
 		<class>eu.apenet.persistence.vo.EadContent</class>
 		<class>eu.apenet.persistence.vo.Ese</class>
 		<class>eu.apenet.persistence.vo.ArchivalInstitution</class>
