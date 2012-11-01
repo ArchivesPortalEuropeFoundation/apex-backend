@@ -147,7 +147,7 @@ public class ContentManager extends ContentManagerIndexer{
         eadcmUnit.setCountEadCMUnitDocs(ead.getTotalNumberOfUnits());
 
         if(ead.getFileState().getState().equals(FileState.READY_TO_INDEX)){
-            QueueItem indexQueue = ead.getIndexQueue();
+            QueueItem indexQueue = ead.getQueueItem();
             if(indexQueue != null ){
                 eadcmUnit.setQueuePosition(-1);
 	            String errors = indexQueue.getErrors();

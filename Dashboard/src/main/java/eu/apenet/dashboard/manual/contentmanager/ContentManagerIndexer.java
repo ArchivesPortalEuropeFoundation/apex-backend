@@ -58,7 +58,7 @@ public abstract class ContentManagerIndexer {
 		indexqueue.setQueueDate(new Date());
 //		indexqueue.setFileState(state);
 
-		QueueItem indexQueue = ead.getIndexQueue();
+		QueueItem indexQueue = ead.getQueueItem();
 		if (indexQueue == null)
 			indexqueueDao.store(setCorrectIndexQueue(ead, indexqueue));
 	}
@@ -144,7 +144,7 @@ public abstract class ContentManagerIndexer {
 		SecurityContext.get().checkAuthorized(ead);
 		try {
 
-			QueueItem indexQueue = ead.getIndexQueue();
+			QueueItem indexQueue = ead.getQueueItem();
 			int queueId = indexQueue.getId();
 //			FileState previousState = indexQueue.getFileState();
 //			ead.setFileState(previousState);
