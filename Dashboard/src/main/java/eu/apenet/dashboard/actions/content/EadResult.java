@@ -3,10 +3,20 @@ package eu.apenet.dashboard.actions.content;
 import java.text.SimpleDateFormat;
 
 import eu.apenet.persistence.vo.Ead;
-import eu.apenet.persistence.vo.QueingState;
+import eu.apenet.persistence.vo.QueuingState;
+import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.ValidatedState;
 
 public class EadResult {
+	protected static final String CONTENT_MESSAGE_NO = "content.message.no";
+	protected static final String CONTENT_MESSAGE_OK = "content.message.ok";
+	protected static final String CONTENT_MESSAGE_QUEUE = "content.message.queue";
+	protected static final String CONTENT_MESSAGE_ERROR = "content.message.fatalerror";
+	
+	protected static final String STATUS_ERROR = "status_error";
+	protected static final String STATUS_NO = "status_no";
+	protected static final String STATUS_OK = "status_ok";
+	protected static final String STATUS_QUEUE = "status_queue";
 	private static final int MAX_TITLE = 120;
 	private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("dd/MM/yyyy");
 	private Integer id;
@@ -17,9 +27,10 @@ public class EadResult {
 	private boolean searchable;
 	private boolean validated;
 	private boolean validatedFatalError;
-	private boolean readyForQueueProcessing;
-	private boolean queueProcessing;
+	protected boolean readyForQueueProcessing;
+	protected boolean queueProcessing;
 	private long units;
+	protected QueueAction queueAction;
 	public EadResult(Ead ead){
 		this.eadid = ead.getEadid();
 		this.id = ead.getId();
@@ -33,8 +44,11 @@ public class EadResult {
         this.validated = ValidatedState.VALIDATED.equals(ead.getValidated());
         this.validatedFatalError = ValidatedState.FATAL_ERROR.equals(ead.getValidated());
         this.units = ead.getTotalNumberOfUnits();
-        this.readyForQueueProcessing = QueingState.READY.equals(ead.getQueuing());
-        this.queueProcessing = QueingState.BUSY.equals(ead.getQueuing());
+        this.readyForQueueProcessing = QueuingState.READY.equals(ead.getQueuing());
+        this.queueProcessing = QueuingState.BUSY.equals(ead.getQueuing());
+        if ((readyForQueueProcessing || queueProcessing) && ead.getQueueItem() != null){
+        	queueAction = ead.getQueueItem().getAction();
+        }
 	}
 	public Integer getId() {
 		return id;
@@ -69,7 +83,72 @@ public class EadResult {
 	public boolean isQueueProcessing() {
 		return queueProcessing;
 	}
+	public String getCssClass(){
+		if (queueProcessing){
+			return "status_queue_processing";
+		}else {
+			return "";
+		}
+	}
+	public String getConvertedCssClass(){
+		if (converted){
+			return STATUS_OK;
+		}else if(queueAction != null && queueAction.isConvertAction()){
+			return STATUS_QUEUE;
+		}else {
+		
+			return STATUS_NO;
+		}
+	}
 
+	public String getValidatedCssClass(){
+		if (validated){
+			return STATUS_OK;
+		}else if(queueAction != null && queueAction.isValidateAction()){
+			return STATUS_QUEUE;
+		}else if (validatedFatalError){
+			return STATUS_ERROR;
+		}else {
+			return STATUS_NO;
+		}
+	}
+	public String getIndexedCssClass(){
+		if (searchable){
+			return STATUS_OK;
+		}else if(queueAction != null && queueAction.isIndexAction()){
+			return STATUS_QUEUE;
+		}else {
+			return STATUS_NO;
+		}
+	}
+	public String getConvertedText(){
+		if (converted){
+			return CONTENT_MESSAGE_OK;
+		}else if(queueAction != null && queueAction.isConvertAction()){
+			return CONTENT_MESSAGE_QUEUE;
+		}else {
+			return CONTENT_MESSAGE_NO;
+		}
+	}
+	public String getValidatedText(){
+		if (validated){
+			return CONTENT_MESSAGE_OK;
+		}else if(queueAction != null && queueAction.isValidateAction()){
+			return CONTENT_MESSAGE_QUEUE;
+		}else if (validatedFatalError){
+			return CONTENT_MESSAGE_ERROR;
+		}else {
+			return CONTENT_MESSAGE_NO;
+		}
+	}
+	public String getIndexedText(){
+		if (searchable){
+			return getUnits()+"";
+		}else if(queueAction != null && queueAction.isIndexAction()){
+			return CONTENT_MESSAGE_QUEUE;
+		}else {
+			return CONTENT_MESSAGE_NO;
+		}
+	}
 
-	
 }
