@@ -22,7 +22,7 @@ import eu.apenet.persistence.dao.EadContentDAO;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.dao.EseStateDAO;
-import eu.apenet.persistence.dao.IndexQueueDAO;
+import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.Ead;
@@ -32,7 +32,7 @@ import eu.apenet.persistence.vo.EseState;
 import eu.apenet.persistence.vo.FileState;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
-import eu.apenet.persistence.vo.IndexQueue;
+import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.SourceGuide;
 
 /**
@@ -51,19 +51,19 @@ public abstract class ContentManagerIndexer {
 
 	// Insert in the indexing queue
 	private static void insertQueueFile(Ead ead, int position, FileState state) {
-		IndexQueueDAO indexqueueDao = DAOFactory.instance().getIndexQueueDAO();
+		QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
 
-		IndexQueue indexqueue = new IndexQueue();
-		indexqueue.setPosition(position);
+		QueueItem indexqueue = new QueueItem();
+//		indexqueue.setPosition(position);
 		indexqueue.setQueueDate(new Date());
-		indexqueue.setFileState(state);
+//		indexqueue.setFileState(state);
 
-		IndexQueue indexQueue = ead.getIndexQueue();
+		QueueItem indexQueue = ead.getIndexQueue();
 		if (indexQueue == null)
 			indexqueueDao.store(setCorrectIndexQueue(ead, indexqueue));
 	}
 
-	private static IndexQueue setCorrectIndexQueue(Ead ead, IndexQueue indexQueue) {
+	private static QueueItem setCorrectIndexQueue(Ead ead, QueueItem indexQueue) {
 		if (ead instanceof FindingAid)
 			indexQueue.setFindingAid((FindingAid) ead);
 		else if (ead instanceof HoldingsGuide)
@@ -144,13 +144,13 @@ public abstract class ContentManagerIndexer {
 		SecurityContext.get().checkAuthorized(ead);
 		try {
 
-			IndexQueue indexQueue = ead.getIndexQueue();
+			QueueItem indexQueue = ead.getIndexQueue();
 			int queueId = indexQueue.getId();
-			FileState previousState = indexQueue.getFileState();
-			ead.setFileState(previousState);
-			eadDAO.update(ead);
-			IndexQueueDAO indexqueueDAO = DAOFactory.instance().getIndexQueueDAO();
-			IndexQueue iq = indexqueueDAO.findById(queueId);
+//			FileState previousState = indexQueue.getFileState();
+//			ead.setFileState(previousState);
+//			eadDAO.update(ead);
+			QueueItemDAO indexqueueDAO = DAOFactory.instance().getQueueItemDAO();
+			QueueItem iq = indexqueueDAO.findById(queueId);
 
 			if (iq != null) {
 				indexqueueDAO.delete(iq);

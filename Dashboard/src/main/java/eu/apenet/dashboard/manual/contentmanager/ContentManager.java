@@ -59,7 +59,7 @@ import eu.apenet.persistence.vo.EseState;
 import eu.apenet.persistence.vo.FileState;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
-import eu.apenet.persistence.vo.IndexQueue;
+import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.ResumptionToken;
 import eu.apenet.persistence.vo.SourceGuide;
 import eu.apenet.persistence.vo.ValidatedState;
@@ -147,9 +147,9 @@ public class ContentManager extends ContentManagerIndexer{
         eadcmUnit.setCountEadCMUnitDocs(ead.getTotalNumberOfUnits());
 
         if(ead.getFileState().getState().equals(FileState.READY_TO_INDEX)){
-            IndexQueue indexQueue = ead.getIndexQueue();
+            QueueItem indexQueue = ead.getIndexQueue();
             if(indexQueue != null ){
-                eadcmUnit.setQueuePosition(indexQueue.getPosition());
+                eadcmUnit.setQueuePosition(-1);
 	            String errors = indexQueue.getErrors();
 	            if (errors!=null)
 	            	eadcmUnit.setIndexError(errors);
