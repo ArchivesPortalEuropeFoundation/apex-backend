@@ -43,7 +43,7 @@ public class SourceGuide extends Ead {
 	private boolean converted;
 	private ValidatedState validated;
 	private boolean searchable;
-	private QueingState queuing;
+	private QueuingState queuing;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="um_id")
 	private UploadMethod uploadMethod;
@@ -167,11 +167,11 @@ public class SourceGuide extends Ead {
 
 	
 	
-	public Set<QueueItem> getIndexQueues() {
+	public Set<QueueItem> getQueuesItems() {
 		return indexQueues;
 	}
 
-	public void setIndexQueues(Set<QueueItem> indexQueues) {
+	public void setQueueItems(Set<QueueItem> indexQueues) {
 		this.indexQueues = indexQueues;
 	}
 
@@ -207,11 +207,11 @@ public class SourceGuide extends Ead {
 		this.validated = validated;
 	}
 
-	public QueingState getQueuing() {
+	public QueuingState getQueuing() {
 		return queuing;
 	}
 
-	public void setQueuing(QueingState queuing) {
+	public void setQueuing(QueuingState queuing) {
 		this.queuing = queuing;
 	}
 

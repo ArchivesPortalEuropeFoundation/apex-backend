@@ -41,11 +41,11 @@ public abstract class Ead  implements Serializable{
 	public abstract void setValidated(ValidatedState validated);
 	public abstract boolean isConverted();
 	public abstract void setConverted(boolean converted);
-	public abstract QueingState getQueuing();
-	public abstract void setQueuing(QueingState queingState);	
+	public abstract QueuingState getQueuing();
+	public abstract void setQueuing(QueuingState queingState);	
     @Deprecated
-	public abstract Set<QueueItem> getIndexQueues();
-	public abstract void setIndexQueues(Set<QueueItem> indexQueues);
+	public abstract Set<QueueItem> getQueuesItems();
+	public abstract void setQueueItems(Set<QueueItem> indexQueues);
 	public abstract Set<Warnings> getWarningses();
 	public abstract void setWarningses(Set<Warnings> warningses);
     @Deprecated
@@ -58,8 +58,8 @@ public abstract class Ead  implements Serializable{
             return null;
         return set.iterator().next();
     }
-    public QueueItem getIndexQueue() {
-        Set<QueueItem> set = getIndexQueues();
+    public QueueItem getQueueItem() {
+        Set<QueueItem> set = getQueuesItems();
         if(set == null || set.isEmpty())
             return null;
         return set.iterator().next();

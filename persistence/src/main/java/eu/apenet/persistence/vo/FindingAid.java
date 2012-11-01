@@ -47,7 +47,7 @@ public class FindingAid extends Ead {
 	private ValidatedState validated;
 	private boolean searchable;
 	private EuropeanaState europeana;
-	private QueingState queuing;
+	private QueuingState queuing;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="um_id")
 	private UploadMethod uploadMethod;
@@ -173,11 +173,11 @@ public class FindingAid extends Ead {
 		this.searchable = searchable;
 	}
 
-	public Set<QueueItem> getIndexQueues() {
+	public Set<QueueItem> getQueuesItems() {
 		return indexQueues;
 	}
 
-	public void setIndexQueues(Set<QueueItem> indexQueues) {
+	public void setQueueItems(Set<QueueItem> indexQueues) {
 		this.indexQueues = indexQueues;
 	}
 
@@ -236,11 +236,11 @@ public class FindingAid extends Ead {
 		this.europeana = europeana;
 	}
 
-	public QueingState getQueuing() {
+	public QueuingState getQueuing() {
 		return queuing;
 	}
 
-	public void setQueuing(QueingState queuing) {
+	public void setQueuing(QueuingState queuing) {
 		this.queuing = queuing;
 	}
 
