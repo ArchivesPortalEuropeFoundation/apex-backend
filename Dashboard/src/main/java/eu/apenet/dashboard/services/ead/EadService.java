@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.manual.contentmanager.ContentManager;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
