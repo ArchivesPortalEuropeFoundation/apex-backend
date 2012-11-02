@@ -20,7 +20,7 @@ public class QueueItemHibernateDAO extends AbstractHibernateDAO<QueueItem, Integ
 
 	public List<QueueItem> getFirstItems(){
 		TypedQuery<QueueItem> query = getEntityManager().createQuery(
-		        "SELECT queueItem FROM QueueItem queueItem ORDER BY priority, id", QueueItem.class);
+		        "SELECT queueItem FROM QueueItem queueItem ORDER BY priority desc, id asc", QueueItem.class);
 		query.setMaxResults(10);
 		return query.getResultList();
 	}
