@@ -39,7 +39,23 @@ public class EadActions extends AbstractInstitutionAction{
 	}
 	public String convertEad() throws APEnetException{
 		XmlType xmlType = XmlType.getType(type);
-		EadService.validate(xmlType, id);
+		EadService.convert(xmlType, id);
+		return SUCCESS;
+	}
+	
+	public String publishEad() throws APEnetException{
+		XmlType xmlType = XmlType.getType(type);
+		EadService.publish(xmlType, id);
+		return SUCCESS;
+	}
+	public String unpublishEad() throws APEnetException{
+		XmlType xmlType = XmlType.getType(type);
+		EadService.unpublish(xmlType, id);
+		return SUCCESS;
+	}
+	public String deleteEad() throws APEnetException{
+		XmlType xmlType = XmlType.getType(type);
+		EadService.delete(xmlType, id);
 		return SUCCESS;
 	}
 }

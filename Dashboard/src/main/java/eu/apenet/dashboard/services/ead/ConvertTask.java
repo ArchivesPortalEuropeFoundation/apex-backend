@@ -131,6 +131,7 @@ public class ConvertTask extends AbstractEadTask {
 			logger.debug("Converted file takes name of original file.");
 			FileUtils.copyFile(outputfile, file);
 			outputfile.delete();
+			DAOFactory.instance().getEadDAO().store(ead);
 		} catch (Exception e) {
 			throw new APEnetException("Could not convert the file with ID: " + ead.getId(), e);
 		}

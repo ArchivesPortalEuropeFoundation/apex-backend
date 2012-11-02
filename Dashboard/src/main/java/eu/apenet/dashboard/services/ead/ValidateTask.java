@@ -111,6 +111,7 @@ public class ValidateTask extends AbstractEadTask {
                     }
                 }
             }
+			DAOFactory.instance().getEadDAO().store(ead);
         } catch (Exception e) {
             throw new APEnetException("Could not validate the file with ID: " + ead.getId(), e);
         }		

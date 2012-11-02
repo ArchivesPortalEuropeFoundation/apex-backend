@@ -1,11 +1,14 @@
 package eu.apenet.dashboard.manual;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.transform.Result;
@@ -15,34 +18,42 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import com.ctc.wstx.exc.WstxParsingException;
-import eu.apenet.commons.exceptions.APEnetException;
-import eu.apenet.commons.types.XmlType;
-import eu.apenet.persistence.dao.*;
-import eu.apenet.persistence.vo.*;
-import eu.apenet.dpt.utils.service.DocumentValidation;
-import eu.apenet.dpt.utils.util.XmlChecker;
-import eu.apenet.dpt.utils.util.Xsd_enum;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.stax2.XMLInputFactory2;
 import org.codehaus.stax2.XMLStreamReader2;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXParseException;
 
+import com.ctc.wstx.exc.WstxParsingException;
+
+import eu.apenet.commons.exceptions.APEnetException;
+import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.manual.contentmanager.ContentManager;
 import eu.apenet.dashboard.utils.ChangeControl;
 import eu.apenet.dashboard.utils.ContentUtils;
+import eu.apenet.dpt.utils.service.DocumentValidation;
+import eu.apenet.dpt.utils.util.XmlChecker;
+import eu.apenet.dpt.utils.util.Xsd_enum;
+import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
+import eu.apenet.persistence.dao.CpfContentDAO;
+import eu.apenet.persistence.dao.FileStateDAO;
+import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.HibernateUtil;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
-import org.xml.sax.SAXParseException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.CpfContent;
+import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.FileState;
+import eu.apenet.persistence.vo.FileType;
+import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.HoldingsGuide;
+import eu.apenet.persistence.vo.SourceGuide;
+import eu.apenet.persistence.vo.UpFile;
 
 /**
  * User: Eloy García
@@ -333,6 +344,7 @@ public class ExistingFilesChecker {
                             FileState fileState;
                             if (isConverted) {
                                 LOG.debug("File already converted in local tool");
+                                ead.setConverted(true);
                                 fileState = DAOFactory.instance().getFileStateDAO().getFileStateByState(FileState.NOT_VALIDATED_CONVERTED);
                             } else {
                                 LOG.debug("File not converted in local tool");

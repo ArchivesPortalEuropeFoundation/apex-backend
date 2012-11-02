@@ -9,7 +9,7 @@
 						validatechangeainame, changeainame, createsimpleeagwithmenu, uploadowneagwithmenu, downloadeag, upload, checkfilesuploaded, uploadsimpleeag, uploadsimpleeagwithmenu,
 						eaghttpuploadwithmenu, httpUpload, checkexistingfiles, cancelCheckexistingfiles, content, overwriteexistingfiles, canceloverwriteexistingfiles
 						eaghttpupload,indexingLaunched,
-						search, changeLimit,convert, validate, delete, deleteFromIndex, removeEseForFA, indextotemp,deletefromindexqueue,
+						search, changeLimit,convert, validate, publish, delete, unpublish, removeEseForFA, 
 						displayEseConvert, processEseConvert, showwarnings, deleteEse,
 						download, link, removeLink, preview, downloadAllESE, downloadEse,
 	                    displayEadFrontPage, generateTreeJSON, displayEadIntroduction, displayEadDidContent, displayCContent,

@@ -15,7 +15,7 @@ public class ContentManagerResultsAction extends AbstractInstitutionAction imple
 	private Integer pageNumber = 1;
 	private Integer resultPerPage = 20;
 	private String orderByField = "id";
-	private boolean orderByAscending = true;
+	private boolean orderByAscending = false;
 	@Override
 	public void setServletRequest(HttpServletRequest request) {
 		this.request= request;

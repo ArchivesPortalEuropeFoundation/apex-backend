@@ -10,7 +10,6 @@
                             <li><a href="downloadeag.action?ai_id=<s:property value="%{ai_id}"/>" target="_blank"> - <s:property value="getText('dashboard.menu.downloadeag')" /></a></li>
                             <li><br/><a href="changeainame.action"><s:property value="getText('dashboard.menu.changeainame')" /></a><br/></li>
                             <li><br/><a href ="upload.action"><s:property value="getText('dashboard.menu.uploadcontent')" /></a><br/></li>
-                            <li><br/><a href ="checkfilesuploaded.action"><s:property value="getText('dashboard.menu.contentmanager')" /></a><br/></li>      
-                                                        <li><br/><a href ="contentmanager.action"><s:property value="getText('dashboard.menu.contentmanager')" />NEW</a><br/></li>                        
+                            <li><br/><a href ="checkfilesuploaded.action"><s:property value="getText('dashboard.menu.contentmanager')" /></a><br/></li>                           
                         </ul>
                     </div>

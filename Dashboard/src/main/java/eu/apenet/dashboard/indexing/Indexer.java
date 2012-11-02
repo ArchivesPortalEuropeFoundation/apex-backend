@@ -41,15 +41,12 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.CountryDAO;
 import eu.apenet.persistence.dao.EadDAO;
-import eu.apenet.persistence.dao.FileStateDAO;
 import eu.apenet.persistence.dao.WarningsDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
-import eu.apenet.persistence.vo.FileState;
-import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.Warnings;
 
 public class Indexer {
@@ -74,7 +71,6 @@ public class Indexer {
 	private Boolean existunitid_archdesc = false;
 	private Collection<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
 	private static final int MAX_NUMBER_OF_PENDING_DOCS = 10;
-	private FileState initialstate;
 	private String pathApenetead;
 	private boolean isFinalPath;
 	private String currentPath;
@@ -168,7 +164,6 @@ public class Indexer {
 	public Indexer(Ead ead) {
 		this.ead = ead;
 		xmlType = XmlType.getEadType(ead);
-		initialstate = ead.getFileState();
 		eadDao = DAOFactory.instance().getEadDAO();
 	}
 
@@ -178,18 +173,14 @@ public class Indexer {
 		long numberOfDaos = 0l;
 		pathApenetead = ead.getPathApenetead();
 		archivalinstitution = ead.getArchivalInstitution();
-		LOG.info("Indexing: '" + xmlType.getName() + "' id: " + ead.getId() + ", state: " + initialstate.getState()
-				+ ", eadid: " + ead.getEadid() + ", aiId: " + archivalinstitution.getAiId() + ", file path: "
+		LOG.info("Indexing: '" + xmlType.getName() + "' id: " + ead.getId() + ", eadid: " + ead.getEadid() + ", aiId: " + archivalinstitution.getAiId() + ", file path: "
 				+ ead.getPathApenetead());
 		isFinalPath = true;
 		currentPath = APEnetUtilities.getConfig().getRepoDirPath() + pathApenetead;
-
-		LOG.info("Initial state of the file: " + initialstate.getState());
 		/**
 		 * Check the time and check if the backup file exists. If this file
 		 * exists, then it cannot index, for a period.
 		 **/
-		changeState(FileState.INDEXING);
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document doc = builder.parse(new InputSource(new StringReader(eadContent.getXml())));
 		doc.getDocumentElement().normalize();
@@ -200,18 +191,6 @@ public class Indexer {
 		return numberOfDaos;
 	}
 
-	private void changeState(String finalStateStr) {
-		FileStateDAO fileStateDao = DAOFactory.instance().getFileStateDAO();
-		FileState fileState = fileStateDao.getFileStateByState(finalStateStr);
-		changeState(fileState);
-	}
-
-	private void changeState(FileState finalState) {
-		ead.setFileState(finalState);
-		eadDao.updateSimple(ead);
-		LOG.info("State of the file: " + finalState.getState());
-
-	}
 
 	private long extractGeneralData(Document doc, EadContent eadContent) throws XPathExpressionException {
 		Boolean displayIntro = (Boolean) displayIntroExpression.evaluate(doc, XPathConstants.BOOLEAN);
@@ -602,11 +581,6 @@ public class Indexer {
 		ead.setTotalNumberOfDaos(eadCounts.getNumberOfDAOsBelow());
 		ead.setTotalNumberOfUnits(eadCounts.getNumberOfUnits());
 		ead.setTotalNumberOfUnitsWithDao(eadCounts.getNumberOfUnitsWithDaosBelow());
-		if (ead instanceof FindingAid) {
-			changeState(FileState.INDEXED);
-		} else { // HG or SG
-			changeState(FileState.INDEXED_LINKED);
-		}
 		ContentUtils.changeSearchable(ead, true);
 	}
 
@@ -621,7 +595,6 @@ public class Indexer {
 
 		UpdateSolrServerHolder.getInstance().deleteByQuery(SolrFields.FOND_ID + ":" + solrPrefix + ead.getId());
 		Ead rollBackEad = eadDao.findById(ead.getId(), xmlType.getClazz());
-		rollBackEad.setFileState(initialstate);
 		ContentUtils.changeSearchable(rollBackEad, false);
 		eadDao.store(rollBackEad);
 

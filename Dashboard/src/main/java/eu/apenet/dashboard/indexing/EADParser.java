@@ -16,9 +16,6 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import eu.apenet.persistence.vo.*;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.solr.SolrFields;
@@ -27,7 +24,13 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.EadContentDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.hibernate.HibernateUtil;
+import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.EadContent;
+import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.HoldingsGuide;
+import eu.apenet.persistence.vo.SourceGuide;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class EADParser extends AbstractParser {
 	private static Logger LOG = Logger.getLogger(EADParser.class);
@@ -36,28 +39,10 @@ public class EADParser extends AbstractParser {
 	private static final QName UNITTITLE = new QName(APENET_EAD, "unittitle");
 	private static final QName TITLEPROPER = new QName(APENET_EAD, "titleproper");
 
-    @Deprecated
-	public static void parseHoldingGuide(HoldingsGuide holdingsGuide) throws Exception {
-		parseEad(holdingsGuide);
-	}
 
-    @Deprecated
-	public static void parseFindingAid(FindingAid findingAid) throws Exception {
-		parseEad(findingAid);
-	}
 
     public static void parseEad(Ead ead) throws Exception {
 		parse(ead, null);
-	}
-
-    @Deprecated
-	public static void parseHoldingGuideAndIndex(HoldingsGuide holdingsGuide) throws Exception {
-		parseEadAndIndex(holdingsGuide);
-	}
-
-    @Deprecated
-	public static void parseFindingAidAndIndex(FindingAid findingAid) throws Exception {
-		parseEadAndIndex(findingAid);
 	}
 
     public static void parseEadAndIndex(Ead ead) throws Exception {
@@ -128,7 +113,7 @@ public class EADParser extends AbstractParser {
 		boolean noCLevelFound = true;
 		Long ecId = null;
 		try {
-			HibernateUtil.beginDatabaseTransaction();
+			JpaUtil.beginDatabaseTransaction();
 			for (int event = xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
 				if (event == XMLStreamConstants.START_ELEMENT) {
 					QName elementName = xmlReader.getName();
@@ -140,8 +125,10 @@ public class EADParser extends AbstractParser {
 							noCLevelFound = false;
 							xmlWriterHolder.close();
 							eadContent.setXml(stringWriter.toString());
-							HibernateUtil.getDatabaseSession().save(eadContent);
+							dao.updateSimple(eadContent);
+							stringWriter.close();
 							stringWriter = null;
+							
                             if(indexer != null)
                             	eadCounts.addNumberOfDAOs(indexer.parseHeader(eadContent));
 							ecId  = eadContent.getEcId();
@@ -179,7 +166,7 @@ public class EADParser extends AbstractParser {
 				noCLevelFound = false;
 				xmlWriterHolder.close();
 				eadContent.setXml(stringWriter.toString());
-				HibernateUtil.getDatabaseSession().save(eadContent);
+				dao.updateSimple(eadContent);
 				stringWriter = null;
                 if(indexer != null)
                 	eadCounts.addNumberOfDAOs(indexer.parseHeader(eadContent));
@@ -191,7 +178,7 @@ public class EADParser extends AbstractParser {
 			if (indexer != null) {
 				indexer.commitAll(eadCounts);
 			}
-			HibernateUtil.commitDatabaseTransaction();
+			JpaUtil.commitDatabaseTransaction();
 			if (indexer != null && ead instanceof HoldingsGuide) {
 				ContentUtils.addLinkHGtoAL((HoldingsGuide)ead);
 			}
@@ -203,8 +190,8 @@ public class EADParser extends AbstractParser {
                 LOG.error("Starting Parse method rollback... - but we will not move the file back to TMP since it should stay in REPO always");
 			}
 			
-			HibernateUtil.rollbackDatabaseTransaction();
-			HibernateUtil.closeDatabaseSession();
+			JpaUtil.rollbackDatabaseTransaction();
+			JpaUtil.closeDatabaseSession();
 			if (indexer != null) {
 				LOG.error(eadid + ": rollback:", de);
 				indexer.rollback();

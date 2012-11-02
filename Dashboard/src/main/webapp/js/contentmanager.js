@@ -15,9 +15,7 @@ function initSubpage(){
 function performAction(selectedAction, id, type){
 	$.post(selectedAction, { id: id, type: type }, function(data) {
 		updateCurrentSearchResults();
-	}).success(function() { alert("second success"); })
-    .error(function() { alert("error"); })
-    .complete(function() { alert("complete"); });;	
+	});
 }
 function performNewSearch() {
 	$("#ead-results-container").html("<div class='icon_waiting'></div>");
@@ -34,7 +32,6 @@ function updateCurrentSearchResults(){
 	$.post("contentmanagerResults.action", formData, function(data) {
 		$("#ead-results-container").html(data);
 		initSubpage();
-		document.getElementById("ead-results-container").scrollIntoView(true);
 	});
 }
 function changeOrder(fieldValue, fieldSorting) {

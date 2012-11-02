@@ -712,24 +712,7 @@ public class ContentManagerAction extends AbstractContentManagerAction {
 	 * @return SUCCESS or ERROR
 	 */
 	public String deleteOnlyFromIndex() {
-		Integer aiId = getAiId();
-		boolean isBeingHarvested = ContentManager.isBeingHarvested();
-		try {
-			if (!isBeingHarvested
-					|| (isBeingHarvested && !(getXmlType().equals(XmlType.EAD_FA) && ContentManager
-							.eadHasEsePublished(getId())))) {
-				ContentManager.deleteOnlyFromIndex(getId(), getXmlType(), aiId, true);
-				setHarvesting(0);
-			} else {
-				setHarvesting(1);
-			}
-			return finishAction();
-
-		} catch (Exception e) {
-			log.error("Error trying deleteOnlyFromIndex: " + e.getCause());
-		}
-
-		return ERROR;
+		return SUCCESS;
 	}
 
 	/**
