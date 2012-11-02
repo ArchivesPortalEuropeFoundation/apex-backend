@@ -15,12 +15,15 @@ All
 <input type="radio">
 Only selected
 </input>
-<select><option>Convert</option>
-	<option>Validate</option>
-	<option>Index</option>
-	<option>Convert to ESE</option>
+<select id="batchSelectedAction">
+	<option value="convert_validate_publish"><s:text name="content.message.doitall" /></option>
+	<option value="convert"><s:text name="content.message.convert" /></option>
+	<option value="validate"><s:text name="content.message.validate" /></option>
+	<option value="publish"><s:text name="content.message.publish" /></option>
+    <option value="unpublish"><s:text name="content.message.unpublish" /></option>
+    <option value="delete"><s:text name="content.message.delete" /></option>
 </select>
-<input type="submit" value="Go" />
+<input id="batchActionButton" type="submit" value="Go" />
 <div id="ead-results" class="box">
 	<s:form id="updateCurrentSearch" action="contentmanagerResults" theme="simple">
 		<s:hidden name="pageNumber" />
@@ -86,6 +89,10 @@ Only selected
 								href="javascript:changeOrder('europeana','true')"><img class="noStyle" src="images/expand/arrow-down.gif"
 									alt="down" /></a> <a class="order" href="javascript:changeOrder('europeana','false')"><img class="noStyle"
 									src="images/expand/arrow-up.gif" alt="up" /></a></th>
+							<th><s:text name="content.message.queue" /> <a class="order"
+								href="javascript:changeOrder('queuing','true')"><img class="noStyle" src="images/expand/arrow-down.gif"
+									alt="down" /></a> <a class="order" href="javascript:changeOrder('queuing','false')"><img class="noStyle"
+									src="images/expand/arrow-up.gif" alt="up" /></a></th>
 						</c:if>
 						<th><s:text name="content.message.actions" /></th>
 					</tr>
@@ -113,10 +120,10 @@ Only selected
 									</c:otherwise>
 								</c:choose></td>
 							<td class="${eadResult.europeanaCssClass}"><apenet:resource>${eadResult.europeanaText}</apenet:resource></td>
-
+							<td class="${eadResult.actionsCssClass}"><c:if test="${eadResult.readyForQueueProcessing or eadResult.queueProcessing}"><apenet:resource>${eadResult.queueAction.resourceName}</apenet:resource></c:if></td>
 							<td class="actions"><c:choose>
 									<c:when test="${eadResult.readyForQueueProcessing}">
-
+										
 									</c:when>
 									<c:when test="${eadResult.queueProcessing}">
 										<s:text name="content.message.queueprocessing" />
@@ -124,51 +131,51 @@ Only selected
 									<c:otherwise>
 										<select class="selectedAction" name="selectedAction">
 											<c:if test="${not eadResult.converted}">
-												<option value="convert.action">
+												<option value="convert">
 													<s:text name="content.message.convert" />
 												</option>
 											</c:if>							
 											<c:if test="${not eadResult.validated and not eadResult.validatedFatalError}">
-												<option value="validate.action">
+												<option value="validate">
 													<s:text name="content.message.validate" />
 												</option>
 											</c:if>
 
 											<c:if test="${eadResult.validated and not eadResult.searchable}">
-												<option value="publish.action">
+												<option value="publish">
 													<s:text name="content.message.publish" />
 												</option>
 											</c:if>
 											<c:if test="${false }">
 											<c:if test="${eadResult.validated and eadResult.units > 0 and not eadResult.convertedToEseEdm}">
-												<option value="convertToEseEdm.action">
+												<option value="convertToEseEdm">
 													<s:text name="content.message.convert.ese" />
 												</option>
 											</c:if>
 											
 											<c:if
 												test="${eadResult.convertedToEseEdm and eadResult.totalNumberOfDaos > 0 and not eadResult.deliveredToEuropeana}">
-												<option value="deliverToEuropeana.action">
+												<option value="deliverToEuropeana">
 													<s:text name="content.message.deliver.europeana" />
 												</option>
 											</c:if>
 											<c:if test="${eadResult.deliveredToEuropeana}">
-												<option value="deleteFromEuropeana.action">
+												<option value="deleteFromEuropeana">
 													<s:text name="content.message.delete.europeana" />
 												</option>
 											</c:if>
 											<c:if test="${eadResult.convertedToEseEdm and not eadResult.deliveredToEuropeana}">
-												<option value="deleteEseEdm.action">
+												<option value="deleteEseEdm">
 													<s:text name="content.message.delete.ese" />
 												</option>
 											</c:if>
 											</c:if>
 											<c:if test="${eadResult.searchable}">
-												<option value="unpublish.action">
+												<option value="unpublish">
 													<s:text name="content.message.unpublish" />
 												</option>
 											</c:if>
-											<option value="delete.action">
+											<option value="delete">
 												<s:text name="content.message.delete" />
 											</option>
 

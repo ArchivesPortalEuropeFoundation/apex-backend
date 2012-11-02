@@ -197,26 +197,15 @@
 		</action>
 		
 		
-		<action name="validate" class="eu.apenet.dashboard.actions.content.EadActions" method="validateEad">
+		<action name="eadActions" class="eu.apenet.dashboard.actions.content.EadActions">
 			<result name="success">/jsp/ajax/success.jsp</result>
 			<result name="error">/jsp/ajax/error.jsp</result>
 		</action>
-		<action name="convert" class="eu.apenet.dashboard.actions.content.EadActions" method="convertEad">
+		<action name="batchEadActions" class="eu.apenet.dashboard.actions.content.BatchEadActions">
 			<result name="success">/jsp/ajax/success.jsp</result>
 			<result name="error">/jsp/ajax/error.jsp</result>
 		</action>
-		<action name="publish" class="eu.apenet.dashboard.actions.content.EadActions" method="publishEad">
-			<result name="success">/jsp/ajax/success.jsp</result>
-			<result name="error">/jsp/ajax/error.jsp</result>
-		</action>	
-		<action name="unpublish" class="eu.apenet.dashboard.actions.content.EadActions" method="unpublishEad">
-			<result name="success">/jsp/ajax/success.jsp</result>
-			<result name="error">/jsp/ajax/error.jsp</result>
-		</action>		
-		<action name="delete" class="eu.apenet.dashboard.actions.content.EadActions" method="deleteEad">
-			<result name="success">/jsp/ajax/success.jsp</result>
-			<result name="error">/jsp/ajax/error.jsp</result>
-		</action>
+
 		<action name="deleteEse" class="eu.apenet.dashboard.manual.contentmanager.ContentManagerAction" method="deleteEse">
 			<result name="success" type="redirectAction">
 				<param name="actionName">content</param>

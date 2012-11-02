@@ -8,12 +8,22 @@ function initContentManager() {
 function initSubpage(){
 	$(".actions input").click(function(event) {
 		event.preventDefault();
-		performAction($(this).parent().find(".selectedAction").val(),$(this).parent().parent().find(".checkboxSave").val(), "0" );
-
+		performEadAction($(this).parent().find(".selectedAction").val(),$(this).parent().parent().find(".checkboxSave").val(), "0" );
+	});
+	$("#batchActionButton").click(function(event) {
+		event.preventDefault();
+		performBatchEadAction($(this).parent().find("#batchSelectedAction").val(),"0" );
 	});
 }
-function performAction(selectedAction, id, type){
-	$.post(selectedAction, { id: id, type: type }, function(data) {
+function performEadAction(action, id, type){
+	$("#ead-results-container").html("<div class='icon_waiting'></div>");
+	$.post("eadActions.action", { id: id, type: type,action: action }, function(data) {
+		updateCurrentSearchResults();
+	});
+}
+function performBatchEadAction(action, type ){
+	$("#ead-results-container").html("<div class='icon_waiting'></div>");
+	$.post("batchEadActions.action", { type: type,action: action }, function(data) {
 		updateCurrentSearchResults();
 	});
 }

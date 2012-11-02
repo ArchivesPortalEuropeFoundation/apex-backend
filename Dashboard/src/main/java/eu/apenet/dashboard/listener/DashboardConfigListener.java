@@ -37,7 +37,7 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 			if (!apeConfig.isDirectIndexing()){
 				QueueDaemon.init();
 				Date date = new Date();
-				date.setMinutes(date.getMinutes()+2);
+				date.setMinutes(date.getMinutes()+1);
 				QueueDaemon.addTask(date,new Duration(0, 10, 0) , new Duration(0, 13, 0));
 			}
 		} catch (RuntimeException e) {

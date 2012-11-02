@@ -1,15 +1,11 @@
 package eu.apenet.dashboard.actions.content;
 
-import eu.apenet.commons.exceptions.APEnetException;
-import eu.apenet.commons.types.XmlType;
-import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.services.ead.EadService;
 
-public class EadActions extends AbstractInstitutionAction{
+public class EadActions extends AbstractEadActions{
 
 	private Integer id;
-	private Integer type;
-	
+
 	
 	public Integer getId() {
 		return id;
@@ -19,43 +15,40 @@ public class EadActions extends AbstractInstitutionAction{
 		this.id = id;
 	}
 
-	public Integer getType() {
-		return type;
-	}
 
-	public void setType(Integer type) {
-		this.type = type;
-	}
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2671921974304007944L;
 
-	public String validateEad() throws APEnetException{
-		XmlType xmlType = XmlType.getType(type);
-		EadService.validate(xmlType, id);
+	public String validateEad(){
+		EadService.validate(getXmlType(), id);
 		return SUCCESS;
 	}
-	public String convertEad() throws APEnetException{
-		XmlType xmlType = XmlType.getType(type);
-		EadService.convert(xmlType, id);
+	public String convertEad(){
+		EadService.convert(getXmlType(), id);
 		return SUCCESS;
 	}
 	
-	public String publishEad() throws APEnetException{
-		XmlType xmlType = XmlType.getType(type);
-		EadService.publish(xmlType, id);
+	public String publishEad(){
+		EadService.publish(getXmlType(), id);
 		return SUCCESS;
 	}
-	public String unpublishEad() throws APEnetException{
-		XmlType xmlType = XmlType.getType(type);
-		EadService.unpublish(xmlType, id);
+
+	public String unpublishEad(){
+		EadService.unpublish(getXmlType(), id);
 		return SUCCESS;
 	}
-	public String deleteEad() throws APEnetException{
-		XmlType xmlType = XmlType.getType(type);
-		EadService.delete(xmlType, id);
+	public String deleteEad(){
+		EadService.delete(getXmlType(), id);
 		return SUCCESS;
 	}
+
+	@Override
+	public String convertValidatePublishEad() {
+		EadService.convertValidatePublish(getXmlType(), id);
+		return SUCCESS;
+	}
+	
 }

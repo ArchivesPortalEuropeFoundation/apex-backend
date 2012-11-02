@@ -93,8 +93,6 @@ public class EadResult {
 	public String getConvertedCssClass(){
 		if (converted){
 			return STATUS_OK;
-		}else if(queueAction != null && queueAction.isConvertAction()){
-			return STATUS_QUEUE;
 		}else {
 		
 			return STATUS_NO;
@@ -104,8 +102,6 @@ public class EadResult {
 	public String getValidatedCssClass(){
 		if (validated){
 			return STATUS_OK;
-		}else if(queueAction != null && queueAction.isValidateAction()){
-			return STATUS_QUEUE;
 		}else if (validatedFatalError){
 			return STATUS_ERROR;
 		}else {
@@ -115,8 +111,6 @@ public class EadResult {
 	public String getIndexedCssClass(){
 		if (searchable){
 			return STATUS_OK;
-		}else if(queueAction != null && queueAction.isIndexAction()){
-			return STATUS_QUEUE;
 		}else {
 			return STATUS_NO;
 		}
@@ -124,8 +118,6 @@ public class EadResult {
 	public String getConvertedText(){
 		if (converted){
 			return CONTENT_MESSAGE_OK;
-		}else if(queueAction != null && queueAction.isConvertAction()){
-			return CONTENT_MESSAGE_QUEUE;
 		}else {
 			return CONTENT_MESSAGE_NO;
 		}
@@ -133,8 +125,6 @@ public class EadResult {
 	public String getValidatedText(){
 		if (validated){
 			return CONTENT_MESSAGE_OK;
-		}else if(queueAction != null && queueAction.isValidateAction()){
-			return CONTENT_MESSAGE_QUEUE;
 		}else if (validatedFatalError){
 			return CONTENT_MESSAGE_ERROR;
 		}else {
@@ -144,10 +134,18 @@ public class EadResult {
 	public String getIndexedText(){
 		if (searchable){
 			return getUnits()+"";
-		}else if(queueAction != null && queueAction.isIndexAction()){
-			return CONTENT_MESSAGE_QUEUE;
 		}else {
 			return CONTENT_MESSAGE_NO;
+		}
+	}
+	public QueueAction getQueueAction() {
+		return queueAction;
+	}
+	public String getActionsCssClass(){
+		if (readyForQueueProcessing){
+			return STATUS_QUEUE;
+		}else {
+			return "";
 		}
 	}
 

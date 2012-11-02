@@ -7,7 +7,6 @@ import org.apache.solr.client.solrj.SolrServerException;
 import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.UpdateSolrServerHolder;
 import eu.apenet.commons.types.XmlType;
-import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.EadContentDAO;
 import eu.apenet.persistence.dao.EadDAO;
@@ -21,7 +20,6 @@ public class UnpublishTask extends AbstractEadTask {
 	@Override
 	protected void execute(Ead ead) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-		SecurityContext.get().checkAuthorized(ead);
 		XmlType xmlType = XmlType.getEadType(ead);
 		EadContentDAO eadContentDAO = DAOFactory.instance().getEadContentDAO();
 		EadContent eadContent;
@@ -44,8 +42,8 @@ public class UnpublishTask extends AbstractEadTask {
 		eadDAO.updateSimple(ead);
 		logger.debug("Removing the EAD (" + xmlType.getName() + ") with eadid '" + ead.getEadid() + "' from the index");
 		deleteFromSolr(ead.getEadid(), ead.getAiId());
-		logger.info("The " + xmlType.getName() + " with eadid: " + ead.getEadid()
-				+ "has been removed from index, changed its state in database and deleted its eses files correctly.");
+		logger.info(xmlType.getName() + " with eadid: " + ead.getEadid()
+				+ "has been unpublished");
         if(ead instanceof HoldingsGuide)
             ContentUtils.removeHoldingsGuideFromArchivalLandscape((HoldingsGuide)ead);
 	}
