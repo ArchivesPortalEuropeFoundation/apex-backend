@@ -43,11 +43,11 @@ public class FindingAid extends Ead {
 	/*
 	 * states
 	 */
-	private boolean converted;
-	private ValidatedState validated;
-	private boolean searchable;
-	private EuropeanaState europeana;
-	private QueuingState queuing;
+	private boolean converted = false;;
+	private ValidatedState validated = ValidatedState.NOT_VALIDATED;
+	private boolean searchable = false;;
+	private QueuingState queuing = QueuingState.NO;
+	private EuropeanaState europeana = EuropeanaState.NOT_CONVERTED;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="um_id")
 	private UploadMethod uploadMethod;
@@ -56,9 +56,9 @@ public class FindingAid extends Ead {
 	private ArchivalInstitution archivalInstitution;
 	@Column(name="ai_id", updatable = false, insertable = false)
 	private Integer aiId;
-	private Long totalNumberOfDaos;
-	private Long totalNumberOfUnits;
-	private Long totalNumberOfUnitsWithDao;
+	private Long totalNumberOfDaos =0l;
+	private Long totalNumberOfUnits =0l;
+	private Long totalNumberOfUnitsWithDao =0l;
 	@OneToMany(mappedBy="findingAid")
 	private Set<QueueItem> indexQueues = new HashSet<QueueItem>(0);
 	@OneToMany(mappedBy="findingAid")

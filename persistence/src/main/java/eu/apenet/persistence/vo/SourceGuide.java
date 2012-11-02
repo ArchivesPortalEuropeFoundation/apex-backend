@@ -40,10 +40,10 @@ public class SourceGuide extends Ead {
 	/*
 	 * states
 	 */
-	private boolean converted;
-	private ValidatedState validated;
-	private boolean searchable;
-	private QueuingState queuing;
+	private boolean converted = false;;
+	private ValidatedState validated = ValidatedState.NOT_VALIDATED;
+	private boolean searchable = false;;
+	private QueuingState queuing = QueuingState.NO;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="um_id")
 	private UploadMethod uploadMethod;
@@ -52,9 +52,9 @@ public class SourceGuide extends Ead {
 	private ArchivalInstitution archivalInstitution;
 	@Column(name="ai_id", updatable = false, insertable = false)
 	private Integer aiId;
-	private Long totalNumberOfDaos;
-	private Long totalNumberOfUnits;
-	private Long totalNumberOfUnitsWithDao;
+	private Long totalNumberOfDaos = 0l;
+	private Long totalNumberOfUnits = 0l;
+	private Long totalNumberOfUnitsWithDao = 0l;
 	@OneToMany(mappedBy="sourceGuide")
 	private Set<QueueItem> indexQueues = new HashSet<QueueItem>(0);
 	@OneToMany(mappedBy="sourceGuide")
