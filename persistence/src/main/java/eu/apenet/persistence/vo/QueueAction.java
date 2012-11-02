@@ -1,42 +1,45 @@
 package eu.apenet.persistence.vo;
 
 public enum QueueAction {
-	VALIDATE(true, false, false, false, false), CONVERT(false, true, false, false, false), INDEX(false, false, true,
-			false, false), VALIDATE_CONVERT_INDEX(true, true, true, false, false), CONVERT_TO_ESE_EDM(false, false,
-			false, true, false), DELIVER_TO_EUROPEANA(false, false, false, false, true);
-	private boolean validateAction = false;
-	private boolean convertAction = false;
-	private boolean indexAction = false;
-	private boolean eseEdmAction = false;
-	private boolean europeanaAction = false;
+	VALIDATE("content.message.validate"), CONVERT("content.message.convert"), PUBLISH("content.message.publish"), CONVERT_VALIDATE_PUBLISH("content.message.doitall"), UNPUBLISH("content.message.unpublish"), DELETE("content.message.delete"), CONVERT_TO_ESE_EDM("content.message.convert.ese"), DELIVER_TO_EUROPEANA("content.message.deliver.europeana"), DELETE_FROM_EUROPEANA("content.message.delete.europeana" );
 
-	private QueueAction(boolean validateAction, boolean convertAction, boolean indexAction, boolean eseEdmAction,
-			boolean europeanaAction) {
-		this.validateAction = validateAction;
-		this.convertAction = convertAction;
-		this.indexAction = indexAction;
-		this.eseEdmAction = eseEdmAction;
-		this.europeanaAction = europeanaAction;
+	private String resourceName;
+	private QueueAction(String resourceName){
+		this.resourceName = resourceName;
 	}
+	
 
 	public boolean isValidateAction() {
-		return validateAction;
+		return VALIDATE.equals(this) || CONVERT_VALIDATE_PUBLISH.equals(this);
 	}
 
 	public boolean isConvertAction() {
-		return convertAction;
+		return CONVERT.equals(this) || CONVERT_VALIDATE_PUBLISH.equals(this);
 	}
 
-	public boolean isIndexAction() {
-		return indexAction;
+	public boolean isPublishAction() {
+		return PUBLISH.equals(this) || CONVERT_VALIDATE_PUBLISH.equals(this);
 	}
 
 	public boolean isEseEdmAction() {
-		return eseEdmAction;
+		return CONVERT_TO_ESE_EDM.equals(this);
 	}
-
 	public boolean isEuropeanaAction() {
-		return europeanaAction;
+		return DELIVER_TO_EUROPEANA.equals(this);
+	}
+	public boolean isUnpublishAction() {
+		return UNPUBLISH.equals(this);
+	}
+	public boolean isDeleteAction() {
+		return DELETE.equals(this);
+	}
+	public boolean isDeleteFromEuropeanaAction() {
+		return DELETE_FROM_EUROPEANA.equals(this);
 	}
 
+
+	public String getResourceName() {
+		return resourceName;
+	}
+	
 }

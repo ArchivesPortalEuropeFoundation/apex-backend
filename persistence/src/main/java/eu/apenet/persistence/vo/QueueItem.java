@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 // Generated 10-may-2011 9:45:34 by Hibernate Tools 3.2.4.GA
 
 /**
@@ -28,16 +29,16 @@ public class QueueItem implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = -4266955613706066708L;
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="hg_id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "hg_id")
 	private HoldingsGuide holdingsGuide;
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="fa_id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fa_id")
 	private FindingAid findingAid;
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="sg_id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sg_id")
 	private SourceGuide sourceGuide;
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "queue_date")
@@ -50,22 +51,13 @@ public class QueueItem implements java.io.Serializable {
 	public QueueItem() {
 	}
 
-
-
-
 	public int getId() {
 		return id;
 	}
 
-
-
-
 	public void setId(int id) {
 		this.id = id;
 	}
-
-
-
 
 	public HoldingsGuide getHoldingsGuide() {
 		return this.holdingsGuide;
@@ -83,15 +75,13 @@ public class QueueItem implements java.io.Serializable {
 		this.findingAid = findingAid;
 	}
 
-    public SourceGuide getSourceGuide() {
-        return sourceGuide;
-    }
+	public SourceGuide getSourceGuide() {
+		return sourceGuide;
+	}
 
-    public void setSourceGuide(SourceGuide sourceGuide) {
-        this.sourceGuide = sourceGuide;
-    }
-
-
+	public void setSourceGuide(SourceGuide sourceGuide) {
+		this.sourceGuide = sourceGuide;
+	}
 
 	public Date getQueueDate() {
 		return queueDate;
@@ -101,8 +91,6 @@ public class QueueItem implements java.io.Serializable {
 		this.queueDate = queueDate;
 	}
 
-
-
 	public String getErrors() {
 		return errors;
 	}
@@ -111,46 +99,46 @@ public class QueueItem implements java.io.Serializable {
 		this.errors = errors;
 	}
 
-
-
-
 	public Integer getPriority() {
 		return priority;
 	}
-
-
-
 
 	public void setPriority(Integer priority) {
 		this.priority = priority;
 	}
 
-
-
-
 	public QueueAction getAction() {
 		return action;
 	}
 
-
-
-
 	public void setAction(QueueAction action) {
 		this.action = action;
 	}
-	public Ead getEad(){
-		if (findingAid != null){
+
+	public Ead getEad() {
+		if (findingAid != null) {
 			return findingAid;
-		}else if (holdingsGuide != null){
+		} else if (holdingsGuide != null) {
 			return holdingsGuide;
-		}else {
+		} else {
 			return sourceGuide;
 		}
 	}
 
-
-
-
-
+	public void setEad(Ead ead) {
+		if (ead == null) {
+			findingAid = null;
+			holdingsGuide = null;
+			sourceGuide = null;
+		} else {
+			if (ead instanceof FindingAid) {
+				findingAid = (FindingAid) ead;
+			} else if (ead instanceof HoldingsGuide) {
+				holdingsGuide = (HoldingsGuide) ead;
+			} else if (ead instanceof SourceGuide) {
+				sourceGuide = (SourceGuide) ead;
+			}
+		}
+	}
 
 }
