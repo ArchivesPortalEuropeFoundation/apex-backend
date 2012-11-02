@@ -138,7 +138,15 @@ public class QueueItem implements java.io.Serializable {
 	public void setAction(QueueAction action) {
 		this.action = action;
 	}
-
+	public Ead getEad(){
+		if (findingAid != null){
+			return findingAid;
+		}else if (holdingsGuide != null){
+			return holdingsGuide;
+		}else {
+			return sourceGuide;
+		}
+	}
 
 
 
