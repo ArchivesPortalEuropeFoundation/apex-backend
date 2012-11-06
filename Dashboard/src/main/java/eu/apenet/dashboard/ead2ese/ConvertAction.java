@@ -8,6 +8,7 @@ import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
 
+import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dpt.utils.ead2ese.Config;
 
