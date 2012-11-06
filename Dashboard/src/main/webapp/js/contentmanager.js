@@ -4,16 +4,47 @@ function initContentManager() {
 //		performNewSearch();
 //	});
 	initSubpage();
+	
 }
 function initSubpage(){
 	$(".actions input").click(function(event) {
 		event.preventDefault();
-		performEadAction($(this).parent().find(".selectedAction").val(),$(this).parent().parent().find(".checkboxSave").val(), "0" );
+		performEadAction($(this).parent().find(".selectedAction").val(),$(this).parent().parent().find(".checkboxSave").val(), $("#updateCurrentSearch_type").val() );
 	});
 	$("#batchActionButton").click(function(event) {
 		event.preventDefault();
-		performBatchEadAction($(this).parent().find("#batchSelectedAction").val(),"0" );
+		performBatchEadAction();
 	});
+    $("#clearAll").bind("click", function(value){
+        clearFAsFromSession();
+    });
+    $("#selectAllFAs").bind("click", function(value){
+        addAllFAsInSession();
+    });
+    $(".checkboxSave").bind("click", function(){
+        addOneFA($(this).val());
+    });
+    $("#selectAll").bind("click", function(){
+        var ids = new Array();
+        $("input:checkbox[name=check]").each(function(){
+            if(!$(this).is(":checked")) {
+                $(this).attr('checked','checked');
+                ids.push(this.value);
+            }
+        });
+        addFewFAs(ids);
+    });
+    $("#selectNone").bind("click", function(){
+        var ids = new Array();
+        $("input:checkbox[name=check]").each(function(){
+            if($(this).is(":checked")) {
+                $(this).removeAttr('checked');
+                ids.push(this.value);
+            }
+        });
+        addFewFAs(ids);
+    });
+    count();
 }
 function performEadAction(action, id, type){
 	$("#ead-results-container").html("<div class='icon_waiting'></div>");
@@ -21,9 +52,10 @@ function performEadAction(action, id, type){
 		updateCurrentSearchResults();
 	});
 }
-function performBatchEadAction(action, type ){
+function performBatchEadAction(){
+	var formData = $("#batchActionsForm").serialize();
 	$("#ead-results-container").html("<div class='icon_waiting'></div>");
-	$.post("batchEadActions.action", { type: type,action: action }, function(data) {
+	$.post("batchEadActions.action",formData, function(data) {
 		updateCurrentSearchResults();
 	});
 }

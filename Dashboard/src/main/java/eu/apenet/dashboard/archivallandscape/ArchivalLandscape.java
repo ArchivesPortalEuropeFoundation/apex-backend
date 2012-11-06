@@ -109,6 +109,12 @@ public class ArchivalLandscape extends ActionSupport{
         this.country = DAOFactory.instance().getCountryDAO().findById(securityContext.getCountryId());
         this.countryName = this.country.getCname().toLowerCase();
     }
+	public ArchivalLandscape(Country country) {
+		
+		//Obtain partnerId from session.
+        this.country = country;
+        this.countryName = this.country.getCname().toLowerCase();
+    }
      
 //    public Integer getPartnerId() {
 //        return partnerId;

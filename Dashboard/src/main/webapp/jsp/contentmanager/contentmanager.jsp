@@ -7,6 +7,13 @@
 			});
 		</script>
 <div id="contentmanager">
+    <div id="listFiles">
+    	<div id="listFilesActions">
+        <span id="clearAll" class="linkList leftSide">[<s:text name="content.message.clearall" />]</span>
+        <span id="selectAllFAs" class="linkList leftSide">[<s:text name="content.message.selectall" />]</span>
+        </div>
+        <div id="sizeFiles"></div>
+    </div>
 	<div class="searchOptionsContent">
 		<s:form id="newSearchForm" theme="simple">
 			<s:hidden name="refreshFromSession" value="false"/>

@@ -580,22 +580,9 @@ textarea {
 	height: 200px;
 }
 
-#listFiles {
-	margin: 0;
-	position: fixed;
-	top: 25px;
-	left: auto;
-	width: 150px;
-	height: auto;
-	right: 25px;
-	background-color: #d40000;
-	border: 1px black solid;
-}
 
-.linkList {
-	color: blue;
-	cursor: pointer;
-}
+
+
 
 .leftSide {
 	float: left;

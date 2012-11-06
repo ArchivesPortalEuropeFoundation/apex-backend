@@ -9,39 +9,52 @@
 	});
 </script>
 <div id="batchBlock">
-<div  class="right">
-<span class="bold">Batch:</span>
-<input type="radio" checked="checked" value="1">
-All
-</input>
-<input type="radio">
-Only selected
-</input>
-<select id="batchSelectedAction">
-	<option value="convert_validate_publish"><s:text name="content.message.doitall" /></option>
-	<option value="convert"><s:text name="content.message.convert" /></option>
-	<option value="validate"><s:text name="content.message.validate" /></option>
-	<option value="publish"><s:text name="content.message.publish" /></option>
-    <option value="unpublish"><s:text name="content.message.unpublish" /></option>
-    <option value="delete"><s:text name="content.message.delete" /></option>
-</select>
-<input id="batchActionButton" type="submit" value="Go" /></div>
+	<form id="batchActionsForm">
+		<div class="right">
+			<span class="bold"><s:text name="content.message.batch" />:</span> <input type="radio" checked="checked"
+				name="onlySelectedItems" value="false">
+			<s:text name="content.message.all" />
+			</input> <input type="radio" checked="checked" name="onlySelectedItems" value="true">
+			<s:text name="content.message.onlyselected" />
+			</input> <input type="hidden" name="type" value="<s:property value="%{type}"/>" /> <select id="batchSelectedAction" name="action">
+				<option value="convert_validate_publish">
+					<s:text name="content.message.doitall" />
+				</option>
+				<option value="convert">
+					<s:text name="content.message.convert" />
+				</option>
+				<option value="validate">
+					<s:text name="content.message.validate" />
+				</option>
+				<option value="publish">
+					<s:text name="content.message.publish" />
+				</option>
+				<option value="unpublish">
+					<s:text name="content.message.unpublish" />
+				</option>
+				<option value="delete">
+					<s:text name="content.message.delete" />
+				</option>
+			</select> <input id="batchActionButton" type="submit" value="<s:text name="content.message.go" />" />
+		</div>
+	</form>
 </div>
 <div id="ead-results" class="box">
 	<s:form id="updateCurrentSearch" action="contentmanagerResults" theme="simple">
 		<s:hidden name="pageNumber" />
 		<s:hidden name="orderByField" />
 		<s:hidden name="orderByAscending" />
-		
-		
+		<s:hidden name="type" />
+
 		<div id="ead-results-header" class="boxtitle">
 			<div id="numberOfResults">
-				<span class="bold">Resultaten:</span>
+				<span class="bold"><s:text name="content.message.results" />:</span>
 				<ape:pageDescription numberOfItems="${results.totalNumberOfResults}" pageSize="${results.eadSearchOptions.pageSize}"
 					pageNumber="${results.eadSearchOptions.pageNumber}" />
 			</div>
 			<div id="resultPerPageContainer">
-				<label class="bold" id="pageSizeLabel" for="updateCurrentSearch_resultPerPage">Resultaten per pagina: </label>
+				<label class="bold" id="pageSizeLabel" for="updateCurrentSearch_resultPerPage"><s:text
+						name="content.message.resultsperpage" />: </label>
 				<s:select name="resultPerPage" list="#{'10':'10','20':'20','30':'30','50':'50','100':'100'}" />
 			</div>
 			<div id="ead-paging" class="paging">
@@ -60,12 +73,10 @@ Only selected
 						</span></th>
 						<th><s:text name="content.message.id" /> <a class="order" href="javascript:changeOrder('id','true')"><img
 								class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> <a class="order"
-							href="javascript:changeOrder('id','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
-						</th>
+							href="javascript:changeOrder('id','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a></th>
 						<th><s:text name="content.message.title" /> <a class="order" href="javascript:changeOrder('title','true')"><img
 								class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> <a class="order"
-							href="javascript:changeOrder('title','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
-						</th>
+							href="javascript:changeOrder('title','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a></th>
 						<th><s:text name="content.message.date" /> <a class="order"
 							href="javascript:changeOrder('uploadDate','true')"><img class="noStyle" src="images/expand/arrow-down.gif"
 								alt="down" /></a> <a class="order" href="javascript:changeOrder('uploadDate','false')"><img class="noStyle"
@@ -74,7 +85,7 @@ Only selected
 							href="javascript:changeOrder('converted','true')"><img class="noStyle" src="images/expand/arrow-down.gif"
 								alt="down" /></a> <a class="order" href="javascript:changeOrder('converted','false')"><img class="noStyle"
 								src="images/expand/arrow-up.gif" alt="up" /></a><br /> <a href="#conversionOptsDiv" class="link_right"
-								id="conversionOpts"><s:text name="content.message.conversion.options" /></a></th>
+							id="conversionOpts"><s:text name="content.message.conversion.options" /></a></th>
 						<th><s:text name="content.message.validated" /> <a class="order"
 							href="javascript:changeOrder('validated','true')"><img class="noStyle" src="images/expand/arrow-down.gif"
 								alt="down" /></a> <a class="order" href="javascript:changeOrder('validated','false')"><img class="noStyle"
@@ -94,11 +105,12 @@ Only selected
 								href="javascript:changeOrder('europeana','true')"><img class="noStyle" src="images/expand/arrow-down.gif"
 									alt="down" /></a> <a class="order" href="javascript:changeOrder('europeana','false')"><img class="noStyle"
 									src="images/expand/arrow-up.gif" alt="up" /></a></th>
+						</c:if>
 							<th><s:text name="content.message.queue" /> <a class="order"
 								href="javascript:changeOrder('queuing','true')"><img class="noStyle" src="images/expand/arrow-down.gif"
 									alt="down" /></a> <a class="order" href="javascript:changeOrder('queuing','false')"><img class="noStyle"
 									src="images/expand/arrow-up.gif" alt="up" /></a></th>
-						</c:if>
+						
 						<th><s:text name="content.message.actions" /></th>
 					</tr>
 				</thead>
@@ -125,21 +137,27 @@ Only selected
 									</c:otherwise>
 								</c:choose></td>
 							<td class="${eadResult.europeanaCssClass}"><apenet:resource>${eadResult.europeanaText}</apenet:resource></td>
-							<td class="${eadResult.actionsCssClass}"><c:if test="${eadResult.readyForQueueProcessing or eadResult.queueProcessing}"><apenet:resource>${eadResult.queueAction.resourceName}</apenet:resource></c:if></td>
+							</c:if>
+							<td class="${eadResult.actionsCssClass}"><c:if
+									test="${eadResult.readyForQueueProcessing or eadResult.queueProcessing}">
+									<apenet:resource>${eadResult.queueAction.resourceName}</apenet:resource>
+								</c:if></td>
+								
 							<td class="actions"><c:choose>
 									<c:when test="${eadResult.readyForQueueProcessing}">
-										
+
 									</c:when>
 									<c:when test="${eadResult.queueProcessing}">
 										<s:text name="content.message.queueprocessing" />
 									</c:when>
 									<c:otherwise>
+
 										<select class="selectedAction" name="selectedAction">
 											<c:if test="${not eadResult.converted}">
 												<option value="convert">
 													<s:text name="content.message.convert" />
 												</option>
-											</c:if>							
+											</c:if>
 											<c:if test="${not eadResult.validated and not eadResult.validatedFatalError}">
 												<option value="validate">
 													<s:text name="content.message.validate" />
@@ -152,28 +170,28 @@ Only selected
 												</option>
 											</c:if>
 											<c:if test="${false }">
-											<c:if test="${eadResult.validated and eadResult.units > 0 and not eadResult.convertedToEseEdm}">
-												<option value="convertToEseEdm">
-													<s:text name="content.message.convert.ese" />
-												</option>
-											</c:if>
-											
-											<c:if
-												test="${eadResult.convertedToEseEdm and eadResult.totalNumberOfDaos > 0 and not eadResult.deliveredToEuropeana}">
-												<option value="deliverToEuropeana">
-													<s:text name="content.message.deliver.europeana" />
-												</option>
-											</c:if>
-											<c:if test="${eadResult.deliveredToEuropeana}">
-												<option value="deleteFromEuropeana">
-													<s:text name="content.message.delete.europeana" />
-												</option>
-											</c:if>
-											<c:if test="${eadResult.convertedToEseEdm and not eadResult.deliveredToEuropeana}">
-												<option value="deleteEseEdm">
-													<s:text name="content.message.delete.ese" />
-												</option>
-											</c:if>
+												<c:if test="${eadResult.validated and eadResult.units > 0 and not eadResult.convertedToEseEdm}">
+													<option value="convertToEseEdm">
+														<s:text name="content.message.convert.ese" />
+													</option>
+												</c:if>
+
+												<c:if
+													test="${eadResult.convertedToEseEdm and eadResult.totalNumberOfDaos > 0 and not eadResult.deliveredToEuropeana}">
+													<option value="deliverToEuropeana">
+														<s:text name="content.message.deliver.europeana" />
+													</option>
+												</c:if>
+												<c:if test="${eadResult.deliveredToEuropeana}">
+													<option value="deleteFromEuropeana">
+														<s:text name="content.message.delete.europeana" />
+													</option>
+												</c:if>
+												<c:if test="${eadResult.convertedToEseEdm and not eadResult.deliveredToEuropeana}">
+													<option value="deleteEseEdm">
+														<s:text name="content.message.delete.ese" />
+													</option>
+												</c:if>
 											</c:if>
 											<c:if test="${eadResult.searchable}">
 												<option value="unpublish">
@@ -185,10 +203,11 @@ Only selected
 											</option>
 
 										</select>
-										<input type="button" value="Go" />
+										<input type="button" value="<s:text name="content.message.go" />" />
+
 									</c:otherwise>
 								</c:choose></td>
-						</c:if>
+						
 					</tr>
 				</c:forEach>
 

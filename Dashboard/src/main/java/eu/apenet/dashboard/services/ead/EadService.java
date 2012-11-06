@@ -182,7 +182,15 @@ public class EadService {
 				new DeleteTask().execute(ead);
 				queueItemDAO.deleteSimple(queueItem);
 				JpaUtil.commitDatabaseTransaction();
+			}else if (queueItem.getAction().isUnpublishAction()) {
+				JpaUtil.beginDatabaseTransaction();
+				new UnpublishTask().execute(ead);
+				ead.setQueuing(QueuingState.NO);
+				eadDAO.updateSimple(ead);
+				queueItemDAO.deleteSimple(queueItem);
+				JpaUtil.commitDatabaseTransaction();
 			} else {
+				
 				if (queueItem.getAction().isConvertAction() && !ead.isConverted()) {
 					new ConvertTask().execute(ead);
 				}
@@ -202,7 +210,7 @@ public class EadService {
 			processed = true;
 		} catch (Exception e) {
 			String err = "eadid: " + ead.getEadid() + " - id: " + ead.getId() + " - type: " + xmlType.getName();
-			LOGGER.error("Error indexing: " + err, e);
+			LOGGER.error("Error queue processing: " + err, e);
 			queueItem.setErrors(new Date() + err + ". Error: " + e.getMessage() + "-" + e.getCause());
 			ead.setQueuing(QueuingState.ERROR);
 			eadDAO.store(ead);
@@ -238,12 +246,12 @@ public class EadService {
 		indexqueueDao.store(queueItem);
 	}
 
-	public static void addBatchToQueue(Integer aiId, XmlType xmlType, QueueAction queueAction) {
+	public static void addBatchToQueue(List<Integer> ids, Integer aiId, XmlType xmlType, QueueAction queueAction) {
 		SecurityContext.get().checkAuthorized(aiId);
 		QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		EadSearchOptions eadSearchOptions = new EadSearchOptions();
-		eadSearchOptions.setPageSize(1000);
+		eadSearchOptions.setPageSize(0);
 		if (QueueAction.CONVERT.equals(queueAction)) {
 			eadSearchOptions.setConverted(false);
 		} else if (QueueAction.VALIDATE.equals(queueAction)) {
@@ -260,6 +268,9 @@ public class EadService {
 		}
 		eadSearchOptions.setEadClazz(xmlType.getClazz());
 		eadSearchOptions.setArchivalInstitionId(aiId);
+		if (ids != null && ids.size() > 0){
+			eadSearchOptions.setIds(ids);
+		}
 		JpaUtil.beginDatabaseTransaction();
 		List<Ead> eads = eadDAO.getEads(eadSearchOptions);
 		int size = 0;

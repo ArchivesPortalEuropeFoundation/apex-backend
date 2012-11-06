@@ -25,20 +25,20 @@ function createProgressBar(){
     $("#progressbar").progressbar({ value: 0 });
     $("#progresstext").html("<p>0%</p>");
 }
-function createLoop(contextPath, aiId, id, xmlTypeId){
-    var loadUrl = contextPath + "/AjaxControllerAction.action";
+function createLoop(aiId, id, xmlTypeId){
+    var loadUrl =  "AjaxControllerAction.action";
     var data = {id: id, aiId: aiId, xmlTypeId: xmlTypeId};
     $.post(loadUrl, data, function(databack){
-        doLoop(contextPath);
+        doLoop();
     }, 'json');
 }
-function doLoop(contextPath){
-    var loadUrl = contextPath + "/AjaxConversionControllerAction.action";
+function doLoop(){
+    var loadUrl = "AjaxConversionControllerAction.action";
     $.post(loadUrl, null, function(databack){
         if(databack != null){
             $("#progressbar").progressbar({ value : databack.counter });
             $("#progresstext").html("<p>" + databack.counter + "%</p>");
-            doLoop(contextPath);
+            doLoop();
         } else {
             $("#progressbar").progressbar({ value : 100 });
             $("#progresstext").html("<p>100%</p>");
@@ -46,8 +46,8 @@ function doLoop(contextPath){
         }
     }, 'json');
 }
-function count(contextPath) {
-    var loadUrl = contextPath + "/getFAsFromSession.action";
+function count() {
+    var loadUrl = "getFAsFromSession.action";
     $.post(loadUrl, null, function(databack) {
         if(databack != null){
             printCount(databack.listId);
@@ -70,8 +70,8 @@ function printCount(listId){
         $("#sizeFiles").html(nb + " selected file");
     }
 }
-function addOneFA(contextPath, id){
-    var loadUrl = contextPath + "/addOneFA.action";
+function addOneFA(id){
+    var loadUrl = "addOneFA.action";
     var data = {id: id};
     $.post(loadUrl, data, function(databack) {
         if(databack != null){
@@ -83,8 +83,8 @@ function addOneFA(contextPath, id){
         }
     },'json');
 }
-function addFewFAs(contextPath, ids){
-    var loadUrl = contextPath + "/addOneFA.action";
+function addFewFAs(ids){
+    var loadUrl = "addOneFA.action";
     var somedata_assoc = $.param({'ids': ids}, true);
     $.post(loadUrl, somedata_assoc, function(databack) {
         if(databack != null){
@@ -96,9 +96,9 @@ function addFewFAs(contextPath, ids){
         }
     },'json');
 }
-function clearFAsFromSession(contextPath){
+function clearFAsFromSession(){
     $("#files").html("");
-    var loadUrl = contextPath + "/clearFAsFromSession.action";
+    var loadUrl = "clearFAsFromSession.action";
     $.post(loadUrl, null, function(databack) {
         if(databack != null){
             uncheckAllCheckboxes();
@@ -110,9 +110,9 @@ function clearFAsFromSession(contextPath){
         }
     },'json');
 }
-function addAllFAsInSession(contextPath){
+function addAllFAsInSession(){
     $("#files").html("");
-    var loadUrl = contextPath + "/addAllFAsInSession.action";
+    var loadUrl = "addAllFAsInSession.action";
     $.post(loadUrl, null, function(databack) {
         if(databack != null){
             $("input:checkbox[name=check]").each(function(){
@@ -134,8 +134,8 @@ function uncheckAllCheckboxes(){
             $(this).removeAttr('checked');
     });
 }
-function checkCurrentOpts(contextPath) {
-    var loadUrl = contextPath + "/checkCurrentConversionOptions.action";
+function checkCurrentOpts() {
+    var loadUrl = "checkCurrentConversionOptions.action";
     $.post(loadUrl, null, function(databack){
         if(databack){
             if(databack.error){
@@ -154,11 +154,11 @@ function checkCurrentOpts(contextPath) {
     }, 'json');
     prepareSubmitAndCancelBtns(contextPath);
 }
-function prepareSubmitAndCancelBtns(contextPath) {
+function prepareSubmitAndCancelBtns() {
     $("#submitBtnRoleType").unbind();
     $("#cancelBtnRoleType").unbind();
     $("#submitBtnRoleType").bind("click", function(){
-        var loadUrl = contextPath + "/saveConversionOptions.action";
+        var loadUrl = "saveConversionOptions.action";
         var data = {optsUseExisting: $("#useExistingRole").is(":checked"), optsDefault: $("input:radio[name=roleType]:checked").val()};
         $.post(loadUrl, data, function(databack){
             if(databack){

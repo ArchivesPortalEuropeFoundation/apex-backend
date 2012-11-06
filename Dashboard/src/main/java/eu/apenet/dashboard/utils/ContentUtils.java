@@ -532,7 +532,7 @@ public class ContentUtils {
 			        LOGGER.info("The file was stored with the target node remove (link): HG-> "+holdingsGuide.getEadid());
 			        //5. Finally, it is necessary to update the global Archival Landscape
 	        		LOGGER.info("Rebuilding the whole AL");
-	                ArchivalLandscape archivalLandscape = new ArchivalLandscape();
+	                ArchivalLandscape archivalLandscape = new ArchivalLandscape(holdingsGuide.getArchivalInstitution().getCountry());
 	                archivalLandscape.changeAL();
 	                
 	                return found;
@@ -712,7 +712,7 @@ public class ContentUtils {
         		
                 //Finally, it is necessary to rebuild the global Archival Landscape
         		LOGGER.info("Update the whole AL");
-                ArchivalLandscape archivalLandscape = new ArchivalLandscape();
+                ArchivalLandscape archivalLandscape = new ArchivalLandscape(hg.getArchivalInstitution().getCountry());
                 archivalLandscape.changeAL();
                 
     			result = null;
@@ -749,7 +749,7 @@ public class ContentUtils {
 			LOGGER.error("The file " + hg.getArchivalInstitution().getEagPath() + " could not be removed. " +  e.getMessage());
 		}
         catch (Exception e) {
-        	LOGGER.error(e.getMessage());
+        	LOGGER.error(e.getMessage(),e);
         }
         
 		archivalInstitutionDao = null;

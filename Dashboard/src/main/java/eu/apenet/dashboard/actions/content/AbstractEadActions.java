@@ -1,9 +1,13 @@
 package eu.apenet.dashboard.actions.content;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts2.interceptor.ServletRequestAware;
+
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 
-public abstract class AbstractEadActions extends AbstractInstitutionAction{
+public abstract class AbstractEadActions extends AbstractInstitutionAction implements ServletRequestAware{
 
 	private static final String CONVERT_VALIDATE_PUBLISH = "convert_validate_publish";
 	private static final String DELETE = "delete";
@@ -16,14 +20,28 @@ public abstract class AbstractEadActions extends AbstractInstitutionAction{
 	 * 
 	 */
 	private static final long serialVersionUID = 8481634493528974541L;
-	private Integer type;
+	private String type;
 	private String action;
+	private HttpServletRequest httpServletRequest;
 	
-	public Integer getType() {
+	@Override
+	public void setServletRequest(HttpServletRequest httpServletRequest) {
+		this.httpServletRequest = httpServletRequest;
+	}
+
+	public HttpServletRequest getServletRequest() {
+		return httpServletRequest;
+	}
+
+	public void setHttpServletRequest(HttpServletRequest httpServletRequest) {
+		this.httpServletRequest = httpServletRequest;
+	}
+
+	public String getType() {
 		return type;
 	}
 
-	public void setType(Integer type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 
@@ -52,7 +70,7 @@ public abstract class AbstractEadActions extends AbstractInstitutionAction{
 		return ERROR;
 	}
 	protected XmlType getXmlType(){
-		return XmlType.getType(getType());
+		return XmlType.getTypeBySolrPrefix(getType());
 	}
 	public abstract String validateEad();
 	public abstract String convertEad();

@@ -131,8 +131,8 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 				}
 				type = XmlType.getType(eadSearchOptions.getEadClazz()).getSolrPrefix();
 				searchTerms = eadSearchOptions.getSearchTerms();
-				orderByField = eadSearchOptions.getOrderByField();
-				orderByAscending = eadSearchOptions.isOrderByAscending();
+				//orderByField = eadSearchOptions.getOrderByField();
+				//orderByAscending = eadSearchOptions.isOrderByAscending();
 				searchTermsField = eadSearchOptions.getSearchTermsField();
 			}
 		}
