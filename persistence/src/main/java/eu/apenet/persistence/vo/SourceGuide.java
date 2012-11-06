@@ -42,7 +42,7 @@ public class SourceGuide extends Ead {
 	 */
 	private boolean converted = false;;
 	private ValidatedState validated = ValidatedState.NOT_VALIDATED;
-	private boolean searchable = false;;
+	private boolean published = false;;
 	private QueuingState queuing = QueuingState.NO;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="um_id")
@@ -93,12 +93,12 @@ public class SourceGuide extends Ead {
 		this.uploadDate = uploadDate;
 	}
 
-	public boolean isSearchable() {
-		return searchable;
+	public boolean isPublished() {
+		return published;
 	}
 
-	public void setSearchable(boolean searchable) {
-		this.searchable = searchable;
+	public void setPublished(boolean searchable) {
+		this.published = searchable;
 	}
 
 	public String getPathApenetead() {

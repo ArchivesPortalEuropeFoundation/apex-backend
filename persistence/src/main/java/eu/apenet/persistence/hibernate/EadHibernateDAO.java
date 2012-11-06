@@ -3,7 +3,6 @@ package eu.apenet.persistence.hibernate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -22,6 +21,9 @@ import org.hibernate.criterion.Restrictions;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.EuropeanaState;
+import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.ValidatedState;
 
 public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implements EadDAO {
 
@@ -39,72 +41,77 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 			return result.get(0);
 		return null;
 	}
+
 	@Override
 	public Long countEads(Ead eadExample) {
 		return countEads(eadExample, false);
 	}
+
 	private Long countEads(Ead eadExample, boolean allStates) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
 		Root<? extends Ead> from = cq.from(eadExample.getClass());
 		cq.select(criteriaBuilder.countDistinct(from));
 		List<Predicate> whereClause = new ArrayList<Predicate>();
-		if (!allStates){
-			whereClause.add(criteriaBuilder.equal(from.get("searchable"), eadExample.isSearchable()));
+		if (!allStates) {
+			whereClause.add(criteriaBuilder.equal(from.get("published"), eadExample.isPublished()));
 		}
-		if (eadExample.getAiId() != null){
-			whereClause.add(criteriaBuilder.equal(from.get("aiId"), eadExample.getAiId()));		 
+		if (eadExample.getAiId() != null) {
+			whereClause.add(criteriaBuilder.equal(from.get("aiId"), eadExample.getAiId()));
 		}
-		if (eadExample.getEadid() != null){
-			whereClause.add(criteriaBuilder.equal(from.get("eadid"), eadExample.getEadid()));		 
+		if (eadExample.getEadid() != null) {
+			whereClause.add(criteriaBuilder.equal(from.get("eadid"), eadExample.getEadid()));
 		}
 		cq.where(criteriaBuilder.and(whereClause.toArray(new Predicate[0])));
 		return getEntityManager().createQuery(cq).getSingleResult();
 	}
-	
+
 	@Override
 	public boolean existEads(Ead eadExample) {
 		return existEads(eadExample, false);
 	}
+
 	private boolean existEads(Ead eadExample, boolean allStates) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Object> cq = criteriaBuilder.createQuery(Object.class);
 		Root<? extends Ead> from = cq.from(eadExample.getClass());
 		cq.select(from.get("id"));
 		List<Predicate> whereClause = new ArrayList<Predicate>();
-		if (!allStates){
-			whereClause.add(criteriaBuilder.equal(from.get("searchable"), eadExample.isSearchable()));
+		if (!allStates) {
+			whereClause.add(criteriaBuilder.equal(from.get("published"), eadExample.isPublished()));
 		}
-		if (eadExample.getAiId() != null){
-			whereClause.add(criteriaBuilder.equal(from.get("aiId"), eadExample.getAiId()));		 
+		if (eadExample.getAiId() != null) {
+			whereClause.add(criteriaBuilder.equal(from.get("aiId"), eadExample.getAiId()));
 		}
-		if (eadExample.getEadid() != null){
-			whereClause.add(criteriaBuilder.equal(from.get("eadid"), eadExample.getEadid()));		 
+		if (eadExample.getEadid() != null) {
+			whereClause.add(criteriaBuilder.equal(from.get("eadid"), eadExample.getEadid()));
 		}
 		cq.where(criteriaBuilder.and(whereClause.toArray(new Predicate[0])));
 		TypedQuery<Object> query = getEntityManager().createQuery(cq);
 		query.setMaxResults(1);
 		List<Object> result = query.getResultList();
-		return result.size()> 0;
+		return result.size() > 0;
 	}
+
 	@Override
 	public List<Ead> getEads(Ead eadExample, int firstResult, int maxResult) {
 		return getEads(eadExample, false, firstResult, maxResult);
 	}
+
 	private List<Ead> getEads(Ead eadExample, boolean allStates, int firstResult, int maxResult) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Ead> cq = criteriaBuilder.createQuery(Ead.class);
 		Root<? extends Ead> from = cq.from(eadExample.getClass());
 		cq.select(from);
 		List<Predicate> whereClause = new ArrayList<Predicate>();
-		if (!allStates){
-			whereClause.add(criteriaBuilder.equal(from.get("searchable"), eadExample.isSearchable()));
+		if (!allStates) {
+			whereClause.add(criteriaBuilder.equal(from.get("published"), eadExample.isPublished()));
 		}
-		if (eadExample.getAiId() != null){
-			whereClause.add(criteriaBuilder.equal(from.get("aiId"), eadExample.getAiId()));		 
+		if (eadExample.getAiId() != null) {
+			whereClause.add(criteriaBuilder.equal(from.get("aiId"), eadExample.getAiId()));
 		}
-		if (eadExample.getEadid() != null){
-			whereClause.add(criteriaBuilder.equal(from.get("eadid"), eadExample.getEadid()));		 
+		if (eadExample.getEadid() != null) {
+			whereClause.add(criteriaBuilder.equal(from.get("eadid"), eadExample.getEadid()));
 		}
 		cq.where(criteriaBuilder.and(whereClause.toArray(new Predicate[0])));
 		TypedQuery<Ead> query = getEntityManager().createQuery(cq);
@@ -123,21 +130,23 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		/*
 		 * add ordering
 		 */
-		if (eadSearchOptions.isOrderByAscending()){
+		if (eadSearchOptions.isOrderByAscending()) {
 			cq.orderBy(criteriaBuilder.asc(from.get(eadSearchOptions.getOrderByField())));
-		}else {
+		} else {
 			cq.orderBy(criteriaBuilder.desc(from.get(eadSearchOptions.getOrderByField())));
 		}
-		
+
 		/*
 		 * add pagination
 		 */
 		TypedQuery<Ead> query = getEntityManager().createQuery(cq);
-		query.setMaxResults(eadSearchOptions.getPageSize());
-		query.setFirstResult(eadSearchOptions.getPageSize()* (eadSearchOptions.getPageNumber()-1));
-			return query.getResultList();
+		if (eadSearchOptions.getPageSize() > 0) {
+			query.setMaxResults(eadSearchOptions.getPageSize());
+			query.setFirstResult(eadSearchOptions.getPageSize() * (eadSearchOptions.getPageNumber() - 1));
+		}
+		return query.getResultList();
 	}
-	
+
 	@Override
 	public Long countEads(EadSearchOptions eadSearchOptions) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
@@ -145,46 +154,61 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClazz());
 		cq.where(buildWhere(from, eadSearchOptions));
 		cq.select(criteriaBuilder.countDistinct(from));
-		
+
 		return getEntityManager().createQuery(cq).getSingleResult();
 	}
+
 	private Predicate buildWhere(Root<? extends Ead> from, EadSearchOptions eadSearchOptions) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		List<Predicate> whereClause = new ArrayList<Predicate>();
-		if (eadSearchOptions.getArchivalInstitionId() != null){
-			whereClause.add(criteriaBuilder.equal(from.get("aiId"), eadSearchOptions.getArchivalInstitionId()));		 
+		if (eadSearchOptions.getArchivalInstitionId() != null) {
+			whereClause.add(criteriaBuilder.equal(from.get("aiId"), eadSearchOptions.getArchivalInstitionId()));
 		}
-		if (eadSearchOptions.getSearchable() != null){
-			whereClause.add(criteriaBuilder.equal(from.get("searchable"), eadSearchOptions.getSearchable()));		 
+		if (eadSearchOptions.getPublished() != null) {
+			whereClause.add(criteriaBuilder.equal(from.get("published"), eadSearchOptions.getPublished()));
 		}
-		if (eadSearchOptions.getConverted() != null){
-			whereClause.add(criteriaBuilder.equal(from.get("converted"), eadSearchOptions.getConverted()));		 
+		if (eadSearchOptions.getConverted() != null) {
+			whereClause.add(criteriaBuilder.equal(from.get("converted"), eadSearchOptions.getConverted()));
 		}
-		if (eadSearchOptions.getValidated() != null){
-			whereClause.add(criteriaBuilder.equal(from.get("validated"), eadSearchOptions.getValidated()));		 
+		if (eadSearchOptions.getValidated().size() > 0) {
+			List<Predicate> validatedPredicated = new ArrayList<Predicate>();
+			for (ValidatedState validateState : eadSearchOptions.getValidated()) {
+				validatedPredicated.add(criteriaBuilder.equal(from.get("validated"), validateState));
+			}
+			whereClause.add(criteriaBuilder.or(validatedPredicated.toArray(new Predicate[0])));
+		}
+		if (FindingAid.class.equals(eadSearchOptions.getEadClazz())) {
+			if (eadSearchOptions.getEuropeana().size() > 0) {
+				List<Predicate> europeanaPredicated = new ArrayList<Predicate>();
+				for (EuropeanaState europeanaState : eadSearchOptions.getEuropeana()) {
+					europeanaPredicated.add(criteriaBuilder.equal(from.get("europeana"), europeanaState));
+				}
+				whereClause.add(criteriaBuilder.or(europeanaPredicated.toArray(new Predicate[0])));
+			}
 		}
 		if (StringUtils.isNotBlank(eadSearchOptions.getSearchTerms())) {
-			
+
 			String[] searchTerms = StringUtils.split(eadSearchOptions.getSearchTerms(), " ");
-			 if ("eadid".equals(eadSearchOptions.getSearchTermsField())) {
-				for (String searchTerm: searchTerms) {
-					whereClause.add(criteriaBuilder.like(from.<String>get("eadid"),"%"+searchTerm+"%"));
+			if ("eadid".equals(eadSearchOptions.getSearchTermsField())) {
+				for (String searchTerm : searchTerms) {
+					whereClause.add(criteriaBuilder.like(from.<String> get("eadid"), "%" + searchTerm + "%"));
 				}
 			} else if ("title".equals(eadSearchOptions.getSearchTermsField())) {
-				for (String searchTerm: searchTerms) {
-					whereClause.add(criteriaBuilder.like(from.<String>get("title"),"%"+searchTerm+"%"));
+				for (String searchTerm : searchTerms) {
+					whereClause.add(criteriaBuilder.like(from.<String> get("title"), "%" + searchTerm + "%"));
 				}
-			}else {
-				for (String searchTerm: searchTerms) {
-					Predicate titlePredicate = criteriaBuilder.like(from.<String>get("title"),"%"+searchTerm+"%");
-					Predicate eadidPredicate = criteriaBuilder.like(from.<String>get("eadid"),"%"+searchTerm+"%");
+			} else {
+				for (String searchTerm : searchTerms) {
+					Predicate titlePredicate = criteriaBuilder.like(from.<String> get("title"), "%" + searchTerm + "%");
+					Predicate eadidPredicate = criteriaBuilder.like(from.<String> get("eadid"), "%" + searchTerm + "%");
 					whereClause.add(criteriaBuilder.or(titlePredicate, eadidPredicate));
-				}				
-			
+				}
+
 			}
 		}
 		return criteriaBuilder.and(whereClause.toArray(new Predicate[0]));
 	}
+
 	@Override
 	public Integer isEadidUsed(String eadid, Integer aiId, Class<? extends Ead> clazz) {
 		Criteria criteria = getSession().createCriteria(clazz, "ead").setProjection(Projections.property("id"));
@@ -197,10 +221,10 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		return null;
 	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<Ead> getEadsByStates(Collection<String> fileStates, Class<? extends Ead> clazz) {
-        long startTime = System.currentTimeMillis();
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Ead> getEadsByStates(Collection<String> fileStates, Class<? extends Ead> clazz) {
+		long startTime = System.currentTimeMillis();
 		Criteria criteria = getSession().createCriteria(clazz, "ead");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		if (fileStates.size() > 0) {
@@ -213,9 +237,9 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		}
 		List<Ead> results = criteria.list();
 		long endTime = System.currentTimeMillis();
-        LOG.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
+		LOG.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
 		return results;
-    }
+	}
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -310,6 +334,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		criteria.add(Restrictions.eq("archivalInstitution.aiId", ai));
 		return (long) criteria.list().size();
 	}
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Ead> getEadsByAiId(Class<? extends Ead> clazz, Integer aiId) {
@@ -317,78 +342,74 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		criteria = criteria.createAlias("ead.archivalInstitution", "archivalInstitution");
 		criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
-		
+
 		List<Ead> list = criteria.list();
 		return list;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Ead getEadByEadid(Class<? extends Ead> clazz, Integer aiId,
-			String eadid) {
+	public Ead getEadByEadid(Class<? extends Ead> clazz, Integer aiId, String eadid) {
 		Criteria criteria = getSession().createCriteria(clazz, "ead");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		criteria = criteria.createAlias("ead.archivalInstitution", "archivalInstitution");
 		criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
-		criteria.add(Restrictions.eq("eadid", eadid));	
+		criteria.add(Restrictions.eq("eadid", eadid));
 		List<Ead> list = criteria.list();
 		if (list.size() > 0)
 			return list.get(0);
 		return null;
 	}
 
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	@Override
-    public List<Integer> getAllIds(Class<? extends Ead> clazz, Integer aiId) {
-        Criteria criteria = getSession().createCriteria(clazz, "ead");
-        criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        criteria = criteria.createAlias("ead.archivalInstitution", "archivalInstitution");
+	public List<Integer> getAllIds(Class<? extends Ead> clazz, Integer aiId) {
+		Criteria criteria = getSession().createCriteria(clazz, "ead");
+		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		criteria = criteria.createAlias("ead.archivalInstitution", "archivalInstitution");
 		criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
-        criteria.setProjection(Projections.property("id"));
-        return criteria.list();
-    }
-	
-    @SuppressWarnings({ "unchecked"})
-	public Long getTotalCountOfUnits(){
+		criteria.setProjection(Projections.property("id"));
+		return criteria.list();
+	}
 
-    	Criteria criteria = null;
-    	List<Long> result=null;
-    	Long value=0L;
+	@SuppressWarnings({ "unchecked" })
+	public Long getTotalCountOfUnits() {
+
+		Criteria criteria = null;
+		List<Long> result = null;
+		Long value = 0L;
 
 		criteria = getSession().createCriteria(getPersistentClass(), "ead");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		result = criteria.setProjection(Projections.sum("totalNumberOfUnits")).list();
-		if(result.size() > 0)
-		{
-			int i=0;			
-			while(result.size()>i)	
-			{
-				if (result.get(i)!=null){
+		if (result.size() > 0) {
+			int i = 0;
+			while (result.size() > i) {
+				if (result.get(i) != null) {
 					value += result.get(i);
-					}
+				}
 				i++;
 			}
 		}
 		return value;
 
 	}
-    
-    @SuppressWarnings({ "unchecked"})
-	public Long getTotalCountOfUnitsWithDao(){
 
-    	Criteria criteria = null;
-    	List<Long> result=null;
-    	Long value=0L;
+	@SuppressWarnings({ "unchecked" })
+	public Long getTotalCountOfUnitsWithDao() {
+
+		Criteria criteria = null;
+		List<Long> result = null;
+		Long value = 0L;
 
 		criteria = getSession().createCriteria(getPersistentClass(), "ead");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		result = criteria.setProjection(Projections.sum("totalNumberOfUnitsWithDao")).list();
-		if(result.size() > 0){
-			int i=0;			
-			while(result.size()>i)	
-			{
-				if (result.get(i)!=null){
-					value += result.get(i);					
+		if (result.size() > 0) {
+			int i = 0;
+			while (result.size() > i) {
+				if (result.get(i) != null) {
+					value += result.get(i);
 				}
 				i++;
 			}
@@ -399,15 +420,15 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 	@SuppressWarnings("unchecked")
 	@Override
 	public Long countFilesbyInstitution(Class<? extends Ead> clazz, Integer aiId) {
-		
+
 		Criteria criteria = getSession().createCriteria(clazz, "ead");
 		criteria = criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
 		List<Long> result = criteria.setProjection(Projections.countDistinct("id")).list();
-		Long value =0L;
-		
-		if (result.size()>0)	
-				value = result.get(0);
-			
+		Long value = 0L;
+
+		if (result.size() > 0)
+			value = result.get(0);
+
 		return value;
 	}
 }

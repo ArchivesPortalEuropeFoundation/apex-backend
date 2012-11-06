@@ -1,6 +1,8 @@
 package eu.apenet.persistence.dao;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EuropeanaState;
@@ -20,10 +22,10 @@ public class EadSearchOptions implements Serializable{
 	private boolean orderByAscending = true;
 	private Class<? extends Ead> eadClazz = FindingAid.class;
 	private Integer archivalInstitionId = null;
-	private Boolean searchable = null;
+	private Boolean published = null;
 	private Boolean converted = null;
-	private ValidatedState validated = null;
-	private EuropeanaState europeana = null;
+	private List<ValidatedState> validated = new ArrayList<ValidatedState>();
+	private List<EuropeanaState> europeana = new ArrayList<EuropeanaState>();
 
 	public Class<? extends Ead> getEadClazz() {
 		return eadClazz;
@@ -73,12 +75,12 @@ public class EadSearchOptions implements Serializable{
 		this.archivalInstitionId = archivalInstitionId;
 	}
 
-	public Boolean getSearchable() {
-		return searchable;
+	public Boolean getPublished() {
+		return published;
 	}
 
-	public void setSearchable(Boolean searchable) {
-		this.searchable = searchable;
+	public void setPublished(Boolean searchable) {
+		this.published = searchable;
 	}
 
 	public Boolean getConverted() {
@@ -89,19 +91,25 @@ public class EadSearchOptions implements Serializable{
 		this.converted = converted;
 	}
 
-	public ValidatedState getValidated() {
+
+
+	public List<ValidatedState> getValidated() {
 		return validated;
 	}
 
-	public void setValidated(ValidatedState validated) {
+	public void setValidated(List<ValidatedState> validated) {
 		this.validated = validated;
 	}
+	public void setValidated(ValidatedState validated) {
+		this.validated.clear();
+		this.validated.add(validated);
+	}
 
-	public EuropeanaState getEuropeana() {
+	public List<EuropeanaState> getEuropeana() {
 		return europeana;
 	}
 
-	public void setEuropeana(EuropeanaState europeana) {
+	public void setEuropeana(List<EuropeanaState> europeana) {
 		this.europeana = europeana;
 	}
 

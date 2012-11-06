@@ -45,7 +45,7 @@ public class FindingAid extends Ead {
 	 */
 	private boolean converted = false;;
 	private ValidatedState validated = ValidatedState.NOT_VALIDATED;
-	private boolean searchable = false;;
+	private boolean published = false;;
 	private QueuingState queuing = QueuingState.NO;
 	private EuropeanaState europeana = EuropeanaState.NOT_CONVERTED;
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -165,12 +165,12 @@ public class FindingAid extends Ead {
 
 	
 	
-	public boolean isSearchable() {
-		return searchable;
+	public boolean isPublished() {
+		return published;
 	}
 
-	public void setSearchable(boolean searchable) {
-		this.searchable = searchable;
+	public void setPublished(boolean searchable) {
+		this.published = searchable;
 	}
 
 	public Set<QueueItem> getQueuesItems() {
