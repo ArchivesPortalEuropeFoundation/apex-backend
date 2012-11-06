@@ -161,6 +161,13 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 	private Predicate buildWhere(Root<? extends Ead> from, EadSearchOptions eadSearchOptions) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		List<Predicate> whereClause = new ArrayList<Predicate>();
+		if (eadSearchOptions.getIds() != null && eadSearchOptions.getIds().size() > 0) {
+			List<Predicate> idPredicated = new ArrayList<Predicate>();
+			for (Integer id : eadSearchOptions.getIds()) {
+				idPredicated.add(criteriaBuilder.equal(from.get("id"), id));
+			}
+			whereClause.add(criteriaBuilder.or(idPredicated.toArray(new Predicate[0])));
+		}
 		if (eadSearchOptions.getArchivalInstitionId() != null) {
 			whereClause.add(criteriaBuilder.equal(from.get("aiId"), eadSearchOptions.getArchivalInstitionId()));
 		}

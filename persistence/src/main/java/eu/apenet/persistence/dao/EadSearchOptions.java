@@ -26,6 +26,7 @@ public class EadSearchOptions implements Serializable{
 	private Boolean converted = null;
 	private List<ValidatedState> validated = new ArrayList<ValidatedState>();
 	private List<EuropeanaState> europeana = new ArrayList<EuropeanaState>();
+	private List<Integer> ids = new ArrayList<Integer>();
 
 	public Class<? extends Ead> getEadClazz() {
 		return eadClazz;
@@ -127,6 +128,14 @@ public class EadSearchOptions implements Serializable{
 
 	public void setSearchTermsField(String searchTermsField) {
 		this.searchTermsField = searchTermsField;
+	}
+
+	public List<Integer> getIds() {
+		return ids;
+	}
+
+	public void setIds(List<Integer> ids) {
+		this.ids = ids;
 	}
 	
 	
