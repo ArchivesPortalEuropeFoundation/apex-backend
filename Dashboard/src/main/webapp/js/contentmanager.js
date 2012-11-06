@@ -1,9 +1,9 @@
 function initContentManager() {
-	$("#searchButton").click(function(event) {
-		event.preventDefault();
-		performNewSearch();
-	});
-
+//	$("#searchButton").click(function(event) {
+//		event.preventDefault();
+//		performNewSearch();
+//	});
+	initSubpage();
 }
 function initSubpage(){
 	$(".actions input").click(function(event) {

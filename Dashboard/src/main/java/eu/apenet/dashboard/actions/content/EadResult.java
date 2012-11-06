@@ -9,7 +9,7 @@ import eu.apenet.persistence.vo.ValidatedState;
 
 public class EadResult {
 	protected static final String CONTENT_MESSAGE_NO = "content.message.no";
-	protected static final String CONTENT_MESSAGE_OK = "content.message.ok";
+	protected static final String CONTENT_MESSAGE_YES = "content.message.yes";
 	protected static final String CONTENT_MESSAGE_QUEUE = "content.message.queue";
 	protected static final String CONTENT_MESSAGE_ERROR = "content.message.fatalerror";
 	
@@ -40,7 +40,7 @@ public class EadResult {
 			this.title =  ead.getTitle();
         this.date = FORMATTER.format(ead.getUploadDate());
         this.converted = ead.isConverted();
-        this.searchable = ead.isSearchable();
+        this.searchable = ead.isPublished();
         this.validated = ValidatedState.VALIDATED.equals(ead.getValidated());
         this.validatedFatalError = ValidatedState.FATAL_ERROR.equals(ead.getValidated());
         this.units = ead.getTotalNumberOfUnits();
@@ -117,14 +117,14 @@ public class EadResult {
 	}
 	public String getConvertedText(){
 		if (converted){
-			return CONTENT_MESSAGE_OK;
+			return CONTENT_MESSAGE_YES;
 		}else {
 			return CONTENT_MESSAGE_NO;
 		}
 	}
 	public String getValidatedText(){
 		if (validated){
-			return CONTENT_MESSAGE_OK;
+			return CONTENT_MESSAGE_YES;
 		}else if (validatedFatalError){
 			return CONTENT_MESSAGE_ERROR;
 		}else {

@@ -8,6 +8,8 @@
 		initResultsHandlers();
 	});
 </script>
+<div id="batchBlock">
+<div  class="right">
 <span class="bold">Batch:</span>
 <input type="radio" checked="checked" value="1">
 All
@@ -23,12 +25,15 @@ Only selected
     <option value="unpublish"><s:text name="content.message.unpublish" /></option>
     <option value="delete"><s:text name="content.message.delete" /></option>
 </select>
-<input id="batchActionButton" type="submit" value="Go" />
+<input id="batchActionButton" type="submit" value="Go" /></div>
+</div>
 <div id="ead-results" class="box">
 	<s:form id="updateCurrentSearch" action="contentmanagerResults" theme="simple">
 		<s:hidden name="pageNumber" />
 		<s:hidden name="orderByField" />
 		<s:hidden name="orderByAscending" />
+		
+		
 		<div id="ead-results-header" class="boxtitle">
 			<div id="numberOfResults">
 				<span class="bold">Resultaten:</span>
@@ -65,12 +70,12 @@ Only selected
 							href="javascript:changeOrder('uploadDate','true')"><img class="noStyle" src="images/expand/arrow-down.gif"
 								alt="down" /></a> <a class="order" href="javascript:changeOrder('uploadDate','false')"><img class="noStyle"
 								src="images/expand/arrow-up.gif" alt="up" /></a></th>
-						<th><s:text name="content.message.conversion" /> <a class="order"
+						<th><s:text name="content.message.converted" /> <a class="order"
 							href="javascript:changeOrder('converted','true')"><img class="noStyle" src="images/expand/arrow-down.gif"
 								alt="down" /></a> <a class="order" href="javascript:changeOrder('converted','false')"><img class="noStyle"
 								src="images/expand/arrow-up.gif" alt="up" /></a><br /> <a href="#conversionOptsDiv" class="link_right"
 								id="conversionOpts"><s:text name="content.message.conversion.options" /></a></th>
-						<th><s:text name="content.message.validation" /> <a class="order"
+						<th><s:text name="content.message.validated" /> <a class="order"
 							href="javascript:changeOrder('validated','true')"><img class="noStyle" src="images/expand/arrow-down.gif"
 								alt="down" /></a> <a class="order" href="javascript:changeOrder('validated','false')"><img class="noStyle"
 								src="images/expand/arrow-up.gif" alt="up" /></a></th>

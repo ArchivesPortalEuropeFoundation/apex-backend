@@ -81,7 +81,7 @@ public class EadService {
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
 		boolean processed = false;
-		if (ValidatedState.VALIDATED.equals(ead.getValidated()) && !ead.isSearchable()) {
+		if (ValidatedState.VALIDATED.equals(ead.getValidated()) && !ead.isPublished()) {
 			if (APEnetUtilities.getDashboardConfig().isDirectIndexing()) {
 				try {
 					new PublishTask().execute(ead);
@@ -105,7 +105,7 @@ public class EadService {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
-		if (!ead.isSearchable()) {
+		if (!ead.isPublished()) {
 			addToQueue(ead, QueueAction.CONVERT_VALIDATE_PUBLISH);
 		}
 		return true;
@@ -116,7 +116,7 @@ public class EadService {
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
 		boolean processed = false;
-		if (ead.isSearchable()) {
+		if (ead.isPublished()) {
 			if (APEnetUtilities.getDashboardConfig().isDirectIndexing()) {
 				try {
 					JpaUtil.beginDatabaseTransaction();
@@ -190,7 +190,7 @@ public class EadService {
 					new ValidateTask().execute(ead);
 				}
 				if (queueItem.getAction().isPublishAction() && ValidatedState.VALIDATED.equals(ead.getValidated())
-						&& !ead.isSearchable()) {
+						&& !ead.isPublished()) {
 					new PublishTask().execute(ead);
 				}
 				ead.setQueuing(QueuingState.NO);
@@ -252,11 +252,11 @@ public class EadService {
 		} else if (QueueAction.PUBLISH.equals(queueAction)) {
 			eadSearchOptions.setConverted(true);
 			eadSearchOptions.setValidated(ValidatedState.VALIDATED);
-			eadSearchOptions.setSearchable(false);
+			eadSearchOptions.setPublished(false);
 		} else if (QueueAction.CONVERT_VALIDATE_PUBLISH.equals(queueAction)) {
-			eadSearchOptions.setSearchable(false);
+			eadSearchOptions.setPublished(false);
 		} else if (QueueAction.UNPUBLISH.equals(queueAction)) {
-			eadSearchOptions.setSearchable(true);
+			eadSearchOptions.setPublished(true);
 		}
 		eadSearchOptions.setEadClazz(xmlType.getClazz());
 		eadSearchOptions.setArchivalInstitionId(aiId);

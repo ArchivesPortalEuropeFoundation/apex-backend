@@ -337,7 +337,7 @@ public class ContentUtils {
 	}
 	public static void changeSearchable(Ead ead, boolean searchable){
 		changeContainsSearchableItems(ead.getArchivalInstitution(), searchable);
-		ead.setSearchable(searchable);
+		ead.setPublished(searchable);
 		
 	}
 	private static void changeContainsSearchableItems(ArchivalInstitution ai, boolean searchable){
@@ -355,17 +355,17 @@ public class ContentUtils {
 				EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 				Ead eadExample = new FindingAid();
 				eadExample.setAiId(ai.getAiId());
-				eadExample.setSearchable(true);
+				eadExample.setPublished(true);
 				long numberOfEads = eadDAO.countEads(eadExample);
 				if (numberOfEads <= 1){
 					eadExample = new HoldingsGuide();
 					eadExample.setAiId(ai.getAiId());
-					eadExample.setSearchable(true);
+					eadExample.setPublished(true);
 					numberOfEads += eadDAO.countEads(eadExample);
 					if (numberOfEads <= 1){
 						eadExample = new SourceGuide();
 						eadExample.setAiId(ai.getAiId());
-						eadExample.setSearchable(true);
+						eadExample.setPublished(true);
 						numberOfEads += eadDAO.countEads(eadExample);
 						if (numberOfEads <= 1){
 							LOGGER.info("AI: '" + ai.getAiname() + "' has now no searchable items left");

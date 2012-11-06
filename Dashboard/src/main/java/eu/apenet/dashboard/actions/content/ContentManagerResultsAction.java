@@ -9,7 +9,7 @@ import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.FindingAid;
 
-public class ContentManagerResultsAction extends AbstractInstitutionAction implements ServletRequestAware{
+public class ContentManagerResultsAction extends ContentManagerAction implements ServletRequestAware{
 
 	private HttpServletRequest request;
 	private Integer pageNumber = 1;

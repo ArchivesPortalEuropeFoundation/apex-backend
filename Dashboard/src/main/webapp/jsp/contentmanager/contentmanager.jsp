@@ -8,40 +8,33 @@
 		</script>
 <div id="contentmanager">
 	<div class="searchOptionsContent">
-		<form id="newSearchForm">
+		<s:form id="newSearchForm" theme="simple">
+			<s:hidden name="refreshFromSession" value="false"/>
+			<s:hidden name="orderByField"/>
+			<s:hidden name="orderByAscending"/>
 				<table>
 					<tr>
-						<th>Conversion status:</th><td> <input type="checkbox" checked="checked" value="1" >Ok</input><input type="checkbox" checked="checked">No</input></td>
-						<th>Validation status:</th><td> <input type="checkbox" checked="checked">Ok</input><input type="checkbox" checked="checked">No</input><input type="checkbox" checked="checked">Error</input></td>
-						<th>Index status:</th><td> <input type="checkbox" checked="checked">Ok</input><input type="checkbox" checked="checked">No</input></td>
-						<th>Type: </th><td> <input type="radio" name="hi" checked="checked" value="1" >Findingaid</input><input type="radio"  name="hi">Holdingsguide</input><input  name="hi" type="radio" >Sourceguide</input></td>
+						<th><s:text name="content.message.type" />:</th><td colspan="5"><s:radio list="typeList" name="type"/></td>
 					</tr>
 					<tr>
-						<th>Conversion for Europeana status:</th><td> <input type="checkbox" checked="checked">Ok</input><input type="checkbox" checked="checked">No</input></td>
-						<th>Delivered for Europeana status:</th><td> <input type="checkbox" checked="checked">Ok</input><input type="checkbox" checked="checked">No</input></td>
-						<th>Holdings guide status: </th><td> <input type="checkbox" checked="checked">Ok</input><input type="checkbox" checked="checked">No</input></td>
+						<th><s:text name="content.message.converted" />:</th><td><s:checkboxlist  list="convertedStatusList" name="convertedStatus"/></td>
+						<th><s:text name="content.message.validated" />:</th><td><s:checkboxlist  list="validatedStatusList" name="validatedStatus"/></td>
+						<th><s:text name="content.message.published" />:</th><td><s:checkboxlist  list="publishedStatusList" name="publishedStatus"/></td>
+					</tr>
+					<tr>
+						<th><s:text name="content.message.europeana" />:</th><td><s:checkboxlist  list="europeanaStatusList" name="europeanaStatus"/></td>
+						<th>Holdings guide status: </th><td> <input type="checkbox" checked="checked" disabled="disabled">Ok</input><input type="checkbox" checked="checked" disabled="disabled">No</input></td>
 						
 					</tr>
 					
-					<tr><td colspan="3"> <input type="text" value="" name="searchTerms"><select class="small" name="search" style="float:left;">
-							
-							<option value="0">All</option>
-							
-							<option value="1">ID</option>
-							
-							<option value="2">Title</option>	
-						</select><input type="submit" id="searchButton" value="Search" class="mainButton"><span>Order by:</span><select class="small" name="orderBy">
-                            <option value="uploadDate">Date</option>
-                            <option value="title">Title</option>
-                            <option value="eadid">ID</option>
-                        </select></td></tr>
+					<tr><td colspan="7"><s:textfield name="searchTerms"/><s:select cssClass="small left" list="searchTermsFieldList" name="searchTermsField"/><input type="submit" id="searchButton" value="Search" class="mainButton"></td></tr>
 				</table>
-		</form>
+		</s:form>
 	</div>
 	<div id="eads">
 
 	<div id="ead-results-container">
-
+		<jsp:include page="contentmanager-results.jsp"/>
 	</div>
 	</div>
 </div>

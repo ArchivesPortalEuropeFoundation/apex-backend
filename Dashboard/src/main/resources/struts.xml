@@ -192,7 +192,7 @@
 		<action name="contentmanager" class="eu.apenet.dashboard.actions.content.ContentManagerAction">
 			<result name="success" type="tiles">contentmanager-new</result>
 		</action>
-		<action name="contentmanagerResults" class="eu.apenet.dashboard.actions.content.ContentManagerResultsAction">
+		<action name="contentmanagerResults" class="eu.apenet.dashboard.actions.content.ContentManagerAction">
 			<result name="success">/jsp/contentmanager/contentmanager-results.jsp</result>
 		</action>
 		
