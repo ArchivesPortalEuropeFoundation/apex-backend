@@ -45,7 +45,7 @@ public enum XmlType {
     }
     public static XmlType getType(Class<? extends Ead> clazz){
         for(XmlType type : XmlType.values()){
-            if(type.getClazz().equals(clazz))
+            if(type.getClazz() != null && type.getClazz().equals(clazz))
                 return type;
         }
         return null;
