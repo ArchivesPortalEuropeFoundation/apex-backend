@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,25 +22,24 @@ import javax.persistence.TemporalType;
 @Table(name = "finding_aid")
 public class FindingAid extends Ead {
 
-
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 8833722976902370936L;
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String eadid;
 	private String title;
 	@Column(name = "path_apenetead")
 	private String pathApenetead;
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="fs_id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fs_id")
 	private FileState fileState;
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="upload_date")
+	@Column(name = "upload_date")
 	private Date uploadDate;
-	
+
 	/*
 	 * states
 	 */
@@ -48,25 +48,24 @@ public class FindingAid extends Ead {
 	private boolean published = false;;
 	private QueuingState queuing = QueuingState.NO;
 	private EuropeanaState europeana = EuropeanaState.NOT_CONVERTED;
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="um_id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "um_id")
 	private UploadMethod uploadMethod;
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="ai_id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ai_id")
 	private ArchivalInstitution archivalInstitution;
-	@Column(name="ai_id", updatable = false, insertable = false)
+	@Column(name = "ai_id", updatable = false, insertable = false)
 	private Integer aiId;
-	private Long totalNumberOfDaos =0l;
-	private Long totalNumberOfUnits =0l;
-	private Long totalNumberOfUnitsWithDao =0l;
-	@OneToMany(mappedBy="findingAid")
-	private Set<QueueItem> indexQueues = new HashSet<QueueItem>(0);
-	@OneToMany(mappedBy="findingAid")
+	private Long totalNumberOfDaos = 0l;
+	private Long totalNumberOfUnits = 0l;
+	private Long totalNumberOfUnitsWithDao = 0l;
+	@OneToMany(mappedBy = "findingAid")
+	private Set<QueueItem> queueItems = new HashSet<QueueItem>(0);
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "findingAid")
 	private Set<Warnings> warningses = new HashSet<Warnings>(0);
-	@OneToMany(mappedBy="findingAid")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "findingAid")
 	private Set<EadContent> eadContents = new HashSet<EadContent>(0);
 
-	
 	public Integer getId() {
 		return id;
 	}
@@ -74,7 +73,7 @@ public class FindingAid extends Ead {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}
@@ -163,8 +162,6 @@ public class FindingAid extends Ead {
 		this.totalNumberOfUnitsWithDao = totalNumberOfUnitsWithDao;
 	}
 
-	
-	
 	public boolean isPublished() {
 		return published;
 	}
@@ -174,11 +171,11 @@ public class FindingAid extends Ead {
 	}
 
 	public Set<QueueItem> getQueuesItems() {
-		return indexQueues;
+		return queueItems;
 	}
 
 	public void setQueueItems(Set<QueueItem> indexQueues) {
-		this.indexQueues = indexQueues;
+		this.queueItems = indexQueues;
 	}
 
 	public Set<Warnings> getWarningses() {
@@ -197,12 +194,8 @@ public class FindingAid extends Ead {
 		this.eadContents = eadContents;
 	}
 
-
-
-	@OneToMany(mappedBy="findingAid")
+	@OneToMany(mappedBy = "findingAid")
 	private Set<Ese> eses = new HashSet<Ese>(0);
-
-
 
 	public Set<Ese> getEses() {
 		return this.eses;
@@ -243,13 +236,5 @@ public class FindingAid extends Ead {
 	public void setQueuing(QueuingState queuing) {
 		this.queuing = queuing;
 	}
-
-
-
-
-
-
-
-
 
 }

@@ -3,6 +3,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -57,11 +58,11 @@ public class HoldingsGuide extends Ead {
 	private Long totalNumberOfDaos =0l;
 	private Long totalNumberOfUnits =0l;
 	private Long totalNumberOfUnitsWithDao =0l;
-	@OneToMany(mappedBy="holdingsGuide")
-	private Set<QueueItem> indexQueues = new HashSet<QueueItem>(0);
-	@OneToMany(mappedBy="holdingsGuide")
+	@OneToMany(mappedBy = "holdingsGuide")
+	private Set<QueueItem> queueItems = new HashSet<QueueItem>(0);
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "holdingsGuide")
 	private Set<Warnings> warningses = new HashSet<Warnings>(0);
-	@OneToMany(mappedBy="holdingsGuide")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "holdingsGuide")
 	private Set<EadContent> eadContents = new HashSet<EadContent>(0);
 	public Integer getId() {
 		return id;
@@ -170,11 +171,11 @@ public class HoldingsGuide extends Ead {
 	
 	
 	public Set<QueueItem> getQueuesItems() {
-		return indexQueues;
+		return queueItems;
 	}
 
 	public void setQueueItems(Set<QueueItem> indexQueues) {
-		this.indexQueues = indexQueues;
+		this.queueItems = indexQueues;
 	}
 
 	public Set<Warnings> getWarningses() {

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -55,11 +56,12 @@ public class SourceGuide extends Ead {
 	private Long totalNumberOfDaos = 0l;
 	private Long totalNumberOfUnits = 0l;
 	private Long totalNumberOfUnitsWithDao = 0l;
-	@OneToMany(mappedBy="sourceGuide")
-	private Set<QueueItem> indexQueues = new HashSet<QueueItem>(0);
-	@OneToMany(mappedBy="sourceGuide")
+	
+	@OneToMany(mappedBy = "sourceGuide")
+	private Set<QueueItem> queueItems = new HashSet<QueueItem>(0);
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "sourceGuide")
 	private Set<Warnings> warningses = new HashSet<Warnings>(0);
-	@OneToMany(mappedBy="sourceGuide")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "sourceGuide")
 	private Set<EadContent> eadContents = new HashSet<EadContent>(0);
 	public Integer getId() {
 		return id;
@@ -168,11 +170,11 @@ public class SourceGuide extends Ead {
 	
 	
 	public Set<QueueItem> getQueuesItems() {
-		return indexQueues;
+		return queueItems;
 	}
 
 	public void setQueueItems(Set<QueueItem> indexQueues) {
-		this.indexQueues = indexQueues;
+		this.queueItems = indexQueues;
 	}
 
 	public Set<Warnings> getWarningses() {
