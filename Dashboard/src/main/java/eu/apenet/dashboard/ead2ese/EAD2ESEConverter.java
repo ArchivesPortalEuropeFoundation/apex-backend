@@ -16,7 +16,7 @@ import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
 
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dpt.utils.ead2ese.Config;
+import eu.apenet.dpt.utils.ead2ese.EseConfig;
 import eu.apenet.dpt.utils.ead2ese.FileUtils;
 import eu.apenet.dpt.utils.ead2ese.XMLUtil;
 import eu.apenet.dpt.utils.ead2ese.stax.ESEParser;
@@ -40,7 +40,7 @@ public class EAD2ESEConverter {
 	private static final String COLON = ":";
 
 	//private static final Logger LOGGER = Logger.getLogger(EAD2ESEConverter.class);
-	public static void convertEAD2ESE(Integer findingAidId, Config config) throws TransformerException, XMLStreamException, SAXException, IOException {
+	public static void convertEAD2ESE(Integer findingAidId, EseConfig config) throws TransformerException, XMLStreamException, SAXException, IOException {
 		EseDAO eseDao = DAOFactory.instance().getEseDAO();
 		FindingAidDAO findingAidDAO = DAOFactory.instance().getFindingAidDAO();
 		FileStateDAO fileStateDAO = DAOFactory.instance().getFileStateDAO();
@@ -127,7 +127,7 @@ public class EAD2ESEConverter {
 		if (ese.getNumberOfRecords() > 0) {
 			
 			int numberOfFiles = 0;
-			Config config = new Config();
+			EseConfig config = new EseConfig();
 				int numberOfRecords = ese.getNumberOfRecords();
 				File htmlOutputFile = FileUtils.getFile(FileUtils.getOutputHTMLDir(APEnetUtilities.getConfig().getRepoDirPath(), ese.getFindingAid().getArchivalInstitution().getCountry().getIsoname(), ese.getFindingAid().getArchivalInstitution().getAiId()), xmlNameRelative + ".html");
 				File htmlDirectory = htmlOutputFile.getParentFile();
