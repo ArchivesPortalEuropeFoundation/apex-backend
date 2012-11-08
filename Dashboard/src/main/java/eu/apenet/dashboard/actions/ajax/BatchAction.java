@@ -10,7 +10,7 @@ import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.ead2ese.EAD2ESEConverter;
 import eu.apenet.dashboard.manual.contentmanager.ContentManager;
-import eu.apenet.dpt.utils.ead2ese.Config;
+import eu.apenet.dpt.utils.ead2ese.EseConfig;
 import eu.apenet.dpt.utils.util.extendxsl.CounterCLevelCall;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.FileState;
@@ -241,7 +241,7 @@ public class BatchAction extends AjaxControllerAbstractAction {
         }
     }
     private void convertFileToEse(int aiId, int id){
-       Config config = (Config) request.getSession().getAttribute("eseConfig");
+       EseConfig config = (EseConfig) request.getSession().getAttribute("eseConfig");
         try {
         	EAD2ESEConverter.convertEAD2ESE(new Integer(id) , config);
         } catch (Exception e){
