@@ -15,7 +15,7 @@ public class QueueTask extends TimerTask {
 	private static final Logger LOGGER = Logger.getLogger(QueueDaemon.class);
 	private long duration;
 	private boolean active = true;
-	private long INTERVAL = 60000;
+	private long INTERVAL = 30000;
 
 	public QueueTask(long duration) {
 		this.duration = duration;

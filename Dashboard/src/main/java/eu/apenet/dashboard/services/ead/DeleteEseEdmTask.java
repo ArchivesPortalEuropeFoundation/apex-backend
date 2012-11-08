@@ -69,6 +69,7 @@ public class DeleteEseEdmTask extends AbstractEadTask {
 
 				}
 				findingAid.setEuropeana(EuropeanaState.NOT_CONVERTED);
+				findingAid.setTotalNumberOfDaos(0l);
 				eadDAO.store(findingAid);
 				logAction(ead, true);
 			} catch (Exception e) {

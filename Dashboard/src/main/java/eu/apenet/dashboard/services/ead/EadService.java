@@ -176,7 +176,6 @@ public class EadService {
 				new DeleteEseEdmTask().execute(ead, preferences);
 				new UnpublishTask().execute(ead, preferences);
 				new DeleteTask().execute(ead, preferences);
-				queueItemDAO.delete(queueItem);
 			} else {
 
 				if (queueItem.getAction().isConvertAction()) {

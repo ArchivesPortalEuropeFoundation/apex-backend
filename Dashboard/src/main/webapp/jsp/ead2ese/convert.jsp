@@ -148,4 +148,5 @@
 	<br></br>
 	<br></br>
 	<s:hidden name="batchItems" />
+		<s:hidden name="id" />
 </s:form>

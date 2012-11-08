@@ -35,8 +35,14 @@
 				<option value="displayEseConvert">
 					<s:text name="content.message.convert.ese" />
 				</option>
+				<option value="deliverToEuropeana">
+					<s:text name="content.message.deliver.europeana" />
+				</option>
 				<option value="unpublish">
 					<s:text name="content.message.unpublish" />
+				</option>
+				<option value="deleteFromEuropeana">
+					<s:text name="content.message.delete.europeana" />
 				</option>
 				<option value="deleteEseEdm">
 					<s:text name="content.message.delete.ese" />
@@ -141,7 +147,7 @@
 							</c:choose></td>
 						<c:if test="${results.findingAid}">
 							<td class="${eadResult.eseEdmCssClass}"><c:choose>
-									<c:when test="${eadResult.convertedToEseEdm}">${eadResult.totalNumberOfDaos}</c:when>
+									<c:when test="${(eadResult.convertedToEseEdm or eadResult.deliveredToEuropeana) and eadResult.totalNumberOfDaos > 0}">${eadResult.totalNumberOfDaos}</c:when>
 									<c:otherwise>
 										<apenet:resource>${eadResult.eseEdmText}</apenet:resource>
 									</c:otherwise>
@@ -182,24 +188,23 @@
 											</option>
 										</c:if>
 										<c:if test="${results.findingAid}">
-											<c:if test="${eadResult.validated and eadResult.units > 0 and not eadResult.convertedToEseEdm}">
+											<c:if test="${eadResult.validated and eadResult.units > 0 and not eadResult.convertedToEseEdm and not eadResult.deliveredToEuropeana}">
 												<option value="displayEseConvert">
 													<s:text name="content.message.convert.ese" />
 												</option>
 											</c:if>
-										</c:if>
-										<c:if test="${eadResult.convertedToEseEdm and not eadResult.deliveredToEuropeana}">
-											<option value="deleteEseEdm">
-												<s:text name="content.message.delete.ese" />
-											</option>
-										</c:if>
-										<c:if test="${false }">
 											<c:if
-												test="${eadResult.convertedToEseEdm and eadResult.totalNumberOfDaos > 0 and not eadResult.deliveredToEuropeana}">
+												test="${eadResult.convertedToEseEdm and eadResult.totalNumberOfDaos > 0}">
 												<option value="deliverToEuropeana">
 													<s:text name="content.message.deliver.europeana" />
 												</option>
 											</c:if>
+											<c:if test="${eadResult.convertedToEseEdm}">
+												<option value="deleteEseEdm">
+													<s:text name="content.message.delete.ese" />
+												</option>
+											</c:if>
+
 											<c:if test="${eadResult.deliveredToEuropeana}">
 												<option value="deleteFromEuropeana">
 													<s:text name="content.message.delete.europeana" />

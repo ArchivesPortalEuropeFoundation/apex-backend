@@ -51,7 +51,6 @@ public class UnpublishTask extends AbstractEadTask {
 
 				logger.debug("Changing EAD (" + xmlType.getName() + ") state of the EAD with eadid " + ead.getEadid());
 				ContentUtils.changeSearchable(ead, false);
-				ead.setTotalNumberOfDaos(0l);
 				ead.setTotalNumberOfUnits(0l);
 				ead.setTotalNumberOfUnitsWithDao(0l);
 				eadDAO.store(ead);

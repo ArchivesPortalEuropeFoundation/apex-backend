@@ -41,7 +41,7 @@ public class FindingAidResult extends EadResult {
 		}
 	}
 	public String getEseEdmCssClass(){
-		if (convertedToEseEdm){
+		if (convertedToEseEdm || deliveredToEuropeana || harvestedByEuropeana){
 			return STATUS_OK;
 		}else {
 			return STATUS_NO;
