@@ -3,7 +3,7 @@ package eu.apenet.dashboard.ead2ese;
 import java.util.*;
 import javax.servlet.http.HttpSession;
 import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
-import eu.apenet.dpt.utils.ead2ese.Config;
+import eu.apenet.dpt.utils.ead2ese.EseConfig;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import eu.apenet.dashboard.manual.FindingAidLogic;
@@ -29,7 +29,7 @@ public class BatchConvertAction extends ConvertAction{
 
 
 	public String execute() {
-		Config config = fillConfig();
+		EseConfig config = fillConfig();
 		ServletActionContext.getRequest().getSession().setAttribute("eseConfig" , config);
 		type = "Converting to ESE";
 

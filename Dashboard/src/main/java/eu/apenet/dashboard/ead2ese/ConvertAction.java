@@ -10,7 +10,7 @@ import org.apache.commons.lang.StringUtils;
 
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
-import eu.apenet.dpt.utils.ead2ese.Config;
+import eu.apenet.dpt.utils.ead2ese.EseConfig;
 
 public class ConvertAction extends AbstractInstitutionAction{
 
@@ -161,12 +161,12 @@ public class ConvertAction extends AbstractInstitutionAction{
    		return SUCCESS;
 	}
 	public String execute() throws Exception{
-		Config config = fillConfig();
+		EseConfig config = fillConfig();
     	EAD2ESEConverter.convertEAD2ESE(new Integer(id) , config);
    		return SUCCESS;
     }
-	protected Config fillConfig(){
-    	Config config = new Config();  	
+	protected EseConfig fillConfig(){
+    	EseConfig config = new EseConfig();  	
     	config.setContextInformationPrefix(hierarchyPrefix);
     	config.setInheritElementsFromFileLevel("yes".equals(inheritFileParent));
     	config.setInheritOrigination("yes".equals(inheritOrigination));
