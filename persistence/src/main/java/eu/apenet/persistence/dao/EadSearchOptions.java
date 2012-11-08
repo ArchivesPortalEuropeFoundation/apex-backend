@@ -113,7 +113,10 @@ public class EadSearchOptions implements Serializable{
 	public void setEuropeana(List<EuropeanaState> europeana) {
 		this.europeana = europeana;
 	}
-
+	public void setEuropeana(EuropeanaState europeana) {
+		this.europeana.clear();
+		this.europeana.add(europeana);
+	}
 	public String getSearchTerms() {
 		return searchTerms;
 	}

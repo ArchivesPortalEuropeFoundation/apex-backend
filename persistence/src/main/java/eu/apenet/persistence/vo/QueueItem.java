@@ -47,6 +47,7 @@ public class QueueItem implements java.io.Serializable {
 	private Integer priority;
 	@Enumerated(EnumType.STRING)
 	private QueueAction action;
+	private String preferences;
 
 	public QueueItem() {
 	}
@@ -113,6 +114,14 @@ public class QueueItem implements java.io.Serializable {
 
 	public void setAction(QueueAction action) {
 		this.action = action;
+	}
+
+	public String getPreferences() {
+		return preferences;
+	}
+
+	public void setPreferences(String preferences) {
+		this.preferences = preferences;
 	}
 
 	public Ead getEad() {
