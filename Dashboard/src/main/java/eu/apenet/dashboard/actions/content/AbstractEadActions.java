@@ -2,13 +2,14 @@ package eu.apenet.dashboard.actions.content;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.ServletRequestAware;
 
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 
 public abstract class AbstractEadActions extends AbstractInstitutionAction implements ServletRequestAware{
-
+    protected Logger logger = Logger.getLogger(getClass());
 	private static final String CONVERT_VALIDATE_PUBLISH = "convert_validate_publish";
 	private static final String DELETE = "delete";
 	private static final String UNPUBLISH = "unpublish";

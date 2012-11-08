@@ -4,10 +4,14 @@ import java.util.List;
 
 import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
 import eu.apenet.dashboard.services.ead.EadService;
+import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.vo.QueueAction;
 
 public class BatchEadActions extends AbstractEadActions {
-	private boolean onlySelectedItems = true;
+	public static final String ALL_ITEMS = "all";
+	public static final String SELECTED_ITEMS = "only_selected";
+	public static final String SEARCHED_ITEMS = "only_searched";
+	private String batchItems;
 
 	/**
 	 * 
@@ -41,28 +45,41 @@ public class BatchEadActions extends AbstractEadActions {
 
 	@SuppressWarnings("unchecked")
 	private String addBatchToQueue(QueueAction queueAction) {
-		if (onlySelectedItems) {
+		try {
+		if (SELECTED_ITEMS.equals(batchItems)) {
 			List<Integer> ids = (List<Integer>) getServletRequest().getSession().getAttribute(
 					AjaxControllerAbstractAction.LIST_IDS);
 			if (ids != null) {
-				EadService.addBatchToQueue(ids, getAiId(), getXmlType(), queueAction);
+				EadService.addBatchToQueue(ids, getAiId(), getXmlType(), queueAction, null);
 				return SUCCESS;
 			} else {
 				return ERROR;
 			}
 
-		} else {
-			EadService.addBatchToQueue(null, getAiId(), getXmlType(), queueAction);
+		} else if (SEARCHED_ITEMS.equals(batchItems)) {
+			EadSearchOptions eadSearchOptions = (EadSearchOptions)getServletRequest().getSession()
+					.getAttribute(ContentManagerAction.EAD_SEARCH_OPTIONS);
+			EadService.addBatchToQueue(eadSearchOptions, queueAction,null);
 			return SUCCESS;
+		} else {
+			EadService.addBatchToQueue(null, getAiId(), getXmlType(), queueAction, null);
+			return SUCCESS;
+		}
+		} catch (Exception e){
+			logger.error(e.getMessage(), e);
+			return ERROR;
 		}
 	}
 
-	public boolean isOnlySelectedItems() {
-		return onlySelectedItems;
+	public String getBatchItems() {
+		return batchItems;
 	}
 
-	public void setOnlySelectedItems(boolean onlySelectedItems) {
-		this.onlySelectedItems = onlySelectedItems;
+	public void setBatchItems(String batchItems) {
+		this.batchItems = batchItems;
 	}
+
+
+
 
 }

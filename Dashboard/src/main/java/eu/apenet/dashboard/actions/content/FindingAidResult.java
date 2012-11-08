@@ -36,8 +36,6 @@ public class FindingAidResult extends EadResult {
 	public String getEseEdmText(){
 		if (convertedToEseEdm){
 			return getTotalNumberOfDaos()+"";
-		}else if(queueAction != null && queueAction.isEseEdmAction()){
-			return CONTENT_MESSAGE_QUEUE;
 		}else {
 			return CONTENT_MESSAGE_NO;
 		}
@@ -45,8 +43,6 @@ public class FindingAidResult extends EadResult {
 	public String getEseEdmCssClass(){
 		if (convertedToEseEdm){
 			return STATUS_OK;
-		}else if(queueAction != null && queueAction.isEseEdmAction()){
-			return STATUS_QUEUE;
 		}else {
 			return STATUS_NO;
 		}
@@ -54,8 +50,6 @@ public class FindingAidResult extends EadResult {
 	public String getEuropeanaCssClass(){
 		if (deliveredToEuropeana || harvestedByEuropeana){
 			return STATUS_OK;
-		}else if(queueAction != null && queueAction.isEuropeanaAction()){
-			return STATUS_QUEUE;
 		}else {
 			return STATUS_NO;
 		}
@@ -63,8 +57,6 @@ public class FindingAidResult extends EadResult {
 	public String getEuropeanaText(){
 		if (deliveredToEuropeana){
 			return "content.message.europeana.delivered";
-		}else if(queueAction != null && queueAction.isEuropeanaAction()){
-			return CONTENT_MESSAGE_QUEUE;
 		}else if (harvestedByEuropeana){
 			return "content.message.europeana.harvested";
 		}else {

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.xml.stream.XMLInputFactory;
@@ -29,7 +30,7 @@ import eu.apenet.persistence.vo.Warnings;
 public class ValidateTask extends AbstractEadTask {
 
 	@Override
-	protected void execute(Ead ead) throws APEnetException{
+	protected void execute(Ead ead, Properties properties) throws APEnetException{
 		Xsd_enum schema = Xsd_enum.XSD_APE_SCHEMA;
 		ArchivalInstitution archivalInstitution = ead.getArchivalInstitution();
         String filepath = APEnetUtilities.getConfig().getRepoDirPath() + ead.getPathApenetead();

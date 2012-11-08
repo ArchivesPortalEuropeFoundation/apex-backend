@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -24,7 +25,7 @@ public class ConvertTask extends AbstractEadTask {
 
 
 	@Override
-	protected void execute(Ead ead) throws APEnetException {
+	protected void execute(Ead ead, Properties properties) throws APEnetException {
 		CounterCLevelCall counterCLevelCall = null;
 		String xslFileName = "default.xsl";
 //		Map<String, String> conversionParameters = null;

@@ -1,18 +1,29 @@
 package eu.apenet.dashboard.ead2ese;
 
 import java.io.File;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.lang.StringUtils;
+import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.interceptor.ServletRequestAware;
+
+import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
+import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
+import eu.apenet.dashboard.actions.content.BatchEadActions;
+import eu.apenet.dashboard.actions.content.ContentManagerAction;
+import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dpt.utils.ead2ese.EseConfig;
+import eu.apenet.persistence.dao.EadSearchOptions;
+import eu.apenet.persistence.vo.QueueAction;
 
-public class ConvertAction extends AbstractInstitutionAction{
+public class ConvertAction extends AbstractInstitutionAction  implements ServletRequestAware{
 
 	private static final String CREATIVECOMMONS_CPDM = "cpdm";
 	private static final String CREATIVECOMMONS_CC0 = "cc0";
@@ -20,14 +31,12 @@ public class ConvertAction extends AbstractInstitutionAction{
 	private static final String DATA_PROVIDER_CUSTOM = "custom";
 	private static final String INHERITLANGUAGE_PROVIDE = "provide";
 	private static final String EUROPEANA = "europeana";
-	private static final String SEARCH = "success_search";
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -304486360468003677L;
 	private String id;
-    private String xmlTypeId;
-	private String pageNumber;
+	private String batchItems;
 	private String provider = "Archives Portal Europe";
 	private String daoType;
     private Set<SelectItem> typeSet = new TreeSet<SelectItem>();
@@ -55,11 +64,14 @@ public class ConvertAction extends AbstractInstitutionAction{
     private String mappingsFileFileName; 		//The uploaded file name
     private File mappingsFile;					//The uploaded file
     private String mappingsFileContentType;		//The content type of the file uploaded
-    private String searchTerms;
-    private String orderBy;
     
     private Set<SelectItem> languages = new TreeSet<SelectItem>();
-
+	private HttpServletRequest httpServletRequest;
+	
+	@Override
+	public void setServletRequest(HttpServletRequest httpServletRequest) {
+		this.httpServletRequest = httpServletRequest;
+	}
 	
 	@Override
 	public void validate() {
@@ -137,32 +149,33 @@ public class ConvertAction extends AbstractInstitutionAction{
 		this.id = id;
 	}
 
-    public String getXmlTypeId() {
-        return xmlTypeId;
-    }
-
-    public void setXmlTypeId(String xmlTypeId) {
-        this.xmlTypeId = xmlTypeId;
-    }
-
-    public String getPageNumber() {
-		return pageNumber;
-	}
-
-	public void setPageNumber(String pageNumber) {
-		this.pageNumber = pageNumber;
-	}
-
-
-	public String cancel(){
-		if(this.searchTerms!=null && !this.searchTerms.isEmpty()){
-			return SEARCH; 
-    	}
-   		return SUCCESS;
-	}
+	@SuppressWarnings("unchecked")
 	public String execute() throws Exception{
 		EseConfig config = fillConfig();
-    	EAD2ESEConverter.convertEAD2ESE(new Integer(id) , config);
+		if (StringUtils.isBlank(batchItems)){
+			EadService.convertToEse(Integer.parseInt(id), config.getProperties());
+		}else {
+			if (BatchEadActions.SELECTED_ITEMS.equals(batchItems)) {
+
+				List<Integer> ids = (List<Integer>) httpServletRequest.getSession().getAttribute(
+						AjaxControllerAbstractAction.LIST_IDS);
+				if (ids != null) {
+					EadService.addBatchToQueue(ids, getAiId(), XmlType.EAD_FA,QueueAction.CONVERT_TO_ESE_EDM,config.getProperties());
+					return SUCCESS;
+				} else {
+					return ERROR;
+				}
+
+			} else if (BatchEadActions.SEARCHED_ITEMS.equals(batchItems)) {
+				EadSearchOptions eadSearchOptions = (EadSearchOptions)httpServletRequest.getSession()
+						.getAttribute(ContentManagerAction.EAD_SEARCH_OPTIONS);
+				EadService.addBatchToQueue(eadSearchOptions, QueueAction.CONVERT_TO_ESE_EDM,config.getProperties());
+				return SUCCESS;
+			} else {
+				EadService.addBatchToQueue(null, getAiId(),XmlType.EAD_FA, QueueAction.CONVERT_TO_ESE_EDM,config.getProperties());
+				return SUCCESS;
+			}
+		}
    		return SUCCESS;
     }
 	protected EseConfig fillConfig(){
@@ -407,21 +420,13 @@ public class ConvertAction extends AbstractInstitutionAction{
 	public void setLicenseAdditionalInformation(String licenseAdditionalInformation) {
 		this.licenseAdditionalInformation = licenseAdditionalInformation;
 	}
-
-	public void setSearchTerms(String searchTerms) {
-		this.searchTerms = searchTerms;
+	public String getBatchItems() {
+		return batchItems;
+	}
+	public void setBatchItems(String batchItems) {
+		this.batchItems = batchItems;
 	}
 
-	public String getSearchTerms() {
-		return searchTerms;
-	}
 
-	public void setOrderBy(String orderBy) {
-		this.orderBy = orderBy;
-	}
-
-	public String getOrderBy() {
-		return orderBy;
-	}
 	
 }

@@ -1,6 +1,7 @@
 package eu.apenet.dashboard.services.ead;
 
 import java.io.IOException;
+import java.util.Properties;
 
 import org.apache.solr.client.solrj.SolrServerException;
 
@@ -18,7 +19,7 @@ import eu.apenet.persistence.vo.HoldingsGuide;
 public class UnpublishTask extends AbstractEadTask {
 
 	@Override
-	protected void execute(Ead ead) throws Exception {
+	protected void execute(Ead ead, Properties properties) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		XmlType xmlType = XmlType.getEadType(ead);
 		EadContentDAO eadContentDAO = DAOFactory.instance().getEadContentDAO();

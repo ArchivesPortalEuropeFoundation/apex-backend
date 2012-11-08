@@ -132,6 +132,10 @@
 }
 
 #contentmanager .status_queue {
+	color: #B23062;
+	font-weight: bold;
+}
+#contentmanager .status_queue_error {
 	background-color: yellow;
 	color: #B23062;
 	font-weight: bold;

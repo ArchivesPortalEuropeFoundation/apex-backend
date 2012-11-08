@@ -17,6 +17,7 @@ public class EadResult {
 	protected static final String STATUS_NO = "status_no";
 	protected static final String STATUS_OK = "status_ok";
 	protected static final String STATUS_QUEUE = "status_queue";
+	protected static final String STATUS_QUEUE_ERROR = "status_queue_error";
 	private static final int MAX_TITLE = 120;
 	private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("dd/MM/yyyy");
 	private Integer id;
@@ -27,8 +28,9 @@ public class EadResult {
 	private boolean searchable;
 	private boolean validated;
 	private boolean validatedFatalError;
-	protected boolean readyForQueueProcessing;
-	protected boolean queueProcessing;
+	private boolean queueReady;
+	private boolean queueError;
+	private boolean queueProcessing;
 	private long units;
 	protected QueueAction queueAction;
 	public EadResult(Ead ead){
@@ -44,9 +46,10 @@ public class EadResult {
         this.validated = ValidatedState.VALIDATED.equals(ead.getValidated());
         this.validatedFatalError = ValidatedState.FATAL_ERROR.equals(ead.getValidated());
         this.units = ead.getTotalNumberOfUnits();
-        this.readyForQueueProcessing = QueuingState.READY.equals(ead.getQueuing());
+        this.queueReady = QueuingState.READY.equals(ead.getQueuing());
+        this.queueError = QueuingState.ERROR.equals(ead.getQueuing());
         this.queueProcessing = QueuingState.BUSY.equals(ead.getQueuing());
-        if ((readyForQueueProcessing || queueProcessing) && ead.getQueueItem() != null){
+        if ((!QueuingState.NO.equals(ead.getQueuing()) && ead.getQueueItem() != null)){
         	queueAction = ead.getQueueItem().getAction();
         }
 	}
@@ -77,9 +80,7 @@ public class EadResult {
 	public long getUnits() {
 		return units;
 	}
-	public boolean isReadyForQueueProcessing() {
-		return readyForQueueProcessing;
-	}
+
 	public boolean isQueueProcessing() {
 		return queueProcessing;
 	}
@@ -141,12 +142,31 @@ public class EadResult {
 	public QueueAction getQueueAction() {
 		return queueAction;
 	}
-	public String getActionsCssClass(){
-		if (readyForQueueProcessing){
+	public String getQueueCssClass(){
+		if (queueReady){
 			return STATUS_QUEUE;
+		}
+		if (queueError){
+			return STATUS_QUEUE_ERROR;
 		}else {
 			return "";
 		}
 	}
-
+	
+	public String getQueueText(){
+		if (isQueueReady() ||isQueueProcessing()){
+			return queueAction.getResourceName();
+		}else if (isQueueError()){
+			return CONTENT_MESSAGE_ERROR;
+		}else {
+			return null;
+		}
+	}
+	public boolean isQueueReady() {
+		return queueReady;
+	}
+	public boolean isQueueError() {
+		return queueError;
+	}
+	
 }

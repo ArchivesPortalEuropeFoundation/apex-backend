@@ -1,5 +1,6 @@
 package eu.apenet.dashboard.services.ead;
 
+import java.util.Properties;
 import java.util.Set;
 
 import eu.apenet.commons.utils.APEnetUtilities;
@@ -13,7 +14,7 @@ import eu.apenet.persistence.vo.Warnings;
 public class DeleteTask extends AbstractEadTask {
 
 	@Override
-	protected void execute(Ead ead) throws Exception {
+	protected void execute(Ead ead, Properties properties) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
         WarningsDAO warningsDao = DAOFactory.instance().getWarningsDAO();
         Set<Warnings> warningsList = ead.getWarningses();

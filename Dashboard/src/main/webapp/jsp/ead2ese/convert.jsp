@@ -147,10 +147,5 @@
 	</table>
 	<br></br>
 	<br></br>
-	<s:hidden name="id" />
-	<s:hidden name="aiId" />
-	<s:hidden name="holding" />
-	<s:hidden name="pageNumber" />
-	<s:hidden name="searchTerms" />
-	<s:hidden name="orderBy" />
+	<s:hidden name="batchItems" />
 </s:form>

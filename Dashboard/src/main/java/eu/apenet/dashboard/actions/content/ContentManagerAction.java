@@ -18,7 +18,7 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 
 	private static final String TRUE = "true";
 	private static final String FALSE = "false";
-	private static final String EAD_SEARCH_OPTIONS = "eadSearchOptions";
+	public static final String EAD_SEARCH_OPTIONS = "eadSearchOptions";
 	protected static final String CONTENT_MESSAGE_NO = "content.message.no";
 	protected static final String CONTENT_MESSAGE_YES = "content.message.yes";
 	protected static final String CONTENT_MESSAGE_QUEUE = "content.message.queue";

@@ -12,11 +12,14 @@
 	<form id="batchActionsForm">
 		<div class="right">
 			<span class="bold"><s:text name="content.message.batch" />:</span> <input type="radio" checked="checked"
-				name="onlySelectedItems" value="false">
+				name="batchItems" value="all">
 			<s:text name="content.message.all" />
-			</input> <input type="radio" checked="checked" name="onlySelectedItems" value="true">
+			</input> <input type="radio" checked="checked" name="batchItems" value="only_selected">
 			<s:text name="content.message.onlyselected" />
-			</input> <input type="hidden" name="type" value="<s:property value="%{type}"/>" /> <select id="batchSelectedAction" name="action">
+			<input type="radio" name="batchItems" value="only_searched">
+			<s:text name="content.message.onlysearched" />
+			</input> <input type="hidden" name="type" value="<s:property value="%{type}"/>" /> <select id="batchSelectedAction"
+				name="action">
 				<option value="convert_validate_publish">
 					<s:text name="content.message.doitall" />
 				</option>
@@ -34,6 +37,9 @@
 				</option>
 				<option value="delete">
 					<s:text name="content.message.delete" />
+				</option>
+				<option value="displayEseConvert">
+					<s:text name="content.message.convert.ese" />
 				</option>
 			</select> <input id="batchActionButton" type="submit" value="<s:text name="content.message.go" />" />
 		</div>
@@ -106,11 +112,11 @@
 									alt="down" /></a> <a class="order" href="javascript:changeOrder('europeana','false')"><img class="noStyle"
 									src="images/expand/arrow-up.gif" alt="up" /></a></th>
 						</c:if>
-							<th><s:text name="content.message.queue" /> <a class="order"
-								href="javascript:changeOrder('queuing','true')"><img class="noStyle" src="images/expand/arrow-down.gif"
-									alt="down" /></a> <a class="order" href="javascript:changeOrder('queuing','false')"><img class="noStyle"
-									src="images/expand/arrow-up.gif" alt="up" /></a></th>
-						
+						<th><s:text name="content.message.queue" /> <a class="order" href="javascript:changeOrder('queuing','true')"><img
+								class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> <a class="order"
+							href="javascript:changeOrder('queuing','false')"><img class="noStyle" src="images/expand/arrow-up.gif"
+								alt="up" /></a></th>
+
 						<th><s:text name="content.message.actions" /></th>
 					</tr>
 				</thead>
@@ -137,77 +143,78 @@
 									</c:otherwise>
 								</c:choose></td>
 							<td class="${eadResult.europeanaCssClass}"><apenet:resource>${eadResult.europeanaText}</apenet:resource></td>
-							</c:if>
-							<td class="${eadResult.actionsCssClass}"><c:if
-									test="${eadResult.readyForQueueProcessing or eadResult.queueProcessing}">
-									<apenet:resource>${eadResult.queueAction.resourceName}</apenet:resource>
-								</c:if></td>
-								
-							<td class="actions"><c:choose>
-									<c:when test="${eadResult.readyForQueueProcessing}">
+						</c:if>
+						<td class="${eadResult.queueCssClass}"><c:if
+								test="${eadResult.queueReady or eadResult.queueProcessing or eadResult.queueError}">
+								<c:if test="${eadResult.queueError}"><s:text name="content.message.error" />:</c:if><apenet:resource>${eadResult.queueAction.resourceName }</apenet:resource>
+							</c:if></td>
 
-									</c:when>
-									<c:when test="${eadResult.queueProcessing}">
-										<s:text name="content.message.queueprocessing" />
-									</c:when>
-									<c:otherwise>
+						<td class="actions"><c:choose>
+								<c:when test="${eadResult.queueReady or eadResult.queueError}">
 
-										<select class="selectedAction" name="selectedAction">
-											<c:if test="${not eadResult.converted}">
-												<option value="convert">
-													<s:text name="content.message.convert" />
-												</option>
-											</c:if>
-											<c:if test="${not eadResult.validated and not eadResult.validatedFatalError}">
-												<option value="validate">
-													<s:text name="content.message.validate" />
-												</option>
-											</c:if>
+								</c:when>
+								<c:when test="${eadResult.queueProcessing}">
+									<s:text name="content.message.queueprocessing" />
+								</c:when>
+								<c:otherwise>
 
-											<c:if test="${eadResult.validated and not eadResult.searchable}">
-												<option value="publish">
-													<s:text name="content.message.publish" />
-												</option>
-											</c:if>
-											<c:if test="${false }">
-												<c:if test="${eadResult.validated and eadResult.units > 0 and not eadResult.convertedToEseEdm}">
-													<option value="convertToEseEdm">
-														<s:text name="content.message.convert.ese" />
-													</option>
-												</c:if>
-
-												<c:if
-													test="${eadResult.convertedToEseEdm and eadResult.totalNumberOfDaos > 0 and not eadResult.deliveredToEuropeana}">
-													<option value="deliverToEuropeana">
-														<s:text name="content.message.deliver.europeana" />
-													</option>
-												</c:if>
-												<c:if test="${eadResult.deliveredToEuropeana}">
-													<option value="deleteFromEuropeana">
-														<s:text name="content.message.delete.europeana" />
-													</option>
-												</c:if>
-												<c:if test="${eadResult.convertedToEseEdm and not eadResult.deliveredToEuropeana}">
-													<option value="deleteEseEdm">
-														<s:text name="content.message.delete.ese" />
-													</option>
-												</c:if>
-											</c:if>
-											<c:if test="${eadResult.searchable}">
-												<option value="unpublish">
-													<s:text name="content.message.unpublish" />
-												</option>
-											</c:if>
-											<option value="delete">
-												<s:text name="content.message.delete" />
+									<select class="selectedAction" name="selectedAction">
+										<c:if test="${not eadResult.converted}">
+											<option value="convert">
+												<s:text name="content.message.convert" />
 											</option>
+										</c:if>
+										<c:if test="${not eadResult.validated and not eadResult.validatedFatalError}">
+											<option value="validate">
+												<s:text name="content.message.validate" />
+											</option>
+										</c:if>
 
-										</select>
-										<input type="button" value="<s:text name="content.message.go" />" />
+										<c:if test="${eadResult.validated and not eadResult.searchable}">
+											<option value="publish">
+												<s:text name="content.message.publish" />
+											</option>
+										</c:if>
+										<c:if test="${results.findingAid}">
+											<c:if test="${eadResult.validated and eadResult.units > 0 and not eadResult.convertedToEseEdm}">
+												<option value="displayEseConvert">
+													<s:text name="content.message.convert.ese" />
+												</option>
+											</c:if>
+										</c:if>
+										<c:if test="${false }">
+											<c:if
+												test="${eadResult.convertedToEseEdm and eadResult.totalNumberOfDaos > 0 and not eadResult.deliveredToEuropeana}">
+												<option value="deliverToEuropeana">
+													<s:text name="content.message.deliver.europeana" />
+												</option>
+											</c:if>
+											<c:if test="${eadResult.deliveredToEuropeana}">
+												<option value="deleteFromEuropeana">
+													<s:text name="content.message.delete.europeana" />
+												</option>
+											</c:if>
+											<c:if test="${eadResult.convertedToEseEdm and not eadResult.deliveredToEuropeana}">
+												<option value="deleteEseEdm">
+													<s:text name="content.message.delete.ese" />
+												</option>
+											</c:if>
+										</c:if>
+										<c:if test="${eadResult.searchable}">
+											<option value="unpublish">
+												<s:text name="content.message.unpublish" />
+											</option>
+										</c:if>
+										<option value="delete">
+											<s:text name="content.message.delete" />
+										</option>
 
-									</c:otherwise>
-								</c:choose></td>
-						
+									</select>
+									<input type="button" value="<s:text name="content.message.go" />" />
+
+								</c:otherwise>
+							</c:choose></td>
+
 					</tr>
 				</c:forEach>
 
