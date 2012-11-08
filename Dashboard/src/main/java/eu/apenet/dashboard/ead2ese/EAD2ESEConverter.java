@@ -17,7 +17,7 @@ import org.xml.sax.SAXException;
 
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dpt.utils.ead2ese.EseConfig;
-import eu.apenet.dpt.utils.ead2ese.FileUtils;
+import eu.apenet.dpt.utils.ead2ese.EseFileUtils;
 import eu.apenet.dpt.utils.ead2ese.XMLUtil;
 import eu.apenet.dpt.utils.ead2ese.stax.ESEParser;
 import eu.apenet.dpt.utils.ead2ese.stax.RecordParser;
@@ -45,15 +45,15 @@ public class EAD2ESEConverter {
 		FindingAidDAO findingAidDAO = DAOFactory.instance().getFindingAidDAO();
 		FileStateDAO fileStateDAO = DAOFactory.instance().getFileStateDAO();
 		FindingAid findingAid = findingAidDAO.findById(findingAidId);
-		File apenetEad = FileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), findingAid.getPathApenetead());
-		String xmlNameRelative = FileUtils.getFileName(APEnetUtilities.FILESEPARATOR, apenetEad);
+		File apenetEad = EseFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), findingAid.getPathApenetead());
+		String xmlNameRelative = EseFileUtils.getFileName(APEnetUtilities.FILESEPARATOR, apenetEad);
 		int lastIndex = xmlNameRelative.lastIndexOf('.');
 		String xmlOutputFilename = xmlNameRelative.substring(0, lastIndex) + "-ese"
 				+ xmlNameRelative.substring(lastIndex);
 		// String xmlOutputFilenameTemp = FileUtils.getTempFile(findingAid,
 		// xmlOutputFilename);
-		File outputXMLDir = FileUtils.getOutputXMLDir(APEnetUtilities.getConfig().getRepoDirPath(), findingAid.getArchivalInstitution().getCountry().getIsoname(), findingAid.getArchivalInstitution().getAiId());
-		File xmlOutputFile = FileUtils.getFile(outputXMLDir, xmlOutputFilename);
+		File outputXMLDir = EseFileUtils.getOutputXMLDir(APEnetUtilities.getConfig().getRepoDirPath(), findingAid.getArchivalInstitution().getCountry().getIsoname(), findingAid.getArchivalInstitution().getAiId());
+		File xmlOutputFile = EseFileUtils.getFile(outputXMLDir, xmlOutputFilename);
 		//File xmlOutputFileTemp = FileUtils.getTempFile(findingAid, xmlOutputFilename);
 			xmlOutputFile.getParentFile().mkdirs();
 			config.getTransformerXML2XML().transform(xmlNameRelative, apenetEad, xmlOutputFile);
@@ -68,7 +68,7 @@ public class EAD2ESEConverter {
 					ese = findingAid.getEses().iterator().next();
 					update = true;
 					if (ese.getPathHtml() != null) {
-						FileUtils.deleteDir(FileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPathHtml()));
+						EseFileUtils.deleteDir(EseFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPathHtml()));
 						ese.setPathHtml(null);
 					}
 				}
@@ -94,7 +94,7 @@ public class EAD2ESEConverter {
 					ese.setModificationDate(ese.getCreationDate());
 					eseState = DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.NOT_PUBLISHED);
 				}
-				ese.setPath(FileUtils.getRelativeESEFilePath(findingAid.getArchivalInstitution().getCountry().getIsoname(), findingAid.getArchivalInstitution().getAiId(), xmlOutputFilename));
+				ese.setPath(EseFileUtils.getRelativeESEFilePath(findingAid.getArchivalInstitution().getCountry().getIsoname(), findingAid.getArchivalInstitution().getAiId(), xmlOutputFilename));
 				ese.setOaiIdentifier(oaiIdentifier);
 				ese.setNumberOfRecords(numberOfRecords);
 				ese.setFindingAid(findingAid);
@@ -121,21 +121,21 @@ public class EAD2ESEConverter {
 	}
 
 	public static void generateHtml(Ese ese) throws TransformerException {
-		File eseFile = FileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPath());
+		File eseFile = EseFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPath());
 		EseDAO eseDao = DAOFactory.instance().getEseDAO();
-		String xmlNameRelative = FileUtils.getFileName(APEnetUtilities.FILESEPARATOR, eseFile);
+		String xmlNameRelative = EseFileUtils.getFileName(APEnetUtilities.FILESEPARATOR, eseFile);
 		if (ese.getNumberOfRecords() > 0) {
 			
 			int numberOfFiles = 0;
 			EseConfig config = new EseConfig();
 				int numberOfRecords = ese.getNumberOfRecords();
-				File htmlOutputFile = FileUtils.getFile(FileUtils.getOutputHTMLDir(APEnetUtilities.getConfig().getRepoDirPath(), ese.getFindingAid().getArchivalInstitution().getCountry().getIsoname(), ese.getFindingAid().getArchivalInstitution().getAiId()), xmlNameRelative + ".html");
+				File htmlOutputFile = EseFileUtils.getFile(EseFileUtils.getOutputHTMLDir(APEnetUtilities.getConfig().getRepoDirPath(), ese.getFindingAid().getArchivalInstitution().getCountry().getIsoname(), ese.getFindingAid().getArchivalInstitution().getAiId()), xmlNameRelative + ".html");
 				File htmlDirectory = htmlOutputFile.getParentFile();
 				htmlDirectory.mkdirs();
 				String htmlDirname = eseFile.getName() + ".htmldir";
-				File htmlSubDirectory = FileUtils.getFile(htmlDirectory, htmlDirname);
+				File htmlSubDirectory = EseFileUtils.getFile(htmlDirectory, htmlDirname);
 				htmlSubDirectory.mkdirs();
-				FileUtils.createDirs(htmlSubDirectory.getAbsolutePath(), numberOfRecords);
+				EseFileUtils.createDirs(htmlSubDirectory.getAbsolutePath(), numberOfRecords);
 				config.getTransformerXML2HTML().setParameter("outputdir", htmlDirname);
 				double temp = ese.getNumberOfRecords();
 				int recordsPerDirectory = 100;
@@ -159,7 +159,7 @@ public class EAD2ESEConverter {
 				// add index html when generate html
 				numberOfFiles++;
 				numberOfFiles += numberOfRecords;
-				ese.setPathHtml(FileUtils.getRelativeESEHTMLFilePath(ese.getFindingAid().getArchivalInstitution().getCountry().getIsoname(), ese.getFindingAid().getArchivalInstitution().getAiId(), xmlNameRelative + ".html"));
+				ese.setPathHtml(EseFileUtils.getRelativeESEHTMLFilePath(ese.getFindingAid().getArchivalInstitution().getCountry().getIsoname(), ese.getFindingAid().getArchivalInstitution().getAiId(), xmlNameRelative + ".html"));
 				eseDao.store(ese);
 
 

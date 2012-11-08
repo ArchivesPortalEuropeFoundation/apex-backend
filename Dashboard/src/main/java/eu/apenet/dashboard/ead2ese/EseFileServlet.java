@@ -18,7 +18,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 
-import eu.apenet.dpt.utils.ead2ese.FileUtils;
+import eu.apenet.dpt.utils.ead2ese.EseFileUtils;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ese;
@@ -54,7 +54,7 @@ public class EseFileServlet extends HttpServlet {
 				}
 			}
 			if (ese.getPathHtml() != null) {
-				File file = FileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPathHtml());
+				File file = EseFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPathHtml());
 				if (!file.exists()) {
 					// Do your thing if the file appears to be non-existing.
 					// Throw an exception, or send 404, or show default/warning
@@ -67,7 +67,7 @@ public class EseFileServlet extends HttpServlet {
 						write(file, response);
 					} else {
 						File parentDir = file.getParentFile();
-						File subHtmlFile = FileUtils.getFile(parentDir, path);
+						File subHtmlFile = EseFileUtils.getFile(parentDir, path);
 						if (!subHtmlFile.exists()) {
 							// Do your thing if the file appears to be
 							// non-existing.

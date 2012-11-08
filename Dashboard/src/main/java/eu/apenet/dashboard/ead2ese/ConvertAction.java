@@ -153,7 +153,7 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 	public String execute() throws Exception{
 		EseConfig config = fillConfig();
 		if (StringUtils.isBlank(batchItems)){
-			EadService.convertToEse(Integer.parseInt(id), config.getProperties());
+			EadService.convertToEseEdm(Integer.parseInt(id), config.getProperties());
 		}else {
 			if (BatchEadActions.SELECTED_ITEMS.equals(batchItems)) {
 

@@ -42,6 +42,24 @@ public class BatchEadActions extends AbstractEadActions {
 	public String convertValidatePublishEad() {
 		return addBatchToQueue(QueueAction.CONVERT_VALIDATE_PUBLISH);
 	}
+	
+	
+
+	@Override
+	public String deleteEseEdm() {
+		return addBatchToQueue(QueueAction.DELETE_ESE_EDM);
+	}
+
+	
+	@Override
+	public String deleteFromEuropeana() {
+		return addBatchToQueue(QueueAction.DELETE_FROM_EUROPEANA);
+	}
+
+	@Override
+	public String deliverToEuropeana() {
+		return addBatchToQueue(QueueAction.DELIVER_TO_EUROPEANA);
+	}
 
 	@SuppressWarnings("unchecked")
 	private String addBatchToQueue(QueueAction queueAction) {

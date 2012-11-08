@@ -10,7 +10,7 @@ import org.apache.commons.lang.math.NumberUtils;
 
 import com.opensymphony.xwork2.ActionSupport;
 
-import eu.apenet.dpt.utils.ead2ese.FileUtils;
+import eu.apenet.dpt.utils.ead2ese.EseFileUtils;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ese;
@@ -38,7 +38,7 @@ public class DownloadEseXmlAction extends ActionSupport {
 			List<Ese> eses = dao.getEses(NumberUtils.toInt(id));
 			if (eses.size() > 0) {
 				Ese ese = eses.get(0);
-				File file = FileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPath());
+				File file = EseFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPath());
 				inputStream = new FileInputStream(file);
 				fileName = file.getName();
 				fileSize = file.length();

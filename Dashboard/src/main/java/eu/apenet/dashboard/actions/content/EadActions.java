@@ -20,28 +20,53 @@ public class EadActions extends AbstractEadActions {
 	private static final long serialVersionUID = 2671921974304007944L;
 
 	public String validateEad() {
-		EadService.validate(getXmlType(), id);
-		return SUCCESS;
+		try {
+			EadService.validate(getXmlType(), id);
+			return SUCCESS;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return ERROR;
+		}
 	}
 
 	public String convertEad() {
-		EadService.convert(getXmlType(), id);
-		return SUCCESS;
+		try {
+			EadService.convert(getXmlType(), id);
+			return SUCCESS;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return ERROR;
+		}
 	}
 
 	public String publishEad() {
-		EadService.publish(getXmlType(), id);
-		return SUCCESS;
+		try {
+			EadService.publish(getXmlType(), id);
+			return SUCCESS;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return ERROR;
+		}
 	}
 
 	public String unpublishEad() {
-		EadService.unpublish(getXmlType(), id);
-		return SUCCESS;
+		try {
+			EadService.unpublish(getXmlType(), id);
+			return SUCCESS;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return ERROR;
+		}
 	}
 
 	public String deleteEad() {
-		EadService.delete(getXmlType(), id);
-		return SUCCESS;
+		try {
+			EadService.delete(getXmlType(), id);
+			return SUCCESS;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return ERROR;
+		}
 	}
 
 	@Override
@@ -54,6 +79,39 @@ public class EadActions extends AbstractEadActions {
 			return ERROR;
 		}
 
+	}
+
+	@Override
+	public String deleteEseEdm() {
+		try {
+			EadService.deleteEseEdm(getXmlType(), id);
+			return SUCCESS;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return ERROR;
+		}
+	}
+
+	@Override
+	public String deleteFromEuropeana() {
+		try {
+			EadService.deleteFromEuropeana(getXmlType(), id);
+			return SUCCESS;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return ERROR;
+		}
+	}
+
+	@Override
+	public String deliverToEuropeana() {
+		try {
+			EadService.deliverToEuropeana(getXmlType(), id);
+			return SUCCESS;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return ERROR;
+		}
 	}
 
 }

@@ -32,15 +32,19 @@
 				<option value="publish">
 					<s:text name="content.message.publish" />
 				</option>
+				<option value="displayEseConvert">
+					<s:text name="content.message.convert.ese" />
+				</option>
 				<option value="unpublish">
 					<s:text name="content.message.unpublish" />
+				</option>
+				<option value="deleteEseEdm">
+					<s:text name="content.message.delete.ese" />
 				</option>
 				<option value="delete">
 					<s:text name="content.message.delete" />
 				</option>
-				<option value="displayEseConvert">
-					<s:text name="content.message.convert.ese" />
-				</option>
+
 			</select> <input id="batchActionButton" type="submit" value="<s:text name="content.message.go" />" />
 		</div>
 	</form>
@@ -146,7 +150,9 @@
 						</c:if>
 						<td class="${eadResult.queueCssClass}"><c:if
 								test="${eadResult.queueReady or eadResult.queueProcessing or eadResult.queueError}">
-								<c:if test="${eadResult.queueError}"><s:text name="content.message.error" />:</c:if><apenet:resource>${eadResult.queueAction.resourceName }</apenet:resource>
+								<c:if test="${eadResult.queueError}">
+									<s:text name="content.message.error" />:</c:if>
+								<apenet:resource>${eadResult.queueAction.resourceName }</apenet:resource>
 							</c:if></td>
 
 						<td class="actions"><c:choose>
@@ -182,6 +188,11 @@
 												</option>
 											</c:if>
 										</c:if>
+										<c:if test="${eadResult.convertedToEseEdm and not eadResult.deliveredToEuropeana}">
+											<option value="deleteEseEdm">
+												<s:text name="content.message.delete.ese" />
+											</option>
+										</c:if>
 										<c:if test="${false }">
 											<c:if
 												test="${eadResult.convertedToEseEdm and eadResult.totalNumberOfDaos > 0 and not eadResult.deliveredToEuropeana}">
@@ -192,11 +203,6 @@
 											<c:if test="${eadResult.deliveredToEuropeana}">
 												<option value="deleteFromEuropeana">
 													<s:text name="content.message.delete.europeana" />
-												</option>
-											</c:if>
-											<c:if test="${eadResult.convertedToEseEdm and not eadResult.deliveredToEuropeana}">
-												<option value="deleteEseEdm">
-													<s:text name="content.message.delete.ese" />
 												</option>
 											</c:if>
 										</c:if>

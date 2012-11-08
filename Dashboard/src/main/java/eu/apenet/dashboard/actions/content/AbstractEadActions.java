@@ -16,7 +16,9 @@ public abstract class AbstractEadActions extends AbstractInstitutionAction imple
 	private static final String PUBLISH = "publish";
 	private static final String CONVERT = "convert";
 	private static final String VALIDATE = "validate";
-
+	private static final String DELETE_ESE_EDM = "deleteEseEdm";
+	private static final String DELETE_FROM_EUROPEANA = "deleteFromEuropeana";	
+	private static final String DELIVER_TO_EUROPEANA = "deliverToEuropeana";	
 	/**
 	 * 
 	 */
@@ -67,6 +69,12 @@ public abstract class AbstractEadActions extends AbstractInstitutionAction imple
 			return deleteEad();
 		}else if(CONVERT_VALIDATE_PUBLISH.equals(action)){
 			return convertValidatePublishEad();
+		}else if(DELETE_ESE_EDM.equals(action)){
+			return deleteEseEdm();
+		}else if(DELETE_FROM_EUROPEANA.equals(action)){
+			return deleteFromEuropeana();
+		}else if(DELIVER_TO_EUROPEANA.equals(action)){
+			return deliverToEuropeana();
 		}
 		return ERROR;
 	}
@@ -79,5 +87,7 @@ public abstract class AbstractEadActions extends AbstractInstitutionAction imple
 	public abstract String unpublishEad();
 	public abstract String deleteEad();
 	public abstract String convertValidatePublishEad();
-
+	public abstract String deleteEseEdm();
+	public abstract String deleteFromEuropeana();
+	public abstract String deliverToEuropeana();
 }

@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import org.apache.solr.client.solrj.SolrServerException;
 
+import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.UpdateSolrServerHolder;
 import eu.apenet.commons.types.XmlType;
@@ -19,34 +20,47 @@ import eu.apenet.persistence.vo.HoldingsGuide;
 public class UnpublishTask extends AbstractEadTask {
 
 	@Override
+	protected String getActionName() {
+		return "unpublish";
+	}
+	public static boolean valid(Ead ead){
+		return ead.isPublished();
+	}
+	@Override
 	protected void execute(Ead ead, Properties properties) throws Exception {
-		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-		XmlType xmlType = XmlType.getEadType(ead);
-		EadContentDAO eadContentDAO = DAOFactory.instance().getEadContentDAO();
-		EadContent eadContent;
+		if (valid(ead)) {
+			try {
+				EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+				XmlType xmlType = XmlType.getEadType(ead);
+				logger.debug("Removing the EAD (" + xmlType.getName() + ") with eadid '" + ead.getEadid()
+						+ "' from the index");
+				deleteFromSolr(ead.getEadid(), ead.getAiId());
+				if (ead instanceof HoldingsGuide)
+					ContentUtils.removeHoldingsGuideFromArchivalLandscape((HoldingsGuide) ead);
+				EadContentDAO eadContentDAO = DAOFactory.instance().getEadContentDAO();
+				EadContent eadContent;
 
-		if (xmlType.equals(XmlType.EAD_HG))
-			eadContent = eadContentDAO.getEadContentByHoldingsGuideId(ead.getId());
-		else if (xmlType.equals(XmlType.EAD_FA))
-			eadContent = eadContentDAO.getEadContentByFindingAidId(ead.getId());
-		else
-			eadContent = eadContentDAO.getEadContentBySourceGuideId(ead.getId());
-		if (eadContent != null)
-			eadContentDAO.deleteSimple(eadContent);
+				if (xmlType.equals(XmlType.EAD_HG))
+					eadContent = eadContentDAO.getEadContentByHoldingsGuideId(ead.getId());
+				else if (xmlType.equals(XmlType.EAD_FA))
+					eadContent = eadContentDAO.getEadContentByFindingAidId(ead.getId());
+				else
+					eadContent = eadContentDAO.getEadContentBySourceGuideId(ead.getId());
+				if (eadContent != null)
+					eadContentDAO.deleteSimple(eadContent);
 
-		logger.debug("Changing EAD (" + xmlType.getName() + ") state of the EAD with eadid " + ead.getEadid());
-		ContentUtils.changeSearchable(ead, false);
-		ead.setTotalNumberOfDaos(0l);
-		ead.setTotalNumberOfUnits(0l);
-		ead.setTotalNumberOfUnitsWithDao(0l);
-
-		eadDAO.updateSimple(ead);
-		logger.debug("Removing the EAD (" + xmlType.getName() + ") with eadid '" + ead.getEadid() + "' from the index");
-		deleteFromSolr(ead.getEadid(), ead.getAiId());
-		logger.info(xmlType.getName() + " with eadid: " + ead.getEadid()
-				+ "has been unpublished");
-        if(ead instanceof HoldingsGuide)
-            ContentUtils.removeHoldingsGuideFromArchivalLandscape((HoldingsGuide)ead);
+				logger.debug("Changing EAD (" + xmlType.getName() + ") state of the EAD with eadid " + ead.getEadid());
+				ContentUtils.changeSearchable(ead, false);
+				ead.setTotalNumberOfDaos(0l);
+				ead.setTotalNumberOfUnits(0l);
+				ead.setTotalNumberOfUnitsWithDao(0l);
+				eadDAO.store(ead);
+				logAction(ead, true);
+			} catch (Exception e) {
+				logAction(ead, false);
+				throw new APEnetException("Could not unpublish the file with ID: " + ead.getId(), e);
+			}
+		}
 	}
 
 	private static void deleteFromSolr(String eadid, int aiId) throws SolrServerException, IOException {
