@@ -189,13 +189,13 @@ public class ContentManagerAction extends AbstractContentManagerAction {
 		Integer aiId = getAiId();
 		FindingAidDAO findingAidDao = DAOFactory.instance().getFindingAidDAO();
 		Set<String> fileStates = new HashSet<String>();
-		fileStates.add(FileState.VALIDATED_CONVERTED);
-		fileStates.add(FileState.VALIDATED_NOT_CONVERTED);
-		fileStates.add(FileState.INDEXED);
-		fileStates.add(FileState.INDEXED_CONVERTED_EUROPEANA);
-		fileStates.add(FileState.INDEXED_DELIVERED_EUROPEANA);
-		fileStates.add(FileState.INDEXED_HARVESTED_EUROPEANA);
-		fileStates.add(FileState.INDEXED_NO_HTML);
+//		fileStates.add(FileState.VALIDATED_CONVERTED);
+//		fileStates.add(FileState.VALIDATED_NOT_CONVERTED);
+//		fileStates.add(FileState.INDEXED);
+//		fileStates.add(FileState.INDEXED_CONVERTED_EUROPEANA);
+//		fileStates.add(FileState.INDEXED_DELIVERED_EUROPEANA);
+//		fileStates.add(FileState.INDEXED_HARVESTED_EUROPEANA);
+//		fileStates.add(FileState.INDEXED_NO_HTML);
 		List<FindingAid> findingAidSet = findingAidDao.getFindingAids(aiId, fileStates);
 		log.info(getAiname() + " is creating an HG");
 		for (FindingAid findingAid : findingAidSet) {
