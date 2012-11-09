@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -17,8 +16,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import eu.apenet.commons.types.XmlType;
-import eu.apenet.persistence.factory.DAOFactory;
 import org.apache.commons.io.FileUtils;
 import org.hibernate.HibernateException;
 import org.w3c.dom.Document;
@@ -27,11 +24,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.utils.ContentUtils;
+import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.ArchivalInstitution;
-import eu.apenet.persistence.vo.FileState;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 

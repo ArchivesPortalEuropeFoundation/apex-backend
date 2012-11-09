@@ -1,7 +1,5 @@
 package eu.apenet.commons.seconddisplay;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +17,6 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.Ead;
-import eu.apenet.persistence.vo.FileState;
 
 public class SecondDisplayAction extends ActionSupport implements ServletRequestAware {
 	/**

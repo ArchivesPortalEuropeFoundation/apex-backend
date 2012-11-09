@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import eu.apenet.persistence.vo.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.SQLQuery;
@@ -22,19 +21,24 @@ import eu.apenet.commons.exceptions.APEnetRuntimeException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.persistence.dao.CouAlternativeNameDAO;
 import eu.apenet.persistence.dao.CountryDAO;
-import eu.apenet.persistence.dao.FileStateDAO;
 import eu.apenet.persistence.dao.FileTypeDAO;
 import eu.apenet.persistence.dao.LangDAO;
-import eu.apenet.persistence.dao.UserRoleDAO;
 import eu.apenet.persistence.dao.UploadMethodDAO;
+import eu.apenet.persistence.dao.UserRoleDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.CouAlternativeNameHibernateDAO;
 import eu.apenet.persistence.hibernate.CountryHibernateDAO;
-import eu.apenet.persistence.hibernate.FileStateHibernateDAO;
 import eu.apenet.persistence.hibernate.FileTypeHibernateDAO;
 import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.hibernate.LangHibernateDAO;
 import eu.apenet.persistence.hibernate.UploadMethodHibernateDAO;
+import eu.apenet.persistence.vo.CouAlternativeName;
+import eu.apenet.persistence.vo.Country;
+import eu.apenet.persistence.vo.FileType;
+import eu.apenet.persistence.vo.Lang;
+import eu.apenet.persistence.vo.UploadMethod;
+import eu.apenet.persistence.vo.User;
+import eu.apenet.persistence.vo.UserRole;
 
 /**
  * User: Yoann Moranville
@@ -150,7 +154,6 @@ public class StartingProjectInterceptor extends AbstractInterceptor {
         createRoleTypeInformation();
         createCountryInformation();
         createLangInformation();
-        createFileStateInformation();
         createFileTypeInformation();
         createUploadMethodInformation();
 
@@ -278,67 +281,6 @@ public class StartingProjectInterceptor extends AbstractInterceptor {
         }
     }
 
-    private void createFileStateInformation() {
-        LOG.info("Insert File State information...");
-        FileStateDAO fileStateDAO = new FileStateHibernateDAO();
-        FileState fileState;
-
-        HibernateUtil.beginDatabaseTransaction();
-        try {
-            fileState = new FileState();
-            fileState.setState("New");
-            fileStateDAO.insertSimple(fileState);
-            fileState = new FileState();
-            fileState.setState("Not_Validated_Not_Converted");
-            fileStateDAO.insertSimple(fileState);
-            fileState = new FileState();
-            fileState.setState("Not_Validated_Converted");
-            fileStateDAO.insertSimple(fileState);
-            fileState = new FileState();
-            fileState.setState("Validated_Converted");
-            fileStateDAO.insertSimple(fileState);
-            fileState = new FileState();
-            fileState.setState("Validated_Not_Converted");
-            fileStateDAO.insertSimple(fileState);
-            fileState = new FileState();
-            fileState.setState("Validated_Final_Error");
-            fileStateDAO.insertSimple(fileState);
-            fileState = new FileState();
-            fileState.setState("Indexing");
-            fileStateDAO.insertSimple(fileState);
-            fileState = new FileState();
-            fileState.setState("Indexed_Not converted to ESE/EDM");
-            fileStateDAO.insertSimple(fileState);
-            fileState = new FileState();
-            fileState.setState("Indexed_Converted to ESE/EDM");
-            fileStateDAO.insertSimple(fileState);
-            fileState = new FileState();
-            fileState.setState("Indexed_Delivered to Europeana");
-            fileStateDAO.insertSimple(fileState);
-            fileState = new FileState();
-            fileState.setState("Indexed_Harvested to Europeana");
-            fileStateDAO.insertSimple(fileState);
-            fileState = new FileState();
-            fileState.setState("Indexed_No html");
-            fileStateDAO.insertSimple(fileState);
-            fileState = new FileState();
-            fileState.setState("Indexed_Not Linked");
-            fileStateDAO.insertSimple(fileState);
-            fileState = new FileState();
-            fileState.setState("Indexed_Linked");
-            fileStateDAO.insertSimple(fileState);
-            fileState = new FileState();
-            fileState.setState("Ready_to_index");
-            fileStateDAO.insertSimple(fileState);
-
-            HibernateUtil.commitDatabaseTransaction();
-            HibernateUtil.closeDatabaseSession();
-        } catch (Exception e) {
-            LOG.error("Could not create File State information");
-            HibernateUtil.rollbackDatabaseTransaction();
-            HibernateUtil.closeDatabaseSession();
-        }
-    }
 
     private void createUploadMethodInformation() {
         LOG.info("Insert Upload Method information...");

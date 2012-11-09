@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -18,7 +17,6 @@ import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.dao.FindingAidDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.CLevel;
-import eu.apenet.persistence.vo.FileState;
 import eu.apenet.persistence.vo.FindingAid;
 
 /**

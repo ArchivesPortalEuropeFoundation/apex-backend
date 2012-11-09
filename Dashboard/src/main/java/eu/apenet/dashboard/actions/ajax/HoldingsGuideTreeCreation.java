@@ -1,23 +1,15 @@
 package eu.apenet.dashboard.actions.ajax;
 
-import eu.apenet.commons.exceptions.APEnetException;
-import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.indexing.AbstractParser;
-import eu.apenet.dashboard.indexing.EADNamespaceContext;
-import eu.apenet.dashboard.indexing.EADParser;
-import eu.apenet.dashboard.manual.ReconstructEadFile;
-import eu.apenet.dashboard.manual.hgTreeCreation.CLevelTreeNode;
-import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.hibernate.HibernateUtil;
-import eu.apenet.persistence.vo.*;
-import eu.apenet.dpt.utils.service.TransformationTool;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.struts2.ServletActionContext;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 import javax.xml.namespace.QName;
@@ -29,9 +21,33 @@ import javax.xml.stream.XMLStreamWriter;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
-import java.io.*;
-import java.net.URLEncoder;
-import java.util.*;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+
+import eu.apenet.commons.exceptions.APEnetException;
+import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.indexing.AbstractParser;
+import eu.apenet.dashboard.indexing.EADNamespaceContext;
+import eu.apenet.dashboard.indexing.EADParser;
+import eu.apenet.dashboard.manual.ReconstructEadFile;
+import eu.apenet.dashboard.manual.hgTreeCreation.CLevelTreeNode;
+import eu.apenet.dpt.utils.service.TransformationTool;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.hibernate.HibernateUtil;
+import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.CLevel;
+import eu.apenet.persistence.vo.EadContent;
+import eu.apenet.persistence.vo.FileType;
+import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.HoldingsGuide;
+import eu.apenet.persistence.vo.UpFile;
+import eu.apenet.persistence.vo.UploadMethod;
+import eu.apenet.persistence.vo.ValidatedState;
 
 /**
  * User: Yoann Moranville
@@ -47,21 +63,8 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
     private String hgId;
     private HttpSession session;
 
-    private static final Set<String> FILE_STATES;
-    static {
-        Set<String> set = new HashSet<String>();
-        set.add(FileState.VALIDATED_CONVERTED);
-        set.add(FileState.VALIDATED_NOT_CONVERTED);
-        set.add(FileState.INDEXING);
-        set.add(FileState.INDEXED);
-        set.add(FileState.INDEXED_CONVERTED_EUROPEANA);
-        set.add(FileState.INDEXED_DELIVERED_EUROPEANA);
-        set.add(FileState.INDEXED_HARVESTED_EUROPEANA);
-        set.add(FileState.INDEXED_NO_HTML);
-        set.add(FileState.INDEXED_NOT_LINKED);
-        set.add(FileState.READY_TO_INDEX);
-        FILE_STATES = Collections.unmodifiableSet(set);
-    }
+
+
 
     @Override
     public String execute() {

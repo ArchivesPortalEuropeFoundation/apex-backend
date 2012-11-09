@@ -1,39 +1,9 @@
 package eu.apenet.dashboard.manual.contentmanager;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.SolrServerException;
 
 import eu.apenet.commons.types.XmlType;
-import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.exception.DashboardAPEnetException;
-import eu.apenet.dashboard.indexing.EADParser;
-import eu.apenet.dashboard.security.SecurityContext;
-import eu.apenet.dashboard.utils.ChangeControl;
-import eu.apenet.dashboard.utils.ContentUtils;
-import eu.apenet.persistence.dao.EadContentDAO;
-import eu.apenet.persistence.dao.EadDAO;
-import eu.apenet.persistence.dao.EseDAO;
-import eu.apenet.persistence.dao.EseStateDAO;
-import eu.apenet.persistence.dao.QueueItemDAO;
-import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.Ead;
-import eu.apenet.persistence.vo.EadContent;
-import eu.apenet.persistence.vo.Ese;
-import eu.apenet.persistence.vo.EseState;
-import eu.apenet.persistence.vo.FileState;
-import eu.apenet.persistence.vo.FindingAid;
-import eu.apenet.persistence.vo.HoldingsGuide;
-import eu.apenet.persistence.vo.QueueItem;
-import eu.apenet.persistence.vo.SourceGuide;
 
 /**
  * This class is used for store all the actions which will be used in

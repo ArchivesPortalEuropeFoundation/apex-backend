@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -29,7 +28,6 @@ import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.AiAlternativeName;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Country;
-import eu.apenet.persistence.vo.FileState;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 

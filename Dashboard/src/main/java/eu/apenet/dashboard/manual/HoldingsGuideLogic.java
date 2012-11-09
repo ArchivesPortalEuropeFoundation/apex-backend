@@ -4,9 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,28 +14,16 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import eu.apenet.commons.exceptions.APEnetRuntimeException;
-import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
-import eu.apenet.dashboard.utils.ChangeControl;
-import eu.apenet.dashboard.utils.ContentUtils;
-import eu.apenet.persistence.dao.FindingAidDAO;
 import eu.apenet.persistence.dao.HoldingsGuideDAO;
-import eu.apenet.persistence.dao.WarningsDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.hibernate.HibernateUtil;
-import eu.apenet.persistence.vo.FileState;
-import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
-import eu.apenet.persistence.vo.Warnings;
 
 public class HoldingsGuideLogic extends EadLogicAbstract {
 	private Logger log = Logger.getLogger(getClass());

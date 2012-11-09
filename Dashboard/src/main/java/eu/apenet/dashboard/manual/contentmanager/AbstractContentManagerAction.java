@@ -2,10 +2,7 @@ package eu.apenet.dashboard.manual.contentmanager;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -13,14 +10,8 @@ import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.manual.EADCMUnit;
-import eu.apenet.dashboard.manual.contentmanager.ContentManager.EadResult;
-import eu.apenet.persistence.dao.EseDAO;
-import eu.apenet.persistence.dao.FindingAidDAO;
-import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.CLevel;
-import eu.apenet.persistence.vo.FileState;
 import eu.apenet.persistence.vo.FindingAid;
-import eu.archivesportaleurope.commons.config.DashboardConfig;
 
 /**
  * This class has been included because we can not permit have an Action class

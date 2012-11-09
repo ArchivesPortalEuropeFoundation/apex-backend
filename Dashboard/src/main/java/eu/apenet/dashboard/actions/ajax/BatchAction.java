@@ -12,8 +12,6 @@ import eu.apenet.dashboard.ead2ese.EAD2ESEConverter;
 import eu.apenet.dashboard.manual.contentmanager.ContentManager;
 import eu.apenet.dpt.utils.ead2ese.EseConfig;
 import eu.apenet.dpt.utils.util.extendxsl.CounterCLevelCall;
-import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.FileState;
 
 /**
  * User: Yoann Moranville

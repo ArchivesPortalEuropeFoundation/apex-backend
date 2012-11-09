@@ -6,8 +6,6 @@ package eu.apenet.dashboard.ead2ese;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -22,15 +20,8 @@ import eu.apenet.dpt.utils.ead2ese.XMLUtil;
 import eu.apenet.dpt.utils.ead2ese.stax.ESEParser;
 import eu.apenet.dpt.utils.ead2ese.stax.RecordParser;
 import eu.apenet.persistence.dao.EseDAO;
-import eu.apenet.persistence.dao.FileStateDAO;
-import eu.apenet.persistence.dao.FindingAidDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ese;
-import eu.apenet.persistence.vo.EseState;
-import eu.apenet.persistence.vo.FileState;
-import eu.apenet.persistence.vo.FindingAid;
-import eu.apenet.persistence.vo.MetadataFormat;
 
 /**
  * 
