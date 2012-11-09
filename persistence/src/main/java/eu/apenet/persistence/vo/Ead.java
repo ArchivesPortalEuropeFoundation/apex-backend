@@ -15,8 +15,8 @@ public abstract class Ead  implements Serializable{
 
 	public abstract Integer getId();
 	public abstract void setId(Integer id);
-	public abstract FileState getFileState() ;
-	public abstract void setFileState(FileState fileState);
+//	public abstract FileState getFileState() ;
+//	public abstract void setFileState(FileState fileState);
 	public abstract UploadMethod getUploadMethod();
 	public abstract void setUploadMethod(UploadMethod uploadMethod);
 	public abstract ArchivalInstitution getArchivalInstitution();
