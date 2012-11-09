@@ -8,7 +8,6 @@
 		<class>eu.apenet.persistence.vo.UploadMethod</class>
 		<class>eu.apenet.persistence.vo.FileType</class>
 		<class>eu.apenet.persistence.vo.EseState</class>
-		<class>eu.apenet.persistence.vo.FileState</class>
 		<class>eu.apenet.persistence.vo.Lang</class>
 		<class>eu.apenet.persistence.vo.User</class>
 		<class>eu.apenet.persistence.vo.Country</class>

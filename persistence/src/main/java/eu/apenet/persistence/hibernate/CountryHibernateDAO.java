@@ -1,7 +1,6 @@
 package eu.apenet.persistence.hibernate;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -21,7 +20,6 @@ import org.hibernate.criterion.Subqueries;
 import eu.apenet.persistence.dao.CountryDAO;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Country;
-import eu.apenet.persistence.vo.FileState;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 //import org.hibernate.FetchMode;
@@ -66,7 +64,6 @@ private final Logger log = Logger.getLogger(getClass());
 	@SuppressWarnings("unchecked")
 	public List<Country> getCountriesWithContentIndexedOrderByCName() {
 		long startTime = System.currentTimeMillis();
-		Collection<String> fileStates = Arrays.asList(FileState.INDEXED_FILE_STATES);
 		List<Country> results = new ArrayList<Country>();
 		
 		Criteria criteria = getSession().createCriteria(Country.class);
@@ -80,14 +77,14 @@ private final Logger log = Logger.getLogger(getClass());
 					DetachedCriteria subQuery3 = DetachedCriteria.forClass(FindingAid.class,"findingAid");
 					subQuery3.setProjection(Property.forName("findingAid.archivalInstitution.aiId"));
 					subQuery3.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-					subQuery3 = setFileStates(subQuery3,fileStates, FindingAid.class);
+					subQuery3.add(Restrictions.eq("findingAid.published", true));
 					
 				disjunction.add(Subqueries.propertyIn("archivalInstitution.aiId", subQuery3));
 
 					DetachedCriteria subQuery4 = DetachedCriteria.forClass(HoldingsGuide.class,"holdingsGuide");
 					subQuery4.setProjection(Property.forName("holdingsGuide.archivalInstitution.aiId"));
 					subQuery4.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-					subQuery4 = setFileStates(subQuery4,fileStates, HoldingsGuide.class);
+					subQuery4.add(Restrictions.eq("holdingsGuide.published", true));
 				
 				disjunction.add(Subqueries.propertyIn("archivalInstitution.aiId", subQuery4));
 

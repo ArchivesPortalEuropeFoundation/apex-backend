@@ -1,11 +1,9 @@
 package eu.apenet.persistence.hibernate;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -23,9 +21,6 @@ import org.hibernate.criterion.Subqueries;
 
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.vo.ArchivalInstitution;
-import eu.apenet.persistence.vo.Country;
-import eu.apenet.persistence.vo.Ead;
-import eu.apenet.persistence.vo.FileState;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
@@ -383,20 +378,13 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 	// This method retrieves the number of archival institutions which have
 	// content indexed in the System
 	public Long countArchivalInstitutionsWithContentIndexed() {
-		Criteria criteria = createCriteriaForArchivalInstitutionsWithContentIndexed(Arrays
-				.asList(FileState.INDEXED_FILE_STATES));
+		Criteria criteria = createCriteriaForArchivalInstitutionsWithContentIndexed();
 		criteria.setProjection(Projections.count("archivalInstitution.aiId"));
 		return (Long) criteria.uniqueResult();
 	}
 
-	/*
-	 * SELECT ai_id FROM archival_institution WHERE ai_id IN (SELECT DISTINCT
-	 * ai_id FROM finding_aid WHERE fs_id > 7 AND fs_id < 15) OR ai_id IN
-	 * (SELECT DISTINCT ai_id FROM holdings_guide WHERE fs_id > 7 AND fs_id <
-	 * 15) OR ai_id IN (SELECT DISTINCT ai_id FROM source_guide WHERE fs_id > 7
-	 * AND fs_id < 15)
-	 */
-	private Criteria createCriteriaForArchivalInstitutionsWithContentIndexed(Collection<String> fileStates) {
+
+	private Criteria createCriteriaForArchivalInstitutionsWithContentIndexed() {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		criteria.setProjection(Property.forName("archivalInstitution.aiId"));
@@ -404,21 +392,21 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 		DetachedCriteria subQuery = DetachedCriteria.forClass(FindingAid.class, "findingAid");
 		subQuery.setProjection(Property.forName("findingAid.archivalInstitution.aiId"));
 		subQuery.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		subQuery = setFileStates(subQuery, fileStates, FindingAid.class);
+		subQuery.add(Restrictions.eq("findingAid.published", true));
 
 		disjunction.add(Subqueries.propertyIn("archivalInstitution.aiId", subQuery));
 
 		DetachedCriteria subQuery2 = DetachedCriteria.forClass(HoldingsGuide.class, "holdingsGuide");
 		subQuery2.setProjection(Property.forName("holdingsGuide.archivalInstitution.aiId"));
 		subQuery2.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		subQuery2 = setFileStates(subQuery2, fileStates, HoldingsGuide.class);
+		subQuery.add(Restrictions.eq("holdingsGuide.published", true));
 
 		disjunction.add(Subqueries.propertyIn("archivalInstitution.aiId", subQuery2));
 
 		DetachedCriteria subQuery3 = DetachedCriteria.forClass(SourceGuide.class, "sourceGuide");
 		subQuery3.setProjection(Property.forName("sourceGuide.archivalInstitution.aiId"));
 		subQuery3.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		subQuery3 = setFileStates(subQuery3, fileStates, SourceGuide.class);
+		subQuery.add(Restrictions.eq("sourceGuide.published", true));
 
 		disjunction.add(Subqueries.propertyIn("archivalInstitution.aiId", subQuery3));
 
