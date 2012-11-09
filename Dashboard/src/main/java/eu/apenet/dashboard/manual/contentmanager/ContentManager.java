@@ -140,27 +140,14 @@ public class ContentManager extends ContentManagerIndexer{
 			eadcmUnit.setEadCMUnitTitle(ead.getTitle());
 
 		eadcmUnit.setEadCMUnitListWarnings(ead.getWarningses());
-		eadcmUnit.setEadCMUnitState(ead.getFileState().getId());
 		eadcmUnit.setEadCMUnitUpDate(ead.getUploadDate());
         eadcmUnit.setEadCMUnitUpMeth(ead.getUploadMethod().getMethod());
         eadcmUnit.setNumberOfDAOs(ead.getTotalNumberOfDaos());
         eadcmUnit.setCountEadCMUnitDocs(ead.getTotalNumberOfUnits());
 
-        if(ead.getFileState().getState().equals(FileState.READY_TO_INDEX)){
-            QueueItem indexQueue = ead.getQueueItem();
-            if(indexQueue != null ){
-                eadcmUnit.setQueuePosition(-1);
-	            String errors = indexQueue.getErrors();
-	            if (errors!=null)
-	            	eadcmUnit.setIndexError(errors);
-            }
-            else
-                eadcmUnit.setQueuePosition(-1);
-        }
-
         if(ead instanceof FindingAid) {
             log.debug("convertEadToEADCMUnit function is FA");
-        	if(Arrays.asList(FileState.INDEXED_FILE_STATES).contains(ead.getFileState().getState())){
+            if(ead.isPublished()){
                 long start = System.currentTimeMillis();
         		String title = DAOFactory.instance().getHoldingsGuideDAO().getLinkedHoldingsGuideTitleByFindingAidEadid(ead.getEadid(), aiId);
                 log.debug("Find title of HG linked to FA in: " + (System.currentTimeMillis() - start) + " ms");
@@ -173,7 +160,7 @@ public class ContentManager extends ContentManagerIndexer{
                 eadcmUnit.setEadCMUnitHolding("No Holdings Guide");
             }
         } else if(ead instanceof HoldingsGuide){
-            if(ead.getFileState().getState().equals(FileState.INDEXED_LINKED)){
+            if(ead.isPublished()){
                 eadcmUnit.setPossibleFindingAidsLinked(DAOFactory.instance().getCLevelDAO().countTotalCLevelsByHoldingsGuideId(ead.getId())); //max. number
                 eadcmUnit.setFindingAidsLinked(DAOFactory.instance().getFindingAidDAO().countFindingAidsIndexedByHoldingsGuideId(ead.getId(), aiId, Arrays.asList(FileState.INDEXED_FILE_STATES))); //currently number
             }

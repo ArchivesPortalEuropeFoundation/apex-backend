@@ -251,20 +251,20 @@ public class BatchAction extends AjaxControllerAbstractAction {
 
     }
     private void doItAll(int id){
-        String currentState = DAOFactory.instance().getFindingAidDAO().findById(id).getFileState().getState();
-        LOG.info("Current state for id " + id + " is " + currentState);
-        if(currentState.equals(FileState.NEW)){ //Do validate, if ok: index, if not ok: convert - validate - index
-            validateFile(id);
-            doItAll(id);
-        } else if(currentState.equals(FileState.NOT_VALIDATED_NOT_CONVERTED)){ //Do convert - validate - index
-            convertFile(id);
-            doItAll(id);
-        } else if(currentState.equals(FileState.NOT_VALIDATED_CONVERTED)){ //Do validate - index
-            validateFile(id);
-            doItAll(id);
-        } else if(currentState.equals(FileState.VALIDATED_NOT_CONVERTED) || currentState.equals(FileState.VALIDATED_CONVERTED)){ //Do index
-            index(id);
-        }
+//        String currentState = DAOFactory.instance().getFindingAidDAO().findById(id).getFileState().getState();
+//        LOG.info("Current state for id " + id + " is " + currentState);
+//        if(currentState.equals(FileState.NEW)){ //Do validate, if ok: index, if not ok: convert - validate - index
+//            validateFile(id);
+//            doItAll(id);
+//        } else if(currentState.equals(FileState.NOT_VALIDATED_NOT_CONVERTED)){ //Do convert - validate - index
+//            convertFile(id);
+//            doItAll(id);
+//        } else if(currentState.equals(FileState.NOT_VALIDATED_CONVERTED)){ //Do validate - index
+//            validateFile(id);
+//            doItAll(id);
+//        } else if(currentState.equals(FileState.VALIDATED_NOT_CONVERTED) || currentState.equals(FileState.VALIDATED_CONVERTED)){ //Do index
+//            index(id);
+//        }
     }
 }
 

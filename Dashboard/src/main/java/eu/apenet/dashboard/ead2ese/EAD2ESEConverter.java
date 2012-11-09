@@ -41,82 +41,82 @@ public class EAD2ESEConverter {
 
 	//private static final Logger LOGGER = Logger.getLogger(EAD2ESEConverter.class);
 	public static void convertEAD2ESE(Integer findingAidId, EseConfig config) throws TransformerException, XMLStreamException, SAXException, IOException {
-		EseDAO eseDao = DAOFactory.instance().getEseDAO();
-		FindingAidDAO findingAidDAO = DAOFactory.instance().getFindingAidDAO();
-		FileStateDAO fileStateDAO = DAOFactory.instance().getFileStateDAO();
-		FindingAid findingAid = findingAidDAO.findById(findingAidId);
-		File apenetEad = EseFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), findingAid.getPathApenetead());
-		String xmlNameRelative = EseFileUtils.getFileName(APEnetUtilities.FILESEPARATOR, apenetEad);
-		int lastIndex = xmlNameRelative.lastIndexOf('.');
-		String xmlOutputFilename = xmlNameRelative.substring(0, lastIndex) + "-ese"
-				+ xmlNameRelative.substring(lastIndex);
-		// String xmlOutputFilenameTemp = FileUtils.getTempFile(findingAid,
-		// xmlOutputFilename);
-		File outputXMLDir = EseFileUtils.getOutputXMLDir(APEnetUtilities.getConfig().getRepoDirPath(), findingAid.getArchivalInstitution().getCountry().getIsoname(), findingAid.getArchivalInstitution().getAiId());
-		File xmlOutputFile = EseFileUtils.getFile(outputXMLDir, xmlOutputFilename);
-		//File xmlOutputFileTemp = FileUtils.getTempFile(findingAid, xmlOutputFilename);
-			xmlOutputFile.getParentFile().mkdirs();
-			config.getTransformerXML2XML().transform(xmlNameRelative, apenetEad, xmlOutputFile);
-			int numberOfRecords = analyzeESEXML(xmlNameRelative, xmlOutputFile);
-			boolean update = false;
-			if (numberOfRecords > 0) {
-				Ese ese = null;
-				if(findingAid.getEses().isEmpty()){
-					ese = new Ese();
-					ese.setCreationDate(new Date());
-				}else{
-					ese = findingAid.getEses().iterator().next();
-					update = true;
-					if (ese.getPathHtml() != null) {
-						EseFileUtils.deleteDir(EseFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPathHtml()));
-						ese.setPathHtml(null);
-					}
-				}
-				// OAI Identifier will be built according to the next syntax: isoname/ai_id/fa_eadid
-				String oaiIdentifier = findingAid.getArchivalInstitution().getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + findingAid.getArchivalInstitution().getAiId() + APEnetUtilities.FILESEPARATOR + findingAid.getEadid();
-				
-//				Ese example = new Ese();
-//				example.setOaiIdentifier(oaiIdentifier);
-				List<Ese> esesToBeDeleted = eseDao.getEsesFromDeletedFindingaids(oaiIdentifier);
-				EseState eseState;
-				if (esesToBeDeleted.size() > 0){
-					if(!update){
-						for (Ese eseToBeDeleted: esesToBeDeleted){
-							//FileUtils.deleteDir(FileUtils.getRepoFile(ese.getPathHtml()));
-							eseDao.delete(eseToBeDeleted);
-						}
-						eseState = DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.REMOVED);
-					}else{
-						eseState = ese.getEseState();
-					}
-					ese.setModificationDate(new Date());
-				}else {
-					ese.setModificationDate(ese.getCreationDate());
-					eseState = DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.NOT_PUBLISHED);
-				}
-				ese.setPath(EseFileUtils.getRelativeESEFilePath(findingAid.getArchivalInstitution().getCountry().getIsoname(), findingAid.getArchivalInstitution().getAiId(), xmlOutputFilename));
-				ese.setOaiIdentifier(oaiIdentifier);
-				ese.setNumberOfRecords(numberOfRecords);
-				ese.setFindingAid(findingAid);
-				ArchivalInstitution ai = findingAid.getArchivalInstitution();
-				String eset =  "";
-				while (ai != null){
-					eset = COLON + ai.getAiId() + eset; 
-					ai = ai.getParent();
-				}
-				eset = findingAid.getArchivalInstitution().getCountry().getIsoname() + eset;
-				ese.setEseState(eseState);
-				ese.setEset(eset);
-                ese.setMetadataFormat(DAOFactory.instance().getMetadataFormatDAO().getMetadataFormatByName(MetadataFormat.ESE));
-                if(update){
-                	eseDao.update(ese);
-                }else{
-                	eseDao.store(ese);
-                }
-			}
-			findingAid.setTotalNumberOfDaos(new Long(numberOfRecords));
-			findingAid.setFileState(fileStateDAO.getFileStateByState(FileState.INDEXED_CONVERTED_EUROPEANA));
-			findingAidDAO.store(findingAid);
+//		EseDAO eseDao = DAOFactory.instance().getEseDAO();
+//		FindingAidDAO findingAidDAO = DAOFactory.instance().getFindingAidDAO();
+//		FileStateDAO fileStateDAO = DAOFactory.instance().getFileStateDAO();
+//		FindingAid findingAid = findingAidDAO.findById(findingAidId);
+//		File apenetEad = EseFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), findingAid.getPathApenetead());
+//		String xmlNameRelative = EseFileUtils.getFileName(APEnetUtilities.FILESEPARATOR, apenetEad);
+//		int lastIndex = xmlNameRelative.lastIndexOf('.');
+//		String xmlOutputFilename = xmlNameRelative.substring(0, lastIndex) + "-ese"
+//				+ xmlNameRelative.substring(lastIndex);
+//		// String xmlOutputFilenameTemp = FileUtils.getTempFile(findingAid,
+//		// xmlOutputFilename);
+//		File outputXMLDir = EseFileUtils.getOutputXMLDir(APEnetUtilities.getConfig().getRepoDirPath(), findingAid.getArchivalInstitution().getCountry().getIsoname(), findingAid.getArchivalInstitution().getAiId());
+//		File xmlOutputFile = EseFileUtils.getFile(outputXMLDir, xmlOutputFilename);
+//		//File xmlOutputFileTemp = FileUtils.getTempFile(findingAid, xmlOutputFilename);
+//			xmlOutputFile.getParentFile().mkdirs();
+//			config.getTransformerXML2XML().transform(xmlNameRelative, apenetEad, xmlOutputFile);
+//			int numberOfRecords = analyzeESEXML(xmlNameRelative, xmlOutputFile);
+//			boolean update = false;
+//			if (numberOfRecords > 0) {
+//				Ese ese = null;
+//				if(findingAid.getEses().isEmpty()){
+//					ese = new Ese();
+//					ese.setCreationDate(new Date());
+//				}else{
+//					ese = findingAid.getEses().iterator().next();
+//					update = true;
+//					if (ese.getPathHtml() != null) {
+//						EseFileUtils.deleteDir(EseFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPathHtml()));
+//						ese.setPathHtml(null);
+//					}
+//				}
+//				// OAI Identifier will be built according to the next syntax: isoname/ai_id/fa_eadid
+//				String oaiIdentifier = findingAid.getArchivalInstitution().getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + findingAid.getArchivalInstitution().getAiId() + APEnetUtilities.FILESEPARATOR + findingAid.getEadid();
+//				
+////				Ese example = new Ese();
+////				example.setOaiIdentifier(oaiIdentifier);
+//				List<Ese> esesToBeDeleted = eseDao.getEsesFromDeletedFindingaids(oaiIdentifier);
+//				EseState eseState;
+//				if (esesToBeDeleted.size() > 0){
+//					if(!update){
+//						for (Ese eseToBeDeleted: esesToBeDeleted){
+//							//FileUtils.deleteDir(FileUtils.getRepoFile(ese.getPathHtml()));
+//							eseDao.delete(eseToBeDeleted);
+//						}
+//						eseState = DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.REMOVED);
+//					}else{
+//						eseState = ese.getEseState();
+//					}
+//					ese.setModificationDate(new Date());
+//				}else {
+//					ese.setModificationDate(ese.getCreationDate());
+//					eseState = DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.NOT_PUBLISHED);
+//				}
+//				ese.setPath(EseFileUtils.getRelativeESEFilePath(findingAid.getArchivalInstitution().getCountry().getIsoname(), findingAid.getArchivalInstitution().getAiId(), xmlOutputFilename));
+//				ese.setOaiIdentifier(oaiIdentifier);
+//				ese.setNumberOfRecords(numberOfRecords);
+//				ese.setFindingAid(findingAid);
+//				ArchivalInstitution ai = findingAid.getArchivalInstitution();
+//				String eset =  "";
+//				while (ai != null){
+//					eset = COLON + ai.getAiId() + eset; 
+//					ai = ai.getParent();
+//				}
+//				eset = findingAid.getArchivalInstitution().getCountry().getIsoname() + eset;
+//				ese.setEseState(eseState);
+//				ese.setEset(eset);
+//                ese.setMetadataFormat(DAOFactory.instance().getMetadataFormatDAO().getMetadataFormatByName(MetadataFormat.ESE));
+//                if(update){
+//                	eseDao.update(ese);
+//                }else{
+//                	eseDao.store(ese);
+//                }
+//			}
+//			findingAid.setTotalNumberOfDaos(new Long(numberOfRecords));
+//			findingAid.setFileState(fileStateDAO.getFileStateByState(FileState.INDEXED_CONVERTED_EUROPEANA));
+//			findingAidDAO.store(findingAid);
 
 	}
 

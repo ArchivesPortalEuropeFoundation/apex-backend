@@ -326,7 +326,6 @@ public class ExistingFilesChecker {
                         Ead ead = instantiateCorrectEadType(xmlType);
                         String fileShortPath = instantiateCorrectDirPath(xmlType) + fileUnit.getFileName();
                         try {
-                            HibernateUtil.beginDatabaseTransaction();
                             ead.setEadid(eadid);
 
                             try {
@@ -341,24 +340,12 @@ public class ExistingFilesChecker {
                             ead.setUploadDate(new Date());
                             ead.setPathApenetead(fileShortPath);
 
-                            FileState fileState;
-                            if (isConverted) {
-                                LOG.debug("File already converted in local tool");
-                                ead.setConverted(true);
-                                fileState = DAOFactory.instance().getFileStateDAO().getFileStateByState(FileState.NOT_VALIDATED_CONVERTED);
-                            } else {
-                                LOG.debug("File not converted in local tool");
-                                fileState = DAOFactory.instance().getFileStateDAO().getFileStateByState(FileState.NEW);
-                            }
-                            ead.setFileState(fileState);
                             UpFile upFile = upFileDao.findById(fileUnit.getFileId());
                             ead.setUploadMethod(upFile.getUploadMethod());
 
                             DAOFactory.instance().getEadDAO().store(ead);
-                            HibernateUtil.commitDatabaseTransaction();
                         } catch (Exception e) {
                             LOG.error("The " + xmlType.getName() + " which eadid is " + eadid + " could not be stored in the table [Database Rollback]. Error:" + e.getMessage());
-                            HibernateUtil.rollbackDatabaseTransaction();
                             dataBaseCommitError = true;
                         } finally {
                             if (!dataBaseCommitError) {
@@ -650,8 +637,6 @@ public class ExistingFilesChecker {
                             Ead ead = instantiateCorrectEadType(xmlType);
                             String fileShortPath = instantiateCorrectDirPath(xmlType) + fileUnit.getFileName();
                             try {
-                                HibernateUtil.beginDatabaseTransaction();
-
                                 ead.setEadid(eadid);
                                 try {
                                     ead.setTitle(extractAttributeFromEad(uploadedFilesPath + fileUnit.getFileName(), "eadheader/filedesc/titlestmt/titleproper", null, true).trim());
@@ -662,24 +647,16 @@ public class ExistingFilesChecker {
                                 ead.setUploadDate(new Date());
                                 ead.setPathApenetead(fileShortPath);
 
-                                FileStateDAO fileStateDao = DAOFactory.instance().getFileStateDAO();
-                                if (isConverted)
-                                    ead.setFileState(fileStateDao.getFileStateByState(FileState.NOT_VALIDATED_CONVERTED));
-                                else
-                                    ead.setFileState(fileStateDao.getFileStateByState(FileState.NEW));
-
                                 UpFile upFile = upFileDao.findById(fileUnit.getFileId());
                                 ead.setUploadMethod(upFile.getUploadMethod());
                                 ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(archivalInstitutionId);
                                 ead.setArchivalInstitution(archivalInstitution);
 
-                                DAOFactory.instance().getEadDAO().insertSimple(ead);
+                                DAOFactory.instance().getEadDAO().store(ead);
 
-                                HibernateUtil.commitDatabaseTransaction();
                             } catch (Exception e) {
                                 LOG.error("The EAD which eadid is '" + eadid + "' could not be stored in table [Database Rollback]. Error:" + e.getMessage());
 
-                                HibernateUtil.rollbackDatabaseTransaction();
                                 dataBaseCommitError = true;
                             } finally {
 

@@ -174,13 +174,6 @@ public class ContentUtils {
 				//3. Delete the Finding Aids related to this Institution
 
                 for (Ead findingAid : findingAids) {
-                    //3.1. Delete all warnings related to each finding aid
-                    WarningsDAO warningsDao = DAOFactory.instance().getWarningsDAO();
-                    List<Warnings> warningsList = warningsDao.getWarnings(findingAid.getId(), null);
-                    for (Warnings warning : warningsList) {
-                        LOGGER.debug("Deleting the registries in warnings entity related to FAs related to the institution: " + ai.getAiId());
-                        warningsDao.deleteSimple(warning);
-                    }
 
                     ///3.4. Delete all ese files related to this finding aid from ese table or change it the state if they are already published
                     EseStateDAO eseStateDao = DAOFactory.instance().getEseStateDAO();
@@ -210,13 +203,6 @@ public class ContentUtils {
 				
 				//4. Delete the Holdings Guide related to this Institution
                 for (Ead holdingsGuide : holdingsGuides) {
-                    //4.1. Delete the warnings related to this holdings guide
-                    WarningsDAO warningsDao = DAOFactory.instance().getWarningsDAO();
-                    List<Warnings> warningsList = warningsDao.getWarnings(null, holdingsGuide.getId());
-                    for (Warnings warning : warningsList) {
-                        LOGGER.debug("Deleting the registries in warnings entity related to HGs related to the institution: " + ai.getAiId());
-                        warningsDao.deleteSimple(warning);
-                    }
                     LOGGER.debug("Deleting the registries in holdings_guide entity related to the institution: " + ai.getAiId());
                     eadDAO.deleteSimple(holdingsGuide);
                     LOGGER.debug("Storing the operation 'remove HG' in p_operation entity ");
@@ -258,7 +244,7 @@ public class ContentUtils {
             for (Ead findingAid : findingAids) {
                 // Remove all the entries related to this finding aid from the Index
                 //Check first if this is indexed or not with the associated state
-                if (Arrays.asList(FileState.INDEXED_FILE_STATES).contains(findingAid.getFileState().getState())) {
+                if (findingAid.isPublished()) {
                     try {
                         if (execute) {
                             LOGGER.debug("Deleting the FAs from the index related to the institution: " + ai.getAiId());
@@ -276,7 +262,7 @@ public class ContentUtils {
             for (Ead holdingsGuide : holdingsGuides) {
                 // Remove all the entries related to this holding guide from the Index
                 // Check first if this is indexed or not with the associated state
-                if (Arrays.asList(FileState.INDEXED_FILE_STATES).contains(holdingsGuide.getFileState().getState())) {
+                if (holdingsGuide.isPublished()) {
                     try {
                         if (execute) {
                             LOGGER.debug("Deleting the HGAs from the index related to the institution: " + ai.getAiId());
@@ -396,8 +382,8 @@ public class ContentUtils {
 
 	//This method indexes an ead file
 	public static void indexRollback(XmlType xmlType, int id) throws Exception {
-        LOGGER.info("Making a rollbak in the Index. Re-indexing the " + xmlType.getName() + " which id is: " + id);
-		ContentManager.reindex(xmlType, id);
+//        LOGGER.info("Making a rollbak in the Index. Re-indexing the " + xmlType.getName() + " which id is: " + id);
+//		ContentManager.reindex(xmlType, id);
 	 }
 
 	//This method renames a file and adds the "_remove" prefix to it in order to mark it as deleted
@@ -432,20 +418,7 @@ public class ContentUtils {
 		return destFile.getPath();
 	}
 	
-	//This method restores the state of a Finding Aid or a Holdings Guide in database
-	public static void restoreOriginalStateOfEAD(Ead originalEad) throws Exception {
-        XmlType xmlType = XmlType.getEadType(originalEad);
-		try {
-            EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-            Ead ead = eadDAO.findById(originalEad.getId(), xmlType.getClazz());
-            ead.setFileState(originalEad.getFileState());
-            eadDAO.update(ead);
-		} catch (Exception e) {
-            LOGGER.error("Error restoring the original state of the '" + xmlType.getName() + "' which eadid is " + originalEad.getEadid() + " and id is " + originalEad.getId() + ". Please, check the state in database and change it into " + originalEad.getFileState().getState());
-			throw e;
-		}		
-	}
-	
+
 	/**
 	 * This method open the Archival Landscape and remove the link relative to 
 	 * the holdings guide which is the parameter

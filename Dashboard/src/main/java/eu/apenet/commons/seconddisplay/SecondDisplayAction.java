@@ -136,8 +136,7 @@ public class SecondDisplayAction extends ActionSupport implements ServletRequest
 				addActionError(getText("error.user.second.display.notexist"));
 				return ERROR;
 			} else {
-				List<String> indexedStates = Arrays.asList(FileState.INDEXED_FILE_STATES);
-				if (dashboard || indexedStates.contains(ead.getFileState().getState())) {
+				if (dashboard || ead.isPublished()) {
 					title = ead.getTitle();
 					archivalInstitution = ead.getArchivalInstitution();
 				} else {

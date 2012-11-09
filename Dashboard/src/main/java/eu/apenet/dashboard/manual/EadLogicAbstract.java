@@ -79,13 +79,6 @@ public abstract class EadLogicAbstract {
                 /// DELETE FROM DATABASE ///
                 HibernateUtil.beginDatabaseTransaction();
 
-                WarningsDAO warningsDao = DAOFactory.instance().getWarningsDAO();
-                Set<Warnings> warningsList = ead.getWarningses();
-                for (Warnings warnings : warningsList) {
-                    log.debug("Removing warnings for EAD which EADID is " + ead.getEadid());
-                    warningsDao.deleteSimple(warnings);
-                }
-
                 if(ead instanceof FindingAid) {
                     EseDAO eseDao = DAOFactory.instance().getEseDAO();
                     EseStateDAO eseStateDao = DAOFactory.instance().getEseStateDAO();
@@ -107,8 +100,7 @@ public abstract class EadLogicAbstract {
                 ContentUtils.changeSearchable(ead,false);
                 eadDAO.deleteSimple(ead);
 
-                FileState fileState = ead.getFileState();
-                if ((fileState.getId() > 7) && (fileState.getId() < 15)) {
+                if(ead.isPublished()){
                     log.debug("Removing the EAD which eadid is " + ead.getEadid() + " from the index");
                     ContentUtils.deleteFromIndex(ead.getEadid(), ead.getArchivalInstitution().getAiId());
                     if(ead instanceof HoldingsGuide)
@@ -139,15 +131,6 @@ public abstract class EadLogicAbstract {
                     newEad.setTitle(title);
                     newEad.setUploadDate(new Date());
                     newEad.setPathApenetead(APEnetUtilities.FILESEPARATOR + countryIso + APEnetUtilities.FILESEPARATOR + archivalInstitutionId + APEnetUtilities.FILESEPARATOR + fileUnit.getFileName());
-
-                    FileStateDAO fileStateDAO = DAOFactory.instance().getFileStateDAO();
-                    if (isConverted) {
-                        log.debug("File already converted in local tool");
-                        newEad.setFileState(fileStateDAO.getFileStateByState(FileState.NOT_VALIDATED_CONVERTED));
-                    } else {
-                        log.debug("File not converted in local tool");
-                        newEad.setFileState(fileStateDAO.getFileStateByState(FileState.NEW));
-                    }
                     newEad.setUploadMethod(upFile.getUploadMethod());
                     eadDAO.insertSimple(newEad);
                 }
@@ -197,31 +180,30 @@ public abstract class EadLogicAbstract {
             } catch (Exception e) {
                 HibernateUtil.rollbackDatabaseTransaction();
 
-                FileState fileState = ead.getFileState();
-                if((fileState.getId() > 7) && (fileState.getId() < 15)) {
-                    try {
-                        ContentUtils.indexRollback(XmlType.getEadType(ead), ead.getId());
-                    } catch (Exception ex) {
-                        log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is '" + ead.getEadid() + "'. Error:" + ex.getMessage());
-                    }
-
-                    if(ead instanceof HoldingsGuide) {
-                        try {
-                            ContentUtils.addLinkHGtoAL((HoldingsGuide)ead);
-                        }catch(Exception excep){
-                            log.error("FATAL ERROR. Error during re-link with Archival Landscape: "+excep.getMessage());
-                        }
-                    }
-
-                    //Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-                    if(fileState.getId() != 8) {
-                        try {
-                            ContentUtils.restoreOriginalStateOfEAD(ead);
-                        } catch (Exception ex) {
-                            log.error("Error restoring the original state of the EAD. Check Database");
-                        }
-                    }
-                }
+//                if(ead.isPublished()){
+//                    try {
+//                        ContentUtils.indexRollback(XmlType.getEadType(ead), ead.getId());
+//                    } catch (Exception ex) {
+//                        log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is '" + ead.getEadid() + "'. Error:" + ex.getMessage());
+//                    }
+//
+//                    if(ead instanceof HoldingsGuide) {
+//                        try {
+//                            ContentUtils.addLinkHGtoAL((HoldingsGuide)ead);
+//                        }catch(Exception excep){
+//                            log.error("FATAL ERROR. Error during re-link with Archival Landscape: "+excep.getMessage());
+//                        }
+//                    }
+//
+//                    //Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
+//                    if(fileState.getId() != 8) {
+//                        try {
+//                            ContentUtils.restoreOriginalStateOfEAD(ead);
+//                        } catch (Exception ex) {
+//                            log.error("Error restoring the original state of the EAD. Check Database");
+//                        }
+//                    }
+//                }
 
                 //Rename the FA to the original name in temporal repository or final repository
                 try {

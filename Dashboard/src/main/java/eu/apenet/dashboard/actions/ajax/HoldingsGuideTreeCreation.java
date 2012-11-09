@@ -125,11 +125,11 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
     }
 
     public String holdingsGuideIsNotIndexed(HoldingsGuide holdingsGuide){
-        if(holdingsGuide.getFileState().getState().equals(FileState.NEW) || holdingsGuide.getFileState().getState().equals(FileState.NOT_VALIDATED_NOT_CONVERTED) || holdingsGuide.getFileState().getState().equals(FileState.NOT_VALIDATED_CONVERTED) || holdingsGuide.getFileState().getState().equals(FileState.VALIDATING_FINAL_ERROR))
+        if(holdingsGuide.isPublished()){
             return ERROR;
-        else if(holdingsGuide.getFileState().getState().equals(FileState.VALIDATED_CONVERTED) || holdingsGuide.getFileState().getState().equals(FileState.VALIDATED_NOT_CONVERTED))
+        }else if(ValidatedState.VALIDATED.equals(holdingsGuide.getValidated())){
             return SUCCESS;
-        else
+        }else
             return NONE;
     }
 

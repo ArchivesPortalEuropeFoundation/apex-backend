@@ -412,47 +412,47 @@ public class EditAction extends eu.apenet.dashboard.archivallandscape.AbstractEd
 						//Re-index again the finding aids deleted
 						for (int i=0; i< this.fasDeleted.size();i++)
 						{
-							if (Arrays.asList(FileState.INDEXED_FILE_STATES).contains(this.fasDeleted.get(i).getFileState().getState())) {
+							if (this.fasDeleted.get(i).isPublished()) {
 								try {
 									ContentUtils.indexRollback(XmlType.EAD_FA, this.fasDeleted.get(i).getId());
 								} catch (Exception ex) {
 									log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + this.fasDeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
 								}
 								
-								//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-								if ((Arrays.asList(FileState.INDEXED_FILE_STATES).contains(this.fasDeleted.get(i).getFileState().getState()) &&(this.fasDeleted.get(i).getFileState().getId()!=8))) {
-
-									try {
-										ContentUtils.restoreOriginalStateOfEAD(this.fasDeleted.get(i));
-									}
-									catch (Exception ex) {
-										log.error("Error restoring the original state of the Finding Aid. Check Database");
-									}
-								}
+//								//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
+//								if ((Arrays.asList(FileState.INDEXED_FILE_STATES).contains(this.fasDeleted.get(i).getFileState().getState()) &&(this.fasDeleted.get(i).getFileState().getId()!=8))) {
+//
+//									try {
+//										ContentUtils.restoreOriginalStateOfEAD(this.fasDeleted.get(i));
+//									}
+//									catch (Exception ex) {
+//										log.error("Error restoring the original state of the Finding Aid. Check Database");
+//									}
+//								}
 							}							
 						}
 						//Re-index again the holding guides deleted
 						for (int i=0; i< this.hgsDeleted.size();i++)
 						{
-							if (Arrays.asList(FileState.INDEXED_FILE_STATES).contains(this.hgsDeleted.get(i).getFileState().getState())) {
+							if (this.hgsDeleted.get(i).isPublished()) {
 								try {
 									ContentUtils.indexRollback(XmlType.EAD_HG, this.hgsDeleted.get(i).getId());
 								} catch (Exception ex) {
 									log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + this.hgsDeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
 									log.error("FATAL ERROR. The rollback of index could not be done successfully. A manually review of the AL of: " + a.getmyCountry() + " must be done");
 								}
-								
-								//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-								if ((Arrays.asList(FileState.INDEXED_FILE_STATES).contains(this.hgsDeleted.get(i).getFileState().getState())&&(this.hgsDeleted.get(i).getFileState().getId()!=8))) {
-
-									try {
-										ContentUtils.restoreOriginalStateOfEAD(this.hgsDeleted.get(i));
-									}
-									catch (Exception ex) {
-										log.error("Error restoring the original state of the Finding Aid. Check Database");
-										log.error("FATAL ERROR. The rollback of index could not be done successfully. A manually review of the AL of: " + a.getmyCountry() + " must be done");
-									}
-								}
+//								
+//								//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
+//								if ((Arrays.asList(FileState.INDEXED_FILE_STATES).contains(this.hgsDeleted.get(i).getFileState().getState())&&(this.hgsDeleted.get(i).getFileState().getId()!=8))) {
+//
+//									try {
+//										ContentUtils.restoreOriginalStateOfEAD(this.hgsDeleted.get(i));
+//									}
+//									catch (Exception ex) {
+//										log.error("Error restoring the original state of the Finding Aid. Check Database");
+//										log.error("FATAL ERROR. The rollback of index could not be done successfully. A manually review of the AL of: " + a.getmyCountry() + " must be done");
+//									}
+//								}
 							}							
 						}
 						

@@ -20,16 +20,16 @@ import eu.apenet.dashboard.manual.EditParser;
 import eu.apenet.dashboard.manual.ReconstructEadFile;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.persistence.dao.EadContentDAO;
-import eu.apenet.persistence.dao.FileStateDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
-import eu.apenet.persistence.vo.FileState;
+import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
+import eu.apenet.persistence.vo.ValidatedState;
 
 /**
  * User: Yoann Moranville
@@ -112,11 +112,14 @@ public class EditEadAction extends AjaxControllerAbstractAction {
                 throw new APEnetException("No XmlType defined or wrong type, should be either EAD_FA or EAD_HG - other types not working yet");
 
             Ead ead = DAOFactory.instance().getEadDAO().findById(id.intValue(), xmlType.getClazz());
-            String currentState = ead.getFileState().getState();
 
-            if(!currentState.equals(FileState.NEW) && !currentState.equals(FileState.NOT_VALIDATED_NOT_CONVERTED) && !currentState.equals(FileState.NOT_VALIDATED_CONVERTED) && !currentState.equals(FileState.VALIDATED_CONVERTED) && !currentState.equals(FileState.VALIDATED_NOT_CONVERTED) && !currentState.equals(FileState.VALIDATING_FINAL_ERROR))
+            if(ead.isPublished())
                 throw new APEnetException("The file state of the finding aid is not compliant for the Edition action.");
-
+            if (ead instanceof FindingAid){
+            	if (!EuropeanaState.NOT_CONVERTED.equals(((FindingAid) ead).getEuropeana())){
+            		throw new APEnetException("The file state of the finding aid is not compliant for the Edition action.");
+            	}
+            }
             EADParser.parseEad(ead);
 
             writer.append(new JSONObject().put("dbEntriesCreated", true).toString());
@@ -311,17 +314,12 @@ public class EditEadAction extends AjaxControllerAbstractAction {
                 ReconstructEadFile.reconstructEadFile(eadContent, filePath);
 
                 HibernateUtil.beginDatabaseTransaction();
-                FileStateDAO fileStateDAO = DAOFactory.instance().getFileStateDAO();
                 if(findingAid != null){
-                    if(findingAid.getFileState().equals(fileStateDAO.getFileStateByState(FileState.VALIDATED_CONVERTED)))
-                        findingAid.setFileState(fileStateDAO.getFileStateByState(FileState.NOT_VALIDATED_CONVERTED));
-                    else if(findingAid.getFileState().equals(fileStateDAO.getFileStateByState(FileState.VALIDATED_NOT_CONVERTED)))
-                        findingAid.setFileState(fileStateDAO.getFileStateByState(FileState.NOT_VALIDATED_NOT_CONVERTED));
+                    if(ValidatedState.VALIDATED.equals(findingAid.getValidated()))
+                        findingAid.setValidated(ValidatedState.NOT_VALIDATED);
                 } else {
-                    if(holdingsGuide.getFileState().equals(fileStateDAO.getFileStateByState(FileState.VALIDATED_CONVERTED)))
-                        holdingsGuide.setFileState(fileStateDAO.getFileStateByState(FileState.NOT_VALIDATED_CONVERTED));
-                    else if(holdingsGuide.getFileState().equals(fileStateDAO.getFileStateByState(FileState.VALIDATED_NOT_CONVERTED)))
-                        holdingsGuide.setFileState(fileStateDAO.getFileStateByState(FileState.NOT_VALIDATED_NOT_CONVERTED));
+                    if(ValidatedState.VALIDATED.equals(holdingsGuide.getValidated()))
+                    	holdingsGuide.setValidated(ValidatedState.NOT_VALIDATED);
                 }
                 HibernateUtil.commitDatabaseTransaction();
 
