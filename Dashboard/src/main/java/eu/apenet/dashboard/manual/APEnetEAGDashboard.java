@@ -1731,7 +1731,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
 		while (!found && i < this.holdingsGuideIndexed.size()){
 
 			if (this.holdingsGuideIndexed.get(i).getTitle().equals(hgTitle)) {
-				hgResult = this.holdingsGuideIndexed.get(i);
+				hgResult = (HoldingsGuide) this.holdingsGuideIndexed.get(i);
 				found = true;
 			}
 			else {

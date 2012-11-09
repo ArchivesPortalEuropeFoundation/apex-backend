@@ -55,9 +55,9 @@ public class ContentManager extends ContentManagerIndexer{
 
 
 //
-	public static Long getHoldingsGuideSize(Integer aiId) {
-		return new HoldingsGuideLogic().getSize(aiId);
-	}
+//	public static Long getHoldingsGuideSize(Integer aiId) {
+//		return new HoldingsGuideLogic().getSize(aiId);
+//	}
 
     public static Long getEacCpfSize(int aiId){
         return DAOFactory.instance().getCpfContentDAO().countCpfContentByArchivalInstitution(aiId);

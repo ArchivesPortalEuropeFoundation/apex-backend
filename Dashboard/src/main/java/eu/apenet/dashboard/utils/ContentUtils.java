@@ -608,28 +608,11 @@ public class ContentUtils {
                                 	ArchivalInstitution ai = hg.getArchivalInstitution();
                                 	HoldingsGuide hg2 = new HoldingsGuide();
                                 	List<String> collection = new ArrayList<String>();
-                                	HoldingsGuideDAO holdingsGuideDao = DAOFactory.instance().getHoldingsGuideDAO();
-                                	List<HoldingsGuide> holdingsGuideList = holdingsGuideDao.getHoldingsGuides(str, "", "", collection, ai.getAiId(), "", false);
-                                	if (holdingsGuideList.size() == 0) 
+                                	HoldingsGuideDAO holdingsGuideDao = DAOFactory.instance().getHoldingsGuideDAO() ;
+                                	boolean hgFound = DAOFactory.instance().getEadDAO().isEadidUsed(str, ai.getAiId(), HoldingsGuide.class)!= null;
+                                	if (!hgFound) 
                                 	{
-                                		//Delete this p tag
                                 		pNode.getParentNode().removeChild(pNode);
-                                	}
-                                	else
-                                	{
-                                		Boolean hgFound =false;
-                                		for (int jj=0;jj< holdingsGuideList.size();jj++)
-                                		{
-                                			if (str.equals(holdingsGuideList.get(jj).getEadid()))
-                                			{
-                                				hgFound = true;
-                                			}
-                                		}
-                                		if (!hgFound)
-                                		{
-                                			//Delete this p tag.
-                                    		pNode.getParentNode().removeChild(pNode);
-                                		}
                                 	}
                         			
                                 }

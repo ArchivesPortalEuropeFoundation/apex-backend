@@ -43,59 +43,7 @@ import eu.apenet.persistence.vo.Warnings;
 public class HoldingsGuideLogic extends EadLogicAbstract {
 	private Logger log = Logger.getLogger(getClass());
 
-	public List<HoldingsGuide> findAll() {
-		List<HoldingsGuide> favo = null;
-		HoldingsGuideDAO hgdao = DAOFactory.instance().getHoldingsGuideDAO();
-		favo = hgdao.findAll();
-		return favo;
-	}
 
-	public HoldingsGuide getHoldingGuide(Integer id) {
-		return DAOFactory.instance().getHoldingsGuideDAO().findById(id);
-	}
-
-	public void update(HoldingsGuide holdingTemp) {
-		HibernateUtil.beginDatabaseTransaction();
-		HoldingsGuideDAO hgdao = DAOFactory.instance().getHoldingsGuideDAO();
-		hgdao.store(holdingTemp);
-		HibernateUtil.commitDatabaseTransaction();
-	}
-
-	public Long getSize(Integer aiId) {
-		List<String> collection = new ArrayList<String>();
-		HoldingsGuideDAO hgdao = DAOFactory.instance().getHoldingsGuideDAO();
-		return hgdao.countHoldingsGuideByArchivalInstitution(aiId, collection);
-	}
-
-	public List<HoldingsGuide> getFourResults(Integer page, Boolean orderDate, Integer aiId) {
-		HoldingsGuideDAO hgdao = DAOFactory.instance().getHoldingsGuideDAO();
-		return hgdao.getHoldingsGuidePage("", "", "", new ArrayList<String>(), aiId, "uploadDate", orderDate, page, 4);
-	}
-
-	public List<HoldingsGuide> search(String searchTerms, Integer page, Integer ai, Integer option, String orderBy, Boolean orderDecreasing) {
-		HoldingsGuideDAO hgdao = DAOFactory.instance().getHoldingsGuideDAO();
-		return hgdao.getMatchHoldingsGuides(searchTerms, ai, page, option, orderBy, orderDecreasing);
-	}
-
-	public Long countSearch(String searchTerms, Integer page, Integer ai, Integer option) {
-		HoldingsGuideDAO hgdao = DAOFactory.instance().getHoldingsGuideDAO();
-		return hgdao.getMatchCountHoldingsGuides(searchTerms, ai, page, option);
-	}
-
-	public void insert(Warnings warnings) {
-		WarningsDAO warningsDao = DAOFactory.instance().getWarningsDAO();
-		warningsDao.store(warnings);
-	}
-
-	public void update(Warnings warnings) {
-		WarningsDAO warningsDao = DAOFactory.instance().getWarningsDAO();
-		warningsDao.update(warnings);
-	}
-
-	public void delete(Warnings warnings) {
-		WarningsDAO warningsDao = DAOFactory.instance().getWarningsDAO();
-		warningsDao.delete(warnings);
-	}
 
 	/**
 	 * It's called after index process is launched, adds otherfindaid tag with
