@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -39,17 +38,16 @@ import eu.apenet.commons.solr.UpdateSolrServerHolder;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
-import eu.apenet.dashboard.manual.contentmanager.ContentManager;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.dao.EadDAO;
+import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.dao.EseStateDAO;
 import eu.apenet.persistence.dao.HoldingsGuideDAO;
 import eu.apenet.persistence.dao.SentMailRegisterDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
-import eu.apenet.persistence.dao.WarningsDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AiAlternativeName;
 import eu.apenet.persistence.vo.ArchivalInstitution;
@@ -57,14 +55,11 @@ import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.Ese;
 import eu.apenet.persistence.vo.EseState;
-import eu.apenet.persistence.vo.FileState;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
-import eu.apenet.persistence.vo.User;
 import eu.apenet.persistence.vo.SentMailRegister;
 import eu.apenet.persistence.vo.SourceGuide;
 import eu.apenet.persistence.vo.UpFile;
-import eu.apenet.persistence.vo.Warnings;
 
 
 /**
@@ -339,20 +334,18 @@ public class ContentUtils {
 				}
 			}else {
 				EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-				Ead eadExample = new FindingAid();
-				eadExample.setAiId(ai.getAiId());
-				eadExample.setPublished(true);
-				long numberOfEads = eadDAO.countEads(eadExample);
+				EadSearchOptions eadSearchOptions = new EadSearchOptions();
+				eadSearchOptions.setArchivalInstitionId(ai.getAiId());
+				eadSearchOptions.setPublished(true);
+				eadSearchOptions.setEadClazz(FindingAid.class);
+
+				long numberOfEads = eadDAO.countEads(eadSearchOptions);
 				if (numberOfEads <= 1){
-					eadExample = new HoldingsGuide();
-					eadExample.setAiId(ai.getAiId());
-					eadExample.setPublished(true);
-					numberOfEads += eadDAO.countEads(eadExample);
+					eadSearchOptions.setEadClazz(HoldingsGuide.class);
+					numberOfEads += eadDAO.countEads(eadSearchOptions);
 					if (numberOfEads <= 1){
-						eadExample = new SourceGuide();
-						eadExample.setAiId(ai.getAiId());
-						eadExample.setPublished(true);
-						numberOfEads += eadDAO.countEads(eadExample);
+						eadSearchOptions.setEadClazz(SourceGuide.class);
+						numberOfEads += eadDAO.countEads(eadSearchOptions);
 						if (numberOfEads <= 1){
 							LOGGER.info("AI: '" + ai.getAiname() + "' has now no searchable items left");
 							ai.setContainSearchableItems(searchable);

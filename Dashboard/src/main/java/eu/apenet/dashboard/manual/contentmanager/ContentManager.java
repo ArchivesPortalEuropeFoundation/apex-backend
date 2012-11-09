@@ -112,9 +112,9 @@ public class ContentManager extends ContentManagerIndexer{
             for (FindingAid findingTemp : listFinding)
                 tempList.add(convertEadToEADCMUnit(findingTemp, aiId));
 		} else if(xmlType.equals(XmlType.EAD_HG) || xmlType.equals(XmlType.EAD_SG)) {
-            List<Ead> listEad = DAOFactory.instance().getEadDAO().getEadPage(null, aiId, orderBy, orderDecreasing, page, limit, xmlType.getClazz());
-            for(Ead ead : listEad)
-                tempList.add(convertEadToEADCMUnit(ead, aiId));
+//            List<Ead> listEad = DAOFactory.instance().getEadDAO().getEadPage(null, aiId, orderBy, orderDecreasing, page, limit, xmlType.getClazz());
+//            for(Ead ead : listEad)
+//                tempList.add(convertEadToEADCMUnit(ead, aiId));
         }
 		return tempList;
 	}
@@ -266,12 +266,12 @@ public class ContentManager extends ContentManagerIndexer{
 			}
 		} else if(xmlType.equals(XmlType.EAD_SG) || xmlType.equals(XmlType.EAD_HG)){
 			EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-            List<Ead> listEad = eadDAO.getMatchEads(searchTerms, ai, page, pageSize, orderBy, orderDecreasing, xmlType.getClazz());
-            result.setTotalSize(eadDAO.getMatchCountEads(searchTerms, ai, xmlType.getClazz()));
-            if (listEad != null) {
-				for(Ead ead : listEad)
-					temp.add(convertEadToEADCMUnit(ead, ai));
-			}
+            //List<Ead> listEad = eadDAO.getMatchEads(searchTerms, ai, page, pageSize, orderBy, orderDecreasing, xmlType.getClazz());
+//            //result.setTotalSize(eadDAO.getMatchCountEads(searchTerms, ai, xmlType.getClazz()));
+//            if (listEad != null) {
+//				for(Ead ead : listEad)
+//					temp.add(convertEadToEADCMUnit(ead, ai));
+//			}
         }
 		result.setResults(temp);
 		return result;
