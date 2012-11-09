@@ -222,101 +222,26 @@ public class ContentManager extends ContentManagerIndexer{
 	}
 
 	public static void deleteEseFiles(Integer id) throws Exception {
-		FindingAidLogic.deleteEseFiles(id);
 	}
 	
-	/*
-	public static String deleteEseFiles(Integer id) throws Exception {
-		
-		if (!isBeingHarvested()) {
-			FindingAidLogic.deleteEseFiles(id);
-			return Action.SUCCESS;
-		}
-		else {
-			return Action.NONE;
-		}
-	}
-	 */
+
 
 	public static File deliverEseFiles(Integer id) throws Exception {
-		FindingAidLogic fal = new FindingAidLogic();
-		return fal.deliverEseFiles(id);
+		return null;
 	}
 
     public static String deliverToEuropeana(int faId) {
-		FindingAidDAO findingaidDao = DAOFactory.instance().getFindingAidDAO();
-		FindingAid findingaid = findingaidDao.findById(faId);
-		SecurityContext.get().checkAuthorized(findingaid);
-		removeOldResumptionTokens();
-		Ese ese = null;
-		if(!isBeingHarvested()){
-			EseDAO esesDao = DAOFactory.instance().getEseDAO();
-			List<Ese> eses = esesDao.getEses(faId);
-			if(eses!=null && !eses.isEmpty()){
-				Iterator<Ese> iterator = eses.iterator();
-				while(iterator.hasNext()){
-					ese = iterator.next();
-					if(ese.getEseState().getState().equals(EseState.NOT_PUBLISHED) || ese.getEseState().getState().equals(EseState.REMOVED)){
-						ese.setEseState(DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.PUBLISHED));
-						esesDao.update(ese);
-					}
-				}
-				//Changing FA's state to "Indexed, delivered to Europeana"
-				FileStateDAO fileStateDao = DAOFactory.instance().getFileStateDAO();
 
-				FileState fileState = fileStateDao.getFileStateByState(FileState.INDEXED_DELIVERED_EUROPEANA);
-				findingaid.setFileState(fileState);
-				findingaidDao.store(findingaid);
-
-			}else{
-				return Action.ERROR;
-			}
-		}else{
-			return Action.NONE;
-		}
-		return Action.SUCCESS;
-
+    	return null;
 	}
 
       
     public static void deleteFromEuropeana(int faId) throws Exception {
-		FindingAidDAO findingaidDao = DAOFactory.instance().getFindingAidDAO();
-		FindingAid findingaid = findingaidDao.findById(faId);
-		SecurityContext.get().checkAuthorized(findingaid);
-		//Change ese_state from ese to "Removed"
-        Ese ese = null;
-        EseDAO esesDao = DAOFactory.instance().getEseDAO();
-        List<Ese> eses = esesDao.getEses(faId);
-        if(eses!=null && !eses.isEmpty()){
-            Iterator<Ese> iterator = eses.iterator();
-            while(iterator.hasNext()){
-                ese = iterator.next();
-                if(ese.getEseState().getState().equals(EseState.PUBLISHED)){
-                    ese.setEseState(DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.REMOVED));
-                    esesDao.update(ese);
-                }
-            }
-        }
-        //Changing FA's state to "Indexed, converted to ESE/EDM"
-        FileStateDAO fileStateDao = DAOFactory.instance().getFileStateDAO();
-        FileState fileState=null;
-        fileState = fileStateDao.getFileStateByState("Indexed_Converted to ESE/EDM");
-        findingaid.setFileState(fileState);
-        findingaidDao.store(findingaid);
+
 	}
 
 
-    /**
-	 * Deletes all values in DDBB that has never been used again.
-	 */
-	public static void removeOldResumptionTokens() {
-		ResumptionTokenDAO resumptionTokenDao = DAOFactory.instance().getResumptionTokenDAO();
-		List<ResumptionToken> resumptionTokenList = resumptionTokenDao.getOldResumptionTokensThan(new Date());
-		Iterator<ResumptionToken> iterator = resumptionTokenList.iterator();
-		while(iterator.hasNext()){
-			resumptionTokenDao.delete(iterator.next());
-		}
-	}
+
 
 	/**
 	 * This method calls to delete method of finding aid or holdings guide

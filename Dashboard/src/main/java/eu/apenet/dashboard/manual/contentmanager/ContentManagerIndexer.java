@@ -62,28 +62,7 @@ public abstract class ContentManagerIndexer {
 	}
 
 
-	public static void deletefromIndexQueue(XmlType xmltype, int id) {
-//		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-//
-//		Ead ead = eadDAO.findById(id, xmltype.getClazz());
-//		SecurityContext.get().checkAuthorized(ead);
-//		try {
-//
-//			QueueItem indexQueue = ead.getQueueItem();
-//			int queueId = indexQueue.getId();
-////			FileState previousState = indexQueue.getFileState();
-////			ead.setFileState(previousState);
-////			eadDAO.update(ead);
-//			QueueItemDAO indexqueueDAO = DAOFactory.instance().getQueueItemDAO();
-//			QueueItem iq = indexqueueDAO.findById(queueId);
-//
-//			if (iq != null) {
-//				indexqueueDAO.delete(iq);
-//			}
-//		} catch (Exception e) {
-//			log.info(ead + " unable to delete from index queue");
-//		}
-	}
+
 
 	/**
 	 * This method provides the functionality of only delete a file from index

@@ -220,42 +220,9 @@ public class ContentManagerAction extends AbstractContentManagerAction {
 
 	}
 
-	/**
-	 * (deleteEse action).
-	 * 
-	 * @return SUCCESS or ERROR
-	 * @throws Exception
-	 */
-	public String deleteEse() throws Exception {
-		Integer aiId = getAiId();
-		boolean isBeingHarvested = ContentManager.isBeingHarvested();
-		try {
-			log.info("Institution with id :" + aiId + ": is trying to delete ESE with id :" + getId() + ":");
-			if (!isBeingHarvested
-					|| (isBeingHarvested && !(getXmlType().equals(XmlType.EAD_FA) && ContentManager
-							.eadHasEsePublished(getId())))) {
-				ContentManager.deleteEseFiles(getId());
-				setHarvesting(0);
-			} else {
-				setHarvesting(1);
-			}
-			return finishAction();
-		} catch (Exception e) {
-			log.error("Unable to delete ese files for FA which fa_id is " + getId() + ". Error:" + e.getMessage());
-			throw e;
-		}
 
-	}
 
-	/**
-	 * (deletefromindexqueue action).
-	 * 
-	 * @return SUCCESS or ERROR
-	 */
-	public String deletefromIndexQueue() {
-		ContentManager.deletefromIndexQueue(getXmlType(), getId());
-		return finishAction();
-	}
+
 
 	/**
 	 * (delete action). This method call to ContentManager.delete method to
