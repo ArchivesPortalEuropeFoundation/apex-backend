@@ -61,6 +61,7 @@
 		<s:hidden name="orderByField" />
 		<s:hidden name="orderByAscending" />
 		<s:hidden name="type" />
+		<input name="ajax" type="hidden" value="true"/>
 
 		<div id="ead-results-header" class="boxtitle">
 			<div id="numberOfResults">

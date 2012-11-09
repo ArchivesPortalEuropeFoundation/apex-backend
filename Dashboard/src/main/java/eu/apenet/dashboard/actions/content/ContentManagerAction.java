@@ -23,6 +23,7 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 	protected static final String CONTENT_MESSAGE_YES = "content.message.yes";
 	protected static final String CONTENT_MESSAGE_QUEUE = "content.message.queue";
 	protected static final String CONTENT_MESSAGE_ERROR = "content.message.fatalerror";
+	protected static final String SUCCESS_AJAX = "success_ajax";
 	/**
 	 * 
 	 */
@@ -45,7 +46,26 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 	private boolean orderByAscending = false;
 	private String searchTerms;
 	private String searchTermsField;
-	private boolean refreshFromSession = true;
+	private boolean ajax = false;
+	public ContentManagerAction(){
+		convertedStatusList.put(TRUE, getText(CONTENT_MESSAGE_YES));
+		convertedStatusList.put(FALSE, getText(CONTENT_MESSAGE_NO));
+		validatedStatusList.put(ValidatedState.VALIDATED.toString(), getText(CONTENT_MESSAGE_YES));
+		validatedStatusList.put(ValidatedState.NOT_VALIDATED.toString(), getText(CONTENT_MESSAGE_NO));
+		validatedStatusList.put(ValidatedState.FATAL_ERROR.toString(), getText(CONTENT_MESSAGE_ERROR));
+		publishedStatusList.put(TRUE, getText(CONTENT_MESSAGE_YES));
+		publishedStatusList.put(FALSE, getText(CONTENT_MESSAGE_NO));
+		europeanaStatusList.put(EuropeanaState.CONVERTED.toString(), getText("content.message.eseedm"));
+		europeanaStatusList.put(EuropeanaState.NOT_CONVERTED.toString(), getText(CONTENT_MESSAGE_NO));
+		europeanaStatusList.put(EuropeanaState.DELIVERED.toString(), getText("content.message.europeana.delivered"));
+		europeanaStatusList.put(EuropeanaState.HARVESTED.toString(), getText("content.message.europeana.harvested"));
+		typeList.put(XmlType.EAD_FA.getSolrPrefix(), getText("content.message." + XmlType.EAD_FA.getResourceName()));
+		typeList.put(XmlType.EAD_HG.getSolrPrefix(), getText("content.message." + XmlType.EAD_HG.getResourceName()));
+		typeList.put(XmlType.EAD_SG.getSolrPrefix(), getText("content.message." + XmlType.EAD_SG.getResourceName()));
+		searchTermsFieldList.put("", getText("content.message.all"));
+		searchTermsFieldList.put("eadid", getText("content.message.id"));
+		searchTermsFieldList.put("title", getText("content.message.title"));
+	}
 	@Override
 	public void setServletRequest(HttpServletRequest request) {
 		this.request= request;
@@ -86,64 +106,67 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 	
 	@Override
 	public void prepare() throws Exception {
-		fillFields();
 		super.prepare();
 	}
-	private void fillFields(){
-		convertedStatusList.put(TRUE, getText(CONTENT_MESSAGE_YES));
-		convertedStatusList.put(FALSE, getText(CONTENT_MESSAGE_NO));
-		validatedStatusList.put(ValidatedState.VALIDATED.toString(), getText(CONTENT_MESSAGE_YES));
-		validatedStatusList.put(ValidatedState.NOT_VALIDATED.toString(), getText(CONTENT_MESSAGE_NO));
-		validatedStatusList.put(ValidatedState.FATAL_ERROR.toString(), getText(CONTENT_MESSAGE_ERROR));
-		publishedStatusList.put(TRUE, getText(CONTENT_MESSAGE_YES));
-		publishedStatusList.put(FALSE, getText(CONTENT_MESSAGE_NO));
-		europeanaStatusList.put(EuropeanaState.CONVERTED.toString(), getText("content.message.eseedm"));
-		europeanaStatusList.put(EuropeanaState.NOT_CONVERTED.toString(), getText(CONTENT_MESSAGE_NO));
-		europeanaStatusList.put(EuropeanaState.DELIVERED.toString(), getText("content.message.europeana.delivered"));
-		europeanaStatusList.put(EuropeanaState.HARVESTED.toString(), getText("content.message.europeana.harvested"));
-		typeList.put(XmlType.EAD_FA.getSolrPrefix(), getText("content.message." + XmlType.EAD_FA.getResourceName()));
-		typeList.put(XmlType.EAD_HG.getSolrPrefix(), getText("content.message." + XmlType.EAD_HG.getResourceName()));
-		typeList.put(XmlType.EAD_SG.getSolrPrefix(), getText("content.message." + XmlType.EAD_SG.getResourceName()));
-		searchTermsFieldList.put("", getText("content.message.all"));
-		searchTermsFieldList.put("eadid", getText("content.message.id"));
-		searchTermsFieldList.put("title", getText("content.message.title"));
-		if (refreshFromSession){
-			EadSearchOptions eadSearchOptions = (EadSearchOptions) request.getSession()
-					.getAttribute(EAD_SEARCH_OPTIONS);
-			if (eadSearchOptions != null) {
-				if (eadSearchOptions.getConverted() != null) {
-					convertedStatus = new String[] { eadSearchOptions.getConverted().toString() };
-				}
-				if (eadSearchOptions.getValidated().size() > 0) {
-					validatedStatus = new String[eadSearchOptions.getValidated().size()];
-					for (int i = 0; i < eadSearchOptions.getValidated().size(); i++) {
-						validatedStatus[i] = eadSearchOptions.getValidated().get(i).toString();
-					}
-				}
-				if (eadSearchOptions.getPublished() != null) {
-					publishedStatus = new String[] { eadSearchOptions.getPublished().toString() };
-				}
-				if (eadSearchOptions.getEuropeana().size() > 0) {
-					europeanaStatus = new String[eadSearchOptions.getEuropeana().size()];
-					for (int i = 0; i < eadSearchOptions.getEuropeana().size(); i++) {
-						europeanaStatus[i] = eadSearchOptions.getEuropeana().get(i).toString();
-					}
-				}
-				type = XmlType.getType(eadSearchOptions.getEadClazz()).getSolrPrefix();
-				searchTerms = eadSearchOptions.getSearchTerms();
-				//orderByField = eadSearchOptions.getOrderByField();
-				//orderByAscending = eadSearchOptions.isOrderByAscending();
-				searchTermsField = eadSearchOptions.getSearchTermsField();
-			}
+	
+	@Override
+	public String input() throws Exception {
+		EadSearchOptions eadSearchOptions = initFromExistingEadSearchOptions();
+		if (eadSearchOptions == null){
+			eadSearchOptions = createNewEadSearchOptions();
+		}
+		ContentManagerResults results = new ContentManagerResults(eadSearchOptions);
+		results.setEads(DAOFactory.instance().getEadDAO().getEads(eadSearchOptions));
+		results.setTotalNumberOfResults(DAOFactory.instance().getEadDAO().countEads(eadSearchOptions));
+
+		request.setAttribute("results", results);
+		if (ajax){
+			return SUCCESS_AJAX;
+		}else {
+			return SUCCESS;
 		}
 	}
 
+
 	@Override
 	public String execute() throws Exception {
-		fillResults();
+		request.getSession().setAttribute(EAD_SEARCH_OPTIONS, createNewEadSearchOptions());
 		return SUCCESS;
 	}
-	private void fillResults(){
+
+	private EadSearchOptions initFromExistingEadSearchOptions(){
+		EadSearchOptions eadSearchOptions = (EadSearchOptions) request.getSession()
+				.getAttribute(EAD_SEARCH_OPTIONS);
+		if (eadSearchOptions != null) {
+			if (eadSearchOptions.getConverted() != null) {
+				convertedStatus = new String[] { eadSearchOptions.getConverted().toString() };
+			}
+			if (eadSearchOptions.getValidated().size() > 0) {
+				validatedStatus = new String[eadSearchOptions.getValidated().size()];
+				for (int i = 0; i < eadSearchOptions.getValidated().size(); i++) {
+					validatedStatus[i] = eadSearchOptions.getValidated().get(i).toString();
+				}
+			}
+			if (eadSearchOptions.getPublished() != null) {
+				publishedStatus = new String[] { eadSearchOptions.getPublished().toString() };
+			}
+			if (eadSearchOptions.getEuropeana().size() > 0) {
+				europeanaStatus = new String[eadSearchOptions.getEuropeana().size()];
+				for (int i = 0; i < eadSearchOptions.getEuropeana().size(); i++) {
+					europeanaStatus[i] = eadSearchOptions.getEuropeana().get(i).toString();
+				}
+			}
+			type = XmlType.getType(eadSearchOptions.getEadClazz()).getSolrPrefix();
+			searchTerms = eadSearchOptions.getSearchTerms();
+			orderByField = eadSearchOptions.getOrderByField();
+			orderByAscending = eadSearchOptions.isOrderByAscending();
+			searchTermsField = eadSearchOptions.getSearchTermsField();
+			pageNumber = eadSearchOptions.getPageNumber();
+			resultPerPage = eadSearchOptions.getPageSize();
+		}
+		return eadSearchOptions;
+	}
+	private EadSearchOptions createNewEadSearchOptions(){
 		EadSearchOptions eadSearchOptions = new EadSearchOptions();
 		eadSearchOptions.setPageNumber(pageNumber);
 		eadSearchOptions.setPageSize(resultPerPage);
@@ -169,11 +192,7 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 		eadSearchOptions.setSearchTerms(searchTerms);
 		eadSearchOptions.setSearchTermsField(searchTermsField);
 		eadSearchOptions.setEadClazz(XmlType.getTypeBySolrPrefix(type).getClazz());
-		ContentManagerResults results = new ContentManagerResults(eadSearchOptions);
-		results.setEads(DAOFactory.instance().getEadDAO().getEads(eadSearchOptions));
-		results.setTotalNumberOfResults(DAOFactory.instance().getEadDAO().countEads(eadSearchOptions));
-		request.getSession().setAttribute(EAD_SEARCH_OPTIONS, eadSearchOptions);
-		request.setAttribute("results", results);
+		return eadSearchOptions;
 	}
 
 
@@ -288,14 +307,13 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 		this.type = type;
 	}
 
-	public boolean isRefreshFromSession() {
-		return refreshFromSession;
-	}
 
-	public void setRefreshFromSession(boolean refreshFromSession) {
-		this.refreshFromSession = refreshFromSession;
+	public boolean isAjax() {
+		return ajax;
 	}
-
+	public void setAjax(boolean ajax) {
+		this.ajax = ajax;
+	}
 	public Map<String, String> getSearchTermsFieldList() {
 		return searchTermsFieldList;
 	}
