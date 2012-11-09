@@ -123,6 +123,20 @@ public class EadService {
 		}
 	}
 
+	public static void unpublishAll(XmlType xmlType, Integer id) throws Exception {
+		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+		Ead ead = eadDAO.findById(id, xmlType.getClazz());
+		SecurityContext.get().checkAuthorized(ead);
+		if (APEnetUtilities.getDashboardConfig().isDirectIndexing()) {
+			new DeleteFromEuropeanaTask().execute(ead);
+			new DeleteEseEdmTask().execute(ead);
+			new UnpublishTask().execute(ead);
+		} else { // Add the file to the indexing queue
+			addToQueue(ead, QueueAction.UNPUBLISH_ALL, null);
+		}
+
+	}
+
 	public static void delete(XmlType xmlType, Integer id) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
@@ -136,6 +150,7 @@ public class EadService {
 			addToQueue(ead, QueueAction.DELETE, null);
 		}
 	}
+
 	public static void deleteFromEuropeana(XmlType xmlType, Integer id) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
@@ -146,6 +161,7 @@ public class EadService {
 			addToQueue(ead, QueueAction.DELETE_FROM_EUROPEANA, null);
 		}
 	}
+
 	public static void deliverToEuropeana(XmlType xmlType, Integer id) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
@@ -156,6 +172,7 @@ public class EadService {
 			addToQueue(ead, QueueAction.DELIVER_TO_EUROPEANA, null);
 		}
 	}
+
 	public static boolean processQueueItem(QueueItem queueItem) throws IOException {
 		boolean processed = false;
 		Ead ead = queueItem.getEad();
@@ -193,12 +210,13 @@ public class EadService {
 				if (queueItem.getAction().isUnpublishAction()) {
 					new UnpublishTask().execute(ead, preferences);
 				}
-				if (queueItem.getAction().isDeleteEseEdmAction()) {
-					new DeleteEseEdmTask().execute(ead, preferences);
-				}
 				if (queueItem.getAction().isDeleteFromEuropeanaAction()) {
 					new DeleteFromEuropeanaTask().execute(ead, preferences);
 				}
+				if (queueItem.getAction().isDeleteEseEdmAction()) {
+					new DeleteEseEdmTask().execute(ead, preferences);
+				}
+
 				if (queueItem.getAction().isDeliverToEuropeanaAction()) {
 					new DeliverToEuropeanaTask().execute(ead, preferences);
 				}

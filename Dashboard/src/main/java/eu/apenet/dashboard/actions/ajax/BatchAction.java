@@ -230,15 +230,15 @@ public class BatchAction extends AjaxControllerAbstractAction {
         }
     }
     private void deleteFromIndex(int aiId,int id){
-    	boolean isBeingHarvested = ContentManager.isBeingHarvested(); 
-        try {
-			if (!isBeingHarvested || (isBeingHarvested && !ContentManager.eadHasEsePublished(id))) {
-	        	ContentManager.deleteOnlyFromIndex(id, XmlType.EAD_FA, aiId, true);
-			}
-        } catch (Exception e){
-        	LOG.error("Delete from index failed in batch processing!" + e.getMessage());
-            //throw new APEnetRuntimeException("Delete from index failed in batch processing!", e);
-        }
+//    	boolean isBeingHarvested = ContentManager.isBeingHarvested(); 
+//        try {
+//			if (!isBeingHarvested || (isBeingHarvested && !ContentManager.eadHasEsePublished(id))) {
+//	        	ContentManager.deleteOnlyFromIndex(id, XmlType.EAD_FA, aiId, true);
+//			}
+//        } catch (Exception e){
+//        	LOG.error("Delete from index failed in batch processing!" + e.getMessage());
+//            //throw new APEnetRuntimeException("Delete from index failed in batch processing!", e);
+//        }
     }
     private void convertFileToEse(int aiId, int id){
        EseConfig config = (EseConfig) request.getSession().getAttribute("eseConfig");

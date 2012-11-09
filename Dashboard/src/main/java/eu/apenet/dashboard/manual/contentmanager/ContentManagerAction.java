@@ -7,24 +7,14 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
-import javax.servlet.http.HttpSession;
-
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.IndexUtils;
-import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
-import eu.apenet.dashboard.manual.FindingAidLogic;
 import eu.apenet.persistence.dao.CLevelDAO;
-import eu.apenet.persistence.dao.FileStateDAO;
 import eu.apenet.persistence.dao.FindingAidDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.CLevel;
@@ -87,12 +77,7 @@ public class ContentManagerAction extends AbstractContentManagerAction {
 	 * @return SUCCESS or ERROR
 	 */
 	private String finishAction() {
-		log.debug("entering finishAction function");
-		if (isLaunchingASearch()) {
-			return searchEADCMUnit(); // Same page
-		}
-
-		return getEADCMUnits(); // Show results
+		return SUCCESS;
 	}
 
 	// /**
@@ -131,12 +116,7 @@ public class ContentManagerAction extends AbstractContentManagerAction {
 				addFieldError("id", getText("id.valid"));
 			}
 		}
-		if (getSize() == null) {
-			setSize(getSize(getXmlType()));
-			if (getSize() == null) {
-				setSize(new Long(-1));
-			}
-		}
+
 		if (getSearchTerms() == null || getSearchTerms().trim().length() == 0) {
 			setSearchTerms("");
 		}
@@ -180,45 +160,7 @@ public class ContentManagerAction extends AbstractContentManagerAction {
 		return finishAction();
 	}
 
-	/**
-	 * (createHG action).
-	 * 
-	 * @return SUCCESS or ERROR
-	 */
-	public String createHG() {
-		Integer aiId = getAiId();
-		FindingAidDAO findingAidDao = DAOFactory.instance().getFindingAidDAO();
-		Set<String> fileStates = new HashSet<String>();
-//		fileStates.add(FileState.VALIDATED_CONVERTED);
-//		fileStates.add(FileState.VALIDATED_NOT_CONVERTED);
-//		fileStates.add(FileState.INDEXED);
-//		fileStates.add(FileState.INDEXED_CONVERTED_EUROPEANA);
-//		fileStates.add(FileState.INDEXED_DELIVERED_EUROPEANA);
-//		fileStates.add(FileState.INDEXED_HARVESTED_EUROPEANA);
-//		fileStates.add(FileState.INDEXED_NO_HTML);
-		List<FindingAid> findingAidSet = findingAidDao.getFindingAids(aiId, fileStates);
-		log.info(getAiname() + " is creating an HG");
-		for (FindingAid findingAid : findingAidSet) {
-			log.info("Ready to insert " + findingAid.getEadid());
-		}
-		return finishAction();
-	}
 
-	/**
-	 * (indextotemp action).
-	 * 
-	 * @return SUCCESS or ERROR
-	 * @throws Exception
-	 */
-	public String indexToTemp() throws Exception {
-		boolean processed = ContentManager.indexProcess(getXmlType(), getId());
-		if (processed) {
-			return finishAction();
-		} else {
-			return ERROR;
-		}
-
-	}
 
 
 
@@ -343,11 +285,11 @@ public class ContentManagerAction extends AbstractContentManagerAction {
 			// First list: listOfFindingAidsNotIndex, finding_aids uploaded
 			// but not indexed
 			setListOfFindingAidsNotIndex(faDao.getFindingAidsByHoldingsGuideId(getId(), aiId,
-					Arrays.asList(FileState.NOT_INDEXED_FILE_STATES)));
+					false));
 			// Second list: ListOfFindingAidsIndexed, indexed and linked
 			// finding_aids
 			setListOfFindingAidsIndexed(faDao.getFindingAidsByHoldingsGuideId(getId(), aiId,
-					Arrays.asList(FileState.INDEXED_FILE_STATES)));
+					true));
 			// Third list: ListOfFindingAidsOut, finding_aids out of the
 			// system
 			CLevelDAO cLevelDao = DAOFactory.instance().getCLevelDAO();
@@ -407,270 +349,8 @@ public class ContentManagerAction extends AbstractContentManagerAction {
 		return ERROR;
 	}
 
-	/**
-	 * (batchAction action).
-	 * 
-	 * @return SUCCESS or INPUT
-	 */
-	public String batchAction() { // TODO: talk with jara about batch action and
-									// aiId, which aiId can be checked? after
-									// aiId check
-		Integer aiId = getAiId();
-		if (getType() == null) {
-			log.warn("A whole batch is being launched, but type of batch is null, nothing is done.");
-			return SUCCESS;
-		}
-		if (aiId != null) {
-			FindingAidDAO findingAidDao = DAOFactory.instance().getFindingAidDAO();
-			FileStateDAO fileStateDAO = DAOFactory.instance().getFileStateDAO();
-			List<FindingAid> findingAidListToUse = new ArrayList<FindingAid>();
-			List<FindingAid> findingAidSelectedListToUse = new ArrayList<FindingAid>();
-			List<FindingAid> findingAidSearchListToUse = new ArrayList<FindingAid>();
 
-			HttpSession session = ServletActionContext.getRequest().getSession();
-			List<Integer> tempIds = (List<Integer>) session.getAttribute(AjaxControllerAbstractAction.LIST_IDS);
 
-			if (getType().equals("conversion")) {
-				Set<String> notConvertedFileStates = new HashSet<String>();
-				notConvertedFileStates.add(FileState.NEW);
-				notConvertedFileStates.add(FileState.NOT_VALIDATED_NOT_CONVERTED);
-				notConvertedFileStates.add(FileState.VALIDATED_NOT_CONVERTED);
-				findingAidListToUse = findingAidDao.getFindingAids(aiId, notConvertedFileStates);
-				findingAidSelectedListToUse = findingAidDao.getFindingAids(aiId, tempIds, notConvertedFileStates);
-				log.info("Number of Finding Aids to convert: " + findingAidListToUse.size());
-				log.info("Number of Selected Finding Aids to convert: " + findingAidSelectedListToUse.size());
-			} else if (getType().equals("validation")) {
-				Set<String> notValidatedFileStates = new HashSet<String>();
-				notValidatedFileStates.add(FileState.NEW);
-				notValidatedFileStates.add(FileState.NOT_VALIDATED_CONVERTED);
-				findingAidListToUse = findingAidDao.getFindingAids(aiId, notValidatedFileStates);
-				findingAidSelectedListToUse = findingAidDao.getFindingAids(aiId, tempIds, notValidatedFileStates);
-				log.info("Number of Finding Aids to validate: " + findingAidListToUse.size());
-				log.info("Number of Selected Finding Aids to validate: " + findingAidSelectedListToUse.size());
-			} else if (getType().equals("indexing")) {
-				Set<String> readyForIndexFileStates = new HashSet<String>();
-				readyForIndexFileStates.add(FileState.VALIDATED_CONVERTED);
-				readyForIndexFileStates.add(FileState.VALIDATED_NOT_CONVERTED);
-				findingAidListToUse = findingAidDao.getFindingAids(aiId, readyForIndexFileStates);
-				findingAidSelectedListToUse = findingAidDao.getFindingAids(aiId, tempIds, readyForIndexFileStates);
-				log.info("Number of Finding Aids to index: " + findingAidListToUse.size());
-				log.info("Number of Selected Finding Aids to index: " + findingAidSelectedListToUse.size());
-				if (IndexUtils.getIndexing())
-					setIndexing(1);
-				else {
-					setIndexing(0);
-				}
-			} else if (getType().equals("deleting")) {
-				List<FileState> fileStates = fileStateDAO.findAll();
-				Set<String> fileStatesStrings = new HashSet<String>();
-				for (FileState fileState : fileStates) {
-					if (!fileState.getState().equals(FileState.INDEXING))
-						fileStatesStrings.add(fileState.getState());
-				}
-				findingAidListToUse = findingAidDao.getFindingAids(aiId, fileStatesStrings);
-				findingAidSelectedListToUse = findingAidDao.getFindingAids(aiId, tempIds, fileStatesStrings);
-				removeFAWhichHaveEsePublished(findingAidListToUse, findingAidSelectedListToUse);
-				log.info("Number of Finding Aids to delete: " + findingAidListToUse.size());
-				log.info("Number of Selected Finding Aids to delete: " + findingAidSelectedListToUse.size());
-			} else if (getType().equals("deletingFromIndex")) {
-				Set<String> fileStates = new HashSet<String>();
-				fileStates.add(FileState.INDEXED);
-				fileStates.add(FileState.INDEXED_CONVERTED_EUROPEANA);
-				fileStates.add(FileState.INDEXED_DELIVERED_EUROPEANA);
-				fileStates.add(FileState.INDEXED_HARVESTED_EUROPEANA);
-				fileStates.add(FileState.INDEXED_NO_HTML);
-				fileStates.add(FileState.INDEXED_NOT_LINKED);
-				fileStates.add(FileState.INDEXED_LINKED);
-				findingAidListToUse = findingAidDao.getFindingAids(aiId, fileStates);
-				findingAidSelectedListToUse = findingAidDao.getFindingAids(aiId, tempIds, fileStates);
-				removeFAWhichHaveEsePublished(findingAidListToUse, findingAidSelectedListToUse);
-				log.info("Number of Finding Aids to delete from index: " + findingAidListToUse.size());
-				log.info("Number of Selected Finding Aids to delete from index: " + findingAidSelectedListToUse.size());
-			} else if (getType().equals("convertingToEse")) {
-				Set<String> fileStates = new HashSet<String>();
-				fileStates.add(FileState.INDEXED);
-				findingAidListToUse = findingAidDao.getFindingAids(aiId, fileStates);
-				if (StringUtils.isNotBlank(getSearchTerms()))
-					findingAidSearchListToUse = new FindingAidLogic().search(getSearchTerms(), null, null, aiId,
-							getSearch(), getOrderBy(), getOrderDecreasing(), fileStates, getSearchStatuses(),
-							isLinkedToHoldingsGuide());
-				findingAidSelectedListToUse = findingAidDao.getFindingAids(aiId, tempIds, fileStates);
-				log.info("Number of Finding Aids to convert to ESE: " + findingAidListToUse.size());
-				log.info("Number of Search Finding Aids to convert to ESE: " + findingAidSearchListToUse.size());
-				log.info("Number of Selected Finding Aids to convert to ESE: " + findingAidSelectedListToUse.size());
-			} else if (getType().equals("deletingEse")) {
-				Set<String> fileStates = new HashSet<String>();
-				fileStates.add(FileState.INDEXED_CONVERTED_EUROPEANA);
-				fileStates.add(FileState.INDEXED_DELIVERED_EUROPEANA);
-				fileStates.add(FileState.INDEXED_HARVESTED_EUROPEANA);
-				findingAidListToUse = findingAidDao.getFindingAids(aiId, fileStates);
-				if (StringUtils.isNotBlank(getSearchTerms()))
-					findingAidSearchListToUse = new FindingAidLogic().search(getSearchTerms(), null, null, aiId,
-							getSearch(), getOrderBy(), getOrderDecreasing(), fileStates, getSearchStatuses(),
-							isLinkedToHoldingsGuide());
-				findingAidSelectedListToUse = findingAidDao.getFindingAids(aiId, tempIds, fileStates);
-				removeFAWhichHaveEsePublished(findingAidListToUse, findingAidSelectedListToUse);
-				log.info("Number of Finding Aids to delete the ESE files: " + findingAidListToUse.size());
-				log.info("Number of Search Finding Aids to delete the ESE files: " + findingAidSearchListToUse.size());
-				log.info("Number of Selected Finding Aids to delete the ESE files: "
-						+ findingAidSelectedListToUse.size());
-			} else if (getType().equals("deliveringToEuropeana")) {
-				if (ContentManager.isBeingHarvested()) {
-					setHarvesting(1);
-				} else {
-					Set<String> fileStates = new HashSet<String>();
-					fileStates.add(FileState.INDEXED_CONVERTED_EUROPEANA);
-					findingAidListToUse = findingAidDao.getFindingAids(aiId, fileStates);
-					if (StringUtils.isNotBlank(getSearchTerms()))
-						findingAidSearchListToUse = new FindingAidLogic().search(getSearchTerms(), null, null, aiId,
-								getSearch(), getOrderBy(), getOrderDecreasing(), fileStates, getSearchStatuses(),
-								isLinkedToHoldingsGuide());
-					findingAidSelectedListToUse = findingAidDao.getFindingAids(aiId, tempIds, fileStates);
-					log.info("Number of Finding Aids to deliver to Europeana: " + findingAidListToUse.size());
-					log.info("Number of Search Finding Aids to deliver to Europeana: "
-							+ findingAidSearchListToUse.size());
-					log.info("Number of Selected Finding Aids to deliver to Europeana: "
-							+ findingAidSelectedListToUse.size());
-					setHarvesting(0);
-				}
-			} else if (getType().equals("batchEuropeanaDelete")) {
-				if (ContentManager.isBeingHarvested()) {
-					setHarvesting(1);
-				} else {
-					Set<String> fileStates = new HashSet<String>();
-					fileStates.add(FileState.INDEXED_DELIVERED_EUROPEANA);
-					findingAidListToUse = findingAidDao.getFindingAids(aiId, fileStates);
-					if (StringUtils.isNotBlank(getSearchTerms()))
-						findingAidSearchListToUse = new FindingAidLogic().search(getSearchTerms(), null, null, aiId,
-								getSearch(), getOrderBy(), getOrderDecreasing(), fileStates, getSearchStatuses(),
-								isLinkedToHoldingsGuide());
-					findingAidSelectedListToUse = findingAidDao.getFindingAids(aiId, tempIds, fileStates);
-					log.info("Number of Finding Aids to delete from Europeana: " + findingAidListToUse.size());
-					log.info("Number of Search Finding Aids to delete from Europeana: "
-							+ findingAidSearchListToUse.size());
-					log.info("Number of Selected Finding Aids to delete from Europeana: "
-							+ findingAidSelectedListToUse.size());
-					setHarvesting(0);
-				}
-			} else if (getType().equals("batchDoItAll")) {
-				Set<String> fileStates = new HashSet<String>();
-				fileStates.add(FileState.NEW);
-				fileStates.add(FileState.NOT_VALIDATED_NOT_CONVERTED);
-				fileStates.add(FileState.NOT_VALIDATED_CONVERTED);
-				fileStates.add(FileState.VALIDATED_CONVERTED);
-				fileStates.add(FileState.VALIDATED_NOT_CONVERTED);
-				findingAidListToUse = findingAidDao.getFindingAids(aiId, fileStates);
-				findingAidSelectedListToUse = findingAidDao.getFindingAids(aiId, tempIds, fileStates);
-				log.info("Number of Finding Aids to convert, validate and index: " + findingAidListToUse.size());
-				log.info("Number of Selected Finding Aids to convert, validate and index: "
-						+ findingAidSelectedListToUse.size());
-			} else {
-				return SUCCESS;
-			}
-
-			ServletActionContext.getRequest().setAttribute("nbFindingAidForBatch", findingAidListToUse.size());
-			ServletActionContext.getRequest().setAttribute("nbSelectedFindingAidForBatch",
-					findingAidSelectedListToUse.size());
-			ServletActionContext.getRequest().setAttribute("nbSearchFindingAidForBatch",
-					findingAidSearchListToUse.size());
-			ServletActionContext.getRequest().setAttribute("type", getType());
-			ServletActionContext.getRequest().setAttribute("aiId", aiId);
-
-			setNbFindingAidForBatch(findingAidListToUse.size());
-			setNbSelectedFindingAidForBatch(findingAidSelectedListToUse.size());
-			setNbSearchFindingAidForBatch(findingAidSearchListToUse.size());
-
-			StringBuilder faIdArray = new StringBuilder("[");
-			int count = 0;
-			int size = findingAidListToUse.size();
-			for (FindingAid fa : findingAidListToUse) {
-				faIdArray.append(fa.getId());
-				if (count < size - 1)
-					faIdArray.append(",");
-				count++;
-			}
-			faIdArray.append("]");
-
-			StringBuilder faIdArray_small = new StringBuilder("[");
-			count = 0;
-			size = findingAidSelectedListToUse.size();
-			for (FindingAid fa : findingAidSelectedListToUse) {
-				faIdArray_small.append(fa.getId());
-				if (count < size - 1)
-					faIdArray_small.append(",");
-				count++;
-			}
-			faIdArray_small.append("]");
-
-			StringBuilder faIdArray_search = new StringBuilder("[");
-			count = 0;
-			size = findingAidSearchListToUse.size();
-			for (FindingAid fa : findingAidSearchListToUse) {
-				faIdArray_search.append(fa.getId());
-				if (count < size - 1)
-					faIdArray_search.append(",");
-				count++;
-			}
-			faIdArray_search.append("]");
-
-			session.setAttribute("faID", faIdArray.toString());
-			session.setAttribute("faID_small", faIdArray_small.toString());
-			session.setAttribute("faID_search", faIdArray_search.toString());
-
-			log.debug("returning input");
-			return INPUT;
-		} else {
-			log.warn("aiId from session is null?");
-			return SUCCESS;
-		}
-	}
-
-	/**
-	 * This method removes from the lists those FAs which have ESE files
-	 * published in Europeana
-	 * 
-	 * @param findingAidListToUse
-	 * @param findingAidSelectedListToUse
-	 */
-	@SuppressWarnings("rawtypes")
-	private void removeFAWhichHaveEsePublished(List<FindingAid> findingAidListToUse,
-			List<FindingAid> findingAidSelectedListToUse) {
-		if (ContentManager.isBeingHarvested()) {
-			// Remove all the finding aids which have ESE files converted and
-			// published
-			Iterator iterator = findingAidListToUse.iterator();
-			int numberOfFindingAidsSelected = findingAidSelectedListToUse.size();
-			while (iterator.hasNext()) {
-				FindingAid findingAid = (FindingAid) iterator.next();
-				if (ContentManager.eadHasEsePublished(findingAid.getId())) {
-					iterator.remove();
-				}
-			}
-			iterator = findingAidSelectedListToUse.iterator();
-			while (iterator.hasNext()) {
-				FindingAid findingAid = (FindingAid) iterator.next();
-				if (ContentManager.eadHasEsePublished(findingAid.getId())) {
-					iterator.remove();
-				}
-			}
-			int numberOfSuccesfullyFindingAidsSelected = findingAidSelectedListToUse.size();
-			if (numberOfFindingAidsSelected > 0) {
-				if (numberOfSuccesfullyFindingAidsSelected == 0) {
-					setHarvesting(1);
-				} else {
-					setHarvesting(0);
-				}
-			} else {
-				if (findingAidListToUse.size() > 0) {
-					setHarvesting(0);
-				} else {
-					setHarvesting(1);
-				}
-			}
-		} else {
-			setHarvesting(0);
-		}
-	}
 
 	/**
 	 * (deleteFromIndex action). This method calls to deleteOnlyFromIndex in

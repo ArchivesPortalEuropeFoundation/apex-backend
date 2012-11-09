@@ -1,55 +1,33 @@
 package eu.apenet.dashboard.manual.contentmanager;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.LocatorImpl;
-
-import com.opensymphony.xwork2.Action;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.manual.EADCMUnit;
 import eu.apenet.dashboard.manual.EadLogicAbstract;
-import eu.apenet.dashboard.manual.FindingAidLogic;
 import eu.apenet.dashboard.manual.HoldingsGuideLogic;
-import eu.apenet.dashboard.security.SecurityContext;
-
-import eu.apenet.dpt.utils.service.DocumentValidation;
-import eu.apenet.dpt.utils.service.TransformationTool;
-import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.dpt.utils.util.extendxsl.CounterCLevelCall;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.CpfContentDAO;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.dao.EseStateDAO;
-import eu.apenet.persistence.dao.FileStateDAO;
 import eu.apenet.persistence.dao.FindingAidDAO;
 import eu.apenet.persistence.dao.ResumptionTokenDAO;
-import eu.apenet.persistence.dao.WarningsDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.CpfContent;
@@ -59,11 +37,7 @@ import eu.apenet.persistence.vo.EseState;
 import eu.apenet.persistence.vo.FileState;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
-import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.ResumptionToken;
-import eu.apenet.persistence.vo.SourceGuide;
-import eu.apenet.persistence.vo.ValidatedState;
-import eu.apenet.persistence.vo.Warnings;
 
 
 /**
@@ -79,10 +53,7 @@ public class ContentManager extends ContentManagerIndexer{
 	private static final Logger log = Logger.getLogger(ContentManager.class);
 
 
-//	
-	public static Long getFindingAidsSize(Integer aiId, List<String> statuses, Boolean isLinkedWithHoldingsGuide) {
-		return new FindingAidLogic().getSize(aiId, null, statuses, isLinkedWithHoldingsGuide);
-	}
+
 //
 	public static Long getHoldingsGuideSize(Integer aiId) {
 		return new HoldingsGuideLogic().getSize(aiId);
@@ -93,31 +64,6 @@ public class ContentManager extends ContentManagerIndexer{
     }
 
 
-	/**     
-	 * This method is called in ContentManagerAction to do the "get 
-	 * Finding Aid/Holdings Guide List" depending on the parameters.
-	 * It returns a list of FindingAids casted to EADCMUnits
-	 * 
-	 * @param page
-	 * @param aiId
-	 * @return List<EADCMUnit>
-	 * @throws SolrServerException
-	 * @throws MalformedURLException
-	 */
-	public List<EADCMUnit> getEADFiles(Integer page, Integer aiId, XmlType xmlType, Integer limit, String orderBy, Boolean orderDecreasing, List<String> statuses, Boolean isLinkedToHoldingsGuide){
-        log.debug("entering getEADFiles function");
-		List<EADCMUnit> tempList = new ArrayList<EADCMUnit>();
-		if(xmlType.equals(XmlType.EAD_FA)) {
-            List<FindingAid> listFinding = DAOFactory.instance().getFindingAidDAO().searchFindingAids(null, aiId, page, limit, 0, orderBy, orderDecreasing, null, statuses, isLinkedToHoldingsGuide);
-            for (FindingAid findingTemp : listFinding)
-                tempList.add(convertEadToEADCMUnit(findingTemp, aiId));
-		} else if(xmlType.equals(XmlType.EAD_HG) || xmlType.equals(XmlType.EAD_SG)) {
-//            List<Ead> listEad = DAOFactory.instance().getEadDAO().getEadPage(null, aiId, orderBy, orderDecreasing, page, limit, xmlType.getClazz());
-//            for(Ead ead : listEad)
-//                tempList.add(convertEadToEADCMUnit(ead, aiId));
-        }
-		return tempList;
-	}
 
     public List<EADCMUnit> getCPFFiles(int pageNumber, int aiId, int limit){
         CpfContentDAO cpfContentDAO = DAOFactory.instance().getCpfContentDAO();
@@ -162,7 +108,7 @@ public class ContentManager extends ContentManagerIndexer{
         } else if(ead instanceof HoldingsGuide){
             if(ead.isPublished()){
                 eadcmUnit.setPossibleFindingAidsLinked(DAOFactory.instance().getCLevelDAO().countTotalCLevelsByHoldingsGuideId(ead.getId())); //max. number
-                eadcmUnit.setFindingAidsLinked(DAOFactory.instance().getFindingAidDAO().countFindingAidsIndexedByHoldingsGuideId(ead.getId(), aiId, Arrays.asList(FileState.INDEXED_FILE_STATES))); //currently number
+                eadcmUnit.setFindingAidsLinked(DAOFactory.instance().getFindingAidDAO().countFindingAidsIndexedByHoldingsGuideId(ead.getId(), aiId)); //currently number
             }
         }
         log.debug("convertEadToEADCMUnit function return");
@@ -258,12 +204,12 @@ public class ContentManager extends ContentManagerIndexer{
 		List<EADCMUnit> temp = new ArrayList<EADCMUnit>();
 		FindingAidDAO findingAidDAO = DAOFactory.instance().getFindingAidDAO();
 		if (xmlType.equals(XmlType.EAD_FA)) {
-			List<FindingAid> listFinding = findingAidDAO.searchFindingAids(searchTerms, ai, page, pageSize, option, orderBy, orderDecreasing, null, statuses, isLinkedWithHoldingsGuide);
-			result.setTotalSize(findingAidDAO.countSearchFindingAids(searchTerms, ai, option, null, statuses, isLinkedWithHoldingsGuide));
-            if (listFinding != null) {
-				for(FindingAid findingAid : listFinding)
-					temp.add(convertEadToEADCMUnit(findingAid, ai));
-			}
+//			List<FindingAid> listFinding = findingAidDAO.searchFindingAids(searchTerms, ai, page, pageSize, option, orderBy, orderDecreasing, null, statuses, isLinkedWithHoldingsGuide);
+//			result.setTotalSize(findingAidDAO.countSearchFindingAids(searchTerms, ai, option, null, statuses, isLinkedWithHoldingsGuide));
+//            if (listFinding != null) {
+//				for(FindingAid findingAid : listFinding)
+//					temp.add(convertEadToEADCMUnit(findingAid, ai));
+//			}
 		} else if(xmlType.equals(XmlType.EAD_SG) || xmlType.equals(XmlType.EAD_HG)){
 			EadDAO eadDAO = DAOFactory.instance().getEadDAO();
             //List<Ead> listEad = eadDAO.getMatchEads(searchTerms, ai, page, pageSize, orderBy, orderDecreasing, xmlType.getClazz());

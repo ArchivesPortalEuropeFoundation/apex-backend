@@ -26,9 +26,11 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.manual.contentmanager.ContentManager;
+import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
+import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.dao.FindingAidDAO;
 import eu.apenet.persistence.dao.HoldingsGuideDAO;
@@ -36,6 +38,7 @@ import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.AiAlternativeName;
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 
@@ -156,7 +159,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 		//3=the process is deleting database;
 		//4=the process is changing EAG from file system; 
 		//5=the process is changing AL from file system;
-		List<String> collection = new ArrayList<String>();
+
 		String isoname="";	
 		String pathAL ="";
 		String pathEAG="";
@@ -190,12 +193,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				return INPUT;
 			}
 			else{
-			collection.add("Indexed_Not converted to ESE/EDM");
-			collection.add("Indexed_Converted to ESE/EDM");
-			collection.add("Indexed_Delivered to Europeana");
-			collection.add("Indexed_Harvested to Europeana");
-			collection.add("Indexed_Not linked");
-			collection.add("Indexed_Linked");			
+			
 			HibernateUtil.beginDatabaseTransaction();
 			ArchivalInstitution ai = aidao.getArchivalInstitution(aiId);			
 			AiAlternativeName an = andao.findByAIId_primarykey(ai);			
@@ -229,30 +227,26 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 			// it is necessary to make a commit immediately
 			
 			//Obtain the finding aids indexed from this institution.
-			List<FindingAid>findingAidList = findingAidDao.getFindingAids(aiId,collection);
+			EadSearchOptions eadSearchOptions = new EadSearchOptions();
+			eadSearchOptions.setPublishedToAll(true);
+			eadSearchOptions.setEadClazz(FindingAid.class);
+			List<Ead> findingAidList = DAOFactory.instance().getEadDAO().getEads(eadSearchOptions);
 			//Copy EUROPEANA directory.
-			File Europeanadir = new File(path_EUROPEANA);
-			File Europeanadir_copy = new File(path_EUROPEANA_copy);
-			if (Europeanadir.exists()){
-				FileUtils.copyDirectory(Europeanadir, Europeanadir_copy);
-			}
-			Europeanadir = null;
-			Europeanadir_copy = null;
 			
 			if (findingAidList.size()>0){
 				for (int i = 0 ; i < findingAidList.size() ; i ++) {
 					//Delete each FA of this institution.	
-					FindingAid findingaid = findingAidList.get(i);
+					Ead findingaid = findingAidList.get(i);
 					try{
 			        	LOG.info("Deleting finding aid with eadid "+ findingaid.getEadid()+" from index.");
-			        	ContentManager.deleteOnlyFromIndex(findingaid.getId(), XmlType.EAD_FA, aiId, false);
-						findingAidListdeleted.add(findingaid);
+			        	EadService.unpublish(XmlType.EAD_FA, findingaid.getId());
+						findingAidListdeleted.add((FindingAid)findingaid);
 												
 					}
 					catch (Exception ex){
 						FAerror=true;
 						LOG.error("ERROR deleting finding aid with eadid "+findingaid.getEadid()+" from index.");
-						findingAidListFailed.add(findingaid);
+						findingAidListFailed.add((FindingAid)findingaid);
 					}
 				}
 					
@@ -264,20 +258,20 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 			// from the Index only if it is indexed
 			// Because of Solr doesn't support transactions as DDBB
 			// it is necessary to make a commit immediately
-			
-			List<HoldingsGuide> holdingsGuideList = holdingsGuideDao.getHoldingsGuides("", "", "", collection, aiId, "", false);
+			eadSearchOptions.setEadClazz(HoldingsGuide.class);
+			List<Ead> holdingsGuideList = DAOFactory.instance().getEadDAO().getEads(eadSearchOptions);
 			//Copy the list of the holdings guides to restore the files in rollback.
 			if (holdingsGuideList.size()>0){
 				for (int i = 0 ; i < holdingsGuideList.size() ; i ++) {
-					HoldingsGuide holdingsGuide =  holdingsGuideList.get(i);
+					Ead holdingsGuide =  holdingsGuideList.get(i);
 					try{
 						LOG.error("Deleting Holding guide: "+ holdingsGuide.getEadid()+" from index.");
-						ContentManager.deleteOnlyFromIndex(holdingsGuide.getId(), XmlType.EAD_HG, aiId, false);
-						holdingsGuideListdeleted.add(holdingsGuide);
+						EadService.unpublish(XmlType.EAD_HG, holdingsGuide.getId());
+						holdingsGuideListdeleted.add((HoldingsGuide)holdingsGuide);
 					}
 					catch (Exception ex){
 						LOG.error("ERROR deleting Holding guide: "+ holdingsGuideList.get(i).getEadid()+" from index.");
-						holdingsGuideListFailed.add(holdingsGuideList.get(i));
+						holdingsGuideListFailed.add((HoldingsGuide)holdingsGuideList.get(i));
 						HGerror = true;
 					}
 				}
@@ -400,19 +394,6 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 	    			ContentUtils.deleteFile(path_copyAL);
 	    			LOG.info("The file " + path_copyAL + "has been deleted correctly.");
 	    			
-	    			//Delete EUROPEANA
-	    			Europeanadir = new File (path_EUROPEANA);
-	    			if (Europeanadir.exists()){
-	    				FileUtils.forceDelete(Europeanadir);
-	    				Europeanadir = null;
-	    			}
-	    			//Delete EUROPEANA_copy
-					Europeanadir_copy = new File(path_EUROPEANA_copy);
-					if (Europeanadir_copy.exists())
-					{
-						FileUtils.forceDelete(Europeanadir_copy);
-						Europeanadir_copy = null;
-					}
 					HibernateUtil.closeDatabaseSession();
 					this.setAllok(true);
 					

@@ -64,18 +64,5 @@ public abstract class ContentManagerIndexer {
 
 
 
-	/**
-	 * This method provides the functionality of only delete a file from index
-	 * and not on the system.
-	 * 
-	 * @param id
-	 * @param xmlType
-	 * @param aiId
-	 * @throws IOException
-	 * @throws SolrServerException
-	 * @throws Exception
-	 */
-	public static void deleteOnlyFromIndex(Integer id, XmlType xmlType, Integer aiId, boolean commits) throws Exception {
 
-	}
 }

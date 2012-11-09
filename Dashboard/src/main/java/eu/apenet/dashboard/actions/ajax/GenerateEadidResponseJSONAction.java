@@ -2,8 +2,6 @@ package eu.apenet.dashboard.actions.ajax;
 
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +13,7 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 
 import com.opensymphony.xwork2.ActionSupport;
 
-import eu.apenet.persistence.dao.FindingAidDAO;
+import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.FindingAid;
@@ -127,13 +125,10 @@ public class GenerateEadidResponseJSONAction extends ActionSupport implements Se
 	public StringBuffer checkNewEADID()
 	{	
 		StringBuffer buffer = new StringBuffer();
-        FindingAidDAO findingAidDao = DAOFactory.instance().getFindingAidDAO();
-        //FindingAid fa = findingAidDao.getFindingAidByEadId(this.neweadid);
-        List<String> collection = new ArrayList<String>();
-        List<FindingAid> findingAidList = findingAidDao.getFindingAids(this.neweadid.trim(), "", "", collection,
-                this.ai_id, "", false);
+		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+        boolean eadidUsed = eadDAO.isEadidUsed(this.neweadid.trim(), ai_id, FindingAid.class) != null;
        
-        if (findingAidList.size() > 0)
+        if (eadidUsed)
         {
         	buffer.append(START_ITEM);
         	buffer.append(MESSAGE + SEPARATOR + getText("content.message.EadidNotAvailable") + SEPARATOR);

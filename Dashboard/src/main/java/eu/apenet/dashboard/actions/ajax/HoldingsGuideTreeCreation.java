@@ -114,7 +114,7 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
         List<FindingAid> findingAids;
 
         if(session.getAttribute(ALL_FINDING_AIDS_SESSION) == null)
-            findingAids = DAOFactory.instance().getFindingAidDAO().getFindingAidsNotLinked(archivalInstitution.getAiId(), FILE_STATES, "", false);
+            findingAids = DAOFactory.instance().getFindingAidDAO().getFindingAidsNotLinked(archivalInstitution.getAiId());
         else {
             findingAids = (List<FindingAid>) session.getAttribute(ALL_FINDING_AIDS_SESSION);
         }
