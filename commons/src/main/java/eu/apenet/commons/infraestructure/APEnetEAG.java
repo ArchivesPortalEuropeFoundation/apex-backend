@@ -21,9 +21,10 @@ import eu.apenet.commons.ResourceBundleSource;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.commons.utils.XMLUtils;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.dao.HoldingsGuideDAO;
+import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.HoldingsGuide;
 
 
@@ -155,7 +156,7 @@ public class APEnetEAG {
 	protected String dateCreated;
 	protected String dateUpdated;
 	protected List<String> warnings_ead;
-	protected List<HoldingsGuide> holdingsGuideIndexed;
+	protected List<Ead> holdingsGuideIndexed;
 	protected List<String> repositorguideInformation;
 	protected List<String> repositorguideURL;
 	protected List<String> repositorguideResource;
@@ -712,11 +713,11 @@ public class APEnetEAG {
 		return log;
 	}
 	
-	public List<HoldingsGuide> getHoldingsGuideIndexed() {
+	public List<Ead> getHoldingsGuideIndexed() {
 		return holdingsGuideIndexed;
 	}
 
-	public void setHoldingsGuideIndexed(List<HoldingsGuide> holdingsGuideIndexed) {
+	public void setHoldingsGuideIndexed(List<Ead> holdingsGuideIndexed) {
 		this.holdingsGuideIndexed = holdingsGuideIndexed;
 	}
 	
@@ -882,15 +883,17 @@ public class APEnetEAG {
 			collection.add("Indexed_Harvested to Europeana");
 			collection.add("Indexed_Not linked");
 			collection.add("Indexed_Linked");
-
-			HoldingsGuideDAO holdingsGuideDao = DAOFactory.instance().getHoldingsGuideDAO();
-			this.holdingsGuideIndexed = holdingsGuideDao.getHoldingsGuides("", "", "", collection, this.aiId, "hgTittle", true);
+			
+			EadSearchOptions eadSearchOptions = new EadSearchOptions();
+			eadSearchOptions.setEadClazz(HoldingsGuide.class);
+			eadSearchOptions.setArchivalInstitionId(aiId);
+			eadSearchOptions.setPublished(true);
+			this.holdingsGuideIndexed =  DAOFactory.instance().getEadDAO().getEads(eadSearchOptions);
 			
 			boolean eadidFound = false;
 			int j = 0;
 			
 			collection = null;
-			holdingsGuideDao = null;
 			
 			if (this.holdingsGuideIndexed.size() == 0) {
 				this.repositorguidePossibleHGTitle.add("");

@@ -1,19 +1,16 @@
 package eu.apenet.commons.infraestructure;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.dao.FindingAidDAO;
+import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.dao.LangDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.dao.HoldingsGuideDAO;
 import eu.apenet.persistence.vo.AiAlternativeName;
 import eu.apenet.persistence.vo.ArchivalInstitution;
-import eu.apenet.persistence.vo.FileState;
-import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.Lang;
 
@@ -197,39 +194,17 @@ public class ArchivalInstitutionUnit implements Comparable<ArchivalInstitutionUn
 		return alorder.compareTo(aiu.getAlorder());
 	}
 
-	private static Long countHoldingsGuide (Integer aiId) {
-		return DAOFactory.instance().getHoldingsGuideDAO().countHoldingsGuideByArchivalInstitution(aiId, Arrays.asList(FileState.INDEXED_FILE_STATES));
-	}
-
-	private static Long countFindingAidsNotLinked (Integer aiId) {
-		return DAOFactory.instance().getFindingAidDAO().countFindingAidsNotLinkedByArchivalInstitution(aiId, Arrays.asList(FileState.INDEXED_FILE_STATES));
-	}
-	
-	//This method obtains all the finding aids not linked and indexed related to an Archival Insititution using pagination
-	private static List<FindingAidUnit> getFindingAidsNotLinkedBySegment (Integer aiId, Integer from, Integer maxNumberOfItems) {
-		List<FindingAid> findingAidList = DAOFactory.instance().getFindingAidDAO().getFindingAidsNotLinkedBySegment(aiId, Arrays.asList(FileState.INDEXED_FILE_STATES), "faTitle", true, from, maxNumberOfItems);
-        return createFindingAidUnits(findingAidList);
-	}
-
-	//This method obtains all the finding aids not linked and indexed related to an Archival Insititution
-	private static List<FindingAidUnit> getFindingAidsNotLinked (Integer aiId){
-		List<FindingAid> findingAidList = DAOFactory.instance().getFindingAidDAO().getFindingAidsNotLinked(aiId, Arrays.asList(FileState.INDEXED_FILE_STATES), "faTitle", true);
-        return createFindingAidUnits(findingAidList);
-	}
-
-    private static List<FindingAidUnit> createFindingAidUnits(List<FindingAid> findingAidList) {
-        List<FindingAidUnit> findingAidUnitList = new ArrayList<FindingAidUnit>();
-        for (FindingAid findingAid : findingAidList)
-            findingAidUnitList.add(new FindingAidUnit(findingAid.getId(), findingAid.getTitle(), findingAid.getArchivalInstitution().getAiname(), findingAid.getEadid()));
-        return findingAidUnitList;
-    }
 
 	//This method obtains all the holdings guide indexed related to an Archival Institution
 	public static List<HoldingsGuideUnit> getHoldingsGuide (Integer aiId){
-		List<HoldingsGuide> holdingsGuideList = DAOFactory.instance().getHoldingsGuideDAO().getHoldingsGuidesByStateAndArchivalInstitution(aiId, Arrays.asList(FileState.INDEXED_FILE_STATES));
+		EadSearchOptions eadSearchOptions = new EadSearchOptions();
+		eadSearchOptions.setArchivalInstitionId(aiId);
+		eadSearchOptions.setPublished(true);
+		eadSearchOptions.setEadClazz(HoldingsGuide.class);
+		List<Ead> holdingsGuideList = DAOFactory.instance().getEadDAO().getEads(eadSearchOptions);
 
         List<HoldingsGuideUnit> holdingsGuideUnitList = new ArrayList<HoldingsGuideUnit>();
-        for (HoldingsGuide currentHoldingsGuide : holdingsGuideList)
+        for (Ead currentHoldingsGuide : holdingsGuideList)
             holdingsGuideUnitList.add(new HoldingsGuideUnit(currentHoldingsGuide.getId(), currentHoldingsGuide.getTitle(), null, currentHoldingsGuide.getEadid()));
 		return holdingsGuideUnitList;
 	}
