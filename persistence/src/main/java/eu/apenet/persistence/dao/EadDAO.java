@@ -6,25 +6,14 @@ import java.util.List;
 import eu.apenet.persistence.vo.Ead;
 
 public interface EadDAO extends GenericDAO<Ead, Integer> {
-	
-	public Long countEads(Ead eadExample );
-	public boolean existEads(Ead eadExample );
+
 	public Integer isEadidIndexed(String eadid, Integer aiId, Class<? extends Ead> clazz);
 
 	public Integer isEadidUsed(String eadid, Integer aiId, Class<? extends Ead> clazz);
 
-    public List<Ead> getEadsByStates(Collection<String> fileStates, Class<? extends Ead> clazz);
-
-	public List<Ead> getEadPage(Collection<String> fileStates, Integer aiId,
-			String sort, boolean ascending, Integer pageNumber,
-			Integer pageSize, Class<? extends Ead> clazz);
-
-	public List<Ead> getMatchEads(String queries, Integer ai, Integer page,
-			Integer pageSize, String orderBy, Boolean orderDecreasing,
-			Class<? extends Ead> clazz);
 	public List<Ead> getEads(EadSearchOptions eadSearchOptions);
 	public Long countEads(EadSearchOptions eadSearchOptions);
-	public Long getMatchCountEads(String queries, Integer ai, Class<? extends Ead> clazz);
+	public boolean existEads(EadSearchOptions eadSearchOptions);
 	
 	List<Ead> getEadsByAiId(Class<? extends Ead> clazz, Integer aiId);
 	
@@ -33,5 +22,4 @@ public interface EadDAO extends GenericDAO<Ead, Integer> {
 	public Long getTotalCountOfUnits();
 	public Long getTotalCountOfUnitsWithDao();
 	public Long countFilesbyInstitution(Class<? extends Ead> clazz, Integer aiId);
-	public List<Ead> getEads(Ead eadExample, int firstResult, int maxResult);
 }

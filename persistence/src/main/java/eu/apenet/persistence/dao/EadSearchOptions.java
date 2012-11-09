@@ -16,6 +16,7 @@ public class EadSearchOptions implements Serializable{
 	private static final long serialVersionUID = 7670523402797168198L;
 	private int pageNumber = 1;
 	private int pageSize = 20;
+	private long firstResult = -1;;
 	private String searchTerms;
 	private String searchTermsField;
 	private String orderByField = "id";
@@ -139,6 +140,14 @@ public class EadSearchOptions implements Serializable{
 
 	public void setIds(List<Integer> ids) {
 		this.ids = ids;
+	}
+
+	public long getFirstResult() {
+		return firstResult;
+	}
+
+	public void setFirstResult(long firstResult) {
+		this.firstResult = firstResult;
 	}
 	
 	
