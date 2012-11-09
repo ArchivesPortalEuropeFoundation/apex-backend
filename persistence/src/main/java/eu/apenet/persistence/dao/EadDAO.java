@@ -1,6 +1,5 @@
 package eu.apenet.persistence.dao;
 
-import java.util.Collection;
 import java.util.List;
 
 import eu.apenet.persistence.vo.Ead;

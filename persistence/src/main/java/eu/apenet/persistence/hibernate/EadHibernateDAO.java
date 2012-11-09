@@ -131,6 +131,16 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 				whereClause.add(criteriaBuilder.or(europeanaPredicated.toArray(new Predicate[0])));
 			}
 		}
+		if (eadSearchOptions.getPublishedToAll()!= null){
+			List<Predicate> orPredicated = new ArrayList<Predicate>();
+			if (eadSearchOptions.getPublishedToAll()){
+				orPredicated.add(criteriaBuilder.equal(from.get("published"), true));
+				orPredicated.add(criteriaBuilder.equal(from.get("europeana"), EuropeanaState.NOT_CONVERTED));
+			}else {
+				orPredicated.add(criteriaBuilder.equal(from.get("published"), false));
+				orPredicated.add(criteriaBuilder.notEqual(from.get("europeana"), EuropeanaState.NOT_CONVERTED));
+			}
+		}
 		if (StringUtils.isNotBlank(eadSearchOptions.getSearchTerms())) {
 
 			String[] searchTerms = StringUtils.split(eadSearchOptions.getSearchTerms(), " ");

@@ -25,6 +25,7 @@ public class EadSearchOptions implements Serializable{
 	private Integer archivalInstitionId = null;
 	private Boolean published = null;
 	private Boolean converted = null;
+	private Boolean publishedToAll = null;
 	private List<ValidatedState> validated = new ArrayList<ValidatedState>();
 	private List<EuropeanaState> europeana = new ArrayList<EuropeanaState>();
 	private List<Integer> ids = new ArrayList<Integer>();
@@ -148,6 +149,14 @@ public class EadSearchOptions implements Serializable{
 
 	public void setFirstResult(long firstResult) {
 		this.firstResult = firstResult;
+	}
+
+	public Boolean getPublishedToAll() {
+		return publishedToAll;
+	}
+
+	public void setPublishedToAll(Boolean publishedToAll) {
+		this.publishedToAll = publishedToAll;
 	}
 	
 	
