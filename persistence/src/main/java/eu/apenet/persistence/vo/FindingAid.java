@@ -33,9 +33,6 @@ public class FindingAid extends Ead {
 	private String title;
 	@Column(name = "path_apenetead")
 	private String pathApenetead;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "fs_id")
-	private FileState fileState;
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "upload_date")
 	private Date uploadDate;
@@ -104,14 +101,6 @@ public class FindingAid extends Ead {
 
 	public void setPathApenetead(String pathApenetead) {
 		this.pathApenetead = pathApenetead;
-	}
-
-	public FileState getFileState() {
-		return fileState;
-	}
-
-	public void setFileState(FileState fileState) {
-		this.fileState = fileState;
 	}
 
 	public UploadMethod getUploadMethod() {

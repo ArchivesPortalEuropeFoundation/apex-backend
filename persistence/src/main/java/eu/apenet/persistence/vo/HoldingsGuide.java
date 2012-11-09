@@ -34,9 +34,6 @@ public class HoldingsGuide extends Ead {
 	private String title;
 	@Column(name = "path_apenetead")
 	private String pathApenetead;
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="fs_id")
-	private FileState fileState;
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="upload_date")
 	private Date uploadDate;
@@ -112,13 +109,6 @@ public class HoldingsGuide extends Ead {
 		this.pathApenetead = pathApenetead;
 	}
 
-	public FileState getFileState() {
-		return fileState;
-	}
-
-	public void setFileState(FileState fileState) {
-		this.fileState = fileState;
-	}
 
 	public UploadMethod getUploadMethod() {
 		return uploadMethod;
@@ -197,18 +187,7 @@ public class HoldingsGuide extends Ead {
 
 	public HoldingsGuide() {
 	}
-	@Deprecated
-	public HoldingsGuide(int hgId, FileState fileState,
-			UploadMethod uploadMethod, ArchivalInstitution archivalInstitution,
-			String hgTittle, Date uploadDate, String pathApenetead) {
-		this.setId(hgId);
-		this.setFileState(fileState);
-		this.setUploadMethod(uploadMethod);
-		this.setArchivalInstitution(archivalInstitution);
-		this.setTitle(hgTittle);
-		this.setUploadDate(uploadDate);
-		this.setPathApenetead(pathApenetead);
-	}
+
 
 	public boolean isConverted() {
 		return converted;
