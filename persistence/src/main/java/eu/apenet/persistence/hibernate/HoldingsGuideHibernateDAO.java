@@ -36,7 +36,7 @@ public class HoldingsGuideHibernateDAO extends AbstractHibernateDAO<HoldingsGuid
 				subQuery2.setProjection(Property.forName("cLevel.ecId"));
 			subQuery.add(Subqueries.propertyIn("eadContent.ecId", subQuery2));
 		criteria.add(Subqueries.propertyIn("holdingsGuide.id", subQuery));
-		criteria.add(Restrictions.eq("findingAid.published", true));
+		criteria.add(Restrictions.eq("holdingsGuide.published", true));
 		if(aiId!=null){
 			criteria.add(Restrictions.eq("holdingsGuide.archivalInstitution.aiId", aiId));
 		}
