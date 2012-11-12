@@ -15,7 +15,7 @@
         <div id="sizeFiles"></div>
     </div>
 	<div class="searchOptionsContent">
-		<s:form id="newSearchForm" theme="simple">
+		<s:form id="newSearchForm" theme="simple" action="updateContentmanager">
 			<s:hidden name="refreshFromSession" value="false"/>
 			<s:hidden name="orderByField"/>
 			<s:hidden name="orderByAscending"/>

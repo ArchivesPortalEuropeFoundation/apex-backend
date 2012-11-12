@@ -24,6 +24,7 @@ import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.SourceGuide;
+import eu.apenet.persistence.vo.UpFile;
 import eu.apenet.persistence.vo.ValidatedState;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
@@ -173,6 +174,17 @@ public class EadService {
 		}
 	}
 
+	public static void overwrite(Ead oldEad, UpFile upFile) throws Exception {
+		SecurityContext.get().checkAuthorized(oldEad);
+		addToQueue(oldEad, QueueAction.OVERWRITE, null, upFile);
+	}
+
+	public static void create(XmlType xmlType, UpFile upFile, Integer aiId) throws Exception {
+		SecurityContext.get().checkAuthorized(aiId);
+		new CreateEadTask().execute(xmlType, upFile, aiId);
+		DAOFactory.instance().getUpFileDAO().delete(upFile);
+	}
+
 	public static boolean processQueueItem(QueueItem queueItem) throws IOException {
 		boolean processed = false;
 		Ead ead = queueItem.getEad();
@@ -187,14 +199,58 @@ public class EadService {
 		if (queueItem.getPreferences() != null) {
 			preferences = readProperties(queueItem.getPreferences());
 		}
-		try {
-			if (queueItem.getAction().isDeleteAction()) {
-				new DeleteFromEuropeanaTask().execute(ead, preferences);
-				new DeleteEseEdmTask().execute(ead, preferences);
-				new UnpublishTask().execute(ead, preferences);
-				new DeleteTask().execute(ead, preferences);
-			} else {
 
+		if (queueItem.getAction().isOverwriteAction() || queueItem.getAction().isDeleteAction()) {
+			boolean eadDeleted = false;
+			boolean upFileDeleted = false;
+			UpFile upFile = queueItem.getUpFile();
+			try {
+				
+				queueItem.setEad(null);
+				queueItem.setUpFile(null);
+				queueItemDAO.store(queueItem);
+				
+				if (queueItem.getAction().isOverwriteAction()) {
+					boolean isPublished = ead.isPublished();
+					Integer aiId = ead.getAiId();
+					new DeleteFromEuropeanaTask().execute(ead, preferences);
+					new DeleteEseEdmTask().execute(ead, preferences);
+					new UnpublishTask().execute(ead, preferences);
+					new DeleteTask().execute(ead, preferences);
+					eadDeleted = true;
+					Ead newEad = new CreateEadTask().execute(xmlType, upFile, aiId);
+					if (isPublished) {
+						new ConvertTask().execute(newEad);
+						new ValidateTask().execute(newEad);
+						new PublishTask().execute(newEad);
+					}
+					DAOFactory.instance().getUpFileDAO().delete(upFile);
+					upFileDeleted = true;
+				} else if (queueItem.getAction().isDeleteAction()) {
+					new DeleteFromEuropeanaTask().execute(ead, preferences);
+					new DeleteEseEdmTask().execute(ead, preferences);
+					new UnpublishTask().execute(ead, preferences);
+					new DeleteTask().execute(ead, preferences);
+					eadDeleted = true;
+				}
+				queueItemDAO.delete(queueItem);
+			} catch (Exception e) {
+				if (!eadDeleted){
+					queueItem.setEad(ead);
+					ead.setQueuing(QueuingState.ERROR);
+					eadDAO.store(ead);
+				}
+				if (!upFileDeleted && upFile != null){
+					queueItem.setUpFile(upFile);
+				}
+				String err = "eadid: " + ead.getEadid() + " - id: " + ead.getId() + " - type: " + xmlType.getName();
+				LOGGER.error("Error occured: " + err, e);
+				queueItem.setErrors(new Date() + err + ". Error: " + e.getMessage() + "-" + e.getCause());
+				queueItem.setPriority(0);
+				queueItemDAO.store(queueItem);
+			}
+		} else {
+			try {
 				if (queueItem.getAction().isConvertAction()) {
 					new ConvertTask().execute(ead, preferences);
 				}
@@ -223,20 +279,32 @@ public class EadService {
 				ead.setQueuing(QueuingState.NO);
 				eadDAO.store(ead);
 				queueItemDAO.delete(queueItem);
-			}
-			processed = true;
-			LOGGER.info("Process queue item finished");
-		} catch (Exception e) {
-			String err = "eadid: " + ead.getEadid() + " - id: " + ead.getId() + " - type: " + xmlType.getName();
-			LOGGER.error("Error occured: " + err, e);
-			queueItem.setErrors(new Date() + err + ". Error: " + e.getMessage() + "-" + e.getCause());
-			ead.setQueuing(QueuingState.ERROR);
-			eadDAO.store(ead);
-			queueItem.setPriority(0);
-			queueItemDAO.store(queueItem);
+			} catch (Exception e) {
+				String err = "eadid: " + ead.getEadid() + " - id: " + ead.getId() + " - type: " + xmlType.getName();
+				LOGGER.error("Error occured: " + err, e);
+				queueItem.setErrors(new Date() + err + ". Error: " + e.getMessage() + "-" + e.getCause());
+				ead.setQueuing(QueuingState.ERROR);
+				eadDAO.store(ead);
+				queueItem.setPriority(0);
+				queueItemDAO.store(queueItem);
 
+			}
 		}
+		processed = true;
+		LOGGER.info("Process queue item finished");
+
 		return processed;
+	}
+
+	private static void addToQueue(Ead ead, QueueAction queueAction, Properties preferences, UpFile upFile)
+			throws IOException {
+		QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
+		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+		ead.setQueuing(QueuingState.READY);
+		eadDAO.store(ead);
+		QueueItem queueItem = fillQueueItem(ead, queueAction, preferences);
+		queueItem.setUpFile(upFile);
+		indexqueueDao.store(queueItem);
 	}
 
 	private static void addToQueue(Ead ead, QueueAction queueAction, Properties preferences) throws IOException {

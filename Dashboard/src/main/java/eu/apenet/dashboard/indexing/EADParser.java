@@ -50,7 +50,6 @@ public class EADParser extends AbstractParser {
     }
 
 	private static void parse(Ead ead, Indexer indexer) throws Exception {
-		long startTime = System.currentTimeMillis();
 		EadContentDAO dao = DAOFactory.instance().getEadContentDAO();
 		int cOrderId = 0;
 		EadContent eadContent = new EadContent();
@@ -182,7 +181,6 @@ public class EADParser extends AbstractParser {
 			if (indexer != null && ead instanceof HoldingsGuide) {
 				ContentUtils.addLinkHGtoAL((HoldingsGuide)ead);
 			}
-			LOG.info(eadid + ": Total time: " + (System.currentTimeMillis() - startTime));
 			
 		} catch (Exception de) {
 			if ((initialFilePath!=null) &&(initialFilePath.contains(APEnetUtilities.FILESEPARATOR))){

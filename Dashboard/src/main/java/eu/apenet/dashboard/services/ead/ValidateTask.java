@@ -42,16 +42,18 @@ public class ValidateTask extends AbstractEadTask {
 			Xsd_enum schema = Xsd_enum.XSD_APE_SCHEMA;
 			ArchivalInstitution archivalInstitution = ead.getArchivalInstitution();
 			String filepath = APEnetUtilities.getConfig().getRepoDirPath() + ead.getPathApenetead();
-			logger.info("'" + archivalInstitution.getAiname() + "' is validating file: '" + ead.getEadid()
-					+ "' with id: '" + ead.getId() + "'");
+//			logger.info("'" + archivalInstitution.getAiname() + "' is validating file: '" + ead.getEadid()
+//					+ "' with id: '" + ead.getId() + "'");
 			File file = new File(filepath);
 
 			try {
 				/* Special for Spanish non UTF8 data */
 				List<SAXParseException> exceptions = null;
 				XMLStreamReader reader = null;
+				FileInputStream inputStream = null;
 				try {
-					reader = XMLInputFactory.newInstance().createXMLStreamReader(new FileInputStream(file), "UTF-8");
+					inputStream = new FileInputStream(file);
+					reader = XMLInputFactory.newInstance().createXMLStreamReader(inputStream, "UTF-8");
 					reader.next();
 				} catch (Exception e) {
 					exceptions = new ArrayList<SAXParseException>();
@@ -59,7 +61,7 @@ public class ValidateTask extends AbstractEadTask {
 							.add(new SAXParseException(
 									"The file is not UTF-8 - We will try to convert it right now to UTF-8 or make sure your file is UTF-8 before re-uploading. If not, the file will not pass the index step and will fail.",
 									new LocatorImpl()));
-					logger.warn("ERROR - not UTF-8 ? - Trying to convert it to UTF-8");
+					logger.warn("ERROR - not UTF-8 ? - Trying to convert it to UTF-8",e);
 					try {
 						simpleUtf8Conversion(
 								APEnetUtilities.getDashboardConfig().getRepoDirPath() + ead.getPathApenetead(),
@@ -73,6 +75,9 @@ public class ValidateTask extends AbstractEadTask {
 				} finally {
 					if (reader != null)
 						reader.close();
+					if (inputStream != null){
+						inputStream.close();
+					}
 				}
 				/* End: Special for Spanish non UTF8 data */
 

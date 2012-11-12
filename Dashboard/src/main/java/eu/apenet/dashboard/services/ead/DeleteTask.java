@@ -60,11 +60,6 @@ public class DeleteTask extends AbstractEadTask {
                     findingAid.getEses().clear();
                 }
 				ContentUtils.deleteFile(APEnetUtilities.getConfig().getRepoDirPath() + ead.getPathApenetead());
-				if (ead.getQueueItem() != null){
-					QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
-					queueItemDAO.delete(ead.getQueueItem());
-				}
-				ead.getQueuesItems().clear();
 				EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 				eadDAO.delete(ead);
 				logAction(ead, true);

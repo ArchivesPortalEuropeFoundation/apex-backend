@@ -173,8 +173,6 @@ public class Indexer {
 		long numberOfDaos = 0l;
 		pathApenetead = ead.getPathApenetead();
 		archivalinstitution = ead.getArchivalInstitution();
-		LOG.info("Indexing: '" + xmlType.getName() + "' id: " + ead.getId() + ", eadid: " + ead.getEadid() + ", aiId: " + archivalinstitution.getAiId() + ", file path: "
-				+ ead.getPathApenetead());
 		isFinalPath = true;
 		currentPath = APEnetUtilities.getConfig().getRepoDirPath() + pathApenetead;
 		/**

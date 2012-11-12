@@ -31,6 +31,7 @@ public abstract class AbstractEadTask {
 		}
 		logger.info("Ead " + ead.getEadid() + "(" + xmlType.getName() + "): " + getActionName() + " - " + successString);
 	}
+
 	protected static boolean isBeingHarvested () {
 		boolean result = true;
 		ResumptionTokenDAO resumptionTokenDAO = DAOFactory.instance().getResumptionTokenDAO();

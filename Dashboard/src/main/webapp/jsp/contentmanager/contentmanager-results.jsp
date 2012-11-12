@@ -56,7 +56,7 @@
 	</form>
 </div>
 <div id="ead-results" class="box">
-	<s:form id="updateCurrentSearch" action="contentmanagerResults" theme="simple">
+	<s:form id="updateCurrentSearch" action="updateContentmanager" theme="simple">
 		<s:hidden name="pageNumber" />
 		<s:hidden name="orderByField" />
 		<s:hidden name="orderByAscending" />
