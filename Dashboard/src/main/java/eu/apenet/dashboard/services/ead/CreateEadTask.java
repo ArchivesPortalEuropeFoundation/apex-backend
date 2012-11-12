@@ -76,7 +76,7 @@ public class CreateEadTask extends AbstractEadTask {
 			String startPath = getPath(xmlType, countryIso, aiId) + upFile.getFname();
 			newEad.setPathApenetead(startPath);
 			newEad.setUploadMethod(upFile.getUploadMethod());
-			DAOFactory.instance().getEadDAO().store(newEad);
+			newEad = DAOFactory.instance().getEadDAO().store(newEad);
 
 			File destFile = new File(APEnetUtilities.getDashboardConfig().getRepoDirPath() +startPath);
 
