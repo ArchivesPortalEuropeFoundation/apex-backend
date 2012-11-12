@@ -121,5 +121,29 @@ public class Warnings implements java.io.Serializable {
 	public void setIswarning(Boolean iswarning) {
 		this.iswarning = iswarning;
 	}
+	public Ead getEad() {
+		if (findingAid != null) {
+			return findingAid;
+		} else if (holdingsGuide != null) {
+			return holdingsGuide;
+		} else {
+			return sourceGuide;
+		}
+	}
 
+	public void setEad(Ead ead) {
+		if (ead == null) {
+			findingAid = null;
+			holdingsGuide = null;
+			sourceGuide = null;
+		} else {
+			if (ead instanceof FindingAid) {
+				findingAid = (FindingAid) ead;
+			} else if (ead instanceof HoldingsGuide) {
+				holdingsGuide = (HoldingsGuide) ead;
+			} else if (ead instanceof SourceGuide) {
+				sourceGuide = (SourceGuide) ead;
+			}
+		}
+	}
 }
