@@ -48,15 +48,7 @@ public abstract class EadLogicAbstract {
         }
     }
 
-    /**
-     * The isOverwrite boolean is set to false, so the next parameters can be set to anything, they will never be used
-     * @param id identifier of the file within the DB
-     * @param xmlType the type of XML of this file
-     * @return boolean if it works or not
-     */
-    public static boolean delete(Integer id, XmlType xmlType) {
-        return deleteOrOverwrite(id, xmlType, false, null, false, null, -1);
-    }
+
 
     public static boolean deleteOrOverwrite(Integer id, XmlType xmlType, boolean isOverwrite, FileUnit fileUnit, boolean isConverted, String title, int archivalInstitutionId) {
         EadDAO eadDAO = DAOFactory.instance().getEadDAO();
@@ -131,6 +123,7 @@ public abstract class EadLogicAbstract {
                     newEad.setTitle(title);
                     newEad.setUploadDate(new Date());
                     newEad.setPathApenetead(APEnetUtilities.FILESEPARATOR + countryIso + APEnetUtilities.FILESEPARATOR + archivalInstitutionId + APEnetUtilities.FILESEPARATOR + fileUnit.getFileName());
+                    newEad.setConverted(isConverted);
                     newEad.setUploadMethod(upFile.getUploadMethod());
                     eadDAO.insertSimple(newEad);
                 }

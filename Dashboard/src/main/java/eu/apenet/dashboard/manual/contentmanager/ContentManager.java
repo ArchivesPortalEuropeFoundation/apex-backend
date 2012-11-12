@@ -183,7 +183,6 @@ public class ContentManager extends ContentManagerIndexer{
 	 * @throws Exception
 	 */
 	public static void delete(Integer id, XmlType xmlType) throws Exception {
-        EadLogicAbstract.delete(id, xmlType);
 	}
 
 	/**

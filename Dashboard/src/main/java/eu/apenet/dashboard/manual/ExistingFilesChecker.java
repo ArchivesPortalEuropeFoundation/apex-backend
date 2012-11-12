@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -34,7 +33,7 @@ import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.manual.contentmanager.ContentManager;
-import eu.apenet.dashboard.utils.ChangeControl;
+import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.util.XmlChecker;
@@ -321,50 +320,52 @@ public class ExistingFilesChecker {
                         	result = STATUS_BLOCKED;
                         }
                     } else {
-                        Ead ead = instantiateCorrectEadType(xmlType);
-                        String fileShortPath = instantiateCorrectDirPath(xmlType) + fileUnit.getFileName();
+                    	
+//                        Ead ead = instantiateCorrectEadType(xmlType);
+//                        String fileShortPath = instantiateCorrectDirPath(xmlType) + fileUnit.getFileName();
                         try {
-                            ead.setEadid(eadid);
-
-                            try {
-                                ead.setTitle(this.extractAttributeFromEad(this.uploadedFilesPath + fileUnit.getFileName(), "eadheader/filedesc/titlestmt/titleproper", null, true).trim());
-                            } catch (WstxParsingException e) {
-                                ead.setTitle("");
-                            }
-
-                            ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(this.archivalInstitutionId);
-                            ead.setArchivalInstitution(archivalInstitution);
-
-                            ead.setUploadDate(new Date());
-                            ead.setPathApenetead(fileShortPath);
-
-                            UpFile upFile = upFileDao.findById(fileUnit.getFileId());
-                            ead.setUploadMethod(upFile.getUploadMethod());
-
-                            DAOFactory.instance().getEadDAO().store(ead);
+                        	EadService.create(xmlType, upFileDao.findById(fileUnit.getFileId()), archivalInstitutionId);
+//                            ead.setEadid(eadid);
+//
+//                            try {
+//                                ead.setTitle(this.extractAttributeFromEad(this.uploadedFilesPath + fileUnit.getFileName(), "eadheader/filedesc/titlestmt/titleproper", null, true).trim());
+//                            } catch (WstxParsingException e) {
+//                                ead.setTitle("");
+//                            }
+//
+//                            ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(this.archivalInstitutionId);
+//                            ead.setArchivalInstitution(archivalInstitution);
+//
+//                            ead.setUploadDate(new Date());
+//                            ead.setPathApenetead(fileShortPath);
+//
+//                            UpFile upFile = upFileDao.findById(fileUnit.getFileId());
+//                            ead.setUploadMethod(upFile.getUploadMethod());
+//                            ead.setConverted(isConverted);
+//                            DAOFactory.instance().getEadDAO().store(ead);
                         } catch (Exception e) {
-                            LOG.error("The " + xmlType.getName() + " which eadid is " + eadid + " could not be stored in the table [Database Rollback]. Error:" + e.getMessage());
+                            LOG.error("The " + xmlType.getName() + " which eadid is " + eadid + " could not be stored in the table [Database Rollback]. Error:" + e.getMessage(),e);
                             dataBaseCommitError = true;
                         } finally {
-                            if (!dataBaseCommitError) {
-                                try {
-                                    deleteFileFromDDBB(fileUnit.getFileId());
-                                } catch (Exception e) {
-                                    dataBaseCommitError = true;
-                                    LOG.error("Error removing file which id is " + fileUnit.getFileId() + " from up_file table in Database");
-                                }
-                            }
+//                            if (!dataBaseCommitError) {
+//                                try {
+//                                    deleteFileFromDDBB(fileUnit.getFileId());
+//                                } catch (Exception e) {
+//                                    dataBaseCommitError = true;
+//                                    LOG.error("Error removing file which id is " + fileUnit.getFileId() + " from up_file table in Database");
+//                                }
+//                            }
                         }
 
-                        if (!dataBaseCommitError) {
-                            try {
-                                insertFileToTempFiles(this.uploadedFilesPath + fileUnit.getFileName(), APEnetUtilities.getConfig().getRepoDirPath() + fileShortPath);
-                                LOG.info("The EAD " + fileUnit.getFileName() + " has been stored in the REPO directory");
-                                ChangeControl.logOperation(ead, ChangeControl.UPLOAD_EAD_OPERATION);
-                            } catch (APEnetException ex) {
-                                LOG.error("The file " + fileUnit.getFileName() + " could not be stored or removed: " + ex.getMessage(), ex);
-                            }
-                        }
+//                        if (!dataBaseCommitError) {
+//                            try {
+//                                insertFileToTempFiles(this.uploadedFilesPath + fileUnit.getFileName(), APEnetUtilities.getConfig().getRepoDirPath() + fileShortPath);
+//                                LOG.info("The EAD " + fileUnit.getFileName() + " has been stored in the REPO directory");
+//                                ChangeControl.logOperation(ead, ChangeControl.UPLOAD_EAD_OPERATION);
+//                            } catch (APEnetException ex) {
+//                                LOG.error("The file " + fileUnit.getFileName() + " could not be stored or removed: " + ex.getMessage(), ex);
+//                            }
+//                        }
                         result = STATUS_NO_EXIST;
                     }
                 }
@@ -396,7 +397,7 @@ public class ExistingFilesChecker {
         return null;
     }
 
-	public String extractAttributeFromEad(String path, String element, String attribute, boolean isReturningFirstInstance) throws WstxParsingException {
+	public static String extractAttributeFromEad(String path, String element, String attribute, boolean isReturningFirstInstance) throws WstxParsingException {
         final String CONVERTED_FLAG = "Converted_APEnet_EAD_version_";
         XMLStreamReader2 input = null;
 	    InputStream sfile = null;
@@ -548,8 +549,11 @@ public class ExistingFilesChecker {
 			// The file is an EAD
 			if (fileUnit.getEadType().equals(XmlType.EAD_FA.getName()) || fileUnit.getEadType().equals(XmlType.EAD_HG.getName()) || fileUnit.getEadType().equals(XmlType.EAD_SG.getName())) {
                 try {
-                    overwrite(fileUnit);
-                } catch (APEnetException e) {
+                	XmlType xmlType = XmlType.getType(fileUnit.getEadType());
+                	Ead eadToOverwrite = DAOFactory.instance().getEadDAO().getEadByEadid(xmlType.getClazz(), archivalInstitutionId, fileUnit.getEadid());
+                	EadService.overwrite(eadToOverwrite, upFileDao.findById(fileUnit.getFileId()));
+                    //overwrite(fileUnit);
+                } catch (Exception e) {
                     return "error";
                 }
 			}
@@ -632,25 +636,27 @@ public class ExistingFilesChecker {
                             // It is necessary to move the file to /mnt/tmp/tmp/ and remove it from /mnt/tmp/up/ folder
                             // It is necessary to insert an entry in finding_aid table
                             // It is necessary to remove the entry from up_file table
-                            Ead ead = instantiateCorrectEadType(xmlType);
+                        	
+                            //Ead ead = instantiateCorrectEadType(xmlType);
                             String fileShortPath = instantiateCorrectDirPath(xmlType) + fileUnit.getFileName();
                             try {
-                                ead.setEadid(eadid);
-                                try {
-                                    ead.setTitle(extractAttributeFromEad(uploadedFilesPath + fileUnit.getFileName(), "eadheader/filedesc/titlestmt/titleproper", null, true).trim());
-                                } catch (WstxParsingException e){
-                                    ead.setTitle("");
-                                }
-
-                                ead.setUploadDate(new Date());
-                                ead.setPathApenetead(fileShortPath);
-
-                                UpFile upFile = upFileDao.findById(fileUnit.getFileId());
-                                ead.setUploadMethod(upFile.getUploadMethod());
-                                ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(archivalInstitutionId);
-                                ead.setArchivalInstitution(archivalInstitution);
-
-                                DAOFactory.instance().getEadDAO().store(ead);
+                            	EadService.create(xmlType, upFileDao.findById(fileUnit.getFileId()), archivalInstitutionId);
+//                                ead.setEadid(eadid);
+//                                try {
+//                                    ead.setTitle(extractAttributeFromEad(uploadedFilesPath + fileUnit.getFileName(), "eadheader/filedesc/titlestmt/titleproper", null, true).trim());
+//                                } catch (WstxParsingException e){
+//                                    ead.setTitle("");
+//                                }
+//
+//                                ead.setUploadDate(new Date());
+                              //ead.setPathApenetead(fileShortPath);
+//
+//                                UpFile upFile = upFileDao.findById(fileUnit.getFileId());
+//                                ead.setUploadMethod(upFile.getUploadMethod());
+//                                ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(archivalInstitutionId);
+//                                ead.setArchivalInstitution(archivalInstitution);
+//                                ead.setConverted(isConverted);
+//                                DAOFactory.instance().getEadDAO().store(ead);
 
                             } catch (Exception e) {
                                 LOG.error("The EAD which eadid is '" + eadid + "' could not be stored in table [Database Rollback]. Error:" + e.getMessage());
@@ -658,25 +664,26 @@ public class ExistingFilesChecker {
                                 dataBaseCommitError = true;
                             } finally {
 
-                                if (!dataBaseCommitError) {
-                                    try {
-                                        deleteFileFromDDBB(fileUnit.getFileId());
-                                    } catch (Exception e) {
-                                        dataBaseCommitError = true;
-                                        LOG.error("Error removing file which id is " + fileUnit.getFileId() + " from up_file table in Database");
-                                    }
-                                }
-                            }
-
-                            if (!dataBaseCommitError) {
-                                try {
-                                    insertFileToTempFiles(uploadedFilesPath + fileUnit.getFileName(), APEnetUtilities.getConfig().getRepoDirPath() + fileShortPath);
-                                    // Register operation
-                                    LOG.info("The EAD " + fileUnit.getFileName() + " has been stored in the temporal repository");
-                                    ChangeControl.logOperation(ead, "Upload EAD");
-                                } catch (APEnetException ex) {
-                                    LOG.error("The file " + fileUnit.getFileName() + " could not be stored or removed: " + ex.getMessage(), ex);
-                                }
+//                                if (!dataBaseCommitError) {
+//                                    try {
+//                                        deleteFileFromDDBB(fileUnit.getFileId());
+//                                    } catch (Exception e) {
+//                                        dataBaseCommitError = true;
+//                                        LOG.error("Error removing file which id is " + fileUnit.getFileId() + " from up_file table in Database");
+//                                    }
+//                                }
+//                            }
+//
+//                            if (!dataBaseCommitError) {
+//                                try {
+//                                    insertFileToTempFiles(uploadedFilesPath + fileUnit.getFileName(), APEnetUtilities.getConfig().getRepoDirPath() + fileShortPath);
+//                                    // Register operation
+//                                    LOG.info("The EAD " + fileUnit.getFileName() + " has been stored in the temporal repository");
+//                                    ChangeControl.logOperation(ead, "Upload EAD");
+//                                } catch (APEnetException ex) {
+//                                    LOG.error("The file " + fileUnit.getFileName() + " could not be stored or removed: " + ex.getMessage(), ex);
+//                                }
+//                            }
                             }
                             return STATUS_NO_EXIST;
                         }
@@ -755,7 +762,7 @@ public class ExistingFilesChecker {
         } catch (WstxParsingException e){
             title = "";
         }
-
+        
         XmlType xmlType = XmlType.getType(fileUnit.getEadType());
         if(!EadLogicAbstract.deleteOrOverwrite(fileUnit.getPermId(), xmlType, true, fileUnit, isConverted, title, archivalInstitutionId))
             throw new APEnetException();
