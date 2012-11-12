@@ -576,8 +576,10 @@ public class FindingAidHibernateDAO extends AbstractHibernateDAO<FindingAid, Int
 	 * finding aids with holdings guide.
 	 */
 	@Override
-	public List<FindingAid> getFindingAidsByHoldingsGuideId(Integer hgId,Integer aiId,boolean published){
-		Criteria criteria = createCriteriaForFindingAidsByHoldingsGuide(hgId,aiId,true,null);
+	public List<FindingAid> getFindingAidsByHoldingsGuideId(Integer hgId,boolean published, Integer pageSize, Integer pageNumber){
+		Criteria criteria = createCriteriaForFindingAidsByHoldingsGuide(hgId,true,null);
+		criteria.setFirstResult(pageSize * (pageNumber - 1));
+		criteria.setMaxResults(pageSize);
 		return (List<FindingAid>)criteria.list();
 	}
 	
@@ -585,13 +587,13 @@ public class FindingAidHibernateDAO extends AbstractHibernateDAO<FindingAid, Int
 	 * Get the total figure of finding aids indexed into a holdings guide 
 	 */
 	@Override
-	public Long countFindingAidsIndexedByHoldingsGuideId(Integer hgId,Integer aiId){
-		Criteria criteria = createCriteriaForFindingAidsByHoldingsGuide(hgId,aiId,true, null);
+	public Long countFindingAidsByHoldingsGuideId(Integer hgId,boolean published){
+		Criteria criteria = createCriteriaForFindingAidsByHoldingsGuide(hgId,true, null);
 		criteria.setProjection(Projections.count("findingAid.id"));
 		return (Long)criteria.uniqueResult();
 	}
 	
-	private Criteria createCriteriaForFindingAidsByHoldingsGuide(Integer hgId,Integer aiId,boolean published,Boolean isLinked) {
+	private Criteria createCriteriaForFindingAidsByHoldingsGuide(Integer hgId,boolean published,Boolean isLinked) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(),"findingAid");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		DetachedCriteria subQuery = DetachedCriteria.forClass(CLevel.class,"cLevel");
@@ -603,14 +605,6 @@ public class FindingAidHibernateDAO extends AbstractHibernateDAO<FindingAid, Int
 				}else{
 					DetachedCriteria subQuery3 = DetachedCriteria.forClass(HoldingsGuide.class,"holdingsGuide");
 						subQuery3.setProjection(Property.forName("holdingsGuide.id"));
-						/*Disjunction disjunction = Restrictions.disjunction();
-						for (String fileState : FileState.INDEXED_FILE_STATES) {
-							disjunction.add(Restrictions.eq("holdingsGuide.fileState.state", fileState));
-						}
-						subQuery3.add(disjunction);*/
-						if(aiId!=null){
-							subQuery3.add(Restrictions.eq("holdingsGuide.archivalInstitution.aiId", aiId));
-						}
 					subQuery2.add(Subqueries.propertyIn("eadContent.hgId",subQuery3));
 				}
 				subQuery2.setProjection(Property.forName("eadContent.ecId"));
@@ -619,9 +613,6 @@ public class FindingAidHibernateDAO extends AbstractHibernateDAO<FindingAid, Int
 			criteria.add(Subqueries.propertyIn("findingAid.eadid", subQuery));
 		}else if((isLinked!=null && !isLinked)){
 			criteria.add(Subqueries.propertyNotIn("findingAid.eadid", subQuery));
-		}
-		if(aiId!=null){
-			criteria.add(Restrictions.eq("findingAid.archivalInstitution.aiId", aiId));
 		}
 		criteria.add(Restrictions.eq("findingAid.published", published));
 		return criteria;

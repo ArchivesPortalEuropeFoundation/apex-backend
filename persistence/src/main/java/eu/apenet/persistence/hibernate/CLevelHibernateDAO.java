@@ -276,11 +276,18 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 	 * @return List<CLevel>
 	 */
 	@Override
-	public List<CLevel> getCLevelsOutOfSystemByHoldingsGuideId(Integer hgId, Integer aiId) {
-		Criteria criteria = criteriaCriteriaCLevelsOutOfSystemByHoldingsGuideId(hgId, aiId);
+	public List<CLevel> getCLevelsOutOfSystemByHoldingsGuideId(Integer hgId, Integer pageSize, Integer pageNumber) {
+		Criteria criteria = criteriaCriteriaCLevelsOutOfSystemByHoldingsGuideId(hgId);
+		criteria.setFirstResult(pageSize * (pageNumber - 1));
+		criteria.setMaxResults(pageSize);
 		return (List<CLevel>) criteria.list();
 	}
-
+	@Override
+	public Long countCLevelsOutOfSystemByHoldingsGuideId(Integer hgId){
+		Criteria criteria = criteriaCriteriaCLevelsOutOfSystemByHoldingsGuideId(hgId);
+		criteria.setProjection(Projections.count("cLevel.clId"));
+		return (Long)criteria.uniqueResult();
+	}
 	/**
 	 * Returns total number of c_level (FindingAids) included into a Holdings
 	 * Guide
@@ -302,7 +309,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		return (Long) criteria.uniqueResult();
 	}
 
-	private Criteria criteriaCriteriaCLevelsOutOfSystemByHoldingsGuideId(Integer hgId, Integer aiId) {
+	private Criteria criteriaCriteriaCLevelsOutOfSystemByHoldingsGuideId(Integer hgId) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "cLevel");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		DetachedCriteria subQuery = DetachedCriteria.forClass(EadContent.class, "eadContent");
@@ -311,7 +318,6 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		criteria.add(Subqueries.propertyIn("cLevel.ecId", subQuery));
 		DetachedCriteria subQuery2 = DetachedCriteria.forClass(FindingAid.class, "findingAid");
 		subQuery2.setProjection(Property.forName("findingAid.eadid"));
-		subQuery2.add(Restrictions.eq("findingAid.archivalInstitution.aiId", aiId));
 		criteria.add(Subqueries.propertyNotIn("cLevel.hrefEadid", subQuery2));
 		criteria.add(Restrictions.isNotNull("hrefEadid"));
 		return criteria;
