@@ -1,5 +1,6 @@
 package eu.apenet.dashboard.actions.content;
 
+import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
@@ -11,6 +12,7 @@ public class FindingAidResult extends EadResult {
 	private boolean harvestedByEuropeana;
 	private long totalNumberOfDaos;
 	private boolean hasEseEdmFiles = false;
+	private String holdingsGuideTitle;
 	public FindingAidResult(Ead ead) {
 		super(ead);
 		FindingAid findingAid = (FindingAid) ead;
@@ -19,6 +21,9 @@ public class FindingAidResult extends EadResult {
         this.harvestedByEuropeana = EuropeanaState.HARVESTED.equals(findingAid.getEuropeana());
         this.totalNumberOfDaos = findingAid.getTotalNumberOfDaos();
         hasEseEdmFiles = (convertedToEseEdm | deliveredToEuropeana || harvestedByEuropeana ) && totalNumberOfDaos >0;
+        if (this.isPublished()){
+        	holdingsGuideTitle = DAOFactory.instance().getHoldingsGuideDAO().getLinkedHoldingsGuideTitleByFindingAidEadid(ead.getEadid(), ead.getAiId());
+        }
 	}
 
 	public boolean isConvertedToEseEdm() {
@@ -72,4 +77,9 @@ public class FindingAidResult extends EadResult {
 	public boolean isEditable(){
 		return super.isEditable() && !(convertedToEseEdm | deliveredToEuropeana || harvestedByEuropeana );
 	}
+
+	public String getHoldingsGuideTitle() {
+		return holdingsGuideTitle;
+	}
+	
 }

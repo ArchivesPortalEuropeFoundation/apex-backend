@@ -105,8 +105,8 @@ public class ContentManager extends ContentManagerIndexer{
             }
         } else if(ead instanceof HoldingsGuide){
             if(ead.isPublished()){
-                eadcmUnit.setPossibleFindingAidsLinked(DAOFactory.instance().getCLevelDAO().countTotalCLevelsByHoldingsGuideId(ead.getId())); //max. number
-                eadcmUnit.setFindingAidsLinked(DAOFactory.instance().getFindingAidDAO().countFindingAidsIndexedByHoldingsGuideId(ead.getId(), aiId)); //currently number
+//                eadcmUnit.setPossibleFindingAidsLinked(DAOFactory.instance().getCLevelDAO().countTotalCLevelsByHoldingsGuideId(ead.getId())); //max. number
+//                eadcmUnit.setFindingAidsLinked(DAOFactory.instance().getFindingAidDAO().countFindingAidsIndexedByHoldingsGuideId(ead.getId(), aiId)); //currently number
             }
         }
         log.debug("convertEadToEADCMUnit function return");

@@ -29,6 +29,8 @@ public class ContentManagerResults {
 		for (Ead ead: eads){
 			if (XmlType.EAD_FA.equals(xmlType)){
 				this.eadResults.add(new FindingAidResult(ead));
+			}else if (XmlType.EAD_HG.equals(xmlType)){
+				this.eadResults.add(new HoldingsGuideResult(ead));
 			}else {
 				this.eadResults.add(new EadResult(ead));
 			}
@@ -57,5 +59,7 @@ public class ContentManagerResults {
 	public boolean isFindingAid(){
 		return XmlType.EAD_FA.equals(xmlType);
 	}
-	
+	public boolean isHoldingsGuide(){
+		return XmlType.EAD_HG.equals(xmlType);
+	}
 }

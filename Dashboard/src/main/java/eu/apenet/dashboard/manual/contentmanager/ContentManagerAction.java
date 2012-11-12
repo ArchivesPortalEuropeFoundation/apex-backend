@@ -282,16 +282,15 @@ public class ContentManagerAction extends AbstractContentManagerAction {
 			FindingAidDAO faDao = DAOFactory.instance().getFindingAidDAO();
 			// First list: listOfFindingAidsNotIndex, finding_aids uploaded
 			// but not indexed
-			setListOfFindingAidsNotIndex(faDao.getFindingAidsByHoldingsGuideId(getId(), aiId,
-					false));
+			setListOfFindingAidsNotIndex(faDao.getFindingAidsByHoldingsGuideId(getId(),
+					false, 10,1));
 			// Second list: ListOfFindingAidsIndexed, indexed and linked
 			// finding_aids
-			setListOfFindingAidsIndexed(faDao.getFindingAidsByHoldingsGuideId(getId(), aiId,
-					true));
+			setListOfFindingAidsIndexed(faDao.getFindingAidsByHoldingsGuideId(getId(), true,10,1));
 			// Third list: ListOfFindingAidsOut, finding_aids out of the
 			// system
 			CLevelDAO cLevelDao = DAOFactory.instance().getCLevelDAO();
-			setListOfFindingAidsOut(cLevelDao.getCLevelsOutOfSystemByHoldingsGuideId(getId(), aiId));
+//			setListOfFindingAidsOut(cLevelDao.getCLevelsOutOfSystemByHoldingsGuideId(getId(), aiId));
 			setListNotLinkedId(getId());
 			setXmlType(XmlType.EAD_HG);
 			return finishAction();

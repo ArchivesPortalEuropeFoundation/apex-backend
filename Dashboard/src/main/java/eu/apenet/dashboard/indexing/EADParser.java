@@ -24,6 +24,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.EadContentDAO;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
@@ -112,7 +113,7 @@ public class EADParser extends AbstractParser {
 		boolean noCLevelFound = true;
 		Long ecId = null;
 		try {
-			JpaUtil.beginDatabaseTransaction();
+			HibernateUtil.beginDatabaseTransaction();
 			for (int event = xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
 				if (event == XMLStreamConstants.START_ELEMENT) {
 					QName elementName = xmlReader.getName();
@@ -124,7 +125,7 @@ public class EADParser extends AbstractParser {
 							noCLevelFound = false;
 							xmlWriterHolder.close();
 							eadContent.setXml(stringWriter.toString());
-							dao.updateSimple(eadContent);
+							HibernateUtil.getDatabaseSession().save(eadContent);
 							stringWriter.close();
 							stringWriter = null;
 							
@@ -165,7 +166,7 @@ public class EADParser extends AbstractParser {
 				noCLevelFound = false;
 				xmlWriterHolder.close();
 				eadContent.setXml(stringWriter.toString());
-				dao.updateSimple(eadContent);
+				HibernateUtil.getDatabaseSession().save(eadContent);
 				stringWriter = null;
                 if(indexer != null)
                 	eadCounts.addNumberOfDAOs(indexer.parseHeader(eadContent));
@@ -177,7 +178,7 @@ public class EADParser extends AbstractParser {
 			if (indexer != null) {
 				indexer.commitAll(eadCounts);
 			}
-			JpaUtil.commitDatabaseTransaction();
+			HibernateUtil.commitDatabaseTransaction();
 			if (indexer != null && ead instanceof HoldingsGuide) {
 				ContentUtils.addLinkHGtoAL((HoldingsGuide)ead);
 			}
@@ -188,8 +189,8 @@ public class EADParser extends AbstractParser {
                 LOG.error("Starting Parse method rollback... - but we will not move the file back to TMP since it should stay in REPO always");
 			}
 			
-			JpaUtil.rollbackDatabaseTransaction();
-			JpaUtil.closeDatabaseSession();
+			HibernateUtil.rollbackDatabaseTransaction();
+			HibernateUtil.closeDatabaseSession();
 			if (indexer != null) {
 				LOG.error(eadid + ": rollback:", de);
 				indexer.rollback();
