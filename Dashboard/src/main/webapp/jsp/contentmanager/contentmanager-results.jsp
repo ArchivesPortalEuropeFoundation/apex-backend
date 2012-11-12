@@ -18,8 +18,8 @@
 			<s:text name="content.message.onlyselected" />
 			<input type="radio" name="batchItems" value="only_searched">
 			<s:text name="content.message.onlysearched" />
-			</input> <input type="hidden" name="xmlTypeId" value="<s:property value="%{xmlTypeId}"/>" /> <select id="batchSelectedAction"
-				name="action">
+			</input> <input type="hidden" name="xmlTypeId" value="<s:property value="%{xmlTypeId}"/>" /> <select
+				id="batchSelectedAction" name="action">
 				<option value="convert_validate_publish">
 					<s:text name="content.message.doitall" />
 				</option>
@@ -112,17 +112,23 @@
 								src="images/expand/arrow-down.gif" alt="down" /></a> <a class="order"
 							href="javascript:changeOrder('totalNumberOfUnits','false')"><img class="noStyle"
 								src="images/expand/arrow-up.gif" alt="up" /></a></th>
-						<c:if test="${results.findingAid}">
-							<th><s:text name="content.message.eseedm" /> <a class="order"
-								href="javascript:changeOrder('totalNumberOfDaos','true')"><img class="noStyle"
-									src="images/expand/arrow-down.gif" alt="down" /></a> <a class="order"
-								href="javascript:changeOrder('totalNumberOfDaos','false')"><img class="noStyle"
-									src="images/expand/arrow-up.gif" alt="up" /></a></th>
-							<th><s:text name="content.message.europeana" /> <a class="order"
-								href="javascript:changeOrder('europeana','true')"><img class="noStyle" src="images/expand/arrow-down.gif"
-									alt="down" /></a> <a class="order" href="javascript:changeOrder('europeana','false')"><img class="noStyle"
-									src="images/expand/arrow-up.gif" alt="up" /></a></th>
-						</c:if>
+						<c:choose>
+							<c:when test="${results.findingAid}">
+								<th><s:text name="content.message.holdings" /></th>
+								<th><s:text name="content.message.eseedm" /> <a class="order"
+									href="javascript:changeOrder('totalNumberOfDaos','true')"><img class="noStyle"
+										src="images/expand/arrow-down.gif" alt="down" /></a> <a class="order"
+									href="javascript:changeOrder('totalNumberOfDaos','false')"><img class="noStyle"
+										src="images/expand/arrow-up.gif" alt="up" /></a></th>
+								<th><s:text name="content.message.europeana" /> <a class="order"
+									href="javascript:changeOrder('europeana','true')"><img class="noStyle" src="images/expand/arrow-down.gif"
+										alt="down" /></a> <a class="order" href="javascript:changeOrder('europeana','false')"><img class="noStyle"
+										src="images/expand/arrow-up.gif" alt="up" /></a></th>
+							</c:when>
+							<c:when test="${results.holdingsGuide}">
+								<th><s:text name="content.message.linked" /></th>
+							</c:when>
+						</c:choose>
 						<th><s:text name="content.message.queue" /> <a class="order" href="javascript:changeOrder('queuing','true')"><img
 								class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> <a class="order"
 							href="javascript:changeOrder('queuing','false')"><img class="noStyle" src="images/expand/arrow-up.gif"
@@ -146,16 +152,21 @@
 									<apenet:resource>${eadResult.indexedText}</apenet:resource>
 								</c:otherwise>
 							</c:choose></td>
-						<c:if test="${results.findingAid}">
-							<td class="${eadResult.eseEdmCssClass}"><c:choose>
-									<c:when
-										test="${(eadResult.convertedToEseEdm or eadResult.deliveredToEuropeana) and eadResult.totalNumberOfDaos > 0}">${eadResult.totalNumberOfDaos}</c:when>
-									<c:otherwise>
-										<apenet:resource>${eadResult.eseEdmText}</apenet:resource>
-									</c:otherwise>
-								</c:choose></td>
-							<td class="${eadResult.europeanaCssClass}"><apenet:resource>${eadResult.europeanaText}</apenet:resource></td>
-						</c:if>
+						<c:choose>
+							<c:when test="${results.findingAid}">
+								<td>${eadResult.holdingsGuideTitle}</td>
+								<td class="${eadResult.eseEdmCssClass}"><c:choose>
+										<c:when
+											test="${(eadResult.convertedToEseEdm or eadResult.deliveredToEuropeana) and eadResult.totalNumberOfDaos > 0}">${eadResult.totalNumberOfDaos}</c:when>
+										<c:otherwise>
+											<apenet:resource>${eadResult.eseEdmText}</apenet:resource>
+										</c:otherwise>
+									</c:choose></td>
+								<td class="${eadResult.europeanaCssClass}"><apenet:resource>${eadResult.europeanaText}</apenet:resource></td>
+							</c:when>
+							<c:when test="${results.holdingsGuide}"><td>${eadResult.findingAidsLinked} / ${eadResult.possibleFindingAidsLinked}</td></c:when>
+
+						</c:choose>
 						<td class="${eadResult.queueCssClass}"><c:if
 								test="${eadResult.queueReady or eadResult.queueProcessing or eadResult.queueError}">
 								<c:if test="${eadResult.queueError}">
