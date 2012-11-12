@@ -744,8 +744,8 @@
             </result>
         </action>
 
-        <action name="getFindingAidsNotLinked" class="eu.apenet.dashboard.manual.contentmanager.ContentManagerAction" method="getFindingAidsNotLinked">
-            <result name="success" type="tiles">contentmanager</result>
+        <action name="getFindingAidsNotLinked" class="eu.apenet.dashboard.actions.content.NotLinkedFindingAidsAction">
+            <result name="success" type="tiles">notLinkedFindingAids</result>
 			<result name="error" type="tiles">error</result>
         </action>
         

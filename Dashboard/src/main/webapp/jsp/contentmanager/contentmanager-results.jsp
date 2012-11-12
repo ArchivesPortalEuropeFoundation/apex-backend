@@ -220,6 +220,12 @@
 											</option>
 
 										</c:if>
+										<c:if test="${results.holdingsGuide and (eadResult.findingAidsLinked != eadResult.possibleFindingAidsLinked)}">
+											<option value="_blank|getFindingAidsNotLinked.action">
+												<s:text name="content.message.getFindingAidsNotLinked" />
+											</option>
+										
+										</c:if>
 										<c:if test="${results.findingAid}">
 											<c:if
 												test="${eadResult.validated and eadResult.units > 0 and not eadResult.convertedToEseEdm and not eadResult.deliveredToEuropeana}">

@@ -14,7 +14,12 @@ font: 0.75em Arial,sans-serif;
 text-align : center;
 background : #fff;
 }
-
+.left {
+	float:left;
+}
+.right {
+	float:right;
+}
 #principal {
 	background: #fff;
 	position: relative;
