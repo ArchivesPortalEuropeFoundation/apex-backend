@@ -21,7 +21,7 @@
 			<s:hidden name="orderByAscending"/>
 				<table>
 					<tr>
-						<th><s:text name="content.message.type" />:</th><td colspan="5"><s:radio list="typeList" name="type"/></td>
+						<th><s:text name="content.message.type" />:</th><td colspan="5"><s:radio list="typeList" name="xmlTypeId"/></td>
 					</tr>
 					<tr>
 						<th><s:text name="content.message.converted" />:</th><td><s:checkboxlist  list="convertedStatusList" name="convertedStatus"/></td>

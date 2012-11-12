@@ -54,7 +54,7 @@ public class EadService {
 			if (APEnetUtilities.getDashboardConfig().isDirectIndexing()) {
 				new ConvertTask().execute(ead);
 			} else { // Add the file to the indexing queue
-				addToQueue(ead, QueueAction.VALIDATE, null);
+				addToQueue(ead, QueueAction.CONVERT, null);
 			}
 		}
 	}

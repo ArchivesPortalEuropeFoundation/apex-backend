@@ -25,13 +25,14 @@ public class EadResult {
 	private String eadid;
 	private String date;
 	private boolean converted;
-	private boolean searchable;
+	private boolean published;
 	private boolean validated;
 	private boolean validatedFatalError;
 	private boolean queueReady;
 	private boolean queueError;
 	private boolean queueProcessing;
 	private long units;
+	private boolean containWarnings;
 	protected QueueAction queueAction;
 	public EadResult(Ead ead){
 		this.eadid = ead.getEadid();
@@ -42,7 +43,7 @@ public class EadResult {
 			this.title =  ead.getTitle();
         this.date = FORMATTER.format(ead.getUploadDate());
         this.converted = ead.isConverted();
-        this.searchable = ead.isPublished();
+        this.published = ead.isPublished();
         this.validated = ValidatedState.VALIDATED.equals(ead.getValidated());
         this.validatedFatalError = ValidatedState.FATAL_ERROR.equals(ead.getValidated());
         this.units = ead.getTotalNumberOfUnits();
@@ -52,6 +53,7 @@ public class EadResult {
         if ((!QueuingState.NO.equals(ead.getQueuing()) && ead.getQueueItem() != null)){
         	queueAction = ead.getQueueItem().getAction();
         }
+        this.containWarnings = ead.getWarningses().size() > 0;
 	}
 	public Integer getId() {
 		return id;
@@ -68,14 +70,18 @@ public class EadResult {
 	public boolean isConverted() {
 		return converted;
 	}
-	public boolean isSearchable() {
-		return searchable;
+
+	public boolean isPublished() {
+		return published;
 	}
 	public boolean isValidated() {
 		return validated;
 	}
 	public boolean isValidatedFatalError() {
 		return validatedFatalError;
+	}
+	public boolean isEditable(){
+		return validated & !published;
 	}
 	public long getUnits() {
 		return units;
@@ -110,7 +116,7 @@ public class EadResult {
 		}
 	}
 	public String getIndexedCssClass(){
-		if (searchable){
+		if (published){
 			return STATUS_OK;
 		}else {
 			return STATUS_NO;
@@ -133,7 +139,7 @@ public class EadResult {
 		}
 	}
 	public String getIndexedText(){
-		if (searchable){
+		if (published){
 			return getUnits()+"";
 		}else {
 			return CONTENT_MESSAGE_NO;
@@ -167,6 +173,9 @@ public class EadResult {
 	}
 	public boolean isQueueError() {
 		return queueError;
+	}
+	public boolean isContainWarnings() {
+		return containWarnings;
 	}
 	
 }

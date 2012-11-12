@@ -18,7 +18,7 @@
 			<s:text name="content.message.onlyselected" />
 			<input type="radio" name="batchItems" value="only_searched">
 			<s:text name="content.message.onlysearched" />
-			</input> <input type="hidden" name="type" value="<s:property value="%{type}"/>" /> <select id="batchSelectedAction"
+			</input> <input type="hidden" name="xmlTypeId" value="<s:property value="%{xmlTypeId}"/>" /> <select id="batchSelectedAction"
 				name="action">
 				<option value="convert_validate_publish">
 					<s:text name="content.message.doitall" />
@@ -60,8 +60,8 @@
 		<s:hidden name="pageNumber" />
 		<s:hidden name="orderByField" />
 		<s:hidden name="orderByAscending" />
-		<s:hidden name="type" />
-		<input name="ajax" type="hidden" value="true"/>
+		<s:hidden name="xmlTypeId" />
+		<input name="ajax" type="hidden" value="true" />
 
 		<div id="ead-results-header" class="boxtitle">
 			<div id="numberOfResults">
@@ -141,14 +141,15 @@
 						<td class="${eadResult.convertedCssClass}"><apenet:resource>${eadResult.convertedText}</apenet:resource></td>
 						<td class="${eadResult.validatedCssClass}"><apenet:resource>${eadResult.validatedText}</apenet:resource></td>
 						<td class="${eadResult.indexedCssClass}"><c:choose>
-								<c:when test="${eadResult.searchable}">${eadResult.units}</c:when>
+								<c:when test="${eadResult.published}">${eadResult.units}</c:when>
 								<c:otherwise>
 									<apenet:resource>${eadResult.indexedText}</apenet:resource>
 								</c:otherwise>
 							</c:choose></td>
 						<c:if test="${results.findingAid}">
 							<td class="${eadResult.eseEdmCssClass}"><c:choose>
-									<c:when test="${(eadResult.convertedToEseEdm or eadResult.deliveredToEuropeana) and eadResult.totalNumberOfDaos > 0}">${eadResult.totalNumberOfDaos}</c:when>
+									<c:when
+										test="${(eadResult.convertedToEseEdm or eadResult.deliveredToEuropeana) and eadResult.totalNumberOfDaos > 0}">${eadResult.totalNumberOfDaos}</c:when>
 									<c:otherwise>
 										<apenet:resource>${eadResult.eseEdmText}</apenet:resource>
 									</c:otherwise>
@@ -173,51 +174,79 @@
 
 									<select class="selectedAction" name="selectedAction">
 										<c:if test="${not eadResult.converted}">
-											<option value="convert">
+											<option value="action|convert">
 												<s:text name="content.message.convert" />
 											</option>
 										</c:if>
 										<c:if test="${not eadResult.validated and not eadResult.validatedFatalError}">
-											<option value="validate">
+											<option value="action|validate">
 												<s:text name="content.message.validate" />
 											</option>
 										</c:if>
 
-										<c:if test="${eadResult.validated and not eadResult.searchable}">
-											<option value="publish">
+										<c:if test="${eadResult.validated and not eadResult.published}">
+											<option value="action|publish">
 												<s:text name="content.message.publish" />
 											</option>
 										</c:if>
+										<c:if test="${eadResult.editable}">
+											<option value="_blank|editEad.action">
+												<s:text name="label.edit" />
+											</option>
+										</c:if>
+										<c:if test="${eadResult.validated}">
+											<option value="_blank|preview.action">
+												<s:text name="content.message.preview" />
+											</option>
+											<option value="_blank|download.action">
+												<s:text name="content.message.download" />
+											</option>
+
+										</c:if>
+										<c:if test="${eadResult.containWarnings}">
+											<option value="colorbox|showwarnings.action?iswarning=true">
+												<s:text name="content.message.showerror" />
+											</option>
+
+										</c:if>
 										<c:if test="${results.findingAid}">
-											<c:if test="${eadResult.validated and eadResult.units > 0 and not eadResult.convertedToEseEdm and not eadResult.deliveredToEuropeana}">
-												<option value="displayEseConvert">
+											<c:if
+												test="${eadResult.validated and eadResult.units > 0 and not eadResult.convertedToEseEdm and not eadResult.deliveredToEuropeana}">
+												<option value="_self|displayEseConvert.action">
 													<s:text name="content.message.convert.ese" />
 												</option>
 											</c:if>
-											<c:if
-												test="${eadResult.convertedToEseEdm and eadResult.totalNumberOfDaos > 0}">
-												<option value="deliverToEuropeana">
+											<c:if test="${eadResult.convertedToEseEdm and eadResult.totalNumberOfDaos > 0}">
+												<option value="action|deliverToEuropeana">
 													<s:text name="content.message.deliver.europeana" />
 												</option>
 											</c:if>
+											<c:if test="${eadResult.hasEseEdmFiles}">
+												<option value="_blank|htmlPreview">
+													<s:text name="content.message.preview.ese" />
+												</option>
+												<option value="_blank|downloadEse.action">
+													<s:text name="content.message.download.ese" />
+												</option>
+											</c:if>
 											<c:if test="${eadResult.convertedToEseEdm}">
-												<option value="deleteEseEdm">
+												<option value="action|deleteEseEdm">
 													<s:text name="content.message.delete.ese" />
 												</option>
 											</c:if>
 
 											<c:if test="${eadResult.deliveredToEuropeana}">
-												<option value="deleteFromEuropeana">
+												<option value="action|deleteFromEuropeana">
 													<s:text name="content.message.delete.europeana" />
 												</option>
 											</c:if>
 										</c:if>
-										<c:if test="${eadResult.searchable}">
-											<option value="unpublish">
+										<c:if test="${eadResult.published}">
+											<option value="action|unpublish">
 												<s:text name="content.message.unpublish" />
 											</option>
 										</c:if>
-										<option value="delete">
+										<option value="action|delete">
 											<s:text name="content.message.delete" />
 										</option>
 

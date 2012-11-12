@@ -114,17 +114,17 @@ public class ValidateTask extends AbstractEadTask {
 						Warnings warnings = new Warnings();
 						warnings.setAbstract_(warn.toString());
 						warnings.setIswarning(true);
+						warnings.setEad(ead);
+						ead.getWarningses().add(warnings);
 					}
 
 				} else {
 					ead.setValidated(ValidatedState.VALIDATED);
 					Set<Warnings> warningsFromEad = ead.getWarningses();
 					if (!warningsFromEad.isEmpty()) {
-						WarningsDAO warningsDAO = DAOFactory.instance().getWarningsDAO();
-						warningsDAO = DAOFactory.instance().getWarningsDAO();
 						for (Warnings warning : warningsFromEad) {
 							if (!warning.getIswarning()) {
-								warningsDAO.delete(warning);
+								warningsFromEad.remove(warning);
 							}
 						}
 					}

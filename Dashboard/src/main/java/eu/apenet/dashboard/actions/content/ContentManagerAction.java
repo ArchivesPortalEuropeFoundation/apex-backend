@@ -29,7 +29,7 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 	 */
 	private static final long serialVersionUID = 4513310293148562803L;
     private Map<String, String> typeList = new LinkedHashMap<String, String>();	
-    private String type = XmlType.EAD_FA.getSolrPrefix();
+    private String xmlTypeId = XmlType.EAD_FA.getIdentifier() +"";
     private Map<String, String> convertedStatusList = new LinkedHashMap<String, String>();
     private String[] convertedStatus = new String[] {FALSE, TRUE};
     private Map<String, String> validatedStatusList = new LinkedHashMap<String, String>();
@@ -59,9 +59,9 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 		europeanaStatusList.put(EuropeanaState.NOT_CONVERTED.toString(), getText(CONTENT_MESSAGE_NO));
 		europeanaStatusList.put(EuropeanaState.DELIVERED.toString(), getText("content.message.europeana.delivered"));
 		europeanaStatusList.put(EuropeanaState.HARVESTED.toString(), getText("content.message.europeana.harvested"));
-		typeList.put(XmlType.EAD_FA.getSolrPrefix(), getText("content.message." + XmlType.EAD_FA.getResourceName()));
-		typeList.put(XmlType.EAD_HG.getSolrPrefix(), getText("content.message." + XmlType.EAD_HG.getResourceName()));
-		typeList.put(XmlType.EAD_SG.getSolrPrefix(), getText("content.message." + XmlType.EAD_SG.getResourceName()));
+		typeList.put(XmlType.EAD_FA.getIdentifier() +"", getText("content.message." + XmlType.EAD_FA.getResourceName()));
+		typeList.put(XmlType.EAD_HG.getIdentifier() +"", getText("content.message." + XmlType.EAD_HG.getResourceName()));
+		typeList.put(XmlType.EAD_SG.getIdentifier() +"", getText("content.message." + XmlType.EAD_SG.getResourceName()));
 		searchTermsFieldList.put("", getText("content.message.all"));
 		searchTermsFieldList.put("eadid", getText("content.message.id"));
 		searchTermsFieldList.put("title", getText("content.message.title"));
@@ -156,7 +156,7 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 					europeanaStatus[i] = eadSearchOptions.getEuropeana().get(i).toString();
 				}
 			}
-			type = XmlType.getType(eadSearchOptions.getEadClazz()).getSolrPrefix();
+			xmlTypeId = XmlType.getType(eadSearchOptions.getEadClazz()).getIdentifier() +"";
 			searchTerms = eadSearchOptions.getSearchTerms();
 			orderByField = eadSearchOptions.getOrderByField();
 			orderByAscending = eadSearchOptions.isOrderByAscending();
@@ -191,7 +191,7 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 		}
 		eadSearchOptions.setSearchTerms(searchTerms);
 		eadSearchOptions.setSearchTermsField(searchTermsField);
-		eadSearchOptions.setEadClazz(XmlType.getTypeBySolrPrefix(type).getClazz());
+		eadSearchOptions.setEadClazz(XmlType.getType(Integer.parseInt(xmlTypeId)).getClazz());
 		return eadSearchOptions;
 	}
 
@@ -299,15 +299,13 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 		this.typeList = typeList;
 	}
 
-	public String getType() {
-		return type;
+
+	public String getXmlTypeId() {
+		return xmlTypeId;
 	}
-
-	public void setType(String type) {
-		this.type = type;
+	public void setXmlTypeId(String xmlTypeId) {
+		this.xmlTypeId = xmlTypeId;
 	}
-
-
 	public boolean isAjax() {
 		return ajax;
 	}

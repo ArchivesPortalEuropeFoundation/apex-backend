@@ -10,6 +10,7 @@ public class FindingAidResult extends EadResult {
 	private boolean deliveredToEuropeana;
 	private boolean harvestedByEuropeana;
 	private long totalNumberOfDaos;
+	private boolean hasEseEdmFiles = false;
 	public FindingAidResult(Ead ead) {
 		super(ead);
 		FindingAid findingAid = (FindingAid) ead;
@@ -17,6 +18,7 @@ public class FindingAidResult extends EadResult {
         this.deliveredToEuropeana = EuropeanaState.DELIVERED.equals(findingAid.getEuropeana());
         this.harvestedByEuropeana = EuropeanaState.HARVESTED.equals(findingAid.getEuropeana());
         this.totalNumberOfDaos = findingAid.getTotalNumberOfDaos();
+        hasEseEdmFiles = (convertedToEseEdm | deliveredToEuropeana || harvestedByEuropeana ) && totalNumberOfDaos >0;
 	}
 
 	public boolean isConvertedToEseEdm() {
@@ -62,5 +64,12 @@ public class FindingAidResult extends EadResult {
 		}else {
 			return CONTENT_MESSAGE_NO;
 		}
+	}
+
+	public boolean isHasEseEdmFiles() {
+		return hasEseEdmFiles;
+	}
+	public boolean isEditable(){
+		return super.isEditable() && !(convertedToEseEdm | deliveredToEuropeana || harvestedByEuropeana );
 	}
 }

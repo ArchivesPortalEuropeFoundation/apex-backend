@@ -23,7 +23,7 @@ public abstract class AbstractEadActions extends AbstractInstitutionAction imple
 	 * 
 	 */
 	private static final long serialVersionUID = 8481634493528974541L;
-	private String type;
+	private Integer xmlTypeId;
 	private String action;
 	private HttpServletRequest httpServletRequest;
 	
@@ -40,12 +40,13 @@ public abstract class AbstractEadActions extends AbstractInstitutionAction imple
 		this.httpServletRequest = httpServletRequest;
 	}
 
-	public String getType() {
-		return type;
+
+	public Integer getXmlTypeId() {
+		return xmlTypeId;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setXmlTypeId(Integer xmlTypeId) {
+		this.xmlTypeId = xmlTypeId;
 	}
 
 	public String getAction() {
@@ -79,7 +80,7 @@ public abstract class AbstractEadActions extends AbstractInstitutionAction imple
 		return ERROR;
 	}
 	protected XmlType getXmlType(){
-		return XmlType.getTypeBySolrPrefix(getType());
+		return XmlType.getType(xmlTypeId);
 	}
 	public abstract String validateEad();
 	public abstract String convertEad();

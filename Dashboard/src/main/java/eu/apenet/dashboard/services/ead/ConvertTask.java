@@ -126,6 +126,8 @@ public class ConvertTask extends AbstractEadTask {
 					Warnings warnings = new Warnings();
 					warnings.setAbstract_(xslWarnings.toString());
 					warnings.setIswarning(true);
+					warnings.setEad(ead);
+					ead.getWarningses().add(warnings);
 				}
 
 				ead.setConverted(true);

@@ -17,6 +17,7 @@ import javax.xml.transform.TransformerException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.log4j.Logger;
 
 import eu.apenet.dpt.utils.ead2ese.EseFileUtils;
 import eu.apenet.persistence.dao.EseDAO;
@@ -27,6 +28,7 @@ import eu.apenet.persistence.vo.Ese;
  * Servlet implementation class EseHTMLServlet
  */
 public class EseFileServlet extends HttpServlet {
+    protected Logger logger = Logger.getLogger(getClass());
 	private static final long serialVersionUID = 1L;
 	private static final int DEFAULT_BUFFER_SIZE = 10240; // 10KB.
 
@@ -50,6 +52,7 @@ public class EseFileServlet extends HttpServlet {
 				try {
 					EAD2ESEConverter.generateHtml(ese);
 				} catch (TransformerException e) {
+					logger.error(e.getMessage(),e);
 					response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not create html files.");
 				}
 			}
