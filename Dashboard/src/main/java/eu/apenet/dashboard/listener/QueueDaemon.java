@@ -19,7 +19,7 @@ public class QueueDaemon {
 		if (timer != null){
 			LOGGER.info("Add queue task");
 			QueueTask queueTask = new QueueTask(maxDuration.getMilliseconds());
-			//timer.scheduleAtFixedRate(queueTask, startDate, delay.getMilliseconds());
+			timer.scheduleAtFixedRate(queueTask, startDate, delay.getMilliseconds());
 		}
 	}
 	public static void cancel(){
