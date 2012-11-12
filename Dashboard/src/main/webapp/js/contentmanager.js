@@ -13,7 +13,7 @@ function initSubpage() {
 				performEadAction(
 						$(this).parent().find(".selectedAction").val(), $(this)
 								.parent().parent().find(".checkboxSave").val(),
-						$("#updateCurrentSearch_type").val());
+						$("#updateCurrentSearch_xmlTypeId").val());
 			});
 	$("#batchActionButton").click(function(event) {
 		event.preventDefault();
@@ -51,20 +51,39 @@ function initSubpage() {
 	count();
 }
 function performEadAction(action, id, type) {
-	var updateForm = getUpdateCurrentSearchResultsForm();
-	var actionUrl = "eadActions.action";
-	if (action == "displayEseConvert") {
-		window.open(action + ".action?id=" + id,"_self");
-	} else {
+	var actionSplitted = action.split("|");
+	var windowType = actionSplitted[0];
+	var actionOrUrl = actionSplitted[1];
+	if ("action" == windowType) {
+		var updateForm = getUpdateCurrentSearchResultsForm();
+		var actionUrl = "eadActions.action";
 		$("#ead-results-container").html("<div class='icon_waiting'></div>");
 		$.post(actionUrl, {
 			id : id,
-			type : type,
-			action : action
+			xmlTypeId : type,
+			action : actionOrUrl
 		}, function(data) {
 			updateCurrentSearchResults(updateForm);
 		});
+	} else {
+		var parameters = "id=" + id + "&xmlTypeId=" + type;
+		var actionUrl = actionOrUrl;
+		if (actionUrl.indexOf("?") > 0) {
+			actionUrl = actionUrl + "&" + parameters;
+		} else {
+			actionUrl = actionUrl + "?" + parameters;
+		}
+		if ("colorbox" == windowType) {
+			jQuery().colorbox({
+				width:"80%", inline:false,  
+				href : actionUrl
+			});
+
+		} else {
+			window.open(actionUrl, windowType);
+		}
 	}
+
 }
 function performBatchEadAction() {
 	var formData = $("#batchActionsForm").serializeArray();
@@ -75,7 +94,9 @@ function performBatchEadAction() {
 	}
 	$("#ead-results-container").html("<div class='icon_waiting'></div>");
 	if (json['action'] == "displayEseConvert") {
-		window.open(json['action'] + ".action?batchItems=" + json['batchItems'],"_self");
+		window.open(
+				json['action'] + ".action?batchItems=" + json['batchItems'],
+				"_self");
 	} else {
 		$.post("batchEadActions.action", formData, function(data) {
 			updateCurrentSearchResults(updateForm);
@@ -97,7 +118,7 @@ function getUpdateCurrentSearchResultsForm() {
 	return $("#updateCurrentSearch").serialize();
 }
 function updateCurrentSearchResults(formData) {
-	if (formData == null){
+	if (formData == null) {
 		formData = getUpdateCurrentSearchResultsForm();
 	}
 	$("#ead-results-container").html("<div class='icon_waiting'></div>");
