@@ -7,13 +7,20 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 
 import eu.apenet.persistence.dao.UpFileDAO;
+import eu.apenet.persistence.vo.CLevel;
+import eu.apenet.persistence.vo.EadContent;
+import eu.apenet.persistence.vo.HoldingsGuide;
+import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.UpFile;
 
 public class UpFileHibernateDAO extends AbstractHibernateDAO<UpFile, Integer> implements UpFileDAO {
@@ -46,7 +53,9 @@ public class UpFileHibernateDAO extends AbstractHibernateDAO<UpFile, Integer> im
 		if (StringUtils.isNotBlank(fileType)) {
 			criteria.add(Restrictions.like("fileType.ftype", fileType, MatchMode.ANYWHERE));
 		}
-
+		DetachedCriteria subQuery = DetachedCriteria.forClass(QueueItem.class,"queueItem");
+		subQuery.setProjection(Property.forName("queueItem.upFile.ufId"));
+		criteria.add(Subqueries.propertyNotIn("upFile.ufId", subQuery));
 		return criteria;
 	}
 

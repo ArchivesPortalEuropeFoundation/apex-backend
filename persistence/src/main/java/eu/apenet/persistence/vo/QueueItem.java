@@ -40,6 +40,9 @@ public class QueueItem implements java.io.Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sg_id")
 	private SourceGuide sourceGuide;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "uf_id")
+	private UpFile upFile;
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "queue_date")
 	private Date queueDate;
@@ -148,6 +151,14 @@ public class QueueItem implements java.io.Serializable {
 				sourceGuide = (SourceGuide) ead;
 			}
 		}
+	}
+
+	public UpFile getUpFile() {
+		return upFile;
+	}
+
+	public void setUpFile(UpFile upFile) {
+		this.upFile = upFile;
 	}
 
 }
