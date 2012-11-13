@@ -88,9 +88,9 @@
 									name="content.message.select.all" />]
 						</span> - <span class="linkList" id="selectNone">[<s:text name="content.message.select.none" />]
 						</span></th>
-						<th><s:text name="content.message.id" /> <a class="order" href="javascript:changeOrder('id','true')"><img
+						<th><s:text name="content.message.id" /> <a class="order" href="javascript:changeOrder('eadid','true')"><img
 								class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> <a class="order"
-							href="javascript:changeOrder('id','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a></th>
+							href="javascript:changeOrder('eadid','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a></th>
 						<th><s:text name="content.message.title" /> <a class="order" href="javascript:changeOrder('title','true')"><img
 								class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> <a class="order"
 							href="javascript:changeOrder('title','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a></th>
