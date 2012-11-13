@@ -21,6 +21,7 @@ import org.hibernate.criterion.Subqueries;
 
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
@@ -378,60 +379,17 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 	// This method retrieves the number of archival institutions which have
 	// content indexed in the System
 	public Long countArchivalInstitutionsWithContentIndexed() {
-		Criteria criteria = createCriteriaForArchivalInstitutionsWithContentIndexed();
-		criteria.setProjection(Projections.count("archivalInstitution.aiId"));
-		return (Long) criteria.uniqueResult();
+		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
+		Root<ArchivalInstitution> from = cq.from(ArchivalInstitution.class);
+		List<Predicate> whereClause = new ArrayList<Predicate>();
+		whereClause.add(criteriaBuilder.equal(from.get("group"), false));	
+		whereClause.add(criteriaBuilder.equal(from.get("containSearchableItems"), true));	
+		cq.where(criteriaBuilder.and(whereClause.toArray(new Predicate[0])));
+		cq.select(criteriaBuilder.countDistinct(from));
+
+		return getEntityManager().createQuery(cq).getSingleResult();
 	}
 
 
-	private Criteria createCriteriaForArchivalInstitutionsWithContentIndexed() {
-		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
-		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		criteria.setProjection(Property.forName("archivalInstitution.aiId"));
-		Disjunction disjunction = Restrictions.disjunction();
-		DetachedCriteria subQuery = DetachedCriteria.forClass(FindingAid.class, "findingAid");
-		subQuery.setProjection(Property.forName("findingAid.archivalInstitution.aiId"));
-		subQuery.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		subQuery.add(Restrictions.eq("findingAid.published", true));
-
-		disjunction.add(Subqueries.propertyIn("archivalInstitution.aiId", subQuery));
-
-		DetachedCriteria subQuery2 = DetachedCriteria.forClass(HoldingsGuide.class, "holdingsGuide");
-		subQuery2.setProjection(Property.forName("holdingsGuide.archivalInstitution.aiId"));
-		subQuery2.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		subQuery.add(Restrictions.eq("holdingsGuide.published", true));
-
-		disjunction.add(Subqueries.propertyIn("archivalInstitution.aiId", subQuery2));
-
-		DetachedCriteria subQuery3 = DetachedCriteria.forClass(SourceGuide.class, "sourceGuide");
-		subQuery3.setProjection(Property.forName("sourceGuide.archivalInstitution.aiId"));
-		subQuery3.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		subQuery.add(Restrictions.eq("sourceGuide.published", true));
-
-		disjunction.add(Subqueries.propertyIn("archivalInstitution.aiId", subQuery3));
-
-		criteria.add(disjunction);
-		return criteria;
-	}
-
-	@SuppressWarnings("rawtypes")
-	private DetachedCriteria setFileStates(DetachedCriteria criteria, Collection<String> fileStates, Class clazz) {
-		if (fileStates != null && fileStates.size() > 0) {
-
-			if (clazz.equals(FindingAid.class)) {
-				criteria = criteria.createAlias("findingAid.fileState", "fileState");
-			} else if (clazz.equals(HoldingsGuide.class)) {
-				criteria = criteria.createAlias("holdingsGuide.fileState", "fileState");
-			} else {
-				criteria = criteria.createAlias("sourceGuide.fileState", "fileState");
-			}
-
-			Disjunction disjunction = Restrictions.disjunction();
-			for (String fileState : fileStates) {
-				disjunction.add(Restrictions.eq("fileState.state", fileState));
-			}
-			criteria.add(disjunction);
-		}
-		return criteria;
-	}
 }
