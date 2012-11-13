@@ -622,7 +622,7 @@ public class FindingAidHibernateDAO extends AbstractHibernateDAO<FindingAid, Int
 	@Override
 	public boolean existFindingAidsNotLinkedByArchivalInstitution(Integer aiId) {
 		Query query = getEntityManager().createQuery(
-		        "SELECT fa.id FROM FindingAid fa WHERE fa.aiId = :aiId AND fa.searchable = true AND fa.eadid NOT IN (SELECT c.hrefEadid FROM CLevel c WHERE c.hrefEadid IS NOT NULL AND c.ecId IN (SELECT ec.ecId FROM EadContent ec WHERE ec.hgId IN (SELECT hg.id FROM HoldingsGuide hg WHERE hg.searchable = true AND hg.aiId = :aiId) OR ec.sgId IN (SELECT sg.id FROM SourceGuide sg WHERE sg.searchable = true AND sg.aiId = :aiId)))");
+		        "SELECT fa.id FROM FindingAid fa WHERE fa.aiId = :aiId AND fa.published = true AND fa.eadid NOT IN (SELECT c.hrefEadid FROM CLevel c WHERE c.hrefEadid IS NOT NULL AND c.ecId IN (SELECT ec.ecId FROM EadContent ec WHERE ec.hgId IN (SELECT hg.id FROM HoldingsGuide hg WHERE hg.published = true AND hg.aiId = :aiId) OR ec.sgId IN (SELECT sg.id FROM SourceGuide sg WHERE sg.published = true AND sg.aiId = :aiId)))");
 		query.setParameter("aiId", aiId);
 		query.setMaxResults(1);
 		return query.getResultList().size() > 0;
@@ -630,7 +630,7 @@ public class FindingAidHibernateDAO extends AbstractHibernateDAO<FindingAid, Int
 	@Override
 	public List<FindingAid> getFindingAidsNotLinkedByArchivalInstitution(Integer aiId, Integer start, Integer maxResults ) {
 		TypedQuery<FindingAid> query = getEntityManager().createQuery(
-		        "SELECT fa FROM FindingAid fa WHERE fa.aiId = :aiId AND fa.searchable = true AND fa.eadid NOT IN (SELECT c.hrefEadid FROM CLevel c WHERE c.hrefEadid IS NOT NULL AND c.ecId IN (SELECT ec.ecId FROM EadContent ec WHERE ec.hgId IN (SELECT hg.id FROM HoldingsGuide hg WHERE hg.searchable = true AND hg.aiId = :aiId) OR ec.sgId IN (SELECT sg.id FROM SourceGuide sg WHERE sg.searchable = true AND sg.aiId = :aiId))) ORDER BY fa.title", FindingAid.class);
+		        "SELECT fa FROM FindingAid fa WHERE fa.aiId = :aiId AND fa.published = true AND fa.eadid NOT IN (SELECT c.hrefEadid FROM CLevel c WHERE c.hrefEadid IS NOT NULL AND c.ecId IN (SELECT ec.ecId FROM EadContent ec WHERE ec.hgId IN (SELECT hg.id FROM HoldingsGuide hg WHERE hg.published = true AND hg.aiId = :aiId) OR ec.sgId IN (SELECT sg.id FROM SourceGuide sg WHERE sg.published = true AND sg.aiId = :aiId))) ORDER BY fa.title", FindingAid.class);
 		query.setParameter("aiId", aiId);
 		query.setFirstResult(start);
 		query.setMaxResults(maxResults);
