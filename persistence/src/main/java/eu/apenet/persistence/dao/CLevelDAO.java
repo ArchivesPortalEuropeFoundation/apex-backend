@@ -3,6 +3,7 @@ package eu.apenet.persistence.dao;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import eu.apenet.persistence.vo.CLevel;
@@ -51,8 +52,9 @@ public interface CLevelDAO extends GenericDAO<CLevel, Long> {
 	
 	public List<CLevel> getCLevelsWithinSystemByHoldingsGuideId(Integer hgId);
 	
-	public List<CLevel> getCLevelsOutOfSystemByHoldingsGuideId(Integer hgId, Integer aiId);
-	
+	public List<CLevel> getCLevelsOutOfSystemByHoldingsGuideId(Integer hgId, Integer pageSize, Integer pageNumber);
+
+	public Long countCLevelsOutOfSystemByHoldingsGuideId(Integer hgId);
 	public Long countCLevelsByEadId(Integer hgId,Class<? extends Ead> clazz);
 	
 	public Long countTotalCLevelsByHoldingsGuideId(Integer hgId);

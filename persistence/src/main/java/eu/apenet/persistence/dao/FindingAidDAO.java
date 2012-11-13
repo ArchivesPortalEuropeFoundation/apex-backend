@@ -30,8 +30,8 @@ public interface FindingAidDAO extends GenericDAO<FindingAid, Integer> {
 	public Long getFindingAidsLinkedByHoldingsGuide(HoldingsGuide hgvo);
 //	public Long countFindingAids(List<ArchivalInstitution> archivalInstitutions, Collection<String> fileStates);
 //	public Long countSearchFindingAidsUnits(String queries, Integer ai, int option, Collection<String> fileStates, List<String> statuses,Boolean isLinkedToHoldingsGuide);
-	public List<FindingAid> getFindingAidsByHoldingsGuideId(Integer hgId,Integer aiId,boolean published);
-	public Long countFindingAidsIndexedByHoldingsGuideId(Integer hgId,Integer aiId);
+	public List<FindingAid> getFindingAidsByHoldingsGuideId(Integer hgId,boolean published, Integer pageSize, Integer pageNumber);
+	public Long countFindingAidsByHoldingsGuideId(Integer hgId,boolean published);
 	public Long countFindingAidsIndexedByInternalArchivalInstitutionId(String identifier);
 	List<FindingAid> getFindingAidsNotLinkedByArchivalInstitution(Integer aiId, Integer start, Integer maxResults);
 }
