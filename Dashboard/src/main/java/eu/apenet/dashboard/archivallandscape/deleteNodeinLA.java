@@ -44,28 +44,28 @@ public class deleteNodeinLA extends Thread {
         this.setCountry(country);
     } 
 		
-	public void run()  {  
-		
+	public void run()  {
+
 		try {
 
-				this.sem1.acquire();				
+				this.sem1.acquire();
 
 		        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		        DocumentBuilder dBuilder;
 		        Boolean countryFound=false;
-		        
+
 				try {
 
 					dBuilder = dbFactory.newDocumentBuilder();
-					String path = APEnetUtilities.getDashboardConfig().getArchivalLandscapeDirPath() + APEnetUtilities.FILESEPARATOR + "AL.xml";		        	
+					String path = APEnetUtilities.getDashboardConfig().getArchivalLandscapeDirPath() + APEnetUtilities.FILESEPARATOR + "AL.xml";
 			    	File file = new File  (path);
 					InputStream sfile = new FileInputStream(file);
 			        Document doc = dBuilder.parse(sfile);
-			        doc.getDocumentElement().normalize();	
+			        doc.getDocumentElement().normalize();
 			        
 		        	NodeList cNodes = doc.getElementsByTagName("c");
 			        	for (int i=0; i<cNodes.getLength();i++)
-			        	{	
+			        	{
 			        		NamedNodeMap attributes = cNodes.item(i).getAttributes();
 			                Node attribute = attributes.getNamedItem("level");
 			                if ((attribute.getNodeValue().equals("fonds"))) {
@@ -83,23 +83,23 @@ public class deleteNodeinLA extends Thread {
 			        	this.sem1.release();
 			        }
 	         	  
-			        //Write the right node      
+			        //Write the right node
 			        Source source = new DOMSource(doc);
 		            Result result = new StreamResult(new java.io.File(path));
 
 		            //Write the XML
 		            Transformer transformer;
 		            transformer = TransformerFactory.newInstance().newTransformer();
-		            transformer.transform(source, result);    
+		            transformer.transform(source, result);
 
 				} catch (Exception e) {
 					log.error(e.getMessage());
 				}finally {
 					this.sem1.release();
 				}
-	    	
+
 		    	log.debug("The country" +this.getCountry()+" has been deleted from the general AL.xml");
-		    	
+
 		} catch (InterruptedException e1) {
 			log.error(e1.getMessage());
 			this.sem1.release();

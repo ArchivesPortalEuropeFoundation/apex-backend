@@ -26,7 +26,7 @@ public class NFSChecker implements Runnable {
 		this.setCurrentStateNFS("ERROR");
 		
 		try{			
-			String pathAL = APEnetUtilities.getApePortalAndDashboardConfig().getArchivalLandscapeDirPath() + APEnetUtilities.FILESEPARATOR + "AL.xml";
+			String pathAL = APEnetUtilities.getApePortalAndDashboardConfig().getRepoDirPath();
 			
 			if (new File(pathAL).exists()){
 				this.setCurrentStateNFS("SUCCESS");

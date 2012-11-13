@@ -211,7 +211,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
         log.debug("Path of EAG: " + eagPath);
         log.debug("Filename of EAG: " + filename);
         File file = new File(eagPath + filename);
-        Xsd_enum schema = Xsd_enum.XSD_APE_EAG_SCHEMA;
+        Xsd_enum schema = Xsd_enum.XSD_APE_EAG_SCHEMA; //todo: Now we use EAG 2012 for this, but it needs to be completed
         try {
             InputStream in = new FileInputStream(file);
             List<SAXParseException> exceptions = DocumentValidation.xmlValidation(in, schema);

@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -20,6 +21,10 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
+import eu.apenet.persistence.dao.CountryDAO;
+import eu.apenet.persistence.vo.Country;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -27,7 +32,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 
@@ -35,7 +39,7 @@ public class EditArchivalLandscapeLogic {
 
 	private static Logger log = Logger.getLogger(EditArchivalLandscapeLogic.class);
 	
-	public static Institution localizateInstitution(ArrayList<Institution> list,String cadena) {
+	public static Institution localizateInstitution(List<Institution> list,String cadena) {
 		Institution insti = null;
 		Iterator<Institution> it = list.iterator();
 		boolean exit = false;
@@ -63,8 +67,8 @@ public class EditArchivalLandscapeLogic {
 	 * @param first
 	 * @return ArrayList<Institution>
 	 */
-	public static ArrayList<Institution> navigate(Boolean first){
-		ArrayList<Institution> list = null;
+	public static List<Institution> navigate(Boolean first){
+		List<Institution> list = null;
 		try {
 			ArchivalLandscape a = new ArchivalLandscape();
 			String path = a.getmyPath(a.getmyCountry()) + "tmp" + APEnetUtilities.FILESEPARATOR + a.getmyCountry() + "AL.xml";
@@ -81,6 +85,44 @@ public class EditArchivalLandscapeLogic {
 		}
 		return list;
 	}
+
+//    private static List<Institution> getArchivalInstitutionListFromDB(ArchivalLandscape a) {
+//        List<Institution> institutions = new ArrayList<Institution>();
+//
+//        CountryDAO countryDAO = DAOFactory.instance().getCountryDAO();
+//        Country country = countryDAO.getCountryByCname(a.getmyCountryName());
+//        ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
+//
+//
+//        List<ArchivalInstitution> archivalInstitutions = archivalInstitutionDAO.getArchivalInstitutionsByCountryId(country.getId());
+//        for(ArchivalInstitution archivalInstitution : archivalInstitutions) {
+//            if(archivalInstitution.getParentAiId() == null) {
+//                Institution institution = new Institution();
+//                institution.setId(archivalInstitution.getAiId()+"");
+//                institution.setLevel("series");
+//                institution.setName(archivalInstitution.getAiname());
+//
+//                institution.setInstitutions(archivalInstitutionToInstitution(new ArrayList<ArchivalInstitution>(archivalInstitution.getChildArchivalInstitutions())));
+//
+//                institutions.add(institution);
+//            }
+//        }
+//
+//        return institutions;
+//    }
+//
+//    public static List<Institution> archivalInstitutionToInstitution(List<ArchivalInstitution> archivalInstitutions) {
+//        List<Institution> institutions = new ArrayList<Institution>(archivalInstitutions.size());
+//        for(ArchivalInstitution archivalInstitution : archivalInstitutions) {
+//            Institution institution = new Institution();
+//            institution.setId(archivalInstitution.getAiId()+"");
+//            institution.setName(archivalInstitution.getAiname());
+//            institution.setLevel("series");
+//            institution.setInstitutions(archivalInstitutionToInstitution(new ArrayList<ArchivalInstitution>(archivalInstitution.getChildArchivalInstitutions())));
+//            institutions.add(institution);
+//        }
+//        return institutions;
+//    }
 
 	/**
 	 * This function generates a new instance of DocumentBuilder 
@@ -181,7 +223,7 @@ public class EditArchivalLandscapeLogic {
 	 * Returns an institution matched by a String id. First clean the name
 	 * and last compare the institution by levels and if it's found returns it.
 	 * @param insti
-	 * @param name
+	 * @param id
 	 * @return Institution
 	 */
 	public static Institution getInstiById(Institution insti, String id){
@@ -225,7 +267,7 @@ public class EditArchivalLandscapeLogic {
 								level = r.getAttributeValue(i).trim();
 							}
 							if(id!=null && level!=null){
-								ArrayList<Institution> institutions = institution.getInstitutions();
+								List<Institution> institutions = institution.getInstitutions();
 								if(institutions==null){
 									institutions = new ArrayList<Institution>();
 								}
@@ -266,15 +308,14 @@ public class EditArchivalLandscapeLogic {
 	 * This function read the XML file, parse it to a list of Institutions and
 	 * returns it. Needs the XML route.
 	 * @param route
-	 * @param state
 	 * @return ArrayList<Institution>
 	 * @throws FileNotFoundException
 	 * @throws XMLStreamException
 	 */
-	private static ArrayList<Institution> xmlReadFunction(String route) throws FileNotFoundException, XMLStreamException{
+	private static List<Institution> xmlReadFunction(String route) throws FileNotFoundException, XMLStreamException{
 		XMLInputFactory factory = XMLInputFactory.newFactory();
 		XMLStreamReader r = factory.createXMLStreamReader(new FileReader(route));
-		ArrayList<Institution> list = new ArrayList<Institution>();
+		List<Institution> list = new ArrayList<Institution>();
 		Institution tempInstitution = null;
 		boolean unittitle = false;
 		String name = null;

@@ -22,6 +22,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import eu.apenet.persistence.vo.ArchivalInstitution;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -47,7 +48,7 @@ public abstract class AbstractEditAction extends AbstractAction{
 	private String ALElement;
 	private String textAL;
 	private String element;
-	private ArrayList<Institution> list;
+	private List<Institution> list;
 	protected Logger log = Logger.getLogger(getClass());
 	private String country;
 	private String countryCIdentifier;
@@ -76,11 +77,11 @@ public abstract class AbstractEditAction extends AbstractAction{
 		super.buildBreadcrumbs();
 		addBreadcrumb(getText("breadcrumb.section.editArchivalLandscape"));
 	}	
-	protected void setList(ArrayList<Institution> list){
+	protected void setList(List<Institution> list){
 		this.list = list;
 	}
 	
-	protected ArrayList<Institution> getList(){
+	protected List<Institution> getList(){
 		return this.list;
 	}
 	
@@ -207,7 +208,7 @@ public abstract class AbstractEditAction extends AbstractAction{
 	 * Navigate by a node looking forward a string. 
 	 * If it matches and returns state.
 	 * 
-	 * @param node
+	 * @param oldNode
 	 * @param insti
 	 * @return Boolean (found-true or not_found-false)
 	 */
@@ -236,7 +237,6 @@ public abstract class AbstractEditAction extends AbstractAction{
 	 * It writes the encodinganalog and type node attributes too but it's prepared to 
 	 * replaces old nodes. Needs the parent node. 
 	 * @param insti
-	 * @param doc
 	 * @param oldNode
 	 */
 	private Boolean appendNewElement(Institution insti, Node oldNode){
@@ -334,7 +334,7 @@ public abstract class AbstractEditAction extends AbstractAction{
 	 * @throws IOException
 	 * @throws TransformerException 
 	 */
-	protected boolean remove(String alElement, ArrayList<Institution> list) throws ParserConfigurationException, SAXException, IOException, TransformerException {
+	protected boolean remove(String alElement, List<Institution> list) throws ParserConfigurationException, SAXException, IOException, TransformerException {
 		DocumentBuilder db = EditArchivalLandscapeLogic.buildDocument();
 		ArchivalLandscape a = new ArchivalLandscape();
 		String path = a.getmyPath(a.getmyCountry())+"tmp"+APEnetUtilities.FILESEPARATOR+a.getmyCountry()+"AL.xml";
@@ -443,7 +443,7 @@ public abstract class AbstractEditAction extends AbstractAction{
 	 * This method parse an institution lists to elements to be showed 
 	 * in the edition of Archival Landscape
 	 */
-	protected void parseList(ArrayList<Institution> list, String level){
+	protected void parseList(List<Institution> list, String level){
         for(Integer i=1,counter=i;list!=null && i<=list.size();i++){
 			Institution insti = list.get(i-1);
 			if(insti!=null){
@@ -600,13 +600,12 @@ public abstract class AbstractEditAction extends AbstractAction{
 	 * Write a list in a DOM document and returns it. 
 	 * 
 	 * @param list
-	 * @param state
 	 * @param route 
 	 * @throws ParserConfigurationException 
 	 * @throws IOException 
 	 * @throws SAXException 
 	 */
-	protected Document write(ArrayList<Institution> list,String route) throws ParserConfigurationException, SAXException, IOException {
+	protected Document write(List<Institution> list,String route) throws ParserConfigurationException, SAXException, IOException {
 		Document doc = null;
 		if ((list!=null && list.size()>0) && this.ALElement!=null) {
 			//Extract institutions
@@ -652,7 +651,7 @@ public abstract class AbstractEditAction extends AbstractAction{
 				insti2.setId("A"+(System.currentTimeMillis()+"-"+Math.random()*1000000).toString());
 				insti2.setInstitutions(null);
 				if(insti.getInstitutions()!=null){
-					ArrayList<Institution> listInsti = insti.getInstitutions();
+					List<Institution> listInsti = insti.getInstitutions();
 					if(listInsti==null){
 						listInsti = new ArrayList<Institution>();
 					}
@@ -704,7 +703,7 @@ public abstract class AbstractEditAction extends AbstractAction{
 	 * @throws SAXException
 	 * @throws TransformerException
 	 */
-	protected void writeList(ArrayList<Institution> list,String route) throws XMLStreamException, IOException, ParserConfigurationException, SAXException, TransformerException {
+	protected void writeList(List<Institution> list,String route) throws XMLStreamException, IOException, ParserConfigurationException, SAXException, TransformerException {
 		if(this.textAL!=null && this.textAL.length()>0){
 			Document doc = write(list,route);
 			log.debug("OK - Starting saving in a file...");
@@ -719,7 +718,7 @@ public abstract class AbstractEditAction extends AbstractAction{
 	 * It navigates on the list and upload the content adding the new element
 	 * @return Boolean
 	 */
-	protected Boolean navigateToUploadList(ArrayList<Institution> list){
+	protected Boolean navigateToUploadList(List<Institution> list){
 		for(int i=0;list!=null && i<list.size();i++){
 			if(list.get(i).getId().equals(this.ALElement)){
 				if(this.element!=null && (this.element.equals("file") || this.element.equals("series"))){
@@ -728,7 +727,7 @@ public abstract class AbstractEditAction extends AbstractAction{
 					insti.setLevel(this.element);
 					insti.setId("A"+(System.currentTimeMillis()+"-"+Math.random()*1000000).toString());
 					insti.setInstitutions(null);
-					ArrayList<Institution> institutions = null;
+					List<Institution> institutions = null;
 					if(list.get(i).getInstitutions()!=null){
 						institutions = list.get(i).getInstitutions();
 					}else{

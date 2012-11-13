@@ -1,12 +1,12 @@
 package eu.apenet.dashboard.archivallandscape;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Institution{
 	public String name;
 	public String id;
 	public String level;
-	public ArrayList<Institution> institutions;
+	public List<Institution> institutions;
 	
 	public String getName() {
 		return name;
@@ -24,11 +24,11 @@ public class Institution{
 		this.level = level;
 	}
 	
-	public ArrayList<Institution> getInstitutions() {
+	public List<Institution> getInstitutions() {
 		return institutions;
 	}
 	
-	public void setInstitutions(ArrayList<Institution> institutions) {
+	public void setInstitutions(List<Institution> institutions) {
 		this.institutions = institutions;
 	}
 	

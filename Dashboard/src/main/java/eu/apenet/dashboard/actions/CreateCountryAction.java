@@ -177,7 +177,7 @@ public class CreateCountryAction extends ActionSupport{
 					File file = new File(pathRepo = pathRepo + this.getIsoCountryName());
 					if (file.exists())
 						file.delete();
-					deleteNodeAL(this.getEnglishCountryName());	
+					deleteNodeAL(this.getEnglishCountryName());
 				}
 			}			
 		}
@@ -197,7 +197,7 @@ public class CreateCountryAction extends ActionSupport{
 	}
 	
 	public synchronized void deleteNodeAL(String couName)
-	{		
+	{
 		log.debug("Deleting in the general AL the country node for " + couName + "...");
 		new Thread( new deleteNodeinLA(this.sem, couName)).start();
 	}

@@ -82,15 +82,26 @@
 						});
 					}else{
 						//updateStatusWindow("<s:property value='getText("al.message.noElementSelected")' />");
-						$.post('editAL.action','&selectedLang='+selectedLang+'&element='+element+'&textAL='+textAL,function(response){
-							$("body").html(response);
-							$("select[name=ALElement] option[value="+elementValue+"]").attr('selected','selected');
-                            if($("#hasElementChanged:contains('true')").length > 0) {
-							    updateStatusWindow('<span style="font-weight:bold;">'+textAL+"</span> <s:property value="getText('al.message.elementEdited')" />");
-                            } else {
-                                updateStatusWindow('<span style="font-weight:bold;">'+textAL+"</span> <s:property value="getText('al.message.existsAlready')" />");
+                        var doesAlreadyExist = false;
+                        $("#selectId > option").each(function() {
+                            if(textAL == this.text) {
+                                doesAlreadyExist = true;
+                                return false;
                             }
-						});
+                        });
+                        if(doesAlreadyExist) {
+                            updateStatusWindow('<span style="font-weight:bold;">'+textAL+"</span> <s:property value="getText('al.message.existsAlready')" />");
+                        } else {
+                            $.post('editAL.action','&selectedLang='+selectedLang+'&element='+element+'&textAL='+textAL,function(response){
+                                $("body").html(response);
+                                $("select[name=ALElement] option[value="+elementValue+"]").attr('selected','selected');
+                                if($("#hasElementChanged:contains('true')").length > 0) {
+                                    updateStatusWindow('<span style="font-weight:bold;">'+textAL+"</span> <s:property value="getText('al.message.elementEdited')" />");
+                                } else {
+                                    updateStatusWindow('<span style="font-weight:bold;">'+textAL+"</span> <s:property value="getText('al.message.existsAlready')" />");
+                                }
+                            });
+                        }
 					}
 				});
 				$("#moveUpDiv").click(function(){
@@ -304,7 +315,7 @@
 						<div class="divFilterThree">
 							<div class="secondFilterDiv">
 								<label for="ALElement" class="ALElementLabel"><s:property value="getText('al.message.listal')" /></label>
-								<select id="selectOnlyListElements" class="selectListElementsAL" name="ALElement" id="ALElement" size="2">
+								<select id="selectOnlyListElements" class="selectListElementsALNoMargin" name="ALElement" id="ALElement" size="2">
 				</s:elseif>
 				<s:else>
 						<div id="selectOnlyListElements" class="divSelectOnlyListElements">

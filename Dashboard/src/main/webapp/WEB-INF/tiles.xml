@@ -226,6 +226,10 @@
 		<put-attribute name="title" value="dashboard.aledit.title" />
 		<put-attribute name="body" value="/jsp/indexEditAL.jsp" />	
 	</definition>
+    <!--<definition name="editArchivalLandscape" extends="ArchivalLandscapeLayout">-->
+        <!--<put-attribute name="title" value="dashboard.aledit.title" />-->
+        <!--<put-attribute name="body" value="/jsp/editArchivalLandscape.jsp" />-->
+    <!--</definition>-->
 	
 	<definition name="uploadAL" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.alupload.title" />

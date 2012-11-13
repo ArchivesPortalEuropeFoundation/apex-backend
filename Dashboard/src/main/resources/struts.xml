@@ -448,6 +448,16 @@
 			<result name="error" type="tiles">uploadAL</result>
 			<result name="input" type="tiles">uploadALresult</result>
 		</action>
+
+        <!--<action name="editArchivalLandscape" class="eu.apenet.dashboard.archivallandscape.EditArchivalLandscape">-->
+            <!--<result type="tiles">editArchivalLandscape</result>-->
+        <!--</action>-->
+        <!--<action name="deleteArchivalInstitution" class="eu.apenet.dashboard.archivallandscape.EditArchivalLandscape" method="deleteArchivalInstitution">-->
+            <!--<result type="stream">-->
+                <!--<param name="inputName">outputStream</param>-->
+                <!--<param name="contentType">application/json</param>-->
+            <!--</result>-->
+        <!--</action>-->
 		
 		<action name="changeAlIdFromUpload" class="eu.apenet.dashboard.uploadALAction" method="changeAlIdFromUpload">
 			<interceptor-ref name="changeLanguageStack"/>
@@ -468,6 +478,17 @@
 			</result>
 			<result name="error" type="tiles">ALnotFound</result>
 		</action>
+        <!--<action name="downloadAL_fromDB" class="eu.apenet.dashboard.uploadALAction" method="downloadAL">-->
+            <!--<interceptor-ref name="changeLanguageStack"/>-->
+            <!--<result name="download" type="stream">-->
+                <!--<param name="contentType">application/xml</param>-->
+                <!--<param name="contentCharSet">UTF-8</param>-->
+                <!--<param name="inputName">inputStream</param>-->
+                <!--<param name="contentDisposition">atachment; filename=${fileName}</param>-->
+                <!--<param name="bufferSize">4096</param>-->
+            <!--</result>-->
+            <!--<result name="error" type="tiles">ALnotFound</result>-->
+        <!--</action>-->
 		
 		<action name="changeAlIdentifiers" class="eu.apenet.dashboard.actions.ChangeAlIdentifiersAction">
 			<interceptor-ref name="changeLanguageStack"/>
@@ -895,6 +916,7 @@
                 <result name="input" type="tiles">languageNames</result>   
                <result name="error" type="tiles">blank</result>     
         	</action>
+
         	<action name="downloadGeneralAL" class="eu.apenet.dashboard.actions.DownloadGeneralALAction">
 				<interceptor-ref name="changeLanguageStack"/>
 				<result name="download" type="stream">
@@ -906,7 +928,20 @@
 					<param name="bufferSize">4096</param>
 				</result>
 				<result name="error" type="tiles">blank</result>
-			</action> 
+			</action>
+
+        <!--<action name="downloadGeneralAL" class="eu.apenet.dashboard.actions.DownloadGeneralALAction" method="downloadArchivalLandscapeFromDB">-->
+            <!--<interceptor-ref name="changeLanguageStack"/>-->
+            <!--<result name="download" type="stream">-->
+                <!--<param name="contentType">application/xml</param>-->
+                <!--<param name="contentCharSet">UTF-8</param>-->
+                <!--<param name="inputName">inputStream</param>-->
+                <!--<param name="contentDisposition">atachment; filename=${fileName}</param>-->
+                <!--<param name="bufferSize">4096</param>-->
+            <!--</result>-->
+            <!--<result name="error" type="tiles">blank</result>-->
+        <!--</action>-->
+
 			<action name="countryState" class="eu.apenet.dashboard.actions.CountryStateAction">
         	<interceptor-ref name="changeLanguageStack"/>  
                <result name="success" type="tiles">countryState</result>    

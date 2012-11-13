@@ -1,9 +1,6 @@
  package eu.apenet.dashboard;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +28,7 @@ import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 
-/**
+ /**
  * User: Jara Alvarez
  * Date: Sep 20th, 2010
  *
@@ -50,7 +47,7 @@ public class uploadALAction extends ActionSupport implements Preparable{
     private File httpFile;					//The uploaded file
     private String httpFileContentType;		//The content type of the file uploaded
 	private Boolean Overwrite = false;
-	private final Logger log = Logger.getLogger(getClass());
+	private final static Logger LOGGER = Logger.getLogger(uploadALAction.class);
 	private List<FindingAid> fasDeleted = new ArrayList<FindingAid>();
 	private List<HoldingsGuide> hgsDeleted = new ArrayList<HoldingsGuide>();
 	private String fileName;
@@ -356,14 +353,14 @@ public class uploadALAction extends ActionSupport implements Preparable{
 				    		if (!(tempDir.exists()))				    			
 				    			tempDir.mkdir();
 							FileUtils.copyFile(this.getHttpFile(), tempDir);
-							log.info("The new file has been copied to the temp directory. ");
+							LOGGER.info("The new file has been copied to the temp directory. ");
 							this.setOverwrite(true);
 							this.setResultAL(true);
 							result = httpoverwriteAL();
 							
 						} catch (Exception e) {
 							result = INPUT;
-							log.error("Error in http uploading first step when temp directory creation. ", e);							
+							LOGGER.error("Error in http uploading first step when temp directory creation. ", e);
 						}
 				    	this.filesNotUploaded = this.uploader_http.getFilesNotUploaded();
 				    	this.filesUploaded = this.uploader_http.getFilesUploaded();
@@ -477,9 +474,9 @@ public class uploadALAction extends ActionSupport implements Preparable{
 				       if (!a.checkEadid(new File(a.getmyPath(a.getmyCountry()) + "temp" + APEnetUtilities.FILESEPARATOR+this.getHttpFileFileName())))
 				       {   
 				    	   //The eadid has NOT been changed successfully		    	   
-				    	   log.error("uploadALAction: There was a problem when the EADID was assigned to your file");
+				    	   LOGGER.error("uploadALAction: There was a problem when the EADID was assigned to your file");
 				       }else 
-				    	   log.debug("uploadALAction: The EADID in the archival landscape of the country " + a.getmyCountry() + " is correct");
+				    	   LOGGER.debug("uploadALAction: The EADID in the archival landscape of the country " + a.getmyCountry() + " is correct");
 					   
 				       if(a.checkIdentifiers(new File(a.getmyPath(a.getmyCountry()) + "temp" + APEnetUtilities.FILESEPARATOR+this.getHttpFileFileName())))
 				       {
@@ -507,7 +504,7 @@ public class uploadALAction extends ActionSupport implements Preparable{
 				} catch (Exception e) {
 					result=ERROR;
 					ddbbResult=false;
-					log.error("The new archival landscape of " +a.getmyCountry() + " could not be overwrited requested by upload AL process", e);
+					LOGGER.error("The new archival landscape of " + a.getmyCountry() + " could not be overwrited requested by upload AL process", e);
 				}finally{
 
 					String pathCountryAL = a.getmyPath(a.getmyCountry()) + a.getmyCountry() + "AL.xml";					
@@ -518,9 +515,9 @@ public class uploadALAction extends ActionSupport implements Preparable{
 					{
 						Boolean rollbackFiles = false;
 						if (this.resultAL == null)
-							log.debug("Rollbacking the transaction process, the user has to check data first");
+							LOGGER.debug("Rollbacking the transaction process, the user has to check data first");
 						else						   
-							log.error("Some operation was not correct in overwriting the AL of the " + a.getmyCountry()+ ". Rollbacking the whole transaction process");
+							LOGGER.error("Some operation was not correct in overwriting the AL of the " + a.getmyCountry()+ ". Rollbacking the whole transaction process");
 						
 						try {
 							this.setArchivalInstitutionsToDelete(uploader_http.getArchivalInstitutionsToDelete());
@@ -556,7 +553,7 @@ public class uploadALAction extends ActionSupport implements Preparable{
 								String tmpDirPath = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + this.archivalInstitutionsToDelete.get(i).getAiId();
 								File  tmpDirFile = new File (tmpDirOldPath);
 								if (tmpDirFile.exists()) {
-									log.debug("Renaming the tmp folder from the repository related the institution: " + this.archivalInstitutionsToDelete.get(i));
+									LOGGER.debug("Renaming the tmp folder from the repository related the institution: " + this.archivalInstitutionsToDelete.get(i));
 									tmpDirFile.renameTo(new File(tmpDirPath));		
 								}
 											
@@ -566,7 +563,7 @@ public class uploadALAction extends ActionSupport implements Preparable{
 								File repoDirFile = new File(repoDirOldPath);
 								if (repoDirFile.exists()){
 								
-									log.debug("Renaming the repo folder from the repository related to the institution: " + this.archivalInstitutionsToDelete.get(i));
+									LOGGER.debug("Renaming the repo folder from the repository related to the institution: " + this.archivalInstitutionsToDelete.get(i));
 									repoDirFile.renameTo(new File(repoDirPath));
 								}
 							}
@@ -585,7 +582,7 @@ public class uploadALAction extends ActionSupport implements Preparable{
 										try {
 											ContentUtils.indexRollback(XmlType.EAD_FA, this.fasDeleted.get(i).getId());
 										} catch (Exception ex) {
-											log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + this.fasDeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
+											LOGGER.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + this.fasDeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
 										}
 										
 //										//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
@@ -607,7 +604,7 @@ public class uploadALAction extends ActionSupport implements Preparable{
 										try {
 											ContentUtils.indexRollback(XmlType.EAD_HG, this.hgsDeleted.get(i).getId());
 										} catch (Exception ex) {
-											log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + this.hgsDeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
+											LOGGER.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + this.hgsDeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
 										}
 //										
 //										//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
@@ -627,7 +624,7 @@ public class uploadALAction extends ActionSupport implements Preparable{
 							}
 							
 						} catch (Exception e) {
-							log.error("FATAL ERROR. The rollback of index or in repository could not be done successfully. A manually review of the AL of: " + a.getmyCountry() + " must be done");
+							LOGGER.error("FATAL ERROR. The rollback of index or in repository could not be done successfully. A manually review of the AL of: " + a.getmyCountry() + " must be done");
 						}
 						if (result != INPUT)
 							addActionMessage(getText("al.message.error.overwrite"));
@@ -645,7 +642,7 @@ public class uploadALAction extends ActionSupport implements Preparable{
 								String tmpDirOldPath = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + this.archivalInstitutionsToDelete.get(i).getAiId() + "_old";
 								File  tmpDirFile = new File (tmpDirOldPath);
 								if (tmpDirFile.exists()) {
-									log.debug("Renaming the tmp folder from the repository related the institution: " + this.archivalInstitutionsToDelete.get(i));
+									LOGGER.debug("Renaming the tmp folder from the repository related the institution: " + this.archivalInstitutionsToDelete.get(i));
 									FileUtils.forceDelete(tmpDirFile);		
 								}
 											
@@ -654,13 +651,13 @@ public class uploadALAction extends ActionSupport implements Preparable{
 								File repoDirFile = new File(repoDirOldPath);
 								if (repoDirFile.exists()){
 								
-									log.debug("Renaming the repo folder from the repository related to the institution: " + this.archivalInstitutionsToDelete.get(i));
+									LOGGER.debug("Renaming the repo folder from the repository related to the institution: " + this.archivalInstitutionsToDelete.get(i));
 									FileUtils.forceDelete(repoDirFile);
 								}
 							}
 							
 						}catch(Exception e){
-							log.error("The temporary file"+ pathCountryALOld + " or the ones related to the institutions: " + this.archivalInstitutionsToDelete + " could not have been deleted. It should remove it manually", e);
+							LOGGER.error("The temporary file" + pathCountryALOld + " or the ones related to the institutions: " + this.archivalInstitutionsToDelete + " could not have been deleted. It should remove it manually", e);
 						}						
 					}
 				}
@@ -673,7 +670,7 @@ public class uploadALAction extends ActionSupport implements Preparable{
 				   if (this.getHttpFileFileName()!=null)
 					   this.filesNotUploaded.add(this.getHttpFileFileName());
 			   } catch (IOException e) {
-				   log.error("The files in "+ tmpDir + "could not be deleted");				   
+				   LOGGER.error("The files in " + tmpDir + "could not be deleted");
 			   }
 			   return "error";
 			}
@@ -701,12 +698,62 @@ public class uploadALAction extends ActionSupport implements Preparable{
 	                this.fileSize = tempFile.length();
 				}
 			} catch (Exception e){
-				log.error(e.getMessage());
+				LOGGER.error(e.getMessage());
 			}
 			al.storeOperation("Download al");
 			return al.download(inputStream);		   
 	   }
-	   
+
+
+
+////    public String downloadAL_fromDB() {
+////        ArchivalLandscape al = new ArchivalLandscape();
+////        try {
+////            StringWriter eadArchilvaLandscapeWriter = new StringWriter();
+////            CreateArchivalLandscapeEad createArchivalLandscapeEad = new CreateArchivalLandscapeEad(eadArchilvaLandscapeWriter);
+////
+////            CountryDAO countryDAO = DAOFactory.instance().getCountryDAO();
+////            Country country = countryDAO.findById(al.getCountryId());
+////            ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
+////
+////            createArchivalLandscapeEad.createEadContentData("Archives Portal Europe - Archival Landscape", "AL-"+country.getIsoname(), country.getIsoname(), null);
+////
+////            createArchivalLandscapeEad.addInsideEad(country);
+////            List<ArchivalInstitution> archivalInstitutions = archivalInstitutionDAO.getArchivalInstitutionsByCountryId(country.getId());
+////            for(ArchivalInstitution archivalInstitution : archivalInstitutions) {
+////                if(archivalInstitution.getParentAiId() == null) {
+////                    createArchivalLandscapeEad.addInsideEad(archivalInstitution);
+////                    recurenceLoop(createArchivalLandscapeEad, archivalInstitution);
+////                    createArchivalLandscapeEad.writeEndElement(); //close each C element for each main archival institution
+////                }
+////            }
+////            createArchivalLandscapeEad.writeEndElement(); //close each C element for each country
+////
+////            createArchivalLandscapeEad.closeEndFile();
+////            eadArchilvaLandscapeWriter.close();
+////
+////            inputStream = (IOUtils.toInputStream(eadArchilvaLandscapeWriter.toString()));
+////            fileName = "AL.xml";
+////
+////            al.storeOperation("Download al");
+////            return al.download(inputStream);
+////        } catch (Exception e) {
+////            LOGGER.error("Error downloading the local AL EAD for " + country.getCname(), e);
+////            return ERROR;
+////        }
+////    }
+//
+//    public void recurenceLoop(CreateArchivalLandscapeEad createArchivalLandscapeEad, ArchivalInstitution archivalInstitution) throws XMLStreamException {
+//        List<ArchivalInstitution> archivalInstitutionChildren = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionsByParentAiId(archivalInstitution.getAiId());
+//        for(ArchivalInstitution archivalInstitutionChild : archivalInstitutionChildren) {
+//            createArchivalLandscapeEad.addInsideEad(archivalInstitutionChild);
+//            recurenceLoop(createArchivalLandscapeEad, archivalInstitutionChild);
+//            createArchivalLandscapeEad.writeEndElement();
+//        }
+//    }
+//
+//
+
 	   public String changeAlIdFromUpload()   {
 			String result = null;
 			ChangeAlIdentifiers cAlId = new ChangeAlIdentifiers();
@@ -771,13 +818,13 @@ public class uploadALAction extends ActionSupport implements Preparable{
 					}//End-for					
 					
 				}catch(Exception e){
-					log.error(e.getMessage());
+					LOGGER.error(e.getMessage());
 					addActionMessage(getText(this.getIdentifier()+ ":   " + "al.message.changeIdentifier.error"));
 					result = ERROR;				
 				}finally{
 					if (result.equals(ERROR)){
 						try{
-								log.debug("Rollbacking the changing AL identifiers process");
+								LOGGER.debug("Rollbacking the changing AL identifiers process");
 			
 								HibernateUtil.rollbackDatabaseTransaction();
 								HibernateUtil.closeDatabaseSession();
@@ -790,13 +837,13 @@ public class uploadALAction extends ActionSupport implements Preparable{
 									if (resultChangeXml.equals(SUCCESS))
 										al.changeAL();
 									else
-										log.warn("The changing identifier " + this.getIdentifierOld() + " into " + this.getIdentifier().get(i) + " in the storeIdentifier() rollback could not be done properly. Please review them manually.");
+										LOGGER.warn("The changing identifier " + this.getIdentifierOld() + " into " + this.getIdentifier().get(i) + " in the storeIdentifier() rollback could not be done properly. Please review them manually.");
 								}
 						}
 						catch(Exception e){						
-							log.error("Error in rollbacking the changing archival landscape identifiers process. Please review manually.");
-							log.error(e.getMessage());
-							log.error(e.getStackTrace());						
+							LOGGER.error("Error in rollbacking the changing archival landscape identifiers process. Please review manually.");
+							LOGGER.error(e.getMessage());
+							LOGGER.error(e.getStackTrace());
 						}
 					}
 				}

@@ -246,7 +246,7 @@ public class ArchivalLandscape extends ActionSupport{
                             NodeList listUnitTitle = listDid.item(l).getChildNodes();
                           
                             //Check if the 14 country name translations are included in the xml
-                            if (checkTranslation(listUnitTitle))
+                            if (checkTranslation(listUnitTitle)) //todo: Why do we care about this? Why do we need all country names?
                             	checkTranslation = true;
                             
                             	for (int j = 0; j < listUnitTitle.getLength(); j++) {
@@ -269,7 +269,7 @@ public class ArchivalLandscape extends ActionSupport{
             
           //The country is not in the AL
     		if ((country == -1) || (!checkTranslation)){
-    			log.debug("The file " + file.getName() + " of the country " +this.countryName + " does not have the country unittitle's");
+    			log.error("The file " + file.getName() + " of the country " +this.countryName + " does not have the country unittitle's");
     			result = "ERROR";
     		}
     		else 
@@ -277,13 +277,13 @@ public class ArchivalLandscape extends ActionSupport{
     			if (!typeProcess.equals("upload"))
     			{
     				//If the xml of this country does not exist, create it     			
-		            File files = new File(pathCountry + this.getmyCountry() + "AL.xml");	            
-		        	if (!files.exists()) 
-		        	{ 	        		
+		            File files = new File(pathCountry + this.getmyCountry() + "AL.xml");
+		        	if (!files.exists())
+		        	{
 		        		//Everything is OK. The node of this country is located
 		        		Document docCountry = createXML(a.item(country), doc, null);
 			            doc = docCountry;
-			            result="SUCCESS";	        		
+			            result="SUCCESS";
 		        	}
     			}
         	    result = "SUCCESS";    	         

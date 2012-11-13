@@ -232,7 +232,7 @@ public class EditAction extends eu.apenet.dashboard.archivallandscape.AbstractEd
             }
 			setList(EditArchivalLandscapeLogic.navigate(false)); //It has to be here because write is the last writer 
 		}
-		parseList(getList(),null); //Cipher is the start number(1.x in this case)
+		parseList(getList(), null); //Cipher is the start number(1.x in this case)
 		return SUCCESS;		//END UPLOAD LIST
 	}
 	
@@ -502,7 +502,7 @@ public class EditAction extends eu.apenet.dashboard.archivallandscape.AbstractEd
 	 * @throws TransformerException 
 	 */
 	public String modifyArchivalLandscape() throws ParserConfigurationException, SAXException, IOException, TransformerException{
-		ArrayList<Institution> list = EditArchivalLandscapeLogic.navigate(false);
+		List<Institution> list = EditArchivalLandscapeLogic.navigate(false);
 		ArchivalLandscape a = new ArchivalLandscape();
 		this.setCountry(a.getmyCountryName());
 		String path = a.getmyPath(a.getmyCountry()) + "tmp" + APEnetUtilities.FILESEPARATOR + a.getmyCountry() + "AL.xml";
