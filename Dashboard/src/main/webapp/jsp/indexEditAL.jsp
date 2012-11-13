@@ -83,8 +83,8 @@
 					}else{
 						//updateStatusWindow("<s:property value='getText("al.message.noElementSelected")' />");
                         var doesAlreadyExist = false;
-                        $("#selectId > option").each(function() {
-                            if(textAL == this.text) {
+                        $("select[name=ALElement] > option").each(function() {
+                            if(textAL == translateName(this.text)) {
                                 doesAlreadyExist = true;
                                 return false;
                             }
@@ -104,6 +104,9 @@
                         }
 					}
 				});
+                function translateName(name) {
+                    return name.replace(/^[0-9|\||\.| |\*]*/, "");
+                }
 				$("#moveUpDiv").click(function(){
 					var selectedIndex = $("select[name=ALElement] option:selected").index();
 					var elementName = $("select[name=ALElement] option:selected").text();
