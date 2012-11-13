@@ -31,7 +31,7 @@ public class EadResult {
 	private boolean queueReady;
 	private boolean queueError;
 	private boolean queueProcessing;
-	private long units;
+	private Long units;
 	private boolean containWarnings;
 	protected QueueAction queueAction;
 	public EadResult(Ead ead){
@@ -83,7 +83,7 @@ public class EadResult {
 	public boolean isEditable(){
 		return validated & !published;
 	}
-	public long getUnits() {
+	public Long getUnits() {
 		return units;
 	}
 

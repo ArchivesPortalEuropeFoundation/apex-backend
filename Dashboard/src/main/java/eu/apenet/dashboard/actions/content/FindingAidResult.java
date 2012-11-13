@@ -10,7 +10,7 @@ public class FindingAidResult extends EadResult {
 	private boolean convertedToEseEdm;
 	private boolean deliveredToEuropeana;
 	private boolean harvestedByEuropeana;
-	private long totalNumberOfDaos;
+	private Long totalNumberOfDaos;
 	private boolean hasEseEdmFiles = false;
 	private String holdingsGuideTitle;
 	public FindingAidResult(Ead ead) {
@@ -37,7 +37,7 @@ public class FindingAidResult extends EadResult {
 	public boolean isHarvestedByEuropeana() {
 		return harvestedByEuropeana;
 	}
-	public long getTotalNumberOfDaos() {
+	public Long getTotalNumberOfDaos() {
 		return totalNumberOfDaos;
 	}
 	public String getEseEdmText(){
