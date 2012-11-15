@@ -35,6 +35,7 @@ background : #fff;
 	height: auto !important;
 	height: 100%;
 	margin: 0 auto 50px;
+	min-width: 1200px;
 }
 select#selectLanguage  {
     font-size: 10px;
