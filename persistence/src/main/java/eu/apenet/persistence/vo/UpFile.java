@@ -2,6 +2,8 @@ package eu.apenet.persistence.vo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,37 +29,26 @@ public class UpFile implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "id")	
-	private int ufId;
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="ft_id")
+	private int id;
+	@Enumerated(EnumType.STRING)
+	@Column(name="file_type")
 	private FileType fileType;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="um_id")
 	private UploadMethod uploadMethod;
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="ai_id")
-	private ArchivalInstitution archivalInstitution;
+	@Column(name="ai_id")
+	private Integer aiId;
 	private String path;
-	private String fname;
+	private String filename;
 
-	public UpFile() {
+
+
+	public int getId() {
+		return this.id;
 	}
 
-	public UpFile(int ufId, FileType fileType, UploadMethod uploadMethod, ArchivalInstitution archivalInstitution,
-			String path) {
-		this.ufId = ufId;
-		this.fileType = fileType;
-		this.uploadMethod = uploadMethod;
-		this.archivalInstitution = archivalInstitution;
-		this.path = path;
-	}
-
-	public int getUfId() {
-		return this.ufId;
-	}
-
-	public void setUfId(int ufId) {
-		this.ufId = ufId;
+	public void setId(int ufId) {
+		this.id = ufId;
 	}
 
 	public FileType getFileType() {
@@ -76,12 +67,14 @@ public class UpFile implements java.io.Serializable {
 		this.uploadMethod = uploadMethod;
 	}
 
-	public ArchivalInstitution getArchivalInstitution() {
-		return this.archivalInstitution;
+
+
+	public Integer getAiId() {
+		return aiId;
 	}
 
-	public void setArchivalInstitution(ArchivalInstitution archivalInstitution) {
-		this.archivalInstitution = archivalInstitution;
+	public void setAiId(Integer aiId) {
+		this.aiId = aiId;
 	}
 
 	public String getPath() {
@@ -92,12 +85,12 @@ public class UpFile implements java.io.Serializable {
 		this.path = path;
 	}
 
-	public void setFname(String fname) {
-		this.fname = fname;
+	public void setFilename(String fname) {
+		this.filename = fname;
 	}
 
-	public String getFname() {
-		return fname;
+	public String getFilename() {
+		return filename;
 	}
 
 }

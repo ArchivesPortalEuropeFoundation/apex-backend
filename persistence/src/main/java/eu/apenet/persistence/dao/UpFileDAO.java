@@ -2,6 +2,7 @@ package eu.apenet.persistence.dao;
 
 import java.util.List;
 
+import eu.apenet.persistence.vo.FileType;
 import eu.apenet.persistence.vo.UpFile;
 
 /**
@@ -11,7 +12,7 @@ import eu.apenet.persistence.vo.UpFile;
  */
 
 public interface UpFileDAO extends GenericDAO<UpFile, Integer> {
-	public List<UpFile> getUpFiles(Integer aiId, String fileType);
+	public List<UpFile> getUpFiles(Integer aiId, FileType fileType);
 	public List<UpFile> getUpFiles(Integer aiId);
 	public UpFile getUpFile(Integer fileId);
 }

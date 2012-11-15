@@ -15,7 +15,6 @@ import eu.apenet.persistence.dao.EadContentDAO;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.dao.EseStateDAO;
-import eu.apenet.persistence.dao.FileTypeDAO;
 import eu.apenet.persistence.dao.FindingAidDAO;
 import eu.apenet.persistence.dao.GenericDAO;
 import eu.apenet.persistence.dao.HoldingsGuideDAO;
@@ -117,7 +116,6 @@ public abstract class DAOFactory {
     public abstract LangDAO getLangDAO();
     public abstract EseDAO getEseDAO();
     public abstract UploadMethodDAO getUploadMethodDAO();
-    public abstract FileTypeDAO getFileTypeDAO();
     public abstract EseStateDAO getEseStateDAO();
     public abstract ArchivalInstitutionOaiPmhDAO getArchivalInstitutionOaiPmhDAO();
     public abstract CLevelDAO getCLevelDAO();

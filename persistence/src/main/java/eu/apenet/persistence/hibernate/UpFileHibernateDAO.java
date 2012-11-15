@@ -1,62 +1,30 @@
 package eu.apenet.persistence.hibernate;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import javax.persistence.TypedQuery;
+
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.Subqueries;
 
 import eu.apenet.persistence.dao.UpFileDAO;
-import eu.apenet.persistence.vo.CLevel;
-import eu.apenet.persistence.vo.EadContent;
-import eu.apenet.persistence.vo.HoldingsGuide;
-import eu.apenet.persistence.vo.QueueItem;
+import eu.apenet.persistence.vo.FileType;
 import eu.apenet.persistence.vo.UpFile;
 
 public class UpFileHibernateDAO extends AbstractHibernateDAO<UpFile, Integer> implements UpFileDAO {
 
 	private final Logger log = Logger.getLogger(getClass());
-	
-	@SuppressWarnings("unchecked")
-	public List<UpFile> getUpFiles(Integer aiId, String fileType) {
-		long startTime = System.currentTimeMillis();
-		List<UpFile> results = new ArrayList<UpFile>();
-		Criteria criteria = createUpFilesCriteria(aiId, fileType);
-		results = criteria.list();
-		long endTime = System.currentTimeMillis();
-		if (log.isDebugEnabled()) {
-			log.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
-		}
 
-		return results;
-	}
-
-	private Criteria createUpFilesCriteria(Integer aiId, String fileType) {
-		Criteria criteria = getSession().createCriteria(getPersistentClass(), "upFile");
-		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		criteria = criteria.createAlias("upFile.archivalInstitution", "archivalInstitution");
-		criteria = criteria.createAlias("upFile.fileType", "fileType");
-
-		if (aiId != null) {
-			criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId.intValue()));
-		}
-		if (StringUtils.isNotBlank(fileType)) {
-			criteria.add(Restrictions.like("fileType.ftype", fileType, MatchMode.ANYWHERE));
-		}
-		DetachedCriteria subQuery = DetachedCriteria.forClass(QueueItem.class,"queueItem");
-		subQuery.setProjection(Property.forName("queueItem.upFile.ufId"));
-		criteria.add(Subqueries.propertyNotIn("upFile.ufId", subQuery));
-		return criteria;
+	@Override
+	public List<UpFile> getUpFiles(Integer aiId, FileType fileType) {
+		String query = "SELECT upFile FROM UpFile upFile WHERE upFile.aiId  = :aiId  AND upFile.fileType = :fileType AND upFile.id NOT IN (SELECT queueItem.upFileId FROM QueueItem queueItem WHERE queueItem.upFileId IS NOT NULL)";
+		TypedQuery<UpFile> typedQuery = getEntityManager().createQuery(
+				query, UpFile.class);
+		typedQuery.setParameter("aiId", aiId);
+		typedQuery.setParameter("fileType", fileType);
+		return typedQuery.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
