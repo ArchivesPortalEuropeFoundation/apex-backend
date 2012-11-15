@@ -9,12 +9,14 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.AbstractInstitutionAction;
+import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.EuropeanaState;
+import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.ValidatedState;
 
-public class ContentManagerAction extends AbstractInstitutionAction implements ServletRequestAware{
+public class ContentManagerAction extends AbstractInstitutionAction implements ServletRequestAware {
 
 	private static final String TRUE = "true";
 	private static final String FALSE = "false";
@@ -28,18 +30,21 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 	 * 
 	 */
 	private static final long serialVersionUID = 4513310293148562803L;
-    private Map<String, String> typeList = new LinkedHashMap<String, String>();	
-    private String xmlTypeId = XmlType.EAD_FA.getIdentifier() +"";
-    private Map<String, String> convertedStatusList = new LinkedHashMap<String, String>();
-    private String[] convertedStatus = new String[] {FALSE, TRUE};
-    private Map<String, String> validatedStatusList = new LinkedHashMap<String, String>();
-    private String[] validatedStatus = new String[] {ValidatedState.NOT_VALIDATED.toString(), ValidatedState.VALIDATED.toString(), ValidatedState.FATAL_ERROR.toString()};
-    private Map<String, String> publishedStatusList = new LinkedHashMap<String, String>();
-    private String[] publishedStatus = new String[] {FALSE, TRUE};
-    private Map<String, String> europeanaStatusList = new LinkedHashMap<String, String>();
-    private String[] europeanaStatus = new String[] {EuropeanaState.NOT_CONVERTED.toString(), EuropeanaState.CONVERTED.toString(),EuropeanaState.DELIVERED.toString(), EuropeanaState.HARVESTED.toString()};
-    private Map<String, String> searchTermsFieldList = new LinkedHashMap<String, String>();
-    private HttpServletRequest request;
+	private Map<String, String> typeList = new LinkedHashMap<String, String>();
+	private String xmlTypeId = XmlType.EAD_FA.getIdentifier() + "";
+	private Map<String, String> convertedStatusList = new LinkedHashMap<String, String>();
+	private String[] convertedStatus = new String[] { FALSE, TRUE };
+	private Map<String, String> validatedStatusList = new LinkedHashMap<String, String>();
+	private String[] validatedStatus = new String[] { ValidatedState.NOT_VALIDATED.toString(),
+			ValidatedState.VALIDATED.toString(), ValidatedState.FATAL_ERROR.toString() };
+	private Map<String, String> publishedStatusList = new LinkedHashMap<String, String>();
+	private String[] publishedStatus = new String[] { FALSE, TRUE };
+	private Map<String, String> europeanaStatusList = new LinkedHashMap<String, String>();
+	private String[] europeanaStatus = new String[] { EuropeanaState.NOT_CONVERTED.toString(),
+			EuropeanaState.CONVERTED.toString(), EuropeanaState.DELIVERED.toString(),
+			EuropeanaState.HARVESTED.toString() };
+	private Map<String, String> searchTermsFieldList = new LinkedHashMap<String, String>();
+	private HttpServletRequest request;
 	private Integer pageNumber = 1;
 	private Integer resultPerPage = 20;
 	private String orderByField = "id";
@@ -47,7 +52,8 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 	private String searchTerms;
 	private String searchTermsField;
 	private boolean ajax = false;
-	public ContentManagerAction(){
+
+	public ContentManagerAction() {
 		convertedStatusList.put(TRUE, getText(CONTENT_MESSAGE_YES));
 		convertedStatusList.put(FALSE, getText(CONTENT_MESSAGE_NO));
 		validatedStatusList.put(ValidatedState.VALIDATED.toString(), getText(CONTENT_MESSAGE_YES));
@@ -59,40 +65,51 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 		europeanaStatusList.put(EuropeanaState.NOT_CONVERTED.toString(), getText(CONTENT_MESSAGE_NO));
 		europeanaStatusList.put(EuropeanaState.DELIVERED.toString(), getText("content.message.europeana.delivered"));
 		europeanaStatusList.put(EuropeanaState.HARVESTED.toString(), getText("content.message.europeana.harvested"));
-		typeList.put(XmlType.EAD_FA.getIdentifier() +"", getText("content.message." + XmlType.EAD_FA.getResourceName()));
-		typeList.put(XmlType.EAD_HG.getIdentifier() +"", getText("content.message." + XmlType.EAD_HG.getResourceName()));
-		typeList.put(XmlType.EAD_SG.getIdentifier() +"", getText("content.message." + XmlType.EAD_SG.getResourceName()));
+		typeList.put(XmlType.EAD_FA.getIdentifier() + "",
+				getText("content.message." + XmlType.EAD_FA.getResourceName()));
+		typeList.put(XmlType.EAD_HG.getIdentifier() + "",
+				getText("content.message." + XmlType.EAD_HG.getResourceName()));
+		typeList.put(XmlType.EAD_SG.getIdentifier() + "",
+				getText("content.message." + XmlType.EAD_SG.getResourceName()));
 		searchTermsFieldList.put("", getText("content.message.all"));
 		searchTermsFieldList.put("eadid", getText("content.message.id"));
 		searchTermsFieldList.put("title", getText("content.message.title"));
 	}
+
 	@Override
 	public void setServletRequest(HttpServletRequest request) {
-		this.request= request;
-		
+		this.request = request;
+
 	}
 
 	public Integer getPageNumber() {
 		return pageNumber;
 	}
+
 	public void setPageNumber(Integer pageNumber) {
 		this.pageNumber = pageNumber;
 	}
+
 	public Integer getResultPerPage() {
 		return resultPerPage;
 	}
+
 	public void setResultPerPage(Integer resultPerPage) {
 		this.resultPerPage = resultPerPage;
 	}
+
 	public String getOrderByField() {
 		return orderByField;
 	}
+
 	public void setOrderByField(String orderByField) {
 		this.orderByField = orderByField;
 	}
+
 	public boolean isOrderByAscending() {
 		return orderByAscending;
 	}
+
 	public void setOrderByAscending(boolean orderByAscending) {
 		this.orderByAscending = orderByAscending;
 	}
@@ -102,31 +119,78 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 		super.buildBreadcrumbs();
 		addBreadcrumb(getText("breadcrumb.section.contentmanager"));
 	}
-	
-	
+
 	@Override
 	public void prepare() throws Exception {
 		super.prepare();
 	}
-	
+
 	@Override
 	public String input() throws Exception {
+		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		EadSearchOptions eadSearchOptions = initFromExistingEadSearchOptions();
-		if (eadSearchOptions == null){
+		if (eadSearchOptions == null) {
 			eadSearchOptions = createNewEadSearchOptions();
 		}
 		ContentManagerResults results = new ContentManagerResults(eadSearchOptions);
-		results.setEads(DAOFactory.instance().getEadDAO().getEads(eadSearchOptions));
-		results.setTotalNumberOfResults(DAOFactory.instance().getEadDAO().countEads(eadSearchOptions));
+		results.setEads(eadDAO.getEads(eadSearchOptions));
+		results.setTotalNumberOfResults(eadDAO.countEads(eadSearchOptions));
+		/*
+		 * statistics for total converted files
+		 */
+		if (eadSearchOptions.getConverted() == null || eadSearchOptions.getConverted() == true) {
+			EadSearchOptions convertedSearchOptions = new EadSearchOptions(eadSearchOptions);
+			convertedSearchOptions.setConverted(true);
+			results.setTotalConvertedFiles(eadDAO.countEads(convertedSearchOptions));
+		}
+		/*
+		 * statistics for total validated files
+		 */
+		if (eadSearchOptions.getValidated().size() == 0
+				|| eadSearchOptions.getValidated().contains(ValidatedState.VALIDATED)) {
+			EadSearchOptions validatedSearchOptions = new EadSearchOptions(eadSearchOptions);
+			if (validatedSearchOptions.getValidated().size() == 0)
+				validatedSearchOptions.setValidated(ValidatedState.VALIDATED);
+			results.setTotalValidatedFiles(eadDAO.countEads(validatedSearchOptions));
+		}
+		/*
+		 * statistics for total published units
+		 */
+		if (eadSearchOptions.getPublished() == null || eadSearchOptions.getPublished() == true) {
+			EadSearchOptions publishedSearchOptions = new EadSearchOptions(eadSearchOptions);
+			publishedSearchOptions.setPublished(true);
+			results.setTotalPublishedUnits(eadDAO.countUnits(publishedSearchOptions));
+		}
+		if (eadSearchOptions.getEadClazz().equals(FindingAid.class)) {
+			/*
+			 * statistics for total delivered daos
+			 */
+			if (eadSearchOptions.getEuropeana().size() == 0
+					|| eadSearchOptions.getEuropeana().contains(EuropeanaState.DELIVERED)) {
+				EadSearchOptions europeanaSearchOptions = new EadSearchOptions(eadSearchOptions);
+				europeanaSearchOptions.setEuropeana(EuropeanaState.DELIVERED);
+				results.setTotalDaosDeliveredToEuropea(eadDAO.countDaos(europeanaSearchOptions));
+			}
+			/*
+			 * statistics for total converted daos
+			 */
+			if (eadSearchOptions.getEuropeana().size() == 0
+					|| eadSearchOptions.getEuropeana().contains(EuropeanaState.CONVERTED)) {
+				EadSearchOptions europeanaSearchOptions = new EadSearchOptions(eadSearchOptions);
+				europeanaSearchOptions.getEuropeana().clear();
+				europeanaSearchOptions.getEuropeana().add(EuropeanaState.CONVERTED);
+				europeanaSearchOptions.getEuropeana().add(EuropeanaState.DELIVERED);
+				results.setTotalDaosConvertedToEseEdm(eadDAO.countDaos(europeanaSearchOptions));
+			}
 
+		}
 		request.setAttribute("results", results);
-		if (ajax){
+		if (ajax) {
 			return SUCCESS_AJAX;
-		}else {
+		} else {
 			return SUCCESS;
 		}
 	}
-
 
 	@Override
 	public String execute() throws Exception {
@@ -134,9 +198,8 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 		return SUCCESS;
 	}
 
-	private EadSearchOptions initFromExistingEadSearchOptions(){
-		EadSearchOptions eadSearchOptions = (EadSearchOptions) request.getSession()
-				.getAttribute(EAD_SEARCH_OPTIONS);
+	private EadSearchOptions initFromExistingEadSearchOptions() {
+		EadSearchOptions eadSearchOptions = (EadSearchOptions) request.getSession().getAttribute(EAD_SEARCH_OPTIONS);
 		if (eadSearchOptions != null) {
 			if (eadSearchOptions.getConverted() != null) {
 				convertedStatus = new String[] { eadSearchOptions.getConverted().toString() };
@@ -156,7 +219,7 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 					europeanaStatus[i] = eadSearchOptions.getEuropeana().get(i).toString();
 				}
 			}
-			xmlTypeId = XmlType.getType(eadSearchOptions.getEadClazz()).getIdentifier() +"";
+			xmlTypeId = XmlType.getType(eadSearchOptions.getEadClazz()).getIdentifier() + "";
 			searchTerms = eadSearchOptions.getSearchTerms();
 			orderByField = eadSearchOptions.getOrderByField();
 			orderByAscending = eadSearchOptions.isOrderByAscending();
@@ -166,26 +229,27 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 		}
 		return eadSearchOptions;
 	}
-	private EadSearchOptions createNewEadSearchOptions(){
+
+	private EadSearchOptions createNewEadSearchOptions() {
 		EadSearchOptions eadSearchOptions = new EadSearchOptions();
 		eadSearchOptions.setPageNumber(pageNumber);
 		eadSearchOptions.setPageSize(resultPerPage);
 		eadSearchOptions.setOrderByAscending(orderByAscending);
 		eadSearchOptions.setOrderByField(orderByField);
 		eadSearchOptions.setArchivalInstitionId(getAiId());
-		if (convertedStatus != null && convertedStatus.length == 1){
+		if (convertedStatus != null && convertedStatus.length == 1) {
 			eadSearchOptions.setConverted(Boolean.valueOf(convertedStatus[0]));
 		}
-		if (validatedStatus != null && validatedStatus.length >= 1 && validatedStatus.length <= 2){
-			for (String validatedStatusItem: validatedStatus){
+		if (validatedStatus != null && validatedStatus.length >= 1 && validatedStatus.length <= 2) {
+			for (String validatedStatusItem : validatedStatus) {
 				eadSearchOptions.getValidated().add(ValidatedState.getValidatedState(validatedStatusItem));
 			}
 		}
-		if (publishedStatus != null && publishedStatus.length == 1){
+		if (publishedStatus != null && publishedStatus.length == 1) {
 			eadSearchOptions.setPublished(Boolean.valueOf(publishedStatus[0]));
 		}
-		if (europeanaStatus != null && europeanaStatus.length >= 1 && europeanaStatus.length <= 3){
-			for (String europeanaStatusItem: europeanaStatus){
+		if (europeanaStatus != null && europeanaStatus.length >= 1 && europeanaStatus.length <= 3) {
+			for (String europeanaStatusItem : europeanaStatus) {
 				eadSearchOptions.getEuropeana().add(EuropeanaState.getEuropeanaState(europeanaStatusItem));
 			}
 		}
@@ -195,57 +259,33 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 		return eadSearchOptions;
 	}
 
-
-
-
 	public Map<String, String> getConvertedStatusList() {
 		return convertedStatusList;
 	}
-
-
-
 
 	public void setConvertedStatusList(Map<String, String> convertedStatusList) {
 		this.convertedStatusList = convertedStatusList;
 	}
 
-
-
-
 	public String[] getConvertedStatus() {
 		return convertedStatus;
 	}
-
-
-
 
 	public void setConvertedStatus(String[] convertedStatus) {
 		this.convertedStatus = convertedStatus;
 	}
 
-
-
-
 	public Map<String, String> getValidatedStatusList() {
 		return validatedStatusList;
 	}
-
-
-
 
 	public void setValidatedStatusList(Map<String, String> validatedStatusList) {
 		this.validatedStatusList = validatedStatusList;
 	}
 
-
-
-
 	public String[] getValidatedStatus() {
 		return validatedStatus;
 	}
-
-
-
 
 	public void setValidatedStatus(String[] validatedStatus) {
 		this.validatedStatus = validatedStatus;
@@ -299,19 +339,22 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 		this.typeList = typeList;
 	}
 
-
 	public String getXmlTypeId() {
 		return xmlTypeId;
 	}
+
 	public void setXmlTypeId(String xmlTypeId) {
 		this.xmlTypeId = xmlTypeId;
 	}
+
 	public boolean isAjax() {
 		return ajax;
 	}
+
 	public void setAjax(boolean ajax) {
 		this.ajax = ajax;
 	}
+
 	public Map<String, String> getSearchTermsFieldList() {
 		return searchTermsFieldList;
 	}
@@ -328,9 +371,4 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 		this.searchTermsField = searchTermsField;
 	}
 
-
-
-
-
-	
 }

@@ -237,3 +237,13 @@
 	color: #C65400;
 	cursor: pointer;
 }
+#contentmanager .total{
+	background-color: #E8E8E8;
+    color: #B23062;
+}
+#contentmanager .total td{
+	font-weight: bold;
+    color: #B23062;
+    font-size: 9pt;
+	height:2em;
+}

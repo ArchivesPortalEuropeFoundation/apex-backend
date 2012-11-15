@@ -275,7 +275,16 @@
 
 					</tr>
 				</c:forEach>
-
+					<tr class="total">
+						<td colspan="4"><s:text name="content.statistics.title.all"/></td>
+						<td>${results.totalConvertedFiles}</td>
+						<td>${results.totalValidatedFiles}</td>
+						<td>${results.totalPublishedUnits}</td>
+						<td></td>
+						<td>${results.totalDaosConvertedToEseEdm}</td>
+						<td>${results.totalDaosDeliveredToEuropea}</td>
+						<td colspan="2"></td>
+					</tr>
 			</table>
 		</div>
 	</s:form>

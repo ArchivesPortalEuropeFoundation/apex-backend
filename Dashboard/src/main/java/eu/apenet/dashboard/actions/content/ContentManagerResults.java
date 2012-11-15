@@ -10,7 +10,12 @@ import eu.apenet.persistence.vo.Ead;
 public class ContentManagerResults {
 	
 	private List<EadResult> eadResults = new ArrayList<EadResult>();
-	private long totalNumberOfResults;
+	private Long totalNumberOfResults = 0l;
+	private Long totalConvertedFiles = 0l;
+	private Long totalValidatedFiles = 0l;
+	private Long totalPublishedUnits = 0l;
+	private Long totalDaosConvertedToEseEdm = 0l;
+	private Long totalDaosDeliveredToEuropea = 0l;
 	private EadSearchOptions eadSearchOptions;
 	private XmlType xmlType;
 	
@@ -62,4 +67,44 @@ public class ContentManagerResults {
 	public boolean isHoldingsGuide(){
 		return XmlType.EAD_HG.equals(xmlType);
 	}
+	public Long getTotalConvertedFiles() {
+		return totalConvertedFiles;
+	}
+	public void setTotalConvertedFiles(Long totalConvertedFiles) {
+		this.totalConvertedFiles = totalConvertedFiles;
+	}
+	public Long getTotalValidatedFiles() {
+		return totalValidatedFiles;
+	}
+	public void setTotalValidatedFiles(Long totalValidatedFiles) {
+		this.totalValidatedFiles = totalValidatedFiles;
+	}
+	public Long getTotalPublishedUnits() {
+		return totalPublishedUnits;
+	}
+	public void setTotalPublishedUnits(Long totalPublishedUnits) {
+		this.totalPublishedUnits = totalPublishedUnits;
+	}
+	public Long getTotalDaosConvertedToEseEdm() {
+		return totalDaosConvertedToEseEdm;
+	}
+	public void setTotalDaosConvertedToEseEdm(Long totalDaosConvertedToEseEdm) {
+		this.totalDaosConvertedToEseEdm = totalDaosConvertedToEseEdm;
+	}
+	public Long getTotalDaosDeliveredToEuropea() {
+		return totalDaosDeliveredToEuropea;
+	}
+	public void setTotalDaosDeliveredToEuropea(Long totalDaosDeliveredToEuropea) {
+		this.totalDaosDeliveredToEuropea = totalDaosDeliveredToEuropea;
+	}
+	public XmlType getXmlType() {
+		return xmlType;
+	}
+	public void setXmlType(XmlType xmlType) {
+		this.xmlType = xmlType;
+	}
+	public void setTotalNumberOfResults(Long totalNumberOfResults) {
+		this.totalNumberOfResults = totalNumberOfResults;
+	}
+	
 }
