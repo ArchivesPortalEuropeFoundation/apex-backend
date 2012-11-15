@@ -8,7 +8,7 @@
 		<s:actionmessage />
   			<br></br>
 			<div id="country_list" style="height:10%;">
-				 <s:select  id="countrySelected" name="countrySelected" list="countriesList" listKey="couId" 
+				 <s:select  id="countrySelected" name="countrySelected" list="countriesList" listKey="id" 
 	  			listValue="cname" headerKey = "-1" headerValue="%{getText('admin.menu.countryselection')}" theme="simple" >
 				</s:select> 
 				
