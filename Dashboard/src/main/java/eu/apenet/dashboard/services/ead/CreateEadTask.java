@@ -29,7 +29,7 @@ public class CreateEadTask extends AbstractEadTask {
 	}
 
 	protected Ead execute(XmlType xmlType, UpFile upFile, Integer aiId) throws Exception {
-		String fileName = upFile.getFname();
+		String fileName = upFile.getFilename();
 		try {
 			String uploadedFilesPath = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath()
 					+ APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR;
@@ -37,14 +37,14 @@ public class CreateEadTask extends AbstractEadTask {
 			boolean isConverted;
 			try {
 				isConverted = Boolean.valueOf(ExistingFilesChecker.extractAttributeFromEad(
-						uploadedFilesPath + upFile.getFname(), "eadheader/revisiondesc/change/item", null, false));
+						uploadedFilesPath + upFile.getFilename(), "eadheader/revisiondesc/change/item", null, false));
 			} catch (Exception e) {
 				isConverted = false;
 			}
 
 			String title;
 			try {
-				title = ExistingFilesChecker.extractAttributeFromEad(uploadedFilesPath + upFile.getFname(),
+				title = ExistingFilesChecker.extractAttributeFromEad(uploadedFilesPath + upFile.getFilename(),
 						"eadheader/filedesc/titlestmt/titleproper", null, true).trim();
 			} catch (WstxParsingException e) {
 				title = "";
@@ -52,7 +52,7 @@ public class CreateEadTask extends AbstractEadTask {
 
 			String eadid = "";
 			try {
-				eadid = ExistingFilesChecker.extractAttributeFromEad(uploadedFilesPath + upFile.getFname(),
+				eadid = ExistingFilesChecker.extractAttributeFromEad(uploadedFilesPath + upFile.getFilename(),
 						"eadheader/eadid", null, true).trim();
 			} catch (WstxParsingException e) {
 			}
@@ -73,7 +73,7 @@ public class CreateEadTask extends AbstractEadTask {
 			newEad.setConverted(isConverted);
 			newEad.setUploadDate(new Date());
 			// / STORING THE NEW FINDING AID IN THE FILE SYSTEM ///
-			String startPath = getPath(xmlType, countryIso, aiId) + upFile.getFname();
+			String startPath = getPath(xmlType, countryIso, aiId) + upFile.getFilename();
 			newEad.setPathApenetead(startPath);
 			newEad.setUploadMethod(upFile.getUploadMethod());
 			newEad = DAOFactory.instance().getEadDAO().store(newEad);
@@ -99,7 +99,7 @@ public class CreateEadTask extends AbstractEadTask {
 			logAction(xmlType, fileName, e);
 			
 			JpaUtil.rollbackDatabaseTransaction();
-			throw new APEnetException("Could not create the file with from: " + upFile.getFname(), e);
+			throw new APEnetException("Could not create the file with from: " + upFile.getFilename(), e);
 		}
 	}
 
