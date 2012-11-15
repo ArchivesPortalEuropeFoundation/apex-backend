@@ -110,13 +110,13 @@ public class ExistingFilesChecker {
 		List<UpFile> listXml = upFileDao.getUpFiles(this.archivalInstitutionId, FileType.XML);
 		for (UpFile aListXml : listXml) {
 			FileUnit fileUnit = new FileUnit();
-			fileUnit.setFileId(aListXml.getUfId());
-			fileUnit.setFileName(aListXml.getFname());
-			fileUnit.setFileType(aListXml.getFileType().getFtype());
+			fileUnit.setFileId(aListXml.getId());
+			fileUnit.setFileName(aListXml.getFilename());
+			fileUnit.setFileType(aListXml.getFileType());
 			
 			//It is necessary to check if the XML file uploaded is a Finding Aid or a Holdings Guide
             try {
-			    eadType = this.extractAttributeFromEad(this.uploadedFilesPath + aListXml.getFname(), "archdesc", "type", true);
+			    eadType = this.extractAttributeFromEad(this.uploadedFilesPath + aListXml.getFilename(), "archdesc", "type", true);
             } catch (WstxParsingException e){
                 //We get the exception just after - so nothing to do here.
             }
@@ -141,9 +141,9 @@ public class ExistingFilesChecker {
 		List<UpFile> listXsl = upFileDao.getUpFiles(this.archivalInstitutionId, FileType.XSL);
 		for (UpFile aListXsl : listXsl) {
 			FileUnit fileUnit = new FileUnit();
-			fileUnit.setFileId(aListXsl.getUfId());
-			fileUnit.setFileName(aListXsl.getFname());
-			fileUnit.setFileType(aListXsl.getFileType().getFtype());
+			fileUnit.setFileId(aListXsl.getId());
+			fileUnit.setFileName(aListXsl.getFilename());
+			fileUnit.setFileType(aListXsl.getFileType());
 			fileUnit.setEadType("");
 			fileUnit.setEadid("");
 			fileUnit.setPermId(null);
@@ -822,9 +822,9 @@ public class ExistingFilesChecker {
                     //Change the path into upFile table to the new path.
                     upfile.setPath(newfilepath);
                     upFileDao.update(upfile);
-                    String oldfname=upfile.getFname();
+                    String oldfname=upfile.getFilename();
                     String newfname= oldfname.replace(".xml", "") + neweadid + ".xml";
-                    upfile.setFname(newfname);
+                    upfile.setFilename(newfname);
 
                     fileUnit.setFileName(newfname);
                     fileUnit.setEadid(neweadid);

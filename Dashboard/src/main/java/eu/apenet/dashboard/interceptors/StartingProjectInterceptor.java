@@ -21,20 +21,17 @@ import eu.apenet.commons.exceptions.APEnetRuntimeException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.persistence.dao.CouAlternativeNameDAO;
 import eu.apenet.persistence.dao.CountryDAO;
-import eu.apenet.persistence.dao.FileTypeDAO;
 import eu.apenet.persistence.dao.LangDAO;
 import eu.apenet.persistence.dao.UploadMethodDAO;
 import eu.apenet.persistence.dao.UserRoleDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.CouAlternativeNameHibernateDAO;
 import eu.apenet.persistence.hibernate.CountryHibernateDAO;
-import eu.apenet.persistence.hibernate.FileTypeHibernateDAO;
 import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.hibernate.LangHibernateDAO;
 import eu.apenet.persistence.hibernate.UploadMethodHibernateDAO;
 import eu.apenet.persistence.vo.CouAlternativeName;
 import eu.apenet.persistence.vo.Country;
-import eu.apenet.persistence.vo.FileType;
 import eu.apenet.persistence.vo.Lang;
 import eu.apenet.persistence.vo.UploadMethod;
 import eu.apenet.persistence.vo.User;
@@ -154,7 +151,6 @@ public class StartingProjectInterceptor extends AbstractInterceptor {
         createRoleTypeInformation();
         createCountryInformation();
         createLangInformation();
-        createFileTypeInformation();
         createUploadMethodInformation();
 
     }
@@ -308,31 +304,7 @@ public class StartingProjectInterceptor extends AbstractInterceptor {
         }
     }
 
-    private void createFileTypeInformation() {
-        LOG.info("Insert File Type information...");
-        FileTypeDAO fileTypeDAO = new FileTypeHibernateDAO();
-        FileType fileType;
 
-        HibernateUtil.beginDatabaseTransaction();
-        try {
-            fileType = new FileType();
-            fileType.setFtype("zip");
-            fileTypeDAO.insertSimple(fileType);
-            fileType = new FileType();
-            fileType.setFtype("xml");
-            fileTypeDAO.insertSimple(fileType);
-            fileType = new FileType();
-            fileType.setFtype("xsl");
-            fileTypeDAO.insertSimple(fileType);
-
-            HibernateUtil.commitDatabaseTransaction();
-            HibernateUtil.closeDatabaseSession();
-        } catch (Exception e) {
-            LOG.error("Could not create File Type information");
-            HibernateUtil.rollbackDatabaseTransaction();
-            HibernateUtil.closeDatabaseSession();
-        }
-    }
 
     public void populateCountryAlternativeName() throws APEnetException {
         Map<String, String> countryMap = new HashMap<String, String>();

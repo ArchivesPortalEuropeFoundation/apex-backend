@@ -1,5 +1,7 @@
 package eu.apenet.dashboard.manual;
 
+import eu.apenet.persistence.vo.FileType;
+
 /**
  * 
  * @author eloy
@@ -9,7 +11,7 @@ package eu.apenet.dashboard.manual;
 
 public class FileUnit {
 	private Integer fileId;		//Identifier in up_file table
-	private String fileType;	//File type (zip, xml or xsl)
+	private FileType fileType;	//File type (zip, xml or xsl)
 	private String fileName;	//File name
 	private String eadType;		//EAD type (Holdings Guide, Finding Aid or Undefined. Empty in other case)
 	private String eadid;		//EADID (fa_eadid if the file is a Finding Aid or hg_eadid if the file is a Holdings Guide)
@@ -28,11 +30,11 @@ public class FileUnit {
 		return fileId;
 	}
 
-	public void setFileType(String fileType) {
+	public void setFileType(FileType fileType) {
 		this.fileType = fileType;
 	}
 
-	public String getFileType() {
+	public FileType getFileType() {
 		return fileType;
 	}
 

@@ -295,9 +295,9 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
             ReconstructEadFile.reconstructEadFile(eadContent, APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + filePath);
             UpFile upFile = new UpFile();
 
-            upFile.setArchivalInstitution(DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(aiId));
-            upFile.setFileType(DAOFactory.instance().getFileTypeDAO().getFileTypeByType(FileType.XML));
-            upFile.setFname(fileName);
+            upFile.setAiId(aiId);
+            upFile.setFileType(FileType.XML);
+            upFile.setFilename(fileName);
             upFile.setPath(filePath);
             upFile.setUploadMethod(DAOFactory.instance().getUploadMethodDAO().getUploadMethodByMethod(UploadMethod.HTTP));
 
