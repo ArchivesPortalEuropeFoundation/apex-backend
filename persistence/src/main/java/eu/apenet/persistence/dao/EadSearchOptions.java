@@ -29,6 +29,32 @@ public class EadSearchOptions implements Serializable{
 	private List<ValidatedState> validated = new ArrayList<ValidatedState>();
 	private List<EuropeanaState> europeana = new ArrayList<EuropeanaState>();
 	private List<Integer> ids = new ArrayList<Integer>();
+	public EadSearchOptions(){
+		
+	}
+	public EadSearchOptions(EadSearchOptions eadSearchOptions){
+		this.pageNumber = eadSearchOptions.getPageNumber();
+		this.pageSize = eadSearchOptions.getPageSize();
+		this.firstResult = eadSearchOptions.getFirstResult();
+		this.searchTerms = eadSearchOptions.getSearchTerms();
+		this.searchTermsField = eadSearchOptions.getSearchTermsField();
+		this.orderByField = eadSearchOptions.getOrderByField();
+		this.orderByAscending = eadSearchOptions.isOrderByAscending();
+		this.eadClazz = eadSearchOptions.getEadClazz();
+		this.archivalInstitionId = eadSearchOptions.getArchivalInstitionId();
+		this.published = eadSearchOptions.getPublished();
+		this.converted = eadSearchOptions.getConverted();
+		this.publishedToAll = eadSearchOptions.getPublishedToAll();
+		for (ValidatedState validatedState: eadSearchOptions.getValidated()){
+			validated.add(validatedState);
+		}
+		for (EuropeanaState europeanaState: eadSearchOptions.getEuropeana()){
+			europeana.add(europeanaState);
+		}
+		for (Integer id: eadSearchOptions.getIds()){
+			ids.add(id);
+		}
+	}
 
 	public Class<? extends Ead> getEadClazz() {
 		return eadClazz;

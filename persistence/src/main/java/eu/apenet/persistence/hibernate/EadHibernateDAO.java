@@ -95,7 +95,26 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 
 		return getEntityManager().createQuery(cq).getSingleResult();
 	}
+	@Override
+	public Long countUnits(EadSearchOptions eadSearchOptions) {
+		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
+		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClazz());
+		cq.where(criteriaBuilder.and(buildWhere(from, eadSearchOptions), criteriaBuilder.greaterThan(from.<Integer>get("totalNumberOfUnits"),0)));
+		cq.select(criteriaBuilder.sum(from.<Long>get("totalNumberOfUnits")));
 
+		return getEntityManager().createQuery(cq).getSingleResult();
+	}
+	@Override
+	public Long countDaos(EadSearchOptions eadSearchOptions) {
+		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
+		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClazz());
+		cq.where(criteriaBuilder.and(buildWhere(from, eadSearchOptions), criteriaBuilder.greaterThan(from.<Integer>get("totalNumberOfDaos"),0)));
+		cq.select(criteriaBuilder.sum(from.<Long>get("totalNumberOfDaos")));
+
+		return getEntityManager().createQuery(cq).getSingleResult();
+	}
 	private Predicate buildWhere(Root<? extends Ead> from, EadSearchOptions eadSearchOptions) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		List<Predicate> whereClause = new ArrayList<Predicate>();
