@@ -302,7 +302,7 @@ public class ContentUtils {
 			LOGGER.error("The file " + filePath + " could not be removed: " + e.getMessage(), e);
 			return Action.ERROR;
 		} catch(Exception ex) {
-			LOGGER.error("The institution " + ai.getAiId() + " could not be removed from database " );
+			LOGGER.error("The institution " + ai.getAiId() + " could not be removed from database ",ex );
 			return Action.ERROR;
 		}
 	}
