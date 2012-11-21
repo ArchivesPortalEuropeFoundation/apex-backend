@@ -298,12 +298,6 @@
 			</dependency>
 			<dependency>
 				<groupId>eu.archivesportaleurope</groupId>
-				<artifactId>persistence</artifactId>
-				<version>${project.version}</version>
-				<classifier>tests</classifier>
-			</dependency>
-			<dependency>
-				<groupId>eu.archivesportaleurope</groupId>
 				<artifactId>commons</artifactId>
 				<version>${project.version}</version>
 			</dependency>

@@ -216,12 +216,6 @@
 			<artifactId>commons</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>eu.archivesportaleurope</groupId>
-			<artifactId>persistence</artifactId>
-			<scope>test</scope>
-			<classifier>tests</classifier>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
 			<version>${spring.version}</version>
@@ -250,11 +244,6 @@
 		<dependency>
 			<groupId>xalan</groupId>
 			<artifactId>xalan</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.tanesha.recaptcha4j</groupId>
-			<artifactId>recaptcha4j</artifactId>
-			<version>0.0.7</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.mail</groupId>
