@@ -636,71 +636,7 @@ public class FindingAidHibernateDAO extends AbstractHibernateDAO<FindingAid, Int
 		query.setMaxResults(maxResults);
 		return query.getResultList();
 	}
-	/*
-	SELECT fa_title FROM finding_aid 
-	WHERE fa_eadid NOT IN 
-		(SELECT href_eadid FROM c_level
-		 WHERE ec_id IN 
-			(SELECT ec_id FROM ead_content WHERE hg_id IN 
-				(SELECT hg_id FROM holdings_guide WHERE ai_id = ?)
-			)
-		 AND href_eadid IS NOT Null
-		) 
-	AND (fs_id = ? OR fs_id = ? OR ...) AND ai_id = ?;
-	*/
-	//This criteria selects all the finding aids which belongs to a specific archival institution and have certain file states
-	//and are not included within any holdings guide indexed for this specific archival institution
-//	private Criteria createFindingAidsNotLinkedCriteria(Integer aiId,Collection<String> fileStates, String sortValue, boolean ascending) {
-//		Criteria criteria = getSession().createCriteria(getPersistentClass(),"findingAid");
-//		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-//		DetachedCriteria subQuery = DetachedCriteria.forClass(CLevel.class,"cLevel");
-//			subQuery.setProjection(Property.forName("cLevel.hrefEadid"));
-//			subQuery.add(Restrictions.isNotNull("cLevel.hrefEadid"));
-//				DetachedCriteria subQuery2 = DetachedCriteria.forClass(EadContent.class,"eadContent");
-//				subQuery2.setProjection(Property.forName("eadContent.ecId"));
-//					DetachedCriteria subQuery3 = DetachedCriteria.forClass(HoldingsGuide.class, "holdingsGuide");
-//					subQuery3.setProjection(Property.forName("holdingsGuide.id"));
-//					subQuery3.add(Restrictions.eq("holdingsGuide.archivalInstitution.aiId", aiId));
-//				subQuery2.add(Subqueries.propertyIn("eadContent.hgId", subQuery3));
-//			subQuery.add(Subqueries.propertyIn("cLevel.ecId", subQuery2));
-//		criteria.add(Subqueries.propertyNotIn("findingAid.eadid", subQuery));
-//		criteria.add(Restrictions.eq("findingAid.archivalInstitution.aiId", aiId));
-//		//File states
-//		if(fileStates!=null){
-//			criteria = setFileStates(criteria,fileStates);
-//		}
-//		//Sorting results
-//		if ("faEadid".equals(sortValue)) {
-//			if (ascending) {
-//				criteria.addOrder(Order.asc("findingAid.eadid"));
-//			} else {
-//				criteria.addOrder(Order.desc("findingAid.eadid"));
-//			}
-//		} else if ("uploadMethod".equals(sortValue)) {
-//			if (ascending) {
-//				criteria.addOrder(Order.asc("uploadMethod.method"));
-//			} else {
-//				criteria.addOrder(Order.desc("uploadMethod.method"));
-//			}
-//		} else if ("faTitle".equals(sortValue)) {
-//			if (ascending) {
-//				criteria.addOrder(Order.asc("findingAid.title"));
-//			} else {
-//				criteria.addOrder(Order.desc("findingAid.title"));
-//			}
-//		} else if ("uploadDate".equals(sortValue)) {
-//			if (ascending) {
-//				criteria.addOrder(Order.asc("findingAid.uploadDate"));
-//				criteria.addOrder(Order.asc("findingAid.eadid"));
-//				criteria.addOrder(Order.asc("findingAid.title"));
-//			} else {
-//				criteria.addOrder(Order.desc("findingAid.uploadDate"));
-//				criteria.addOrder(Order.asc("findingAid.eadid"));
-//				criteria.addOrder(Order.asc("findingAid.title"));
-//			}
-//		}
-//		return criteria;
-//	}
+
 
 	@Override
 	public Long countFindingAidsIndexedByInternalArchivalInstitutionId(String identifier) {

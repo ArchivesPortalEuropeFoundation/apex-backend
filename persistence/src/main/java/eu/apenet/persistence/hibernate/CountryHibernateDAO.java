@@ -156,28 +156,6 @@ private final Logger log = Logger.getLogger(getClass());
 		return result;
 	}
 	
-	@SuppressWarnings("rawtypes")
-	private DetachedCriteria setFileStates(DetachedCriteria criteria, Collection<String> fileStates, Class clazz) {
-		if (fileStates!= null && fileStates.size() > 0) {
-			
-			if (clazz.equals(FindingAid.class)) {
-				criteria = criteria.createAlias("findingAid.fileState", "fileState");				
-			}
-			else if (clazz.equals(HoldingsGuide.class)) {
-				criteria = criteria.createAlias("holdingsGuide.fileState", "fileState");								
-			}
-			else {
-				criteria = criteria.createAlias("sourceGuide.fileState", "fileState");												
-			}
-
-			Disjunction disjunction = Restrictions.disjunction();
-			for (String fileState : fileStates) {
-				disjunction.add(Restrictions.eq("fileState.state", fileState));
-			}
-			criteria.add(disjunction);
-		}
-		return criteria;
-	}
 
 
 }
