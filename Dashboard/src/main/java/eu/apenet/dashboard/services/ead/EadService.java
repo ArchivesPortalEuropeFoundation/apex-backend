@@ -174,6 +174,18 @@ public class EadService {
 		}
 	}
 
+	public static void deleteFromQueue(XmlType xmlType, Integer id) throws Exception {
+		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+		Ead ead = eadDAO.findById(id, xmlType.getClazz());
+		SecurityContext.get().checkAuthorized(ead);
+		if (QueuingState.ERROR.equals(ead.getQueuing())){
+			QueueItem queueItem = ead.getQueueItem();
+			ead.setQueuing(QueuingState.NO);
+			eadDAO.store(ead);
+			DAOFactory.instance().getQueueItemDAO().delete(queueItem);
+		}
+	}
+
 	public static void overwrite(Ead oldEad, UpFile upFile) throws Exception {
 		SecurityContext.get().checkAuthorized(oldEad);
 		addToQueue(oldEad, QueueAction.OVERWRITE, null, upFile);
