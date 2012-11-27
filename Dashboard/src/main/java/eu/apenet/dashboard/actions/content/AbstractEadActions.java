@@ -17,6 +17,7 @@ public abstract class AbstractEadActions extends AbstractInstitutionAction imple
 	private static final String CONVERT = "convert";
 	private static final String VALIDATE = "validate";
 	private static final String DELETE_ESE_EDM = "deleteEseEdm";
+	private static final String DELETE_FROM_QUEUE = "deleteFromQueue";	
 	private static final String DELETE_FROM_EUROPEANA = "deleteFromEuropeana";	
 	private static final String DELIVER_TO_EUROPEANA = "deliverToEuropeana";	
 	/**
@@ -76,6 +77,8 @@ public abstract class AbstractEadActions extends AbstractInstitutionAction imple
 			return deleteFromEuropeana();
 		}else if(DELIVER_TO_EUROPEANA.equals(action)){
 			return deliverToEuropeana();
+		}else if(DELETE_FROM_QUEUE.equals(action)){
+			return deleteFromQueue();
 		}
 		return ERROR;
 	}
@@ -91,4 +94,5 @@ public abstract class AbstractEadActions extends AbstractInstitutionAction imple
 	public abstract String deleteEseEdm();
 	public abstract String deleteFromEuropeana();
 	public abstract String deliverToEuropeana();
+	public abstract String deleteFromQueue();
 }

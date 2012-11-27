@@ -114,4 +114,15 @@ public class EadActions extends AbstractEadActions {
 		}
 	}
 
+	@Override
+	public String deleteFromQueue() {
+		try {
+			EadService.deleteFromQueue(getXmlType(), id);
+			return SUCCESS;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return ERROR;
+		}
+	}
+
 }

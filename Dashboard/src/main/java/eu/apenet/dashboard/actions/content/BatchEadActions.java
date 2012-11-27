@@ -60,6 +60,13 @@ public class BatchEadActions extends AbstractEadActions {
 	public String deliverToEuropeana() {
 		return addBatchToQueue(QueueAction.DELIVER_TO_EUROPEANA);
 	}
+	
+
+	@Override
+	public String deleteFromQueue() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@SuppressWarnings("unchecked")
 	private String addBatchToQueue(QueueAction queueAction) {
