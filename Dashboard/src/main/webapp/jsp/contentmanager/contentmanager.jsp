@@ -7,6 +7,7 @@
 			});
 		</script>
 <div id="contentmanager">
+	<div id="relatedLinks"><a href="upload.action"><s:text name="dashboard.menu.uploadcontent"/></a></div>
     <div id="listFiles">
     	<div id="listFilesActions">
         <span id="clearAll" class="linkList leftSide">[<s:text name="content.message.clearall" />]</span>

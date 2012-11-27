@@ -175,9 +175,20 @@
 							</c:if></td>
 
 						<td class="actions"><c:choose>
-								<c:when test="${eadResult.queueReady or eadResult.queueError}">
+								<c:when test="${eadResult.queueReady}">
 
 								</c:when>
+								<c:when test="${eadResult.queueError}">
+									<select class="selectedAction" name="selectedAction">
+										<option value="action|deleteFromQueue">
+											<s:text name="content.message.delete.queue" />
+										</option>
+										<option value="action|delete">
+											<s:text name="content.message.delete" />
+										</option>										
+									</select>
+									<input type="button" value="<s:text name="content.message.go" />" />
+								</c:when>																		
 								<c:when test="${eadResult.queueProcessing}">
 									<s:text name="content.message.queueprocessing" />
 								</c:when>
