@@ -132,6 +132,7 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 		if (eadSearchOptions == null) {
 			eadSearchOptions = createNewEadSearchOptions();
 		}
+
 		ContentManagerResults results = new ContentManagerResults(eadSearchOptions);
 		results.setEads(eadDAO.getEads(eadSearchOptions));
 		results.setTotalNumberOfResults(eadDAO.countEads(eadSearchOptions));
@@ -226,7 +227,9 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 			searchTermsField = eadSearchOptions.getSearchTermsField();
 			pageNumber = eadSearchOptions.getPageNumber();
 			resultPerPage = eadSearchOptions.getPageSize();
+			eadSearchOptions.setArchivalInstitionId(getAiId());
 		}
+		
 		return eadSearchOptions;
 	}
 
