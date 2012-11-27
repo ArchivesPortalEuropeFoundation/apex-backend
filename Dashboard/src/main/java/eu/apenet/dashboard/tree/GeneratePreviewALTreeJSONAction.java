@@ -202,7 +202,7 @@ public class GeneratePreviewALTreeJSONAction extends ActionSupport implements Se
 			if (archivalInstitutionUnit.getIsgroup() && archivalInstitutionUnit.getNumberOfArchivalInstitutions() > 0){
 				//The Archival Institution is a group and it has archival institutions within it
 				buffer.append(START_ITEM);
-				addTitle(buffer, archivalInstitutionUnit.getAiScndname());
+				addTitle(buffer, archivalInstitutionUnit.getAiname());
 				buffer.append(COMMA);
 				buffer.append(NOT_CHECKBOX);
 				buffer.append(COMMA);
@@ -216,7 +216,7 @@ public class GeneratePreviewALTreeJSONAction extends ActionSupport implements Se
 			else if (archivalInstitutionUnit.getIsgroup() && archivalInstitutionUnit.getNumberOfArchivalInstitutions() == 0) {
 				//The Archival Institution is a group but it doesn't have any archival institutions within it
 				buffer.append(START_ITEM);
-				addTitle(buffer, archivalInstitutionUnit.getAiScndname());
+				addTitle(buffer, archivalInstitutionUnit.getAiname());
 				buffer.append(COMMA);
 				buffer.append(NOT_CHECKBOX);
 				buffer.append(COMMA);
@@ -232,7 +232,7 @@ public class GeneratePreviewALTreeJSONAction extends ActionSupport implements Se
 			else if (!archivalInstitutionUnit.getIsgroup()){
 				//The Archival Institution is a leaf
 				buffer.append(START_ITEM);
-				addTitle(buffer, archivalInstitutionUnit.getAiScndname());
+				addTitle(buffer, archivalInstitutionUnit.getAiname());
 				buffer.append(COMMA);
 				if (archivalInstitutionUnit.getPathEAG() != null && !archivalInstitutionUnit.getPathEAG().equals("")) {
 					//The archival institution has EAG
