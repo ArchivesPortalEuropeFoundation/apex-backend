@@ -57,7 +57,7 @@ public class Indexer {
 	public static final DecimalFormat NUMBERFORMAT = new DecimalFormat("00000000");
 	// public static final DecimalFormat SIMPLE_NUMBERFORMAT = new
 	// DecimalFormat("000");
-	private String provider;
+	//private String provider;
 	private Country country;
 	private String language;
 	private String archdesc_langmaterial;
@@ -77,7 +77,6 @@ public class Indexer {
 	private final static XPath XPATH = APEnetUtilities.getDashboardConfig().getXpathFactory().newXPath();
 	private static XPathExpression eadidExpression;
 	private static XPathExpression eadidCountrycodeExpression;
-	private static XPathExpression eadidMainagencycodeExpression;
 	private static XPathExpression eadidIdentifierExpression;
 	private static XPathExpression textBelowExpression;
 	private static XPathExpression languageExpression;
@@ -107,7 +106,6 @@ public class Indexer {
 			XPATH.setNamespaceContext(new EADNamespaceContext());
 			eadidExpression = XPATH.compile("/ead:ead/ead:eadheader/ead:eadid");
 			eadidCountrycodeExpression = XPATH.compile("@countrycode");
-			eadidMainagencycodeExpression = XPATH.compile("@mainagencycode");
 			eadidIdentifierExpression = XPATH.compile("@identifier");
 			languageExpression = XPATH
 					.compile("/ead:ead/ead:eadheader/ead:profiledesc/ead:langusage/ead:language/@langcode");
@@ -196,7 +194,6 @@ public class Indexer {
 		Boolean displayDid = (Boolean) displayDidExpression.evaluate(doc, XPathConstants.BOOLEAN);
 		eadContent.setDisplayDid(displayDid);
 		Node eadidNode = (Node) eadidExpression.evaluate(doc, XPathConstants.NODE);
-		provider = (String) eadidMainagencycodeExpression.evaluate(eadidNode, XPathConstants.STRING);
 		String countryString = (String) eadidCountrycodeExpression.evaluate(eadidNode, XPathConstants.STRING);
 		eadidstring = (String) textBelowExpression.evaluate(eadidNode, XPathConstants.STRING);
 		if (StringUtils.isBlank(eadidstring)) {
@@ -204,9 +201,7 @@ public class Indexer {
 		}
 		eadidstring = removeUnusedCharacters(eadidstring);
 		String repositorycode = removeUnusedCharacters(archivalinstitution.getRepositorycode());
-		if (provider.equals(repositorycode)) {
-			provider = archivalinstitution.getAutform();
-		}
+
 		if (StringUtils.isNotBlank(countryString)) {
 			try {
 				// Get the country.
