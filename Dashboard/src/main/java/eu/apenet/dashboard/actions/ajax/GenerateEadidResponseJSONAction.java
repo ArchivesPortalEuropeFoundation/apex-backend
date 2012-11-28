@@ -105,7 +105,7 @@ public class GenerateEadidResponseJSONAction extends ActionSupport implements Se
 			response.setContentType("application/json");
 			Writer writer = new OutputStreamWriter(response.getOutputStream(), UTF8);
 			UpFileDAO upfileDao = DAOFactory.instance().getUpFileDAO();
-			this.ai_id = upfileDao.getUpFile(fileId).getAiId();
+			this.ai_id = upfileDao.findById(fileId).getAiId();
 			
 			String m = checkNewEADID().toString();
 			writer.write(m);
