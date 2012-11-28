@@ -18,7 +18,7 @@ import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.manual.EADCMUnit;
-import eu.apenet.dashboard.manual.EadLogicAbstract;
+
 import eu.apenet.dpt.utils.util.extendxsl.CounterCLevelCall;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.CpfContentDAO;
@@ -130,27 +130,14 @@ public class ContentManager extends ContentManagerIndexer{
 		return eadcmUnit;
 	}
 
-	/**
-	 * This method extract and returns a file by id from DDBB and FileSystem
-	 * to be downloaded by user.
-	 * @param id
-	 * @param xmlType
-     * @return InputStream
-	 * @throws Exception
-	 */
-	public static File download(Integer id, XmlType xmlType) throws Exception {
-		return EadLogicAbstract.download(id, xmlType);
-	}
+
 
     public static InputStream getInputStream(Integer id) throws Exception {
         String cpfContentXml = DAOFactory.instance().getCpfContentDAO().findById(id.longValue()).getXml();
         return IOUtils.toInputStream(cpfContentXml);
 	}
 
-	public static Integer preview(Integer id, XmlType xmlType) {
-        EadLogicAbstract.createPreviewHTML(id, xmlType);
-        return id;
-	}
+
 
 	public static void deleteEseFiles(Integer id) throws Exception {
 	}

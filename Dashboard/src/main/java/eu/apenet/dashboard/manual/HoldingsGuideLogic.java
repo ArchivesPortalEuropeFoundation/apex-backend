@@ -25,7 +25,7 @@ import eu.apenet.persistence.dao.HoldingsGuideDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.HoldingsGuide;
 
-public class HoldingsGuideLogic extends EadLogicAbstract {
+public class HoldingsGuideLogic {
 	private Logger log = Logger.getLogger(getClass());
 
 

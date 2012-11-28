@@ -747,26 +747,7 @@ public class ExistingFilesChecker {
 		}
 	}
 	
-	private void overwrite(FileUnit fileUnit) throws APEnetException {
-        LOG.info("The Archival Institution '" + archivalInstitutionId + "' has chosen to overwrite the EAD file '" + fileUnit.getFileName() + "' with eadid '" + fileUnit.getEadid() + "'");
-        boolean isConverted;
-        try {
-            isConverted = Boolean.valueOf(extractAttributeFromEad(uploadedFilesPath + fileUnit.getFileName(), "eadheader/revisiondesc/change/item", null, false));
-        } catch (Exception e){
-            isConverted = false;
-        }
 
-        String title;
-        try {
-            title = extractAttributeFromEad(uploadedFilesPath + fileUnit.getFileName(), "eadheader/filedesc/titlestmt/titleproper", null, true).trim();
-        } catch (WstxParsingException e){
-            title = "";
-        }
-        
-        XmlType xmlType = XmlType.getType(fileUnit.getEadType());
-        if(!EadLogicAbstract.deleteOrOverwrite(fileUnit.getPermId(), xmlType, true, fileUnit, isConverted, title, archivalInstitutionId))
-            throw new APEnetException();
-    }
 
     private String changeEadidUsingDOM(FileUnit fileUnit, String neweadid) {
         UpFileDAO upFileDao = DAOFactory.instance().getUpFileDAO();

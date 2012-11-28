@@ -184,44 +184,7 @@ public class ContentManagerAction extends AbstractContentManagerAction {
 		return finishAction();
 	}
 
-	/**
-	 * (download action) This method provides the functionality of download when
-	 * an ead is selected.
-	 * 
-	 * @return ERROR or DOWNLOAD
-	 */
-	public String download() {
-		Integer aiId = getAiId();
-		try {
-			if (!getXmlType().equals(XmlType.EAC_CPF)) {
-				File tempFile = ContentManager.download(getId(), getXmlType());
-				setInputStream(new FileInputStream(tempFile));
-				setFileName(tempFile.getName());
-				setFileSize(tempFile.length());
-			} else {
-				setInputStream(ContentManager.getInputStream(getId()));
-				setFileName(XmlType.EAC_CPF.getName() + "_" + getId());
-			}
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
-		if (getInputStream() == null) {
-			log.warn("Download KO, file inputStream not available, aiId :" + aiId + "; file id :" + getId() + ":");
-			return ERROR;
-		} else {
-			try {
-				if (getInputStream().available() > 0) {
-					log.info("Download OK and available, start download of file for aiId :" + aiId + "; file id :"
-							+ getId() + ":");
-					return DOWNLOAD;
-				}
-			} catch (IOException e) {
-				log.error(e.getMessage(), e);
-			}
-		}
-		log.warn("Download KO, open but not available (empty file?), aiId :" + aiId + "; file id :" + getId() + ":");
-		return ERROR;
-	}
+
 
 	/**
 	 * (changeLimitPerPage action). This function reset pageNumber when limit
