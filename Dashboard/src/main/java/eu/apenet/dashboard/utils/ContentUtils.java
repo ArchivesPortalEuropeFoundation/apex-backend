@@ -139,6 +139,7 @@ public class ContentUtils {
 			EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 			EadSearchOptions eadSearchOptions = new EadSearchOptions();
 			eadSearchOptions.setArchivalInstitionId(archivalInstitution.getAiId());
+			eadSearchOptions.setPublishedToAll(true);
 			eadSearchOptions.setEadClazz(FindingAid.class);
 			boolean hasEads = eadDAO.existEads(eadSearchOptions);
 			if (!hasEads) {

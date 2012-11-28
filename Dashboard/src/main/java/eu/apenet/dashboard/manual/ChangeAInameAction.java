@@ -3,8 +3,6 @@ package eu.apenet.dashboard.manual;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -21,26 +19,17 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import eu.apenet.commons.types.XmlType;
+import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
-import eu.apenet.dashboard.manual.contentmanager.ContentManager;
-import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.dao.EadSearchOptions;
-import eu.apenet.persistence.dao.EseDAO;
-import eu.apenet.persistence.dao.FindingAidDAO;
-import eu.apenet.persistence.dao.HoldingsGuideDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.AiAlternativeName;
 import eu.apenet.persistence.vo.ArchivalInstitution;
-import eu.apenet.persistence.vo.Ead;
-import eu.apenet.persistence.vo.FindingAid;
-import eu.apenet.persistence.vo.HoldingsGuide;
 
 public class ChangeAInameAction extends AbstractInstitutionAction {
 
@@ -153,9 +142,8 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 	
 	public String validateChangeAIname() throws Exception{
 		Integer aiId = this.getAiId();
+		
 		Integer validateChangeAInameProcessState = 0;	//This variable is in charge of storing the changing process state: 
-		//1=The process is deleting FA from index; 
-		//2=the process is deleting HG from index; 
 		//3=the process is deleting database;
 		//4=the process is changing EAG from file system; 
 		//5=the process is changing AL from file system;
@@ -165,24 +153,8 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 		String pathEAG="";
 		String path_copyEAG = "";
 		String path_copyAL ="";
-		List<HoldingsGuide> holdingsGuideListFailed = new ArrayList<HoldingsGuide>();
-		List<FindingAid> findingAidListFailed = new ArrayList<FindingAid>();	
-		List<FindingAid> findingAidListdeleted = new ArrayList<FindingAid>();
-		List<HoldingsGuide> holdingsGuideListdeleted=new ArrayList<HoldingsGuide>();
-		boolean FAerror = false;
-		boolean HGerror = false;
-		boolean dataBaseCommitError = false;
-		boolean EAGerror=false;
-		boolean ALerror=false;
-		boolean existAL =true;
-		boolean existEAG = true;
-		String path_EUROPEANA_copy ="";
-		String path_EUROPEANA ="";
 		
-		FindingAidDAO findingAidDao = DAOFactory.instance().getFindingAidDAO();
-		HoldingsGuideDAO holdingsGuideDao = DAOFactory.instance().getHoldingsGuideDAO();
 		AiAlternativeNameDAO andao = DAOFactory.instance().getAiAlternativeNameDAO();
-		EseDAO esedao = DAOFactory.instance().getEseDAO();
 		ArchivalInstitutionDAO aidao = DAOFactory.instance().getArchivalInstitutionDAO();
 		ArchivalLandscape a = new ArchivalLandscape();
 		
@@ -195,7 +167,10 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 			else{
 			
 			HibernateUtil.beginDatabaseTransaction();
-			ArchivalInstitution ai = aidao.getArchivalInstitution(aiId);			
+			ArchivalInstitution ai = aidao.getArchivalInstitution(aiId);
+			if (ContentUtils.containsPublishedFiles(ai)){
+				throw new APEnetException("Could not delete an archival institution with published EAD files");
+			}
 			AiAlternativeName an = andao.findByAIId_primarykey(ai);			
 			
 			isoname = ai.getCountry().getIsoname();
@@ -206,8 +181,6 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 	    	path_copyEAG = path_copyEAG + "_copy.xml";	
 	    	path_copyAL = pathAL.replace(".xm", "");
         	path_copyAL = path_copyAL + "_copy.xml";
-        	path_EUROPEANA = APEnetUtilities.getConfig().getRepoDirPath()+ APEnetUtilities.FILESEPARATOR + isoname + APEnetUtilities.FILESEPARATOR + ai.getAiId() + APEnetUtilities.FILESEPARATOR + "EUROPEANA";
-			path_EUROPEANA_copy = path_EUROPEANA + "_copy";
 			
         	
 			/// UPDATE DATABASE ///
@@ -218,76 +191,16 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 			andao.updateSimple(an);
 			aidao.updateSimple(ai);
 			
-			validateChangeAInameProcessState = 1;
+			validateChangeAInameProcessState = 3;
 			
-			/// DELETE FA FROM INDEX ///
-			// Remove all FA related to this institution
-			// from the Index only if it is indexed
-			// Because of Solr doesn't support transactions as DDBB
-			// it is necessary to make a commit immediately
-			
-			//Obtain the finding aids indexed from this institution.
-			EadSearchOptions eadSearchOptions = new EadSearchOptions();
-			eadSearchOptions.setPublishedToAll(true);
-			eadSearchOptions.setEadClazz(FindingAid.class);
-			List<Ead> findingAidList = DAOFactory.instance().getEadDAO().getEads(eadSearchOptions);
-			//Copy EUROPEANA directory.
-			
-			if (findingAidList.size()>0){
-				for (int i = 0 ; i < findingAidList.size() ; i ++) {
-					//Delete each FA of this institution.	
-					Ead findingaid = findingAidList.get(i);
-					try{
-			        	LOG.info("Deleting finding aid with eadid "+ findingaid.getEadid()+" from index.");
-			        	EadService.unpublish(XmlType.EAD_FA, findingaid.getId());
-						findingAidListdeleted.add((FindingAid)findingaid);
-												
-					}
-					catch (Exception ex){
-						FAerror=true;
-						LOG.error("ERROR deleting finding aid with eadid "+findingaid.getEadid()+" from index.");
-						findingAidListFailed.add((FindingAid)findingaid);
-					}
-				}
-					
-				validateChangeAInameProcessState = 2;
-			}
-			
-			/// DELETE HG FROM INDEX ///
-			// Remove all HG related to this institution
-			// from the Index only if it is indexed
-			// Because of Solr doesn't support transactions as DDBB
-			// it is necessary to make a commit immediately
-			eadSearchOptions.setEadClazz(HoldingsGuide.class);
-			List<Ead> holdingsGuideList = DAOFactory.instance().getEadDAO().getEads(eadSearchOptions);
-			//Copy the list of the holdings guides to restore the files in rollback.
-			if (holdingsGuideList.size()>0){
-				for (int i = 0 ; i < holdingsGuideList.size() ; i ++) {
-					Ead holdingsGuide =  holdingsGuideList.get(i);
-					try{
-						LOG.error("Deleting Holding guide: "+ holdingsGuide.getEadid()+" from index.");
-						EadService.unpublish(XmlType.EAD_HG, holdingsGuide.getId());
-						holdingsGuideListdeleted.add((HoldingsGuide)holdingsGuide);
-					}
-					catch (Exception ex){
-						LOG.error("ERROR deleting Holding guide: "+ holdingsGuideList.get(i).getEadid()+" from index.");
-						holdingsGuideListFailed.add((HoldingsGuide)holdingsGuideList.get(i));
-						HGerror = true;
-					}
-				}
-				
-				validateChangeAInameProcessState = 3;
-			}
+
 			
 			/// CHANGE EAG ///
 			File copyEAGfile = new File (path_copyEAG);
         	if (EAGfile.exists()){
-        		existEAG = true;
         		FileUtils.copyFile(EAGfile, copyEAGfile);
         	}
-        	else{
-        		existEAG =false;
-        	}
+
         		
         	boolean changeEAG = false;
 			NodeList nodeAutList = null;
@@ -324,11 +237,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 		    File copyALfile = new File (path_copyAL);
 		    if (ALfile.exists()){
 		    	FileUtils.copyFile(ALfile, copyALfile);
-		    	existAL =true;
 			}
-		    else{
-		    	existAL=false;
-		     }
 	        	
 					Boolean changeAL = false;
 					log.info("Modifying Archival Landscape because the change of the name of the Archival Institution with id: " + aiId);
@@ -402,182 +311,8 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 			
 		}
 		catch (Exception e){
-			if (validateChangeAInameProcessState == 0) {
-				//There were errors during Database Transaction
-				//It is necessary to make a Database rollback
-				this.setErrormessage("There were errors during deleting from Data Base.");
-				HibernateUtil.rollbackDatabaseTransaction();
-				HibernateUtil.closeDatabaseSession();
-				log.error("There were errors during Database Transaction [Database Rollback]. Error: " + e.getMessage());
-			}
 			
-			if (validateChangeAInameProcessState == 1 && findingAidListdeleted.size()>0) {
-				log.error("There were errors during deleting FA from index [Database Rollback, Index Rollback]. Error: " + e.getMessage());
-				//There were errors during File system Transaction
-				//It is necessary to make a Database rollback
-				HibernateUtil.rollbackDatabaseTransaction();
-				HibernateUtil.closeDatabaseSession();
-				log.info("Database rollback succeed");
-				
-
-				//It is necessary to make a Index rollback of the FA indexed
-				this.setErrormessage("There were errors during deleting FA from index.");
-				//There were errors during deleting FA from index.
-				//It is necessary to make a Index rollback if the file was deleted.
-				for (int i=0; i< findingAidListdeleted.size();i++)
-				{
-						
-					if (findingAidListdeleted.get(i).isPublished()) {
-						try {
-							//ContentUtils.indexRollback(XmlType.EAD_FA, findingAidListdeleted.get(i).getId());
-							log.info("Index rollback of FA succeed");
-						} catch (Exception ex) {
-							log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + findingAidListdeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
-						}
-							
-//						//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-//						if ((findingAidListdeleted.get(i).getFileState().getId()>8)&&(findingAidListdeleted.get(i).getFileState().getId()<15)) {
-//							try {
-//								ContentUtils.restoreOriginalStateOfEAD(findingAidListdeleted.get(i));
-//								}
-//							catch (Exception ex) {
-//								log.error("Error restoring the original state of the Finding Aid. Check Database");
-//								}
-//						}
-					}							
-				}
-				//Restore EUROPEANA directory.
-				File Europeanadir = new File(path_EUROPEANA);
-				File Europeanadir_copy = new File (path_EUROPEANA_copy);
-				if (Europeanadir.exists())
-				{
-					FileUtils.forceDelete(Europeanadir);
-					Europeanadir_copy.renameTo(Europeanadir);
-					log.debug("The directory EUROPEANA has been restored correctly");
-				}
-				Europeanadir = null;
-				Europeanadir_copy=null;
-				HibernateUtil.closeDatabaseSession();
-				log.error("There were errors during deleting from index [Database Rollback, Index Rollback]. Error: " + e.getMessage());
-			}
-			
-			if (validateChangeAInameProcessState == 1 && holdingsGuideListdeleted.size()>0) {
-				log.error("There were errors during deleting HG from Index [Database Rollback, Index Rollback]. Error: " + e.getMessage());
-				//There were errors during File system Transaction
-				//It is necessary to make a Database rollback
-				HibernateUtil.rollbackDatabaseTransaction();
-				HibernateUtil.closeDatabaseSession();
-				log.info("Database rollback succeed");
-
-				//It is necessary to make a Index rollback of the FA indexed
-				this.setErrormessage("There were errors during deleting HG from index.");
-				
-				//It is necessary to make a Index rollback of the HG indexed
-				//There were errors during deleting HG from index.
-				//It is necessary to make a Index rollback if the file was deleted.
-				//Re-index again the holdings guides deleted
-				for (int i=0; i< holdingsGuideListdeleted.size();i++)
-				{
-					if (holdingsGuideListdeleted.get(i).isPublished()) {
-						try {
-							//ContentUtils.indexRollback(XmlType.EAD_HG, holdingsGuideListdeleted.get(i).getId());
-							log.info("Index rollback of FA succeed");
-
-						} catch (Exception ex) {
-							log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + holdingsGuideListdeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
-						}
-							
-//						//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-//						if ((holdingsGuideListdeleted.get(i).getFileState().getId()>8)&&(holdingsGuideListdeleted.get(i).getFileState().getId()<15)) {
-//							try {
-//								ContentUtils.restoreOriginalStateOfEAD(holdingsGuideListdeleted.get(i));
-//							}
-//							catch (Exception ex) {
-//								log.error("Error restoring the original state of the Holdings Guide. Check Database");
-//							}
-//						}
-					}							
-				}
-				
-				HibernateUtil.closeDatabaseSession();
-				log.error("There were errors during deleting HG from index [Database Rollback, Index Rollback]. Error: " + e.getMessage());
-			}
-			if (validateChangeAInameProcessState==2 && holdingsGuideListdeleted.size()>0){	
-				log.error("There were errors during updating EAG file [Database Rollback, Index Rollback]. Error: " + e.getMessage());
-				//It is necessary to make a Database rollback
-				HibernateUtil.rollbackDatabaseTransaction();
-				HibernateUtil.closeDatabaseSession();
-				log.info("Database rollback succeed");
-
-				//It is necessary to make a Index rollback of the FA indexed
-				this.setErrormessage("There were errors during EAG change.");
-				
-				//It is necessary to make a Index rollback if the file was deleted.
-				for (int i=0; i< findingAidListdeleted.size();i++)
-				{
-						
-					if (findingAidListdeleted.get(i).isPublished()) {
-						try {
-							//ContentUtils.indexRollback(XmlType.EAD_FA, findingAidListdeleted.get(i).getId());
-							log.info("Index rollback of FA succeed");
-						} catch (Exception ex) {
-							log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + findingAidListdeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
-						}
-							
-//						//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-//						if ((findingAidListdeleted.get(i).getFileState().getId()>8)&&(findingAidListdeleted.get(i).getFileState().getId()<15)) {
-//							try {
-//								ContentUtils.restoreOriginalStateOfEAD(findingAidListdeleted.get(i));
-//								}
-//							catch (Exception ex) {
-//								log.error("Error restoring the original state of the Finding Aid. Check Database");
-//								}
-//						}
-					}							
-				}
-						
-				//Restore EUROPEANA directory.
-				File Europeanadir = new File(path_EUROPEANA);
-				File Europeanadir_copy = new File (path_EUROPEANA_copy);
-				if (Europeanadir.exists())
-				{
-					FileUtils.forceDelete(Europeanadir);
-					Europeanadir_copy.renameTo(Europeanadir);
-					log.debug("The directory EUROPEANA has been restored correctly");
-				}
-				Europeanadir = null;
-				Europeanadir_copy=null;
-				
-				//It is necessary to make a Index rollback of the HG indexed
-				//There were errors during deleting HG from index.
-				//It is necessary to make a Index rollback if the file was deleted.
-				//Re-index again the holdings guides deleted
-				for (int i=0; i< holdingsGuideListdeleted.size();i++)
-				{
-					if (holdingsGuideListdeleted.get(i).isPublished()) {
-						try {
-							//ContentUtils.indexRollback(XmlType.EAD_HG, holdingsGuideListdeleted.get(i).getId());
-							log.info("Index rollback of HG succeed");
-						} catch (Exception ex) {
-							log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + holdingsGuideListdeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
-						}
-							
-//						//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-//						if ((holdingsGuideListdeleted.get(i).getFileState().getId()>8)&&(holdingsGuideListdeleted.get(i).getFileState().getId()<15)) {
-//							try {
-//								ContentUtils.restoreOriginalStateOfEAD(holdingsGuideListdeleted.get(i));
-//							}
-//							catch (Exception ex) {
-//								log.error("Error restoring the original state of the Holdings Guide. Check Database");
-//							}
-//						}
-					}							
-				}
-				HibernateUtil.closeDatabaseSession();
-				log.error("There were errors during deleting HG from index [Database Rollback, Index Rollback]. Error: " + e.getMessage());
-			}
-			
-			if (validateChangeAInameProcessState == 2 && holdingsGuideListdeleted.size()==0){
+			if (validateChangeAInameProcessState==3 ){
 				log.error("There were errors during updating EAG file [Database Rollback, Index Rollback]. Error: " + e.getMessage());
 				//It is necessary to make a Database rollback
 				HibernateUtil.rollbackDatabaseTransaction();
@@ -587,114 +322,8 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				//It is necessary to make a Index rollback of the FA indexed
 				this.setErrormessage("There were errors during updating EAG file.");
 				
-				//It is necessary to make a Index rollback if the file was deleted.
-				for (int i=0; i< findingAidListdeleted.size();i++)
-				{
-						
-					if (findingAidListdeleted.get(i).isPublished()) {
-						try {
-							//ContentUtils.indexRollback(XmlType.EAD_FA, findingAidListdeleted.get(i).getId());
-							log.info("Index rollback of FA succeed");
-						} catch (Exception ex) {
-							log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + findingAidListdeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
-						}
-							
-//						//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-//						if ((findingAidListdeleted.get(i).getFileState().getId()>8)&&(findingAidListdeleted.get(i).getFileState().getId()<15)) {
-//							try {
-//								ContentUtils.restoreOriginalStateOfEAD(findingAidListdeleted.get(i));
-//								}
-//							catch (Exception ex) {
-//								log.error("Error restoring the original state of the Finding Aid. Check Database");
-//								}
-//						}
-					}							
-				}
-						
-				//Restore EUROPEANA directory.
-				File Europeanadir = new File(path_EUROPEANA);
-				File Europeanadir_copy = new File (path_EUROPEANA_copy);
-				if (Europeanadir.exists())
-				{
-					FileUtils.forceDelete(Europeanadir);
-					Europeanadir_copy.renameTo(Europeanadir);
-					log.debug("The directory EUROPEANA has been restored correctly");
-				}
-				Europeanadir = null;
-				Europeanadir_copy=null;
-				
-				HibernateUtil.closeDatabaseSession();
-				log.error("There were errors during deleting HG from index [Database Rollback, Index Rollback]. Error: " + e.getMessage());			
-			}
-			
-			if (validateChangeAInameProcessState==3 && holdingsGuideListdeleted.size()>0){
-				log.error("There were errors during updating EAG file [Database Rollback, Index Rollback]. Error: " + e.getMessage());
-				//It is necessary to make a Database rollback
-				HibernateUtil.rollbackDatabaseTransaction();
-				HibernateUtil.closeDatabaseSession();
-				log.info("Database rollback succeed");
 
-				//It is necessary to make a Index rollback of the FA indexed
-				this.setErrormessage("There were errors during updating EAG file.");
-				
-				//It is necessary to make a Index rollback if the file was deleted.
-				for (int i=0; i< findingAidListdeleted.size();i++)
-				{
-						
-					if (findingAidListdeleted.get(i).isPublished()) {
-						try {
-							//ContentUtils.indexRollback(XmlType.EAD_FA, findingAidListdeleted.get(i).getId());
-							log.info("Index rollback of FA succeed");
-						} catch (Exception ex) {
-							log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + findingAidListdeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
-						}
-//							
-//						//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-//						if ((findingAidListdeleted.get(i).getFileState().getId()>8)&&(findingAidListdeleted.get(i).getFileState().getId()<15)) {
-//							try {
-//								ContentUtils.restoreOriginalStateOfEAD(findingAidListdeleted.get(i));
-//								}
-//							catch (Exception ex) {
-//								log.error("Error restoring the original state of the Finding Aid. Check Database");
-//								}
-//						}
-					}							
-				}
-				//Restore EUROPEANA directory.
-				File Europeanadir = new File(path_EUROPEANA);
-				File Europeanadir_copy = new File (path_EUROPEANA_copy);
-				if (Europeanadir.exists())
-				{
-					FileUtils.forceDelete(Europeanadir);
-					Europeanadir_copy.renameTo(Europeanadir);
-					log.debug("The directory EUROPEANA has been restored correctly");
-				}
-				
-				//It is necessary to make a Index rollback of the HG indexed
-				//There were errors during deleting HG from index.
-				//It is necessary to make a Index rollback if the file was deleted.
-				//Re-index again the holdings guides deleted
-				for (int i=0; i< holdingsGuideListdeleted.size();i++)
-				{
-					if (holdingsGuideListdeleted.get(i).isPublished()) {
-						try {
-							//ContentUtils.indexRollback(XmlType.EAD_HG, holdingsGuideListdeleted.get(i).getId());
-							log.info("Index rollback of HG succeed");
-						} catch (Exception ex) {
-							log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + holdingsGuideListdeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
-						}
-//							
-//						//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-//						if ((holdingsGuideListdeleted.get(i).getFileState().getId()>8)&&(holdingsGuideListdeleted.get(i).getFileState().getId()<15)) {
-//							try {
-//								ContentUtils.restoreOriginalStateOfEAD(holdingsGuideListdeleted.get(i));
-//							}
-//							catch (Exception ex) {
-//								log.error("Error restoring the original state of the Holdings Guide. Check Database");
-//							}
-//						}
-					}							
-				}
+
 				
 				//There were errors during EAG modify.
 				//It is necessary to make EAG rollback
@@ -719,67 +348,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 
 				//It is necessary to make a Index rollback of the FA indexed
 				this.setErrormessage("There were errors during updating AL file.");
-				if (findingAidListdeleted.size()>0){
-					//It is necessary to make a Index rollback if the file was deleted.
-					for (int i=0; i< findingAidListdeleted.size();i++)
-					{
-							
-						if (findingAidListdeleted.get(i).isPublished()) {
-							try {
-								//ContentUtils.indexRollback(XmlType.EAD_FA, findingAidListdeleted.get(i).getId());
-								log.info("Index rollback of FA succeed");
-							} catch (Exception ex) {
-								log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + findingAidListdeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
-							}
-								
-//							//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-//							if ((findingAidListdeleted.get(i).getFileState().getId()>8)&&(findingAidListdeleted.get(i).getFileState().getId()<15)) {
-//								try {
-//									ContentUtils.restoreOriginalStateOfEAD(findingAidListdeleted.get(i));
-//									}
-//								catch (Exception ex) {
-//									log.error("Error restoring the original state of the Finding Aid. Check Database");
-//									}
-//							}
-						}							
-					}
-					//Restore EUROPEANA directory.
-					File Europeanadir = new File(path_EUROPEANA);
-					File Europeanadir_copy = new File (path_EUROPEANA_copy);
-					if (Europeanadir.exists())
-					{
-						FileUtils.forceDelete(Europeanadir);
-						Europeanadir_copy.renameTo(Europeanadir);
-						log.debug("The directory EUROPEANA has been restored correctly");
-					}
-				}
-				if (holdingsGuideListdeleted.size()>0){
-					//It is necessary to make a Index rollback of the HG indexed
-					//There were errors during deleting HG from index.
-					//It is necessary to make a Index rollback if the file was deleted.
-					//Re-index again the holdings guides deleted
-					for (int i=0; i< holdingsGuideListdeleted.size();i++)
-					{
-						if (holdingsGuideListdeleted.get(i).isPublished()) {
-							try {
-								//ContentUtils.indexRollback(XmlType.EAD_HG, holdingsGuideListdeleted.get(i).getId());
-								log.info("Index rollback of HG succeed");
-							} catch (Exception ex) {
-								log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + holdingsGuideListdeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
-							}
-								
-//							//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-//							if ((holdingsGuideListdeleted.get(i).getFileState().getId()>8)&&(holdingsGuideListdeleted.get(i).getFileState().getId()<15)) {
-//								try {
-//									ContentUtils.restoreOriginalStateOfEAD(holdingsGuideListdeleted.get(i));
-//								}
-//								catch (Exception ex) {
-//									log.error("Error restoring the original state of the Holdings Guide. Check Database");
-//								}
-//							}
-						}							
-					}
-				}
+
 				//There were errors during EAG modify.
 				//It is necessary to make EAG rollback			
 				File EAGfile = new File(pathEAG);
