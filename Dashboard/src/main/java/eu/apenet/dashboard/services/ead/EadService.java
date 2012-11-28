@@ -9,8 +9,10 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import eu.apenet.commons.exceptions.APEnetRuntimeException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.indexing.EADParser;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EadSearchOptions;
@@ -31,6 +33,18 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 public class EadService {
 	protected static final Logger LOGGER = Logger.getLogger(EadService.class);
 
+    public static void createPreviewHTML(XmlType xmlType, Integer id){
+		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+        Ead ead = eadDAO.findById(id, xmlType.getClazz());
+		SecurityContext.get().checkAuthorized(ead);
+        if(ead.getEadContent() == null){
+            try {
+                EADParser.parseEad(ead);
+            } catch (Exception e) {
+                throw new APEnetRuntimeException(e);
+            }
+        }
+    }
 	public static void validate(XmlType xmlType, Integer id) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
