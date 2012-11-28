@@ -157,4 +157,5 @@ public abstract class AbstractJpaDAO <T, ID extends Serializable> extends Generi
 	public final void clear() {
 		getEntityManager().clear();
 	}
+	
 }

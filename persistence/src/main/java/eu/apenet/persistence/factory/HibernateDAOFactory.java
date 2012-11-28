@@ -2,6 +2,7 @@ package eu.apenet.persistence.factory;
 
 import eu.apenet.persistence.dao.*;
 import eu.apenet.persistence.hibernate.*;
+import eu.archivesportaleurope.persistence.jpa.dao.UpFileJpaDAO;
 
 
 /**
@@ -26,7 +27,7 @@ public class HibernateDAOFactory extends DAOFactory {
 
 	@Override
 	public UpFileDAO getUpFileDAO() {
-		return (UpFileDAO) instantiateDAO(UpFileHibernateDAO.class);
+		return (UpFileDAO) instantiateDAO(UpFileJpaDAO.class);
 	}
  
 	@Override
