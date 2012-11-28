@@ -429,7 +429,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 						
 					if (findingAidListdeleted.get(i).isPublished()) {
 						try {
-							ContentUtils.indexRollback(XmlType.EAD_FA, findingAidListdeleted.get(i).getId());
+							//ContentUtils.indexRollback(XmlType.EAD_FA, findingAidListdeleted.get(i).getId());
 							log.info("Index rollback of FA succeed");
 						} catch (Exception ex) {
 							log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + findingAidListdeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
@@ -480,7 +480,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				{
 					if (holdingsGuideListdeleted.get(i).isPublished()) {
 						try {
-							ContentUtils.indexRollback(XmlType.EAD_HG, holdingsGuideListdeleted.get(i).getId());
+							//ContentUtils.indexRollback(XmlType.EAD_HG, holdingsGuideListdeleted.get(i).getId());
 							log.info("Index rollback of FA succeed");
 
 						} catch (Exception ex) {
@@ -518,7 +518,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 						
 					if (findingAidListdeleted.get(i).isPublished()) {
 						try {
-							ContentUtils.indexRollback(XmlType.EAD_FA, findingAidListdeleted.get(i).getId());
+							//ContentUtils.indexRollback(XmlType.EAD_FA, findingAidListdeleted.get(i).getId());
 							log.info("Index rollback of FA succeed");
 						} catch (Exception ex) {
 							log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + findingAidListdeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
@@ -556,7 +556,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				{
 					if (holdingsGuideListdeleted.get(i).isPublished()) {
 						try {
-							ContentUtils.indexRollback(XmlType.EAD_HG, holdingsGuideListdeleted.get(i).getId());
+							//ContentUtils.indexRollback(XmlType.EAD_HG, holdingsGuideListdeleted.get(i).getId());
 							log.info("Index rollback of HG succeed");
 						} catch (Exception ex) {
 							log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + holdingsGuideListdeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
@@ -593,7 +593,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 						
 					if (findingAidListdeleted.get(i).isPublished()) {
 						try {
-							ContentUtils.indexRollback(XmlType.EAD_FA, findingAidListdeleted.get(i).getId());
+							//ContentUtils.indexRollback(XmlType.EAD_FA, findingAidListdeleted.get(i).getId());
 							log.info("Index rollback of FA succeed");
 						} catch (Exception ex) {
 							log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + findingAidListdeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
@@ -643,7 +643,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 						
 					if (findingAidListdeleted.get(i).isPublished()) {
 						try {
-							ContentUtils.indexRollback(XmlType.EAD_FA, findingAidListdeleted.get(i).getId());
+							//ContentUtils.indexRollback(XmlType.EAD_FA, findingAidListdeleted.get(i).getId());
 							log.info("Index rollback of FA succeed");
 						} catch (Exception ex) {
 							log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + findingAidListdeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
@@ -678,7 +678,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				{
 					if (holdingsGuideListdeleted.get(i).isPublished()) {
 						try {
-							ContentUtils.indexRollback(XmlType.EAD_HG, holdingsGuideListdeleted.get(i).getId());
+							//ContentUtils.indexRollback(XmlType.EAD_HG, holdingsGuideListdeleted.get(i).getId());
 							log.info("Index rollback of HG succeed");
 						} catch (Exception ex) {
 							log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + holdingsGuideListdeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
@@ -726,7 +726,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 							
 						if (findingAidListdeleted.get(i).isPublished()) {
 							try {
-								ContentUtils.indexRollback(XmlType.EAD_FA, findingAidListdeleted.get(i).getId());
+								//ContentUtils.indexRollback(XmlType.EAD_FA, findingAidListdeleted.get(i).getId());
 								log.info("Index rollback of FA succeed");
 							} catch (Exception ex) {
 								log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + findingAidListdeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
@@ -762,7 +762,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 					{
 						if (holdingsGuideListdeleted.get(i).isPublished()) {
 							try {
-								ContentUtils.indexRollback(XmlType.EAD_HG, holdingsGuideListdeleted.get(i).getId());
+								//ContentUtils.indexRollback(XmlType.EAD_HG, holdingsGuideListdeleted.get(i).getId());
 								log.info("Index rollback of HG succeed");
 							} catch (Exception ex) {
 								log.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + holdingsGuideListdeleted.get(i).getEadid() + ". Error:" + ex.getMessage());

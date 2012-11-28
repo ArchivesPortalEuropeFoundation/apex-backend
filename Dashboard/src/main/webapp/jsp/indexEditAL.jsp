@@ -3,6 +3,7 @@
 <%@page import="java.util.List"%>
 <%@page import="com.opensymphony.xwork2.ActionContext"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
     <div id="hasElementChanged" style="visibility:hidden;"><s:property value="hasElementChanged"/></div>
     <div id="aLandscape" class="aLandscape">
@@ -18,11 +19,13 @@
 					<div id="addDiv" class="divAction" ><s:property value="getText('al.message.addtolist')" /></div>
 				</div>
 				<div id="actionsSelectDivContainer" class="filterContainer">
+					
 					<div id="actionsButtons">
-						<div id="deleteDiv" class="divAction"><s:property value="getText('al.message.modify')" /></div>
+					<div id="actionWarning"></div>
 						<div id="moveUpDiv" class="divAction"><s:property value="getText('al.message.up')" /></div>
 						<div id="moveDownDiv" class="divAction"><s:property value="getText('al.message.down')" /></div>
-						<div id="unselectDiv" class="divAction">Unselect List Elements</div>
+						<div id="unselectDiv" class="divAction"><s:property value="getText('al.message.unselect')" /></div>
+						<div id="deleteDiv" class="divAction"><s:property value="getText('al.message.modify')" /></div>
 					</div>
 				</div>
 				<div id="divGroupNodesContainer" class="filterContainer">
@@ -43,6 +46,7 @@
 					setTimeout('$("#stateDiv").fadeOut("slow")',2000);
 					//setTimeout('$("#divBlock").remove()',1500);
 				}
+
 				$("#changeNodeDiv").click(function(){
 					var selectedIndex = $("select[name=ALElement] option:selected").index();
 					var elementName = $("select[name=ALElement] option:selected").text();
@@ -273,6 +277,15 @@
 							});
 						}
 					}
+					$("#ALElement").click(function(){
+						if ($('select[name=ALElement] option:selected').hasClass("nodelete")) {
+							$('#actionWarning').html("<s:text name='al.message.contains.eads'/>");
+							$('#deleteDiv').addClass("hidden");
+						} else {
+							$('#actionWarning').html("");
+							$('#deleteDiv').removeClass("hidden");
+						}
+					});
 				});
 				function showcurtain(){
 					$("#curtain").show();
@@ -326,7 +339,9 @@
 							<select class="divSelectOnlyListElements2" name="ALElement" id="ALElement" size="<s:property value="AL.size()" />">
 				</s:else>								
 							<s:iterator var="row" value="AL">
-								<option style="text-align:justify;" value="<s:property value="#row.id" />" ><s:property value="#row.name" /></option>
+									<option class="${row.cssClass}" style="padding-left:${15*row.depth}px;" value="${row.id}" ><s:property value="#row.name" /></option>
+
+								
 							</s:iterator>
 					<s:if test="AL.size()>0">
 							</select>

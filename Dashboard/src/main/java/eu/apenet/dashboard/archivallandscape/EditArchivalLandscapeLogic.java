@@ -381,34 +381,35 @@ public class EditArchivalLandscapeLogic {
 		return list;
 	}
 	
-	public static Long countIndexedContentByInstitutionGroupId(String identifier,boolean isGroup){
-		Long counter = new Long(0);
-		try{
-			if(!isGroup){
-				counter = DAOFactory.instance().getFindingAidDAO().countFindingAidsIndexedByInternalArchivalInstitutionId(identifier);
-			}else{
-				counter = recursiveCountIndexedContentByInstitutionGroup(identifier);
-			}
-		}catch(Exception e){
-			log.error("Error trying to obtain if an institution/group has indexed content",e);
-		}
-		return counter;
-	}
+//	public static Long countIndexedContentByInstitutionGroupId(String identifier,boolean isGroup){
+//		Long counter = new Long(0);
+//		try{
+//			if(!isGroup){
+//				counter = DAOFactory.instance().getFindingAidDAO().countFindingAidsIndexedByInternalArchivalInstitutionId(identifier);
+//			}else{
+//				counter = recursiveCountIndexedContentByInstitutionGroup(identifier);
+//			}
+//		}catch(Exception e){
+//			log.error("Error trying to obtain if an institution/group has indexed content",e);
+//		}
+//		return counter;
+//	}
+//	
+//	private static Long recursiveCountIndexedContentByInstitutionGroup(String identifier){
+//		Long counter = new Long(0);
+//		ArchivalInstitution aiTemp = new ArchivalInstitution();
+//		aiTemp = (ArchivalInstitution) DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionByInternalAlId(identifier);
+//		Set<ArchivalInstitution> archivalInstitutions = aiTemp.getChildArchivalInstitutions();
+//		Iterator<ArchivalInstitution> iteratorArchivalInstitutions = archivalInstitutions.iterator();
+//		while(iteratorArchivalInstitutions.hasNext()){
+//			aiTemp = iteratorArchivalInstitutions.next();
+//			if(aiTemp.isGroup()){
+//				counter += recursiveCountIndexedContentByInstitutionGroup(aiTemp.getInternalAlId());
+//			}else{
+//				counter += DAOFactory.instance().getFindingAidDAO().countFindingAidsIndexedByInternalArchivalInstitutionId(aiTemp.getInternalAlId());
+//			}
+//		}
+//		return counter;
+//	}
 	
-	private static Long recursiveCountIndexedContentByInstitutionGroup(String identifier){
-		Long counter = new Long(0);
-		ArchivalInstitution aiTemp = new ArchivalInstitution();
-		aiTemp = (ArchivalInstitution) DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionByInternalAlId(identifier);
-		Set<ArchivalInstitution> archivalInstitutions = aiTemp.getChildArchivalInstitutions();
-		Iterator<ArchivalInstitution> iteratorArchivalInstitutions = archivalInstitutions.iterator();
-		while(iteratorArchivalInstitutions.hasNext()){
-			aiTemp = iteratorArchivalInstitutions.next();
-			if(aiTemp.isGroup()){
-				counter += recursiveCountIndexedContentByInstitutionGroup(aiTemp.getInternalAlId());
-			}else{
-				counter += DAOFactory.instance().getFindingAidDAO().countFindingAidsIndexedByInternalArchivalInstitutionId(aiTemp.getInternalAlId());
-			}
-		}
-		return counter;
-	}
 }

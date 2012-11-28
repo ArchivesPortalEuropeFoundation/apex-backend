@@ -6,6 +6,9 @@ public class Institution{
 	public String name;
 	public String id;
 	public String level;
+	private boolean group;
+	private boolean containsEads;
+	private int depth = 0;
 	public List<Institution> institutions;
 	
 	public String getName() {
@@ -38,5 +41,41 @@ public class Institution{
 	
 	public String getId(){
 		return this.id;
+	}
+
+	public boolean isGroup() {
+		return group;
+	}
+
+	public void setGroup(boolean group) {
+		this.group = group;
+	}
+
+	public boolean isContainsEads() {
+		return containsEads;
+	}
+
+	public void setContainsEads(boolean containsEads) {
+		this.containsEads = containsEads;
+	}
+
+	public int getDepth() {
+		return depth;
+	}
+
+	public void setDepth(int depth) {
+		this.depth = depth;
+	}
+	public String getCssClass(){
+		String cssClass = null;
+		if (group){
+			cssClass = "aiGroup";
+		}else {
+			cssClass = "aiNormal";
+		}
+		if (containsEads){
+			cssClass += " nodelete";
+		}
+		return cssClass;
 	}
 }

@@ -567,61 +567,7 @@ public class uploadALAction extends ActionSupport implements Preparable{
 									repoDirFile.renameTo(new File(repoDirPath));
 								}
 							}
-							//The rollbacking of the files are finished without errors
-							rollbackFiles = true;
-							
-							if ((rollbackFiles) && (execute))
-							{
-								this.setFasDeleted(uploader_http.getFasDeleted());						
-								this.setHgsDeleted(uploader_http.getHgsDeleted());
-								
-								//Re-index again the finding aids deleted
-								for (int i=0; i< this.fasDeleted.size();i++)
-								{
-									if (this.fasDeleted.get(i).isPublished()) {
-										try {
-											ContentUtils.indexRollback(XmlType.EAD_FA, this.fasDeleted.get(i).getId());
-										} catch (Exception ex) {
-											LOGGER.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + this.fasDeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
-										}
-										
-//										//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-//										if ((Arrays.asList(FileState.INDEXED_FILE_STATES).contains(this.fasDeleted.get(i).getFileState().getState()) &&(this.fasDeleted.get(i).getFileState().getId()!=8))) {
-//
-//											try {
-//												ContentUtils.restoreOriginalStateOfEAD(this.fasDeleted.get(i));
-//											}
-//											catch (Exception ex) {
-//												log.error("Error restoring the original state of the Finding Aid. Check Database");
-//											}
-//										}
-									}							
-								}
-								//Re-index again the holding guides deleted
-								for (int i=0; i< this.hgsDeleted.size();i++)
-								{
-									if (this.hgsDeleted.get(i).isPublished()) {
-										try {
-											ContentUtils.indexRollback(XmlType.EAD_HG, this.hgsDeleted.get(i).getId());
-										} catch (Exception ex) {
-											LOGGER.error("FATAL ERROR. Error during Index Rollback [Re-indexing process because of the rollback]. The file affected is " + this.hgsDeleted.get(i).getEadid() + ". Error:" + ex.getMessage());
-										}
-//										
-//										//Due to the re-indexing of this FA, the current state is "Indexed_Not Converted to ESE/EDM". It is necessary to restore the original state if the original state is different from "Indexed_Not Converted to ESE/EDM"
-//										if ((Arrays.asList(FileState.INDEXED_FILE_STATES).contains(this.hgsDeleted.get(i).getFileState().getState())&&(this.hgsDeleted.get(i).getFileState().getId()!=8))) {
-//
-//											try {
-//												ContentUtils.restoreOriginalStateOfEAD(this.hgsDeleted.get(i));
-//											}
-//											catch (Exception ex) {
-//												log.error("Error restoring the original state of the Finding Aid. Check Database");
-//											}
-//										}
-									}							
-								}
-								
 
-							}
 							
 						} catch (Exception e) {
 							LOGGER.error("FATAL ERROR. The rollback of index or in repository could not be done successfully. A manually review of the AL of: " + a.getmyCountry() + " must be done");

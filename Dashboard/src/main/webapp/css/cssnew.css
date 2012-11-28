@@ -978,3 +978,19 @@ h2 {
 	margin: auto;
 	display:inline-block;
 }
+#aLandscape .aiNormal {
+	font-weight:normal;
+	font-size:13px;
+}
+#aLandscape .aiGroup {
+	font-weight:bold;
+	font-size:15px;
+}
+#aLandscape .nodelete {
+	color: gray;
+}
+#aLandscape #actionWarning {
+	color:red;
+	font-weight: bold;
+	text-align: center;
+}

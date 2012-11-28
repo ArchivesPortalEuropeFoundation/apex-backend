@@ -456,8 +456,8 @@ public abstract class ManualUploader {
 			//Change the database without commit
 			String resultStore = a.storeArchives(sfile,execute);
 			
-			this.setFasDeleted(a.getFasDeleted());						
-			this.setHgsDeleted(a.getHgsDeleted());			
+			//this.setFasDeleted(a.getFasDeleted());						
+			//this.setHgsDeleted(a.getHgsDeleted());			
 			
 			//Change the repository renaming the files and not deleted the current one
 			if (!resultStore.equals("error"))

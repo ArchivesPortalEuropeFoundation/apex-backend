@@ -76,25 +76,9 @@ public class ArchivalLandscape extends ActionSupport{
 	private List<AiAlternativeName> archivalInstitutionsNameChanged= new ArrayList<AiAlternativeName>();
 	private List<ArchivalInstitution> archivalInstitutionsParentNotChanged= new ArrayList<ArchivalInstitution>();
 	private List<ArchivalInstitution> archivalInstitutionsParentChanged= new ArrayList<ArchivalInstitution>();
-	private List<FindingAid> fasDeleted = new ArrayList<FindingAid>();
-	private List<HoldingsGuide> hgsDeleted = new ArrayList<HoldingsGuide>();
 	private List<SentMailRegister> sentMailRegisterList = new ArrayList<SentMailRegister>();
 	
-	public List<FindingAid> getFasDeleted() {
-		return fasDeleted;
-	}
 
-	public void setFasDeleted(List<FindingAid> fasDeleted) {
-		this.fasDeleted = fasDeleted;
-	}
-
-	public List<HoldingsGuide> getHgsDeleted() {
-		return hgsDeleted;
-	}
-
-	public void setHgsDeleted(List<HoldingsGuide> hgsDeleted) {
-		this.hgsDeleted = hgsDeleted;
-	}
 
 
 	static Semaphore sem = new Semaphore(1,true) ;
@@ -628,8 +612,8 @@ public class ArchivalLandscape extends ActionSupport{
         					//If it's the primary name, we have to check if this item is indexed somewhere 
         					else{
         						// If yes, update the list to inform the user that the name can't be changed
-        						Long numFilesIndexed = EditArchivalLandscapeLogic.countIndexedContentByInstitutionGroupId(arch_inst.getInternalAlId(),arch_inst.isGroup());
-        						if ((numFilesIndexed != null) && (numFilesIndexed > 0))
+        						boolean containsPublishedFiles = ContentUtils.containsPublishedFiles(arch_inst);
+        						if (containsPublishedFiles)
         							this.getArchivalInstitutionsNameNotChanged().add(aiNames.get(m));        						
         						//Change the name in archival institution name too.
         						else
@@ -852,13 +836,13 @@ public class ArchivalLandscape extends ActionSupport{
 				            	//If not, change the parent of the item for the new one
 				            	else 
 				            	{
-				            		//Check if the item is in the index
-				            		Long numFilesIndexed = EditArchivalLandscapeLogic.countIndexedContentByInstitutionGroupId(archivalInstitution.getInternalAlId(), archivalInstitution.isGroup());
-	        						if ((numFilesIndexed != null) && (numFilesIndexed > 0))
-	        						{
-	        							this.getArchivalInstitutionsParentNotChanged().add(ais.get(h));
-	        						}
-	        						else{
+//				            		//Check if the item is in the index
+//				            		Long numFilesIndexed = EditArchivalLandscapeLogic.countIndexedContentByInstitutionGroupId(archivalInstitution.getInternalAlId(), archivalInstitution.isGroup());
+//	        						if ((numFilesIndexed != null) && (numFilesIndexed > 0))
+//	        						{
+//	        							this.getArchivalInstitutionsParentNotChanged().add(ais.get(h));
+//	        						}
+//	        						else{
 	        							if (archivalLandscapeNode.getParent_internal_al_id()== null)
 				    		            	this.ai.setParent(null);
 				    		            else {
@@ -866,31 +850,31 @@ public class ArchivalLandscape extends ActionSupport{
 				    		            	this.ai.setParent(ai_parent);
 				    		            }
 	        							this.getArchivalInstitutionsParentChanged().add(this.ai);
-	        						}
+//	        						}
 				            	}
 		            		}
 		            		//Discrepancies in parents to solve (unless the parent is the node of the country=fonds)
 		            		else if ((archivalInstitution.getParent() == null) && (archivalLandscapeNode.getParent_internal_al_id()!= null))
 		            		{
-		            			//Check if the item is in the index
-			            		Long numFilesIndexed = EditArchivalLandscapeLogic.countIndexedContentByInstitutionGroupId(archivalInstitution.getInternalAlId(), archivalInstitution.isGroup());
-        						if ((numFilesIndexed != null) && (numFilesIndexed > 0)) {
-		            				this.getArchivalInstitutionsParentNotChanged().add(this.ai);
-        						} else {
+//		            			//Check if the item is in the index
+//			            		Long numFilesIndexed = EditArchivalLandscapeLogic.countIndexedContentByInstitutionGroupId(archivalInstitution.getInternalAlId(), archivalInstitution.isGroup());
+//        						if ((numFilesIndexed != null) && (numFilesIndexed > 0)) {
+//		            				this.getArchivalInstitutionsParentNotChanged().add(this.ai);
+//        						} else {
         							ai_parent = aiDao.getArchivalInstitutionsByCountryIdandAlIdentifier(this.country.getId() , archivalLandscapeNode.getParent_internal_al_id());
 		    		            	this.ai.setParent(ai_parent);
 		    		            	this.getArchivalInstitutionsParentChanged().add(this.ai);
-        						}
+//        						}
 		            		}else if (((archivalInstitution.getParent() != null) && (archivalLandscapeNode.getParent_internal_al_id()== null)))
 		            		{
-		            			//Check if the item is in the index
-			            		Long numFilesIndexed = EditArchivalLandscapeLogic.countIndexedContentByInstitutionGroupId(archivalInstitution.getInternalAlId(), archivalInstitution.isGroup());
-        						if ((numFilesIndexed != null) && (numFilesIndexed > 0)) {
-        							this.getArchivalInstitutionsParentNotChanged().add(this.ai);
-        						} else {
+//		            			//Check if the item is in the index
+//			            		Long numFilesIndexed = EditArchivalLandscapeLogic.countIndexedContentByInstitutionGroupId(archivalInstitution.getInternalAlId(), archivalInstitution.isGroup());
+//        						if ((numFilesIndexed != null) && (numFilesIndexed > 0)) {
+//        							this.getArchivalInstitutionsParentNotChanged().add(this.ai);
+//        						} else {
         							this.ai.setParent(null);
         							this.getArchivalInstitutionsParentChanged().add(this.ai);
-        						}
+//        						}
 		            		}	
 					         //Update always the order of the archival landscape
 		            		this.ai.setAlorder(archivalLandscapeNode.getNodeId());
@@ -957,8 +941,6 @@ public class ArchivalLandscape extends ActionSupport{
                     String resultRemoveAI = cu.deleteArchivalInstitution(ai1, execute);
                     archivalInstitutionsToDelete.add(ai1);
                     this.sentMailRegisterList.addAll(cu.getSentMailRegisterList());
-                    this.fasDeleted.addAll(cu.getFasDeleted());
-                    this.hgsDeleted.addAll(cu.getHgsDeleted());
                     if (resultRemoveAI.equals("error")) {
                         log.error("The institution " + ai1.getAiname() + " could not be removed. ");
                         result = "error";
