@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import eu.apenet.commons.seconddisplay.SecondDisplayAction;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.manual.contentmanager.ContentManager;
+import eu.apenet.dashboard.services.ead.EadService;
 
 public class PreviewSecondDisplayAction extends SecondDisplayAction {
 
@@ -19,7 +20,7 @@ public class PreviewSecondDisplayAction extends SecondDisplayAction {
 		try {
 			XmlType xmlType = XmlType.getType(Integer.parseInt(getXmlTypeId()));
 			if (StringUtils.isNotBlank(getId()) && StringUtils.isNumeric(getId())) {
-				ContentManager.preview(Integer.parseInt(getId()), xmlType);
+				EadService.createPreviewHTML(xmlType, Integer.parseInt(getId()));
 			}
 			
 
