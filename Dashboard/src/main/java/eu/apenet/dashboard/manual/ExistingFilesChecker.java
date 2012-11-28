@@ -107,7 +107,7 @@ public class ExistingFilesChecker {
 
 		String eadType = "";
 		// Retrieving all XML files uploaded
-		List<UpFile> listXml = upFileDao.getUpFiles(this.archivalInstitutionId, FileType.XML);
+		List<UpFile> listXml = upFileDao.getNewUpFiles(this.archivalInstitutionId, FileType.XML);
 		for (UpFile aListXml : listXml) {
 			FileUnit fileUnit = new FileUnit();
 			fileUnit.setFileId(aListXml.getId());
@@ -138,7 +138,7 @@ public class ExistingFilesChecker {
 		}
 
 		// Retrieving all XSL files uploaded
-		List<UpFile> listXsl = upFileDao.getUpFiles(this.archivalInstitutionId, FileType.XSL);
+		List<UpFile> listXsl = upFileDao.getNewUpFiles(this.archivalInstitutionId, FileType.XSL);
 		for (UpFile aListXsl : listXsl) {
 			FileUnit fileUnit = new FileUnit();
 			fileUnit.setFileId(aListXsl.getId());
@@ -770,7 +770,7 @@ public class ExistingFilesChecker {
 
     private String changeEadidUsingDOM(FileUnit fileUnit, String neweadid) {
         UpFileDAO upFileDao = DAOFactory.instance().getUpFileDAO();
-        UpFile upfile = upFileDao.getUpFile(fileUnit.getFileId());
+        UpFile upfile = upFileDao.findById(fileUnit.getFileId());
 
         String path = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upfile.getPath();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
