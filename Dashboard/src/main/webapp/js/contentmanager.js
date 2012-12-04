@@ -1,9 +1,16 @@
 function initContentManager() {
-	// $("#searchButton").click(function(event) {
-	// event.preventDefault();
-	// performNewSearch();
-	// });
+	initType();
 	initSubpage();
+
+}
+function initType() {
+	$(".typeRadio").click(function(event) {
+		if ($(this).val() == 0){
+			$(".findingAidOptions").removeClass("hidden");
+		}else {
+			$(".findingAidOptions").addClass("hidden");
+		}
+	});
 
 }
 function initSubpage() {
@@ -75,7 +82,8 @@ function performEadAction(action, id, type) {
 		}
 		if ("colorbox" == windowType) {
 			jQuery().colorbox({
-				width:"80%", inline:false,  
+				width : "80%",
+				inline : false,
 				href : actionUrl
 			});
 
