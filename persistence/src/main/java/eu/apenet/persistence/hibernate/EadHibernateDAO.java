@@ -20,6 +20,7 @@ import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.ValidatedState;
 
 public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implements EadDAO {
@@ -152,6 +153,13 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 				}
 				whereClause.add(criteriaBuilder.or(europeanaPredicated.toArray(new Predicate[0])));
 			}
+		}
+		if (eadSearchOptions.getQueuing().size() > 0) {
+			List<Predicate> queuingPredicated = new ArrayList<Predicate>();
+			for (QueuingState queuingState : eadSearchOptions.getQueuing()) {
+				queuingPredicated.add(criteriaBuilder.equal(from.get("queuing"), queuingState));
+			}
+			whereClause.add(criteriaBuilder.or(queuingPredicated.toArray(new Predicate[0])));
 		}
 		if (eadSearchOptions.getPublishedToAll() != null) {
 			List<Predicate> orPredicated = new ArrayList<Predicate>();
