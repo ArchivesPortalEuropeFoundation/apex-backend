@@ -14,6 +14,7 @@ import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.ValidatedState;
 
 public class ContentManagerAction extends AbstractInstitutionAction implements ServletRequestAware {
@@ -24,6 +25,7 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 	protected static final String CONTENT_MESSAGE_NO = "content.message.no";
 	protected static final String CONTENT_MESSAGE_YES = "content.message.yes";
 	protected static final String CONTENT_MESSAGE_QUEUE = "content.message.queue";
+
 	protected static final String CONTENT_MESSAGE_ERROR = "content.message.fatalerror";
 	protected static final String SUCCESS_AJAX = "success_ajax";
 	/**
@@ -43,6 +45,10 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 	private String[] europeanaStatus = new String[] { EuropeanaState.NOT_CONVERTED.toString(),
 			EuropeanaState.CONVERTED.toString(), EuropeanaState.DELIVERED.toString(),
 			EuropeanaState.HARVESTED.toString() };
+	private Map<String, String> queuingStatusList = new LinkedHashMap<String, String>();
+	private String[] queuingStatus = new String[] { QueuingState.NO.toString(),
+			QueuingState.READY.toString(), QueuingState.BUSY.toString(),
+			QueuingState.ERROR.toString() };
 	private Map<String, String> searchTermsFieldList = new LinkedHashMap<String, String>();
 	private HttpServletRequest request;
 	private Integer pageNumber = 1;
@@ -65,6 +71,11 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 		europeanaStatusList.put(EuropeanaState.NOT_CONVERTED.toString(), getText(CONTENT_MESSAGE_NO));
 		europeanaStatusList.put(EuropeanaState.DELIVERED.toString(), getText("content.message.europeana.delivered"));
 		europeanaStatusList.put(EuropeanaState.HARVESTED.toString(), getText("content.message.europeana.harvested"));
+
+		queuingStatusList.put(QueuingState.NO.toString(), getText(CONTENT_MESSAGE_NO));
+		queuingStatusList.put(QueuingState.READY.toString(), getText("content.message.ready"));
+		queuingStatusList.put(QueuingState.BUSY.toString(), getText("content.message.queueprocessing"));
+		queuingStatusList.put(QueuingState.ERROR.toString(), getText(CONTENT_MESSAGE_ERROR));
 		typeList.put(XmlType.EAD_FA.getIdentifier() + "",
 				getText("content.message." + XmlType.EAD_FA.getResourceName()));
 		typeList.put(XmlType.EAD_HG.getIdentifier() + "",
@@ -220,6 +231,13 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 					europeanaStatus[i] = eadSearchOptions.getEuropeana().get(i).toString();
 				}
 			}
+			
+			if (eadSearchOptions.getQueuing().size() > 0) {
+				queuingStatus = new String[eadSearchOptions.getQueuing().size()];
+				for (int i = 0; i < eadSearchOptions.getQueuing().size(); i++) {
+					queuingStatus[i] = eadSearchOptions.getQueuing().get(i).toString();
+				}
+			}
 			xmlTypeId = XmlType.getType(eadSearchOptions.getEadClazz()).getIdentifier() + "";
 			searchTerms = eadSearchOptions.getSearchTerms();
 			orderByField = eadSearchOptions.getOrderByField();
@@ -254,6 +272,11 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 		if (europeanaStatus != null && europeanaStatus.length >= 1 && europeanaStatus.length <= 3) {
 			for (String europeanaStatusItem : europeanaStatus) {
 				eadSearchOptions.getEuropeana().add(EuropeanaState.getEuropeanaState(europeanaStatusItem));
+			}
+		}
+		if (queuingStatus != null && queuingStatus.length >= 1 && queuingStatus.length <= 3) {
+			for (String queuingStatusItem : queuingStatus) {
+				eadSearchOptions.getQueuing().add(QueuingState.getQueuingState(queuingStatusItem));
 			}
 		}
 		eadSearchOptions.setSearchTerms(searchTerms);
@@ -372,6 +395,22 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 
 	public void setSearchTermsField(String searchTermsField) {
 		this.searchTermsField = searchTermsField;
+	}
+
+	public Map<String, String> getQueuingStatusList() {
+		return queuingStatusList;
+	}
+
+	public void setQueuingStatusList(Map<String, String> queuingStatusList) {
+		this.queuingStatusList = queuingStatusList;
+	}
+
+	public String[] getQueuingStatus() {
+		return queuingStatus;
+	}
+
+	public void setQueuingStatus(String[] queuingStatus) {
+		this.queuingStatus = queuingStatus;
 	}
 
 }
