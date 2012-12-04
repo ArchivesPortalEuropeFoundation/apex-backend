@@ -7,6 +7,7 @@ import java.util.List;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.ValidatedState;
 
 public class EadSearchOptions implements Serializable{
@@ -28,6 +29,7 @@ public class EadSearchOptions implements Serializable{
 	private Boolean publishedToAll = null;
 	private List<ValidatedState> validated = new ArrayList<ValidatedState>();
 	private List<EuropeanaState> europeana = new ArrayList<EuropeanaState>();
+	private List<QueuingState> queuing = new ArrayList<QueuingState>();
 	private List<Integer> ids = new ArrayList<Integer>();
 	public EadSearchOptions(){
 		
@@ -50,6 +52,9 @@ public class EadSearchOptions implements Serializable{
 		}
 		for (EuropeanaState europeanaState: eadSearchOptions.getEuropeana()){
 			europeana.add(europeanaState);
+		}
+		for (QueuingState queuingState: eadSearchOptions.getQueuing()){
+			queuing.add(queuingState);
 		}
 		for (Integer id: eadSearchOptions.getIds()){
 			ids.add(id);
@@ -183,6 +188,12 @@ public class EadSearchOptions implements Serializable{
 
 	public void setPublishedToAll(Boolean publishedToAll) {
 		this.publishedToAll = publishedToAll;
+	}
+	public List<QueuingState> getQueuing() {
+		return queuing;
+	}
+	public void setQueuing(List<QueuingState> queuing) {
+		this.queuing = queuing;
 	}
 	
 	
