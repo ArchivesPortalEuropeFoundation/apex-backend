@@ -34,6 +34,11 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
 public class ChangeAInameAction extends AbstractInstitutionAction {
 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2075500483635921910L;
+
 	protected Logger log = Logger.getLogger(getClass());
 	
     //Attributes
@@ -135,7 +140,9 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 		ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
 		ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.getAiId());
 		this.name = archivalInstitution.getAiname();
-				
+		if (ContentUtils.containsPublishedFiles(archivalInstitution)){
+			addActionError(getText("label.ai.changeainame.published.eads"));
+		}		
 		return SUCCESS;
 	}
 	
@@ -165,10 +172,11 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				return INPUT;
 			}
 			else{
-			
+				validateChangeAInameProcessState = 1;	//This variable is in charge of storing the changing process state: 
 			HibernateUtil.beginDatabaseTransaction();
 			ArchivalInstitution ai = aidao.getArchivalInstitution(aiId);
 			if (ContentUtils.containsPublishedFiles(ai)){
+				addActionError(getText("label.ai.changeainame.published.eads"));
 				throw new APEnetException("Could not delete an archival institution with published EAD files");
 			}
 			AiAlternativeName an = andao.findByAIId_primarykey(ai);			
@@ -184,7 +192,6 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 			
         	
 			/// UPDATE DATABASE ///
-			LOG.info("Changing database ai_alternative_name table and archival_landscape table.");
 			an.setAiAName(this.newname);
 			ai.setAiname(this.newname);
 			ai.setAutform(this.newname);
@@ -202,7 +209,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
         	}
 
         		
-        	boolean changeEAG = false;
+
 			NodeList nodeAutList = null;
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			dbFactory.setNamespaceAware(true);
@@ -211,14 +218,12 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 	        Document doc = dBuilder.parse(sfile);
 	       
 	        doc.getDocumentElement().normalize();
-	        LOG.info("Changing EAG, changing autform tag's content.");
 	        nodeAutList = doc.getElementsByTagNameNS("http://www.archivesportaleurope.eu/profiles/APEnet_EAG/", "autform");
 	        for (int j=0;j<nodeAutList.getLength();j++){
 	        	Node nodeAutform = nodeAutList.item(j);
 	        	if (!nodeAutform.getTextContent().equals(this.newname)){
 	        		nodeAutform.setTextContent(this.newname);
-	        		changeEAG=true;
-	        		LOG.info("EAG has been modified correctly");
+	        		//LOG.info("EAG has been modified correctly");
 	        	}
 	        }
 	        TransformerFactory tf = TransformerFactory.newInstance();
@@ -240,7 +245,6 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 			}
 	        	
 					Boolean changeAL = false;
-					log.info("Modifying Archival Landscape because the change of the name of the Archival Institution with id: " + aiId);
 					//First, looking for the node c with the attribute id internal_al_id from ddbb.								
 					NodeList nodeCList = null;
 						
@@ -268,10 +272,10 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 		        									for (int t=0;t<unittitlelist.getLength();t++){
 		        										if (unittitlelist.item(t).getNodeName().trim().equals("unittitle")){
 		        											Node unittitlenode = unittitlelist.item(t);
-		        											LOG.info("Changing <unititle> in AL from " + unittitlenode.getTextContent() + " to " + this.newname);
+		        											//LOG.info("Changing <unititle> in AL from " + unittitlenode.getTextContent() + " to " + this.newname);
 		        											unittitlenode.setTextContent(this.newname);
 		        											changeAL= true;
-		        											LOG.info("The AL has been changed.");
+		        											//LOG.info("The AL has been changed.");
 		        										}
 		        									}
 		        								}
@@ -296,12 +300,10 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 					
 					//Delete EAG_copy
 					ContentUtils.deleteFile(path_copyEAG);
-					LOG.info("The EAG_copy has been deleted");
 					
 					//Delete AL_copy
-					LOG.info("Deleting temporal file with path " +path_copyAL);
+
 	    			ContentUtils.deleteFile(path_copyAL);
-	    			LOG.info("The file " + path_copyAL + "has been deleted correctly.");
 	    			
 					HibernateUtil.closeDatabaseSession();
 					this.setAllok(true);
@@ -311,9 +313,19 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 			
 		}
 		catch (Exception e){
-			
+			addActionError(getText("label.ai.changeainame.error"));
+			log.error("There were errors during updating AL file. Error: " + e.getMessage(),e);
+			if (validateChangeAInameProcessState == 1) {
+				//There were errors during Database Transaction
+				//It is necessary to make a Database rollback
+				
+				this.setErrormessage("There were errors during deleting from Data Base.");
+				HibernateUtil.rollbackDatabaseTransaction();
+				HibernateUtil.closeDatabaseSession();
+				log.error("There were errors during Database Transaction [Database Rollback]. Error: " + e.getMessage());
+			}
 			if (validateChangeAInameProcessState==3 ){
-				log.error("There were errors during updating EAG file [Database Rollback, Index Rollback]. Error: " + e.getMessage());
+				log.error("There were errors during updating EAG file [Database Rollback]. Error: " + e.getMessage(),e);
 				//It is necessary to make a Database rollback
 				HibernateUtil.rollbackDatabaseTransaction();
 				HibernateUtil.closeDatabaseSession();
@@ -340,7 +352,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 			}
 			
 			if (validateChangeAInameProcessState == 4){
-				log.error("There were errors during updating AL file [Database Rollback, Index Rollback, EAG Rollback]. Error: " + e.getMessage());
+				log.error("There were errors during updating AL file [Database Rollback, EAG Rollback]. Error: " + e.getMessage(),e);
 				//It is necessary to make a Database rollback
 				HibernateUtil.rollbackDatabaseTransaction();
 				HibernateUtil.closeDatabaseSession();
@@ -378,7 +390,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				this.setErrormessage("There were errors during final commits");
 				//There were errors during Database, Index or File system commit
 				HibernateUtil.closeDatabaseSession();
-				log.error("FATAL ERROR. Error during Database, Index or File System commits. Please, check inconsistencies in Database, Index and File system " + e);
+				log.error("FATAL ERROR. Error during Database, Index or File System commits. Please, check inconsistencies in Database, Index and File system " + e,e);
 			}
 			this.setAllok(false);
 			return ERROR;
