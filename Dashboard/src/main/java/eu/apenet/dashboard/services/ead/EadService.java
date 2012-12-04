@@ -1,5 +1,6 @@
 package eu.apenet.dashboard.services.ead;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -44,6 +45,19 @@ public class EadService {
                 throw new APEnetRuntimeException(e);
             }
         }
+    }
+    public static File download(Integer id, XmlType xmlType) {
+		Ead ead = DAOFactory.instance().getEadDAO().findById(id, xmlType.getClazz());
+		SecurityContext.get().checkAuthorized(ead);
+		String path = APEnetUtilities.getConfig().getRepoDirPath() + ead.getPathApenetead();
+		try {
+            File file = new File(path);
+	        if(file.exists())
+	            return file;
+		} catch(Exception e) {
+			LOGGER.error("Download function error, trying to open the file '" + path + "'", e);
+		}
+		return null;
     }
 	public static void validate(XmlType xmlType, Integer id) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
