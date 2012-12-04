@@ -1,48 +1,26 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>	
-<script type="text/javascript">
-function showError(){
-	document.getElementById("diverror").style.display='inline';
-	document.getElementById("diverror").style.backgroundColor= '#CCC';
-	document.getElementById("diverror").style.color='red';
-	document.getElementById("showerror").style.display='none';
-	
-}
-function hideError(){
-	document.getElementById("diverror").style.display='none';
-	document.getElementById("showerror").style.display='inline';
-}
-</script>
+
 	<div id="eagwebform" align="center">
-	<p><span style="font-weight: bold;font-size:large;"><s:property value="getText('label.ai.changeainame.title')" /></span><br></p>
+	<p><span style="font-weight: bold;font-size:large;"><s:property value="getText('label.ai.changeainame.title')" /></span><br/><br/></p>
 	
-	
+<s:if test="hasActionErrors()">
+   <div class="errors">
+      <s:actionerror/><br/>
+      <s:property value="errormessage"/>
+   </div>
+</s:if>
+<s:else>	
 	<s:if test="%{allok==true}">		
 		<p><br><br><br><s:property value="getText('label.ai.changeainame.success')" /></p>
 		
 		<br><br><br>
-		<s:form method="post" enctype= "multipart/form-data">
+		<s:form method="get">
 			<s:submit key="label.continue" action="dashboardHome"/>
 		</s:form>
 	</s:if>
-	<s:elseif test="%{allok==false}">
-		<br><br>
-		<s:property value="getText('label.ai.changeainame.error')"/>
-		<br><br>
-		<input type="button" id="showerror" value="<s:property value="getText('label.ai.changeainame.showerrorbutton')"/>" onclick="showError();"/>
-		<br><br><br><br>
-		<div id="diverror" style="display:none; width: 500px; height: 300px;"><s:property value="errormessage"/>
-		<br><br>
-		<input type="button" id="hideerror" value="<s:property value="getText('label.ai.changeainame.hideerrorbutton')"/>" onclick="hideError();"/>
-		</div>
-	</s:elseif>
 	<s:else>
-	<p><br><br><s:property value="getText('label.ai.changeainame.advice1')" />	
-	</p>
-        
-    	<br>
-    	<br>
-    	<br>
+
 		<s:form method="POST">		
 			<s:hidden name="ai_id" value="%{ai_id}"></s:hidden>
     		<s:textfield name="name" value="%{name}" key="label.ai.changeainame.currentname" cssStyle="width:190%"></s:textfield>
@@ -60,3 +38,4 @@ function hideError(){
 		
 		</s:else>        
 	</div>
+</s:else>
