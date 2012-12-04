@@ -34,7 +34,7 @@
 	                <s:select list="oaiType" name="oaiType" key="label.harvesttype"/>
 	                <s:textfield name="oaiToken" key="label.token"/>
 	                <s:hidden name="ai_id" value="%{ai_id}" />
-	                <s:submit onclick="document.getElementById('stopButton').style.display='block';" method="harvestData" key="label.harvestdata" />
+	                <s:submit onclick="document.getElementById('stopButton').style.display='block';" key="label.harvestdata" />
 	            </s:form>
 	            <div style="width:100%;float:left;"><div style="width:50%;float:left;margin-left: -1em;">&nbsp;</div><input id="stopButton" style="display:none;float:left;" type="button" value="<s:property value="getText('label.stop')"/>" onclick="stopBrowser('stopButton','<s:property value="getText('al.message.canceled')" />')" /></div>
             </div>
