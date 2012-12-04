@@ -247,3 +247,10 @@
     font-size: 9pt;
 	height:2em;
 }
+
+#contentmanager #noresults {
+	text-align:center;
+    font-size: 11pt;
+    font-weight:bold;
+    padding-top:40px;
+}
