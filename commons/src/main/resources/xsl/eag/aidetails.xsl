@@ -196,7 +196,7 @@
 				</tr>		
 				<xsl:if test="./eag:repositorguides/eag:repositorguide">		
 				<tr>
-					<td class="header"><xsl:value-of select="ape:resource('text.list.holdings.guide')" /></td>
+					<td class="header"><xsl:value-of select="ape:resource('directory.text.list.holdings.guide')" /></td>
 					<td><ul>
 						<xsl:for-each select="./eag:repositorguides/eag:repositorguide">
 							<xsl:variable name="href" select="./@href"/>
