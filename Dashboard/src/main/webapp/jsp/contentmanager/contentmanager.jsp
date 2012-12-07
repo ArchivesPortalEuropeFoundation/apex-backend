@@ -58,13 +58,13 @@
 	<div id="eads">
 		<div id="ead-results-container">
 			<c:choose>
-				<c:when test="${true or results.totalNumberOfResults > 0 }">
+				<c:when test="${results.totalNumberOfResults > 0 }">
 
 					<jsp:include page="contentmanager-results.jsp" />
 
 				</c:when>
 				<c:otherwise>
-					<div id="noresults">No results found</div>
+					<div id="noresults"><s:text name="content.message.noresults" /></div>
 				</c:otherwise>
 			</c:choose>
 		</div>

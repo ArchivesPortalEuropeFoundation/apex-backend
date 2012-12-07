@@ -296,11 +296,12 @@
 							<c:when test="${results.findingAid}">
 								<td>${results.totalDaosConvertedToEseEdm}</td>
 								<td>${results.totalDaosDeliveredToEuropea}</td>
+								<td>&nbsp;</td>
 							</c:when>
 							<c:when test="${results.holdingsGuide}"><td>&nbsp;</td></c:when>
 						</c:choose>
 
-						<td>&nbsp;</td><td>&nbsp;</td>
+						<td>&nbsp;</td>
 					</tr>
 			</table>
 		</div>
