@@ -15,8 +15,8 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 public class ChangeLanguageTag extends SimpleTagSupport {
 	private String varSelectedLanguage;
 	private String varCurrentAction;
-	private static final List<String> SUPPORTED_LANGUAGES = Arrays.asList("de", "el", "en", "es", "fr", "ga", "lv",
-			"mt", "nl", "pl", "pt", "sl", "fi", "sv");
+	private static final List<String> SUPPORTED_LANGUAGES = Arrays.asList("de", "el", "en", "es", "fi", "fr", "ga", "hr",
+			"is", "it", "lv", "mt", "nl", "pl", "pt", "sl", "sv");
 
 
 

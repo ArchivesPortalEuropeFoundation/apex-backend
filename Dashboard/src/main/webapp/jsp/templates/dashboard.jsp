@@ -64,6 +64,9 @@
 								        <option title="Español" value="es"${selectedLanguage['es']}>Español</option>				
 										<option title="Français" value="fr" ${selectedLanguage['fr']}>Français</option>
 										<option title="Gaeilge" value="ga" ${selectedLanguage['ga']}>Gaeilge</option>
+										<option title="Hrvatski" value="hr" ${selectedLanguage['hr']}>Hrvatski</option>
+										<option title="íslenska" value="is" ${selectedLanguage['is']}>íslenska</option>
+										<option title="Italiano" value="it" ${selectedLanguage['it']}>Italiano</option>
 										<option title="Latviešu" value="lv" ${selectedLanguage['lv']}>Latviešu</option>
 										<option title="Malti" value="mt" ${selectedLanguage['mt']}>Malti</option>				
 										<option title="Nederlands" value="nl" ${selectedLanguage['nl']}>Nederlands</option>
