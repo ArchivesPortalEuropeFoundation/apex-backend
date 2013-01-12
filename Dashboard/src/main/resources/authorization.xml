@@ -6,9 +6,9 @@
 		<group name="institutionManagerActions">
 			showHome,selectArchive,
 						view, edit,contentmanager,updateContentmanager,			
-						validatechangeainame, changeainame, createsimpleeagwithmenu, uploadowneagwithmenu, downloadeag, upload, checkfilesuploaded, uploadsimpleeag, uploadsimpleeagwithmenu,
-						eaghttpuploadwithmenu, httpUpload, checkexistingfiles, cancelCheckexistingfiles, overwriteexistingfiles, canceloverwriteexistingfiles
-						eaghttpupload,indexingLaunched,
+						validatechangeainame, changeainame, downloadeag, upload, checkfilesuploaded,
+						httpUpload, checkexistingfiles, cancelCheckexistingfiles, overwriteexistingfiles, canceloverwriteexistingfiles
+						indexingLaunched,
 						eadActions, batchEadActions, removeEseForFA, 
 						displayEseConvert, processEseConvert, showwarnings, download, link, removeLink, preview, downloadEse,
 	                    displayEadFrontPage, generateTreeJSON, displayEadIntroduction, displayEadDidContent, displayCContent,
@@ -19,9 +19,10 @@
 	                    GoDashboard, dashboardHome, GoDashboardByInstitutionManager,
 	                    
 	                    <!-- EAG -->
-	                    createsimpleeag, uploadowneag, generaterepositorguidePossibleHGTitlePartJSON, generateInformationMessageJSON,
-	                    
-	                    <!-- Edition of EAD -->
+	                    createsimpleeag, createsimpleeagwithmenu, uploadsimpleeag, uploadsimpleeagwithmenu, uploadowneag, eaghttpuploadwithmenu,
+                        eaghttpupload, generaterepositorguidePossibleHGTitlePartJSON, generateInformationMessageJSON, uploadowneagwithmenu, eagcorrectlyuploaded,
+
+            <!-- Edition of EAD -->
 	                    editEad, editEadCreateDbEntries, editEadXml, editEadXmlSaveLevel, editEadXmlSaveAll, editEadXmlDeleteEntries, editEadGetFields, editEadAddField,
 	
 	                    <!-- Harvesting -->
@@ -44,7 +45,7 @@
 		</group>
 		<group name="countryManagerActions">
 			AjaxGetEmailFromInstituionAction,InstitutionsControl,ListInstitutionsControl,changeAlIdFromUpload,changeAlIdentifiers,
-			changeInstitutionManager,changeNode,deleteTarget,downloadAL,eaghttpupload,editAL,editElement,editInstitutionControl,
+			changeInstitutionManager,changeNode,deleteTarget,downloadAL,editAL,editElement,editInstitutionControl,
 			editTarget,feditAL,generateArchivalInstitutionPartPreviewALJSON,generatePreviewALTreeJSON,httpOverwriteAL,httpUploadAL,
 			modifyStructure,moveDownAL,moveUpAL,showEAGPreviewAL,showLanguages,storeAlIdentifier,uploadAL,viewAL,institutionManagerManagement,
 			displayCreateInstitutionManager,deleteInstitutionManager,changeToInstitutionManager,disableInstitutionManager,enableInstitutionManager,createInstitutionManager

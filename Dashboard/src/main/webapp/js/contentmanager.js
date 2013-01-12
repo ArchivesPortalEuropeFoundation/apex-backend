@@ -1,7 +1,7 @@
 function initContentManager() {
+    clearFAsFromSession();
 	initType();
 	initSubpage();
-
 }
 function initType() {
 	$(".typeRadio").click(function(event) {
