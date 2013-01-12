@@ -111,6 +111,7 @@ public class Emailer {
 			msg.setContent(mimeMultipart);
 			msg.setSentDate(new Date());
 			sendMessage(msg);
+            LOGGER.info("The email has been sent");
 		} catch (Exception e) {
 			throw new APEnetRuntimeException("Unable to send email to " + toRecipients + " - " + e.getMessage(), e);
 		}
