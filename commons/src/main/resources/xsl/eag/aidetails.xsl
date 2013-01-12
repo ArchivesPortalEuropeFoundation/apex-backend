@@ -166,7 +166,7 @@
 					<td class="header"><xsl:value-of select="ape:resource('directory.text.information')" /></td>
 					<td>
 					<xsl:choose>
-						<xsl:when test="./eag:techservices/eag:automation[@question='yes']">
+						<xsl:when test="./eag:automation[@question='yes']">
 							<xsl:value-of select="ape:resource('directory.text.available')" />
 						</xsl:when>
 						<xsl:otherwise>
