@@ -291,11 +291,11 @@ public class EadService {
 			}
 		} else {
 			try {
+                if (queueItem.getAction().isValidateAction()) {
+                    new ValidateTask().execute(ead, preferences);
+                }
 				if (queueItem.getAction().isConvertAction()) {
 					new ConvertTask().execute(ead, preferences);
-				}
-				if (queueItem.getAction().isValidateAction()) {
-					new ValidateTask().execute(ead, preferences);
 				}
 				if (queueItem.getAction().isPublishAction()) {
 					new PublishTask().execute(ead, preferences);

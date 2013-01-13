@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Properties;
 import java.util.Set;
 
+import eu.apenet.persistence.vo.ValidatedState;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -27,7 +28,7 @@ public class ConvertTask extends AbstractEadTask {
 		return "convert to APE EAD";
 	}
 	public static boolean valid(Ead ead){
-		return !ead.isConverted();
+		return !ead.isConverted() && !ead.getValidated().equals(ValidatedState.VALIDATED);
 	}
 
 	@Override
