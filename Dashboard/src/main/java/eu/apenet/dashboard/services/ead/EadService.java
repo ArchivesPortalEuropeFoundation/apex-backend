@@ -384,11 +384,15 @@ public class EadService {
 		int size = 0;
 		while ((size = eads.size()) > 0) {
 			Ead ead = eads.get(size - 1);
-			QueueItem queueItem = fillQueueItem(ead, queueAction, preferences);
-			ead.setQueuing(QueuingState.READY);
-			eadDAO.updateSimple(ead);
-			eads.remove(size - 1);
-			indexqueueDao.updateSimple(queueItem);
+			if (QueuingState.ERROR.equals(ead.getQueuing()) || QueuingState.NO.equals(ead.getQueuing())){
+				QueueItem queueItem = fillQueueItem(ead, queueAction, preferences);
+				ead.setQueuing(QueuingState.READY);
+				eadDAO.updateSimple(ead);
+				eads.remove(size - 1);
+				indexqueueDao.updateSimple(queueItem);
+			}else {
+				eads.remove(size - 1);
+			}
 		}
 		JpaUtil.commitDatabaseTransaction();
 	}
