@@ -285,7 +285,7 @@ public class EadService {
 				}
 				String err = "eadid: " + ead.getEadid() + " - id: " + ead.getId() + " - type: " + xmlType.getName();
 				LOGGER.error("Error occured: " + err, e);
-				queueItem.setErrors(new Date() + err + ". Error: " + e.getMessage() + "-" + e.getCause());
+				queueItem.setErrors(new Date() + " - " + err + ". Error: " + e.getMessage() + " - " + e.getCause());
 				queueItem.setPriority(0);
 				queueItemDAO.store(queueItem);
 			}
