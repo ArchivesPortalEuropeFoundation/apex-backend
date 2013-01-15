@@ -1,5 +1,6 @@
 function initContentManager() {
     clearFAsFromSession();
+    hideOrShowSelectAllFAsWindow();
 	initType();
 	initSubpage();
 }
@@ -126,6 +127,7 @@ function getUpdateCurrentSearchResultsForm() {
 	return $("#updateCurrentSearch").serialize();
 }
 function updateCurrentSearchResults(formData) {
+    hideOrShowSelectAllFAsWindow();
 	if (formData == null) {
 		formData = getUpdateCurrentSearchResultsForm();
 	}
@@ -151,4 +153,12 @@ function initResultsHandlers() {
 		$("#updateCurrentSearch_pageNumber").attr("value", "1");
 		updateCurrentSearchResults();
 	});
+}
+
+function hideOrShowSelectAllFAsWindow() {
+    if($('#newSearchForm_xmlTypeId0').is(':checked')) {
+        $("#listFiles").removeClass("hidden");
+    } else {
+        $("#listFiles").addClass("hidden");
+    }
 }
