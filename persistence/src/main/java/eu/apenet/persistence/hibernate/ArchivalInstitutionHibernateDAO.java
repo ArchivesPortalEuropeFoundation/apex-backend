@@ -369,9 +369,10 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 	}
 
 	@Override
-	public ArchivalInstitution getArchivalInstitutionByInternalAlId(String identifier) {
+	public ArchivalInstitution getArchivalInstitutionByInternalAlId(String identifier, Integer countryIdentifier) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		criteria.add(Restrictions.eq("archivalInstitution.countryId", countryIdentifier));
 		criteria.add(Restrictions.eq("archivalInstitution.internalAlId", identifier));
 		return (ArchivalInstitution) criteria.uniqueResult();
 	}

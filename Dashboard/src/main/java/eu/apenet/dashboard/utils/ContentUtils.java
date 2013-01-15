@@ -123,8 +123,8 @@ public class ContentUtils {
 		}
 	}
 
-	public static boolean containsPublishedFiles(String identifier){
-		ArchivalInstitution archivalInstitution =  DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionByInternalAlId(identifier);
+	public static boolean containsPublishedFiles(String identifier, Integer countryIdentifier){
+		ArchivalInstitution archivalInstitution =  DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionByInternalAlId(identifier, countryIdentifier);
 		return containsPublishedFiles(archivalInstitution);
 	}
 	public static boolean containsPublishedFiles(ArchivalInstitution archivalInstitution){
@@ -153,8 +153,8 @@ public class ContentUtils {
 			return hasEads;
 		}
 	}
-	public static boolean containsEads(String identifier){
-		ArchivalInstitution archivalInstitution =  DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionByInternalAlId(identifier);
+	public static boolean containsEads(String identifier, Integer countryIdentifier){
+		ArchivalInstitution archivalInstitution =  DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionByInternalAlId(identifier, countryIdentifier);
 		if (archivalInstitution == null)
 			return false;
 		return containsEads(archivalInstitution);

@@ -31,7 +31,7 @@ public interface ArchivalInstitutionDAO extends GenericDAO<ArchivalInstitution, 
 	//public ArchivalInstitution getArchivalInstitutionbyPartnerandAlIdentifier(List<Partner> listpartners, String internalAlId);
 	public ArchivalInstitution getArchivalInstitutionsByCountryIdandAlIdentifier(Integer countryId, String internalAlId);
 	public List<ArchivalInstitution> getGroupsAndArchivalInstitutionsByCountryId(Integer countryId, String sortValue, boolean ascending);
-	public ArchivalInstitution getArchivalInstitutionByInternalAlId(String identifier);
+	public ArchivalInstitution getArchivalInstitutionByInternalAlId(String identifier, Integer countryIdentifier);
 	public Long countArchivalInstitutionsWithContentIndexed();
 }
 

@@ -22,6 +22,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -60,6 +61,8 @@ public abstract class AbstractEditAction extends AbstractAction {
 	private boolean hasElementChanged = false;
 
 	private boolean edit;
+    private Integer countryIdentifier;
+    private SecurityContext securityContext;
 
 	@Override
 	public void validate() {
@@ -71,7 +74,18 @@ public abstract class AbstractEditAction extends AbstractAction {
 		}
 		this.edit = false;
 		getLanguagesList(); // It's called all the time
+        setCountryIdentifier();
 	}
+
+    public void setCountryIdentifier() {
+        log.info("set country id");
+        if(countryIdentifier == null) {
+            if(securityContext == null) {
+                securityContext = SecurityContext.get();
+            }
+            countryIdentifier = securityContext.getCountryId();
+        }
+    }
 
 	@Override
 	protected void buildBreadcrumbs() {
@@ -490,7 +504,7 @@ public abstract class AbstractEditAction extends AbstractAction {
 	 * edition of Archival Landscape
 	 */
 	protected void parseList(List<Institution> list, String level) {
-		for (Integer i = 1, counter = i; list != null && i <= list.size(); i++) {
+        for (Integer i = 1, counter = i; list != null && i <= list.size(); i++) {
 			Institution insti = list.get(i - 1);
 			if (insti != null) {
 				Institution institutionTemp = new Institution();
@@ -516,7 +530,7 @@ public abstract class AbstractEditAction extends AbstractAction {
 						}
 						institutionTemp.setName(level + "." + (counter++) + " " + insti.getName());
 						institutionTemp.setGroup(true);
-						institutionTemp.setContainsEads(ContentUtils.containsEads(institutionTemp.getId()));
+						institutionTemp.setContainsEads(ContentUtils.containsEads(institutionTemp.getId(), countryIdentifier));
 						this.AL.add(institutionTemp);
 					} else { // Tab should be ""
 						if (insti.getId() != null && !insti.getId().isEmpty()) {
@@ -525,7 +539,7 @@ public abstract class AbstractEditAction extends AbstractAction {
 							institutionTemp.setId(insti.getId());
 						}
 						institutionTemp.setName((counter++) + " " + insti.getName());
-						institutionTemp.setContainsEads(ContentUtils.containsEads(institutionTemp.getId()));
+						institutionTemp.setContainsEads(ContentUtils.containsEads(institutionTemp.getId(), countryIdentifier));
 						institutionTemp.setGroup(true);
 						this.AL.add(institutionTemp);
 					}
@@ -554,7 +568,7 @@ public abstract class AbstractEditAction extends AbstractAction {
 					institutionTemp.setName(insti.getName());
 
 					institutionTemp.setGroup(false);
-					institutionTemp.setContainsEads(ContentUtils.containsEads(institutionTemp.getId()));
+					institutionTemp.setContainsEads(ContentUtils.containsEads(institutionTemp.getId(), countryIdentifier));
 					this.AL.add(institutionTemp);
 				}
 			}
