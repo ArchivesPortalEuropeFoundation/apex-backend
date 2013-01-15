@@ -78,7 +78,6 @@ public abstract class AbstractEditAction extends AbstractAction {
 	}
 
     public void setCountryIdentifier() {
-        log.info("set country id");
         if(countryIdentifier == null) {
             if(securityContext == null) {
                 securityContext = SecurityContext.get();
