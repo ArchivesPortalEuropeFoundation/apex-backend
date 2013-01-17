@@ -446,7 +446,9 @@ public class EadService {
 		}
 		if (queueAction.isConvertAction() || queueAction.isValidateAction() || queueAction.isPublishAction()) {
 			priority += 25;
-		}
+		} else if (queueAction.isDeleteAction() || queueAction.isOverwriteAction()) {
+            priority += 50;
+        }
 		queueItem.setPriority(priority);
 		return queueItem;
 	}
