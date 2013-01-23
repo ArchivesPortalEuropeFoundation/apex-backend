@@ -13,7 +13,7 @@ public class PublishTask extends AbstractEadTask {
 	}
 	@Override
 	protected void execute(Ead ead, Properties properties) throws Exception {
-		if (!ead.isPublished()) {
+		if (valid(ead)) {
 			try {
 				EADParser.parseEadAndIndex(ead);
 				logAction(ead, true);
