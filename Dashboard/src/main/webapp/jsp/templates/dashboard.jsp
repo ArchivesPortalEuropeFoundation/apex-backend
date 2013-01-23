@@ -123,6 +123,9 @@
                 </div>
             <script type="text/javascript">
 	        	$(this).load(bBreadcrumb("<s:property value="breadcrumbLinks" />"));
+                $(document).ready(function() {
+                    loadGoogleAnalytics();
+                });
 	        </script>
         </div>
     </body>
