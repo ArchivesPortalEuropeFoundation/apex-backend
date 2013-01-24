@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.interceptor.ServletRequestAware;
 
 import eu.apenet.commons.types.XmlType;
@@ -59,7 +60,9 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 	private String searchTermsField;
 	private boolean ajax = false;
 
-	public ContentManagerAction() {
+	public ContentManagerAction() {}
+
+    public void prepareJspLists() {
 		convertedStatusList.put(TRUE, getText(CONTENT_MESSAGE_YES));
 		convertedStatusList.put(FALSE, getText(CONTENT_MESSAGE_NO));
 		validatedStatusList.put(ValidatedState.VALIDATED.toString(), getText(CONTENT_MESSAGE_YES));
@@ -138,7 +141,8 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 
 	@Override
 	public String input() throws Exception {
-		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+        prepareJspLists();
+        EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		EadSearchOptions eadSearchOptions = initFromExistingEadSearchOptions();
 		if (eadSearchOptions == null) {
 			eadSearchOptions = createNewEadSearchOptions();

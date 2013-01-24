@@ -42,8 +42,10 @@
 					<th><s:text name="content.message.europeana" />:</th>
 					<td><s:checkboxlist list="europeanaStatusList" name="europeanaStatus" /></td>
 					<th>Holdings guide status:</th>
-					<td><input type="checkbox" checked="checked" disabled="disabled">Ok</input><input type="checkbox"
-						checked="checked" disabled="disabled">No</input></td>
+					<td>
+                        <input type="checkbox" checked="checked" disabled="disabled"><s:text name="content.message.yes" /></input>
+                        <input type="checkbox" checked="checked" disabled="disabled"><s:text name="content.message.no" /></input>
+                    </td>
 
 				</tr>
 
