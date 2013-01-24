@@ -350,6 +350,9 @@ CREATE SEQUENCE dpt_update_id_seq
     CACHE 1;
 
 ALTER SEQUENCE dpt_update_id_seq OWNED BY dpt_update.id;
+ALTER TABLE dpt_update
+    ALTER COLUMN id
+        SET DEFAULT NEXTVAL('dpt_update_id_seq');
 
 CREATE SEQUENCE ead_content_ec_id_seq
     START WITH 1
