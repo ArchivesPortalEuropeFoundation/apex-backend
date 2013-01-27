@@ -35,7 +35,7 @@ public class HarvesterAjaxAction extends AjaxControllerAbstractAction {
             addActionError("This institution is already harvesting, please try again later or contact an administrator");
             return ERROR;
         }
-        HarvestingStatus.addHarvestingInstitution(ai_id);
+//        HarvestingStatus.addHarvestingInstitution(ai_id);
         return SUCCESS;
     }
 
