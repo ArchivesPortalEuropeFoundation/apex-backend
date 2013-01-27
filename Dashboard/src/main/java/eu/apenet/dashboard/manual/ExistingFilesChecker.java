@@ -399,7 +399,7 @@ public class ExistingFilesChecker {
 
 	public static String extractAttributeFromEad(String path, String element, String attribute, boolean isReturningFirstInstance) throws WstxParsingException {
         final String CONVERTED_FLAG = "Converted_APEnet_EAD_version_";
-        final String CONVERTED_FLAG_NEW = "Converted_APE_EAD_version_";
+        final String CONVERTED_FLAG_NEW = "Converted_apeEAD_version_";
         XMLStreamReader2 input = null;
 	    InputStream sfile = null;
         XMLInputFactory2 xmlif = (XMLInputFactory2) XMLInputFactory2.newInstance();
