@@ -22,6 +22,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
@@ -181,11 +182,10 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
             }
 
 
-            HibernateUtil.beginDatabaseTransaction();
-            DAOFactory.instance().getEadContentDAO().store(eadContent);
-            HibernateUtil.commitDatabaseTransaction();
-            HibernateUtil.closeDatabaseSession();
-
+            JpaUtil.beginDatabaseTransaction();
+            eadContent = DAOFactory.instance().getEadContentDAO().store(eadContent);
+            JpaUtil.commitDatabaseTransaction();
+            JpaUtil.closeDatabaseSession();
 
             String eadContentNewId = "ec_" + eadContent.getEcId();
             JSONObject jsonObject = new JSONObject();
@@ -254,10 +254,10 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
                 cLevel.setOrderId(sizeChildren.intValue());
             }
 
-            HibernateUtil.beginDatabaseTransaction();
-            DAOFactory.instance().getCLevelDAO().store(cLevel);
-            HibernateUtil.commitDatabaseTransaction();
-            HibernateUtil.closeDatabaseSession();
+            JpaUtil.beginDatabaseTransaction();
+            cLevel = DAOFactory.instance().getCLevelDAO().store(cLevel);
+            JpaUtil.commitDatabaseTransaction();
+            JpaUtil.closeDatabaseSession();
 
             String cLevelNewId = "cl_" + cLevel.getClId();
             JSONObject jsonObject = new JSONObject();
@@ -523,10 +523,10 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
                 else if(type.equals(TYPE_EAD_CONTENT))
                     cLevel.setEcId(Long.parseLong(keyId));
 
-                HibernateUtil.beginDatabaseTransaction();
-                DAOFactory.instance().getCLevelDAO().store(cLevel);
-                HibernateUtil.commitDatabaseTransaction();
-                HibernateUtil.closeDatabaseSession();
+                JpaUtil.beginDatabaseTransaction();
+                cLevel = DAOFactory.instance().getCLevelDAO().store(cLevel);
+                JpaUtil.commitDatabaseTransaction();
+                JpaUtil.closeDatabaseSession();
 
                 jsonObject = new JSONObject();
                 jsonObject.put("identifier", cLevel.getUnitid()).put("title", cLevel.getUnittitle()).put("isFolder", false).put("key", TYPE_C_LEVEL + "_" + cLevel.getClId());
