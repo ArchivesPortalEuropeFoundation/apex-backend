@@ -330,7 +330,7 @@
         });
         $("#myMenu .cancel a").click(function(){
             if(confirm('<s:property value="getText('dashboard.hgcreation.cancelandquit')" />')){
-                window.location = '${pageContext.request.contextPath}/content.action';
+                window.location = '${pageContext.request.contextPath}/contentmanager.action';
             }
         });
     }
