@@ -504,7 +504,7 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("addXMLNS", "true");
                 TransformationTool.createTransformation(fileIs, outputTemp, xslIs, params, false, false, null, true);
-                String cLevelXml = FileUtils.readFileToString(outputTemp);
+                String cLevelXml = FileUtils.readFileToString(outputTemp, UTF8); //UTF8 important!
 
                 doc = builder.parse(new InputSource(new StringReader(cLevelXml)));
                 doc.getDocumentElement().normalize();
