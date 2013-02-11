@@ -249,7 +249,9 @@
 							$("#showLanguagesDiv").show();
 							$("#actionsButtons").show();
 							$("#showEditLanguagesDiv").show();
-							$("#divGroupNodesContainer").show();
+							if($("#father option").size()>1){
+								$("#divGroupNodesContainer").show();
+							}
 							$("#showAlternativeNamesDiv").hide();
 							$("#editDiv").hide();
 							$("#editLanguagesDiv").hide();
