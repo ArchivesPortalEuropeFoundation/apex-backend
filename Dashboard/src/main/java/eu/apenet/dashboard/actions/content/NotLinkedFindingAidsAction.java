@@ -70,8 +70,8 @@ public class NotLinkedFindingAidsAction extends AbstractInstitutionAction implem
 		CLevelDAO cLevelDAO = DAOFactory.instance().getCLevelDAO();
 		request.setAttribute("notUploadedFindingAids", cLevelDAO.getCLevelsOutOfSystemByHoldingsGuideId(getId(), resultPerPage, pageNumber));
 		request.setAttribute("countNotUploadedFindingAids", cLevelDAO.countCLevelsOutOfSystemByHoldingsGuideId(getId()));
-//		request.setAttribute("notIndexedFindingAids", faDAO.getFindingAidsByHoldingsGuideId(getId(),false, resultPerPage, pageNumber));
-//		request.setAttribute("countNotIndexedFindingAids", faDAO.countFindingAidsByHoldingsGuideId(getId(),false));
+		request.setAttribute("notIndexedFindingAids", faDAO.getFindingAidsByHoldingsGuideId(getId(),false, resultPerPage, pageNumber));
+		request.setAttribute("countNotIndexedFindingAids", faDAO.countFindingAidsByHoldingsGuideId(getId(),false));
 		return SUCCESS;
 	}
 
