@@ -399,6 +399,7 @@ public class ExistingFilesChecker {
 
 	public static String extractAttributeFromEad(String path, String element, String attribute, boolean isReturningFirstInstance) throws WstxParsingException {
         final String CONVERTED_FLAG = "Converted_APEnet_EAD_version_";
+        final String CONVERTED_FLAG_NEW = "Converted_apeEAD_version_";
         XMLStreamReader2 input = null;
 	    InputStream sfile = null;
         XMLInputFactory2 xmlif = (XMLInputFactory2) XMLInputFactory2.newInstance();
@@ -463,13 +464,10 @@ public class ExistingFilesChecker {
 					case XMLEvent.CHARACTERS:
 						if (isInsideElement) {
 							importantData = input.getText();
-							if (importantData.startsWith(CONVERTED_FLAG)) {
-                                LOG.debug("Returning true");
+							if (importantData.startsWith(CONVERTED_FLAG) || importantData.startsWith(CONVERTED_FLAG_NEW))
 								return "true";
-							} else if(isReturningFirstInstance){
-                                LOG.debug("Returning " + importantData);
+							else if(isReturningFirstInstance)
                                 return importantData;
-                            }
 						}
 						break;
 					case XMLEvent.CDATA:
