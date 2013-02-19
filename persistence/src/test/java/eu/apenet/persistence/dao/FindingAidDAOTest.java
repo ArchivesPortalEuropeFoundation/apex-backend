@@ -21,9 +21,9 @@ public class FindingAidDAOTest extends AbstractJpaTestCase {
         final int aiId = 1;
         final int start = 0;
         final int maxResults = 100000;
-        for(int i = 0; i < 10; i++)
-            DAOFactory.instance().getFindingAidDAO().getFindingAidsNotLinkedByArchivalInstitution(aiId, start, maxResults);
-        for(int i = 0; i < 10; i++)
-            DAOFactory.instance().getFindingAidDAO().getFindingAidsNotLinked(aiId);
+//        for(int i = 0; i < 10; i++)
+//            DAOFactory.instance().getFindingAidDAO().getFindingAidsNotLinkedByArchivalInstitution(aiId, start, maxResults);
+//        for(int i = 0; i < 10; i++)
+//            DAOFactory.instance().getFindingAidDAO().getFindingAidsNotLinked(aiId);
     }
 }

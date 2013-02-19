@@ -618,24 +618,24 @@ public class FindingAidHibernateDAO extends AbstractHibernateDAO<FindingAid, Int
 		return criteria;
 	}
 	
-	
-	@Override
-	public boolean existFindingAidsNotLinkedByArchivalInstitution(Integer aiId) {
-		Query query = getEntityManager().createQuery(
-		        "SELECT fa2.id FROM FindingAid fa2 WHERE fa2.aiId = :aiId AND fa2.published = true AND fa2.id NOT IN (SELECT fa.id FROM FindingAid fa, CLevel c WHERE fa.aiId = :aiId AND fa.published = true AND fa.eadid = c.hrefEadid AND c.hrefEadid IS NOT NULL AND c.ecId IN (SELECT ec.ecId FROM EadContent ec WHERE ec.hgId IN (SELECT hg.id FROM HoldingsGuide hg WHERE hg.published = true AND hg.aiId = :aiId) OR ec.sgId IN (SELECT sg.id FROM SourceGuide sg WHERE sg.published = true AND sg.aiId = :aiId)))");
-		query.setParameter("aiId", aiId);
-		query.setMaxResults(1);
-		return query.getResultList().size() > 0;
-	}
-	@Override
-	public List<FindingAid> getFindingAidsNotLinkedByArchivalInstitution(Integer aiId, Integer start, Integer maxResults ) {
-		TypedQuery<FindingAid> query = getEntityManager().createQuery(
-		        "SELECT fa2 FROM FindingAid fa2 WHERE fa2.aiId = :aiId AND fa2.published = true AND fa2 NOT IN (SELECT fa FROM FindingAid fa, CLevel c WHERE fa.aiId = :aiId AND fa.published = true AND fa.eadid = c.hrefEadid AND c.hrefEadid IS NOT NULL AND c.ecId IN (SELECT ec.ecId FROM EadContent ec WHERE ec.hgId IN (SELECT hg.id FROM HoldingsGuide hg WHERE hg.published = true AND hg.aiId = :aiId) OR ec.sgId IN (SELECT sg.id FROM SourceGuide sg WHERE sg.published = true AND sg.aiId = :aiId))) ORDER BY fa2.title", FindingAid.class);
-		query.setParameter("aiId", aiId);
-		query.setFirstResult(start);
-		query.setMaxResults(maxResults);
-		return query.getResultList();
-	}
+//	
+//	@Override
+//	public boolean existFindingAidsNotLinkedByArchivalInstitution(Integer aiId) {
+//		Query query = getEntityManager().createQuery(
+//		        "SELECT fa2.id FROM FindingAid fa2 WHERE fa2.aiId = :aiId AND fa2.published = true AND fa2.id NOT IN (SELECT fa.id FROM FindingAid fa, CLevel c WHERE fa.aiId = :aiId AND fa.published = true AND fa.eadid = c.hrefEadid AND c.hrefEadid IS NOT NULL AND c.ecId IN (SELECT ec.ecId FROM EadContent ec WHERE ec.hgId IN (SELECT hg.id FROM HoldingsGuide hg WHERE hg.published = true AND hg.aiId = :aiId) OR ec.sgId IN (SELECT sg.id FROM SourceGuide sg WHERE sg.published = true AND sg.aiId = :aiId)))");
+//		query.setParameter("aiId", aiId);
+//		query.setMaxResults(1);
+//		return query.getResultList().size() > 0;
+//	}
+//	@Override
+//	public List<FindingAid> getFindingAidsNotLinkedByArchivalInstitution(Integer aiId, Integer start, Integer maxResults ) {
+//		TypedQuery<FindingAid> query = getEntityManager().createQuery(
+//		        "SELECT fa2 FROM FindingAid fa2 WHERE fa2.aiId = :aiId AND fa2.published = true AND fa2 NOT IN (SELECT fa FROM FindingAid fa, CLevel c WHERE fa.aiId = :aiId AND fa.published = true AND fa.eadid = c.hrefEadid AND c.hrefEadid IS NOT NULL AND c.ecId IN (SELECT ec.ecId FROM EadContent ec WHERE ec.hgId IN (SELECT hg.id FROM HoldingsGuide hg WHERE hg.published = true AND hg.aiId = :aiId) OR ec.sgId IN (SELECT sg.id FROM SourceGuide sg WHERE sg.published = true AND sg.aiId = :aiId))) ORDER BY fa2.title", FindingAid.class);
+//		query.setParameter("aiId", aiId);
+//		query.setFirstResult(start);
+//		query.setMaxResults(maxResults);
+//		return query.getResultList();
+//	}
 
 
 	@Override
