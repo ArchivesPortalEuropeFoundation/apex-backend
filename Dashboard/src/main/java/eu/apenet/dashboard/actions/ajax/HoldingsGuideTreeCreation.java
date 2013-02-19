@@ -381,21 +381,6 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
         writer.writeEndElement();
         writer.writeEndElement();
 
-        //todo: have converted_to_APEnet_EAD_versoipn,,,,,
-        qName = new QName(AbstractParser.APENET_EAD, "filedesc");
-        writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
-        qName = new QName(AbstractParser.APENET_EAD, "titlestmt");
-        writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
-        qName = new QName(AbstractParser.APENET_EAD, "titleproper");
-        writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
-        writer.writeCharacters(levelTreeNode.getUnittitle());
-        writer.writeEndElement();
-        writer.writeEndElement();
-        writer.writeEndElement();
-        writer.writeEndElement();
-
-
-
         qName = new QName(AbstractParser.APENET_EAD, "archdesc");
         writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
         writer.writeAttribute("level", "fonds");
