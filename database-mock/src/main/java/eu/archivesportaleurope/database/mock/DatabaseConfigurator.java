@@ -28,7 +28,7 @@ public class DatabaseConfigurator {
 
 	public void init() throws NamingException {
 		if (System.getProperty("db_url") == null) {
-			System.setProperty("db_url", "jdbc:postgresql:apexv1");
+			System.setProperty("db_url", "jdbc:postgresql:apenet");
 			System.setProperty("db_username", "apenet_dashboard");
 			System.setProperty("db_password", "AP3n3tSQLD4sh");
 		}

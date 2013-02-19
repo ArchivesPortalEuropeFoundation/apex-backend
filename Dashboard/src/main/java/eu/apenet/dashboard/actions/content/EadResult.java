@@ -11,8 +11,9 @@ public class EadResult {
 	protected static final String CONTENT_MESSAGE_NO = "content.message.no";
 	protected static final String CONTENT_MESSAGE_YES = "content.message.yes";
 	protected static final String CONTENT_MESSAGE_QUEUE = "content.message.queue";
-	protected static final String CONTENT_MESSAGE_ERROR = "content.message.fatalerror";
-	
+	protected static final String CONTENT_MESSAGE_FATAL_ERROR = "content.message.fatalerror";
+	protected static final String CONTENT_MESSAGE_ERROR = "content.message.errorsmall";
+
 	protected static final String STATUS_ERROR = "status_error";
 	protected static final String STATUS_NO = "status_no";
 	protected static final String STATUS_OK = "status_ok";
@@ -133,8 +134,10 @@ public class EadResult {
 		if (validated){
 			return CONTENT_MESSAGE_YES;
 		}else if (validatedFatalError){
-			return CONTENT_MESSAGE_ERROR;
-		}else {
+			return CONTENT_MESSAGE_FATAL_ERROR;
+		} else if(isContainWarnings()) {
+            return CONTENT_MESSAGE_ERROR;
+        } else {
 			return CONTENT_MESSAGE_NO;
 		}
 	}
@@ -163,7 +166,7 @@ public class EadResult {
 		if (isQueueReady() ||isQueueProcessing()){
 			return queueAction.getResourceName();
 		}else if (isQueueError()){
-			return CONTENT_MESSAGE_ERROR;
+			return CONTENT_MESSAGE_FATAL_ERROR;
 		}else {
 			return null;
 		}
