@@ -260,6 +260,7 @@ public class EadService {
 					eadDeleted = true;
 					Ead newEad = new CreateEadTask().execute(xmlType, upFile, aiId);
 					if (isPublished) {
+                        new ValidateTask().execute(newEad);
 						new ConvertTask().execute(newEad);
 						new ValidateTask().execute(newEad);
 						new PublishTask().execute(newEad);
