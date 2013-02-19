@@ -59,7 +59,7 @@
 		<div class="contextInformation">
 			<apenet:context clevel="${c}" country="${localizedCountryName}" />
 		</div>
-		<dashboard:ead type="cdetails" xml="${c.xml}"  secondDisplayUrl="${pageContext.request.contextPath}/preview.action?holding=false&aiId=${archivalInstitution.aiId}" aiId="${archivalInstitution.aiId}" />
+		<dashboard:ead type="cdetails" xml="${c.xml}"  secondDisplayUrl="${pageContext.request.contextPath}/SecondDisplay.action?holding=false&aiId=${archivalInstitution.aiId}" aiId="${archivalInstitution.aiId}" />
 		<c:if test="${not c.leaf}">
 
 		<div id="children" class="box">
