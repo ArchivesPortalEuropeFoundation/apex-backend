@@ -118,12 +118,18 @@
 					if(selectedIndex!=-1){
 						$.post('moveUpAL.action',{"textAL":"","element":"","ALElement": $("select[name=ALElement] option:selected").val()},function(response){
 							$("body").html(response);
-							$("select[name=ALElement] option[value="+elementValue+"]").attr('selected','selected');
+							//$("select[name=ALElement] option[value="+elementValue+"]").attr('selected','selected');
 							updateStatusWindow('<span style="font-weight:bold;">'+elementName+'</span> <s:property value="getText('al.message.movedup')"/>');
 							$("#showLanguagesDiv").show();
 							$("#actionsButtons").show();
 							$("#showEditLanguagesDiv").show();
 							$("#divGroupNodesContainer").show();
+							//$("option[value="+elementValue+"]").attr("selected",true); //re-select
+							$("select[name=ALElement] option").each(function(){
+								if($(this).val()==elementValue){
+									$(this).attr("selected",true);
+								}
+							});
 						});
 					}else{
 						updateStatusWindow("<s:property value='getText("al.message.noElementSelected")' />");
@@ -136,12 +142,18 @@
 					if(selectedIndex!=-1){
 						$.post('moveDownAL.action',{"textAL":"","element":"" ,"ALElement": $("select[name=ALElement] option:selected").val()},function(response){
 							$("body").html(response);
-							$("select[name=ALElement] option[value="+elementValue+"]").attr('selected','selected');
+							//$("select[name=ALElement] option[value="+elementValue+"]").attr('selected','selected');
 							updateStatusWindow('<span style="font-weight:bold;">'+elementName+'</span> <s:property value="getText('al.message.moveddown')"/>');
 							$("#showLanguagesDiv").show();
 							$("#actionsButtons").show();
 							$("#showEditLanguagesDiv").show();
 							$("#divGroupNodesContainer").show();
+							//$("option[value="+elementValue+"]").attr("selected",true); //re-select
+							$("select[name=ALElement] option").each(function(){
+								if($(this).val()==elementValue){
+									$(this).attr("selected",true);
+								}
+							});
 						});
 					}else{
 						updateStatusWindow("<s:property value='getText("al.message.noElementSelected")' />");
