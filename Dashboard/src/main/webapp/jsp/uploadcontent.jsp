@@ -5,7 +5,7 @@
                 <s:actionmessage />
                 <s:actionerror />
 
-	            <s:radio list="uploadType" key="label.uploadtype" name="uploadTypeChoice" onchange="changeOptions(this)"/>
+	            <s:radio list="uploadType" key="label.uploadtype" name="uploadTypeChoice" onclick="changeOptions(this)"/>
 				<s:form id="httpUpload" method="POST" enctype="multipart/form-data" action="httpUpload">
 					<p style="margin-top:10px;">
 						<s:file id="httpFile" theme="simple" name="httpFile" key="label.filetoupload"/>
