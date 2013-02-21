@@ -223,7 +223,7 @@
 	       			</div>
 				</div>
 			</s:if>
-			<s:submit theme="simple" cssClass="mainButton" key="label.accept" action="overwriteexistingfiles"/>
+			<input type="button" class="mainButton" value="<s:property value='getText("label.accept")' />" name="form_submit" onclick="checkEadIdAndSubmit()" />
 			<s:if  test="filesWithEmptyEadid.size()>0 || existingFiles.size()>0" >
 				<!--<s:submit theme="simple" style="font-weight:bold; background-color:#B0D0FF;" key="label.cancel" action="canceloverwriteexistingfiles"/>-->
 			</s:if>
@@ -248,6 +248,25 @@
 				</form>
 	        </s:else>
 	        <script type="text/javascript">
+	        $(document).ready(function(){
+	        	changes = new Array();
+	        	$("div[id^=divChangeEadid]").each(function(){
+	        		var id = $(this).attr("id");
+	        		id = id.substring("divChangeEadid".length);
+	        		//changes[id] = "";
+	        		changes.push(id);
+	        	});
+	        });
+	        
+	        function checkEadIdAndSubmit(){
+	        	if(changes.length>0 && $("select#existingFilesAnswers option:selected").val()=="Change EADID"){
+	        		alert('<s:property value='getText("content.message.UserHasNotCheckedAvailability")' />');
+	        	}else{
+	        		$("form#overwriteexistingfiles").attr("action","overwriteexistingfiles.action");//action="overwriteexistingfiles"
+	        		$("form#overwriteexistingfiles").submit();
+	        	}
+	        }
+	        
 	        var eadidarray = new Array();
 			function changeEADID(text,eadid,method)
 			{
@@ -336,6 +355,10 @@
 								}
 							}
 							if (dataResponse.existingChangeEADIDAnswers == "OK") {
+								//changes[oldeadid] = neweadid;
+								if(changes.indexOf(oldeadid)>=0){
+									changes.splice(changes.indexOf(oldeadid));
+								}
 								//Change the value of the select OK or KO
 								document.getElementById(labelanswermessage).style.color="green";
 								document.getElementById(labelanswermessage).style.font.bold = "true";
@@ -348,6 +371,9 @@
 								document.getElementById(div).style.display='none';
 							}
 							else if (dataResponse.existingChangeEADIDAnswers == "KO") {
+								if(changes.indexOf(oldeadid)){
+									changes.push(oldeadid);
+								}
 								document.getElementById(labelanswermessage).style.color="red";
 								document.getElementById(labelanswermessage).style.font.bold = "true";
 								var selectanswer = "existingChangeEADIDAnswers" + dataResponse.eadid;
