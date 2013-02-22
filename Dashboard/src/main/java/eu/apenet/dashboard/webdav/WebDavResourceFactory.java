@@ -12,8 +12,6 @@ import eu.apenet.commons.utils.APEnetUtilities;
 
 public class WebDavResourceFactory implements ResourceFactory {
 
-	private static final String CATALINA_BASE = "catalina.base";
-	private static final String ADMIN = "admin";
 	private static MimetypesFileTypeMap mimeTypes = new MimetypesFileTypeMap();
 
 	@Override
@@ -22,11 +20,6 @@ public class WebDavResourceFactory implements ResourceFactory {
 		Path path = Path.path(url);
 		String rootPath = path.getStripFirst().toPath().substring(1);
 		path = path.getStripFirst().getStripFirst();
-		if (ADMIN.equals(path.getFirst())) {
-			path = path.getStripFirst();
-			basePath = System.getProperty(CATALINA_BASE);
-			rootPath = ADMIN;
-		}
 		File file = new File(basePath, path.toPath());
 		if (path.isRoot()) {
 			return new RootDirectoryResource(file, url,rootPath);
