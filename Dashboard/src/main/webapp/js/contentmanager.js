@@ -153,6 +153,7 @@ function initResultsHandlers() {
 		$("#updateCurrentSearch_pageNumber").attr("value", "1");
 		updateCurrentSearchResults();
 	});
+    createColorboxForConversionOptions();
 }
 
 function hideOrShowSelectAllFAsWindow() {
@@ -161,4 +162,56 @@ function hideOrShowSelectAllFAsWindow() {
     } else {
         $("#listFiles").addClass("hidden");
     }
+}
+function createColorboxForConversionOptions() {
+    $("#conversionOpts").colorbox(
+        {
+            width:"80%",
+            height:"200px",
+            inline:true,
+            overlayClose:false,
+            onLoad:function(){ checkCurrentOpts(); },
+            href: "#conversionOptsDiv"
+        }
+    );
+}
+function checkCurrentOpts() {
+    var loadUrl = "checkCurrentConversionOptions.action";
+    $.post(loadUrl, null, function(databack){
+        if(databack){
+            if(databack.error){
+                console.log("ERROR");
+                $("input:radio[name=roleType]").val(["UNSPECIFIED"]);
+                $("input:checkbox[name=useExistingRole]").val(["useExistingRole"]);
+            } else {
+                $("input:radio[name=roleType]").val([databack.optsDefault]);
+                if(databack.optsUseExisting == 'true') {
+                    $("input:checkbox[name=useExistingRole]").val(["useExistingRole"]);
+                } else {
+                    $("input:checkbox[name=useExistingRole]").removeAttr("checked");
+                }
+            }
+        }
+    }, 'json');
+    prepareSubmitAndCancelBtns();
+}
+function prepareSubmitAndCancelBtns() {
+    $("#submitBtnRoleType").unbind();
+    $("#cancelBtnRoleType").unbind();
+    $("#submitBtnRoleType").bind("click", function(){
+        var loadUrl = "saveConversionOptions.action";
+        var data = {optsUseExisting: $("#useExistingRole").is(":checked"), optsDefault: $("input:radio[name=roleType]:checked").val()};
+        $.post(loadUrl, data, function(databack){
+            if(databack){
+                if(databack.error){
+                    console.log("ERROR");
+                } else {
+                    $.fn.colorbox.close();
+                }
+            }
+        }, 'json');
+    });
+    $("#cancelBtnRoleType").bind("click", function(){
+        $.fn.colorbox.close();
+    });
 }

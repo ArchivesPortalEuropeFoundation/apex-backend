@@ -2,6 +2,8 @@ package eu.apenet.dashboard.actions.content;
 
 import eu.apenet.dashboard.services.ead.EadService;
 
+import java.util.Properties;
+
 public class EadActions extends AbstractEadActions {
 
 	private Integer id;
@@ -29,9 +31,9 @@ public class EadActions extends AbstractEadActions {
 		}
 	}
 
-	public String convertEad() {
+	public String convertEad(Properties properties) {
 		try {
-			EadService.convert(getXmlType(), id);
+			EadService.convert(getXmlType(), id, properties);
 			return SUCCESS;
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -70,9 +72,9 @@ public class EadActions extends AbstractEadActions {
 	}
 
 	@Override
-	public String convertValidatePublishEad() {
+	public String convertValidatePublishEad(Properties properties) {
 		try {
-			EadService.convertValidatePublish(getXmlType(), id);
+			EadService.convertValidatePublish(getXmlType(), id, properties);
 			return SUCCESS;
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

@@ -74,15 +74,15 @@ public class EadService {
 
 	}
 
-	public static void convert(XmlType xmlType, Integer id) throws Exception {
+	public static void convert(XmlType xmlType, Integer id, Properties properties) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
 		if (ConvertTask.valid(ead)) {
 			if (APEnetUtilities.getDashboardConfig().isDirectIndexing()) {
-				new ConvertTask().execute(ead);
+				new ConvertTask().execute(ead, properties);
 			} else { // Add the file to the indexing queue
-				addToQueue(ead, QueueAction.CONVERT, null);
+				addToQueue(ead, QueueAction.CONVERT, properties);
 			}
 		}
 	}
@@ -128,12 +128,12 @@ public class EadService {
 		}
 	}
 
-	public static boolean convertValidatePublish(XmlType xmlType, Integer id) throws IOException {
+	public static boolean convertValidatePublish(XmlType xmlType, Integer id, Properties properties) throws IOException {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
 		if (!ead.isPublished()) {
-			addToQueue(ead, QueueAction.CONVERT_VALIDATE_PUBLISH, null);
+			addToQueue(ead, QueueAction.CONVERT_VALIDATE_PUBLISH, properties);
 		}
 		return true;
 	}
@@ -261,7 +261,7 @@ public class EadService {
 					Ead newEad = new CreateEadTask().execute(xmlType, upFile, aiId);
 					if (isPublished) {
                         new ValidateTask().execute(newEad);
-						new ConvertTask().execute(newEad);
+						new ConvertTask().execute(newEad, preferences);
 						new ValidateTask().execute(newEad);
 						new PublishTask().execute(newEad);
 					}
