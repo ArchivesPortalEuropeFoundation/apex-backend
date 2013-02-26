@@ -1,1 +1,1 @@
-INSERT INTO dashboard_user (email_address, password, secret_question, secret_answer, user_role_id, first_name, last_name) VALUES ('lauri.ratsep@ra.ee','5JgP8LV83cuhtvwYmd6Z9hOVLA4=','What is your surname?','Verhoef',3,'Lauri','Rätsep');
+INSERT INTO dashboard_user (email_address, password, secret_question, secret_answer, user_role_id, first_name, last_name) VALUES ('lauri.ratsep@ra.ee','5JgP8LV83cuhtvwYmd6Z9hOVLA4=','What is your surname?','Ratsep',3,'Lauri','Ratsep');
