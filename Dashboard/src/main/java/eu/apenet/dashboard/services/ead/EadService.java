@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -34,31 +35,36 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 public class EadService {
 	protected static final Logger LOGGER = Logger.getLogger(EadService.class);
 
-    public static void createPreviewHTML(XmlType xmlType, Integer id){
+	public static void createPreviewHTML(XmlType xmlType, Integer id) {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-        Ead ead = eadDAO.findById(id, xmlType.getClazz());
+		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
-        if(ead.getEadContent() == null){
-            try {
-                EADParser.parseEad(ead);
-            } catch (Exception e) {
-                throw new APEnetRuntimeException(e);
-            }
-        }
-    }
-    public static File download(Integer id, XmlType xmlType) {
-		Ead ead = DAOFactory.instance().getEadDAO().findById(id, xmlType.getClazz());
+		if (ead.getEadContent() == null) {
+			try {
+				EADParser.parseEad(ead);
+			} catch (Exception e) {
+				throw new APEnetRuntimeException(e);
+			}
+		}
+	}
+
+	public static File download(Integer id, XmlType xmlType) {
+		Ead ead = DAOFactory.instance().getEadDAO()
+				.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
-		String path = APEnetUtilities.getConfig().getRepoDirPath() + ead.getPathApenetead();
+		String path = APEnetUtilities.getConfig().getRepoDirPath()
+				+ ead.getPathApenetead();
 		try {
-            File file = new File(path);
-	        if(file.exists())
-	            return file;
-		} catch(Exception e) {
-			LOGGER.error("Download function error, trying to open the file '" + path + "'", e);
+			File file = new File(path);
+			if (file.exists())
+				return file;
+		} catch (Exception e) {
+			LOGGER.error("Download function error, trying to open the file '"
+					+ path + "'", e);
 		}
 		return null;
-    }
+	}
+
 	public static void validate(XmlType xmlType, Integer id) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
@@ -74,7 +80,8 @@ public class EadService {
 
 	}
 
-	public static void convert(XmlType xmlType, Integer id, Properties properties) throws Exception {
+	public static void convert(XmlType xmlType, Integer id,
+			Properties properties) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
@@ -101,7 +108,8 @@ public class EadService {
 
 	}
 
-	public static void deleteEseEdm(XmlType xmlType, Integer id) throws Exception {
+	public static void deleteEseEdm(XmlType xmlType, Integer id)
+			throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
@@ -115,7 +123,8 @@ public class EadService {
 
 	}
 
-	public static void convertToEseEdm(Integer id, Properties preferences) throws Exception {
+	public static void convertToEseEdm(Integer id, Properties preferences)
+			throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, FindingAid.class);
 		SecurityContext.get().checkAuthorized(ead);
@@ -128,7 +137,8 @@ public class EadService {
 		}
 	}
 
-	public static boolean convertValidatePublish(XmlType xmlType, Integer id, Properties properties) throws IOException {
+	public static boolean convertValidatePublish(XmlType xmlType, Integer id,
+			Properties properties) throws IOException {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
@@ -152,7 +162,8 @@ public class EadService {
 		}
 	}
 
-	public static void unpublishAll(XmlType xmlType, Integer id) throws Exception {
+	public static void unpublishAll(XmlType xmlType, Integer id)
+			throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
@@ -180,7 +191,8 @@ public class EadService {
 		}
 	}
 
-	public static void deleteFromEuropeana(XmlType xmlType, Integer id) throws Exception {
+	public static void deleteFromEuropeana(XmlType xmlType, Integer id)
+			throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
@@ -191,7 +203,8 @@ public class EadService {
 		}
 	}
 
-	public static void deliverToEuropeana(XmlType xmlType, Integer id) throws Exception {
+	public static void deliverToEuropeana(XmlType xmlType, Integer id)
+			throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
@@ -202,16 +215,20 @@ public class EadService {
 		}
 	}
 
-	public static void deleteFromQueue(XmlType xmlType, Integer id) throws Exception {
+	public static void deleteFromQueue(XmlType xmlType, Integer id)
+			throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+		JpaUtil.beginDatabaseTransaction();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
-		if (QueuingState.ERROR.equals(ead.getQueuing())){
+		if (QueuingState.ERROR.equals(ead.getQueuing())
+				|| QueuingState.READY.equals(ead.getQueuing())) {
 			QueueItem queueItem = ead.getQueueItem();
 			ead.setQueuing(QueuingState.NO);
-			eadDAO.store(ead);
-			DAOFactory.instance().getQueueItemDAO().delete(queueItem);
+			eadDAO.updateSimple(ead);
+			DAOFactory.instance().getQueueItemDAO().deleteSimple(queueItem);
 		}
+		JpaUtil.commitDatabaseTransaction();
 	}
 
 	public static void overwrite(Ead oldEad, UpFile upFile) throws Exception {
@@ -219,37 +236,39 @@ public class EadService {
 		addToQueue(oldEad, QueueAction.OVERWRITE, null, upFile);
 	}
 
-	public static void create(XmlType xmlType, UpFile upFile, Integer aiId) throws Exception {
+	public static void create(XmlType xmlType, UpFile upFile, Integer aiId)
+			throws Exception {
 		SecurityContext.get().checkAuthorized(aiId);
 		new CreateEadTask().execute(xmlType, upFile, aiId);
 		DAOFactory.instance().getUpFileDAO().delete(upFile);
 	}
 
-	public static boolean processQueueItem(QueueItem queueItem) throws IOException {
+	public static boolean processQueueItem(QueueItem queueItem)
+			throws IOException {
+		QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
+		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		boolean processed = false;
 		Ead ead = queueItem.getEad();
 		XmlType xmlType = XmlType.getEadType(ead);
-		LOGGER.info("Process queue item: " + queueItem.getId() + " " + queueItem.getAction() + " " + ead.getEadid()
-				+ "(" + xmlType.getName() + ")");
-		QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
-		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-		ead.setQueuing(QueuingState.BUSY);
-		eadDAO.store(ead);
+		LOGGER.info("Process queue item: " + queueItem.getId() + " "
+				+ queueItem.getAction() + " " + ead.getEadid() + "("
+				+ xmlType.getName() + ")");
 		Properties preferences = null;
 		if (queueItem.getPreferences() != null) {
 			preferences = readProperties(queueItem.getPreferences());
 		}
 
-		if (queueItem.getAction().isOverwriteAction() || queueItem.getAction().isDeleteAction()) {
+		if (queueItem.getAction().isOverwriteAction()
+				|| queueItem.getAction().isDeleteAction()) {
 			boolean eadDeleted = false;
 			boolean upFileDeleted = false;
 			UpFile upFile = queueItem.getUpFile();
 			try {
-				
+
 				queueItem.setEad(null);
 				queueItem.setUpFile(null);
 				queueItemDAO.store(queueItem);
-				
+
 				if (queueItem.getAction().isOverwriteAction()) {
 					boolean isPublished = ead.isPublished();
 					Integer aiId = ead.getAiId();
@@ -258,9 +277,10 @@ public class EadService {
 					new UnpublishTask().execute(ead, preferences);
 					new DeleteTask().execute(ead, preferences);
 					eadDeleted = true;
-					Ead newEad = new CreateEadTask().execute(xmlType, upFile, aiId);
+					Ead newEad = new CreateEadTask().execute(xmlType, upFile,
+							aiId);
 					if (isPublished) {
-                        new ValidateTask().execute(newEad);
+						new ValidateTask().execute(newEad);
 						new ConvertTask().execute(newEad, preferences);
 						new ValidateTask().execute(newEad);
 						new PublishTask().execute(newEad);
@@ -276,31 +296,33 @@ public class EadService {
 				}
 				queueItemDAO.delete(queueItem);
 			} catch (Exception e) {
-				if (!eadDeleted){
+				if (!eadDeleted) {
 					queueItem.setEad(ead);
 					ead.setQueuing(QueuingState.ERROR);
 					eadDAO.store(ead);
 				}
-				if (!upFileDeleted && upFile != null){
+				if (!upFileDeleted && upFile != null) {
 					queueItem.setUpFile(upFile);
 				}
-				String err = "eadid: " + ead.getEadid() + " - id: " + ead.getId() + " - type: " + xmlType.getName();
+				String err = "eadid: " + ead.getEadid() + " - id: "
+						+ ead.getId() + " - type: " + xmlType.getName();
 				LOGGER.error("Error occured: " + err, e);
-				queueItem.setErrors(new Date() + " - " + err + ". Error: " + e.getMessage() + " - " + e.getCause());
+				queueItem.setErrors(new Date() + " - " + err + ". Error: "
+						+ e.getMessage() + " - " + e.getCause());
 				queueItem.setPriority(0);
 				queueItemDAO.store(queueItem);
 			}
 		} else {
 			try {
-                if (queueItem.getAction().isValidateAction()) {
-                    new ValidateTask().execute(ead, preferences);
-                }
+				if (queueItem.getAction().isValidateAction()) {
+					new ValidateTask().execute(ead, preferences);
+				}
 				if (queueItem.getAction().isConvertAction()) {
 					new ConvertTask().execute(ead, preferences);
 				}
-                if (queueItem.getAction().isValidateAction()) {
-                    new ValidateTask().execute(ead, preferences);
-                }
+				if (queueItem.getAction().isValidateAction()) {
+					new ValidateTask().execute(ead, preferences);
+				}
 				if (queueItem.getAction().isPublishAction()) {
 					new PublishTask().execute(ead, preferences);
 				}
@@ -324,9 +346,11 @@ public class EadService {
 				eadDAO.store(ead);
 				queueItemDAO.delete(queueItem);
 			} catch (Exception e) {
-				String err = "eadid: " + ead.getEadid() + " - id: " + ead.getId() + " - type: " + xmlType.getName();
+				String err = "eadid: " + ead.getEadid() + " - id: "
+						+ ead.getId() + " - type: " + xmlType.getName();
 				LOGGER.error("Error occured: " + err, e);
-				queueItem.setErrors(new Date() + err + ". Error: " + e.getMessage() + "-" + e.getCause());
+				queueItem.setErrors(new Date() + err + ". Error: "
+						+ e.getMessage() + "-" + e.getCause());
 				ead.setQueuing(QueuingState.ERROR);
 				eadDAO.store(ead);
 				queueItem.setPriority(0);
@@ -340,8 +364,8 @@ public class EadService {
 		return processed;
 	}
 
-	private static void addToQueue(Ead ead, QueueAction queueAction, Properties preferences, UpFile upFile)
-			throws IOException {
+	private static void addToQueue(Ead ead, QueueAction queueAction,
+			Properties preferences, UpFile upFile) throws IOException {
 		QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		ead.setQueuing(QueuingState.READY);
@@ -351,7 +375,8 @@ public class EadService {
 		indexqueueDao.store(queueItem);
 	}
 
-	private static void addToQueue(Ead ead, QueueAction queueAction, Properties preferences) throws IOException {
+	private static void addToQueue(Ead ead, QueueAction queueAction,
+			Properties preferences) throws IOException {
 		QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		ead.setQueuing(QueuingState.READY);
@@ -360,9 +385,10 @@ public class EadService {
 		indexqueueDao.store(queueItem);
 	}
 
-	public static void addBatchToQueue(EadSearchOptions eadSearchOptions, QueueAction queueAction,
-			Properties preferences) throws IOException {
-		SecurityContext.get().checkAuthorized(eadSearchOptions.getArchivalInstitionId());
+	public static void addBatchToQueue(EadSearchOptions eadSearchOptions,
+			QueueAction queueAction, Properties preferences) throws IOException {
+		SecurityContext.get().checkAuthorized(
+				eadSearchOptions.getArchivalInstitionId());
 		QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		eadSearchOptions.setPageSize(0);
@@ -383,26 +409,59 @@ public class EadService {
 			eadSearchOptions.setValidated(ValidatedState.VALIDATED);
 
 		}
+		eadSearchOptions.setQueuing(QueuingState.NO);
 		JpaUtil.beginDatabaseTransaction();
 		List<Ead> eads = eadDAO.getEads(eadSearchOptions);
 		int size = 0;
 		while ((size = eads.size()) > 0) {
 			Ead ead = eads.get(size - 1);
-			if (QueuingState.ERROR.equals(ead.getQueuing()) || QueuingState.NO.equals(ead.getQueuing())){
-				QueueItem queueItem = fillQueueItem(ead, queueAction, preferences);
-				ead.setQueuing(QueuingState.READY);
-				eadDAO.updateSimple(ead);
-				eads.remove(size - 1);
-				indexqueueDao.updateSimple(queueItem);
-			}else {
-				eads.remove(size - 1);
-			}
+			QueueItem queueItem = fillQueueItem(ead, queueAction, preferences);
+			ead.setQueuing(QueuingState.READY);
+			eadDAO.updateSimple(ead);
+			eads.remove(size - 1);
+			indexqueueDao.updateSimple(queueItem);
 		}
 		JpaUtil.commitDatabaseTransaction();
 	}
+	public static void deleteBatchFromQueue(List<Integer> ids, Integer aiId,
+			XmlType xmlType)
+			throws IOException {
+		EadSearchOptions eadSearchOptions = new EadSearchOptions();
+		eadSearchOptions.setPageSize(0);
+		eadSearchOptions.setEadClazz(xmlType.getClazz());
+		eadSearchOptions.setArchivalInstitionId(aiId);
+		if (ids != null && ids.size() > 0) {
+			eadSearchOptions.setIds(ids);
+		}
+		deleteBatchFromQueue(eadSearchOptions);
 
-	public static void addBatchToQueue(List<Integer> ids, Integer aiId, XmlType xmlType, QueueAction queueAction,
-			Properties preferences) throws IOException {
+	}
+	public static void deleteBatchFromQueue(EadSearchOptions eadSearchOptions) {
+		SecurityContext.get().checkAuthorized(
+				eadSearchOptions.getArchivalInstitionId());
+		QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
+		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+		eadSearchOptions.setPageSize(0);
+		List<QueuingState> queueStates = new ArrayList<QueuingState>();
+		queueStates.add(QueuingState.READY);
+		queueStates.add(QueuingState.ERROR);
+		eadSearchOptions.setQueuing(queueStates);
+		
+		JpaUtil.beginDatabaseTransaction();
+		List<Ead> eads = eadDAO.getEads(eadSearchOptions);
+		int size = 0;
+		while ((size = eads.size()) > 0) {
+			Ead ead = eads.get(size - 1);
+			QueueItem queueItem = ead.getQueueItem();
+			ead.setQueuing(QueuingState.NO);
+			eadDAO.updateSimple(ead);
+			queueDAO.deleteSimple(queueItem);
+		}
+		JpaUtil.commitDatabaseTransaction();
+	}
+	public static void addBatchToQueue(List<Integer> ids, Integer aiId,
+			XmlType xmlType, QueueAction queueAction, Properties preferences)
+			throws IOException {
 		EadSearchOptions eadSearchOptions = new EadSearchOptions();
 		eadSearchOptions.setPageSize(0);
 		eadSearchOptions.setEadClazz(xmlType.getClazz());
@@ -422,7 +481,8 @@ public class EadService {
 		return properties;
 	}
 
-	private static String writeProperties(Properties properties) throws IOException {
+	private static String writeProperties(Properties properties)
+			throws IOException {
 		StringWriter stringWriter = new StringWriter();
 		properties.store(stringWriter, "");
 		String result = stringWriter.toString();
@@ -431,7 +491,8 @@ public class EadService {
 		return result;
 	}
 
-	private static QueueItem fillQueueItem(Ead ead, QueueAction queueAction, Properties preferences) throws IOException {
+	private static QueueItem fillQueueItem(Ead ead, QueueAction queueAction,
+			Properties preferences) throws IOException {
 		QueueItem queueItem = new QueueItem();
 		queueItem.setQueueDate(new Date());
 		queueItem.setAction(queueAction);
@@ -448,11 +509,13 @@ public class EadService {
 			queueItem.setSourceGuide((SourceGuide) ead);
 			priority += 50;
 		}
-		if (queueAction.isConvertAction() || queueAction.isValidateAction() || queueAction.isPublishAction()) {
+		if (queueAction.isConvertAction() || queueAction.isValidateAction()
+				|| queueAction.isPublishAction()) {
 			priority += 25;
-		} else if (queueAction.isDeleteAction() || queueAction.isOverwriteAction()) {
-            priority += 50;
-        }
+		} else if (queueAction.isDeleteAction()
+				|| queueAction.isOverwriteAction()) {
+			priority += 50;
+		}
 		queueItem.setPriority(priority);
 		return queueItem;
 	}

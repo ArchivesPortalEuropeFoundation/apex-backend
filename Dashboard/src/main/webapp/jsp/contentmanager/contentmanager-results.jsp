@@ -14,11 +14,11 @@
 			<span class="bold"><s:text name="content.message.batch" />:</span> <input type="radio" checked="checked"
 				name="batchItems" value="all">
 			<s:text name="content.message.all" />
-			</input> <input type="radio" checked="checked" name="batchItems" value="only_selected">
+			<input type="radio" checked="checked" name="batchItems" value="only_selected"/>
 			<s:text name="content.message.onlyselected" />
 			<input type="radio" name="batchItems" value="only_searched">
 			<s:text name="content.message.onlysearched" />
-			</input> <input type="hidden" name="xmlTypeId" value="<s:property value="%{xmlTypeId}"/>" /> <select
+			<input type="hidden" name="xmlTypeId" value="<s:property value="%{xmlTypeId}"/>" /> <select
 				id="batchSelectedAction" name="action">
 				<option value="convert_validate_publish">
 					<s:text name="content.message.doitall" />
@@ -47,6 +47,9 @@
 				<%--<option value="deleteEseEdm">--%>
 					<%--<s:text name="content.message.delete.ese" />--%>
 				<%--</option>--%>
+				<option value="deleteFromQueue">
+					<s:text name="content.message.delete.queue" />
+				</option>	
 				<option value="delete">
 					<s:text name="content.message.delete" />
 				</option>
@@ -176,16 +179,18 @@
 
 						<td class="actions"><c:choose>
 								<c:when test="${eadResult.queueReady}">
-
-								</c:when>
-								<c:when test="${eadResult.queueError}">
 									<select class="selectedAction" name="selectedAction">
 										<option value="action|deleteFromQueue">
 											<s:text name="content.message.delete.queue" />
-										</option>
-										<option value="action|delete">
-											<s:text name="content.message.delete" />
-										</option>										
+										</option>							
+									</select>
+									<input type="button" value="<s:text name="content.message.go" />" />
+								</c:when>
+								<c:when test="${eadResult.queueError} ">
+									<select class="selectedAction" name="selectedAction">
+										<option value="action|deleteFromQueue">
+											<s:text name="content.message.delete.queue" />
+										</option>								
 									</select>
 									<input type="button" value="<s:text name="content.message.go" />" />
 								</c:when>																		

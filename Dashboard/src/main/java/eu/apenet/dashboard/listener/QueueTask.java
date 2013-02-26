@@ -1,14 +1,18 @@
 package eu.apenet.dashboard.listener;
 
-import java.util.List;
+import java.io.IOException;
+import java.util.Date;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 
 import eu.apenet.dashboard.services.ead.EadService;
+import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.QueueItem;
+import eu.apenet.persistence.vo.QueuingState;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class QueueTask extends TimerTask {
@@ -27,50 +31,30 @@ public class QueueTask extends TimerTask {
 		LOGGER.info("Queuing process active");
 		long endTime = System.currentTimeMillis() + duration;
 		boolean stopped = false;
-		try {
-			while (!stopped && active && System.currentTimeMillis() < endTime) {
+		while (!stopped && active && System.currentTimeMillis() < endTime) {
+			try {
 				processQueue(endTime);
-				// LOGGER.info("Processing queue stopped");
-				if ((System.currentTimeMillis() + INTERVAL) < endTime) {
-					// LOGGER.info("Start sleeping");
-					Thread.sleep(INTERVAL);
-				} else {
-					stopped = true;
+			} catch (Exception e) {
+				LOGGER.error(e.getMessage(), e);
+				try {
+					JpaUtil.rollbackDatabaseTransaction();
+				} catch (Exception de) {
+					LOGGER.error(de.getMessage());
 				}
 			}
-
-			// Commit any pending database transaction.
-			try {
-				JpaUtil.commitDatabaseTransaction();
-			} catch (Exception de) {
-				LOGGER.error(de.getMessage());
-			}
-
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			// If an exception occurs and there is an open transaction, roll
-			// back the transaction.
-			try {
-
-				JpaUtil.rollbackDatabaseTransaction();
-			}
-
-			catch (Exception de) {
-				LOGGER.error(de.getMessage());
-			}
-
-		} finally {
-
-			// No matter what happens, close the Session.
-			try {
-				JpaUtil.closeDatabaseSession();
-			}
-
-			catch (Exception de) {
-				LOGGER.error(de.getMessage());
+			if ((System.currentTimeMillis() + INTERVAL) < endTime) {
+				cleanUp();
+				try {
+					Thread.sleep(INTERVAL);
+				} catch (InterruptedException e) {
+				}
+			} else {
+				cleanUp();
+				stopped = true;
 			}
 
 		}
+
 		LOGGER.info("Queuing process inactive");
 	}
 
@@ -80,36 +64,62 @@ public class QueueTask extends TimerTask {
 		return super.cancel();
 	}
 
-	public void processQueue(long endTime) throws Exception {
+	private static void cleanUp() {
+		try {
+			JpaUtil.closeDatabaseSession();
+		}
 
+		catch (Exception de) {
+			LOGGER.error(de.getMessage());
+		}
+	}
+
+	public void processQueue(long endTime) {
 		QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
-		boolean filesLeft = true;
-		while (active && filesLeft && System.currentTimeMillis() < endTime) {
-			// LOGGER.info("Looking for files in queue");
-			List<QueueItem> queueItems = queueItemDAO.getFirstItems();
-			if (queueItems.size() == 0) {
-				// LOGGER.info("No files in queue");
-				filesLeft = false;
-			} else {
-				processQueueItem(queueItems, endTime);
+		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+		boolean hasItems = true;
+		while (hasItems && active && System.currentTimeMillis() < endTime) {
+			int queueId = -1;
+			try {
+				/*
+				 * lock ead and queue item before going to process.
+				 */
+				JpaUtil.beginDatabaseTransaction();
+				QueueItem queueItem = queueItemDAO.getFirstItem();
+				
+				if (queueItem == null) {
+					JpaUtil.rollbackDatabaseTransaction();
+					hasItems = false;
+				} else {
+					queueId = queueItem.getId();
+					Ead ead = queueItem.getEad();
+					ead.setQueuing(QueuingState.BUSY);
+					eadDAO.updateSimple(ead);
+					JpaUtil.commitDatabaseTransaction();
+					EadService.processQueueItem(queueItem);
+					hasItems = true;
+				}
+			}catch (Exception e) {
+				LOGGER.error("queueId: " + queueId + " - " +e.getMessage(), e);
+				JpaUtil.rollbackDatabaseTransaction();
+				/*
+				 * it is unexcepted that this error occurred. put priority on 0, to the queue could go futher.
+				 */
+				JpaUtil.beginDatabaseTransaction();
+				if (queueId > -1){
+					QueueItem queueItem = queueItemDAO.findById(queueId);
+					if (queueItem.getPriority() > 0){
+						queueItem.setPriority(0);
+					}
+					queueItem.setErrors(new Date()+ ". Error: "
+							+ e.getMessage() + "-" + e.getCause());
+					queueItemDAO.updateSimple(queueItem);
+				}
+				JpaUtil.commitDatabaseTransaction();
 			}
+
 		}
 
 	}
 
-	public int processQueueItem(List<QueueItem> queueItems, long endTime) throws Exception {
-		int indexed = 0;
-		boolean expired = false;
-		for (int i=0; !expired && i < queueItems.size();i++) {
-			if (active && System.currentTimeMillis() < endTime) {
-				boolean processed = EadService.processQueueItem(queueItems.get(i));
-				if (processed)
-					indexed++;
-			} else {
-				expired = true;
-			}
-
-		}
-		return indexed;
-	}
 }
