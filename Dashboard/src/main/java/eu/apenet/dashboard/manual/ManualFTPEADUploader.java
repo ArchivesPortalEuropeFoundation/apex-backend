@@ -1,6 +1,7 @@
 package eu.apenet.dashboard.manual;
 
 import eu.apenet.commons.utils.APEnetUtilities;
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
@@ -87,6 +88,7 @@ public class ManualFTPEADUploader extends ManualUploader {
 
         ftpClient.enterRemotePassiveMode();
         ftpClient.enterLocalPassiveMode();
+        ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 
         if(FTPReply.isPositiveCompletion(reply)){
             log.debug("Connected to " + serverUrl + " server: " + ftpClient.getReplyString());
@@ -120,8 +122,11 @@ public class ManualFTPEADUploader extends ManualUploader {
         File fileToSave = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitutionId + APEnetUtilities.FILESEPARATOR + pathFile);
 
         OutputStream os = new FileOutputStream(fileToSave);
-        if(ftpClient.retrieveFile(file, os))
+        if(ftpClient.retrieveFile(file, os)) {
+            os.flush();
+            os.close();
             return fileToSave;
+        }
         return null;
 	}
 
