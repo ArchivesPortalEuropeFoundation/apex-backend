@@ -239,11 +239,7 @@
 	        	<br>
 	        	<br>
 				<form id="content" method="get">
-					<s:hidden id="aiId" value="%{ai_id}" name="aiId" />
-					<!--<s:iterator value="filesWithEmptyEadid" status="stat">
-					<s:submit key="label.accept" action="addneweadid"/>
-					</s:iterator>-->
-					<s:submit theme="simple" key="content.continue.contentmanager" action="content"/>
+					<s:submit theme="simple" key="content.continue.contentmanager" action="contentmanager"/>
 					
 				</form>
 	        </s:else>
