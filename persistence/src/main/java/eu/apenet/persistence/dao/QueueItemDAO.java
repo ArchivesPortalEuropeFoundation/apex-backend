@@ -12,6 +12,6 @@ import eu.apenet.persistence.vo.QueueItem;
 
 public interface QueueItemDAO extends GenericDAO<QueueItem, Integer> {
 	public List<QueueItem> getFilesWithErrors();
-	List<QueueItem> getFirstItems();
+	QueueItem getFirstItem();
 }
 

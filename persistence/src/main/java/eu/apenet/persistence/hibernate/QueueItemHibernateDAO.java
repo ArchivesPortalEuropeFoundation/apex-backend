@@ -18,11 +18,15 @@ public class QueueItemHibernateDAO extends AbstractHibernateDAO<QueueItem, Integ
 	private final Logger log = Logger.getLogger(getClass());
 	
 
-	public List<QueueItem> getFirstItems(){
+	public QueueItem getFirstItem(){
 		TypedQuery<QueueItem> query = getEntityManager().createQuery(
 		        "SELECT queueItem FROM QueueItem queueItem WHERE priority > 0 ORDER BY priority desc, id asc", QueueItem.class);
-		query.setMaxResults(10);
-		return query.getResultList();
+		query.setMaxResults(1);
+		List<QueueItem> results = query.getResultList();
+		if (results.size() > 0){
+			return results.get(0);
+		}
+		return null;
 	}
 	
 
