@@ -1,7 +1,8 @@
 package eu.apenet.dashboard.listener;
 
 import java.util.Date;
-import java.util.TimerTask;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
@@ -14,23 +15,26 @@ import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.QueuingState;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
-public class QueueTask extends TimerTask {
+public class QueueTask implements Runnable {
 	private static final Logger LOGGER = Logger.getLogger(QueueDaemon.class);
-	private long duration;
-	private boolean active = true;
+	private Duration duration;
+	private Duration delay;
 	private long INTERVAL = 30000;
+	private final ScheduledExecutorService scheduler;
 
-	public QueueTask(long duration) {
-		this.duration = duration;
+	public QueueTask(ScheduledExecutorService scheduler, Duration maxDuration, Duration delay) {
+		this.duration = maxDuration;
+		this.delay = delay;
+		this.scheduler = scheduler;
 		JpaUtil.init();
 	}
 
 	@Override
 	public void run() {
 		LOGGER.info("Queuing process active");
-		long endTime = System.currentTimeMillis() + duration;
+		long endTime = System.currentTimeMillis() + duration.getMilliseconds();
 		boolean stopped = false;
-		while (!stopped && active && System.currentTimeMillis() < endTime) {
+		while (!stopped && !scheduler.isShutdown() && System.currentTimeMillis() < endTime) {
 			try {
 				processQueue(endTime);
 			} catch (Exception e) {
@@ -55,12 +59,10 @@ public class QueueTask extends TimerTask {
 		}
 
 		LOGGER.info("Queuing process inactive");
-	}
-
-	@Override
-	public boolean cancel() {
-		active = true;
-		return super.cancel();
+		if (!scheduler.isShutdown()) {
+			scheduler.schedule(new QueueTask(scheduler, duration, delay), delay.getMilliseconds(),
+					TimeUnit.MILLISECONDS);
+		}
 	}
 
 	private static void cleanUp() {
@@ -77,7 +79,7 @@ public class QueueTask extends TimerTask {
 		QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		boolean hasItems = true;
-		while (hasItems && active && System.currentTimeMillis() < endTime) {
+		while (hasItems && !scheduler.isShutdown() && System.currentTimeMillis() < endTime) {
 			int queueId = -1;
 			try {
 				/*
@@ -85,7 +87,7 @@ public class QueueTask extends TimerTask {
 				 */
 				JpaUtil.beginDatabaseTransaction();
 				QueueItem queueItem = queueItemDAO.getFirstItem();
-				
+
 				if (queueItem == null) {
 					JpaUtil.rollbackDatabaseTransaction();
 					hasItems = false;
@@ -98,20 +100,20 @@ public class QueueTask extends TimerTask {
 					EadService.processQueueItem(queueItem);
 					hasItems = true;
 				}
-			}catch (Exception e) {
-				LOGGER.error("queueId: " + queueId + " - " +e.getMessage(), e);
+			} catch (Exception e) {
+				LOGGER.error("queueId: " + queueId + " - " + e.getMessage(), e);
 				JpaUtil.rollbackDatabaseTransaction();
 				/*
-				 * it is unexcepted that this error occurred. put priority on 0, to the queue could go futher.
+				 * it is unexcepted that this error occurred. put priority on 0,
+				 * to the queue could go futher.
 				 */
 				JpaUtil.beginDatabaseTransaction();
-				if (queueId > -1){
+				if (queueId > -1) {
 					QueueItem queueItem = queueItemDAO.findById(queueId);
-					if (queueItem.getPriority() > 0){
+					if (queueItem.getPriority() > 0) {
 						queueItem.setPriority(0);
 					}
-					queueItem.setErrors(new Date()+ ". Error: "
-							+ e.getMessage() + "-" + e.getCause());
+					queueItem.setErrors(new Date() + ". Error: " + e.getMessage() + "-" + e.getCause());
 					queueItemDAO.updateSimple(queueItem);
 				}
 				JpaUtil.commitDatabaseTransaction();

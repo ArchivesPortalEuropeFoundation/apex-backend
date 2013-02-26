@@ -35,10 +35,7 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 			apeConfig.finalizeConfigPhase();
 			APEnetUtilities.setConfig(apeConfig);
 			if (!apeConfig.isDirectIndexing()){
-				QueueDaemon.init();
-				Date date = new Date();
-				date.setMinutes(date.getMinutes()+1);
-				QueueDaemon.addTask(date,new Duration(0, 10, 0) , new Duration(0, 13, 0));
+				QueueDaemon.start();
 			}
 		} catch (RuntimeException e) {
 			log.fatal("Fatal error while initializing: " + e.getMessage(), e);
@@ -115,7 +112,7 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 
 	@Override
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
-		QueueDaemon.cancel();
+		QueueDaemon.stop();
 	}
 
 }
