@@ -13,6 +13,10 @@
 			<th><s:text name="admin.queuemanagement.queue.active" /></th>
 			<td>${queueActive}</td>
 		</tr>
+		<tr>
+			<th><s:text name="admin.queuemanagement.queue.processing" /></th>
+			<td>${queueProcessing}</td>
+		</tr>
 	</table>
 	<s:form action="startStopQueue" method="post">
 		<s:actionerror />

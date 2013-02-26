@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 public class QueueDaemon {
 	private static final Logger LOGGER = Logger.getLogger(QueueDaemon.class);
 	private static ScheduledExecutorService scheduler;
+	private static boolean queueProcessing = false;
 	public static synchronized void start(){
 		if (scheduler == null){
 			scheduler = Executors.newScheduledThreadPool(1);
@@ -38,4 +39,11 @@ public class QueueDaemon {
 			return false;
 		}
 	}
+	public static boolean isQueueProcessing() {
+		return queueProcessing;
+	}
+	protected static void setQueueProcessing(boolean queueProcessing) {
+		QueueDaemon.queueProcessing = queueProcessing;
+	}
+	
 }

@@ -36,6 +36,7 @@ public class QueueTask implements Runnable {
 		boolean stopped = false;
 		while (!stopped && !scheduler.isShutdown() && System.currentTimeMillis() < endTime) {
 			try {
+				QueueDaemon.setQueueProcessing(true);
 				processQueue(endTime);
 			} catch (Exception e) {
 				LOGGER.error(e.getMessage(), e);
@@ -67,6 +68,7 @@ public class QueueTask implements Runnable {
 
 	private static void cleanUp() {
 		try {
+			QueueDaemon.setQueueProcessing(false);
 			JpaUtil.closeDatabaseSession();
 		}
 

@@ -46,6 +46,7 @@ public class ManageQueueAction  extends AbstractAction implements ServletRequest
 		request.setAttribute("firstItems", queueDAO.getFirstItems());
 		request.setAttribute("itemsWithErrors", queueDAO.getItemsWithErrors());
 		request.setAttribute("queueActive", QueueDaemon.isActive());
+		request.setAttribute("queueProcessing", QueueDaemon.isQueueProcessing());
 		return SUCCESS;
 	}
 	public String deleteQueueItem() throws Exception{
