@@ -8,8 +8,8 @@
 	<name>Dashboard and common Project</name>
 	<description>Maven Project for building the Dashboard/OAI-PMH server and common libraries</description>
 	<scm>
-		<connection>scm:svn:https://195.169.26.11/svn/apex/trunk</connection>
-		<developerConnection>scm:svn:https://195.169.26.11/svn/apex/trunk</developerConnection>
+		<connection>scm:svn:https://build.archivesportaleurope.net/svn/apex/trunk</connection>
+		<developerConnection>scm:svn:https://build.archivesportaleurope.net/svn/apex/trunk</developerConnection>
 	</scm>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -299,7 +299,7 @@
 			<dependency>
 				<groupId>eu.apenet</groupId>
 				<artifactId>DPTutils</artifactId>
-				<version>1.2.0-alpha-1</version>
+				<version>1.2.0-sprint-feb-2013</version>
 			</dependency>
 			<dependency>
 				<groupId>eu.archivesportaleurope</groupId>
