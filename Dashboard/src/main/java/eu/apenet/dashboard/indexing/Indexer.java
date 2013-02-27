@@ -9,7 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
@@ -32,19 +31,16 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import eu.apenet.commons.exceptions.APEnetRuntimeException;
 import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.solr.UpdateSolrServerHolder;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.utils.ContentUtils;
-import eu.apenet.persistence.dao.CountryDAO;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.WarningsDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
-import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
 import eu.apenet.persistence.vo.Warnings;
@@ -58,7 +54,7 @@ public class Indexer {
 	// public static final DecimalFormat SIMPLE_NUMBERFORMAT = new
 	// DecimalFormat("000");
 	//private String provider;
-	private Country country;
+	//private Country country;
 	private String language;
 	private String archdesc_langmaterial;
 	private String eadidstring;
@@ -76,7 +72,6 @@ public class Indexer {
 	private String currentPath;
 	private final static XPath XPATH = APEnetUtilities.getDashboardConfig().getXpathFactory().newXPath();
 	private static XPathExpression eadidExpression;
-	private static XPathExpression eadidCountrycodeExpression;
 	private static XPathExpression eadidIdentifierExpression;
 	private static XPathExpression textBelowExpression;
 	private static XPathExpression languageExpression;
@@ -105,7 +100,6 @@ public class Indexer {
 		try {
 			XPATH.setNamespaceContext(new EADNamespaceContext());
 			eadidExpression = XPATH.compile("/ead:ead/ead:eadheader/ead:eadid");
-			eadidCountrycodeExpression = XPATH.compile("@countrycode");
 			eadidIdentifierExpression = XPATH.compile("@identifier");
 			languageExpression = XPATH
 					.compile("/ead:ead/ead:eadheader/ead:profiledesc/ead:langusage/ead:language/@langcode");
@@ -194,29 +188,11 @@ public class Indexer {
 		Boolean displayDid = (Boolean) displayDidExpression.evaluate(doc, XPathConstants.BOOLEAN);
 		eadContent.setDisplayDid(displayDid);
 		Node eadidNode = (Node) eadidExpression.evaluate(doc, XPathConstants.NODE);
-		String countryString = (String) eadidCountrycodeExpression.evaluate(eadidNode, XPathConstants.STRING);
 		eadidstring = (String) textBelowExpression.evaluate(eadidNode, XPathConstants.STRING);
 		if (StringUtils.isBlank(eadidstring)) {
 			eadidstring = (String) eadidIdentifierExpression.evaluate(eadidNode, XPathConstants.STRING);
 		}
 		eadidstring = removeUnusedCharacters(eadidstring);
-		String repositorycode = removeUnusedCharacters(archivalinstitution.getRepositorycode());
-
-		if (StringUtils.isNotBlank(countryString)) {
-			try {
-				// Get the country.
-				CountryDAO countryDao = (CountryDAO) DAOFactory.instance().getCountryDAO();
-				List<Country> countryList = new ArrayList<Country>();
-				countryList = countryDao.getCountries(countryString);
-				country = countryList.get(0);
-
-			} catch (Exception ex) {
-				throw new APEnetRuntimeException(
-						"Extract General Data: Don't exist the countrycode into the file. Warning: " + ex.getMessage());
-			}
-		} else {
-			throw new APEnetRuntimeException("COUNTRY: There is not countrycode");
-		}
 		// Get out the language. @LANGCODE of all <language> node of
 		// <langusage>.
 		NodeList languageNodeList = (NodeList) languageExpression.evaluate(doc, XPathConstants.NODESET);
@@ -480,8 +456,8 @@ public class Indexer {
 				add(doc1, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NORMALIZED);
 			}
 		}
-		add(doc1, SolrFields.COUNTRY, country.getCname() + COLON + SolrValues.TYPE_GROUP + COLON + country.getId());
-		doc1.addField(SolrFields.COUNTRY_ID, country.getId());
+		add(doc1, SolrFields.COUNTRY, archivalinstitution.getCountry().getCname() + COLON + SolrValues.TYPE_GROUP + COLON + archivalinstitution.getCountry().getId());
+		doc1.addField(SolrFields.COUNTRY_ID, archivalinstitution.getCountry().getId());
 		add(doc1, SolrFields.LANGUAGE, language);
 		add(doc1, SolrFields.LANGMATERIAL, langmaterial);
 		// deprecated
