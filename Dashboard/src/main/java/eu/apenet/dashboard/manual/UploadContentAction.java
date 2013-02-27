@@ -309,7 +309,7 @@ public class UploadContentAction extends AbstractInstitutionAction implements Se
                 client = (FTPClient) session.get("ftpClient");
 
             String parentName = request.getParameter("parentName");
-            log.debug("ParentName: " + parentName);
+            log.info("ParentName: " + parentName);
 
             List<FTPFile> listFiles = uploader_ftp.getFTPFiles(client, parentName);
             String s = createJSONString(listFiles, parentName);
