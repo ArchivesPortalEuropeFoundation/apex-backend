@@ -27,6 +27,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
+            <add-attribute type="string" value="/js/richselect.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal"/>        
 	</definition>	

@@ -46,8 +46,7 @@
 					setTimeout('$("#stateDiv").fadeOut("slow")',2000);
 					//setTimeout('$("#divBlock").remove()',1500);
 				}
-
-				$("#changeNodeDiv").click(function(){
+				var changenodedivfunction = function(){
 					var selectedIndex = $("select[name=ALElement] option:selected").index();
 					var elementName = $("select[name=ALElement] option:selected").text();
 					var elementValue = $("select[name=ALElement] option:selected").val();
@@ -56,21 +55,23 @@
 					if(selectedIndex!=-1){
 						$.post('changeNode.action',{"textAL":"","element":"","father" :fatherId,"ALElement":$("select[name=ALElement] option:selected").val()},function(response){
 							$("body").html(response);
-							$("select[name=ALElement] option[value="+elementValue+"]").attr('selected','selected');
+							$("option[value*='"+elementValue+"']").attr('selected','selected'); //select
+							$("#editDiv").show();
+							$("#showEditLanguagesDiv").show();
+							$("#actionsButtons").show();
+							$("#divGroupNodesContainer").show();
+							alelementclick();
 							if($("#changeNode_").length>0){
 								updateStatusWindow('<span style="font-weight:bold;">'+elementName+'</span> <s:property value="getText('al.message.institutionhascontentindexed')"/>!');
 							}else{
 								updateStatusWindow('<span style="font-weight:bold;">'+elementName+'</span> <s:property value="getText('al.message.nodechangedto')"/> '+father+'!');
 							}
-							$("#editDiv").show();
-							$("#showEditLanguagesDiv").show();
-							$("#actionsButtons").show();
-							$("#divGroupNodesContainer").show();
 						});
 					}else{
 						updateStatusWindow("<s:property value='getText("al.message.noElementSelected")' />");
 					}
-				});
+				};
+				$("#changeNodeDiv").click(changenodedivfunction);
 				$("#addDiv").click(function(){
 					var selectedIndex = $("select[name=ALElement] option:selected").index();
 					var elementName = $("select[name=ALElement] option:selected").text();
@@ -111,6 +112,15 @@
                 function translateName(name) {
                     return name.replace(/^[0-9|\||\.| |\*]*/, "");
                 }
+                function checkSpecialNodes(){
+                	if ($('select[name=ALElement] option:selected').hasClass("nodelete")) {
+						$('#actionWarning').html("<s:text name='al.message.contains.eads'/>");
+						$('#deleteDiv').addClass("hidden");
+					} else {
+						$('#actionWarning').html("");
+						$('#deleteDiv').removeClass("hidden");
+					}
+                }
 				$("#moveUpDiv").click(function(){
 					var selectedIndex = $("select[name=ALElement] option:selected").index();
 					var elementName = $("select[name=ALElement] option:selected").text();
@@ -128,6 +138,7 @@
 							$("select[name=ALElement] option").each(function(){
 								if($(this).val()==elementValue){
 									$(this).attr("selected",true);
+									checkSpecialNodes();
 								}
 							});
 						});
@@ -152,6 +163,7 @@
 							$("select[name=ALElement] option").each(function(){
 								if($(this).val()==elementValue){
 									$(this).attr("selected",true);
+									checkSpecialNodes();
 								}
 							});
 						});
@@ -170,15 +182,39 @@
 						updateStatusWindow("<s:property value='getText("al.message.noElementSelected")' />");
 					}
 				});
-				
-				$("#unselectDiv").click(function(){
+				var unselectclickfunction = function(){
 					var elementName = $("select[name=ALElement] option:selected").text();
 					$("select[name=ALElement]")[0].selectedIndex = -1;
 					updateStatusWindow('<span style="font-weight:bold;">'+elementName+'</span> <s:property value="getText('al.message.unselected')"/>');
 					$("#actionsButtons").hide();
 					$("#showEditLanguagesDiv").hide();
 					$("#divGroupNodesContainer").hide();
-				});
+					//unselect
+					$("ul[id*='ALElement'] li.selected").css("background-color","");
+					$("ul[id*='ALElement'] li.selected").removeClass("selected");
+				};
+				var alelementclick = function(){
+					
+					if ($('select[name=ALElement] option:selected').hasClass("nodelete")) {
+						$('#actionWarning').html("<s:text name='al.message.contains.eads'/>");
+						$('#deleteDiv').addClass("hidden");
+					} else {
+						$('#actionWarning').html("");
+						$('#deleteDiv').removeClass("hidden");
+					}
+					
+					$("#showLanguagesDiv").show();
+					$("#actionsButtons").show();
+					$("#showEditLanguagesDiv").show();
+					if($("#father option").size()>1){
+						$("#divGroupNodesContainer").show();
+					}
+					$("#showAlternativeNamesDiv").hide();
+					$("#editDiv").hide();
+					$("#editLanguagesDiv").hide();
+					
+				};
+				$("#unselectDiv").click(unselectclickfunction);
 				
 				$("#showLanguagesDiv").click(function(){
 					var selectedIndex = $("select[name=ALElement] option:selected").index();
@@ -192,6 +228,14 @@
 							$("#showEditLanguagesDiv").show();
 							$("#actionsButtons").show();
 							$("#divGroupNodesContainer").show();
+							
+							if($('select[name=ALElement] option:selected').hasClass("nodelete")){
+								$('#actionWarning').html("<s:text name='al.message.contains.eads'/>");
+								$('#deleteDiv').addClass("hidden");
+							}else{
+								$('#actionWarning').html("");
+								$('#deleteDiv').removeClass("hidden");
+							}
 						});
 					}else{
 						updateStatusWindow("<s:property value='getText("al.message.noElementSelected")' />");
@@ -257,17 +301,7 @@
 						$("#actionsButtons").hide();
 						$("#showEditLanguagesDiv").hide();
 						$("#divGroupNodesContainer").hide();
-						$("select[name='ALElement']").change(function(){
-							$("#showLanguagesDiv").show();
-							$("#actionsButtons").show();
-							$("#showEditLanguagesDiv").show();
-							if($("#father option").size()>1){
-								$("#divGroupNodesContainer").show();
-							}
-							$("#showAlternativeNamesDiv").hide();
-							$("#editDiv").hide();
-							$("#editLanguagesDiv").hide();
-						});
+						$("select[name='ALElement']").click(alelementclick);
 						if($("#submitDeleteTarget").is('*')){
 							$("#submitDeleteTarget").remove();
 							$("#showAlternativeNamesDiv").append("<div id='submitDeleteTargetDiv' class='divAction' ><s:property value="getText('al.message.deletetarget')"/></div>");
@@ -291,21 +325,18 @@
 							});
 						}
 					}
-					$("#ALElement").click(function(){
-						if ($('select[name=ALElement] option:selected').hasClass("nodelete")) {
-							$('#actionWarning').html("<s:text name='al.message.contains.eads'/>");
-							$('#deleteDiv').addClass("hidden");
-						} else {
-							$('#actionWarning').html("");
-							$('#deleteDiv').removeClass("hidden");
-						}
+					$("#ALElement").richSelect({
+						"global_class":"divSelectOnlyListElements2",
+						"individual_class":"",
+						"onelement_click":/*$._data($("#ALElement")[0],"events")["click"][0].handler*/alelementclick,
+						"onelement_unselected": /*$._data($("#unselectDiv")[0],"events")["click"][0].handler*/unselectclickfunction
 					});
 				});
 				function showcurtain(){
 					$("#curtain").show();
-					};
+				};
+				
 			</script>
-			
 			<div id="filterSelect">
 				<div class="firstFilterDiv">
 					<label for="textAL"><s:property value="getText('al.message.name')" />:</label>
@@ -344,13 +375,19 @@
 				<s:elseif test="AL.size()<2">
 						<div class="divFilterThree">
 							<div class="secondFilterDiv">
-								<label for="ALElement" class="ALElementLabel"><s:property value="getText('al.message.listal')" /></label>
-								<select id="selectOnlyListElements" class="selectListElementsALNoMargin" name="ALElement" id="ALElement" size="2">
+								<div style="float:left;width:100%;">
+									<label for="ALElement" class="ALElementLabel"><s:property value="getText('al.message.listal')" /></label>
+								</div>
+								<div style="float:left;width:100%;">
+									<select id="selectOnlyListElements" class="selectListElementsALNoMargin" name="ALElement" id="ALElement" size="2">
 				</s:elseif>
 				<s:else>
 						<div id="selectOnlyListElements" class="divSelectOnlyListElements">
-							<label for="ALElement" class="ALElementLabel"><s:property value="getText('al.message.listal')" /></label>
-							<select class="divSelectOnlyListElements2" name="ALElement" id="ALElement" size="<s:property value="AL.size()" />">
+							<div style="float:left;width:100%;">
+								<label for="ALElement" class="ALElementLabel"><s:property value="getText('al.message.listal')" /></label>
+							</div>
+							<div style="float:left;width:100%;">
+								<select class="divSelectOnlyListElements2" name="ALElement" id="ALElement" size="<s:property value="AL.size()" />">
 				</s:else>								
 							<s:iterator var="row" value="AL">
 									<option class="${row.cssClass}" style="padding-left:${15*row.depth}px;" value="${row.id}" ><s:property value="#row.name" /></option>
@@ -358,7 +395,8 @@
 								
 							</s:iterator>
 					<s:if test="AL.size()>0">
-							</select>
+								</select>
+							</div>
 							<s:if test="elementLanguages.size()>0">
 								<div id="showAlternativeNamesDiv" style="float:left;width:100%;">
 									<p><s:property value="getText('al.message.alternativenames')" /></p>
