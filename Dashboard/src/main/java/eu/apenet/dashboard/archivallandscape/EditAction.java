@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -27,7 +28,7 @@ import org.xml.sax.SAXException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.utils.ContentUtils;
-import eu.apenet.persistence.factory.DAOFactory;
+//import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.FindingAid;
@@ -207,22 +208,18 @@ public class EditAction extends eu.apenet.dashboard.archivallandscape.AbstractEd
 		} else if (getALElement() != null && !state) {
 			return ERROR; // NOT SAVED
 		} else if ((getALElement() != null && state) || (getList() != null && getList().size() == 0)
-				|| (getALElement() == null && getTextAL() != null && getTextAL().length() > 0)) { // AL
-																									// should
-																									// be
-																									// distinct
-																									// of
-																									// null
+				|| (getALElement() == null && getTextAL() != null && getTextAL().length() > 0)) { // AL should be distinct of null
+			
 			boolean archivalInstitutionNameExists = false;
-			List<ArchivalInstitution> archivalInstitutions = DAOFactory.instance().getArchivalInstitutionDAO()
-					.getArchivalInstitutionsByCountryId(a.getCountryId(), false);
-			for (ArchivalInstitution archivalInstitution : archivalInstitutions) {
-				if (getTextAL().equals(archivalInstitution.getAiname())
-						|| getTextAL().equals(archivalInstitution.getAutform())) {
-					archivalInstitutionNameExists = true;
-					break;
-				}
-			}
+//			List<ArchivalInstitution> archivalInstitutions = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionsByCountryId(a.getCountryId(), false);
+//			for (ArchivalInstitution archivalInstitution : archivalInstitutions) {
+//				if (getTextAL().equals(archivalInstitution.getAiname()) || getTextAL().equals(archivalInstitution.getAutform())) {
+//					archivalInstitutionNameExists = true;
+//					break;
+//				}
+//			}
+			//find textAL, archival institution name
+			archivalInstitutionNameExists = findArchivalInstitutionName(getTextAL(),getList());
 
 			List<Institution> tempAL = getAL();
 			tempAL.clear();
@@ -230,17 +227,33 @@ public class EditAction extends eu.apenet.dashboard.archivallandscape.AbstractEd
 			if (!archivalInstitutionNameExists) {
 				writeList(getList(), path);
 				setHasElementChanged(true);
+			}else{
+				addActionMessage(getTextAL()+" "+getText("al.message.existsAlready"));
 			}
-			setList(EditArchivalLandscapeLogic.navigate(false)); // It has to be
-																	// here
-																	// because
-																	// write is
-																	// the last
-																	// writer
+			setList(EditArchivalLandscapeLogic.navigate(false)); // It has to be here because write is the last writer
 		}
 		parseList(getList(), null); // Cipher is the start number(1.x in this
 									// case)
 		return SUCCESS; // END UPLOAD LIST
+	}
+
+	private boolean findArchivalInstitutionName(String institutionName,List<Institution> archivalInstitutions) {
+		boolean found = false;
+		if(archivalInstitutions!=null && archivalInstitutions.size()>0 && institutionName!=null && !institutionName.isEmpty()){
+			List<Institution> tempArchivalInstitutionList = archivalInstitutions;
+			Iterator<Institution> iterator = tempArchivalInstitutionList.iterator();
+			while(iterator.hasNext() && !found){
+				Institution targetArchivalInstitution = iterator.next();
+				String targetInstitutionName = targetArchivalInstitution.getName();
+				if(targetInstitutionName!=null && !targetInstitutionName.isEmpty() && targetInstitutionName.equals(institutionName)){
+					return true;
+				}
+				if(targetArchivalInstitution.isGroup()){
+					found = findArchivalInstitutionName(institutionName,targetArchivalInstitution.getInstitutions());
+				}
+			}
+		}
+		return found;
 	}
 
 	/**
