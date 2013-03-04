@@ -1,3 +1,0 @@
-/* Test File attached within MailSender */
-
-Here should appear the privacy policy in the future releases...

@@ -1,8 +1,0 @@
-Dear ${name},
-
-Your Country Manager account for the country ${country} (e-mail address: ${emailAddress}) has been deleted.
-
-Best wishes,
-
-${userManager}
-Administrator of the Dashboard

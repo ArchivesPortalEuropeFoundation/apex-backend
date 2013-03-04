@@ -1,8 +1,0 @@
-Dear ${name},
-
-Your Institution Manager account for ${archivalInstitution} (e-mail address: ${emailAddress}) has been deleted.
-
-Best wishes,
-
-${userManager}
-Administrator/Country Manager of the Dashboard

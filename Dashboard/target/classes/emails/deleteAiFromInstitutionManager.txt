@@ -1,8 +1,0 @@
-Dear ${name},
-
-The archival institution ${archivalInstitution} has been removed from your Institution Manager account '${emailAddress}'.
-
-Best wishes,
-
-${userManager}
-Administrator/Country Manager of the Dashboard
