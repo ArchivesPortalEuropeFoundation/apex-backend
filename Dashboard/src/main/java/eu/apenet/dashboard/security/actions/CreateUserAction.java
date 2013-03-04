@@ -2,6 +2,8 @@ package eu.apenet.dashboard.security.actions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
@@ -101,13 +103,13 @@ public class CreateUserAction extends AbstractAction {
 		if (existingPartnerId == null) {
 			if (this.getFirstName() != null) {
 				if (this.getFirstName().length() == 0) {
-					addFieldError("name", getText("firstname.required"));
+					addFieldError("firstName", getText("firstname.required"));
 				}
 			}
 
 			if (this.getLastName() != null) {
 				if (this.getLastName().length() == 0) {
-					addFieldError("surname", getText("lastname.required"));
+					addFieldError("lastName", getText("lastname.required"));
 				}
 			}
 
@@ -117,6 +119,16 @@ public class CreateUserAction extends AbstractAction {
 				} else {
 					if (UserService.exitsEmailUser(this.getEmail())) {
 						addFieldError("email", getText("email.notAvailable"));
+					}
+					else {
+						/*Email validation required to allow to create a new user*/
+						String  expression="^[\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+			               CharSequence inputStr = email;
+			               Pattern pattern = Pattern.compile(expression,Pattern.CASE_INSENSITIVE);
+			               Matcher matcher = pattern.matcher(inputStr);
+			               /*A new method has been created to add the error message for an invalid email format*/
+			               if(!matcher.matches())
+			            	   addFieldError("email", getText("email.valid"));				
 					}
 				}
 			}

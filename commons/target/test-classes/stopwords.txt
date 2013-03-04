@@ -1,0 +1,4 @@
+#APEnet stopword list
+de
+van
+la

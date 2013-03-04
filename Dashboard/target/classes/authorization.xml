@@ -1,0 +1,69 @@
+<authorization>
+	<groups>
+		<group name="publicActions">
+			FillOrderAL,changeForgetPwd,changeLanguage,contact,currentState,error-404,error-500,forgetPwd,index,login,startpage,termsOfUse,logout
+		</group>
+		<group name="institutionManagerActions">
+			showHome,selectArchive,
+						view, edit,contentmanager,updateContentmanager,			
+						validatechangeainame, changeainame, downloadeag, upload, checkfilesuploaded,
+						httpUpload, checkexistingfiles, cancelCheckexistingfiles, overwriteexistingfiles, canceloverwriteexistingfiles
+						indexingLaunched,
+						eadActions, batchEadActions, removeEseForFA, 
+						displayEseConvert, processEseConvert, showwarnings, download, link, removeLink, preview, downloadEse,
+	                    displayEadFrontPage, generateTreeJSON, displayEadIntroduction, displayEadDidContent, displayCContent,
+						batchAction,
+	                    displayConvertEseBatch, startConvertEseBatch,
+	                    generateTreeJSONWithoutPreface, showxml,getFindingAidsNotLinked,
+	                    
+	                    GoDashboard, dashboardHome, GoDashboardByInstitutionManager,
+	                    
+	                    <!-- EAG -->
+	                    createsimpleeag, createsimpleeagwithmenu, uploadsimpleeag, uploadsimpleeagwithmenu, uploadowneag, eaghttpuploadwithmenu,
+                        eaghttpupload, generaterepositorguidePossibleHGTitlePartJSON, generateInformationMessageJSON, uploadowneagwithmenu, eagcorrectlyuploaded,
+
+            <!-- Edition of EAD -->
+	                    editEad, editEadCreateDbEntries, editEadXml, editEadXmlSaveLevel, editEadXmlSaveAll, editEadXmlDeleteEntries, editEadGetFields, editEadAddField,
+	
+	                    <!-- Harvesting -->
+	                    harvestOAI, harvesting, stopHarvest, getThreadLevel, dbToEadAjax,
+
+	                    <!-- Uploading -->
+	                    generateEadidResponseJSON, connectFTP, updateFtp, saveFtpFiles,
+	
+	                    batchActionAjax, AjaxControllerAction, AjaxConversionControllerAction,
+	                    addOneFA, clearFAsFromSession, getFAsFromSession, addAllFAsInSession, checkCurrentConversionOptions, saveConversionOptions,
+	
+	                    hasCpfReady, displayCpfInformation,
+
+                        <!-- hg creation -->
+	                    hgTreeCreation, getPossibleFAs, addEadContentData, addCLevelData, addFAsToCurrentLevel, deleteLevelHG,
+                        createHoldingsGuide,
+                        
+                        <!-- unload -->
+                        unload;
+		</group>
+		<group name="countryManagerActions">
+			AjaxGetEmailFromInstituionAction,InstitutionsControl,ListInstitutionsControl,changeAlIdFromUpload,changeAlIdentifiers,
+			changeInstitutionManager,changeNode,deleteTarget,downloadAL,editAL,editElement,editInstitutionControl,
+			editTarget,feditAL,generateArchivalInstitutionPartPreviewALJSON,generatePreviewALTreeJSON,httpOverwriteAL,httpUploadAL,
+			modifyStructure,moveDownAL,moveUpAL,showEAGPreviewAL,showLanguages,storeAlIdentifier,uploadAL,viewAL,institutionManagerManagement,
+			displayCreateInstitutionManager,deleteInstitutionManager,changeToInstitutionManager,disableInstitutionManager,enableInstitutionManager,createInstitutionManager
+		</group>
+		<group name="adminActions">
+			FillPrimaryNameAction,checkEagNamespace,countryState,
+			createCountry,createLanguage,downloadGeneralAL,goCountryAccount,
+			insertAlternativeCountryNames,
+			storeAlternativeCountryNames,storeCountry,storeLanguage,viewAdmin,
+			sessionManagement,deleteSession,userManagement,
+			changeToCountryManager,createCountryManager,displayCreateCountryManager,disableCountryManager,enableCountryManager,deleteCountryManager,
+            viewDptVersions, addVersion, deleteVersion, manageQueue, startStopQueue,deleteQueueItem
+		</group>
+	</groups>
+	<role-mappings>
+		<role-mapping name="norole" groups="publicActions"/>
+		<role-mapping name="institutionManager" groups="publicActions,institutionManagerActions"/>
+		<role-mapping name="countryManager" groups="publicActions,institutionManagerActions,countryManagerActions"/>
+		<role-mapping name="admin" groups="publicActions,institutionManagerActions,countryManagerActions,adminActions"/>
+	</role-mappings>
+</authorization>

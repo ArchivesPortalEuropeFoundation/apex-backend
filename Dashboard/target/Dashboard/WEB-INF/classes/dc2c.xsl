@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="2.0" xmlns="urn:isbn:1-931666-22-9"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:ns3="http://www.openarchives.org/OAI/2.0/oai_dc/"
+                xmlns:ns2="http://purl.org/dc/elements/1.1/"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.loc.gov/ead/ead.xsd"
+                xpath-default-namespace="urn:isbn:1-931666-22-9"
+                exclude-result-prefixes="xsl fo xs ns2 ns3">
+
+    <xsl:output indent="yes" method="xml" />
+    <xsl:strip-space elements="*"/>
+
+    <xsl:template match="/">
+        <c>
+            <xsl:call-template name="level">
+                <xsl:with-param name="level" select="ns3:dc/ns2:type"/>
+            </xsl:call-template>
+            <did>
+                <xsl:call-template name="did"/>
+            </did>
+            <xsl:call-template name="notdid"/>
+        </c>
+    </xsl:template>
+
+    <xsl:template name="level">
+        <xsl:param name="level"/>
+        <xsl:attribute name="level">
+            <xsl:choose>
+                <xsl:when test="$level eq 'Fundo'">
+                    <xsl:value-of select="'fonds'"/>
+                </xsl:when>
+                <xsl:when test="$level eq 'Série' or $level eq 'Subfundo' or $level eq 'Secção' or $level eq 'Subsérie' or $level eq 'Subsecção'">
+                    <xsl:value-of select="'series'"/>
+                </xsl:when>
+                <xsl:when test="$level eq 'Documento composto' or $level eq 'Unidade de instalação'">
+                    <xsl:value-of select="'file'"/>
+                </xsl:when>
+                <xsl:when test="$level eq 'Documento simples'">
+                    <xsl:value-of select="'item'"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="'series'"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:attribute>
+    </xsl:template>
+
+    <xsl:template name="did">
+        <xsl:for-each select="ns3:dc/ns2:identifier">
+            <xsl:if test="not(starts-with(text(), 'http'))">
+                <unitid type="call number" encodinganalog="3.1.1">
+                    <xsl:for-each select="parent::*/*[local-name()='identifier']">
+                        <xsl:if test="starts-with(text(), 'http')">
+                            <extptr>
+                                <xsl:attribute name="xlink:href">
+                                    <xsl:value-of select="text()" />
+                                </xsl:attribute>
+                            </extptr>
+                        </xsl:if>
+                    </xsl:for-each>
+                    <xsl:apply-templates select="text()" />
+                </unitid>
+            </xsl:if>
+        </xsl:for-each>
+        <xsl:if test="ns3:dc/ns2:title">
+            <unittitle encodinganalog="3.1.2">
+                <xsl:value-of select="ns3:dc/ns2:title/text()"/>
+            </unittitle>
+        </xsl:if>
+        <xsl:if test="ns3:dc/ns2:publisher">
+            <origination>
+                <xsl:value-of select="ns3:dc/ns2:publisher"/>
+            </origination>
+        </xsl:if>
+        <xsl:for-each select="ns3:dc/ns2:date">
+            <unitdate encodinganalog="3.1.3" era="ce" calendar="gregorian">
+                <xsl:value-of select="text()"/>
+            </unitdate>
+        </xsl:for-each>
+    </xsl:template>
+
+    <xsl:template name="notdid">
+        <xsl:if test="ns3:dc/ns2:subject">
+            <scopecontent encodinganalog="summary">
+                <p>
+                    <xsl:value-of select="ns3:dc/ns2:subject"/>
+                </p>
+            </scopecontent>
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template match="text()|@*" priority="2">
+        <xsl:copy>
+            <xsl:apply-templates select="node()|@*"/>
+        </xsl:copy>
+    </xsl:template>
+
+    <xsl:template match="comment()" priority="3" />
+
+</xsl:stylesheet>

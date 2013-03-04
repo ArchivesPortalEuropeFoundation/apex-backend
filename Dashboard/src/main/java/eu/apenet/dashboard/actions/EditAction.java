@@ -71,6 +71,8 @@ public class EditAction extends AbstractAction {
 			userToUpdate.setSecretQuestion(this.getSecretQuestion());
 			UserService.updateUser(userToUpdate);
 			addActionMessage(getText("success.user.edit"));
+			//after successful change, update the name and surname in <user features>
+			
 			return SUCCESS;
 		} else {
 			// addActionError(getText("error.user.edit.modify"));
