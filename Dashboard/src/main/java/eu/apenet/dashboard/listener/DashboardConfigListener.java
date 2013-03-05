@@ -17,12 +17,10 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 	private static final String EUROPEANA_DIR_PATH = "EUROPEANA_DIR_PATH";
 	private static final String EUROPEANA_DIR_PATH_DEFAULT = "/mnt/europeana/";
 	private static final String SOLR_INDEX_URL = "SOLR_INDEX_URL";
-	private static final String DIRECT_INDEXING = "DIRECT_INDEXING";
 	private static final String XSL_DIR_PATH = "XSL_DIR_PATH";
 	private static final String XSL_DIR_PATH_DEFAULT = "/mnt/xsl/";
 	private static final String TMP_DIR_PATH = "TMP_DIR_PATH";
 	private static final String TMP_DIR_PATH_DEFAULT = "/mnt/tmp/";
-	private static final String BATCH_PROCESSING_ENABLED = "BATCH_PROCESSING_ENABLED";
 
 	private static final String DOMAIN_NAME_MAIN_SERVER = "DOMAIN_NAME_MAIN_SERVER";
 	private static final String DOMAIN_NAME_MAIN_SERVER_DEFAULT = "localhost:8443";
@@ -34,9 +32,7 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 			init(servletContext, apeConfig);
 			apeConfig.finalizeConfigPhase();
 			APEnetUtilities.setConfig(apeConfig);
-			if (!apeConfig.isDirectIndexing()){
-				QueueDaemon.start();
-			}
+			QueueDaemon.start();
 		} catch (RuntimeException e) {
 			log.fatal("Fatal error while initializing: " + e.getMessage(), e);
 			throw e;
@@ -71,16 +67,6 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 			log.info(SOLR_INDEX_URL + ": " + solrIndexUrl);
 		}
 		config.setSolrIndexUrl(solrIndexUrl);
-		/*
-		 * direct indexing
-		 */
-		boolean directIndexing = TRUE.equalsIgnoreCase(servletContext.getInitParameter(DIRECT_INDEXING));
-		config.setDirectIndexing(directIndexing);
-		String batchProcessingEnabled = servletContext.getInitParameter(BATCH_PROCESSING_ENABLED);
-		if (!StringUtils.isBlank(batchProcessingEnabled)) {
-			config.setBatchProcessingEnabled(TRUE.equalsIgnoreCase(batchProcessingEnabled));
-		}
-
 		
 		String xslDirPath = servletContext.getInitParameter(XSL_DIR_PATH);
 		if (StringUtils.isBlank(xslDirPath)) {
