@@ -18,7 +18,8 @@
 			</div>
 			<div id="countrystate" style="width:350px;" >
 				<s:if test="aiNodes.size()>0">
-					<table border="1" cellpadding="1500">
+				<!-- 				Updated cellpadding="1500" for cellpadding="2" -->
+					<table border="1" cellpadding="2">
 					<thead align="center">
 					<tr style="background:#ECE9EA; font-weight: bold; ">
 						<td ><s:property value="getText('admin.menu.institution')"/></td>
