@@ -1,15 +1,10 @@
 package eu.apenet.dashboard.actions;
 
-import org.apache.log4j.Logger;
-
 import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.security.SecurityContext;
 
 public class IndexAction extends AbstractAction {
-	
 	private static final long serialVersionUID = -904941635133388559L;
-	private Logger log = Logger.getLogger(getClass());
-	
 
 	@Override
     public String execute() throws Exception {
@@ -26,10 +21,4 @@ public class IndexAction extends AbstractAction {
         }
         return ERROR;
     }
-	
-	//Empty action
-	public String index(){
-		return SUCCESS;
-	}
-
 }

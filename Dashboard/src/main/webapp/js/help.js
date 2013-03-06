@@ -12,40 +12,6 @@ function uploadBlackout(text_value) {
     };
     return curtain;
 }
-function removeBlackout() {
-    var d = document.body;
-    var olddiv = document.getElementById("curtain");
-    if(d == undefined || olddiv == undefined){return;}
-    d.removeChild(olddiv);
-}
-function changeXslValue(selectTag, id){
-    document.getElementById(id).value = selectTag.options[selectTag.selectedIndex].text;
-}
-function createProgressBar(){
-    $("#progressbar").progressbar({ value: 0 });
-    $("#progresstext").html("<p>0%</p>");
-}
-function createLoop(aiId, id, xmlTypeId){
-    var loadUrl =  "AjaxControllerAction.action";
-    var data = {id: id, aiId: aiId, xmlTypeId: xmlTypeId};
-    $.post(loadUrl, data, function(databack){
-        doLoop();
-    }, 'json');
-}
-function doLoop(){
-    var loadUrl = "AjaxConversionControllerAction.action";
-    $.post(loadUrl, null, function(databack){
-        if(databack != null){
-            $("#progressbar").progressbar({ value : databack.counter });
-            $("#progresstext").html("<p>" + databack.counter + "%</p>");
-            doLoop();
-        } else {
-            $("#progressbar").progressbar({ value : 100 });
-            $("#progresstext").html("<p>100%</p>");
-            location.reload(true);
-        }
-    }, 'json');
-}
 function count() {
     var loadUrl = "getFAsFromSession.action";
     $.post(loadUrl, null, function(databack) {
@@ -172,25 +138,5 @@ function prepareSubmitAndCancelBtns() {
     });
     $("#cancelBtnRoleType").bind("click", function(){
         $.fn.colorbox.close();
-    });
-}
-
-function checkEagLink(){
-    $('.eagLink').each(function(index) {
-        $(this).attr("title", "Check if the namespace of the file is correct...");
-        $(this).bind("click", function(){
-            var identifier = $(this).attr("id");
-            $.post("checkEagNamespace.action", {fileId:$(this).attr("id")}, function(databack){
-                if(databack.old == "true"){
-                    $("#" + identifier).addClass("wrong");
-                    $("#" + identifier).attr("title", "The namespace is not correct...");
-                } else if(databack.old == 'false') {
-                    $("#" + identifier).addClass("correct");
-                    $("#" + identifier).attr("title", "The namespace is correct...");
-                }
-                $("#" + identifier).unbind("click");
-                $("#" + identifier).removeClass("eagLink");
-            });
-        });
     });
 }

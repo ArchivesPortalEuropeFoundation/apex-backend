@@ -341,12 +341,7 @@
 			<result name="SSLRequiredResult" type="tiles">error</result>
 		</action>
 
-        <action name="startpage" class="eu.apenet.dashboard.actions.StartPageAction">
-            <result name="success" type="tiles">login</result>
-            <result name="start_page" type="tiles">startpage</result>
-        </action>
-
-		<!-- It contents all Archival Landscape Actions -->
+        <!-- It contents all Archival Landscape Actions -->
 		<action name="viewAL" class="eu.apenet.dashboard.ViewALAction">
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="success" type="tiles">viewAL</result>
@@ -529,28 +524,6 @@
 			</result>
 		</action>
 
-		<action name="batchActionAjax" class="eu.apenet.dashboard.actions.ajax.BatchAction">
-			<result type="stream">
-				<param name="inputName">outputStream</param>
-				<param name="contentType">text/html</param>
-			</result>
-		</action>
-
-        <action name="AjaxControllerAction" class="eu.apenet.dashboard.actions.ajax.AjaxControllerAction" method="convert2eadAjax">
-            <result type="stream">
-				<param name="inputName">outputStream</param>
-				<param name="contentType">application/json</param>
-			</result>
-        </action>
-
-        <action name="AjaxConversionControllerAction" class="eu.apenet.dashboard.actions.ajax.AjaxControllerAction" method="getCounterStatus">
-            <result type="stream">
-				<param name="inputName">outputStream</param>
-				<param name="contentType">application/json</param>
-			</result>
-        </action>
-
-
 		<action name="login" class="eu.apenet.dashboard.actions.LoginAction">
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="input" type="tiles">login</result>
@@ -626,11 +599,10 @@
 				<param name="actionName">index</param>
 			</result>
 		</action>
-		
-		<action name="termsOfUse" class="eu.apenet.dashboard.actions.IndexAction" method="index">
-			<interceptor-ref name="changeLanguageStack"/>
-			<result type="tiles">termsOfUse</result>
-		</action>
+
+        <action name="termsOfUse">
+            <result type="tiles">termsOfUse</result>
+        </action>
 
 		<action name="contact" class="eu.apenet.dashboard.actions.ContactAction">
 			<interceptor-ref name="changeLanguageStack"/>
@@ -834,14 +806,14 @@
             </result>
         </action>
 
-        <action name="checkCurrentConversionOptions" class="eu.apenet.dashboard.actions.ajax.AjaxControllerAction" method="checkCurrentConversionOptions">
+        <action name="checkCurrentConversionOptions" class="eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsAction" method="checkCurrentConversionOptions">
             <result type="stream">
                 <param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
             </result>
         </action>
 
-        <action name="saveConversionOptions" class="eu.apenet.dashboard.actions.ajax.AjaxControllerAction" method="saveConversionOptions">
+        <action name="saveConversionOptions" class="eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsAction" method="saveConversionOptions">
             <result type="stream">
                 <param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>

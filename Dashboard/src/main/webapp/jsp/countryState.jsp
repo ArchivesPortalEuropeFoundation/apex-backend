@@ -35,7 +35,7 @@
 								<td><s:property value="#row.ai.ainame" /></td>
 								<td>
 									<s:if test="#row.ai.eagPath!=null">
-										<span class="eagLink" id="eagLink_${row.ai.aiId}"><s:property value="getText('admin.menu.label.EAGuploaded')"/></span>
+										<s:property value="getText('admin.menu.label.EAGuploaded')"/>
 									</s:if>
 									<s:else>
 										<s:property value="getText('admin.menu.label.EAGnotuploaded')"/>
@@ -60,11 +60,6 @@
 				</s:elseif>
 			</div>
 		</s:form>	
-		<br></br>
-		<br></br>	       
+		<br/>
+		<br/>
 </div>
-<script type="text/javascript">
-    $(document).ready(function() {
-        checkEagLink();
-    });
-</script>

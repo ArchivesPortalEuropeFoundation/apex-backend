@@ -17,8 +17,6 @@
 			     to access a particular page according to the rules defined in the
 			 "roleActions" parameter. -->
 			<interceptor name="securityInterceptor" class="eu.apenet.dashboard.security.SecurityInterceptor" />
-			<interceptor name="startingProjectInterceptor" class="eu.apenet.dashboard.interceptors.StartingProjectInterceptor"/>
-			<interceptor name="fixDatabaseAndFilesInterceptor" class="eu.apenet.dashboard.interceptors.FixDatabaseAndFilesInterceptor"/>
 			
 			<interceptor-stack name="defaultApeStack">
 				<interceptor-ref name="securityInterceptor"/>

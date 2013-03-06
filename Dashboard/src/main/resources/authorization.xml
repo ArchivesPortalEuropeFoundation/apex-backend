@@ -31,7 +31,7 @@
 	                    <!-- Uploading -->
 	                    generateEadidResponseJSON, connectFTP, updateFtp, saveFtpFiles,
 	
-	                    batchActionAjax, AjaxControllerAction, AjaxConversionControllerAction,
+	                    batchActionAjax, AjaxConversionControllerAction,
 	                    addOneFA, clearFAsFromSession, getFAsFromSession, addAllFAsInSession, checkCurrentConversionOptions, saveConversionOptions,
 	
 	                    hasCpfReady, displayCpfInformation,
