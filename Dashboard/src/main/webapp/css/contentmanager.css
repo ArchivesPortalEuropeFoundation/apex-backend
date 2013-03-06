@@ -3,8 +3,8 @@
 		0 transparent;
 	height: 18px;
 	font-weight: bold;
-	padding-bottom: 3px;/*2px*/
-	padding-top: 3px;/*2px*/
+	padding-bottom: 2px;
+	padding-top: 2px;
 	text-transform: uppercase;
 	background-color: #afdefc;
 	padding-left: 5px;
@@ -14,14 +14,14 @@
 	border: 1px solid #afdefc;
 	margin-top: 7px;
 	margin-bottom: 7px;
-	border-radius: 5px;/*4px*/
+	border-radius: 4px;
 }
 
 .paging ul {
 	display: inline-block;
 	list-style: none outside none;
-	padding: 2px;/*0*/
-	margin: 2px;/*0*/
+	padding: 0px;
+	margin: 0px;
 	width: auto;
 }
 
@@ -29,15 +29,15 @@
 	float: left;
 	font-size: 11px;
 	color: gray;
-	margin-left: 5px;/*1*/
-	margin-right: 5px;/*1*/
+	margin-left: 1px;
+	margin-right: 1px;
 }
 
 .paging li.nolink {
 	color: gray;
 	background-color: white;
 	/* for IE */
-	filter: alpha(opacity = 70);
+	filter: alpha(opacity =               70);
 	/* CSS3 standard */
 	opacity: 0.7;
 }
@@ -50,7 +50,7 @@
 .paging li a {
 	background-color: white;
 	/* for IE */
-	filter: alpha(opacity = 70);
+	filter: alpha(opacity =               70);
 	/* CSS3 standard */
 	opacity: 0.7;
 }
@@ -61,9 +61,9 @@
 	display: block;
 	font-weight: bold;
 	min-width: 20px;
-	padding-left: 6px;/*4px*/
-	padding-right: 6px;/*4px*/
-	text-align: left;/*center*/
+	padding-left: 4px;
+	padding-right: 4px;
+	text-align: center;
 	border: 1px solid #00A0DF;
 }
 
@@ -72,18 +72,10 @@
 	color: #00384D;
 	background-color: white;
 	/* for IE */
-	filter: alpha(opacity = 80);
+	filter: alpha(opacity =               80);
 	/* CSS3 standard */
 	opacity: 0.8;
 	text-decoration: none;
-}
-
-.search_option{
-	background-color: #E8E8E8;
-	padding-left: 4px;
-	padding-right: 4px;
-	padding: 0.4em;
-	text-align: left;
 }
 
 #contentmanager #ead-results-header {
@@ -123,20 +115,11 @@
 #contentmanager .searchOptionsContent {
 	background-color: #E8E8E8;
 	padding: 5px;
-	text-align: left;
-   	margin: 0 0 1em 0;
-   	caption-side: top;
-   	padding: 0.6em;
-   	padding-left: 2px;
-    padding-right: 2px;
 }
 
 #contentmanager .searchOptionsContent th {
-	background-color: #E8E8E8;
-	padding-left: 4px;
-	padding-right: 4px;
-	padding: 0.4em;
-	text-align: left;
+	padding-left: 5px;
+	padding-right: 5px;
 }
 
 #contentmanager .status_ok {
@@ -231,7 +214,7 @@
 	/* CSS3 standard */
 	opacity: 0.7;
 	border: 1px solid #00A0DF;
-	border-radius: 5px;/*3px*/
+	border-radius: 3px;
 	padding: 3px;
 }
 #contentmanager  #listFiles span {
@@ -262,7 +245,7 @@
 	font-weight: bold;
     color: #B23062;
     font-size: 9pt;
-	height:4em;/*2*/
+	height:2em;
 }
 
 #contentmanager #noresults {

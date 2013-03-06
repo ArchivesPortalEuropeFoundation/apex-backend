@@ -105,27 +105,28 @@
 			    	</c:choose>			    	
 
                 </div>                  
-
+                
             </div>
             
+            <div id="footernavbar">
+                    <div id="footerCatInner">
+                        <ul>
+							<li><a id="food1" href="#" title="Navigation guide"><s:property value="getText('label.footer.navigationguide')"/> | </a></li>
+                            <li><a id="food2" href="termsOfUse.action" title="<s:property value="getText('terms.use.title')"/>"><s:property value="getText('label.footer.termsofuse')"/> | </a></li>
+                            <li><a id="food3" href="#" title="Site map"><s:property value="getText('label.footer.sitemap')"/> | </a></li>
+                          	<li><a id="food4" href="contact.action" title="Contact"><s:property value="getText('label.footer.contact')"/></a></li>  
+                        </ul>
+                    </div>
+                    <div id="footerSupportText"><s:text name="footer.support"/></div>
+                    <div id="footerSupportLogos"><img  src="images/ictpsp_logo.gif"/><img  src="images/eu_logo.gif"/></div>
+
+                </div>
             <script type="text/javascript">
 	        	$(this).load(bBreadcrumb("<s:property value="breadcrumbLinks" />"));
                 $(document).ready(function() {
                     loadGoogleAnalytics();
                 });
 	        </script>
-        </div>   
-		<div id="footernavbar">
-	    	<div id="footerCatInner">
-	         	<ul>
-					<li><a id="food1" href="#" title="Navigation guide"><s:property value="getText('label.footer.navigationguide')"/> | </a></li>
-	                <li><a id="food2" href="termsOfUse.action" title="<s:property value="getText('terms.use.title')"/>"><s:property value="getText('label.footer.termsofuse')"/> | </a></li>
-	                <li><a id="food3" href="#" title="Site map"><s:property value="getText('label.footer.sitemap')"/> | </a></li>
-	              	<li><a id="food4" href="contact.action" title="Contact"><s:property value="getText('label.footer.contact')"/></a></li>  
-	           	 </ul>
-	        </div>
-	        <div id="footerSupportText"><s:text name="footer.support"/></div>
-	        <div id="footerSupportLogos"><img  src="images/ictpsp_logo.gif"/><img  src="images/eu_logo.gif"/></div>
-		</div> 
+        </div>
     </body>
 </html>                

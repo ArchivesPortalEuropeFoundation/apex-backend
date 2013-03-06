@@ -1,6 +1,6 @@
 * {
 	margin: 0;
-	/*padding: 0;*/
+	padding: 0;
 	outline: 0;
 }
 
@@ -10,9 +10,9 @@ html,body {
 
 body {
     color: #333333;
-	font: 0.75em Arial,sans-serif;
-	text-align : center; 
-	background : #fff;
+font: 0.75em Arial,sans-serif;
+text-align : center;
+background : #fff;
 }
 .left {
 	float:left;
@@ -28,22 +28,15 @@ body {
 }
 
 #wrap {
-	width: 90%; 
+	width: 90%;
 	text-align: left;
 	min-height: 95%;
 	margin: 0 auto 50px;
-	min-width: 1200px; 
-	/*
-	text-align: left;
 	min-width: 1200px;
-	min-height: 100%;
-	height: auto !important;
-	height: 100%;
-	margin: 0 auto -25px; */
 }
 select#selectLanguage  {
     font-size: 10px;
-    border-color: #BFBFBF #DEDEDE #DEDEDE #BFBFBF;
+       border-color: #BFBFBF #DEDEDE #DEDEDE #BFBFBF;
     border-image: none;
     border-style: solid;
     border-width: 1px;
@@ -305,21 +298,19 @@ text-align:  center;
 }
 
 #footernavbar {
-background: none repeat scroll 0 0 #CCCCCC;
-    border-top: 3px solid #333333;
-    bottom: 0;
-    clear: both;
-    color: #FFFFFF;
-    font-size: 0.8em;
-    font-weight: normal;
-    height: 25px;
-    left: 0;
-    margin-left: 5%;
-    margin-right: 5%;
-    margin-top: 500px;
-    text-align: center;
-    width: 100%;
-    overflow:hidden;
+	background: none repeat scroll 0 0 #CCCCCC;
+	border-top: 3px solid #333333;
+	bottom: 0px;
+	left: 0px;
+	clear: both;
+	color: #FFFFFF;
+	font-size: 0.8em;
+	font-weight: normal;
+	height: 25px;
+	text-align: center;
+	width: 90%;
+	margin-left: 5%;
+	margin-right: 5%;
 }
 
 #footerCatInner {
