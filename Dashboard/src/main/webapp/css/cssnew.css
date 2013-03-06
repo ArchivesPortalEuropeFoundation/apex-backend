@@ -1,6 +1,5 @@
 * {
 	margin: 0;
-	padding: 0;
 	outline: 0;
 }
 
@@ -10,9 +9,9 @@ html,body {
 
 body {
     color: #333333;
-font: 0.75em Arial,sans-serif;
-text-align : center;
-background : #fff;
+	font: 0.75em Arial,sans-serif;
+	text-align : center;
+	background : #fff;
 }
 .left {
 	float:left;
@@ -36,7 +35,7 @@ background : #fff;
 }
 select#selectLanguage  {
     font-size: 10px;
-       border-color: #BFBFBF #DEDEDE #DEDEDE #BFBFBF;
+    border-color: #BFBFBF #DEDEDE #DEDEDE #BFBFBF;
     border-image: none;
     border-style: solid;
     border-width: 1px;
@@ -65,13 +64,10 @@ select#selectLanguage  {
 
 #titledashboard {
 	float: left;
-	
-	/*width : 50%;*/
 	width: 50%;
 	height: auto;
 	font-weight: bold;
 	font-size: 2em;
-
 	color: #00A0DF;
 	margin-top: 45px;
 }
@@ -92,9 +88,7 @@ select#selectLanguage  {
 }
 #idioma {
 	position: relative;
-	/*float : left;*/
 	float: inherit;
-	/*width : 50%;*/
 	width: 10%;
 	height: auto;
 	top: 10px;
@@ -298,19 +292,21 @@ text-align:  center;
 }
 
 #footernavbar {
-	background: none repeat scroll 0 0 #CCCCCC;
-	border-top: 3px solid #333333;
-	bottom: 0px;
-	left: 0px;
-	clear: both;
-	color: #FFFFFF;
-	font-size: 0.8em;
-	font-weight: normal;
-	height: 25px;
-	text-align: center;
-	width: 90%;
-	margin-left: 5%;
-	margin-right: 5%;
+background: none repeat scroll 0 0 #CCCCCC;
+    border-top: 3px solid #333333;
+    bottom: 0px;
+    clear: both;
+    color: #FFFFFF;
+    font-size: 0.8em;
+    font-weight: normal;
+    height: 25px;
+    left: 0px;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 500px;
+    text-align: center;
+    width: 100%;
+    overflow:hidden;
 }
 
 #footerCatInner {
@@ -635,22 +631,18 @@ h2 {
 	float: right;
 	height: 450px;
 	width: 40%;
-	/*width:35%;*/
 	font-family: Arial, sans-serif;
 	font-size: 10pt;
 	color: #000;
 	font-weight: normal;
 	margin-right: 5px;
-	/*margin-right: 33px;*/
 	margin-left: -8px;
 }
 
 .scrollbar {
 	overflow-x: hidden;
-	/*height: 480px;*/
 	height: 450px;
 	overflow-y: auto;
-	/*width: 420px;*/
 	clip: auto;
 	margin-left: -65px;
 	padding-right: 10px;
@@ -904,6 +896,8 @@ h2 {
 	font-size:8pt;
 	padding-left:2px;
 	padding-right:2px;
+	width: auto;
+	overflow: hidden;
 }
 #content_div_table td, table.defaultlayout td{
 	 border: 1px solid #DBDBDB;
@@ -924,11 +918,11 @@ h2 {
 }
 #content_div_table td.title{
 	text-align: left;
-	width:200px;
+	width:auto;
 }
 #content_div_table td.actions{
 	text-align: left;
-	width:300px;
+	width:auto;
 	padding-top:2px;
 	padding-bottom:2px;
 }
