@@ -1,6 +1,7 @@
 package eu.apenet.dashboard.manual;
 
 import eu.apenet.commons.utils.APEnetUtilities;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -22,6 +23,7 @@ public class ManualFTPEADUploader extends ManualUploader {
 	private String password;
 	private String serverUrl;
 	private Integer serverPort;
+	private String userDir;
 
     public ManualFTPEADUploader(String user, String password, String serverUrl, Integer serverPort){
         this.user = user;
@@ -165,15 +167,16 @@ public class ManualFTPEADUploader extends ManualUploader {
         log.debug("Getting files");
 
         if(folder!=null)
-            ftpClient.changeWorkingDirectory("/" + folder);
-        
+            ftpClient.changeWorkingDirectory(folder);
         log.debug("Working dir: " + ftpClient.printWorkingDirectory());
+        if(StringUtils.isEmpty(userDir))
+            userDir = ftpClient.printWorkingDirectory();
 
         FTPFile[] ftpFiles = ftpClient.listFiles();
         List<FTPFile> ftpFileList = new ArrayList<FTPFile>();
 
         for(FTPFile ftpFile : ftpFiles){
-            if(ftpFile.getName().endsWith(".xml") || ftpFile.getName().endsWith(".zip") || (ftpFile.isDirectory() && !ftpFile.getName().equals(".") && !ftpFile.getName().equals("..")))
+            if(ftpFile.getName().endsWith(".xml") || ftpFile.getName().endsWith(".zip") || (ftpFile.isDirectory() && !ftpFile.getName().startsWith(".")))
                 ftpFileList.add(ftpFile);
         }
 
@@ -185,5 +188,8 @@ public class ManualFTPEADUploader extends ManualUploader {
 	private Boolean checkFormat(){
 		return null;
 	}
-	
+
+    public String getUserDir() {
+        return userDir;
+    }
 }

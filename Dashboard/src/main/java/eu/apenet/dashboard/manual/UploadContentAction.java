@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.log4j.Logger;
@@ -309,7 +310,7 @@ public class UploadContentAction extends AbstractInstitutionAction implements Se
                 client = (FTPClient) session.get("ftpClient");
 
             String parentName = request.getParameter("parentName");
-            log.debug("ParentName: " + parentName);
+            log.info("ParentName: " + parentName);
 
             List<FTPFile> listFiles = uploader_ftp.getFTPFiles(client, parentName);
             String s = createJSONString(listFiles, parentName);
@@ -454,7 +455,11 @@ public class UploadContentAction extends AbstractInstitutionAction implements Se
                     obj.put("isLazy", true);
                     obj.put("hideCheckbox", true);
                 }
-                obj.put("name", parentName + "/" + file.getName());
+                String userDir = uploader_ftp.getUserDir();
+                if(StringUtils.contains(parentName, userDir))
+                    obj.put("name", parentName + "/" + file.getName());
+                else
+                    obj.put("name", userDir + parentName + "/" + file.getName());
                 jsonArray.put(obj);
             }
         } catch (JSONException e){
