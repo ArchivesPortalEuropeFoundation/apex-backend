@@ -4,32 +4,26 @@
 <%@ taglib prefix="apenet" uri="http://commons.apenet.eu/tags"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <div >
-	<s:form action="countryState" method="POST" >
+	<s:form action="countryState" method="POST" theme="simple">
 		<s:actionmessage />
-  			<br></br>
-			<div id="country_list" style="height:10%;">
+			<div id="country_list">
 				 <s:select  id="countrySelected" name="countrySelected" list="countriesList" listKey="id" 
 	  			listValue="cname" headerKey = "-1" headerValue="%{getText('admin.menu.countryselection')}" theme="simple" >
 				</s:select> 
 				
 				<s:submit id="ok" key="admin.menu.label.ok" theme="simple"/>
-				&nbsp;  &nbsp; 
-				<br></br>
 			</div>
-			<div id="countrystate" style="width:350px;" >
+			<div>
 				<s:if test="aiNodes.size()>0">
-				<!-- 				Updated cellpadding="1500" for cellpadding="2" -->
-					<table border="1" cellpadding="2">
-					<thead align="center">
-					<tr style="background:#ECE9EA; font-weight: bold; ">
-						<td ><s:property value="getText('admin.menu.institution')"/></td>
-						<td><s:property value="getText('admin.menu.EAG')"/></td>
-						<td><s:property value="getText('admin.menu.FA')"/></td>
-						<td><s:property value="getText('admin.menu.HG')"/></td>
-						<td><s:property value="getText('admin.menu.SG')"/></td>
+					<table class="defaultlayout">
+					<tr>
+						<th ><s:property value="getText('admin.menu.institution')"/></th>
+						<th><s:property value="getText('admin.menu.EAG')"/></th>
+						<th><s:property value="getText('admin.menu.FA')"/></th>
+						<th><s:property value="getText('admin.menu.HG')"/></th>
+						<th><s:property value="getText('admin.menu.SG')"/></th>
 					</tr>
-					</thead>
-					<tbody>						
+				
 						<s:iterator value="aiNodes" var="row" status="stat">
 							<tr>
 								<td><s:property value="#row.ai.ainame" /></td>
@@ -52,7 +46,6 @@
 								</td>
 							</tr>	
 						</s:iterator>
-					</tbody>
 					</table>
 				</s:if>
 				<s:elseif test="countrySelected!=null"> 
@@ -60,6 +53,5 @@
 				</s:elseif>
 			</div>
 		</s:form>	
-		<br/>
-		<br/>
+     
 </div>
