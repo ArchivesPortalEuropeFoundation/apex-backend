@@ -363,7 +363,7 @@ public class EditAction extends eu.apenet.dashboard.archivallandscape.AbstractEd
 				// The final commits
 				HibernateUtil.commitDatabaseTransaction();
 
-				result = SUCCESS;
+				result = INPUT;
 			} else {
 				String errorMessage = getText("al.message.someErrors");
 				addActionMessage(getText("al.message.someErrors"));
