@@ -414,6 +414,9 @@
 		</action>
 
 		<action name="feditAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="finishAddArchivalLandscape">
+			<result name="input" type="redirectAction">
+				<param name="actionName">editAL</param>
+			</result>
 			<result name="success" type="redirectAction">
 				<param name="actionName">index</param>
 			</result>
