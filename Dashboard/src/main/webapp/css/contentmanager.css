@@ -111,7 +111,10 @@
 	border-width: 1px;
 	border-radius: 3px 3px 3px 3px;
 }
-
+#contentmanager #newSearchForm label {
+    padding-left: 4px;
+    padding-right: 4px;
+}
 #contentmanager .searchOptionsContent {
 	background-color: #E8E8E8;
 	padding: 5px;
