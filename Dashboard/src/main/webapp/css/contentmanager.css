@@ -20,8 +20,8 @@
 .paging ul {
 	display: inline-block;
 	list-style: none outside none;
-	padding: 2px;
-	margin: 2px;
+	padding: 0px;
+	margin: 0px;
 	width: auto;
 }
 
@@ -29,8 +29,8 @@
 	float: left;
 	font-size: 11px;
 	color: gray;
-	margin-left: 3px;
-	margin-right: 3px;
+	margin-left: 1px;
+	margin-right: 1px;
 }
 
 .paging li.nolink {
@@ -61,9 +61,9 @@
 	display: block;
 	font-weight: bold;
 	min-width: 20px;
-	padding-left: 6px;
-	padding-right: 6px;
-	text-align: left;
+	padding-left: 4px;
+	padding-right: 4px;
+	text-align: center;
 	border: 1px solid #00A0DF;
 }
 
@@ -76,13 +76,6 @@
 	/* CSS3 standard */
 	opacity: 0.8;
 	text-decoration: none;
-}
-
-.search_option{
-	background-color: #E8E8E8;
-	padding-left: 4px;
-	padding-right: 4px;
-	text-align: left;
 }
 
 #contentmanager #ead-results-header {
@@ -122,19 +115,17 @@
 #contentmanager .searchOptionsContent {
 	background-color: #E8E8E8;
 	padding: 5px;
-	text-align: left;
-   	caption-side: top;
-   	padding-left: 2px;
-    padding-right: 2px;
 }
 
 #contentmanager .searchOptionsContent th {
-	background-color: #E8E8E8;
 	padding-left: 5px;
 	padding-right: 5px;
-	text-align: left;
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
-
+#contentmanager .searchOptionsContent td {
+	padding-right: 10px;
+}
 #contentmanager .status_ok {
 	color: green;
 	font-weight: bold;
@@ -192,31 +183,16 @@
 	padding-bottom: 2px;
 	padding-top: 2px;
 	text-align: left;
-	width: auto;
-	display: inline-block;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+	width: 150px;
 }
 
 #contentmanager #content_div_table td.actions select {
 	font-size: 11px;
-	width: auto;
-	display: inline-block;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	text-align: left;
+	width: 120px;
 }
 
 #contentmanager #content_div_table td.actions input {
 	font-size: 11px;
-	width: auto;
-	display: inline-block;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	text-align: left;
 }
 
 #contentmanager  #batchBlock {

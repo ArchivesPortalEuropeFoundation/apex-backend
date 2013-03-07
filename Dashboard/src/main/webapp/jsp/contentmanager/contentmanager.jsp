@@ -27,27 +27,27 @@
 				<tr>
 					<th><s:text name="content.message.type" />:</th>
 					<td><s:radio  cssClass="typeRadio" list="typeList" name="xmlTypeId" /></td>
-					<th><s:text name="content.message.published" />:</th>
-					<td><s:checkboxlist list="publishedStatusList" name="publishedStatus" /></td>
-				</tr>
-				<tr>
 					<th><s:text name="content.message.converted" />:</th>
 					<td><s:checkboxlist list="convertedStatusList" name="convertedStatus" /></td>
-					<th><s:text name="content.message.validated" />:</th>
-					<td><s:checkboxlist list="validatedStatusList" name="validatedStatus" /></td>
-				</tr>
-				<tr>
 					<th><s:text name="content.message.queue" />:</th>
 					<td><s:checkboxlist list="queuingStatusList" name="queuingStatus" /></td>
+
 				</tr>
 				<tr>
-					<th><s:text name="content.message.europeana" />:</th>
-					<td><s:checkboxlist list="europeanaStatusList" name="europeanaStatus" /></td>
-					<th>Holdings guide status:</th>
-					<td>
-                        <input type="checkbox" checked="checked" disabled="disabled"><s:text name="content.message.yes" /></input>
-                        <input type="checkbox" checked="checked" disabled="disabled"><s:text name="content.message.no" /></input>
-                    </td>
+					<th></th>
+					<td> </td>
+					<th><s:text name="content.message.validated" />:</th>
+					<td><s:checkboxlist list="validatedStatusList" name="validatedStatus" /></td>
+					<th class="findingAidOptions"><s:text name="content.message.europeana" />:</th>
+					<td class="findingAidOptions"><s:checkboxlist list="europeanaStatusList" name="europeanaStatus" /></td>
+				</tr>
+				<tr>
+					<th></th>
+					<td> </td>
+
+					<th><s:text name="content.message.published" />:</th>
+					<td><s:checkboxlist list="publishedStatusList" name="publishedStatus" /></td>
+
 				</tr>
 				<tr>
 					<td colspan="7"><s:textfield name="searchTerms" /> 
