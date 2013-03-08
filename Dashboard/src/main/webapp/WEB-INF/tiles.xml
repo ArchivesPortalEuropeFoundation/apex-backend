@@ -29,7 +29,9 @@
             <add-attribute type="string" value="/js/breadcrumb.js"/>
             <add-attribute type="string" value="/js/richselect.js"/>
         </put-list-attribute>
-        <put-list-attribute name="cssfilesInternal"/>        
+        <put-list-attribute name="cssfilesInternal" >
+        	<add-attribute type="string" value="/css/richselect.css"/>
+        </put-list-attribute>        
 	</definition>	
 	
 	<definition name="DefaultLayout" template="/jsp/templates/dashboard.jsp">

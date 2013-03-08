@@ -14,7 +14,7 @@
 		if("global_class" in params){
 			divRichSelect += '" class=\"'+params["class"]+'\" ';
 		}else{
-			divRichSelect += '" style=\"border:1px solid black;float:left;width:auto;height:auto;margin:5px;\" ';
+			divRichSelect += '" class=\"default_global_class\" ';
 		}
 		divRichSelect += '>';
 		divRichSelect += '<ul id="ul_RichSelect'+id+'"></ul></div>';
@@ -31,29 +31,14 @@
 					style+=";";
 				}
 			}
-			style+="cursor:pointer;";
 			
-			if(!("global_class" in params)){
-				style+="border:1px solid black;padding-right:15px;";
-			}
 			//update if the element is selected before the richSelect is loaded
 			var selected = $(this).attr("selected");
-			if(selected || selected == "selected"){
-				style+="background-color:yellow;";
-			}
-			//disable browser text selection on component 
-			if(!("text_selection" in params && params["text_selection"]==true)){
-				style+="-webkit-touch-callout: none;";
-				style+="-webkit-user-select: none;";
-				style+="-khtml-user-select: none;";
-				style+="-moz-user-select: none;";
-				style+="-ms-user-select: none;";
-				style+="user-select: none;";
-			}
 			
 			style+="\"";
 			var classes = $(this).attr("class");
 			style+=" class=\"";
+			style+="pointer ";
 			if(classes){
 				style+=classes;
 				if("individual_class" in params){
@@ -62,6 +47,10 @@
 			}
 			if(selected || selected == "selected"){
 				style+=" selected";
+			}
+			//disable browser text selection on component 
+			if(!("text_selection" in params && params["text_selection"]==true)){
+				style+=" text_unseleced";
 			}
 			style+="\" ";
 			child +=style+" >"+$(this).text()+"</li>";
@@ -82,16 +71,13 @@
 			if(("multiple" in params && params["multiple"]!="true") || !("multiple" in params)){ //unselect all elements 
 				$(this).siblings().each(function(){ //remove all selected elements
 					$(this).removeClass("selected");
-					$(this).css("background-color","");
 				});
 			}
 			
 			if($(this).attr("class") && $(this).attr("class").indexOf("selected")>=0){
 				$(this).removeClass("selected");
-				$(this).css("background-color","");
 			}else{
 				$(this).addClass("selected");
-				$(this).css("background-color","yellow");
 			}
 			//additional events
 			if("onelement_click" in params){ 
