@@ -141,6 +141,7 @@
 									checkSpecialNodes();
 								}
 							});
+							checkForNextPrevButtons($("select[name=ALElement] option:selected"));
 						});
 					}else{
 						updateStatusWindow("<s:property value='getText("al.message.noElementSelected")' />");
@@ -166,6 +167,7 @@
 									checkSpecialNodes();
 								}
 							});
+							checkForNextPrevButtons($("select[name=ALElement] option:selected"));
 						});
 					}else{
 						updateStatusWindow("<s:property value='getText("al.message.noElementSelected")' />");
@@ -202,7 +204,6 @@
 						$('#actionWarning').html("");
 						$('#deleteDiv').removeClass("hidden");
 					}
-					
 					$("#showLanguagesDiv").show();
 					$("#actionsButtons").show();
 					$("#showEditLanguagesDiv").show();
@@ -213,6 +214,7 @@
 					$("#editDiv").hide();
 					$("#editLanguagesDiv").hide();
 					
+					checkForNextPrevButtons($('select[name=ALElement] option:selected'));
 				};
 				$("#unselectDiv").click(unselectclickfunction);
 				
@@ -335,6 +337,60 @@
 				function showcurtain(){
 					$("#curtain").show();
 				};
+				function checkForNextPrevButtons(jqueryNode){
+					targetPaddingLeft = jqueryNode.css("padding-left");
+					if(targetPaddingLeft.length>2){
+						targetPaddingLeft = targetPaddingLeft.substring(0,2);
+					}
+					$("#moveUpDiv").show();
+					$("#moveDownDiv").show();
+					var paddingLeft = null;
+					//check for downDivButton
+					if(($("select[name=ALElement] option").size()-1)>$("select[name=ALElement] option").index(jqueryNode)){
+						var next = jqueryNode.next();
+						var exit = false;
+						do{
+							paddingLeft = next.css("padding-left");
+							if(paddingLeft.length>2){
+								paddingLeft = paddingLeft.substring(0,2);
+							}
+							if(parseInt(targetPaddingLeft) < parseInt(paddingLeft)){
+								$("#moveDownDiv").hide();
+							}else if(parseInt(paddingLeft) == parseInt(targetPaddingLeft)){
+								exit = true;
+								$("#moveDownDiv").show();
+							}else{
+								$("#moveDownDiv").hide();
+								exit = true;
+							}
+						}while(!exit && (next = next.next()));
+					}else{
+						$("#moveDownDiv").hide();
+					}
+					//check for upDivButton
+					if($("select[name=ALElement] option").index(jqueryNode)>0){
+						var prev = jqueryNode.prev();
+						exit = false;
+						do{
+							paddingLeft = prev.css("padding-left");
+							if(paddingLeft.length>2){
+								paddingLeft = paddingLeft.substring(0,2);
+							}
+							if( parseInt(targetPaddingLeft) < parseInt(paddingLeft) ){
+								$("#moveUpDiv").hide();
+							}else if( parseInt(paddingLeft) == parseInt(targetPaddingLeft) ){
+								exit = true;
+								$("#moveUpDiv").show();
+							}else{
+								$("#moveUpDiv").hide();
+								exit = true;
+							}
+							lastValue = parseInt(paddingLeft);
+						}while(!exit && (prev = prev.prev()));
+					}else{
+						$("#moveUpDiv").hide();
+					}
+				}
 				
 			</script>
 			<div id="filterSelect">
