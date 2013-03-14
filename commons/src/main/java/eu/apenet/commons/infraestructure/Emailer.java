@@ -38,7 +38,7 @@ public class Emailer {
 	private static final String MAIL_ADDRESS_SEPARATOR = ";";
 
 	private Session session;
-	private String emailFromAddress = "noreply@archivesportaleurope.eu";
+	private String emailFromAddress = "noreply@archivesportaleurope.net";
 
 	/**
 	 * Constructor
