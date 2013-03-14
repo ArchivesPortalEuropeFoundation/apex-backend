@@ -67,26 +67,17 @@ public class EadService {
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
 		if (ValidateTask.valid(ead)) {
-			if (APEnetUtilities.getDashboardConfig().isDirectIndexing()) {
-				new ValidateTask().execute(ead);
-			} else { // Add the file to the indexing queue
-
-				addToQueue(ead, QueueAction.VALIDATE, null);
-			}
+			addToQueue(ead, QueueAction.VALIDATE, null);
 		}
 
 	}
 
-	public static void convert(XmlType xmlType, Integer id) throws Exception {
+	public static void convert(XmlType xmlType, Integer id, Properties properties) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
 		if (ConvertTask.valid(ead)) {
-			if (APEnetUtilities.getDashboardConfig().isDirectIndexing()) {
-				new ConvertTask().execute(ead);
-			} else { // Add the file to the indexing queue
-				addToQueue(ead, QueueAction.CONVERT, null);
-			}
+			addToQueue(ead, QueueAction.CONVERT, properties);
 		}
 	}
 
@@ -95,11 +86,7 @@ public class EadService {
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
 		if (PublishTask.valid(ead)) {
-			if (APEnetUtilities.getDashboardConfig().isDirectIndexing()) {
-				new PublishTask().execute(ead);
-			} else { // Add the file to the indexing queue
-				addToQueue(ead, QueueAction.PUBLISH, null);
-			}
+			addToQueue(ead, QueueAction.PUBLISH, null);
 		}
 
 	}
@@ -109,11 +96,7 @@ public class EadService {
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
 		if (DeleteEseEdmTask.valid(ead)) {
-			if (APEnetUtilities.getDashboardConfig().isDirectIndexing()) {
-				new DeleteEseEdmTask().execute(ead);
-			} else { // Add the file to the indexing queue
-				addToQueue(ead, QueueAction.DELETE_ESE_EDM, null);
-			}
+			addToQueue(ead, QueueAction.DELETE_ESE_EDM, null);
 		}
 
 	}
@@ -123,20 +106,16 @@ public class EadService {
 		Ead ead = eadDAO.findById(id, FindingAid.class);
 		SecurityContext.get().checkAuthorized(ead);
 		if (ConvertToEseEdmTask.valid(ead)) {
-			if (APEnetUtilities.getDashboardConfig().isDirectIndexing()) {
-				new ConvertToEseEdmTask().execute(ead, preferences);
-			} else { // Add the file to the indexing queue
-				addToQueue(ead, QueueAction.CONVERT_TO_ESE_EDM, preferences);
-			}
+			addToQueue(ead, QueueAction.CONVERT_TO_ESE_EDM, preferences);
 		}
 	}
 
-	public static boolean convertValidatePublish(XmlType xmlType, Integer id) throws IOException {
+	public static boolean convertValidatePublish(XmlType xmlType, Integer id, Properties properties) throws IOException {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
 		if (!ead.isPublished()) {
-			addToQueue(ead, QueueAction.CONVERT_VALIDATE_PUBLISH, null);
+			addToQueue(ead, QueueAction.CONVERT_VALIDATE_PUBLISH, properties);
 		}
 		return true;
 	}
@@ -146,11 +125,7 @@ public class EadService {
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
 		if (UnpublishTask.valid(ead)) {
-			if (APEnetUtilities.getDashboardConfig().isDirectIndexing()) {
-				new UnpublishTask().execute(ead);
-			} else { // Add the file to the indexing queue
-				addToQueue(ead, QueueAction.UNPUBLISH, null);
-			}
+			addToQueue(ead, QueueAction.UNPUBLISH, null);
 
 		}
 	}
@@ -159,13 +134,7 @@ public class EadService {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
-		if (APEnetUtilities.getDashboardConfig().isDirectIndexing()) {
-			new DeleteFromEuropeanaTask().execute(ead);
-			new DeleteEseEdmTask().execute(ead);
-			new UnpublishTask().execute(ead);
-		} else { // Add the file to the indexing queue
-			addToQueue(ead, QueueAction.UNPUBLISH_ALL, null);
-		}
+		addToQueue(ead, QueueAction.UNPUBLISH_ALL, null);
 
 	}
 
@@ -173,36 +142,22 @@ public class EadService {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
-		if (APEnetUtilities.getDashboardConfig().isDirectIndexing()) {
-			new DeleteFromEuropeanaTask().execute(ead);
-			new DeleteEseEdmTask().execute(ead);
-			new UnpublishTask().execute(ead);
-			new DeleteTask().execute(ead);
-		} else { // Add the file to the indexing queue
-			addToQueue(ead, QueueAction.DELETE, null);
-		}
+		addToQueue(ead, QueueAction.DELETE, null);
 	}
 
 	public static void deleteFromEuropeana(XmlType xmlType, Integer id) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
-		if (APEnetUtilities.getDashboardConfig().isDirectIndexing()) {
-			new DeleteFromEuropeanaTask().execute(ead);
-		} else { // Add the file to the indexing queue
-			addToQueue(ead, QueueAction.DELETE_FROM_EUROPEANA, null);
-		}
+		addToQueue(ead, QueueAction.DELETE_FROM_EUROPEANA, null);
+
 	}
 
 	public static void deliverToEuropeana(XmlType xmlType, Integer id) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
-		if (APEnetUtilities.getDashboardConfig().isDirectIndexing()) {
-			new DeliverToEuropeanaTask().execute(ead);
-		} else { // Add the file to the indexing queue
-			addToQueue(ead, QueueAction.DELIVER_TO_EUROPEANA, null);
-		}
+		addToQueue(ead, QueueAction.DELIVER_TO_EUROPEANA, null);
 	}
 
 	public static void deleteFromQueue(XmlType xmlType, Integer id) throws Exception {
@@ -277,7 +232,7 @@ public class EadService {
 					Ead newEad = new CreateEadTask().execute(xmlType, upFile, aiId);
 					if (isPublished) {
 						new ValidateTask().execute(newEad);
-						new ConvertTask().execute(newEad);
+						new ConvertTask().execute(newEad, preferences);
 						new ValidateTask().execute(newEad);
 						new PublishTask().execute(newEad);
 					}
