@@ -53,11 +53,11 @@
 		<group name="adminActions">
 			FillPrimaryNameAction,checkEagNamespace,countryState,
 			createCountry,createLanguage,downloadGeneralAL,goCountryAccount,
-			insertAlternativeCountryNames,showFilesFailed,
+			insertAlternativeCountryNames,
 			storeAlternativeCountryNames,storeCountry,storeLanguage,viewAdmin,
 			sessionManagement,deleteSession,userManagement,
 			changeToCountryManager,createCountryManager,displayCreateCountryManager,disableCountryManager,enableCountryManager,deleteCountryManager,
-            viewDptVersions, addVersion, deleteVersion
+            viewDptVersions, addVersion, deleteVersion, manageQueue, startStopQueue,deleteQueueItem
 		</group>
 	</groups>
 	<role-mappings>

@@ -141,10 +141,6 @@
 				<param name="contentType">application/json</param>
 			</result>
 		</action>
-
-		<action name="indexingLaunched" class="eu.apenet.dashboard.manual.contentmanager.ContentManagerAction" method="preIndex">
-
-		</action>
 		<action name="generateInformationMessageJSON" class="eu.apenet.dashboard.actions.ajax.AjaxEAGHandlerAction" method="generateInformationMessageJSON">
 			<result name="success" type="stream">
 				<param name="inputName">outputStream</param>
@@ -774,11 +770,7 @@
          <action name="currentState" class="eu.apenet.dashboard.actions.CurrentStateAction">
             <result name="success">/jsp/currentState.jsp</result>            
         </action>
-        
-        <action name="indexing" class="eu.apenet.dashboard.actions.IndexingAction">
-            <result name="success">/jsp/templates/blank.jsp</result>  
-            <result name="error">/jsp/templates/blank.jsp</result>           
-        </action>
+
 
         <!-- Actions used for selection of finding aids in content manager -->
         <action name="addOneFA" class="eu.apenet.dashboard.actions.ajax.SelectFindingAidsAction" method="addOneFA2Session">
@@ -947,12 +939,20 @@
                <result name="success" type="tiles">countryState</result>    
                <result name="error" type="tiles">blank</result>     
         	</action>
-        	<action name="showFilesFailed" class="eu.apenet.dashboard.actions.ShowFilesFailedAction">
-        	<interceptor-ref name="changeLanguageStack"/>  
-               <result name="success" type="tiles">filesFailed</result>
+        	<action name="manageQueue" class="eu.apenet.dashboard.queue.ManageQueueAction">  
+				<result name="success" type="tiles">manageQueue</result>
         	</action>
-  
-  
+        	
+        	<action name="startStopQueue" class="eu.apenet.dashboard.queue.ManageQueueAction" method="startStopQueue">  
+               <result name="success" type="redirectAction">
+					<param name="actionName">manageQueue</param>				
+				</result> 
+        	</action>   
+        	<action name="deleteQueueItem" class="eu.apenet.dashboard.queue.ManageQueueAction" method="deleteQueueItem">  
+               <result name="success" type="redirectAction">
+					<param name="actionName">manageQueue</param>				
+				</result> 
+        	</action>   
         	<action name="sessionManagement" class="eu.apenet.dashboard.security.actions.SessionManagementAction">  
                <result name="success" type="tiles">sessionManagement</result>
         	</action>
