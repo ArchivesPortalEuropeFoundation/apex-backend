@@ -101,7 +101,7 @@ public class Identify extends OAIVerb{
 		url.setTextContent("PLEASE CREATE DEFINED-SIZED (88 x 31) LOGO AND INSERT URL");
 		collectionIcon.appendChild(url);
 		Node link = doc.createElementNS(OAIUtils.BRANDING_SCHEMA_LOCATION, "link");
-		link.setTextContent("http://www.archivesportaleurope.eu");
+		link.setTextContent("http://www.archivesportaleurope.net");
 		collectionIcon.appendChild(link);
 		Node title = doc.createElementNS(OAIUtils.BRANDING_SCHEMA_LOCATION, "title");
 		title.setTextContent("Archives Portal Europe");
