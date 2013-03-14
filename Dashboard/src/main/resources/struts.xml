@@ -125,7 +125,7 @@
 		<action name="downloadeag" class="eu.apenet.dashboard.manual.ShowContentProviderInfOptionsAction" method="download">
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="download" type="stream">
-				<param name="contentType">application/xml</param>
+				<param name="contentType">application/file-download</param>
 				<param name="contentCharSet">UTF-8</param>
 				<param name="inputName">inputStream</param>
 				<param name="contentLength">${fileSize}</param>
@@ -272,7 +272,7 @@
 
 		<action name="download" class="eu.apenet.dashboard.manual.contentmanager.ContentManagerAction" method="download">
 			<result name="download" type="stream">
-				<param name="contentType">application/xml</param>
+				<param name="contentType">application/file-download</param>
 				<param name="contentCharSet">UTF-8</param>
 				<param name="inputName">inputStream</param>
 				<param name="contentLength">${fileSize}</param>
@@ -463,7 +463,7 @@
 		<action name="downloadAL" class="eu.apenet.dashboard.uploadALAction" method="downloadAL">
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="download" type="stream">
-				<param name="contentType">application/xml</param>
+				<param name="contentType">application/file-download</param>
 				<param name="contentCharSet">UTF-8</param>
 				<param name="inputName">inputStream</param>
 				<param name="contentLength">${fileSize}</param>
@@ -634,7 +634,7 @@
 		
 		<action name="downloadEse" class="eu.apenet.dashboard.ead2ese.DownloadEseXmlAction">
 			<result name="success" type="stream">
-				<param name="contentType">application/xml</param>
+				<param name="contentType">application/file-download</param>
 				<param name="contentCharSet">UTF-8</param>
 				<param name="inputName">inputStream</param>
 				<param name="contentLength">${fileSize}</param>
@@ -887,7 +887,7 @@
         	<action name="downloadGeneralAL" class="eu.apenet.dashboard.actions.DownloadGeneralALAction">
 				<interceptor-ref name="changeLanguageStack"/>
 				<result name="download" type="stream">
-					<param name="contentType">application/xml</param>
+					<param name="contentType">application/file-download</param>
 					<param name="contentCharSet">UTF-8</param>
 					<param name="inputName">inputStream</param>
 					<param name="contentLength">${fileSize}</param>
