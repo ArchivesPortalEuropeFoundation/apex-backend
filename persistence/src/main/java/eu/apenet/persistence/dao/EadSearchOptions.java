@@ -195,6 +195,9 @@ public class EadSearchOptions implements Serializable{
 	public void setQueuing(List<QueuingState> queuing) {
 		this.queuing = queuing;
 	}
-	
+	public void setQueuing(QueuingState queuingState) {
+		this.queuing.clear();
+		this.queuing.add(queuingState);
+	}
 	
 }
