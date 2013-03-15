@@ -107,7 +107,6 @@ public class AbstractContentManagerAction extends AbstractInstitutionAction{
 	
 	//(Internal attributes), also NON contentmanager.jsp attributes
 	private XmlType xmlType; //It depends on xmlTypeId, in validate method is filled (before each action)
-	private boolean batchProcessingEnabled = APEnetUtilities.getDashboardConfig().isBatchProcessingEnabled();
 	@Override
 	protected void buildBreadcrumbs() {
 		super.buildBreadcrumbs();
@@ -557,11 +556,6 @@ public class AbstractContentManagerAction extends AbstractInstitutionAction{
 		this.indexing = indexing;
 	}
 
-
-
-	public boolean isBatchProcessingEnabled() {
-		return batchProcessingEnabled;
-	}
 
 
 

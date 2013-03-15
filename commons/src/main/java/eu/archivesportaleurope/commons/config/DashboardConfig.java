@@ -16,10 +16,8 @@ public class DashboardConfig extends ApePortalAndDashboardConfig{
 	private String europeanaDirPath;
     private String solrIndexUrl;
 	private String emailDashboardFeedbackDestiny;   
-  	private boolean directIndexing;
     private String xslDirPath;
     private XPathFactory xpathFactory;
-    private boolean batchProcessingEnabled = true;
 
 	public String getEuropeanaDirPath() {
 		return europeanaDirPath;
@@ -39,10 +37,7 @@ public class DashboardConfig extends ApePortalAndDashboardConfig{
 		this.emailDashboardFeedbackDestiny = emailDashboardFeedbackDestiny;
 	
 	}
-	public void setDirectIndexing(boolean directIndexing) {
-		checkConfigured();
-		this.directIndexing = directIndexing;
-	}
+
 
 	public String getSolrIndexUrl() {
 		return solrIndexUrl;
@@ -52,9 +47,7 @@ public class DashboardConfig extends ApePortalAndDashboardConfig{
 		checkConfigured();
 		this.solrIndexUrl = solrIndexUrl;
 	}
-	public boolean isDirectIndexing() {
-		return directIndexing;
-	}
+
     public String getXslDirPath(){
         return xslDirPath;
     }
@@ -97,17 +90,4 @@ public class DashboardConfig extends ApePortalAndDashboardConfig{
 		checkConfigured();
 		this.tempDirPath = tempDirPath;
 	}
-
-
-	public boolean isBatchProcessingEnabled() {
-		return batchProcessingEnabled;
-	}
-
-	public void setBatchProcessingEnabled(boolean batchProcessingEnabled) {
-		checkConfigured();
-		this.batchProcessingEnabled = batchProcessingEnabled;
-	}
-
-
-	
 }

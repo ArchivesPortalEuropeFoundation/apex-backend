@@ -47,6 +47,9 @@
 				<option value="deleteEseEdm">
 					<s:text name="content.message.delete.ese" />
 				</option>
+				<option value="deleteFromQueue">
+					<s:text name="content.message.delete.queue" />
+				</option>	
 				<option value="delete">
 					<s:text name="content.message.delete" />
 				</option>
@@ -176,16 +179,18 @@
 
 						<td class="actions"><c:choose>
 								<c:when test="${eadResult.queueReady}">
-
+									<select class="selectedAction" name="selectedAction">
+										<option value="action|deleteFromQueue">
+											<s:text name="content.message.delete.queue" />
+										</option>							
+									</select>
+									<input type="button" value="<s:text name="content.message.go" />" />
 								</c:when>
 								<c:when test="${eadResult.queueError}">
 									<select class="selectedAction" name="selectedAction">
 										<option value="action|deleteFromQueue">
 											<s:text name="content.message.delete.queue" />
-										</option>
-										<option value="action|delete">
-											<s:text name="content.message.delete" />
-										</option>										
+										</option>								
 									</select>
 									<input type="button" value="<s:text name="content.message.go" />" />
 								</c:when>																		

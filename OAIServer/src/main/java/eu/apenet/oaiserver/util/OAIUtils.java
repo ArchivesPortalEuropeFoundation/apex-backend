@@ -155,36 +155,7 @@ public class OAIUtils {
 	 * @return String
 	 */
 	public static String getURL(HttpServletRequest request){
-		
-		// Old version
-		//String url = request.getScheme()+"://"+ServletActionContext.getRequest().getHeader("Host");
-		//if(url.contains("1:8080")){
-			//url=url.replace(url.substring(0,url.indexOf(":8080")+5),"http://preoai.archivesportaleurope.eu");
-		//}else if(url.contains("6:8080")){
-			//url=url.replace(url.substring(0,url.indexOf(":8080")+5),"https://oai.archivesportaleurope.eu");
-		//}
-		//url+=request.getContextPath();
-		//return url;
-		
-		// New code updated from the branch in order to Content Checker works properly
-		//String DOMAIN_NAME_MAIN_SERVER = "DOMAIN_NAME_MAIN_SERVER";
-		//HttpServletRequest requestHttp = ServletActionContext.getRequest();
-		//String nameMainServer = requestHttp.getSession().getServletContext().getInitParameter(DOMAIN_NAME_MAIN_SERVER);
-		//TODO: Unify the DOMAIN_NAME_MAIN_SERVER for Content Checker, Localhost, Development, Preproduction and Production Environments
-		String nameMainServer = null;
-		String url ="";
-		if (nameMainServer == null || nameMainServer.trim().length() == 0){
-			url = request.getScheme()+"://"+ServletActionContext.getRequest().getHeader("Host");
-			if(url.contains("1:8080")){
-				url=url.replace(url.substring(0,url.indexOf(":8080")+5),"http://preoai.archivesportaleurope.eu");
-			}else if(url.contains("6:8080")){
-				url=url.replace(url.substring(0,url.indexOf(":8080")+5),"https://oai.archivesportaleurope.eu");
-			}
-		}else {
-			url = request.getScheme()+"://"+nameMainServer + ":"+ request.getServerPort();
-		}
-		url += request.getContextPath() + REQUEST_SUFIX;
-		return url;
+		return request.getContextPath() + REQUEST_SUFIX;
 	}
 	
 	/**

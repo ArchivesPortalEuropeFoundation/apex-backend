@@ -13,7 +13,7 @@ import eu.apenet.persistence.factory.DAOFactory;
 
 public class Identify extends OAIVerb{
 	private static final String REPOSITORY_NAME = "Archives Portal Europe OAI-PMH Repository";
-	private static final String ADMIN_EMAIL = "eloy.garcia@mcu.es";
+	private static final String ADMIN_EMAIL = "info@apex-project.eu";
 	private static final String DELETED_RECORD_MANNER = "transient";
 	private static final String GRANULARITY = "YYYY-MM-DDThh:mm:ssZ";
 	private static final String PROTOCOL_VERSION = "2.0";
@@ -101,7 +101,7 @@ public class Identify extends OAIVerb{
 		url.setTextContent("PLEASE CREATE DEFINED-SIZED (88 x 31) LOGO AND INSERT URL");
 		collectionIcon.appendChild(url);
 		Node link = doc.createElementNS(OAIUtils.BRANDING_SCHEMA_LOCATION, "link");
-		link.setTextContent("http://www.archivesportaleurope.eu");
+		link.setTextContent("http://www.archivesportaleurope.net");
 		collectionIcon.appendChild(link);
 		Node title = doc.createElementNS(OAIUtils.BRANDING_SCHEMA_LOCATION, "title");
 		title.setTextContent("Archives Portal Europe");

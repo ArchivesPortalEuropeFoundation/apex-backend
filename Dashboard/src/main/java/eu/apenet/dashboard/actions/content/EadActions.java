@@ -31,7 +31,7 @@ public class EadActions extends AbstractEadActions {
 
 	public String convertEad() {
 		try {
-			EadService.convert(getXmlType(), id);
+			EadService.convert(getXmlType(), id, null);
 			return SUCCESS;
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -72,7 +72,7 @@ public class EadActions extends AbstractEadActions {
 	@Override
 	public String convertValidatePublishEad() {
 		try {
-			EadService.convertValidatePublish(getXmlType(), id);
+			EadService.convertValidatePublish(getXmlType(), id, null);
 			return SUCCESS;
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

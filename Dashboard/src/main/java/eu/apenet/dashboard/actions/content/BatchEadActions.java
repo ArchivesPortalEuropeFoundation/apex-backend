@@ -1,6 +1,7 @@
 package eu.apenet.dashboard.actions.content;
 
 import java.util.List;
+import java.util.Properties;
 
 import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
 import eu.apenet.dashboard.services.ead.EadService;
@@ -62,35 +63,63 @@ public class BatchEadActions extends AbstractEadActions {
 	}
 	
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public String deleteFromQueue() {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			if (SELECTED_ITEMS.equals(batchItems)) {
+				List<Integer> ids = (List<Integer>) getServletRequest().getSession().getAttribute(
+						AjaxControllerAbstractAction.LIST_IDS);
+				if (ids != null) {
+					EadService.deleteBatchFromQueue(ids, getAiId(), getXmlType());
+					return SUCCESS;
+				} else {
+					return ERROR;
+				}
+
+			} else if (SEARCHED_ITEMS.equals(batchItems)) {
+				EadSearchOptions eadSearchOptions = (EadSearchOptions) getServletRequest().getSession().getAttribute(
+						ContentManagerAction.EAD_SEARCH_OPTIONS);
+				EadService.deleteBatchFromQueue(eadSearchOptions);
+				return SUCCESS;
+			} else {
+				EadService.deleteBatchFromQueue(null, getAiId(), getXmlType());
+				return SUCCESS;
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return ERROR;
+		}
+	}
+
+
+	private String addBatchToQueue(QueueAction queueAction) {
+		return addBatchToQueue(queueAction, new Properties());
 	}
 
 	@SuppressWarnings("unchecked")
-	private String addBatchToQueue(QueueAction queueAction) {
+	private String addBatchToQueue(QueueAction queueAction, Properties properties) {
 		try {
-		if (SELECTED_ITEMS.equals(batchItems)) {
-			List<Integer> ids = (List<Integer>) getServletRequest().getSession().getAttribute(
-					AjaxControllerAbstractAction.LIST_IDS);
-			if (ids != null) {
-				EadService.addBatchToQueue(ids, getAiId(), getXmlType(), queueAction, null);
+			if (SELECTED_ITEMS.equals(batchItems)) {
+				List<Integer> ids = (List<Integer>) getServletRequest().getSession().getAttribute(
+						AjaxControllerAbstractAction.LIST_IDS);
+				if (ids != null) {
+					EadService.addBatchToQueue(ids, getAiId(), getXmlType(), queueAction, properties);
+					return SUCCESS;
+				} else {
+					return ERROR;
+				}
+
+			} else if (SEARCHED_ITEMS.equals(batchItems)) {
+				EadSearchOptions eadSearchOptions = (EadSearchOptions) getServletRequest().getSession().getAttribute(
+						ContentManagerAction.EAD_SEARCH_OPTIONS);
+				EadService.addBatchToQueue(eadSearchOptions, queueAction, properties);
 				return SUCCESS;
 			} else {
-				return ERROR;
+				EadService.addBatchToQueue(null, getAiId(), getXmlType(), queueAction, properties);
+				return SUCCESS;
 			}
-
-		} else if (SEARCHED_ITEMS.equals(batchItems)) {
-			EadSearchOptions eadSearchOptions = (EadSearchOptions)getServletRequest().getSession()
-					.getAttribute(ContentManagerAction.EAD_SEARCH_OPTIONS);
-			EadService.addBatchToQueue(eadSearchOptions, queueAction,null);
-			return SUCCESS;
-		} else {
-			EadService.addBatchToQueue(null, getAiId(), getXmlType(), queueAction, null);
-			return SUCCESS;
-		}
-		} catch (Exception e){
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return ERROR;
 		}

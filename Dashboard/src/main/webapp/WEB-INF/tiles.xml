@@ -461,7 +461,11 @@
 	</definition>
 
 	<definition name="filesFailed" extends="AdminLayout" >		
-		<put-attribute name="body" value="/jsp/filesFailed.jsp" />		
+		<put-attribute name="body" value="/jsp/queue/filesFailed.jsp" />		
+	</definition>	
+	<definition name="manageQueue" extends="AdminLayout" >	
+		<put-attribute name="title" value="admin.queuemanagement.title" />	
+		<put-attribute name="body" value="/jsp/queue/managequeue.jsp" />		
 	</definition>	
 	<definition name="sessionManagement" extends="DefaultLayout" >
 		<put-attribute name="title" value="dashboard.sessionmanagement.title" />
