@@ -255,9 +255,6 @@
 												</option>
 											</c:if>
 											<c:if test="${eadResult.hasEseEdmFiles}">
-												<option value="_blank|htmlPreview">
-													<s:text name="content.message.preview.ese" />
-												</option>
 												<option value="_blank|downloadEse.action">
 													<s:text name="content.message.download.ese" />
 												</option>
