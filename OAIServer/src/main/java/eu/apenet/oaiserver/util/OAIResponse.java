@@ -116,7 +116,7 @@ public class OAIResponse {
 							if(verb.equals("GetRecord") || verb.equals("ListIdentifiers") || verb.equals("ListRecords") || verb.equals("ListMetadataFormats")){
 								if(key.equals("metadataPrefix") && attributes.get("metadataPrefix")!=null && !verb.equals("ListMetadataFormats")){
 									String metadataPrefix = attributes.get(key);
-									if(DAOFactory.instance().getMetadataFormatDAO().getMetadataFormatByName(metadataPrefix)==null){
+									if(MetadataFormat.getMetadataFormat(metadataPrefix)==null){
 										metadataPrefixAvailable = true;
 									}
 								}
@@ -228,7 +228,7 @@ public class OAIResponse {
 								LOG.error("Parse error, trying to obtain the start arguments from resumptionToken in ListRecords: "+e.getCause());
 								return OAIUtils.getResponseError(doc,"badResumptionToken");
 							}
-							MetadataFormat metadataFormat = DAOFactory.instance().getMetadataFormatDAO().getMetadataFormatByName(metadataPrefix);
+							MetadataFormat metadataFormat = MetadataFormat.getMetadataFormat(metadataPrefix);
 							List<Ese> sets = null;
 							if(metadataFormat!=null){
 								try{

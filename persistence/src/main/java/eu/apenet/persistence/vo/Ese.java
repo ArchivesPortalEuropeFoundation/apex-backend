@@ -6,6 +6,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -58,11 +60,9 @@ public class Ese implements java.io.Serializable {
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="fa_id")
 	private FindingAid findingAid;
-
-	//bi-directional many-to-one association to MetadataFormat
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="mf_id")
-	private MetadataFormat metadataFormat;
+	
+	@Enumerated(EnumType.STRING)
+	private MetadataFormat metadataFormat = MetadataFormat.EDM;
 
 	public Ese() {
 	}

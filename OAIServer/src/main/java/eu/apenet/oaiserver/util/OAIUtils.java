@@ -214,7 +214,7 @@ public class OAIUtils {
 				}
 				resToken.setLastRecordHarvested(limit.toString());
 				resToken.setExpirationDate(expirationDate); 
-				MetadataFormat metadataFormat = DAOFactory.instance().getMetadataFormatDAO().getMetadataFormatByName(metadataPrefix);
+				MetadataFormat metadataFormat = MetadataFormat.getMetadataFormat(metadataPrefix);
 				resToken.setMetadataFormat(metadataFormat);
 				daoResumptionToken.store(resToken);//End DDBB part
 			}catch(Exception e){
@@ -340,7 +340,7 @@ public class OAIUtils {
 		Iterator<Ese> eseIterator = eses.iterator();
 		if(!found && eseIterator.hasNext()){
 			Ese ese = eseIterator.next();
-			if(ese.getMetadataFormat().getFormat().equals(metadataPrefix) && ese.getEseState().getState().equals(EseState.PUBLISHED)){
+			if(ese.getMetadataFormat().equals(MetadataFormat.getMetadataFormat(metadataPrefix)) && ese.getEseState().getState().equals(EseState.PUBLISHED)){
 				try{
 					XMLInputFactory factory = XMLInputFactory.newFactory();
 					//XMLStreamReader r = factory.createXMLStreamReader(new FileReader(APEnetUtilities.getConfig().getRepoDirPath()+ese.getPath()));
@@ -458,7 +458,7 @@ public class OAIUtils {
 					LOG.error("CanNOT 'parse' an Ese, identifier: "+identifier+" -- "+exception.getCause());
 				}
 			}
-			else if(ese.getMetadataFormat().getFormat().equals(metadataPrefix) && ese.getEseState().getState().equals(EseState.REMOVED)){
+			else if(ese.getMetadataFormat().equals(MetadataFormat.getMetadataFormat(metadataPrefix)) && ese.getEseState().getState().equals(EseState.REMOVED)){
 				
 				if (identifier == null) {
 					// ListRecords part

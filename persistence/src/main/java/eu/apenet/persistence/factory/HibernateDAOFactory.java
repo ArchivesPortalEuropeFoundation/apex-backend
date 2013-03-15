@@ -110,11 +110,7 @@ public class HibernateDAOFactory extends DAOFactory {
     public DptUpdateDAO getDptUpdateDAO(){
         return (DptUpdateDAO) instantiateDAO(DptUpdateHibernateDAO.class);
     }
-	
-	@Override
-	public MetadataFormatDAO getMetadataFormatDAO(){
-		return (MetadataFormatDAO) instantiateDAO(MetadataFormatHibernateDAO.class);
-	}
+
 	
 	@Override 
 	public ResumptionTokenDAO getResumptionTokenDAO(){

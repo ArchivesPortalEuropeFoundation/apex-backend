@@ -6,6 +6,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,9 +33,9 @@ public class ResumptionToken implements java.io.Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "id")	
 	private int rtId;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "mf_id")
-	private MetadataFormat metadataFormat;
+	
+	@Enumerated(EnumType.STRING)
+	private MetadataFormat metadataFormat = MetadataFormat.EDM;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="expiration_date")

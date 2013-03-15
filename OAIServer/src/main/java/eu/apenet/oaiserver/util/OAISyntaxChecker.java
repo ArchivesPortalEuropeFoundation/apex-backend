@@ -214,7 +214,7 @@ public class OAISyntaxChecker {
 		try{
 			OAIUtils.removeOldResumptionTokens();
 			ResumptionTokenDAO resumptionTokenDAO = DAOFactory.instance().getResumptionTokenDAO();
-			MetadataFormat metadataFormat = DAOFactory.instance().getMetadataFormatDAO().getMetadataFormatByName(metadataPrefix);
+			MetadataFormat metadataFormat = MetadataFormat.getMetadataFormat(metadataPrefix);
 			ResumptionToken resumptionToken = resumptionTokenDAO.getResumptionToken(fromDate,untilDate,metadataFormat,set,limit);
 			if(resumptionToken!=null && resumptionToken.getExpirationDate().after(new Date())){
 				state = true;

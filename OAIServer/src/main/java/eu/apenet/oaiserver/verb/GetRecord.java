@@ -83,7 +83,7 @@ public class GetRecord extends OAIVerb{
 		NodeList errorNode = null;
 		try {
 			doc = OAIResponse.getVerbResponse("GetRecord",attributesMap,requestURL);
-			MetadataFormat metadataFormat = DAOFactory.instance().getMetadataFormatDAO().getMetadataFormatByName(metadataPrefix);
+			MetadataFormat metadataFormat = MetadataFormat.getMetadataFormat(metadataPrefix);
 			ese = DAOFactory.instance().getEseDAO().getEseByIdentifierAndFormat(identifier.substring(0,identifier.lastIndexOf(OAIUtils.SPECIAL_KEY)),metadataFormat);
 			errorNode = doc.getElementsByTagName("error");
 			if(errorNode==null || errorNode.getLength()>0){
@@ -104,7 +104,7 @@ public class GetRecord extends OAIVerb{
 			String path = null;
 			try {
 				//Check metadataPrefix
-				if(ese.getMetadataFormat().getFormat().equals(metadataPrefix)){
+				if(ese.getMetadataFormat().equals(MetadataFormat.getMetadataFormat(metadataPrefix))){
 					valid = true;
 				}else{
 					valid = false;

@@ -87,11 +87,11 @@ public class ListMetadataFormats extends OAIVerb{
 				}
 			}else{
 				EseDAO eseDAO = DAOFactory.instance().getEseDAO();
-				Iterator<MetadataFormat> metadataFormatIterator = DAOFactory.instance().getMetadataFormatDAO().findAll().iterator();
+				MetadataFormat[] metadataFormats = MetadataFormat.values();
 				Node verbNode = doc.createElementNS(OAIResponse.NAMESPACE, "ListMetadataFormats");
 				boolean changes = false;
-				while(metadataFormatIterator.hasNext()){
-					MetadataFormat metadataFormat = metadataFormatIterator.next();
+				for(int i = 0; i < metadataFormats.length;i++){
+					MetadataFormat metadataFormat = metadataFormats[i];
 					List<Ese> results = eseDAO.getEsesByArguments(null, null,metadataFormat, null, 0, OAIResponse.LIMIT_PER_RESPONSE);
 					if(!results.isEmpty()){
 						Node metadataFormatNode = buildMetadataFormatNode(doc,null,metadataFormat);
@@ -112,7 +112,7 @@ public class ListMetadataFormats extends OAIVerb{
 	public static Node buildMetadataFormatNode(Document doc,String object,MetadataFormat metadataFormat) {
 		Node metadataFormatNode  = doc.createElementNS(OAIResponse.NAMESPACE, "metadataFormat");
 		Node metadataPrefixNode = doc.createElementNS(OAIResponse.NAMESPACE, "metadataPrefix");
-		metadataPrefixNode.setTextContent(metadataFormat.getFormat());
+		metadataPrefixNode.setTextContent(metadataFormat.toString());
 		metadataFormatNode.appendChild(metadataPrefixNode);
 		Node schemaNode = doc.createElementNS(OAIResponse.NAMESPACE, "schema");
 		schemaNode.setTextContent(OAIUtils.ESE_SCHEMA_LOCATION_FILE);
