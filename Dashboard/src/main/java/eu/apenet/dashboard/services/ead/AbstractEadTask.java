@@ -1,16 +1,13 @@
 package eu.apenet.dashboard.services.ead;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.types.XmlType;
-import eu.apenet.persistence.dao.ResumptionTokenDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead;
-import eu.apenet.persistence.vo.ResumptionToken;
 
 public abstract class AbstractEadTask {
 	protected Logger logger = Logger.getLogger(getClass());
@@ -33,15 +30,7 @@ public abstract class AbstractEadTask {
 	}
 
 	protected static boolean isBeingHarvested () {
-		boolean result = true;
-		ResumptionTokenDAO resumptionTokenDAO = DAOFactory.instance().getResumptionTokenDAO();
-		List<ResumptionToken> listValidResumptionTokens = resumptionTokenDAO.getGreaterResumptionTokensThan(new Date());
-		if(listValidResumptionTokens==null || listValidResumptionTokens.isEmpty()){
-			result = false;
-		}
-		
-		resumptionTokenDAO = null;
-		listValidResumptionTokens = null;
-		return result;
+		return DAOFactory.instance().getResumptionTokenDAO().containsValidResumptionTokens(new Date());
+
 	}
 }

@@ -41,12 +41,7 @@
 				<tr class="findingAidOptions">
 					<th><s:text name="content.message.europeana" />:</th>
 					<td><s:checkboxlist list="europeanaStatusList" name="europeanaStatus" /></td>
-					<th>Holdings guide status:</th>
-					<td><input type="checkbox" checked="checked" disabled="disabled">Ok</input><input type="checkbox"
-						checked="checked" disabled="disabled">No</input></td>
-
 				</tr>
-
 				<tr>
 					<td colspan="7"><s:textfield name="searchTerms" /> <s:select cssClass="small left"
 							list="searchTermsFieldList" name="searchTermsField" /><input type="submit" id="searchButton" value="Search"
@@ -55,6 +50,11 @@
 			</table>
 		</s:form>
 	</div>
+	<c:if test="${harvestingStarted}">
+		<div id="harvestingStarted">
+			<s:text name="content.message.harvesting" />
+		</div>
+	</c:if>
 	<div id="eads">
 		<div id="ead-results-container">
 			<c:choose>

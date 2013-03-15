@@ -1,6 +1,7 @@
 package eu.apenet.commons.listener;
 
 import java.io.File;
+import java.util.TimeZone;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -52,6 +53,7 @@ public class APEnetConfigListener implements ServletContextListener {
 	}
 	
 	protected void init(ServletContext servletContext, ApeConfig config){
+		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 		String repositoryDirPath = servletContext.getInitParameter(REPOSITORY_DIR_PATH);
 		repositoryDirPath = checkPath(REPOSITORY_DIR_PATH, repositoryDirPath);
 		if (StringUtils.isBlank(repositoryDirPath)) {
