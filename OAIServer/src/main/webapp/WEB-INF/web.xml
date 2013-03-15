@@ -34,4 +34,26 @@
 	<listener>
 		<listener-class>eu.apenet.commons.listener.APEnetConfigListener</listener-class>
 	</listener>
+    <security-role>
+        <role-name>EdmHarvester</role-name>
+    </security-role>
+    <security-constraint>
+        <display-name>SSL Is Required</display-name>
+        <web-resource-collection>
+            <web-resource-name>Match All - SSL Is Required</web-resource-name>
+            <description/>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>EdmHarvester</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <description>SSL is required</description>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>OAI PMH Server authentication</realm-name>
+    </login-config>
 </web-app>
