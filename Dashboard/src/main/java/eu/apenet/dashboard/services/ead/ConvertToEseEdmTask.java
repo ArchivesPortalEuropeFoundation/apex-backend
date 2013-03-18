@@ -91,7 +91,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 						+ xmlNameRelative.substring(lastIndex);
 				File edmOutputFile = EseFileUtils.getFile(outputXMLDir, edmOutputFilename);
 				config.getTransformerXML2XML().transform(edmTempOutputFile, edmOutputFile);
-				outputXMLDir.delete();
+				eseOutputFile.delete();
 				edmTempOutputFile.delete();
 				/*
 				 * end of EDM stuf
