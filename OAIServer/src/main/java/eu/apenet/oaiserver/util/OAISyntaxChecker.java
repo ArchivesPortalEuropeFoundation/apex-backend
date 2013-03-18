@@ -70,7 +70,7 @@ public class OAISyntaxChecker {
 	 * @throws ParseException
 	 * @throws Exception
 	 */
-	public static InputStream check(String verb, String url, Map<String, String> params) throws Exception {
+	private static InputStream check(String verb, String url, Map<String, String> params) throws Exception {
 		InputStream inputStream = null;
 		Document doc = null;
 		if (verb.equals("ListRecords")) {
@@ -206,7 +206,7 @@ public class OAISyntaxChecker {
 	 * @param limit
 	 * @return boolean
 	 */
-	public static boolean checkValidResumptionToken(Date fromDate, Date untilDate, String metadataPrefix, String set,
+	protected static boolean checkValidResumptionToken(Date fromDate, Date untilDate, String metadataPrefix, String set,
 			String limit) {
 		boolean state = false;
 		try {
