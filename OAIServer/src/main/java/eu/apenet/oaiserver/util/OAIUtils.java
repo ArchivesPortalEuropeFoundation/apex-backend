@@ -514,7 +514,7 @@ public class OAIUtils {
 
 			// identifier, metadataPrefix and resumptionToken attributes won't be validated because they are Strings with no restrictions
 			if (entry.getKey().equals(IDENTIFIER_ATTRIBUTE) || entry.getKey().equals(METADATAPREFIX_ATTRIBUTE) || entry.getKey().equals(RESUMPTIONTOKEN_ATTRIBUTE)) {
-				LOG.info("The attribute " + entry.getKey() + " doesn't need to be validated");
+				LOG.debug("The attribute " + entry.getKey() + " doesn't need to be validated");
 			}
 			else {
 				if (entry.getKey().equals(FROM_ATTRIBUTE)) {

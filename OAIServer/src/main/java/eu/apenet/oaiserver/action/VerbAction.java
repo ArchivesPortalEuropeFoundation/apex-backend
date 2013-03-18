@@ -32,7 +32,7 @@ public class VerbAction extends ActionSupport implements ServletRequestAware{
 	 */
 	public String execute(){
 		try {
-			LOG.info(request.getUserPrincipal() + ": " + OAIUtils.getURL(request));
+			LOG.info(request.getUserPrincipal() + ": " + OAIUtils.getURL(request)+ request.getQueryString()) ;
 			this.inputStream = OAISyntaxChecker.check(OAISyntaxChecker.fillParams(this.request),this.request);
 		} catch (Exception e) {
 			LOG.error("Error trying to check verb and params in OAISyntaxChecker.check.",e);
