@@ -59,12 +59,12 @@ public class OAIUtils {
 	private static final String DC_PREFIX = "dc";
 	private static final String DCTERMS_PREFIX = "dcterms";
 	private static final String EUROPEANA_PREFIX = "europeana";
-	private static final String REQUEST_SUFIX = "/request";
 	private static final String IDENTIFIER_ATTRIBUTE = "identifier";
 	private static final String METADATAPREFIX_ATTRIBUTE = "metadataPrefix";
 	private static final String FROM_ATTRIBUTE = "from";
 	private static final String UNTIL_ATTRIBUTE = "until";
 	private static final String SET_ATTRIBUTE = "set";
+	public static final String VERB = "verb";
 	private static final String RESUMPTIONTOKEN_ATTRIBUTE = "resumptionToken";
 	private static final long EXPIRATION_TIME_IN_MILLISECONDS = 1000*60*10; //10 minutes
 	public static final String SPECIAL_KEY = "-";
@@ -148,15 +148,7 @@ public class OAIUtils {
 			throw e;
 		}
 	}
-	/**
-	 * Gets the petition url from a request HttpServletRequest to be used in request
-	 * node (of a response in OAIServer)
-	 * @param request
-	 * @return String
-	 */
-	public static String getURL(HttpServletRequest request){
-		return request.getContextPath() + REQUEST_SUFIX;
-	}
+
 	
 	/**
 	 * Builds a resumptionToken Node to be used in the next petition, it has to have this structure:

@@ -10,11 +10,11 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 import com.opensymphony.xwork2.ActionSupport;
 
 import eu.apenet.oaiserver.util.OAISyntaxChecker;
-import eu.apenet.oaiserver.util.OAIUtils;
 
 
 
 public class VerbAction extends ActionSupport implements ServletRequestAware{
+	private static final String REQUEST_SUFIX = "/request";
 	/**
 	 * 
 	 */
@@ -32,8 +32,9 @@ public class VerbAction extends ActionSupport implements ServletRequestAware{
 	 */
 	public String execute(){
 		try {
-			LOG.info(request.getUserPrincipal() + ": " + OAIUtils.getURL(request)+ request.getQueryString()) ;
-			this.inputStream = OAISyntaxChecker.check(OAISyntaxChecker.fillParams(this.request),this.request);
+			String url = request.getContextPath() + REQUEST_SUFIX;;
+			LOG.info(request.getUserPrincipal() + ": " + url+ request.getQueryString()) ;
+			this.inputStream = OAISyntaxChecker.process(request.getParameterMap(),url);
 		} catch (Exception e) {
 			LOG.error("Error trying to check verb and params in OAISyntaxChecker.check.",e);
 		}
@@ -43,6 +44,5 @@ public class VerbAction extends ActionSupport implements ServletRequestAware{
 	public InputStream getInputStream() {
 		return inputStream;
 	}
-	
-	
+
 }
