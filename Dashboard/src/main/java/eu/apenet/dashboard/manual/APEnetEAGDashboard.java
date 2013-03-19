@@ -13,6 +13,8 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -211,7 +213,8 @@ public class APEnetEAGDashboard extends APEnetEAG {
         log.debug("Path of EAG: " + eagPath);
         log.debug("Filename of EAG: " + filename);
         File file = new File(eagPath + filename);
-        Xsd_enum schema = Xsd_enum.XSD_APE_EAG_SCHEMA; //todo: Now we use EAG 2012 for this, but it needs to be completed
+        //Xsd_enum schema = Xsd_enum.XSD_APE_EAG_SCHEMA; //todo: Now we use EAG 2012 for this, but it needs to be completed
+        Xsd_enum schema = Xsd_enum.XSD_EAG_2012_SCHEMA;
         try {
             InputStream in = new FileInputStream(file);
             List<SAXParseException> exceptions = DocumentValidation.xmlValidation(in, schema);

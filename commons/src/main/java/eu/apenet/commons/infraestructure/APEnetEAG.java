@@ -1558,14 +1558,14 @@ public class APEnetEAG {
 		this.id = valuesExtractedFromEAG.get(ROOT + APEnetUtilities.FILESEPARATOR + EADID_TAG);
 		//this.responsiblePersonSurname = valuesExtractedFromEAG.get(ROOT + APEnetUtilities.FILESEPARATOR + SURNAMES_TAG);
 		//this.responsiblePersonName = valuesExtractedFromEAG.get(ROOT + APEnetUtilities.FILESEPARATOR + FIRSTNAME_TAG);
-		this.country = valuesExtractedFromEAG.get(ROOT + APEnetUtilities.FILESEPARATOR + COUNTRY_TAG);
+		/*this.country = valuesExtractedFromEAG.get(ROOT + APEnetUtilities.FILESEPARATOR + COUNTRY_TAG);
 		this.cityTown = valuesExtractedFromEAG.get(ROOT + APEnetUtilities.FILESEPARATOR + MUNICIPALITY_TAG);
 		this.postalCode = valuesExtractedFromEAG.get(ROOT + APEnetUtilities.FILESEPARATOR + POSTALCODE_TAG);
 		this.street = valuesExtractedFromEAG.get(ROOT + APEnetUtilities.FILESEPARATOR + STREET_TAG);
 		this.telephone = valuesExtractedFromEAG.get(ROOT + APEnetUtilities.FILESEPARATOR + TELEPHONE_TAG);
 		this.emailAddress = valuesExtractedFromEAG.get(ROOT + APEnetUtilities.FILESEPARATOR + EMAIL_TAG + START_ATTRIBUTE + HREF_ATTRIBUTE + END_ATTRIBUTE);
 		this.webPage = valuesExtractedFromEAG.get(ROOT + APEnetUtilities.FILESEPARATOR + WEBPAGE_TAG + START_ATTRIBUTE + HREF_ATTRIBUTE + END_ATTRIBUTE);
-		if (!this.webPage.startsWith(HTTP) && !(this.webPage.startsWith(HTTPS))) {
+		if (this.webPage!=null && !this.webPage.startsWith(HTTP) && !(this.webPage.startsWith(HTTPS))) {
 			this.webPage = HTTP + this.webPage;
 		}
 		this.access = valuesExtractedFromEAG.get(ROOT + APEnetUtilities.FILESEPARATOR + ACCESS_TAG + START_ATTRIBUTE + QUESTION_ATTRIBUTE + END_ATTRIBUTE);
@@ -1611,7 +1611,58 @@ public class APEnetEAG {
 				}
 			}
 		}
-		
+		*/
 	}
 	
+	public String lookingForwardElementContent(String element) {
+		String text = null;
+        XMLStreamReader input = null;
+	    InputStream sfile = null;
+        XMLInputFactory xmlif = (XMLInputFactory) XMLInputFactory.newInstance();
+        xmlif.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, Boolean.FALSE);
+        xmlif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
+        xmlif.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
+        xmlif.setProperty(XMLInputFactory.IS_COALESCING, Boolean.FALSE);
+
+        try {
+            sfile = new FileInputStream(this.eagPath);
+            input = xmlif.createXMLStreamReader(sfile);
+
+            boolean exit = false;
+            boolean found = true;
+            if(input!=null && element!=null){
+            	String[] pathElements = element.split("/");
+                List<String> currentElement = new ArrayList<String>();
+                log.debug("Checking EAG file, looking for element " + element + ", path begins with " + pathElements[0]);
+                while (!exit && input.hasNext()) {
+                	switch (input.getEventType()) {
+                	case XMLEvent.START_ELEMENT:
+                		currentElement.add(input.getName().toString());
+                		if(currentElement.size()==pathElements.length){
+                			found = true;
+                			for(int i=0;i<pathElements.length && found;i++){
+                				found = (pathElements[i]==currentElement.get(i));
+                			}
+                			text = "";
+                		}
+                		break;
+                	case XMLEvent.CDATA:
+                		if(found){
+                			text += input.getText();
+                		}
+                		break;
+                	case XMLEvent.END_ELEMENT:
+                		currentElement.remove(currentElement.size()-1);
+                		if(found){
+                			exit = true;
+                		}
+                		break;
+                	}
+                }
+            }
+        }catch(Exception e){
+        	log.error("Exception getting "+element,e);
+        }
+		return text;
+	}
 }
