@@ -297,10 +297,10 @@
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>eu.apenet</groupId>
-				<artifactId>DPTutils</artifactId>
-				<version>1.2.0-alpha-1</version>
-			</dependency>
+                <groupId>eu.apenet</groupId>
+                <artifactId>DPTutils</artifactId>
+                <version>1.2.1-SNAPSHOT</version>
+            </dependency>
 			<dependency>
 				<groupId>eu.archivesportaleurope</groupId>
 				<artifactId>persistence</artifactId>
