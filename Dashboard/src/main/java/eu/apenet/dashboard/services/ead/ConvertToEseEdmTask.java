@@ -136,8 +136,8 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 						ese.setModificationDate(ese.getCreationDate());
 						eseState = DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.NOT_PUBLISHED);
 					}
-					ese.setPath(EseFileUtils.getRelativeESEFilePath(findingAid.getArchivalInstitution().getCountry()
-							.getIsoname(), findingAid.getArchivalInstitution().getAiId(), eseOutputFilename));
+					ese.setPath(EseFileUtils.getRelativeEDMFilePath(findingAid.getArchivalInstitution().getCountry()
+							.getIsoname(), findingAid.getArchivalInstitution().getAiId(), edmOutputFilename));
 					ese.setOaiIdentifier(oaiIdentifier);
 					ese.setNumberOfRecords(numberOfRecords);
 					ese.setFindingAid(findingAid);
