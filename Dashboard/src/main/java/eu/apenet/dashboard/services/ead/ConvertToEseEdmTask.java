@@ -65,31 +65,36 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 				int lastIndex = xmlNameRelative.lastIndexOf('.');
 				String eseOutputFilename = xmlNameRelative.substring(0, lastIndex) + "-ese"
 						+ xmlNameRelative.substring(lastIndex);
-				// String xmlOutputFilenameTemp =
-				// FileUtils.getTempFile(findingAid,
-				// xmlOutputFilename);
-				File outputXMLDir = EseFileUtils.getOutputXMLDir(APEnetUtilities.getConfig().getRepoDirPath(),
+				File outputESEDir = EseFileUtils.getOutputESEDir(APEnetUtilities.getConfig().getRepoDirPath(),
 						findingAid.getArchivalInstitution().getCountry().getIsoname(), findingAid
 								.getArchivalInstitution().getAiId());
-				File eseOutputFile = EseFileUtils.getFile(outputXMLDir, eseOutputFilename);
-				// File xmlOutputFileTemp =
-				// FileUtils.getTempFile(findingAid,
-				// xmlOutputFilename);
+				File eseOutputFile = EseFileUtils.getFile(outputESEDir, eseOutputFilename);
 				eseOutputFile.getParentFile().mkdirs();
 				eseConfig.getTransformerXML2XML().transform(xmlNameRelative, apenetEad, eseOutputFile);
 				int numberOfRecords = analyzeESEXML(xmlNameRelative, eseOutputFile);
 				/*
 				 * ESE2EDM stuff
 				 */
+				File outputEDMDir = EseFileUtils.getOutputEDMDir(APEnetUtilities.getConfig().getRepoDirPath(),
+						findingAid.getArchivalInstitution().getCountry().getIsoname(), findingAid
+								.getArchivalInstitution().getAiId());
+				// OAI Identifier will be built according to the next
+				// syntax:
+				// isoname/ai_id/fa_eadid
+				String oaiIdentifier = findingAid.getArchivalInstitution().getCountry().getIsoname()
+						+ APEnetUtilities.FILESEPARATOR + findingAid.getArchivalInstitution().getAiId()
+						+ APEnetUtilities.FILESEPARATOR + findingAid.getEadid();
+
 				EdmConfig config = new EdmConfig(false);
+				config.setEdmIdentifier(oaiIdentifier);
 				String edmTempOutputFilename = xmlNameRelative.substring(0, lastIndex) + "-edm-temp"
 						+ xmlNameRelative.substring(lastIndex);
-				File edmTempOutputFile = EseFileUtils.getFile(outputXMLDir, edmTempOutputFilename);
+				File edmTempOutputFile = EseFileUtils.getFile(outputEDMDir, edmTempOutputFilename);
 				config.getTransformerXML2XML().transform(eseOutputFile, edmTempOutputFile);
 				config.setTransferToFileOutput(true);
 				String edmOutputFilename = xmlNameRelative.substring(0, lastIndex) + "-edm"
 						+ xmlNameRelative.substring(lastIndex);
-				File edmOutputFile = EseFileUtils.getFile(outputXMLDir, edmOutputFilename);
+				File edmOutputFile = EseFileUtils.getFile(outputEDMDir, edmOutputFilename);
 				config.getTransformerXML2XML().transform(edmTempOutputFile, edmOutputFile);
 				eseOutputFile.delete();
 				edmTempOutputFile.delete();
@@ -111,12 +116,6 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 							ese.setPathHtml(null);
 						}
 					}
-					// OAI Identifier will be built according to the next
-					// syntax:
-					// isoname/ai_id/fa_eadid
-					String oaiIdentifier = findingAid.getArchivalInstitution().getCountry().getIsoname()
-							+ APEnetUtilities.FILESEPARATOR + findingAid.getArchivalInstitution().getAiId()
-							+ APEnetUtilities.FILESEPARATOR + findingAid.getEadid();
 
 					// Ese example = new Ese();
 					// example.setOaiIdentifier(oaiIdentifier);
@@ -138,7 +137,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 						eseState = DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.NOT_PUBLISHED);
 					}
 					ese.setPath(EseFileUtils.getRelativeESEFilePath(findingAid.getArchivalInstitution().getCountry()
-							.getIsoname(), findingAid.getArchivalInstitution().getAiId(), edmOutputFilename));
+							.getIsoname(), findingAid.getArchivalInstitution().getAiId(), eseOutputFilename));
 					ese.setOaiIdentifier(oaiIdentifier);
 					ese.setNumberOfRecords(numberOfRecords);
 					ese.setFindingAid(findingAid);
