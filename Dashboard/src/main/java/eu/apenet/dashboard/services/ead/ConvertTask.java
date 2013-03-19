@@ -78,7 +78,7 @@ public class ConvertTask extends AbstractEadTask {
 							+ "' with id: '" + ead.getId() + "'");
 					in = new FileInputStream(file);
 					TransformationTool.createTransformation(in, tempOutputFile, new File(xslFilePath), null, true,
-							true, null, true, null);
+							true, null, true, null, APEnetUtilities.getDashboardConfig().getSystemXslDirPath());
 
 					File xslFile = new File(APEnetUtilities.getDashboardConfig().getSystemXslDirPath()
 							+ APEnetUtilities.FILESEPARATOR + "default.xsl");
@@ -86,7 +86,7 @@ public class ConvertTask extends AbstractEadTask {
 					in = new FileInputStream(tempOutputFile);
 					outputfile = new File(tempDirOutputPath + "converted_" + file.getName());
 					xslMessages = TransformationTool.createTransformation(in, outputfile, xslFile, parameters, true,
-							true, null, true, counterCLevelCall);
+							true, null, true, counterCLevelCall, APEnetUtilities.getDashboardConfig().getSystemXslDirPath());
 					tempOutputFile.delete();
 				} else {
 					String xslFilePath = APEnetUtilities.getDashboardConfig().getXslDirPath()
