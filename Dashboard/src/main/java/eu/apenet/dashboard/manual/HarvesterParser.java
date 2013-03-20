@@ -154,7 +154,7 @@ public class HarvesterParser extends AbstractParser {
                         findingAidOutputStream2.close();
 
                         File outputFile = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + ai_id + APEnetUtilities.FILESEPARATOR + "oai_" + ai_id + ".xml");
-                        TransformationTool.createTransformation(IOUtils.toInputStream(findingAidOutputStream2.toString()), outputFile, HarvesterParser.class.getResourceAsStream("/dc2c.xsl"), null, true, true, null, true);
+                        TransformationTool.createTransformation(IOUtils.toInputStream(findingAidOutputStream2.toString()), outputFile, HarvesterParser.class.getResourceAsStream("/dc2c.xsl"), null, true, true, null, true, null);
 
                         Document doc = builder.parse(outputFile);
                         doc.getDocumentElement().normalize();
@@ -290,7 +290,7 @@ public class HarvesterParser extends AbstractParser {
         try {
             Map<String, String> params = new HashMap<String, String>();
             params.put("mainagencycode", mainagencycode);
-            TransformationTool.createTransformation(IOUtils.toInputStream(cLevel.getXml(), UTF8), outputFile, HarvesterParser.class.getResourceAsStream("/c2ead.xsl"), params, true, true, null, true);
+            TransformationTool.createTransformation(IOUtils.toInputStream(cLevel.getXml(), UTF8), outputFile, HarvesterParser.class.getResourceAsStream("/c2ead.xsl"), params, true, true, null, true, null);
             eadContent.setXml(FileUtils.readFileToString(outputFile, UTF8));
 
             FileUtils.forceDelete(outputFile);
