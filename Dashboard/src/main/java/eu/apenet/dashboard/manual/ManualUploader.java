@@ -340,11 +340,17 @@ public abstract class ManualUploader {
                         log.info("EAG is valid");
                         
                         //check the <recordId> content
+                        eag.setEagPath(fullFileName); //temp used for looking forward target tag
                         String recordIdValue = eag.lookingForwardElementContent("/eag/control/recordId");
                         if(recordIdValue!=null && recordIdValue.endsWith(MAGIC_KEY)){ 
                         	//replace value with a consecutive unique value
-                        	String newRecordIdValue = new ArchivalLandscape().getmyCountry();
-                        	
+                        	ArchivalLandscape archivalLandscape = new ArchivalLandscape();
+                        	int zeroes = 13-archivalInstitutionId.toString().length();
+                        	String newRecordIdValue = archivalLandscape.getmyCountry()+"-";
+                        	for(int x=0;x<zeroes;x++){
+                        		newRecordIdValue+="0";
+                        	}
+                        	newRecordIdValue+=archivalInstitutionId.toString();
                         	DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
                     		DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
                     		Document tempDoc = docBuilder.parse(fullFileName);
@@ -353,9 +359,9 @@ public abstract class ManualUploader {
                     		for(int i=0;i<recordsIds.getLength() && !changed;i++){
                     			Node currentNode = recordsIds.item(i);
                     			Node parent = currentNode.getParentNode();
-                    			if(parent!=null && parent.getNodeName()=="control"){
+                    			if(parent!=null && parent.getNodeName().equals("control")){
                     				parent = parent.getParentNode();
-                    				if(parent!=null && parent.getNodeName() == "eag"){
+                    				if(parent!=null && parent.getNodeName().equals("eag")){
                     					currentNode.setTextContent(newRecordIdValue);
                     					changed = true;
                     				}

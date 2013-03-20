@@ -1630,22 +1630,35 @@ public class APEnetEAG {
 
             boolean exit = false;
             boolean found = true;
+            String[] pathElements = null;
             if(input!=null && element!=null){
-            	String[] pathElements = element.split("/");
+            	if(element.contains("/")){ //check input parameters
+            		if(element.startsWith("/")){ 
+            			element = element.substring(1);
+            		}
+            		if(element.endsWith("/") && element.length()>2){
+            			element = element.substring(0,element.length()-2);
+            		}
+            		pathElements = element.split("/");
+            	}else{
+            		pathElements = new String[1];
+            		pathElements[0] = element;
+            	}
                 List<String> currentElement = new ArrayList<String>();
                 log.debug("Checking EAG file, looking for element " + element + ", path begins with " + pathElements[0]);
                 while (!exit && input.hasNext()) {
                 	switch (input.getEventType()) {
                 	case XMLEvent.START_ELEMENT:
-                		currentElement.add(input.getName().toString());
+                		currentElement.add(input.getLocalName().toString());
                 		if(currentElement.size()==pathElements.length){
                 			found = true;
                 			for(int i=0;i<pathElements.length && found;i++){
-                				found = (pathElements[i]==currentElement.get(i));
+                				found = (pathElements[i].trim().equals(currentElement.get(i).trim()));
                 			}
                 			text = "";
                 		}
                 		break;
+                	case XMLEvent.CHARACTERS:
                 	case XMLEvent.CDATA:
                 		if(found){
                 			text += input.getText();
@@ -1658,6 +1671,9 @@ public class APEnetEAG {
                 		}
                 		break;
                 	}
+                	if (input.hasNext()){
+    	                input.next();
+    	            }
                 }
             }
         }catch(Exception e){
