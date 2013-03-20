@@ -67,7 +67,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 				// String xmlOutputFilenameTemp =
 				// FileUtils.getTempFile(findingAid,
 				// xmlOutputFilename);
-				File outputXMLDir = EseFileUtils.getOutputXMLDir(APEnetUtilities.getConfig().getRepoDirPath(),
+				File outputXMLDir = EseFileUtils.getOutputESEDir(APEnetUtilities.getConfig().getRepoDirPath(),
 						findingAid.getArchivalInstitution().getCountry().getIsoname(), findingAid
 								.getArchivalInstitution().getAiId());
 				File xmlOutputFile = EseFileUtils.getFile(outputXMLDir, xmlOutputFilename);
