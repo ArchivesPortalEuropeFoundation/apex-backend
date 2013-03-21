@@ -66,7 +66,7 @@ public class OAIUtils {
 	private static final String SET_ATTRIBUTE = "set";
 	public static final String VERB = "verb";
 	private static final String RESUMPTIONTOKEN_ATTRIBUTE = "resumptionToken";
-	private static final long EXPIRATION_TIME_IN_MILLISECONDS = 1000*60*10; //10 minutes
+	public static final long EXPIRATION_TIME_IN_MILLISECONDS = 1000*60*10; //10 minutes
 	public static final String SPECIAL_KEY = "-";
 	private static Logger LOG = Logger.getLogger(OAIUtils.class);
 	public final static String XSI_SCHEMALOCATION = "http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd";
@@ -222,7 +222,90 @@ public class OAIUtils {
 		}
 		return doc;
 	}
-
+	public static ResumptionToken buildResumptionToken(Map<String,String> arguments,int limit){
+		Date expirationDate = new Date();
+		expirationDate = new Date(expirationDate.getTime()+OAIUtils.EXPIRATION_TIME_IN_MILLISECONDS);
+		String resumptionToken = arguments.get("resumptionToken");
+		String from = null;
+		String until = null;
+		String set = null;
+		String metadataPrefix = null;
+		if(resumptionToken==null || resumptionToken.length()<=5){
+			from = arguments.get("from");
+			until = arguments.get("until");
+			set = arguments.get("set");
+			metadataPrefix = arguments.get("metadataPrefix");
+		}else{
+			String[] params = resumptionToken.split("/");
+			from = params[0];
+			until = params[1];
+			set = params[2];
+			metadataPrefix = params[3];
+		}
+		if(from==null){
+			from = "0001-01-01T00:00:00Z";
+		}
+		if(until==null){
+			until = "9999-12-31T23:59:59Z";
+		}
+		if(set==null){
+			set = "";
+		}
+		if(metadataPrefix==null){
+			metadataPrefix = "";
+		}
+		resumptionToken = null;
+		ResumptionToken result = null;
+		try {
+			try{//DDBB part
+				ResumptionTokenDAO daoResumptionToken = DAOFactory.instance().getResumptionTokenDAO();
+				ResumptionToken resToken = new ResumptionToken();
+				resToken.setFromDate(OAIUtils.parseStringToISO8601Date(from));
+				resToken.setUntilDate(OAIUtils.parseStringToISO8601Date(until));
+				if(set!=null && !set.isEmpty()){
+					resToken.setSet(set.trim());
+				}
+				resToken.setLastRecordHarvested(limit +"");
+				resToken.setExpirationDate(expirationDate); 
+				MetadataFormat metadataFormat = MetadataFormat.getMetadataFormat(metadataPrefix);
+				resToken.setMetadataFormat(metadataFormat);
+				result = daoResumptionToken.store(resToken);//End DDBB part
+			}catch(Exception e){
+				LOG.error("Error trying to save the resumptionToken value in DDBB:",e);
+			}
+			resumptionToken = limit +"";
+		} catch (Exception e) {
+			LOG.error("Error trying to obtain the last identifier to be stored in ddbb (building resumptionToken):"+e.getCause());
+		} finally{
+			OAIUtils.removeOldResumptionTokens();
+		}
+		return result;
+	}
+	public static ResumptionToken buildResumptionToken(ResumptionToken oldResumptionToken,int limit){
+		Date expirationDate = new Date();
+		expirationDate = new Date(expirationDate.getTime()+OAIUtils.EXPIRATION_TIME_IN_MILLISECONDS);
+		ResumptionToken result = null;
+		try {
+			try{//DDBB part
+				ResumptionTokenDAO daoResumptionToken = DAOFactory.instance().getResumptionTokenDAO();
+				ResumptionToken resToken = new ResumptionToken();
+				resToken.setFromDate(oldResumptionToken.getFromDate());
+				resToken.setUntilDate(oldResumptionToken.getUntilDate());
+				resToken.setSet(oldResumptionToken.getSet());
+				resToken.setLastRecordHarvested(limit +"");
+				resToken.setExpirationDate(expirationDate); 
+				resToken.setMetadataFormat(oldResumptionToken.getMetadataFormat());
+				result = daoResumptionToken.store(resToken);//End DDBB part
+			}catch(Exception e){
+				LOG.error("Error trying to save the resumptionToken value in DDBB:",e);
+			}
+		} catch (Exception e) {
+			LOG.error("Error trying to obtain the last identifier to be stored in ddbb (building resumptionToken):"+e.getCause());
+		} finally{
+			OAIUtils.removeOldResumptionTokens();
+		}
+		return result;
+	}
 	/**
 	 * Deletes all values in DDBB that has never been used again.
 	 */
@@ -251,7 +334,7 @@ public class OAIUtils {
 			//Only day granularity
 			df = new SimpleDateFormat("yyyy-MM-dd");						
 		}
-		TimeZone tz = TimeZone.getTimeZone("Zulu");
+		TimeZone tz = TimeZone.getTimeZone("UTC");
         df.setTimeZone(tz);
         Date date = df.parse(isoStringDate);
         return date;
@@ -447,7 +530,7 @@ public class OAIUtils {
 					}
 					r.close();
 				}catch(Exception exception){
-					LOG.error("CanNOT 'parse' an Ese, identifier: "+identifier+" -- "+exception.getCause());
+					LOG.error("CanNOT 'parse' an Ese, identifier: "+identifier+" -- "+exception.getCause(), exception);
 				}
 			}
 			else if(ese.getMetadataFormat().equals(MetadataFormat.getMetadataFormat(metadataPrefix)) && ese.getEseState().getState().equals(EseState.REMOVED)){
