@@ -41,49 +41,52 @@ public class RequestProcessor {
 
 		} else {
 			String metadataPrefix = params.get(METADATA_PREFIX);
-			if (StringUtils.isNotBlank(metadataPrefix) && MetadataFormat.getMetadataFormat(metadataPrefix) == null){
+			if (StringUtils.isNotBlank(metadataPrefix) && MetadataFormat.getMetadataFormat(metadataPrefix) == null) {
 				new ErrorResponse(ErrorResponse.ErrorCode.CANNOT_DISSEMINATE_FORMAT).generateResponse(writer, params);
-			}else if (!badArguments) {
+			} else if (OAIUtils.validateRequestAttributes(params)) {
+				new ErrorResponse(ErrorResponse.ErrorCode.BAD_ARGUMENT).generateResponse(writer, params);
+			} else if (!badArguments) {
 				if (VERB_LIST_RECORDS.equals(verb)) {
 					if (checkListIdentifiersAndListRecords(params)) {
 						params.put(AbstractResponse.REQUEST_URL, url);
 						ListRecordsOrIdentifiers.execute(writer, params, true);
-					}else {
+					} else {
 						badArguments = true;
 					}
-				}if (VERB_LIST_IDENTIFIERS.equals(verb)) {
+				}
+				if (VERB_LIST_IDENTIFIERS.equals(verb)) {
 					if (checkListIdentifiersAndListRecords(params)) {
 						params.put(AbstractResponse.REQUEST_URL, url);
 						ListRecordsOrIdentifiers.execute(writer, params, false);
-					}else {
+					} else {
 						badArguments = true;
 					}
-				}else if (VERB_IDENTIFY.equals(verb)) {
+				} else if (VERB_IDENTIFY.equals(verb)) {
 					if (checkIdentifyArguments(params)) {
 						params.put(AbstractResponse.REQUEST_URL, url);
 						new IdentifyResponse().generateResponse(writer, params);
 					} else {
 						badArguments = true;
 					}
-				}else if (VERB_LIST_METADATAFORMATS.equals(verb)) {
+				} else if (VERB_LIST_METADATAFORMATS.equals(verb)) {
 					if (checkListMetadataFormats(params)) {
 						params.put(AbstractResponse.REQUEST_URL, url);
 						new ListMetadataFormatsResponse().generateResponse(writer, params);
-					}else {
+					} else {
 						badArguments = true;
 					}
-				}else if (VERB_GET_RECORD.equals(verb)) {
+				} else if (VERB_GET_RECORD.equals(verb)) {
 					if (checkGetRecordArguments(params)) {
 						params.put(AbstractResponse.REQUEST_URL, url);
 						GetRecord.execute(writer, params);
-					}else {
+					} else {
 						badArguments = true;
 					}
-				}else if (VERB_LIST_SETS.equals(verb)) {
+				} else if (VERB_LIST_SETS.equals(verb)) {
 					if (checkListSetsArguments(params)) {
 						params.put(AbstractResponse.REQUEST_URL, url);
 						ListSets.execute(writer, params);
-					}else {
+					} else {
 						badArguments = true;
 					}
 				}
@@ -94,6 +97,7 @@ public class RequestProcessor {
 		}
 		writer.close();
 	}
+
 	private static boolean checkListMetadataFormats(Map<String, String> params) {
 		int size = params.size();
 		if (size == 1) {
