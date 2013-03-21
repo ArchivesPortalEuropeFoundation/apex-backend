@@ -17,8 +17,9 @@ public class RequestProcessor {
 
 	public static final String VERB_IDENTIFY = "Identify";
 	public static final String VERB_LIST_RECORDS = "ListRecords";
+	public static final String VERB_LIST_IDENTIFIERS = "ListIdentifiers";
 	public static final String VERB_LIST_METADATAFORMATS = "ListMetadataFormats";
-
+	
 
 	public static void process(Map<String, String[]> originalParams, String url, XMLStreamWriterHolder writer)
 			throws Exception {
@@ -38,22 +39,30 @@ public class RequestProcessor {
 
 		} else {
 			if (!badArguments) {
-				if (verb.equals(VERB_LIST_RECORDS)) {
+				if (VERB_LIST_RECORDS.equals(verb)) {
 					if (checkListIdentifiersAndListRecords(params)) {
 						params.put(AbstractResponse.REQUEST_URL, url);
-						ListRecords.execute(writer, params);
+						ListRecordsOrIdentifiers.execute(writer, params, true);
 						//new EdmListRecordsResponse().generateResponse(writer, params);
 					}else {
 						badArguments = true;
 					}
-				}else if (verb.equals(VERB_IDENTIFY)) {
+				}if (VERB_LIST_IDENTIFIERS.equals(verb)) {
+					if (checkListIdentifiersAndListRecords(params)) {
+						params.put(AbstractResponse.REQUEST_URL, url);
+						ListRecordsOrIdentifiers.execute(writer, params, false);
+						//new EdmListRecordsResponse().generateResponse(writer, params);
+					}else {
+						badArguments = true;
+					}
+				}else if (VERB_IDENTIFY.equals(verb)) {
 					if (checkIdentifyArguments(params)) {
 						params.put(AbstractResponse.REQUEST_URL, url);
 						new IdentifyResponse().generateResponse(writer, params);
 					} else {
 						badArguments = true;
 					}
-				}else if (verb.equals(VERB_LIST_METADATAFORMATS)) {
+				}else if (VERB_LIST_METADATAFORMATS.equals(verb)) {
 					if (checkListMetadataFormats(params)) {
 						new ListMetadataFormatsResponse().generateResponse(writer, params);
 					}else {

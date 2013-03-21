@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -14,50 +13,21 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.oaiserver.util.OAIUtils;
+import eu.apenet.oaiserver.request.RequestProcessor;
 import eu.apenet.persistence.vo.Ese;
-import eu.apenet.persistence.vo.EseState;
 import eu.apenet.persistence.vo.MetadataFormat;
 import eu.apenet.persistence.vo.ResumptionToken;
 
-public class ListRecordsResponse extends AbstractResponse {
+public class ListRecordsResponse extends ListIdentifiersResponse {
 
-
-
-	private List<Ese> eses;
-	private ResumptionToken resumptionToken;
 
 	public ListRecordsResponse(List<Ese> eses, ResumptionToken resumptionToken) {
-		this.eses = eses;
-		this.resumptionToken = resumptionToken;
+		super(eses, resumptionToken);
 	}
 
-	@Override
-	protected void generateResponseInternal(XMLStreamWriterHolder writer, Map<String, String> params) throws XMLStreamException, IOException {
-		writer.writeStartElement("ListRecords");
-		for (Ese ese: eses){
-			writer.writeStartElement("record");
-			writer.writeStartElement("header");
-			if (EseState.REMOVED.equalsIgnoreCase(ese.getEseState().getState())){
-				writer.writeAttribute("status", "deleted");
-			}
-			writer.writeTextElement("identifier" , ese.getOaiIdentifier());
-			writer.writeTextElement("datestamp" , OAIUtils.parseDateToISO8601(ese.getModificationDate()));
-			writer.writeTextElement("setSpec" , ese.getEset());
-			writer.closeElement();
-			if (EseState.PUBLISHED.equalsIgnoreCase(ese.getEseState().getState())){
-				writer.writeStartElement("metadata");
-				writeEseFile(writer, ese);
-				writer.closeElement();
-			}
 
-			writer.closeElement();
-		}
-		writeResumptionToken(writer, resumptionToken );
-		writer.closeElement();
-	}
-
-	private void writeEseFile(XMLStreamWriterHolder writer, Ese ese) throws IOException, XMLStreamException {
+	protected void writeEseFile(XMLStreamWriterHolder writer, Ese ese) throws IOException, XMLStreamException {
+		writer.writeStartElement("metadata");
 		FileInputStream inputStream = getFileInputStream(ese.getPath());
 		XMLStreamReader xmlReader = getXMLReader(inputStream);
 		for (int event = xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
@@ -90,6 +60,7 @@ public class ListRecordsResponse extends AbstractResponse {
 		}
 		xmlReader.close();
 		inputStream.close();
+		writer.closeElement();
 	}
 
 	private static FileInputStream getFileInputStream(String path) throws FileNotFoundException, XMLStreamException {
@@ -103,5 +74,7 @@ public class ListRecordsResponse extends AbstractResponse {
 		return (XMLStreamReader) inputFactory.createXMLStreamReader(fileInputStream, UTF_8);
 	}
 
-
+	protected String getVerb(){
+		return RequestProcessor.VERB_LIST_RECORDS;
+	}
 }
