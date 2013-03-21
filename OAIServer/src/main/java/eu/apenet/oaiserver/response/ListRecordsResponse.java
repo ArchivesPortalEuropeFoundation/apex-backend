@@ -23,7 +23,7 @@ import eu.apenet.persistence.vo.ResumptionToken;
 public class ListRecordsResponse extends AbstractResponse {
 
 
-	private static final String RDF_NAMESPACE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+
 	private List<Ese> eses;
 	private ResumptionToken resumptionToken;
 
@@ -65,10 +65,10 @@ public class ListRecordsResponse extends AbstractResponse {
 				writer.writeStartElement(xmlReader);
 				QName elementName = xmlReader.getName();
 				if (elementName.getLocalPart().equals("RDF") && MetadataFormat.EDM.equals(ese.getMetadataFormat())){
-					writer.writeAttribute(XMLStreamWriterHolder.XMLNS, RDF_NAMESPACE);
+					writer.writeAttribute(XMLStreamWriterHolder.XMLNS, EDM_NAMESPACE);
 					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "ore", "", "http://www.openarchives.org/ore/terms/");
 					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "owl", "", "http://www.w3.org/2002/07/owl#");
-					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "rdf", "", RDF_NAMESPACE);
+					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "rdf", "", EDM_NAMESPACE);
 					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "skos", "", "http://www.w3.org/2004/02/skos/core#");
 					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "wgs84", "", "http://www.w3.org/2003/01/geo/wgs84_pos#");
 					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "dc", "", "http://purl.org/dc/elements/1.1/");
@@ -76,7 +76,7 @@ public class ListRecordsResponse extends AbstractResponse {
 					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "edm", "", "http://www.europeana.eu/schemas/edm/");
 					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "enrichment", "", "http://www.europeana.eu/schemas/edm/enrichment");
 					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "europeana", "", "http://www.europeana.eu/schemas/ese/");
-					writer.writeAttributeNS(XMLStreamWriterHolder.XSI_PREFIX, XMLStreamWriterHolder.SCHEMA_LOCATION,"", RDF_NAMESPACE + " http://www.europeana.eu/schemas/edm/EDM.xsd");
+					writer.writeAttributeNS(XMLStreamWriterHolder.XSI_PREFIX, XMLStreamWriterHolder.SCHEMA_LOCATION,"", EDM_NAMESPACE + " " + EDM_SCHEMA_LOCATION);
 				}
 				
 				

@@ -50,7 +50,7 @@ public class VerbAction extends ActionSupport implements ServletRequestAware, Se
 			String url = request.getContextPath() + REQUEST_SUFIX;;
 			LOG.info(request.getUserPrincipal() + ": " + url+ request.getQueryString()) ;
 			String verb = request.getParameter("verb");
-			if (RequestProcessor.VERB_LIST_RECORDS.equals(verb) || RequestProcessor.VERB_IDENTIFY.equals(verb) ){
+			if (RequestProcessor.VERB_LIST_RECORDS.equals(verb) || RequestProcessor.VERB_IDENTIFY.equals(verb)  || RequestProcessor.VERB_LIST_METADATAFORMATS.equals(verb) ){
 				OutputStream outputStream = new GZIPOutputStream(response.getOutputStream());
 				response.setCharacterEncoding("UTF-8");
 				response.setContentType("text/xml");

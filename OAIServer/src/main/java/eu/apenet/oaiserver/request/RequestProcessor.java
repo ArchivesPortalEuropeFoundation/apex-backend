@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import eu.apenet.oaiserver.response.AbstractResponse;
 import eu.apenet.oaiserver.response.ErrorResponse;
 import eu.apenet.oaiserver.response.IdentifyResponse;
+import eu.apenet.oaiserver.response.ListMetadataFormatsResponse;
 import eu.apenet.oaiserver.response.XMLStreamWriterHolder;
 import eu.apenet.oaiserver.util.OAIUtils;
 
@@ -16,6 +17,8 @@ public class RequestProcessor {
 
 	public static final String VERB_IDENTIFY = "Identify";
 	public static final String VERB_LIST_RECORDS = "ListRecords";
+	public static final String VERB_LIST_METADATAFORMATS = "ListMetadataFormats";
+
 
 	public static void process(Map<String, String[]> originalParams, String url, XMLStreamWriterHolder writer)
 			throws Exception {
@@ -48,6 +51,12 @@ public class RequestProcessor {
 						params.put(AbstractResponse.REQUEST_URL, url);
 						new IdentifyResponse().generateResponse(writer, params);
 					} else {
+						badArguments = true;
+					}
+				}else if (verb.equals(VERB_LIST_METADATAFORMATS)) {
+					if (checkListMetadataFormats(params)) {
+						new ListMetadataFormatsResponse().generateResponse(writer, params);
+					}else {
 						badArguments = true;
 					}
 				}

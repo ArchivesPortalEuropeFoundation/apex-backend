@@ -19,6 +19,8 @@ public abstract class AbstractResponse {
 	protected static final String XMLNS_XSI = "http://www.w3.org/2001/XMLSchema-instance";
 	protected static final String ESE_METADATA_NAMESPACE = "http://www.europeana.eu/schemas/ese/";
 	protected static final String DCTERMS_SCHEMA_LOCATION = "http://purl.org/dc/terms/";
+	protected static final String EDM_SCHEMA_LOCATION = "http://www.europeana.eu/schemas/edm/EDM.xsd";
+	protected static final String EDM_NAMESPACE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 	public void generateResponse(XMLStreamWriterHolder writerHolder, Map<String, String> params)
 			throws XMLStreamException, IOException {
 		writerHolder.writeOaiPmh();
