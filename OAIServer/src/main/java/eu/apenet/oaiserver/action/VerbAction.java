@@ -50,8 +50,8 @@ public class VerbAction extends ActionSupport implements ServletRequestAware, Se
 			String url = request.getContextPath() + REQUEST_SUFIX;;
 			LOG.info(request.getUserPrincipal() + ": " + url+ request.getQueryString()) ;
 			String verb = request.getParameter("verb");
-			if (RequestProcessor.VERB_LIST_RECORDS.equals(verb) || RequestProcessor.VERB_IDENTIFY.equals(verb)  || RequestProcessor.VERB_LIST_METADATAFORMATS.equals(verb) 
-					|| RequestProcessor.VERB_GET_RECORD.equals(verb) || RequestProcessor.VERB_LIST_IDENTIFIERS.equals(verb)){
+//			if (RequestProcessor.VERB_LIST_RECORDS.equals(verb) || RequestProcessor.VERB_IDENTIFY.equals(verb)  || RequestProcessor.VERB_LIST_METADATAFORMATS.equals(verb) 
+//					|| RequestProcessor.VERB_GET_RECORD.equals(verb) || RequestProcessor.VERB_LIST_IDENTIFIERS.equals(verb)){
 				OutputStream outputStream = new GZIPOutputStream(response.getOutputStream());
 				response.setCharacterEncoding("UTF-8");
 				response.setContentType("text/xml");
@@ -61,9 +61,9 @@ public class VerbAction extends ActionSupport implements ServletRequestAware, Se
 				outputStream.flush();
 				outputStream.close();
 				return null;
-			}else {
-				this.inputStream = OAISyntaxChecker.process(request.getParameterMap(),url);
-			}
+//			}else {
+//				this.inputStream = OAISyntaxChecker.process(request.getParameterMap(),url);
+//			}
 		} catch (Exception e) {
 			LOG.error("Error trying to check verb and params in OAISyntaxChecker.check.",e);
 		}

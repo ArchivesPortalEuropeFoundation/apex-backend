@@ -21,7 +21,7 @@ public class GetRecord {
 		MetadataFormat metadataFormat = MetadataFormat.getMetadataFormat(params.get("metadataPrefix"));
 		Ese ese = DAOFactory.instance().getEseDAO().getEseByIdentifierAndFormat(identifier,metadataFormat);
 		if (ese == null){
-			new ErrorResponse(ErrorResponse.ErrorCode.BAD_ARGUMENT).generateResponse(writer, params);
+			new ErrorResponse(ErrorResponse.ErrorCode.ID_DOES_NOT_EXIST).generateResponse(writer, params);
 			return false;
 		}else{
 			new GetRecordResponse(ese).generateResponse(writer, params);

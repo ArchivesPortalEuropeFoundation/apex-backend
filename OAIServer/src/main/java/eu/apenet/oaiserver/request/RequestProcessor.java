@@ -19,6 +19,7 @@ public class RequestProcessor {
 	public static final String VERB_IDENTIFY = "Identify";
 	public static final String VERB_LIST_RECORDS = "ListRecords";
 	public static final String VERB_LIST_IDENTIFIERS = "ListIdentifiers";
+	public static final String VERB_LIST_SETS = "ListSets";
 	public static final String VERB_GET_RECORD = "GetRecord";
 	public static final String VERB_LIST_METADATAFORMATS = "ListMetadataFormats";
 	
@@ -64,13 +65,22 @@ public class RequestProcessor {
 					}
 				}else if (VERB_LIST_METADATAFORMATS.equals(verb)) {
 					if (checkListMetadataFormats(params)) {
+						params.put(AbstractResponse.REQUEST_URL, url);
 						new ListMetadataFormatsResponse().generateResponse(writer, params);
 					}else {
 						badArguments = true;
 					}
 				}else if (VERB_GET_RECORD.equals(verb)) {
 					if (checkGetRecordArguments(params)) {
+						params.put(AbstractResponse.REQUEST_URL, url);
 						GetRecord.execute(writer, params);
+					}else {
+						badArguments = true;
+					}
+				}else if (VERB_LIST_SETS.equals(verb)) {
+					if (checkListSetsArguments(params)) {
+						params.put(AbstractResponse.REQUEST_URL, url);
+						ListSets.execute(writer, params);
 					}else {
 						badArguments = true;
 					}
