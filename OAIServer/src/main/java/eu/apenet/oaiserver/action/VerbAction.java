@@ -16,11 +16,8 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import eu.apenet.oaiserver.request.RequestProcessor;
 import eu.apenet.oaiserver.response.XMLStreamWriterHolder;
-import eu.apenet.oaiserver.util.OAISyntaxChecker;
 
-
-
-public class VerbAction extends ActionSupport implements ServletRequestAware, ServletResponseAware{
+public class VerbAction extends ActionSupport implements ServletRequestAware, ServletResponseAware {
 	private static final String REQUEST_SUFIX = "/request";
 	public static final String UTF_8 = "utf-8";
 	/**
@@ -31,41 +28,38 @@ public class VerbAction extends ActionSupport implements ServletRequestAware, Se
 	private InputStream inputStream;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
-	
+
 	public void setServletRequest(HttpServletRequest request) {
 		this.request = request;
 	}
-	
+
 	@Override
 	public void setServletResponse(HttpServletResponse response) {
 		this.response = response;
-		
+
 	}
 
 	/**
-	 * It's the unique action that must be called in server. 
+	 * It's the unique action that must be called in server.
 	 */
-	public String execute(){
+	public String execute() {
 		try {
-			String url = request.getContextPath() + REQUEST_SUFIX;;
-			LOG.info(request.getUserPrincipal() + ": " + url+ request.getQueryString()) ;
+			String url = request.getContextPath() + REQUEST_SUFIX;
+			;
+			LOG.info(request.getUserPrincipal() + ": " + url + request.getQueryString());
 			String verb = request.getParameter("verb");
-//			if (RequestProcessor.VERB_LIST_RECORDS.equals(verb) || RequestProcessor.VERB_IDENTIFY.equals(verb)  || RequestProcessor.VERB_LIST_METADATAFORMATS.equals(verb) 
-//					|| RequestProcessor.VERB_GET_RECORD.equals(verb) || RequestProcessor.VERB_LIST_IDENTIFIERS.equals(verb)){
-				OutputStream outputStream = new GZIPOutputStream(response.getOutputStream());
-				response.setCharacterEncoding("UTF-8");
-				response.setContentType("text/xml");
-				response.setHeader("Content-Encoding", "gzip");
-				XMLStreamWriterHolder writerHolder = new XMLStreamWriterHolder(XMLOutputFactory.newInstance().createXMLStreamWriter(outputStream,UTF_8));
-				RequestProcessor.process(request.getParameterMap(), url, writerHolder);
-				outputStream.flush();
-				outputStream.close();
-				return null;
-//			}else {
-//				this.inputStream = OAISyntaxChecker.process(request.getParameterMap(),url);
-//			}
+			OutputStream outputStream = new GZIPOutputStream(response.getOutputStream());
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType("text/xml");
+			response.setHeader("Content-Encoding", "gzip");
+			XMLStreamWriterHolder writerHolder = new XMLStreamWriterHolder(XMLOutputFactory.newInstance()
+					.createXMLStreamWriter(outputStream, UTF_8));
+			RequestProcessor.process(request.getParameterMap(), url, writerHolder);
+			outputStream.flush();
+			outputStream.close();
+			return null;
 		} catch (Exception e) {
-			LOG.error("Error trying to check verb and params in OAISyntaxChecker.check.",e);
+			LOG.error("Error trying to check verb and params in OAISyntaxChecker.check.", e);
 		}
 		return SUCCESS;
 	}
