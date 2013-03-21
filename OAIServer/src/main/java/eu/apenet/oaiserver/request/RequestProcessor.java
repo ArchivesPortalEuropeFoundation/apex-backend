@@ -8,11 +8,11 @@ import org.apache.commons.lang.StringUtils;
 
 import eu.apenet.oaiserver.response.AbstractResponse;
 import eu.apenet.oaiserver.response.ErrorResponse;
-import eu.apenet.oaiserver.response.GetRecordResponse;
 import eu.apenet.oaiserver.response.IdentifyResponse;
 import eu.apenet.oaiserver.response.ListMetadataFormatsResponse;
 import eu.apenet.oaiserver.response.XMLStreamWriterHolder;
 import eu.apenet.oaiserver.util.OAIUtils;
+import eu.apenet.persistence.vo.MetadataFormat;
 
 public class RequestProcessor {
 
@@ -22,7 +22,7 @@ public class RequestProcessor {
 	public static final String VERB_LIST_SETS = "ListSets";
 	public static final String VERB_GET_RECORD = "GetRecord";
 	public static final String VERB_LIST_METADATAFORMATS = "ListMetadataFormats";
-	
+	public static final String METADATA_PREFIX = "metadataPrefix";
 
 	public static void process(Map<String, String[]> originalParams, String url, XMLStreamWriterHolder writer)
 			throws Exception {
@@ -36,12 +36,14 @@ public class RequestProcessor {
 			}
 		}
 		String verb = params.get(OAIUtils.VERB);
-		//params.put(AbstractResponse.REQUEST_URL, url);
 		if (StringUtils.isBlank(verb)) {
 			new ErrorResponse(ErrorResponse.ErrorCode.BAD_VERB).generateResponse(writer, params);
 
 		} else {
-			if (!badArguments) {
+			String metadataPrefix = params.get(METADATA_PREFIX);
+			if (StringUtils.isNotBlank(metadataPrefix) && MetadataFormat.getMetadataFormat(metadataPrefix) == null){
+				new ErrorResponse(ErrorResponse.ErrorCode.CANNOT_DISSEMINATE_FORMAT).generateResponse(writer, params);
+			}else if (!badArguments) {
 				if (VERB_LIST_RECORDS.equals(verb)) {
 					if (checkListIdentifiersAndListRecords(params)) {
 						params.put(AbstractResponse.REQUEST_URL, url);

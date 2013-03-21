@@ -15,10 +15,12 @@ import eu.apenet.persistence.vo.MetadataFormat;
 public class GetRecord {
 
 
+
+
 	public static boolean execute(XMLStreamWriterHolder writer, Map<String, String> params)
 			throws XMLStreamException, IOException {
 		String identifier = params.get("identifier");
-		MetadataFormat metadataFormat = MetadataFormat.getMetadataFormat(params.get("metadataPrefix"));
+		MetadataFormat metadataFormat = MetadataFormat.getMetadataFormat(params.get(RequestProcessor.METADATA_PREFIX));
 		Ese ese = DAOFactory.instance().getEseDAO().getEseByIdentifierAndFormat(identifier,metadataFormat);
 		if (ese == null){
 			new ErrorResponse(ErrorResponse.ErrorCode.ID_DOES_NOT_EXIST).generateResponse(writer, params);
