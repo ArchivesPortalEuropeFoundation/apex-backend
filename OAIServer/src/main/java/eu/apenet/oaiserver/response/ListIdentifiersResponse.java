@@ -1,6 +1,7 @@
 package eu.apenet.oaiserver.response;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,10 @@ public class ListIdentifiersResponse extends AbstractResponse {
 		this.eses = eses;
 		this.resumptionToken = resumptionToken;
 	}
-
+	protected ListIdentifiersResponse(Ese ese) {
+		eses = new ArrayList<Ese>();
+		eses.add(ese);
+	}
 	@Override
 	protected void generateResponseInternal(XMLStreamWriterHolder writer, Map<String, String> params)
 			throws XMLStreamException, IOException {

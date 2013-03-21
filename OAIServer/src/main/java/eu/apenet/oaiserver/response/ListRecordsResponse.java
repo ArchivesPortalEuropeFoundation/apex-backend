@@ -24,7 +24,9 @@ public class ListRecordsResponse extends ListIdentifiersResponse {
 	public ListRecordsResponse(List<Ese> eses, ResumptionToken resumptionToken) {
 		super(eses, resumptionToken);
 	}
-
+	protected ListRecordsResponse(Ese ese) {
+		super(ese);
+	}
 
 	protected void writeEseFile(XMLStreamWriterHolder writer, Ese ese) throws IOException, XMLStreamException {
 		writer.writeStartElement("metadata");

@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 
 import eu.apenet.oaiserver.response.AbstractResponse;
 import eu.apenet.oaiserver.response.ErrorResponse;
+import eu.apenet.oaiserver.response.GetRecordResponse;
 import eu.apenet.oaiserver.response.IdentifyResponse;
 import eu.apenet.oaiserver.response.ListMetadataFormatsResponse;
 import eu.apenet.oaiserver.response.XMLStreamWriterHolder;
@@ -18,6 +19,7 @@ public class RequestProcessor {
 	public static final String VERB_IDENTIFY = "Identify";
 	public static final String VERB_LIST_RECORDS = "ListRecords";
 	public static final String VERB_LIST_IDENTIFIERS = "ListIdentifiers";
+	public static final String VERB_GET_RECORD = "GetRecord";
 	public static final String VERB_LIST_METADATAFORMATS = "ListMetadataFormats";
 	
 
@@ -43,7 +45,6 @@ public class RequestProcessor {
 					if (checkListIdentifiersAndListRecords(params)) {
 						params.put(AbstractResponse.REQUEST_URL, url);
 						ListRecordsOrIdentifiers.execute(writer, params, true);
-						//new EdmListRecordsResponse().generateResponse(writer, params);
 					}else {
 						badArguments = true;
 					}
@@ -51,7 +52,6 @@ public class RequestProcessor {
 					if (checkListIdentifiersAndListRecords(params)) {
 						params.put(AbstractResponse.REQUEST_URL, url);
 						ListRecordsOrIdentifiers.execute(writer, params, false);
-						//new EdmListRecordsResponse().generateResponse(writer, params);
 					}else {
 						badArguments = true;
 					}
@@ -65,6 +65,12 @@ public class RequestProcessor {
 				}else if (VERB_LIST_METADATAFORMATS.equals(verb)) {
 					if (checkListMetadataFormats(params)) {
 						new ListMetadataFormatsResponse().generateResponse(writer, params);
+					}else {
+						badArguments = true;
+					}
+				}else if (VERB_GET_RECORD.equals(verb)) {
+					if (checkGetRecordArguments(params)) {
+						GetRecord.execute(writer, params);
 					}else {
 						badArguments = true;
 					}
