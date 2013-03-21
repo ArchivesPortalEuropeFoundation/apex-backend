@@ -21,7 +21,7 @@ import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ese;
 import eu.apenet.persistence.vo.EseState;
 import eu.apenet.persistence.vo.MetadataFormat;
-
+@Deprecated
 public class ListIdentifiers extends OAIVerb{
 	
 	private InputStream inputStream;

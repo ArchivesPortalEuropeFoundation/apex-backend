@@ -26,7 +26,7 @@ import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ese;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.MetadataFormat;
-
+@Deprecated
 public class OAIResponse {
 	public final static String NAMESPACE = "http://www.openarchives.org/OAI/2.0/";
 	public static final Integer LIMIT_PER_RESPONSE = 100; //100 nodes

@@ -2,19 +2,20 @@ package eu.apenet.oaiserver.verb;
 
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+
 import eu.apenet.oaiserver.util.OAIResponse;
 import eu.apenet.oaiserver.util.OAIUtils;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ese;
 import eu.apenet.persistence.vo.MetadataFormat;
-
+@Deprecated
 public class ListMetadataFormats extends OAIVerb{
 	private static Logger LOG = Logger.getLogger(ListMetadataFormats.class);
 	private InputStream inputStream;

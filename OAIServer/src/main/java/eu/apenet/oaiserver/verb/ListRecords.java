@@ -24,7 +24,7 @@ import eu.apenet.oaiserver.util.OAIUtils;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ese;
 import eu.apenet.persistence.vo.MetadataFormat;
-
+@Deprecated
 public class ListRecords extends OAIVerb{
 	
 	private InputStream inputStream;

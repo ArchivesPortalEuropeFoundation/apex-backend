@@ -20,6 +20,7 @@ import eu.apenet.persistence.vo.Ese;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.MetadataFormat;
 
+@Deprecated
 public class GetRecord extends OAIVerb{
 	
 	private static Logger LOG = Logger.getLogger(GetRecord.class);

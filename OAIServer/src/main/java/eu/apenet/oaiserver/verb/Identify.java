@@ -10,7 +10,7 @@ import org.w3c.dom.Node;
 import eu.apenet.oaiserver.util.OAIResponse;
 import eu.apenet.oaiserver.util.OAIUtils;
 import eu.apenet.persistence.factory.DAOFactory;
-
+@Deprecated
 public class Identify extends OAIVerb{
 	private static final String REPOSITORY_NAME = "Archives Portal Europe OAI-PMH Repository";
 	private static final String ADMIN_EMAIL = "info@apex-project.eu";

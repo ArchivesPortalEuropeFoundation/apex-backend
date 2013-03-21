@@ -24,7 +24,7 @@ import eu.apenet.persistence.dao.ResumptionTokenDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.MetadataFormat;
 import eu.apenet.persistence.vo.ResumptionToken;
-
+@Deprecated
 public class OAISyntaxChecker {
 
 	private static Logger log = Logger.getLogger(OAIResponse.class);
