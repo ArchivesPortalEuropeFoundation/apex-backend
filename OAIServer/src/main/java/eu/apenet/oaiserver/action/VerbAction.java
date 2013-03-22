@@ -41,27 +41,23 @@ public class VerbAction extends ActionSupport implements ServletRequestAware, Se
 
 	/**
 	 * It's the unique action that must be called in server.
+	 * 
+	 * @throws Exception
 	 */
-	public String execute() {
-		try {
-			String url = request.getContextPath() + REQUEST_SUFIX;
-			;
-			LOG.info(request.getUserPrincipal() + ": " + url + request.getQueryString());
-			String verb = request.getParameter("verb");
-			OutputStream outputStream = new GZIPOutputStream(response.getOutputStream());
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("text/xml");
-			response.setHeader("Content-Encoding", "gzip");
-			XMLStreamWriterHolder writerHolder = new XMLStreamWriterHolder(XMLOutputFactory.newInstance()
-					.createXMLStreamWriter(outputStream, UTF_8));
-			RequestProcessor.process(request.getParameterMap(), url, writerHolder);
-			outputStream.flush();
-			outputStream.close();
-			return null;
-		} catch (Exception e) {
-			LOG.error("Error trying to check verb and params in OAISyntaxChecker.check.", e);
-		}
-		return SUCCESS;
+	public String execute() throws Exception {
+		String url = request.getContextPath() + REQUEST_SUFIX;
+		LOG.info(request.getUserPrincipal() + ": " + url + request.getQueryString());
+		response.setBufferSize(4096);
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/xml");
+		response.setHeader("Content-Encoding", "gzip");
+		OutputStream outputStream = new GZIPOutputStream(response.getOutputStream());
+		XMLStreamWriterHolder writerHolder = new XMLStreamWriterHolder(XMLOutputFactory.newInstance()
+				.createXMLStreamWriter(outputStream, UTF_8));
+		RequestProcessor.process(request.getParameterMap(), url, writerHolder);
+		outputStream.flush();
+		outputStream.close();
+		return null;
 	}
 
 	public InputStream getInputStream() {

@@ -1,10 +1,14 @@
 package eu.apenet.oaiserver.request;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import eu.apenet.oaiserver.response.AbstractResponse;
 import eu.apenet.oaiserver.response.ErrorResponse;
@@ -15,7 +19,7 @@ import eu.apenet.oaiserver.util.OAIUtils;
 import eu.apenet.persistence.vo.MetadataFormat;
 
 public class RequestProcessor {
-
+	private static Logger LOGGER = Logger.getLogger(RequestProcessor.class);
 	public static final String VERB_IDENTIFY = "Identify";
 	public static final String VERB_LIST_RECORDS = "ListRecords";
 	public static final String VERB_LIST_IDENTIFIERS = "ListIdentifiers";
@@ -25,7 +29,7 @@ public class RequestProcessor {
 	public static final String METADATA_PREFIX = "metadataPrefix";
 
 	public static void process(Map<String, String[]> originalParams, String url, XMLStreamWriterHolder writer)
-			throws Exception {
+			throws XMLStreamException, IOException {
 		Map<String, String> params = new HashMap<String, String>();
 		boolean badArguments = false;
 		for (Entry<String, String[]> entry : originalParams.entrySet()) {
@@ -35,71 +39,72 @@ public class RequestProcessor {
 				params.put(entry.getKey(), entry.getValue()[0]);
 			}
 		}
+		params.put(AbstractResponse.REQUEST_URL, url);
 		String verb = params.get(OAIUtils.VERB);
-		if (StringUtils.isBlank(verb)) {
-			new ErrorResponse(ErrorResponse.ErrorCode.BAD_VERB).generateResponse(writer, params);
+		try {
+			if (StringUtils.isBlank(verb)) {
+				new ErrorResponse(ErrorResponse.ErrorCode.BAD_VERB).generateResponse(writer, params);
 
-		} else {
-			String metadataPrefix = params.get(METADATA_PREFIX);
-			if (StringUtils.isNotBlank(metadataPrefix) && MetadataFormat.getMetadataFormat(metadataPrefix) == null) {
-				new ErrorResponse(ErrorResponse.ErrorCode.CANNOT_DISSEMINATE_FORMAT).generateResponse(writer, params);
-			} else if (OAIUtils.validateRequestAttributes(params)) {
-				new ErrorResponse(ErrorResponse.ErrorCode.BAD_ARGUMENT).generateResponse(writer, params);
-			} else if (!badArguments) {
-				if (VERB_LIST_RECORDS.equals(verb)) {
-					if (checkListIdentifiersAndListRecords(params)) {
-						params.put(AbstractResponse.REQUEST_URL, url);
-						ListRecordsOrIdentifiers.execute(writer, params, true);
-					} else {
-						badArguments = true;
+			} else {
+				String metadataPrefix = params.get(METADATA_PREFIX);
+				if (StringUtils.isNotBlank(metadataPrefix) && MetadataFormat.getMetadataFormat(metadataPrefix) == null) {
+					new ErrorResponse(ErrorResponse.ErrorCode.CANNOT_DISSEMINATE_FORMAT).generateResponse(writer,
+							params);
+				} else if (!OAIUtils.validateRequestAttributes(params)) {
+					new ErrorResponse(ErrorResponse.ErrorCode.BAD_ARGUMENT).generateResponse(writer, params);
+				} else if (!badArguments) {
+					if (VERB_LIST_RECORDS.equals(verb)) {
+						if (checkListIdentifiersAndListRecords(params)) {
+							ListRecordsOrIdentifiers.execute(writer, params, true);
+						} else {
+							badArguments = true;
+						}
+					}
+					if (VERB_LIST_IDENTIFIERS.equals(verb)) {
+						if (checkListIdentifiersAndListRecords(params)) {
+							ListRecordsOrIdentifiers.execute(writer, params, false);
+						} else {
+							badArguments = true;
+						}
+					} else if (VERB_IDENTIFY.equals(verb)) {
+						if (checkIdentifyArguments(params)) {
+							new IdentifyResponse().generateResponse(writer, params);
+						} else {
+							badArguments = true;
+						}
+					} else if (VERB_LIST_METADATAFORMATS.equals(verb)) {
+						if (checkListMetadataFormats(params)) {
+							new ListMetadataFormatsResponse().generateResponse(writer, params);
+						} else {
+							badArguments = true;
+						}
+					} else if (VERB_GET_RECORD.equals(verb)) {
+						if (checkGetRecordArguments(params)) {
+							GetRecord.execute(writer, params);
+						} else {
+							badArguments = true;
+						}
+					} else if (VERB_LIST_SETS.equals(verb)) {
+						if (checkListSetsArguments(params)) {
+							ListSets.execute(writer, params);
+						} else {
+							badArguments = true;
+						}
 					}
 				}
-				if (VERB_LIST_IDENTIFIERS.equals(verb)) {
-					if (checkListIdentifiersAndListRecords(params)) {
-						params.put(AbstractResponse.REQUEST_URL, url);
-						ListRecordsOrIdentifiers.execute(writer, params, false);
-					} else {
-						badArguments = true;
-					}
-				} else if (VERB_IDENTIFY.equals(verb)) {
-					if (checkIdentifyArguments(params)) {
-						params.put(AbstractResponse.REQUEST_URL, url);
-						new IdentifyResponse().generateResponse(writer, params);
-					} else {
-						badArguments = true;
-					}
-				} else if (VERB_LIST_METADATAFORMATS.equals(verb)) {
-					if (checkListMetadataFormats(params)) {
-						params.put(AbstractResponse.REQUEST_URL, url);
-						new ListMetadataFormatsResponse().generateResponse(writer, params);
-					} else {
-						badArguments = true;
-					}
-				} else if (VERB_GET_RECORD.equals(verb)) {
-					if (checkGetRecordArguments(params)) {
-						params.put(AbstractResponse.REQUEST_URL, url);
-						GetRecord.execute(writer, params);
-					} else {
-						badArguments = true;
-					}
-				} else if (VERB_LIST_SETS.equals(verb)) {
-					if (checkListSetsArguments(params)) {
-						params.put(AbstractResponse.REQUEST_URL, url);
-						ListSets.execute(writer, params);
-					} else {
-						badArguments = true;
-					}
+				if (badArguments) {
+					new ErrorResponse(ErrorResponse.ErrorCode.BAD_ARGUMENT).generateResponse(writer, params);
 				}
 			}
-			if (badArguments) {
-				new ErrorResponse(ErrorResponse.ErrorCode.BAD_ARGUMENT).generateResponse(writer, params);
-			}
+		} catch (Exception e) {
+			LOGGER.error("Could not process the request: "  + e.getMessage(), e);
+			new ErrorResponse(ErrorResponse.ErrorCode.BAD_ARGUMENT).generateResponse(writer, params);
 		}
 		writer.close();
 	}
 
 	private static boolean checkListMetadataFormats(Map<String, String> params) {
-		int size = params.size();
+		int size = params.size() - 1;
 		if (size == 1) {
 			return true;
 		} else if (size == 2 && params.containsKey("identifier")) {
@@ -109,7 +114,7 @@ public class RequestProcessor {
 	}
 
 	private static boolean checkListSetsArguments(Map<String, String> params) {
-		int size = params.size();
+		int size = params.size() - 1;
 		if (size == 1) {
 			return true;
 		} else if (size == 2 && params.containsKey("resumptionToken")) {
@@ -119,7 +124,7 @@ public class RequestProcessor {
 	}
 
 	private static boolean checkListIdentifiersAndListRecords(Map<String, String> params) {
-		int size = params.size();
+		int size = params.size()-1;
 		if (size <= 5) {
 			if (!params.containsKey("resumptionToken") && params.containsKey("metadataPrefix")) {
 				switch (size) {
@@ -141,7 +146,7 @@ public class RequestProcessor {
 					}
 				}
 			} else if (params.containsKey("resumptionToken") && !params.containsKey("metadataPrefix")
-					&& params.size() == 2) {
+					&& size == 2) {
 				return true;
 			}
 		}
@@ -149,14 +154,14 @@ public class RequestProcessor {
 	}
 
 	private static boolean checkIdentifyArguments(Map<String, String> params) {
-		if (params.size() == 1) {
+		if ((params.size() - 1) == 1) {
 			return true;
 		}
 		return false;
 	}
 
 	private static boolean checkGetRecordArguments(Map<String, String> params) {
-		int size = params.size();
+		int size = params.size() - 1;
 		if (size == 3) {
 			if (params.containsKey("identifier") && params.containsKey("metadataPrefix")) {
 				return true;
