@@ -59,8 +59,7 @@ public class RequestProcessor {
 						} else {
 							badArguments = true;
 						}
-					}
-					if (VERB_LIST_IDENTIFIERS.equals(verb)) {
+					}else if (VERB_LIST_IDENTIFIERS.equals(verb)) {
 						if (checkListIdentifiersAndListRecords(params)) {
 							ListRecordsOrIdentifiers.execute(writer, params, false);
 						} else {
