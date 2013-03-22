@@ -45,7 +45,7 @@ public class VerbAction extends ActionSupport implements ServletRequestAware, Se
 	 * @throws Exception
 	 */
 	public String execute() throws Exception {
-		String url = request.getContextPath() + REQUEST_SUFIX;
+		String url = request.getScheme()+"://"+request.getHeader("Host") + request.getContextPath() + REQUEST_SUFIX;
 		LOG.info(request.getUserPrincipal() + ": " + url + request.getQueryString());
 		response.setBufferSize(4096);
 		response.setCharacterEncoding("UTF-8");

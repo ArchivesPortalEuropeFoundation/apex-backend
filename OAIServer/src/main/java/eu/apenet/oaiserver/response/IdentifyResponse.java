@@ -28,7 +28,7 @@ public class IdentifyResponse extends AbstractResponse {
 	protected void generateResponseInternal(XMLStreamWriterHolder writer, Map<String, String> params) throws XMLStreamException {
 		writer.writeStartElement("Identify");
 		writer.writeTextElement("repositoryName",REPOSITORY_NAME );
-		writer.writeTextElement("baseURL",AbstractResponse.REQUEST_URL );
+		writer.writeTextElement("baseURL",params.get(AbstractResponse.REQUEST_URL) );
 		writer.writeTextElement("protocolVersion",PROTOCOL_VERSION );
 		writer.writeTextElement("adminEmail",ADMIN_EMAIL);
 		Date earliestDate = DAOFactory.instance().getEseDAO().getTheEarliestDatestamp();
