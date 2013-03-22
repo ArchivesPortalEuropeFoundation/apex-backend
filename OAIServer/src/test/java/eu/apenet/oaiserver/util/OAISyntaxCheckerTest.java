@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.xml.stream.XMLOutputFactory;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import eu.apenet.commons.utils.APEnetUtilities;
@@ -22,7 +23,7 @@ import eu.archivesportaleurope.commons.config.ApeConfig;
 
 public class OAISyntaxCheckerTest  extends AbstractJpaTestCase {
 	public static final String UTF_8 = "utf-8";
-	@Test
+	@Test @Ignore
 	public void testProcess() throws Exception {
 		APEnetUtilities.setConfig(new ApeConfig());
 		APEnetUtilities.getConfig().setRepoDirPath("/home/bastiaan/apex/apexv1/data/repo");
