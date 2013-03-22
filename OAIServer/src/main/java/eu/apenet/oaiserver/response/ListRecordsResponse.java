@@ -34,9 +34,9 @@ public class ListRecordsResponse extends ListIdentifiersResponse {
 		XMLStreamReader xmlReader = getXMLReader(inputStream);
 		for (int event = xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
 			if (event == XMLStreamConstants.START_ELEMENT) {
-				writer.writeStartElement(xmlReader);
 				QName elementName = xmlReader.getName();
 				if (elementName.getLocalPart().equals("RDF") && MetadataFormat.EDM.equals(ese.getMetadataFormat())){
+					writer.writeStartElementNS(elementName.getPrefix(), elementName.getLocalPart(), elementName.getNamespaceURI());
 					writer.writeAttribute(XMLStreamWriterHolder.XMLNS, EDM_NAMESPACE);
 					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "ore", "", "http://www.openarchives.org/ore/terms/");
 					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "owl", "", "http://www.w3.org/2002/07/owl#");
@@ -49,6 +49,8 @@ public class ListRecordsResponse extends ListIdentifiersResponse {
 					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "enrichment", "", "http://www.europeana.eu/schemas/edm/enrichment");
 					writer.writeAttributeNS(XMLStreamWriterHolder.XMLNS, "europeana", "", "http://www.europeana.eu/schemas/ese/");
 					writer.writeAttributeNS(XMLStreamWriterHolder.XSI_PREFIX, XMLStreamWriterHolder.SCHEMA_LOCATION,"", EDM_NAMESPACE + " " + EDM_SCHEMA_LOCATION);
+				}else {
+					writer.writeStartElement(xmlReader);
 				}
 				
 				
