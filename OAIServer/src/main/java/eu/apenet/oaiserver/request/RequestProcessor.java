@@ -90,6 +90,8 @@ public class RequestProcessor {
 						} else {
 							badArguments = true;
 						}
+					}else {
+						new ErrorResponse(ErrorResponse.ErrorCode.BAD_VERB).generateResponse(writer, params);
 					}
 				}
 				if (badArguments) {
