@@ -93,5 +93,11 @@
         	<groupId>eu.archivesportaleurope</groupId>
         	<artifactId>commons</artifactId>
         </dependency>
+		<dependency>
+			<groupId>eu.archivesportaleurope</groupId>
+			<artifactId>database-mock</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>			
+		</dependency>
 	</dependencies>
 </project>
