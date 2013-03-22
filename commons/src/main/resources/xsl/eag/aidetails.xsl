@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns='http://www.w3.org/1999/xhtml' xmlns:eag="http://www.archivesportaleurope.net/Portal/profiles/eag_2012.xsd/" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns='http://www.w3.org/1999/xhtml' xmlns:eag="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:ape="http://www.archivesportaleurope.eu/xslt/extensions" exclude-result-prefixes="xlink xlink xsi eag ape">
 
 	<xsl:output method="html" indent="yes" version="4.0" encoding="UTF-8" />
@@ -26,7 +26,7 @@
 				    <xsl:value-of select="ape:resource('directory.text.visitorsaddress')" />
 				   </td>
 				   <td id="address">
-				      <xsl:value-of select="./eag:eag/eag:archguide/eag:desc/eag:street" /> 
+				      <xsl:value-of select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:location/eag:street" /> 
 				      <xsl:text> , </xsl:text>
 				 	  <xsl:value-of select="./eag:eag/eag:archguide/eag:desc/eag:municipalityPostalCode" /> 
 					 
