@@ -835,9 +835,16 @@
 			   <td><xsl:value-of select= "./eag:eag/eag:control/eag:maintenanceHistory/eag:eventDateTime"/></td>
 			 </tr>
 			 </tbody>
-			 
-			 </table>
-		
+			 <tfoot>
+				<tr>
+					<td>
+					</td>
+					<td>
+						<a id="displayLink" href="javascript:display();" >Show/hide</a>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
 		<xsl:apply-templates select="./eag:eag/eag:archguide/eag:desc"></xsl:apply-templates>
 
 	</xsl:template>
