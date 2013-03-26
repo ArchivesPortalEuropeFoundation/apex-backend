@@ -6,7 +6,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import eu.apenet.commons.StrutsResourceBundleSource;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.dpt.utils.util.XsltChecker;
 import eu.apenet.persistence.vo.*;
@@ -20,6 +26,10 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.utils.ZipManager;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.HibernateUtil;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -36,7 +46,10 @@ import com.opensymphony.xwork2.ActionSupport;
  */
 public abstract class ManualUploader {
 
-    private final Logger log = Logger.getLogger(getClass());
+    
+	private static final String MAGIC_KEY = "9999999999999";
+    
+	private final Logger log = Logger.getLogger(getClass());
 	protected String uploadingMethod;
 	protected ZipManager zipManager;
 
@@ -325,6 +338,41 @@ public abstract class ManualUploader {
                     log.debug("Beginning EAG validation");
     				if (eag.APEnetEAGValidate(fileName)){
                         log.info("EAG is valid");
+                        
+                        //check the <recordId> content
+                        eag.setEagPath(fullFileName); //temp used for looking forward target tag
+                        String recordIdValue = eag.lookingForwardElementContent("/eag/control/recordId");
+                        if(recordIdValue!=null && recordIdValue.endsWith(MAGIC_KEY)){ 
+                        	//replace value with a consecutive unique value
+                        	ArchivalLandscape archivalLandscape = new ArchivalLandscape();
+                        	int zeroes = 13-archivalInstitutionId.toString().length();
+                        	String newRecordIdValue = archivalLandscape.getmyCountry()+"-";
+                        	for(int x=0;x<zeroes;x++){
+                        		newRecordIdValue+="0";
+                        	}
+                        	newRecordIdValue+=archivalInstitutionId.toString();
+                        	DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
+                    		DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
+                    		Document tempDoc = docBuilder.parse(fullFileName);
+                    		NodeList recordsIds = tempDoc.getElementsByTagName("recordId");
+                    		boolean changed = false;
+                    		for(int i=0;i<recordsIds.getLength() && !changed;i++){
+                    			Node currentNode = recordsIds.item(i);
+                    			Node parent = currentNode.getParentNode();
+                    			if(parent!=null && parent.getNodeName().equals("control")){
+                    				parent = parent.getParentNode();
+                    				if(parent!=null && parent.getNodeName().equals("eag")){
+                    					currentNode.setTextContent(newRecordIdValue);
+                    					changed = true;
+                    				}
+                    			}
+                    		}
+                    		
+                    		TransformerFactory tf = TransformerFactory.newInstance(); // Save changes
+                    		Transformer transformer = tf.newTransformer();
+                    		transformer.transform(new DOMSource(tempDoc), new StreamResult(new File(fullFileName)));
+                        }
+                        
     					//The EAG has been validated so it has to be stored in /mnt/repo/country/aiid/EAG/
     					//and it is necessary to update archival_institution table
         				eag.setEagPath(null);
