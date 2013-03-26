@@ -57,6 +57,10 @@
 			<result name="input" type="tiles">eagfirstcreation</result>
 			<result name="error" type="tiles">blank</result>
 		</action>
+		
+		<action name="parseEAG2EAG2012" class="eu.apenet.dashboard.services.eag.ParseEAGAction">
+			<result name="success" type="tiles">index</result>
+		</action> 
 
 
 		<action name="createsimpleeag" class="eu.apenet.dashboard.manual.ReadEAGAction">

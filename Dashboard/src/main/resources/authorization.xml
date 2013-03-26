@@ -57,7 +57,7 @@
 			storeAlternativeCountryNames,storeCountry,storeLanguage,viewAdmin,
 			sessionManagement,deleteSession,userManagement,
 			changeToCountryManager,createCountryManager,displayCreateCountryManager,disableCountryManager,enableCountryManager,deleteCountryManager,
-            viewDptVersions, addVersion, deleteVersion, manageQueue, startStopQueue,deleteQueueItem
+            viewDptVersions, addVersion, deleteVersion, manageQueue, startStopQueue,deleteQueueItem,parseEAG2EAG2012
 		</group>
 	</groups>
 	<role-mappings>
