@@ -72,37 +72,40 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 				eseOutputFile.getParentFile().mkdirs();
 				eseConfig.getTransformerXML2XML().transform(xmlNameRelative, apenetEad, eseOutputFile);
 				int numberOfRecords = analyzeESEXML(xmlNameRelative, eseOutputFile);
-				/*
-				 * ESE2EDM stuff
-				 */
-				File outputEDMDir = EseFileUtils.getOutputEDMDir(APEnetUtilities.getConfig().getRepoDirPath(),
-						findingAid.getArchivalInstitution().getCountry().getIsoname(), findingAid
-								.getArchivalInstitution().getAiId());
-				// OAI Identifier will be built according to the next
-				// syntax:
-				// isoname/ai_id/fa_eadid
-				String oaiIdentifier = findingAid.getArchivalInstitution().getCountry().getIsoname()
-						+ APEnetUtilities.FILESEPARATOR + findingAid.getArchivalInstitution().getAiId()
-						+ APEnetUtilities.FILESEPARATOR + findingAid.getEadid();
 
-				EdmConfig config = new EdmConfig(false);
-				config.setEdmIdentifier(oaiIdentifier);
-				String edmTempOutputFilename = xmlNameRelative.substring(0, lastIndex) + "-edm-temp"
-						+ xmlNameRelative.substring(lastIndex);
-				File edmTempOutputFile = EseFileUtils.getFile(outputEDMDir, edmTempOutputFilename);
-				config.getTransformerXML2XML().transform(eseOutputFile, edmTempOutputFile);
-				config.setTransferToFileOutput(true);
-				String edmOutputFilename = xmlNameRelative.substring(0, lastIndex) + "-edm"
-						+ xmlNameRelative.substring(lastIndex);
-				File edmOutputFile = EseFileUtils.getFile(outputEDMDir, edmOutputFilename);
-				config.getTransformerXML2XML().transform(edmTempOutputFile, edmOutputFile);
-				eseOutputFile.delete();
-				edmTempOutputFile.delete();
-				/*
-				 * end of EDM stuf
-				 */
 				boolean update = false;
 				if (numberOfRecords > 0) {
+					/*
+					 * ESE2EDM stuff
+					 */
+					File outputEDMDir = EseFileUtils.getOutputEDMDir(APEnetUtilities.getConfig().getRepoDirPath(),
+							findingAid.getArchivalInstitution().getCountry().getIsoname(), findingAid
+									.getArchivalInstitution().getAiId());
+					// OAI Identifier will be built according to the next
+					// syntax:
+					// isoname/ai_id/fa_eadid
+					String oaiIdentifier = findingAid.getArchivalInstitution().getCountry().getIsoname()
+							+ APEnetUtilities.FILESEPARATOR + findingAid.getArchivalInstitution().getAiId()
+							+ APEnetUtilities.FILESEPARATOR + findingAid.getEadid();
+
+					EdmConfig config = new EdmConfig(false);
+					config.setEdmIdentifier(oaiIdentifier);
+					config.setRepositoryCode(findingAid.getArchivalInstitution().getRepositorycode());
+					config.setPrefixUrl("http://" + APEnetUtilities.getDashboardConfig().getDomainNameMainServer() + "/web/guest/ead-display/-/ead/fp");
+//					String edmTempOutputFilename = xmlNameRelative.substring(0, lastIndex) + "-edm-temp"
+//							+ xmlNameRelative.substring(lastIndex);
+//					File edmTempOutputFile = EseFileUtils.getFile(outputEDMDir, edmTempOutputFilename);
+//					config.getTransformerXML2XML().transform(eseOutputFile, edmTempOutputFile);
+//					config.setTransferToFileOutput(true);
+					String edmOutputFilename = xmlNameRelative.substring(0, lastIndex) + "-edm"
+							+ xmlNameRelative.substring(lastIndex);
+					File edmOutputFile = EseFileUtils.getFile(outputEDMDir, edmOutputFilename);
+					config.getTransformerXML2XML().transform(eseOutputFile, edmOutputFile);
+					eseOutputFile.delete();
+//					edmTempOutputFile.delete();
+					/*
+					 * end of EDM stuf
+					 */
 					Ese ese = null;
 					if (findingAid.getEses().isEmpty()) {
 						ese = new Ese();
@@ -156,6 +159,8 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 					} else {
 						eseDao.store(ese);
 					}
+				}else {
+					eseOutputFile.delete();
 				}
 				findingAid.setTotalNumberOfDaos(new Long(numberOfRecords));
 				findingAid.setEuropeana(EuropeanaState.CONVERTED);
