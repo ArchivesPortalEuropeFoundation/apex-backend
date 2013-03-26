@@ -1,5 +1,8 @@
 package eu.apenet.dashboard.queue;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.interceptor.ServletRequestAware;
@@ -12,6 +15,7 @@ import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.QueueItem;
 
 public class ManageQueueAction  extends AbstractAction implements ServletRequestAware {
+	private static final SimpleDateFormat DATE_TIME = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss"); 
 	private HttpServletRequest request;
 	private Integer queueItemId;
 	
@@ -47,6 +51,11 @@ public class ManageQueueAction  extends AbstractAction implements ServletRequest
 		request.setAttribute("itemsWithErrors", queueDAO.getItemsWithErrors());
 		request.setAttribute("queueActive", QueueDaemon.isActive());
 		request.setAttribute("queueProcessing", QueueDaemon.isQueueProcessing());
+		request.setAttribute("harvestingStarted", EadService.isHarvestingStarted());
+		request.setAttribute("currentTime", DATE_TIME.format(new Date()));
+		Date endDateTime = DAOFactory.instance().getResumptionTokenDAO().getPossibleEndDateTime();
+		if (endDateTime != null)
+			request.setAttribute("harvestingEndTime", DATE_TIME.format(endDateTime));
 		return SUCCESS;
 	}
 	public String deleteQueueItem() throws Exception{

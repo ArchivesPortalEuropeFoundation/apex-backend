@@ -19,7 +19,7 @@ import eu.apenet.oaiserver.util.OAIUtils;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Country;
-
+@Deprecated
 public class ListSets extends OAIVerb{
 	private String resumptionToken;
 	private InputStream inputStream;

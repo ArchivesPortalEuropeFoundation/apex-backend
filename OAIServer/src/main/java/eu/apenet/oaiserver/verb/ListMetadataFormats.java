@@ -2,19 +2,20 @@ package eu.apenet.oaiserver.verb;
 
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+
 import eu.apenet.oaiserver.util.OAIResponse;
 import eu.apenet.oaiserver.util.OAIUtils;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ese;
 import eu.apenet.persistence.vo.MetadataFormat;
-
+@Deprecated
 public class ListMetadataFormats extends OAIVerb{
 	private static Logger LOG = Logger.getLogger(ListMetadataFormats.class);
 	private InputStream inputStream;
@@ -87,11 +88,11 @@ public class ListMetadataFormats extends OAIVerb{
 				}
 			}else{
 				EseDAO eseDAO = DAOFactory.instance().getEseDAO();
-				Iterator<MetadataFormat> metadataFormatIterator = DAOFactory.instance().getMetadataFormatDAO().findAll().iterator();
+				MetadataFormat[] metadataFormats = MetadataFormat.values();
 				Node verbNode = doc.createElementNS(OAIResponse.NAMESPACE, "ListMetadataFormats");
 				boolean changes = false;
-				while(metadataFormatIterator.hasNext()){
-					MetadataFormat metadataFormat = metadataFormatIterator.next();
+				for(int i = 0; i < metadataFormats.length;i++){
+					MetadataFormat metadataFormat = metadataFormats[i];
 					List<Ese> results = eseDAO.getEsesByArguments(null, null,metadataFormat, null, 0, OAIResponse.LIMIT_PER_RESPONSE);
 					if(!results.isEmpty()){
 						Node metadataFormatNode = buildMetadataFormatNode(doc,null,metadataFormat);
@@ -112,7 +113,7 @@ public class ListMetadataFormats extends OAIVerb{
 	public static Node buildMetadataFormatNode(Document doc,String object,MetadataFormat metadataFormat) {
 		Node metadataFormatNode  = doc.createElementNS(OAIResponse.NAMESPACE, "metadataFormat");
 		Node metadataPrefixNode = doc.createElementNS(OAIResponse.NAMESPACE, "metadataPrefix");
-		metadataPrefixNode.setTextContent(metadataFormat.getFormat());
+		metadataPrefixNode.setTextContent(metadataFormat.toString());
 		metadataFormatNode.appendChild(metadataPrefixNode);
 		Node schemaNode = doc.createElementNS(OAIResponse.NAMESPACE, "schema");
 		schemaNode.setTextContent(OAIUtils.ESE_SCHEMA_LOCATION_FILE);

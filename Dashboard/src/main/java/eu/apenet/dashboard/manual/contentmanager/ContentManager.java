@@ -248,14 +248,14 @@ public class ContentManager extends ContentManagerIndexer{
 	 */
 	public static boolean isBeingHarvested () {
 		boolean result = true;
-		ResumptionTokenDAO resumptionTokenDAO = DAOFactory.instance().getResumptionTokenDAO();
-		List<ResumptionToken> listValidResumptionTokens = resumptionTokenDAO.getGreaterResumptionTokensThan(new Date());
-		if(listValidResumptionTokens==null || listValidResumptionTokens.isEmpty()){
-			result = false;
-		}
-		
-		resumptionTokenDAO = null;
-		listValidResumptionTokens = null;
+//		ResumptionTokenDAO resumptionTokenDAO = DAOFactory.instance().getResumptionTokenDAO();
+//		List<ResumptionToken> listValidResumptionTokens = resumptionTokenDAO.getGreaterResumptionTokensThan(new Date());
+//		if(listValidResumptionTokens==null || listValidResumptionTokens.isEmpty()){
+//			result = false;
+//		}
+//		
+//		resumptionTokenDAO = null;
+//		listValidResumptionTokens = null;
 		return result;
 	}
 

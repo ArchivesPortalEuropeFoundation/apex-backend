@@ -64,6 +64,13 @@ public enum XmlType {
         }
         return null;
     }
+    public static XmlType getTypeByResourceName(String resourceName){
+        for(XmlType type : XmlType.values()){
+            if(type.getResourceName() != null && type.getResourceName().equalsIgnoreCase(resourceName))
+                return type;
+        }
+        return null;
+    }
     public static XmlType getType(String name){
         for(XmlType type : XmlType.values()){
             if(type.getName().equals(name))

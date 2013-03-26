@@ -21,7 +21,7 @@ import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ese;
 import eu.apenet.persistence.vo.EseState;
 import eu.apenet.persistence.vo.MetadataFormat;
-
+@Deprecated
 public class ListIdentifiers extends OAIVerb{
 	
 	private InputStream inputStream;
@@ -124,7 +124,7 @@ public class ListIdentifiers extends OAIVerb{
 				eseNumber = new Integer(eseAndRecord.substring(0,eseAndRecord.lastIndexOf(OAIUtils.SPECIAL_KEY)));
 				recordNumber = new Integer(eseAndRecord.substring(eseAndRecord.indexOf(OAIUtils.SPECIAL_KEY)+1));
 			}
-			metadataFormat = DAOFactory.instance().getMetadataFormatDAO().getMetadataFormatByName(metadataPrefix);
+			metadataFormat = MetadataFormat.getMetadataFormat(metadataPrefix);
 			esesToBeShown = DAOFactory.instance().getEseDAO().getEsesByArguments(fromDate,untilDate,metadataFormat,set,eseNumber,OAIResponse.LIMIT_PER_RESPONSE);
 		}
 		if(esesToBeShown!=null && esesToBeShown.size()>0){
@@ -152,7 +152,7 @@ public class ListIdentifiers extends OAIVerb{
 		while(esesIterator.hasNext() && (numberOfObjects<OAIResponse.LIMIT_PER_RESPONSE)){
 			ese = esesIterator.next();
 			numberOfEse++;
-			lastMetadataFormatEse  = ese.getMetadataFormat().getFormat();
+			lastMetadataFormatEse  = ese.getMetadataFormat().toString();
 			if(!ese.getEseState().getState().equals(EseState.NOT_PUBLISHED) && (metadataPrefix==null || metadataPrefix.isEmpty() || metadataPrefix.equals(lastMetadataFormatEse))){
 				for(int i=0;i<ese.getNumberOfRecords() && numberOfObjects<OAIResponse.LIMIT_PER_RESPONSE;i++,numberOfIdentifiers=i){
 					Element headerNode = doc.createElementNS(OAIResponse.NAMESPACE,"header");

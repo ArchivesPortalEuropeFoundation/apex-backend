@@ -124,7 +124,7 @@
 				<xsl:choose>
 					<xsl:when test="ape:linked($href) = 'indexed'">
 						<div class="linkButton">
-						<a href="{$prefix}&amp;eadid={$href}" target="{$href}">
+						<a href="{$prefix}/{$href}" target="{$href}">
 						<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
 						<xsl:choose>
 							<xsl:when test="./@xlink:title">

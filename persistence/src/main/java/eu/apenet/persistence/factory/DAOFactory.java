@@ -19,7 +19,6 @@ import eu.apenet.persistence.dao.FindingAidDAO;
 import eu.apenet.persistence.dao.GenericDAO;
 import eu.apenet.persistence.dao.HoldingsGuideDAO;
 import eu.apenet.persistence.dao.LangDAO;
-import eu.apenet.persistence.dao.MetadataFormatDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.dao.ResumptionTokenDAO;
 import eu.apenet.persistence.dao.SentMailRegisterDAO;
@@ -124,7 +123,6 @@ public abstract class DAOFactory {
 	public abstract CouAlternativeNameDAO getCouAlternativeNameDAO();
 	public abstract CpfContentDAO getCpfContentDAO();
 	public abstract DptUpdateDAO getDptUpdateDAO();
-	public abstract MetadataFormatDAO getMetadataFormatDAO();
 	public abstract ResumptionTokenDAO getResumptionTokenDAO();
 	public abstract QueueItemDAO getQueueItemDAO();
 	public abstract UserRoleDAO getUserRoleDAO();

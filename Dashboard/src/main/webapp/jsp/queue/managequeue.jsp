@@ -6,6 +6,10 @@
 <div id="manageQueue">
 	<table class="defaultlayout">
 		<tr>
+			<th><s:text name="admin.queuemanagement.currenttime" /></th>
+			<td>${currentTime}</td>
+		</tr>
+		<tr>
 			<th><s:text name="admin.queuemanagement.queue.totalnumber" /></th>
 			<td>${numberOfItemsInQueue}</td>
 		</tr>
@@ -17,6 +21,16 @@
 			<th><s:text name="admin.queuemanagement.queue.processing" /></th>
 			<td>${queueProcessing}</td>
 		</tr>
+		<tr>
+			<th><s:text name="admin.queuemanagement.harvesting" /></th>
+			<td>${harvestingStarted}</td>
+		</tr>
+		<c:if test="${harvestingStarted}">
+			<tr>
+				<th><s:text name="admin.queuemanagement.harvesting.endtime" /></th>
+				<td>${harvestingEndTime}</td>
+			</tr>
+		</c:if>
 	</table>
 	<s:form action="startStopQueue" method="post">
 		<s:actionerror />
@@ -75,7 +89,9 @@
 							<input type="hidden" name="queueItemId" value="${item.id}" />
 							<s:submit key="content.message.delete.queue"></s:submit>
 						</s:form></td>
-					<td><pre><c:out value="${item.errors}" /></pre></td>
+					<td><pre>
+							<c:out value="${item.errors}" />
+						</pre></td>
 
 				</tr>
 			</c:forEach>

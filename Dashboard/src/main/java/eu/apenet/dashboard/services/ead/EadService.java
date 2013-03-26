@@ -34,7 +34,10 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class EadService {
 	protected static final Logger LOGGER = Logger.getLogger(EadService.class);
-
+	
+	public static boolean isHarvestingStarted() {
+		return DAOFactory.instance().getResumptionTokenDAO().containsValidResumptionTokens(new Date());
+	}
 	public static void createPreviewHTML(XmlType xmlType, Integer id) {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
