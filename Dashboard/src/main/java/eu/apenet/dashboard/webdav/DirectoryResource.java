@@ -101,17 +101,18 @@ public class DirectoryResource extends AbstractResource implements PropFindableR
 		}
 		printWriter.append("</table></body></html>");
 		printWriter.flush();
-		// printWriter.close();
+		// 
 		out.flush();
-		// out.close();
-		
+		printWriter.close();
+		out.close();
+
 	
 	}
+	
 
 	@Override
 	public Long getMaxAgeSeconds(Auth auth) {
-		// TODO Auto-generated method stub
-		return 1l;
+		return 30l;
 	}
 
 	@Override
@@ -121,7 +122,7 @@ public class DirectoryResource extends AbstractResource implements PropFindableR
 
 	@Override
 	public Long getContentLength() {
-		return Integer.valueOf(getChilds().length).longValue();
+		return -1l;
 	}
 
 	protected File[] getChilds(){
