@@ -58,30 +58,32 @@ public class ParseEAGAction extends ActionSupport {
 					String xslFilePath = APEnetUtilities.getDashboardConfig().getSystemXslDirPath()+ APEnetUtilities.FILESEPARATOR + "eag2eag2012.xsl";
 					logger.info("'" + institution.getAiname() + "' is parsing file: '" + tempDirOutputPath);
 					in  = new FileInputStream(new File(tempDirOutputPath));
-					TransformationTool.createTransformation(in, tempOutputFile, new File(xslFilePath), null, true, true, null, true, null);
+                    if(!DocumentValidation.xmlValidation(tempDirOutputPath, Xsd_enum.XSD_EAG_2012_SCHEMA).isEmpty()) {
+                        TransformationTool.createTransformation(in, tempOutputFile, new File(xslFilePath), null, true, true, null, true, null);
 
-                    List<SAXParseException> exceptions = DocumentValidation.xmlValidation(tempOutputFile, Xsd_enum.XSD_EAG_2012_SCHEMA);
-                    String eagDirPath = tempDirOutputPath.substring(0, tempDirOutputPath.lastIndexOf("/") + 1);
-                    String validationErrorFilePath = eagDirPath + "validation_errors.txt";
-                    if(exceptions == null) {
-                        File file = new File(tempDirOutputPath);
-                        try {
-                            FileUtils.moveFile(file , new File(tempDirOutputPath+".old")); //backup old EAGs, if it's not needed comment this line
-                            FileUtils.moveFile(new File(tempDirOutputPath+".new"), file);
-                        } catch (IOException e) {
-                            logger.error("problem moving file "+file.getAbsolutePath());
+                        List<SAXParseException> exceptions = DocumentValidation.xmlValidation(tempOutputFile, Xsd_enum.XSD_EAG_2012_SCHEMA);
+                        String eagDirPath = tempDirOutputPath.substring(0, tempDirOutputPath.lastIndexOf("/") + 1);
+                        String validationErrorFilePath = eagDirPath + "validation_errors.txt";
+                        if(exceptions == null) {
+                            File file = new File(tempDirOutputPath);
+                            try {
+                                FileUtils.moveFile(file , new File(tempDirOutputPath+".old")); //backup old EAGs, if it's not needed comment this line
+                                FileUtils.moveFile(new File(tempDirOutputPath+".new"), file);
+                            } catch (IOException e) {
+                                logger.error("problem moving file "+file.getAbsolutePath());
+                            }
+                            if(new File(validationErrorFilePath).exists())
+                                new File(validationErrorFilePath).delete();
+                        } else {
+                            eagsNotConverted.add(eagDirPath);
+                            logger.error("The converted EAG 2012 file is not valid, we will not use this file for now, it has to be checked manually. The list of errors can be found in the file validation_errors.txt");
+                            StringBuilder warn = new StringBuilder();
+                            for (SAXParseException exception : exceptions) {
+                                warn.append("l.").append(exception.getLineNumber()).append(" c.").append(exception.getColumnNumber()).append(": ").append(exception.getMessage()).append("\n");
+                            }
+                            File validationErrorFile = new File(validationErrorFilePath);
+                            FileUtils.writeStringToFile(validationErrorFile, warn.toString(), "UTF-8");
                         }
-                        if(new File(validationErrorFilePath).exists())
-                            new File(validationErrorFilePath).delete();
-                    } else {
-                        eagsNotConverted.add(eagDirPath);
-                        logger.error("The converted EAG 2012 file is not valid, we will not use this file for now, it has to be checked manually. The list of errors can be found in the file validation_errors.txt");
-                        StringBuilder warn = new StringBuilder();
-                        for (SAXParseException exception : exceptions) {
-                            warn.append("l.").append(exception.getLineNumber()).append(" c.").append(exception.getColumnNumber()).append(": ").append(exception.getMessage()).append("\n");
-                        }
-                        File validationErrorFile = new File(validationErrorFilePath);
-                        FileUtils.writeStringToFile(validationErrorFile, warn.toString(), "UTF-8");
                     }
 				}
 			}
