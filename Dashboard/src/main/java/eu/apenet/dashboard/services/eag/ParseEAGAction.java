@@ -8,11 +8,11 @@ import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
 
+import net.sf.saxon.s9api.SaxonApiException;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
-
-import net.sf.saxon.s9api.SaxonApiException;
 
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -54,6 +54,14 @@ public class ParseEAGAction extends ActionSupport {
 					logger.info("'" + institution.getAiname() + "' is parsing file: '" + tempDirOutputPath);
 					in  = new FileInputStream(new File(tempDirOutputPath));
 					TransformationTool.createTransformation(in, tempOutputFile, new File(xslFilePath), null, true, true, null, true, null);
+
+					File file = new File(tempDirOutputPath);
+					try {
+						FileUtils.moveFile(file , new File(tempDirOutputPath+".old")); //backup old EAGs, if it's not needed comment this line
+						FileUtils.moveFile(new File(tempDirOutputPath+".new"), file);
+					} catch (IOException e) {
+						logger.error("problem moving file "+file.getAbsolutePath());
+					}
 				}
 			}
 		}
