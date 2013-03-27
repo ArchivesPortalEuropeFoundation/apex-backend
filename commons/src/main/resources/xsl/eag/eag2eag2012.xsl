@@ -6,7 +6,7 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:ape="z"
+                xmlns:ape="http://www.archivesportaleurope.net/functions"
                 xmlns:ape_static="http://www.archivesportaleurope.net/functions_static"
                 xsi:schemaLocation="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/ http://www.archivesportaleurope.net/Portal/profiles/eag_2012.xsd"
                 xpath-default-namespace="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/"

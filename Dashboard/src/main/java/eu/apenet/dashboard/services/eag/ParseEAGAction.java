@@ -49,10 +49,6 @@ public class ParseEAGAction extends ActionSupport {
 					}
 					FileInputStream in = null;
 					String tempOutputFilePath = tempDirOutputPath + ".new";
-					File tempDirOutput = new File(tempOutputFilePath);
-					if (!tempDirOutput.exists()) {
-						tempDirOutput.mkdirs();
-					}
 					File tempOutputFile = new File(tempOutputFilePath);
 					String xslFilePath = APEnetUtilities.getDashboardConfig().getSystemXslDirPath()+ APEnetUtilities.FILESEPARATOR + "eag2eag2012.xsl";
 					logger.info("'" + institution.getAiname() + "' is parsing file: '" + tempDirOutputPath);
