@@ -64,13 +64,13 @@ public class ParseEAGAction extends ActionSupport {
                     String eagDirPath = tempDirOutputPath.substring(0, tempDirOutputPath.lastIndexOf("/") + 1);
                     String validationErrorFilePath = eagDirPath + "validation_errors.txt";
                     if(exceptions == null) {
-//                        File file = new File(tempDirOutputPath);
-//                        try {
-//                            FileUtils.moveFile(file , new File(tempDirOutputPath+".old")); //backup old EAGs, if it's not needed comment this line
-//                            FileUtils.moveFile(new File(tempDirOutputPath+".new"), file);
-//                        } catch (IOException e) {
-//                            logger.error("problem moving file "+file.getAbsolutePath());
-//                        }
+                        File file = new File(tempDirOutputPath);
+                        try {
+                            FileUtils.moveFile(file , new File(tempDirOutputPath+".old")); //backup old EAGs, if it's not needed comment this line
+                            FileUtils.moveFile(new File(tempDirOutputPath+".new"), file);
+                        } catch (IOException e) {
+                            logger.error("problem moving file "+file.getAbsolutePath());
+                        }
                         if(new File(validationErrorFilePath).exists())
                             new File(validationErrorFilePath).delete();
                     } else {
