@@ -1,6 +1,7 @@
 package eu.apenet.commons.xslt;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.io.Writer;
 
 import javax.xml.transform.Source;
@@ -36,4 +37,15 @@ public class EagXslt {
         transformer.setDestination(serializer);
         transformer.transform();
     }
+
+	public static void convertAi(Writer writer, File eagPathFile, ResourceBundleSource resourceBundleSource) throws SaxonApiException {
+		Source xmlSource = new StreamSource(eagPathFile);
+    	XsltExecutable executable = getXsltExecutable("xsl/eag/eag2eag2012.xsl", resourceBundleSource);
+        XsltTransformer transformer = executable.load();
+        transformer.setSource(xmlSource);
+        Serializer serializer = new Serializer();
+        serializer.setOutputWriter(writer);
+        transformer.setDestination(serializer);
+        transformer.transform();
+	}
 }
