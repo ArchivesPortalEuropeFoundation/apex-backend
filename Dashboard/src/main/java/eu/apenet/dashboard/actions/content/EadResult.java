@@ -2,10 +2,7 @@ package eu.apenet.dashboard.actions.content;
 
 import java.text.SimpleDateFormat;
 
-import eu.apenet.persistence.vo.Ead;
-import eu.apenet.persistence.vo.QueuingState;
-import eu.apenet.persistence.vo.QueueAction;
-import eu.apenet.persistence.vo.ValidatedState;
+import eu.apenet.persistence.vo.*;
 
 public class EadResult {
 	protected static final String CONTENT_MESSAGE_NO = "content.message.no";
@@ -34,6 +31,7 @@ public class EadResult {
 	private boolean queueProcessing;
 	private Long units;
 	private boolean containWarnings;
+	private boolean containValidationErrors;
 	protected QueueAction queueAction;
 	public EadResult(Ead ead){
 		this.eadid = ead.getEadid();
@@ -55,6 +53,7 @@ public class EadResult {
         	queueAction = ead.getQueueItem().getAction();
         }
         this.containWarnings = ead.getWarningses().size() > 0;
+        this.containValidationErrors = containValidationErrors(ead);
 	}
 	public Integer getId() {
 		return id;
@@ -133,10 +132,10 @@ public class EadResult {
 	public String getValidatedText(){
 		if (validated){
 			return CONTENT_MESSAGE_YES;
-		}else if (validatedFatalError){
-			return CONTENT_MESSAGE_FATAL_ERROR;
-		} else if(isContainWarnings()) {
+		} else if(!converted && containValidationErrors) {
             return CONTENT_MESSAGE_ERROR;
+        } else if (validatedFatalError) {
+            return CONTENT_MESSAGE_FATAL_ERROR;
         } else {
 			return CONTENT_MESSAGE_NO;
 		}
@@ -177,8 +176,17 @@ public class EadResult {
 	public boolean isQueueError() {
 		return queueError;
 	}
-	public boolean isContainWarnings() {
-		return containWarnings;
+
+    public boolean isContainWarnings() {
+        return containWarnings;
+    }
+
+	public boolean containValidationErrors(Ead ead) {
+        for(Warnings warnings : ead.getWarningses()) {
+            if(!warnings.getIswarning())
+                return true;
+        }
+		return false;
 	}
 	
 }
