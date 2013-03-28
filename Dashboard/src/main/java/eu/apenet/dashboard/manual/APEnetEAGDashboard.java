@@ -1304,7 +1304,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
 		if (gArchivalLandscape.exists() && lArchivalLandscape.exists() && this.isArchivalInstitutionInArchivalLandscape()){
 			//It is necessary to build the path
 			this.eagPath = sourcePath;
-			this.setId(this.extractAttributeFromEag("eagheader/eagid", null, true));
+			this.setId(this.extractAttributeFromEag("control/recordId", null, true));
 			this.setName(this.extractAttributeFromEag("archguide/identity/autform", null,true));
 			
 			//It is necessary to check if this EAG has been updated before for another archival institution			
