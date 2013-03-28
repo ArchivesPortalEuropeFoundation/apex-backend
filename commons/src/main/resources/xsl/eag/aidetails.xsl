@@ -5,7 +5,7 @@
 
 	<xsl:output method="html" indent="yes" version="4.0" encoding="UTF-8" />
 	<xsl:template match="/">
-		<h2 class="blockHeader">
+		<h2 id="archivalInstitutionName" class="blockHeader">
 			<xsl:value-of select="./eag:eag/eag:archguide/eag:identity/eag:autform"></xsl:value-of>
 		</h2>
 	
