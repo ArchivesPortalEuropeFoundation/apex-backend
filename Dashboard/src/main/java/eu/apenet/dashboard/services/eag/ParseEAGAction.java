@@ -58,12 +58,13 @@ public class ParseEAGAction extends ActionSupport {
 					String xslFilePath = APEnetUtilities.getDashboardConfig().getSystemXslDirPath()+ APEnetUtilities.FILESEPARATOR + "eag2eag2012.xsl";
 					logger.info("'" + institution.getAiname() + "' is parsing file: '" + tempDirOutputPath);
 					in  = new FileInputStream(new File(tempDirOutputPath));
-                    if(!DocumentValidation.xmlValidation(tempDirOutputPath, Xsd_enum.XSD_EAG_2012_SCHEMA).isEmpty()) {
+                    if(DocumentValidation.xmlValidation(new File(tempDirOutputPath), Xsd_enum.XSD_EAG_2012_SCHEMA) != null) {
+                        String eagDirPath = tempDirOutputPath.substring(0, tempDirOutputPath.lastIndexOf("/") + 1);
+                        String validationErrorFilePath = eagDirPath + "validation_errors.txt";
+
                         TransformationTool.createTransformation(in, tempOutputFile, new File(xslFilePath), null, true, true, null, true, null, APEnetUtilities.getDashboardConfig().getSystemXslDirPath());
 
                         List<SAXParseException> exceptions = DocumentValidation.xmlValidation(tempOutputFile, Xsd_enum.XSD_EAG_2012_SCHEMA);
-                        String eagDirPath = tempDirOutputPath.substring(0, tempDirOutputPath.lastIndexOf("/") + 1);
-                        String validationErrorFilePath = eagDirPath + "validation_errors.txt";
                         if(exceptions == null) {
                             File file = new File(tempDirOutputPath);
                             try {
