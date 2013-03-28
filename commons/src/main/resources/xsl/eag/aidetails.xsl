@@ -21,7 +21,8 @@
 				</tr>
 			</thead>
 			<tbody>
-			<tr>
+				<xsl:if test="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:location[@localType='visitors address']">
+				<tr>
 			   <td class="header">
 				    <xsl:value-of select="ape:resource('directory.text.visitorsaddress')" />
 				   </td>
@@ -32,6 +33,7 @@
 					 
 				   </td>
 				  </tr> 
+				  </xsl:if>
 				 <xsl:if test="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:location/eag:localentity/text()">
 				 <tr class="longDisplay" >
 				   <td class="header">
@@ -62,6 +64,7 @@
 	                </td>		
 			      </tr>
 			      </xsl:if>
+			      <xsl:if test="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:location[not(@localType) or @localType='postal address']">
 			      <tr class="longDisplay">
 			        <td class="header">
 			         <xsl:value-of select="ape:resource('directory.text.postaladdress')"></xsl:value-of>
@@ -72,6 +75,7 @@
 			            <xsl:value-of select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:location[not(@localType) or @localType='postal address']/eag:municipalityPostalcode"></xsl:value-of>
 			        </td>
 			      </tr>
+			      </xsl:if>
 			       <tr>
 					<td class="header">
 						<xsl:value-of select="ape:resource('directory.text.country')" />
