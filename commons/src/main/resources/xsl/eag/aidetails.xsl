@@ -67,7 +67,7 @@
 			         <xsl:value-of select="ape:resource('directory.text.postaladdress')"></xsl:value-of>
 			        </td>
 			        <td id="postalAddress">
-                        <xsl:value-of select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:location[not(@localType) or @localType='visitors address']/eag:street" />
+                        <xsl:value-of select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:location[not(@localType) or @localType='postal address']/eag:street" />
                         <xsl:text> , </xsl:text>
 			            <xsl:value-of select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:location[not(@localType) or @localType='postal address']/eag:municipalityPostalcode"></xsl:value-of>
 			        </td>
