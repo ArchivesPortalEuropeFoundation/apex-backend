@@ -305,7 +305,7 @@
 			     <xsl:if test="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:services/eag:searchroom/eag:contact/eag:email">
 			     <xsl:for-each select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:services/eag:searchroom/eag:contact/eag:email/@href">
 			     <tr class="longDisplay">
-			      <td class="header1">
+			      <td class="subHeader">
 			       <xsl:value-of select="ape:resource('directory.text.email')" />
 			      </td>
 			      <td>
@@ -319,7 +319,7 @@
 			     <xsl:if test="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:services/eag:searchroom/eag:webpage/text()">
 			     <xsl:for-each select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:services/eag:searchroom/eag:webpage/@href">
 			     <tr class="longDisplay">
-			       <td class="header1"><xsl:value-of select="ape:resource('directory.text.webpage')" /></td>
+			       <td class="subHeader"><xsl:value-of select="ape:resource('directory.text.webpage')" /></td>
 					<td>
 						<xsl:variable name="webpage" select="."/>
 						<a href="{$webpage}"  target="_blank" ><xsl:value-of select="$webpage" /></a>
@@ -330,7 +330,7 @@
 			     <xsl:if test="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:services/eag:searchroom/eag:contact/eag:telephone/text()">
 			     <xsl:for-each select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:services/eag:searchroom/eag:contact/eag:telephone" >
 			      <tr class="longDisplay">
-					<td class="header1">
+					<td class="subHeader">
 						<xsl:value-of select="ape:resource('directory.text.tel')" />
 					</td>
 					<td>
@@ -443,7 +443,7 @@
 			     
 			     <xsl:for-each select= "./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:services/eag:library/eag:contact/eag:email/@href">
 			     <tr class="longDisplay">
-			      <td class="header1">
+			      <td class="subHeader">
 			       <xsl:value-of select="ape:resource('directory.text.email')" />
 			      </td>
 			      
@@ -458,7 +458,7 @@
 			     <xsl:if test= "./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:services/eag:library/eag:webpage/text()">
 			     <xsl:for-each select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:services/eag:library/eag:webpage/@href">
 			     <tr class="longDisplay">
-			       <td class="header1"><xsl:value-of select="ape:resource('directory.text.webpage')" /></td>
+			       <td class="subHeader"><xsl:value-of select="ape:resource('directory.text.webpage')" /></td>
 					<td>
 						<xsl:variable name="webpage" select="."/>
 						<a href="{$webpage}"  target="_blank" ><xsl:value-of select="$webpage" /></a>
@@ -469,7 +469,7 @@
 			     <xsl:if test= "./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:services/eag:library/eag:contact/eag:telephone/text()">
 			      <xsl:for-each select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:services/eag:library/eag:contact/eag:telephone">
 			      <tr class="longDisplay">
-					<td class="header1">
+					<td class="subHeader">
 						<xsl:value-of select="ape:resource('directory.text.tel')" />
 					</td>
 					<td>
@@ -579,7 +579,7 @@
 			     <xsl:if test="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:services/eag:techservices/eag:reproductionser/eag:contact/eag:email">
 			     <xsl:for-each select= "./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:services/eag:techservices/eag:reproductionser/eag:contact/eag:email/@href">
 			     <tr class="longDisplay">
-			      <td class="header1">
+			      <td class="subHeader">
 			       <xsl:value-of select="ape:resource('directory.text.email')" />
 			      </td>
 			      <td>
@@ -593,7 +593,7 @@
 			     <xsl:if test="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:services/eag:techservices/eag:reproductionser/eag:webpage/text()">
 			     <xsl:for-each select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:services/eag:techservices/eag:reproductionser/eag:webpage/@href">
 			     <tr class="longDisplay">
-			       <td class="header1"><xsl:value-of select="ape:resource('directory.text.webpage')" /></td>
+			       <td class="subHeader"><xsl:value-of select="ape:resource('directory.text.webpage')" /></td>
 					<td>
 						<xsl:variable name="webpage" select="."/>
 						<a href="{$webpage}"  target="_blank" ><xsl:value-of select="$webpage" /></a>
@@ -604,7 +604,7 @@
 			     <xsl:if test="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:services/eag:techservices/eag:reproductionser/eag:contact/eag:telephone/text()">
 			     <xsl:for-each select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:services/eag:techservices/eag:reproductionser/eag:contact/eag:telephone">
 			      <tr class="longDisplay">
-					<td class="header1">
+					<td class="subHeader">
 						<xsl:value-of select="ape:resource('directory.text.tel')" />
 					</td>
 					<td>
@@ -644,7 +644,7 @@
 			         
 			        <xsl:for-each select= "./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:services/eag:techservices/eag:restorationlab/eag:contact/eag:email/@href"> 
 			         <tr class="longDisplay">
-			           <td class="header1">
+			           <td class="subHeader">
 			             <xsl:value-of select="ape:resource('directory.text.email')" />
 			           </td>
 			           <td>
@@ -659,7 +659,7 @@
 			      
 			      <xsl:for-each select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:services/eag:techservices/eag:restorationlab/eag:webpage/@href">
 			      <tr class="longDisplay">
-			        <td class="header1"><xsl:value-of select="ape:resource('directory.text.webpage')" /></td>
+			        <td class="subHeader"><xsl:value-of select="ape:resource('directory.text.webpage')" /></td>
 					<td>
 						<xsl:variable name="webpage" select="."/>
 						<a href="{$webpage}"  target="_blank" ><xsl:value-of select="$webpage" /></a>
@@ -671,7 +671,7 @@
 			      
 			      <xsl:for-each select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:services/eag:techservices/eag:restorationlab/eag:contact/eag:telephone">
 			      <tr class="longDisplay">
-					<td class="header1">
+					<td class="subHeader">
 						<xsl:value-of select="ape:resource('directory.text.tel')" />
 					</td>
 					<td>
@@ -827,7 +827,7 @@
 			  <xsl:if test="./eag:eag/eag:archguide/eag:identity/eag:nonpreform">
 			  <xsl:for-each select="./eag:eag/eag:archguide/eag:identity/eag:nonpreform">
 			   <tr class="longDisplay">
-			    <td class="header1"><xsl:value-of select="ape:resource('directory.text.alternative')" /></td>
+			    <td class="subHeader"><xsl:value-of select="ape:resource('directory.text.alternative')" /></td>
 			    <td><xsl:value-of select= "." />
 			    </td>
 			   </tr>
@@ -836,7 +836,7 @@
 			 
 			 <xsl:if test="./eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates">
 			   <tr class="longDisplay">
-			    <td class="header1"><xsl:value-of select="ape:resource('directory.text.used')" /></td>
+			    <td class="subHeader"><xsl:value-of select="ape:resource('directory.text.used')" /></td>
 			    <td><!-- <xsl:value-of select= "./eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateSet/eag:date" /> -->
 			      <xsl:value-of select= "./eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateSet/eag:dateRange/eag:fromDate" /> 
 			      <xsl:text>-</xsl:text>
@@ -848,7 +848,7 @@
 			 </xsl:if>
 			 <xsl:if test="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:repositorfound/eag:date/text()">
 			   <tr class="longDisplay">
-			    <td class="header1"><xsl:value-of select="ape:resource('directory.text.daterepositorfound')" /></td>
+			    <td class="subHeader"><xsl:value-of select="ape:resource('directory.text.daterepositorfound')" /></td>
 			    <td><xsl:value-of select= "./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:repositorfound/eag:date" />
 			    </td>
 			   </tr>
@@ -856,7 +856,7 @@
 			 
 			 <xsl:if test="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:repositorfound/eag:rule/text()">
 			   <tr class="longDisplay">
-			    <td class="header1"><xsl:value-of select="ape:resource('directory.text.rulerepositorfound')" /></td>
+			    <td class="subHeader"><xsl:value-of select="ape:resource('directory.text.rulerepositorfound')" /></td>
 			    <td><xsl:value-of select= "./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:repositorfound/eag:rule" />
 			    </td>
 			   </tr>
@@ -864,7 +864,7 @@
 			 
 			 <xsl:if test="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:repositorsup/eag:date/text()">
 			   <tr class="longDisplay">
-			    <td class="header1"><xsl:value-of select="ape:resource('directory.text.daterepositorsup')" /></td>
+			    <td class="subHeader"><xsl:value-of select="ape:resource('directory.text.daterepositorsup')" /></td>
 			    <td><xsl:value-of select= "./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:repositorsup/eag:date" />
 			    </td>
 			   </tr>
