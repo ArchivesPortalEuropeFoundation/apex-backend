@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -336,7 +337,7 @@ public abstract class ManualUploader {
 	    		    
     				//It is necessary to validate the file against APEnet EAG schema
                     log.debug("Beginning EAG validation");
-    				if (eag.APEnetEAGValidate(fileName)){
+    				if (eag.APEnetEAGValidate(archivalInstitutionId, fileName)){
                         log.info("EAG is valid");
                         
                         //check the <recordId> content
@@ -372,7 +373,7 @@ public abstract class ManualUploader {
                     		Transformer transformer = tf.newTransformer();
                     		transformer.transform(new DOMSource(tempDoc), new StreamResult(new File(fullFileName)));
                         }
-                        
+
     					//The EAG has been validated so it has to be stored in /mnt/repo/country/aiid/EAG/
     					//and it is necessary to update archival_institution table
         				eag.setEagPath(null);
@@ -424,7 +425,7 @@ public abstract class ManualUploader {
     					//It has to be converted
     					if (eag.convertToAPEnetEAG(fileName)){
     						//The EAG has been converted so it is necessary to validate the file against APEnet EAG schema
-    	    				if (eag.APEnetEAGValidate(fileName)){
+    	    				if (eag.APEnetEAGValidate(archivalInstitutionId,fileName)){
     	    					//The EAG has been validated so it has to be stored in /mnt/repo/country/aiid/EAG/
     	    					//and it is necessary to update archival_institution table
     	        				eag.setEagPath(null);

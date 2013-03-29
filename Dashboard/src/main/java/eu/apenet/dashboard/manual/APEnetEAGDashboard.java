@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -208,7 +209,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
 	}
 
 	//Methods
-	public Boolean APEnetEAGValidate (String filename) throws APEnetException, SAXException {
+	public Boolean APEnetEAGValidate (Integer aiId, String filename) throws APEnetException, SAXException {
         //EAG file is stored temporally in the location defined in eagPath attribute
         log.debug("Path of EAG: " + eagPath);
         log.debug("Filename of EAG: " + filename);
@@ -233,7 +234,15 @@ public class APEnetEAGDashboard extends APEnetEAG {
         } catch (Exception e){
             throw new APEnetException("Exception while validating an EAG file", e);
         }
-		return true;
+    	ArchivalInstitution institution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
+		String pattern = institution.getCountry().getIsoname() + "-[a-zA-Z0-9:/\\-]{1,11}";
+		String repositoryCode = this.lookingForwardElementContent("/eag/control/recordId");
+		boolean validRepositoryCode = Pattern.matches(pattern, repositoryCode);
+		if (validRepositoryCode){
+			return true;
+		}else {
+			return false;
+		}
 	}
 
 	public Boolean convertToAPEnetEAG (String filename) throws APEnetException {
@@ -1306,14 +1315,16 @@ public class APEnetEAGDashboard extends APEnetEAG {
 			this.eagPath = sourcePath;
 			this.setId(this.extractAttributeFromEag("control/recordId", null, true));
 			this.setName(this.extractAttributeFromEag("archguide/identity/autform", null,true));
-			
+			String pattern = archivalInstitution.getCountry().getIsoname() + "-[a-zA-Z0-9:/\\-]{1,11}";
+			boolean validRepositoryCode = Pattern.matches(pattern, this.getId());
 			//It is necessary to check if this EAG has been updated before for another archival institution			
 			if (this.isEagAlreadyUploaded()){
 				value = "error_eagalreadyuploaded";
 			} else {
-				this.eagPath = APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + this.aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + this.getId() + ".xml";
+				String fileName = this.getId().replaceAll("[:/\\\\]", "_") + ".xml";
+				this.eagPath = APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + this.aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + fileName + ".xml";
 				String storagePath = APEnetUtilities.getConfig().getRepoDirPath() + this.eagPath;
-				String oldEAGPath = APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + this.aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + "_remove" + this.getId() + ".xml";
+				String oldEAGPath = APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + this.aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + "_remove" + fileName + ".xml";
 				File source = new File(sourcePath);
 				File destination = new File(storagePath);
 				        
