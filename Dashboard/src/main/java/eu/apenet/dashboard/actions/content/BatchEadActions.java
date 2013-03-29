@@ -23,8 +23,8 @@ public class BatchEadActions extends AbstractEadActions {
 		return addBatchToQueue(QueueAction.VALIDATE);
 	}
 
-	public String convertEad() {
-		return addBatchToQueue(QueueAction.CONVERT);
+	public String convertEad(Properties properties) {
+		return addBatchToQueue(QueueAction.CONVERT, properties);
 	}
 
 	public String publishEad() {
@@ -40,8 +40,8 @@ public class BatchEadActions extends AbstractEadActions {
 	}
 
 	@Override
-	public String convertValidatePublishEad() {
-		return addBatchToQueue(QueueAction.CONVERT_VALIDATE_PUBLISH);
+	public String convertValidatePublishEad(Properties properties) {
+		return addBatchToQueue(QueueAction.CONVERT_VALIDATE_PUBLISH, properties);
 	}
 	
 	

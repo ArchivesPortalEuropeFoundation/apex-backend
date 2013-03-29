@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -36,15 +37,10 @@ public class ConvertTask extends AbstractEadTask {
 		if (valid(ead)) {
 			CounterCLevelCall counterCLevelCall = null;
 			String xslFileName = "default.xsl";
-			// Map<String, String> conversionParameters = null;
 			ArchivalInstitution archivalInstitution = ead.getArchivalInstitution();
-
 			String mainagencycode = archivalInstitution.getRepositorycode();
-			HashMap<String, String> parameters = new HashMap<String, String>();
-			// if (conversionParameters != null) {
-			// for (String key : conversionParameters.keySet())
-			// parameters.put(key, conversionParameters.get(key));
-			// }
+            Map<String, String> parameters = getConversionProperties(properties);
+
 			if (mainagencycode != null)
 				parameters.put("mainagencycode", mainagencycode);
 			String countryCode = archivalInstitution.getCountry().getIsoname();
@@ -145,4 +141,14 @@ public class ConvertTask extends AbstractEadTask {
 			}
 		}
 	}
+
+    private Map<String, String> getConversionProperties(Properties properties) {
+        Map<String, String> parameters = new HashMap<String, String>();
+        String option_default = properties.getProperty("defaultRoleType");
+        String option_use_existing = properties.getProperty("useDefaultRoleType");
+        boolean option_use_existing_bool = !Boolean.parseBoolean(option_use_existing);
+        parameters.put("defaultRoleType", option_default);
+        parameters.put("useDefaultRoleType", Boolean.toString(option_use_existing_bool));
+        return parameters;
+    }
 }

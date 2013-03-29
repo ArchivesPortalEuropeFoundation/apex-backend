@@ -308,4 +308,38 @@
 			</table>
 		</div>
 	</s:form>
+    <div class="hidden">
+        <div id="conversionOptsDiv">
+            <form action="">
+                <table>
+                    <tr>
+                        <td><s:text name="content.message.roletype.useexisting"/> <input type="checkbox" name="useExistingRole" id="useExistingRole" value="useExistingRole" /></td>
+                        <td><s:text name="content.message.roletype.defaultrole"/></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="radio" class="roleTypeRadio" name="roleType" value="IMAGE" />IMAGE</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="radio" class="roleTypeRadio" name="roleType" value="VIDEO" />VIDEO</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="radio" class="roleTypeRadio" name="roleType" value="SOUND" />SOUND</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="radio" class="roleTypeRadio" name="roleType" value="TEXT" />TEXT</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="radio" class="roleTypeRadio" name="roleType" value="UNSPECIFIED" />UNSPECIFIED</td>
+                    </tr>
+                </table>
+                <input type="button" id="submitBtnRoleType" value="Submit"/>
+                <input type="button" id="cancelBtnRoleType" value="Cancel"/>
+            </form>
+        </div>
+    </div>
 </div>

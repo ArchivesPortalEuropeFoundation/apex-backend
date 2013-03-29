@@ -1,12 +1,16 @@
 package eu.apenet.dashboard.actions.content;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.ServletRequestAware;
 
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.AbstractInstitutionAction;
+
+import java.util.Properties;
 
 public abstract class AbstractEadActions extends AbstractInstitutionAction implements ServletRequestAware{
     protected Logger logger = Logger.getLogger(getClass());
@@ -57,12 +61,28 @@ public abstract class AbstractEadActions extends AbstractInstitutionAction imple
 	public void setAction(String action) {
 		this.action = action;
 	}
+
+    protected Properties getConversionParameters() {
+        Properties parameters = new Properties();
+        HttpSession session = httpServletRequest.getSession();
+        String option_default = (String)session.getAttribute(AjaxControllerAbstractAction.OPTIONS_DEFAULT);
+        String option_use_existing = (String)session.getAttribute(AjaxControllerAbstractAction.OPTIONS_USE_EXISTING);
+        boolean option_use_existing_bool = true;
+        if(option_use_existing != null)
+            option_use_existing_bool = !Boolean.parseBoolean(option_use_existing);
+        if(option_default == null)
+            option_default = "UNSPECIFIED";
+        parameters.put("defaultRoleType", option_default);
+        parameters.put("useDefaultRoleType", Boolean.toString(option_use_existing_bool));
+        return parameters;
+    }
+    
 	@Override
 	public String execute() throws Exception {
 		if (VALIDATE.equals(action)){
 			return validateEad();
 		}else if (CONVERT.equals(action)){
-			return convertEad();
+			return convertEad(getConversionParameters());
 		}else if (PUBLISH.equals(action)){
 			return publishEad();
 		}else if (UNPUBLISH.equals(action)){
@@ -70,7 +90,7 @@ public abstract class AbstractEadActions extends AbstractInstitutionAction imple
 		}else if (DELETE.equals(action)){
 			return deleteEad();
 		}else if(CONVERT_VALIDATE_PUBLISH.equals(action)){
-			return convertValidatePublishEad();
+			return convertValidatePublishEad(getConversionParameters());
 		}else if(DELETE_ESE_EDM.equals(action)){
 			return deleteEseEdm();
 		}else if(DELETE_FROM_EUROPEANA.equals(action)){
@@ -86,11 +106,11 @@ public abstract class AbstractEadActions extends AbstractInstitutionAction imple
 		return XmlType.getType(xmlTypeId);
 	}
 	public abstract String validateEad();
-	public abstract String convertEad();
+	public abstract String convertEad(Properties properties);
 	public abstract String publishEad();
 	public abstract String unpublishEad();
 	public abstract String deleteEad();
-	public abstract String convertValidatePublishEad();
+	public abstract String convertValidatePublishEad(Properties properties);
 	public abstract String deleteEseEdm();
 	public abstract String deleteFromEuropeana();
 	public abstract String deliverToEuropeana();
