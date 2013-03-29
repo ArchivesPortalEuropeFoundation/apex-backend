@@ -339,7 +339,6 @@ public class EadService {
 		if (QueueAction.CONVERT.equals(queueAction)) {
 			eadSearchOptions.setConverted(false);
 		} else if (QueueAction.VALIDATE.equals(queueAction)) {
-			eadSearchOptions.setConverted(true);
 			eadSearchOptions.setValidated(ValidatedState.NOT_VALIDATED);
 		} else if (QueueAction.PUBLISH.equals(queueAction)) {
 			eadSearchOptions.setValidated(ValidatedState.VALIDATED);
