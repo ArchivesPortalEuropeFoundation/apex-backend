@@ -503,7 +503,7 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
                 File outputTemp = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + aiId + APEnetUtilities.FILESEPARATOR + ".temp_file.xml");
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("addXMLNS", "true");
-                TransformationTool.createTransformation(fileIs, outputTemp, xslIs, params, false, false, null, true);
+                TransformationTool.createTransformation(fileIs, outputTemp, xslIs, params, false, false, null, true, null);
                 String cLevelXml = FileUtils.readFileToString(outputTemp, UTF8); //UTF8 important!
 
                 doc = builder.parse(new InputSource(new StringReader(cLevelXml)));
