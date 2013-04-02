@@ -1523,28 +1523,28 @@ public class APEnetEAG {
 		//                    ("eag/archguide/identity/autform",""); 
 		//                    ("eag/eagheader/mainhist/mainevent/date","normal")]
 
-//		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + AUTFORM_TAG, NULL_ATTRIBUTE);
-//		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + PARFORM_TAG, NULL_ATTRIBUTE);
-//		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + EADID_TAG, NULL_ATTRIBUTE);
-//		//tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + SURNAMES_TAG, NULL_ATTRIBUTE);
-//		//tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + FIRSTNAME_TAG, NULL_ATTRIBUTE);
-//		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + COUNTRY_TAG, NULL_ATTRIBUTE);
-//		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + MUNICIPALITY_TAG, NULL_ATTRIBUTE);
-//		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + POSTALCODE_TAG, NULL_ATTRIBUTE);
-//		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + STREET_TAG, NULL_ATTRIBUTE);
-//		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + TELEPHONE_TAG, NULL_ATTRIBUTE);
-//		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + EMAIL_TAG, HREF_ATTRIBUTE);
-//		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + WEBPAGE_TAG, HREF_ATTRIBUTE);
-//		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + ACCESS_TAG, QUESTION_ATTRIBUTE);
-//		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + HANDICAPPED_TAG, QUESTION_ATTRIBUTE);
-//		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + SEARCHROOM_NUM_TAG, NULL_ATTRIBUTE);
-//		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + LIBRARY_TAG, QUESTION_ATTRIBUTE);
-//		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + RESTORATIONLAB_TAG, QUESTION_ATTRIBUTE);
-//		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + REPRODUCTIONSER_TAG, QUESTION_ATTRIBUTE);
-//		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + AUTOMATION_TAG, QUESTION_ATTRIBUTE);
-//		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + EXTENT_NUM_TAG, NULL_ATTRIBUTE);
-//		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + DATE_TAG, NORMAL_ATTRIBUTE);
-//		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + MAINEVENT_TAG, MAINTYPE_ATTRIBUTE);
+		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + AUTFORM_TAG, NULL_ATTRIBUTE);
+		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + PARFORM_TAG, NULL_ATTRIBUTE);
+		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + EADID_TAG, NULL_ATTRIBUTE);
+		//tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + SURNAMES_TAG, NULL_ATTRIBUTE);
+		//tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + FIRSTNAME_TAG, NULL_ATTRIBUTE);
+		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + COUNTRY_TAG, NULL_ATTRIBUTE);
+		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + MUNICIPALITY_TAG, NULL_ATTRIBUTE);
+		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + POSTALCODE_TAG, NULL_ATTRIBUTE);
+		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + STREET_TAG, NULL_ATTRIBUTE);
+		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + TELEPHONE_TAG, NULL_ATTRIBUTE);
+		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + EMAIL_TAG, HREF_ATTRIBUTE);
+		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + WEBPAGE_TAG, HREF_ATTRIBUTE);
+		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + ACCESS_TAG, QUESTION_ATTRIBUTE);
+		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + HANDICAPPED_TAG, QUESTION_ATTRIBUTE);
+		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + SEARCHROOM_NUM_TAG, NULL_ATTRIBUTE);
+		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + LIBRARY_TAG, QUESTION_ATTRIBUTE);
+		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + RESTORATIONLAB_TAG, QUESTION_ATTRIBUTE);
+		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + REPRODUCTIONSER_TAG, QUESTION_ATTRIBUTE);
+		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + AUTOMATION_TAG, QUESTION_ATTRIBUTE);
+		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + EXTENT_NUM_TAG, NULL_ATTRIBUTE);
+		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + DATE_TAG, NORMAL_ATTRIBUTE);
+		tagsAndAttributesToRetrieved.put(ROOT + APEnetUtilities.FILESEPARATOR + MAINEVENT_TAG, MAINTYPE_ATTRIBUTE);
 
 	}
 	
