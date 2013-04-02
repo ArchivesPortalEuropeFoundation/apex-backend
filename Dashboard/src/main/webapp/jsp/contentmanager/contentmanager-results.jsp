@@ -32,21 +32,24 @@
 				<option value="publish">
 					<s:text name="content.message.publish" />
 				</option>
-				<%--<option value="displayEseConvert">--%>
-					<%--<s:text name="content.message.convert.ese" />--%>
-				<%--</option>--%>
-				<%--<option value="deliverToEuropeana">--%>
-					<%--<s:text name="content.message.deliver.europeana" />--%>
-				<%--</option>--%>
+				<option value="displayEseConvert">
+					<s:text name="content.message.convert.ese" />
+				</option>
+				<option value="deliverToEuropeana">
+					<s:text name="content.message.deliver.europeana" />
+				</option>
 				<option value="unpublish">
 					<s:text name="content.message.unpublish" />
 				</option>
-				<%--<option value="deleteFromEuropeana">--%>
-					<%--<s:text name="content.message.delete.europeana" />--%>
-				<%--</option>--%>
-				<%--<option value="deleteEseEdm">--%>
-					<%--<s:text name="content.message.delete.ese" />--%>
-				<%--</option>--%>
+				<option value="deleteFromEuropeana">
+					<s:text name="content.message.delete.europeana" />
+				</option>
+				<option value="deleteEseEdm">
+					<s:text name="content.message.delete.ese" />
+				</option>
+				<option value="deleteFromQueue">
+					<s:text name="content.message.delete.queue" />
+				</option>	
 				<option value="deleteFromQueue">
 					<s:text name="content.message.delete.queue" />
 				</option>	
@@ -200,7 +203,7 @@
 								<c:otherwise>
 
 									<select class="selectedAction" name="selectedAction">
-										<c:if test="${not eadResult.converted}">
+										<c:if test="${not eadResult.converted and not eadResult.validated}">
 											<option value="action|convert">
 												<s:text name="content.message.convert" />
 											</option>
@@ -242,38 +245,35 @@
 											</option>
 										
 										</c:if>
-										<%--<c:if test="${results.findingAid}">--%>
-											<%--<c:if--%>
-												<%--test="${eadResult.validated and not eadResult.convertedToEseEdm and not eadResult.deliveredToEuropeana}">--%>
-												<%--<option value="_self|displayEseConvert.action">--%>
-													<%--<s:text name="content.message.convert.ese" />--%>
-												<%--</option>--%>
-											<%--</c:if>--%>
-											<%--<c:if test="${eadResult.convertedToEseEdm and eadResult.totalNumberOfDaos > 0}">--%>
-												<%--<option value="action|deliverToEuropeana">--%>
-													<%--<s:text name="content.message.deliver.europeana" />--%>
-												<%--</option>--%>
-											<%--</c:if>--%>
-											<%--<c:if test="${eadResult.hasEseEdmFiles}">--%>
-												<%--<option value="_blank|htmlPreview">--%>
-													<%--<s:text name="content.message.preview.ese" />--%>
-												<%--</option>--%>
-												<%--<option value="_blank|downloadEse.action">--%>
-													<%--<s:text name="content.message.download.ese" />--%>
-												<%--</option>--%>
-											<%--</c:if>--%>
-											<%--<c:if test="${eadResult.convertedToEseEdm}">--%>
-												<%--<option value="action|deleteEseEdm">--%>
-													<%--<s:text name="content.message.delete.ese" />--%>
-												<%--</option>--%>
-											<%--</c:if>--%>
+										<c:if test="${results.findingAid}">
+											<c:if
+												test="${eadResult.validated and not eadResult.convertedToEseEdm and not eadResult.deliveredToEuropeana}">
+												<option value="_self|displayEseConvert.action">
+													<s:text name="content.message.convert.ese" />
+												</option>
+											</c:if>
+											<c:if test="${eadResult.convertedToEseEdm and eadResult.totalNumberOfDaos > 0}">
+												<option value="action|deliverToEuropeana">
+													<s:text name="content.message.deliver.europeana" />
+												</option>
+											</c:if>
+											<c:if test="${eadResult.hasEseEdmFiles}">
+												<option value="_blank|downloadEse.action">
+													<s:text name="content.message.download.ese" />
+												</option>
+											</c:if>
+											<c:if test="${eadResult.convertedToEseEdm}">
+												<option value="action|deleteEseEdm">
+													<s:text name="content.message.delete.ese" />
+												</option>
+											</c:if>
 
-											<%--<c:if test="${eadResult.deliveredToEuropeana}">--%>
-												<%--<option value="action|deleteFromEuropeana">--%>
-													<%--<s:text name="content.message.delete.europeana" />--%>
-												<%--</option>--%>
-											<%--</c:if>--%>
-										<%--</c:if>--%>
+											<c:if test="${eadResult.deliveredToEuropeana}">
+												<option value="action|deleteFromEuropeana">
+													<s:text name="content.message.delete.europeana" />
+												</option>
+											</c:if>
+										</c:if>
 										<c:if test="${eadResult.published}">
 											<option value="action|unpublish">
 												<s:text name="content.message.unpublish" />
