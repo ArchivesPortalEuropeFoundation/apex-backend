@@ -465,7 +465,6 @@ public class UploadContentAction extends AbstractInstitutionAction implements Se
         } catch (JSONException e){
             log.error("Error", e);
         }
-        log.info(jsonArray.toString());
         return jsonArray.toString();
     }
 
