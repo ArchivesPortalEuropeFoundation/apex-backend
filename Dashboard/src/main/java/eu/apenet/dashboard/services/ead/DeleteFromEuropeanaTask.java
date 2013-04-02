@@ -1,5 +1,6 @@
 package eu.apenet.dashboard.services.ead;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -13,6 +14,7 @@ import eu.apenet.persistence.vo.Ese;
 import eu.apenet.persistence.vo.EseState;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class DeleteFromEuropeanaTask extends AbstractEadTask {
 
@@ -33,26 +35,28 @@ public class DeleteFromEuropeanaTask extends AbstractEadTask {
 	protected void execute(Ead ead, Properties properties) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		if (valid(ead)) {
-
-			FindingAid findingAid = (FindingAid) ead;
-
 			try {
+				JpaUtil.beginDatabaseTransaction();
+				FindingAid findingAid = (FindingAid) ead;
+				EseState eseStateRemoved = DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.REMOVED);
+				Date newModificationDate = new Date();
 				//Change ese_state from ese to "Removed"
-		        Ese ese = null;
 		        EseDAO esesDao = DAOFactory.instance().getEseDAO();
 		        List<Ese> eses = esesDao.getEses(findingAid.getId());
 		        if(eses!=null && !eses.isEmpty()){
 		            Iterator<Ese> iterator = eses.iterator();
 		            while(iterator.hasNext()){
-		                ese = iterator.next();
+		                Ese ese = iterator.next();
 		                if(ese.getEseState().getState().equals(EseState.PUBLISHED)){
-		                    ese.setEseState(DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.REMOVED));
-		                    esesDao.update(ese);
+		                    ese.setEseState(eseStateRemoved);
+		                    ese.setModificationDate(newModificationDate);
+		                    esesDao.updateSimple(ese);
 		                }
 		            }
 		        }
 		        findingAid.setEuropeana(EuropeanaState.CONVERTED);
-				eadDAO.store(findingAid);
+				eadDAO.updateSimple(findingAid);
+				JpaUtil.commitDatabaseTransaction();
 				logAction(ead, true);
 			} catch (Exception e) {
 				logAction(ead, false);

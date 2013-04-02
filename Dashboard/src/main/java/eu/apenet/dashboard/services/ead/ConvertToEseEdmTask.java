@@ -18,6 +18,7 @@ import eu.apenet.dpt.utils.ead2ese.EseFileUtils;
 import eu.apenet.dpt.utils.ead2ese.XMLUtil;
 import eu.apenet.dpt.utils.ead2ese.stax.ESEParser;
 import eu.apenet.dpt.utils.ead2ese.stax.RecordParser;
+import eu.apenet.dpt.utils.ese2edm.EdmConfig;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -62,23 +63,49 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 						findingAid.getPathApenetead());
 				String xmlNameRelative = EseFileUtils.getFileName(APEnetUtilities.FILESEPARATOR, apenetEad);
 				int lastIndex = xmlNameRelative.lastIndexOf('.');
-				String xmlOutputFilename = xmlNameRelative.substring(0, lastIndex) + "-ese"
+				String eseOutputFilename = xmlNameRelative.substring(0, lastIndex) + "-ese"
 						+ xmlNameRelative.substring(lastIndex);
-				// String xmlOutputFilenameTemp =
-				// FileUtils.getTempFile(findingAid,
-				// xmlOutputFilename);
-				File outputXMLDir = EseFileUtils.getOutputXMLDir(APEnetUtilities.getConfig().getRepoDirPath(),
+				File outputESEDir = EseFileUtils.getOutputESEDir(APEnetUtilities.getConfig().getRepoDirPath(),
 						findingAid.getArchivalInstitution().getCountry().getIsoname(), findingAid
 								.getArchivalInstitution().getAiId());
-				File xmlOutputFile = EseFileUtils.getFile(outputXMLDir, xmlOutputFilename);
-				// File xmlOutputFileTemp =
-				// FileUtils.getTempFile(findingAid,
-				// xmlOutputFilename);
-				xmlOutputFile.getParentFile().mkdirs();
-				eseConfig.getTransformerXML2XML().transform(xmlNameRelative, apenetEad, xmlOutputFile);
-				int numberOfRecords = analyzeESEXML(xmlNameRelative, xmlOutputFile);
+				File eseOutputFile = EseFileUtils.getFile(outputESEDir, eseOutputFilename);
+				eseOutputFile.getParentFile().mkdirs();
+				eseConfig.getTransformerXML2XML().transform(xmlNameRelative, apenetEad, eseOutputFile);
+				int numberOfRecords = analyzeESEXML(xmlNameRelative, eseOutputFile);
+
 				boolean update = false;
 				if (numberOfRecords > 0) {
+					/*
+					 * ESE2EDM stuff
+					 */
+					File outputEDMDir = EseFileUtils.getOutputEDMDir(APEnetUtilities.getConfig().getRepoDirPath(),
+							findingAid.getArchivalInstitution().getCountry().getIsoname(), findingAid
+									.getArchivalInstitution().getAiId());
+					// OAI Identifier will be built according to the next
+					// syntax:
+					// isoname/ai_id/fa_eadid
+					String oaiIdentifier = findingAid.getArchivalInstitution().getCountry().getIsoname()
+							+ APEnetUtilities.FILESEPARATOR + findingAid.getArchivalInstitution().getAiId()
+							+ APEnetUtilities.FILESEPARATOR + findingAid.getEadid();
+
+					EdmConfig config = new EdmConfig(false);
+					config.setEdmIdentifier(oaiIdentifier);
+					config.setRepositoryCode(findingAid.getArchivalInstitution().getRepositorycode());
+					config.setPrefixUrl("http://" + APEnetUtilities.getDashboardConfig().getDomainNameMainServer() + "/web/guest/ead-display/-/ead/fp");
+//					String edmTempOutputFilename = xmlNameRelative.substring(0, lastIndex) + "-edm-temp"
+//							+ xmlNameRelative.substring(lastIndex);
+//					File edmTempOutputFile = EseFileUtils.getFile(outputEDMDir, edmTempOutputFilename);
+//					config.getTransformerXML2XML().transform(eseOutputFile, edmTempOutputFile);
+//					config.setTransferToFileOutput(true);
+					String edmOutputFilename = xmlNameRelative.substring(0, lastIndex) + "-edm"
+							+ xmlNameRelative.substring(lastIndex);
+					File edmOutputFile = EseFileUtils.getFile(outputEDMDir, edmOutputFilename);
+					config.getTransformerXML2XML().transform(eseOutputFile, edmOutputFile);
+					eseOutputFile.delete();
+//					edmTempOutputFile.delete();
+					/*
+					 * end of EDM stuf
+					 */
 					Ese ese = null;
 					if (findingAid.getEses().isEmpty()) {
 						ese = new Ese();
@@ -92,12 +119,6 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 							ese.setPathHtml(null);
 						}
 					}
-					// OAI Identifier will be built according to the next
-					// syntax:
-					// isoname/ai_id/fa_eadid
-					String oaiIdentifier = findingAid.getArchivalInstitution().getCountry().getIsoname()
-							+ APEnetUtilities.FILESEPARATOR + findingAid.getArchivalInstitution().getAiId()
-							+ APEnetUtilities.FILESEPARATOR + findingAid.getEadid();
 
 					// Ese example = new Ese();
 					// example.setOaiIdentifier(oaiIdentifier);
@@ -118,8 +139,8 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 						ese.setModificationDate(ese.getCreationDate());
 						eseState = DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.NOT_PUBLISHED);
 					}
-					ese.setPath(EseFileUtils.getRelativeESEFilePath(findingAid.getArchivalInstitution().getCountry()
-							.getIsoname(), findingAid.getArchivalInstitution().getAiId(), xmlOutputFilename));
+					ese.setPath(EseFileUtils.getRelativeEDMFilePath(findingAid.getArchivalInstitution().getCountry()
+							.getIsoname(), findingAid.getArchivalInstitution().getAiId(), edmOutputFilename));
 					ese.setOaiIdentifier(oaiIdentifier);
 					ese.setNumberOfRecords(numberOfRecords);
 					ese.setFindingAid(findingAid);
@@ -132,13 +153,14 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 					eset = findingAid.getArchivalInstitution().getCountry().getIsoname() + eset;
 					ese.setEseState(eseState);
 					ese.setEset(eset);
-					ese.setMetadataFormat(DAOFactory.instance().getMetadataFormatDAO()
-							.getMetadataFormatByName(MetadataFormat.ESE));
+					ese.setMetadataFormat(MetadataFormat.EDM);
 					if (update) {
 						eseDao.update(ese);
 					} else {
 						eseDao.store(ese);
 					}
+				}else {
+					eseOutputFile.delete();
 				}
 				findingAid.setTotalNumberOfDaos(new Long(numberOfRecords));
 				findingAid.setEuropeana(EuropeanaState.CONVERTED);

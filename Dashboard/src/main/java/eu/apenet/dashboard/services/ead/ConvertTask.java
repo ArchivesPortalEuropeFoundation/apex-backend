@@ -74,17 +74,15 @@ public class ConvertTask extends AbstractEadTask {
 							+ "' with id: '" + ead.getId() + "'");
 					in = new FileInputStream(file);
 					TransformationTool.createTransformation(in, tempOutputFile, new File(xslFilePath), null, true,
-							true, null, true, null);
+							true, null, true, null, APEnetUtilities.getDashboardConfig().getSystemXslDirPath());
 
-					xslFilePath = APEnetUtilities.getDashboardConfig().getSystemXslDirPath()
-							+ APEnetUtilities.FILESEPARATOR + "default.xsl";
-					File xslFile = TransformationTool.modifyDefaultXslFile(APEnetUtilities.getDashboardConfig()
-							.getSystemXslDirPath() + APEnetUtilities.FILESEPARATOR, xslFilePath);
+					File xslFile = new File(APEnetUtilities.getDashboardConfig().getSystemXslDirPath()
+							+ APEnetUtilities.FILESEPARATOR + "default.xsl");
 
 					in = new FileInputStream(tempOutputFile);
 					outputfile = new File(tempDirOutputPath + "converted_" + file.getName());
 					xslMessages = TransformationTool.createTransformation(in, outputfile, xslFile, parameters, true,
-							true, null, true, counterCLevelCall);
+							true, null, true, counterCLevelCall, APEnetUtilities.getDashboardConfig().getSystemXslDirPath());
 					tempOutputFile.delete();
 				} else {
 					String xslFilePath = APEnetUtilities.getDashboardConfig().getXslDirPath()
@@ -112,14 +110,18 @@ public class ConvertTask extends AbstractEadTask {
 				if (!warningsFromEad.isEmpty()) {
 					for (Warnings warning : warningsFromEad) {
 						if (warning.getIswarning()) {
-							warningExists = true;
-							warning.setAbstract_(xslWarnings.toString());
+                            if(StringUtils.isEmpty(xslMessages.toString())) {
+                                warningsFromEad.remove(warning);
+                            } else {
+                                warningExists = true;
+                                warning.setAbstract_(xslWarnings.toString());
+                            }
 						} else {
 							warningsFromEad.remove(warning);
 						}
 					}
 				}
-				if (!warningExists) {
+				if (!warningExists && StringUtils.isNotEmpty(xslMessages.toString())) {
 					Warnings warnings = new Warnings();
 					warnings.setAbstract_(xslWarnings.toString());
 					warnings.setIswarning(true);
