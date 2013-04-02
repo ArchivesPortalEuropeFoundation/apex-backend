@@ -236,7 +236,20 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 			return list.get(0);
 		return null;
 	}
-
+	@SuppressWarnings("unchecked")
+	@Override
+	public Ead getEadByEadid(Class<? extends Ead> clazz, String repositorycode, String eadid) {
+		Criteria criteria = getSession().createCriteria(clazz, "ead");
+		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		criteria = criteria.createAlias("ead.archivalInstitution", "archivalInstitution");
+		criteria.add(Restrictions.eq("archivalInstitution.repositorycode", repositorycode));
+		criteria.add(Restrictions.eq("eadid", eadid));
+		criteria.setMaxResults(1);
+		List<Ead> list = criteria.list();
+		if (list.size() > 0)
+			return list.get(0);
+		return null;
+	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Integer> getAllIds(Class<? extends Ead> clazz, Integer aiId) {
