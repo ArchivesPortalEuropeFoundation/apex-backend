@@ -14,8 +14,6 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -241,6 +239,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
 		if (validRepositoryCode){
 			return true;
 		}else {
+			warnings_ead.add("recordId does not match pattern: " + pattern);
 			return false;
 		}
 	}
