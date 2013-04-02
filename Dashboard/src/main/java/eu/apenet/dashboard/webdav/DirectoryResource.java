@@ -81,37 +81,50 @@ public class DirectoryResource extends AbstractResource implements PropFindableR
 	public Date getCreateDate() {
 		return new Date();
 	}
+	private static String toFileSize(Long fileSize) {
+		if (fileSize == null) {
+			return null;
+		}
+		long size = fileSize.longValue();
+		if (size > 1024 * 1024) {
+			return size / (1024 * 1024) + " MB";
+		} else if (size > 1024) {
+			return size / 1024 + " KB";
+		} else {
+			return size + " B";
+		}
+	}
 
 	@Override
 	public void sendContentInternal(OutputStream out, Range range, Map<String, String> params, String contentType)
 			throws IOException, NotAuthorizedException, BadRequestException, NotFoundException {
 		PrintWriter printWriter = new PrintWriter(out);
-		printWriter.append("<html><body><table><tr><th>Name</th><th>Last modified</th><th>Size</th></tr>");
+		printWriter.append("<html><body><table  border=\"1\" cellpadding=\"10\"><tr><th>Name</th><th>Type</th><th>Last modified</th><th>Size</th></tr>");
 		for (File child : getChilds()) {
 				String uri = getUrl() + "/" + child.getName();
 				if (child.isDirectory()) {
 					printWriter.append("<tr><td><b><a href=\"" + uri + "\"/>" + child.getName()
-							+ "</a></b></td><td>Directory</td><td>" + new Date(child.lastModified()) + "</td><td>"
-							+ child.length() + "</td></tr>");
+							+ "</a></b></td><td>Directory</td><td>" + new Date(child.lastModified()) + "</td><td></td></tr>");
 				} else {
 					printWriter.append("<tr><td><a href=\"" + uri + "\"/>" + child.getName() + "</a></td><td>File</td><td>"
-							+ new Date(child.lastModified()) + "</td><td>" + child.length() + "</td></tr>");
+							+ new Date(child.lastModified()) + "</td><td  ALIGN=\"right\">" + toFileSize(child.length()) + "</td></tr>");
 				}
 	
 		}
 		printWriter.append("</table></body></html>");
 		printWriter.flush();
-		// printWriter.close();
+		// 
 		out.flush();
-		// out.close();
-		
+		printWriter.close();
+		out.close();
+
 	
 	}
+	
 
 	@Override
 	public Long getMaxAgeSeconds(Auth auth) {
-		// TODO Auto-generated method stub
-		return 1l;
+		return 30l;
 	}
 
 	@Override
@@ -121,7 +134,7 @@ public class DirectoryResource extends AbstractResource implements PropFindableR
 
 	@Override
 	public Long getContentLength() {
-		return Integer.valueOf(getChilds().length).longValue();
+		return -1l;
 	}
 
 	protected File[] getChilds(){

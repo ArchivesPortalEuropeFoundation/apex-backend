@@ -5,11 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
-
-import javax.activation.MimetypesFileTypeMap;
 
 import com.bradmcevoy.http.Auth;
 import com.bradmcevoy.http.GetableResource;
@@ -18,9 +15,6 @@ import com.bradmcevoy.http.PropFindableResource;
 import com.bradmcevoy.http.Range;
 import com.bradmcevoy.http.Request;
 import com.bradmcevoy.http.Resource;
-
-import eu.medsea.mimeutil.MimeType;
-import eu.medsea.mimeutil.MimeUtil;
 
 public class FileResource extends AbstractResource implements GetableResource,PropFindableResource  {
     
