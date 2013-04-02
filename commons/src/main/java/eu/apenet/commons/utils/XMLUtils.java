@@ -145,7 +145,7 @@ public final class XMLUtils {
 											keyOutput = currentTag + START_ATTRIBUTE + attributeList.get(i) + END_ATTRIBUTE;
 											valueOutput = NO_ATTRIBUTE_FOUND;
 											results.put(keyOutput, valueOutput);
-											log.info("Warning: Reading XML. Attribute " + attributeList.get(i) + " for tag " + currentTag + " has not been found within the XML");
+											//log.info("Warning: Reading XML. Attribute " + attributeList.get(i) + " for tag " + currentTag + " has not been found within the XML");
 											keyOutput = "";
 											valueOutput = "";
 										}
@@ -240,7 +240,7 @@ public final class XMLUtils {
     						keyOutput = (String)iterator.next();
     						valueOutput = NO_TAG_FOUND;
     						results.put(keyOutput, valueOutput);
-							log.info("Warning: Reading XML. Tag " + keyOutput + " has not been found within the XML");
+							//log.info("Warning: Reading XML. Tag " + keyOutput + " has not been found within the XML");
 
     						
         	            }
