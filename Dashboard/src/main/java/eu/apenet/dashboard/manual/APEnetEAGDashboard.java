@@ -1318,10 +1318,9 @@ public class APEnetEAGDashboard extends APEnetEAG {
 			if (this.isEagAlreadyUploaded()){
 				value = "error_eagalreadyuploaded";
 			} else {
-				String fileName = this.getId().replaceAll("[:/\\\\]", "_") + ".xml";
-				this.eagPath = APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + this.aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + fileName + ".xml";
+				this.eagPath = APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + this.aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + this.getFilename();
 				String storagePath = APEnetUtilities.getConfig().getRepoDirPath() + this.eagPath;
-				String oldEAGPath = APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + this.aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + "_remove" + fileName + ".xml";
+				String oldEAGPath = APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + this.aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + "_remove" + getFilename();
 				File source = new File(sourcePath);
 				File destination = new File(storagePath);
 				        
@@ -1445,7 +1444,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
 	//This method inserts the APEnet EAG reference into the local archival landscape for
 	//a specific country (country related to the archival institution) and rebuilds the 
 	//global archival landscape
-	private String modifyArchivalLandscape() {
+	public String modifyArchivalLandscape() {
 		String value = "";
 		ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
 		ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.aiId);
@@ -1518,9 +1517,9 @@ public class APEnetEAGDashboard extends APEnetEAG {
 	                            if (attributeHref!=null && attributeTitle!=null){
 	                            	//xlink:href attribute exits and xlink:title attribute exits 
 	            	        		log.info("xlink:href and xlink:title attributes exist in <repository> tag");	                            	
-	                            	attributeHref.setTextContent(APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + this.getId() + ".xml");
+	                            	attributeHref.setTextContent(APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + getFilename());
 		                            attributeTitle.setTextContent(archivalInstitution.getAiname() + " EAG");
-	            	        		log.info("Changing xlink:href content to " + APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + this.getId() + ".xml");	                            	
+	            	        		log.info("Changing xlink:href content to " + APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + getFilename());	                            	
 	            	        		log.info("Changing xlink:title content to " + archivalInstitution.getAiname() + " EAG");	                            	
 	            					
 	                            }
@@ -1531,10 +1530,10 @@ public class APEnetEAGDashboard extends APEnetEAG {
 	            	        		Node parent = repositoryChildren.item(k).getParentNode();
 	                            	Node extrefOld = repositoryChildren.item(k);
 	                    			extrefNode = doc.createElement("extref");
-	                    			extrefNode.setAttribute("xlink:href", APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + this.getId() + ".xml");
+	                    			extrefNode.setAttribute("xlink:href", APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + getFilename());
 	                    			extrefNode.setAttribute("xlink:title", archivalInstitution.getAiname() + " EAG");
 	            	        		parent.replaceChild(extrefNode, extrefOld);
-	            	        		log.info("xlink:href attribute added with content " + APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + this.getId() + ".xml");	                            	
+	            	        		log.info("xlink:href attribute added with content " + APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + getFilename());	                            	
 	            	        		log.info("xlink:title attribute added with content " + archivalInstitution.getAiname() + " EAG");	                            	
 	                            }
         					}
@@ -1544,7 +1543,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
         			if (!extrefFound){
         				//If there is not a extref tag, it is needed to create a new one
             			extrefNode = doc.createElement("extref");
-            			extrefNode.setAttribute("xlink:href", APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + this.getId() + ".xml");
+            			extrefNode.setAttribute("xlink:href", APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + getFilename());
             			extrefNode.setAttribute("xlink:title", archivalInstitution.getAiname() + " EAG");
             			repository.appendChild(extrefNode);	            		        				
         			}
@@ -1560,7 +1559,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
         			repositoryNode = doc.createElement("repository");
         			did.appendChild(repositoryNode);
         				extrefNode = doc.createElement("extref");
-        				extrefNode.setAttribute("xlink:href", APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + this.getId() + ".xml");
+        				extrefNode.setAttribute("xlink:href", APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR +getFilename());
         				extrefNode.setAttribute("xlink:title", archivalInstitution.getAiname() + " EAG");
         				repositoryNode.appendChild(extrefNode);
             		
@@ -1574,7 +1573,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
         		
                 //Finally, it is necessary to rebuild the global Archival Landscape
         		log.info("Rebuilding the whole AL");
-                ArchivalLandscape archivalLandscape = new ArchivalLandscape();
+                ArchivalLandscape archivalLandscape = new ArchivalLandscape(archivalInstitution.getCountry());
                 archivalLandscape.changeAL();
                 
     			result = null;
@@ -1616,7 +1615,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
 			value = "error";
 		}
         catch (Exception e) {
-        	log.error(e.getMessage());
+        	log.error(e.getMessage(),e);
         	value = "error";
         }
         
