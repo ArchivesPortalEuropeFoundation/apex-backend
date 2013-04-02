@@ -1,6 +1,8 @@
 package eu.apenet.dashboard.listener;
 
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -9,10 +11,12 @@ import org.apache.log4j.Logger;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
+import eu.apenet.persistence.dao.ResumptionTokenDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.QueuingState;
+import eu.apenet.persistence.vo.ResumptionToken;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class QueueTask implements Runnable {
@@ -32,31 +36,36 @@ public class QueueTask implements Runnable {
 	@Override
 	public void run() {
 		LOGGER.info("Queuing process active");
+		removeOldResumptionTokens();
 		long endTime = System.currentTimeMillis() + duration.getMilliseconds();
 		boolean stopped = false;
 		while (!stopped && !scheduler.isShutdown() && System.currentTimeMillis() < endTime) {
-			try {
-				QueueDaemon.setQueueProcessing(true);
-				processQueue(endTime);
-			} catch (Exception e) {
-				LOGGER.error(e.getMessage(), e);
-				try {
-					JpaUtil.rollbackDatabaseTransaction();
-				} catch (Exception de) {
-					LOGGER.error(de.getMessage());
-				}
-			}
-			if ((System.currentTimeMillis() + INTERVAL) < endTime) {
+			if (EadService.isHarvestingStarted()) {
+				LOGGER.info("Harvesting process is started, the queue process is stopped");
 				cleanUp();
-				try {
-					Thread.sleep(INTERVAL);
-				} catch (InterruptedException e) {
-				}
 			} else {
-				cleanUp();
-				stopped = true;
+				try {
+					QueueDaemon.setQueueProcessing(true);
+					processQueue(endTime);
+				} catch (Exception e) {
+					LOGGER.error(e.getMessage(), e);
+					try {
+						JpaUtil.rollbackDatabaseTransaction();
+					} catch (Exception de) {
+						LOGGER.error(de.getMessage());
+					}
+				}
+				if ((System.currentTimeMillis() + INTERVAL) < endTime) {
+					cleanUp();
+					try {
+						Thread.sleep(INTERVAL);
+					} catch (InterruptedException e) {
+					}
+				} else {
+					cleanUp();
+					stopped = true;
+				}
 			}
-
 		}
 
 		LOGGER.info("Queuing process inactive");
@@ -123,6 +132,15 @@ public class QueueTask implements Runnable {
 
 		}
 
+
 	}
 
+	private static void removeOldResumptionTokens() {
+		ResumptionTokenDAO resumptionTokenDao = DAOFactory.instance().getResumptionTokenDAO();
+		List<ResumptionToken> resumptionTokenList = resumptionTokenDao.getOldResumptionTokensThan(new Date());
+		Iterator<ResumptionToken> iterator = resumptionTokenList.iterator();
+		while (iterator.hasNext()) {
+			resumptionTokenDao.delete(iterator.next());
+		}
+	}
 }

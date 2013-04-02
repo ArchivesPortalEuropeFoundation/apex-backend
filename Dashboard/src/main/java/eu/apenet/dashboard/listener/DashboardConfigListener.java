@@ -1,6 +1,6 @@
 package eu.apenet.dashboard.listener;
 
-import java.util.Date;
+import java.util.TimeZone;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -12,7 +12,6 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.archivesportaleurope.commons.config.DashboardConfig;
 
 public class DashboardConfigListener extends ApePortalAndDashboardConfigListener {
-	private static final String TRUE = "true";
 	private static final String EMAIL_DASHBOARD_FEEDBACK_DESTINY = "EMAIL_DASHBOARD_FEEDBACK_DESTINY";
 	private static final String EUROPEANA_DIR_PATH = "EUROPEANA_DIR_PATH";
 	private static final String EUROPEANA_DIR_PATH_DEFAULT = "/mnt/europeana/";
