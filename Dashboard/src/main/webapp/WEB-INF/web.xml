@@ -32,16 +32,15 @@
         <filter-name>struts2</filter-name>
         <url-pattern>*.action</url-pattern>
     </filter-mapping>
-    <!--
-   <filter-mapping>
-        <filter-name>struts2</filter-name>
-        <url-pattern>/*</url-pattern>
-   </filter-mapping>
-    -->
+    <filter>
+        <filter-name>GZipFilter</filter-name>
+        <filter-class>eu.apenet.dashboard.webdav.GZipFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>GZipFilter</filter-name>
+        <servlet-name>milton</servlet-name>
+    </filter-mapping>
     <session-config>
-        <!-- <session-timeout>1</session-timeout> -->
-        <!-- <session-timeout>4320</session-timeout>  -->
-        <!-- <session-timeout>60</session-timeout>  -->
         <session-timeout>180</session-timeout>
     </session-config>
     <listener>
@@ -63,30 +62,7 @@
         <param-name>org.apache.tiles.impl.BasicTilesContainer.DEFINITIONS_CONFIG</param-name>
         <param-value>/WEB-INF/tiles.xml, /WEB-INF/tiles-ead2ese.xml</param-value>
     </context-param>
-    <!--<context-param>-->
-    <!--<param-name>HIBERNATE_CONFIG_PATH</param-name>-->
-    <!--<param-value>/hibernate.cfg.xml</param-value>-->
-    <!--</context-param>-->
-    <context-param>
-        <param-name>SOLR_INDEX_URL</param-name>
-        <param-value>http://192.168.1.32:8080/solr/Dashboard0</param-value>
-    </context-param>
-    <context-param>
-        <param-name>SOLR_SEARCH_URL</param-name>
-        <param-value>http://192.168.1.32:8080/solr/Dashboard0</param-value>
-    </context-param>
-    
-    <context-param>
-        <param-name>DOMAIN_NAME_MAIN_SERVER</param-name>
-		<param-value>localhost:8443</param-value>        
-    </context-param>
-    
-   
-    <context-param>
-        <param-name>EMAIL_DASHBOARD_FEEDBACK_DESTINY</param-name>
-		<param-value>jara.alvarez@mcu.es;yoann.moranville@gmail.com;paul.developer.web@gmail.com</param-value>        
-    </context-param>
-	<servlet>
+<!-- 	<servlet>
         <description></description>
         <display-name>EseHTMLServlet</display-name>
         <servlet-name>EseHTMLServlet</servlet-name>
@@ -95,7 +71,7 @@
     <servlet-mapping>
         <servlet-name>EseHTMLServlet</servlet-name>
         <url-pattern>/htmlPreview</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping>-->
 	<servlet>
         <servlet-name>milton</servlet-name>
         <servlet-class>com.bradmcevoy.http.MiltonServlet</servlet-class>        
