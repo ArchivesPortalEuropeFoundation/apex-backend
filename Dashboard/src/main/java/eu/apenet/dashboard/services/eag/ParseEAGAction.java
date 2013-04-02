@@ -33,6 +33,7 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.commons.xslt.EagXslt;
+import eu.apenet.dashboard.manual.APEnetEAGDashboard;
 import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.Xsd_enum;
@@ -113,6 +114,10 @@ public class ParseEAGAction extends ActionSupport {
 							institution.setRepositorycode(repositoryCode);
 							institution.setEagPath(eagPath + eagFile);
 							aiDao.store(institution);
+				    		APEnetEAGDashboard eag = new APEnetEAGDashboard(institution.getAiId(), newEagFile.getAbsolutePath());
+				    		eag.setEagPath(eagPath);
+				    		eag.setId(repositoryCode);
+				    		eag.modifyArchivalLandscape();
 						}
 					} else {
 						eagsNotConverted.add("NOT EXIST: " + oldEagFile.getAbsolutePath());
