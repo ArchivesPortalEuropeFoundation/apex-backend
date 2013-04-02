@@ -10,6 +10,7 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.AbstractInstitutionAction;
+import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -201,6 +202,7 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 
 		}
 		request.setAttribute("results", results);
+		request.setAttribute("harvestingStarted", EadService.isHarvestingStarted());
 		if (ajax) {
 			return SUCCESS_AJAX;
 		} else {
