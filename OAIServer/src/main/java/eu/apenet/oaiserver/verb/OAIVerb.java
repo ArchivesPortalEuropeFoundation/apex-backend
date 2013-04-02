@@ -1,5 +1,5 @@
 package eu.apenet.oaiserver.verb;
-
+@Deprecated
 public abstract class OAIVerb {
 	private String url;
 	

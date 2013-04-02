@@ -24,7 +24,7 @@ import eu.apenet.oaiserver.util.OAIUtils;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ese;
 import eu.apenet.persistence.vo.MetadataFormat;
-
+@Deprecated
 public class ListRecords extends OAIVerb{
 	
 	private InputStream inputStream;
@@ -112,7 +112,7 @@ public class ListRecords extends OAIVerb{
 			boolean error = false;
 			boolean changes = false;
 			if(!(arguments==null || arguments.isEmpty()) && arguments.get("metadataPrefix")!=null && (arguments.get("from")==null && arguments.get("until")==null && arguments.get("set")==null)){
-				MetadataFormat metadataFormat = DAOFactory.instance().getMetadataFormatDAO().getMetadataFormatByName(arguments.get("metadataPrefix"));
+				MetadataFormat metadataFormat = MetadataFormat.getMetadataFormat(arguments.get("metadataPrefix"));
 				Iterator<Ese> esesIterator = DAOFactory.instance().getEseDAO().getEsesByArguments(null,null,metadataFormat,null,0,OAIResponse.LIMIT_PER_RESPONSE).iterator();
 				HashSet<Ese> tempSet = new HashSet<Ese>();
 				Integer counter = OAIResponse.LIMIT_PER_RESPONSE;
@@ -121,7 +121,7 @@ public class ListRecords extends OAIVerb{
 				int length = 0;
 				while(esesIterator.hasNext() && counter>0){
 					Ese eseTemp = esesIterator.next();
-					if(eseTemp.getMetadataFormat().getFormat().equals(metadataPrefix)){
+					if(eseTemp.getMetadataFormat().equals(MetadataFormat.getMetadataFormat(metadataPrefix))){
 						tempSet.add(eseTemp);						
 						Node recordNode = OAIUtils.getRecordOfEse(tempSet,null,metadataPrefix,doc);
 						setNumber++;
@@ -165,7 +165,7 @@ public class ListRecords extends OAIVerb{
 					return OAIUtils.getResponseError(doc,"badArgument");
 				}
 				if(arguments.get("resumptionToken")==null || arguments.get("resumptionToken").isEmpty()){
-					MetadataFormat metadataFormat = DAOFactory.instance().getMetadataFormatDAO().getMetadataFormatByName(metadataPrefix);
+					MetadataFormat metadataFormat = MetadataFormat.getMetadataFormat(metadataPrefix);
 					List<Ese> eses = null;
 					String set = null;
 					set = arguments.get("set");
@@ -254,7 +254,7 @@ public class ListRecords extends OAIVerb{
 					arguments.put("until",OAIUtils.parseDateToISO8601(untilDate));
 				}
 				arguments.put("set",set);
-				arguments.put("metadataPrefix", metadataFormat.getFormat());
+				arguments.put("metadataPrefix", metadataFormat.toString());
 				doc = OAIUtils.buildResumptionToken(doc,arguments,esesCounter+OAIUtils.SPECIAL_KEY+esesRecordsCounter);
 			}
 		}
@@ -291,7 +291,7 @@ public class ListRecords extends OAIVerb{
 				Set<Ese> tempSet = new HashSet<Ese>();
 				Ese eseTemp = iteratorEses.next();
 				String metadataPrefix = params[3]; //metadataPrefix
-				if(eseTemp.getMetadataFormat().getFormat().equals(metadataPrefix))
+				if(eseTemp.getMetadataFormat().equals(MetadataFormat.getMetadataFormat(metadataPrefix)))
 				tempSet.add(eseTemp);
 				recordNode = OAIUtils.getRecordOfEse(tempSet,null,metadataPrefix,doc);
 				if(recordNode==null){
