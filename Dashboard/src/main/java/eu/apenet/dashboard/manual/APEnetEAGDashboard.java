@@ -1314,8 +1314,6 @@ public class APEnetEAGDashboard extends APEnetEAG {
 			this.eagPath = sourcePath;
 			this.setId(this.extractAttributeFromEag("control/recordId", null, true));
 			this.setName(this.extractAttributeFromEag("archguide/identity/autform", null,true));
-			String pattern = archivalInstitution.getCountry().getIsoname() + "-[a-zA-Z0-9:/\\-]{1,11}";
-			boolean validRepositoryCode = Pattern.matches(pattern, this.getId());
 			//It is necessary to check if this EAG has been updated before for another archival institution			
 			if (this.isEagAlreadyUploaded()){
 				value = "error_eagalreadyuploaded";
