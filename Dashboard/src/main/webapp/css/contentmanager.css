@@ -261,3 +261,11 @@
     font-weight:bold;
     padding-top:40px;
 }
+#contentmanager #harvestingStarted {
+	text-align:center;
+    font-size: 11pt;
+    font-weight:bold;
+    color: red;
+    padding-top:20px;
+    padding-bottom:20px;
+}
