@@ -55,17 +55,18 @@ public class QueueTask implements Runnable {
 						LOGGER.error(de.getMessage());
 					}
 				}
-				if ((System.currentTimeMillis() + INTERVAL) < endTime) {
-					cleanUp();
-					try {
-						Thread.sleep(INTERVAL);
-					} catch (InterruptedException e) {
-					}
-				} else {
-					cleanUp();
-					stopped = true;
-				}
 			}
+			if ((System.currentTimeMillis() + INTERVAL) < endTime) {
+				cleanUp();
+				try {
+					Thread.sleep(INTERVAL);
+				} catch (InterruptedException e) {
+				}
+			} else {
+				cleanUp();
+				stopped = true;
+			}
+
 		}
 
 		LOGGER.info("Queuing process inactive");
