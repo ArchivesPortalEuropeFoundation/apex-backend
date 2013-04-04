@@ -62,6 +62,43 @@
         <param-name>org.apache.tiles.impl.BasicTilesContainer.DEFINITIONS_CONFIG</param-name>
         <param-value>/WEB-INF/tiles.xml, /WEB-INF/tiles-ead2ese.xml</param-value>
     </context-param>
+        <context-param>
+    <!-- In order to update all mail addresses depending the subject, this config file has been added with "subject" and "to" fields, wich can be easily changed or updated in case of message, task or contact should be modified-->
+        <param-name>email-configuration</param-name>
+		<param-value>emails/email-configuration.xml</param-value>        
+    </context-param>
+    <!--<context-param>-->
+    <!--<param-name>HIBERNATE_CONFIG_PATH</param-name>-->
+    <!--<param-value>/hibernate.cfg.xml</param-value>-->
+    <!--</context-param>-->
+    <context-param>
+        <param-name>SOLR_INDEX_URL</param-name>
+        <param-value>http://192.168.1.32:8080/solr/Dashboard0</param-value>
+    </context-param>
+    <context-param>
+        <param-name>SOLR_SEARCH_URL</param-name>
+        <param-value>http://192.168.1.32:8080/solr/Dashboard0</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>DOMAIN_NAME_MAIN_SERVER</param-name>
+		<param-value>localhost:8443</param-value>        
+    </context-param>
+    
+   
+    <context-param>
+        <param-name>EMAIL_DASHBOARD_FEEDBACK_DESTINY</param-name>
+		<param-value>bastiaan.verhoef.ape@gmail.com;yoann.moranville@gmail.com;Gonzalez Villodas Beatriz;kerstin.arnold.ape@gmail.com;chris.houwing.ape@gmail.com</param-value>        
+    </context-param>
+    
+    <context-param>
+    <!-- In order to update all mail addresses depending the subject, this config file has been added with "subject" and "to" fields, wich can be easily changed or updated in case of message, task or contact should be modified-->
+        <param-name>email-configuration</param-name>
+		<param-value>emails/email-configuration.xml</param-value>        
+    </context-param>
+    
+	<servlet>
+<!-- 	<servlet>
 <!-- 	<servlet>
         <description></description>
         <display-name>EseHTMLServlet</display-name>
