@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<options>
+  <opt>
+    <subject>TxmlMail.troubles</subject>
+    <to>bastiaan.verhoef.ape@gmail.com;yoann.moranville@gmail.com</to>
+  </opt>
+  <opt>
+    <subject>xmlMail.data</subject>
+    <to>beatriz.gonzalezvi@mecd.es</to>
+  </opt>
+  <opt>
+    <subject>xmlMail.procesing</subject>
+    <to>lucile.grand.ape@gmail.com</to>
+  </opt>  
+  <opt>
+    <subject>xmlMail.europeana</subject>
+    <to>kerstin.arnold.ape@gmail.com</to>
+  </opt>  
+  <opt>
+    <subject>xmlMail.other</subject>
+    <to>bastiaan.verhoef.ape@gmail.com;yoann.moranville@gmail.com;beatriz.gonzalezvi@mecd.es</to>
+  </opt>  
+  <opt>
+    <subject>xmlMail.suggestions</subject>
+    <to>kerstin.arnold.ape@gmail.com;chris.houwing.ape@gmail.com</to>
+  </opt>  
+</options>
