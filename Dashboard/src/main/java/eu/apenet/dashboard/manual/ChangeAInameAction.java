@@ -147,6 +147,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 	}
 	
 	
+	@SuppressWarnings("deprecation")
 	public String validateChangeAIname() throws Exception{
 		Integer aiId = this.getAiId();
 		
@@ -167,7 +168,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 		
 		try{
 			if (this.newname.isEmpty()){
-				this.setErrormessage("The name cannot be empty.");
+				addActionError(getText("changeAIname.noEmptyName"));
 				this.setAllok(false);
 				return INPUT;
 			}
@@ -177,7 +178,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 			ArchivalInstitution ai = aidao.getArchivalInstitution(aiId);
 			if (ContentUtils.containsPublishedFiles(ai)){
 				addActionError(getText("label.ai.changeainame.published.eads"));
-				throw new APEnetException("Could not delete an archival institution with published EAD files");
+				throw new APEnetException(getText("changeAIname.noDeletePublishedAI"));
 			}
 			AiAlternativeName an = andao.findByAIId_primarykey(ai);			
 			
@@ -319,7 +320,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				//There were errors during Database Transaction
 				//It is necessary to make a Database rollback
 				
-				this.setErrormessage("There were errors during deleting from Data Base.");
+				this.setErrormessage(getText("changeAIname.errDeletingFromDb"));
 				HibernateUtil.rollbackDatabaseTransaction();
 				HibernateUtil.closeDatabaseSession();
 				log.error("There were errors during Database Transaction [Database Rollback]. Error: " + e.getMessage());
@@ -332,7 +333,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				log.info("Database rollback succeed");
 
 				//It is necessary to make a Index rollback of the FA indexed
-				this.setErrormessage("There were errors during updating EAG file.");
+				this.setErrormessage(getText("changeAIname.errUploadingEAG"));
 				
 
 
@@ -359,7 +360,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				log.info("Database rollback succeed");
 
 				//It is necessary to make a Index rollback of the FA indexed
-				this.setErrormessage("There were errors during updating AL file.");
+				this.setErrormessage(getText("changeAIname.errUpdatingAL"));
 
 				//There were errors during EAG modify.
 				//It is necessary to make EAG rollback			
@@ -395,6 +396,5 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 			this.setAllok(false);
 			return ERROR;
 		}
-	}			
-	
+	}	
 }

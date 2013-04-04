@@ -32,7 +32,7 @@ public class HarvesterAjaxAction extends AjaxControllerAbstractAction {
         LOG.info("Providing the Harvest control page for AI_ID=" + ai_id + ", URL=" + oaiUrl + ", METADATAFORMAT=" + oaiMetadataFormat + ", SET=" + oaiSet);
         if(HarvestingStatus.isHarvesting(ai_id)) {
             LOG.error("This institution is already harvesting, please try again later or contact an administrator");
-            addActionError("This institution is already harvesting, please try again later or contact an administrator");
+            addActionError(getText("harvesterAjaxAction.institutionAlreadyHarvesting"));
             return ERROR;
         }
 //        HarvestingStatus.addHarvestingInstitution(ai_id);

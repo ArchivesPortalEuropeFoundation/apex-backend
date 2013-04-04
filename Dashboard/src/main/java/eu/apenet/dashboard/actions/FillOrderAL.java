@@ -178,7 +178,7 @@ public class FillOrderAL extends ActionSupport {
 						}
 					}
 					else{						
-						addActionMessage("Error al asignar identificadores en los xmls");
+						addActionMessage(getText("al.message.errAssignXMLId"));
 						ddbbResult = false;						
 						result= ERROR;
 					}

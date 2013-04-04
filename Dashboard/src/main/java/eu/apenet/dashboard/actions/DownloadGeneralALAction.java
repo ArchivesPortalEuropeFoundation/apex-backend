@@ -59,7 +59,7 @@ public class DownloadGeneralALAction extends ActionSupport {
 		    String path = APEnetUtilities.getDashboardConfig().getArchivalLandscapeDirPath() + APEnetUtilities.FILESEPARATOR + "AL.xml";
 		    File file = new File  (path);
 	        if (!file.exists()) {
-	            addActionMessage("Error");
+	            addActionMessage(getText("content.message.errorsmall"));
 	        	result= ERROR;
             } else {
 			    this.setInputStream(new FileInputStream(file));
@@ -69,7 +69,7 @@ public class DownloadGeneralALAction extends ActionSupport {
 		    }
 
 	    	if(this.inputStream==null){
-	    	    addActionMessage("Error");
+	    	    addActionMessage(getText("content.message.errorsmall"));
 	    		result= ERROR;
             } else{
 	    	    try {

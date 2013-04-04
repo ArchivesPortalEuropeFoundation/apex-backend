@@ -41,12 +41,12 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
     private String[] existingCancelOverwriteEADIDAnswers;
     private String[] existingFilesAnswers; //This array contains all the answers typed by the user regarding to the actions to carry out with the existing files
     private String additionalError;
-    private final static String OVERWRITE = "Overwrite";
-    private final static String CANCEL = "Cancel";
-    private final static String CHANGE = "Change EADID";
-    private final static String ADD = "Add EADID";
-    private final static String OK = "OK";//
-    private final static String KO = "KO";//
+    private String OVERWRITE = getText("existingFiles.overwrite");
+    private String CANCEL = getText("existingFiles.cancel");
+    private String CHANGE = getText("existingFiles.change");
+    private String ADD = getText("existingFiles.add");
+    private String OK = getText("existingFiles.ok");
+    private String KO = getText("existingFiles.ko");
 	 
 	private String eadid;
     private String neweadid;

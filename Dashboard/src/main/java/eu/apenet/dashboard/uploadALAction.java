@@ -458,7 +458,7 @@ public class uploadALAction extends ActionSupport implements Preparable{
 								   }
 							   }
 							   if (changes==-1)
-								   addActionMessage("There is no institutions to delete or insert");
+								   addActionMessage(getText("al.message.error.noInstitutions"));
 							   result = INPUT;
 							   ddbbResult = false;
 						   }

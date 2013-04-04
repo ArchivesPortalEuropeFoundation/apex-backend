@@ -108,14 +108,13 @@ public class CreateCountryAction extends ActionSupport{
 		if (this.getEnglishCountryName()!= null)
 		{
 			if (this.getEnglishCountryName().length() == 0)
-				addFieldError("englishCountryName", "English country name required");
+				addFieldError("englishCountryName", getText("createCountry.englishCountryName"));
 		}
 		if (this.getIsoCountryName()!= null)
 		{
 			if (this.getIsoCountryName().length() == 0)
-				addFieldError("isoCountryName", "Iso country name is required and should have two characters. If you need more information: http://www.iso.org/iso/iso-3166-1_decoding_table");
+				addFieldError("isoCountryName", getText("createCountry.isoCountryName"));
 		}
-
 	}
 
 	public String execute() throws Exception{
@@ -162,10 +161,10 @@ public class CreateCountryAction extends ActionSupport{
 			        
 			        HibernateUtil.commitDatabaseTransaction();
 					result= SUCCESS;
-					addActionMessage("New country stored");
+					addActionMessage(getText("createCountry.newCountryStored"));
 				}else
 				{
-					addActionMessage("Country already stored in the system");
+					addActionMessage(getText("createCountry.countryAlreadyStored"));
 					result=INPUT;
 				}
 				

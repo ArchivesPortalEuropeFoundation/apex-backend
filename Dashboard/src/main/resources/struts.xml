@@ -45,13 +45,13 @@
 			<result type="tiles">error-404</result>
 		</action>
 				
-		<action name="changeLanguage" class="eu.apenet.dashboard.language.ChangeLanguageAction">
+		<action name="changeLanguage" class="eu.apenet.dashboard.language.ChangeLanguageAction"> 
      		<interceptor-ref name="internacionalizationStack"/>
 			<result name="redirect" type="redirect">${url}</result>
      	</action>
 	
 		<!-- Content Provider Information -->
-		<action name="dashboardHome" class="eu.apenet.dashboard.DashboardHomeAction">
+		<action name="dashboardHome" class="eu.apenet.dashboard.DashboardHomeAction"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="success" type="tiles">index</result>
 			<result name="input" type="tiles">eagfirstcreation</result>
@@ -63,70 +63,72 @@
 		</action> 
 
 
-		<action name="createsimpleeag" class="eu.apenet.dashboard.manual.ReadEAGAction">
+		<action name="createsimpleeag" class="eu.apenet.dashboard.manual.ReadEAGAction"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="success" type="tiles">webformeag</result>
 		</action>
 		
-		<action name="createsimpleeagwithmenu" class="eu.apenet.dashboard.manual.ReadEAGAction">
+		<action name="createsimpleeagwithmenu" class="eu.apenet.dashboard.manual.ReadEAGAction"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="success" type="tiles">webformeagwithmenu</result>
 		</action>
 		
-		<action name="changeainame" class="eu.apenet.dashboard.manual.ChangeAInameAction">
+		<action name="changeainame" class="eu.apenet.dashboard.manual.ChangeAInameAction"> 
 			<interceptor-ref name="changeLanguageStack"/>
-			<result name="success" type="tiles">webformainame</result>
-		</action>
-		
-		<action name="validatechangeainame" class="eu.apenet.dashboard.manual.ChangeAInameAction" method="validateChangeAIname">
 			<result name="success" type="tiles">webformainame</result>
 			<result name="error" type="tiles">webformainame</result>
 			<result name="input" type="tiles">webformainame</result>
 		</action>
 		
-		<action name="uploadsimpleeag" class="eu.apenet.dashboard.manual.WebFormUploadEAGAction" method="uploadEAG">
+		<action name="validatechangeainame" class="eu.apenet.dashboard.manual.ChangeAInameAction" method="validateChangeAIname"> 
+			<result name="success" type="tiles">webformainame</result>
+			<result name="error" type="tiles">webformainame</result>
+			<result name="input" type="tiles">webformainame</result>
+		</action>
+		
+		<action name="uploadsimpleeag" class="eu.apenet.dashboard.manual.WebFormUploadEAGAction" method="uploadEAG"> 
 			<result name="success" type="tiles">index</result>
 			<result name="error" type="tiles">eagfirstcreation</result>
 			<result name="input" type="tiles">webformeag</result>
 		</action>
 
-		<action name="uploadsimpleeagwithmenu" class="eu.apenet.dashboard.manual.WebFormUploadEAGAction" method="uploadEAG">
+		<action name="uploadsimpleeagwithmenu" class="eu.apenet.dashboard.manual.WebFormUploadEAGAction" method="uploadEAG"> 
 			<result name="success" type="tiles">index</result>
 			<result name="error" type="tiles">uploadeagerrorswithmenu</result>
 			<result name="input" type="tiles">webformeag</result>
 		</action>
 
-		<action name="uploadowneag" class="eu.apenet.dashboard.manual.HTTPUploadEAGAction">
+		<action name="uploadowneag" class="eu.apenet.dashboard.manual.HTTPUploadEAGAction"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="success" type="tiles">httpuploadeag</result>
 		</action>
 
-		<action name="uploadowneagwithmenu" class="eu.apenet.dashboard.manual.HTTPUploadEAGAction">
+		<action name="uploadowneagwithmenu" class="eu.apenet.dashboard.manual.HTTPUploadEAGAction"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="success" type="tiles">httpuploadeagwithmenu</result>
 		</action>
 
-		<action name="eaghttpupload" class="eu.apenet.dashboard.manual.HTTPUploadEAGAction" method="httpUpload">
+		<action name="eaghttpupload" class="eu.apenet.dashboard.manual.HTTPUploadEAGAction" method="httpUpload"> 
 			<result name="success" type="tiles">index</result>			
 			<result name="error" type="tiles">uploadeagerrors</result>
 			<result name="input" type="tiles">httpuploadeag</result>
 		</action>
 		
-		<action name="eaghttpuploadwithmenu" class="eu.apenet.dashboard.manual.HTTPUploadEAGAction" method="httpUpload">
+		<action name="eaghttpuploadwithmenu" class="eu.apenet.dashboard.manual.HTTPUploadEAGAction" method="httpUpload"> 
 			<result name="success" type="tiles">index</result>
 			<result name="error" type="tiles">uploadeagerrorswithmenu</result>
 			<result name="input" type="tiles">httpuploadeagwithmenu</result>
 		</action>		
 
-		<action name="eagcorrectlyuploaded" class="eu.apenet.dashboard.manual.DashboardRedirectionAction">
+		<action name="eagcorrectlyuploaded" class="eu.apenet.dashboard.manual.DashboardRedirectionAction"> 
 			<result name="success" type="tiles">index</result>
 		</action>
 
-		<action name="contentproviderinf" class="eu.apenet.dashboard.manual.ShowContentProviderInfOptionsAction">
+		<action name="contentproviderinf" class="eu.apenet.dashboard.manual.ShowContentProviderInfOptionsAction"> 
 			<result name="success" type="tiles">contentproviderinf</result>
 		</action>
 
-		<action name="downloadeag" class="eu.apenet.dashboard.manual.ShowContentProviderInfOptionsAction" method="download">
+		<action name="downloadeag" class="eu.apenet.dashboard.manual.ShowContentProviderInfOptionsAction" method="download"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="download" type="stream">
 				<param name="contentType">application/file-download</param>
@@ -139,13 +141,13 @@
 			<result name="error" type="tiles">error</result>
 		</action>
 		
-		<action name="generaterepositorguidePossibleHGTitlePartJSON" class="eu.apenet.dashboard.actions.ajax.AjaxEAGHandlerAction" method="generaterepositorguidePossibleHGTitlePartJSON">
+		<action name="generaterepositorguidePossibleHGTitlePartJSON" class="eu.apenet.dashboard.actions.ajax.AjaxEAGHandlerAction" method="generaterepositorguidePossibleHGTitlePartJSON"> 
 			<result name="success" type="stream">
 				<param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
 			</result>
 		</action>
-		<action name="generateInformationMessageJSON" class="eu.apenet.dashboard.actions.ajax.AjaxEAGHandlerAction" method="generateInformationMessageJSON">
+		<action name="generateInformationMessageJSON" class="eu.apenet.dashboard.actions.ajax.AjaxEAGHandlerAction" method="generateInformationMessageJSON"> 
 			<result name="success" type="stream">
 				<param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
@@ -153,7 +155,7 @@
 		</action>
 
 		<!-- Checking Existing Files -->
-		<action name="checkfilesuploaded" class="eu.apenet.dashboard.manual.ExistingFilesAction">
+		<action name="checkfilesuploaded" class="eu.apenet.dashboard.manual.ExistingFilesAction"> 
 			<!--todo:Discuss with Inteco about this DIRECT result -->
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="DIRECT" type="redirectAction">
@@ -162,38 +164,38 @@
 			<result name="success" type="tiles">checkexistingfiles</result>
 		</action>
 
-		<action name="overwriteexistingfiles" class="eu.apenet.dashboard.manual.ExistingFilesAction" method="overwriteExistingFiles">
+		<action name="overwriteexistingfiles" class="eu.apenet.dashboard.manual.ExistingFilesAction" method="overwriteExistingFiles"> 
             <result name="DIRECT" type="redirectAction">
                 <param name="actionName">contentmanager</param>
             </result>
 			<result name="success" type="tiles">checkuploadedfiles</result>
 		</action>
 		
-		<action name="canceloverwriteexistingfiles" class="eu.apenet.dashboard.manual.ExistingFilesAction" method="canceloverwriteExistingFiles">
+		<action name="canceloverwriteexistingfiles" class="eu.apenet.dashboard.manual.ExistingFilesAction" method="canceloverwriteExistingFiles"> 
 			<result name="success" type="tiles">checkuploadedfiles</result>
 		</action>
 		
-		<action name="checkexistingfiles" class="eu.apenet.dashboard.manual.ExistingFilesAction" method="checkExistingFiles">
+		<action name="checkexistingfiles" class="eu.apenet.dashboard.manual.ExistingFilesAction" method="checkExistingFiles"> 
 			<result name="success" type="tiles">checkuploadedfiles</result>
 		</action>
 		
-		<action name="cancelCheckexistingfiles" class="eu.apenet.dashboard.manual.ExistingFilesAction" method="cancelCheckExistingFiles">
+		<action name="cancelCheckexistingfiles" class="eu.apenet.dashboard.manual.ExistingFilesAction" method="cancelCheckExistingFiles"> 
 			<result name="success" type="tiles">checkuploadedfiles</result>
 		</action>
 		
-		<action name="generateEadidResponseJSON" class="eu.apenet.dashboard.actions.ajax.GenerateEadidResponseJSONAction">
+		<action name="generateEadidResponseJSON" class="eu.apenet.dashboard.actions.ajax.GenerateEadidResponseJSONAction"> 
 			<result name="SUCCESS" type="stream">
 				<param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
 			</result>
 		</action>
-		
-		
-		<action name="contentmanager" class="eu.apenet.dashboard.actions.content.ContentManagerAction" method="input">
+				
+		<action name="contentmanager" class="eu.apenet.dashboard.actions.content.ContentManagerAction" method="input"> 
 			<result name="success" type="tiles">contentmanager</result>
 			<result name="success_ajax">/jsp/contentmanager/contentmanager-results.jsp</result>
 		</action>
-		<action name="updateContentmanager" class="eu.apenet.dashboard.actions.content.ContentManagerAction">
+		
+		<action name="updateContentmanager" class="eu.apenet.dashboard.actions.content.ContentManagerAction"> 
 			<result name="success" type="redirectAction">
 				<param name="actionName">contentmanager</param>
 				<param name="ajax">${ajax}</param>
@@ -201,60 +203,56 @@
 		</action>
 		
 		
-		<action name="eadActions" class="eu.apenet.dashboard.actions.content.EadActions">
+		<action name="eadActions" class="eu.apenet.dashboard.actions.content.EadActions"> 
 			<result name="success">/jsp/ajax/success.jsp</result>
 			<result name="error">/jsp/ajax/error.jsp</result>
 		</action>
-		<action name="batchEadActions" class="eu.apenet.dashboard.actions.content.BatchEadActions">
+		<action name="batchEadActions" class="eu.apenet.dashboard.actions.content.BatchEadActions"> 
 			<result name="success">/jsp/ajax/success.jsp</result>
 			<result name="error">/jsp/ajax/error.jsp</result>
 		</action>
-
-
-
-
 
 		<!-- This action does not use tiles because the data in the jsp is plain text -->
-		<action name="showwarnings" class="eu.apenet.dashboard.manual.ShowWarningsAction">
+		<action name="showwarnings" class="eu.apenet.dashboard.manual.ShowWarningsAction"> 
 			<result name="success">/jsp/warnings.jsp</result>
 		</action>
 
-		<action name="preview" class="eu.apenet.dashboard.actions.PreviewSecondDisplayAction">
+		<action name="preview" class="eu.apenet.dashboard.actions.PreviewSecondDisplayAction"> 
 			<result name="success">/jsp/eadcontent/eadcontent.jsp</result>
 			<result name="error">/jsp/eadcontent/error.jsp</result>
 		</action>
 		
-        <action name="generateTreeJSON" class="eu.apenet.commons.seconddisplay.GenerateTreeJSONAction">
+        <action name="generateTreeJSON" class="eu.apenet.commons.seconddisplay.GenerateTreeJSONAction"> 
 			<result name="SUCCESS" type="stream">
 				<param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
 			</result>
 		</action>
 
-        <action name="displayCContent" class="eu.apenet.commons.seconddisplay.DisplayCContentAction">
+        <action name="displayCContent" class="eu.apenet.commons.seconddisplay.DisplayCContentAction"> 
 			<result name="success">/jsp/eadcontent/cdetails.jsp</result>
 		</action>
 
-        <action name="displayCContentPreview" class="eu.apenet.commons.seconddisplay.DisplayCContentAction">
+        <action name="displayCContentPreview" class="eu.apenet.commons.seconddisplay.DisplayCContentAction"> 
 			<result name="success">/jsp/eadcontent/cdetails-preview.jsp</result>
 		</action>
 
 		<action name="displayEadFrontPage"
-			class="eu.apenet.commons.seconddisplay.DisplayEadContentAction">
+			class="eu.apenet.commons.seconddisplay.DisplayEadContentAction"> 
 				<result name="success">/jsp/eadcontent/frontpage.jsp</result>
 		</action>
 
 		<action name="displayEadIntroduction"
-			class="eu.apenet.commons.seconddisplay.DisplayEadContentAction">
+			class="eu.apenet.commons.seconddisplay.DisplayEadContentAction"> 
 				<result name="success">/jsp/eadcontent/introduction.jsp</result>
 		</action>
 
 		<action name="displayEadDidContent"
-			class="eu.apenet.commons.seconddisplay.DisplayEadContentAction">
+			class="eu.apenet.commons.seconddisplay.DisplayEadContentAction"> 
 				<result name="success">/jsp/eadcontent/didcontent.jsp</result>
 		</action>
 
-        <action name="generateTreeJSONWithoutPreface" class="eu.apenet.dashboard.tree.GenerateTreeJSONAction" method="executeNoPreface">
+        <action name="generateTreeJSONWithoutPreface" class="eu.apenet.dashboard.tree.GenerateTreeJSONAction" method="executeNoPreface"> 
 			<result name="SUCCESS" type="stream">
 				<param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
@@ -262,11 +260,11 @@
 		</action>
 
 
-        <action name="displayCpfInformation" class="eu.apenet.dashboard.tree.DisplayCpfContentAction">
+        <action name="displayCpfInformation" class="eu.apenet.dashboard.tree.DisplayCpfContentAction"> 
             <result name="success">/jsp/eadcontent/cpfdetails.jsp</result>
         </action>
 
-        <action name="hasCpfReady" class="eu.apenet.dashboard.tree.DisplayCpfContentAction" method="hasCpfReady">
+        <action name="hasCpfReady" class="eu.apenet.dashboard.tree.DisplayCpfContentAction" method="hasCpfReady"> 
             <result type="stream">
 				<param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
@@ -274,7 +272,7 @@
         </action>
 
 
-		<action name="download" class="eu.apenet.dashboard.manual.contentmanager.ContentManagerAction" method="download">
+		<action name="download" class="eu.apenet.dashboard.manual.contentmanager.ContentManagerAction" method="download"> 
 			<result name="download" type="stream">
 				<param name="contentType">application/file-download</param>
 				<param name="contentCharSet">UTF-8</param>
@@ -292,48 +290,48 @@
 
 
 		<!--Upload: Main page -->
-		<action name="upload" class="eu.apenet.dashboard.manual.UploadContentAction">
+		<action name="upload" class="eu.apenet.dashboard.manual.UploadContentAction"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="success" type="tiles">uploadcontent</result>
 		</action>
 		<!--Upload: Connection to FTP / Tree page -->
-		<action name="connectFTP" class="eu.apenet.dashboard.manual.UploadContentAction" method="connectFTP">
+		<action name="connectFTP" class="eu.apenet.dashboard.manual.UploadContentAction" method="connectFTP"> 
 			<result name="success" type="tiles">viewftpfiles</result>
 		</action>
 		<!--Upload: FTP update AJAX -->
-		<action name="updateFtp" class="eu.apenet.dashboard.manual.UploadContentAction" method="retrieveFtpData">
+		<action name="updateFtp" class="eu.apenet.dashboard.manual.UploadContentAction" method="retrieveFtpData"> 
 			<result name="NONE" />
 		</action>
 		<!--Upload: Connection to FTP / Download files to server -->
-		<action name="saveFtpFiles" class="eu.apenet.dashboard.manual.UploadContentAction" method="saveFtpFiles">
+		<action name="saveFtpFiles" class="eu.apenet.dashboard.manual.UploadContentAction" method="saveFtpFiles"> 
 			<result name="success" type="tiles">viewresult</result>
 		</action>
 		<!--Upload: Connection to OAI-PMH repository -->
-		<action name="harvestOAI" class="eu.apenet.dashboard.actions.ajax.HarvesterAjaxAction">
+		<action name="harvestOAI" class="eu.apenet.dashboard.actions.ajax.HarvesterAjaxAction"> 
 			<result name="success" type="tiles">viewHarvest</result>
 			<result name="error" type="tiles">uploadcontent</result>
 		</action>
-        <action name="harvesting" class="eu.apenet.dashboard.actions.ajax.HarvesterAjaxAction" method="harvest">
+        <action name="harvesting" class="eu.apenet.dashboard.actions.ajax.HarvesterAjaxAction" method="harvest"> 
 			<result type="stream">
 				<param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
 			</result>
 		</action>
-        <action name="stopHarvest" class="eu.apenet.dashboard.actions.ajax.HarvesterAjaxAction" method="stopHarvest">
+        <action name="stopHarvest" class="eu.apenet.dashboard.actions.ajax.HarvesterAjaxAction" method="stopHarvest"> 
             <result type="stream">
                 <param name="inputName">outputStream</param>
                 <param name="contentType">application/json</param>
             </result>
         </action>
 		<!-- Upload: HTTP file upload -->
-		<action name="httpUpload" class="eu.apenet.dashboard.manual.UploadContentAction" method="httpUpload">
+		<action name="httpUpload" class="eu.apenet.dashboard.manual.UploadContentAction" method="httpUpload"> 
 			<result name="input" type="tiles">uploaderrorformat</result>
 			<result name="success" type="tiles">viewresult</result>
 			<result name="error" type="tiles">uploaderrorexisting</result>
 			<result name="reload" type="tiles">uploadcontent</result>
 		</action>
 
-		<action name="index" class="eu.apenet.dashboard.actions.IndexAction">
+		<action name="index" class="eu.apenet.dashboard.actions.IndexAction"> 
 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="success_country" type="tiles">indexLandscape</result>
@@ -350,64 +348,64 @@
             <result name="start_page" type="tiles">startpage</result>
         </action>
         <!-- It contents all Archival Landscape Actions -->
-		<action name="viewAL" class="eu.apenet.dashboard.ViewALAction">
+		<action name="viewAL" class="eu.apenet.dashboard.ViewALAction"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="success" type="tiles">viewAL</result>
 			<result name="error" type="tiles">ALnotFound</result>
 		</action>
 		
-		<action name="generatePreviewALTreeJSON" class="eu.apenet.dashboard.tree.GeneratePreviewALTreeJSONAction">
+		<action name="generatePreviewALTreeJSON" class="eu.apenet.dashboard.tree.GeneratePreviewALTreeJSONAction"> 
 			<result name="SUCCESS" type="stream">
 				<param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
 			</result>
 		</action>
 		
-		<action name="generateArchivalInstitutionPartPreviewALJSON" class="eu.apenet.dashboard.tree.GeneratePreviewALTreeJSONAction" method="generateArchivalInstitutionPartJSON">
+		<action name="generateArchivalInstitutionPartPreviewALJSON" class="eu.apenet.dashboard.tree.GeneratePreviewALTreeJSONAction" method="generateArchivalInstitutionPartJSON"> 
 			<result name="SUCCESS" type="stream">
 				<param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
 			</result>
 		</action>
 		
-		<action name="showEAGPreviewAL" class="eu.apenet.dashboard.ViewALAction" method="showEAG">
+		<action name="showEAGPreviewAL" class="eu.apenet.dashboard.ViewALAction" method="showEAG"> 
             <result name="success">/jsp/displayEAGPreviewAL.jsp</result>
             <result name="input">displayEAGPreviewAL.jsp</result>
         </action>
 
-		<action name="moveUpAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="upAnInstitution">
+		<action name="moveUpAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="upAnInstitution"> 
 			<result name="success" type="tiles">editAL</result>
 			<result name="error" type="tiles">ALnotFound</result>
 		</action>
 
-		<action name="moveDownAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="downAnInstitution">
+		<action name="moveDownAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="downAnInstitution"> 
 			<result name="success" type="tiles">editAL</result>
 			<result name="error" type="tiles">ALnotFound</result>
 		</action>
 
-		<action name="editElement" class="eu.apenet.dashboard.archivallandscape.EditAction" method="editArchivalLandscapeElement">
+		<action name="editElement" class="eu.apenet.dashboard.archivallandscape.EditAction" method="editArchivalLandscapeElement"> 
 			<result name="success" type="tiles">editAL</result>
 			<result name="error" type="tiles">ALnotFound</result>
 		</action>
 		
-		<action name="editTarget" class="eu.apenet.dashboard.archivallandscape.EditAction" method="editArchivalLandscapeTarget">
+		<action name="editTarget" class="eu.apenet.dashboard.archivallandscape.EditAction" method="editArchivalLandscapeTarget"> 
 			<result name="success" type="tiles">editAL</result>
 			<result name="error" type="tiles">ALnotFound</result>
 		</action>
 
-		<action name="deleteTarget" class="eu.apenet.dashboard.archivallandscape.EditAction" method="deleteAlternativeNameTarget">
+		<action name="deleteTarget" class="eu.apenet.dashboard.archivallandscape.EditAction" method="deleteAlternativeNameTarget"> 
 			<result name="success" type="tiles">editAL</result>
 			<result name="error" type="tiles">ALnotFound</result>
 		</action>
 		
 		<!-- First form edit - Button add -->
-		<action name="addAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="addArchivalLandscape">
+		<action name="addAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="addArchivalLandscape"> 
 			<result name="success" type="tiles">editAL</result>
 			<result name="error" type="tiles">ALnotFound</result>
 		</action>
 
 		<!-- First form edit - Button edit -->
-		<action name="modifyStructure" class="eu.apenet.dashboard.archivallandscape.EditAction" method="modifyArchivalLandscape">
+		<action name="modifyStructure" class="eu.apenet.dashboard.archivallandscape.EditAction" method="modifyArchivalLandscape"> 
 			<param name="country"></param>
 			<result name="input" type="tiles">editAL</result>
 			<result name="success" type="tiles">editAL</result>
@@ -415,13 +413,13 @@
 		</action>
 
 		<!-- Second form edit - Button add -->
-		<action name="editAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="appendArchivalLandscape">
+		<action name="editAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="appendArchivalLandscape"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="success" type="tiles">editAL</result>
 			<result name="error" type="tiles">ALnotFound</result>
 		</action>
 
-		<action name="feditAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="finishAddArchivalLandscape">
+		<action name="feditAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="finishAddArchivalLandscape"> 
 			<result name="input" type="redirectAction">
 				<param name="actionName">editAL</param>
 			</result>
@@ -433,19 +431,19 @@
 			</result>
 		</action>
 
-		<action name="uploadAL" class="eu.apenet.dashboard.uploadALAction">
+		<action name="uploadAL" class="eu.apenet.dashboard.uploadALAction"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="success" type="tiles">uploadAL</result>
 		</action>
 
-		<action name="httpUploadAL" class="eu.apenet.dashboard.uploadALAction" method="httpUploadAL">
+		<action name="httpUploadAL" class="eu.apenet.dashboard.uploadALAction" method="httpUploadAL"> 
 			<result name="input" type="tiles">uploaderrorformat2</result>
 			<result name="success" type="tiles">viewresult2</result>
 			<result name="error" type="tiles">overwriteALoption</result>
 			<result name="none" type="tiles">uploadAL</result>			
 		</action>
 
-		<action name="httpOverwriteAL" class="eu.apenet.dashboard.uploadALAction" method="httpoverwriteAL">
+		<action name="httpOverwriteAL" class="eu.apenet.dashboard.uploadALAction" method="httpoverwriteAL"> 
 			<result name="success" type="tiles">viewresult2</result>
 			<result name="error" type="tiles">uploadAL</result>
 			<result name="input" type="tiles">uploadALresult</result>
@@ -461,14 +459,14 @@
             <!--</result>-->
         <!--</action>-->
 		
-		<action name="changeAlIdFromUpload" class="eu.apenet.dashboard.uploadALAction" method="changeAlIdFromUpload">
+		<action name="changeAlIdFromUpload" class="eu.apenet.dashboard.uploadALAction" method="changeAlIdFromUpload"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="success" type="tiles">uploadALresult</result>
 			<result name="input" type="tiles">uploadALresult</result>
 			<result name="error" type="tiles">uploadAL</result> 
 		</action>
 		
-		<action name="downloadAL" class="eu.apenet.dashboard.uploadALAction" method="downloadAL">
+		<action name="downloadAL" class="eu.apenet.dashboard.uploadALAction" method="downloadAL"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="download" type="stream">
 				<param name="contentType">application/file-download</param>
@@ -492,19 +490,19 @@
             <!--<result name="error" type="tiles">ALnotFound</result>-->
         <!--</action>-->
 		
-		<action name="changeAlIdentifiers" class="eu.apenet.dashboard.actions.ChangeAlIdentifiersAction">
+		<action name="changeAlIdentifiers" class="eu.apenet.dashboard.actions.ChangeAlIdentifiersAction"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="success" type="tiles">changeAlIdentifiers</result>			
 		</action>
 		
-		<action name="storeAlIdentifier" class="eu.apenet.dashboard.actions.ChangeAlIdentifiersAction" method="storeIdentifier">
+		<action name="storeAlIdentifier" class="eu.apenet.dashboard.actions.ChangeAlIdentifiersAction" method="storeIdentifier"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="success" type="tiles">indexLandscape</result>
 			<result name="input" type="tiles">changeAlIdentifiers</result>
 			<result name="error" type="tiles">changeAlIdentifiers</result>
 		</action>
 		
-		<action name="GoDashboard" class="eu.apenet.dashboard.GoDashboardAction">
+		<action name="GoDashboard" class="eu.apenet.dashboard.GoDashboardAction"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="success" type="tiles">selectArchive</result>
 			<result name="one-archive" type="redirectAction">
@@ -513,14 +511,14 @@
 			<result name="error" type="tiles">ALnotFound</result>
 		</action>		
 
-		<action name="selectArchive" class="eu.apenet.dashboard.GoDashboardAction" method="selectArchive">
+		<action name="selectArchive" class="eu.apenet.dashboard.GoDashboardAction" method="selectArchive"> 
 			<result name="success" type="redirectAction">
 				<param name="actionName">dashboardHome</param>
 			</result>
 			<result name="error" type="tiles">ALnotFound</result>
 		</action>	
 
-		<action name="showxml" class="eu.apenet.dashboard.manual.contentmanager.ContentManagerAction" method="download">
+		<action name="showxml" class="eu.apenet.dashboard.manual.contentmanager.ContentManagerAction" method="download"> 
 			<result name="download" type="stream">
 				<param name="inputName">inputStream</param>
 				<param name="contentType">application/xml</param>
@@ -535,7 +533,7 @@
 			</result>
 		</action>
 
-		<action name="login" class="eu.apenet.dashboard.actions.LoginAction">
+		<action name="login" class="eu.apenet.dashboard.actions.LoginAction"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="input" type="tiles">login</result>
 			<result name="success" type="redirectAction">
@@ -546,7 +544,7 @@
 		</action>
 
 
-		<action name="forgetPwd" class="eu.apenet.dashboard.actions.ForgetPwdAction">
+		<action name="forgetPwd" class="eu.apenet.dashboard.actions.ForgetPwdAction"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="input" type="tiles">forgetPwd</result>
 			<result name="success" type="tiles">success</result>
@@ -554,19 +552,19 @@
 			<result name="cancel" type="tiles">indexLandscape</result>
 		</action>
 
-		<action name="changeForgetPwd" class="eu.apenet.dashboard.actions.ChangeForgetPwdAction">
+		<action name="changeForgetPwd" class="eu.apenet.dashboard.actions.ChangeForgetPwdAction"> 
 			<result name="input" type="tiles">changeForgetPwd</result>
 			<result name="success" type="tiles">success</result>
 			<result name="error" type="tiles">login</result>
 			<result name="cancel" type="tiles">indexLandscape</result>
 		</action>
 		
-		<action name="changeNode" class="eu.apenet.dashboard.archivallandscape.EditAction" method="moveANodeToOtherPlaces">
+		<action name="changeNode" class="eu.apenet.dashboard.archivallandscape.EditAction" method="moveANodeToOtherPlaces"> 
 			<result name="success" type="tiles">editAL</result>
 			<result name="error" type="tiles">ALnotFound</result>
 		</action>
 
-		<action name="edit" class="eu.apenet.dashboard.actions.EditAction">
+		<action name="edit" class="eu.apenet.dashboard.actions.EditAction"> 
 			<result name="input" type="tiles">edit</result>
 			<result name="success" type="tiles">success</result>
 			<result name="error" type="tiles">error</result>
@@ -578,7 +576,7 @@
 			</result>			
 		</action>
 
-		<action name="view" class="eu.apenet.dashboard.actions.ViewAction">
+		<action name="view" class="eu.apenet.dashboard.actions.ViewAction"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="input" type="tiles">edit</result>
 			<result name="error" type="tiles">error</result>
@@ -593,7 +591,7 @@
 			</result>
         </action>
 
-		<action name="logout" class="eu.apenet.dashboard.actions.LogoutAction">
+		<action name="logout" class="eu.apenet.dashboard.actions.LogoutAction"> 
 			<result name="success" type="redirectAction">
 				<param name="actionName">index</param>
 			</result>
@@ -605,7 +603,7 @@
 			</result>
 		</action>
 
-		<action name="showHome" class="eu.apenet.dashboard.actions.IndexAction">
+		<action name="showHome" class="eu.apenet.dashboard.actions.IndexAction"> 
 			<result type="redirectAction">
 				<param name="actionName">index</param>
 			</result>
@@ -615,7 +613,7 @@
             <result type="tiles">termsOfUse</result>
         </action>
 
-		<action name="contact" class="eu.apenet.dashboard.actions.ContactAction">
+		<action name="contact" class="eu.apenet.dashboard.actions.ContactAction"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="input" type="tiles">contact</result>
 			<result name="success" type="tiles">success</result>
@@ -623,14 +621,14 @@
 			<result name="cancel" type="tiles">indexLandscape</result>
 		</action>
 
-		<action name="displayEseConvert" class="eu.apenet.dashboard.ead2ese.ConvertAction" method="input" >
+		<action name="displayEseConvert" class="eu.apenet.dashboard.ead2ese.ConvertAction" method="input" > 
 			<result name="success" type="tiles">ead2ese.convert</result>
 			<result name="input" type="tiles">ead2ese.convert</result>
 		</action>
 		
 
 		
-		<action name="processEseConvert" class="eu.apenet.dashboard.ead2ese.ConvertAction">
+		<action name="processEseConvert" class="eu.apenet.dashboard.ead2ese.ConvertAction"> 
 			<result name="input" type="tiles">ead2ese.convert</result>
 			<result name="success" type="redirectAction">
 				<param name="actionName">contentmanager</param>
@@ -640,7 +638,7 @@
 			</result>
 		</action>
 		
-		<action name="downloadEse" class="eu.apenet.dashboard.ead2ese.DownloadEseXmlAction">
+		<action name="downloadEse" class="eu.apenet.dashboard.ead2ese.DownloadEseXmlAction"> 
 			<result name="success" type="stream">
 				<param name="contentType">application/file-download</param>
 				<param name="contentCharSet">UTF-8</param>
@@ -653,7 +651,7 @@
 		
 	
 
-		<action name="createHG" class="eu.apenet.dashboard.manual.contentmanager.ContentManagerAction" method="createHG">
+		<action name="createHG" class="eu.apenet.dashboard.manual.contentmanager.ContentManagerAction" method="createHG"> 
 			<result name="success" type="redirectAction">
 				<param name="actionName">content</param>
 				<param name="xmlTypeId">${xmlTypeId}</param>
@@ -672,44 +670,44 @@
 		</action>
        
        <!--  Action to check the state of the application --> 
-         <action name="currentState" class="eu.apenet.dashboard.actions.CurrentStateAction">
+         <action name="currentState" class="eu.apenet.dashboard.actions.CurrentStateAction"> 
             <result name="success">/jsp/currentState.jsp</result>            
         </action>
 
 
-        <action name="editEad" class="eu.apenet.dashboard.actions.ajax.EditEadAction">
+        <action name="editEad" class="eu.apenet.dashboard.actions.ajax.EditEadAction"> 
             <result name="success" type="tiles">eadEdition</result>
         </action>
 
-        <action name="editEadCreateDbEntries" class="eu.apenet.dashboard.actions.ajax.EditEadAction" method="createDbEntries">
+        <action name="editEadCreateDbEntries" class="eu.apenet.dashboard.actions.ajax.EditEadAction" method="createDbEntries"> 
             <result type="stream">
 				<param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
 			</result>
         </action>
 
-        <action name="editEadXml" class="eu.apenet.dashboard.actions.ajax.EditEadAction" method="getXmlData">
+        <action name="editEadXml" class="eu.apenet.dashboard.actions.ajax.EditEadAction" method="getXmlData"> 
             <result type="stream">
 				<param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
 			</result>
         </action>
 
-        <action name="editEadXmlSaveLevel" class="eu.apenet.dashboard.actions.ajax.EditEadAction" method="saveXmlData">
+        <action name="editEadXmlSaveLevel" class="eu.apenet.dashboard.actions.ajax.EditEadAction" method="saveXmlData"> 
             <result type="stream">
 				<param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
 			</result>
         </action>
 
-        <action name="editEadXmlSaveAll" class="eu.apenet.dashboard.actions.ajax.EditEadAction" method="saveAllXmlData">
+        <action name="editEadXmlSaveAll" class="eu.apenet.dashboard.actions.ajax.EditEadAction" method="saveAllXmlData"> 
             <result type="stream">
 				<param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
 			</result>
         </action>
 
-        <action name="editEadXmlDeleteEntries" class="eu.apenet.dashboard.actions.ajax.EditEadAction" method="deleteDatabaseEntries">
+        <action name="editEadXmlDeleteEntries" class="eu.apenet.dashboard.actions.ajax.EditEadAction" method="deleteDatabaseEntries"> 
             <result type="stream">
 				<param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
@@ -723,108 +721,108 @@
             </result>
         </action>
 
-        <action name="editEadAddField" class="eu.apenet.dashboard.actions.ajax.EditEadAction" method="addFieldEntry">
+        <action name="editEadAddField" class="eu.apenet.dashboard.actions.ajax.EditEadAction" method="addFieldEntry"> 
             <result type="stream">
                 <param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
             </result>
         </action>
 
-        <action name="getThreadLevel" class="eu.apenet.dashboard.actions.ajax.AutomaticCheckAction">
+        <action name="getThreadLevel" class="eu.apenet.dashboard.actions.ajax.AutomaticCheckAction"> 
             <result type="stream">
                 <param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
             </result>
         </action>
 
-        <action name="dbToEadAjax" class="eu.apenet.dashboard.actions.ajax.AutomaticCheckAction" method="dbToEadAjax">
+        <action name="dbToEadAjax" class="eu.apenet.dashboard.actions.ajax.AutomaticCheckAction" method="dbToEadAjax"> 
             <result type="stream">
                 <param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
             </result>
         </action>
 
-        <action name="getFindingAidsNotLinked" class="eu.apenet.dashboard.actions.content.NotLinkedFindingAidsAction">
+        <action name="getFindingAidsNotLinked" class="eu.apenet.dashboard.actions.content.NotLinkedFindingAidsAction"> 
             <result name="success" type="tiles">notLinkedFindingAids</result>
 			<result name="error" type="tiles">error</result>
         </action>
         
         <!--  Action to check the state of the application --> 
-         <action name="currentState" class="eu.apenet.dashboard.actions.CurrentStateAction">
+         <action name="currentState" class="eu.apenet.dashboard.actions.CurrentStateAction"> 
             <result name="success">/jsp/currentState.jsp</result>            
         </action>
 
 
         <!-- Actions used for selection of finding aids in content manager -->
-        <action name="addOneFA" class="eu.apenet.dashboard.actions.ajax.SelectFindingAidsAction" method="addOneFA2Session">
+        <action name="addOneFA" class="eu.apenet.dashboard.actions.ajax.SelectFindingAidsAction" method="addOneFA2Session"> 
             <result type="stream">
                 <param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
             </result>
         </action>
-        <action name="clearFAsFromSession" class="eu.apenet.dashboard.actions.ajax.SelectFindingAidsAction" method="clearFAsFromSession">
+        <action name="clearFAsFromSession" class="eu.apenet.dashboard.actions.ajax.SelectFindingAidsAction" method="clearFAsFromSession"> 
             <result type="stream">
                 <param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
             </result>
         </action>
-        <action name="addAllFAsInSession" class="eu.apenet.dashboard.actions.ajax.SelectFindingAidsAction" method="addAllFAsInSession">
+        <action name="addAllFAsInSession" class="eu.apenet.dashboard.actions.ajax.SelectFindingAidsAction" method="addAllFAsInSession"> 
             <result type="stream">
                 <param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
             </result>
         </action>
-        <action name="getFAsFromSession" class="eu.apenet.dashboard.actions.ajax.SelectFindingAidsAction" method="getFAsFromSession">
+        <action name="getFAsFromSession" class="eu.apenet.dashboard.actions.ajax.SelectFindingAidsAction" method="getFAsFromSession"> 
             <result type="stream">
                 <param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
             </result>
         </action>
-        <action name="showLanguages" class="eu.apenet.dashboard.archivallandscape.EditAction" method="seeLanguagesForArchivalLandscapeElement"> 
+        <action name="showLanguages" class="eu.apenet.dashboard.archivallandscape.EditAction" method="seeLanguagesForArchivalLandscapeElement">  
                 <result name="success" type="tiles">editAL</result> 
                 <result name="error" type="tiles">ALnotFound</result> 
         </action>
         
-        <action name="hgTreeCreation" class="eu.apenet.dashboard.actions.ajax.HoldingsGuideTreeCreation">
+        <action name="hgTreeCreation" class="eu.apenet.dashboard.actions.ajax.HoldingsGuideTreeCreation"> 
             <result name="success" type="tiles">hgTreeCreation</result>
         </action>
 
-        <action name="addEadContentData" class="eu.apenet.dashboard.actions.ajax.HoldingsGuideTreeCreation" method="addEadContentData">
+        <action name="addEadContentData" class="eu.apenet.dashboard.actions.ajax.HoldingsGuideTreeCreation" method="addEadContentData"> 
             <result type="stream">
                 <param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
             </result>
         </action>
 
-        <action name="addCLevelData" class="eu.apenet.dashboard.actions.ajax.HoldingsGuideTreeCreation" method="addCLevelData">
+        <action name="addCLevelData" class="eu.apenet.dashboard.actions.ajax.HoldingsGuideTreeCreation" method="addCLevelData"> 
             <result type="stream">
                 <param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
             </result>
         </action>
 
-        <action name="deleteLevelHG" class="eu.apenet.dashboard.actions.ajax.HoldingsGuideTreeCreation" method="deleteLevelHG">
+        <action name="deleteLevelHG" class="eu.apenet.dashboard.actions.ajax.HoldingsGuideTreeCreation" method="deleteLevelHG"> 
             <result type="stream">
                 <param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
             </result>
         </action>
 
-        <action name="createHoldingsGuide" class="eu.apenet.dashboard.actions.ajax.HoldingsGuideTreeCreation" method="createHoldingsGuide">
+        <action name="createHoldingsGuide" class="eu.apenet.dashboard.actions.ajax.HoldingsGuideTreeCreation" method="createHoldingsGuide"> 
             <result type="stream">
                 <param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
             </result>
         </action>
 
-        <action name="checkCurrentConversionOptions" class="eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsAction" method="checkCurrentConversionOptions">
+        <action name="checkCurrentConversionOptions" class="eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsAction" method="checkCurrentConversionOptions"> 
             <result type="stream">
                 <param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
             </result>
         </action>
 
-        <action name="saveConversionOptions" class="eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsAction" method="saveConversionOptions">
+        <action name="saveConversionOptions" class="eu.apenet.dashboard.actions.ajax.AjaxConversionOptionsAction" method="saveConversionOptions"> 
             <result type="stream">
                 <param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
@@ -832,67 +830,67 @@
         </action>
 
         <!--addFAsToCurrentLevel-->
-        <action name="addFAsToCurrentLevel" class="eu.apenet.dashboard.actions.ajax.HoldingsGuideTreeCreation" method="addFAsToCurrentLevel">
+        <action name="addFAsToCurrentLevel" class="eu.apenet.dashboard.actions.ajax.HoldingsGuideTreeCreation" method="addFAsToCurrentLevel"> 
             <result type="stream">
                 <param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
             </result>
         </action>
 
-        <action name="getPossibleFAs" class="eu.apenet.dashboard.actions.ajax.HoldingsGuideTreeCreation" method="getPossibleFAs">
+        <action name="getPossibleFAs" class="eu.apenet.dashboard.actions.ajax.HoldingsGuideTreeCreation" method="getPossibleFAs"> 
             <result type="stream">
                 <param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
             </result>
         </action>
                  <!--Temporary action -->  
-           <action name="FillOrderAL" class="eu.apenet.dashboard.actions.FillOrderAL">  
+           <action name="FillOrderAL" class="eu.apenet.dashboard.actions.FillOrderAL"> 
                <result name="success">/jsp/templates/blank.jsp</result>    
               <result name="error">/jsp/templates/blank.jsp</result>     
         </action>  
         
-        <action name="FillPrimaryNameAction" class="eu.apenet.dashboard.archivallandscape.FillPrimaryAltInstNameAction">  
+        <action name="FillPrimaryNameAction" class="eu.apenet.dashboard.archivallandscape.FillPrimaryAltInstNameAction"> 
                <result name="success">/jsp/templates/blank.jsp</result>    
               <result name="error">/jsp/templates/blank.jsp</result>     
         </action>
         
         	<!--  Admin functionalities -->
-        	<action name="createCountry" class="eu.apenet.dashboard.actions.CreateCountryAction">
+        	<action name="createCountry" class="eu.apenet.dashboard.actions.CreateCountryAction"> 
         		<interceptor-ref name="changeLanguageStack"/>  
                <result name="success" type="tiles">countryCreation</result>    
                <result name="error">/jsp/templates/blank.jsp</result>     
         	</action>
-        	<action name="storeCountry" class="eu.apenet.dashboard.actions.CreateCountryAction" method="storeCountry">
+        	<action name="storeCountry" class="eu.apenet.dashboard.actions.CreateCountryAction" method="storeCountry"> 
         	<interceptor-ref name="changeLanguageStack"/>  
                <result name="success" type="tiles">blank</result>    
                <result name="input" type="tiles">countryCreation</result>
                <result name="error" type="tiles">blank</result>     
         	</action>      	
-        	 <action name="insertAlternativeCountryNames" class="eu.apenet.dashboard.actions.CreateCountryAltNamesAction" >
+        	 <action name="insertAlternativeCountryNames" class="eu.apenet.dashboard.actions.CreateCountryAltNamesAction" > 
         	 <interceptor-ref name="changeLanguageStack"/>  
                <result name="success" type="tiles">countryAltNames</result>
                <result name="input" type="tiles">countryAltNames</result>    
                <result name="error" type="tiles">blank</result>     
         	</action>
-        	<action name="storeAlternativeCountryNames" class="eu.apenet.dashboard.actions.CreateCountryAltNamesAction" method="insertAlternativeCountryNames">
+        	<action name="storeAlternativeCountryNames" class="eu.apenet.dashboard.actions.CreateCountryAltNamesAction" method="insertAlternativeCountryNames"> 
         	<interceptor-ref name="changeLanguageStack"/>  
                <result name="success" type="tiles">blank</result>
                <result name="input" type="tiles">countryAltNames</result>    
                <result name="error" type="tiles">blank</result>     
         	</action>   
-        	<action name="createLanguage" class="eu.apenet.dashboard.actions.CreateLanguageAction">
+        	<action name="createLanguage" class="eu.apenet.dashboard.actions.CreateLanguageAction"> 
         	<interceptor-ref name="changeLanguageStack"/>  
                <result name="success" type="tiles">languageNames</result>    
                <result name="error" type="tiles">blank</result>     
         	</action>
-        	<action name="storeLanguage" class="eu.apenet.dashboard.actions.CreateLanguageAction" method="storeLanguage">  
+        	<action name="storeLanguage" class="eu.apenet.dashboard.actions.CreateLanguageAction" method="storeLanguage"> 
         	<interceptor-ref name="changeLanguageStack"/>
                <result name="success" type="tiles">blank</result>  
                 <result name="input" type="tiles">languageNames</result>   
                <result name="error" type="tiles">blank</result>     
         	</action>
 
-        	<action name="downloadGeneralAL" class="eu.apenet.dashboard.actions.DownloadGeneralALAction">
+        	<action name="downloadGeneralAL" class="eu.apenet.dashboard.actions.DownloadGeneralALAction"> 
 				<interceptor-ref name="changeLanguageStack"/>
 				<result name="download" type="stream">
 					<param name="contentType">application/file-download</param>
@@ -917,16 +915,16 @@
             <!--<result name="error" type="tiles">blank</result>-->
         <!--</action>-->
 
-			<action name="countryState" class="eu.apenet.dashboard.actions.CountryStateAction">
+			<action name="countryState" class="eu.apenet.dashboard.actions.CountryStateAction"> 
         	<interceptor-ref name="changeLanguageStack"/>  
                <result name="success" type="tiles">countryState</result>    
                <result name="error" type="tiles">blank</result>     
         	</action>
-        	<action name="manageQueue" class="eu.apenet.dashboard.queue.ManageQueueAction">  
+        	<action name="manageQueue" class="eu.apenet.dashboard.queue.ManageQueueAction"> 
 				<result name="success" type="tiles">manageQueue</result>
         	</action>
         	
-        	<action name="startStopQueue" class="eu.apenet.dashboard.queue.ManageQueueAction" method="startStopQueue">  
+        	<action name="startStopQueue" class="eu.apenet.dashboard.queue.ManageQueueAction" method="startStopQueue"> 
                <result name="success" type="redirectAction">
 					<param name="actionName">manageQueue</param>				
 				</result> 
@@ -936,23 +934,23 @@
 					<param name="actionName">manageQueue</param>				
 				</result> 
         	</action>   
-        	<action name="sessionManagement" class="eu.apenet.dashboard.security.actions.SessionManagementAction">  
+        	<action name="sessionManagement" class="eu.apenet.dashboard.security.actions.SessionManagementAction"> 
                <result name="success" type="tiles">sessionManagement</result>
         	</action>
-        	<action name="deleteSession" class="eu.apenet.dashboard.security.actions.SessionManagementAction" method="deleteSession">  
+        	<action name="deleteSession" class="eu.apenet.dashboard.security.actions.SessionManagementAction" method="deleteSession"> 
                <result name="success" type="redirectAction">
 					<param name="actionName">sessionManagement</param>				
 				</result> 
         	</action>  
-        	<action name="userManagement" class="eu.apenet.dashboard.security.actions.UserManagementAction">  
+        	<action name="userManagement" class="eu.apenet.dashboard.security.actions.UserManagementAction"> 
 				<result name="success" type="tiles">userManagement</result>
         	</action>
-        	<action name="disableCountryManager" class="eu.apenet.dashboard.security.actions.UserManagementAction" method="disableUser">  
+        	<action name="disableCountryManager" class="eu.apenet.dashboard.security.actions.UserManagementAction" method="disableUser"> 
                <result name="success" type="redirectAction">
 					<param name="actionName">userManagement</param>				
 				</result> 
         	</action>    
-        	<action name="enableCountryManager" class="eu.apenet.dashboard.security.actions.UserManagementAction" method="enableUser">  
+        	<action name="enableCountryManager" class="eu.apenet.dashboard.security.actions.UserManagementAction" method="enableUser">   
                <result name="success" type="redirectAction">
 					<param name="actionName">userManagement</param>				
 				</result> 
@@ -963,15 +961,15 @@
 				</result> 
         	</action>
 
-        <action name="viewDptVersions" class="eu.apenet.dashboard.actions.DptVersionAction">
+        <action name="viewDptVersions" class="eu.apenet.dashboard.actions.DptVersionAction">   
             <result name="success" type="tiles">dptVersion</result>
         </action>
-        <action name="addVersion" class="eu.apenet.dashboard.actions.DptVersionAction" method="addVersion">
+        <action name="addVersion" class="eu.apenet.dashboard.actions.DptVersionAction" method="addVersion">   
             <result name="success" type="redirectAction">
                 <param name="actionName">viewDptVersions</param>
             </result>
         </action>
-        <action name="deleteVersion" class="eu.apenet.dashboard.actions.DptVersionAction" method="deleteVersion">
+        <action name="deleteVersion" class="eu.apenet.dashboard.actions.DptVersionAction" method="deleteVersion">  
             <result name="success" type="redirectAction">
                 <param name="actionName">viewDptVersions</param>
             </result>
@@ -986,19 +984,19 @@
         	<action name="institutionManagerManagement" class="eu.apenet.dashboard.security.actions.InstitutionManagerManagementAction">  
 				<result name="success" type="tiles">institutionManagerManagement</result>
         	</action>   
-        	<action name="displayCreateCountryManager" class="eu.apenet.dashboard.security.actions.CreateUserAction" method="input">
+        	<action name="displayCreateCountryManager" class="eu.apenet.dashboard.security.actions.CreateUserAction" method="input">  
         		<result name="input" type="tiles">createCountryManager</result>
         	</action>  	      	
-        	<action name="createCountryManager" class="eu.apenet.dashboard.security.actions.CreateUserAction">
+        	<action name="createCountryManager" class="eu.apenet.dashboard.security.actions.CreateUserAction">  
                <result name="success" type="redirectAction">
 					<param name="actionName">userManagement</param>				
 				</result>         	
         		<result name="input" type="tiles">createCountryManager</result>
         	</action> 
-        	<action name="displayCreateInstitutionManager" class="eu.apenet.dashboard.security.actions.CreateUserAction" method="input">
+        	<action name="displayCreateInstitutionManager" class="eu.apenet.dashboard.security.actions.CreateUserAction" method="input">  
         		<result name="input" type="tiles">createInstitutionManager</result>
         	</action>  	      	
-        	<action name="createInstitutionManager" class="eu.apenet.dashboard.security.actions.CreateUserAction">
+        	<action name="createInstitutionManager" class="eu.apenet.dashboard.security.actions.CreateUserAction">  
                <result name="success" type="redirectAction">
 					<param name="actionName">institutionManagerManagement</param>	
 					<param name="countryId">${countryId}</param>			
@@ -1011,19 +1009,19 @@
 					<param name="countryId">${countryId}</param>			
 				</result>  
         	</action> 
-        	<action name="changeToInstitutionManager" class="eu.apenet.dashboard.security.actions.InstitutionManagerManagementAction" method="changeToInstitutionManager">  
+        	<action name="changeToInstitutionManager" class="eu.apenet.dashboard.security.actions.InstitutionManagerManagementAction" method="changeToInstitutionManager">
                <result name="success" type="redirectAction">
 					<param name="actionName">index</param>				
 				</result> 
 				 <result name="input" type="tiles">institutionManagerManagement</result>				
         	</action>   
-        	<action name="disableInstitutionManager" class="eu.apenet.dashboard.security.actions.InstitutionManagerManagementAction" method="disableUser">  
+        	<action name="disableInstitutionManager" class="eu.apenet.dashboard.security.actions.InstitutionManagerManagementAction" method="disableUser">
                <result name="success" type="redirectAction">
 					<param name="actionName">institutionManagerManagement</param>	
 					<param name="countryId">${countryId}</param>			
 				</result>  
         	</action>    
-        	<action name="enableInstitutionManager" class="eu.apenet.dashboard.security.actions.InstitutionManagerManagementAction" method="enableUser">  
+        	<action name="enableInstitutionManager" class="eu.apenet.dashboard.security.actions.InstitutionManagerManagementAction" method="enableUser">
                <result name="success" type="redirectAction">
 					<param name="actionName">institutionManagerManagement</param>	
 					<param name="countryId">${countryId}</param>			

@@ -258,6 +258,7 @@ public class UploadContentAction extends AbstractInstitutionAction implements Se
             return SUCCESS;
         } catch (IOException ioe){
             log.error("Could not connect to FTP server '" + ftpUrl + "'.", ioe);
+            addActionMessage(getText("uploadContent.errFTP"));
             return ERROR;
         }
     }
@@ -286,6 +287,7 @@ public class UploadContentAction extends AbstractInstitutionAction implements Se
         } catch (Exception e) {
             filesNotUploaded.add(filename);
             log.error("Harvest failed, last token was: " + token);
+            addActionMessage(getText("uploadContent.errHarvest"));
             return ERROR;
         }
     }
@@ -527,6 +529,7 @@ public class UploadContentAction extends AbstractInstitutionAction implements Se
             return result;
     	}catch(Exception e){
     		log.error("ERROR trying to upload a file",e);
+    		addActionMessage(getText("uploadContent.errHTTP"));
     	}
     	return ERROR;
     }

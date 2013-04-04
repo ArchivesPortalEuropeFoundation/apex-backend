@@ -93,7 +93,7 @@ public class CountryStateAction extends ActionSupport implements Preparable{
 		}catch(Exception e)
 		{
 			log.error(e.getStackTrace());
-			addActionMessage("Some errors occurred in getting information for the country selected.");
+			addActionMessage(getText("countryState.errorsGettingInformation"));
 			result = ERROR;
 		}
 		return result;

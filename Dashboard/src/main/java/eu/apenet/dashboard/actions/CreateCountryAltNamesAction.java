@@ -107,7 +107,7 @@ public class CreateCountryAltNamesAction extends ActionSupport implements Prepar
 		if (this.getAltCountryName()!= null)
 		{
 			if (this.getAltCountryName().length() == 0)
-				addFieldError("altCountryName", "Alternative country name required");
+				addFieldError("altCountryName", getText("CreateCountryAltNames.altCountryName"));
 		}
 	}
 
@@ -140,16 +140,16 @@ public class CreateCountryAltNamesAction extends ActionSupport implements Prepar
 				try{
 					couAltNamesDAO.store(newCouAltName);
 					result = SUCCESS;
-					addActionMessage("Alternative name stored");
+					addActionMessage(getText("CreateCountryAltNames.AlternativeNameStored"));
 					insertNodeinAL("unittitle", country, this.languageSelected, this.getAltCountryName());				
 					
 				}catch(Exception e){
 					result=ERROR;
-					addActionMessage("Alternative name not stored");
+					addActionMessage(getText("CreateCountryAltNames.AlternativeNameNotStored"));
 				}
 			}else
 			{
-				addActionMessage("Alternative country name already stored in the system");
+				addActionMessage(getText("createCountryAltNames.AlternativeNameAlreadyStored"));
 				result=INPUT;
 			}
 		}

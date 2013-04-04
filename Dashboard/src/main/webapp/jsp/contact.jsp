@@ -3,6 +3,10 @@
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@page import="java.util.Locale"%>
 
+
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
+<%@ taglib prefix="apenet" uri="http://commons.apenet.eu/tags"%>
+
 <div align="center">  
 	
 	<s:form action="contact" method="post">
@@ -11,6 +15,11 @@
 				
 		<s:textfield name="email" required="true" key="label.email.contact" size="50" />
 		
+		&nbsp;
+		
+
+		&nbsp;
+			
 		<s:div>
 			<br></br>
 		</s:div>
@@ -26,9 +35,6 @@
 				<td><s:reset value="Reset" theme="simple" /></td>
 			</tr>
 		</table>
-	</s:form>
-	
-	
-	
+	</s:form>	
 </div>
 

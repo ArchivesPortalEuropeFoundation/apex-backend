@@ -214,7 +214,7 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
             StringWriter cLevelXml = createCLevelData(levelTreeNode);
 
             if(StringUtils.isEmpty(request.getParameter("parentId")))
-                throw new APEnetException("In addCLevelData(), the parameter parentId can not be null or empty");
+                throw new APEnetException(getText("holdingsGuideTreeCreation.parentIdCanNotBeNullOrEmpty"));
 
             String fullStr = request.getParameter("parentId");
             String parentId = fullStr.substring(3);
@@ -276,10 +276,10 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
         	Integer aiId = getAiId();
             writer = openOutputWriter();
             if(StringUtils.isEmpty(request.getParameter("key"))){
-                throw new APEnetException("The key parameter is empty and should not be...");
+                throw new APEnetException(getText("holdingsGuideTreeCreation.keyParameterNotBeEmpty"));
             }
             if(aiId==null){
-                throw new APEnetException("The aiId parameter could not be readed from session...");
+                throw new APEnetException(getText("holdingsGuideTreeCreation.aiIdParameterCouldNotBeReadedFromSession"));
             }
             String fullStr = request.getParameter("key");
             String keyString = fullStr.substring(3);
@@ -570,7 +570,7 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
         try {
             writer = openOutputWriter();
             if(StringUtils.isEmpty(request.getParameter("key")))
-                throw new APEnetException("The parameter key can not be null or empty");
+                throw new APEnetException(getText("holdingsGuideTreeCreation.keyNotBeNullOrEmpty"));
             String fullStr = request.getParameter("key");
             String keyString = fullStr.substring(3);
             CLevel cLevel = DAOFactory.instance().getCLevelDAO().findById(Long.parseLong(keyString));

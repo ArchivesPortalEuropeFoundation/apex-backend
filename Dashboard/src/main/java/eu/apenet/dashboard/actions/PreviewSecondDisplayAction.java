@@ -25,7 +25,7 @@ public class PreviewSecondDisplayAction extends SecondDisplayAction {
 			
 
 		}catch (Exception e){
-			logger.error("Unable to preview (id,xmlType): (" + getId() + "," + getXmlTypeId() + "): " + e.getMessage() ,e);
+			logger.error(getText("previewseconddisplay.unabletopreview") + " (id,xmlType): (" + getId() + "," + getXmlTypeId() + "): " + e.getMessage() ,e);
 			addActionError(getText("error.user.second.display.notindexed"));
 			return ERROR;
 		}

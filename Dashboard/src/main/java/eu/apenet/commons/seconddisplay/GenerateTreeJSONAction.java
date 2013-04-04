@@ -237,7 +237,7 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 				eadContent = eadContentDAO.getEadContentByHoldingsGuideId(holdingsGuideId);
             }
             if(eadContent == null)
-                throw new APEnetException("No correct FA id or HG id, eadContent is null");
+                throw new APEnetException(getText("generateTreeJSON.APEnetException.no.correct.FA"));
 
             StringBuilder topCLevelsBuffer = generateCLevelJSON(clevelDAO.findTopCLevels(eadContent.getEcId()), path, isWithUrl);
             writer.write(generateRootJSON(eadContent, topCLevelsBuffer, path, false, false, xmlTypeIdString).toString());

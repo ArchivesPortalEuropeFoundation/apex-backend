@@ -109,15 +109,15 @@ public class EditEadAction extends AjaxControllerAbstractAction {
             writer = openOutputWriter();
 
             if(xmlType != XmlType.EAD_FA && xmlType != xmlType.EAD_HG)
-                throw new APEnetException("No XmlType defined or wrong type, should be either EAD_FA or EAD_HG - other types not working yet");
+                throw new APEnetException(getText("editEadAction.noXmlTypedefinedOrWrongType"));
 
             Ead ead = DAOFactory.instance().getEadDAO().findById(id.intValue(), xmlType.getClazz());
 
             if(ead.isPublished())
-                throw new APEnetException("The file state of the finding aid is not compliant for the Edition action.");
+                throw new APEnetException(getText("editEadAction.faStateNotCompliant"));
             if (ead instanceof FindingAid){
             	if (!EuropeanaState.NOT_CONVERTED.equals(((FindingAid) ead).getEuropeana())){
-            		throw new APEnetException("The file state of the finding aid is not compliant for the Edition action.");
+            		throw new APEnetException(getText("editEadAction.faStateNotCompliant"));
             	}
             }
             EADParser.parseEad(ead);

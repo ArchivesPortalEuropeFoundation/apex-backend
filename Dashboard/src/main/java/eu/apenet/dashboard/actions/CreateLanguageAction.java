@@ -66,23 +66,23 @@ public class CreateLanguageAction extends ActionSupport {
 		if (this.getEnglishlanguageName()!= null)
 		{
 			if (this.getEnglishlanguageName().length() == 0)
-				addFieldError("englishCountryName", "English language name required");
+				addFieldError("englishCountryName", getText("createLanguage.englishCountryName"));
 		}
 		if (this.getIsoLanguageName()!= null)
 		{
 			if (this.getIsoLanguageName().length() != 3)
-				addFieldError("isoCountryName", "Iso (iso639-2) language is required and should have three characters. If you need more information: http://www.loc.gov/standards/iso639-2/php/code_list.php");
+				addFieldError("isoCountryName", getText("createLanguage.isoCountryName"));
 		}
 		
 		if (this.getIso2LanguageName() != null)
 		{
 			if (this.getIso2LanguageName().length() != 2)
-				addFieldError("lang", "Iso (iso639-1) language name is required and should have two characters. If you need more information: http://www.loc.gov/standards/iso639-2/php/code_list.php");
+				addFieldError("lang", getText("createLanguage.lang"));
 		}		
 		if (this.getNativeLanguageName()!= null)
 		{
 			if (this.getNativeLanguageName().length() == 0)
-				addFieldError("altCountryName", "Native language name required");
+				addFieldError("altCountryName", getText("createLanguage.altCountryName"));
 		}
 	}
 
@@ -108,17 +108,17 @@ public class CreateLanguageAction extends ActionSupport {
 					langDao.store(language);
 	
 					result = SUCCESS;
-					addActionMessage("Language stored");
+					addActionMessage(getText("createLanguage.languageStored"));
 				}else
 				{
-					addActionMessage("Language already stored in the system");
+					addActionMessage(getText("createLanguage.languageAlreadyStored"));
 					result=INPUT;
 				}
 				
 			}catch(Exception e)
 			{
 				result = ERROR;	
-				addActionMessage("Language not stored");
+				addActionMessage(getText("createLanguage.languageNotStored"));
 			}		
 			
 		}else
