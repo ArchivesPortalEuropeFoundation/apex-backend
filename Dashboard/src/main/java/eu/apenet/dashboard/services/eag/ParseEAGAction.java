@@ -43,6 +43,10 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
 
 public class ParseEAGAction extends ActionSupport {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8652898000994157556L;
 	private final static Logger logger = Logger.getLogger(ParseEAGAction.class); // TODO
 	private final static XPath XPATH = APEnetUtilities.getDashboardConfig().getXpathFactory().newXPath(); // instance
 	List<String> eagsNotConverted = new ArrayList<String>();
@@ -72,17 +76,7 @@ public class ParseEAGAction extends ActionSupport {
 						prefixPath = APEnetUtilities.getDashboardConfig().getRepoDirPath();
 						tempDirOutputPath = prefixPath + institution.getEagPath();
 					}
-					String filePattern = "[a-zA-Z0-9-_\\.]+";
-					File tempFile = new File(tempDirOutputPath);
-					File oldEagFile = tempFile;
-					if (!Pattern.matches(filePattern, tempFile.getName())) {
-						String fileName = oldEagFile.getName().replaceAll("[^a-zA-Z0-9\\-\\.]", "_");
-						oldEagFile = new File(tempFile.getParentFile(), fileName);
-						logger.info("Move: " + tempFile.getAbsolutePath() + " to: " + oldEagFile.getAbsolutePath());
-						FileUtils.moveFile(tempFile, oldEagFile);	
-						institution.setEagPath(eagPath + fileName);
-						aiDao.store(institution);
-					}
+					File oldEagFile = new File(tempDirOutputPath);
 					if (oldEagFile.exists()) {
 						String pattern = institution.getCountry().getIsoname() + "-[a-zA-Z0-9:/\\-]{1,11}";
 						String repositoryCode = institution.getRepositorycode();
