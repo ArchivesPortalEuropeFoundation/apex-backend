@@ -373,7 +373,7 @@
 		
 		<action name="showEAGPreviewAL" class="eu.apenet.dashboard.ViewALAction" method="showEAG">
             <result name="success">/jsp/displayEAGPreviewAL.jsp</result>
-            <result name="input">displayEAGPreviewAL.jsp</result>
+            <result name="input">/jsp/displayEAGPreviewAL.jsp</result>
         </action>
 
 		<action name="moveUpAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="upAnInstitution">

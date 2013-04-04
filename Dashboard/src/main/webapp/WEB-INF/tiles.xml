@@ -220,6 +220,16 @@
 	<definition name="viewAL" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.alview.title" />
 		<put-attribute name="body" value="/jsp/viewAL.jsp" />	
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery-ui.custom.min.js"/>
+	        <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
+	        <add-attribute type="string" value="/js/dynatree/jquery.dynatree.min.js"/>
+        </put-list-attribute>
+        <put-list-attribute name="cssfilesInternal">
+            <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>
+            <add-attribute type="string" value="/css/custom-portlet-directory.css"/>
+        </put-list-attribute>
 	</definition>
 	
 	<definition name="editAL" extends="ArchivalLandscapeLayout">
@@ -460,9 +470,7 @@
 		<put-attribute name="body" value="/jsp/countryState.jsp" />	
 	</definition>
 
-	<definition name="filesFailed" extends="AdminLayout" >		
-		<put-attribute name="body" value="/jsp/queue/filesFailed.jsp" />		
-	</definition>	
+
 	<definition name="manageQueue" extends="AdminLayout" >	
 		<put-attribute name="title" value="admin.queuemanagement.title" />	
 		<put-attribute name="body" value="/jsp/queue/managequeue.jsp" />		
