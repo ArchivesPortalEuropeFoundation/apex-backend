@@ -575,7 +575,7 @@ public class APEnetEAG {
 	}
 
 	public String getFilename() {
-		return this.getId().replaceAll("[:/\\\\]", "_") + ".xml";
+		return this.getId().replaceAll("[^a-zA-Z0-9\\-\\.]", "_") + ".xml";
 	}
 	public void setId(String id) {
 
