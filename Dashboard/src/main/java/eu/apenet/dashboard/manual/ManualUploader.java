@@ -334,14 +334,14 @@ public abstract class ManualUploader {
 					fullFileName = path + fileName;
 		    		File source = new File(fullFileName);
     				FileUtils.copyFile(file, source);
-	    		    
+                    eag.setEagPath(fullFileName); //temp used for looking forward target tag
     				//It is necessary to validate the file against APEnet EAG schema
                     log.debug("Beginning EAG validation");
     				if (eag.APEnetEAGValidate(archivalInstitutionId, fileName)){
                         log.info("EAG is valid");
                         
                         //check the <recordId> content
-                        eag.setEagPath(fullFileName); //temp used for looking forward target tag
+
                         String recordIdValue = eag.lookingForwardElementContent("/eag/control/recordId");
                         if(recordIdValue!=null && recordIdValue.endsWith(MAGIC_KEY)){ 
                         	//replace value with a consecutive unique value
