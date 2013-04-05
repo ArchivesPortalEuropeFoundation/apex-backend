@@ -105,6 +105,7 @@
 			<td class="inputLabel"><s:label key="ead2ese.label.provider" for="provider" /><span
 				class="required">*</span>:</td>
 			<td><s:textfield id="provider" name="provider" required="true"/>
+				<s:fielderror fieldName="provider"/>
 			</td>
 		</tr>
 		<tr>

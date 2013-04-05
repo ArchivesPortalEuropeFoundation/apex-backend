@@ -90,6 +90,9 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 		if (StringUtils.isBlank(daoType)){
 			addFieldError("daoType",getText("errors.required"));
 		}
+		if (provider.isEmpty()) {
+			addFieldError("provider", getText("errors.required"));
+		}
 
 		retrieveRepositoryInfo();
 		if (textDataProvider.isEmpty() && !this.isShowDataProviderCheck()) {
