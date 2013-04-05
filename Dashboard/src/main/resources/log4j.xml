@@ -34,9 +34,13 @@
 	<logger name="eu.apenet.dashboard.security.SecurityInterceptor">
 		<level value="debug" />
 		<appender-ref ref="securityFile" /> 
-	</logger>	
+	</logger>
+	<logger name="eu">
+		<level value="info" />
+		<appender-ref ref="file" /> 
+	</logger>		
 	<root>
-		<priority value="INFO" />
+		<priority value="ERROR" />
 		<!-- <appender-ref ref="console" /> -->
 		<appender-ref ref="file" />
 	</root>
