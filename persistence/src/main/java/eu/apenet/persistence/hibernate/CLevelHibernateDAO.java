@@ -288,6 +288,25 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		criteria.setProjection(Projections.count("cLevel.clId"));
 		return (Long)criteria.uniqueResult();
 	}
+
+	/**
+	 * Returns a List<CLevel> which contains "dao" with "repository" information.
+	 *
+	 * @param hgId
+	 *
+	 * @return List<CLevel>
+	 */
+	@Override
+	public List<CLevel> getCLevelsWithRepositoryInDao(Integer hgId) {
+		Criteria criteria = getSession().createCriteria(getPersistentClass(), "cLevel");
+		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		criteria.add(Restrictions.eq("ecId", hgId.longValue()));
+		criteria.add(Restrictions.and(Restrictions.like("xml", "%<dao%"),
+				Restrictions.like("xml", "%<repository%")));
+
+		return (List<CLevel>) criteria.list();
+	}
+
 	/**
 	 * Returns total number of c_level (FindingAids) included into a Holdings
 	 * Guide

@@ -20,7 +20,10 @@ import eu.apenet.dashboard.actions.content.BatchEadActions;
 import eu.apenet.dashboard.actions.content.ContentManagerAction;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dpt.utils.ead2ese.EseConfig;
+import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.dao.EadSearchOptions;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.QueueAction;
 
 public class ConvertAction extends AbstractInstitutionAction  implements ServletRequestAware{
@@ -28,7 +31,6 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 	private static final String CREATIVECOMMONS_CPDM = "cpdm";
 	private static final String CREATIVECOMMONS_CC0 = "cc0";
 	private static final String CREATIVECOMMONS = "creativecommons";
-	private static final String DATA_PROVIDER_CUSTOM = "custom";
 	private static final String INHERITLANGUAGE_PROVIDE = "provide";
 	private static final String EUROPEANA = "europeana";
 	/**
@@ -43,7 +45,6 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
     private Set<SelectItem> yesNoSet = new TreeSet<SelectItem>();
     private Set<SelectItem> inheritLanguageSet = new TreeSet<SelectItem>();
     private Set<SelectItem> providerSet = new TreeSet<SelectItem>();
-    private Set<SelectItem> dataProviderSet = new TreeSet<SelectItem>();
     private Set<SelectItem> licenseSet = new TreeSet<SelectItem>();
     private Set<SelectItem> europeanaLicenseSet = new TreeSet<SelectItem>();
     private String license;
@@ -59,11 +60,12 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
     private String hierarchyPrefix;
     private String inheritOrigination= "no";
     private String inheritFileParent= "no";
-    private String dataProvider = "mapping";
     private String customDataProvider;
     private String mappingsFileFileName; 		//The uploaded file name
     private File mappingsFile;					//The uploaded file
     private String mappingsFileContentType;		//The content type of the file uploaded
+    private String textDataProvider;			//Text for the data provider from element "<repository>".
+    private Boolean showDataProviderCheck;		//Show or not the check for the data provider
     
     private Set<SelectItem> languages = new TreeSet<SelectItem>();
 	private HttpServletRequest httpServletRequest;
@@ -80,19 +82,19 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 				addFieldError("language", getText("errors.required"));
 			}
 		}
-		if (DATA_PROVIDER_CUSTOM.equals(dataProvider)){
-			if (StringUtils.isBlank(customDataProvider)){
-				addFieldError("customDataProvider",getText("errors.required"));
-			}
-		}
 		if (EUROPEANA.equals(license)){
 			if (StringUtils.isBlank(europeanaLicense)){
 				addFieldError("europeanaLicense", getText("errors.required"));
 			}
-		}	
+		}
 		if (StringUtils.isBlank(daoType)){
 			addFieldError("daoType",getText("errors.required"));
-		} 
+		}
+
+		retrieveRepositoryInfo();
+		if (textDataProvider.isEmpty() && !this.isShowDataProviderCheck()) {
+			addFieldError("textDataProvider", getText("errors.required"));
+		}
 	}
 	@Override
 	protected void buildBreadcrumbs() {
@@ -120,9 +122,7 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 		yesNoSet.add(new SelectItem("no", getText("ead2ese.content.no")));
 		inheritLanguageSet.add(new SelectItem("yes", getText("ead2ese.content.yes")));
 		inheritLanguageSet.add(new SelectItem("no", getText("ead2ese.content.no")));
-		inheritLanguageSet.add(new SelectItem(INHERITLANGUAGE_PROVIDE, getText("ead2ese.label.language.select")));	
-		dataProviderSet.add(new SelectItem(DATA_PROVIDER_CUSTOM, getText("ead2ese.content.dataprovider.custom")));
-		dataProviderSet.add(new SelectItem("mapping", getText("ead2ese.content.dataprovider.mapping")));
+		inheritLanguageSet.add(new SelectItem(INHERITLANGUAGE_PROVIDE, getText("ead2ese.label.language.select")));
 		licenseSet.add(new SelectItem(EUROPEANA, getText("ead2ese.content.license.europeana")));
 		licenseSet.add(new SelectItem(CREATIVECOMMONS, getText("ead2ese.content.license.creativecommons")));
 		licenseSet.add(new SelectItem(CREATIVECOMMONS_CC0, getText("ead2ese.content.license.creativecommons.cc0")));
@@ -134,10 +134,29 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 		europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/rr-r/", getText("ead2ese.content.license.europeana.access.restricted")));
 		europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/unknown/", getText("ead2ese.content.license.europeana.access.unknown")));
 		this.setHierarchyPrefix(getText("ead2ese.content.hierarchy.prefix" ));
-
     }
+
 	public String input(){
+		retrieveRepositoryInfo();
 		return SUCCESS;
+	}
+
+	/**
+	 * Method to try to retrieve the "repository" information on "<c" level with "dao".
+	 */
+	protected void retrieveRepositoryInfo() {
+		CLevelDAO cLevelDAO = DAOFactory.instance().getCLevelDAO();
+		List<CLevel> cLevelList = cLevelDAO.getCLevelsWithRepositoryInDao(Integer.valueOf(id));
+
+		if (!cLevelList.isEmpty()) {
+			CLevel cLevel = cLevelList.get(0);
+			String xml = cLevel.getXml();
+			textDataProvider = xml.substring(xml.indexOf("<repository>") + 12).split("\\n")[0];
+			this.setShowDataProviderCheck(false);
+			return;
+		}
+
+		this.setShowDataProviderCheck(true);
 	}
 	
     public String getId() {
@@ -355,22 +374,6 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 		this.providerSet = providerSet;
 	}
 
-	public Set<SelectItem> getDataProviderSet() {
-		return dataProviderSet;
-	}
-
-	public void setDataProviderSet(Set<SelectItem> dataProviderSet) {
-		this.dataProviderSet = dataProviderSet;
-	}
-
-	public String getDataProvider() {
-		return dataProvider;
-	}
-
-	public void setDataProvider(String dataProvider) {
-		this.dataProvider = dataProvider;
-	}
-
 	public Set<SelectItem> getLicenseSet() {
 		return licenseSet;
 	}
@@ -427,6 +430,20 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 		this.batchItems = batchItems;
 	}
 
+	public String getTextDataProvider() {
+		return textDataProvider;
+	}
 
+	public void setTextDataProvider(String textDataProvider) {
+		this.textDataProvider = textDataProvider;
+	}
+
+	public Boolean isShowDataProviderCheck() {
+		return showDataProviderCheck;
+	}
+
+	public void setShowDataProviderCheck(Boolean showDataProviderCheck) {
+		this.showDataProviderCheck = showDataProviderCheck;
+	}
 	
 }

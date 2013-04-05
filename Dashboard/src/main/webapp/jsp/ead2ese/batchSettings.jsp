@@ -100,20 +100,17 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="inputLabel"><s:label key="ead2ese.label.dataprovider" for="dataProvider" />:</td>
-			<td><s:radio name="dataProvider" id="dataProvider" list="dataProviderSet" listKey="value" listValue="content"></s:radio>
-			</td>
-		</tr>
-		<s:if test="dataProvider!='custom'">
-			<c:set var="customDataProviderInvisible" value="style=\"display: none;\""></c:set>
-		</s:if>
-		<tr id="hiddenCustomDataProvider" ${customDataProviderInvisible}>
-			<td class="inputLabel"><s:label key="ead2ese.label.dataprovider.custom" for="customDataProvider" /><span
+			<td class="inputLabel"><s:label key="ead2ese.label.dataprovider" for="dataProvider" /><span
 				class="required">*</span>:</td>
-			<td><s:textfield id="customDataProvider" name="customDataProvider" required="true" /><s:fielderror fieldName="customDataProvider"/>
+			<td>
+				<s:textfield id="textDataProvider" name="textDataProvider" required="true"/>
+				<s:if test="showDataProviderCheck==true">
+					<s:checkbox name="dataProviderCheck" id="dataProviderCheck" value="true"></s:checkbox>
+					<s:label key="ead2ese.content.dataprovider.mapping" for="dataProviderCheck"/>
+				</s:if>
+				<s:fielderror fieldName="textDataProvider"/>
 			</td>
 		</tr>
-
 		<tr>
 			<td class="inputLabel"><s:label key="ead2ese.label.provider" for="provider" /><span
 				class="required">*</span>:</td>
