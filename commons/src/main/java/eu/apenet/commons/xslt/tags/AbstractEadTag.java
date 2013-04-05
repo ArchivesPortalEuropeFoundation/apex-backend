@@ -62,7 +62,7 @@ public abstract class AbstractEadTag extends SimpleTagSupport {
 			EadXslt.convertEadToHtml(xsltUrls.get(getType()), this.getJspContext().getOut(), xmlSource, searchTerms,
 					highlightFields, getResourceBundleSource(), secondDisplayUrl, aiIdInt, getSolrStopwordsUrl());
 		} catch (Exception e) {
-			LOG.error(e.getMessage(), e);
+			LOG.error(e.getMessage());
 		}
 
 	}
