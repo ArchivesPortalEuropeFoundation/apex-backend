@@ -155,7 +155,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
 	public APEnetEAGDashboard(Integer aiId, String tempEagPath) {
 		super(new StrutsResourceBundleSource(), aiId, tempEagPath);
 				
-		if (this.eagPath == null){
+		if (this.getEagPath() == null){
 					
 			//respondiblePersonSurname and responsiblePersonName have been removed from EAG Web Form for the moment
 			this.responsiblePersonSurname = "";
@@ -207,11 +207,10 @@ public class APEnetEAGDashboard extends APEnetEAG {
 	}
 
 	//Methods
-	public Boolean APEnetEAGValidate (Integer aiId, String filename) throws APEnetException, SAXException {
+	public boolean validate () throws APEnetException, SAXException {
         //EAG file is stored temporally in the location defined in eagPath attribute
-        log.debug("Path of EAG: " + eagPath);
-        log.debug("Filename of EAG: " + filename);
-        File file = new File(eagPath + filename);
+        log.debug("Path of EAG: " + this.getEagPath());
+        File file = new File(this.getEagPath());
         //Xsd_enum schema = Xsd_enum.XSD_APE_EAG_SCHEMA; //todo: Now we use EAG 2012 for this, but it needs to be completed
         Xsd_enum schema = Xsd_enum.XSD_EAG_2012_SCHEMA;
         try {
@@ -244,14 +243,13 @@ public class APEnetEAGDashboard extends APEnetEAG {
 		}
 	}
 
-	public Boolean convertToAPEnetEAG (String filename) throws APEnetException {
+	public Boolean convertToAPEnetEAG () throws APEnetException {
         //EAG file is stored temporally in the location defined in eagPath attribute
-        File file = new File(eagPath + filename);
+        File file = new File(this.getEagPath());
         try {
             InputStream in;
             final String xslfilename = "changeNS.xsl";
-            String outputFilePath = eagPath + "converted_" + filename;
-            File outputfile = new File(outputFilePath);
+            File outputfile = new File(file.getParentFile(), "converted_" + file.getName());
             String xslFilePath = APEnetUtilities.getDashboardConfig().getSystemXslDirPath() + APEnetUtilities.FILESEPARATOR + xslfilename;
             in = new FileInputStream(file);
             TransformationTool.createTransformation(in, outputfile, FileUtils.openInputStream(new File(xslFilePath)), null, true, true, null, true, null);
@@ -309,16 +307,16 @@ public class APEnetEAGDashboard extends APEnetEAG {
 //					oldEAG = null;
 //				}
 
-				if (this.eagPath == null) {
+				if (this.getEagPath()== null) {
 					
 					//It is necessary to create a new EAG file from scratch
 					//First, it is necessary to build the path
-					this.eagPath = APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + this.getId() + ".xml";
+					this.setEagPath(APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + this.getFilename());
 					File eagDir = new File(APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG");
 		            if(!eagDir.exists())
 		                eagDir.mkdirs();
 
-		            String storagePath = APEnetUtilities.getConfig().getRepoDirPath() + this.eagPath;
+		            String storagePath = APEnetUtilities.getConfig().getRepoDirPath() + this.getEagPath();
 					File eagFile = new File(storagePath);
 		            
 		            try {
@@ -608,13 +606,13 @@ public class APEnetEAGDashboard extends APEnetEAG {
 				                archivalInstitution.setRegistrationDate(dateNow);	                	
 			                }
 
-			                archivalInstitution.setEagPath(eagPath);
+			                archivalInstitution.setEagPath(getEagPath());
 			                archivalInstitution.setAutform(this.getName());
 			                archivalInstitution.setRepositorycode(this.getId());
 			                archivalInstitutionDao.store(archivalInstitution);
 			                
 
-							log.info("The EAG " + this.eagPath + " has been created and stored in repository");
+							log.info("The EAG " + getEagPath() + " has been created and stored in repository");
 			                ChangeControl.logOperation("Upload eag");
 			                
 			                if (someRepositorguideInformationEmpty) {
@@ -669,8 +667,8 @@ public class APEnetEAGDashboard extends APEnetEAG {
 					try {
 			        	
 						//First, it is necessary to backup the original EAG
-						File srcFile = new File(this.eagPath);
-						File destFile = new File(this.eagPath + "_old");
+						File srcFile = new File(getEagPath());
+						File destFile = new File(getEagPath()+ "_old");
 						FileUtils.copyFile(srcFile, destFile);
 
 						eagModifyingProcessState = 1;
@@ -679,7 +677,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
 			        	//For those nodes modified, the name space won't be taken into account
 						dbFactory.setNamespaceAware(true);
 			        	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			        	InputStream sfile = new FileInputStream(this.eagPath);
+			        	InputStream sfile = new FileInputStream(getEagPath());
 			        	Document doc = dBuilder.parse(sfile);
 			        	doc.getDocumentElement().normalize();
 			        	
@@ -1074,18 +1072,18 @@ public class APEnetEAGDashboard extends APEnetEAG {
 			            	oldEAGpath = this.getEagPath();
 							File oldEAG = new File(oldEAGpath);
 							if (oldEAG.exists()) {
-								log.info("Removing EAG " + this.eagPath);
+								log.info("Removing EAG " + this.getEagPath());
 								FileUtils.forceDelete(oldEAG);							
 							}
 							
 							oldEAG = null;
 
 			            	//Create a new path with the new name
-			    			this.eagPath = APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + this.getId() + ".xml";
+			    			this.setEagPath( APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + this.getFilename());
 			    			
 			            }
 
-			            Result result = new StreamResult(new java.io.File(this.eagPath));;
+			            Result result = new StreamResult(new File(this.getEagPath()));;
 			            Source source = new DOMSource(doc);
 			            Transformer transformer;
 		                transformer = TransformerFactory.newInstance().newTransformer();
@@ -1098,7 +1096,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
 		                
 		                Date dateNow = new Date();
 		                archivalInstitution.setRegistrationDate(dateNow);
-		                archivalInstitution.setEagPath(APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + this.getId() + ".xml");
+		                archivalInstitution.setEagPath(APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + this.getFilename());
 		                archivalInstitution.setAutform(this.getName());
 		                archivalInstitution.setRepositorycode(this.getId());
 		                archivalInstitutionDao.updateSimple(archivalInstitution);
@@ -1113,7 +1111,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
 							backupFile = new File(oldEAGpath + "_old");		                	
 		                }
 		                else {
-							backupFile = new File(this.eagPath + "_old");
+							backupFile = new File(getEagPath() + "_old");
 		                }
 						FileUtils.forceDelete(backupFile);
 
@@ -1134,7 +1132,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
 
 		    			//Register operation
 		                ChangeControl.logOperation("Upload eag");
-						log.info("EAG " + this.eagPath + " has been successfuly modified");
+						log.info("EAG " + getEagPath() + " has been successfuly modified");
 						
 		                if (someRepositorguideInformationEmpty) {
 		                	value = "correct_withoutRepositorguideInformation";
@@ -1157,7 +1155,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
 									log.error("Error removing backup EAG file. Error:" + e.getMessage());
 								}
 							}
-							log.error("There were errors during backup the eag file " + this.eagPath + ". Error: " + e.getMessage());
+							log.error("There were errors during backup the eag file " + this.getEagPath() + ". Error: " + e.getMessage());
 						}
 						
 						if (eagModifyingProcessState == 1) {
@@ -1201,7 +1199,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
 							currentEAG = null;
 							backupEAG = null;
 							
-							log.error("There were errors during the modification of the EAG file " + this.eagPath + " [File System Rollback]. Error: " + e.getMessage());
+							log.error("There were errors during the modification of the EAG file " + this.getEagPath() + " [File System Rollback]. Error: " + e.getMessage());
 						}
 
 						if (eagModifyingProcessState == 2) {
@@ -1250,13 +1248,13 @@ public class APEnetEAGDashboard extends APEnetEAG {
 							HibernateUtil.rollbackDatabaseTransaction();
 							HibernateUtil.closeDatabaseSession();
 							
-							log.error("There were errors during Database Transaction and the modification of the EAG file " + this.eagPath + " [File System and Database Rollback]. Error: " + e.getMessage());
+							log.error("There were errors during Database Transaction and the modification of the EAG file " + this.getEagPath() + " [File System and Database Rollback]. Error: " + e.getMessage());
 						}
 						
 						if (eagModifyingProcessState == 3) {
 							//There were errors during Database or File system commit
 							HibernateUtil.closeDatabaseSession();
-							log.error("FATAL ERROR. Error during Database or File System commits while modifying the EAG " + this.eagPath + ". Please, check inconsistencies in Database and File system", e);
+							log.error("FATAL ERROR. Error during Database or File System commits while modifying the EAG " + this.getEagPath() + ". Please, check inconsistencies in Database and File system", e);
 						}
 
 			        	oldEAGpath = null;
@@ -1311,15 +1309,15 @@ public class APEnetEAGDashboard extends APEnetEAG {
 		
 		if (gArchivalLandscape.exists() && lArchivalLandscape.exists() && this.isArchivalInstitutionInArchivalLandscape()){
 			//It is necessary to build the path
-			this.eagPath = sourcePath;
+			this.setEagPath(sourcePath);
 			this.setId(this.extractAttributeFromEag("control/recordId", null, true));
 			this.setName(this.extractAttributeFromEag("archguide/identity/autform", null,true));
 			//It is necessary to check if this EAG has been updated before for another archival institution			
 			if (this.isEagAlreadyUploaded()){
 				value = "error_eagalreadyuploaded";
 			} else {
-				this.eagPath = APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + this.aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + this.getFilename();
-				String storagePath = APEnetUtilities.getConfig().getRepoDirPath() + this.eagPath;
+				this.setEagPath(APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + this.aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + this.getFilename());
+				String storagePath = APEnetUtilities.getConfig().getRepoDirPath() + this.getEagPath();
 				String oldEAGPath = APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + this.aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR + "_remove" + getFilename();
 				File source = new File(sourcePath);
 				File destination = new File(storagePath);
@@ -1337,7 +1335,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
 					//The new path, autform and repositorycode are stored in archival_institution table
 			        Date dateNow = new Date();
 			        archivalInstitution.setRegistrationDate(dateNow);
-			        archivalInstitution.setEagPath(this.eagPath);
+			        archivalInstitution.setEagPath(this.getEagPath());
 	                archivalInstitution.setAutform(this.getName());
 	                archivalInstitution.setRepositorycode(this.getId());
 			        archivalInstitutionDao.insertSimple(archivalInstitution);
@@ -1367,7 +1365,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
 					HibernateUtil.commitDatabaseTransaction();
 						
 			        ChangeControl.logOperation("Upload eag");						
-					log.info("The EAG " + this.eagPath + " has been created and stored in repository");
+					log.info("The EAG " + this.getEagPath() + " has been created and stored in repository");
 
 			        value = "correct";	                			
 
@@ -1599,15 +1597,15 @@ public class APEnetEAGDashboard extends APEnetEAG {
         	
 		}
         catch (TransformerConfigurationException e) {
-			log.error("Error configuring Transformer during the creation of " + this.eagPath + " file. " +  e.getMessage());
+			log.error("Error configuring Transformer during the creation of " + this.getEagPath() + " file. " +  e.getMessage());
             value = "error";
         } 
         catch (TransformerFactoryConfigurationError e) {
-			log.error("Error configuring Transformer Factory during the creation of " + this.eagPath + " file. " +  e.getMessage());
+			log.error("Error configuring Transformer Factory during the creation of " + this.getEagPath() + " file. " +  e.getMessage());
             value = "error";
         } 
         catch (TransformerException e) {
-			log.error("Transformer error during the creation of " + this.eagPath + " file. " +  e.getMessage());
+			log.error("Transformer error during the creation of " + this.getEagPath() + " file. " +  e.getMessage());
             value = "error";
         }
 		catch (IOException e) {
@@ -1761,10 +1759,10 @@ public class APEnetEAGDashboard extends APEnetEAG {
     public String toString() {
         return "APEnetEAG{" +
                 "aiId=" + this.aiId +
-                ", eagPath='" + this.eagPath + '\'' +
+                ", eagPath='" + this.getEagPath() + '\'' +
                 ", name='" + this.name + '\'' +
                 ", englishName='" + this.englishName + '\'' +
-                ", id='" + this.id + '\'' +
+                ", id='" + this.getId() + '\'' +
                 ", responsiblePersonSurname='" + this.responsiblePersonSurname + '\'' +
                 ", responsiblePersonName='" + this.responsiblePersonName + '\'' +
                 ", country='" + this.country + '\'' +
