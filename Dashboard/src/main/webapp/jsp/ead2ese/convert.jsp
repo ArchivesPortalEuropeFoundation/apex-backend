@@ -138,7 +138,7 @@
 			</td>
 		</tr>					
 		<tr>
-			<td colspan="2"><s:submit action="processEseConvert" key="ead2ese.label.next"  cssClass="mainButton"/> <s:submit action="content"
+			<td colspan="2"><s:submit action="processEseConvert" key="ead2ese.label.next"  cssClass="mainButton"/> <s:submit action="contentmanager"
 					key="ead2ese.label.cancel" />
 			</td>
 		</tr>
