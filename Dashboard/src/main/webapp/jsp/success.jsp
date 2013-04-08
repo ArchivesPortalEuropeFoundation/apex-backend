@@ -6,7 +6,7 @@
 	<br></br>
 	<s:actionmessage />
 	<br></br>
-	<s:submit action="index" value="Back to home"/>
+	<s:submit action="index" <s:property value="getText('currentState.back')" />/>
 	</s:form>
 </div>
 

@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
         <div id="fileList">
-            Some errors occurred during the EAG creation process:<br>
-			The EAG could't be properly created
+            <s:property value="getText('uploadsimpleeagerror.errorsOccurred')" /><br>
+			<s:property value="getText('uploadsimpleeagerror.errEAG')" />
         </div>
         <div id="global">
 			<s:form method="POST" action="index">

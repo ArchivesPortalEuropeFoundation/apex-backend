@@ -246,7 +246,7 @@
                 onDrop: function(node, sourceNode, hitMode, ui, draggable) {
                     logMsg(hitMode);
                     //todo: Also do some DB changes
-                    alert("This UI function (drag and drop) does not function yet, it is not linked to any backend function...");
+                    alert("<s:property value="getText('hgTreeCreation.notImplemented')" />");
                     if(hitMode == "over"){
                         node.addChild(sourceNode);
                         sourceNode.remove();

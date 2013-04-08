@@ -35,7 +35,7 @@
 								
 						$("#directoryTree").dynatree({
 							//Navigated Search Tree for Countries, Archival Institution Groups and Archival Institutions configuration
-							title: "Navigated Search Tree for Archival Landscape - Countries, Archival Insitution Groups and Archival Institutions",
+							title: "<s:property value="getText('viewAL.tree')" />",
 							rootVisible: false,
 							fx: { height: "toggle", duration: 200 },
 							selectMode: 1,

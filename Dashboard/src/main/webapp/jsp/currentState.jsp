@@ -15,7 +15,7 @@
 	   	<s:hidden name="currentStateNFS"></s:hidden>
 	   	<s:hidden name="currentStateSOLR"></s:hidden>
 	   	 <s:hidden name="currentStateTOMCAT"></s:hidden>
-		<s:submit action="index" value="Back to the Home"/>		
+		<s:submit action="index" value="getText('currentState.back')" />		
 		</s:form>
 	</div>
 </body>	

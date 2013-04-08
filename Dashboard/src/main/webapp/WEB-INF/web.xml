@@ -96,9 +96,7 @@
         <param-name>email-configuration</param-name>
 		<param-value>emails/email-configuration.xml</param-value>        
     </context-param>
-    
-	<servlet>
-<!-- 	<servlet>
+
 <!-- 	<servlet>
         <description></description>
         <display-name>EseHTMLServlet</display-name>

@@ -9,6 +9,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.security.SecurityService;
 import eu.apenet.dashboard.security.UserService;
+import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.User;
 
 import java.io.File;
@@ -22,11 +23,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author paul
@@ -40,9 +43,11 @@ public class ContactAction extends ActionSupport{
 	private String feedbackText;
 	public String toList;
 	
+	private Map<String, String> mails;
+	
 	private String breadcrumbLinks;
-	
-	
+
+
 	/**
 	 * <p> Send a email contact. In case of user logged, the system fill out the field automatically and not show Captcha </p>
 	 */
@@ -65,49 +70,47 @@ public class ContactAction extends ActionSupport{
 	public void addTo(){
 		try{
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            List<String> dropDownSubject = new ArrayList<String>();
-            List<String> dropDownTo = new ArrayList<String>();
-            Map<String,String> dropDownTable = new HashMap<String, String>();
+            Map<String,String> dropDownTable = new HashMap<String,String>();
             String ruta = "emails/email-configuration.xml";
             InputStream path = Thread.currentThread().getContextClassLoader().getResourceAsStream(ruta);
             Document documento = builder.parse(path);
-            dropDownTable = readConfigFile(dropDownTable,documento, dropDownSubject, dropDownTo);
-            
-            Iterator it = dropDownTable.entrySet().iterator();
-            while (it.hasNext()) {
-	            Map.Entry e = (Map.Entry)it.next();
-	            System.out.println(e.getKey() + " " + e.getValue());
-            }
+            mails = readConfigFile(dropDownTable,documento);
+            printMap(mails);
      
 		}catch(Exception e){
             e.printStackTrace();
         }
 	}
 	
-   public Map<String, String> readConfigFile(Map<String,String> dropDownTable,Node section, List<String> subject, List<String> to ){
+	public static void printMap(Map mp) {
+	    Iterator it = mp.entrySet().iterator();
+	    while (it.hasNext()) {
+	        Map.Entry pairs = (Map.Entry)it.next();
+	        System.out.println(pairs.getKey() + " = " + pairs.getValue());
+	        it.remove(); // avoids a ConcurrentModificationException
+	    }
+	}
+	
+    public Map<String, String> readConfigFile(Map<String,String> dropDownTable,Node section){
 	   if(section != null){
-			if (section.getNodeName().equals("subject")) {
-				System.out.println(section.getNodeName() + ": " + getText(section.getTextContent()));
-				subject.add(getText(section.getTextContent()));
-			}
-			
-			if (section.getNodeName().equals("to")) {
-				System.out.println(section.getNodeName() + ": " + section.getTextContent());
-				to.add(section.getTextContent());
-			}
-			
-			dropDownTable.put(subject.toString(), to.toString());
-			
-			NodeList field = section.getChildNodes();
-			for(int i = 0; i < field.getLength(); i++){
-			    Node data = field.item(i);
-			    dropDownTable = readConfigFile(dropDownTable,data, subject, to);
-			    
-			    if(!subject.toString().contains("[]") || !to.toString().contains("[]"))
-			    {	    	
-			    		
+			NodeList emails = section.getChildNodes();
+			String subject = new String();
+			String to = new String();
+			for(int i = 0; i < emails.getLength(); i++){
+			    Node email = emails.item(i);
+			    if(email.hasChildNodes() && !email.getNodeName().equals("subject") && !email.getNodeName().equals("to")){
+			    	dropDownTable = readConfigFile(dropDownTable,email);
+			    }else{
+			    	if (email.getNodeName().equals("subject")) {
+						subject=getText(email.getTextContent());
+					}
+					if (email.getNodeName().equals("to")) {
+						to=email.getTextContent();
+					}
 			    }
-
+			}
+			if(section.getNodeName().equals("email")){
+				dropDownTable.put(subject, to);
 			}
         }
 	   return dropDownTable;
@@ -128,7 +131,6 @@ public class ContactAction extends ActionSupport{
 		}
 	}
 	
-
 	public String getFeedbackText() {
 		return feedbackText;
 	}
@@ -145,13 +147,20 @@ public class ContactAction extends ActionSupport{
 		this.email = email;
 	}
 
-
 	public void setBreadcrumbLinks(String breadcrumbLinks) {
 		this.breadcrumbLinks = breadcrumbLinks;
 	}
 
 	public String getBreadcrumbLinks() {
 		return breadcrumbLinks;
+	}
+
+	public Map<String, String> getMails() {
+		return mails;
+	}
+
+	public void setMails(Map<String, String> mails) {
+		this.mails = mails;
 	}
 }
 

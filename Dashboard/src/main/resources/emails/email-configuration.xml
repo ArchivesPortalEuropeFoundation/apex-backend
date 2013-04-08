@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <emails>
-    <subject>xmlMail.troubles</subject>
-    <to>bastiaan.verhoef.ape@gmail.com;yoann.moranville@gmail.com</to>
-    <subject>xmlMail.data</subject>
-    <to>beatriz.gonzalezvi@mecd.es</to>
+	<email>
+	    <subject>xmlMail.troubles</subject>
+	    <to>bastiaan.verhoef.ape@gmail.com;yoann.moranville@gmail.com</to>
+	</email>
+	<email>
+	    <subject>xmlMail.data</subject>
+	    <to>beatriz.gonzalezvi@mecd.es</to>
+    	</email>
+	<email>
     <subject>xmlMail.procesing</subject>
     <to>lucile.grand.ape@gmail.com</to>
+    	</email>
+	<email>
     <subject>xmlMail.europeana</subject>
     <to>kerstin.arnold.ape@gmail.com</to>
+    	</email>
+	<email>
     <subject>xmlMail.other</subject>
     <to>bastiaan.verhoef.ape@gmail.com;yoann.moranville@gmail.com;beatriz.gonzalezvi@mecd.es</to>
+    	</email>
+	<email>
     <subject>xmlMail.suggestions</subject>
     <to>kerstin.arnold.ape@gmail.com;chris.houwing.ape@gmail.com</to>
+    </email>
 </emails>

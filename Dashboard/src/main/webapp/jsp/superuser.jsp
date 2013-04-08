@@ -9,12 +9,12 @@
         $("#indexAll").click(function() {
             $("#stopAll").css("display", "block");
             $("#indexAll").css("display", "none");
-            $("#introduction").html("Please wait patiently... It will take quite some time to finish...");
+            $("#introduction").html("<s:property value="getText('superuser.wait')" />");
             doIndexingLoop(loadUrl, data);
         });
         $("#stopAll").click(function() {
             $("#stopAll").css("display", "none");
-            $("#introduction").html("We are closing the connection, please wait...");
+            $("#introduction").html("<s:property value="getText('superuser.closing')" />");
             continueLoop = false;
         });
     });
@@ -25,11 +25,11 @@
                 if(continueLoop) {
                     doIndexingLoop(loadUrl, data);
                 } else {
-                    $("#introduction").html("Stopped - you can restart it when you want.");
+                    $("#introduction").html("<s:property value="getText('superuser.stopped')" />");
                     $("#indexAll").css("display", "block");
                 }
             } else {
-                $("#introduction").html("Your batch is finished!");
+                $("#introduction").html("<s:property value="getText('superuser.finished')" />");
             }
         }, 'json');
     }

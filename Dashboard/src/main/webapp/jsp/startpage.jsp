@@ -3,9 +3,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <div align="center">
-	Welcome!<br/>
-    You just finished installing the APEnet Dashboard.<br/><br/>
-    Please create your administrator user below:<br/>
+	<s:property value="getText('startpage.wellcome')" /><br/>
+    <s:property value="getText('startpage.wellcome2')" /><br/><br/>
+    <s:property value="getText('startpage.wellcome3')" /><br/>
     <s:form method="POST">
 
         <s:textfield name="username" key="label.username" size="25" />

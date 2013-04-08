@@ -8,7 +8,7 @@
 	<s:actionerror />
 	<s:actionmessage />
 	<br></br>
-	<s:submit action="index" value="Back to the Home"/>
+	<s:submit action="index" value="getText('currentState.back')"/>
 	</s:form>
 </div>
 	

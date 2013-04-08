@@ -29,7 +29,7 @@
     function ajaxHarvest(data){
         $.post("${pageContext.request.contextPath}/harvesting.action", data, function(databack){
             if(databack != null){
-                $("#harvestInfo").prepend("Current resumption token: " + databack.currentToken + "<br/>");
+                $("#harvestInfo").prepend("<s:property value="getText('harvest.currentTesumptionToken')" />" + databack.currentToken + "<br/>");
                 if(databack.finished) {
                     continueHarvest = false;
                     checkThreadLevel();
@@ -52,7 +52,7 @@
 //        $("#harvestInfo").html("Harvest finished");
 //        $("#harvestInfo").append("<br/><button id=\"step1\">Construct Finding Aids</button><br/>(Can be very long depending on the size of the harvest)");
 //        $("#step1").click(function(){
-            $("#harvestInfo").html("Step 2/3: Preparation of EAD files began");
+            $("#harvestInfo").html("<s:property value="getText('harvest.step2')" />");
             getThreadLevel();
 //        });
     }
@@ -60,17 +60,17 @@
         $.post("${pageContext.request.contextPath}/getThreadLevel.action", {oaiType: '${oaiType}'}, function(databack){
             if(databack != null){
                 if(databack.countLeft != null){
-                    $("#harvestInfo").append(databack.countLeft + " OAI-PMH files left to examine");
+                    $("#harvestInfo").append(databack.countLeft + " " + "<s:property value="getText('harvest.OAI-PMH')" />");
                     checkThreadLevel();
                 }
                 if(databack.fullFinished){
-                    $("#harvestInfo").html(databack.numberEadContent + " finding aids have been successfully converted into EAD, you can see the files in the content manager.");
+                    $("#harvestInfo").html(databack.numberEadContent + " " + "<s:property value="getText('harvest.successfullyConvertedIntoEAD')" />");
                     $("#harvestingWheel").html("");
                 } else if(databack.finished){
-                    $("#harvestInfo").html("Insertion of data in database is finished.<br/>Step 3/3: Conversion to data into EAD.");
+                    $("#harvestInfo").html("<s:property value="getText('harvest.step3')" />" + "<br>" + "<s:property value="getText('harvest.step31')" />");
                     convertToEad();
                 } else {
-                    $("#harvestInfo").html("Insertion of data in database failed...");
+                    $("#harvestInfo").html("<s:property value="getText('harvest.insertionInDatabaseFailed')" />");
                 }
             }
         }, "json");
@@ -79,11 +79,11 @@
         $.post("${pageContext.request.contextPath}/dbToEadAjax.action", function(databack){
             if(databack != null){
                 if(databack.finished){
-                    $("#harvestInfo").html(databack.numberEadContent + " finding aids have been successfully converted into EAD, you can see the files in the content manager.");
+                    $("#harvestInfo").html(databack.numberEadContent + " " + "<s:property value="getText('harvest.successfully')" />");
                     $("#harvestingWheel").html("");
                 } else {
                     $("#harvestingWheel").html("");
-                    $("#harvestInfo").html("Error: Data has not been successfully converted to EAD");
+                    $("#harvestInfo").html("<s:property value="getText('harvest.error')" />");
                 }
             }
         }, "json");

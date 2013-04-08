@@ -132,7 +132,7 @@
                 var doClose = true;
                 if(databack != null){
                     if(databack.error){
-                        $("#mytext").html("Error parsing your request... Sorry, please try again or contact the core team:<br/>" + databack.error);
+                        $("#mytext").html("<s:property value="getText('batch.err')" />" + "<br/>" + databack.error);
                         $("#cboxClose").css("display", "inline");
                         $("#abort").css("display", "none");
                         $("#progressbar").css("display", "none");
@@ -172,7 +172,7 @@
 
 
         function stop(){
-            $("#mytext").html("Cleaning up and closing the batch processing in a minute...");
+            $("#mytext").html("<s:property value="getText('batch.cleaning=')" />");
             continueLoop = false;
         }
 
