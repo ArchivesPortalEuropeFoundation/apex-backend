@@ -535,7 +535,7 @@ public class APEnetEAG {
 	}
 
 
-	protected void setEagPath(String eagPath) {
+	public void setEagPath(String eagPath) {
 		this.eagPath = eagPath;
 	}
 
