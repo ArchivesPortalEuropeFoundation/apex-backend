@@ -137,7 +137,7 @@
 		</tr>				
 		<tr id="hiddenCreativeCommonsLicense" ${creativeCommonsInvisible}>
 			<td colspan="2">     <div id="cc_js_widget_container">
-       <script type="text/javascript" src="http://api.creativecommons.org/jswidget/tags/0.97/complete.js?locale=en_US&amp;want_a_license=definitely"></script>
+       <script type="text/javascript" src="https://api.creativecommons.org/jswidget/tags/0.97/complete.js?locale=en_US&amp;want_a_license=definitely"></script>
      </div>
 			</td>
 		</tr>
