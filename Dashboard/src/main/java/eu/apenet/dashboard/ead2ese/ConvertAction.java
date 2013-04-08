@@ -149,14 +149,16 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 	 */
 	protected void retrieveRepositoryInfo() {
 		CLevelDAO cLevelDAO = DAOFactory.instance().getCLevelDAO();
-		List<CLevel> cLevelList = cLevelDAO.getCLevelsWithRepositoryInDao(Integer.valueOf(id));
+		List<CLevel> cLevelList = cLevelDAO.getCLevelsWithRepositoryInDao(Long.valueOf(id));
 
 		if (!cLevelList.isEmpty()) {
 			CLevel cLevel = cLevelList.get(0);
 			String xml = cLevel.getXml();
 			textDataProvider = xml.substring(xml.indexOf("<repository>") + 12).split("\\n")[0];
-			this.setShowDataProviderCheck(false);
-			return;
+			if (!textDataProvider.isEmpty()) {
+				this.setShowDataProviderCheck(false);
+				return;
+			}
 		}
 
 		this.setShowDataProviderCheck(true);

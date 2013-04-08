@@ -292,15 +292,15 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 	/**
 	 * Returns a List<CLevel> which contains "dao" with "repository" information.
 	 *
-	 * @param hgId
+	 * @param eadContentId
 	 *
 	 * @return List<CLevel>
 	 */
 	@Override
-	public List<CLevel> getCLevelsWithRepositoryInDao(Integer hgId) {
+	public List<CLevel> getCLevelsWithRepositoryInDao(Long eadContentId) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "cLevel");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		criteria.add(Restrictions.eq("ecId", hgId.longValue()));
+		criteria.add(Restrictions.eq("ecId", eadContentId));
 		criteria.add(Restrictions.and(Restrictions.like("xml", "%<dao%"),
 				Restrictions.like("xml", "%<repository%")));
 
