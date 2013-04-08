@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,6 +26,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.utils.ZipManager;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.HibernateUtil;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -48,7 +48,7 @@ import com.opensymphony.xwork2.ActionSupport;
 public abstract class ManualUploader {
 
     
-	private static final String MAGIC_KEY = "9999999999999";
+	private static final String MAGIC_KEY = "99999999999";
     
 	private final Logger log = Logger.getLogger(getClass());
 	protected String uploadingMethod;
@@ -180,8 +180,6 @@ public abstract class ManualUploader {
 		File tempDir = new File(tempPath); 
     	this.filesNotUploaded = new ArrayList<String>();
     	this.filesUploaded = new ArrayList<String>();    	
-		List<String> repositorguideInformation = null;
-		ActionSupport actionSupport = new ActionSupport();
 		log.info("Checking eadtype: "+uploadType);
     	if (uploadType.equals("EAD")) {
 			
@@ -209,7 +207,7 @@ public abstract class ManualUploader {
                             filesUploaded.add(fileName);
                             try {
                                 //Insert file uploaded into up_file table
-                                HibernateUtil.beginDatabaseTransaction();
+                                JpaUtil.beginDatabaseTransaction();
 
                                 String defaultUpDir = APEnetUtilities.FILESEPARATOR + archivalInstitutionId + APEnetUtilities.FILESEPARATOR;
                                 UpFile upFile;
@@ -224,9 +222,9 @@ public abstract class ManualUploader {
                                 }
 
                                 DAOFactory.instance().getUpFileDAO().insertSimple(upFile);
-                                HibernateUtil.commitDatabaseTransaction();
+                                JpaUtil.commitDatabaseTransaction();
                             } catch (Exception e) {
-                                HibernateUtil.rollbackDatabaseTransaction();
+                            	JpaUtil.rollbackDatabaseTransaction();
                                 throw new APEnetException("Error inserting the file " + fileName + " in up_table (the user was uploading this file to the Dashboard) [Database Rollback]. Error: " + e.getMessage());
                             }
 
@@ -324,29 +322,30 @@ public abstract class ManualUploader {
 		}else {
 			//HTTP EAG upload
 			path = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitutionId.toString() + APEnetUtilities.FILESEPARATOR;
-    		APEnetEAGDashboard eag = new APEnetEAGDashboard(archivalInstitutionId, file.getAbsolutePath());
-    		eag.setEagPath(path);
+    		
     		log.info("Archival institution ID " + archivalInstitutionId + " uploads an EAG.");
     		try {       
 				if (contentType.equals("xml")){
+					
 					//The format is allowed
 					//The file is copied to /mnt/tmp/tmp/ai_id/
 					fullFileName = path + fileName;
 		    		File source = new File(fullFileName);
     				FileUtils.copyFile(file, source);
-                    eag.setEagPath(fullFileName); //temp used for looking forward target tag
+	    		    
     				//It is necessary to validate the file against APEnet EAG schema
                     log.debug("Beginning EAG validation");
-    				if (eag.APEnetEAGValidate(archivalInstitutionId, fileName)){
+                    APEnetEAGDashboard eag = new APEnetEAGDashboard(archivalInstitutionId, file.getAbsolutePath());
+    				if (eag.validate()){
                         log.info("EAG is valid");
                         
                         //check the <recordId> content
-
+                        //eag.setEagPath(fullFileName); //temp used for looking forward target tag
                         String recordIdValue = eag.lookingForwardElementContent("/eag/control/recordId");
                         if(recordIdValue!=null && recordIdValue.endsWith(MAGIC_KEY)){ 
                         	//replace value with a consecutive unique value
                         	ArchivalLandscape archivalLandscape = new ArchivalLandscape();
-                        	int zeroes = 13-archivalInstitutionId.toString().length();
+                        	int zeroes = 11-archivalInstitutionId.toString().length();
                         	String newRecordIdValue = archivalLandscape.getmyCountry()+"-";
                         	for(int x=0;x<zeroes;x++){
                         		newRecordIdValue+="0";
@@ -373,10 +372,9 @@ public abstract class ManualUploader {
                     		Transformer transformer = tf.newTransformer();
                     		transformer.transform(new DOMSource(tempDoc), new StreamResult(new File(fullFileName)));
                         }
-
+                        
     					//The EAG has been validated so it has to be stored in /mnt/repo/country/aiid/EAG/
     					//and it is necessary to update archival_institution table
-        				eag.setEagPath(null);
         				result = eag.saveEAGviaHTTP(fullFileName);
        
         				if (result.equals("error_eagnotstored")) {
@@ -423,12 +421,12 @@ public abstract class ManualUploader {
                         log.info("EAG is not valid");
     					//The EAG has not been validated
     					//It has to be converted
-    					if (eag.convertToAPEnetEAG(fileName)){
+    					if (eag.convertToAPEnetEAG()){
     						//The EAG has been converted so it is necessary to validate the file against APEnet EAG schema
-    	    				if (eag.APEnetEAGValidate(archivalInstitutionId,fileName)){
+    	    				if (eag.validate()){
     	    					//The EAG has been validated so it has to be stored in /mnt/repo/country/aiid/EAG/
     	    					//and it is necessary to update archival_institution table
-    	        				eag.setEagPath(null);
+    	        				//eag.setEagPath(null);
     	        				result = eag.saveEAGviaHTTP(fullFileName);
     	        				if (result.equals("error_eagnotstored")) {
     	        					this.filesNotUploaded.add(fileName);
@@ -481,7 +479,7 @@ public abstract class ManualUploader {
                 this.filesNotUploaded.add(fileName);
 	    		result = "error_parsing";
             } catch (Exception e) {
-	    	    log.error(e.getMessage());
+	    	    log.error(e.getMessage(),e);
 				this.filesNotUploaded.add(fileName);
 	    		result = "error_eagnotstored";
 	    	}
@@ -606,7 +604,7 @@ public abstract class ManualUploader {
 			    	try {
 						// Moving the file
 						// Insert file uploaded into up_file table
-						HibernateUtil.beginDatabaseTransaction();
+			    		JpaUtil.beginDatabaseTransaction();
 
                         UpFile upFile;
 						if(format.equals("xml"))
@@ -623,10 +621,10 @@ public abstract class ManualUploader {
 						FileUtils.moveFile(srcFile, destFile);
 						filesUploaded.add(fileStr);
 
-						HibernateUtil.commitDatabaseTransaction();
+						JpaUtil.commitDatabaseTransaction();
 					} catch (Exception e) {
 						log.error("Error inserting the file " + fileStr + " in up_table (the user was uploading this file to the Dashboard) or error storing the file in temporal up repository [Database and FileSystem Rollback]. Error: " + e.getMessage());
-						HibernateUtil.rollbackDatabaseTransaction();
+						JpaUtil.rollbackDatabaseTransaction();
 						// FileSystem Rollback //todo: For Inteco: Shouldn't it be destFile to be erased if it exists?
 						if (srcFile.exists()) {
 							try {
