@@ -117,6 +117,7 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 		}  
 		//list="#{'IMAGE':'Image', 'TEXT':'Text', 'SOUND':'Sound', 'VIDEO':'Video'}"
 		typeSet.add(new SelectItem("", getText("ead2ese.content.selectone")));
+		typeSet.add(new SelectItem("3D", getText("ead2ese.content.type.3D")));
 		typeSet.add(new SelectItem("IMAGE", getText("ead2ese.content.type.image")));
 		typeSet.add(new SelectItem("TEXT", getText("ead2ese.content.type.text")));
 		typeSet.add(new SelectItem("SOUND", getText("ead2ese.content.type.sound")));
