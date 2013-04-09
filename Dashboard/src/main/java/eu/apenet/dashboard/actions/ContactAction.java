@@ -80,20 +80,10 @@ public class ContactAction extends ActionSupport{
             InputStream path = Thread.currentThread().getContextClassLoader().getResourceAsStream(ruta);
             Document documento = builder.parse(path);
             mails = readConfigFile(dropDownTable,documento);
-            //printMap(mails);
      
 		}catch(Exception e){
             e.printStackTrace();
         }
-	}
-	
-	public static void printMap(Map mp) {
-	    Iterator it = mp.entrySet().iterator();
-	    while (it.hasNext()) {
-	        Map.Entry pairs = (Map.Entry)it.next();
-	        System.out.println(pairs.getKey() + " = " + pairs.getValue());
-	        it.remove(); 
-	    }
 	}
 	
     public Map<String, String> readConfigFile(Map<String,String> dropDownTable,Node section){
