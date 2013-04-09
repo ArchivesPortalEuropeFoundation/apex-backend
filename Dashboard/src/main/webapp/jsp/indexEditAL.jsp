@@ -339,16 +339,6 @@
 				function showcurtain(){
 					$("#curtain").show();
 				};
-				function updatesFatherSelect(){
-					if($("select#father").size()>1){
-						var target = $("select#ALElement option:selected");
-						var targetMarginLeft = parseInt(target.css("margin-left").substring(0,target.indexOf("px")));
-						var next; 
-						while((next = target.next()) && next.hasClass("aiGroup") && parseInt(next.css("margin-left").substring(0,target.indexOf("px")))){
-							
-						}
-					}
-				}
 				function checkForNextPrevButtons(jqueryNode){
 					targetPaddingLeft = jqueryNode.css("padding-left");
 					if(targetPaddingLeft.length>2){
