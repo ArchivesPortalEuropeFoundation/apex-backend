@@ -15,12 +15,17 @@
 	
 	<xsl:for-each select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository">
 	   <xsl:variable name="id" select="position()"/>
-	
-		<table class="aiSection" id="contactDisplay">
+	   <xsl:if test="count(current()/parent::node()/eag:repository)> 1">
+		<h3 class="repositoryName">
+			<xsl:value-of select="./eag:repositoryName"></xsl:value-of>
+		</h3>	
+		</xsl:if>
+		<div class="repositoryInfo">
+		<table class="aiSection" id="contactDisplay_{$id}">
 			<thead>
 				<tr>
 					<th colspan="2">
-						<xsl:value-of select="ape:resource('directory.text.contact')" /> <a id="displayLinkSeeMore" href="javascript:seeMore('contactDisplay');" ><xsl:value-of select="ape:resource('directory.text.seemore')"/></a><a id="displayLinkSeeLess" href="javascript:seeLess('contactDisplay');" ><xsl:value-of select="ape:resource('directory.text.seeless')"/></a>
+						<xsl:value-of select="ape:resource('directory.text.contact')" /><xsl:text> (</xsl:text><a id="displayLinkSeeMore" href="javascript:seeMore('contactDisplay_{$id}');" ><xsl:value-of select="ape:resource('directory.text.seemore')"/></a><a id="displayLinkSeeLess" href="javascript:seeLess('contactDisplay_{$id}');" ><xsl:value-of select="ape:resource('directory.text.seeless')"/></a><xsl:text>)</xsl:text>
 					</th>
 				</tr>
 			</thead>
@@ -944,9 +949,13 @@
 			</tfoot>
 		</table>   
 	<!-- END LOOP -->
+		</div>
 	</xsl:for-each>
 	<!-- STARTS LOOP_2 FOR LINKS : Associated repository -->
 	<!-- ENDS LOOP_2 FOR LINKS : Associated repository -->
+	<h3>
+		<xsl:value-of select="ape:resource('directory.text.other')" />
+	</h3>	
 	  <table class="aiSection">
 			  
 			 <tbody>
