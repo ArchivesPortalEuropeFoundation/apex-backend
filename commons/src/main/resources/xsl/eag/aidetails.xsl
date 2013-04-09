@@ -16,11 +16,11 @@
 	<xsl:for-each select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository">
 	   <xsl:variable name="id" select="position()"/>
 	
-		<table class="aiSection" id="contactDisplay" title="{$id}">
+		<table class="aiSection" id="contactDisplay">
 			<thead>
 				<tr>
 					<th colspan="2">
-						<xsl:value-of select="ape:resource('directory.text.contact')" />
+						<xsl:value-of select="ape:resource('directory.text.contact')" /> <a id="displayLinkSeeMore" href="javascript:seeMore('contactDisplay');" ><xsl:value-of select="ape:resource('directory.text.seemore')"/></a><a id="displayLinkSeeLess" href="javascript:seeLess('contactDisplay');" ><xsl:value-of select="ape:resource('directory.text.seeless')"/></a>
 					</th>
 				</tr>
 			</thead>
@@ -32,7 +32,7 @@
 			   
 			   <!-- visitors Address -->
 			  <xsl:if test="eag:location[@localType='visitors address']"> 
-			  <tr title="repository">
+			  <tr>
 			      <td class="header">
 				    <xsl:value-of select="ape:resource('directory.text.visitorsaddress')" />
 				   </td>
@@ -43,7 +43,7 @@
 						    <xsl:text> , </xsl:text>
 					     </xsl:if>
 					  </xsl:if>	 
-					  <xsl:if test="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:location[@localType='visitors address']/eag:municipalityPostalcode/text()">	 		
+					  <xsl:if test="eag:location[@localType='visitors address']/eag:municipalityPostalcode/text()">	 		
 				 	     <xsl:value-of select="eag:location[@localType='visitors address']/eag:municipalityPostalcode" />  
 				      </xsl:if>
 					</td>
@@ -53,7 +53,7 @@
 			      <!-- localentity -->
 			  
 				 <xsl:if test="eag:location[@localType='visitors address']/eag:localentity/text()">
-				 <tr class="longDisplay" title="repository" >
+				 <tr class="longDisplay">
 				   <td class="header">
 				     <xsl:value-of select="ape:resource('directory.text.district')"/>
 				    </td>
@@ -66,7 +66,7 @@
 				      <!-- secondem -->
 				  
 				  <xsl:if test="eag:location[@localType='visitors address']/eag:secondem/text()">
-				  <tr class="longDisplay" title="repository">
+				  <tr class="longDisplay">
 				    <td class="header">
 				      <xsl:value-of select="ape:resource('directory.text.countrylocalauthority')"/>
 				    </td>    
@@ -79,7 +79,7 @@
 				    <!-- firstdem -->
 				  
 			      <xsl:if test="eag:location/eag:firstdem/text()">
-				  <tr class="longDisplay" title="repository">
+				  <tr class="longDisplay">
 				    <td class="header">
 				      <xsl:value-of select="ape:resource('directory.text.regionautonomousauthority')"/>
 				    </td>    
@@ -92,7 +92,7 @@
 				    <!-- postal address -->
 					
 			     <xsl:if test="eag:location[@localType='postal address']">
-			      <tr class="longDisplay" title="repository">
+			      <tr class="longDisplay">
 			        <td class="header">
 			         <xsl:value-of select="ape:resource('directory.text.postaladdress')"></xsl:value-of>
 			        </td>
@@ -113,7 +113,7 @@
 				      <!-- country -->
 					  
 				  <xsl:if test="eag:location[@localType='visitors address']/eag:country/text()"> 
-			       <tr title="repository">
+			       <tr>
 					<td class="header">
 						<xsl:value-of select="ape:resource('directory.text.country')" />
 					</td>
@@ -124,63 +124,64 @@
 				 </xsl:if> 
 				  
 				  <!-- email -->
-				  
-			    <xsl:for-each select="eag:email/@href">
-				  <tr title="repository">
-				  
+				 <xsl:if test="eag:email/@href">		  
+				  <tr>
 					<td class="header"><xsl:value-of select="ape:resource('directory.text.email')" /></td>
 					<td>
-					  
+					  <xsl:for-each select="eag:email/@href">
 						<xsl:variable name="email" select="."/>
-						<a href="mailto:{$email}"  target="_blank" ><xsl:value-of select="$email" /></a>
-					
+						<div><a href="mailto:{$email}"  target="_blank" ><xsl:value-of select="$email" /></a></div>
+					</xsl:for-each>  
 					</td>
 				  </tr>
 				  
-				  </xsl:for-each>  
 				  
+				  </xsl:if>
 				    <!-- webpage -->
-				  
-				  <xsl:for-each select="eag:webpage/@href">
-				  <tr title="repository">
+				   <xsl:if test="eag:webpage/@href">		 
+				  <tr>
 					<td class="header"><xsl:value-of select="ape:resource('directory.text.webpage')" /></td>
 					<td>
+						 <xsl:for-each select="eag:webpage/@href">
 						<xsl:variable name="webpage" select="."/>
-						<a href="{$webpage}"  target="_blank" ><xsl:value-of select="$webpage" /></a>
+						<div><a href="{$webpage}"  target="_blank" ><xsl:value-of select="$webpage" /></a></div>
+						 </xsl:for-each>
 					</td>
 				  </tr>
-				  </xsl:for-each>
+				 
+				  </xsl:if>
 				  
 				    <!-- telephone -->
-				  
-				  <xsl:for-each select="eag:telephone">
-				  <tr title="repository">
+				  <xsl:if test="eag:telephone">
+				  <tr>
 					<td class="header">
 						<xsl:value-of select="ape:resource('directory.text.tel')" />
 					</td>
 					<td>
-						<xsl:value-of select="." />
+						<xsl:for-each select="eag:telephone">
+						<div><xsl:value-of select="." /></div>
+						</xsl:for-each>
 					</td>
 				  </tr>
-				  </xsl:for-each>
+				  </xsl:if>
 				  
 				      <!-- fax -->
+				  <xsl:if test="eag:fax">
 				  
-				  <xsl:for-each select="eag:fax">
-				  <tr class="longDisplay" title="repository_{$id}">
+				  <tr class="longDisplay">
 				   <td class="header">
 				     <xsl:value-of select="ape:resource('directory.text.fax')" />
 				   </td>
-				   <td>
-						<xsl:value-of select="." />
+				   <td>	<xsl:for-each select="eag:fax">
+						<div><xsl:value-of select="." /></div>
+						</xsl:for-each>
 				   </td>
 				  </tr>
-				  </xsl:for-each>
-				  
+				  </xsl:if>
 				     <!-- repositoryType -->
 				  
 				  <xsl:if test="./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text()">
-				  <tr title="repository">
+				  <tr >
 				    <td class="header">
 				      <xsl:value-of select="ape:resource('directory.text.typeofarchive')" />	
 				    </td>
@@ -193,7 +194,7 @@
 				     <!-- roleofthearchive -->
 				
    				   <!--   <xsl:if test= "$repository = 'Head quarter'">-->
-   				       <tr title="repository">
+   				       <tr >
 				        <td class="header">
 				         <xsl:value-of select="ape:resource('directory.text.roleofthearchive')" />	
 				        </td>
@@ -204,16 +205,6 @@
    				   
 			 
 			  </tbody>
-			  
-			  <tfoot>
-				<tr>
-					<td>
-					</td>
-					<td>
-						<a id="displayLink" href="javascript:display('contactDisplay');" ><xsl:value-of select="ape:resource('directory.text.hideshow')"/></a>
-					</td>
-				</tr>
-			</tfoot>
 			  
 			  
 			  </table>
