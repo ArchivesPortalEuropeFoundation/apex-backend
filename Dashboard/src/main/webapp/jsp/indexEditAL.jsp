@@ -135,6 +135,7 @@
 							$("#showEditLanguagesDiv").show();
 							$("#divGroupNodesContainer").show();
 							//$("option[value="+elementValue+"]").attr("selected",true); //re-select
+							$("li[id='li_"+elementValue+"']").addClass("selected"); //for safari and chrome browsers
 							$("select[name=ALElement] option").each(function(){
 								if($(this).val()==elementValue){
 									$(this).attr("selected",true);
@@ -160,6 +161,7 @@
 							$("#actionsButtons").show();
 							$("#showEditLanguagesDiv").show();
 							$("#divGroupNodesContainer").show();
+							$("li[id='li_"+elementValue+"']").addClass("selected"); //for safari and chrome browsers
 							//$("option[value="+elementValue+"]").attr("selected",true); //re-select
 							$("select[name=ALElement] option").each(function(){
 								if($(this).val()==elementValue){
@@ -337,6 +339,16 @@
 				function showcurtain(){
 					$("#curtain").show();
 				};
+				function updatesFatherSelect(){
+					if($("select#father").size()>1){
+						var target = $("select#ALElement option:selected");
+						var targetMarginLeft = parseInt(target.css("margin-left").substring(0,target.indexOf("px")));
+						var next; 
+						while((next = target.next()) && next.hasClass("aiGroup") && parseInt(next.css("margin-left").substring(0,target.indexOf("px")))){
+							
+						}
+					}
+				}
 				function checkForNextPrevButtons(jqueryNode){
 					targetPaddingLeft = jqueryNode.css("padding-left");
 					if(targetPaddingLeft.length>2){
