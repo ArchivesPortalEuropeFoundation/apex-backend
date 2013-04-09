@@ -15,6 +15,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>3.1.1.RELEASE</spring.version>
 		<postgresql.version>9.1-901.jdbc4</postgresql.version>
+        <archivesportaleurope.dptutil.version>1.2.5</archivesportaleurope.dptutil.version>
 	</properties>
 
 
@@ -299,7 +300,7 @@
 			<dependency>
 				<groupId>eu.apenet</groupId>
 				<artifactId>DPTutils</artifactId>
-				<version>1.2.4</version>
+				<version>${archivesportaleurope.dptutil.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>eu.archivesportaleurope</groupId>
