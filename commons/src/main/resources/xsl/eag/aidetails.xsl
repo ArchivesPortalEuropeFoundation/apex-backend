@@ -304,10 +304,7 @@
 			    <tr>
 			     <td class="header"><xsl:value-of select="ape:resource('directory.text.accessinformation')" /></td>
 				 <td>
-				   <xsl:for-each select="eag:access/eag:restaccess">
-					<p><xsl:value-of select="." /></p>
-					
-					</xsl:for-each>
+				 	<xsl:apply-templates select="eag:access/eag:restaccess" mode="multilanguage"/>
 				 </td> 
 			    </tr> 
 			    </xsl:if> 
@@ -972,7 +969,7 @@
 			  <thead>
 				<tr>
 					<th colspan="2">
-						<xsl:value-of select="ape:resource('directory.text.archivesandholdings')" />
+						<xsl:value-of select="ape:resource('directory.text.archivesandholdings')" /><xsl:text> (</xsl:text><a class="displayLinkSeeMore" href="javascript:seeMore('archivesDisplay');" ><xsl:value-of select="ape:resource('directory.text.seemore')"/></a><a class="displayLinkSeeLess" href="javascript:seeLess('archivesDisplay');" ><xsl:value-of select="ape:resource('directory.text.seeless')"/></a><xsl:text>)</xsl:text>
 					</th>
 				</tr>
 			 </thead>	 
@@ -1200,18 +1197,10 @@
 			 </tr>
 			 </xsl:if>
 			 </tbody>
-			 <tfoot>
-				<tr>
-					<td>
-					</td>
-					<td>
-						<a id="displayLink" href="javascript:display('archivesDisplay');" ><xsl:value-of select="ape:resource('directory.text.hideshow')"/></a>
-					</td>
-				</tr>
-			</tfoot>
 		</table>
 		<input id="print" type="button" value="Print" onClick="javascript:printEAG();"/>
-   
-
+  </xsl:template>
+  <xsl:template match="*" mode="multilanguage">
+  		<p><xsl:value-of select="."></xsl:value-of></p>
   </xsl:template>
 </xsl:stylesheet>
