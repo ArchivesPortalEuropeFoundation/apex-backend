@@ -47,6 +47,11 @@ public class ContactAction extends ActionSupport{
 	
 	private String breadcrumbLinks;
 
+	private String subjectsMenu;
+
+	public void setSubjectsMenu(String subjectsMenu) {
+		this.subjectsMenu = subjectsMenu;
+	}
 
 	/**
 	 * <p> Send a email contact. In case of user logged, the system fill out the field automatically and not show Captcha </p>
@@ -55,7 +60,7 @@ public class ContactAction extends ActionSupport{
 	public String execute() throws Exception {
 		addTo();
 		if (this.getEmail() != null && this.getFeedbackText() != null){
-			UserService.sendEmailFeedback(this.getEmail(),this.getFeedbackText());
+			UserService.sendEmailFeedback(this.getEmail(),this.getFeedbackText(), this.subjectsMenu);
 			addActionMessage(getText("success.feedback.contact"));
 			return SUCCESS;
 		}
@@ -75,7 +80,7 @@ public class ContactAction extends ActionSupport{
             InputStream path = Thread.currentThread().getContextClassLoader().getResourceAsStream(ruta);
             Document documento = builder.parse(path);
             mails = readConfigFile(dropDownTable,documento);
-            printMap(mails);
+            //printMap(mails);
      
 		}catch(Exception e){
             e.printStackTrace();
@@ -87,7 +92,7 @@ public class ContactAction extends ActionSupport{
 	    while (it.hasNext()) {
 	        Map.Entry pairs = (Map.Entry)it.next();
 	        System.out.println(pairs.getKey() + " = " + pairs.getValue());
-	        it.remove(); // avoids a ConcurrentModificationException
+	        it.remove(); 
 	    }
 	}
 	

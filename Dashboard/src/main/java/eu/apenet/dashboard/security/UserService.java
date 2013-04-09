@@ -368,14 +368,14 @@ public final class UserService {
 
 	}
 
-	public static void sendEmailFeedback(String email, String body) throws DashboardAPEnetException {
+	public static void sendEmailFeedback(String email, String body, String to) throws DashboardAPEnetException {
 		EmailComposer emailComposer = new EmailComposer("emails/feedback.txt",
 				"Dashboard feedback comments and suggestions", true, false);
 		emailComposer.setProperty("email", email);
 		emailComposer.setProperty("body", body);
+		emailComposer.setProperty("to", to);
 		Emailer emailer = new Emailer();
-		emailer.sendMessage(APEnetUtilities.getDashboardConfig().getEmailDashboardFeedbackDestiny(), null, null, email,
-				emailComposer);
+		emailer.sendMessage(to, null, null, email, emailComposer);
 	}
 
 	private static void sendEmailCreateCountryManager(User partner, String password) {
