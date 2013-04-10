@@ -100,10 +100,8 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 						+ getText("errors.clevel.without.langmaterial"));
 				}
 			}
-		} else {
-			// TODO: implement.
 		}
-		
+
 		if (EUROPEANA.equals(license)){
 			if (StringUtils.isBlank(europeanaLicense)){
 				addFieldError("europeanaLicense", getText("errors.required"));
