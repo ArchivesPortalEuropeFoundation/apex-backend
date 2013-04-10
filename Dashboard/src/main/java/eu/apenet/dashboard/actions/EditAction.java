@@ -1,11 +1,16 @@
 package eu.apenet.dashboard.actions;
 
+import java.util.Date;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 
 import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.security.PasswordValidator;
 import eu.apenet.dashboard.security.PasswordValidator.ValidationResult;
+import eu.apenet.dashboard.security.SecurityService.LoginResult;
+import eu.apenet.dashboard.security.SecurityService.LoginResult.LoginResultType;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.security.SecurityService;
 import eu.apenet.dashboard.security.UserService;
@@ -28,6 +33,7 @@ public class EditAction extends AbstractAction {
 	private String currentPassword;
 	private String newPassword;
 	private String rePassword;
+	private String parent;
 
 	@Override
 	protected void buildBreadcrumbs() {
@@ -69,13 +75,36 @@ public class EditAction extends AbstractAction {
 			userToUpdate.setEmailAddress(this.getEmail());
 			userToUpdate.setSecretAnswer(this.getSecretAnswer());
 			userToUpdate.setSecretQuestion(this.getSecretQuestion());
-			UserService.updateUser(userToUpdate);
-			addActionMessage(getText("success.user.edit"));
-			return SUCCESS;
+			//after editing the user will be logged out and logged in
+			try{
+				addActionMessage(getText("success.user.edit"));
+				UserService.updateUser(userToUpdate);
+				if (relog(email,newPassword)){
+					return SUCCESS;
+				}
+			}
+			catch (Exception e) {
+				log.error("Unable to relog " + e.getMessage(), e);
+				return INPUT;
+			}
 		} else {
-			// addActionError(getText("error.user.edit.modify"));
 			return INPUT;
 		}
+		return INPUT;
+	}
+	
+	private boolean relog(String email, String passw) throws Exception
+	{
+		log.trace("relog() method is called");
+		try {
+			LoginResult loginResult = null;
+			SecurityService.logout("true".equals(parent));
+			loginResult = SecurityService.login(email, passw, true);
+		}
+		catch (Exception e){
+			return false;
+		}
+		return false;
 	}
 
 	public boolean validateChangePwd() {
@@ -229,4 +258,12 @@ public class EditAction extends AbstractAction {
 		this.secretAnswer = secretAnswer;
 	}
 
+	public String getParent() {
+		return parent;
+	}
+
+	public void setParent(String parent) {
+		this.parent = parent;
+	}
+	
 }
