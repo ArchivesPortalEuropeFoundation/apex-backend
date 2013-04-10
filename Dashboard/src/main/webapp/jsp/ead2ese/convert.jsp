@@ -76,8 +76,9 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="inputLabel"><s:label key="ead2ese.label.inherit.language" for="inheritLanguage" />:</td>
-			<td><s:radio name="inheritLanguage" id="inheritLanguage" list="inheritLanguageSet" listKey="value" listValue="content"></s:radio>
+			<td class="inputLabel"><s:label key="ead2ese.label.inherit.language" for="inheritLanguage" /><span class="required">*</span>:</td>
+			<td><s:radio name="inheritLanguage" id="inheritLanguage" list="inheritLanguageSet" listKey="value" listValue="content" required="true">
+				</s:radio><s:fielderror fieldName="inheritLanguage"/>
 			</td>
 		</tr>
 		<s:if test="inheritLanguage!='provide'">

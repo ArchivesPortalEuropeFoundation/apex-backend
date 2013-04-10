@@ -297,14 +297,46 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 	 * @return List<CLevel>
 	 */
 	@Override
-	public List<CLevel> getCLevelsWithRepositoryInDao(Long eadContentId) {
+	public List<CLevel> getCLevelsWithRepositoryAndDao(Long eadContentId) {
+		long startTime = System.currentTimeMillis();
+
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "cLevel");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		criteria.add(Restrictions.eq("ecId", eadContentId));
 		criteria.add(Restrictions.and(Restrictions.like("xml", "%<dao%"),
 				Restrictions.like("xml", "%<repository%")));
+		List<CLevel> results = criteria.list();
 
-		return (List<CLevel>) criteria.list();
+		long endTime = System.currentTimeMillis();
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
+		}
+
+		return results;
+	}
+
+	/**
+	 * Returns a List<CLevel> which contains "dao" information.
+	 *
+	 * @param eadContentId
+	 *
+	 * @return List<CLevel>
+	 */
+	@Override
+	public List<CLevel> getCLevelsWithDao(Long eadContentId) {
+		long startTime = System.currentTimeMillis();
+
+		Criteria criteria = getSession().createCriteria(getPersistentClass(), "cLevel");
+		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		criteria.add(Restrictions.eq("ecId", eadContentId)).add(Restrictions.and(Restrictions.like("xml", "%<dao%")));
+		List<CLevel> results = criteria.list();
+
+		long endTime = System.currentTimeMillis();
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
+		}
+
+		return results;
 	}
 
 	/**

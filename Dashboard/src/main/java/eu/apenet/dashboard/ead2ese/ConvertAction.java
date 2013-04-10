@@ -1,6 +1,8 @@
 package eu.apenet.dashboard.ead2ese;
 
 import java.io.File;
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -8,8 +10,13 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.events.XMLEvent;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.ServletRequestAware;
 
 import eu.apenet.commons.types.XmlType;
@@ -33,6 +40,11 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 	private static final String CREATIVECOMMONS = "creativecommons";
 	private static final String INHERITLANGUAGE_PROVIDE = "provide";
 	private static final String EUROPEANA = "europeana";
+	private static final String TYPE_TEXT = "TEXT";	// Constant for type "text".
+	private static final String OPTION_YES = "yes";	// Constant for value "yes".
+	private static final String OPTION_NO = "no";		// Constant for value "no".
+
+	protected final Logger log = Logger.getLogger(getClass());
 	/**
 	 * 
 	 */
@@ -54,12 +66,12 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
     private String licenseAdditionalInformation;
     private Map<String, String> dateMappings;
     private String filename;
-    private String validateLinks = "no";
-    private String inheritLanguage = "no";
+    private String validateLinks = ConvertAction.OPTION_NO;
+    private String inheritLanguage = ConvertAction.OPTION_NO;
     //private List<LabelValueBean> languages = new ArrayList<SelectItem>();
     private String hierarchyPrefix;
-    private String inheritOrigination= "no";
-    private String inheritFileParent= "no";
+    private String inheritOrigination= ConvertAction.OPTION_NO;
+    private String inheritFileParent= ConvertAction.OPTION_NO;
     private String customDataProvider;
     private String mappingsFileFileName; 		//The uploaded file name
     private File mappingsFile;					//The uploaded file
@@ -81,7 +93,17 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 			if (StringUtils.isBlank(language)){
 				addFieldError("language", getText("errors.required"));
 			}
+		} else  if (ConvertAction.OPTION_NO.equals(inheritLanguage)) {
+			if (ConvertAction.TYPE_TEXT.equals(daoType)) {
+				if (!checkLanguageOnCLevel()) {
+					addFieldError("inheritLanguage", getText("errors.required")
+						+ getText("errors.clevel.without.langmaterial"));
+				}
+			}
+		} else {
+			// TODO: implement.
 		}
+		
 		if (EUROPEANA.equals(license)){
 			if (StringUtils.isBlank(europeanaLicense)){
 				addFieldError("europeanaLicense", getText("errors.required"));
@@ -99,6 +121,110 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 			addFieldError("textDataProvider", getText("errors.required"));
 		}
 	}
+
+	/**
+	 * Method to verify the presence of the language at the same level as the DAO.
+	 *
+	 * @return boolean
+	 */
+	private boolean checkLanguageOnCLevel() {
+		CLevelDAO cLevelDAO = DAOFactory.instance().getCLevelDAO();
+		List<CLevel> cLevelList = cLevelDAO.getCLevelsWithDao(Long.valueOf(id));
+
+		boolean langPresence = true;
+
+		if (!cLevelList.isEmpty()) {
+			for (int i = 0; i < cLevelList.size(); i++) {
+				CLevel cLevel = cLevelList.get(i);
+				String xml = cLevel.getXml();
+				String element = "c/did/langmaterial";
+
+				langPresence = checkElement(xml, element);
+
+				if (!langPresence) {
+					return langPresence;
+				}
+			}
+		}
+
+		return langPresence;
+	}
+
+	/**
+	 * Method to check the existence of an element.
+	 *
+	 * @param xml
+	 * @param element
+	 *
+	 * @return boolean
+	 */
+	private boolean checkElement(final String xml, final String element) {
+		String el = element;
+
+		XMLStreamReader input = null;
+		XMLInputFactory xmlif = (XMLInputFactory) XMLInputFactory.newInstance();
+        xmlif.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, Boolean.FALSE);
+        xmlif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
+        xmlif.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
+        xmlif.setProperty(XMLInputFactory.IS_COALESCING, Boolean.FALSE);
+
+        try {
+			input = xmlif.createXMLStreamReader(new StringReader(xml));
+            boolean exit = false;
+            boolean found = true;
+            String[] pathElements = null;
+
+			if (input != null) {
+				if (el.contains("/")) { //check input parameters
+            		if (el.startsWith("/")) { 
+            			el = el.substring(1);
+            		}
+            		if (el.endsWith("/") && el.length() > 2) {
+            			el = el.substring(0, el.length() - 2);
+            		}
+            		pathElements = el.split("/");
+            	} else {
+            		pathElements = new String[1];
+            		pathElements[0] = el;
+            	}
+
+				List<String> currentElement = new ArrayList<String>();
+
+				log.debug("Checking EAG file, looking for element " + el + ", path begins with " + pathElements[0]);
+
+				while (!exit && input.hasNext()) {
+					switch (input.getEventType()) {
+					case XMLEvent.START_ELEMENT:
+						currentElement.add(input.getLocalName().toString());
+						if (currentElement.size() == pathElements.length) {
+							found = true;
+							for(int j = 0; j < pathElements.length && found ; j++){
+								found = (pathElements[j].trim().equals(currentElement.get(j).trim()));
+							}
+						}
+						break;
+					case XMLEvent.END_ELEMENT:
+						currentElement.remove(currentElement.size() - 1);
+						if(found) {
+							exit = true;
+						}
+						break;
+					}
+					if (input.hasNext()) {
+						input.next();
+					}
+				}
+				if (!found) {
+					return found;
+				}
+			}
+		} catch (XMLStreamException e) {
+			log.error("Exception getting " + el, e);
+		}
+
+        return true;
+	}
+
 	@Override
 	protected void buildBreadcrumbs() {
 		addBreadcrumb("content.action", getText("breadcrumb.section.contentmanager"));
@@ -119,13 +245,13 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 		typeSet.add(new SelectItem("", getText("ead2ese.content.selectone")));
 		typeSet.add(new SelectItem("3D", getText("ead2ese.content.type.3D")));
 		typeSet.add(new SelectItem("IMAGE", getText("ead2ese.content.type.image")));
-		typeSet.add(new SelectItem("TEXT", getText("ead2ese.content.type.text")));
+		typeSet.add(new SelectItem(ConvertAction.TYPE_TEXT, getText("ead2ese.content.type.text")));
 		typeSet.add(new SelectItem("SOUND", getText("ead2ese.content.type.sound")));
 		typeSet.add(new SelectItem("VIDEO", getText("ead2ese.content.type.video")));
-		yesNoSet.add(new SelectItem("yes", getText("ead2ese.content.yes")));
-		yesNoSet.add(new SelectItem("no", getText("ead2ese.content.no")));
-		inheritLanguageSet.add(new SelectItem("yes", getText("ead2ese.content.yes")));
-		inheritLanguageSet.add(new SelectItem("no", getText("ead2ese.content.no")));
+		yesNoSet.add(new SelectItem(ConvertAction.OPTION_YES, getText("ead2ese.content.yes")));
+		yesNoSet.add(new SelectItem(ConvertAction.OPTION_NO, getText("ead2ese.content.no")));
+		inheritLanguageSet.add(new SelectItem(ConvertAction.OPTION_YES, getText("ead2ese.content.yes")));
+		inheritLanguageSet.add(new SelectItem(ConvertAction.OPTION_NO, getText("ead2ese.content.no")));
 		inheritLanguageSet.add(new SelectItem(INHERITLANGUAGE_PROVIDE, getText("ead2ese.label.language.select")));
 		licenseSet.add(new SelectItem(EUROPEANA, getText("ead2ese.content.license.europeana")));
 		licenseSet.add(new SelectItem(CREATIVECOMMONS, getText("ead2ese.content.license.creativecommons")));
@@ -150,7 +276,7 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 	 */
 	protected void retrieveRepositoryInfo() {
 		CLevelDAO cLevelDAO = DAOFactory.instance().getCLevelDAO();
-		List<CLevel> cLevelList = cLevelDAO.getCLevelsWithRepositoryInDao(Long.valueOf(id));
+		List<CLevel> cLevelList = cLevelDAO.getCLevelsWithRepositoryAndDao(Long.valueOf(id));
 
 		if (!cLevelList.isEmpty()) {
 			CLevel cLevel = cLevelList.get(0);
@@ -206,9 +332,9 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 	protected EseConfig fillConfig(){
     	EseConfig config = new EseConfig();  	
     	config.setContextInformationPrefix(hierarchyPrefix);
-    	config.setInheritElementsFromFileLevel("yes".equals(inheritFileParent));
-    	config.setInheritOrigination("yes".equals(inheritOrigination));
-    	config.setInheritLanguage("yes".equals(inheritLanguage));
+    	config.setInheritElementsFromFileLevel(ConvertAction.OPTION_YES.equals(inheritFileParent));
+    	config.setInheritOrigination(ConvertAction.OPTION_YES.equals(inheritOrigination));
+    	config.setInheritLanguage(ConvertAction.OPTION_YES.equals(inheritLanguage));
     	if (INHERITLANGUAGE_PROVIDE.equals(inheritLanguage)){
     		config.setLanguage(language);
     	}
