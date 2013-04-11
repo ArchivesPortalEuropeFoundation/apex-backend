@@ -8,8 +8,10 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
 import net.sf.saxon.s9api.Processor;
+import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.Serializer;
+import net.sf.saxon.s9api.XdmAtomicValue;
 import net.sf.saxon.s9api.XsltCompiler;
 import net.sf.saxon.s9api.XsltExecutable;
 import net.sf.saxon.s9api.XsltTransformer;
@@ -24,13 +26,18 @@ public class EagXslt {
         ResourcebundleExtension resourcebundleExtension = new ResourcebundleExtension(resourceBundleSource);
         processor.registerExtensionFunction(resourcebundleExtension);
         XsltCompiler compiler = processor.newXsltCompiler();
+        
         return compiler.compile(xsltSource);
 	}
-
+	@Deprecated
     public static void displayAiDetails(Writer writer, File xmlFile, ResourceBundleSource resourceBundleSource) throws SaxonApiException{
+		displayAiDetails(writer, xmlFile, resourceBundleSource, "eng");
+    }
+    public static void displayAiDetails(Writer writer, File xmlFile, ResourceBundleSource resourceBundleSource, String language) throws SaxonApiException{
 		Source xmlSource = new StreamSource(xmlFile);
     	XsltExecutable executable = getXsltExecutable("xsl/eag/aidetails.xsl", resourceBundleSource);
         XsltTransformer transformer = executable.load();
+        transformer.setParameter(new QName("language.selected"), new XdmAtomicValue(language));
         transformer.setSource(xmlSource);
         Serializer serializer = new Serializer();
         serializer.setOutputWriter(writer);
