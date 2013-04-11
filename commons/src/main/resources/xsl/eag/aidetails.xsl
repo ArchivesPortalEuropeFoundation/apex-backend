@@ -312,45 +312,20 @@
 				
 				           <!-- termsOfUse-->
 				<xsl:if test="eag:access/eag:termsOfUse">		   
-				
-				    <tr class="longDisplay">
-				      <td class="header"><xsl:value-of select="ape:resource('directory.text.termsofuse')" />  
-			          </td>
-			          <td>
-			          <xsl:for-each select="eag:access/eag:termsOfUse">
-				          <div><xsl:choose>
-				          	<xsl:when test="./@href">
-				          	<xsl:variable name="term" select="./@href"/>
-				              <a href="{$term}" target="_blank"><xsl:value-of select="." /></a>
-				          	</xsl:when>
-				          	<xsl:otherwise>
-				          	<xsl:value-of select="." />
-				          	</xsl:otherwise>
-				          </xsl:choose></div>
-			           </xsl:for-each>
-					  </td>
-					 </tr>
+					<xsl:call-template name="multilanguageWithChilds">
+						<xsl:with-param name="title"><xsl:value-of select="ape:resource('directory.text.readersticket')" /></xsl:with-param>
+						<xsl:with-param name="list" select="eag:access/eag:termsOfUse"/>
+						<xsl:with-param name="trClass" select="'longDisplay'"/>
+					</xsl:call-template>					
+
 				</xsl:if>
 				            <!-- readersTicket-->
 				<xsl:if test="eag:services/eag:searchroom/eag:readersTicket">		
-			   
-				    <tr>
-				      <td class="header"><xsl:value-of select="ape:resource('directory.text.readersticket')" />  
-			          </td>
-			          <td>
-			           <xsl:for-each select="eag:services/eag:searchroom/eag:readersTicket">
-				          <div><xsl:choose>
-				          	<xsl:when test="./@href">
-				          	<xsl:variable name="term" select="./@href"/>
-				              <a href="{$term}" target="_blank"><xsl:value-of select="." /></a>
-				          	</xsl:when>
-				          	<xsl:otherwise>
-				          	<xsl:value-of select="." />
-				          	</xsl:otherwise>
-				          </xsl:choose></div>
-			           </xsl:for-each>
-					  </td>
-					 </tr>
+					<xsl:call-template name="multilanguageWithChilds">
+						<xsl:with-param name="title"><xsl:value-of select="ape:resource('directory.text.readersticket')" /></xsl:with-param>
+						<xsl:with-param name="list" select="eag:services/eag:searchroom/eag:readersTicket"/>
+					</xsl:call-template>				   
+
 				</xsl:if>
 				       <!-- searchroom-->
 				
@@ -366,26 +341,14 @@
 				</xsl:if>  
 				
 				       <!-- advancedOrders-->
-					   
-			    <xsl:for-each select="eag:services/eag:searchroom/eag:advancedOrders">
-				    <tr>
-				      <td class="header"><xsl:value-of select="ape:resource('directory.text.orderingdocuments')" />  
-			          </td>
-			          <td>
-			           <xsl:value-of select="." />
-					  </td>
-					 </tr>
-					 <xsl:if test="./@href">
-					   <tr title="repository">
-					     <td class="header"></td>
-						 <td> 
-					      <xsl:variable name="advanced" select="./@href"/>
-			              <a href="{$advanced}" target="_blank"> <xsl:value-of select="ape:resource('directory.text.advancedorderslink')"/></a>
-			             </td>	
-				       </tr>
-					 </xsl:if> 
-			    </xsl:for-each>
-				
+				<xsl:if test="eag:services/eag:searchroom/eag:advancedOrders">			
+					<xsl:call-template name="multilanguageWithChilds">
+						<xsl:with-param name="title"><xsl:value-of select="ape:resource('directory.text.orderingdocuments')" /></xsl:with-param>
+						<xsl:with-param name="list" select="eag:services/eag:searchroom/eag:advancedOrders"/>
+					</xsl:call-template>		   
+
+
+				</xsl:if>
 				      <!-- contact searchroom --> 
 				
 			    <xsl:if test="eag:services/eag:searchroom/eag:contact" >
@@ -437,20 +400,13 @@
 			      </td>
 			      <td>
 			       <xsl:value-of select= "eag:services/eag:searchroom/eag:computerPlaces/eag:num" />
+			       <xsl:call-template name="multilanguage">
+				  	<xsl:with-param name="list" select="eag:services/eag:searchroom/eag:computerPlaces/eag:descriptiveNote/eag:p"/>
+				  </xsl:call-template>
 			      </td>
 			     </tr>
 			    </xsl:if>
 				
-			    <xsl:if test="eag:services/eag:searchroom/eag:computerPlaces/eag:descriptiveNote/eag:p/text()">
-			    <tr class="longDisplay">
-			      <td class="header"></td>
-			      <td>
-			      <xsl:call-template name="multilanguage">
-				  	<xsl:with-param name="list" select="eag:services/eag:searchroom/eag:computerPlaces/eag:descriptiveNote/eag:p"/>
-				  </xsl:call-template>
-			      </td> 
-			    </tr>
-			    </xsl:if>
 				
 				      <!-- microfilmPlaces -->
 				
@@ -1175,5 +1131,57 @@
 			        </xsl:for-each>
 					<xsl:text>)</xsl:text>
 				 </xsl:if>	
+	</xsl:template>
+	<xsl:template name="multilanguageWithChilds">
+		<xsl:param name="title"/>
+		<xsl:param name="class" select="'header'" />
+		<xsl:param name="trClass" select="''"/>
+		<xsl:param name="list"/>
+		<xsl:if test="$list">
+			  <tr class="{$trClass}">
+				<td class="{$class}"><xsl:value-of select="$title" /></td>
+				<td>
+					<xsl:choose>
+						<xsl:when test="count($list) > 1">
+							<xsl:choose>
+								<xsl:when test="$list[@xml:lang = $language.selected]">
+									<xsl:for-each select="$list[@xml:lang = $language.selected]">
+										<p><xsl:apply-templates select="."/></p>
+									</xsl:for-each>
+								</xsl:when>	
+								<xsl:when test="$list[@xml:lang = $language.default]">
+									<xsl:for-each select="$list[@xml:lang = $language.default]">
+										<p><xsl:apply-templates select="."/></p>
+									</xsl:for-each>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
+									<xsl:for-each select="$list[@xml:lang = $language.first]">
+										<p><xsl:apply-templates select="."/></p>
+									</xsl:for-each>
+								</xsl:otherwise>			
+							</xsl:choose>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:for-each select="$list">
+								<p><xsl:apply-templates select="."/></p>
+							</xsl:for-each>
+						</xsl:otherwise>
+					</xsl:choose>
+				</td>
+			  </tr>
+			</xsl:if>
+	</xsl:template>
+	<xsl:template match="eag:advancedOrders | eag:readersTicket | eag:termsOfUse">
+		<xsl:choose>
+				<xsl:when test="./@href">
+					<xsl:variable name="href" select="./@href"/>
+					<a href="{$href}" target="_blank"><xsl:value-of select="." /></a>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="." />
+				</xsl:otherwise>
+		</xsl:choose>
+
 	</xsl:template>
 </xsl:stylesheet>
