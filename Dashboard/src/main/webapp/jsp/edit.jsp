@@ -2,9 +2,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
 
+<script type='text/javascript'>
+	function settings()
+	{
+		$('#okButton').hide();
+		$('#resetButton').hide();
+		$('#MyPass').show();
+		$('#passwordTable').hide();
+		
+	}
+</script>
 <div align="center" > 
 
-	<s:form action="edit" method="post" theme="simple">
+	<s:form action="edit" method="post" theme="simple" >
 	<br></br>
 	<s:actionerror />
 	<s:actionmessage/>
@@ -44,7 +54,7 @@
 	
 	<br/>
 		
-	<table>
+	<table id="passwordTable">
 	<s:password name="currentPassword" required="true" key="label.currentpassword" size="25" theme="xhtml"/>
 	<s:password name="newPassword" required="true" key="label.newPassword" size="25" theme="xhtml" />
 	<s:password name="rePassword" required="true" key="label.verifypassword" size="25" theme="xhtml"/>
@@ -53,10 +63,17 @@
 	<table>
 		<br></br>
 		<tr>
-			<td><s:submit method="execute" key="label.save" theme="simple"  cssClass="mainButton"/>
+			<!--<td><s:submit method="execute" key="label.save" theme="simple"  cssClass="mainButton" />-->
+			<td><input type="button" id="okButton" value="<s:property value="getText('label.save')"/>" class="mainButton" onclick="settings()"/>
+			<div id="MyPass" style="display:none;" >
+				<label for="confirmPassword"><s:property value='getText("label.messageConfirmPassword")' /></label>
+				<p></p>
+				<input type="password" name="confirmPassword" required="true" size="25" theme="simple"/>
+				<p></p>
+				<input type="submit" value="<s:property value="getText('label.verifypassword')" />" class="checkPass" />				
+			</div>
 			</td>
-			<!-- <td><s:submit action="showHome" value="Cancel" onclick="form.onsubmit=null" theme="simple" /></td> -->
-			<td><s:reset value="Reset" theme="simple" /></td>
+			<td><input type="reset" id="resetButton" value="<s:property value="getText('label.reset')" />"  /></td>
 			</tr>
 	</table>
 		

@@ -1,7 +1,6 @@
 package eu.apenet.dashboard.actions;
 
 import java.util.Date;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -34,6 +33,7 @@ public class EditAction extends AbstractAction {
 	private String newPassword;
 	private String rePassword;
 	private String parent;
+	public String confirmPassword;
 
 	@Override
 	protected void buildBreadcrumbs() {
@@ -77,10 +77,12 @@ public class EditAction extends AbstractAction {
 			userToUpdate.setSecretQuestion(this.getSecretQuestion());
 			//after editing the user will be logged out and logged in
 			try{
-				addActionMessage(getText("success.user.edit"));
-				UserService.updateUser(userToUpdate);
-				if (relog(email,newPassword)){
+				if (relog(email,newPassword,userToUpdate)){
+					addActionMessage(getText("success.user.edit"));
 					return SUCCESS;
+				}
+				else{
+					addActionMessage(getText("oldpassword.notEquals"));
 				}
 			}
 			catch (Exception e) {
@@ -93,15 +95,21 @@ public class EditAction extends AbstractAction {
 		return INPUT;
 	}
 	
-	private boolean relog(String email, String passw) throws Exception
+	private boolean relog(String email, String passw, User userToUpdate) throws Exception
 	{
 		log.trace("relog() method is called");
 		try {
-			LoginResult loginResult = null;
-			SecurityService.logout("true".equals(parent));
-			loginResult = SecurityService.login(email, passw, true);
+			//if the password provided by the user matches with the password the system has, it will be update the user data and update the label
+			if(getConfirmPassword().compareTo(passw)==0){
+				UserService.updateUser(userToUpdate);
+				SecurityService.logout("true".equals(parent));
+				LoginResult loginResult = SecurityService.login(email, passw, true);
+				log.trace("relog() method has finished right.");
+				return true;
+			}
 		}
 		catch (Exception e){
+			log.trace("relog() method is called with " + e);
 			return false;
 		}
 		return false;
@@ -174,8 +182,8 @@ public class EditAction extends AbstractAction {
 				addFieldError("secretQuestion", getText("secretQuestion.required"));
 			}
 
-		}			
-
+		}
+		
 	}
 
 	public String getEmail() {
@@ -266,4 +274,11 @@ public class EditAction extends AbstractAction {
 		this.parent = parent;
 	}
 	
+	private String getConfirmPassword() {
+		return confirmPassword;
+	}
+
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
+	}
 }
