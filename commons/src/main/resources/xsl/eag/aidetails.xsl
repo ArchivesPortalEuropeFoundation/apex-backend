@@ -713,51 +713,27 @@
 				
 				<xsl:if test="eag:services/eag:techservices/eag:restorationlab/eag:contact">
 				  <tr class="longDisplay">
-			       <td class="header">
+			       <td class="header subInfoHeader" colspan="2" >
 			        <xsl:value-of select="ape:resource('directory.text.restorationlabcontact')" />
 			       </td>
 			      </tr>
-			        <xsl:if test="eag:services/eag:techservices/eag:restorationlab/eag:contact/eag:email">
-			         
-			        <xsl:for-each select= "eag:services/eag:techservices/eag:restorationlab/eag:contact/eag:email/@href"> 
-			         <tr class="longDisplay">
-			           <td class="subHeader">
-			             <xsl:value-of select="ape:resource('directory.text.email')" />
-			           </td>
-			           <td>
-					    <xsl:variable name="email" select= "."/>
-					    <a href="mailto:{$email}"  target="_blank" ><xsl:value-of select="$email" /></a>			      
-			           </td>
-			         </tr>
-			         </xsl:for-each>
-			        </xsl:if>
-			     </xsl:if>
-			     <xsl:if test="eag:services/eag:techservices/eag:restorationlab/eag:webpage/text()">
-			      
-			      <xsl:for-each select="eag:services/eag:techservices/eag:restorationlab/eag:webpage/@href">
-			      <tr class="longDisplay">
-			        <td class="subHeader"><xsl:value-of select="ape:resource('directory.text.webpage')" /></td>
-					<td>
-						<xsl:variable name="webpage" select="."/>
-						<a href="{$webpage}"  target="_blank" ><xsl:value-of select="$webpage" /></a>
-					</td>
-				  </tr>
-				  </xsl:for-each>
-			     </xsl:if>
-			     <xsl:if test="eag:services/eag:techservices/eag:restorationlab/eag:contact/eag:telephone/text()">
-			      
-			      <xsl:for-each select="eag:services/eag:techservices/eag:restorationlab/eag:contact/eag:telephone">
-			      <tr class="longDisplay">
-					<td class="subHeader">
-						<xsl:value-of select="ape:resource('directory.text.tel')" />
-					</td>
-					<td>
-						<xsl:value-of select="." />
-					</td>
-				  </tr>
-				  </xsl:for-each>
-				  </xsl:if>
-				
+				 <xsl:call-template name="email">
+				 	<xsl:with-param name="parent" select="eag:services/eag:techservices/eag:restorationlab/eag:contact"/>
+				 	<xsl:with-param name="class" select="'subHeader'"/>
+				 	<xsl:with-param name="trClass" select="'longDisplay'"/>
+				 </xsl:call-template>
+				 <xsl:call-template name="webpage">
+				 	<xsl:with-param name="parent" select="eag:services/eag:techservices/eag:restorationlab"/>
+				 	<xsl:with-param name="class" select="'subHeader'"/>
+				 	<xsl:with-param name="trClass" select="'longDisplay'"/>
+				 </xsl:call-template>
+				 <xsl:call-template name="telephone">
+				 	<xsl:with-param name="parent" select="eag:services/eag:techservices/eag:restorationlab/eag:contact"/>
+				 	<xsl:with-param name="class" select="'subHeader'"/>
+				 	<xsl:with-param name="trClass" select="'longDisplay'"/>
+				 </xsl:call-template>				     
+
+				</xsl:if>
 				         <!-- refreshment --> 
 				
 				 <xsl:if test="eag:services/eag:recreationalServices/eag:refreshment">
@@ -780,19 +756,13 @@
 				     	<xsl:call-template name="multilanguage">
 			         		<xsl:with-param name="list" select="eag:services/eag:recreationalServices/eag:exhibition/eag:descriptiveNote/eag:p"/>
 			         	</xsl:call-template>
+					     <xsl:for-each select="eag:services/eag:recreationalServices/eag:toursSessions/eag:webpage">
+							<xsl:variable name="webpage" select="@href"/>
+							<div><a href="{$webpage}"  target="_blank" ><xsl:value-of select="." /></a></div>
+						 </xsl:for-each>				         	
 				     </td>
 				   </tr> 
-                   <xsl:if test= "eag:services/eag:recreationalServices/eag:exhibition/eag:webpage/text()">
-			         <xsl:for-each select="eag:services/eag:recreationalServices/eag:exhibition/eag:webpage/@href">
-			            <tr class="longDisplay">
-			               <td class="header"></td>
-					       <td>
-						      <xsl:variable name="webpage" select="."/>
-						      <a href="{$webpage}"  target="_blank" ><xsl:value-of select="ape:resource('directory.text.webpageexhibition')" /></a>
-					       </td>
-				        </tr>
-				    </xsl:for-each>
-			       </xsl:if>	
+
 			     </xsl:if>
 			     
 				       <!-- toursSession -->
@@ -804,19 +774,13 @@
 				     	<xsl:call-template name="multilanguage">
 			         		<xsl:with-param name="list" select="eag:services/eag:recreationalServices/eag:toursSessions/eag:descriptiveNote/eag:p"/>
 			         	</xsl:call-template>
+			         	<xsl:for-each select="eag:services/eag:recreationalServices/eag:toursSessions/eag:webpage">
+							<xsl:variable name="webpage" select="@href"/>
+							<div><a href="{$webpage}"  target="_blank" ><xsl:value-of select="." /></a></div>
+						 </xsl:for-each>
 				     </td>  
 				   </tr> 
-                 <xsl:if test= "eag:services/eag:recreationalServices/eag:toursSessions/eag:webpage/text()">
-			     <xsl:for-each select="eag:services/eag:recreationalServices/eag:toursSession/eag:webpage/@href"> 
-			       <tr class="longDisplay">
-			          <td class="header"></td>
-			          <td>
-						<xsl:variable name="webpage" select="."/>
-						<a href="{$webpage}"  target="_blank" ><xsl:value-of select="ape:resource('directory.text.gotothewebsite')" /></a>
-					  </td>
-				   </tr>
-				 </xsl:for-each>
-			     </xsl:if>	
+
 			    </xsl:if>	
 			    
 				       <!-- otherServices -->
@@ -828,20 +792,13 @@
 				     	<xsl:call-template name="multilanguage">
 			         		<xsl:with-param name="list" select="eag:services/eag:recreationalServices/eag:otherServices/eag:descriptiveNote/eag:p"/>
 			         	</xsl:call-template>
+			         	<xsl:for-each select="eag:services/eag:recreationalServices/eag:otherServices/eag:webpage">
+							<xsl:variable name="webpage" select="@href"/>
+							<div><a href="{$webpage}"  target="_blank" ><xsl:value-of select="." /></a></div>
+						 </xsl:for-each>
 				     </td>  
 				   </tr> 
-				   
-                 <xsl:if test= "eag:services/eag:recreationalServices/eag:otherServices/eag:webpage/text()">
-			      <xsl:for-each select="eag:services/eag:recreationalServices/eag:otherServices/eag:webpage/@href">
-			        <tr class="longDisplay">
-			          <td class="header"></td>
-			          <td>
-						<xsl:variable name="webpage" select="."/>
-						<a href="{$webpage}"  target="_blank" ><xsl:value-of select="ape:resource('directory.text.gotothewebsite')" /></a>
-					  </td>
-				    </tr>
-				 </xsl:for-each>
-			     </xsl:if>	
+
 			    </xsl:if>	
 	   			<xsl:if test="count(current()/parent::node()/eag:repository)> 1">
 				 <tr>
@@ -896,10 +853,6 @@
 						  </xsl:when>
 						  <xsl:otherwise>
 						    <td>
-							   <xsl:text>There is no content in relationEntry. 
-							   You have the posibility to add text (either locally, followed by a new upload or-later on- in the EAG 2012 web form on dashboard).
-							   If you want to proceed, please click here: 
-							   </xsl:text>     
 				               <a href="{$link}"  target="_blank" ><xsl:value-of select="ape:resource('directory.text.linktorelatedresource')" /></a> 
 							</td>	   
 						  </xsl:otherwise>
@@ -934,7 +887,7 @@
 			 <xsl:if test="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:holdings/eag:extent/eag:num/text()">
 			   <tr >
 			    <td class="header"><xsl:value-of select="ape:resource('directory.text.extentholdings')" /></td>
-			    <td><xsl:value-of select= "./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:holdings/eag:extent/eag:num" /><xsl:text> linear metre</xsl:text> </td>
+			    <td><xsl:value-of select= "./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:holdings/eag:extent/eag:num" /><xsl:text> </xsl:text><xsl:value-of select="ape:resource('directory.text.extentholdings.unit')" /></td>
 			   </tr>
 			 </xsl:if>
 			 
@@ -951,9 +904,12 @@
 			     <xsl:for-each select= "./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:holdings/eag:dateSet/eag:dateRange">
 			       <xsl:value-of select= "./eag:fromDate" /> 
 			       <xsl:variable name="variable" select="./eag:toDate"></xsl:variable>
-			       <xsl:if test="string(number(substring($variable,1,2)))!='NaN'">
-			         <xsl:text> - </xsl:text>
-			       </xsl:if>
+			       <xsl:choose>
+			       		<xsl:when test="string(number(substring($variable,1,2)))!='NaN'">
+			       			<xsl:text> - </xsl:text>
+			       		</xsl:when>
+			       		<xsl:otherwise><xsl:text> </xsl:text></xsl:otherwise>
+			       </xsl:choose>
 			       <xsl:value-of select= "./eag:toDate" /> 
 				<!--    <xsl:if test="./eag:toDate[position()]<last()"> -->
 				      <xsl:text>, </xsl:text>
@@ -1178,32 +1134,32 @@
 				<xsl:choose>
 					<xsl:when test="$list[@xml:lang = $language.selected]">
 						<xsl:for-each select="$list[@xml:lang = $language.selected]">
-							<p><xsl:apply-templates select="current()"/></p>
+							<p><xsl:apply-templates select="."/></p>
 						</xsl:for-each>
 					</xsl:when>	
 					<xsl:when test="$list[@xml:lang = $language.default]">
 						<xsl:for-each select="$list[@xml:lang = $language.default]">
-							<p><xsl:apply-templates select="current()"/></p>
+							<p><xsl:apply-templates select="."/></p>
 						</xsl:for-each>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
 						<xsl:for-each select="$list[@xml:lang = $language.first]">
-							<p><xsl:apply-templates select="current()"/></p>
+							<p><xsl:apply-templates select="."/></p>
 						</xsl:for-each>
 					</xsl:otherwise>			
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:for-each select="$list">
-					<p><xsl:value-of select="." /></p>
+					<p><xsl:apply-templates select="."/></p>
 				</xsl:for-each>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	<xsl:template name="eag:nonpreform">
-			<xsl:value-of select= "." />
-				  <xsl:if test="./eag:useDates">
+	<xsl:template match="eag:nonpreform">
+			<xsl:value-of select= "./text()" />
+				  <xsl:if test="./eag:useDates/eag:dateSet/eag:dateRange or ./eag:useDates/eag:dateSet/eag:date">
 				     <xsl:text> (</xsl:text>
 				     <xsl:for-each select= "./eag:useDates/eag:dateSet/eag:date">
 			            <xsl:value-of select= "." />
