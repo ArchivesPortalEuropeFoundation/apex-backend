@@ -4,6 +4,8 @@
 	xmlns:ape="http://www.archivesportaleurope.eu/xslt/extensions" exclude-result-prefixes="xlink xlink xsi eag ape">
 
 	<xsl:output method="html" indent="yes" version="4.0" encoding="UTF-8" />
+	<xsl:param name="language.selected"/>
+	<xsl:variable name="language.default" select="'eng'"/>
 	<xsl:template match="/">
 		<h2 class="blockHeader">
 			<xsl:value-of select="./eag:eag/eag:archguide/eag:identity/eag:autform"></xsl:value-of>
@@ -272,7 +274,9 @@
 			    <tr>
 			     <td class="header"><xsl:value-of select="ape:resource('directory.text.accessinformation')" /></td>
 				 <td>
-				 	<xsl:apply-templates select="eag:access/eag:restaccess" mode="multilanguage"/>
+				 	<xsl:call-template name="multilanguage" >
+				 	<xsl:with-param name="list" select="eag:access/eag:restaccess"></xsl:with-param>
+				 	</xsl:call-template>
 				 </td> 
 			    </tr> 
 			    </xsl:if> 
@@ -417,9 +421,9 @@
 			          <xsl:value-of select="ape:resource('directory.text.archivesresearchservice')" />
 			        </td>
 			        <td>
-			        <xsl:for-each select= "eag:services/eag:searchroom/eag:researchServices/eag:descriptiveNote/eag:p">
-			          <p><xsl:value-of select= "." /></p>
-			         </xsl:for-each>
+			      <xsl:call-template name="multilanguage">
+				  	<xsl:with-param name="list" select="eag:services/eag:searchroom/eag:researchServices/eag:descriptiveNote/eag:p"/>
+				  </xsl:call-template>
 			        </td>
 			      </tr>
 			    </xsl:if>
@@ -441,9 +445,9 @@
 			    <tr class="longDisplay">
 			      <td class="header"></td>
 			      <td>
-			      <xsl:for-each select=  "eag:services/eag:searchroom/eag:computerPlaces/eag:descriptiveNote/eag:p">
-			       <p><xsl:value-of select=  "." /></p>
-			      </xsl:for-each>
+			      <xsl:call-template name="multilanguage">
+				  	<xsl:with-param name="list" select="eag:services/eag:searchroom/eag:computerPlaces/eag:descriptiveNote/eag:p"/>
+				  </xsl:call-template>
 			      </td> 
 			    </tr>
 			    </xsl:if>
@@ -496,9 +500,10 @@
 				 <xsl:if test="eag:services/eag:internetAccess[@question='yes']/eag:descriptiveNote/eag:p/text()">  
 			       <tr>
 			         <td class="header"></td>  
-			         <td> <xsl:for-each select= "eag:services/eag:internetAccess[@question='yes']/eag:descriptiveNote/eag:p">
-			              <p><xsl:value-of select="."/></p>
-			             </xsl:for-each> 
+			         <td>
+			         	<xsl:call-template name="multilanguage">
+			         		<xsl:with-param name="list" select="eag:services/eag:internetAccess[@question='yes']/eag:descriptiveNote/eag:p"/>
+			         	</xsl:call-template>
 			         </td>
 			       </tr>   
 				 </xsl:if>
@@ -564,9 +569,9 @@
 			      <td>
 			         <xsl:choose>
 						<xsl:when test="eag:services/eag:techservices/eag:reproductionser[@question='yes']">
-						  <xsl:for-each select= "eag:services/eag:techservices/eag:reproductionser/eag:descriptiveNote/eag:p">
-							<p><xsl:value-of select= "." /></p>
-						  </xsl:for-each>
+						  	<xsl:call-template name="multilanguage">
+				         		<xsl:with-param name="list" select="eag:services/eag:techservices/eag:reproductionser/eag:descriptiveNote/eag:p"/>
+				         	</xsl:call-template>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="ape:resource('directory.text.noreproductionser')" />
@@ -692,9 +697,9 @@
 			        <td>
 			         <xsl:choose>
 						<xsl:when test="eag:services/eag:techservices/eag:restorationlab[@question='yes']">
-						   <xsl:for-each select= "eag:services/eag:techservices/eag:restorationlab/eag:descriptiveNote/eag:p">
-							<p><xsl:value-of select= "." /></p>
-						</xsl:for-each>
+							<xsl:call-template name="multilanguage">
+				         		<xsl:with-param name="list" select="eag:services/eag:techservices/eag:restorationlab/eag:descriptiveNote/eag:p"/>
+				         	</xsl:call-template>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="ape:resource('directory.text.norestorationlab')" />
@@ -758,9 +763,10 @@
 				 <xsl:if test="eag:services/eag:recreationalServices/eag:refreshment">
 				   <tr class="longDisplay">
 				     <td class="header"><xsl:value-of select="ape:resource('directory.text.refreshmentarea')" /></td>
-				     <td><xsl:for-each select="eag:services/eag:recreationalServices/eag:refreshment/eag:descriptiveNote/eag:p">
-				           <p><xsl:value-of select="."/></p> 
-				          </xsl:for-each>
+				     <td>
+				       <xsl:call-template name="multilanguage">
+			         		<xsl:with-param name="list" select="eag:services/eag:recreationalServices/eag:refreshment/eag:descriptiveNote/eag:p"/>
+			         	</xsl:call-template>
 				     </td>  
 				   </tr>
 				 </xsl:if>
@@ -770,9 +776,10 @@
 				 <xsl:if test= "eag:services/eag:recreationalServices/eag:exhibition">
 				   <tr class="longDisplay">
 				     <td class="header"><xsl:value-of select="ape:resource('directory.text.exhibition')" /></td>
-				     <td><xsl:for-each select="eag:services/eag:recreationalServices/eag:exhibition/eag:descriptiveNote/eag:p">
-				       <p><xsl:value-of select="." /></p> 
-				     </xsl:for-each> 
+				     <td>
+				     	<xsl:call-template name="multilanguage">
+			         		<xsl:with-param name="list" select="eag:services/eag:recreationalServices/eag:exhibition/eag:descriptiveNote/eag:p"/>
+			         	</xsl:call-template>
 				     </td>
 				   </tr> 
                    <xsl:if test= "eag:services/eag:recreationalServices/eag:exhibition/eag:webpage/text()">
@@ -794,9 +801,9 @@
 				   <tr class="longDisplay">
 				     <td class="header"><xsl:value-of select="ape:resource('directory.text.guidedtour')" /></td>
 				     <td>
-				     <xsl:for-each select="eag:services/eag:recreationalServices/eag:toursSessions/eag:descriptiveNote/eag:p">
-				       <p><xsl:value-of select="." /></p>
-				     </xsl:for-each>
+				     	<xsl:call-template name="multilanguage">
+			         		<xsl:with-param name="list" select="eag:services/eag:recreationalServices/eag:toursSessions/eag:descriptiveNote/eag:p"/>
+			         	</xsl:call-template>
 				     </td>  
 				   </tr> 
                  <xsl:if test= "eag:services/eag:recreationalServices/eag:toursSessions/eag:webpage/text()">
@@ -817,9 +824,10 @@
 			     <xsl:if test= "eag:services/eag:recreationalServices/eag:otherServices">
 				   <tr class="longDisplay">
 				     <td class="header"><xsl:value-of select="ape:resource('directory.text.otherservices')" /></td>
-				     <td><xsl:for-each select="eag:services/eag:recreationalServices/eag:otherServices/eag:descriptiveNote/eag:p">
-				            <p><xsl:value-of select="."/></p>
-				          </xsl:for-each>
+				     <td>
+				     	<xsl:call-template name="multilanguage">
+			         		<xsl:with-param name="list" select="eag:services/eag:recreationalServices/eag:otherServices/eag:descriptiveNote/eag:p"/>
+			         	</xsl:call-template>
 				     </td>  
 				   </tr> 
 				   
@@ -914,9 +922,9 @@
 			   <tr class="longDisplay" >
 			    <td class="header"><xsl:value-of select="ape:resource('directory.text.holdings')" /></td>
 			    <td>
-			     <xsl:for-each select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:holdings/eag:descriptiveNote/eag:p">
-			        <p><xsl:value-of select= "." /></p>
-			    </xsl:for-each>
+			    		<xsl:call-template name="multilanguage">
+			         		<xsl:with-param name="list" select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:holdings/eag:descriptiveNote/eag:p"/>
+			         	</xsl:call-template>
 			    </td>
 			   </tr>
 			 </xsl:if>
@@ -961,10 +969,9 @@
 			   <tr class="longDisplay">
 			    <td class="header"><xsl:value-of select="ape:resource('directory.text.historyofthearchives')" /></td>
 			    <td>
-			     <xsl:for-each select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:repositorhist/eag:descriptiveNote/eag:p">
-			       <p><xsl:value-of select= "." /></p>
-			    
-			     </xsl:for-each>
+			    	<xsl:call-template name="multilanguage">
+			    		<xsl:with-param name="list" select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:repositorhist/eag:descriptiveNote/eag:p"></xsl:with-param>
+			    	</xsl:call-template>
 			    </td>
 			   </tr>
 			 </xsl:if>
@@ -1059,9 +1066,9 @@
 			   <tr class="longDisplay">
 			    <td class="header"><xsl:value-of select="ape:resource('directory.text.archivebuilding')" /></td>
 			    <td>
-			    <xsl:for-each select= "./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:buildinginfo/eag:building/eag:descriptiveNote/eag:p">
-			      <p><xsl:value-of select= "." /></p>
-			    </xsl:for-each>
+			    		<xsl:call-template name="multilanguage">
+			         		<xsl:with-param name="list" select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:buildinginfo/eag:building/eag:descriptiveNote/eag:p"/>
+			         	</xsl:call-template>
 			    </td>
 			   </tr>
 			 </xsl:if>
@@ -1146,5 +1153,34 @@
 				</td>
 			  </tr>
 			</xsl:if>
-	</xsl:template>	
+	</xsl:template>
+	<xsl:template name="multilanguage">
+		<xsl:param name="list"/>
+		<xsl:choose>
+			<xsl:when test="count($list) > 1">
+				<xsl:choose>
+					<xsl:when test="$list[@xml:lang = $language.selected]">
+						<xsl:for-each select="$list[@xml:lang = $language.selected]">
+							<p><xsl:value-of select="." /></p>
+						</xsl:for-each>
+					</xsl:when>	
+					<xsl:when test="$list[@xml:lang = $language.default]">
+						<xsl:for-each select="$list[@xml:lang = $language.default]">
+							<p><xsl:value-of select="." /></p>
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:variable name="language.first" select="$list/*[1]/@xml:language"></xsl:variable>
+						<p><b><xsl:value-of select="$language.first" /></b></p>
+					</xsl:otherwise>			
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:for-each select="$list">
+					<p><xsl:value-of select="." /></p>
+				</xsl:for-each>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
 </xsl:stylesheet>
