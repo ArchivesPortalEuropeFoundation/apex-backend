@@ -18,11 +18,11 @@
 	<xsl:for-each select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository">
 	   <xsl:variable name="id" select="position()"/>
 	   <xsl:if test="count(current()/parent::node()/eag:repository)> 1">
-		<h3 class="repositoryName">
+		<h3 class="repositoryName" id="repositoryName_{$id}">
 			<xsl:value-of select="./eag:repositoryName"></xsl:value-of>
 		</h3>	
 		</xsl:if>
-		<div class="repositoryInfo">
+		<div class="repositoryInfo" id="repositoryName_{$id}">
 		<table class="aiSection" id="contactDisplay_{$id}">
 			<thead>
 				<tr>
@@ -808,7 +808,7 @@
 		            <xsl:for-each select="current()/parent::node()/eag:repository">
 		               <xsl:variable name="otherRepositoryId" select="position()"/>
 		               <xsl:if test="$id != $otherRepositoryId">
-			    	   <div><a href= "javascript:displayrepository('{$otherRepositoryId}');"> <xsl:value-of select="./eag:repositoryName"/><xsl:text> (</xsl:text><xsl:value-of select="./eag:repositoryRole"/><xsl:text>)</xsl:text></a></div>
+			    	   <div><a href= "javascript:displayRepository('{$otherRepositoryId}');"> <xsl:value-of select="./eag:repositoryName"/><xsl:text> (</xsl:text><xsl:value-of select="./eag:repositoryRole"/><xsl:text>)</xsl:text></a></div>
 				        </xsl:if>    
 	   		        </xsl:for-each>
 	   		         
@@ -820,11 +820,8 @@
 	<!-- END LOOP -->
 		</div>
 	</xsl:for-each>
-	<!-- STARTS LOOP_2 FOR LINKS : Associated repository -->
-	<!-- ENDS LOOP_2 FOR LINKS : Associated repository -->
-	<h3>
-		<xsl:value-of select="ape:resource('directory.text.other')" />
-	</h3>	
+	<div id="afterRepositories">
+	</div>
 	
 			        <!-- ARCHIVES & HOLDINGS DESCRIPTION -->
 			        
