@@ -1,7 +1,6 @@
 package eu.apenet.commons.xslt;
 
 import java.io.File;
-import java.io.PrintWriter;
 import java.io.Writer;
 
 import javax.xml.transform.Source;
@@ -17,6 +16,8 @@ import net.sf.saxon.s9api.XsltExecutable;
 import net.sf.saxon.s9api.XsltTransformer;
 import eu.apenet.commons.ResourceBundleSource;
 import eu.apenet.commons.xslt.extensions.ResourcebundleExtension;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.Lang;
 
 public class EagXslt {
 	private static XsltExecutable getXsltExecutable(String xslUrl, ResourceBundleSource resourceBundleSource) throws SaxonApiException{
@@ -31,7 +32,13 @@ public class EagXslt {
 	}
 	@Deprecated
     public static void displayAiDetails(Writer writer, File xmlFile, ResourceBundleSource resourceBundleSource) throws SaxonApiException{
-		displayAiDetails(writer, xmlFile, resourceBundleSource, "eng");
+		String language = resourceBundleSource.getLocale().getLanguage();
+		String languageIso2 = "eng";
+		Lang lang = DAOFactory.instance().getLangDAO().getLangByIso2Name(language);
+		if (lang != null){
+			languageIso2 = lang.getIsoname();
+		}
+		displayAiDetails(writer, xmlFile, resourceBundleSource, languageIso2);
     }
     public static void displayAiDetails(Writer writer, File xmlFile, ResourceBundleSource resourceBundleSource, String language) throws SaxonApiException{
 		Source xmlSource = new StreamSource(xmlFile);
