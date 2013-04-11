@@ -979,33 +979,16 @@
 			     <!-- nonpreform  and useDates-->
 			 
 			 <xsl:if test="./eag:eag/eag:archguide/eag:identity/eag:nonpreform">
-			  <xsl:for-each select="./eag:eag/eag:archguide/eag:identity/eag:nonpreform">
+			  
 			   <tr class="longDisplay">
 			    <td class="subHeader"><xsl:value-of select="ape:resource('directory.text.alternative')" /></td>
 			    <td>
-				  <xsl:value-of select= "." />
-				  <xsl:if test="./eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates">
-				     <xsl:text> (</xsl:text>
-				     <xsl:for-each select= "./eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateSet/eag:date">
-			            <xsl:value-of select= "." />
-			            <xsl:text>, </xsl:text>
-			         </xsl:for-each>
-				     <xsl:for-each select= "./eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateSet/eag:dateRange">
-			           <xsl:value-of select= "./eag:fromDate" /> 
-			           <xsl:variable name="variable" select="./eag:toDate"></xsl:variable>
-			           <xsl:if test="string(number(substring($variable,1,2)))!='NaN'">
-			              <xsl:text> - </xsl:text>
-			           </xsl:if>
-			          <xsl:value-of select= "./eag:toDate" /> 
-				   <!--    <xsl:if test="./eag:toDate[position()]<last()">--> 
-				         <xsl:text>, </xsl:text>
-				   <!--    </xsl:if>  --> 
-			        </xsl:for-each>
-					<xsl:text>)</xsl:text>
-				 </xsl:if>	
+			    	<xsl:call-template name="multilanguageNoperform">
+			    		<xsl:with-param name="list" select="./eag:eag/eag:archguide/eag:identity/eag:nonpreform"/>
+			    	</xsl:call-template>
 			    </td>
 			   </tr>
-			  </xsl:for-each>
+		
 			 </xsl:if>
 				
 			     <!-- date of repositorfound -->
@@ -1051,13 +1034,14 @@
 			     <!-- adminunit --> 
 			 
 			  <xsl:if test="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:adminhierarchy/eag:adminunit/text()">
-			  <xsl:for-each select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:adminhierarchy/eag:adminunit">
 			   <tr class="longDisplay">
 			    <td class="header"><xsl:value-of select="ape:resource('directory.text.archivedepartment')" /></td>
-			    <td><xsl:value-of select= "." />
+			    <td>
+			    		<xsl:call-template name="multilanguage">
+			         		<xsl:with-param name="list" select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:adminhierarchy/eag:adminunit"/>
+			         	</xsl:call-template>
 			    </td>
 			   </tr>
-			   </xsl:for-each>
 			 </xsl:if>
 			 
 			       <!-- building -->
@@ -1098,7 +1082,10 @@
 			<xsl:if test="./eag:eag/eag:control/eag:maintenanceHistory/eag:maintenanceEvent/eag:eventDateTime/text()">  
 			 <tr>
 			   <td class="header"><xsl:value-of select="ape:resource('directory.text.lastupdate')"/> </td>
-			   <td><xsl:value-of select= "./eag:eag/eag:control/eag:maintenanceHistory/eag:maintenanceEvent/eag:eventDateTime"/></td>
+			   <td>
+			   		<xsl:variable name="numberOfMaintenanceEvent" select="count(./eag:eag/eag:control/eag:maintenanceHistory/eag:maintenanceEvent)"/>
+			   		<xsl:value-of select= "./eag:eag/eag:control/eag:maintenanceHistory/eag:maintenanceEvent[$numberOfMaintenanceEvent]/eag:eventDateTime"/>
+			   	</td>
 			 </tr>
 			 </xsl:if>
 			 </tbody>
@@ -1170,8 +1157,10 @@
 						</xsl:for-each>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:variable name="language.first" select="$list/*[1]/@xml:language"></xsl:variable>
-						<p><b><xsl:value-of select="$language.first" /></b></p>
+						<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
+						<xsl:for-each select="$list[@xml:lang = $language.first]">
+							<p><xsl:value-of select="." /></p>
+						</xsl:for-each>
 					</xsl:otherwise>			
 				</xsl:choose>
 			</xsl:when>
@@ -1182,5 +1171,56 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-
+	<xsl:template name="multilanguageNoperform">
+		<xsl:param name="list"/>
+		<xsl:choose>
+			<xsl:when test="count($list) > 1">
+				<xsl:choose>
+					<xsl:when test="$list[@xml:lang = $language.selected]">
+						<xsl:for-each select="$list[@xml:lang = $language.selected]">
+							<p><xsl:apply-templates select="current()"/></p>
+						</xsl:for-each>
+					</xsl:when>	
+					<xsl:when test="$list[@xml:lang = $language.default]">
+						<xsl:for-each select="$list[@xml:lang = $language.default]">
+							<p><xsl:apply-templates select="current()"/></p>
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
+						<xsl:for-each select="$list[@xml:lang = $language.first]">
+							<p><xsl:apply-templates select="current()"/></p>
+						</xsl:for-each>
+					</xsl:otherwise>			
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:for-each select="$list">
+					<p><xsl:value-of select="." /></p>
+				</xsl:for-each>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	<xsl:template name="eag:nonpreform">
+			<xsl:value-of select= "." />
+				  <xsl:if test="./eag:useDates">
+				     <xsl:text> (</xsl:text>
+				     <xsl:for-each select= "./eag:useDates/eag:dateSet/eag:date">
+			            <xsl:value-of select= "." />
+			            <xsl:text>, </xsl:text>
+			         </xsl:for-each>
+				     <xsl:for-each select= "./eag:useDates/eag:dateSet/eag:dateRange">
+			           <xsl:value-of select= "./eag:fromDate" /> 
+			           <xsl:variable name="variable" select="./eag:toDate"></xsl:variable>
+			           <xsl:if test="string(number(substring($variable,1,2)))!='NaN'">
+			              <xsl:text> - </xsl:text>
+			           </xsl:if>
+			          <xsl:value-of select= "./eag:toDate" /> 
+				   <!--    <xsl:if test="./eag:toDate[position()]<last()">--> 
+				         <xsl:text>, </xsl:text>
+				   <!--    </xsl:if>  --> 
+			        </xsl:for-each>
+					<xsl:text>)</xsl:text>
+				 </xsl:if>	
+	</xsl:template>
 </xsl:stylesheet>
