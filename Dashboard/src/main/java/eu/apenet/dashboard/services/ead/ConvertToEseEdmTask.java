@@ -71,7 +71,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 				File eseOutputFile = EseFileUtils.getFile(outputESEDir, eseOutputFilename);
 				eseOutputFile.getParentFile().mkdirs();
 				eseConfig.getTransformerXML2XML().transform(xmlNameRelative, apenetEad, eseOutputFile);
-				int numberOfRecords = analyzeESEXML(xmlNameRelative, eseOutputFile);
+				int numberOfRecords = analyzeESEXML(xmlNameRelative, eseOutputFile) - 1;
 
 				boolean update = false;
 				if (numberOfRecords > 0) {
