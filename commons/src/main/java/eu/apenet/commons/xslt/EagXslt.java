@@ -33,12 +33,12 @@ public class EagXslt {
 	@Deprecated
     public static void displayAiDetails(Writer writer, File xmlFile, ResourceBundleSource resourceBundleSource) throws SaxonApiException{
 		String language = resourceBundleSource.getLocale().getLanguage();
-		String languageIso2 = "eng";
+		String languageIso3 = "eng";
 		Lang lang = DAOFactory.instance().getLangDAO().getLangByIso2Name(language);
 		if (lang != null){
-			languageIso2 = lang.getIsoname();
+			languageIso3 = lang.getIsoname().toLowerCase();
 		}
-		displayAiDetails(writer, xmlFile, resourceBundleSource, languageIso2);
+		displayAiDetails(writer, xmlFile, resourceBundleSource, languageIso3);
     }
     public static void displayAiDetails(Writer writer, File xmlFile, ResourceBundleSource resourceBundleSource, String language) throws SaxonApiException{
 		Source xmlSource = new StreamSource(xmlFile);
