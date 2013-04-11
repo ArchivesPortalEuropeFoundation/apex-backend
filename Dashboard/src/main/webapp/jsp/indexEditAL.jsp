@@ -55,7 +55,8 @@
 					if(selectedIndex!=-1){
 						$.post('changeNode.action',{"textAL":"","element":"","father" :fatherId,"ALElement":$("select[name=ALElement] option:selected").val()},function(response){
 							$("body").html(response);
-							$("option[value*='"+elementValue+"']").attr('selected','selected'); //select
+							$("select[name=ALElement] option[value*='"+elementValue+"']").attr('selected','selected'); //select
+							$("li[id='li_"+elementValue+"']").addClass("selected"); //for safari and chrome browsers
 							$("#editDiv").show();
 							$("#showEditLanguagesDiv").show();
 							$("#actionsButtons").show();
@@ -143,6 +144,7 @@
 								}
 							});
 							checkForNextPrevButtons($("select[name=ALElement] option:selected"));
+							checkForDisableWrongPathers($('select[name=ALElement] option:selected'));
 						});
 					}else{
 						updateStatusWindow("<s:property value='getText("al.message.noElementSelected")' />");
@@ -170,6 +172,7 @@
 								}
 							});
 							checkForNextPrevButtons($("select[name=ALElement] option:selected"));
+							checkForDisableWrongPathers($('select[name=ALElement] option:selected'));
 						});
 					}else{
 						updateStatusWindow("<s:property value='getText("al.message.noElementSelected")' />");
@@ -215,8 +218,8 @@
 					$("#showAlternativeNamesDiv").hide();
 					$("#editDiv").hide();
 					$("#editLanguagesDiv").hide();
-					
 					checkForNextPrevButtons($('select[name=ALElement] option:selected'));
+					checkForDisableWrongPathers($('select[name=ALElement] option:selected'));
 				};
 				$("#unselectDiv").click(unselectclickfunction);
 				
@@ -339,6 +342,34 @@
 				function showcurtain(){
 					$("#curtain").show();
 				};
+				function checkForDisableWrongPathers(jqueryNode){
+					$("select#father option").each(function(){
+						if($(this).attr("value")!=jqueryNode.attr("value")){
+							$(this).removeAttr("disabled");
+						}else{
+							$(this).attr("disabled","true");
+						}
+					});
+					var paddingLeft = null;
+					paddingLeft = jqueryNode.css("padding-left"); //used by previews developmens to enable a virtual tabulation
+					if(paddingLeft && paddingLeft!=null && paddingLeft!=undefined){
+						var numPaddingLeft = parseInt(paddingLeft.substring(0,paddingLeft.indexOf("px")));
+						var stop = false;
+						while(!stop && (nextJqueryNode = jqueryNode.next()) && nextJqueryNode.length>0){
+							var currentNumPaddingLeft = parseInt(nextJqueryNode.css("padding-left").substring(0,paddingLeft.indexOf("px")));
+							if(currentNumPaddingLeft>numPaddingLeft){ //add to blacklist
+								$("select#father option").each(function(){
+									if($(this).attr("value")==nextJqueryNode.attr("value")){
+										$(this).attr("disabled","true");
+									}
+								});
+							}else{
+								stop = true;
+							}
+							jqueryNode = nextJqueryNode;
+						}
+					}
+				}
 				function checkForNextPrevButtons(jqueryNode){
 					targetPaddingLeft = jqueryNode.css("padding-left");
 					if(targetPaddingLeft.length>2){
@@ -365,7 +396,7 @@
 								$("#moveDownDiv").hide();
 								exit = true;
 							}
-						}while(!exit && (next = next.next()));
+						}while(!exit && (next = next.next()) && next.length>0);
 					}else{
 						$("#moveDownDiv").hide();
 					}
@@ -388,7 +419,7 @@
 								exit = true;
 							}
 							lastValue = parseInt(paddingLeft);
-						}while(!exit && (prev = prev.prev()));
+						}while(!exit && (prev = prev.prev()) && prev.length>0);
 					}else{
 						$("#moveUpDiv").hide();
 					}
