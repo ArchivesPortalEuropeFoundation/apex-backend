@@ -225,17 +225,18 @@
 				
 				$("#showLanguagesDiv").click(function(){
 					var selectedIndex = $("select[name=ALElement] option:selected").index();
+					var elementValue = $("select[name=ALElement] option:selected").val();
 					if(selectedIndex!=-1){
 						$.post('showLanguages.action','ALElement='+$("select[name=ALElement] option:selected").val(),function(response){
 							$("body").html(response);
 							$("select[name=ALElement]")[0].selectedIndex = selectedIndex;
+							$("li[id='li_"+elementValue+"']").addClass("selected"); //for safari and chrome browsers
 							updateStatusWindow('Show alternatives names done!');
 							$("#showLanguagesDiv").hide();
 							$("#editDiv").show();
 							$("#showEditLanguagesDiv").show();
 							$("#actionsButtons").show();
 							$("#divGroupNodesContainer").show();
-							
 							if($('select[name=ALElement] option:selected').hasClass("nodelete")){
 								$('#actionWarning').html("<s:text name='al.message.contains.eads'/>");
 								$('#deleteDiv').addClass("hidden");
@@ -251,12 +252,15 @@
 				$("#editDiv").click(function(){
 					var elementName = $("select[name=ALElement] option:selected").text();
 					var selectedIndex = $("select[name=ALElement] option:selected").index();
+					var elementValue = $("select[name=ALElement] option:selected").val();
+					$("#editDiv").hide();
 					if($("select[name=ALElement] option:selected").index()!=-1){
-						$.post('editElement.action','ALElement='+$("select[name=ALElement] option:selected").val(),function(response){
+						$.post('editElement.action','ALElement='+elementValue,function(response){
 							$("body").html(response);
 							$("select[name=ALElement]")[0].selectedIndex = selectedIndex;
+							$("li[id='li_"+elementValue+"']").addClass("selected"); //for safari and chrome browsers
 							updateStatusWindow('<span style="font-weight:bold;">'+elementName+'</span> <s:property value="getText('al.message.alternativesnamesdisplayed')"/>');
-							//$("#editDiv").show();
+							$("#editDiv").hide();
 							$("#showLanguagesDiv").hide();
 							$("#showEditLanguagesDiv").show();
 							$("#actionsButtons").show();
@@ -269,12 +273,13 @@
 								$.post('editTarget.action',{'languageTarget':$("#languageTarget").val(),'target':$("#target").val(),'ALElement':$("select[name=ALElement]").val()},function(response){
 									$("body").html(response);
 									document.getElementById("ALElement").selectedIndex = selectedIndex;
+									$("li[id='li_"+elementValue+"']").addClass("selected"); //for safari and chrome browsers
 									updateStatusWindow('<s:property value="getText('al.message.editedalternativesnamesdone')"/>');
 									$("#showLanguagesDiv").hide();
 									$("#showEditLanguagesDiv").show();
 									$("#actionsButtons").show();
 									$("#divGroupNodesContainer").show();
-									$("#editDiv").show();
+									//$("#editDiv").show();
 								});
 							});
 							$("#editTargetCancelDiv").click(function(){
@@ -303,9 +308,9 @@
 					$("#showEditLanguagesDiv").append($("#editLanguagesDiv"));
 					$("#divForSubmitButtom").append($("#finalSubmitButton")); 
 					$("#selectOnlyListElements").css("margin-bottom","0px");
-					$("#editDiv").hide();
 					if($("select[name=ALElement] option:selected").index()==-1){
 						$("#actionsButtons").hide();
+						$("#editDiv").hide();
 						$("#showEditLanguagesDiv").hide();
 						$("#divGroupNodesContainer").hide();
 						$("select[name='ALElement']").click(alelementclick);
@@ -331,6 +336,8 @@
 								}
 							});
 						}
+					}else if(!($("#editLanguagesDiv").is(":visible"))){
+						$("#editDiv").show();
 					}
 					$("#ALElement").richSelect({
 						"global_class":"divSelectOnlyListElements2",
