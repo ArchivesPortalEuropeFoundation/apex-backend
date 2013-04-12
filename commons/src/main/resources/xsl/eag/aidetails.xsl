@@ -38,20 +38,20 @@
 	   
 			   
 			   <!-- visitors Address -->
-				  <xsl:if test="eag:location[@localType='visitors address']"> 
+				  <xsl:if test="eag:location[not(@localType) or @localType='visitors address']"> 
 				  <tr>
 			      <td class="header">
 				    <xsl:value-of select="ape:resource('directory.text.visitorsaddress')" />
 				   </td>
 				   <td id="address">
-					  <xsl:if test="eag:location[@localType='visitors address']/eag:street/text()">
-				         <xsl:value-of select="eag:location[@localType='visitors address']/eag:street" /> 
-				         <xsl:if test="eag:location[@localType='visitors address']/eag:municipalityPostalcode/text()">
+					  <xsl:if test="eag:location[not(@localType) or @localType='visitors address']/eag:street/text()">
+				         <xsl:value-of select="eag:location[not(@localType) or @localType='visitors address']/eag:street" /> 
+				         <xsl:if test="eag:location[not(@localType) or @localType='visitors address']/eag:municipalityPostalcode/text()">
 						    <xsl:text> , </xsl:text>
 					     </xsl:if>
 					  </xsl:if>	 
-					  <xsl:if test="eag:location[@localType='visitors address']/eag:municipalityPostalcode/text()">	 		
-				 	     <xsl:value-of select="eag:location[@localType='visitors address']/eag:municipalityPostalcode" />  
+					  <xsl:if test="eag:location[not(@localType) or @localType='visitors address']/eag:municipalityPostalcode/text()">	 		
+				 	     <xsl:value-of select="eag:location[not(@localType) or @localType='visitors address']/eag:municipalityPostalcode" />  
 				      </xsl:if>
 					</td>
 			      </tr>
@@ -59,26 +59,26 @@
 			  
 			      <!-- localentity -->
 			  
-				 <xsl:if test="eag:location[@localType='visitors address']/eag:localentity/text()">
+				 <xsl:if test="eag:location[not(@localType) or @localType='visitors address']/eag:localentity/text()">
 				 <tr class="longDisplay">
 				   <td class="header">
 				     <xsl:value-of select="ape:resource('directory.text.district')"/>
 				    </td>
 				    <td>
-				      <xsl:value-of select="eag:location[@localType='visitors address']/eag:localentity"/>    
+				      <xsl:value-of select="eag:location[not(@localType) or @localType='visitors address']/eag:localentity"/>    
 				    </td>  
 				  </tr>
 				  </xsl:if>
 				  
 				      <!-- secondem -->
 				  
-				  <xsl:if test="eag:location[@localType='visitors address']/eag:secondem/text()">
+				  <xsl:if test="eag:location[not(@localType) or @localType='visitors address']/eag:secondem/text()">
 				  <tr class="longDisplay">
 				    <td class="header">
 				      <xsl:value-of select="ape:resource('directory.text.countrylocalauthority')"/>
 				    </td>    
 	                <td>
-	                  <xsl:value-of select="eag:location[@localType='visitors address']/eag:secondem"></xsl:value-of>
+	                  <xsl:value-of select="eag:location[not(@localType) or @localType='visitors address']/eag:secondem"></xsl:value-of>
 	                </td>		
 			      </tr>
 			      </xsl:if>
@@ -98,20 +98,20 @@
 				  
 				    <!-- postal address -->
 					
-			     <xsl:if test="eag:location[not(@localType) or @localType='postal address']">
+			     <xsl:if test="eag:location[@localType='postal address']">
 			      <tr class="longDisplay">
 			        <td class="header">
 			         <xsl:value-of select="ape:resource('directory.text.postaladdress')"></xsl:value-of>
 			        </td>
 					 <td id="address">
-					  <xsl:if test="eag:location[not(@localType) or @localType='postal address']/eag:street/text()">
-				         <xsl:value-of select="eag:location[not(@localType) or @localType='postal address']/eag:street" /> 
-				         <xsl:if test="eag:location[not(@localType) or @localType='postal address']/eag:municipalityPostalcode/text()">
+					  <xsl:if test="eag:location[@localType='postal address']/eag:street/text()">
+				         <xsl:value-of select="eag:location[@localType='postal address']/eag:street" /> 
+				         <xsl:if test="eag:location[@localType='postal address']/eag:municipalityPostalcode/text()">
 						    <xsl:text> , </xsl:text>
 					     </xsl:if>
 					  </xsl:if>	 
-					  <xsl:if test="eag:location[not(@localType) or @localType='postal address']/eag:municipalityPostalcode/text()">	 		
-				 	     <xsl:value-of select="eag:location[not(@localType) or @localType='postal address']/eag:municipalityPostalcode" />  
+					  <xsl:if test="eag:location[@localType='postal address']/eag:municipalityPostalcode/text()">	 		
+				 	     <xsl:value-of select="eag:location[@localType='postal address']/eag:municipalityPostalcode" />  
 				      </xsl:if>
 					 </td>
 			      </tr>
@@ -119,13 +119,13 @@
 				  
 				      <!-- country -->
 					  
-				  <xsl:if test="eag:location[@localType='visitors address']/eag:country/text()"> 
+				  <xsl:if test="eag:location[not(@localType) or @localType='visitors address']/eag:country/text()"> 
 			       <tr>
 					<td class="header">
 						<xsl:value-of select="ape:resource('directory.text.country')" />
 					</td>
 					<td>
-						<xsl:value-of select="eag:location[@localType='visitors address']/eag:country" />
+						<xsl:value-of select="eag:location[not(@localType) or @localType='visitors address']/eag:country" />
 					</td>
 				  </tr>
 				 </xsl:if> 
