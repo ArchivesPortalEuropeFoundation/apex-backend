@@ -71,10 +71,10 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 				File eseOutputFile = EseFileUtils.getFile(outputESEDir, eseOutputFilename);
 				eseOutputFile.getParentFile().mkdirs();
 				eseConfig.getTransformerXML2XML().transform(xmlNameRelative, apenetEad, eseOutputFile);
-				int numberOfRecords = analyzeESEXML(xmlNameRelative, eseOutputFile) - 1;
+				int numberOfRecords = analyzeESEXML(xmlNameRelative, eseOutputFile);
 
 				boolean update = false;
-				if (numberOfRecords > 0) {
+				if (numberOfRecords > 1) {
 					/*
 					 * ESE2EDM stuff
 					 */
@@ -162,7 +162,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 				}else {
 					eseOutputFile.delete();
 				}
-				findingAid.setTotalNumberOfDaos(new Long(numberOfRecords));
+				findingAid.setTotalNumberOfChos(new Long(numberOfRecords));
 				findingAid.setEuropeana(EuropeanaState.CONVERTED);
 				eadDAO.store(findingAid);
 				logAction(ead, true);
