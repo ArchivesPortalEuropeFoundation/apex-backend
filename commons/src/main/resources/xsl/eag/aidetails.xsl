@@ -334,9 +334,7 @@
 			        <td class="header">
 			          <xsl:value-of select="ape:resource('directory.text.searchroom')" />
 			        </td>
-			        <td>
-			         <xsl:value-of select="eag:services/eag:searchroom/eag:workPlaces/eag:num" /><xsl:text> seats </xsl:text>
-			        </td>  
+			        <td><xsl:apply-templates select="eag:services/eag:searchroom/eag:workPlaces/eag:num"/></td>  
 			      </tr>
 				</xsl:if>  
 				
@@ -399,7 +397,7 @@
 			       <xsl:value-of select="ape:resource('directory.text.computerplaces')" />
 			      </td>
 			      <td>
-			       <xsl:value-of select= "eag:services/eag:searchroom/eag:computerPlaces/eag:num" />
+			       <xsl:apply-templates select="eag:services/eag:searchroom/eag:computerPlaces/eag:num"/>
 			       <xsl:call-template name="multilanguage">
 				  	<xsl:with-param name="list" select="eag:services/eag:searchroom/eag:computerPlaces/eag:descriptiveNote/eag:p"/>
 				  </xsl:call-template>
@@ -416,7 +414,7 @@
 			       <xsl:value-of select="ape:resource('directory.text.microfilmplaces')" />
 			      </td>
 			      <td>
-			       <xsl:value-of select= "eag:services/eag:searchroom/eag:microfilmPlaces/eag:num" />
+			       <xsl:apply-templates select="eag:services/eag:searchroom/eag:microfilmPlaces/eag:num"/>
 			      </td>
 			     </tr>
 			    </xsl:if>
@@ -474,14 +472,13 @@
 			         <xsl:value-of select="ape:resource('directory.text.library')" />
 			      </td>
 			      <td>
-				    <xsl:if test="eag:services/eag:library[@question='yes']/eag:monographicpub/eag:num/text()">
-						<xsl:value-of select= "eag:services/eag:library/eag:monographicpub/eag:num" /> <xsl:text> books</xsl:text>
-					</xsl:if>
+				<xsl:apply-templates select="eag:services/eag:library[@question='yes']/eag:monographicpub/eag:num"/>
+
 					<xsl:if test="eag:services/eag:library[@question='yes']/eag:serialpub/eag:num/text()">	
 					   <xsl:if test="eag:services/eag:library[@question='yes']/eag:monographicpub/eag:num/text()">
 					       <xsl:text>, </xsl:text>
 					   </xsl:if>   
-			            <xsl:value-of select= "eag:services/eag:library/eag:serialpub/eag:num" /> <xsl:text> periodicals</xsl:text>
+			            		 <xsl:apply-templates select="eag:services/eag:library[@question='yes']/eag:serialpub/eag:num"/>
 					</xsl:if>	
 					<xsl:if test ="eag:services/eag:library[@question='no']">
 					 		<xsl:value-of select="ape:resource('directory.text.nolibrary')" />
@@ -804,7 +801,7 @@
 			 <xsl:if test="eag:holdings/eag:extent/eag:num/text()">
 			   <tr >
 			    <td class="header"><xsl:value-of select="ape:resource('directory.text.extentholdings')" /></td>
-			    <td><xsl:value-of select= "eag:holdings/eag:extent/eag:num" /><xsl:text> </xsl:text><xsl:value-of select="ape:resource('directory.text.extentholdings.unit')" /></td>
+			    <td><xsl:apply-templates select="eag:holdings/eag:extent/eag:num"/></td>
 			   </tr>
 			 </xsl:if>
 			 
@@ -813,25 +810,7 @@
 			 <xsl:if test="eag:holdings/eag:dateSet">
 			   <tr >
 			    <td class="header"><xsl:value-of select="ape:resource('directory.text.datesholdings')" /></td>
-			    <td>
-			     <xsl:for-each select= "eag:holdings/eag:dateSet/eag:date">
-			      <xsl:value-of select= "." />
-			      <xsl:text>, </xsl:text>
-			     </xsl:for-each>
-			     <xsl:for-each select= "eag:holdings/eag:dateSet/eag:dateRange">
-			       <xsl:value-of select= "./eag:fromDate" /> 
-			       <xsl:variable name="variable" select="./eag:toDate"></xsl:variable>
-			       <xsl:choose>
-			       		<xsl:when test="string(number(substring($variable,1,2)))!='NaN'">
-			       			<xsl:text> - </xsl:text>
-			       		</xsl:when>
-			       		<xsl:otherwise><xsl:text> </xsl:text></xsl:otherwise>
-			       </xsl:choose>
-			       <xsl:value-of select= "./eag:toDate" /> 
-				<!--    <xsl:if test="./eag:toDate[position()]<last()"> -->
-				      <xsl:text>, </xsl:text>
-				  <!--  </xsl:if>   -->
-			     </xsl:for-each>
+			    <td><xsl:apply-templates select="eag:holdings/eag:dateSet"/>
 			    </td>
 			   </tr>
 			 </xsl:if>
@@ -921,8 +900,7 @@
 			  <xsl:if test="eag:buildinginfo/eag:repositorarea/eag:num/text()">
 			   <tr class="longDisplay">
 			    <td class="header"><xsl:value-of select="ape:resource('directory.text.buildingarea')" /></td>
-			    <td><xsl:value-of select= "eag:buildinginfo/eag:repositorarea/eag:num" /><xsl:text> m</xsl:text><sup><xsl:text>2</xsl:text></sup>
-			    </td>
+			    <td><xsl:apply-templates select="eag:buildinginfo/eag:repositorarea/eag:num"/></td>
 			   </tr>
 			 </xsl:if>
 			 
@@ -931,8 +909,7 @@
 			 <xsl:if test="eag:buildinginfo/eag:lengthshelf/eag:num/text()">
 			   <tr class="longDisplay">
 			    <td class="header"><xsl:value-of select="ape:resource('directory.text.lengthshelfavailable')" /></td>
-			    <td><xsl:value-of select= "eag:buildinginfo/eag:lengthshelf/eag:num" /><xsl:text> linear metre</xsl:text>
-			    </td>
+			    <td><xsl:apply-templates select="eag:buildinginfo/eag:lengthshelf/eag:num"/></td>
 			   </tr>
 			 </xsl:if>
 			 
@@ -943,8 +920,7 @@
 	</xsl:for-each>
 	<div id="afterRepositories">
 	</div>
-	
-			        <!-- ARCHIVES & HOLDINGS DESCRIPTION -->
+
 			        
 			 <table class="aiSection" id="otherDisplay">
 			  <thead>
@@ -1132,25 +1108,33 @@
 		</xsl:choose>
 	</xsl:template>
 	<xsl:template match="eag:nonpreform">
-			<xsl:value-of select= "./text()" />
-				  <xsl:if test="./eag:useDates/eag:dateSet/eag:dateRange or ./eag:useDates/eag:dateSet/eag:date">
-				     <xsl:text> (</xsl:text>
-				     <xsl:for-each select= "./eag:useDates/eag:dateSet/eag:date">
+		<xsl:value-of select="text()" />
+		 <xsl:if test="./eag:useDates/eag:dateSet"> <xsl:text> (</xsl:text>
+			<xsl:apply-templates select="./eag:useDates/eag:dateSet"/><xsl:text>)</xsl:text>
+		</xsl:if>
+	</xsl:template>
+	<xsl:template match="eag:dateSet">
+				  <xsl:if test="eag:dateRange or eag:date">
+				     <xsl:for-each select= "eag:date">
 			            <xsl:value-of select= "." />
-			            <xsl:text>, </xsl:text>
+			            <xsl:if test="position() != last()">
+			            	<xsl:text>, </xsl:text>
+			            </xsl:if>
 			         </xsl:for-each>
-				     <xsl:for-each select= "./eag:useDates/eag:dateSet/eag:dateRange">
+			         <xsl:if test="eag:dateRange and eag:date">
+			        	 <xsl:text>, </xsl:text>
+			         </xsl:if>
+				     <xsl:for-each select= "eag:dateRange">
 			           <xsl:value-of select= "./eag:fromDate" /> 
 			           <xsl:variable name="variable" select="./eag:toDate"></xsl:variable>
 			           <xsl:if test="string(number(substring($variable,1,2)))!='NaN'">
 			              <xsl:text> - </xsl:text>
 			           </xsl:if>
 			          <xsl:value-of select= "./eag:toDate" /> 
-				   <!--    <xsl:if test="./eag:toDate[position()]<last()">--> 
+				   		<xsl:if test="position() != last()">
 				         <xsl:text>, </xsl:text>
-				   <!--    </xsl:if>  --> 
+				 		</xsl:if>
 			        </xsl:for-each>
-					<xsl:text>)</xsl:text>
 				 </xsl:if>	
 	</xsl:template>
 	<xsl:template name="multilanguageWithChilds">
@@ -1210,4 +1194,10 @@
 		</xsl:choose>
 
 	</xsl:template>
+	<xsl:template match="eag:num">
+		<xsl:variable name="unit" select="concat('directory.text.num.unit.', ./@unit)"/>
+		<xsl:value-of select="text()"/><xsl:text> </xsl:text><xsl:value-of select="ape:resource($unit)" disable-output-escaping="yes"/>
+	</xsl:template>
+		
+
 </xsl:stylesheet>
