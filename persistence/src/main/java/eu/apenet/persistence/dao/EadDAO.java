@@ -19,6 +19,8 @@ public interface EadDAO extends GenericDAO<Ead, Integer> {
 	public Long countUnits(EadSearchOptions eadSearchOptions);
 
 	public Long countDaos(EadSearchOptions eadSearchOptions);
+	
+	public Long countChos(EadSearchOptions eadSearchOptions);
 
 	List<Ead> getEadsByAiId(Class<? extends Ead> clazz, Integer aiId);
 
