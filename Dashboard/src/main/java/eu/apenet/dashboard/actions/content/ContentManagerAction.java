@@ -182,7 +182,7 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 					|| eadSearchOptions.getEuropeana().contains(EuropeanaState.DELIVERED)) {
 				EadSearchOptions europeanaSearchOptions = new EadSearchOptions(eadSearchOptions);
 				europeanaSearchOptions.setEuropeana(EuropeanaState.DELIVERED);
-				results.setTotalDaosDeliveredToEuropea(eadDAO.countDaos(europeanaSearchOptions));
+				results.setTotalChosDeliveredToEuropeana(eadDAO.countChos(europeanaSearchOptions));
 			}
 			/*
 			 * statistics for total converted daos
@@ -193,7 +193,7 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 				europeanaSearchOptions.getEuropeana().clear();
 				europeanaSearchOptions.getEuropeana().add(EuropeanaState.CONVERTED);
 				europeanaSearchOptions.getEuropeana().add(EuropeanaState.DELIVERED);
-				results.setTotalDaosConvertedToEseEdm(eadDAO.countDaos(europeanaSearchOptions));
+				results.setTotalChos(eadDAO.countChos(europeanaSearchOptions));
 			}
 
 		}

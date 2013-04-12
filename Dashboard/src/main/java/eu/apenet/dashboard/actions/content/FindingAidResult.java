@@ -10,7 +10,7 @@ public class FindingAidResult extends EadResult {
 	private boolean convertedToEseEdm;
 	private boolean deliveredToEuropeana;
 	private boolean harvestedByEuropeana;
-	private Long totalNumberOfDaos;
+	private Long totalNumberOfChos;
 	private boolean hasEseEdmFiles = false;
 	private String holdingsGuideTitle;
 	public FindingAidResult(Ead ead) {
@@ -19,8 +19,8 @@ public class FindingAidResult extends EadResult {
         this.convertedToEseEdm = EuropeanaState.CONVERTED.equals(findingAid.getEuropeana());
         this.deliveredToEuropeana = EuropeanaState.DELIVERED.equals(findingAid.getEuropeana());
         this.harvestedByEuropeana = EuropeanaState.HARVESTED.equals(findingAid.getEuropeana());
-        this.totalNumberOfDaos = findingAid.getTotalNumberOfDaos();
-        hasEseEdmFiles = (convertedToEseEdm | deliveredToEuropeana || harvestedByEuropeana ) && totalNumberOfDaos >0;
+        this.totalNumberOfChos = findingAid.getTotalNumberOfChos();
+        hasEseEdmFiles = (convertedToEseEdm | deliveredToEuropeana || harvestedByEuropeana ) && totalNumberOfChos >0;
         if (this.isPublished()){
         	holdingsGuideTitle = DAOFactory.instance().getHoldingsGuideDAO().getLinkedHoldingsGuideTitleByFindingAidEadid(ead.getEadid(), ead.getAiId());
         }
@@ -37,12 +37,14 @@ public class FindingAidResult extends EadResult {
 	public boolean isHarvestedByEuropeana() {
 		return harvestedByEuropeana;
 	}
-	public Long getTotalNumberOfDaos() {
-		return totalNumberOfDaos;
+
+	public Long getTotalNumberOfChos() {
+		return totalNumberOfChos;
 	}
+
 	public String getEseEdmText(){
 		if (convertedToEseEdm){
-			return getTotalNumberOfDaos()+"";
+			return getTotalNumberOfChos()+"";
 		}else {
 			return CONTENT_MESSAGE_NO;
 		}
