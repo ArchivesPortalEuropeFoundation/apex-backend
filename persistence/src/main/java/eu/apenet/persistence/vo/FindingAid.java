@@ -53,6 +53,7 @@ public class FindingAid extends Ead {
 	private ArchivalInstitution archivalInstitution;
 	@Column(name = "ai_id", updatable = false, insertable = false)
 	private Integer aiId;
+	private Long totalNumberOfCho = 0l;
 	private Long totalNumberOfDaos = 0l;
 	private Long totalNumberOfUnits = 0l;
 	private Long totalNumberOfUnitsWithDao = 0l;
@@ -224,6 +225,14 @@ public class FindingAid extends Ead {
 
 	public void setQueuing(QueuingState queuing) {
 		this.queuing = queuing;
+	}
+
+	public Long getTotalNumberOfCho() {
+		return totalNumberOfCho;
+	}
+
+	public void setTotalNumberOfCho(Long totalNumberOfCho) {
+		this.totalNumberOfCho = totalNumberOfCho;
 	}
 
 }
