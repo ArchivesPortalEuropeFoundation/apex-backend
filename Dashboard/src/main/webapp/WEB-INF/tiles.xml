@@ -225,6 +225,7 @@
             <add-attribute type="string" value="/js/jquery/jquery-ui.custom.min.js"/>
 	        <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
 	        <add-attribute type="string" value="/js/dynatree/jquery.dynatree.min.js"/>
+	        <add-attribute type="string" value="/js/directory.js"/>	    
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>

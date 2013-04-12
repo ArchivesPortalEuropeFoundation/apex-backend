@@ -65,7 +65,9 @@
 	        					if( node.data.url ) {
 	        						$("#directory-column-right-content").empty();
 	        						$("#directory-column-right-content").append("<div id='waitingImage'><img src='images/waiting.gif'/></div>");
-	        						$("#directory-column-right-content").load(node.data.url);
+	        						$("#directory-column-right-content").load(node.data.url, function() {
+	        							initEagDetails();
+	        						});
 	        					}
 	        				}
 	              							
