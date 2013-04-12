@@ -17,17 +17,18 @@
 	
 	<xsl:for-each select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository">
 	   <xsl:variable name="id" select="position()"/>
+	   <div id="repository_{$id}">
 	   <xsl:if test="count(current()/parent::node()/eag:repository)> 1">
-		<h3 class="repositoryName" id="repositoryName_{$id}">
+		<h3 class="repositoryName">
 			<xsl:value-of select="./eag:repositoryName"></xsl:value-of>
 		</h3>	
 		</xsl:if>
-		<div class="repositoryInfo" id="repositoryName_{$id}">
-		<table class="aiSection" id="contactDisplay_{$id}">
+		<div class="repositoryInfo">
+		<table class="aiSection contactDisplay">
 			<thead>
 				<tr>
 					<th colspan="2">
-						<xsl:value-of select="ape:resource('eagcontent.contact')" /><xsl:text> (</xsl:text><a class="displayLinkSeeMore" href="javascript:seeMore('contactDisplay_{$id}');" ><xsl:value-of select="ape:resource('eagcontent.seemore')"/></a><a class="displayLinkSeeLess" href="javascript:seeLess('contactDisplay_{$id}');" ><xsl:value-of select="ape:resource('eagcontent.seeless')"/></a><xsl:text>)</xsl:text>
+						<xsl:value-of select="ape:resource('eagcontent.contact')" /><xsl:text> (</xsl:text><a class="displayLinkSeeMore" href="javascript:seeMore('contactDisplay','{$id}');" ><xsl:value-of select="ape:resource('eagcontent.seemore')"/></a><a class="displayLinkSeeLess" href="javascript:seeLess('contactDisplay','{$id}');" ><xsl:value-of select="ape:resource('eagcontent.seeless')"/></a><xsl:text>)</xsl:text>
 					</th>
 				</tr>
 			</thead>
@@ -43,7 +44,7 @@
 			      <td class="header">
 				    <xsl:value-of select="ape:resource('eagcontent.visitorsaddress')" />
 				   </td>
-				   <td id="address">
+				   <td class="address">
 					  <xsl:if test="eag:location[not(@localType) or @localType='visitors address']/eag:street/text()">
 				         <xsl:value-of select="eag:location[not(@localType) or @localType='visitors address']/eag:street" /> 
 				         <xsl:if test="eag:location[not(@localType) or @localType='visitors address']/eag:municipalityPostalcode/text()">
@@ -103,7 +104,7 @@
 			        <td class="header">
 			         <xsl:value-of select="ape:resource('eagcontent.postaladdress')"></xsl:value-of>
 			        </td>
-					 <td id="address">
+					 <td class="postalAddress">
 					  <xsl:if test="eag:location[@localType='postal address']/eag:street/text()">
 				         <xsl:value-of select="eag:location[@localType='postal address']/eag:street" /> 
 				         <xsl:if test="eag:location[@localType='postal address']/eag:municipalityPostalcode/text()">
@@ -189,11 +190,11 @@
 			  
 			  <!-- ACCESS INFORMATION -->
 			  
-			  <table class="aiSection" id="accessDisplay_{$id}">
+			  <table class="aiSection accessDisplay">
 			  <thead>
 				<tr>
 					<th colspan="2">
-						<xsl:value-of select="ape:resource('eagcontent.accessandserviceinfo')" /><xsl:text> (</xsl:text><a class="displayLinkSeeMore" href="javascript:seeMore('accessDisplay_{$id}');" ><xsl:value-of select="ape:resource('eagcontent.seemore')"/></a><a class="displayLinkSeeLess" href="javascript:seeLess('accessDisplay_{$id}');" ><xsl:value-of select="ape:resource('eagcontent.seeless')"/></a><xsl:text>)</xsl:text>
+						<xsl:value-of select="ape:resource('eagcontent.accessandserviceinfo')" /><xsl:text> (</xsl:text><a class="displayLinkSeeMore" href="javascript:seeMore('accessDisplay','{$id}');" ><xsl:value-of select="ape:resource('eagcontent.seemore')"/></a><a class="displayLinkSeeLess" href="javascript:seeLess('accessDisplay','{$id}');" ><xsl:value-of select="ape:resource('eagcontent.seeless')"/></a><xsl:text>)</xsl:text>
 					</th>
 				</tr>
 			  </thead>
@@ -760,11 +761,11 @@
 			</tbody>
 		</table>  
 		
-					 <table class="aiSection" id="archivesDisplay">
+					 <table class="aiSection archivesDisplay">
 			  <thead>
 				<tr>
 					<th colspan="2">
-						<xsl:value-of select="ape:resource('eagcontent.archivesandholdings')" /><xsl:text> (</xsl:text><a class="displayLinkSeeMore" href="javascript:seeMore('archivesDisplay');" ><xsl:value-of select="ape:resource('eagcontent.seemore')"/></a><a class="displayLinkSeeLess" href="javascript:seeLess('archivesDisplay');" ><xsl:value-of select="ape:resource('eagcontent.seeless')"/></a><xsl:text>)</xsl:text>
+						<xsl:value-of select="ape:resource('eagcontent.archivesandholdings')" /><xsl:text> (</xsl:text><a class="displayLinkSeeMore" href="javascript:seeMore('archivesDisplay','{$id}');" ><xsl:value-of select="ape:resource('eagcontent.seemore')"/></a><a class="displayLinkSeeLess" href="javascript:seeLess('archivesDisplay','{$id}');" ><xsl:value-of select="ape:resource('eagcontent.seeless')"/></a><xsl:text>)</xsl:text>
 					</th>
 				</tr>
 			 </thead>	 
@@ -906,12 +907,13 @@
 		</table> 
 	<!-- END LOOP -->
 		</div>
+		</div>
 	</xsl:for-each>
 	<div id="afterRepositories">
 	</div>
 
 			        
-			 <table class="aiSection" id="otherDisplay">
+			 <table class="aiSection otherDisplay">
 			  <thead>
 				<tr>
 					<th colspan="2">
@@ -978,7 +980,6 @@
 			 </xsl:if>
 			 </tbody>
 		</table>
-		<input id="print" type="button" value="Print" onClick="javascript:printEAG();"/>
   </xsl:template>
 	<xsl:template name="email">
 		<xsl:param name="parent" select="current()"/>
