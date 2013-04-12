@@ -160,7 +160,7 @@
 								<td>${eadResult.holdingsGuideTitle}</td>
 								<td class="${eadResult.eseEdmCssClass}"><c:choose>
 										<c:when
-											test="${(eadResult.convertedToEseEdm or eadResult.deliveredToEuropeana) and eadResult.totalNumberOfDaos > 0}">${eadResult.totalNumberOfDaos}</c:when>
+											test="${(eadResult.convertedToEseEdm or eadResult.deliveredToEuropeana) and eadResult.totalNumberOfChos > 0}">${eadResult.totalNumberOfChos}</c:when>
 										<c:otherwise>
 											<apenet:resource>${eadResult.eseEdmText}</apenet:resource>
 										</c:otherwise>
