@@ -1116,9 +1116,12 @@
 				     <xsl:for-each select= "eag:dateRange">
 			           <xsl:value-of select= "./eag:fromDate" /> 
 			           <xsl:variable name="variable" select="./eag:toDate"></xsl:variable>
-			           <xsl:if test="string(number(substring($variable,1,2)))!='NaN'">
-			              <xsl:text> - </xsl:text>
-			           </xsl:if>
+				       <xsl:choose>
+				       		<xsl:when test="string(number(substring($variable,1,2)))!='NaN'">
+				       			<xsl:text> - </xsl:text>
+				       		</xsl:when>
+				       		<xsl:otherwise><xsl:text> </xsl:text></xsl:otherwise>
+				       </xsl:choose>			           
 			          <xsl:value-of select= "./eag:toDate" /> 
 				   		<xsl:if test="position() != last()">
 				         <xsl:text>, </xsl:text>
