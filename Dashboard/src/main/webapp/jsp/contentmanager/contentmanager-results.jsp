@@ -119,9 +119,9 @@
 							<c:when test="${results.findingAid}">
 								<th><s:text name="content.message.holdings" /></th>
 								<th><s:text name="content.message.eseedm" /> <a class="order"
-									href="javascript:changeOrder('totalNumberOfDaos','true')"><img class="noStyle"
+									href="javascript:changeOrder('totalNumberOfChos','true')"><img class="noStyle"
 										src="images/expand/arrow-down.gif" alt="down" /></a> <a class="order"
-									href="javascript:changeOrder('totalNumberOfDaos','false')"><img class="noStyle"
+									href="javascript:changeOrder('totalNumberOfChos','false')"><img class="noStyle"
 										src="images/expand/arrow-up.gif" alt="up" /></a></th>
 								<th><s:text name="content.message.europeana" /> <a class="order"
 									href="javascript:changeOrder('europeana','true')"><img class="noStyle" src="images/expand/arrow-down.gif"
@@ -249,7 +249,7 @@
 													<s:text name="content.message.convert.ese" />
 												</option>
 											</c:if>
-											<c:if test="${eadResult.convertedToEseEdm and eadResult.totalNumberOfDaos > 0}">
+											<c:if test="${eadResult.convertedToEseEdm and eadResult.totalNumberOfChos > 0}">
 												<option value="action|deliverToEuropeana">
 													<s:text name="content.message.deliver.europeana" />
 												</option>
@@ -296,8 +296,8 @@
 						<td>&nbsp;</td>
 						<c:choose>
 							<c:when test="${results.findingAid}">
-								<td>${results.totalDaosConvertedToEseEdm}</td>
-								<td>${results.totalDaosDeliveredToEuropea}</td>
+								<td>${results.totalChos}</td>
+								<td>${results.totalChosDeliveredToEuropeana}</td>
 								<td>&nbsp;</td>
 							</c:when>
 							<c:when test="${results.holdingsGuide}"><td>&nbsp;</td></c:when>
