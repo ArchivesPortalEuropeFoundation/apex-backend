@@ -1,8 +1,6 @@
 package eu.apenet.dashboard.ead2ese;
 
 import java.io.File;
-import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -10,10 +8,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.events.XMLEvent;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -27,10 +21,7 @@ import eu.apenet.dashboard.actions.content.BatchEadActions;
 import eu.apenet.dashboard.actions.content.ContentManagerAction;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dpt.utils.ead2ese.EseConfig;
-import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.dao.EadSearchOptions;
-import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.QueueAction;
 
 public class ConvertAction extends AbstractInstitutionAction  implements ServletRequestAware{
@@ -126,102 +117,9 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 	 * @return boolean
 	 */
 	private boolean checkLanguageOnCLevel() {
-		CLevelDAO cLevelDAO = DAOFactory.instance().getCLevelDAO();
-		List<CLevel> cLevelList = cLevelDAO.getCLevelsWithDao(Long.valueOf(id));
-
-		boolean langPresence = true;
-
-		if (!cLevelList.isEmpty()) {
-			for (int i = 0; i < cLevelList.size(); i++) {
-				CLevel cLevel = cLevelList.get(i);
-				String xml = cLevel.getXml();
-				String element = "c/did/langmaterial";
-
-				langPresence = checkElement(xml, element);
-
-				if (!langPresence) {
-					return langPresence;
-				}
-			}
-		}
-
-		return langPresence;
+		return true;
 	}
 
-	/**
-	 * Method to check the existence of an element.
-	 *
-	 * @param xml
-	 * @param element
-	 *
-	 * @return boolean
-	 */
-	private boolean checkElement(final String xml, final String element) {
-		String el = element;
-
-		XMLStreamReader input = null;
-		XMLInputFactory xmlif = (XMLInputFactory) XMLInputFactory.newInstance();
-        xmlif.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, Boolean.FALSE);
-        xmlif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
-        xmlif.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
-        xmlif.setProperty(XMLInputFactory.IS_COALESCING, Boolean.FALSE);
-
-        try {
-			input = xmlif.createXMLStreamReader(new StringReader(xml));
-            boolean exit = false;
-            boolean found = true;
-            String[] pathElements = null;
-
-			if (input != null) {
-				if (el.contains("/")) { //check input parameters
-            		if (el.startsWith("/")) { 
-            			el = el.substring(1);
-            		}
-            		if (el.endsWith("/") && el.length() > 2) {
-            			el = el.substring(0, el.length() - 2);
-            		}
-            		pathElements = el.split("/");
-            	} else {
-            		pathElements = new String[1];
-            		pathElements[0] = el;
-            	}
-
-				List<String> currentElement = new ArrayList<String>();
-
-				log.debug("Checking EAG file, looking for element " + el + ", path begins with " + pathElements[0]);
-
-				while (!exit && input.hasNext()) {
-					switch (input.getEventType()) {
-					case XMLEvent.START_ELEMENT:
-						currentElement.add(input.getLocalName().toString());
-						if (currentElement.size() == pathElements.length) {
-							found = true;
-							for(int j = 0; j < pathElements.length && found ; j++){
-								found = (pathElements[j].trim().equals(currentElement.get(j).trim()));
-							}
-						}
-						break;
-					case XMLEvent.END_ELEMENT:
-						currentElement.remove(currentElement.size() - 1);
-						if(found) {
-							exit = true;
-						}
-						break;
-					}
-					if (input.hasNext()) {
-						input.next();
-					}
-				}
-				if (!found) {
-					return found;
-				}
-			}
-		} catch (XMLStreamException e) {
-			log.error("Exception getting " + el, e);
-		}
-
-        return true;
-	}
 
 	@Override
 	protected void buildBreadcrumbs() {
@@ -273,19 +171,6 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 	 * Method to try to retrieve the "repository" information on "<c" level with "dao".
 	 */
 	protected void retrieveRepositoryInfo() {
-		CLevelDAO cLevelDAO = DAOFactory.instance().getCLevelDAO();
-		List<CLevel> cLevelList = cLevelDAO.getCLevelsWithRepositoryAndDao(Long.valueOf(id));
-
-		if (!cLevelList.isEmpty()) {
-			CLevel cLevel = cLevelList.get(0);
-			String xml = cLevel.getXml();
-			textDataProvider = xml.substring(xml.indexOf("<repository>") + 12).split("\\n")[0];
-			if (!textDataProvider.isEmpty()) {
-				this.setShowDataProviderCheck(false);
-				return;
-			}
-		}
-
 		this.setShowDataProviderCheck(true);
 	}
 	
