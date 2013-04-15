@@ -146,14 +146,8 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 						ese.setNumberOfRecords(numberOfRecords);
 						ese.setFindingAid(findingAid);
 						ArchivalInstitution ai = findingAid.getArchivalInstitution();
-						String eset = "";
-						while (ai != null) {
-							eset = COLON + ai.getAiId() + eset;
-							ai = ai.getParent();
-						}
-						eset = findingAid.getArchivalInstitution().getCountry().getIsoname() + eset;
 						ese.setEseState(eseState);
-						ese.setEset(eset);
+						ese.setEset(ai.getRepositorycode());
 						ese.setMetadataFormat(MetadataFormat.EDM);
 						if (update) {
 							eseDao.update(ese);
