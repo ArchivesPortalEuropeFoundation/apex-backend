@@ -3,20 +3,24 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="ape" uri="http://commons.archivesportaleurope.eu/tags"%>
 <%@ taglib prefix="apenet" uri="http://commons.apenet.eu/tags"%>
+
 <script type="text/javascript">
 	$(document).ready(function() {
 		initResultsHandlers();
-	});
+		});
 </script>
+
 <div id="batchBlock">
 	<form id="batchActionsForm">
 		<div class="right">
-			<span class="bold"><s:text name="content.message.batch" />:</span> <input type="radio" checked="checked"
-				name="batchItems" value="all">
+			<span class="bold">
+			<s:actionerror />
+			<s:text name="content.message.batch" />:</span> 
+			<input type="radio" name="batchItems" value="all" onchange="select_all()">
 			<s:text name="content.message.all" />
-			<input type="radio" checked="checked" name="batchItems" value="only_selected"/>
+			<input type="radio" name="batchItems" value="only_selected" onchange="select_none();" checked="checked"/>
 			<s:text name="content.message.onlyselected" />
-			<input type="radio" name="batchItems" value="only_searched">
+			<input type="radio" name="batchItems" value="only_searched" onchange="select_none();">
 			<s:text name="content.message.onlysearched" />
 			<input type="hidden" name="xmlTypeId" value="<s:property value="%{xmlTypeId}"/>" /> <select
 				id="batchSelectedAction" name="action">
@@ -93,7 +97,8 @@
 						<th><s:text name="content.message.select.label" /><br /> <span class="linkList" id="selectAll">[<s:text
 									name="content.message.select.all" />]
 						</span> - <span class="linkList" id="selectNone">[<s:text name="content.message.select.none" />]
-						</span></th>
+						</span>
+						</th>
 						<th><s:text name="content.message.id" /> <a class="order" href="javascript:changeOrder('eadid','true')"><img
 								class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> <a class="order"
 							href="javascript:changeOrder('eadid','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a></th>
@@ -146,7 +151,7 @@
 				<c:forEach var="eadResult" items="${results.eadResults}">
 					<tr class="${eadResult.cssClass}">
 						<td><input class="checkboxSave" type="checkbox" name="check" id="check_${eadResult.id}"
-							value="${eadResult.id}" /></td>
+							value="${eadResult.id}" onclick="enable_features"/></td>
 						<td class="nocenter">${eadResult.eadid}</td>
 						<td><span class="title">${eadResult.title}</span></td>
 						<td>${eadResult.date}</td>

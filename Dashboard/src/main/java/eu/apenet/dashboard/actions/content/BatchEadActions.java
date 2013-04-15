@@ -63,17 +63,21 @@ public class BatchEadActions extends AbstractEadActions {
 	@Override
 	public String deleteFromQueue() {
 		try {
-			if (SELECTED_ITEMS.equals(batchItems)) {
-				List<Integer> ids = (List<Integer>) getServletRequest().getSession().getAttribute(
-						AjaxControllerAbstractAction.LIST_IDS);
-				if (ids != null) {
+			List<Integer> ids = (List<Integer>) getServletRequest().getSession().getAttribute(
+					AjaxControllerAbstractAction.LIST_IDS);
+			if (SELECTED_ITEMS.equals(batchItems) && !ids.isEmpty()) {
+				if (ids != null && !ids.isEmpty()) {
 					EadService.deleteBatchFromQueue(ids, getAiId(), getXmlType());
 					return SUCCESS;
 				} else {
 					return ERROR;
 				}
 
-			} else if (SEARCHED_ITEMS.equals(batchItems)) {
+			} else if (SELECTED_ITEMS.equals(batchItems) && ids.isEmpty()){
+				addActionError(getText("content.message.noSelected"));
+				return ERROR;
+			}
+			else if (SEARCHED_ITEMS.equals(batchItems)) {
 				EadSearchOptions eadSearchOptions = (EadSearchOptions) getServletRequest().getSession().getAttribute(
 						ContentManagerAction.EAD_SEARCH_OPTIONS);
 				EadService.deleteBatchFromQueue(eadSearchOptions);
@@ -95,17 +99,20 @@ public class BatchEadActions extends AbstractEadActions {
 	@SuppressWarnings("unchecked")
 	private String addBatchToQueue(QueueAction queueAction, Properties properties) {
 		try {
-			if (SELECTED_ITEMS.equals(batchItems)) {
-				List<Integer> ids = (List<Integer>) getServletRequest().getSession().getAttribute(
-						AjaxControllerAbstractAction.LIST_IDS);
-				if (ids != null) {
+			List<Integer> ids = (List<Integer>) getServletRequest().getSession().getAttribute(
+					AjaxControllerAbstractAction.LIST_IDS);
+			if (SELECTED_ITEMS.equals(batchItems) && !ids.isEmpty()) {
+				if (ids != null && !ids.isEmpty()) {
 					EadService.addBatchToQueue(ids, getAiId(), getXmlType(), queueAction, properties);
 					return SUCCESS;
 				} else {
 					return ERROR;
 				}
 
-			} else if (SEARCHED_ITEMS.equals(batchItems)) {
+			} else if (SELECTED_ITEMS.equals(batchItems) && ids.isEmpty()){
+				addActionError(getText("content.message.noSelected"));
+				return ERROR;
+			}else if (SEARCHED_ITEMS.equals(batchItems)) {
 				EadSearchOptions eadSearchOptions = (EadSearchOptions) getServletRequest().getSession().getAttribute(
 						ContentManagerAction.EAD_SEARCH_OPTIONS);
 				EadService.addBatchToQueue(eadSearchOptions, queueAction, properties);
