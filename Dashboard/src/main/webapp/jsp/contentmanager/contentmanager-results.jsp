@@ -244,7 +244,7 @@
 										</c:if>
 										<c:if test="${results.findingAid}">
 											<c:if
-												test="${eadResult.validated and not eadResult.convertedToEseEdm and not eadResult.deliveredToEuropeana}">
+												test="${eadResult.validated and not eadResult.convertedToEseEdm and not eadResult.deliveredToEuropeana and not eadResult.noEuropeanaCandidate}">
 												<option value="_self|displayEseConvert.action">
 													<s:text name="content.message.convert.ese" />
 												</option>

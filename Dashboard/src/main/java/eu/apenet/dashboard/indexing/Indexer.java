@@ -47,6 +47,8 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
+import eu.apenet.persistence.vo.EuropeanaState;
+import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.Warnings;
 
 public class Indexer {
@@ -200,7 +202,6 @@ public class Indexer {
 			eadidstring = (String) eadidIdentifierExpression.evaluate(eadidNode, XPathConstants.STRING);
 		}
 		eadidstring = removeUnusedCharacters(eadidstring);
-		String repositorycode = removeUnusedCharacters(archivalinstitution.getRepositorycode());
 
 		if (StringUtils.isNotBlank(countryString)) {
 			try {
@@ -572,6 +573,21 @@ public class Indexer {
 		}
 		// Indexed_Not converted to ESE/EDM
 		ead.setTotalNumberOfDaos(eadCounts.getNumberOfDAOsBelow());
+		if (eadCounts.getNumberOfDAOsBelow() == 0){
+			if (ead instanceof FindingAid){
+				FindingAid findingAid = (FindingAid) ead;
+				if (EuropeanaState.NOT_CONVERTED.equals(findingAid.getEuropeana())){
+					((FindingAid) ead).setEuropeana(EuropeanaState.NO_EUROPEANA_CANDIDATE);
+				}
+			} 
+		}else {
+			if (ead instanceof FindingAid){
+				FindingAid findingAid = (FindingAid) ead;
+				if (EuropeanaState.NO_EUROPEANA_CANDIDATE.equals(findingAid.getEuropeana())){
+					((FindingAid) ead).setEuropeana(EuropeanaState.NOT_CONVERTED);
+				}
+			} 			
+		}
 		ead.setTotalNumberOfUnits(eadCounts.getNumberOfUnits());
 		ead.setTotalNumberOfUnitsWithDao(eadCounts.getNumberOfUnitsWithDaosBelow());
 		ContentUtils.changeSearchable(ead, true);
