@@ -58,6 +58,8 @@
 		<tr>
 			<td class="inputLabel"><s:label key="ead2ese.label.type" for="selectType" /><span class="required">*</span>:</td>
 			<td><s:select id="selectType" name="daoType" list="typeSet" listKey="value" listValue="content" required="true"></s:select> <s:fielderror fieldName="daoType"/>
+				<s:checkbox name="daoTypeCheck" id="daoTypeCheck" value="true"></s:checkbox>
+				<s:label key="ead2ese.label.type.file" for="daoType"/>
 			</td>
 		</tr>
 		<tr>
@@ -97,7 +99,7 @@
 				<s:textfield id="textDataProvider" name="textDataProvider" required="true"/>
 				<s:if test="showDataProviderCheck==true">
 					<s:checkbox name="dataProviderCheck" id="dataProviderCheck" value="true"></s:checkbox>
-					<s:label key="ead2ese.content.dataprovider.mapping" for="dataProviderCheck"/>
+					<s:label key="ead2ese.content.dataprovider.file" for="dataProviderCheck"/>
 				</s:if>
 				<s:fielderror fieldName="textDataProvider"/>
 			</td>
@@ -148,4 +150,5 @@
 	<br></br>
 	<s:hidden name="batchItems" />
 		<s:hidden name="id" />
+	<s:hidden name="noLanguageOnClevel"/>
 </s:form>

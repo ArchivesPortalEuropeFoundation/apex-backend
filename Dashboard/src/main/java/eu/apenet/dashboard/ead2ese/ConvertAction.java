@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.ServletRequestAware;
 
 import eu.apenet.commons.types.XmlType;
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
@@ -21,7 +22,12 @@ import eu.apenet.dashboard.actions.content.BatchEadActions;
 import eu.apenet.dashboard.actions.content.ContentManagerAction;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dpt.utils.ead2ese.EseConfig;
+import eu.apenet.dpt.utils.ead2ese.EseFileUtils;
+import eu.apenet.dpt.utils.util.Ead2EseInformation;
 import eu.apenet.persistence.dao.EadSearchOptions;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.QueueAction;
 
 public class ConvertAction extends AbstractInstitutionAction  implements ServletRequestAware{
@@ -68,8 +74,9 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
     private File mappingsFile;					//The uploaded file
     private String mappingsFileContentType;		//The content type of the file uploaded
     private String textDataProvider;			//Text for the data provider from element "<repository>".
-    private Boolean showDataProviderCheck;		//Show or not the check for the data provider
-    
+    private boolean showDataProviderCheck;		//Show or not the check for the data provider
+    private boolean daoTypeCheck = true;
+    private boolean noLanguageOnClevel = true;
     private Set<SelectItem> languages = new TreeSet<SelectItem>();
 	private HttpServletRequest httpServletRequest;
 	
@@ -86,7 +93,7 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 			}
 		} else  if (ConvertAction.OPTION_NO.equals(inheritLanguage)) {
 			if (ConvertAction.TYPE_TEXT.equals(daoType)) {
-				if (!checkLanguageOnCLevel()) {
+				if (noLanguageOnClevel) {
 					addFieldError("inheritLanguage", getText("errors.required")
 						+ getText("errors.clevel.without.langmaterial"));
 				}
@@ -105,20 +112,11 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 			addFieldError("provider", getText("errors.required"));
 		}
 
-		retrieveRepositoryInfo();
 		if (textDataProvider.isEmpty() && !this.isShowDataProviderCheck()) {
 			addFieldError("textDataProvider", getText("errors.required"));
 		}
 	}
 
-	/**
-	 * Method to verify the presence of the language at the same level as the DAO.
-	 *
-	 * @return boolean
-	 */
-	private boolean checkLanguageOnCLevel() {
-		return true;
-	}
 
 
 	@Override
@@ -128,7 +126,29 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 	}
 
 
-    public ConvertAction() {
+    @Override
+	public void prepare() throws Exception {
+		super.prepare();
+		if (StringUtils.isNotBlank(id)){
+			Ead ead = DAOFactory.instance().getEadDAO().findById(Integer.parseInt(id), FindingAid.class);
+			File file = EseFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(),
+					ead.getPathApenetead());
+			Ead2EseInformation ead2EseInformation = new Ead2EseInformation(file, "", getAiname());
+			textDataProvider = ead2EseInformation.getRepository();
+			daoType = ead2EseInformation.getRoleType();
+			if (StringUtils.isNotBlank(textDataProvider)){
+				this.setShowDataProviderCheck(true);			
+			}
+			if (StringUtils.isNotBlank(ead2EseInformation.getLanguageCode())){
+				noLanguageOnClevel = false;			
+			}
+			
+		}else {
+			this.setShowDataProviderCheck(true);			
+		}
+    }
+
+	public ConvertAction() {
 		String[] isoLanguages = Locale.getISOLanguages();
 		languages.add(new SelectItem("", getText("ead2ese.content.selectone")));
 		for (String language : isoLanguages) {
@@ -163,16 +183,9 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
     }
 
 	public String input(){
-		retrieveRepositoryInfo();
 		return SUCCESS;
 	}
 
-	/**
-	 * Method to try to retrieve the "repository" information on "<c" level with "dao".
-	 */
-	protected void retrieveRepositoryInfo() {
-		this.setShowDataProviderCheck(true);
-	}
 	
     public String getId() {
 		return id;
@@ -184,7 +197,7 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 	}
 
 	@SuppressWarnings("unchecked")
-	public String execute() throws Exception{
+	public String execute() throws Exception{		
 		EseConfig config = fillConfig();
 		if (StringUtils.isBlank(batchItems)){
 			EadService.convertToEseEdm(Integer.parseInt(id), config.getProperties());
@@ -233,6 +246,7 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
     	}else {
     		config.setRights(cc_js_result_uri);
     	}
+    	config.setUseExistingDaoRole(daoTypeCheck);
     	config.setRightsAdditionalInformation(licenseAdditionalInformation);
     	return config;
 	}
@@ -453,12 +467,28 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 		this.textDataProvider = textDataProvider;
 	}
 
-	public Boolean isShowDataProviderCheck() {
+	public boolean isShowDataProviderCheck() {
 		return showDataProviderCheck;
 	}
 
-	public void setShowDataProviderCheck(Boolean showDataProviderCheck) {
+	public void setShowDataProviderCheck(boolean showDataProviderCheck) {
 		this.showDataProviderCheck = showDataProviderCheck;
+	}
+
+	public boolean isDaoTypeCheck() {
+		return daoTypeCheck;
+	}
+
+	public void setDaoTypeCheck(boolean daoTypeCheck) {
+		this.daoTypeCheck = daoTypeCheck;
+	}
+
+	public boolean isNoLanguageOnClevel() {
+		return noLanguageOnClevel;
+	}
+
+	public void setNoLanguageOnClevel(boolean noLanguageOnClevel) {
+		this.noLanguageOnClevel = noLanguageOnClevel;
 	}
 	
 }
