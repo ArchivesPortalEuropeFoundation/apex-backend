@@ -7,9 +7,10 @@ import eu.apenet.persistence.vo.FindingAid;
 
 public class FindingAidResult extends EadResult {
 
+	private static final String ZERO = "0";
 	private boolean convertedToEseEdm;
 	private boolean deliveredToEuropeana;
-	private boolean harvestedByEuropeana;
+	private boolean noEuropeanaCandidate;
 	private Long totalNumberOfChos;
 	private boolean hasEseEdmFiles = false;
 	private String holdingsGuideTitle;
@@ -18,9 +19,9 @@ public class FindingAidResult extends EadResult {
 		FindingAid findingAid = (FindingAid) ead;
         this.convertedToEseEdm = EuropeanaState.CONVERTED.equals(findingAid.getEuropeana());
         this.deliveredToEuropeana = EuropeanaState.DELIVERED.equals(findingAid.getEuropeana());
-        this.harvestedByEuropeana = EuropeanaState.HARVESTED.equals(findingAid.getEuropeana());
+        this.noEuropeanaCandidate = EuropeanaState.NO_EUROPEANA_CANDIDATE.equals(findingAid.getEuropeana());
         this.totalNumberOfChos = findingAid.getTotalNumberOfChos();
-        hasEseEdmFiles = (convertedToEseEdm | deliveredToEuropeana || harvestedByEuropeana ) && totalNumberOfChos >0;
+        hasEseEdmFiles = (convertedToEseEdm || deliveredToEuropeana ) && totalNumberOfChos >0;
         if (this.isPublished()){
         	holdingsGuideTitle = DAOFactory.instance().getHoldingsGuideDAO().getLinkedHoldingsGuideTitleByFindingAidEadid(ead.getEadid(), ead.getAiId());
         }
@@ -34,9 +35,6 @@ public class FindingAidResult extends EadResult {
 	public boolean isDeliveredToEuropeana() {
 		return deliveredToEuropeana;
 	}
-	public boolean isHarvestedByEuropeana() {
-		return harvestedByEuropeana;
-	}
 
 	public Long getTotalNumberOfChos() {
 		return totalNumberOfChos;
@@ -45,20 +43,26 @@ public class FindingAidResult extends EadResult {
 	public String getEseEdmText(){
 		if (convertedToEseEdm){
 			return getTotalNumberOfChos()+"";
+		}else if(noEuropeanaCandidate){
+			return ZERO;
 		}else {
 			return CONTENT_MESSAGE_NO;
 		}
 	}
 	public String getEseEdmCssClass(){
-		if (convertedToEseEdm || deliveredToEuropeana || harvestedByEuropeana){
+		if (convertedToEseEdm || deliveredToEuropeana){
 			return STATUS_OK;
+		}else if(noEuropeanaCandidate){
+			return STATUS_NOT_AVAILABLE;
 		}else {
 			return STATUS_NO;
 		}
 	}
 	public String getEuropeanaCssClass(){
-		if (deliveredToEuropeana || harvestedByEuropeana){
+		if (deliveredToEuropeana){
 			return STATUS_OK;
+		}else if(noEuropeanaCandidate){
+			return STATUS_NOT_AVAILABLE;
 		}else {
 			return STATUS_NO;
 		}
@@ -66,8 +70,6 @@ public class FindingAidResult extends EadResult {
 	public String getEuropeanaText(){
 		if (deliveredToEuropeana){
 			return "content.message.europeana.delivered";
-		}else if (harvestedByEuropeana){
-			return "content.message.europeana.harvested";
 		}else {
 			return CONTENT_MESSAGE_NO;
 		}
@@ -76,8 +78,13 @@ public class FindingAidResult extends EadResult {
 	public boolean isHasEseEdmFiles() {
 		return hasEseEdmFiles;
 	}
+	
+	public boolean isNoEuropeanaCandidate() {
+		return noEuropeanaCandidate;
+	}
+
 	public boolean isEditable(){
-		return super.isEditable() && !(convertedToEseEdm | deliveredToEuropeana || harvestedByEuropeana );
+		return super.isEditable() && !(convertedToEseEdm || deliveredToEuropeana);
 	}
 
 	public String getHoldingsGuideTitle() {

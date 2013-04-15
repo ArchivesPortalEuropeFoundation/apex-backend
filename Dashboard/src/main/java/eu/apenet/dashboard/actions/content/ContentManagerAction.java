@@ -45,7 +45,7 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 	private Map<String, String> europeanaStatusList = new LinkedHashMap<String, String>();
 	private String[] europeanaStatus = new String[] { EuropeanaState.NOT_CONVERTED.toString(),
 			EuropeanaState.CONVERTED.toString(), EuropeanaState.DELIVERED.toString(),
-			EuropeanaState.HARVESTED.toString() };
+			EuropeanaState.NO_EUROPEANA_CANDIDATE.toString() };
 	private Map<String, String> queuingStatusList = new LinkedHashMap<String, String>();
 	private String[] queuingStatus = new String[] { QueuingState.NO.toString(),
 			QueuingState.READY.toString(), QueuingState.BUSY.toString(),
@@ -71,7 +71,7 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 		europeanaStatusList.put(EuropeanaState.CONVERTED.toString(), getText("content.message.eseedm"));
 		europeanaStatusList.put(EuropeanaState.NOT_CONVERTED.toString(), getText(CONTENT_MESSAGE_NO));
 		europeanaStatusList.put(EuropeanaState.DELIVERED.toString(), getText("content.message.europeana.delivered"));
-		europeanaStatusList.put(EuropeanaState.HARVESTED.toString(), getText("content.message.europeana.harvested"));
+		europeanaStatusList.put(EuropeanaState.NO_EUROPEANA_CANDIDATE.toString(), getText("content.message.europeana.nochos"));
 
 		queuingStatusList.put(QueuingState.NO.toString(), getText(CONTENT_MESSAGE_NO));
 		queuingStatusList.put(QueuingState.READY.toString(), getText("content.message.ready"));

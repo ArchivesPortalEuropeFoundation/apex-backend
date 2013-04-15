@@ -13,6 +13,7 @@ public class EadResult {
 
 	protected static final String STATUS_ERROR = "status_error";
 	protected static final String STATUS_NO = "status_no";
+	protected static final String STATUS_NOT_AVAILABLE = "status_not_available";
 	protected static final String STATUS_OK = "status_ok";
 	protected static final String STATUS_QUEUE = "status_queue";
 	protected static final String STATUS_QUEUE_ERROR = "status_queue_error";
