@@ -50,8 +50,6 @@ public interface CLevelDAO extends GenericDAO<CLevel, Long> {
 	
 	public List<CLevel> getCLevelsOutOfSystemByHoldingsGuideId(Integer hgId, Integer pageSize, Integer pageNumber);
 
-	public List<CLevel> getCLevelsWithRepositoryAndDao(Long eadContentId);
-	public List<CLevel> getCLevelsWithDao(Long eadContentId);
 
 	public Long countCLevelsOutOfSystemByHoldingsGuideId(Integer hgId);
 	public Long countCLevelsByEadId(Integer hgId,Class<? extends Ead> clazz);
