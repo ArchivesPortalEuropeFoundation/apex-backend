@@ -235,9 +235,4 @@ public class FindingAid extends Ead {
 		this.totalNumberOfChos = totalNumberOfChos;
 	}
 
-	public boolean isEuropeanaCandidate(){
-        boolean converted = EuropeanaState.CONVERTED.equals(getEuropeana()) || EuropeanaState.DELIVERED.equals(getEuropeana());;
-        return !((converted && totalNumberOfChos == 0) || (isPublished() && getTotalNumberOfDaos()==0));
-	}
-
 }
