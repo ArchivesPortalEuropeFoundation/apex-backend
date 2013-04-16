@@ -177,8 +177,8 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 			Ead2EseInformation ead2EseInformation = new Ead2EseInformation(file, "", getAiname());
 			textDataProvider = ead2EseInformation.getRepository();
 			daoType = ead2EseInformation.getRoleType();
-			if (StringUtils.isNotBlank(textDataProvider)){
-				this.setShowDataProviderCheck(true);			
+			if (StringUtils.isBlank(textDataProvider)){
+				this.setShowDataProviderCheck(true);
 			}
 			if (StringUtils.isNotBlank(ead2EseInformation.getLanguageCode())){
 				noLanguageOnClevel = false;			
