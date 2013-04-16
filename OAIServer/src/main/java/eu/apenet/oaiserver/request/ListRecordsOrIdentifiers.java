@@ -114,6 +114,13 @@ public class ListRecordsOrIdentifiers {
 			 */
 			int lastIndex = eses.size() - 1;
 			eses.remove(lastIndex);
+		}else {
+			//TODO: add nicer locking, but without this, there is no locking when the items are below the max
+			if (oldResToken == null) {
+				OAIUtils.buildResumptionToken(params, start + limit);
+			} else {
+				OAIUtils.buildResumptionToken(oldResToken, start + limit);
+			}			
 		}
 		if (showRecords) {
 			new ListRecordsResponse(eses, resToken).generateResponse(writer, params);
