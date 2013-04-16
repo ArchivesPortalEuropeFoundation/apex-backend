@@ -374,6 +374,8 @@ public class EadService {
 
 		}else if (QueueAction.DELETE_FROM_EUROPEANA.equals(queueAction)) {
 			eadSearchOptions.setEuropeana(EuropeanaState.DELIVERED);
+		}else if (QueueAction.DELETE_ESE_EDM.equals(queueAction)) {
+			eadSearchOptions.setEuropeana(EuropeanaState.CONVERTED);
 		}
 		eadSearchOptions.setQueuing(QueuingState.NO);
 		JpaUtil.beginDatabaseTransaction();
