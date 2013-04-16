@@ -854,7 +854,8 @@
         	<!--  Admin functionalities -->
         	<action name="createCountry" class="eu.apenet.dashboard.actions.CreateCountryAction"> 
         		<interceptor-ref name="changeLanguageStack"/>  
-               <result name="success" type="tiles">countryCreation</result>    
+               <result name="success" type="tiles">countryCreation</result>
+               <result name="input" type="tiles">countryCreation</result>
                <result name="error">/jsp/templates/blank.jsp</result>     
         	</action>
         	<action name="storeCountry" class="eu.apenet.dashboard.actions.CreateCountryAction" method="storeCountry"> 

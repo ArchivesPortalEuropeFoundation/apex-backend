@@ -2,7 +2,9 @@ package eu.apenet.dashboard.actions;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Semaphore;
 
 import eu.apenet.commons.utils.APEnetUtilities;
@@ -43,6 +45,8 @@ public class CreateCountryAction extends ActionSupport{
 	private Integer languageSelected;
 	private Integer countrySelected;
 	private String pathRepo = APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR;
+
+	private Locale tempLocale;
 	static Semaphore sem = new Semaphore(1,true) ;
 	
 	public List<Lang> getLanguagesList() {
@@ -100,20 +104,28 @@ public class CreateCountryAction extends ActionSupport{
 	public void setPathRepo(String pathRepo) {
 		this.pathRepo = pathRepo;
 	}
-
+	
+	@Override
 	public void validate(){
-		
 		log.debug("Validating textfields in creating country process...");
-		
-		if (this.getEnglishCountryName()!= null)
-		{
-			if (this.getEnglishCountryName().length() == 0)
+		if (this.getEnglishCountryName()!= null){
+			if (this.getEnglishCountryName().length() == 0){ //empty
 				addFieldError("englishCountryName", getText("createCountry.englishCountryName"));
+			}
 		}
-		if (this.getIsoCountryName()!= null)
-		{
-			if (this.getIsoCountryName().length() == 0)
-				addFieldError("isoCountryName", getText("createCountry.isoCountryName"));
+		if (this.getIsoCountryName()!=null && (this.getIsoCountryName().length()!=2 && this.getIsoCountryName().length()!=3)){
+			addFieldError("isoCountryName", getText("createCountry.isoCountryNameWrong"));
+		}else if(this.getIsoCountryName()!=null){
+			Locale[] locales = Locale.getAvailableLocales();
+			tempLocale = null;
+			for( int i=0;tempLocale==null && i<locales.length;i++){
+				if(locales[i].getDisplayCountry().toUpperCase().equals(this.getEnglishCountryName().toUpperCase())){
+					tempLocale = locales[i];
+				}
+			}
+			if(tempLocale==null || !((this.getIsoCountryName().length()==3 && tempLocale.getISO3Country().toUpperCase().equals(this.getIsoCountryName().toUpperCase())) || (this.getIsoCountryName().length()==2 && tempLocale.getCountry().toUpperCase().equals(this.getIsoCountryName().toUpperCase())))){
+				addFieldError("isoCountryName", getText("createCountry.isoCountryNameWrong"));
+			}
 		}
 	}
 
@@ -135,14 +147,14 @@ public class CreateCountryAction extends ActionSupport{
 			LangDAO langDao = DAOFactory.instance().getLangDAO();
 			Lang language = langDao.getLangByIsoname("ENG");
 			
-			try {				
+			try {
 				
 				if ((countryDAO.getCountryByCname(this.getEnglishCountryName().trim()) == null)) 
 				{
 					HibernateUtil.beginDatabaseTransaction();
                     Country newCountry = new Country();
 					newCountry.setCname(this.getEnglishCountryName().toUpperCase());
-					newCountry.setIsoname(this.getIsoCountryName().toUpperCase());
+					newCountry.setIsoname(tempLocale.getCountry().toUpperCase());
 					newCountry.setAlOrder(0);					
 					countryDAO.insertSimple(newCountry);
 					
