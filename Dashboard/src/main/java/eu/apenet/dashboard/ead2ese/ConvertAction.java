@@ -178,6 +178,10 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 			textDataProvider = ead2EseInformation.getRepository();
 			daoType = ead2EseInformation.getRoleType();
 			if (StringUtils.isBlank(textDataProvider)){
+				Ead2EseInformation ead2EseInformationParent = new Ead2EseInformation(file, "", null);
+				if (!ead2EseInformationParent.getArchdescRepository().isEmpty()) {
+					textDataProvider = ead2EseInformationParent.getArchdescRepository();
+				}
 				this.setShowDataProviderCheck(true);
 			}
 			if (StringUtils.isNotBlank(ead2EseInformation.getLanguageCode())){
