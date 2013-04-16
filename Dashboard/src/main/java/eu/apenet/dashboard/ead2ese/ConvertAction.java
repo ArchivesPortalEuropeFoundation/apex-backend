@@ -1,6 +1,7 @@
 package eu.apenet.dashboard.ead2ese;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -8,10 +9,12 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.ServletRequestAware;
+import org.xml.sax.SAXException;
 
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
@@ -129,23 +132,7 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
     @Override
 	public void prepare() throws Exception {
 		super.prepare();
-		if (StringUtils.isNotBlank(id)){
-			Ead ead = DAOFactory.instance().getEadDAO().findById(Integer.parseInt(id), FindingAid.class);
-			File file = EseFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(),
-					ead.getPathApenetead());
-			Ead2EseInformation ead2EseInformation = new Ead2EseInformation(file, "", getAiname());
-			textDataProvider = ead2EseInformation.getRepository();
-			daoType = ead2EseInformation.getRoleType();
-			if (StringUtils.isNotBlank(textDataProvider)){
-				this.setShowDataProviderCheck(true);			
-			}
-			if (StringUtils.isNotBlank(ead2EseInformation.getLanguageCode())){
-				noLanguageOnClevel = false;			
-			}
-			
-		}else {
-			this.setShowDataProviderCheck(true);			
-		}
+
     }
 
 	public ConvertAction() {
@@ -182,7 +169,24 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 		this.setHierarchyPrefix(getText("ead2ese.content.hierarchy.prefix" ));
     }
 
-	public String input(){
+	public String input() throws IOException, SAXException, ParserConfigurationException{
+		if (StringUtils.isNotBlank(id)){
+			Ead ead = DAOFactory.instance().getEadDAO().findById(Integer.parseInt(id), FindingAid.class);
+			File file = EseFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(),
+					ead.getPathApenetead());
+			Ead2EseInformation ead2EseInformation = new Ead2EseInformation(file, "", getAiname());
+			textDataProvider = ead2EseInformation.getRepository();
+			daoType = ead2EseInformation.getRoleType();
+			if (StringUtils.isNotBlank(textDataProvider)){
+				this.setShowDataProviderCheck(true);			
+			}
+			if (StringUtils.isNotBlank(ead2EseInformation.getLanguageCode())){
+				noLanguageOnClevel = false;			
+			}
+			
+		}else {
+			this.setShowDataProviderCheck(true);			
+		}
 		return SUCCESS;
 	}
 
