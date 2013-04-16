@@ -1,4 +1,3 @@
 <%@ taglib prefix="s" uri="/struts-tags"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 error
-<s:actionerror theme="simple"/>
+<s:property value="getText('content.message.noSelected')"/>

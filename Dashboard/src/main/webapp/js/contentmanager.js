@@ -128,14 +128,13 @@ function performBatchEadAction() {
 				"_self");
 	} else {
 		$.post("batchEadActions.action", formData, function(data) {
-			/*if(data.indexOf("error")==0){
+			if(data.indexOf("error")>-1){
 				var message = data;
 				if(message.length>"error".length){
-					message = data.substring("error".length);
+					message = data.substring("error".length+1);
 				}
 				alert(message);
-			}*/
-			alert(data);
+			}		
 			updateCurrentSearchResults(updateForm);
 		});
 	}
