@@ -97,7 +97,7 @@ public class ListRecordsOrIdentifiers {
 		ResumptionToken resToken = null;
 		if (eses.isEmpty()) {
 			eses = DAOFactory.instance().getEseDAO()
-					.getEsesByArguments(fromDate, untilDate, metadataFormat, set + ":", start, limit);
+					.getEsesByArguments(fromDate, untilDate, metadataFormat, set + "-", start, limit);
 			if (eses.isEmpty()) {
 				new ErrorResponse(ErrorResponse.ErrorCode.NO_RECORDS_MATCH).generateResponse(writer, params);
 				return false;
