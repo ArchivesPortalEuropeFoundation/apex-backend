@@ -236,7 +236,13 @@ public class APEnetEAGDashboard extends APEnetEAG {
 		String repositoryCode = this.lookingForwardElementContent("/eag/control/recordId");
 		boolean validRepositoryCode = Pattern.matches(pattern, repositoryCode);
 		if (validRepositoryCode){
-			return true;
+			if (DAOFactory.instance().getArchivalInstitutionDAO().isRepositoryCodeAvailable(repositoryCode, aiId)){
+				return true;
+			}else {
+				warnings_ead.add("recordId already used");
+				return false;
+			}
+			
 		}else {
 			warnings_ead.add("recordId does not match pattern: " + pattern);
 			return false;
