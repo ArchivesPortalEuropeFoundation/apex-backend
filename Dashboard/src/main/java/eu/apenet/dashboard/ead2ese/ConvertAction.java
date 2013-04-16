@@ -179,7 +179,8 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 			daoType = ead2EseInformation.getRoleType();
 			if (StringUtils.isBlank(textDataProvider)){
 				Ead2EseInformation ead2EseInformationParent = new Ead2EseInformation(file, "", null);
-				if (!ead2EseInformationParent.getArchdescRepository().isEmpty()) {
+				if (ead2EseInformationParent.getArchdescRepository() != null
+						&& !ead2EseInformationParent.getArchdescRepository().isEmpty()) {
 					textDataProvider = ead2EseInformationParent.getArchdescRepository();
 				}
 				this.setShowDataProviderCheck(true);
@@ -244,7 +245,11 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
     	}
     	config.setType(daoType);
     	config.setProvider(provider);
-    	config.setDataProvider(customDataProvider);
+    	if (customDataProvider != null && !customDataProvider.isEmpty()) {
+    		config.setDataProvider(customDataProvider);
+    	} else if (textDataProvider != null && !textDataProvider.isEmpty()) {
+    		config.setDataProvider(textDataProvider);
+    	}
     	if (EUROPEANA.equals(license)){
     		config.setRights(europeanaLicense);
     	}else if(CREATIVECOMMONS_CC0.equals(license)){
