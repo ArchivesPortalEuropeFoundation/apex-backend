@@ -194,10 +194,37 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
     public List<ArchivalInstitution> getArchivalInstitutionsByCountryId(Integer countryId) {
         return  getArchivalInstitutionsByCountryId(countryId, false);
     }
+    
+    @SuppressWarnings("unchecked")
+	public List<ArchivalInstitution> getArchivalInstitutionsWithRepositoryCode(){
+		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
+		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);    	
+		criteria.addOrder(Order.asc("archivalInstitution.repositorycode"));
+		criteria.add(Restrictions.isNotNull("repositorycode"));
+		return  criteria.list();
+    }
+    
+    @SuppressWarnings("unchecked")
+	public boolean isRepositoryCodeAvailable(String repositorycode, Integer aiId){
+		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
+		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);    	
+		criteria.addOrder(Order.asc("archivalInstitution.repositorycode"));
+		criteria.add(Restrictions.eq("repositorycode", repositorycode));
+		criteria.add(Restrictions.ne("aiId", aiId));
+		criteria.setMaxResults(1);
+		List<ArchivalInstitution> results = criteria.list();
+		if (results.size() == 0){
+			return true;
+		}else {
+			return false;
+		}
+    }
+
 
 	private Criteria createArchivalInstitutionCriteria(boolean group, String sortValue, boolean ascending) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		
 
 		criteria.add(Restrictions.eq("group", group));
 		if ("countryId".equals(sortValue)) {
