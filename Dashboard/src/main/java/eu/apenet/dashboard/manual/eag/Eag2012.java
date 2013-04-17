@@ -21,6 +21,9 @@ import org.xml.sax.SAXException;
 
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.manual.APEnetEAGDashboard;
+import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.ArchivalInstitution;
 
 /**
  * This class has been created to manage all EAG2012 information
@@ -142,12 +145,25 @@ public class Eag2012 {
 	public String getSourceId() {
 		return sourceId;
 	}
-	
+	/**
+	 * 
+	 * Through this procedure can be ensured that an institution within the Dashboard
+	 * will have its unique ISO 15511 compliant identifier.
+	 * 
+	 * @param archivalInstitutionId
+	 * @param fullFilePath
+	 * @return boolean
+	 * @throws TransformerException
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 */
 	public boolean checkAndFixRepositorId(Integer archivalInstitutionId,String fullFilePath) throws TransformerException, ParserConfigurationException, SAXException, IOException{
-        
 		boolean changed = false;
+		
         APEnetEAGDashboard eag = new APEnetEAGDashboard(archivalInstitutionId, fullFilePath);
-        //eag.setEagPath(fullFilePath);
+        eag.setEagPath(fullFilePath);
+        
         String otherRepositorId = eag.lookingForwardElementContent("/eag/archguide/repositorid");
         
         DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
@@ -155,10 +171,11 @@ public class Eag2012 {
 		Document tempDoc = docBuilder.parse(fullFilePath);
         
 		Element currentNode = null;
-		//TODO it's needed store all identifiers or check all existings eags to get all ingested ISO-codes into repositorycode attribute
+		
 		if(otherRepositorId!=null && !otherRepositorId.isEmpty()){  
-			//Fill with new code
-			if(otherRepositorId.length()!=14 || otherRepositorId.charAt(2)!='-' || StringUtils.isAlphanumeric(otherRepositorId.substring(3))){//XY-###########.length()=14
+			//in case it isn’t, a code compliant with ISO 15511 will be created automatically 
+			//for @repositorycode, using the country code plus an ascending counter
+			if(checkRepositorId(otherRepositorId) && otherRepositorId.charAt(2)!='-' ){
 				int zeroes = 11-archivalInstitutionId.toString().length();
 				otherRepositorId = new ArchivalLandscape().getmyCountry()+"-";
             	for(int x=0;x<zeroes;x++){
@@ -166,6 +183,8 @@ public class Eag2012 {
             	}
             	otherRepositorId+=archivalInstitutionId.toString();
 			}
+			//at this case the code provided is compliant with ISO 15511, it will 
+			//be copied to the attribute @repositorycode coming with <repositorid>;
 			NodeList recordsIds = tempDoc.getElementsByTagName("repositorid");
     		for(int i=0;i<recordsIds.getLength() && !changed;i++){
     			currentNode = (Element) recordsIds.item(i);
@@ -179,12 +198,34 @@ public class Eag2012 {
     			}
     		}
 		}
-        
         if(changed){
 			TransformerFactory tf = TransformerFactory.newInstance(); // Save changes
 			Transformer transformer = tf.newTransformer();
 			transformer.transform(new DOMSource(tempDoc), new StreamResult(new File(fullFilePath)));
 		}
         return changed;
+	}
+	/**
+	 * Checks if it's a valid code.
+	 * The code provided must be compliant with ISO 15511. 
+	 * In case it isn’t return false 
+	 * 
+	 * @param repositorId
+	 * @return boolean
+	 */
+	private boolean checkRepositorId(String repositorId){
+		String isoCountry = new ArchivalLandscape().getmyCountry();
+		if(repositorId.length()==14 && repositorId.substring(0,2).toLowerCase().equals(isoCountry) && StringUtils.isNumeric(repositorId.substring(3))){
+			//TODO it's needed store all identifiers or check all existings eags to get all ingested ISO-codes into repositorycode attribute
+			Integer archivalInstitutionId = new Integer(repositorId.substring(3));
+			if(archivalInstitutionId!=null){
+				ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
+				ArchivalInstitution archivalInstitution = aiDao.getArchivalInstitution(archivalInstitutionId);
+				if(archivalInstitution!=null && archivalInstitution.getCountry().getIsoname().equals(isoCountry)){  
+					return true; //the ISO code used could not be unique because it's reserved to existing other institution of this country
+				}
+			}
+		}
+		return false;
 	}
 }
