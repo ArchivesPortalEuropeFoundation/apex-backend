@@ -77,7 +77,7 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
     private File mappingsFile;					//The uploaded file
     private String mappingsFileContentType;		//The content type of the file uploaded
     private String textDataProvider;			//Text for the data provider from element "<repository>".
-    private boolean showDataProviderCheck;		//Show or not the check for the data provider
+    private boolean dataProviderCheck;			//Select or not the check for the data provider
     private boolean daoTypeCheck = true;
     private boolean noLanguageOnClevel = true;
     private Set<SelectItem> languages = new TreeSet<SelectItem>();
@@ -115,7 +115,7 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 			addFieldError("provider", getText("errors.required"));
 		}
 
-		if (textDataProvider.isEmpty() && !this.isShowDataProviderCheck()) {
+		if (textDataProvider.isEmpty()) {
 			addFieldError("textDataProvider", getText("errors.required"));
 		}
 	}
@@ -183,14 +183,14 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 						&& !ead2EseInformationParent.getArchdescRepository().isEmpty()) {
 					textDataProvider = ead2EseInformationParent.getArchdescRepository();
 				}
-				this.setShowDataProviderCheck(true);
-			}
+				this.setDataProviderCheck(true);
+			}	
 			if (StringUtils.isNotBlank(ead2EseInformation.getLanguageCode())){
 				noLanguageOnClevel = false;			
 			}
 			
-		}else {
-			this.setShowDataProviderCheck(true);			
+		}else {		
+			this.setDataProviderCheck(true);			
 		}
 		return SUCCESS;
 	}
@@ -480,12 +480,12 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 		this.textDataProvider = textDataProvider;
 	}
 
-	public boolean isShowDataProviderCheck() {
-		return showDataProviderCheck;
+	public boolean isDataProviderCheck() {
+		return dataProviderCheck;
 	}
 
-	public void setShowDataProviderCheck(boolean showDataProviderCheck) {
-		this.showDataProviderCheck = showDataProviderCheck;
+	public void setDataProviderCheck(boolean dataProviderCheck) {
+		this.dataProviderCheck = dataProviderCheck;
 	}
 
 	public boolean isDaoTypeCheck() {
