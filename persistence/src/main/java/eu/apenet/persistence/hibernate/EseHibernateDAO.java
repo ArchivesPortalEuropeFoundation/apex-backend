@@ -89,6 +89,7 @@ public class EseHibernateDAO extends AbstractHibernateDAO<Ese, Integer> implemen
 		if(metadataFormat!=null){
 			criteria.add(Restrictions.eq("metadataFormat",metadataFormat));
 		}
+		criteria.add(Restrictions.between("eseState.id",2,3));
 		if(set!=null && !set.isEmpty()){
 			/*
 			if(set.endsWith(":")){

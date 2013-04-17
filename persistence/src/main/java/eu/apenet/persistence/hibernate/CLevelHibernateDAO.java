@@ -288,6 +288,8 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		criteria.setProjection(Projections.count("cLevel.clId"));
 		return (Long)criteria.uniqueResult();
 	}
+
+
 	/**
 	 * Returns total number of c_level (FindingAids) included into a Holdings
 	 * Guide
