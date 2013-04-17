@@ -175,7 +175,7 @@ public class Eag2012 {
 		if(otherRepositorId!=null && !otherRepositorId.isEmpty()){  
 			//in case it isn’t, a code compliant with ISO 15511 will be created automatically 
 			//for @repositorycode, using the country code plus an ascending counter
-			if(checkRepositorId(otherRepositorId) && otherRepositorId.charAt(2)!='-' ){
+			if(!isWrongRepositorId(otherRepositorId) && otherRepositorId.charAt(2)!='-' ){
 				int zeroes = 11-archivalInstitutionId.toString().length();
 				otherRepositorId = new ArchivalLandscape().getmyCountry()+"-";
             	for(int x=0;x<zeroes;x++){
@@ -208,20 +208,21 @@ public class Eag2012 {
 	/**
 	 * Checks if it's a valid code.
 	 * The code provided must be compliant with ISO 15511. 
-	 * In case it isn’t return false 
+	 * In case it isn’t or the code provided could not be used
+	 * returns false 
 	 * 
 	 * @param repositorId
 	 * @return boolean
 	 */
-	private boolean checkRepositorId(String repositorId){
+	private boolean isWrongRepositorId(String repositorId){
 		String isoCountry = new ArchivalLandscape().getmyCountry();
 		if(repositorId.length()==14 && repositorId.substring(0,2).toLowerCase().equals(isoCountry) && StringUtils.isNumeric(repositorId.substring(3))){
-			//TODO it's needed store all identifiers or check all existings eags to get all ingested ISO-codes into repositorycode attribute
+			//TODO could be helpful store all identifiers or check all existings eags to get all ingested ISO-codes into repositorycode attribute
 			Integer archivalInstitutionId = new Integer(repositorId.substring(3));
 			if(archivalInstitutionId!=null){
 				ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
 				ArchivalInstitution archivalInstitution = aiDao.getArchivalInstitution(archivalInstitutionId);
-				if(archivalInstitution!=null && archivalInstitution.getCountry().getIsoname().equals(isoCountry)){  
+				if(archivalInstitution==null || archivalInstitution.getCountry().getIsoname().equals(isoCountry)){  
 					return true; //the ISO code used could not be unique because it's reserved to existing other institution of this country
 				}
 			}
