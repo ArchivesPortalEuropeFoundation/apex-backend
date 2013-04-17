@@ -88,12 +88,12 @@ public class APEnetEAG {
 	protected final Logger log = Logger.getLogger(getClass());
 	
 	protected Integer aiId;
-	protected String eagPath;
+	private String eagPath;
 	protected String name;
 	protected Boolean hasChangedName;
 	protected String englishName;
 	protected Boolean hasChangedEnglishName;
-	protected String id;
+	private String id;
 	protected Boolean hasChangedId;
 	protected String responsiblePersonSurname;
 	protected String responsiblePersonName;
@@ -575,7 +575,7 @@ public class APEnetEAG {
 	}
 
 	public String getFilename() {
-		return this.getId().replaceAll("[:/\\\\]", "_") + ".xml";
+		return this.getId().replaceAll("[^a-zA-Z0-9\\-\\.]", "_") + ".xml";
 	}
 	public void setId(String id) {
 
@@ -793,7 +793,9 @@ public class APEnetEAG {
 		this.aiId = aiId;
 		
 		if (this.eagPath == null){			
-			
+			if (tempEagPath != null) {
+	        	this.eagPath = tempEagPath;
+	        }
 			this.name = "";
 			if (archivalInstitution != null) {
 				this.name = archivalInstitution.getAiname().toString();				
@@ -876,15 +878,6 @@ public class APEnetEAG {
 			this.fillEAGValues(valuesExtractedFromEAG);
 
 		
-			//It is necessary to retrieve all the holdings guide related to this archivalInstitution
-			//already indexed in the System
-			List<String> collection = new ArrayList<String>();
-			collection.add("Indexed_Not converted to ESE/EDM");
-			collection.add("Indexed_Converted to ESE/EDM");
-			collection.add("Indexed_Delivered to Europeana");
-			collection.add("Indexed_Harvested to Europeana");
-			collection.add("Indexed_Not linked");
-			collection.add("Indexed_Linked");
 			
 			EadSearchOptions eadSearchOptions = new EadSearchOptions();
 			eadSearchOptions.setEadClazz(HoldingsGuide.class);
@@ -895,7 +888,6 @@ public class APEnetEAG {
 			boolean eadidFound = false;
 			int j = 0;
 			
-			collection = null;
 			
 			if (this.holdingsGuideIndexed.size() == 0) {
 				this.repositorguidePossibleHGTitle.add("");
