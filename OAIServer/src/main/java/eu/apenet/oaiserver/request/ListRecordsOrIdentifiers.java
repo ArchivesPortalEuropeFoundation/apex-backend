@@ -97,7 +97,7 @@ public class ListRecordsOrIdentifiers {
 		ResumptionToken resToken = null;
 		if (eses.isEmpty()) {
 			eses = DAOFactory.instance().getEseDAO()
-					.getEsesByArguments(fromDate, untilDate, metadataFormat, set + ":", start, limit);
+					.getEsesByArguments(fromDate, untilDate, metadataFormat, set + "-", start, limit);
 			if (eses.isEmpty()) {
 				new ErrorResponse(ErrorResponse.ErrorCode.NO_RECORDS_MATCH).generateResponse(writer, params);
 				return false;
@@ -114,6 +114,13 @@ public class ListRecordsOrIdentifiers {
 			 */
 			int lastIndex = eses.size() - 1;
 			eses.remove(lastIndex);
+		}else {
+			//TODO: add nicer locking, but without this, there is no locking when the items are below the max
+			if (oldResToken == null) {
+				OAIUtils.buildResumptionToken(params, start + limit);
+			} else {
+				OAIUtils.buildResumptionToken(oldResToken, start + limit);
+			}			
 		}
 		if (showRecords) {
 			new ListRecordsResponse(eses, resToken).generateResponse(writer, params);
