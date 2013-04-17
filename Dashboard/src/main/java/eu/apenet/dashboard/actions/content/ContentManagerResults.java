@@ -14,8 +14,8 @@ public class ContentManagerResults {
 	private Long totalConvertedFiles = 0l;
 	private Long totalValidatedFiles = 0l;
 	private Long totalPublishedUnits = 0l;
-	private Long totalDaosConvertedToEseEdm = 0l;
-	private Long totalDaosDeliveredToEuropea = 0l;
+	private Long totalChos = 0l;
+	private Long totalChosDeliveredToEuropeana = 0l;
 	private EadSearchOptions eadSearchOptions;
 	private XmlType xmlType;
 	
@@ -85,17 +85,19 @@ public class ContentManagerResults {
 	public void setTotalPublishedUnits(Long totalPublishedUnits) {
 		this.totalPublishedUnits = totalPublishedUnits;
 	}
-	public Long getTotalDaosConvertedToEseEdm() {
-		return totalDaosConvertedToEseEdm;
+
+	public Long getTotalChos() {
+		return totalChos;
 	}
-	public void setTotalDaosConvertedToEseEdm(Long totalDaosConvertedToEseEdm) {
-		this.totalDaosConvertedToEseEdm = totalDaosConvertedToEseEdm;
+	public void setTotalChos(Long totalChos) {
+		this.totalChos = totalChos;
 	}
-	public Long getTotalDaosDeliveredToEuropea() {
-		return totalDaosDeliveredToEuropea;
+
+	public Long getTotalChosDeliveredToEuropeana() {
+		return totalChosDeliveredToEuropeana;
 	}
-	public void setTotalDaosDeliveredToEuropea(Long totalDaosDeliveredToEuropea) {
-		this.totalDaosDeliveredToEuropea = totalDaosDeliveredToEuropea;
+	public void setTotalChosDeliveredToEuropeana(Long totalChosDeliveredToEuropeana) {
+		this.totalChosDeliveredToEuropeana = totalChosDeliveredToEuropeana;
 	}
 	public XmlType getXmlType() {
 		return xmlType;

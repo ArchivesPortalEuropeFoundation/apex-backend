@@ -62,6 +62,7 @@ public class BatchEadActions extends AbstractEadActions {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String deleteFromQueue() {
+<<<<<<< .working
 		try {
 			List<Integer> ids = (List<Integer>) getServletRequest().getSession().getAttribute(
 					AjaxControllerAbstractAction.LIST_IDS);
@@ -90,8 +91,38 @@ public class BatchEadActions extends AbstractEadActions {
 			logger.error(e.getMessage(), e);
 			return ERROR;
 		}
+=======
+		try {
+			if (SELECTED_ITEMS.equals(batchItems)) {
+				List<Integer> ids = (List<Integer>) getServletRequest().getSession().getAttribute(
+						AjaxControllerAbstractAction.LIST_IDS);
+				if (ids != null) {
+					EadService.deleteBatchFromQueue(ids, getAiId(), getXmlType());
+					return SUCCESS;
+				} else {
+					return ERROR;
+				}
+
+			} else if (SEARCHED_ITEMS.equals(batchItems)) {
+				EadSearchOptions eadSearchOptions = (EadSearchOptions) getServletRequest().getSession().getAttribute(
+						ContentManagerAction.EAD_SEARCH_OPTIONS);
+				EadService.deleteBatchFromQueue(eadSearchOptions);
+				return SUCCESS;
+			} else {
+				EadService.deleteBatchFromQueue(null, getAiId(), getXmlType());
+				return SUCCESS;
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return ERROR;
+		}
+>>>>>>> .merge-right.r715
 	}
 
+<<<<<<< .working
+=======
+
+>>>>>>> .merge-right.r715
 	private String addBatchToQueue(QueueAction queueAction) {
 		return addBatchToQueue(queueAction, new Properties());
 	}
@@ -99,6 +130,7 @@ public class BatchEadActions extends AbstractEadActions {
 	@SuppressWarnings("unchecked")
 	private String addBatchToQueue(QueueAction queueAction, Properties properties) {
 		try {
+<<<<<<< .working
 			List<Integer> ids = (List<Integer>) getServletRequest().getSession().getAttribute(
 					AjaxControllerAbstractAction.LIST_IDS);
 			if (SELECTED_ITEMS.equals(batchItems) && !ids.isEmpty()) {
@@ -116,6 +148,22 @@ public class BatchEadActions extends AbstractEadActions {
 				EadSearchOptions eadSearchOptions = (EadSearchOptions) getServletRequest().getSession().getAttribute(
 						ContentManagerAction.EAD_SEARCH_OPTIONS);
 				EadService.addBatchToQueue(eadSearchOptions, queueAction, properties);
+=======
+			if (SELECTED_ITEMS.equals(batchItems)) {
+				List<Integer> ids = (List<Integer>) getServletRequest().getSession().getAttribute(
+						AjaxControllerAbstractAction.LIST_IDS);
+				if (ids != null) {
+					EadService.addBatchToQueue(ids, getAiId(), getXmlType(), queueAction, properties);
+					return SUCCESS;
+				} else {
+					return ERROR;
+				}
+
+			} else if (SEARCHED_ITEMS.equals(batchItems)) {
+				EadSearchOptions eadSearchOptions = (EadSearchOptions) getServletRequest().getSession().getAttribute(
+						ContentManagerAction.EAD_SEARCH_OPTIONS);
+				EadService.addBatchToQueue(eadSearchOptions, queueAction, properties);
+>>>>>>> .merge-right.r715
 				return SUCCESS;
 			} else {
 				EadService.addBatchToQueue(null, getAiId(), getXmlType(), queueAction, properties);
