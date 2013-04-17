@@ -200,7 +200,7 @@ public class ArchivalLandscape extends ActionSupport{
 
     	String result="";
         int country = -1;
-        Boolean checkTranslation= false;
+        Boolean checkTranslation= true;
         
         try {
             //Open the file
@@ -230,8 +230,8 @@ public class ArchivalLandscape extends ActionSupport{
                             NodeList listUnitTitle = listDid.item(l).getChildNodes();
                           
                             //Check if the 14 country name translations are included in the xml
-                            if (checkTranslation(listUnitTitle)) //todo: Why do we care about this? Why do we need all country names?
-                            	checkTranslation = true;
+//                            if (checkTranslation(listUnitTitle)) //todo: Why do we care about this? Why do we need all country names?
+//                            	checkTranslation = true;
                             
                             	for (int j = 0; j < listUnitTitle.getLength(); j++) {
                                 if (listUnitTitle.item(j).getNodeName().equals("unittitle")) {
