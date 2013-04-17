@@ -1,25 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
         <%@ taglib prefix="s" uri="/struts-tags"%>   
-        
-<link href='${pageContext.request.contextPath}/js/dynatree/skin/ui.dynatree.css' rel='stylesheet' type='text/css'>
-
-<script src='${pageContext.request.contextPath}/js/jquery/jquery_1.4.2.min.js' type='text/javascript'></script>
-<script src='${pageContext.request.contextPath}/js/jquery/jquery-ui.custom.min.js' type='text/javascript'></script>
-<script src='${pageContext.request.contextPath}/js/jquery/jquery.cookie.js' type='text/javascript'></script>
-<script src='${pageContext.request.contextPath}/js/dynatree/jquery.dynatree.js' type='text/javascript'></script>
+<div id="directoryPortlet">
+       
              
    	<!-- Begind - Div where the whole directory is displayed (left and right part) -->
-   	<div id="wholeDirectory" style="height:450px; width:100%;">
+   	<div id="wholeDirectory">
    		   	<%-- Div for the directory tree with countries and institutions --%>
 		<p>&nbsp;</p>	   	
 
     	<!-- Begind - Div for the right part in which the EAG is displayed -->
 		<div id="archivalInstitutionContactInformation" class="archivalInstitutionContactInformation">
 			<div id="displayEAG" class="scrollbar">
+			<div id="directory-column-right-content" class="portlet-column-content portlet-column-content-last">
+				<div class="arrow_box">
+					<p>
+						<s:text name="directory.message.noInstitutionSelected" />
+					</p>
+				</div>
+				&nbsp;
+			</div>
 				<div class="Aboutus">
 			    		<div class="directoryEAGSection">
-							<s:property value="getText('previewal.message.noInstitutionSelected')" />
+							
 						</div>
 				</div>
 			</div>
@@ -45,7 +48,7 @@
 							//Tree initialization
 							initAjax: {
 	              				url: "${pageContext.request.contextPath}/generatePreviewALTreeJSON.action",
-	              				data: {couId: "${couId}", navTreeLang: "${navTreeLang}"}
+	              				data: {couId: "${couId}"}
 	              			},
 											
 	              			//Function to load only the part of the tree that the user wants to expand
@@ -53,16 +56,18 @@
 	              				            	
 	              				node.appendAjax({
 	              					url: "${pageContext.request.contextPath}/generateArchivalInstitutionPartPreviewALJSON.action",
-	              					data: {navTreeLang: "${navTreeLang}", nodeId: node.data.key}
+	              					data: {nodeId: node.data.key}
 	              				});
 	              			},
 	              							
 	        				//Function to load the EAG information in the right part of the page using AJAX
 	              			onActivate: function(node) {
 	        					if( node.data.url ) {
-	        						$("#displayEAG").empty();
-	        						$("#displayEAG").append("<div id='waitingImage'><img src='images/waiting.gif'/></div>");
-	        						$("#displayEAG").load(node.data.url);
+	        						$("#directory-column-right-content").empty();
+	        						$("#directory-column-right-content").append("<div id='waitingImage'><img src='images/waiting.gif'/></div>");
+	        						$("#directory-column-right-content").load(node.data.url, function() {
+	        							initEagDetails();
+	        						});
 	        					}
 	        				}
 	              							
@@ -74,5 +79,5 @@
 		</div>
 		<!-- End - Div where the directory tree is displayed -->	
 	</div>   	
-   	<!-- End - Div where the whole directory is displayed (left and right part) -->
+</div>
 	
