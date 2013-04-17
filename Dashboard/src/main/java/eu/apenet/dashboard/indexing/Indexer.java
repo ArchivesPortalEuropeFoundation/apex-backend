@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
@@ -548,6 +549,21 @@ public class Indexer {
 		}
 		// Indexed_Not converted to ESE/EDM
 		ead.setTotalNumberOfDaos(eadCounts.getNumberOfDAOsBelow());
+		if (eadCounts.getNumberOfDAOsBelow() == 0){
+			if (ead instanceof FindingAid){
+				FindingAid findingAid = (FindingAid) ead;
+				if (EuropeanaState.NOT_CONVERTED.equals(findingAid.getEuropeana())){
+					((FindingAid) ead).setEuropeana(EuropeanaState.NO_EUROPEANA_CANDIDATE);
+				}
+			} 
+		}else {
+			if (ead instanceof FindingAid){
+				FindingAid findingAid = (FindingAid) ead;
+				if (EuropeanaState.NO_EUROPEANA_CANDIDATE.equals(findingAid.getEuropeana())){
+					((FindingAid) ead).setEuropeana(EuropeanaState.NOT_CONVERTED);
+				}
+			} 			
+		}
 		ead.setTotalNumberOfUnits(eadCounts.getNumberOfUnits());
 		ead.setTotalNumberOfUnitsWithDao(eadCounts.getNumberOfUnitsWithDaosBelow());
 		ContentUtils.changeSearchable(ead, true);
