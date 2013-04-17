@@ -76,8 +76,8 @@ public class ContactAction extends ActionSupport{
 		try{
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Map<String,String> dropDownTable = new HashMap<String,String>();
-            String ruta = "emails/email-configuration.xml";
-            InputStream path = Thread.currentThread().getContextClassLoader().getResourceAsStream(ruta);
+            String file_path = "emails/email-configuration.xml";
+            InputStream path = Thread.currentThread().getContextClassLoader().getResourceAsStream(file_path);
             Document documento = builder.parse(path);
             mails = readConfigFile(dropDownTable,documento);
      
