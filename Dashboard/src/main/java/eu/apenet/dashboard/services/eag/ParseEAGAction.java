@@ -7,9 +7,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -59,7 +61,8 @@ public class ParseEAGAction extends ActionSupport {
 	}
 
 	private void parseEAGs() throws SAXException, IOException, ParserConfigurationException, XPathExpressionException {
-
+		Set<String> repositoryCodes = new HashSet<String>();
+		Set<String> doubledRepositoryCodes = new HashSet<String>();
 		ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
 		List<ArchivalInstitution> institutions = aiDao.findAll();
 		if (institutions != null && institutions.size() > 0) {
@@ -112,6 +115,11 @@ public class ParseEAGAction extends ActionSupport {
 						}
 						String eagFile = repositoryCode.replaceAll("[^a-zA-Z0-9\\-\\.]", "_") + ".xml";
 						logger.info(repositoryCode + " : " + eagPath + eagFile);
+						if (repositoryCodes.contains(repositoryCode)){
+							doubledRepositoryCodes.add(repositoryCode);
+						}else {
+							repositoryCodes.add(repositoryCode);
+						}
 						File newEagFile = new File(prefixPath + eagPath + eagFile);
 						boolean converted = convert(institution.getAiname(), repositoryCode, oldEagFile, newEagFile);
 						if (converted){
@@ -135,6 +143,12 @@ public class ParseEAGAction extends ActionSupport {
 			logger.warn("---------------");
 			logger.warn("The following EAGs (in total: " + eagsNotConverted.size()
 					+ ") have not been correctly validated against EAG 2012, please take care of them manually:");
+		}
+		if (doubledRepositoryCodes.size() > 0) {
+			logger.warn("---------------");	
+			for (String doubledRepositoryCode: doubledRepositoryCodes){
+				logger.warn("NOT UNIQUE REPOSITORY CODE: " + doubledRepositoryCode);	
+			}
 		}
 		for (String eagNotConverted : eagsNotConverted) {
 			logger.warn(eagNotConverted);
