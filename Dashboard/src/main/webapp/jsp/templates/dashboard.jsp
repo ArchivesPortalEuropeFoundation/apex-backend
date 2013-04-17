@@ -128,6 +128,9 @@
                 $(document).ready(function() {
                     loadGoogleAnalytics();
                 });
+                $(document).ready(function() {
+                    loadGoogleAnalytics();
+                });
 	        </script>
         </div>
     </body>
