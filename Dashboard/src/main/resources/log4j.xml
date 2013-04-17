@@ -15,6 +15,13 @@
 			<param name="ConversionPattern" value="%d{ABSOLUTE} %-5p %C{1}:%L - %m%n" />
 		</layout>
 	</appender>
+	<appender name="all" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="${catalina.base}/logs/dashboard-error.log" />
+		<param name="Threshold" value="ERROR" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ABSOLUTE} %-5p %C{1}:%L - %m%n" />
+		</layout>
+	</appender>
 	<appender name="operationsFile" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="File" value="${catalina.base}/logs/dashboard-operations.log" />
 		<layout class="org.apache.log4j.PatternLayout">
@@ -34,10 +41,13 @@
 	<logger name="eu.apenet.dashboard.security.SecurityInterceptor">
 		<level value="debug" />
 		<appender-ref ref="securityFile" /> 
-	</logger>	
+	</logger>
+	<logger name="eu">
+		<level value="info" />
+		<appender-ref ref="file" /> 
+	</logger>		
 	<root>
-		<priority value="INFO" />
-		<!-- <appender-ref ref="console" /> -->
-		<appender-ref ref="file" />
+		<priority value="ERROR" />
+		<appender-ref ref="all" />
 	</root>
 </log4j:configuration>
