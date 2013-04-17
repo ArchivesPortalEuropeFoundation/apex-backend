@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.exceptions.APEnetRuntimeException;
@@ -16,6 +17,7 @@ import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.indexing.EADParser;
 import eu.apenet.dashboard.security.SecurityContext;
+import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.dao.QueueItemDAO;
@@ -168,11 +170,28 @@ public class EadService {
 			QueueItem queueItem = ead.getQueueItem();
 			ead.setQueuing(QueuingState.NO);
 			eadDAO.updateSimple(ead);
-			DAOFactory.instance().getQueueItemDAO().deleteSimple(queueItem);
+			deleteFromQueueInternal(queueItem);
 		}
 		JpaUtil.commitDatabaseTransaction();
 	}
 
+	private static void deleteFromQueueInternal(QueueItem queueItem) throws IOException{
+		UpFile upFile = queueItem.getUpFile();
+		if (upFile != null){
+			String filename = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath();
+			File file = new File(filename);
+			File aiDir = file.getParentFile();
+			FileUtils.forceDelete(file);
+			if (aiDir.listFiles().length == 0){
+				FileUtils.forceDelete(aiDir);
+			}
+		}
+		DAOFactory.instance().getQueueItemDAO().deleteSimple(queueItem);
+		if (upFile != null){
+			DAOFactory.instance().getUpFileDAO().deleteSimple(upFile);
+		}
+	}
+	
 	public static void deleteFromQueue(QueueItem queueItem) throws Exception {
 		SecurityContext.get().checkAuthorizedToManageQueue();
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
@@ -182,7 +201,7 @@ public class EadService {
 			ead.setQueuing(QueuingState.NO);
 			eadDAO.updateSimple(ead);
 		}
-		DAOFactory.instance().getQueueItemDAO().deleteSimple(queueItem);
+		deleteFromQueueInternal(queueItem);
 		JpaUtil.commitDatabaseTransaction();
 	}
 
@@ -350,12 +369,13 @@ public class EadService {
 		} else if (QueueAction.CONVERT_TO_ESE_EDM.equals(queueAction)) {
 			eadSearchOptions.setEuropeana(EuropeanaState.NOT_CONVERTED);
 			eadSearchOptions.setValidated(ValidatedState.VALIDATED);
-
 		}else if (QueueAction.DELIVER_TO_EUROPEANA.equals(queueAction)) {
 			eadSearchOptions.setEuropeana(EuropeanaState.CONVERTED);
 
 		}else if (QueueAction.DELETE_FROM_EUROPEANA.equals(queueAction)) {
 			eadSearchOptions.setEuropeana(EuropeanaState.DELIVERED);
+		}else if (QueueAction.DELETE_ESE_EDM.equals(queueAction)) {
+			eadSearchOptions.setEuropeana(EuropeanaState.CONVERTED);
 		}
 		eadSearchOptions.setQueuing(QueuingState.NO);
 		JpaUtil.beginDatabaseTransaction();
@@ -384,9 +404,8 @@ public class EadService {
 
 	}
 
-	public static void deleteBatchFromQueue(EadSearchOptions eadSearchOptions) {
+	public static void deleteBatchFromQueue(EadSearchOptions eadSearchOptions) throws IOException {
 		SecurityContext.get().checkAuthorized(eadSearchOptions.getArchivalInstitionId());
-		QueueItemDAO queueDAO = DAOFactory.instance().getQueueItemDAO();
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		eadSearchOptions.setPageSize(0);
 		List<QueuingState> queueStates = new ArrayList<QueuingState>();
@@ -402,7 +421,7 @@ public class EadService {
 			QueueItem queueItem = ead.getQueueItem();
 			ead.setQueuing(QueuingState.NO);
 			eadDAO.updateSimple(ead);
-			queueDAO.deleteSimple(queueItem);
+			deleteFromQueueInternal(queueItem);
 		}
 		JpaUtil.commitDatabaseTransaction();
 	}
