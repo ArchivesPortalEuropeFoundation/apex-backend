@@ -69,5 +69,15 @@
 			<name>aiId</name>		
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>			
-	</tag>	
+	</tag>
+	<tag>
+		<name>eag</name>
+		<tag-class>eu.apenet.dashboard.jsp.EagTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>eagUrl</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>			
+	</tag>		
 </taglib>
