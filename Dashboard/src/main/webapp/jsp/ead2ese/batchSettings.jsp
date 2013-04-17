@@ -86,8 +86,9 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="inputLabel"><s:label key="ead2ese.label.inherit.language" for="inheritLanguage" />:</td>
-			<td><s:radio name="inheritLanguage" id="inheritLanguage" list="inheritLanguageSet" listKey="value" listValue="content"></s:radio>
+			<td class="inputLabel"><s:label key="ead2ese.label.inherit.language" for="inheritLanguage" /><span class="required">*</span>:</td>
+			<td><s:radio name="inheritLanguage" id="inheritLanguage" list="inheritLanguageSet" listKey="value" listValue="content" required="true">
+				</s:radio><s:fielderror fieldName="inheritLanguage"/>
 			</td>
 		</tr>
 		<s:if test="inheritLanguage!='provide'">
@@ -100,24 +101,22 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="inputLabel"><s:label key="ead2ese.label.dataprovider" for="dataProvider" />:</td>
-			<td><s:radio name="dataProvider" id="dataProvider" list="dataProviderSet" listKey="value" listValue="content"></s:radio>
-			</td>
-		</tr>
-		<s:if test="dataProvider!='custom'">
-			<c:set var="customDataProviderInvisible" value="style=\"display: none;\""></c:set>
-		</s:if>
-		<tr id="hiddenCustomDataProvider" ${customDataProviderInvisible}>
-			<td class="inputLabel"><s:label key="ead2ese.label.dataprovider.custom" for="customDataProvider" /><span
+			<td class="inputLabel"><s:label key="ead2ese.label.dataprovider" for="dataProvider" /><span
 				class="required">*</span>:</td>
-			<td><s:textfield id="customDataProvider" name="customDataProvider" required="true" /><s:fielderror fieldName="customDataProvider"/>
+			<td>
+				<s:textfield id="textDataProvider" name="textDataProvider" required="true"/>
+				<s:if test="showDataProviderCheck==true">
+					<s:checkbox name="dataProviderCheck" id="dataProviderCheck" value="true"></s:checkbox>
+					<s:label key="ead2ese.content.dataprovider.mapping" for="dataProviderCheck"/>
+				</s:if>
+				<s:fielderror fieldName="textDataProvider"/>
 			</td>
 		</tr>
-
 		<tr>
 			<td class="inputLabel"><s:label key="ead2ese.label.provider" for="provider" /><span
 				class="required">*</span>:</td>
 			<td><s:textfield id="provider" name="provider" required="true"/>
+				<s:fielderror fieldName="provider"/>
 			</td>
 		</tr>
 		<tr>
@@ -139,7 +138,7 @@
 		</tr>				
 		<tr id="hiddenCreativeCommonsLicense" ${creativeCommonsInvisible}>
 			<td colspan="2">     <div id="cc_js_widget_container">
-       <script type="text/javascript" src="http://api.creativecommons.org/jswidget/tags/0.97/complete.js?locale=en_US&amp;want_a_license=definitely"></script>
+       <script type="text/javascript" src="https://api.creativecommons.org/jswidget/tags/0.97/complete.js?locale=en_US&amp;want_a_license=definitely"></script>
      </div>
 			</td>
 		</tr>
