@@ -57,10 +57,6 @@
 			<result name="input" type="tiles">eagfirstcreation</result>
 			<result name="error" type="tiles">blank</result>
 		</action>
-		
-		<action name="parseEAG2EAG2012" class="eu.apenet.dashboard.services.eag.ParseEAGAction">
-			<result name="success" type="tiles">index</result>
-		</action> 
 
 
 		<action name="createsimpleeag" class="eu.apenet.dashboard.manual.ReadEAGAction"> 
@@ -367,7 +363,7 @@
 		
 		<action name="showEAGPreviewAL" class="eu.apenet.dashboard.ViewALAction" method="showEAG"> 
             <result name="success">/jsp/displayEAGPreviewAL.jsp</result>
-            <result name="input">displayEAGPreviewAL.jsp</result>
+            <result name="input">/jsp/displayEAGPreviewAL.jsp</result>
         </action>
 
 		<action name="moveUpAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="upAnInstitution"> 
