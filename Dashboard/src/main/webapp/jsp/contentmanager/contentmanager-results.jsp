@@ -54,9 +54,6 @@
 				<option value="deleteFromQueue">
 					<s:text name="content.message.delete.queue" />
 				</option>	
-				<option value="deleteFromQueue">
-					<s:text name="content.message.delete.queue" />
-				</option>	
 				<option value="delete">
 					<s:text name="content.message.delete" />
 				</option>
@@ -97,8 +94,7 @@
 						<th><s:text name="content.message.select.label" /><br /> <span class="linkList" id="selectAll">[<s:text
 									name="content.message.select.all" />]
 						</span> - <span class="linkList" id="selectNone">[<s:text name="content.message.select.none" />]
-						</span>
-						</th>
+						</span></th>
 						<th><s:text name="content.message.id" /> <a class="order" href="javascript:changeOrder('eadid','true')"><img
 								class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> <a class="order"
 							href="javascript:changeOrder('eadid','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a></th>
@@ -127,9 +123,9 @@
 							<c:when test="${results.findingAid}">
 								<th><s:text name="content.message.holdings" /></th>
 								<th><s:text name="content.message.eseedm" /> <a class="order"
-									href="javascript:changeOrder('totalNumberOfDaos','true')"><img class="noStyle"
+									href="javascript:changeOrder('totalNumberOfChos','true')"><img class="noStyle"
 										src="images/expand/arrow-down.gif" alt="down" /></a> <a class="order"
-									href="javascript:changeOrder('totalNumberOfDaos','false')"><img class="noStyle"
+									href="javascript:changeOrder('totalNumberOfChos','false')"><img class="noStyle"
 										src="images/expand/arrow-up.gif" alt="up" /></a></th>
 								<th><s:text name="content.message.europeana" /> <a class="order"
 									href="javascript:changeOrder('europeana','true')"><img class="noStyle" src="images/expand/arrow-down.gif"
@@ -168,7 +164,7 @@
 								<td>${eadResult.holdingsGuideTitle}</td>
 								<td class="${eadResult.eseEdmCssClass}"><c:choose>
 										<c:when
-											test="${(eadResult.convertedToEseEdm or eadResult.deliveredToEuropeana) and eadResult.totalNumberOfDaos > 0}">${eadResult.totalNumberOfDaos}</c:when>
+											test="${(eadResult.convertedToEseEdm or eadResult.deliveredToEuropeana) and eadResult.totalNumberOfChos > 0}">${eadResult.totalNumberOfChos}</c:when>
 										<c:otherwise>
 											<apenet:resource>${eadResult.eseEdmText}</apenet:resource>
 										</c:otherwise>
@@ -257,7 +253,7 @@
 													<s:text name="content.message.convert.ese" />
 												</option>
 											</c:if>
-											<c:if test="${eadResult.convertedToEseEdm and eadResult.totalNumberOfDaos > 0}">
+											<c:if test="${eadResult.convertedToEseEdm and eadResult.totalNumberOfChos > 0}">
 												<option value="action|deliverToEuropeana">
 													<s:text name="content.message.deliver.europeana" />
 												</option>
@@ -304,8 +300,8 @@
 						<td>&nbsp;</td>
 						<c:choose>
 							<c:when test="${results.findingAid}">
-								<td>${results.totalDaosConvertedToEseEdm}</td>
-								<td>${results.totalDaosDeliveredToEuropea}</td>
+								<td>${results.totalChos}</td>
+								<td>${results.totalChosDeliveredToEuropeana}</td>
 								<td>&nbsp;</td>
 							</c:when>
 							<c:when test="${results.holdingsGuide}"><td>&nbsp;</td></c:when>

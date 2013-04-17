@@ -58,6 +58,11 @@
 			</table> 
 		</s:form>
 	</div>
+	<c:if test="${harvestingStarted}">
+		<div id="harvestingStarted">
+			<s:text name="content.message.harvesting" />
+		</div>
+	</c:if>
 	<div id="eads">
 		<div id="ead-results-container">
 			<c:choose>
