@@ -202,7 +202,7 @@ public abstract class AbstractEditAction extends AbstractAction {
 					for (int k = 0; k < oldNode.getChildNodes().getLength() && !exit; k++) {
 						if (k + 1 == oldNode.getChildNodes().getLength()) { // append
 							if (appendNewElement(insti, oldNode) == null) {
-								addActionMessage(getText("al.message.someErrors"));
+								addActionMessage(getText("al.message.noAddUnderOtherOne"));
 							}
 							exit = true;
 						}
