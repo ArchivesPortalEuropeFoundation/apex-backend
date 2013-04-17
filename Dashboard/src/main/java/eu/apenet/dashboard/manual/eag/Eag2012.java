@@ -2601,9 +2601,9 @@ public class Eag2012 {
 		String isoCountry = new ArchivalLandscape().getmyCountry();
 		if(repositorId.length()==14 && repositorId.substring(0,2).toLowerCase().equals(isoCountry) && StringUtils.isNumeric(repositorId.substring(3))){
 			//TODO could be helpful store all identifiers or check all existings eags to get all ingested ISO-codes into repositorycode attribute
+			ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
 			Integer archivalInstitutionId = new Integer(repositorId.substring(3));
-			if(archivalInstitutionId!=null){
-				ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
+			if(archivalInstitutionId!=null || aiDao.isRepositoryCodeAvailable(repositorId, archivalInstitutionId)){ //TODO check if isRepositoryCodeAvailable is useful
 				ArchivalInstitution archivalInstitution = aiDao.getArchivalInstitution(archivalInstitutionId);
 				if(archivalInstitution==null || archivalInstitution.getCountry().getIsoname().equals(isoCountry)){  
 					return true; //the ISO code used could not be unique because it's reserved to existing other institution of this country
@@ -2612,6 +2612,4 @@ public class Eag2012 {
 		}
 		return false;
 	}
-
-	
 }
