@@ -208,6 +208,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
 
 	//Methods
 	public boolean validate () throws APEnetException, SAXException {
+		warnings_ead = new ArrayList<String>();
         //EAG file is stored temporally in the location defined in eagPath attribute
         log.debug("Path of EAG: " + this.getEagPath());
         File file = new File(this.getEagPath());
@@ -218,7 +219,6 @@ public class APEnetEAGDashboard extends APEnetEAG {
             List<SAXParseException> exceptions = DocumentValidation.xmlValidation(in, schema);
             if(exceptions!=null){
                 StringBuilder warn;
-                warnings_ead = new ArrayList<String>();
                 for(SAXParseException exception : exceptions){
                     warn = new StringBuilder();
                     warn.append("l.").append(exception.getLineNumber()).append(" c.").append(exception.getColumnNumber()).append(": ").append(exception.getMessage()).append("<br/>");
