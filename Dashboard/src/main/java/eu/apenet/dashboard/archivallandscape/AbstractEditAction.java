@@ -233,19 +233,7 @@ public abstract class AbstractEditAction extends AbstractAction {
 		for (int g = 0; g < childNodes.getLength(); g++) {
 			if (childNodes.item(g).getNodeName() != null) {
 				if (childNodes.item(g).getNodeName().equals("did") && childNodes.item(g).getTextContent() != null) {// If
-																													// the
-																													// system
-																													// is
-																													// out
-																													// of
-																													// the
-																													// c
-																													// levels
-																													// children
-																													// and
-																													// has
-																													// content
-					if (oldNode.getAttributes() != null && insti != null
+						if (oldNode.getAttributes() != null && insti != null
 							&& oldNode.getAttributes().getNamedItem("id") != null
 							&& oldNode.getAttributes().getNamedItem("id").getNodeValue().equals(insti.getId())) {
 						replaceNode(oldNode, insti);
