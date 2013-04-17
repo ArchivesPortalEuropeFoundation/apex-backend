@@ -138,6 +138,11 @@
 	font-weight: bold;
 }
 
+#contentmanager .status_not_available {
+	font-weight: bold;
+    color: #DBDBDB;
+}
+
 #contentmanager .status_queue {
 	color: #B23062;
 	font-weight: bold;
