@@ -1,4 +1,27 @@
 package eu.apenet.dashboard.manual.eag;
+
+import java.io.File;
+import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.apache.commons.lang.StringUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
+import eu.apenet.dashboard.manual.APEnetEAGDashboard;
+
 /**
  * This class has been created to manage all EAG2012 information
  * into one object.
@@ -101,7 +124,6 @@ public class Eag2012 {
 	}
 
 	public String getSourcesId() {
-		// TODO Auto-generated method stub
 		return this.sourcesId;
 	}
 
@@ -119,5 +141,50 @@ public class Eag2012 {
 
 	public String getSourceId() {
 		return sourceId;
+	}
+	
+	public boolean checkAndFixRepositorId(Integer archivalInstitutionId,String fullFilePath) throws TransformerException, ParserConfigurationException, SAXException, IOException{
+        
+		boolean changed = false;
+        APEnetEAGDashboard eag = new APEnetEAGDashboard(archivalInstitutionId, fullFilePath);
+        //eag.setEagPath(fullFilePath);
+        String otherRepositorId = eag.lookingForwardElementContent("/eag/archguide/repositorid");
+        
+        DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
+		Document tempDoc = docBuilder.parse(fullFilePath);
+        
+		Element currentNode = null;
+		//TODO it's needed store all identifiers or check all existings eags to get all ingested ISO-codes into repositorycode attribute
+		if(otherRepositorId!=null && !otherRepositorId.isEmpty()){  
+			//Fill with new code
+			if(otherRepositorId.length()!=14 || otherRepositorId.charAt(2)!='-' || StringUtils.isAlphanumeric(otherRepositorId.substring(3))){//XY-###########.length()=14
+				int zeroes = 11-archivalInstitutionId.toString().length();
+				otherRepositorId = new ArchivalLandscape().getmyCountry()+"-";
+            	for(int x=0;x<zeroes;x++){
+            		otherRepositorId+="0";
+            	}
+            	otherRepositorId+=archivalInstitutionId.toString();
+			}
+			NodeList recordsIds = tempDoc.getElementsByTagName("repositorid");
+    		for(int i=0;i<recordsIds.getLength() && !changed;i++){
+    			currentNode = (Element) recordsIds.item(i);
+    			Node parent = currentNode.getParentNode();
+    			if(parent!=null && parent.getNodeName().equals("archguide")){
+    				parent = parent.getParentNode();
+    				if(parent!=null && parent.getNodeName().equals("eag")){
+    					currentNode.setAttribute("repositorycode",otherRepositorId);
+    					changed = true;
+    				}
+    			}
+    		}
+		}
+        
+        if(changed){
+			TransformerFactory tf = TransformerFactory.newInstance(); // Save changes
+			Transformer transformer = tf.newTransformer();
+			transformer.transform(new DOMSource(tempDoc), new StreamResult(new File(fullFilePath)));
+		}
+        return changed;
 	}
 }
