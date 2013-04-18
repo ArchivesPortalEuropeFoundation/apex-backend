@@ -152,6 +152,7 @@
 	<br></br>
 	<br></br>
 	<s:hidden name="batchItems" />
-		<s:hidden name="id" />
+	<s:hidden name="id" />
 	<s:hidden name="noLanguageOnClevel"/>
+	<s:hidden name="noLanguageOnParents" />
 </s:form>

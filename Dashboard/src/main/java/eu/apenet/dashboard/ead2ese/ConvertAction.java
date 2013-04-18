@@ -80,6 +80,7 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
     private boolean dataProviderCheck;			//Select or not the check for the data provider
     private boolean daoTypeCheck = true;
     private boolean noLanguageOnClevel = true;
+    private boolean noLanguageOnParents;
     private Set<SelectItem> languages = new TreeSet<SelectItem>();
 	private HttpServletRequest httpServletRequest;
 	
@@ -99,6 +100,12 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 				if (noLanguageOnClevel) {
 					addFieldError("inheritLanguage", getText("errors.required")
 						+ getText("errors.clevel.without.langmaterial"));
+				}
+			}
+		} else if (ConvertAction.OPTION_YES.equals(inheritLanguage)) {
+			if (ConvertAction.TYPE_TEXT.equals(daoType)) {
+				if (this.isNoLanguageOnParents()) {
+					log.info("No language in file. Transfer \"unknown\" as language.");
 				}
 			}
 		}
@@ -184,9 +191,15 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 					textDataProvider = ead2EseInformationParent.getArchdescRepository();
 				}
 				this.setDataProviderCheck(true);
-			}	
+			}
 			if (StringUtils.isNotBlank(ead2EseInformation.getLanguageCode())){
 				noLanguageOnClevel = false;			
+			}
+			if (ead2EseInformation.getAlternativeLanguages() != null
+					&& !ead2EseInformation.getAlternativeLanguages().isEmpty()){
+				this.setNoLanguageOnParents(false);			
+			} else {
+				this.setNoLanguageOnParents(true);
 			}
 			
 		}else {		
@@ -502,6 +515,14 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 
 	public void setNoLanguageOnClevel(boolean noLanguageOnClevel) {
 		this.noLanguageOnClevel = noLanguageOnClevel;
+	}
+
+	public boolean isNoLanguageOnParents() {
+		return this.noLanguageOnParents;
+	}
+
+	public void setNoLanguageOnParents(boolean noLanguageOnParents) {
+		this.noLanguageOnParents = noLanguageOnParents;
 	}
 	
 }
