@@ -31,6 +31,8 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
  */
 public class Eag2012 {
 	
+	private static final String OTHERRECORDID_PATH = "/eag/archguide/otherRecordId";
+	
 	private String repositoryId;
 	private String otherRepositorId;
 	private String autform;
@@ -2541,53 +2543,73 @@ public class Eag2012 {
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public boolean checkAndFixRepositorId(Integer archivalInstitutionId,String fullFilePath) throws TransformerException, ParserConfigurationException, SAXException, IOException{
+	public static boolean checkAndFixRepositorId(Integer archivalInstitutionId,String fullFilePath) throws TransformerException, ParserConfigurationException, SAXException, IOException{
 		boolean changed = false;
 		
         APEnetEAGDashboard eag = new APEnetEAGDashboard(archivalInstitutionId, fullFilePath);
         eag.setEagPath(fullFilePath);
+        //this information must be encoded in the element <otherRepositorId>;
+        String otherRepositorId = eag.lookingForwardElementContent(OTHERRECORDID_PATH);
         
-        String otherRepositorId = eag.lookingForwardElementContent("/eag/archguide/repositorid");
-        
-        DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
+		if(otherRepositorId!=null && !otherRepositorId.isEmpty()){
+			if(!isWrongRepositorId(otherRepositorId)){
+				//in case it isn’t, a code compliant with ISO 15511 will be created automatically 
+				//for @repositorycode, using the country code plus an ascending counter
+				otherRepositorId = generatesISOCode(archivalInstitutionId);
+			}
+		}else{ 
+			//code is not provided (doesn't exists target tag). In this case a code 
+			//compliant with ISO 15511 will be created automatically for @repositorycode
+			otherRepositorId = generatesISOCode(archivalInstitutionId);
+		}
+		DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
 		Document tempDoc = docBuilder.parse(fullFilePath);
-        
 		Element currentNode = null;
-		
-		if(otherRepositorId!=null && !otherRepositorId.isEmpty()){  
-			//in case it isn’t, a code compliant with ISO 15511 will be created automatically 
-			//for @repositorycode, using the country code plus an ascending counter
-			if(!isWrongRepositorId(otherRepositorId) && otherRepositorId.charAt(2)!='-' ){
-				int zeroes = 11-archivalInstitutionId.toString().length();
-				otherRepositorId = new ArchivalLandscape().getmyCountry()+"-";
-            	for(int x=0;x<zeroes;x++){
-            		otherRepositorId+="0";
-            	}
-            	otherRepositorId+=archivalInstitutionId.toString();
+		//at this case the code provided is compliant with ISO 15511, it will 
+		//be copied to the attribute @repositorycode coming with <repositorid>;
+		NodeList recordsIds = tempDoc.getElementsByTagName("repositorid");
+		for(int i=0;i<recordsIds.getLength() && !changed;i++){
+			currentNode = (Element) recordsIds.item(i);
+			Node parent = currentNode.getParentNode();
+			if(parent!=null && parent.getNodeName().equals("identity")){
+				parent = parent.getParentNode();
+				if(parent!=null && parent.getNodeName().equals("archguide")){
+					parent = parent.getParentNode();
+					if(parent!=null && parent.getNodeName().equals("eag")){
+						currentNode.setAttribute("repositorycode",otherRepositorId);
+						changed = true;
+					}
+				}
 			}
-			//at this case the code provided is compliant with ISO 15511, it will 
-			//be copied to the attribute @repositorycode coming with <repositorid>;
-			NodeList recordsIds = tempDoc.getElementsByTagName("repositorid");
-    		for(int i=0;i<recordsIds.getLength() && !changed;i++){
-    			currentNode = (Element) recordsIds.item(i);
-    			Node parent = currentNode.getParentNode();
-    			if(parent!=null && parent.getNodeName().equals("archguide")){
-    				parent = parent.getParentNode();
-    				if(parent!=null && parent.getNodeName().equals("eag")){
-    					currentNode.setAttribute("repositorycode",otherRepositorId);
-    					changed = true;
-    				}
-    			}
-    		}
 		}
-        if(changed){
+		if(changed){
 			TransformerFactory tf = TransformerFactory.newInstance(); // Save changes
 			Transformer transformer = tf.newTransformer();
 			transformer.transform(new DOMSource(tempDoc), new StreamResult(new File(fullFilePath)));
 		}
         return changed;
 	}
+	/**
+	 * Generates a ISO-code based on internal archivalInstitutionId. 
+	 * This ISO-code should be unique for each institution.
+	 * 
+	 * @param archivalInstitutionId
+	 * @return String
+	 */
+	private static String generatesISOCode(Integer archivalInstitutionId) {
+		String otherRepositorId = null;
+		if(archivalInstitutionId>0){
+			int zeroes = 11-archivalInstitutionId.toString().length();
+			otherRepositorId = new ArchivalLandscape().getmyCountry()+"-";
+	    	for(int x=0;x<zeroes;x++){
+	    		otherRepositorId+="0";
+	    	}
+	    	otherRepositorId+=archivalInstitutionId.toString();
+		}
+    	return otherRepositorId;
+	}
+
 	/**
 	 * Checks if it's a valid code.
 	 * The code provided must be compliant with ISO 15511. 
@@ -2597,7 +2619,7 @@ public class Eag2012 {
 	 * @param repositorId
 	 * @return boolean
 	 */
-	private boolean isWrongRepositorId(String repositorId){
+	private static boolean isWrongRepositorId(String repositorId){
 		String isoCountry = new ArchivalLandscape().getmyCountry();
 		if(repositorId.length()==14 && repositorId.substring(0,2).toLowerCase().equals(isoCountry) && StringUtils.isNumeric(repositorId.substring(3))){
 			//TODO could be helpful store all identifiers or check all existings eags to get all ingested ISO-codes into repositorycode attribute

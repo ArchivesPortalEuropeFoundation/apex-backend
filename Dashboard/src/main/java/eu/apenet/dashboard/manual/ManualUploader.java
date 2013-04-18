@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.manual.eag.Eag2012;
 import eu.apenet.dashboard.utils.ZipManager;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.HibernateUtil;
@@ -342,7 +343,7 @@ public abstract class ManualUploader {
                         //check the <recordId> content
                         //eag.setEagPath(fullFileName); //temp used for looking forward target tag
                         String recordIdValue = eag.lookingForwardElementContent("/eag/control/recordId");
-                        if(recordIdValue!=null && recordIdValue.endsWith(MAGIC_KEY)){ 
+                        if(recordIdValue!=null && recordIdValue.endsWith(MAGIC_KEY)){
                         	//replace value with a consecutive unique value
                         	ArchivalLandscape archivalLandscape = new ArchivalLandscape();
                         	int zeroes = 11-archivalInstitutionId.toString().length();
@@ -367,12 +368,14 @@ public abstract class ManualUploader {
                     				}
                     			}
                     		}
-                    		
                     		TransformerFactory tf = TransformerFactory.newInstance(); // Save changes
                     		Transformer transformer = tf.newTransformer();
                     		transformer.transform(new DOMSource(tempDoc), new StreamResult(new File(fullFileName)));
                         }
-                        
+                        //check and fix /eag/archguide/repositorId@repositorycode
+                        if(Eag2012.checkAndFixRepositorId(archivalInstitutionId,fullFileName)){
+    						log.debug("EAG2012 changed (from <otherRepositorId> tag) - repositorId@repositorycode");
+    					}
     					//The EAG has been validated so it has to be stored in /mnt/repo/country/aiid/EAG/
     					//and it is necessary to update archival_institution table
         				result = eag.saveEAGviaHTTP(fullFileName);

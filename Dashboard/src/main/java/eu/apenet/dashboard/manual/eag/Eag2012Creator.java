@@ -1,6 +1,7 @@
 package eu.apenet.dashboard.manual.eag;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,6 +27,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
@@ -97,6 +99,14 @@ public class Eag2012Creator {
 	        if(doc!=null){
 	        	//Write the XML
 	            storeToXML(doc);
+	            //last checks 
+	            try {
+					if(Eag2012.checkAndFixRepositorId(this.aiId, this.storagePath)){
+						log.debug("EAG2012 changed (from <otherRepositorId> tag) - repositorId@repositorycode");
+					}
+				} catch (Exception e){
+					log.error("EXCEPTION trying to check and fix/fill repositorycode",e);
+				}
 	        }else{
 	        	log.warn("Couldn't not be stored EAG2012 to XML file, possible reason: is doc null?");
 	        }
