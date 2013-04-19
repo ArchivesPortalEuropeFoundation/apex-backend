@@ -105,7 +105,8 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 		} else if (ConvertAction.OPTION_YES.equals(inheritLanguage)) {
 			if (ConvertAction.TYPE_TEXT.equals(daoType)) {
 				if (this.isNoLanguageOnParents()) {
-					log.info("No language in file. Transfer \"unknown\" as language.");
+					addFieldError("inheritLanguage", getText("errors.required")
+						+ getText("errors.fa.without.langmaterial"));
 				}
 			}
 		}
