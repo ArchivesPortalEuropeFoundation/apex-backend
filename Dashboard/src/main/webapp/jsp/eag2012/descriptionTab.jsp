@@ -17,11 +17,10 @@
 				<textarea id="textRepositoryHistory"></textarea>
 			</td>
 			<td id="tdLanguageRepositoryHistory">
-				<s:property value="getText('label.ai.common.select.language')" />
+				<label for="selectLanguageRepositoryHistory"><s:property value="getText('label.ai.common.select.language')" /></label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="noti_languageList" list="languageList" />--%>
+				<s:select theme="simple" id="selectLanguageRepositoryHistory" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -43,11 +42,10 @@
 				<s:property value="#ruleOfRepositoryFoundation" />
 			</td>
 			<td id="tdLanguageRuleOfRepositoryFoundation">
-				<s:property value="getText('label.ai.common.select.language')" />
+				<label for="selectLanguageRuleOfRepositoryFoundation"><s:property value="getText('label.ai.common.select.language')" /></label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="noti_languageList" list="languageList" />--%>
+				<s:select theme="simple" id="selectLanguageRuleOfRepositoryFoundation" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -75,11 +73,10 @@
 				<s:property value="#ruleOfRepositorySuppression" />
 			</td>
 			<td id="tdLanguageRuleOfRepositorySuppression">
-				<s:property value="getText('label.ai.common.select.language')" />
+				<label for="selectLanguageRuleOfRepositorySuppression"><s:property value="getText('label.ai.common.select.language')" /></label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="noti_languageList" list="languageList" />--%>
+				<s:select theme="simple" id="selectLanguageRuleOfRepositorySuppression" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -103,11 +100,10 @@
 				<s:property value="#unitOfAdministrativeStructure" />
 			</td>
 			<td id="tdLanguageUnitOfAdministrativeStructure">
-				<s:property value="getText('label.ai.common.select.language')" />
+				<label for="selectLanguageUnitOfAdministrativeStructure"><s:property value="getText('label.ai.common.select.language')" /></label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="noti_languageList" list="languageList" />--%>
+				<s:select theme="simple" id="selectLanguageUnitOfAdministrativeStructure" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -131,11 +127,10 @@
 				<s:property value="#building" />
 			</td>
 			<td id="tdLanguageBuilding">
-				<s:property value="getText('label.ai.common.select.language')" />
+				<label for="selectLanguageBuilding"><s:property value="getText('label.ai.common.select.language')" /></label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="noti_languageList" list="languageList" />--%>
+				<s:select theme="simple" id="selectLanguageBuilding" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -173,11 +168,10 @@
 				<s:property value="#archivalAndOtherHoldings" />
 			</td>
 			<td id="tdLanguageArchivalAndOtherHoldings">
-				<s:property value="getText('label.ai.common.select.language')" />
+				<label for="selectLanguageArchivalAndOtherHoldings"><s:property value="getText('label.ai.common.select.language')" /></label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="noti_languageList" list="languageList" />--%>
+				<s:select theme="simple" id="selectLanguageArchivalAndOtherHoldings" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -214,9 +208,9 @@
 
 		<tr>
 			<td id="tdButtonsDescriptionTab" colspan="4">
-				<input type="button" id="buttonDescriptionTabSave" value="<s:property value='getText("label.ai.common.save")' />" class="rightButton" />
-				<input type="button" id="buttonDescriptionTabExit" value="<s:property value='getText("label.ai.common.exit")' />" class="rightButton" />
 				<input type="button" id="buttonDescriptionTabNext" value="<s:property value='getText("label.ai.common.nextTab")' />" class="rightButton" />
+				<input type="button" id="buttonDescriptionTabExit" value="<s:property value='getText("label.ai.common.exit")' />" class="rightButton" />
+				<input type="button" id="buttonDescriptionTabSave" value="<s:property value='getText("label.ai.common.save")' />" class="rightButton" />
 			</td>
 		</tr>
 	</table>

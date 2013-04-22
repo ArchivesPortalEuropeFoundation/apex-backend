@@ -62,8 +62,7 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="selectYINOTISelectLanguage" list="languageList" />--%>
+				<s:select theme="simple" id="selectYINOTISelectLanguage" list="languageList"></s:select>
 				<s:fielderror fieldName="yourInstitutionLanguageNameOfTheInstitution"/>
 			</td>
 		</tr>
@@ -87,8 +86,7 @@
 				<label for="selectYIPNOTISelectLanguage"><s:property value="getText('label.ai.yourinstitution.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="selectYIPNOTISelectLanguage" list="languageList" />--%>
+				<s:select theme="simple" id="selectYIPNOTISelectLanguage" list="languageList"></s:select>
 			</td>
 		</tr>
 	
@@ -111,8 +109,7 @@
 				<label for="selectYISSelectLanguage"><s:property value="getText('label.ai.yourinstitution.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="selectYISSelectLanguage" list="languageList" />--%>
+				<s:select theme="simple" id="selectYISSelectLanguage" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -129,8 +126,7 @@
 				<label for="selectYICSelectLanguage"><s:property value="getText('label.ai.yourinstitution.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="selectYICSelectLanguage" list="languageList" />--%>
+				<s:select theme="simple" id="selectYICSelectLanguage" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -147,26 +143,25 @@
 				<label for="selectYICoSelectLanguage"><s:property value="getText('label.ai.yourinstitution.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="selectYICoSelectLanguage" list="languageList" />--%>
+				<s:select theme="simple" id="selectYICoSelectLanguage" list="languageList"></s:select>
 			</td>
 		</tr>
 
 		<tr>
 			<td id="coordinatesLabel" colspan="4">
-				<s:property value="getText('label.ai.contact.coordinates')" />
+				<s:property value="getText('label.ai.yourinstitution.coordinates')" />
 			</td>
 		</tr>
 
 		<tr>
 			<td>
-				<label for="textYILatitude"><s:property value="getText('label.ai.yourinstitution.latitude')"/>:</label>
+				<label for="textYILatitude"><s:property value="getText('label.ai.yourinstitution.latitude')"/></label>
 			</td>
 			<td>
 				<input type="text" id="textYILatitude" />
 			</td>
 			<td>
-				<label for="selectYILongitude"><s:property value="getText('label.ai.yourinstitution.longitude')"/>:</label>
+				<label for="selectYILongitude"><s:property value="getText('label.ai.yourinstitution.longitude')"/></label>
 			</td>
 			<td>
 				<input type="text" id="selectYILongitude" />
@@ -174,10 +169,10 @@
 		</tr>
 
 		<tr>
-			<td>
-				<input type="button" id="buttonAddPostalAddressIfDifferent" value="<s:property value="getText('label.ai.yourinstitution.addpostaladdressifdifferent')"/>" />
+			<td colspan="2">
+				<input type="button" id="buttonAddPostalAddressIfDifferent" value="<s:property value="getText('label.ai.yourinstitution.addPostalAddressIfDifferent')"/>" />
 			</td>
-			<td colspan="3">
+			<td colspan="2">
 			</td>
 		</tr>
 
@@ -186,8 +181,7 @@
 				<label for="selectYIContinent" ><s:property value="getText('label.ai.yourinstitution.continent')"/>:</label>
 			</td>
 			<td>
-				<s:label>TODO: Continent list</s:label>
-				<%-- <s:select id="selectYIContinent" list="continentList" />--%>
+				<s:select theme="simple" id="selectYIContinent" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -208,7 +202,7 @@
 				<input type="text" id="textYIEmailAddress" />
 			</td>
 			<td>
-				<label for="textYIEmailLinkTitle" ><s:property value="getText('label.ai.yourinstitution.linktitle')"/>:</label>
+				<label for="textYIEmailLinkTitle" ><s:property value="getText('label.ai.yourinstitution.linkTitle')"/>:</label>
 			</td>
 			<td>
 				<input type="text" id="textYIEmailLinkTitle" />
@@ -225,7 +219,7 @@
 				<s:fielderror fieldName="yourInstitutionWebPageOfTheInstitution"/>
 			</td>
 			<td>
-				<label for="textYIWebpageLinkTitle" ><s:property value="getText('label.ai.yourinstitution.linktitle')"/>:</label>
+				<label for="textYIWebpageLinkTitle" ><s:property value="getText('label.ai.yourinstitution.linkTitle')"/>:</label>
 			</td>
 			<td>
 				<input type="text" id="textYIWebpageLinkTitle" />
@@ -247,7 +241,7 @@
 
 		<tr>
 			<td>
-				<input type="button" id="buttonAddClosingDates" value="<s:property value="getText('label.ai.yourinstitution.addclosingdates')"/>" />
+				<input type="button" id="buttonAddClosingDates" value="<s:property value="getText('label.ai.yourinstitution.addClosingDates')"/>" />
 			</td>
 			<td colspan="3">
 			</td>
@@ -255,7 +249,7 @@
 
 		<tr>
 			<td>
-				<label for="selectAccessibleToThePublic" ><s:property value="getText('label.ai.yourinstitution.accessibletothepublic')"/></label>
+				<label for="selectAccessibleToThePublic" ><s:property value="getText('label.ai.yourinstitution.accessibleToThePublic')"/></label>
 				<span class="required">*</span>:
 			</td>
 			<td>
@@ -264,13 +258,13 @@
 				<s:fielderror fieldName="yourInstitutionAccesibleToPublic"/>
 			</td>
 			<td colspan="2">
-				<input type="button" id="buttonFutherAccessInformation" value="<s:property value="getText('label.ai.yourinstitution.addfurtheraccessinformation')"/>" />
+				<input type="button" id="buttonFutherAccessInformation" value="<s:property value="getText('label.ai.yourinstitution.addFurtherAccessInformation')"/>" />
 			</td>
 		</tr>
 
 		<tr>
 			<td>
-				<label for="selectFacilitiesForDisabledPeopleAvailable" ><s:property value="getText('label.ai.yourinstitution.facilitiesfordisabledpeopleavailable')"/></label>
+				<label for="selectFacilitiesForDisabledPeopleAvailable" ><s:property value="getText('label.ai.yourinstitution.facilitiesForFisabledPeopleAvailable')"/></label>
 				<span class="required">*</span>:
 			</td>
 			<td>
@@ -279,13 +273,13 @@
 				<s:fielderror fieldName="yourInstitutionFacilitiesForDisabledPeople"/>
 			</td>
 			<td colspan="2">
-				<input type="button" id="buttonAddFutherInformationOnExistingFacilities" value="<s:property value="getText('label.ai.yourinstitution.addfutherinformationonexistingfacilities')"/>" />
+				<input type="button" id="buttonAddFutherInformationOnExistingFacilities" value="<s:property value="getText('label.ai.yourinstitution.addFutherInformationOnExistingFacilities')"/>" />
 			</td>
 		</tr>
 
 		<tr>
 			<td colspan="2">
-				<label for="textReferencetoyourinstitutionsholdingsguide" ><s:property value="getText('label.ai.yourinstitution.referencetoyourinstitutionsholdingsguide')"/>:</label>
+				<label for="textReferencetoyourinstitutionsholdingsguide" ><s:property value="getText('label.ai.yourinstitution.referenceToYourInstitutionsHoldingsGuide')"/>:</label>
 			</td>
 			<td colspan="2">
 				<input type="text" id="textReferencetoyourinstitutionsholdingsguide" />
@@ -294,10 +288,10 @@
 
 		<tr>
 			<td>
-				<label for="buttonLinkTitle"><s:property value="getText('label.ai.yourinstitution.linkTitle')"/>:</label>
+				<label for="textYIHoldingsGuideLinkTitle" ><s:property value="getText('label.ai.yourinstitution.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="button" id="buttonLinkTitle" value="<s:property value="getText('label.ai.yourinstitution.linkToHoldingsGuide')"/>" />
+				<input type="text" id="textYIHoldingsGuideLinkTitle" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -305,9 +299,9 @@
 
 		<tr>
 			<td id="tdButtonsYourInstitutionTab" colspan="4">
-				<input type="button" id="buttonYourInstitutionTabSave" value="<s:property value='getText("label.ai.common.save")' />" class="rightButton" />
-				<input type="button" id="buttonYourInstitutionTabExit" value="<s:property value='getText("label.ai.common.exit")' />" class="rightButton" />
-				<input type="button" id="buttonYourInstitutionTabNext" value="<s:property value='getText("label.ai.common.nextTab")' />" class="rightButton" />
+				<input type="button" id="buttonYourInstitutionTabNext" value="<s:property value='getText("label.ai.tabs.button.nextTab")' />" class="rightButton" />
+				<input type="button" id="buttonYourInstitutionTabExit" value="<s:property value='getText("label.ai.tabs.button.exit")' />" class="rightButton" />
+				<input type="button" id="buttonYourInstitutionTabSave" value="<s:property value='getText("label.ai.tabs.button.save")' />" class="rightButton" />
 			</td>
 		</tr>
 	</table>

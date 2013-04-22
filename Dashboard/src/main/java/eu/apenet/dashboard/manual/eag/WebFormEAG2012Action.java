@@ -1,5 +1,9 @@
 package eu.apenet.dashboard.manual.eag;
 
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
@@ -50,6 +54,15 @@ public class WebFormEAG2012Action extends ActionSupport {
 	 */
 	public WebFormEAG2012Action() {
 		super();
+	}
+
+	public Map<String,String> getLanguageList() {
+		Locale[] locales = Locale.getAvailableLocales();
+		Map<String,String> languages = new HashMap<String,String>();
+		for (int i = 0; i < locales.length; i++) {
+			languages.put(locales[i].getCountry(), locales[i].getDisplayLanguage(Locale.ENGLISH));
+		}
+		return languages;
 	}
 
 	// Getters and setters.

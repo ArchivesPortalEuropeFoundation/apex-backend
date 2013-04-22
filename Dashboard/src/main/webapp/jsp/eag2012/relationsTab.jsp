@@ -44,11 +44,10 @@
 				<s:property value="#descriptionOfRelation" />
 			</td>
 			<td id="tdLanguageDescriptionOfRelation">
-				<s:property value="getText('label.ai.common.select.language')" />
+				<label for="selectLanguageDescriptionOfRelation"><s:property value="getText('label.ai.common.select.language')" /></label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="noti_languageList" list="languageList" />--%>
+				<s:select theme="simple" id="selectLanguageDescriptionOfRelation" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -95,11 +94,10 @@
 				<s:property value="#institutionDescriptionOfRelation" />
 			</td>
 			<td id="tdLanguageInstitutionDescriptionOfRelation">
-				<s:property value="getText('label.ai.common.select.language')" />
+				<label for="selectLanguageInstitutionDescriptionOfRelation"><s:property value="getText('label.ai.common.select.language')" /></label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="noti_languageList" list="languageList" />--%>
+				<s:select theme="simple" id="selectLanguageInstitutionDescriptionOfRelation" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -111,9 +109,9 @@
 
 		<tr>
 			<td id="tdButtonsDescriptionTab" colspan="4">
-				<input type="button" id="buttonRelationsTabSave" value="<s:property value='getText("label.ai.common.save")' />" class="rightButton" />
-				<input type="button" id="buttonRelationsTabExit" value="<s:property value='getText("label.ai.common.exit")' />" class="rightButton" />
 <%--				<input type="button" id="buttonRelationsTabNext" value="<s:property value='getText("label.ai.common.nextTab")' />" class="rightButton" /> --%>
+				<input type="button" id="buttonRelationsTabExit" value="<s:property value='getText("label.ai.common.exit")' />" class="rightButton" />
+				<input type="button" id="buttonRelationsTabSave" value="<s:property value='getText("label.ai.common.save")' />" class="rightButton" />
 			</td>
 		</tr>
 

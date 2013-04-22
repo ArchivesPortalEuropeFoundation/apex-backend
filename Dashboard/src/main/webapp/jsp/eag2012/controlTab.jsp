@@ -26,11 +26,10 @@
 				<s:fielderror fieldName="pesonresponsible"/>
 			</td>
 			<td id="tdLanguagePesonresponsible">
-				<s:property value="getText('label.ai.common.select.language')" />
+				<label for="selectLanguagePesonresponsible"><s:property value="getText('label.ai.common.select.language')" /></label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="noti_languageList" list="languageList" />--%>
+				<s:select theme="simple" id="selectLanguagePesonresponsible" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -121,9 +120,9 @@
 
 		<tr>
 			<td id="tdButtonsDescriptionTab" colspan="4">
-				<input type="button" id="buttonControlTabSave" value="<s:property value='getText("label.ai.common.save")' />" class="rightButton" />
-				<input type="button" id="buttonControlTabExit" value="<s:property value='getText("label.ai.common.exit")' />" class="rightButton" />
 				<input type="button" id="buttonControlTabNext" value="<s:property value='getText("label.ai.common.nextTab")' />" class="rightButton" />
+				<input type="button" id="buttonControlTabExit" value="<s:property value='getText("label.ai.common.exit")' />" class="rightButton" />
+				<input type="button" id="buttonControlTabSave" value="<s:property value='getText("label.ai.common.save")' />" class="rightButton" />
 			</td>
 		</tr>
 

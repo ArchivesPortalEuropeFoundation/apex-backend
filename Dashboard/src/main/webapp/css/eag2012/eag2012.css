@@ -112,6 +112,8 @@
 
 #eag2012Div #tab-contact td#visitorAdressLabel, #postalAddressLabel, #coordinatesLabel,
 #repositoryLabel, #administrativeLabel, #buildingLabel, #holdingLabel, #usedLanguagesLabel,
-#usedRulesLabel, #resourceLabel, #institutionLabel, #searchroomLabel {
+#usedRulesLabel, #resourceLabel, #institutionLabel, #searchroomLabel, #libraryLabel,
+#internetAccessLabel, #technicalServicesLabel, #restaurationLabLabel, #reproductionServiceLabel,
+#recreationalServiceLabel {
 	font-weight: bold
 }

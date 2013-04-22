@@ -47,8 +47,7 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="noti_languageList" list="languageList" />--%>
+				<s:select theme="simple" id="noti_languageList" list="languageList"></s:select>
 				<s:fielderror fieldName="noti_languageList"/>
 			</td>
 		</tr>
@@ -68,8 +67,7 @@
 				<label for="pnoti_languageList"><s:property value="getText('label.ai.identity.selectALanguage')" />:</label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="pnoti_languageList" list="languageList" />--%>
+				<s:select theme="simple" id="pnoti_languageList" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -92,8 +90,7 @@
 				<label for="tfun_languageList"><s:property value="getText('label.ai.identity.selectALanguage')" />:</label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="tfun_languageList" list="languageList" />--%>
+				<s:select theme="simple" id="tfun_languageList" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -150,9 +147,9 @@
 
 		<tr>
 			<td id="tdButtonsContactTab" colspan="4">
-				<input type="button" id="buttonContactTabSave" value="<s:property value='getText("label.ai.common.save")' />" class="rightButton" />
-				<input type="button" id="buttonContactTabExit" value="<s:property value='getText("label.ai.common.exit")' />" class="rightButton" />
 				<input type="button" id="buttonContactTabNext" value="<s:property value='getText("label.ai.common.nextTab")' />" class="rightButton" />
+				<input type="button" id="buttonContactTabExit" value="<s:property value='getText("label.ai.common.exit")' />" class="rightButton" />
+				<input type="button" id="buttonContactTabSave" value="<s:property value='getText("label.ai.common.save")' />" class="rightButton" />
 			</td>
 		</tr>
 	</table>

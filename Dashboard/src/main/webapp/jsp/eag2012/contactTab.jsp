@@ -19,11 +19,10 @@
 				<s:fielderror fieldName="streetOfTheInstitution"/>
 			</td>
 			<td id="tdLanguageStreetOfTheInstitution">
-				<s:property value="getText('label.ai.common.select.language')" />
+				<label for="selectLanguageStreetOfTheInstitution" ><s:property value="getText('label.ai.common.select.language')" /></label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="noti_languageList" list="languageList" />--%>
+				<s:select theme="simple" id="selectLanguageStreetOfTheInstitution" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -37,11 +36,10 @@
 				<s:fielderror fieldName="cityOfTheInstitution"/>
 			</td>
 			<td id="tdLanguageCityOfTheInstitution">
-				<s:property value="getText('label.ai.common.select.language')" />
+				<label for="selectLanguageCityOfTheInstitution"><s:property value="getText('label.ai.common.select.language')" /></label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="noti_languageList" list="languageList" />--%>
+				<s:select theme="simple" id="selectLanguageCityOfTheInstitution" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -53,11 +51,10 @@
 				<s:property value="#districtOfTheInstitution" />
 			</td>
 			<td id="tdLanguageDistrictOfTheInstitution">
-				<s:property value="getText('label.ai.common.select.language')" />
+				<label for="selectLanguageDistrictOfTheInstitution"><s:property value="getText('label.ai.common.select.language')" /></label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="noti_languageList" list="languageList" />--%>
+				<s:select theme="simple" id="selectLanguageDistrictOfTheInstitution" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -69,11 +66,10 @@
 				<s:property value="#countyOfTheInstitution" />
 			</td>
 			<td id="tdLanguageCountyOfTheInstitution">
-				<s:property value="getText('label.ai.common.select.language')" />
+				<label for="selectLanguageCountyOfTheInstitution"><s:property value="getText('label.ai.common.select.language')" /></label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="noti_languageList" list="languageList" />--%>
+				<s:select theme="simple" id="selectLanguageCountyOfTheInstitution" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -85,11 +81,10 @@
 				<s:property value="#regionOfTheInstitution" />
 			</td>
 			<td id="tdLanguageRegionOfTheInstitution">
-				<s:property value="getText('label.ai.common.select.language')" />
+				<label for="selectLanguageRegionOfTheInstitution"><s:property value="getText('label.ai.common.select.language')" /></label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="noti_languageList" list="languageList" />--%>
+				<s:select theme="simple" id="selectLanguageRegionOfTheInstitution" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -103,11 +98,10 @@
 				<s:fielderror fieldName="countryOfTheInstitution"/>
 			</td>
 			<td id="tdLanguageCountryOfTheInstitution">
-				<s:property value="getText('label.ai.common.select.language')" />
+				<label for="selectLanguageCountryOfTheInstitution"><s:property value="getText('label.ai.common.select.language')" /></label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="noti_languageList" list="languageList" />--%>
+				<s:select theme="simple" id="selectLanguageCountryOfTheInstitution" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -146,11 +140,10 @@
 				<s:property value="#postalStreetOfTheInstitution" />
 			</td>
 			<td id="tdLanguagePostalStreetOfTheInstitution">
-				<s:property value="getText('label.ai.common.select.language')" />
+				<label for="selectLanguagePostalStreetOfTheInstitution"><s:property value="getText('label.ai.common.select.language')" /></label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="noti_languageList" list="languageList" />--%>
+				<s:select theme="simple" id="selectLanguagePostalStreetOfTheInstitution" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -162,11 +155,10 @@
 				<s:property value="#postalCityOfTheInstitution" />
 			</td>
 			<td id="tdLanguagePostalCityOfTheInstitution">
-				<s:property value="getText('label.ai.common.select.language')" />
+				<label for="selectLanguagePostalCityOfTheInstitution"><s:property value="getText('label.ai.common.select.language')" /></label>
 			</td>
 			<td>
-				<s:label>TODO: Language list</s:label>
-				<%-- <s:select id="noti_languageList" list="languageList" />--%>
+				<s:select theme="simple" id="selectLanguagePostalCityOfTheInstitution" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -252,9 +244,9 @@
 
 		<tr>
 			<td id="tdButtonsContactTab" colspan="4">
-				<input type="button" id="buttonContactTabSave" value="<s:property value='getText("label.ai.common.save")' />" class="rightButton" />
-				<input type="button" id="buttonContactTabExit" value="<s:property value='getText("label.ai.common.exit")' />" class="rightButton" />
 				<input type="button" id="buttonContactTabNext" value="<s:property value='getText("label.ai.common.nextTab")' />" class="rightButton" />
+				<input type="button" id="buttonContactTabExit" value="<s:property value='getText("label.ai.common.exit")' />" class="rightButton" />
+				<input type="button" id="buttonContactTabSave" value="<s:property value='getText("label.ai.common.save")' />" class="rightButton" />
 			</td>
 		</tr>
 	</table>
