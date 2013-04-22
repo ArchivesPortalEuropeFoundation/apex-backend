@@ -5,7 +5,7 @@
 	<table id="identityTable">
 		<tr>
 			<td id="countryCodeFieldColumn">
-				<s:property value="getText('label.ai.identity.countryCode')" />
+				<s:property value="getText('label.ai.tabs.commons.countryCode')" />
 				<span class="required">*</span>:
 			</td>
 			<td>
@@ -18,7 +18,7 @@
 
 		<tr>
 			<td id="tdIdentifierOfTheInstitution">
-				<s:property value="getText('label.ai.identity.identifierOfTheInstitution')" />
+				<s:property value="getText('label.ai.tabs.commons.identifierOfTheInstitution')" />
 				<span class="required">*</span>:
 			</td>
 			<td>
@@ -26,7 +26,7 @@
 				<s:fielderror fieldName="identifierOfTheInstitution"/>
 			</td>
 			<td id="tdIdUsedInAPE">
-				<s:property value="getText('label.ai.identity.idUsedInAPE')" />:
+				<s:property value="getText('label.ai.tabs.commons.idUsedInAPE')" />:
 			</td>
 			<td>
 				<s:property value="#idUsedInAPE" />
@@ -35,7 +35,7 @@
 
 		<tr>
 			<td id="tdNameOfTheInstitution">
-				<s:property value="getText('label.ai.identity.nameOfTheInstitution')" />
+				<s:property value="getText('label.ai.tabs.commons.nameOfTheInstitution')" />
 				<span class="required">*</span>:
 			</td>
 			<td>
@@ -43,7 +43,7 @@
 				<s:fielderror fieldName="nameOfTheInstitution"/>
 			</td>
 			<td id="tdNameOfTheInstitutionLanguage">
-				<label for="noti_languageList"><s:property value="getText('label.ai.identity.selectALanguage')" /></label>
+				<label for="noti_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" /></label>
 				<span class="required">*</span>:
 			</td>
 			<td>
@@ -58,13 +58,13 @@
 
 		<tr class="marginTop">
 			<td>
-				<label for="textParallelNameOfTheInstitution"><s:property value="getText('label.ai.identity.selectALanguage')" />:</label>
+				<label for="textParallelNameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.parallelNameOfTheInstitution')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textParallelNameOfTheInstitution" value=""/>
 			</td>
 			<td id="tdNameOfTheInstitutionLanguage">
-				<label for="pnoti_languageList"><s:property value="getText('label.ai.identity.selectALanguage')" />:</label>
+				<label for="pnoti_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
 				<s:select theme="simple" id="pnoti_languageList" list="languageList"></s:select>
@@ -72,10 +72,10 @@
 		</tr>
 
 		<tr>
-			<td>
-				<input type="button" value="<s:property value='getText("label.ai.identity.addAnotherFormOfTheAuthorizedName")' />" class="longButton" />
+			<td colspan="2">
+				<input type="button" value="<s:property value='getText("label.ai.identity.addAnotherParallelNameOfTheInstitution")' />" class="longButton" />
 			</td>
-			<td colspan="3">
+			<td colspan="2">
 			</td>
 		</tr>
 
@@ -87,7 +87,7 @@
 				<input type="text" id="textFormerlyUsedName" value=""/>
 			</td>
 			<td id="tdTextFormerlyUsedName">
-				<label for="tfun_languageList"><s:property value="getText('label.ai.identity.selectALanguage')" />:</label>
+				<label for="tfun_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
 				<s:select theme="simple" id="tfun_languageList" list="languageList"></s:select>
@@ -95,22 +95,20 @@
 		</tr>
 
 		<tr>
-			<td>
+			<td colspan="4">
 				<label for="textDatesWhenThisNameWasUsed"><s:property value="getText('label.ai.identity.datesWhenThisNameWasUsed')" />:</label>
-			</td>
-			<td colspan="3">
 			</td>
 		</tr>
 
 		<tr>
 			<td>
-				<label for="textDatesWhenThisNameWasUsedFrom"><s:property value="getText('label.ai.identity.textFrom')" />:</label>
+				<label for="textDatesWhenThisNameWasUsedFrom"><s:property value="getText('label.ai.tabs.commons.textFrom')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textDatesWhenThisNameWasUsedFrom" value=""/>
 			</td>
 			<td>
-				<label for="textDatesWhenThisNameWasUsedTo"><s:property value="getText('label.ai.identity.textTo')" />:</label>
+				<label for="textDatesWhenThisNameWasUsedTo"><s:property value="getText('label.ai.tabs.commons.textTo')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textDatesWhenThisNameWasUsedTo" value=""/>
@@ -126,10 +124,10 @@
 		</tr>
 
 		<tr>
-			<td>
-				<input type="button" id="buttonAddMoreAnotherFormerlyUsedName" value="<s:property value='getText("label.ai.identity.addMoreAnotherFormerlyUsedName")' />" class="longButton" />
+			<td colspan="2">
+				<input type="button" id="buttonAddMoreAnotherFormerlyUsedName" value="<s:property value='getText("label.ai.identity.addAnotherFormerlyUsedName")' />" class="longButton" />
 			</td>
-			<td colspan="3">
+			<td colspan="2">
 			</td>
 		</tr>
 
@@ -147,9 +145,9 @@
 
 		<tr>
 			<td id="tdButtonsContactTab" colspan="4">
-				<input type="button" id="buttonContactTabNext" value="<s:property value='getText("label.ai.common.nextTab")' />" class="rightButton" />
-				<input type="button" id="buttonContactTabExit" value="<s:property value='getText("label.ai.common.exit")' />" class="rightButton" />
-				<input type="button" id="buttonContactTabSave" value="<s:property value='getText("label.ai.common.save")' />" class="rightButton" />
+				<input type="button" id="buttonContactTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
+				<input type="button" id="buttonContactTabExit" value="<s:property value='getText("label.ai.tabs.commons.button.exit")' />" class="rightButton" />
+				<input type="button" id="buttonContactTabSave" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" />
 			</td>
 		</tr>
 	</table>

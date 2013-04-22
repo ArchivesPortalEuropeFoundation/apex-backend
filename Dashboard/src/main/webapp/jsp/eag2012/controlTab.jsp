@@ -26,7 +26,7 @@
 				<s:fielderror fieldName="pesonresponsible"/>
 			</td>
 			<td id="tdLanguagePesonresponsible">
-				<label for="selectLanguagePesonresponsible"><s:property value="getText('label.ai.common.select.language')" /></label>
+				<label for="selectLanguagePesonresponsible"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
 				<s:select theme="simple" id="selectLanguagePesonresponsible" list="languageList"></s:select>
@@ -47,52 +47,54 @@
 		</tr>
 
 		<tr>
-			<td id="usedLanguagesLabel" colspan="4">
+			<td id="usedLanguagesLabel" colspan="2">
 				<s:property value="getText('label.ai.control.usedLanguages')" />
 			</td>
-		</tr>
-
-		<tr>
-			<td id="tdContactLanguage">
-				<s:property value="getText('label.ai.control.contactLanguage')" />
-				<span class="required">*</span>:
-			</td>
-			<td>
-				<s:property value="#contactLanguage" />
-				<s:fielderror fieldName="contactLanguage"/>
-			</td>
-			<td colspan="2">
-			</td>
-		</tr>
-
-		<tr>
-			<td id="tdContactScript">
-				<s:property value="getText('label.ai.control.contactScript')" />
-				<span class="required">*</span>:
-			</td>
-			<td>
-				<s:property value="#contactScript" />
-				<s:fielderror fieldName="contactScript"/>
-			</td>
-			<td colspan="2">
-			</td>
-		</tr>
-
-		<tr>
-			<td id="tdAddFurtherLangsAnsScripts" colspan="4">
+			<td id="tdAddFurtherLangsAnsScripts" colspan="2">
 				<input type="button" value="<s:property value='getText("label.ai.control.addFurtherLangsAnsScripts")' />" class="longButton" />
 			</td>
 		</tr>
 
 		<tr>
-			<td id="usedRulesLabel" colspan="4">
+			<td id="tdDescriptionLanguage">
+				<s:property value="getText('label.ai.control.descriptionLanguage')" />
+				<span class="required">*</span>:
+			</td>
+			<td>
+				<s:label>TODO</s:label>
+				<%-- <s:property value="#descriptionLanguage" /> --%>
+				<s:fielderror fieldName="descriptionLanguage"/>
+			</td>
+			<td colspan="2">
+			</td>
+		</tr>
+
+		<tr>
+			<td id="tdDescriptionScript">
+				<s:property value="getText('label.ai.control.descriptionScript')" />
+				<span class="required">*</span>:
+			</td>
+			<td>
+				<s:label>TODO</s:label>
+				<%-- <s:property value="#descriptionScript" /> --%>
+				<s:fielderror fieldName="descriptionScript"/>
+			</td>
+			<td colspan="2">
+			</td>
+		</tr>
+
+		<tr>
+			<td id="usedRulesLabel" colspan="2">
 				<s:property value="getText('label.ai.control.usedRules')" />
+			</td>
+			<td id="tdAddFurtherRules" colspan="2">
+				<input type="button" value="<s:property value='getText("label.ai.control.addFurtherRules")' />" class="longButton" />
 			</td>
 		</tr>
 
 		<tr>
 			<td id="tdContactAbbreviation">
-				<s:property value="getText('label.ai.control.contactAbbreviation')" />:
+				<s:property value="getText('label.ai.control.abbreviation')" />:
 			</td>
 			<td>
 				<s:property value="#contactAbbreviation" />
@@ -103,7 +105,7 @@
 
 		<tr>
 			<td id="tdContactFullName">
-				<s:property value="getText('label.ai.control.contactFullName')" />:
+				<s:property value="getText('label.ai.control.fullName')" />:
 			</td>
 			<td>
 				<s:property value="#contactFullName" />
@@ -113,16 +115,10 @@
 		</tr>
 
 		<tr>
-			<td id="tdAddFurtherRules" colspan="4">
-				<input type="button" value="<s:property value='getText("label.ai.description.addFurtherRules")' />" class="longButton" />
-			</td>
-		</tr>
-
-		<tr>
 			<td id="tdButtonsDescriptionTab" colspan="4">
-				<input type="button" id="buttonControlTabNext" value="<s:property value='getText("label.ai.common.nextTab")' />" class="rightButton" />
-				<input type="button" id="buttonControlTabExit" value="<s:property value='getText("label.ai.common.exit")' />" class="rightButton" />
-				<input type="button" id="buttonControlTabSave" value="<s:property value='getText("label.ai.common.save")' />" class="rightButton" />
+				<input type="button" id="buttonControlTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
+				<input type="button" id="buttonControlTabExit" value="<s:property value='getText("label.ai.tabs.commons.button.exit")' />" class="rightButton" />
+				<input type="button" id="buttonControlTabSave" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" />
 			</td>
 		</tr>
 

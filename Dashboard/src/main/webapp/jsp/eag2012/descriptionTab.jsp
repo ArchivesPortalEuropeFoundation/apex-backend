@@ -5,7 +5,7 @@
 	<table id="descriptionTable">
 		<tr>
 			<td id="repositoryLabel" colspan="4">
-				<s:property value="getText('label.ai.description.visitorAddress')" />
+				<s:property value="getText('label.ai.description.repositoryDescription')" />
 			</td>
 		</tr>
 
@@ -17,7 +17,7 @@
 				<textarea id="textRepositoryHistory"></textarea>
 			</td>
 			<td id="tdLanguageRepositoryHistory">
-				<label for="selectLanguageRepositoryHistory"><s:property value="getText('label.ai.common.select.language')" /></label>
+				<label for="selectLanguageRepositoryHistory"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
 				<s:select theme="simple" id="selectLanguageRepositoryHistory" list="languageList"></s:select>
@@ -42,7 +42,7 @@
 				<s:property value="#ruleOfRepositoryFoundation" />
 			</td>
 			<td id="tdLanguageRuleOfRepositoryFoundation">
-				<label for="selectLanguageRuleOfRepositoryFoundation"><s:property value="getText('label.ai.common.select.language')" /></label>
+				<label for="selectLanguageRuleOfRepositoryFoundation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
 				<s:select theme="simple" id="selectLanguageRuleOfRepositoryFoundation" list="languageList"></s:select>
@@ -50,8 +50,10 @@
 		</tr>
 
 		<tr>
-			<td id="tdAddFoundationInformation" colspan="4">
+			<td id="tdAddFoundationInformation" colspan="2">
 				<input type="button" value="<s:property value='getText("label.ai.description.addFoundationInformation")' />" class="longButton" />
+			</td>
+			<td colspan="2">
 			</td>
 		</tr>
 
@@ -73,7 +75,7 @@
 				<s:property value="#ruleOfRepositorySuppression" />
 			</td>
 			<td id="tdLanguageRuleOfRepositorySuppression">
-				<label for="selectLanguageRuleOfRepositorySuppression"><s:property value="getText('label.ai.common.select.language')" /></label>
+				<label for="selectLanguageRuleOfRepositorySuppression"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
 				<s:select theme="simple" id="selectLanguageRuleOfRepositorySuppression" list="languageList"></s:select>
@@ -81,8 +83,10 @@
 		</tr>
 
 		<tr>
-			<td id="tdAddSuppressionInformation" colspan="4">
+			<td id="tdAddSuppressionInformation" colspan="2">
 				<input type="button" value="<s:property value='getText("label.ai.description.addSuppressionInformation")' />" class="longButton" />
+			</td>
+			<td colspan="2">
 			</td>
 		</tr>
 
@@ -100,7 +104,7 @@
 				<s:property value="#unitOfAdministrativeStructure" />
 			</td>
 			<td id="tdLanguageUnitOfAdministrativeStructure">
-				<label for="selectLanguageUnitOfAdministrativeStructure"><s:property value="getText('label.ai.common.select.language')" /></label>
+				<label for="selectLanguageUnitOfAdministrativeStructure"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
 				<s:select theme="simple" id="selectLanguageUnitOfAdministrativeStructure" list="languageList"></s:select>
@@ -108,8 +112,10 @@
 		</tr>
 
 		<tr>
-			<td id="tdAddAdministrationUnits" colspan="4">
+			<td id="tdAddAdministrationUnits" colspan="2">
 				<input type="button" value="<s:property value='getText("label.ai.description.addAdministrationUnits")' />" class="longButton" />
+			</td>
+			<td colspan="2">
 			</td>
 		</tr>
 
@@ -127,7 +133,7 @@
 				<s:property value="#building" />
 			</td>
 			<td id="tdLanguageBuilding">
-				<label for="selectLanguageBuilding"><s:property value="getText('label.ai.common.select.language')" /></label>
+				<label for="selectLanguageBuilding"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
 				<s:select theme="simple" id="selectLanguageBuilding" list="languageList"></s:select>
@@ -168,7 +174,7 @@
 				<s:property value="#archivalAndOtherHoldings" />
 			</td>
 			<td id="tdLanguageArchivalAndOtherHoldings">
-				<label for="selectLanguageArchivalAndOtherHoldings"><s:property value="getText('label.ai.common.select.language')" /></label>
+				<label for="selectLanguageArchivalAndOtherHoldings"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
 				<s:select theme="simple" id="selectLanguageArchivalAndOtherHoldings" list="languageList"></s:select>
@@ -182,6 +188,11 @@
 			<td>
 				<s:property value="#dateOfHoldings" />
 			</td>
+			<td colspan="2">
+			</td>
+		</tr>
+
+		<tr>
 			<td id="tdDateOfHoldingsFrom">
 				<s:property value="getText('label.ai.description.dateOfHoldingsFrom')" />:
 			</td>
@@ -189,7 +200,7 @@
 				<s:property value="#dateOfHoldingsFrom" />
 			</td>
 			<td id="tdDateOfHoldingsTo">
-				<s:property value="getText('label.ai.description.dateOfHoldingsTo')" />:
+				<s:property value="getText('label.ai.tabs.commons.textTo')" />:
 			</td>
 			<td>
 				<s:property value="#dateOfHoldingsTo" />
@@ -208,9 +219,9 @@
 
 		<tr>
 			<td id="tdButtonsDescriptionTab" colspan="4">
-				<input type="button" id="buttonDescriptionTabNext" value="<s:property value='getText("label.ai.common.nextTab")' />" class="rightButton" />
-				<input type="button" id="buttonDescriptionTabExit" value="<s:property value='getText("label.ai.common.exit")' />" class="rightButton" />
-				<input type="button" id="buttonDescriptionTabSave" value="<s:property value='getText("label.ai.common.save")' />" class="rightButton" />
+				<input type="button" id="buttonDescriptionTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
+				<input type="button" id="buttonDescriptionTabExit" value="<s:property value='getText("label.ai.tabs.commons.button.exit")' />" class="rightButton" />
+				<input type="button" id="buttonDescriptionTabSave" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" />
 			</td>
 		</tr>
 	</table>
