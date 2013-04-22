@@ -33,6 +33,9 @@
             <!--<s:elseif test="currentAction == 'createsimpleeagwithmenu'">
     			<s:submit key="label.validate" action="uploadsimpleeagwithmenu"/>
             </s:elseif>-->
+            <s:elseif test="currentAction == 'createeag2012withmenu'">
+    			<s:submit key="label.validate" action="uploadsimpleeagwithmenu"/>
+            </s:elseif>
     		<s:submit key="label.cancel" action="dashboardHome"/>
 		</s:form>
 		

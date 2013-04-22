@@ -77,6 +77,18 @@
 		<put-attribute name="menu" value="/jsp/indexEAGCreation.jsp" />
 		<put-attribute name="body" value="/jsp/webformeag.jsp" />	
 	</definition>
+
+	<definition name="webFormEAG2012" extends="dashboardLayout">
+		<put-attribute name="title" value="dashboard.eagwebform.title" />	
+		<put-attribute name="menu" value="/jsp/eag2012/indexEAG2012Creation.jsp" />
+		<put-attribute name="body" value="/jsp/eag2012/webFormEAG2012.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+			<add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+			<add-attribute type="string" value="/js/eag2012/eag2012.js"/>
+			<add-attribute type="string" value="/js/breadcrumb.js"/>
+        </put-list-attribute>
+	</definition>
+
 	<definition name="webformeagwithmenu" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.eagwebform.title" />
 		<put-attribute name="body" value="/jsp/webformeag.jsp" />	
@@ -474,7 +486,9 @@
 		<put-attribute name="body" value="/jsp/countryState.jsp" />	
 	</definition>
 
-
+	<definition name="filesFailed" extends="AdminLayout" >		
+		<put-attribute name="body" value="/jsp/queue/filesFailed.jsp" />		
+	</definition>	
 	<definition name="manageQueue" extends="AdminLayout" >	
 		<put-attribute name="title" value="admin.queuemanagement.title" />	
 		<put-attribute name="body" value="/jsp/queue/managequeue.jsp" />		
