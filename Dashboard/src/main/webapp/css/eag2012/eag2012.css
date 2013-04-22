@@ -4,7 +4,7 @@
 	border: none;
 
 }
-#eag2012Div ul#eag2012TabsContainer {
+#eag2012Div ul#eag2012TabsContainer, ul#eag2012tabs_institution_tabs {
 	margin: 0;
 	padding: 0;
 	float: left;
@@ -15,7 +15,7 @@
 	width: 100%;
 }
 
-#eag2012Div ul#eag2012TabsContainer li {
+#eag2012Div ul#eag2012TabsContainer li, ul#eag2012tabs_institution_tabs li {
 	float: left;
 	margin: 0;
 	padding: 0;
@@ -27,7 +27,7 @@
 	color: #ccc;
 
 }
-#eag2012Div ul#eag2012TabsContainer li a {
+#eag2012Div ul#eag2012TabsContainer li a, ul#eag2012tabs_institution_tabs li a {
 	text-decoration: none;
 	color: #000;
 	display: block;
@@ -36,16 +36,16 @@
 	outline: none;
 	height: 22px;
 }
-#eag2012Div ul#eag2012TabsContainer li.ui-state-active, #eag2012Div  ul#eag2012TabsContainer li.ui-state-active a:hover {
+#eag2012Div ul#eag2012TabsContainer li.ui-state-active, #eag2012Div  ul#eag2012TabsContainer li.ui-state-active a:hover, ul#eag2012tabs_institution_tabs li.ui-state-active, ul#eag2012tabs_institution_tabs li.ui-state-active a:hover{
 	background: #99CCFF;
 	background-image: url(../images/eag2012/tabbg.jpg);
 	color: black;
 
 }
-#eag2012Div ul#eag2012TabsContainer li.ui-tabs-selected {
+#eag2012Div ul#eag2012TabsContainer li.ui-tabs-selected , ul#eag2012tabs_institution_tabs li.ui-tabs-selected{
 	height: 28px;
 }
-#eag2012Div ul#eag2012TabsContainer li a:hover  {
+#eag2012Div ul#eag2012TabsContainer li a:hover , ul#eag2012tabs_institution_tabs li a:hover {
 	background: #fff;
 	color: #4D8BCB;
 }

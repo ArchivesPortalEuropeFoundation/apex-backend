@@ -35,6 +35,25 @@
 					$("a[href^='#tab-']").click(function(){
 						hideAndShow("tab-",$(this).attr("href").substring(1));
 					});
+					$("table#yourInstitutionTabContent_1 input#buttonAddPostalAddressIfDifferent").click(function(){
+						$(this).hide();
+						$("table#yourInstitutionTabContent_1 tr#YILatitudeLongitude").hide();
+						$("table#yourInstitutionTabContent_1 tr#YIPostalAddress").show();
+					});
+					$("table#yourInstitutionTabContent_1 input#buttonAddClosingDates").click(function(){
+						$(this).hide();
+						$("table#yourInstitutionTabContent_1 tr#fieldClosingDates").show();
+					});
+					$("table#yourInstitutionTabContent_1 input#buttonFutherAccessInformation").click(function(){
+						$(this).after('<input type="text" id="futherAccessInformation" />');
+						$(this).hide();
+					});
+					$("table#yourInstitutionTabContent_1 input#buttonAddFutherInformationOnExistingFacilities").click(function(){
+						$(this).after('<input type="text" id="futherInformationOnExistingFacilities" />');
+						$(this).hide();
+					});
+					//send first tab
+					$("table#yourInstitutionTabContent_1 input#buttonYourInstitutionTabSave").click(clickAction);
 				});
 			</script>
 			<div id="tab-yourInstitution">
