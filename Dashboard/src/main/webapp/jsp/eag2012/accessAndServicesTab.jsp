@@ -53,8 +53,7 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<s:label>TODO: Yes/No list</s:label>
-				<%-- <s:select id="selectASAccesibleToThePublic" list="yesnoList" />--%>
+				<s:select theme="simple" id="selectASAccesibleToThePublic" list="yesNoList"></s:select>
 				<s:fielderror fieldName="yesNoSelectASAccesibleToThePublic"/>
 			</td>
 			<td colspan="2">
@@ -117,8 +116,7 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<s:label>TODO: Yes/No list</s:label>
-				<%-- <s:select id="selectASFacilitiesForDisabledPeopleAvailable" list="yesnoList" />--%>
+				<s:select theme="simple" id="selectASFacilitiesForDisabledPeopleAvailable" list="yesNoList"></s:select>
 				<s:fielderror fieldName="yesNoSelectASFacilitiesForDisabledPeopleAvailable"/>
 			</td>
 		</tr>
@@ -226,11 +224,10 @@
 				<input type="text" id="textASSRMicrofilmPlaces" />
 			</td>
 			<td>
-				<label for="textASSRPhotographAllowance"><s:property value="getText('label.ai.accessAndServices.photographAllowance')"/>:</label>
+				<label for="selectASSRPhotographAllowance"><s:property value="getText('label.ai.accessAndServices.photographAllowance')"/>:</label>
 			</td>
 			<td>
-				<s:label>TODO: Microfilm photograph allowance</s:label>
-				<%-- <s:select id="textASSRPhotographAllowance" list="yesnoWithoutFlashlist" /> --%>
+				<s:select theme="simple" id="selectASSRPhotographAllowance" list="photographList"></s:select>
 			</td>
 		</tr>
 
@@ -318,8 +315,7 @@
 				<span><s:property value="getText('label.ai.accessAndServices.library')" /></span>
 			</td>
 			<td>
-				<s:label>TODO: YES/No list</s:label>
-				<%-- <s:select id="selectASLibrary" list="yesnoList" />--%>
+				<s:select theme="simple" id="selectASLibrary" list="yesNoList"></s:select>
 			</td>
 			<td colspan="2">
 			</td>
@@ -386,8 +382,7 @@
 				<label for="selectASInternetAccess"><span><s:property value="getText('label.ai.accessAndServices.internetAccess')" /></span>:</label>
 			</td>
 			<td>
-				<s:label>TODO: YES/No list</s:label>
-				<%-- <s:select id="selectASInternetAccess" list="yesnoList" />--%>
+				<s:select theme="simple" id="selectASInternetAccess" list="yesNoList"></s:select>
 			</td>
 			<td colspan="2">
 			</td>
@@ -416,11 +411,10 @@
 
 		<tr>
 			<td id="restaurationLabLabel">
-				<span><label for="textASTSRestaurationLab"><s:property value="getText('label.ai.accessAndServices.restaurationLab')" />:</label></span>
+				<span><label for="selectASTSRestaurationLab"><s:property value="getText('label.ai.accessAndServices.restaurationLab')" />:</label></span>
 			</td>
 			<td>
-				<s:label>TODO: YES/No list</s:label>
-				<%-- <s:select id="textASTSRestaurationLab" list="yesnoList" />--%>
+				<s:select theme="simple" id="selectASTSRestaurationLab" list="yesNoList"></s:select>
 			</td>
 			<td colspan="2">
 				<input type="button" id="buttonAddADescriptionOfYourRestaurationLab" value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourRestaurationLab')"/>"/>
@@ -470,12 +464,11 @@
 
 		<tr>
 			<td id="reproductionServiceLabel">
-				<label for="textASTSReproductionService"><s:property value="getText('label.ai.accessAndServices.reproductionService')" /></label>
+				<label for="selectASTSReproductionService"><s:property value="getText('label.ai.accessAndServices.reproductionService')" /></label>
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<s:label>TODO: Yes/No list</s:label>
-				<%-- <s:select id="textASTSReproductionService" list="yesnoList" />--%>
+				<s:select theme="simple" id="selectASTSReproductionService" list="yesNoList"></s:select>
 				<s:fielderror fieldName="yesNotextASTSReproductionService"/>
 			</td>
 			<td colspan="2">
@@ -529,8 +522,7 @@
 				<label for="selectASTSRSMicroform"><s:property value="getText('label.ai.accessAndServices.microformServices')" />:</label>
 			</td>
 			<td>
-				<s:label>TODO: Yes/No list</s:label>
-				<%-- <s:select id="selectASTSRSMicroform" list="yesnoList" />--%>
+				<s:select theme="simple" id="selectASTSRSMicroform" list="yesNoList"></s:select>
 			</td>
 			<td>
 				<label for="textASTSRSMicroformDescription"><s:property value="getText('label.ai.accessAndServices.description')" />:</label>
@@ -545,8 +537,7 @@
 				<label for="selectASTSRSPhotographServices"><s:property value="getText('label.ai.accessAndServices.photographServices')" />:</label>
 			</td>
 			<td>
-				<s:label>TODO: Yes/No list</s:label>
-				<%-- <s:select id="selectASTSRSPhotographServices" list="yesnoList" />--%>
+				<s:select theme="simple" id="selectASTSRSPhotographServices" list="yesNoList"></s:select>
 			</td>
 			<td>
 				<label for="textASTSRSPhotographServicesDescription"><s:property value="getText('label.ai.accessAndServices.description')" />:</label>
@@ -561,8 +552,7 @@
 				<label for="selectASTSRSDigitalServices"><s:property value="getText('label.ai.accessAndServices.digitalServices')" />:</label>
 			</td>
 			<td>
-				<s:label>TODO: Yes/No list</s:label>
-				<%-- <s:select id="selectASTSRSDigitalServices" list="yesnoList" />--%>
+				<s:select theme="simple" id="selectASTSRSDigitalServices" list="yesNoList"></s:select>
 			</td>
 			<td>
 				<label for="textASTSRSDigitalServicesDescription"><s:property value="getText('label.ai.accessAndServices.description')" />:</label>
@@ -577,8 +567,7 @@
 				<label for="selectASTSRSPhotocopyServices"><s:property value="getText('label.ai.accessAndServices.photocopyServices')" />:</label>
 			</td>
 			<td>
-				<s:label>TODO: Yes/No list</s:label>
-				<%-- <s:select id="selectASTSRSPhotocopyServices" list="yesnoList" />--%>
+				<s:select theme="simple" id="selectASTSRSPhotocopyServices" list="yesNoList"></s:select>
 			</td>
 			<td>
 				<label for="textASTSRSPhotocopyServicesDescription"><s:property value="getText('label.ai.accessAndServices.description')" />:</label>

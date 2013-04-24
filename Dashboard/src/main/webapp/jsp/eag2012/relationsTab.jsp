@@ -17,11 +17,10 @@
 				<s:property value="#websiteOfResource" />
 			</td>
 			<td id="tdTypeOfRelation">
-				<s:property value="getText('label.ai.relations.typeOfRelation')" />:
+				<label for="selectTypeOfYourRelation"><s:property value="getText('label.ai.relations.typeOfRelation')" />:</label>
 			</td>
 			<td>
-				<s:label>TODO: relation list</s:label>
-				<%-- <s:select id="relationList" list="relationList" />--%>
+				<s:select theme="simple" id="selectTypeOfYourRelation" list="typeYourRelationList"></s:select>
 			</td>
 		</tr>
 
@@ -64,11 +63,10 @@
 				<s:property value="getText('label.ai.relations.institutionRelation')" />
 			</td>
 			<td id="tdInstitutionTypeOfRelation">
-				<s:property value="getText('label.ai.relations.institutionTypeOfRelation')" />:
+				<label for="selectTypeOftheRelation"><s:property value="getText('label.ai.relations.institutionTypeOfRelation')" />:</label>
 			</td>
 			<td>
-				<s:label>TODO: institution relation list</s:label>
-				<%-- <s:select id="institutionRelationList" list="institutionRelationList" />--%>
+				<s:select theme="simple" id="selectTypeOftheRelation" list="typeTheRelationList"></s:select>
 			</td>
 		</tr>
 

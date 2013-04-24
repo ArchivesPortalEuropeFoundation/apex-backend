@@ -45,9 +45,25 @@ public class WebFormEAG2012Action extends ActionSupport {
 	private static final String OPTION_ASIA = "asia";				// Constant for value "asia".
 	private static final String OPTION_AUSTRALIA = "australia";		// Constant for value "australia".
 
+	private static final String OPTION_DEPENDING = "depending";		// Constant for value "depending".
+	private static final String OPTION_WITHOUT = "without";			// Constant for value "without".
+
+	private static final String OPTION_CREATOR = "creator";			// Constant for value "creator".
+	private static final String OPTION_SUBJECT = "subject";			// Constant for value "subject".
+	private static final String OPTION_OTHER = "other";				// Constant for value "other".
+
+	private static final String OPTION_CHILD = "child";				// Constant for value "child".
+	private static final String OPTION_PARENT = "parent";			// Constant for value "parent".
+	private static final String OPTION_EARLIER = "earlier";			// Constant for value "earlier".
+	private static final String OPTION_LATER = "later";				// Constant for value "later".
+	private static final String OPTION_ASSOCIATIVE = "associative";	// Constant for value "associative".
+
     private Map<String,String> yesNoMap = new HashMap<String,String>();
     private Map<String,String> typeOfInstitutionMap = new LinkedHashMap<String,String>();
     private Map<String,String> continentOfInstitutionMap = new LinkedHashMap<String,String>();
+    private Map<String,String> photographMap = new LinkedHashMap<String,String>();
+    private Map<String,String> typeYourRelationMap = new LinkedHashMap<String,String>();
+    private Map<String,String> typeTheRelationMap = new LinkedHashMap<String,String>();
 
 	// Attributes.
 	// Common to various tabs.
@@ -149,6 +165,45 @@ public class WebFormEAG2012Action extends ActionSupport {
 		return this.getContinentOfInstitutionMap();
 	}
 
+	public Map<String,String> getPhotographList() {
+		this.getPhotographMap().put(WebFormEAG2012Action.OPTION_NONE, "---");
+		this.getPhotographMap().put(WebFormEAG2012Action.OPTION_DEPENDING,
+				getText("label.ai.tabs.commons.option.photograph.depending"));
+		this.getPhotographMap().put(WebFormEAG2012Action.OPTION_YES, getText("label.ai.tabs.commons.option.yes"));
+		this.getPhotographMap().put(WebFormEAG2012Action.OPTION_WITHOUT,
+				getText("label.ai.tabs.commons.option.photograph.without"));
+		this.getPhotographMap().put(WebFormEAG2012Action.OPTION_NO, getText("label.ai.tabs.commons.option.no"));
+
+		return this.getPhotographMap();
+	}
+
+	public Map<String,String> getTypeYourRelationList() {
+		this.getTypeYourRelationMap().put(WebFormEAG2012Action.OPTION_CREATOR,
+				getText("label.ai.tabs.commons.option.typeYourRelation.creator"));
+		this.getTypeYourRelationMap().put(WebFormEAG2012Action.OPTION_SUBJECT,
+				getText("label.ai.tabs.commons.option.typeYourRelation.subject"));
+		this.getTypeYourRelationMap().put(WebFormEAG2012Action.OPTION_OTHER,
+				getText("label.ai.tabs.commons.option.typeYourRelation.other"));
+
+		return this.getTypeYourRelationMap();
+	}
+
+	public Map<String,String> getTypeTheRelationList() {
+		this.getTypeTheRelationMap().put(WebFormEAG2012Action.OPTION_NONE, "---");
+		this.getTypeTheRelationMap().put(WebFormEAG2012Action.OPTION_CHILD,
+				getText("label.ai.tabs.commons.option.typeTheRelation.child"));
+		this.getTypeTheRelationMap().put(WebFormEAG2012Action.OPTION_PARENT,
+				getText("label.ai.tabs.commons.option.typeTheRelation.parent"));
+		this.getTypeTheRelationMap().put(WebFormEAG2012Action.OPTION_EARLIER,
+				getText("label.ai.tabs.commons.option.typeTheRelation.earlier"));
+		this.getTypeTheRelationMap().put(WebFormEAG2012Action.OPTION_LATER,
+				getText("label.ai.tabs.commons.option.typeTheRelation.later"));
+		this.getTypeTheRelationMap().put(WebFormEAG2012Action.OPTION_ASSOCIATIVE,
+				getText("label.ai.tabs.commons.option.typeTheRelation.associative"));
+
+		return this.getTypeTheRelationMap();
+	}
+
 	// Getters and setters.
 	/**
 	 * @return the yesNoMap
@@ -191,6 +246,48 @@ public class WebFormEAG2012Action extends ActionSupport {
 	public void setContinentOfInstitutionMap(
 			Map<String, String> continentOfInstitutionMap) {
 		this.continentOfInstitutionMap = continentOfInstitutionMap;
+	}
+
+	/**
+	 * @return the photographMap
+	 */
+	public Map<String, String> getPhotographMap() {
+		return this.photographMap;
+	}
+
+	/**
+	 * @param photographMap the photographMap to set
+	 */
+	public void setPhotographMap(Map<String, String> photographMap) {
+		this.photographMap = photographMap;
+	}
+
+	/**
+	 * @return the typeYourRelationMap
+	 */
+	public Map<String, String> getTypeYourRelationMap() {
+		return this.typeYourRelationMap;
+	}
+
+	/**
+	 * @param typeYourRelationMap the typeYourRelationMap to set
+	 */
+	public void setTypeYourRelationMap(Map<String, String> typeYourRelationMap) {
+		this.typeYourRelationMap = typeYourRelationMap;
+	}
+
+	/**
+	 * @return the typetheRelationMap
+	 */
+	public Map<String, String> getTypeTheRelationMap() {
+		return this.typeTheRelationMap;
+	}
+
+	/**
+	 * @param typetheRelationMap the typeTheRelationMap to set
+	 */
+	public void setTypeTheRelationMap(Map<String, String> typeTheRelationMap) {
+		this.typeTheRelationMap = typeTheRelationMap;
 	}
 
 	/**

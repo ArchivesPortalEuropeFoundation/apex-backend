@@ -25,6 +25,13 @@
 		</tr>
 
 		<tr>
+			<td>
+			</td>
+			<td colspan="2">
+			</td>
+		</tr>
+
+		<tr>
 			<td id="tdDateOfRepositoryFoundation">
 				<s:property value="getText('label.ai.description.dateOfRepositoryFoundation')" />:
 			</td>
