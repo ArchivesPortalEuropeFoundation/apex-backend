@@ -53,7 +53,7 @@
 						$(this).hide();
 					});
 					//send first tab
-					$("table#yourInstitutionTabContent_1 input#buttonYourInstitutionTabSave").click(clickAction);
+					$("table#yourInstitutionTabContent_1 input#buttonYourInstitutionTabSave").click(clickYourInstitutionAction);
 				});
 			</script>
 			<div id="tab-yourInstitution">

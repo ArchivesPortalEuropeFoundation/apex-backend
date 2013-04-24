@@ -4,7 +4,7 @@ function hideAndShow(idPrefix,shown){
 	});
 	$("div[id='"+shown+"']").show();
 }
-var clickAction = function(){
+var clickYourInstitutionAction = function(){
 	
 	var jsonData = "{";
 	
@@ -22,40 +22,77 @@ var clickAction = function(){
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 		});
+	
+		//institutions
+		var formData = new Array();
+		$("table[id^='yourInstitutionTabContent_']").each(function(){
+			var id = $(this).attr("id");
+			if(id.indexOf("#")>-1){
+				id = id.substring(id.indexOf("#"));
+			}
+			formData.push(id);
+		});
+		jsonData += ",'institutions':[";
+		for(var i=0;i<formData.length;i++){
+			if(jsonData.substring(jsonData.length-1)!='['){
+				jsonData += ",";
+			}
+			jsonData += "{'"+formData[i]+"':";
+			//input type text
+			$("#"+formData[i]+" input[type='text']").each(function(){
+				if(jsonData.charAt(jsonData.length-1)!=':'){
+					jsonData += ",";
+				}
+				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			});
+			//select options selected
+			$("#"+formData[i]+" select").each(function(){
+				if(jsonData.charAt(jsonData.length-1)!=':'){
+					jsonData += ",";
+				}
+				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			});
+			jsonData += "}";
+		}
 		
-	
-	
-	//institutions
-	var formData = new Array();
-	$("table[id^='yourInstitutionTabContent_']").each(function(){
-		var id = $(this).attr("id");
-		if(id.indexOf("#")>-1){
-			id = id.substring(id.indexOf("#"));
-		}
-		formData.push(id);
-	});
-	jsonData += ",'institutions':[";
-	for(var i=0;i<formData.length;i++){
-		if(jsonData.substring(jsonData.length-1)!='['){
-			jsonData += ",";
-		}
-		jsonData += "{'"+formData[i]+"':";
-		//input type text
-		$("#"+formData[i]+" input[type='text']").each(function(){
-			if(jsonData.charAt(jsonData.length-1)!=':'){
+	jsonData += "]}";
+//	alert(jsonData);
+};
+var clickIdentityAction = function(){
+	var jsonData = "{";
+		//content before institutions part
+		$("table#identityTable input[type='text']").each(function(){
+			if(jsonData.length>1){
 				jsonData += ",";
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 		});
 		//select options selected
-		$("#"+formData[i]+" select").each(function(){
+		$("table#identityTable select").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'){
 				jsonData += ",";
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 		});
-		jsonData += "}";
-	}
 	jsonData += "]}";
-	//alert(jsonData);
-}
+//	alert(jsonData);
+};
+var clickContactAction = function(){
+	var jsonData = "{";
+		//content before institutions part
+		$("table#contactTable input[type='text']").each(function(){
+			if(jsonData.length>1){
+				jsonData += ",";
+			}
+			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		});
+		//select options selected
+		$("table#identityTable select").each(function(){
+			if(jsonData.charAt(jsonData.length-1)!=':'){
+				jsonData += ",";
+			}
+			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		});
+	jsonData += "]}";
+//	alert(jsonData);
+};

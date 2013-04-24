@@ -146,7 +146,7 @@
 							$("table#"+localId).show();
 						});
 						//current tab
-						$("table#yourInstitutionTabContent_"+(counter+1)+" input#buttonYourInstitutionTabSave").click(clickAction);
+						$("table#yourInstitutionTabContent_"+(counter+1)+" input#buttonYourInstitutionTabSave").click(clickYourInstitutionAction);
 					});
 				</script>
 			</td>

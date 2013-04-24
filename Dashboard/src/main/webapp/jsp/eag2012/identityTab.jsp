@@ -9,10 +9,8 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<s:property value="#countryCode" />
-				<s:fielderror fieldName="countryCodeOfTheInstitution"/>
-			</td>
-			<td colspan="2">
+				<input type="text" id="textIdentityCountryCodeOfTheInstitution" value="<s:property value="#countryCode" />" disabled="disabled" />
+				<s:fielderror fieldName="textIdentityCountryCodeOfTheInstitution"/>
 			</td>
 		</tr>
 
@@ -22,24 +20,24 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<s:property value="#identifierOfTheInstitution" />
-				<s:fielderror fieldName="identifierOfTheInstitution"/>
+				<input type="text" id="textIdentityIdentifierOfTheInstitution" value="<s:property value="#identifierOfTheInstitution" />" disabled="disabled" />
+				<s:fielderror fieldName="textIdentityIdentifierOfTheInstitution"/>
 			</td>
 			<td id="tdIdUsedInAPE">
 				<s:property value="getText('label.ai.tabs.commons.idUsedInAPE')" />:
 			</td>
 			<td>
-				<s:property value="#idUsedInAPE" />
+				<input type="text" id="textIdentityIdUsedInAPE" value="<s:property value="#idUsedInAPE" />" disabled="disabled" />
 			</td>
 		</tr>
 
-		<tr>
+		<tr id="trNameOfTheInstitution">
 			<td id="tdNameOfTheInstitution">
 				<s:property value="getText('label.ai.tabs.commons.nameOfTheInstitution')" />
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<s:property value="#nameOfTheInstitution" />
+				<input type="text" id="textIdentityIdUsedInAPE" value="<s:property value="#nameOfTheInstitution" />" disabled="disabled" />
 				<s:fielderror fieldName="nameOfTheInstitution"/>
 			</td>
 			<td id="tdNameOfTheInstitutionLanguage">
@@ -52,8 +50,28 @@
 			</td>
 		</tr>
 
-		<tr id="tr4">
-			<td colspan="2"><input type="button" value="<s:property value='getText("label.ai.identity.addAnotherFormOfTheAuthorizedName")' />" class="longButton" /></td>
+		<tr>
+			<td colspan="2"><input id="buttonAddAnotherFormOfTheAuthorizedName" type="button" value="<s:property value='getText("label.ai.identity.addAnotherFormOfTheAuthorizedName")' />" class="longButton" /></td>
+			<script type="text/javascript">
+				$("table#identityTable input#buttonAddAnotherFormOfTheAuthorizedName").click(function(){
+					var count = $("table#identityTable tr[id^='trNameOfTheInstitution']").length;
+					var newId = "trNameOfTheInstitution_"+(count+1);
+					var trHtml = "<tr id=\""+newId+"\">"+$("table#identityTable tr[id^='trNameOfTheInstitution']").clone().html()+"</tr>";
+					var lastId = "table#identityTable tr#trNameOfTheInstitution";
+					if(count>1){
+						lastId+="_"+(count);
+					}
+					$(lastId).after(trHtml);
+					//update last content
+					$("#"+newId+" input#textIdentityIdUsedInAPE").attr("id","textIdentityIdUsedInAPE_"+(count+1));
+					$("#"+newId+" td#tdNameOfTheInstitution").attr("id","tdNameOfTheInstitution_"+(count+1));
+					$("#"+newId+" input#textIdentityIdUsedInAPE_"+(count+1)).attr("value","");
+					$("#"+newId+" input#textIdentityIdUsedInAPE_"+(count+1)).removeAttr("disabled");
+					$("#"+newId+" td#tdNameOfTheInstitutionLanguage").attr("id","tdNameOfTheInstitutionLanguage_"+(count+1));
+					$("#"+newId+" label[for='noti_languageList']").attr("for","noti_languageList_"+(count+1));
+					$("#"+newId+" select#noti_languageList").attr("id","noti_languageList_"+(count+1));
+				});
+			</script>
 		</tr>
 
 		<tr class="marginTop">
@@ -136,7 +154,7 @@
 				<label for="textSelectTypeOfTheInstitution"><s:property value="getText('label.ai.identity.selectTypeOfTheInstitution')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectTypeOfTheInstitution" list="typeOfInstitutionList" ></s:select>
+				<s:select theme="simple" id="selectTypeOfTheInstitution" list="typeOfInstitutionList" cssStyle="max-width:300px;" ></s:select>
 			</td>
 			<td colspan="2">
 			</td>
@@ -144,9 +162,13 @@
 
 		<tr>
 			<td id="tdButtonsContactTab" colspan="4">
-				<input type="button" id="buttonContactTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
-				<input type="button" id="buttonContactTabExit" value="<s:property value='getText("label.ai.tabs.commons.button.exit")' />" class="rightButton" />
-				<input type="button" id="buttonContactTabSave" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" />
+				<input type="button" id="buttonIdentityTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
+				<input type="button" id="buttonIdentityTabExit" value="<s:property value='getText("label.ai.tabs.commons.button.exit")' />" class="rightButton" />
+				<input type="button" id="buttonIdentityTabSave" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" />
+				<script type="text/javascript">
+					//current tab
+					$("table#identityTable input#buttonIdentityTabSave").click(clickIdentityAction);
+				</script>
 			</td>
 		</tr>
 	</table>
