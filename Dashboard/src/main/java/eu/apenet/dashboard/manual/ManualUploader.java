@@ -352,6 +352,7 @@ public abstract class ManualUploader {
                         	}
                         	newRecordIdValue+=archivalInstitutionId.toString();
                         	DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
+                            dbfac.setNamespaceAware(true);
                     		DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
                     		Document tempDoc = docBuilder.parse(fullFileName);
                     		NodeList recordsIds = tempDoc.getElementsByTagName("recordId");
