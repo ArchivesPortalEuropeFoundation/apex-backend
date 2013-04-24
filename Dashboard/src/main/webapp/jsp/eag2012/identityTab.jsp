@@ -74,7 +74,7 @@
 			</script>
 		</tr>
 
-		<tr class="marginTop">
+		<tr class="marginTop" id="trParallelNameOfTheInstitution" >
 			<td>
 				<label for="textParallelNameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.parallelNameOfTheInstitution')" />:</label>
 			</td>
@@ -91,20 +91,39 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" value="<s:property value='getText("label.ai.identity.addAnotherParallelNameOfTheInstitution")' />" class="longButton" />
-			</td>
-			<td colspan="2">
+				<input type="button" id="buttonAddParallelNameOfTheInstitution" value="<s:property value='getText("label.ai.identity.addAnotherParallelNameOfTheInstitution")' />" class="longButton" />
+				<script type="text/javascript">
+					$("table#identityTable input#buttonAddParallelNameOfTheInstitution").click(function(){
+						var count = $("table#identityTable tr[id^='trParallelNameOfTheInstitution']").length;
+						var newId = "trParallelNameOfTheInstitution_"+(count+1);
+						var trHtml = "<tr id=\""+newId+"\">"+$("table#identityTable tr[id^='trParallelNameOfTheInstitution']").clone().html()+"</tr>";
+						var lastId = "table#identityTable tr#trParallelNameOfTheInstitution";
+						if(count>1){
+							lastId+="_"+(count);
+						}
+						$(lastId).after(trHtml);
+						//update last content
+						$("#"+newId+" input#textParallelNameOfTheInstitution").attr("id","textParallelNameOfTheInstitution_"+(count+1));
+						$("#"+newId+" td#tdNameOfTheInstitutionLanguage").attr("id","tdNameOfTheInstitutionLanguage_"+(count+1));
+						$("#"+newId+" label[for='textParallelNameOfTheInstitution']").attr("for","textParallelNameOfTheInstitution_"+(count+1));
+						$("#"+newId+" input#textParallelNameOfTheInstitution").attr("id","textParallelNameOfTheInstitution_"+(count+1));
+						$("#"+newId+" input#textParallelNameOfTheInstitution_"+(count+1)).attr("value","");
+						$("#"+newId+" td#tdNameOfTheInstitutionLanguage").attr("id","tdNameOfTheInstitutionLanguage_"+(count+1));
+						$("#"+newId+" label[for='pnoti_languageList']").attr("for","pnoti_languageList_"+(count+1));
+						$("#"+newId+" select#pnoti_languageList").attr("id","pnoti_languageList_"+(count+1));
+					});
+				</script>
 			</td>
 		</tr>
 
-		<tr class="marginTop">
+		<tr id="trTextFormerlyUsedName" class="marginTop">
 			<td>
 				<label for="textFormerlyUsedName"><s:property value="getText('label.ai.identity.formerlyUsedName')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textFormerlyUsedName" value=""/>
 			</td>
-			<td id="tdTextFormerlyUsedName">
+			<td>
 				<label for="tfun_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
@@ -112,13 +131,13 @@
 			</td>
 		</tr>
 
-		<tr>
+		<tr id="trLabelDatesWhenThisNameWasUsed">
 			<td colspan="4">
 				<label for="textDatesWhenThisNameWasUsed"><s:property value="getText('label.ai.identity.datesWhenThisNameWasUsed')" />:</label>
 			</td>
 		</tr>
 
-		<tr>
+		<tr id="trDatesWhenThisNameWasUsed">
 			<td>
 				<label for="textDatesWhenThisNameWasUsedFrom"><s:property value="getText('label.ai.tabs.commons.textFrom')" />:</label>
 			</td>
@@ -136,14 +155,50 @@
 		<tr>
 			<td>
 				<input type="button" id="buttonAddMoreDates" value="<s:property value='getText("label.ai.identity.addMoreDates")' />" class="longButton" />
+				<script type="text/javascript">
+					$("table#identityTable input#buttonAddMoreDates").click(function(){
+						var count = $("table#identityTable tr[id^='trDatesWhenThisNameWasUsed']").length;
+						var newId = "trDatesWhenThisNameWasUsed_"+(count+1);
+						var trHtml = "<tr id=\""+newId+"\">"+$("table#identityTable tr[id^='trDatesWhenThisNameWasUsed']").clone().html()+"</tr>";
+						var lastId = "table#identityTable tr#trDatesWhenThisNameWasUsed";
+						if(count>1){
+							lastId+="_"+(count);
+						}
+						$(lastId).after(trHtml);
+						//update last content
+						$("#"+newId+" label[for='textDatesWhenThisNameWasUsedFrom']").attr("for","textDatesWhenThisNameWasUsedFrom_"+(count+1));
+						$("#"+newId+" label[for='textDatesWhenThisNameWasUsedTo']").attr("for","textDatesWhenThisNameWasUsedTo_"+(count+1));
+						$("#"+newId+" input#textDatesWhenThisNameWasUsedFrom").attr("id","textDatesWhenThisNameWasUsedFrom_"+(count+1));
+						$("#"+newId+" input#textDatesWhenThisNameWasUsedTo").attr("id","textDatesWhenThisNameWasUsedTo_"+(count+1));
+						$("#"+newId+" tr#trDatesWhenThisNameWasUsed").attr("id","trDatesWhenThisNameWasUsed_"+(count+1));
+					});
+				</script>
 			</td>
 			<td colspan="3">
 			</td>
 		</tr>
 
-		<tr>
+		<tr id="trAddMoreAnotherFormerlyUsedName">
 			<td colspan="2">
 				<input type="button" id="buttonAddMoreAnotherFormerlyUsedName" value="<s:property value='getText("label.ai.identity.addAnotherFormerlyUsedName")' />" class="longButton" />
+				<script type="text/javascript">
+				$("table#identityTable input#buttonAddMoreAnotherFormerlyUsedName").click(function(){
+					var count = $("table#identityTable tr[id^='trTextFormerlyUsedName']").length;
+					var newId = "trTextFormerlyUsedName_"+(count+1);
+					var trHtml = "<tr id=\""+newId+"\">"+$("table#identityTable tr[id^='trTextFormerlyUsedName']").clone().html()+"</tr>";
+					var lastId = "table#identityTable tr#trTextFormerlyUsedName";
+					if(count>1){
+						lastId+="_"+(count);
+					}
+					$(lastId).after(trHtml);
+					//update last content
+					$("#"+newId+" tr#trTextFormerlyUsedName").attr("id","trTextFormerlyUsedName_"+(count+1));
+					$("#"+newId+" label[for='textFormerlyUsedName']").attr("for","textFormerlyUsedName_"+(count+1));
+					$("#"+newId+" input#textFormerlyUsedName").attr("id","textFormerlyUsedName_"+(count+1));
+					$("#"+newId+" label[for='tfun_languageList']").attr("for","tfun_languageList_"+(count+1));
+					$("#"+newId+" select#tfun_languageList").attr("id","tfun_languageList_"+(count+1));
+				});
+				</script>
 			</td>
 			<td colspan="2">
 			</td>
