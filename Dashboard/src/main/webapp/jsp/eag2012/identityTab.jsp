@@ -136,8 +136,7 @@
 				<label for="textSelectTypeOfTheInstitution"><s:property value="getText('label.ai.identity.selectTypeOfTheInstitution')" />:</label>
 			</td>
 			<td>
-				<s:label>TODO: Type list</s:label>
-				<%-- <s:select id="typeList" list="typeList" />--%>
+				<s:select theme="simple" id="selectTypeOfTheInstitution" list="typeOfInstitutionList" ></s:select>
 			</td>
 			<td colspan="2">
 			</td>

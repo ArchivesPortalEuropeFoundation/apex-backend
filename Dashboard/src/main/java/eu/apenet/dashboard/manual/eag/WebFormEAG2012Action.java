@@ -1,6 +1,7 @@
 package eu.apenet.dashboard.manual.eag;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -19,6 +20,34 @@ public class WebFormEAG2012Action extends ActionSupport {
 	/**
 	 * This action is used to render the EAG2012 webform.
 	 */
+
+	private static final String OPTION_YES = "yes";	// Constant for value "yes".
+	private static final String OPTION_NO = "no";	// Constant for value "no".
+
+	private static final String OPTION_NONE = "none";				// Constant for value "none".
+	private static final String OPTION_NATIONAL = "national";		// Constant for value "national".
+	private static final String OPTION_REGIONAL = "regional";		// Constant for value "regional".
+	private static final String OPTION_COUNTY = "county";			// Constant for value "county".
+	private static final String OPTION_MUNICIPAL = "municipal";		// Constant for value "municipal".
+	private static final String OPTION_SPECIALISED = "specialised";	// Constant for value "specialised".
+	private static final String OPTION_PRIVATE = "private";			// Constant for value "private".
+	private static final String OPTION_CHURCH = "church";			// Constant for value "church".
+	private static final String OPTION_BUSINESS = "business";		// Constant for value "business".
+	private static final String OPTION_UNIVERSITY = "university";	// Constant for value "university".
+	private static final String OPTION_MEDIA = "media";				// Constant for value "media".
+	private static final String OPTION_POLITICAL = "political";		// Constant for value "political".
+	private static final String OPTION_CULTURAL = "cultural";		// Constant for value "cultural".
+
+	private static final String OPTION_EUROPE = "europe";			// Constant for value "europe".
+	private static final String OPTION_AFRICA = "africa";			// Constant for value "africa".
+	private static final String OPTION_AMERICA = "america";			// Constant for value "america".
+	private static final String OPTION_ANTARCTICA = "antarctica";	// Constant for value "antarctica".
+	private static final String OPTION_ASIA = "asia";				// Constant for value "asia".
+	private static final String OPTION_AUSTRALIA = "australia";		// Constant for value "australia".
+
+    private Map<String,String> yesNoMap = new HashMap<String,String>();
+    private Map<String,String> typeOfInstitutionMap = new LinkedHashMap<String,String>();
+    private Map<String,String> continentOfInstitutionMap = new LinkedHashMap<String,String>();
 
 	// Attributes.
 	// Common to various tabs.
@@ -58,14 +87,112 @@ public class WebFormEAG2012Action extends ActionSupport {
 
 	public Map<String,String> getLanguageList() {
 		Locale[] locales = Locale.getAvailableLocales();
-		Map<String,String> languages = new HashMap<String,String>();
+		Map<String,String> languages = new LinkedHashMap<String,String>();
+		languages.put(WebFormEAG2012Action.OPTION_NONE, "---");
 		for (int i = 0; i < locales.length; i++) {
 			languages.put(locales[i].getCountry(), locales[i].getDisplayLanguage(Locale.ENGLISH));
 		}
 		return languages;
 	}
 
+	public Map<String,String> getYesNoList() {
+		this.getYesNoMap().put(WebFormEAG2012Action.OPTION_YES, getText("label.ai.tabs.commons.option.yes"));
+		this.getYesNoMap().put(WebFormEAG2012Action.OPTION_NO, getText("label.ai.tabs.commons.option.no"));
+
+		return this.getYesNoMap();
+	}
+
+	public Map<String,String> getTypeOfInstitutionList() {
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_NONE, "---");
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_NATIONAL,
+				getText("label.ai.tabs.commons.option.institutionType.nationalArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_REGIONAL,
+				getText("label.ai.tabs.commons.option.institutionType.regionalArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_COUNTY,
+				getText("label.ai.tabs.commons.option.institutionType.countyArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_MUNICIPAL,
+				getText("label.ai.tabs.commons.option.institutionType.municipalArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_SPECIALISED,
+				getText("label.ai.tabs.commons.option.institutionType.specialisedArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_PRIVATE,
+				getText("label.ai.tabs.commons.option.institutionType.privateArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_CHURCH,
+				getText("label.ai.tabs.commons.option.institutionType.churchArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_BUSINESS,
+				getText("label.ai.tabs.commons.option.institutionType.businessArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_UNIVERSITY,
+				getText("label.ai.tabs.commons.option.institutionType.universityArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_MEDIA,
+				getText("label.ai.tabs.commons.option.institutionType.mediaArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_POLITICAL,
+				getText("label.ai.tabs.commons.option.institutionType.politicalArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_CULTURAL,
+				getText("label.ai.tabs.commons.option.institutionType.culturalArchives"));
+
+		return this.getTypeOfInstitutionMap();
+	}
+
+	public Map<String,String> getContinentOfTheInstitutionList() {
+		this.getContinentOfInstitutionMap().put(WebFormEAG2012Action.OPTION_EUROPE,
+				getText("label.ai.tabs.commons.option.continent.europe"));
+		this.getContinentOfInstitutionMap().put(WebFormEAG2012Action.OPTION_AFRICA,
+				getText("label.ai.tabs.commons.option.continent.africa"));
+		this.getContinentOfInstitutionMap().put(WebFormEAG2012Action.OPTION_AMERICA,
+				getText("label.ai.tabs.commons.option.continent.america"));
+		this.getContinentOfInstitutionMap().put(WebFormEAG2012Action.OPTION_ANTARCTICA,
+				getText("label.ai.tabs.commons.option.continent.antarctica"));
+		this.getContinentOfInstitutionMap().put(WebFormEAG2012Action.OPTION_ASIA,
+				getText("label.ai.tabs.commons.option.continent.asia"));
+		this.getContinentOfInstitutionMap().put(WebFormEAG2012Action.OPTION_AUSTRALIA,
+				getText("label.ai.tabs.commons.option.continent.australia"));
+
+		return this.getContinentOfInstitutionMap();
+	}
+
 	// Getters and setters.
+	/**
+	 * @return the yesNoMap
+	 */
+	public Map<String,String> getYesNoMap() {
+		return this.yesNoMap;
+	}
+
+	/**
+	 * @param yesNoSet the yesNoMap to set
+	 */
+	public void setYesNoMap(Map<String,String> yesNoMap) {
+		this.yesNoMap = yesNoMap;
+	}
+
+	/**
+	 * @return the typeOfInstitutionMap
+	 */
+	public Map<String, String> getTypeOfInstitutionMap() {
+		return this.typeOfInstitutionMap;
+	}
+
+	/**
+	 * @param typeOfInstitutionMap the typeOfInstitutionMap to set
+	 */
+	public void setTypeOfInstitutionMap(Map<String, String> typeOfInstitutionMap) {
+		this.typeOfInstitutionMap = typeOfInstitutionMap;
+	}
+
+	/**
+	 * @return the continentOfInstitutionMap
+	 */
+	public Map<String, String> getContinentOfInstitutionMap() {
+		return this.continentOfInstitutionMap;
+	}
+
+	/**
+	 * @param continentOfInstitutionMap the continentOfInstitutionMap to set
+	 */
+	public void setContinentOfInstitutionMap(
+			Map<String, String> continentOfInstitutionMap) {
+		this.continentOfInstitutionMap = continentOfInstitutionMap;
+	}
+
 	/**
 	 * @return the repositoridCountryCode
 	 */

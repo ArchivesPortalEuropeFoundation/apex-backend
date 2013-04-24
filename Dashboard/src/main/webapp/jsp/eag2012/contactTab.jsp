@@ -168,7 +168,7 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<s:property value="#continentOfTheInstitution" />
+				<s:select theme="simple" id="selectContinentOfTheInstitution" list="continentOfTheInstitutionList" ></s:select>
 				<s:fielderror fieldName="continentOfTheInstitution" />
 			</td>
 			<td colspan="2" ></td>

@@ -346,10 +346,7 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<select id="selectAccessibleToThePublic" >
-					<option value="yes"><s:property value="getText('label.ai.yourinstitution.yes')" /></option>
-					<option value="no"><s:property value="getText('label.ai.yourinstitution.no')" /></option>
-				</select>
+				<s:select theme="simple" id="selectAccessibleToThePublic" list="yesNoList"></s:select>
 				<s:fielderror fieldName="yourInstitutionAccesibleToPublic"/>
 			</td>
 			<td colspan="2">
@@ -363,10 +360,7 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<select id="selectFacilitiesForDisabledPeopleAvailable" >
-					<option value="yes"><s:property value="getText('label.ai.yourinstitution.yes')" /></option>
-					<option value="no"><s:property value="getText('label.ai.yourinstitution.no')" /></option>
-				</select>
+				<s:select theme="simple" id="selectFacilitiesForDisabledPeopleAvailable" list="yesNoList"></s:select>
 				<s:fielderror fieldName="yourInstitutionFacilitiesForDisabledPeople"/>
 			</td>
 			<td colspan="2">
