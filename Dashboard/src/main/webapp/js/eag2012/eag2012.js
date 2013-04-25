@@ -2,7 +2,11 @@ function hideAndShow(idPrefix,shown){
 	$("div[id^='"+idPrefix+"']").each(function(){
 		$(this).hide();
 	});
+	$("ul#eag2012TabsContainer li a[href^='#tab']").each(function(){
+		$(this).removeClass("eag2012currenttab");
+	});
 	$("div[id='"+shown+"']").show();
+	$("ul#eag2012TabsContainer li a[href='#"+shown+"']").addClass("eag2012currenttab");
 }
 
 var clickYourInstitutionAction = function(){

@@ -1,5 +1,168 @@
 @CHARSET "UTF-8";
 
+
+
+#eag2012Tabs{
+	float:left;
+	width:100%;
+	/*font-size:15px;
+	font-weight:bold;*/
+	line-height:normal;	
+	
+}
+
+#eag2012TabsContainer {
+   /* border: 1px solid #00A0DF;*/
+  width:100%;
+
+}
+
+#container{
+	
+	background-image: url(../images/eag2012/tabbg.jpg);
+    border-color: #79B7E7 #79B7E7 -moz-use-text-color;
+    border-style: solid solid none;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 25px;
+    border-width: 1px 1px solid;
+    float: left;
+    width:100%;	
+}
+#eag2012Tabs ul{         
+	margin:0;
+	padding:0;
+	list-style:none outside none;
+	height:24px;
+	
+/*	 border: 1px solid #00A0DF;*/
+}
+
+
+#eag2012Tabs li{
+float:left;
+padding:0;
+/*border-top-right-radius:5px;
+border-top-left-radius:5px;*/
+border:1px solid #006699;
+
+background-image: url(../images/eag2012/tabbg.jpg);
+    border-color: #79B7E7 #79B7E7 -moz-use-text-color;
+ /*   border-style: solid solid none;*/
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  /*  border-width: 1px 1px solid;*/
+}
+
+#eag2012Tabs li:hover{
+	
+border-botton-left-radius:5px;
+border-top-left-radius:5px;
+border:1px solid #006699;	
+background: #00A0DF;	
+	
+}
+#eag2012Tabs li a{
+padding:3px 10px 3px 10px;
+display:block;
+text-decoration:none;
+color:black;
+font-size:1.2em;
+font-weight:bold;
+
+}
+/* contenido de las tabs*/
+
+#eag2012Tabs li a:hover{
+	background: #00A0DF;
+	color:black;
+}
+
+#eag2012Tabs li a:active{
+	background: #00A0DF;
+	color:black;
+}
+
+#eag2012Tabs li a:after, .eag2012currenttab{
+	color:gray;
+	background: #00A0DF;	
+	
+}
+#eag2012Div li .tab-yourInstitution{
+background: #00A0DF;	
+	
+}
+
+#eag2012Div table {
+	float: left;
+	width: 100%;
+	font-size:1em;
+	
+}
+
+#eag2012Div td, th {
+	/*border: solid 1px #999999;*/
+  	width: 25%;
+}
+#eag2012Div td label{
+	
+	width:auto;
+	
+}
+
+#eag2012Div input{
+	/*background-color: #00A0DF;*/
+    color: black;
+    font-weight: bold;
+	
+}
+#eag2012Div .longButton{
+	float: left;
+	width: 60%;
+}
+#eag2012Div .middleText{
+	float: left;
+	width: 50%;
+}
+#eag2012Div .rightButton{
+	float: right;
+	width: 10%;
+}
+#eag2012Div .marginTop{
+	margin-top: 15px;
+}
+
+#eag2012Div #tab-contact td#visitorAdressLabel, #postalAddressLabel, #coordinatesLabel,
+#repositoryLabel, #administrativeLabel, #buildingLabel, #holdingLabel, #usedLanguagesLabel,
+#usedRulesLabel, #resourceLabel, #institutionLabel, #searchroomLabel, #libraryLabel,
+#internetAccessLabel, #technicalServicesLabel, #restaurationLabLabel, #reproductionServiceLabel,
+#recreationalServiceLabel {
+	font-weight: bold;
+}
+
+textarea {
+    height: 100px;
+    width: 200px;
+}
+
+
+input[type="button"] {
+	background:#00A0DF;
+	border-color: #0174DF;
+	border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+}
+
+input[type="text"] {
+    width: 200px;
+  /* background:#00A0DF;*/
+
+}
+
+
+
+/*
+
 #eag2012Div #eag2012Tabs {
 	border: none;
 
@@ -120,4 +283,4 @@
 
 p.required {
 	color: red;
-}
+}*/

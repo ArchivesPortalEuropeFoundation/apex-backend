@@ -5,9 +5,9 @@
 
 <div id="eag2012Div">
 	<form id="webformeag2012" name="webformeag2012" method="POST" action="createeag2012withmenu.action">
-		<div id="eag2012Tabs">
+		<div id="eag2012Tabs" class="corner-all helper-clearfix">
 			<ul id="eag2012TabsContainer">
-				<li>
+				<li class="tab-yourInstitution">
 					<a href="#tab-yourInstitution"><s:property value="getText('label.ai.tab.yourinstitution.title')" /></a> 
 				</li>
 				<li>
@@ -56,32 +56,34 @@
 					$("table#yourInstitutionTabContent_1 input#buttonYourInstitutionTabSave").click(clickYourInstitutionAction);
 				});
 			</script>
-			<div id="tab-yourInstitution">
+			<div id="container">
+			  <div id="tab-yourInstitution">
 					<jsp:include page="yourInstitutionTab.jsp" />
-			</div>
+			  </div>
 
-			<div id="tab-identity">
+			  <div id="tab-identity">
 					<jsp:include page="identityTab.jsp" />
-			</div>
+			  </div>
 
-			<div id="tab-contact">
+			  <div id="tab-contact">
 					<jsp:include page="contactTab.jsp" />
-			</div>
+			  </div>
 
-			<div id="tab-accessAndServices">
+			  <div id="tab-accessAndServices">
 					<jsp:include page="accessAndServicesTab.jsp" />
-			</div>
+			  </div>
 
-			<div id="tab-description">
+			  <div id="tab-description">
 					<jsp:include page="descriptionTab.jsp" />
-			</div>
+			  </div>
 
-			<div id="tab-control">
+			  <div id="tab-control">
 					<jsp:include page="controlTab.jsp" />
-			</div>
+			  </div>
 
-			<div id="tab-relations">
+			  <div id="tab-relations">
 					<jsp:include page="relationsTab.jsp" />
+			  </div>
 			</div>
 		</div>
 	</form>
