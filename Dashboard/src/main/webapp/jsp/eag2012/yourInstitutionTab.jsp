@@ -138,13 +138,45 @@
 						$("#eag2012tabs_institution_tabs").append("<li><a id=\"tab_"+localId+"\" href=\"#repositories\" ><s:property value="getText('label.ai.yourinstitution.repository')" /> "+(counter)+"</a></li>");
 						$("table#"+localId).show();
 						$("a[id^='tab_']").click(function(){
+							$("a[id^='tab_']").each(function(){
+								$(this).removeClass("eag2012currenttab");
+							});
+							$(this).addClass("eag2012currenttab");
 							var localId = $(this).attr("id");
 							if(localId.indexOf("tab_")==0){
 								localId = localId.substring("tab_".length);
 							}
 							$("table[id^='yourInstitutionTabContent_']").hide();
 							$("table#"+localId).show();
+							//show/hide right tabs and content
+							if(localId.indexOf("_1")>-1){
+								$("ul#eag2012TabsContainer li a").each(function(){
+									var id = $(this).parent().attr("id");
+									if(id.indexOf("tab-yourInstitution")>-1){
+										$(this).removeClass("eag2012disabled");
+									}else if(id.indexOf("tab-identity")>-1){
+										$(this).removeClass("eag2012disabled");
+									}else if(id.indexOf("tab-control")>-1){
+										$(this).removeClass("eag2012disabled");
+									}else if(id.indexOf("tab-relations")>-1){
+										$(this).removeClass("eag2012disabled");
+									}
+								});
+							}else{
+								$("ul#eag2012TabsContainer li a").each(function(){
+									var id = $(this).parent().attr("id");
+									if(id.indexOf("tab-yourInstitution")>-1 || id.indexOf("tab-identity")>-1 || id.indexOf("tab-control")>-1 || id.indexOf("tab-relations")>-1){
+										$(this).addClass("eag2012disabled");
+										$("ul#eag2012TabsContainer a[href='#tab-contact']").trigger('click');
+									}
+								});
+//								if($("ul#eag2012TabsContainer a .eag2012currenttab").hasClass("eag2012disabled")){
+//									$("ul#eag2012TabsContainer a[href='#tab-contact']").trigger('click');
+//								}
+							}
 						});
+						$("a#tab_"+localId).trigger('click');
+						$("a#tab-contact").parent().trigger('click');
 						//current tab
 						$("table#yourInstitutionTabContent_"+(counter+1)+" input#buttonYourInstitutionTabSave").click(clickYourInstitutionAction);
 					});

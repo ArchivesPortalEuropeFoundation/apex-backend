@@ -11,25 +11,25 @@
 				<ul id="eag2012tabs_institution_tabs"></ul>
 			</div>
 			<ul id="eag2012TabsContainer">
-				<li class="tab-yourInstitution">
+				<li id="tab-yourInstitution">
 					<a href="#tab-yourInstitution"><s:property value="getText('label.ai.tab.yourinstitution.title')" /></a> 
 				</li>
-				<li>
+				<li id="tab-identity">
 					<a href="#tab-identity"><s:property value="getText('label.ai.tab.identity.title')" /></a>
 				</li>
-				<li>
+				<li id="tab-contact">
 					<a href="#tab-contact"><s:property value="getText('label.ai.tab.contact.title')" /></a>
 				</li>
-				<li>
+				<li id="tab-accessAndServices">
 					<a href="#tab-accessAndServices"><s:property value="getText('label.ai.tab.accessAndServices.title')" /></a>
 				</li>
-				<li>
+				<li id="tab-description">
 					<a href="#tab-description"><s:property value="getText('label.ai.tab.description.title')" /></a>
 				</li>
-				<li>
+				<li id="tab-control">
 					<a href="#tab-control"><s:property value="getText('label.ai.tab.control.title')" /></a>
 				</li>
-				<li>
+				<li id="tab-relations">
 					<a href="#tab-relations"><s:property value="getText('label.ai.tab.relations.title')" /></a>
 				</li>
 			</ul>
