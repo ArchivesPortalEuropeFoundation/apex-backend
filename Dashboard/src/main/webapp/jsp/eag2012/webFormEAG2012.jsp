@@ -6,6 +6,10 @@
 <div id="eag2012Div">
 	<form id="webformeag2012" name="webformeag2012" method="POST" action="createeag2012withmenu.action">
 		<div id="eag2012Tabs" class="corner-all helper-clearfix">
+			<a name="repositories"></a>
+			<div id="eag2012tabs_institution" style="float:left;width:100%;">
+				<ul id="eag2012tabs_institution_tabs"></ul>
+			</div>
 			<ul id="eag2012TabsContainer">
 				<li class="tab-yourInstitution">
 					<a href="#tab-yourInstitution"><s:property value="getText('label.ai.tab.yourinstitution.title')" /></a> 

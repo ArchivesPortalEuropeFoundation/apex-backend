@@ -109,8 +109,8 @@
 						$("table[id^='yourInstitutionTabContent_']").hide();
 						var localId = "";
 						if(counter==1){
-							localId = "yourInstitutionTabContent_"+counter;
-							$("#eag2012tabs_institution_tabs").append("<li><a id=\"tab_"+localId+"\" href=\"#repositories\" ><s:property value="getText('label.ai.yourinstitution.repository')" /> "+counter+"</a></li>");
+							localId = "yourInstitutionTabContent";
+							$("#eag2012tabs_institution_tabs").append("<li><a id=\"tab_"+localId+"\" href=\"#repositories\" ><s:property value="getText('label.ai.yourinstitution.institution')" /></a></li>");
 						}
 						$("table#yourInstitutionTabContent_"+(counter+1)+" input#buttonFutherAccessInformation").click(function(){
 							$(this).after('<input type="text" id="futherAccessInformation" />');
@@ -135,7 +135,7 @@
 							$(this).hide();
 						});
 						localId = "yourInstitutionTabContent_"+(counter+1);
-						$("#eag2012tabs_institution_tabs").append("<li><a id=\"tab_"+localId+"\" href=\"#repositories\" ><s:property value="getText('label.ai.yourinstitution.repository')" /> "+(counter+1)+"</a></li>");
+						$("#eag2012tabs_institution_tabs").append("<li><a id=\"tab_"+localId+"\" href=\"#repositories\" ><s:property value="getText('label.ai.yourinstitution.repository')" /> "+(counter)+"</a></li>");
 						$("table#"+localId).show();
 						$("a[id^='tab_']").click(function(){
 							var localId = $(this).attr("id");
@@ -152,11 +152,6 @@
 			</td>
 		</tr>
 		</table>
-		<a name="repositories"></a>
-		<div id="eag2012tabs_institution" style="float:left;width:100%;">
-			<ul id="eag2012tabs_institution_tabs"></ul>
-		</div>
-		
 		<table id="yourInstitutionTabContent_1">
 		<tr>
 			<td>
