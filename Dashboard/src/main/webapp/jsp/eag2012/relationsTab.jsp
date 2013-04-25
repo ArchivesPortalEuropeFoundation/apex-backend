@@ -117,9 +117,11 @@
 
 		<tr>
 			<td id="tdButtonsDescriptionTab" colspan="4">
-<%--				<input type="button" id="buttonRelationsTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" /> --%>
-				<input type="button" id="buttonRelationsTabExit" value="<s:property value='getText("label.ai.tabs.commons.button.exit")' />" class="rightButton" />
 				<input type="button" id="buttonRelationsTabSave" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" />
+				<script type="text/javascript">
+					//current tab
+					$("table#relationsTable input#buttonRelationsTabSave").click(clickRelationsAction);
+				</script>
 			</td>
 		</tr>
 

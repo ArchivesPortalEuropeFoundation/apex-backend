@@ -945,7 +945,6 @@
 		<tr>
 			<td id="tdButtonsAccessAndServiceTab" colspan="4">
 				<input type="button" id="buttonAccessAndServiceTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
-				<input type="button" id="buttonAccessAndServiceTabExit" value="<s:property value='getText("label.ai.tabs.commons.button.exit")' />" class="rightButton" />
 				<input type="button" id="buttonAccessAndServicelTabSave" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" />
 				<script type="text/javascript">
 					//current tab

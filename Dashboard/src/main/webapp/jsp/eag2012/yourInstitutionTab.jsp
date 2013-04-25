@@ -418,7 +418,6 @@
 		<tr>
 			<td id="tdButtonsYourInstitutionTab" colspan="4">
 				<input type="button" id="buttonYourInstitutionTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
-				<input type="button" id="buttonYourInstitutionTabExit" value="<s:property value='getText("label.ai.tabs.commons.button.exit")' />" class="rightButton" />
 				<input type="button" id="buttonYourInstitutionTabSave" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" />
 			</td>
 		</tr>

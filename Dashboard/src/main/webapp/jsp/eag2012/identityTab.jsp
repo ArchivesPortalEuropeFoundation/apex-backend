@@ -218,7 +218,6 @@
 		<tr>
 			<td id="tdButtonsContactTab" colspan="4">
 				<input type="button" id="buttonIdentityTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
-				<input type="button" id="buttonIdentityTabExit" value="<s:property value='getText("label.ai.tabs.commons.button.exit")' />" class="rightButton" />
 				<input type="button" id="buttonIdentityTabSave" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" />
 				<script type="text/javascript">
 					//current tab

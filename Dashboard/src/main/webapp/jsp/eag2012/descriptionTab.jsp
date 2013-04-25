@@ -227,8 +227,11 @@
 		<tr>
 			<td id="tdButtonsDescriptionTab" colspan="4">
 				<input type="button" id="buttonDescriptionTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
-				<input type="button" id="buttonDescriptionTabExit" value="<s:property value='getText("label.ai.tabs.commons.button.exit")' />" class="rightButton" />
 				<input type="button" id="buttonDescriptionTabSave" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" />
+				<script type="text/javascript">
+					//current tab
+					$("table#descriptionTable input#buttonDescriptionTabSave").click(clickDescriptionAction);
+				</script>
 			</td>
 		</tr>
 	</table>

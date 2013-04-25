@@ -10,7 +10,7 @@ function hideAndShow(idPrefix,shown){
 }
 
 function deleteChecks() {
-	$('.required').remove();
+	$('.fieldRequired').remove();
 }
 
 var clickYourInstitutionAction = function(){
@@ -107,7 +107,7 @@ var clickYourInstitutionAction = function(){
 		
 		subelement.appendChild(document.createTextNode('Field required'));
 		subelement.id = yiMandatoryElements[i].toString() + '_required';
-		subelement.className="required";
+		subelement.className="fieldRequired";
 		element.parentNode.insertBefore(subelement, element.nextSibling);
 	}
 
@@ -119,13 +119,14 @@ var clickYourInstitutionAction = function(){
 
 			subelement.appendChild(document.createTextNode('Field required'));
 			subelement.id = array[j].toString() + '_required';
-			subelement.className="required";
+			subelement.className="fieldRequired";
 
 			$('#' + validationArray[i].toString()).find('#' + array[j].toString()).after(subelement);
 		}
 
 	}
 };
+
 var clickIdentityAction = function(){
 	var jsonData = "{";
 		//content from texts
@@ -145,6 +146,7 @@ var clickIdentityAction = function(){
 	jsonData += "]}";
 //	alert(jsonData);
 };
+
 var clickContactAction = function(){
 	var jsonData = "{";
 		//content from texts
@@ -164,6 +166,7 @@ var clickContactAction = function(){
 	jsonData += "]}";
 //	alert(jsonData);
 };
+
 var clickAccessAndServicesAction = function(){
 	// Delete old checks
 	deleteChecks();
@@ -178,6 +181,12 @@ var clickAccessAndServicesAction = function(){
 				jsonData += ",";
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+
+			// Check fill mandatory fields.
+			if ($(this).attr("value") != '') {
+				var position = aasMandatoryElements.indexOf($(this).attr("id"));
+				aasMandatoryElements.splice(position, 1);
+			}
 		});
 		//content from selects
 		$("table#accessAndServicesTable select").each(function(){
@@ -185,12 +194,6 @@ var clickAccessAndServicesAction = function(){
 				jsonData += ",";
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
-
-			// Check fill mandatory fields.
-			if ($(this).attr("value") != '') {
-				var position = aasMandatoryElements.indexOf($(this).attr("id"));
-				aasMandatoryElements.splice(position, 1);
-			}
 		});
 	jsonData += "]}";
 //	alert(jsonData);
@@ -201,7 +204,67 @@ var clickAccessAndServicesAction = function(){
 		
 		subelement.appendChild(document.createTextNode('Field required'));
 		subelement.id = aasMandatoryElements[i].toString() + '_required';
-		subelement.className="required";
+		subelement.className="fieldRequired";
 		element.parentNode.insertBefore(subelement, element.nextSibling);
 	}
+};
+
+var clickDescriptionAction = function(){
+	var jsonData = "{";
+		//content from texts
+		$("table#descriptionTable input[type='text']").each(function(){
+			if(jsonData.length>1){
+				jsonData += ",";
+			}
+			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		});
+		//content from selects
+		$("table#descriptionTable select").each(function(){
+			if(jsonData.charAt(jsonData.length-1)!=':'){
+				jsonData += ",";
+			}
+			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		});
+	jsonData += "]}";
+//	alert(jsonData);
+};
+
+var clickControlAction = function(){
+	var jsonData = "{";
+		//content from texts
+		$("table#controlTable input[type='text']").each(function(){
+			if(jsonData.length>1){
+				jsonData += ",";
+			}
+			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		});
+		//content from selects
+		$("table#controlTable select").each(function(){
+			if(jsonData.charAt(jsonData.length-1)!=':'){
+				jsonData += ",";
+			}
+			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		});
+	jsonData += "]}";
+//	alert(jsonData);
+};
+
+var clickRelationsAction = function(){
+	var jsonData = "{";
+		//content from texts
+		$("table#relationsTable input[type='text']").each(function(){
+			if(jsonData.length>1){
+				jsonData += ",";
+			}
+			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		});
+		//content from selects
+		$("table#relationsTable select").each(function(){
+			if(jsonData.charAt(jsonData.length-1)!=':'){
+				jsonData += ",";
+			}
+			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		});
+	jsonData += "]}";
+//	alert(jsonData);
 };
