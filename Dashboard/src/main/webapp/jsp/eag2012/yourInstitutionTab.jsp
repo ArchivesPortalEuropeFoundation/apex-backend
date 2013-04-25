@@ -109,7 +109,7 @@
 						$("table[id^='yourInstitutionTabContent_']").hide();
 						var localId = "";
 						if(counter==1){
-							localId = "yourInstitutionTabContent";
+							localId = "yourInstitutionTabContent_"+counter;
 							$("#eag2012tabs_institution_tabs").append("<li><a id=\"tab_"+localId+"\" href=\"#repositories\" ><s:property value="getText('label.ai.yourinstitution.institution')" /></a></li>");
 						}
 						$("table#yourInstitutionTabContent_"+(counter+1)+" input#buttonFutherAccessInformation").click(function(){
