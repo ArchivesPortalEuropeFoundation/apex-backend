@@ -331,7 +331,7 @@
 
 		<tr>
 			<td>
-				<input type="button" id="buttonAddClosingDates" value="<s:property value="getText('label.ai.yourinstitution.addClosingDates')"/>" />
+				<input type="button" id="buttonAddClosingDates" value="<s:property value="getText('label.ai.tabs.commons.closingDates')"/>" />
 			</td>
 			<td colspan="3">
 			</td>

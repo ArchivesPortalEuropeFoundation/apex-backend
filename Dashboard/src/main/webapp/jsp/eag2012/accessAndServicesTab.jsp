@@ -13,7 +13,7 @@
 				<s:fielderror fieldName="textOpeningTimes"/>
 			</td>
 			<td>
-				<label for="textClosingDates"><s:property value="getText('label.ai.accessAndServices.closingDates')" />:</label>
+				<label for="textClosingDates"><s:property value="getText('label.ai.tabs.commons.closingDates')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textClosingDates" />
@@ -409,7 +409,7 @@
 		</tr>
 
 		<tr>
-			<td>
+			<td colspan="2">
 				<input type="button" id="buttonASSRAddFurtherOrderInformation" value="<s:property value="getText('label.ai.accessAndServices.addFurtherOrderInformation')" />" />
 				<script type="text/javascript">
 					$("table#accessAndServicesTable input#buttonASSRAddFurtherOrderInformation").click(function(){
@@ -428,8 +428,6 @@
 						$("table#accessAndServicesTable tr#"+newId+" input#textASSRAOLink").attr("id","textASSRAOLink_"+(count+1));
 					});
 				</script>
-			</td>
-			<td>
 			</td>
 			<td>
 				<label for="selectASSRAFOIUSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -949,6 +947,10 @@
 				<input type="button" id="buttonAccessAndServiceTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
 				<input type="button" id="buttonAccessAndServiceTabExit" value="<s:property value='getText("label.ai.tabs.commons.button.exit")' />" class="rightButton" />
 				<input type="button" id="buttonAccessAndServicelTabSave" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" />
+				<script type="text/javascript">
+					//current tab
+					$("table#accessAndServicesTable input#buttonAccessAndServicelTabSave").click(clickAccessAndServicesAction);
+				</script>
 			</td>
 		</tr>
 	</table>
