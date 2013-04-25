@@ -117,3 +117,7 @@
 #recreationalServiceLabel {
 	font-weight: bold
 }
+
+p.required {
+	color: red;
+}

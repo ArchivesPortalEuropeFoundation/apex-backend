@@ -4,7 +4,11 @@ function hideAndShow(idPrefix,shown){
 	});
 	$("div[id='"+shown+"']").show();
 }
+
 var clickYourInstitutionAction = function(){
+	// Delete old checks
+	$('.required').remove();
+
 	// Mandatory elements
 	var yiMandatoryElements = new Array("textYIInstitutionCountryCode", "textYIIdentifierOfTheInstitution",
 	                           "textYINameOfTheInstitution", "selectYINOTISelectLanguage");
@@ -89,12 +93,29 @@ var clickYourInstitutionAction = function(){
 	jsonData += "]}";
 //	alert(jsonData);
 
-	for(var i = 0; i < yiMandatoryElements.length; i++){
-//		alert(yiMandatoryElements[i].toString());
+	for (var i = 0; i < yiMandatoryElements.length; i++) {
+		var element = document.getElementById(yiMandatoryElements[i].toString());
+		var subelement = document.createElement('p');
+		
+		subelement.appendChild(document.createTextNode('Field required'));
+		subelement.id = yiMandatoryElements[i].toString() + '_required';
+		subelement.className="required";
+		element.parentNode.insertBefore(subelement, element.nextSibling);
 	}
 
-	for(var i = 0; i < validationArray.length; i++){
-//		alert(validationArray[i].toString());
+	for (var i = 0; i < validationArray.length; i = (i + 2)) {
+		var array = validationArray[i+1];
+
+		for (var j = 0; j < array.length; j++) {
+			var subelement = document.createElement('p');
+
+			subelement.appendChild(document.createTextNode('Field required'));
+			subelement.id = array[j].toString() + '_required';
+			subelement.className="required";
+
+			$('#' + validationArray[i].toString()).find('#' + array[j].toString()).after(subelement);
+		}
+
 	}
 };
 var clickIdentityAction = function(){
