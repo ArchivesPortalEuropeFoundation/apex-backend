@@ -29,10 +29,11 @@ a:visited {
 #eadDisplayPortlet  #splitter {
 width: 5px;
 cursor: col-resize;
-background-color: pink;
-color: pink;
-background-image: url("../../images/second_display/vgrabber.gif");
+background-color: rgba(178,48,98,0.2);
+color: rgba(178,48,98,0.2);
+background-image: url("../images/ape/eaddisplay/vgrabber.gif");
 background: url("../images/ape/eaddisplay/vgrabber.gif") no-repeat scroll center center rgba(178,48,98,0.2);
+overflow: auto;
 }
 
 #eadDisplayPortlet #left-pane {
