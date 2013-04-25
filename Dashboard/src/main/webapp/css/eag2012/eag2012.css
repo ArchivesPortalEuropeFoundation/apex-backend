@@ -1,32 +1,39 @@
 @CHARSET "UTF-8";
 
+#eag2012Div .tab_header {
+	border: 1px solid #79B7E7;
+	background: url("../images/eag2012/tabbg.jpg") repeat-x;
+	border-top-right-radius: 5px;
+	border-bottom: none;
+	clear: both;
+	float: left; 
+	width: 100%;
+    height: 24px;
 
+}
 
 #eag2012Tabs{
 	float:left;
 	width:100%;
-	/*font-size:15px;
-	font-weight:bold;*/
 	line-height:normal;	
 	
 }
 
 #eag2012TabsContainer {
-   /* border: 1px solid #00A0DF;*/
+  
   width:100%;
 
 }
 
 #container{
 	
-	background-image: url(../images/eag2012/tabbg.jpg);
     border-color: #79B7E7 #79B7E7 -moz-use-text-color;
     border-style: solid solid none;
     border-top-left-radius: 5px;
     border-top-right-radius: 25px;
     border-width: 1px 1px solid;
     float: left;
-    width:100%;	
+    width:97%;	
 }
 #eag2012Tabs ul{         
 	margin:0;
@@ -34,23 +41,21 @@
 	list-style:none outside none;
 	height:24px;
 	
-/*	 border: 1px solid #00A0DF;*/
 }
-
 
 #eag2012Tabs li{
 float:left;
 padding:0;
 /*border-top-right-radius:5px;
 border-top-left-radius:5px;*/
-border:1px solid #006699;
+/*border:3px solid #006699;*/
 
-background-image: url(../images/eag2012/tabbg.jpg);
+/*background-image: url(../images/eag2012/tabbg.jpg);*/
     border-color: #79B7E7 #79B7E7 -moz-use-text-color;
- /*   border-style: solid solid none;*/
+    border-style: solid solid none;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-  /*  border-width: 1px 1px solid;*/
+    border-width: 1px 1px solid;
 }
 
 #eag2012Tabs li:hover{
@@ -102,6 +107,7 @@ background: #00A0DF;
 #eag2012Div td, th {
 	/*border: solid 1px #999999;*/
   	width: 25%;
+  /*	padding:20px;*/
 }
 #eag2012Div td label{
 	
@@ -158,129 +164,14 @@ input[type="text"] {
   /* background:#00A0DF;*/
 
 }
-
-
-
-/*
-
-#eag2012Div #eag2012Tabs {
-	border: none;
-
-}
-#eag2012Div ul#eag2012TabsContainer, ul#eag2012tabs_institution_tabs {
-	margin: 0;
-	padding: 0;
-	float: left;
-	list-style: none;
-	height: 29px;
-	border-bottom: 1px solid #006699;
-	border-left: 1px solid #006699;
-	width: 100%;
-}
-
-#eag2012Div ul#eag2012TabsContainer li, ul#eag2012tabs_institution_tabs li {
-	float: left;
-	margin: 0;
-	padding: 0;
-
-	margin-bottom: -1px;
-	background: #E9F3FA;
-	overflow: hidden;
-	position: relative;
-	color: #ccc;
-
-}
-#eag2012Div ul#eag2012TabsContainer li a, ul#eag2012tabs_institution_tabs li a {
-	text-decoration: none;
-	color: #000;
-	display: block;
-	font-size: 0.9em;
-	padding: 5px 20px 0px 20px;
-	outline: none;
-	height: 22px;
-}
-#eag2012Div ul#eag2012TabsContainer li.ui-state-active, #eag2012Div  ul#eag2012TabsContainer li.ui-state-active a:hover, ul#eag2012tabs_institution_tabs li.ui-state-active, ul#eag2012tabs_institution_tabs li.ui-state-active a:hover{
-	background: #99CCFF;
-	background-image: url(../images/eag2012/tabbg.jpg);
-	color: black;
-
-}
-#eag2012Div ul#eag2012TabsContainer li.ui-tabs-selected , ul#eag2012tabs_institution_tabs li.ui-tabs-selected{
-	height: 28px;
-}
-#eag2012Div ul#eag2012TabsContainer li a:hover , ul#eag2012tabs_institution_tabs li a:hover {
-	background: #fff;
-	color: #4D8BCB;
-}
-#eag2012Div #tabs .ui-widget-header {
-	border: none;
-	background: none;
-}
-#eag2012Div #tabs .ui-tabs-selected {
+#bodyt{
+width:65%;	
 	
 }
-#eag2012Div .tab_header {
-	border: 1px solid #79B7E7;
-	background: url("../images/eag2012/tabbg.jpg") repeat-x;
-	border-top-right-radius: 5px;
-	border-bottom: none;
-	clear: both;
-	float: left; 
-	width: 100%;
-    height: 24px;
-
-
+.eag2012disabled{
+	color:red;
+	
 }
-#eag2012Div #tab-yourInstitution, #tab-identity, #tab-contact, #tab-accessAndServices, 
-#tab-description, #tab-control, #tab-relations {
-	padding: 0em 0em;
-}
-
-#eag2012Div #yourInstitutionTabContent, #identityTabContent, #contactTabContent,
-#accessAndServicesTabContent, #descriptionTabContent, #controlTabContent,
-#relationsTabContent {
-	float: left;
-	width: 100%;
-}
-
-#eag2012Div table {
-	float: left;
-	width: 100%;
-}
-#eag2012Div td, th {
-	border: solid 1px #999999;
-  	width: 25%;
-}
-#eag2012Div input{
-	float: left;
-	width: 100%;
-	background-color: #123456;
-	color: #987654;
-}
-#eag2012Div .longButton{
-	float: left;
-	width: 90%;
-}
-#eag2012Div .middleText{
-	float: left;
-	width: 50%;
-}
-#eag2012Div .rightButton{
-	float: right;
-	width: 15%;
-}
-#eag2012Div .marginTop{
-	margin-top: 15px;
-}
-
-#eag2012Div #tab-contact td#visitorAdressLabel, #postalAddressLabel, #coordinatesLabel,
-#repositoryLabel, #administrativeLabel, #buildingLabel, #holdingLabel, #usedLanguagesLabel,
-#usedRulesLabel, #resourceLabel, #institutionLabel, #searchroomLabel, #libraryLabel,
-#internetAccessLabel, #technicalServicesLabel, #restaurationLabLabel, #reproductionServiceLabel,
-#recreationalServiceLabel {
-	font-weight: bold
-}
-
-p.required {
+p.fieldRequired {
 	color: red;
-}*/
+}
