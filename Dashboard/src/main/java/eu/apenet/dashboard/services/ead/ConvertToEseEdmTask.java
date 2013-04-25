@@ -33,6 +33,8 @@ import eu.apenet.persistence.vo.ValidatedState;
 
 public class ConvertToEseEdmTask extends AbstractEadTask {
 
+	private static final String FA_XML_TYPE = "fa";
+
 	@Override
 	protected String getActionName() {
 		return "convert to ESE/EDM";
@@ -47,7 +49,6 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 		return false;
 	}
 
-	private static final String COLON = ":";
 
 	@Override
 	protected void execute(Ead ead, Properties properties) throws Exception {
@@ -86,9 +87,9 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 										.getArchivalInstitution().getAiId());
 						// OAI Identifier will be built according to the next
 						// syntax:
-						// isoname/ai_id/fa_eadid
-						String oaiIdentifier = findingAid.getArchivalInstitution().getCountry().getIsoname()
-								+ APEnetUtilities.FILESEPARATOR + findingAid.getArchivalInstitution().getAiId()
+						// NL-HaNA/fa/4.VTHR/edm
+						String oaiIdentifier = findingAid.getArchivalInstitution().getRepositorycode()
+								+ APEnetUtilities.FILESEPARATOR + FA_XML_TYPE
 								+ APEnetUtilities.FILESEPARATOR + findingAid.getEadid();
 
 						EdmConfig config = new EdmConfig(false);
@@ -96,6 +97,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 						config.setRepositoryCode(findingAid.getArchivalInstitution().getRepositorycode());
 						config.setPrefixUrl("http://" + APEnetUtilities.getDashboardConfig().getDomainNameMainServer()
 								+ "/web/guest/ead-display/-/ead/fp");
+						config.setXmlTypeName(FA_XML_TYPE);
 						String edmOutputFilename = xmlNameRelative.substring(0, lastIndex) + "-edm"
 								+ xmlNameRelative.substring(lastIndex);
 						File edmOutputFile = EseFileUtils.getFile(outputEDMDir, edmOutputFilename);
