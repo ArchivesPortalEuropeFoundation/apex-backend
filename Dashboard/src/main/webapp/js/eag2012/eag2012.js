@@ -1,12 +1,15 @@
 function hideAndShow(idPrefix,shown){
-	$("div[id^='"+idPrefix+"']").each(function(){
-		$(this).hide();
-	});
-	$("ul#eag2012TabsContainer li a[href^='#tab']").each(function(){
-		$(this).removeClass("eag2012currenttab");
-	});
-	$("div[id='"+shown+"']").show();
-	$("ul#eag2012TabsContainer li a[href='#"+shown+"']").addClass("eag2012currenttab");
+	//first check if the click action can happens
+	if(!($("ul#eag2012TabsContainer li a[href='#"+shown+"']").hasClass("eag2012disabled"))){
+		$("div[id^='"+idPrefix+"']").each(function(){
+			$(this).hide();
+		});
+		$("ul#eag2012TabsContainer li a[href^='#tab']").each(function(){
+			$(this).removeClass("eag2012currenttab");
+		});
+		$("div[id='"+shown+"']").show();
+		$("ul#eag2012TabsContainer li a[href='#"+shown+"']").addClass("eag2012currenttab");
+	}
 }
 
 function deleteChecks() {
