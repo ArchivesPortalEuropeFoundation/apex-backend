@@ -14,7 +14,7 @@
 				<s:property value="getText('label.ai.relations.websiteOfResource')" />:
 			</td>
 			<td>
-				<s:property value="#websiteOfResource" />
+				<input type="text" id="textWebsiteOfResource" value="<s:property value="#websiteOfResource" />" />
 			</td>
 			<td id="tdTypeOfRelation">
 				<label for="selectTypeOfYourRelation"><s:property value="getText('label.ai.relations.typeOfRelation')" />:</label>
@@ -29,7 +29,7 @@
 				<s:property value="getText('label.ai.relations.titleOfRelatedMaterial')" />:
 			</td>
 			<td>
-				<s:property value="#titleOfRelatedMaterial" />
+				<input type="text" id="textTitleOfRelatedMaterial" value="<s:property value="#titleOfRelatedMaterial" />" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -40,7 +40,7 @@
 				<s:property value="getText('label.ai.relations.descriptionOfRelation')" />:
 			</td>
 			<td>
-				<s:property value="#descriptionOfRelation" />
+				<input type="text" id="textDescriptionOfRelation" value="<s:property value="#descriptionOfRelation" />" />
 			</td>
 			<td id="tdLanguageDescriptionOfRelation">
 				<label for="selectLanguageDescriptionOfRelation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -75,7 +75,7 @@
 				<s:property value="getText('label.ai.relations.websiteOfDescription')" />:
 			</td>
 			<td>
-				<s:property value="#websiteOfDescription" />
+				<input type="text" id="textWebsiteOfDescription" value="<s:property value="#websiteOfDescription" />" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -86,7 +86,7 @@
 				<s:property value="getText('label.ai.relations.titleOfRelatedInstitution')" />:
 			</td>
 			<td>
-				<s:property value="#titleOfRelatedInstitution" />
+				<input type="text" id="textTitleOfRelatedInstitution" value="<s:property value="#titleOfRelatedInstitution" />" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -97,7 +97,7 @@
 				<s:property value="getText('label.ai.relations.descriptionOfRelation')" />:
 			</td>
 			<td>
-				<s:property value="#institutionDescriptionOfRelation" />
+				<input type="text" id="textInstitutionDescriptionOfRelation" value="<s:property value="#institutionDescriptionOfRelation" />" />
 			</td>
 			<td id="tdLanguageInstitutionDescriptionOfRelation">
 				<label for="selectLanguageInstitutionDescriptionOfRelation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>

@@ -36,7 +36,7 @@
 				<s:property value="getText('label.ai.description.dateOfRepositoryFoundation')" />:
 			</td>
 			<td>
-				<s:property value="#dateOfRepositoryFoundation" />
+				<input type="text" id="textDateOfRepositoryFoundation" value="<s:property value="#dateOfRepositoryFoundation" />" />
 			</td>
 			<td colspan="2"></td>
 		</tr>
@@ -46,7 +46,7 @@
 				<s:property value="getText('label.ai.description.ruleOfRepositoryFoundation')" />:
 			</td>
 			<td>
-				<s:property value="#ruleOfRepositoryFoundation" />
+				<input type="text" id="textRuleOfRepositoryFoundation" value="<s:property value="#ruleOfRepositoryFoundation" />" />
 			</td>
 			<td id="tdLanguageRuleOfRepositoryFoundation">
 				<label for="selectLanguageRuleOfRepositoryFoundation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -69,7 +69,7 @@
 				<s:property value="getText('label.ai.description.dateOfRepositorySuppression')" />:
 			</td>
 			<td>
-				<s:property value="#dateOfRepositorySuppression" />
+				<input type="text" id="textDateOfRepositorySuppression" value="<s:property value="#dateOfRepositorySuppression" />" />
 			</td>
 			<td colspan="2"></td>
 		</tr>
@@ -79,7 +79,7 @@
 				<s:property value="getText('label.ai.description.ruleOfRepositorySuppression')" />:
 			</td>
 			<td>
-				<s:property value="#ruleOfRepositorySuppression" />
+				<input type="text" id="textRuleOfRepositorySuppression" value="<s:property value="#ruleOfRepositorySuppression" />" />
 			</td>
 			<td id="tdLanguageRuleOfRepositorySuppression">
 				<label for="selectLanguageRuleOfRepositorySuppression"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -108,7 +108,7 @@
 				<s:property value="getText('label.ai.description.unitOfAdministrativeStructure')" />:
 			</td>
 			<td>
-				<s:property value="#unitOfAdministrativeStructure" />
+				<input type="text" id="textUnitOfAdministrativeStructure" value="<s:property value="#unitOfAdministrativeStructure" />" />
 			</td>
 			<td id="tdLanguageUnitOfAdministrativeStructure">
 				<label for="selectLanguageUnitOfAdministrativeStructure"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -137,7 +137,7 @@
 				<s:property value="getText('label.ai.description.building')" />:
 			</td>
 			<td>
-				<s:property value="#building" />
+				<input type="text" id="textBuilding" value="<s:property value="#building" />" />
 			</td>
 			<td id="tdLanguageBuilding">
 				<label for="selectLanguageBuilding"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -152,7 +152,7 @@
 				<s:property value="getText('label.ai.description.repositoryArea')" />:
 			</td>
 			<td>
-				<s:property value="#repositoryArea" />
+				<input type="text" id="textRepositoryArea" value="<s:property value="#repositoryArea" />" />
 			</td>
 			<td colspan="2"></td>
 		</tr>
@@ -162,7 +162,7 @@
 				<s:property value="getText('label.ai.description.lengthOfShelf')" />:
 			</td>
 			<td>
-				<s:property value="#lengthOfShelf" />
+				<input type="text" id="textLengthOfShelf" value="<s:property value="#lengthOfShelf" />" />
 			</td>
 			<td colspan="2"></td>
 		</tr>
@@ -178,7 +178,7 @@
 				<s:property value="getText('label.ai.description.archivalAndOtherHoldings')" />:
 			</td>
 			<td>
-				<s:property value="#archivalAndOtherHoldings" />
+				<input type="text" id="textArchivalAndOtherHoldings" value="<s:property value="#archivalAndOtherHoldings" />" />
 			</td>
 			<td id="tdLanguageArchivalAndOtherHoldings">
 				<label for="selectLanguageArchivalAndOtherHoldings"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -193,7 +193,7 @@
 				<s:property value="getText('label.ai.description.dateOfHoldings')" />:
 			</td>
 			<td>
-				<s:property value="#dateOfHoldings" />
+				<input type="text" id="textDateOfHoldings" value="<s:property value="#dateOfHoldings" />" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -204,13 +204,13 @@
 				<s:property value="getText('label.ai.description.dateOfHoldingsFrom')" />:
 			</td>
 			<td>
-				<s:property value="#dateOfHoldingsFrom" />
+				<input type="text" id="textDateOfHoldingsFrom" value="<s:property value="#dateOfHoldingsFrom" />" />
 			</td>
 			<td id="tdDateOfHoldingsTo">
 				<s:property value="getText('label.ai.tabs.commons.textTo')" />:
 			</td>
 			<td>
-				<s:property value="#dateOfHoldingsTo" />
+				<input type="text" id="textDateOfHoldingsTo" value="<s:property value="#dateOfHoldingsTo" />" />
 			</td>
 		</tr>
 
@@ -219,7 +219,7 @@
 				<s:property value="getText('label.ai.description.extent')" />:
 			</td>
 			<td>
-				<s:property value="#extent" />
+				<input type="text" id="textExtent" value="<s:property value="#extent" />" />
 			</td>
 			<td colspan="2"></td>
 		</tr>
