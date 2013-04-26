@@ -105,10 +105,13 @@
 				class="required">*</span>:</td>
 			<td>
 				<s:textfield id="textDataProvider" name="textDataProvider" required="true"/>
-				<s:if test="showDataProviderCheck==true">
+				<s:if test="dataProviderCheck==true">
 					<s:checkbox name="dataProviderCheck" id="dataProviderCheck" value="true"></s:checkbox>
-					<s:label key="ead2ese.content.dataprovider.mapping" for="dataProviderCheck"/>
 				</s:if>
+				<s:else>
+					<s:checkbox name="dataProviderCheck" id="dataProviderCheck" value="false"></s:checkbox>
+				</s:else>
+				<s:label key="ead2ese.content.dataprovider.file" for="dataProviderCheck"/>
 				<s:fielderror fieldName="textDataProvider"/>
 			</td>
 		</tr>
