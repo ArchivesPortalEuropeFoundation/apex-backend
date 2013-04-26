@@ -58,7 +58,7 @@
 
 		<tr>
 			<td id="tdAddFoundationInformation" colspan="2">
-				<input type="button" value="<s:property value='getText("label.ai.description.addFoundationInformation")' />" class="longButton" />
+				<input type="button" value="<s:property value='getText("label.ai.description.addFoundationInformation")' />" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -91,7 +91,7 @@
 
 		<tr>
 			<td id="tdAddSuppressionInformation" colspan="2">
-				<input type="button" value="<s:property value='getText("label.ai.description.addSuppressionInformation")' />" class="longButton" />
+				<input type="button" value="<s:property value='getText("label.ai.description.addSuppressionInformation")' />"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -120,7 +120,7 @@
 
 		<tr>
 			<td id="tdAddAdministrationUnits" colspan="2">
-				<input type="button" value="<s:property value='getText("label.ai.description.addAdministrationUnits")' />" class="longButton" />
+				<input type="button" value="<s:property value='getText("label.ai.description.addAdministrationUnits")' />" />
 			</td>
 			<td colspan="2">
 			</td>

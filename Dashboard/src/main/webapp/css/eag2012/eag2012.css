@@ -1,5 +1,6 @@
 @CHARSET "UTF-8";
 
+
 #eag2012Div .tab_header {
 	border: 1px solid #79B7E7;
 	background: url("../images/eag2012/tabbg.jpg") repeat-x;
@@ -27,7 +28,7 @@
 
 #container{
 	
-    border-color: #79B7E7 #79B7E7 -moz-use-text-color;
+    border-color: #00A0DF #00A0DF -moz-use-text-color;
     border-style: solid solid none;
     border-top-left-radius: 5px;
     border-top-right-radius: 25px;
@@ -44,18 +45,13 @@
 }
 
 #eag2012Tabs li{
-float:left;
-padding:0;
-/*border-top-right-radius:5px;
-border-top-left-radius:5px;*/
-/*border:3px solid #006699;*/
-
-/*background-image: url(../images/eag2012/tabbg.jpg);*/
-    border-color: #79B7E7 #79B7E7 -moz-use-text-color;
-    border-style: solid solid none;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    border-width: 1px 1px solid;
+ float:left;
+ padding:0;
+ border-color: #00A0DF #00A0DF -moz-use-text-color;
+ border-style: solid solid none;
+ border-top-left-radius: 5px;
+ border-top-right-radius: 5px;
+ border-width: 1px 1px solid;
 }
 
 #eag2012Tabs li:hover{
@@ -75,7 +71,11 @@ font-size:1.2em;
 font-weight:bold;
 
 }
-/* contenido de las tabs*/
+
+#eag2012Tabs li a:visited{
+	/*color:gray;*/
+		
+}
 
 #eag2012Tabs li a:hover{
 	background: #00A0DF;
@@ -88,10 +88,11 @@ font-weight:bold;
 }
 
 #eag2012Tabs li a:after, .eag2012currenttab{
-	color:gray;
+	/*color:gray;*/
 	background: #00A0DF;	
 	
 }
+
 #eag2012Div li .tab-yourInstitution{
 background: #00A0DF;	
 	
@@ -105,10 +106,10 @@ background: #00A0DF;
 }
 
 #eag2012Div td, th {
-	/*border: solid 1px #999999;*/
   	width: 25%;
-  /*	padding:20px;*/
+   padding-top: 15px;
 }
+
 #eag2012Div td label{
 	
 	width:auto;
@@ -123,8 +124,14 @@ background: #00A0DF;
 }
 #eag2012Div .longButton{
 	float: left;
-	width: 60%;
+	width: 70%;
 }
+
+#eag2012Div .longButtonL{
+	float: left;
+	width: 90%;
+}
+
 #eag2012Div .middleText{
 	float: left;
 	width: 50%;
@@ -153,10 +160,11 @@ textarea {
 
 input[type="button"] {
 	background:#00A0DF;
-	border-color: #0174DF;
+	border-color: #00A0DF;
 	border-style: solid;
     border-width: 1px;
     cursor: pointer;
+    border-radius:10px;
 }
 
 input[type="text"] {
@@ -165,13 +173,58 @@ input[type="text"] {
 
 }
 #bodyt{
+margin-left:36%;	
 width:65%;	
 	
 }
 .eag2012disabled{
-	color:red;
+	background:#E6E6E6;
 	
 }
 p.fieldRequired {
 	color: red;
 }
+
+#visitorAdressLabel{
+	
+	font-weight:bold;
+	
+}
+
+#coordinatesLabel{
+color:#00A0DF;	
+text-decoration:underline;	
+}
+
+#selectTypeOfTheInstitution, #selectDescriptionLanguage{
+	width:200px;
+	
+	}
+
+#selectTypeOfTheInstitution option{
+	
+	width:610px;
+	
+}
+#selectDescriptionLanguage option{
+	width:290px;
+	
+}
+
+.labelLeft{
+	padding-left:40px;
+}
+.labelLeftselect{
+	padding-left:10px;
+	
+}
+#tdLanguageRuleOfRepositorySuppression,#tdLanguageRuleOfRepositoryFoundation,
+#tdLanguageRuleOfRepositorySuppression,#tdLanguageUnitOfAdministrativeStructure,#tdLanguageBuilding,
+#tdLanguageArchivalAndOtherHoldings,#tdLanguageRepositoryHistory,#tdDateOfHoldingsTo,#tdLanguagePesonresponsible,
+#tdTypeOfRelation,#tdLanguageDescriptionOfRelation,#tdInstitutionTypeOfRelation,#tdLanguageInstitutionDescriptionOfRelation{
+	padding-left:40px;
+	
+}
+
+}
+

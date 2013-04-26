@@ -51,7 +51,7 @@
 				<s:property value="getText('label.ai.control.usedLanguages')" />
 			</td>
 			<td id="tdAddFurtherLangsAnsScripts" colspan="2">
-				<input type="button" value="<s:property value='getText("label.ai.control.addFurtherLangsAnsScripts")' />" class="longButton" />
+				<input type="button" value="<s:property value='getText("label.ai.control.addFurtherLangsAnsScripts")' />" />
 			</td>
 		</tr>
 
@@ -86,7 +86,7 @@
 				<s:property value="getText('label.ai.control.usedRules')" />
 			</td>
 			<td id="tdAddFurtherRules" colspan="2">
-				<input type="button" value="<s:property value='getText("label.ai.control.addFurtherRules")' />" class="longButton" />
+				<input type="button" value="<s:property value='getText("label.ai.control.addFurtherRules")' />" />
 			</td>
 		</tr>
 

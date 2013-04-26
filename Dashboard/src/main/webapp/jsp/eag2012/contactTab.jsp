@@ -18,7 +18,7 @@
 				<input type="text" id="textContactStreetOfTheInstitution" value="<s:property value="#streetOfTheInstitution" />" />
 				<s:fielderror fieldName="textContactStreetOfTheInstitution"/>
 			</td>
-			<td id="tdLanguageStreetOfTheInstitution">
+			<td id="tdLanguageStreetOfTheInstitution" class="labelLeft">
 				<label for="selectLanguageStreetOfTheInstitution" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
@@ -35,7 +35,7 @@
 				<input type="text" id="textContactCityOfTheInstitution" value="<s:property value="#cityOfTheInstitution" />" />
 				<s:fielderror fieldName="textContactCityOfTheInstitution"/>
 			</td>
-			<td id="tdLanguageCityOfTheInstitution">
+			<td id="tdLanguageCityOfTheInstitution" class="labelLeft">
 				<label for="selectLanguageCityOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
@@ -50,7 +50,7 @@
 			<td>
 				<input type="text" id="textContactDistrictOfTheInstitution" value="<s:property value="#districtOfTheInstitution" />" />
 			</td>
-			<td id="tdLanguageDistrictOfTheInstitution">
+			<td id="tdLanguageDistrictOfTheInstitution" class="labelLeft">
 				<label for="selectLanguageDistrictOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
@@ -65,7 +65,7 @@
 			<td>
 				<input type="text" id="textContactCountyOfTheInstitution" value="<s:property value="#countyOfTheInstitution" />" />
 			</td>
-			<td id="tdLanguageCountyOfTheInstitution">
+			<td id="tdLanguageCountyOfTheInstitution" class="labelLeft">
 				<label for="selectLanguageCountyOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
@@ -80,7 +80,7 @@
 			<td>
 				<input type="text" id="textContactRegionOfTheInstitution" value="<s:property value="#regionOfTheInstitution" />" />
 			</td>
-			<td id="tdLanguageRegionOfTheInstitution">
+			<td id="tdLanguageRegionOfTheInstitution" class="labelLeft">
 				<label for="selectLanguageRegionOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
@@ -97,7 +97,7 @@
 				<input type="text" id="textContactCountryOfTheInstitution" value="<s:property value="#countryOfTheInstitution" />" />
 				<s:fielderror fieldName="textContactCountryOfTheInstitution"/>
 			</td>
-			<td id="tdLanguageCountryOfTheInstitution">
+			<td id="tdLanguageCountryOfTheInstitution" class="labelLeft">
 				<label for="selectLanguageCountryOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
@@ -118,7 +118,7 @@
 			<td>
 				<input type="text" id="textContactLatitudeOfTheInstitution" value="<s:property value="#latitudeOfTheInstitution" />" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<s:property value="getText('label.ai.tabs.commons.longitude')" />
 			</td>
 			<td>
@@ -139,7 +139,7 @@
 			<td>
 				<input type="text" id="textContactPostalStreetOfTheInstitution" value="<s:property value="#postalStreetOfTheInstitution" />" />
 			</td>
-			<td id="tdLanguagePostalStreetOfTheInstitution">
+			<td id="tdLanguagePostalStreetOfTheInstitution" class="labelLeft">
 				<label for="selectLanguagePostalStreetOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
@@ -154,7 +154,7 @@
 			<td>
 				<input type="text" id="textContactPostalCityOfTheInstitution" value="<s:property value="#postalCityOfTheInstitution" />" />
 			</td>
-			<td id="tdLanguagePostalCityOfTheInstitution">
+			<td id="tdLanguagePostalCityOfTheInstitution" class="labelLeft">
 				<label for="selectLanguagePostalCityOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
@@ -182,7 +182,7 @@
 				<input type="text" id="textContactTelephoneOfTheInstitution" value="<s:property value="#telephoneOfTheInstitution" />" />
 			</td>
 			<td id="tdAddFurtherTelephoneOfTheInstitution" colspan="2">
-				<input id="buttonAddFurtherTelephoneOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherTelephoneNumbers")' />" class="longButton" />
+				<input id="buttonAddFurtherTelephoneOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherTelephoneNumbers")' />"/>
 			</td>
 		</tr>
 		<script type="text/javascript">
@@ -211,7 +211,7 @@
 				<input type="text" id="textContactFaxOfTheInstitution" value="<s:property value="#faxOfTheInstitution" />" />
 			</td>
 			<td id="tdAddFurtherFaxOfTheInstitution" colspan="2">
-				<input id="buttonAddFurtherFaxOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherFaxOfTheInstitution")' />" class="longButton" />
+				<input id="buttonAddFurtherFaxOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherFaxOfTheInstitution")' />"/>
 			</td>
 		</tr>
 		<script type="text/javascript">
@@ -239,7 +239,7 @@
 			<td>
 				<input type="text" id="textContactEmailOfTheInstitution" value="<s:property value="#emailOfTheInstitution" />" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textContactLinkTitleForEmailOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.linkTitle')" /></label>:
 			</td>
 			<td>
@@ -249,7 +249,7 @@
 
 		<tr>
 			<td id="tdAddFurtherEmailsOfTheInstitution" colspan="2">
-				<input id="buttonAddFurtherEmailsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherEmailsAddresses")' />" class="longButton" />
+				<input id="buttonAddFurtherEmailsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherEmailsAddresses")' />" />
 			</td>
 			<script type="text/javascript">
 				$("table#contactTable input#buttonAddFurtherEmailsOfTheInstitution").click(function(){
@@ -280,7 +280,7 @@
 				<input type="text" id="textContactWebOfTheInstitution" value="<s:property value="#webOfTheInstitution" />" />
 				<s:fielderror fieldName="webOfTheInstitution"/>
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textContactLinkTitleForWebOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.linkTitle')" /></label>:
 			</td>
 			<td>
@@ -290,7 +290,7 @@
 
 		<tr>
 			<td id="tdAddFurtherWebsOfTheInstitution" colspan="2">
-				<input id="buttonAddFurtherWebsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherWebpages")' />" class="longButton" />
+				<input id="buttonAddFurtherWebsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherWebpages")' />" />
 			</td>
 			<script type="text/javascript">
 				$("table#contactTable input#buttonAddFurtherWebsOfTheInstitution").click(function(){

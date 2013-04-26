@@ -52,7 +52,7 @@
 
 		<tr>
 			<td id="tdAddNewResourceRelation" colspan="2">
-				<input type="button" value="<s:property value='getText("label.ai.relations.addNewResourceRelation")' />" class="longButton" />
+				<input type="button" value="<s:property value='getText("label.ai.relations.addNewResourceRelation")' />"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -109,7 +109,7 @@
 
 		<tr>
 			<td id="tdAddNewInstitutionRelation" colspan="2">
-				<input type="button" value="<s:property value='getText("label.ai.relations.addNewInstitutionRelation")' />" class="longButton" />
+				<input type="button" value="<s:property value='getText("label.ai.relations.addNewInstitutionRelation")' />"/>
 			</td>
 			<td colspan="2">
 			</td>

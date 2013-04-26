@@ -23,7 +23,7 @@
 				<input type="text" id="textIdentityIdentifierOfTheInstitution" value="<s:property value="#identifierOfTheInstitution" />" disabled="disabled" />
 				<s:fielderror fieldName="textIdentityIdentifierOfTheInstitution"/>
 			</td>
-			<td id="tdIdUsedInAPE">
+			<td id="tdIdUsedInAPE" class="labelLeft">
 				<s:property value="getText('label.ai.tabs.commons.idUsedInAPE')" />:
 			</td>
 			<td>
@@ -40,7 +40,7 @@
 				<input type="text" id="textIdentityIdUsedInAPE" value="<s:property value="#nameOfTheInstitution" />" disabled="disabled" />
 				<s:fielderror fieldName="nameOfTheInstitution"/>
 			</td>
-			<td id="tdNameOfTheInstitutionLanguage">
+			<td id="tdNameOfTheInstitutionLanguage" class="labelLeft">
 				<label for="noti_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" /></label>
 				<span class="required">*</span>:
 			</td>
@@ -51,7 +51,7 @@
 		</tr>
 
 		<tr>
-			<td colspan="2"><input id="buttonAddAnotherFormOfTheAuthorizedName" type="button" value="<s:property value='getText("label.ai.identity.addAnotherFormOfTheAuthorizedName")' />" class="longButton" /></td>
+			<td colspan="2"><input id="buttonAddAnotherFormOfTheAuthorizedName" type="button" value="<s:property value='getText("label.ai.identity.addAnotherFormOfTheAuthorizedName")' />" /></td>
 			<script type="text/javascript">
 				$("table#identityTable input#buttonAddAnotherFormOfTheAuthorizedName").click(function(){
 					var count = $("table#identityTable tr[id^='trNameOfTheInstitution']").length;
@@ -81,7 +81,7 @@
 			<td>
 				<input type="text" id="textParallelNameOfTheInstitution" value=""/>
 			</td>
-			<td id="tdNameOfTheInstitutionLanguage">
+			<td id="tdNameOfTheInstitutionLanguage" class="labelLeft">
 				<label for="pnoti_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
@@ -91,7 +91,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonAddParallelNameOfTheInstitution" value="<s:property value='getText("label.ai.identity.addAnotherParallelNameOfTheInstitution")' />" class="longButton" />
+				<input type="button" id="buttonAddParallelNameOfTheInstitution" value="<s:property value='getText("label.ai.identity.addAnotherParallelNameOfTheInstitution")' />"/>
 				<script type="text/javascript">
 					$("table#identityTable input#buttonAddParallelNameOfTheInstitution").click(function(){
 						var count = $("table#identityTable tr[id^='trParallelNameOfTheInstitution']").length;
@@ -123,7 +123,7 @@
 			<td>
 				<input type="text" id="textFormerlyUsedName" value=""/>
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="tfun_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
@@ -144,7 +144,7 @@
 			<td>
 				<input type="text" id="textDatesWhenThisNameWasUsedFrom" value=""/>
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textDatesWhenThisNameWasUsedTo"><s:property value="getText('label.ai.tabs.commons.textTo')" />:</label>
 			</td>
 			<td>
@@ -154,7 +154,7 @@
 
 		<tr>
 			<td>
-				<input type="button" id="buttonAddMoreDates" value="<s:property value='getText("label.ai.identity.addMoreDates")' />" class="longButton" />
+				<input type="button" id="buttonAddMoreDates" value="<s:property value='getText("label.ai.identity.addMoreDates")' />"/>
 				<script type="text/javascript">
 					$("table#identityTable input#buttonAddMoreDates").click(function(){
 						var count = $("table#identityTable tr[id^='trDatesWhenThisNameWasUsed']").length;
@@ -180,7 +180,7 @@
 
 		<tr id="trAddMoreAnotherFormerlyUsedName">
 			<td colspan="2">
-				<input type="button" id="buttonAddMoreAnotherFormerlyUsedName" value="<s:property value='getText("label.ai.identity.addAnotherFormerlyUsedName")' />" class="longButton" />
+				<input type="button" id="buttonAddMoreAnotherFormerlyUsedName" value="<s:property value='getText("label.ai.identity.addAnotherFormerlyUsedName")' />"/>
 				<script type="text/javascript">
 				$("table#identityTable input#buttonAddMoreAnotherFormerlyUsedName").click(function(){
 					var count = $("table#identityTable tr[id^='trTextFormerlyUsedName']").length;
@@ -209,7 +209,7 @@
 				<label for="textSelectTypeOfTheInstitution"><s:property value="getText('label.ai.identity.selectTypeOfTheInstitution')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectTypeOfTheInstitution" list="typeOfInstitutionList" cssStyle="max-width:300px;" ></s:select>
+				<s:select theme="simple" id="selectTypeOfTheInstitution" list="typeOfInstitutionList" ></s:select>
 			</td>
 			<td colspan="2">
 			</td>

@@ -34,7 +34,7 @@
 				<input type="text" id="textYIIdentifierOfTheInstitution" />
 				<s:fielderror fieldName="yourInstitutionIdentifierOfTheInstitution"/>
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textYIIdUsedInAPE"><s:property value="getText('label.ai.tabs.commons.idUsedInAPE')"/>:</label>
 			</td>
 			<td>
@@ -63,7 +63,7 @@
 				<input type="text" id="textYINameOfTheInstitution" />
 				<s:fielderror fieldName="yourInstitutionNameOfTheInstitution"/>
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="selectYINOTISelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/></label>
 				<span class="required">*</span>:
 			</td>
@@ -226,10 +226,10 @@
 			<td>
 				<input type="text" id="textYIParallelNameOfTheInstitution" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="selectYIPNOTISelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
-			<td>
+			<td class="labelLeftselect">
 				<s:select theme="simple" id="selectYIPNOTISelectLanguage" list="languageList"></s:select>
 			</td>
 		</tr>
@@ -249,10 +249,10 @@
 				<input type="text" id="textYIStreet" />
 				<s:fielderror fieldName="yourInstitutionStreetOfTheInstitution"/>
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="selectYISSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
-			<td>
+			<td class="labelLeftselect">
 				<s:select theme="simple" id="selectYISSelectLanguage" list="languageList"></s:select>
 			</td>
 		</tr>
@@ -266,10 +266,10 @@
 				<input type="text" id="textYICity" />
 				<s:fielderror fieldName="yourInstitutionCityOfTheInstitution"/>
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="selectYICSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
-			<td>
+			<td class="labelLeftselect">
 				<s:select theme="simple" id="selectYICSelectLanguage" list="languageList"></s:select>
 			</td>
 		</tr>
@@ -283,10 +283,10 @@
 				<input type="text" id="textYICountry" />
 				<s:fielderror fieldName="yourInstitutionCountryOfTheInstitution"/>
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="selectYICoSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
-			<td>
+			<td class="labelLeftselect">
 				<s:select theme="simple" id="selectYICoSelectLanguage" list="languageList"></s:select>
 			</td>
 		</tr>
@@ -304,7 +304,7 @@
 			<td>
 				<input type="text" id="textYILatitude" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textYILongitude"><s:property value="getText('label.ai.tabs.commons.longitude')"/></label>
 			</td>
 			<td>
@@ -352,7 +352,7 @@
 			<td>
 				<input type="text" id="textYIEmailAddress" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textYIEmailLinkTitle" ><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
@@ -369,7 +369,7 @@
 				<input type="text" id="textYIWebpage" />
 				<s:fielderror fieldName="yourInstitutionWebPageOfTheInstitution"/>
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textYIWebpageLinkTitle" ><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>

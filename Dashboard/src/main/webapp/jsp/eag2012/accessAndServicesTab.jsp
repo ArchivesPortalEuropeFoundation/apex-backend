@@ -12,7 +12,7 @@
 				<input type="text" id="textOpeningTimes" />
 				<s:fielderror fieldName="textOpeningTimes"/>
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textClosingDates"><s:property value="getText('label.ai.tabs.commons.closingDates')" />:</label>
 			</td>
 			<td>
@@ -27,7 +27,7 @@
 			<td rowspan="2">
 				<textarea id="textTravellingDirections"></textarea>
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textTravelLink"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 			</td>
 			<td colspan="2">
@@ -38,7 +38,7 @@
 			<td>
 				<input type="button" id="buttonASAddTravellingDirections" value="<s:property value="getText('label.ai.accessAndServices.addTravellingDirections')"/>" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="selectASATDSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
@@ -101,7 +101,7 @@
 			<td>
 				<input type="text" id="textASAccessRestrictions" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="selectASARSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
@@ -141,7 +141,7 @@
 			<td rowspan="2">
 				<textarea id="textASTermOfUse"></textarea>
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textASTOULink"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 			</td>
 			<td colspan="2">
@@ -153,7 +153,7 @@
 			<td>
 				<input type="button" id="buttonASAddFutherTermOfUse" value="<s:property value="getText('label.ai.accessAndServices.addFurtherTermsOfUse')"/>" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="selectASAFTOUSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
@@ -214,7 +214,7 @@
 			<td>
 				<input type="text" id="textASAccessibility" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="selectASASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
@@ -265,13 +265,13 @@
 		</tr>
 
 		<tr>
-			<td>
+			<td class="labelLeft">
 				<label for="textASSREmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')"/>:</label>
 			</td>
 			<td>
 				<input type="text" id="textASSREmailAddress" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textASSREmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
@@ -286,7 +286,7 @@
 			<td>
 				<input type="text" id="textASSRWebpage" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textASSRWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
@@ -341,7 +341,7 @@
 			<td>
 				<input type="text" id="textASSRMicrofilmPlaces" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="selectASSRPhotographAllowance"><s:property value="getText('label.ai.accessAndServices.photographAllowance')"/>:</label>
 			</td>
 			<td>
@@ -356,7 +356,7 @@
 			<td>
 				<input type="text" id="textASSRReadersTicket" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textASSRRTLink"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 			</td>
 			<td>
@@ -385,7 +385,7 @@
 					});
 				</script>
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="selectReadersTickectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
@@ -400,7 +400,7 @@
 			<td>
 				<input type="text" id="textASSRAdvancedOrders" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textASSRAOLink"><s:property value="getText('label.ai.accessAndServices.link')" />:</label>
 			</td>
 			<td colspan="2">
@@ -429,7 +429,7 @@
 					});
 				</script>
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="selectASSRAFOIUSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
@@ -444,7 +444,7 @@
 			<td>
 				<input type="text" id="textASSRResearchServices" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textASSRRSSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
@@ -506,7 +506,7 @@
 			<td>
 				<input type="text" id="textASLEmailAddress" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textASLEmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
@@ -521,7 +521,7 @@
 			<td>
 				<input type="text" id="textASLWebpage" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textASLWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
@@ -536,7 +536,7 @@
 			<td>
 				<input type="text" id="textASLMonographocPublication" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textASLSerialPublication"><s:property value="getText('label.ai.accessAndServices.serialPublication')"/>:</label>
 			</td>
 			<td>
@@ -562,7 +562,7 @@
 			<td>
 				<input type="text" id="textASDescription" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="selectASDSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
@@ -612,7 +612,7 @@
 			<td>
 				<input type="text" id="textASRSEmail" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textASRSEmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
@@ -627,7 +627,7 @@
 			<td>
 				<input type="text" id="textASRSWebpage" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textASRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
@@ -673,7 +673,7 @@
 			<td>
 				<input type="text" id="textASTSRSEmailAddress" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textASTSEmailAddressLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
@@ -688,7 +688,7 @@
 			<td>
 				<input type="text" id="textASRSWebpage" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textASRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
@@ -703,7 +703,7 @@
 			<td>
 				<s:select theme="simple" id="selectASTSRSMicroform" list="yesNoList"></s:select>
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textASTSRSMicroformDescription"><s:property value="getText('label.ai.accessAndServices.description')" />:</label>
 			</td>
 			<td>
@@ -718,7 +718,7 @@
 			<td>
 				<s:select theme="simple" id="selectASTSRSPhotographServices" list="yesNoList"></s:select>
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textASTSRSPhotographServicesDescription"><s:property value="getText('label.ai.accessAndServices.description')" />:</label>
 			</td>
 			<td>
@@ -733,7 +733,7 @@
 			<td>
 				<s:select theme="simple" id="selectASTSRSDigitalServices" list="yesNoList"></s:select>
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textASTSRSDigitalServicesDescription"><s:property value="getText('label.ai.accessAndServices.description')" />:</label>
 			</td>
 			<td>
@@ -748,7 +748,7 @@
 			<td>
 				<s:select theme="simple" id="selectASTSRSPhotocopyServices" list="yesNoList"></s:select>
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textASTSRSPhotocopyServicesDescription"><s:property value="getText('label.ai.accessAndServices.description')" />:</label>
 			</td>
 			<td>
@@ -769,7 +769,7 @@
 			<td>
 				<input type="text" id="textASReSeRefreshment" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="selectASReSeRefreshmentSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
@@ -784,7 +784,7 @@
 			<td>
 				<input type="text" id="textASReSeExhibition" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="selectASReSeExhibitionSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
@@ -824,7 +824,7 @@
 			<td>
 				<input type="text" id="textASReSeWebpage" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textASReSeWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 			</td>
 			<td>
@@ -839,7 +839,7 @@
 			<td>
 				<input type="text" id="textASReSeToursAndSessions" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="selectASReSeToursAndSessionsSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/></label>
 			</td>
 			<td>
@@ -879,7 +879,7 @@
 			<td>
 				<input type="text" id="textASReSeTSWebpage" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textASReSeWebpageTSLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 			</td>
 			<td>
@@ -894,7 +894,7 @@
 			<td>
 				<input type="text" id="textASReSeOtherServices" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="selectASReSeOtherServicesSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
@@ -934,7 +934,7 @@
 			<td>
 				<input type="text" id="textASReSeOSWebpage" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="textASReSeWebpageOSLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 			</td>
 			<td>
