@@ -61,7 +61,7 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<s:select theme="simple" id="selectDescriptionScript" list="languageISOList"></s:select>
+				<s:select theme="simple" id="selectDescriptionLanguage" list="languageISOList"></s:select>
 				<s:fielderror fieldName="descriptionLanguage"/>
 			</td>
 			<td colspan="2">

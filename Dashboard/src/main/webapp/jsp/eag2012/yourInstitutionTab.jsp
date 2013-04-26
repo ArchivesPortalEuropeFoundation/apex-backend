@@ -136,6 +136,40 @@
 						});
 						localId = "yourInstitutionTabContent_"+(counter+1);
 						$("#eag2012tabs_institution_tabs").append("<li><a id=\"tab_"+localId+"\" href=\"#repositories\" ><s:property value="getText('label.ai.yourinstitution.repository')" /> "+(counter)+"</a></li>");
+						//clone and put the 3 new tables
+						$("div#tab-contact").append("<table id=\"contactTable_"+(counter+1)+"\">"+$("table#contactTable").clone().html()+"</table>");
+						$("div#tab-accessAndServices").append("<table id=\"accessAndServicesTable_"+(counter+1)+"\">"+$("table#accessAndServicesTable").clone().html()+"</table>");
+						$("div#tab-description").append("<table id=\"descriptionTable_"+(counter+1)+"\">"+$("table#descriptionTable").clone().html()+"</table>");
+						//fill values with the current "your institution" values provided by user
+						
+						//contact tab
+						var selectedIndex = document.getElementById('selectYIContinent').selectedIndex;
+						var latitude = $("#textYILatitude").val();
+						var longitude = $("#textYILongitude").val();
+						var country = $("#textYICountry").val();
+						var city = $("#textYICity").val();
+						var street = $("#textYIStreet").val();
+						var telephone = $("#textYITelephone").val();
+						var email = $("#textYIEmailAddress").val();
+						var web = $("#textYIEmailAddress").val();
+						//contact table
+						$("table#contactTable_"+(counter+1)+" #selectContinentOfTheInstitution option").eq(selectedIndex).prop("selected",true);
+						$("table#contactTable_"+(counter+1)+" #textcontactLatitudeOfTheInstitution").attr("value",latitude);
+						$("table#contactTable_"+(counter+1)+" #textContactLongitudeOfTheInstitution").attr("value",longitude);
+						$("table#contactTable_"+(counter+1)+" #textContactCountryOfTheInstitution").attr("value",country);
+						$("table#contactTable_"+(counter+1)+" #textContactCityOfTheInstitution").attr("value",city);
+						$("table#contactTable_"+(counter+1)+" #textContactStreetOfTheInstitution").attr("value",street);
+						$("table#contactTable_"+(counter+1)+" #textContactTelephoneOfTheInstitution").attr("value",telephone);
+						$("table#contactTable_"+(counter+1)+" #textContactEmailOfTheInstitution").attr("value",email);
+						$("table#contactTable_"+(counter+1)+" #textContactWebOfTheInstitution").attr("value",web);
+						//access and services
+						var opening = $("#textYIOpeningTimes").val();
+						var accessPublic = document.getElementById('selectAccessibleToThePublic').selectedIndex;
+						var access = $("#selectFacilitiesForDisabledPeopleAvailable").val();
+						$("table#contactTable_"+(counter+1)+" #textContactWebOfTheInstitution").attr("value",opening);
+						$("table#contactTable_"+(counter+1)+" #selectASFacilitiesForDisabledPeopleAvailable option").eq(accessPublic).prop("selected",true);
+						$("table#contactTable_"+(counter+1)+" #textASAccessibility").attr("value",access);
+						
 						$("table#"+localId).show();
 						$("a[id^='tab_']").click(function(){
 							$("a[id^='tab_']").each(function(){
@@ -271,10 +305,10 @@
 				<input type="text" id="textYILatitude" />
 			</td>
 			<td>
-				<label for="selectYILongitude"><s:property value="getText('label.ai.tabs.commons.longitude')"/></label>
+				<label for="textYILongitude"><s:property value="getText('label.ai.tabs.commons.longitude')"/></label>
 			</td>
 			<td>
-				<input type="text" id="selectYILongitude" />
+				<input type="text" id="textYILongitude" />
 			</td>
 		</tr>
 		<tr id="YIPostalAddress" style="display:none;">

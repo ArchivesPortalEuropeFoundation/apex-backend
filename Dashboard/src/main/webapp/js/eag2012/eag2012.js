@@ -9,6 +9,23 @@ function hideAndShow(idPrefix,shown){
 		});
 		$("div[id='"+shown+"']").show();
 		$("ul#eag2012TabsContainer li a[href='#"+shown+"']").addClass("eag2012currenttab");
+		if(shown=="tab-accessAndServices" || shown=="tab-contact" || shown=="tab-description"){
+			var id = "";
+			$("ul#eag2012tabs_institution_tabs li a").each(function(){
+				if($(this).hasClass("eag2012currenttab")){
+					id = $(this).attr("id");
+				}
+			});
+			id = id.substring(id.lastIndexOf("_"));
+			//hide all other tables and show target table
+			$("div[id='"+shown+"'] table").each(function(){
+				$(this).hide();
+				var newId = $(this).attr("id");
+				if(newId.indexOf(id)>-1){
+					$(this).show();
+				}
+			});
+		}
 	}
 }
 

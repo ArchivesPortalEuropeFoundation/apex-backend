@@ -58,6 +58,14 @@
 					});
 					//send first tab
 					$("table#yourInstitutionTabContent_1 input#buttonYourInstitutionTabSave").click(clickYourInstitutionAction);
+					//clone contact, "access and services" and description
+					$("div#divTempContainter").append($("table#contactTable").clone());
+					$("div#divTempContainter").append($("table#accessAndServicesTable").clone());
+					$("div#divTempContainter").append($("table#descriptionTable").clone());
+					//update new table names
+					$("div#contactTabContent table#contactTable").attr("id","contactTable_1");
+					$("div#accessAndServicesTabContent table#accessAndServicesTable").attr("id","accessAndServicesTable_1");
+					$("div#descriptionTabContent table#descriptionTable").attr("id","descriptionTable_1");
 				});
 			</script>
 			<div id="container">
@@ -91,4 +99,5 @@
 			</div>
 		</div>
 	</form>
+	<div id="divTempContainter" style="display:none;"></div>
 </div>
