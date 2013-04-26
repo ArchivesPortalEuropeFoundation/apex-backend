@@ -2,10 +2,13 @@ package eu.apenet.dashboard.manual.eag;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import com.opensymphony.xwork2.ActionSupport;
+
+import eu.apenet.dpt.utils.util.LanguageIsoList;
 
 /**
  * Action used to manage and store the new EAG2012.
@@ -58,12 +61,17 @@ public class WebFormEAG2012Action extends ActionSupport {
 	private static final String OPTION_LATER = "later";				// Constant for value "later".
 	private static final String OPTION_ASSOCIATIVE = "associative";	// Constant for value "associative".
 
+	private static final String OPTION_SCRIPT = "Latn";			// Constant for value "Latn".
+	private static final String OPTION_SCRIPT_TEXT = "Latin";	// Constant for value "Latin".
+
     private Map<String,String> yesNoMap = new HashMap<String,String>();
     private Map<String,String> typeOfInstitutionMap = new LinkedHashMap<String,String>();
     private Map<String,String> continentOfInstitutionMap = new LinkedHashMap<String,String>();
     private Map<String,String> photographMap = new LinkedHashMap<String,String>();
     private Map<String,String> typeYourRelationMap = new LinkedHashMap<String,String>();
     private Map<String,String> typeTheRelationMap = new LinkedHashMap<String,String>();
+    private Map<String,String> languageISOMap = new LinkedHashMap<String,String>();
+    private Map<String,String> scriptMap = new LinkedHashMap<String,String>();
 
 	// Attributes.
 	// Common to various tabs.
@@ -204,6 +212,27 @@ public class WebFormEAG2012Action extends ActionSupport {
 		return this.getTypeTheRelationMap();
 	}
 
+	public Map<String,String> getLanguageISOList() {
+		this.getLanguageISOMap().put(WebFormEAG2012Action.OPTION_NONE, "---");
+
+		List<String> languageList = LanguageIsoList.getLanguageIsoList();
+
+		for (int i = 0; i < languageList.size(); i++) {
+			Locale locale = new Locale(languageList.get(i));
+			this.getLanguageISOMap().put(languageList.get(i), locale.getDisplayLanguage());
+		}
+
+		return this.getLanguageISOMap();
+	}
+
+	public Map<String,String> getScriptList() {
+		this.getScriptMap().put(WebFormEAG2012Action.OPTION_NONE, "---");
+
+		this.getScriptMap().put(WebFormEAG2012Action.OPTION_SCRIPT, WebFormEAG2012Action.OPTION_SCRIPT_TEXT);
+
+		return this.getScriptMap();
+	}
+
 	// Getters and setters.
 	/**
 	 * @return the yesNoMap
@@ -288,6 +317,34 @@ public class WebFormEAG2012Action extends ActionSupport {
 	 */
 	public void setTypeTheRelationMap(Map<String, String> typeTheRelationMap) {
 		this.typeTheRelationMap = typeTheRelationMap;
+	}
+
+	/**
+	 * @return the languageISOMap
+	 */
+	public Map<String, String> getLanguageISOMap() {
+		return this.languageISOMap;
+	}
+
+	/**
+	 * @param languageISOMap the languageISOMap to set
+	 */
+	public void setLanguageISOMap(Map<String, String> languageISOMap) {
+		this.languageISOMap = languageISOMap;
+	}
+
+	/**
+	 * @return the scriptMap
+	 */
+	public Map<String, String> getScriptMap() {
+		return this.scriptMap;
+	}
+
+	/**
+	 * @param scriptMap the scriptMap to set
+	 */
+	public void setScriptMap(Map<String, String> scriptMap) {
+		this.scriptMap = scriptMap;
 	}
 
 	/**

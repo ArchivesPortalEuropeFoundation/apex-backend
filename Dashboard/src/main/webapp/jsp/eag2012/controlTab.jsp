@@ -9,7 +9,7 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<s:property value="#descriptionIdentifier" />
+				<input type="text" id="textDescriptionIdentifier" value="<s:property value="#descriptionIdentifier" />" />
 				<s:fielderror fieldName="descriptionIdentifier"/>
 			</td>
 			<td colspan="2">
@@ -17,12 +17,12 @@
 		</tr>
 
 		<tr>
-			<td id="tdPesonresponsible">
+			<td id="tdPesonResponsible">
 				<s:property value="getText('label.ai.control.pesonresponsible')" />
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<s:property value="#pesonresponsible" />
+				<input type="text" id="textPesonResponsible" value="<s:property value="#pesonResponsible" />" />
 				<s:fielderror fieldName="pesonresponsible"/>
 			</td>
 			<td id="tdLanguagePesonresponsible">
@@ -39,7 +39,7 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<s:property value="#identifierOfResponsible" />
+				<input type="text" id="textIdentifierOfResponsible" value="<s:property value="#identifierOfResponsible" />" />
 				<s:fielderror fieldName="identifierOfResponsible"/>
 			</td>
 			<td colspan="2">
@@ -61,8 +61,7 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<s:label>TODO</s:label>
-				<%-- <s:property value="#descriptionLanguage" /> --%>
+				<s:select theme="simple" id="selectDescriptionScript" list="languageISOList"></s:select>
 				<s:fielderror fieldName="descriptionLanguage"/>
 			</td>
 			<td colspan="2">
@@ -75,8 +74,7 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<s:label>TODO</s:label>
-				<%-- <s:property value="#descriptionScript" /> --%>
+				<s:select theme="simple" id="selectDescriptionScript" list="scriptList"></s:select>
 				<s:fielderror fieldName="descriptionScript"/>
 			</td>
 			<td colspan="2">
@@ -97,7 +95,7 @@
 				<s:property value="getText('label.ai.control.abbreviation')" />:
 			</td>
 			<td>
-				<s:property value="#contactAbbreviation" />
+				<input type="text" id="textContactAbbreviation" value="<s:property value="#contactAbbreviation" />" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -108,7 +106,7 @@
 				<s:property value="getText('label.ai.control.fullName')" />:
 			</td>
 			<td>
-				<s:property value="#contactFullName" />
+				<input type="text" id="textContactFullName" value="<s:property value="#contactFullName" />" />
 			</td>
 			<td colspan="2">
 			</td>
