@@ -609,7 +609,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonASReSeAddExhibition" value="<s:property value="getText('label.ai.accessAndServices.addExhibition')"/>" />
+				<input type="button" id="buttonASReSeAddExhibition" value="<s:property value="getText('label.ai.accessAndServices.addExhibition')"/>" onclick="aSReSeAddExhibition();" />
 			</td>
 			<td colspan="2">
 			</td>

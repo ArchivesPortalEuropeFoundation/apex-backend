@@ -825,3 +825,20 @@ function aSAddServices(){
 	$("table#accessAndServicesTable_"+tablesCount+" tr#"+newId+" label[for='selectASReSeOtherServicesSelectLanguage']").attr("for","selectASReSeOtherServicesSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable_"+tablesCount+" tr#"+newId+" select#selectASReSeOtherServicesSelectLanguage").attr("id","selectASReSeOtherServicesSelectLanguage_"+(count+1));
 }
+function aSReSeAddExhibition(){
+	var tablesCount = $("table[id^='accessAndServicesTable_']").length;
+	var count = $("table#accessAndServicesTable_"+tablesCount+" tr[id^='trASReSeExhibition']").length;
+	
+	var newId = "trASReSeExhibition_"+(count+1);
+	var trHtml = "<tr id=\""+newId+"\">"+$("table#accessAndServicesTable_"+tablesCount+" tr[id='trASReSeExhibition']").clone().html()+"</tr>";
+	var lastId = "table#accessAndServicesTable_"+tablesCount+" tr#trASReSeExhibition";
+	if(count>1){
+		lastId+="_"+(count);
+	}
+	$(lastId).after(trHtml);
+	//update last content
+	$("table#accessAndServicesTable_"+tablesCount+" tr#"+newId+" label[for='textASReSeExhibition']").attr("for","textASReSeExhibition_"+(count+1));
+	$("table#accessAndServicesTable_"+tablesCount+" tr#"+newId+" input#textASReSeExhibition").attr("id","textASReSeExhibition_"+(count+1));
+	$("table#accessAndServicesTable_"+tablesCount+" tr#"+newId+" label[for='selectASReSeExhibitionSelectLanguage']").attr("for","selectASReSeExhibitionSelectLanguage_"+(count+1));
+	$("table#accessAndServicesTable_"+tablesCount+" tr#"+newId+" select#selectASReSeExhibitionSelectLanguage").attr("id","selectASReSeExhibitionSelectLanguage_"+(count+1));
+}
