@@ -11,7 +11,7 @@
 
 		<tr>
 			<td colspan="2">
-				<label class="middleText" for="textYIPersonInstitutionResposibleForTheDescription"><s:property value="getText('label.ai.yourinstitution.personinstitutionresposibleforthedescription')"/>:</label>
+				<label  for="textYIPersonInstitutionResposibleForTheDescription"><s:property value="getText('label.ai.yourinstitution.personinstitutionresposibleforthedescription')"/>:</label>
 			</td>
 			<td colspan="2">
 				<input type="text" id="textYIPersonInstitutionResposibleForTheDescription" class="middleText"/>
