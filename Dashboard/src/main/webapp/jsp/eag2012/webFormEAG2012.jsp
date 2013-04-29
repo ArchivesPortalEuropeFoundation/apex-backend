@@ -41,8 +41,11 @@
 					});
 					$("table#yourInstitutionTabContent_1 input#buttonAddPostalAddressIfDifferent").click(function(){
 						$(this).hide();
-						$("table#yourInstitutionTabContent_1 tr#YILatitudeLongitude").hide();
-						$("table#yourInstitutionTabContent_1 tr#YIPostalAddress").show();
+						$("table#yourInstitutionTabContent_1 tr#yiPostalAddressLabel").show();
+						$("table#yourInstitutionTabContent_1 tr#yiPostalAddressLanguage").show();
+						$("table#yourInstitutionTabContent_1 tr#yiPostalAddressStreet").show();
+						$("table#yourInstitutionTabContent_1 tr#yiPostalAddressCity").show();
+						$("table#yourInstitutionTabContent_1 tr#yiPostalAddressTranslation").show();
 					});
 					$("table#yourInstitutionTabContent_1 input#buttonAddClosingDates").click(function(){
 						$(this).hide();

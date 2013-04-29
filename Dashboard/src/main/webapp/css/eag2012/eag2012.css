@@ -148,7 +148,7 @@ background: #00A0DF;
 #repositoryLabel, #administrativeLabel, #buildingLabel, #holdingLabel, #usedLanguagesLabel,
 #usedRulesLabel, #resourceLabel, #institutionLabel, #searchroomLabel, #libraryLabel,
 #internetAccessLabel, #technicalServicesLabel, #restaurationLabLabel, #reproductionServiceLabel,
-#recreationalServiceLabel {
+#recreationalServiceLabel, #yourInstitutionLabel, #yiPostalAddressLabel {
 	font-weight: bold;
 }
 

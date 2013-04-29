@@ -9,7 +9,7 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<input type="text" id="textDescriptionIdentifier" value="<s:property value="#descriptionIdentifier" />" />
+				<input type="text" id="textDescriptionIdentifier" value="<s:property value="#descriptionIdentifier" />" disabled="disabled" />
 				<s:fielderror fieldName="descriptionIdentifier"/>
 			</td>
 			<td colspan="2">

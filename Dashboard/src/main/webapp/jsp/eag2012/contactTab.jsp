@@ -15,14 +15,14 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<input type="text" id="textContactStreetOfTheInstitution" value="<s:property value="#streetOfTheInstitution" />" />
+				<input type="text" id="textContactStreetOfTheInstitution" value="<s:property value="#streetOfTheInstitution" />" disabled="disabled" />
 				<s:fielderror fieldName="textContactStreetOfTheInstitution"/>
 			</td>
 			<td id="tdLanguageStreetOfTheInstitution" class="labelLeft">
 				<label for="selectLanguageStreetOfTheInstitution" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectLanguageStreetOfTheInstitution" list="languageList"></s:select>
+				<s:select theme="simple" id="selectLanguageStreetOfTheInstitution" list="languageList" disabled="true"></s:select>
 			</td>
 		</tr>
 
@@ -32,14 +32,14 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<input type="text" id="textContactCityOfTheInstitution" value="<s:property value="#cityOfTheInstitution" />" />
+				<input type="text" id="textContactCityOfTheInstitution" value="<s:property value="#cityOfTheInstitution" />" disabled="disabled" />
 				<s:fielderror fieldName="textContactCityOfTheInstitution"/>
 			</td>
 			<td id="tdLanguageCityOfTheInstitution" class="labelLeft">
 				<label for="selectLanguageCityOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectLanguageCityOfTheInstitution" list="languageList"></s:select>
+				<s:select theme="simple" id="selectLanguageCityOfTheInstitution" list="languageList" disabled="true"></s:select>
 			</td>
 		</tr>
 
@@ -94,14 +94,14 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<input type="text" id="textContactCountryOfTheInstitution" value="<s:property value="#countryOfTheInstitution" />" />
+				<input type="text" id="textContactCountryOfTheInstitution" value="<s:property value="#countryOfTheInstitution" />" disabled="disabled" />
 				<s:fielderror fieldName="textContactCountryOfTheInstitution"/>
 			</td>
 			<td id="tdLanguageCountryOfTheInstitution" class="labelLeft">
 				<label for="selectLanguageCountryOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectLanguageCountryOfTheInstitution" list="languageList"></s:select>
+				<s:select theme="simple" id="selectLanguageCountryOfTheInstitution" list="languageList" disabled="true"></s:select>
 			</td>
 		</tr>
 
@@ -116,13 +116,13 @@
 				<s:property value="getText('label.ai.tabs.commons.latitude')" />
 			</td>
 			<td>
-				<input type="text" id="textContactLatitudeOfTheInstitution" value="<s:property value="#latitudeOfTheInstitution" />" />
+				<input type="text" id="textContactLatitudeOfTheInstitution" value="<s:property value="#latitudeOfTheInstitution" />" disabled="disabled" />
 			</td>
 			<td class="labelLeft">
 				<s:property value="getText('label.ai.tabs.commons.longitude')" />
 			</td>
 			<td>
-				<input type="text" id="textContactLongitudeOfTheInstitution" value="<s:property value="#longitudeOfTheInstitution" />" />
+				<input type="text" id="textContactLongitudeOfTheInstitution" value="<s:property value="#longitudeOfTheInstitution" />" disabled="disabled" />
 			</td>
 		</tr>
 
@@ -168,7 +168,7 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<s:select theme="simple" id="selectContinentOfTheInstitution" list="continentOfTheInstitutionList" ></s:select>
+				<s:select theme="simple" id="selectContinentOfTheInstitution" list="continentOfTheInstitutionList" disabled="true"></s:select>
 				<s:fielderror fieldName="continentOfTheInstitution" />
 			</td>
 			<td colspan="2" ></td>
@@ -179,7 +179,7 @@
 				<label for="textContactTelephoneOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.telephone')" /></label>:
 			</td>
 			<td>
-				<input type="text" id="textContactTelephoneOfTheInstitution" value="<s:property value="#telephoneOfTheInstitution" />" />
+				<input type="text" id="textContactTelephoneOfTheInstitution" value="<s:property value="#telephoneOfTheInstitution" />" disabled="disabled" />
 			</td>
 			<td id="tdAddFurtherTelephoneOfTheInstitution" colspan="2">
 				<input id="buttonAddFurtherTelephoneOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherTelephoneNumbers")' />" onclick="addFurtherTelephoneOfTheInstitution();"/>
@@ -204,7 +204,7 @@
 				<label for="textContactEmailOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.emailAddress')" /></label>:
 			</td>
 			<td>
-				<input type="text" id="textContactEmailOfTheInstitution" value="<s:property value="#emailOfTheInstitution" />" />
+				<input type="text" id="textContactEmailOfTheInstitution" value="<s:property value="#emailOfTheInstitution" />" disabled="disabled" />
 			</td>
 			<td class="labelLeft">
 				<label for="textContactLinkTitleForEmailOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.linkTitle')" /></label>:
@@ -226,7 +226,7 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<input type="text" id="textContactWebOfTheInstitution" value="<s:property value="#webOfTheInstitution" />" />
+				<input type="text" id="textContactWebOfTheInstitution" value="<s:property value="#webOfTheInstitution" />" disabled="disabled" />
 				<s:fielderror fieldName="webOfTheInstitution"/>
 			</td>
 			<td class="labelLeft">

@@ -45,7 +45,7 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<s:select theme="simple" id="noti_languageList" list="languageList"></s:select>
+				<s:select theme="simple" id="noti_languageList" list="languageList" disabled="true"></s:select>
 				<s:fielderror fieldName="noti_languageList"/>
 			</td>
 		</tr>
