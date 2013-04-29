@@ -182,26 +182,11 @@
 				<input type="text" id="textContactTelephoneOfTheInstitution" value="<s:property value="#telephoneOfTheInstitution" />" />
 			</td>
 			<td id="tdAddFurtherTelephoneOfTheInstitution" colspan="2">
-				<input id="buttonAddFurtherTelephoneOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherTelephoneNumbers")' />"/>
+				<input id="buttonAddFurtherTelephoneOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherTelephoneNumbers")' />" onclick="addFurtherTelephoneOfTheInstitution();"/>
 			</td>
 		</tr>
 		<script type="text/javascript">
-			$("table#contactTable input#buttonAddFurtherTelephoneOfTheInstitution").click(function(){
-				var count = $("table#contactTable tr[id^='trTelephoneOfTheInstitution']").length;
-				var newId = "trTelephoneOfTheInstitution_"+(count+1);
-				var trHtml = "<tr id=\""+newId+"\">"+$("table#contactTable tr[id^='trTelephoneOfTheInstitution']").clone().html()+"</tr>";
-				var lastId = "table#contactTable tr#trTelephoneOfTheInstitution";
-				if(count>1){
-					lastId+="_"+(count);
-				}
-				$(lastId).after(trHtml);
-				//delete cloned button
-				$("table#contactTable tr#"+newId+" td#tdAddFurtherTelephoneOfTheInstitution").remove();
-				//update last content
-				$("table#contactTable tr#"+newId+" td#tdTelephoneOfTheInstitution").attr("id","tdTelephoneOfTheInstitution_"+(count+1));
-				$("table#contactTable tr#"+newId+" label[for='textContactTelephoneOfTheInstitution']").attr("for","textContactTelephoneOfTheInstitution_"+(count+1));
-				$("table#contactTable tr#"+newId+" input#textContactTelephoneOfTheInstitution").attr("id","textContactTelephoneOfTheInstitution_"+(count+1));
-			});
+			$("table#contactTable input#buttonAddFurtherTelephoneOfTheInstitution").click();
 		</script>
 		<tr id="trFaxOfTheInstitution">
 			<td id="tdFaxOfTheInstitution">
@@ -211,27 +196,9 @@
 				<input type="text" id="textContactFaxOfTheInstitution" value="<s:property value="#faxOfTheInstitution" />" />
 			</td>
 			<td id="tdAddFurtherFaxOfTheInstitution" colspan="2">
-				<input id="buttonAddFurtherFaxOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherFaxOfTheInstitution")' />"/>
+				<input id="buttonAddFurtherFaxOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherFaxOfTheInstitution")' />" onclick="addFurtherFaxOfTheInstitution();"/>
 			</td>
 		</tr>
-		<script type="text/javascript">
-			$("table#contactTable input#buttonAddFurtherFaxOfTheInstitution").click(function(){
-				var count = $("table#contactTable tr[id^='trFaxOfTheInstitution']").length;
-				var newId = "trFaxOfTheInstitution_"+(count+1);
-				var trHtml = "<tr id=\""+newId+"\">"+$("table#contactTable tr[id^='trFaxOfTheInstitution']").clone().html()+"</tr>";
-				var lastId = "table#contactTable tr#trFaxOfTheInstitution";
-				if(count>1){
-					lastId+="_"+(count);
-				}
-				$(lastId).after(trHtml);
-				//delete cloned button
-				$("table#contactTable tr#"+newId+" td#tdAddFurtherFaxOfTheInstitution").remove();
-				//update last content
-				$("table#contactTable tr#"+newId+" td#tdFaxOfTheInstitution").attr("id","tdFaxOfTheInstitution_"+(count+1));
-				$("table#contactTable tr#"+newId+" label[for='textContactFaxOfTheInstitution']").attr("for","textContactFaxOfTheInstitution_"+(count+1));
-				$("table#contactTable tr#"+newId+" input#textContactFaxOfTheInstitution").attr("id","textContactFaxOfTheInstitution_"+(count+1));
-			});
-		</script>
 		<tr id="trEmailOfTheInstitution">
 			<td>
 				<label for="textContactEmailOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.emailAddress')" /></label>:
@@ -249,26 +216,8 @@
 
 		<tr>
 			<td id="tdAddFurtherEmailsOfTheInstitution" colspan="2">
-				<input id="buttonAddFurtherEmailsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherEmailsAddresses")' />" />
+				<input id="buttonAddFurtherEmailsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherEmailsAddresses")' />" onclick="addFurtherEmailsOfTheInstitution();" />
 			</td>
-			<script type="text/javascript">
-				$("table#contactTable input#buttonAddFurtherEmailsOfTheInstitution").click(function(){
-					var count = $("table#contactTable tr[id^='trEmailOfTheInstitution']").length;
-					var newId = "trEmailOfTheInstitution_"+(count+1);
-					var trHtml = "<tr id=\""+newId+"\">"+$("table#contactTable tr[id^='trEmailOfTheInstitution']").clone().html()+"</tr>";
-					var lastId = "table#contactTable tr#trEmailOfTheInstitution";
-					if(count>1){
-						lastId+="_"+(count);
-					}
-					$(lastId).after(trHtml);
-					//update last content
-					$("table#contactTable tr#"+newId+" tr#trEmailOfTheInstitution").attr("id","trEmailOfTheInstitution_"+(count+1));
-					$("table#contactTable tr#"+newId+" label[for='textContactEmailOfTheInstitution']").attr("for","textContactEmailOfTheInstitution_"+(count+1));
-					$("table#contactTable tr#"+newId+" input#textContactEmailOfTheInstitution").attr("id","textContactEmailOfTheInstitution_"+(count+1));
-					$("table#contactTable tr#"+newId+" label[for='textContactLinkTitleForEmailOfTheInstitution']").attr("for","textContactLinkTitleForEmailOfTheInstitution_"+(count+1));
-					$("table#contactTable tr#"+newId+" input#textContactLinkTitleForEmailOfTheInstitution").attr("id","textContactLinkTitleForEmailOfTheInstitution_"+(count+1));
-				});
-			</script>
 		</tr>
 
 		<tr id="trWebOfTheInstitution">
@@ -290,26 +239,8 @@
 
 		<tr>
 			<td id="tdAddFurtherWebsOfTheInstitution" colspan="2">
-				<input id="buttonAddFurtherWebsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherWebpages")' />" />
+				<input id="buttonAddFurtherWebsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherWebpages")' />" onclick="addFurtherWebsOfTheInstitution();" />
 			</td>
-			<script type="text/javascript">
-				$("table#contactTable input#buttonAddFurtherWebsOfTheInstitution").click(function(){
-					var count = $("table#contactTable tr[id^='trWebOfTheInstitution']").length;
-					var newId = "trWebOfTheInstitution_"+(count+1);
-					var trHtml = "<tr id=\""+newId+"\">"+$("table#contactTable tr[id^='trWebOfTheInstitution']").clone().html()+"</tr>";
-					var lastId = "table#contactTable tr#trWebOfTheInstitution";
-					if(count>1){
-						lastId+="_"+(count);
-					}
-					$(lastId).after(trHtml);
-					//update last content
-					$("table#contactTable tr#"+newId+" tr#trWebOfTheInstitution").attr("id","trWebOfTheInstitution_"+(count+1));
-					$("table#contactTable tr#"+newId+" label[for='textContactWebOfTheInstitution']").attr("for","textContactWebOfTheInstitution_"+(count+1));
-					$("table#contactTable tr#"+newId+" input#textContactWebOfTheInstitution").attr("id","textContactWebOfTheInstitution_"+(count+1));
-					$("table#contactTable tr#"+newId+" label[for='textContactLinkTitleForWebOfTheInstitution']").attr("for","textContactLinkTitleForWebOfTheInstitution_"+(count+1));
-					$("table#contactTable tr#"+newId+" input#textContactLinkTitleForWebOfTheInstitution").attr("id","textContactLinkTitleForWebOfTheInstitution_"+(count+1));
-				});
-			</script>
 		</tr>
 
 		<tr>
@@ -318,7 +249,7 @@
 				<input type="button" id="buttonContactTabSave" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" />
 				<script type="text/javascript">
 					//current tab
-					$("table#contactTable input#buttonContactTabSave").click(clickContactAction);
+					$("table#contactTable_"+$("table[id^='contactTable_']").length+" input#buttonContactTabSave").click(clickContactAction);
 				</script>
 			</td>
 		</tr>

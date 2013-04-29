@@ -46,12 +46,7 @@
 			<td colspan="3">
 			</td>
 			<td>
-				<input type="button" id="buttonAddFutherIds" value="<s:property value="getText('label.ai.yourinstitution.addFutherIds')" />" />
-				<script type="text/javascript">
-					$("#buttonAddFutherIds").click(function(){
-						$(this).parent().parent().before("<tr><td colspan=\"2\"></td><td><label for=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\"> <s:property value="getText('label.ai.yourinstitution.futherId')" />:</label></td><td><input type=\"text\" id=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\" /></td></tr>");
-					});
-				</script>
+				<input type="button" id="buttonAddFutherIds" value="<s:property value="getText('label.ai.yourinstitution.addFutherIds')" />" onclick="addFurtherIds('<s:property value="getText('label.ai.yourinstitution.futherId')" />');" />
 			</td>
 		</tr>
 		<tr>
@@ -77,144 +72,7 @@
 			<td colspan="3">
 			</td>
 			<td>
-				<input type="button" id="buttonAddRepositories" value="<s:property value="getText('label.ai.yourinstitution.addRepositories')" />" />
-				<script type="text/javascript">
-					$("#buttonAddRepositories").click(function(){
-						var counter = $("table[id^='yourInstitutionTabContent_']").length;
-						var clone = $("table[id^='yourInstitutionTabContent_"+counter+"']").clone();
-						clone = "<table id='"+("yourInstitutionTabContent_"+(counter+1))+"'>"+clone.html()+"</table>";
-						$("table[id^='yourInstitutionTabContent_"+counter+"']").after(clone);
-						//reset parametters
-						$("table#yourInstitutionTabContent_"+(counter+1)+" input[type='text']").each(function(){
-							$(this).val(""); //clean all input_text
-						});
-						$("table#yourInstitutionTabContent_"+(counter+1)+" tr#YILatitudeLongitude").each(function(){
-							$(this).show();
-						});
-						$("table#yourInstitutionTabContent_"+(counter+1)+" tr#YIPostalAddress").each(function(){
-							$(this).hide();
-						});
-						$("table#yourInstitutionTabContent_"+(counter+1)+" input#buttonAddPostalAddressIfDifferent").each(function(){
-							$(this).show();
-						});
-						$("table#yourInstitutionTabContent_"+(counter+1)+" input#buttonAddPostalAddressIfDifferent").click(function(){
-							$(this).hide();
-							$("table#yourInstitutionTabContent_"+($("table[id^='yourInstitutionTabContent_']").length)+" tr#YILatitudeLongitude").hide();
-							$("table#yourInstitutionTabContent_"+($("table[id^='yourInstitutionTabContent_']").length)+" tr#YIPostalAddress").show();
-						});
-						$("table#yourInstitutionTabContent_"+(counter+1)+" input#buttonAddClosingDates").click(function(){
-							$(this).hide();
-							$("table#yourInstitutionTabContent_"+(counter+1)+" tr#fieldClosingDates").show();
-						});
-						$("table[id^='yourInstitutionTabContent_']").hide();
-						var localId = "";
-						if(counter==1){
-							localId = "yourInstitutionTabContent_"+counter;
-							$("#eag2012tabs_institution_tabs").append("<li><a id=\"tab_"+localId+"\" href=\"#repositories\" ><s:property value="getText('label.ai.yourinstitution.institution')" /></a></li>");
-						}
-						$("table#yourInstitutionTabContent_"+(counter+1)+" input#buttonFutherAccessInformation").click(function(){
-							$(this).after('<input type="text" id="futherAccessInformation" />');
-							$(this).hide();
-						});
-						$("table#yourInstitutionTabContent_"+(counter+1)+" input#buttonFutherAccessInformation").each(function(){
-							$(this).show();
-						});
-						$("table#yourInstitutionTabContent_"+(counter+1)+" input#buttonAddFutherInformationOnExistingFacilities").each(function(){
-							$(this).show();
-						});
-						//futherAccessInformation
-						$("table#yourInstitutionTabContent_"+(counter+1)+" input#futherAccessInformation").each(function(){
-							$(this).remove();
-						});
-						//futherInformationOnExistingFacilities
-						$("table#yourInstitutionTabContent_"+(counter+1)+" input#futherInformationOnExistingFacilities").each(function(){
-							$(this).remove();
-						});
-						$("table#yourInstitutionTabContent_"+(counter+1)+" input#buttonAddFutherInformationOnExistingFacilities").click(function(){
-							$(this).after('<input type="text" id="futherInformationOnExistingFacilities" />');
-							$(this).hide();
-						});
-						localId = "yourInstitutionTabContent_"+(counter+1);
-						$("#eag2012tabs_institution_tabs").append("<li><a id=\"tab_"+localId+"\" href=\"#repositories\" ><s:property value="getText('label.ai.yourinstitution.repository')" /> "+(counter)+"</a></li>");
-						//clone and put the 3 new tables
-						$("div#tab-contact").append("<table id=\"contactTable_"+(counter+1)+"\">"+$("table#contactTable").clone().html()+"</table>");
-						$("div#tab-accessAndServices").append("<table id=\"accessAndServicesTable_"+(counter+1)+"\">"+$("table#accessAndServicesTable").clone().html()+"</table>");
-						$("div#tab-description").append("<table id=\"descriptionTable_"+(counter+1)+"\">"+$("table#descriptionTable").clone().html()+"</table>");
-						//fill values with the current "your institution" values provided by user
-						
-						//contact tab
-						var selectedIndex = document.getElementById('selectYIContinent').selectedIndex;
-						var latitude = $("#textYILatitude").val();
-						var longitude = $("#textYILongitude").val();
-						var country = $("#textYICountry").val();
-						var city = $("#textYICity").val();
-						var street = $("#textYIStreet").val();
-						var telephone = $("#textYITelephone").val();
-						var email = $("#textYIEmailAddress").val();
-						var web = $("#textYIEmailAddress").val();
-						//contact table
-						$("table#contactTable_"+(counter+1)+" #selectContinentOfTheInstitution option").eq(selectedIndex).prop("selected",true);
-						$("table#contactTable_"+(counter+1)+" #textcontactLatitudeOfTheInstitution").attr("value",latitude);
-						$("table#contactTable_"+(counter+1)+" #textContactLongitudeOfTheInstitution").attr("value",longitude);
-						$("table#contactTable_"+(counter+1)+" #textContactCountryOfTheInstitution").attr("value",country);
-						$("table#contactTable_"+(counter+1)+" #textContactCityOfTheInstitution").attr("value",city);
-						$("table#contactTable_"+(counter+1)+" #textContactStreetOfTheInstitution").attr("value",street);
-						$("table#contactTable_"+(counter+1)+" #textContactTelephoneOfTheInstitution").attr("value",telephone);
-						$("table#contactTable_"+(counter+1)+" #textContactEmailOfTheInstitution").attr("value",email);
-						$("table#contactTable_"+(counter+1)+" #textContactWebOfTheInstitution").attr("value",web);
-						//access and services
-						var opening = $("#textYIOpeningTimes").val();
-						var accessPublic = document.getElementById('selectAccessibleToThePublic').selectedIndex;
-						var access = $("#selectFacilitiesForDisabledPeopleAvailable").val();
-						$("table#contactTable_"+(counter+1)+" #textContactWebOfTheInstitution").attr("value",opening);
-						$("table#contactTable_"+(counter+1)+" #selectASFacilitiesForDisabledPeopleAvailable option").eq(accessPublic).prop("selected",true);
-						$("table#contactTable_"+(counter+1)+" #textASAccessibility").attr("value",access);
-						
-						$("table#"+localId).show();
-						$("a[id^='tab_']").click(function(){
-							$("a[id^='tab_']").each(function(){
-								$(this).removeClass("eag2012currenttab");
-							});
-							$(this).addClass("eag2012currenttab");
-							var localId = $(this).attr("id");
-							if(localId.indexOf("tab_")==0){
-								localId = localId.substring("tab_".length);
-							}
-							$("table[id^='yourInstitutionTabContent_']").hide();
-							$("table#"+localId).show();
-							//show/hide right tabs and content
-							if(localId.indexOf("_1")>-1){
-								$("ul#eag2012TabsContainer li a").each(function(){
-									var id = $(this).parent().attr("id");
-									if(id.indexOf("tab-yourInstitution")>-1){
-										$(this).removeClass("eag2012disabled");
-									}else if(id.indexOf("tab-identity")>-1){
-										$(this).removeClass("eag2012disabled");
-									}else if(id.indexOf("tab-control")>-1){
-										$(this).removeClass("eag2012disabled");
-									}else if(id.indexOf("tab-relations")>-1){
-										$(this).removeClass("eag2012disabled");
-									}
-								});
-							}else{
-								$("ul#eag2012TabsContainer li a").each(function(){
-									var id = $(this).parent().attr("id");
-									if(id.indexOf("tab-yourInstitution")>-1 || id.indexOf("tab-identity")>-1 || id.indexOf("tab-control")>-1 || id.indexOf("tab-relations")>-1){
-										$(this).addClass("eag2012disabled");
-										$("ul#eag2012TabsContainer a[href='#tab-contact']").trigger('click');
-									}
-								});
-//								if($("ul#eag2012TabsContainer a .eag2012currenttab").hasClass("eag2012disabled")){
-//									$("ul#eag2012TabsContainer a[href='#tab-contact']").trigger('click');
-//								}
-							}
-						});
-						$("a#tab_"+localId).trigger('click');
-						$("a#tab-contact").parent().trigger('click');
-						//current tab
-						$("table#yourInstitutionTabContent_"+(counter+1)+" input#buttonYourInstitutionTabSave").click(clickYourInstitutionAction);
-					});
-				</script>
+				<input type="button" id="buttonAddRepositories" value="<s:property value="getText('label.ai.yourinstitution.addRepositories')" />" onclick="addRepositories('<s:property value="getText('label.ai.yourinstitution.institution')" />','<s:property value="getText('label.ai.yourinstitution.repository')" />');" />
 			</td>
 		</tr>
 		</table>

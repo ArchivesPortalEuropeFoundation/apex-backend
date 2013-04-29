@@ -51,27 +51,7 @@
 		</tr>
 
 		<tr>
-			<td colspan="2"><input id="buttonAddAnotherFormOfTheAuthorizedName" type="button" value="<s:property value='getText("label.ai.identity.addAnotherFormOfTheAuthorizedName")' />" /></td>
-			<script type="text/javascript">
-				$("table#identityTable input#buttonAddAnotherFormOfTheAuthorizedName").click(function(){
-					var count = $("table#identityTable tr[id^='trNameOfTheInstitution']").length;
-					var newId = "trNameOfTheInstitution_"+(count+1);
-					var trHtml = "<tr id=\""+newId+"\">"+$("table#identityTable tr[id^='trNameOfTheInstitution']").clone().html()+"</tr>";
-					var lastId = "table#identityTable tr#trNameOfTheInstitution";
-					if(count>1){
-						lastId+="_"+(count);
-					}
-					$(lastId).after(trHtml);
-					//update last content
-					$("#"+newId+" input#textIdentityIdUsedInAPE").attr("id","textIdentityIdUsedInAPE_"+(count+1));
-					$("#"+newId+" td#tdNameOfTheInstitution").attr("id","tdNameOfTheInstitution_"+(count+1));
-					$("#"+newId+" input#textIdentityIdUsedInAPE_"+(count+1)).attr("value","");
-					$("#"+newId+" input#textIdentityIdUsedInAPE_"+(count+1)).removeAttr("disabled");
-					$("#"+newId+" td#tdNameOfTheInstitutionLanguage").attr("id","tdNameOfTheInstitutionLanguage_"+(count+1));
-					$("#"+newId+" label[for='noti_languageList']").attr("for","noti_languageList_"+(count+1));
-					$("#"+newId+" select#noti_languageList").attr("id","noti_languageList_"+(count+1));
-				});
-			</script>
+			<td colspan="2"><input id="buttonAddAnotherFormOfTheAuthorizedName" type="button" value="<s:property value='getText("label.ai.identity.addAnotherFormOfTheAuthorizedName")' />" onclick="addAnotherFormOfTheAuthorizedName();"/></td>
 		</tr>
 
 		<tr class="marginTop" id="trParallelNameOfTheInstitution" >
@@ -91,28 +71,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonAddParallelNameOfTheInstitution" value="<s:property value='getText("label.ai.identity.addAnotherParallelNameOfTheInstitution")' />"/>
-				<script type="text/javascript">
-					$("table#identityTable input#buttonAddParallelNameOfTheInstitution").click(function(){
-						var count = $("table#identityTable tr[id^='trParallelNameOfTheInstitution']").length;
-						var newId = "trParallelNameOfTheInstitution_"+(count+1);
-						var trHtml = "<tr id=\""+newId+"\">"+$("table#identityTable tr[id^='trParallelNameOfTheInstitution']").clone().html()+"</tr>";
-						var lastId = "table#identityTable tr#trParallelNameOfTheInstitution";
-						if(count>1){
-							lastId+="_"+(count);
-						}
-						$(lastId).after(trHtml);
-						//update last content
-						$("#"+newId+" input#textParallelNameOfTheInstitution").attr("id","textParallelNameOfTheInstitution_"+(count+1));
-						$("#"+newId+" td#tdNameOfTheInstitutionLanguage").attr("id","tdNameOfTheInstitutionLanguage_"+(count+1));
-						$("#"+newId+" label[for='textParallelNameOfTheInstitution']").attr("for","textParallelNameOfTheInstitution_"+(count+1));
-						$("#"+newId+" input#textParallelNameOfTheInstitution").attr("id","textParallelNameOfTheInstitution_"+(count+1));
-						$("#"+newId+" input#textParallelNameOfTheInstitution_"+(count+1)).attr("value","");
-						$("#"+newId+" td#tdNameOfTheInstitutionLanguage").attr("id","tdNameOfTheInstitutionLanguage_"+(count+1));
-						$("#"+newId+" label[for='pnoti_languageList']").attr("for","pnoti_languageList_"+(count+1));
-						$("#"+newId+" select#pnoti_languageList").attr("id","pnoti_languageList_"+(count+1));
-					});
-				</script>
+				<input type="button" id="buttonAddParallelNameOfTheInstitution" value="<s:property value='getText("label.ai.identity.addAnotherParallelNameOfTheInstitution")' />" onclick="addParallelNameOfTheInstitution();"/>
 			</td>
 		</tr>
 
@@ -154,25 +113,7 @@
 
 		<tr>
 			<td>
-				<input type="button" id="buttonAddMoreDates" value="<s:property value='getText("label.ai.identity.addMoreDates")' />"/>
-				<script type="text/javascript">
-					$("table#identityTable input#buttonAddMoreDates").click(function(){
-						var count = $("table#identityTable tr[id^='trDatesWhenThisNameWasUsed']").length;
-						var newId = "trDatesWhenThisNameWasUsed_"+(count+1);
-						var trHtml = "<tr id=\""+newId+"\">"+$("table#identityTable tr[id^='trDatesWhenThisNameWasUsed']").clone().html()+"</tr>";
-						var lastId = "table#identityTable tr#trDatesWhenThisNameWasUsed";
-						if(count>1){
-							lastId+="_"+(count);
-						}
-						$(lastId).after(trHtml);
-						//update last content
-						$("#"+newId+" label[for='textDatesWhenThisNameWasUsedFrom']").attr("for","textDatesWhenThisNameWasUsedFrom_"+(count+1));
-						$("#"+newId+" label[for='textDatesWhenThisNameWasUsedTo']").attr("for","textDatesWhenThisNameWasUsedTo_"+(count+1));
-						$("#"+newId+" input#textDatesWhenThisNameWasUsedFrom").attr("id","textDatesWhenThisNameWasUsedFrom_"+(count+1));
-						$("#"+newId+" input#textDatesWhenThisNameWasUsedTo").attr("id","textDatesWhenThisNameWasUsedTo_"+(count+1));
-						$("#"+newId+" tr#trDatesWhenThisNameWasUsed").attr("id","trDatesWhenThisNameWasUsed_"+(count+1));
-					});
-				</script>
+				<input type="button" id="buttonAddMoreDates" value="<s:property value='getText("label.ai.identity.addMoreDates")' />" onclick="addMoreDates();" />
 			</td>
 			<td colspan="3">
 			</td>
@@ -180,25 +121,7 @@
 
 		<tr id="trAddMoreAnotherFormerlyUsedName">
 			<td colspan="2">
-				<input type="button" id="buttonAddMoreAnotherFormerlyUsedName" value="<s:property value='getText("label.ai.identity.addAnotherFormerlyUsedName")' />"/>
-				<script type="text/javascript">
-				$("table#identityTable input#buttonAddMoreAnotherFormerlyUsedName").click(function(){
-					var count = $("table#identityTable tr[id^='trTextFormerlyUsedName']").length;
-					var newId = "trTextFormerlyUsedName_"+(count+1);
-					var trHtml = "<tr id=\""+newId+"\">"+$("table#identityTable tr[id^='trTextFormerlyUsedName']").clone().html()+"</tr>";
-					var lastId = "table#identityTable tr#trTextFormerlyUsedName";
-					if(count>1){
-						lastId+="_"+(count);
-					}
-					$(lastId).after(trHtml);
-					//update last content
-					$("#"+newId+" tr#trTextFormerlyUsedName").attr("id","trTextFormerlyUsedName_"+(count+1));
-					$("#"+newId+" label[for='textFormerlyUsedName']").attr("for","textFormerlyUsedName_"+(count+1));
-					$("#"+newId+" input#textFormerlyUsedName").attr("id","textFormerlyUsedName_"+(count+1));
-					$("#"+newId+" label[for='tfun_languageList']").attr("for","tfun_languageList_"+(count+1));
-					$("#"+newId+" select#tfun_languageList").attr("id","tfun_languageList_"+(count+1));
-				});
-				</script>
+				<input type="button" id="buttonAddMoreAnotherFormerlyUsedName" value="<s:property value='getText("label.ai.identity.addAnotherFormerlyUsedName")' />" onclick="addMoreAnotherFormerlyUsedName();"/>
 			</td>
 			<td colspan="2">
 			</td>
