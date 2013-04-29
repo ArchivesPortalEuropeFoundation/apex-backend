@@ -39,28 +39,6 @@
 					$("a[href^='#tab-']").click(function(){
 						hideAndShow("tab-",$(this).attr("href").substring(1));
 					});
-					$("table#yourInstitutionTabContent_1 input#buttonAddPostalAddressIfDifferent").click(function(){
-						$(this).hide();
-						$("table#yourInstitutionTabContent_1 tr#yiPostalAddressLabel").show();
-						$("table#yourInstitutionTabContent_1 tr#yiPostalAddressLanguage").show();
-						$("table#yourInstitutionTabContent_1 tr#yiPostalAddressStreet").show();
-						$("table#yourInstitutionTabContent_1 tr#yiPostalAddressCity").show();
-						$("table#yourInstitutionTabContent_1 tr#yiPostalAddressTranslation").show();
-					});
-					$("table#yourInstitutionTabContent_1 input#buttonAddClosingDates").click(function(){
-						$(this).hide();
-						$("table#yourInstitutionTabContent_1 tr#fieldClosingDates").show();
-					});
-					$("table#yourInstitutionTabContent_1 input#buttonFutherAccessInformation").click(function(){
-						$(this).after('<input type="text" id="futherAccessInformation" />');
-						$(this).hide();
-					});
-					$("table#yourInstitutionTabContent_1 input#buttonAddFutherInformationOnExistingFacilities").click(function(){
-						$(this).after('<input type="text" id="futherInformationOnExistingFacilities" />');
-						$(this).hide();
-					});
-					//send first tab
-					$("table#yourInstitutionTabContent_1 input#buttonYourInstitutionTabSave").click(clickYourInstitutionAction);
 					//clone contact, "access and services" and description
 					$("div#divTempContainter").append($("table#contactTable").clone());
 					$("div#divTempContainter").append($("table#accessAndServicesTable").clone());

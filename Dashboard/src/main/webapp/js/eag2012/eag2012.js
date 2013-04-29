@@ -44,7 +44,7 @@ var clickYourInstitutionAction = function(){
 	var jsonData = "{";
 	
 		//content before institutions part
-		$("table#yourInstitutionTable input[type='text']").each(function(){
+		$("table#yourInstitutionTable_1 input[type='text']").each(function(){
 			if(jsonData.length>1){
 				jsonData += ",";
 			}
@@ -57,7 +57,7 @@ var clickYourInstitutionAction = function(){
 			}
 		});
 		//select options selected
-		$("table#yourInstitutionTable select").each(function(){
+		$("table#yourInstitutionTable_1 select").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'){
 				jsonData += ",";
 			}
@@ -73,118 +73,26 @@ var clickYourInstitutionAction = function(){
 		//validation array
 		var validationArray = new Array();
 
-		//institutions
-		var formData = new Array();
-		$("table[id^='yourInstitutionTabContent_']").each(function(){
+		// Visitors addess.
+		var visitorsAddress = new Array();
+		$("table[id^='yiTableVisitorsAddress_']").each(function(){
 			var id = $(this).attr("id");
 			if(id.indexOf("#")>-1){
 				id = id.substring(id.indexOf("#"));
 			}
-			formData.push(id);
+			visitorsAddress.push(id);
 		});
-		jsonData += ",'institutions':[";
-		for(var i=0;i<formData.length;i++){
-			var yiMERepositories = new Array("textYIOpeningTimes");
-
+		jsonData += ",'visitorsAddress':[";
+		for(var j=0; j<visitorsAddress.length; j++) {
+			var yiMEVisitorsAddress = new Array("selectYIVASelectLanguage", "textYIStreet",
+					"textYICity", "textYICountry");
+			
 			if(jsonData.substring(jsonData.length-1)!='['){
 				jsonData += ",";
 			}
-			jsonData += "{'"+formData[i]+"':";
-
-			// Visitors addess.
-			var visitorsAddress = new Array();
-			$("table[id^='yiTableVisitosAddress_']").each(function(){
-				var id = $(this).attr("id");
-				if(id.indexOf("#")>-1){
-					id = id.substring(id.indexOf("#"));
-				}
-				visitorsAddress.push(id);
-			});
-			jsonData += ",'visitorsAddress':[";
-			for(var j=0; j<visitorsAddress.length; j++) {
-				var yiMEVisitorsAddress = new Array("selectYIVASelectLanguage", "textYIStreet",
-						"textYICity", "textYICountry");
-				
-				if(jsonData.substring(jsonData.length-1)!='['){
-					jsonData += ",";
-				}
-				jsonData += "{'"+visitorsAddress[j]+"':";
-				//input type text
-				$("#"+visitorsAddress[j]+" input[type='text']").each(function(){
-					if(jsonData.charAt(jsonData.length-1)!=':'){
-						jsonData += ",";
-					}
-					jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
-
-					// Check fill mandatory fields.
-					if ($(this).attr("value") != '') {
-						var position = yiMEVisitorsAddress.indexOf($(this).attr("id"));
-						yiMEVisitorsAddress.splice(position, 1);
-					}
-				});
-				//select options selected
-				$("#"+visitorsAddress[j]+" select").each(function(){
-					if(jsonData.charAt(jsonData.length-1)!=':'){
-						jsonData += ",";
-					}
-					jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
-				});
-				if(yiMEVisitorsAddress.length>0){
-					validationArray.push(visitorsAddress[j],yiMEVisitorsAddress);
-				}
-				jsonData += "}";
-			}
-			
-			jsonData += "]";
-
-			// Postal addess.
-			var postalAddress = new Array();
-			$("table[id^='yiTablePostalAddress_']").each(function(){
-				var id = $(this).attr("id");
-				if(id.indexOf("#")>-1){
-					id = id.substring(id.indexOf("#"));
-				}
-				visitorsAddress.push(id);
-			});
-			jsonData += ",'postalAddress':[";
-			for(var j=0; j<postalAddress.length; j++) {
-				var yiMEPostalAddress = new Array("selectYIPASelectLanguage", "textYIPAStreet",
-						"textYIPACity");
-				
-				if(jsonData.substring(jsonData.length-1)!='['){
-					jsonData += ",";
-				}
-				jsonData += "{'"+postalAddress[j]+"':";
-				//input type text
-				$("#"+postalAddress[j]+" input[type='text']").each(function(){
-					if(jsonData.charAt(jsonData.length-1)!=':'){
-						jsonData += ",";
-					}
-					jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
-
-					// Check fill mandatory fields.
-					if ($(this).attr("value") != '') {
-						var position = yiMEPostalAddress.indexOf($(this).attr("id"));
-						yiMEPostalAddress.splice(position, 1);
-					}
-				});
-				//select options selected
-				$("#"+postalAddress[j]+" select").each(function(){
-					if(jsonData.charAt(jsonData.length-1)!=':'){
-						jsonData += ",";
-					}
-					jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
-				});
-				if(yiMEPostalAddress.length>0){
-					validationArray.push(postalAddress[j],yiMEPostalAddress);
-				}
-				jsonData += "}";
-			}
-			
-			jsonData += "]";
-
+			jsonData += "{'"+visitorsAddress[j]+"':";
 			//input type text
-			$("#"+formData[i]+" input[type='text']").each(function(){
+			$("#"+visitorsAddress[j]+" input[type='text']").each(function(){
 				if(jsonData.charAt(jsonData.length-1)!=':'){
 					jsonData += ",";
 				}
@@ -192,24 +100,104 @@ var clickYourInstitutionAction = function(){
 
 				// Check fill mandatory fields.
 				if ($(this).attr("value") != '') {
-					var position = yiMERepositories.indexOf($(this).attr("id"));
-					yiMERepositories.splice(position, 1);
+					var position = yiMEVisitorsAddress.indexOf($(this).attr("id"));
+					yiMEVisitorsAddress.splice(position, 1);
 				}
 			});
 			//select options selected
-			$("#"+formData[i]+" select").each(function(){
+			$("#"+visitorsAddress[j]+" select").each(function(){
 				if(jsonData.charAt(jsonData.length-1)!=':'){
 					jsonData += ",";
 				}
 				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 			});
-			if(yiMERepositories.length>0){
-				validationArray.push(formData[i],yiMERepositories);
+			if(yiMEVisitorsAddress.length>0){
+				validationArray.push(visitorsAddress[j],yiMEVisitorsAddress);
 			}
 			jsonData += "}";
 		}
 		
-	jsonData += "]}";
+		jsonData += "]";
+
+		// Postal addess.
+		var postalAddress = new Array();
+		$("table[id^='yiTablePostalAddress_']").each(function(){
+			var id = $(this).attr("id");
+			if(id.indexOf("#")>-1){
+				id = id.substring(id.indexOf("#"));
+			}
+			visitorsAddress.push(id);
+		});
+		jsonData += ",'postalAddress':[";
+		for(var j=0; j<postalAddress.length; j++) {
+			var yiMEPostalAddress = new Array("selectYIPASelectLanguage", "textYIPAStreet",
+					"textYIPACity");
+			
+			if(jsonData.substring(jsonData.length-1)!='['){
+				jsonData += ",";
+			}
+			jsonData += "{'"+postalAddress[j]+"':";
+			//input type text
+			$("#"+postalAddress[j]+" input[type='text']").each(function(){
+				if(jsonData.charAt(jsonData.length-1)!=':'){
+					jsonData += ",";
+				}
+				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+
+				// Check fill mandatory fields.
+				if ($(this).attr("value") != '') {
+					var position = yiMEPostalAddress.indexOf($(this).attr("id"));
+					yiMEPostalAddress.splice(position, 1);
+				}
+			});
+			//select options selected
+			$("#"+postalAddress[j]+" select").each(function(){
+				if(jsonData.charAt(jsonData.length-1)!=':'){
+					jsonData += ",";
+				}
+				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			});
+			if(yiMEPostalAddress.length>0){
+				validationArray.push(postalAddress[j],yiMEPostalAddress);
+			}
+			jsonData += "}";
+		}
+		
+		jsonData += "]";
+
+		var yiMERepositories = new Array("textYIOpeningTimes");
+
+		if(jsonData.substring(jsonData.length-1)!='['){
+			jsonData += ",";
+		}
+
+		//input type text
+		$("#yiTableOthers input[type='text']").each(function(){
+			if(jsonData.charAt(jsonData.length-1)!=':'){
+				jsonData += ",";
+			}
+			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+
+			// Check fill mandatory fields.
+			if ($(this).attr("value") != '') {
+				var position = yiMERepositories.indexOf($(this).attr("id"));
+				yiMERepositories.splice(position, 1);
+			}
+		});
+		//select options selected
+		$("#yiTableOthers select").each(function(){
+			if(jsonData.charAt(jsonData.length-1)!=':'){
+				jsonData += ",";
+			}
+			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		});
+		if(yiMERepositories.length>0){
+			validationArray.push("yiTableOthers",yiMERepositories);
+		}
+		jsonData += "}";
+
+//	jsonData += "]}";
+	jsonData += "}";
 //	alert(jsonData);
 
 	for (var i = 0; i < yiMandatoryElements.length; i++) {
@@ -405,70 +393,21 @@ function addFurtherIds(text1){
 	$("input#buttonAddFutherIds").parent().parent().before("<tr><td colspan=\"2\"></td><td><label for=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\"> "+text1+":</label></td><td><input type=\"text\" id=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\" /></td></tr>");
 }
 function addRepositories(text1,text2){
-	var counter = $("table[id^='yourInstitutionTabContent_']").length;
-	var clone = $("table[id^='yourInstitutionTabContent_"+counter+"']").clone();
-	clone = "<table id='"+("yourInstitutionTabContent_"+(counter+1))+"'>"+clone.html()+"</table>";
-	$("table[id^='yourInstitutionTabContent_"+counter+"']").after(clone);
+	var counter = $("table[id^='yourInstitutionTable_']").length;
+	var clone = $("table[id^='yourInstitutionTable_"+counter+"']").clone();
+	clone = "<table id='"+("yourInstitutionTable_"+(counter+1))+"'>"+clone.html()+"</table>";
+	$("table[id^='yourInstitutionTable_"+counter+"']").after(clone);
 	//reset parametters
-	$("table#yourInstitutionTabContent_"+(counter+1)+" input[type='text']").each(function(){
+	$("table#yourInstitutionTable_"+(counter+1)+" input[type='text']").each(function(){
 		$(this).val(""); //clean all input_text
 	});
-	$("table#yourInstitutionTabContent_"+(counter+1)+" tr#yiPostalAddressLabel").each(function(){
-		$(this).hide();
-	});
-	$("table#yourInstitutionTabContent_"+(counter+1)+" tr#yiPostalAddressLanguage").each(function(){
-		$(this).hide();
-	});
-	$("table#yourInstitutionTabContent_"+(counter+1)+" tr#yiPostalAddressStreet").each(function(){
-		$(this).hide();
-	});
-	$("table#yourInstitutionTabContent_"+(counter+1)+" tr#yiPostalAddressCity").each(function(){
-		$(this).hide();
-	});
-	$("table#yourInstitutionTabContent_"+(counter+1)+" input#buttonAddPostalAddressIfDifferent").each(function(){
-		$(this).show();
-	});
-	$("table#yourInstitutionTabContent_"+(counter+1)+" input#buttonAddPostalAddressIfDifferent").click(function(){
-		$(this).hide();
-		$("table#yourInstitutionTabContent_"+($("table[id^='yourInstitutionTabContent_']").length)+" tr#yiPostalAddressLabel").show();
-		$("table#yourInstitutionTabContent_"+($("table[id^='yourInstitutionTabContent_']").length)+" tr#yiPostalAddressLanguage").show();
-		$("table#yourInstitutionTabContent_"+($("table[id^='yourInstitutionTabContent_']").length)+" tr#yiPostalAddressStreet").show();
-		$("table#yourInstitutionTabContent_"+($("table[id^='yourInstitutionTabContent_']").length)+" tr#yiPostalAddressCity").show();
-		$("table#yourInstitutionTabContent_"+($("table[id^='yourInstitutionTabContent_']").length)+" tr#yiPostalAddressTranslation").show();
-	});
-	$("table#yourInstitutionTabContent_"+(counter+1)+" input#buttonAddClosingDates").click(function(){
-		$(this).hide();
-		$("table#yourInstitutionTabContent_"+(counter+1)+" tr#fieldClosingDates").show();
-	});
-	$("table[id^='yourInstitutionTabContent_']").hide();
+	$("table[id^='yourInstitutionTable_']").hide();
 	var localId = "";
 	if(counter==1){
-		localId = "yourInstitutionTabContent_"+counter;
+		localId = "yourInstitutionTable_"+counter;
 		$("#eag2012tabs_institution_tabs").append("<li><a id=\"tab_"+localId+"\" href=\"#repositories\" >"+text1+"</a></li>");
 	}
-	$("table#yourInstitutionTabContent_"+(counter+1)+" input#buttonFutherAccessInformation").click(function(){
-		$(this).after('<input type="text" id="futherAccessInformation" />');
-		$(this).hide();
-	});
-	$("table#yourInstitutionTabContent_"+(counter+1)+" input#buttonFutherAccessInformation").each(function(){
-		$(this).show();
-	});
-	$("table#yourInstitutionTabContent_"+(counter+1)+" input#buttonAddFutherInformationOnExistingFacilities").each(function(){
-		$(this).show();
-	});
-	//futherAccessInformation
-	$("table#yourInstitutionTabContent_"+(counter+1)+" input#futherAccessInformation").each(function(){
-		$(this).remove();
-	});
-	//futherInformationOnExistingFacilities
-	$("table#yourInstitutionTabContent_"+(counter+1)+" input#futherInformationOnExistingFacilities").each(function(){
-		$(this).remove();
-	});
-	$("table#yourInstitutionTabContent_"+(counter+1)+" input#buttonAddFutherInformationOnExistingFacilities").click(function(){
-		$(this).after('<input type="text" id="futherInformationOnExistingFacilities" />');
-		$(this).hide();
-	});
-	localId = "yourInstitutionTabContent_"+(counter+1);
+	localId = "yourInstitutionTable_"+(counter+1);
 	$("#eag2012tabs_institution_tabs").append("<li><a id=\"tab_"+localId+"\" href=\"#repositories\" >"+text2+" "+(counter)+"</a></li>");
 	//clone and put the 3 new tables
 	$("div#tab-contact").append("<table id=\"contactTable_"+(counter+1)+"\">"+$("table#contactTable").clone().html()+"</table>");
@@ -514,7 +453,7 @@ function addRepositories(text1,text2){
 		if(localId.indexOf("tab_")==0){
 			localId = localId.substring("tab_".length);
 		}
-		$("table[id^='yourInstitutionTabContent_']").hide();
+		$("table[id^='yourInstitutionTable_']").hide();
 		$("table#"+localId).show();
 		//show/hide right tabs and content
 		if(localId.indexOf("_1")>-1){
@@ -569,7 +508,7 @@ function addRepositories(text1,text2){
 	$(firstId+"_"+(counter+1)+" input#buttonASAddServices").click($._data($(firstId+"_1 input#buttonASAddServices")[0],"events")["click"][0].handler);
 	
 	//current tab
-	$("table#yourInstitutionTabContent_"+(counter+1)+" input#buttonYourInstitutionTabSave").click(clickYourInstitutionAction);
+	$("table#yourInstitutionTable_"+(counter+1)+" input#buttonYourInstitutionTabSave").click(clickYourInstitutionAction);
 }
 function addFurtherEmailsOfTheInstitution(){
 	var currentTab = "";
