@@ -289,7 +289,7 @@ var clickRelationsAction = function(){
 //	alert(jsonData);
 };
 function addFurtherIds(text1){
-	$(this).parent().parent().before("<tr><td colspan=\"2\"></td><td><label for=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\"> "+text1+":</label></td><td><input type=\"text\" id=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\" /></td></tr>");
+	$("input#buttonAddFutherIds").parent().parent().before("<tr><td colspan=\"2\"></td><td><label for=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\"> "+text1+":</label></td><td><input type=\"text\" id=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\" /></td></tr>");
 }
 function addRepositories(text1,text2){
 	var counter = $("table[id^='yourInstitutionTabContent_']").length;
@@ -618,6 +618,7 @@ function aSAddTravellingDirections(){
 		tr2HTML += "<tr id=\""+target2+"\">"+$("table#accessAndServicesTable_"+tablesCount+" tr#tr2TravellingDirections_"+(count)).clone().html();
 	}
 	tr2HTML += "</tr>";
+	$("input#buttonASAddTravellingDirections").each(function(){$(this).remove();});
 	$(lastId).after(tr2HTML);
 	//update with new elements
 	//put .click event to only new visible button
@@ -669,6 +670,7 @@ function aSAddFutherTermOfUse(){
 		tr2HTML += "<tr id=\""+target2+"\">"+$("table#accessAndServicesTable_"+tablesCount+" tr#tr2ASAddFutherTermOfUse_"+(count)).clone().html();
 	}
 	tr2HTML += "</tr>";
+	$("input#buttonASAddFutherTermOfUse").each(function(){$(this).remove();});
 	$(lastId).after(tr2HTML);
 	//update with new elements
 	//put .click event to only new visible button
@@ -766,12 +768,12 @@ function aSAddResearchServices(){
 	$("table#accessAndServicesTable_"+tablesCount+" tr#"+newId+" select#textASSRRSSelectLanguage").attr("id","textASSRRSSelectLanguage_"+(count+1));
 }
 function addADescriptionOfYourRestaurationLab(){
-	$(this).before("<input type=\"text\" id=\"textDescriptionOfYourRestaurationLab\" />");
-	$(this).remove();
+	$("input#buttonAddADescriptionOfYourRestaurationLab").before("<input type=\"text\" id=\"textDescriptionOfYourRestaurationLab\" />");
+	$("input#buttonAddADescriptionOfYourRestaurationLab").remove();
 }
 function aSAddADescriptionOfYourReproductionService(){
-	$(this).before("<input type=\"text\" id=\"textASADescriptionOfYourReproductionService\" />");
-	$(this).remove();
+	$("input#buttonASAddADescriptionOfYourReproductionService").before("<input type=\"text\" id=\"textASADescriptionOfYourReproductionService\" />");
+	$("input#buttonASAddADescriptionOfYourReproductionService").remove();
 }
 function aSReSeAddExhibition(){
 	var tablesCount = $("table[id^='accessAndServicesTable_']").length;
