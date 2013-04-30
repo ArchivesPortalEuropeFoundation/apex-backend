@@ -1030,3 +1030,80 @@ function aSReSeAddExhibition(){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='selectASReSeExhibitionSelectLanguage']").attr("for","selectASReSeExhibitionSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASReSeExhibitionSelectLanguage").attr("id","selectASReSeExhibitionSelectLanguage_"+(count+1));
 }
+function descriptionAddFoundationInformation(){
+	var currentTab = "";
+	$("ul#eag2012tabs_institution_tabs li a").each(function(){
+		if($(this).hasClass("eag2012currenttab")){
+			currentTab = $(this).attr("id");
+			currentTab = currentTab.substring(currentTab.lastIndexOf("_"));
+		}
+	});
+	if(currentTab.length==0){
+		currentTab = "_1";
+	}
+	//trRuleOfRepositoryFoundation
+	var count = $("table#descriptionTable"+currentTab+" tr[id^='trRuleOfRepositoryFoundation']").length;
+	var newId = "trRuleOfRepositoryFoundation_"+(count+1);
+	var trHtml = "<tr id=\""+newId+"\">"+$("table#descriptionTable"+currentTab+" tr[id='trRuleOfRepositoryFoundation']").clone().html()+"</tr>";
+	var lastId = "table#descriptionTable"+currentTab+" tr#trRuleOfRepositoryFoundation";
+	if(count>1){
+		lastId+="_"+(count);
+	}
+	$(lastId).after(trHtml);
+	//update last content
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='textRuleOfRepositoryFoundation']").attr("for","textRuleOfRepositoryFoundation_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" input#textRuleOfRepositoryFoundation").attr("id","textRuleOfRepositoryFoundation_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageRuleOfRepositoryFoundation']").attr("for","selectLanguageRuleOfRepositoryFoundation_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageRuleOfRepositoryFoundation").attr("id","selectLanguageRuleOfRepositoryFoundation_"+(count+1));
+}
+function descriptionAddSuppressionInformation(){
+	var currentTab = "";
+	$("ul#eag2012tabs_institution_tabs li a").each(function(){
+		if($(this).hasClass("eag2012currenttab")){
+			currentTab = $(this).attr("id");
+			currentTab = currentTab.substring(currentTab.lastIndexOf("_"));
+		}
+	});
+	if(currentTab.length==0){
+		currentTab = "_1";
+	}
+	//trDescriptionAddSuppressionInformation
+	var count = $("table#descriptionTable"+currentTab+" tr[id^='trDescriptionAddSuppressionInformation']").length;
+	var newId = "trDescriptionAddSuppressionInformation_"+(count+1);
+	var trHtml = "<tr id=\""+newId+"\">"+$("table#descriptionTable"+currentTab+" tr[id='trDescriptionAddSuppressionInformation']").clone().html()+"</tr>";
+	var lastId = "table#descriptionTable"+currentTab+" tr#trDescriptionAddSuppressionInformation";
+	if(count>1){
+		lastId+="_"+(count);
+	}
+	$(lastId).after(trHtml);
+	//update last content
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='textRuleOfRepositorySuppression']").attr("for","textRuleOfRepositorySuppression_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" input#textRuleOfRepositorySuppression").attr("id","textRuleOfRepositorySuppression_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageRuleOfRepositorySuppression']").attr("for","selectLanguageRuleOfRepositorySuppression_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageRuleOfRepositorySuppression").attr("id","selectLanguageRuleOfRepositorySuppression_"+(count+1));
+}
+function descriptionAddAdministrationUnits(){
+	var currentTab = "";
+	$("ul#eag2012tabs_institution_tabs li a").each(function(){
+		if($(this).hasClass("eag2012currenttab")){
+			currentTab = $(this).attr("id");
+			currentTab = currentTab.substring(currentTab.lastIndexOf("_"));
+		}
+	});
+	if(currentTab.length==0){
+		currentTab = "_1";
+	}
+	var count = $("table#descriptionTable"+currentTab+" tr[id^='trDescriptionAddAdministrationUnits']").length;
+	var newId = "trDescriptionAddAdministrationUnits_"+(count+1);
+	var trHtml = "<tr id=\""+newId+"\">"+$("table#descriptionTable"+currentTab+" tr[id='trDescriptionAddAdministrationUnits']").clone().html()+"</tr>";
+	var lastId = "table#descriptionTable"+currentTab+" tr#trDescriptionAddAdministrationUnits";
+	if(count>1){
+		lastId+="_"+(count);
+	}
+	$(lastId).after(trHtml);
+	//update last content
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='textUnitOfAdministrativeStructure']").attr("for","textUnitOfAdministrativeStructure_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" input#textUnitOfAdministrativeStructure").attr("id","textUnitOfAdministrativeStructure_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageUnitOfAdministrativeStructure']").attr("for","selectLanguageUnitOfAdministrativeStructure_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageUnitOfAdministrativeStructure").attr("id","selectLanguageUnitOfAdministrativeStructure_"+(count+1));
+}

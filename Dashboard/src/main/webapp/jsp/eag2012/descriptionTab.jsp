@@ -41,7 +41,7 @@
 			<td colspan="2"></td>
 		</tr>
 
-		<tr>
+		<tr id="trRuleOfRepositoryFoundation">
 			<td id="tdRuleOfRepositoryFoundation">
 				<s:property value="getText('label.ai.description.ruleOfRepositoryFoundation')" />:
 			</td>
@@ -58,7 +58,7 @@
 
 		<tr>
 			<td id="tdAddFoundationInformation" colspan="2">
-				<input type="button" value="<s:property value='getText("label.ai.description.addFoundationInformation")' />" />
+				<input type="button" id="buttonDescriptionAddFoundationInformation" value="<s:property value='getText("label.ai.description.addFoundationInformation")' />" onclick="descriptionAddFoundationInformation();"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -74,7 +74,7 @@
 			<td colspan="2"></td>
 		</tr>
 
-		<tr>
+		<tr id="trDescriptionAddSuppressionInformation">
 			<td id="tdRuleOfRepositorySuppression">
 				<s:property value="getText('label.ai.description.ruleOfRepositorySuppression')" />:
 			</td>
@@ -91,7 +91,7 @@
 
 		<tr>
 			<td id="tdAddSuppressionInformation" colspan="2">
-				<input type="button" value="<s:property value='getText("label.ai.description.addSuppressionInformation")' />"/>
+				<input type="button" id="buttonDescriptionAddSuppressionInformation" onclick="descriptionAddSuppressionInformation();" value="<s:property value='getText("label.ai.description.addSuppressionInformation")' />"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -103,7 +103,7 @@
 			</td>
 		</tr>
 
-		<tr>
+		<tr id="trDescriptionAddAdministrationUnits">
 			<td id="tdUnitOfAdministrativeStructure">
 				<s:property value="getText('label.ai.description.unitOfAdministrativeStructure')" />:
 			</td>
@@ -120,7 +120,7 @@
 
 		<tr>
 			<td id="tdAddAdministrationUnits" colspan="2">
-				<input type="button" value="<s:property value='getText("label.ai.description.addAdministrationUnits")' />" />
+				<input type="button" id="buttonDescriptionAddAdministrationUnits" onclick="descriptionAddAdministrationUnits();" value="<s:property value='getText("label.ai.description.addAdministrationUnits")' />" />
 			</td>
 			<td colspan="2">
 			</td>
