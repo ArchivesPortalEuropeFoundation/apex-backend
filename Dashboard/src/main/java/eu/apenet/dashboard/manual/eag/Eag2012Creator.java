@@ -41,9 +41,9 @@ import eu.archivesportaleurope.commons.config.ApeConfig;
  */
 public class Eag2012Creator {
 	
-    private static final String EAG_XMLNS = "http://www.archivesportaleurope.eu/profiles/APEnet_EAG/";
+    private static final String EAG_XMLNS = "http://www.archivesportaleurope.net/profiles/APEnet_EAG/";
 	private static final String XML_AUDIENCE = "external";
-	private static final String XML_BASE = "http://www.archivesportaleurope.eu/";
+	private static final String XML_BASE = "http://www.archivesportaleurope.net/";
     private Eag2012 eag2012;
 	private String storagePath;
 	private boolean isNew;
@@ -207,7 +207,9 @@ public class Eag2012Creator {
         	while(keysIterator.hasNext()){
         		String key = keysIterator.next();
         		String value = attributes.get(key);
-        		elementNode.setAttribute(key, value);
+        		if(value!=null && !value.isEmpty()){
+        			elementNode.setAttribute(key, value);
+        		}
         	}
         }
         if(mainEagNode.getValue()!=null){
@@ -238,7 +240,9 @@ public class Eag2012Creator {
 	        	while(keysIterator.hasNext()){
 	        		String key = keysIterator.next();
 	        		String value = attributes.get(key);
-	        		childNode.setAttribute(key, value);
+	        		if(value!=null && !value.isEmpty()){
+	        			childNode.setAttribute(key, value);
+	        		}
 	        	}
 	        }
 			if(childEagNode.getValue()!=null){
@@ -334,10 +338,12 @@ public class Eag2012Creator {
 		childRelations.put("attributes", childRelationsAttributes);
 		childRelations.put("nodeValue", null);
 		   ArrayList<HashMap<String, ?>> childrenRelations = new ArrayList<HashMap<String,?>>();
-		   
-		   childrenRelations.add(buildResourceRelation(this.eag2012.getResourceRelationResourceRelationType(),this.eag2012.getResourceRelationLastDateTimeVerified(),this.eag2012.getResourceRelationId(),this.eag2012.getResourceRelationLang(),this.eag2012.getResourceRelationHref()));
-		   childrenRelations.add(buildeagRelation(this.eag2012.getEagRelationEagRelationType(),this.eag2012.getEagRelationHref()));
-		  
+		   for(int i=0;this.eag2012.getResourceRelationResourceRelationType()!=null && i<this.eag2012.getResourceRelationResourceRelationType().size();i++){ //no mandatory
+		    childrenRelations.add(buildResourceRelation(this.eag2012.getResourceRelationResourceRelationType().get(i),this.eag2012.getResourceRelationLastDateTimeVerified().get(i),this.eag2012.getResourceRelationId().get(i),this.eag2012.getResourceRelationLang().get(i),this.eag2012.getResourceRelationHref().get(i)));
+		   }
+		   for(int i=0;this.eag2012.getEagRelationEagRelationType()!=null && i<this.eag2012.getEagRelationEagRelationType().size();i++){ //no mandatory
+		   childrenRelations.add(buildEagRelation(this.eag2012.getEagRelationEagRelationType().get(i),this.eag2012.getEagRelationHref().get(i)));
+		   }
 		
 		childRelations.put("children", childrenRelations);
 		
@@ -348,28 +354,44 @@ public class Eag2012Creator {
 	private HashMap<String, ?> buildResourceRelation(String resourceRelationType,String resourceRelationLastDateTimeVerified,String resourceRelationId,String resourceRelationLang,String resourceRelationHref) {
 		
 		HashMap<String, Object> childresourceRelation = new HashMap<String, Object>();
-		childresourceRelation.put("nodeName", "resourceRelation");
+		 childresourceRelation.put("nodeName", "resourceRelation");
 		HashMap<String, String> childresourceRelationAttributes = new HashMap<String, String>();
-		childresourceRelationAttributes.put("resourceRelationType", /*"creatorOf"*/resourceRelationType);
-		childresourceRelationAttributes.put("lastDateTimeVerified", resourceRelationLastDateTimeVerified);
-		childresourceRelationAttributes.put("xml:id", resourceRelationId);
-		childresourceRelationAttributes.put("xml:lang",resourceRelationLang);
-		childresourceRelationAttributes.put("href", resourceRelationHref);
-		childresourceRelation.put("attributes",childresourceRelationAttributes);
+		if(resourceRelationType!=null){
+	     childresourceRelationAttributes.put("resourceRelationType",resourceRelationType);
+		 childresourceRelationAttributes.put("lastDateTimeVerified", resourceRelationLastDateTimeVerified);
+		 childresourceRelationAttributes.put("xml:id", resourceRelationId);
+		 childresourceRelationAttributes.put("xml:lang",resourceRelationLang);
+		 childresourceRelationAttributes.put("href", resourceRelationHref);
+		 childresourceRelation.put("attributes",childresourceRelationAttributes);
+		}
 		childresourceRelation.put("nodeValue",null);
 		    //Children of resourceRelation
 		    
 		    ArrayList<HashMap<String, ?>> childrenresourceRelation = new ArrayList<HashMap<String,?>>();
 		
-		     childrenresourceRelation.add(buildRelationEntry(this.eag2012.getRelationEntryScriptCode(),this.eag2012.getRelationEntryId(),this.eag2012.getRelationEntryLang(),this.eag2012.getRelationEntryValue()));
+		    for(int i=0;this.eag2012.getRelationEntryValue()!=null && i<this.eag2012.getRelationEntryValue().size();i++){//no mandatory
+		     childrenresourceRelation.add(buildRelationEntry(this.eag2012.getRelationEntryScriptCode().get(i),this.eag2012.getRelationEntryId().get(i),this.eag2012.getRelationEntryLang().get(i),this.eag2012.getRelationEntryValue().get(i)));
+		    } 
 		     childrenresourceRelation.add(buildDescriptiveNote(this.eag2012.getDescriptiveNoteLang(),this.eag2012.getDescriptiveNoteId()));
-		     childrenresourceRelation.add(buildDateSet(this.eag2012.getDateSetId(), this.eag2012.getDateSetLang()));
-		     childrenresourceRelation.add(buildDate(this.eag2012.getDateNotAfter(),this.eag2012.getDateNotBefore(),this.eag2012.getDateStandardDate(),this.eag2012.getDateId(),this.eag2012.getDateLang(),this.eag2012.getDateValue()));
-		     childrenresourceRelation.add(buildDateRange(this.eag2012.getDateRangeId(),this.eag2012.getDateRangeLang()));
+		     
+		     for(int i=0;this.eag2012.getDateSetLang()!=null && i<this.eag2012.getDateSetLang().size();i++){//no mandatory
+		       childrenresourceRelation.add(buildDateSet(this.eag2012.getDateSetId().get(i), this.eag2012.getDateSetLang().get(i)));
+		     }
+		     for(int i=0;this.eag2012.getDateLang()!=null && i<this.eag2012.getDateLang().size();i++){ //no mandatory
+		      childrenresourceRelation.add(buildDate(this.eag2012.getDateNotAfter().get(i),this.eag2012.getDateNotBefore().get(i),this.eag2012.getDateStandardDate().get(i),this.eag2012.getDateId().get(i),this.eag2012.getDateLang().get(i),this.eag2012.getDateValue().get(i)));
+		     }
+		     for(int i=0;this.eag2012.getDateRangeLang()!=null && i<this.eag2012.getDateRangeLang().size();i++){ //no mandatory
+		    	 childrenresourceRelation.add(buildDateRange(this.eag2012.getDateRangeId().get(i),this.eag2012.getDateRangeLang().get(i)));
+		     }
 		     childrenresourceRelation.add(buildObjectBinWrap(this.eag2012.getObjectBinWrapId()));
-		     childrenresourceRelation.add(buildObjectXMLWrap(this.eag2012.getObjectXMLWrapId()));
-		     childrenresourceRelation.add(buildPlaceEntry(this.eag2012.getPlaceEntryAccuracy(),this.eag2012.getPlaceEntryAltitude(),this.eag2012.getPlaceEntryId(),this.eag2012.getPlaceEntryLang(),this.eag2012.getPlaceEntryCountryCode(),this.eag2012.getPlaceEntryLatitude(),this.eag2012.getPlaceEntryLongitude(),this.eag2012.getPlaceEntryScriptCode(),this.eag2012.getPlaceEntryValue()));
-		
+		     
+		     for(int i=0;this.eag2012.getObjectXMLWrapId()!=null && i<this.eag2012.getObjectXMLWrapId().size();i++){//no mandatory
+		       childrenresourceRelation.add(buildObjectXMLWrap(this.eag2012.getObjectXMLWrapId().get(i)));
+		     }
+		     
+		     for(int i=0;this.eag2012.getPlaceEntryValue()!=null && i<this.eag2012.getPlaceEntryValue().size();i++){//no mandatory
+		       childrenresourceRelation.add(buildPlaceEntry(this.eag2012.getPlaceEntryAccuracy().get(i),this.eag2012.getPlaceEntryAltitude().get(i),this.eag2012.getPlaceEntryId().get(i),this.eag2012.getPlaceEntryLang().get(i),this.eag2012.getPlaceEntryCountryCode().get(i),this.eag2012.getPlaceEntryLatitude().get(i),this.eag2012.getPlaceEntryLongitude().get(i),this.eag2012.getPlaceEntryScriptCode().get(i),this.eag2012.getPlaceEntryValue().get(i)));
+		     }
 		childresourceRelation.put("children", childrenresourceRelation);     
 		     
 		return childresourceRelation;
@@ -389,8 +411,8 @@ public class Eag2012Creator {
 		childPlaceEntryAttributes.put("longitude", longitude);
 		childPlaceEntryAttributes.put("localType", "localType");
 		childPlaceEntryAttributes.put("scriptCode", scriptCode);
-		childPlaceEntryAttributes.put("transliteration", "http://www.archivesportaleurope.eu/scripts/EAG/");
-		childPlaceEntryAttributes.put("vocabularySource", "http://www.archivesportaleurope.eu/vocabularies/EAG/");
+		childPlaceEntryAttributes.put("transliteration", "http://www.archivesportaleurope.net/scripts/EAG/");
+		childPlaceEntryAttributes.put("vocabularySource", "http://www.archivesportaleurope.net/vocabularies/EAG/");
 		childPlaceEntry.put("attributes", childPlaceEntryAttributes);
 		childPlaceEntry.put("nodeValue", value);
 		
@@ -398,19 +420,23 @@ public class Eag2012Creator {
 		return childPlaceEntry;
 	}
 
-	private HashMap<String, ?> buildeagRelation(String eagRelationType,String eagRelationHref) {
+	private HashMap<String, ?> buildEagRelation(String eagRelationType,String eagRelationHref) {
 		
 		HashMap<String, Object> childeagRelation = new HashMap<String, Object>();
 		childeagRelation.put("nodeName", "eagRelation");
 		HashMap<String, String> childeagRelationAttributes = new HashMap<String,String>();
+		if(eagRelationType!=null){
 		childeagRelationAttributes.put("eagRelationType", eagRelationType);
 		childeagRelationAttributes.put("href", eagRelationHref);
 		childeagRelation.put("attributes", childeagRelationAttributes);
+		}
 		childeagRelation.put("nodeValue", null);
 		   
 		    //Children of eagRelation
 		    ArrayList<HashMap<String, ?>> childrenRelations = new ArrayList<HashMap<String,?>>();
-		    childrenRelations.add(buildRelationEntry(this.eag2012.getRelationEntryScriptCode(),this.eag2012.getRelationEntryId(),this.eag2012.getRelationEntryLang(),this.eag2012.getRelationEntryValue()));
+		    for(int i=0;this.eag2012.getRelationEntryValue()!=null && i<this.eag2012.getRelationEntryValue().size();i++){//no mandatory
+		      childrenRelations.add(buildRelationEntry(this.eag2012.getRelationEntryScriptCode().get(i),this.eag2012.getRelationEntryId().get(i),this.eag2012.getRelationEntryLang().get(i),this.eag2012.getRelationEntryValue().get(i)));
+		    }
 		    childrenRelations.add(buildDescriptiveNote(this.eag2012.getDescriptiveNoteLang(),this.eag2012.getDescriptiveNoteId()));
 		    
 		childeagRelation.put("children", childrenRelations); 
@@ -426,12 +452,11 @@ public class Eag2012Creator {
 		HashMap<String, String> childRelationAttributes = new HashMap<String,String>();
 		childRelationAttributes.put("localType", "localType");
 		childRelationAttributes.put("scriptCode", /*"scriptCode"*/relationEntryScriptCode);
-		childRelationAttributes.put("transliteration", "http://www.archivesportaleurope.eu/scripts/EAG/");
+		childRelationAttributes.put("transliteration", "http://www.archivesportaleurope.net/scripts/EAG/");
 		childRelationAttributes.put("xml:id", relationEntryId);
 		childRelationAttributes.put("xml:lang", relationEntryLang);
 		childRelation.put("attributes", childRelationAttributes);
 		childRelation.put("nodeValue", relationEntryValue);
-	
 		
 		return childRelation;
 	}
@@ -450,14 +475,25 @@ public class Eag2012Creator {
         ArrayList<HashMap<String, ?>> childrenControl = new ArrayList<HashMap<String,?>>();
         
         childrenControl.add(buildRecordId(this.eag2012.getRecordIdId(),this.eag2012.getRecordIdValue()));
-        childrenControl.add(buildOtherRecordId(this.eag2012.getOtherRecordIdId(), this.eag2012.getOtherRecordIdValue()));
+        
+        for(int i=0;this.eag2012.getOtherRecordIdValue()!=null && i<this.eag2012.getOtherRecordIdValue().size(); i++){ //no mandatory
+        childrenControl.add(buildOtherRecordId(this.eag2012.getOtherRecordIdId().get(i), this.eag2012.getOtherRecordIdValue().get(i)));
+        }
+        
         childrenControl.add(buildMaintenanceAgency(this.eag2012.getMaintenanceAgencyId()));
         childrenControl.add(buildMaintenanceStatus(this.eag2012.getMaintenanceStatusId(),this.eag2012.getMaintenanceStatusValue()));
         childrenControl.add(buildMaintenanceHistory(this.eag2012.getMaintenanceHistoryId(),this.eag2012.getMaintenanceHistoryLang()));
         childrenControl.add(buildLanguageDeclarations());
-        childrenControl.add(buildConventionDeclaration(this.eag2012.getConventionDeclarationId(),this.eag2012.getConvetionDeclarationLang()));
-        childrenControl.add(buildLocalControl(this.eag2012.getLocalControlId(),this.eag2012.getLocalControlLang()));
-        childrenControl.add(buildLocalTypeDeclaration(this.eag2012.getLocalTypeDeclarationId(),this.eag2012.getLocalTypeDeclarationLang()));
+        
+        for(int i=0;this.eag2012.getConventionDeclarationLang()!=null && i<this.eag2012.getConventionDeclarationLang().size();i++){ //no mandatory
+          childrenControl.add(buildConventionDeclaration(this.eag2012.getConventionDeclarationId().get(i),this.eag2012.getConventionDeclarationLang().get(i)));
+        }
+        for(int i=0;this.eag2012.getLocalControlLang()!=null && i<this.eag2012.getLocalControlLang().size();i++){
+          childrenControl.add(buildLocalControl(this.eag2012.getLocalControlId().get(i),this.eag2012.getLocalControlLang().get(i)));
+        }
+        for(int i=0;this.eag2012.getLocalTypeDeclarationLang()!=null && i<this.eag2012.getLocalTypeDeclarationLang().size();i++){ //no mandatory
+          childrenControl.add(buildLocalTypeDeclaration(this.eag2012.getLocalTypeDeclarationId().get(i),this.eag2012.getLocalTypeDeclarationLang().get(i)));
+        }
         childrenControl.add(buildPublicationStatus(this.eag2012.getPublicationStatusId(),this.eag2012.getPublicationStatusValue()));
         childrenControl.add(buildSources(this.eag2012.getSourcesId(),this.eag2012.getSourcesLang()));
         
@@ -475,7 +511,9 @@ public class Eag2012Creator {
         childControl.put("nodeValue", null);
        
         ArrayList<HashMap<String, Object>> childControlChildren = new ArrayList<HashMap<String,Object>>();
-        childControlChildren.add(buildCitation(this.eag2012.getCitationId(),this.eag2012.getCitationLang(),this.eag2012.getCitationLastDateTimeVerified(),this.eag2012.getCitationHref(),this.eag2012.getCitationValue()));
+        for(int i=0;this.eag2012.getCitationValue()!=null && i<this.eag2012.getCitationValue().size();i++){ // citation mandatory
+          childControlChildren.add(buildCitation(this.eag2012.getCitationId().get(i),this.eag2012.getCitationLang().get(i),this.eag2012.getCitationLastDateTimeVerified().get(i),this.eag2012.getCitationHref().get(i),this.eag2012.getCitationValue().get(i)));
+        }
         childControlChildren.add(buildAbbreviation(this.eag2012.getAbbreviationId(),this.eag2012.getAbbreviationLang(),this.eag2012.getAbbreviationValue()));
         childControlChildren.add(buildDescriptiveNote(this.eag2012.getDescriptiveNoteLang(),this.eag2012.getDescriptiveNoteId()));
         childControl.put("children",childControlChildren);
@@ -493,9 +531,16 @@ public class Eag2012Creator {
         childControl.put("nodeValue", null);
         
         ArrayList<HashMap<String, Object>> childControlChildren = new ArrayList<HashMap<String,Object>>();
-        childControlChildren.add(buildTerm(this.eag2012.getTermLastDateTimeVerified(),this.eag2012.getTermScriptCode(),this.eag2012.getTermId(),this.eag2012.getTermLang(),this.eag2012.getTermValue()));
-        childControlChildren.add(buildDate(this.eag2012.getDateNotAfter(),this.eag2012.getDateNotBefore(),this.eag2012.getDateStandardDate(),this.eag2012.getDateId(),this.eag2012.getDateLang(),this.eag2012.getDateValue()));
-        childControlChildren.add(buildDateRange(this.eag2012.getDateRangeId(),this.eag2012.getDateRangeLang()));
+        
+        for(int i=0;i<this.eag2012.getTermLang().size();i++){ //no mandatory
+         childControlChildren.add(buildTerm(this.eag2012.getTermLastDateTimeVerified().get(i),this.eag2012.getTermScriptCode().get(i),this.eag2012.getTermId().get(i),this.eag2012.getTermLang().get(i),this.eag2012.getTermValue().get(i)));
+        }
+        for(int i=0;i<this.eag2012.getDateLang().size();i++){//no mandatory
+         childControlChildren.add(buildDate(this.eag2012.getDateNotAfter().get(i),this.eag2012.getDateNotBefore().get(i),this.eag2012.getDateStandardDate().get(i),this.eag2012.getDateId().get(i),this.eag2012.getDateLang().get(i),this.eag2012.getDateValue().get(i)));
+        }
+        for(int i=0;i<this.eag2012.getDateRangeLang().size();i++){ //no mandatory
+         childControlChildren.add(buildDateRange(this.eag2012.getDateRangeId().get(i),this.eag2012.getDateRangeLang().get(i)));
+        }
         childControl.put("children",childControlChildren);
         return childControl;
 	}
@@ -511,7 +556,9 @@ public class Eag2012Creator {
 
         ArrayList<HashMap<String, Object>> childControlChildren = new ArrayList<HashMap<String,Object>>();
         childControlChildren.add(buildAbbreviation(this.eag2012.getAbbreviationId(),this.eag2012.getAbbreviationLang(),this.eag2012.getAbbreviationValue()));
-        childControlChildren.add(buildCitation(this.eag2012.getCitationId(),this.eag2012.getCitationLang(),this.eag2012.getCitationLastDateTimeVerified(),this.eag2012.getCitationHref(),this.eag2012.getCitationValue()));
+        for(int i=0;this.eag2012.getCitationValue()!=null && i<this.eag2012.getCitationValue().size();i++){ //mandatory
+          childControlChildren.add(buildCitation(this.eag2012.getCitationId().get(i),this.eag2012.getCitationLang().get(i),this.eag2012.getCitationLastDateTimeVerified().get(i),this.eag2012.getCitationHref().get(i),this.eag2012.getCitationValue().get(i)));
+        }
         childControlChildren.add(buildDescriptiveNote(this.eag2012.getDescriptiveNoteLang(),this.eag2012.getDescriptiveNoteId()));
         
         childControl.put("children", childControlChildren);
@@ -526,9 +573,9 @@ public class Eag2012Creator {
         
         ArrayList<HashMap<String, Object>> childControlChildren = new ArrayList<HashMap<String,Object>>();
         
-	      
-        childControlChildren.add(buildLanguageDeclaration(this.eag2012.getLanguageDeclarationId(),this.eag2012.getLanguageDeclarationLang()));
-        
+	    for(int i=0;this.eag2012.getLanguageDeclarationLang()!=null && i<this.eag2012.getLanguageDeclarationLang().size();i++){  //no mandatory
+          childControlChildren.add(buildLanguageDeclaration(this.eag2012.getLanguageDeclarationId().get(i),this.eag2012.getLanguageDeclarationLang().get(i)));
+	    }
         childControl.put("children",childControlChildren);
         return childControl;
 	}
@@ -596,9 +643,9 @@ public class Eag2012Creator {
         childControl.put("nodeValue",null);
         
         ArrayList<HashMap<String, Object>> childControlChildren = new ArrayList<HashMap<String, Object>>();
-       
-        childControlChildren.add(buildMaintenanceEvent(this.eag2012.getMaintenanceEventId(),this.eag2012.getMaintenanceEventLang()));
-        
+        for(int i=0; i<this.eag2012.getMaintenanceEventLang().size();i++){ //mandatory
+          childControlChildren.add(buildMaintenanceEvent(this.eag2012.getMaintenanceEventId().get(i),this.eag2012.getMaintenanceEventLang().get(i)));
+        }
         childControl.put("children", childControlChildren);
         return childControl;
 	}
@@ -703,8 +750,10 @@ public class Eag2012Creator {
         ArrayList<HashMap<String, Object>> childControlChildren = new ArrayList<HashMap<String, Object>>();
          childControlChildren.add(buildAgencyCode(this.eag2012.getAgencyCodeId(),this.eag2012.getAgencyCodeValue()));
          childControlChildren.add(buildAgencyName(this.eag2012.getAgencyNameLang(),this.eag2012.getAgencyNameId(),this.eag2012.getAgencyNameValue()));
-         childControlChildren.add(buildOtherAgencyCode(this.eag2012.getOtherAgencyCodeId(),this.eag2012.getOtherAgencyCodeValue()));
-        
+         
+         for(int i=0;this.eag2012.getOtherAgencyCodeValue()!=null && i<this.eag2012.getOtherAgencyCodeValue().size();i++){ //no mandatory
+           childControlChildren.add(buildOtherAgencyCode(this.eag2012.getOtherAgencyCodeId().get(i),this.eag2012.getOtherAgencyCodeValue().get(i)));
+         }
         childControlChildren.add(buildDescriptiveNote(this.eag2012.getDescriptiveNoteLang(),this.eag2012.getDescriptiveNoteId()));
         childControl.put("children",childControlChildren);
         
@@ -761,6 +810,7 @@ public class Eag2012Creator {
         childControlAttributes.put("xml:id",otherRecordId);
         childControl.put("attributes",childControlAttributes);
         childControl.put("nodeValue", otherRecordIdValue);
+        childControl.put("children", null);
         return childControl;
 	}
 
@@ -788,7 +838,9 @@ public class Eag2012Creator {
         childControl.put("nodeValue", null);
         ArrayList<HashMap<String, Object>> childControlChildren = new ArrayList<HashMap<String,Object>>();
         
-        childControlChildren.add(buildSource(this.eag2012.getSourceLastDateTimeVerified(),this.eag2012.getSourceId(),this.eag2012.getSourceHref()));
+        for(int i=0;i<this.eag2012.getSourceLastDateTimeVerified().size();i++){ //mandatory
+          childControlChildren.add(buildSource(this.eag2012.getSourceLastDateTimeVerified().get(i),this.eag2012.getSourceId().get(i),this.eag2012.getSourceHref().get(i)));
+        }
         childControl.put("children",childControlChildren);
         return childControl;
 	}
@@ -807,7 +859,10 @@ public class Eag2012Creator {
         List<HashMap<String, Object>> childControl2Children = new ArrayList<HashMap<String,Object>>();
         childControl2Children.add(buildSourceEntry(this.eag2012.getSourceEntryScriptCode(),this.eag2012.getSourceEntryId(),this.eag2012.getSourceEntryLang(),this.eag2012.getSourceEntryValue()));
         childControl2Children.add(buildObjectBinWrap(this.eag2012.getObjectBinWrapId())); 
-        childControl2Children.add(buildObjectXMLWrap(this.eag2012.getObjectXMLWrapId()));
+        
+        for(int i=0;this.eag2012.getObjectXMLWrapId()!=null && i<this.eag2012.getObjectXMLWrapId().size();i++){ //no mandatory
+          childControl2Children.add(buildObjectXMLWrap(this.eag2012.getObjectXMLWrapId().get(i)));
+	    }
         childControl2Children.add(buildDescriptiveNote(this.eag2012.getDescriptiveNoteLang(),this.eag2012.getDescriptiveNoteId()));
 		childControl2.put("children", childControl2Children);
 		
@@ -820,7 +875,7 @@ public class Eag2012Creator {
         childControl3.put("nodeName","sourceEntry");
         HashMap<String, String> childControl3Attributes = new HashMap<String, String>();
         childControl3Attributes.put("scriptCode", sourceEntryScriptCode);
-        childControl3Attributes.put("transliteration","http://www.archivesportaleurope.eu/scripts/EAG/");
+        childControl3Attributes.put("transliteration","http://www.archivesportaleurope.net/scripts/EAG/");
         childControl3Attributes.put("xml:id",sourceEntryId);
         childControl3Attributes.put("xml:lang",sourceEntryLang);
         childControl3.put("attributes",childControl3Attributes);
@@ -924,8 +979,8 @@ public class Eag2012Creator {
         HashMap<String, String> childControlChildAttributes = new HashMap<String, String>();
         childControlChildAttributes.put("lastDateTimeVerified", termLastDateTimeVerified);
         childControlChildAttributes.put("scriptCode", termScriptCode);
-        childControlChildAttributes.put("transliteration","http://www.archivesportaleurope.eu/scripts/EAG/");
-        childControlChildAttributes.put("vocabularySource", "http://www.archivesportaleurope.eu/vocabularies/EAG/");
+        childControlChildAttributes.put("transliteration","http://www.archivesportaleurope.net/scripts/EAG/");
+        childControlChildAttributes.put("vocabularySource", "http://www.archivesportaleurope.net/vocabularies/EAG/");
         childControlChildAttributes.put("xml:id", termId);
         childControlChildAttributes.put("xml:lang", termLang);
         childControlchild.put("attributes",childControlChildAttributes);
@@ -986,9 +1041,10 @@ public class Eag2012Creator {
         childControl1.put("attributes",childControl1Attributes);
         childControl1.put("nodeValue", null);
         List<HashMap<String, Object>> childControl1Children = new ArrayList<HashMap<String, Object>>();
-       
-        childControl1Children.add(buildP(this.eag2012.getDescriptiveNotePId(),this.eag2012.getDescriptiveNotePLang(),this.eag2012.getDescriptiveNotePValue()));
-        childControl1.put("children", childControl1Children);
+         for(int i=0; this.eag2012.getPValue()!=null && i<this.eag2012.getPValue().size();i++){ //mandatory
+           childControl1Children.add(buildP(this.eag2012.getPId().get(i),this.eag2012.getPLang().get(i),this.eag2012.getPValue().get(i)));
+         }
+           childControl1.put("children", childControl1Children);
         return childControl1;
 	}
 	
@@ -1042,11 +1098,18 @@ public class Eag2012Creator {
 	        childArchguideChildren.add(buildRepositorid(this.eag2012.getRepositoridCountrycode(),this.eag2012.getRepositoridRepositorycode()));
 	        childArchguideChildren.add(buildOtherRepositorId(this.eag2012.getOtherRepositorIdValue()));
 	        
-	        childArchguideChildren.add(buildAutform(this.eag2012.getAutformLang(),this.eag2012.getAutformValue()));
-	        childArchguideChildren.add(buildParform(this.eag2012.getParformLang(),this.eag2012.getParformValue()));	        
-	        childArchguideChildren.add(buildNonpreform(this.eag2012.getNonpreformLang(),this.eag2012.getNonpreformValue()));
-	        childArchguideChildren.add(buildRepositoryType(this.eag2012.getRepositoryTypeValue()));
-	        
+	        for(int i=0;this.eag2012.getAutformLang()!=null && i<this.eag2012.getAutformLang().size();i++){ // mandatory
+	          childArchguideChildren.add(buildAutform(this.eag2012.getAutformLang().get(i),this.eag2012.getAutformValue().get(i)));
+	        }
+	        for(int i=0;this.eag2012.getParformLang()!=null && i<this.eag2012.getParformLang().size();i++){ //no mandatory
+	        childArchguideChildren.add(buildParform(this.eag2012.getParformLang().get(i),this.eag2012.getParformValue().get(i)));	
+	        }
+	        for(int i=0;this.eag2012.getNonpreformLang()!=null && i<this.eag2012.getNonpreformLang().size();i++){ //no mandatory
+	        childArchguideChildren.add(buildNonpreform(this.eag2012.getNonpreformLang().get(i),this.eag2012.getNonpreformValue().get(i)));
+	        }
+	        for(int i=0;this.eag2012.getRepositoryTypeValue()!=null && i<this.eag2012.getRepositoryTypeValue().size();i++){//no mandatory
+	        childArchguideChildren.add(buildRepositoryType(this.eag2012.getRepositoryTypeValue().get(i)));
+	        }
 	        childArchguide.put("children", childArchguideChildren);
 	        
 	        return childArchguide;
@@ -1083,8 +1146,10 @@ public class Eag2012Creator {
 		HashMap<String, Object> childArchguide1 = new HashMap<String, Object>();
 	        childArchguide1.put("nodeName", "autform");
 	        HashMap<String, String> childArchguide1Attributes = new HashMap<String, String>();
-	        childArchguide1Attributes.put("xml:lang", autformLang);
-	        childArchguide1.put("attributes", childArchguide1Attributes);
+	        if(autformLang!=null){
+	        	childArchguide1Attributes.put("xml:lang", autformLang);
+	        	childArchguide1.put("attributes", childArchguide1Attributes);
+	        }
 	        childArchguide1.put("nodeValue",autformValue);
 	        childArchguide1.put("children", null);
 		
@@ -1096,8 +1161,10 @@ public class Eag2012Creator {
 		HashMap<String, Object> childArchguide1 = new HashMap<String, Object>();
 	        childArchguide1.put("nodeName", "parform");
 	        HashMap<String, String>  childArchguide1Attributes = new HashMap<String, String>();
-	        childArchguide1Attributes.put("xml:lang",parformLang);
-	        childArchguide1.put("attributes", childArchguide1Attributes);
+	        if(parformLang!=null){
+	           childArchguide1Attributes.put("xml:lang",parformLang);
+	           childArchguide1.put("attributes", childArchguide1Attributes);
+	        }
 	        childArchguide1.put("nodeValue", parformValue);
 	        childArchguide1.put("children", null);
 		
@@ -1121,8 +1188,10 @@ public class Eag2012Creator {
 		HashMap<String, Object> childArchguide1 = new HashMap<String, Object>();
         childArchguide1.put("nodeName", "nonpreform");
         HashMap<String, String> childArchguide1Attributes = new HashMap<String, String>();
-        childArchguide1Attributes.put("xml:lang",nonpreformLang);
-        childArchguide1.put("attributes", childArchguide1Attributes);
+        if(nonpreformLang!=null){
+          childArchguide1Attributes.put("xml:lang",nonpreformLang);
+          childArchguide1.put("attributes", childArchguide1Attributes);
+        }
         childArchguide1.put("nodeValue", nonpreformValue);
         
 	        List<HashMap<String, Object>> childArchguide1Children = new ArrayList<HashMap<String,Object>>();
@@ -1144,8 +1213,10 @@ public class Eag2012Creator {
 	        childArchguide2.put("nodeValue", null);
 	        
 	        List<HashMap<String, Object>> childArchguide2Children = new ArrayList<HashMap<String,Object>>();
-	        	childArchguide2Children.add(buildDateSet(this.eag2012.getDateSetId(), this.eag2012.getDateSetLang()));
-	                
+	        
+	          for(int i=0;this.eag2012.getDateSetLang()!=null && i<this.eag2012.getDateSetLang().size();i++){//no mandatory
+	        	childArchguide2Children.add(buildDateSet(this.eag2012.getDateSetId().get(i), this.eag2012.getDateSetLang().get(i)));
+	          }      
 	        childArchguide2.put("children", childArchguide2Children);
 		
 		return childArchguide2;
@@ -1167,9 +1238,13 @@ public class Eag2012Creator {
     	
         	//dateSet children	        
 	        List<HashMap<String, Object>> childArchguide3Children = new ArrayList<HashMap<String,Object>>();
-	        childArchguide3Children.add(buildDate(this.eag2012.getDateNotAfter(),this.eag2012.getDateNotBefore(),this.eag2012.getDateStandardDate(),this.eag2012.getDateId(),this.eag2012.getDateLang(),this.eag2012.getDateValue()));
-	        childArchguide3Children.add(buildDateRange(this.eag2012.getDateRangeId(),this.eag2012.getDateRangeLang()));
 	        
+	        for(int i=0;this.eag2012.getDateLang()!=null && i<this.eag2012.getDateLang().size();i++){//no mandatory
+	          childArchguide3Children.add(buildDate(this.eag2012.getDateNotAfter().get(i),this.eag2012.getDateNotBefore().get(i),this.eag2012.getDateStandardDate().get(i),this.eag2012.getDateId().get(i),this.eag2012.getDateLang().get(i),this.eag2012.getDateValue().get(i)));
+	        }
+	        for(int i=0;this.eag2012.getDateRangeLang()!=null && i<this.eag2012.getDateRangeLang().size();i++){  //no mandatory
+	          childArchguide3Children.add(buildDateRange(this.eag2012.getDateRangeId().get(i),this.eag2012.getDateRangeLang().get(i)));
+	        }
         childArchguide3.put("children",childArchguide3Children);    
 	        
 		return childArchguide3;
@@ -1223,15 +1298,30 @@ public class Eag2012Creator {
         
      		ArrayList<HashMap<String, Object>> childArchguide2Children = new ArrayList<HashMap<String, Object>>();
             
-        	childArchguide2Children.add(buildRepositoryName(this.eag2012.getRepositoryNameLang(),this.eag2012.getRepositoryNameValue()));
-		    childArchguide2Children.add(buildRepositoryRole(this.eag2012.getRepositoryRoleValue()));
+     		for(int i=0;this.eag2012.getRepositoryNameValue()!=null && i<this.eag2012.getRepositoryNameValue().size();i++){//no mandatory
+        	 childArchguide2Children.add(buildRepositoryName(this.eag2012.getRepositoryNameLang().get(i),this.eag2012.getRepositoryNameValue().get(i)));
+     		}
+        	childArchguide2Children.add(buildRepositoryRole(this.eag2012.getRepositoryRoleValue()));
         	childArchguide2Children.add(buildGeogarea(this.eag2012.getGeogareaLang(),this.eag2012.getGeogareaValue()));
-            childArchguide2Children.add(buildLocation(this.eag2012.getLocationLocalType(),this.eag2012.getLocationLongitude(),this.eag2012.getLocationLatitude()));
-            childArchguide2Children.add(buildTelephone(this.eag2012.getTelephoneValue()));     
-            childArchguide2Children.add(buildFax(this.eag2012.getFaxValue()));
-            childArchguide2Children.add(buildEmail(this.eag2012.getEmailHref(),this.eag2012.getEmailValue()));   
-            childArchguide2Children.add(buildWebpage(this.eag2012.getWebpageHref(),this.eag2012.getWebpageValue()));   
-            childArchguide2Children.add(buildDirections(this.eag2012.getDirectionsLang(),this.eag2012.getDirectionsValue()));    
+        	
+        	for(int i=0;i<this.eag2012.getLocationLocalType().size();i++){ //mandatory
+              childArchguide2Children.add(buildLocation(this.eag2012.getLocationLocalType().get(i),this.eag2012.getLocationLongitude().get(i),this.eag2012.getLocationLatitude().get(i)));
+        	}
+            for(int i=0;this.eag2012.getTelephoneValue()!=null && i<this.eag2012.getTelephoneValue().size();i++){ //no mandatory
+             childArchguide2Children.add(buildTelephone(this.eag2012.getTelephoneValue().get(i)));     
+            }
+            for(int i=0;this.eag2012.getFaxValue()!=null && i<this.eag2012.getFaxValue().size();i++){//no mandatory
+               childArchguide2Children.add(buildFax(this.eag2012.getFaxValue().get(i)));
+            }
+            for(int i=0;this.eag2012.getEmailHref()!=null && i<this.eag2012.getEmailHref().size();i++){//no mandatory
+             childArchguide2Children.add(buildEmail(this.eag2012.getEmailHref().get(i),this.eag2012.getEmailValue().get(i)));   
+            }
+            for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory
+              childArchguide2Children.add(buildWebpage(this.eag2012.getWebpageHref().get(i),this.eag2012.getWebpageValue().get(i)));  
+            }
+            for(int i=0; i< this.eag2012.getDirectionsValue().size();i++){
+               childArchguide2Children.add(buildDirections(this.eag2012.getDirectionsLang().get(i),this.eag2012.getDirectionsValue().get(i)));
+            }  
             childArchguide2Children.add(buildRepositorHist());                   
             childArchguide2Children.add(buildRepositorfound());     
             childArchguide2Children.add(buildRepositorsup());        
@@ -1240,7 +1330,11 @@ public class Eag2012Creator {
             childArchguide2Children.add(buildHoldings());   
             childArchguide2Children.add(buildTimetable());
             childArchguide2Children.add(buildAccess(this.eag2012.getAccessQuestion()));
-            childArchguide2Children.add(buildAccessibility(this.eag2012.getAccessibilityQuestion(),this.eag2012.getAccessibilityLang(),this.eag2012.getAccessibilityValue()));              
+            
+            for(int i=0;i<this.eag2012.getAccessibilityQuestion().size();i++){//mandatory
+              childArchguide2Children.add(buildAccessibility(this.eag2012.getAccessibilityQuestion().get(i),this.eag2012.getAccessibilityLang().get(i),this.eag2012.getAccessibilityValue().get(i)));              
+            }
+            
             childArchguide2Children.add(buildServices());  // add services       
             childArchguide2Children.add(buildDescriptiveNote(this.eag2012.getDescriptiveNoteLang(),this.eag2012.getDescriptiveNoteId()));                     
         childArchguide2.put("children", childArchguide2Children);
@@ -1297,8 +1391,9 @@ public class Eag2012Creator {
          childArchguide5.put("nodeValue", null); 
          ArrayList<HashMap<String, Object>> childArchguide5Children = new ArrayList<HashMap<String, Object>>(); 
             childArchguide5Children.add(buildDescriptiveNote(this.eag2012.getDescriptiveNoteLang(),this.eag2012.getDescriptiveNoteId()));
-            childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref(),this.eag2012.getWebpageValue()));
-   
+           for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory
+            childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(i),this.eag2012.getWebpageValue().get(i)));
+           }
         childArchguide5.put("children", childArchguide5Children);
 		
 		return childArchguide5;
@@ -1307,13 +1402,14 @@ public class Eag2012Creator {
 	private HashMap<String, Object> buildTourSessions() {
 
 		HashMap<String, Object> childArchguide5 = new HashMap<String, Object>();
-        childArchguide5.put("nodeName", "tourSessions");  //tourSessions
+        childArchguide5.put("nodeName", "toursSessions");  //toursSessions
         childArchguide5.put("attributes", null);
         childArchguide5.put("nodeValue", null); 
         ArrayList<HashMap<String, Object>> childArchguide5Children = new 	ArrayList<HashMap<String, Object>>(); 
           childArchguide5Children.add(buildDescriptiveNote(this.eag2012.getDescriptiveNoteLang(),this.eag2012.getDescriptiveNoteId()));
-          childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref(),this.eag2012.getWebpageValue()));
-  
+          for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory
+            childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(i),this.eag2012.getWebpageValue().get(i)));
+          }
        childArchguide5.put("children", childArchguide5Children);
 		
 		return childArchguide5;
@@ -1327,8 +1423,10 @@ public class Eag2012Creator {
          childArchguide5.put("nodeValue", null); 
          ArrayList<HashMap<String, Object>> childArchguide5Children = new ArrayList<HashMap<String, Object>>(); 
           childArchguide5Children.add(buildDescriptiveNote(this.eag2012.getDescriptiveNoteLang(),this.eag2012.getDescriptiveNoteId()));
-          childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref(),this.eag2012.getWebpageValue()));
-   
+          
+          for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory
+            childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(i),this.eag2012.getWebpageValue().get(i)));
+          }
          childArchguide5.put("children", childArchguide5Children);
 		
 		return  childArchguide5;
@@ -1382,8 +1480,9 @@ public class Eag2012Creator {
                ArrayList<HashMap<String, Object>> childArchguide5Children = new ArrayList<HashMap<String, Object>>(); 
                childArchguide5Children.add(buildDescriptiveNote(this.eag2012.getDescriptiveNoteLang(),this.eag2012.getDescriptiveNoteId()));
                childArchguide5Children.add(buildContact());
-               childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref(),this.eag2012.getWebpageValue()));
-        
+               for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory
+                 childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(i),this.eag2012.getWebpageValue().get(i)));
+               }
          childArchguide5.put("children", childArchguide5Children);
 		
 		
@@ -1404,7 +1503,10 @@ public class Eag2012Creator {
           
         childArchguide5Children.add(buildDescriptiveNote(this.eag2012.getDescriptiveNoteLang(),this.eag2012.getDescriptiveNoteId()));
         childArchguide5Children.add(buildContact());
-        childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref(),this.eag2012.getWebpageValue()));
+        
+        for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory
+          childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(i),this.eag2012.getWebpageValue().get(i)));
+        }
         childArchguide5Children.add(buildMicroformser(this.eag2012.getMicroformserQuestion()));       
         childArchguide5Children.add(buildPhotographser(this.eag2012.getPhotographserQuestion()));                
         childArchguide5Children.add(buildDigitalser(this.eag2012.getDigitalserQuestion())); 
@@ -1497,7 +1599,9 @@ public class Eag2012Creator {
             //Children of library
             ArrayList<HashMap<String, Object>> childArchguide4Children = new ArrayList<HashMap<String, Object>>(); 
               childArchguide4Children.add(buildContact()); //contact
-              childArchguide4Children.add(buildWebpage(this.eag2012.getWebpageHref(),this.eag2012.getWebpageValue())); //webpage
+              for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory
+                childArchguide4Children.add(buildWebpage(this.eag2012.getWebpageHref().get(i),this.eag2012.getWebpageValue().get(i))); //webpage
+              }
               childArchguide4Children.add(buildMonographicpub());
               childArchguide4Children.add(buildSerialpub());  
        
@@ -1548,22 +1652,30 @@ public class Eag2012Creator {
            childArchguide4Children.add(buildWorkPlaces());
            childArchguide4Children.add(buildComputerPlaces());
            childArchguide4Children.add(buildMicrofilmPlaces());
-           childArchguide4Children.add(buildWebpage(this.eag2012.getWebpageHref(),this.eag2012.getWebpageValue()));  //webpage
+           for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory
+             childArchguide4Children.add(buildWebpage(this.eag2012.getWebpageHref().get(i),this.eag2012.getWebpageValue().get(i)));  //webpage
+           }
            childArchguide4Children.add(buildPhotographAllowance(this.eag2012.getPhotographAllowanceValue()));
-           childArchguide4Children.add(buildReadersTicket(this.eag2012.getReadersTicketHref(),this.eag2012.getReadersTicketLang(),this.eag2012.getReadersTicketValue()));
-           childArchguide4Children.add(buildAdvancedOrders(this.eag2012.getAdvancedOrdersHref(),this.eag2012.getAdvancedOrdersLang(),this.eag2012.getAdvancedOrdersValue()));
-           childArchguide4Children.add(buildResearchservices());
-        
+           
+           for(int i=0;this.eag2012.getReadersTicketLang()!=null && i<this.eag2012.getReadersTicketLang().size();i++){//no mandatory
+             childArchguide4Children.add(buildReadersTicket(this.eag2012.getReadersTicketHref().get(i),this.eag2012.getReadersTicketLang().get(i),this.eag2012.getReadersTicketValue().get(i)));
+           }
+           for(int i=0;this.eag2012.getAdvancedOrdersLang()!=null && i<this.eag2012.getAdvancedOrdersLang().size();i++){//no mandatory
+            childArchguide4Children.add(buildAdvancedOrders(this.eag2012.getAdvancedOrdersHref().get(i),this.eag2012.getAdvancedOrdersLang().get(i),this.eag2012.getAdvancedOrdersValue().get(i)));
+           }
+           
+             childArchguide4Children.add(buildResearchServices());
+           
      childArchguide4.put("children", childArchguide4Children);  
 		
 		
 		return childArchguide4;
 	}
 
-	private HashMap<String, Object> buildResearchservices() {
+	private HashMap<String, Object> buildResearchServices() {
 
 	  HashMap<String, Object> childArchguide5 = new HashMap<String, Object>();
-	   childArchguide5.put("nodeName", "researchservices");  //researchservices
+	   childArchguide5.put("nodeName", "researchServices");  //researchservices
 	   childArchguide5.put("attributes", null);
 	   childArchguide5.put("nodeValue", null);
 	   ArrayList<HashMap<String, Object>> childArchguide5Children = new ArrayList<HashMap<String, Object>>(); 
@@ -1682,9 +1794,12 @@ public class Eag2012Creator {
             
            ArrayList<HashMap<String, Object>> childArchguide3Children = new ArrayList<HashMap<String, Object>>();   
            
-             childArchguide3Children.add(buildRestaccess(this.eag2012.getRestaccessLang(),this.eag2012.getRestaccessValue()));
-             childArchguide3Children.add(buildTermsOfUse(this.eag2012.getTermsOfUseHref(),this.eag2012.getTermsOfUseLang(),this.eag2012.getTermsOfUseValue()));
-
+             for(int i=0;this.eag2012.getRestaccessValue()!=null && i<this.eag2012.getRestaccessValue().size();i++){//no mandatory
+              childArchguide3Children.add(buildRestaccess(this.eag2012.getRestaccessLang().get(i),this.eag2012.getRestaccessValue().get(i)));
+             }
+             for(int i=0;this.eag2012.getTermsOfUseLang()!=null && i<this.eag2012.getTermsOfUseLang().size();i++){//
+               childArchguide3Children.add(buildTermsOfUse(this.eag2012.getTermsOfUseHref().get(i),this.eag2012.getTermsOfUseLang().get(i),this.eag2012.getTermsOfUseValue().get(i)));
+             }
         childArchguide3.put("children", childArchguide3Children);
 		
 		return  childArchguide3;
@@ -1768,7 +1883,10 @@ public class Eag2012Creator {
           //Children of holdings
           ArrayList<HashMap<String, Object>> childArchguide3Children = new ArrayList<HashMap<String, Object>>();   
  	        childArchguide3Children.add(buildDescriptiveNote(this.eag2012.getDescriptiveNoteLang(),this.eag2012.getDescriptiveNoteId()));
- 	        childArchguide3Children.add(buildDateSet(this.eag2012.getDateSetId(), this.eag2012.getDateSetLang()));
+ 	       
+ 	        for(int i=0;this.eag2012.getDateSetLang()!=null && i<this.eag2012.getDateSetLang().size();i++){ //no mandatory
+ 	          childArchguide3Children.add(buildDateSet(this.eag2012.getDateSetId().get(i), this.eag2012.getDateSetLang().get(i)));
+ 	        }
  	        childArchguide3Children.add(buildExtent());
  	    
  	        childArchguide3.put("children", childArchguide3Children);
@@ -1802,9 +1920,13 @@ public class Eag2012Creator {
         childArchguide3.put("nodeValue", null); 
            
            //Children of adminhierarchy
-           ArrayList<HashMap<String, Object>> childArchguide3Children = new ArrayList<HashMap<String, Object>>();  
-             childArchguide3Children.add(buildAdminunit(this.eag2012.getAdminunitLang(),this.eag2012.getAdminunitValue()));                        
- 	    childArchguide3.put("children", childArchguide3Children);
+           ArrayList<HashMap<String, Object>> childArchguide3Children = new ArrayList<HashMap<String, Object>>();
+           
+           for(int i=0;i<this.eag2012.getAdminunitValue().size();i++){//mandatory
+             childArchguide3Children.add(buildAdminunit(this.eag2012.getAdminunitLang().get(i),this.eag2012.getAdminunitValue().get(i)));                        
+           }
+           
+          childArchguide3.put("children", childArchguide3Children);
 		
 		return childArchguide3;
 	}
@@ -1890,10 +2012,13 @@ public class Eag2012Creator {
          childArchguide3.put("nodeValue", null);
      	
          ArrayList<HashMap<String, Object>>  childArchguide3Children = new ArrayList<HashMap<String, Object>>();   
-     	       
-     	   childArchguide3Children.add(buildDate(this.eag2012.getDateNotAfter(),this.eag2012.getDateNotBefore(),this.eag2012.getDateStandardDate(),this.eag2012.getDateId(),this.eag2012.getDateLang(),this.eag2012.getDateValue()));
-           childArchguide3Children.add(buildRule(this.eag2012.getRuleLang(),this.eag2012.getRuleValue()));    	       
-     	      
+     	   
+         for(int i=0;this.eag2012.getDateLang()!=null && i<this.eag2012.getDateLang().size();i++){ //no mandatory
+     	   childArchguide3Children.add(buildDate(this.eag2012.getDateNotAfter().get(i),this.eag2012.getDateNotBefore().get(i),this.eag2012.getDateStandardDate().get(i),this.eag2012.getDateId().get(i),this.eag2012.getDateLang().get(i),this.eag2012.getDateValue().get(i)));
+         } 
+     	   for(int i=0; this.eag2012.getRuleValue()!=null && i<this.eag2012.getRuleValue().size();i++){//no mandatory
+     	    childArchguide3Children.add(buildRule(this.eag2012.getRuleLang().get(i),this.eag2012.getRuleValue().get(i)));    	       
+     	   }  
            childArchguide3.put("children", childArchguide3Children);
 		
 		return childArchguide3;
@@ -1908,9 +2033,12 @@ public class Eag2012Creator {
    	
    	      ArrayList<HashMap<String, Object>> childArchguide3Children = new ArrayList<HashMap<String, Object>>();   
    	       
-   	         childArchguide3Children.add(buildDate(this.eag2012.getDateNotAfter(),this.eag2012.getDateNotBefore(),this.eag2012.getDateStandardDate(),this.eag2012.getDateId(),this.eag2012.getDateLang(),this.eag2012.getDateValue()));
-             childArchguide3Children.add(buildRule(this.eag2012.getRuleLang(),this.eag2012.getRuleValue()));    	       
-   	      
+   	      for(int i=0;this.eag2012.getDateLang()!=null && i<this.eag2012.getDateLang().size();i++){ //no mandatory
+   	         childArchguide3Children.add(buildDate(this.eag2012.getDateNotAfter().get(i),this.eag2012.getDateNotBefore().get(i),this.eag2012.getDateStandardDate().get(i),this.eag2012.getDateId().get(i),this.eag2012.getDateLang().get(i),this.eag2012.getDateValue().get(i)));
+   	      }
+   	      for(int i=0; this.eag2012.getRuleValue()!=null && i<this.eag2012.getRuleValue().size();i++){//no mandatory
+   	         childArchguide3Children.add(buildRule(this.eag2012.getRuleLang().get(i),this.eag2012.getRuleValue().get(i)));    	       
+   	      }
              childArchguide3.put("children", childArchguide3Children);
 		
 		return childArchguide3;
@@ -1939,9 +2067,9 @@ public class Eag2012Creator {
          childArchguide3.put("attributes",childArchguide3Attributes);
      	 childArchguide3.put("nodeValue", directionsValue);
      	 ArrayList<HashMap<String, Object>> childArchguide3Children = new ArrayList<HashMap<String, Object>>();
- 	  
-	          childArchguide3Children.add(buildCitation(this.eag2012.getCitationId(),this.eag2012.getCitationLang(),this.eag2012.getCitationLastDateTimeVerified(),this.eag2012.getCitationHref(),this.eag2012.getCitationValue()));
-	       
+ 	        for(int i=0;this.eag2012.getCitationHref()!=null && i<this.eag2012.getCitationHref().size();i++){ //no mandatory
+	          childArchguide3Children.add(buildCitation(this.eag2012.getCitationId().get(i),this.eag2012.getCitationLang().get(i),this.eag2012.getCitationLastDateTimeVerified().get(i),this.eag2012.getCitationHref().get(i),this.eag2012.getCitationValue().get(i)));
+ 	        }
 	       childArchguide3.put("children", childArchguide3Children);
 		
 		return childArchguide3;
@@ -2087,9 +2215,13 @@ public class Eag2012Creator {
          childArchguidechild.put("nodeValue", null); 
          		
          ArrayList<HashMap<String, Object>> childArchguideChildren = new ArrayList<HashMap<String, Object>>();
-         childArchguideChildren.add(buildTelephone(this.eag2012.getTelephoneValue()));
-         childArchguideChildren.add(buildEmail(this.eag2012.getEmailHref(),this.eag2012.getEmailValue()));
-         
+        
+         for(int i=0;this.eag2012.getTelephoneValue()!=null && i<this.eag2012.getTelephoneValue().size();i++){ //no mandatory
+           childArchguideChildren.add(buildTelephone(this.eag2012.getTelephoneValue().get(i)));
+         }
+         for(int i=0;this.eag2012.getEmailHref()!=null && i<this.eag2012.getEmailHref().size();i++){//no mandatory
+           childArchguideChildren.add(buildEmail(this.eag2012.getEmailHref().get(i),this.eag2012.getEmailValue().get(i)));
+         }
          childArchguidechild.put("children", childArchguideChildren);
 		
 		
@@ -2128,8 +2260,10 @@ public class Eag2012Creator {
 		childArchguide3 = new HashMap<String, Object>();
         childArchguide3.put("nodeName","webpage");
         HashMap<String, String> childArchguide3Attributes = new HashMap<String, String>();
+       if(webpageHref!=null){
         childArchguide3Attributes.put("href", webpageHref);
         childArchguide3.put("attributes", childArchguide3Attributes);
+       }
         childArchguide3.put("nodeValue", /*"Go to the website"*/webpageValue);
 		
 

@@ -2,6 +2,7 @@ package eu.apenet.dashboard.manual.eag;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -40,27 +41,27 @@ public class Eag2012 {
 	private String controlLanguage;
 	private String recordIdId;
 	private String recordIdValue;
-	private String otherRecordIdId;
-	private String otherRecordIdValue;
+	private List<String> otherRecordIdId;
+	private List<String> otherRecordIdValue;
 	private String sourcesId;
 	private String sourcesLang;
-	private String sourceHref;
-	private String sourceId;
-	private String sourceLastDateTimeVerified;
+	private List<String> sourceHref;
+	private List<String> sourceId;
+	private List<String> sourceLastDateTimeVerified;
 	private String maintenanceAgencyId;
 	private String agencyCodeId;
 	private String agencyCodeValue;
 	private String agencyNameLang;
 	private String agencyNameId;
 	private String agencyNameValue;
-	private String otherAgencyCodeId;
-	private String otherAgencyCodeValue;
+	private List<String> otherAgencyCodeId;
+	private List<String> otherAgencyCodeValue;
 	private String maintenanceStatusId;
 	private String maintenanceStatusValue;
 	private String maintenanceHistoryId;
 	private String maintenanceHistoryLang;
-	private String maintenanceEventId;
-	private String maintenanceEventLang;
+	private List<String> maintenanceEventId;
+	private List<String> maintenanceEventLang;
 	private String agentId;
 	private String agentLang;
 	private String agentValue;
@@ -72,8 +73,8 @@ public class Eag2012 {
 	private String eventDateTimeValue;
 	private String eventTypeId;
 	private String eventTypeValue;
-	private String languageDeclarationId;
-	private String languageDeclarationLang;
+	private List<String> languageDeclarationId;
+	private List<String> languageDeclarationLang;
 	private String languageLanguageCode;
 	private String languageId;
 	private String scriptScriptCode;
@@ -82,39 +83,39 @@ public class Eag2012 {
 	private String scriptValue;
 	private String languageLang;
 	private String languageValue;
-	private String conventionDeclarationId;
-	private String convetionDeclarationLang;
+	private List<String> conventionDeclarationId;
+	private List<String> conventionDeclarationLang;
 	private String abbreviationId;
 	private String abbreviationLang;
 	private String abbreviationValue;
-	private String citationId;
-	private String citationLang;
-	private String citationLastDateTimeVerified;
-	private String citationHref;
-	private String citationValue;
+	private List<String> citationId;
+	private List<String> citationLang;
+	private List<String> citationLastDateTimeVerified;
+	private List<String> citationHref;
+	private List<String> citationValue;
 	private String descriptiveNoteLang;
 	private String descriptiveNoteId;
-	private String descriptiveNotePId;
-	private String descriptiveNotePLang;
-	private String descriptiveNotePValue;
-	private String localControlId;
-	private String localControlLang;
-	private String termLastDateTimeVerified;
-	private String termScriptCode;
-	private String termId;
-	private String termLang;
-	private String termValue;
-	private String dateNotAfter;
-	private String dateNotBefore;
-	private String dateStandardDate;
-	private String dateId;
-	private String dateLang;
-	private String dateValue;
-	private String dateRangeId;
+	private List<String> descriptiveNotePId;
+	private List<String> descriptiveNotePLang;
+	private List<String> descriptiveNotePValue;
+	private List<String> localControlId;
+	private List<String> localControlLang;
+	private List<String> termLastDateTimeVerified;
+	private List<String> termScriptCode;
+	private List<String> termId;
+	private List<String> termLang;
+	private List<String> termValue;
+	private List<String> dateNotAfter;
+	private List<String> dateNotBefore;
+	private List<String> dateStandardDate;
+	private List<String> dateId;
+	private List<String> dateLang;
+	private List<String> dateValue;
+	private List<String> dateRangeId;
 	private String toDateNotAfter;
 	private String toDateNotBefore;
 	private String toDateStandardDate;
-	private String dateRangeLang;
+	private List<String> dateRangeLang;
 	private String fromDateNotAfter;
 	private String fromDateNotBefore;
 	private String fromDateStandardDate;
@@ -124,38 +125,38 @@ public class Eag2012 {
 	private String toDateId;
 	private String toDateLang;
 	private String toDateValue;
-	private String localTypeDeclarationId;
-	private String localTypeDeclarationLang;
+	private List<String> localTypeDeclarationId;
+	private List<String> localTypeDeclarationLang;
 	private String publicationStatusId;
 	private String publicationStatusValue;
 	private String sourceEntryScriptCode;
 	private String sourceEntryId;
 	private String sourceEntryLang;
 	private String sourceEntryValue;
-	private String objectXMLWrapId;
+	private List<String> objectXMLWrapId;
 	private String objectBinWrapId;
 	private String repositoridCountrycode;
 	private String repositoridRepositorycode;
 	private String otherRepositorIdValue;
-	private String autformLang;
-	private String autformValue;
-	private String parformLang;
-	private String parformValue;
-	private String repositoryTypeValue;
-	private String nonpreformLang;
-	private String nonpreformValue;
+	private List<String> autformLang;
+	private List<String> autformValue;
+	private List<String> parformLang;
+	private List<String> parformValue;
+	private List<String> repositoryTypeValue;
+	private List<String> nonpreformLang;
+	private List<String> nonpreformValue;
 	private String useDatesId;
 	private String useDatesLang;
-	private String dateSetId;
-	private String dateSetLang;
-	private String repositoryNameLang;
-	private String repositoryNameValue;
+	private List<String> dateSetId;
+	private List<String> dateSetLang;
+	private List<String> repositoryNameLang;
+	private List<String> repositoryNameValue;
 	private String repositoryRoleValue;
 	private String geogareaLang;
 	private String geogareaValue;
-	private String locationLocalType;
-	private String locationLatitude;
-	private String locationLongitude;
+	private List<String> locationLocalType;
+	private List<String> locationLatitude;
+	private List<String> locationLongitude;
 	private String countryLang;
 	private String countryValue;
 	private String firstdemLang;
@@ -168,29 +169,29 @@ public class Eag2012 {
 	private String localentityValue;
 	private String streetLang;
 	private String streetValue;
-	private String directionsLang;
-	private String directionsValue;
-	private String adminunitLang;
-	private String adminunitValue;
+	private List<String> directionsLang;
+	private List<String> directionsValue;
+	private List<String> adminunitLang;
+	private List<String> adminunitValue;
 	private String openingValue;
 	private String closingStandardDate;
 	private String closingValue;
 	private String accessQuestion;
-	private String restaccessLang;
-	private String restaccessValue;
-	private String termsOfUseHref;
-	private String termsOfUseLang;
-	private String termsOfUseValue;
-	private String accessibilityQuestion;
-	private String accessibilityLang;
-	private String accessibilityValue;
+	private List<String> restaccessLang;
+	private List<String> restaccessValue;
+	private List<String> termsOfUseHref;
+	private List<String> termsOfUseLang;
+	private List<String> termsOfUseValue;
+	private List<String> accessibilityQuestion;
+	private List<String> accessibilityLang;
+	private List<String> accessibilityValue;
 	private String photographAllowanceValue;
-	private String readersTicketHref;
-	private String readersTicketLang;
-	private String readersTicketValue;
-	private String advancedOrdersHref;
-	private String advancedOrdersLang;
-	private String advancedOrdersValue;
+	private List<String> readersTicketHref;
+	private List<String> readersTicketLang;
+	private List<String> readersTicketValue;
+	private List<String> advancedOrdersHref;
+	private List<String> advancedOrdersLang;
+	private List<String> advancedOrdersValue;
 	private String libraryQuestion;
 	private String internetAccessQuestion;
 	private String reproductionserQuestion;
@@ -200,36 +201,36 @@ public class Eag2012 {
 	private String photocopyserQuestion;
 	private String restorationlabQuestion;
 	private String numValue;
-	private String ruleLang;
-	private String ruleValue;
-	private String webpageHref;
-	private String webpageValue;
-	private String emailHref;
-	private String emailValue;
-	private String faxValue;
-	private String telephoneValue;
-	private String relationEntryScriptCode;
-	private String relationEntryId;
-	private String relationEntryLang;
-	private String relationEntryValue;
-	private String eagRelationEagRelationType;
-	private String eagRelationHref;
-	private String placeEntryAccuracy;
-	private String placeEntryAltitude;
-	private String placeEntryId;
-	private String placeEntryLang;
-	private String placeEntryCountryCode;
-	private String placeEntryLatitude;
-	private String placeEntryLongitude;
-	private String placeEntryScriptCode;
-	private String resourceRelationResourceRelationType;
-	private String resourceRelationLastDateTimeVerified;
-	private String resourceRelationId;
-	private String resourceRelationLang;
-	private String resourceRelationHref;
+	private List<String> ruleLang;
+	private List<String> ruleValue;
+	private List<String> webpageHref;
+	private List<String> webpageValue;
+	private List<String> emailHref;
+	private List<String> emailValue;
+	private List<String> faxValue;
+	private List<String> telephoneValue;
+	private List<String> relationEntryScriptCode;
+	private List<String> relationEntryId;
+	private List<String> relationEntryLang;
+	private List<String> relationEntryValue;
+	private List<String> eagRelationEagRelationType;
+	private List<String> eagRelationHref;
+	private List<String> placeEntryAccuracy;
+	private List<String> placeEntryAltitude;
+	private List<String> placeEntryId;
+	private List<String> placeEntryLang;
+	private List<String> placeEntryCountryCode;
+	private List<String> placeEntryLatitude;
+	private List<String> placeEntryLongitude;
+	private List<String> placeEntryScriptCode;
+	private List<String> resourceRelationResourceRelationType;
+	private List<String> resourceRelationLastDateTimeVerified;
+	private List<String> resourceRelationId;
+	private List<String> resourceRelationLang;
+	private List<String> resourceRelationHref;
 	private String relationsId;
 	private String relationsLang;
-	private String placeEntryValue;
+	private List<String> placeEntryValue;
 
 	public Eag2012() {
 		// TODO put all parameters here
@@ -265,11 +266,11 @@ public class Eag2012 {
 		return this.recordIdValue;
 	}
 
-	public String getOtherRecordIdId() {
+	public List<String> getOtherRecordIdId() {
 		return this.otherRecordIdId;
 	}
 
-	public String getOtherRecordIdValue() {
+	public List<String> getOtherRecordIdValue() {
 		return this.otherRecordIdValue;
 	}
 
@@ -281,15 +282,15 @@ public class Eag2012 {
 		return this.sourcesLang;
 	}
 
-	public String getSourceLastDateTimeVerified() {
+	public List<String> getSourceLastDateTimeVerified() {
 		return sourceLastDateTimeVerified;
 	}
 
-	public String getSourceHref() {
+	public List<String> getSourceHref() {
 		return sourceHref;
 	}
 
-	public String getSourceId() {
+	public List<String> getSourceId() {
 		return sourceId;
 	}
 
@@ -318,11 +319,11 @@ public class Eag2012 {
 	}
 
 
-	public String getOtherAgencyCodeId() {
+	public List<String> getOtherAgencyCodeId() {
 		return otherAgencyCodeId;
 	}
 
-	public String getOtherAgencyCodeValue() {
+	public List<String> getOtherAgencyCodeValue() {
 		return otherAgencyCodeValue;
 	}
 
@@ -350,13 +351,13 @@ public class Eag2012 {
 
 
 
-	public String getMaintenanceEventId() {
+	public List<String> getMaintenanceEventId() {
 		return maintenanceEventId;
 	}
 
 
 
-	public String getMaintenanceEventLang() {
+	public List<String> getMaintenanceEventLang() {
 		return maintenanceEventLang;
 	}
 
@@ -428,13 +429,19 @@ public class Eag2012 {
 
 
 
-	public String getLanguageDeclarationId() {
+	public List<String> getLanguageDeclarationId() {
 		return languageDeclarationId;
 	}
 
 
 
-	public String getLanguageDeclarationLang() {
+	public void setLanguageDeclarationId(List<String> languageDeclarationId) {
+		this.languageDeclarationId = languageDeclarationId;
+	}
+
+
+
+	public List<String> getLanguageDeclarationLang() {
 		return languageDeclarationLang;
 	}
 
@@ -488,14 +495,14 @@ public class Eag2012 {
 
 
 
-	public String getConventionDeclarationId() {
+	public List<String> getConventionDeclarationId() {
 		return conventionDeclarationId;
 	}
 
 
 
-	public String getConvetionDeclarationLang() {
-		return convetionDeclarationLang;
+	public List<String> getConventionDeclarationLang() {
+		return conventionDeclarationLang;
 	}
 
 
@@ -518,31 +525,31 @@ public class Eag2012 {
 
 
 
-	public String getCitationId() {
+	public List<String> getCitationId() {
 		return citationId;
 	}
 
 
 
-	public String getCitationLang() {
+	public List<String> getCitationLang() {
 		return citationLang;
 	}
 
 
 
-	public String getCitationLastDateTimeVerified() {
+	public List<String> getCitationLastDateTimeVerified() {
 		return citationLastDateTimeVerified;
 	}
 
 
 
-	public String getCitationHref() {
+	public List<String> getCitationHref() {
 		return citationHref;
 	}
 
 
 
-	public String getCitationValue() {
+	public List<String> getCitationValue() {
 		return citationValue;
 	}
 
@@ -560,103 +567,103 @@ public class Eag2012 {
 
 
 
-	public String getDescriptiveNotePId() {
+	public List<String> getPId() {
 		return descriptiveNotePId;
 	}
 
 
 
-	public String getDescriptiveNotePLang() {
+	public List<String> getPLang() {
 		return descriptiveNotePLang;
 	}
 
 
 
-	public String getDescriptiveNotePValue() {
+	public List<String> getPValue() {
 		return descriptiveNotePValue;
 	}
 
 
-	public String getLocalControlId() {
+	public List<String> getLocalControlId() {
 		return localControlId;
 	}
 
 
 
-	public String getLocalControlLang() {
+	public List<String> getLocalControlLang() {
 		return localControlLang;
 	}
 
 
 
-	public String getTermLastDateTimeVerified() {
+	public List<String> getTermLastDateTimeVerified() {
 		return termLastDateTimeVerified;
 	}
 
 
 
-	public String getTermScriptCode() {
+	public List<String> getTermScriptCode() {
 		return termScriptCode;
 	}
 
 
-	public String getTermId() {
+	public List<String> getTermId() {
 		return termId;
 	}
 
 
 
-	public String getTermLang() {
+	public List<String> getTermLang() {
 		return termLang;
 	}
 
 
 
-	public String getTermValue() {
+	public List<String> getTermValue() {
 		return termValue;
 	}
 
 
 
-	public String getDateNotAfter() {
+	public List<String> getDateNotAfter() {
 		return dateNotAfter;
 	}
 
 
 
-	public String getDateNotBefore() {
+	public List<String> getDateNotBefore() {
 		return dateNotBefore;
 	}
 
 
 
-	public String getDateStandardDate() {
+	public List<String> getDateStandardDate() {
 		return dateStandardDate;
 	}
 
 
 
-	public String getDateId() {
+	public List<String> getDateId() {
 		return dateId;
 	}
 
 
 
-	public String getDateLang() {
+	public List<String> getDateLang() {
 		return dateLang;
 	}
 
 
 
-	public String getDateValue() {
+	public List<String> getDateValue() {
 		return dateValue;
 	}
 
-	public String getDateRangeLang() {
+	public List<String> getDateRangeLang() {
 		return dateRangeLang;
 	}
 
-	public String getDateRangeId() {
+	public List<String> getDateRangeId() {
 		return dateRangeId;
 	}
 
@@ -734,13 +741,13 @@ public class Eag2012 {
 
 
 
-	public String getLocalTypeDeclarationId() {
+	public List<String> getLocalTypeDeclarationId() {
 		return localTypeDeclarationId;
 	}
 
 
 
-	public String getLocalTypeDeclarationLang() {
+	public List<String> getLocalTypeDeclarationLang() {
 		return localTypeDeclarationLang;
 	}
 
@@ -781,7 +788,7 @@ public class Eag2012 {
 
 
 
-	public String getObjectXMLWrapId() {
+	public List<String> getObjectXMLWrapId() {
 		return objectXMLWrapId;
 	}
 
@@ -811,43 +818,43 @@ public class Eag2012 {
 
 
 
-	public String getAutformLang() {
+	public List<String> getAutformLang() {
 		return autformLang;
 	}
 
 
 
-	public String getAutformValue() {
+	public List<String> getAutformValue() {
 		return autformValue;
 	}
 
 
 
-	public String getParformLang() {
+	public List<String> getParformLang() {
 		return parformLang;
 	}
 
 
 
-	public String getParformValue() {
+	public List<String> getParformValue() {
 		return parformValue;
 	}
 
 
 
-	public String getRepositoryTypeValue() {
+	public List<String> getRepositoryTypeValue() {
 		return repositoryTypeValue;
 	}
 
 
 
-	public String getNonpreformLang() {
+	public List<String> getNonpreformLang() {
 		return nonpreformLang;
 	}
 
 
 
-	public String getNonpreformValue() {
+	public List<String> getNonpreformValue() {
 		return nonpreformValue;
 	}
 
@@ -865,25 +872,25 @@ public class Eag2012 {
 
 
 
-	public String getDateSetId() {
+	public List<String> getDateSetId() {
 		return dateSetId;
 	}
 
 
 
-	public String getDateSetLang() {
+	public List<String> getDateSetLang() {
 		return dateSetLang;
 	}
 
 
 
-	public String getRepositoryNameLang() {
+	public List<String> getRepositoryNameLang() {
 		return repositoryNameLang;
 	}
 
 
 
-	public String getRepositoryNameValue() {
+	public List<String> getRepositoryNameValue() {
 		return repositoryNameValue;
 	}
 
@@ -907,19 +914,19 @@ public class Eag2012 {
 
 
 
-	public String getLocationLocalType() {
+	public List<String> getLocationLocalType() {
 		return locationLocalType;
 	}
 
 
 
-	public String getLocationLatitude() {
+	public List<String> getLocationLatitude() {
 		return locationLatitude;
 	}
 
 
 
-	public String getLocationLongitude() {
+	public List<String> getLocationLongitude() {
 		return locationLongitude;
 	}
 
@@ -997,25 +1004,25 @@ public class Eag2012 {
 
 
 
-	public String getDirectionsLang() {
+	public List<String> getDirectionsLang() {
 		return directionsLang;
 	}
 
 
 
-	public String getDirectionsValue() {
+	public List<String> getDirectionsValue() {
 		return directionsValue;
 	}
 
 
 
-	public String getAdminunitLang() {
+	public List<String> getAdminunitLang() {
 		return adminunitLang;
 	}
 
 
 
-	public String getAdminunitValue() {
+	public List<String> getAdminunitValue() {
 		return adminunitValue;
 	}
 
@@ -1045,49 +1052,49 @@ public class Eag2012 {
 
 
 
-	public String getRestaccessLang() {
+	public List<String> getRestaccessLang() {
 		return restaccessLang;
 	}
 
 
 
-	public String getRestaccessValue() {
+	public List<String> getRestaccessValue() {
 		return restaccessValue;
 	}
 
 
 
-	public String getTermsOfUseHref() {
+	public List<String> getTermsOfUseHref() {
 		return termsOfUseHref;
 	}
 
 
 
-	public String getTermsOfUseLang() {
+	public List<String> getTermsOfUseLang() {
 		return termsOfUseLang;
 	}
 
 
 
-	public String getTermsOfUseValue() {
+	public List<String> getTermsOfUseValue() {
 		return termsOfUseValue;
 	}
 
 
 
-	public String getAccessibilityQuestion() {
+	public List<String> getAccessibilityQuestion() {
 		return accessibilityQuestion;
 	}
 
 
 
-	public String getAccessibilityLang() {
+	public List<String> getAccessibilityLang() {
 		return accessibilityLang;
 	}
 
 
 
-	public String getAccessibilityValue() {
+	public List<String> getAccessibilityValue() {
 		return accessibilityValue;
 	}
 
@@ -1099,37 +1106,37 @@ public class Eag2012 {
 
 
 
-	public String getReadersTicketHref() {
+	public List<String> getReadersTicketHref() {
 		return readersTicketHref;
 	}
 
 
 
-	public String getReadersTicketLang() {
+	public List<String> getReadersTicketLang() {
 		return readersTicketLang;
 	}
 
 
 
-	public String getReadersTicketValue() {
+	public List<String> getReadersTicketValue() {
 		return readersTicketValue;
 	}
 
 
 
-	public String getAdvancedOrdersHref() {
+	public List<String> getAdvancedOrdersHref() {
 		return advancedOrdersHref;
 	}
 
 
 
-	public String getAdvancedOrdersLang() {
+	public List<String> getAdvancedOrdersLang() {
 		return advancedOrdersLang;
 	}
 
 
 
-	public String getAdvancedOrdersValue() {
+	public List<String> getAdvancedOrdersValue() {
 		return advancedOrdersValue;
 	}
 
@@ -1189,162 +1196,164 @@ public class Eag2012 {
 
 
 
-	public String getRuleLang() {
+	public List<String> getRuleLang() {
 		return ruleLang;
 	}
 
 
 
-	public String getRuleValue() {
+	public List<String> getRuleValue() {
 		return ruleValue;
 	}
 
 
 
-	public String getWebpageHref() {
+	public List<String> getWebpageHref() {
 		return webpageHref;
 	}
 
 
 
-	public String getWebpageValue() {
+	public List<String> getWebpageValue() {
 		return webpageValue;
 	}
 
 
 
-	public String getEmailHref() {
+	public List<String> getEmailHref() {
 		return emailHref;
 	}
 
 
 
-	public String getEmailValue() {
+	public List<String> getEmailValue() {
 		return emailValue;
 	}
 
 
 
-	public String getFaxValue() {
+	public List<String> getFaxValue() {
 		return faxValue;
 	}
 
 
 
-	public String getTelephoneValue() {
+	public List<String> getTelephoneValue() {
 		return telephoneValue;
 	}
 
 
 
-	public String getRelationEntryScriptCode() {
+	public List<String> getRelationEntryScriptCode() {
 		return relationEntryScriptCode;
 	}
 
 
-	public String getRelationEntryId() {
+	public List<String> getRelationEntryId() {
 		return relationEntryId;
 	}
 
 
 
-	public String getRelationEntryLang() {
+	public List<String> getRelationEntryLang() {
 		return relationEntryLang;
 	}
 
 
 
-	public String getRelationEntryValue() {
+	public List<String> getRelationEntryValue() {
 		return relationEntryValue;
 	}
 
 
 
-	public String getEagRelationEagRelationType() {
+	public List<String> getEagRelationEagRelationType() {
 		return eagRelationEagRelationType;
 	}
 
 
 
-	public String getEagRelationHref() {
+	public List<String> getEagRelationHref() {
 		return eagRelationHref;
 	}
 
 
 
-	public String getPlaceEntryAccuracy() {
+	public List<String> getPlaceEntryAccuracy() {
 		return placeEntryAccuracy;
 	}
 
 
 
-	public String getPlaceEntryAltitude() {
+	public List<String> getPlaceEntryAltitude() {
 		return placeEntryAltitude;
 	}
 
 
 
-	public String getPlaceEntryId() {
+	public List<String> getPlaceEntryId() {
 		return placeEntryId;
 	}
 
 
 
-	public String getPlaceEntryLang() {
+	public List<String> getPlaceEntryLang() {
 		return placeEntryLang;
 	}
 
 
 
-	public String getPlaceEntryCountryCode() {
+	public List<String> getPlaceEntryCountryCode() {
 		return placeEntryCountryCode;
 	}
 
 
 
-	public String getPlaceEntryLatitude() {
+	public List<String> getPlaceEntryLatitude() {
 		return placeEntryLatitude;
 	}
 
 
 
-	public String getPlaceEntryLongitude() {
+	public List<String> getPlaceEntryLongitude() {
 		return placeEntryLongitude;
 	}
 
 
 
-	public String getPlaceEntryScriptCode() {
+	public List<String> getPlaceEntryScriptCode() {
 		return placeEntryScriptCode;
 	}
 
+	public List<String> getPlaceEntryValue() {
+		return placeEntryValue;
+	}
 
-
-	public String getResourceRelationResourceRelationType() {
+	public List<String> getResourceRelationResourceRelationType() {
 		return resourceRelationResourceRelationType;
 	}
 
 
 
-	public String getResourceRelationLastDateTimeVerified() {
+	public List<String> getResourceRelationLastDateTimeVerified() {
 		return resourceRelationLastDateTimeVerified;
 	}
 
 
 
-	public String getResourceRelationId() {
+	public List<String> getResourceRelationId() {
 		return resourceRelationId;
 	}
 
 
 
-	public String getResourceRelationLang() {
+	public List<String> getResourceRelationLang() {
 		return resourceRelationLang;
 	}
 
 
 
-	public String getResourceRelationHref() {
+	public List<String> getResourceRelationHref() {
 		return resourceRelationHref;
 	}
 
@@ -1404,13 +1413,13 @@ public class Eag2012 {
 
 
 
-	public void setOtherRecordIdId(String otherRecordIdId) {
+	public void setOtherRecordIdId(List<String> otherRecordIdId) {
 		this.otherRecordIdId = otherRecordIdId;
 	}
 
 
 
-	public void setOtherRecordIdValue(String otherRecordIdValue) {
+	public void setOtherRecordIdValue(List<String> otherRecordIdValue) {
 		this.otherRecordIdValue = otherRecordIdValue;
 	}
 
@@ -1428,19 +1437,19 @@ public class Eag2012 {
 
 
 
-	public void setSourceHref(String sourceHref) {
+	public void setSourceHref(List<String> sourceHref) {
 		this.sourceHref = sourceHref;
 	}
 
 
 
-	public void setSourceId(String sourceId) {
+	public void setSourceId(List<String> sourceId) {
 		this.sourceId = sourceId;
 	}
 
 
 
-	public void setSourceLastDateTimeVerified(String sourceLastDateTimeVerified) {
+	public void setSourceLastDateTimeVerified(List<String> sourceLastDateTimeVerified) {
 		this.sourceLastDateTimeVerified = sourceLastDateTimeVerified;
 	}
 
@@ -1482,13 +1491,13 @@ public class Eag2012 {
 
 
 
-	public void setOtherAgencyCodeId(String otherAgencyCodeId) {
+	public void setOtherAgencyCodeId(List<String> otherAgencyCodeId) {
 		this.otherAgencyCodeId = otherAgencyCodeId;
 	}
 
 
 
-	public void setOtherAgencyCodeValue(String otherAgencyCodeValue) {
+	public void setOtherAgencyCodeValue(List<String> otherAgencyCodeValue) {
 		this.otherAgencyCodeValue = otherAgencyCodeValue;
 	}
 
@@ -1518,13 +1527,13 @@ public class Eag2012 {
 
 
 
-	public void setMaintenanceEventId(String maintenanceEventId) {
+	public void setMaintenanceEventId(List<String> maintenanceEventId) {
 		this.maintenanceEventId = maintenanceEventId;
 	}
 
 
 
-	public void setMaintenanceEventLang(String maintenanceEventLang) {
+	public void setMaintenanceEventLang(List<String> maintenanceEventLang) {
 		this.maintenanceEventLang = maintenanceEventLang;
 	}
 
@@ -1596,17 +1605,9 @@ public class Eag2012 {
 	}
 
 
-
-	/*public void setLanguageDeclaration(String languageDeclaration) {
-		this.languageDeclaration = languageDeclaration;
-	}*/
-
-
-
-	public void setLanguageDeclarationLang(String languageDeclarationLang) {
+	public void setLanguageDeclarationLang(List<String> languageDeclarationLang) {
 		this.languageDeclarationLang = languageDeclarationLang;
 	}
-
 
 
 	public void setLanguageLanguageCode(String languageLanguageCode) {
@@ -1657,14 +1658,14 @@ public class Eag2012 {
 
 
 
-	public void setConventionDeclarationId(String conventionDeclarationId) {
+	public void setConventionDeclarationId(List<String> conventionDeclarationId) {
 		this.conventionDeclarationId = conventionDeclarationId;
 	}
 
 
 
-	public void setConvetionDeclarationLang(String convetionDeclarationLang) {
-		this.convetionDeclarationLang = convetionDeclarationLang;
+	public void setConventionDeclarationLang(List<String> conventionDeclarationLang) {
+		this.conventionDeclarationLang = conventionDeclarationLang;
 	}
 
 
@@ -1687,31 +1688,31 @@ public class Eag2012 {
 
 
 
-	public void setCitationId(String citationId) {
+	public void setCitationId(List<String> citationId) {
 		this.citationId = citationId;
 	}
 
 
 
-	public void setCitationLang(String citationLang) {
+	public void setCitationLang(List<String> citationLang) {
 		this.citationLang = citationLang;
 	}
 
 
 
-	public void setCitationLastDateTimeVerified(String citationLastDateTimeVerified) {
+	public void setCitationLastDateTimeVerified(List<String> citationLastDateTimeVerified) {
 		this.citationLastDateTimeVerified = citationLastDateTimeVerified;
 	}
 
 
 
-	public void setCitationHref(String citationHref) {
+	public void setCitationHref(List<String> citationHref) {
 		this.citationHref = citationHref;
 	}
 
 
 
-	public void setCitationValue(String citationValue) {
+	public void setCitationValue(List<String> citationValue) {
 		this.citationValue = citationValue;
 	}
 
@@ -1729,102 +1730,102 @@ public class Eag2012 {
 
 
 
-	public void setDescriptiveNotePId(String descriptiveNotePId) {
+	public void setPId(List<String> descriptiveNotePId) {
 		this.descriptiveNotePId = descriptiveNotePId;
 	}
 
 
 
-	public void setDescriptiveNotePLang(String descriptiveNotePLang) {
+	public void setPLang(List<String> descriptiveNotePLang) {
 		this.descriptiveNotePLang = descriptiveNotePLang;
 	}
 
 
 
-	public void setDescriptiveNotePValue(String descriptiveNotePValue) {
+	public void setPValue(List<String> descriptiveNotePValue) {
 		this.descriptiveNotePValue = descriptiveNotePValue;
 	}
 
 
 
-	public void setLocalControlId(String localControlId) {
+	public void setLocalControlId(List<String> localControlId) {
 		this.localControlId = localControlId;
 	}
 
 
 
-	public void setLocalControlLang(String localControlLang) {
+	public void setLocalControlLang(List<String> localControlLang) {
 		this.localControlLang = localControlLang;
 	}
 
 
 
-	public void setTermLastDateTimeVerified(String termLastDateTimeVerified) {
+	public void setTermLastDateTimeVerified(List<String> termLastDateTimeVerified) {
 		this.termLastDateTimeVerified = termLastDateTimeVerified;
 	}
 
 
 
-	public void setTermScriptCode(String termScriptCode) {
+	public void setTermScriptCode(List<String> termScriptCode) {
 		this.termScriptCode = termScriptCode;
 	}
 
 
-	public void setTermId(String termId) {
+	public void setTermId(List<String> termId) {
 		this.termId = termId;
 	}
 
 
 
-	public void setTermLang(String termLang) {
+	public void setTermLang(List<String> termLang) {
 		this.termLang = termLang;
 	}
 
 
 
-	public void setTermValue(String termValue) {
+	public void setTermValue(List<String> termValue) {
 		this.termValue = termValue;
 	}
 
 
 
-	public void setDateNotAfter(String dateNotAfter) {
+	public void setDateNotAfter(List<String> dateNotAfter) {
 		this.dateNotAfter = dateNotAfter;
 	}
 
 
 
-	public void setDateNotBefore(String dateNotBefore) {
+	public void setDateNotBefore(List<String> dateNotBefore) {
 		this.dateNotBefore = dateNotBefore;
 	}
 
 
 
-	public void setDateStandardDate(String dateStandardDate) {
+	public void setDateStandardDate(List<String> dateStandardDate) {
 		this.dateStandardDate = dateStandardDate;
 	}
 
 
 
-	public void setDateId(String dateId) {
+	public void setDateId(List<String> dateId) {
 		this.dateId = dateId;
 	}
 
 
 
-	public void setDateLang(String dateLang) {
+	public void setDateLang(List<String> dateLang) {
 		this.dateLang = dateLang;
 	}
 
 
 
-	public void setDateValue(String dateValue) {
+	public void setDateValue(List<String> dateValue) {
 		this.dateValue = dateValue;
 	}
 
 
 
-	public void setDateRangeId(String dateRangeId) {
+	public void setDateRangeId(List<String> dateRangeId) {
 		this.dateRangeId = dateRangeId;
 	}
 
@@ -1848,7 +1849,7 @@ public class Eag2012 {
 
 
 
-	public void setDateRangeLang(String dateRangeLang) {
+	public void setDateRangeLang(List<String> dateRangeLang) {
 		this.dateRangeLang = dateRangeLang;
 	}
 
@@ -1908,13 +1909,13 @@ public class Eag2012 {
 
 
 
-	public void setLocalTypeDeclarationId(String localTypeDeclarationId) {
+	public void setLocalTypeDeclarationId(List<String> localTypeDeclarationId) {
 		this.localTypeDeclarationId = localTypeDeclarationId;
 	}
 
 
 
-	public void setLocalTypeDeclarationLang(String localTypeDeclarationLang) {
+	public void setLocalTypeDeclarationLang(List<String> localTypeDeclarationLang) {
 		this.localTypeDeclarationLang = localTypeDeclarationLang;
 	}
 
@@ -1956,7 +1957,7 @@ public class Eag2012 {
 
 
 
-	public void setObjectXMLWrapId(String objectXMLWrapId) {
+	public void setObjectXMLWrapId(List<String> objectXMLWrapId) {
 		this.objectXMLWrapId = objectXMLWrapId;
 	}
 
@@ -1986,43 +1987,43 @@ public class Eag2012 {
 
 
 
-	public void setAutformLang(String autformLang) {
+	public void setAutformLang(List<String> autformLang) {
 		this.autformLang = autformLang;
 	}
 
 
 
-	public void setAutformValue(String autformValue) {
+	public void setAutformValue(List<String> autformValue) {
 		this.autformValue = autformValue;
 	}
 
 
 
-	public void setParformLang(String parformLang) {
+	public void setParformLang(List<String> parformLang) {
 		this.parformLang = parformLang;
 	}
 
 
 
-	public void setParformValue(String parformValue) {
+	public void setParformValue(List<String> parformValue) {
 		this.parformValue = parformValue;
 	}
 
 
 
-	public void setRepositoryTypeValue(String repositoryTypeValue) {
+	public void setRepositoryTypeValue(List<String> repositoryTypeValue) {
 		this.repositoryTypeValue = repositoryTypeValue;
 	}
 
 
 
-	public void setNonpreformLang(String nonpreformLang) {
+	public void setNonpreformLang(List<String> nonpreformLang) {
 		this.nonpreformLang = nonpreformLang;
 	}
 
 
 
-	public void setNonpreformValue(String nonpreformValue) {
+	public void setNonpreformValue(List<String> nonpreformValue) {
 		this.nonpreformValue = nonpreformValue;
 	}
 
@@ -2040,25 +2041,25 @@ public class Eag2012 {
 
 
 
-	public void setDateSetId(String dateSetId) {
+	public void setDateSetId(List<String> dateSetId) {
 		this.dateSetId = dateSetId;
 	}
 
 
 
-	public void setDateSetLang(String dateSetLang) {
+	public void setDateSetLang(List<String> dateSetLang) {
 		this.dateSetLang = dateSetLang;
 	}
 
 
 
-	public void setRepositoryNameLang(String repositoryNameLang) {
+	public void setRepositoryNameLang(List<String> repositoryNameLang) {
 		this.repositoryNameLang = repositoryNameLang;
 	}
 
 
 
-	public void setRepositoryNameValue(String repositoryNameValue) {
+	public void setRepositoryNameValue(List<String> repositoryNameValue) {
 		this.repositoryNameValue = repositoryNameValue;
 	}
 
@@ -2082,19 +2083,19 @@ public class Eag2012 {
 
 
 
-	public void setLocationLocalType(String locationLocalType) {
+	public void setLocationLocalType(List<String> locationLocalType) {
 		this.locationLocalType = locationLocalType;
 	}
 
 
 
-	public void setLocationLatitude(String locationLatitude) {
+	public void setLocationLatitude(List<String> locationLatitude) {
 		this.locationLatitude = locationLatitude;
 	}
 
 
 
-	public void setLocationLongitude(String locationLongitude) {
+	public void setLocationLongitude(List<String> locationLongitude) {
 		this.locationLongitude = locationLongitude;
 	}
 
@@ -2172,25 +2173,25 @@ public class Eag2012 {
 
 
 
-	public void setDirectionsLang(String directionsLang) {
+	public void setDirectionsLang(List<String> directionsLang) {
 		this.directionsLang = directionsLang;
 	}
 
 
 
-	public void setDirectionsValue(String directionsValue) {
+	public void setDirectionsValue(List<String> directionsValue) {
 		this.directionsValue = directionsValue;
 	}
 
 
 
-	public void setAdminunitLang(String adminunitLang) {
+	public void setAdminunitLang(List<String> adminunitLang) {
 		this.adminunitLang = adminunitLang;
 	}
 
 
 
-	public void setAdminunitValue(String adminunitValue) {
+	public void setAdminunitValue(List<String> adminunitValue) {
 		this.adminunitValue = adminunitValue;
 	}
 
@@ -2220,49 +2221,49 @@ public class Eag2012 {
 
 
 
-	public void setRestaccessLang(String restaccessLang) {
+	public void setRestaccessLang(List<String> restaccessLang) {
 		this.restaccessLang = restaccessLang;
 	}
 
 
 
-	public void setRestaccessValue(String restaccessValue) {
+	public void setRestaccessValue(List<String> restaccessValue) {
 		this.restaccessValue = restaccessValue;
 	}
 
 
 
-	public void setTermsOfUseHref(String termsOfUseHref) {
+	public void setTermsOfUseHref(List<String> termsOfUseHref) {
 		this.termsOfUseHref = termsOfUseHref;
 	}
 
 
 
-	public void setTermsOfUseLang(String termsOfUseLang) {
+	public void setTermsOfUseLang(List<String> termsOfUseLang) {
 		this.termsOfUseLang = termsOfUseLang;
 	}
 
 
 
-	public void setTermsOfUseValue(String termsOfUseValue) {
+	public void setTermsOfUseValue(List<String> termsOfUseValue) {
 		this.termsOfUseValue = termsOfUseValue;
 	}
 
 
 
-	public void setAccessibilityQuestion(String accessibilityQuestion) {
+	public void setAccessibilityQuestion(List<String> accessibilityQuestion) {
 		this.accessibilityQuestion = accessibilityQuestion;
 	}
 
 
 
-	public void setAccessibilityLang(String accessibilityLang) {
+	public void setAccessibilityLang(List<String> accessibilityLang) {
 		this.accessibilityLang = accessibilityLang;
 	}
 
 
 
-	public void setAccessibilityValue(String accessibilityValue) {
+	public void setAccessibilityValue(List<String> accessibilityValue) {
 		this.accessibilityValue = accessibilityValue;
 	}
 
@@ -2274,37 +2275,37 @@ public class Eag2012 {
 
 
 
-	public void setReadersTicketHref(String readersTicketHref) {
+	public void setReadersTicketHref(List<String> readersTicketHref) {
 		this.readersTicketHref = readersTicketHref;
 	}
 
 
 
-	public void setReadersTicketLang(String readersTicketLang) {
+	public void setReadersTicketLang(List<String> readersTicketLang) {
 		this.readersTicketLang = readersTicketLang;
 	}
 
 
 
-	public void setReadersTicketValue(String readersTicketValue) {
+	public void setReadersTicketValue(List<String> readersTicketValue) {
 		this.readersTicketValue = readersTicketValue;
 	}
 
 
 
-	public void setAdvancedOrdersHref(String advancedOrdersHref) {
+	public void setAdvancedOrdersHref(List<String> advancedOrdersHref) {
 		this.advancedOrdersHref = advancedOrdersHref;
 	}
 
 
 
-	public void setAdvancedOrdersLang(String advancedOrdersLang) {
+	public void setAdvancedOrdersLang(List<String> advancedOrdersLang) {
 		this.advancedOrdersLang = advancedOrdersLang;
 	}
 
 
 
-	public void setAdvancedOrdersValue(String advancedOrdersValue) {
+	public void setAdvancedOrdersValue(List<String> advancedOrdersValue) {
 		this.advancedOrdersValue = advancedOrdersValue;
 	}
 
@@ -2364,151 +2365,157 @@ public class Eag2012 {
 
 
 
-	public void setRuleLang(String ruleLang) {
+	public void setRuleLang(List<String> ruleLang) {
 		this.ruleLang = ruleLang;
 	}
 
 
 
-	public void setRuleValue(String ruleValue) {
+	public void setRuleValue(List<String> ruleValue) {
 		this.ruleValue = ruleValue;
 	}
 
 
 
-	public void setWebpageHref(String webpageHref) {
+	public void setWebpageHref(List<String> webpageHref) {
 		this.webpageHref = webpageHref;
 	}
 
 
-	public void setWebpageValue(String webpageValue) {
+	public void setWebpageValue(List<String> webpageValue) {
 		this.webpageValue = webpageValue;
 	}
 
 
-	public void setEmailHref(String emailHref) {
+	public void setEmailHref(List<String> emailHref) {
 		this.emailHref = emailHref;
 	}
 
 
-	public void setEmailValue(String emailValue) {
+	public void setEmailValue(List<String> emailValue) {
 		this.emailValue = emailValue;
 	}
 
 
-	public void setFaxValue(String faxValue) {
+	public void setFaxValue(List<String> faxValue) {
 		this.faxValue = faxValue;
 	}
 
 
-	public void setTelephoneValue(String telephoneValue) {
+	public void setTelephoneValue(List<String> telephoneValue) {
 		this.telephoneValue = telephoneValue;
 	}
 
-	public void setRelationEntryId(String relationEntryId) {
+	public void setRelationEntryId(List<String> relationEntryId) {
 		this.relationEntryId = relationEntryId;
 	}
 
 
-	public void setRelationEntryLang(String relationEntryLang) {
+	public void setRelationEntryScriptCode(List<String> relationEntryScriptCode) {
+		this.relationEntryScriptCode = relationEntryScriptCode;
+	}
+
+
+
+	public void setRelationEntryLang(List<String> relationEntryLang) {
 		this.relationEntryLang = relationEntryLang;
 	}
 
 
 
-	public void setRelationEntryValue(String relationEntryValue) {
+	public void setRelationEntryValue(List<String> relationEntryValue) {
 		this.relationEntryValue = relationEntryValue;
 	}
 
 
 
-	public void setEagRelationEagRelationType(String eagRelationEagRelationType) {
+	public void setEagRelationEagRelationType(List<String> eagRelationEagRelationType) {
 		this.eagRelationEagRelationType = eagRelationEagRelationType;
 	}
 
 
 
-	public void setEagRelationHref(String eagRelationHref) {
+	public void setEagRelationHref(List<String> eagRelationHref) {
 		this.eagRelationHref = eagRelationHref;
 	}
 
 
 
-	public void setPlaceEntryAccuracy(String placeEntryAccuracy) {
+	public void setPlaceEntryAccuracy(List<String> placeEntryAccuracy) {
 		this.placeEntryAccuracy = placeEntryAccuracy;
 	}
 
 
 
-	public void setPlaceEntryAltitude(String placeEntryAltitude) {
+	public void setPlaceEntryAltitude(List<String> placeEntryAltitude) {
 		this.placeEntryAltitude = placeEntryAltitude;
 	}
 
 
 
-	public void setPlaceEntryId(String placeEntryId) {
+	public void setPlaceEntryId(List<String> placeEntryId) {
 		this.placeEntryId = placeEntryId;
 	}
 
 
 
-	public void setPlaceEntryLang(String placeEntryLang) {
+	public void setPlaceEntryLang(List<String> placeEntryLang) {
 		this.placeEntryLang = placeEntryLang;
 	}
 
 
 
-	public void setPlaceEntryCountryCode(String placeEntryCountryCode) {
+	public void setPlaceEntryCountryCode(List<String> placeEntryCountryCode) {
 		this.placeEntryCountryCode = placeEntryCountryCode;
 	}
 
 
 
-	public void setPlaceEntryLatitude(String placeEntryLatitude) {
+	public void setPlaceEntryLatitude(List<String> placeEntryLatitude) {
 		this.placeEntryLatitude = placeEntryLatitude;
 	}
 
 
 
-	public void setPlaceEntryLongitude(String placeEntryLongitude) {
+	public void setPlaceEntryLongitude(List<String> placeEntryLongitude) {
 		this.placeEntryLongitude = placeEntryLongitude;
 	}
 
 
 
-	public void setPlaceEntryScriptCode(String placeEntryScriptCode) {
+	public void setPlaceEntryScriptCode(List<String> placeEntryScriptCode) {
 		this.placeEntryScriptCode = placeEntryScriptCode;
 	}
 
 
 
 	public void setResourceRelationResourceRelationType(
-			String resourceRelationResourceRelationType) {
+			List<String> resourceRelationResourceRelationType) {
 		this.resourceRelationResourceRelationType = resourceRelationResourceRelationType;
 	}
 
 
 
 	public void setResourceRelationLastDateTimeVerified(
-			String resourceRelationLastDateTimeVerified) {
+			List<String> resourceRelationLastDateTimeVerified) {
 		this.resourceRelationLastDateTimeVerified = resourceRelationLastDateTimeVerified;
 	}
 
 
 
-	public void setResourceRelationId(String resourceRelationId) {
+	public void setResourceRelationId(List<String> resourceRelationId) {
 		this.resourceRelationId = resourceRelationId;
 	}
 
 
 
-	public void setResourceRelationLang(String resourceRelationLang) {
+	public void setResourceRelationLang(List<String> resourceRelationLang) {
 		this.resourceRelationLang = resourceRelationLang;
 	}
 
 
 
-	public void setResourceRelationHref(String resourceRelationHref) {
+	public void setResourceRelationHref(List<String> resourceRelationHref) {
 		this.resourceRelationHref = resourceRelationHref;
 	}
 
@@ -2524,11 +2531,12 @@ public class Eag2012 {
 		this.relationsLang = relationsLang;
 	}
 
-
-
-	public String getPlaceEntryValue() {
-		return placeEntryValue;
+	
+	public void setPlaceEntryValue(List<String> placeEntryValue) {
+		this.placeEntryValue = placeEntryValue;
 	}
+
+
 
 	/**
 	 * 
