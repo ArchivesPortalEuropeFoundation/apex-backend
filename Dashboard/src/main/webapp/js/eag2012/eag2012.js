@@ -1136,3 +1136,27 @@ function descriptionAddAdministrationUnits(){
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageUnitOfAdministrativeStructure']").attr("for","selectLanguageUnitOfAdministrativeStructure_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageUnitOfAdministrativeStructure").attr("id","selectLanguageUnitOfAdministrativeStructure_"+(count+1));
 }
+function controlAddFurtherLangsAnsScripts(){
+	var count = $("table#controlTable tr[id^='trControlAddFurtherLangsAnsScriptsOne']").length;
+	var target1 = "trControlAddFurtherLangsAnsScriptsOne_"+(count+1);
+	var target2 = "trControlAddFurtherLangsAnsScriptsTwo_"+(count+1);
+	var lastId = "table#controlTable tr#trControlAddFurtherLangsAnsScriptsTwo";
+	if(count>1){
+		lastId+="_"+(count);
+	}
+	var tr2HTML = "<tr id=\""+target1+"\">";
+	tr2HTML += $("table#controlTable tr#trControlAddFurtherLangsAnsScriptsOne").clone().html();
+	tr2HTML += "</tr>\n";
+	tr2HTML += "<tr id=\""+target2+"\">"+$("table#controlTable tr#trControlAddFurtherLangsAnsScriptsTwo").clone().html();
+	tr2HTML += "</tr>";
+	alert(tr2HTML);
+	$(lastId).after(tr2HTML);
+	//update rest of new elements
+	$("table#controlTable tr#"+target1+" label[for='selectDescriptionLanguage']").attr("for","selectDescriptionLanguage_"+(count+1));
+	$("table#controlTable tr#"+target1+" select#selectDescriptionLanguage").attr("id","selectDescriptionLanguage_"+(count+1));
+	$("table#controlTable tr#"+target2+" label[for='selectDescriptionScript']").attr("for","selectDescriptionScript_"+(count+1));
+	$("table#controlTable tr#"+target2+" select#select").attr("id","selectDescriptionScript_"+(count+1));
+}
+function addContactAbbreviation(){
+	
+}
