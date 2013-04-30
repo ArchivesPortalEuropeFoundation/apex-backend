@@ -1157,5 +1157,22 @@ function controlAddFurtherLangsAnsScripts(){
 	$("table#controlTable tr#"+target2+" select#select").attr("id","selectDescriptionScript_"+(count+1));
 }
 function addContactAbbreviation(){
-	
+	var count = $("table#controlTable tr[id^='trContactAbbreviationOne']").length;
+	var target1 = "trContactAbbreviationOne_"+(count+1);
+	var target2 = "trContactAbbreviationTwo_"+(count+1);
+	var lastId = "table#controlTable tr#trContactAbbreviationTwo";
+	if(count>1){
+		lastId+="_"+(count);
+	}
+	var tr2HTML = "<tr id=\""+target1+"\">";
+	tr2HTML += $("table#controlTable tr#trContactAbbreviationOne").clone().html();
+	tr2HTML += "</tr>\n";
+	tr2HTML += "<tr id=\""+target2+"\">"+$("table#controlTable tr#trContactAbbreviationTwo").clone().html();
+	tr2HTML += "</tr>";
+	$(lastId).after(tr2HTML);
+	//update rest of new elements
+	$("table#controlTable tr#"+target1+" label[for='textContactAbbreviation']").attr("for","textContactAbbreviation_"+(count+1));
+	$("table#controlTable tr#"+target1+" input#textContactAbbreviation").attr("id","textContactAbbreviation_"+(count+1));
+	$("table#controlTable tr#"+target2+" label[for='textContactFullName']").attr("for","textContactFullName_"+(count+1));
+	$("table#controlTable tr#"+target2+" input#textContactFullName").attr("id","textContactFullName_"+(count+1));
 }
