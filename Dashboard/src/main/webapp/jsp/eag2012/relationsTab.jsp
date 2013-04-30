@@ -35,7 +35,7 @@
 			</td>
 		</tr>
 
-		<tr>
+		<tr id="trRelationsDescriptionOfRelation">
 			<td id="tdDescriptionOfRelation">
 				<s:property value="getText('label.ai.relations.descriptionOfRelation')" />:
 			</td>
@@ -52,7 +52,7 @@
 
 		<tr>
 			<td id="tdAddNewResourceRelation" colspan="2">
-				<input type="button" value="<s:property value='getText("label.ai.relations.addNewResourceRelation")' />"/>
+				<input type="button" id="buttonRelationAddNewResourceRelation" onclick="relationAddNewResourceRelation();" value="<s:property value='getText("label.ai.relations.addNewResourceRelation")' />"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -92,7 +92,7 @@
 			</td>
 		</tr>
 
-		<tr>
+		<tr id="trRelationsInstitutionDescriptionOfRelation">
 			<td id="tdInstitutionDescriptionOfRelation">
 				<s:property value="getText('label.ai.relations.descriptionOfRelation')" />:
 			</td>
@@ -109,7 +109,7 @@
 
 		<tr>
 			<td id="tdAddNewInstitutionRelation" colspan="2">
-				<input type="button" value="<s:property value='getText("label.ai.relations.addNewInstitutionRelation")' />"/>
+				<input type="button" id="buttonAddNewInstitutionRelation" onclick="addInstitutionDescriptionOfRelation();" value="<s:property value='getText("label.ai.relations.addNewInstitutionRelation")' />"/>
 			</td>
 			<td colspan="2">
 			</td>

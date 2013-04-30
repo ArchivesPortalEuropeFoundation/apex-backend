@@ -1176,3 +1176,33 @@ function addContactAbbreviation(){
 	$("table#controlTable tr#"+target2+" label[for='textContactFullName']").attr("for","textContactFullName_"+(count+1));
 	$("table#controlTable tr#"+target2+" input#textContactFullName").attr("id","textContactFullName_"+(count+1));
 }
+function relationAddNewResourceRelation(){
+	var count = $("table#relationsTable tr[id^='trRelationsDescriptionOfRelation']").length;
+	var newId = "trRelationsDescriptionOfRelation_"+(count+1);
+	var trHtml = "<tr id=\""+newId+"\">"+$("table#relationsTable tr[id='trRelationsDescriptionOfRelation']").clone().html()+"</tr>";
+	var lastId = "table#relationsTable tr#trRelationsDescriptionOfRelation";
+	if(count>1){
+		lastId+="_"+(count);
+	}
+	$(lastId).after(trHtml);
+	//update last content
+	$("table#relationsTable tr#"+newId+" label[for='textDescriptionOfRelation']").attr("for","textDescriptionOfRelation_"+(count+1));
+	$("table#relationsTable tr#"+newId+" input#textDescriptionOfRelation").attr("id","textDescriptionOfRelation_"+(count+1));
+	$("table#relationsTable tr#"+newId+" label[for='selectLanguageDescriptionOfRelation']").attr("for","selectLanguageDescriptionOfRelation_"+(count+1));
+	$("table#relationsTable tr#"+newId+" select#selectLanguageDescriptionOfRelation").attr("id","selectLanguageDescriptionOfRelation_"+(count+1));
+}
+function addInstitutionDescriptionOfRelation(){
+	var count = $("table#relationsTable tr[id^='trRelationsInstitutionDescriptionOfRelation']").length;
+	var newId = "trRelationsInstitutionDescriptionOfRelation_"+(count+1);
+	var trHtml = "<tr id=\""+newId+"\">"+$("table#relationsTable tr[id='trRelationsInstitutionDescriptionOfRelation']").clone().html()+"</tr>";
+	var lastId = "table#relationsTable tr#trRelationsInstitutionDescriptionOfRelation";
+	if(count>1){
+		lastId+="_"+(count);
+	}
+	$(lastId).after(trHtml);
+	//update last content
+	$("table#relationsTable tr#"+newId+" label[for='textInstitutionDescriptionOfRelation']").attr("for","textInstitutionDescriptionOfRelation_"+(count+1));
+	$("table#relationsTable tr#"+newId+" input#textInstitutionDescriptionOfRelation").attr("id","textInstitutionDescriptionOfRelation_"+(count+1));
+	$("table#relationsTable tr#"+newId+" label[for='selectLanguageInstitutionDescriptionOfRelation']").attr("for","selectLanguageInstitutionDescriptionOfRelation_"+(count+1));
+	$("table#relationsTable tr#"+newId+" select#selectLanguageInstitutionDescriptionOfRelation").attr("id","selectLanguageInstitutionDescriptionOfRelation_"+(count+1));
+}
