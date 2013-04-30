@@ -50,12 +50,9 @@
 			<td id="usedLanguagesLabel" colspan="2">
 				<s:property value="getText('label.ai.control.usedLanguages')" />
 			</td>
-			<td id="tdAddFurtherLangsAnsScripts" colspan="2">
-				<input type="button" value="<s:property value='getText("label.ai.control.addFurtherLangsAnsScripts")' />" />
-			</td>
 		</tr>
 
-		<tr>
+		<tr id="trControlAddFurtherLangsAnsScriptsOne">
 			<td id="tdDescriptionLanguage">
 				<s:property value="getText('label.ai.control.descriptionLanguage')" />
 				<span class="required">*</span>:
@@ -67,8 +64,7 @@
 			<td colspan="2">
 			</td>
 		</tr>
-
-		<tr>
+		<tr id="trControlAddFurtherLangsAnsScriptsTwo">
 			<td id="tdDescriptionScript">
 				<s:property value="getText('label.ai.control.descriptionScript')" />
 				<span class="required">*</span>:
@@ -80,17 +76,17 @@
 			<td colspan="2">
 			</td>
 		</tr>
-
+		<tr>
+			<td id="tdAddFurtherLangsAnsScripts" colspan="2">
+				<input type="button" onclick="controlAddFurtherLangsAnsScripts();" id="buttonControlAddFurtherLangsAnsScripts" value="<s:property value='getText("label.ai.control.addFurtherLangsAnsScripts")' />" />
+			</td>
+		</tr>
 		<tr>
 			<td id="usedRulesLabel" colspan="2">
 				<s:property value="getText('label.ai.control.usedRules')" />
 			</td>
-			<td id="tdAddFurtherRules" colspan="2">
-				<input type="button" value="<s:property value='getText("label.ai.control.addFurtherRules")' />" />
-			</td>
 		</tr>
-
-		<tr>
+		<tr id="trContactAbbreviationOne">
 			<td id="tdContactAbbreviation">
 				<s:property value="getText('label.ai.control.abbreviation')" />:
 			</td>
@@ -100,8 +96,7 @@
 			<td colspan="2">
 			</td>
 		</tr>
-
-		<tr>
+		<tr id="trContactAbbreviationTwo">
 			<td id="tdContactFullName">
 				<s:property value="getText('label.ai.control.fullName')" />:
 			</td>
@@ -111,7 +106,11 @@
 			<td colspan="2">
 			</td>
 		</tr>
-
+		<tr>
+			<td id="tdAddFurtherRules" colspan="2">
+				<input type="button" id="buttonControlAddFurtherRules" onclick="addContactAbbreviation();" value="<s:property value='getText("label.ai.control.addFurtherRules")' />" />
+			</td>
+		</tr>
 		<tr>
 			<td id="tdButtonsDescriptionTab" colspan="4">
 				<input type="button" id="buttonControlTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
