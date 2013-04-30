@@ -109,7 +109,7 @@ background: #e9f3fa;
 }
 
 #eag2012Div td, th {
- /*  width: 25%;*/
+   width: 25%;
    padding-top: 15px;
  
 }
@@ -120,131 +120,6 @@ background: #e9f3fa;
 	
 }
 
-.borderYourInstitution{
-	
-	border-bottom:1px solid #00a0df;
-	left: 590px;
-    position: absolute;
-    top: 558px;
-    width: 49.5%;
-	
-}
-
-.borderContactVisitorAddress{
-	
-    border-bottom:1px solid #00a0df;
-	left: 590px;
-    position: absolute;
-    top: 229px;
-    width: 49%;	
-	
-}
-
-.borderContactPostalAddress{
-	
-	border-bottom:1px solid #00a0df;
-	left: 660px;
-    position: absolute;
-    top: 605px;
-    width: 44%;
-	
-}
-
-.borderDescription{
-	
-    border-bottom:1px solid #00a0df;
-	left: 635px;
-    position: absolute;
-    top: 229px;
-    width: 46%;		
-	
-}
-
-.borderSearchroom{
-	
-    border-bottom:1px solid #00a0df;
-	left: 560px;
-    position: absolute;
-    top: 775px;
-    width: 52%;
-	
-}
-.borderAdministrative{
-	
-    border-bottom:1px solid #00a0df;
-	left: 650px;
-    position: absolute;
-    top: 640px;
-    width: 45%;
-	
-}
-
-.borderBuilding{
-	
-    border-bottom:1px solid #00a0df;
-	left: 620px;
-    position: absolute;
-    top: 758px;
-    width: 47.5%;
-	
-}
-
-.borderHolding{
-	
-    border-bottom:1px solid #00a0df;
-	left: 620px;
-    position: absolute;
-    top: 925px;
-    width: 47.5%;
-	
-}
-
-.borderTechnicalServices{
-	
-    border-bottom:1px solid #00a0df;
-	left: 600px;
-    position: absolute;
-    top: 1620px;
-    width: 49%;
-	
-}
-.borderRecreationalServices{
-	
-    border-bottom:1px solid #00a0df;
-	left: 625px;
-    position: absolute;
-    top: 2170px;
-    width: 47%;
-	
-}
-.borderRelations{
-	
-    border-bottom:1px solid #00a0df;
-	left: 610px;
-    position: absolute;
-    top: 229px;
-    width: 48%;		
-	
-}
-
-.borderLanguages{
-	
-    border-bottom:1px solid #00a0df;
-	left: 800px;
-    position: absolute;
-    top: 354px;
-    width: 33%;
-}
-
-.borderRules{
-	
-    border-bottom:1px solid #00a0df;
-	left: 715px;
-    position: absolute;
-    top: 520px;
-    width: 40%;
-	
-}
 
 #eag2012Div input{
 	/*background-color: #00A0DF;*/
@@ -281,10 +156,10 @@ background: #e9f3fa;
 	font-weight: bold;
 	
 }
-#visitorAdressLabel, #postalAddressLabel,#repositoryLabel, #administrativeLabel, #buildingLabel, #holdingLabel, #usedLanguagesLabel,
+#visitorAdressLabel,#yourInstitutionLabel, #postalAddressLabel,#repositoryLabel, #administrativeLabel, #buildingLabel, #holdingLabel, #usedLanguagesLabel,
 #usedRulesLabel, #resourceLabel, #institutionLabel, #searchroomLabel, #technicalServicesLabel,#recreationalServiceLabel {
 	
-	/*border-bottom:1px solid #00a0df;*/
+	border-bottom:1px solid #00a0df;
 	
 }
 
@@ -303,6 +178,11 @@ input[type="button"] {
     cursor: pointer;
     border-radius:10px;
     font-weight: bold;
+}
+
+#buttonAddFurtherTelephoneOfTheInstitution, #buttonAddFurtherFaxOfTheInstitution{
+ margin-left:30px;	
+	
 }
 
 input[type="text"] {
@@ -334,8 +214,6 @@ p.fieldRequired {
 	padding-top:5px;
 }
 
-
-
 #coordinatesLabel{
 color:#00A0DF;	
 text-decoration:underline;	
@@ -350,13 +228,13 @@ text-decoration:underline;
 	width:610px;
 	
 }
-#selectDescriptionLanguage option{
+#selectDescriptionLanguage option, .selectControlTab option{
 	width:290px;
 	
 }
 
 .labelLeft{
-	padding-left:10px;
+	padding-left:20px;
 }
 .labelLeftselect{
 	padding-left:10px;

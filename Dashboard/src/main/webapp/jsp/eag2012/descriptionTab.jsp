@@ -7,7 +7,7 @@
 			<td id="repositoryLabel" colspan="4">
 				<s:property value="getText('label.ai.description.repositoryDescription')" />
 			</td>
-			<td class="borderDescription"></td>
+			
 		</tr>
 
 		<tr>
@@ -102,7 +102,7 @@
 			<td id="administrativeLabel" colspan="4">
 				<s:property value="getText('label.ai.description.administrativeStructure')" />
 			</td>
-			<td class="borderAdministrative"></td>
+			
 		</tr>
 
 		<tr id="trDescriptionAddAdministrationUnits">
@@ -132,7 +132,7 @@
 			<td id="buildingLabel" colspan="4">
 				<s:property value="getText('label.ai.description.buildingDescription')" />
 			</td>
-			<td class="borderBuilding"></td>
+			
 		</tr>
 
 		<tr>
@@ -174,7 +174,7 @@
 			<td id="holdingLabel" colspan="4">
 				<s:property value="getText('label.ai.description.holdingDescription')" />
 			</td>
-			<td class="borderHolding"></td>
+			
 		</tr>
 
 		<tr>

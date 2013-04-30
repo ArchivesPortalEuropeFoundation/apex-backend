@@ -145,7 +145,6 @@
 			<td id="searchroomLabel" colspan="4">
 				<span><s:property value="getText('label.ai.accessAndServices.searchroom')" /></span>
 			</td>
-			<td class="borderSearchroom"></td>
 		</tr>
 
 		<tr>
@@ -402,7 +401,6 @@
 			<td id="technicalServicesLabel" colspan="4">
 				<span><s:property value="getText('label.ai.accessAndServices.technicalServices')" /></span>
 			</td>
-			<td class="borderTechnicalServices"></td>
 		</tr>
 
 		<tr>
@@ -577,7 +575,7 @@
 			<td id="recreationalServiceLabel" colspan="4">
 				<span><s:property value="getText('label.ai.accessAndServices.recreationalServices')"/></span>
 			</td>
-			<td class="borderRecreationalServices"></td>
+			
 		</tr>
 
 		<tr>

@@ -7,7 +7,7 @@
 			<td id="yourInstitutionLabel" colspan="4">
 				<s:property value="getText('label.ai.tab.yourinstitution.title')" />
 			</td>
-			<td class="borderContactVisitorAddress"></td>
+			
 		</tr>
 
 		<tr>
@@ -95,7 +95,7 @@
 			<td id="visitorAdressLabel" colspan="4">
 				<s:property value="getText('label.ai.tabs.commons.visitorAddress')" />
 			</td>
-			<td class="borderYourInstitution"></td>
+			
 		</tr>
 		<tr>
 			<td>

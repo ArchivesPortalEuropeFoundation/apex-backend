@@ -7,7 +7,7 @@
 			<td id="resourceLabel" colspan="4">
 				<s:property value="getText('label.ai.relations.resourceRelations')" />
 			</td>
-			<td class="borderRelations"></td>
+			
 		</tr>
 
 		<tr>
@@ -60,15 +60,10 @@
 		</tr>
 
 		<tr>
-			<td id="institutionLabel" colspan="2">
+			<td id="institutionLabel" colspan="4">
 				<s:property value="getText('label.ai.relations.institutionRelation')" />
 			</td>
-			<td id="tdInstitutionTypeOfRelation">
-				<label for="selectTypeOftheRelation"><s:property value="getText('label.ai.relations.institutionTypeOfRelation')" />:</label>
-			</td>
-			<td>
-				<s:select theme="simple" id="selectTypeOftheRelation" list="typeTheRelationList"></s:select>
-			</td>
+			
 		</tr>
 
 		<tr>
@@ -78,8 +73,15 @@
 			<td>
 				<input type="text" id="textWebsiteOfDescription" value="<s:property value="#websiteOfDescription" />" />
 			</td>
+			<td id="tdInstitutionTypeOfRelation">
+				<label for="selectTypeOftheRelation"><s:property value="getText('label.ai.relations.institutionTypeOfRelation')" />:</label>
+			</td>
+			<td>
+				<s:select theme="simple" id="selectTypeOftheRelation" list="typeTheRelationList"></s:select>
+			</td>
 			<td colspan="2">
 			</td>
+			
 		</tr>
 
 		<tr>
