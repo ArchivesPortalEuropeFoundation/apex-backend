@@ -1149,7 +1149,6 @@ function controlAddFurtherLangsAnsScripts(){
 	tr2HTML += "</tr>\n";
 	tr2HTML += "<tr id=\""+target2+"\">"+$("table#controlTable tr#trControlAddFurtherLangsAnsScriptsTwo").clone().html();
 	tr2HTML += "</tr>";
-	alert(tr2HTML);
 	$(lastId).after(tr2HTML);
 	//update rest of new elements
 	$("table#controlTable tr#"+target1+" label[for='selectDescriptionLanguage']").attr("for","selectDescriptionLanguage_"+(count+1));
