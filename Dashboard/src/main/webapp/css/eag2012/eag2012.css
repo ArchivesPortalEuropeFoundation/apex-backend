@@ -3,7 +3,7 @@
 
 #eag2012Div .tab_header {
 	border: 1px solid #79B7E7;
-	background: url("../images/eag2012/tabbg.jpg") repeat-x;
+	
 	border-top-right-radius: 5px;
 	border-bottom: none;
 	clear: both;
@@ -41,9 +41,8 @@
 	padding:0;
 	list-style:none outside none;
 	height:24px;
-	background: url("../images/eag2012/tabbg.jpg") repeat-x;
+	
 }
-
 
 
 #eag2012Tabs li{
@@ -54,6 +53,7 @@
  border-top-left-radius: 5px;
  border-top-right-radius: 5px;
  border-width: 1px 1px solid;
+ 
  /*background:#afdefc;*/
 }
 /*#eag2012Div li #tab-yourInstitution:active{
@@ -109,14 +109,121 @@ background: #e9f3fa;
 }
 
 #eag2012Div td, th {
-   width: 25%;
+ /*  width: 25%;*/
    padding-top: 15px;
-   font-family:"GravurCondesedCY",regular,rounded;
+ 
 }
 
 #eag2012Div td label{
 	
 	/*width:auto;*/
+	
+}
+
+.borderYourInstitution{
+	
+	border-bottom:1px solid #00a0df;
+	left: 590px;
+    position: absolute;
+    top: 558px;
+    width: 49.5%;
+	
+}
+
+.borderContactVisitorAddress{
+	
+    border-bottom:1px solid #00a0df;
+	left: 590px;
+    position: absolute;
+    top: 229px;
+    width: 49%;	
+	
+}
+
+.borderContactPostalAddress{
+	
+	border-bottom:1px solid #00a0df;
+	left: 660px;
+    position: absolute;
+    top: 605px;
+    width: 44%;
+	
+}
+
+.borderDescription{
+	
+    border-bottom:1px solid #00a0df;
+	left: 635px;
+    position: absolute;
+    top: 229px;
+    width: 46%;		
+	
+}
+
+.borderSearchroom{
+	
+    border-bottom:1px solid #00a0df;
+	left: 560px;
+    position: absolute;
+    top: 775px;
+    width: 52%;
+	
+}
+.borderAdministrative{
+	
+    border-bottom:1px solid #00a0df;
+	left: 650px;
+    position: absolute;
+    top: 640px;
+    width: 45%;
+	
+}
+
+.borderBuilding{
+	
+    border-bottom:1px solid #00a0df;
+	left: 620px;
+    position: absolute;
+    top: 758px;
+    width: 47.5%;
+	
+}
+
+.borderHolding{
+	
+    border-bottom:1px solid #00a0df;
+	left: 620px;
+    position: absolute;
+    top: 925px;
+    width: 47.5%;
+	
+}
+
+.borderTechnicalServices{
+	
+    border-bottom:1px solid #00a0df;
+	left: 600px;
+    position: absolute;
+    top: 1620px;
+    width: 49%;
+	
+}
+.borderRecreationalServices{
+	
+    border-bottom:1px solid #00a0df;
+	left: 625px;
+    position: absolute;
+    top: 2170px;
+    width: 47%;
+	
+}
+.borderRelations{
+	
+    border-bottom:1px solid #00a0df;
+	left: 610px;
+    position: absolute;
+    top: 229px;
+    width: 48%;		
 	
 }
 
@@ -158,7 +265,7 @@ background: #e9f3fa;
 #visitorAdressLabel, #postalAddressLabel,#repositoryLabel, #administrativeLabel, #buildingLabel, #holdingLabel, #usedLanguagesLabel,
 #usedRulesLabel, #resourceLabel, #institutionLabel, #searchroomLabel, #technicalServicesLabel,#recreationalServiceLabel {
 	
-	border-bottom:1px solid #00a0df;
+	/*border-bottom:1px solid #00a0df;*/
 	
 }
 
@@ -215,10 +322,9 @@ color:#00A0DF;
 text-decoration:underline;	
 }
 
-#selectTypeOfTheInstitution, #selectDescriptionLanguage{
+#selectTypeOfTheInstitution, .selectControlTab{
 	width:200px;
-	
-	}
+}
 
 #selectTypeOfTheInstitution option{
 	

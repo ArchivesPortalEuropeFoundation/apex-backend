@@ -58,7 +58,7 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<s:select theme="simple" id="selectDescriptionLanguage" list="languageISOList"></s:select>
+				<s:select theme="simple" id="selectDescriptionLanguage" cssClass="selectControlTab" list="languageISOList"></s:select>
 				<s:fielderror fieldName="descriptionLanguage"/>
 			</td>
 			<td colspan="2">
@@ -70,7 +70,7 @@
 				<span class="required">*</span>:
 			</td>
 			<td>
-				<s:select theme="simple" id="selectDescriptionScript" list="scriptList"></s:select>
+				<s:select theme="simple" id="selectDescriptionScript" cssClass="selectControlTab"  list="scriptList"></s:select>
 				<s:fielderror fieldName="descriptionScript"/>
 			</td>
 			<td colspan="2">
