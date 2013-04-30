@@ -141,10 +141,10 @@
 		<tr>
 			<td id="tdButtonsContactTab" colspan="4">
 				<input type="button" id="buttonIdentityTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
-				<input type="button" id="buttonIdentityTabSave" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" />
+				<input type="button" id="buttonIdentityTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" />
 				<script type="text/javascript">
 					//current tab
-					$("table#identityTable input#buttonIdentityTabSave").click(clickIdentityAction);
+					$("table#identityTable input#buttonIdentityTabCheck").click(clickIdentityAction);
 				</script>
 			</td>
 		</tr>

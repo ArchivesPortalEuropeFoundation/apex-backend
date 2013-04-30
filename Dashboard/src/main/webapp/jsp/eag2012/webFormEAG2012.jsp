@@ -79,6 +79,7 @@
 			  </div>
 			</div>
 		</div>
+		<input type="button" id="buttonSaveEAG2012" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" onclick="clickSaveAction(this.form);" />
 	</form>
 	<div id="divTempContainter" style="display:none;"></div>
 </div>

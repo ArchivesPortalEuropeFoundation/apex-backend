@@ -712,10 +712,10 @@
 		<tr>
 			<td id="tdButtonsAccessAndServiceTab" colspan="4">
 				<input type="button" id="buttonAccessAndServiceTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
-				<input type="button" id="buttonAccessAndServicelTabSave" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" />
+				<input type="button" id="buttonAccessAndServicelTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" />
 				<script type="text/javascript">
 					//current tab
-					$("table#accessAndServicesTable input#buttonAccessAndServicelTabSave").click(clickAccessAndServicesAction);
+					$("table#accessAndServicesTable input#buttonAccessAndServicelTabCheck").click(clickAccessAndServicesAction);
 				</script>
 			</td>
 		</tr>

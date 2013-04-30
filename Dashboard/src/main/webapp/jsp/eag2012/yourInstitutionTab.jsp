@@ -341,10 +341,10 @@
 		<tr>
 			<td id="tdButtonsYourInstitutionTab" colspan="4">
 				<input type="button" id="buttonYourInstitutionTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
-				<input type="button" id="buttonYourInstitutionTabSave" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" />
+				<input type="button" id="buttonYourInstitutionTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" />
 				<script type="text/javascript">
 					//current tab
-					$("table#yiTableOthers input#buttonYourInstitutionTabSave").click(clickYourInstitutionAction);
+					$("table#yiTableOthers input#buttonYourInstitutionTabCheck").click(clickYourInstitutionAction);
 				</script>
 			</td>
 		</tr>

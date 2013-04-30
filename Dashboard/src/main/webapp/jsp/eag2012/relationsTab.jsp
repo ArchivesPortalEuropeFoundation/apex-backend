@@ -118,10 +118,10 @@
 
 		<tr>
 			<td id="tdButtonsDescriptionTab" colspan="4">
-				<input type="button" id="buttonRelationsTabSave" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" />
+				<input type="button" id="buttonRelationsTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" />
 				<script type="text/javascript">
 					//current tab
-					$("table#relationsTable input#buttonRelationsTabSave").click(clickRelationsAction);
+					$("table#relationsTable input#buttonRelationsTabCheck").click(clickRelationsAction);
 				</script>
 			</td>
 		</tr>

@@ -185,11 +185,11 @@
 			</td>
 			<td id="tdAddFurtherTelephoneOfTheInstitution" colspan="2">
 				<input id="buttonAddFurtherTelephoneOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherTelephoneNumbers")' />" onclick="addFurtherTelephoneOfTheInstitution();"/>
+				<script type="text/javascript">
+					$("table#contactTable input#buttonAddFurtherTelephoneOfTheInstitution").click();
+				</script>
 			</td>
 		</tr>
-		<script type="text/javascript">
-			$("table#contactTable input#buttonAddFurtherTelephoneOfTheInstitution").click();
-		</script>
 		<tr id="trFaxOfTheInstitution">
 			<td id="tdFaxOfTheInstitution">
 				<label for="textContactFaxOfTheInstitution"><s:property value="getText('label.ai.contact.faxOfTheInstitution')" /></label>:
@@ -248,10 +248,10 @@
 		<tr>
 			<td id="tdButtonsContactTab" colspan="4">
 				<input type="button" id="buttonContactTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
-				<input type="button" id="buttonContactTabSave" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" />
+				<input type="button" id="buttonContactTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" />
 				<script type="text/javascript">
 					//current tab
-					$("table#contactTable_"+$("table[id^='contactTable_']").length+" input#buttonContactTabSave").click(clickContactAction);
+					$("table#contactTable_"+$("table[id^='contactTable_']").length+" input#buttonContactTabCheck").click(clickContactAction);
 				</script>
 			</td>
 		</tr>

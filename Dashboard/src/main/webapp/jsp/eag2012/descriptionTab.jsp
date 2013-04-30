@@ -231,10 +231,10 @@
 		<tr>
 			<td id="tdButtonsDescriptionTab" colspan="4">
 				<input type="button" id="buttonDescriptionTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
-				<input type="button" id="buttonDescriptionTabSave" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" />
+				<input type="button" id="buttonDescriptionTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" />
 				<script type="text/javascript">
 					//current tab
-					$("table#descriptionTable input#buttonDescriptionTabSave").click(clickDescriptionAction);
+					$("table#descriptionTable input#buttonDescriptionTabCheck").click(clickDescriptionAction);
 				</script>
 			</td>
 		</tr>

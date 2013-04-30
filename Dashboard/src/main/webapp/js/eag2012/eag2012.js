@@ -29,6 +29,10 @@ function hideAndShow(idPrefix,shown){
 	}
 }
 
+function clickSaveAction(form) {
+	alert("Save");
+}
+
 function deleteChecks() {
 	$('.fieldRequired').remove();
 }
@@ -110,6 +114,12 @@ var clickYourInstitutionAction = function(){
 				jsonData += ",";
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+
+			// Check fill mandatory fields.
+			if ($(this).attr("value") != 'none') {
+				var position = yiMEVisitorsAddress.indexOf($(this).attr("id"));
+				yiMEVisitorsAddress.splice(position, 1);
+			}
 		});
 		if(yiMEVisitorsAddress.length>0){
 			validationArray.push(visitorsAddress[j],yiMEVisitorsAddress);
@@ -156,6 +166,12 @@ var clickYourInstitutionAction = function(){
 				jsonData += ",";
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+
+			// Check fill mandatory fields.
+			if ($(this).attr("value") != 'none') {
+				var position = yiMEPostalAddress.indexOf($(this).attr("id"));
+				yiMEPostalAddress.splice(position, 1);
+			}
 		});
 		if(yiMEPostalAddress.length>0){
 			validationArray.push(postalAddress[j],yiMEPostalAddress);
@@ -193,8 +209,6 @@ var clickYourInstitutionAction = function(){
 	}
 	jsonData += "}";
 
-//	alert(jsonData);
-
 	for (var i = 0; i < yiMandatoryElements.length; i++) {
 		var element = document.getElementById(yiMandatoryElements[i].toString());
 		var subelement = document.createElement('p');
@@ -217,7 +231,6 @@ var clickYourInstitutionAction = function(){
 
 			$('#' + validationArray[i].toString()).find('#' + array[j].toString()).after(subelement);
 		}
-
 	}
 };
 
@@ -238,7 +251,6 @@ var clickIdentityAction = function(){
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 		});
 	jsonData += "]}";
-//	alert(jsonData);
 };
 
 var clickContactAction = function(){
@@ -258,7 +270,6 @@ var clickContactAction = function(){
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 		});
 	jsonData += "]}";
-//	alert(jsonData);
 };
 
 var clickAccessAndServicesAction = function(){
@@ -290,7 +301,6 @@ var clickAccessAndServicesAction = function(){
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 		});
 	jsonData += "]}";
-//	alert(jsonData);
 
 	for (var i = 0; i < aasMandatoryElements.length; i++) {
 		var element = document.getElementById(aasMandatoryElements[i].toString());
@@ -320,7 +330,6 @@ var clickDescriptionAction = function(){
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 		});
 	jsonData += "]}";
-//	alert(jsonData);
 };
 
 var clickControlAction = function(){
@@ -352,7 +361,6 @@ var clickControlAction = function(){
 			}
 		});
 	jsonData += "]}";
-//	alert(jsonData);
 
 	for (var i = 0; i < controlMandatoryElements.length; i++) {
 		var element = document.getElementById(controlMandatoryElements[i].toString());
@@ -382,7 +390,6 @@ var clickRelationsAction = function(){
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 		});
 	jsonData += "]}";
-//	alert(jsonData);
 };
 
 function yiAddVisitorsAddressTranslation() {
@@ -537,7 +544,7 @@ function addRepositories(text1,text2){
 	$(firstId+"_"+(counter+1)+" input#buttonASAddServices").click($._data($(firstId+"_1 input#buttonASAddServices")[0],"events")["click"][0].handler);
 	
 	//current tab
-	$("table#yourInstitutionTable_"+(counter+1)+" input#buttonYourInstitutionTabSave").click(clickYourInstitutionAction);
+	$("table#yourInstitutionTable_"+(counter+1)+" input#buttonYourInstitutionTabCheck").click(clickYourInstitutionAction);
 }
 function getCurrentTab(){
 	var currentTab = "";
