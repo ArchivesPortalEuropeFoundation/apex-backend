@@ -162,101 +162,73 @@
 		</tr>
 	</table>
 
-	<table id="yiTablePostalAddress_1">
-		<tr id="yiPostalAddressLabel" style="display:none;">
-			<td id="postalAddressLabel" colspan="4">
-				<s:property value="getText('label.ai.yourinstitution.postalAddress')" />
-			</td>
-		</tr>
-
-		<tr id="yiPostalAddressLanguage" style="display:none;">
-			<td>
-				<label for="selectYIPASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/><span class="required">*</span>:</label>
-			</td>
-			<td>
-				<s:select theme="simple" id="selectYIPASelectLanguage" list="languageList"></s:select>
-			</td>
-			<td colspan="2">
-			</td>
-		</tr>
-
-		<tr id="yiPostalAddressStreet" style="display:none;">
-			<td>
-				<label for="textYIPAStreet"><s:property value="getText('label.ai.tabs.commons.street')"/><span class="required">*</span>:</label>
-			</td>
-			<td>
-				<input type="text" id="textYIPAStreet" />
-			</td>
-			<td colspan="2">
-			</td>
-		</tr>
-
-		<tr id="yiPostalAddressCity" style="display:none;">
-			<td>
-				<label for="textYIPACity"><s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')"/><span class="required">*</span>:</label>
-			</td>
-			<td>
-				<input type="text" id="textYIPACity" />
-			</td>
-			<td colspan="2">
-			</td>
-		</tr>
-	</table>
-
 	<table id="yiTableOthers">
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonAddVisitorsAddressTranslation" value="<s:property value="getText('label.ai.yourinstitution.addFurtherVisitorsAddress')"/>" />
-				<script type="text/javascript">
-					$("#buttonAddVisitorsAddressTranslation").click(function(){
-						var counter = $("table[id^='yiTableVisitorsAddress_']").length;
-						var clone = $("table[id^='yiTableVisitorsAddress_"+counter+"']").clone();
-						clone = "<table id='"+("yiTableVisitorsAddress_"+(counter+1))+"'>"+clone.html()+"</table>";
-						$("table[id^='yiTableVisitorsAddress_"+counter+"']").after(clone);
-						// Reset parametters.
-						$("table#yiTableVisitorsAddress_"+(counter+1)+" input[type='text']").each(function(){
-							$(this).val(""); // Clean all input_text.
-						});
-					});
-				</script>
+				<input type="button" id="buttonAddVisitorsAddressTranslation" value="<s:property value="getText('label.ai.yourinstitution.addFurtherVisitorsAddress')"/>" onclick="yiAddVisitorsAddressTranslation();" />
 			</td>
 			<td colspan="2">
 			</td>
 		</tr>
 
 		<tr>
-			<td colspan="2">
+			<td colspan="4">
 				<input type="button" id="buttonAddPostalAddressIfDifferent" value="<s:property value="getText('label.ai.yourinstitution.addPostalAddressIfDifferent')"/>" />
 				<script type="text/javascript">
 					$("#buttonAddPostalAddressIfDifferent").click(function(){
-						$(this).hide();
-						$("table#yiTablePostalAddress_1 tr#yiPostalAddressLabel").show();
-						$("table#yiTablePostalAddress_1 tr#yiPostalAddressLanguage").show();
-						$("table#yiTablePostalAddress_1 tr#yiPostalAddressStreet").show();
-						$("table#yiTablePostalAddress_1 tr#yiPostalAddressCity").show();
+						$("#buttonAddPostalAddressIfDifferent").hide();
+
+						var property1 = "<s:property value="getText('label.ai.yourinstitution.postalAddress')" />";
+						var property2 = "<s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>";
+						var property3 = "<s:property value="getText('label.ai.tabs.commons.street')"/>";
+						var property4 = "<s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')"/>";
+						/*var select = '<s:select theme="simple" id="selectYIPASelectLanguage" list="languageList"></s:select>';*/
+						var select = 'TODO';
+
+						$("table#yiTableOthers").before('<table id="yiTablePostalAddress_1">'+
+							'<tr id="yiPostalAddressLabel">'+
+								'<td id="postalAddressLabel" colspan="4">'+property1+
+								'</td>'+
+							'</tr>'+
+							'<tr>'+
+								'<td id="yiPostalAddressLanguage">'+
+									'<label for="selectYIPASelectLanguage">'+property2+'<span class="required">*</span>:</label>'+
+								'</td>'+
+								'<td>'+select+
+								'</td>'+
+								'<td colspan="2">'+
+								'</td>'+
+							'</tr>'+
+							'<tr id="yiPostalAddressStreet">'+
+								'<td>'+
+									'<label for="textYIPAStreet">'+property3+'<span class="required">*</span>:</label>'+
+								'</td>'+
+								'<td>'+
+									'<input type="text" id="textYIPAStreet" />'+
+								'</td>'+
+								'<td colspan="2">'+
+								'</td>'+
+							'</tr>'+
+							'<tr id="yiPostalAddressCity">'+
+								'<td>'+
+									'<label for="textYIPACity">'+property4+'<span class="required">*</span>:</label>'+
+								'</td>'+
+								'<td>'+
+									'<input type="text" id="textYIPACity" />'+
+								'</td>'+
+								'<td colspan="2">'+
+								'</td>'+
+							'</tr></table>');
+
 						$("table#yiTableOthers tr#yiPostalAddressTranslation").show();
 					});
 				</script>
-			</td>
-			<td colspan="2">
 			</td>
 		</tr>
 
 		<tr id="yiPostalAddressTranslation" style="display:none;">
 			<td colspan="2">
-				<input type="button" id="buttonAddPostalAddressTranslation" value="<s:property value="getText('label.ai.yourinstitution.addPostalAddressTranslation')"/>" />
-				<script type="text/javascript">
-					$("#buttonAddPostalAddressTranslation").click(function(){
-						var counter = $("table[id^='yiTablePostalAddress_']").length;
-						var clone = $("table[id^='yiTablePostalAddress_"+counter+"']").clone();
-						clone = "<table id='"+("yiTablePostalAddress_"+(counter+1))+"'>"+clone.html()+"</table>";
-						$("table[id^='yiTablePostalAddress_"+counter+"']").after(clone);
-						// Reset parametters.
-						$("table#yiTablePostalAddress_"+(counter+1)+" input[type='text']").each(function(){
-							$(this).val(""); // Clean all input_text.
-						});
-					});
-				</script>
+				<input type="button" id="buttonAddPostalAddressTranslation" value="<s:property value="getText('label.ai.yourinstitution.addPostalAddressTranslation')"/>" onclick="yiAddPostalAddressTranslation();" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -323,19 +295,13 @@
 
 		<tr>
 			<td>
-				<input type="button" id="buttonAddClosingDates" value="<s:property value="getText('label.ai.tabs.commons.closingDates')"/>" />
-				<script type="text/javascript">
-					$("#buttonAddClosingDates").click(function(){
-						$(this).hide();
-						$("table#yiTableOthers tr#fieldClosingDates").show();
-					});
-				</script>
+				<input type="button" id="buttonAddClosingDates" value="<s:property value="getText('label.ai.tabs.commons.closingDates')"/>" onclick="yiAddClosingDates();" />
 			</td>
 			<td colspan="3">
 			</td>
 		</tr>
 		<tr id="fieldClosingDates" style="display:none;">
-			<td><label for="yourInstitutionClosingDates"><s:property value="getText('label.ai.yourinstitution.closingDates')"/></label></td>
+			<td><label for="yourInstitutionClosingDates"><s:property value="getText('label.ai.yourinstitution.closingDates')"/>:</label></td>
 			<td><input type="text" id="yourInstitutionClosingDates" /></td>
 		</tr>
 		<tr>
@@ -346,13 +312,7 @@
 				<s:select theme="simple" id="selectAccessibleToThePublic" list="yesNoList"></s:select>
 			</td>
 			<td colspan="2">
-				<input type="button" id="buttonFutherAccessInformation" value="<s:property value="getText('label.ai.yourinstitution.addFurtherAccessInformation')"/>" />
-				<script type="text/javascript">
-					$("#buttonFutherAccessInformation").click(function(){
-						$(this).hide();
-						$(this).after('<input type="text" id="futherAccessInformation" />');
-					});
-				</script>
+				<input type="button" id="buttonFutherAccessInformation" value="<s:property value="getText('label.ai.yourinstitution.addFurtherAccessInformation')"/>" onclick="yiFutherAccessInformation();" />
 			</td>
 		</tr>
 
@@ -364,13 +324,7 @@
 				<s:select theme="simple" id="selectFacilitiesForDisabledPeopleAvailable" list="yesNoList"></s:select>
 			</td>
 			<td colspan="2">
-				<input type="button" id="buttonAddFutherInformationOnExistingFacilities" value="<s:property value="getText('label.ai.yourinstitution.addFutherInformationOnExistingFacilities')"/>" />
-				<script type="text/javascript">
-					$("#buttonAddFutherInformationOnExistingFacilities").click(function(){
-						$(this).after('<input type="text" id="futherInformationOnExistingFacilities" />');
-						$(this).hide();
-					});
-				</script>
+				<input type="button" id="buttonAddFutherInformationOnExistingFacilities" value="<s:property value="getText('label.ai.yourinstitution.addFutherInformationOnExistingFacilities')"/>" onclick="yiAddFutherInformationOnExistingFacilities();" />
 			</td>
 		</tr>
 

@@ -43,136 +43,56 @@ var clickYourInstitutionAction = function(){
 
 	var jsonData = "{";
 	
-		//content before institutions part
-		$("table#yourInstitutionTable_1 input[type='text']").each(function(){
-			if(jsonData.length>1){
-				jsonData += ",";
-			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
-
-			// Check fill mandatory fields.
-			if ($(this).attr("value") != '') {
-				var position = yiMandatoryElements.indexOf($(this).attr("id"));
-				yiMandatoryElements.splice(position, 1);
-			}
-		});
-		//select options selected
-		$("table#yourInstitutionTable_1 select").each(function(){
-			if(jsonData.charAt(jsonData.length-1)!=':'){
-				jsonData += ",";
-			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
-
-			// Check fill mandatory fields.
-			if ($(this).attr("value") != 'none') {
-				var position = yiMandatoryElements.indexOf($(this).attr("id"));
-				yiMandatoryElements.splice(position, 1);
-			}
-		});
-
-		//validation array
-		var validationArray = new Array();
-
-		// Visitors addess.
-		var visitorsAddress = new Array();
-		$("table[id^='yiTableVisitorsAddress_']").each(function(){
-			var id = $(this).attr("id");
-			if(id.indexOf("#")>-1){
-				id = id.substring(id.indexOf("#"));
-			}
-			visitorsAddress.push(id);
-		});
-		jsonData += ",'visitorsAddress':[";
-		for(var j=0; j<visitorsAddress.length; j++) {
-			var yiMEVisitorsAddress = new Array("selectYIVASelectLanguage", "textYIStreet",
-					"textYICity", "textYICountry");
-			
-			if(jsonData.substring(jsonData.length-1)!='['){
-				jsonData += ",";
-			}
-			jsonData += "{'"+visitorsAddress[j]+"':";
-			//input type text
-			$("#"+visitorsAddress[j]+" input[type='text']").each(function(){
-				if(jsonData.charAt(jsonData.length-1)!=':'){
-					jsonData += ",";
-				}
-				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
-
-				// Check fill mandatory fields.
-				if ($(this).attr("value") != '') {
-					var position = yiMEVisitorsAddress.indexOf($(this).attr("id"));
-					yiMEVisitorsAddress.splice(position, 1);
-				}
-			});
-			//select options selected
-			$("#"+visitorsAddress[j]+" select").each(function(){
-				if(jsonData.charAt(jsonData.length-1)!=':'){
-					jsonData += ",";
-				}
-				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
-			});
-			if(yiMEVisitorsAddress.length>0){
-				validationArray.push(visitorsAddress[j],yiMEVisitorsAddress);
-			}
-			jsonData += "}";
+	// Common part.
+	$("table#yourInstitutionTable_1 input[type='text']").each(function(){
+		if(jsonData.length>1){
+			jsonData += ",";
 		}
-		
-		jsonData += "]";
+		jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 
-		// Postal addess.
-		var postalAddress = new Array();
-		$("table[id^='yiTablePostalAddress_']").each(function(){
-			var id = $(this).attr("id");
-			if(id.indexOf("#")>-1){
-				id = id.substring(id.indexOf("#"));
-			}
-			visitorsAddress.push(id);
-		});
-		jsonData += ",'postalAddress':[";
-		for(var j=0; j<postalAddress.length; j++) {
-			var yiMEPostalAddress = new Array("selectYIPASelectLanguage", "textYIPAStreet",
-					"textYIPACity");
-			
-			if(jsonData.substring(jsonData.length-1)!='['){
-				jsonData += ",";
-			}
-			jsonData += "{'"+postalAddress[j]+"':";
-			//input type text
-			$("#"+postalAddress[j]+" input[type='text']").each(function(){
-				if(jsonData.charAt(jsonData.length-1)!=':'){
-					jsonData += ",";
-				}
-				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
-
-				// Check fill mandatory fields.
-				if ($(this).attr("value") != '') {
-					var position = yiMEPostalAddress.indexOf($(this).attr("id"));
-					yiMEPostalAddress.splice(position, 1);
-				}
-			});
-			//select options selected
-			$("#"+postalAddress[j]+" select").each(function(){
-				if(jsonData.charAt(jsonData.length-1)!=':'){
-					jsonData += ",";
-				}
-				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
-			});
-			if(yiMEPostalAddress.length>0){
-				validationArray.push(postalAddress[j],yiMEPostalAddress);
-			}
-			jsonData += "}";
+		// Check fill mandatory fields.
+		if ($(this).attr("value") != '') {
+			var position = yiMandatoryElements.indexOf($(this).attr("id"));
+			yiMandatoryElements.splice(position, 1);
 		}
+	});
+	//select options selected
+	$("table#yourInstitutionTable_1 select").each(function(){
+		if(jsonData.charAt(jsonData.length-1)!=':'){
+			jsonData += ",";
+		}
+		jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+
+		// Check fill mandatory fields.
+		if ($(this).attr("value") != 'none') {
+			var position = yiMandatoryElements.indexOf($(this).attr("id"));
+			yiMandatoryElements.splice(position, 1);
+		}
+	});
+
+	//validation array
+	var validationArray = new Array();
+
+	// Visitors address.
+	var visitorsAddress = new Array();
+	$("table[id^='yiTableVisitorsAddress_']").each(function(){
+		var id = $(this).attr("id");
+		if(id.indexOf("#")>-1){
+			id = id.substring(id.indexOf("#"));
+		}
+		visitorsAddress.push(id);
+	});
+	jsonData += ",'visitorsAddress':[";
+	for(var j=0; j<visitorsAddress.length; j++) {
+		var yiMEVisitorsAddress = new Array("selectYIVASelectLanguage", "textYIStreet",
+				"textYICity", "textYICountry");
 		
-		jsonData += "]";
-
-		var yiMERepositories = new Array("textYIOpeningTimes");
-
 		if(jsonData.substring(jsonData.length-1)!='['){
 			jsonData += ",";
 		}
-
+		jsonData += "{'"+visitorsAddress[j]+"':";
 		//input type text
-		$("#yiTableOthers input[type='text']").each(function(){
+		$("#"+visitorsAddress[j]+" input[type='text']").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'){
 				jsonData += ",";
 			}
@@ -180,24 +100,99 @@ var clickYourInstitutionAction = function(){
 
 			// Check fill mandatory fields.
 			if ($(this).attr("value") != '') {
-				var position = yiMERepositories.indexOf($(this).attr("id"));
-				yiMERepositories.splice(position, 1);
+				var position = yiMEVisitorsAddress.indexOf($(this).attr("id"));
+				yiMEVisitorsAddress.splice(position, 1);
 			}
 		});
 		//select options selected
-		$("#yiTableOthers select").each(function(){
+		$("#"+visitorsAddress[j]+" select").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'){
 				jsonData += ",";
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 		});
-		if(yiMERepositories.length>0){
-			validationArray.push("yiTableOthers",yiMERepositories);
+		if(yiMEVisitorsAddress.length>0){
+			validationArray.push(visitorsAddress[j],yiMEVisitorsAddress);
 		}
 		jsonData += "}";
+	}
+	
+	jsonData += "]";
 
-//	jsonData += "]}";
+	// Postal address.
+	var postalAddress = new Array();
+	$("table[id^='yiTablePostalAddress_']").each(function(){
+		var id = $(this).attr("id");
+		if(id.indexOf("#")>-1){
+			id = id.substring(id.indexOf("#"));
+		}
+		postalAddress.push(id);
+	});
+	jsonData += ",'postalAddress':[";
+	for(var j=0; j<postalAddress.length; j++) {
+		var yiMEPostalAddress = new Array("selectYIPASelectLanguage", "textYIPAStreet",
+				"textYIPACity");
+		
+		if(jsonData.substring(jsonData.length-1)!='['){
+			jsonData += ",";
+		}
+		jsonData += "{'"+postalAddress[j]+"':";
+		//input type text
+		$("#"+postalAddress[j]+" input[type='text']").each(function(){
+			if(jsonData.charAt(jsonData.length-1)!=':'){
+				jsonData += ",";
+			}
+			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+
+			// Check fill mandatory fields.
+			if ($(this).attr("value") != '') {
+				var position = yiMEPostalAddress.indexOf($(this).attr("id"));
+				yiMEPostalAddress.splice(position, 1);
+			}
+		});
+		//select options selected
+		$("#"+postalAddress[j]+" select").each(function(){
+			if(jsonData.charAt(jsonData.length-1)!=':'){
+				jsonData += ",";
+			}
+			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		});
+		if(yiMEPostalAddress.length>0){
+			validationArray.push(postalAddress[j],yiMEPostalAddress);
+		}
+		jsonData += "}";
+	}
+	
+	jsonData += "]";
+
+	// Other fields.
+	var yiMERepositories = new Array("textYIOpeningTimes");
+
+	//input type text
+	$("#yiTableOthers input[type='text']").each(function(){
+		if(jsonData.charAt(jsonData.length-1)!=':'){
+			jsonData += ",";
+		}
+		jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+
+		// Check fill mandatory fields.
+		if ($(this).attr("value") != '') {
+			var position = yiMERepositories.indexOf($(this).attr("id"));
+			yiMERepositories.splice(position, 1);
+		}
+	});
+	//select options selected
+	$("#yiTableOthers select").each(function(){
+		if(jsonData.charAt(jsonData.length-1)!=':'){
+			jsonData += ",";
+		}
+		jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+	});
+	if(yiMERepositories.length>0){
+		validationArray.push("yiTableOthers",yiMERepositories);
+	}
 	jsonData += "}";
+
 //	alert(jsonData);
 
 	for (var i = 0; i < yiMandatoryElements.length; i++) {
@@ -389,6 +384,40 @@ var clickRelationsAction = function(){
 	jsonData += "]}";
 //	alert(jsonData);
 };
+
+function yiAddVisitorsAddressTranslation() {
+	var counter = $("table[id^='yiTableVisitorsAddress_']").length;
+	var clone = $("table[id^='yiTableVisitorsAddress_"+counter+"']").clone();
+	clone = "<table id='"+("yiTableVisitorsAddress_"+(counter+1))+"'>"+clone.html()+"</table>";
+	$("table[id^='yiTableVisitorsAddress_"+counter+"']").after(clone);
+	// Reset parametters.
+	$("table#yiTableVisitorsAddress_"+(counter+1)+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
+}
+function yiAddPostalAddressTranslation() {
+	var counter = $("table[id^='yiTablePostalAddress_']").length;
+	var clone = $("table[id^='yiTablePostalAddress_"+counter+"']").clone();
+	clone = "<table id='"+("yiTablePostalAddress_"+(counter+1))+"'>"+clone.html()+"</table>";
+	$("table[id^='yiTablePostalAddress_"+counter+"']").after(clone);
+	// Reset parametters.
+	$("table#yiTablePostalAddress_"+(counter+1)+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
+}
+function yiAddClosingDates() {
+	$("#buttonAddClosingDates").hide();
+	$("table#yiTableOthers tr#fieldClosingDates").show();
+}
+function yiFutherAccessInformation() {
+	$("#buttonFutherAccessInformation").hide();
+	$("#buttonFutherAccessInformation").after('<input type="text" id="futherAccessInformation" />');
+}
+function yiAddFutherInformationOnExistingFacilities() {
+	$("#buttonAddFutherInformationOnExistingFacilities").after('<input type="text" id="futherInformationOnExistingFacilities" />');
+	$("#buttonAddFutherInformationOnExistingFacilities").hide();
+}
+
 function addFurtherIds(text1){
 	$("input#buttonAddFutherIds").parent().parent().before("<tr><td colspan=\"2\"></td><td><label for=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\"> "+text1+":</label></td><td><input type=\"text\" id=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\" /></td></tr>");
 }
