@@ -7,6 +7,7 @@
 			<td id="resourceLabel" colspan="4">
 				<s:property value="getText('label.ai.relations.resourceRelations')" />
 			</td>
+			<td class="borderRelations"></td>
 		</tr>
 
 		<tr>

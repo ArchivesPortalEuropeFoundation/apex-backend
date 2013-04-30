@@ -50,6 +50,7 @@
 			<td id="usedLanguagesLabel" colspan="2">
 				<s:property value="getText('label.ai.control.usedLanguages')" />
 			</td>
+			<td class="borderLanguages"></td>
 		</tr>
 
 		<tr id="trControlAddFurtherLangsAnsScriptsOne">
@@ -85,6 +86,7 @@
 			<td id="usedRulesLabel" colspan="2">
 				<s:property value="getText('label.ai.control.usedRules')" />
 			</td>
+			<td class="borderRules"></td>
 		</tr>
 		<tr id="trContactAbbreviationOne">
 			<td id="tdContactAbbreviation">

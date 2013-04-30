@@ -227,6 +227,25 @@ background: #e9f3fa;
 	
 }
 
+.borderLanguages{
+	
+    border-bottom:1px solid #00a0df;
+	left: 800px;
+    position: absolute;
+    top: 354px;
+    width: 33%;
+}
+
+.borderRules{
+	
+    border-bottom:1px solid #00a0df;
+	left: 715px;
+    position: absolute;
+    top: 520px;
+    width: 40%;
+	
+}
+
 #eag2012Div input{
 	/*background-color: #00A0DF;*/
     color: black;
@@ -337,7 +356,7 @@ text-decoration:underline;
 }
 
 .labelLeft{
-	padding-left:20px;
+	padding-left:10px;
 }
 .labelLeftselect{
 	padding-left:10px;
