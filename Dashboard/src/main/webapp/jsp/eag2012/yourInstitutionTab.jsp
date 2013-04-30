@@ -97,18 +97,6 @@
 			</td>
 			<td class="borderYourInstitution"></td>
 		</tr>
-
-		<tr>
-			<td>
-				<label for="selectYIVASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/><span class="required">*</span>:</label>
-			</td>
-			<td>
-				<s:select theme="simple" id="selectYIVASelectLanguage" list="languageList"></s:select>
-			</td>
-			<td colspan="2">
-			</td>
-		</tr>
-
 		<tr>
 			<td>
 				<label for="textYIStreet"><s:property value="getText('label.ai.tabs.commons.street')"/><span class="required">*</span>:</label>
@@ -116,7 +104,11 @@
 			<td>
 				<input type="text" id="textYIStreet" />
 			</td>
-			<td colspan="2">
+			<td>
+				<label for="selectYIVASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/><span class="required">*</span>:</label>
+			</td>
+			<td>
+				<s:select theme="simple" id="selectYIVASelectLanguage" list="languageList"></s:select>
 			</td>
 		</tr>
 
@@ -184,21 +176,10 @@
 						var property2 = "<s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>";
 						var property3 = "<s:property value="getText('label.ai.tabs.commons.street')"/>";
 						var property4 = "<s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')"/>";
-						/*var select = '<s:select theme="simple" id="selectYIPASelectLanguage" list="languageList"></s:select>';*/
-						var select = 'TODO';
-
+						var select = '<select id="selectYIPASelectLanguage">'+$("#selectYIPNOTISelectLanguage").html()+'</select>';
 						$("table#yiTableOthers").before('<table id="yiTablePostalAddress_1">'+
 							'<tr id="yiPostalAddressLabel">'+
 								'<td id="postalAddressLabel" colspan="4">'+property1+
-								'</td>'+
-							'</tr>'+
-							'<tr>'+
-								'<td id="yiPostalAddressLanguage">'+
-									'<label for="selectYIPASelectLanguage">'+property2+'<span class="required">*</span>:</label>'+
-								'</td>'+
-								'<td>'+select+
-								'</td>'+
-								'<td colspan="2">'+
 								'</td>'+
 							'</tr>'+
 							'<tr id="yiPostalAddressStreet">'+
@@ -208,7 +189,10 @@
 								'<td>'+
 									'<input type="text" id="textYIPAStreet" />'+
 								'</td>'+
-								'<td colspan="2">'+
+								'<td id="yiPostalAddressLanguage">'+
+									'<label for="selectYIPASelectLanguage">'+property2+'<span class="required">*</span>:</label>'+
+								'</td>'+
+								'<td>'+select+
 								'</td>'+
 							'</tr>'+
 							'<tr id="yiPostalAddressCity">'+
@@ -217,8 +201,6 @@
 								'</td>'+
 								'<td>'+
 									'<input type="text" id="textYIPACity" />'+
-								'</td>'+
-								'<td colspan="2">'+
 								'</td>'+
 							'</tr></table>');
 
