@@ -181,9 +181,10 @@ public class EadService {
 			String filename = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath();
 			File file = new File(filename);
 			File aiDir = file.getParentFile();
+			ContentUtils.deleteFile(file, false);
 			FileUtils.forceDelete(file);
 			if (aiDir.listFiles().length == 0){
-				FileUtils.forceDelete(aiDir);
+				ContentUtils.deleteFile(aiDir, false);
 			}
 		}
 		DAOFactory.instance().getQueueItemDAO().deleteSimple(queueItem);
