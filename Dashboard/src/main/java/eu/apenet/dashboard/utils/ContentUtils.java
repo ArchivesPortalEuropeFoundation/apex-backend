@@ -112,17 +112,23 @@ public class ContentUtils {
 
 	public static void deleteFile(String path, boolean failOnError) throws IOException {
 		File srcFile = new File(path);
+		deleteFile(srcFile,failOnError);
+	}
+	public static void deleteFile(File file, boolean failOnError) throws IOException {
 		try {
-			if (srcFile.exists())
-				FileUtils.forceDelete(srcFile);
+			if (file.exists()){
+				FileUtils.forceDelete(file);
+			}else {
+				LOGGER.warn(file + " does not exist");
+			}
 		} catch (IOException e) {
-			if (failOnError)
+			if (failOnError){
 				throw e;
-			else
+			}else {
 				LOGGER.error(e.getMessage());
+			}
 		}
 	}
-
 	public static boolean containsPublishedFiles(String identifier, Integer countryIdentifier){
 		ArchivalInstitution archivalInstitution =  DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionByInternalAlId(identifier, countryIdentifier);
 		return containsPublishedFiles(archivalInstitution);
