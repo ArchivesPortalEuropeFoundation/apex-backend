@@ -182,7 +182,7 @@ public class EadService {
 			File file = new File(filename);
 			File aiDir = file.getParentFile();
 			ContentUtils.deleteFile(file, false);
-			if (aiDir.listFiles().length == 0){
+			if (aiDir.exists() && aiDir.listFiles().length == 0){
 				ContentUtils.deleteFile(aiDir, false);
 			}
 		}
