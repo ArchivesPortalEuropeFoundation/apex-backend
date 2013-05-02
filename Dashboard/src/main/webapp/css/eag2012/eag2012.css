@@ -33,6 +33,7 @@
     border-top-left-radius: 5px;
     border-top-right-radius: 25px;
     border-width: 1px 1px solid;
+    border-bottom:3px solid #00A0DF;
     float: left;
     width:97%;	
 }
@@ -119,7 +120,10 @@ background: #e9f3fa;
 	/*width:auto;*/
 	
 }
-
+#buttonSaveEAG2012{
+	margin-right:10px;
+	margin-bottom:5px;
+}
 
 #eag2012Div input{
 	/*background-color: #00A0DF;*/
