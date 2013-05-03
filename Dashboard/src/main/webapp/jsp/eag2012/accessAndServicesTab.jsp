@@ -159,7 +159,7 @@
 		</tr>
 
 		<tr>
-			<td class="labelLeft">
+			<td>
 				<label for="textASSREmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')"/>:</label>
 			</td>
 			<td>

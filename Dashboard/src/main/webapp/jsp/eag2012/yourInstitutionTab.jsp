@@ -104,7 +104,7 @@
 			<td>
 				<input type="text" id="textYIStreet" />
 			</td>
-			<td>
+			<td class="labelLeft">
 				<label for="selectYIVASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/><span class="required">*</span>:</label>
 			</td>
 			<td>

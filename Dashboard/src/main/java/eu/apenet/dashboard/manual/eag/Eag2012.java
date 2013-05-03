@@ -203,7 +203,7 @@ public class Eag2012 {
 	private String restorationlabQuestion;
 	private List<Map<String,String>> numValue;
 	private List<List<String>> ruleLang;
-	private List<String> ruleValue;
+	private List<List<String>> ruleValue;
 	private List<Map<String,List<String> >> webpageHref;
 	private List<Map<String,List<String> >> webpageValue;
 	private List<Map<String,List<String> >> emailHref;
