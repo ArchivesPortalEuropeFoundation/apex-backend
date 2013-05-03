@@ -1587,11 +1587,11 @@ public class Eag2012 {
 		this.ruleLang = ruleLang;
 	}
 
-	public List<String> getRuleValue() {
+	public List<List<String>> getRuleValue() {
 		return ruleValue;
 	}
 
-	public void setRuleValue(List<String> ruleValue) {
+	public void setRuleValue(List<List<String>> ruleValue) {
 		this.ruleValue = ruleValue;
 	}
 
