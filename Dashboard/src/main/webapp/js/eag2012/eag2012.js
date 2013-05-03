@@ -16,6 +16,7 @@ function hideAndShow(idPrefix,shown){
 					id = $(this).attr("id");
 				}
 			});
+
 			id = id.substring(id.lastIndexOf("_"));
 			//hide all other tables and show target table
 			$("div[id='"+shown+"'] table").each(function(){
@@ -23,6 +24,22 @@ function hideAndShow(idPrefix,shown){
 				var newId = $(this).attr("id");
 				if(newId.indexOf(id)>-1){
 					$(this).show();
+				}
+
+				var showContactTables = new Array("contactTableVisitorsAddress", "contactTablePostalAddress");
+				if (shown == "tab-contact") {
+					for (var i = 0; i < showContactTables.length; i++) {
+						// Show visitor address tables.
+						var parentId = $(this).parent().parent().parent().parent().parent().parent().attr("id");
+						if($(this).attr("id").indexOf(showContactTables[i])>-1 && ("contactTable" + id) == parentId){
+							$(this).show();
+						}
+						// Show postal address tables.
+						parentId = $(this).parent().parent().parent().parent().attr("id");
+						if($(this).attr("id").indexOf(showContactTables[i])>-1 && ("contactTable" + id) == parentId){
+							$(this).show();
+						}
+					}
 				}
 			});
 		}
@@ -363,27 +380,118 @@ var clickIdentityAction = function(){
 	// more
 	jsonData += "}";
 
-alert(jsonData);
 	return jsonData;
 };
 
 var clickContactAction = function(){
+	var currentTab = getCurrentTab();
 	var jsonData = "{";
-		//content from texts
-		$("table#contactTable input[type='text']").each(function(){
-			if(jsonData.length>1){
+	//content from texts
+	$("table#contactTable" + currentTab + " input[type='text']").each(function(){
+		if(jsonData.length>1){
+			if(jsonData.substring(jsonData.length-1)!=','){
 				jsonData += ",";
 			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		}
+		if ($(this).parent().parent().parent().parent().attr("id").indexOf("contactTableVisitorsAddress") == -1) {
+			if ($(this).parent().parent().parent().parent().attr("id").indexOf("contactTablePostalAddress") == -1) {
+				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			}
+		}
+	});
+	//content from selects
+	$("table#contactTable" + currentTab + " select").each(function(){
+		if(jsonData.charAt(jsonData.length-1)!=':'){
+			if(jsonData.substring(jsonData.length-1)!=','){
+				jsonData += ",";
+			}
+		}
+
+
+		if ($(this).parent().parent().parent().parent().attr("id").indexOf("contactTableVisitorsAddress") == -1) {
+			if ($(this).parent().parent().parent().parent().attr("id").indexOf("contactTablePostalAddress") == -1) {
+				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			}
+		}
+	});
+
+	// Visitors address.
+	var visitorsAddress = new Array();
+	$("table#contactTable" + currentTab + " table[id^='contactTableVisitorsAddress_']").each(function(){
+		var id = $(this).attr("id");
+		if(id.indexOf("#")>-1){
+			id = id.substring(id.indexOf("#"));
+		}
+		visitorsAddress.push(id);
+	});
+	jsonData += ",'visitorsAddress':[";
+	for(var j=0; j<visitorsAddress.length; j++) {
+		if(jsonData.substring(jsonData.length-1)!='['){
+			if(jsonData.substring(jsonData.length-1)!=','){
+				jsonData += ",";
+			}
+		}
+		jsonData += "{'"+visitorsAddress[j]+"':";
+		//input type text
+		$("table#contactTable" + currentTab + " table#"+visitorsAddress[j]+" input[type='text']").each(function(){
+			if(jsonData.charAt(jsonData.length-1)!=':'){
+				if(jsonData.substring(jsonData.length-1)!=','){
+					jsonData += ",";
+				}
+			}
+			if ($(this).parent().parent().parent().parent().parent().parent().parent().parent().parent().attr("id").indexOf("divTempContainter") == -1) {
+				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			}
 		});
-		//content from selects
-		$("table#contactTable select").each(function(){
+		//select options selected
+		$("table#contactTable" + currentTab + " table#"+visitorsAddress[j]+" select").each(function(){
+			if(jsonData.charAt(jsonData.length-1)!=':'){
+				if(jsonData.substring(jsonData.length-1)!=','){
+					jsonData += ",";
+				}
+			}
+			if ($(this).parent().parent().parent().parent().parent().parent().parent().parent().parent().attr("id").indexOf("divTempContainter") == -1) {
+				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			}
+		});
+		jsonData += "}";
+	}
+	
+	jsonData += "]";
+
+	// Postal address.
+	var postalAddress = new Array();
+	$("table#contactTable" + currentTab + " table[id^='contactTablePostalAddress_']").each(function(){
+		var id = $(this).attr("id");
+		if(id.indexOf("#")>-1){
+			id = id.substring(id.indexOf("#"));
+		}
+		postalAddress.push(id);
+	});
+	jsonData += ",'postalAddress':[";
+	for(var j=0; j<postalAddress.length; j++) {		
+		if(jsonData.substring(jsonData.length-1)!='['){
+			jsonData += ",";
+		}
+		jsonData += "{'"+postalAddress[j]+"':";
+		//input type text
+		$("table#contactTable" + currentTab + " table#"+postalAddress[j]+" input[type='text']").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'){
 				jsonData += ",";
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 		});
-	jsonData += "}";
+		//select options selected
+		$("table#contactTable" + currentTab + " table#"+postalAddress[j]+" select").each(function(){
+			if(jsonData.charAt(jsonData.length-1)!=':'){
+				jsonData += ",";
+			}
+			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		});
+		jsonData += "}";
+	}
+	
+	jsonData += "]}";
 
 	return jsonData;
 };
@@ -469,14 +577,26 @@ var clickControlAction = function(){
 			if(jsonData.length>1){
 				jsonData += ",";
 			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			if ($(this).attr("id") == "textContactAbbreviation") {
+				jsonData += "'"+$(this).attr("id")+"_1' : '"+$(this).attr("value")+"'";
+			}else if ($(this).attr("id") == "textContactFullName") {
+				jsonData += "'"+$(this).attr("id")+"_1' : '"+$(this).attr("value")+"'";
+			} else {
+				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			}
 		});
 		//content from selects
 		$("table#controlTable select").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'){
 				jsonData += ",";
 			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			if ($(this).attr("id") == "selectDescriptionLanguage") {
+				jsonData += "'"+$(this).attr("id")+"_1' : '"+$(this).attr("value")+"'";
+			}else if ($(this).attr("id") == "selectDescriptionScript") {
+				jsonData += "'"+$(this).attr("id")+"_1' : '"+$(this).attr("value")+"'";
+			} else {
+				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			}
 
 			// Check fill mandatory fields.
 			if ($(this).attr("value") != 'none') {
@@ -653,12 +773,13 @@ function addRepositories(text1,text2){
 	$("a#tab_"+localId).trigger('click');
 	$("a#tab-contact").parent().trigger('click');
 	//fill all button events cloned
-	//contactTable
-	var firstId = "table#contactTable";
-	$(firstId+"_"+(counter+1)+" input#buttonAddFurtherTelephoneOfTheInstitution").click($._data($(firstId+"_1 input#buttonAddFurtherTelephoneOfTheInstitution")[0],"events")["click"][0].handler);
-	$(firstId+"_"+(counter+1)+" input#buttonAddFurtherFaxOfTheInstitution").click($._data($(firstId+"_1 input#buttonAddFurtherFaxOfTheInstitution")[0],"events")["click"][0].handler);
-	//$(firstId+"_"+(counter+1)+"input#buttonAddFurtherEmailsOfTheInstitution").click($._data($(firstId+"_1 input#buttonAddFurtherEmailsOfTheInstitution")[0],"events")["click"][0].handler);
-	$(firstId+"_"+(counter+1)+" input#buttonAddFurtherWebsOfTheInstitution").click($._data($(firstId+"_1 input#buttonAddFurtherWebsOfTheInstitution")[0],"events")["click"][0].handler);
+//	//contactTable
+//	var firstId = "table#contactTable";
+//	$(firstId+"_"+(counter+1)+" table#contactTableVisitorsAddress_1").removeAttr("style");
+//	$(firstId+"_"+(counter+1)+" input#buttonAddFurtherTelephoneOfTheInstitution").click($._data($(firstId+"_1 input#buttonAddFurtherTelephoneOfTheInstitution")[0],"events")["click"][0].handler);
+//	$(firstId+"_"+(counter+1)+" input#buttonAddFurtherFaxOfTheInstitution").click($._data($(firstId+"_1 input#buttonAddFurtherFaxOfTheInstitution")[0],"events")["click"][0].handler);
+//	//$(firstId+"_"+(counter+1)+"input#buttonAddFurtherEmailsOfTheInstitution").click($._data($(firstId+"_1 input#buttonAddFurtherEmailsOfTheInstitution")[0],"events")["click"][0].handler);
+//	$(firstId+"_"+(counter+1)+" input#buttonAddFurtherWebsOfTheInstitution").click($._data($(firstId+"_1 input#buttonAddFurtherWebsOfTheInstitution")[0],"events")["click"][0].handler);
 	//accessAndServicesTable
 	firstId = "table#accessAndServicesTable";
 	$(firstId+"_"+(counter+1)+" input#buttonASAddTravellingDirections").click($._data($(firstId+"_1 input#buttonASAddTravellingDirections")[0],"events")["click"][0].handler);
@@ -694,10 +815,19 @@ function getCurrentTab(){
 function addFurtherEmailsOfTheInstitution(){
 	var currentTab = getCurrentTab();
 	var count = $("table#contactTable"+currentTab+" tr[id^='trEmailOfTheInstitution']").length;
-	var newId = "trEmailOfTheInstitution"+currentTab;
+	var newId = "trEmailOfTheInstitution_"+(count+1);
 	var trHtml = "<tr id=\""+newId+"\">"+$("table#contactTable tr#trEmailOfTheInstitution").clone().html()+"</tr>";
 	var lastId = "table#contactTable"+currentTab+" tr#trEmailOfTheInstitution";
-	
+	if(count>1){
+		lastId+="_"+(count);
+	} else {
+		$("table#contactTable"+currentTab+" tr#trEmailOfTheInstitution tr#trEmailOfTheInstitution").attr("id","trEmailOfTheInstitution_"+count);
+		$("table#contactTable"+currentTab+" tr#trEmailOfTheInstitution label[for='textContactEmailOfTheInstitution']").attr("for","textContactEmailOfTheInstitution_"+count);
+		$("table#contactTable"+currentTab+" tr#trEmailOfTheInstitution input#textContactEmailOfTheInstitution").attr("id","textContactEmailOfTheInstitution_"+count);
+		$("table#contactTable"+currentTab+" tr#trEmailOfTheInstitution label[for='textContactLinkTitleForEmailOfTheInstitution']").attr("for","textContactLinkTitleForEmailOfTheInstitution_"+count);
+		$("table#contactTable"+currentTab+" tr#trEmailOfTheInstitution input#textContactLinkTitleForEmailOfTheInstitution").attr("id","textContactLinkTitleForEmailOfTheInstitution_"+count);
+	}
+
 	$(lastId).after(trHtml);
 	//update last content
 	$("table#contactTable"+currentTab+" tr#"+newId+" tr#trEmailOfTheInstitution").attr("id","trEmailOfTheInstitution_"+(count+1));
@@ -705,6 +835,7 @@ function addFurtherEmailsOfTheInstitution(){
 	$("table#contactTable"+currentTab+" tr#"+newId+" input#textContactEmailOfTheInstitution").attr("id","textContactEmailOfTheInstitution_"+(count+1));
 	$("table#contactTable"+currentTab+" tr#"+newId+" label[for='textContactLinkTitleForEmailOfTheInstitution']").attr("for","textContactLinkTitleForEmailOfTheInstitution_"+(count+1));
 	$("table#contactTable"+currentTab+" tr#"+newId+" input#textContactLinkTitleForEmailOfTheInstitution").attr("id","textContactLinkTitleForEmailOfTheInstitution_"+(count+1));
+	$("table#contactTable"+currentTab+" tr#"+newId+" input#textContactEmailOfTheInstitution_"+(count+1)).removeAttr("disabled");
 }
 function addAnotherFormOfTheAuthorizedName(){
 	var counter = $("table[id^='identityTableNameOfTheInstitution_']").length;
@@ -788,6 +919,69 @@ function addRangeYear(table, text1, text2){
 	}
 }
 
+function contactAddVisitorsAddressTranslation() {
+	var currentTab = getCurrentTab();
+	var counter = $("table#contactTable"+currentTab+" table[id^='contactTableVisitorsAddress_']").length;
+	var clone = $("table#contactTable"+currentTab+" table[id^='contactTableVisitorsAddress_"+counter+"']").clone();
+	clone = "<table id='"+("contactTableVisitorsAddress_"+(counter+1))+"'>"+clone.html()+"</table>";
+	$("table#contactTable"+currentTab+" table[id^='contactTableVisitorsAddress_"+counter+"']").after(clone);
+	// Reset parametters and enable fields.
+	$("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+(counter+1)+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+		$(this).removeAttr("disabled");
+	});
+	$("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+(counter+1)+" select").removeAttr("disabled");
+}
+
+function contactAddPostalAddressIfDifferent(property1, property2, property3, property4) {
+	var currentTab = getCurrentTab();
+	var select = '<select id="selectContactLanguagePostalAddress">'+$("#selectLanguageVisitorAddress").html()+'</select>';
+	var counter = $("table#contactTable"+currentTab+" table[id^='contactTableVisitorsAddress_']").length;
+
+	$("table#contactTable"+currentTab+" input#buttonContactAddPostalAddressIfDifferent").hide();
+
+	$("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter).after('<tr><td><table id="contactTablePostalAddress_1">'+
+		'<tr id="trContactPostalAddressLabel">'+
+			'<td id="postalAddressLabel" colspan="4">'+property1+
+			'</td>'+
+		'</tr>'+
+		'<tr id="contactPostalAddressStreet">'+
+			'<td>'+
+				'<label for="textContactPAStreet">'+property3+':</label>'+
+			'</td>'+
+			'<td>'+
+				'<input type="text" id="textContactPAStreet" />'+
+			'</td>'+
+			'<td id="contactPostalAddressLanguage">'+
+				'<label for="selectContactPASelectLanguage">'+property2+':</label>'+
+			'</td>'+
+			'<td>'+select+
+			'</td>'+
+		'</tr>'+
+		'<tr id="contactPostalAddressCity">'+
+			'<td>'+
+				'<label for="textContactPACity">'+property4+':</label>'+
+			'</td>'+
+			'<td>'+
+				'<input type="text" id="textContactPACity" />'+
+			'</td>'+
+		'</tr></table></td></tr>');
+
+	$("table#contactTable"+currentTab+" tr#trButtonContacPostalAddressTranslation").show();
+}
+
+function contactAddPostalAddressTranslation() {
+	var currentTab = getCurrentTab();
+	var counter = $("table#contactTable"+currentTab+" table[id^='contactTablePostalAddress_']").length;
+	var clone = $("table#contactTable"+currentTab+" table[id^='contactTablePostalAddress_"+counter+"']").clone();
+	clone = "<table id='"+("contactTablePostalAddress_"+(counter+1))+"'>"+clone.html()+"</table>";
+	$("table#contactTable"+currentTab+" table[id^='contactTablePostalAddress_"+counter+"']").after(clone);
+	// Reset parametters and enable fields.
+	$("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+(counter+1)+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
+}
+
 function addFurtherTelephoneOfTheInstitution(){
 	var currentTab = getCurrentTab();
 	var count = $("table#contactTable"+currentTab+" tr[id^='trTelephoneOfTheInstitution']").length;
@@ -796,6 +990,10 @@ function addFurtherTelephoneOfTheInstitution(){
 	var lastId = "table#contactTable"+currentTab+" tr#trTelephoneOfTheInstitution";
 	if(count>1){
 		lastId+="_"+(count);
+	} else {
+		$("table#contactTable"+currentTab+" tr#trTelephoneOfTheInstitution td#tdTelephoneOfTheInstitution").attr("id","tdTelephoneOfTheInstitution_"+count);
+		$("table#contactTable"+currentTab+" tr#trTelephoneOfTheInstitution label[for='textContactTelephoneOfTheInstitution']").attr("for","textContactTelephoneOfTheInstitution_"+count);
+		$("table#contactTable"+currentTab+" tr#trTelephoneOfTheInstitution input#textContactTelephoneOfTheInstitution").attr("id","textContactTelephoneOfTheInstitution_"+count);
 	}
 	$(lastId).after(trHtml);
 	//delete cloned button
@@ -804,15 +1002,21 @@ function addFurtherTelephoneOfTheInstitution(){
 	$("table#contactTable"+currentTab+" tr#"+newId+" td#tdTelephoneOfTheInstitution").attr("id","tdTelephoneOfTheInstitution_"+(count+1));
 	$("table#contactTable"+currentTab+" tr#"+newId+" label[for='textContactTelephoneOfTheInstitution']").attr("for","textContactTelephoneOfTheInstitution_"+(count+1));
 	$("table#contactTable"+currentTab+" tr#"+newId+" input#textContactTelephoneOfTheInstitution").attr("id","textContactTelephoneOfTheInstitution_"+(count+1));
+	$("table#contactTable"+currentTab+" tr#"+newId+" input#textContactTelephoneOfTheInstitution_"+(count+1)).removeAttr("disabled");
 }
+
 function addFurtherFaxOfTheInstitution(){
 	var currentTab = getCurrentTab();
-	var count = $("table#contactTable"+currentTab+" table#contactTable tr[id^='trFaxOfTheInstitution']").length;
+	var count = $("table#contactTable"+currentTab+" tr[id^='trFaxOfTheInstitution']").length;
 	var newId = "trFaxOfTheInstitution_"+(count+1);
 	var trHtml = "<tr id=\""+newId+"\">"+$("table#contactTable tr[id^='trFaxOfTheInstitution']").clone().html()+"</tr>";
 	var lastId = "table#contactTable"+currentTab+" tr#trFaxOfTheInstitution";
 	if(count>1){
 		lastId+="_"+(count);
+	} else {
+		$("table#contactTable"+currentTab+" tr#trFaxOfTheInstitution td#tdFaxOfTheInstitution").attr("id","tdFaxOfTheInstitution_"+count);
+		$("table#contactTable"+currentTab+" tr#trFaxOfTheInstitution label[for='textContactFaxOfTheInstitution']").attr("for","textContactFaxOfTheInstitution_"+count);
+		$("table#contactTable"+currentTab+" tr#trFaxOfTheInstitution input#textContactFaxOfTheInstitution").attr("id","textContactFaxOfTheInstitution_"+count);
 	}
 	$(lastId).after(trHtml);
 	//delete cloned button
@@ -830,6 +1034,12 @@ function addFurtherWebsOfTheInstitution(){
 	var lastId = "table#contactTable"+currentTab+" tr#trWebOfTheInstitution";
 	if(count>1){
 		lastId+="_"+(count);
+	} else {
+		$("table#contactTable"+currentTab+" tr#trWebOfTheInstitution tr#trWebOfTheInstitution").attr("id","trWebOfTheInstitution_"+count);
+		$("table#contactTable"+currentTab+" tr#trWebOfTheInstitution label[for='textContactWebOfTheInstitution']").attr("for","textContactWebOfTheInstitution_"+count);
+		$("table#contactTable"+currentTab+" tr#trWebOfTheInstitution input#textContactWebOfTheInstitution").attr("id","textContactWebOfTheInstitution_"+count);
+		$("table#contactTable"+currentTab+" tr#trWebOfTheInstitution label[for='textContactLinkTitleForWebOfTheInstitution']").attr("for","textContactLinkTitleForWebOfTheInstitution_"+count);
+		$("table#contactTable"+currentTab+" tr#trWebOfTheInstitution input#textContactLinkTitleForWebOfTheInstitution").attr("id","textContactLinkTitleForWebOfTheInstitution_"+count);
 	}
 	$(lastId).after(trHtml);
 	//update last content
@@ -838,6 +1048,7 @@ function addFurtherWebsOfTheInstitution(){
 	$("table#contactTable"+currentTab+" tr#"+newId+" input#textContactWebOfTheInstitution").attr("id","textContactWebOfTheInstitution_"+(count+1));
 	$("table#contactTable"+currentTab+" tr#"+newId+" label[for='textContactLinkTitleForWebOfTheInstitution']").attr("for","textContactLinkTitleForWebOfTheInstitution_"+(count+1));
 	$("table#contactTable"+currentTab+" tr#"+newId+" input#textContactLinkTitleForWebOfTheInstitution").attr("id","textContactLinkTitleForWebOfTheInstitution_"+(count+1));
+	$("table#contactTable"+currentTab+" tr#"+newId+" input#textContactWebOfTheInstitution_"+(count+1)).removeAttr("disabled");
 }
 function aSAddTravellingDirections(){
 	var currentTab = getCurrentTab();
@@ -1148,7 +1359,7 @@ function controlAddFurtherLangsAnsScripts(){
 	$("table#controlTable tr#"+target1+" label[for='selectDescriptionLanguage']").attr("for","selectDescriptionLanguage_"+(count+1));
 	$("table#controlTable tr#"+target1+" select#selectDescriptionLanguage").attr("id","selectDescriptionLanguage_"+(count+1));
 	$("table#controlTable tr#"+target2+" label[for='selectDescriptionScript']").attr("for","selectDescriptionScript_"+(count+1));
-	$("table#controlTable tr#"+target2+" select#select").attr("id","selectDescriptionScript_"+(count+1));
+	$("table#controlTable tr#"+target2+" select#selectDescriptionScript").attr("id","selectDescriptionScript_"+(count+1));
 }
 function addContactAbbreviation(){
 	var count = $("table#controlTable tr[id^='trContactAbbreviationOne']").length;

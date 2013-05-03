@@ -159,7 +159,7 @@
 	<table id="yiTableOthers">
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonAddVisitorsAddressTranslation" value="<s:property value="getText('label.ai.yourinstitution.addFurtherVisitorsAddress')"/>" onclick="yiAddVisitorsAddressTranslation();" />
+				<input type="button" id="buttonAddVisitorsAddressTranslation" value="<s:property value="getText('label.ai.tabs.commons.addFurtherVisitorsAddress')"/>" onclick="yiAddVisitorsAddressTranslation();" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -167,7 +167,7 @@
 
 		<tr>
 			<td colspan="4">
-				<input type="button" id="buttonAddPostalAddressIfDifferent" value="<s:property value="getText('label.ai.yourinstitution.addPostalAddressIfDifferent')"/>" />
+				<input type="button" id="buttonAddPostalAddressIfDifferent" value="<s:property value="getText('label.ai.tabs.commons.addPostalAddressIfDifferent')"/>" />
 				<script type="text/javascript">
 					$("#buttonAddPostalAddressIfDifferent").click(function(){
 						$("#buttonAddPostalAddressIfDifferent").hide();

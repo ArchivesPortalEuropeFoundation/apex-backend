@@ -5,12 +5,10 @@
 	<table id="controlTable">
 		<tr>
 			<td id="tdDescriptionIdentifier">
-				<s:property value="getText('label.ai.control.descriptionIdentifier')" />
-				<span class="required">*</span>:
+				<label for="textDescriptionIdentifier"><s:property value="getText('label.ai.control.descriptionIdentifier')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
 				<input type="text" id="textDescriptionIdentifier" value="<s:property value="#descriptionIdentifier" />" disabled="disabled" />
-				<s:fielderror fieldName="descriptionIdentifier"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -18,12 +16,10 @@
 
 		<tr>
 			<td id="tdPesonResponsible">
-				<s:property value="getText('label.ai.control.pesonresponsible')" />
-				<span class="required">*</span>:
+				<label for="textPesonResponsible"><s:property value="getText('label.ai.control.pesonresponsible')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
 				<input type="text" id="textPesonResponsible" value="<s:property value="#pesonResponsible" />" />
-				<s:fielderror fieldName="pesonresponsible"/>
 			</td>
 			<td id="tdLanguagePesonresponsible">
 				<label for="selectLanguagePesonresponsible"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -35,12 +31,10 @@
 
 		<tr>
 			<td id="tdIdentifierOfResponsible">
-				<s:property value="getText('label.ai.control.identifierOfResponsible')" />
-				<span class="required">*</span>:
+				<label for="textIdentifierOfResponsible"><s:property value="getText('label.ai.control.identifierOfResponsible')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
 				<input type="text" id="textIdentifierOfResponsible" value="<s:property value="#identifierOfResponsible" />" />
-				<s:fielderror fieldName="identifierOfResponsible"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -55,24 +49,20 @@
 
 		<tr id="trControlAddFurtherLangsAnsScriptsOne">
 			<td id="tdDescriptionLanguage">
-				<s:property value="getText('label.ai.control.descriptionLanguage')" />
-				<span class="required">*</span>:
+				<label for="selectDescriptionLanguage"><s:property value="getText('label.ai.control.descriptionLanguage')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
 				<s:select theme="simple" id="selectDescriptionLanguage" cssClass="selectControlTab" list="languageISOList"></s:select>
-				<s:fielderror fieldName="descriptionLanguage"/>
 			</td>
 			<td colspan="2">
 			</td>
 		</tr>
 		<tr id="trControlAddFurtherLangsAnsScriptsTwo">
 			<td id="tdDescriptionScript">
-				<s:property value="getText('label.ai.control.descriptionScript')" />
-				<span class="required">*</span>:
+				<label for="selectDescriptionScript"><s:property value="getText('label.ai.control.descriptionScript')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
 				<s:select theme="simple" id="selectDescriptionScript" cssClass="selectControlTab"  list="scriptList"></s:select>
-				<s:fielderror fieldName="descriptionScript"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -90,7 +80,7 @@
 		</tr>
 		<tr id="trContactAbbreviationOne">
 			<td id="tdContactAbbreviation">
-				<s:property value="getText('label.ai.control.abbreviation')" />:
+				<label for="textContactAbbreviation"><s:property value="getText('label.ai.control.abbreviation')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textContactAbbreviation" value="<s:property value="#contactAbbreviation" />" />
@@ -100,7 +90,7 @@
 		</tr>
 		<tr id="trContactAbbreviationTwo">
 			<td id="tdContactFullName">
-				<s:property value="getText('label.ai.control.fullName')" />:
+				<label for="textContactFullName"><s:property value="getText('label.ai.control.fullName')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textContactFullName" value="<s:property value="#contactFullName" />" />
