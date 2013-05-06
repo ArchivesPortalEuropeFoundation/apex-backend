@@ -89,7 +89,7 @@ public class Eag2012 {
 	private String abbreviationId;
 	private String abbreviationLang;
 	private String abbreviationValue;
-	private List<List<String>> citationId;
+	private List<List<String>> citationId; //first index if control tab, next elements are into repo_# --> <repository></directions></citation></repository>
 	private List<List<String>> citationLang;
 	private List<List<String>> citationLastDateTimeVerified;
 	private List<List<String>> citationHref;
@@ -200,7 +200,7 @@ public class Eag2012 {
 	private List<String> photographserQuestion;
 	private List<String> digitalserQuestion;
 	private List<String> photocopyserQuestion;
-	private String restorationlabQuestion;
+	private List<String> restorationlabQuestion;
 	private List<String> numValue;
 	private List<List<String>> ruleLang;
 	private List<List<String>> ruleValue;
@@ -1561,11 +1561,11 @@ public class Eag2012 {
 		this.photocopyserQuestion = photocopyserQuestion;
 	}
 
-	public String getRestorationlabQuestion() {
+	public List<String> getRestorationlabQuestion() {
 		return restorationlabQuestion;
 	}
 
-	public void setRestorationlabQuestion(String restorationlabQuestion) {
+	public void setRestorationlabQuestion(List<String> restorationlabQuestion) {
 		this.restorationlabQuestion = restorationlabQuestion;
 	}
 
