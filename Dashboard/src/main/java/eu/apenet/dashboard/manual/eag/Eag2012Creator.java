@@ -41,13 +41,13 @@ import eu.archivesportaleurope.commons.config.ApeConfig;
  */
 public class Eag2012Creator {
 	
-	private static final String TAB_YOUR_INSTITUTION = "your_institution";
-	private static final String TAB_IDENTITY = "identity";
-	private static final String TAB_CONTACT = "contact";
-	private static final String TAB_ACCESS_AND_SERVICES = "access_and_services";
-	private static final String TAB_DESCRIPTION = "description";
-	private static final String TAB_CONTROL = "control";
-	private static final String TAB_RELATION = "relation";
+	public static final String TAB_YOUR_INSTITUTION = "your_institution";
+	public static final String TAB_IDENTITY = "identity";
+	public static final String TAB_CONTACT = "contact";
+	public static final String TAB_ACCESS_AND_SERVICES = "access_and_services";
+	public static final String TAB_DESCRIPTION = "description";
+	public static final String TAB_CONTROL = "control";
+	public static final String TAB_RELATION = "relation";
 	
     private static final String EAG_XMLNS = "http://www.archivesportaleurope.net/profiles/APEnet_EAG/";
 	private static final String XML_AUDIENCE = "external";
@@ -1308,9 +1308,13 @@ public class Eag2012Creator {
         	childArchguide2Children.add(buildRepositoryRole(this.eag2012.getRepositoryRoleValue().get(indexRepo))); //no mandatory not repeatable
         	childArchguide2Children.add(buildGeogarea(this.eag2012.getGeogareaLang().get(indexRepo),this.eag2012.getGeogareaValue().get(indexRepo))); //mandatory not repeatable
         	
-        	for(int i=0;i<this.eag2012.getLocationLocalType().get(indexRepo).size();i++){ //mandatory repeatable
-        		childArchguide2Children.add(buildLocation(this.eag2012.getLocationLocalType().get(indexRepo).get(i),this.eag2012.getLocationLongitude().get(indexRepo).get(i),this.eag2012.getLocationLatitude().get(indexRepo).get(i)));
+        	for(int i=0;i<this.eag2012.getLocationLocalType().get(indexRepo).size();i++){ //first part <-> mandatory repeatable
+        		childArchguide2Children.add(buildLocation(this.eag2012.getLocationLocalType().get(indexRepo).get(i),this.eag2012.getLocationLongitude().get(indexRepo).get(i),this.eag2012.getLocationLatitude().get(indexRepo).get(i),indexRepo));
         	}
+        	for(int i=0;i<this.eag2012.getLocationLocalType().get(indexRepo).size();i++){ //second part <-> mandatory repeatable
+        		childArchguide2Children.add(buildLocation2(this.eag2012.getLocationLocalType().get(indexRepo).get(i),indexRepo));
+        	}
+        	
             for(int i=0;this.eag2012.getTelephoneValue().get(indexRepo)!=null && i<this.eag2012.getTelephoneValue().get(indexRepo).size();i++){ //no mandatory repeatable
             	childArchguide2Children.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_CONTACT).get(i)));     
             }
@@ -2079,7 +2083,26 @@ public class Eag2012Creator {
 		return childArchguide3;
 	}
 
-	private HashMap<String, Object> buildLocation(String locationLocalType, String locationLatitude, String locationLongitude) {
+	private HashMap<String, Object> buildLocation2(String locationLocalType,Integer indexRepo) {
+
+		   HashMap<String,Object> childArchguide3 = new HashMap<String, Object>();
+	    	childArchguide3.put("nodeName", "location");
+	    	HashMap<String, String>childArchguide3Attributes = new HashMap<String, String>();
+	    	childArchguide3Attributes.put("localType", locationLocalType);
+	    	childArchguide3.put("attributes",childArchguide3Attributes);
+	    	childArchguide3.put("nodeValue", null);
+	    	  
+	    	  ArrayList<HashMap<String, Object>> childArchguide3Children = new ArrayList<HashMap<String, Object>>();
+	    	  
+	          childArchguide3Children.add(buildMunicipalityPostalCode(this.eag2012.getMunicipalityPostalcodeLang().get(1).get(indexRepo),this.eag2012.getMunicipalityPostalcodeValue().get(1).get(indexRepo)));
+	          childArchguide3Children.add(buildStreet(this.eag2012.getStreetLang().get(1).get(indexRepo),this.eag2012.getStreetValue().get(1).get(indexRepo)));
+	          
+	          childArchguide3.put("children", childArchguide3Children);
+			
+			return childArchguide3;
+		}
+	
+	private HashMap<String, Object> buildLocation(String locationLocalType, String locationLatitude, String locationLongitude,Integer indexRepo) {
 
 	   HashMap<String,Object> childArchguide3 = new HashMap<String, Object>();
     	childArchguide3.put("nodeName", "location");
@@ -2092,12 +2115,12 @@ public class Eag2012Creator {
     	  
     	  ArrayList<HashMap<String, Object>> childArchguide3Children = new ArrayList<HashMap<String, Object>>();
     	  
-          childArchguide3Children.add(buildCountry(this.eag2012.getCountryLang(),this.eag2012.getCountryValue()));
-          childArchguide3Children.add(buildFirstdem(this.eag2012.getFirstdemLang(),this.eag2012.getFirstdemValue()));
-          childArchguide3Children.add(buildSecondem(this.eag2012.getSecondemLang(),this.eag2012.getSecondemValue()));
-          childArchguide3Children.add(buildMunicipalityPostalCode(this.eag2012.getMunicipalityPostalcodeLang(),this.eag2012.getMunicipalityPostalcodeValue()));
-          childArchguide3Children.add(buildLocalentity(this.eag2012.getLocalentityLang(),this.eag2012.getLocalentityValue()));
-          childArchguide3Children.add(buildStreet(this.eag2012.getStreetLang(),this.eag2012.getStreetValue()));
+          childArchguide3Children.add(buildCountry(this.eag2012.getCountryLang().get(indexRepo),this.eag2012.getCountryValue().get(indexRepo)));
+          childArchguide3Children.add(buildFirstdem(this.eag2012.getFirstdemLang().get(indexRepo),this.eag2012.getFirstdemValue().get(indexRepo)));
+          childArchguide3Children.add(buildSecondem(this.eag2012.getSecondemLang().get(indexRepo),this.eag2012.getSecondemValue().get(indexRepo)));
+          childArchguide3Children.add(buildMunicipalityPostalCode(this.eag2012.getMunicipalityPostalcodeLang().get(0).get(indexRepo),this.eag2012.getMunicipalityPostalcodeValue().get(0).get(indexRepo)));
+          childArchguide3Children.add(buildLocalentity(this.eag2012.getLocalentityLang().get(indexRepo),this.eag2012.getLocalentityValue().get(indexRepo)));
+          childArchguide3Children.add(buildStreet(this.eag2012.getStreetLang().get(0).get(indexRepo),this.eag2012.getStreetValue().get(0).get(indexRepo)));
           
           childArchguide3.put("children", childArchguide3Children);
 		

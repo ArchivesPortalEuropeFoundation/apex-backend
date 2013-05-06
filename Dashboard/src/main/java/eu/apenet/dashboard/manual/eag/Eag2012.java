@@ -158,18 +158,18 @@ public class Eag2012 {
 	private List<List<String>> locationLocalType;
 	private List<List<String>> locationLatitude;
 	private List<List<String>> locationLongitude;
-	private String countryLang;
-	private String countryValue;
-	private String firstdemLang;
-	private String firstdemValue;
-	private String secondemLang;
-	private String secondemValue;
-	private String municipalityPostalcodeLang;
-	private String municipalityPostalcodeValue;
-	private String localentityLang;
-	private String localentityValue;
-	private String streetLang;
-	private String streetValue;
+	private List<String> countryLang;
+	private List<String> countryValue;
+	private List<String> firstdemLang;
+	private List<String> firstdemValue;
+	private List<String> secondemLang;
+	private List<String> secondemValue;
+	private List<List<String>> municipalityPostalcodeLang;
+	private List<List<String>> municipalityPostalcodeValue;
+	private List<String> localentityLang;
+	private List<String> localentityValue;
+	private List<List<String>> streetLang;
+	private List<List<String>> streetValue;
 	private List<Map<String,List<String> >> directionsLang;
 	private List<Map<String,List<String> >> directionsValue;
 	private List<List<String>> adminunitLang;
@@ -1225,99 +1225,99 @@ public class Eag2012 {
 		this.locationLongitude = locationLongitude;
 	}
 
-	public String getCountryLang() {
+	public List<String> getCountryLang() {
 		return countryLang;
 	}
 
-	public void setCountryLang(String countryLang) {
+	public void setCountryLang(List<String> countryLang) {
 		this.countryLang = countryLang;
 	}
 
-	public String getCountryValue() {
+	public List<String> getCountryValue() {
 		return countryValue;
 	}
 
-	public void setCountryValue(String countryValue) {
+	public void setCountryValue(List<String>  countryValue) {
 		this.countryValue = countryValue;
 	}
 
-	public String getFirstdemLang() {
+	public List<String> getFirstdemLang() {
 		return firstdemLang;
 	}
 
-	public void setFirstdemLang(String firstdemLang) {
+	public void setFirstdemLang(List<String> firstdemLang) {
 		this.firstdemLang = firstdemLang;
 	}
 
-	public String getFirstdemValue() {
+	public List<String> getFirstdemValue() {
 		return firstdemValue;
 	}
 
-	public void setFirstdemValue(String firstdemValue) {
+	public void setFirstdemValue(List<String> firstdemValue) {
 		this.firstdemValue = firstdemValue;
 	}
 
-	public String getSecondemLang() {
+	public List<String> getSecondemLang() {
 		return secondemLang;
 	}
 
-	public void setSecondemLang(String secondemLang) {
+	public void setSecondemLang(List<String> secondemLang) {
 		this.secondemLang = secondemLang;
 	}
 
-	public String getSecondemValue() {
+	public List<String> getSecondemValue() {
 		return secondemValue;
 	}
 
-	public void setSecondemValue(String secondemValue) {
+	public void setSecondemValue(List<String> secondemValue) {
 		this.secondemValue = secondemValue;
 	}
 
-	public String getMunicipalityPostalcodeLang() {
+	public List<List<String>> getMunicipalityPostalcodeLang() {
 		return municipalityPostalcodeLang;
 	}
 
-	public void setMunicipalityPostalcodeLang(String municipalityPostalcodeLang) {
+	public void setMunicipalityPostalcodeLang(List<List<String>> municipalityPostalcodeLang) {
 		this.municipalityPostalcodeLang = municipalityPostalcodeLang;
 	}
 
-	public String getMunicipalityPostalcodeValue() {
+	public List<List<String>> getMunicipalityPostalcodeValue() {
 		return municipalityPostalcodeValue;
 	}
 
-	public void setMunicipalityPostalcodeValue(String municipalityPostalcodeValue) {
+	public void setMunicipalityPostalcodeValue(List<List<String>> municipalityPostalcodeValue) {
 		this.municipalityPostalcodeValue = municipalityPostalcodeValue;
 	}
 
-	public String getLocalentityLang() {
+	public List<String> getLocalentityLang() {
 		return localentityLang;
 	}
 
-	public void setLocalentityLang(String localentityLang) {
+	public void setLocalentityLang(List<String> localentityLang) {
 		this.localentityLang = localentityLang;
 	}
 
-	public String getLocalentityValue() {
+	public List<String> getLocalentityValue() {
 		return localentityValue;
 	}
 
-	public void setLocalentityValue(String localentityValue) {
+	public void setLocalentityValue(List<String> localentityValue) {
 		this.localentityValue = localentityValue;
 	}
 
-	public String getStreetLang() {
+	public List<List<String>> getStreetLang() {
 		return streetLang;
 	}
 
-	public void setStreetLang(String streetLang) {
+	public void setStreetLang(List<List<String>> streetLang) {
 		this.streetLang = streetLang;
 	}
 
-	public String getStreetValue() {
+	public List<List<String>> getStreetValue() {
 		return streetValue;
 	}
 
-	public void setStreetValue(String streetValue) {
+	public void setStreetValue(List<List<String>> streetValue) {
 		this.streetValue = streetValue;
 	}
 
