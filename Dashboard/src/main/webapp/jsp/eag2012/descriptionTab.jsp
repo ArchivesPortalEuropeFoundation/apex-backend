@@ -10,11 +10,11 @@
 			
 		</tr>
 
-		<tr>
+		<tr id="trRepositoryHistory">
 			<td id="tdRepositoryHistory">
-				<s:property value="getText('label.ai.description.repositoryHistory')" />:
+				<label for="textRepositoryHistory"><s:property value="getText('label.ai.description.repositoryHistory')" />:</label>
 			</td>
-			<td rowspan="2">
+			<td>
 				<textarea id="textRepositoryHistory"></textarea>
 			</td>
 			<td id="tdLanguageRepositoryHistory">
@@ -25,8 +25,9 @@
 			</td>
 		</tr>
 
-		<tr>
-			<td>
+		<tr id="trAddHistoryDescription">
+			<td id="tdAddHistoryDescription" colspan="2">
+				<input type="button" id="buttonAddHistoryDescription" onclick="descriptionAddHistoryDescription();" value="<s:property value='getText("label.ai.description.addHistoryDescription")' />"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -34,7 +35,7 @@
 
 		<tr>
 			<td id="tdDateOfRepositoryFoundation">
-				<s:property value="getText('label.ai.description.dateOfRepositoryFoundation')" />:
+				<label for="textDateOfRepositoryFoundation"><s:property value="getText('label.ai.description.dateOfRepositoryFoundation')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textDateOfRepositoryFoundation" value="<s:property value="#dateOfRepositoryFoundation" />" />
@@ -44,7 +45,7 @@
 
 		<tr id="trRuleOfRepositoryFoundation">
 			<td id="tdRuleOfRepositoryFoundation">
-				<s:property value="getText('label.ai.description.ruleOfRepositoryFoundation')" />:
+				<label for="textRuleOfRepositoryFoundation"><s:property value="getText('label.ai.description.ruleOfRepositoryFoundation')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textRuleOfRepositoryFoundation" value="<s:property value="#ruleOfRepositoryFoundation" />" />
@@ -59,7 +60,7 @@
 
 		<tr>
 			<td id="tdAddFoundationInformation" colspan="2">
-				<input type="button" id="buttonDescriptionAddFoundationInformation" value="<s:property value='getText("label.ai.description.addFoundationInformation")' />" onclick="descriptionAddFoundationInformation();"/>
+				<input type="button" id="buttonDescriptionAddFoundationInformation" value="<s:property value='getText("label.ai.description.addRule")' />" onclick="descriptionAddFoundationInformation();"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -67,7 +68,7 @@
 
 		<tr>
 			<td id="tdDateOfRepositorySuppression">
-				<s:property value="getText('label.ai.description.dateOfRepositorySuppression')" />:
+				<label for="textDateOfRepositorySuppression"><s:property value="getText('label.ai.description.dateOfRepositorySuppression')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textDateOfRepositorySuppression" value="<s:property value="#dateOfRepositorySuppression" />" />
@@ -77,7 +78,7 @@
 
 		<tr id="trDescriptionAddSuppressionInformation">
 			<td id="tdRuleOfRepositorySuppression">
-				<s:property value="getText('label.ai.description.ruleOfRepositorySuppression')" />:
+				<label for="textRuleOfRepositorySuppression"><s:property value="getText('label.ai.description.ruleOfRepositorySuppression')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textRuleOfRepositorySuppression" value="<s:property value="#ruleOfRepositorySuppression" />" />
@@ -92,7 +93,7 @@
 
 		<tr>
 			<td id="tdAddSuppressionInformation" colspan="2">
-				<input type="button" id="buttonDescriptionAddSuppressionInformation" onclick="descriptionAddSuppressionInformation();" value="<s:property value='getText("label.ai.description.addSuppressionInformation")' />"/>
+				<input type="button" id="buttonDescriptionAddSuppressionInformation" onclick="descriptionAddSuppressionInformation();" value="<s:property value='getText("label.ai.description.addRule")' />"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -107,10 +108,10 @@
 
 		<tr id="trDescriptionAddAdministrationUnits">
 			<td id="tdUnitOfAdministrativeStructure">
-				<s:property value="getText('label.ai.description.unitOfAdministrativeStructure')" />:
+				<label for="textUnitOfAdministrativeStructure"><s:property value="getText('label.ai.description.unitOfAdministrativeStructure')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textUnitOfAdministrativeStructure" value="<s:property value="#unitOfAdministrativeStructure" />" />
+				<textarea id="textUnitOfAdministrativeStructure"></textarea>
 			</td>
 			<td id="tdLanguageUnitOfAdministrativeStructure">
 				<label for="selectLanguageUnitOfAdministrativeStructure"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -122,7 +123,7 @@
 
 		<tr>
 			<td id="tdAddAdministrationUnits" colspan="2">
-				<input type="button" id="buttonDescriptionAddAdministrationUnits" onclick="descriptionAddAdministrationUnits();" value="<s:property value='getText("label.ai.description.addAdministrationUnits")' />" />
+				<input type="button" id="buttonDescriptionAddAdministrationUnits" onclick="descriptionAddAdministrationUnits();" value="<s:property value='getText("label.ai.description.addAdministrativeUnit")' />" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -135,12 +136,12 @@
 			
 		</tr>
 
-		<tr>
+		<tr id="trBuildingDescription">
 			<td id="tdBuilding">
-				<s:property value="getText('label.ai.description.building')" />:
+				<label for="textBuilding"><s:property value="getText('label.ai.description.building')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textBuilding" value="<s:property value="#building" />" />
+				<textarea id="textBuilding"></textarea>
 			</td>
 			<td id="tdLanguageBuilding">
 				<label for="selectLanguageBuilding"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -151,8 +152,16 @@
 		</tr>
 
 		<tr>
+			<td id="tdAddBuildingDescription" colspan="2">
+				<input type="button" id="buttonDescriptionBuildingDescription" onclick="descriptionAddBuildingDescription();" value="<s:property value='getText("label.ai.description.addBuildingDescription")' />" />
+			</td>
+			<td colspan="2">
+			</td>
+		</tr>
+
+		<tr>
 			<td id="tdRepositoryArea">
-				<s:property value="getText('label.ai.description.repositoryArea')" />:
+				<label for="textRepositoryArea"><s:property value="getText('label.ai.description.repositoryArea')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textRepositoryArea" value="<s:property value="#repositoryArea" />" />
@@ -162,7 +171,7 @@
 
 		<tr>
 			<td id="tdLengthOfShelf">
-				<s:property value="getText('label.ai.description.lengthOfShelf')" />:
+				<label for="textLengthOfShelf"><s:property value="getText('label.ai.description.lengthOfShelf')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textLengthOfShelf" value="<s:property value="#lengthOfShelf" />" />
@@ -177,12 +186,12 @@
 			
 		</tr>
 
-		<tr>
+		<tr id="trArchivalAndOtherHoldings">
 			<td id="tdArchivalAndOtherHoldings">
-				<s:property value="getText('label.ai.description.archivalAndOtherHoldings')" />:
+				<label for="textArchivalAndOtherHoldings"><s:property value="getText('label.ai.description.archivalAndOtherHoldings')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textArchivalAndOtherHoldings" value="<s:property value="#archivalAndOtherHoldings" />" />
+				<textarea id="textArchivalAndOtherHoldings"></textarea>
 			</td>
 			<td id="tdLanguageArchivalAndOtherHoldings">
 				<label for="selectLanguageArchivalAndOtherHoldings"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -193,34 +202,45 @@
 		</tr>
 
 		<tr>
-			<td id="tdDateOfHoldings">
-				<s:property value="getText('label.ai.description.dateOfHoldings')" />:
-			</td>
-			<td>
-				<input type="text" id="textDateOfHoldings" value="<s:property value="#dateOfHoldings" />" />
+			<td id="tdAddAnotherArchivalDescription" colspan="2">
+				<input type="button" id="buttonDescriptionAddAnotherArchivalDescription" onclick="descriptionAddAnotherArchivalDescription();" value="<s:property value='getText("label.ai.description.addAnotherArchivalDescription")' />" />
 			</td>
 			<td colspan="2">
 			</td>
 		</tr>
 
 		<tr>
-			<td id="tdDateOfHoldingsFrom">
-				<s:property value="getText('label.ai.description.dateOfHoldingsFrom')" />:
+			<td colspan="4">
+				<s:property value="getText('label.ai.description.yearsOfTheHoldings')" />
+			</td>
+			
+		</tr>
+
+		<tr id="trYearWhenThisNameWasUsed_1">
+			<td>
+				<label for="textYearWhenThisNameWasUsed_1"><s:property value="getText('label.ai.tabs.commons.year')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textDateOfHoldingsFrom" value="<s:property value="#dateOfHoldingsFrom" />" />
+				<input type="text" id="textYearWhenThisNameWasUsed_1" value=""/>
 			</td>
-			<td id="tdDateOfHoldingsTo">
-				<s:property value="getText('label.ai.tabs.commons.textTo')" />:
+			<td colspan="2">
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+				<input type="button" id="buttonDescriptionAddSingleYear" value="<s:property value="getText('label.ai.tabs.commons.addSingleYear')" />" onclick="addSingleYear($(this).parent().parent().parent().parent());" />
 			</td>
 			<td>
-				<input type="text" id="textDateOfHoldingsTo" value="<s:property value="#dateOfHoldingsTo" />" />
+				<input type="button" id="buttonDescriptionAddYearRange" value="<s:property value="getText('label.ai.tabs.commons.addYearRange')" />" onclick="addRangeYear($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.yearFrom')" />', '<s:property value="getText('label.ai.tabs.commons.textTo')" />');" />
+			</td>
+			<td colspan="2">
 			</td>
 		</tr>
 
 		<tr>
 			<td id="tdExtent">
-				<s:property value="getText('label.ai.description.extent')" />:
+				<label for="textExtent"><s:property value="getText('label.ai.description.extent')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textExtent" value="<s:property value="#extent" />" />
@@ -231,11 +251,7 @@
 		<tr>
 			<td id="tdButtonsDescriptionTab" colspan="4">
 				<input type="button" id="buttonDescriptionTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
-				<input type="button" id="buttonDescriptionTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" />
-				<script type="text/javascript">
-					//current tab
-					$("table#descriptionTable input#buttonDescriptionTabCheck").click(clickDescriptionAction);
-				</script>
+				<input type="button" id="buttonDescriptionTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" onclick="clickDescriptionAction();"/>
 			</td>
 		</tr>
 	</table>

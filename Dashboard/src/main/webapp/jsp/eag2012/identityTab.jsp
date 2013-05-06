@@ -88,11 +88,11 @@
 						var property1 = "<s:property value="getText('label.ai.identity.formerlyUsedName')" />";
 						var property2 = "<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />";
 						var property3 = "<s:property value="getText('label.ai.identity.datesWhenThisNameWasUsed')" />";
-						var property4 = "<s:property value="getText('label.ai.identity.year')" />";
-						var property5 = "<s:property value="getText('label.ai.identity.addSingleYear')" />";
-						var property6 = "<s:property value="getText('label.ai.identity.addYearRange')" />";
+						var property4 = "<s:property value="getText('label.ai.tabs.commons.year')" />";
+						var property5 = "<s:property value="getText('label.ai.tabs.commons.addSingleYear')" />";
+						var property6 = "<s:property value="getText('label.ai.tabs.commons.addYearRange')" />";
 						var select = '<select id="tfun_languageList">'+$("#pnoti_languageList").html()+'</select>';
-						var text1 = "<s:property value="getText('label.ai.identity.yearFrom')" />";
+						var text1 = "<s:property value="getText('label.ai.tabs.commons.yearFrom')" />";
 						var text2 = "<s:property value="getText('label.ai.tabs.commons.textTo')" />";
 
 

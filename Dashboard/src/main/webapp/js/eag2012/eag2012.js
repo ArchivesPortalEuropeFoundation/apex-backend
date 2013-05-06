@@ -385,6 +385,30 @@ var clickIdentityAction = function(){
 
 var clickContactAction = function(){
 	var currentTab = getCurrentTab();
+
+	return checkContactTab(currentTab);
+};
+
+function checkAllContactTabs() {
+	var counter = $("table[id^='contactTable_']").length;
+	var jsonData = "";
+
+	for (var i = 1; i <= counter; i++) {
+		if(jsonData.substring(jsonData.length-1)=='}'){
+			jsonData += ",";
+		}
+
+		jsonData += "{'contactTable_" + i + "':[";
+
+		jsonData += checkContactTab("_" + i);
+		
+		jsonData += "]}";
+	}
+
+	return jsonData;
+};
+
+function checkContactTab(currentTab) {
 	var jsonData = "{";
 	//content from texts
 	$("table#contactTable" + currentTab + " input[type='text']").each(function(){
@@ -544,25 +568,78 @@ var clickAccessAndServicesAction = function(){
 };
 
 var clickDescriptionAction = function(){
-	var jsonData = "{";
-		//content from texts
-		$("table#descriptionTable input[type='text']").each(function(){
-			if(jsonData.length>1){
-				jsonData += ",";
-			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
-		});
-		//content from selects
-		$("table#descriptionTable select").each(function(){
-			if(jsonData.charAt(jsonData.length-1)!=':'){
-				jsonData += ",";
-			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
-		});
-	jsonData += "}";
+	var currentTab = getCurrentTab();
+
+	return checkDescriptionTab(currentTab);
+};
+
+function checkAllDescriptionTabs() {
+	var counter = $("table[id^='descriptionTable_']").length;
+	var jsonData = "";
+
+	for (var i = 1; i <= counter; i++) {
+		if(jsonData.substring(jsonData.length-1)=='}'){
+			jsonData += ",";
+		}
+
+		jsonData += "{'descriptionTable_" + i + "':[";
+
+		jsonData += checkDescriptionTab("_" + i);
+		
+		jsonData += "]}";
+	}
 
 	return jsonData;
 };
+
+function checkDescriptionTab(currentTab) {
+	var jsonData = "{";
+	//content from textareas
+	$("table#descriptionTable" + currentTab + " textarea").each(function(){
+		if(jsonData.length>1){
+			jsonData += ",";
+		}
+		if ($(this).attr("id") == "textRepositoryHistory"
+			|| $(this).attr("id") == "textUnitOfAdministrativeStructure"
+			|| $(this).attr("id") == "textBuilding"
+			|| $(this).attr("id") == "textArchivalAndOtherHoldings") {
+			jsonData += "'"+$(this).attr("id")+"_1' : '"+$(this).attr("value")+"'";
+		} else {
+			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		}
+	});
+	//content from texts
+	$("table#descriptionTable" + currentTab + " input[type='text']").each(function(){
+		if(jsonData.length>1){
+			jsonData += ",";
+		}
+		if ($(this).attr("id") == "textRuleOfRepositoryFoundation"
+			|| $(this).attr("id") == "textRuleOfRepositorySuppression") {
+			jsonData += "'"+$(this).attr("id")+"_1' : '"+$(this).attr("value")+"'";
+		} else {
+			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		}
+	});
+	//content from selects
+	$("table#descriptionTable" + currentTab + " select").each(function(){
+		if(jsonData.charAt(jsonData.length-1)!=':'){
+			jsonData += ",";
+		}
+		if ($(this).attr("id") == "selectLanguageRepositoryHistory"
+			|| $(this).attr("id") == "selectLanguageUnitOfAdministrativeStructure"
+			|| $(this).attr("id") == "selectLanguageBuilding"
+			|| $(this).attr("id") == "selectLanguageArchivalAndOtherHoldings"
+			|| $(this).attr("id") == "selectLanguageRuleOfRepositoryFoundation"
+			|| $(this).attr("id") == "selectLanguageRuleOfRepositorySuppression") {
+			jsonData += "'"+$(this).attr("id")+"_1' : '"+$(this).attr("value")+"'";
+		} else {
+			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		}
+	});
+	jsonData += "}";
+	
+	return jsonData;
+}
 
 var clickControlAction = function(){
 	// Delete old checks
@@ -1344,6 +1421,26 @@ function aSReSeAddExhibition(){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='selectASReSeExhibitionSelectLanguage']").attr("for","selectASReSeExhibitionSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASReSeExhibitionSelectLanguage").attr("id","selectASReSeExhibitionSelectLanguage_"+(count+1));
 }
+
+function descriptionAddHistoryDescription(){
+	var currentTab = getCurrentTab();
+	// trAddHistory
+	var count = $("table#descriptionTable"+currentTab+" tr[id^='trRepositoryHistory']").length;
+	var newId = "trRepositoryHistory_"+(count+1);
+	var trHtml = "<tr id=\""+newId+"\">"+$("table#descriptionTable"+currentTab+" tr[id='trRepositoryHistory']").clone().html()+"</tr>";
+	var lastId= "table#descriptionTable"+currentTab+" tr#trRepositoryHistory";
+
+	if(count>1){
+		lastId += "_" + (count);
+	}
+	$(lastId).after(trHtml);
+	// update last content
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='textRepositoryHistory']").attr("for","textRepositoryHistory_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textRepositoryHistory").attr("id","textRepositoryHistory_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageRepositoryHistory']").attr("for","selectLanguageRepositoryHistory_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageRepositoryHistory").attr("id","selectLanguageRepositoryHistory_"+(count+1));
+}
+
 function descriptionAddFoundationInformation(){
 	var currentTab = getCurrentTab();
 	//trRuleOfRepositoryFoundation
@@ -1378,22 +1475,64 @@ function descriptionAddSuppressionInformation(){
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageRuleOfRepositorySuppression']").attr("for","selectLanguageRuleOfRepositorySuppression_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageRuleOfRepositorySuppression").attr("id","selectLanguageRuleOfRepositorySuppression_"+(count+1));
 }
+
 function descriptionAddAdministrationUnits(){
+	// trDescriptionAddAdministrationUnits
 	var currentTab = getCurrentTab();
 	var count = $("table#descriptionTable"+currentTab+" tr[id^='trDescriptionAddAdministrationUnits']").length;
 	var newId = "trDescriptionAddAdministrationUnits_"+(count+1);
 	var trHtml = "<tr id=\""+newId+"\">"+$("table#descriptionTable"+currentTab+" tr[id='trDescriptionAddAdministrationUnits']").clone().html()+"</tr>";
 	var lastId = "table#descriptionTable"+currentTab+" tr#trDescriptionAddAdministrationUnits";
+
 	if(count>1){
 		lastId+="_"+(count);
 	}
 	$(lastId).after(trHtml);
 	//update last content
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='textUnitOfAdministrativeStructure']").attr("for","textUnitOfAdministrativeStructure_"+(count+1));
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" input#textUnitOfAdministrativeStructure").attr("id","textUnitOfAdministrativeStructure_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textUnitOfAdministrativeStructure").attr("id","textUnitOfAdministrativeStructure_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageUnitOfAdministrativeStructure']").attr("for","selectLanguageUnitOfAdministrativeStructure_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageUnitOfAdministrativeStructure").attr("id","selectLanguageUnitOfAdministrativeStructure_"+(count+1));
 }
+
+function descriptionAddBuildingDescription(){
+	// trBuildingDescription
+	var currentTab = getCurrentTab();
+	var count = $("table#descriptionTable"+currentTab+" tr[id^='trBuildingDescription']").length;
+	var newId = "trBuildingDescription_"+(count+1);
+	var trHtml = "<tr id=\""+newId+"\">"+$("table#descriptionTable"+currentTab+" tr[id='trBuildingDescription']").clone().html()+"</tr>";
+	var lastId = "table#descriptionTable"+currentTab+" tr#trBuildingDescription";
+
+	if(count>1){
+		lastId+="_"+(count);
+	}
+	$(lastId).after(trHtml);
+	//update last content
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='textBuilding']").attr("for","textBuilding_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textBuilding").attr("id","textBuilding_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageBuilding']").attr("for","selectLanguageBuilding_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageBuilding").attr("id","selectLanguageBuilding_"+(count+1));
+}
+
+function descriptionAddAnotherArchivalDescription() {
+	// trArchivalAndOtherHoldings
+	var currentTab = getCurrentTab();
+	var count = $("table#descriptionTable"+currentTab+" tr[id^='trArchivalAndOtherHoldings']").length;
+	var newId = "trArchivalAndOtherHoldings_"+(count+1);
+	var trHtml = "<tr id=\""+newId+"\">"+$("table#descriptionTable"+currentTab+" tr[id='trArchivalAndOtherHoldings']").clone().html()+"</tr>";
+	var lastId = "table#descriptionTable"+currentTab+" tr#trArchivalAndOtherHoldings";
+
+	if(count>1){
+		lastId+="_"+(count);
+	}
+	$(lastId).after(trHtml);
+	//update last content
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='textArchivalAndOtherHoldings']").attr("for","textArchivalAndOtherHoldings_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textArchivalAndOtherHoldings").attr("id","textArchivalAndOtherHoldings_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageArchivalAndOtherHoldings']").attr("for","selectLanguageArchivalAndOtherHoldings_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageArchivalAndOtherHoldings").attr("id","selectLanguageArchivalAndOtherHoldings_"+(count+1));
+}
+
 function controlAddFurtherLangsAnsScripts(){
 	var count = $("table#controlTable tr[id^='trControlAddFurtherLangsAnsScriptsOne']").length;
 	var target1 = "trControlAddFurtherLangsAnsScriptsOne_"+(count+1);
