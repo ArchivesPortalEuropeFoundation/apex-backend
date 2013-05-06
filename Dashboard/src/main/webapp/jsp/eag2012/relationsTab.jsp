@@ -2,7 +2,7 @@
 <%@ taglib prefix="s" uri="/struts-tags"%>
 
 <div id="relationsTabContent">
-	<table id="relationsTable">
+	<table id="resourceRelationTable_1">
 		<tr>
 			<td id="resourceLabel" colspan="4">
 				<s:property value="getText('label.ai.relations.resourceRelations')" />
@@ -50,7 +50,9 @@
 				<s:select theme="simple" id="selectLanguageDescriptionOfRelation" list="languageList"></s:select>
 			</td>
 		</tr>
+	</table>
 
+	<table id="addResourceRelationTable">
 		<tr>
 			<td id="tdAddNewResourceRelation" colspan="2">
 				<input type="button" id="buttonRelationAddNewResourceRelation" onclick="relationAddNewResourceRelation();" value="<s:property value='getText("label.ai.relations.addNewResourceRelation")' />"/>
@@ -58,7 +60,9 @@
 			<td colspan="2">
 			</td>
 		</tr>
+	</table>
 
+	<table id="institutionRelationTable_1">
 		<tr>
 			<td id="institutionLabel" colspan="4">
 				<s:property value="getText('label.ai.relations.institutionRelation')" />
@@ -109,10 +113,12 @@
 				<s:select theme="simple" id="selectLanguageInstitutionDescriptionOfRelation" list="languageList"></s:select>
 			</td>
 		</tr>
+	</table>
 
+	<table id="relationsOtherTable">
 		<tr>
 			<td id="tdAddNewInstitutionRelation" colspan="2">
-				<input type="button" id="buttonAddNewInstitutionRelation" onclick="addInstitutionDescriptionOfRelation();" value="<s:property value='getText("label.ai.relations.addNewInstitutionRelation")' />"/>
+				<input type="button" id="buttonAddNewInstitutionRelation" onclick="relationAddNewInstitutionRelation();" value="<s:property value='getText("label.ai.relations.addNewInstitutionRelation")' />"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -123,7 +129,7 @@
 				<input type="button" id="buttonRelationsTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" />
 				<script type="text/javascript">
 					//current tab
-					$("table#relationsTable input#buttonRelationsTabCheck").click(clickRelationsAction);
+					$("table#relationsOtherTable input#buttonRelationsTabCheck").click(clickRelationsAction);
 				</script>
 			</td>
 		</tr>

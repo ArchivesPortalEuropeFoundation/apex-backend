@@ -625,21 +625,74 @@ var clickControlAction = function(){
 
 var clickRelationsAction = function(){
 	var jsonData = "{";
-		//content from texts
-		$("table#relationsTable input[type='text']").each(function(){
-			if(jsonData.length>1){
-				jsonData += ",";
-			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
-		});
-		//content from selects
-		$("table#relationsTable select").each(function(){
+
+	// Resource relations.
+	var resourceRelations = new Array();
+	$("table[id^='resourceRelationTable_']").each(function(){
+		var id = $(this).attr("id");
+		if(id.indexOf("#")>-1){
+			id = id.substring(id.indexOf("#"));
+		}
+		resourceRelations.push(id);
+	});
+	jsonData += "'resourceRelations':[";
+	for(var j=0; j<resourceRelations.length; j++) {
+		if(jsonData.substring(jsonData.length-1)!='['){
+			jsonData += ",";
+		}
+		jsonData += "{'"+resourceRelations[j]+"':";
+		//input type text
+		$("#"+resourceRelations[j]+" input[type='text']").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'){
 				jsonData += ",";
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 		});
-	jsonData += "}";
+		//select options selected
+		$("#"+resourceRelations[j]+" select").each(function(){
+			if(jsonData.charAt(jsonData.length-1)!=':'){
+				jsonData += ",";
+			}
+			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		});
+		jsonData += "}";
+	}
+	
+	jsonData += "]";
+
+	// Institution relations.
+	var institutionRelations = new Array();
+	$("table[id^='institutionRelationTable_']").each(function(){
+		var id = $(this).attr("id");
+		if(id.indexOf("#")>-1){
+			id = id.substring(id.indexOf("#"));
+		}
+		institutionRelations.push(id);
+	});
+	jsonData += ",'institutionRelations':[";
+	for(var j=0; j<institutionRelations.length; j++) {
+		if(jsonData.substring(jsonData.length-1)!='['){
+			jsonData += ",";
+		}
+		jsonData += "{'"+institutionRelations[j]+"':";
+		//input type text
+		$("#"+institutionRelations[j]+" input[type='text']").each(function(){
+			if(jsonData.charAt(jsonData.length-1)!=':'){
+				jsonData += ",";
+			}
+			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		});
+		//select options selected
+		$("#"+institutionRelations[j]+" select").each(function(){
+			if(jsonData.charAt(jsonData.length-1)!=':'){
+				jsonData += ",";
+			}
+			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		});
+		jsonData += "}";
+	}
+	
+	jsonData += "]}";
 
 	return jsonData;
 };
@@ -1381,33 +1434,25 @@ function addContactAbbreviation(){
 	$("table#controlTable tr#"+target2+" label[for='textContactFullName']").attr("for","textContactFullName_"+(count+1));
 	$("table#controlTable tr#"+target2+" input#textContactFullName").attr("id","textContactFullName_"+(count+1));
 }
+
 function relationAddNewResourceRelation(){
-	var count = $("table#relationsTable tr[id^='trRelationsDescriptionOfRelation']").length;
-	var newId = "trRelationsDescriptionOfRelation_"+(count+1);
-	var trHtml = "<tr id=\""+newId+"\">"+$("table#relationsTable tr[id='trRelationsDescriptionOfRelation']").clone().html()+"</tr>";
-	var lastId = "table#relationsTable tr#trRelationsDescriptionOfRelation";
-	if(count>1){
-		lastId+="_"+(count);
-	}
-	$(lastId).after(trHtml);
-	//update last content
-	$("table#relationsTable tr#"+newId+" label[for='textDescriptionOfRelation']").attr("for","textDescriptionOfRelation_"+(count+1));
-	$("table#relationsTable tr#"+newId+" input#textDescriptionOfRelation").attr("id","textDescriptionOfRelation_"+(count+1));
-	$("table#relationsTable tr#"+newId+" label[for='selectLanguageDescriptionOfRelation']").attr("for","selectLanguageDescriptionOfRelation_"+(count+1));
-	$("table#relationsTable tr#"+newId+" select#selectLanguageDescriptionOfRelation").attr("id","selectLanguageDescriptionOfRelation_"+(count+1));
+	var counter = $("table[id^='resourceRelationTable_']").length;
+	var clone = $("table[id^='resourceRelationTable_"+counter+"']").clone();
+	clone = "<table id='"+("resourceRelationTable_"+(counter+1))+"'>"+clone.html()+"</table>";
+	$("table[id^='resourceRelationTable_"+counter+"']").after(clone);
+	// Reset parametters.
+	$("table#resourceRelationTable_"+(counter+1)+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
-function addInstitutionDescriptionOfRelation(){
-	var count = $("table#relationsTable tr[id^='trRelationsInstitutionDescriptionOfRelation']").length;
-	var newId = "trRelationsInstitutionDescriptionOfRelation_"+(count+1);
-	var trHtml = "<tr id=\""+newId+"\">"+$("table#relationsTable tr[id='trRelationsInstitutionDescriptionOfRelation']").clone().html()+"</tr>";
-	var lastId = "table#relationsTable tr#trRelationsInstitutionDescriptionOfRelation";
-	if(count>1){
-		lastId+="_"+(count);
-	}
-	$(lastId).after(trHtml);
-	//update last content
-	$("table#relationsTable tr#"+newId+" label[for='textInstitutionDescriptionOfRelation']").attr("for","textInstitutionDescriptionOfRelation_"+(count+1));
-	$("table#relationsTable tr#"+newId+" input#textInstitutionDescriptionOfRelation").attr("id","textInstitutionDescriptionOfRelation_"+(count+1));
-	$("table#relationsTable tr#"+newId+" label[for='selectLanguageInstitutionDescriptionOfRelation']").attr("for","selectLanguageInstitutionDescriptionOfRelation_"+(count+1));
-	$("table#relationsTable tr#"+newId+" select#selectLanguageInstitutionDescriptionOfRelation").attr("id","selectLanguageInstitutionDescriptionOfRelation_"+(count+1));
+
+function relationAddNewInstitutionRelation(){
+	var counter = $("table[id^='institutionRelationTable_']").length;
+	var clone = $("table[id^='institutionRelationTable_"+counter+"']").clone();
+	clone = "<table id='"+("institutionRelationTable_"+(counter+1))+"'>"+clone.html()+"</table>";
+	$("table[id^='institutionRelationTable_"+counter+"']").after(clone);
+	// Reset parametters.
+	$("table#institutionRelationTable_"+(counter+1)+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
