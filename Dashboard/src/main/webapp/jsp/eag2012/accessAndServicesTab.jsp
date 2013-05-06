@@ -3,20 +3,49 @@
 
 <div id="accessAndServicesTabContent">
 	<table id="accessAndServicesTable">
-		<tr>
+		<tr id="trASOpeningTimes">
 			<td>
-				<label for="textOpeningTimes"><s:property value="getText('label.ai.accessAndServices.openingTimes')" /></label>
-				<span class="required">*</span>:
+				<label for="textOpeningTimes"><s:property value="getText('label.ai.accessAndServices.openingTimes')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
 				<input type="text" id="textOpeningTimes" />
-				<s:fielderror fieldName="textOpeningTimes"/>
 			</td>
 			<td class="labelLeft">
+				<label for="selectLanguageOpeningTimes" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+			</td>
+			<td>
+				<s:select theme="simple" id="selectLanguageOpeningTimes" list="languageList"></s:select>
+			</td>
+		</tr>
+
+		<tr>
+			<td id="tdASAddOpeningTimes" colspan="2">
+				<input type="button" id="buttonASAddOpeningTimes"  value="<s:property value='getText("label.ai.accessAndServices.addOpeningTimes")' />" onclick="aSAddOpeningTimes();" />
+			</td>
+			<td colspan="2">
+			</td>
+		</tr>
+
+		<tr id="trASClosingDates">
+			<td>
 				<label for="textClosingDates"><s:property value="getText('label.ai.tabs.commons.closingDates')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textClosingDates" />
+			</td>
+			<td class="labelLeft">
+				<label for="selectLanguageClosingDates" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+			</td>
+			<td>
+				<s:select theme="simple" id="selectLanguageClosingDates" list="languageList"></s:select>
+			</td>
+		</tr>
+
+		<tr>
+			<td id="tdASAddClosingDates" colspan="2">
+				<input type="button" id="buttonASAddClosingDates"  value="<s:property value='getText("label.ai.accessAndServices.addClosingDates")' />" onclick="aSAddClosingDates();" />
+			</td>
+			<td colspan="2">
 			</td>
 		</tr>
 
@@ -24,19 +53,8 @@
 			<td>
 				<label for="textTravellingDirections"><s:property value="getText('label.ai.accessAndServices.travellingDirections')" />:</label>
 			</td>
-			<td rowspan="2">
-				<textarea id="textTravellingDirections"></textarea>
-			</td>
-			<td class="labelLeft">
-				<label for="textTravelLink"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
-			</td>
-			<td colspan="2">
-				<input type="text" id="textTravelLink" />
-			</td>
-		</tr>
-		<tr id="tr2TravellingDirections">
 			<td>
-				<input type="button" id="buttonASAddTravellingDirections" value="<s:property value="getText('label.ai.accessAndServices.addTravellingDirections')"/>" onclick="aSAddTravellingDirections();"/>
+				<textarea id="textTravellingDirections"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectASATDSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -45,14 +63,32 @@
 				<s:select theme="simple" id="selectASATDSelectLanguage" list="languageList"></s:select>
 			</td>
 		</tr>
+
+		<tr id="tr2TravellingDirections">
+			<td>
+				<label for="textTravelLink"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
+			</td>
+			<td colspan="2">
+				<input type="text" id="textTravelLink" />
+			</td>
+			<td colspan="2">
+			</td>
+		</tr>
+
+		<tr>
+			<td colspan="2">
+				<input type="button" id="buttonASAddTravellingDirections" value="<s:property value="getText('label.ai.accessAndServices.addTravellingDirections')"/>" onclick="aSAddTravellingDirections();"/>
+			</td>
+			<td colspan="2">
+			</td>
+		</tr>
+
 		<tr>
 			<td>
-				<label for="selectASAccesibleToThePublic"><s:property value="getText('label.ai.accessAndServices.accesibleToThePublic')"/></label>
-				<span class="required">*</span>:
+				<label for="selectASAccesibleToThePublic"><s:property value="getText('label.ai.accessAndServices.accesibleToThePublic')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
 				<s:select theme="simple" id="selectASAccesibleToThePublic" list="yesNoList"></s:select>
-				<s:fielderror fieldName="yesNoSelectASAccesibleToThePublic"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -85,20 +121,8 @@
 			<td>
 				<label for="textASTermOfUse"><s:property value="getText('label.ai.accessAndServices.termsOfUse')" />:</label>
 			</td>
-			<td rowspan="2">
-				<textarea id="textASTermOfUse"></textarea>
-			</td>
-			<td class="labelLeft">
-				<label for="textASTOULink"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
-			</td>
-			<td colspan="2">
-				<input type="text" id="textASTOULink" />
-			</td>
-		</tr>
-
-		<tr id="tr2ASAddFutherTermOfUse">
 			<td>
-				<input type="button" id="buttonASAddFutherTermOfUse" value="<s:property value="getText('label.ai.accessAndServices.addFurtherTermsOfUse')"/>" onclick="aSAddFutherTermOfUse();" />
+				<textarea id="textASTermOfUse"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectASAFTOUSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -107,14 +131,32 @@
 				<s:select theme="simple" id="selectASAFTOUSelectLanguage" list="languageList"></s:select>
 			</td>
 		</tr>
+
+		<tr id="tr2ASAddFutherTermOfUse">
+			<td>
+				<label for="textASTOULink"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
+			</td>
+			<td>
+				<input type="text" id="textASTOULink" />
+			</td>
+			<td colspan="2">
+			</td>
+		</tr>
+
+		<tr>
+			<td colspan="2">
+				<input type="button" id="buttonASAddFutherTermOfUse" value="<s:property value="getText('label.ai.accessAndServices.addFurtherTermsOfUse')"/>" onclick="aSAddFutherTermOfUse();" />
+			</td>
+			<td colspan="2">
+			</td>
+		</tr>
+
 		<tr>
 			<td>
-				<label for="selectASFacilitiesForDisabledPeopleAvailable"><s:property value="getText('label.ai.accessAndServices.facilitiesForDisabledPeopleAvailable')"/></label>
-				<span class="required">*</span>:
+				<label for="selectASFacilitiesForDisabledPeopleAvailable"><s:property value="getText('label.ai.accessAndServices.facilitiesForDisabledPeopleAvailable')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
 				<s:select theme="simple" id="selectASFacilitiesForDisabledPeopleAvailable" list="yesNoList"></s:select>
-				<s:fielderror fieldName="yesNoSelectASFacilitiesForDisabledPeopleAvailable"/>
 			</td>
 		</tr>
 
@@ -190,18 +232,16 @@
 
 		<tr>
 			<td>
-				<label for="textASSRWorkPlaces"><s:property value="getText('label.ai.accessAndServices.workPlaces')"/></label>
-				<span class="required">*</span>:
+				<label for="textASSRWorkPlaces"><s:property value="getText('label.ai.accessAndServices.workPlaces')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
 				<input type="text" id="textASSRWorkPlaces" />
-				<s:fielderror fieldName="textASSRWorkPlaces"/>
 			</td>
 			<td colspan="2">
 			</td>
 		</tr>
 
-		<tr id="trASSRAddadescriptionofyourcomputerplaces">
+		<tr>
 			<td>
 				<label for="textASSRComputerPlaces"><s:property value="getText('label.ai.accessAndServices.computerPlaces')"/>:</label>
 			</td>
@@ -209,9 +249,17 @@
 				<input type="text" id="textASSRComputerPlaces" />
 			</td>
 			<td colspan="2">
-				<input type="button" id="buttonASSRAddadescriptionofyourcomputerplaces" value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourComputerPlaces')"/>" onclick="aSSRAddadescriptionofyourcomputerplaces();" />
 			</td>
 		</tr>
+
+		<tr id="trASSRAddDescriptionOfYourComputerPlaces">
+			<td colspan="2">
+				<input type="button" id="buttonASSRAddadescriptionofyourcomputerplaces" value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourComputerPlaces')"/>" onclick="aSSRAddDescriptionOfYourComputerPlaces('<s:property value="getText('label.ai.accessAndServices.descriptionOfComputerPlaces')"/>', '<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />');" />
+			</td>
+			<td colspan="2">
+			</td>
+		</tr>
+
 		<tr>
 			<td>
 				<label for="textASSRMicrofilmPlaces"><s:property value="getText('label.ai.accessAndServices.microfilmPlaces')"/>:</label>
@@ -235,10 +283,21 @@
 				<input type="text" id="textASSRReadersTicket" />
 			</td>
 			<td class="labelLeft">
+				<label for="selectReadersTickectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+			</td>
+			<td>
+				<s:select theme="simple" id="selectReadersTickectLanguage" list="languageList"></s:select>
+			</td>
+		</tr>
+
+		<tr id="tr2ASSRReadersTicket">
+			<td>
 				<label for="textASSRRTLink"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 			</td>
 			<td>
 				<input type="text" id="textASSRRTLink" />
+			</td>
+			<td colspan="2">
 			</td>
 		</tr>
 
@@ -246,11 +305,7 @@
 			<td colspan="2">
 				<input type="button" id="buttonASSRAddReadersTicket" value="<s:property value="getText('label.ai.accessAndServices.addReadersTicket')"/>" onclick="aSSRAddReadersTicket();"/>
 			</td>
-			<td class="labelLeft">
-				<label for="selectReadersTickectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
-			</td>
-			<td>
-				<s:select theme="simple" id="selectReadersTickectLanguage" list="languageList"></s:select>
+			<td colspan="2">
 			</td>
 		</tr>
 
@@ -262,10 +317,21 @@
 				<input type="text" id="textASSRAdvancedOrders" />
 			</td>
 			<td class="labelLeft">
+				<label for="selectASSRAFOIUSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+			</td>
+			<td>
+				<s:select theme="simple" id="selectASSRAFOIUSelectLanguage" list="languageList"></s:select>
+			</td>
+		</tr>
+
+		<tr id="tr2ASSRAddFurtherOrderInformation">
+			<td>
 				<label for="textASSRAOLink"><s:property value="getText('label.ai.accessAndServices.link')" />:</label>
 			</td>
-			<td colspan="2">
+			<td>
 				<input type="text" id="textASSRAOLink" />
+			</td>
+			<td colspan="2">
 			</td>
 		</tr>
 
@@ -273,11 +339,7 @@
 			<td colspan="2">
 				<input type="button" id="buttonASSRAddFurtherOrderInformation" value="<s:property value="getText('label.ai.accessAndServices.addFurtherOrderInformation')" />" onclick="aSSRAddFurtherOrderInformation();" />
 			</td>
-			<td class="labelLeft">
-				<label for="selectASSRAFOIUSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
-			</td>
-			<td>
-				<s:select theme="simple" id="selectASSRAFOIUSelectLanguage" list="languageList"></s:select>
+			<td colspan="2">
 			</td>
 		</tr>
 
@@ -382,7 +444,7 @@
 			</td>
 		</tr>
 
-		<tr>
+		<tr id="trASPIAAddInternetAccessInformation">
 			<td>
 				<label for="textASDescription"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
 			</td>
@@ -394,6 +456,14 @@
 			</td>
 			<td>
 				<s:select theme="simple" id="selectASDSelectLanguage" list="languageList"></s:select>
+			</td>
+		</tr>
+
+		<tr>
+			<td colspan="2">
+				<input type="button" id="buttonASPIAAddInternetAccessInformation" value="<s:property value="getText('label.ai.accessAndServices.addInternetAccessInformation')" />" onclick="aSPIAAddInternetAccessInformation();" />
+			</td>
+			<td colspan="2">
 			</td>
 		</tr>
 
@@ -411,7 +481,29 @@
 				<s:select theme="simple" id="selectASTSRestaurationLab" list="yesNoList"></s:select>
 			</td>
 			<td colspan="2">
+			</td>
+		</tr>
+
+		<tr id="trASTSDescriptionOfRestaurationLab">
+			<td>
+				<label for="textASTSDescriptionOfRestaurationLab"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
+			</td>
+			<td>
+				<input type="text" id="textASTSDescriptionOfRestaurationLab" />
+			</td>
+			<td class="labelLeft">
+				<label for="selectASTSSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+			</td>
+			<td>
+				<s:select theme="simple" id="selectASTSSelectLanguage" list="languageList"></s:select>
+			</td>
+		</tr>
+
+		<tr>
+			<td colspan="2">
 				<input type="button" id="buttonAddADescriptionOfYourRestaurationLab" value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourRestaurationLab')"/>" onclick="addADescriptionOfYourRestaurationLab();"/>
+			</td>
+			<td colspan="2">
 			</td>
 		</tr>
 
@@ -458,17 +550,37 @@
 
 		<tr>
 			<td id="reproductionServiceLabel">
-				<label for="selectASTSReproductionService"><s:property value="getText('label.ai.accessAndServices.reproductionService')" /></label>
-				<span class="required">*</span>:
+				<label for="selectASTSReproductionService"><s:property value="getText('label.ai.accessAndServices.reproductionService')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
 				<s:select theme="simple" id="selectASTSReproductionService" list="yesNoList"></s:select>
-				<s:fielderror fieldName="yesNotextASTSReproductionService"/>
 			</td>
+			<td colspan="2">
+			</td>
+		<tr>
+
+		<tr id="trASTSDescriptionOfReproductionService">
+			<td>
+				<label for="textASTSDescriptionOfReproductionService"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
+			</td>
+			<td>
+				<input type="text" id="textASTSDescriptionOfReproductionService" />
+			</td>
+			<td class="labelLeft">
+				<label for="selectASTSRSSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+			</td>
+			<td>
+				<s:select theme="simple" id="selectASTSRSSelectLanguage" list="languageList"></s:select>
+			</td>
+		</tr>
+
+		<tr>
 			<td colspan="2">
 				<input type="button" id="buttonASAddADescriptionOfYourReproductionService"value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourReproductionService')"/>" onclick="aSAddADescriptionOfYourReproductionService();" />
 			</td>
-		<tr>
+			<td colspan="2">
+			</td>
+		</tr>
 
 		<tr>
 			<td>
@@ -608,15 +720,7 @@
 			</td>
 		</tr>
 
-		<tr>
-			<td colspan="2">
-				<input type="button" id="buttonASReSeAddExhibition" value="<s:property value="getText('label.ai.accessAndServices.addExhibition')"/>" onclick="aSReSeAddExhibition();" />
-			</td>
-			<td colspan="2">
-			</td>
-		</tr>
-
-		<tr>
+		<tr id="tr2ASReSeExhibition">
 			<td>
 				<label for="textASReSeWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
@@ -631,6 +735,14 @@
 			</td>
 		</tr>
 
+		<tr>
+			<td colspan="2">
+				<input type="button" id="buttonASReSeAddExhibition" value="<s:property value="getText('label.ai.accessAndServices.addExhibition')"/>" onclick="aSReSeAddExhibition();" />
+			</td>
+			<td colspan="2">
+			</td>
+		</tr>
+
 		<tr id="trASReSeToursAndSessions">
 			<td>
 				<label for="textASReSeToursAndSessions" ><s:property value="getText('label.ai.accessAndServices.toursAndSessions')" /></label>
@@ -639,22 +751,14 @@
 				<input type="text" id="textASReSeToursAndSessions" />
 			</td>
 			<td class="labelLeft">
-				<label for="selectASReSeToursAndSessionsSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/></label>
+				<label for="selectASReSeToursAndSessionsSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASReSeToursAndSessionsSelectLanguage" list="languageList"></s:select>
+				<s:select theme="simple" id="selectASReSeToursAndSessionsSelectLanguage" list="languageList">:</s:select>
 			</td>
 		</tr>
 
-		<tr>
-			<td colspan="2">
-				<input type="button" id="buttonASReSeToursAndSessions" value="<s:property value="getText('label.ai.accessAndServices.addToursAndSessions')"/>" onclick="aSReSeToursAndSessions();"/>
-			</td>
-			<td colspan="2">
-			</td>
-		</tr>
-
-		<tr>
+		<tr id="tr2ASReSeToursAndSessions">
 			<td>
 				<label for="textASReSeTSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
@@ -666,6 +770,14 @@
 			</td>
 			<td>
 				<input type="text" id="textASReSeWebpageTSLinkTitle" />
+			</td>
+		</tr>
+
+		<tr>
+			<td colspan="2">
+				<input type="button" id="buttonASReSeToursAndSessions" value="<s:property value="getText('label.ai.accessAndServices.addToursAndSessions')"/>" onclick="aSReSeToursAndSessions();"/>
+			</td>
+			<td colspan="2">
 			</td>
 		</tr>
 
@@ -684,15 +796,7 @@
 			</td>
 		</tr>
 
-		<tr>
-			<td colspan="2">
-				<input type="button" id="buttonASAddServices" value="<s:property value="getText('label.ai.accessAndServices.addSevices')"/>" onclick="aSAddServices();"/>
-			</td>
-			<td colspan="2">
-			</td>
-		</tr>
-
-		<tr>
+		<tr id="tr2ASReSeOtherServices">
 			<td>
 				<label for="textASReSeOSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
@@ -708,13 +812,17 @@
 		</tr>
 
 		<tr>
+			<td colspan="2">
+				<input type="button" id="buttonASAddServices" value="<s:property value="getText('label.ai.accessAndServices.addSevices')"/>" onclick="aSAddServices();"/>
+			</td>
+			<td colspan="2">
+			</td>
+		</tr>
+
+		<tr>
 			<td id="tdButtonsAccessAndServiceTab" colspan="4">
 				<input type="button" id="buttonAccessAndServiceTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
-				<input type="button" id="buttonAccessAndServicelTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" />
-				<script type="text/javascript">
-					//current tab
-					$("table#accessAndServicesTable input#buttonAccessAndServicelTabCheck").click(clickAccessAndServicesAction);
-				</script>
+				<input type="button" id="buttonAccessAndServicelTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" onclick="clickAccessAndServicesAction();"/>
 			</td>
 		</tr>
 	</table>
