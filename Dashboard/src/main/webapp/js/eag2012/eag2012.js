@@ -810,7 +810,7 @@ function yiAddFutherInformationOnExistingFacilities() {
 function addFurtherIds(text1){
 	$("input#buttonAddFutherIds").parent().parent().before("<tr><td colspan=\"2\"></td><td class='labelLeft'><label for=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\"> "+text1+":</label></td><td><input type=\"text\" id=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\" /></td></tr>");
 }
-function addRepositories(text1,text2){
+function addRepositories(text1, text2, text3){
 	var counter = $("table[id^='yourInstitutionTable_']").length;
 	var clone = $("table[id^='yourInstitutionTable_"+counter+"']").clone();
 	clone = "<table id='"+("yourInstitutionTable_"+(counter+1))+"'>"+clone.html()+"</table>";
@@ -853,6 +853,17 @@ function addRepositories(text1,text2){
 	$("table#contactTable_"+(counter+1)+" #textContactTelephoneOfTheInstitution").attr("value",telephone);
 	$("table#contactTable_"+(counter+1)+" #textContactEmailOfTheInstitution").attr("value",email);
 	$("table#contactTable_"+(counter+1)+" #textContactWebOfTheInstitution").attr("value",web);
+
+	// add name of repository to contact tab.
+	$("table#contactTable_"+(counter+1)+" tr#trVisitorsAddressLabel").before("<tr>"+
+			"<td id=\"tdNameOfRepository\">"+
+				"<label for=\"textNameOfRepository\">"+text3+"<span class=\"required\">*</span>:</label>"+
+			"</td>"+
+			"<td>"+
+				"<input type=\"text\" id=\"textNameOfRepository\" />"+
+			"<td colspan=\"2\">"+
+			"</td></tr>");
+
 	//access and services
 	var opening = $("#textYIOpeningTimes").val();
 	var accessPublic = document.getElementById('selectAccessibleToThePublic').selectedIndex;
@@ -903,13 +914,6 @@ function addRepositories(text1,text2){
 	$("a#tab_"+localId).trigger('click');
 	$("a#tab-contact").parent().trigger('click');
 	//fill all button events cloned
-//	//contactTable
-//	var firstId = "table#contactTable";
-//	$(firstId+"_"+(counter+1)+" table#contactTableVisitorsAddress_1").removeAttr("style");
-//	$(firstId+"_"+(counter+1)+" input#buttonAddFurtherTelephoneOfTheInstitution").click($._data($(firstId+"_1 input#buttonAddFurtherTelephoneOfTheInstitution")[0],"events")["click"][0].handler);
-//	$(firstId+"_"+(counter+1)+" input#buttonAddFurtherFaxOfTheInstitution").click($._data($(firstId+"_1 input#buttonAddFurtherFaxOfTheInstitution")[0],"events")["click"][0].handler);
-//	//$(firstId+"_"+(counter+1)+"input#buttonAddFurtherEmailsOfTheInstitution").click($._data($(firstId+"_1 input#buttonAddFurtherEmailsOfTheInstitution")[0],"events")["click"][0].handler);
-//	$(firstId+"_"+(counter+1)+" input#buttonAddFurtherWebsOfTheInstitution").click($._data($(firstId+"_1 input#buttonAddFurtherWebsOfTheInstitution")[0],"events")["click"][0].handler);
 	//accessAndServicesTable
 	firstId = "table#accessAndServicesTable";
 	$(firstId+"_"+(counter+1)+" input#buttonASAddTravellingDirections").click($._data($(firstId+"_1 input#buttonASAddTravellingDirections")[0],"events")["click"][0].handler);

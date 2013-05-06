@@ -3,7 +3,7 @@
 
 <div id="contactTabContent">
 	<table id="contactTable">
-		<tr><td colspan="4"><table id="contactTableVisitorsAddress_1">
+		<tr id="trVisitorsAddressLabel"><td colspan="4"><table id="contactTableVisitorsAddress_1">
 			<tr>
 				<td id="visitorAdressLabel" colspan="4">
 					<s:property value="getText('label.ai.tabs.commons.visitorAddress')" />
