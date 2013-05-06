@@ -275,6 +275,9 @@ a:hover {
 	text-align: center;
 	margin-bottom: 8px;
 	width: 100%;
+	color: red;
+	color: rgb(255, 0, 0);
+    font-style: oblique;
 }
 
 .filterSelect {
