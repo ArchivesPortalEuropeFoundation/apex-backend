@@ -106,17 +106,17 @@ public class Eag2012 {
 	private List<String> termId;
 	private List<String> termLang;
 	private List<String> termValue;
-	private List<List<String>> dateNotAfter;
-	private List<List<String>> dateNotBefore;
-	private List<List<String>> dateStandardDate;
-	private List<List<String>> dateId;
-	private List<List<String>> dateLang;
-	private List<List<String>> dateValue;
-	private List<String> dateRangeId;
+	private List<Map<String,List<String>>> dateNotAfter;
+	private List<Map<String,List<String>>> dateNotBefore;
+	private List<Map<String,List<String>>> dateStandardDate;
+	private List<Map<String,List<String>>> dateId;
+	private List<Map<String,List<String>>> dateLang;
+	private List<Map<String,List<String>>> dateValue;
+	private List<Map<String,List<String>>> dateRangeId;
+	private List<Map<String,List<String>>> dateRangeLang;
 	private String toDateNotAfter;
 	private String toDateNotBefore;
 	private String toDateStandardDate;
-	private List<String> dateRangeLang;
 	private String fromDateNotAfter;
 	private String fromDateNotBefore;
 	private String fromDateStandardDate;
@@ -148,8 +148,8 @@ public class Eag2012 {
 	private List<String> nonpreformValue;
 	private String useDatesId;
 	private String useDatesLang;
-	private List<String> dateSetId;
-	private List<String> dateSetLang;
+	private List<Map<String,List<String>>> dateSetId;
+	private List<Map<String,List<String>>> dateSetLang;
 	private List<List<String>> repositoryNameLang;
 	private List<List<String>> repositoryNameValue;
 	private List<String> repositoryRoleValue;
@@ -195,13 +195,13 @@ public class Eag2012 {
 	private List<List<String>> advancedOrdersValue;
 	private List<String> libraryQuestion;
 	private List<String> internetAccessQuestion;
-	private String reproductionserQuestion;
+	private List<String> reproductionserQuestion;
 	private List<String> microformserQuestion;
 	private List<String> photographserQuestion;
 	private List<String> digitalserQuestion;
 	private List<String> photocopyserQuestion;
 	private String restorationlabQuestion;
-	private List<Map<String,String>> numValue;
+	private List<String> numValue;
 	private List<List<String>> ruleLang;
 	private List<List<String>> ruleValue;
 	private List<Map<String,List<String> >> webpageHref;
@@ -732,8 +732,7 @@ public class Eag2012 {
 		return descriptiveNotePId;
 	}
 
-	public void setDescriptiveNotePId(
-			List<Map<String, List<String>>> descriptiveNotePId) {
+	public void setDescriptiveNotePId(List<Map<String, List<String>>> descriptiveNotePId) {
 		this.descriptiveNotePId = descriptiveNotePId;
 	}
 
@@ -750,8 +749,7 @@ public class Eag2012 {
 		return descriptiveNotePValue;
 	}
 
-	public void setDescriptiveNotePValue(
-			List<Map<String, List<String>>> descriptiveNotePValue) {
+	public void setDescriptiveNotePValue(List<Map<String, List<String>>> descriptiveNotePValue) {
 		this.descriptiveNotePValue = descriptiveNotePValue;
 	}
 
@@ -811,59 +809,59 @@ public class Eag2012 {
 		this.termValue = termValue;
 	}
 
-	public List<List<String>> getDateNotAfter() {
+	public List<Map<String,List<String>>> getDateNotAfter() {
 		return dateNotAfter;
 	}
 
-	public void setDateNotAfter(List<List<String>> dateNotAfter) {
+	public void setDateNotAfter(List<Map<String,List<String>>> dateNotAfter) {
 		this.dateNotAfter = dateNotAfter;
 	}
 
-	public List<List<String>> getDateNotBefore() {
+	public List<Map<String,List<String>>> getDateNotBefore() {
 		return dateNotBefore;
 	}
 
-	public void setDateNotBefore(List<List<String>> dateNotBefore) {
+	public void setDateNotBefore(List<Map<String,List<String>>> dateNotBefore) {
 		this.dateNotBefore = dateNotBefore;
 	}
 
-	public List<List<String>> getDateStandardDate() {
+	public List<Map<String,List<String>>> getDateStandardDate() {
 		return dateStandardDate;
 	}
 
-	public void setDateStandardDate(List<List<String>> dateStandardDate) {
+	public void setDateStandardDate(List<Map<String,List<String>>> dateStandardDate) {
 		this.dateStandardDate = dateStandardDate;
 	}
 
-	public List<List<String>> getDateId() {
+	public List<Map<String,List<String>>> getDateId() {
 		return dateId;
 	}
 
-	public void setDateId(List<List<String>> dateId) {
+	public void setDateId(List<Map<String,List<String>>> dateId) {
 		this.dateId = dateId;
 	}
 
-	public List<List<String>> getDateLang() {
+	public List<Map<String,List<String>>> getDateLang() {
 		return dateLang;
 	}
 
-	public void setDateLang(List<List<String>> dateLang) {
+	public void setDateLang(List<Map<String,List<String>>> dateLang) {
 		this.dateLang = dateLang;
 	}
 
-	public List<List<String>> getDateValue() {
+	public List<Map<String,List<String>>> getDateValue() {
 		return dateValue;
 	}
 
-	public void setDateValue(List<List<String>> dateValue) {
+	public void setDateValue(List<Map<String,List<String>>> dateValue) {
 		this.dateValue = dateValue;
 	}
 
-	public List<String> getDateRangeId() {
+	public List<Map<String,List<String>>> getDateRangeId() {
 		return dateRangeId;
 	}
 
-	public void setDateRangeId(List<String> dateRangeId) {
+	public void setDateRangeId(List<Map<String,List<String>>> dateRangeId) {
 		this.dateRangeId = dateRangeId;
 	}
 
@@ -891,11 +889,11 @@ public class Eag2012 {
 		this.toDateStandardDate = toDateStandardDate;
 	}
 
-	public List<String> getDateRangeLang() {
+	public List<Map<String,List<String>>> getDateRangeLang() {
 		return dateRangeLang;
 	}
 
-	public void setDateRangeLang(List<String> dateRangeLang) {
+	public void setDateRangeLang(List<Map<String,List<String>>> dateRangeLang) {
 		this.dateRangeLang = dateRangeLang;
 	}
 
@@ -1147,19 +1145,19 @@ public class Eag2012 {
 		this.useDatesLang = useDatesLang;
 	}
 
-	public List<String> getDateSetId() {
+	public List<Map<String,List<String>>> getDateSetId() {
 		return dateSetId;
 	}
 
-	public void setDateSetId(List<String> dateSetId) {
+	public void setDateSetId(List<Map<String,List<String>>> dateSetId) {
 		this.dateSetId = dateSetId;
 	}
 
-	public List<String> getDateSetLang() {
+	public List<Map<String,List<String>>> getDateSetLang() {
 		return dateSetLang;
 	}
 
-	public void setDateSetLang(List<String> dateSetLang) {
+	public void setDateSetLang(List<Map<String,List<String>>> dateSetLang) {
 		this.dateSetLang = dateSetLang;
 	}
 
@@ -1523,11 +1521,11 @@ public class Eag2012 {
 		this.internetAccessQuestion = internetAccessQuestion;
 	}
 
-	public String getReproductionserQuestion() {
+	public List<String> getReproductionserQuestion() {
 		return reproductionserQuestion;
 	}
 
-	public void setReproductionserQuestion(String reproductionserQuestion) {
+	public void setReproductionserQuestion(List<String> reproductionserQuestion) {
 		this.reproductionserQuestion = reproductionserQuestion;
 	}
 
@@ -1571,11 +1569,11 @@ public class Eag2012 {
 		this.restorationlabQuestion = restorationlabQuestion;
 	}
 
-	public List<Map<String, String>> getNumValue() {
+	public List<String> getNumValue() {
 		return numValue;
 	}
 
-	public void setNumValue(List<Map<String, String>> numValue) {
+	public void setNumValue(List<String> numValue) {
 		this.numValue = numValue;
 	}
 
