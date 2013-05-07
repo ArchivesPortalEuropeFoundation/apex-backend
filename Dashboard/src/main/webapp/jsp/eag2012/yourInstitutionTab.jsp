@@ -328,17 +328,6 @@
 		</tr>
 
 		<tr>
-			<td>
-				<label for="textYINumberOFWorkingPlaces" ><s:property value="getText('label.ai.yourinstitution.working.places')"/>:</label>
-			</td>
-			<td>
-				<input type="text" id="textYINumberOFWorkingPlaces" />
-			</td>
-			<td colspan="2">
-			</td>
-		</tr>
-
-		<tr>
 			<td id="tdButtonsYourInstitutionTab" colspan="4">
 				<input type="button" id="buttonYourInstitutionTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
 				<input type="button" id="buttonYourInstitutionTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" />

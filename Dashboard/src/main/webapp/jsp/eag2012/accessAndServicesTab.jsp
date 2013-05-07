@@ -745,7 +745,7 @@
 
 		<tr id="trASReSeToursAndSessions">
 			<td>
-				<label for="textASReSeToursAndSessions" ><s:property value="getText('label.ai.accessAndServices.toursAndSessions')" /></label>
+				<label for="textASReSeToursAndSessions" ><s:property value="getText('label.ai.accessAndServices.toursAndSessions')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textASReSeToursAndSessions" />
@@ -754,7 +754,7 @@
 				<label for="selectASReSeToursAndSessionsSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASReSeToursAndSessionsSelectLanguage" list="languageList">:</s:select>
+				<s:select theme="simple" id="selectASReSeToursAndSessionsSelectLanguage" list="languageList"></s:select>
 			</td>
 		</tr>
 
