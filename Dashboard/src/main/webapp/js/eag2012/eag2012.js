@@ -105,7 +105,7 @@ function clickSaveAction(form, text1, error1, error2, error3, error4, error5, er
 	"'control':[" + jsonDataControl + "]," +
 	"'relations':[" + jsonDataRelations + "]}";
 
-	$.post("storeEAG2012.action", { form:JSON.stringify(jsonData) });
+	$.post("storeEAG2012.action", { form:jsonData });
 }
 
 function deleteChecks() {
