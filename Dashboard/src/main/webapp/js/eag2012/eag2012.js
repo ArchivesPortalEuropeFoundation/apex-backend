@@ -1419,17 +1419,8 @@ function aSAddFutherTermOfUse(){
 		tr2HTML += "<tr id=\""+target2+"\">"+$("table#accessAndServicesTable"+currentTab+" tr#tr2ASAddFutherTermOfUse_"+(count)).clone().html();
 	}
 	tr2HTML += "</tr>";
-	$("input#buttonASAddFutherTermOfUse").each(function(){$(this).remove();});
 	$(lastId).after(tr2HTML);
-	//update with new elements
-	//put .click event to only new visible button
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#buttonASAddFutherTermOfUse").click($._data($(lastId+" input#buttonASAddFutherTermOfUse")[0],"events")["click"][0].handler);
-	if(count==1){
-		$("table#accessAndServicesTable"+currentTab+" tr#tr2ASAddFutherTermOfUse input#buttonASAddFutherTermOfUse").remove();
-	}else{
-		$("table#accessAndServicesTable"+currentTab+" tr#tr2ASAddFutherTermOfUse_"+(count)+" input#buttonASAddFutherTermOfUse").remove();
-	}
-	//update rest of new elements
+	//update elements
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" label[for='textASTermOfUse']").attr("for","textASTermOfUse_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" textarea#textASTermOfUse").attr("id","textASTermOfUse_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" label[for='textTravelLink']").attr("for","textTravelLink_"+(count+1));
