@@ -117,11 +117,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	}
 
 	public Map<String,String> getLanguageList() {
-		Locale[] locales = Locale.getAvailableLocales();
+		String[] isoLanguages = Locale.getISOLanguages();
 		Map<String,String> languages = new LinkedHashMap<String,String>();
 		languages.put(WebFormEAG2012Action.OPTION_NONE, "---");
-		for (int i = 0; i < locales.length; i++) {
-			languages.put(locales[i].getCountry(), locales[i].getDisplayLanguage(Locale.ENGLISH));
+		for (String language : isoLanguages) {
+			String languageDescription = new Locale(language).getDisplayLanguage(Locale.ENGLISH);
+			languages.put(language, languageDescription);
 		}
 		return languages;
 	}

@@ -30,17 +30,6 @@
 		</tr>
 
 		<tr>
-			<td id="tdIdentifierOfResponsible">
-				<label for="textIdentifierOfResponsible"><s:property value="getText('label.ai.control.identifierOfResponsible')" /><span class="required">*</span>:</label>
-			</td>
-			<td>
-				<input type="text" id="textIdentifierOfResponsible" value="<s:property value="#identifierOfResponsible" />" />
-			</td>
-			<td colspan="2">
-			</td>
-		</tr>
-
-		<tr>
 			<td id="usedLanguagesLabel" colspan="4">
 				<s:property value="getText('label.ai.control.usedLanguages')" />
 			</td>
