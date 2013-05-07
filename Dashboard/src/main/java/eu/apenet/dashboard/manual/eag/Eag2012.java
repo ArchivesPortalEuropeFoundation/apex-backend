@@ -1887,7 +1887,7 @@ public class Eag2012 {
 	 * @param archivalInstitutionId
 	 * @return String
 	 */
-	private static String generatesISOCode(Integer archivalInstitutionId) {
+	public static String generatesISOCode(Integer archivalInstitutionId) {
 		String otherRepositorId = null;
 		if(archivalInstitutionId>0){
 			int zeroes = 11-archivalInstitutionId.toString().length();

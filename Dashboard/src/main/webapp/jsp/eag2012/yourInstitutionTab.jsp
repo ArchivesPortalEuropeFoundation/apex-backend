@@ -24,7 +24,7 @@
 				<label for="textYIInstitutionCountryCode"><s:property value="getText('label.ai.tabs.commons.countryCode')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYIInstitutionCountryCode" disabled="disabled"/>
+				<input type="text" id="textYIInstitutionCountryCode" value="${countryCode}" disabled="disabled"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -41,7 +41,7 @@
 				<label for="textYIIdUsedInAPE"><s:property value="getText('label.ai.tabs.commons.idUsedInAPE')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYIIdUsedInAPE" disabled="disabled"/>
+				<input type="text" id="textYIIdUsedInAPE" value="${idUsedInAPE}" disabled="disabled"/>
 			</td>
 		</tr>
 
