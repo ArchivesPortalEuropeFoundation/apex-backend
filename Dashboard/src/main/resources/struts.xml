@@ -61,6 +61,12 @@
 		<action name="createeag2012withmenu" class="eu.apenet.dashboard.manual.eag.WebFormEAG2012Action">
 			<result name="success" type="tiles">webFormEAG2012</result>
 		</action>
+		
+		<action name="storeEAG2012" class="eu.apenet.dashboard.manual.eag.WebFormEAG2012Action" method="createEAG2012" >
+			<result name="success" type="redirectAction">
+				<param name="actionName">index</param>
+			</result>
+		</action>
 
 		<action name="createsimpleeag" class="eu.apenet.dashboard.manual.ReadEAGAction"> 
 			<interceptor-ref name="changeLanguageStack"/>
