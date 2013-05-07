@@ -172,7 +172,8 @@ var clickYourInstitutionAction = function(text1){
 		jsonData += "{'"+visitorsAddress[j]+"':{";
 		//input type text
 		$("#"+visitorsAddress[j]+" input[type='text']").each(function(){
-			if(jsonData.charAt(jsonData.length-1)!=':'){
+			if(jsonData.charAt(jsonData.length-1)!=':'
+				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
@@ -224,7 +225,8 @@ var clickYourInstitutionAction = function(text1){
 		jsonData += "{'"+postalAddress[j]+"':{";
 		//input type text
 		$("#"+postalAddress[j]+" input[type='text']").each(function(){
-			if(jsonData.charAt(jsonData.length-1)!=':'){
+			if(jsonData.charAt(jsonData.length-1)!=':'
+				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
@@ -261,7 +263,8 @@ var clickYourInstitutionAction = function(text1){
 
 	//input type text
 	$("#yiTableOthers input[type='text']").each(function(){
-		if(jsonData.charAt(jsonData.length-1)!=':'){
+		if(jsonData.charAt(jsonData.length-1)!=':'
+			&& jsonData.charAt(jsonData.length-1)!='{'){
 			jsonData += ",";
 		}
 		jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
@@ -352,7 +355,8 @@ var clickIdentityAction = function(text1){
 		jsonData += "{'"+institutionNames[j]+"':{";
 		//input type text
 		$("#"+institutionNames[j]+" input[type='text']").each(function(){
-			if(jsonData.charAt(jsonData.length-1)!=':'){
+			if(jsonData.charAt(jsonData.length-1)!=':'
+				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
@@ -386,7 +390,8 @@ var clickIdentityAction = function(text1){
 		jsonData += "{'"+parallelNames[j]+"':{";
 		//input type text
 		$("#"+parallelNames[j]+" input[type='text']").each(function(){
-			if(jsonData.charAt(jsonData.length-1)!=':'){
+			if(jsonData.charAt(jsonData.length-1)!=':'
+				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
@@ -420,7 +425,8 @@ var clickIdentityAction = function(text1){
 		jsonData += "{'"+formerlyNames[j]+"':{";
 		//input type text
 		$("#"+formerlyNames[j]+" input[type='text']").each(function(){
-			if(jsonData.charAt(jsonData.length-1)!=':'){
+			if(jsonData.charAt(jsonData.length-1)!=':'
+				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
@@ -514,7 +520,8 @@ function checkContactTab(currentTab, text1) {
 		jsonData += "{'"+visitorsAddress[j]+"':{";
 		//input type text
 		$("table#contactTable" + currentTab + " table#"+visitorsAddress[j]+" input[type='text']").each(function(){
-			if(jsonData.charAt(jsonData.length-1)!=':'){
+			if(jsonData.charAt(jsonData.length-1)!=':'
+				&& jsonData.charAt(jsonData.length-1)!='{'){
 				if(jsonData.substring(jsonData.length-1)!=','){
 					jsonData += ",";
 				}
@@ -556,7 +563,8 @@ function checkContactTab(currentTab, text1) {
 		jsonData += "{'"+postalAddress[j]+"':{";
 		//input type text
 		$("table#contactTable" + currentTab + " table#"+postalAddress[j]+" input[type='text']").each(function(){
-			if(jsonData.charAt(jsonData.length-1)!=':'){
+			if(jsonData.charAt(jsonData.length-1)!=':'
+				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
@@ -857,10 +865,11 @@ var clickRelationsAction = function(text1){
 		if(jsonData.substring(jsonData.length-1)!='['){
 			jsonData += ",";
 		}
-		jsonData += "{'"+resourceRelations[j]+"':";
+		jsonData += "{'"+resourceRelations[j]+"':{";
 		//input type text
 		$("#"+resourceRelations[j]+" input[type='text']").each(function(){
-			if(jsonData.charAt(jsonData.length-1)!=':'){
+			if(jsonData.charAt(jsonData.length-1)!=':'
+				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
@@ -872,7 +881,7 @@ var clickRelationsAction = function(text1){
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 		});
-		jsonData += "}";
+		jsonData += "}}";
 	}
 	
 	jsonData += "]";
@@ -891,10 +900,11 @@ var clickRelationsAction = function(text1){
 		if(jsonData.substring(jsonData.length-1)!='['){
 			jsonData += ",";
 		}
-		jsonData += "{'"+institutionRelations[j]+"':";
+		jsonData += "{'"+institutionRelations[j]+"':{";
 		//input type text
 		$("#"+institutionRelations[j]+" input[type='text']").each(function(){
-			if(jsonData.charAt(jsonData.length-1)!=':'){
+			if(jsonData.charAt(jsonData.length-1)!=':'
+				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
@@ -906,7 +916,7 @@ var clickRelationsAction = function(text1){
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 		});
-		jsonData += "}";
+		jsonData += "}}";
 	}
 	
 	jsonData += "]}";
