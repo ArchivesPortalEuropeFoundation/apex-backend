@@ -216,6 +216,7 @@ width:65%;
 p.fieldRequired {
 	color: red;
 	padding-top:5px;
+	font-weight: bold;
 }
 
 #coordinatesLabel{

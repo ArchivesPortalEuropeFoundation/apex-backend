@@ -71,7 +71,7 @@
 			<td colspan="3">
 			</td>
 			<td>
-				<input type="button" id="buttonAddRepositories" value="<s:property value="getText('label.ai.yourinstitution.addRepositories')" />" onclick="addRepositories('<s:property value="getText('label.ai.yourinstitution.institution')" />','<s:property value="getText('label.ai.yourinstitution.repository')" />','<s:property value="getText('label.ai.contact.nameOfRepository')" />');" />
+				<input type="button" id="buttonAddRepositories" value="<s:property value="getText('label.ai.yourinstitution.addRepositories')" />" onclick="addRepositories('<s:property value="getText('label.ai.yourinstitution.institution')" />','<s:property value="getText('label.ai.yourinstitution.repository')" />','<s:property value="getText('label.ai.contact.nameOfRepository')" />','<s:property value="getText('label.ai.contact.roleOfRepository')" />','<s:property value="getText('label.ai.tabs.commons.option.role.headquarters')" />','<s:property value="getText('label.ai.tabs.commons.option.role.branch')" />','<s:property value="getText('label.ai.tabs.commons.option.role.interimArchive')" />');" />
 			</td>
 		</tr>
 		<tr>
@@ -330,11 +330,7 @@
 		<tr>
 			<td id="tdButtonsYourInstitutionTab" colspan="4">
 				<input type="button" id="buttonYourInstitutionTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
-				<input type="button" id="buttonYourInstitutionTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" />
-				<script type="text/javascript">
-					//current tab
-					$("table#yiTableOthers input#buttonYourInstitutionTabCheck").click(clickYourInstitutionAction);
-				</script>
+				<input type="button" id="buttonYourInstitutionTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" onclick="clickYourInstitutionAction('<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />');"/>
 			</td>
 		</tr>
 	</table>

@@ -200,11 +200,7 @@
 		<tr>
 			<td id="tdButtonsContactTab" colspan="4">
 				<input type="button" id="buttonIdentityTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
-				<input type="button" id="buttonIdentityTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" />
-				<script type="text/javascript">
-					//current tab
-					$("table#identitySelectTypeOfTheInstitution input#buttonIdentityTabCheck").click(clickIdentityAction);
-				</script>
+				<input type="button" id="buttonIdentityTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" onclick="clickIdentityAction('<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />');" />
 			</td>
 		</tr>
 	</table>

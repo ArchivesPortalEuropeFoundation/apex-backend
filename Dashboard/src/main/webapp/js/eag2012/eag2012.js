@@ -46,22 +46,73 @@ function hideAndShow(idPrefix,shown){
 	}
 }
 
-function clickSaveAction(form) {
-//	var jsonData =  "{'yourInstitution':[" + clickYourInstitutionAction() + "]," +
-//	"'identity':[" + clickIdentityAction() + "]," +
-//	"'contact':[" + checkAllContactTabs() + "]," +
-//	"'accessAndServices':[" + clickAccessAndServicesAction() + "]," +
-//	"'description':[" + checkAllDescriptionTabs() + "]," +
-//	"'control':[" + clickControlAction() + "]," +
-//	"'relations':[" + clickRelationsAction() + "]}";
-//alert(jsonData);
+function clickSaveAction(form, text1, error1, error2, error3, error4, error5, error6, error7) {
+	// Check fill mandatory fields in tab "your institution".
+	var jsonDataYourInstitution =  clickYourInstitutionAction(text1);
+	if (!jsonDataYourInstitution) {
+		alert(error1);
+		return;
+	}
+
+	// Check fill mandatory fields in tab "identity".
+	var jsonDataIdentity =  clickIdentityAction(text1);
+	if (!jsonDataIdentity) {
+		alert(error2);
+		return;
+	}
+
+	// Check fill mandatory fields in tab "contact".
+	var jsonDataContact =  checkAllContactTabs(text1);
+	if (!jsonDataContact) {
+		alert(error3);
+		return;
+	}
+
+	// Check fill mandatory fields in tab "access and services".
+	var jsonDataAccessAndServices =  checkAllAccessAndServicesTabs(text1);
+	if (!jsonDataAccessAndServices) {
+		alert(error4);
+		return;
+	}
+
+	// Check fill mandatory fields in tab "description".
+	var jsonDataDescription =  checkAllDescriptionTabs(text1);
+	if (!jsonDataDescription) {
+		alert(error5);
+		return;
+	}
+
+	// Check fill mandatory fields in tab "control".
+	var jsonDataControl =  clickControlAction(text1);
+	if (!jsonDataControl) {
+		alert(error6);
+		return;
+	}
+
+	// Check fill mandatory fields in tab "relations".
+	var jsonDataRelations =  clickRelationsAction(text1);
+	if (!jsonDataRelations) {
+		alert(error7);
+		return;
+	}
+
+	// Create final json object.
+	var jsonData =  "{'yourInstitution':[" + jsonDataYourInstitution + "]," +
+	"'identity':[" + jsonDataIdentity + "]," +
+	"'contact':[" + jsonDataContact + "]," +
+	"'accessAndServices':[" + jsonDataAccessAndServices + "]," +
+	"'description':[" + jsonDataDescription + "]," +
+	"'control':[" + jsonDataControl + "]," +
+	"'relations':[" + jsonDataRelations + "]}";
+
+	$.post("storeEAG2012.action", { form:JSON.stringify(jsonData) });
 }
 
 function deleteChecks() {
 	$('.fieldRequired').remove();
 }
 
-var clickYourInstitutionAction = function(){
+var clickYourInstitutionAction = function(text1){
 	// Delete old checks
 	deleteChecks();
 
@@ -237,7 +288,7 @@ var clickYourInstitutionAction = function(){
 		var element = document.getElementById(yiMandatoryElements[i].toString());
 		var subelement = document.createElement('p');
 		
-		subelement.appendChild(document.createTextNode('Field required'));
+		subelement.appendChild(document.createTextNode(text1));
 		subelement.id = yiMandatoryElements[i].toString() + '_required';
 		subelement.className="fieldRequired";
 		element.parentNode.insertBefore(subelement, element.nextSibling);
@@ -249,7 +300,7 @@ var clickYourInstitutionAction = function(){
 		for (var j = 0; j < array.length; j++) {
 			var subelement = document.createElement('p');
 
-			subelement.appendChild(document.createTextNode('Field required'));
+			subelement.appendChild(document.createTextNode(text1));
 			subelement.id = array[j].toString() + '_required';
 			subelement.className="fieldRequired";
 
@@ -264,7 +315,7 @@ var clickYourInstitutionAction = function(){
 	return jsonData;
 };
 
-var clickIdentityAction = function(){
+var clickIdentityAction = function(text1){
 	var jsonData = "{";
 	
 	// Table identityTable.
@@ -388,13 +439,13 @@ var clickIdentityAction = function(){
 	return jsonData;
 };
 
-var clickContactAction = function(){
+var clickContactAction = function(text1){
 	var currentTab = getCurrentTab();
 
-	return checkContactTab(currentTab);
+	return checkContactTab(currentTab, text1);
 };
 
-function checkAllContactTabs() {
+function checkAllContactTabs(text1) {
 	var counter = $("table[id^='contactTable_']").length;
 	var jsonData = "";
 
@@ -405,7 +456,7 @@ function checkAllContactTabs() {
 
 		jsonData += "{'contactTable_" + i + "':[";
 
-		jsonData += checkContactTab("_" + i);
+		jsonData += checkContactTab("_" + i, text1);
 		
 		jsonData += "]}";
 	}
@@ -413,7 +464,7 @@ function checkAllContactTabs() {
 	return jsonData;
 };
 
-function checkContactTab(currentTab) {
+function checkContactTab(currentTab, text1) {
 	var jsonData = "{";
 	//content from texts
 	$("table#contactTable" + currentTab + " input[type='text']").each(function(){
@@ -525,13 +576,13 @@ function checkContactTab(currentTab) {
 	return jsonData;
 };
 
-var clickAccessAndServicesAction = function(){
+var clickAccessAndServicesAction = function(text1){
 	var currentTab = getCurrentTab();
 
-	return checkAccessAndServicesTab(currentTab);
+	return checkAccessAndServicesTab(currentTab, text1);
 };
 
-function checkAllAccessAndServicesTabs() {
+function checkAllAccessAndServicesTabs(text1) {
 	var counter = $("table[id^='accessAndServicesTable_']").length;
 	var jsonData = "";
 
@@ -542,7 +593,7 @@ function checkAllAccessAndServicesTabs() {
 
 		jsonData += "{'accessAndServicesTable_" + i + "':[";
 
-		jsonData += checkAccessAndServicesTab("_" + i);
+		jsonData += checkAccessAndServicesTab("_" + i, text1);
 		
 		jsonData += "]}";
 	}
@@ -551,7 +602,7 @@ function checkAllAccessAndServicesTabs() {
 };
 
 
-function checkAccessAndServicesTab(currentTab) {
+function checkAccessAndServicesTab(currentTab, text1) {
 	// Delete old checks
 	deleteChecks();
 
@@ -643,7 +694,7 @@ function checkAccessAndServicesTab(currentTab) {
 		var element = document.getElementById(aasMandatoryElements[i].toString());
 		var subelement = document.createElement('p');
 		
-		subelement.appendChild(document.createTextNode('Field required'));
+		subelement.appendChild(document.createTextNode(text1));
 		subelement.id = aasMandatoryElements[i].toString() + '_required';
 		subelement.className="fieldRequired";
 		element.parentNode.insertBefore(subelement, element.nextSibling);
@@ -656,13 +707,13 @@ function checkAccessAndServicesTab(currentTab) {
 	return jsonData;
 };
 
-var clickDescriptionAction = function(){
+var clickDescriptionAction = function(text1){
 	var currentTab = getCurrentTab();
 
-	return checkDescriptionTab(currentTab);
+	return checkDescriptionTab(currentTab, text1);
 };
 
-function checkAllDescriptionTabs() {
+function checkAllDescriptionTabs(text1) {
 	var counter = $("table[id^='descriptionTable_']").length;
 	var jsonData = "";
 
@@ -673,7 +724,7 @@ function checkAllDescriptionTabs() {
 
 		jsonData += "{'descriptionTable_" + i + "':[";
 
-		jsonData += checkDescriptionTab("_" + i);
+		jsonData += checkDescriptionTab("_" + i, text1);
 		
 		jsonData += "]}";
 	}
@@ -681,7 +732,7 @@ function checkAllDescriptionTabs() {
 	return jsonData;
 };
 
-function checkDescriptionTab(currentTab) {
+function checkDescriptionTab(currentTab, text1) {
 	var jsonData = "{";
 	//content from textareas
 	$("table#descriptionTable" + currentTab + " textarea").each(function(){
@@ -730,7 +781,7 @@ function checkDescriptionTab(currentTab) {
 	return jsonData;
 }
 
-var clickControlAction = function(){
+var clickControlAction = function(text1){
 	// Delete old checks
 	deleteChecks();
 
@@ -776,7 +827,7 @@ var clickControlAction = function(){
 		var element = document.getElementById(controlMandatoryElements[i].toString());
 		var subelement = document.createElement('p');
 		
-		subelement.appendChild(document.createTextNode('Field required'));
+		subelement.appendChild(document.createTextNode(text1));
 		subelement.id = controlMandatoryElements[i].toString() + '_required';
 		subelement.className="fieldRequired";
 		element.parentNode.insertBefore(subelement, element.nextSibling);
@@ -789,7 +840,7 @@ var clickControlAction = function(){
 	return jsonData;
 };
 
-var clickRelationsAction = function(){
+var clickRelationsAction = function(text1){
 	var jsonData = "{";
 
 	// Resource relations.
@@ -899,7 +950,7 @@ function yiAddFutherInformationOnExistingFacilities() {
 function addFurtherIds(text1){
 	$("input#buttonAddFutherIds").parent().parent().before("<tr><td colspan=\"2\"></td><td class='labelLeft'><label for=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\"> "+text1+":</label></td><td><input type=\"text\" id=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\" /></td></tr>");
 }
-function addRepositories(text1, text2, text3){
+function addRepositories(text1, text2, text3, text4, text5, text6, text7){
 	var counter = $("table[id^='yourInstitutionTable_']").length;
 	var clone = $("table[id^='yourInstitutionTable_"+counter+"']").clone();
 	clone = "<table id='"+("yourInstitutionTable_"+(counter+1))+"'>"+clone.html()+"</table>";
@@ -950,7 +1001,16 @@ function addRepositories(text1, text2, text3){
 			"</td>"+
 			"<td>"+
 				"<input type=\"text\" id=\"textNameOfRepository\" />"+
-			"<td colspan=\"2\">"+
+			"<td>"+
+				"<label for=\"selectRoleOfRepository\">"+text4+":</label>"+
+			"</td>"+
+			"<td>"+
+				"<select id=\"selectRoleOfRepository\">"+
+					"<option value=\"none\">---</option>"+
+					"<option value=\"headquarters\">"+text5+"</option>"+
+					"<option value=\"branch\">"+text6+"</option>"+
+					"<option value=\"interim\">"+text7+"</option>"+
+				"</select>"+
 			"</td></tr>");
 
 	//access and services
@@ -1643,40 +1703,7 @@ function aSAddServices(){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textASReSeOSWebpage").attr("id","textASReSeOSWebpage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" label[for='textASReSeWebpageOSLinkTitle']").attr("for","textASReSeWebpageOSLinkTitle_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textASReSeWebpageOSLinkTitle").attr("id","textASReSeWebpageOSLinkTitle_"+(count+1));
-
-//	var currentTab = getCurrentTab();
-//	var count = $("table#accessAndServicesTable"+currentTab+" tr[id^='trASReSeOtherServices']").length;
-//	
-//	var newId = "trASReSeOtherServices_"+(count+1);
-//	var trHtml = "<tr id=\""+newId+"\">"+$("table#accessAndServicesTable tr[id='trASReSeOtherServices']").clone().html()+"</tr>";
-//	var lastId = "table#accessAndServicesTable"+currentTab+" tr#trASReSeOtherServices";
-//	if(count>1){
-//		lastId+="_"+(count);
-//	}
-//	$(lastId).after(trHtml);
-//	//update last content
-//	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='textASReSeOtherServices']").attr("for","textASReSeOtherServices_"+(count+1));
-//	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input#textASReSeOtherServices").attr("id","textASReSeOtherServices_"+(count+1));
-//	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='selectASReSeOtherServicesSelectLanguage']").attr("for","selectASReSeOtherServicesSelectLanguage_"+(count+1));
-//	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASReSeOtherServicesSelectLanguage").attr("id","selectASReSeOtherServicesSelectLanguage_"+(count+1));
 }
-//function aSReSeAddExhibition(){
-//	var currentTab = getCurrentTab();
-//	var count = $("table#accessAndServicesTable"+currentTab+" tr[id^='trASReSeExhibition']").length;
-//	
-//	var newId = "trASReSeExhibition_"+(count+1);
-//	var trHtml = "<tr id=\""+newId+"\">"+$("table#accessAndServicesTable"+currentTab+" tr[id='trASReSeExhibition']").clone().html()+"</tr>";
-//	var lastId = "table#accessAndServicesTable"+currentTab+" tr#trASReSeExhibition";
-//	if(count>1){
-//		lastId+="_"+(count);
-//	}
-//	$(lastId).after(trHtml);
-//	//update last content
-//	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='textASReSeExhibition']").attr("for","textASReSeExhibition_"+(count+1));
-//	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input#textASReSeExhibition").attr("id","textASReSeExhibition_"+(count+1));
-//	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='selectASReSeExhibitionSelectLanguage']").attr("for","selectASReSeExhibitionSelectLanguage_"+(count+1));
-//	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASReSeExhibitionSelectLanguage").attr("id","selectASReSeExhibitionSelectLanguage_"+(count+1));
-//}
 
 function descriptionAddHistoryDescription(){
 	var currentTab = getCurrentTab();

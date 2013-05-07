@@ -251,7 +251,7 @@
 		<tr>
 			<td id="tdButtonsDescriptionTab" colspan="4">
 				<input type="button" id="buttonDescriptionTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
-				<input type="button" id="buttonDescriptionTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" onclick="clickDescriptionAction();"/>
+				<input type="button" id="buttonDescriptionTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" onclick="clickDescriptionAction('<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />');"/>
 			</td>
 		</tr>
 	</table>

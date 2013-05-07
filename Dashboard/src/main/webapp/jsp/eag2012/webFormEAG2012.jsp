@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/eag2012/eag2012.css" type="text/css"/>
 
 <div id="eag2012Div">
-	<form id="webformeag2012" name="webformeag2012" method="POST" action="createeag2012withmenu.action">
+	<form id="webformeag2012" name="webformeag2012" method="POST" action="storeEAG2012.action">
 		<div id="eag2012Tabs" class="corner-all helper-clearfix">
 			<a id="repositories"></a>
 			<div id="eag2012tabs_institution" style="float:left;width:100%;">
@@ -80,7 +80,7 @@
 			</div>
 		</div>
 		<table><tr><td>
-		 <input type="button" id="buttonSaveEAG2012" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" onclick="clickSaveAction(this.form);" />
+			<input type="button" id="buttonSaveEAG2012" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" onclick="clickSaveAction(this.form, '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.errorYourInstitution')" />', '<s:property value="getText('label.ai.tabs.commons.errorIdentity')" />', '<s:property value="getText('label.ai.tabs.commons.errorContact')" />', '<s:property value="getText('label.ai.tabs.commons.errorAccessAndServices')" />', '<s:property value="getText('label.ai.tabs.commons.errorDesription')" />', '<s:property value="getText('label.ai.tabs.commons.errorControl')" />', '<s:property value="getText('label.ai.tabs.commons.errorRelations')" />');" />
 	    </td></tr></table>
 	
 	</form>

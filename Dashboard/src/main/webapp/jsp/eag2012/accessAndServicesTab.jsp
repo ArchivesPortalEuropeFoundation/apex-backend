@@ -822,7 +822,7 @@
 		<tr>
 			<td id="tdButtonsAccessAndServiceTab" colspan="4">
 				<input type="button" id="buttonAccessAndServiceTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
-				<input type="button" id="buttonAccessAndServicelTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" onclick="clickAccessAndServicesAction();"/>
+				<input type="button" id="buttonAccessAndServicelTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" onclick="clickAccessAndServicesAction('<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />');"/>
 			</td>
 		</tr>
 	</table>

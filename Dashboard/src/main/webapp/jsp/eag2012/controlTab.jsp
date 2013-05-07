@@ -106,11 +106,7 @@
 		<tr>
 			<td id="tdButtonsDescriptionTab" colspan="4">
 				<input type="button" id="buttonControlTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
-				<input type="button" id="buttonControlTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" />
-				<script type="text/javascript">
-					//current tab
-					$("table#controlTable input#buttonControlTabCheck").click(clickControlAction);
-				</script>
+				<input type="button" id="buttonControlTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" onclick="clickControlAction('<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />');" />
 			</td>
 		</tr>
 

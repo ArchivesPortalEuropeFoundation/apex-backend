@@ -126,11 +126,7 @@
 
 		<tr>
 			<td id="tdButtonsDescriptionTab" colspan="4">
-				<input type="button" id="buttonRelationsTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" />
-				<script type="text/javascript">
-					//current tab
-					$("table#relationsOtherTable input#buttonRelationsTabCheck").click(clickRelationsAction);
-				</script>
+				<input type="button" id="buttonRelationsTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" onclick="clickRelationsAction('<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />');"/>
 			</td>
 		</tr>
 
