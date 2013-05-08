@@ -1,7 +1,6 @@
 package eu.apenet.dashboard.manual.eag;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,15 +26,12 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.utils.ChangeControl;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
-import eu.archivesportaleurope.commons.config.ApeConfig;
 /**
  * Creates and manages all building proccess related to EAG2012 into Dashboard 
  */
@@ -52,6 +48,8 @@ public class Eag2012Creator {
     private static final String EAG_XMLNS = "http://www.archivesportaleurope.net/profiles/APEnet_EAG/";
 	private static final String XML_AUDIENCE = "external";
 	private static final String XML_BASE = "http://www.archivesportaleurope.net/";
+	private static final String AGENT_TYPE_MACHINE = "machine";
+	private static final String AGENT_TYPE_HUMAN = "human";
     private Eag2012 eag2012;
 	private String storagePath;
 	private boolean isNew;
@@ -485,7 +483,7 @@ public class Eag2012Creator {
         childrenControl.add(buildRecordId(this.eag2012.getRecordIdId(),this.eag2012.getRecordIdValue())); //mandatory, no-repeatable
         
         for(int i=0;this.eag2012.getOtherRecordIdValue()!=null && i<this.eag2012.getOtherRecordIdValue().size(); i++){ //no mandatory, repeatable
-        	childrenControl.add(buildOtherRecordId(this.eag2012.getOtherRecordIdId().get(i), this.eag2012.getOtherRecordIdValue().get(i)));
+        	childrenControl.add(buildOtherRecordId((this.eag2012.getOtherRecordIdId()!=null && i<this.eag2012.getOtherRecordIdId().size())?this.eag2012.getOtherRecordIdId().get(i):null, this.eag2012.getOtherRecordIdValue().get(i)));
         }
         
         childrenControl.add(buildMaintenanceAgency(0,TAB_CONTROL)); //mandatory, no-repeatable
@@ -651,9 +649,11 @@ public class Eag2012Creator {
         childControl.put("nodeValue",null);
         
         ArrayList<HashMap<String, Object>> childControlChildren = new ArrayList<HashMap<String, Object>>();
-        for(int i=0; i<this.eag2012.getMaintenanceEventLang().size();i++){ //mandatory, repeatable
-        	childControlChildren.add(buildMaintenanceEvent(this.eag2012.getMaintenanceEventId().get(i),this.eag2012.getMaintenanceEventLang().get(i)));
-        }
+        //for(int i=0;this.eag2012.getMaintenanceEventLang()!=null && i<this.eag2012.getMaintenanceEventLang().size();i++){ //mandatory, repeatable
+        //for(int i=0;(this.eag2012.getAgentValue()!=null && this.eag2012.getAgentValue())|| this.eag2012.getAgentTypeValue() || this.eag2012.getEventDateTimeValue() || this.eag2012.getEventTypeValue();i++){ //mandatory, repeatable (why this tag is repeatable if the target agent tag is unique?)
+        	//childControlChildren.add(buildMaintenanceEvent((this.eag2012.getMaintenanceEventId()!=null && this.eag2012.getMaintenanceEventId().size()>i)?this.eag2012.getMaintenanceEventId().get(i):null,(this.eag2012.getMaintenanceEventLang()!=null && this.eag2012.getMaintenanceEventLang().size()>i)?this.eag2012.getMaintenanceEventLang().get(i):null));
+        	childControlChildren.add(buildMaintenanceEvent(null,null));
+        //}
         childControl.put("children", childControlChildren);
         return childControl;
 	}
@@ -672,7 +672,7 @@ public class Eag2012Creator {
 	        
 	        childControl1Children.add(buildAgent(this.eag2012.getAgentId(),this.eag2012.getAgentLang(),this.eag2012.getAgentValue())); //mandatory, non-repeatable
 	       
-	        childControl1Children.add(buildAgentType(this.eag2012.getAgentTypeId(),this.eag2012.getAgentTypeValue())); //mandatory, non-repeatable
+	        childControl1Children.add(buildAgentType(this.eag2012.getAgentTypeId(),this.eag2012.getAgentValue())); //mandatory, non-repeatable
 	       
 	        childControl1Children.add(buildEventDateTime(this.eag2012.getEventDateTimeStandardDateTime(),this.eag2012.getEventDateTimeLang(),this.eag2012.getEventDateTimeId(),this.eag2012.getEventDateTimeValue())); //mandatory, non-repeatable
 	       
@@ -717,7 +717,7 @@ public class Eag2012Creator {
 	        HashMap<String, String>  childControl2Attributes = new HashMap<String, String>();
 	        childControl2Attributes.put("xml:id", agentTypeId);
 	        childControl2.put("attributes", childControl2Attributes);
-	        childControl2.put("nodeValue", agentTypeValue);
+	        childControl2.put("nodeValue", (agentTypeValue==null || agentTypeValue.isEmpty())?AGENT_TYPE_MACHINE:AGENT_TYPE_HUMAN);
 	        childControl2.put("children", null);
 		
 		return childControl2;
@@ -847,7 +847,7 @@ public class Eag2012Creator {
         childControl.put("nodeValue", null);
         ArrayList<HashMap<String, Object>> childControlChildren = new ArrayList<HashMap<String,Object>>();
         
-        for(int i=0;i<this.eag2012.getSourceLastDateTimeVerified().size();i++){ //mandatory, repeatable
+        for(int i=0;this.eag2012.getSourceLastDateTimeVerified()!=null && i<this.eag2012.getSourceLastDateTimeVerified().size();i++){ //mandatory, repeatable
         	childControlChildren.add(buildSource(this.eag2012.getSourceLastDateTimeVerified().get(i),this.eag2012.getSourceId().get(i),this.eag2012.getSourceHref().get(i)));
         }
         childControl.put("children",childControlChildren);
@@ -1045,8 +1045,12 @@ public class Eag2012Creator {
 		HashMap<String, Object> childControl1 = new HashMap<String, Object>();
         childControl1.put("nodeName", "descriptiveNote");
         HashMap<String, String> childControl1Attributes = new HashMap<String, String>();
-        childControl1Attributes.put("xml:lang", this.eag2012.getDescriptiveNoteLang().get(indexRepo).get(tabKey));
-        childControl1Attributes.put("xml:id",this.eag2012.getDescriptiveNoteId().get(indexRepo).get(tabKey));
+        if(this.eag2012.getDescriptiveNoteLang()!=null){
+        	childControl1Attributes.put("xml:lang", this.eag2012.getDescriptiveNoteLang().get(indexRepo).get(tabKey));
+        }
+        if(this.eag2012.getDescriptiveNoteId()!=null){
+        	childControl1Attributes.put("xml:id",this.eag2012.getDescriptiveNoteId().get(indexRepo).get(tabKey));
+        }
         childControl1.put("attributes",childControl1Attributes);
         childControl1.put("nodeValue", null);
         List<HashMap<String, Object>> childControl1Children = new ArrayList<HashMap<String, Object>>();
@@ -1283,7 +1287,7 @@ public class Eag2012Creator {
 		
 		ArrayList<HashMap<String, Object>> childArchguide1Children = new ArrayList<HashMap<String, Object>>();
         
-        for(int indexRepo=0;indexRepo<this.eag2012.getLocationLocalType().size();indexRepo++){ //location-localtype is mandatory so there are the same number of repositories and localtypes  
+        for(int indexRepo=0;this.eag2012.getLocationLocalType()!=null && indexRepo<this.eag2012.getLocationLocalType().size();indexRepo++){ //location-localtype is mandatory so there are the same number of repositories and localtypes  
         	childArchguide1Children.add(buildRepository(indexRepo)); //no mandatory repeatable
         }
         childArchguide1.put("children",childArchguide1Children);
