@@ -97,13 +97,13 @@ function clickSaveAction(form, text1, error1, error2, error3, error4, error5, er
 	}
 
 	// Create final json object.
-	var jsonData =  "{'yourInstitution':[" + jsonDataYourInstitution + "]," +
-	"'identity':[" + jsonDataIdentity + "]," +
+	var jsonData =  "{'yourInstitution':" + jsonDataYourInstitution + "," +
+	"'identity':" + jsonDataIdentity + "," +
 	"'contact':[" + jsonDataContact + "]," +
 	"'accessAndServices':[" + jsonDataAccessAndServices + "]," +
 	"'description':[" + jsonDataDescription + "]," +
-	"'control':[" + jsonDataControl + "]," +
-	"'relations':[" + jsonDataRelations + "]}";
+	"'control':" + jsonDataControl + "," +
+	"'relations':" + jsonDataRelations + "}";
 
 	$.post("storeEAG2012.action", { form:jsonData });
 }
