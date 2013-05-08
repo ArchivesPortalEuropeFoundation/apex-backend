@@ -126,10 +126,8 @@ background: #e9f3fa;
 }
 
 #eag2012Div input{
-	/*background-color: #00A0DF;*/
     color: black;
-   /* font-weight: bold;*/
-	
+  	
 }
 #eag2012Div .longButton{
 	float: left;
@@ -211,6 +209,7 @@ width:65%;
 }
 .eag2012disabled{
 	background:#a4afb6;
+	cursor:default;
 	
 }
 p.fieldRequired {

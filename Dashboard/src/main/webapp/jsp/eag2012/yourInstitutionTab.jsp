@@ -84,7 +84,7 @@
 			<td class="labelLeft">
 				<label for="selectYIPNOTISelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
-			<td class="labelLeftselect">
+			<td>
 				<s:select theme="simple" id="selectYIPNOTISelectLanguage" list="languageList"></s:select>
 			</td>
 		</tr>
@@ -189,7 +189,7 @@
 								'<td>'+
 									'<input type="text" id="textYIPAStreet" />'+
 								'</td>'+
-								'<td id="yiPostalAddressLanguage">'+
+								'<td id="yiPostalAddressLanguage" class="labelLeft">'+
 									'<label for="selectYIPASelectLanguage">'+property2+'<span class="required">*</span>:</label>'+
 								'</td>'+
 								'<td>'+select+

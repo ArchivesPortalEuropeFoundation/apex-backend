@@ -583,6 +583,82 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		}
 		return eag2012;
 	}
+	
+	private Eag2012 parseContactJsonObjToEag2012(Eag2012 eag2012,JSONObject jsonObj) throws JSONException {
+		JSONObject contact = new JSONObject(jsonObj.get("contact"));
+		if(contact!=null){
+			
+			//Contact visitorsAddress
+			
+			JSONObject visitorAddress = new JSONObject(jsonObj.get("visitorsAddress"));
+			if(visitorAddress!=null){
+				List<String> listStreet = new ArrayList<String>();
+				List<String> listCities = new ArrayList<String>();
+				List<String> listDistrict = new ArrayList<String>();
+				List<String> listLocalAuthority = new ArrayList<String>();
+				List<String> listAutonomus = new ArrayList<String>();
+				List<String> listCountries = new ArrayList<String>();
+				List<String> listLatitudes = new ArrayList<String>();
+				List<String> listLongitudes = new ArrayList<String>();
+				List<String> listStreetLanguage = new ArrayList<String>();
+				int i=0;
+				if(visitorAddress.getJSONObject("contactTableVisitorsAddress_"+i)!=null){
+			    	
+			      do{
+			    	  JSONObject visitorAddressTable = visitorAddress.getJSONObject("contactTableVisitorsAddress_"+i);
+						listStreet.add(visitorAddressTable.getString("textContactStreetOfTheInstitution"));
+						listStreetLanguage.add(visitorAddressTable.getString("selectLanguageVisitorAddress")); 
+			            listCities.add(visitorAddressTable.getString("textContactCityOfTheInstitution"));
+			            listDistrict.add(visitorAddressTable.getString("textContactDistrictOfTheInstitution"));
+			            listLocalAuthority.add(visitorAddressTable.getString("textContactCountyOfTheInstitution"));
+			            listAutonomus.add(visitorAddressTable.getString("textContactRegionOfTheInstitution"));
+			            listCountries.add(visitorAddressTable.getString("textContactCountryOfTheInstitution"));
+			            listLatitudes.add(visitorAddressTable.getString("textContactLatitudeOfTheInstitution"));
+			            listLongitudes.add(visitorAddressTable.getString("textContactLongitudeOfTheInstitution"));
+			            
+			      
+			      }while(visitorAddress.get("contactTableVisitorsAddress_"+(++i))!=null);
+			      
+			      List<List<String>> tempListList = new ArrayList<List<String>>();  
+					tempListList.add(listStreet);
+					eag2012.setStreetValue(tempListList);
+					tempListList.clear();
+					tempListList.add(listStreetLanguage);
+					eag2012.setStreetLang(tempListList);
+					tempListList.clear();
+					tempListList.add(listCities);
+					eag2012.setMunicipalityPostalcodeValue(tempListList);
+					tempListList.clear();
+					//tempListList.add(listDistrict);
+					eag2012.setLocalentityValue(listDistrict);
+					eag2012.setSecondemValue(listLocalAuthority);
+					eag2012.setFirstdemValue(listAutonomus);
+					eag2012.setCountryValue(listCountries);
+					
+					tempListList.add(listLatitudes);
+					eag2012.setLocationLatitude(tempListList);
+					tempListList.clear();
+					tempListList.add(listLongitudes);
+					eag2012.setLocationLongitude(tempListList);
+			      
+			      }
+			      
+			
+			
+			}
+			
+			
+			
+			
+			
+			
+		}
+		
+		
+		
+		return eag2012;	
+	}
+	
 	private Eag2012 parseIdentityJsonObjToEag2012(Eag2012 eag2012,JSONObject jsonObj) throws JSONException {
 		JSONObject identity = jsonObj.getJSONObject("identity");
 		if(identity!=null){
@@ -614,7 +690,51 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			}
 			if(identity.get("formerlyNames")!=null){
 				//TODO
+				JSONObject formerlyName = identity.getJSONObject("formerlyNames");
+				int i=0;
+				//Formerly used name
+				while(formerlyName.get("identityTableFormerlyUsedName_"+(++i))!=null){
+					JSONObject previousNameOfTheArchive = formerlyName.getJSONObject("identityTableFormerlyUsedName_"+i);
+					List<String> listNonpreform = eag2012.getNonpreformValue();
+					listNonpreform.add(previousNameOfTheArchive.getString("textFormerlyUsedName"));
+					eag2012.setNonpreformValue(listNonpreform);
+					List<String> listNonpreformLangs = eag2012.getNonpreformLang();
+					listNonpreformLangs.add(previousNameOfTheArchive.getString("tfun_languageList"));
+								
+				}
+				//Identity Single Year
+			    i=0;
+				while(formerlyName.get("trYearWhenThisNameWasUsed_"+(++i))!=null){
+					JSONObject yearWhenThisNameWasUsed=formerlyName.getJSONObject("trYearWhenThisNameWasUsed_"+i);
+					Map<String, List<String>> years = new HashMap<String,List<String>>();
+					ArrayList<String> listYears = new ArrayList<String>();
+					listYears.add(yearWhenThisNameWasUsed.getString("textYearWhenThisNameWasUsed_"+i));
+					years.put(Eag2012Creator.TAB_IDENTITY,listYears);
+					List<Map<String, List<String>>> listMapYearsList = new ArrayList<Map<String, List<String>>>();
+					listMapYearsList.add(years);
+					eag2012.setDateStandardDate(listMapYearsList);
+					
+				}
+				//Identity Range Year From
+				i=0;
+				while(formerlyName.get("trYearRangeWhenThisNameWasUsed_"+(++i))!=null){
+					JSONObject rangeYear=formerlyName.getJSONObject("trYearRangeWhenThisNameWasUsed_"+i);
+					List<String> rangeYearsFrom = new ArrayList<String>();
+					rangeYearsFrom.add(rangeYear.getString("textYearWhenThisNameWasUsedFrom_"+i));
+			//		eag2012.setFromDateStandardDate(rangeYearsFrom);
+				}		
+			
+				//Identity Range Year To
+			
+			
 			}
+					
+				//Identity Type of the Institution
+				
+				List<String> listRepositoryType = eag2012.getRepositoryTypeValue();
+				listRepositoryType.add(identity.getString("selectTypeOfTheInstitution"));
+				eag2012.setRepositoryTypeValue(listRepositoryType);
+		
 		}
 		return eag2012;
 	}
