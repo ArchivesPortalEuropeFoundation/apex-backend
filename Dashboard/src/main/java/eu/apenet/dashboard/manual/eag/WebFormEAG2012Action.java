@@ -574,17 +574,17 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		if(this.form!=null && !this.form.isEmpty()){
 			eag2012 = new Eag2012();
 			JSONObject jsonObj = new JSONObject(this.form);
-			if(jsonObj.get("yourInstitution")!=null){ //first_tab -> 'yourInstitution' : array[{},..,{}]
+			if(jsonObj.has("yourInstitution")){ //first_tab -> 'yourInstitution' : array[{},..,{}]
 				eag2012 = parseYourInstitutionJsonObjToEag2012(eag2012,jsonObj);				
 			}
-			if(jsonObj.get("identity")!=null){
-				eag2012 = parseIdentityJsonObjToEag2012(eag2012,jsonObj);
+			if(jsonObj.has("identity")){
+				//eag2012 = parseIdentityJsonObjToEag2012(eag2012,jsonObj);
 			}
 		}
 		return eag2012;
 	}
 	private Eag2012 parseIdentityJsonObjToEag2012(Eag2012 eag2012,JSONObject jsonObj) throws JSONException {
-		JSONObject identity = new JSONObject(jsonObj.get("identity"));
+		JSONObject identity = jsonObj.getJSONObject("identity");
 		if(identity!=null){
 			if(identity.get("institutionNames")!=null){
 				JSONObject institutionNames = identity.getJSONObject("institutionNames");
@@ -629,7 +629,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	 * @throws JSONException
 	 */
 	private Eag2012 parseYourInstitutionJsonObjToEag2012(Eag2012 eag2012,JSONObject jsonObj) throws JSONException {
-		JSONObject yourInstitution = new JSONObject(jsonObj.get("yourInstitution"));
+		JSONObject yourInstitution = jsonObj.getJSONObject("yourInstitution");
 		if(yourInstitution!=null){
 			//your institution - your institution
 			eag2012.setAgentValue(yourInstitution.getString("textYIPersonInstitutionResposibleForTheDescription"));
@@ -640,32 +640,36 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			eag2012.setRepositoridRepositorycode(eag2012.getOtherRepositorId());
 			eag2012.setRecordIdValue(yourInstitution.getString("textYIIdUsedInAPE"));
 			//looper
-			boolean exit = false;
 			List<String> otherRepositorIds = new ArrayList<String>();
-			for(int i=0;!exit;i++){
-				if(yourInstitution.getString("otherRepositorId_"+(i))!=null){
-					otherRepositorIds.add(yourInstitution.getString("otherRepositorId_"+(i)));
-				}
+			for(int i=0;yourInstitution.has("otherRepositorId_"+(i));i++){
+				otherRepositorIds.add(yourInstitution.getString("otherRepositorId_"+(i)));
 			}
 			if(otherRepositorIds.size()>0){
 				eag2012.setOtherRecordIdValue(otherRepositorIds);
 			}
 			List<String> tempList = new ArrayList<String>();
-			tempList.add(yourInstitution.getString("textYINameOfTheInstitution"));
-			eag2012.setAutformValue(tempList);
-			tempList.clear();
-			tempList.add(yourInstitution.getString("selectYINOTISelectLanguage"));
-			eag2012.setAutformLang(tempList);
-			tempList.clear();
-			tempList.add(yourInstitution.getString("textYIParallelNameOfTheInstitution"));
-			eag2012.setParformValue(tempList);
-			tempList.clear();
-			tempList.add(yourInstitution.getString("selectYIPNOTISelectLanguage"));
-			eag2012.setParformLang(tempList);
+			if(yourInstitution.has("textYINameOfTheInstitution")){
+				tempList.add(yourInstitution.getString("textYINameOfTheInstitution"));
+				eag2012.setAutformValue(tempList);
+			}
+			if(yourInstitution.has("selectYINOTISelectLanguage")){
+				tempList.clear();
+				tempList.add(yourInstitution.getString("selectYINOTISelectLanguage"));
+				eag2012.setAutformLang(tempList);
+			}
+			if(yourInstitution.has("textYIParallelNameOfTheInstitution")){
+				tempList.clear();
+				tempList.add(yourInstitution.getString("textYIParallelNameOfTheInstitution"));
+				eag2012.setParformValue(tempList);
+			}
+			if(yourInstitution.has("selectYIPNOTISelectLanguage")){
+				tempList.clear();
+				tempList.add(yourInstitution.getString("selectYIPNOTISelectLanguage"));
+				eag2012.setParformLang(tempList);
+			}
 			//your institution - visitor address
-			JSONObject visitorAddress = new JSONObject(jsonObj.get("visitorsAddress"));
+			JSONObject visitorAddress = yourInstitution.getJSONObject("visitorsAddress");
 			if(visitorAddress!=null){
-				int i = 1;
 				List<String> listStreets = new ArrayList<String>();
 				List<String> listLangStreets = new ArrayList<String>();
 				List<String> listCities = new ArrayList<String>();
@@ -673,17 +677,18 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				List<String> listLatitudes = new ArrayList<String>();
 				List<String> listLongitudes = new ArrayList<String>();
 				List<String> listStreetLanguage = new ArrayList<String>();
-				if(visitorAddress.getJSONObject("yiTableVisitorsAddress_1")!=null){
-					do{
-						JSONObject visitorAddressTable = visitorAddress.getJSONObject("yiTableVisitorsAddress_"+i);
-							listStreets.add(visitorAddressTable.getString("textYIStreet"));
-							listLangStreets.add(visitorAddressTable.getString("selectYIVASelectLanguage"));
-							listCities.add(visitorAddressTable.getString("textYICity"));
-							listCountries.add(visitorAddressTable.getString("textYICountry"));
-							listLatitudes.add(visitorAddressTable.getString("textYILatitude"));
-							listLongitudes.add(visitorAddressTable.getString("textYILongitude"));
-							listStreetLanguage.add(visitorAddressTable.getString("selectYIVASelectLanguage"));
-					}while(visitorAddress.get("yiTableVisitorsAddress_"+(++i))!=null);
+				if(visitorAddress.length()>0){
+					for(int i=0;i<visitorAddress.length();i++){
+						JSONObject visitorAddressTable = visitorAddress.getJSONObject("yiTableVisitorsAddress_"+(i+1));
+						listStreets.add(visitorAddressTable.getString("textYIStreet"));
+						listLangStreets.add(visitorAddressTable.getString("selectYIVASelectLanguage"));
+						listCities.add(visitorAddressTable.getString("textYICity"));
+						listCountries.add(visitorAddressTable.getString("textYICountry"));
+						listLatitudes.add(visitorAddressTable.getString("textYILatitude"));
+						listLongitudes.add(visitorAddressTable.getString("textYILongitude"));
+						listStreetLanguage.add(visitorAddressTable.getString("selectYIVASelectLanguage"));
+					}//"yiTableVisitorsAddress_"+(++i)
+					
 					List<List<String>> tempListList = new ArrayList<List<String>>(); //at first time list must be in 0 position for first <location> tag into <repository> and 
 					tempListList.add(listStreets);
 					eag2012.setStreetValue(tempListList);
@@ -703,119 +708,131 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					locationsTemp.add(listLongitudes);
 					eag2012.setLocationLongitude(locationsTemp);
 				}
-				
 			}
-			JSONObject postalAddress = new JSONObject(jsonObj.get("postalAddress"));
+			JSONObject postalAddress = yourInstitution.getJSONObject("postalAddress");
 			if(postalAddress!=null){
 				List<String> listStreets = new ArrayList<String>();
 				List<String> listLangStreets = new ArrayList<String>();
 				List<String> listCities = new ArrayList<String>();
-				if(visitorAddress.getJSONObject("yiTablePostalAddress_1")!=null){
-					int i = 1;
-					do{
-						JSONObject postalAddressTable = visitorAddress.getJSONObject("yiTableVisitorsAddress_"+i);
-						listStreets.add(postalAddressTable.getString("textYIPAStreet"));
-						listLangStreets.add(postalAddressTable.getString("selectYIPASelectLanguage"));
-						listCities.add(postalAddressTable.getString("textYIPACity"));
-					}while(visitorAddress.get("yiTableVisitorsAddress_"+(++i))!=null);
-					List<List<String>> streetValueList = eag2012.getStreetValue();
-					streetValueList.add(listStreets);
-					List<List<String>> streetLangList = eag2012.getStreetLang();
-					streetLangList.add(listLangStreets);
-					List<List<String>> municipalityPostalcodeValueList = eag2012.getMunicipalityPostalcodeValue();
-					municipalityPostalcodeValueList.add(listCities);
-					//update lists
-					eag2012.setStreetValue(streetValueList);
-					eag2012.setStreetLang(streetLangList);
-					eag2012.setMunicipalityPostalcodeValue(municipalityPostalcodeValueList);
+				for(int i=0;i<postalAddress.length();i++){
+					JSONObject postalAddressTable = postalAddress.getJSONObject("yiTablePostalAddress_"+(i+1));
+					listStreets.add(postalAddressTable.getString("textYIPAStreet"));
+					listLangStreets.add(postalAddressTable.getString("selectYIPASelectLanguage"));
+					listCities.add(postalAddressTable.getString("textYIPACity"));
 				}
+				List<List<String>> streetValueList = eag2012.getStreetValue();
+				streetValueList.add(listStreets);
+				List<List<String>> streetLangList = eag2012.getStreetLang();
+				streetLangList.add(listLangStreets);
+				List<List<String>> municipalityPostalcodeValueList = eag2012.getMunicipalityPostalcodeValue();
+				municipalityPostalcodeValueList.add(listCities);
+				//update lists
+				eag2012.setStreetValue(streetValueList);
+				eag2012.setStreetLang(streetLangList);
+				eag2012.setMunicipalityPostalcodeValue(municipalityPostalcodeValueList);
 			}
 			//your institution - last part
-			Map<String, List<String>> telephones = new HashMap<String,List<String>>();
-			ArrayList<String> listTelephones = new ArrayList<String>();
-			listTelephones.add(yourInstitution.getString("textYITelephone"));
-			telephones.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listTelephones);
-			List<Map<String, List<String>>> listMapTelephonesList = new ArrayList<Map<String, List<String>>>(); 
-			listMapTelephonesList.add(telephones);
-			eag2012.setTelephoneValue(listMapTelephonesList); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(telephone) }
 			
-			Map<String, List<String>> mails = new HashMap<String,List<String>>();
-			ArrayList<String> listMails = new ArrayList<String>();
-			listMails.add(yourInstitution.getString("textYIEmailAddress"));
-			mails.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listMails);
-			List<Map<String, List<String>>> listMapMailsList = new ArrayList<Map<String, List<String>>>();
-			listMapMailsList.add(mails);
-			eag2012.setEmailHref(listMapMailsList); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(mailsHref) }
-			
-			Map<String, List<String>> mailsTitle = new HashMap<String,List<String>>();
-			ArrayList<String> listMailsTitle = new ArrayList<String>();
-			listMailsTitle.add(yourInstitution.getString("textYIEmailLinkTitle"));
-			mailsTitle.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listMails);
-			List<Map<String, List<String>>> listMailsTitleList = new ArrayList<Map<String, List<String>>>();
-			listMailsTitleList.add(mailsTitle);
-			eag2012.setEmailValue(listMailsTitleList); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(mailsTitle) }
-
-			Map<String, List<String>> webpageLink = new HashMap<String,List<String>>();
-			ArrayList<String> listMailsWebpage = new ArrayList<String>();
-			listMailsWebpage.add(yourInstitution.getString("textYIWebpage"));
-			webpageLink.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listMailsWebpage);
-			List<Map<String, List<String>>> listWebpageLink = new ArrayList<Map<String, List<String>>>();
-			listWebpageLink.add(webpageLink);
-			eag2012.setWebpageHref(listWebpageLink); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(webpageTitle) }
-			
-			Map<String, List<String>> webpageLinkTitle = new HashMap<String,List<String>>();
-			ArrayList<String> listMailsWebpageTitle = new ArrayList<String>();
-			listMailsWebpageTitle.add(yourInstitution.getString("textYIWebpageLinkTitle"));
-			webpageLinkTitle.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listMailsWebpageTitle);
-			List<Map<String, List<String>>> listWebpageLinkTitle = new ArrayList<Map<String, List<String>>>(); 
-			eag2012.setWebpageValue(listWebpageLinkTitle); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(webpageHref) }
-			
-			Map<String, String> openingMap = new HashMap<String,String>();
-			openingMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION, yourInstitution.getString("textYIOpeningTimes"));
-			List<Map<String, String>> openingValues = new ArrayList<Map<String,String>>();
-			openingValues.add(openingMap);
-			eag2012.setOpeningValue(openingValues); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {opening}
-			
-			Map<String, String> closingMap = new HashMap<String,String>();
-			closingMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION, yourInstitution.getString("yourInstitutionClosingDates"));
-			List<Map<String, String>> closingValues = new ArrayList<Map<String,String>>();
-			closingValues.add(closingMap);
-			eag2012.setClosingStandardDate(closingValues); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {closing}
-			
-			eag2012.setAccessQuestion(yourInstitution.getString("selectAccessibleToThePublic"));
-			
-			List<List<String>> furtherAccessInformationListList = new ArrayList<List<String>>();
-			List<String> furtherAccessInformationList = new ArrayList<String>();
-			furtherAccessInformationList.add(yourInstitution.getString("futherAccessInformation"));
-			furtherAccessInformationListList.add(furtherAccessInformationList);
-			eag2012.setRestaccessValue(furtherAccessInformationListList); //first repo (index_0) (your_institution), unique element {list.furtherAccessInformation}
-			
-			List<List<String>> futherInformationOnExistingFacilitiesListList = new ArrayList<List<String>>();
-			List<String> futherInformationOnExistingFacilitiesList = new ArrayList<String>();
-			futherInformationOnExistingFacilitiesList.add(yourInstitution.getString("futherInformationOnExistingFacilities"));
-			futherInformationOnExistingFacilitiesListList.add(futherInformationOnExistingFacilitiesList); 
-			eag2012.setAccessibilityValue(futherInformationOnExistingFacilitiesListList);//first repo (index_0) (your_institution), unique element {list.futherInformationOnExistingFacilities}
-			
-			String resourceRelationHref = yourInstitution.getString("textReferencetoyourinstitutionsholdingsguide");
-			List<String> resourceRelationHrefList = new ArrayList<String>();
-			resourceRelationHrefList.add(resourceRelationHref);
-			eag2012.setResourceRelationHref(resourceRelationHrefList);
-			
-			String relationEntry = yourInstitution.getString("textYIHoldingsGuideLinkTitle");
-			List<String> relationEntryList = new ArrayList<String>();
-			relationEntryList.add(relationEntry);
-			eag2012.setRelationEntryValue(relationEntryList);
-			
-			String continent = yourInstitution.getString("selectYIContinent");
-			List<String> continentList = new ArrayList<String>();
-			continentList.add(continent);
-			eag2012.setGeogareaValue(continentList);
-			
-			List<List<String>> accessibilityQuestionListList = new ArrayList<List<String>>();
-			List<String> accessibilityQuestionList = new ArrayList<String>();
-			accessibilityQuestionList.add(yourInstitution.getString("selectFacilitiesForDisabledPeopleAvailable"));
-			accessibilityQuestionListList.add(accessibilityQuestionList);
-			eag2012.setAccessibilityQuestion(accessibilityQuestionListList);
+			if(yourInstitution.has("textYITelephone")){
+				Map<String, List<String>> telephones = new HashMap<String,List<String>>();
+				ArrayList<String> listTelephones = new ArrayList<String>();
+				listTelephones.add(yourInstitution.getString("textYITelephone"));
+				telephones.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listTelephones);
+				List<Map<String, List<String>>> listMapTelephonesList = new ArrayList<Map<String, List<String>>>(); 
+				listMapTelephonesList.add(telephones);
+				eag2012.setTelephoneValue(listMapTelephonesList); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(telephone) }
+			}
+			if(yourInstitution.has("textYIEmailAddress")){
+				Map<String, List<String>> mails = new HashMap<String,List<String>>();
+				ArrayList<String> listMails = new ArrayList<String>();
+				listMails.add(yourInstitution.getString("textYIEmailAddress"));
+				mails.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listMails);
+				List<Map<String, List<String>>> listMapMailsList = new ArrayList<Map<String, List<String>>>();
+				listMapMailsList.add(mails);
+				eag2012.setEmailHref(listMapMailsList); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(mailsHref) }
+			}
+			if(yourInstitution.has("textYIEmailLinkTitle")){
+				Map<String, List<String>> mailsTitle = new HashMap<String,List<String>>();
+				ArrayList<String> listMailsTitle = new ArrayList<String>();
+				listMailsTitle.add(yourInstitution.getString("textYIEmailLinkTitle"));
+				mailsTitle.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listMailsTitle);
+				List<Map<String, List<String>>> listMailsTitleList = new ArrayList<Map<String, List<String>>>();
+				listMailsTitleList.add(mailsTitle);
+				eag2012.setEmailValue(listMailsTitleList); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(mailsTitle) }
+			}
+			if(yourInstitution.has("textYIEmailLinkTitle")){
+				Map<String, List<String>> webpageLink = new HashMap<String,List<String>>();
+				ArrayList<String> listMailsWebpage = new ArrayList<String>();
+				listMailsWebpage.add(yourInstitution.getString("textYIEmailLinkTitle"));
+				webpageLink.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listMailsWebpage);
+				List<Map<String, List<String>>> listWebpageLink = new ArrayList<Map<String, List<String>>>();
+				listWebpageLink.add(webpageLink);
+				eag2012.setWebpageHref(listWebpageLink); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(webpageTitle) }
+			}
+			if(yourInstitution.has("textYIWebpageLinkTitle")){
+				Map<String, List<String>> webpageLinkTitle = new HashMap<String,List<String>>();
+				ArrayList<String> listMailsWebpageTitle = new ArrayList<String>();
+				listMailsWebpageTitle.add(yourInstitution.getString("textYIWebpageLinkTitle"));
+				webpageLinkTitle.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listMailsWebpageTitle);
+				List<Map<String, List<String>>> listWebpageLinkTitle = new ArrayList<Map<String, List<String>>>(); 
+				eag2012.setWebpageValue(listWebpageLinkTitle); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(webpageHref) }
+			}
+			if(yourInstitution.has("textYIOpeningTimes")){
+				Map<String, String> openingMap = new HashMap<String,String>();
+				openingMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION, yourInstitution.getString("textYIOpeningTimes"));
+				List<Map<String, String>> openingValues = new ArrayList<Map<String,String>>();
+				openingValues.add(openingMap);
+				eag2012.setOpeningValue(openingValues); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {opening}
+			}
+			if(yourInstitution.has("yourInstitutionClosingDates")){
+				Map<String, String> closingMap = new HashMap<String,String>();
+				closingMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION, yourInstitution.getString("yourInstitutionClosingDates"));
+				List<Map<String, String>> closingValues = new ArrayList<Map<String,String>>();
+				closingValues.add(closingMap);
+				eag2012.setClosingStandardDate(closingValues); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {closing}
+			}
+			if(yourInstitution.has("selectAccessibleToThePublic")){
+				eag2012.setAccessQuestion(yourInstitution.getString("selectAccessibleToThePublic"));
+			}
+			if(yourInstitution.has("futherAccessInformation")){
+				List<List<String>> furtherAccessInformationListList = new ArrayList<List<String>>();
+				List<String> furtherAccessInformationList = new ArrayList<String>();
+				furtherAccessInformationList.add(yourInstitution.getString("futherAccessInformation"));
+				furtherAccessInformationListList.add(furtherAccessInformationList);
+				eag2012.setRestaccessValue(furtherAccessInformationListList); //first repo (index_0) (your_institution), unique element {list.furtherAccessInformation}
+			}
+			if(yourInstitution.has("futherInformationOnExistingFacilities")){
+				List<List<String>> futherInformationOnExistingFacilitiesListList = new ArrayList<List<String>>();
+				List<String> futherInformationOnExistingFacilitiesList = new ArrayList<String>();
+				futherInformationOnExistingFacilitiesList.add(yourInstitution.getString("futherInformationOnExistingFacilities"));
+				futherInformationOnExistingFacilitiesListList.add(futherInformationOnExistingFacilitiesList); 
+				eag2012.setAccessibilityValue(futherInformationOnExistingFacilitiesListList);//first repo (index_0) (your_institution), unique element {list.futherInformationOnExistingFacilities}
+			}
+			if(yourInstitution.has("textReferencetoyourinstitutionsholdingsguide")){
+				String resourceRelationHref = yourInstitution.getString("textReferencetoyourinstitutionsholdingsguide");
+				List<String> resourceRelationHrefList = new ArrayList<String>();
+				resourceRelationHrefList.add(resourceRelationHref);
+				eag2012.setResourceRelationHref(resourceRelationHrefList);
+			}
+			if(yourInstitution.has("textYIHoldingsGuideLinkTitle")){
+				String relationEntry = yourInstitution.getString("textYIHoldingsGuideLinkTitle");
+				List<String> relationEntryList = new ArrayList<String>();
+				relationEntryList.add(relationEntry);
+				eag2012.setRelationEntryValue(relationEntryList);
+			}
+			if(yourInstitution.has("selectYIContinent")){
+				String continent = yourInstitution.getString("selectYIContinent");
+				List<String> continentList = new ArrayList<String>();
+				continentList.add(continent);
+				eag2012.setGeogareaValue(continentList);
+			}
+			if(yourInstitution.has("selectFacilitiesForDisabledPeopleAvailable")){
+				List<List<String>> accessibilityQuestionListList = new ArrayList<List<String>>();
+				List<String> accessibilityQuestionList = new ArrayList<String>();
+				accessibilityQuestionList.add(yourInstitution.getString("selectFacilitiesForDisabledPeopleAvailable"));
+				accessibilityQuestionListList.add(accessibilityQuestionList);
+				eag2012.setAccessibilityQuestion(accessibilityQuestionListList);
+			}
 		}
 		return eag2012;
 	}
