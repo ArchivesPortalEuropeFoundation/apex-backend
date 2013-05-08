@@ -132,7 +132,9 @@ var clickYourInstitutionAction = function(text1){
 		// Check fill mandatory fields.
 		if ($(this).attr("value") != '') {
 			var position = yiMandatoryElements.indexOf($(this).attr("id"));
-			yiMandatoryElements.splice(position, 1);
+			if (position != -1) {
+				yiMandatoryElements.splice(position, 1);
+			}
 		}
 	});
 	//select options selected
@@ -145,7 +147,9 @@ var clickYourInstitutionAction = function(text1){
 		// Check fill mandatory fields.
 		if ($(this).attr("value") != 'none') {
 			var position = yiMandatoryElements.indexOf($(this).attr("id"));
-			yiMandatoryElements.splice(position, 1);
+			if (position != -1) {
+				yiMandatoryElements.splice(position, 1);
+			}
 		}
 	});
 
@@ -161,15 +165,15 @@ var clickYourInstitutionAction = function(text1){
 		}
 		visitorsAddress.push(id);
 	});
-	jsonData += ",'visitorsAddress':[";
+	jsonData += ",'visitorsAddress':{";
 	for(var j=0; j<visitorsAddress.length; j++) {
 		var yiMEVisitorsAddress = new Array("selectYIVASelectLanguage", "textYIStreet",
 				"textYICity", "textYICountry");
 		
-		if(jsonData.substring(jsonData.length-1)!='['){
+		if(jsonData.substring(jsonData.length-1)!='{'){
 			jsonData += ",";
 		}
-		jsonData += "{'"+visitorsAddress[j]+"':{";
+		jsonData += "'"+visitorsAddress[j]+"':{";
 		//input type text
 		$("#"+visitorsAddress[j]+" input[type='text']").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'
@@ -181,7 +185,9 @@ var clickYourInstitutionAction = function(text1){
 			// Check fill mandatory fields.
 			if ($(this).attr("value") != '') {
 				var position = yiMEVisitorsAddress.indexOf($(this).attr("id"));
-				yiMEVisitorsAddress.splice(position, 1);
+				if (position != -1) {
+					yiMEVisitorsAddress.splice(position, 1);
+				}
 			}
 		});
 		//select options selected
@@ -194,16 +200,18 @@ var clickYourInstitutionAction = function(text1){
 			// Check fill mandatory fields.
 			if ($(this).attr("value") != 'none') {
 				var position = yiMEVisitorsAddress.indexOf($(this).attr("id"));
-				yiMEVisitorsAddress.splice(position, 1);
+				if (position != -1) {
+					yiMEVisitorsAddress.splice(position, 1);
+				}
 			}
 		});
 		if(yiMEVisitorsAddress.length>0){
 			validationArray.push(visitorsAddress[j],yiMEVisitorsAddress);
 		}
-		jsonData += "}}";
+		jsonData += "}";
 	}
 	
-	jsonData += "]";
+	jsonData += "}";
 
 	// Postal address.
 	var postalAddress = new Array();
@@ -214,15 +222,15 @@ var clickYourInstitutionAction = function(text1){
 		}
 		postalAddress.push(id);
 	});
-	jsonData += ",'postalAddress':[";
+	jsonData += ",'postalAddress':{";
 	for(var j=0; j<postalAddress.length; j++) {
 		var yiMEPostalAddress = new Array("selectYIPASelectLanguage", "textYIPAStreet",
 				"textYIPACity");
 		
-		if(jsonData.substring(jsonData.length-1)!='['){
+		if(jsonData.substring(jsonData.length-1)!='{'){
 			jsonData += ",";
 		}
-		jsonData += "{'"+postalAddress[j]+"':{";
+		jsonData += "'"+postalAddress[j]+"':{";
 		//input type text
 		$("#"+postalAddress[j]+" input[type='text']").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'
@@ -234,7 +242,9 @@ var clickYourInstitutionAction = function(text1){
 			// Check fill mandatory fields.
 			if ($(this).attr("value") != '') {
 				var position = yiMEPostalAddress.indexOf($(this).attr("id"));
-				yiMEPostalAddress.splice(position, 1);
+				if (position != -1) {
+					yiMEPostalAddress.splice(position, 1);
+				}
 			}
 		});
 		//select options selected
@@ -247,16 +257,18 @@ var clickYourInstitutionAction = function(text1){
 			// Check fill mandatory fields.
 			if ($(this).attr("value") != 'none') {
 				var position = yiMEPostalAddress.indexOf($(this).attr("id"));
-				yiMEPostalAddress.splice(position, 1);
+				if (position != -1) {
+					yiMEPostalAddress.splice(position, 1);
+				}
 			}
 		});
 		if(yiMEPostalAddress.length>0){
 			validationArray.push(postalAddress[j],yiMEPostalAddress);
 		}
-		jsonData += "}}";
+		jsonData += "}";
 	}
 	
-	jsonData += "]";
+	jsonData += "}";
 
 	// Other fields.
 	var yiMERepositories = new Array("textYIOpeningTimes");
@@ -272,7 +284,9 @@ var clickYourInstitutionAction = function(text1){
 		// Check fill mandatory fields.
 		if ($(this).attr("value") != '') {
 			var position = yiMERepositories.indexOf($(this).attr("id"));
-			yiMERepositories.splice(position, 1);
+			if (position != -1) {
+				yiMERepositories.splice(position, 1);
+			}
 		}
 	});
 	//select options selected
@@ -347,12 +361,12 @@ var clickIdentityAction = function(text1){
 		institutionNames.push(id);
 	});
 
-	jsonData += ",'institutionNames':[";
+	jsonData += ",'institutionNames':{";
 	for(var j=0; j<institutionNames.length; j++) {
-		if(jsonData.substring(jsonData.length-1)!='['){
+		if(jsonData.substring(jsonData.length-1)!='{'){
 			jsonData += ",";
 		}
-		jsonData += "{'"+institutionNames[j]+"':{";
+		jsonData += "'"+institutionNames[j]+"':{";
 		//input type text
 		$("#"+institutionNames[j]+" input[type='text']").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'
@@ -368,9 +382,9 @@ var clickIdentityAction = function(text1){
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 		});
-		jsonData += "}}";
+		jsonData += "}";
 	}
-	jsonData += "]";
+	jsonData += "}";
 
 	// Parallel names.
 	var parallelNames = new Array();
@@ -382,12 +396,12 @@ var clickIdentityAction = function(text1){
 		parallelNames.push(id);
 	});
 
-	jsonData += ",'parallelNames':[";
+	jsonData += ",'parallelNames':{";
 	for(var j=0; j<parallelNames.length; j++) {
-		if(jsonData.substring(jsonData.length-1)!='['){
+		if(jsonData.substring(jsonData.length-1)!='{'){
 			jsonData += ",";
 		}
-		jsonData += "{'"+parallelNames[j]+"':{";
+		jsonData += "'"+parallelNames[j]+"':{";
 		//input type text
 		$("#"+parallelNames[j]+" input[type='text']").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'
@@ -403,9 +417,9 @@ var clickIdentityAction = function(text1){
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 		});
-		jsonData += "}}";
+		jsonData += "}";
 	}
-	jsonData += "]";
+	jsonData += "}";
 
 	// Formerly names.
 	var formerlyNames = new Array();
@@ -417,12 +431,12 @@ var clickIdentityAction = function(text1){
 		formerlyNames.push(id);
 	});
 
-	jsonData += ",'formerlyNames':[";
+	jsonData += ",'formerlyNames':{";
 	for(var j=0; j<formerlyNames.length; j++) {
-		if(jsonData.substring(jsonData.length-1)!='['){
+		if(jsonData.substring(jsonData.length-1)!='{'){
 			jsonData += ",";
 		}
-		jsonData += "{'"+formerlyNames[j]+"':{";
+		jsonData += "'"+formerlyNames[j]+"':{";
 		//input type text
 		$("#"+formerlyNames[j]+" input[type='text']").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'
@@ -438,9 +452,9 @@ var clickIdentityAction = function(text1){
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 		});
-		jsonData += "}}";
+		jsonData += "}";
 	}
-	jsonData += "]}";
+	jsonData += "}}";
 
 	return jsonData;
 };
@@ -510,14 +524,14 @@ function checkContactTab(currentTab, text1) {
 		}
 		visitorsAddress.push(id);
 	});
-	jsonData += ",'visitorsAddress':[";
+	jsonData += ",'visitorsAddress':{";
 	for(var j=0; j<visitorsAddress.length; j++) {
-		if(jsonData.substring(jsonData.length-1)!='['){
+		if(jsonData.substring(jsonData.length-1)!='{'){
 			if(jsonData.substring(jsonData.length-1)!=','){
 				jsonData += ",";
 			}
 		}
-		jsonData += "{'"+visitorsAddress[j]+"':{";
+		jsonData += "'"+visitorsAddress[j]+"':{";
 		//input type text
 		$("table#contactTable" + currentTab + " table#"+visitorsAddress[j]+" input[type='text']").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'
@@ -541,10 +555,10 @@ function checkContactTab(currentTab, text1) {
 				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 			}
 		});
-		jsonData += "}}";
+		jsonData += "}";
 	}
 	
-	jsonData += "]";
+	jsonData += "}";
 
 	// Postal address.
 	var postalAddress = new Array();
@@ -555,12 +569,12 @@ function checkContactTab(currentTab, text1) {
 		}
 		postalAddress.push(id);
 	});
-	jsonData += ",'postalAddress':[";
+	jsonData += ",'postalAddress':{";
 	for(var j=0; j<postalAddress.length; j++) {		
-		if(jsonData.substring(jsonData.length-1)!='['){
+		if(jsonData.substring(jsonData.length-1)!='{'){
 			jsonData += ",";
 		}
-		jsonData += "{'"+postalAddress[j]+"':{";
+		jsonData += "'"+postalAddress[j]+"':{";
 		//input type text
 		$("table#contactTable" + currentTab + " table#"+postalAddress[j]+" input[type='text']").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'
@@ -576,10 +590,10 @@ function checkContactTab(currentTab, text1) {
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 		});
-		jsonData += "}}";
+		jsonData += "}";
 	}
 	
-	jsonData += "]}";
+	jsonData += "}}";
 
 	return jsonData;
 };
@@ -601,7 +615,13 @@ function checkAllAccessAndServicesTabs(text1) {
 
 		jsonData += "{'accessAndServicesTable_" + i + "':[";
 
-		jsonData += checkAccessAndServicesTab("_" + i, text1);
+		var check = checkAccessAndServicesTab("_" + i, text1);
+
+		if (!check){
+			return false;
+		}
+
+		jsonData += check;
 		
 		jsonData += "]}";
 	}
@@ -667,7 +687,9 @@ function checkAccessAndServicesTab(currentTab, text1) {
 		// Check fill mandatory fields.
 		if ($(this).attr("value") != '') {
 			var position = aasMandatoryElements.indexOf($(this).attr("id"));
-			aasMandatoryElements.splice(position, 1);
+			if (position != -1) {
+				aasMandatoryElements.splice(position, 1);
+			}
 		}
 	});
 	//content from selects
@@ -826,7 +848,9 @@ var clickControlAction = function(text1){
 			// Check fill mandatory fields.
 			if ($(this).attr("value") != 'none') {
 				var position = controlMandatoryElements.indexOf($(this).attr("id"));
-				controlMandatoryElements.splice(position, 1);
+				if (position != -1) {
+					controlMandatoryElements.splice(position, 1);
+				}
 			}
 		});
 	jsonData += "}";
@@ -860,12 +884,12 @@ var clickRelationsAction = function(text1){
 		}
 		resourceRelations.push(id);
 	});
-	jsonData += "'resourceRelations':[";
+	jsonData += "'resourceRelations':{";
 	for(var j=0; j<resourceRelations.length; j++) {
-		if(jsonData.substring(jsonData.length-1)!='['){
+		if(jsonData.substring(jsonData.length-1)!='{'){
 			jsonData += ",";
 		}
-		jsonData += "{'"+resourceRelations[j]+"':{";
+		jsonData += "'"+resourceRelations[j]+"':{";
 		//input type text
 		$("#"+resourceRelations[j]+" input[type='text']").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'
@@ -881,10 +905,10 @@ var clickRelationsAction = function(text1){
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 		});
-		jsonData += "}}";
+		jsonData += "}";
 	}
 	
-	jsonData += "]";
+	jsonData += "}";
 
 	// Institution relations.
 	var institutionRelations = new Array();
@@ -895,12 +919,12 @@ var clickRelationsAction = function(text1){
 		}
 		institutionRelations.push(id);
 	});
-	jsonData += ",'institutionRelations':[";
+	jsonData += ",'institutionRelations':{";
 	for(var j=0; j<institutionRelations.length; j++) {
-		if(jsonData.substring(jsonData.length-1)!='['){
+		if(jsonData.substring(jsonData.length-1)!='{'){
 			jsonData += ",";
 		}
-		jsonData += "{'"+institutionRelations[j]+"':{";
+		jsonData += "'"+institutionRelations[j]+"':{";
 		//input type text
 		$("#"+institutionRelations[j]+" input[type='text']").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'
@@ -916,10 +940,10 @@ var clickRelationsAction = function(text1){
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 		});
-		jsonData += "}}";
+		jsonData += "}";
 	}
 	
-	jsonData += "]}";
+	jsonData += "}}";
 
 	return jsonData;
 };
@@ -1123,8 +1147,10 @@ function addAnotherFormOfTheAuthorizedName(){
 	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
 	});
-	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" tr#trNameOfTheInstitution input#textIdentityIdUsedInAPE").removeAttr("disabled");
+	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" tr#trNameOfTheInstitution input#textNameOfTheInstitution").removeAttr("disabled");
+	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" tr#trNameOfTheInstitution td#tdNameOfTheInstitution").find("span").remove();
 	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" tr#trNameOfTheInstitution select#noti_languageList").removeAttr("disabled");
+	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" tr#trNameOfTheInstitution td#tdNameOfTheInstitutionLanguage").find("span").remove();
 }
 function addParallelNameOfTheInstitution(){
 	var counter = $("table[id^='identityTableParallelNameOfTheInstitution_']").length;
@@ -1135,6 +1161,8 @@ function addParallelNameOfTheInstitution(){
 	$("table#identityTableParallelNameOfTheInstitution_"+(counter+1)+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
 	});
+	$("table#identityTableParallelNameOfTheInstitution_"+(counter+1)+" tr#trParallelNameOfTheInstitution input#textParallelNameOfTheInstitution").removeAttr("disabled");
+	$("table#identityTableParallelNameOfTheInstitution_"+(counter+1)+" tr#trParallelNameOfTheInstitution select#pnoti_languageList").removeAttr("disabled");
 }
 function addSingleYear(table){
 	var id =  $(table).attr("id");
@@ -1878,4 +1906,29 @@ function relationAddNewInstitutionRelation(){
 	$("table#institutionRelationTable_"+(counter+1)+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
 	});
+}
+
+// Copy contect functions.
+function personResponsibleForDescriptionChanged(){
+	$("#textPesonResponsible").attr("value", $("#textYIPersonInstitutionResposibleForTheDescription").val());
+}
+
+function idOfInstitutionChanged(){
+	$("#textIdentityIdentifierOfTheInstitution").attr("value", $("#textYIIdentifierOfTheInstitution").val());
+}
+
+function nameOfInstitutionChanged(){
+	$("#textNameOfTheInstitution").attr("value", $("#textYINameOfTheInstitution").val());
+}
+
+function nameOfInstitutionLanguageChanged(){
+	$("#noti_languageList").attr("value", $("#selectYINOTISelectLanguage").val());
+}
+
+function parallelNameOfInstitutionChanged(){
+	$("#textParallelNameOfTheInstitution").attr("value", $("#textYIParallelNameOfTheInstitution").val());
+}
+
+function parallelNnameOfInstitutionLanguageChanged(){
+	$("#pnoti_languageList").attr("value", $("#selectYIPNOTISelectLanguage").val());
 }

@@ -8,7 +8,7 @@
 				<label for="textDescriptionIdentifier"><s:property value="getText('label.ai.control.descriptionIdentifier')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textDescriptionIdentifier" value="<s:property value="#descriptionIdentifier" />" disabled="disabled" />
+				<input type="text" id="textDescriptionIdentifier" value="${idUsedInAPE}" disabled="disabled" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -19,7 +19,7 @@
 				<label for="textPesonResponsible"><s:property value="getText('label.ai.control.pesonresponsible')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textPesonResponsible" value="<s:property value="#pesonResponsible" />" />
+				<input type="text" id="textPesonResponsible" value="${personResponsibleForDescription}" />
 			</td>
 			<td id="tdLanguagePesonresponsible">
 				<label for="selectLanguagePesonresponsible"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>

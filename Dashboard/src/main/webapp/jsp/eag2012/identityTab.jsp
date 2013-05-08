@@ -8,7 +8,7 @@
 				<label  for="textIdentityCountryCodeOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.countryCode')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textIdentityCountryCodeOfTheInstitution" value="<s:property value="#countryCode" />" disabled="disabled" />
+				<input type="text" id="textIdentityCountryCodeOfTheInstitution" value="${countryCode}" disabled="disabled" />
 			</td>
 		</tr>
 
@@ -17,13 +17,13 @@
 				<label  for="textIdentityIdentifierOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.identifierOfTheInstitution')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textIdentityIdentifierOfTheInstitution" value="<s:property value="#identifierOfTheInstitution" />" disabled="disabled" />
+				<input type="text" id="textIdentityIdentifierOfTheInstitution" value="${idOfInstitution}" disabled="disabled" />
 			</td>
 			<td id="tdIdUsedInAPE" class="labelLeft">
-				<label  for="textIdentityCountryCodeOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.idUsedInAPE')" />:</label>
+				<label  for="textIdentityIdUsedInAPE"><s:property value="getText('label.ai.tabs.commons.idUsedInAPE')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textIdentityIdUsedInAPE" value="<s:property value="#idUsedInAPE" />" disabled="disabled" />
+				<input type="text" id="textIdentityIdUsedInAPE" value="${idUsedInAPE}" disabled="disabled" />
 			</td>
 		</tr>
 	</table>
@@ -31,10 +31,10 @@
 	<table id="identityTableNameOfTheInstitution_1">
 		<tr id="trNameOfTheInstitution">
 			<td id="tdNameOfTheInstitution">
-				<label for="textIdentityCountryCodeOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.nameOfTheInstitution')" /><span class="required">*</span>:</label>
+				<label for="textNameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.nameOfTheInstitution')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textIdentityIdUsedInAPE" value="<s:property value="#nameOfTheInstitution" />" disabled="disabled" />
+				<input type="text" id="textNameOfTheInstitution" value="${nameOfInstitution}" disabled="disabled" />
 			</td>
 			<td id="tdNameOfTheInstitutionLanguage" class="labelLeft">
 				<label for="noti_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" /><span class="required">*</span>:</label>
@@ -57,13 +57,13 @@
 				<label for="textParallelNameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.parallelNameOfTheInstitution')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textParallelNameOfTheInstitution" value=""/>
+				<input type="text" id="textParallelNameOfTheInstitution" value="${parallelNameOfInstitution}" disabled="disabled" />
 			</td>
 			<td id="tdNameOfTheInstitutionLanguage" class="labelLeft">
 				<label for="pnoti_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="pnoti_languageList" list="languageList"></s:select>
+				<s:select theme="simple" id="pnoti_languageList" list="languageList" disabled="true"></s:select>
 			</td>
 		</tr>
 	</table>

@@ -15,7 +15,7 @@
 				<label  for="textYIPersonInstitutionResposibleForTheDescription"><s:property value="getText('label.ai.yourinstitution.personinstitutionresposibleforthedescription')"/>:</label>
 			</td>
 			<td colspan="2">
-				<input type="text" id="textYIPersonInstitutionResposibleForTheDescription" class="middleText"/>
+				<input type="text" id="textYIPersonInstitutionResposibleForTheDescription" class="middleText" value="${personResponsibleForDescription}" onchange="personResponsibleForDescriptionChanged();" />
 			</td>
 		</tr>
 
@@ -35,13 +35,13 @@
 				<label for="textYIIdentifierOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.identifierOfTheInstitution')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYIIdentifierOfTheInstitution" />
+				<input type="text" id="textYIIdentifierOfTheInstitution" value="${idOfInstitution}" onchange="idOfInstitutionChanged();" />
 			</td>
 			<td class="labelLeft">
 				<label for="textYIIdUsedInAPE"><s:property value="getText('label.ai.tabs.commons.idUsedInAPE')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYIIdUsedInAPE" value="${idUsedInAPE}" disabled="disabled"/>
+				<input type="text" id="textYIIdUsedInAPE" value="${idUsedInAPE}" disabled="disabled" />
 			</td>
 		</tr>
 
@@ -57,13 +57,13 @@
 				<label for="textYINameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.nameOfTheInstitution')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYINameOfTheInstitution" />
+				<input type="text" id="textYINameOfTheInstitution" value="${nameOfInstitution}" onchange="nameOfInstitutionChanged();" />
 			</td>
 			<td class="labelLeft">
 				<label for="selectYINOTISelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectYINOTISelectLanguage" list="languageList"></s:select>
+				<s:select theme="simple" id="selectYINOTISelectLanguage" list="languageList" onchange="nameOfInstitutionLanguageChanged();"></s:select>
 			</td>
 		</tr>
 
@@ -79,13 +79,13 @@
 				<label for="textYIParallelNameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.parallelNameOfTheInstitution')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYIParallelNameOfTheInstitution" />
+				<input type="text" id="textYIParallelNameOfTheInstitution" value="${parallelNameOfInstitution}" onchange="parallelNameOfInstitutionChanged();" />
 			</td>
 			<td class="labelLeft">
 				<label for="selectYIPNOTISelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
-			<td>
-				<s:select theme="simple" id="selectYIPNOTISelectLanguage" list="languageList"></s:select>
+			<td class="labelLeftselect">
+				<s:select theme="simple" id="selectYIPNOTISelectLanguage" list="languageList" onchange="parallelNnameOfInstitutionLanguageChanged();"></s:select>
 			</td>
 		</tr>
 	</table>

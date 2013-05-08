@@ -82,6 +82,14 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 
 	// Attributes.
 	// Common to various tabs.
+    private String personResponsibleForDescription;
+    private String idOfInstitution;
+    private String nameOfInstitution;
+    private String nameOfInstitutionLanguage;
+    private String parallelNameOfInstitution;
+    private String parallelNameOfInstitutionLanguage;
+
+
 	private String repositoridCountryCode;
 	private String otherRepositorIdValue;
 	private String recordIdValue;
@@ -353,6 +361,92 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	 */
 	public void setScriptMap(Map<String, String> scriptMap) {
 		this.scriptMap = scriptMap;
+	}
+
+	/**
+	 * @return the personResponsibleForDescription
+	 */
+	public String getPersonResponsibleForDescription() {
+		return this.personResponsibleForDescription;
+	}
+
+	/**
+	 * @param personResponsibleForDescription the personResponsibleForDescription to set
+	 */
+	public void setPersonResponsibleForDescription(
+			String personResponsibleForDescription) {
+		this.personResponsibleForDescription = personResponsibleForDescription;
+	}
+
+	/**
+	 * @return the idOfInstitution
+	 */
+	public String getIdOfInstitution() {
+		return this.idOfInstitution;
+	}
+
+	/**
+	 * @param idOfInstitution the idOfInstitution to set
+	 */
+	public void setIdOfInstitution(String idOfInstitution) {
+		this.idOfInstitution = idOfInstitution;
+	}
+
+	/**
+	 * @return the nameOfInstitution
+	 */
+	public String getNameOfInstitution() {
+		return this.nameOfInstitution;
+	}
+
+	/**
+	 * @param nameOfInstitution the nameOfInstitution to set
+	 */
+	public void setNameOfInstitution(String nameOfInstitution) {
+		this.nameOfInstitution = nameOfInstitution;
+	}
+
+	/**
+	 * @return the nameOfInstitutionLanguage
+	 */
+	public String getNameOfInstitutionLanguage() {
+		return this.nameOfInstitutionLanguage;
+	}
+
+	/**
+	 * @param nameOfInstitutionLanguage the nameOfInstitutionLanguage to set
+	 */
+	public void setNameOfInstitutionLanguage(String nameOfInstitutionLanguage) {
+		this.nameOfInstitutionLanguage = nameOfInstitutionLanguage;
+	}
+
+	/**
+	 * @return the parallelNameOfInstitution
+	 */
+	public String getParallelNameOfInstitution() {
+		return this.parallelNameOfInstitution;
+	}
+
+	/**
+	 * @param parallelNameOfInstitution the parallelNameOfInstitution to set
+	 */
+	public void setParallelNameOfInstitution(String parallelNameOfInstitution) {
+		this.parallelNameOfInstitution = parallelNameOfInstitution;
+	}
+
+	/**
+	 * @return the parallelNameOfInstitutionLanguage
+	 */
+	public String getParallelNameOfInstitutionLanguage() {
+		return this.parallelNameOfInstitutionLanguage;
+	}
+
+	/**
+	 * @param parallelNameOfInstitutionLanguage the parallelNameOfInstitutionLanguage to set
+	 */
+	public void setParallelNameOfInstitutionLanguage(
+			String parallelNameOfInstitutionLanguage) {
+		this.parallelNameOfInstitutionLanguage = parallelNameOfInstitutionLanguage;
 	}
 
 	/**
