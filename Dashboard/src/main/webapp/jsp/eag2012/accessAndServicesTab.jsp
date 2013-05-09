@@ -4,7 +4,7 @@
 <div id="accessAndServicesTabContent">
 	<table id="accessAndServicesTable">
 		<tr id="trASOpeningTimes">
-			<td>
+			<td id="tdOpeningTimes">
 				<label for="textOpeningTimes"><s:property value="getText('label.ai.accessAndServices.openingTimes')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
@@ -20,7 +20,7 @@
 
 		<tr>
 			<td id="tdASAddOpeningTimes" colspan="2">
-				<input type="button" id="buttonASAddOpeningTimes"  value="<s:property value='getText("label.ai.accessAndServices.addOpeningTimes")' />" onclick="aSAddOpeningTimes();" />
+				<input type="button" id="buttonASAddOpeningTimes"  value="<s:property value='getText("label.ai.accessAndServices.addOpeningTimes")' />" onclick="aSAddOpeningTimes('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -43,7 +43,7 @@
 
 		<tr>
 			<td id="tdASAddClosingDates" colspan="2">
-				<input type="button" id="buttonASAddClosingDates"  value="<s:property value='getText("label.ai.accessAndServices.addClosingDates")' />" onclick="aSAddClosingDates();" />
+				<input type="button" id="buttonASAddClosingDates"  value="<s:property value='getText("label.ai.accessAndServices.addClosingDates")' />" onclick="aSAddClosingDates('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -77,7 +77,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonASAddTravellingDirections" value="<s:property value="getText('label.ai.accessAndServices.addTravellingDirections')"/>" onclick="aSAddTravellingDirections();"/>
+				<input type="button" id="buttonASAddTravellingDirections" value="<s:property value="getText('label.ai.accessAndServices.addTravellingDirections')"/>" onclick="aSAddTravellingDirections('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -111,7 +111,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonAddFutherAccessInformation" value="<s:property value="getText('label.ai.accessAndServices.addFutherAccessInformation')"/>" onclick="addFutherAccessInformation();" />
+				<input type="button" id="buttonAddFutherAccessInformation" value="<s:property value="getText('label.ai.accessAndServices.addFutherAccessInformation')"/>" onclick="addFutherAccessInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -145,7 +145,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonASAddFutherTermOfUse" value="<s:property value="getText('label.ai.accessAndServices.addFurtherTermsOfUse')"/>" onclick="aSAddFutherTermOfUse();" />
+				<input type="button" id="buttonASAddFutherTermOfUse" value="<s:property value="getText('label.ai.accessAndServices.addFurtherTermsOfUse')"/>" onclick="aSAddFutherTermOfUse('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -177,7 +177,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonAddAccessibilityInformation" value="<s:property value="getText('label.ai.accessAndServices.addAccessibilityInformation')"/>" onclick="addAccessibilityInformation();" />
+				<input type="button" id="buttonAddAccessibilityInformation" value="<s:property value="getText('label.ai.accessAndServices.addAccessibilityInformation')"/>" onclick="addAccessibilityInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -254,7 +254,7 @@
 
 		<tr id="trASSRAddDescriptionOfYourComputerPlaces">
 			<td colspan="2">
-				<input type="button" id="buttonASSRAddadescriptionofyourcomputerplaces" value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourComputerPlaces')"/>" onclick="aSSRAddDescriptionOfYourComputerPlaces('<s:property value="getText('label.ai.accessAndServices.descriptionOfComputerPlaces')"/>', '<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />');" />
+				<input type="button" id="buttonASSRAddadescriptionofyourcomputerplaces" value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourComputerPlaces')"/>" onclick="aSSRAddDescriptionOfYourComputerPlaces('<s:property value="getText('label.ai.accessAndServices.descriptionOfComputerPlaces')"/>', '<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -303,7 +303,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonASSRAddReadersTicket" value="<s:property value="getText('label.ai.accessAndServices.addReadersTicket')"/>" onclick="aSSRAddReadersTicket();"/>
+				<input type="button" id="buttonASSRAddReadersTicket" value="<s:property value="getText('label.ai.accessAndServices.addReadersTicket')"/>" onclick="aSSRAddReadersTicket('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -337,7 +337,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonASSRAddFurtherOrderInformation" value="<s:property value="getText('label.ai.accessAndServices.addFurtherOrderInformation')" />" onclick="aSSRAddFurtherOrderInformation();" />
+				<input type="button" id="buttonASSRAddFurtherOrderInformation" value="<s:property value="getText('label.ai.accessAndServices.addFurtherOrderInformation')" />" onclick="aSSRAddFurtherOrderInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -360,7 +360,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonASAddResearchServices" value="<s:property value="getText('label.ai.accessAndServices.addResearchServices')"/>" onclick="aSAddResearchServices();" />
+				<input type="button" id="buttonASAddResearchServices" value="<s:property value="getText('label.ai.accessAndServices.addResearchServices')"/>" onclick="aSAddResearchServices('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -461,7 +461,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonASPIAAddInternetAccessInformation" value="<s:property value="getText('label.ai.accessAndServices.addInternetAccessInformation')" />" onclick="aSPIAAddInternetAccessInformation();" />
+				<input type="button" id="buttonASPIAAddInternetAccessInformation" value="<s:property value="getText('label.ai.accessAndServices.addInternetAccessInformation')" />" onclick="aSPIAAddInternetAccessInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -501,7 +501,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonAddADescriptionOfYourRestaurationLab" value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourRestaurationLab')"/>" onclick="addADescriptionOfYourRestaurationLab();"/>
+				<input type="button" id="buttonAddADescriptionOfYourRestaurationLab" value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourRestaurationLab')"/>" onclick="addADescriptionOfYourRestaurationLab('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -576,7 +576,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonASAddADescriptionOfYourReproductionService"value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourReproductionService')"/>" onclick="aSAddADescriptionOfYourReproductionService();" />
+				<input type="button" id="buttonASAddADescriptionOfYourReproductionService"value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourReproductionService')"/>" onclick="aSAddADescriptionOfYourReproductionService('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -737,7 +737,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonASReSeAddExhibition" value="<s:property value="getText('label.ai.accessAndServices.addExhibition')"/>" onclick="aSReSeAddExhibition();" />
+				<input type="button" id="buttonASReSeAddExhibition" value="<s:property value="getText('label.ai.accessAndServices.addExhibition')"/>" onclick="aSReSeAddExhibition('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -775,7 +775,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonASReSeToursAndSessions" value="<s:property value="getText('label.ai.accessAndServices.addToursAndSessions')"/>" onclick="aSReSeToursAndSessions();"/>
+				<input type="button" id="buttonASReSeToursAndSessions" value="<s:property value="getText('label.ai.accessAndServices.addToursAndSessions')"/>" onclick="aSReSeToursAndSessions('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -813,7 +813,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonASAddServices" value="<s:property value="getText('label.ai.accessAndServices.addSevices')"/>" onclick="aSAddServices();"/>
+				<input type="button" id="buttonASAddServices" value="<s:property value="getText('label.ai.accessAndServices.addSevices')"/>" onclick="aSAddServices('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');"/>
 			</td>
 			<td colspan="2">
 			</td>

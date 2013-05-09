@@ -58,7 +58,7 @@
 		</tr>
 		<tr>
 			<td id="tdAddFurtherLangsAnsScripts" colspan="2">
-				<input type="button" onclick="controlAddFurtherLangsAnsScripts();" id="buttonControlAddFurtherLangsAnsScripts" value="<s:property value='getText("label.ai.control.addFurtherLangsAnsScripts")' />" />
+				<input type="button" onclick="controlAddFurtherLangsAnsScripts('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" id="buttonControlAddFurtherLangsAnsScripts" value="<s:property value='getText("label.ai.control.addFurtherLangsAnsScripts")' />" />
 			</td>
 		</tr>
 		<tr>
@@ -89,7 +89,7 @@
 		</tr>
 		<tr>
 			<td id="tdAddFurtherRules" colspan="2">
-				<input type="button" id="buttonControlAddFurtherRules" onclick="addContactAbbreviation();" value="<s:property value='getText("label.ai.control.addFurtherRules")' />" />
+				<input type="button" id="buttonControlAddFurtherRules" onclick="addContactAbbreviation('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" value="<s:property value='getText("label.ai.control.addFurtherRules")' />" />
 			</td>
 		</tr>
 		<tr>

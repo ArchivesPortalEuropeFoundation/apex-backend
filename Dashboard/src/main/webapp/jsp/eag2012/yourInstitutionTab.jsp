@@ -49,7 +49,7 @@
 			<td colspan="3">
 			</td>
 			<td>
-				<input type="button" id="buttonAddFutherIds" value="<s:property value="getText('label.ai.yourinstitution.addFutherIds')" />" onclick="addFurtherIds('<s:property value="getText('label.ai.yourinstitution.futherId')" />');" />
+				<input type="button" id="buttonAddFutherIds" value="<s:property value="getText('label.ai.yourinstitution.addFutherIds')" />" onclick="addFurtherIds('<s:property value="getText('label.ai.yourinstitution.futherId')" />','<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
 			</td>
 		</tr>
 		<tr>
@@ -159,7 +159,7 @@
 	<table id="yiTableOthers">
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonAddVisitorsAddressTranslation" value="<s:property value="getText('label.ai.tabs.commons.addFurtherVisitorsAddress')"/>" onclick="yiAddVisitorsAddressTranslation();" />
+				<input type="button" id="buttonAddVisitorsAddressTranslation" value="<s:property value="getText('label.ai.tabs.commons.addFurtherVisitorsAddress')"/>" onclick="yiAddVisitorsAddressTranslation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -167,52 +167,13 @@
 
 		<tr>
 			<td colspan="4">
-				<input type="button" id="buttonAddPostalAddressIfDifferent" value="<s:property value="getText('label.ai.tabs.commons.addPostalAddressIfDifferent')"/>" />
-				<script type="text/javascript">
-					$("#buttonAddPostalAddressIfDifferent").click(function(){
-						$("#buttonAddPostalAddressIfDifferent").hide();
-
-						var property1 = "<s:property value="getText('label.ai.yourinstitution.postalAddress')" />";
-						var property2 = "<s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>";
-						var property3 = "<s:property value="getText('label.ai.tabs.commons.street')"/>";
-						var property4 = "<s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')"/>";
-						var select = '<select id="selectYIPASelectLanguage">'+$("#selectYIPNOTISelectLanguage").html()+'</select>';
-						$("table#yiTableOthers").before('<table id="yiTablePostalAddress_1">'+
-							'<tr id="yiPostalAddressLabel">'+
-								'<td id="postalAddressLabel" colspan="4">'+property1+
-								'</td>'+
-							'</tr>'+
-							'<tr id="yiPostalAddressStreet">'+
-								'<td>'+
-									'<label for="textYIPAStreet">'+property3+'<span class="required">*</span>:</label>'+
-								'</td>'+
-								'<td>'+
-									'<input type="text" id="textYIPAStreet" />'+
-								'</td>'+
-								'<td id="yiPostalAddressLanguage" class="labelLeft">'+
-									'<label for="selectYIPASelectLanguage">'+property2+'<span class="required">*</span>:</label>'+
-								'</td>'+
-								'<td>'+select+
-								'</td>'+
-							'</tr>'+
-							'<tr id="yiPostalAddressCity">'+
-								'<td>'+
-									'<label for="textYIPACity">'+property4+'<span class="required">*</span>:</label>'+
-								'</td>'+
-								'<td>'+
-									'<input type="text" id="textYIPACity" />'+
-								'</td>'+
-							'</tr></table>');
-
-						$("table#yiTableOthers tr#yiPostalAddressTranslation").show();
-					});
-				</script>
+				<input type="button" id="buttonAddPostalAddressIfDifferent" value="<s:property value="getText('label.ai.tabs.commons.addPostalAddressIfDifferent')"/>" onclick="yiAddPostalAddressIfDifferent('<s:property value="getText('label.ai.yourinstitution.postalAddress')" />', '<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />', '<s:property value="getText('label.ai.tabs.commons.street')" />', '<s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')" />')" />
 			</td>
 		</tr>
 
 		<tr id="yiPostalAddressTranslation" style="display:none;">
 			<td colspan="2">
-				<input type="button" id="buttonAddPostalAddressTranslation" value="<s:property value="getText('label.ai.yourinstitution.addPostalAddressTranslation')"/>" onclick="yiAddPostalAddressTranslation();" />
+				<input type="button" id="buttonAddPostalAddressTranslation" value="<s:property value="getText('label.ai.yourinstitution.addPostalAddressTranslation')"/>" onclick="yiAddPostalAddressTranslation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>

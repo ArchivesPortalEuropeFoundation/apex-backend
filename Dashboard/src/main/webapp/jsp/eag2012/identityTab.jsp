@@ -47,7 +47,7 @@
 
 	<table id="identityButtonAddNames">
 		<tr>
-			<td colspan="2"><input id="buttonAddAnotherFormOfTheAuthorizedName" type="button" value="<s:property value='getText("label.ai.identity.addAnotherFormOfTheAuthorizedName")' />" onclick="addAnotherFormOfTheAuthorizedName();"/></td>
+			<td colspan="2"><input id="buttonAddAnotherFormOfTheAuthorizedName" type="button" value="<s:property value='getText("label.ai.identity.addAnotherFormOfTheAuthorizedName")' />" onclick="addAnotherFormOfTheAuthorizedName('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/></td>
 		</tr>
 	</table>
 
@@ -71,7 +71,7 @@
 	<table id="identityButtonAddParallelNames">
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonAddParallelNameOfTheInstitution" value="<s:property value='getText("label.ai.identity.addAnotherParallelNameOfTheInstitution")' />" onclick="addParallelNameOfTheInstitution();"/>
+				<input type="button" id="buttonAddParallelNameOfTheInstitution" value="<s:property value='getText("label.ai.identity.addAnotherParallelNameOfTheInstitution")' />" onclick="addParallelNameOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
 			</td>
 		</tr>
 	</table>
@@ -79,106 +79,7 @@
 	<table id="identityButtonAddFormerlyUsedName">
 		<tr id="trAddMoreAnotherFormerlyUsedName">
 			<td colspan="2">
-				<input type="button" id="buttonAddMoreAnotherFormerlyUsedName" value="<s:property value='getText("label.ai.identity.addAnotherFormerlyUsedName")' />" />
-				<script type="text/javascript">
-					$("#buttonAddMoreAnotherFormerlyUsedName").click(function(){
-
-
-						var counter = $("table[id^='identityTableFormerlyUsedName_']").length;
-						var property1 = "<s:property value="getText('label.ai.identity.formerlyUsedName')" />";
-						var property2 = "<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />";
-						var property3 = "<s:property value="getText('label.ai.identity.datesWhenThisNameWasUsed')" />";
-						var property4 = "<s:property value="getText('label.ai.tabs.commons.year')" />";
-						var property5 = "<s:property value="getText('label.ai.tabs.commons.addSingleYear')" />";
-						var property6 = "<s:property value="getText('label.ai.tabs.commons.addYearRange')" />";
-						var select = '<select id="tfun_languageList">'+$("#pnoti_languageList").html()+'</select>';
-						var text1 = "<s:property value="getText('label.ai.tabs.commons.yearFrom')" />";
-						var text2 = "<s:property value="getText('label.ai.tabs.commons.textTo')" />";
-
-
-						if (counter == 0) {
-							$("table#identityButtonAddFormerlyUsedName").before('<table id="identityTableFormerlyUsedName_1">'+
-								'<tr id="trTextFormerlyUsedName" class="marginTop">'+
-									'<td>'+
-										'<label for="textFormerlyUsedName">'+property1+':</label>'+
-									'</td>'+
-									'<td>'+
-										'<input type="text" id="textFormerlyUsedName" value=""/>'+
-									'</td>'+
-									'<td class="labelLeft">'+
-										'<label for="tfun_languageList">'+property2+':</label>'+
-									'</td>'+
-									'<td>'+select+
-									'</td>'+
-								'</tr>'+
-								'<tr id="trLabelDatesWhenThisNameWasUsed">'+
-									'<td colspan="4">'+
-										'<label for="textDatesWhenThisNameWasUsed">'+property3+':</label>'+
-									'</td>'+
-								'</tr>'+
-								'<tr id="trYearWhenThisNameWasUsed_1">'+
-									'<td>'+
-										'<label for="textYearWhenThisNameWasUsed_1">'+property4+':</label>'+
-									'</td>'+
-									'<td>'+
-										'<input type="text" id="textYearWhenThisNameWasUsed_1" value=""/>'+
-									'</td>'+
-									'<td colspan="2">'+
-									'</td>'+
-								'</tr>'+
-								'<tr>'+
-									'<td>'+
-										'<input type="button" id="buttonAddSingleYear" value="'+property5+'" onclick="addSingleYear($(this).parent().parent().parent().parent());" />'+
-									'</td>'+
-									'<td>'+
-									'<input type="button" id="buttonAddYearRange" value="'+property6+'" onclick="addRangeYear($(this).parent().parent().parent().parent(), \''+text1+'\', \''+text2+'\');" />'+
-								'</td>'+
-									'<td colspan="2">'+
-									'</td>'+
-								'</tr></table>');
-						} else {
-							$("table#identityButtonAddFormerlyUsedName").before('<table id="identityTableFormerlyUsedName_'+(counter+1)+'">'+
-								'<tr id="trTextFormerlyUsedName" class="marginTop">'+
-									'<td>'+
-										'<label for="textFormerlyUsedName">'+property1+':</label>'+
-									'</td>'+
-									'<td>'+
-										'<input type="text" id="textFormerlyUsedName" value=""/>'+
-									'</td>'+
-									'<td class="labelLeft">'+
-										'<label for="tfun_languageList">'+property2+':</label>'+
-									'</td>'+
-									'<td>'+select+
-									'</td>'+
-								'</tr>'+
-								'<tr id="trLabelDatesWhenThisNameWasUsed">'+
-									'<td colspan="4">'+
-										'<label for="textDatesWhenThisNameWasUsed">'+property3+':</label>'+
-									'</td>'+
-								'</tr>'+
-								'<tr id="trYearWhenThisNameWasUsed_1">'+
-									'<td>'+
-										'<label for="textYearWhenThisNameWasUsed_1">'+property4+':</label>'+
-									'</td>'+
-									'<td>'+
-										'<input type="text" id="textYearWhenThisNameWasUsed_1" value=""/>'+
-									'</td>'+
-									'<td colspan="2">'+
-									'</td>'+
-								'</tr>'+
-								'<tr>'+
-									'<td>'+
-										'<input type="button" id="buttonAddSingleYear" value="'+property5+'" onclick="addSingleYear($(this).parent().parent().parent().parent());" />'+
-									'</td>'+
-									'<td>'+
-									'<input type="button" id="buttonAddYearRange" value="'+property6+'" onclick="addRangeYear($(this).parent().parent().parent().parent(), \''+text1+'\', \''+text2+'\');" />'+
-								'</td>'+
-									'<td colspan="2">'+
-									'</td>'+
-								'</tr></table>');
-						}
-					});
-				</script>
+				<input type="button" id="buttonAddMoreAnotherFormerlyUsedName" value="<s:property value='getText("label.ai.identity.addAnotherFormerlyUsedName")' />" onclick="addMoreAnotherFormerlyUsedName('<s:property value="getText('label.ai.identity.formerlyUsedName')" />', '<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />', '<s:property value="getText('label.ai.identity.datesWhenThisNameWasUsed')" />', '<s:property value="getText('label.ai.tabs.commons.year')" />', '<s:property value="getText('label.ai.tabs.commons.addSingleYear')" />', '<s:property value="getText('label.ai.tabs.commons.addYearRange')" />', '<s:property value="getText('label.ai.tabs.commons.yearFrom')" />', '<s:property value="getText('label.ai.tabs.commons.textTo')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>

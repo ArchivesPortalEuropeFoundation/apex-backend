@@ -105,7 +105,7 @@
 
 		<tr>
 			<td id="tdContactAddVisitorsAddressTranslation" colspan="2">
-				<input type="button" id="buttonContactAddVisitorsAddressTranslation"  value="<s:property value='getText("label.ai.tabs.commons.addFurtherVisitorsAddress")' />" onclick="contactAddVisitorsAddressTranslation();" />
+				<input type="button" id="buttonContactAddVisitorsAddressTranslation"  value="<s:property value='getText("label.ai.tabs.commons.addFurtherVisitorsAddress")' />" onclick="contactAddVisitorsAddressTranslation('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" />
 			</td>
 		</tr>
 
@@ -117,7 +117,7 @@
 
 		<tr id="trButtonContacPostalAddressTranslation" style="display:none;">
 			<td colspan="2">
-				<input type="button" id="buttonContacPostalAddressTranslation" value="<s:property value="getText('label.ai.yourinstitution.addPostalAddressTranslation')"/>" onclick="contactAddPostalAddressTranslation();" />
+				<input type="button" id="buttonContacPostalAddressTranslation" value="<s:property value="getText('label.ai.yourinstitution.addPostalAddressTranslation')"/>" onclick="contactAddPostalAddressTranslation('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -142,10 +142,7 @@
 				<input type="text" id="textContactTelephoneOfTheInstitution" value="<s:property value="#telephoneOfTheInstitution" />" disabled="disabled" />
 			</td>
 			<td id="tdAddFurtherTelephoneOfTheInstitution" colspan="2">
-				<input id="buttonAddFurtherTelephoneOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherTelephoneNumbers")' />" onclick="addFurtherTelephoneOfTheInstitution();"/>
-				<script type="text/javascript">
-					$("table#contactTable_"+$("table[id^='contactTable_']").length+" input#buttonAddFurtherTelephoneOfTheInstitution").click();
-				</script>
+				<input id="buttonAddFurtherTelephoneOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherTelephoneNumbers")' />" onclick="addFurtherTelephoneOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');"/>
 			</td>
 		</tr>
 		<tr id="trFaxOfTheInstitution">
@@ -156,7 +153,7 @@
 				<input type="text" id="textContactFaxOfTheInstitution" value="<s:property value="#faxOfTheInstitution" />" />
 			</td>
 			<td id="tdAddFurtherFaxOfTheInstitution" colspan="2">
-				<input id="buttonAddFurtherFaxOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherFaxOfTheInstitution")' />" onclick="addFurtherFaxOfTheInstitution();"/>
+				<input id="buttonAddFurtherFaxOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherFaxOfTheInstitution")' />" onclick="addFurtherFaxOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');"/>
 			</td>
 		</tr>
 		<tr id="trEmailOfTheInstitution">
@@ -176,7 +173,7 @@
 
 		<tr>
 			<td id="tdAddFurtherEmailsOfTheInstitution" colspan="2">
-				<input id="buttonAddFurtherEmailsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherEmailsAddresses")' />" onclick="addFurtherEmailsOfTheInstitution();" />
+				<input id="buttonAddFurtherEmailsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherEmailsAddresses")' />" onclick="addFurtherEmailsOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" />
 			</td>
 		</tr>
 
@@ -197,7 +194,7 @@
 
 		<tr>
 			<td id="tdAddFurtherWebsOfTheInstitution" colspan="2">
-				<input id="buttonAddFurtherWebsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherWebpages")' />" onclick="addFurtherWebsOfTheInstitution();" />
+				<input id="buttonAddFurtherWebsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherWebpages")' />" onclick="addFurtherWebsOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" />
 			</td>
 		</tr>
 

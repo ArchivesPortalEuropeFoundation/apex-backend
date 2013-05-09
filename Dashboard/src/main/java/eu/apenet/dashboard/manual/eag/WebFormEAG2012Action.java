@@ -242,7 +242,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 
 		for (int i = 0; i < languageList.size(); i++) {
 			Locale locale = new Locale(languageList.get(i));
-			this.getLanguageISOMap().put(languageList.get(i), locale.getDisplayLanguage());
+			this.getLanguageISOMap().put(locale.getISO3Language(), locale.getDisplayLanguage());
 		}
 
 		return this.getLanguageISOMap();
