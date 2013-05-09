@@ -351,6 +351,15 @@ var clickIdentityAction = function(text1){
 		jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 	});
 
+	// Table identityTable.
+	//content from selects
+	$("table#identitySelectTypeOfTheInstitution select").each(function(){
+		if(jsonData.charAt(jsonData.length-1)!=':'){
+			jsonData += ",";
+		}
+		jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+	});
+
 	// Institution names.
 	var institutionNames = new Array();
 	$("table[id^='identityTableNameOfTheInstitution_']").each(function(){
