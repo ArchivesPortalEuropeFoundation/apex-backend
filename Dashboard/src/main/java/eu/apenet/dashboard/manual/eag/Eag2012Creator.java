@@ -544,7 +544,7 @@ public class Eag2012Creator {
         for(int i=0;i<this.eag2012.getDateLang().size();i++){//no mandatory, repeatable
         	childControlChildren.add(buildDate(0,TAB_CONTROL,i));
         }
-        for(int i=0;i<this.eag2012.getDateRangeLang().size();i++){ //no mandatory, repeatable
+        for(int i=0;this.eag2012.getFromDateStandardDate()!=null && this.eag2012.getFromDateStandardDate().size()>0 && this.eag2012.getFromDateStandardDate().get(0).get(TAB_CONTROL)!=null && i<this.eag2012.getFromDateStandardDate().get(0).get(TAB_CONTROL).size();i++){ //no mandatory, repeatable
         	childControlChildren.add(buildDateRange(0,TAB_CONTROL,i));
         }
         childControl.put("children",childControlChildren);
@@ -1110,7 +1110,7 @@ public class Eag2012Creator {
 		childArchguideChildren.add(buildOtherRepositorId(this.eag2012.getOtherRepositorIdValue())); //no mandatory not repeatable
 		
 		for(int i=0;this.eag2012.getAutformLang()!=null && i<this.eag2012.getAutformLang().size();i++){ // mandatory repeatable
-		  childArchguideChildren.add(buildAutform(this.eag2012.getAutformLang().get(i),this.eag2012.getAutformValue().get(i)));
+			childArchguideChildren.add(buildAutform(this.eag2012.getAutformLang().get(i),this.eag2012.getAutformValue().get(i)));
 		}
 		for(int i=0;this.eag2012.getParformLang()!=null && i<this.eag2012.getParformLang().size();i++){ //no mandatory repeatable
 		childArchguideChildren.add(buildParform(this.eag2012.getParformLang().get(i),this.eag2012.getParformValue().get(i)));	
@@ -1251,7 +1251,7 @@ public class Eag2012Creator {
 	        for(int i=0;this.eag2012.getDateLang()!=null && i<this.eag2012.getDateLang().size();i++){//no mandatory repeatable
 	        	childArchguide3Children.add(buildDate(indexRepo,indexTab,indexList));
 	        }
-	        for(int i=0;this.eag2012.getDateRangeLang()!=null && i<this.eag2012.getDateRangeLang().size();i++){  //no mandatory repeatable
+	        for(int i=0;this.eag2012.getFromDateStandardDate()!=null && this.eag2012.getFromDateStandardDate().size()>0 && this.eag2012.getFromDateStandardDate().get(indexRepo).get(indexTab)!=null && i<this.eag2012.getFromDateStandardDate().get(indexRepo).get(indexTab).size();i++){  //no mandatory repeatable
 	        	childArchguide3Children.add(buildDateRange(indexRepo,indexTab,indexList));
 	        }
         childArchguide3.put("children",childArchguide3Children);    

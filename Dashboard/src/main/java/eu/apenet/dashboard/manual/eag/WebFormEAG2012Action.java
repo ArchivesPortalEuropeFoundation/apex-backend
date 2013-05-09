@@ -758,13 +758,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					eag2012.setLocationLongitude(tempListList);
 			      
 			      }
-			      
-			//TODO
-			
-			}	
-			
+			}
 		}
-		
 		return eag2012;	
 	}
 	
@@ -774,89 +769,134 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			if(identity.get("institutionNames")!=null){
 				JSONObject institutionNames = identity.getJSONObject("institutionNames");
 				//Name of the institution
-				int i=1;
-				while(institutionNames.get("identityTableNameOfTheInstitution_"+(++i))!=null){
+				int i=0;
+				while(institutionNames.has("identityTableNameOfTheInstitution_"+(++i))){
 					JSONObject nameOfTheInstitutionTable = institutionNames.getJSONObject("identityTableNameOfTheInstitution_"+i);
-					List<String> listAutforms = eag2012.getAutformValue();
-					listAutforms.add(nameOfTheInstitutionTable.getString("textIdentityIdUsedInAPE"));
-					eag2012.setAutformValue(listAutforms);
-					List<String> listAutformLangs = eag2012.getAutformLang();
-					listAutformLangs.add(nameOfTheInstitutionTable.getString("noti_languageList"));
-					eag2012.setAutformLang(listAutformLangs);
+					if(nameOfTheInstitutionTable.has("textIdentityIdUsedInAPE")){
+						List<String> listAutforms = eag2012.getAutformValue();
+						if(listAutforms==null){
+							listAutforms = new ArrayList<String>();
+						}
+						listAutforms.add(nameOfTheInstitutionTable.getString("textIdentityIdUsedInAPE"));
+						eag2012.setAutformValue(listAutforms);
+					}
+					if(nameOfTheInstitutionTable.has("noti_languageList")){
+						List<String> listAutformLangs = eag2012.getAutformLang();
+						if(listAutformLangs==null){
+							listAutformLangs = new ArrayList<String>();
+						}
+						listAutformLangs.add(nameOfTheInstitutionTable.getString("noti_languageList"));
+						eag2012.setAutformLang(listAutformLangs);
+					}
 				}
 			}
-			if(identity.get("parallelNames")!=null){
+			if(identity.has("parallelNames")){
 				JSONObject parallelName = identity.getJSONObject("parallelNames");
 				int i=0;
 				//Parallel name of the institution
-				while(parallelName.get("identityTableParallelNameOfTheInstitution_"+(++i))!=null){
+				while(parallelName.has("identityTableParallelNameOfTheInstitution_"+(++i))){
 					JSONObject parallelNameOfTheInstitution = parallelName.getJSONObject("identityTableParallelNameOfTheInstitution_"+i);
-					List<String> listParforms = eag2012.getParformValue();
-					listParforms.add(parallelNameOfTheInstitution.getString("textParallelNameOfTheInstitution"));
-					eag2012.setAutformValue(listParforms);
-					List<String> listParformLangs = eag2012.getParformLang();
-					listParformLangs.add(parallelNameOfTheInstitution.getString("pnoti_languageList"));
-					eag2012.setParformLang(listParformLangs);
+					if(parallelNameOfTheInstitution.has("textParallelNameOfTheInstitution")){
+						List<String> listParforms = eag2012.getParformValue();
+						if(listParforms==null){
+							listParforms = new ArrayList<String>();
+						}
+						listParforms.add(parallelNameOfTheInstitution.getString("textParallelNameOfTheInstitution"));
+						eag2012.setAutformValue(listParforms);
+					}
+					if(parallelNameOfTheInstitution.has("pnoti_languageList")){
+						List<String> listParformLangs = eag2012.getParformLang();
+						if(listParformLangs==null){
+							listParformLangs = new ArrayList<String>();
+						}
+						listParformLangs.add(parallelNameOfTheInstitution.getString("pnoti_languageList"));
+						eag2012.setParformLang(listParformLangs);
+					}
 				}
 			}
-			if(identity.get("formerlyNames")!=null){
+			if(identity.has("formerlyNames")){
 				//TODO
 				JSONObject formerlyName = identity.getJSONObject("formerlyNames");
 				int i=0;
 				//Formerly used name
-				while(formerlyName.get("identityTableFormerlyUsedName_"+(++i))!=null){
+				while(formerlyName.has("identityTableFormerlyUsedName_"+(++i))){
 					JSONObject previousNameOfTheArchive = formerlyName.getJSONObject("identityTableFormerlyUsedName_"+i);
-					List<String> listNonpreform = eag2012.getNonpreformValue();
-					listNonpreform.add(previousNameOfTheArchive.getString("textFormerlyUsedName"));
-					eag2012.setNonpreformValue(listNonpreform);
-					List<String> listNonpreformLangs = eag2012.getNonpreformLang();
-					listNonpreformLangs.add(previousNameOfTheArchive.getString("tfun_languageList"));
-					eag2012.setNonpreformLang(listNonpreformLangs);
+					if(previousNameOfTheArchive.has("textFormerlyUsedName")){
+						List<String> listNonpreform = eag2012.getNonpreformValue();
+						if(listNonpreform==null){
+							listNonpreform = new ArrayList<String>();
+						}
+						listNonpreform.add(previousNameOfTheArchive.getString("textFormerlyUsedName"));
+						eag2012.setNonpreformValue(listNonpreform);
+					}
+					if(previousNameOfTheArchive.has("tfun_languageList")){
+						List<String> listNonpreformLangs = eag2012.getNonpreformLang();
+						if(listNonpreformLangs==null){
+							listNonpreformLangs = new ArrayList<String>();
+						}
+						listNonpreformLangs.add(previousNameOfTheArchive.getString("tfun_languageList"));
+						eag2012.setNonpreformLang(listNonpreformLangs);
+					}
 								
 				}
 				//Identity Single Year
 			    i=0;
-				while(formerlyName.get("trYearWhenThisNameWasUsed_"+(++i))!=null){
+				while(formerlyName.has("trYearWhenThisNameWasUsed_"+(++i))){
 					JSONObject yearWhenThisNameWasUsed=formerlyName.getJSONObject("trYearWhenThisNameWasUsed_"+i);
-					Map<String, List<String>> years = new HashMap<String,List<String>>();
-					ArrayList<String> listYears = new ArrayList<String>();
-					listYears.add(yearWhenThisNameWasUsed.getString("textYearWhenThisNameWasUsed_"+i));
-					years.put(Eag2012Creator.TAB_IDENTITY,listYears);
-					List<Map<String, List<String>>> listMapYearsList = new ArrayList<Map<String, List<String>>>();
-					listMapYearsList.add(years);
-					eag2012.setDateStandardDate(listMapYearsList);
+					if(yearWhenThisNameWasUsed.has("textYearWhenThisNameWasUsed_"+i)){
+						Map<String, List<String>> years = new HashMap<String,List<String>>();
+						ArrayList<String> listYears = new ArrayList<String>();
+						listYears.add(yearWhenThisNameWasUsed.getString("textYearWhenThisNameWasUsed_"+i));
+						years.put(Eag2012Creator.TAB_IDENTITY,listYears);
+						List<Map<String, List<String>>> listMapYearsList = eag2012.getDateStandardDate();
+						if(listMapYearsList==null){
+							listMapYearsList = new ArrayList<Map<String, List<String>>>();
+						}
+						listMapYearsList.add(years);
+						eag2012.setDateStandardDate(listMapYearsList);
+					}
 					
 				}
 				//Identity Range Year From
 				i=0;
-				while(formerlyName.get("trYearRangeWhenThisNameWasUsed_"+(++i))!=null){
+				while(formerlyName.has("trYearRangeWhenThisNameWasUsed_"+(++i))){
 					JSONObject rangeYear=formerlyName.getJSONObject("trYearRangeWhenThisNameWasUsed_"+i);
-					Map<String,List<String>> rangeYearsFrom = new HashMap<String,List<String>>();
-					ArrayList<String> listYearsFrom = new ArrayList<String>();
-					listYearsFrom.add(rangeYear.getString("textYearWhenThisNameWasUsedFrom_"+i));
-					rangeYearsFrom.put(Eag2012Creator.TAB_IDENTITY, listYearsFrom);
-					List<Map<String, List<String>>> listMapYearsFromList = new ArrayList<Map<String, List<String>>>();
-					listMapYearsFromList.add(rangeYearsFrom);
-					eag2012.setFromDateStandardDate(listMapYearsFromList);
 					
-					Map<String,List<String>> rangeYearsTo = new HashMap<String,List<String>>();
-					ArrayList<String> listYearsTo = new ArrayList<String>();
-					listYearsTo.add(rangeYear.getString("textYearWhenThisNameWasUsedFrom_"+i));
-					rangeYearsTo.put(Eag2012Creator.TAB_IDENTITY, listYearsTo);
-					List<Map<String, List<String>>> listMapYearsToList = new ArrayList<Map<String, List<String>>>();
-					listMapYearsToList.add(rangeYearsFrom);
-					eag2012.setToDateStandardDate(listMapYearsFromList);
-			
+					if(rangeYear.has("textYearWhenThisNameWasUsedFrom_"+i)){
+						Map<String,List<String>> rangeYearsFrom = new HashMap<String,List<String>>();
+						ArrayList<String> listYearsFrom = new ArrayList<String>();
+						listYearsFrom.add(rangeYear.getString("textYearWhenThisNameWasUsedFrom_"+i));
+						rangeYearsFrom.put(Eag2012Creator.TAB_IDENTITY, listYearsFrom);
+						List<Map<String, List<String>>> listMapYearsFromList = eag2012.getFromDateStandardDate();
+						if(listMapYearsFromList==null){
+							listMapYearsFromList = new ArrayList<Map<String, List<String>>>();
+						}
+						listMapYearsFromList.add(rangeYearsFrom);
+						eag2012.setFromDateStandardDate(listMapYearsFromList);
+					}
+					
+					if(rangeYear.has("textYearWhenThisNameWasUsedTo_"+(i))){
+						Map<String,List<String>> rangeYearsTo = new HashMap<String,List<String>>();
+						ArrayList<String> listYearsTo = new ArrayList<String>();
+						listYearsTo.add(rangeYear.getString("textYearWhenThisNameWasUsedTo_"+(i)));
+						rangeYearsTo.put(Eag2012Creator.TAB_IDENTITY, listYearsTo);
+						List<Map<String, List<String>>> listMapYearsToList = eag2012.getToDateStandardDate();
+						if(listMapYearsToList==null){
+							listMapYearsToList = new ArrayList<Map<String, List<String>>>();
+						}
+						listMapYearsToList.add(rangeYearsTo);
+						eag2012.setToDateStandardDate(listMapYearsToList);
+					}
 				}		
 			
-			}	
-				//Identity Type of the Institution
-			  if (identity.has("selectTypeOfTheInstitution")){
+			}
+					
+			//Identity Type of the Institution
+			if (identity.has("selectTypeOfTheInstitution")){
 				List<String> listRepositoryType = new ArrayList<String>(); 
 				listRepositoryType.add(identity.getString("selectTypeOfTheInstitution"));
 				eag2012.setRepositoryTypeValue(listRepositoryType);
-			 
-			  }
+			}
 		}
 		return eag2012;
 	}
