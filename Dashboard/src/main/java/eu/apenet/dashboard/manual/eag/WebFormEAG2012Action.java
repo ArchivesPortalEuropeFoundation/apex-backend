@@ -769,15 +769,15 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			if(identity.get("institutionNames")!=null){
 				JSONObject institutionNames = identity.getJSONObject("institutionNames");
 				//Name of the institution
-				int i=0;
+				int i=1;
 				while(institutionNames.has("identityTableNameOfTheInstitution_"+(++i))){
 					JSONObject nameOfTheInstitutionTable = institutionNames.getJSONObject("identityTableNameOfTheInstitution_"+i);
-					if(nameOfTheInstitutionTable.has("textIdentityIdUsedInAPE")){
+					if(nameOfTheInstitutionTable.has("textNameOfTheInstitution")){
 						List<String> listAutforms = eag2012.getAutformValue();
 						if(listAutforms==null){
 							listAutforms = new ArrayList<String>();
 						}
-						listAutforms.add(nameOfTheInstitutionTable.getString("textIdentityIdUsedInAPE"));
+						listAutforms.add(nameOfTheInstitutionTable.getString("textNameOfTheInstitution"));
 						eag2012.setAutformValue(listAutforms);
 					}
 					if(nameOfTheInstitutionTable.has("noti_languageList")){
@@ -792,7 +792,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			}
 			if(identity.has("parallelNames")){
 				JSONObject parallelName = identity.getJSONObject("parallelNames");
-				int i=0;
+				int i=1;
 				//Parallel name of the institution
 				while(parallelName.has("identityTableParallelNameOfTheInstitution_"+(++i))){
 					JSONObject parallelNameOfTheInstitution = parallelName.getJSONObject("identityTableParallelNameOfTheInstitution_"+i);
@@ -802,7 +802,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							listParforms = new ArrayList<String>();
 						}
 						listParforms.add(parallelNameOfTheInstitution.getString("textParallelNameOfTheInstitution"));
-						eag2012.setAutformValue(listParforms);
+						eag2012.setParformValue(listParforms);
 					}
 					if(parallelNameOfTheInstitution.has("pnoti_languageList")){
 						List<String> listParformLangs = eag2012.getParformLang();
@@ -815,11 +815,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				}
 			}
 			if(identity.has("formerlyNames")){
-				//TODO
 				JSONObject formerlyName = identity.getJSONObject("formerlyNames");
 				int i=0;
-				//Formerly used name
 				while(formerlyName.has("identityTableFormerlyUsedName_"+(++i))){
+					//Formerly used name
 					JSONObject previousNameOfTheArchive = formerlyName.getJSONObject("identityTableFormerlyUsedName_"+i);
 					if(previousNameOfTheArchive.has("textFormerlyUsedName")){
 						List<String> listNonpreform = eag2012.getNonpreformValue();
@@ -837,16 +836,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						listNonpreformLangs.add(previousNameOfTheArchive.getString("tfun_languageList"));
 						eag2012.setNonpreformLang(listNonpreformLangs);
 					}
-								
-				}
-				//Identity Single Year
-			    i=0;
-				while(formerlyName.has("trYearWhenThisNameWasUsed_"+(++i))){
-					JSONObject yearWhenThisNameWasUsed=formerlyName.getJSONObject("trYearWhenThisNameWasUsed_"+i);
-					if(yearWhenThisNameWasUsed.has("textYearWhenThisNameWasUsed_"+i)){
+					//Identity Single Year
+					int j=0;
+					while(previousNameOfTheArchive.has("textYearWhenThisNameWasUsed_"+(++j))){
 						Map<String, List<String>> years = new HashMap<String,List<String>>();
 						ArrayList<String> listYears = new ArrayList<String>();
-						listYears.add(yearWhenThisNameWasUsed.getString("textYearWhenThisNameWasUsed_"+i));
+						listYears.add(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsed_"+j));
 						years.put(Eag2012Creator.TAB_IDENTITY,listYears);
 						List<Map<String, List<String>>> listMapYearsList = eag2012.getDateStandardDate();
 						if(listMapYearsList==null){
@@ -855,42 +850,36 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						listMapYearsList.add(years);
 						eag2012.setDateStandardDate(listMapYearsList);
 					}
-					
+					//Identity Range Year From
+					j=0;
+					while(previousNameOfTheArchive.has("textYearWhenThisNameWasUsedFrom_"+(++j))){
+						Map<String, List<String>> years = new HashMap<String,List<String>>();
+						ArrayList<String> listYears = new ArrayList<String>();
+						listYears.add(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsedFrom_"+j));
+						years.put(Eag2012Creator.TAB_IDENTITY,listYears);
+						List<Map<String, List<String>>> listMapYearsList = eag2012.getDateStandardDate();
+						if(listMapYearsList==null){
+							listMapYearsList = new ArrayList<Map<String, List<String>>>();
+						}
+						listMapYearsList.add(years);
+						eag2012.setFromDateStandardDate(listMapYearsList);
+					}
+					//Identity Range Year To
+					j=0;
+					while(previousNameOfTheArchive.has("textYearWhenThisNameWasUsedTo_"+(++j))){
+						Map<String, List<String>> years = new HashMap<String,List<String>>();
+						ArrayList<String> listYears = new ArrayList<String>();
+						listYears.add(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsedTo_"+j));
+						years.put(Eag2012Creator.TAB_IDENTITY,listYears);
+						List<Map<String, List<String>>> listMapYearsList = eag2012.getDateStandardDate();
+						if(listMapYearsList==null){
+							listMapYearsList = new ArrayList<Map<String, List<String>>>();
+						}
+						listMapYearsList.add(years);
+						eag2012.setToDateStandardDate(listMapYearsList);
+					}
 				}
-				//Identity Range Year From
-				i=0;
-				while(formerlyName.has("trYearRangeWhenThisNameWasUsed_"+(++i))){
-					JSONObject rangeYear=formerlyName.getJSONObject("trYearRangeWhenThisNameWasUsed_"+i);
-					
-					if(rangeYear.has("textYearWhenThisNameWasUsedFrom_"+i)){
-						Map<String,List<String>> rangeYearsFrom = new HashMap<String,List<String>>();
-						ArrayList<String> listYearsFrom = new ArrayList<String>();
-						listYearsFrom.add(rangeYear.getString("textYearWhenThisNameWasUsedFrom_"+i));
-						rangeYearsFrom.put(Eag2012Creator.TAB_IDENTITY, listYearsFrom);
-						List<Map<String, List<String>>> listMapYearsFromList = eag2012.getFromDateStandardDate();
-						if(listMapYearsFromList==null){
-							listMapYearsFromList = new ArrayList<Map<String, List<String>>>();
-						}
-						listMapYearsFromList.add(rangeYearsFrom);
-						eag2012.setFromDateStandardDate(listMapYearsFromList);
-					}
-					
-					if(rangeYear.has("textYearWhenThisNameWasUsedTo_"+(i))){
-						Map<String,List<String>> rangeYearsTo = new HashMap<String,List<String>>();
-						ArrayList<String> listYearsTo = new ArrayList<String>();
-						listYearsTo.add(rangeYear.getString("textYearWhenThisNameWasUsedTo_"+(i)));
-						rangeYearsTo.put(Eag2012Creator.TAB_IDENTITY, listYearsTo);
-						List<Map<String, List<String>>> listMapYearsToList = eag2012.getToDateStandardDate();
-						if(listMapYearsToList==null){
-							listMapYearsToList = new ArrayList<Map<String, List<String>>>();
-						}
-						listMapYearsToList.add(rangeYearsTo);
-						eag2012.setToDateStandardDate(listMapYearsToList);
-					}
-				}		
-			
 			}
-					
 			//Identity Type of the Institution
 			if (identity.has("selectTypeOfTheInstitution")){
 				List<String> listRepositoryType = new ArrayList<String>(); 
@@ -935,17 +924,17 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				eag2012.setAutformValue(tempList);
 			}
 			if(yourInstitution.has("selectYINOTISelectLanguage")){
-				tempList.clear();
+				tempList = new ArrayList<String>();
 				tempList.add(yourInstitution.getString("selectYINOTISelectLanguage"));
 				eag2012.setAutformLang(tempList);
 			}
 			if(yourInstitution.has("textYIParallelNameOfTheInstitution")){
-				tempList.clear();
+				tempList = new ArrayList<String>();
 				tempList.add(yourInstitution.getString("textYIParallelNameOfTheInstitution"));
 				eag2012.setParformValue(tempList);
 			}
 			if(yourInstitution.has("selectYIPNOTISelectLanguage")){
-				tempList.clear();
+				tempList = new ArrayList<String>();
 				tempList.add(yourInstitution.getString("selectYIPNOTISelectLanguage"));
 				eag2012.setParformLang(tempList);
 			}
@@ -974,10 +963,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					List<List<String>> tempListList = new ArrayList<List<String>>(); //at first time list must be in 0 position for first <location> tag into <repository> and 
 					tempListList.add(listStreets);
 					eag2012.setStreetValue(tempListList);
-					tempListList.clear();
+					tempListList = new ArrayList<List<String>>();
 					tempListList.add(listLangStreets);
 					eag2012.setStreetLang(tempListList);
-					tempListList.clear();
+					tempListList = new ArrayList<List<String>>();
 					tempListList.add(listCities);
 					eag2012.setMunicipalityPostalcodeValue(tempListList);
 					
@@ -986,7 +975,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					List<List<String>> locationsTemp = new ArrayList<List<String>>();
 					locationsTemp.add(listLatitudes);//repo0
 					eag2012.setLocationLatitude(locationsTemp);
-					locationsTemp.clear();
+					locationsTemp = new ArrayList<List<String>>();
 					locationsTemp.add(listLongitudes);
 					eag2012.setLocationLongitude(locationsTemp);
 				}

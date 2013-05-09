@@ -935,14 +935,26 @@ public class Eag2012Creator {
         childControl1.put("nodeName", "dateRange");
         HashMap<String, String> childControl1Attributes = new HashMap<String, String>();
         childControl1Attributes.put("localType", "localDateType");
-        childControl1Attributes.put("xml:id", this.eag2012.getDateRangeId().get(indexRepo).get(indexTab).get(indexList));
-        childControl1Attributes.put("xml:lang", this.eag2012.getDateRangeLang().get(indexRepo).get(indexTab).get(indexList));
+//        childControl1Attributes.put("xml:id", this.eag2012.getDateRangeId().get(indexRepo).get(indexTab).get(indexList));
+//        childControl1Attributes.put("xml:lang", this.eag2012.getDateRangeLang().get(indexRepo).get(indexTab).get(indexList));
         childControl1.put("attributes",childControl1Attributes);
         childControl1.put("nodeValue", null);
         List<HashMap<String, Object>> childControl1Children = new ArrayList<HashMap<String, Object>>();
        
-        childControl1Children.add(buildFromDate(this.eag2012.getFromDateNotAfter().get(indexRepo).get(indexTab).get(indexList),this.eag2012.getFromDateNotBefore().get(indexRepo).get(indexTab).get(indexList),this.eag2012.getFromDateStandardDate().get(indexRepo).get(indexTab).get(indexList),this.eag2012.getFromDateId().get(indexRepo).get(indexTab).get(indexList),this.eag2012.getFromDateLang().get(indexRepo).get(indexTab).get(indexList),this.eag2012.getFromDateValue().get(indexRepo).get(indexTab).get(indexList)));
-        childControl1Children.add(buildToDate(this.eag2012.getToDateNotAfter().get(indexRepo).get(indexTab).get(indexList),this.eag2012.getToDateNotBefore().get(indexRepo).get(indexTab).get(indexList),this.eag2012.getToDateStandardDate().get(indexRepo).get(indexTab).get(indexList),this.eag2012.getToDateId().get(indexRepo).get(indexTab).get(indexList),this.eag2012.getToDateLang().get(indexRepo).get(indexTab).get(indexList),this.eag2012.getToDateValue().get(indexRepo).get(indexTab).get(indexList)));
+        childControl1Children.add(buildFromDate(
+        		/*this.eag2012.getFromDateNotAfter().get(indexRepo).get(indexTab).get(indexList)*/null,
+        		/*this.eag2012.getFromDateNotBefore().get(indexRepo).get(indexTab).get(indexList)*/null,
+        		this.eag2012.getFromDateStandardDate().get(indexRepo).get(indexTab).get(indexList),
+        		/*this.eag2012.getFromDateId().get(indexRepo).get(indexTab).get(indexList)*/null,
+        		/*this.eag2012.getFromDateLang().get(indexRepo).get(indexTab).get(indexList)*/null,
+        		/*this.eag2012.getFromDateValue().get(indexRepo).get(indexTab).get(indexList))*/this.eag2012.getFromDateStandardDate().get(indexRepo).get(indexTab).get(indexList)));
+        childControl1Children.add(buildToDate(
+        		/*this.eag2012.getToDateNotAfter().get(indexRepo).get(indexTab).get(indexList)*/null,
+        		/*this.eag2012.getToDateNotBefore().get(indexRepo).get(indexTab).get(indexList)*/null,
+        		this.eag2012.getToDateStandardDate().get(indexRepo).get(indexTab).get(indexList),
+        		/*this.eag2012.getToDateId().get(indexRepo).get(indexTab).get(indexList)*/null,
+        		/*this.eag2012.getToDateLang().get(indexRepo).get(indexTab).get(indexList)*/null,
+        		/*this.eag2012.getToDateValue().get(indexRepo).get(indexTab).get(indexList)*/this.eag2012.getToDateStandardDate().get(indexRepo).get(indexTab).get(indexList)));
         
         childControl1.put("children", childControl1Children);
         return childControl1;
@@ -1003,13 +1015,13 @@ public class Eag2012Creator {
         childControlChild.put("nodeName", "date");
         HashMap<String, String> childControlChildAttributes = new HashMap<String, String>();
         childControlChildAttributes.put("localType", "localDateType");
-        childControlChildAttributes.put("notAfter", this.eag2012.getDateNotAfter().get(indexRepo).get(indexTab).get(indexList));
-        childControlChildAttributes.put("notBefore", this.eag2012.getDateNotBefore().get(indexRepo).get(indexTab).get(indexList));
+//        childControlChildAttributes.put("notAfter", this.eag2012.getDateNotAfter().get(indexRepo).get(indexTab).get(indexList));
+//        childControlChildAttributes.put("notBefore", this.eag2012.getDateNotBefore().get(indexRepo).get(indexTab).get(indexList));
         childControlChildAttributes.put("standardDate", this.eag2012.getDateStandardDate().get(indexRepo).get(indexTab).get(indexList));
-        childControlChildAttributes.put("xml:id", this.eag2012.getDateId().get(indexRepo).get(indexTab).get(indexList));
-        childControlChildAttributes.put("xml:lang", this.eag2012.getDateLang().get(indexRepo).get(indexTab).get(indexList));
+//        childControlChildAttributes.put("xml:id", this.eag2012.getDateId().get(indexRepo).get(indexTab).get(indexList));
+//        childControlChildAttributes.put("xml:lang", this.eag2012.getDateLang().get(indexRepo).get(indexTab).get(indexList));
         childControlChild.put("attributes",childControlChildAttributes);
-        childControlChild.put("nodeValue", this.eag2012.getDateValue().get(indexRepo).get(indexTab).get(indexList));
+        childControlChild.put("nodeValue", (this.eag2012.getDateValue()!=null && this.eag2012.getDateValue().size()>0 && this.eag2012.getDateValue().get(indexRepo)!=null && this.eag2012.getDateValue().get(indexRepo).get(indexTab)!=null && this.eag2012.getDateValue().get(indexRepo).get(indexTab)!=null)?this.eag2012.getDateValue().get(indexRepo).get(indexTab).get(indexList):null);
         childControlChild.put("children", null);
         return childControlChild;
 	}
@@ -1107,19 +1119,24 @@ public class Eag2012Creator {
 		    ArrayList<HashMap<String, Object>> childArchguideChildren = new ArrayList<HashMap<String, Object>>();
 		    
 		    childArchguideChildren.add(buildRepositorid(this.eag2012.getRepositoridCountrycode(),this.eag2012.getRepositoridRepositorycode())); //mandatory not repeatable
-		childArchguideChildren.add(buildOtherRepositorId(this.eag2012.getOtherRepositorIdValue())); //no mandatory not repeatable
-		
+		if(this.eag2012.getOtherRepositorIdValue()==null || this.eag2012.getOtherRepositorIdValue().isEmpty()){
+			childArchguideChildren.add(buildOtherRepositorId(this.eag2012.getOtherRepositorIdValue())); //no mandatory not repeatable
+		}
 		for(int i=0;this.eag2012.getAutformLang()!=null && i<this.eag2012.getAutformLang().size();i++){ // mandatory repeatable
-			childArchguideChildren.add(buildAutform(this.eag2012.getAutformLang().get(i),this.eag2012.getAutformValue().get(i)));
+			if(this.eag2012.getAutformValue().get(i)!=null && !this.eag2012.getAutformValue().get(i).isEmpty()){
+				childArchguideChildren.add(buildAutform(this.eag2012.getAutformLang().get(i),this.eag2012.getAutformValue().get(i)));
+			}
 		}
 		for(int i=0;this.eag2012.getParformLang()!=null && i<this.eag2012.getParformLang().size();i++){ //no mandatory repeatable
-		childArchguideChildren.add(buildParform(this.eag2012.getParformLang().get(i),this.eag2012.getParformValue().get(i)));	
+			if(this.eag2012.getParformValue().get(i)!=null && !this.eag2012.getParformValue().get(i).isEmpty()){
+				childArchguideChildren.add(buildParform(this.eag2012.getParformLang().get(i),this.eag2012.getParformValue().get(i)));
+			}
 		}
 		for(int i=0;this.eag2012.getNonpreformLang()!=null && i<this.eag2012.getNonpreformLang().size();i++){ //no mandatory repeatable
-		childArchguideChildren.add(buildNonpreform(this.eag2012.getNonpreformLang().get(i),this.eag2012.getNonpreformValue().get(i)));
+			childArchguideChildren.add(buildNonpreform(this.eag2012.getNonpreformLang().get(i),this.eag2012.getNonpreformValue().get(i)));
 		}
 		for(int i=0;this.eag2012.getRepositoryTypeValue()!=null && i<this.eag2012.getRepositoryTypeValue().size();i++){//no mandatory repeatable
-		childArchguideChildren.add(buildRepositoryType(this.eag2012.getRepositoryTypeValue().get(i)));
+			childArchguideChildren.add(buildRepositoryType(this.eag2012.getRepositoryTypeValue().get(i)));
 		}
 		childArchguide.put("children", childArchguideChildren);
 		
@@ -1130,7 +1147,7 @@ public class Eag2012Creator {
 
 		HashMap<String, Object> childArchguide1 = new HashMap<String, Object>();
         childArchguide1.put("nodeName", "otherRepositorId");
-        childArchguide1.put("nodeValue", otherRepositorIdValue);
+        childArchguide1.put("nodeValue", (otherRepositorIdValue==null || otherRepositorIdValue.isEmpty())?null:otherRepositorIdValue);
 		
 		return  childArchguide1;
 	}
@@ -1159,7 +1176,7 @@ public class Eag2012Creator {
 	        	childArchguide1Attributes.put("xml:lang", autformLang);
 	        	childArchguide1.put("attributes", childArchguide1Attributes);
 	        }
-	        childArchguide1.put("nodeValue",autformValue);
+	        childArchguide1.put("nodeValue",(autformValue==null || autformValue.isEmpty())?null:autformValue);
 	        childArchguide1.put("children", null);
 		
 		return childArchguide1;
@@ -1174,7 +1191,7 @@ public class Eag2012Creator {
 	           childArchguide1Attributes.put("xml:lang",parformLang);
 	           childArchguide1.put("attributes", childArchguide1Attributes);
 	        }
-	        childArchguide1.put("nodeValue", parformValue);
+	        childArchguide1.put("nodeValue", (parformValue==null || parformValue.isEmpty())?null:parformValue);
 	        childArchguide1.put("children", null);
 		
 		
@@ -1223,8 +1240,15 @@ public class Eag2012Creator {
 	        
 	        List<HashMap<String, Object>> childArchguide2Children = new ArrayList<HashMap<String,Object>>();
 	        
-	          for(int i=0;this.eag2012.getDateSetLang()!=null && i<this.eag2012.getDateSetLang().size();i++){//no mandatory repeatable
-	        	childArchguide2Children.add(buildDateSet(0,TAB_IDENTITY,0));
+	          for(int i=0;
+	        		  (this.eag2012.getDateStandardDate()!=null && this.eag2012.getDateStandardDate().size()>0 && 
+	        				  this.eag2012.getDateStandardDate().get(0).get(TAB_IDENTITY)!=null && 
+	        				  this.eag2012.getDateStandardDate().get(0).get(TAB_IDENTITY).size()>i) &&
+	        		  (this.eag2012.getFromDateStandardDate()!=null && this.eag2012.getFromDateStandardDate().size()>0 && 
+	        		  		this.eag2012.getFromDateStandardDate().get(0).get(TAB_IDENTITY)!=null && 
+	        		  		this.eag2012.getFromDateStandardDate().get(0).get(TAB_IDENTITY).size()>i)
+	        		  ;i++){//no mandatory repeatable
+	        	childArchguide2Children.add(buildDateSet(0,TAB_IDENTITY,i));
 	        }      
 	        childArchguide2.put("children", childArchguide2Children);
 		
@@ -1239,8 +1263,8 @@ public class Eag2012Creator {
     	HashMap<String, String> childArchguide3Attributes = new HashMap<String, String>();
 
     	childArchguide3Attributes.put("localType", "localDateType");
-    	childArchguide3Attributes.put("xml:id", this.eag2012.getDateSetId().get(indexRepo).get(indexTab).get(indexList));
-    	childArchguide3Attributes.put("xml:lang", this.eag2012.getDateSetLang().get(indexRepo).get(indexTab).get(indexList));
+    	//childArchguide3Attributes.put("xml:id", this.eag2012.getDateSetId().get(indexRepo).get(indexTab).get(indexList));
+    	//childArchguide3Attributes.put("xml:lang", this.eag2012.getDateSetLang().get(indexRepo).get(indexTab).get(indexList));
     	
     	childArchguide3.put("attributes",childArchguide3Attributes);
     	childArchguide3.put("nodeValue",null);
@@ -1248,11 +1272,11 @@ public class Eag2012Creator {
         	//dateSet children	        
 	        List<HashMap<String, Object>> childArchguide3Children = new ArrayList<HashMap<String,Object>>();
 	        
-	        for(int i=0;this.eag2012.getDateLang()!=null && i<this.eag2012.getDateLang().size();i++){//no mandatory repeatable
-	        	childArchguide3Children.add(buildDate(indexRepo,indexTab,indexList));
+	        for(int i=0;this.eag2012.getDateStandardDate().get(indexRepo).get(indexTab)!=null && i<this.eag2012.getDateStandardDate().get(indexRepo).get(indexTab).size();i++){//no mandatory repeatable
+	        	childArchguide3Children.add(buildDate(indexRepo,indexTab,i));
 	        }
 	        for(int i=0;this.eag2012.getFromDateStandardDate()!=null && this.eag2012.getFromDateStandardDate().size()>0 && this.eag2012.getFromDateStandardDate().get(indexRepo).get(indexTab)!=null && i<this.eag2012.getFromDateStandardDate().get(indexRepo).get(indexTab).size();i++){  //no mandatory repeatable
-	        	childArchguide3Children.add(buildDateRange(indexRepo,indexTab,indexList));
+	        	childArchguide3Children.add(buildDateRange(indexRepo,indexTab,i));
 	        }
         childArchguide3.put("children",childArchguide3Children);    
 	        
