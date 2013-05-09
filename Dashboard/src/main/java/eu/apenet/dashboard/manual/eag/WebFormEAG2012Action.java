@@ -694,7 +694,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				eag2012 = parseYourInstitutionJsonObjToEag2012(eag2012,jsonObj);				
 			}
 			if(jsonObj.has("identity")){
-				//eag2012 = parseIdentityJsonObjToEag2012(eag2012,jsonObj);
+				eag2012 = parseIdentityJsonObjToEag2012(eag2012,jsonObj);
 			}
 		}
 		return eag2012;
@@ -759,18 +759,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			      
 			      }
 			      
+			//TODO
 			
-			
-			}
-			
-			
-			
-			
-			
+			}	
 			
 		}
-		
-		
 		
 		return eag2012;	
 	}
@@ -846,18 +839,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					listMapYearsFromList.add(rangeYearsFrom);
 					eag2012.setFromDateStandardDate(listMapYearsFromList);
 					
-					
+					Map<String,List<String>> rangeYearsTo = new HashMap<String,List<String>>();
+					ArrayList<String> listYearsTo = new ArrayList<String>();
+					listYearsTo.add(rangeYear.getString("textYearWhenThisNameWasUsedFrom_"+i));
+					rangeYearsTo.put(Eag2012Creator.TAB_IDENTITY, listYearsTo);
+					List<Map<String, List<String>>> listMapYearsToList = new ArrayList<Map<String, List<String>>>();
+					listMapYearsToList.add(rangeYearsFrom);
+					eag2012.setToDateStandardDate(listMapYearsFromList);
 			
 				}		
 			
-				//Identity Range Year To
-			
-			
-			}
-					
+			}	
 				//Identity Type of the Institution
 			  if (identity.has("selectTypeOfTheInstitution")){
-				
 				List<String> listRepositoryType = new ArrayList<String>(); 
 				listRepositoryType.add(identity.getString("selectTypeOfTheInstitution"));
 				eag2012.setRepositoryTypeValue(listRepositoryType);
