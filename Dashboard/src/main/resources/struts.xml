@@ -136,11 +136,11 @@
 		<action name="downloadeag" class="eu.apenet.dashboard.manual.ShowContentProviderInfOptionsAction" method="download"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="download" type="stream">
-				<param name="contentType">application/file-download</param>
+ 				<param name="contentType">application/file-download</param> 
 				<param name="contentCharSet">UTF-8</param>
 				<param name="inputName">inputStream</param>
 				<param name="contentLength">${fileSize}</param>
-				<param name="contentDisposition">atachment; filename=${fileName}</param>
+				<param name="contentDisposition">attachment; filename=${fileName}</param>
 				<param name="bufferSize">4096</param>
 			</result>
 			<result name="error" type="tiles">error</result>
@@ -279,14 +279,14 @@
 
 		<action name="download" class="eu.apenet.dashboard.manual.contentmanager.ContentManagerAction" method="download"> 
 			<result name="download" type="stream">
-				<param name="contentType">application/file-download</param>
+ 				<param name="contentType">application/file-download</param> 
 				<param name="contentCharSet">UTF-8</param>
 				<param name="inputName">inputStream</param>
 				<param name="contentLength">${fileSize}</param>
-				<param name="contentDisposition">atachment; filename=${fileName}</param>
+				<param name="contentDisposition">attachment; filename=${fileName}</param>
 				<param name="bufferSize">4096</param>
 			</result>
-			<result name="error" type="tiles">error</result>
+			<result name="error" type="tiles">error</result>			
 		</action>
 
 		
@@ -471,11 +471,11 @@
 		<action name="downloadAL" class="eu.apenet.dashboard.uploadALAction" method="downloadAL"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="download" type="stream">
-				<param name="contentType">application/file-download</param>
+ 				<param name="contentType">application/file-download</param> 
 				<param name="contentCharSet">UTF-8</param>
 				<param name="inputName">inputStream</param>
 				<param name="contentLength">${fileSize}</param>
-				<param name="contentDisposition">atachment; filename=${fileName}</param>
+				<param name="contentDisposition">attachment; filename=${fileName}</param>
 				<param name="bufferSize">4096</param>
 			</result>
 			<result name="error" type="tiles">ALnotFound</result>
@@ -522,10 +522,12 @@
 
 		<action name="showxml" class="eu.apenet.dashboard.manual.contentmanager.ContentManagerAction" method="download"> 
 			<result name="download" type="stream">
-				<param name="inputName">inputStream</param>
-				<param name="contentType">application/xml</param>
+ 				<param name="contentType">application/file-download</param> 
 				<param name="contentCharSet">UTF-8</param>
+				<param name="inputName">inputStream</param>
 				<param name="contentLength">${fileSize}</param>
+				<param name="contentDisposition">attachment; filename=${fileName}</param>
+				<param name="bufferSize">4096</param>
 			</result>
 			<result name="success" type="redirectAction">
 				<param name="actionName">content</param>
@@ -641,12 +643,12 @@
 		</action>
 		
 		<action name="downloadEse" class="eu.apenet.dashboard.ead2ese.DownloadEseXmlAction"> 
-			<result name="success" type="stream">
-				<param name="contentType">application/file-download</param>
+			<result name="download" type="stream">
+ 				<param name="contentType">application/file-download</param> 
 				<param name="contentCharSet">UTF-8</param>
 				<param name="inputName">inputStream</param>
 				<param name="contentLength">${fileSize}</param>
-				<param name="contentDisposition">atachment; filename=${fileName}</param>
+				<param name="contentDisposition">attachment; filename=${fileName}</param>
 				<param name="bufferSize">4096</param>
 			</result>
 		</action>
@@ -895,14 +897,14 @@
 
         	<action name="downloadGeneralAL" class="eu.apenet.dashboard.actions.DownloadGeneralALAction"> 
 				<interceptor-ref name="changeLanguageStack"/>
-				<result name="download" type="stream">
-					<param name="contentType">application/file-download</param>
-					<param name="contentCharSet">UTF-8</param>
-					<param name="inputName">inputStream</param>
-					<param name="contentLength">${fileSize}</param>
-					<param name="contentDisposition">atachment; filename=${fileName}</param>
-					<param name="bufferSize">4096</param>
-				</result>
+			<result name="download" type="stream">
+ 				<param name="contentType">application/file-download</param> 
+				<param name="contentCharSet">UTF-8</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentLength">${fileSize}</param>
+				<param name="contentDisposition">attachment; filename=${fileName}</param>
+				<param name="bufferSize">4096</param>
+			</result>
 				<result name="error" type="tiles">blank</result>
 			</action>
 
