@@ -1,5 +1,6 @@
 package eu.apenet.dashboard.manual.eag;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -11,9 +12,13 @@ import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dpt.utils.util.LanguageIsoList;
+import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.ArchivalInstitution;
 
 /**
  * Action used to manage and store the new EAG2012.
@@ -70,6 +75,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 
 	private static final String OPTION_SCRIPT = "Latn";			// Constant for value "Latn".
 	private static final String OPTION_SCRIPT_TEXT = "Latin";	// Constant for value "Latin".
+
+	private static final String EAG_PATH = "EAG";
 
     private Map<String,String> yesNoMap = new HashMap<String,String>();
     private Map<String,String> typeOfInstitutionMap = new LinkedHashMap<String,String>();
@@ -563,8 +570,23 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			log.error(e.getMessage());
 		}
 		if(eag2012!=null){
-			Eag2012Creator creator = new Eag2012Creator(this.getAiId(), eag2012, "/tmp/eag2012.xml");
-			creator.createEag2012();
+			String path = File.separatorChar+getCountryCode()+File.separatorChar+getAiId()+File.separatorChar+EAG_PATH+File.separatorChar+"eag2012.xml";
+			
+			//create file
+			Eag2012Creator creator = new Eag2012Creator(this.getAiId(), eag2012,APEnetUtilities.getConfig().getRepoDirPath()+path);
+			creator.createEag2012(); 
+			
+			//store ddbb path
+			ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
+			ArchivalInstitution archivalInstitution = archivalInstitutionDao.getArchivalInstitution(getAiId());
+			if(archivalInstitution!=null){
+				archivalInstitution.setEagPath(path);
+				archivalInstitutionDao.store(archivalInstitution);
+				log.info("EAG2012 stored to "+path);
+			}else{
+				log.error("Could not be stored EAG2012 path, reason: null archival institution");
+			}
+			
 		}
 		return SUCCESS;
 	}
