@@ -941,8 +941,8 @@ public class Eag2012Creator {
         childControl1.put("nodeValue", null);
         List<HashMap<String, Object>> childControl1Children = new ArrayList<HashMap<String, Object>>();
        
-        childControl1Children.add(buildFromDate(this.eag2012.getFromDateNotAfter(),this.eag2012.getFromDateNotBefore(),this.eag2012.getFromDateStandardDate(),this.eag2012.getFromDateId(),this.eag2012.getFromDateLang(),this.eag2012.getFromDateValue()));
-        childControl1Children.add(buildToDate(this.eag2012.getToDateNotAfter(),this.eag2012.getToDateNotBefore(),this.eag2012.getToDateStandardDate(),this.eag2012.getToDateId(),this.eag2012.getToDateLang(),this.eag2012.getToDateValue()));
+        childControl1Children.add(buildFromDate(this.eag2012.getFromDateNotAfter().get(indexRepo).get(indexTab).get(indexList),this.eag2012.getFromDateNotBefore().get(indexRepo).get(indexTab).get(indexList),this.eag2012.getFromDateStandardDate().get(indexRepo).get(indexTab).get(indexList),this.eag2012.getFromDateId().get(indexRepo).get(indexTab).get(indexList),this.eag2012.getFromDateLang().get(indexRepo).get(indexTab).get(indexList),this.eag2012.getFromDateValue().get(indexRepo).get(indexTab).get(indexList)));
+        childControl1Children.add(buildToDate(this.eag2012.getToDateNotAfter().get(indexRepo).get(indexTab).get(indexList),this.eag2012.getToDateNotBefore().get(indexRepo).get(indexTab).get(indexList),this.eag2012.getToDateStandardDate().get(indexRepo).get(indexTab).get(indexList),this.eag2012.getToDateId().get(indexRepo).get(indexTab).get(indexList),this.eag2012.getToDateLang().get(indexRepo).get(indexTab).get(indexList),this.eag2012.getToDateValue().get(indexRepo).get(indexTab).get(indexList)));
         
         childControl1.put("children", childControl1Children);
         return childControl1;
