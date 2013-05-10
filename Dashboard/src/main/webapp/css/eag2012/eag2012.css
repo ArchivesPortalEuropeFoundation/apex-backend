@@ -190,6 +190,7 @@
 textarea {
 	height: 100px;
 	width: 200px;
+	font-weight: bold;
 }
 
 input[type="button"] {
@@ -238,9 +239,16 @@ input[type="text"] {
 	width: 65%;
 }
 
-.eag2012disabled {
-	background: #a4afb6;
+#eag2012Tabs .eag2012disabled {
+	background: #FFFFFF;
 	cursor: default;
+	color: #a4afb6;
+}
+
+#eag2012Tabs .eag2012disabled:hover {
+	background: #FFFFFF;
+	cursor: default;
+	color: #a4afb6;
 }
 
 p.fieldRequired {

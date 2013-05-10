@@ -7,7 +7,6 @@
 			<td id="yourInstitutionLabel" colspan="4">
 				<s:property value="getText('label.ai.tab.yourinstitution.title')" />
 			</td>
-			
 		</tr>
 
 		<tr>
@@ -85,7 +84,7 @@
 				<label for="selectYIPNOTISelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td class="labelLeftselect">
-				<s:select theme="simple" id="selectYIPNOTISelectLanguage" list="languageList" onchange="parallelNnameOfInstitutionLanguageChanged();"></s:select>
+				<s:select theme="simple" id="selectYIPNOTISelectLanguage" list="languageList" onchange="parallelNameOfInstitutionLanguageChanged();"></s:select>
 			</td>
 		</tr>
 	</table>
@@ -102,13 +101,13 @@
 				<label for="textYIStreet"><s:property value="getText('label.ai.tabs.commons.street')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYIStreet" />
+				<input type="text" id="textYIStreet" onchange="streetOfInstitutionChanged();" />
 			</td>
 			<td class="labelLeft">
 				<label for="selectYIVASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectYIVASelectLanguage" list="languageList"></s:select>
+				<s:select theme="simple" id="selectYIVASelectLanguage" list="languageList" onchange="streetOfInstitutionLanguageChanged();"></s:select>
 			</td>
 		</tr>
 
@@ -117,7 +116,7 @@
 				<label for="textYICity"><s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYICity" />
+				<input type="text" id="textYICity" onchange="cityOfInstitutionChanged();" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -128,7 +127,7 @@
 				<label for="textYICountry"><s:property value="getText('label.ai.tabs.commons.country')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYICountry" />
+				<input type="text" id="textYICountry" onchange="countryOfInstitutionChanged();" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -145,13 +144,13 @@
 				<label for="textYILatitude"><s:property value="getText('label.ai.tabs.commons.latitude')"/></label>
 			</td>
 			<td>
-				<input type="text" id="textYILatitude" />
+				<input type="text" id="textYILatitude" onchange="latitudeOfInstitutionChanged();" />
 			</td>
 			<td class="labelLeft">
 				<label for="textYILongitude"><s:property value="getText('label.ai.tabs.commons.longitude')"/></label>
 			</td>
 			<td>
-				<input type="text" id="textYILongitude" />
+				<input type="text" id="textYILongitude" onchange="longitudeOfInstitutionChanged();" />
 			</td>
 		</tr>
 	</table>
@@ -184,7 +183,7 @@
 				<label for="selectYIContinent" ><s:property value="getText('label.ai.tabs.commons.continent')"/>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectYIContinent" list="continentOfTheInstitutionList"></s:select>
+				<s:select theme="simple" id="selectYIContinent" list="continentOfTheInstitutionList" onchange="continentOfInstitutionChanged();"></s:select>
 			</td>
 		</tr>
 
@@ -193,7 +192,7 @@
 				<label for="textYITelephone" ><s:property value="getText('label.ai.tabs.commons.telephone')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYITelephone" />
+				<input type="text" id="textYITelephone" onchange="telephoneOfInstitutionChanged();" />
 			</td>
 		</tr>
 
@@ -202,13 +201,13 @@
 				<label for="textYIEmailAddress" ><s:property value="getText('label.ai.tabs.commons.emailAddress')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYIEmailAddress" />
+				<input type="text" id="textYIEmailAddress" onchange="emailOfInstitutionChanged();" />
 			</td>
 			<td class="labelLeft">
 				<label for="textYIEmailLinkTitle" ><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYIEmailLinkTitle" />
+				<input type="text" id="textYIEmailLinkTitle" onchange="emailOfInstitutionLinkChanged();" />
 			</td>
 		</tr>
 
@@ -217,13 +216,13 @@
 				<label for="textYIWebpage" ><s:property value="getText('label.ai.tabs.commons.webpage')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYIWebpage" />
+				<input type="text" id="textYIWebpage" onchange="webOfInstitutionChanged();" />
 			</td>
 			<td class="labelLeft">
 				<label for="textYIWebpageLinkTitle" ><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYIWebpageLinkTitle" />
+				<input type="text" id="textYIWebpageLinkTitle" onchange="webOfInstitutionLinkChanged();" />
 			</td>
 		</tr>
 
@@ -278,19 +277,19 @@
 				<label for="textReferencetoyourinstitutionsholdingsguide" ><s:property value="getText('label.ai.yourinstitution.referenceToYourInstitutionsHoldingsGuide')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textReferencetoyourinstitutionsholdingsguide" />
+				<input type="text" id="textReferencetoyourinstitutionsholdingsguide" onchange="linkToYourHolndingsGuideChanged();" />
 			</td>
 			<td class="labelLeft">
 				<label for="textYIHoldingsGuideLinkTitle" ><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYIHoldingsGuideLinkTitle" />
+				<input type="text" id="textYIHoldingsGuideLinkTitle" onchange="linkToYourHolndingsGuideTitleChanged();" />
 			</td>
 		</tr>
 
 		<tr>
 			<td id="tdButtonsYourInstitutionTab" colspan="4">
-				<input type="button" id="buttonYourInstitutionTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
+				<input type="button" id="buttonYourInstitutionTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" onclick="checkAndShowNextTab($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillMandatoryFields')" />');" />
 				<input type="button" id="buttonYourInstitutionTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" onclick="clickYourInstitutionAction('<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />');"/>
 			</td>
 		</tr>

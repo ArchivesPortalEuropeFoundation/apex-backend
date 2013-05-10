@@ -8,7 +8,6 @@
 				<td id="visitorAdressLabel" colspan="4">
 					<s:property value="getText('label.ai.tabs.commons.visitorAddress')" />
 				</td>
-				
 			</tr>
 
 			<tr>
@@ -19,7 +18,7 @@
 					<input type="text" id="textContactStreetOfTheInstitution" value="<s:property value="#streetOfTheInstitution" />" disabled="disabled" />
 				</td>
 				<td id="tdLanguageVisitorAddress" class="labelLeft">
-					<label for="selectLanguageVisitorAddress" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+					<label for="selectLanguageVisitorAddress" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" /><span class="required">*</span>:</label>
 				</td>
 				<td>
 					<s:select theme="simple" id="selectLanguageVisitorAddress" list="languageList" disabled="true"></s:select>
@@ -105,7 +104,7 @@
 
 		<tr>
 			<td id="tdContactAddVisitorsAddressTranslation" colspan="2">
-				<input type="button" id="buttonContactAddVisitorsAddressTranslation"  value="<s:property value='getText("label.ai.tabs.commons.addFurtherVisitorsAddress")' />" onclick="contactAddVisitorsAddressTranslation('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" />
+				<input type="button" id="buttonContactAddVisitorsAddressTranslation"  value="<s:property value='getText("label.ai.tabs.commons.addFurtherVisitorsAddress")' />" onclick="contactAddVisitorsAddressTranslation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
 			</td>
 		</tr>
 
@@ -117,7 +116,7 @@
 
 		<tr id="trButtonContacPostalAddressTranslation" style="display:none;">
 			<td colspan="2">
-				<input type="button" id="buttonContacPostalAddressTranslation" value="<s:property value="getText('label.ai.yourinstitution.addPostalAddressTranslation')"/>" onclick="contactAddPostalAddressTranslation('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" />
+				<input type="button" id="buttonContacPostalAddressTranslation" value="<s:property value="getText('label.ai.yourinstitution.addPostalAddressTranslation')"/>" onclick="contactAddPostalAddressTranslation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -142,7 +141,7 @@
 				<input type="text" id="textContactTelephoneOfTheInstitution" value="<s:property value="#telephoneOfTheInstitution" />" disabled="disabled" />
 			</td>
 			<td id="tdAddFurtherTelephoneOfTheInstitution" colspan="2">
-				<input id="buttonAddFurtherTelephoneOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherTelephoneNumbers")' />" onclick="addFurtherTelephoneOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');"/>
+				<input id="buttonAddFurtherTelephoneOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherTelephoneNumbers")' />" onclick="addFurtherTelephoneOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
 			</td>
 		</tr>
 		<tr id="trFaxOfTheInstitution">
@@ -153,7 +152,7 @@
 				<input type="text" id="textContactFaxOfTheInstitution" value="<s:property value="#faxOfTheInstitution" />" />
 			</td>
 			<td id="tdAddFurtherFaxOfTheInstitution" colspan="2">
-				<input id="buttonAddFurtherFaxOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherFaxOfTheInstitution")' />" onclick="addFurtherFaxOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');"/>
+				<input id="buttonAddFurtherFaxOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherFaxOfTheInstitution")' />" onclick="addFurtherFaxOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
 			</td>
 		</tr>
 		<tr id="trEmailOfTheInstitution">
@@ -167,19 +166,19 @@
 				<label for="textContactLinkTitleForEmailOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.linkTitle')" /></label>:
 			</td>
 			<td>
-				<input type="text" id="textContactLinkTitleForEmailOfTheInstitution" value="<s:property value="#linkTitleForEmailOfTheInstitution" />" />
+				<input type="text" id="textContactLinkTitleForEmailOfTheInstitution" value="<s:property value="#linkTitleForEmailOfTheInstitution" />" onchange="contactEmailOfInstitutionLinkChanged();" />
 			</td>
 		</tr>
 
 		<tr>
 			<td id="tdAddFurtherEmailsOfTheInstitution" colspan="2">
-				<input id="buttonAddFurtherEmailsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherEmailsAddresses")' />" onclick="addFurtherEmailsOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" />
+				<input id="buttonAddFurtherEmailsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherEmailsAddresses")' />" onclick="addFurtherEmailsOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
 			</td>
 		</tr>
 
 		<tr id="trWebOfTheInstitution">
-			<td>
-				<label for="textContactWebOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.webpage')" /><span class="required">*</span>:</label>
+			<td id="tdLabelTextContactWebOfTheInstitution">
+				<label for="textContactWebOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textContactWebOfTheInstitution" value="<s:property value="#webOfTheInstitution" />" disabled="disabled" />
@@ -188,19 +187,19 @@
 				<label for="textContactLinkTitleForWebOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.linkTitle')" /></label>:
 			</td>
 			<td>
-				<input type="text" id="textContactLinkTitleForWebOfTheInstitution" value="<s:property value="#linkTitleForWebOfTheInstitution" />" />
+				<input type="text" id="textContactLinkTitleForWebOfTheInstitution" value="<s:property value="#linkTitleForWebOfTheInstitution" />" onchange="contactWebOfInstitutionLinkChanged();" />
 			</td>
 		</tr>
 
 		<tr>
 			<td id="tdAddFurtherWebsOfTheInstitution" colspan="2">
-				<input id="buttonAddFurtherWebsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherWebpages")' />" onclick="addFurtherWebsOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" />
+				<input id="buttonAddFurtherWebsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherWebpages")' />" onclick="addFurtherWebsOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
 			</td>
 		</tr>
 
 		<tr>
 			<td id="tdButtonsContactTab" colspan="4">
-				<input type="button" id="buttonContactTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
+				<input type="button" id="buttonContactTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" onclick="checkAndShowNextTab($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillMandatoryFields')" />');" />
 				<input type="button" id="buttonContactTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" onclick="clickContactAction('<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />');" />
 			</td>
 		</tr>

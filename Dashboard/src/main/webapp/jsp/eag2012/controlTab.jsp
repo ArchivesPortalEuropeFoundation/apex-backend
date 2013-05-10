@@ -58,7 +58,7 @@
 		</tr>
 		<tr>
 			<td id="tdAddFurtherLangsAnsScripts" colspan="2">
-				<input type="button" onclick="controlAddFurtherLangsAnsScripts('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" id="buttonControlAddFurtherLangsAnsScripts" value="<s:property value='getText("label.ai.control.addFurtherLangsAnsScripts")' />" />
+				<input type="button" onclick="controlAddFurtherLangsAnsScripts('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" id="buttonControlAddFurtherLangsAnsScripts" value="<s:property value='getText("label.ai.control.addFurtherLangsAnsScripts")' />" />
 			</td>
 		</tr>
 		<tr>
@@ -89,12 +89,12 @@
 		</tr>
 		<tr>
 			<td id="tdAddFurtherRules" colspan="2">
-				<input type="button" id="buttonControlAddFurtherRules" onclick="addContactAbbreviation('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" value="<s:property value='getText("label.ai.control.addFurtherRules")' />" />
+				<input type="button" id="buttonControlAddFurtherRules" onclick="addContactAbbreviation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.control.addFurtherRules")' />" />
 			</td>
 		</tr>
 		<tr>
 			<td id="tdButtonsDescriptionTab" colspan="4">
-				<input type="button" id="buttonControlTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
+				<input type="button" id="buttonControlTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" onclick="checkAndShowNextTab($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillMandatoryFields')" />');" />
 				<input type="button" id="buttonControlTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" onclick="clickControlAction('<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />');" />
 			</td>
 		</tr>

@@ -27,7 +27,7 @@
 
 		<tr id="trAddHistoryDescription">
 			<td id="tdAddHistoryDescription" colspan="2">
-				<input type="button" id="buttonAddHistoryDescription" onclick="descriptionAddHistoryDescription('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" value="<s:property value='getText("label.ai.description.addHistoryDescription")' />"/>
+				<input type="button" id="buttonAddHistoryDescription" onclick="descriptionAddHistoryDescription('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.description.addHistoryDescription")' />"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -60,7 +60,7 @@
 
 		<tr>
 			<td id="tdAddFoundationInformation" colspan="2">
-				<input type="button" id="buttonDescriptionAddFoundationInformation" value="<s:property value='getText("label.ai.description.addRule")' />" onclick="descriptionAddFoundationInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');"/>
+				<input type="button" id="buttonDescriptionAddFoundationInformation" value="<s:property value='getText("label.ai.description.addRule")' />" onclick="descriptionAddFoundationInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -93,7 +93,7 @@
 
 		<tr>
 			<td id="tdAddSuppressionInformation" colspan="2">
-				<input type="button" id="buttonDescriptionAddSuppressionInformation" onclick="descriptionAddSuppressionInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" value="<s:property value='getText("label.ai.description.addRule")' />"/>
+				<input type="button" id="buttonDescriptionAddSuppressionInformation" onclick="descriptionAddSuppressionInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.description.addRule")' />"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -123,7 +123,7 @@
 
 		<tr>
 			<td id="tdAddAdministrationUnits" colspan="2">
-				<input type="button" id="buttonDescriptionAddAdministrationUnits" onclick="descriptionAddAdministrationUnits('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" value="<s:property value='getText("label.ai.description.addAdministrativeUnit")' />" />
+				<input type="button" id="buttonDescriptionAddAdministrationUnits" onclick="descriptionAddAdministrationUnits('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.description.addAdministrativeUnit")' />" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -153,7 +153,7 @@
 
 		<tr>
 			<td id="tdAddBuildingDescription" colspan="2">
-				<input type="button" id="buttonDescriptionBuildingDescription" onclick="descriptionAddBuildingDescription('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" value="<s:property value='getText("label.ai.description.addBuildingDescription")' />" />
+				<input type="button" id="buttonDescriptionBuildingDescription" onclick="descriptionAddBuildingDescription('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.description.addBuildingDescription")' />" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -203,7 +203,7 @@
 
 		<tr>
 			<td id="tdAddAnotherArchivalDescription" colspan="2">
-				<input type="button" id="buttonDescriptionAddAnotherArchivalDescription" onclick="descriptionAddAnotherArchivalDescription('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" value="<s:property value='getText("label.ai.description.addAnotherArchivalDescription")' />" />
+				<input type="button" id="buttonDescriptionAddAnotherArchivalDescription" onclick="descriptionAddAnotherArchivalDescription('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.description.addAnotherArchivalDescription")' />" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -250,7 +250,7 @@
 
 		<tr>
 			<td id="tdButtonsDescriptionTab" colspan="4">
-				<input type="button" id="buttonDescriptionTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" />
+				<input type="button" id="buttonDescriptionTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" onclick="checkAndShowNextTab($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillMandatoryFields')" />');" />
 				<input type="button" id="buttonDescriptionTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" onclick="clickDescriptionAction('<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />');"/>
 			</td>
 		</tr>

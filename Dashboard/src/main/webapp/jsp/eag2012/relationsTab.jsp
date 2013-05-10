@@ -55,7 +55,7 @@
 	<table id="addResourceRelationTable">
 		<tr>
 			<td id="tdAddNewResourceRelation" colspan="2">
-				<input type="button" id="buttonRelationAddNewResourceRelation" onclick="relationAddNewResourceRelation('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" value="<s:property value='getText("label.ai.relations.addNewResourceRelation")' />"/>
+				<input type="button" id="buttonRelationAddNewResourceRelation" onclick="relationAddNewResourceRelation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.relations.addNewResourceRelation")' />"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -118,7 +118,7 @@
 	<table id="relationsOtherTable">
 		<tr>
 			<td id="tdAddNewInstitutionRelation" colspan="2">
-				<input type="button" id="buttonAddNewInstitutionRelation" onclick="relationAddNewInstitutionRelation('<s:property value="getText('label.ai.tabs.commons.pleaseFilData')" />');" value="<s:property value='getText("label.ai.relations.addNewInstitutionRelation")' />"/>
+				<input type="button" id="buttonAddNewInstitutionRelation" onclick="relationAddNewInstitutionRelation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.relations.addNewInstitutionRelation")' />"/>
 			</td>
 			<td colspan="2">
 			</td>
