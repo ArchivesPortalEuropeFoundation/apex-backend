@@ -696,17 +696,21 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			if(jsonObj.has("identity")){
 				eag2012 = parseIdentityJsonObjToEag2012(eag2012,jsonObj);
 			}
+	        if(jsonObj.has("contact")){
+	        	eag2012 = parseContactJsonObjToEag2012(eag2012, jsonObj);
+	        }
 		}
+		
 		return eag2012;
 	}
 	
 	private Eag2012 parseContactJsonObjToEag2012(Eag2012 eag2012,JSONObject jsonObj) throws JSONException {
-		JSONObject contact = new JSONObject(jsonObj.get("contact"));
+		JSONObject contact = jsonObj.getJSONObject("contact");
 		if(contact!=null){
 			
 			//Contact visitorsAddress
 			
-			JSONObject visitorAddress = new JSONObject(jsonObj.get("visitorsAddress"));
+			JSONObject visitorAddress = contact.getJSONObject("visitorsAddress");
 			if(visitorAddress!=null){
 				List<String> listStreet = new ArrayList<String>();
 				List<String> listCities = new ArrayList<String>();
@@ -717,11 +721,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				List<String> listLatitudes = new ArrayList<String>();
 				List<String> listLongitudes = new ArrayList<String>();
 				List<String> listStreetLanguage = new ArrayList<String>();
+				List<List<String>> tempListList = new ArrayList<List<String>>();  
 				int i=0;
 				if(visitorAddress.getJSONObject("contactTableVisitorsAddress_"+i)!=null){
 			    	
 			      do{
-			    	  JSONObject visitorAddressTable = visitorAddress.getJSONObject("contactTableVisitorsAddress_"+i);
+			    	    JSONObject visitorAddressTable = visitorAddress.getJSONObject("contactTableVisitorsAddress_"+i);
 						listStreet.add(visitorAddressTable.getString("textContactStreetOfTheInstitution"));
 						listStreetLanguage.add(visitorAddressTable.getString("selectLanguageVisitorAddress")); 
 			            listCities.add(visitorAddressTable.getString("textContactCityOfTheInstitution"));
@@ -733,27 +738,25 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			            listLongitudes.add(visitorAddressTable.getString("textContactLongitudeOfTheInstitution"));
 			            
 			      
-			      }while(visitorAddress.get("contactTableVisitorsAddress_"+(++i))!=null);
+			      }while(visitorAddress.has("contactTableVisitorsAddress_"+(++i)));
 			      
-			      List<List<String>> tempListList = new ArrayList<List<String>>();  
+			     
 					tempListList.add(listStreet);
 					eag2012.setStreetValue(tempListList);
-					tempListList.clear();
+					tempListList = new ArrayList<List<String>>();
 					tempListList.add(listStreetLanguage);
 					eag2012.setStreetLang(tempListList);
-					tempListList.clear();
+					tempListList = new ArrayList<List<String>>();
 					tempListList.add(listCities);
 					eag2012.setMunicipalityPostalcodeValue(tempListList);
-					tempListList.clear();
-					//tempListList.add(listDistrict);
 					eag2012.setLocalentityValue(listDistrict);
 					eag2012.setSecondemValue(listLocalAuthority);
 					eag2012.setFirstdemValue(listAutonomus);
 					eag2012.setCountryValue(listCountries);
-					
+					tempListList = new ArrayList<List<String>>();
 					tempListList.add(listLatitudes);
 					eag2012.setLocationLatitude(tempListList);
-					tempListList.clear();
+					tempListList = new ArrayList<List<String>>();
 					tempListList.add(listLongitudes);
 					eag2012.setLocationLongitude(tempListList);
 			      
@@ -766,7 +769,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	private Eag2012 parseIdentityJsonObjToEag2012(Eag2012 eag2012,JSONObject jsonObj) throws JSONException {
 		JSONObject identity = jsonObj.getJSONObject("identity");
 		if(identity!=null){
-			if(identity.get("institutionNames")!=null){
+			if(identity.has("institutionNames")){
 				JSONObject institutionNames = identity.getJSONObject("institutionNames");
 				//Name of the institution
 				int i=1;
