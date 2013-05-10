@@ -47,7 +47,6 @@ public class EditAction extends AbstractAction {
 	 * </p>
 	 */
 	public String execute() throws Exception {
-		// checkUserRoleToBuildBreadcrumbs();
 		User userToUpdate = new User();
 		userToUpdate.setId( SecurityService.getCurrentPartner().getId());
 		boolean changePwd = false;
@@ -77,7 +76,7 @@ public class EditAction extends AbstractAction {
 			userToUpdate.setSecretQuestion(this.getSecretQuestion());
 			//after editing the user will be logged out and logged in
 			try{
-				if (relog(email,newPassword,userToUpdate)){
+				if (relog(email,getConfirmPassword(),userToUpdate, changePwd)){
 					addActionMessage(getText("success.user.edit"));
 					return SUCCESS;
 				}
@@ -95,17 +94,32 @@ public class EditAction extends AbstractAction {
 		return INPUT;
 	}
 	
-	private boolean relog(String email, String passw, User userToUpdate) throws Exception
+	private boolean relog(String email, String passw, User userToUpdate, boolean changePwd) throws Exception
 	{
 		log.trace("relog() method is called");
+		
 		try {
-			//if the password provided by the user matches with the password the system has, it will be update the user data and update the label
-			if(getConfirmPassword().compareTo(passw)==0){
-				UserService.updateUser(userToUpdate);
-				SecurityService.logout("true".equals(parent));
-				LoginResult loginResult = SecurityService.login(email, passw, true);
-				log.trace("relog() method has finished right.");
-				return true;
+			//if the user has changed the password is needed to check usertoupdate password
+			if (changePwd){
+				//if the password provided by the user matches with the password the system has, it will be update the user data and update the label
+				if(userToUpdate.getPassword().compareTo(passw)==0){
+					UserService.updateUser(userToUpdate);
+					SecurityService.logout("true".equals(parent));
+					SecurityService.login(email, passw, true);
+					log.trace("relog() method has finished right.");
+					return true;
+				}
+			}
+			//if the user has not changed the password is needed to check the current user password
+			else{
+				//if the password provided by the user matches with the password the system has, it will be update the user data and update the label
+				if(SecurityService.getCurrentPartner().getPassword().compareTo(BasicDigestPwd.generateDigest(passw))==0){
+					UserService.updateUser(userToUpdate);
+					SecurityService.logout("true".equals(parent));
+					SecurityService.login(email, passw, true);
+					log.trace("relog() method has finished right.");
+					return true;
+				}
 			}
 		}
 		catch (Exception e){
