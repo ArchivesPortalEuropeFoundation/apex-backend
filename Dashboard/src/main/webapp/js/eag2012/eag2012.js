@@ -99,9 +99,9 @@ function clickSaveAction(form, text1, error1, error2, error3, error4, error5, er
 	// Create final json object.
 	var jsonData =  "{'yourInstitution':" + jsonDataYourInstitution + "," +
 	"'identity':" + jsonDataIdentity + "," +
-	"'contact':[" + jsonDataContact + "]," +
-	"'accessAndServices':[" + jsonDataAccessAndServices + "]," +
-	"'description':[" + jsonDataDescription + "]," +
+	"'contact':" + jsonDataContact + "," +
+	"'accessAndServices':" + jsonDataAccessAndServices + "," +
+	"'description':" + jsonDataDescription + "," +
 	"'control':" + jsonDataControl + "," +
 	"'relations':" + jsonDataRelations + "}";
 
@@ -476,19 +476,19 @@ var clickContactAction = function(text1){
 
 function checkAllContactTabs(text1) {
 	var counter = $("table[id^='contactTable_']").length;
-	var jsonData = "";
+	var jsonData = "{";
 
 	for (var i = 1; i <= counter; i++) {
 		if(jsonData.substring(jsonData.length-1)=='}'){
 			jsonData += ",";
 		}
 
-		jsonData += "{'contactTable_" + i + "':[";
+		jsonData += "'contactTable_" + i + "':";
 
 		jsonData += checkContactTab("_" + i, text1);
-		
-		jsonData += "]}";
 	}
+
+	jsonData += "}";
 
 	return jsonData;
 };
@@ -615,14 +615,14 @@ var clickAccessAndServicesAction = function(text1){
 
 function checkAllAccessAndServicesTabs(text1) {
 	var counter = $("table[id^='accessAndServicesTable_']").length;
-	var jsonData = "";
+	var jsonData = "{";
 
 	for (var i = 1; i <= counter; i++) {
 		if(jsonData.substring(jsonData.length-1)=='}'){
 			jsonData += ",";
 		}
 
-		jsonData += "{'accessAndServicesTable_" + i + "':[";
+		jsonData += "'accessAndServicesTable_" + i + "':";
 
 		var check = checkAccessAndServicesTab("_" + i, text1);
 
@@ -631,13 +631,12 @@ function checkAllAccessAndServicesTabs(text1) {
 		}
 
 		jsonData += check;
-		
-		jsonData += "]}";
 	}
+	
+	jsonData += "}";
 
 	return jsonData;
 };
-
 
 function checkAccessAndServicesTab(currentTab, text1) {
 	// Delete old checks
@@ -754,19 +753,19 @@ var clickDescriptionAction = function(text1){
 
 function checkAllDescriptionTabs(text1) {
 	var counter = $("table[id^='descriptionTable_']").length;
-	var jsonData = "";
+	var jsonData = "{";
 
 	for (var i = 1; i <= counter; i++) {
 		if(jsonData.substring(jsonData.length-1)=='}'){
 			jsonData += ",";
 		}
 
-		jsonData += "{'descriptionTable_" + i + "':[";
+		jsonData += "'descriptionTable_" + i + "':";
 
 		jsonData += checkDescriptionTab("_" + i, text1);
-		
-		jsonData += "]}";
 	}
+	
+	jsonData += "}";
 
 	return jsonData;
 };
