@@ -707,60 +707,162 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	private Eag2012 parseContactJsonObjToEag2012(Eag2012 eag2012,JSONObject jsonObj) throws JSONException {
 		JSONObject contact = jsonObj.getJSONObject("contact");
 		if(contact!=null){
+			int x = 0;
+			while(contact.has("contactTable_"+(++x))){ //each child of contact is the container of visitor address and all attributes
+				
+				JSONObject contactTable = contact.getJSONObject("contactTable_"+(x));
+				//Contact visitorsAddress
+				
+				JSONObject visitorAddress = contactTable.getJSONObject("visitorsAddress");
+				if(visitorAddress!=null){
+					List<String> listStreet = new ArrayList<String>();
+					List<String> listCities = new ArrayList<String>();
+					List<String> listDistrict = new ArrayList<String>();
+					List<String> listLocalAuthority = new ArrayList<String>();
+					List<String> listAutonomus = new ArrayList<String>();
+					List<String> listCountries = new ArrayList<String>();
+					List<String> listLatitudes = new ArrayList<String>();
+					List<String> listLongitudes = new ArrayList<String>();
+					List<String> listStreetLanguage = new ArrayList<String>();
+					List<List<String>> tempListList = new ArrayList<List<String>>();  
+					int i=0;
+					if(visitorAddress.getJSONObject("contactTableVisitorsAddress_"+i)!=null){
+				    	
+				      do{
+				    	    JSONObject visitorAddressTable = visitorAddress.getJSONObject("contactTableVisitorsAddress_"+i);
+							listStreet.add(visitorAddressTable.getString("textContactStreetOfTheInstitution"));
+							listStreetLanguage.add(visitorAddressTable.getString("selectLanguageVisitorAddress")); 
+				            listCities.add(visitorAddressTable.getString("textContactCityOfTheInstitution"));
+				            listDistrict.add(visitorAddressTable.getString("textContactDistrictOfTheInstitution"));
+				            listLocalAuthority.add(visitorAddressTable.getString("textContactCountyOfTheInstitution"));
+				            listAutonomus.add(visitorAddressTable.getString("textContactRegionOfTheInstitution"));
+				            listCountries.add(visitorAddressTable.getString("textContactCountryOfTheInstitution"));
+				            listLatitudes.add(visitorAddressTable.getString("textContactLatitudeOfTheInstitution"));
+				            listLongitudes.add(visitorAddressTable.getString("textContactLongitudeOfTheInstitution"));
+				            
+				      
+				      }while(visitorAddress.has("contactTableVisitorsAddress_"+(++i)));
+				      
+				     
+						tempListList.add(listStreet);
+						eag2012.setStreetValue(tempListList);
+						tempListList = new ArrayList<List<String>>();
+						tempListList.add(listStreetLanguage);
+						eag2012.setStreetLang(tempListList);
+						tempListList = new ArrayList<List<String>>();
+						tempListList.add(listCities);
+						eag2012.setMunicipalityPostalcodeValue(tempListList);
+						eag2012.setLocalentityValue(listDistrict);
+						eag2012.setSecondemValue(listLocalAuthority);
+						eag2012.setFirstdemValue(listAutonomus);
+						eag2012.setCountryValue(listCountries);
+						tempListList = new ArrayList<List<String>>();
+						tempListList.add(listLatitudes);
+						eag2012.setLocationLatitude(tempListList);
+						tempListList = new ArrayList<List<String>>();
+						tempListList.add(listLongitudes);
+						eag2012.setLocationLongitude(tempListList);
+				      
+				      }
+				}
+				
+				JSONObject postalAddress = contactTable.getJSONObject("postalAddress");
+				if(postalAddress!=null){
+					List<String> listStreet = new ArrayList<String>();
+					List<String> listStreetLanguage = new ArrayList<String>();
+					List<String> listCities = new ArrayList<String>();
+					List<List<String>> tempListList = new ArrayList<List<String>>();
+					int i=0;
+					if(postalAddress.getJSONObject("contactTablePostalAddress_"+i)!=null){
+						
+						do{
+							JSONObject postalAddressTable = postalAddress.getJSONObject("contactTablePostalAddress_"+i);
+							listStreet.add(postalAddressTable.getString("textContactPAStreet"));
+							listStreetLanguage.add(postalAddressTable.getString("selectContactLanguagePostalAddress"));
+							listCities.add(postalAddressTable.getString("textContactPACity"));
+							
+						}while(postalAddress.has("contactTablePostalAddress_"+(++i)));
+						
+						tempListList.add(listStreet);
+						eag2012.setStreetValue(tempListList);
+						tempListList = new ArrayList<List<String>>();
+						tempListList.add(listStreetLanguage);
+						eag2012.setStreetLang(tempListList);
+						tempListList = new ArrayList<List<String>>();
+						tempListList.add(listCities);
+						eag2012.setMunicipalityPostalcodeValue(tempListList);
+					}
+					
+				}
+				int i=1;
+				while(contactTable.has("textContactTelephoneOfTheInstitution_"+(++i))){
+					JSONObject telephoneTable = contactTable.getJSONObject("textContactTelephoneOfTheInstitution_"+i);
+					Map<String, List<String>> telephones = new HashMap<String,List<String>>();
+					ArrayList<String> listTelephones = new ArrayList<String>();
+					listTelephones.add(telephoneTable.getString("textContactTelephoneOfTheInstitution_"+i));
+					telephones.put(Eag2012Creator.TAB_CONTACT,listTelephones);
+					List<Map<String, List<String>>> listMapTelephonesList = new ArrayList<Map<String, List<String>>>(); 
+					listMapTelephonesList.add(telephones);
+					eag2012.setTelephoneValue(listMapTelephonesList); 	
+				}
+				
+			    i=0;
+				while(contactTable.has("textContactFaxOfTheInstitution_"+(++i))){
+					JSONObject FaxTable = contactTable.getJSONObject("textContactFaxOfTheInstitution_"+i);
+					Map<String, List<String>> fax = new HashMap<String,List<String>>();
+					ArrayList<String> listFax = new ArrayList<String>();
+					listFax.add(FaxTable.getString("textContactFaxOfTheInstitution_"+i));
+					fax.put(Eag2012Creator.TAB_CONTACT,listFax);
+					List<Map<String, List<String>>> listMapFaxList = new ArrayList<Map<String, List<String>>>(); 
+					listMapFaxList.add(fax);
+					eag2012.setFaxValue(listMapFaxList); 	
+				}
+				
+				 i=1;
+				 while(contactTable.has("textContactEmailOfTheInstitution_"+(++i))){
+					 JSONObject emailTable = contactTable.getJSONObject("textContactEmailOfTheInstitution_"+i);
+					 Map<String, List<String>> email = new HashMap<String,List<String>>();
+					 ArrayList<String> listEmail = new ArrayList<String>();
+					 listEmail.add(emailTable.getString("textContactEmailOfTheInstitution_"+i));
+					 email.put(Eag2012Creator.TAB_CONTACT,listEmail);
+					 List<Map<String, List<String>>> listMapEmailList = new ArrayList<Map<String, List<String>>>(); 
+					 listMapEmailList.add(email);
+					 eag2012.setEmailHref(listMapEmailList); 	
+					}
+				 i=1;
+				 while(contactTable.has("textContactLinkTitleForEmailOfTheInstitution_"+(++i))){
+					 JSONObject emailTable = contactTable.getJSONObject("textContactLinkTitleForEmailOfTheInstitution_"+i);
+					 Map<String, List<String>> email = new HashMap<String,List<String>>();
+					 ArrayList<String> listEmail = new ArrayList<String>();
+					 listEmail.add(emailTable.getString("textContactLinkTitleForEmailOfTheInstitution_"+i));
+					 email.put(Eag2012Creator.TAB_CONTACT,listEmail);
+					 List<Map<String, List<String>>> listMapEmailList = new ArrayList<Map<String, List<String>>>(); 
+					 listMapEmailList.add(email);
+					 eag2012.setEmailValue(listMapEmailList); 	
+					}
+				 i=1;
+				 while(contactTable.has("textContactWebOfTheInstitution_"+(++i))){
+					 JSONObject webTable = contactTable.getJSONObject("textContactWebOfTheInstitution_"+i);
+					 Map<String, List<String>> web = new HashMap<String,List<String>>();
+					 ArrayList<String> listWeb = new ArrayList<String>();
+					 listWeb.add(webTable.getString("textContactWebOfTheInstitution_"+i));
+					 web.put(Eag2012Creator.TAB_CONTACT,listWeb);
+					 List<Map<String, List<String>>> listMapWebList = new ArrayList<Map<String, List<String>>>(); 
+					 listMapWebList.add(web);
+					 eag2012.setWebpageHref(listMapWebList); 	
+					}
 			
-			//Contact visitorsAddress
-			
-			JSONObject visitorAddress = contact.getJSONObject("visitorsAddress");
-			if(visitorAddress!=null){
-				List<String> listStreet = new ArrayList<String>();
-				List<String> listCities = new ArrayList<String>();
-				List<String> listDistrict = new ArrayList<String>();
-				List<String> listLocalAuthority = new ArrayList<String>();
-				List<String> listAutonomus = new ArrayList<String>();
-				List<String> listCountries = new ArrayList<String>();
-				List<String> listLatitudes = new ArrayList<String>();
-				List<String> listLongitudes = new ArrayList<String>();
-				List<String> listStreetLanguage = new ArrayList<String>();
-				List<List<String>> tempListList = new ArrayList<List<String>>();  
-				int i=0;
-				if(visitorAddress.getJSONObject("contactTableVisitorsAddress_"+i)!=null){
-			    	
-			      do{
-			    	    JSONObject visitorAddressTable = visitorAddress.getJSONObject("contactTableVisitorsAddress_"+i);
-						listStreet.add(visitorAddressTable.getString("textContactStreetOfTheInstitution"));
-						listStreetLanguage.add(visitorAddressTable.getString("selectLanguageVisitorAddress")); 
-			            listCities.add(visitorAddressTable.getString("textContactCityOfTheInstitution"));
-			            listDistrict.add(visitorAddressTable.getString("textContactDistrictOfTheInstitution"));
-			            listLocalAuthority.add(visitorAddressTable.getString("textContactCountyOfTheInstitution"));
-			            listAutonomus.add(visitorAddressTable.getString("textContactRegionOfTheInstitution"));
-			            listCountries.add(visitorAddressTable.getString("textContactCountryOfTheInstitution"));
-			            listLatitudes.add(visitorAddressTable.getString("textContactLatitudeOfTheInstitution"));
-			            listLongitudes.add(visitorAddressTable.getString("textContactLongitudeOfTheInstitution"));
-			            
-			      
-			      }while(visitorAddress.has("contactTableVisitorsAddress_"+(++i)));
-			      
-			     
-					tempListList.add(listStreet);
-					eag2012.setStreetValue(tempListList);
-					tempListList = new ArrayList<List<String>>();
-					tempListList.add(listStreetLanguage);
-					eag2012.setStreetLang(tempListList);
-					tempListList = new ArrayList<List<String>>();
-					tempListList.add(listCities);
-					eag2012.setMunicipalityPostalcodeValue(tempListList);
-					eag2012.setLocalentityValue(listDistrict);
-					eag2012.setSecondemValue(listLocalAuthority);
-					eag2012.setFirstdemValue(listAutonomus);
-					eag2012.setCountryValue(listCountries);
-					tempListList = new ArrayList<List<String>>();
-					tempListList.add(listLatitudes);
-					eag2012.setLocationLatitude(tempListList);
-					tempListList = new ArrayList<List<String>>();
-					tempListList.add(listLongitudes);
-					eag2012.setLocationLongitude(tempListList);
-			      
-			      }
+				 i=1;
+				 while(contactTable.has("textContactLinkTitleForWebOfTheInstitution_"+(++i))){
+					 JSONObject webTable = contactTable.getJSONObject("textContactLinkTitleForWebOfTheInstitution_"+i);
+					 Map<String, List<String>> web = new HashMap<String,List<String>>();
+					 ArrayList<String> listWeb = new ArrayList<String>();
+					 listWeb.add(webTable.getString("textContactLinkTitleForWebOfTheInstitution_"+i));
+					 web.put(Eag2012Creator.TAB_CONTACT,listWeb);
+					 List<Map<String, List<String>>> listMapWebList = new ArrayList<Map<String, List<String>>>(); 
+					 listMapWebList.add(web);
+					 eag2012.setWebpageValue(listMapWebList); 	
+					}
 			}
 		}
 		return eag2012;	
