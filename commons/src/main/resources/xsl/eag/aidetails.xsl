@@ -923,25 +923,24 @@
 			 </thead>	 
 			 <tbody>
 			         <!-- relationEntry -->
-			
+
 				<xsl:choose>
-				  <xsl:when test="./eag:eag/eag:relations/eag:resourceRelation/@href">
-				     <xsl:variable name="link" select="./eag:eag/eag:relations/eag:resourceRelation/@href"/>
+ 				  <xsl:when test="./eag:eag/eag:relations/eag:resourceRelation/@href">
 				     <tr>
-					   <td class="header"><xsl:value-of select="ape:resource('eagcontent.relatedresource')" /></td>
-				       <xsl:choose>
-					     <xsl:when test="./eag:eag/eag:relations/eag:resourceRelation/eag:relationEntry/text()">    
-			                  <td>
-				                 <a href="{$link}"  target="_blank" ><xsl:value-of select="./eag:eag/eag:relations/eag:resourceRelation/eag:relationEntry" /></a>    
-			                  </td>
-						  </xsl:when>
-						  <xsl:otherwise>
-						    <td>
-				               <a href="{$link}"  target="_blank" ><xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')" /></a> 
-							</td>	   
-						  </xsl:otherwise>
-						</xsl:choose>
-					  </tr>	
+					   <td class="header"><xsl:value-of select="ape:resource('eagcontent.relatedresource')" />:</td>
+					   <td>
+			  		<xsl:for-each select="./eag:eag/eag:relations/eag:resourceRelation/eag:relationEntry">
+			  			<xsl:variable name="link" select="current()/parent::node()/@href"></xsl:variable>
+						<xsl:choose>
+							<xsl:when test="text()">
+								<p><a href="{$link}"  target="_blank" ><xsl:value-of select="text()" /></a></p>
+							</xsl:when>
+							<xsl:otherwise>
+								<p><a href="{$link}"  target="_blank" ><xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')" /></a></p>
+							</xsl:otherwise>
+						</xsl:choose> 
+					</xsl:for-each>
+						</td></tr>	
 					</xsl:when>
 					<xsl:otherwise>
 					  <xsl:if test="./eag:eag/eag:relations/eag:resourceRelation/eag:relationEntry/text()">	  		   
@@ -952,7 +951,7 @@
 					  </xsl:if>
 					</xsl:otherwise>
 				  </xsl:choose>
-				 
+
 			     <!-- nonpreform  and useDates-->
 			 
 			 <xsl:if test="./eag:eag/eag:archguide/eag:identity/eag:nonpreform">
@@ -971,7 +970,7 @@
 			   
 			<xsl:if test="./eag:eag/eag:control/eag:maintenanceHistory/eag:maintenanceEvent/eag:eventDateTime/text()">  
 			 <tr>
-			   <td class="header"><xsl:value-of select="ape:resource('eagcontent.lastupdate')"/> </td>
+			   <td class="header"><xsl:value-of select="ape:resource('eagcontent.lastupdate')"/>:</td>
 			   <td>
 			   		<xsl:variable name="numberOfMaintenanceEvent" select="count(./eag:eag/eag:control/eag:maintenanceHistory/eag:maintenanceEvent)"/>
 			   		<xsl:value-of select= "./eag:eag/eag:control/eag:maintenanceHistory/eag:maintenanceEvent[$numberOfMaintenanceEvent]/eag:eventDateTime"/>
