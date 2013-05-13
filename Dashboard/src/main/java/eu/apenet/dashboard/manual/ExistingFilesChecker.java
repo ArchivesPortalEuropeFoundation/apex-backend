@@ -116,15 +116,17 @@ public class ExistingFilesChecker {
 			
 			//It is necessary to check if the XML file uploaded is a Finding Aid or a Holdings Guide
             try {
-			    eadType = this.extractAttributeFromEad(this.uploadedFilesPath + aListXml.getFilename(), "archdesc", "type", true);
+			    eadType = extractAttributeFromEad(this.uploadedFilesPath + aListXml.getFilename(), "archdesc", "type", true);
             } catch (WstxParsingException e){
                 //We get the exception just after - so nothing to do here.
             }
 			if (eadType.equals("inventory")) {
 				eadType = XmlType.EAD_FA.getName();
+				fileUnit.setEadTypeId(XmlType.EAD_FA.getIdentifier());
 			}
 			else if (eadType.equals("holdings_guide")) {
 				eadType = XmlType.EAD_HG.getName();
+				fileUnit.setEadTypeId(XmlType.EAD_HG.getIdentifier());
 			}
 			else {
 				//The XML is not an APEnet EAD

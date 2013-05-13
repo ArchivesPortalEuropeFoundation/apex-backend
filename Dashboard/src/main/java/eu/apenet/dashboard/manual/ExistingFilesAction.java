@@ -2,11 +2,17 @@ package eu.apenet.dashboard.manual;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.types.XmlType;
+import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
+import eu.apenet.persistence.dao.UpFileDAO;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.FileType;
 
 /**
  * User: Eloy García
@@ -22,7 +28,7 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 	private static final long serialVersionUID = 412564723638638837L;
 
 	private final static Logger LOG = Logger.getLogger(ExistingFilesAction.class);
-    
+    private Set<SelectItem> typeSet = new TreeSet<SelectItem>();
     //Attributes
 	private List<FileUnit> existingNewXmlFilesUploaded;	//This attribute contains all the XML file names that have been uploaded to the Dashboard through HTTP, FTP or OAI-PMH protocols.
 	private List<FileUnit> existingNewXslFilesUploaded;	//This attribute contains all the XSL file names that have been uploaded to the Dashboard through HTTP, FTP or OAI-PMH protocols.	
@@ -51,8 +57,8 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 	private String eadid;
     private String neweadid;
     private String[] arrayneweadid;
-    
-	
+    private boolean filesLeft;
+    private String newXmlFilesTitle;
 	public void setFilesSuccessful(List<FileUnit> filesSuccessful) {
 		this.filesSuccessful = filesSuccessful;
 	}
@@ -261,6 +267,9 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 		this.existingFiles = new ArrayList<FileUnit>();
 		this.filesNotUploaded = new ArrayList<FileUnit>();
 		this.filesBlocked = new ArrayList<FileUnit>();
+		typeSet.add(new SelectItem("0", getText("content.message.fa")));
+		typeSet.add(new SelectItem("1", getText("content.message.hg")));
+		typeSet.add(new SelectItem("3", getText("content.message.sg")));
     }
 	@Override
 	protected void buildBreadcrumbs() {
@@ -274,7 +283,12 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 
 		ExistingFilesChecker checker = new ExistingFilesChecker(this.getAiId());
 		checker.retrieveUploadedFiles(this.existingNewXmlFilesUploaded, this.existingNewXslFilesUploaded);
-        //if(existingNewXslFilesUploaded.size() == 0 && existingNewXmlFilesUploaded.size() == 0 && filesWithErrors.size() == 0 && existingFiles.size() == 0 && filesNotUploaded.size() == 0)
+		long totalNumberOfFiles = DAOFactory.instance().getUpFileDAO().countNewUpFiles(this.getAiId(), FileType.XML);
+		int numberOfFiles = this.existingNewXmlFilesUploaded.size();
+		newXmlFilesTitle = getText("content.message.files.processing", new String[]{numberOfFiles+"", totalNumberOfFiles+""});
+		if (numberOfFiles > numberOfFiles){
+			filesLeft = true;	
+		}
         if(existingNewXslFilesUploaded.size() == 0 && existingNewXmlFilesUploaded.size() == 0)
             return "DIRECT";
 		return SUCCESS;
@@ -331,8 +345,14 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 		}
 		this.filesWithEmptyEadid=null;
 
-        if(existingNewXslFilesUploaded.size() == 0 && existingNewXmlFilesUploaded.size() == 0 && filesWithErrors.size() == 0 && filesNotUploaded.size() == 0)
-            return "DIRECT";
+        if(existingNewXslFilesUploaded.size() == 0 && existingNewXmlFilesUploaded.size() == 0 && filesWithErrors.size() == 0 && filesNotUploaded.size() == 0){
+        	if (DAOFactory.instance().getUpFileDAO().hasNewUpFiles(getAiId(), FileType.XML)){
+        		return "filesLeft";
+        	}else {
+        		return "contentmanager";
+        	}
+        }
+            
         return SUCCESS;
 	}
 	
@@ -452,8 +472,16 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 		this.existingNewXslFilesUploaded = null;
 		this.existingNewXmlFilesUploaded = null;
 		checker = null;
-		
-		return SUCCESS;
+		if (filesSuccessful.size() >0 && filesWithEmptyEadid.size() == 0 && 
+				filesWithErrors.size() == 0 && filesNotUploaded.size() == 0 && filesBlocked.size() == 0 && existingFiles.size() == 0){
+        	if (DAOFactory.instance().getUpFileDAO().hasNewUpFiles(getAiId(), FileType.XML)){
+        		return "filesLeft";
+        	}else {
+        		return "contentmanager";
+        	}
+		}else {
+			return SUCCESS;
+		}
 	}
 
 	public String cancelCheckExistingFiles() {
@@ -483,14 +511,6 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 			
 			fileUnit = this.getExistingNewXmlFilesUploaded().get(i);
 
-            XmlType xmlType;
-            try {
-                xmlType = XmlType.getType(Integer.parseInt(filesTypeAnswers[i]));
-            } catch (Exception e){
-                LOG.error("Could not decide which type it is, switching to default: FA");
-                xmlType = XmlType.EAD_FA;
-            }
-
 			if (checker.overwriteFile(this.existingNewXmlFilesUploaded.get(i), "Cancel", "", "", "", "").equals("error")) {
 				//The file has not been correctly uploaded
 				this.filesNotUploaded.add(this.existingNewXmlFilesUploaded.get(i));
@@ -504,6 +524,19 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 		
 		return SUCCESS;
 	}
+
+	public Set<SelectItem> getTypeSet() {
+		return typeSet;
+	}
+
+	public boolean isFilesLeft() {
+		return filesLeft;
+	}
+
+	public String getNewXmlFilesTitle() {
+		return newXmlFilesTitle;
+	}
+
 
 
 }

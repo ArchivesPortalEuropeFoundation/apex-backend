@@ -14,6 +14,7 @@ public class FileUnit {
 	private FileType fileType;	//File type (zip, xml or xsl)
 	private String fileName;	//File name
 	private String eadType;		//EAD type (Holdings Guide, Finding Aid or Undefined. Empty in other case)
+	private int eadTypeId = 0;
 	private String eadid;		//EADID (fa_eadid if the file is a Finding Aid or hg_eadid if the file is a Holdings Guide)
 	private Integer permId;		//Permanent Identifier (fa_id if the file is a Finding Aid or hg_id if the file is a Holdings Guide)
     private String errorInformation;
@@ -77,4 +78,13 @@ public class FileUnit {
     public void setErrorInformation(String errorInformation) {
         this.errorInformation = errorInformation;
     }
+
+	public int getEadTypeId() {
+		return eadTypeId;
+	}
+
+	public void setEadTypeId(int eadTypeId) {
+		this.eadTypeId = eadTypeId;
+	}
+    
 }
