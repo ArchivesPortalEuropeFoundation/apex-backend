@@ -332,6 +332,9 @@
 		<action name="httpUpload" class="eu.apenet.dashboard.manual.UploadContentAction" method="httpUpload"> 
 			<result name="input" type="tiles">uploaderrorformat</result>
 			<result name="success" type="tiles">viewresult</result>
+			<result name="redirect" type="redirectAction">
+				<param name="actionName">checkfilesuploaded</param>
+			</result>
 			<result name="error" type="tiles">uploaderrorexisting</result>
 			<result name="reload" type="tiles">uploadcontent</result>
 		</action>
@@ -653,25 +656,6 @@
 			</result>
 		</action>
 		
-	
-
-		<action name="createHG" class="eu.apenet.dashboard.manual.contentmanager.ContentManagerAction" method="createHG"> 
-			<result name="success" type="redirectAction">
-				<param name="actionName">content</param>
-				<param name="xmlTypeId">${xmlTypeId}</param>
-				<param name="pageNumber">${pageNumber}</param>
-				<param name="limit">${limit}</param>
-                <param name="orderBy">${orderBy}</param>
-                <param name="orderDecreasing">${orderDecreasing}</param>
-                <param name="convertStatus">${convertStatus}</param>
-                <param name="validateStatus">${validateStatus}</param>
-                <param name="indexStatus">${indexStatus}</param>
-                <param name="holdingsGuideStatus">${holdingsGuideStatus}</param>
-                <param name="convertEseStatus">${convertEseStatus}</param>
-                <param name="deliverStatus">${deliverStatus}</param>
-			</result>
-			<result name="error" type="tiles">error</result>
-		</action>
        
        <!--  Action to check the state of the application --> 
          <action name="currentState" class="eu.apenet.dashboard.actions.CurrentStateAction"> 

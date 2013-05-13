@@ -7,14 +7,13 @@
 			showHome,selectArchive,
 						view, edit,contentmanager,updateContentmanager,			
 						validatechangeainame, changeainame, downloadeag, upload, checkfilesuploaded,
-						httpUpload, checkexistingfiles, cancelCheckexistingfiles, overwriteexistingfiles, canceloverwriteexistingfiles
-						indexingLaunched,
+						httpUpload, checkexistingfiles, cancelCheckexistingfiles, overwriteexistingfiles, canceloverwriteexistingfiles,
 						eadActions, batchEadActions, removeEseForFA, 
 						displayEseConvert, processEseConvert, showwarnings, download, link, removeLink, preview, downloadEse,
 	                    displayEadFrontPage, generateTreeJSON, displayEadIntroduction, displayEadDidContent, displayCContent,
 						batchAction,
 	                    displayConvertEseBatch, startConvertEseBatch,
-	                    generateTreeJSONWithoutPreface, showxml,getFindingAidsNotLinked,
+	                    generateTreeJSONWithoutPreface, showxml,hgTreeCreation,
 	                    
 	                    GoDashboard, dashboardHome, GoDashboardByInstitutionManager,
 	                    

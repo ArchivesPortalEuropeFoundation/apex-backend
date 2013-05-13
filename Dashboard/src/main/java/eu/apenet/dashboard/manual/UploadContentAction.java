@@ -513,7 +513,11 @@ public class UploadContentAction extends AbstractInstitutionAction implements Se
         	    if (result.equals("success")) {
         	    	this.filesNotUploaded = this.uploader_http.getFilesNotUploaded();
         	    	this.filesUploaded = this.uploader_http.getFilesUploaded();
-        	    	result = SUCCESS;
+        	    	if (filesNotUploaded.size() == 0 && filesUploaded.size() > 0){
+        	    		result = "redirect";
+        	    	}else {
+        	    		result = SUCCESS;
+        	    	}
         	    }
         	    else if (result.equals("error")) {
         	    	result = ERROR;
