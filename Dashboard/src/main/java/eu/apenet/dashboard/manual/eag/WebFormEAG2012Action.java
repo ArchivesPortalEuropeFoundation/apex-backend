@@ -725,8 +725,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					List<String> listLongitudes = new ArrayList<String>();
 					List<String> listStreetLanguage = new ArrayList<String>();
 					List<List<String>> tempListList = new ArrayList<List<String>>();  
-					int i=0;
-					if(visitorAddress.getJSONObject("contactTableVisitorsAddress_"+i)!=null){
+					int i=1;
+					if(visitorAddress.has("contactTableVisitorsAddress_"+i)){
 				    	
 				      do{
 				    	    JSONObject visitorAddressTable = visitorAddress.getJSONObject("contactTableVisitorsAddress_"+i);
@@ -772,8 +772,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					List<String> listStreetLanguage = new ArrayList<String>();
 					List<String> listCities = new ArrayList<String>();
 					List<List<String>> tempListList = new ArrayList<List<String>>();
-					int i=0;
-					if(postalAddress.getJSONObject("contactTablePostalAddress_"+i)!=null){
+					int i=1;
+					if(postalAddress.has("contactTablePostalAddress_"+i)){
 						
 						do{
 							JSONObject postalAddressTable = postalAddress.getJSONObject("contactTablePostalAddress_"+i);
@@ -796,10 +796,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				}
 				int i=1;
 				while(contactTable.has("textContactTelephoneOfTheInstitution_"+(++i))){
-					JSONObject telephoneTable = contactTable.getJSONObject("textContactTelephoneOfTheInstitution_"+i);
 					Map<String, List<String>> telephones = new HashMap<String,List<String>>();
 					ArrayList<String> listTelephones = new ArrayList<String>();
-					listTelephones.add(telephoneTable.getString("textContactTelephoneOfTheInstitution_"+i));
+					listTelephones.add(contactTable.getString("textContactTelephoneOfTheInstitution_"+i));
 					telephones.put(Eag2012Creator.TAB_CONTACT,listTelephones);
 					List<Map<String, List<String>>> listMapTelephonesList = new ArrayList<Map<String, List<String>>>(); 
 					listMapTelephonesList.add(telephones);
@@ -808,56 +807,51 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				
 			    i=0;
 				while(contactTable.has("textContactFaxOfTheInstitution_"+(++i))){
-					JSONObject FaxTable = contactTable.getJSONObject("textContactFaxOfTheInstitution_"+i);
 					Map<String, List<String>> fax = new HashMap<String,List<String>>();
 					ArrayList<String> listFax = new ArrayList<String>();
-					listFax.add(FaxTable.getString("textContactFaxOfTheInstitution_"+i));
+					listFax.add(contactTable.getString("textContactFaxOfTheInstitution_"+i));
 					fax.put(Eag2012Creator.TAB_CONTACT,listFax);
 					List<Map<String, List<String>>> listMapFaxList = new ArrayList<Map<String, List<String>>>(); 
 					listMapFaxList.add(fax);
 					eag2012.setFaxValue(listMapFaxList); 	
 				}
 				
-				 i=1;
+				 i=(x==1)?1:0;
 				 while(contactTable.has("textContactEmailOfTheInstitution_"+(++i))){
-					 JSONObject emailTable = contactTable.getJSONObject("textContactEmailOfTheInstitution_"+i);
 					 Map<String, List<String>> email = new HashMap<String,List<String>>();
 					 ArrayList<String> listEmail = new ArrayList<String>();
-					 listEmail.add(emailTable.getString("textContactEmailOfTheInstitution_"+i));
+					 listEmail.add(contactTable.getString("textContactEmailOfTheInstitution_"+i));
 					 email.put(Eag2012Creator.TAB_CONTACT,listEmail);
 					 List<Map<String, List<String>>> listMapEmailList = new ArrayList<Map<String, List<String>>>(); 
 					 listMapEmailList.add(email);
 					 eag2012.setEmailHref(listMapEmailList); 	
 					}
-				 i=1;
+				 i=(x==1)?1:0;
 				 while(contactTable.has("textContactLinkTitleForEmailOfTheInstitution_"+(++i))){
-					 JSONObject emailTable = contactTable.getJSONObject("textContactLinkTitleForEmailOfTheInstitution_"+i);
 					 Map<String, List<String>> email = new HashMap<String,List<String>>();
 					 ArrayList<String> listEmail = new ArrayList<String>();
-					 listEmail.add(emailTable.getString("textContactLinkTitleForEmailOfTheInstitution_"+i));
+					 listEmail.add(contactTable.getString("textContactLinkTitleForEmailOfTheInstitution_"+i));
 					 email.put(Eag2012Creator.TAB_CONTACT,listEmail);
 					 List<Map<String, List<String>>> listMapEmailList = new ArrayList<Map<String, List<String>>>(); 
 					 listMapEmailList.add(email);
 					 eag2012.setEmailValue(listMapEmailList); 	
 					}
-				 i=1;
+				 i=(x==1)?1:0;
 				 while(contactTable.has("textContactWebOfTheInstitution_"+(++i))){
-					 JSONObject webTable = contactTable.getJSONObject("textContactWebOfTheInstitution_"+i);
 					 Map<String, List<String>> web = new HashMap<String,List<String>>();
 					 ArrayList<String> listWeb = new ArrayList<String>();
-					 listWeb.add(webTable.getString("textContactWebOfTheInstitution_"+i));
+					 listWeb.add(contactTable.getString("textContactWebOfTheInstitution_"+i));
 					 web.put(Eag2012Creator.TAB_CONTACT,listWeb);
 					 List<Map<String, List<String>>> listMapWebList = new ArrayList<Map<String, List<String>>>(); 
 					 listMapWebList.add(web);
 					 eag2012.setWebpageHref(listMapWebList); 	
 					}
 			
-				 i=1;
+				 i=(x==1)?1:0;
 				 while(contactTable.has("textContactLinkTitleForWebOfTheInstitution_"+(++i))){
-					 JSONObject webTable = contactTable.getJSONObject("textContactLinkTitleForWebOfTheInstitution_"+i);
 					 Map<String, List<String>> web = new HashMap<String,List<String>>();
 					 ArrayList<String> listWeb = new ArrayList<String>();
-					 listWeb.add(webTable.getString("textContactLinkTitleForWebOfTheInstitution_"+i));
+					 listWeb.add(contactTable.getString("textContactLinkTitleForWebOfTheInstitution_"+i));
 					 web.put(Eag2012Creator.TAB_CONTACT,listWeb);
 					 List<Map<String, List<String>>> listMapWebList = new ArrayList<Map<String, List<String>>>(); 
 					 listMapWebList.add(web);

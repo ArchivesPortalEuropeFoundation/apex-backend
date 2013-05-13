@@ -33,7 +33,7 @@ import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 /**
- * Creates and manages all building proccess related to EAG2012 into Dashboard 
+ * Creates and manages all building process related to EAG2012 into Dashboard 
  */
 public class Eag2012Creator {
 	
@@ -1310,8 +1310,8 @@ public class Eag2012Creator {
 		childArchguide1.put("nodeValue",null);
 		
 		ArrayList<HashMap<String, Object>> childArchguide1Children = new ArrayList<HashMap<String, Object>>();
-        
-        for(int indexRepo=0;this.eag2012.getLocationLocalType()!=null && indexRepo<this.eag2012.getLocationLocalType().size();indexRepo++){ //location-localtype is mandatory so there are the same number of repositories and localtypes  
+        //geogearea is unique for all repositories and mandatory, so it's used into looper into for-control-condition
+        for(int indexRepo=0;(this.eag2012.getGeogareaValue()!=null && indexRepo<this.eag2012.getGeogareaValue().size());indexRepo++){ //location-localtype is mandatory so there are the same number of repositories and localtypes  
         	childArchguide1Children.add(buildRepository(indexRepo)); //no mandatory repeatable
         }
         childArchguide1.put("children",childArchguide1Children);
@@ -1329,50 +1329,54 @@ public class Eag2012Creator {
 		
         
      		ArrayList<HashMap<String, Object>> childArchguide2Children = new ArrayList<HashMap<String, Object>>();
-            
-     		for(int i=0;this.eag2012.getRepositoryNameValue().get(indexRepo)!=null && i<this.eag2012.getRepositoryNameValue().get(indexRepo).size();i++){//no mandatory repeatable
-     			childArchguide2Children.add(buildRepositoryName(this.eag2012.getRepositoryNameLang().get(indexRepo).get(i),this.eag2012.getRepositoryNameValue().get(indexRepo).get(i)));
-     		}
-        	childArchguide2Children.add(buildRepositoryRole(this.eag2012.getRepositoryRoleValue().get(indexRepo))); //no mandatory not repeatable
-        	childArchguide2Children.add(buildGeogarea(this.eag2012.getGeogareaLang().get(indexRepo),this.eag2012.getGeogareaValue().get(indexRepo))); //mandatory not repeatable
-        	
-        	for(int i=0;i<this.eag2012.getLocationLocalType().get(indexRepo).size();i++){ //first part <-> mandatory repeatable
-        		childArchguide2Children.add(buildLocation(this.eag2012.getLocationLocalType().get(indexRepo).get(i),this.eag2012.getLocationLongitude().get(indexRepo).get(i),this.eag2012.getLocationLatitude().get(indexRepo).get(i),indexRepo));
-        	}
-        	for(int i=0;i<this.eag2012.getLocationLocalType().get(indexRepo).size();i++){ //second part <-> mandatory repeatable
-        		childArchguide2Children.add(buildLocation2(this.eag2012.getLocationLocalType().get(indexRepo).get(i),indexRepo));
-        	}
-        	
-            for(int i=0;this.eag2012.getTelephoneValue().get(indexRepo)!=null && i<this.eag2012.getTelephoneValue().get(indexRepo).size();i++){ //no mandatory repeatable
-            	childArchguide2Children.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_CONTACT).get(i)));     
+            if(indexRepo>0){
+            	for(int i=0;this.eag2012.getRepositoryNameValue().get(indexRepo)!=null && i<this.eag2012.getRepositoryNameValue().get(indexRepo).size();i++){//no mandatory repeatable
+         			childArchguide2Children.add(buildRepositoryName(this.eag2012.getRepositoryNameLang().get(indexRepo).get(i),this.eag2012.getRepositoryNameValue().get(indexRepo).get(i)));
+         		}
+            	childArchguide2Children.add(buildRepositoryRole(this.eag2012.getRepositoryRoleValue().get(indexRepo))); //no mandatory not repeatable
+            	childArchguide2Children.add(buildGeogarea(this.eag2012.getGeogareaLang().get(indexRepo),this.eag2012.getGeogareaValue().get(indexRepo))); //mandatory not repeatable
+            	
+            	for(int i=0;i<this.eag2012.getLocationLocalType().get(indexRepo).size();i++){ //first part <-> mandatory repeatable
+            		childArchguide2Children.add(buildLocation(this.eag2012.getLocationLocalType().get(indexRepo).get(i),this.eag2012.getLocationLongitude().get(indexRepo).get(i),this.eag2012.getLocationLatitude().get(indexRepo).get(i),indexRepo));
+            	}
+            	for(int i=0;i<this.eag2012.getLocationLocalType().get(indexRepo).size();i++){ //second part <-> mandatory repeatable
+            		childArchguide2Children.add(buildLocation2(this.eag2012.getLocationLocalType().get(indexRepo).get(i),indexRepo));
+            	}
+            	
+                for(int i=0;this.eag2012.getTelephoneValue().get(indexRepo)!=null && i<this.eag2012.getTelephoneValue().get(indexRepo).size();i++){ //no mandatory repeatable
+                	childArchguide2Children.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_CONTACT).get(i)));     
+                }
+                for(int i=0;this.eag2012.getFaxValue()!=null && i<this.eag2012.getFaxValue().size();i++){//no mandatory repeatable
+                	childArchguide2Children.add(buildFax(this.eag2012.getFaxValue().get(indexRepo).get(TAB_CONTACT).get(i)));
+                }
+                for(int i=0;this.eag2012.getEmailHref()!=null && i<this.eag2012.getEmailHref().size();i++){//no mandatory repeatable
+                	childArchguide2Children.add(buildEmail(this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).get(i),this.eag2012.getEmailValue().get(indexRepo).get(TAB_CONTACT).get(i)));   
+                }
+                for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory repeatable
+                	childArchguide2Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_CONTACT).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_CONTACT).get(i)));  
+                }
+                for(int i=0; i< this.eag2012.getDirectionsValue().size();i++){ //no mandatory repeatable
+                   childArchguide2Children.add(buildDirections(this.eag2012.getDirectionsLang().get(indexRepo).get(TAB_CONTACT).get(i),this.eag2012.getDirectionsValue().get(indexRepo).get(TAB_CONTACT).get(i),indexRepo));
+                }  
+                childArchguide2Children.add(buildRepositorHist(indexRepo));    //no mandatory not repeatable                
+                childArchguide2Children.add(buildRepositorfound(indexRepo));   //no mandatory not repeatable 
+                childArchguide2Children.add(buildRepositorsup(indexRepo));     //no mandatory not repeatable    
+                childArchguide2Children.add(buildBuildinginfo(indexRepo));     //no mandatory not repeatable 
+                childArchguide2Children.add(buildAdminhierarchy(indexRepo));   //no mandatory not repeatable 
+                childArchguide2Children.add(buildHoldings(indexRepo));         //no mandatory not repeatable 
+                childArchguide2Children.add(buildTimetable(indexRepo));        //mandatory not repeatable 
+                childArchguide2Children.add(buildAccess(indexRepo));   //mandatory not repeatable 
+                
+                for(int i=0;i<this.eag2012.getAccessibilityQuestion().size();i++){//mandatory repeatable
+                  childArchguide2Children.add(buildAccessibility(this.eag2012.getAccessibilityQuestion().get(indexRepo).get(i),this.eag2012.getAccessibilityLang().get(indexRepo).get(i),this.eag2012.getAccessibilityValue().get(indexRepo).get(i)));              
+                }
+                
+                childArchguide2Children.add(buildServices(indexRepo));  //no mandatory not repeatable      
+                childArchguide2Children.add(buildDescriptiveNote(indexRepo,TAB_ACCESS_AND_SERVICES)); //no mandatory not repeatable
+            }else{
+            	//TODO
+            	
             }
-            for(int i=0;this.eag2012.getFaxValue()!=null && i<this.eag2012.getFaxValue().size();i++){//no mandatory repeatable
-            	childArchguide2Children.add(buildFax(this.eag2012.getFaxValue().get(indexRepo).get(TAB_CONTACT).get(i)));
-            }
-            for(int i=0;this.eag2012.getEmailHref()!=null && i<this.eag2012.getEmailHref().size();i++){//no mandatory repeatable
-            	childArchguide2Children.add(buildEmail(this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).get(i),this.eag2012.getEmailValue().get(indexRepo).get(TAB_CONTACT).get(i)));   
-            }
-            for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory repeatable
-            	childArchguide2Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_CONTACT).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_CONTACT).get(i)));  
-            }
-            for(int i=0; i< this.eag2012.getDirectionsValue().size();i++){ //no mandatory repeatable
-               childArchguide2Children.add(buildDirections(this.eag2012.getDirectionsLang().get(indexRepo).get(TAB_CONTACT).get(i),this.eag2012.getDirectionsValue().get(indexRepo).get(TAB_CONTACT).get(i),indexRepo));
-            }  
-            childArchguide2Children.add(buildRepositorHist(indexRepo));    //no mandatory not repeatable                
-            childArchguide2Children.add(buildRepositorfound(indexRepo));   //no mandatory not repeatable 
-            childArchguide2Children.add(buildRepositorsup(indexRepo));     //no mandatory not repeatable    
-            childArchguide2Children.add(buildBuildinginfo(indexRepo));     //no mandatory not repeatable 
-            childArchguide2Children.add(buildAdminhierarchy(indexRepo));   //no mandatory not repeatable 
-            childArchguide2Children.add(buildHoldings(indexRepo));         //no mandatory not repeatable 
-            childArchguide2Children.add(buildTimetable(indexRepo));        //mandatory not repeatable 
-            childArchguide2Children.add(buildAccess(indexRepo));   //mandatory not repeatable 
-            
-            for(int i=0;i<this.eag2012.getAccessibilityQuestion().size();i++){//mandatory repeatable
-              childArchguide2Children.add(buildAccessibility(this.eag2012.getAccessibilityQuestion().get(indexRepo).get(i),this.eag2012.getAccessibilityLang().get(indexRepo).get(i),this.eag2012.getAccessibilityValue().get(indexRepo).get(i)));              
-            }
-            
-            childArchguide2Children.add(buildServices(indexRepo));  //no mandatory not repeatable      
-            childArchguide2Children.add(buildDescriptiveNote(indexRepo,TAB_ACCESS_AND_SERVICES)); //no mandatory not repeatable                    
         childArchguide2.put("children", childArchguide2Children);
 		
 		return childArchguide2;
