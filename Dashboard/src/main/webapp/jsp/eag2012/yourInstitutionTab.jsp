@@ -231,7 +231,7 @@
 				<label for="textYIOpeningTimes" ><s:property value="getText('label.ai.yourinstitution.openingTimes')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYIOpeningTimes" />
+				<input type="text" id="textYIOpeningTimes" onchange="openingHoursOfInstitutionChanged();" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -246,14 +246,14 @@
 		</tr>
 		<tr id="fieldClosingDates" style="display:none;">
 			<td><label for="yourInstitutionClosingDates"><s:property value="getText('label.ai.yourinstitution.closingDates')"/>:</label></td>
-			<td><input type="text" id="yourInstitutionClosingDates" /></td>
+			<td><input type="text" id="yourInstitutionClosingDates" onchange="closingHoursOfInstitutionChanged();" /></td>
 		</tr>
 		<tr>
 			<td>
 				<label for="selectAccessibleToThePublic" ><s:property value="getText('label.ai.yourinstitution.accessibleToThePublic')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectAccessibleToThePublic" list="yesNoList"></s:select>
+				<s:select theme="simple" id="selectAccessibleToThePublic" list="yesNoList" onchange="accessibleToThePublicChanged();"></s:select>
 			</td>
 			<td colspan="2">
 				<input type="button" id="buttonFutherAccessInformation" value="<s:property value="getText('label.ai.yourinstitution.addFurtherAccessInformation')"/>" onclick="yiFutherAccessInformation();" />
@@ -265,7 +265,7 @@
 				<label for="selectFacilitiesForDisabledPeopleAvailable" ><s:property value="getText('label.ai.yourinstitution.facilitiesForFisabledPeopleAvailable')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectFacilitiesForDisabledPeopleAvailable" list="yesNoList"></s:select>
+				<s:select theme="simple" id="selectFacilitiesForDisabledPeopleAvailable" list="yesNoList" onchange="facilitiesForDisabledPeopleAvailableChanged();"></s:select>
 			</td>
 			<td colspan="2">
 				<input type="button" id="buttonAddFutherInformationOnExistingFacilities" value="<s:property value="getText('label.ai.yourinstitution.addFutherInformationOnExistingFacilities')"/>" onclick="yiAddFutherInformationOnExistingFacilities();" />

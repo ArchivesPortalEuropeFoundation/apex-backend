@@ -485,7 +485,13 @@ function checkAllContactTabs(text1) {
 
 		jsonData += "'contactTable_" + i + "':";
 
-		jsonData += checkContactTab("_" + i, text1);
+		var check = checkContactTab("_" + i, text1);
+
+		if (!check){
+			return false;
+		}
+
+		jsonData += check;
 	}
 
 	jsonData += "}";
@@ -713,6 +719,9 @@ function checkAccessAndServicesTab(currentTab, text1) {
 	// Mandatory elements
 	var aasMandatoryElements = new Array("textASSRWorkPlaces");
 
+	// Fill almost one element.
+	var fillOneElement = false;
+
 	var jsonData = "{";
 	//content from textareas
 	$("table#accessAndServicesTable" + currentTab + " textarea").each(function(){
@@ -725,6 +734,9 @@ function checkAccessAndServicesTab(currentTab, text1) {
 		} else {
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 		}
+
+		// Check fill value.
+		fillOneElement = checkFillValue($(this));
 	});
 	//content from texts
 	$("table#accessAndServicesTable" + currentTab + " input[type='text']").each(function(){
@@ -767,6 +779,9 @@ function checkAccessAndServicesTab(currentTab, text1) {
 				aasMandatoryElements.splice(position, 1);
 			}
 		}
+
+		// Check fill value.
+		fillOneElement = checkFillValue($(this));
 	});
 	//content from selects
 	$("table#accessAndServicesTable" + currentTab + " select").each(function(){
@@ -793,21 +808,21 @@ function checkAccessAndServicesTab(currentTab, text1) {
 		} else {
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 		}
+
+		// Check fill value.
+		fillOneElement = checkFillValue($(this));
 	});
 	jsonData += "}";
 
-	for (var i = 0; i < aasMandatoryElements.length; i++) {
-		var element = document.getElementById(aasMandatoryElements[i].toString());
-		var subelement = document.createElement('p');
-		
-		subelement.appendChild(document.createTextNode(text1));
-		subelement.id = aasMandatoryElements[i].toString() + '_required';
-		subelement.className="fieldRequired";
-		element.parentNode.insertBefore(subelement, element.nextSibling);
-	}
+	if (fillOneElement) {
+		for (var i = 0; i < aasMandatoryElements.length; i++) {
+			var pFieldError = "<p id=\""+aasMandatoryElements[i]+"_required\" class=\"fieldRequired\">"+text1+"</p>";
+			$("table#accessAndServicesTable" + currentTab + " #" + aasMandatoryElements[i]).after(pFieldError);
+		}
 
-	if (aasMandatoryElements.length != 0) {
-		return false;
+		if (aasMandatoryElements.length != 0) {
+			return false;
+		}
 	}
 
 	return jsonData;
@@ -1073,6 +1088,13 @@ function checkAndShowNextTab(table, text1, text2){
 	}
 }
 
+function checkFillValue(element) {
+	if (($(element).attr("value") != null && $(element).attr("value") != "")
+			|| ($(element).attr("value") != 'none')) {
+		return true;
+	}
+}
+
 function yiAddVisitorsAddressTranslation(text1) {
 	var counter = $("table[id^='yiTableVisitorsAddress_']").length;
 
@@ -1228,19 +1250,25 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7){
 	var country = $("#textYICountry").val();
 	var city = $("#textYICity").val();
 	var street = $("#textYIStreet").val();
+	var streetLanguage = $("#selectYIVASelectLanguage").val();
 	var telephone = $("#textYITelephone").val();
 	var email = $("#textYIEmailAddress").val();
-	var web = $("#textYIEmailAddress").val();
+	var emailLinkTitle = $("#textYIEmailLinkTitle").val();
+	var web = $("#textYIWebpage").val();
+	var webLinkTitle = $("#textYIWebpageLinkTitle").val();
 	//contact table
 	$("table#contactTable_"+(counter+1)+" #selectContinentOfTheInstitution option").eq(selectedIndex).prop("selected",true);
-	$("table#contactTable_"+(counter+1)+" #textcontactLatitudeOfTheInstitution").attr("value",latitude);
+	$("table#contactTable_"+(counter+1)+" #selectLanguageVisitorAddress").attr("value",streetLanguage);
+	$("table#contactTable_"+(counter+1)+" #textContactLatitudeOfTheInstitution").attr("value",latitude);
 	$("table#contactTable_"+(counter+1)+" #textContactLongitudeOfTheInstitution").attr("value",longitude);
 	$("table#contactTable_"+(counter+1)+" #textContactCountryOfTheInstitution").attr("value",country);
 	$("table#contactTable_"+(counter+1)+" #textContactCityOfTheInstitution").attr("value",city);
 	$("table#contactTable_"+(counter+1)+" #textContactStreetOfTheInstitution").attr("value",street);
 	$("table#contactTable_"+(counter+1)+" #textContactTelephoneOfTheInstitution").attr("value",telephone);
 	$("table#contactTable_"+(counter+1)+" #textContactEmailOfTheInstitution").attr("value",email);
+	$("table#contactTable_"+(counter+1)+" #textContactLinkTitleForEmailOfTheInstitution").attr("value",emailLinkTitle);
 	$("table#contactTable_"+(counter+1)+" #textContactWebOfTheInstitution").attr("value",web);
+	$("table#contactTable_"+(counter+1)+" #textContactLinkTitleForWebOfTheInstitution").attr("value",webLinkTitle);
 
 	// add name of repository to contact tab.
 	$("table#contactTable_"+(counter+1)+" tr#trVisitorsAddressLabel").before("<tr>"+
@@ -1263,11 +1291,13 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7){
 
 	//access and services
 	var opening = $("#textYIOpeningTimes").val();
+	var closing = $("#yourInstitutionClosingDates").val();
 	var accessPublic = document.getElementById('selectAccessibleToThePublic').selectedIndex;
-	var access = $("#selectFacilitiesForDisabledPeopleAvailable").val();
-	$("table#contactTable_"+(counter+1)+" #textContactWebOfTheInstitution").attr("value",opening);
-	$("table#contactTable_"+(counter+1)+" #selectASFacilitiesForDisabledPeopleAvailable option").eq(accessPublic).prop("selected",true);
-	$("table#contactTable_"+(counter+1)+" #textASAccessibility").attr("value",access);
+	var accessibilityDisabledPeople = $("#selectFacilitiesForDisabledPeopleAvailable").val();
+	$("table#accessAndServicesTable_"+(counter+1)+" #textOpeningTimes").attr("value",opening);
+	$("table#accessAndServicesTable_"+(counter+1)+" #textClosingDates").attr("value",closing);
+	$("table#accessAndServicesTable_"+(counter+1)+" #selectASAccesibleToThePublic option").eq(accessPublic).prop("selected",true);
+	$("table#accessAndServicesTable_"+(counter+1)+" #selectASFacilitiesForDisabledPeopleAvailable").attr("value",accessibilityDisabledPeople);
 	
 	$("table#"+localId).show();
 	$("a[id^='tab_']").click(function(){
@@ -2832,6 +2862,18 @@ function webOfInstitutionChanged(){
 	$("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution").attr("value", $("table#yiTableOthers #textYIWebpage").val());
 }
 
+function openingHoursOfInstitutionChanged(){
+	$("table#accessAndServicesTable_1 tr#trASOpeningTimes #textOpeningTimes").attr("value", $("table#yiTableOthers #textYIOpeningTimes").val());
+}
+
+function accessibleToThePublicChanged() {
+	$("table#accessAndServicesTable_1 #selectASAccesibleToThePublic").attr("value", $("table#yiTableOthers #selectAccessibleToThePublic").val());
+}
+
+function facilitiesForDisabledPeopleAvailableChanged() {
+	$("table#accessAndServicesTable_1 #selectASFacilitiesForDisabledPeopleAvailable").attr("value", $("table#yiTableOthers #selectFacilitiesForDisabledPeopleAvailable").val());
+}
+
 function webOfInstitutionLinkChanged(){
 	$("table#contactTable_1 tr#trWebOfTheInstitution #textContactLinkTitleForWebOfTheInstitution").attr("value", $("table#yiTableOthers #textYIWebpageLinkTitle").val());
 }
@@ -2842,6 +2884,22 @@ function contactEmailOfInstitutionLinkChanged(){
 
 function contactWebOfInstitutionLinkChanged(){
 	$("table#yiTableOthers #textYIWebpageLinkTitle").attr("value", $("table#contactTable_1 tr#trWebOfTheInstitution #textContactLinkTitleForWebOfTheInstitution").val());
+}
+
+function aSOpeningHoursOfInstitutionChanged(){
+	$("table#yiTableOthers #textYIOpeningTimes").attr("value", $("table#accessAndServicesTable_1 tr#trASOpeningTimes #textOpeningTimes").val());
+}
+
+function aSClosingHoursOfInstitutionChanged(){
+	$("table#yiTableOthers #yourInstitutionClosingDates").attr("value", $("table#accessAndServicesTable_1 tr#trASClosingDates #textClosingDates").val());
+}
+
+function aSAccessibleToThePublicChanged() {
+	$("table#yiTableOthers #selectAccessibleToThePublic").attr("value", $("table#accessAndServicesTable_1 #selectASAccesibleToThePublic").val());
+}
+
+function aSFacilitiesForDisabledPeopleAvailableChanged() {
+	$("table#yiTableOthers #selectFacilitiesForDisabledPeopleAvailable").attr("value", $().val("table#accessAndServicesTable_1 #selectASFacilitiesForDisabledPeopleAvailable"));
 }
 
 function linkToYourHolndingsGuideChanged(){

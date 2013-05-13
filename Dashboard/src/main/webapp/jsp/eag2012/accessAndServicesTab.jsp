@@ -8,7 +8,7 @@
 				<label for="textOpeningTimes"><s:property value="getText('label.ai.accessAndServices.openingTimes')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textOpeningTimes" />
+				<input type="text" id="textOpeningTimes" onchange="aSOpeningHoursOfInstitutionChanged();" />
 			</td>
 			<td class="labelLeft">
 				<label for="selectLanguageOpeningTimes" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -31,7 +31,7 @@
 				<label for="textClosingDates"><s:property value="getText('label.ai.tabs.commons.closingDates')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textClosingDates" />
+				<input type="text" id="textClosingDates" onchange="aSClosingHoursOfInstitutionChanged();" />
 			</td>
 			<td class="labelLeft">
 				<label for="selectLanguageClosingDates" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -88,7 +88,7 @@
 				<label for="selectASAccesibleToThePublic"><s:property value="getText('label.ai.accessAndServices.accesibleToThePublic')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASAccesibleToThePublic" list="yesNoList"></s:select>
+				<s:select theme="simple" id="selectASAccesibleToThePublic" list="yesNoList" onchange="aSAccessibleToThePublicChanged();"></s:select>
 			</td>
 			<td colspan="2">
 			</td>
@@ -156,7 +156,7 @@
 				<label for="selectASFacilitiesForDisabledPeopleAvailable"><s:property value="getText('label.ai.accessAndServices.facilitiesForDisabledPeopleAvailable')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASFacilitiesForDisabledPeopleAvailable" list="yesNoList"></s:select>
+				<s:select theme="simple" id="selectASFacilitiesForDisabledPeopleAvailable" list="yesNoList" onchange="aSFacilitiesForDisabledPeopleAvailableChanged();"></s:select>
 			</td>
 		</tr>
 
