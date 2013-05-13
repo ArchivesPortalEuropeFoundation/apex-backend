@@ -29,27 +29,10 @@
 			</s:if>
 			<s:if test="existingNewXmlFilesUploaded.size()>0" >
 	        	<div id="existingNewXmlFilesUploadedList">
-	            	<strong><s:property value="getText('content.message.filesselection')"/></strong>
-	            	<br></br>
-	            	<br></br>
-                       <s:set name="endVariable"><s:property value="existingNewXmlFilesUploaded.size()"/></s:set>
-                       <s:if test="#endVariable > 3000"><s:set name="endVariable">3000</s:set></s:if>
-	        		<s:iterator value="existingNewXmlFilesUploaded" status="stat" var="row" begin="0" end="#endVariable - 1">
-	        			<s:if test="#row.eadType=='Holdings Guide'">
-	        			<!-- '2':'EAC_CPF' is disabled for the moment -->
-	        				<s:select list="#{'0':'Finding Aid', '1':'Holdings Guide', '3':'Source Guide'}" label="%{(#stat.index+1) + '- ' + top.fileName}" name="filesTypeAnswers" value="1"></s:select>
-	        				<%--<s:label label="%{(#stat.index+1) + '- ' + top.fileName}"></s:label>		        				--%>
-	        				<%--<s:hidden name="filesTypeAnswers" value="1"></s:hidden>--%>
-	        			</s:if>
-	        			<s:elseif test="#row.eadType=='Finding Aid'">
-	        			<!-- '2':'EAC_CPF' is disabled for the moment -->
-	        				<s:select list="#{'0':'Finding Aid', '1':'Holdings Guide', '3':'Source Guide'}" label="%{(#stat.index+1) + '- ' + top.fileName}" name="filesTypeAnswers" value="0"></s:select>
-	        				<%--<s:label label="%{(#stat.index+1) + '- ' + top.fileName}"></s:label>--%>
-	        				<%--<s:hidden name="filesTypeAnswers" value="0"></s:hidden>--%>
-	        			</s:elseif>
-	        			<s:else> <!-- '2':'EAC_CPF' is disabled for the moment -->
-	        				<s:select list="#{'0':'Finding Aid', '1':'Holdings Guide', '3':'Source Guide'}" label="%{(#stat.index+1) + '- ' + top.fileName}" name="filesTypeAnswers" value="0"></s:select>
-	        			</s:else>
+         				<h1><s:property value='newXmlFilesTitle'/></h1>
+	            	<h3><s:property value="getText('content.message.filesselection')"/></h3>           	
+	        		<s:iterator value="existingNewXmlFilesUploaded" status="stat" >
+	        			<s:select list="typeSet" label="%{(#stat.index+1) + '- ' + top.fileName}" listKey="value" listValue="content" name="filesTypeAnswers" value="%{top.eadTypeId}"></s:select>
 	       				<s:hidden name="existingNewXmlFilesUploaded[%{#stat.index}].fileId" value="%{top.fileId}"></s:hidden>
 	       				<s:hidden name="existingNewXmlFilesUploaded[%{#stat.index}].fileType" value="%{top.fileType}"></s:hidden>
 	       				<s:hidden name="existingNewXmlFilesUploaded[%{#stat.index}].fileName" value="%{top.fileName}"></s:hidden>		        			

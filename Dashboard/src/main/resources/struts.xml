@@ -170,9 +170,12 @@
 		</action>
 
 		<action name="overwriteexistingfiles" class="eu.apenet.dashboard.manual.ExistingFilesAction" method="overwriteExistingFiles"> 
-            <result name="DIRECT" type="redirectAction">
-                <param name="actionName">contentmanager</param>
-            </result>
+		    <result name="contentmanager" type="redirectAction">
+		        <param name="actionName">contentmanager</param>
+		    </result>
+		    <result name="filesLeft" type="redirectAction">
+		        <param name="actionName">checkfilesuploaded</param>
+		    </result>
 			<result name="success" type="tiles">checkuploadedfiles</result>
 		</action>
 		
@@ -182,6 +185,12 @@
 		
 		<action name="checkexistingfiles" class="eu.apenet.dashboard.manual.ExistingFilesAction" method="checkExistingFiles"> 
 			<result name="success" type="tiles">checkuploadedfiles</result>
+		    <result name="contentmanager" type="redirectAction">
+		        <param name="actionName">contentmanager</param>
+		    </result>
+		    <result name="filesLeft" type="redirectAction">
+		        <param name="actionName">checkfilesuploaded</param>
+		    </result>
 		</action>
 		
 		<action name="cancelCheckexistingfiles" class="eu.apenet.dashboard.manual.ExistingFilesAction" method="cancelCheckExistingFiles"> 
