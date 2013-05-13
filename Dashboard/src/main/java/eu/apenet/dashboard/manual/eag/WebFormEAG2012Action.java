@@ -1130,22 +1130,22 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				listMailsTitleList.add(mailsTitle);
 				eag2012.setEmailValue(listMailsTitleList); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(mailsTitle) }
 			}
-			if(yourInstitution.has("textYIEmailLinkTitle")){
-				Map<String, List<String>> webpageLink = new HashMap<String,List<String>>();
-				ArrayList<String> listMailsWebpage = new ArrayList<String>();
-				listMailsWebpage.add(yourInstitution.getString("textYIEmailLinkTitle"));
-				webpageLink.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listMailsWebpage);
-				List<Map<String, List<String>>> listWebpageLink = new ArrayList<Map<String, List<String>>>();
-				listWebpageLink.add(webpageLink);
-				eag2012.setWebpageHref(listWebpageLink); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(webpageTitle) }
+			if(yourInstitution.has("textYIWebpage")){
+				Map<String, List<String>> webpageLinkHref = new HashMap<String,List<String>>();
+				ArrayList<String> listMailsWebpageHref = new ArrayList<String>();
+				listMailsWebpageHref.add(yourInstitution.getString("textYIWebpage"));
+				webpageLinkHref.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listMailsWebpageHref);
+				List<Map<String, List<String>>> listWebpageLinkHref = new ArrayList<Map<String, List<String>>>(); 
+				eag2012.setWebpageHref(listWebpageLinkHref); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(webpageHref) }
 			}
 			if(yourInstitution.has("textYIWebpageLinkTitle")){
-				Map<String, List<String>> webpageLinkTitle = new HashMap<String,List<String>>();
-				ArrayList<String> listMailsWebpageTitle = new ArrayList<String>();
-				listMailsWebpageTitle.add(yourInstitution.getString("textYIWebpageLinkTitle"));
-				webpageLinkTitle.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listMailsWebpageTitle);
-				List<Map<String, List<String>>> listWebpageLinkTitle = new ArrayList<Map<String, List<String>>>(); 
-				eag2012.setWebpageValue(listWebpageLinkTitle); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(webpageHref) }
+				Map<String, List<String>> webpageValue = new HashMap<String,List<String>>();
+				ArrayList<String> listWebpage = new ArrayList<String>();
+				listWebpage.add(yourInstitution.getString("textYIWebpageLinkTitle"));
+				webpageValue.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listWebpage);
+				List<Map<String, List<String>>> listWebpageValue = new ArrayList<Map<String, List<String>>>();
+				listWebpageValue.add(webpageValue);
+				eag2012.setWebpageValue(listWebpageValue); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(webpageTitle) }
 			}
 			if(yourInstitution.has("textYIOpeningTimes")){
 				Map<String, String> openingMap = new HashMap<String,String>();
@@ -1159,6 +1159,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				closingMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION, yourInstitution.getString("yourInstitutionClosingDates"));
 				List<Map<String, String>> closingValues = new ArrayList<Map<String,String>>();
 				closingValues.add(closingMap);
+				eag2012.setClosingValue(closingValues); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {opening}
 				eag2012.setClosingStandardDate(closingValues); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {closing}
 			}
 			if(yourInstitution.has("selectAccessibleToThePublic")){

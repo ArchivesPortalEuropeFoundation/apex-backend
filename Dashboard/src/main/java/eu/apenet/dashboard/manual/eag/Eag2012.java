@@ -34,6 +34,8 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
 public class Eag2012 {
 	
 	private static final String OTHERRECORDID_PATH = "/eag/archguide/otherRecordId";
+
+	public static final String REPOSITORY_ROLE_HEAD_QUARTER = "HeadQuarters";
 	
 	private String repositoryId;
 	private String otherRepositorId;

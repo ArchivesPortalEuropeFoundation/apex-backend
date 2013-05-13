@@ -1058,10 +1058,10 @@ public class Eag2012Creator {
         childControl1.put("nodeName", "descriptiveNote");
         HashMap<String, String> childControl1Attributes = new HashMap<String, String>();
         if(this.eag2012.getDescriptiveNoteLang()!=null){
-        	childControl1Attributes.put("xml:lang", this.eag2012.getDescriptiveNoteLang().get(indexRepo).get(tabKey));
+        	childControl1Attributes.put("xml:lang", (this.eag2012.getDescriptiveNoteLang() !=null && this.eag2012.getDescriptiveNoteLang().size()>indexRepo && this.eag2012.getDescriptiveNoteLang().get(indexRepo)!=null)?this.eag2012.getDescriptiveNoteLang().get(indexRepo).get(tabKey):null);
         }
         if(this.eag2012.getDescriptiveNoteId()!=null){
-        	childControl1Attributes.put("xml:id",this.eag2012.getDescriptiveNoteId().get(indexRepo).get(tabKey));
+        	childControl1Attributes.put("xml:id",(this.eag2012.getDescriptiveNoteId()!=null && this.eag2012.getDescriptiveNoteId().size()>indexRepo && this.eag2012.getDescriptiveNoteId().get(indexRepo)!=null && this.eag2012.getDescriptiveNoteId().get(indexRepo).size()>0)?this.eag2012.getDescriptiveNoteId().get(indexRepo).get(tabKey):null);
         }
         childControl1.put("attributes",childControl1Attributes);
         childControl1.put("nodeValue", null);
@@ -1079,10 +1079,10 @@ public class Eag2012Creator {
         childControl2.put("nodeName", "p");
         childControl2.put("children", null);
         HashMap<String,String> childControlChildChildAttributes = new HashMap<String,String>();
-        childControlChildChildAttributes.put("xml:id",this.eag2012.getDescriptiveNotePId().get(indexRepo).get(tabKey).get(indexP));
-        childControlChildChildAttributes.put("xml:lang", this.eag2012.getDescriptiveNotePLang().get(indexRepo).get(tabKey).get(indexP));
+        childControlChildChildAttributes.put("xml:id",(this.eag2012.getDescriptiveNotePId()!=null && this.eag2012.getDescriptiveNotePId().size()>indexRepo && this.eag2012.getDescriptiveNotePId().get(indexRepo)!=null && this.eag2012.getDescriptiveNotePId().get(indexRepo).size()>0)?this.eag2012.getDescriptiveNotePId().get(indexRepo).get(tabKey).get(indexP):null);
+        childControlChildChildAttributes.put("xml:lang",(this.eag2012.getDescriptiveNotePLang()!=null && this.eag2012.getDescriptiveNotePLang().size()>indexRepo && this.eag2012.getDescriptiveNotePLang().get(indexRepo).size()>0)?this.eag2012.getDescriptiveNotePLang().get(indexRepo).get(tabKey).get(indexP):null);
         childControl2.put("attributes", childControlChildChildAttributes);
-        childControl2.put("nodeValue", this.eag2012.getDescriptiveNotePValue().get(indexRepo).get(tabKey).get(indexP));
+        childControl2.put("nodeValue", (this.eag2012.getDescriptiveNotePValue()!=null && this.eag2012.getDescriptiveNotePValue().size()>indexRepo && this.eag2012.getDescriptiveNotePValue().get(indexRepo)!=null && this.eag2012.getDescriptiveNotePValue().get(indexRepo).size()>0)?this.eag2012.getDescriptiveNotePValue().get(indexRepo).get(tabKey).get(indexP):null);
 			
 		return childControl2;
 	}
@@ -1272,10 +1272,10 @@ public class Eag2012Creator {
         	//dateSet children	        
 	        List<HashMap<String, Object>> childArchguide3Children = new ArrayList<HashMap<String,Object>>();
 	        
-	        for(int i=0;this.eag2012.getDateStandardDate().get(indexRepo).get(indexTab)!=null && i<this.eag2012.getDateStandardDate().get(indexRepo).get(indexTab).size();i++){//no mandatory repeatable
+	        for(int i=0;this.eag2012.getDateStandardDate()!=null && this.eag2012.getDateStandardDate().size()>indexRepo && this.eag2012.getDateStandardDate().get(indexRepo)!=null && this.eag2012.getDateStandardDate().get(indexRepo).get(indexTab)!=null && i<this.eag2012.getDateStandardDate().get(indexRepo).get(indexTab).size();i++){//no mandatory repeatable
 	        	childArchguide3Children.add(buildDate(indexRepo,indexTab,i));
 	        }
-	        for(int i=0;this.eag2012.getFromDateStandardDate()!=null && this.eag2012.getFromDateStandardDate().size()>0 && this.eag2012.getFromDateStandardDate().get(indexRepo).get(indexTab)!=null && i<this.eag2012.getFromDateStandardDate().get(indexRepo).get(indexTab).size();i++){  //no mandatory repeatable
+	        for(int i=0;this.eag2012.getFromDateStandardDate()!=null && this.eag2012.getFromDateStandardDate().size()>indexRepo && this.eag2012.getFromDateStandardDate().get(indexRepo)!=null && this.eag2012.getFromDateStandardDate()!=null && this.eag2012.getFromDateStandardDate().size()>0 && this.eag2012.getFromDateStandardDate().get(indexRepo).get(indexTab)!=null && i<this.eag2012.getFromDateStandardDate().get(indexRepo).get(indexTab).size();i++){  //no mandatory repeatable
 	        	childArchguide3Children.add(buildDateRange(indexRepo,indexTab,i));
 	        }
         childArchguide3.put("children",childArchguide3Children);    
@@ -1329,54 +1329,80 @@ public class Eag2012Creator {
 		
         
      		ArrayList<HashMap<String, Object>> childArchguide2Children = new ArrayList<HashMap<String, Object>>();
-            if(indexRepo>0){
-            	for(int i=0;this.eag2012.getRepositoryNameValue().get(indexRepo)!=null && i<this.eag2012.getRepositoryNameValue().get(indexRepo).size();i++){//no mandatory repeatable
-         			childArchguide2Children.add(buildRepositoryName(this.eag2012.getRepositoryNameLang().get(indexRepo).get(i),this.eag2012.getRepositoryNameValue().get(indexRepo).get(i)));
-         		}
-            	childArchguide2Children.add(buildRepositoryRole(this.eag2012.getRepositoryRoleValue().get(indexRepo))); //no mandatory not repeatable
-            	childArchguide2Children.add(buildGeogarea(this.eag2012.getGeogareaLang().get(indexRepo),this.eag2012.getGeogareaValue().get(indexRepo))); //mandatory not repeatable
-            	
-            	for(int i=0;i<this.eag2012.getLocationLocalType().get(indexRepo).size();i++){ //first part <-> mandatory repeatable
+     		if(indexRepo>0){
+	        	for(int i=0;this.eag2012.getRepositoryNameValue()!=null && this.eag2012.getRepositoryNameValue().size()>indexRepo && this.eag2012.getRepositoryNameValue().get(indexRepo)!=null && i<this.eag2012.getRepositoryNameValue().get(indexRepo).size();i++){//no mandatory repeatable
+	     			childArchguide2Children.add(buildRepositoryName(this.eag2012.getRepositoryNameLang().get(indexRepo).get(i),this.eag2012.getRepositoryNameValue().get(indexRepo).get(i)));
+	     		}
+	        	childArchguide2Children.add(buildRepositoryRole(this.eag2012.getRepositoryRoleValue().get(indexRepo))); //no mandatory not repeatable
+     		}else{
+     			childArchguide2Children.add(buildRepositoryRole(Eag2012.REPOSITORY_ROLE_HEAD_QUARTER)); //no mandatory not repeatable
+     		}
+        	childArchguide2Children.add(buildGeogarea(indexRepo)); //mandatory not repeatable
+        	if(indexRepo>0){
+        		for(int i=0;this.eag2012.getLocationLocalType()!=null && this.eag2012.getLocationLocalType().size()>indexRepo && i<this.eag2012.getLocationLocalType().get(indexRepo).size();i++){ //first part <-> mandatory repeatable
             		childArchguide2Children.add(buildLocation(this.eag2012.getLocationLocalType().get(indexRepo).get(i),this.eag2012.getLocationLongitude().get(indexRepo).get(i),this.eag2012.getLocationLatitude().get(indexRepo).get(i),indexRepo));
             	}
-            	for(int i=0;i<this.eag2012.getLocationLocalType().get(indexRepo).size();i++){ //second part <-> mandatory repeatable
+            	for(int i=0;this.eag2012.getLocationLocalType()!=null && this.eag2012.getLocationLocalType().size()>indexRepo && i<this.eag2012.getLocationLocalType().get(indexRepo).size();i++){ //second part <-> mandatory repeatable
             		childArchguide2Children.add(buildLocation2(this.eag2012.getLocationLocalType().get(indexRepo).get(i),indexRepo));
             	}
-            	
-                for(int i=0;this.eag2012.getTelephoneValue().get(indexRepo)!=null && i<this.eag2012.getTelephoneValue().get(indexRepo).size();i++){ //no mandatory repeatable
-                	childArchguide2Children.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_CONTACT).get(i)));     
-                }
-                for(int i=0;this.eag2012.getFaxValue()!=null && i<this.eag2012.getFaxValue().size();i++){//no mandatory repeatable
+        	}else{
+        		//TODO
+        	}
+        	if(indexRepo>0){
+	            for(int i=0;this.eag2012.getTelephoneValue()!=null && this.eag2012.getTelephoneValue().size()>indexRepo && this.eag2012.getTelephoneValue().get(indexRepo)!=null && i<this.eag2012.getTelephoneValue().get(indexRepo).size();i++){ //no mandatory repeatable
+	            	childArchguide2Children.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_CONTACT).get(i)));     
+	            }
+        	}else if(this.eag2012.getTelephoneValue()!=null && this.eag2012.getTelephoneValue().size()>0 && this.eag2012.getTelephoneValue().get(indexRepo)!=null && this.eag2012.getTelephoneValue().get(indexRepo).size()>0 && this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_YOUR_INSTITUTION)!=null && this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_YOUR_INSTITUTION).size()>0){
+	            	childArchguide2Children.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(0)));     
+        	}
+            if(indexRepo>0){
+            	for(int i=0;this.eag2012.getFaxValue()!=null && i<this.eag2012.getFaxValue().size();i++){//no mandatory repeatable
                 	childArchguide2Children.add(buildFax(this.eag2012.getFaxValue().get(indexRepo).get(TAB_CONTACT).get(i)));
                 }
-                for(int i=0;this.eag2012.getEmailHref()!=null && i<this.eag2012.getEmailHref().size();i++){//no mandatory repeatable
-                	childArchguide2Children.add(buildEmail(this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).get(i),this.eag2012.getEmailValue().get(indexRepo).get(TAB_CONTACT).get(i)));   
+            }
+            if(indexRepo>0){
+            	for(int i=0;this.eag2012.getEmailHref()!=null && i<this.eag2012.getEmailHref().size();i++){//no mandatory repeatable
+                	childArchguide2Children.add(buildEmail(this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).get(i),
+                			this.eag2012.getEmailValue().get(indexRepo).get(TAB_CONTACT).get(i)));   
                 }
                 for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory repeatable
-                	childArchguide2Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_CONTACT).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_CONTACT).get(i)));  
+                	childArchguide2Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_CONTACT).get(i),
+                			this.eag2012.getWebpageValue().get(indexRepo).get(TAB_CONTACT).get(i)));  
                 }
-                for(int i=0; i< this.eag2012.getDirectionsValue().size();i++){ //no mandatory repeatable
-                   childArchguide2Children.add(buildDirections(this.eag2012.getDirectionsLang().get(indexRepo).get(TAB_CONTACT).get(i),this.eag2012.getDirectionsValue().get(indexRepo).get(TAB_CONTACT).get(i),indexRepo));
-                }  
-                childArchguide2Children.add(buildRepositorHist(indexRepo));    //no mandatory not repeatable                
+            }else{
+            	if(this.eag2012.getEmailHref()!=null && this.eag2012.getEmailHref().size()>0 && this.eag2012.getEmailHref().get(indexRepo)!=null && this.eag2012.getEmailHref().get(indexRepo).size()>0 && this.eag2012.getEmailHref().get(indexRepo).get(TAB_YOUR_INSTITUTION)!=null && this.eag2012.getEmailHref().get(indexRepo).get(TAB_YOUR_INSTITUTION).size()>0){
+            		childArchguide2Children.add(buildEmail(this.eag2012.getEmailHref().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(0),
+                			this.eag2012.getEmailValue().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(0)));
+            	}
+            	if(this.eag2012.getWebpageHref()!=null && this.eag2012.getWebpageHref().size()>0 && this.eag2012.getWebpageHref().get(indexRepo)!=null && this.eag2012.getWebpageHref().get(indexRepo).size()>0 && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_YOUR_INSTITUTION)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_YOUR_INSTITUTION).size()>0){
+            		childArchguide2Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(0),
+                			this.eag2012.getWebpageValue().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(0)));
+            	}
+            }
+            if(indexRepo>0){
+            	for(int i=0;this.eag2012.getDirectionsValue()!=null && i<this.eag2012.getDirectionsValue().size();i++){ //no mandatory repeatable
+                    childArchguide2Children.add(buildDirections(this.eag2012.getDirectionsLang().get(indexRepo).get(TAB_CONTACT).get(i),this.eag2012.getDirectionsValue().get(indexRepo).get(TAB_CONTACT).get(i),indexRepo));
+                 }
+            	childArchguide2Children.add(buildRepositorHist(indexRepo));    //no mandatory not repeatable                
                 childArchguide2Children.add(buildRepositorfound(indexRepo));   //no mandatory not repeatable 
                 childArchguide2Children.add(buildRepositorsup(indexRepo));     //no mandatory not repeatable    
                 childArchguide2Children.add(buildBuildinginfo(indexRepo));     //no mandatory not repeatable 
                 childArchguide2Children.add(buildAdminhierarchy(indexRepo));   //no mandatory not repeatable 
                 childArchguide2Children.add(buildHoldings(indexRepo));         //no mandatory not repeatable 
-                childArchguide2Children.add(buildTimetable(indexRepo));        //mandatory not repeatable 
-                childArchguide2Children.add(buildAccess(indexRepo));   //mandatory not repeatable 
-                
-                for(int i=0;i<this.eag2012.getAccessibilityQuestion().size();i++){//mandatory repeatable
-                  childArchguide2Children.add(buildAccessibility(this.eag2012.getAccessibilityQuestion().get(indexRepo).get(i),this.eag2012.getAccessibilityLang().get(indexRepo).get(i),this.eag2012.getAccessibilityValue().get(indexRepo).get(i)));              
-                }
-                
-                childArchguide2Children.add(buildServices(indexRepo));  //no mandatory not repeatable      
-                childArchguide2Children.add(buildDescriptiveNote(indexRepo,TAB_ACCESS_AND_SERVICES)); //no mandatory not repeatable
-            }else{
-            	//TODO
-            	
             }
+
+            childArchguide2Children.add(buildTimetable(indexRepo));        //mandatory not repeatable
+            childArchguide2Children.add(buildAccess(indexRepo));   //mandatory not repeatable
+            
+            for(int i=0;i<this.eag2012.getAccessibilityQuestion().size();i++){//mandatory repeatable
+              childArchguide2Children.add(buildAccessibility(indexRepo,i));              
+            }
+            
+            childArchguide2Children.add(buildServices(indexRepo));  //no mandatory not repeatable      
+            childArchguide2Children.add(buildDescriptiveNote(indexRepo,TAB_ACCESS_AND_SERVICES)); //no mandatory not repeatable
+            
+            
+            
         childArchguide2.put("children", childArchguide2Children);
 		
 		return childArchguide2;
@@ -1430,10 +1456,14 @@ public class Eag2012Creator {
          childArchguide5.put("attributes", null);
          childArchguide5.put("nodeValue", null); 
          ArrayList<HashMap<String, Object>> childArchguide5Children = new ArrayList<HashMap<String, Object>>(); 
-            childArchguide5Children.add(buildDescriptiveNote(indexRepo,TAB_ACCESS_AND_SERVICES)); //no mandatory not repeatable, can appear in other nodes 
-           for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory repeatable
-        	   childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i)));
-           }
+            childArchguide5Children.add(buildDescriptiveNote(indexRepo,TAB_ACCESS_AND_SERVICES)); //no mandatory not repeatable, can appear in other nodes
+            if(indexRepo>0){
+            	for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory repeatable
+             	   childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i)));
+                }
+            }else{
+            	//TODO
+            }
         childArchguide5.put("children", childArchguide5Children);
 		
 		return childArchguide5;
@@ -1446,9 +1476,13 @@ public class Eag2012Creator {
         childArchguide5.put("attributes", null);
         childArchguide5.put("nodeValue", null); 
         ArrayList<HashMap<String, Object>> childArchguide5Children = new 	ArrayList<HashMap<String, Object>>(); 
-          childArchguide5Children.add(buildDescriptiveNote(indexRepo,TAB_ACCESS_AND_SERVICES)); //no mandatory not repeatable, can appear in other nodes 
-          for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory repeatable
-        	  childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i)));
+          childArchguide5Children.add(buildDescriptiveNote(indexRepo,TAB_ACCESS_AND_SERVICES)); //no mandatory not repeatable, can appear in other nodes
+          if(indexRepo>0){
+        	  for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory repeatable
+            	  childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i)));
+              }
+          }else{
+        	  //TODO
           }
        childArchguide5.put("children", childArchguide5Children);
 		
@@ -1463,9 +1497,12 @@ public class Eag2012Creator {
          childArchguide5.put("nodeValue", null); 
          ArrayList<HashMap<String, Object>> childArchguide5Children = new ArrayList<HashMap<String, Object>>(); 
           childArchguide5Children.add(buildDescriptiveNote(indexRepo,TAB_ACCESS_AND_SERVICES)); //no mandatory not repeatable, can appear in other nodes 
-          
-          for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory repeatable  
-        	  childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i)));
+          if(indexRepo>0){
+        	  for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory repeatable  
+            	  childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i)));
+              } 
+          }else{
+        	  //TODO
           }
          childArchguide5.put("children", childArchguide5Children);
 		
@@ -1512,7 +1549,7 @@ public class Eag2012Creator {
         HashMap<String, Object> childArchguide5 = new HashMap<String, Object>();
         childArchguide5.put("nodeName", "restorationlab");  //restorationLab
         HashMap<String, String> childArchguide5Attributes = new HashMap<String, String>();
-        childArchguide5Attributes.put("question", this.eag2012.getRestorationlabQuestion().get(indexRepo)); //check
+        childArchguide5Attributes.put("question", (this.eag2012.getRestorationlabQuestion()!=null && this.eag2012.getRestorationlabQuestion().size()>indexRepo)?this.eag2012.getRestorationlabQuestion().get(indexRepo):null); //check
         childArchguide5.put("attributes", childArchguide5Attributes);
         childArchguide5.put("nodeValue", null);
         
@@ -1520,8 +1557,12 @@ public class Eag2012Creator {
                ArrayList<HashMap<String, Object>> childArchguide5Children = new ArrayList<HashMap<String, Object>>(); 
                childArchguide5Children.add(buildDescriptiveNote(indexRepo,TAB_ACCESS_AND_SERVICES)); //no mandatory not repeatable, can appear in other nodes
                childArchguide5Children.add(buildContact(indexRepo)); //not mandatory can appear in other nodes
-               for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory repeatable
-            	   childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i)));
+               if(indexRepo>0){
+            	   for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory repeatable
+                	   childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i)));
+                   } 
+               }else{
+            	   //TODO
                }
          childArchguide5.put("children", childArchguide5Children);
 		
@@ -1534,7 +1575,7 @@ public class Eag2012Creator {
         HashMap<String, Object> childArchguide5 = new HashMap<String, Object>();
         childArchguide5.put("nodeName", "reproductionser");  //reproductionser
         HashMap<String, String> childArchguide5Attributes = new HashMap<String, String>();
-        childArchguide5Attributes.put("question",this.eag2012.getReproductionserQuestion().get(indexRepo));
+        childArchguide5Attributes.put("question",(this.eag2012.getReproductionserQuestion()!=null && this.eag2012.getReproductionserQuestion().size()>indexRepo)?this.eag2012.getReproductionserQuestion().get(indexRepo):null);
         childArchguide5.put("attributes", childArchguide5Attributes);
         childArchguide5.put("nodeValue", null);
           
@@ -1543,15 +1584,25 @@ public class Eag2012Creator {
           
         childArchguide5Children.add(buildDescriptiveNote(indexRepo,TAB_ACCESS_AND_SERVICES)); //no mandatory no repeatable
         childArchguide5Children.add(buildContact(indexRepo)); //not mandatory can appear in other nodes
-        
-        for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory
-          childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i)));
+        if(indexRepo>0){
+        	for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory
+                childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i)));
+              }
+        }else{
+        	//TODO
         }
-        childArchguide5Children.add(buildMicroformser(this.eag2012.getMicroformserQuestion().get(indexRepo)));  //no mandatory no repeatable     
-        childArchguide5Children.add(buildPhotographser(this.eag2012.getPhotographserQuestion().get(indexRepo)));  //no mandatory no repeatable                
-        childArchguide5Children.add(buildDigitalser(this.eag2012.getDigitalserQuestion().get(indexRepo)));       //no mandatory no repeatable  
-        childArchguide5Children.add(buildPhotocopyser(this.eag2012.getPhotocopyserQuestion().get(indexRepo)));   //no mandatory no repeatable  
-                
+        if(this.eag2012.getMicroformserQuestion()!=null && this.eag2012.getMicroformserQuestion().size()>indexRepo){
+        	childArchguide5Children.add(buildMicroformser(this.eag2012.getMicroformserQuestion().get(indexRepo)));  //no mandatory no repeatable
+        }
+        if(this.eag2012.getPhotographserQuestion()!=null && this.eag2012.getPhotographserQuestion().size()>indexRepo){
+        	childArchguide5Children.add(buildPhotographser(this.eag2012.getPhotographserQuestion().get(indexRepo)));  //no mandatory no repeatable
+        }
+        if(this.eag2012.getDigitalserQuestion()!=null && this.eag2012.getDigitalserQuestion().size()>indexRepo){
+        	childArchguide5Children.add(buildDigitalser(this.eag2012.getDigitalserQuestion().get(indexRepo)));       //no mandatory no repeatable
+        }
+        if(this.eag2012.getPhotocopyserQuestion()!=null && this.eag2012.getPhotocopyserQuestion().size()>indexRepo){
+        	childArchguide5Children.add(buildPhotocopyser(this.eag2012.getPhotocopyserQuestion().get(indexRepo)));   //no mandatory no repeatable
+        }
        childArchguide5.put("children", childArchguide5Children);
 		
 		return childArchguide5;
@@ -1612,7 +1663,7 @@ public class Eag2012Creator {
         HashMap<String, Object> childArchguide4 = new HashMap<String, Object>();
         childArchguide4.put("nodeName", "internetAccess");
         HashMap<String, String> childArchguide4Attributes = new HashMap<String, String>();
-        childArchguide4Attributes.put("question", this.eag2012.getInternetAccessQuestion().get(indexRepo));
+        childArchguide4Attributes.put("question", (this.eag2012.getInternetAccessQuestion()!=null && this.eag2012.getInternetAccessQuestion().size()>indexRepo)?this.eag2012.getInternetAccessQuestion().get(indexRepo):null);
         childArchguide4.put("attributes", childArchguide4Attributes);
         childArchguide4.put("nodeValue", null);
           
@@ -1632,15 +1683,19 @@ public class Eag2012Creator {
         HashMap<String, Object> childArchguide4 = new HashMap<String, Object>();
         childArchguide4.put("nodeName", "library");
         HashMap<String, String> childArchguide4Attributes = new HashMap<String, String>();
-        childArchguide4Attributes.put("question",this.eag2012.getLibraryQuestion().get(indexRepo));
+        childArchguide4Attributes.put("question",(this.eag2012.getLibraryQuestion()!=null && this.eag2012.getLibraryQuestion().size()>indexRepo)?this.eag2012.getLibraryQuestion().get(indexRepo):null);
         childArchguide4.put("attributes", childArchguide4Attributes);
         childArchguide4.put("nodeValue", null);
           
             //Children of library
             ArrayList<HashMap<String, Object>> childArchguide4Children = new ArrayList<HashMap<String, Object>>(); 
               childArchguide4Children.add(buildContact(indexRepo)); //contact
-              for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory
-            	  childArchguide4Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i))); //webpage
+              if(indexRepo>0){
+            	  for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory
+                	  childArchguide4Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i))); //webpage
+                  } 
+              }else{
+            	  //TODO
               }
               childArchguide4Children.add(buildMonographicpub(indexRepo));
               childArchguide4Children.add(buildSerialpub(indexRepo));  
@@ -1657,7 +1712,7 @@ public class Eag2012Creator {
 	     childArchguide5.put("attributes", null);
 	     childArchguide5.put("nodeValue", null);
 	     ArrayList<HashMap<String, Object>> childArchguide5Children = new ArrayList<HashMap<String, Object>>(); 
-	        childArchguide5Children.add(buildNum("title",this.eag2012.getNumValue().get(indexRepo)));
+	        childArchguide5Children.add(buildNum("title",(this.eag2012.getNumValue()!=null && this.eag2012.getNumValue().size()>indexRepo)?this.eag2012.getNumValue().get(indexRepo):null));
 	       
 	     childArchguide5.put("children", childArchguide5Children);
 		
@@ -1672,7 +1727,7 @@ public class Eag2012Creator {
         childArchguide5.put("attributes", null);
         childArchguide5.put("nodeValue", null);
         ArrayList<HashMap<String, Object>> childArchguide5Children = new ArrayList<HashMap<String, Object>>(); 
-          childArchguide5Children.add(buildNum("book",this.eag2012.getNumValue().get(indexRepo)));
+          childArchguide5Children.add(buildNum("book",(this.eag2012.getNumValue()!=null)?this.eag2012.getNumValue().get(indexRepo):null));
       
         childArchguide5.put("children", childArchguide5Children);
 		
@@ -1692,8 +1747,12 @@ public class Eag2012Creator {
            childArchguide4Children.add(buildWorkPlaces(indexRepo));
            childArchguide4Children.add(buildComputerPlaces(indexRepo));
            childArchguide4Children.add(buildMicrofilmPlaces(indexRepo));
-           for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory
-        	   childArchguide4Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i)));  //webpage
+           if(indexRepo>0){
+        	   for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory
+            	   childArchguide4Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i)));  //webpage
+               }  
+           }else{
+        	   //TODO
            }
            childArchguide4Children.add(buildPhotographAllowance(this.eag2012.getPhotographAllowanceValue()));
            
@@ -1769,7 +1828,7 @@ public class Eag2012Creator {
          childArchguide5.put("attributes", null);
          childArchguide5.put("nodeValue", null);
          ArrayList<HashMap<String, Object>> childArchguide5Children = new ArrayList<HashMap<String, Object>>(); 
-            childArchguide5Children.add(buildNum("site",this.eag2012.getNumValue().get(indexRepo)));
+            childArchguide5Children.add(buildNum("site",(this.eag2012.getNumValue()!=null && this.eag2012.getNumValue().size()>indexRepo)?this.eag2012.getNumValue().get(indexRepo):null));
          childArchguide5.put("children", childArchguide5Children);
 		
 		return childArchguide5;
@@ -1782,7 +1841,7 @@ public class Eag2012Creator {
          childArchguide5.put("attributes", null);
          childArchguide5.put("nodeValue", null);
          ArrayList<HashMap<String, Object>> childArchguide5Children = new ArrayList<HashMap<String, Object>>(); 
-            childArchguide5Children.add(buildNum("site",this.eag2012.getNumValue().get(indexRepo)));
+            childArchguide5Children.add(buildNum("site",(this.eag2012.getNumValue()!=null && this.eag2012.getNumValue().size()>indexRepo)?this.eag2012.getNumValue().get(indexRepo):null));
             childArchguide5Children.add(buildDescriptiveNote(indexRepo,TAB_ACCESS_AND_SERVICES));
           
           childArchguide5.put("children", childArchguide5Children);
@@ -1798,23 +1857,24 @@ public class Eag2012Creator {
 	     childArchguide5.put("attributes", null);
 	     childArchguide5.put("nodeValue", null);
 	     ArrayList<HashMap<String, Object>> childArchguide5Children = new ArrayList<HashMap<String, Object>>(); 
-	        childArchguide5Children.add(buildNum("site",this.eag2012.getNumValue().get(indexRepo)));
+	        childArchguide5Children.add(buildNum("site",(this.eag2012.getNumValue()!=null && this.eag2012.getNumValue().size()>indexRepo)?this.eag2012.getNumValue().get(indexRepo):null));
 	         
 	     childArchguide5.put("children", childArchguide5Children);
 			
 		return  childArchguide5;
 	}
 
-	private HashMap<String, Object> buildAccessibility(String accessibilityQuestion, String accessibilityLang, String accessibilityValue) {
+	private HashMap<String, Object> buildAccessibility(Integer indexRepo,Integer indexList) {
 
 		 //Children of repository, accessibility
    	    HashMap<String, Object> childArchguide3 = new HashMap<String, Object>();
         childArchguide3.put("nodeName", "accessibility");
         HashMap<String, String> childArchguide3Attributes = new HashMap<String, String>();
-          childArchguide3Attributes.put("question",accessibilityQuestion); //mandatory
-          childArchguide3Attributes.put("xml:lang",accessibilityLang);
+        //i),this.eag2012.getAccessibilityLang().get(indexRepo).get(i),this.eag2012.getAccessibilityValue().get(indexRepo).get(i)
+          childArchguide3Attributes.put("question",(this.eag2012.getAccessibilityQuestion()!=null && this.eag2012.getAccessibilityQuestion().size()>indexRepo && this.eag2012.getAccessibilityQuestion().get(indexRepo).size()>indexList)?this.eag2012.getAccessibilityQuestion().get(indexRepo).get(indexList):null); //mandatory
+          childArchguide3Attributes.put("xml:lang",(this.eag2012.getAccessibilityLang()!=null && this.eag2012.getAccessibilityLang().size()>indexRepo && this.eag2012.getAccessibilityLang().get(indexRepo)!=null && this.eag2012.getAccessibilityLang().get(indexRepo).size()>indexList)?this.eag2012.getAccessibilityLang().get(indexRepo).get(indexList):null); 
           childArchguide3.put("attributes", childArchguide3Attributes);
-        childArchguide3.put("nodeValue", accessibilityValue); 
+        childArchguide3.put("nodeValue", (this.eag2012.getAccessibilityValue()!=null && this.eag2012.getAccessibilityValue().size()>indexRepo && this.eag2012.getAccessibilityValue().get(indexRepo).size()>indexList)?this.eag2012.getAccessibilityValue().get(indexRepo).get(indexList):null); 
 		
 		return childArchguide3;
 	}
@@ -1835,7 +1895,7 @@ public class Eag2012Creator {
            ArrayList<HashMap<String, Object>> childArchguide3Children = new ArrayList<HashMap<String, Object>>();   
            
              for(int i=0;this.eag2012.getRestaccessValue()!=null && i<this.eag2012.getRestaccessValue().size();i++){//no mandatory repeatable
-              childArchguide3Children.add(buildRestaccess(this.eag2012.getRestaccessLang().get(indexRepo).get(i),this.eag2012.getRestaccessValue().get(indexRepo).get(i)));
+              childArchguide3Children.add(buildRestaccess(indexRepo,i));
              }
              for(int i=0;this.eag2012.getTermsOfUseLang()!=null && i<this.eag2012.getTermsOfUseLang().size();i++){//no mandatory repeatable
                childArchguide3Children.add(buildTermsOfUse(this.eag2012.getTermsOfUseHref().get(indexRepo).get(i),this.eag2012.getTermsOfUseLang().get(indexRepo).get(i),this.eag2012.getTermsOfUseValue().get(indexRepo).get(i)));
@@ -1858,15 +1918,13 @@ public class Eag2012Creator {
 		return childArchguide4;
 	}
 
-	private HashMap<String, Object> buildRestaccess(String restaccessLang, String restaccessValue) {
-
+	private HashMap<String, Object> buildRestaccess(Integer indexRepo,Integer indexList) {
 		HashMap<String, Object> childArchguide4 = new HashMap<String, Object>();
         childArchguide4.put("nodeName", "restaccess");
         HashMap<String, String> childArchguide4Attributes = new HashMap<String, String>();
-        childArchguide4Attributes.put("xml:lang",restaccessLang);
+        childArchguide4Attributes.put("xml:lang",(this.eag2012.getRestaccessLang()!=null && this.eag2012.getRestaccessLang().size()>indexRepo && this.eag2012.getRestaccessLang().get(indexRepo)!=null && this.eag2012.getRestaccessLang().get(indexRepo).size()>indexList)?this.eag2012.getRestaccessLang().get(indexRepo).get(indexList):null);
         childArchguide4.put("attributes", childArchguide4Attributes);
-        childArchguide4.put("nodeValue", restaccessValue);
-		
+        childArchguide4.put("nodeValue", (this.eag2012.getRestaccessValue().get(indexRepo)!=null && this.eag2012.getRestaccessValue().get(indexRepo).size()>indexList)?this.eag2012.getRestaccessValue().get(indexRepo).get(indexList):null);
 		return childArchguide4;
 	}
 
@@ -1881,9 +1939,17 @@ public class Eag2012Creator {
 	         
            //Children of timetable
            ArrayList<HashMap<String, Object>> childArchguide3Children = new ArrayList<HashMap<String, Object>>();   
-	          
-	           childArchguide3Children.add(buildOpening(this.eag2012.getOpeningValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES))); //mandatory not repeatable
-               childArchguide3Children.add(buildClosing(this.eag2012.getClosingStandardDate().get(indexRepo).get(TAB_ACCESS_AND_SERVICES),this.eag2012.getClosingValue().get(indexRepo).get(TAB_CONTACT))); //not mandatory not repeatable
+           if(indexRepo>0){
+        	   childArchguide3Children.add(buildOpening(this.eag2012.getOpeningValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES))); //mandatory not repeatable
+        	   if(this.eag2012.getClosingStandardDate()!=null && this.eag2012.getClosingStandardDate().get(indexRepo)!=null && this.eag2012.getClosingStandardDate().get(indexRepo).get(TAB_ACCESS_AND_SERVICES)!=null){
+        		   childArchguide3Children.add(buildClosing(this.eag2012.getClosingStandardDate().get(indexRepo).get(TAB_ACCESS_AND_SERVICES),this.eag2012.getClosingValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES))); //not mandatory not repeatable  
+        	   }
+           }else{
+        	   childArchguide3Children.add(buildOpening(this.eag2012.getOpeningValue().get(indexRepo).get(TAB_YOUR_INSTITUTION))); //mandatory not repeatable
+        	   if(this.eag2012.getClosingStandardDate()!=null && this.eag2012.getClosingStandardDate().get(indexRepo)!=null && this.eag2012.getClosingStandardDate().get(indexRepo).get(TAB_YOUR_INSTITUTION)!=null){
+        		   childArchguide3Children.add(buildClosing(this.eag2012.getClosingStandardDate().get(indexRepo).get(TAB_YOUR_INSTITUTION),this.eag2012.getClosingValue().get(indexRepo).get(TAB_YOUR_INSTITUTION))); //not mandatory not repeatable  
+        	   }
+           }
 	    
              childArchguide3.put("children", childArchguide3Children);
 		
@@ -1944,7 +2010,7 @@ public class Eag2012Creator {
 	      
 	           //Children of extent
 	           ArrayList<HashMap<String, Object>> childArchguide4Children = new ArrayList<HashMap<String, Object>>();
-                  childArchguide4Children.add(buildNum("linearmetre",this.eag2012.getNumValue().get(indexRepo)));
+                  childArchguide4Children.add(buildNum("linearmetre",(this.eag2012.getNumValue()!=null && this.eag2012.getNumValue().size()>indexRepo)?this.eag2012.getNumValue().get(indexRepo):null));
           
 	      childArchguide4.put("children", childArchguide4Children);
 		
@@ -1962,7 +2028,7 @@ public class Eag2012Creator {
            //Children of adminhierarchy
            ArrayList<HashMap<String, Object>> childArchguide3Children = new ArrayList<HashMap<String, Object>>();
            
-           for(int i=0;i<this.eag2012.getAdminunitValue().size();i++){//mandatory repeatable
+           for(int i=0;this.eag2012.getAdminunitValue()!=null && i<this.eag2012.getAdminunitValue().size();i++){//mandatory repeatable
              childArchguide3Children.add(buildAdminunit(this.eag2012.getAdminunitLang().get(indexRepo).get(i),this.eag2012.getAdminunitValue().get(indexRepo).get(i)));                        
            }
            
@@ -2009,7 +2075,7 @@ public class Eag2012Creator {
         childArchguide4.put("attributes", null);
         childArchguide4.put("nodeValue", null);
         ArrayList<HashMap<String, Object>> childArchguide4Children = new ArrayList<HashMap<String, Object>>();
-          childArchguide4Children.add(buildNum("linearmetre",this.eag2012.getNumValue().get(indexRepo))); //mandatory not repeatable, can appear in other nodes
+          childArchguide4Children.add(buildNum("linearmetre",(this.eag2012.getNumValue()!=null && this.eag2012.getNumValue().size()>indexRepo)?this.eag2012.getNumValue().get(indexRepo):null)); //mandatory not repeatable, can appear in other nodes
         
         childArchguide4.put("children",childArchguide4Children);
 		
@@ -2022,7 +2088,7 @@ public class Eag2012Creator {
 	       childArchguide4.put("attributes", null);
 	       childArchguide4.put("nodeValue", null);
 	       ArrayList<HashMap<String, Object>> childArchguide4Children = new ArrayList<HashMap<String, Object>>();
-	         childArchguide4Children.add(buildNum("linearmetre",this.eag2012.getNumValue().get(indexRepo))); //mandatory not repeatable, can appear in other nodes 
+	         childArchguide4Children.add(buildNum("linearmetre",(this.eag2012.getNumValue()!=null && this.eag2012.getNumValue().size()>indexRepo)?this.eag2012.getNumValue().get(indexRepo):null)); //mandatory not repeatable, can appear in other nodes 
                        	       
            childArchguide4.put("children",childArchguide4Children);	
 		
@@ -2107,7 +2173,7 @@ public class Eag2012Creator {
          childArchguide3.put("attributes",childArchguide3Attributes);
      	 childArchguide3.put("nodeValue", directionsValue);
      	 ArrayList<HashMap<String, Object>> childArchguide3Children = new ArrayList<HashMap<String, Object>>();
- 	        for(int i=0;this.eag2012.getCitationHref().get(indexRepo)!=null && i<this.eag2012.getCitationHref().get(indexRepo).size();i++){ //no mandatory
+ 	        for(int i=0;this.eag2012.getCitationHref()!=null && this.eag2012.getCitationHref().size()>indexRepo && this.eag2012.getCitationHref().get(indexRepo)!=null && i<this.eag2012.getCitationHref().get(indexRepo).size();i++){ //no mandatory
  	        	childArchguide3Children.add(buildCitation(this.eag2012.getCitationId().get(indexRepo).get(i),this.eag2012.getCitationLang().get(indexRepo).get(i),this.eag2012.getCitationLastDateTimeVerified().get(indexRepo).get(i),this.eag2012.getCitationHref().get(indexRepo).get(i),this.eag2012.getCitationValue().get(indexRepo).get(i)));
  	        }
 	       childArchguide3.put("children", childArchguide3Children);
@@ -2147,12 +2213,12 @@ public class Eag2012Creator {
     	  
     	  ArrayList<HashMap<String, Object>> childArchguide3Children = new ArrayList<HashMap<String, Object>>();
     	  
-          childArchguide3Children.add(buildCountry(this.eag2012.getCountryLang().get(indexRepo),this.eag2012.getCountryValue().get(indexRepo)));
-          childArchguide3Children.add(buildFirstdem(this.eag2012.getFirstdemLang().get(indexRepo),this.eag2012.getFirstdemValue().get(indexRepo)));
-          childArchguide3Children.add(buildSecondem(this.eag2012.getSecondemLang().get(indexRepo),this.eag2012.getSecondemValue().get(indexRepo)));
-          childArchguide3Children.add(buildMunicipalityPostalCode(this.eag2012.getMunicipalityPostalcodeLang().get(0).get(indexRepo),this.eag2012.getMunicipalityPostalcodeValue().get(0).get(indexRepo)));
-          childArchguide3Children.add(buildLocalentity(this.eag2012.getLocalentityLang().get(indexRepo),this.eag2012.getLocalentityValue().get(indexRepo)));
-          childArchguide3Children.add(buildStreet(this.eag2012.getStreetLang().get(0).get(indexRepo),this.eag2012.getStreetValue().get(0).get(indexRepo)));
+          childArchguide3Children.add(buildCountry((this.eag2012.getCountryLang()!=null && this.eag2012.getCountryLang().size()>indexRepo)?this.eag2012.getCountryLang().get(indexRepo):null,(this.eag2012.getCountryValue()!=null && this.eag2012.getCountryValue().size()>indexRepo)?this.eag2012.getCountryValue().get(indexRepo):null));
+          childArchguide3Children.add(buildFirstdem((this.eag2012.getFirstdemLang()!=null && this.eag2012.getFirstdemLang().size()>indexRepo)?this.eag2012.getFirstdemLang().get(indexRepo):null,(this.eag2012.getFirstdemValue()!=null && this.eag2012.getFirstdemValue().size()>indexRepo)?this.eag2012.getFirstdemValue().get(indexRepo):null));
+          childArchguide3Children.add(buildSecondem((this.eag2012.getSecondemLang()!=null && this.eag2012.getSecondemLang().size()>indexRepo)?this.eag2012.getSecondemLang().get(indexRepo):null,(this.eag2012.getSecondemValue()!=null && this.eag2012.getSecondemValue().size()>indexRepo)?this.eag2012.getSecondemValue().get(indexRepo):null));
+          childArchguide3Children.add(buildMunicipalityPostalCode((this.eag2012.getMunicipalityPostalcodeLang()!=null && this.eag2012.getMunicipalityPostalcodeLang().size()>0 && this.eag2012.getMunicipalityPostalcodeLang().get(0)!=null && this.eag2012.getMunicipalityPostalcodeLang().get(0).size()>indexRepo)?this.eag2012.getMunicipalityPostalcodeLang().get(0).get(indexRepo):null,(this.eag2012.getMunicipalityPostalcodeValue()!=null && this.eag2012.getMunicipalityPostalcodeValue().size()>0 && this.eag2012.getMunicipalityPostalcodeValue().get(0)!=null && this.eag2012.getMunicipalityPostalcodeValue().get(0).size()>indexRepo)?this.eag2012.getMunicipalityPostalcodeValue().get(0).get(indexRepo):null));
+          childArchguide3Children.add(buildLocalentity((this.eag2012.getLocalentityLang()!=null && this.eag2012.getLocalentityLang().size()>indexRepo)?this.eag2012.getLocalentityLang().get(indexRepo):null,(this.eag2012.getLocalentityValue()!=null && this.eag2012.getLocalentityValue().size()>indexRepo)?this.eag2012.getLocalentityValue().get(indexRepo):null));
+          childArchguide3Children.add(buildStreet((this.eag2012.getStreetLang()!=null && this.eag2012.getStreetLang().size()>0 && this.eag2012.getStreetLang().get(0)!=null && this.eag2012.getStreetLang().get(0).size()>indexRepo)?this.eag2012.getStreetLang().get(0).get(indexRepo):null,(this.eag2012.getStreetValue()!=null && this.eag2012.getStreetValue().size()>0 && this.eag2012.getStreetValue().get(0)!=null && this.eag2012.getStreetValue().get(0).size()>indexRepo)?this.eag2012.getStreetValue().get(0).get(indexRepo):null));
           
           childArchguide3.put("children", childArchguide3Children);
 		
@@ -2232,14 +2298,14 @@ public class Eag2012Creator {
 		return childArchguide4;
 	}
 
-	private HashMap<String, Object> buildGeogarea(String geogareaLang, String geogareaValue) {
+	private HashMap<String, Object> buildGeogarea(Integer indexRepo) {
 
 		 HashMap<String, Object> childArchguide3 = new HashMap<String, Object>();
 		    childArchguide3.put("nodeName", "geogarea");
 		    HashMap<String, String>childArchguide3Attributes = new HashMap<String, String>();
-      	    childArchguide3Attributes.put("xml:lang", geogareaLang);
+      	    childArchguide3Attributes.put("xml:lang", (this.eag2012.getGeogareaLang()!=null)?this.eag2012.getGeogareaLang().get(indexRepo):null); //,this.eag2012.getGeogareaValue().get(indexRepo))
       	    childArchguide3.put("attributes",childArchguide3Attributes);
-      	    childArchguide3.put("nodeValue", /*"Europe"*/geogareaValue);
+      	    childArchguide3.put("nodeValue", (this.eag2012.getGeogareaValue()!=null)?this.eag2012.getGeogareaValue().get(indexRepo):null);
 		
 		return childArchguide3;
 	}
@@ -2249,7 +2315,7 @@ public class Eag2012Creator {
 		  HashMap<String, Object> childArchguide3 = new HashMap<String, Object>();
 		    childArchguide3.put("nodeName", "repositoryRole");
 		    childArchguide3.put("attributes", null);
-		    childArchguide3.put("nodeValue", /*"Headquarter"*/repositoryRoleValue);
+		    childArchguide3.put("nodeValue", repositoryRoleValue);
 			
 		return childArchguide3;
 	}
@@ -2274,13 +2340,20 @@ public class Eag2012Creator {
          childArchguidechild.put("nodeValue", null); 
          		
          ArrayList<HashMap<String, Object>> childArchguideChildren = new ArrayList<HashMap<String, Object>>();
-        
-         for(int i=0;this.eag2012.getTelephoneValue()!=null && i<this.eag2012.getTelephoneValue().size();i++){ //no mandatory
-        	 childArchguideChildren.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_CONTACT).get(i)));
-         }
-         for(int i=0;this.eag2012.getEmailHref()!=null && i<this.eag2012.getEmailHref().size();i++){//no mandatory
-           childArchguideChildren.add(buildEmail(this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).get(i),this.eag2012.getEmailValue().get(indexRepo).get(TAB_CONTACT).get(i)));
-         }
+        if(indexRepo>0){
+        	for(int i=0;this.eag2012.getTelephoneValue()!=null && i<this.eag2012.getTelephoneValue().size();i++){ //no mandatory
+           	 childArchguideChildren.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_CONTACT).get(i)));
+            }
+            for(int i=0;this.eag2012.getEmailHref()!=null && i<this.eag2012.getEmailHref().size();i++){//no mandatory
+              childArchguideChildren.add(buildEmail(this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).get(i),this.eag2012.getEmailValue().get(indexRepo).get(TAB_CONTACT).get(i)));
+            }
+        }else{
+        	if(this.eag2012.getTelephoneValue()!=null && this.eag2012.getTelephoneValue().size()>0 && this.eag2012.getTelephoneValue().get(0).get(TAB_YOUR_INSTITUTION)!=null && this.eag2012.getTelephoneValue().get(0).get(TAB_YOUR_INSTITUTION).size()>0){
+        		childArchguideChildren.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(0)));
+        	}if(this.eag2012.getEmailHref()!=null && this.eag2012.getEmailHref().size()>0 && this.eag2012.getEmailHref().get(0)!=null && this.eag2012.getEmailHref().get(0).get(TAB_YOUR_INSTITUTION)!=null && this.eag2012.getEmailHref().get(0).get(TAB_YOUR_INSTITUTION).size()>0){
+        		childArchguideChildren.add(buildEmail(this.eag2012.getEmailHref().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(0),this.eag2012.getEmailValue().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(0)));
+        	}
+        }
          childArchguidechild.put("children", childArchguideChildren);
 		
 		
@@ -2306,9 +2379,9 @@ public class Eag2012Creator {
 		
   	    childArchguide4.put("nodeName", "rule");
         HashMap<String, String> childArchguide4Attributes = new HashMap<String, String>();
-        childArchguide4Attributes.put("xml:lang", this.eag2012.getRuleLang().get(indexRepo).get(indexList));
+        childArchguide4Attributes.put("xml:lang",(this.eag2012.getRuleLang()!=null && this.eag2012.getRuleLang().size()>indexRepo && this.eag2012.getRuleLang().get(indexRepo)!=null && this.eag2012.getRuleLang().get(indexRepo).size()>indexList)? this.eag2012.getRuleLang().get(indexRepo).get(indexList):null);
         childArchguide4.put("attributes", childArchguide4Attributes);
-        childArchguide4.put("nodeValue", this.eag2012.getRuleValue().get(indexRepo).get(indexList));
+        childArchguide4.put("nodeValue",(this.eag2012.getRuleValue()!=null && this.eag2012.getRuleValue().size()>indexRepo && this.eag2012.getRuleValue().get(indexRepo)!=null && this.eag2012.getRuleValue().get(indexRepo).size()>indexList)?this.eag2012.getRuleValue().get(indexRepo).get(indexList):null);
         
 		return childArchguide4;
 	}
@@ -2337,7 +2410,7 @@ public class Eag2012Creator {
         HashMap<String, String> childArchguide3Attributes = new HashMap<String, String>();
         childArchguide3Attributes.put("href", emailHref);
         childArchguide3.put("attributes", childArchguide3Attributes);
-        childArchguide3.put("nodeValue", /*"Send an e-mail"*/emailValue);
+        childArchguide3.put("nodeValue", emailValue);
 		
 		
 		return childArchguide3;
