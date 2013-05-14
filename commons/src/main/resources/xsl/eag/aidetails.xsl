@@ -991,29 +991,33 @@
 							<td>
 								<xsl:for-each select="./eag:eag/eag:relations/eag:resourceRelation/eag:relationEntry">
 									<xsl:variable name="link" select="current()/parent::node()/@href"></xsl:variable>
-									<xsl:choose>
-										<xsl:when test="text()">
-											<div>
-												<a href="{$link}" target="_blank">
+										<xsl:choose>
+											<xsl:when test="$link and $link != '' and text()">
+												<div>
+													<a href="{$link}" target="_blank">
+														<xsl:value-of select="text()" />
+													</a>
+												</div>
+											</xsl:when>
+											<xsl:when test="$link and $link != ''">
+												<div>
+													<a href="{$link}" target="_blank">
+														<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')" />
+													</a>
+												</div>
+											</xsl:when>
+											<xsl:when test="text()">
+												<div>
 													<xsl:value-of select="text()" />
-												</a>
-											</div>
-										</xsl:when>
-										<xsl:otherwise>
-											<div>
-												<a href="{$link}" target="_blank">
-													<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')" />
-												</a>
-											</div>
-										</xsl:otherwise>
-									</xsl:choose>
+												</div>
+											</xsl:when>
+										</xsl:choose>
 								</xsl:for-each>
 							</td>
 						</tr>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:if
-							test="./eag:eag/eag:relations/eag:resourceRelation/eag:relationEntry/text()">
+						<xsl:if test="./eag:eag/eag:relations/eag:resourceRelation/eag:relationEntry/text()">
 							<tr>
 								<td class="header">
 									<xsl:value-of select="ape:resource('eagcontent.relatedresource')" />
