@@ -596,7 +596,7 @@
 									</td>
 									<td>
 										<xsl:choose>
-											<xsl:when test="eag:services/eag:techservices/eag.reproductionser/eag:microformser[@question='yes']">
+											<xsl:when test="eag:services/eag:techservices/eag:reproductionser/eag:microformser[@question='yes']">
 												<xsl:value-of select="ape:resource('eagcontent.available')" />
 											</xsl:when>
 											<xsl:otherwise>
