@@ -775,9 +775,15 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						tempListList.add(listCities);
 						eag2012.setCitiesValue(tempListList);
 						eag2012.setLocalentityValue(listDistrict);
-						eag2012.setSecondemValue(listLocalAuthority);
-						eag2012.setFirstdemValue(listAutonomus);
-						eag2012.setCountryValue(listCountries);
+						tempListList = new ArrayList<List<String>>();
+						tempListList.add(listLocalAuthority);
+						eag2012.setSecondemValue(tempListList);
+						tempListList = new ArrayList<List<String>>();
+						tempListList.add(listAutonomus);
+						eag2012.setFirstdemValue(tempListList);
+						tempListList = new ArrayList<List<String>>();
+						tempListList.add(listCountries);
+						eag2012.setCountryValue(tempListList);
 						tempListList = new ArrayList<List<String>>();
 						tempListList.add(listLatitudes);
 						eag2012.setLocationLatitude(tempListList);
@@ -1090,9 +1096,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					tempListList = new ArrayList<List<String>>();
 					tempListList.add(listCities);
 					eag2012.setMunicipalityPostalcodeValue(tempListList);
-					
-					eag2012.setCountryValue(listCountries);
-					eag2012.setCountryLang(listStreetLanguage); //TODO change in other moment
+					tempListList = new ArrayList<List<String>>();
+					tempListList.add(listCountries);
+					eag2012.setCountryValue(tempListList);
+					tempListList = new ArrayList<List<String>>();
+					tempListList.add(listStreetLanguage);
+					eag2012.setCountryLang(tempListList);
 					List<List<String>> locationsTemp = new ArrayList<List<String>>();
 					locationsTemp.add(listLatitudes);//repo0
 					eag2012.setLocationLatitude(locationsTemp);

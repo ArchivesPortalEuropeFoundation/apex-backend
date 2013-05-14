@@ -160,12 +160,12 @@ public class Eag2012 {
 	private List<List<String>> locationLocalType;
 	private List<List<String>> locationLatitude;
 	private List<List<String>> locationLongitude;
-	private List<String> countryLang;
-	private List<String> countryValue;
-	private List<String> firstdemLang;
-	private List<String> firstdemValue;
-	private List<String> secondemLang;
-	private List<String> secondemValue;
+	private List<List<String>> countryLang;
+	private List<List<String>> countryValue;
+	private List<List<String>> firstdemLang;
+	private List<List<String>> firstdemValue;
+	private List<List<String>> secondemLang;
+	private List<List<String>> secondemValue;
 	private List<List<String>> municipalityPostalcodeLang;
 	private List<List<String>> municipalityPostalcodeValue;
 	private List<List<String>> citiesValue;
@@ -1235,51 +1235,51 @@ public class Eag2012 {
 		this.locationLongitude = locationLongitude;
 	}
 
-	public List<String> getCountryLang() {
+	public List<List<String>> getCountryLang() {
 		return countryLang;
 	}
 
-	public void setCountryLang(List<String> countryLang) {
+	public void setCountryLang(List<List<String>> countryLang) {
 		this.countryLang = countryLang;
 	}
 
-	public List<String> getCountryValue() {
+	public List<List<String>> getCountryValue() {
 		return countryValue;
 	}
 
-	public void setCountryValue(List<String>  countryValue) {
+	public void setCountryValue(List<List<String>>  countryValue) {
 		this.countryValue = countryValue;
 	}
 
-	public List<String> getFirstdemLang() {
+	public List<List<String>> getFirstdemLang() {
 		return firstdemLang;
 	}
 
-	public void setFirstdemLang(List<String> firstdemLang) {
+	public void setFirstdemLang(List<List<String>> firstdemLang) {
 		this.firstdemLang = firstdemLang;
 	}
 
-	public List<String> getFirstdemValue() {
+	public List<List<String>> getFirstdemValue() {
 		return firstdemValue;
 	}
 
-	public void setFirstdemValue(List<String> firstdemValue) {
+	public void setFirstdemValue(List<List<String>> firstdemValue) {
 		this.firstdemValue = firstdemValue;
 	}
 
-	public List<String> getSecondemLang() {
+	public List<List<String>> getSecondemLang() {
 		return secondemLang;
 	}
 
-	public void setSecondemLang(List<String> secondemLang) {
+	public void setSecondemLang(List<List<String>> secondemLang) {
 		this.secondemLang = secondemLang;
 	}
 
-	public List<String> getSecondemValue() {
+	public List<List<String>> getSecondemValue() {
 		return secondemValue;
 	}
 
-	public void setSecondemValue(List<String> secondemValue) {
+	public void setSecondemValue(List<List<String>> secondemValue) {
 		this.secondemValue = secondemValue;
 	}
 
