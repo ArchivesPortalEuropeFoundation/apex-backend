@@ -713,6 +713,25 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				JSONObject contactTable = contact.getJSONObject("contactTable_"+(x));
 				//Contact visitorsAddress
 				
+				if(contactTable.has("textNameOfRepository")){
+					String nameOfRepository = contactTable.getString("textNameOfRepository");
+					List<String> repositorNames = eag2012.getRepositoryNameValue();
+					if(repositorNames==null){
+						repositorNames = new ArrayList<String>();
+					}
+					repositorNames.add(nameOfRepository);
+					eag2012.setRepositoryNameValue(repositorNames);
+				}
+				if(contactTable.has("selectRoleOfRepository")){
+					String roleOfRepository = contactTable.getString("selectRoleOfRepository");
+					List<String> rolesOfRepository = eag2012.getRepositoryRoleValue();
+					if(rolesOfRepository==null){
+						rolesOfRepository = new ArrayList<String>();
+					}
+					rolesOfRepository.add(roleOfRepository);
+					eag2012.setRepositoryRoleValue(rolesOfRepository);
+				}
+				
 				JSONObject visitorAddress = contactTable.getJSONObject("visitorsAddress");
 				if(visitorAddress!=null){
 					List<String> listStreet = new ArrayList<String>();
@@ -725,6 +744,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					List<String> listLongitudes = new ArrayList<String>();
 					List<String> listStreetLanguage = new ArrayList<String>();
 					List<List<String>> tempListList = new ArrayList<List<String>>();  
+					
+					
+					
 					int i=1;
 					if(visitorAddress.has("contactTableVisitorsAddress_"+i)){
 				    	
@@ -751,7 +773,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						eag2012.setStreetLang(tempListList);
 						tempListList = new ArrayList<List<String>>();
 						tempListList.add(listCities);
-						eag2012.setMunicipalityPostalcodeValue(tempListList);
+						eag2012.setCitiesValue(tempListList);
 						eag2012.setLocalentityValue(listDistrict);
 						eag2012.setSecondemValue(listLocalAuthority);
 						eag2012.setFirstdemValue(listAutonomus);
@@ -784,10 +806,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						}while(postalAddress.has("contactTablePostalAddress_"+(++i)));
 						
 						tempListList.add(listStreet);
-						eag2012.setStreetValue(tempListList);
+						eag2012.setPostalStreetValue(tempListList);
 						tempListList = new ArrayList<List<String>>();
 						tempListList.add(listStreetLanguage);
-						eag2012.setStreetLang(tempListList);
+						eag2012.setPostalStreetLang(tempListList);
 						tempListList = new ArrayList<List<String>>();
 						tempListList.add(listCities);
 						eag2012.setMunicipalityPostalcodeValue(tempListList);
@@ -1193,9 +1215,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			}
 			if(yourInstitution.has("selectYIContinent")){
 				String continent = yourInstitution.getString("selectYIContinent");
-				List<String> continentList = new ArrayList<String>();
-				continentList.add(continent);
-				eag2012.setGeogareaValue(continentList);
+				eag2012.setGeogareaValue(continent);
 			}
 			if(yourInstitution.has("selectFacilitiesForDisabledPeopleAvailable")){
 				List<List<String>> accessibilityQuestionListList = new ArrayList<List<String>>();

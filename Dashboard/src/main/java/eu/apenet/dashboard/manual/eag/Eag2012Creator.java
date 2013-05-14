@@ -50,6 +50,8 @@ public class Eag2012Creator {
 	private static final String XML_BASE = "http://www.archivesportaleurope.net/";
 	private static final String AGENT_TYPE_MACHINE = "machine";
 	private static final String AGENT_TYPE_HUMAN = "human";
+	private static final String VISITORS_ADDRESS = "visitors address";
+	private static final String POSTAL_ADDRESS = "postal address";
     private Eag2012 eag2012;
 	private String storagePath;
 	private boolean isNew;
@@ -1311,7 +1313,9 @@ public class Eag2012Creator {
 		
 		ArrayList<HashMap<String, Object>> childArchguide1Children = new ArrayList<HashMap<String, Object>>();
         //geogearea is unique for all repositories and mandatory, so it's used into looper into for-control-condition
-        for(int indexRepo=0;(this.eag2012.getGeogareaValue()!=null && indexRepo<this.eag2012.getGeogareaValue().size());indexRepo++){ //location-localtype is mandatory so there are the same number of repositories and localtypes  
+		int counter = (this.eag2012.getGeogareaValue()!=null && !this.eag2012.getGeogareaValue().isEmpty())?1:0;
+		counter += (this.eag2012.getRepositoryNameValue()!=null && this.eag2012.getRepositoryNameValue().size()>0)?this.eag2012.getRepositoryNameValue().size():0;
+        for(int indexRepo=0;indexRepo<counter;indexRepo++){ //location-localtype is mandatory so there are the same number of repositories and localtypes  
         	childArchguide1Children.add(buildRepository(indexRepo)); //no mandatory repeatable
         }
         childArchguide1.put("children",childArchguide1Children);
@@ -1330,24 +1334,20 @@ public class Eag2012Creator {
         
      		ArrayList<HashMap<String, Object>> childArchguide2Children = new ArrayList<HashMap<String, Object>>();
      		if(indexRepo>0){
-	        	for(int i=0;this.eag2012.getRepositoryNameValue()!=null && this.eag2012.getRepositoryNameValue().size()>indexRepo && this.eag2012.getRepositoryNameValue().get(indexRepo)!=null && i<this.eag2012.getRepositoryNameValue().get(indexRepo).size();i++){//no mandatory repeatable
-	     			childArchguide2Children.add(buildRepositoryName(this.eag2012.getRepositoryNameLang().get(indexRepo).get(i),this.eag2012.getRepositoryNameValue().get(indexRepo).get(i)));
-	     		}
-	        	childArchguide2Children.add(buildRepositoryRole(this.eag2012.getRepositoryRoleValue().get(indexRepo))); //no mandatory not repeatable
+	     		childArchguide2Children.add(buildRepositoryName((this.eag2012.getRepositoryNameLang()!=null && this.eag2012.getRepositoryNameLang().size()>indexRepo)?this.eag2012.getRepositoryNameLang().get(indexRepo):null,(this.eag2012.getRepositoryNameValue()!=null && this.eag2012.getRepositoryNameValue().size()>indexRepo)?this.eag2012.getRepositoryNameValue().get(indexRepo):null));
+	        	childArchguide2Children.add(buildRepositoryRole((this.eag2012.getRepositoryRoleValue()!=null && this.eag2012.getRepositoryRoleValue().size()>indexRepo)?this.eag2012.getRepositoryRoleValue().get(indexRepo):null)); //no mandatory not repeatable
      		}else{
      			childArchguide2Children.add(buildRepositoryRole(Eag2012.REPOSITORY_ROLE_HEAD_QUARTER)); //no mandatory not repeatable
      		}
         	childArchguide2Children.add(buildGeogarea(indexRepo)); //mandatory not repeatable
-        	if(indexRepo>0){
-        		for(int i=0;this.eag2012.getLocationLocalType()!=null && this.eag2012.getLocationLocalType().size()>indexRepo && i<this.eag2012.getLocationLocalType().get(indexRepo).size();i++){ //first part <-> mandatory repeatable
-            		childArchguide2Children.add(buildLocation(this.eag2012.getLocationLocalType().get(indexRepo).get(i),this.eag2012.getLocationLongitude().get(indexRepo).get(i),this.eag2012.getLocationLatitude().get(indexRepo).get(i),indexRepo));
+//        	if(indexRepo>0){
+        		for(int i=0;this.eag2012.getStreetValue()!=null && this.eag2012.getStreetValue().size()>indexRepo && i<this.eag2012.getStreetValue().get(indexRepo).size();i++){ //first part <-> mandatory repeatable
+            		childArchguide2Children.add(buildLocation(VISITORS_ADDRESS,indexRepo,i));
             	}
-            	for(int i=0;this.eag2012.getLocationLocalType()!=null && this.eag2012.getLocationLocalType().size()>indexRepo && i<this.eag2012.getLocationLocalType().get(indexRepo).size();i++){ //second part <-> mandatory repeatable
-            		childArchguide2Children.add(buildLocation2(this.eag2012.getLocationLocalType().get(indexRepo).get(i),indexRepo));
-            	}
-        	}else{
-        		//TODO
-        	}
+        		for(int i=0;this.eag2012.getPostalStreetValue()!=null && this.eag2012.getPostalStreetValue().size()>indexRepo && i<this.eag2012.getPostalStreetValue().get(indexRepo).size();i++){ //first part <-> mandatory repeatable
+        			childArchguide2Children.add(buildLocation2(POSTAL_ADDRESS,indexRepo,i)); //postal address
+        		}
+//        	}
         	if(indexRepo>0){
 	            for(int i=0;this.eag2012.getTelephoneValue()!=null && this.eag2012.getTelephoneValue().size()>indexRepo && this.eag2012.getTelephoneValue().get(indexRepo)!=null && i<this.eag2012.getTelephoneValue().get(indexRepo).size();i++){ //no mandatory repeatable
 	            	childArchguide2Children.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_CONTACT).get(i)));     
@@ -1356,16 +1356,16 @@ public class Eag2012Creator {
 	            	childArchguide2Children.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(0)));     
         	}
             if(indexRepo>0){
-            	for(int i=0;this.eag2012.getFaxValue()!=null && i<this.eag2012.getFaxValue().size();i++){//no mandatory repeatable
+            	for(int i=0;this.eag2012.getFaxValue()!=null && indexRepo<this.eag2012.getFaxValue().size() && this.eag2012.getFaxValue().get(indexRepo)!=null && this.eag2012.getFaxValue().get(indexRepo).get(TAB_CONTACT)!=null && this.eag2012.getFaxValue().get(indexRepo).get(TAB_CONTACT).size()>i;i++){//no mandatory repeatable
                 	childArchguide2Children.add(buildFax(this.eag2012.getFaxValue().get(indexRepo).get(TAB_CONTACT).get(i)));
                 }
             }
             if(indexRepo>0){
-            	for(int i=0;this.eag2012.getEmailHref()!=null && i<this.eag2012.getEmailHref().size();i++){//no mandatory repeatable
+            	for(int i=0;this.eag2012.getEmailHref()!=null && this.eag2012.getEmailHref().size()>indexRepo && this.eag2012.getEmailHref().get(indexRepo)!=null && this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT)!=null && this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).size()>i;i++){//no mandatory repeatable
                 	childArchguide2Children.add(buildEmail(this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).get(i),
                 			this.eag2012.getEmailValue().get(indexRepo).get(TAB_CONTACT).get(i)));   
                 }
-                for(int i=0;this.eag2012.getWebpageHref()!=null && i<this.eag2012.getWebpageHref().size();i++){ //no mandatory repeatable
+                for(int i=0;this.eag2012.getWebpageHref()!=null && this.eag2012.getWebpageHref().size()>indexRepo && this.eag2012.getWebpageHref().get(indexRepo)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_CONTACT)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_CONTACT).size()>i;i++){ //no mandatory repeatable
                 	childArchguide2Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_CONTACT).get(i),
                 			this.eag2012.getWebpageValue().get(indexRepo).get(TAB_CONTACT).get(i)));  
                 }
@@ -1924,7 +1924,7 @@ public class Eag2012Creator {
         HashMap<String, String> childArchguide4Attributes = new HashMap<String, String>();
         childArchguide4Attributes.put("xml:lang",(this.eag2012.getRestaccessLang()!=null && this.eag2012.getRestaccessLang().size()>indexRepo && this.eag2012.getRestaccessLang().get(indexRepo)!=null && this.eag2012.getRestaccessLang().get(indexRepo).size()>indexList)?this.eag2012.getRestaccessLang().get(indexRepo).get(indexList):null);
         childArchguide4.put("attributes", childArchguide4Attributes);
-        childArchguide4.put("nodeValue", (this.eag2012.getRestaccessValue().get(indexRepo)!=null && this.eag2012.getRestaccessValue().get(indexRepo).size()>indexList)?this.eag2012.getRestaccessValue().get(indexRepo).get(indexList):null);
+        childArchguide4.put("nodeValue", (this.eag2012.getRestaccessValue()!=null && this.eag2012.getRestaccessValue().size()>indexRepo && this.eag2012.getRestaccessValue().get(indexRepo)!=null && this.eag2012.getRestaccessValue().get(indexRepo).size()>indexList)?this.eag2012.getRestaccessValue().get(indexRepo).get(indexList):null);
 		return childArchguide4;
 	}
 
@@ -1940,14 +1940,14 @@ public class Eag2012Creator {
            //Children of timetable
            ArrayList<HashMap<String, Object>> childArchguide3Children = new ArrayList<HashMap<String, Object>>();   
            if(indexRepo>0){
-        	   childArchguide3Children.add(buildOpening(this.eag2012.getOpeningValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES))); //mandatory not repeatable
-        	   if(this.eag2012.getClosingStandardDate()!=null && this.eag2012.getClosingStandardDate().get(indexRepo)!=null && this.eag2012.getClosingStandardDate().get(indexRepo).get(TAB_ACCESS_AND_SERVICES)!=null){
-        		   childArchguide3Children.add(buildClosing(this.eag2012.getClosingStandardDate().get(indexRepo).get(TAB_ACCESS_AND_SERVICES),this.eag2012.getClosingValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES))); //not mandatory not repeatable  
+        	   childArchguide3Children.add(buildOpening((this.eag2012.getOpeningValue()!=null && this.eag2012.getOpeningValue().size()>indexRepo && this.eag2012.getOpeningValue().get(indexRepo)!=null && this.eag2012.getOpeningValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES)!=null)?this.eag2012.getOpeningValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES):null)); //mandatory not repeatable
+        	   if(this.eag2012.getClosingStandardDate()!=null && this.eag2012.getClosingStandardDate().size()>indexRepo && this.eag2012.getClosingStandardDate().get(indexRepo)!=null && this.eag2012.getClosingStandardDate().get(indexRepo).get(TAB_ACCESS_AND_SERVICES)!=null){
+        		   childArchguide3Children.add(buildClosing((this.eag2012.getClosingStandardDate()!=null && this.eag2012.getClosingStandardDate().size()>indexRepo && this.eag2012.getClosingStandardDate().get(indexRepo)!=null && this.eag2012.getClosingStandardDate().get(indexRepo).get(TAB_ACCESS_AND_SERVICES)!=null)?this.eag2012.getClosingStandardDate().get(indexRepo).get(TAB_ACCESS_AND_SERVICES):null,(this.eag2012.getClosingValue()!=null && this.eag2012.getClosingValue().size()>0 && this.eag2012.getClosingValue().get(indexRepo)!=null && this.eag2012.getClosingValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES)!=null)?this.eag2012.getClosingValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES):null)); //not mandatory not repeatable
         	   }
            }else{
-        	   childArchguide3Children.add(buildOpening(this.eag2012.getOpeningValue().get(indexRepo).get(TAB_YOUR_INSTITUTION))); //mandatory not repeatable
-        	   if(this.eag2012.getClosingStandardDate()!=null && this.eag2012.getClosingStandardDate().get(indexRepo)!=null && this.eag2012.getClosingStandardDate().get(indexRepo).get(TAB_YOUR_INSTITUTION)!=null){
-        		   childArchguide3Children.add(buildClosing(this.eag2012.getClosingStandardDate().get(indexRepo).get(TAB_YOUR_INSTITUTION),this.eag2012.getClosingValue().get(indexRepo).get(TAB_YOUR_INSTITUTION))); //not mandatory not repeatable  
+        	   childArchguide3Children.add(buildOpening((this.eag2012.getOpeningValue()!=null && this.eag2012.getOpeningValue().size()>indexRepo && this.eag2012.getOpeningValue().get(indexRepo)!=null && this.eag2012.getOpeningValue().get(indexRepo).get(TAB_YOUR_INSTITUTION)!=null)?this.eag2012.getOpeningValue().get(indexRepo).get(TAB_YOUR_INSTITUTION):null)); //mandatory not repeatable
+        	   if(this.eag2012.getClosingStandardDate()!=null && this.eag2012.getClosingStandardDate().size()>indexRepo && this.eag2012.getClosingStandardDate().get(indexRepo)!=null && this.eag2012.getClosingStandardDate().get(indexRepo).get(TAB_YOUR_INSTITUTION)!=null){
+        		   childArchguide3Children.add(buildClosing((this.eag2012.getClosingStandardDate()!=null && this.eag2012.getClosingStandardDate().size()>indexRepo && this.eag2012.getClosingStandardDate().get(indexRepo)!=null && this.eag2012.getClosingStandardDate().get(indexRepo).get(TAB_YOUR_INSTITUTION)!=null)?this.eag2012.getClosingStandardDate().get(indexRepo).get(TAB_YOUR_INSTITUTION):null,(this.eag2012.getClosingValue()!=null && this.eag2012.getClosingValue().size()>0 && this.eag2012.getClosingValue().get(indexRepo)!=null && this.eag2012.getClosingValue().get(indexRepo).get(TAB_YOUR_INSTITUTION)!=null)?this.eag2012.getClosingValue().get(indexRepo).get(TAB_YOUR_INSTITUTION):null)); //not mandatory not repeatable
         	   }
            }
 	    
@@ -2181,7 +2181,7 @@ public class Eag2012Creator {
 		return childArchguide3;
 	}
 
-	private HashMap<String, Object> buildLocation2(String locationLocalType,Integer indexRepo) {
+	private HashMap<String, Object> buildLocation2(String locationLocalType,Integer indexRepo,Integer indexList) {
 
 		   HashMap<String,Object> childArchguide3 = new HashMap<String, Object>();
 	    	childArchguide3.put("nodeName", "location");
@@ -2192,22 +2192,22 @@ public class Eag2012Creator {
 	    	  
 	    	  ArrayList<HashMap<String, Object>> childArchguide3Children = new ArrayList<HashMap<String, Object>>();
 	    	  
-	          childArchguide3Children.add(buildMunicipalityPostalCode(this.eag2012.getMunicipalityPostalcodeLang().get(1).get(indexRepo),this.eag2012.getMunicipalityPostalcodeValue().get(1).get(indexRepo)));
-	          childArchguide3Children.add(buildStreet(this.eag2012.getStreetLang().get(1).get(indexRepo),this.eag2012.getStreetValue().get(1).get(indexRepo)));
+	          childArchguide3Children.add(buildMunicipalityPostalCode((this.eag2012.getMunicipalityPostalcodeLang()!=null && this.eag2012.getMunicipalityPostalcodeLang().size()>indexRepo && this.eag2012.getMunicipalityPostalcodeLang().get(indexRepo)!=null && this.eag2012.getMunicipalityPostalcodeLang().get(indexRepo).size()>indexList)?this.eag2012.getMunicipalityPostalcodeLang().get(indexRepo).get(indexList):null,(this.eag2012.getMunicipalityPostalcodeValue()!=null && this.eag2012.getMunicipalityPostalcodeValue().size()>indexRepo && this.eag2012.getMunicipalityPostalcodeValue().get(indexRepo)!=null && this.eag2012.getMunicipalityPostalcodeValue().get(indexRepo).size()>indexList)?this.eag2012.getMunicipalityPostalcodeValue().get(indexRepo).get(indexList):null));
+	          childArchguide3Children.add(buildStreet((this.eag2012.getPostalStreetLang()!=null && this.eag2012.getPostalStreetLang().size()>indexRepo && this.eag2012.getPostalStreetLang().get(indexRepo)!=null && this.eag2012.getPostalStreetLang().get(indexRepo).size()>indexList)?this.eag2012.getPostalStreetLang().get(indexRepo).get(indexList):null,(this.eag2012.getPostalStreetValue()!=null && this.eag2012.getPostalStreetValue().size()>indexRepo && this.eag2012.getPostalStreetValue().get(indexRepo)!=null && this.eag2012.getPostalStreetValue().get(indexRepo).size()>indexList)?this.eag2012.getPostalStreetValue().get(indexRepo).get(indexList):null));
 	          
 	          childArchguide3.put("children", childArchguide3Children);
 			
 			return childArchguide3;
 		}
 	
-	private HashMap<String, Object> buildLocation(String locationLocalType, String locationLatitude, String locationLongitude,Integer indexRepo) {
+	private HashMap<String, Object> buildLocation(String locationLocalType, Integer indexRepo,Integer indexList) {
 
 	   HashMap<String,Object> childArchguide3 = new HashMap<String, Object>();
     	childArchguide3.put("nodeName", "location");
     	HashMap<String, String>childArchguide3Attributes = new HashMap<String, String>();
     	childArchguide3Attributes.put("localType", locationLocalType);
-    	childArchguide3Attributes.put("latitude", locationLatitude);
-    	childArchguide3Attributes.put("longitude", locationLongitude);
+    	childArchguide3Attributes.put("latitude", (this.eag2012.getLocationLongitude()!=null && this.eag2012.getLocationLongitude().size()>indexRepo && this.eag2012.getLocationLongitude().get(indexRepo)!=null && this.eag2012.getLocationLongitude().get(indexRepo).size()>indexList)?this.eag2012.getLocationLongitude().get(indexRepo).get(indexList):null);
+    	childArchguide3Attributes.put("longitude", (this.eag2012.getLocationLatitude()!=null && this.eag2012.getLocationLatitude().size()>indexRepo && this.eag2012.getLocationLatitude().get(indexRepo)!=null && this.eag2012.getLocationLatitude().get(indexRepo).size()>indexList)?this.eag2012.getLocationLatitude().get(indexRepo).get(indexList):null);
     	childArchguide3.put("attributes",childArchguide3Attributes);
     	childArchguide3.put("nodeValue", null);
     	  
@@ -2216,9 +2216,9 @@ public class Eag2012Creator {
           childArchguide3Children.add(buildCountry((this.eag2012.getCountryLang()!=null && this.eag2012.getCountryLang().size()>indexRepo)?this.eag2012.getCountryLang().get(indexRepo):null,(this.eag2012.getCountryValue()!=null && this.eag2012.getCountryValue().size()>indexRepo)?this.eag2012.getCountryValue().get(indexRepo):null));
           childArchguide3Children.add(buildFirstdem((this.eag2012.getFirstdemLang()!=null && this.eag2012.getFirstdemLang().size()>indexRepo)?this.eag2012.getFirstdemLang().get(indexRepo):null,(this.eag2012.getFirstdemValue()!=null && this.eag2012.getFirstdemValue().size()>indexRepo)?this.eag2012.getFirstdemValue().get(indexRepo):null));
           childArchguide3Children.add(buildSecondem((this.eag2012.getSecondemLang()!=null && this.eag2012.getSecondemLang().size()>indexRepo)?this.eag2012.getSecondemLang().get(indexRepo):null,(this.eag2012.getSecondemValue()!=null && this.eag2012.getSecondemValue().size()>indexRepo)?this.eag2012.getSecondemValue().get(indexRepo):null));
-          childArchguide3Children.add(buildMunicipalityPostalCode((this.eag2012.getMunicipalityPostalcodeLang()!=null && this.eag2012.getMunicipalityPostalcodeLang().size()>0 && this.eag2012.getMunicipalityPostalcodeLang().get(0)!=null && this.eag2012.getMunicipalityPostalcodeLang().get(0).size()>indexRepo)?this.eag2012.getMunicipalityPostalcodeLang().get(0).get(indexRepo):null,(this.eag2012.getMunicipalityPostalcodeValue()!=null && this.eag2012.getMunicipalityPostalcodeValue().size()>0 && this.eag2012.getMunicipalityPostalcodeValue().get(0)!=null && this.eag2012.getMunicipalityPostalcodeValue().get(0).size()>indexRepo)?this.eag2012.getMunicipalityPostalcodeValue().get(0).get(indexRepo):null));
+          childArchguide3Children.add(buildMunicipalityPostalCode((this.eag2012.getCitiesLang()!=null && this.eag2012.getCitiesLang().size()>0 && this.eag2012.getCitiesLang().get(indexRepo)!=null && this.eag2012.getCitiesLang().get(indexRepo).size()>indexList)?this.eag2012.getCitiesLang().get(indexRepo).get(indexList):null,(this.eag2012.getCitiesValue()!=null && this.eag2012.getCitiesValue().size()>0 && this.eag2012.getCitiesValue().get(indexRepo)!=null && this.eag2012.getCitiesValue().get(indexRepo).size()>indexList)?this.eag2012.getCitiesValue().get(indexRepo).get(indexList):null));
           childArchguide3Children.add(buildLocalentity((this.eag2012.getLocalentityLang()!=null && this.eag2012.getLocalentityLang().size()>indexRepo)?this.eag2012.getLocalentityLang().get(indexRepo):null,(this.eag2012.getLocalentityValue()!=null && this.eag2012.getLocalentityValue().size()>indexRepo)?this.eag2012.getLocalentityValue().get(indexRepo):null));
-          childArchguide3Children.add(buildStreet((this.eag2012.getStreetLang()!=null && this.eag2012.getStreetLang().size()>0 && this.eag2012.getStreetLang().get(0)!=null && this.eag2012.getStreetLang().get(0).size()>indexRepo)?this.eag2012.getStreetLang().get(0).get(indexRepo):null,(this.eag2012.getStreetValue()!=null && this.eag2012.getStreetValue().size()>0 && this.eag2012.getStreetValue().get(0)!=null && this.eag2012.getStreetValue().get(0).size()>indexRepo)?this.eag2012.getStreetValue().get(0).get(indexRepo):null));
+          childArchguide3Children.add(buildStreet((this.eag2012.getStreetLang()!=null && this.eag2012.getStreetLang().size()>0 && this.eag2012.getStreetLang().get(indexRepo)!=null && this.eag2012.getStreetLang().get(indexRepo).size()>indexList)?this.eag2012.getStreetLang().get(indexRepo).get(indexList):null,(this.eag2012.getStreetValue()!=null && this.eag2012.getStreetValue().size()>0 && this.eag2012.getStreetValue().get(indexRepo)!=null && this.eag2012.getStreetValue().get(indexRepo).size()>indexList)?this.eag2012.getStreetValue().get(indexRepo).get(indexList):null));
           
           childArchguide3.put("children", childArchguide3Children);
 		
@@ -2303,9 +2303,9 @@ public class Eag2012Creator {
 		 HashMap<String, Object> childArchguide3 = new HashMap<String, Object>();
 		    childArchguide3.put("nodeName", "geogarea");
 		    HashMap<String, String>childArchguide3Attributes = new HashMap<String, String>();
-      	    childArchguide3Attributes.put("xml:lang", (this.eag2012.getGeogareaLang()!=null)?this.eag2012.getGeogareaLang().get(indexRepo):null); //,this.eag2012.getGeogareaValue().get(indexRepo))
+      	    childArchguide3Attributes.put("xml:lang", this.eag2012.getGeogareaLang()); 
       	    childArchguide3.put("attributes",childArchguide3Attributes);
-      	    childArchguide3.put("nodeValue", (this.eag2012.getGeogareaValue()!=null)?this.eag2012.getGeogareaValue().get(indexRepo):null);
+      	    childArchguide3.put("nodeValue", this.eag2012.getGeogareaValue() );
 		
 		return childArchguide3;
 	}
@@ -2341,11 +2341,16 @@ public class Eag2012Creator {
          		
          ArrayList<HashMap<String, Object>> childArchguideChildren = new ArrayList<HashMap<String, Object>>();
         if(indexRepo>0){
-        	for(int i=0;this.eag2012.getTelephoneValue()!=null && i<this.eag2012.getTelephoneValue().size();i++){ //no mandatory
-           	 childArchguideChildren.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_CONTACT).get(i)));
+        	for(int i=0;this.eag2012.getTelephoneValue()!=null && 
+        			indexRepo<this.eag2012.getTelephoneValue().size() && 
+        			this.eag2012.getTelephoneValue().get(indexRepo)!=null && 
+        			this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_CONTACT)!=null && 
+        			this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_CONTACT).size()>i
+        			;i++){ //no mandatory
+        		childArchguideChildren.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_CONTACT).get(i)));
             }
-            for(int i=0;this.eag2012.getEmailHref()!=null && i<this.eag2012.getEmailHref().size();i++){//no mandatory
-              childArchguideChildren.add(buildEmail(this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).get(i),this.eag2012.getEmailValue().get(indexRepo).get(TAB_CONTACT).get(i)));
+            for(int i=0;this.eag2012.getEmailHref()!=null && indexRepo<this.eag2012.getEmailHref().size() && this.eag2012.getEmailHref().get(indexRepo)!=null && this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT)!=null && this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).size()>i;i++){//no mandatory
+            	childArchguideChildren.add(buildEmail(this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).get(i),this.eag2012.getEmailValue().get(indexRepo).get(TAB_CONTACT).get(i)));
             }
         }else{
         	if(this.eag2012.getTelephoneValue()!=null && this.eag2012.getTelephoneValue().size()>0 && this.eag2012.getTelephoneValue().get(0).get(TAB_YOUR_INSTITUTION)!=null && this.eag2012.getTelephoneValue().get(0).get(TAB_YOUR_INSTITUTION).size()>0){

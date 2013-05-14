@@ -152,11 +152,11 @@ public class Eag2012 {
 	private String useDatesLang;
 	private List<Map<String,List<String>>> dateSetId;
 	private List<Map<String,List<String>>> dateSetLang;
-	private List<List<String>> repositoryNameLang;
-	private List<List<String>> repositoryNameValue;
+	private List<String> repositoryNameLang;
+	private List<String> repositoryNameValue;
 	private List<String> repositoryRoleValue;
-	private List<String> geogareaLang;
-	private List<String> geogareaValue;
+	private String geogareaLang;
+	private String geogareaValue;
 	private List<List<String>> locationLocalType;
 	private List<List<String>> locationLatitude;
 	private List<List<String>> locationLongitude;
@@ -168,6 +168,8 @@ public class Eag2012 {
 	private List<String> secondemValue;
 	private List<List<String>> municipalityPostalcodeLang;
 	private List<List<String>> municipalityPostalcodeValue;
+	private List<List<String>> citiesValue;
+	private List<List<String>> citiesLang;
 	private List<String> localentityLang;
 	private List<String> localentityValue;
 	private List<List<String>> streetLang;
@@ -234,9 +236,15 @@ public class Eag2012 {
 	private String relationsId;
 	private String relationsLang;
 	private List<String> placeEntryValue;
+	private List<List<String>> postalStreetValue;
+	private List<List<String>> postalStreetLang;
 
 	public Eag2012() {
 		// TODO put all parameters here
+	}
+	
+	public List<List<String>> getPostalStreetValue(){
+		return this.postalStreetValue;
 	}
 	
 	public String getRepositoryId() {
@@ -1163,19 +1171,19 @@ public class Eag2012 {
 		this.dateSetLang = dateSetLang;
 	}
 
-	public List<List<String>> getRepositoryNameLang() {
+	public List<String> getRepositoryNameLang() {
 		return repositoryNameLang;
 	}
 
-	public void setRepositoryNameLang(List<List<String>> repositoryNameLang) {
+	public void setRepositoryNameLang(List<String> repositoryNameLang) {
 		this.repositoryNameLang = repositoryNameLang;
 	}
 
-	public List<List<String>> getRepositoryNameValue() {
+	public List<String> getRepositoryNameValue() {
 		return repositoryNameValue;
 	}
 
-	public void setRepositoryNameValue(List<List<String>> repositoryNameValue) {
+	public void setRepositoryNameValue(List<String> repositoryNameValue) {
 		this.repositoryNameValue = repositoryNameValue;
 	}
 
@@ -1187,19 +1195,19 @@ public class Eag2012 {
 		this.repositoryRoleValue = repositoryRoleValue;
 	}
 
-	public List<String> getGeogareaLang() {
+	public String getGeogareaLang() {
 		return geogareaLang;
 	}
 
-	public void setGeogareaLang(List<String> geogareaLang) {
+	public void setGeogareaLang(String geogareaLang) {
 		this.geogareaLang = geogareaLang;
 	}
 
-	public List<String> getGeogareaValue() {
+	public String getGeogareaValue() {
 		return geogareaValue;
 	}
 
-	public void setGeogareaValue(List<String> geogareaValue) {
+	public void setGeogareaValue(String geogareaValue) {
 		this.geogareaValue = geogareaValue;
 	}
 
@@ -1317,6 +1325,10 @@ public class Eag2012 {
 
 	public List<List<String>> getStreetValue() {
 		return streetValue;
+	}
+	
+	public void setPostalStreetValue(List<List<String>> postalStreetValue){
+		this.postalStreetValue = postalStreetValue;
 	}
 
 	public void setStreetValue(List<List<String>> streetValue) {
@@ -1814,12 +1826,36 @@ public class Eag2012 {
 		this.relationsLang = relationsLang;
 	}
 
+	public List<List<String>> getPostalStreetLang() {
+		return postalStreetLang;
+	}
+
+	public void setPostalStreetLang(List<List<String>> postalStreetLang) {
+		this.postalStreetLang = postalStreetLang;
+	}
+
 	public List<String> getPlaceEntryValue() {
 		return placeEntryValue;
 	}
 
 	public void setPlaceEntryValue(List<String> placeEntryValue) {
 		this.placeEntryValue = placeEntryValue;
+	}
+
+	public List<List<String>> getCitiesValue() {
+		return citiesValue;
+	}
+
+	public void setCitiesValue(List<List<String>> citiesValue) {
+		this.citiesValue = citiesValue;
+	}
+
+	public List<List<String>> getCitiesLang() {
+		return citiesLang;
+	}
+
+	public void setCitiesLang(List<List<String>> citiesLang) {
+		this.citiesLang = citiesLang;
 	}
 
 	/**
