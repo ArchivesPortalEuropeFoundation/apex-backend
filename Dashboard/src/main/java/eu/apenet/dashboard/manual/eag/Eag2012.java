@@ -100,7 +100,7 @@ public class Eag2012 {
 	private List<Map<String,String>> descriptiveNoteId;
 	private List<Map<String,List<String>>> descriptiveNotePId;
 	private List<Map<String,List<String>>> descriptiveNotePLang;
-	private List<Map<String,List<String>>> descriptiveNotePValue;
+	private List<Map<String,Map<String,List<String>>>> descriptiveNotePValue;
 	private List<String> localControlId;
 	private List<String> localControlLang;
 	private List<String> termLastDateTimeVerified;
@@ -755,11 +755,11 @@ public class Eag2012 {
 		this.descriptiveNotePLang = descriptiveNotePLang;
 	}
 
-	public List<Map<String, List<String>>> getDescriptiveNotePValue() {
+	public List<Map<String,Map<String,List<String>>>> getDescriptiveNotePValue() {
 		return descriptiveNotePValue;
 	}
 
-	public void setDescriptiveNotePValue(List<Map<String, List<String>>> descriptiveNotePValue) {
+	public void setDescriptiveNotePValue(List<Map<String,Map<String,List<String>>>> descriptiveNotePValue) {
 		this.descriptiveNotePValue = descriptiveNotePValue;
 	}
 

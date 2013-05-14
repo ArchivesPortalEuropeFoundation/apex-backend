@@ -1030,10 +1030,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		JSONObject yourInstitution = jsonObj.getJSONObject("yourInstitution");
 		if(yourInstitution!=null){
 			//your institution - your institution
-			eag2012.setAgentValue(yourInstitution.getString("textYIPersonInstitutionResposibleForTheDescription"));
+			if(yourInstitution.has("textYIPersonInstitutionResposibleForTheDescription")){
+				eag2012.setAgentValue(yourInstitution.getString("textYIPersonInstitutionResposibleForTheDescription"));
+			}
 			eag2012.setRepositoridCountrycode(yourInstitution.getString("textYIInstitutionCountryCode"));
 			//used afterwards
 			//eag2012.setCountryValue(yourInstitution.get("textYIInstitutionCountryCode").toString()); //this tag is used into each repository. TODO, needs to be parsed to ISO3_Characters
+			//eag2012.setRepositoridRepositorycode(yourInstitution.getString("textYIIdentifierOfTheInstitution"));
 			eag2012.setOtherRepositorId(yourInstitution.getString("textYIIdentifierOfTheInstitution"));
 			eag2012.setRepositoridRepositorycode(eag2012.getOtherRepositorId());
 			eag2012.setRecordIdValue(yourInstitution.getString("textYIIdUsedInAPE"));
