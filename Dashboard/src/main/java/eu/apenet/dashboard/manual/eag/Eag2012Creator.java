@@ -1,6 +1,9 @@
 package eu.apenet.dashboard.manual.eag;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -101,8 +104,7 @@ public class Eag2012Creator {
 		this.storagePath=storagePath;
 		checkAndFillParametters();
 	}
-	
-	public void createEag2012(){
+public void createEag2012(){
 		
 		if(this.eag2012!=null && this.aiId!=null){
 			/*NEW DEVELOPMENT - BEGIN TEST */
@@ -128,16 +130,24 @@ public class Eag2012Creator {
 			//build EAG-Object-Structure
 			Eag2012Node eagNode = buildEagNode(nodeName,nodeValue,attributes,eagNodeChildren);
 	        //parse to DOM
-	        Document doc = null;
-			try {
-				doc = generateXMLDocumentFromEagNodes(eagNode);
-			} catch (ParserConfigurationException e) {
-				log.error("EXCEPTION trying to generate an XML Document from EAGNode",e);
-			} 
+//	        Document doc = null;
+			StringBuilder docStringBuilder = null;
+//			try {
+//				doc = generateXMLDocumentFromEagNodes(eagNode);
+				docStringBuilder = generateStringFromEagNodes(eagNode);
+//			} catch (ParserConfigurationException e) {
+//				log.error("EXCEPTION trying to generate an XML Document from EAGNode",e);
+//			} 
 			//generate XML-DOM Document to be stored from object-eag-structure
-	        if(doc!=null){
+//	        if(doc!=null){
+			if(docStringBuilder!=null){
 	        	//Write the XML
-	            storeToXML(doc);
+//	            storeToXML(doc);
+				try {
+					storeToXML(docStringBuilder);
+				} catch (IOException e) {
+					log.error("ERROR trying to store eag2012 into '"+storagePath+"'.",e);
+				}
 	            //last checks 
 	            try {
 					if(Eag2012.checkAndFixRepositorId(this.aiId, this.storagePath)){
@@ -152,6 +162,49 @@ public class Eag2012Creator {
 			/* NEW DEVELOPMENT - END TEST*/
 		}
 	}
+	
+	private StringBuilder generateStringFromEagNodes(Eag2012Node eagNode) {
+		StringBuilder eag2012StringBuilder = new StringBuilder();
+		eag2012StringBuilder.append(generateRecursiveStringFromEagNodes(eagNode,0));
+		return eag2012StringBuilder;
+	}
+	
+	private StringBuilder generateRecursiveStringFromEagNodes(Eag2012Node eagNode,Integer level){
+		StringBuilder stringBuilderNode = new StringBuilder();
+		stringBuilderNode.append("\n");
+		for(int i=0;i<level;i++){
+    		stringBuilderNode.append("\t");
+    	}
+		stringBuilderNode.append("<"+eagNode.getNodeName());
+        if(eagNode.getAttributes()!=null){
+        	HashMap<String, String> attributes = eagNode.getAttributes();
+        	Iterator<String> keysIterator = attributes.keySet().iterator();
+        	while(keysIterator.hasNext()){
+        		String key = keysIterator.next();
+        		String value = attributes.get(key);
+        		if(value!=null && !value.isEmpty()){
+        			stringBuilderNode.append(" "+key+"=\""+value+"\"");
+        		}
+        	}
+        }
+        stringBuilderNode.append(">");
+        if(eagNode.getValue()!=null){
+        	stringBuilderNode.append(eagNode.getValue());
+        }
+        if(eagNode.getChildren()!=null){
+        	Iterator<Eag2012Node> eag2012nodesIterator = eagNode.getChildren().iterator();
+        	while(eag2012nodesIterator.hasNext()){
+        		stringBuilderNode.append(generateRecursiveStringFromEagNodes(eag2012nodesIterator.next(),level+1));
+        	}
+        	stringBuilderNode.append("\n");
+            for(int i=0;i<level;i++){
+        		stringBuilderNode.append("\t");
+        	}
+        }
+        stringBuilderNode.append("</"+eagNode.getNodeName()+">");
+        return stringBuilderNode;
+	}
+
 	
 	private void checkAndFillParametters() {
 		if(this.archivalInstitutionDao==null){
@@ -174,20 +227,13 @@ public class Eag2012Creator {
         }
 	}
 
-	private void storeToXML(Node doc) {
+	private void storeToXML(StringBuilder docSB) throws IOException {
 		//Create the new file 
-        Source source = new DOMSource(doc);
-        Transformer transformer = null;
         try {
-        	File eagFile = new File(storagePath);
-        	Result result = new StreamResult(eagFile);
-            transformer = TransformerFactory.newInstance().newTransformer();
-            //tabulation by levels into XML
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-            
-            transformer.transform(source, result);
-            
+        	BufferedWriter writer = new BufferedWriter(new FileWriter(new File(storagePath)));
+        	writer.write(docSB.toString());
+        	writer.close();
+        	
             //Finally, the new path, autform and repositorycode are stored in archival_institution table
             if (this.isNew) {
             	//If the EAG is new, the registration date has to be stored in Data Base
@@ -212,22 +258,15 @@ public class Eag2012Creator {
             }
             
         } 
-        catch (TransformerConfigurationException e) {
-			log.error("Error configuring Transformer during the creation of " + storagePath + " file. " +  e.getMessage());
-            value = "error";
-        } 
         catch (TransformerFactoryConfigurationError e) {
 			log.error("Error configuring Transformer Factory during the creation of " + storagePath + " file. " +  e.getMessage());
             value = "error";
         } 
-        catch (TransformerException e) {
-			log.error("Transformer error during the creation of " + storagePath + " file. " +  e.getMessage());
-            value = "error";
-        }
         finally {
-        	transformer = null;
+        	docSB = null;
         }
 	}
+	
 	
 	private String getId() {
 		return this.id;
