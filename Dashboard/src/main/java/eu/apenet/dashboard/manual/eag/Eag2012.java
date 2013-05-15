@@ -208,10 +208,10 @@ public class Eag2012 {
 	private List<String> numValue;
 	private List<List<String>> ruleLang;
 	private List<List<String>> ruleValue;
-	private List<Map<String,List<String> >> webpageHref;
-	private List<Map<String,List<String> >> webpageValue;
-	private List<Map<String,List<String> >> emailHref;
-	private List<Map<String,List<String> >> emailValue;
+	private List<Map<String, Map<String, List<String>>>> webpageHref;
+	private List<Map<String, Map<String, List<String>>>> webpageValue;
+	private List<Map<String, Map<String, List<String>>>> emailHref;
+	private List<Map<String, Map<String, List<String>>>> emailValue;
 	private List<Map<String,List<String> >> faxValue;
 	private List<Map<String,List<String> >> telephoneValue;
 	private List<String> relationEntryScriptCode;
@@ -1607,35 +1607,35 @@ public class Eag2012 {
 		this.ruleValue = ruleValue;
 	}
 
-	public List<Map<String, List<String>>> getWebpageHref() {
+	public List<Map<String, Map<String, List<String>>>> getWebpageHref() {
 		return webpageHref;
 	}
 
-	public void setWebpageHref(List<Map<String, List<String>>> webpageHref) {
+	public void setWebpageHref(List<Map<String, Map<String, List<String>>>> webpageHref) {
 		this.webpageHref = webpageHref;
 	}
 
-	public List<Map<String, List<String>>> getWebpageValue() {
+	public List<Map<String, Map<String, List<String>>>> getWebpageValue() {
 		return webpageValue;
 	}
 
-	public void setWebpageValue(List<Map<String, List<String>>> webpageValue) {
+	public void setWebpageValue(List<Map<String, Map<String, List<String>>>> webpageValue) {
 		this.webpageValue = webpageValue;
 	}
 
-	public List<Map<String, List<String>>> getEmailHref() {
+	public List<Map<String, Map<String, List<String>>>> getEmailHref() {
 		return emailHref;
 	}
 
-	public void setEmailHref(List<Map<String, List<String>>> emailHref) {
+	public void setEmailHref(List<Map<String, Map<String, List<String>>>> emailHref) {
 		this.emailHref = emailHref;
 	}
 
-	public List<Map<String, List<String>>> getEmailValue() {
+	public List<Map<String, Map<String, List<String>>>> getEmailValue() {
 		return emailValue;
 	}
 
-	public void setEmailValue(List<Map<String, List<String>>> emailValue) {
+	public void setEmailValue(List<Map<String, Map<String, List<String>>>> emailValue) {
 		this.emailValue = emailValue;
 	}
 

@@ -6,7 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -17,21 +16,10 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.utils.ChangeControl;
@@ -64,7 +52,8 @@ public class Eag2012Creator {
 	//eventType values
 	private static final String EVENTTYPE_CREATED = "created";
 	private static final String EVENTTYPE_DELETED = "revised";
-	//descriptiveNote section indexes
+	//section indexes
+	public static final String ROOT = "root";
 	private static final String LANGUAGE_DECLARATIONS = "languageDeclaration";
 	private static final String RESOURCE_RELATION = "resourceRelation";
 	private static final String EAG_RELATION = "eagRelation";
@@ -85,7 +74,9 @@ public class Eag2012Creator {
 	private static final String HOLDINGS = "holdings";
 	private static final String BUILDING = "building";
 	private static final String REPOSITORHIST = "repositorhist";
-	
+	private static final String LIBRARY = "library";
+	private static final String SEARCHROOM = "searchroom";
+
     private Eag2012 eag2012;
 	private String storagePath;
 	private boolean isNew;
@@ -104,7 +95,8 @@ public class Eag2012Creator {
 		this.storagePath=storagePath;
 		checkAndFillParametters();
 	}
-public void createEag2012(){
+	
+	public void createEag2012(){
 		
 		if(this.eag2012!=null && this.aiId!=null){
 			/*NEW DEVELOPMENT - BEGIN TEST */
@@ -226,44 +218,39 @@ public void createEag2012(){
         	this.eag2012.setEventTypeValue((this.isNew)?EVENTTYPE_CREATED:EVENTTYPE_DELETED);
         }
 	}
-
+	/**
+	 * Stores an StringBuilder which contains eag2012 data.
+	 * 
+	 * @param StringBuiler
+	 * @throws IOException
+	 */
 	private void storeToXML(StringBuilder docSB) throws IOException {
 		//Create the new file 
-        try {
-        	BufferedWriter writer = new BufferedWriter(new FileWriter(new File(storagePath)));
-        	writer.write(docSB.toString());
-        	writer.close();
-        	
-            //Finally, the new path, autform and repositorycode are stored in archival_institution table
-            if (this.isNew) {
-            	//If the EAG is new, the registration date has to be stored in Data Base
-                Date dateNow = new Date();
-                this.archivalInstitution.setRegistrationDate(dateNow);	                	
-            }
+    	BufferedWriter writer = new BufferedWriter(new FileWriter(new File(storagePath)));
+    	writer.write(docSB.toString());
+    	writer.close();
+    	
+        //Finally, the new path, autform and repositorycode are stored in archival_institution table
+        if (this.isNew) {
+        	//If the EAG is new, the registration date has to be stored in Data Base
+            Date dateNow = new Date();
+            this.archivalInstitution.setRegistrationDate(dateNow);	                	
+        }
 
-            this.archivalInstitution.setEagPath(this.eagPath);
-            this.archivalInstitution.setAutform(this.eag2012.getAutform());
-            this.archivalInstitution.setRepositorycode(this.getId());
-            this.archivalInstitutionDao.store(this.archivalInstitution);
-            
+        this.archivalInstitution.setEagPath(this.eagPath);
+        this.archivalInstitution.setAutform(this.eag2012.getAutform());
+        this.archivalInstitution.setRepositorycode(this.getId());
+        this.archivalInstitutionDao.store(this.archivalInstitution);
+        
 
-			log.info("The EAG " + this.eagPath + " has been created and stored in repository");
-            ChangeControl.logOperation("Upload eag");
-            
-            if (someRepositorguideInformationEmpty) {
-            	value = "correct_withoutRepositorguideInformation";
-            }
-            else {
-            	value = "correct";
-            }
-            
-        } 
-        catch (TransformerFactoryConfigurationError e) {
-			log.error("Error configuring Transformer Factory during the creation of " + storagePath + " file. " +  e.getMessage());
-            value = "error";
-        } 
-        finally {
-        	docSB = null;
+		log.info("The EAG " + this.eagPath + " has been created and stored in repository");
+        ChangeControl.logOperation("Upload eag");
+        
+        if (someRepositorguideInformationEmpty) {
+        	value = "correct_withoutRepositorguideInformation";
+        }
+        else {
+        	value = "correct";
         }
 	}
 	
@@ -1446,21 +1433,17 @@ public void createEag2012(){
             }
             if(indexRepo>0){
             	for(int i=0;this.eag2012.getEmailHref()!=null && this.eag2012.getEmailHref().size()>indexRepo && this.eag2012.getEmailHref().get(indexRepo)!=null && this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT)!=null && this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).size()>i;i++){//no mandatory repeatable
-                	childArchguide2Children.add(buildEmail(this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).get(i),
-                			this.eag2012.getEmailValue().get(indexRepo).get(TAB_CONTACT).get(i)));   
+                	childArchguide2Children.add(buildEmail(this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).get(ROOT).get(i),this.eag2012.getEmailValue().get(indexRepo).get(TAB_CONTACT).get(ROOT).get(i)));   
                 }
                 for(int i=0;this.eag2012.getWebpageHref()!=null && this.eag2012.getWebpageHref().size()>indexRepo && this.eag2012.getWebpageHref().get(indexRepo)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_CONTACT)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_CONTACT).size()>i;i++){ //no mandatory repeatable
-                	childArchguide2Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_CONTACT).get(i),
-                			this.eag2012.getWebpageValue().get(indexRepo).get(TAB_CONTACT).get(i)));  
+                	childArchguide2Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_CONTACT).get(ROOT).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_CONTACT).get(ROOT).get(i)));  
                 }
             }else{
             	if(this.eag2012.getEmailHref()!=null && this.eag2012.getEmailHref().size()>0 && this.eag2012.getEmailHref().get(indexRepo)!=null && this.eag2012.getEmailHref().get(indexRepo).size()>0 && this.eag2012.getEmailHref().get(indexRepo).get(TAB_YOUR_INSTITUTION)!=null && this.eag2012.getEmailHref().get(indexRepo).get(TAB_YOUR_INSTITUTION).size()>0){
-            		childArchguide2Children.add(buildEmail(this.eag2012.getEmailHref().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(0),
-                			this.eag2012.getEmailValue().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(0)));
+            		childArchguide2Children.add(buildEmail(this.eag2012.getEmailHref().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(ROOT).get(0),this.eag2012.getEmailValue().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(ROOT).get(0)));
             	}
             	if(this.eag2012.getWebpageHref()!=null && this.eag2012.getWebpageHref().size()>0 && this.eag2012.getWebpageHref().get(indexRepo)!=null && this.eag2012.getWebpageHref().get(indexRepo).size()>0 && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_YOUR_INSTITUTION)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_YOUR_INSTITUTION).size()>0){
-            		childArchguide2Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(0),
-                			this.eag2012.getWebpageValue().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(0)));
+            		childArchguide2Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(ROOT).get(0),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(ROOT).get(0)));
             	}
             }
             if(indexRepo>0){
@@ -1541,8 +1524,8 @@ public void createEag2012(){
          childArchguide5.put("nodeValue", null); 
          ArrayList<HashMap<String, Object>> childArchguide5Children = new ArrayList<HashMap<String, Object>>(); 
             childArchguide5Children.add(buildDescriptiveNote(indexRepo,TAB_ACCESS_AND_SERVICES,OTHER_SERVICES,0)); //no mandatory not repeatable, can appear in other nodes
-            	for(int i=0;this.eag2012.getWebpageHref()!=null && indexRepo<this.eag2012.getWebpageHref().size() && this.eag2012.getWebpageHref().get(indexRepo)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).size()>i;i++){ //no mandatory repeatable
-             	   childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i)));
+            	for(int i=0;this.eag2012.getWebpageHref()!=null && indexRepo<this.eag2012.getWebpageHref().size() && this.eag2012.getWebpageHref().get(indexRepo)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).size()>0 && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(ROOT)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(OTHER_SERVICES).size()>i;i++){ //no mandatory repeatable
+             	   childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(OTHER_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(OTHER_SERVICES).get(i)));
                 }
         childArchguide5.put("children", childArchguide5Children);
 		
@@ -1557,8 +1540,8 @@ public void createEag2012(){
         childArchguide5.put("nodeValue", null); 
         ArrayList<HashMap<String, Object>> childArchguide5Children = new 	ArrayList<HashMap<String, Object>>(); 
           childArchguide5Children.add(buildDescriptiveNote(indexRepo,TAB_ACCESS_AND_SERVICES,TOURS_SESSIONS,0)); //no mandatory not repeatable, can appear in other nodes
-        	  for(int i=0;this.eag2012.getWebpageHref()!=null && indexRepo<this.eag2012.getWebpageHref().size() && this.eag2012.getWebpageHref().get(indexRepo)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).size()>i;i++){ //no mandatory repeatable
-            	  childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i)));
+        	  for(int i=0;this.eag2012.getWebpageHref()!=null && indexRepo<this.eag2012.getWebpageHref().size() && this.eag2012.getWebpageHref().get(indexRepo)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).size()>0 && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(TOURS_SESSIONS)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(TOURS_SESSIONS).size()>i;i++){ //no mandatory repeatable
+            	  childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(TOURS_SESSIONS).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(TOURS_SESSIONS).get(i)));
               }
        childArchguide5.put("children", childArchguide5Children);
 		
@@ -1573,8 +1556,8 @@ public void createEag2012(){
          childArchguide5.put("nodeValue", null); 
          ArrayList<HashMap<String, Object>> childArchguide5Children = new ArrayList<HashMap<String, Object>>(); 
           childArchguide5Children.add(buildDescriptiveNote(indexRepo,TAB_ACCESS_AND_SERVICES,EXHIBITION,0)); //no mandatory not repeatable, can appear in other nodes 
-        	  for(int i=0;this.eag2012.getWebpageHref()!=null && indexRepo<this.eag2012.getWebpageHref().size() && this.eag2012.getWebpageHref().get(indexRepo)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).size()>i;i++){ //no mandatory repeatable  
-            	  childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i)));
+        	  for(int i=0;this.eag2012.getWebpageHref()!=null && indexRepo<this.eag2012.getWebpageHref().size() && this.eag2012.getWebpageHref().get(indexRepo)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).size()>0 && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(EXHIBITION)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(EXHIBITION).size()>i;i++){ //no mandatory repeatable  
+            	  childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(EXHIBITION).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(EXHIBITION).get(i)));
               } 
          childArchguide5.put("children", childArchguide5Children);
 		
@@ -1629,8 +1612,8 @@ public void createEag2012(){
                ArrayList<HashMap<String, Object>> childArchguide5Children = new ArrayList<HashMap<String, Object>>(); 
                childArchguide5Children.add(buildDescriptiveNote(indexRepo,TAB_ACCESS_AND_SERVICES,RESTORATION_LAB,0)); //no mandatory not repeatable, can appear in other nodes
                childArchguide5Children.add(buildContact(indexRepo)); //not mandatory can appear in other nodes
-            	   for(int i=0;this.eag2012.getWebpageHref()!=null && indexRepo<this.eag2012.getWebpageHref().size() && this.eag2012.getWebpageHref().get(indexRepo)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).size()>i;i++){ //no mandatory repeatable
-                	   childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i)));
+            	   for(int i=0;this.eag2012.getWebpageHref()!=null && indexRepo<this.eag2012.getWebpageHref().size() && this.eag2012.getWebpageHref().get(indexRepo)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).size()>0 && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(RESTORATION_LAB)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(RESTORATION_LAB).size()>i;i++){ //no mandatory repeatable
+                	   childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(RESTORATION_LAB).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(RESTORATION_LAB).get(i)));
                    } 
          childArchguide5.put("children", childArchguide5Children);
 		
@@ -1652,8 +1635,8 @@ public void createEag2012(){
           
         childArchguide5Children.add(buildDescriptiveNote(indexRepo,TAB_ACCESS_AND_SERVICES,REPRODUCTIONSER,0)); //no mandatory no repeatable
         childArchguide5Children.add(buildContact(indexRepo)); //not mandatory can appear in other nodes
-        	for(int i=0;this.eag2012.getWebpageHref()!=null && indexRepo<this.eag2012.getWebpageHref().size() && this.eag2012.getWebpageHref().get(indexRepo)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).size()>i;i++){ //no mandatory
-                childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i)));
+        	for(int i=0;this.eag2012.getWebpageHref()!=null && indexRepo<this.eag2012.getWebpageHref().size() && this.eag2012.getWebpageHref().get(indexRepo)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).size()>0 && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(REPRODUCTIONSER)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(REPRODUCTIONSER).size()>i;i++){ //no mandatory
+                childArchguide5Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(REPRODUCTIONSER).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(REPRODUCTIONSER).get(i)));
               }
         if(this.eag2012.getMicroformserQuestion()!=null && this.eag2012.getMicroformserQuestion().size()>indexRepo){
         	childArchguide5Children.add(buildMicroformser(this.eag2012.getMicroformserQuestion().get(indexRepo)));  //no mandatory no repeatable
@@ -1754,8 +1737,8 @@ public void createEag2012(){
             //Children of library
             ArrayList<HashMap<String, Object>> childArchguide4Children = new ArrayList<HashMap<String, Object>>(); 
               childArchguide4Children.add(buildContact(indexRepo)); //contact
-            	  for(int i=0;this.eag2012.getWebpageHref()!=null && indexRepo<this.eag2012.getWebpageHref().size() && this.eag2012.getWebpageHref().get(indexRepo)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).size()>i;i++){ //no mandatory
-                	  childArchguide4Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i))); //webpage
+            	  for(int i=0;this.eag2012.getWebpageHref()!=null && indexRepo<this.eag2012.getWebpageHref().size() && this.eag2012.getWebpageHref().get(indexRepo)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).size()>0 && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(LIBRARY)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(LIBRARY).size()>i;i++){ //no mandatory
+                	  childArchguide4Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(LIBRARY).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(LIBRARY).get(i))); //webpage
                   } 
               childArchguide4Children.add(buildMonographicpub(indexRepo));
               childArchguide4Children.add(buildSerialpub(indexRepo));  
@@ -1807,8 +1790,8 @@ public void createEag2012(){
            childArchguide4Children.add(buildWorkPlaces(indexRepo));
            childArchguide4Children.add(buildComputerPlaces(indexRepo));
            childArchguide4Children.add(buildMicrofilmPlaces(indexRepo));
-        	   for(int i=0;this.eag2012.getWebpageHref()!=null && indexRepo<this.eag2012.getWebpageHref().size() && this.eag2012.getWebpageHref().get(indexRepo)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).size()>i;i++){ //no mandatory
-            	   childArchguide4Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(i)));  //webpage
+        	   for(int i=0;this.eag2012.getWebpageHref()!=null && indexRepo<this.eag2012.getWebpageHref().size() && this.eag2012.getWebpageHref().get(indexRepo)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).size()>0 && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(SEARCHROOM)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(SEARCHROOM).size()>i;i++){ //no mandatory
+            	   childArchguide4Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(SEARCHROOM).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(SEARCHROOM).get(i)));  //webpage
                }
            childArchguide4Children.add(buildPhotographAllowance(this.eag2012.getPhotographAllowanceValue()));
            
@@ -2404,14 +2387,14 @@ public void createEag2012(){
         	for(int i=0;this.eag2012.getTelephoneValue()!=null && indexRepo<this.eag2012.getTelephoneValue().size() && this.eag2012.getTelephoneValue().get(indexRepo)!=null && this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_CONTACT)!=null && this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_CONTACT).size()>i;i++){ //no mandatory
         		childArchguideChildren.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_CONTACT).get(i)));
             }
-            for(int i=0;this.eag2012.getEmailHref()!=null && indexRepo<this.eag2012.getEmailHref().size() && this.eag2012.getEmailHref().get(indexRepo)!=null && this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT)!=null && this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).size()>i;i++){//no mandatory
-            	childArchguideChildren.add(buildEmail(this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).get(i),this.eag2012.getEmailValue().get(indexRepo).get(TAB_CONTACT).get(i)));
+            for(int i=0;this.eag2012.getEmailHref()!=null && indexRepo<this.eag2012.getEmailHref().size() && this.eag2012.getEmailHref().get(indexRepo)!=null && this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT)!=null && this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).size()>0 && this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).get(ROOT)!=null && this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).get(ROOT).size()>i;i++){//no mandatory
+            	childArchguideChildren.add(buildEmail(this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).get(ROOT).get(i),this.eag2012.getEmailValue().get(indexRepo).get(TAB_CONTACT).get(ROOT).get(i)));
             }
         }else{
         	if(this.eag2012.getTelephoneValue()!=null && this.eag2012.getTelephoneValue().size()>0 && this.eag2012.getTelephoneValue().get(0).get(TAB_YOUR_INSTITUTION)!=null && this.eag2012.getTelephoneValue().get(0).get(TAB_YOUR_INSTITUTION).size()>0){
         		childArchguideChildren.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(0)));
-        	}if(this.eag2012.getEmailHref()!=null && this.eag2012.getEmailHref().size()>0 && this.eag2012.getEmailHref().get(0)!=null && this.eag2012.getEmailHref().get(0).get(TAB_YOUR_INSTITUTION)!=null && this.eag2012.getEmailHref().get(0).get(TAB_YOUR_INSTITUTION).size()>0){
-        		childArchguideChildren.add(buildEmail(this.eag2012.getEmailHref().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(0),this.eag2012.getEmailValue().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(0)));
+        	}if(this.eag2012.getEmailHref()!=null && this.eag2012.getEmailHref().size()>0 && this.eag2012.getEmailHref().get(0)!=null && this.eag2012.getEmailHref().get(0).get(TAB_YOUR_INSTITUTION)!=null && this.eag2012.getEmailHref().get(0).get(TAB_YOUR_INSTITUTION).size()>0 && this.eag2012.getEmailHref().get(0).get(TAB_YOUR_INSTITUTION).get(ROOT)!=null && this.eag2012.getEmailHref().get(0).get(TAB_YOUR_INSTITUTION).get(ROOT).size()>0){
+        		childArchguideChildren.add(buildEmail(this.eag2012.getEmailHref().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(ROOT).get(0),this.eag2012.getEmailValue().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(ROOT).get(0)));
         	}
         }
          childArchguidechild.put("children", childArchguideChildren);

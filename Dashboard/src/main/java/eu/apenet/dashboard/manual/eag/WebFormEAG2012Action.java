@@ -847,45 +847,126 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				
 				 i=(x==1)?1:0;
 				 while(contactTable.has("textContactEmailOfTheInstitution_"+(++i))){
-					 Map<String, List<String>> email = new HashMap<String,List<String>>();
-					 ArrayList<String> listEmail = new ArrayList<String>();
+					 List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailHref();
+					 if(listMapEmailList==null){
+						 listMapEmailList = new ArrayList<Map<String, Map<String, List<String>>>>();
+					 }
+					 Map<String, Map<String, List<String>>> email = null;
+					 if(listMapEmailList.size()>=x && listMapEmailList.get(x)!=null){
+						 email = listMapEmailList.get(x);
+					 }else{
+						 email = new HashMap<String, Map<String, List<String>>>();
+					 }
+					 List<String> listEmail = null;
+					 Map<String,List<String>> emailMap = null;
+					 if(email.size()>0 && email.get(Eag2012Creator.TAB_CONTACT)!=null){
+						 emailMap = email.get(Eag2012Creator.TAB_CONTACT);
+					 }else{
+						 emailMap = new HashMap<String,List<String>>();
+					 }
+					 if(emailMap.size()>0 && emailMap.get(Eag2012Creator.ROOT)!=null){
+						 listEmail = emailMap.get(Eag2012Creator.ROOT);
+					 }else{
+						 listEmail = new ArrayList<String>();
+					 }
 					 listEmail.add(contactTable.getString("textContactEmailOfTheInstitution_"+i));
-					 email.put(Eag2012Creator.TAB_CONTACT,listEmail);
-					 List<Map<String, List<String>>> listMapEmailList = new ArrayList<Map<String, List<String>>>(); 
+					 emailMap.put(Eag2012Creator.ROOT,listEmail); //root section, here there is only one mails list
+					 email.put(Eag2012Creator.TAB_CONTACT, emailMap);
 					 listMapEmailList.add(email);
-					 eag2012.setEmailHref(listMapEmailList); 	
-					}
+					 eag2012.setEmailHref(listMapEmailList);
+				 }
 				 i=(x==1)?1:0;
 				 while(contactTable.has("textContactLinkTitleForEmailOfTheInstitution_"+(++i))){
-					 Map<String, List<String>> email = new HashMap<String,List<String>>();
-					 ArrayList<String> listEmail = new ArrayList<String>();
+					 List<Map<String, Map<String, List<String>>>> listMapEmailValueList = eag2012.getEmailValue();
+					 if(listMapEmailValueList==null){
+						 listMapEmailValueList = new ArrayList<Map<String, Map<String, List<String>>>>();
+					 }
+					 Map<String, Map<String, List<String>>> email = null;
+					 if(listMapEmailValueList.size()>=x && listMapEmailValueList.get(x)!=null){
+						 email = listMapEmailValueList.get(x);
+					 }else{
+						 email = new HashMap<String, Map<String, List<String>>>();
+					 }
+					 List<String> listEmail = null;
+					 Map<String,List<String>> emailMap = null;
+					 if(email.size()>0 && email.get(Eag2012Creator.TAB_CONTACT)!=null){
+						 emailMap = email.get(Eag2012Creator.TAB_CONTACT);
+					 }else{
+						 emailMap = new HashMap<String,List<String>>();
+					 }
+					 if(emailMap.size()>0 && emailMap.get(Eag2012Creator.ROOT)!=null){
+						 listEmail = emailMap.get(Eag2012Creator.ROOT);
+					 }else{
+						 listEmail = new ArrayList<String>();
+					 }
 					 listEmail.add(contactTable.getString("textContactLinkTitleForEmailOfTheInstitution_"+i));
-					 email.put(Eag2012Creator.TAB_CONTACT,listEmail);
-					 List<Map<String, List<String>>> listMapEmailList = new ArrayList<Map<String, List<String>>>(); 
-					 listMapEmailList.add(email);
-					 eag2012.setEmailValue(listMapEmailList); 	
-					}
+					  
+					 emailMap.put(Eag2012Creator.ROOT,listEmail); //root section, here there is only one mails list
+					 email.put(Eag2012Creator.TAB_CONTACT, emailMap);
+					 listMapEmailValueList.add(email);
+					 eag2012.setEmailValue(listMapEmailValueList); 	
+				 }
 				 i=(x==1)?1:0;
 				 while(contactTable.has("textContactWebOfTheInstitution_"+(++i))){
-					 Map<String, List<String>> web = new HashMap<String,List<String>>();
-					 ArrayList<String> listWeb = new ArrayList<String>();
+					 List<Map<String, Map<String, List<String>>>> listMapWebpageHrefList = eag2012.getWebpageHref();
+					 if(listMapWebpageHrefList==null){
+						 listMapWebpageHrefList = new ArrayList<Map<String, Map<String, List<String>>>>();
+					 }
+					 Map<String, Map<String, List<String>>> mapMapListWeb = null;
+					 if(listMapWebpageHrefList.size()>=x && listMapWebpageHrefList.get(x)!=null){
+						 mapMapListWeb = listMapWebpageHrefList.get(x);
+					 }else{
+						 mapMapListWeb = new HashMap<String, Map<String, List<String>>>();
+					 }
+					 List<String> listWeb = null;
+					 Map<String,List<String>> webMap = null;
+					 if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_CONTACT)!=null){
+						 webMap = mapMapListWeb.get(Eag2012Creator.TAB_CONTACT);
+					 }else{
+						 webMap = new HashMap<String,List<String>>();
+					 }
+					 if(webMap.size()>0 && webMap.get(Eag2012Creator.TAB_CONTACT)!=null){
+						 listWeb = webMap.get(Eag2012Creator.TAB_CONTACT);
+					 }else{
+						 listWeb = new ArrayList<String>();
+					 }
 					 listWeb.add(contactTable.getString("textContactWebOfTheInstitution_"+i));
-					 web.put(Eag2012Creator.TAB_CONTACT,listWeb);
-					 List<Map<String, List<String>>> listMapWebList = new ArrayList<Map<String, List<String>>>(); 
-					 listMapWebList.add(web);
-					 eag2012.setWebpageHref(listMapWebList); 	
-					}
+					 webMap.put(Eag2012Creator.ROOT,listWeb);
+					 mapMapListWeb.put(Eag2012Creator.TAB_CONTACT,webMap);
+					 listMapWebpageHrefList.add(mapMapListWeb);
+					 eag2012.setWebpageHref(listMapWebpageHrefList); 	
+				 }
 			
-				 i=(x==1)?1:0;
+				 i=(x==1)?1:0;//listWeb.add(contactTable.getString("textContactLinkTitleForWebOfTheInstitution_"+i));
 				 while(contactTable.has("textContactLinkTitleForWebOfTheInstitution_"+(++i))){
-					 Map<String, List<String>> web = new HashMap<String,List<String>>();
-					 ArrayList<String> listWeb = new ArrayList<String>();
+					 List<Map<String, Map<String, List<String>>>> listMapWebList = eag2012.getWebpageHref();
+					 if(listMapWebList==null){
+						 listMapWebList = new ArrayList<Map<String, Map<String, List<String>>>>();
+					 }
+					 Map<String, Map<String, List<String>>> mapMapListWeb = null;
+					 if(listMapWebList.size()>=x && listMapWebList.get(x)!=null){
+						 mapMapListWeb = listMapWebList.get(x);
+					 }else{
+						 mapMapListWeb = new HashMap<String, Map<String, List<String>>>();
+					 }
+					 List<String> listWeb = null;
+					 Map<String,List<String>> webMap = null;
+					 if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_CONTACT)!=null){
+						 webMap = mapMapListWeb.get(Eag2012Creator.TAB_CONTACT);
+					 }else{
+						 webMap = new HashMap<String,List<String>>();
+					 }
+					 if(webMap.size()>0 && webMap.get(Eag2012Creator.TAB_CONTACT)!=null){
+						 listWeb = webMap.get(Eag2012Creator.TAB_CONTACT);
+					 }else{
+						 listWeb = new ArrayList<String>();
+					 }
 					 listWeb.add(contactTable.getString("textContactLinkTitleForWebOfTheInstitution_"+i));
-					 web.put(Eag2012Creator.TAB_CONTACT,listWeb);
-					 List<Map<String, List<String>>> listMapWebList = new ArrayList<Map<String, List<String>>>(); 
-					 listMapWebList.add(web);
+					 webMap.put(Eag2012Creator.ROOT,listWeb);
+					 mapMapListWeb.put(Eag2012Creator.TAB_CONTACT,webMap);
+					 listMapWebList.add(mapMapListWeb);
 					 eag2012.setWebpageValue(listMapWebList); 	
-					}
+				}
 			}
 		}
 		return eag2012;	
@@ -1148,39 +1229,120 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				eag2012.setTelephoneValue(listMapTelephonesList); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(telephone) }
 			}
 			if(yourInstitution.has("textYIEmailAddress")){
-				Map<String, List<String>> mails = new HashMap<String,List<String>>();
-				ArrayList<String> listMails = new ArrayList<String>();
-				listMails.add(yourInstitution.getString("textYIEmailAddress"));
-				mails.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listMails);
-				List<Map<String, List<String>>> listMapMailsList = new ArrayList<Map<String, List<String>>>();
-				listMapMailsList.add(mails);
-				eag2012.setEmailHref(listMapMailsList); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(mailsHref) }
+				List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailHref();
+				if(listMapEmailList==null){
+					listMapEmailList = new ArrayList<Map<String, Map<String, List<String>>>>();
+				}
+				Map<String, Map<String, List<String>>> email = null;
+				if(listMapEmailList.size()>0 && listMapEmailList.get(0)!=null){
+					email = listMapEmailList.get(0);
+				}else{
+					email = new HashMap<String, Map<String, List<String>>>();
+				}
+				List<String> listEmail = null;
+				Map<String,List<String>> emailMap = null;
+				if(email.size()>0 && email.get(Eag2012Creator.TAB_YOUR_INSTITUTION)!=null){
+					emailMap = email.get(Eag2012Creator.TAB_YOUR_INSTITUTION);
+				}else{
+					emailMap = new HashMap<String,List<String>>();
+				}
+				if(emailMap.size()>0 && emailMap.get(Eag2012Creator.ROOT)!=null){
+					listEmail = emailMap.get(Eag2012Creator.ROOT);
+				}else{
+					listEmail = new ArrayList<String>();
+				}
+				listEmail.add(yourInstitution.getString("textYIEmailAddress"));
+				emailMap.put(Eag2012Creator.ROOT,listEmail); //root section, here there is only one mails list
+				email.put(Eag2012Creator.TAB_YOUR_INSTITUTION, emailMap);
+				listMapEmailList.add(email);
+				eag2012.setEmailHref(listMapEmailList); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(mailsHref) }
 			}
 			if(yourInstitution.has("textYIEmailLinkTitle")){
-				Map<String, List<String>> mailsTitle = new HashMap<String,List<String>>();
-				ArrayList<String> listMailsTitle = new ArrayList<String>();
-				listMailsTitle.add(yourInstitution.getString("textYIEmailLinkTitle"));
-				mailsTitle.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listMailsTitle);
-				List<Map<String, List<String>>> listMailsTitleList = new ArrayList<Map<String, List<String>>>();
-				listMailsTitleList.add(mailsTitle);
-				eag2012.setEmailValue(listMailsTitleList); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(mailsTitle) }
+				List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailValue();
+				if(listMapEmailList==null){
+					listMapEmailList = new ArrayList<Map<String, Map<String, List<String>>>>();
+				}
+				Map<String, Map<String, List<String>>> email = null;
+				if(listMapEmailList.size()>0 && listMapEmailList.get(0)!=null){
+					email = listMapEmailList.get(0);
+				}else{
+					email = new HashMap<String, Map<String, List<String>>>();
+				}
+				List<String> listEmail = null;
+				Map<String,List<String>> emailMap = null;
+				if(email.size()>0 && email.get(Eag2012Creator.TAB_YOUR_INSTITUTION)!=null){
+					emailMap = email.get(Eag2012Creator.TAB_YOUR_INSTITUTION);
+				}else{
+					emailMap = new HashMap<String,List<String>>();
+				}
+				if(emailMap.size()>0 && emailMap.get(Eag2012Creator.ROOT)!=null){
+					listEmail = emailMap.get(Eag2012Creator.ROOT);
+				}else{
+					listEmail = new ArrayList<String>();
+				}
+				listEmail.add(yourInstitution.getString("textYIEmailLinkTitle"));
+				emailMap.put(Eag2012Creator.ROOT,listEmail); //root section, here there is only one mails list
+				email.put(Eag2012Creator.TAB_YOUR_INSTITUTION, emailMap);
+				listMapEmailList.add(email);
+				eag2012.setEmailValue(listMapEmailList); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(mailsTitle) }
 			}
 			if(yourInstitution.has("textYIWebpage")){
-				Map<String, List<String>> webpageLinkHref = new HashMap<String,List<String>>();
-				ArrayList<String> listMailsWebpageHref = new ArrayList<String>();
-				listMailsWebpageHref.add(yourInstitution.getString("textYIWebpage"));
-				webpageLinkHref.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listMailsWebpageHref);
-				List<Map<String, List<String>>> listWebpageLinkHref = new ArrayList<Map<String, List<String>>>(); 
-				eag2012.setWebpageHref(listWebpageLinkHref); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(webpageHref) }
+				List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailValue();
+				if(listMapEmailList==null){
+					listMapEmailList = new ArrayList<Map<String, Map<String, List<String>>>>();
+				}
+				Map<String, Map<String, List<String>>> email = null;
+				if(listMapEmailList.size()>0 && listMapEmailList.get(0)!=null){
+					email = listMapEmailList.get(0);
+				}else{
+					email = new HashMap<String, Map<String, List<String>>>();
+				}
+				List<String> listEmail = null;
+				Map<String,List<String>> emailMap = null;
+				if(email.size()>0 && email.get(Eag2012Creator.TAB_YOUR_INSTITUTION)!=null){
+					emailMap = email.get(Eag2012Creator.TAB_YOUR_INSTITUTION);
+				}else{
+					emailMap = new HashMap<String,List<String>>();
+				}
+				if(emailMap.size()>0 && emailMap.get(Eag2012Creator.ROOT)!=null){
+					listEmail = emailMap.get(Eag2012Creator.ROOT);
+				}else{
+					listEmail = new ArrayList<String>();
+				}
+				listEmail.add(yourInstitution.getString("textYIWebpage"));
+				emailMap.put(Eag2012Creator.ROOT,listEmail); //root section, here there is only one mails list
+				email.put(Eag2012Creator.TAB_YOUR_INSTITUTION, emailMap);
+				listMapEmailList.add(email);
+				eag2012.setWebpageHref(listMapEmailList); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(webpageHref) }
 			}
 			if(yourInstitution.has("textYIWebpageLinkTitle")){
-				Map<String, List<String>> webpageValue = new HashMap<String,List<String>>();
-				ArrayList<String> listWebpage = new ArrayList<String>();
-				listWebpage.add(yourInstitution.getString("textYIWebpageLinkTitle"));
-				webpageValue.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listWebpage);
-				List<Map<String, List<String>>> listWebpageValue = new ArrayList<Map<String, List<String>>>();
-				listWebpageValue.add(webpageValue);
-				eag2012.setWebpageValue(listWebpageValue); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(webpageTitle) }
+				List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailValue();
+				if(listMapEmailList==null){
+					listMapEmailList = new ArrayList<Map<String, Map<String, List<String>>>>();
+				}
+				Map<String, Map<String, List<String>>> email = null;
+				if(listMapEmailList.size()>0 && listMapEmailList.get(0)!=null){
+					email = listMapEmailList.get(0);
+				}else{
+					email = new HashMap<String, Map<String, List<String>>>();
+				}
+				List<String> listEmail = null;
+				Map<String,List<String>> emailMap = null;
+				if(email.size()>0 && email.get(Eag2012Creator.TAB_YOUR_INSTITUTION)!=null){
+					emailMap = email.get(Eag2012Creator.TAB_YOUR_INSTITUTION);
+				}else{
+					emailMap = new HashMap<String,List<String>>();
+				}
+				if(emailMap.size()>0 && emailMap.get(Eag2012Creator.ROOT)!=null){
+					listEmail = emailMap.get(Eag2012Creator.ROOT);
+				}else{
+					listEmail = new ArrayList<String>();
+				}
+				listEmail.add(yourInstitution.getString("textYIWebpageLinkTitle"));
+				emailMap.put(Eag2012Creator.ROOT,listEmail); //root section, here there is only one mails list
+				email.put(Eag2012Creator.TAB_YOUR_INSTITUTION, emailMap);
+				listMapEmailList.add(email);
+				eag2012.setWebpageValue(listMapEmailList); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(webpageTitle) }
 			}
 			if(yourInstitution.has("textYIOpeningTimes")){
 				Map<String, String> openingMap = new HashMap<String,String>();
