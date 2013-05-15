@@ -232,7 +232,7 @@
 
 		<tr>
 			<td>
-				<label for="textASSRWorkPlaces"><s:property value="getText('label.ai.accessAndServices.workPlaces')"/><span class="required">*</span>:</label>
+				<label for="textASSRWorkPlaces"><s:property value="getText('label.ai.accessAndServices.workPlaces')"/>:</label>
 			</td>
 			<td>
 				<input type="text" id="textASSRWorkPlaces" />

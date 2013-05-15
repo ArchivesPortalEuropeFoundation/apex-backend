@@ -41,7 +41,7 @@
 				<label for="selectDescriptionLanguage"><s:property value="getText('label.ai.control.descriptionLanguage')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectDescriptionLanguage" cssClass="selectControlTab" list="languageISOList"></s:select>
+				<s:select theme="simple" id="selectDescriptionLanguage" cssClass="selectControlTab" list="languageList"></s:select>
 			</td>
 			<td colspan="2">
 			</td>
