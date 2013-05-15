@@ -10,6 +10,8 @@
 			<td>
 				<input type="text" id="textIdentityCountryCodeOfTheInstitution" value="${countryCode}" disabled="disabled" />
 			</td>
+			<td colspan="2">
+			</td>
 		</tr>
 
 		<tr>
@@ -48,6 +50,8 @@
 	<table id="identityButtonAddNames">
 		<tr>
 			<td colspan="2"><input id="buttonAddAnotherFormOfTheAuthorizedName" type="button" value="<s:property value='getText("label.ai.identity.addAnotherFormOfTheAuthorizedName")' />" onclick="addAnotherFormOfTheAuthorizedName('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/></td>
+			<td colspan="2">
+			</td>
 		</tr>
 	</table>
 
@@ -72,6 +76,8 @@
 		<tr>
 			<td colspan="2">
 				<input type="button" id="buttonAddParallelNameOfTheInstitution" value="<s:property value='getText("label.ai.identity.addAnotherParallelNameOfTheInstitution")' />" onclick="addParallelNameOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
+			</td>
+			<td colspan="2">
 			</td>
 		</tr>
 	</table>

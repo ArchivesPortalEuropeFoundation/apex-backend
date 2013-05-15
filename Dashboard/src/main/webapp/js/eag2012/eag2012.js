@@ -1583,8 +1583,8 @@ function addRangeYear(table, text1, text2, text3){
 					"<td>"+
 						"<input type=\"text\" id=\"textYearWhenThisNameWasUsedFrom_1\" value=\"\" />"+
 					"</td>"+
-					"<td>"+
-						"<label for=\"textYearWhenThisNameWasUsedTo_1\" class=\"labelLeft\">"+text2+":</label>"+
+					"<td class=\"labelLeft\">"+
+						"<label for=\"textYearWhenThisNameWasUsedTo_1\">"+text2+":</label>"+
 					"</td>"+
 					"<td>"+
 						"<input type=\"text\" id=\"textYearWhenThisNameWasUsedTo_1\" value=\"\" />"+
@@ -2699,7 +2699,7 @@ function controlAddFurtherLangsAnsScripts(text1){
 	$("table#controlTable tr#"+target2+" td#tdDescriptionScript").find("span").remove();
 }
 
-function addContactAbbreviation(){
+function addContactAbbreviation(text1){
 	var count = $("table#controlTable tr[id^='trContactAbbreviationOne']").length;
 
 	var id = "";

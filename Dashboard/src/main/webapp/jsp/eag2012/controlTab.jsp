@@ -21,7 +21,7 @@
 			<td>
 				<input type="text" id="textPesonResponsible" value="${personResponsibleForDescription}" />
 			</td>
-			<td id="tdLanguagePesonresponsible">
+			<td id="tdLanguagePesonresponsible" class="labelLeft">
 				<label for="selectLanguagePesonresponsible"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
@@ -60,6 +60,8 @@
 			<td id="tdAddFurtherLangsAnsScripts" colspan="2">
 				<input type="button" onclick="controlAddFurtherLangsAnsScripts('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" id="buttonControlAddFurtherLangsAnsScripts" value="<s:property value='getText("label.ai.control.addFurtherLangsAnsScripts")' />" />
 			</td>
+			<td colspan="2">
+			</td>
 		</tr>
 		<tr>
 			<td id="usedRulesLabel" colspan="4">
@@ -90,6 +92,8 @@
 		<tr>
 			<td id="tdAddFurtherRules" colspan="2">
 				<input type="button" id="buttonControlAddFurtherRules" onclick="addContactAbbreviation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.control.addFurtherRules")' />" />
+			</td>
+			<td colspan="2">
 			</td>
 		</tr>
 		<tr>

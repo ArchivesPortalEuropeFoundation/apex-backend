@@ -13,7 +13,7 @@
 			<td colspan="2">
 				<label  for="textYIPersonInstitutionResposibleForTheDescription"><s:property value="getText('label.ai.yourinstitution.personinstitutionresposibleforthedescription')"/>:</label>
 			</td>
-			<td colspan="2">
+			<td colspan="2" class="labelLeft">
 				<input type="text" id="textYIPersonInstitutionResposibleForTheDescription" class="middleText" value="${personResponsibleForDescription}" onchange="personResponsibleForDescriptionChanged();" />
 			</td>
 		</tr>
@@ -255,7 +255,7 @@
 			<td>
 				<s:select theme="simple" id="selectAccessibleToThePublic" list="yesNoList" onchange="accessibleToThePublicChanged();"></s:select>
 			</td>
-			<td colspan="2">
+			<td colspan="2" class="labelLeft">
 				<input type="button" id="buttonFutherAccessInformation" value="<s:property value="getText('label.ai.yourinstitution.addFurtherAccessInformation')"/>" onclick="yiFutherAccessInformation();" />
 			</td>
 		</tr>
@@ -267,7 +267,7 @@
 			<td>
 				<s:select theme="simple" id="selectFacilitiesForDisabledPeopleAvailable" list="yesNoList" onchange="facilitiesForDisabledPeopleAvailableChanged();"></s:select>
 			</td>
-			<td colspan="2">
+			<td colspan="2" class="labelLeft">
 				<input type="button" id="buttonAddFutherInformationOnExistingFacilities" value="<s:property value="getText('label.ai.yourinstitution.addFutherInformationOnExistingFacilities')"/>" onclick="yiAddFutherInformationOnExistingFacilities();" />
 			</td>
 		</tr>

@@ -17,7 +17,7 @@
 			<td>
 				<textarea id="textRepositoryHistory"></textarea>
 			</td>
-			<td id="tdLanguageRepositoryHistory">
+			<td id="tdLanguageRepositoryHistory" class="labelLeft">
 				<label for="selectLanguageRepositoryHistory"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
@@ -50,7 +50,7 @@
 			<td>
 				<input type="text" id="textRuleOfRepositoryFoundation" value="<s:property value="#ruleOfRepositoryFoundation" />" />
 			</td>
-			<td id="tdLanguageRuleOfRepositoryFoundation">
+			<td id="tdLanguageRuleOfRepositoryFoundation" class="labelLeft">
 				<label for="selectLanguageRuleOfRepositoryFoundation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
@@ -83,7 +83,7 @@
 			<td>
 				<input type="text" id="textRuleOfRepositorySuppression" value="<s:property value="#ruleOfRepositorySuppression" />" />
 			</td>
-			<td id="tdLanguageRuleOfRepositorySuppression">
+			<td id="tdLanguageRuleOfRepositorySuppression" class="labelLeft">
 				<label for="selectLanguageRuleOfRepositorySuppression"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
@@ -113,7 +113,7 @@
 			<td>
 				<textarea id="textUnitOfAdministrativeStructure"></textarea>
 			</td>
-			<td id="tdLanguageUnitOfAdministrativeStructure">
+			<td id="tdLanguageUnitOfAdministrativeStructure" class="labelLeft">
 				<label for="selectLanguageUnitOfAdministrativeStructure"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
@@ -143,7 +143,7 @@
 			<td>
 				<textarea id="textBuilding"></textarea>
 			</td>
-			<td id="tdLanguageBuilding">
+			<td id="tdLanguageBuilding" class="labelLeft">
 				<label for="selectLanguageBuilding"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
@@ -193,7 +193,7 @@
 			<td>
 				<textarea id="textArchivalAndOtherHoldings"></textarea>
 			</td>
-			<td id="tdLanguageArchivalAndOtherHoldings">
+			<td id="tdLanguageArchivalAndOtherHoldings" class="labelLeft">
 				<label for="selectLanguageArchivalAndOtherHoldings"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
@@ -232,7 +232,7 @@
 				<input type="button" id="buttonDescriptionAddSingleYear" value="<s:property value="getText('label.ai.tabs.commons.addSingleYear')" />" onclick="addSingleYear($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
 			</td>
 			<td>
-				<input type="button" id="buttonDescriptionAddYearRange" value="<s:property value="getText('label.ai.tabs.commons.addYearRange')" />" onclick="addRangeYear($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.yearFrom')" />', '<s:property value="getText('label.ai.tabs.commons.textTo')" />');" />
+				<input type="button" id="buttonDescriptionAddYearRange" value="<s:property value="getText('label.ai.tabs.commons.addYearRange')" />" onclick="addRangeYear($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.yearFrom')" />', '<s:property value="getText('label.ai.tabs.commons.textTo')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
