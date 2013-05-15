@@ -241,7 +241,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		List<String> languageList = LanguageIsoList.getLanguageIsoList();
 
 		for (int i = 0; i < languageList.size(); i++) {
-			Locale locale = new Locale(languageList.get(i));
+			// TODO: for some countries can not retrieve the name from the code.
+			Locale locale = new Locale(LanguageIsoList.getIsoCode(languageList.get(i)));
 			this.getLanguageISOMap().put(locale.getISO3Language(), locale.getDisplayLanguage());
 		}
 
