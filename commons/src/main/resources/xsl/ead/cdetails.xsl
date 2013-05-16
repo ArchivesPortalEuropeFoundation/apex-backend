@@ -47,9 +47,6 @@
 		<xsl:if test="ead:custodhist">
 			<xsl:call-template name="custodhist" />
 		</xsl:if>
-		<xsl:if test="ead:custodhist">
-			<xsl:call-template name="custodhist" />
-		</xsl:if>
 		<xsl:if test="ead:bioghist">
 			<xsl:call-template name="bioghist" />
 		</xsl:if>
