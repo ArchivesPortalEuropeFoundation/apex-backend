@@ -54,28 +54,28 @@ public class Eag2012Creator {
 	private static final String EVENTTYPE_DELETED = "revised";
 	//section indexes
 	public static final String ROOT = "root";
-	private static final String LANGUAGE_DECLARATIONS = "languageDeclaration";
-	private static final String RESOURCE_RELATION = "resourceRelation";
-	private static final String EAG_RELATION = "eagRelation";
-	private static final String LOCAL_TYPE_DECLARATION = "localTypeDeclaration";
-	private static final String CONVENTION_DECLARATION = "conventionDeclaration";
-	private static final String MAINTENANCE_AGENCY = "maintenanceAgency";
-	private static final String SOURCE = "source";
-	private static final String REPOSITORY = "repository";
-	private static final String OTHER_SERVICES = "otherServices";
-	private static final String TOURS_SESSIONS = "toursSessions";
-	private static final String EXHIBITION = "exhibition";
-	private static final String REFRESHMENT = "refreshment";
-	private static final String RESTORATION_LAB = "restorationlab";
-	private static final String REPRODUCTIONSER = "reproductionser";
-	private static final String INTERNET_ACCESS = "internetAccess";
-	private static final String RESEARCH_SERVICES = "researchServices";
-	private static final String COMPUTER_PLACES = "computerPlaces";
-	private static final String HOLDINGS = "holdings";
-	private static final String BUILDING = "building";
-	private static final String REPOSITORHIST = "repositorhist";
-	private static final String LIBRARY = "library";
-	private static final String SEARCHROOM = "searchroom";
+	public static final String LANGUAGE_DECLARATIONS = "languageDeclaration";
+	public static final String RESOURCE_RELATION = "resourceRelation";
+	public static final String EAG_RELATION = "eagRelation";
+	public static final String LOCAL_TYPE_DECLARATION = "localTypeDeclaration";
+	public static final String CONVENTION_DECLARATION = "conventionDeclaration";
+	public static final String MAINTENANCE_AGENCY = "maintenanceAgency";
+	public static final String SOURCE = "source";
+	public static final String REPOSITORY = "repository";
+	public static final String OTHER_SERVICES = "otherServices";
+	public static final String TOURS_SESSIONS = "toursSessions";
+	public static final String EXHIBITION = "exhibition";
+	public static final String REFRESHMENT = "refreshment";
+	public static final String RESTORATION_LAB = "restorationlab";
+	public static final String REPRODUCTIONSER = "reproductionser";
+	public static final String INTERNET_ACCESS = "internetAccess";
+	public static final String RESEARCH_SERVICES = "researchServices";
+	public static final String COMPUTER_PLACES = "computerPlaces";
+	public static final String HOLDINGS = "holdings";
+	public static final String BUILDING = "building";
+	public static final String REPOSITORHIST = "repositorhist";
+	public static final String LIBRARY = "library";
+	public static final String SEARCHROOM = "searchroom";
 
     private Eag2012 eag2012;
 	private String storagePath;
@@ -1421,10 +1421,10 @@ public class Eag2012Creator {
 //        	}
         	if(indexRepo>0){
 	            for(int i=0;this.eag2012.getTelephoneValue()!=null && this.eag2012.getTelephoneValue().size()>indexRepo && this.eag2012.getTelephoneValue().get(indexRepo)!=null && i<this.eag2012.getTelephoneValue().get(indexRepo).size();i++){ //no mandatory repeatable
-	            	childArchguide2Children.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_CONTACT).get(i)));     
+/* TODO	            	childArchguide2Children.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_CONTACT).get(i))); */     
 	            }
         	}else if(this.eag2012.getTelephoneValue()!=null && this.eag2012.getTelephoneValue().size()>0 && this.eag2012.getTelephoneValue().get(indexRepo)!=null && this.eag2012.getTelephoneValue().get(indexRepo).size()>0 && this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_YOUR_INSTITUTION)!=null && this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_YOUR_INSTITUTION).size()>0){
-	            	childArchguide2Children.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(0)));     
+/* TODO	            	childArchguide2Children.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(0))); */     
         	}
             if(indexRepo>0){
             	for(int i=0;this.eag2012.getFaxValue()!=null && indexRepo<this.eag2012.getFaxValue().size() && this.eag2012.getFaxValue().get(indexRepo)!=null && this.eag2012.getFaxValue().get(indexRepo).get(TAB_CONTACT)!=null && this.eag2012.getFaxValue().get(indexRepo).get(TAB_CONTACT).size()>i;i++){//no mandatory repeatable
@@ -2386,14 +2386,14 @@ public class Eag2012Creator {
          ArrayList<HashMap<String, Object>> childArchguideChildren = new ArrayList<HashMap<String, Object>>();
         if(indexRepo>0){
         	for(int i=0;this.eag2012.getTelephoneValue()!=null && indexRepo<this.eag2012.getTelephoneValue().size() && this.eag2012.getTelephoneValue().get(indexRepo)!=null && this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_CONTACT)!=null && this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_CONTACT).size()>i;i++){ //no mandatory
-        		childArchguideChildren.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_CONTACT).get(i)));
+/* TODO        		childArchguideChildren.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_CONTACT).get(i))); */
             }
             for(int i=0;this.eag2012.getEmailHref()!=null && indexRepo<this.eag2012.getEmailHref().size() && this.eag2012.getEmailHref().get(indexRepo)!=null && this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT)!=null && this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).size()>0 && this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).get(ROOT)!=null && this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).get(ROOT).size()>i;i++){//no mandatory
             	childArchguideChildren.add(buildEmail(this.eag2012.getEmailHref().get(indexRepo).get(TAB_CONTACT).get(ROOT).get(i),this.eag2012.getEmailValue().get(indexRepo).get(TAB_CONTACT).get(ROOT).get(i)));
             }
         }else{
         	if(this.eag2012.getTelephoneValue()!=null && this.eag2012.getTelephoneValue().size()>0 && this.eag2012.getTelephoneValue().get(0).get(TAB_YOUR_INSTITUTION)!=null && this.eag2012.getTelephoneValue().get(0).get(TAB_YOUR_INSTITUTION).size()>0){
-        		childArchguideChildren.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(0)));
+/* TODO        		childArchguideChildren.add(buildTelephone(this.eag2012.getTelephoneValue().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(0))); */
         	}if(this.eag2012.getEmailHref()!=null && this.eag2012.getEmailHref().size()>0 && this.eag2012.getEmailHref().get(0)!=null && this.eag2012.getEmailHref().get(0).get(TAB_YOUR_INSTITUTION)!=null && this.eag2012.getEmailHref().get(0).get(TAB_YOUR_INSTITUTION).size()>0 && this.eag2012.getEmailHref().get(0).get(TAB_YOUR_INSTITUTION).get(ROOT)!=null && this.eag2012.getEmailHref().get(0).get(TAB_YOUR_INSTITUTION).get(ROOT).size()>0){
         		childArchguideChildren.add(buildEmail(this.eag2012.getEmailHref().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(ROOT).get(0),this.eag2012.getEmailValue().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(ROOT).get(0)));
         	}

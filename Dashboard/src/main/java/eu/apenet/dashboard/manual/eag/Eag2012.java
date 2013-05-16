@@ -213,7 +213,7 @@ public class Eag2012 {
 	private List<Map<String, Map<String, List<String>>>> emailHref;
 	private List<Map<String, Map<String, List<String>>>> emailValue;
 	private List<Map<String,List<String> >> faxValue;
-	private List<Map<String,List<String> >> telephoneValue;
+	private List<Map<String, Map<String, List<String>>>> telephoneValue;
 	private List<String> relationEntryScriptCode;
 	private List<String> relationEntryId;
 	private List<String> relationEntryLang;
@@ -1647,11 +1647,11 @@ public class Eag2012 {
 		this.faxValue = faxValue;
 	}
 
-	public List<Map<String, List<String>>> getTelephoneValue() {
+	public List<Map<String, Map<String, List<String>>>> getTelephoneValue() {
 		return telephoneValue;
 	}
 
-	public void setTelephoneValue(List<Map<String, List<String>>> telephoneValue) {
+	public void setTelephoneValue(List<Map<String, Map<String, List<String>>>> telephoneValue) {
 		this.telephoneValue = telephoneValue;
 	}
 
