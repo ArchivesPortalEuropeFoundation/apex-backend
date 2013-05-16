@@ -665,12 +665,6 @@
 			</result>
 		</action>
 		
-       
-       <!--  Action to check the state of the application --> 
-         <action name="currentState" class="eu.apenet.dashboard.actions.CurrentStateAction"> 
-            <result name="success">/jsp/currentState.jsp</result>            
-        </action>
-
 
         <action name="editEad" class="eu.apenet.dashboard.actions.ajax.EditEadAction"> 
             <result name="success" type="tiles">eadEdition</result>
