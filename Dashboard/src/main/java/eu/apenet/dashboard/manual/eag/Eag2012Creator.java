@@ -1912,7 +1912,7 @@ public class Eag2012Creator {
         HashMap<String, String> childArchguide3Attributes = new HashMap<String, String>();
         //i),this.eag2012.getAccessibilityLang().get(indexRepo).get(i),this.eag2012.getAccessibilityValue().get(indexRepo).get(i)
           childArchguide3Attributes.put("question",(this.eag2012.getAccessibilityQuestion()!=null && this.eag2012.getAccessibilityQuestion().size()>indexRepo && this.eag2012.getAccessibilityQuestion().get(indexRepo).size()>indexList)?this.eag2012.getAccessibilityQuestion().get(indexRepo).get(indexList):null); //mandatory
-          childArchguide3Attributes.put("xml:lang",(this.eag2012.getAccessibilityLang()!=null && this.eag2012.getAccessibilityLang().size()>indexRepo && this.eag2012.getAccessibilityLang().get(indexRepo)!=null && this.eag2012.getAccessibilityLang().get(indexRepo).size()>indexList)?this.eag2012.getAccessibilityLang().get(indexRepo).get(indexList):null); 
+/* TODO          childArchguide3Attributes.put("xml:lang",(this.eag2012.getAccessibilityLang()!=null && this.eag2012.getAccessibilityLang().size()>indexRepo && this.eag2012.getAccessibilityLang().get(indexRepo)!=null && this.eag2012.getAccessibilityLang().get(indexRepo).size()>indexList)?this.eag2012.getAccessibilityLang().get(indexRepo).get(indexList):null); */ 
           childArchguide3.put("attributes", childArchguide3Attributes);
         childArchguide3.put("nodeValue", (this.eag2012.getAccessibilityValue()!=null && this.eag2012.getAccessibilityValue().size()>indexRepo && this.eag2012.getAccessibilityValue().get(indexRepo).size()>indexList)?this.eag2012.getAccessibilityValue().get(indexRepo).get(indexList):null); 
 		

@@ -179,17 +179,19 @@ public class Eag2012 {
 	private List<List<String>> adminunitLang;
 	private List<List<String>> adminunitValue;
 	private List<Map<String,String>> openingValue;
+	private List<Map<String,String>> openingLang;
 	private List<Map<String,String>> closingStandardDate;
 	private List<Map<String,String>> closingValue;
+	private List<Map<String,String>> closingLang;
 	private List<Map<String,String>> accessQuestion;
 	private List<Map<String,List<String>>> restaccessLang;
 	private List<Map<String,List<String>>> restaccessValue;
 	private List<List<String>> termsOfUseHref;
 	private List<List<String>> termsOfUseLang;
 	private List<List<String>> termsOfUseValue;
-	private List<List<String>> accessibilityQuestion;
-	private List<List<String>> accessibilityLang;
-	private List<List<String>> accessibilityValue;
+	private List<Map<String,String>> accessibilityQuestion;
+	private List<Map<String,List<String>>> accessibilityLang;
+	private List<Map<String,List<String>>> accessibilityValue;
 	private String photographAllowanceValue;
 	private List<List<String>> readersTicketHref;
 	private List<List<String>> readersTicketLang;
@@ -1371,6 +1373,20 @@ public class Eag2012 {
 		return openingValue;
 	}
 
+	/**
+	 * @return the openingLang
+	 */
+	public List<Map<String, String>> getOpeningLang() {
+		return openingLang;
+	}
+
+	/**
+	 * @param openingLang the openingLang to set
+	 */
+	public void setOpeningLang(List<Map<String, String>> openingLang) {
+		this.openingLang = openingLang;
+	}
+
 	public void setOpeningValue(List<Map<String, String>> openingValue) {
 		this.openingValue = openingValue;
 	}
@@ -1385,6 +1401,20 @@ public class Eag2012 {
 
 	public List<Map<String, String>> getClosingValue() {
 		return closingValue;
+	}
+
+	/**
+	 * @return the closingLang
+	 */
+	public List<Map<String, String>> getClosingLang() {
+		return closingLang;
+	}
+
+	/**
+	 * @param closingLang the closingLang to set
+	 */
+	public void setClosingLang(List<Map<String, String>> closingLang) {
+		this.closingLang = closingLang;
 	}
 
 	public void setClosingValue(List<Map<String, String>> closingValue) {
@@ -1439,27 +1469,27 @@ public class Eag2012 {
 		this.termsOfUseValue = termsOfUseValue;
 	}
 
-	public List<List<String>> getAccessibilityQuestion() {
+	public List<Map<String, String>> getAccessibilityQuestion() {
 		return accessibilityQuestion;
 	}
 
-	public void setAccessibilityQuestion(List<List<String>> accessibilityQuestion) {
+	public void setAccessibilityQuestion(List<Map<String, String>> accessibilityQuestion) {
 		this.accessibilityQuestion = accessibilityQuestion;
 	}
 
-	public List<List<String>> getAccessibilityLang() {
+	public List<Map<String, List<String>>> getAccessibilityLang() {
 		return accessibilityLang;
 	}
 
-	public void setAccessibilityLang(List<List<String>> accessibilityLang) {
+	public void setAccessibilityLang(List<Map<String, List<String>>> accessibilityLang) {
 		this.accessibilityLang = accessibilityLang;
 	}
 
-	public List<List<String>> getAccessibilityValue() {
+	public List<Map<String, List<String>>> getAccessibilityValue() {
 		return accessibilityValue;
 	}
 
-	public void setAccessibilityValue(List<List<String>> accessibilityValue) {
+	public void setAccessibilityValue(List<Map<String, List<String>>> accessibilityValue) {
 		this.accessibilityValue = accessibilityValue;
 	}
 
