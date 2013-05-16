@@ -38,6 +38,7 @@ public class Eag2012Creator {
 	public static final String TAB_DESCRIPTION = "description";
 	public static final String TAB_CONTROL = "control";
 	public static final String TAB_RELATION = "relation";
+	
 	private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 	
     private static final String EAG_XMLNS = "http://www.archivesportaleurope.net/profiles/APEnet_EAG/";
@@ -70,12 +71,15 @@ public class Eag2012Creator {
 	public static final String REPRODUCTIONSER = "reproductionser";
 	public static final String INTERNET_ACCESS = "internetAccess";
 	public static final String RESEARCH_SERVICES = "researchServices";
-	public static final String COMPUTER_PLACES = "computerPlaces";
 	public static final String HOLDINGS = "holdings";
 	public static final String BUILDING = "building";
 	public static final String REPOSITORHIST = "repositorhist";
 	public static final String LIBRARY = "library";
 	public static final String SEARCHROOM = "searchroom";
+	//subsection indexes
+	public static final String WORKING_PLACES = "workingPlaces";
+	public static final String COMPUTER_PLACES = "computerPlaces";
+	public static final String MICROFILM = "microfilm";
 
     private Eag2012 eag2012;
 	private String storagePath;
@@ -1756,7 +1760,7 @@ public class Eag2012Creator {
 	     childArchguide5.put("attributes", null);
 	     childArchguide5.put("nodeValue", null);
 	     ArrayList<HashMap<String, Object>> childArchguide5Children = new ArrayList<HashMap<String, Object>>(); 
-	        childArchguide5Children.add(buildNum("title",(this.eag2012.getNumValue()!=null && this.eag2012.getNumValue().size()>indexRepo)?this.eag2012.getNumValue().get(indexRepo):null));
+/* TODO	        childArchguide5Children.add(buildNum("title",(this.eag2012.getNumValue()!=null && this.eag2012.getNumValue().size()>indexRepo)?this.eag2012.getNumValue().get(indexRepo):null)); */
 	       
 	     childArchguide5.put("children", childArchguide5Children);
 		
@@ -1771,7 +1775,7 @@ public class Eag2012Creator {
         childArchguide5.put("attributes", null);
         childArchguide5.put("nodeValue", null);
         ArrayList<HashMap<String, Object>> childArchguide5Children = new ArrayList<HashMap<String, Object>>(); 
-          childArchguide5Children.add(buildNum("book",(this.eag2012.getNumValue()!=null)?this.eag2012.getNumValue().get(indexRepo):null));
+/* TODO          childArchguide5Children.add(buildNum("book",(this.eag2012.getNumValue()!=null)?this.eag2012.getNumValue().get(indexRepo):null)); */
       
         childArchguide5.put("children", childArchguide5Children);
 		
@@ -1868,7 +1872,7 @@ public class Eag2012Creator {
          childArchguide5.put("attributes", null);
          childArchguide5.put("nodeValue", null);
          ArrayList<HashMap<String, Object>> childArchguide5Children = new ArrayList<HashMap<String, Object>>(); 
-            childArchguide5Children.add(buildNum("site",(this.eag2012.getNumValue()!=null && this.eag2012.getNumValue().size()>indexRepo)?this.eag2012.getNumValue().get(indexRepo):null));
+/* TODO            childArchguide5Children.add(buildNum("site",(this.eag2012.getNumValue()!=null && this.eag2012.getNumValue().size()>indexRepo)?this.eag2012.getNumValue().get(indexRepo):null)); */
          childArchguide5.put("children", childArchguide5Children);
 		
 		return childArchguide5;
@@ -1881,7 +1885,7 @@ public class Eag2012Creator {
          childArchguide5.put("attributes", null);
          childArchguide5.put("nodeValue", null);
          ArrayList<HashMap<String, Object>> childArchguide5Children = new ArrayList<HashMap<String, Object>>(); 
-            childArchguide5Children.add(buildNum("site",(this.eag2012.getNumValue()!=null && this.eag2012.getNumValue().size()>indexRepo)?this.eag2012.getNumValue().get(indexRepo):null));
+/* TODO            childArchguide5Children.add(buildNum("site",(this.eag2012.getNumValue()!=null && this.eag2012.getNumValue().size()>indexRepo)?this.eag2012.getNumValue().get(indexRepo):null)); */
             childArchguide5Children.add(buildDescriptiveNote(indexRepo,TAB_ACCESS_AND_SERVICES,COMPUTER_PLACES,0));
           
           childArchguide5.put("children", childArchguide5Children);
@@ -1897,7 +1901,7 @@ public class Eag2012Creator {
 	     childArchguide5.put("attributes", null);
 	     childArchguide5.put("nodeValue", null);
 	     ArrayList<HashMap<String, Object>> childArchguide5Children = new ArrayList<HashMap<String, Object>>(); 
-	        childArchguide5Children.add(buildNum("site",(this.eag2012.getNumValue()!=null && this.eag2012.getNumValue().size()>indexRepo)?this.eag2012.getNumValue().get(indexRepo):null));
+/* TODO	        childArchguide5Children.add(buildNum("site",(this.eag2012.getNumValue()!=null && this.eag2012.getNumValue().size()>indexRepo)?this.eag2012.getNumValue().get(indexRepo):null)); */
 	         
 	     childArchguide5.put("children", childArchguide5Children);
 			
@@ -2054,7 +2058,7 @@ public class Eag2012Creator {
 	      
 	           //Children of extent
 	           ArrayList<HashMap<String, Object>> childArchguide4Children = new ArrayList<HashMap<String, Object>>();
-                  childArchguide4Children.add(buildNum("linearmetre",(this.eag2012.getNumValue()!=null && this.eag2012.getNumValue().size()>indexRepo)?this.eag2012.getNumValue().get(indexRepo):null));
+/* TODO                  childArchguide4Children.add(buildNum("linearmetre",(this.eag2012.getNumValue()!=null && this.eag2012.getNumValue().size()>indexRepo)?this.eag2012.getNumValue().get(indexRepo):null)); */
           
 	      childArchguide4.put("children", childArchguide4Children);
 		
@@ -2119,7 +2123,7 @@ public class Eag2012Creator {
         childArchguide4.put("attributes", null);
         childArchguide4.put("nodeValue", null);
         ArrayList<HashMap<String, Object>> childArchguide4Children = new ArrayList<HashMap<String, Object>>();
-          childArchguide4Children.add(buildNum("linearmetre",(this.eag2012.getNumValue()!=null && this.eag2012.getNumValue().size()>indexRepo)?this.eag2012.getNumValue().get(indexRepo):null)); //mandatory not repeatable, can appear in other nodes
+/* TODO          childArchguide4Children.add(buildNum("linearmetre",(this.eag2012.getNumValue()!=null && this.eag2012.getNumValue().size()>indexRepo)?this.eag2012.getNumValue().get(indexRepo):null)); //mandatory not repeatable, can appear in other nodes */
         
         childArchguide4.put("children",childArchguide4Children);
 		
@@ -2132,7 +2136,7 @@ public class Eag2012Creator {
 	       childArchguide4.put("attributes", null);
 	       childArchguide4.put("nodeValue", null);
 	       ArrayList<HashMap<String, Object>> childArchguide4Children = new ArrayList<HashMap<String, Object>>();
-	         childArchguide4Children.add(buildNum("linearmetre",(this.eag2012.getNumValue()!=null && this.eag2012.getNumValue().size()>indexRepo)?this.eag2012.getNumValue().get(indexRepo):null)); //mandatory not repeatable, can appear in other nodes 
+/* TODO	         childArchguide4Children.add(buildNum("linearmetre",(this.eag2012.getNumValue()!=null && this.eag2012.getNumValue().size()>indexRepo)?this.eag2012.getNumValue().get(indexRepo):null)); //mandatory not repeatable, can appear in other nodes */ 
                        	       
            childArchguide4.put("children",childArchguide4Children);	
 		

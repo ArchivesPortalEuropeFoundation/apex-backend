@@ -207,7 +207,7 @@ public class Eag2012 {
 	private List<String> digitalserQuestion;
 	private List<String> photocopyserQuestion;
 	private List<String> restorationlabQuestion;
-	private List<String> numValue;
+	private List<Map<String,Map<String,Map<String,List<String>>>>> numValue;
 	private List<List<String>> ruleLang;
 	private List<List<String>> ruleValue;
 	private List<Map<String, Map<String, List<String>>>> webpageHref;
@@ -1613,11 +1613,11 @@ public class Eag2012 {
 		this.restorationlabQuestion = restorationlabQuestion;
 	}
 
-	public List<String> getNumValue() {
+	public List<Map<String,Map<String,Map<String,List<String>>>>> getNumValue() {
 		return numValue;
 	}
 
-	public void setNumValue(List<String> numValue) {
+	public void setNumValue(List<Map<String,Map<String,Map<String,List<String>>>>> numValue) {
 		this.numValue = numValue;
 	}
 
