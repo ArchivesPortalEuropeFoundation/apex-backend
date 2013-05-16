@@ -700,9 +700,130 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	        if(jsonObj.has("contact")){
 	        	eag2012 = parseContactJsonObjToEag2012(eag2012, jsonObj);
 	        }
+		
+	        if(jsonObj.has("accessAndServices")){
+	        	eag2012 = parseAccesAndServicesJsonObjToEag2012(eag2012, jsonObj);
+	        } 		
 		}
 		
 		return eag2012;
+	}
+	private Eag2012 parseAccesAndServicesJsonObjToEag2012(Eag2012 eag2012,JSONObject jsonObj) throws JSONException {
+		JSONObject accessAndServices = jsonObj.getJSONObject("accessAndServices");
+		if(accessAndServices!=null){
+			int i=0;
+			while(accessAndServices.has("accessAndServicesTable_"+(++i))){
+				JSONObject accessTable = accessAndServices.getJSONObject("accessAndServicesTable_"+(i));
+                //opening times
+				int j=1;
+				if(accessTable.has("textOpeningTimes_"+j)) {
+				  do{	
+            	     Map<String, String> openingMap = new HashMap<String,String>();
+   				     openingMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, accessTable.getString("textOpeningTimes_"+j));
+   				     List<Map<String, String>> openingValues = new ArrayList<Map<String,String>>();
+   				     openingValues.add(openingMap);
+   				     eag2012.setOpeningValue(openingValues); 
+				  }while(accessTable.has("textOpeningTimes_"+(++j)));           	   
+               }
+				//TODO languages of opening times
+			/*	j=1;
+				if(accessTable.has("selectLanguageOpeningTimes_"+j)){
+				  do{	
+	            	 Map<String, String> openingMap = new HashMap<String,String>();
+	   				 openingMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, accessTable.getString("selectLanguageOpeningTimes_"+j));
+	   				 List<Map<String, String>> openingValues = new ArrayList<Map<String,String>>();
+	   				 openingLang.add(openingMap);
+	   				 eag2012.setOpeningLang(openingLang); 
+				   }while(accessTable.has("selectLanguageOpeningTimes_"+(++j)));   	
+					
+					
+				}*/
+				//closing times
+			    j=1;
+				if(accessTable.has("textClosingDates_"+j)) {
+				  do{	
+            	     Map<String, String> closingMap = new HashMap<String,String>();
+   				     closingMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, accessTable.getString("textClosingDates_"+j));
+   				     List<Map<String, String>> closingValues = new ArrayList<Map<String,String>>();
+   				     closingValues.add(closingMap);
+   				     eag2012.setClosingStandardDate(closingValues); 
+				  }while(accessTable.has("textClosingDates_"+(++j)));           	   
+               }
+				//TODO languages of closing dates
+				
+				//directions
+				 List<String> directionsList = new ArrayList<String>();
+				 List<String> directionsLangsList = new ArrayList<String>();
+				 List<List<String>> listDirectionsList = new ArrayList<List<String>>();
+				 List<List<String>> listDirectionsLangsList = new ArrayList<List<String>>();
+				 List<String> citationList = new ArrayList<String>();
+				 List<List<String>> listCitationList = new ArrayList<List<String>>();
+				 
+				 j=1;
+				 if(accessTable.has("textTtravellingDirections_"+j)) {
+				   do{	
+	            	  directionsList.add(accessTable.getString("textTtravellingDirections_"+j)); 
+					  }while(accessTable.has("textTravellingDirections_"+(++j)));           	   
+	              
+				   listDirectionsList.add(directionsList);
+				   eag2012.setDirectionsValue(listDirectionsList);
+				 }
+				 j=1;
+				 if(accessTable.has("selectASATDSelectLanguage_"+j)) {
+					   do{	
+		            	  directionsLangsList.add(accessTable.getString("selectASATDSelectLanguage_"+j));
+		   				  
+						  }while(accessTable.has("selectASATDSelectLanguage_"+(++j)));           	   
+		              
+					   listDirectionsLangsList.add(directionsList);
+					   eag2012.setDirectionsLang(listDirectionsLangsList);
+					 }
+			
+			     j=1;
+			     if(accessTable.has("textTravelLink_"+j)){
+			    	 do{
+			    		citationList.add(accessTable.getString("textTravelLink_+j")); 
+			    		 
+			    	 }while(accessTable.has("textTravelLink_"+(++j)));
+			    	 
+			    	 listCitationList.add(citationList);
+			    	 eag2012.setCitationHref(listCitationList); 	 
+			     }
+			
+			   //access yes or no, it appears in tab yourinstitution, in tab accessAndServices for each repository
+			     if(accessTable.has("selectASAccesibleToThePublic")){		
+			       Map<String,String> accessMap =new HashMap<String, String>();
+			       List<Map<String,String>> listAccessMap = new ArrayList<Map<String,String>>();
+			       accessMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,accessTable.getString("selectASAccesibleToThePublic"));
+			       listAccessMap.add(accessMap);
+			       eag2012.setAccessQuestion(listAccessMap);
+			     }
+			     //access information, restaccessValue node
+			     
+			     j=0;
+				 while(accessTable.has("textASAccessRestrictions_"+(++j))){
+					Map<String, List<String>> restaccess = new HashMap<String,List<String>>();
+					ArrayList<String> listRestaccess = new ArrayList<String>();
+					listRestaccess.add(accessTable.getString("textASAccessRestrictions_"+j));
+					restaccess.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,listRestaccess);
+					List<Map<String, List<String>>> listMapRestaccessList = eag2012.getRestaccessValue();
+					if(listMapRestaccessList==null){
+						listMapRestaccessList = new ArrayList<Map<String, List<String>>>();
+						}
+					listMapRestaccessList.add(restaccess);
+					eag2012.setRestaccessValue(listMapRestaccessList);
+					}
+			     
+			     //access information langs, 
+			
+			
+			}
+			
+			
+		}
+		
+		
+	return eag2012;	
 	}
 	
 	private Eag2012 parseContactJsonObjToEag2012(Eag2012 eag2012,JSONObject jsonObj) throws JSONException {
@@ -1360,14 +1481,45 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				eag2012.setClosingStandardDate(closingValues); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {closing}
 			}
 			if(yourInstitution.has("selectAccessibleToThePublic")){
-				eag2012.setAccessQuestion(yourInstitution.getString("selectAccessibleToThePublic"));
+				List<Map<String, String>> accessQuestions = eag2012.getAccessQuestion();
+				if(accessQuestions == null){
+					accessQuestions = new ArrayList<Map<String, String>>(); 
+				}
+				Map<String, String> accessQuestionRepo = null;
+				if(accessQuestions.size()>0 && accessQuestions.get(0)!=null){
+					accessQuestionRepo = accessQuestions.get(0);
+				}else{
+					accessQuestionRepo = new HashMap<String, String>();
+				}
+				accessQuestionRepo.put(Eag2012Creator.TAB_YOUR_INSTITUTION,yourInstitution.getString("selectAccessibleToThePublic"));
+				accessQuestions.add(accessQuestionRepo);
+				eag2012.setAccessQuestion(accessQuestions);
 			}
 			if(yourInstitution.has("futherAccessInformation")){
-				List<List<String>> furtherAccessInformationListList = new ArrayList<List<String>>();
-				List<String> furtherAccessInformationList = new ArrayList<String>();
-				furtherAccessInformationList.add(yourInstitution.getString("futherAccessInformation"));
-				furtherAccessInformationListList.add(furtherAccessInformationList);
-				eag2012.setRestaccessValue(furtherAccessInformationListList); //first repo (index_0) (your_institution), unique element {list.furtherAccessInformation}
+				List<Map<String, List<String>>> restAccessValue = eag2012.getRestaccessValue();
+				if(restAccessValue == null){
+					restAccessValue = new ArrayList<Map<String, List<String>>>(); 
+				}
+				Map<String, List<String>> restAccessMap = null;
+				if(restAccessValue.size()>0 && restAccessValue.get(0)!=null){
+					restAccessMap = restAccessValue.get(0);
+				}else{
+					restAccessMap = new HashMap<String, List<String>>(); 
+				}
+				List<String> restAccessList = null;
+				if(restAccessMap.size()>0 && restAccessMap.get(Eag2012Creator.TAB_YOUR_INSTITUTION)!=null){
+					restAccessList = restAccessMap.get(Eag2012Creator.TAB_YOUR_INSTITUTION);
+				}else{
+					restAccessList = new ArrayList<String>();
+				}
+				restAccessList.add(yourInstitution.getString("futherAccessInformation"));
+				restAccessMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION, restAccessList);
+				if(restAccessValue.size()>0){
+					restAccessValue.set(0,restAccessMap);
+				}else{
+					restAccessValue.add(restAccessMap);
+				}
+				eag2012.setRestaccessValue(restAccessValue); 
 			}
 			if(yourInstitution.has("futherInformationOnExistingFacilities")){
 				List<List<String>> futherInformationOnExistingFacilitiesListList = new ArrayList<List<String>>();

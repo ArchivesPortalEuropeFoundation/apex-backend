@@ -1446,7 +1446,8 @@ public class Eag2012Creator {
             		childArchguide2Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(ROOT).get(0),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_YOUR_INSTITUTION).get(ROOT).get(0)));
             	}
             }
-            if(indexRepo>0){
+            /* TODO
+             * if(indexRepo>0){
             	for(int i=0;this.eag2012.getDirectionsValue()!=null && indexRepo<this.eag2012.getDirectionsValue().size() && this.eag2012.getDirectionsValue().get(indexRepo)!=null && this.eag2012.getDirectionsValue().get(indexRepo).get(TAB_CONTACT)!=null && this.eag2012.getDirectionsValue().get(indexRepo).get(TAB_CONTACT).size()>i;i++){ //no mandatory repeatable
                     childArchguide2Children.add(buildDirections(this.eag2012.getDirectionsLang().get(indexRepo).get(TAB_CONTACT).get(i),this.eag2012.getDirectionsValue().get(indexRepo).get(TAB_CONTACT).get(i),indexRepo));
                  }
@@ -1456,7 +1457,7 @@ public class Eag2012Creator {
                 childArchguide2Children.add(buildBuildinginfo(indexRepo));     //no mandatory not repeatable 
                 childArchguide2Children.add(buildAdminhierarchy(indexRepo));   //no mandatory not repeatable 
                 childArchguide2Children.add(buildHoldings(indexRepo));         //no mandatory not repeatable 
-            }
+            }*/
 
             childArchguide2Children.add(buildTimetable(indexRepo));        //mandatory not repeatable
             childArchguide2Children.add(buildAccess(indexRepo));   //mandatory not repeatable
@@ -1925,7 +1926,7 @@ public class Eag2012Creator {
 	    HashMap<String, Object> childArchguide3 = new HashMap<String, Object>();
         childArchguide3.put("nodeName", "access");
         HashMap<String, String> childArchguide3Attributes = new HashMap<String, String>();
-         childArchguide3Attributes.put("question",this.eag2012.getAccessQuestion());
+/* TODO         childArchguide3Attributes.put("question",this.eag2012.getAccessQuestion()); */
          childArchguide3.put("attributes", childArchguide3Attributes);
         childArchguide3.put("nodeValue", null); 
         
@@ -1965,7 +1966,7 @@ public class Eag2012Creator {
 		HashMap<String, Object> childArchguide4 = new HashMap<String, Object>();
         childArchguide4.put("nodeName", "restaccess");
         HashMap<String, String> childArchguide4Attributes = new HashMap<String, String>();
-        childArchguide4Attributes.put("xml:lang",(this.eag2012.getRestaccessLang()!=null && this.eag2012.getRestaccessLang().size()>indexRepo && this.eag2012.getRestaccessLang().get(indexRepo)!=null && this.eag2012.getRestaccessLang().get(indexRepo).size()>indexList)?this.eag2012.getRestaccessLang().get(indexRepo).get(indexList):null);
+/* TODO       childArchguide4Attributes.put("xml:lang",(this.eag2012.getRestaccessLang()!=null && this.eag2012.getRestaccessLang().size()>indexRepo && this.eag2012.getRestaccessLang().get(indexRepo)!=null && this.eag2012.getRestaccessLang().get(indexRepo).size()>indexList)?this.eag2012.getRestaccessLang().get(indexRepo).get(indexList):null); */
         childArchguide4.put("attributes", childArchguide4Attributes);
         childArchguide4.put("nodeValue", (this.eag2012.getRestaccessValue()!=null && this.eag2012.getRestaccessValue().size()>indexRepo && this.eag2012.getRestaccessValue().get(indexRepo)!=null && this.eag2012.getRestaccessValue().get(indexRepo).size()>indexList)?this.eag2012.getRestaccessValue().get(indexRepo).get(indexList):null);
 		return childArchguide4;

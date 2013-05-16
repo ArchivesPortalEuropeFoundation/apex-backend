@@ -174,16 +174,16 @@ public class Eag2012 {
 	private List<String> localentityValue;
 	private List<List<String>> streetLang;
 	private List<List<String>> streetValue;
-	private List<Map<String,List<String> >> directionsLang;
-	private List<Map<String,List<String> >> directionsValue;
+	private List<List<String>> directionsLang;
+	private List<List<String>> directionsValue;
 	private List<List<String>> adminunitLang;
 	private List<List<String>> adminunitValue;
 	private List<Map<String,String>> openingValue;
 	private List<Map<String,String>> closingStandardDate;
 	private List<Map<String,String>> closingValue;
-	private String accessQuestion;
-	private List<List<String>> restaccessLang;
-	private List<List<String>> restaccessValue;
+	private List<Map<String,String>> accessQuestion;
+	private List<Map<String,List<String>>> restaccessLang;
+	private List<Map<String,List<String>>> restaccessValue;
 	private List<List<String>> termsOfUseHref;
 	private List<List<String>> termsOfUseLang;
 	private List<List<String>> termsOfUseValue;
@@ -1335,19 +1335,19 @@ public class Eag2012 {
 		this.streetValue = streetValue;
 	}
 
-	public List<Map<String, List<String>>> getDirectionsLang() {
+	public List<List<String>> getDirectionsLang() {
 		return directionsLang;
 	}
 
-	public void setDirectionsLang(List<Map<String, List<String>>> directionsLang) {
+	public void setDirectionsLang(List<List<String>> directionsLang) {
 		this.directionsLang = directionsLang;
 	}
 
-	public List<Map<String, List<String>>> getDirectionsValue() {
+	public List<List<String>> getDirectionsValue() {
 		return directionsValue;
 	}
 
-	public void setDirectionsValue(List<Map<String, List<String>>> directionsValue) {
+	public void setDirectionsValue(List<List<String>> directionsValue) {
 		this.directionsValue = directionsValue;
 	}
 
@@ -1391,27 +1391,27 @@ public class Eag2012 {
 		this.closingValue = closingValue;
 	}
 
-	public String getAccessQuestion() {
+	public List<Map<String, String>> getAccessQuestion() {
 		return accessQuestion;
 	}
 
-	public void setAccessQuestion(String accessQuestion) {
+	public void setAccessQuestion(List<Map<String, String>> accessQuestion) {
 		this.accessQuestion = accessQuestion;
 	}
 
-	public List<List<String>> getRestaccessLang() {
+	public List<Map<String, List<String>>> getRestaccessLang() {
 		return restaccessLang;
 	}
 
-	public void setRestaccessLang(List<List<String>> restaccessLang) {
+	public void setRestaccessLang(List<Map<String, List<String>>> restaccessLang) {
 		this.restaccessLang = restaccessLang;
 	}
 
-	public List<List<String>> getRestaccessValue() {
+	public List<Map<String, List<String>>> getRestaccessValue() {
 		return restaccessValue;
 	}
 
-	public void setRestaccessValue(List<List<String>> restaccessValue) {
+	public void setRestaccessValue(List<Map<String, List<String>>> restaccessValue) {
 		this.restaccessValue = restaccessValue;
 	}
 
