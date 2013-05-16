@@ -738,12 +738,6 @@
 			<result name="error" type="tiles">error</result>
         </action>
         
-        <!--  Action to check the state of the application --> 
-         <action name="currentState" class="eu.apenet.dashboard.actions.CurrentStateAction"> 
-            <result name="success">/jsp/currentState.jsp</result>            
-        </action>
-
-
         <!-- Actions used for selection of finding aids in content manager -->
         <action name="addOneFA" class="eu.apenet.dashboard.actions.ajax.SelectFindingAidsAction" method="addOneFA2Session"> 
             <result type="stream">
