@@ -1274,6 +1274,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				 target1 = "textASSRReadersTicket";
 				 target2 = "selectReadersTickectLanguage";
 				 String target3 = "textASSRRTLink";
+				 targetNumber = 1;
 				 while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3)){
 					 if(accessTable.has(target1)){
 						 List<List<String>> readersTicket = eag2012.getReadersTicketValue();
@@ -1337,8 +1338,66 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 target3=(target3.indexOf("_")!=-1?target3.substring(0,target3.indexOf("_")):target3)+"_"+targetNumber;
 					 targetNumber++;
 				 }
-				 if(accessTable.has("textASSRAdvancedOrders")){
-					 
+				 target1 = "textASSRAdvancedOrders";
+				 target2 = "textASSRAOLink";
+				 target3 = "selectASSRAFOIUSelectLanguage";
+				 targetNumber = 1;
+				 while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3)){
+					 if(accessTable.has(target1)){
+						 List<List<String>> advancedOrders = eag2012.getAdvancedOrdersValue();
+						 if(advancedOrders==null){
+							 advancedOrders = new ArrayList<List<String>>();
+						 }
+						 List<String> advanceOrder = null;
+						 if(advancedOrders.size()>i && advancedOrders.get(i)!=null){
+							 advanceOrder = advancedOrders.get(i);
+						 }
+						 advanceOrder.add(accessTable.getString(target1));
+						 if(advancedOrders.size()>i){
+							 advancedOrders.set(i,advanceOrder);
+						 }else{
+							 advancedOrders.add(advanceOrder);
+						 }
+						 eag2012.setAdvancedOrdersValue(advancedOrders);
+					 }
+					 if(accessTable.has(target2)){
+						 List<List<String>> advancedOrdersHref = eag2012.getAdvancedOrdersHref();
+						 if(advancedOrdersHref==null){
+							 advancedOrdersHref = new ArrayList<List<String>>();
+						 }
+						 List<String> advanceOrderHref = null;
+						 if(advancedOrdersHref.size()>i && advancedOrdersHref.get(i)!=null){
+							 advanceOrderHref = advancedOrdersHref.get(i);
+						 }
+						 advanceOrderHref.add(accessTable.getString(target2));
+						 if(advancedOrdersHref.size()>i){
+							 advancedOrdersHref.set(i,advanceOrderHref);
+						 }else{
+							 advancedOrdersHref.add(advanceOrderHref);
+						 }
+						 eag2012.setAdvancedOrdersHref(advancedOrdersHref);
+					 }
+					 if(accessTable.has(target3)){
+						 List<List<String>> advancedOrdersLang = eag2012.getAdvancedOrdersLang();
+						 if(advancedOrdersLang==null){
+							 advancedOrdersLang = new ArrayList<List<String>>();
+						 }
+						 List<String> advanceOrderLang = null;
+						 if(advancedOrdersLang.size()>i && advancedOrdersLang.get(i)!=null){
+							 advanceOrderLang = advancedOrdersLang.get(i);
+						 }
+						 advanceOrderLang.add(accessTable.getString(target2));
+						 if(advancedOrdersLang.size()>i){
+							 advancedOrdersLang.set(i,advanceOrderLang);
+						 }else{
+							 advancedOrdersLang.add(advanceOrderLang);
+						 }
+						 eag2012.setAdvancedOrdersLang(advancedOrdersLang);
+					 }
+					 target1=(target1.indexOf("_")!=-1?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+					 target2=(target2.indexOf("_")!=-1?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
+					 target3=(target3.indexOf("_")!=-1?target3.substring(0,target3.indexOf("_")):target3)+"_"+targetNumber;
+					 targetNumber++;
 				 }
 			}
 		}
