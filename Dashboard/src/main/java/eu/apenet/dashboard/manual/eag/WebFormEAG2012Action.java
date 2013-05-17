@@ -1092,7 +1092,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }else{
 						 listMapWebpageValueList.add(webpage);
 					 }
-					 eag2012.setWebpageHref(listMapWebpageValueList);
+					 eag2012.setWebpageValue(listMapWebpageValueList);
 				 }
 				 if(accessTable.has("textASSRWorkPlaces")){
 					 List<Map<String,Map<String,Map<String,List<String>>>>> numValue = eag2012.getNumValue();
@@ -1132,6 +1132,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }else{
 						 numValue.add(numMapMapMap);
 					 }
+					 eag2012.setNumValue(numValue);
 				 }
 				 if(accessTable.has("textASSRComputerPlaces")){
 					 List<Map<String,Map<String,Map<String,List<String>>>>> numValue = eag2012.getNumValue();
@@ -1171,6 +1172,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }else{
 						 numValue.add(numMapMapMap);
 					 }
+					 eag2012.setNumValue(numValue);
 				 }
 				 String target1 = "textDescriptionOfYourComputerPlaces";
 				 String target2 = "selectDescriptionOfYourComputerPlaces";
@@ -1253,6 +1255,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }else{
 						 nums.add(numsMapMapMapList);
 					 }
+					 eag2012.setNumValue(nums);
 				 }
 			}
 		}
@@ -1908,7 +1911,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				eag2012.setEmailValue(listMapEmailList); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(mailsTitle) }
 			}
 			if(yourInstitution.has("textYIWebpage")){
-				List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailValue();
+				List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getWebpageHref();
 				if(listMapEmailList==null){
 					listMapEmailList = new ArrayList<Map<String, Map<String, List<String>>>>();
 				}
@@ -1941,7 +1944,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				eag2012.setWebpageHref(listMapEmailList); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(webpageHref) }
 			}
 			if(yourInstitution.has("textYIWebpageLinkTitle")){
-				List<Map<String, Map<String, List<String>>>> listMapWebpagelList = eag2012.getEmailValue();
+				List<Map<String, Map<String, List<String>>>> listMapWebpagelList = eag2012.getWebpageValue();
 				if(listMapWebpagelList==null){
 					listMapWebpagelList = new ArrayList<Map<String, Map<String, List<String>>>>();
 				}
