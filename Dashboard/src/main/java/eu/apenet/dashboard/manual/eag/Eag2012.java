@@ -99,7 +99,7 @@ public class Eag2012 {
 	private List<Map<String,String>> descriptiveNoteLang;
 	private List<Map<String,String>> descriptiveNoteId;
 	private List<Map<String,List<String>>> descriptiveNotePId;
-	private List<Map<String,List<String>>> descriptiveNotePLang;
+	private List<Map<String, Map<String, List<String>>>> descriptiveNotePLang;
 	private List<Map<String,Map<String,List<String>>>> descriptiveNotePValue;
 	private List<String> localControlId;
 	private List<String> localControlLang;
@@ -192,7 +192,7 @@ public class Eag2012 {
 	private List<Map<String,String>> accessibilityQuestion;
 	private List<Map<String,List<String>>> accessibilityLang;
 	private List<Map<String,List<String>>> accessibilityValue;
-	private String photographAllowanceValue;
+	private List<String> photographAllowanceValue;
 	private List<List<String>> readersTicketHref;
 	private List<List<String>> readersTicketLang;
 	private List<List<String>> readersTicketValue;
@@ -748,12 +748,11 @@ public class Eag2012 {
 		this.descriptiveNotePId = descriptiveNotePId;
 	}
 
-	public List<Map<String, List<String>>> getDescriptiveNotePLang() {
+	public List<Map<String, Map<String, List<String>>>> getDescriptiveNotePLang() {
 		return descriptiveNotePLang;
 	}
 
-	public void setDescriptiveNotePLang(
-			List<Map<String, List<String>>> descriptiveNotePLang) {
+	public void setDescriptiveNotePLang(List<Map<String, Map<String, List<String>>>> descriptiveNotePLang) {
 		this.descriptiveNotePLang = descriptiveNotePLang;
 	}
 
@@ -1493,11 +1492,11 @@ public class Eag2012 {
 		this.accessibilityValue = accessibilityValue;
 	}
 
-	public String getPhotographAllowanceValue() {
+	public List<String> getPhotographAllowanceValue() {
 		return photographAllowanceValue;
 	}
 
-	public void setPhotographAllowanceValue(String photographAllowanceValue) {
+	public void setPhotographAllowanceValue(List<String> photographAllowanceValue) {
 		this.photographAllowanceValue = photographAllowanceValue;
 	}
 

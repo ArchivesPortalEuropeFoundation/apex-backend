@@ -145,93 +145,62 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	public Map<String,String> getYesNoList() {
 		this.getYesNoMap().put(WebFormEAG2012Action.OPTION_YES, getText("label.ai.tabs.commons.option.yes"));
 		this.getYesNoMap().put(WebFormEAG2012Action.OPTION_NO, getText("label.ai.tabs.commons.option.no"));
-
 		return this.getYesNoMap();
 	}
 
 	public Map<String,String> getTypeOfInstitutionList() {
 		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_NONE, "---");
-		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_NATIONAL,
-				getText("label.ai.tabs.commons.option.institutionType.nationalArchives"));
-		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_REGIONAL,
-				getText("label.ai.tabs.commons.option.institutionType.regionalArchives"));
-		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_COUNTY,
-				getText("label.ai.tabs.commons.option.institutionType.countyArchives"));
-		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_MUNICIPAL,
-				getText("label.ai.tabs.commons.option.institutionType.municipalArchives"));
-		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_SPECIALISED,
-				getText("label.ai.tabs.commons.option.institutionType.specialisedArchives"));
-		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_PRIVATE,
-				getText("label.ai.tabs.commons.option.institutionType.privateArchives"));
-		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_CHURCH,
-				getText("label.ai.tabs.commons.option.institutionType.churchArchives"));
-		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_BUSINESS,
-				getText("label.ai.tabs.commons.option.institutionType.businessArchives"));
-		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_UNIVERSITY,
-				getText("label.ai.tabs.commons.option.institutionType.universityArchives"));
-		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_MEDIA,
-				getText("label.ai.tabs.commons.option.institutionType.mediaArchives"));
-		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_POLITICAL,
-				getText("label.ai.tabs.commons.option.institutionType.politicalArchives"));
-		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_CULTURAL,
-				getText("label.ai.tabs.commons.option.institutionType.culturalArchives"));
-
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_NATIONAL,getText("label.ai.tabs.commons.option.institutionType.nationalArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_REGIONAL,getText("label.ai.tabs.commons.option.institutionType.regionalArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_COUNTY,getText("label.ai.tabs.commons.option.institutionType.countyArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_MUNICIPAL,getText("label.ai.tabs.commons.option.institutionType.municipalArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_SPECIALISED,getText("label.ai.tabs.commons.option.institutionType.specialisedArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_PRIVATE,getText("label.ai.tabs.commons.option.institutionType.privateArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_CHURCH,getText("label.ai.tabs.commons.option.institutionType.churchArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_BUSINESS,getText("label.ai.tabs.commons.option.institutionType.businessArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_UNIVERSITY,getText("label.ai.tabs.commons.option.institutionType.universityArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_MEDIA,getText("label.ai.tabs.commons.option.institutionType.mediaArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_POLITICAL,getText("label.ai.tabs.commons.option.institutionType.politicalArchives"));
+		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_CULTURAL,getText("label.ai.tabs.commons.option.institutionType.culturalArchives"));
 		return this.getTypeOfInstitutionMap();
 	}
 
 	public Map<String,String> getContinentOfTheInstitutionList() {
-		this.getContinentOfInstitutionMap().put(WebFormEAG2012Action.OPTION_EUROPE,
-				getText("label.ai.tabs.commons.option.continent.europe"));
-		this.getContinentOfInstitutionMap().put(WebFormEAG2012Action.OPTION_AFRICA,
-				getText("label.ai.tabs.commons.option.continent.africa"));
-		this.getContinentOfInstitutionMap().put(WebFormEAG2012Action.OPTION_AMERICA,
-				getText("label.ai.tabs.commons.option.continent.america"));
-		this.getContinentOfInstitutionMap().put(WebFormEAG2012Action.OPTION_ANTARCTICA,
-				getText("label.ai.tabs.commons.option.continent.antarctica"));
-		this.getContinentOfInstitutionMap().put(WebFormEAG2012Action.OPTION_ASIA,
-				getText("label.ai.tabs.commons.option.continent.asia"));
-		this.getContinentOfInstitutionMap().put(WebFormEAG2012Action.OPTION_AUSTRALIA,
-				getText("label.ai.tabs.commons.option.continent.australia"));
+		this.getContinentOfInstitutionMap().put(WebFormEAG2012Action.OPTION_EUROPE,getText("label.ai.tabs.commons.option.continent.europe"));
+		this.getContinentOfInstitutionMap().put(WebFormEAG2012Action.OPTION_AFRICA,getText("label.ai.tabs.commons.option.continent.africa"));
+		this.getContinentOfInstitutionMap().put(WebFormEAG2012Action.OPTION_AMERICA,getText("label.ai.tabs.commons.option.continent.america"));
+		this.getContinentOfInstitutionMap().put(WebFormEAG2012Action.OPTION_ANTARCTICA,getText("label.ai.tabs.commons.option.continent.antarctica"));
+		this.getContinentOfInstitutionMap().put(WebFormEAG2012Action.OPTION_ASIA,getText("label.ai.tabs.commons.option.continent.asia"));
+		this.getContinentOfInstitutionMap().put(WebFormEAG2012Action.OPTION_AUSTRALIA,getText("label.ai.tabs.commons.option.continent.australia"));
 
 		return this.getContinentOfInstitutionMap();
 	}
 
 	public Map<String,String> getPhotographList() {
 		this.getPhotographMap().put(WebFormEAG2012Action.OPTION_NONE, "---");
-		this.getPhotographMap().put(WebFormEAG2012Action.OPTION_DEPENDING,
-				getText("label.ai.tabs.commons.option.photograph.depending"));
+		this.getPhotographMap().put(WebFormEAG2012Action.OPTION_DEPENDING,getText("label.ai.tabs.commons.option.photograph.depending"));
 		this.getPhotographMap().put(WebFormEAG2012Action.OPTION_YES, getText("label.ai.tabs.commons.option.yes"));
-		this.getPhotographMap().put(WebFormEAG2012Action.OPTION_WITHOUT,
-				getText("label.ai.tabs.commons.option.photograph.without"));
+		this.getPhotographMap().put(WebFormEAG2012Action.OPTION_WITHOUT,getText("label.ai.tabs.commons.option.photograph.without"));
 		this.getPhotographMap().put(WebFormEAG2012Action.OPTION_NO, getText("label.ai.tabs.commons.option.no"));
 
 		return this.getPhotographMap();
 	}
 
 	public Map<String,String> getTypeYourRelationList() {
-		this.getTypeYourRelationMap().put(WebFormEAG2012Action.OPTION_CREATOR,
-				getText("label.ai.tabs.commons.option.typeYourRelation.creator"));
-		this.getTypeYourRelationMap().put(WebFormEAG2012Action.OPTION_SUBJECT,
-				getText("label.ai.tabs.commons.option.typeYourRelation.subject"));
-		this.getTypeYourRelationMap().put(WebFormEAG2012Action.OPTION_OTHER,
-				getText("label.ai.tabs.commons.option.typeYourRelation.other"));
+		this.getTypeYourRelationMap().put(WebFormEAG2012Action.OPTION_CREATOR,getText("label.ai.tabs.commons.option.typeYourRelation.creator"));
+		this.getTypeYourRelationMap().put(WebFormEAG2012Action.OPTION_SUBJECT,getText("label.ai.tabs.commons.option.typeYourRelation.subject"));
+		this.getTypeYourRelationMap().put(WebFormEAG2012Action.OPTION_OTHER,getText("label.ai.tabs.commons.option.typeYourRelation.other"));
 
 		return this.getTypeYourRelationMap();
 	}
 
 	public Map<String,String> getTypeTheRelationList() {
 		this.getTypeTheRelationMap().put(WebFormEAG2012Action.OPTION_NONE, "---");
-		this.getTypeTheRelationMap().put(WebFormEAG2012Action.OPTION_CHILD,
-				getText("label.ai.tabs.commons.option.typeTheRelation.child"));
-		this.getTypeTheRelationMap().put(WebFormEAG2012Action.OPTION_PARENT,
-				getText("label.ai.tabs.commons.option.typeTheRelation.parent"));
-		this.getTypeTheRelationMap().put(WebFormEAG2012Action.OPTION_EARLIER,
-				getText("label.ai.tabs.commons.option.typeTheRelation.earlier"));
-		this.getTypeTheRelationMap().put(WebFormEAG2012Action.OPTION_LATER,
-				getText("label.ai.tabs.commons.option.typeTheRelation.later"));
-		this.getTypeTheRelationMap().put(WebFormEAG2012Action.OPTION_ASSOCIATIVE,
-				getText("label.ai.tabs.commons.option.typeTheRelation.associative"));
-
+		this.getTypeTheRelationMap().put(WebFormEAG2012Action.OPTION_CHILD, getText("label.ai.tabs.commons.option.typeTheRelation.child"));
+		this.getTypeTheRelationMap().put(WebFormEAG2012Action.OPTION_PARENT, getText("label.ai.tabs.commons.option.typeTheRelation.parent"));
+		this.getTypeTheRelationMap().put(WebFormEAG2012Action.OPTION_EARLIER,getText("label.ai.tabs.commons.option.typeTheRelation.earlier"));
+		this.getTypeTheRelationMap().put(WebFormEAG2012Action.OPTION_LATER,getText("label.ai.tabs.commons.option.typeTheRelation.later"));
+		this.getTypeTheRelationMap().put(WebFormEAG2012Action.OPTION_ASSOCIATIVE,getText("label.ai.tabs.commons.option.typeTheRelation.associative"));
 		return this.getTypeTheRelationMap();
 	}
 
@@ -1212,11 +1181,44 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 eag2012.setDescriptiveNotePValue(descriptiveNotePValue);
 					 }
 					 if(accessTable.has(target2)){
-						 
+						 List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePLang();
+						 if(descriptiveNotePValue==null){
+							 descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
+						 }
+						 Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
+						 if(descriptiveNotePValue.size()>0 && descriptiveNotePValue.get(i)!=null){
+							 descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
+						 }else{
+							 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
+						 }
+						 Map<String, List<String>> descriptiveNoteMapList = null;
+						 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
+							 descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 }else{
+							 descriptiveNoteMapList = new HashMap<String, List<String>>();
+						 }
+						 List<String> descriptiveNoteList = null;
+						 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.SEARCHROOM)!=null){
+							 descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.SEARCHROOM);
+						 }else{
+							 descriptiveNoteList = new ArrayList<String>();
+						 }
+						 descriptiveNoteList.add(accessTable.getString(target2));
+						 descriptiveNoteMapList.put(Eag2012Creator.SEARCHROOM,descriptiveNoteList);
+						 descriptiveNoteMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+						 if(descriptiveNotePValue.size()>i){
+							 descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
+						 }else{
+							 descriptiveNotePValue.add(descriptiveNoteMapMapList);
+						 }
+						 eag2012.setDescriptiveNotePLang(descriptiveNotePValue);
 					 }
 					 target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
 					 target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
+					 targetNumber++;
 				 }
+				 target1 = null;
+				 target2 = null;
 				 if(accessTable.has("textASSRMicrofilmPlaces")){
 					 List<Map<String, Map<String, Map<String, List<String>>>>> nums = eag2012.getNumValue();
 					 if(nums==null){
@@ -1256,6 +1258,87 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 nums.add(numsMapMapMapList);
 					 }
 					 eag2012.setNumValue(nums);
+				 }
+				 if(accessTable.has("selectASSRPhotographAllowance")){
+					 List<String> photographAllowance = eag2012.getPhotographAllowanceValue();
+					 if(photographAllowance==null){
+						 photographAllowance = new ArrayList<String>();
+					 }
+					 if(photographAllowance.size()>i){
+						 photographAllowance.set(i, accessTable.getString("selectASSRPhotographAllowance"));
+					 }else{
+						 photographAllowance.add(accessTable.getString("selectASSRPhotographAllowance"));
+					 }
+					 eag2012.setPhotographAllowanceValue(photographAllowance);
+				 }
+				 target1 = "textASSRReadersTicket";
+				 target2 = "selectReadersTickectLanguage";
+				 String target3 = "textASSRRTLink";
+				 while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3)){
+					 if(accessTable.has(target1)){
+						 List<List<String>> readersTicket = eag2012.getReadersTicketValue();
+						 if(readersTicket==null){
+							 readersTicket = new ArrayList<List<String>>();
+						 }
+						 List<String> readerTicket = null;
+						 if(readersTicket.size()>i){
+							 readerTicket = readersTicket.get(i);
+						 }else{
+							 readerTicket = new ArrayList<String>();
+						 }
+						 readerTicket.add(accessTable.getString(target1));
+						 if(readersTicket.size()>i){
+							 readersTicket.set(i,readerTicket);
+						 }else{
+							 readersTicket.add(readerTicket);
+						 }
+						 eag2012.setReadersTicketHref(readersTicket);
+					 }
+					 if(accessTable.has(target2)){
+						 List<List<String>> readersTicketLang = eag2012.getReadersTicketLang();
+						 if(readersTicketLang==null){
+							 readersTicketLang = new ArrayList<List<String>>();
+						 }
+						 List<String> readerTicketLang = null;
+						 if(readersTicketLang.size()>i){
+							 readerTicketLang = readersTicketLang.get(i);
+						 }else{
+							 readerTicketLang = new ArrayList<String>();
+						 }
+						 readerTicketLang.add(accessTable.getString(target2));
+						 if(readersTicketLang.size()>i){
+							 readersTicketLang.set(i,readerTicketLang);
+						 }else{
+							 readersTicketLang.add(readerTicketLang);
+						 }
+						 eag2012.setReadersTicketLang(readersTicketLang);
+					 }
+					 if(accessTable.has(target3)){
+						 List<List<String>> readersTicketHref = eag2012.getReadersTicketHref();
+						 if(readersTicketHref==null){
+							 readersTicketHref = new ArrayList<List<String>>();
+						 }
+						 List<String> readerTicketHref = null;
+						 if(readersTicketHref.size()>i){
+							 readerTicketHref = readersTicketHref.get(i);
+						 }else{
+							 readerTicketHref = new ArrayList<String>();
+						 }
+						 readerTicketHref.add(accessTable.getString(target3));
+						 if(readersTicketHref.size()>i){
+							 readersTicketHref.set(i,readerTicketHref);
+						 }else{
+							 readersTicketHref.add(readerTicketHref);
+						 }
+						 eag2012.setReadersTicketHref(readersTicketHref);
+					 }
+					 target1=(target1.indexOf("_")!=-1?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+					 target2=(target2.indexOf("_")!=-1?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
+					 target3=(target3.indexOf("_")!=-1?target3.substring(0,target3.indexOf("_")):target3)+"_"+targetNumber;
+					 targetNumber++;
+				 }
+				 if(accessTable.has("textASSRAdvancedOrders")){
+					 
 				 }
 			}
 		}
