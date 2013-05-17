@@ -1798,7 +1798,7 @@ public class Eag2012Creator {
         	   for(int i=0;this.eag2012.getWebpageHref()!=null && indexRepo<this.eag2012.getWebpageHref().size() && this.eag2012.getWebpageHref().get(indexRepo)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).size()>0 && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(SEARCHROOM)!=null && this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(SEARCHROOM).size()>i;i++){ //no mandatory
             	   childArchguide4Children.add(buildWebpage(this.eag2012.getWebpageHref().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(SEARCHROOM).get(i),this.eag2012.getWebpageValue().get(indexRepo).get(TAB_ACCESS_AND_SERVICES).get(SEARCHROOM).get(i)));  //webpage
                }
-           childArchguide4Children.add(buildPhotographAllowance(this.eag2012.getPhotographAllowanceValue()));
+/* TODO           childArchguide4Children.add(buildPhotographAllowance(this.eag2012.getPhotographAllowanceValue())); */
            
            for(int i=0;this.eag2012.getReadersTicketLang()!=null && i<this.eag2012.getReadersTicketLang().size();i++){//no mandatory
         	   childArchguide4Children.add(buildReadersTicket(this.eag2012.getReadersTicketHref().get(indexRepo).get(i),this.eag2012.getReadersTicketLang().get(indexRepo).get(i),this.eag2012.getReadersTicketValue().get(indexRepo).get(i)));
