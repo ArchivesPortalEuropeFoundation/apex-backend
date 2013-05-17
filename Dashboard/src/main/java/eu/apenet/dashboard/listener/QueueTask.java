@@ -7,7 +7,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
 
+import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
@@ -47,16 +49,17 @@ public class QueueTask implements Runnable {
 				try {
 					QueueDaemon.setQueueProcessing(true);
 					processQueue(endTime);
-				} catch (Exception e) {
-					LOGGER.error(e.getMessage(), e);
+				} catch (Throwable e) {
+					LOGGER.error("Stopping processing for a while :" + e.getMessage(), e);
 					try {
 						JpaUtil.rollbackDatabaseTransaction();
 					} catch (Exception de) {
 						LOGGER.error(de.getMessage());
 					}
+					stopped = true;
 				}
 			}
-			if ((System.currentTimeMillis() + INTERVAL) < endTime) {
+			if (!stopped && (System.currentTimeMillis() + INTERVAL) < endTime) {
 				cleanUp();
 				try {
 					Thread.sleep(INTERVAL);
@@ -87,7 +90,7 @@ public class QueueTask implements Runnable {
 		}
 	}
 
-	public void processQueue(long endTime) {
+	public void processQueue(long endTime) throws Exception {
 		QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		boolean hasItems = true;
@@ -129,6 +132,13 @@ public class QueueTask implements Runnable {
 					queueItemDAO.updateSimple(queueItem);
 				}
 				JpaUtil.commitDatabaseTransaction();
+				/*
+				 * throw exception when solr has problem, so the queue will stop for a while.
+				 */
+				if (e instanceof APEnetException && e.getCause() instanceof SolrServerException){
+					throw e;
+					
+				}
 			}
 
 		}

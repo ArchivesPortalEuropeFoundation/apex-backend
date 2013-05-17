@@ -15,8 +15,9 @@ public class PublishTask extends AbstractEadTask {
 	protected void execute(Ead ead, Properties properties) throws Exception {
 		if (valid(ead)) {
 			try {
+				long startTime = System.currentTimeMillis();
 				EADParser.parseEadAndIndex(ead);
-				logAction(ead, true);
+				logAction(ead, true, System.currentTimeMillis()-startTime);
 			} catch (Exception e) {
 				logAction(ead, false);
 				throw new APEnetException("Could not publish the file with ID: " + ead.getId(), e);

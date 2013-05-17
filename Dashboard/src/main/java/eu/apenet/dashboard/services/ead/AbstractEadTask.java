@@ -28,7 +28,14 @@ public abstract class AbstractEadTask {
 		}
 		logger.info("Ead " + ead.getEadid() + "(" + xmlType.getName() + "): " + getActionName() + " - " + successString);
 	}
-
+	protected void logAction(Ead ead, boolean success, long milliseconds) {
+		XmlType xmlType = XmlType.getEadType(ead);
+		String successString = "succeed";
+		if (!success) {
+			successString = "failed";
+		}
+		logger.info("Ead " + ead.getEadid() + "(" + xmlType.getName() + "): " + getActionName() + " - " + successString + " - " + milliseconds +"ms");
+	}
 	protected static boolean isBeingHarvested () {
 		return DAOFactory.instance().getResumptionTokenDAO().containsValidResumptionTokens(new Date());
 

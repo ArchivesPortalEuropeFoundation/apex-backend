@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.BinaryRequestWriter;
 import org.apache.solr.client.solrj.impl.BinaryResponseParser;
-import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
+import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.client.solrj.impl.XMLResponseParser;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.params.SolrParams;
@@ -20,7 +20,7 @@ public class SearchSolrServerHolder {
 	private static final String SOLR_NOT_AVAILABLE = "solr_search_not_available";
 	private static final long WAIT_TIME = 30 * 3600 * 1000;
 	private static final Logger LOGGER = Logger.getLogger(SearchSolrServerHolder.class);
-	private static CommonsHttpSolrServer solrServer;
+	private static HttpSolrServer solrServer;
 	private static boolean available = false;
 	private static SearchSolrServerHolder instance;
 
@@ -51,14 +51,14 @@ public class SearchSolrServerHolder {
 		}
 	}
 
-	private CommonsHttpSolrServer getSolrServer() {
+	private HttpSolrServer getSolrServer() {
 		Map<String, Object> session = ActionContext.getContext().getSession();
 		HolderInfo notAvailableObject = (HolderInfo) session.get(SOLR_NOT_AVAILABLE);
 		if (notAvailableObject == null) {
 			if (solrServer == null) {
 				try {
 					LOGGER.debug("Create new solr client");
-					solrServer = new CommonsHttpSolrServer(APEnetUtilities.getDashboardConfig().getSolrSearchUrl());
+					solrServer = new HttpSolrServer(APEnetUtilities.getDashboardConfig().getSolrSearchUrl());
 					//solrServer.setRequestWriter(new XMLRequestWriter());
 					solrServer.setParser(new XMLResponseParser());
 					solrServer.ping();

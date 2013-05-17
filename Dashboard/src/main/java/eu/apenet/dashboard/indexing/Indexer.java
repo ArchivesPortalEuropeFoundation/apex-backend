@@ -68,7 +68,7 @@ public class Indexer {
 	private ArchivalInstitution archivalinstitution;
 	private Boolean existunitid_archdesc = false;
 	private Collection<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
-	private static final int MAX_NUMBER_OF_PENDING_DOCS = 10;
+	private static final int MAX_NUMBER_OF_PENDING_DOCS = 200;
 	private String pathApenetead;
 	private boolean isFinalPath;
 	private String currentPath;

@@ -28,11 +28,11 @@
     </context-param>
     <context-param>
         <param-name>SOLR_INDEX_URL</param-name>
-        <param-value>http://localhost:8083/solr</param-value>
+        <param-value>http://localhost:8083/solr/eads</param-value>
     </context-param>
     <context-param>
         <param-name>SOLR_SEARCH_URL</param-name>
-        <param-value>http://localhost:8083/solr</param-value>
+        <param-value>http://localhost:8083/solr/eads</param-value>
         <!--<param-value>http://80.38.128.242:8989/solr/core0</param-value>-->
     </context-param>
     <context-param>

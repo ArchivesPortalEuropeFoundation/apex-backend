@@ -1,23 +1,23 @@
  package eu.apenet.dashboard;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Preparable;
 
-import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.archivallandscape.ChangeAlIdentifiers;
 import eu.apenet.dashboard.manual.ManualHTTPUploader;
 import eu.apenet.dashboard.security.SecurityContext;
-import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.CountryDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -70,7 +70,6 @@ public class uploadALAction extends ActionSupport implements Preparable{
 	private Boolean changeidentifierchance = false;
 	private Boolean cancel = false;
 	
-	private static CommonsHttpSolrServer server;
 	
 	public List<ArchivalInstitution> getInstitutionList() {
 		return institutionList;

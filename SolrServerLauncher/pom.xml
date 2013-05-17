@@ -36,7 +36,7 @@
 							<mainClass>eu.apenet.solrServerLauncher.indexstarter.SolrStarter</mainClass>
 							<arguments>
 								<argument>/commons/src/test/resources/web-override-jetty.xml</argument>
-								<argument>3.4.0-modified</argument>
+								<argument>4.3.0</argument>
 							</arguments>
 						</configuration>
 					</plugin>
