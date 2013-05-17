@@ -544,7 +544,7 @@
 				<label for="textASRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASRSLinkTitle" />
+				<input type="text" id="textASRSWebpageLinkTitle" />
 			</td>
 		</tr>
 
@@ -610,16 +610,16 @@
 
 		<tr>
 			<td>
-				<label for="textASRSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+				<label for="textASTSRSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASRSWebpage" />
+				<input type="text" id="textASTSRSWebpage" />
 			</td>
 			<td class="labelLeft">
-				<label for="textASRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+				<label for="textASTSRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASRSLinkTitle" />
+				<input type="text" id="textASTSRSWebpageLinkTitle" />
 			</td>
 		</tr>
 

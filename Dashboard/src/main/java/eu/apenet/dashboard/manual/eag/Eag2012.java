@@ -99,7 +99,7 @@ public class Eag2012 {
 	private List<Map<String,String>> descriptiveNoteLang;
 	private List<Map<String,String>> descriptiveNoteId;
 	private List<Map<String,List<String>>> descriptiveNotePId;
-	private List<Map<String, Map<String, List<String>>>> descriptiveNotePLang;
+	private List<Map<String,Map<String,List<String>>>> descriptiveNotePLang;
 	private List<Map<String,Map<String,List<String>>>> descriptiveNotePValue;
 	private List<String> localControlId;
 	private List<String> localControlLang;

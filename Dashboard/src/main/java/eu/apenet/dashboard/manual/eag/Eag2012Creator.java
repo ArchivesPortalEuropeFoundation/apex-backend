@@ -80,7 +80,8 @@ public class Eag2012Creator {
 	public static final String WORKING_PLACES = "workingPlaces";
 	public static final String COMPUTER_PLACES = "computerPlaces";
 	public static final String MICROFILM = "microfilm";
-
+	public static final String MONOGRAPHIC_PUBLICATION ="monographicPublication";
+    public static final String SERIAL_PUBLICATION ="serialPublication";
     private Eag2012 eag2012;
 	private String storagePath;
 	private boolean isNew;
