@@ -3119,8 +3119,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						telephones = new ArrayList<Map<String, Map<String, List<String>>>>();
 					}
 					Map<String, Map<String, List<String>>> telephonesMap = null;
-					if(telephones.size()>i && telephones.get(i)!=null){ //repo
-						telephonesMap = telephones.get(i);
+					if(telephones.size()>x && telephones.get(x)!=null){ //repo
+						telephonesMap = telephones.get(x);
 					}else{
 						telephonesMap = new HashMap<String, Map<String, List<String>>>(); 
 					}
@@ -3139,8 +3139,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					telephonesList.add(contactTable.getString("textContactTelephoneOfTheInstitution_"+i));
 					telephonesMapList.put(Eag2012Creator.ROOT, telephonesList);
 					telephonesMap.put(Eag2012Creator.TAB_CONTACT,telephonesMapList);
-					if(telephones.size()>i){
-						telephones.set(i, telephonesMap);
+					if(telephones.size()>x){
+						telephones.set(x, telephonesMap);
 					}else{
 						telephones.add(telephonesMap);
 					}
@@ -3153,7 +3153,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					ArrayList<String> listFax = new ArrayList<String>();
 					listFax.add(contactTable.getString("textContactFaxOfTheInstitution_"+i));
 					fax.put(Eag2012Creator.TAB_CONTACT,listFax);
-					List<Map<String, List<String>>> listMapFaxList = new ArrayList<Map<String, List<String>>>(); 
+					List<Map<String, List<String>>> listMapFaxList = null;
+					if(eag2012.getFaxValue()==null){
+						listMapFaxList = new ArrayList<Map<String, List<String>>>();
+					}else{
+						listMapFaxList = eag2012.getFaxValue();
+					}
 					listMapFaxList.add(fax);
 					eag2012.setFaxValue(listMapFaxList); 	
 				}
@@ -3185,8 +3190,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 listEmail.add(contactTable.getString("textContactEmailOfTheInstitution_"+i));
 					 emailMap.put(Eag2012Creator.ROOT,listEmail); //root section, here there is only one mails list
 					 email.put(Eag2012Creator.TAB_CONTACT, emailMap);
-					 if(listMapEmailList.size()>i){
-						 listMapEmailList.set(i,email);
+					 if(listMapEmailList.size()>x){
+						 listMapEmailList.set(x,email);
 					 }else{
 						 listMapEmailList.add(email);
 					 }
@@ -3220,8 +3225,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					  
 					 emailMap.put(Eag2012Creator.ROOT,listEmail); //root section, here there is only one mails list
 					 email.put(Eag2012Creator.TAB_CONTACT, emailMap);
-					 if(listMapEmailValueList.size()>i){
-						 listMapEmailValueList.set(i,email);
+					 if(listMapEmailValueList.size()>x){
+						 listMapEmailValueList.set(x,email);
 					 }else{
 						 listMapEmailValueList.add(email);
 					 }
@@ -3254,8 +3259,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 listWeb.add(contactTable.getString("textContactWebOfTheInstitution_"+i));
 					 webMap.put(Eag2012Creator.ROOT,listWeb);
 					 mapMapListWeb.put(Eag2012Creator.TAB_CONTACT,webMap);
-					 if(listMapWebpageHrefList.size()>i){
-						 listMapWebpageHrefList.set(i,mapMapListWeb);
+					 if(listMapWebpageHrefList.size()>x){
+						 listMapWebpageHrefList.set(x,mapMapListWeb);
 					 }else{
 						 listMapWebpageHrefList.add(mapMapListWeb);
 					 }
@@ -3264,7 +3269,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			
 				 i=(x==1)?1:0;//listWeb.add(contactTable.getString("textContactLinkTitleForWebOfTheInstitution_"+i));
 				 while(contactTable.has("textContactLinkTitleForWebOfTheInstitution_"+(++i))){
-					 List<Map<String, Map<String, List<String>>>> listMapWebList = eag2012.getWebpageHref();
+					 List<Map<String, Map<String, List<String>>>> listMapWebList = eag2012.getWebpageValue();
 					 if(listMapWebList==null){
 						 listMapWebList = new ArrayList<Map<String, Map<String, List<String>>>>();
 					 }
@@ -3289,8 +3294,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 listWeb.add(contactTable.getString("textContactLinkTitleForWebOfTheInstitution_"+i));
 					 webMap.put(Eag2012Creator.ROOT,listWeb);
 					 mapMapListWeb.put(Eag2012Creator.TAB_CONTACT,webMap);
-					 if(listMapWebList.size()>i){
-						 listMapWebList.set(i,mapMapListWeb);
+					 if(listMapWebList.size()>x){
+						 listMapWebList.set(x,mapMapListWeb);
 					 }else{
 						 listMapWebList.add(mapMapListWeb);
 					 }
