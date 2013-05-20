@@ -880,7 +880,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						accessQuestionRepo = new HashMap<String, String>();
 					}
 					accessQuestionRepo.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,accessTable.getString("selectASAccesibleToThePublic"));
-					accessQuestions.add(accessQuestionRepo);
+					if(accessQuestions.size()>i){
+						accessQuestions.set(i,accessQuestionRepo);
+					}else{
+						accessQuestions.add(accessQuestionRepo);
+					}
 					eag2012.setAccessQuestion(accessQuestions);
 				}
 				
@@ -1019,9 +1023,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						accessibilityMap = new HashMap<String, String>();
 					}
 					accessibilityMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,accessTable.getString("selectASFacilitiesForDisabledPeopleAvailable"));
-					listAccessibilityMap.add(accessibilityMap);
-					eag2012.setAccessibilityQuestion(listAccessibilityMap);
+					if(listAccessibilityMap.size()>i){
+						listAccessibilityMap.set(i,accessibilityMap);
+					}else{
+						listAccessibilityMap.add(accessibilityMap);
 					}
+					eag2012.setAccessibilityQuestion(listAccessibilityMap);
+				  }
 				  
 				   j=0;
 				   while((accessTable.has("textASAccessibility_"+(++j))) && (accessTable.has("selectASASelectLanguage_"+(++j)))){
@@ -3401,7 +3409,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					accessQuestionRepo = new HashMap<String, String>();
 				}
 				accessQuestionRepo.put(Eag2012Creator.TAB_YOUR_INSTITUTION,yourInstitution.getString("selectAccessibleToThePublic"));
-				accessQuestions.add(accessQuestionRepo);
+				if(accessQuestions.size()>0){
+					accessQuestions.set(0,accessQuestionRepo);
+				}else{
+					accessQuestions.add(accessQuestionRepo);
+				}
 				eag2012.setAccessQuestion(accessQuestions);
 			}
 			if(yourInstitution.has("futherAccessInformation")){
@@ -3484,7 +3496,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					accessibilityQuestionRepo = new HashMap<String, String>();
 				}
 				accessibilityQuestionRepo.put(Eag2012Creator.TAB_YOUR_INSTITUTION,yourInstitution.getString("selectFacilitiesForDisabledPeopleAvailable"));
-				accessibilityQuestions.add(accessibilityQuestionRepo);
+				if(accessibilityQuestions.size()>0){
+					accessibilityQuestions.set(0,accessibilityQuestionRepo);
+				}else{
+					accessibilityQuestions.add(accessibilityQuestionRepo);
+				}
 				eag2012.setAccessibilityQuestion(accessibilityQuestions);	
 			}
 		}
