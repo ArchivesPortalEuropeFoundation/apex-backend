@@ -681,208 +681,404 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		JSONObject accessAndServices = jsonObj.getJSONObject("accessAndServices");
 		if(accessAndServices!=null){
 			int i=0;
-			while(accessAndServices.has("accessAndServicesTable_"+(++i))){
-				JSONObject accessTable = accessAndServices.getJSONObject("accessAndServicesTable_"+(i));
-                //opening times
-				int j=1;
-				if(accessTable.has("textOpeningTimes_"+j)) {
-				  do{	
-            	     Map<String, String> openingMap = new HashMap<String,String>();
-   				     openingMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, accessTable.getString("textOpeningTimes_"+j));
-   				     List<Map<String, String>> openingValues = new ArrayList<Map<String,String>>();
-   				     openingValues.add(openingMap);
-   				     eag2012.setOpeningValue(openingValues); 
-				  }while(accessTable.has("textOpeningTimes_"+(++j)));           	   
-               }
-				// languages of opening times
-				j=1;
-				if(accessTable.has("selectLanguageOpeningTimes_"+j)){
-				  do{	
-	            	 Map<String, String> openingMap = new HashMap<String,String>();
-	   				 openingMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, accessTable.getString("selectLanguageOpeningTimes_"+j));
-	   				 List<Map<String, String>> openingLang = new ArrayList<Map<String,String>>();
-	   				 openingLang.add(openingMap);
-	   				 eag2012.setOpeningLang(openingLang); 
-				   }while(accessTable.has("selectLanguageOpeningTimes_"+(++j)));   	
-						
-				}
-				//closing times
-			    j=1;
-				if(accessTable.has("textClosingDates_"+j)) {
-				  do{	
-            	     Map<String, String> closingMap = new HashMap<String,String>();
-   				     closingMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, accessTable.getString("textClosingDates_"+j));
-   				     List<Map<String, String>> closingValues = new ArrayList<Map<String,String>>();
-   				     closingValues.add(closingMap);
-   				     eag2012.setClosingStandardDate(closingValues); 
-				  }while(accessTable.has("textClosingDates_"+(++j)));           	   
-               }
-				//languages of closing dates
-				j=1;
-				if(accessTable.has("selectLanguageClosingDates_"+j)){
-				  do{	
-	            	 Map<String, String> closingMap = new HashMap<String,String>();
-	   				 closingMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, accessTable.getString("selectLanguageClosingDates_"+j));
-	   				 List<Map<String, String>> closingLang = new ArrayList<Map<String,String>>();
-	   				 closingLang.add(closingMap);
-	   				 eag2012.setClosingLang(closingLang); 
-				   }while(accessTable.has("selectLanguageClosingDates_"+(++j)));   	
-						
-				}
+			while(accessAndServices.has("accessAndServicesTable_"+(i+1))){
+				JSONObject accessTable = accessAndServices.getJSONObject("accessAndServicesTable_"+(i+1));
+             
+//opening times and opening langs 
+				
+				int j=0;			
+				while(accessTable.has("textOpeningTimes_"+(++j)) && (accessTable.has("selectLanguageOpeningTimes_"+(++j)))){
+				  if(accessTable.has("textOpeningTimes_"+j)){
+				     List<Map<String,List<String>>> openingValues = eag2012.getOpeningValue();
+					 if(openingValues == null){
+					   openingValues = new ArrayList<Map<String,List<String>>>();  
+					 }
+					 Map<String, List<String>> openingMap = null;
+					 if((openingValues.size() > i) && (openingValues.get(i)!=null)){
+					   openingMap = openingValues.get(i);	  
+					 }else{
+						 openingMap = new HashMap<String,List<String>>();
+					 }
+					List<String> openingList = null;
+					if((openingMap.size()>i) && (openingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null)){
+						openingList = openingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+					}else{
+						openingList = new ArrayList<String>();
+					}
+					openingList.add(accessTable.getString("textOpeningTimes_"+j));
+					openingMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, openingList);
+				    if(openingValues.size() > i){
+					   openingValues.set(i,openingMap);
+				    }else{
+				    	openingValues.add(openingMap);
+				    }
+				    eag2012.setOpeningValue(openingValues);
+				  }
+				  if(accessTable.has("selectLanguageOpeningTimes_"+j)){
+					     List<Map<String,List<String>>> openingLangs = eag2012.getOpeningLang();
+						 if(openingLangs == null){
+						   openingLangs = new ArrayList<Map<String,List<String>>>();  
+						 }
+						 Map<String, List<String>> openingMap = null;
+						 if((openingLangs.size() > i) && (openingLangs.get(i)!=null)){
+						   openingMap = openingLangs.get(i);	  
+						 }else{
+							 openingMap = new HashMap<String,List<String>>();
+						 }
+						List<String> openingList = null;
+						if((openingMap.size()>i) && (openingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null)){
+							openingList = openingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						}else{
+							openingList = new ArrayList<String>();
+						}
+						openingList.add(accessTable.getString("selectLanguageOpeningTimes_"+j));
+						openingMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, openingList);
+					    if(openingLangs.size() > i){
+						   openingLangs.set(i,openingMap);
+					    }else{
+					    	openingLangs.add(openingMap);
+					    }
+					    eag2012.setOpeningLang(openingLangs);
+				 }
+				  
+				}//end while opening times
+				
+				//closing times and langs closing
+	            
+				j=0;			
+				while(accessTable.has("textClosingDates_"+(++j)) && (accessTable.has("selectLanguageClosingDates_"+(++j)))){
+				  if(accessTable.has("textClosingDates_"+j)){
+				     List<Map<String,List<String>>> closingValues = eag2012.getClosingStandardDate();
+					 if(closingValues == null){
+						 closingValues = new ArrayList<Map<String,List<String>>>();  
+					 }
+					 Map<String, List<String>> closingMap = null;
+					 if((closingValues.size() > i) && (closingValues.get(i)!=null)){
+						 closingMap = closingValues.get(i);	  
+					 }else{
+						 closingMap = new HashMap<String,List<String>>();
+					 }
+					List<String> closingList = null;
+					if((closingMap.size()>i) && (closingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null)){
+						closingList = closingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+					}else{
+						closingList = new ArrayList<String>();
+					}
+					closingList.add(accessTable.getString("textClosingDates_"+j));
+					closingMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, closingList);
+				    if(closingValues.size() > i){
+				    	closingValues.set(i,closingMap);
+				    }else{
+				    	closingValues.add(closingMap);
+				    }
+				   //TODO eag2012.setClosingStandardDate(closingValues);
+				    eag2012.setClosingValue(closingValues);
+				  }
+				  if(accessTable.has("selectLanguageClosingDates_"+j)){
+					     List<Map<String,List<String>>> closingLangs = eag2012.getClosingLang();
+						 if(closingLangs == null){
+							 closingLangs = new ArrayList<Map<String,List<String>>>();  
+						 }
+						 Map<String, List<String>> closingMap = null;
+						 if((closingLangs.size() > i) && (closingLangs.get(i)!=null)){
+							 closingMap = closingLangs.get(i);	  
+						 }else{
+							 closingMap = new HashMap<String,List<String>>();
+						 }
+						List<String> closingList = null;
+						if((closingMap.size()>i) && (closingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null)){
+							closingList = closingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						}else{
+							closingList = new ArrayList<String>();
+						}
+						closingList.add(accessTable.getString("selectLanguageClosingDates_"+j));
+						closingMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, closingList);
+					    if(closingLangs.size() > i){
+					    	closingLangs.set(i,closingMap);
+					    }else{
+					    	closingLangs.add(closingMap);
+					    }
+					    eag2012.setClosingLang(closingLangs);
+				 }
+				  
+				}//end while closing times
 				
 				//directions
-				 List<String> directionsList = new ArrayList<String>();
-				 List<String> directionsLangsList = new ArrayList<String>();
-				 List<List<String>> listDirectionsList = new ArrayList<List<String>>();
-				 List<List<String>> listDirectionsLangsList = new ArrayList<List<String>>();
-				 List<String> citationList = new ArrayList<String>();
-				 List<List<String>> listCitationList = new ArrayList<List<String>>();
-				 
-				 j=1;
-				 if(accessTable.has("textTtravellingDirections_"+j)) {
-				   do{	
-	            	  directionsList.add(accessTable.getString("textTtravellingDirections_"+j)); 
-					  }while(accessTable.has("textTravellingDirections_"+(++j)));           	   
-	              
-				   listDirectionsList.add(directionsList);
-				   eag2012.setDirectionsValue(listDirectionsList);
-				 }
-				 j=1;
-				 if(accessTable.has("selectASATDSelectLanguage_"+j)) {
-					   do{	
-		            	  directionsLangsList.add(accessTable.getString("selectASATDSelectLanguage_"+j));
-		   				  
-						  }while(accessTable.has("selectASATDSelectLanguage_"+(++j)));           	   
-		              
-					   listDirectionsLangsList.add(directionsList);
-					   eag2012.setDirectionsLang(listDirectionsLangsList);
-					 }
-			
-			     j=1;
-			     if(accessTable.has("textTravelLink_"+j)){
-			    	 do{
-			    		citationList.add(accessTable.getString("textTravelLink_"+j)); 
-			    		 
-			    	 }while(accessTable.has("textTravelLink_"+(++j)));
-			    	 
-			    	 listCitationList.add(citationList);
-			    	 eag2012.setCitationHref(listCitationList); 	 
-			     }
-			
-			   //access yes or no, it appears in tab yourinstitution, in tab accessAndServices and for each repository
-			     if(accessTable.has("selectASAccesibleToThePublic")){		
-			       Map<String,String> accessMap =new HashMap<String, String>();
-			       List<Map<String,String>> listAccessMap = new ArrayList<Map<String,String>>();
-			       accessMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,accessTable.getString("selectASAccesibleToThePublic"));
-			       listAccessMap.add(accessMap);
-			       eag2012.setAccessQuestion(listAccessMap);
-			     }
-			     //access information, restaccessValue node
+				j=0;
+				while((accessTable.has("textTravellingDirections_"+(++j))) && (accessTable.has("selectASATDSelectLanguage_"+(++j))) && (accessTable.has("textTravelLink_"+(++j)))){
+				  	if(accessTable.has("textTtravellingDirections_"+j)){
+				  		List<List<String>> listDirectionsList = eag2012.getDirectionsValue();
+				  		if(listDirectionsList == null){
+				  			listDirectionsList = new ArrayList<List<String>>();
+				  		}
+				  		List<String> directionList = null;
+				  		if((listDirectionsList.size()>i) && (listDirectionsList.get(i)!=null)){
+				  		  directionList=listDirectionsList.get(i);	
+				  		}else{
+				  			directionList = new ArrayList<String>();
+				  		}
+				  		directionList.add(accessTable.getString("textTtravellingDirections_"+j));
+				  		if(listDirectionsList.size()>i){
+				  			listDirectionsList.set(i, directionList);
+				  		}else{
+				  			listDirectionsList.add(directionList);
+				  		}
+				  		eag2012.setDirectionsValue(listDirectionsList);
+				  	}
+				  	if(accessTable.has("selectASATDSelectLanguage_"+j)){
+				  		List<List<String>> listDirectionsLangList =eag2012.getDirectionsLang();
+				  		if(listDirectionsLangList == null){
+				  			listDirectionsLangList = new ArrayList<List<String>>();
+				  		}
+				  		List<String> directionsLangsList = null;
+				  		if(listDirectionsLangList.size()>i && (listDirectionsLangList.get(i)!=null)){
+				  			directionsLangsList=listDirectionsLangList.get(i);
+				  		}else{
+				  			directionsLangsList = new ArrayList<String>();
+				  		}
+				  		directionsLangsList.add(accessTable.getString("selectASATDSelectLanguage_"+j));
+				  		if(listDirectionsLangList.size()>i){
+				  			listDirectionsLangList.set(i, directionsLangsList);
+				  		}else{
+				  			listDirectionsLangList.add(directionsLangsList);
+				  		}
+				  	  eag2012.setDirectionsLang(listDirectionsLangList);
+				  	}
+				  	if(accessTable.has("textTravelLink_"+j)){
+				  		List<List<String>> listCitationList = eag2012.getCitationHref();
+				  		if(listCitationList==null){
+				  			listCitationList=new ArrayList<List<String>>();
+				  		}
+				  		List<String> citationList = null;	
+				  		if(listCitationList.size()>i && (listCitationList.get(i)!=null)){
+				  			citationList=listCitationList.get(i);
+				  		}else{
+				  			citationList = new ArrayList<String>();
+				  		}
+				  		citationList.add(accessTable.getString("textTravelLink_"+j));
+				  		if(listCitationList.size()>i){
+				  			listCitationList.set(i, citationList);
+				  		}else{
+				  			listCitationList.add(citationList);
+				  		}
+				  	  eag2012.setCitationHref(listCitationList);
+				  	}
+				
+				}//end while directions
+				
+                //access yes or no, it appears in tab yourinstitution, in tab accessAndServices and for each repository
+				
+				if(accessTable.has("selectASAccesibleToThePublic")){
+					List<Map<String, String>> accessQuestions = eag2012.getAccessQuestion();
+					if(accessQuestions == null){
+						accessQuestions = new ArrayList<Map<String, String>>(); 
+					}
+					Map<String, String> accessQuestionRepo = null;
+					if(accessQuestions.size()>i && accessQuestions.get(i)!=null){
+						accessQuestionRepo = accessQuestions.get(i);
+					}else{
+						accessQuestionRepo = new HashMap<String, String>();
+					}
+					accessQuestionRepo.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,accessTable.getString("selectASAccesibleToThePublic"));
+					accessQuestions.add(accessQuestionRepo);
+					eag2012.setAccessQuestion(accessQuestions);
+				}
+				
+			     //access information and access langs
 			     
 			     j=0;
-				 while(accessTable.has("textASAccessRestrictions_"+(++j))){
-					Map<String, List<String>> restaccess = new HashMap<String,List<String>>();
-					ArrayList<String> listRestaccess = new ArrayList<String>();
-					listRestaccess.add(accessTable.getString("textASAccessRestrictions_"+j));
-					restaccess.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,listRestaccess);
-					List<Map<String, List<String>>> listMapRestaccessList = eag2012.getRestaccessValue();
-					if(listMapRestaccessList==null){
-						listMapRestaccessList = new ArrayList<Map<String, List<String>>>();
+				 while((accessTable.has("textASAccessRestrictions_"+(++j))) && (accessTable.has("selectASARSelectLanguage_"+(++j)))){
+					if(accessTable.has("textASAccessRestrictions_"+j)){
+						List<Map<String,List<String>>> listMapRestaccessList = eag2012.getRestaccessValue();
+						if(listMapRestaccessList==null){
+						  listMapRestaccessList = new ArrayList<Map<String, List<String>>>();	
 						}
-					listMapRestaccessList.add(restaccess);
-					eag2012.setRestaccessValue(listMapRestaccessList);
+						 Map<String, List<String>> restaccess = null;
+						 if((listMapRestaccessList.size()>i) && (listMapRestaccessList.get(i)!=null)){
+							restaccess=listMapRestaccessList.get(i); 
+						 }else{
+							 restaccess=new HashMap<String,List<String>>();
+						 }
+						 List<String> listRestaccess = null;
+						 if((restaccess.size()>i) && (restaccess.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null)){
+							 listRestaccess=restaccess.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 }else{
+							 listRestaccess=new ArrayList<String>();
+						 }
+					     listRestaccess.add(accessTable.getString("textASAccessRestrictions_"+j));
+					     restaccess.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, listRestaccess);
+					     if(listMapRestaccessList.size()>i){
+					    	 listMapRestaccessList.set(i, restaccess);
+					     }else{
+					    	 listMapRestaccessList.add(restaccess);
+					     }
+					    eag2012.setRestaccessValue(listMapRestaccessList);
 					}
-			     
-			     //access information langs, 
-				 
-				 j=0;
-				 while(accessTable.has("selectASARSelectLanguage_"+(++j))){
-					Map<String, List<String>> restaccessLangs = new HashMap<String,List<String>>();
-					ArrayList<String> listRestaccessLangs = new ArrayList<String>();
-					listRestaccessLangs.add(accessTable.getString("selectASARSelectLanguage_"+j));
-					restaccessLangs.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,listRestaccessLangs);
-					List<Map<String, List<String>>> listMapRestaccessList = eag2012.getRestaccessLang();
-					if(listMapRestaccessList==null){
-						listMapRestaccessList = new ArrayList<Map<String, List<String>>>();
+					if(accessTable.has("selectASARSelectLanguage_"+j)) {   //access information lang
+						List<Map<String,List<String>>> listMapRestaccessList = eag2012.getRestaccessLang();
+						if(listMapRestaccessList==null){
+						  listMapRestaccessList = new ArrayList<Map<String, List<String>>>();	
 						}
-					listMapRestaccessList.add(restaccessLangs);
-					eag2012.setRestaccessLang(listMapRestaccessList);
+						 Map<String, List<String>> restaccessLang = null;
+						 if((listMapRestaccessList.size()>i) && (listMapRestaccessList.get(i)!=null)){
+							 restaccessLang=listMapRestaccessList.get(i); 
+						 }else{
+							 restaccessLang=new HashMap<String,List<String>>();
+						 }
+						 List<String> listRestaccess = null;
+						 if((restaccessLang.size()>i) && (restaccessLang.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null)){
+							 listRestaccess=restaccessLang.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 }else{
+							 listRestaccess=new ArrayList<String>();
+						 }
+					     listRestaccess.add(accessTable.getString("selectASARSelectLanguage_"+j));
+					     restaccessLang.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, listRestaccess);
+					     if(listMapRestaccessList.size()>i){
+					    	 listMapRestaccessList.set(i, restaccessLang);
+					     }else{
+					    	 listMapRestaccessList.add(restaccessLang);
+					     }
+					    eag2012.setRestaccessLang(listMapRestaccessList);		
 					}
-			      
-				 //terms of use
-				 List<String> termsList = new ArrayList<String>();
-				 List<String> termsLangsList = new ArrayList<String>();
-				 List<List<String>> listTermsList = new ArrayList<List<String>>();
-				 List<List<String>> listTermsLangsList = new ArrayList<List<String>>();
-				 List<String> termsHrefList = new ArrayList<String>();
-				 List<List<String>> listTermsHrefList = new ArrayList<List<String>>();
-				 
-				 //terms of use value
-                 j=0;
-                 while(accessTable.has("textASTermOfUse_"+(++j))){
-                	 termsList.add(accessTable.getString("textASTermOfUse_"+j));	 	 
-                 }
-				 listTermsList.add(termsList);
-				 eag2012.setTermsOfUseValue(listTermsList);
+				}// end while access information
 				
-				 //terms of use lang
+				//terms of use
 				 j=0;
-                 while(accessTable.has("textASTermOfUse_"+(++j))){
-                	 termsLangsList.add(accessTable.getString("textASTermOfUse_"+j));	 	 
-                 }
-				 listTermsLangsList.add(termsList);
-				 eag2012.setTermsOfUseLang(listTermsLangsList);
+				 while((accessTable.has("textASTermOfUse_"+(++j))) && (accessTable.has("selectASAFTOUSelectLanguage_"+(++j))) && (accessTable.has("textASTOULink_"+(++j)))){
+					  	if(accessTable.has("textASTermOfUse_"+j)){
+					  		List<List<String>> listTermsList = eag2012.getTermsOfUseValue();
+					  		if(listTermsList == null){
+					  			listTermsList = new ArrayList<List<String>>();
+					  		}
+					  		List<String> termsList = null;
+					  		if((listTermsList.size()>i) && (listTermsList.get(i)!=null)){
+					  			termsList=listTermsList.get(i);	
+					  		}else{
+					  			termsList = new ArrayList<String>();
+					  		}
+					  		termsList.add(accessTable.getString("textASTermOfUse_"+j));
+					  		if(listTermsList.size()>i){
+					  			listTermsList.set(i, termsList);
+					  		}else{
+					  			listTermsList.add(termsList);
+					  		}
+					  		eag2012.setTermsOfUseValue(listTermsList);
+					  	}
+					  	if(accessTable.has("selectASAFTOUSelectLanguage_"+j)){
+					  		List<List<String>> listTermsLangList =eag2012.getTermsOfUseLang();
+					  		if(listTermsLangList == null){
+					  			listTermsLangList = new ArrayList<List<String>>();
+					  		}
+					  		List<String> termsLangsList = null;
+					  		if(listTermsLangList.size()>i && (listTermsLangList.get(i)!=null)){
+					  			termsLangsList=listTermsLangList.get(i);
+					  		}else{
+					  			termsLangsList = new ArrayList<String>();
+					  		}
+					  		termsLangsList.add(accessTable.getString("selectASAFTOUSelectLanguage_"+j));
+					  		if(listTermsLangList.size()>i){
+					  			listTermsLangList.set(i, termsLangsList);
+					  		}else{
+					  			listTermsLangList.add(termsLangsList);
+					  		}
+					  	  eag2012.setTermsOfUseLang(listTermsLangList);
+					  	}
+					  	if(accessTable.has("textASTOULink_"+j)){
+					  		List<List<String>> listTermsHrefList = eag2012.getTermsOfUseHref();
+					  		if(listTermsHrefList==null){
+					  			listTermsHrefList=new ArrayList<List<String>>();
+					  		}
+					  		List<String> termsHrefList = null;	
+					  		if(listTermsHrefList.size()>i && (listTermsHrefList.get(i)!=null)){
+					  			termsHrefList=listTermsHrefList.get(i);
+					  		}else{
+					  			termsHrefList = new ArrayList<String>();
+					  		}
+					  		termsHrefList.add(accessTable.getString("textASTOULink_"+j));
+					  		if(listTermsHrefList.size()>i){
+					  			listTermsHrefList.set(i, termsHrefList);
+					  		}else{
+					  			listTermsHrefList.add(termsHrefList);
+					  		}
+					  	  eag2012.setTermsOfUseHref(listTermsHrefList);
+					  	}
+					
+					}//end while terms of use
+				 
+				//accessibility yes or no, it appears in tab yourinstitution, in tab accessAndServices and for each repository
+				 
+				  if(accessTable.has("selectASFacilitiesForDisabledPeopleAvailable")){
+					List<Map<String, String>> listAccessibilityMap = eag2012.getAccessibilityQuestion();
+					if(listAccessibilityMap == null){
+						listAccessibilityMap = new ArrayList<Map<String, String>>(); 
+					}
+					Map<String, String> accessibilityMap = null;
+					if(listAccessibilityMap.size()>i && listAccessibilityMap.get(i)!=null){
+						accessibilityMap = listAccessibilityMap.get(i);
+					}else{
+						accessibilityMap = new HashMap<String, String>();
+					}
+					accessibilityMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,accessTable.getString("selectASFacilitiesForDisabledPeopleAvailable"));
+					listAccessibilityMap.add(accessibilityMap);
+					eag2012.setAccessibilityQuestion(listAccessibilityMap);
+					}
+				  
+				   j=0;
+				   while((accessTable.has("textASAccessibility_"+(++j))) && (accessTable.has("selectASASelectLanguage_"+(++j)))){
+						if(accessTable.has("textASAccessibility_"+j)){
+							List<Map<String,List<String>>> listMapAccessibilityList = eag2012.getAccessibilityValue();
+							if(listMapAccessibilityList==null){
+								listMapAccessibilityList = new ArrayList<Map<String, List<String>>>();	
+							}
+							 Map<String, List<String>> accesibility = null;
+							 if((listMapAccessibilityList.size()>i) && (listMapAccessibilityList.get(i)!=null)){
+								 accesibility=listMapAccessibilityList.get(i); 
+							 }else{
+								 accesibility=new HashMap<String,List<String>>();
+							 }
+							 List<String> listAccessibility = null;
+							 if((accesibility.size()>i) && (accesibility.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null)){
+								 listAccessibility=accesibility.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+							 }else{
+								 listAccessibility=new ArrayList<String>();
+							 }
+							 listAccessibility.add(accessTable.getString("textASAccessibility_"+j));
+						     accesibility.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, listAccessibility);
+						     if(listMapAccessibilityList.size()>i){
+						    	 listMapAccessibilityList.set(i, accesibility);
+						     }else{
+						    	 listMapAccessibilityList.add(accesibility);
+						     }
+						    eag2012.setAccessibilityValue(listMapAccessibilityList);
+						}
+						if(accessTable.has("selectASASelectLanguage_"+j)) {   //accessibility information lang
+							List<Map<String,List<String>>> listMapAccessibilityList = eag2012.getAccessibilityLang();
+							if(listMapAccessibilityList==null){
+								listMapAccessibilityList = new ArrayList<Map<String, List<String>>>();	
+							}
+							 Map<String, List<String>> accessibilityLang = null;
+							 if((listMapAccessibilityList.size()>i) && (listMapAccessibilityList.get(i)!=null)){
+								 accessibilityLang=listMapAccessibilityList.get(i); 
+							 }else{
+								 accessibilityLang=new HashMap<String,List<String>>();
+							 }
+							 List<String> listAccessibility = null;
+							 if(( accessibilityLang.size()>i) && ( accessibilityLang.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null)){
+								 listAccessibility= accessibilityLang.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+							 }else{
+								 listAccessibility=new ArrayList<String>();
+							 }
+							 listAccessibility.add(accessTable.getString("selectASASelectLanguage_"+j));
+						     accessibilityLang.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, listAccessibility);
+						     if(listMapAccessibilityList.size()>i){
+						    	 listMapAccessibilityList.set(i,  accessibilityLang);
+						     }else{
+						    	 listMapAccessibilityList.add( accessibilityLang);
+						     }
+						    eag2012.setAccessibilityLang(listMapAccessibilityList);		
+						}
+					}// end while accessibility
 				
-				 //terms of use link
-				 j=0;
-                 while(accessTable.has("textASTOULink_"+(++j))){
-                	 termsHrefList.add(accessTable.getString("textASTOULink_"+j));	 	 
-                 }
-				 listTermsHrefList.add(termsList);
-				 eag2012.setTermsOfUseHref(listTermsHrefList);
-			
-				 //accessibility yes or no, it appears in tab yourinstitution, in tab accessAndServices and for each repository
-				 
-				 if(accessTable.has("selectASFacilitiesForDisabledPeopleAvailable")){		
-				   Map<String,String> accessibilityMap =new HashMap<String, String>();
-				   List<Map<String,String>> listAccessibilityMap = new ArrayList<Map<String,String>>();
-				   accessibilityMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,accessTable.getString("selectASFacilitiesForDisabledPeopleAvailable"));
-				   listAccessibilityMap.add(accessibilityMap);
-				   eag2012.setAccessibilityQuestion(listAccessibilityMap);
-				  }
-				 
-				 //accessibility value
-				 j=0;
-				 while(accessTable.has("textASAccessibility_"+(++j))){
-					Map<String, List<String>> accessibilityValue = new HashMap<String,List<String>>();
-					ArrayList<String> listAccessibilityValue = new ArrayList<String>();
-					listAccessibilityValue.add(accessTable.getString("textASAccessibility_"+j));
-					accessibilityValue.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,listAccessibilityValue);
-					List<Map<String, List<String>>> listMapAccessibilityList = eag2012.getAccessibilityValue();
-					if(listMapAccessibilityList==null){
-						listMapAccessibilityList = new ArrayList<Map<String, List<String>>>();
-						}
-					listMapAccessibilityList.add(accessibilityValue);
-					eag2012.setAccessibilityValue(listMapAccessibilityList);
-					}
-			     
-			     //accessibility langs 
-				 
-				 j=0;
-				 while(accessTable.has("selectASASelectLanguage_"+(++j))){
-					Map<String, List<String>> accessibilityLangs = new HashMap<String,List<String>>();
-					ArrayList<String> listAccessibilityLangs = new ArrayList<String>();
-					listAccessibilityLangs.add(accessTable.getString("selectASASelectLanguage_"+j));
-					accessibilityLangs.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,listAccessibilityLangs);
-					List<Map<String, List<String>>> listMapAccessibilityList = eag2012.getAccessibilityLang();
-					if(listMapAccessibilityList==null){
-						listMapAccessibilityList = new ArrayList<Map<String, List<String>>>();
-						}
-					listMapAccessibilityList.add(accessibilityLangs);
-					eag2012.setAccessibilityLang(listMapAccessibilityList);
-					}
-				 
-				 
 				 //search_room section
 				 if(accessTable.has("textASSRTelephone")){
 					 List<Map<String, Map<String, List<String>>>> telephones = eag2012.getTelephoneValue();
@@ -1132,7 +1328,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				 String target1 = "textDescriptionOfYourComputerPlaces";
 				 String target2 = "selectDescriptionOfYourComputerPlaces";
 				 int targetNumber = 1;
-				 while(accessTable.has(target1) && accessTable.has(target2)){
+				 do{
+					 target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+					 target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
+					 targetNumber++;
 					 if(accessTable.has(target1)){
 						 List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
 						 if(descriptiveNotePValue==null){
@@ -1199,12 +1398,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 eag2012.setDescriptiveNotePLang(descriptiveNotePValue);
 					 }
-					 target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
-					 target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
-					 targetNumber++;
-				 }
+				 }while(accessTable.has(target1) && accessTable.has(target2));
 				 target1 = null;
 				 target2 = null;
+				 
 				 if(accessTable.has("textASSRMicrofilmPlaces")){
 					 List<Map<String, Map<String, Map<String, List<String>>>>> nums = eag2012.getNumValue();
 					 if(nums==null){
@@ -1261,7 +1458,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				 target2 = "selectReadersTickectLanguage";
 				 String target3 = "textASSRRTLink";
 				 targetNumber = 1;
-				 while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3)){
+				 do{
+					 target1=(target1.indexOf("_")!=-1?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+					 target2=(target2.indexOf("_")!=-1?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
+					 target3=(target3.indexOf("_")!=-1?target3.substring(0,target3.indexOf("_")):target3)+"_"+targetNumber;
+					 targetNumber++;
 					 if(accessTable.has(target1)){
 						 List<List<String>> readersTicket = eag2012.getReadersTicketValue();
 						 if(readersTicket==null){
@@ -1319,16 +1520,17 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 eag2012.setReadersTicketHref(readersTicketHref);
 					 }
-					 target1=(target1.indexOf("_")!=-1?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
-					 target2=(target2.indexOf("_")!=-1?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
-					 target3=(target3.indexOf("_")!=-1?target3.substring(0,target3.indexOf("_")):target3)+"_"+targetNumber;
-					 targetNumber++;
-				 }
+				 }while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3));
+				 
 				 target1 = "textASSRAdvancedOrders";
 				 target2 = "textASSRAOLink";
 				 target3 = "selectASSRAFOIUSelectLanguage";
 				 targetNumber = 1;
-				 while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3)){
+				 do{
+					 target1=(target1.indexOf("_")!=-1?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+					 target2=(target2.indexOf("_")!=-1?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
+					 target3=(target3.indexOf("_")!=-1?target3.substring(0,target3.indexOf("_")):target3)+"_"+targetNumber;
+					 targetNumber++;
 					 if(accessTable.has(target1)){
 						 List<List<String>> advancedOrders = eag2012.getAdvancedOrdersValue();
 						 if(advancedOrders==null){
@@ -1337,6 +1539,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 List<String> advanceOrder = null;
 						 if(advancedOrders.size()>i && advancedOrders.get(i)!=null){
 							 advanceOrder = advancedOrders.get(i);
+						 }else{
+							 advanceOrder = new ArrayList<String>();
 						 }
 						 advanceOrder.add(accessTable.getString(target1));
 						 if(advancedOrders.size()>i){
@@ -1354,6 +1558,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 List<String> advanceOrderHref = null;
 						 if(advancedOrdersHref.size()>i && advancedOrdersHref.get(i)!=null){
 							 advanceOrderHref = advancedOrdersHref.get(i);
+						 }else{
+							 advanceOrderHref = new ArrayList<String>();
 						 }
 						 advanceOrderHref.add(accessTable.getString(target2));
 						 if(advancedOrdersHref.size()>i){
@@ -1371,6 +1577,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 List<String> advanceOrderLang = null;
 						 if(advancedOrdersLang.size()>i && advancedOrdersLang.get(i)!=null){
 							 advanceOrderLang = advancedOrdersLang.get(i);
+						 }else{
+							 advanceOrderLang = new ArrayList<String>();
 						 }
 						 advanceOrderLang.add(accessTable.getString(target2));
 						 if(advancedOrdersLang.size()>i){
@@ -1380,15 +1588,15 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 eag2012.setAdvancedOrdersLang(advancedOrdersLang);
 					 }
-					 target1=(target1.indexOf("_")!=-1?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
-					 target2=(target2.indexOf("_")!=-1?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
-					 target3=(target3.indexOf("_")!=-1?target3.substring(0,target3.indexOf("_")):target3)+"_"+targetNumber;
-					 targetNumber++;
-				 }
+				 }while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3));
+				 
 				 target1 = "textASSRResearchServices";
 				 target2 = "selectASASelectLanguage";
 				 targetNumber=1;
-				 while(accessTable.has(target1) && accessTable.has(target2)){
+				 do{
+					 target1=(target1.indexOf("_")!=-1?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+					 target2=(target2.indexOf("_")!=-1?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
+					 targetNumber++;
 					 if(accessTable.has(target1)){
 						 List<Map<String, Map<String, List<String>>>> descriptiveNotesPValues = eag2012.getDescriptiveNotePValue();
 						 if(descriptiveNotesPValues==null){
@@ -1455,10 +1663,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 eag2012.setDescriptiveNotePValue(descriptiveNotesPLang);
 					 }
-					 target1=(target1.indexOf("_")!=-1?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
-					 target2=(target2.indexOf("_")!=-1?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
-					 targetNumber++;
-				 }
+				 }while(accessTable.has(target1) && accessTable.has(target2));
 					
 				  //library section
 					 if(accessTable.has("selectASLibrary")){
@@ -1744,7 +1949,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 target1 = "textASDescription";
 					 target2 = "selectASDSelectLanguage";
 					 targetNumber = 1;
-					 while(accessTable.has(target1) && accessTable.has(target2)){
+					 do{
+						 target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+						 target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
+						 targetNumber++;
 						 if(accessTable.has(target1)){
 							 List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
 							 if(descriptiveNotePValue==null){
@@ -1813,10 +2021,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 eag2012.setDescriptiveNotePLang(descriptiveNotePLang);
 							 	 
 						 }
-						 target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
-						 target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
-						 targetNumber++;
-					 }
+					 }while(accessTable.has(target1) && accessTable.has(target2));
 					 
 					 //technical services section Restoration Lab
 					 
@@ -1837,7 +2042,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 target1 = "textASTSDescriptionOfRestaurationLab";
 					 target2 = "selectASTSSelectLanguage";
 					 targetNumber = 1;
-					 while(accessTable.has(target1) && accessTable.has(target2)){
+					 do{
+						 target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+						 target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
+						 targetNumber++;
 						 if(accessTable.has(target1)){
 							 List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
 							 if(descriptiveNotePValue==null){
@@ -1907,10 +2115,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 
 							 
 						 }
-						 target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
-						 target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
-						 targetNumber++;
-					 }
+					 }while(accessTable.has(target1) && accessTable.has(target2));
 				     
 					 if(accessTable.has("textASTSTelephone")){
 						 List<Map<String, Map<String, List<String>>>> telephones = eag2012.getTelephoneValue();
@@ -2100,7 +2305,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 target1 = "textASTSDescriptionOfReproductionService";
 					 target2 = "selectASTSRSSelectLanguage";
 					 targetNumber = 1;
-					 while(accessTable.has(target1) && accessTable.has(target2)){
+					 do{
+						 target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+						 target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
+						 targetNumber++;
 						 if(accessTable.has(target1)){
 							 List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
 							 if(descriptiveNotePValue==null){
@@ -2170,10 +2378,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 
 							 
 						 }
-						 target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
-						 target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
-						 targetNumber++;
-					 }
+					 }while(accessTable.has(target1) && accessTable.has(target2));
 				     
 					 if(accessTable.has("textASTSRSTelephone")){
 						 List<Map<String, Map<String, List<String>>>> telephones = eag2012.getTelephoneValue();
@@ -2371,8 +2576,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }else{
 							 photographList.add(photograph);
 						 } 
-						 eag2012.setMicroformserQuestion(photographList);
+						 eag2012.setPhotographserQuestion(photographList);
 					 }
+					 ++i;
 			}
 		}
 		return eag2012;	
@@ -3093,20 +3299,59 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				eag2012.setWebpageValue(listMapWebpagelList); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(webpageTitle) }
 			}
 			if(yourInstitution.has("textYIOpeningTimes")){
-				Map<String, String> openingMap = new HashMap<String,String>();
-				openingMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION, yourInstitution.getString("textYIOpeningTimes"));
-				List<Map<String, String>> openingValues = new ArrayList<Map<String,String>>();
-				openingValues.add(openingMap);
-				eag2012.setOpeningValue(openingValues); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {opening}
+				List<Map<String,List<String>>> openingValues = eag2012.getOpeningValue();
+				 if(openingValues == null){
+				   openingValues = new ArrayList<Map<String,List<String>>>();  
+				 }
+				 Map<String, List<String>> openingMap = null;
+				 if((openingValues.size() > 0) && (openingValues.get(0)!=null)){
+				   openingMap = openingValues.get(0);	  
+				 }else{
+					 openingMap = new HashMap<String,List<String>>();
+				 }
+				List<String> openingList = null;
+				if((openingMap.size()>0) && (openingMap.get(Eag2012Creator.TAB_YOUR_INSTITUTION)!=null)){
+					openingList = openingMap.get(Eag2012Creator.TAB_YOUR_INSTITUTION);
+				}else{
+					openingList = new ArrayList<String>();
+				}
+				openingList.add(yourInstitution.getString("textYIOpeningTimes"));
+				openingMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION, openingList);
+			    if(openingValues.size() > 0){
+				   openingValues.set(0,openingMap);
+			    }else{
+			    	openingValues.add(openingMap);
+			    }
+			    eag2012.setOpeningValue(openingValues);
 			}
 			if(yourInstitution.has("yourInstitutionClosingDates")){
-				Map<String, String> closingMap = new HashMap<String,String>();
-				closingMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION, yourInstitution.getString("yourInstitutionClosingDates"));
-				List<Map<String, String>> closingValues = new ArrayList<Map<String,String>>();
-				closingValues.add(closingMap);
-				eag2012.setClosingValue(closingValues); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {opening}
-				eag2012.setClosingStandardDate(closingValues); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {closing}
+				List<Map<String,List<String>>> closingValues = eag2012.getClosingStandardDate();
+				 if(closingValues == null){
+					 closingValues = new ArrayList<Map<String,List<String>>>();  
+				 }
+				 Map<String, List<String>> closingMap = null;
+				 if((closingValues.size() > 0) && (closingValues.get(0)!=null)){
+					 closingMap = closingValues.get(0);	  
+				 }else{
+					 closingMap = new HashMap<String,List<String>>();
+				 }
+				List<String> closingList = null;
+				if((closingMap.size()>0) && (closingMap.get(Eag2012Creator.TAB_YOUR_INSTITUTION)!=null)){
+					closingList = closingMap.get(Eag2012Creator.TAB_YOUR_INSTITUTION);
+				}else{
+					closingList = new ArrayList<String>();
+				}
+				closingList.add(yourInstitution.getString("yourInstitutionClosingDates"));
+				closingMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION, closingList);
+			    if(closingValues.size() > 0){
+			    	closingValues.set(0,closingMap);
+			    }else{
+			    	closingValues.add(closingMap);
+			    }
+			 //TODO   eag2012.setClosingStandardDate(closingValues);
+				eag2012.setClosingValue(closingValues);
 			}
+			
 			if(yourInstitution.has("selectAccessibleToThePublic")){
 				List<Map<String, String>> accessQuestions = eag2012.getAccessQuestion();
 				if(accessQuestions == null){

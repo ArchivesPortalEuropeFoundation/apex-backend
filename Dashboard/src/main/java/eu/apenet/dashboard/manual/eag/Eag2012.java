@@ -178,11 +178,11 @@ public class Eag2012 {
 	private List<List<String>> directionsValue;
 	private List<List<String>> adminunitLang;
 	private List<List<String>> adminunitValue;
-	private List<Map<String,String>> openingValue;
-	private List<Map<String,String>> openingLang;
-	private List<Map<String,String>> closingStandardDate;
-	private List<Map<String,String>> closingValue;
-	private List<Map<String,String>> closingLang;
+	private List<Map<String,List<String>>> openingValue;
+	private List<Map<String,List<String>>> openingLang;
+	private List<Map<String,List<String>>> closingStandardDate;
+	private List<Map<String,List<String>>> closingValue;
+	private List<Map<String,List<String>>> closingLang;
 	private List<Map<String,String>> accessQuestion;
 	private List<Map<String,List<String>>> restaccessLang;
 	private List<Map<String,List<String>>> restaccessValue;
@@ -1368,55 +1368,55 @@ public class Eag2012 {
 		this.adminunitValue = adminunitValue;
 	}
 
-	public List<Map<String, String>> getOpeningValue() {
+	public List<Map<String, List<String>>> getOpeningValue() {
 		return openingValue;
 	}
 
 	/**
 	 * @return the openingLang
 	 */
-	public List<Map<String, String>> getOpeningLang() {
+	public List<Map<String, List<String>>> getOpeningLang() {
 		return openingLang;
 	}
 
 	/**
 	 * @param openingLang the openingLang to set
 	 */
-	public void setOpeningLang(List<Map<String, String>> openingLang) {
+	public void setOpeningLang(List<Map<String, List<String>>> openingLang) {
 		this.openingLang = openingLang;
 	}
 
-	public void setOpeningValue(List<Map<String, String>> openingValue) {
+	public void setOpeningValue(List<Map<String, List<String>>> openingValue) {
 		this.openingValue = openingValue;
 	}
 
-	public List<Map<String, String>> getClosingStandardDate() {
+	public List<Map<String, List<String>>> getClosingStandardDate() {
 		return closingStandardDate;
 	}
 
-	public void setClosingStandardDate(List<Map<String, String>> closingStandardDate) {
+	public void setClosingStandardDate(List<Map<String, List<String>>> closingStandardDate) {
 		this.closingStandardDate = closingStandardDate;
 	}
 
-	public List<Map<String, String>> getClosingValue() {
+	public List<Map<String, List<String>>> getClosingValue() {
 		return closingValue;
 	}
 
 	/**
 	 * @return the closingLang
 	 */
-	public List<Map<String, String>> getClosingLang() {
+	public List<Map<String, List<String>>> getClosingLang() {
 		return closingLang;
 	}
 
 	/**
 	 * @param closingLang the closingLang to set
 	 */
-	public void setClosingLang(List<Map<String, String>> closingLang) {
+	public void setClosingLang(List<Map<String, List<String>>> closingLang) {
 		this.closingLang = closingLang;
 	}
 
-	public void setClosingValue(List<Map<String, String>> closingValue) {
+	public void setClosingValue(List<Map<String, List<String>>> closingValue) {
 		this.closingValue = closingValue;
 	}
 
