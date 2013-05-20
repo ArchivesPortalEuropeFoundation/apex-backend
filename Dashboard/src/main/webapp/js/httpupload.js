@@ -178,10 +178,19 @@ function internetExplorer9Way(xmlHttpRequest){
 		xmlHttpRequest.setRequestHeader("Content-Type","multipart/form-data; boundary="+boundary);
 		xmlHttpRequest.setRequestHeader("Content-Length",request.length);
 		xmlHttpRequest.send(request);
+		alert(request);
 	}else{//not suppported '.upload'
 		alternativeForIe();
 	}
 }
+
+/**
+ * this is the other way to upload in ie9 without progress bar
+ */
+function internetExplorer9Way2(){
+	alternativeForIe();
+}
+
 /**
  * It's the second method to upload content (alternative of HTML5 standar browsers)
  * @param xmlHttpRequest
@@ -193,7 +202,8 @@ function uploadSecondOption(xmlHttpRequest){
 			if(window.FileReader){
 				readWithBlob(document.getElementById("httpFile").files[0]);
 			}else{
-				internetExplorer9Way(xmlHttpRequest);
+				//internetExplorer9Way(xmlHttpRequest);
+				internetExplorer9Way2();
 			}
 		}catch(ex){
 			console.log("Your browser is NOT compatible :: "+ex.description);
