@@ -3246,8 +3246,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }else{
 						 webMap = new HashMap<String,List<String>>();
 					 }
-					 if(webMap.size()>0 && webMap.get(Eag2012Creator.TAB_CONTACT)!=null){
-						 listWeb = webMap.get(Eag2012Creator.TAB_CONTACT);
+					 if(webMap.size()>0 && webMap.get(Eag2012Creator.ROOT)!=null){
+						 listWeb = webMap.get(Eag2012Creator.ROOT);
 					 }else{
 						 listWeb = new ArrayList<String>();
 					 }
@@ -3281,8 +3281,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }else{
 						 webMap = new HashMap<String,List<String>>();
 					 }
-					 if(webMap.size()>0 && webMap.get(Eag2012Creator.TAB_CONTACT)!=null){
-						 listWeb = webMap.get(Eag2012Creator.TAB_CONTACT);
+					 if(webMap.size()>0 && webMap.get(Eag2012Creator.ROOT)!=null){
+						 listWeb = webMap.get(Eag2012Creator.ROOT);
 					 }else{
 						 listWeb = new ArrayList<String>();
 					 }
