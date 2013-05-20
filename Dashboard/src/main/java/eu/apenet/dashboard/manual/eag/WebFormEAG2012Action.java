@@ -2961,7 +2961,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		JSONObject contact = jsonObj.getJSONObject("contact");
 		if(contact!=null){
 			int x = 0;
-			while(contact.has("contactTable_"+(x))){ //each child of contact is the container of visitor address and all attributes
+			while(contact.has("contactTable_"+(x+1))){ //each child of contact is the container of visitor address and all attributes
 				
 				JSONObject contactTable = contact.getJSONObject("contactTable_"+(x+1));
 				//Contact visitorsAddress
@@ -3301,6 +3301,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 eag2012.setWebpageValue(listMapWebList); 	
 				}
+				x++;
 			}
 		}
 		return eag2012;	
