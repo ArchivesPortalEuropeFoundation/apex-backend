@@ -759,7 +759,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 closingMap = new HashMap<String,List<String>>();
 					 }
 					List<String> closingList = null;
-					if((closingMap.size()>i) && (closingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null)){
+					if((closingMap.size()>0) && (closingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null)){
 						closingList = closingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
 					}else{
 						closingList = new ArrayList<String>();
@@ -772,7 +772,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				    	closingValues.add(closingMap);
 				    }
 				   //TODO eag2012.setClosingStandardDate(closingValues);
-				    eag2012.setClosingValue(closingValues);
+				    eag2012.setClosingStandardDate(closingValues);
 				  }
 				  if(accessTable.has("selectLanguageClosingDates_"+j)){
 					     List<Map<String,List<String>>> closingLangs = eag2012.getClosingLang();
@@ -786,7 +786,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 closingMap = new HashMap<String,List<String>>();
 						 }
 						List<String> closingList = null;
-						if((closingMap.size()>i) && (closingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null)){
+						if((closingMap.size()>0) && (closingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null)){
 							closingList = closingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
 						}else{
 							closingList = new ArrayList<String>();
