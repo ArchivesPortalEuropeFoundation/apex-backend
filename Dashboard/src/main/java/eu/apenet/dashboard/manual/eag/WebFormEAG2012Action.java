@@ -3149,17 +3149,32 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				
 			    i=0;
 				while(contactTable.has("textContactFaxOfTheInstitution_"+(++i))){
-					Map<String, List<String>> fax = new HashMap<String,List<String>>();
+					List<Map<String, List<String>>> listMapFaxList = null;
+					if(eag2012.getFaxValue()!=null){
+						listMapFaxList = eag2012.getFaxValue();
+					}else{
+						listMapFaxList = new ArrayList<Map<String,List<String>>>();
+					}
+					Map<String, List<String>> fax = null;
+					if(listMapFaxList.size()>x){
+						fax = listMapFaxList.get(x);
+					}else{
+						fax = new HashMap<String,List<String>>();
+					}
 					ArrayList<String> listFax = new ArrayList<String>();
 					listFax.add(contactTable.getString("textContactFaxOfTheInstitution_"+i));
 					fax.put(Eag2012Creator.TAB_CONTACT,listFax);
-					List<Map<String, List<String>>> listMapFaxList = null;
+					
 					if(eag2012.getFaxValue()==null){
 						listMapFaxList = new ArrayList<Map<String, List<String>>>();
 					}else{
 						listMapFaxList = eag2012.getFaxValue();
 					}
-					listMapFaxList.add(fax);
+					if(listMapFaxList.size()>x){
+						listMapFaxList.set(x,fax);
+					}else{
+						listMapFaxList.add(fax);
+					}
 					eag2012.setFaxValue(listMapFaxList); 	
 				}
 				
