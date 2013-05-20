@@ -2698,7 +2698,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 eag2012.setWebpageHref(listMapWebpageHrefList);
 						}
 						if(accessTable.has(target3)){
-							List<Map<String, Map<String, List<String>>>> listMapWebList = eag2012.getWebpageHref();
+							List<Map<String, Map<String, List<String>>>> listMapWebList = eag2012.getWebpageValue();
 							if(listMapWebList==null){
 								listMapWebList = new ArrayList<Map<String, Map<String, List<String>>>>();
 							}
