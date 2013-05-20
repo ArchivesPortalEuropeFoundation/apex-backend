@@ -687,7 +687,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 //opening times and opening langs 
 				
 				int j=0;			
-				while(accessTable.has("textOpeningTimes_"+(++j)) && (accessTable.has("selectLanguageOpeningTimes_"+(++j)))){
+				while(accessTable.has("textOpeningTimes_"+(++j)) && (accessTable.has("selectLanguageOpeningTimes_"+(j)))){
 				  if(accessTable.has("textOpeningTimes_"+j)){
 				     List<Map<String,List<String>>> openingValues = eag2012.getOpeningValue();
 					 if(openingValues == null){
@@ -708,7 +708,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					openingList.add(accessTable.getString("textOpeningTimes_"+j));
 					openingMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, openingList);
 				    if(openingValues.size() > i){
-					   openingValues.set(i,openingMap);
+				    	openingValues.set(i,openingMap);
 				    }else{
 				    	openingValues.add(openingMap);
 				    }
@@ -734,7 +734,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						openingList.add(accessTable.getString("selectLanguageOpeningTimes_"+j));
 						openingMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, openingList);
 					    if(openingLangs.size() > i){
-						   openingLangs.set(i,openingMap);
+					    	openingLangs.set(i,openingMap);
 					    }else{
 					    	openingLangs.add(openingMap);
 					    }
@@ -746,7 +746,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				//closing times and langs closing
 	            
 				j=0;			
-				while(accessTable.has("textClosingDates_"+(++j)) && (accessTable.has("selectLanguageClosingDates_"+(++j)))){
+				while(accessTable.has("textClosingDates_"+(++j)) && (accessTable.has("selectLanguageClosingDates_"+(j)))){
 				  if(accessTable.has("textClosingDates_"+j)){
 				     List<Map<String,List<String>>> closingValues = eag2012.getClosingStandardDate();
 					 if(closingValues == null){
