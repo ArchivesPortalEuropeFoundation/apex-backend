@@ -3161,15 +3161,14 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					}else{
 						fax = new HashMap<String,List<String>>();
 					}
-					ArrayList<String> listFax = new ArrayList<String>();
+					List<String> listFax = null;
+					if(fax.size()>0 && fax.get(Eag2012Creator.TAB_CONTACT)!=null){
+						listFax = fax.get(Eag2012Creator.TAB_CONTACT);
+					}else{
+						listFax = new ArrayList<String>();
+					}
 					listFax.add(contactTable.getString("textContactFaxOfTheInstitution_"+i));
 					fax.put(Eag2012Creator.TAB_CONTACT,listFax);
-					
-					if(eag2012.getFaxValue()==null){
-						listMapFaxList = new ArrayList<Map<String, List<String>>>();
-					}else{
-						listMapFaxList = eag2012.getFaxValue();
-					}
 					if(listMapFaxList.size()>x){
 						listMapFaxList.set(x,fax);
 					}else{
