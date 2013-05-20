@@ -673,10 +673,142 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	        if(jsonObj.has("accessAndServices")){
 	        	eag2012 = parseAccesAndServicesJsonObjToEag2012(eag2012, jsonObj);
 	        } 		
+		    if(jsonObj.has("description")){
+		    	eag2012 = parseDescriptionJsonObjToEag2012(eag2012, jsonObj);
+		    }
 		}
 		
 		return eag2012;
 	}
+	
+	private Eag2012 parseDescriptionJsonObjToEag2012(Eag2012 eag2012, JSONObject jsonObj) throws JSONException {
+		JSONObject description = jsonObj.getJSONObject("description");
+		if(description!=null){
+			int i=0;
+			while(description.has("descriptionTable_"+(i+1))){
+				JSONObject descriptionTable = description.getJSONObject("descriptionTable_"+(i+1)); 
+			    
+				//repository description section
+				
+				int j=0;
+				while (descriptionTable.has("textRepositoryHistory_"+(++j)) && (descriptionTable.has("selectLanguageRepositoryHistory_"+(j)))){
+					if(descriptionTable.has("textRepositoryHistory_"+j)){
+						List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
+						 if(descriptiveNotePValue==null){
+							 descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
+						 }
+						 Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
+						 if(descriptiveNotePValue.size()>i && descriptiveNotePValue.get(i)!=null){
+							 descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
+						 }else{
+							 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
+						 }
+						 Map<String, List<String>> descriptiveNoteMapList = null;
+						 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_DESCRIPTION)!=null){
+							 descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_DESCRIPTION);
+						 }else{
+							 descriptiveNoteMapList = new HashMap<String, List<String>>();
+						 }
+						 List<String> descriptiveNoteList = null;
+						 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.REPOSITORHIST)!=null){
+							 descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.REPOSITORHIST);
+						 }else{
+							 descriptiveNoteList = new ArrayList<String>();
+						 }
+						 descriptiveNoteList.add(descriptionTable.getString("textRepositoryHistory_"+j));
+						 descriptiveNoteMapList.put(Eag2012Creator.REPOSITORHIST,descriptiveNoteList);
+						 descriptiveNoteMapMapList.put(Eag2012Creator.TAB_DESCRIPTION,descriptiveNoteMapList);
+						 if(descriptiveNotePValue.size()>i){
+							 descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
+						 }else{
+							 descriptiveNotePValue.add(descriptiveNoteMapMapList);
+						 }
+						 eag2012.setDescriptiveNotePValue(descriptiveNotePValue);
+					 }
+					if(descriptionTable.has("selectLanguageRepositoryHistory_"+j)){
+						List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePLang();
+						 if(descriptiveNotePValue==null){
+							 descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
+						 }
+						 Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
+						 if(descriptiveNotePValue.size()>i && descriptiveNotePValue.get(i)!=null){
+							 descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
+						 }else{
+							 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
+						 }
+						 Map<String, List<String>> descriptiveNoteMapList = null;
+						 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_DESCRIPTION)!=null){
+							 descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_DESCRIPTION);
+						 }else{
+							 descriptiveNoteMapList = new HashMap<String, List<String>>();
+						 }
+						 List<String> descriptiveNoteList = null;
+						 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.REPOSITORHIST)!=null){
+							 descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.REPOSITORHIST);
+						 }else{
+							 descriptiveNoteList = new ArrayList<String>();
+						 }
+						 descriptiveNoteList.add(descriptionTable.getString("selectLanguageRepositoryHistory_"+j));
+						 descriptiveNoteMapList.put(Eag2012Creator.REPOSITORHIST,descriptiveNoteList);
+						 descriptiveNoteMapMapList.put(Eag2012Creator.TAB_DESCRIPTION,descriptiveNoteMapList);
+						 if(descriptiveNotePValue.size()>i){
+							 descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
+						 }else{
+							 descriptiveNotePValue.add(descriptiveNoteMapMapList);
+						 }
+						 eag2012.setDescriptiveNotePLang(descriptiveNotePValue);
+					 }	
+				}
+				//date y rule of repositorfound
+				if(descriptionTable.has("textDateOfRepositoryFoundation")){
+					 List<Map<String,Map<String,Map<String,List<String>>>>> dateValue = eag2012.getDateValue();
+					 if(dateValue==null){
+						 dateValue = new ArrayList<Map<String,Map<String,Map<String,List<String>>>>>();
+					 }
+					 Map<String, Map<String, Map<String, List<String>>>> dateMapMapMap = null;
+					 if(dateValue.size()>i && dateValue.get(i)!=null){
+						 dateMapMapMap = dateValue.get(i);
+					 }else{
+						 dateMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>(); 
+					 }
+					 Map<String, Map<String, List<String>>> dateMapMap = null;
+					 if(dateMapMapMap.size()>0 && dateMapMapMap.get(Eag2012Creator.TAB_DESCRIPTION)!=null){
+						 dateMapMap= dateMapMapMap.get(Eag2012Creator.TAB_DESCRIPTION);
+					 }else{
+						 dateMapMap = new HashMap<String, Map<String, List<String>>>();
+					 }
+					 Map<String, List<String>> datesMap = null;
+					 if(dateMapMap.size()>0 && dateMapMap.get(Eag2012Creator.REPOSITORHIST)!=null){
+						 datesMap = dateMapMap.get(Eag2012Creator.REPOSITORHIST);
+					 }else{
+						 datesMap = new HashMap<String, List<String>>();
+					 }
+					 List<String> dates = null;
+					 if(datesMap.size()>0 && datesMap.get(Eag2012Creator.REPOSITOR_FOUND)!=null){
+						 dates = datesMap.get(Eag2012Creator.REPOSITOR_FOUND);
+					 }else{
+						 dates = new ArrayList<String>();
+					 }
+					 dates.add(descriptionTable.getString("textDateOfRepositoryFoundation"));
+					 datesMap.put(Eag2012Creator.REPOSITOR_FOUND, dates);
+					 dateMapMap.put(Eag2012Creator.REPOSITORHIST,datesMap);
+					 dateMapMapMap.put(Eag2012Creator.TAB_DESCRIPTION,dateMapMap);
+					 if( dateValue.size()>i){
+						 dateValue.set(i,dateMapMapMap);
+					 }else{
+						 dateValue.add(dateMapMapMap);
+					 }
+					 eag2012.setDateValue(dateValue);
+				 }
+					
+			 i++;
+			}//end while description
+			
+		}
+		
+	return eag2012;	
+	}
+	
 	private Eag2012 parseAccesAndServicesJsonObjToEag2012(Eag2012 eag2012,JSONObject jsonObj) throws JSONException {
 		JSONObject accessAndServices = jsonObj.getJSONObject("accessAndServices");
 		if(accessAndServices!=null){
@@ -805,7 +937,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				
 				//directions
 				j=0;
-				while((accessTable.has("textTravellingDirections_"+(++j))) && (accessTable.has("selectASATDSelectLanguage_"+(++j))) && (accessTable.has("textTravelLink_"+(++j)))){
+				while((accessTable.has("textTravellingDirections_"+(++j))) && (accessTable.has("selectASATDSelectLanguage_"+(j))) && (accessTable.has("textTravelLink_"+(j)))){
 				  	if(accessTable.has("textTtravellingDirections_"+j)){
 				  		List<List<String>> listDirectionsList = eag2012.getDirectionsValue();
 				  		if(listDirectionsList == null){
@@ -891,7 +1023,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			     //access information and access langs
 			     
 			     j=0;
-				 while((accessTable.has("textASAccessRestrictions_"+(++j))) && (accessTable.has("selectASARSelectLanguage_"+(++j)))){
+				 while((accessTable.has("textASAccessRestrictions_"+(++j))) && (accessTable.has("selectASARSelectLanguage_"+(j)))){
 					if(accessTable.has("textASAccessRestrictions_"+j)){
 						List<Map<String,List<String>>> listMapRestaccessList = eag2012.getRestaccessValue();
 						if(listMapRestaccessList==null){
@@ -948,7 +1080,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				
 				//terms of use
 				 j=0;
-				 while((accessTable.has("textASTermOfUse_"+(++j))) && (accessTable.has("selectASAFTOUSelectLanguage_"+(++j))) && (accessTable.has("textASTOULink_"+(++j)))){
+				 while((accessTable.has("textASTermOfUse_"+(++j))) && (accessTable.has("selectASAFTOUSelectLanguage_"+(j))) && (accessTable.has("textASTOULink_"+(j)))){
 					  	if(accessTable.has("textASTermOfUse_"+j)){
 					  		List<List<String>> listTermsList = eag2012.getTermsOfUseValue();
 					  		if(listTermsList == null){
@@ -1032,7 +1164,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				  }
 				  
 				   j=0;
-				   while((accessTable.has("textASAccessibility_"+(++j))) && (accessTable.has("selectASASelectLanguage_"+(++j)))){
+				   while((accessTable.has("textASAccessibility_"+(++j))) && (accessTable.has("selectASASelectLanguage_"+(j)))){
 						if(accessTable.has("textASAccessibility_"+j)){
 							List<Map<String,List<String>>> listMapAccessibilityList = eag2012.getAccessibilityValue();
 							if(listMapAccessibilityList==null){
@@ -1967,7 +2099,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
 							 }
 							 Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
-							 if(descriptiveNotePValue.size()>0 && descriptiveNotePValue.get(i)!=null){
+							 if(descriptiveNotePValue.size()>i && descriptiveNotePValue.get(i)!=null){
 								 descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
 							 }else{
 								 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
@@ -2001,7 +2133,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 descriptiveNotePLang = new ArrayList<Map<String, Map<String, List<String>>>>();
 							 }
 							 Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
-							 if(descriptiveNotePLang.size()>0 && descriptiveNotePLang.get(i)!=null){
+							 if(descriptiveNotePLang.size()>i && descriptiveNotePLang.get(i)!=null){
 								 descriptiveNoteMapMapList = descriptiveNotePLang.get(i);
 							 }else{
 								 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
@@ -2060,7 +2192,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
 							 }
 							 Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
-							 if(descriptiveNotePValue.size()>0 && descriptiveNotePValue.get(i)!=null){
+							 if(descriptiveNotePValue.size()>i && descriptiveNotePValue.get(i)!=null){
 								 descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
 							 }else{
 								 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
@@ -2094,7 +2226,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 descriptiveNotePLang = new ArrayList<Map<String, Map<String, List<String>>>>();
 							 }
 							 Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
-							 if(descriptiveNotePLang.size()>0 && descriptiveNotePLang.get(i)!=null){
+							 if(descriptiveNotePLang.size()>i && descriptiveNotePLang.get(i)!=null){
 								 descriptiveNoteMapMapList = descriptiveNotePLang.get(i);
 							 }else{
 								 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
@@ -2556,7 +2688,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 eag2012.setWebpageValue(listMapWebpageValueList);
 					 }
-				
+                     
+					 //microform
 					 if(accessTable.has("selectASTSRSMicroform")){
 						 String microform = accessTable.getString("selectASTSRSMicroform");
 						 List<String> microformList = eag2012.getMicroformserQuestion();
@@ -2573,6 +2706,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 
 				     //TODO description
 					 
+					 //photograph
 					 if(accessTable.has("selectASTSRSPhotographServices")){
 						 String photograph = accessTable.getString("selectASTSRSPhotographServices");
 						 List<String> photographList = eag2012.getMicroformserQuestion();
@@ -2587,386 +2721,420 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 eag2012.setPhotographserQuestion(photographList);
 					 }
 					 
-					//Recreational services
-					if(accessTable.has("textASReSeRefreshment")){
-						List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
-						if(descriptiveNotePValue==null){
-							descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
+					 //TODO description
+					 
+					 //digitalser
+					 if(accessTable.has("selectASTSRSDigitalServices")){
+						 String digitalser = accessTable.getString("selectASTSRSDigitalServices");
+						 List<String> digitalserList = eag2012.getDigitalserQuestion();
+						 if(digitalserList  == null){
+							 digitalserList  = new ArrayList<String>();
+						 }
+						 if(digitalserList.size()>i){
+							 digitalserList.set(i,digitalser);
+						 }else{
+							 digitalserList.add(digitalser);
+						 } 
+						 eag2012.setDigitalserQuestion(digitalserList);
+					 }
+					 //TODO description
+					 
+					 //photocopyser
+					 if(accessTable.has("selectASTSRSPhotocopyServices")){
+						 String photocopyser = accessTable.getString("selectASTSRSPhotocopyServices");
+						 List<String> photocopyserList = eag2012.getPhotocopyserQuestion();
+						 if(photocopyserList  == null){
+							 photocopyserList  = new ArrayList<String>();
+						 }
+						 if(photocopyserList.size()>i){
+							 photocopyserList.set(i,photocopyser);
+						 }else{
+							 photocopyserList.add(photocopyser);
+						 } 
+						 eag2012.setPhotocopyserQuestion(photocopyserList);
+					 }
+					 //TODO description
+					 
+						//Recreational services
+						if(accessTable.has("textASReSeRefreshment")){
+							List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
+							if(descriptiveNotePValue==null){
+								descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
+							}
+							Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
+							if(descriptiveNotePValue.size()>0 && descriptiveNotePValue.get(i)!=null){
+								descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
+							}else{
+								descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
+							}
+							Map<String, List<String>> descriptiveNoteMapList = null;
+							if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
+								descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+							}else{
+								descriptiveNoteMapList = new HashMap<String, List<String>>();
+							}
+							List<String> descriptiveNoteList = null;
+							if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.REFRESHMENT)!=null){
+								descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.REFRESHMENT);
+							}else{
+								descriptiveNoteList = new ArrayList<String>();
+							}
+							descriptiveNoteList.add(accessTable.getString("textASReSeRefreshment"));
+							descriptiveNoteMapList.put(Eag2012Creator.REFRESHMENT,descriptiveNoteList);
+							descriptiveNoteMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+							if(descriptiveNotePValue.size()>i){
+								descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
+							}else{
+								descriptiveNotePValue.add(descriptiveNoteMapMapList);
+							}
+							eag2012.setDescriptiveNotePValue(descriptiveNotePValue);
 						}
-						Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
-						if(descriptiveNotePValue.size()>0 && descriptiveNotePValue.get(i)!=null){
-							descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
-						}else{
-							descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
-						}
-						Map<String, List<String>> descriptiveNoteMapList = null;
-						if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
-						}else{
-							descriptiveNoteMapList = new HashMap<String, List<String>>();
-						}
-						List<String> descriptiveNoteList = null;
-						if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.REFRESHMENT)!=null){
-							descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.REFRESHMENT);
-						}else{
-							descriptiveNoteList = new ArrayList<String>();
-						}
-						descriptiveNoteList.add(accessTable.getString("textASReSeRefreshment"));
-						descriptiveNoteMapList.put(Eag2012Creator.REFRESHMENT,descriptiveNoteList);
-						descriptiveNoteMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
-						if(descriptiveNotePValue.size()>i){
-							descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
-						}else{
-							descriptiveNotePValue.add(descriptiveNoteMapMapList);
-						}
-						eag2012.setDescriptiveNotePValue(descriptiveNotePValue);
-					}
 
-					target1 = "textASReSeExhibition";
-					target2 = "textASReSeWebpage";
-					target3 = "textASReSeWebpageLinkTitle";
-					targetNumber = 1;
-					do{
-						target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
-						target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
-						target3 = ((target3.indexOf("_")!=-1)?target3.substring(0,target3.indexOf("_")):target3)+"_"+targetNumber;
-						targetNumber++;
-						if(accessTable.has(target1)){
-							List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
-							if(descriptiveNotePValue==null){
-								descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
+						target1 = "textASReSeExhibition";
+						target2 = "textASReSeWebpage";
+						target3 = "textASReSeWebpageLinkTitle";
+						targetNumber = 1;
+						do{
+							target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+							target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
+							target3 = ((target3.indexOf("_")!=-1)?target3.substring(0,target3.indexOf("_")):target3)+"_"+targetNumber;
+							targetNumber++;
+							if(accessTable.has(target1)){
+								List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
+								if(descriptiveNotePValue==null){
+									descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
+								}
+								Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
+								if(descriptiveNotePValue.size()>0 && descriptiveNotePValue.get(i)!=null){
+									descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
+								}else{
+									descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
+								}
+								Map<String, List<String>> descriptiveNoteMapList = null;
+								if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
+									descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+								}else{
+									descriptiveNoteMapList = new HashMap<String, List<String>>();
+								}
+								List<String> descriptiveNoteList = null;
+								if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.EXHIBITION)!=null){
+									descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.EXHIBITION);
+								}else{
+									descriptiveNoteList = new ArrayList<String>();
+								}
+								descriptiveNoteList.add(accessTable.getString(target1));
+								descriptiveNoteMapList.put(Eag2012Creator.EXHIBITION,descriptiveNoteList);
+								descriptiveNoteMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+								if(descriptiveNotePValue.size()>i){
+									descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
+								}else{
+									descriptiveNotePValue.add(descriptiveNoteMapMapList);
+								}
+								eag2012.setDescriptiveNotePValue(descriptiveNotePValue);
 							}
-							Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
-							if(descriptiveNotePValue.size()>0 && descriptiveNotePValue.get(i)!=null){
-								descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
-							}else{
-								descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
+							if(accessTable.has(target2)){
+								List<Map<String, Map<String, List<String>>>> listMapWebpageHrefList = eag2012.getWebpageHref();
+								 if(listMapWebpageHrefList==null){
+									 listMapWebpageHrefList = new ArrayList<Map<String, Map<String, List<String>>>>();
+								 }
+								 Map<String, Map<String, List<String>>> mapMapListWeb = null;
+								 if(listMapWebpageHrefList.size()>i && listMapWebpageHrefList.get(i)!=null){
+									 mapMapListWeb = listMapWebpageHrefList.get(i);
+								 }else{
+									 mapMapListWeb = new HashMap<String, Map<String, List<String>>>();
+								 }
+								 List<String> listWeb = null;
+								 Map<String,List<String>> webMap = null;
+								 if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
+									 webMap = mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+								 }else{
+									 webMap = new HashMap<String,List<String>>();
+								 }
+								 if(webMap.size()>0 && webMap.get(Eag2012Creator.EXHIBITION)!=null){
+									 listWeb = webMap.get(Eag2012Creator.EXHIBITION);
+								 }else{
+									 listWeb = new ArrayList<String>();
+								 }
+								 listWeb.add(accessTable.getString(target2));
+								 webMap.put(Eag2012Creator.EXHIBITION,listWeb);
+								 mapMapListWeb.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,webMap);
+								 if(listMapWebpageHrefList.size()>i){
+									 listMapWebpageHrefList.set(i,mapMapListWeb);
+								 }else{
+									 listMapWebpageHrefList.add(mapMapListWeb);
+								 }
+								 eag2012.setWebpageHref(listMapWebpageHrefList);
 							}
-							Map<String, List<String>> descriptiveNoteMapList = null;
-							if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-								descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
-							}else{
-								descriptiveNoteMapList = new HashMap<String, List<String>>();
+							if(accessTable.has(target3)){
+								List<Map<String, Map<String, List<String>>>> listMapWebList = eag2012.getWebpageValue();
+								if(listMapWebList==null){
+									listMapWebList = new ArrayList<Map<String, Map<String, List<String>>>>();
+								}
+								Map<String, Map<String, List<String>>> mapMapListWeb = null;
+								if(listMapWebList.size()>i && listMapWebList.get(i)!=null){
+									mapMapListWeb = listMapWebList.get(i);
+								}else{
+									mapMapListWeb = new HashMap<String, Map<String, List<String>>>();
+								}
+								List<String> listWeb = null;
+								Map<String,List<String>> webMap = null;
+								if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
+									webMap = mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+								}else{
+									webMap = new HashMap<String,List<String>>();
+								}
+								if(webMap.size()>0 && webMap.get(Eag2012Creator.EXHIBITION)!=null){
+									listWeb = webMap.get(Eag2012Creator.EXHIBITION);
+								}else{
+									listWeb = new ArrayList<String>();
+								}
+								listWeb.add(accessTable.getString(target3));
+								webMap.put(Eag2012Creator.EXHIBITION,listWeb);
+								mapMapListWeb.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,webMap);
+								if(listMapWebList.size()>i){
+									listMapWebList.set(i,mapMapListWeb);
+								}else{
+									listMapWebList.add(mapMapListWeb);
+								}
+								eag2012.setWebpageValue(listMapWebList); 
 							}
-							List<String> descriptiveNoteList = null;
-							if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.EXHIBITION)!=null){
-								descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.EXHIBITION);
-							}else{
-								descriptiveNoteList = new ArrayList<String>();
+						}while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3));
+						
+						target1 = "textASReSeToursAndSessions";
+						target2 = "textASReSeTSWebpage";
+						target3 = "textASReSeWebpageTSLinkTitle";
+						targetNumber = 1;
+						do{
+							target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+							target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
+							target3 = ((target3.indexOf("_")!=-1)?target3.substring(0,target3.indexOf("_")):target3)+"_"+targetNumber;
+							targetNumber++;
+							if(accessTable.has(target1)){
+								List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
+								if(descriptiveNotePValue==null){
+									descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
+								}
+								Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
+								if(descriptiveNotePValue.size()>0 && descriptiveNotePValue.get(i)!=null){
+									descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
+								}else{
+									descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
+								}
+								Map<String, List<String>> descriptiveNoteMapList = null;
+								if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
+									descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+								}else{
+									descriptiveNoteMapList = new HashMap<String, List<String>>();
+								}
+								List<String> descriptiveNoteList = null;
+								if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.TOURS_SESSIONS)!=null){
+									descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.TOURS_SESSIONS);
+								}else{
+									descriptiveNoteList = new ArrayList<String>();
+								}
+								descriptiveNoteList.add(accessTable.getString(target1));
+								descriptiveNoteMapList.put(Eag2012Creator.TOURS_SESSIONS,descriptiveNoteList);
+								descriptiveNoteMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+								if(descriptiveNotePValue.size()>i){
+									descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
+								}else{
+									descriptiveNotePValue.add(descriptiveNoteMapMapList);
+								}
+								eag2012.setDescriptiveNotePValue(descriptiveNotePValue);
 							}
-							descriptiveNoteList.add(accessTable.getString(target1));
-							descriptiveNoteMapList.put(Eag2012Creator.EXHIBITION,descriptiveNoteList);
-							descriptiveNoteMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
-							if(descriptiveNotePValue.size()>i){
-								descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
-							}else{
-								descriptiveNotePValue.add(descriptiveNoteMapMapList);
+							if(accessTable.has(target2)){
+								List<Map<String, Map<String, List<String>>>> listMapWebpageHrefList = eag2012.getWebpageHref();
+								 if(listMapWebpageHrefList==null){
+									 listMapWebpageHrefList = new ArrayList<Map<String, Map<String, List<String>>>>();
+								 }
+								 Map<String, Map<String, List<String>>> mapMapListWeb = null;
+								 if(listMapWebpageHrefList.size()>i && listMapWebpageHrefList.get(i)!=null){
+									 mapMapListWeb = listMapWebpageHrefList.get(i);
+								 }else{
+									 mapMapListWeb = new HashMap<String, Map<String, List<String>>>();
+								 }
+								 List<String> listWeb = null;
+								 Map<String,List<String>> webMap = null;
+								 if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
+									 webMap = mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+								 }else{
+									 webMap = new HashMap<String,List<String>>();
+								 }
+								 if(webMap.size()>0 && webMap.get(Eag2012Creator.TOURS_SESSIONS)!=null){
+									 listWeb = webMap.get(Eag2012Creator.TOURS_SESSIONS);
+								 }else{
+									 listWeb = new ArrayList<String>();
+								 }
+								 listWeb.add(accessTable.getString(target2));
+								 webMap.put(Eag2012Creator.TOURS_SESSIONS,listWeb);
+								 mapMapListWeb.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,webMap);
+								 if(listMapWebpageHrefList.size()>i){
+									 listMapWebpageHrefList.set(i,mapMapListWeb);
+								 }else{
+									 listMapWebpageHrefList.add(mapMapListWeb);
+								 }
+								 eag2012.setWebpageHref(listMapWebpageHrefList);
 							}
-							eag2012.setDescriptiveNotePValue(descriptiveNotePValue);
-						}
-						if(accessTable.has(target2)){
-							List<Map<String, Map<String, List<String>>>> listMapWebpageHrefList = eag2012.getWebpageHref();
-							 if(listMapWebpageHrefList==null){
-								 listMapWebpageHrefList = new ArrayList<Map<String, Map<String, List<String>>>>();
-							 }
-							 Map<String, Map<String, List<String>>> mapMapListWeb = null;
-							 if(listMapWebpageHrefList.size()>i && listMapWebpageHrefList.get(i)!=null){
-								 mapMapListWeb = listMapWebpageHrefList.get(i);
-							 }else{
-								 mapMapListWeb = new HashMap<String, Map<String, List<String>>>();
-							 }
-							 List<String> listWeb = null;
-							 Map<String,List<String>> webMap = null;
-							 if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-								 webMap = mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
-							 }else{
-								 webMap = new HashMap<String,List<String>>();
-							 }
-							 if(webMap.size()>0 && webMap.get(Eag2012Creator.EXHIBITION)!=null){
-								 listWeb = webMap.get(Eag2012Creator.EXHIBITION);
-							 }else{
-								 listWeb = new ArrayList<String>();
-							 }
-							 listWeb.add(accessTable.getString(target2));
-							 webMap.put(Eag2012Creator.EXHIBITION,listWeb);
-							 mapMapListWeb.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,webMap);
-							 if(listMapWebpageHrefList.size()>i){
-								 listMapWebpageHrefList.set(i,mapMapListWeb);
-							 }else{
-								 listMapWebpageHrefList.add(mapMapListWeb);
-							 }
-							 eag2012.setWebpageHref(listMapWebpageHrefList);
-						}
-						if(accessTable.has(target3)){
-							List<Map<String, Map<String, List<String>>>> listMapWebList = eag2012.getWebpageValue();
-							if(listMapWebList==null){
-								listMapWebList = new ArrayList<Map<String, Map<String, List<String>>>>();
+							if(accessTable.has(target3)){
+								List<Map<String, Map<String, List<String>>>> listMapWebList = eag2012.getWebpageHref();
+								if(listMapWebList==null){
+									listMapWebList = new ArrayList<Map<String, Map<String, List<String>>>>();
+								}
+								Map<String, Map<String, List<String>>> mapMapListWeb = null;
+								if(listMapWebList.size()>i && listMapWebList.get(i)!=null){
+									mapMapListWeb = listMapWebList.get(i);
+								}else{
+									mapMapListWeb = new HashMap<String, Map<String, List<String>>>();
+								}
+								List<String> listWeb = null;
+								Map<String,List<String>> webMap = null;
+								if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
+									webMap = mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+								}else{
+									webMap = new HashMap<String,List<String>>();
+								}
+								if(webMap.size()>0 && webMap.get(Eag2012Creator.TOURS_SESSIONS)!=null){
+									listWeb = webMap.get(Eag2012Creator.TOURS_SESSIONS);
+								}else{
+									listWeb = new ArrayList<String>();
+								}
+								listWeb.add(accessTable.getString(target3));
+								webMap.put(Eag2012Creator.TOURS_SESSIONS,listWeb);
+								mapMapListWeb.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,webMap);
+								if(listMapWebList.size()>i){
+									listMapWebList.set(i,mapMapListWeb);
+								}else{
+									listMapWebList.add(mapMapListWeb);
+								}
+								eag2012.setWebpageValue(listMapWebList); 
 							}
-							Map<String, Map<String, List<String>>> mapMapListWeb = null;
-							if(listMapWebList.size()>i && listMapWebList.get(i)!=null){
-								mapMapListWeb = listMapWebList.get(i);
-							}else{
-								mapMapListWeb = new HashMap<String, Map<String, List<String>>>();
+						}while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3));
+						
+						target1 = "textASReSeOtherServices";
+						target2 = "textASReSeOSWebpage";
+						target3 = "textASReSeWebpageOSLinkTitle";
+						targetNumber = 1;
+						do{
+							target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+							target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
+							target3 = ((target3.indexOf("_")!=-1)?target3.substring(0,target3.indexOf("_")):target3)+"_"+targetNumber;
+							targetNumber++;
+							if(accessTable.has(target1)){
+								List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
+								if(descriptiveNotePValue==null){
+									descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
+								}
+								Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
+								if(descriptiveNotePValue.size()>0 && descriptiveNotePValue.get(i)!=null){
+									descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
+								}else{
+									descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
+								}
+								Map<String, List<String>> descriptiveNoteMapList = null;
+								if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
+									descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+								}else{
+									descriptiveNoteMapList = new HashMap<String, List<String>>();
+								}
+								List<String> descriptiveNoteList = null;
+								if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.OTHER_SERVICES)!=null){
+									descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.OTHER_SERVICES);
+								}else{
+									descriptiveNoteList = new ArrayList<String>();
+								}
+								descriptiveNoteList.add(accessTable.getString(target1));
+								descriptiveNoteMapList.put(Eag2012Creator.OTHER_SERVICES,descriptiveNoteList);
+								descriptiveNoteMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+								if(descriptiveNotePValue.size()>i){
+									descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
+								}else{
+									descriptiveNotePValue.add(descriptiveNoteMapMapList);
+								}
+								eag2012.setDescriptiveNotePValue(descriptiveNotePValue);
 							}
-							List<String> listWeb = null;
-							Map<String,List<String>> webMap = null;
-							if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-								webMap = mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
-							}else{
-								webMap = new HashMap<String,List<String>>();
+							if(accessTable.has(target2)){
+								List<Map<String, Map<String, List<String>>>> listMapWebpageHrefList = eag2012.getWebpageHref();
+								 if(listMapWebpageHrefList==null){
+									 listMapWebpageHrefList = new ArrayList<Map<String, Map<String, List<String>>>>();
+								 }
+								 Map<String, Map<String, List<String>>> mapMapListWeb = null;
+								 if(listMapWebpageHrefList.size()>i && listMapWebpageHrefList.get(i)!=null){
+									 mapMapListWeb = listMapWebpageHrefList.get(i);
+								 }else{
+									 mapMapListWeb = new HashMap<String, Map<String, List<String>>>();
+								 }
+								 List<String> listWeb = null;
+								 Map<String,List<String>> webMap = null;
+								 if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
+									 webMap = mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+								 }else{
+									 webMap = new HashMap<String,List<String>>();
+								 }
+								 if(webMap.size()>0 && webMap.get(Eag2012Creator.OTHER_SERVICES)!=null){
+									 listWeb = webMap.get(Eag2012Creator.OTHER_SERVICES);
+								 }else{
+									 listWeb = new ArrayList<String>();
+								 }
+								 listWeb.add(accessTable.getString(target2));
+								 webMap.put(Eag2012Creator.OTHER_SERVICES,listWeb);
+								 mapMapListWeb.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,webMap);
+								 if(listMapWebpageHrefList.size()>i){
+									 listMapWebpageHrefList.set(i,mapMapListWeb);
+								 }else{
+									 listMapWebpageHrefList.add(mapMapListWeb);
+								 }
+								 eag2012.setWebpageHref(listMapWebpageHrefList);
 							}
-							if(webMap.size()>0 && webMap.get(Eag2012Creator.EXHIBITION)!=null){
-								listWeb = webMap.get(Eag2012Creator.EXHIBITION);
-							}else{
-								listWeb = new ArrayList<String>();
+							if(accessTable.has(target3)){
+								List<Map<String, Map<String, List<String>>>> listMapWebList = eag2012.getWebpageHref();
+								if(listMapWebList==null){
+									listMapWebList = new ArrayList<Map<String, Map<String, List<String>>>>();
+								}
+								Map<String, Map<String, List<String>>> mapMapListWeb = null;
+								if(listMapWebList.size()>i && listMapWebList.get(i)!=null){
+									mapMapListWeb = listMapWebList.get(i);
+								}else{
+									mapMapListWeb = new HashMap<String, Map<String, List<String>>>();
+								}
+								List<String> listWeb = null;
+								Map<String,List<String>> webMap = null;
+								if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
+									webMap = mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+								}else{
+									webMap = new HashMap<String,List<String>>();
+								}
+								if(webMap.size()>0 && webMap.get(Eag2012Creator.OTHER_SERVICES)!=null){
+									listWeb = webMap.get(Eag2012Creator.OTHER_SERVICES);
+								}else{
+									listWeb = new ArrayList<String>();
+								}
+								listWeb.add(accessTable.getString(target3));
+								webMap.put(Eag2012Creator.OTHER_SERVICES,listWeb);
+								mapMapListWeb.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,webMap);
+								if(listMapWebList.size()>i){
+									listMapWebList.set(i,mapMapListWeb);
+								}else{
+									listMapWebList.add(mapMapListWeb);
+								}
+								eag2012.setWebpageValue(listMapWebList); 
 							}
-							listWeb.add(accessTable.getString(target3));
-							webMap.put(Eag2012Creator.EXHIBITION,listWeb);
-							mapMapListWeb.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,webMap);
-							if(listMapWebList.size()>i){
-								listMapWebList.set(i,mapMapListWeb);
-							}else{
-								listMapWebList.add(mapMapListWeb);
-							}
-							eag2012.setWebpageValue(listMapWebList); 
-						}
-					}while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3));
-					
-					target1 = "textASReSeToursAndSessions";
-					target2 = "textASReSeTSWebpage";
-					target3 = "textASReSeWebpageTSLinkTitle";
-					targetNumber = 1;
-					do{
-						target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
-						target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
-						target3 = ((target3.indexOf("_")!=-1)?target3.substring(0,target3.indexOf("_")):target3)+"_"+targetNumber;
-						targetNumber++;
-						if(accessTable.has(target1)){
-							List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
-							if(descriptiveNotePValue==null){
-								descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
-							}
-							Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
-							if(descriptiveNotePValue.size()>0 && descriptiveNotePValue.get(i)!=null){
-								descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
-							}else{
-								descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
-							}
-							Map<String, List<String>> descriptiveNoteMapList = null;
-							if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-								descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
-							}else{
-								descriptiveNoteMapList = new HashMap<String, List<String>>();
-							}
-							List<String> descriptiveNoteList = null;
-							if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.TOURS_SESSIONS)!=null){
-								descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.TOURS_SESSIONS);
-							}else{
-								descriptiveNoteList = new ArrayList<String>();
-							}
-							descriptiveNoteList.add(accessTable.getString(target1));
-							descriptiveNoteMapList.put(Eag2012Creator.TOURS_SESSIONS,descriptiveNoteList);
-							descriptiveNoteMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
-							if(descriptiveNotePValue.size()>i){
-								descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
-							}else{
-								descriptiveNotePValue.add(descriptiveNoteMapMapList);
-							}
-							eag2012.setDescriptiveNotePValue(descriptiveNotePValue);
-						}
-						if(accessTable.has(target2)){
-							List<Map<String, Map<String, List<String>>>> listMapWebpageHrefList = eag2012.getWebpageHref();
-							 if(listMapWebpageHrefList==null){
-								 listMapWebpageHrefList = new ArrayList<Map<String, Map<String, List<String>>>>();
-							 }
-							 Map<String, Map<String, List<String>>> mapMapListWeb = null;
-							 if(listMapWebpageHrefList.size()>i && listMapWebpageHrefList.get(i)!=null){
-								 mapMapListWeb = listMapWebpageHrefList.get(i);
-							 }else{
-								 mapMapListWeb = new HashMap<String, Map<String, List<String>>>();
-							 }
-							 List<String> listWeb = null;
-							 Map<String,List<String>> webMap = null;
-							 if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-								 webMap = mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
-							 }else{
-								 webMap = new HashMap<String,List<String>>();
-							 }
-							 if(webMap.size()>0 && webMap.get(Eag2012Creator.TOURS_SESSIONS)!=null){
-								 listWeb = webMap.get(Eag2012Creator.TOURS_SESSIONS);
-							 }else{
-								 listWeb = new ArrayList<String>();
-							 }
-							 listWeb.add(accessTable.getString(target2));
-							 webMap.put(Eag2012Creator.TOURS_SESSIONS,listWeb);
-							 mapMapListWeb.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,webMap);
-							 if(listMapWebpageHrefList.size()>i){
-								 listMapWebpageHrefList.set(i,mapMapListWeb);
-							 }else{
-								 listMapWebpageHrefList.add(mapMapListWeb);
-							 }
-							 eag2012.setWebpageHref(listMapWebpageHrefList);
-						}
-						if(accessTable.has(target3)){
-							List<Map<String, Map<String, List<String>>>> listMapWebList = eag2012.getWebpageHref();
-							if(listMapWebList==null){
-								listMapWebList = new ArrayList<Map<String, Map<String, List<String>>>>();
-							}
-							Map<String, Map<String, List<String>>> mapMapListWeb = null;
-							if(listMapWebList.size()>i && listMapWebList.get(i)!=null){
-								mapMapListWeb = listMapWebList.get(i);
-							}else{
-								mapMapListWeb = new HashMap<String, Map<String, List<String>>>();
-							}
-							List<String> listWeb = null;
-							Map<String,List<String>> webMap = null;
-							if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-								webMap = mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
-							}else{
-								webMap = new HashMap<String,List<String>>();
-							}
-							if(webMap.size()>0 && webMap.get(Eag2012Creator.TOURS_SESSIONS)!=null){
-								listWeb = webMap.get(Eag2012Creator.TOURS_SESSIONS);
-							}else{
-								listWeb = new ArrayList<String>();
-							}
-							listWeb.add(accessTable.getString(target3));
-							webMap.put(Eag2012Creator.TOURS_SESSIONS,listWeb);
-							mapMapListWeb.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,webMap);
-							if(listMapWebList.size()>i){
-								listMapWebList.set(i,mapMapListWeb);
-							}else{
-								listMapWebList.add(mapMapListWeb);
-							}
-							eag2012.setWebpageValue(listMapWebList); 
-						}
-					}while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3));
-					
-					target1 = "textASReSeOtherServices";
-					target2 = "textASReSeOSWebpage";
-					target3 = "textASReSeWebpageOSLinkTitle";
-					targetNumber = 1;
-					do{
-						target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
-						target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
-						target3 = ((target3.indexOf("_")!=-1)?target3.substring(0,target3.indexOf("_")):target3)+"_"+targetNumber;
-						targetNumber++;
-						if(accessTable.has(target1)){
-							List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
-							if(descriptiveNotePValue==null){
-								descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
-							}
-							Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
-							if(descriptiveNotePValue.size()>0 && descriptiveNotePValue.get(i)!=null){
-								descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
-							}else{
-								descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
-							}
-							Map<String, List<String>> descriptiveNoteMapList = null;
-							if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-								descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
-							}else{
-								descriptiveNoteMapList = new HashMap<String, List<String>>();
-							}
-							List<String> descriptiveNoteList = null;
-							if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.OTHER_SERVICES)!=null){
-								descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.OTHER_SERVICES);
-							}else{
-								descriptiveNoteList = new ArrayList<String>();
-							}
-							descriptiveNoteList.add(accessTable.getString(target1));
-							descriptiveNoteMapList.put(Eag2012Creator.OTHER_SERVICES,descriptiveNoteList);
-							descriptiveNoteMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
-							if(descriptiveNotePValue.size()>i){
-								descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
-							}else{
-								descriptiveNotePValue.add(descriptiveNoteMapMapList);
-							}
-							eag2012.setDescriptiveNotePValue(descriptiveNotePValue);
-						}
-						if(accessTable.has(target2)){
-							List<Map<String, Map<String, List<String>>>> listMapWebpageHrefList = eag2012.getWebpageHref();
-							 if(listMapWebpageHrefList==null){
-								 listMapWebpageHrefList = new ArrayList<Map<String, Map<String, List<String>>>>();
-							 }
-							 Map<String, Map<String, List<String>>> mapMapListWeb = null;
-							 if(listMapWebpageHrefList.size()>i && listMapWebpageHrefList.get(i)!=null){
-								 mapMapListWeb = listMapWebpageHrefList.get(i);
-							 }else{
-								 mapMapListWeb = new HashMap<String, Map<String, List<String>>>();
-							 }
-							 List<String> listWeb = null;
-							 Map<String,List<String>> webMap = null;
-							 if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-								 webMap = mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
-							 }else{
-								 webMap = new HashMap<String,List<String>>();
-							 }
-							 if(webMap.size()>0 && webMap.get(Eag2012Creator.OTHER_SERVICES)!=null){
-								 listWeb = webMap.get(Eag2012Creator.OTHER_SERVICES);
-							 }else{
-								 listWeb = new ArrayList<String>();
-							 }
-							 listWeb.add(accessTable.getString(target2));
-							 webMap.put(Eag2012Creator.OTHER_SERVICES,listWeb);
-							 mapMapListWeb.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,webMap);
-							 if(listMapWebpageHrefList.size()>i){
-								 listMapWebpageHrefList.set(i,mapMapListWeb);
-							 }else{
-								 listMapWebpageHrefList.add(mapMapListWeb);
-							 }
-							 eag2012.setWebpageHref(listMapWebpageHrefList);
-						}
-						if(accessTable.has(target3)){
-							List<Map<String, Map<String, List<String>>>> listMapWebList = eag2012.getWebpageHref();
-							if(listMapWebList==null){
-								listMapWebList = new ArrayList<Map<String, Map<String, List<String>>>>();
-							}
-							Map<String, Map<String, List<String>>> mapMapListWeb = null;
-							if(listMapWebList.size()>i && listMapWebList.get(i)!=null){
-								mapMapListWeb = listMapWebList.get(i);
-							}else{
-								mapMapListWeb = new HashMap<String, Map<String, List<String>>>();
-							}
-							List<String> listWeb = null;
-							Map<String,List<String>> webMap = null;
-							if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-								webMap = mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
-							}else{
-								webMap = new HashMap<String,List<String>>();
-							}
-							if(webMap.size()>0 && webMap.get(Eag2012Creator.OTHER_SERVICES)!=null){
-								listWeb = webMap.get(Eag2012Creator.OTHER_SERVICES);
-							}else{
-								listWeb = new ArrayList<String>();
-							}
-							listWeb.add(accessTable.getString(target3));
-							webMap.put(Eag2012Creator.OTHER_SERVICES,listWeb);
-							mapMapListWeb.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,webMap);
-							if(listMapWebList.size()>i){
-								listMapWebList.set(i,mapMapListWeb);
-							}else{
-								listMapWebList.add(mapMapListWeb);
-							}
-							eag2012.setWebpageValue(listMapWebList); 
-						}
-					}while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3));
-					++i;
+						}while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3));
+						++i;
+				}
 			}
+			return eag2012;	
 		}
-		return eag2012;	
-	}
-	
-	private Eag2012 parseContactJsonObjToEag2012(Eag2012 eag2012,JSONObject jsonObj) throws JSONException {
-		JSONObject contact = jsonObj.getJSONObject("contact");
-		if(contact!=null){
-			int x = 0;
-			while(contact.has("contactTable_"+(x+1))){ //each child of contact is the container of visitor address and all attributes
-				
-				JSONObject contactTable = contact.getJSONObject("contactTable_"+(x+1));
-				//Contact visitorsAddress
-				
-				if(contactTable.has("textNameOfRepository")){
+		
+		private Eag2012 parseContactJsonObjToEag2012(Eag2012 eag2012,JSONObject jsonObj) throws JSONException {
+			JSONObject contact = jsonObj.getJSONObject("contact");
+			if(contact!=null){
+				int x = 0;
+				while(contact.has("contactTable_"+(x+1))){ //each child of contact is the container of visitor address and all attributes
+					
+					JSONObject contactTable = contact.getJSONObject("contactTable_"+(x+1));
+					//Contact visitorsAddress
+					
+					if(contactTable.has("textNameOfRepository")){
 					String nameOfRepository = contactTable.getString("textNameOfRepository");
 					List<String> repositorNames = eag2012.getRepositoryNameValue();
 					if(repositorNames==null){
@@ -3397,43 +3565,133 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					//Identity Single Year
 					int j=0;
 					while(previousNameOfTheArchive.has("textYearWhenThisNameWasUsed_"+(++j))){
-						Map<String, List<String>> years = new HashMap<String,List<String>>();
-						ArrayList<String> listYears = new ArrayList<String>();
-						listYears.add(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsed_"+j));
-						years.put(Eag2012Creator.TAB_IDENTITY,listYears);
-						List<Map<String, List<String>>> listMapYearsList = eag2012.getDateStandardDate();
+						List<Map<String, Map<String, Map<String, List<String>>>>> listMapYearsList = eag2012.getDateStandardDate();
 						if(listMapYearsList==null){
-							listMapYearsList = new ArrayList<Map<String, List<String>>>();
+							listMapYearsList = new ArrayList<Map<String,Map<String,Map<String,List<String>>>>>();
+						}else{
+							listMapYearsList = eag2012.getDateStandardDate();
 						}
-						listMapYearsList.add(years);
+						Map<String, Map<String, Map<String, List<String>>>> listMapYearsMap = null;
+						if(listMapYearsList.size()>0 && listMapYearsList.get(0)!=null){
+							listMapYearsMap = listMapYearsList.get(0);
+						}else{
+							listMapYearsMap = new HashMap<String, Map<String, Map<String, List<String>>>>();
+						}
+						Map<String, Map<String, List<String>>> listMapYearsMapMap = null;
+						if(listMapYearsMap.size()>0 && listMapYearsMap.get(Eag2012Creator.TAB_IDENTITY)!=null){
+							listMapYearsMapMap = listMapYearsMap.get(Eag2012Creator.TAB_IDENTITY);
+						}else{
+							listMapYearsMapMap = new HashMap<String, Map<String, List<String>>>();
+						}
+						Map<String, List<String>> listMapYearsMapMapMap = null;
+						if(listMapYearsMapMap.size()>0 && listMapYearsMapMap.get(Eag2012Creator.ROOT)!=null){
+							listMapYearsMapMapMap = listMapYearsMapMap.get(Eag2012Creator.ROOT);
+						}else{
+							listMapYearsMapMapMap = new HashMap<String, List<String>>();
+						}
+						List<String> listMapList = null;
+						if(listMapYearsMapMapMap.size()>0 && listMapYearsMapMapMap.get(Eag2012Creator.ROOT_SUBSECTION)!=null){
+							listMapList = listMapYearsMapMapMap.get(Eag2012Creator.ROOT_SUBSECTION);
+						}else{
+							listMapList = new ArrayList<String>();
+						}
+						listMapList.add(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsed_"+j));
+						listMapYearsMapMapMap.put(Eag2012Creator.ROOT_SUBSECTION,listMapList);
+						listMapYearsMapMap.put(Eag2012Creator.ROOT, listMapYearsMapMapMap);
+						listMapYearsMap.put(Eag2012Creator.TAB_IDENTITY,listMapYearsMapMap);
+						if(listMapYearsList.size()>0){
+							listMapYearsList.set(0,listMapYearsMap);
+						}else{
+							listMapYearsList.add(listMapYearsMap);
+						}
 						eag2012.setDateStandardDate(listMapYearsList);
 					}
 					//Identity Range Year From
 					j=0;
 					while(previousNameOfTheArchive.has("textYearWhenThisNameWasUsedFrom_"+(++j))){
-						Map<String, List<String>> years = new HashMap<String,List<String>>();
-						ArrayList<String> listYears = new ArrayList<String>();
-						listYears.add(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsedFrom_"+j));
-						years.put(Eag2012Creator.TAB_IDENTITY,listYears);
-						List<Map<String, List<String>>> listMapYearsList = eag2012.getDateStandardDate();
+						List<Map<String, Map<String, Map<String, List<String>>>>> listMapYearsList = eag2012.getFromDateStandardDate();
 						if(listMapYearsList==null){
-							listMapYearsList = new ArrayList<Map<String, List<String>>>();
+							listMapYearsList = new ArrayList<Map<String,Map<String,Map<String,List<String>>>>>();
+						}else{
+							listMapYearsList = eag2012.getDateStandardDate();
 						}
-						listMapYearsList.add(years);
+						Map<String, Map<String, Map<String, List<String>>>> listMapYearsMap = null;
+						if(listMapYearsList.size()>0 && listMapYearsList.get(0)!=null){
+							listMapYearsMap = listMapYearsList.get(0);
+						}else{
+							listMapYearsMap = new HashMap<String, Map<String, Map<String, List<String>>>>();
+						}
+						Map<String, Map<String, List<String>>> listMapYearsMapMap = null;
+						if(listMapYearsMap.size()>0 && listMapYearsMap.get(Eag2012Creator.TAB_IDENTITY)!=null){
+							listMapYearsMapMap = listMapYearsMap.get(Eag2012Creator.TAB_IDENTITY);
+						}else{
+							listMapYearsMapMap = new HashMap<String, Map<String, List<String>>>();
+						}
+						Map<String, List<String>> listMapYearsMapMapMap = null;
+						if(listMapYearsMapMap.size()>0 && listMapYearsMapMap.get(Eag2012Creator.ROOT)!=null){
+							listMapYearsMapMapMap = listMapYearsMapMap.get(Eag2012Creator.ROOT);
+						}else{
+							listMapYearsMapMapMap = new HashMap<String, List<String>>();
+						}
+						List<String> listMapList = null;
+						if(listMapYearsMapMapMap.size()>0 && listMapYearsMapMapMap.get(Eag2012Creator.ROOT_SUBSECTION)!=null){
+							listMapList = listMapYearsMapMapMap.get(Eag2012Creator.ROOT_SUBSECTION);
+						}else{
+							listMapList = new ArrayList<String>();
+						}
+						listMapList.add(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsedFrom_"+j));
+						listMapYearsMapMapMap.put(Eag2012Creator.ROOT_SUBSECTION,listMapList);
+						listMapYearsMapMap.put(Eag2012Creator.ROOT, listMapYearsMapMapMap);
+						listMapYearsMap.put(Eag2012Creator.TAB_IDENTITY,listMapYearsMapMap);
+						if(listMapYearsList.size()>0){
+							listMapYearsList.set(0,listMapYearsMap);
+						}else{
+							listMapYearsList.add(listMapYearsMap);
+						}
 						eag2012.setFromDateStandardDate(listMapYearsList);
 					}
 					//Identity Range Year To
 					j=0;
 					while(previousNameOfTheArchive.has("textYearWhenThisNameWasUsedTo_"+(++j))){
-						Map<String, List<String>> years = new HashMap<String,List<String>>();
-						ArrayList<String> listYears = new ArrayList<String>();
-						listYears.add(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsedTo_"+j));
-						years.put(Eag2012Creator.TAB_IDENTITY,listYears);
-						List<Map<String, List<String>>> listMapYearsList = eag2012.getDateStandardDate();
+						List<Map<String, Map<String, Map<String, List<String>>>>> listMapYearsList = eag2012.getToDateStandardDate();
 						if(listMapYearsList==null){
-							listMapYearsList = new ArrayList<Map<String, List<String>>>();
+							listMapYearsList = new ArrayList<Map<String,Map<String,Map<String,List<String>>>>>();
+						}else{
+							listMapYearsList = eag2012.getDateStandardDate();
 						}
-						listMapYearsList.add(years);
+						Map<String, Map<String, Map<String, List<String>>>> listMapYearsMap = null;
+						if(listMapYearsList.size()>0 && listMapYearsList.get(0)!=null){
+							listMapYearsMap = listMapYearsList.get(0);
+						}else{
+							listMapYearsMap = new HashMap<String, Map<String, Map<String, List<String>>>>();
+						}
+						Map<String, Map<String, List<String>>> listMapYearsMapMap = null;
+						if(listMapYearsMap.size()>0 && listMapYearsMap.get(Eag2012Creator.TAB_IDENTITY)!=null){
+							listMapYearsMapMap = listMapYearsMap.get(Eag2012Creator.TAB_IDENTITY);
+						}else{
+							listMapYearsMapMap = new HashMap<String, Map<String, List<String>>>();
+						}
+						Map<String, List<String>> listMapYearsMapMapMap = null;
+						if(listMapYearsMapMap.size()>0 && listMapYearsMapMap.get(Eag2012Creator.ROOT)!=null){
+							listMapYearsMapMapMap = listMapYearsMapMap.get(Eag2012Creator.ROOT);
+						}else{
+							listMapYearsMapMapMap = new HashMap<String, List<String>>();
+						}
+						List<String> listMapList = null;
+						if(listMapYearsMapMapMap.size()>0 && listMapYearsMapMapMap.get(Eag2012Creator.ROOT_SUBSECTION)!=null){
+							listMapList = listMapYearsMapMapMap.get(Eag2012Creator.ROOT_SUBSECTION);
+						}else{
+							listMapList = new ArrayList<String>();
+						}
+						listMapList.add(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsedTo_"+j));
+						listMapYearsMapMapMap.put(Eag2012Creator.ROOT_SUBSECTION,listMapList);
+						listMapYearsMapMap.put(Eag2012Creator.ROOT, listMapYearsMapMapMap);
+						listMapYearsMap.put(Eag2012Creator.TAB_IDENTITY,listMapYearsMapMap);
+						if(listMapYearsList.size()>0){
+							listMapYearsList.set(0,listMapYearsMap);
+						}else{
+							listMapYearsList.add(listMapYearsMap);
+						}
 						eag2012.setToDateStandardDate(listMapYearsList);
 					}
 				}

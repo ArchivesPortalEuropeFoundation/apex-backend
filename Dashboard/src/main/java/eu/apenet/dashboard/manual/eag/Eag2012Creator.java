@@ -82,6 +82,9 @@ public class Eag2012Creator {
 	public static final String MICROFILM = "microfilm";
 	public static final String MONOGRAPHIC_PUBLICATION ="monographicPublication";
     public static final String SERIAL_PUBLICATION ="serialPublication";
+	public static final String REPOSITOR_FOUND = "repositorfound";
+	public static final String REPOSITOR_SUP = "repositorsup";
+	public static final String ROOT_SUBSECTION = "root_section";
     private Eag2012 eag2012;
 	private String storagePath;
 	private boolean isNew;
@@ -1014,17 +1017,17 @@ public class Eag2012Creator {
         childControl1Children.add(buildFromDate(
         		/*this.eag2012.getFromDateNotAfter().get(indexRepo).get(indexTab).get(indexList)*/null,
         		/*this.eag2012.getFromDateNotBefore().get(indexRepo).get(indexTab).get(indexList)*/null,
-        		this.eag2012.getFromDateStandardDate().get(indexRepo).get(indexTab).get(indexList),
+        		/*this.eag2012.getFromDateStandardDate().get(indexRepo).get(indexTab).get(indexList)*/null,
         		/*this.eag2012.getFromDateId().get(indexRepo).get(indexTab).get(indexList)*/null,
         		/*this.eag2012.getFromDateLang().get(indexRepo).get(indexTab).get(indexList)*/null,
-        		/*this.eag2012.getFromDateValue().get(indexRepo).get(indexTab).get(indexList))*/this.eag2012.getFromDateStandardDate().get(indexRepo).get(indexTab).get(indexList)));
+        		/*this.eag2012.getFromDateValue().get(indexRepo).get(indexTab).get(indexList))*//*this.eag2012.getFromDateStandardDate().get(indexRepo).get(indexTab).get(indexList)));*/null));
         childControl1Children.add(buildToDate(
         		/*this.eag2012.getToDateNotAfter().get(indexRepo).get(indexTab).get(indexList)*/null,
         		/*this.eag2012.getToDateNotBefore().get(indexRepo).get(indexTab).get(indexList)*/null,
-        		this.eag2012.getToDateStandardDate().get(indexRepo).get(indexTab).get(indexList),
+        		/*this.eag2012.getToDateStandardDate().get(indexRepo).get(indexTab).get(indexList)*/null,
         		/*this.eag2012.getToDateId().get(indexRepo).get(indexTab).get(indexList)*/null,
         		/*this.eag2012.getToDateLang().get(indexRepo).get(indexTab).get(indexList)*/null,
-        		/*this.eag2012.getToDateValue().get(indexRepo).get(indexTab).get(indexList)*/this.eag2012.getToDateStandardDate().get(indexRepo).get(indexTab).get(indexList)));
+        		/*this.eag2012.getToDateValue().get(indexRepo).get(indexTab).get(indexList)*//*this.eag2012.getToDateStandardDate().get(indexRepo).get(indexTab).get(indexList)));*/null));
         
         childControl1.put("children", childControl1Children);
         return childControl1;
@@ -1087,7 +1090,7 @@ public class Eag2012Creator {
         childControlChildAttributes.put("localType", "localDateType");
 //        childControlChildAttributes.put("notAfter", this.eag2012.getDateNotAfter().get(indexRepo).get(indexTab).get(indexList));
 //        childControlChildAttributes.put("notBefore", this.eag2012.getDateNotBefore().get(indexRepo).get(indexTab).get(indexList));
-        childControlChildAttributes.put("standardDate", this.eag2012.getDateStandardDate().get(indexRepo).get(indexTab).get(indexList));
+ //       childControlChildAttributes.put("standardDate", this.eag2012.getDateStandardDate().get(indexRepo).get(indexTab).get(indexList));
 //        childControlChildAttributes.put("xml:id", this.eag2012.getDateId().get(indexRepo).get(indexTab).get(indexList));
 //        childControlChildAttributes.put("xml:lang", this.eag2012.getDateLang().get(indexRepo).get(indexTab).get(indexList));
         childControlChild.put("attributes",childControlChildAttributes);
