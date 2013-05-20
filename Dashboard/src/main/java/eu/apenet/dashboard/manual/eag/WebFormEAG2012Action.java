@@ -2961,9 +2961,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		JSONObject contact = jsonObj.getJSONObject("contact");
 		if(contact!=null){
 			int x = 0;
-			while(contact.has("contactTable_"+(++x))){ //each child of contact is the container of visitor address and all attributes
+			while(contact.has("contactTable_"+(x))){ //each child of contact is the container of visitor address and all attributes
 				
-				JSONObject contactTable = contact.getJSONObject("contactTable_"+(x));
+				JSONObject contactTable = contact.getJSONObject("contactTable_"+(x+1));
 				//Contact visitorsAddress
 				
 				if(contactTable.has("textNameOfRepository")){
@@ -3163,7 +3163,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					eag2012.setFaxValue(listMapFaxList); 	
 				}
 				
-				 i=(x==1)?1:0;
+				 i=1;
 				 while(contactTable.has("textContactEmailOfTheInstitution_"+(++i))){
 					 List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailHref();
 					 if(listMapEmailList==null){
@@ -3197,7 +3197,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 eag2012.setEmailHref(listMapEmailList);
 				 }
-				 i=(x==1)?1:0;
+				 i=1;
 				 while(contactTable.has("textContactLinkTitleForEmailOfTheInstitution_"+(++i))){
 					 List<Map<String, Map<String, List<String>>>> listMapEmailValueList = eag2012.getEmailValue();
 					 if(listMapEmailValueList==null){
@@ -3232,7 +3232,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 eag2012.setEmailValue(listMapEmailValueList); 	
 				 }
-				 i=(x==1)?1:0;
+				 i=1;
 				 while(contactTable.has("textContactWebOfTheInstitution_"+(++i))){
 					 List<Map<String, Map<String, List<String>>>> listMapWebpageHrefList = eag2012.getWebpageHref();
 					 if(listMapWebpageHrefList==null){
@@ -3267,7 +3267,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 eag2012.setWebpageHref(listMapWebpageHrefList); 	
 				 }
 			
-				 i=(x==1)?1:0;//listWeb.add(contactTable.getString("textContactLinkTitleForWebOfTheInstitution_"+i));
+				 i=1;
 				 while(contactTable.has("textContactLinkTitleForWebOfTheInstitution_"+(++i))){
 					 List<Map<String, Map<String, List<String>>>> listMapWebList = eag2012.getWebpageValue();
 					 if(listMapWebList==null){
