@@ -2623,9 +2623,6 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					List<String> listLatitudes = new ArrayList<String>();
 					List<String> listLongitudes = new ArrayList<String>();
 					List<String> listStreetLanguage = new ArrayList<String>();
-					List<List<String>> tempListList = new ArrayList<List<String>>();  
-					
-					
 					
 					int i=1;
 					if(visitorAddress.has("contactTableVisitorsAddress_"+i)){
@@ -2644,30 +2641,70 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				            
 				      
 				      }while(visitorAddress.has("contactTableVisitorsAddress_"+(++i)));
-				      
-				     
+				        
+				        List<List<String>> tempListList = null;
+				        if(eag2012.getStreetValue()==null){
+				        	tempListList = new ArrayList<List<String>>();
+				        }else{
+				        	tempListList = eag2012.getStreetValue();
+				        }
 						tempListList.add(listStreet);
 						eag2012.setStreetValue(tempListList);
-						tempListList = new ArrayList<List<String>>();
+						tempListList = null;
+						if(eag2012.getStreetLang()==null){
+							tempListList = new ArrayList<List<String>>();
+						}else{
+							tempListList = eag2012.getStreetLang();
+						}
 						tempListList.add(listStreetLanguage);
 						eag2012.setStreetLang(tempListList);
-						tempListList = new ArrayList<List<String>>();
+						tempListList = null;
+						if(eag2012.getCitiesValue()==null){
+							tempListList = new ArrayList<List<String>>();
+						}else{
+							tempListList = eag2012.getCitiesValue();
+						}
 						tempListList.add(listCities);
 						eag2012.setCitiesValue(tempListList);
 						eag2012.setLocalentityValue(listDistrict);
-						tempListList = new ArrayList<List<String>>();
+						tempListList = null;
+						if(eag2012.getSecondemValue()==null){
+							tempListList = new ArrayList<List<String>>();
+						}else{
+							tempListList = eag2012.getSecondemValue();
+						}
 						tempListList.add(listLocalAuthority);
 						eag2012.setSecondemValue(tempListList);
-						tempListList = new ArrayList<List<String>>();
+						tempListList = null;
+						if(eag2012.getFirstdemValue()==null){
+							tempListList = new ArrayList<List<String>>();
+						}else{
+							tempListList = eag2012.getFirstdemValue();
+						}
 						tempListList.add(listAutonomus);
 						eag2012.setFirstdemValue(tempListList);
-						tempListList = new ArrayList<List<String>>();
+						tempListList = null;
+						if(eag2012.getCountryValue()==null){
+							tempListList = new ArrayList<List<String>>();
+						}else{
+							tempListList = eag2012.getCountryValue();
+						}
 						tempListList.add(listCountries);
 						eag2012.setCountryValue(tempListList);
-						tempListList = new ArrayList<List<String>>();
+						tempListList = null;
+						if(eag2012.getLocationLatitude()==null){
+							tempListList = new ArrayList<List<String>>();
+						}else{
+							tempListList = eag2012.getLocationLatitude();
+						}
 						tempListList.add(listLatitudes);
 						eag2012.setLocationLatitude(tempListList);
-						tempListList = new ArrayList<List<String>>();
+						tempListList = null;
+						if(eag2012.getLocationLongitude()==null){
+							tempListList = new ArrayList<List<String>>();
+						}else{
+							tempListList = eag2012.getLocationLongitude();
+						}
 						tempListList.add(listLongitudes);
 						eag2012.setLocationLongitude(tempListList);
 				      
