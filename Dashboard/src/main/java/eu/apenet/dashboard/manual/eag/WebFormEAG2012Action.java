@@ -3137,8 +3137,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						telephonesList = new ArrayList<String>();
 					}
 					telephonesList.add(contactTable.getString("textContactTelephoneOfTheInstitution_"+i));
-					telephonesMapList.put(Eag2012Creator.SEARCHROOM, telephonesList);
-					telephonesMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,telephonesMapList);
+					telephonesMapList.put(Eag2012Creator.ROOT, telephonesList);
+					telephonesMap.put(Eag2012Creator.TAB_CONTACT,telephonesMapList);
 					if(telephones.size()>i){
 						telephones.set(i, telephonesMap);
 					}else{
