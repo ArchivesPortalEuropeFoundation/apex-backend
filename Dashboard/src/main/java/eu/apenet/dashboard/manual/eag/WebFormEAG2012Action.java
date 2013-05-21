@@ -3384,7 +3384,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								}else{
 									listMapWebList.add(mapMapListWeb);
 								}
-								eag2012.setWebpageValue(listMapWebList); 
+								eag2012.setWebpageHref(listMapWebList); 
 							}
 						}while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3));
 						
