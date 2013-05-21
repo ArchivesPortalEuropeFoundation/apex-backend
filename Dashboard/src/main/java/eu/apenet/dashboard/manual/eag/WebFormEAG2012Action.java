@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,6 +19,8 @@ import org.json.JSONObject;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
+import eu.apenet.dashboard.manual.eag.utils.CreateEAG2012;
+import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.dpt.utils.util.LanguageIsoList;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -625,7 +631,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	public String getForm(){
 		return this.form;
 	}
-	
+
 	public String createEAG2012(){
 		Eag2012 eag2012 = null;
 		try{
@@ -634,11 +640,25 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			log.error(e.getMessage());
 		}
 		if(eag2012!=null){
-			String path = File.separatorChar+getCountryCode()+File.separatorChar+getAiId()+File.separatorChar+EAG_PATH+File.separatorChar+"eag2012.xml";
-			
-			//create file
-			Eag2012Creator creator = new Eag2012Creator(this.getAiId(), eag2012,APEnetUtilities.getConfig().getRepoDirPath()+path);
-			creator.createEag2012(); 
+			String path = File.separatorChar+this.getCountryCode()+File.separatorChar+getAiId()+File.separatorChar+EAG_PATH+File.separatorChar+"eag2012.xml";
+
+			// Fill EAG2012 JAXB object.
+			CreateEAG2012 createEAG2012 = new CreateEAG2012(eag2012);
+			Eag eag = createEAG2012.fillEAG2012();
+
+			// Save XML.
+			try {
+				JAXBContext jaxbContext = JAXBContext.newInstance(Eag.class);
+				Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+				jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+//TODO:				jaxbMarshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new EagNamespaceMapper());
+				File eagFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + path));
+
+				jaxbMarshaller.marshal(eag, eagFile);
+			} catch (JAXBException jaxbe) {
+				log.info(jaxbe.getMessage());
+				jaxbe.printStackTrace();
+			}
 			
 			//store ddbb path
 			ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
@@ -704,20 +724,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
 						 }
 						 Map<String, List<String>> descriptiveNoteMapList = null;
-						 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_DESCRIPTION)!=null){
-							 descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_DESCRIPTION);
+						 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_DESCRIPTION)!=null){
+							 descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_DESCRIPTION);
 						 }else{
 							 descriptiveNoteMapList = new HashMap<String, List<String>>();
 						 }
 						 List<String> descriptiveNoteList = null;
-						 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.REPOSITORHIST)!=null){
-							 descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.REPOSITORHIST);
+						 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.REPOSITORHIST)!=null){
+							 descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.REPOSITORHIST);
 						 }else{
 							 descriptiveNoteList = new ArrayList<String>();
 						 }
 						 descriptiveNoteList.add(descriptionTable.getString("textRepositoryHistory_"+j));
-						 descriptiveNoteMapList.put(Eag2012Creator.REPOSITORHIST,descriptiveNoteList);
-						 descriptiveNoteMapMapList.put(Eag2012Creator.TAB_DESCRIPTION,descriptiveNoteMapList);
+						 descriptiveNoteMapList.put(CreateEAG2012.REPOSITORHIST,descriptiveNoteList);
+						 descriptiveNoteMapMapList.put(CreateEAG2012.TAB_DESCRIPTION,descriptiveNoteMapList);
 						 if(descriptiveNotePValue.size()>i){
 							 descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
 						 }else{
@@ -737,20 +757,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
 						 }
 						 Map<String, List<String>> descriptiveNoteMapList = null;
-						 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_DESCRIPTION)!=null){
-							 descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_DESCRIPTION);
+						 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_DESCRIPTION)!=null){
+							 descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_DESCRIPTION);
 						 }else{
 							 descriptiveNoteMapList = new HashMap<String, List<String>>();
 						 }
 						 List<String> descriptiveNoteList = null;
-						 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.REPOSITORHIST)!=null){
-							 descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.REPOSITORHIST);
+						 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.REPOSITORHIST)!=null){
+							 descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.REPOSITORHIST);
 						 }else{
 							 descriptiveNoteList = new ArrayList<String>();
 						 }
 						 descriptiveNoteList.add(descriptionTable.getString("selectLanguageRepositoryHistory_"+j));
-						 descriptiveNoteMapList.put(Eag2012Creator.REPOSITORHIST,descriptiveNoteList);
-						 descriptiveNoteMapMapList.put(Eag2012Creator.TAB_DESCRIPTION,descriptiveNoteMapList);
+						 descriptiveNoteMapList.put(CreateEAG2012.REPOSITORHIST,descriptiveNoteList);
+						 descriptiveNoteMapMapList.put(CreateEAG2012.TAB_DESCRIPTION,descriptiveNoteMapList);
 						 if(descriptiveNotePValue.size()>i){
 							 descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
 						 }else{
@@ -772,27 +792,27 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 dateMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>(); 
 					 }
 					 Map<String, Map<String, List<String>>> dateMapMap = null;
-					 if(dateMapMapMap.size()>0 && dateMapMapMap.get(Eag2012Creator.TAB_DESCRIPTION)!=null){
-						 dateMapMap= dateMapMapMap.get(Eag2012Creator.TAB_DESCRIPTION);
+					 if(dateMapMapMap.size()>0 && dateMapMapMap.get(CreateEAG2012.TAB_DESCRIPTION)!=null){
+						 dateMapMap= dateMapMapMap.get(CreateEAG2012.TAB_DESCRIPTION);
 					 }else{
 						 dateMapMap = new HashMap<String, Map<String, List<String>>>();
 					 }
 					 Map<String, List<String>> datesMap = null;
-					 if(dateMapMap.size()>0 && dateMapMap.get(Eag2012Creator.REPOSITORHIST)!=null){
-						 datesMap = dateMapMap.get(Eag2012Creator.REPOSITORHIST);
+					 if(dateMapMap.size()>0 && dateMapMap.get(CreateEAG2012.REPOSITORHIST)!=null){
+						 datesMap = dateMapMap.get(CreateEAG2012.REPOSITORHIST);
 					 }else{
 						 datesMap = new HashMap<String, List<String>>();
 					 }
 					 List<String> dates = null;
-					 if(datesMap.size()>0 && datesMap.get(Eag2012Creator.REPOSITOR_FOUND)!=null){
-						 dates = datesMap.get(Eag2012Creator.REPOSITOR_FOUND);
+					 if(datesMap.size()>0 && datesMap.get(CreateEAG2012.REPOSITOR_FOUND)!=null){
+						 dates = datesMap.get(CreateEAG2012.REPOSITOR_FOUND);
 					 }else{
 						 dates = new ArrayList<String>();
 					 }
 					 dates.add(descriptionTable.getString("textDateOfRepositoryFoundation"));
-					 datesMap.put(Eag2012Creator.REPOSITOR_FOUND, dates);
-					 dateMapMap.put(Eag2012Creator.REPOSITORHIST,datesMap);
-					 dateMapMapMap.put(Eag2012Creator.TAB_DESCRIPTION,dateMapMap);
+					 datesMap.put(CreateEAG2012.REPOSITOR_FOUND, dates);
+					 dateMapMap.put(CreateEAG2012.REPOSITORHIST,datesMap);
+					 dateMapMapMap.put(CreateEAG2012.TAB_DESCRIPTION,dateMapMap);
 					 if( dateValue.size()>i){
 						 dateValue.set(i,dateMapMapMap);
 					 }else{
@@ -832,13 +852,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 openingMap = new HashMap<String,List<String>>();
 					 }
 					List<String> openingList = null;
-					if((openingMap.size()>i) && (openingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null)){
-						openingList = openingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+					if((openingMap.size()>i) && (openingMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null)){
+						openingList = openingMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 					}else{
 						openingList = new ArrayList<String>();
 					}
 					openingList.add(accessTable.getString("textOpeningTimes_"+j));
-					openingMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, openingList);
+					openingMap.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, openingList);
 				    if(openingValues.size() > i){
 				    	openingValues.set(i,openingMap);
 				    }else{
@@ -858,13 +878,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 openingMap = new HashMap<String,List<String>>();
 						 }
 						List<String> openingList = null;
-						if((openingMap.size()>i) && (openingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null)){
-							openingList = openingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						if((openingMap.size()>i) && (openingMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null)){
+							openingList = openingMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						}else{
 							openingList = new ArrayList<String>();
 						}
 						openingList.add(accessTable.getString("selectLanguageOpeningTimes_"+j));
-						openingMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, openingList);
+						openingMap.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, openingList);
 					    if(openingLangs.size() > i){
 					    	openingLangs.set(i,openingMap);
 					    }else{
@@ -891,13 +911,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 closingMap = new HashMap<String,List<String>>();
 					 }
 					List<String> closingList = null;
-					if((closingMap.size()>0) && (closingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null)){
-						closingList = closingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+					if((closingMap.size()>0) && (closingMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null)){
+						closingList = closingMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 					}else{
 						closingList = new ArrayList<String>();
 					}
 					closingList.add(accessTable.getString("textClosingDates_"+j));
-					closingMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, closingList);
+					closingMap.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, closingList);
 				    if(closingValues.size() > i){
 				    	closingValues.set(i,closingMap);
 				    }else{
@@ -918,13 +938,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 closingMap = new HashMap<String,List<String>>();
 						 }
 						List<String> closingList = null;
-						if((closingMap.size()>0) && (closingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null)){
-							closingList = closingMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						if((closingMap.size()>0) && (closingMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null)){
+							closingList = closingMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						}else{
 							closingList = new ArrayList<String>();
 						}
 						closingList.add(accessTable.getString("selectLanguageClosingDates_"+j));
-						closingMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, closingList);
+						closingMap.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, closingList);
 					    if(closingLangs.size() > i){
 					    	closingLangs.set(i,closingMap);
 					    }else{
@@ -1011,7 +1031,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					}else{
 						accessQuestionRepo = new HashMap<String, String>();
 					}
-					accessQuestionRepo.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,accessTable.getString("selectASAccesibleToThePublic"));
+					accessQuestionRepo.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,accessTable.getString("selectASAccesibleToThePublic"));
 					if(accessQuestions.size()>i){
 						accessQuestions.set(i,accessQuestionRepo);
 					}else{
@@ -1036,13 +1056,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 restaccess=new HashMap<String,List<String>>();
 						 }
 						 List<String> listRestaccess = null;
-						 if((restaccess.size()>i) && (restaccess.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null)){
-							 listRestaccess=restaccess.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if((restaccess.size()>i) && (restaccess.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null)){
+							 listRestaccess=restaccess.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 listRestaccess=new ArrayList<String>();
 						 }
 					     listRestaccess.add(accessTable.getString("textASAccessRestrictions_"+j));
-					     restaccess.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, listRestaccess);
+					     restaccess.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, listRestaccess);
 					     if(listMapRestaccessList.size()>i){
 					    	 listMapRestaccessList.set(i, restaccess);
 					     }else{
@@ -1062,13 +1082,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 restaccessLang=new HashMap<String,List<String>>();
 						 }
 						 List<String> listRestaccess = null;
-						 if((restaccessLang.size()>i) && (restaccessLang.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null)){
-							 listRestaccess=restaccessLang.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if((restaccessLang.size()>i) && (restaccessLang.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null)){
+							 listRestaccess=restaccessLang.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 listRestaccess=new ArrayList<String>();
 						 }
 					     listRestaccess.add(accessTable.getString("selectASARSelectLanguage_"+j));
-					     restaccessLang.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, listRestaccess);
+					     restaccessLang.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, listRestaccess);
 					     if(listMapRestaccessList.size()>i){
 					    	 listMapRestaccessList.set(i, restaccessLang);
 					     }else{
@@ -1154,7 +1174,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					}else{
 						accessibilityMap = new HashMap<String, String>();
 					}
-					accessibilityMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,accessTable.getString("selectASFacilitiesForDisabledPeopleAvailable"));
+					accessibilityMap.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,accessTable.getString("selectASFacilitiesForDisabledPeopleAvailable"));
 					if(listAccessibilityMap.size()>i){
 						listAccessibilityMap.set(i,accessibilityMap);
 					}else{
@@ -1177,13 +1197,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 accesibility=new HashMap<String,List<String>>();
 							 }
 							 List<String> listAccessibility = null;
-							 if((accesibility.size()>i) && (accesibility.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null)){
-								 listAccessibility=accesibility.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+							 if((accesibility.size()>i) && (accesibility.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null)){
+								 listAccessibility=accesibility.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 							 }else{
 								 listAccessibility=new ArrayList<String>();
 							 }
 							 listAccessibility.add(accessTable.getString("textASAccessibility_"+j));
-						     accesibility.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, listAccessibility);
+						     accesibility.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, listAccessibility);
 						     if(listMapAccessibilityList.size()>i){
 						    	 listMapAccessibilityList.set(i, accesibility);
 						     }else{
@@ -1203,13 +1223,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 accessibilityLang=new HashMap<String,List<String>>();
 							 }
 							 List<String> listAccessibility = null;
-							 if(( accessibilityLang.size()>i) && ( accessibilityLang.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null)){
-								 listAccessibility= accessibilityLang.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+							 if(( accessibilityLang.size()>i) && ( accessibilityLang.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null)){
+								 listAccessibility= accessibilityLang.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 							 }else{
 								 listAccessibility=new ArrayList<String>();
 							 }
 							 listAccessibility.add(accessTable.getString("selectASASelectLanguage_"+j));
-						     accessibilityLang.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, listAccessibility);
+						     accessibilityLang.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, listAccessibility);
 						     if(listMapAccessibilityList.size()>i){
 						    	 listMapAccessibilityList.set(i,  accessibilityLang);
 						     }else{
@@ -1232,20 +1252,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 telephonesMap = new HashMap<String, Map<String, List<String>>>(); 
 					 }
 					 Map<String, List<String>> telephonesMapList = null;
-					 if(telephonesMap.size()>0 && telephonesMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-						 telephonesMapList = telephonesMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+					 if(telephonesMap.size()>0 && telephonesMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+						 telephonesMapList = telephonesMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 					 }else{
 						 telephonesMapList = new HashMap<String, List<String>>();
 					 }
 					 List<String> telephonesList = null;
-					 if(telephonesMapList.size()>0 && telephonesMapList.get(Eag2012Creator.SEARCHROOM)!=null){
-						 telephonesList = telephonesMapList.get(Eag2012Creator.SEARCHROOM);
+					 if(telephonesMapList.size()>0 && telephonesMapList.get(CreateEAG2012.SEARCHROOM)!=null){
+						 telephonesList = telephonesMapList.get(CreateEAG2012.SEARCHROOM);
 					 }else{
 						 telephonesList = new ArrayList<String>();
 					 }
 					 telephonesList.add(accessTable.getString("textASSRTelephone"));
-					 telephonesMapList.put(Eag2012Creator.SEARCHROOM, telephonesList);
-					 telephonesMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,telephonesMapList);
+					 telephonesMapList.put(CreateEAG2012.SEARCHROOM, telephonesList);
+					 telephonesMap.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,telephonesMapList);
 					 if(telephones.size()>i){
 						 telephones.set(i, telephonesMap);
 					 }else{
@@ -1266,19 +1286,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 List<String> listEmail = null;
 					 Map<String,List<String>> emailMap = null;
-					 if(email.size()>0 && email.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-						 emailMap = email.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+					 if(email.size()>0 && email.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+						 emailMap = email.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 					 }else{
 						 emailMap = new HashMap<String,List<String>>();
 					 }
-					 if(emailMap.size()>0 && emailMap.get(Eag2012Creator.SEARCHROOM)!=null){
-						 listEmail = emailMap.get(Eag2012Creator.SEARCHROOM);
+					 if(emailMap.size()>0 && emailMap.get(CreateEAG2012.SEARCHROOM)!=null){
+						 listEmail = emailMap.get(CreateEAG2012.SEARCHROOM);
 					 }else{
 						 listEmail = new ArrayList<String>();
 					 }
 					 listEmail.add(accessTable.getString("textASSREmailAddress"));
-					 emailMap.put(Eag2012Creator.SEARCHROOM,listEmail); 
-					 email.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, emailMap);
+					 emailMap.put(CreateEAG2012.SEARCHROOM,listEmail); 
+					 email.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, emailMap);
 					 if(listMapEmailValueList.size()>i){
 						 listMapEmailValueList.set(i,email);
 					 }else{
@@ -1299,19 +1319,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 List<String> listEmail = null;
 					 Map<String,List<String>> emailMap = null;
-					 if(email.size()>0 && email.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-						 emailMap = email.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+					 if(email.size()>0 && email.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+						 emailMap = email.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 					 }else{
 						 emailMap = new HashMap<String,List<String>>();
 					 }
-					 if(emailMap.size()>0 && emailMap.get(Eag2012Creator.SEARCHROOM)!=null){
-						 listEmail = emailMap.get(Eag2012Creator.SEARCHROOM);
+					 if(emailMap.size()>0 && emailMap.get(CreateEAG2012.SEARCHROOM)!=null){
+						 listEmail = emailMap.get(CreateEAG2012.SEARCHROOM);
 					 }else{
 						 listEmail = new ArrayList<String>();
 					 }
 					 listEmail.add(accessTable.getString("textASSREmailLinkTitle"));
-					 emailMap.put(Eag2012Creator.SEARCHROOM,listEmail); 
-					 email.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, emailMap);
+					 emailMap.put(CreateEAG2012.SEARCHROOM,listEmail); 
+					 email.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, emailMap);
 					 if(listMapEmailList.size()>i){
 						 listMapEmailList.set(i,email);
 					 }else{
@@ -1332,19 +1352,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 List<String> listWebpage = null;
 					 Map<String,List<String>> webpageMap = null;
-					 if(webpage.size()>0 && webpage.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-						 webpageMap = webpage.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+					 if(webpage.size()>0 && webpage.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+						 webpageMap = webpage.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 					 }else{
 						 webpageMap = new HashMap<String,List<String>>();
 					 }
-					 if(webpageMap.size()>0 && webpageMap.get(Eag2012Creator.SEARCHROOM)!=null){
-						 listWebpage = webpageMap.get(Eag2012Creator.SEARCHROOM);
+					 if(webpageMap.size()>0 && webpageMap.get(CreateEAG2012.SEARCHROOM)!=null){
+						 listWebpage = webpageMap.get(CreateEAG2012.SEARCHROOM);
 					 }else{
 						 listWebpage = new ArrayList<String>();
 					 }
 					 listWebpage.add(accessTable.getString("textASSRWebpage"));
-					 webpageMap.put(Eag2012Creator.SEARCHROOM,listWebpage); //root section, here there is only one mails list
-					 webpage.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, webpageMap);
+					 webpageMap.put(CreateEAG2012.SEARCHROOM,listWebpage); //root section, here there is only one mails list
+					 webpage.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, webpageMap);
 					 if(listMapWebpagelList.size()>i){
 						 listMapWebpagelList.set(i,webpage);
 					 }else{
@@ -1365,19 +1385,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 List<String> listWebpage = null;
 					 Map<String,List<String>> webpageMap = null;
-					 if(webpage.size()>0 && webpage.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-						 webpageMap = webpage.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+					 if(webpage.size()>0 && webpage.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+						 webpageMap = webpage.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 					 }else{
 						 webpageMap = new HashMap<String,List<String>>();
 					 }
-					 if(webpageMap.size()>0 && webpageMap.get(Eag2012Creator.SEARCHROOM)!=null){
-						 listWebpage = webpageMap.get(Eag2012Creator.SEARCHROOM);
+					 if(webpageMap.size()>0 && webpageMap.get(CreateEAG2012.SEARCHROOM)!=null){
+						 listWebpage = webpageMap.get(CreateEAG2012.SEARCHROOM);
 					 }else{
 						 listWebpage = new ArrayList<String>();
 					 }
 					 listWebpage.add(accessTable.getString("textASSRWebpageLinkTitle"));
-					 webpageMap.put(Eag2012Creator.SEARCHROOM,listWebpage); //root section, here there is only one mails list
-					 webpage.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, webpageMap);
+					 webpageMap.put(CreateEAG2012.SEARCHROOM,listWebpage); //root section, here there is only one mails list
+					 webpage.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, webpageMap);
 					 if(listMapWebpageValueList.size()>i){
 						 listMapWebpageValueList.set(i,webpage);
 					 }else{
@@ -1397,27 +1417,27 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 numMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>(); 
 					 }
 					 Map<String, Map<String, List<String>>> numMapMap = null;
-					 if(numMapMapMap.size()>0 && numMapMapMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-						 numMapMap = numMapMapMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+					 if(numMapMapMap.size()>0 && numMapMapMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+						 numMapMap = numMapMapMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 					 }else{
 						 numMapMap = new HashMap<String, Map<String, List<String>>>();
 					 }
 					 Map<String, List<String>> numsMap = null;
-					 if(numMapMap.size()>0 && numMapMap.get(Eag2012Creator.SEARCHROOM)!=null){
-						 numsMap = numMapMap.get(Eag2012Creator.SEARCHROOM);
+					 if(numMapMap.size()>0 && numMapMap.get(CreateEAG2012.SEARCHROOM)!=null){
+						 numsMap = numMapMap.get(CreateEAG2012.SEARCHROOM);
 					 }else{
 						 numsMap = new HashMap<String, List<String>>();
 					 }
 					 List<String> nums = null;
-					 if(numsMap.size()>0 && numsMap.get(Eag2012Creator.WORKING_PLACES)!=null){
-						 nums = numsMap.get(Eag2012Creator.WORKING_PLACES);
+					 if(numsMap.size()>0 && numsMap.get(CreateEAG2012.WORKING_PLACES)!=null){
+						 nums = numsMap.get(CreateEAG2012.WORKING_PLACES);
 					 }else{
 						 nums = new ArrayList<String>();
 					 }
 					 nums.add(accessTable.getString("textASSRWorkPlaces"));
-					 numsMap.put(Eag2012Creator.WORKING_PLACES, nums);
-					 numMapMap.put(Eag2012Creator.SEARCHROOM,numsMap);
-					 numMapMapMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,numMapMap);
+					 numsMap.put(CreateEAG2012.WORKING_PLACES, nums);
+					 numMapMap.put(CreateEAG2012.SEARCHROOM,numsMap);
+					 numMapMapMap.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,numMapMap);
 					 if(numValue.size()>i){
 						 numValue.set(i,numMapMapMap);
 					 }else{
@@ -1437,27 +1457,27 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 numMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>(); 
 					 }
 					 Map<String, Map<String, List<String>>> numMapMap = null;
-					 if(numMapMapMap.size()>0 && numMapMapMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-						 numMapMap = numMapMapMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+					 if(numMapMapMap.size()>0 && numMapMapMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+						 numMapMap = numMapMapMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 					 }else{
 						 numMapMap = new HashMap<String, Map<String, List<String>>>();
 					 }
 					 Map<String, List<String>> numsMap = null;
-					 if(numMapMap.size()>0 && numMapMap.get(Eag2012Creator.SEARCHROOM)!=null){
-						 numsMap = numMapMap.get(Eag2012Creator.SEARCHROOM);
+					 if(numMapMap.size()>0 && numMapMap.get(CreateEAG2012.SEARCHROOM)!=null){
+						 numsMap = numMapMap.get(CreateEAG2012.SEARCHROOM);
 					 }else{
 						 numsMap = new HashMap<String, List<String>>();
 					 }
 					 List<String> nums = null;
-					 if(numsMap.size()>0 && numsMap.get(Eag2012Creator.COMPUTER_PLACES)!=null){
-						 nums = numsMap.get(Eag2012Creator.COMPUTER_PLACES);
+					 if(numsMap.size()>0 && numsMap.get(CreateEAG2012.COMPUTER_PLACES)!=null){
+						 nums = numsMap.get(CreateEAG2012.COMPUTER_PLACES);
 					 }else{
 						 nums = new ArrayList<String>();
 					 }
 					 nums.add(accessTable.getString("textASSRComputerPlaces"));
-					 numsMap.put(Eag2012Creator.COMPUTER_PLACES, nums);
-					 numMapMap.put(Eag2012Creator.SEARCHROOM,numsMap);
-					 numMapMapMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,numMapMap);
+					 numsMap.put(CreateEAG2012.COMPUTER_PLACES, nums);
+					 numMapMap.put(CreateEAG2012.SEARCHROOM,numsMap);
+					 numMapMapMap.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,numMapMap);
 					 if(numValue.size()>i){
 						 numValue.set(i,numMapMapMap);
 					 }else{
@@ -1484,20 +1504,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
 						 }
 						 Map<String, List<String>> descriptiveNoteMapList = null;
-						 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							 descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							 descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 descriptiveNoteMapList = new HashMap<String, List<String>>();
 						 }
 						 List<String> descriptiveNoteList = null;
-						 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.SEARCHROOM)!=null){
-							 descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.SEARCHROOM);
+						 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.SEARCHROOM)!=null){
+							 descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.SEARCHROOM);
 						 }else{
 							 descriptiveNoteList = new ArrayList<String>();
 						 }
 						 descriptiveNoteList.add(accessTable.getString(target1));
-						 descriptiveNoteMapList.put(Eag2012Creator.SEARCHROOM,descriptiveNoteList);
-						 descriptiveNoteMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+						 descriptiveNoteMapList.put(CreateEAG2012.SEARCHROOM,descriptiveNoteList);
+						 descriptiveNoteMapMapList.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
 						 if(descriptiveNotePValue.size()>i){
 							 descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
 						 }else{
@@ -1517,20 +1537,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
 						 }
 						 Map<String, List<String>> descriptiveNoteMapList = null;
-						 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							 descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							 descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 descriptiveNoteMapList = new HashMap<String, List<String>>();
 						 }
 						 List<String> descriptiveNoteList = null;
-						 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.SEARCHROOM)!=null){
-							 descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.SEARCHROOM);
+						 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.SEARCHROOM)!=null){
+							 descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.SEARCHROOM);
 						 }else{
 							 descriptiveNoteList = new ArrayList<String>();
 						 }
 						 descriptiveNoteList.add(accessTable.getString(target2));
-						 descriptiveNoteMapList.put(Eag2012Creator.SEARCHROOM,descriptiveNoteList);
-						 descriptiveNoteMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+						 descriptiveNoteMapList.put(CreateEAG2012.SEARCHROOM,descriptiveNoteList);
+						 descriptiveNoteMapMapList.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
 						 if(descriptiveNotePValue.size()>i){
 							 descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
 						 }else{
@@ -1554,27 +1574,27 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 numsMapMapMapList = new HashMap<String, Map<String, Map<String, List<String>>>>();
 					 }
 					 Map<String, Map<String, List<String>>> numsMapMapList = null;
-					 if(numsMapMapMapList.size()>0 && numsMapMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-						 numsMapMapList = numsMapMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+					 if(numsMapMapMapList.size()>0 && numsMapMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+						 numsMapMapList = numsMapMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 					 }else{
 						 numsMapMapList = new HashMap<String, Map<String, List<String>>>();
 					 }
 					 Map<String, List<String>> numsMapList = null;
-					 if(numsMapMapList.size()>0 && numsMapMapList.get(Eag2012Creator.SEARCHROOM)!=null){
-						 numsMapList = numsMapMapList.get(Eag2012Creator.SEARCHROOM);
+					 if(numsMapMapList.size()>0 && numsMapMapList.get(CreateEAG2012.SEARCHROOM)!=null){
+						 numsMapList = numsMapMapList.get(CreateEAG2012.SEARCHROOM);
 					 }else{
 						 numsMapList = new HashMap<String, List<String>>(); 
 					 }
 					 List<String> numsList = null;
-					 if(numsMapList.size()>0 && numsMapList.get(Eag2012Creator.MICROFILM)!=null){
-						 numsList = numsMapList.get(Eag2012Creator.MICROFILM);
+					 if(numsMapList.size()>0 && numsMapList.get(CreateEAG2012.MICROFILM)!=null){
+						 numsList = numsMapList.get(CreateEAG2012.MICROFILM);
 					 }else{
 						 numsList = new ArrayList<String>();
 					 }
 					 numsList.add(accessTable.getString("textASSRMicrofilmPlaces"));
-					 numsMapList.put(Eag2012Creator.MICROFILM,numsList);
-					 numsMapMapList.put(Eag2012Creator.SEARCHROOM,numsMapList);
-					 numsMapMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,numsMapMapList);
+					 numsMapList.put(CreateEAG2012.MICROFILM,numsList);
+					 numsMapMapList.put(CreateEAG2012.SEARCHROOM,numsMapList);
+					 numsMapMapMapList.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,numsMapMapList);
 					 if(nums.size()>i){
 						 nums.set(i,numsMapMapMapList);
 					 }else{
@@ -1749,20 +1769,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 descriptiveNotePValue = new HashMap<String,Map<String,List<String>>>();
 						 }
 						 Map<String, List<String>> descriptiveNoteMapList = null;
-						 if(descriptiveNotePValue.size()>0 && descriptiveNotePValue.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							 descriptiveNoteMapList = descriptiveNotePValue.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if(descriptiveNotePValue.size()>0 && descriptiveNotePValue.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							 descriptiveNoteMapList = descriptiveNotePValue.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 descriptiveNoteMapList = new HashMap<String, List<String>>(); 
 						 }
 						 List<String> descriptiveNoteList = null;
-						 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.RESEARCH_SERVICES)!=null){
-							 descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.RESEARCH_SERVICES);
+						 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.RESEARCH_SERVICES)!=null){
+							 descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.RESEARCH_SERVICES);
 						 }else{
 							 descriptiveNoteList = new ArrayList<String>();
 						 }
 						 descriptiveNoteList.add(accessTable.getString(target1));
-						 descriptiveNoteMapList.put(Eag2012Creator.RESEARCH_SERVICES,descriptiveNoteList);
-						 descriptiveNotePValue.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+						 descriptiveNoteMapList.put(CreateEAG2012.RESEARCH_SERVICES,descriptiveNoteList);
+						 descriptiveNotePValue.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
 						 if(descriptiveNotesPValues.size()>i){
 							 descriptiveNotesPValues.set(i,descriptiveNotePValue);
 						 }else{
@@ -1782,20 +1802,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 descriptiveNotePLang = new HashMap<String,Map<String,List<String>>>();
 						 }
 						 Map<String, List<String>> descriptiveNoteMapList = null;
-						 if(descriptiveNotePLang.size()>0 && descriptiveNotePLang.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							 descriptiveNoteMapList = descriptiveNotePLang.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if(descriptiveNotePLang.size()>0 && descriptiveNotePLang.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							 descriptiveNoteMapList = descriptiveNotePLang.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 descriptiveNoteMapList = new HashMap<String, List<String>>(); 
 						 }
 						 List<String> descriptiveNoteList = null;
-						 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.RESEARCH_SERVICES)!=null){
-							 descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.RESEARCH_SERVICES);
+						 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.RESEARCH_SERVICES)!=null){
+							 descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.RESEARCH_SERVICES);
 						 }else{
 							 descriptiveNoteList = new ArrayList<String>();
 						 }
 						 descriptiveNoteList.add(accessTable.getString(target2));
-						 descriptiveNoteMapList.put(Eag2012Creator.RESEARCH_SERVICES,descriptiveNoteList);
-						 descriptiveNotePLang.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+						 descriptiveNoteMapList.put(CreateEAG2012.RESEARCH_SERVICES,descriptiveNoteList);
+						 descriptiveNotePLang.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
 						 if(descriptiveNotesPLang.size()>i){
 							 descriptiveNotesPLang.set(i,descriptiveNotePLang);
 						 }else{
@@ -1832,20 +1852,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 telephonesMap = new HashMap<String, Map<String, List<String>>>(); 
 						 }
 						 Map<String, List<String>> telephonesMapList = null;
-						 if(telephonesMap.size()>0 && telephonesMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							 telephonesMapList = telephonesMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if(telephonesMap.size()>0 && telephonesMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							 telephonesMapList = telephonesMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 telephonesMapList = new HashMap<String, List<String>>();
 						 }
 						 List<String> telephonesList = null;
-						 if(telephonesMapList.size()>0 && telephonesMapList.get(Eag2012Creator.LIBRARY)!=null){
-							 telephonesList = telephonesMapList.get(Eag2012Creator.LIBRARY);
+						 if(telephonesMapList.size()>0 && telephonesMapList.get(CreateEAG2012.LIBRARY)!=null){
+							 telephonesList = telephonesMapList.get(CreateEAG2012.LIBRARY);
 						 }else{
 							 telephonesList = new ArrayList<String>();
 						 }
 						 telephonesList.add(accessTable.getString("textASLTelephone"));
-						 telephonesMapList.put(Eag2012Creator.LIBRARY, telephonesList);
-						 telephonesMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,telephonesMapList);
+						 telephonesMapList.put(CreateEAG2012.LIBRARY, telephonesList);
+						 telephonesMap.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,telephonesMapList);
 						 if(telephones.size()>i){
 							 telephones.set(i, telephonesMap);
 						 }else{
@@ -1867,19 +1887,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 List<String> listEmail = null;
 						 Map<String,List<String>> emailMap = null;
-						 if(email.size()>0 && email.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							 emailMap = email.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if(email.size()>0 && email.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							 emailMap = email.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 emailMap = new HashMap<String,List<String>>();
 						 }
-						 if(emailMap.size()>0 && emailMap.get(Eag2012Creator.LIBRARY)!=null){
-							 listEmail = emailMap.get(Eag2012Creator.LIBRARY);
+						 if(emailMap.size()>0 && emailMap.get(CreateEAG2012.LIBRARY)!=null){
+							 listEmail = emailMap.get(CreateEAG2012.LIBRARY);
 						 }else{
 							 listEmail = new ArrayList<String>();
 						 }
 						 listEmail.add(accessTable.getString("textASLEmailAddress"));
-						 emailMap.put(Eag2012Creator.LIBRARY,listEmail); 
-						 email.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, emailMap);
+						 emailMap.put(CreateEAG2012.LIBRARY,listEmail); 
+						 email.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, emailMap);
 						 if(listMapEmailValueList.size()>i){
 							 listMapEmailValueList.set(i,email);
 						 }else{
@@ -1901,19 +1921,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 List<String> listEmail = null;
 						 Map<String,List<String>> emailMap = null;
-						 if(email.size()>0 && email.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							 emailMap = email.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if(email.size()>0 && email.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							 emailMap = email.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 emailMap = new HashMap<String,List<String>>();
 						 }
-						 if(emailMap.size()>0 && emailMap.get(Eag2012Creator.LIBRARY)!=null){
-							 listEmail = emailMap.get(Eag2012Creator.LIBRARY);
+						 if(emailMap.size()>0 && emailMap.get(CreateEAG2012.LIBRARY)!=null){
+							 listEmail = emailMap.get(CreateEAG2012.LIBRARY);
 						 }else{
 							 listEmail = new ArrayList<String>();
 						 }
 						 listEmail.add(accessTable.getString("textASLEmailLinkTitle"));
-						 emailMap.put(Eag2012Creator.LIBRARY,listEmail); 
-						 email.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, emailMap);
+						 emailMap.put(CreateEAG2012.LIBRARY,listEmail); 
+						 email.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, emailMap);
 						 if(listMapEmailList.size()>i){
 							 listMapEmailList.set(i,email);
 						 }else{
@@ -1935,19 +1955,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 List<String> listWebpage = null;
 						 Map<String,List<String>> webpageMap = null;
-						 if(webpage.size()>0 && webpage.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							 webpageMap = webpage.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if(webpage.size()>0 && webpage.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							 webpageMap = webpage.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 webpageMap = new HashMap<String,List<String>>();
 						 }
-						 if(webpageMap.size()>0 && webpageMap.get(Eag2012Creator.LIBRARY)!=null){
-							 listWebpage = webpageMap.get(Eag2012Creator.LIBRARY);
+						 if(webpageMap.size()>0 && webpageMap.get(CreateEAG2012.LIBRARY)!=null){
+							 listWebpage = webpageMap.get(CreateEAG2012.LIBRARY);
 						 }else{
 							 listWebpage = new ArrayList<String>();
 						 }
 						 listWebpage.add(accessTable.getString("textASLWebpage"));
-						 webpageMap.put(Eag2012Creator.LIBRARY,listWebpage); //root section, here there is only one mails list
-						 webpage.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, webpageMap);
+						 webpageMap.put(CreateEAG2012.LIBRARY,listWebpage); //root section, here there is only one mails list
+						 webpage.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, webpageMap);
 						 if(listMapWebpagelList.size()>i){
 							 listMapWebpagelList.set(i,webpage);
 						 }else{
@@ -1968,19 +1988,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 List<String> listWebpage = null;
 						 Map<String,List<String>> webpageMap = null;
-						 if(webpage.size()>0 && webpage.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							 webpageMap = webpage.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if(webpage.size()>0 && webpage.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							 webpageMap = webpage.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 webpageMap = new HashMap<String,List<String>>();
 						 }
-						 if(webpageMap.size()>0 && webpageMap.get(Eag2012Creator.LIBRARY)!=null){
-							 listWebpage = webpageMap.get(Eag2012Creator.LIBRARY);
+						 if(webpageMap.size()>0 && webpageMap.get(CreateEAG2012.LIBRARY)!=null){
+							 listWebpage = webpageMap.get(CreateEAG2012.LIBRARY);
 						 }else{
 							 listWebpage = new ArrayList<String>();
 						 }
 						 listWebpage.add(accessTable.getString("textASLWebpageLinkTitle"));
-						 webpageMap.put(Eag2012Creator.LIBRARY,listWebpage); //root section, here there is only one mails list
-						 webpage.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, webpageMap);
+						 webpageMap.put(CreateEAG2012.LIBRARY,listWebpage); //root section, here there is only one mails list
+						 webpage.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, webpageMap);
 						 if(listMapWebpageValueList.size()>i){
 							 listMapWebpageValueList.set(i,webpage);
 						 }else{
@@ -2000,27 +2020,27 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 numMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>(); 
 						 }
 						 Map<String, Map<String, List<String>>> numMapMap = null;
-						 if(numMapMapMap.size()>0 && numMapMapMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							 numMapMap = numMapMapMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if(numMapMapMap.size()>0 && numMapMapMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							 numMapMap = numMapMapMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 numMapMap = new HashMap<String, Map<String, List<String>>>();
 						 }
 						 Map<String, List<String>> numsMap = null;
-						 if(numMapMap.size()>0 && numMapMap.get(Eag2012Creator.LIBRARY)!=null){
-							 numsMap = numMapMap.get(Eag2012Creator.LIBRARY);
+						 if(numMapMap.size()>0 && numMapMap.get(CreateEAG2012.LIBRARY)!=null){
+							 numsMap = numMapMap.get(CreateEAG2012.LIBRARY);
 						 }else{
 							 numsMap = new HashMap<String, List<String>>();
 						 }
 						 List<String> nums = null;
-						 if(numsMap.size()>0 && numsMap.get(Eag2012Creator.MONOGRAPHIC_PUBLICATION)!=null){
-							 nums = numsMap.get(Eag2012Creator.MONOGRAPHIC_PUBLICATION);
+						 if(numsMap.size()>0 && numsMap.get(CreateEAG2012.MONOGRAPHIC_PUBLICATION)!=null){
+							 nums = numsMap.get(CreateEAG2012.MONOGRAPHIC_PUBLICATION);
 						 }else{
 							 nums = new ArrayList<String>();
 						 }
 						 nums.add(accessTable.getString("textASLMonographocPublication"));
-						 numsMap.put(Eag2012Creator.MONOGRAPHIC_PUBLICATION, nums);
-						 numMapMap.put(Eag2012Creator.LIBRARY,numsMap);
-						 numMapMapMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,numMapMap);
+						 numsMap.put(CreateEAG2012.MONOGRAPHIC_PUBLICATION, nums);
+						 numMapMap.put(CreateEAG2012.LIBRARY,numsMap);
+						 numMapMapMap.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,numMapMap);
 						 if(numValue.size()>i){
 							 numValue.set(i,numMapMapMap);
 						 }else{
@@ -2041,27 +2061,27 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 numMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>(); 
 						 }
 						 Map<String, Map<String, List<String>>> numMapMap = null;
-						 if(numMapMapMap.size()>0 && numMapMapMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							 numMapMap = numMapMapMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if(numMapMapMap.size()>0 && numMapMapMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							 numMapMap = numMapMapMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 numMapMap = new HashMap<String, Map<String, List<String>>>();
 						 }
 						 Map<String, List<String>> numsMap = null;
-						 if(numMapMap.size()>0 && numMapMap.get(Eag2012Creator.LIBRARY)!=null){
-							 numsMap = numMapMap.get(Eag2012Creator.LIBRARY);
+						 if(numMapMap.size()>0 && numMapMap.get(CreateEAG2012.LIBRARY)!=null){
+							 numsMap = numMapMap.get(CreateEAG2012.LIBRARY);
 						 }else{
 							 numsMap = new HashMap<String, List<String>>();
 						 }
 						 List<String> nums = null;
-						 if(numsMap.size()>0 && numsMap.get(Eag2012Creator.SERIAL_PUBLICATION)!=null){
-							 nums = numsMap.get(Eag2012Creator.SERIAL_PUBLICATION);
+						 if(numsMap.size()>0 && numsMap.get(CreateEAG2012.SERIAL_PUBLICATION)!=null){
+							 nums = numsMap.get(CreateEAG2012.SERIAL_PUBLICATION);
 						 }else{
 							 nums = new ArrayList<String>();
 						 }
 						 nums.add(accessTable.getString("textASLSerialPublication"));
-						 numsMap.put(Eag2012Creator.SERIAL_PUBLICATION, nums);
-						 numMapMap.put(Eag2012Creator.LIBRARY,numsMap);
-						 numMapMapMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,numMapMap);
+						 numsMap.put(CreateEAG2012.SERIAL_PUBLICATION, nums);
+						 numMapMap.put(CreateEAG2012.LIBRARY,numsMap);
+						 numMapMapMap.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,numMapMap);
 						 if(numValue.size()>i){
 							 numValue.set(i,numMapMapMap);
 						 }else{
@@ -2105,20 +2125,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
 							 }
 							 Map<String, List<String>> descriptiveNoteMapList = null;
-							 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-								 descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+							 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+								 descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 							 }else{
 								 descriptiveNoteMapList = new HashMap<String, List<String>>();
 							 }
 							 List<String> descriptiveNoteList = null;
-							 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.INTERNET_ACCESS)!=null){
-								 descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.INTERNET_ACCESS);
+							 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.INTERNET_ACCESS)!=null){
+								 descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.INTERNET_ACCESS);
 							 }else{
 								 descriptiveNoteList = new ArrayList<String>();
 							 }
 							 descriptiveNoteList.add(accessTable.getString(target1));
-							 descriptiveNoteMapList.put(Eag2012Creator.INTERNET_ACCESS,descriptiveNoteList);
-							 descriptiveNoteMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+							 descriptiveNoteMapList.put(CreateEAG2012.INTERNET_ACCESS,descriptiveNoteList);
+							 descriptiveNoteMapMapList.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
 							 if(descriptiveNotePValue.size()>i){
 								 descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
 							 }else{
@@ -2139,20 +2159,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
 							 }
 							 Map<String, List<String>> descriptiveNoteMapList = null;
-							 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-								 descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+							 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+								 descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 							 }else{
 								 descriptiveNoteMapList = new HashMap<String, List<String>>();
 							 }
 							 List<String> descriptiveNoteList = null;
-							 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.INTERNET_ACCESS)!=null){
-								 descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.INTERNET_ACCESS);
+							 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.INTERNET_ACCESS)!=null){
+								 descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.INTERNET_ACCESS);
 							 }else{
 								 descriptiveNoteList = new ArrayList<String>();
 							 }
 							 descriptiveNoteList.add(accessTable.getString(target1));
-							 descriptiveNoteMapList.put(Eag2012Creator.INTERNET_ACCESS,descriptiveNoteList);
-							 descriptiveNoteMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+							 descriptiveNoteMapList.put(CreateEAG2012.INTERNET_ACCESS,descriptiveNoteList);
+							 descriptiveNoteMapMapList.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
 							 if(descriptiveNotePLang.size()>i){
 								 descriptiveNotePLang.set(i,descriptiveNoteMapMapList);
 							 }else{
@@ -2198,20 +2218,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
 							 }
 							 Map<String, List<String>> descriptiveNoteMapList = null;
-							 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-								 descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+							 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+								 descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 							 }else{
 								 descriptiveNoteMapList = new HashMap<String, List<String>>();
 							 }
 							 List<String> descriptiveNoteList = null;
-							 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.RESTORATION_LAB)!=null){
-								 descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.RESTORATION_LAB);
+							 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.RESTORATION_LAB)!=null){
+								 descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.RESTORATION_LAB);
 							 }else{
 								 descriptiveNoteList = new ArrayList<String>();
 							 }
 							 descriptiveNoteList.add(accessTable.getString(target1));
-							 descriptiveNoteMapList.put(Eag2012Creator.RESTORATION_LAB,descriptiveNoteList);
-							 descriptiveNoteMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+							 descriptiveNoteMapList.put(CreateEAG2012.RESTORATION_LAB,descriptiveNoteList);
+							 descriptiveNoteMapMapList.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
 							 if(descriptiveNotePValue.size()>i){
 								 descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
 							 }else{
@@ -2232,20 +2252,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
 							 }
 							 Map<String, List<String>> descriptiveNoteMapList = null;
-							 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-								 descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+							 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+								 descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 							 }else{
 								 descriptiveNoteMapList = new HashMap<String, List<String>>();
 							 }
 							 List<String> descriptiveNoteList = null;
-							 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.RESTORATION_LAB)!=null){
-								 descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.RESTORATION_LAB);
+							 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.RESTORATION_LAB)!=null){
+								 descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.RESTORATION_LAB);
 							 }else{
 								 descriptiveNoteList = new ArrayList<String>();
 							 }
 							 descriptiveNoteList.add(accessTable.getString(target1));
-							 descriptiveNoteMapList.put(Eag2012Creator.RESTORATION_LAB,descriptiveNoteList);
-							 descriptiveNoteMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+							 descriptiveNoteMapList.put(CreateEAG2012.RESTORATION_LAB,descriptiveNoteList);
+							 descriptiveNoteMapMapList.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
 							 if(descriptiveNotePLang.size()>i){
 								 descriptiveNotePLang.set(i,descriptiveNoteMapMapList);
 							 }else{
@@ -2269,20 +2289,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 telephonesMap = new HashMap<String, Map<String, List<String>>>(); 
 						 }
 						 Map<String, List<String>> telephonesMapList = null;
-						 if(telephonesMap.size()>0 && telephonesMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							 telephonesMapList = telephonesMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if(telephonesMap.size()>0 && telephonesMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							 telephonesMapList = telephonesMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 telephonesMapList = new HashMap<String, List<String>>();
 						 }
 						 List<String> telephonesList = null;
-						 if(telephonesMapList.size()>0 && telephonesMapList.get(Eag2012Creator.RESTORATION_LAB)!=null){
-							 telephonesList = telephonesMapList.get(Eag2012Creator.RESTORATION_LAB);
+						 if(telephonesMapList.size()>0 && telephonesMapList.get(CreateEAG2012.RESTORATION_LAB)!=null){
+							 telephonesList = telephonesMapList.get(CreateEAG2012.RESTORATION_LAB);
 						 }else{
 							 telephonesList = new ArrayList<String>();
 						 }
 						 telephonesList.add(accessTable.getString("textASTSTelephone"));
-						 telephonesMapList.put(Eag2012Creator.RESTORATION_LAB, telephonesList);
-						 telephonesMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,telephonesMapList);
+						 telephonesMapList.put(CreateEAG2012.RESTORATION_LAB, telephonesList);
+						 telephonesMap.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,telephonesMapList);
 						 if(telephones.size()>i){
 							 telephones.set(i, telephonesMap);
 						 }else{
@@ -2304,19 +2324,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 List<String> listEmail = null;
 						 Map<String,List<String>> emailMap = null;
-						 if(email.size()>0 && email.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							 emailMap = email.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if(email.size()>0 && email.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							 emailMap = email.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 emailMap = new HashMap<String,List<String>>();
 						 }
-						 if(emailMap.size()>0 && emailMap.get(Eag2012Creator.RESTORATION_LAB)!=null){
-							 listEmail = emailMap.get(Eag2012Creator.RESTORATION_LAB);
+						 if(emailMap.size()>0 && emailMap.get(CreateEAG2012.RESTORATION_LAB)!=null){
+							 listEmail = emailMap.get(CreateEAG2012.RESTORATION_LAB);
 						 }else{
 							 listEmail = new ArrayList<String>();
 						 }
 						 listEmail.add(accessTable.getString("textASRSEmail"));
-						 emailMap.put(Eag2012Creator.RESTORATION_LAB,listEmail); 
-						 email.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, emailMap);
+						 emailMap.put(CreateEAG2012.RESTORATION_LAB,listEmail); 
+						 email.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, emailMap);
 						 if(listMapEmailValueList.size()>i){
 							 listMapEmailValueList.set(i,email);
 						 }else{
@@ -2338,19 +2358,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 List<String> listEmail = null;
 						 Map<String,List<String>> emailMap = null;
-						 if(email.size()>0 && email.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							 emailMap = email.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if(email.size()>0 && email.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							 emailMap = email.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 emailMap = new HashMap<String,List<String>>();
 						 }
-						 if(emailMap.size()>0 && emailMap.get(Eag2012Creator.RESTORATION_LAB)!=null){
-							 listEmail = emailMap.get(Eag2012Creator.RESTORATION_LAB);
+						 if(emailMap.size()>0 && emailMap.get(CreateEAG2012.RESTORATION_LAB)!=null){
+							 listEmail = emailMap.get(CreateEAG2012.RESTORATION_LAB);
 						 }else{
 							 listEmail = new ArrayList<String>();
 						 }
 						 listEmail.add(accessTable.getString("textASRSEmailLinkTitle"));
-						 emailMap.put(Eag2012Creator.RESTORATION_LAB,listEmail); 
-						 email.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, emailMap);
+						 emailMap.put(CreateEAG2012.RESTORATION_LAB,listEmail); 
+						 email.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, emailMap);
 						 if(listMapEmailList.size()>i){
 							 listMapEmailList.set(i,email);
 						 }else{
@@ -2372,19 +2392,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 List<String> listWebpage = null;
 						 Map<String,List<String>> webpageMap = null;
-						 if(webpage.size()>0 && webpage.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							 webpageMap = webpage.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if(webpage.size()>0 && webpage.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							 webpageMap = webpage.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 webpageMap = new HashMap<String,List<String>>();
 						 }
-						 if(webpageMap.size()>0 && webpageMap.get(Eag2012Creator.RESTORATION_LAB)!=null){
-							 listWebpage = webpageMap.get(Eag2012Creator.RESTORATION_LAB);
+						 if(webpageMap.size()>0 && webpageMap.get(CreateEAG2012.RESTORATION_LAB)!=null){
+							 listWebpage = webpageMap.get(CreateEAG2012.RESTORATION_LAB);
 						 }else{
 							 listWebpage = new ArrayList<String>();
 						 }
 						 listWebpage.add(accessTable.getString("textASRSWebpage"));
-						 webpageMap.put(Eag2012Creator.RESTORATION_LAB,listWebpage); //root section, here there is only one mails list
-						 webpage.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, webpageMap);
+						 webpageMap.put(CreateEAG2012.RESTORATION_LAB,listWebpage); //root section, here there is only one mails list
+						 webpage.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, webpageMap);
 						 if(listMapWebpagelList.size()>i){
 							 listMapWebpagelList.set(i,webpage);
 						 }else{
@@ -2405,19 +2425,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 List<String> listWebpage = null;
 						 Map<String,List<String>> webpageMap = null;
-						 if(webpage.size()>0 && webpage.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							 webpageMap = webpage.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if(webpage.size()>0 && webpage.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							 webpageMap = webpage.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 webpageMap = new HashMap<String,List<String>>();
 						 }
-						 if(webpageMap.size()>0 && webpageMap.get(Eag2012Creator.RESTORATION_LAB)!=null){
-							 listWebpage = webpageMap.get(Eag2012Creator.RESTORATION_LAB);
+						 if(webpageMap.size()>0 && webpageMap.get(CreateEAG2012.RESTORATION_LAB)!=null){
+							 listWebpage = webpageMap.get(CreateEAG2012.RESTORATION_LAB);
 						 }else{
 							 listWebpage = new ArrayList<String>();
 						 }
 						 listWebpage.add(accessTable.getString("textASRSWebpageLinkTitle"));
-						 webpageMap.put(Eag2012Creator.RESTORATION_LAB,listWebpage); //root section, here there is only one mails list
-						 webpage.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, webpageMap);
+						 webpageMap.put(CreateEAG2012.RESTORATION_LAB,listWebpage); //root section, here there is only one mails list
+						 webpage.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, webpageMap);
 						 if(listMapWebpageValueList.size()>i){
 							 listMapWebpageValueList.set(i,webpage);
 						 }else{
@@ -2461,20 +2481,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
 							 }
 							 Map<String, List<String>> descriptiveNoteMapList = null;
-							 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-								 descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+							 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+								 descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 							 }else{
 								 descriptiveNoteMapList = new HashMap<String, List<String>>();
 							 }
 							 List<String> descriptiveNoteList = null;
-							 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.REPRODUCTIONSER)!=null){
-								 descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.REPRODUCTIONSER);
+							 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.REPRODUCTIONSER)!=null){
+								 descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.REPRODUCTIONSER);
 							 }else{
 								 descriptiveNoteList = new ArrayList<String>();
 							 }
 							 descriptiveNoteList.add(accessTable.getString(target1));
-							 descriptiveNoteMapList.put(Eag2012Creator.REPRODUCTIONSER,descriptiveNoteList);
-							 descriptiveNoteMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+							 descriptiveNoteMapList.put(CreateEAG2012.REPRODUCTIONSER,descriptiveNoteList);
+							 descriptiveNoteMapMapList.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
 							 if(descriptiveNotePValue.size()>i){
 								 descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
 							 }else{
@@ -2495,20 +2515,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
 							 }
 							 Map<String, List<String>> descriptiveNoteMapList = null;
-							 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-								 descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+							 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+								 descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 							 }else{
 								 descriptiveNoteMapList = new HashMap<String, List<String>>();
 							 }
 							 List<String> descriptiveNoteList = null;
-							 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.REPRODUCTIONSER)!=null){
-								 descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.REPRODUCTIONSER);
+							 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.REPRODUCTIONSER)!=null){
+								 descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.REPRODUCTIONSER);
 							 }else{
 								 descriptiveNoteList = new ArrayList<String>();
 							 }
 							 descriptiveNoteList.add(accessTable.getString(target1));
-							 descriptiveNoteMapList.put(Eag2012Creator.REPRODUCTIONSER,descriptiveNoteList);
-							 descriptiveNoteMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+							 descriptiveNoteMapList.put(CreateEAG2012.REPRODUCTIONSER,descriptiveNoteList);
+							 descriptiveNoteMapMapList.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
 							 if(descriptiveNotePLang.size()>i){
 								 descriptiveNotePLang.set(i,descriptiveNoteMapMapList);
 							 }else{
@@ -2532,20 +2552,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 telephonesMap = new HashMap<String, Map<String, List<String>>>(); 
 						 }
 						 Map<String, List<String>> telephonesMapList = null;
-						 if(telephonesMap.size()>0 && telephonesMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							 telephonesMapList = telephonesMap.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if(telephonesMap.size()>0 && telephonesMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							 telephonesMapList = telephonesMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 telephonesMapList = new HashMap<String, List<String>>();
 						 }
 						 List<String> telephonesList = null;
-						 if(telephonesMapList.size()>0 && telephonesMapList.get(Eag2012Creator.REPRODUCTIONSER)!=null){
-							 telephonesList = telephonesMapList.get(Eag2012Creator.REPRODUCTIONSER);
+						 if(telephonesMapList.size()>0 && telephonesMapList.get(CreateEAG2012.REPRODUCTIONSER)!=null){
+							 telephonesList = telephonesMapList.get(CreateEAG2012.REPRODUCTIONSER);
 						 }else{
 							 telephonesList = new ArrayList<String>();
 						 }
 						 telephonesList.add(accessTable.getString("textASTSRSTelephone"));
-						 telephonesMapList.put(Eag2012Creator.REPRODUCTIONSER, telephonesList);
-						 telephonesMap.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,telephonesMapList);
+						 telephonesMapList.put(CreateEAG2012.REPRODUCTIONSER, telephonesList);
+						 telephonesMap.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,telephonesMapList);
 						 if(telephones.size()>i){
 							 telephones.set(i, telephonesMap);
 						 }else{
@@ -2567,19 +2587,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 List<String> listEmail = null;
 						 Map<String,List<String>> emailMap = null;
-						 if(email.size()>0 && email.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							 emailMap = email.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if(email.size()>0 && email.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							 emailMap = email.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 emailMap = new HashMap<String,List<String>>();
 						 }
-						 if(emailMap.size()>0 && emailMap.get(Eag2012Creator.REPRODUCTIONSER)!=null){
-							 listEmail = emailMap.get(Eag2012Creator.REPRODUCTIONSER);
+						 if(emailMap.size()>0 && emailMap.get(CreateEAG2012.REPRODUCTIONSER)!=null){
+							 listEmail = emailMap.get(CreateEAG2012.REPRODUCTIONSER);
 						 }else{
 							 listEmail = new ArrayList<String>();
 						 }
 						 listEmail.add(accessTable.getString("textASTSRSEmailAddress"));
-						 emailMap.put(Eag2012Creator.REPRODUCTIONSER,listEmail); 
-						 email.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, emailMap);
+						 emailMap.put(CreateEAG2012.REPRODUCTIONSER,listEmail); 
+						 email.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, emailMap);
 						 if(listMapEmailValueList.size()>i){
 							 listMapEmailValueList.set(i,email);
 						 }else{
@@ -2601,19 +2621,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 List<String> listEmail = null;
 						 Map<String,List<String>> emailMap = null;
-						 if(email.size()>0 && email.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							 emailMap = email.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if(email.size()>0 && email.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							 emailMap = email.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 emailMap = new HashMap<String,List<String>>();
 						 }
-						 if(emailMap.size()>0 && emailMap.get(Eag2012Creator.REPRODUCTIONSER)!=null){
-							 listEmail = emailMap.get(Eag2012Creator.REPRODUCTIONSER);
+						 if(emailMap.size()>0 && emailMap.get(CreateEAG2012.REPRODUCTIONSER)!=null){
+							 listEmail = emailMap.get(CreateEAG2012.REPRODUCTIONSER);
 						 }else{
 							 listEmail = new ArrayList<String>();
 						 }
 						 listEmail.add(accessTable.getString("textASTSEmailAddressLinkTitle"));
-						 emailMap.put(Eag2012Creator.REPRODUCTIONSER,listEmail); 
-						 email.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, emailMap);
+						 emailMap.put(CreateEAG2012.REPRODUCTIONSER,listEmail); 
+						 email.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, emailMap);
 						 if(listMapEmailList.size()>i){
 							 listMapEmailList.set(i,email);
 						 }else{
@@ -2635,19 +2655,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 List<String> listWebpage = null;
 						 Map<String,List<String>> webpageMap = null;
-						 if(webpage.size()>0 && webpage.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							 webpageMap = webpage.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if(webpage.size()>0 && webpage.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							 webpageMap = webpage.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 webpageMap = new HashMap<String,List<String>>();
 						 }
-						 if(webpageMap.size()>0 && webpageMap.get(Eag2012Creator.REPRODUCTIONSER)!=null){
-							 listWebpage = webpageMap.get(Eag2012Creator.REPRODUCTIONSER);
+						 if(webpageMap.size()>0 && webpageMap.get(CreateEAG2012.REPRODUCTIONSER)!=null){
+							 listWebpage = webpageMap.get(CreateEAG2012.REPRODUCTIONSER);
 						 }else{
 							 listWebpage = new ArrayList<String>();
 						 }
 						 listWebpage.add(accessTable.getString("textASTSRSWebpage"));
-						 webpageMap.put(Eag2012Creator.REPRODUCTIONSER,listWebpage); //root section, here there is only one mails list
-						 webpage.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, webpageMap);
+						 webpageMap.put(CreateEAG2012.REPRODUCTIONSER,listWebpage); //root section, here there is only one mails list
+						 webpage.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, webpageMap);
 						 if(listMapWebpagelList.size()>i){
 							 listMapWebpagelList.set(i,webpage);
 						 }else{
@@ -2668,19 +2688,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 						 List<String> listWebpage = null;
 						 Map<String,List<String>> webpageMap = null;
-						 if(webpage.size()>0 && webpage.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-							 webpageMap = webpage.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+						 if(webpage.size()>0 && webpage.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							 webpageMap = webpage.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 webpageMap = new HashMap<String,List<String>>();
 						 }
-						 if(webpageMap.size()>0 && webpageMap.get(Eag2012Creator.REPRODUCTIONSER)!=null){
-							 listWebpage = webpageMap.get(Eag2012Creator.REPRODUCTIONSER);
+						 if(webpageMap.size()>0 && webpageMap.get(CreateEAG2012.REPRODUCTIONSER)!=null){
+							 listWebpage = webpageMap.get(CreateEAG2012.REPRODUCTIONSER);
 						 }else{
 							 listWebpage = new ArrayList<String>();
 						 }
 						 listWebpage.add(accessTable.getString("textASTSRSWebpageLinkTitle"));
-						 webpageMap.put(Eag2012Creator.REPRODUCTIONSER,listWebpage); //root section, here there is only one mails list
-						 webpage.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES, webpageMap);
+						 webpageMap.put(CreateEAG2012.REPRODUCTIONSER,listWebpage); //root section, here there is only one mails list
+						 webpage.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, webpageMap);
 						 if(listMapWebpageValueList.size()>i){
 							 listMapWebpageValueList.set(i,webpage);
 						 }else{
@@ -2768,20 +2788,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
 							}
 							Map<String, List<String>> descriptiveNoteMapList = null;
-							if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-								descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+							if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+								descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 							}else{
 								descriptiveNoteMapList = new HashMap<String, List<String>>();
 							}
 							List<String> descriptiveNoteList = null;
-							if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.REFRESHMENT)!=null){
-								descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.REFRESHMENT);
+							if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.REFRESHMENT)!=null){
+								descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.REFRESHMENT);
 							}else{
 								descriptiveNoteList = new ArrayList<String>();
 							}
 							descriptiveNoteList.add(accessTable.getString("textASReSeRefreshment"));
-							descriptiveNoteMapList.put(Eag2012Creator.REFRESHMENT,descriptiveNoteList);
-							descriptiveNoteMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+							descriptiveNoteMapList.put(CreateEAG2012.REFRESHMENT,descriptiveNoteList);
+							descriptiveNoteMapMapList.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
 							if(descriptiveNotePValue.size()>i){
 								descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
 							}else{
@@ -2811,20 +2831,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 									descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
 								}
 								Map<String, List<String>> descriptiveNoteMapList = null;
-								if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-									descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+								if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+									descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 								}else{
 									descriptiveNoteMapList = new HashMap<String, List<String>>();
 								}
 								List<String> descriptiveNoteList = null;
-								if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.EXHIBITION)!=null){
-									descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.EXHIBITION);
+								if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.EXHIBITION)!=null){
+									descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.EXHIBITION);
 								}else{
 									descriptiveNoteList = new ArrayList<String>();
 								}
 								descriptiveNoteList.add(accessTable.getString(target1));
-								descriptiveNoteMapList.put(Eag2012Creator.EXHIBITION,descriptiveNoteList);
-								descriptiveNoteMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+								descriptiveNoteMapList.put(CreateEAG2012.EXHIBITION,descriptiveNoteList);
+								descriptiveNoteMapMapList.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
 								if(descriptiveNotePValue.size()>i){
 									descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
 								}else{
@@ -2845,19 +2865,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 }
 								 List<String> listWeb = null;
 								 Map<String,List<String>> webMap = null;
-								 if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-									 webMap = mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+								 if(mapMapListWeb.size()>0 && mapMapListWeb.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+									 webMap = mapMapListWeb.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 								 }else{
 									 webMap = new HashMap<String,List<String>>();
 								 }
-								 if(webMap.size()>0 && webMap.get(Eag2012Creator.EXHIBITION)!=null){
-									 listWeb = webMap.get(Eag2012Creator.EXHIBITION);
+								 if(webMap.size()>0 && webMap.get(CreateEAG2012.EXHIBITION)!=null){
+									 listWeb = webMap.get(CreateEAG2012.EXHIBITION);
 								 }else{
 									 listWeb = new ArrayList<String>();
 								 }
 								 listWeb.add(accessTable.getString(target2));
-								 webMap.put(Eag2012Creator.EXHIBITION,listWeb);
-								 mapMapListWeb.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,webMap);
+								 webMap.put(CreateEAG2012.EXHIBITION,listWeb);
+								 mapMapListWeb.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,webMap);
 								 if(listMapWebpageHrefList.size()>i){
 									 listMapWebpageHrefList.set(i,mapMapListWeb);
 								 }else{
@@ -2878,19 +2898,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								}
 								List<String> listWeb = null;
 								Map<String,List<String>> webMap = null;
-								if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-									webMap = mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+								if(mapMapListWeb.size()>0 && mapMapListWeb.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+									webMap = mapMapListWeb.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 								}else{
 									webMap = new HashMap<String,List<String>>();
 								}
-								if(webMap.size()>0 && webMap.get(Eag2012Creator.EXHIBITION)!=null){
-									listWeb = webMap.get(Eag2012Creator.EXHIBITION);
+								if(webMap.size()>0 && webMap.get(CreateEAG2012.EXHIBITION)!=null){
+									listWeb = webMap.get(CreateEAG2012.EXHIBITION);
 								}else{
 									listWeb = new ArrayList<String>();
 								}
 								listWeb.add(accessTable.getString(target3));
-								webMap.put(Eag2012Creator.EXHIBITION,listWeb);
-								mapMapListWeb.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,webMap);
+								webMap.put(CreateEAG2012.EXHIBITION,listWeb);
+								mapMapListWeb.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,webMap);
 								if(listMapWebList.size()>i){
 									listMapWebList.set(i,mapMapListWeb);
 								}else{
@@ -2921,20 +2941,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 									descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
 								}
 								Map<String, List<String>> descriptiveNoteMapList = null;
-								if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-									descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+								if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+									descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 								}else{
 									descriptiveNoteMapList = new HashMap<String, List<String>>();
 								}
 								List<String> descriptiveNoteList = null;
-								if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.TOURS_SESSIONS)!=null){
-									descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.TOURS_SESSIONS);
+								if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.TOURS_SESSIONS)!=null){
+									descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.TOURS_SESSIONS);
 								}else{
 									descriptiveNoteList = new ArrayList<String>();
 								}
 								descriptiveNoteList.add(accessTable.getString(target1));
-								descriptiveNoteMapList.put(Eag2012Creator.TOURS_SESSIONS,descriptiveNoteList);
-								descriptiveNoteMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+								descriptiveNoteMapList.put(CreateEAG2012.TOURS_SESSIONS,descriptiveNoteList);
+								descriptiveNoteMapMapList.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
 								if(descriptiveNotePValue.size()>i){
 									descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
 								}else{
@@ -2955,19 +2975,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 }
 								 List<String> listWeb = null;
 								 Map<String,List<String>> webMap = null;
-								 if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-									 webMap = mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+								 if(mapMapListWeb.size()>0 && mapMapListWeb.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+									 webMap = mapMapListWeb.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 								 }else{
 									 webMap = new HashMap<String,List<String>>();
 								 }
-								 if(webMap.size()>0 && webMap.get(Eag2012Creator.TOURS_SESSIONS)!=null){
-									 listWeb = webMap.get(Eag2012Creator.TOURS_SESSIONS);
+								 if(webMap.size()>0 && webMap.get(CreateEAG2012.TOURS_SESSIONS)!=null){
+									 listWeb = webMap.get(CreateEAG2012.TOURS_SESSIONS);
 								 }else{
 									 listWeb = new ArrayList<String>();
 								 }
 								 listWeb.add(accessTable.getString(target2));
-								 webMap.put(Eag2012Creator.TOURS_SESSIONS,listWeb);
-								 mapMapListWeb.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,webMap);
+								 webMap.put(CreateEAG2012.TOURS_SESSIONS,listWeb);
+								 mapMapListWeb.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,webMap);
 								 if(listMapWebpageHrefList.size()>i){
 									 listMapWebpageHrefList.set(i,mapMapListWeb);
 								 }else{
@@ -2988,19 +3008,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								}
 								List<String> listWeb = null;
 								Map<String,List<String>> webMap = null;
-								if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-									webMap = mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+								if(mapMapListWeb.size()>0 && mapMapListWeb.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+									webMap = mapMapListWeb.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 								}else{
 									webMap = new HashMap<String,List<String>>();
 								}
-								if(webMap.size()>0 && webMap.get(Eag2012Creator.TOURS_SESSIONS)!=null){
-									listWeb = webMap.get(Eag2012Creator.TOURS_SESSIONS);
+								if(webMap.size()>0 && webMap.get(CreateEAG2012.TOURS_SESSIONS)!=null){
+									listWeb = webMap.get(CreateEAG2012.TOURS_SESSIONS);
 								}else{
 									listWeb = new ArrayList<String>();
 								}
 								listWeb.add(accessTable.getString(target3));
-								webMap.put(Eag2012Creator.TOURS_SESSIONS,listWeb);
-								mapMapListWeb.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,webMap);
+								webMap.put(CreateEAG2012.TOURS_SESSIONS,listWeb);
+								mapMapListWeb.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,webMap);
 								if(listMapWebList.size()>i){
 									listMapWebList.set(i,mapMapListWeb);
 								}else{
@@ -3031,20 +3051,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 									descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
 								}
 								Map<String, List<String>> descriptiveNoteMapList = null;
-								if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-									descriptiveNoteMapList = descriptiveNoteMapMapList.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+								if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+									descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 								}else{
 									descriptiveNoteMapList = new HashMap<String, List<String>>();
 								}
 								List<String> descriptiveNoteList = null;
-								if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(Eag2012Creator.OTHER_SERVICES)!=null){
-									descriptiveNoteList = descriptiveNoteMapList.get(Eag2012Creator.OTHER_SERVICES);
+								if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.OTHER_SERVICES)!=null){
+									descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.OTHER_SERVICES);
 								}else{
 									descriptiveNoteList = new ArrayList<String>();
 								}
 								descriptiveNoteList.add(accessTable.getString(target1));
-								descriptiveNoteMapList.put(Eag2012Creator.OTHER_SERVICES,descriptiveNoteList);
-								descriptiveNoteMapMapList.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+								descriptiveNoteMapList.put(CreateEAG2012.OTHER_SERVICES,descriptiveNoteList);
+								descriptiveNoteMapMapList.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
 								if(descriptiveNotePValue.size()>i){
 									descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
 								}else{
@@ -3065,19 +3085,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 }
 								 List<String> listWeb = null;
 								 Map<String,List<String>> webMap = null;
-								 if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-									 webMap = mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+								 if(mapMapListWeb.size()>0 && mapMapListWeb.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+									 webMap = mapMapListWeb.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 								 }else{
 									 webMap = new HashMap<String,List<String>>();
 								 }
-								 if(webMap.size()>0 && webMap.get(Eag2012Creator.OTHER_SERVICES)!=null){
-									 listWeb = webMap.get(Eag2012Creator.OTHER_SERVICES);
+								 if(webMap.size()>0 && webMap.get(CreateEAG2012.OTHER_SERVICES)!=null){
+									 listWeb = webMap.get(CreateEAG2012.OTHER_SERVICES);
 								 }else{
 									 listWeb = new ArrayList<String>();
 								 }
 								 listWeb.add(accessTable.getString(target2));
-								 webMap.put(Eag2012Creator.OTHER_SERVICES,listWeb);
-								 mapMapListWeb.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,webMap);
+								 webMap.put(CreateEAG2012.OTHER_SERVICES,listWeb);
+								 mapMapListWeb.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,webMap);
 								 if(listMapWebpageHrefList.size()>i){
 									 listMapWebpageHrefList.set(i,mapMapListWeb);
 								 }else{
@@ -3098,19 +3118,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								}
 								List<String> listWeb = null;
 								Map<String,List<String>> webMap = null;
-								if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES)!=null){
-									webMap = mapMapListWeb.get(Eag2012Creator.TAB_ACCESS_AND_SERVICES);
+								if(mapMapListWeb.size()>0 && mapMapListWeb.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+									webMap = mapMapListWeb.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
 								}else{
 									webMap = new HashMap<String,List<String>>();
 								}
-								if(webMap.size()>0 && webMap.get(Eag2012Creator.OTHER_SERVICES)!=null){
-									listWeb = webMap.get(Eag2012Creator.OTHER_SERVICES);
+								if(webMap.size()>0 && webMap.get(CreateEAG2012.OTHER_SERVICES)!=null){
+									listWeb = webMap.get(CreateEAG2012.OTHER_SERVICES);
 								}else{
 									listWeb = new ArrayList<String>();
 								}
 								listWeb.add(accessTable.getString(target3));
-								webMap.put(Eag2012Creator.OTHER_SERVICES,listWeb);
-								mapMapListWeb.put(Eag2012Creator.TAB_ACCESS_AND_SERVICES,webMap);
+								webMap.put(CreateEAG2012.OTHER_SERVICES,listWeb);
+								mapMapListWeb.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,webMap);
 								if(listMapWebList.size()>i){
 									listMapWebList.set(i,mapMapListWeb);
 								}else{
@@ -3293,20 +3313,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						telephonesMap = new HashMap<String, Map<String, List<String>>>(); 
 					}
 					Map<String, List<String>> telephonesMapList = null;
-					if(telephonesMap.size()>0 && telephonesMap.get(Eag2012Creator.TAB_CONTACT)!=null){
-						telephonesMapList = telephonesMap.get(Eag2012Creator.TAB_CONTACT);
+					if(telephonesMap.size()>0 && telephonesMap.get(CreateEAG2012.TAB_CONTACT)!=null){
+						telephonesMapList = telephonesMap.get(CreateEAG2012.TAB_CONTACT);
 					}else{
 						telephonesMapList = new HashMap<String, List<String>>();
 					}
 					List<String> telephonesList = null;
-					if(telephonesMapList.size()>0 && telephonesMapList.get(Eag2012Creator.ROOT)!=null){
-						telephonesList = telephonesMapList.get(Eag2012Creator.ROOT);
+					if(telephonesMapList.size()>0 && telephonesMapList.get(CreateEAG2012.ROOT)!=null){
+						telephonesList = telephonesMapList.get(CreateEAG2012.ROOT);
 					}else{
 						telephonesList = new ArrayList<String>();
 					}
 					telephonesList.add(contactTable.getString("textContactTelephoneOfTheInstitution_"+i));
-					telephonesMapList.put(Eag2012Creator.ROOT, telephonesList);
-					telephonesMap.put(Eag2012Creator.TAB_CONTACT,telephonesMapList);
+					telephonesMapList.put(CreateEAG2012.ROOT, telephonesList);
+					telephonesMap.put(CreateEAG2012.TAB_CONTACT,telephonesMapList);
 					if(telephones.size()>x){
 						telephones.set(x, telephonesMap);
 					}else{
@@ -3330,13 +3350,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						fax = new HashMap<String,List<String>>();
 					}
 					List<String> listFax = null;
-					if(fax.size()>0 && fax.get(Eag2012Creator.TAB_CONTACT)!=null){
-						listFax = fax.get(Eag2012Creator.TAB_CONTACT);
+					if(fax.size()>0 && fax.get(CreateEAG2012.TAB_CONTACT)!=null){
+						listFax = fax.get(CreateEAG2012.TAB_CONTACT);
 					}else{
 						listFax = new ArrayList<String>();
 					}
 					listFax.add(contactTable.getString("textContactFaxOfTheInstitution_"+i));
-					fax.put(Eag2012Creator.TAB_CONTACT,listFax);
+					fax.put(CreateEAG2012.TAB_CONTACT,listFax);
 					if(listMapFaxList.size()>x){
 						listMapFaxList.set(x,fax);
 					}else{
@@ -3359,19 +3379,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 List<String> listEmail = null;
 					 Map<String,List<String>> emailMap = null;
-					 if(email.size()>0 && email.get(Eag2012Creator.TAB_CONTACT)!=null){
-						 emailMap = email.get(Eag2012Creator.TAB_CONTACT);
+					 if(email.size()>0 && email.get(CreateEAG2012.TAB_CONTACT)!=null){
+						 emailMap = email.get(CreateEAG2012.TAB_CONTACT);
 					 }else{
 						 emailMap = new HashMap<String,List<String>>();
 					 }
-					 if(emailMap.size()>0 && emailMap.get(Eag2012Creator.ROOT)!=null){
-						 listEmail = emailMap.get(Eag2012Creator.ROOT);
+					 if(emailMap.size()>0 && emailMap.get(CreateEAG2012.ROOT)!=null){
+						 listEmail = emailMap.get(CreateEAG2012.ROOT);
 					 }else{
 						 listEmail = new ArrayList<String>();
 					 }
 					 listEmail.add(contactTable.getString("textContactEmailOfTheInstitution_"+i));
-					 emailMap.put(Eag2012Creator.ROOT,listEmail); //root section, here there is only one mails list
-					 email.put(Eag2012Creator.TAB_CONTACT, emailMap);
+					 emailMap.put(CreateEAG2012.ROOT,listEmail); //root section, here there is only one mails list
+					 email.put(CreateEAG2012.TAB_CONTACT, emailMap);
 					 if(listMapEmailList.size()>x){
 						 listMapEmailList.set(x,email);
 					 }else{
@@ -3393,20 +3413,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 List<String> listEmail = null;
 					 Map<String,List<String>> emailMap = null;
-					 if(email.size()>0 && email.get(Eag2012Creator.TAB_CONTACT)!=null){
-						 emailMap = email.get(Eag2012Creator.TAB_CONTACT);
+					 if(email.size()>0 && email.get(CreateEAG2012.TAB_CONTACT)!=null){
+						 emailMap = email.get(CreateEAG2012.TAB_CONTACT);
 					 }else{
 						 emailMap = new HashMap<String,List<String>>();
 					 }
-					 if(emailMap.size()>0 && emailMap.get(Eag2012Creator.ROOT)!=null){
-						 listEmail = emailMap.get(Eag2012Creator.ROOT);
+					 if(emailMap.size()>0 && emailMap.get(CreateEAG2012.ROOT)!=null){
+						 listEmail = emailMap.get(CreateEAG2012.ROOT);
 					 }else{
 						 listEmail = new ArrayList<String>();
 					 }
 					 listEmail.add(contactTable.getString("textContactLinkTitleForEmailOfTheInstitution_"+i));
 					  
-					 emailMap.put(Eag2012Creator.ROOT,listEmail); //root section, here there is only one mails list
-					 email.put(Eag2012Creator.TAB_CONTACT, emailMap);
+					 emailMap.put(CreateEAG2012.ROOT,listEmail); //root section, here there is only one mails list
+					 email.put(CreateEAG2012.TAB_CONTACT, emailMap);
 					 if(listMapEmailValueList.size()>x){
 						 listMapEmailValueList.set(x,email);
 					 }else{
@@ -3428,19 +3448,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 List<String> listWeb = null;
 					 Map<String,List<String>> webMap = null;
-					 if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_CONTACT)!=null){
-						 webMap = mapMapListWeb.get(Eag2012Creator.TAB_CONTACT);
+					 if(mapMapListWeb.size()>0 && mapMapListWeb.get(CreateEAG2012.TAB_CONTACT)!=null){
+						 webMap = mapMapListWeb.get(CreateEAG2012.TAB_CONTACT);
 					 }else{
 						 webMap = new HashMap<String,List<String>>();
 					 }
-					 if(webMap.size()>0 && webMap.get(Eag2012Creator.ROOT)!=null){
-						 listWeb = webMap.get(Eag2012Creator.ROOT);
+					 if(webMap.size()>0 && webMap.get(CreateEAG2012.ROOT)!=null){
+						 listWeb = webMap.get(CreateEAG2012.ROOT);
 					 }else{
 						 listWeb = new ArrayList<String>();
 					 }
 					 listWeb.add(contactTable.getString("textContactWebOfTheInstitution_"+i));
-					 webMap.put(Eag2012Creator.ROOT,listWeb);
-					 mapMapListWeb.put(Eag2012Creator.TAB_CONTACT,webMap);
+					 webMap.put(CreateEAG2012.ROOT,listWeb);
+					 mapMapListWeb.put(CreateEAG2012.TAB_CONTACT,webMap);
 					 if(listMapWebpageHrefList.size()>x){
 						 listMapWebpageHrefList.set(x,mapMapListWeb);
 					 }else{
@@ -3463,19 +3483,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 List<String> listWeb = null;
 					 Map<String,List<String>> webMap = null;
-					 if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012Creator.TAB_CONTACT)!=null){
-						 webMap = mapMapListWeb.get(Eag2012Creator.TAB_CONTACT);
+					 if(mapMapListWeb.size()>0 && mapMapListWeb.get(CreateEAG2012.TAB_CONTACT)!=null){
+						 webMap = mapMapListWeb.get(CreateEAG2012.TAB_CONTACT);
 					 }else{
 						 webMap = new HashMap<String,List<String>>();
 					 }
-					 if(webMap.size()>0 && webMap.get(Eag2012Creator.ROOT)!=null){
-						 listWeb = webMap.get(Eag2012Creator.ROOT);
+					 if(webMap.size()>0 && webMap.get(CreateEAG2012.ROOT)!=null){
+						 listWeb = webMap.get(CreateEAG2012.ROOT);
 					 }else{
 						 listWeb = new ArrayList<String>();
 					 }
 					 listWeb.add(contactTable.getString("textContactLinkTitleForWebOfTheInstitution_"+i));
-					 webMap.put(Eag2012Creator.ROOT,listWeb);
-					 mapMapListWeb.put(Eag2012Creator.TAB_CONTACT,webMap);
+					 webMap.put(CreateEAG2012.ROOT,listWeb);
+					 mapMapListWeb.put(CreateEAG2012.TAB_CONTACT,webMap);
 					 if(listMapWebList.size()>x){
 						 listMapWebList.set(x,mapMapListWeb);
 					 }else{
@@ -3578,27 +3598,27 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							listMapYearsMap = new HashMap<String, Map<String, Map<String, List<String>>>>();
 						}
 						Map<String, Map<String, List<String>>> listMapYearsMapMap = null;
-						if(listMapYearsMap.size()>0 && listMapYearsMap.get(Eag2012Creator.TAB_IDENTITY)!=null){
-							listMapYearsMapMap = listMapYearsMap.get(Eag2012Creator.TAB_IDENTITY);
+						if(listMapYearsMap.size()>0 && listMapYearsMap.get(CreateEAG2012.TAB_IDENTITY)!=null){
+							listMapYearsMapMap = listMapYearsMap.get(CreateEAG2012.TAB_IDENTITY);
 						}else{
 							listMapYearsMapMap = new HashMap<String, Map<String, List<String>>>();
 						}
 						Map<String, List<String>> listMapYearsMapMapMap = null;
-						if(listMapYearsMapMap.size()>0 && listMapYearsMapMap.get(Eag2012Creator.ROOT)!=null){
-							listMapYearsMapMapMap = listMapYearsMapMap.get(Eag2012Creator.ROOT);
+						if(listMapYearsMapMap.size()>0 && listMapYearsMapMap.get(CreateEAG2012.ROOT)!=null){
+							listMapYearsMapMapMap = listMapYearsMapMap.get(CreateEAG2012.ROOT);
 						}else{
 							listMapYearsMapMapMap = new HashMap<String, List<String>>();
 						}
 						List<String> listMapList = null;
-						if(listMapYearsMapMapMap.size()>0 && listMapYearsMapMapMap.get(Eag2012Creator.ROOT_SUBSECTION)!=null){
-							listMapList = listMapYearsMapMapMap.get(Eag2012Creator.ROOT_SUBSECTION);
+						if(listMapYearsMapMapMap.size()>0 && listMapYearsMapMapMap.get(CreateEAG2012.ROOT_SUBSECTION)!=null){
+							listMapList = listMapYearsMapMapMap.get(CreateEAG2012.ROOT_SUBSECTION);
 						}else{
 							listMapList = new ArrayList<String>();
 						}
 						listMapList.add(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsed_"+j));
-						listMapYearsMapMapMap.put(Eag2012Creator.ROOT_SUBSECTION,listMapList);
-						listMapYearsMapMap.put(Eag2012Creator.ROOT, listMapYearsMapMapMap);
-						listMapYearsMap.put(Eag2012Creator.TAB_IDENTITY,listMapYearsMapMap);
+						listMapYearsMapMapMap.put(CreateEAG2012.ROOT_SUBSECTION,listMapList);
+						listMapYearsMapMap.put(CreateEAG2012.ROOT, listMapYearsMapMapMap);
+						listMapYearsMap.put(CreateEAG2012.TAB_IDENTITY,listMapYearsMapMap);
 						if(listMapYearsList.size()>0){
 							listMapYearsList.set(0,listMapYearsMap);
 						}else{
@@ -3622,27 +3642,27 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							listMapYearsMap = new HashMap<String, Map<String, Map<String, List<String>>>>();
 						}
 						Map<String, Map<String, List<String>>> listMapYearsMapMap = null;
-						if(listMapYearsMap.size()>0 && listMapYearsMap.get(Eag2012Creator.TAB_IDENTITY)!=null){
-							listMapYearsMapMap = listMapYearsMap.get(Eag2012Creator.TAB_IDENTITY);
+						if(listMapYearsMap.size()>0 && listMapYearsMap.get(CreateEAG2012.TAB_IDENTITY)!=null){
+							listMapYearsMapMap = listMapYearsMap.get(CreateEAG2012.TAB_IDENTITY);
 						}else{
 							listMapYearsMapMap = new HashMap<String, Map<String, List<String>>>();
 						}
 						Map<String, List<String>> listMapYearsMapMapMap = null;
-						if(listMapYearsMapMap.size()>0 && listMapYearsMapMap.get(Eag2012Creator.ROOT)!=null){
-							listMapYearsMapMapMap = listMapYearsMapMap.get(Eag2012Creator.ROOT);
+						if(listMapYearsMapMap.size()>0 && listMapYearsMapMap.get(CreateEAG2012.ROOT)!=null){
+							listMapYearsMapMapMap = listMapYearsMapMap.get(CreateEAG2012.ROOT);
 						}else{
 							listMapYearsMapMapMap = new HashMap<String, List<String>>();
 						}
 						List<String> listMapList = null;
-						if(listMapYearsMapMapMap.size()>0 && listMapYearsMapMapMap.get(Eag2012Creator.ROOT_SUBSECTION)!=null){
-							listMapList = listMapYearsMapMapMap.get(Eag2012Creator.ROOT_SUBSECTION);
+						if(listMapYearsMapMapMap.size()>0 && listMapYearsMapMapMap.get(CreateEAG2012.ROOT_SUBSECTION)!=null){
+							listMapList = listMapYearsMapMapMap.get(CreateEAG2012.ROOT_SUBSECTION);
 						}else{
 							listMapList = new ArrayList<String>();
 						}
 						listMapList.add(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsedFrom_"+j));
-						listMapYearsMapMapMap.put(Eag2012Creator.ROOT_SUBSECTION,listMapList);
-						listMapYearsMapMap.put(Eag2012Creator.ROOT, listMapYearsMapMapMap);
-						listMapYearsMap.put(Eag2012Creator.TAB_IDENTITY,listMapYearsMapMap);
+						listMapYearsMapMapMap.put(CreateEAG2012.ROOT_SUBSECTION,listMapList);
+						listMapYearsMapMap.put(CreateEAG2012.ROOT, listMapYearsMapMapMap);
+						listMapYearsMap.put(CreateEAG2012.TAB_IDENTITY,listMapYearsMapMap);
 						if(listMapYearsList.size()>0){
 							listMapYearsList.set(0,listMapYearsMap);
 						}else{
@@ -3666,27 +3686,27 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							listMapYearsMap = new HashMap<String, Map<String, Map<String, List<String>>>>();
 						}
 						Map<String, Map<String, List<String>>> listMapYearsMapMap = null;
-						if(listMapYearsMap.size()>0 && listMapYearsMap.get(Eag2012Creator.TAB_IDENTITY)!=null){
-							listMapYearsMapMap = listMapYearsMap.get(Eag2012Creator.TAB_IDENTITY);
+						if(listMapYearsMap.size()>0 && listMapYearsMap.get(CreateEAG2012.TAB_IDENTITY)!=null){
+							listMapYearsMapMap = listMapYearsMap.get(CreateEAG2012.TAB_IDENTITY);
 						}else{
 							listMapYearsMapMap = new HashMap<String, Map<String, List<String>>>();
 						}
 						Map<String, List<String>> listMapYearsMapMapMap = null;
-						if(listMapYearsMapMap.size()>0 && listMapYearsMapMap.get(Eag2012Creator.ROOT)!=null){
-							listMapYearsMapMapMap = listMapYearsMapMap.get(Eag2012Creator.ROOT);
+						if(listMapYearsMapMap.size()>0 && listMapYearsMapMap.get(CreateEAG2012.ROOT)!=null){
+							listMapYearsMapMapMap = listMapYearsMapMap.get(CreateEAG2012.ROOT);
 						}else{
 							listMapYearsMapMapMap = new HashMap<String, List<String>>();
 						}
 						List<String> listMapList = null;
-						if(listMapYearsMapMapMap.size()>0 && listMapYearsMapMapMap.get(Eag2012Creator.ROOT_SUBSECTION)!=null){
-							listMapList = listMapYearsMapMapMap.get(Eag2012Creator.ROOT_SUBSECTION);
+						if(listMapYearsMapMapMap.size()>0 && listMapYearsMapMapMap.get(CreateEAG2012.ROOT_SUBSECTION)!=null){
+							listMapList = listMapYearsMapMapMap.get(CreateEAG2012.ROOT_SUBSECTION);
 						}else{
 							listMapList = new ArrayList<String>();
 						}
 						listMapList.add(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsedTo_"+j));
-						listMapYearsMapMapMap.put(Eag2012Creator.ROOT_SUBSECTION,listMapList);
-						listMapYearsMapMap.put(Eag2012Creator.ROOT, listMapYearsMapMapMap);
-						listMapYearsMap.put(Eag2012Creator.TAB_IDENTITY,listMapYearsMapMap);
+						listMapYearsMapMapMap.put(CreateEAG2012.ROOT_SUBSECTION,listMapList);
+						listMapYearsMapMap.put(CreateEAG2012.ROOT, listMapYearsMapMapMap);
+						listMapYearsMap.put(CreateEAG2012.TAB_IDENTITY,listMapYearsMapMap);
 						if(listMapYearsList.size()>0){
 							listMapYearsList.set(0,listMapYearsMap);
 						}else{
@@ -3837,20 +3857,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					telephonesMap = new HashMap<String, Map<String, List<String>>>(); 
 				}
 				Map<String, List<String>> telephonesMapList = null;
-				if(telephonesMap.size()>0 && telephonesMap.get(Eag2012Creator.TAB_YOUR_INSTITUTION)!=null){
-					telephonesMapList = telephonesMap.get(Eag2012Creator.TAB_YOUR_INSTITUTION);
+				if(telephonesMap.size()>0 && telephonesMap.get(CreateEAG2012.TAB_YOUR_INSTITUTION)!=null){
+					telephonesMapList = telephonesMap.get(CreateEAG2012.TAB_YOUR_INSTITUTION);
 				}else{
 					telephonesMapList = new HashMap<String, List<String>>();
 				}
 				List<String> telephonesList = null;
-				if(telephonesMapList.size()>0 && telephonesMapList.get(Eag2012Creator.ROOT)!=null){
-					telephonesList = telephonesMapList.get(Eag2012Creator.ROOT);
+				if(telephonesMapList.size()>0 && telephonesMapList.get(CreateEAG2012.ROOT)!=null){
+					telephonesList = telephonesMapList.get(CreateEAG2012.ROOT);
 				}else{
 					telephonesList = new ArrayList<String>();
 				}
 				telephonesList.add(yourInstitution.getString("textYITelephone"));
-				telephonesMapList.put(Eag2012Creator.ROOT, telephonesList);
-				telephonesMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION,telephonesMapList);
+				telephonesMapList.put(CreateEAG2012.ROOT, telephonesList);
+				telephonesMap.put(CreateEAG2012.TAB_YOUR_INSTITUTION,telephonesMapList);
 				telephones.add(telephonesMap);
 				eag2012.setTelephoneValue(telephones);
 			}
@@ -3867,19 +3887,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				}
 				List<String> listEmail = null;
 				Map<String,List<String>> emailMap = null;
-				if(email.size()>0 && email.get(Eag2012Creator.TAB_YOUR_INSTITUTION)!=null){
-					emailMap = email.get(Eag2012Creator.TAB_YOUR_INSTITUTION);
+				if(email.size()>0 && email.get(CreateEAG2012.TAB_YOUR_INSTITUTION)!=null){
+					emailMap = email.get(CreateEAG2012.TAB_YOUR_INSTITUTION);
 				}else{
 					emailMap = new HashMap<String,List<String>>();
 				}
-				if(emailMap.size()>0 && emailMap.get(Eag2012Creator.ROOT)!=null){
-					listEmail = emailMap.get(Eag2012Creator.ROOT);
+				if(emailMap.size()>0 && emailMap.get(CreateEAG2012.ROOT)!=null){
+					listEmail = emailMap.get(CreateEAG2012.ROOT);
 				}else{
 					listEmail = new ArrayList<String>();
 				}
 				listEmail.add(yourInstitution.getString("textYIEmailAddress"));
-				emailMap.put(Eag2012Creator.ROOT,listEmail); //root section, here there is only one mails list
-				email.put(Eag2012Creator.TAB_YOUR_INSTITUTION, emailMap);
+				emailMap.put(CreateEAG2012.ROOT,listEmail); //root section, here there is only one mails list
+				email.put(CreateEAG2012.TAB_YOUR_INSTITUTION, emailMap);
 				if(listMapEmailList.size()>0){
 					listMapEmailList.set(0,email);
 				}else{
@@ -3900,19 +3920,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				}
 				List<String> listEmail = null;
 				Map<String,List<String>> emailMap = null;
-				if(email.size()>0 && email.get(Eag2012Creator.TAB_YOUR_INSTITUTION)!=null){
-					emailMap = email.get(Eag2012Creator.TAB_YOUR_INSTITUTION);
+				if(email.size()>0 && email.get(CreateEAG2012.TAB_YOUR_INSTITUTION)!=null){
+					emailMap = email.get(CreateEAG2012.TAB_YOUR_INSTITUTION);
 				}else{
 					emailMap = new HashMap<String,List<String>>();
 				}
-				if(emailMap.size()>0 && emailMap.get(Eag2012Creator.ROOT)!=null){
-					listEmail = emailMap.get(Eag2012Creator.ROOT);
+				if(emailMap.size()>0 && emailMap.get(CreateEAG2012.ROOT)!=null){
+					listEmail = emailMap.get(CreateEAG2012.ROOT);
 				}else{
 					listEmail = new ArrayList<String>();
 				}
 				listEmail.add(yourInstitution.getString("textYIEmailLinkTitle"));
-				emailMap.put(Eag2012Creator.ROOT,listEmail); //root section, here there is only one mails list
-				email.put(Eag2012Creator.TAB_YOUR_INSTITUTION, emailMap);
+				emailMap.put(CreateEAG2012.ROOT,listEmail); //root section, here there is only one mails list
+				email.put(CreateEAG2012.TAB_YOUR_INSTITUTION, emailMap);
 				if(listMapEmailList.size()>0){
 					listMapEmailList.set(0,email);
 				}else{
@@ -3933,19 +3953,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				}
 				List<String> listEmail = null;
 				Map<String,List<String>> emailMap = null;
-				if(email.size()>0 && email.get(Eag2012Creator.TAB_YOUR_INSTITUTION)!=null){
-					emailMap = email.get(Eag2012Creator.TAB_YOUR_INSTITUTION);
+				if(email.size()>0 && email.get(CreateEAG2012.TAB_YOUR_INSTITUTION)!=null){
+					emailMap = email.get(CreateEAG2012.TAB_YOUR_INSTITUTION);
 				}else{
 					emailMap = new HashMap<String,List<String>>();
 				}
-				if(emailMap.size()>0 && emailMap.get(Eag2012Creator.ROOT)!=null){
-					listEmail = emailMap.get(Eag2012Creator.ROOT);
+				if(emailMap.size()>0 && emailMap.get(CreateEAG2012.ROOT)!=null){
+					listEmail = emailMap.get(CreateEAG2012.ROOT);
 				}else{
 					listEmail = new ArrayList<String>();
 				}
 				listEmail.add(yourInstitution.getString("textYIWebpage"));
-				emailMap.put(Eag2012Creator.ROOT,listEmail); //root section, here there is only one mails list
-				email.put(Eag2012Creator.TAB_YOUR_INSTITUTION, emailMap);
+				emailMap.put(CreateEAG2012.ROOT,listEmail); //root section, here there is only one mails list
+				email.put(CreateEAG2012.TAB_YOUR_INSTITUTION, emailMap);
 				if(listMapEmailList.size()>0){
 					listMapEmailList.set(0,email);
 				}else{
@@ -3966,19 +3986,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				}
 				List<String> listEmail = null;
 				Map<String,List<String>> emailMap = null;
-				if(email.size()>0 && email.get(Eag2012Creator.TAB_YOUR_INSTITUTION)!=null){
-					emailMap = email.get(Eag2012Creator.TAB_YOUR_INSTITUTION);
+				if(email.size()>0 && email.get(CreateEAG2012.TAB_YOUR_INSTITUTION)!=null){
+					emailMap = email.get(CreateEAG2012.TAB_YOUR_INSTITUTION);
 				}else{
 					emailMap = new HashMap<String,List<String>>();
 				}
-				if(emailMap.size()>0 && emailMap.get(Eag2012Creator.ROOT)!=null){
-					listEmail = emailMap.get(Eag2012Creator.ROOT);
+				if(emailMap.size()>0 && emailMap.get(CreateEAG2012.ROOT)!=null){
+					listEmail = emailMap.get(CreateEAG2012.ROOT);
 				}else{
 					listEmail = new ArrayList<String>();
 				}
 				listEmail.add(yourInstitution.getString("textYIWebpageLinkTitle"));
-				emailMap.put(Eag2012Creator.ROOT,listEmail); //root section, here there is only one mails list
-				email.put(Eag2012Creator.TAB_YOUR_INSTITUTION, emailMap);
+				emailMap.put(CreateEAG2012.ROOT,listEmail); //root section, here there is only one mails list
+				email.put(CreateEAG2012.TAB_YOUR_INSTITUTION, emailMap);
 				if(listMapWebpagelList.size()>0){
 					listMapWebpagelList.set(0,email);
 				}else{
@@ -3998,13 +4018,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 openingMap = new HashMap<String,List<String>>();
 				 }
 				List<String> openingList = null;
-				if((openingMap.size()>0) && (openingMap.get(Eag2012Creator.TAB_YOUR_INSTITUTION)!=null)){
-					openingList = openingMap.get(Eag2012Creator.TAB_YOUR_INSTITUTION);
+				if((openingMap.size()>0) && (openingMap.get(CreateEAG2012.TAB_YOUR_INSTITUTION)!=null)){
+					openingList = openingMap.get(CreateEAG2012.TAB_YOUR_INSTITUTION);
 				}else{
 					openingList = new ArrayList<String>();
 				}
 				openingList.add(yourInstitution.getString("textYIOpeningTimes"));
-				openingMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION, openingList);
+				openingMap.put(CreateEAG2012.TAB_YOUR_INSTITUTION, openingList);
 			    if(openingValues.size() > 0){
 				   openingValues.set(0,openingMap);
 			    }else{
@@ -4024,13 +4044,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 closingMap = new HashMap<String,List<String>>();
 				 }
 				List<String> closingList = null;
-				if((closingMap.size()>0) && (closingMap.get(Eag2012Creator.TAB_YOUR_INSTITUTION)!=null)){
-					closingList = closingMap.get(Eag2012Creator.TAB_YOUR_INSTITUTION);
+				if((closingMap.size()>0) && (closingMap.get(CreateEAG2012.TAB_YOUR_INSTITUTION)!=null)){
+					closingList = closingMap.get(CreateEAG2012.TAB_YOUR_INSTITUTION);
 				}else{
 					closingList = new ArrayList<String>();
 				}
 				closingList.add(yourInstitution.getString("yourInstitutionClosingDates"));
-				closingMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION, closingList);
+				closingMap.put(CreateEAG2012.TAB_YOUR_INSTITUTION, closingList);
 			    if(closingValues.size() > 0){
 			    	closingValues.set(0,closingMap);
 			    }else{
@@ -4051,7 +4071,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				}else{
 					accessQuestionRepo = new HashMap<String, String>();
 				}
-				accessQuestionRepo.put(Eag2012Creator.TAB_YOUR_INSTITUTION,yourInstitution.getString("selectAccessibleToThePublic"));
+				accessQuestionRepo.put(CreateEAG2012.TAB_YOUR_INSTITUTION,yourInstitution.getString("selectAccessibleToThePublic"));
 				if(accessQuestions.size()>0){
 					accessQuestions.set(0,accessQuestionRepo);
 				}else{
@@ -4071,13 +4091,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					restAccessMap = new HashMap<String, List<String>>(); 
 				}
 				List<String> restAccessList = null;
-				if(restAccessMap.size()>0 && restAccessMap.get(Eag2012Creator.TAB_YOUR_INSTITUTION)!=null){
-					restAccessList = restAccessMap.get(Eag2012Creator.TAB_YOUR_INSTITUTION);
+				if(restAccessMap.size()>0 && restAccessMap.get(CreateEAG2012.TAB_YOUR_INSTITUTION)!=null){
+					restAccessList = restAccessMap.get(CreateEAG2012.TAB_YOUR_INSTITUTION);
 				}else{
 					restAccessList = new ArrayList<String>();
 				}
 				restAccessList.add(yourInstitution.getString("futherAccessInformation"));
-				restAccessMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION, restAccessList);
+				restAccessMap.put(CreateEAG2012.TAB_YOUR_INSTITUTION, restAccessList);
 				if(restAccessValue.size()>0){
 					restAccessValue.set(0,restAccessMap);
 				}else{
@@ -4097,13 +4117,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					accessibilityMap = new HashMap<String, List<String>>();
 				}
 				List<String> accessibilityList = null;
-				if(accessibilityMap.size()>0 && accessibilityMap.get(Eag2012Creator.TAB_YOUR_INSTITUTION) != null){
-					accessibilityList = accessibilityMap.get(Eag2012Creator.TAB_YOUR_INSTITUTION);
+				if(accessibilityMap.size()>0 && accessibilityMap.get(CreateEAG2012.TAB_YOUR_INSTITUTION) != null){
+					accessibilityList = accessibilityMap.get(CreateEAG2012.TAB_YOUR_INSTITUTION);
 				}else{
 					accessibilityList = new ArrayList<String>();
 				}
 				accessibilityList.add(yourInstitution.getString("futherInformationOnExistingFacilities"));
-				accessibilityMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION, accessibilityList);
+				accessibilityMap.put(CreateEAG2012.TAB_YOUR_INSTITUTION, accessibilityList);
 				if(accessibilityValue.size()>0){
 					accessibilityValue.set(0,accessibilityMap);
 				}else{
@@ -4138,7 +4158,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				}else{
 					accessibilityQuestionRepo = new HashMap<String, String>();
 				}
-				accessibilityQuestionRepo.put(Eag2012Creator.TAB_YOUR_INSTITUTION,yourInstitution.getString("selectFacilitiesForDisabledPeopleAvailable"));
+				accessibilityQuestionRepo.put(CreateEAG2012.TAB_YOUR_INSTITUTION,yourInstitution.getString("selectFacilitiesForDisabledPeopleAvailable"));
 				if(accessibilityQuestions.size()>0){
 					accessibilityQuestions.set(0,accessibilityQuestionRepo);
 				}else{

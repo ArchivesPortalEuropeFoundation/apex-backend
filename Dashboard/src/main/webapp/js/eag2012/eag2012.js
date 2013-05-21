@@ -357,7 +357,15 @@ var clickIdentityAction = function(text1){
 		if(jsonData.charAt(jsonData.length-1)!=':'){
 			jsonData += ",";
 		}
-		jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		var texts ="";
+		$("select#" + $(this).attr("id") + " option").each(function(){
+			if($(this).attr("selected")) {
+				texts += $(this).text() + ',';
+			}
+		});
+		texts = texts.substring(0, (texts.length - 1));
+
+		jsonData += "'"+$(this).attr("id")+"' : '"+texts+"'";
 	});
 
 	// Institution names.
@@ -1856,6 +1864,11 @@ function aSAddOpeningTimes(text1){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='selectLanguageOpeningTimes']").attr("for","selectLanguageOpeningTimes_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectLanguageOpeningTimes").attr("id","selectLanguageOpeningTimes_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" td#tdOpeningTimes").find("span").remove();
+
+	// Reset parametters.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function aSAddClosingDates(text1){
@@ -2856,6 +2869,10 @@ function webOfInstitutionChanged(){
 
 function openingHoursOfInstitutionChanged(){
 	$("table#accessAndServicesTable_1 tr#trASOpeningTimes #textOpeningTimes").attr("value", $("table#yiTableOthers #textYIOpeningTimes").val());
+}
+
+function closingHoursOfInstitutionChanged(){
+	$("table#accessAndServicesTable_1 tr#trASClosingDates #textClosingDates").attr("value", $("table#yiTableOthers #yourInstitutionClosingDates").val());
 }
 
 function accessibleToThePublicChanged() {
