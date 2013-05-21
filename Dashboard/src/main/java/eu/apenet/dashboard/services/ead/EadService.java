@@ -412,7 +412,6 @@ public class EadService {
 		queueStates.add(QueuingState.READY);
 		queueStates.add(QueuingState.ERROR);
 		eadSearchOptions.setQueuing(queueStates);
-
 		JpaUtil.beginDatabaseTransaction();
 		List<Ead> eads = eadDAO.getEads(eadSearchOptions);
 		int size = 0;
@@ -422,6 +421,7 @@ public class EadService {
 			ead.setQueuing(QueuingState.NO);
 			eadDAO.updateSimple(ead);
 			deleteFromQueueInternal(queueItem);
+			eads.remove(size-1);
 		}
 		JpaUtil.commitDatabaseTransaction();
 	}
