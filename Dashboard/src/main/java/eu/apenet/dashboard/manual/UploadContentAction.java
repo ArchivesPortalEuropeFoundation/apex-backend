@@ -258,7 +258,8 @@ public class UploadContentAction extends AbstractInstitutionAction implements Se
             return SUCCESS;
         } catch (IOException ioe){
             log.error("Could not connect to FTP server '" + ftpUrl + "'.", ioe);
-            addActionMessage(getText("uploadContent.errFTP"));
+            addActionMessage(getText("uploadContent.errFTP") );
+            addActionError(ioe.getMessage());
             return ERROR;
         }
     }
