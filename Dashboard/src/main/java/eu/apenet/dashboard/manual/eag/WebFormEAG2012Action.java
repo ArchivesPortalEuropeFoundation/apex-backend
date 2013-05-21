@@ -781,7 +781,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				}
 				//date y rule of repositorfound
 				if(descriptionTable.has("textDateOfRepositoryFoundation")){  //date
-					 List<Map<String,Map<String,Map<String,List<String>>>>> dateValue = eag2012.getDateValue();
+					 List<Map<String,Map<String,Map<String,List<String>>>>> dateValue = eag2012.getDateStandardDate();
 					 if(dateValue==null){
 						 dateValue = new ArrayList<Map<String,Map<String,Map<String,List<String>>>>>();
 					 }
@@ -818,7 +818,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }else{
 						 dateValue.add(dateMapMapMap);
 					 }
-					 eag2012.setDateValue(dateValue);
+					 eag2012.setDateStandardDate(dateValue);
 				 }
 				//rule of repositorfound
 				j=0;
@@ -880,7 +880,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				//date of repositorsup
 				
 				if(descriptionTable.has("textDateOfRepositorySuppression")){  
-					 List<Map<String,Map<String,Map<String,List<String>>>>> dateValue = eag2012.getDateValue();
+					 List<Map<String,Map<String,Map<String,List<String>>>>> dateValue = eag2012.getDateStandardDate();
 					 if(dateValue==null){
 						 dateValue = new ArrayList<Map<String,Map<String,Map<String,List<String>>>>>();
 					 }
@@ -917,7 +917,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }else{
 						 dateValue.add(dateMapMapMap);
 					 }
-					 eag2012.setDateValue(dateValue);
+					 eag2012.setDateStandardDate(dateValue);
 				 }
 				
 				//rule repositorsup
@@ -1128,7 +1128,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 List<String> nums = null;
 					 if(numsMap.size()>0 && numsMap.get(CreateEAG2012.BUILDING_AREA)!=null){
-						 nums = numsMap.get(CreateEAG2012.ROOT_SUBSECTION);
+						 nums = numsMap.get(CreateEAG2012.BUILDING_AREA);
 					 }else{
 						 nums = new ArrayList<String>();
 					 }
@@ -1168,7 +1168,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 List<String> nums = null;
 					 if(numsMap.size()>0 && numsMap.get(CreateEAG2012.BUILDING_LENGTH)!=null){
-						 nums = numsMap.get(CreateEAG2012.ROOT_SUBSECTION);
+						 nums = numsMap.get(CreateEAG2012.BUILDING_LENGTH);
 					 }else{
 						 nums = new ArrayList<String>();
 					 }
@@ -1183,6 +1183,248 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 eag2012.setNumValue(numValue);
 				 }
+               
+				 //holding description
+				   j=0;
+					while (descriptionTable.has("textArchivalAndOtherHoldings_"+(++j)) && (descriptionTable.has("selectLanguageArchivalAndOtherHoldings_"+(j)))){
+						if(descriptionTable.has("textArchivalAndOtherHoldings_"+j)){
+							List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
+							 if(descriptiveNotePValue==null){
+								 descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
+							 }
+							 Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
+							 if(descriptiveNotePValue.size()>i && descriptiveNotePValue.get(i)!=null){
+								 descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
+							 }else{
+								 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
+							 }
+							 Map<String, List<String>> descriptiveNoteMapList = null;
+							 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_DESCRIPTION)!=null){
+								 descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_DESCRIPTION);
+							 }else{
+								 descriptiveNoteMapList = new HashMap<String, List<String>>();
+							 }
+							 List<String> descriptiveNoteList = null;
+							 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.HOLDINGS)!=null){
+								 descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.HOLDINGS);
+							 }else{
+								 descriptiveNoteList = new ArrayList<String>();
+							 }
+							 descriptiveNoteList.add(descriptionTable.getString("textArchivalAndOtherHoldings_"+j));
+							 descriptiveNoteMapList.put(CreateEAG2012.HOLDINGS,descriptiveNoteList);
+							 descriptiveNoteMapMapList.put(CreateEAG2012.TAB_DESCRIPTION,descriptiveNoteMapList);
+							 if(descriptiveNotePValue.size()>i){
+								 descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
+							 }else{
+								 descriptiveNotePValue.add(descriptiveNoteMapMapList);
+							 }
+							 eag2012.setDescriptiveNotePValue(descriptiveNotePValue);
+						 }
+						if(descriptionTable.has("selectLanguageArchivalAndOtherHoldings_"+j)){
+							List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePLang();
+							 if(descriptiveNotePValue==null){
+								 descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
+							 }
+							 Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
+							 if(descriptiveNotePValue.size()>i && descriptiveNotePValue.get(i)!=null){
+								 descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
+							 }else{
+								 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
+							 }
+							 Map<String, List<String>> descriptiveNoteMapList = null;
+							 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_DESCRIPTION)!=null){
+								 descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_DESCRIPTION);
+							 }else{
+								 descriptiveNoteMapList = new HashMap<String, List<String>>();
+							 }
+							 List<String> descriptiveNoteList = null;
+							 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.HOLDINGS)!=null){
+								 descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.HOLDINGS);
+							 }else{
+								 descriptiveNoteList = new ArrayList<String>();
+							 }
+							 descriptiveNoteList.add(descriptionTable.getString("selectLanguageArchivalAndOtherHoldings_"+j));
+							 descriptiveNoteMapList.put(CreateEAG2012.HOLDINGS,descriptiveNoteList);
+							 descriptiveNoteMapMapList.put(CreateEAG2012.TAB_DESCRIPTION,descriptiveNoteMapList);
+							 if(descriptiveNotePValue.size()>i){
+								 descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
+							 }else{
+								 descriptiveNotePValue.add(descriptiveNoteMapMapList);
+							 }
+							 eag2012.setDescriptiveNotePLang(descriptiveNotePValue);
+						 }	
+					}
+			 	 //date of holdings
+					
+				  j=0;
+				  while(descriptionTable.has("textYearWhenThisNameWasUsed_"+(++j))){
+					if(descriptionTable.has("textYearWhenThisNameWasUsed_"+j)){  
+					  List<Map<String,Map<String,Map<String,List<String>>>>> dateValue = eag2012.getDateStandardDate();
+					  if(dateValue==null){
+						dateValue = new ArrayList<Map<String,Map<String,Map<String,List<String>>>>>();
+					   }
+					   Map<String, Map<String, Map<String, List<String>>>> dateMapMapMap = null;
+					   if(dateValue.size()>i && dateValue.get(i)!=null){
+						 dateMapMapMap = dateValue.get(i);
+					   }else{
+						  dateMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>(); 
+					   }
+					   Map<String, Map<String, List<String>>> dateMapMap = null;
+					   if(dateMapMapMap.size()>0 && dateMapMapMap.get(CreateEAG2012.TAB_DESCRIPTION)!=null){
+						 dateMapMap= dateMapMapMap.get(CreateEAG2012.TAB_DESCRIPTION);
+					   }else{
+						 dateMapMap = new HashMap<String, Map<String, List<String>>>();
+					   }
+					   Map<String, List<String>> datesMap = null;
+					   if(dateMapMap.size()>0 && dateMapMap.get(CreateEAG2012.HOLDINGS)!=null){
+						 datesMap = dateMapMap.get(CreateEAG2012.HOLDINGS);
+					   }else{
+						 datesMap = new HashMap<String, List<String>>();
+					   }
+					   List<String> dates = null;
+					   if(datesMap.size()>0 && datesMap.get(CreateEAG2012.ROOT_SUBSECTION)!=null){
+						 dates = datesMap.get(CreateEAG2012.ROOT_SUBSECTION);
+					   }else{
+						 dates = new ArrayList<String>();
+					   }
+					   dates.add(descriptionTable.getString("textYearWhenThisNameWasUsed_"+j));
+					   datesMap.put(CreateEAG2012.ROOT_SUBSECTION, dates);
+					   dateMapMap.put(CreateEAG2012.HOLDINGS,datesMap);
+					   dateMapMapMap.put(CreateEAG2012.TAB_DESCRIPTION,dateMapMap);
+					   if( dateValue.size()>i){
+						 dateValue.set(i,dateMapMapMap);
+					   }else{
+						 dateValue.add(dateMapMapMap);
+					   }
+					   eag2012.setDateStandardDate(dateValue);
+					}	  
+				  }
+			  	 //date range of holdings
+				  j=0;
+				  while(descriptionTable.has("textYearWhenThisNameWasUsedFrom_"+(++j)) && descriptionTable.has("textYearWhenThisNameWasUsedTo_"+j)){
+					  if(descriptionTable.has("textYearWhenThisNameWasUsedFrom_"+j)){  
+						  List<Map<String,Map<String,Map<String,List<String>>>>> dateValue = eag2012.getFromDateStandardDate();
+						  if(dateValue==null){
+							dateValue = new ArrayList<Map<String,Map<String,Map<String,List<String>>>>>();
+						   }
+						   Map<String, Map<String, Map<String, List<String>>>> dateMapMapMap = null;
+						   if(dateValue.size()>i && dateValue.get(i)!=null){
+							 dateMapMapMap = dateValue.get(i);
+						   }else{
+							  dateMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>(); 
+						   }
+						   Map<String, Map<String, List<String>>> dateMapMap = null;
+						   if(dateMapMapMap.size()>0 && dateMapMapMap.get(CreateEAG2012.TAB_DESCRIPTION)!=null){
+							 dateMapMap= dateMapMapMap.get(CreateEAG2012.TAB_DESCRIPTION);
+						   }else{
+							 dateMapMap = new HashMap<String, Map<String, List<String>>>();
+						   }
+						   Map<String, List<String>> datesMap = null;
+						   if(dateMapMap.size()>0 && dateMapMap.get(CreateEAG2012.HOLDINGS)!=null){
+							 datesMap = dateMapMap.get(CreateEAG2012.HOLDINGS);
+						   }else{
+							 datesMap = new HashMap<String, List<String>>();
+						   }
+						   List<String> dates = null;
+						   if(datesMap.size()>0 && datesMap.get(CreateEAG2012.ROOT_SUBSECTION)!=null){
+							 dates = datesMap.get(CreateEAG2012.ROOT_SUBSECTION);
+						   }else{
+							 dates = new ArrayList<String>();
+						   }
+						   dates.add(descriptionTable.getString("textYearWhenThisNameWasUsedFrom_"+j));
+						   datesMap.put(CreateEAG2012.ROOT_SUBSECTION, dates);
+						   dateMapMap.put(CreateEAG2012.HOLDINGS,datesMap);
+						   dateMapMapMap.put(CreateEAG2012.TAB_DESCRIPTION,dateMapMap);
+						   if( dateValue.size()>i){
+							 dateValue.set(i,dateMapMapMap);
+						   }else{
+							 dateValue.add(dateMapMapMap);
+						   }
+						   eag2012.setFromDateStandardDate(dateValue);
+						}	  
+					  if(descriptionTable.has("textYearWhenThisNameWasUsedTo_"+j)){  
+						  List<Map<String,Map<String,Map<String,List<String>>>>> dateValue = eag2012.getToDateStandardDate();
+						  if(dateValue==null){
+							dateValue = new ArrayList<Map<String,Map<String,Map<String,List<String>>>>>();
+						   }
+						   Map<String, Map<String, Map<String, List<String>>>> dateMapMapMap = null;
+						   if(dateValue.size()>i && dateValue.get(i)!=null){
+							 dateMapMapMap = dateValue.get(i);
+						   }else{
+							  dateMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>(); 
+						   }
+						   Map<String, Map<String, List<String>>> dateMapMap = null;
+						   if(dateMapMapMap.size()>0 && dateMapMapMap.get(CreateEAG2012.TAB_DESCRIPTION)!=null){
+							 dateMapMap= dateMapMapMap.get(CreateEAG2012.TAB_DESCRIPTION);
+						   }else{
+							 dateMapMap = new HashMap<String, Map<String, List<String>>>();
+						   }
+						   Map<String, List<String>> datesMap = null;
+						   if(dateMapMap.size()>0 && dateMapMap.get(CreateEAG2012.HOLDINGS)!=null){
+							 datesMap = dateMapMap.get(CreateEAG2012.HOLDINGS);
+						   }else{
+							 datesMap = new HashMap<String, List<String>>();
+						   }
+						   List<String> dates = null;
+						   if(datesMap.size()>0 && datesMap.get(CreateEAG2012.ROOT_SUBSECTION)!=null){
+							 dates = datesMap.get(CreateEAG2012.ROOT_SUBSECTION);
+						   }else{
+							 dates = new ArrayList<String>();
+						   }
+						   dates.add(descriptionTable.getString("textYearWhenThisNameWasUsedTo_"+j));
+						   datesMap.put(CreateEAG2012.ROOT_SUBSECTION, dates);
+						   dateMapMap.put(CreateEAG2012.HOLDINGS,datesMap);
+						   dateMapMapMap.put(CreateEAG2012.TAB_DESCRIPTION,dateMapMap);
+						   if( dateValue.size()>i){
+							 dateValue.set(i,dateMapMapMap);
+						   }else{
+							 dateValue.add(dateMapMapMap);
+						   }
+						   eag2012.setToDateStandardDate(dateValue);
+						}	  
+				  }  
+				  //extent
+				  if(descriptionTable.has("textExtent")){
+					  List<Map<String,Map<String,Map<String,List<String>>>>> numValue = eag2012.getNumValue();
+						 if(numValue==null){
+							 numValue = new ArrayList<Map<String,Map<String,Map<String,List<String>>>>>();
+						 }
+						 Map<String, Map<String, Map<String, List<String>>>> numMapMapMap = null;
+						 if(numValue.size()>i && numValue.get(i)!=null){
+							 numMapMapMap = numValue.get(i);
+						 }else{
+							 numMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>(); 
+						 }
+						 Map<String, Map<String, List<String>>> numMapMap = null;
+						 if(numMapMapMap.size()>0 && numMapMapMap.get(CreateEAG2012.TAB_DESCRIPTION)!=null){
+							 numMapMap = numMapMapMap.get(CreateEAG2012.TAB_DESCRIPTION);
+						 }else{
+							 numMapMap = new HashMap<String, Map<String, List<String>>>();
+						 }
+						 Map<String, List<String>> numsMap = null;
+						 if(numMapMap.size()>0 && numMapMap.get(CreateEAG2012.HOLDINGS)!=null){
+							 numsMap = numMapMap.get(CreateEAG2012.HOLDINGS);
+						 }else{
+							 numsMap = new HashMap<String, List<String>>();
+						 }
+						 List<String> nums = null;
+						 if(numsMap.size()>0 && numsMap.get(CreateEAG2012.HOLDING_EXTENT)!=null){
+							 nums = numsMap.get(CreateEAG2012.HOLDING_EXTENT);
+						 }else{
+							 nums = new ArrayList<String>();
+						 }
+						 nums.add(descriptionTable.getString("textExtent"));
+						 numsMap.put(CreateEAG2012.HOLDING_EXTENT,nums);
+						 numMapMap.put(CreateEAG2012.HOLDINGS,numsMap);
+						 numMapMapMap.put(CreateEAG2012.TAB_DESCRIPTION,numMapMap);
+						 if(numValue.size()>i){
+							 numValue.set(i,numMapMapMap);
+						 }else{
+							 numValue.add(numMapMapMap);
+						 }
+						 eag2012.setNumValue(numValue);  
+				  }
+				  
 			 i++;
 			}//end while description
 			
@@ -1198,7 +1440,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			while(accessAndServices.has("accessAndServicesTable_"+(i+1))){
 				JSONObject accessTable = accessAndServices.getJSONObject("accessAndServicesTable_"+(i+1));
              
-//opening times and opening langs 
+              //opening times and opening langs 
 				
 				int j=0;			
 				while(accessTable.has("textOpeningTimes_"+(++j)) && (accessTable.has("selectLanguageOpeningTimes_"+(j)))){
@@ -1860,7 +2102,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
 						 }
 						 Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
-						 if(descriptiveNotePValue.size()>0 && descriptiveNotePValue.get(i)!=null){
+						 if(descriptiveNotePValue.size()>i && descriptiveNotePValue.get(i)!=null){
 							 descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
 						 }else{
 							 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
@@ -1893,7 +2135,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
 						 }
 						 Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
-						 if(descriptiveNotePValue.size()>0 && descriptiveNotePValue.get(i)!=null){
+						 if(descriptiveNotePValue.size()>i && descriptiveNotePValue.get(i)!=null){
 							 descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
 						 }else{
 							 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();

@@ -135,6 +135,7 @@ public class CreateEAG2012 {
     public static final String REPOSITOR_SUP ="repositorsup";
 	public static final String BUILDING_AREA = "building_area";
 	public static final String BUILDING_LENGTH = "building_length";
+	public static final String HOLDING_EXTENT = "holding_extent";
 
 	/**
 	 * Constructor.
