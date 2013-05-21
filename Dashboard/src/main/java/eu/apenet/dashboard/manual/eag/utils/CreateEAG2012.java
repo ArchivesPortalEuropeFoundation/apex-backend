@@ -133,6 +133,8 @@ public class CreateEAG2012 {
     public static final String SERIAL_PUBLICATION ="serialPublication";
     public static final String REPOSITOR_FOUND ="repositorfound";
     public static final String REPOSITOR_SUP ="repositorsup";
+	public static final String BUILDING_AREA = "building_area";
+	public static final String BUILDING_LENGTH = "building_length";
 
 	/**
 	 * Constructor.

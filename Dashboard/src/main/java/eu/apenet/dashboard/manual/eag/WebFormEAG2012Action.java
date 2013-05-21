@@ -820,7 +820,212 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 eag2012.setDateValue(dateValue);
 				 }
-					
+				 
+				 //Administrative structure
+				
+				 String target1 = "textUnitOfAdministrativeStructure";
+				 String target2 = "selectLanguageArchivalAndOtherHoldings";
+				 int targetNumber = 1;
+				 do{
+					 target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+					 target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
+					 targetNumber++;
+					 if(descriptionTable.has(target1)){
+						 List<List<String>> adminUnit = eag2012.getAdminunitValue();
+						 if(adminUnit==null){
+							 adminUnit = new ArrayList<List<String>>();
+						 }
+						 List<String> adminUnitList = null;
+						 if(adminUnit.size()>i){
+							 adminUnitList = adminUnit.get(i);
+						 }else{
+							 adminUnitList = new ArrayList<String>();
+						 }
+						 adminUnitList.add(descriptionTable.getString(target1));
+						 if(adminUnit.size()>i){
+							 adminUnit.set(i, adminUnitList);
+						 }else{
+							 adminUnit.add(adminUnitList);
+						 }
+						 eag2012.setAdminunitValue(adminUnit);
+					 }
+					 if(descriptionTable.has(target2)){
+						 List<List<String>> adminUnitLang = eag2012.getAdminunitLang();
+						 if(adminUnitLang==null){
+							 adminUnitLang = new ArrayList<List<String>>();
+						 }
+						 List<String> adminUnitLangList = null;
+						 if(adminUnitLang.size()>i){
+							 adminUnitLangList = adminUnitLang.get(i);
+						 }else{
+							 adminUnitLangList = new ArrayList<String>();
+						 }
+						 adminUnitLangList.add(descriptionTable.getString(target2));
+						 if(adminUnitLang.size()>i){
+							 adminUnitLang.set(i, adminUnitLangList);
+						 }else{
+							 adminUnitLang.add(adminUnitLangList);
+						 }
+						 eag2012.setAdminunitLang(adminUnitLang);
+					 }
+				 }while(descriptionTable.has(target1) && descriptionTable.has(target2));
+				 
+				 //Building description
+				 target1 = "textBuilding";
+				 target2 = "selectLanguageBuilding";
+				 targetNumber = 1;
+				 do{
+					 target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+					 target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
+					 targetNumber++;
+					 if(descriptionTable.has(target1)){
+						 List<Map<String, Map<String, List<String>>>> descriptiveNotePs = eag2012.getDescriptiveNotePValue();
+						 if(descriptiveNotePs==null){
+							 descriptiveNotePs = new ArrayList<Map<String, Map<String, List<String>>>>();
+						 }
+						 Map<String, Map<String, List<String>>> descriptiveNotePMap = null;
+						 if(descriptiveNotePs.size()>i){
+							 descriptiveNotePMap = descriptiveNotePs.get(i);
+						 }else{
+							 descriptiveNotePMap = new HashMap<String, Map<String, List<String>>>();
+						 }
+						 Map<String, List<String>> descriptiveNotePMapMap = null;
+						 if(descriptiveNotePMap.size()>0 && descriptiveNotePMap.get(Eag2012Creator.TAB_DESCRIPTION)!=null){
+							 descriptiveNotePMapMap = descriptiveNotePMap.get(Eag2012Creator.TAB_DESCRIPTION);
+						 }else{
+							 descriptiveNotePMapMap = new HashMap<String, List<String>>(); 
+						 }
+						 List<String> descriptiveNotePMapMapList = null;
+						 if(descriptiveNotePMapMap.size()>0 && descriptiveNotePMapMap.get(Eag2012Creator.BUILDING)!=null){
+							 descriptiveNotePMapMapList = descriptiveNotePMapMap.get(Eag2012Creator.BUILDING);
+						 }else{
+							 descriptiveNotePMapMapList = new ArrayList<String>();
+						 }
+						 descriptiveNotePMapMapList.add(descriptionTable.getString(target1));
+						 descriptiveNotePMapMap.put(Eag2012Creator.BUILDING, descriptiveNotePMapMapList);
+						 descriptiveNotePMap.put(Eag2012Creator.TAB_DESCRIPTION, descriptiveNotePMapMap);
+						 if(descriptiveNotePs.size()>i){
+							 descriptiveNotePs.set(i,descriptiveNotePMap);
+						 }else{
+							 descriptiveNotePs.add(descriptiveNotePMap);
+						 }
+						 eag2012.setDescriptiveNotePValue(descriptiveNotePs);
+					 }
+					 if(descriptionTable.has(target2)){
+						 List<Map<String, Map<String, List<String>>>> descriptiveNotePs = eag2012.getDescriptiveNotePLang();
+						 if(descriptiveNotePs==null){
+							 descriptiveNotePs = new ArrayList<Map<String, Map<String, List<String>>>>();
+						 }
+						 Map<String, Map<String, List<String>>> descriptiveNotePMap = null;
+						 if(descriptiveNotePs.size()>i){
+							 descriptiveNotePMap = descriptiveNotePs.get(i);
+						 }else{
+							 descriptiveNotePMap = new HashMap<String, Map<String, List<String>>>();
+						 }
+						 Map<String, List<String>> descriptiveNotePMapMap = null;
+						 if(descriptiveNotePMap.size()>0 && descriptiveNotePMap.get(Eag2012Creator.TAB_DESCRIPTION)!=null){
+							 descriptiveNotePMapMap = descriptiveNotePMap.get(Eag2012Creator.TAB_DESCRIPTION);
+						 }else{
+							 descriptiveNotePMapMap = new HashMap<String, List<String>>(); 
+						 }
+						 List<String> descriptiveNotePMapMapList = null;
+						 if(descriptiveNotePMapMap.size()>0 && descriptiveNotePMapMap.get(Eag2012Creator.BUILDING)!=null){
+							 descriptiveNotePMapMapList = descriptiveNotePMapMap.get(Eag2012Creator.BUILDING);
+						 }else{
+							 descriptiveNotePMapMapList = new ArrayList<String>();
+						 }
+						 descriptiveNotePMapMapList.add(descriptionTable.getString(target2));
+						 descriptiveNotePMapMap.put(Eag2012Creator.BUILDING, descriptiveNotePMapMapList);
+						 descriptiveNotePMap.put(Eag2012Creator.TAB_DESCRIPTION, descriptiveNotePMapMap);
+						 if(descriptiveNotePs.size()>i){
+							 descriptiveNotePs.set(i,descriptiveNotePMap);
+						 }else{
+							 descriptiveNotePs.add(descriptiveNotePMap);
+						 }
+						 eag2012.setDescriptiveNotePLang(descriptiveNotePs);
+					 }
+				 }while(descriptionTable.has(target1) && descriptionTable.has(target2));
+				 
+				 if(descriptionTable.getString("textRepositoryArea")!=null){
+					 List<Map<String,Map<String,Map<String,List<String>>>>> numValue = eag2012.getNumValue();
+					 if(numValue==null){
+						 numValue = new ArrayList<Map<String,Map<String,Map<String,List<String>>>>>();
+					 }
+					 Map<String, Map<String, Map<String, List<String>>>> numMapMapMap = null;
+					 if(numValue.size()>i && numValue.get(i)!=null){
+						 numMapMapMap = numValue.get(i);
+					 }else{
+						 numMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>(); 
+					 }
+					 Map<String, Map<String, List<String>>> numMapMap = null;
+					 if(numMapMapMap.size()>0 && numMapMapMap.get(CreateEAG2012.TAB_DESCRIPTION)!=null){
+						 numMapMap = numMapMapMap.get(CreateEAG2012.TAB_DESCRIPTION);
+					 }else{
+						 numMapMap = new HashMap<String, Map<String, List<String>>>();
+					 }
+					 Map<String, List<String>> numsMap = null;
+					 if(numMapMap.size()>0 && numMapMap.get(CreateEAG2012.BUILDING)!=null){
+						 numsMap = numMapMap.get(CreateEAG2012.BUILDING);
+					 }else{
+						 numsMap = new HashMap<String, List<String>>();
+					 }
+					 List<String> nums = null;
+					 if(numsMap.size()>0 && numsMap.get(CreateEAG2012.BUILDING_AREA)!=null){
+						 nums = numsMap.get(CreateEAG2012.ROOT_SUBSECTION);
+					 }else{
+						 nums = new ArrayList<String>();
+					 }
+					 nums.add(descriptionTable.getString("textRepositoryArea"));
+					 numsMap.put(CreateEAG2012.BUILDING_AREA,nums);
+					 numMapMap.put(CreateEAG2012.BUILDING,numsMap);
+					 numMapMapMap.put(CreateEAG2012.TAB_DESCRIPTION,numMapMap);
+					 if(numValue.size()>i){
+						 numValue.set(i,numMapMapMap);
+					 }else{
+						 numValue.add(numMapMapMap);
+					 }
+					 eag2012.setNumValue(numValue);
+				 }
+				 if(descriptionTable.getString("textLengthOfShelf")!=null){
+					 List<Map<String,Map<String,Map<String,List<String>>>>> numValue = eag2012.getNumValue();
+					 if(numValue==null){
+						 numValue = new ArrayList<Map<String,Map<String,Map<String,List<String>>>>>();
+					 }
+					 Map<String, Map<String, Map<String, List<String>>>> numMapMapMap = null;
+					 if(numValue.size()>i && numValue.get(i)!=null){
+						 numMapMapMap = numValue.get(i);
+					 }else{
+						 numMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>(); 
+					 }
+					 Map<String, Map<String, List<String>>> numMapMap = null;
+					 if(numMapMapMap.size()>0 && numMapMapMap.get(CreateEAG2012.TAB_DESCRIPTION)!=null){
+						 numMapMap = numMapMapMap.get(CreateEAG2012.TAB_DESCRIPTION);
+					 }else{
+						 numMapMap = new HashMap<String, Map<String, List<String>>>();
+					 }
+					 Map<String, List<String>> numsMap = null;
+					 if(numMapMap.size()>0 && numMapMap.get(CreateEAG2012.BUILDING)!=null){
+						 numsMap = numMapMap.get(CreateEAG2012.BUILDING);
+					 }else{
+						 numsMap = new HashMap<String, List<String>>();
+					 }
+					 List<String> nums = null;
+					 if(numsMap.size()>0 && numsMap.get(CreateEAG2012.BUILDING_LENGTH)!=null){
+						 nums = numsMap.get(CreateEAG2012.ROOT_SUBSECTION);
+					 }else{
+						 nums = new ArrayList<String>();
+					 }
+					 nums.add(descriptionTable.getString("textLengthOfShelf"));
+					 numsMap.put(CreateEAG2012.BUILDING_LENGTH,nums);
+					 numMapMap.put(CreateEAG2012.BUILDING,numsMap);
+					 numMapMapMap.put(CreateEAG2012.TAB_DESCRIPTION,numMapMap);
+					 if(numValue.size()>i){
+						 numValue.set(i,numMapMapMap);
+					 }else{
+						 numValue.add(numMapMapMap);
+					 }
+					 eag2012.setNumValue(numValue);
+				 }
 			 i++;
 			}//end while description
 			
