@@ -3803,70 +3803,107 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				      
 				      }while(visitorAddress.has("contactTableVisitorsAddress_"+(++i)));
 				        
-				        List<List<String>> tempListList = null;
+				        List<Map<String, List<String>>> tempListList = null;
+				        Map<String, List<String>> tempListMap = null;
 				        if(eag2012.getStreetValue()==null){
-				        	tempListList = new ArrayList<List<String>>();
+				        	tempListList = new ArrayList<Map<String, List<String>>>();
 				        }else{
 				        	tempListList = eag2012.getStreetValue();
 				        }
-						tempListList.add(listStreet);
+				        if(tempListList.size()>x){
+				        	tempListMap = tempListList.get(x);
+				        }else{
+				        	tempListMap = new HashMap<String, List<String>>();
+				        }
+				        tempListMap.put(Eag2012Creator.TAB_CONTACT,listStreet);
+						tempListList.add(tempListMap);
 						eag2012.setStreetValue(tempListList);
 						tempListList = null;
 						if(eag2012.getStreetLang()==null){
-							tempListList = new ArrayList<List<String>>();
+							tempListList = new ArrayList<Map<String, List<String>>>();
 						}else{
 							tempListList = eag2012.getStreetLang();
 						}
-						tempListList.add(listStreetLanguage);
+						if(tempListList.size()>x){
+				        	tempListMap = tempListList.get(x);
+				        }else{
+				        	tempListMap = new HashMap<String, List<String>>();
+				        }
+				        tempListMap.put(Eag2012Creator.TAB_CONTACT,listStreetLanguage);
+						tempListList.add(tempListMap);
 						eag2012.setStreetLang(tempListList);
 						tempListList = null;
 						if(eag2012.getCitiesValue()==null){
-							tempListList = new ArrayList<List<String>>();
+							tempListList = new ArrayList<Map<String, List<String>>>();
 						}else{
 							tempListList = eag2012.getCitiesValue();
 						}
-						tempListList.add(listCities);
+						if(tempListList.size()>x){
+				        	tempListMap = tempListList.get(x);
+				        }else{
+				        	tempListMap = new HashMap<String, List<String>>();
+				        }
+				        tempListMap.put(Eag2012Creator.TAB_CONTACT,listCities);
+						tempListList.add(tempListMap);
 						eag2012.setCitiesValue(tempListList);
 						eag2012.setLocalentityValue(listDistrict);
-						tempListList = null;
+						List<List<String>> tempListList2 = null;
 						if(eag2012.getSecondemValue()==null){
-							tempListList = new ArrayList<List<String>>();
+							tempListList2 = new ArrayList<List<String>>();
 						}else{
-							tempListList = eag2012.getSecondemValue();
+							tempListList2 = eag2012.getSecondemValue();
 						}
-						tempListList.add(listLocalAuthority);
-						eag2012.setSecondemValue(tempListList);
-						tempListList = null;
+						tempListList2.add(listLocalAuthority);
+						eag2012.setSecondemValue(tempListList2);
+						tempListList2 = null;
 						if(eag2012.getFirstdemValue()==null){
-							tempListList = new ArrayList<List<String>>();
+							tempListList2 = new ArrayList<List<String>>();
 						}else{
-							tempListList = eag2012.getFirstdemValue();
+							tempListList2 = eag2012.getFirstdemValue();
 						}
-						tempListList.add(listAutonomus);
-						eag2012.setFirstdemValue(tempListList);
+						tempListList2.add(listAutonomus);
+						eag2012.setFirstdemValue(tempListList2);
 						tempListList = null;
 						if(eag2012.getCountryValue()==null){
-							tempListList = new ArrayList<List<String>>();
+							tempListList = new ArrayList<Map<String, List<String>>>();
 						}else{
 							tempListList = eag2012.getCountryValue();
 						}
-						tempListList.add(listCountries);
+						if(tempListList.size()>x){
+				        	tempListMap = tempListList.get(x);
+				        }else{
+				        	tempListMap = new HashMap<String, List<String>>();
+				        }
+				        tempListMap.put(Eag2012Creator.TAB_CONTACT,listCountries);
+						tempListList.add(tempListMap);
 						eag2012.setCountryValue(tempListList);
 						tempListList = null;
 						if(eag2012.getLocationLatitude()==null){
-							tempListList = new ArrayList<List<String>>();
+							tempListList = new ArrayList<Map<String, List<String>>>();
 						}else{
 							tempListList = eag2012.getLocationLatitude();
 						}
-						tempListList.add(listLatitudes);
+						if(tempListList.size()>x){
+				        	tempListMap = tempListList.get(x);
+				        }else{
+				        	tempListMap = new HashMap<String, List<String>>();
+				        }
+				        tempListMap.put(Eag2012Creator.TAB_CONTACT,listStreet);
+						tempListList.add(tempListMap);
 						eag2012.setLocationLatitude(tempListList);
 						tempListList = null;
 						if(eag2012.getLocationLongitude()==null){
-							tempListList = new ArrayList<List<String>>();
+							tempListList = new ArrayList<Map<String, List<String>>>();
 						}else{
 							tempListList = eag2012.getLocationLongitude();
 						}
-						tempListList.add(listLongitudes);
+						if(tempListList.size()>x){
+				        	tempListMap = tempListList.get(x);
+				        }else{
+				        	tempListMap = new HashMap<String, List<String>>();
+				        }
+				        tempListMap.put(Eag2012Creator.TAB_CONTACT,listLongitudes);
+						tempListList.add(tempListMap);
 						eag2012.setLocationLongitude(tempListList);
 				      
 				      }
@@ -4399,27 +4436,45 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						listStreetLanguage.add(visitorAddressTable.getString("selectYIVASelectLanguage"));
 					}//"yiTableVisitorsAddress_"+(++i)
 					
-					List<List<String>> tempListList = new ArrayList<List<String>>(); //at first time list must be in 0 position for first <location> tag into <repository> and 
-					tempListList.add(listStreets);
+					List<Map<String, List<String>>> tempListList = new ArrayList<Map<String, List<String>>>();//at first time list must be in 0 position for first <location> tag into <repository> and
+					HashMap<String, List<String>> listTempMap = new HashMap<String, List<String>>();
+					listTempMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listStreets);
+					tempListList.add(listTempMap);
 					eag2012.setStreetValue(tempListList);
-					tempListList = new ArrayList<List<String>>();
-					tempListList.add(listLangStreets);
+					tempListList = new ArrayList<Map<String, List<String>>>();
+					listTempMap = new HashMap<String, List<String>>();
+					listTempMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listLangStreets);
+					tempListList.add(listTempMap);
+					eag2012.setStreetValue(tempListList);
 					eag2012.setStreetLang(tempListList);
-					tempListList = new ArrayList<List<String>>();
-					tempListList.add(listCities);
+					tempListList = new ArrayList<Map<String, List<String>>>();
+					listTempMap = new HashMap<String, List<String>>();
+					listTempMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listCities);
+					tempListList.add(listTempMap);
+					eag2012.setStreetValue(tempListList);
 					eag2012.setCitiesValue(tempListList);
-					tempListList = new ArrayList<List<String>>();
-					tempListList.add(listCountries);
+					tempListList = new ArrayList<Map<String, List<String>>>();
+					listTempMap = new HashMap<String, List<String>>();
+					listTempMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listCountries);
+					tempListList.add(listTempMap);
 					eag2012.setCountryValue(tempListList);
-					tempListList = new ArrayList<List<String>>();
-					tempListList.add(listStreetLanguage);
-					eag2012.setCountryLang(tempListList);
-					List<List<String>> locationsTemp = new ArrayList<List<String>>();
-					locationsTemp.add(listLatitudes);//repo0
-					eag2012.setLocationLatitude(locationsTemp);
-					locationsTemp = new ArrayList<List<String>>();
-					locationsTemp.add(listLongitudes);
-					eag2012.setLocationLongitude(locationsTemp);
+					tempListList = new ArrayList<Map<String, List<String>>>();
+					listTempMap = new HashMap<String, List<String>>();
+					listTempMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listStreetLanguage);
+					tempListList.add(listTempMap);
+					List<List<String>> tempList2 = new ArrayList<List<String>>();
+					tempList2.addAll(eag2012.getCitiesLang());
+					eag2012.setCountryLang(tempList2);
+					tempListList = new ArrayList<Map<String, List<String>>>();
+					listTempMap = new HashMap<String, List<String>>();
+					listTempMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listLatitudes);
+					tempListList.add(listTempMap);
+					eag2012.setLocationLatitude(tempListList);
+					tempListList = new ArrayList<Map<String, List<String>>>();
+					listTempMap = new HashMap<String, List<String>>();
+					listTempMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listLongitudes);
+					tempListList.add(listTempMap);
+					eag2012.setLocationLongitude(tempListList);
 				}
 			}
 			JSONObject postalAddress = yourInstitution.getJSONObject("postalAddress");

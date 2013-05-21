@@ -158,22 +158,22 @@ public class Eag2012 {
 	private String geogareaLang;
 	private String geogareaValue;
 	private List<List<String>> locationLocalType;
-	private List<List<String>> locationLatitude;
-	private List<List<String>> locationLongitude;
+	private List<Map<String,List<String>>> locationLatitude;
+	private List<Map<String,List<String>>> locationLongitude;
 	private List<List<String>> countryLang;
-	private List<List<String>> countryValue;
+	private List<Map<String,List<String>>> countryValue;
 	private List<List<String>> firstdemLang;
 	private List<List<String>> firstdemValue;
 	private List<List<String>> secondemLang;
 	private List<List<String>> secondemValue;
 	private List<List<String>> municipalityPostalcodeLang;
 	private List<List<String>> municipalityPostalcodeValue;
-	private List<List<String>> citiesValue;
+	private List<Map<String,List<String>>> citiesValue;
 	private List<List<String>> citiesLang;
 	private List<String> localentityLang;
 	private List<String> localentityValue;
-	private List<List<String>> streetLang;
-	private List<List<String>> streetValue;
+	private List<Map<String,List<String>>> streetLang;
+	private List<Map<String,List<String>>> streetValue;
 	private List<List<String>> directionsLang;
 	private List<List<String>> directionsValue;
 	private List<List<String>> adminunitLang;
@@ -1220,19 +1220,19 @@ public class Eag2012 {
 		this.locationLocalType = locationLocalType;
 	}
 
-	public List<List<String>> getLocationLatitude() {
+	public List<Map<String,List<String>>> getLocationLatitude() {
 		return locationLatitude;
 	}
 
-	public void setLocationLatitude(List<List<String>> locationLatitude) {
+	public void setLocationLatitude(List<Map<String,List<String>>> locationLatitude) {
 		this.locationLatitude = locationLatitude;
 	}
 
-	public List<List<String>> getLocationLongitude() {
+	public List<Map<String,List<String>>> getLocationLongitude() {
 		return locationLongitude;
 	}
 
-	public void setLocationLongitude(List<List<String>> locationLongitude) {
+	public void setLocationLongitude(List<Map<String,List<String>>> locationLongitude) {
 		this.locationLongitude = locationLongitude;
 	}
 
@@ -1244,11 +1244,11 @@ public class Eag2012 {
 		this.countryLang = countryLang;
 	}
 
-	public List<List<String>> getCountryValue() {
+	public List<Map<String,List<String>>> getCountryValue() {
 		return countryValue;
 	}
 
-	public void setCountryValue(List<List<String>>  countryValue) {
+	public void setCountryValue(List<Map<String,List<String>>> countryValue) {
 		this.countryValue = countryValue;
 	}
 
@@ -1316,15 +1316,15 @@ public class Eag2012 {
 		this.localentityValue = localentityValue;
 	}
 
-	public List<List<String>> getStreetLang() {
+	public List<Map<String,List<String>>> getStreetLang() {
 		return streetLang;
 	}
 
-	public void setStreetLang(List<List<String>> streetLang) {
+	public void setStreetLang(List<Map<String,List<String>>> streetLang) {
 		this.streetLang = streetLang;
 	}
 
-	public List<List<String>> getStreetValue() {
+	public List<Map<String,List<String>>> getStreetValue() {
 		return streetValue;
 	}
 	
@@ -1332,7 +1332,7 @@ public class Eag2012 {
 		this.postalStreetValue = postalStreetValue;
 	}
 
-	public void setStreetValue(List<List<String>> streetValue) {
+	public void setStreetValue(List<Map<String,List<String>>> streetValue) {
 		this.streetValue = streetValue;
 	}
 
@@ -1871,11 +1871,11 @@ public class Eag2012 {
 		this.placeEntryValue = placeEntryValue;
 	}
 
-	public List<List<String>> getCitiesValue() {
+	public List<Map<String,List<String>>> getCitiesValue() {
 		return citiesValue;
 	}
 
-	public void setCitiesValue(List<List<String>> citiesValue) {
+	public void setCitiesValue(List<Map<String,List<String>>> citiesValue) {
 		this.citiesValue = citiesValue;
 	}
 
