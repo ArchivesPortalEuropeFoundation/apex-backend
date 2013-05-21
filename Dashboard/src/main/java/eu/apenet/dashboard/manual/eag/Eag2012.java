@@ -208,8 +208,8 @@ public class Eag2012 {
 	private List<String> photocopyserQuestion;
 	private List<String> restorationlabQuestion;
 	private List<Map<String,Map<String,Map<String,List<String>>>>> numValue;
-	private List<List<String>> ruleLang;
-	private List<List<String>> ruleValue;
+	private List<Map<String,List<String>>> ruleLang;
+	private List<Map<String,List<String>>> ruleValue;
 	private List<Map<String, Map<String, List<String>>>> webpageHref;
 	private List<Map<String, Map<String, List<String>>>> webpageValue;
 	private List<Map<String, Map<String, List<String>>>> emailHref;
@@ -1620,19 +1620,19 @@ public class Eag2012 {
 		this.numValue = numValue;
 	}
 
-	public List<List<String>> getRuleLang() {
+	public List<Map<String, List<String>>> getRuleLang() {
 		return ruleLang;
 	}
 
-	public void setRuleLang(List<List<String>> ruleLang) {
+	public void setRuleLang(List<Map<String, List<String>>> ruleLang) {
 		this.ruleLang = ruleLang;
 	}
 
-	public List<List<String>> getRuleValue() {
+	public List<Map<String, List<String>>> getRuleValue() {
 		return ruleValue;
 	}
 
-	public void setRuleValue(List<List<String>> ruleValue) {
+	public void setRuleValue(List<Map<String, List<String>>> ruleValue) {
 		this.ruleValue = ruleValue;
 	}
 

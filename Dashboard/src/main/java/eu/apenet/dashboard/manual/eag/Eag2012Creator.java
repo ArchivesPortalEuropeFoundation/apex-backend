@@ -2431,7 +2431,7 @@ public class Eag2012Creator {
 		
   	    childArchguide4.put("nodeName", "rule");
         HashMap<String, String> childArchguide4Attributes = new HashMap<String, String>();
-        childArchguide4Attributes.put("xml:lang",(this.eag2012.getRuleLang()!=null && this.eag2012.getRuleLang().size()>indexRepo && this.eag2012.getRuleLang().get(indexRepo)!=null && this.eag2012.getRuleLang().get(indexRepo).size()>indexList)? this.eag2012.getRuleLang().get(indexRepo).get(indexList):null);
+/* TODO        childArchguide4Attributes.put("xml:lang",(this.eag2012.getRuleLang()!=null && this.eag2012.getRuleLang().size()>indexRepo && this.eag2012.getRuleLang().get(indexRepo)!=null && this.eag2012.getRuleLang().get(indexRepo).size()>indexList)? this.eag2012.getRuleLang().get(indexRepo).get(indexList):null); */
         childArchguide4.put("attributes", childArchguide4Attributes);
         childArchguide4.put("nodeValue",(this.eag2012.getRuleValue()!=null && this.eag2012.getRuleValue().size()>indexRepo && this.eag2012.getRuleValue().get(indexRepo)!=null && this.eag2012.getRuleValue().get(indexRepo).size()>indexList)?this.eag2012.getRuleValue().get(indexRepo).get(indexList):null);
         

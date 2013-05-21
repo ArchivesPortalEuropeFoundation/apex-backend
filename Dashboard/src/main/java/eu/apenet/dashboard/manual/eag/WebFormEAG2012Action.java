@@ -780,7 +780,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }	
 				}
 				//date y rule of repositorfound
-				if(descriptionTable.has("textDateOfRepositoryFoundation")){
+				if(descriptionTable.has("textDateOfRepositoryFoundation")){  //date
 					 List<Map<String,Map<String,Map<String,List<String>>>>> dateValue = eag2012.getDateValue();
 					 if(dateValue==null){
 						 dateValue = new ArrayList<Map<String,Map<String,Map<String,List<String>>>>>();
@@ -820,7 +820,164 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 eag2012.setDateValue(dateValue);
 				 }
-				 
+				//rule of repositorfound
+				j=0;
+				while(descriptionTable.has("textRuleOfRepositoryFoundation_"+(++j)) && descriptionTable.has("selectLanguageRuleOfRepositoryFoundation_"+(j))) {
+				 if(descriptionTable.has("textRuleOfRepositoryFoundation_"+j)){	
+					List<Map<String, List<String>>> listRulesMap = eag2012.getRuleValue();
+					if(listRulesMap==null){
+						listRulesMap= new ArrayList<Map<String,List<String>>>();
+					}
+					Map<String,List<String>> rulesMap = null;
+					if(listRulesMap.size()>i && listRulesMap.get(i)!=null){
+						rulesMap = listRulesMap.get(i);
+					}else{
+						rulesMap = new HashMap<String,List<String>>();
+					}
+					List<String> rulesList =null;
+					if(rulesMap.size()>i && rulesMap.get(CreateEAG2012.REPOSITOR_FOUND)!=null){
+						rulesList= rulesMap.get(CreateEAG2012.REPOSITOR_FOUND);
+					}else{
+						rulesList = new ArrayList<String>();
+					}
+					rulesList.add(descriptionTable.getString("textRuleOfRepositoryFoundation_"+j));
+				    rulesMap.put(CreateEAG2012.REPOSITOR_FOUND, rulesList);
+				    if(listRulesMap.size()>i){
+				    	listRulesMap.set(i, rulesMap);
+				    }else{
+				    	listRulesMap.add(rulesMap);
+				    }
+				    eag2012.setRuleValue(listRulesMap);
+				 }	
+				 if(descriptionTable.has("selectLanguageRuleOfRepositoryFoundation_"+j)){
+					 List<Map<String,List<String>>> listRulesLang =eag2012.getRuleLang();
+					 if(listRulesLang==null){
+						 listRulesLang = new ArrayList<Map<String,List<String>>>();
+					 }
+					 Map<String,List<String>> rulesLangMap = null;
+					 if(listRulesLang.size()>i && listRulesLang.get(i)!=null){
+						 rulesLangMap = listRulesLang.get(i);
+					 }else{
+						 rulesLangMap = new HashMap<String,List<String>>();
+					 }
+					 List<String> rulesLangList = null;
+					 if(rulesLangMap.size()>i && rulesLangMap.get(CreateEAG2012.REPOSITOR_FOUND)!=null){
+						rulesLangList=rulesLangMap.get(CreateEAG2012.REPOSITOR_FOUND); 
+					 }else{
+						 rulesLangList = new ArrayList<String>();
+					 }
+					 rulesLangList.add(descriptionTable.getString("selectLanguageRuleOfRepositoryFoundation_"+j));
+					 rulesLangMap.put(CreateEAG2012.REPOSITOR_FOUND, rulesLangList);
+					 if(listRulesLang.size()>i){
+						 listRulesLang.set(i,rulesLangMap);
+					 }else{
+						 listRulesLang.add(rulesLangMap);
+					 }
+				    eag2012.setRuleLang(listRulesLang);
+				 }	
+				}
+				
+				//date of repositorsup
+				
+				if(descriptionTable.has("textDateOfRepositorySuppression")){  
+					 List<Map<String,Map<String,Map<String,List<String>>>>> dateValue = eag2012.getDateValue();
+					 if(dateValue==null){
+						 dateValue = new ArrayList<Map<String,Map<String,Map<String,List<String>>>>>();
+					 }
+					 Map<String, Map<String, Map<String, List<String>>>> dateMapMapMap = null;
+					 if(dateValue.size()>i && dateValue.get(i)!=null){
+						 dateMapMapMap = dateValue.get(i);
+					 }else{
+						 dateMapMapMap = new HashMap<String, Map<String, Map<String, List<String>>>>(); 
+					 }
+					 Map<String, Map<String, List<String>>> dateMapMap = null;
+					 if(dateMapMapMap.size()>0 && dateMapMapMap.get(CreateEAG2012.TAB_DESCRIPTION)!=null){
+						 dateMapMap= dateMapMapMap.get(CreateEAG2012.TAB_DESCRIPTION);
+					 }else{
+						 dateMapMap = new HashMap<String, Map<String, List<String>>>();
+					 }
+					 Map<String, List<String>> datesMap = null;
+					 if(dateMapMap.size()>0 && dateMapMap.get(CreateEAG2012.REPOSITORHIST)!=null){
+						 datesMap = dateMapMap.get(CreateEAG2012.REPOSITORHIST);
+					 }else{
+						 datesMap = new HashMap<String, List<String>>();
+					 }
+					 List<String> dates = null;
+					 if(datesMap.size()>0 && datesMap.get(CreateEAG2012.REPOSITOR_SUP)!=null){
+						 dates = datesMap.get(CreateEAG2012.REPOSITOR_SUP);
+					 }else{
+						 dates = new ArrayList<String>();
+					 }
+					 dates.add(descriptionTable.getString("textDateOfRepositorySuppression"));
+					 datesMap.put(CreateEAG2012.REPOSITOR_SUP, dates);
+					 dateMapMap.put(CreateEAG2012.REPOSITORHIST,datesMap);
+					 dateMapMapMap.put(CreateEAG2012.TAB_DESCRIPTION,dateMapMap);
+					 if( dateValue.size()>i){
+						 dateValue.set(i,dateMapMapMap);
+					 }else{
+						 dateValue.add(dateMapMapMap);
+					 }
+					 eag2012.setDateValue(dateValue);
+				 }
+				
+				//rule repositorsup
+				
+				j=0;
+				while(descriptionTable.has("textRuleOfRepositorySuppression_"+(++j)) && descriptionTable.has("selectLanguageRuleOfRepositorySuppression_"+(j))) {
+				 if(descriptionTable.has("textRuleOfRepositorySuppression_"+j)){	
+					List<Map<String, List<String>>> listRulesMap = eag2012.getRuleValue();
+					if(listRulesMap==null){
+						listRulesMap= new ArrayList<Map<String,List<String>>>();
+					}
+					Map<String,List<String>> rulesMap = null;
+					if(listRulesMap.size()>i && listRulesMap.get(i)!=null){
+						rulesMap = listRulesMap.get(i);
+					}else{
+						rulesMap = new HashMap<String,List<String>>();
+					}
+					List<String> rulesList =null;
+					if(rulesMap.size()>i && rulesMap.get(CreateEAG2012.REPOSITOR_SUP)!=null){
+						rulesList= rulesMap.get(CreateEAG2012.REPOSITOR_SUP);
+					}else{
+						rulesList = new ArrayList<String>();
+					}
+					rulesList.add(descriptionTable.getString("textRuleOfRepositorySuppression_"+j));
+				    rulesMap.put(CreateEAG2012.REPOSITOR_SUP, rulesList);
+				    if(listRulesMap.size()>i){
+				    	listRulesMap.set(i, rulesMap);
+				    }else{
+				    	listRulesMap.add(rulesMap);
+				    }
+				    eag2012.setRuleValue(listRulesMap);
+				 }	
+				 if(descriptionTable.has("selectLanguageRuleOfRepositorySuppression_"+j)){
+					 List<Map<String,List<String>>> listRulesLang =eag2012.getRuleLang();
+					 if(listRulesLang==null){
+						 listRulesLang = new ArrayList<Map<String,List<String>>>();
+					 }
+					 Map<String,List<String>> rulesLangMap = null;
+					 if(listRulesLang.size()>i && listRulesLang.get(i)!=null){
+						 rulesLangMap = listRulesLang.get(i);
+					 }else{
+						 rulesLangMap = new HashMap<String,List<String>>();
+					 }
+					 List<String> rulesLangList = null;
+					 if(rulesLangMap.size()>i && rulesLangMap.get(CreateEAG2012.REPOSITOR_SUP)!=null){
+						rulesLangList=rulesLangMap.get(CreateEAG2012.REPOSITOR_SUP); 
+					 }else{
+						 rulesLangList = new ArrayList<String>();
+					 }
+					 rulesLangList.add(descriptionTable.getString("selectLanguageRuleOfRepositorySuppression_"+j));
+					 rulesLangMap.put(CreateEAG2012.REPOSITOR_SUP, rulesLangList);
+					 if(listRulesLang.size()>i){
+						 listRulesLang.set(i,rulesLangMap);
+					 }else{
+						 listRulesLang.add(rulesLangMap);
+					 }
+				    eag2012.setRuleLang(listRulesLang);
+				 }	
+				}
+				
 				 //Administrative structure
 				
 				 String target1 = "textUnitOfAdministrativeStructure";
@@ -1163,7 +1320,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				//directions
 				j=0;
 				while((accessTable.has("textTravellingDirections_"+(++j))) && (accessTable.has("selectASATDSelectLanguage_"+(j))) && (accessTable.has("textTravelLink_"+(j)))){
-				  	if(accessTable.has("textTtravellingDirections_"+j)){
+				  	if(accessTable.has("textTravellingDirections_"+j)){
 				  		List<List<String>> listDirectionsList = eag2012.getDirectionsValue();
 				  		if(listDirectionsList == null){
 				  			listDirectionsList = new ArrayList<List<String>>();
@@ -1174,7 +1331,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				  		}else{
 				  			directionList = new ArrayList<String>();
 				  		}
-				  		directionList.add(accessTable.getString("textTtravellingDirections_"+j));
+				  		directionList.add(accessTable.getString("textTravellingDirections_"+j));
 				  		if(listDirectionsList.size()>i){
 				  			listDirectionsList.set(i, directionList);
 				  		}else{
@@ -2929,7 +3086,6 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 eag2012.setMicroformserQuestion(microformList);
 					 }
 					 
-				     //TODO description
 					 
 					 //photograph
 					 if(accessTable.has("selectASTSRSPhotographServices")){
@@ -2946,7 +3102,6 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 eag2012.setPhotographserQuestion(photographList);
 					 }
 					 
-					 //TODO description
 					 
 					 //digitalser
 					 if(accessTable.has("selectASTSRSDigitalServices")){
@@ -2962,7 +3117,6 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 } 
 						 eag2012.setDigitalserQuestion(digitalserList);
 					 }
-					 //TODO description
 					 
 					 //photocopyser
 					 if(accessTable.has("selectASTSRSPhotocopyServices")){
@@ -2978,8 +3132,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 } 
 						 eag2012.setPhotocopyserQuestion(photocopyserList);
 					 }
-					 //TODO description
-					 
+					
 						//Recreational services
 						if(accessTable.has("textASReSeRefreshment")){
 							List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
