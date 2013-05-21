@@ -1903,6 +1903,11 @@ function aSAddClosingDates(text1){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input#textClosingDates").attr("id","textClosingDates_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='selectLanguageClosingDates']").attr("for","selectLanguageClosingDates_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectLanguageClosingDates").attr("id","selectLanguageClosingDates_"+(count+1));
+
+	// Reset parametters.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function aSAddTravellingDirections(text1){

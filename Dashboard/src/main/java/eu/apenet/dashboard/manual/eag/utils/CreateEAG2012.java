@@ -12,10 +12,15 @@ import eu.apenet.dpt.utils.eag2012.AgencyName;
 import eu.apenet.dpt.utils.eag2012.Agent;
 import eu.apenet.dpt.utils.eag2012.Archguide;
 import eu.apenet.dpt.utils.eag2012.Autform;
+import eu.apenet.dpt.utils.eag2012.Citation;
 import eu.apenet.dpt.utils.eag2012.Closing;
+import eu.apenet.dpt.utils.eag2012.ComputerPlaces;
+import eu.apenet.dpt.utils.eag2012.Contact;
 import eu.apenet.dpt.utils.eag2012.Control;
 import eu.apenet.dpt.utils.eag2012.Country;
 import eu.apenet.dpt.utils.eag2012.Desc;
+import eu.apenet.dpt.utils.eag2012.DescriptiveNote;
+import eu.apenet.dpt.utils.eag2012.Directions;
 import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.dpt.utils.eag2012.Email;
 import eu.apenet.dpt.utils.eag2012.Fax;
@@ -26,13 +31,17 @@ import eu.apenet.dpt.utils.eag2012.MaintenanceAgency;
 import eu.apenet.dpt.utils.eag2012.MaintenanceEvent;
 import eu.apenet.dpt.utils.eag2012.MaintenanceHistory;
 import eu.apenet.dpt.utils.eag2012.MaintenanceStatus;
+import eu.apenet.dpt.utils.eag2012.MicrofilmPlaces;
 import eu.apenet.dpt.utils.eag2012.MunicipalityPostalcode;
 import eu.apenet.dpt.utils.eag2012.Nonpreform;
+import eu.apenet.dpt.utils.eag2012.Num;
 import eu.apenet.dpt.utils.eag2012.Opening;
 import eu.apenet.dpt.utils.eag2012.OtherAgencyCode;
 import eu.apenet.dpt.utils.eag2012.OtherRecordId;
 import eu.apenet.dpt.utils.eag2012.OtherRepositorId;
+import eu.apenet.dpt.utils.eag2012.P;
 import eu.apenet.dpt.utils.eag2012.Parform;
+import eu.apenet.dpt.utils.eag2012.PhotographAllowance;
 import eu.apenet.dpt.utils.eag2012.RecordId;
 import eu.apenet.dpt.utils.eag2012.RelationEntry;
 import eu.apenet.dpt.utils.eag2012.Relations;
@@ -42,11 +51,15 @@ import eu.apenet.dpt.utils.eag2012.Repository;
 import eu.apenet.dpt.utils.eag2012.RepositoryType;
 import eu.apenet.dpt.utils.eag2012.ResourceRelation;
 import eu.apenet.dpt.utils.eag2012.Restaccess;
+import eu.apenet.dpt.utils.eag2012.Searchroom;
 import eu.apenet.dpt.utils.eag2012.Secondem;
+import eu.apenet.dpt.utils.eag2012.Services;
 import eu.apenet.dpt.utils.eag2012.Street;
 import eu.apenet.dpt.utils.eag2012.Telephone;
+import eu.apenet.dpt.utils.eag2012.TermsOfUse;
 import eu.apenet.dpt.utils.eag2012.Timetable;
 import eu.apenet.dpt.utils.eag2012.Webpage;
+import eu.apenet.dpt.utils.eag2012.WorkPlaces;
 
 /**
  * Class for fill EAG2012 JAXB object.
@@ -99,6 +112,9 @@ public class CreateEAG2012 {
 	private static final String EVENTTYPE_DERIVED = "derived";
 	private static final String EVENTTYPE_REVISED = "revised";
 	private static final String EVENTTYPE_NEW = "new";
+
+	// Content for unit.
+	private static final String UNIT_SITE = "site";
 
 	// Constants for section indexes.
 	public static final String ROOT = "root";
@@ -431,75 +447,103 @@ public class CreateEAG2012 {
 		// eag/archguide/desc/repositories/repository/geogarea
 
 		// eag/archguide/desc/repositories/repository/location
-		if (this.eag2012.getCountryLang() != null) {
+		if (this.eag2012.getStreetLang() != null) {
+			// TODO: Structure under revision.
 			for (int i =0; i < this.eag2012.getCountryLang().size(); i++) {
-				if (this.eag2012.getCountryLang().get(i) != null) {
+				if (this.eag2012.getStreetLang().get(i) != null) {
 					// Recover repository.
 					Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
 
-					// Visitor address.
-					List<String> countryLangList = this.eag2012.getCountryLang().get(i);
-					List<String> latitudeList = this.eag2012.getLocationLatitude().get(i);
-					List<String> longitudeList = this.eag2012.getLocationLongitude().get(i);
-					List<String> countryList = this.eag2012.getCountryValue().get(i);
-					List<String> firstdemList = this.eag2012.getFirstdemValue().get(i);
-					List<String> secondemList = this.eag2012.getSecondemValue().get(i);
-					List<String> citiesList = this.eag2012.getCitiesValue().get(i);
-					List<String> streetList = this.eag2012.getStreetValue().get(i);
-					for (int j = 0; j < countryLangList.size(); j++) {
-						Location location = new Location();
-						String language = countryLangList.get(j);
-						// eag/archguide/desc/repositories/repository/location/type
-						location.setLocalType(CreateEAG2012.VISITORS_ADDRESS);
-						// eag/archguide/desc/repositories/repository/location/latitude
-						location.setLatitude(latitudeList.get(j));
-						// eag/archguide/desc/repositories/repository/location/longitude
-						location.setLongitude(longitudeList.get(j));
-						// eag/archguide/desc/repositories/repository/location/country
-						if (location.getCountry() == null) {
-							location.setCountry(new Country());
-						}
-						location.getCountry().setContent(countryList.get(j));
-						// eag/archguide/desc/repositories/repository/location/country/lang
-						location.getCountry().setLang(language);
-						// eag/archguide/desc/repositories/repository/location/firstdem
-						if (location.getFirstdem() == null) {
-							location.setFirstdem(new Firstdem());
-						}
-						if (firstdemList.size() > j) {
-							location.getFirstdem().setContent(firstdemList.get(j));
-							// eag/archguide/desc/repositories/repository/location/firstdem/lang
-							location.getFirstdem().setLang(language);
-						}
-						// eag/archguide/desc/repositories/repository/location/secondem
-						if (location.getSecondem() == null) {
-							location.setSecondem(new Secondem());
-						}
-						if (secondemList.size() > j) {
-							location.getSecondem().setContent(secondemList.get(j));
-							// eag/archguide/desc/repositories/repository/location/secondem/lang
-							location.getSecondem().setLang(language);
-						}
-						// eag/archguide/desc/repositories/repository/location/municipalityPostalcode
-						if (location.getMunicipalityPostalcode() == null) {
-							location.setMunicipalityPostalcode(new MunicipalityPostalcode());
-						}
-						location.getMunicipalityPostalcode().setContent(citiesList.get(j));
-						// eag/archguide/desc/repositories/repository/location/municipalityPostalcode/lang
-						location.getMunicipalityPostalcode().setLang(language);
-						// eag/archguide/desc/repositories/repository/location/localentity
-//TODO:					location.getLocalentity().setContent(this.eag2012.getLocalentityValue().get(i).get(j));
-						// eag/archguide/desc/repositories/repository/location/localentity/lang
-//TODO:					location.getLocalentity().setLang(language);
-						// eag/archguide/desc/repositories/repository/location/street
-						if (location.getStreet() == null) {
-							location.setStreet(new Street());
-						}
-						location.getStreet().setContent(streetList.get(j));
-						// eag/archguide/desc/repositories/repository/location/street/lang
-						location.getStreet().setLang(language);
+					// Visitor address maps.
+					Map<String, List<String>> streetLangMap = this.eag2012.getStreetLang().get(i);
+					Map<String, List<String>> latitudeMap = this.eag2012.getLocationLatitude().get(i);
+					Map<String, List<String>> longitudeMap = this.eag2012.getLocationLongitude().get(i);
+					Map<String, List<String>> countryMap = this.eag2012.getCountryValue().get(i);
+//					List<String> firstdemList = this.eag2012.getFirstdemValue().get(i);
+//					List<String> secondemList = this.eag2012.getSecondemValue().get(i);
+					Map<String, List<String>> citiesMap = this.eag2012.getCitiesValue().get(i);
+					Map<String, List<String>> streetMap = this.eag2012.getStreetValue().get(i);
 
-						repository.getLocation().add(location);
+					// Visitor address iterators.
+					Iterator<String> streetLangIt = streetLangMap.keySet().iterator();
+					Iterator<String> latitudeIt = latitudeMap.keySet().iterator();
+					Iterator<String> longitudeIt = longitudeMap.keySet().iterator();
+					Iterator<String> countryIt = countryMap.keySet().iterator();
+					Iterator<String> citiesIt = citiesMap.keySet().iterator();
+					Iterator<String> streetIt = streetMap.keySet().iterator();
+					while (streetLangIt.hasNext()) {
+						// Visitor address keys.
+						String streetLangKey = streetLangIt.next();
+						String latitudeKey = latitudeIt.next();
+						String longitudeKey = longitudeIt.next();
+						String countryKey = countryIt.next();
+						String citiesKey = citiesIt.next();
+						String streetKey = streetIt.next();
+
+						// Visitor address lists.
+						List<String> streetLangList = streetLangMap.get(streetLangKey);
+						List<String> latitudeList = latitudeMap.get(latitudeKey);
+						List<String> longitudeList = latitudeMap.get(longitudeKey);
+						List<String> countryList = countryMap.get(countryKey);
+						List<String> firstdemList = this.eag2012.getFirstdemValue().get(i);
+						List<String> secondemList = this.eag2012.getSecondemValue().get(i);
+						List<String> citiesList = citiesMap.get(citiesKey);
+						List<String> streetList = streetMap.get(streetKey);
+						for (int j = 0; j < streetLangList.size(); j++) {
+							Location location = new Location();
+							String language = streetLangList.get(j);
+							// eag/archguide/desc/repositories/repository/location/type
+							location.setLocalType(CreateEAG2012.VISITORS_ADDRESS);
+							// eag/archguide/desc/repositories/repository/location/latitude
+							location.setLatitude(latitudeList.get(j));
+							// eag/archguide/desc/repositories/repository/location/longitude
+							location.setLongitude(longitudeList.get(j));
+							// eag/archguide/desc/repositories/repository/location/country
+							if (location.getCountry() == null) {
+								location.setCountry(new Country());
+							}
+							location.getCountry().setContent(countryList.get(j));
+							// eag/archguide/desc/repositories/repository/location/country/lang
+							location.getCountry().setLang(language);
+							// eag/archguide/desc/repositories/repository/location/firstdem
+							if (location.getFirstdem() == null) {
+								location.setFirstdem(new Firstdem());
+							}
+							if (firstdemList.size() > j) {
+								location.getFirstdem().setContent(firstdemList.get(j));
+								// eag/archguide/desc/repositories/repository/location/firstdem/lang
+								location.getFirstdem().setLang(language);
+							}
+							// eag/archguide/desc/repositories/repository/location/secondem
+							if (location.getSecondem() == null) {
+								location.setSecondem(new Secondem());
+							}
+							if (secondemList.size() > j) {
+								location.getSecondem().setContent(secondemList.get(j));
+								// eag/archguide/desc/repositories/repository/location/secondem/lang
+								location.getSecondem().setLang(language);
+							}
+							// eag/archguide/desc/repositories/repository/location/municipalityPostalcode
+							if (location.getMunicipalityPostalcode() == null) {
+								location.setMunicipalityPostalcode(new MunicipalityPostalcode());
+							}
+							location.getMunicipalityPostalcode().setContent(citiesList.get(j));
+							// eag/archguide/desc/repositories/repository/location/municipalityPostalcode/lang
+							location.getMunicipalityPostalcode().setLang(language);
+							// eag/archguide/desc/repositories/repository/location/localentity
+//TODO:						location.getLocalentity().setContent(this.eag2012.getLocalentityValue().get(i).get(j));
+							// eag/archguide/desc/repositories/repository/location/localentity/lang
+//TODO:						location.getLocalentity().setLang(language);
+							// eag/archguide/desc/repositories/repository/location/street
+							if (location.getStreet() == null) {
+								location.setStreet(new Street());
+							}
+							location.getStreet().setContent(streetList.get(j));
+							// eag/archguide/desc/repositories/repository/location/street/lang
+							location.getStreet().setLang(language);
+
+							repository.getLocation().add(location);
+						}
 					}
 				}
 
@@ -509,7 +553,7 @@ public class CreateEAG2012 {
 
 					// Postal address.
 					List<String> postalStreetLangList = this.eag2012.getPostalStreetLang().get(i);
-					List<String> countryList = this.eag2012.getCountryValue().get(i);
+// TODO:					List<String> countryList = this.eag2012.getCountryValue().get(i+1);
 					List<String> citiesList = this.eag2012.getMunicipalityPostalcodeValue().get(i);
 					List<String> streetList = this.eag2012.getPostalStreetValue().get(i);
 					for (int j = 0; j < postalStreetLangList.size(); j++) {
@@ -517,13 +561,13 @@ public class CreateEAG2012 {
 						String language = postalStreetLangList.get(j);
 						// eag/archguide/desc/repositories/repository/location/type
 						location.setLocalType(CreateEAG2012.POSTAL_ADDRESS);
-						// eag/archguide/desc/repositories/repository/location/country
+/* TODO:						// eag/archguide/desc/repositories/repository/location/country
 						if (location.getCountry() == null) {
 							location.setCountry(new Country());
 						}
 						location.getCountry().setContent(countryList.get(j));
 						// eag/archguide/desc/repositories/repository/location/country/lang
-						location.getCountry().setLang(language);
+						location.getCountry().setLang(language); */
 						// eag/archguide/desc/repositories/repository/location/municipalityPostalcode
 						if (location.getMunicipalityPostalcode() == null) {
 							location.setMunicipalityPostalcode(new MunicipalityPostalcode());
@@ -559,12 +603,26 @@ public class CreateEAG2012 {
 					Iterator<String> sectionIt = sectionMap.keySet().iterator();
 					while (sectionIt.hasNext()) {
 						String sectionKey = sectionIt.next();
-						if (sectionKey == CreateEAG2012.ROOT) {
-							List<String> telephoneList = sectionMap.get(sectionKey);
-							for (int k = 0; k < telephoneList.size(); k++) {
-								Telephone telephone = new Telephone();
-								telephone.setContent(telephoneList.get(k));
+						List<String> telephoneList = sectionMap.get(sectionKey);
+						for (int k = 0; k < telephoneList.size(); k++) {
+							Telephone telephone = new Telephone();
+							telephone.setContent(telephoneList.get(k));
+							if (CreateEAG2012.ROOT.equalsIgnoreCase(sectionKey)) {
 								repository.getTelephone().add(telephone);
+							}
+
+							// eag/archguide/desc/repositories/repository/services/searchroom
+							if (CreateEAG2012.SEARCHROOM.equalsIgnoreCase(sectionKey)) {
+								if (repository.getServices() == null) {
+									repository.setServices(new Services());
+								}
+								if (repository.getServices().getSearchroom() == null) {
+									repository.getServices().setSearchroom(new Searchroom());
+								}
+								if (repository.getServices().getSearchroom().getContact() == null) {
+									repository.getServices().getSearchroom().setContact(new Contact());
+								}
+									repository.getServices().getSearchroom().getContact().getTelephone().add(telephone);
 							}
 						}
 					}
@@ -600,7 +658,7 @@ public class CreateEAG2012 {
 				Map<String, Map<String, List<String>>> tabsValueMap = this.eag2012.getEmailValue().get(i);
 				Map<String, Map<String, List<String>>> tabsHrefMap = this.eag2012.getEmailHref().get(i);
 				// Repository
-				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
+				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
 
 				Iterator<String> tabsValueIt = tabsValueMap.keySet().iterator();
 				Iterator<String> tabsHrefIt = tabsHrefMap.keySet().iterator();
@@ -614,15 +672,33 @@ public class CreateEAG2012 {
 					while (sectionValueIt.hasNext()) {
 						String sectionValueKey = sectionValueIt.next();
 						String sectionHrefKey = sectionHrefIt.next();
-						if (sectionValueKey == CreateEAG2012.ROOT
-								&& sectionHrefKey == CreateEAG2012.ROOT) {
-							List<String> emailValueList = sectionValueMap.get(sectionValueKey);
-							List<String> emailHrefList = sectionHrefMap.get(sectionHrefKey);
-							for (int k = 0; k < emailValueList.size(); k++) {
-								Email email = new Email();
-								email.setContent(emailValueList.get(k));
-								email.setHref(emailHrefList.get(k));
-								repository.getEmail().add(email);
+						List<String> emailValueList = sectionValueMap.get(sectionValueKey);
+						List<String> emailHrefList = sectionHrefMap.get(sectionHrefKey);
+
+						for (int k = 0; k < emailValueList.size(); k++) {
+							Email email = new Email();
+							email.setContent(emailValueList.get(k));
+							email.setHref(emailHrefList.get(k));
+
+							if (CreateEAG2012.ROOT.equalsIgnoreCase(sectionValueKey)
+									&& CreateEAG2012.ROOT.equalsIgnoreCase(sectionHrefKey)) {
+									repository.getEmail().add(email);
+							}
+
+							// eag/archguide/desc/repositories/repository/services/searchroom
+							if (CreateEAG2012.SEARCHROOM.equalsIgnoreCase(sectionValueKey)
+									&& CreateEAG2012.SEARCHROOM.equalsIgnoreCase(sectionHrefKey)) {
+								if (repository.getServices() == null) {
+									repository.setServices(new Services());
+								}
+								if (repository.getServices().getSearchroom() == null) {
+									repository.getServices().setSearchroom(new Searchroom());
+								}
+								if (repository.getServices().getSearchroom().getContact() == null) {
+									repository.getServices().getSearchroom().setContact(new Contact());
+								}
+	
+								repository.getServices().getSearchroom().getContact().getEmail().add(email);
 							}
 						}
 					}
@@ -636,7 +712,7 @@ public class CreateEAG2012 {
 				Map<String, Map<String, List<String>>> tabsValueMap = this.eag2012.getWebpageValue().get(i);
 				Map<String, Map<String, List<String>>> tabsHrefMap = this.eag2012.getWebpageHref().get(i);
 				// Repository
-				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
+				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
 
 				Iterator<String> tabsValueIt = tabsValueMap.keySet().iterator();
 				Iterator<String> tabsHrefIt = tabsHrefMap.keySet().iterator();
@@ -650,15 +726,29 @@ public class CreateEAG2012 {
 					while (sectionValueIt.hasNext()) {
 						String sectionValueKey = sectionValueIt.next();
 						String sectionHrefKey = sectionHrefIt.next();
-						if (sectionValueKey == CreateEAG2012.ROOT
-								&& sectionHrefKey == CreateEAG2012.ROOT) {
-							List<String> webpageValueList = sectionValueMap.get(sectionValueKey);
-							List<String> webpageHrefList = sectionHrefMap.get(sectionHrefKey);
-							for (int k = 0; k < webpageValueList.size(); k++) {
-								Webpage webpage= new Webpage();
-								webpage.setContent(webpageValueList.get(k));
-								webpage.setHref(webpageHrefList.get(k));
+						List<String> webpageValueList = sectionValueMap.get(sectionValueKey);
+						List<String> webpageHrefList = sectionHrefMap.get(sectionHrefKey);
+						for (int k = 0; k < webpageValueList.size(); k++) {
+							Webpage webpage= new Webpage();
+							webpage.setContent(webpageValueList.get(k));
+							webpage.setHref(webpageHrefList.get(k));
+							
+							if (CreateEAG2012.ROOT.equalsIgnoreCase(sectionValueKey)
+									&& CreateEAG2012.ROOT.equalsIgnoreCase(sectionHrefKey)) {
 								repository.getWebpage().add(webpage);
+							}
+
+							// eag/archguide/desc/repositories/repository/services/searchroom
+							if (CreateEAG2012.SEARCHROOM.equalsIgnoreCase(sectionValueKey)
+									&& CreateEAG2012.SEARCHROOM.equalsIgnoreCase(sectionHrefKey)) {
+								if (repository.getServices() == null) {
+									repository.setServices(new Services());
+								}
+								if (repository.getServices().getSearchroom() == null) {
+									repository.getServices().setSearchroom(new Searchroom());
+								}
+	
+								repository.getServices().getSearchroom().getWebpage().add(webpage);
 							}
 						}
 					}
@@ -667,8 +757,29 @@ public class CreateEAG2012 {
 		}
 
 		// eag/archguide/desc/repositories/repository/directions
-		if (this.eag2012.getDirectionsValue() != null) {
-			
+		if (this.eag2012.getDirectionsValue() != null && this.eag2012.getDirectionsLang() != null
+				&& this.eag2012.getCitationHref() != null ) {
+			for (int i = 0; i < this.eag2012.getDirectionsValue().size(); i++) {
+				List<String> directionsValueList = this.eag2012.getDirectionsValue().get(i);
+				List<String> directionsLangList = this.eag2012.getDirectionsLang().get(i);
+				List<String> citationHrefList = this.eag2012.getCitationHref().get(i);
+
+				// Repository
+				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+
+				for (int j = 0; j < directionsValueList.size(); j++) {
+					Directions directions = new Directions();
+					directions.getContent().add(directionsValueList.get(j));
+					// eag/archguide/desc/repositories/repository/directions/lang
+					directions.setLang(directionsLangList.get(j));
+					// eag/archguide/desc/repositories/repository/directions/citation/href
+					Citation citation = new Citation();
+					citation.setHref(citationHrefList.get(j));
+
+					directions.getContent().add(citation);
+					repository.getDirections().add(directions);
+				}
+			}
 		}
 
 		// eag/archguide/desc/repositories/repository/repositorhist
@@ -776,24 +887,37 @@ public class CreateEAG2012 {
 		}
 
 		// eag/archguide/desc/repositories/repository/access/restaccess
-		//TODO: only for Your institution tab.
-		if (this.eag2012.getRestaccessValue() != null /*&& this.eag2012.getRestaccessLang() != null*/) {
+		if (this.eag2012.getRestaccessValue() != null) {
 			for (int i = 0; i < this.eag2012.getRestaccessValue().size(); i++) {
 				Map<String, List<String>> tabsValueMap = this.eag2012.getRestaccessValue().get(i);
-// TODO:				Map<String, List<String>> tabsLangMap = this.eag2012.getRestaccessLang().get(i);
+				Map<String, List<String>> tabsLangMap = null;
+				if (this.eag2012.getRestaccessLang() != null && !this.eag2012.getRestaccessLang().isEmpty()) {
+					tabsLangMap = this.eag2012.getRestaccessLang().get(i);
+				}
+				// Repository.
 				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+
 				Iterator<String> accessValueIt = tabsValueMap.keySet().iterator();
-// TODO:				Iterator<String> accessLangIt = tabsLangMap.keySet().iterator();
+				Iterator<String> accessLangIt = null;
+				if (tabsLangMap != null) {
+					accessLangIt = tabsLangMap.keySet().iterator();
+				}
 				while (accessValueIt.hasNext()) {
 					String accessValueKey = accessValueIt.next();
-// TODO:					String accessLangKey = accessLangIt.next();
-					if (accessValueKey == CreateEAG2012.TAB_YOUR_INSTITUTION) {
+
+					// Rest of tabs.
+					if (!accessValueKey.equalsIgnoreCase(CreateEAG2012.TAB_YOUR_INSTITUTION)) {
 						List<String> accessValueList = tabsValueMap.get(accessValueKey);
-// TODO:						List<String> accessLangList = tabsLangMap.get(accessLangKey);
+						List<String> accessLangList = null;
+						if (accessLangIt != null) {
+							accessLangList = tabsLangMap.get(accessLangIt.next());
+						}
 						for (int j = 0; j < accessValueList.size(); j++) {
 							Restaccess restaccess = new Restaccess();
 							restaccess.setContent(accessValueList.get(j));
-// TODO:							restaccess.setLang(accessLangList.get(j));
+							if (accessLangList != null) {
+								restaccess.setLang(accessLangList.get(j));
+							}
 							repository.getAccess().getRestaccess().add(restaccess);
 						}
 					}
@@ -801,7 +925,28 @@ public class CreateEAG2012 {
 			}
 		}
 
-		// eag/archguide/desc/repositories/repository/access/termsOsUse
+		// eag/archguide/desc/repositories/repository/access/termsOfUse
+		if (this.eag2012.getTermsOfUseValue() != null && !this.eag2012.getTermsOfUseValue().isEmpty()
+				&& this.eag2012.getTermsOfUseLang() != null && !this.eag2012.getTermsOfUseLang().isEmpty()
+				&& this.eag2012.getTermsOfUseHref() != null && !this.eag2012.getTermsOfUseHref().isEmpty()) {
+			for (int i = 0; i < this.eag2012.getTermsOfUseValue().size(); i++) {
+				List<String> termsOfUseValueList = this.eag2012.getTermsOfUseValue().get(i);
+				List<String> termsOfUseLangList = this.eag2012.getTermsOfUseLang().get(i);
+				List<String> termsOfUseHrefList = this.eag2012.getTermsOfUseHref().get(i);
+
+				// Repository.
+				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+
+				for (int j = 0; j < termsOfUseValueList.size(); j++) {
+					TermsOfUse termsOfUse = new TermsOfUse();
+					termsOfUse.setContent(termsOfUseValueList.get(j));
+					termsOfUse.setLang(termsOfUseLangList.get(j));
+					termsOfUse.setHref(termsOfUseHrefList.get(j));
+
+					repository.getAccess().getTermsOfUse().add(termsOfUse);
+				}
+			}
+		}
 
 		// eag/archguide/desc/repositories/repository/accessibility/question
 		if (this.eag2012.getAccessibilityQuestion() != null) {
@@ -819,20 +964,29 @@ public class CreateEAG2012 {
 		}
 
 		// eag/archguide/desc/repositories/repository/accessibility
-		//TODO: only for Your institution tab.
 		if (this.eag2012.getAccessibilityValue() != null /*&& this.eag2012.getAccessibilityLang() != null*/) {
 			for (int i = 0; i < this.eag2012.getAccessibilityValue().size(); i++) {
 				Map<String, List<String>> tabsValueMap = this.eag2012.getAccessibilityValue().get(i);
-// TODO:				Map<String, List<String>> tabsLangMap = this.eag2012.getAccessibilityLang().get(i);
+				Map<String, List<String>> tabsLangMap = null;
+				if (this.eag2012.getAccessibilityLang() != null && !this.eag2012.getAccessibilityLang().isEmpty()) {
+					tabsLangMap = this.eag2012.getAccessibilityLang().get(i);
+				}
 				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
 				Iterator<String> accessibilityValueIt = tabsValueMap.keySet().iterator();
-// TODO:				Iterator<String> accessibilityLangIt = tabsLangMap.keySet().iterator();
+				Iterator<String> accessibilityLangIt = null;
+				if (tabsLangMap != null) {
+					accessibilityLangIt = tabsLangMap.keySet().iterator();
+				}
 				while (accessibilityValueIt.hasNext()) {
 					String accessibilityValueKey = accessibilityValueIt.next();
-					if (accessibilityValueKey == CreateEAG2012.TAB_YOUR_INSTITUTION) {
-// TODO:						String accessibilityLangKey = accessibilityLangIt.next();
+
+					// Rest of tabs.
+					if (!accessibilityValueKey.equalsIgnoreCase(CreateEAG2012.TAB_YOUR_INSTITUTION)) {
 						List<String> accessibilityValueList = tabsValueMap.get(accessibilityValueKey);
-// TODO:						List<String> accessibilityLangList = tabsLangMap.get(accessibilityLangKey);
+						List<String> accessibilityLangList = null;
+						if (accessibilityLangIt != null) {
+							accessibilityLangList = tabsLangMap.get(accessibilityLangIt.next());
+						}
 						for (int j = 0; j < accessibilityValueList.size(); j++) {
 							Accessibility accessibility = null;
 							if (repository.getAccessibility().get(j) == null) {
@@ -841,16 +995,201 @@ public class CreateEAG2012 {
 								accessibility = repository.getAccessibility().get(j);
 							}
 							accessibility.setContent(accessibilityValueList.get(j));
-// TODO:							accessibility.setLang(accessibilityLangList.get(j));
+							if (accessibilityLangList != null) {
+								accessibility.setLang(accessibilityLangList.get(j));
+							}
 						}
 					}
 				}
 			}
 		}
 
-		// eag/archguide/desc/repositories/repository/services
+		// eag/archguide/desc/repositories/repository/services/searchroom
+		if (this.eag2012.getNumValue() != null) {
+			for (int i = 0; i < this.eag2012.getNumValue().size(); i++) {
+				Map<String, Map<String, Map<String, List<String>>>> tabsMap = this.eag2012.getNumValue().get(i);
+				// Repository.
+				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+
+				Iterator<String> tabsIt = tabsMap.keySet().iterator();
+				while (tabsIt.hasNext()) {
+					String tabKey = tabsIt.next();
+					if (CreateEAG2012.TAB_ACCESS_AND_SERVICES.equalsIgnoreCase(tabKey)) {
+						Map<String, Map<String, List<String>>> sectionsMap = tabsMap.get(tabKey);
+						Iterator<String> sectionsIt = sectionsMap.keySet().iterator();
+						while (sectionsIt.hasNext()) {
+							String sectionKey = sectionsIt.next();
+							if (CreateEAG2012.SEARCHROOM.equalsIgnoreCase(sectionKey)) {
+								Map<String, List<String>> subSectionsMap = sectionsMap.get(sectionKey);
+								Iterator<String> subSectionsIt = subSectionsMap.keySet().iterator();
+								while (subSectionsIt.hasNext()) {
+									String subSectionKey = subSectionsIt.next();
+									// eag/archguide/desc/repositories/repository/services/searchroom/workPlaces
+									if (CreateEAG2012.WORKING_PLACES.equalsIgnoreCase(subSectionKey)) {
+										List<String> valueList = subSectionsMap.get(subSectionKey);
+										for (int j = 0; j < valueList.size(); j++) {
+											if (repository.getServices() == null) {
+												repository.setServices(new Services());
+											}
+											if (repository.getServices().getSearchroom() == null) {
+												repository.getServices().setSearchroom(new Searchroom());
+											}
+
+											Num num = new Num();
+											num.setContent(valueList.get(j));
+											num.setUnit(CreateEAG2012.UNIT_SITE);
+
+											WorkPlaces workPlaces = new WorkPlaces();
+											workPlaces.setNum(num);
+
+											repository.getServices().getSearchroom().setWorkPlaces(workPlaces);
+										}
+									}
+									// eag/archguide/desc/repositories/repository/services/searchroom/ComputerPlaces
+									if (CreateEAG2012.COMPUTER_PLACES.equalsIgnoreCase(subSectionKey)) {
+										List<String> valueList = subSectionsMap.get(subSectionKey);
+										for (int j = 0; j < valueList.size(); j++) {
+											if (repository.getServices() == null) {
+												repository.setServices(new Services());
+											}
+											if (repository.getServices().getSearchroom() == null) {
+												repository.getServices().setSearchroom(new Searchroom());
+											}
+
+											Num num = new Num();
+											num.setContent(valueList.get(j));
+											num.setUnit(CreateEAG2012.UNIT_SITE);
+
+											ComputerPlaces computerPlaces = new ComputerPlaces();
+											computerPlaces.setNum(num);
+
+											// eag/archguide/desc/repositories/repository/services/searchroom/ComputerPlaces/descriptiveNote
+// TODO:											getDescriptiveNote(computerPlaces);
+
+											repository.getServices().getSearchroom().setComputerPlaces(computerPlaces);
+										}
+									}
+									// eag/archguide/desc/repositories/repository/services/searchroom/microfilmPlaces
+									if (CreateEAG2012.MICROFILM.equalsIgnoreCase(subSectionKey)) {
+										List<String> valueList = subSectionsMap.get(subSectionKey);
+										for (int j = 0; j < valueList.size(); j++) {
+											if (repository.getServices() == null) {
+												repository.setServices(new Services());
+											}
+											if (repository.getServices().getSearchroom() == null) {
+												repository.getServices().setSearchroom(new Searchroom());
+											}
+
+											Num num = new Num();
+											num.setContent(valueList.get(j));
+											num.setUnit(CreateEAG2012.UNIT_SITE);
+
+											MicrofilmPlaces microfilmPlaces = new MicrofilmPlaces();
+											microfilmPlaces.setNum(num);
+
+											repository.getServices().getSearchroom().setMicrofilmPlaces(microfilmPlaces);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// eag/archguide/desc/repositories/repository/services/searchroom/photographAllowance
+		if (this.eag2012.getPhotographAllowanceValue() != null) {
+			for (int i = 0; i < this.eag2012.getPhotographAllowanceValue().size(); i++) {
+				String value = this.eag2012.getPhotographAllowanceValue().get(i);
+				// Repository.
+				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+
+				if (repository.getServices() == null) {
+					repository.setServices(new Services());
+				}
+				if (repository.getServices().getSearchroom() == null) {
+					repository.getServices().setSearchroom(new Searchroom());
+				}
+				PhotographAllowance photographAllowance = new PhotographAllowance();
+				photographAllowance.setValue(value);
+
+				repository.getServices().getSearchroom().setPhotographAllowance(photographAllowance);
+			}
+		}
+
+		// eag/archguide/desc/repositories/repository/services/searchroom/readersTicket
+//		if (this.eag2012.getReadersTicketValue() != null) {
+//			for (int i = 0; i < this.eag2012.getPhotographAllowanceValue().size(); i++) {
+//				String value = this.eag2012.getPhotographAllowanceValue().get(i);
+//				// Repository.
+//				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+//
+//				if (repository.getServices() == null) {
+//					repository.setServices(new Services());
+//				}
+//				if (repository.getServices().getSearchroom() == null) {
+//					repository.getServices().setSearchroom(new Searchroom());
+//				}
+//				PhotographAllowance photographAllowance = new PhotographAllowance();
+//				photographAllowance.setValue(value);
+//
+//				repository.getServices().getSearchroom().setPhotographAllowance(photographAllowance);
+//			}
+//		}
 
 		// eag/archguide/desc/repositories/repository/descriptivenote
 
+	}
+
+	/**
+	 * Method to recover descriptiveNote.
+	 *
+	 * @param object The object to add the descriptive note.
+	 */
+	private void getDescriptiveNote(final Object object) {
+		if (this.eag2012.getDescriptiveNotePValue() != null
+				&& this.eag2012.getDescriptiveNotePLang() != null) {
+			for (int i = 0; i < this.eag2012.getDescriptiveNotePValue().size(); i++) {
+				Map<String, Map<String, List<String>>> tabsValueMap = this.eag2012.getDescriptiveNotePValue().get(i);
+				Map<String, Map<String, List<String>>> tabsLangMap = this.eag2012.getDescriptiveNotePLang().get(i);
+				Iterator<String> tabsValueIt = tabsValueMap.keySet().iterator();
+				Iterator<String> tabsLangIt = tabsLangMap.keySet().iterator();
+				while (tabsValueIt.hasNext()) {
+					String tabValueKey = tabsValueIt.next();
+					String tabLangKey = tabsLangIt.next();
+
+					if (CreateEAG2012.TAB_ACCESS_AND_SERVICES.equalsIgnoreCase(tabValueKey)
+							&& CreateEAG2012.TAB_ACCESS_AND_SERVICES.equalsIgnoreCase(tabLangKey)) {
+						Map<String, List<String>> sectionsValueMap = tabsValueMap.get(tabValueKey);
+						Map<String, List<String>> sectionsLangMap = tabsLangMap.get(tabLangKey);
+						Iterator<String> sectionsValueIt = sectionsValueMap.keySet().iterator();
+						Iterator<String> sectionsLangIt = sectionsLangMap.keySet().iterator();
+						while (sectionsValueIt.hasNext()) {
+							String sectionValueKey = sectionsValueIt.next();
+							String sectionLangKey = sectionsLangIt.next();
+							if (CreateEAG2012.SEARCHROOM.equalsIgnoreCase(sectionValueKey)
+									&& CreateEAG2012.SEARCHROOM.equalsIgnoreCase(sectionLangKey)) {
+								List<String> valuesList = sectionsValueMap.get(sectionValueKey);
+								List<String> langList = sectionsLangMap.get(sectionLangKey);
+								for (int j = 0; j < valuesList.size(); j++) {
+									P p = new P();
+									p.setContent(valuesList.get(j));
+									p.setLang(langList.get(j));
+
+									if (object instanceof ComputerPlaces) {
+										ComputerPlaces computerPlaces = (ComputerPlaces) object;
+										if (computerPlaces.getDescriptiveNote() == null) {
+											computerPlaces.setDescriptiveNote(new DescriptiveNote());
+										}
+										computerPlaces.getDescriptiveNote().getP().add(p);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }

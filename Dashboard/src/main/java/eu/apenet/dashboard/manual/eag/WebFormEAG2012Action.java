@@ -46,6 +46,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	private static final String OPTION_NO = "no";	// Constant for value "no".
 
 	private static final String OPTION_NONE = "none";				// Constant for value "none".
+
 	private static final String OPTION_NATIONAL = "national";		// Constant for value "national".
 	private static final String OPTION_REGIONAL = "regional";		// Constant for value "regional".
 	private static final String OPTION_COUNTY = "county";			// Constant for value "county".
@@ -155,7 +156,6 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	}
 
 	public Map<String,String> getTypeOfInstitutionList() {
-		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_NONE, "---");
 		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_NATIONAL,getText("label.ai.tabs.commons.option.institutionType.nationalArchives"));
 		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_REGIONAL,getText("label.ai.tabs.commons.option.institutionType.regionalArchives"));
 		this.getTypeOfInstitutionMap().put(WebFormEAG2012Action.OPTION_COUNTY,getText("label.ai.tabs.commons.option.institutionType.countyArchives"));
@@ -3888,7 +3888,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				        }else{
 				        	tempListMap = new HashMap<String, List<String>>();
 				        }
-				        tempListMap.put(Eag2012Creator.TAB_CONTACT,listStreet);
+				        tempListMap.put(Eag2012Creator.TAB_CONTACT,listLatitudes);
 						tempListList.add(tempListMap);
 						eag2012.setLocationLatitude(tempListList);
 						tempListList = null;
@@ -4445,13 +4445,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					listTempMap = new HashMap<String, List<String>>();
 					listTempMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listLangStreets);
 					tempListList.add(listTempMap);
-					eag2012.setStreetValue(tempListList);
 					eag2012.setStreetLang(tempListList);
 					tempListList = new ArrayList<Map<String, List<String>>>();
 					listTempMap = new HashMap<String, List<String>>();
 					listTempMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listCities);
 					tempListList.add(listTempMap);
-					eag2012.setStreetValue(tempListList);
 					eag2012.setCitiesValue(tempListList);
 					tempListList = new ArrayList<Map<String, List<String>>>();
 					listTempMap = new HashMap<String, List<String>>();
@@ -4463,7 +4461,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					listTempMap.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listStreetLanguage);
 					tempListList.add(listTempMap);
 					List<List<String>> tempList2 = new ArrayList<List<String>>();
-					tempList2.addAll(eag2012.getCitiesLang());
+					List<String> tempList2List = new ArrayList<String>();
+					tempList2List.addAll(listLangStreets);
+					tempList2.add(tempList2List);
 					eag2012.setCountryLang(tempList2);
 					tempListList = new ArrayList<Map<String, List<String>>>();
 					listTempMap = new HashMap<String, List<String>>();

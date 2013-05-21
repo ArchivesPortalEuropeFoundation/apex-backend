@@ -26,6 +26,9 @@ import eu.apenet.dashboard.utils.ChangeControl;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
+
+// TODO: This class will be removed.
+
 /**
  * Creates and manages all building process related to EAG2012 into Dashboard 
  */
@@ -1013,7 +1016,7 @@ public class Eag2012Creator {
         childControl1.put("attributes",childControl1Attributes);
         childControl1.put("nodeValue", null);
         List<HashMap<String, Object>> childControl1Children = new ArrayList<HashMap<String, Object>>();
-       
+        
         childControl1Children.add(buildFromDate(
         		/*this.eag2012.getFromDateNotAfter().get(indexRepo).get(indexTab).get(indexList)*/null,
         		/*this.eag2012.getFromDateNotBefore().get(indexRepo).get(indexTab).get(indexList)*/null,
@@ -1090,7 +1093,7 @@ public class Eag2012Creator {
         childControlChildAttributes.put("localType", "localDateType");
 //        childControlChildAttributes.put("notAfter", this.eag2012.getDateNotAfter().get(indexRepo).get(indexTab).get(indexList));
 //        childControlChildAttributes.put("notBefore", this.eag2012.getDateNotBefore().get(indexRepo).get(indexTab).get(indexList));
- //       childControlChildAttributes.put("standardDate", this.eag2012.getDateStandardDate().get(indexRepo).get(indexTab).get(indexList));
+ //        childControlChildAttributes.put("standardDate", this.eag2012.getDateStandardDate().get(indexRepo).get(indexTab).get(indexList));
 //        childControlChildAttributes.put("xml:id", this.eag2012.getDateId().get(indexRepo).get(indexTab).get(indexList));
 //        childControlChildAttributes.put("xml:lang", this.eag2012.getDateLang().get(indexRepo).get(indexTab).get(indexList));
         childControlChild.put("attributes",childControlChildAttributes);
