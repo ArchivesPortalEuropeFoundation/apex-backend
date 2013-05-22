@@ -3665,7 +3665,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 eag2012.setWebpageHref(listMapWebpageHrefList);
 							}
 							if(accessTable.has(target3)){
-								List<Map<String, Map<String, List<String>>>> listMapWebList = eag2012.getWebpageHref();
+								List<Map<String, Map<String, List<String>>>> listMapWebList = eag2012.getWebpageValue();
 								if(listMapWebList==null){
 									listMapWebList = new ArrayList<Map<String, Map<String, List<String>>>>();
 								}
@@ -3695,7 +3695,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								}else{
 									listMapWebList.add(mapMapListWeb);
 								}
-								eag2012.setWebpageHref(listMapWebList); 
+								eag2012.setWebpageValue(listMapWebList); 
 							}
 							if(accessTable.has(target4)){
 								List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePLang();
@@ -3810,7 +3810,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 eag2012.setWebpageHref(listMapWebpageHrefList);
 							}
 							if(accessTable.has(target3)){
-								List<Map<String, Map<String, List<String>>>> listMapWebList = eag2012.getWebpageHref();
+								List<Map<String, Map<String, List<String>>>> listMapWebList = eag2012.getWebpageValue();
 								if(listMapWebList==null){
 									listMapWebList = new ArrayList<Map<String, Map<String, List<String>>>>();
 								}
@@ -3840,7 +3840,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								}else{
 									listMapWebList.add(mapMapListWeb);
 								}
-								eag2012.setWebpageHref(listMapWebList); 
+								eag2012.setWebpageValue(listMapWebList); 
 							}
 							if(accessTable.has(target4)){
 								List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePLang();
