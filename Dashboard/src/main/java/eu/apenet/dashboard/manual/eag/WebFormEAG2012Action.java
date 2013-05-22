@@ -3995,7 +3995,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				        	tempListList.add(tempListMap);
 				        }
 						eag2012.setCitiesValue(tempListList);
-						eag2012.setLocalentityValue(listDistrict);
+						//begin listDistrict
+						List<List<String>> localEntityValue = null;
+						if(eag2012.getLocalentityValue()==null){
+							localEntityValue = eag2012.getLocalentityValue();
+						}else{
+							localEntityValue = new ArrayList<List<String>>();
+						}
+						if(localEntityValue.size()>x){
+							localEntityValue.set(x,listDistrict);
+						}else{
+							localEntityValue.add(listDistrict);
+						}
+						eag2012.setLocalentityValue(localEntityValue);
+						//end listDistrict
 						List<List<String>> tempListList2 = null;
 						if(eag2012.getSecondemValue()==null){
 							tempListList2 = new ArrayList<List<String>>();

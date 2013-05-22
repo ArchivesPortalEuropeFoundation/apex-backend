@@ -170,8 +170,8 @@ public class Eag2012 {
 	private List<Map<String,List<String>>> municipalityPostalcodeValue;
 	private List<Map<String,List<String>>> citiesValue;
 	private List<List<String>> citiesLang;
-	private List<String> localentityLang;
-	private List<String> localentityValue;
+	private List<List<String>> localentityLang;
+	private List<List<String>> localentityValue;
 	private List<Map<String,List<String>>> streetLang;
 	private List<Map<String,List<String>>> streetValue;
 	private List<List<String>> directionsLang;
@@ -1300,19 +1300,19 @@ public class Eag2012 {
 		this.municipalityPostalcodeValue = municipalityPostalcodeValue;
 	}
 
-	public List<String> getLocalentityLang() {
+	public List<List<String>> getLocalentityLang() {
 		return localentityLang;
 	}
 
-	public void setLocalentityLang(List<String> localentityLang) {
+	public void setLocalentityLang(List<List<String>> localentityLang) {
 		this.localentityLang = localentityLang;
 	}
 
-	public List<String> getLocalentityValue() {
+	public List<List<String>> getLocalentityValue() {
 		return localentityValue;
 	}
 
-	public void setLocalentityValue(List<String> localentityValue) {
+	public void setLocalentityValue(List<List<String>> localentityValue) {
 		this.localentityValue = localentityValue;
 	}
 
