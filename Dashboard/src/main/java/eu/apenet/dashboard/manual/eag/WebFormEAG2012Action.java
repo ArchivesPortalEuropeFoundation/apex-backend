@@ -2773,7 +2773,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 }else{
 								 descriptiveNoteList = new ArrayList<String>();
 							 }
-							 descriptiveNoteList.add(accessTable.getString(target1));
+							 descriptiveNoteList.add(accessTable.getString(target2));
 							 descriptiveNoteMapList.put(CreateEAG2012.INTERNET_ACCESS,descriptiveNoteList);
 							 descriptiveNoteMapMapList.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
 							 if(descriptiveNotePLang.size()>i){
@@ -2866,7 +2866,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 }else{
 								 descriptiveNoteList = new ArrayList<String>();
 							 }
-							 descriptiveNoteList.add(accessTable.getString(target1));
+							 descriptiveNoteList.add(accessTable.getString(target2));
 							 descriptiveNoteMapList.put(CreateEAG2012.RESTORATION_LAB,descriptiveNoteList);
 							 descriptiveNoteMapMapList.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
 							 if(descriptiveNotePLang.size()>i){
@@ -3129,7 +3129,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 }else{
 								 descriptiveNoteList = new ArrayList<String>();
 							 }
-							 descriptiveNoteList.add(accessTable.getString(target1));
+							 descriptiveNoteList.add(accessTable.getString(target2));
 							 descriptiveNoteMapList.put(CreateEAG2012.REPRODUCTIONSER,descriptiveNoteList);
 							 descriptiveNoteMapMapList.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
 							 if(descriptiveNotePLang.size()>i){
