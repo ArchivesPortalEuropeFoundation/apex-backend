@@ -8,6 +8,7 @@ import java.util.Map;
 import eu.apenet.dashboard.manual.eag.Eag2012;
 import eu.apenet.dpt.utils.eag2012.Access;
 import eu.apenet.dpt.utils.eag2012.Accessibility;
+import eu.apenet.dpt.utils.eag2012.AdvancedOrders;
 import eu.apenet.dpt.utils.eag2012.AgencyName;
 import eu.apenet.dpt.utils.eag2012.Agent;
 import eu.apenet.dpt.utils.eag2012.Archguide;
@@ -20,18 +21,25 @@ import eu.apenet.dpt.utils.eag2012.Control;
 import eu.apenet.dpt.utils.eag2012.Country;
 import eu.apenet.dpt.utils.eag2012.Desc;
 import eu.apenet.dpt.utils.eag2012.DescriptiveNote;
+import eu.apenet.dpt.utils.eag2012.Digitalser;
 import eu.apenet.dpt.utils.eag2012.Directions;
 import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.dpt.utils.eag2012.Email;
+import eu.apenet.dpt.utils.eag2012.Exhibition;
 import eu.apenet.dpt.utils.eag2012.Fax;
 import eu.apenet.dpt.utils.eag2012.Firstdem;
 import eu.apenet.dpt.utils.eag2012.Identity;
+import eu.apenet.dpt.utils.eag2012.InternetAccess;
+import eu.apenet.dpt.utils.eag2012.Library;
+import eu.apenet.dpt.utils.eag2012.Localentity;
 import eu.apenet.dpt.utils.eag2012.Location;
 import eu.apenet.dpt.utils.eag2012.MaintenanceAgency;
 import eu.apenet.dpt.utils.eag2012.MaintenanceEvent;
 import eu.apenet.dpt.utils.eag2012.MaintenanceHistory;
 import eu.apenet.dpt.utils.eag2012.MaintenanceStatus;
 import eu.apenet.dpt.utils.eag2012.MicrofilmPlaces;
+import eu.apenet.dpt.utils.eag2012.Microformser;
+import eu.apenet.dpt.utils.eag2012.Monographicpub;
 import eu.apenet.dpt.utils.eag2012.MunicipalityPostalcode;
 import eu.apenet.dpt.utils.eag2012.Nonpreform;
 import eu.apenet.dpt.utils.eag2012.Num;
@@ -39,25 +47,36 @@ import eu.apenet.dpt.utils.eag2012.Opening;
 import eu.apenet.dpt.utils.eag2012.OtherAgencyCode;
 import eu.apenet.dpt.utils.eag2012.OtherRecordId;
 import eu.apenet.dpt.utils.eag2012.OtherRepositorId;
+import eu.apenet.dpt.utils.eag2012.OtherServices;
 import eu.apenet.dpt.utils.eag2012.P;
 import eu.apenet.dpt.utils.eag2012.Parform;
+import eu.apenet.dpt.utils.eag2012.Photocopyser;
 import eu.apenet.dpt.utils.eag2012.PhotographAllowance;
+import eu.apenet.dpt.utils.eag2012.Photographser;
+import eu.apenet.dpt.utils.eag2012.ReadersTicket;
 import eu.apenet.dpt.utils.eag2012.RecordId;
+import eu.apenet.dpt.utils.eag2012.RecreationalServices;
 import eu.apenet.dpt.utils.eag2012.RelationEntry;
 import eu.apenet.dpt.utils.eag2012.Relations;
 import eu.apenet.dpt.utils.eag2012.Repositorid;
 import eu.apenet.dpt.utils.eag2012.Repositories;
 import eu.apenet.dpt.utils.eag2012.Repository;
 import eu.apenet.dpt.utils.eag2012.RepositoryType;
+import eu.apenet.dpt.utils.eag2012.Reproductionser;
+import eu.apenet.dpt.utils.eag2012.ResearchServices;
 import eu.apenet.dpt.utils.eag2012.ResourceRelation;
 import eu.apenet.dpt.utils.eag2012.Restaccess;
+import eu.apenet.dpt.utils.eag2012.Restorationlab;
 import eu.apenet.dpt.utils.eag2012.Searchroom;
 import eu.apenet.dpt.utils.eag2012.Secondem;
+import eu.apenet.dpt.utils.eag2012.Serialpub;
 import eu.apenet.dpt.utils.eag2012.Services;
 import eu.apenet.dpt.utils.eag2012.Street;
+import eu.apenet.dpt.utils.eag2012.Techservices;
 import eu.apenet.dpt.utils.eag2012.Telephone;
 import eu.apenet.dpt.utils.eag2012.TermsOfUse;
 import eu.apenet.dpt.utils.eag2012.Timetable;
+import eu.apenet.dpt.utils.eag2012.ToursSessions;
 import eu.apenet.dpt.utils.eag2012.Webpage;
 import eu.apenet.dpt.utils.eag2012.WorkPlaces;
 
@@ -113,8 +132,10 @@ public class CreateEAG2012 {
 	private static final String EVENTTYPE_REVISED = "revised";
 	private static final String EVENTTYPE_NEW = "new";
 
-	// Content for unit.
+	// Content for units.
 	private static final String UNIT_SITE = "site";
+	private static final String UNIT_BOOK = "book";
+	private static final String UNIT_TITLE = "title";
 
 	// Constants for section indexes.
 	public static final String ROOT = "root";
@@ -459,8 +480,6 @@ public class CreateEAG2012 {
 					Map<String, List<String>> latitudeMap = this.eag2012.getLocationLatitude().get(i);
 					Map<String, List<String>> longitudeMap = this.eag2012.getLocationLongitude().get(i);
 					Map<String, List<String>> countryMap = this.eag2012.getCountryValue().get(i);
-//					List<String> firstdemList = this.eag2012.getFirstdemValue().get(i);
-//					List<String> secondemList = this.eag2012.getSecondemValue().get(i);
 					Map<String, List<String>> citiesMap = this.eag2012.getCitiesValue().get(i);
 					Map<String, List<String>> streetMap = this.eag2012.getStreetValue().get(i);
 
@@ -480,69 +499,78 @@ public class CreateEAG2012 {
 						String citiesKey = citiesIt.next();
 						String streetKey = streetIt.next();
 
-						// Visitor address lists.
-						List<String> streetLangList = streetLangMap.get(streetLangKey);
-						List<String> latitudeList = latitudeMap.get(latitudeKey);
-						List<String> longitudeList = latitudeMap.get(longitudeKey);
-						List<String> countryList = countryMap.get(countryKey);
-						List<String> firstdemList = this.eag2012.getFirstdemValue().get(i);
-						List<String> secondemList = this.eag2012.getSecondemValue().get(i);
-						List<String> citiesList = citiesMap.get(citiesKey);
-						List<String> streetList = streetMap.get(streetKey);
-						for (int j = 0; j < streetLangList.size(); j++) {
-							Location location = new Location();
-							String language = streetLangList.get(j);
-							// eag/archguide/desc/repositories/repository/location/type
-							location.setLocalType(CreateEAG2012.VISITORS_ADDRESS);
-							// eag/archguide/desc/repositories/repository/location/latitude
-							location.setLatitude(latitudeList.get(j));
-							// eag/archguide/desc/repositories/repository/location/longitude
-							location.setLongitude(longitudeList.get(j));
-							// eag/archguide/desc/repositories/repository/location/country
-							if (location.getCountry() == null) {
-								location.setCountry(new Country());
+						// Rest of tabs.
+						if (!streetLangKey.equalsIgnoreCase(CreateEAG2012.TAB_YOUR_INSTITUTION))  {
+							// Visitor address lists.
+							List<String> streetLangList = streetLangMap.get(streetLangKey);
+							List<String> latitudeList = latitudeMap.get(latitudeKey);
+							List<String> longitudeList = latitudeMap.get(longitudeKey);
+							List<String> countryList = countryMap.get(countryKey);
+							List<String> firstdemList = this.eag2012.getFirstdemValue().get(i);
+							List<String> secondemList = this.eag2012.getSecondemValue().get(i);
+// TODO:							List<String> localentityList = this.eag2012.getLocalentityValue().get(i);
+							List<String> citiesList = citiesMap.get(citiesKey);
+							List<String> streetList = streetMap.get(streetKey);
+							for (int j = 0; j < streetLangList.size(); j++) {
+								Location location = new Location();
+								String language = streetLangList.get(j);
+								// eag/archguide/desc/repositories/repository/location/type
+								location.setLocalType(CreateEAG2012.VISITORS_ADDRESS);
+								// eag/archguide/desc/repositories/repository/location/latitude
+								location.setLatitude(latitudeList.get(j));
+								// eag/archguide/desc/repositories/repository/location/longitude
+								location.setLongitude(longitudeList.get(j));
+								// eag/archguide/desc/repositories/repository/location/country
+								if (location.getCountry() == null) {
+									location.setCountry(new Country());
+								}
+								location.getCountry().setContent(countryList.get(j));
+								// eag/archguide/desc/repositories/repository/location/country/lang
+								location.getCountry().setLang(language);
+								// eag/archguide/desc/repositories/repository/location/firstdem
+								if (location.getFirstdem() == null) {
+									location.setFirstdem(new Firstdem());
+								}
+								if (firstdemList.size() > j) {
+									location.getFirstdem().setContent(firstdemList.get(j));
+									// eag/archguide/desc/repositories/repository/location/firstdem/lang
+									location.getFirstdem().setLang(language);
+								}
+								// eag/archguide/desc/repositories/repository/location/secondem
+								if (location.getSecondem() == null) {
+									location.setSecondem(new Secondem());
+								}
+								if (secondemList.size() > j) {
+									location.getSecondem().setContent(secondemList.get(j));
+									// eag/archguide/desc/repositories/repository/location/secondem/lang
+									location.getSecondem().setLang(language);
+								}
+								// eag/archguide/desc/repositories/repository/location/municipalityPostalcode
+								if (location.getMunicipalityPostalcode() == null) {
+									location.setMunicipalityPostalcode(new MunicipalityPostalcode());
+								}
+								location.getMunicipalityPostalcode().setContent(citiesList.get(j));
+								// eag/archguide/desc/repositories/repository/location/municipalityPostalcode/lang
+								location.getMunicipalityPostalcode().setLang(language);
+								// eag/archguide/desc/repositories/repository/location/localentity
+								if (location.getLocalentity() == null) {
+									location.setLocalentity(new Localentity());
+								}
+/* TODO:								if (localentityList.size() > j) {
+									location.getLocalentity().setContent(localentityList.get(j));
+									// eag/archguide/desc/repositories/repository/location/localentity/lang
+								location.getLocalentity().setLang(language);
+								}
+*/								// eag/archguide/desc/repositories/repository/location/street
+								if (location.getStreet() == null) {
+									location.setStreet(new Street());
+								}
+								location.getStreet().setContent(streetList.get(j));
+								// eag/archguide/desc/repositories/repository/location/street/lang
+								location.getStreet().setLang(language);
+	
+								repository.getLocation().add(location);
 							}
-							location.getCountry().setContent(countryList.get(j));
-							// eag/archguide/desc/repositories/repository/location/country/lang
-							location.getCountry().setLang(language);
-							// eag/archguide/desc/repositories/repository/location/firstdem
-							if (location.getFirstdem() == null) {
-								location.setFirstdem(new Firstdem());
-							}
-							if (firstdemList.size() > j) {
-								location.getFirstdem().setContent(firstdemList.get(j));
-								// eag/archguide/desc/repositories/repository/location/firstdem/lang
-								location.getFirstdem().setLang(language);
-							}
-							// eag/archguide/desc/repositories/repository/location/secondem
-							if (location.getSecondem() == null) {
-								location.setSecondem(new Secondem());
-							}
-							if (secondemList.size() > j) {
-								location.getSecondem().setContent(secondemList.get(j));
-								// eag/archguide/desc/repositories/repository/location/secondem/lang
-								location.getSecondem().setLang(language);
-							}
-							// eag/archguide/desc/repositories/repository/location/municipalityPostalcode
-							if (location.getMunicipalityPostalcode() == null) {
-								location.setMunicipalityPostalcode(new MunicipalityPostalcode());
-							}
-							location.getMunicipalityPostalcode().setContent(citiesList.get(j));
-							// eag/archguide/desc/repositories/repository/location/municipalityPostalcode/lang
-							location.getMunicipalityPostalcode().setLang(language);
-							// eag/archguide/desc/repositories/repository/location/localentity
-//TODO:						location.getLocalentity().setContent(this.eag2012.getLocalentityValue().get(i).get(j));
-							// eag/archguide/desc/repositories/repository/location/localentity/lang
-//TODO:						location.getLocalentity().setLang(language);
-							// eag/archguide/desc/repositories/repository/location/street
-							if (location.getStreet() == null) {
-								location.setStreet(new Street());
-							}
-							location.getStreet().setContent(streetList.get(j));
-							// eag/archguide/desc/repositories/repository/location/street/lang
-							location.getStreet().setLang(language);
-
-							repository.getLocation().add(location);
 						}
 					}
 				}
@@ -551,39 +579,61 @@ public class CreateEAG2012 {
 					// Recover repository.
 					Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
 
-					// Postal address.
-					List<String> postalStreetLangList = this.eag2012.getPostalStreetLang().get(i);
-// TODO:					List<String> countryList = this.eag2012.getCountryValue().get(i+1);
-					List<String> citiesList = this.eag2012.getMunicipalityPostalcodeValue().get(i);
-					List<String> streetList = this.eag2012.getPostalStreetValue().get(i);
-					for (int j = 0; j < postalStreetLangList.size(); j++) {
-						Location location = new Location();
-						String language = postalStreetLangList.get(j);
-						// eag/archguide/desc/repositories/repository/location/type
-						location.setLocalType(CreateEAG2012.POSTAL_ADDRESS);
-/* TODO:						// eag/archguide/desc/repositories/repository/location/country
-						if (location.getCountry() == null) {
-							location.setCountry(new Country());
+					// Postal address maps.
+					Map<String, List<String>> postalStreetLangMap = this.eag2012.getPostalStreetLang().get(i);
+					Map<String, List<String>> postalCountryMap = this.eag2012.getCountryValue().get(i);
+					Map<String, List<String>> postalCitiesMap = this.eag2012.getMunicipalityPostalcodeValue().get(i);
+					Map<String, List<String>> postalStreetMap = this.eag2012.getPostalStreetValue().get(i);
+
+					// Postal address iterators.
+					Iterator<String>  postalStreetLangIt = postalStreetLangMap.keySet().iterator();
+					Iterator<String>  postalCountryIt = postalCountryMap.keySet().iterator();
+					Iterator<String>  postalCitiesIt = postalCitiesMap.keySet().iterator();
+					Iterator<String>  postalStreetIt = postalStreetMap.keySet().iterator();
+					while (postalStreetLangIt.hasNext()) {
+						// Postal address keys.
+						String postalStreetLangKey = postalStreetLangIt.next();
+						String postalCountryKey = postalCountryIt.next();
+						String postalCitiesKey = postalCitiesIt.next();
+						String postalStreetKey = postalStreetIt.next();
+
+						// Rest of tabs.
+						if (!postalStreetLangKey.equalsIgnoreCase(CreateEAG2012.TAB_YOUR_INSTITUTION))  {
+							// Postal address lists.
+							List<String> postalStreetLangList = postalStreetLangMap.get(postalStreetLangKey);
+							List<String> postalCountryList = postalCountryMap.get(postalCountryKey);
+							List<String> postalCitiesList = postalCitiesMap.get(postalCitiesKey);
+							List<String> postalStreetList = postalStreetMap.get(postalStreetKey);
+							for (int j = 0; j < postalStreetLangList.size(); j++) {
+								Location location = new Location();
+								String language = postalStreetLangList.get(j);
+								// eag/archguide/desc/repositories/repository/location/type
+								location.setLocalType(CreateEAG2012.POSTAL_ADDRESS);
+								// eag/archguide/desc/repositories/repository/location/country
+								if (location.getCountry() == null) {
+									location.setCountry(new Country());
+								}
+								location.getCountry().setContent(postalCountryList.get(j));
+								// eag/archguide/desc/repositories/repository/location/country/lang
+								location.getCountry().setLang(language);
+								// eag/archguide/desc/repositories/repository/location/municipalityPostalcode
+								if (location.getMunicipalityPostalcode() == null) {
+									location.setMunicipalityPostalcode(new MunicipalityPostalcode());
+								}
+								location.getMunicipalityPostalcode().setContent(postalCitiesList.get(j));
+								// eag/archguide/desc/repositories/repository/location/municipalityPostalcode/lang
+								location.getMunicipalityPostalcode().setLang(language);
+								// eag/archguide/desc/repositories/repository/location/street
+								if (location.getStreet() == null) {
+									location.setStreet(new Street());
+								}
+								location.getStreet().setContent(postalStreetList.get(j));
+								// eag/archguide/desc/repositories/repository/location/street/lang
+								location.getStreet().setLang(language);
+			
+								repository.getLocation().add(location);
+							}
 						}
-						location.getCountry().setContent(countryList.get(j));
-						// eag/archguide/desc/repositories/repository/location/country/lang
-						location.getCountry().setLang(language); */
-						// eag/archguide/desc/repositories/repository/location/municipalityPostalcode
-						if (location.getMunicipalityPostalcode() == null) {
-							location.setMunicipalityPostalcode(new MunicipalityPostalcode());
-						}
-						location.getMunicipalityPostalcode().setContent(citiesList.get(j));
-						// eag/archguide/desc/repositories/repository/location/municipalityPostalcode/lang
-						location.getMunicipalityPostalcode().setLang(language);
-						// eag/archguide/desc/repositories/repository/location/street
-						if (location.getStreet() == null) {
-							location.setStreet(new Street());
-						}
-						location.getStreet().setContent(streetList.get(j));
-						// eag/archguide/desc/repositories/repository/location/street/lang
-						location.getStreet().setLang(language);
-	
-						repository.getLocation().add(location);
 					}
 				}
 			}
@@ -623,6 +673,54 @@ public class CreateEAG2012 {
 									repository.getServices().getSearchroom().setContact(new Contact());
 								}
 									repository.getServices().getSearchroom().getContact().getTelephone().add(telephone);
+							}
+
+							// eag/archguide/desc/repositories/repository/services/library
+							if (CreateEAG2012.LIBRARY.equalsIgnoreCase(sectionKey)) {
+								if (repository.getServices() == null) {
+									repository.setServices(new Services());
+								}
+								if (repository.getServices().getLibrary() == null) {
+									repository.getServices().setLibrary(new Library());
+								}
+								if (repository.getServices().getLibrary().getContact() == null) {
+									repository.getServices().getLibrary().setContact(new Contact());
+								}
+									repository.getServices().getLibrary().getContact().getTelephone().add(telephone);
+							}
+
+							// eag/archguide/desc/repositories/repository/services/techservices/restorationlab
+							if (CreateEAG2012.RESTORATION_LAB.equalsIgnoreCase(sectionKey)) {
+								if (repository.getServices() == null) {
+									repository.setServices(new Services());
+								}
+								if (repository.getServices().getTechservices() == null) {
+									repository.getServices().setTechservices(new Techservices());
+								}
+								if (repository.getServices().getTechservices().getRestorationlab() == null) {
+									repository.getServices().getTechservices().setRestorationlab(new Restorationlab());
+								}
+								if (repository.getServices().getTechservices().getRestorationlab().getContact() == null) {
+									repository.getServices().getTechservices().getRestorationlab().setContact(new Contact());
+								}
+									repository.getServices().getTechservices().getRestorationlab().getContact().getTelephone().add(telephone);
+							}
+
+							// eag/archguide/desc/repositories/repository/services/techservices/reproductionser
+							if (CreateEAG2012.REPRODUCTIONSER.equalsIgnoreCase(sectionKey)) {
+								if (repository.getServices() == null) {
+									repository.setServices(new Services());
+								}
+								if (repository.getServices().getTechservices() == null) {
+									repository.getServices().setTechservices(new Techservices());
+								}
+								if (repository.getServices().getTechservices().getReproductionser() == null) {
+									repository.getServices().getTechservices().setReproductionser(new Reproductionser());
+								}
+								if (repository.getServices().getTechservices().getReproductionser().getContact() == null) {
+									repository.getServices().getTechservices().getReproductionser().setContact(new Contact());
+								}
+									repository.getServices().getTechservices().getReproductionser().getContact().getTelephone().add(telephone);
 							}
 						}
 					}
@@ -700,6 +798,60 @@ public class CreateEAG2012 {
 	
 								repository.getServices().getSearchroom().getContact().getEmail().add(email);
 							}
+
+							// eag/archguide/desc/repositories/repository/services/library
+							if (CreateEAG2012.LIBRARY.equalsIgnoreCase(sectionValueKey)
+									&& CreateEAG2012.LIBRARY.equalsIgnoreCase(sectionHrefKey)) {
+								if (repository.getServices() == null) {
+									repository.setServices(new Services());
+								}
+								if (repository.getServices().getLibrary() == null) {
+									repository.getServices().setLibrary(new Library());
+								}
+								if (repository.getServices().getLibrary().getContact() == null) {
+									repository.getServices().getLibrary().setContact(new Contact());
+								}
+	
+								repository.getServices().getLibrary().getContact().getEmail().add(email);
+							}
+
+							// eag/archguide/desc/repositories/repository/services/techservices/restorationlab
+							if (CreateEAG2012.RESTORATION_LAB.equalsIgnoreCase(sectionValueKey)
+									&& CreateEAG2012.RESTORATION_LAB.equalsIgnoreCase(sectionHrefKey)) {
+								if (repository.getServices() == null) {
+									repository.setServices(new Services());
+								}
+								if (repository.getServices().getTechservices() == null) {
+									repository.getServices().setTechservices(new Techservices());
+								}
+								if (repository.getServices().getTechservices().getRestorationlab() == null) {
+									repository.getServices().getTechservices().setRestorationlab(new Restorationlab());
+								}
+								if (repository.getServices().getTechservices().getRestorationlab().getContact() == null) {
+									repository.getServices().getTechservices().getRestorationlab().setContact(new Contact());
+								}
+	
+								repository.getServices().getTechservices().getRestorationlab().getContact().getEmail().add(email);
+							}
+
+							// eag/archguide/desc/repositories/repository/services/techservices/reproductionser
+							if (CreateEAG2012.REPRODUCTIONSER.equalsIgnoreCase(sectionValueKey)
+									&& CreateEAG2012.REPRODUCTIONSER.equalsIgnoreCase(sectionHrefKey)) {
+								if (repository.getServices() == null) {
+									repository.setServices(new Services());
+								}
+								if (repository.getServices().getTechservices() == null) {
+									repository.getServices().setTechservices(new Techservices());
+								}
+								if (repository.getServices().getTechservices().getReproductionser() == null) {
+									repository.getServices().getTechservices().setReproductionser(new Reproductionser());
+								}
+								if (repository.getServices().getTechservices().getReproductionser().getContact() == null) {
+									repository.getServices().getTechservices().getReproductionser().setContact(new Contact());
+								}
+	
+								repository.getServices().getTechservices().getReproductionser().getContact().getEmail().add(email);
+							}
 						}
 					}
 				}
@@ -749,6 +901,105 @@ public class CreateEAG2012 {
 								}
 	
 								repository.getServices().getSearchroom().getWebpage().add(webpage);
+							}
+
+							// eag/archguide/desc/repositories/repository/services/library
+							if (CreateEAG2012.LIBRARY.equalsIgnoreCase(sectionValueKey)
+									&& CreateEAG2012.LIBRARY.equalsIgnoreCase(sectionHrefKey)) {
+								if (repository.getServices() == null) {
+									repository.setServices(new Services());
+								}
+								if (repository.getServices().getLibrary() == null) {
+									repository.getServices().setLibrary(new Library());
+								}
+	
+								repository.getServices().getLibrary().getWebpage().add(webpage);
+							}
+
+							// eag/archguide/desc/repositories/repository/services/techservices/restorationlab
+							if (CreateEAG2012.RESTORATION_LAB.equalsIgnoreCase(sectionValueKey)
+									&& CreateEAG2012.RESTORATION_LAB.equalsIgnoreCase(sectionHrefKey)) {
+								if (repository.getServices() == null) {
+									repository.setServices(new Services());
+								}
+								if (repository.getServices().getTechservices() == null) {
+									repository.getServices().setTechservices(new Techservices());
+								}
+								if (repository.getServices().getTechservices().getRestorationlab() == null) {
+									repository.getServices().getTechservices().setRestorationlab(new Restorationlab());
+								}
+	
+								repository.getServices().getTechservices().getRestorationlab().getWebpage().add(webpage);
+							}
+
+							// eag/archguide/desc/repositories/repository/services/techservices/reproductionser
+							if (CreateEAG2012.REPRODUCTIONSER.equalsIgnoreCase(sectionValueKey)
+									&& CreateEAG2012.REPRODUCTIONSER.equalsIgnoreCase(sectionHrefKey)) {
+								if (repository.getServices() == null) {
+									repository.setServices(new Services());
+								}
+								if (repository.getServices().getTechservices() == null) {
+									repository.getServices().setTechservices(new Techservices());
+								}
+								if (repository.getServices().getTechservices().getReproductionser() == null) {
+									repository.getServices().getTechservices().setReproductionser(new Reproductionser());
+								}
+	
+								repository.getServices().getTechservices().getReproductionser().getWebpage().add(webpage);
+							}
+
+							// eag/archguide/desc/repositories/repository/services/recreationalServices/exhibition
+							if (CreateEAG2012.EXHIBITION.equalsIgnoreCase(sectionValueKey)
+									&& CreateEAG2012.EXHIBITION.equalsIgnoreCase(sectionHrefKey)) {
+								if (repository.getServices() == null) {
+									repository.setServices(new Services());
+								}
+								if (repository.getServices().getRecreationalServices() == null) {
+									repository.getServices().setRecreationalServices(new RecreationalServices());
+								}
+								if (repository.getServices().getRecreationalServices().getExhibition().size() < (k + 1)) {
+									repository.getServices().getRecreationalServices().getExhibition().add(new Exhibition());
+								}
+
+								Exhibition exhibition = repository.getServices().getRecreationalServices().getExhibition().get(k);
+// TODO:								getDescriptiveNote(exhibition);
+								exhibition.setWebpage(webpage);
+							}
+
+							// eag/archguide/desc/repositories/repository/services/recreationalServices/toursSessions
+							if (CreateEAG2012.TOURS_SESSIONS.equalsIgnoreCase(sectionValueKey)
+									&& CreateEAG2012.TOURS_SESSIONS.equalsIgnoreCase(sectionHrefKey)) {
+								if (repository.getServices() == null) {
+									repository.setServices(new Services());
+								}
+								if (repository.getServices().getRecreationalServices() == null) {
+									repository.getServices().setRecreationalServices(new RecreationalServices());
+								}
+								if (repository.getServices().getRecreationalServices().getToursSessions().size() < (k + 1)) {
+									repository.getServices().getRecreationalServices().getToursSessions().add(new ToursSessions());
+								}
+
+								ToursSessions toursSessions = repository.getServices().getRecreationalServices().getToursSessions().get(k);
+// TODO:								getDescriptiveNote(toursSessions);
+								toursSessions.setWebpage(webpage);
+							}
+
+							// eag/archguide/desc/repositories/repository/services/recreationalServices/otherServices
+							if (CreateEAG2012.OTHER_SERVICES.equalsIgnoreCase(sectionValueKey)
+									&& CreateEAG2012.OTHER_SERVICES.equalsIgnoreCase(sectionHrefKey)) {
+								if (repository.getServices() == null) {
+									repository.setServices(new Services());
+								}
+								if (repository.getServices().getRecreationalServices() == null) {
+									repository.getServices().setRecreationalServices(new RecreationalServices());
+								}
+								if (repository.getServices().getRecreationalServices().getOtherServices().size() < (k + 1)) {
+									repository.getServices().getRecreationalServices().getOtherServices().add(new OtherServices());
+								}
+
+								OtherServices otherServices = repository.getServices().getRecreationalServices().getOtherServices().get(k);
+// TODO:								getDescriptiveNote(otherServices);
+								otherServices.setWebpage(webpage);
 							}
 						}
 					}
@@ -1098,6 +1349,9 @@ public class CreateEAG2012 {
 			}
 		}
 
+		// eag/archguide/desc/repositories/repository/services/searchroom/researchServices/descriptiveNote
+// TODO:		getDescriptiveNoteForResearchServices();
+
 		// eag/archguide/desc/repositories/repository/services/searchroom/photographAllowance
 		if (this.eag2012.getPhotographAllowanceValue() != null) {
 			for (int i = 0; i < this.eag2012.getPhotographAllowanceValue().size(); i++) {
@@ -1119,24 +1373,247 @@ public class CreateEAG2012 {
 		}
 
 		// eag/archguide/desc/repositories/repository/services/searchroom/readersTicket
-//		if (this.eag2012.getReadersTicketValue() != null) {
-//			for (int i = 0; i < this.eag2012.getPhotographAllowanceValue().size(); i++) {
-//				String value = this.eag2012.getPhotographAllowanceValue().get(i);
-//				// Repository.
-//				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
-//
-//				if (repository.getServices() == null) {
-//					repository.setServices(new Services());
-//				}
-//				if (repository.getServices().getSearchroom() == null) {
-//					repository.getServices().setSearchroom(new Searchroom());
-//				}
-//				PhotographAllowance photographAllowance = new PhotographAllowance();
-//				photographAllowance.setValue(value);
-//
-//				repository.getServices().getSearchroom().setPhotographAllowance(photographAllowance);
-//			}
-//		}
+		if (this.eag2012.getReadersTicketValue() != null && this.eag2012.getReadersTicketHref() != null
+				&& this.eag2012.getReadersTicketLang() != null) {
+			for (int i = 0; i < this.eag2012.getReadersTicketValue().size(); i++) {
+				List<String> valueList = this.eag2012.getReadersTicketValue().get(i);
+				List<String> hrefList = this.eag2012.getReadersTicketHref().get(i);
+				List<String> langList = this.eag2012.getReadersTicketLang().get(i);
+				// Repository.
+				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+
+				if (repository.getServices() == null) {
+					repository.setServices(new Services());
+				}
+				if (repository.getServices().getSearchroom() == null) {
+					repository.getServices().setSearchroom(new Searchroom());
+				}
+				for (int j = 0; j < valueList.size(); j++) {
+					ReadersTicket readersTicket = new ReadersTicket();
+					readersTicket.setContent(valueList.get(j));
+					readersTicket.setHref(hrefList.get(j));
+					readersTicket.setLang(langList.get(j));
+
+					repository.getServices().getSearchroom().getReadersTicket().add(readersTicket);
+				}
+			}
+		}
+
+		// eag/archguide/desc/repositories/repository/services/searchroom/advancedOrders
+		if (this.eag2012.getAdvancedOrdersValue() != null && this.eag2012.getAdvancedOrdersHref() != null
+				&& this.eag2012.getAdvancedOrdersLang() != null) {
+			for (int i = 0; i < this.eag2012.getAdvancedOrdersValue().size(); i++) {
+				List<String> valueList = this.eag2012.getAdvancedOrdersValue().get(i);
+				List<String> hrefList = this.eag2012.getAdvancedOrdersHref().get(i);
+				List<String> langList = this.eag2012.getAdvancedOrdersLang().get(i);
+				// Repository.
+				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+
+				if (repository.getServices() == null) {
+					repository.setServices(new Services());
+				}
+				if (repository.getServices().getSearchroom() == null) {
+					repository.getServices().setSearchroom(new Searchroom());
+				}
+				for (int j = 0; j < valueList.size(); j++) {
+					AdvancedOrders advancedOrders = new AdvancedOrders();
+					advancedOrders.setContent(valueList.get(j));
+					advancedOrders.setHref(hrefList.get(j));
+					advancedOrders.setLang(langList.get(j));
+
+					repository.getServices().getSearchroom().getAdvancedOrders().add(advancedOrders);
+				}
+			}
+		}
+
+		// eag/archguide/desc/repositories/repository/services/library
+		if (this.eag2012.getNumValue() != null) {
+			for (int i = 0; i < this.eag2012.getNumValue().size(); i++) {
+				Map<String, Map<String, Map<String, List<String>>>> tabsMap = this.eag2012.getNumValue().get(i);
+				// Repository.
+				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+
+				Iterator<String> tabsIt = tabsMap.keySet().iterator();
+				while (tabsIt.hasNext()) {
+					String tabKey = tabsIt.next();
+					if (CreateEAG2012.TAB_ACCESS_AND_SERVICES.equalsIgnoreCase(tabKey)) {
+						Map<String, Map<String, List<String>>> sectionsMap = tabsMap.get(tabKey);
+						Iterator<String> sectionsIt = sectionsMap.keySet().iterator();
+						while (sectionsIt.hasNext()) {
+							String sectionKey = sectionsIt.next();
+							if (CreateEAG2012.LIBRARY.equalsIgnoreCase(sectionKey)) {
+								Map<String, List<String>> subSectionsMap = sectionsMap.get(sectionKey);
+								Iterator<String> subSectionsIt = subSectionsMap.keySet().iterator();
+								while (subSectionsIt.hasNext()) {
+									String subSectionKey = subSectionsIt.next();
+									// eag/archguide/desc/repositories/repository/services/library/monographicpub
+									if (CreateEAG2012.MONOGRAPHIC_PUBLICATION.equalsIgnoreCase(subSectionKey)) {
+										List<String> valueList = subSectionsMap.get(subSectionKey);
+										for (int j = 0; j < valueList.size(); j++) {
+											if (repository.getServices() == null) {
+												repository.setServices(new Services());
+											}
+											if (repository.getServices().getLibrary() == null) {
+												repository.getServices().setLibrary(new Library());
+											}
+
+											Num num = new Num();
+											num.setContent(valueList.get(j));
+											num.setUnit(CreateEAG2012.UNIT_BOOK);
+
+											Monographicpub monographicpub = new Monographicpub();
+											monographicpub.setNum(num);
+
+											repository.getServices().getLibrary().setMonographicpub(monographicpub);
+										}
+									}
+									// eag/archguide/desc/repositories/repository/services/library/serialpub
+									if (CreateEAG2012.SERIAL_PUBLICATION.equalsIgnoreCase(subSectionKey)) {
+										List<String> valueList = subSectionsMap.get(subSectionKey);
+										for (int j = 0; j < valueList.size(); j++) {
+											if (repository.getServices() == null) {
+												repository.setServices(new Services());
+											}
+											if (repository.getServices().getLibrary() == null) {
+												repository.getServices().setLibrary(new Library());
+											}
+
+											Num num = new Num();
+											num.setContent(valueList.get(j));
+											num.setUnit(CreateEAG2012.UNIT_TITLE);
+
+											Serialpub serialpub = new Serialpub();
+											serialpub.setNum(num);
+
+											repository.getServices().getLibrary().setSerialpub(serialpub);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// eag/archguide/desc/repositories/repository/services/library/question
+		if (this.eag2012.getLibraryQuestion() != null) {
+			for (int i = 0; i < this.eag2012.getLibraryQuestion().size(); i++) {
+				// Repository
+				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+				if (repository.getServices() == null) {
+					repository.setServices(new Services());
+				}
+				if (repository.getServices().getLibrary() == null) {
+					repository.getServices().setLibrary(new Library());
+				}
+
+				repository.getServices().getLibrary().setQuestion(this.eag2012.getLibraryQuestion().get(i));
+			}
+		}
+
+		// eag/archguide/desc/repositories/repository/services/internetAccess
+		if (this.eag2012.getInternetAccessQuestion() != null) {
+			for (int i = 0; i < this.eag2012.getInternetAccessQuestion().size(); i++) {
+				// Repository
+				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+				if (repository.getServices() == null) {
+					repository.setServices(new Services());
+				}
+				if (repository.getServices().getInternetAccess() == null) {
+					repository.getServices().setInternetAccess(new InternetAccess());
+				}
+
+				repository.getServices().getInternetAccess().setQuestion(this.eag2012.getInternetAccessQuestion().get(i));
+
+// TODO:				getDescriptiveNote(repository.getServices().getInternetAccess());
+			}
+		}
+
+		// eag/archguide/desc/repositories/repository/services/techservices/restorationlab
+		if (this.eag2012.getRestorationlabQuestion() != null) {
+			for (int i = 0; i < this.eag2012.getRestorationlabQuestion().size(); i++) {
+				// Repository
+				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+				if (repository.getServices() == null) {
+					repository.setServices(new Services());
+				}
+				if (repository.getServices().getTechservices() == null) {
+					repository.getServices().setTechservices(new Techservices());
+				}
+				if (repository.getServices().getTechservices().getRestorationlab() == null) {
+					repository.getServices().getTechservices().setRestorationlab(new Restorationlab());
+				}
+
+				repository.getServices().getTechservices().getRestorationlab().setQuestion(this.eag2012.getRestorationlabQuestion().get(i));
+
+// TODO:				getDescriptiveNote(repository.getServices().getTechservices().getRestorationlab());
+			}
+		}
+
+		// eag/archguide/desc/repositories/repository/services/techservices/reproductionser
+		if (this.eag2012.getReproductionserQuestion() != null) {
+			for (int i = 0; i < this.eag2012.getReproductionserQuestion().size(); i++) {
+				// Repository
+				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+				if (repository.getServices() == null) {
+					repository.setServices(new Services());
+				}
+				if (repository.getServices().getTechservices() == null) {
+					repository.getServices().setTechservices(new Techservices());
+				}
+				if (repository.getServices().getTechservices().getReproductionser() == null) {
+					repository.getServices().getTechservices().setReproductionser(new Reproductionser());
+				}
+
+				// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/question
+				repository.getServices().getTechservices().getReproductionser().setQuestion(this.eag2012.getReproductionserQuestion().get(i));
+
+				// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/descriptiveNote
+// TODO:				getDescriptiveNote(repository.getServices().getTechservices().getReproductionser());
+
+				// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/microformser
+				if (this.eag2012.getMicroformserQuestion() != null && !this.eag2012.getMicroformserQuestion().isEmpty()) {
+					if (repository.getServices().getTechservices().getReproductionser().getMicroformser() == null) {
+						repository.getServices().getTechservices().getReproductionser().setMicroformser(new Microformser());
+					}
+					repository.getServices().getTechservices().getReproductionser().getMicroformser().setQuestion(this.eag2012.getMicroformserQuestion().get(i));
+				}
+
+				// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/photographser
+				if (this.eag2012.getPhotographserQuestion() != null && !this.eag2012.getPhotographserQuestion().isEmpty()) {
+					if (repository.getServices().getTechservices().getReproductionser().getPhotographser() == null) {
+						repository.getServices().getTechservices().getReproductionser().setPhotographser(new Photographser());
+					}
+					repository.getServices().getTechservices().getReproductionser().getPhotographser().setQuestion(this.eag2012.getPhotographserQuestion().get(i));
+				}
+
+				// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/digitalser
+				if (this.eag2012.getDigitalserQuestion() != null && !this.eag2012.getDigitalserQuestion().isEmpty()) {
+					if (repository.getServices().getTechservices().getReproductionser().getDigitalser() == null) {
+						repository.getServices().getTechservices().getReproductionser().setDigitalser(new Digitalser());
+					}
+					repository.getServices().getTechservices().getReproductionser().getDigitalser().setQuestion(this.eag2012.getDigitalserQuestion().get(i));
+				}
+
+				// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/photocopyser
+				if (this.eag2012.getPhotocopyserQuestion() != null && !this.eag2012.getPhotocopyserQuestion().isEmpty()) {
+					if (repository.getServices().getTechservices().getReproductionser().getPhotocopyser() == null) {
+						repository.getServices().getTechservices().getReproductionser().setPhotocopyser(new Photocopyser());
+					}
+					repository.getServices().getTechservices().getReproductionser().getPhotocopyser().setQuestion(this.eag2012.getPhotocopyserQuestion().get(i));
+				}
+			}
+		}
+
+		// eag/archguide/desc/repositories/repository/services/recreationalServices/refreshment
+// TODO:		getDescriptiveNoteForRefreshment();
+
+		// eag/archguide/desc/repositories/repository/services/recreationalServices/exhibition
+
+		// eag/archguide/desc/repositories/repository/services/recreationalServices/tourSessions
+
+		// eag/archguide/desc/repositories/repository/services/recreationalServices/otherServices
 
 		// eag/archguide/desc/repositories/repository/descriptivenote
 
@@ -1168,21 +1645,156 @@ public class CreateEAG2012 {
 						while (sectionsValueIt.hasNext()) {
 							String sectionValueKey = sectionsValueIt.next();
 							String sectionLangKey = sectionsLangIt.next();
-							if (CreateEAG2012.SEARCHROOM.equalsIgnoreCase(sectionValueKey)
-									&& CreateEAG2012.SEARCHROOM.equalsIgnoreCase(sectionLangKey)) {
-								List<String> valuesList = sectionsValueMap.get(sectionValueKey);
-								List<String> langList = sectionsLangMap.get(sectionLangKey);
-								for (int j = 0; j < valuesList.size(); j++) {
-									P p = new P();
-									p.setContent(valuesList.get(j));
-									p.setLang(langList.get(j));
+							List<String> valuesList = sectionsValueMap.get(sectionValueKey);
+							List<String> langList = sectionsLangMap.get(sectionLangKey);
+							for (int j = 0; j < valuesList.size(); j++) {
+								P p = new P();
+								p.setContent(valuesList.get(j));
+								p.setLang(langList.get(j));
 
+								// eag/archguide/desc/repositories/repository/services/searchroom/computerPlaces/descriptiveNote/P
+								if (CreateEAG2012.SEARCHROOM.equalsIgnoreCase(sectionValueKey)
+										&& CreateEAG2012.SEARCHROOM.equalsIgnoreCase(sectionLangKey)) {
 									if (object instanceof ComputerPlaces) {
 										ComputerPlaces computerPlaces = (ComputerPlaces) object;
 										if (computerPlaces.getDescriptiveNote() == null) {
 											computerPlaces.setDescriptiveNote(new DescriptiveNote());
 										}
 										computerPlaces.getDescriptiveNote().getP().add(p);
+									}
+								}
+								// eag/archguide/desc/repositories/repository/services/internetAccess/descriptiveNote/P
+								if (CreateEAG2012.INTERNET_ACCESS.equalsIgnoreCase(sectionValueKey)
+										&& CreateEAG2012.INTERNET_ACCESS.equalsIgnoreCase(sectionLangKey)) {
+									if (object instanceof InternetAccess) {
+										InternetAccess internetAccess = (InternetAccess) object;
+										if (internetAccess.getDescriptiveNote() == null) {
+											internetAccess.setDescriptiveNote(new DescriptiveNote());
+										}
+										internetAccess.getDescriptiveNote().getP().add(p);
+									}
+								}
+								// eag/archguide/desc/repositories/repository/services/techservices/restorationlab/descriptiveNote/P
+								if (CreateEAG2012.RESTORATION_LAB.equalsIgnoreCase(sectionValueKey)
+										&& CreateEAG2012.RESTORATION_LAB.equalsIgnoreCase(sectionLangKey)) {
+									if (object instanceof Restorationlab) {
+										Restorationlab restorationlab = (Restorationlab) object;
+										if (restorationlab.getDescriptiveNote() == null) {
+											restorationlab.setDescriptiveNote(new DescriptiveNote());
+										}
+										restorationlab.getDescriptiveNote().getP().add(p);
+									}
+								}
+								// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/descriptiveNote/P
+								if (CreateEAG2012.REPRODUCTIONSER.equalsIgnoreCase(sectionValueKey)
+										&& CreateEAG2012.REPRODUCTIONSER.equalsIgnoreCase(sectionLangKey)) {
+									if (object instanceof Reproductionser) {
+										Reproductionser reproductionser = (Reproductionser) object;
+										if (reproductionser.getDescriptiveNote() == null) {
+											reproductionser.setDescriptiveNote(new DescriptiveNote());
+										}
+										reproductionser.getDescriptiveNote().getP().add(p);
+									}
+								}
+								// eag/archguide/desc/repositories/repository/services/recreationalServices/exhibition/descriptiveNote/P
+								if (CreateEAG2012.EXHIBITION.equalsIgnoreCase(sectionValueKey)
+										&& CreateEAG2012.EXHIBITION.equalsIgnoreCase(sectionLangKey)) {
+									if (object instanceof Exhibition) {
+										Exhibition exhibition = (Exhibition) object;
+										if (exhibition.getDescriptiveNote() == null) {
+											exhibition.setDescriptiveNote(new DescriptiveNote());
+										}
+										exhibition.getDescriptiveNote().getP().add(p);
+									}
+								}
+								// eag/archguide/desc/repositories/repository/services/recreationalServices/toursSessions/descriptiveNote/P
+								if (CreateEAG2012.TOURS_SESSIONS.equalsIgnoreCase(sectionValueKey)
+										&& CreateEAG2012.TOURS_SESSIONS.equalsIgnoreCase(sectionLangKey)) {
+									if (object instanceof ToursSessions) {
+										ToursSessions toursSessions = (ToursSessions) object;
+										if (toursSessions.getDescriptiveNote() == null) {
+											toursSessions.setDescriptiveNote(new DescriptiveNote());
+										}
+										toursSessions.getDescriptiveNote().getP().add(p);
+									}
+								}
+								// eag/archguide/desc/repositories/repository/services/recreationalServices/otherServices/descriptiveNote/P
+								if (CreateEAG2012.OTHER_SERVICES.equalsIgnoreCase(sectionValueKey)
+										&& CreateEAG2012.OTHER_SERVICES.equalsIgnoreCase(sectionLangKey)) {
+									if (object instanceof OtherServices) {
+										OtherServices otherServices = (OtherServices) object;
+										if (otherServices.getDescriptiveNote() == null) {
+											otherServices.setDescriptiveNote(new DescriptiveNote());
+										}
+										otherServices.getDescriptiveNote().getP().add(p);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Method to recover descriptiveNote for research services.
+	 *
+	 * @param object The object to add the descriptive note.
+	 */
+	private void getDescriptiveNoteForResearchServices() {
+		if (this.eag.getArchguide().getDesc().getRepositories().getRepository() != null
+				&& !this.eag.getArchguide().getDesc().getRepositories().getRepository().isEmpty()) {
+			for (int i = 0; i < this.eag.getArchguide().getDesc().getRepositories().getRepository().size(); i++) {
+				// Repository.
+				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+				if (repository.getServices() == null) {
+					repository.setServices(new Services());
+				}
+				if (repository.getServices().getSearchroom() == null) {
+					repository.getServices().setSearchroom(new Searchroom());
+				}
+
+				// Recover descriptiveNote for research services.
+				if (this.eag2012.getDescriptiveNotePValue() != null
+						&& this.eag2012.getDescriptiveNotePLang() != null) {
+					for (int j = 0; j < this.eag2012.getDescriptiveNotePValue().size(); j++) {
+						Map<String, Map<String, List<String>>> tabsValueMap = this.eag2012.getDescriptiveNotePValue().get(j);
+						Map<String, Map<String, List<String>>> tabsLangMap = this.eag2012.getDescriptiveNotePLang().get(j);
+						Iterator<String> tabsValueIt = tabsValueMap.keySet().iterator();
+						Iterator<String> tabsLangIt = tabsLangMap.keySet().iterator();
+						while (tabsValueIt.hasNext()) {
+							String tabValueKey = tabsValueIt.next();
+							String tabLangKey = tabsLangIt.next();
+
+							if (CreateEAG2012.TAB_ACCESS_AND_SERVICES.equalsIgnoreCase(tabValueKey)
+									&& CreateEAG2012.TAB_ACCESS_AND_SERVICES.equalsIgnoreCase(tabLangKey)) {
+								Map<String, List<String>> sectionsValueMap = tabsValueMap.get(tabValueKey);
+								Map<String, List<String>> sectionsLangMap = tabsLangMap.get(tabLangKey);
+								Iterator<String> sectionsValueIt = sectionsValueMap.keySet().iterator();
+								Iterator<String> sectionsLangIt = sectionsLangMap.keySet().iterator();
+								while (sectionsValueIt.hasNext()) {
+									String sectionValueKey = sectionsValueIt.next();
+									String sectionLangKey = sectionsLangIt.next();
+									List<String> valuesList = sectionsValueMap.get(sectionValueKey);
+									List<String> langList = sectionsLangMap.get(sectionLangKey);
+									for (int k = 0; k < valuesList.size(); k++) {
+										P p = new P();
+										p.setContent(valuesList.get(k));
+										p.setLang(langList.get(k));
+
+										// eag/archguide/desc/repositories/repository/services/searchroom/researchServices/descriptiveNote/P
+										if (CreateEAG2012.RESEARCH_SERVICES.equalsIgnoreCase(sectionValueKey)
+												&& CreateEAG2012.RESEARCH_SERVICES.equalsIgnoreCase(sectionLangKey)) {
+												ResearchServices researchServices = new ResearchServices();
+											if (researchServices.getDescriptiveNote() == null) {
+												researchServices.setDescriptiveNote(new DescriptiveNote());
+											}
+
+											researchServices.getDescriptiveNote().getP().add(p);
+
+											repository.getServices().getSearchroom().getResearchServices().add(researchServices);
+										}
 									}
 								}
 							}

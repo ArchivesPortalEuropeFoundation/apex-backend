@@ -4109,7 +4109,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						//end listStreet
 						//begin listStreetLanguage
 						tempListList2 = null;
-						if(eag2012.getPostalStreetValue()==null){
+						if(eag2012.getPostalStreetLang()==null){
 							tempListList2 = new ArrayList<Map<String, List<String>>>();
 						}else{
 							tempListList2 = eag2012.getPostalStreetLang();
@@ -4726,7 +4726,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				//end listStreets
 				//begin listLangStreets
 				tempListList2 = null;
-				if(eag2012.getPostalStreetValue()==null){
+				if(eag2012.getPostalStreetLang()==null){
 					tempListList2 = new ArrayList<Map<String, List<String>>>();
 				}else{
 					tempListList2 = eag2012.getPostalStreetLang();
