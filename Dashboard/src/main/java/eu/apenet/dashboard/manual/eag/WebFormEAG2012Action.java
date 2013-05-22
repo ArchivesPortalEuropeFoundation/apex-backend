@@ -4075,7 +4075,6 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					List<String> listStreet = new ArrayList<String>();
 					List<String> listStreetLanguage = new ArrayList<String>();
 					List<String> listCities = new ArrayList<String>();
-					List<List<String>> tempListList = new ArrayList<List<String>>();
 					int i=1;
 					if(postalAddress.has("contactTablePostalAddress_"+i)){
 						
@@ -4087,14 +4086,69 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							
 						}while(postalAddress.has("contactTablePostalAddress_"+(++i)));
 						
-						tempListList.add(listStreet);
-						eag2012.setPostalStreetValue(tempListList);
-						tempListList = new ArrayList<List<String>>();
-						tempListList.add(listStreetLanguage);
-						eag2012.setPostalStreetLang(tempListList);
-						tempListList = new ArrayList<List<String>>();
-						tempListList.add(listCities);
-						eag2012.setMunicipalityPostalcodeValue(tempListList);
+						//begin listStreet
+						List<Map<String, List<String>>> tempListList2 = null;
+						if(eag2012.getPostalStreetValue()==null){
+							tempListList2 = new ArrayList<Map<String, List<String>>>();
+						}else{
+							tempListList2 = eag2012.getPostalStreetValue();
+						}
+						Map<String, List<String>> tempListMap2 = null;
+						if(tempListList2.size()>x){
+				        	tempListMap2 = tempListList2.get(x);
+				        }else{
+				        	tempListMap2 = new HashMap<String, List<String>>();
+				        }
+				        tempListMap2.put(Eag2012Creator.TAB_CONTACT,listStreet);
+				        if(tempListList2.size()>x){
+				        	tempListList2.set(x,tempListMap2);
+				        }else{
+				        	tempListList2.add(tempListMap2);
+				        }
+						eag2012.setPostalStreetValue(tempListList2);
+						//end listStreet
+						//begin listStreetLanguage
+						tempListList2 = null;
+						if(eag2012.getPostalStreetValue()==null){
+							tempListList2 = new ArrayList<Map<String, List<String>>>();
+						}else{
+							tempListList2 = eag2012.getPostalStreetLang();
+						}
+						tempListMap2 = null;
+						if(tempListList2.size()>x){
+				        	tempListMap2 = tempListList2.get(x);
+				        }else{
+				        	tempListMap2 = new HashMap<String, List<String>>();
+				        }
+				        tempListMap2.put(Eag2012Creator.TAB_CONTACT,listStreetLanguage);
+				        if(tempListList2.size()>x){
+				        	tempListList2.set(x,tempListMap2);
+				        }else{
+				        	tempListList2.add(tempListMap2);
+				        }
+						eag2012.setPostalStreetLang(tempListList2);
+						//end listStreetLanguage
+						//begin listCities
+						tempListList2 = null;
+						if(eag2012.getMunicipalityPostalcodeValue()==null){
+							tempListList2 = new ArrayList<Map<String, List<String>>>();
+						}else{
+							tempListList2 = eag2012.getMunicipalityPostalcodeValue();
+						}
+						tempListMap2 = null;
+						if(tempListList2.size()>x){
+				        	tempListMap2 = tempListList2.get(x);
+				        }else{
+				        	tempListMap2 = new HashMap<String, List<String>>();
+				        }
+				        tempListMap2.put(Eag2012Creator.TAB_CONTACT,listCities);
+				        if(tempListList2.size()>x){
+				        	tempListList2.set(x,tempListMap2);
+				        }else{
+				        	tempListList2.add(tempListMap2);
+				        }
+						eag2012.setMunicipalityPostalcodeValue(tempListList2);
+						//end listCities
 					}
 					
 				}
@@ -4649,15 +4703,69 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					listLangStreets.add(postalAddressTable.getString("selectYIPASelectLanguage"));
 					listMunicipalities.add(postalAddressTable.getString("textYIPACity"));
 				}
-				List<List<String>> tempListList = new ArrayList<List<String>>();
-				tempListList.add(listStreets);
-				eag2012.setPostalStreetValue(tempListList);
-				tempListList = new ArrayList<List<String>>();
-				tempListList.add(listLangStreets);
-				eag2012.setPostalStreetLang(tempListList);
-				tempListList = new ArrayList<List<String>>();
-				tempListList.add(listMunicipalities);
-				eag2012.setMunicipalityPostalcodeValue(tempListList);
+				//begin listStreets
+				List<Map<String, List<String>>> tempListList2 = null;
+				if(eag2012.getPostalStreetValue()==null){
+					tempListList2 = new ArrayList<Map<String, List<String>>>();
+				}else{
+					tempListList2 = eag2012.getPostalStreetValue();
+				}
+				Map<String, List<String>> tempListMap2 = null;
+				if(tempListList2.size()>0){
+		        	tempListMap2 = tempListList2.get(0);
+		        }else{
+		        	tempListMap2 = new HashMap<String, List<String>>();
+		        }
+		        tempListMap2.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listStreets);
+		        if(tempListList2.size()>0){
+		        	tempListList2.set(0,tempListMap2);
+		        }else{
+		        	tempListList2.add(tempListMap2);
+		        }
+				eag2012.setPostalStreetValue(tempListList2);
+				//end listStreets
+				//begin listLangStreets
+				tempListList2 = null;
+				if(eag2012.getPostalStreetValue()==null){
+					tempListList2 = new ArrayList<Map<String, List<String>>>();
+				}else{
+					tempListList2 = eag2012.getPostalStreetLang();
+				}
+				tempListMap2 = null;
+				if(tempListList2.size()>0){
+		        	tempListMap2 = tempListList2.get(0);
+		        }else{
+		        	tempListMap2 = new HashMap<String, List<String>>();
+		        }
+		        tempListMap2.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listLangStreets);
+		        if(tempListList2.size()>0){
+		        	tempListList2.set(0,tempListMap2);
+		        }else{
+		        	tempListList2.add(tempListMap2);
+		        }
+				eag2012.setPostalStreetLang(tempListList2);
+				//end listLangStreets
+				//begin listMunicipalities
+				tempListList2 = null;
+				if(eag2012.getMunicipalityPostalcodeValue()==null){
+					tempListList2 = new ArrayList<Map<String, List<String>>>();
+				}else{
+					tempListList2 = eag2012.getMunicipalityPostalcodeValue();
+				}
+				tempListMap2 = null;
+				if(tempListList2.size()>0){
+		        	tempListMap2 = tempListList2.get(0);
+		        }else{
+		        	tempListMap2 = new HashMap<String, List<String>>();
+		        }
+		        tempListMap2.put(Eag2012Creator.TAB_YOUR_INSTITUTION,listMunicipalities);
+		        if(tempListList2.size()>0){
+		        	tempListList2.set(0,tempListMap2);
+		        }else{
+		        	tempListList2.add(tempListMap2);
+		        }
+				eag2012.setMunicipalityPostalcodeValue(tempListList2);
+				//end listMunicipalities
 			}
 			//your institution - last part
 			

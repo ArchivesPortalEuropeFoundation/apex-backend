@@ -167,7 +167,7 @@ public class Eag2012 {
 	private List<List<String>> secondemLang;
 	private List<List<String>> secondemValue;
 	private List<List<String>> municipalityPostalcodeLang;
-	private List<List<String>> municipalityPostalcodeValue;
+	private List<Map<String,List<String>>> municipalityPostalcodeValue;
 	private List<Map<String,List<String>>> citiesValue;
 	private List<List<String>> citiesLang;
 	private List<String> localentityLang;
@@ -238,14 +238,14 @@ public class Eag2012 {
 	private String relationsId;
 	private String relationsLang;
 	private List<String> placeEntryValue;
-	private List<List<String>> postalStreetValue;
-	private List<List<String>> postalStreetLang;
+	private List<Map<String,List<String>>> postalStreetValue;
+	private List<Map<String,List<String>>> postalStreetLang;
 
 	public Eag2012() {
 		// TODO put all parameters here
 	}
 	
-	public List<List<String>> getPostalStreetValue(){
+	public List<Map<String,List<String>>> getPostalStreetValue(){
 		return this.postalStreetValue;
 	}
 	
@@ -1292,11 +1292,11 @@ public class Eag2012 {
 		this.municipalityPostalcodeLang = municipalityPostalcodeLang;
 	}
 
-	public List<List<String>> getMunicipalityPostalcodeValue() {
+	public List<Map<String,List<String>>> getMunicipalityPostalcodeValue() {
 		return municipalityPostalcodeValue;
 	}
 
-	public void setMunicipalityPostalcodeValue(List<List<String>> municipalityPostalcodeValue) {
+	public void setMunicipalityPostalcodeValue(List<Map<String,List<String>>> municipalityPostalcodeValue) {
 		this.municipalityPostalcodeValue = municipalityPostalcodeValue;
 	}
 
@@ -1328,7 +1328,7 @@ public class Eag2012 {
 		return streetValue;
 	}
 	
-	public void setPostalStreetValue(List<List<String>> postalStreetValue){
+	public void setPostalStreetValue(List<Map<String,List<String>>> postalStreetValue){
 		this.postalStreetValue = postalStreetValue;
 	}
 
@@ -1855,11 +1855,11 @@ public class Eag2012 {
 		this.relationsLang = relationsLang;
 	}
 
-	public List<List<String>> getPostalStreetLang() {
+	public List<Map<String,List<String>>> getPostalStreetLang() {
 		return postalStreetLang;
 	}
 
-	public void setPostalStreetLang(List<List<String>> postalStreetLang) {
+	public void setPostalStreetLang(List<Map<String,List<String>>> postalStreetLang) {
 		this.postalStreetLang = postalStreetLang;
 	}
 
