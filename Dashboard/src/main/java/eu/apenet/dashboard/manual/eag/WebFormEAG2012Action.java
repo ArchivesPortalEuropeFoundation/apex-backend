@@ -3078,7 +3078,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
 							 }
 							 Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
-							 if(descriptiveNotePValue.size()>0 && descriptiveNotePValue.get(i)!=null){
+							 if(descriptiveNotePValue.size()>i && descriptiveNotePValue.get(i)!=null){
 								 descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
 							 }else{
 								 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
@@ -3112,7 +3112,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 descriptiveNotePLang = new ArrayList<Map<String, Map<String, List<String>>>>();
 							 }
 							 Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
-							 if(descriptiveNotePLang.size()>0 && descriptiveNotePLang.get(i)!=null){
+							 if(descriptiveNotePLang.size()>i && descriptiveNotePLang.get(i)!=null){
 								 descriptiveNoteMapMapList = descriptiveNotePLang.get(i);
 							 }else{
 								 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
@@ -3381,7 +3381,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
 							}
 							Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
-							if(descriptiveNotePValue.size()>0 && descriptiveNotePValue.get(i)!=null){
+							if(descriptiveNotePValue.size()>i && descriptiveNotePValue.get(i)!=null){
 								descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
 							}else{
 								descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
@@ -3408,15 +3408,50 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							}
 							eag2012.setDescriptiveNotePValue(descriptiveNotePValue);
 						}
+						if(accessTable.has("selectASReSeRefreshmentSelectLanguage")){
+							List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePLang();
+							if(descriptiveNotePValue==null){
+								descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
+							}
+							Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
+							if(descriptiveNotePValue.size()>i && descriptiveNotePValue.get(i)!=null){
+								descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
+							}else{
+								descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
+							}
+							Map<String, List<String>> descriptiveNoteMapList = null;
+							if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+								descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
+							}else{
+								descriptiveNoteMapList = new HashMap<String, List<String>>();
+							}
+							List<String> descriptiveNoteList = null;
+							if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.REFRESHMENT)!=null){
+								descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.REFRESHMENT);
+							}else{
+								descriptiveNoteList = new ArrayList<String>();
+							}
+							descriptiveNoteList.add(accessTable.getString("selectASReSeRefreshmentSelectLanguage"));
+							descriptiveNoteMapList.put(CreateEAG2012.REFRESHMENT,descriptiveNoteList);
+							descriptiveNoteMapMapList.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+							if(descriptiveNotePValue.size()>i){
+								descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
+							}else{
+								descriptiveNotePValue.add(descriptiveNoteMapMapList);
+							}
+							eag2012.setDescriptiveNotePLang(descriptiveNotePValue);
+						}
 
 						target1 = "textASReSeExhibition";
 						target2 = "textASReSeWebpage";
 						target3 = "textASReSeWebpageLinkTitle";
+						String target4= "selectASReSeExhibitionSelectLanguage";
 						targetNumber = 1;
 						do{
 							target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
 							target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
 							target3 = ((target3.indexOf("_")!=-1)?target3.substring(0,target3.indexOf("_")):target3)+"_"+targetNumber;
+							target4 = ((target4.indexOf("_")!=-1)?target4.substring(0,target4.indexOf("_")):target4)+"_"+targetNumber;
 							targetNumber++;
 							if(accessTable.has(target1)){
 								List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
@@ -3424,7 +3459,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 									descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
 								}
 								Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
-								if(descriptiveNotePValue.size()>0 && descriptiveNotePValue.get(i)!=null){
+								if(descriptiveNotePValue.size()>i && descriptiveNotePValue.get(i)!=null){
 									descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
 								}else{
 									descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
@@ -3517,16 +3552,51 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								}
 								eag2012.setWebpageValue(listMapWebList); 
 							}
-						}while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3));
+							if(accessTable.has(target4)){
+								List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePLang();
+								if(descriptiveNotePValue==null){
+									descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
+								}
+								Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
+								if(descriptiveNotePValue.size()>i && descriptiveNotePValue.get(i)!=null){
+									descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
+								}else{
+									descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
+								}
+								Map<String, List<String>> descriptiveNoteMapList = null;
+								if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+									descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
+								}else{
+									descriptiveNoteMapList = new HashMap<String, List<String>>();
+								}
+								List<String> descriptiveNoteList = null;
+								if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.EXHIBITION)!=null){
+									descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.EXHIBITION);
+								}else{
+									descriptiveNoteList = new ArrayList<String>();
+								}
+								descriptiveNoteList.add(accessTable.getString(target4));
+								descriptiveNoteMapList.put(CreateEAG2012.EXHIBITION,descriptiveNoteList);
+								descriptiveNoteMapMapList.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+								if(descriptiveNotePValue.size()>i){
+									descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
+								}else{
+									descriptiveNotePValue.add(descriptiveNoteMapMapList);
+								}
+								eag2012.setDescriptiveNotePLang(descriptiveNotePValue);
+							}
+						}while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3) && accessTable.has(target4));
 						
 						target1 = "textASReSeToursAndSessions";
 						target2 = "textASReSeTSWebpage";
 						target3 = "textASReSeWebpageTSLinkTitle";
+						target4 = "selectASReSeToursAndSessionsSelectLanguage";
 						targetNumber = 1;
 						do{
 							target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
 							target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
 							target3 = ((target3.indexOf("_")!=-1)?target3.substring(0,target3.indexOf("_")):target3)+"_"+targetNumber;
+							target4 = ((target4.indexOf("_")!=-1)?target4.substring(0,target4.indexOf("_")):target4)+"_"+targetNumber;
 							targetNumber++;
 							if(accessTable.has(target1)){
 								List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
@@ -3534,7 +3604,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 									descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
 								}
 								Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
-								if(descriptiveNotePValue.size()>0 && descriptiveNotePValue.get(i)!=null){
+								if(descriptiveNotePValue.size()>i && descriptiveNotePValue.get(i)!=null){
 									descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
 								}else{
 									descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
@@ -3627,16 +3697,51 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								}
 								eag2012.setWebpageHref(listMapWebList); 
 							}
-						}while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3));
+							if(accessTable.has(target4)){
+								List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePLang();
+								if(descriptiveNotePValue==null){
+									descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
+								}
+								Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
+								if(descriptiveNotePValue.size()>i && descriptiveNotePValue.get(i)!=null){
+									descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
+								}else{
+									descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
+								}
+								Map<String, List<String>> descriptiveNoteMapList = null;
+								if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+									descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
+								}else{
+									descriptiveNoteMapList = new HashMap<String, List<String>>();
+								}
+								List<String> descriptiveNoteList = null;
+								if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.TOURS_SESSIONS)!=null){
+									descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.TOURS_SESSIONS);
+								}else{
+									descriptiveNoteList = new ArrayList<String>();
+								}
+								descriptiveNoteList.add(accessTable.getString(target4));
+								descriptiveNoteMapList.put(CreateEAG2012.TOURS_SESSIONS,descriptiveNoteList);
+								descriptiveNoteMapMapList.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+								if(descriptiveNotePValue.size()>i){
+									descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
+								}else{
+									descriptiveNotePValue.add(descriptiveNoteMapMapList);
+								}
+								eag2012.setDescriptiveNotePLang(descriptiveNotePValue);
+							}
+						}while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3) && accessTable.has(target4));
 						
 						target1 = "textASReSeOtherServices";
 						target2 = "textASReSeOSWebpage";
 						target3 = "textASReSeWebpageOSLinkTitle";
+						target4 = "selectASReSeOtherServicesSelectLanguage";
 						targetNumber = 1;
 						do{
 							target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
 							target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
 							target3 = ((target3.indexOf("_")!=-1)?target3.substring(0,target3.indexOf("_")):target3)+"_"+targetNumber;
+							target4 = ((target4.indexOf("_")!=-1)?target4.substring(0,target4.indexOf("_")):target4)+"_"+targetNumber;
 							targetNumber++;
 							if(accessTable.has(target1)){
 								List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
@@ -3644,7 +3749,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 									descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
 								}
 								Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
-								if(descriptiveNotePValue.size()>0 && descriptiveNotePValue.get(i)!=null){
+								if(descriptiveNotePValue.size()>i && descriptiveNotePValue.get(i)!=null){
 									descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
 								}else{
 									descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
@@ -3737,7 +3842,40 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								}
 								eag2012.setWebpageHref(listMapWebList); 
 							}
-						}while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3));
+							if(accessTable.has(target4)){
+								List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePLang();
+								if(descriptiveNotePValue==null){
+									descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
+								}
+								Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
+								if(descriptiveNotePValue.size()>i && descriptiveNotePValue.get(i)!=null){
+									descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
+								}else{
+									descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
+								}
+								Map<String, List<String>> descriptiveNoteMapList = null;
+								if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+									descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
+								}else{
+									descriptiveNoteMapList = new HashMap<String, List<String>>();
+								}
+								List<String> descriptiveNoteList = null;
+								if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.OTHER_SERVICES)!=null){
+									descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.OTHER_SERVICES);
+								}else{
+									descriptiveNoteList = new ArrayList<String>();
+								}
+								descriptiveNoteList.add(accessTable.getString(target4));
+								descriptiveNoteMapList.put(CreateEAG2012.OTHER_SERVICES,descriptiveNoteList);
+								descriptiveNoteMapMapList.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES,descriptiveNoteMapList);
+								if(descriptiveNotePValue.size()>i){
+									descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
+								}else{
+									descriptiveNotePValue.add(descriptiveNoteMapMapList);
+								}
+								eag2012.setDescriptiveNotePLang(descriptiveNotePValue);
+							}
+						}while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3) && accessTable.has(target4));
 						++i;
 				}
 			}
