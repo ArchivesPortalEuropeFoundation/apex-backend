@@ -2425,7 +2425,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }else{
 							 descriptiveNotesPLang.add(descriptiveNotePLang);
 						 }
-						 eag2012.setDescriptiveNotePValue(descriptiveNotesPLang);
+						 eag2012.setDescriptiveNotePLang(descriptiveNotesPLang);
 					 }
 				 }while(accessTable.has(target1) && accessTable.has(target2));
 					
