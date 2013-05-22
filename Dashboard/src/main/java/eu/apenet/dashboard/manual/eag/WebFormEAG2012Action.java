@@ -696,10 +696,22 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		    if(jsonObj.has("description")){
 		    	eag2012 = parseDescriptionJsonObjToEag2012(eag2012, jsonObj);
 		    }
+		       
 		}
 		
 		return eag2012;
 	}
+	
+	/*private Eag2012 parseControlJsonObjToEag2012(Eag2012 eag2012, JSONObject jsonObj) throws JSONException{
+	    JSONObject control = jsonObj.getJSONObject("control");
+		if(control!=null){
+		  int i=0;
+		  while(control.has("selectDescriptionLanguage_"+(++i)) && (control.has("selectDescriptionScript_"+(i)))){
+			
+			
+		}
+		return eag2012;
+	}*/
 	
 	private Eag2012 parseDescriptionJsonObjToEag2012(Eag2012 eag2012, JSONObject jsonObj) throws JSONException {
 		JSONObject description = jsonObj.getJSONObject("description");
@@ -1282,13 +1294,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 datesMap = new HashMap<String, List<String>>();
 					   }
 					   List<String> dates = null;
-					   if(datesMap.size()>0 && datesMap.get(CreateEAG2012.ROOT_SUBSECTION)!=null){
-						 dates = datesMap.get(CreateEAG2012.ROOT_SUBSECTION);
+					   if(datesMap.size()>0 && datesMap.get(CreateEAG2012.HOLDING_SUBSECTION)!=null){
+						 dates = datesMap.get(CreateEAG2012.HOLDING_SUBSECTION);
 					   }else{
 						 dates = new ArrayList<String>();
 					   }
 					   dates.add(descriptionTable.getString("textYearWhenThisNameWasUsed_"+j));
-					   datesMap.put(CreateEAG2012.ROOT_SUBSECTION, dates);
+					   datesMap.put(CreateEAG2012.HOLDING_SUBSECTION, dates);
 					   dateMapMap.put(CreateEAG2012.HOLDINGS,datesMap);
 					   dateMapMapMap.put(CreateEAG2012.TAB_DESCRIPTION,dateMapMap);
 					   if( dateValue.size()>i){
@@ -1326,13 +1338,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 datesMap = new HashMap<String, List<String>>();
 						   }
 						   List<String> dates = null;
-						   if(datesMap.size()>0 && datesMap.get(CreateEAG2012.ROOT_SUBSECTION)!=null){
-							 dates = datesMap.get(CreateEAG2012.ROOT_SUBSECTION);
+						   if(datesMap.size()>0 && datesMap.get(CreateEAG2012.HOLDING_SUBSECTION)!=null){
+							 dates = datesMap.get(CreateEAG2012.HOLDING_SUBSECTION);
 						   }else{
 							 dates = new ArrayList<String>();
 						   }
 						   dates.add(descriptionTable.getString("textYearWhenThisNameWasUsedFrom_"+j));
-						   datesMap.put(CreateEAG2012.ROOT_SUBSECTION, dates);
+						   datesMap.put(CreateEAG2012.HOLDING_SUBSECTION, dates);
 						   dateMapMap.put(CreateEAG2012.HOLDINGS,datesMap);
 						   dateMapMapMap.put(CreateEAG2012.TAB_DESCRIPTION,dateMapMap);
 						   if( dateValue.size()>i){
@@ -1366,13 +1378,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 datesMap = new HashMap<String, List<String>>();
 						   }
 						   List<String> dates = null;
-						   if(datesMap.size()>0 && datesMap.get(CreateEAG2012.ROOT_SUBSECTION)!=null){
-							 dates = datesMap.get(CreateEAG2012.ROOT_SUBSECTION);
+						   if(datesMap.size()>0 && datesMap.get(CreateEAG2012.HOLDING_SUBSECTION)!=null){
+							 dates = datesMap.get(CreateEAG2012.HOLDING_SUBSECTION);
 						   }else{
 							 dates = new ArrayList<String>();
 						   }
 						   dates.add(descriptionTable.getString("textYearWhenThisNameWasUsedTo_"+j));
-						   datesMap.put(CreateEAG2012.ROOT_SUBSECTION, dates);
+						   datesMap.put(CreateEAG2012.HOLDING_SUBSECTION, dates);
 						   dateMapMap.put(CreateEAG2012.HOLDINGS,datesMap);
 						   dateMapMapMap.put(CreateEAG2012.TAB_DESCRIPTION,dateMapMap);
 						   if( dateValue.size()>i){

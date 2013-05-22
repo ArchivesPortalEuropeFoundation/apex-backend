@@ -173,6 +173,7 @@ public class CreateEAG2012 {
 	public static final String BUILDING_AREA = "building_area";
 	public static final String BUILDING_LENGTH = "building_length";
 	public static final String HOLDING_EXTENT = "holding_extent";
+	public static final String HOLDING_SUBSECTION = "holding_subsection";
 
 	/**
 	 * Constructor.
