@@ -3816,7 +3816,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				        	tempListMap = new HashMap<String, List<String>>();
 				        }
 				        tempListMap.put(Eag2012Creator.TAB_CONTACT,listStreet);
-						tempListList.add(tempListMap);
+				        if(tempListList.size()>x){
+				        	tempListList.set(x,tempListMap);
+				        }else{
+				        	tempListList.add(tempListMap);
+				        }
 						eag2012.setStreetValue(tempListList);
 						tempListList = null;
 						if(eag2012.getStreetLang()==null){
@@ -3830,7 +3834,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				        	tempListMap = new HashMap<String, List<String>>();
 				        }
 				        tempListMap.put(Eag2012Creator.TAB_CONTACT,listStreetLanguage);
-						tempListList.add(tempListMap);
+				        if(tempListList.size()>x){
+				        	tempListList.set(x,tempListMap);
+				        }else{
+				        	tempListList.add(tempListMap);
+				        }
 						eag2012.setStreetLang(tempListList);
 						tempListList = null;
 						if(eag2012.getCitiesValue()==null){
@@ -3844,7 +3852,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				        	tempListMap = new HashMap<String, List<String>>();
 				        }
 				        tempListMap.put(Eag2012Creator.TAB_CONTACT,listCities);
-						tempListList.add(tempListMap);
+				        if(tempListList.size()>x){
+				        	tempListList.set(x,tempListMap);
+				        }else{
+				        	tempListList.add(tempListMap);
+				        }
 						eag2012.setCitiesValue(tempListList);
 						eag2012.setLocalentityValue(listDistrict);
 						List<List<String>> tempListList2 = null;
@@ -3875,7 +3887,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				        	tempListMap = new HashMap<String, List<String>>();
 				        }
 				        tempListMap.put(Eag2012Creator.TAB_CONTACT,listCountries);
-						tempListList.add(tempListMap);
+				        if(tempListList.size()>x){
+				        	tempListList.set(x,tempListMap);
+				        }else{
+				        	tempListList.add(tempListMap);
+				        }
 						eag2012.setCountryValue(tempListList);
 						tempListList = null;
 						if(eag2012.getLocationLatitude()==null){
@@ -3889,7 +3905,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				        	tempListMap = new HashMap<String, List<String>>();
 				        }
 				        tempListMap.put(Eag2012Creator.TAB_CONTACT,listLatitudes);
-						tempListList.add(tempListMap);
+				        if(tempListList.size()>x){
+				        	tempListList.set(x,tempListMap);
+				        }else{
+				        	tempListList.add(tempListMap);
+				        }
 						eag2012.setLocationLatitude(tempListList);
 						tempListList = null;
 						if(eag2012.getLocationLongitude()==null){
@@ -3903,7 +3923,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				        	tempListMap = new HashMap<String, List<String>>();
 				        }
 				        tempListMap.put(Eag2012Creator.TAB_CONTACT,listLongitudes);
-						tempListList.add(tempListMap);
+				        if(tempListList.size()>x){
+				        	tempListList.set(x,tempListMap);
+				        }else{
+				        	tempListList.add(tempListMap);
+				        }
 						eag2012.setLocationLongitude(tempListList);
 				      
 				      }
