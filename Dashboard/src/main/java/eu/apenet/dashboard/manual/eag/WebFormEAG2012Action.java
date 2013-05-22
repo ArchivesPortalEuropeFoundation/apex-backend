@@ -1527,7 +1527,6 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				    }else{
 				    	closingValues.add(closingMap);
 				    }
-				   //TODO eag2012.setClosingStandardDate(closingValues);
 				    eag2012.setClosingStandardDate(closingValues);
 				  }
 				  if(accessTable.has("selectLanguageClosingDates_"+j)){
@@ -2244,7 +2243,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }else{
 							 readersTicket.add(readerTicket);
 						 }
-						 eag2012.setReadersTicketHref(readersTicket);
+						 eag2012.setReadersTicketValue(readersTicket);
 					 }
 					 if(accessTable.has(target2)){
 						 List<List<String>> readersTicketLang = eag2012.getReadersTicketLang();
