@@ -360,7 +360,7 @@ var clickIdentityAction = function(text1){
 		var texts ="";
 		$("select#" + $(this).attr("id") + " option").each(function(){
 			if($(this).attr("selected")) {
-				texts += $(this).text() + ',';
+				texts += $(this).text() + '_';
 			}
 		});
 		texts = texts.substring(0, (texts.length - 1));
@@ -787,7 +787,9 @@ function checkAccessAndServicesTab(currentTab, text1) {
 		if(jsonData.charAt(jsonData.length-1)!=':'){
 			jsonData += ",";
 		}
-		if ($(this).attr("id") == "selectLanguageOpeningTimes"
+		if ($(this).attr("id)") == "selectASSRPhotographAllowance") {
+			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).text()+"'";
+		} else if ($(this).attr("id") == "selectLanguageOpeningTimes"
 			|| $(this).attr("id") == "selectLanguageClosingDates"
 			|| $(this).attr("id") == "selectASATDSelectLanguage"
 			|| $(this).attr("id") == "selectASARSelectLanguage"
@@ -1176,10 +1178,10 @@ function yiAddClosingDates() {
 }
 function yiFutherAccessInformation() {
 	$("#buttonFutherAccessInformation").hide();
-	$("#buttonFutherAccessInformation").after('<input type="text" id="futherAccessInformation" />');
+	$("#buttonFutherAccessInformation").after('<input type="text" id="futherAccessInformation" onchange="futherAccessInformationChanged();" />');
 }
 function yiAddFutherInformationOnExistingFacilities() {
-	$("#buttonAddFutherInformationOnExistingFacilities").after('<input type="text" id="futherInformationOnExistingFacilities" />');
+	$("#buttonAddFutherInformationOnExistingFacilities").after('<input type="text" id="futherInformationOnExistingFacilities" onchange="futherInformationOnExistingFacilitiesChanged();" />');
 	$("#buttonAddFutherInformationOnExistingFacilities").hide();
 }
 
@@ -1985,6 +1987,11 @@ function addFutherAccessInformation(text1){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input#textASAccessRestrictions").attr("id","textASAccessRestrictions_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='selectASARSelectLanguage']").attr("for","selectASARSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASARSelectLanguage").attr("id","selectASARSelectLanguage_"+(count+1));
+
+	// Reset parametters.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function aSAddFutherTermOfUse(text1){
@@ -2062,6 +2069,11 @@ function addAccessibilityInformation(text1){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input#textASAccessibility").attr("id","textASAccessibility_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='selectASASelectLanguage']").attr("for","selectASASelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASASelectLanguage").attr("id","selectASASelectLanguage_"+(count+1));
+
+	// Reset parametters.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function aSSRAddDescriptionOfYourComputerPlaces(property1, property2, text1){
@@ -2363,11 +2375,7 @@ function aSReSeAddExhibition(text1){
 	var tr2HTML = "<tr id=\""+target1+"\">";
 	tr2HTML += $("table#accessAndServicesTable"+currentTab+" tr#trASReSeExhibition").clone().html();
 	tr2HTML += "</tr>\n";
-	if(count==1){
-		tr2HTML += "<tr id=\""+target2+"\">"+$("table#accessAndServicesTable"+currentTab+" tr#tr2ASReSeExhibition").clone().html();
-	}else{
-		tr2HTML += "<tr id=\""+target2+"\">"+$("table#accessAndServicesTable"+currentTab+" tr#tr2ASReSeExhibition_"+(count)).clone().html();
-	}
+	tr2HTML += "<tr id=\""+target2+"\">"+$("table#accessAndServicesTable"+currentTab+" tr#tr2ASReSeExhibition").clone().html();
 	tr2HTML += "</tr>";
 	$(lastId).after(tr2HTML);
 	//update new elements
@@ -2412,11 +2420,7 @@ function aSReSeToursAndSessions(text1){
 	var tr2HTML = "<tr id=\""+target1+"\">";
 	tr2HTML += $("table#accessAndServicesTable"+currentTab+" tr#trASReSeToursAndSessions").clone().html();
 	tr2HTML += "</tr>\n";
-	if(count==1){
-		tr2HTML += "<tr id=\""+target2+"\">"+$("table#accessAndServicesTable"+currentTab+" tr#tr2ASReSeToursAndSessions").clone().html();
-	}else{
-		tr2HTML += "<tr id=\""+target2+"\">"+$("table#accessAndServicesTable"+currentTab+" tr#tr2ASReSeToursAndSessions_"+(count)).clone().html();
-	}
+	tr2HTML += "<tr id=\""+target2+"\">"+$("table#accessAndServicesTable"+currentTab+" tr#tr2ASReSeToursAndSessions").clone().html();
 	tr2HTML += "</tr>";
 	$(lastId).after(tr2HTML);
 	//update new elements
@@ -2803,7 +2807,7 @@ function alertFillFieldsBeforeChangeTab(text1) {
 	alert(text1);
 }
 
-// Copy contect functions.
+// Copy content functions.
 function personResponsibleForDescriptionChanged(){
 	$("#textPesonResponsible").attr("value", $("#textYIPersonInstitutionResposibleForTheDescription").val());
 }
@@ -2884,8 +2888,16 @@ function accessibleToThePublicChanged() {
 	$("table#accessAndServicesTable_1 #selectASAccesibleToThePublic").attr("value", $("table#yiTableOthers #selectAccessibleToThePublic").val());
 }
 
+function futherAccessInformationChanged() {
+	$("table#accessAndServicesTable_1 #textASAccessRestrictions").attr("value", $("table#yiTableOthers #futherAccessInformation").val());
+}
+
 function facilitiesForDisabledPeopleAvailableChanged() {
 	$("table#accessAndServicesTable_1 #selectASFacilitiesForDisabledPeopleAvailable").attr("value", $("table#yiTableOthers #selectFacilitiesForDisabledPeopleAvailable").val());
+}
+
+function futherInformationOnExistingFacilitiesChanged() {
+	$("table#accessAndServicesTable_1 #textASAccessibility").attr("value", $("table#yiTableOthers #futherInformationOnExistingFacilities").val());
 }
 
 function webOfInstitutionLinkChanged(){
@@ -2912,8 +2924,20 @@ function aSAccessibleToThePublicChanged() {
 	$("table#yiTableOthers #selectAccessibleToThePublic").attr("value", $("table#accessAndServicesTable_1 #selectASAccesibleToThePublic").val());
 }
 
+function aSFutherAccessInformationChanged() {
+	$("table#yiTableOthers #futherAccessInformation").attr("value", $("table#accessAndServicesTable_1 #textASAccessRestrictions").val());
+}
+
 function aSFacilitiesForDisabledPeopleAvailableChanged() {
 	$("table#yiTableOthers #selectFacilitiesForDisabledPeopleAvailable").attr("value", $().val("table#accessAndServicesTable_1 #selectASFacilitiesForDisabledPeopleAvailable"));
+}
+
+function aSFutherInformationOnExistingFacilitiesChanged() {
+	$("table#yiTableOthers #futherInformationOnExistingFacilities").attr("value", $("table#accessAndServicesTable_1 #textASAccessibility").val());
+}
+
+function controlPersonResponsibleForDescriptionChanged(){
+	$("#textYIPersonInstitutionResposibleForTheDescription").attr("value", $("#textPesonResponsible").val());
 }
 
 function linkToYourHolndingsGuideChanged(){

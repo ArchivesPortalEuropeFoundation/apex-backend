@@ -19,6 +19,8 @@ import eu.apenet.dpt.utils.eag2012.ComputerPlaces;
 import eu.apenet.dpt.utils.eag2012.Contact;
 import eu.apenet.dpt.utils.eag2012.Control;
 import eu.apenet.dpt.utils.eag2012.Country;
+import eu.apenet.dpt.utils.eag2012.Date;
+import eu.apenet.dpt.utils.eag2012.DateSet;
 import eu.apenet.dpt.utils.eag2012.Desc;
 import eu.apenet.dpt.utils.eag2012.DescriptiveNote;
 import eu.apenet.dpt.utils.eag2012.Digitalser;
@@ -28,6 +30,7 @@ import eu.apenet.dpt.utils.eag2012.Email;
 import eu.apenet.dpt.utils.eag2012.Exhibition;
 import eu.apenet.dpt.utils.eag2012.Fax;
 import eu.apenet.dpt.utils.eag2012.Firstdem;
+import eu.apenet.dpt.utils.eag2012.Geogarea;
 import eu.apenet.dpt.utils.eag2012.Identity;
 import eu.apenet.dpt.utils.eag2012.InternetAccess;
 import eu.apenet.dpt.utils.eag2012.Library;
@@ -56,6 +59,7 @@ import eu.apenet.dpt.utils.eag2012.Photographser;
 import eu.apenet.dpt.utils.eag2012.ReadersTicket;
 import eu.apenet.dpt.utils.eag2012.RecordId;
 import eu.apenet.dpt.utils.eag2012.RecreationalServices;
+import eu.apenet.dpt.utils.eag2012.Refreshment;
 import eu.apenet.dpt.utils.eag2012.RelationEntry;
 import eu.apenet.dpt.utils.eag2012.Relations;
 import eu.apenet.dpt.utils.eag2012.Repositorid;
@@ -77,6 +81,7 @@ import eu.apenet.dpt.utils.eag2012.Telephone;
 import eu.apenet.dpt.utils.eag2012.TermsOfUse;
 import eu.apenet.dpt.utils.eag2012.Timetable;
 import eu.apenet.dpt.utils.eag2012.ToursSessions;
+import eu.apenet.dpt.utils.eag2012.UseDates;
 import eu.apenet.dpt.utils.eag2012.Webpage;
 import eu.apenet.dpt.utils.eag2012.WorkPlaces;
 
@@ -411,17 +416,8 @@ public class CreateEAG2012 {
 				// TODO: Review schema.
 				nonpreform.getContent().add(this.eag2012.getNonpreformValue().get(i));
 
-				// eag/archguide/identity/nonpreform/useDates
-				if (this.eag2012.getDateStandardDate() != null
-						|| (this.eag2012.getFromDateStandardDate() != null
-						&& this.eag2012.getToDateStandardDate() != null)) {
-					// TODO: Asked by mail.
-//					UseDates useDates = new UseDates();
-//					if (!this.eag2012.getDateStandardDate().isEmpty()) {
-//						
-//					}
-					// END TODO: Asked by mail.
-				}
+				// eag/archguide/identity/nonpreform/dates
+				getDates(nonpreform);
 
 				this.eag.getArchguide().getIdentity().getNonpreform().add(nonpreform);
 			}
@@ -430,7 +426,7 @@ public class CreateEAG2012 {
 		// eag/archguide/identity/repositoryType
 		if (this.eag2012.getRepositoryTypeValue() != null) {
 			for (int i = 0; i < this.eag2012.getRepositoryTypeValue().size(); i++) {
-				String[] repositoryTypeList = this.eag2012.getRepositoryTypeValue().get(i).split(",");
+				String[] repositoryTypeList = this.eag2012.getRepositoryTypeValue().get(i).split("_");
 				for (int j = 0; j < repositoryTypeList.length; j++) {
 					RepositoryType repositoryType = new RepositoryType();
 					repositoryType.setValue(repositoryTypeList[j]);
@@ -467,6 +463,15 @@ public class CreateEAG2012 {
 		// eag/archguide/desc/repositories/repository/repositoryRole
 
 		// eag/archguide/desc/repositories/repository/geogarea
+		if (this.eag2012.getGeogareaValue() != null) {
+			Geogarea geogarea = new Geogarea();
+			geogarea.setValue(this.eag2012.getGeogareaValue());
+
+			// For every repository.
+			for (int i = 0; i < this.eag.getArchguide().getDesc().getRepositories().getRepository().size(); i ++) {
+				this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i).setGeogarea(geogarea);
+			}
+		}
 
 		// eag/archguide/desc/repositories/repository/location
 		if (this.eag2012.getStreetLang() != null) {
@@ -1605,7 +1610,7 @@ public class CreateEAG2012 {
 		}
 
 		// eag/archguide/desc/repositories/repository/services/recreationalServices/refreshment
-// TODO:		getDescriptiveNoteForRefreshment();
+		getDescriptiveNoteForRefreshment();
 
 		// eag/archguide/desc/repositories/repository/services/recreationalServices/exhibition
 
@@ -1615,6 +1620,19 @@ public class CreateEAG2012 {
 
 		// eag/archguide/desc/repositories/repository/descriptivenote
 
+	}
+
+	/**
+	 * Method to recover dates.
+	 *
+	 * @param object The object to add the dates.
+	 */
+	private void getDates(final Object object) {
+		if (this.eag2012.getDateStandardDate() != null
+				|| (this.eag2012.getFromDateStandardDate() != null
+				&& this.eag2012.getToDateStandardDate() != null)) {
+			// TODO: Asked by mail.
+		}
 	}
 
 	/**
@@ -1701,8 +1719,8 @@ public class CreateEAG2012 {
 										Exhibition exhibition = (Exhibition) object;
 										if (exhibition.getDescriptiveNote() == null) {
 											exhibition.setDescriptiveNote(new DescriptiveNote());
+											exhibition.getDescriptiveNote().getP().add(p);
 										}
-										exhibition.getDescriptiveNote().getP().add(p);
 									}
 								}
 								// eag/archguide/desc/repositories/repository/services/recreationalServices/toursSessions/descriptiveNote/P
@@ -1712,8 +1730,8 @@ public class CreateEAG2012 {
 										ToursSessions toursSessions = (ToursSessions) object;
 										if (toursSessions.getDescriptiveNote() == null) {
 											toursSessions.setDescriptiveNote(new DescriptiveNote());
+											toursSessions.getDescriptiveNote().getP().add(p);
 										}
-										toursSessions.getDescriptiveNote().getP().add(p);
 									}
 								}
 								// eag/archguide/desc/repositories/repository/services/recreationalServices/otherServices/descriptiveNote/P
@@ -1723,8 +1741,8 @@ public class CreateEAG2012 {
 										OtherServices otherServices = (OtherServices) object;
 										if (otherServices.getDescriptiveNote() == null) {
 											otherServices.setDescriptiveNote(new DescriptiveNote());
+											otherServices.getDescriptiveNote().getP().add(p);
 										}
-										otherServices.getDescriptiveNote().getP().add(p);
 									}
 								}
 							}
@@ -1737,8 +1755,6 @@ public class CreateEAG2012 {
 
 	/**
 	 * Method to recover descriptiveNote for research services.
-	 *
-	 * @param object The object to add the descriptive note.
 	 */
 	private void getDescriptiveNoteForResearchServices() {
 		if (this.eag.getArchguide().getDesc().getRepositories().getRepository() != null
@@ -1792,6 +1808,72 @@ public class CreateEAG2012 {
 											researchServices.getDescriptiveNote().getP().add(p);
 
 											repository.getServices().getSearchroom().getResearchServices().add(researchServices);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Method to recover descriptiveNote for refreshment.
+	 */
+	private void getDescriptiveNoteForRefreshment() {
+		if (this.eag.getArchguide().getDesc().getRepositories().getRepository() != null
+				&& !this.eag.getArchguide().getDesc().getRepositories().getRepository().isEmpty()) {
+			for (int i = 0; i < this.eag.getArchguide().getDesc().getRepositories().getRepository().size(); i++) {
+				// Repository.
+				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+				if (repository.getServices() == null) {
+					repository.setServices(new Services());
+				}
+				if (repository.getServices().getRecreationalServices() == null) {
+					repository.getServices().setRecreationalServices(new RecreationalServices());
+				}
+
+				// Recover descriptiveNote for refreshment.
+				if (this.eag2012.getDescriptiveNotePValue() != null
+						&& this.eag2012.getDescriptiveNotePLang() != null) {
+					for (int j = 0; j < this.eag2012.getDescriptiveNotePValue().size(); j++) {
+						Map<String, Map<String, List<String>>> tabsValueMap = this.eag2012.getDescriptiveNotePValue().get(j);
+						Map<String, Map<String, List<String>>> tabsLangMap = this.eag2012.getDescriptiveNotePLang().get(j);
+						Iterator<String> tabsValueIt = tabsValueMap.keySet().iterator();
+						Iterator<String> tabsLangIt = tabsLangMap.keySet().iterator();
+						while (tabsValueIt.hasNext()) {
+							String tabValueKey = tabsValueIt.next();
+							String tabLangKey = tabsLangIt.next();
+
+							if (CreateEAG2012.TAB_ACCESS_AND_SERVICES.equalsIgnoreCase(tabValueKey)
+									&& CreateEAG2012.TAB_ACCESS_AND_SERVICES.equalsIgnoreCase(tabLangKey)) {
+								Map<String, List<String>> sectionsValueMap = tabsValueMap.get(tabValueKey);
+								Map<String, List<String>> sectionsLangMap = tabsLangMap.get(tabLangKey);
+								Iterator<String> sectionsValueIt = sectionsValueMap.keySet().iterator();
+								Iterator<String> sectionsLangIt = sectionsLangMap.keySet().iterator();
+								while (sectionsValueIt.hasNext()) {
+									String sectionValueKey = sectionsValueIt.next();
+									String sectionLangKey = sectionsLangIt.next();
+									List<String> valuesList = sectionsValueMap.get(sectionValueKey);
+									List<String> langList = sectionsLangMap.get(sectionLangKey);
+									for (int k = 0; k < valuesList.size(); k++) {
+										P p = new P();
+										p.setContent(valuesList.get(k));
+										p.setLang(langList.get(k));
+
+										// eag/archguide/desc/repositories/repository/services/recreationalSerices/refreshment/descriptiveNote/P
+										if (CreateEAG2012.REFRESHMENT.equalsIgnoreCase(sectionValueKey)
+												&& CreateEAG2012.REFRESHMENT.equalsIgnoreCase(sectionLangKey)) {
+												Refreshment refreshment = new Refreshment();
+											if (refreshment.getDescriptiveNote() == null) {
+												refreshment.setDescriptiveNote(new DescriptiveNote());
+											}
+
+											refreshment.getDescriptiveNote().getP().add(p);
+
+											repository.getServices().getRecreationalServices().setRefreshment(refreshment);
 										}
 									}
 								}

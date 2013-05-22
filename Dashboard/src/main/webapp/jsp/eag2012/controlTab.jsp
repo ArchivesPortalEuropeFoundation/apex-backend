@@ -19,7 +19,7 @@
 				<label for="textPesonResponsible"><s:property value="getText('label.ai.control.pesonresponsible')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textPesonResponsible" value="${personResponsibleForDescription}" />
+				<input type="text" id="textPesonResponsible" value="${personResponsibleForDescription}" onchange="controlPersonResponsibleForDescriptionChanged();" />
 			</td>
 			<td id="tdLanguagePesonresponsible" class="labelLeft">
 				<label for="selectLanguagePesonresponsible"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
