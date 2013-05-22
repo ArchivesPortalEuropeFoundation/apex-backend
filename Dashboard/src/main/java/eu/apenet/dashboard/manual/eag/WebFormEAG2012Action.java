@@ -1877,7 +1877,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 eag2012.setTelephoneValue(telephones);
 				 }
 				 if(accessTable.has("textASSREmailAddress")){
-					 List<Map<String, Map<String, List<String>>>> listMapEmailValueList = eag2012.getEmailValue();
+					 List<Map<String, Map<String, List<String>>>> listMapEmailValueList = eag2012.getEmailHref();
 					 if(listMapEmailValueList==null){
 						 listMapEmailValueList = new ArrayList<Map<String, Map<String, List<String>>>>();
 					 }
@@ -1907,10 +1907,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }else{
 						 listMapEmailValueList.add(email);
 					 }
-					 eag2012.setEmailValue(listMapEmailValueList);
+					 eag2012.setEmailHref(listMapEmailValueList);
 				 }
 				 if(accessTable.has("textASSREmailLinkTitle")){
-					 List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailHref();
+					 List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailValue();
 					 if(listMapEmailList==null){
 						 listMapEmailList = new ArrayList<Map<String, Map<String, List<String>>>>();
 					 }
@@ -1940,7 +1940,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }else{
 						 listMapEmailList.add(email);
 					 }
-					 eag2012.setEmailHref(listMapEmailList);
+					 eag2012.setEmailValue(listMapEmailList);
 				 }
 				 if(accessTable.has("textASSRWebpage")){
 					 List<Map<String, Map<String, List<String>>>> listMapWebpagelList = eag2012.getWebpageHref();
@@ -2478,7 +2478,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					
 					 if(accessTable.has("textASLEmailAddress")){
-						 List<Map<String, Map<String, List<String>>>> listMapEmailValueList = eag2012.getEmailValue();
+						 List<Map<String, Map<String, List<String>>>> listMapEmailValueList = eag2012.getEmailHref();
 						 if(listMapEmailValueList==null){
 							 listMapEmailValueList = new ArrayList<Map<String, Map<String, List<String>>>>();
 						 }
@@ -2508,11 +2508,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }else{
 							 listMapEmailValueList.add(email);
 						 }
-						 eag2012.setEmailValue(listMapEmailValueList);
+						 eag2012.setEmailHref(listMapEmailValueList);
 					 }
 					
 					 if(accessTable.has("textASLEmailLinkTitle")){
-						 List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailHref();
+						 List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailValue();
 						 if(listMapEmailList==null){
 							 listMapEmailList = new ArrayList<Map<String, Map<String, List<String>>>>();
 						 }
@@ -2542,7 +2542,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }else{
 							 listMapEmailList.add(email);
 						 }
-						 eag2012.setEmailHref(listMapEmailList);
+						 eag2012.setEmailValue(listMapEmailList);
 					 }
 		             
 					 if(accessTable.has("textASLWebpage")){
@@ -2915,7 +2915,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 				
 					 if(accessTable.has("textASRSEmail")){
-						 List<Map<String, Map<String, List<String>>>> listMapEmailValueList = eag2012.getEmailValue();
+						 List<Map<String, Map<String, List<String>>>> listMapEmailValueList = eag2012.getEmailHref();
 						 if(listMapEmailValueList==null){
 							 listMapEmailValueList = new ArrayList<Map<String, Map<String, List<String>>>>();
 						 }
@@ -2945,11 +2945,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }else{
 							 listMapEmailValueList.add(email);
 						 }
-						 eag2012.setEmailValue(listMapEmailValueList);
+						 eag2012.setEmailHref(listMapEmailValueList);
 					 }
 	                 
 					 if(accessTable.has("textASRSEmailLinkTitle")){
-						 List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailHref();
+						 List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailValue();
 						 if(listMapEmailList==null){
 							 listMapEmailList = new ArrayList<Map<String, Map<String, List<String>>>>();
 						 }
@@ -2979,7 +2979,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }else{
 							 listMapEmailList.add(email);
 						 }
-						 eag2012.setEmailHref(listMapEmailList);
+						 eag2012.setEmailValue(listMapEmailList);
 					 }
 	                
 					 if(accessTable.has("textASRSWebpage")){
@@ -3178,7 +3178,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 				
 					 if(accessTable.has("textASTSRSEmailAddress")){
-						 List<Map<String, Map<String, List<String>>>> listMapEmailValueList = eag2012.getEmailValue();
+						 List<Map<String, Map<String, List<String>>>> listMapEmailValueList = eag2012.getEmailHref();
 						 if(listMapEmailValueList==null){
 							 listMapEmailValueList = new ArrayList<Map<String, Map<String, List<String>>>>();
 						 }
@@ -3208,11 +3208,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }else{
 							 listMapEmailValueList.add(email);
 						 }
-						 eag2012.setEmailValue(listMapEmailValueList);
+						 eag2012.setEmailHref(listMapEmailValueList);
 					 }
 	                 
 					 if(accessTable.has("textASTSEmailAddressLinkTitle")){
-						 List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailHref();
+						 List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailValue();
 						 if(listMapEmailList==null){
 							 listMapEmailList = new ArrayList<Map<String, Map<String, List<String>>>>();
 						 }
@@ -3242,7 +3242,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }else{
 							 listMapEmailList.add(email);
 						 }
-						 eag2012.setEmailHref(listMapEmailList);
+						 eag2012.setEmailValue(listMapEmailList);
 					 }
 	                
 					 if(accessTable.has("textASTSRSWebpage")){
