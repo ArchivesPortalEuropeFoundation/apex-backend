@@ -3998,9 +3998,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						//begin listDistrict
 						List<List<String>> localEntityValue = null;
 						if(eag2012.getLocalentityValue()==null){
-							localEntityValue = eag2012.getLocalentityValue();
-						}else{
 							localEntityValue = new ArrayList<List<String>>();
+						}else{
+							localEntityValue = eag2012.getLocalentityValue();
 						}
 						if(localEntityValue.size()>x){
 							localEntityValue.set(x,listDistrict);
