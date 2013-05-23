@@ -3,25 +3,14 @@ package eu.apenet.dashboard.actions.ajax;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.apache.struts2.interceptor.ServletRequestAware;
-import org.apache.struts2.interceptor.ServletResponseAware;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.Preparable;
 
 import eu.apenet.commons.infraestructure.ArchivalInstitutionUnit;
 import eu.apenet.commons.infraestructure.HoldingsGuideUnit;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 
-public class AjaxEAGHandlerAction extends AbstractInstitutionAction implements ServletRequestAware, ServletResponseAware {
+public class AjaxEAGHandlerAction extends AbstractInstitutionAction{
 	
 	private static final long serialVersionUID = -1232516884380663688L;
 
@@ -37,22 +26,7 @@ public class AjaxEAGHandlerAction extends AbstractInstitutionAction implements S
 	private static String INFORMATION_MESSAGE = "\"informationMessage\": ";
 	
 
-	private HttpServletResponse response;
-	private HttpServletRequest request;
-	
 
-
-	@Override
-	public void setServletResponse(HttpServletResponse response) {
-		this.response = response;
-
-	}
-
-	@Override
-	public void setServletRequest(HttpServletRequest request) {
-		this.request = request;
-
-	}
 
 	
 	public String execute() {
@@ -64,10 +38,10 @@ public class AjaxEAGHandlerAction extends AbstractInstitutionAction implements S
 	public String generaterepositorguidePossibleHGTitlePartJSON() {
 		
 		try {
-			request.setCharacterEncoding(UTF8);
-			response.setCharacterEncoding(UTF8);
-			response.setContentType("application/json");
-			Writer writer = new OutputStreamWriter(response.getOutputStream(), UTF8);
+			getServletRequest().setCharacterEncoding(UTF8);
+			getServletResponse().setCharacterEncoding(UTF8);
+			getServletResponse().setContentType("application/json");
+			Writer writer = new OutputStreamWriter(getServletResponse().getOutputStream(), UTF8);
 			writer.write(getHoldingsGuideIndexedJSON().toString());
 			writer.close();
 			
@@ -111,10 +85,10 @@ public class AjaxEAGHandlerAction extends AbstractInstitutionAction implements S
 		StringBuffer buffer = new StringBuffer();
 		
 		try {
-			request.setCharacterEncoding(UTF8);
-			response.setCharacterEncoding(UTF8);
-			response.setContentType("application/json");
-			Writer writer = new OutputStreamWriter(response.getOutputStream(), UTF8);
+			getServletRequest().setCharacterEncoding(UTF8);
+			getServletResponse().setCharacterEncoding(UTF8);
+			getServletResponse().setContentType("application/json");
+			Writer writer = new OutputStreamWriter(getServletResponse().getOutputStream(), UTF8);
 			
 			buffer.append(START_ARRAY);
 			buffer.append(START_ITEM);
