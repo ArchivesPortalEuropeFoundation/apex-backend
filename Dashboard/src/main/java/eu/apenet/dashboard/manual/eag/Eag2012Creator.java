@@ -596,7 +596,7 @@ public class Eag2012Creator {
         for(int i=0;this.eag2012.getCitationValue()!=null && i<this.eag2012.getCitationValue().size();i++){ // citation mandatory, repeatable
           childControlChildren.add(buildCitation(this.eag2012.getCitationId().get(0).get(i),this.eag2012.getCitationLang().get(0).get(i),this.eag2012.getCitationLastDateTimeVerified().get(0).get(i),this.eag2012.getCitationHref().get(0).get(i),this.eag2012.getCitationValue().get(0).get(i)));
         }
-        childControlChildren.add(buildAbbreviation(this.eag2012.getAbbreviationId(),this.eag2012.getAbbreviationLang(),this.eag2012.getAbbreviationValue())); //no-mandatory, no-repeatable
+/* TODO        childControlChildren.add(buildAbbreviation(this.eag2012.getAbbreviationId(),this.eag2012.getAbbreviationLang(),this.eag2012.getAbbreviationValue())); //no-mandatory, no-repeatable */
         childControlChildren.add(buildDescriptiveNote(0,TAB_CONTROL,LOCAL_TYPE_DECLARATION,0)); //no-mandatory,no-repeatable 
         childControl.put("children",childControlChildren);
         return childControl;
@@ -637,7 +637,7 @@ public class Eag2012Creator {
         childControl.put("nodeValue", null);
 
         ArrayList<HashMap<String, Object>> childControlChildren = new ArrayList<HashMap<String,Object>>();
-        childControlChildren.add(buildAbbreviation(this.eag2012.getAbbreviationId(),this.eag2012.getAbbreviationLang(),this.eag2012.getAbbreviationValue())); //no-mandatory,no-repeatable
+/* TODO        childControlChildren.add(buildAbbreviation(this.eag2012.getAbbreviationId(),this.eag2012.getAbbreviationLang(),this.eag2012.getAbbreviationValue())); //no-mandatory,no-repeatable */
         for(int i=0;this.eag2012.getCitationValue()!=null && i<this.eag2012.getCitationValue().size();i++){ //mandatory, repeatable
         	childControlChildren.add(buildCitation(this.eag2012.getCitationId().get(0).get(i),this.eag2012.getCitationLang().get(0).get(i),this.eag2012.getCitationLastDateTimeVerified().get(0).get(i),this.eag2012.getCitationHref().get(0).get(i),this.eag2012.getCitationValue().get(0).get(i))); //get(0) is reserve for citation into TAB_CONTROL
         }
@@ -674,8 +674,8 @@ public class Eag2012Creator {
 	        
 		        ArrayList<HashMap<String, Object>> childControl1Children = new ArrayList<HashMap<String,Object>>();
 		        
-		        childControl1Children.add(buildLanguage(this.eag2012.getLanguageLanguageCode(),this.eag2012.getLanguageId(),this.eag2012.getLanguageLang(),this.eag2012.getLanguageValue())); //mandatory, non-repeatable 
-		        childControl1Children.add(buildScript(this.eag2012.getScriptScriptCode(),this.eag2012.getScriptId(),this.eag2012.getScriptLang(),this.eag2012.getScriptValue())); //mandatory, non-repeatable
+/* TODO		        childControl1Children.add(buildLanguage(this.eag2012.getLanguageLanguageCode(),this.eag2012.getLanguageId(),this.eag2012.getLanguageLang(),this.eag2012.getLanguageValue())); //mandatory, non-repeatable */ 
+/* TODO		        childControl1Children.add(buildScript(this.eag2012.getScriptScriptCode(),this.eag2012.getScriptId(),this.eag2012.getScriptLang(),this.eag2012.getScriptValue())); //mandatory, non-repeatable */
 		        childControl1Children.add(buildDescriptiveNote(0,TAB_CONTROL,LANGUAGE_DECLARATIONS,languageDeclarationIndex));
 		        
 	        childControl1.put("children", childControl1Children);

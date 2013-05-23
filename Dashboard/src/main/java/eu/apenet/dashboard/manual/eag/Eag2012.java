@@ -78,9 +78,9 @@ public class Eag2012 {
 	private String eventTypeValue;
 	private List<String> languageDeclarationId;
 	private List<String> languageDeclarationLang;
-	private String languageLanguageCode;
+	private List<String> languageLanguageCode;
 	private String languageId;
-	private String scriptScriptCode;
+	private List<String> scriptScriptCode;
 	private String scriptId;
 	private String scriptLang;
 	private String scriptValue;
@@ -88,9 +88,9 @@ public class Eag2012 {
 	private String languageValue;
 	private List<String> conventionDeclarationId;
 	private List<String> conventionDeclarationLang;
-	private String abbreviationId;
-	private String abbreviationLang;
-	private String abbreviationValue;
+	private List<String> abbreviationId;
+	private List<String> abbreviationLang;
+	private List<String> abbreviationValue;
 	private List<List<String>> citationId; //first index if control tab, next elements are into repo_# --> <repository></directions></citation></repository>
 	private List<List<String>> citationLang;
 	private List<List<String>> citationLastDateTimeVerified;
@@ -108,26 +108,26 @@ public class Eag2012 {
 	private List<String> termId;
 	private List<String> termLang;
 	private List<String> termValue;
-	private List<Map<String,Map<String,Map<String,List<String>>>>> dateNotAfter;
-	private List<Map<String,Map<String,Map<String,List<String>>>>> dateNotBefore;
-	private List<Map<String,Map<String,Map<String,List<String>>>>> dateStandardDate;
-	private List<Map<String,Map<String,Map<String,List<String>>>>> dateId;
-	private List<Map<String,Map<String,Map<String,List<String>>>>> dateLang;
-	private List<Map<String,Map<String,Map<String,List<String>>>>> dateValue;
+	private List<Map<String,Map<String,Map<String,List<List<String>>>>>> dateNotAfter;
+	private List<Map<String,Map<String,Map<String,List<List<String>>>>>> dateNotBefore;
+	private List<Map<String,Map<String,Map<String,List<List<String>>>>>> dateStandardDate;
+	private List<Map<String,Map<String,Map<String,List<List<String>>>>>> dateId;
+	private List<Map<String,Map<String,Map<String,List<List<String>>>>>> dateLang;
+	private List<Map<String,Map<String,Map<String,List<List<String>>>>>> dateValue;
 	private List<Map<String,List<String>>> dateRangeId;
 	private List<Map<String,List<String>>> dateRangeLang;
-	private List<Map<String,List<String>>> toDateNotAfter;
-	private List<Map<String,List<String>>> toDateNotBefore;
-	private List<Map<String, Map<String, Map<String, List<String>>>>> toDateStandardDate;
-	private List<Map<String,List<String>>> fromDateNotAfter;
-	private List<Map<String,List<String>>> fromDateNotBefore;
-	private List<Map<String, Map<String, Map<String, List<String>>>>> fromDateStandardDate;
-	private List<Map<String,List<String>>> fromDateId;
-	private List<Map<String,List<String>>> fromDateLang;
-	private List<Map<String,List<String>>> fromDateValue;
-	private List<Map<String,List<String>>> toDateId;
-	private List<Map<String,List<String>>> toDateLang;
-	private List<Map<String,List<String>>> toDateValue;
+	private List<Map<String,Map<String,Map<String,List<List<String>>>>>> toDateNotAfter;
+	private List<Map<String,Map<String,Map<String,List<List<String>>>>>> toDateNotBefore;
+	private List<Map<String,Map<String,Map<String,List<List<String>>>>>> toDateStandardDate;
+	private List<Map<String,Map<String,Map<String,List<List<String>>>>>> fromDateNotAfter;
+	private List<Map<String,Map<String,Map<String,List<List<String>>>>>> fromDateNotBefore;
+	private List<Map<String,Map<String,Map<String,List<List<String>>>>>> fromDateStandardDate;
+	private List<Map<String,Map<String,Map<String,List<List<String>>>>>> fromDateId;
+	private List<Map<String,Map<String,Map<String,List<List<String>>>>>> fromDateLang;
+	private List<Map<String,Map<String,Map<String,List<List<String>>>>>> fromDateValue;
+	private List<Map<String,Map<String,Map<String,List<List<String>>>>>> toDateId;
+	private List<Map<String,Map<String,Map<String,List<List<String>>>>>> toDateLang;
+	private List<Map<String,Map<String,Map<String,List<List<String>>>>>> toDateValue;
 	private List<String> localTypeDeclarationId;
 	private List<String> localTypeDeclarationLang;
 	private String publicationStatusId;
@@ -579,11 +579,11 @@ public class Eag2012 {
 		this.languageDeclarationLang = languageDeclarationLang;
 	}
 
-	public String getLanguageLanguageCode() {
+	public List<String> getLanguageLanguageCode() {
 		return languageLanguageCode;
 	}
 
-	public void setLanguageLanguageCode(String languageLanguageCode) {
+	public void setLanguageLanguageCode(List<String> languageLanguageCode) {
 		this.languageLanguageCode = languageLanguageCode;
 	}
 
@@ -595,11 +595,11 @@ public class Eag2012 {
 		this.languageId = languageId;
 	}
 
-	public String getScriptScriptCode() {
+	public List<String> getScriptScriptCode() {
 		return scriptScriptCode;
 	}
 
-	public void setScriptScriptCode(String scriptScriptCode) {
+	public void setScriptScriptCode(List<String> scriptScriptCode) {
 		this.scriptScriptCode = scriptScriptCode;
 	}
 
@@ -659,27 +659,27 @@ public class Eag2012 {
 		this.conventionDeclarationLang = conventionDeclarationLang;
 	}
 
-	public String getAbbreviationId() {
+	public List<String> getAbbreviationId() {
 		return abbreviationId;
 	}
 
-	public void setAbbreviationId(String abbreviationId) {
+	public void setAbbreviationId(List<String> abbreviationId) {
 		this.abbreviationId = abbreviationId;
 	}
 
-	public String getAbbreviationLang() {
+	public List<String> getAbbreviationLang() {
 		return abbreviationLang;
 	}
 
-	public void setAbbreviationLang(String abbreviationLang) {
+	public void setAbbreviationLang(List<String> abbreviationLang) {
 		this.abbreviationLang = abbreviationLang;
 	}
 
-	public String getAbbreviationValue() {
+	public List<String> getAbbreviationValue() {
 		return abbreviationValue;
 	}
 
-	public void setAbbreviationValue(String abbreviationValue) {
+	public void setAbbreviationValue(List<String> abbreviationValue) {
 		this.abbreviationValue = abbreviationValue;
 	}
 
@@ -820,51 +820,51 @@ public class Eag2012 {
 		this.termValue = termValue;
 	}
 
-	public List<Map<String, Map<String, Map<String, List<String>>>>> getDateNotAfter() {
+	public List<Map<String, Map<String, Map<String, List<List<String>>>>>> getDateNotAfter() {
 		return dateNotAfter;
 	}
 
-	public void setDateNotAfter(List<Map<String, Map<String, Map<String, List<String>>>>> dateNotAfter) {
+	public void setDateNotAfter(List<Map<String, Map<String, Map<String, List<List<String>>>>>> dateNotAfter) {
 		this.dateNotAfter = dateNotAfter;
 	}
 
-	public List<Map<String, Map<String, Map<String, List<String>>>>> getDateNotBefore() {
+	public List<Map<String, Map<String, Map<String, List<List<String>>>>>> getDateNotBefore() {
 		return dateNotBefore;
 	}
 
-	public void setDateNotBefore(List<Map<String, Map<String, Map<String, List<String>>>>> dateNotBefore) {
+	public void setDateNotBefore(List<Map<String, Map<String, Map<String, List<List<String>>>>>> dateNotBefore) {
 		this.dateNotBefore = dateNotBefore;
 	}
 
-	public List<Map<String, Map<String, Map<String, List<String>>>>> getDateStandardDate() {
+	public List<Map<String, Map<String, Map<String, List<List<String>>>>>> getDateStandardDate() {
 		return dateStandardDate;
 	}
 
-	public void setDateStandardDate(List<Map<String, Map<String, Map<String, List<String>>>>> dateStandardDate) {
+	public void setDateStandardDate(List<Map<String, Map<String, Map<String, List<List<String>>>>>> dateStandardDate) {
 		this.dateStandardDate = dateStandardDate;
 	}
 
-	public List<Map<String, Map<String, Map<String, List<String>>>>> getDateId() {
+	public List<Map<String, Map<String, Map<String, List<List<String>>>>>> getDateId() {
 		return dateId;
 	}
 
-	public void setDateId(List<Map<String, Map<String, Map<String, List<String>>>>> dateId) {
+	public void setDateId(List<Map<String, Map<String, Map<String, List<List<String>>>>>> dateId) {
 		this.dateId = dateId;
 	}
 
-	public List<Map<String, Map<String, Map<String, List<String>>>>> getDateLang() {
+	public List<Map<String, Map<String, Map<String, List<List<String>>>>>> getDateLang() {
 		return dateLang;
 	}
 
-	public void setDateLang(List<Map<String, Map<String, Map<String, List<String>>>>> dateLang) {
+	public void setDateLang(List<Map<String, Map<String, Map<String, List<List<String>>>>>> dateLang) {
 		this.dateLang = dateLang;
 	}
 
-	public List<Map<String, Map<String, Map<String, List<String>>>>> getDateValue() {
+	public List<Map<String, Map<String, Map<String, List<List<String>>>>>> getDateValue() {
 		return dateValue;
 	}
 
-	public void setDateValue(List<Map<String, Map<String, Map<String, List<String>>>>> dateValue) {
+	public void setDateValue(List<Map<String, Map<String, Map<String, List<List<String>>>>>> dateValue) {
 		this.dateValue = dateValue;
 	}
 
@@ -876,27 +876,27 @@ public class Eag2012 {
 		this.dateRangeId = dateRangeId;
 	}
 
-	public List<Map<String, List<String>>> getToDateNotAfter() {
+	public List<Map<String, Map<String, Map<String, List<List<String>>>>>> getToDateNotAfter() {
 		return toDateNotAfter;
 	}
 
-	public void setToDateNotAfter(List<Map<String, List<String>>> toDateNotAfter) {
+	public void setToDateNotAfter(List<Map<String, Map<String, Map<String, List<List<String>>>>>> toDateNotAfter) {
 		this.toDateNotAfter = toDateNotAfter;
 	}
 
-	public List<Map<String, List<String>>> getToDateNotBefore() {
+	public List<Map<String, Map<String, Map<String, List<List<String>>>>>> getToDateNotBefore() {
 		return toDateNotBefore;
 	}
 
-	public void setToDateNotBefore(List<Map<String, List<String>>> toDateNotBefore) {
+	public void setToDateNotBefore(List<Map<String, Map<String, Map<String, List<List<String>>>>>> toDateNotBefore) {
 		this.toDateNotBefore = toDateNotBefore;
 	}
 
-	public List<Map<String, Map<String, Map<String, List<String>>>>> getToDateStandardDate() {
+	public List<Map<String, Map<String, Map<String, List<List<String>>>>>> getToDateStandardDate() {
 		return toDateStandardDate;
 	}
 
-	public void setToDateStandardDate(List<Map<String, Map<String, Map<String, List<String>>>>> toDateStandardDate) {
+	public void setToDateStandardDate(List<Map<String, Map<String, Map<String, List<List<String>>>>>> toDateStandardDate) {
 		this.toDateStandardDate = toDateStandardDate;
 	}
 
@@ -908,75 +908,75 @@ public class Eag2012 {
 		this.dateRangeLang = dateRangeLang;
 	}
 
-	public List<Map<String, List<String>>> getFromDateNotAfter() {
+	public List<Map<String, Map<String, Map<String, List<List<String>>>>>> getFromDateNotAfter() {
 		return fromDateNotAfter;
 	}
 
-	public void setFromDateNotAfter(List<Map<String, List<String>>> fromDateNotAfter) {
+	public void setFromDateNotAfter(List<Map<String, Map<String, Map<String, List<List<String>>>>>> fromDateNotAfter) {
 		this.fromDateNotAfter = fromDateNotAfter;
 	}
 
-	public List<Map<String, List<String>>> getFromDateNotBefore() {
+	public List<Map<String, Map<String, Map<String, List<List<String>>>>>> getFromDateNotBefore() {
 		return fromDateNotBefore;
 	}
 
-	public void setFromDateNotBefore(List<Map<String, List<String>>> fromDateNotBefore) {
+	public void setFromDateNotBefore(List<Map<String, Map<String, Map<String, List<List<String>>>>>> fromDateNotBefore) {
 		this.fromDateNotBefore = fromDateNotBefore;
 	}
 
-	public List<Map<String, Map<String, Map<String, List<String>>>>> getFromDateStandardDate() {
+	public List<Map<String, Map<String, Map<String, List<List<String>>>>>> getFromDateStandardDate() {
 		return fromDateStandardDate;
 	}
 
-	public void setFromDateStandardDate(List<Map<String, Map<String, Map<String, List<String>>>>> fromDateStandardDate) {
+	public void setFromDateStandardDate(List<Map<String, Map<String, Map<String, List<List<String>>>>>> fromDateStandardDate) {
 		this.fromDateStandardDate = fromDateStandardDate;
 	}
 
-	public List<Map<String, List<String>>> getFromDateId() {
+	public List<Map<String, Map<String, Map<String, List<List<String>>>>>> getFromDateId() {
 		return fromDateId;
 	}
 
-	public void setFromDateId(List<Map<String, List<String>>> fromDateId) {
+	public void setFromDateId(List<Map<String, Map<String, Map<String, List<List<String>>>>>> fromDateId) {
 		this.fromDateId = fromDateId;
 	}
 
-	public List<Map<String, List<String>>> getFromDateLang() {
+	public List<Map<String, Map<String, Map<String, List<List<String>>>>>> getFromDateLang() {
 		return fromDateLang;
 	}
 
-	public void setFromDateLang(List<Map<String, List<String>>> fromDateLang) {
+	public void setFromDateLang(List<Map<String, Map<String, Map<String, List<List<String>>>>>> fromDateLang) {
 		this.fromDateLang = fromDateLang;
 	}
 
-	public List<Map<String, List<String>>> getFromDateValue() {
+	public List<Map<String, Map<String, Map<String, List<List<String>>>>>> getFromDateValue() {
 		return fromDateValue;
 	}
 
-	public void setFromDateValue(List<Map<String, List<String>>> fromDateValue) {
+	public void setFromDateValue(List<Map<String, Map<String, Map<String, List<List<String>>>>>> fromDateValue) {
 		this.fromDateValue = fromDateValue;
 	}
 
-	public List<Map<String, List<String>>> getToDateId() {
+	public List<Map<String, Map<String, Map<String, List<List<String>>>>>> getToDateId() {
 		return toDateId;
 	}
 
-	public void setToDateId(List<Map<String, List<String>>> toDateId) {
+	public void setToDateId(List<Map<String, Map<String, Map<String, List<List<String>>>>>> toDateId) {
 		this.toDateId = toDateId;
 	}
 
-	public List<Map<String, List<String>>> getToDateLang() {
+	public List<Map<String, Map<String, Map<String, List<List<String>>>>>> getToDateLang() {
 		return toDateLang;
 	}
 
-	public void setToDateLang(List<Map<String, List<String>>> toDateLang) {
+	public void setToDateLang(List<Map<String, Map<String, Map<String, List<List<String>>>>>> toDateLang) {
 		this.toDateLang = toDateLang;
 	}
 
-	public List<Map<String, List<String>>> getToDateValue() {
+	public List<Map<String, Map<String, Map<String, List<List<String>>>>>> getToDateValue() {
 		return toDateValue;
 	}
 
-	public void setToDateValue(List<Map<String, List<String>>> toDateValue) {
+	public void setToDateValue(List<Map<String, Map<String, Map<String, List<List<String>>>>>> toDateValue) {
 		this.toDateValue = toDateValue;
 	}
 
