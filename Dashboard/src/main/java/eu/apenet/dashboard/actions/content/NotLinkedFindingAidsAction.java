@@ -1,31 +1,20 @@
 package eu.apenet.dashboard.actions.content;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.interceptor.ServletRequestAware;
-
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.dao.FindingAidDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 
-public class NotLinkedFindingAidsAction extends AbstractInstitutionAction implements ServletRequestAware{
+public class NotLinkedFindingAidsAction extends AbstractInstitutionAction{
 
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 4513310293148562803L;
-    private HttpServletRequest request;
     private Integer id;
 	private Integer pageNumber = 1;
 	private Integer resultPerPage = 100;
-
-	@Override
-	public void setServletRequest(HttpServletRequest request) {
-		this.request= request;
-		
-	}
 
 	public Integer getId() {
 		return id;
@@ -68,10 +57,10 @@ public class NotLinkedFindingAidsAction extends AbstractInstitutionAction implem
 	public String execute() throws Exception {
 		FindingAidDAO faDAO = DAOFactory.instance().getFindingAidDAO();
 		CLevelDAO cLevelDAO = DAOFactory.instance().getCLevelDAO();
-		request.setAttribute("notUploadedFindingAids", cLevelDAO.getCLevelsOutOfSystemByHoldingsGuideId(getId(), resultPerPage, pageNumber));
-		request.setAttribute("countNotUploadedFindingAids", cLevelDAO.countCLevelsOutOfSystemByHoldingsGuideId(getId()));
-		request.setAttribute("notIndexedFindingAids", faDAO.getFindingAidsByHoldingsGuideId(getId(),false, resultPerPage, pageNumber));
-		request.setAttribute("countNotIndexedFindingAids", faDAO.countFindingAidsByHoldingsGuideId(getId(),false));
+		getServletRequest().setAttribute("notUploadedFindingAids", cLevelDAO.getCLevelsOutOfSystemByHoldingsGuideId(getId(), resultPerPage, pageNumber));
+		getServletRequest().setAttribute("countNotUploadedFindingAids", cLevelDAO.countCLevelsOutOfSystemByHoldingsGuideId(getId()));
+		getServletRequest().setAttribute("notIndexedFindingAids", faDAO.getFindingAidsByHoldingsGuideId(getId(),false, resultPerPage, pageNumber));
+		getServletRequest().setAttribute("countNotIndexedFindingAids", faDAO.countFindingAidsByHoldingsGuideId(getId(),false));
 		return SUCCESS;
 	}
 
