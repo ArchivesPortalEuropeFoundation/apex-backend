@@ -12,21 +12,15 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.utils.ContentUtils;
 
-public class EadActions extends AbstractEadActions implements ServletResponseAware{
+public class EadActions extends AbstractEadActions{
 
 	private Integer id;
-	private HttpServletResponse response;
 	public Integer getId() {
 		return id;
 	}
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-	@Override
-	public void setServletResponse(HttpServletResponse response) {
-		this.response = response;
-		
 	}
 	
 
@@ -144,7 +138,7 @@ public class EadActions extends AbstractEadActions implements ServletResponseAwa
 	public String download() {
 		try {
 			File file = EadService.download(getId(), getXmlType());
-			ContentUtils.downloadXml(this.getServletRequest(), response,file);
+			ContentUtils.downloadXml(this.getServletRequest(), getServletResponse(),file);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}

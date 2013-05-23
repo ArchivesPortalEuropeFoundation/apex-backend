@@ -1,18 +1,16 @@
 package eu.apenet.dashboard.actions.content;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Properties;
+
 import javax.servlet.http.HttpSession;
 
-import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
 import org.apache.log4j.Logger;
-import org.apache.struts2.interceptor.ServletRequestAware;
 
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.AbstractInstitutionAction;
+import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
 
-import java.util.Properties;
-
-public abstract class AbstractEadActions extends AbstractInstitutionAction implements ServletRequestAware{
+public abstract class AbstractEadActions extends AbstractInstitutionAction{
     protected Logger logger = Logger.getLogger(getClass());
 	private static final String CONVERT_VALIDATE_PUBLISH = "convert_validate_publish";
 	private static final String DELETE = "delete";
@@ -30,20 +28,6 @@ public abstract class AbstractEadActions extends AbstractInstitutionAction imple
 	private static final long serialVersionUID = 8481634493528974541L;
 	private Integer xmlTypeId;
 	private String action;
-	private HttpServletRequest httpServletRequest;
-	
-	@Override
-	public void setServletRequest(HttpServletRequest httpServletRequest) {
-		this.httpServletRequest = httpServletRequest;
-	}
-
-	public HttpServletRequest getServletRequest() {
-		return httpServletRequest;
-	}
-
-	public void setHttpServletRequest(HttpServletRequest httpServletRequest) {
-		this.httpServletRequest = httpServletRequest;
-	}
 
 
 	public Integer getXmlTypeId() {
@@ -63,7 +47,7 @@ public abstract class AbstractEadActions extends AbstractInstitutionAction imple
 	}
     protected Properties getConversionParameters() {
         Properties parameters = new Properties();
-        HttpSession session = httpServletRequest.getSession();
+        HttpSession session = getServletRequest().getSession();
         String option_default = (String)session.getAttribute(AjaxControllerAbstractAction.OPTIONS_DEFAULT);
         String option_use_existing = (String)session.getAttribute(AjaxControllerAbstractAction.OPTIONS_USE_EXISTING);
         boolean option_use_existing_bool = true;

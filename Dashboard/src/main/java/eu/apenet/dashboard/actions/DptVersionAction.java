@@ -1,13 +1,13 @@
 package eu.apenet.dashboard.actions;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.services.DptUpdateService;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.DptUpdate;
-import org.apache.struts2.interceptor.ServletRequestAware;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * User: Yoann Moranville
@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author Yoann Moranville
  */
-public class DptVersionAction extends AbstractAction implements ServletRequestAware {
+public class DptVersionAction extends AbstractAction{
     private static final long serialVersionUID = 4754804143407258044L;
     private HttpServletRequest request;
 
@@ -59,8 +59,4 @@ public class DptVersionAction extends AbstractAction implements ServletRequestAw
         this.versionId = versionId;
     }
 
-    @Override
-    public void setServletRequest(HttpServletRequest request) {
-        this.request = request;
-    }
 }
