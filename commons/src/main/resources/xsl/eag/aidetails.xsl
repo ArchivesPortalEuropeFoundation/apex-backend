@@ -310,7 +310,7 @@
 							<xsl:if test="eag:access/eag:termsOfUse">
 								<xsl:call-template name="multilanguageWithChilds">
 									<xsl:with-param name="title">
-										<xsl:value-of select="ape:resource('eagcontent.readersticket')" />
+										<xsl:value-of select="ape:resource('eagcontent.termsofuse')" /><xsl:text>:</xsl:text>
 									</xsl:with-param>
 									<xsl:with-param name="list" select="eag:access/eag:termsOfUse" />
 									<xsl:with-param name="trClass" select="'longDisplay'" />
