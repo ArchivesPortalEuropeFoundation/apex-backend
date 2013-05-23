@@ -41,7 +41,7 @@ public class DeliverToEuropeanaTask extends AbstractEadTask {
 				EseState eseStatePublished = DAOFactory.instance().getEseStateDAO().getEseStateByState(EseState.PUBLISHED);
 				Date newModificationDate = new Date();
 				EseDAO esesDao = DAOFactory.instance().getEseDAO();
-				List<Ese> eses = esesDao.getEses(findingAid.getId());
+				List<Ese> eses = esesDao.getEses(findingAid.getId(), findingAid.getAiId());
 				if (eses != null && !eses.isEmpty()) {
 					Iterator<Ese> iterator = eses.iterator();
 					while (iterator.hasNext()) {

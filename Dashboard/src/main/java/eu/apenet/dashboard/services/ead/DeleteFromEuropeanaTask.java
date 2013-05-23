@@ -42,7 +42,7 @@ public class DeleteFromEuropeanaTask extends AbstractEadTask {
 				Date newModificationDate = new Date();
 				//Change ese_state from ese to "Removed"
 		        EseDAO esesDao = DAOFactory.instance().getEseDAO();
-		        List<Ese> eses = esesDao.getEses(findingAid.getId());
+		        List<Ese> eses = esesDao.getEses(findingAid.getId(), findingAid.getAiId());
 		        if(eses!=null && !eses.isEmpty()){
 		            Iterator<Ese> iterator = eses.iterator();
 		            while(iterator.hasNext()){

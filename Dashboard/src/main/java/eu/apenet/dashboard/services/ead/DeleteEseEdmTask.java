@@ -48,7 +48,7 @@ public class DeleteEseEdmTask extends AbstractEadTask {
 				// physically from the repository
 				List<Ese> eseList = new ArrayList<Ese>();
 				EseDAO eseDao = DAOFactory.instance().getEseDAO();
-				eseList = eseDao.getEses(ead.getId());
+				eseList = eseDao.getEses(ead.getId(), findingAid.getAiId());
 
 				for (int i = 0; i < eseList.size(); i++) {
 					Ese ese = eseList.get(i);
