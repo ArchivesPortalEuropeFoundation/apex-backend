@@ -1,17 +1,12 @@
 package eu.apenet.dashboard.security.actions;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.interceptor.ServletRequestAware;
-
 import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.security.SecurityContextContainer;
 import eu.apenet.dashboard.security.SecurityService;
 
-public class SessionManagementAction extends AbstractAction implements ServletRequestAware {
+public class SessionManagementAction extends AbstractAction {
 
 	private String sessionId;
-	private HttpServletRequest request;
 	
 	public String getSessionId() {
 		return sessionId;
@@ -31,17 +26,12 @@ public class SessionManagementAction extends AbstractAction implements ServletRe
 	}
 	@Override
 	public String execute(){
-		request.setAttribute("sessionInfos", SecurityContextContainer.retrieveSessionInfo());
+		getServletRequest().setAttribute("sessionInfos", SecurityContextContainer.retrieveSessionInfo());
 		return SUCCESS;
 	}
 	public String deleteSession(){
 		SecurityService.deleteSession(sessionId);
 		return SUCCESS;
-	}
-	@Override
-	public void setServletRequest(HttpServletRequest request) {
-		this.request = request;
-		
 	}
 	
 }

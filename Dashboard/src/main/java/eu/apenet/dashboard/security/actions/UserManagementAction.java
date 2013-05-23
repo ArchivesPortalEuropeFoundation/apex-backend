@@ -3,16 +3,12 @@ package eu.apenet.dashboard.security.actions;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.interceptor.ServletRequestAware;
-
 import eu.apenet.dashboard.AbstractAction;
-import eu.apenet.dashboard.security.UserService;
 import eu.apenet.dashboard.security.SecurityContextContainer;
 import eu.apenet.dashboard.security.SecurityService;
 import eu.apenet.dashboard.security.SecurityService.LoginResult;
 import eu.apenet.dashboard.security.SecurityService.LoginResult.LoginResultType;
+import eu.apenet.dashboard.security.UserService;
 import eu.apenet.persistence.dao.UserDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Country;
@@ -23,14 +19,13 @@ import eu.apenet.persistence.vo.UserRole;
  * @author bastiaan
  *
  */
-public class UserManagementAction extends AbstractAction  implements ServletRequestAware{
+public class UserManagementAction extends AbstractAction {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7359216603274196641L;
-	
-	private HttpServletRequest request;
+
 	private Integer partnerId;
 	
 	protected void buildBreadcrumbs() {
@@ -52,9 +47,8 @@ public class UserManagementAction extends AbstractAction  implements ServletRequ
 				countryAndManagers.add(new CountryAndManager(country));
 			}
 		}
-		request.setAttribute("countryAndManagers" , countryAndManagers);
-		request.setAttribute("admins", DAOFactory.instance().getUserDAO().getPartnersByRoleType(UserRole.ROLE_ADMIN));
-		//request.setAttribute("sessionInfos", SecurityContextContainer.retrieveSessionInfo());
+		getServletRequest().setAttribute("countryAndManagers" , countryAndManagers);
+		getServletRequest().setAttribute("admins", DAOFactory.instance().getUserDAO().getPartnersByRoleType(UserRole.ROLE_ADMIN));
 		return SUCCESS;
 	}
 	public String disableUser(){
@@ -86,12 +80,7 @@ public class UserManagementAction extends AbstractAction  implements ServletRequ
 	}
 
 
-	
-	@Override
-	public void setServletRequest(HttpServletRequest request) {
-		this.request = request;
-		
-	}
+
 	public Integer getPartnerId() {
 		return partnerId;
 	}
