@@ -10,14 +10,12 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.Preparable;
-
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.archivallandscape.ChangeAlIdentifiers;
 import eu.apenet.dashboard.manual.ManualHTTPUploader;
 import eu.apenet.dashboard.security.SecurityContext;
+import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.CountryDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -34,7 +32,7 @@ import eu.apenet.persistence.vo.HoldingsGuide;
  *
  */
 
-public class uploadALAction extends ActionSupport implements Preparable{
+public class uploadALAction extends AbstractAction{
 
 	/**
 	 * 
@@ -135,20 +133,12 @@ public class uploadALAction extends ActionSupport implements Preparable{
 			List<ArchivalInstitution> archivalInstitutionsToDelete) {
 		this.archivalInstitutionsToDelete = archivalInstitutionsToDelete;
 	}
-	private InputStream inputStream;	
 	
 
 	public Boolean getOverwrite() {
 		return Overwrite;
 	}
 
-	public InputStream getInputStream() {
-		return inputStream;
-	}
-
-	public void setInputStream(InputStream inputStream) {
-		this.inputStream = inputStream;
-	}
 
 	public void setOverwrite(Boolean overwrite) {
 		this.Overwrite = overwrite;
@@ -206,12 +196,6 @@ public class uploadALAction extends ActionSupport implements Preparable{
 		return this.fileName;
 	}
 	
-	private List<Breadcrumb> breadcrumbRoute;
-	
-	
-	public List<Breadcrumb> getBreadcrumbRoute(){
-		return this.breadcrumbRoute;
-	}
 	
 	public Long getFileSize() {
 		return fileSize;
@@ -294,20 +278,15 @@ public class uploadALAction extends ActionSupport implements Preparable{
 		this.archivalInstitutionsParentChanged = archivalInstitutionsParentChanged;
 	}
 
+
+
 	@Override
-	public void validate() {
-		super.validate();
-		buildBreadcrumb();
+	protected void buildBreadcrumbs() {
+		// TODO Auto-generated method stub
+		super.buildBreadcrumbs();
+		addBreadcrumb("index.action",getText("breadcrumb.section.dashboard"));
+		addBreadcrumb(getText("breadcrumb.section.uploadAL"));
 	}
-
-	private void buildBreadcrumb() {
-		this.breadcrumbRoute = new ArrayList<Breadcrumb>();
-		Breadcrumb breadcrumb = new Breadcrumb("index.action",getText("breadcrumb.section.dashboard"));
-		this.breadcrumbRoute.add(breadcrumb);
-		breadcrumb = new Breadcrumb(null,getText("breadcrumb.section.uploadAL"));
-		this.breadcrumbRoute.add(breadcrumb);
-	}
-
 	public void prepare() throws Exception {
 		
 		CountryDAO countryDao = DAOFactory.instance().getCountryDAO();
@@ -315,6 +294,7 @@ public class uploadALAction extends ActionSupport implements Preparable{
 		ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
 		
 		this.setInstitutionList(aiDao.getGroupsAndArchivalInstitutionsByCountryId(this.getCountry().getId(),"alorder", true ));
+		buildBreadcrumbs();
 	}
 	
 	public String execute() throws Exception{
@@ -627,77 +607,25 @@ public class uploadALAction extends ActionSupport implements Preparable{
    		   		   
 			try {
 				String pathCountry = al.getmyPath(al.getmyCountry());
-	            
-	            //if the xml of this country does not exist, error            
-	            File[] files = new File(pathCountry).listFiles();    	
-	        	if (files.length==0) 
+				File file = new File(pathCountry + al.getmyCountry() + "AL.xml");
+ 	
+	        	if (file.exists()) 
 	        	{ 
-	        		return "error";
+					ContentUtils.downloadXml(getServletRequest(), getServletResponse(), file);
+        		
 	        	}
 				else
 				{
-					File tempFile = new File(pathCountry + al.getmyCountry() + "AL.xml");
-					this.inputStream = new FileInputStream(tempFile);
-					this.httpFileFileName = tempFile.getName();
-					this.fileName = al.getmyCountry() + "AL.xml";
-	                this.fileSize = tempFile.length();
+					return "error";
+
 				}
 			} catch (Exception e){
 				LOGGER.error(e.getMessage());
 			}
-			al.storeOperation("Download al");
-			return al.download(inputStream);		   
+			return null;
 	   }
 
 
-
-////    public String downloadAL_fromDB() {
-////        ArchivalLandscape al = new ArchivalLandscape();
-////        try {
-////            StringWriter eadArchilvaLandscapeWriter = new StringWriter();
-////            CreateArchivalLandscapeEad createArchivalLandscapeEad = new CreateArchivalLandscapeEad(eadArchilvaLandscapeWriter);
-////
-////            CountryDAO countryDAO = DAOFactory.instance().getCountryDAO();
-////            Country country = countryDAO.findById(al.getCountryId());
-////            ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
-////
-////            createArchivalLandscapeEad.createEadContentData("Archives Portal Europe - Archival Landscape", "AL-"+country.getIsoname(), country.getIsoname(), null);
-////
-////            createArchivalLandscapeEad.addInsideEad(country);
-////            List<ArchivalInstitution> archivalInstitutions = archivalInstitutionDAO.getArchivalInstitutionsByCountryId(country.getId());
-////            for(ArchivalInstitution archivalInstitution : archivalInstitutions) {
-////                if(archivalInstitution.getParentAiId() == null) {
-////                    createArchivalLandscapeEad.addInsideEad(archivalInstitution);
-////                    recurenceLoop(createArchivalLandscapeEad, archivalInstitution);
-////                    createArchivalLandscapeEad.writeEndElement(); //close each C element for each main archival institution
-////                }
-////            }
-////            createArchivalLandscapeEad.writeEndElement(); //close each C element for each country
-////
-////            createArchivalLandscapeEad.closeEndFile();
-////            eadArchilvaLandscapeWriter.close();
-////
-////            inputStream = (IOUtils.toInputStream(eadArchilvaLandscapeWriter.toString()));
-////            fileName = "AL.xml";
-////
-////            al.storeOperation("Download al");
-////            return al.download(inputStream);
-////        } catch (Exception e) {
-////            LOGGER.error("Error downloading the local AL EAD for " + country.getCname(), e);
-////            return ERROR;
-////        }
-////    }
-//
-//    public void recurenceLoop(CreateArchivalLandscapeEad createArchivalLandscapeEad, ArchivalInstitution archivalInstitution) throws XMLStreamException {
-//        List<ArchivalInstitution> archivalInstitutionChildren = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionsByParentAiId(archivalInstitution.getAiId());
-//        for(ArchivalInstitution archivalInstitutionChild : archivalInstitutionChildren) {
-//            createArchivalLandscapeEad.addInsideEad(archivalInstitutionChild);
-//            recurenceLoop(createArchivalLandscapeEad, archivalInstitutionChild);
-//            createArchivalLandscapeEad.writeEndElement();
-//        }
-//    }
-//
-//
 
 	   public String changeAlIdFromUpload()   {
 			String result = null;
