@@ -3,11 +3,6 @@ package eu.apenet.dashboard.actions.content;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
-import com.opensymphony.xwork2.ActionSupport;
-import org.apache.struts2.interceptor.ServletRequestAware;
-
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.services.ead.EadService;
@@ -19,7 +14,7 @@ import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.ValidatedState;
 
-public class ContentManagerAction extends AbstractInstitutionAction implements ServletRequestAware {
+public class ContentManagerAction extends AbstractInstitutionAction{
 
 	private static final String TRUE = "true";
 	private static final String FALSE = "false";
@@ -52,7 +47,6 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 			QueuingState.READY.toString(), QueuingState.BUSY.toString(),
 			QueuingState.ERROR.toString() };
 	private Map<String, String> searchTermsFieldList = new LinkedHashMap<String, String>();
-	private HttpServletRequest request;
 	private Integer pageNumber = 1;
 	private Integer resultPerPage = 20;
 	private String orderByField = "id";
@@ -91,11 +85,6 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 		searchTermsFieldList.put("title", getText("content.message.title"));
 	}
 
-	@Override
-	public void setServletRequest(HttpServletRequest request) {
-		this.request = request;
-
-	}
 
 	public Integer getPageNumber() {
 		return pageNumber;
@@ -201,8 +190,8 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 			}
 
 		}
-		request.setAttribute("results", results);
-		request.setAttribute("harvestingStarted", EadService.isHarvestingStarted());
+		getServletRequest().setAttribute("results", results);
+		getServletRequest().setAttribute("harvestingStarted", EadService.isHarvestingStarted());
 		if (ajax) {
 			return SUCCESS_AJAX;
 		} else {
@@ -212,12 +201,12 @@ public class ContentManagerAction extends AbstractInstitutionAction implements S
 
 	@Override
 	public String execute() throws Exception {
-		request.getSession().setAttribute(EAD_SEARCH_OPTIONS, createNewEadSearchOptions());
+		getServletRequest().getSession().setAttribute(EAD_SEARCH_OPTIONS, createNewEadSearchOptions());
 		return SUCCESS;
 	}
 
 	private EadSearchOptions initFromExistingEadSearchOptions() {
-		EadSearchOptions eadSearchOptions = (EadSearchOptions) request.getSession().getAttribute(EAD_SEARCH_OPTIONS);
+		EadSearchOptions eadSearchOptions = (EadSearchOptions) getServletRequest().getSession().getAttribute(EAD_SEARCH_OPTIONS);
 		if (eadSearchOptions != null) {
 			if (eadSearchOptions.getConverted() != null) {
 				convertedStatus = new String[] { eadSearchOptions.getConverted().toString() };
