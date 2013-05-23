@@ -15,7 +15,7 @@
 				<s:property value="getText('label.ai.relations.websiteOfResource')" />:
 			</td>
 			<td>
-				<input type="text" id="textWebsiteOfResource" value="<s:property value="#websiteOfResource" />" />
+				<input type="text" id="textWebsiteOfResource" value="<s:property value="#websiteOfResource" />" onchange="relationsLinkToYourHolndingsGuideChanged();" />
 			</td>
 			<td id="tdTypeOfRelation">
 				<label for="selectTypeOfYourRelation"><s:property value="getText('label.ai.relations.typeOfRelation')" />:</label>
@@ -30,7 +30,7 @@
 				<s:property value="getText('label.ai.relations.titleOfRelatedMaterial')" />:
 			</td>
 			<td>
-				<input type="text" id="textTitleOfRelatedMaterial" value="<s:property value="#titleOfRelatedMaterial" />" />
+				<input type="text" id="textTitleOfRelatedMaterial" value="<s:property value="#titleOfRelatedMaterial" />" onchange="relationsLinkToYourHolndingsGuideTitleChanged();" />
 			</td>
 			<td colspan="2">
 			</td>

@@ -2775,6 +2775,10 @@ function relationAddNewResourceRelation(text1){
 	$("table#resourceRelationTable_"+(counter+1)+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
 	});
+
+	// Remove attr "onchange" for all elements of resource relation.
+	$("table#resourceRelationTable_"+(counter+1)+" input#textWebsiteOfResource").removeAttr("onchange");
+	$("table#resourceRelationTable_"+(counter+1)+" input#textTitleOfRelatedMaterial").removeAttr("onchange");
 }
 
 function relationAddNewInstitutionRelation(text1){
@@ -2946,4 +2950,12 @@ function linkToYourHolndingsGuideChanged(){
 
 function linkToYourHolndingsGuideTitleChanged(){
 	$("table#resourceRelationTable_1 #textTitleOfRelatedMaterial").attr("value", $("#textYIHoldingsGuideLinkTitle").val());
+}
+
+function relationsLinkToYourHolndingsGuideChanged(){
+	$("#textReferencetoyourinstitutionsholdingsguide").attr("value", $("table#resourceRelationTable_1 #textWebsiteOfResource").val());
+}
+
+function relationsLinkToYourHolndingsGuideTitleChanged(){
+	$("#textYIHoldingsGuideLinkTitle").attr("value", $("table#resourceRelationTable_1 #textTitleOfRelatedMaterial").val());
 }
