@@ -17,8 +17,6 @@ public interface EadContentDAO extends GenericDAO<EadContent, Long> {
 	public EadContent getEadContentByHoldingsGuideId(Integer holdingsGuideId);
     public EadContent getEadContentBySourceGuideId(Integer sgId);
 
-	public HoldingsGuide getHoldingsGuideByFindingAid(FindingAid findingAid);
-    
     public EadContent getEadContentByEadid(String eadid);
 
     public EadContent getEadContentByFileId(Integer fileId, Class<? extends Ead> clazz);

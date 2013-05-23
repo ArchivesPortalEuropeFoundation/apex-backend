@@ -41,13 +41,6 @@ public class EadContentHibernateDAO extends AbstractHibernateDAO<EadContent, Lon
         return null;
     }
 
-	@Override
-	public HoldingsGuide getHoldingsGuideByFindingAid(FindingAid findingAid) {
-		Criteria criteria = getSession().createCriteria(getPersistentClass(), "eadContent");
-		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		criteria.add(Restrictions.eq("eadContent.clevel.hrefEadid", findingAid.getEadid()));
-		return ((EadContent)criteria.uniqueResult()).getHoldingsGuide();
-	}
     
     @Override
 	public EadContent getEadContentByEadid(String eadid){
