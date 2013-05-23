@@ -1,34 +1,25 @@
 package eu.apenet.dashboard.security.actions;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.interceptor.ServletRequestAware;
-
 import eu.apenet.dashboard.AbstractAction;
-import eu.apenet.dashboard.security.UserService;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.security.SecurityService;
 import eu.apenet.dashboard.security.SecurityService.LoginResult;
 import eu.apenet.dashboard.security.SecurityService.LoginResult.LoginResultType;
+import eu.apenet.dashboard.security.UserService;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 
-public class InstitutionManagerManagementAction extends AbstractAction implements ServletRequestAware {
+public class InstitutionManagerManagementAction extends AbstractAction{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7836284338030276475L;
-	private HttpServletRequest request;
 	private Integer countryId;
 	private Integer aiId;
 	private Integer partnerId;
 
-	@Override
-	public void setServletRequest(HttpServletRequest request) {
-		this.request = request;
 
-	}
 
 	@Override
 	public String execute() throws Exception {
@@ -40,7 +31,7 @@ public class InstitutionManagerManagementAction extends AbstractAction implement
 		
 		// Get all the institutions belong to this list of partners. 
 		// It must take only the institutions that are not group, so the second parameter is false.
-		request.setAttribute("ais" , aiDao.getArchivalInstitutionsByCountryId(countryId, false));
+		getServletRequest().setAttribute("ais" , aiDao.getArchivalInstitutionsByCountryId(countryId, false));
 		 return SUCCESS;
 	}
 	public String disableUser(){
