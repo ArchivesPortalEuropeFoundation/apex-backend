@@ -43,13 +43,13 @@ public abstract class AbstractAction extends ActionSupport  implements Preparabl
 
 	
 	@Override 
-	public void setServletResponse(HttpServletResponse response) {
+	public final void setServletResponse(HttpServletResponse response) {
 		this.response = response;
 		
 	}
 
 	@Override
-	public void setServletRequest(HttpServletRequest request) {
+	public final void setServletRequest(HttpServletRequest request) {
 		this.request = request;
 		
 	}
