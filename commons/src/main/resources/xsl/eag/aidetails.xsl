@@ -30,14 +30,17 @@
 							<tr>
 								<th colspan="2">
 									<xsl:value-of select="ape:resource('eagcontent.contact')" />
-									<xsl:text> (</xsl:text>
-									<a class="displayLinkSeeMore" href="javascript:seeMore('contactDisplay','{$id}');">
-										<xsl:value-of select="ape:resource('eagcontent.seemore')" />
-									</a>
-									<a class="displayLinkSeeLess" href="javascript:seeLess('contactDisplay','{$id}');">
-										<xsl:value-of select="ape:resource('eagcontent.seeless')" />
-									</a>
-									<xsl:text>)</xsl:text>
+									<!-- Check if occult parts exists -->
+									<xsl:if test="eag:location[not(@localType) or @localType='visitors address']/eag:localentity/text() or eag:location[not(@localType) or @localType='visitors address']/eag:secondem/text() or eag:location/eag:firstdem/text() or eag:location[@localType='postal address'] or eag:fax and eag:fax/text() != ''">
+										<xsl:text> (</xsl:text>
+										<a class="displayLinkSeeMore" href="javascript:seeMore('contactDisplay','{$id}');">
+											<xsl:value-of select="ape:resource('eagcontent.seemore')" />
+										</a>
+										<a class="displayLinkSeeLess" href="javascript:seeLess('contactDisplay','{$id}');">
+											<xsl:value-of select="ape:resource('eagcontent.seeless')" />
+										</a>
+										<xsl:text>)</xsl:text>
+									</xsl:if>
 								</th>
 							</tr>
 						</thead>
@@ -787,14 +790,17 @@
 							<tr>
 								<th colspan="2">
 									<xsl:value-of select="ape:resource('eagcontent.archivesandholdings')" />
-									<xsl:text> (</xsl:text>
-									<a class="displayLinkSeeMore" href="javascript:seeMore('archivesDisplay','{$id}');">
-										<xsl:value-of select="ape:resource('eagcontent.seemore')" />
-									</a>
-									<a class="displayLinkSeeLess" href="javascript:seeLess('archivesDisplay','{$id}');">
-										<xsl:value-of select="ape:resource('eagcontent.seeless')" />
-									</a>
-									<xsl:text>)</xsl:text>
+									<!-- Check if occult parts exists -->
+									<xsl:if test="eag:holdings/eag:descriptiveNote/eag:p/text() or eag:repositorhist/eag:descriptiveNote/eag:p/text() or eag:repositorfound/eag:date/text() or eag:repositorfound/eag:rule/text() or ./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:repositorsup/eag:date/text() or eag:repositorsup/eag:rule/text() or eag:adminhierarchy/eag:adminunit/text() or eag:buildinginfo/eag:building/eag:descriptiveNote/eag:p/text() or eag:buildinginfo/eag:repositorarea/eag:num/text() or eag:buildinginfo/eag:lengthshelf/eag:num/text()">
+										<xsl:text> (</xsl:text>
+										<a class="displayLinkSeeMore" href="javascript:seeMore('archivesDisplay','{$id}');">
+											<xsl:value-of select="ape:resource('eagcontent.seemore')" />
+										</a>
+										<a class="displayLinkSeeLess" href="javascript:seeLess('archivesDisplay','{$id}');">
+											<xsl:value-of select="ape:resource('eagcontent.seeless')" />
+										</a>
+										<xsl:text>)</xsl:text>
+									</xsl:if>
 								</th>
 							</tr>
 						</thead>
@@ -968,14 +974,17 @@
 				<tr>
 					<th colspan="2">
 						<xsl:value-of select="ape:resource('eagcontent.other')" />
-						<xsl:text> (</xsl:text>
-						<a class="displayLinkSeeMore" href="javascript:seeMore('otherDisplay');">
-							<xsl:value-of select="ape:resource('eagcontent.seemore')" />
-						</a>
-						<a class="displayLinkSeeLess" href="javascript:seeLess('otherDisplay');">
-							<xsl:value-of select="ape:resource('eagcontent.seeless')" />
-						</a>
-						<xsl:text>)</xsl:text>
+						<!-- Check if occult parts exists -->
+						<xsl:if test="./eag:eag/eag:archguide/eag:identity/eag:nonpreform">
+							<xsl:text> (</xsl:text>
+							<a class="displayLinkSeeMore" href="javascript:seeMore('otherDisplay');">
+								<xsl:value-of select="ape:resource('eagcontent.seemore')" />
+							</a>
+							<a class="displayLinkSeeLess" href="javascript:seeLess('otherDisplay');">
+								<xsl:value-of select="ape:resource('eagcontent.seeless')" />
+							</a>
+							<xsl:text>)</xsl:text>
+						</xsl:if>
 					</th>
 				</tr>
 			</thead>
@@ -1045,8 +1054,7 @@
 				</xsl:if>
 
 				<!-- lastupdate -->
-				<xsl:if
-					test="./eag:eag/eag:control/eag:maintenanceHistory/eag:maintenanceEvent/eag:eventDateTime/text()">
+				<xsl:if test="./eag:eag/eag:control/eag:maintenanceHistory/eag:maintenanceEvent/eag:eventDateTime/text()">
 					<tr>
 						<td class="header">
 							<xsl:value-of select="ape:resource('eagcontent.lastupdate')" />:
