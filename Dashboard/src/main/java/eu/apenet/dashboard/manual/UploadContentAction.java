@@ -10,17 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.log4j.Logger;
-import org.apache.struts2.interceptor.ServletRequestAware;
-import org.apache.struts2.interceptor.ServletResponseAware;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,13 +39,11 @@ import eu.apenet.persistence.vo.UploadMethod;
  *
  * @author Yoann Moranville
  */
-public class UploadContentAction extends AbstractInstitutionAction implements ServletRequestAware, ServletResponseAware {
+public class UploadContentAction extends AbstractInstitutionAction {
  
 	private static final long serialVersionUID = -1321327143496576377L;
 	private final Logger log = Logger.getLogger(getClass());
 
-    private HttpServletResponse response;
-    private HttpServletRequest request;
 
     private List<String> uploadType;
     private final static String HTTP = "HTTP";
@@ -301,10 +294,10 @@ public class UploadContentAction extends AbstractInstitutionAction implements Se
     public String retrieveFtpData(){
         String UTF8 = "utf-8";
         try {
-            request.setCharacterEncoding(UTF8);
-            response.setCharacterEncoding(UTF8);
-            response.setContentType("application/json");
-            Writer writer = new OutputStreamWriter(response.getOutputStream(), UTF8);
+            getServletRequest().setCharacterEncoding(UTF8);
+            getServletResponse().setCharacterEncoding(UTF8);
+            getServletResponse().setContentType("application/json");
+            Writer writer = new OutputStreamWriter(getServletResponse().getOutputStream(), UTF8);
 
             Map<String, Object> session = ActionContext.getContext().getSession();
             if(uploader_ftp == null)
@@ -312,7 +305,7 @@ public class UploadContentAction extends AbstractInstitutionAction implements Se
             if(client == null)
                 client = (FTPClient) session.get("ftpClient");
 
-            String parentName = request.getParameter("parentName");
+            String parentName = getServletRequest().getParameter("parentName");
             log.info("ParentName: " + parentName);
 
             List<FTPFile> listFiles = uploader_ftp.getFTPFiles(client, parentName);
@@ -482,15 +475,7 @@ public class UploadContentAction extends AbstractInstitutionAction implements Se
             return directory + name;
         return directory + "/" + name;
     }
-    
-    @Override
-    public void setServletResponse(HttpServletResponse httpServletResponse) {
-        this.response = httpServletResponse;
-    }
-    @Override
-    public void setServletRequest(HttpServletRequest httpServletRequest) {
-        this.request = httpServletRequest;
-    }
+
 
     /**
      * Upload a File using HTTP protocol
