@@ -20,7 +20,7 @@ import java.util.Map;
  *
  * @author Yoann Moranville
  */
-public abstract class AjaxControllerAbstractAction extends AbstractInstitutionAction implements ServletRequestAware, ServletResponseAware {
+public abstract class AjaxControllerAbstractAction extends AbstractInstitutionAction {
     private static final long serialVersionUID = -385844504423841865L;
 
     protected static final String LIST_HARVEST = "listHarvestedFiles";
@@ -38,19 +38,17 @@ public abstract class AjaxControllerAbstractAction extends AbstractInstitutionAc
     protected static final Logger LOG = Logger.getLogger(AjaxControllerAbstractAction.class);
     protected static final String UTF8 = "utf-8";
 
-    protected HttpServletRequest request;
-    protected HttpServletResponse response;
 
     protected Writer openOutputWriter() throws IOException {
-        request.setCharacterEncoding(UTF8);
-        response.setCharacterEncoding(UTF8);
-        response.setContentType("application/json");
-        return new OutputStreamWriter(response.getOutputStream(), UTF8);
+        getServletRequest().setCharacterEncoding(UTF8);
+        getServletResponse().setCharacterEncoding(UTF8);
+        getServletResponse().setContentType("application/json");
+        return new OutputStreamWriter(getServletResponse().getOutputStream(), UTF8);
     }
 
     protected Map<String, String> getConversionParameters(){
         Map<String, String> parameters = new HashMap<String, String>();
-        HttpSession session = request.getSession();
+        HttpSession session = getServletRequest().getSession();
         String option_default = (String)session.getAttribute(AjaxControllerAbstractAction.OPTIONS_DEFAULT);
         String option_use_existing = (String)session.getAttribute(AjaxControllerAbstractAction.OPTIONS_USE_EXISTING);
         boolean option_use_existing_bool = !Boolean.parseBoolean(option_use_existing);
@@ -59,15 +57,6 @@ public abstract class AjaxControllerAbstractAction extends AbstractInstitutionAc
         return parameters;
     }
 
-    @Override
-    public void setServletRequest(HttpServletRequest httpServletRequest) {
-        this.request = httpServletRequest;
-    }
-
-    @Override
-    public void setServletResponse(HttpServletResponse httpServletResponse) {
-        this.response = httpServletResponse;
-    }
 
     @Override
     public String execute(){

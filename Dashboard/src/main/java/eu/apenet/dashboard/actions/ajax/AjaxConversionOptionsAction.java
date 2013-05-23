@@ -19,7 +19,7 @@ public class AjaxConversionOptionsAction extends AjaxControllerAbstractAction {
         try {
             Writer writer = openOutputWriter();
             try {
-                HttpSession session = request.getSession();
+                HttpSession session = getServletRequest().getSession();
                 String option_default = (String)session.getAttribute(OPTIONS_DEFAULT);
                 String option_use_existing = (String)session.getAttribute(OPTIONS_USE_EXISTING);
 
@@ -46,9 +46,9 @@ public class AjaxConversionOptionsAction extends AjaxControllerAbstractAction {
         try {
             Writer writer = openOutputWriter();
             try {
-                String option_default = request.getParameter(OPTIONS_DEFAULT);
-                String option_use_existing = request.getParameter(OPTIONS_USE_EXISTING);
-                HttpSession session = request.getSession();
+                String option_default = getServletRequest().getParameter(OPTIONS_DEFAULT);
+                String option_use_existing = getServletRequest().getParameter(OPTIONS_USE_EXISTING);
+                HttpSession session = getServletRequest().getSession();
                 session.setAttribute(OPTIONS_DEFAULT, option_default);
                 session.setAttribute(OPTIONS_USE_EXISTING, option_use_existing);
 

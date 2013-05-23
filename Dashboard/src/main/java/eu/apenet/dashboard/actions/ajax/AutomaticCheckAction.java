@@ -29,7 +29,7 @@ public class AutomaticCheckAction extends AjaxControllerAbstractAction {
 
     @Override
     public String execute() {
-        HttpSession session = request.getSession();
+        HttpSession session = getServletRequest().getSession();
         Integer ai_id = getAiId();
         if(session.getAttribute("listUploadedFiles") == null){
             //do conversion of the OAI DC harvested files into FAs
@@ -70,7 +70,7 @@ public class AutomaticCheckAction extends AjaxControllerAbstractAction {
     }
 
     public String dbToEadAjax() {
-        HttpSession session = request.getSession();
+        HttpSession session = getServletRequest().getSession();
         if(session.getAttribute("listUploadedFiles") == null){
             Writer writer = null;
             Integer ai_id = getAiId();

@@ -129,7 +129,7 @@ public class SelectFindingAidsAction extends AjaxControllerAbstractAction {
 
     @SuppressWarnings("unchecked")
     public List<Integer> getIdentifierSelectedFAs(){
-        HttpSession session = request.getSession();
+        HttpSession session = getServletRequest().getSession();
         if(session.getAttribute(LIST_IDS) != null)
             return (List<Integer>) session.getAttribute(LIST_IDS);
         return new ArrayList<Integer>();
@@ -137,7 +137,7 @@ public class SelectFindingAidsAction extends AjaxControllerAbstractAction {
 
     @SuppressWarnings("unchecked")
     public void setIdentifierSelectedFAs(List<Integer> listId){
-        HttpSession session = request.getSession();
+        HttpSession session = getServletRequest().getSession();
         session.setAttribute(LIST_IDS, listId);
     }
 

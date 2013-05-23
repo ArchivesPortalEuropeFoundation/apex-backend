@@ -76,7 +76,7 @@ public class HarvesterAjaxAction extends AjaxControllerAbstractAction {
             out.close();
             LOG.info("Retrieved token: " + token);
 
-            final HttpSession session = request.getSession();
+            final HttpSession session = getServletRequest().getSession();
 
 
             if(FI_TYPE.equals(oaiType)) { //Then we know each request will contain one or more complete FA
@@ -105,13 +105,13 @@ public class HarvesterAjaxAction extends AjaxControllerAbstractAction {
     }
 
     private void resetHarvestedFiles(){
-        HttpSession session = request.getSession();
+        HttpSession session = getServletRequest().getSession();
         if(session.getAttribute(LIST_HARVEST) != null)
             session.removeAttribute(LIST_HARVEST);
     }
 
     private LinkedList<File> getHarvestedFiles(){
-        HttpSession session = request.getSession();
+        HttpSession session = getServletRequest().getSession();
         if(session.getAttribute(LIST_HARVEST) != null)
             return (LinkedList<File>) session.getAttribute(LIST_HARVEST);
         return new LinkedList<File>();

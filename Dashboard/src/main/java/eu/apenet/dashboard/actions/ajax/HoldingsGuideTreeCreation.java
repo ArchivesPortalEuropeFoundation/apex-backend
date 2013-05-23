@@ -22,7 +22,6 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 
-import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
@@ -49,6 +48,7 @@ import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.UpFile;
 import eu.apenet.persistence.vo.UploadMethod;
 import eu.apenet.persistence.vo.ValidatedState;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 /**
  * User: Yoann Moranville
@@ -113,7 +113,7 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
 
     private List<FindingAid> getAllFindingAids(ArchivalInstitution archivalInstitution){
         if(session == null)
-            session = request.getSession();
+            session = getServletRequest().getSession();
 
         List<FindingAid> findingAids;
 
@@ -138,14 +138,14 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
     }
 
     public CLevelTreeNode createCLevelTreeNode(){
-        LOG.info("name: " + request.getParameter("name"));
-        LOG.info("identifier: " + request.getParameter("identifier"));
-        LOG.info("desc: " + request.getParameter("desc"));
-        return new CLevelTreeNode(request.getParameter("identifier"), request.getParameter("name")).setDescription(request.getParameter("desc"));
+        LOG.info("name: " + getServletRequest().getParameter("name"));
+        LOG.info("identifier: " + getServletRequest().getParameter("identifier"));
+        LOG.info("desc: " + getServletRequest().getParameter("desc"));
+        return new CLevelTreeNode(getServletRequest().getParameter("identifier"), getServletRequest().getParameter("name")).setDescription(getServletRequest().getParameter("desc"));
     }
 
     /**
-     * First AJAX request, we create the EAD CONTENT data with a dummy file and save it in the DB
+     * First AJAX getServletRequest(), we create the EAD CONTENT data with a dummy file and save it in the DB
      * while we send this data to the page.
      * The data is send back directly via the http response writer.
      * @return A null String
@@ -159,15 +159,15 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
             StringWriter eadContentXml = createEadContentData(archivalInstitution, levelTreeNode);
 
             EadContent eadContent;
-            if(StringUtils.isEmpty(request.getParameter("dataToEdit"))){
+            if(StringUtils.isEmpty(getServletRequest().getParameter("dataToEdit"))){
                 eadContent = createDummyEadContent();
                 eadContent.setEadid(levelTreeNode.getUnitid());
                 eadContent.setTitleproper(levelTreeNode.getUnittitle());
                 eadContent.setUnittitle(levelTreeNode.getUnittitle());
                 eadContent.setXml(eadContentXml.toString());
             } else { //We just edit the one with DB ID is key
-                LOG.info("Edit key: " + request.getParameter("key"));
-                String fullStr = request.getParameter("key");
+                LOG.info("Edit key: " + getServletRequest().getParameter("key"));
+                String fullStr = getServletRequest().getParameter("key");
                 String keyString = fullStr.substring(3);
 
                 eadContent = DAOFactory.instance().getEadContentDAO().findById(Long.parseLong(keyString));
@@ -213,23 +213,23 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
             CLevelTreeNode levelTreeNode = createCLevelTreeNode();
             StringWriter cLevelXml = createCLevelData(levelTreeNode);
 
-            if(StringUtils.isEmpty(request.getParameter("parentId")))
+            if(StringUtils.isEmpty(getServletRequest().getParameter("parentId")))
                 throw new APEnetException(getText("holdingsGuideTreeCreation.parentIdCanNotBeNullOrEmpty"));
 
-            String fullStr = request.getParameter("parentId");
+            String fullStr = getServletRequest().getParameter("parentId");
             String parentId = fullStr.substring(3);
             String type = fullStr.substring(0, 2);
-            LOG.info("The request parameter parentId is '" + fullStr + "', so the parentId is '" + parentId + "' and the type is '" + type + "'");
+            LOG.info("The getServletRequest() parameter parentId is '" + fullStr + "', so the parentId is '" + parentId + "' and the type is '" + type + "'");
 
             CLevel cLevel;
-            if(StringUtils.isEmpty(request.getParameter("dataToEdit"))){ //If empty then it is a new to create (new CLEVEL)
+            if(StringUtils.isEmpty(getServletRequest().getParameter("dataToEdit"))){ //If empty then it is a new to create (new CLEVEL)
                 cLevel = createDummyCLevel();
                 cLevel.setXml(cLevelXml.toString());
                 cLevel.setUnitid(levelTreeNode.getUnitid());
                 cLevel.setUnittitle(levelTreeNode.getUnittitle());
             } else { //We just edit the one with DB ID is key
-                LOG.info("Edit key: " + request.getParameter("key"));
-                fullStr = request.getParameter("key");
+                LOG.info("Edit key: " + getServletRequest().getParameter("key"));
+                fullStr = getServletRequest().getParameter("key");
                 String keyString = fullStr.substring(3);
 
                 cLevel = DAOFactory.instance().getCLevelDAO().findById(Long.parseLong(keyString));
@@ -275,13 +275,13 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
         try {
         	Integer aiId = getAiId();
             writer = openOutputWriter();
-            if(StringUtils.isEmpty(request.getParameter("key"))){
+            if(StringUtils.isEmpty(getServletRequest().getParameter("key"))){
                 throw new APEnetException(getText("holdingsGuideTreeCreation.keyParameterNotBeEmpty"));
             }
             if(aiId==null){
                 throw new APEnetException(getText("holdingsGuideTreeCreation.aiIdParameterCouldNotBeReadedFromSession"));
             }
-            String fullStr = request.getParameter("key");
+            String fullStr = getServletRequest().getParameter("key");
             String keyString = fullStr.substring(3);
 
             EadContent eadContent = DAOFactory.instance().getEadContentDAO().findById(Long.parseLong(keyString));
@@ -463,7 +463,7 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
             Writer writer = openOutputWriter();
             Integer aiId = getAiId();
             //To get the FA to be a <c> part of HG
-            String[] faIdentifiers = request.getParameter("selectedFAs").replace("[", "").replace("]", "").split(",");
+            String[] faIdentifiers = getServletRequest().getParameter("selectedFAs").replace("[", "").replace("]", "").split(",");
 
             XPath xPath = APEnetUtilities.getDashboardConfig().getXpathFactory().newXPath();
             xPath.setNamespaceContext(new EADNamespaceContext());
@@ -474,10 +474,10 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
             XPathExpression unittitleExpr = xPath.compile("/ead:c/ead:did/ead:unittitle/text()");
             XPathExpression unitidExpr = xPath.compile("/ead:c/ead:did/ead:unitid/text()");
 
-            if(StringUtils.isEmpty(request.getParameter("key"))){
+            if(StringUtils.isEmpty(getServletRequest().getParameter("key"))){
                 throw new APEnetException("The parameter key can not be null or empty");
             }
-            String fullStr = request.getParameter("key");
+            String fullStr = getServletRequest().getParameter("key");
             String keyId = fullStr.substring(3);
             String type = fullStr.substring(0, 2);
 
@@ -550,7 +550,7 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
         List<String> faIdentifierStr = Arrays.asList(faIdentifiers);
 
         if(session == null)
-            session = request.getSession();
+            session = getServletRequest().getSession();
 
         if(session.getAttribute(ALL_FINDING_AIDS_SESSION) != null){
             List<FindingAid> findingAids = (List<FindingAid>) session.getAttribute(ALL_FINDING_AIDS_SESSION);
@@ -569,9 +569,9 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
         Writer writer = null;
         try {
             writer = openOutputWriter();
-            if(StringUtils.isEmpty(request.getParameter("key")))
+            if(StringUtils.isEmpty(getServletRequest().getParameter("key")))
                 throw new APEnetException(getText("holdingsGuideTreeCreation.keyNotBeNullOrEmpty"));
-            String fullStr = request.getParameter("key");
+            String fullStr = getServletRequest().getParameter("key");
             String keyString = fullStr.substring(3);
             CLevel cLevel = DAOFactory.instance().getCLevelDAO().findById(Long.parseLong(keyString));
             DAOFactory.instance().getCLevelDAO().delete(cLevel);

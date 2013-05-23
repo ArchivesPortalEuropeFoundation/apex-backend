@@ -254,8 +254,8 @@ public class EditEadAction extends AjaxControllerAbstractAction {
      * @return null since we use the HttpResponse to write JSON data directly to the page
      */
     public String deleteDatabaseEntries(){
-        Long faId = new Long(request.getParameter("faId"));
-        Long hgId = new Long(request.getParameter("hgId"));
+        Long faId = new Long(getServletRequest().getParameter("faId"));
+        Long hgId = new Long(getServletRequest().getParameter("hgId"));
 
         ArchivalInstitution archivalInstitution;
         if(faId != null)

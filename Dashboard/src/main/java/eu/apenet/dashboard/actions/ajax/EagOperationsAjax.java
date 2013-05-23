@@ -1,20 +1,24 @@
 package eu.apenet.dashboard.actions.ajax;
 
-import com.opensymphony.xwork2.ActionSupport;
-import eu.apenet.commons.exceptions.APEnetException;
-import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.ArchivalInstitution;
-import eu.apenet.dpt.utils.service.TransformationTool;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.Writer;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.events.XMLEvent;
+
 import org.apache.commons.io.FileUtils;
 import org.codehaus.stax2.XMLInputFactory2;
 import org.codehaus.stax2.XMLStreamReader2;
 import org.json.JSONObject;
 
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.XMLEvent;
-import java.io.*;
+import eu.apenet.commons.exceptions.APEnetException;
+import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dpt.utils.service.TransformationTool;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.ArchivalInstitution;
 
 /**
  * User: Yoann Moranville
@@ -23,13 +27,17 @@ import java.io.*;
  * @author Yoann Moranville
  */
 public class EagOperationsAjax extends AjaxControllerAbstractAction {
-    private static final String EAG_XMLNS_OLD = "http://www.ministryculture.es/";
-    private static final String EAG_XMLNS_NEW = "http://www.archivesportaleurope.eu/profiles/APEnet_EAG/";
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1678759998515305296L;
+	private static final String EAG_XMLNS_NEW = "http://www.archivesportaleurope.eu/profiles/APEnet_EAG/";
 
     public String execute() {
         try {
             Writer writer = openOutputWriter();
-            String fileIdStr = request.getParameter("fileId");
+            String fileIdStr = getServletRequest().getParameter("fileId");
             if(fileIdStr != null) {
                 int fileId = Integer.parseInt(fileIdStr.replace("eagLink_", ""));
                 ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(fileId);
