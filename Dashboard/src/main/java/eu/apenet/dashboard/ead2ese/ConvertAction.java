@@ -8,12 +8,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts2.interceptor.ServletRequestAware;
 import org.xml.sax.SAXException;
 
 import eu.apenet.commons.types.XmlType;
@@ -33,7 +31,7 @@ import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.QueueAction;
 
-public class ConvertAction extends AbstractInstitutionAction  implements ServletRequestAware{
+public class ConvertAction extends AbstractInstitutionAction {
 
 	private static final String CREATIVECOMMONS_CPDM = "cpdm";
 	private static final String CREATIVECOMMONS_CC0 = "cc0";
@@ -82,12 +80,6 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
     private boolean noLanguageOnClevel = true;
     private boolean noLanguageOnParents;
     private Set<SelectItem> languages = new TreeSet<SelectItem>();
-	private HttpServletRequest httpServletRequest;
-	
-	@Override
-	public void setServletRequest(HttpServletRequest httpServletRequest) {
-		this.httpServletRequest = httpServletRequest;
-	}
 	
 	@Override
 	public void validate() {
@@ -227,7 +219,7 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 		}else {
 			if (BatchEadActions.SELECTED_ITEMS.equals(batchItems)) {
 
-				List<Integer> ids = (List<Integer>) httpServletRequest.getSession().getAttribute(
+				List<Integer> ids = (List<Integer>) getServletRequest().getSession().getAttribute(
 						AjaxControllerAbstractAction.LIST_IDS);
 				if (ids != null) {
 					EadService.addBatchToQueue(ids, getAiId(), XmlType.EAD_FA,QueueAction.CONVERT_TO_ESE_EDM,config.getProperties());
@@ -237,7 +229,7 @@ public class ConvertAction extends AbstractInstitutionAction  implements Servlet
 				}
 
 			} else if (BatchEadActions.SEARCHED_ITEMS.equals(batchItems)) {
-				EadSearchOptions eadSearchOptions = (EadSearchOptions)httpServletRequest.getSession()
+				EadSearchOptions eadSearchOptions = (EadSearchOptions)getServletRequest().getSession()
 						.getAttribute(ContentManagerAction.EAD_SEARCH_OPTIONS);
 				EadService.addBatchToQueue(eadSearchOptions, QueueAction.CONVERT_TO_ESE_EDM,config.getProperties());
 				return SUCCESS;
