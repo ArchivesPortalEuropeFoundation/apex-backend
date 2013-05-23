@@ -3,24 +3,29 @@ package eu.apenet.dashboard.ead2ese;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import eu.apenet.commons.utils.APEnetUtilities;
 import org.apache.commons.lang.math.NumberUtils;
+import org.oclc.oai.harvester.verb.GetRecord;
 
 import com.opensymphony.xwork2.ActionSupport;
 
+import eu.apenet.dashboard.AbstractInstitutionAction;
+import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.dpt.utils.ead2ese.EseFileUtils;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ese;
 
-public class DownloadEseXmlAction extends ActionSupport {
+public class DownloadEseXmlAction extends AbstractInstitutionAction {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4216154271715161521L;
 	private String id;
-	private FileInputStream inputStream;
-	private String fileName;
-	private Long fileSize;
 
 
 	public String getId() {
@@ -31,17 +36,15 @@ public class DownloadEseXmlAction extends ActionSupport {
 		this.id = id;
 	}
 
-	public String execute() throws FileNotFoundException {
+	public String execute() throws IOException {
 		EseDAO dao = DAOFactory.instance().getEseDAO();
 		if (NumberUtils.isNumber(id)) {
 
-			List<Ese> eses = dao.getEses(NumberUtils.toInt(id));
+			List<Ese> eses = dao.getEses(NumberUtils.toInt(id), getAiId());
 			if (eses.size() > 0) {
 				Ese ese = eses.get(0);
 				File file = EseFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPath());
-				inputStream = new FileInputStream(file);
-				fileName = file.getName();
-				fileSize = file.length();
+				ContentUtils.downloadXml(getServletRequest(), getServletResponse(), file);
 
 			}
 
@@ -49,24 +52,5 @@ public class DownloadEseXmlAction extends ActionSupport {
 		return SUCCESS;
 	}
 
-	public FileInputStream getInputStream() {
-		return inputStream;
-	}
-
-	public void setInputStream(FileInputStream inputStream) {
-		this.inputStream = inputStream;
-	}
-
-	public String getFileName() {
-		return fileName;
-	}
-
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-	
-	public Long getFileSize() {
-		return fileSize;
-	}
 
 }

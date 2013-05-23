@@ -95,11 +95,11 @@ public class EseFileServlet extends HttpServlet {
 		Ese ese = null;
 		EseDAO dao = DAOFactory.instance().getEseDAO();
 		if (NumberUtils.isNumber(id)) {
-
-			List<Ese> eses = dao.getEses(NumberUtils.toInt(id));
-			if (eses.size() > 0) {
-				ese = eses.get(0);
-			}
+//		TODO: this class should be move to Struts Action
+//			List<Ese> eses = dao.getEses(NumberUtils.toInt(id));
+//			if (eses.size() > 0) {
+//				ese = eses.get(0);
+//			}
 		} else if (NumberUtils.isNumber(eseId)) {
 			ese = dao.findById(NumberUtils.toInt(eseId));
 		}
