@@ -47,8 +47,6 @@ import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AiAlternativeName;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Country;
-import eu.apenet.persistence.vo.FindingAid;
-import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.Lang;
 import eu.apenet.persistence.vo.SentMailRegister;
 
@@ -543,24 +541,6 @@ public class ArchivalLandscape extends ActionSupport{
         return Structure;
     }
     
-    //Show directly XML of Archival Landscape
-	public String download(InputStream inst) {
-		
-		log.debug("Downloading the archival landscape of the country " + this.getmyCountry() + "...");
-		if(inst==null){
-			return "error";
-        } else{
-			try {
-				if(inst.available()>0){
-					return "download";
-				}
-			} catch (IOException e) {
-				log.error("The archival landscape of the country " + this.getmyCountry() + " could not be downloaded");
-			}
-        }
-		log.debug("The archival landscape of the country " + this.getmyCountry() + "has been downloaded");
-		return "success";
-	}
 
 	public List<ArchivalInstitution> showArchives() {
 		this.aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
