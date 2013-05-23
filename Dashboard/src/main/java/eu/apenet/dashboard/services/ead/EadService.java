@@ -20,9 +20,13 @@ import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EadSearchOptions;
+import eu.apenet.persistence.dao.EseDAO;
+import eu.apenet.persistence.dao.EseStateDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.Ese;
+import eu.apenet.persistence.vo.EseState;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
@@ -52,7 +56,28 @@ public class EadService {
 			}
 		}
 	}
-
+	public static boolean hasEdmPublished(Integer eadId) {
+		
+		boolean result;
+		
+		// At the moment, only FA can have ESE files converted. Please, change this behavior if another kind of EAD can have
+		// ESE files converted
+		EseDAO eseDao = DAOFactory.instance().getEseDAO();
+		EseStateDAO eseStateDao = DAOFactory.instance().getEseStateDAO();
+		EseState eseState = eseStateDao.getEseStateByState(EseState.PUBLISHED);
+		List<Ese> eseList = eseDao.getEsesByFindingAidAndState(eadId, eseState);
+		if (eseList == null || eseList.isEmpty()) {
+			result = false;
+		}
+		else {
+			result = true;
+		}
+		
+		eseDao = null;
+		eseStateDao = null;
+		eseState = null;
+		return result;
+	}
 	public static File download(Integer id, XmlType xmlType) {
 		Ead ead = DAOFactory.instance().getEadDAO().findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);

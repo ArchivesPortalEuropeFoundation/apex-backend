@@ -1,13 +1,21 @@
 package eu.apenet.dashboard.actions.content;
 
-import eu.apenet.dashboard.services.ead.EadService;
-
+import java.io.File;
 import java.util.Properties;
 
-public class EadActions extends AbstractEadActions {
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.interceptor.ServletRequestAware;
+import org.apache.struts2.interceptor.ServletResponseAware;
+
+import eu.apenet.dashboard.services.ead.EadService;
+import eu.apenet.dashboard.utils.ContentUtils;
+
+public class EadActions extends AbstractEadActions implements ServletResponseAware{
 
 	private Integer id;
-
+	private HttpServletResponse response;
 	public Integer getId() {
 		return id;
 	}
@@ -15,6 +23,12 @@ public class EadActions extends AbstractEadActions {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+	@Override
+	public void setServletResponse(HttpServletResponse response) {
+		this.response = response;
+		
+	}
+	
 
 	/**
 	 * 
@@ -126,5 +140,18 @@ public class EadActions extends AbstractEadActions {
 			return ERROR;
 		}
 	}
+	
+	public String download() {
+		try {
+			File file = EadService.download(getId(), getXmlType());
+			ContentUtils.downloadXml(this.getServletRequest(), response,file);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		return null;
+	}
+
+
 
 }

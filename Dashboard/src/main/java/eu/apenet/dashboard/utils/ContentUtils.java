@@ -4,10 +4,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -755,5 +758,42 @@ public class ContentUtils {
 		archivalInstitutionDao = null;
 		archivalInstitution = null;
 
+	}
+	public static void downloadXml(HttpServletRequest request, HttpServletResponse response, File file) throws IOException{
+		download(request, response, file, "application/xml");
+	}
+	public static void download (HttpServletRequest request, HttpServletResponse response, File file, String contentType) throws IOException{
+		if (file.exists()){
+			response.setContentLength((int) file.length());
+			FileInputStream inputStream = new FileInputStream(file);  //read the file
+        	download(request, response, inputStream, file.getName(), contentType);
+		}else {
+			LOGGER.error("File does not exist: "  + file);
+		}
+	}
+	public static void download (HttpServletRequest request, HttpServletResponse response, InputStream inputStream, String name, String contentType) throws IOException{
+		String browserType=(String)request.getHeader("User-Agent");
+		if(browserType.indexOf("MSIE") > 0){
+			response.setContentType("application/file-download");
+		}else {
+			response.setContentType(contentType);
+		}
+
+		response.setBufferSize(4096);
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("content-disposition", "attachment;filename=" + name);
+		OutputStream outputStream = response.getOutputStream();
+        try {
+            int c;
+            while ((c = inputStream.read()) != -1) {
+            	outputStream.write(c);
+            }
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+			outputStream.flush();
+			outputStream.close();
+        }
 	}
 }

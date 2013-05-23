@@ -32,7 +32,6 @@ import com.ctc.wstx.exc.WstxParsingException;
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.manual.contentmanager.ContentManager;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.dpt.utils.service.DocumentValidation;
@@ -317,7 +316,7 @@ public class ExistingFilesChecker {
                         fileUnit.setEadid(eadid);
                         fileUnit.setPermId(identifier.intValue());
                         result = STATUS_EXISTS;
-                        if (xmlType == XmlType.EAD_FA && EadService.isHarvestingStarted() && ContentManager.eadHasEsePublished(fileUnit.getPermId())) {
+                        if (xmlType == XmlType.EAD_FA && EadService.isHarvestingStarted() && EadService.hasEdmPublished(fileUnit.getPermId())) {
                         	// The EAD is a FA, exists, has ESE files published and Europeana is performing a Harvesting process
                         	result = STATUS_BLOCKED;
                         }
