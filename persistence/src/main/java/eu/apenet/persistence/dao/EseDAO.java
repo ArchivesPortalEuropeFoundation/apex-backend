@@ -15,7 +15,7 @@ import eu.apenet.persistence.vo.MetadataFormat;
  */
 
 public interface EseDAO extends GenericDAO<Ese, Integer> {
-	public List<Ese> getEses(Integer faId);
+	public List<Ese> getEses(Integer faId, Integer aiId);
 	public Date getTheEarliestDatestamp();
 	public List<Ese> getEsesByArguments(Date from,Date until,MetadataFormat metadataFormat,String set,Integer startElement,Integer limitPerResponse);
 	public Set<Ese> getAllEsesInSetFormat();

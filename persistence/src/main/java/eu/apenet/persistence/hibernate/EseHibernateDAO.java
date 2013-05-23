@@ -25,10 +25,16 @@ public class EseHibernateDAO extends AbstractHibernateDAO<Ese, Integer> implemen
 	private final Logger log = Logger.getLogger(getClass());
 	
 	@SuppressWarnings("unchecked")
-	public List<Ese> getEses(Integer faId) {
+	public List<Ese> getEses(Integer faId, Integer aiId) {
 		long startTime = System.currentTimeMillis();
 		List<Ese> results = new ArrayList<Ese>();
-		Criteria criteria = createEseCriteria(faId);
+		Criteria criteria = getSession().createCriteria(getPersistentClass(), "ese");
+		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		criteria = criteria.createAlias("ese.findingAid", "findingAid");
+			criteria.add(Restrictions.eq("findingAid.id", faId.intValue()));
+
+		criteria.createAlias("findingAid.archivalInstitution", "archivalInstitution");
+		criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
 		results = criteria.list();
 		long endTime = System.currentTimeMillis();
 		if (log.isDebugEnabled()) {
@@ -38,17 +44,6 @@ public class EseHibernateDAO extends AbstractHibernateDAO<Ese, Integer> implemen
 		return results;
 	}
 
-	private Criteria createEseCriteria(Integer faId) {
-		Criteria criteria = getSession().createCriteria(getPersistentClass(), "ese");
-		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		criteria = criteria.createAlias("ese.findingAid", "findingAid");
-
-		if (faId != null) {
-			criteria.add(Restrictions.eq("findingAid.id", faId.intValue()));
-		}
-
-		return criteria;
-	}
 	
 	@SuppressWarnings("unchecked")	
 	@Override
