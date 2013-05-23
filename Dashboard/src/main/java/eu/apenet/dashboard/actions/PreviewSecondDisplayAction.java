@@ -4,7 +4,6 @@ import org.apache.commons.lang.StringUtils;
 
 import eu.apenet.commons.seconddisplay.SecondDisplayAction;
 import eu.apenet.commons.types.XmlType;
-import eu.apenet.dashboard.manual.contentmanager.ContentManager;
 import eu.apenet.dashboard.services.ead.EadService;
 
 public class PreviewSecondDisplayAction extends SecondDisplayAction {
