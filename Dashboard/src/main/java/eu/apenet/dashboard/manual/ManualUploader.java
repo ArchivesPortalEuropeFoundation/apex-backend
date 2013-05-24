@@ -373,10 +373,7 @@ public abstract class ManualUploader {
                     		Transformer transformer = tf.newTransformer();
                     		transformer.transform(new DOMSource(tempDoc), new StreamResult(new File(fullFileName)));
                         }
-                        //check and fix /eag/archguide/repositorId@repositorycode
-                        if(Eag2012.checkAndFixRepositorId(archivalInstitutionId,fullFileName)){
-    						log.debug("EAG2012 changed (from <otherRepositorId> tag) - repositorId@repositorycode");
-    					}
+
     					//The EAG has been validated so it has to be stored in /mnt/repo/country/aiid/EAG/
     					//and it is necessary to update archival_institution table
         				result = eag.saveEAGviaHTTP(fullFileName);
@@ -406,64 +403,16 @@ public abstract class ManualUploader {
             				else {
             					result = "success";	
             				}
-            				/*
-            				repositorguideInformation = eag.getRepositorguideInformation();
-            				if (repositorguideInformation.contains(actionSupport.getText("label.ai.hg.information.content.default"))) {
-            					//The EAG file should contain the default message added in case Information is empty
-            					result = "success_noInformation";
-            				}
-            				else {
-            					result = "success";
-            				}
-            				*/
-            		        /////////// LAST MODIFICATIONS REGARDING TICKET #652 -- End
-            		        /////////////////////////////////////////////////////////////
+
         				}
         				    					
     				}
     				else{
-                        log.info("EAG is not valid");
-    					//The EAG has not been validated
-    					//It has to be converted
-    					if (eag.convertToAPEnetEAG()){
-    						//The EAG has been converted so it is necessary to validate the file against APEnet EAG schema
-    	    				if (eag.validate()){
-    	    					//The EAG has been validated so it has to be stored in /mnt/repo/country/aiid/EAG/
-    	    					//and it is necessary to update archival_institution table
-    	        				//eag.setEagPath(null);
-    	        				result = eag.saveEAGviaHTTP(fullFileName);
-    	        				if (result.equals("error_eagnotstored")) {
-    	        					this.filesNotUploaded.add(fileName);
-    	        					result = "error_eagnotstored";
-    	        				} else if (result.equals("error_database")) {
-    	        					this.filesNotUploaded.add(fileName);
-    	        					result = "error_eagnotstored";
-    	        				} else if (result.equals("error_eagalreadyuploaded")) {
-    	        					this.filesNotUploaded.add(fileName);
-    	        					result = "error_eagalreadyuploaded";
-    	        				} else if (result.equals("error_archivallandscape")) {
-    	        					this.filesNotUploaded.add(fileName);
-    	        					result = "error_archivallandscape";
-    	        				} else {
-    	            				this.filesUploaded.add(fileName);
-    	        					result = "success";
-    	        				}
-    	    				} else {
-                                warnings_eag = eag.showWarnings();
-    	    					//The EAG has been neither validated nor converted 
-    	    					log.error("Fatal error. The file " + fileName + " has been neither validated nor converted");
-	        					this.filesNotUploaded.add(fileName);
-    	    					result = "error_eagnotvalidatednotconverted";
-    	    				}
-
-    					}
-    					else {
-    						//The EAG couldn't be converted
-	    					log.error("The file " + fileName + " could not be converted");
-        					this.filesNotUploaded.add(fileName);
-    						result = "error_eagnotconverted";
-    					}
-    					
+                        warnings_eag = eag.showWarnings();
+    					//The EAG has been neither validated nor converted 
+    					log.warn("The file " + fileName + " is not valid");
+    					this.filesNotUploaded.add(fileName);
+    					result = "error_eagnotvalidatednotconverted";
     				}
     				
     				FileUtils.forceDelete(source);
