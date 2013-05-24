@@ -89,7 +89,7 @@
 		<tr id="hiddenLanguage" ${languageInvisible}>
 			<td class="inputLabel"><s:label key="ead2ese.label.language.select" for="language" /><span class="required">*</span>:</td>
 			<td><s:select name="language" id="language" listKey="value" listValue="content" list="languages" required="true"
-					value=""></s:select><s:fielderror fieldName="language"/>
+					value="" multiple="true" size="4"></s:select><s:fielderror fieldName="language"/>
 			</td>
 		</tr>
 		<tr>

@@ -137,7 +137,6 @@ public class ConvertAction extends AbstractInstitutionAction {
 
 	public ConvertAction() {
 		String[] isoLanguages = Locale.getISOLanguages();
-		languages.add(new SelectItem("", getText("ead2ese.content.selectone")));
 		for (String language : isoLanguages) {
 			String languageDescription = new Locale(language).getDisplayLanguage(Locale.ENGLISH);
 			//String label = language + " (" +  languageDescription + ")"; 
@@ -247,7 +246,8 @@ public class ConvertAction extends AbstractInstitutionAction {
     	config.setInheritOrigination(ConvertAction.OPTION_YES.equals(inheritOrigination));
     	config.setInheritLanguage(ConvertAction.OPTION_YES.equals(inheritLanguage));
     	if (INHERITLANGUAGE_PROVIDE.equals(inheritLanguage)){
-    		config.setLanguage(language);
+    		String parseLanguages = this.getLanguage().replaceAll(",", "");
+    		config.setLanguage(parseLanguages);
     	}
     	config.setType(daoType);
     	config.setProvider(provider);
