@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
@@ -21,6 +20,7 @@ import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.manual.eag.utils.CreateEAG2012;
 import eu.apenet.dpt.utils.eag2012.Eag;
+import eu.apenet.dpt.utils.eag2012.namespace.EagNamespaceMapper;
 import eu.apenet.dpt.utils.util.LanguageIsoList;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -80,8 +80,22 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	private static final String OPTION_LATER = "later";				// Constant for value "later".
 	private static final String OPTION_ASSOCIATIVE = "associative";	// Constant for value "associative".
 
-	private static final String OPTION_SCRIPT = "Latn";			// Constant for value "Latn".
-	private static final String OPTION_SCRIPT_TEXT = "Latin";	// Constant for value "Latin".
+	private static final String OPTION_SCRIPT_ARAB = "Arab";	// Constant for value "Arab".
+	private static final String OPTION_SCRIPT_ARMN = "Armn";	// Constant for value "Armn".
+	private static final String OPTION_SCRIPT_CPRT = "Cprt";	// Constant for value "Cprt".
+	private static final String OPTION_SCRIPT_CYRL = "Cyrl";	// Constant for value "Cyrl".
+	private static final String OPTION_SCRIPT_GEOR = "Geor";	// Constant for value "Geor".
+	private static final String OPTION_SCRIPT_GREK = "Grek";	// Constant for value "Grek".
+	private static final String OPTION_SCRIPT_HEBR = "Hebr";	// Constant for value "Hebr".
+	private static final String OPTION_SCRIPT_LATN = "Latn";	// Constant for value "Latn".
+	private static final String OPTION_SCRIPT_TEXT_ARAB = "Arab";	// Constant for value "Arab".
+	private static final String OPTION_SCRIPT_TEXT_ARMN = "Armn";	// Constant for value "Armn".
+	private static final String OPTION_SCRIPT_TEXT_CPRT = "Cprt";	// Constant for value "Cprt".
+	private static final String OPTION_SCRIPT_TEXT_CYRL = "Cyrl";	// Constant for value "Cyrl".
+	private static final String OPTION_SCRIPT_TEXT_GEOR = "Geor";	// Constant for value "Geor".
+	private static final String OPTION_SCRIPT_TEXT_GREK = "Grek";	// Constant for value "Grek".
+	private static final String OPTION_SCRIPT_TEXT_HEBR = "Hebr";	// Constant for value "Hebr".
+	private static final String OPTION_SCRIPT_TEXT_LATN = "Latin";	// Constant for value "Latin".
 
 	private static final String EAG_PATH = "EAG";
 
@@ -139,13 +153,16 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	}
 
 	public Map<String,String> getLanguageList() {
-		String[] isoLanguages = Locale.getISOLanguages();
 		Map<String,String> languages = new LinkedHashMap<String,String>();
 		languages.put(WebFormEAG2012Action.OPTION_NONE, "---");
+
+		List<String> languagesList = LanguageIsoList.getLanguageIsoList();
+		String[] isoLanguages = languagesList.toArray(new String[]{});
 		for (String language : isoLanguages) {
-			String languageDescription = new Locale(language).getDisplayLanguage(Locale.ENGLISH);
-			languages.put(language, languageDescription);
+			String languageDescription = LanguageIsoList.getIsoCode(language);
+			languages.put(languageDescription, language);
 		}
+
 		return languages;
 	}
 
@@ -210,24 +227,17 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		return this.getTypeTheRelationMap();
 	}
 
-	public Map<String,String> getLanguageISOList() {
-		this.getLanguageISOMap().put(WebFormEAG2012Action.OPTION_NONE, "---");
-
-		List<String> languageList = LanguageIsoList.getLanguageIsoList();
-
-		for (int i = 0; i < languageList.size(); i++) {
-			// TODO: for some countries can not retrieve the name from the code.
-			Locale locale = new Locale(LanguageIsoList.getIsoCode(languageList.get(i)));
-			this.getLanguageISOMap().put(locale.getISO3Language(), locale.getDisplayLanguage());
-		}
-
-		return this.getLanguageISOMap();
-	}
-
 	public Map<String,String> getScriptList() {
 		this.getScriptMap().put(WebFormEAG2012Action.OPTION_NONE, "---");
 
-		this.getScriptMap().put(WebFormEAG2012Action.OPTION_SCRIPT, WebFormEAG2012Action.OPTION_SCRIPT_TEXT);
+		this.getScriptMap().put(WebFormEAG2012Action.OPTION_SCRIPT_ARAB, WebFormEAG2012Action.OPTION_SCRIPT_TEXT_ARAB);
+		this.getScriptMap().put(WebFormEAG2012Action.OPTION_SCRIPT_ARMN, WebFormEAG2012Action.OPTION_SCRIPT_TEXT_ARMN);
+		this.getScriptMap().put(WebFormEAG2012Action.OPTION_SCRIPT_CPRT, WebFormEAG2012Action.OPTION_SCRIPT_TEXT_CPRT);
+		this.getScriptMap().put(WebFormEAG2012Action.OPTION_SCRIPT_CYRL, WebFormEAG2012Action.OPTION_SCRIPT_TEXT_CYRL);
+		this.getScriptMap().put(WebFormEAG2012Action.OPTION_SCRIPT_GEOR, WebFormEAG2012Action.OPTION_SCRIPT_TEXT_GEOR);
+		this.getScriptMap().put(WebFormEAG2012Action.OPTION_SCRIPT_GREK, WebFormEAG2012Action.OPTION_SCRIPT_TEXT_GREK);
+		this.getScriptMap().put(WebFormEAG2012Action.OPTION_SCRIPT_HEBR, WebFormEAG2012Action.OPTION_SCRIPT_TEXT_HEBR);
+		this.getScriptMap().put(WebFormEAG2012Action.OPTION_SCRIPT_LATN, WebFormEAG2012Action.OPTION_SCRIPT_TEXT_LATN);
 
 		return this.getScriptMap();
 	}
@@ -651,7 +661,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				JAXBContext jaxbContext = JAXBContext.newInstance(Eag.class);
 				Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 				jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-//TODO:				jaxbMarshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new EagNamespaceMapper());
+				jaxbMarshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new EagNamespaceMapper());
 				File eagFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + path));
 
 				jaxbMarshaller.marshal(eag, eagFile);

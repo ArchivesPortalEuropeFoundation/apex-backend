@@ -1,104 +1,14 @@
 package eu.apenet.dashboard.manual.eag.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import eu.apenet.dashboard.manual.eag.Eag2012;
-import eu.apenet.dpt.utils.eag2012.Access;
-import eu.apenet.dpt.utils.eag2012.Accessibility;
-import eu.apenet.dpt.utils.eag2012.Adminhierarchy;
-import eu.apenet.dpt.utils.eag2012.Adminunit;
-import eu.apenet.dpt.utils.eag2012.AdvancedOrders;
-import eu.apenet.dpt.utils.eag2012.AgencyName;
-import eu.apenet.dpt.utils.eag2012.Agent;
-import eu.apenet.dpt.utils.eag2012.Archguide;
-import eu.apenet.dpt.utils.eag2012.Autform;
-import eu.apenet.dpt.utils.eag2012.Building;
-import eu.apenet.dpt.utils.eag2012.Buildinginfo;
-import eu.apenet.dpt.utils.eag2012.Citation;
-import eu.apenet.dpt.utils.eag2012.Closing;
-import eu.apenet.dpt.utils.eag2012.ComputerPlaces;
-import eu.apenet.dpt.utils.eag2012.Contact;
-import eu.apenet.dpt.utils.eag2012.Control;
-import eu.apenet.dpt.utils.eag2012.Country;
-import eu.apenet.dpt.utils.eag2012.Date;
-import eu.apenet.dpt.utils.eag2012.DateRange;
-import eu.apenet.dpt.utils.eag2012.DateSet;
-import eu.apenet.dpt.utils.eag2012.Desc;
-import eu.apenet.dpt.utils.eag2012.DescriptiveNote;
-import eu.apenet.dpt.utils.eag2012.Digitalser;
-import eu.apenet.dpt.utils.eag2012.Directions;
-import eu.apenet.dpt.utils.eag2012.Eag;
-import eu.apenet.dpt.utils.eag2012.Email;
-import eu.apenet.dpt.utils.eag2012.Exhibition;
-import eu.apenet.dpt.utils.eag2012.Extent;
-import eu.apenet.dpt.utils.eag2012.Fax;
-import eu.apenet.dpt.utils.eag2012.Firstdem;
-import eu.apenet.dpt.utils.eag2012.FromDate;
-import eu.apenet.dpt.utils.eag2012.Geogarea;
-import eu.apenet.dpt.utils.eag2012.Holdings;
-import eu.apenet.dpt.utils.eag2012.Identity;
-import eu.apenet.dpt.utils.eag2012.InternetAccess;
-import eu.apenet.dpt.utils.eag2012.Lengthshelf;
-import eu.apenet.dpt.utils.eag2012.Library;
-import eu.apenet.dpt.utils.eag2012.Localentity;
-import eu.apenet.dpt.utils.eag2012.Location;
-import eu.apenet.dpt.utils.eag2012.MaintenanceAgency;
-import eu.apenet.dpt.utils.eag2012.MaintenanceEvent;
-import eu.apenet.dpt.utils.eag2012.MaintenanceHistory;
-import eu.apenet.dpt.utils.eag2012.MaintenanceStatus;
-import eu.apenet.dpt.utils.eag2012.MicrofilmPlaces;
-import eu.apenet.dpt.utils.eag2012.Microformser;
-import eu.apenet.dpt.utils.eag2012.Monographicpub;
-import eu.apenet.dpt.utils.eag2012.MunicipalityPostalcode;
-import eu.apenet.dpt.utils.eag2012.Nonpreform;
-import eu.apenet.dpt.utils.eag2012.Num;
-import eu.apenet.dpt.utils.eag2012.Opening;
-import eu.apenet.dpt.utils.eag2012.OtherAgencyCode;
-import eu.apenet.dpt.utils.eag2012.OtherRecordId;
-import eu.apenet.dpt.utils.eag2012.OtherRepositorId;
-import eu.apenet.dpt.utils.eag2012.OtherServices;
-import eu.apenet.dpt.utils.eag2012.P;
-import eu.apenet.dpt.utils.eag2012.Parform;
-import eu.apenet.dpt.utils.eag2012.Photocopyser;
-import eu.apenet.dpt.utils.eag2012.PhotographAllowance;
-import eu.apenet.dpt.utils.eag2012.Photographser;
-import eu.apenet.dpt.utils.eag2012.ReadersTicket;
-import eu.apenet.dpt.utils.eag2012.RecordId;
-import eu.apenet.dpt.utils.eag2012.RecreationalServices;
-import eu.apenet.dpt.utils.eag2012.Refreshment;
-import eu.apenet.dpt.utils.eag2012.RelationEntry;
-import eu.apenet.dpt.utils.eag2012.Relations;
-import eu.apenet.dpt.utils.eag2012.Repositorarea;
-import eu.apenet.dpt.utils.eag2012.Repositorfound;
-import eu.apenet.dpt.utils.eag2012.Repositorhist;
-import eu.apenet.dpt.utils.eag2012.Repositorid;
-import eu.apenet.dpt.utils.eag2012.Repositories;
-import eu.apenet.dpt.utils.eag2012.Repositorsup;
-import eu.apenet.dpt.utils.eag2012.Repository;
-import eu.apenet.dpt.utils.eag2012.RepositoryType;
-import eu.apenet.dpt.utils.eag2012.Reproductionser;
-import eu.apenet.dpt.utils.eag2012.ResearchServices;
-import eu.apenet.dpt.utils.eag2012.ResourceRelation;
-import eu.apenet.dpt.utils.eag2012.Restaccess;
-import eu.apenet.dpt.utils.eag2012.Restorationlab;
-import eu.apenet.dpt.utils.eag2012.Rule;
-import eu.apenet.dpt.utils.eag2012.Searchroom;
-import eu.apenet.dpt.utils.eag2012.Secondem;
-import eu.apenet.dpt.utils.eag2012.Serialpub;
-import eu.apenet.dpt.utils.eag2012.Services;
-import eu.apenet.dpt.utils.eag2012.Street;
-import eu.apenet.dpt.utils.eag2012.Techservices;
-import eu.apenet.dpt.utils.eag2012.Telephone;
-import eu.apenet.dpt.utils.eag2012.TermsOfUse;
-import eu.apenet.dpt.utils.eag2012.Timetable;
-import eu.apenet.dpt.utils.eag2012.ToDate;
-import eu.apenet.dpt.utils.eag2012.ToursSessions;
-import eu.apenet.dpt.utils.eag2012.UseDates;
-import eu.apenet.dpt.utils.eag2012.Webpage;
-import eu.apenet.dpt.utils.eag2012.WorkPlaces;
+import eu.apenet.dpt.utils.eag2012.*;
 
 /**
  * Class for fill EAG2012 JAXB object.
@@ -114,6 +24,9 @@ public class CreateEAG2012 {
 	 */
 	protected Eag eag;
 
+	// Constant for default language.
+	private static final String OPTION_NONE = "none";
+
 	// Content for aeg.
     private static final String EAG_XMLNS = "http://www.archivesportaleurope.net/profiles/APEnet_EAG/";
 	private static final String XML_AUDIENCE = "external";
@@ -127,6 +40,14 @@ public class CreateEAG2012 {
 
 	// Content for otherRecordId.
 	private static final String LOCAL_TYPE = "localId";
+
+	// Content for localControl.
+	private static final String LOCAL_TYPE_CONTROL = "detailLevel";
+	//"Arab", "Armn", "Cprt", "Cyrl", "Geor", "Grek", "Hebr", "Latn"
+	private static final String CONTROL_SCRIPT_COD = "Latn";
+	private static final String CONTROL_TRANSLITERATION = "http://www.archivesportaleurope.eu/scripts/EAG/";
+	private static final String CONTROL_VOCABULARY_SOURCE = "http://www.archivesportaleurope.eu/vocabularies/EAG/";
+	private static final String EXTENDED = "extended";
 
 	// Constants for TABs indexes.
 	public static final String TAB_YOUR_INSTITUTION = "your_institution";
@@ -182,6 +103,7 @@ public class CreateEAG2012 {
 	public static final String REPOSITORHIST = "repositorhist";
 	public static final String LIBRARY = "library";
 	public static final String SEARCHROOM = "searchroom";
+	public static final String INSTITUTION_RELATIONS = "institutionRelations";
 
 	// Constants for subsection indexes
 	public static final String ROOT_SUBSECTION = "root_section";
@@ -319,6 +241,10 @@ public class CreateEAG2012 {
 			maintenanceEvent.setAgent(new Agent());
 		}
 		maintenanceEvent.getAgent().setContent(this.eag2012.getAgentValue());
+		if (this.eag2012.getAgentLang() != null 
+				&& this.eag2012.getAgentLang() != CreateEAG2012.OPTION_NONE) {
+			maintenanceEvent.getAgent().setLang(this.eag2012.getAgentLang());
+		}
 
 		// eag/control/maintenanceHistory/maintenanceEvent/agentType
 
@@ -330,10 +256,62 @@ public class CreateEAG2012 {
 		this.eag.getControl().getMaintenanceHistory().getMaintenanceEvent().add(maintenanceEvent);
 
 		// eag/control/languageDeclarations
+		if (this.eag2012.getLanguageLanguageCode() != null
+				&& this.eag2012.getScriptScriptCode() != null) {
+			for (int i = 0; i < this.eag2012.getLanguageLanguageCode().size(); i++) {
+				if (this.eag.getControl().getLanguageDeclarations() == null) {
+					this.eag.getControl().setLanguageDeclarations(new LanguageDeclarations());
+				}
+				Language language = new Language();
+				language.setLanguageCode(this.eag2012.getLanguageLanguageCode().get(i));
+
+				Script script = new Script();
+				script.setScriptCode(this.eag2012.getScriptScriptCode().get(i));
+
+				LanguageDeclaration languageDeclaration = new LanguageDeclaration();
+				languageDeclaration.setLanguage(language);
+				languageDeclaration.setScript(script);
+
+				this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().add(languageDeclaration);
+			}
+		}
 
 		// eag/control/conventionDeclaration
+		if (this.eag2012.getAbbreviationValue() != null
+				&& this.eag2012.getCitationValue() != null) {
+			for (int i = 0; i < this.eag2012.getAbbreviationValue().size(); i++) {
+				Abbreviation abbreviation = new Abbreviation();
+				abbreviation.setContent(this.eag2012.getAbbreviationValue().get(i));
+
+				Citation citation = new Citation();
+// TODO: Structure under revision.
+				citation.setContent("Structure under revision");
+//				citation.setContent(this.eag2012.getCitationValue().get(i));
+
+				ConventionDeclaration conventionDeclaration = new ConventionDeclaration();
+				conventionDeclaration.setAbbreviation(abbreviation);
+				conventionDeclaration.getCitation().add(citation);
+
+				this.eag.getControl().getConventionDeclaration().add(conventionDeclaration);
+			}
+		}
+
+		// eag/control/localControl/term
+		Term term = new Term();
+		SimpleDateFormat df = new SimpleDateFormat();
+        df.applyPattern(CreateEAG2012.DATE_FORMAT);
+        term.setLastDateTimeVerified(df.format(new GregorianCalendar().getTime()));
+		term.setScriptCode(CreateEAG2012.CONTROL_SCRIPT_COD);
+		term.setTransliteration(CreateEAG2012.CONTROL_TRANSLITERATION);
+		term.setVocabularySource(CreateEAG2012.CONTROL_VOCABULARY_SOURCE);
+		term.setValue(CreateEAG2012.EXTENDED);
 
 		// eag/control/localControl
+		LocalControl localControl = new LocalControl();
+		localControl.setLocalType(CreateEAG2012.LOCAL_TYPE_CONTROL);
+		localControl.getTerm().add(term);
+
+		this.eag.getControl().getLocalControl().add(localControl);
 
 		// eag/control/localTypeDeclaration
 
@@ -375,7 +353,9 @@ public class CreateEAG2012 {
 					resourceRelation.setResourceRelationType(this.eag2012.getResourceRelationResourceRelationType().get(i));
 				}
 				RelationEntry relationEntry = new RelationEntry();
-				relationEntry.setContent(this.eag2012.getRelationEntryValue().get(i));
+// TODO: Structure under revision.
+				relationEntry.setContent("Structure under revision");
+//				relationEntry.setContent(this.eag2012.getRelationEntryValue().get(i));
 				resourceRelation.setRelationEntry(relationEntry);
 				this.eag.getRelations().getResourceRelation().add(resourceRelation);
 			}
@@ -438,8 +418,8 @@ public class CreateEAG2012 {
 				// TODO: Review schema.
 				nonpreform.getContent().add(this.eag2012.getNonpreformValue().get(i));
 
-// TODO:				// eag/archguide/identity/nonpreform/dates
-//				getAllDates(nonpreform);
+				// eag/archguide/identity/nonpreform/dates
+				getNompreformDates(nonpreform, i);
 
 				this.eag.getArchguide().getIdentity().getNonpreform().add(nonpreform);
 			}
@@ -1084,7 +1064,8 @@ public class CreateEAG2012 {
 			for (int i = 0; i < this.eag2012.getDirectionsValue().size(); i++) {
 				List<String> directionsValueList = this.eag2012.getDirectionsValue().get(i);
 				List<String> directionsLangList = this.eag2012.getDirectionsLang().get(i);
-				List<String> citationHrefList = this.eag2012.getCitationHref().get(i);
+// TODO: Structure under revision.
+//				List<String> citationHrefList = this.eag2012.getCitationHref().get(i);
 
 				// Repository
 				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
@@ -1096,7 +1077,9 @@ public class CreateEAG2012 {
 					directions.setLang(directionsLangList.get(j));
 					// eag/archguide/desc/repositories/repository/directions/citation/href
 					Citation citation = new Citation();
-					citation.setHref(citationHrefList.get(j));
+// TODO: Structure under revision.
+					citation.setHref("Structure under revision");
+//					citation.setHref(citationHrefList.get(j));
 
 					directions.getContent().add(citation);
 					repository.getDirections().add(directions);
@@ -1611,163 +1594,147 @@ public class CreateEAG2012 {
 	 * Method to recover dates.
 	 */
 	private void getAllDates() {
-//		if (this.eag2012.getDateStandardDate() != null) {
-//			// TODO: Structure under revision.
-//			for (int i = 0; i < this.eag2012.getDateStandardDate().size(); i++) {
-//				// Repository.
-//				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
-//
-//				Map<String, Map<String, Map<String, List<String>>>> tabsValueMap = this.eag2012.getDateStandardDate().get(i);
-//				Iterator<String> tabsValueIt = tabsValueMap.keySet().iterator();
-//				while (tabsValueIt.hasNext()) {
-//					String tabValueKey = tabsValueIt.next();
-//					Map<String, Map<String, List<String>>> sectionsValueMap = tabsValueMap.get(tabValueKey);
-//					Iterator<String> sectionsValueIt = sectionsValueMap.keySet().iterator();
-//					if (CreateEAG2012.TAB_IDENTITY.equalsIgnoreCase(tabValueKey)) {
-//						while (sectionsValueIt.hasNext()) {
-//							String sectionValueKey = sectionsValueIt.next();
-//							Map<String, List<String>> subsectionsValueMap = sectionsValueMap.get(sectionValueKey);
-//							Iterator<String> subsectionsValueIt = subsectionsValueMap.keySet().iterator();
-//							if (CreateEAG2012.ROOT.equalsIgnoreCase(sectionValueKey)) {
-//								while (subsectionsValueIt.hasNext()) {
-//									String subsectionValueKey = subsectionsValueIt.next();
-//									List<String> valuesList = subsectionsValueMap.get(subsectionValueKey);
-//									for (int j = 0; j < valuesList.size(); j++) {
-//										Date date = new Date();
-//										date.setStandardDate(valuesList.get(j));
-//										date.setContent(valuesList.get(j));
-//										
-//										if (CreateEAG2012.ROOT_SUBSECTION.equalsIgnoreCase(subsectionValueKey)) {
-////											Nonpreform nonpreform = this.eag.getArchguide().getIdentity().getNonpreform();
-//// TODO: Structure under revision.
-//										}
-//									}
-//								}
-//							}
-//						}
-//					}
-//					if (CreateEAG2012.TAB_DESCRIPTION.equalsIgnoreCase(tabValueKey)) {
-//						while (sectionsValueIt.hasNext()) {
-//							String sectionValueKey = sectionsValueIt.next();
-//							Map<String, List<String>> subsectionsValueMap = sectionsValueMap.get(sectionValueKey);
-//							Iterator<String> subsectionsValueIt = subsectionsValueMap.keySet().iterator();
-//							if (CreateEAG2012.REPOSITORHIST.equalsIgnoreCase(sectionValueKey)) {
-//								while (subsectionsValueIt.hasNext()) {
-//									String subsectionValueKey = subsectionsValueIt.next();
-//									List<String> valuesList = subsectionsValueMap.get(subsectionValueKey);
-//									for (int j = 0; j < valuesList.size(); j++) {
-//										Date date = new Date();
-//										date.setStandardDate(valuesList.get(j));
-//										date.setContent(valuesList.get(j));
-//
-//										if (CreateEAG2012.REPOSITOR_FOUND.equalsIgnoreCase(subsectionValueKey)) {
-//											// eag/archguide/desc/repositories/repository/repositorfuond/date
-//											if (repository.getRepositorfound() == null) {
-//												repository.setRepositorfound(new Repositorfound());
-//											}
-//											repository.getRepositorfound().setDate(date);
-//										} else if (CreateEAG2012.REPOSITOR_SUP.equalsIgnoreCase(subsectionValueKey)) {
-//											// eag/archguide/desc/repositories/repository/repositorsup/date
-//											if (repository.getRepositorsup() == null) {
-//												repository.setRepositorsup(new Repositorsup());
-//											}
-//											repository.getRepositorsup().setDate(date);
-//										}
-//									}
-//								}
-//							} else if (CreateEAG2012.HOLDINGS.equalsIgnoreCase(sectionValueKey)) {
-//								while (subsectionsValueIt.hasNext()) {
-//									String subsectionValueKey = subsectionsValueIt.next();
-//									List<String> valuesList = subsectionsValueMap.get(subsectionValueKey);
-//									for (int j = 0; j < valuesList.size(); j++) {
-//										Date date = new Date();
-//										date.setStandardDate(valuesList.get(j));
-//										date.setContent(valuesList.get(j));
-//
-//										if (CreateEAG2012.HOLDING_SUBSECTION.equalsIgnoreCase(subsectionValueKey)) {
-//											if (repository.getHoldings() == null) {
-//												repository.setHoldings(new Holdings());
-//											}
-//											if (repository.getHoldings().getDateSet() == null) {
-//												repository.getHoldings().setDateSet(new DateSet());
-//											}
-//											repository.getHoldings().getDateSet().getDateOrDateRange().add(date);
-//										}
-//									}
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
-//
-//		if (this.eag2012.getFromDateStandardDate() != null
-//				&& this.eag2012.getToDateStandardDate() != null) {
-//			// TODO: Structure under revision.
-//			for (int i = 0; i < this.eag2012.getDateStandardDate().size(); i++) {
-//				// Repository.
-//				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
-//
-//				Map<String, Map<String, Map<String, List<String>>>> tabsValueFromMap = this.eag2012.getFromDateStandardDate().get(i);
-//				Map<String, Map<String, Map<String, List<String>>>> tabsValueToMap = this.eag2012.getToDateStandardDate().get(i);
-//				Iterator<String> tabsValueFromIt = tabsValueFromMap.keySet().iterator();
-//				Iterator<String> tabsValueToIt = tabsValueToMap.keySet().iterator();
-//				while (tabsValueFromIt.hasNext()) {
-//					String tabValueFromKey = tabsValueFromIt.next();
-//					String tabValueToKey = tabsValueToIt.next();
-//					Map<String, Map<String, List<String>>> sectionsValueFromMap = tabsValueFromMap.get(tabValueFromKey);
-//					Map<String, Map<String, List<String>>> sectionsValueToMap = tabsValueToMap.get(tabValueToKey);
-//					Iterator<String> sectionsValueFromIt = sectionsValueFromMap.keySet().iterator();
-//					Iterator<String> sectionsValueToIt = sectionsValueToMap.keySet().iterator();
-//					if (CreateEAG2012.TAB_DESCRIPTION.equalsIgnoreCase(tabValueFromKey)
-//							&& CreateEAG2012.TAB_DESCRIPTION.equalsIgnoreCase(tabValueToKey)) {
-//						while (sectionsValueFromIt.hasNext()) {
-//							String sectionValueFromKey = sectionsValueFromIt.next();
-//							String sectionValueToKey = sectionsValueToIt.next();
-//							Map<String, List<String>> subsectionsValueFromMap = sectionsValueFromMap.get(sectionValueFromKey);
-//							Map<String, List<String>> subsectionsValueToMap = sectionsValueToMap.get(sectionValueToKey);
-//							Iterator<String> subsectionsValueFromIt = subsectionsValueFromMap.keySet().iterator();
-//							Iterator<String> subsectionsValueToIt = subsectionsValueToMap.keySet().iterator();
-//							while (subsectionsValueFromIt.hasNext()) {
-//							if (CreateEAG2012.HOLDINGS.equalsIgnoreCase(sectionValueFromKey)
-//									&& CreateEAG2012.HOLDINGS.equalsIgnoreCase(sectionValueToKey)) {
-//									String subsectionValueFromKey = subsectionsValueFromIt.next();
-//									String subsectionValueToKey = subsectionsValueToIt.next();
-//									List<String> valuesFromList = subsectionsValueFromMap.get(subsectionValueFromKey);
-//									List<String> valuesToList = subsectionsValueToMap.get(subsectionValueToKey);
-//									for (int j = 0; j < valuesFromList.size(); j++) {
-//										FromDate fromDate = new FromDate();
-//										fromDate.setStandardDate(valuesFromList.get(j));
-//										fromDate.setContent(valuesFromList.get(j));
-//
-//										ToDate toDate = new ToDate();
-//										toDate.setStandardDate(valuesToList.get(j));
-//										toDate.setContent(valuesToList.get(j));
-//										
-//
-//										DateRange dateRange = new DateRange();
-//										dateRange.setFromDate(fromDate);
-//										dateRange.setToDate(toDate);
-//
-//										if (CreateEAG2012.HOLDING_SUBSECTION.equalsIgnoreCase(subsectionValueFromKey)
-//												&& CreateEAG2012.HOLDING_SUBSECTION.equalsIgnoreCase(subsectionValueToKey)) {
-//											if (repository.getHoldings() == null) {
-//												repository.setHoldings(new Holdings());
-//											}
-//											if (repository.getHoldings().getDateSet() == null) {
-//												repository.getHoldings().setDateSet(new DateSet());
-//											}
-//											repository.getHoldings().getDateSet().getDateOrDateRange().add(dateRange);
-//										}
-//									}
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
+		if (this.eag2012.getDateStandardDate() != null) {
+			for (int i = 0; i < this.eag2012.getDateStandardDate().size(); i++) {
+				// Repository.
+				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+
+				Map<String, Map<String, Map<String, List<List<String>>>>> tabsValueMap = this.eag2012.getDateStandardDate().get(i);
+				Iterator<String> tabsValueIt = tabsValueMap.keySet().iterator();
+				while (tabsValueIt.hasNext()) {
+					String tabValueKey = tabsValueIt.next();
+					Map<String, Map<String, List<List<String>>>> sectionsValueMap = tabsValueMap.get(tabValueKey);
+					Iterator<String> sectionsValueIt = sectionsValueMap.keySet().iterator();
+					if (CreateEAG2012.TAB_DESCRIPTION.equalsIgnoreCase(tabValueKey)) {
+						while (sectionsValueIt.hasNext()) {
+							String sectionValueKey = sectionsValueIt.next();
+							Map<String, List<List<String>>> subsectionsValueMap = sectionsValueMap.get(sectionValueKey);
+							Iterator<String> subsectionsValueIt = subsectionsValueMap.keySet().iterator();
+							if (CreateEAG2012.REPOSITORHIST.equalsIgnoreCase(sectionValueKey)) {
+								while (subsectionsValueIt.hasNext()) {
+									String subsectionValueKey = subsectionsValueIt.next();
+									List<List<String>> valuesList = subsectionsValueMap.get(subsectionValueKey);
+									for (int j = 0; j < valuesList.size(); j++) {
+										List<String> valueList = valuesList.get(j);
+										for (int k = 0; k < valuesList.size(); k++) {
+											Date date = new Date();
+											date.setStandardDate(valueList.get(k));
+											date.setContent(valueList.get(k));
+	
+											if (CreateEAG2012.REPOSITOR_FOUND.equalsIgnoreCase(subsectionValueKey)) {
+												// eag/archguide/desc/repositories/repository/repositorfuond/date
+												if (repository.getRepositorfound() == null) {
+													repository.setRepositorfound(new Repositorfound());
+												}
+												repository.getRepositorfound().setDate(date);
+											} else if (CreateEAG2012.REPOSITOR_SUP.equalsIgnoreCase(subsectionValueKey)) {
+												// eag/archguide/desc/repositories/repository/repositorsup/date
+												if (repository.getRepositorsup() == null) {
+													repository.setRepositorsup(new Repositorsup());
+												}
+												repository.getRepositorsup().setDate(date);
+											}
+										}
+									}
+								}
+							} else if (CreateEAG2012.HOLDINGS.equalsIgnoreCase(sectionValueKey)) {
+								while (subsectionsValueIt.hasNext()) {
+									String subsectionValueKey = subsectionsValueIt.next();
+									List<List<String>> valuesList = subsectionsValueMap.get(subsectionValueKey);
+									for (int j = 0; j < valuesList.size(); j++) {
+										List<String> valueList = valuesList.get(j);
+										for (int k = 0; k < valueList.size(); k++) {
+											Date date = new Date();
+											date.setStandardDate(valueList.get(k));
+											date.setContent(valueList.get(k));
+	
+											if (CreateEAG2012.HOLDING_SUBSECTION.equalsIgnoreCase(subsectionValueKey)) {
+												if (repository.getHoldings() == null) {
+													repository.setHoldings(new Holdings());
+												}
+												if (repository.getHoldings().getDateSet() == null) {
+													repository.getHoldings().setDateSet(new DateSet());
+												}
+												repository.getHoldings().getDateSet().getDateOrDateRange().add(date);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		if (this.eag2012.getFromDateStandardDate() != null
+				&& this.eag2012.getToDateStandardDate() != null) {
+			for (int i = 0; i < this.eag2012.getFromDateStandardDate().size(); i++) {
+				// Repository.
+				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+
+				Map<String, Map<String, Map<String, List<List<String>>>>> tabsValueFromMap = this.eag2012.getFromDateStandardDate().get(i);
+				Map<String, Map<String, Map<String, List<List<String>>>>> tabsValueToMap = this.eag2012.getToDateStandardDate().get(i);
+				Iterator<String> tabsValueFromIt = tabsValueFromMap.keySet().iterator();
+				Iterator<String> tabsValueToIt = tabsValueToMap.keySet().iterator();
+				while (tabsValueFromIt.hasNext()) {
+					String tabValueFromKey = tabsValueFromIt.next();
+					String tabValueToKey = tabsValueToIt.next();
+					Map<String, Map<String, List<List<String>>>> sectionsValueFromMap = tabsValueFromMap.get(tabValueFromKey);
+					Map<String, Map<String, List<List<String>>>> sectionsValueToMap = tabsValueToMap.get(tabValueToKey);
+					Iterator<String> sectionsValueFromIt = sectionsValueFromMap.keySet().iterator();
+					Iterator<String> sectionsValueToIt = sectionsValueToMap.keySet().iterator();
+					if (CreateEAG2012.TAB_DESCRIPTION.equalsIgnoreCase(tabValueFromKey)
+							&& CreateEAG2012.TAB_DESCRIPTION.equalsIgnoreCase(tabValueToKey)) {
+						while (sectionsValueFromIt.hasNext()) {
+							String sectionValueFromKey = sectionsValueFromIt.next();
+							String sectionValueToKey = sectionsValueToIt.next();
+							Map<String, List<List<String>>> subsectionsValueFromMap = sectionsValueFromMap.get(sectionValueFromKey);
+							Map<String, List<List<String>>> subsectionsValueToMap = sectionsValueToMap.get(sectionValueToKey);
+							Iterator<String> subsectionsValueFromIt = subsectionsValueFromMap.keySet().iterator();
+							Iterator<String> subsectionsValueToIt = subsectionsValueToMap.keySet().iterator();
+							while (subsectionsValueFromIt.hasNext()) {
+								String subsectionValueFromKey = subsectionsValueFromIt.next();
+								String subsectionValueToKey = subsectionsValueToIt.next();
+								List<List<String>> valuesFromList = subsectionsValueFromMap.get(subsectionValueFromKey);
+								List<List<String>> valuesToList = subsectionsValueToMap.get(subsectionValueToKey);
+									if (CreateEAG2012.HOLDINGS.equalsIgnoreCase(sectionValueFromKey)
+											&& CreateEAG2012.HOLDINGS.equalsIgnoreCase(sectionValueToKey)) {
+									for (int j = 0; j < valuesFromList.size(); j++) {
+										List<String> valueFromList = valuesFromList.get(j);
+										List<String> valueToList = valuesToList.get(j);
+										for (int k = 0; k < valueFromList.size(); k++) {
+											FromDate fromDate = new FromDate();
+											fromDate.setStandardDate(valueFromList.get(k));
+											fromDate.setContent(valueFromList.get(k));
+	
+											ToDate toDate = new ToDate();
+											toDate.setStandardDate(valueToList.get(k));
+											toDate.setContent(valueToList.get(k));
+
+											DateRange dateRange = new DateRange();
+											dateRange.setFromDate(fromDate);
+											dateRange.setToDate(toDate);
+	
+											if (CreateEAG2012.HOLDING_SUBSECTION.equalsIgnoreCase(subsectionValueFromKey)
+													&& CreateEAG2012.HOLDING_SUBSECTION.equalsIgnoreCase(subsectionValueToKey)) {
+												if (repository.getHoldings() == null) {
+													repository.setHoldings(new Holdings());
+												}
+												if (repository.getHoldings().getDateSet() == null) {
+													repository.getHoldings().setDateSet(new DateSet());
+												}
+												repository.getHoldings().getDateSet().getDateOrDateRange().add(dateRange);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -2252,6 +2219,144 @@ public class CreateEAG2012 {
 										if (otherServices.getDescriptiveNote() == null) {
 											otherServices.setDescriptiveNote(new DescriptiveNote());
 											otherServices.getDescriptiveNote().getP().add(p);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void getNompreformDates(final Nonpreform nonpreform, final int i) {
+		if (this.eag2012.getDateStandardDate() != null) {
+			// Main institution date.
+			Map<String, Map<String, Map<String, List<List<String>>>>> tabsValueMap = this.eag2012.getDateStandardDate().get(0);
+			Iterator<String> tabsValueIt = tabsValueMap.keySet().iterator();
+			while (tabsValueIt.hasNext()) {
+				String tabValueKey = tabsValueIt.next();
+				Map<String, Map<String, List<List<String>>>> sectionsValueMap = tabsValueMap.get(tabValueKey);
+				Iterator<String> sectionsValueIt = sectionsValueMap.keySet().iterator();
+				if (CreateEAG2012.TAB_IDENTITY.equalsIgnoreCase(tabValueKey)) {
+					while (sectionsValueIt.hasNext()) {
+						String sectionValueKey = sectionsValueIt.next();
+						Map<String, List<List<String>>> subsectionsValueMap = sectionsValueMap.get(sectionValueKey);
+						Iterator<String> subsectionsValueIt = subsectionsValueMap.keySet().iterator();
+						if (CreateEAG2012.ROOT.equalsIgnoreCase(sectionValueKey)) {
+							while (subsectionsValueIt.hasNext()) {
+								String subsectionValueKey = subsectionsValueIt.next();
+								List<List<String>> valuesList = subsectionsValueMap.get(subsectionValueKey);
+								for (int j = 0; j < valuesList.size(); j++) {
+									List<String> valueList = valuesList.get(j);
+									for (int k = 0; k < valuesList.size(); k++) {
+										if (k == i) {
+											Date date = new Date();
+											date.setStandardDate(valueList.get(k));
+											date.setContent(valueList.get(k));
+		
+											// TODO: Structure under revision.
+											if (CreateEAG2012.ROOT_SUBSECTION.equalsIgnoreCase(subsectionValueKey)) {
+												DateSet dateSet = new DateSet();
+												dateSet.getDateOrDateRange().add(date);
+	
+												List<Object> nonpreformObjectList = nonpreform.getContent();
+												UseDates useDates = null;
+												for (int l = 0; l < nonpreformObjectList.size(); l++) {
+													if (nonpreformObjectList.get(l) instanceof UseDates) {
+														useDates = (UseDates) nonpreformObjectList.get(l);
+													}
+												}
+												if (useDates == null) {
+													useDates = new UseDates();
+												}
+	
+												useDates.setDateSet(dateSet);
+	
+												nonpreform.getContent().add(useDates);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		if (this.eag2012.getFromDateStandardDate() != null
+				&& this.eag2012.getToDateStandardDate() != null) {
+			// Main institution dateRange.
+			Map<String, Map<String, Map<String, List<List<String>>>>> tabsValueFromMap = this.eag2012.getFromDateStandardDate().get(0);
+			Map<String, Map<String, Map<String, List<List<String>>>>> tabsValueToMap = this.eag2012.getToDateStandardDate().get(0);
+			Iterator<String> tabsValueFromIt = tabsValueFromMap.keySet().iterator();
+			Iterator<String> tabsValueToIt = tabsValueToMap.keySet().iterator();
+			while (tabsValueFromIt.hasNext()) {
+				String tabValueFromKey = tabsValueFromIt.next();
+				String tabValueToKey = tabsValueToIt.next();
+				Map<String, Map<String, List<List<String>>>> sectionsValueFromMap = tabsValueFromMap.get(tabValueFromKey);
+				Map<String, Map<String, List<List<String>>>> sectionsValueToMap = tabsValueToMap.get(tabValueToKey);
+				Iterator<String> sectionsValueFromIt = sectionsValueFromMap.keySet().iterator();
+				Iterator<String> sectionsValueToIt = sectionsValueToMap.keySet().iterator();
+				if (CreateEAG2012.TAB_IDENTITY.equalsIgnoreCase(tabValueFromKey)
+						&& CreateEAG2012.TAB_IDENTITY.equalsIgnoreCase(tabValueToKey)) {
+					while (sectionsValueFromIt.hasNext()) {
+						String sectionValueFromKey = sectionsValueFromIt.next();
+						String sectionValueToKey = sectionsValueToIt.next();
+						Map<String, List<List<String>>> subsectionsValueFromMap = sectionsValueFromMap.get(sectionValueFromKey);
+						Map<String, List<List<String>>> subsectionsValueToMap = sectionsValueToMap.get(sectionValueToKey);
+						Iterator<String> subsectionsValueFromIt = subsectionsValueFromMap.keySet().iterator();
+						Iterator<String> subsectionsValueToIt = subsectionsValueToMap.keySet().iterator();
+						while (subsectionsValueFromIt.hasNext()) {
+							if (CreateEAG2012.ROOT.equalsIgnoreCase(sectionValueFromKey)
+								&& CreateEAG2012.ROOT.equalsIgnoreCase(sectionValueToKey)) {
+								String subsectionValueFromKey = subsectionsValueFromIt.next();
+								String subsectionValueToKey = subsectionsValueToIt.next();
+								List<List<String>> valuesFromList = subsectionsValueFromMap.get(subsectionValueFromKey);
+								List<List<String>> valuesToList = subsectionsValueToMap.get(subsectionValueToKey);
+								for (int j = 0; j < valuesFromList.size(); j++) {
+									List<String> valueFromList = valuesFromList.get(j);
+									List<String> valueToList = valuesToList.get(j);
+									for (int k = 0; k < valueFromList.size(); k++) {
+										if (k == i) {
+											FromDate fromDate = new FromDate();
+											fromDate.setStandardDate(valueFromList.get(k));
+											fromDate.setContent(valueFromList.get(k));
+	
+											ToDate toDate = new ToDate();
+											toDate.setStandardDate(valueToList.get(k));
+											toDate.setContent(valueToList.get(k));
+	
+											DateRange dateRange = new DateRange();
+											dateRange.setFromDate(fromDate);
+											dateRange.setToDate(toDate);
+	
+											// TODO: Structure under revision.
+											if (CreateEAG2012.ROOT_SUBSECTION.equalsIgnoreCase(subsectionValueFromKey)
+													&& CreateEAG2012.ROOT_SUBSECTION.equalsIgnoreCase(subsectionValueToKey)) {
+												DateSet dateSet = new DateSet();
+												dateSet.getDateOrDateRange().add(dateRange);
+	
+												List<Object> nonpreformObjectList = nonpreform.getContent();
+												UseDates useDates = null;
+												for (int l = 0; l < nonpreformObjectList.size(); l++) {
+													if (nonpreformObjectList.get(l) instanceof UseDates) {
+														useDates = (UseDates) nonpreformObjectList.get(l);
+													}
+												}
+												if (useDates == null) {
+													useDates = new UseDates();
+												}
+	
+												useDates.setDateSet(dateSet);
+	
+												nonpreform.getContent().add(useDates);
+											}
 										}
 									}
 								}
