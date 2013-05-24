@@ -1,12 +1,16 @@
 package eu.apenet.persistence.hibernate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -20,6 +24,7 @@ import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
+import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.SourceGuide;
 
 public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> implements CLevelDAO {
@@ -87,21 +92,6 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		return (Long) new Long(0);
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<CLevel> findByHrefEadid(String eadid) {
-		long startTime = System.currentTimeMillis();
-		Criteria criteria = getSession().createCriteria(getPersistentClass(), "clevel");
-		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		criteria.add(Restrictions.eq("clevel.hrefEadid", eadid));
-		List<CLevel> results = criteria.list();
-		long endTime = System.currentTimeMillis();
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
-		}
-
-		return results;
-	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -193,14 +183,6 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		criteria.add(Restrictions.eq("clevel.parentClId", parentId));
 		return criteria;
-	}
-
-	@Override
-	public CLevel findByHrefEadid(FindingAid findingAid) {
-		Criteria criteria = getSession().createCriteria(getPersistentClass(), "clevel");
-		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		criteria.add(Restrictions.eq("clevel.hrefEadid", findingAid.getEadid()));
-		return (CLevel) criteria.uniqueResult();
 	}
 
 	@Override
@@ -334,42 +316,63 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		return (List<CLevel>) criteria.list();
 	}
 
-	@Override
-	public void setEcIdHql(String unitid, Long eadContentId, Long oldEadContentId) {
-		String hqlQuery = "update CLevel set ecId = :ecId where (ecId = :oldEcId and unitid = :unitid)";
-		Query query = getSession().createQuery(hqlQuery);
-		query.setLong("ecId", eadContentId);
-		query.setLong("oldEcId", oldEadContentId);
-		query.setString("unitid", unitid);
-		query.executeUpdate();
-	}
 
 	@Override
-	public void setEcIdHql(Long clId, Long eadContentId, Long oldEadContentId) {
-		String hqlQuery = "update CLevel set ecId = :ecId where (clId = :clId and ecId = :oldEcId)";
-		Query query = getSession().createQuery(hqlQuery);
-		query.setLong("ecId", eadContentId);
-		query.setLong("clId", clId);
-		query.setLong("oldEcId", oldEadContentId);
-		query.executeUpdate();
+	public Long countPossibleLinkedCLevels(Integer id, Class<? extends Ead> clazz) {
+		String jpaQuery = "SELECT count(clevel)" + buildPossibleLinkedCLevels(id, clazz);
+		TypedQuery<Long> query = getEntityManager().createQuery(jpaQuery, Long.class);		
+		query.setParameter("id", id);
+		return query.getSingleResult();
 	}
-
-	@Override
-	public void setEcIdHql(List<Long> clIds, Long eadContentId, Long oldEadContentId) {
-		StringBuffer buffer = new StringBuffer();
-		buffer.append(" where (ecId = :oldEcId) and (");
-		for (int i = 0; i < clIds.size(); i++) {
-			if (i != 0)
-				buffer.append(" OR ");
-			buffer.append("clId = " + clIds.get(i));
+	private String buildPossibleLinkedCLevels(Integer id, Class<? extends Ead> clazz) {
+		String varName = "hgId";
+		if (SourceGuide.class.equals(clazz)){
+			varName = "sgId";
 		}
-
-		buffer.append(")");
-		String hqlQuery = "update CLevel set ecId = :ecId" + buffer.toString();
-		Query query = getSession().createQuery(hqlQuery);
-		query.setLong("ecId", eadContentId);
-		query.setLong("oldEcId", oldEadContentId);
-
-		query.executeUpdate();
+		return " FROM CLevel clevel JOIN clevel.eadContent eadContent WHERE eadContent." + varName + " = :id AND clevel.hrefEadid IS NOT NULL";
 	}
+	@Override
+	public List<CLevel> getLinkedCLevels(Integer id, Class<? extends Ead> clazz) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Long countLinkedCLevels(Integer id, Class<? extends Ead> clazz) {
+		String jpaQuery = "SELECT count(clevel)" + buildLinkedCLevelsFromQuery(id, clazz);
+		TypedQuery<Long> query = getEntityManager().createQuery(jpaQuery, Long.class);		
+		query.setParameter("id", id);
+		return query.getSingleResult();
+	}
+	private String buildLinkedCLevelsFromQuery(Integer id, Class<? extends Ead> clazz) {
+		String varName = "hgId";
+		if (SourceGuide.class.equals(clazz)){
+			varName = "sgId";
+		}
+		return " FROM HgSgFaRelation hgSgFaRelation JOIN hgSgFaRelation.hgSgClevel clevel WHERE hgSgFaRelation." + varName + " = :id)";
+	}
+	@Override
+	public List<CLevel> getNotLinkedCLevels(Integer id, Class<? extends Ead> clazz) {
+		String jpaQuery = "SELECT clevel" + buildNotLinkedCLevelsFromQuery(id, clazz);
+		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);
+		query.setParameter("id", id);
+		return query.getResultList();
+	}
+
+
+	@Override
+	public Long countNotLinkedCLevels(Integer id, Class<? extends Ead> clazz) {
+		String jpaQuery = "SELECT count(clevel)" + buildNotLinkedCLevelsFromQuery(id, clazz);
+		TypedQuery<Long> query = getEntityManager().createQuery(jpaQuery, Long.class);		
+		query.setParameter("id", id);
+		return query.getSingleResult();
+	}
+	private String buildNotLinkedCLevelsFromQuery(Integer id, Class<? extends Ead> clazz) {
+		String varName = "hgId";
+		if (SourceGuide.class.equals(clazz)){
+			varName = "sgId";
+		}
+		return " FROM CLevel clevel JOIN clevel.eadContent eadContent WHERE eadContent." + varName + " = :id AND clevel.hrefEadid IS NOT NULL AND clevel.clId NOT IN (SELECT hgSgFaRelation.hgSgClevelId FROM HgSgFaRelation hgSgFaRelation WHERE hgSgFaRelation." + varName + " = :id)";
+	}
+	
+
 }

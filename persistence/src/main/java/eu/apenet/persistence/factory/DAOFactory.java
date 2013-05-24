@@ -17,6 +17,7 @@ import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.dao.EseStateDAO;
 import eu.apenet.persistence.dao.FindingAidDAO;
 import eu.apenet.persistence.dao.GenericDAO;
+import eu.apenet.persistence.dao.HgSgFaRelationDAO;
 import eu.apenet.persistence.dao.HoldingsGuideDAO;
 import eu.apenet.persistence.dao.LangDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
@@ -127,4 +128,5 @@ public abstract class DAOFactory {
 	public abstract QueueItemDAO getQueueItemDAO();
 	public abstract UserRoleDAO getUserRoleDAO();
     public abstract EadDAO getEadDAO();
+    public abstract HgSgFaRelationDAO getHgSgFaRelationDAO();
 }

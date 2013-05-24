@@ -27,6 +27,7 @@ public class EadSearchOptions implements Serializable{
 	private Boolean published = null;
 	private Boolean converted = null;
 	private Boolean publishedToAll = null;
+	private Boolean linked = null;
 	private List<ValidatedState> validated = new ArrayList<ValidatedState>();
 	private List<EuropeanaState> europeana = new ArrayList<EuropeanaState>();
 	private List<QueuingState> queuing = new ArrayList<QueuingState>();
@@ -47,6 +48,7 @@ public class EadSearchOptions implements Serializable{
 		this.published = eadSearchOptions.getPublished();
 		this.converted = eadSearchOptions.getConverted();
 		this.publishedToAll = eadSearchOptions.getPublishedToAll();
+		this.linked = eadSearchOptions.getLinked();
 		for (ValidatedState validatedState: eadSearchOptions.getValidated()){
 			validated.add(validatedState);
 		}
@@ -198,6 +200,12 @@ public class EadSearchOptions implements Serializable{
 	public void setQueuing(QueuingState queuingState) {
 		this.queuing.clear();
 		this.queuing.add(queuingState);
+	}
+	public Boolean getLinked() {
+		return linked;
+	}
+	public void setLinked(Boolean linked) {
+		this.linked = linked;
 	}
 	
 }

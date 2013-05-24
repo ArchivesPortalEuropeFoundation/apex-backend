@@ -4,7 +4,6 @@ import java.util.List;
 
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
-import eu.apenet.persistence.vo.FindingAid;
 
 /**
  * 
@@ -32,8 +31,6 @@ public interface CLevelDAO extends GenericDAO<CLevel, Long> {
 	@Deprecated
 	public  List<CLevel> findTopCLevels(Long eadContentId);
 
-	public CLevel findByHrefEadid(FindingAid findingAid);
-
     @Deprecated
     public List<CLevel> findTopCLevelsOrderUnitid(Long eadContentId);
 
@@ -44,7 +41,6 @@ public interface CLevelDAO extends GenericDAO<CLevel, Long> {
 
     public Long getClIdByUnitid(String unitid, Long eadContentId);
 
-	public List<CLevel> findByHrefEadid(String eadid);
 	
 	public List<CLevel> getCLevelsWithinSystemByHoldingsGuideId(Integer hgId);
 	
@@ -52,12 +48,14 @@ public interface CLevelDAO extends GenericDAO<CLevel, Long> {
 
 
 	public Long countCLevelsOutOfSystemByHoldingsGuideId(Integer hgId);
-	public Long countCLevelsByEadId(Integer hgId,Class<? extends Ead> clazz);
+	public Long countCLevelsByEadId(Integer id,Class<? extends Ead> clazz);
 	
 	public Long countTotalCLevelsByHoldingsGuideId(Integer hgId);
-
-    public void setEcIdHql(String unitid, Long eadContentId, Long oldEadContentId);
-    public void setEcIdHql(Long clId, Long eadContentId, Long oldEadContentId);
-    public void setEcIdHql(List<Long> clIds, Long eadContentId, Long oldEadContentId);
+	
+	public Long countPossibleLinkedCLevels(Integer id,Class<? extends Ead> clazz);
+	public List<CLevel> getLinkedCLevels(Integer id,Class<? extends Ead> clazz);
+	public List<CLevel> getNotLinkedCLevels(Integer id,Class<? extends Ead> clazz);
+	public Long countLinkedCLevels(Integer id,Class<? extends Ead> clazz);
+	public Long countNotLinkedCLevels(Integer id,Class<? extends Ead> clazz);	
 }
 

@@ -46,7 +46,7 @@ public class CLevel implements Serializable{
 	private Long parentClId;
 	@Column(name = "href_eadid")
 	private String hrefEadid;
-
+	
 	private String xml;
 
 	public String getLevel() {
@@ -122,5 +122,5 @@ public class CLevel implements Serializable{
 	public String getHrefEadid() {
 		return hrefEadid;
 	}
-	
+
 }

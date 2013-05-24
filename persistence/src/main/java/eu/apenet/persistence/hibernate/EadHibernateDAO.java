@@ -8,6 +8,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -20,6 +21,7 @@ import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.HgSgFaRelation;
 import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.ValidatedState;
 
@@ -45,7 +47,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Ead> cq = criteriaBuilder.createQuery(Ead.class);
 		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClazz());
-		cq.where(buildWhere(from, eadSearchOptions));
+		cq.where(buildWhere(from, cq, eadSearchOptions));
 		cq.select(from);
 		/*
 		 * add ordering
@@ -76,7 +78,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Ead> cq = criteriaBuilder.createQuery(Ead.class);
 		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClazz());
-		cq.where(buildWhere(from, eadSearchOptions));
+		cq.where(buildWhere(from, cq, eadSearchOptions));
 		cq.select(from);
 
 		TypedQuery<Ead> query = getEntityManager().createQuery(cq);
@@ -89,7 +91,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
 		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClazz());
-		cq.where(buildWhere(from, eadSearchOptions));
+		cq.where(buildWhere(from, cq, eadSearchOptions));
 		cq.select(criteriaBuilder.countDistinct(from));
 
 		return getEntityManager().createQuery(cq).getSingleResult();
@@ -100,7 +102,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
 		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClazz());
-		cq.where(criteriaBuilder.and(buildWhere(from, eadSearchOptions),
+		cq.where(criteriaBuilder.and(buildWhere(from, cq, eadSearchOptions),
 				criteriaBuilder.greaterThan(from.<Integer> get("totalNumberOfUnits"), 0)));
 		cq.select(criteriaBuilder.sum(from.<Long> get("totalNumberOfUnits")));
 
@@ -112,7 +114,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
 		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClazz());
-		cq.where(criteriaBuilder.and(buildWhere(from, eadSearchOptions),
+		cq.where(criteriaBuilder.and(buildWhere(from, cq, eadSearchOptions),
 				criteriaBuilder.greaterThan(from.<Integer> get("totalNumberOfDaos"), 0)));
 		cq.select(criteriaBuilder.sum(from.<Long> get("totalNumberOfDaos")));
 
@@ -123,13 +125,13 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
 		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClazz());
-		cq.where(criteriaBuilder.and(buildWhere(from, eadSearchOptions),
+		cq.where(criteriaBuilder.and(buildWhere(from, cq, eadSearchOptions),
 				criteriaBuilder.greaterThan(from.<Integer> get("totalNumberOfChos"), 0)));
 		cq.select(criteriaBuilder.sum(from.<Long> get("totalNumberOfChos")));
 
 		return getEntityManager().createQuery(cq).getSingleResult();
 	}
-	private Predicate buildWhere(Root<? extends Ead> from, EadSearchOptions eadSearchOptions) {
+	private Predicate buildWhere(Root<? extends Ead> from, CriteriaQuery<?> cq, EadSearchOptions eadSearchOptions) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		List<Predicate> whereClause = new ArrayList<Predicate>();
 		if (eadSearchOptions.getIds() != null && eadSearchOptions.getIds().size() > 0) {
@@ -155,6 +157,9 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 			}
 			whereClause.add(criteriaBuilder.or(validatedPredicated.toArray(new Predicate[0])));
 		}
+		/*
+		 * only if findingaid
+		 */
 		if (FindingAid.class.equals(eadSearchOptions.getEadClazz())) {
 			if (eadSearchOptions.getEuropeana().size() > 0) {
 				List<Predicate> europeanaPredicated = new ArrayList<Predicate>();
@@ -162,6 +167,19 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 					europeanaPredicated.add(criteriaBuilder.equal(from.get("europeana"), europeanaState));
 				}
 				whereClause.add(criteriaBuilder.or(europeanaPredicated.toArray(new Predicate[0])));
+			}
+			if (eadSearchOptions.getLinked() != null) {
+				Subquery<Long> subquery = cq.subquery(Long.class);
+				Root<HgSgFaRelation> fromHgSgFaRelation = subquery.from(HgSgFaRelation.class);
+				subquery.select(fromHgSgFaRelation.<Long>get("faId"));
+				subquery.where(criteriaBuilder.equal(fromHgSgFaRelation.get("aiId"),eadSearchOptions.getArchivalInstitionId()));
+				subquery.where(criteriaBuilder.equal(fromHgSgFaRelation.<Long>get("faId"),from.get("id")));
+				if (eadSearchOptions.getLinked()){
+					whereClause.add(criteriaBuilder.exists(subquery));
+				}else {
+					whereClause.add(criteriaBuilder.not(criteriaBuilder.exists(subquery)));
+					
+				}
 			}
 		}
 		if (eadSearchOptions.getQueuing().size() > 0) {
@@ -206,6 +224,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 
 			}
 		}
+
 		return criteriaBuilder.and(whereClause.toArray(new Predicate[0]));
 	}
 
