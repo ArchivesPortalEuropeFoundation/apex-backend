@@ -10,5 +10,5 @@ import eu.apenet.persistence.vo.HoldingsGuide;
 
 public interface HoldingsGuideDAO extends GenericDAO<HoldingsGuide, Integer> {
 
-	public String getLinkedHoldingsGuideTitleByFindingAidEadid(String eadid,Integer aiId);
+	
 }
