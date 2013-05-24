@@ -9,7 +9,6 @@ import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.dao.EseStateDAO;
-import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.Ese;
@@ -28,7 +27,7 @@ public class DeleteTask extends AbstractEadTask {
 		if (!ead.isPublished()) {
 			if (ead instanceof FindingAid) {
 				FindingAid findingAid = (FindingAid) ead;
-				if (EuropeanaState.NOT_CONVERTED.equals(findingAid.getEuropeana())) {
+				if (EuropeanaState.NOT_CONVERTED.equals(findingAid.getEuropeana()) || EuropeanaState.NO_EUROPEANA_CANDIDATE.equals(findingAid.getEuropeana())) {
 					valid =true;
 				}
 			}else{
