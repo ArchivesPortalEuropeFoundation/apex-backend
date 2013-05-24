@@ -1,6 +1,8 @@
 package eu.apenet.persistence.vo;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -46,6 +49,9 @@ public class CLevel implements Serializable{
 	private Long parentClId;
 	@Column(name = "href_eadid")
 	private String hrefEadid;
+
+	@OneToMany(mappedBy="hgSgClevel")
+	private Set<HgSgFaRelation> hgSgFaRelations = new HashSet<HgSgFaRelation>();
 	
 	private String xml;
 
@@ -122,5 +128,16 @@ public class CLevel implements Serializable{
 	public String getHrefEadid() {
 		return hrefEadid;
 	}
-
+	public Set<HgSgFaRelation> getHgSgFaRelations() {
+		return hgSgFaRelations;
+	}
+	public void setHgSgFaRelations(Set<HgSgFaRelation> hgSgFaRelations) {
+		this.hgSgFaRelations = hgSgFaRelations;
+	}
+    public HgSgFaRelation getHgSgFaRelation() {
+        Set<HgSgFaRelation> set = getHgSgFaRelations();
+        if(set == null || set.isEmpty())
+            return null;
+        return set.iterator().next();
+    }
 }

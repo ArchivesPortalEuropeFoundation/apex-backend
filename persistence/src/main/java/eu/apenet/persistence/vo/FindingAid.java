@@ -63,7 +63,8 @@ public class FindingAid extends Ead {
 	private Set<Warnings> warningses = new HashSet<Warnings>(0);
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "findingAid")
 	private Set<EadContent> eadContents = new HashSet<EadContent>(0);
-
+	@OneToMany(mappedBy="findingAid")
+	private Set<HgSgFaRelation> hgSgFaRelations = new HashSet<HgSgFaRelation>();
 	public Integer getId() {
 		return id;
 	}
@@ -234,5 +235,16 @@ public class FindingAid extends Ead {
 	public void setTotalNumberOfChos(Long totalNumberOfChos) {
 		this.totalNumberOfChos = totalNumberOfChos;
 	}
-
+	public Set<HgSgFaRelation> getHgSgFaRelations() {
+		return hgSgFaRelations;
+	}
+	public void setHgSgFaRelations(Set<HgSgFaRelation> hgSgFaRelations) {
+		this.hgSgFaRelations = hgSgFaRelations;
+	}
+    public HgSgFaRelation getHgSgFaRelation() {
+        Set<HgSgFaRelation> set = getHgSgFaRelations();
+        if(set == null || set.isEmpty())
+            return null;
+        return set.iterator().next();
+    }
 }
