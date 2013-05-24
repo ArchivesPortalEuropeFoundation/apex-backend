@@ -91,11 +91,11 @@ public class Eag2012 {
 	private List<String> abbreviationId;
 	private List<String> abbreviationLang;
 	private List<String> abbreviationValue;
-	private List<List<String>> citationId; //first index if control tab, next elements are into repo_# --> <repository></directions></citation></repository>
-	private List<List<String>> citationLang;
-	private List<List<String>> citationLastDateTimeVerified;
-	private List<List<String>> citationHref;
-	private List<List<String>> citationValue;
+	private List<Map<String, List<String>>> citationId; //first index if control tab, next elements are into repo_# --> <repository></directions></citation></repository>
+	private List<Map<String, List<String>>> citationLang;
+	private List<Map<String, List<String>>> citationLastDateTimeVerified;
+	private List<Map<String, List<String>>> citationHref;
+	private List<Map<String, List<String>>> citationValue;
 	private List<Map<String,String>> descriptiveNoteLang;
 	private List<Map<String,String>> descriptiveNoteId;
 	private List<Map<String,List<String>>> descriptiveNotePId;
@@ -216,10 +216,10 @@ public class Eag2012 {
 	private List<Map<String, Map<String, List<String>>>> emailValue;
 	private List<Map<String,List<String> >> faxValue;
 	private List<Map<String, Map<String, List<String>>>> telephoneValue;
-	private List<String> relationEntryScriptCode;
-	private List<String> relationEntryId;
-	private List<String> relationEntryLang;
-	private List<String> relationEntryValue;
+	private List<Map<String, List<String>>> relationEntryScriptCode;
+	private List<Map<String, List<String>>> relationEntryId;
+	private List<Map<String, List<String>>> relationEntryLang;
+	private List<Map<String, List<String>>> relationEntryValue;
 	private List<String> eagRelationEagRelationType;
 	private List<String> eagRelationHref;
 	private List<String> placeEntryAccuracy;
@@ -683,44 +683,44 @@ public class Eag2012 {
 		this.abbreviationValue = abbreviationValue;
 	}
 
-	public List<List<String>> getCitationId() {
+	public List<Map<String, List<String>>> getCitationId() {
 		return citationId;
 	}
 
-	public void setCitationId(List<List<String>> citationId) {
+	public void setCitationId(List<Map<String,List<String>>> citationId) {
 		this.citationId = citationId;
 	}
 
-	public List<List<String>> getCitationLang() {
+	public List<Map<String, List<String>>> getCitationLang() {
 		return citationLang;
 	}
 
-	public void setCitationLang(List<List<String>> citationLang) {
+	public void setCitationLang(List<Map<String,List<String>>> citationLang) {
 		this.citationLang = citationLang;
 	}
 
-	public List<List<String>> getCitationLastDateTimeVerified() {
+	public List<Map<String, List<String>>> getCitationLastDateTimeVerified() {
 		return citationLastDateTimeVerified;
 	}
 
 	public void setCitationLastDateTimeVerified(
-			List<List<String>> citationLastDateTimeVerified) {
+			List<Map<String,List<String>>> citationLastDateTimeVerified) {
 		this.citationLastDateTimeVerified = citationLastDateTimeVerified;
 	}
 
-	public List<List<String>> getCitationHref() {
+	public List<Map<String, List<String>>> getCitationHref() {
 		return citationHref;
 	}
 
-	public void setCitationHref(List<List<String>> citationHref) {
+	public void setCitationHref(List<Map<String,List<String>>> citationHref) {
 		this.citationHref = citationHref;
 	}
 
-	public List<List<String>> getCitationValue() {
+	public List<Map<String, List<String>>> getCitationValue() {
 		return citationValue;
 	}
 
-	public void setCitationValue(List<List<String>> citationValue) {
+	public void setCitationValue(List<Map<String, List<String>>> citationValue) {
 		this.citationValue = citationValue;
 	}
 
@@ -1684,35 +1684,35 @@ public class Eag2012 {
 		this.telephoneValue = telephoneValue;
 	}
 
-	public List<String> getRelationEntryScriptCode() {
+	public List<Map<String, List<String>>> getRelationEntryScriptCode() {
 		return relationEntryScriptCode;
 	}
 
-	public void setRelationEntryScriptCode(List<String> relationEntryScriptCode) {
+	public void setRelationEntryScriptCode(List<Map<String, List<String>>> relationEntryScriptCode) {
 		this.relationEntryScriptCode = relationEntryScriptCode;
 	}
 
-	public List<String> getRelationEntryId() {
+	public List<Map<String, List<String>>> getRelationEntryId() {
 		return relationEntryId;
 	}
 
-	public void setRelationEntryId(List<String> relationEntryId) {
+	public void setRelationEntryId(List<Map<String, List<String>>> relationEntryId) {
 		this.relationEntryId = relationEntryId;
 	}
 
-	public List<String> getRelationEntryLang() {
+	public List<Map<String, List<String>>> getRelationEntryLang() {
 		return relationEntryLang;
 	}
 
-	public void setRelationEntryLang(List<String> relationEntryLang) {
+	public void setRelationEntryLang(List<Map<String, List<String>>> relationEntryLang) {
 		this.relationEntryLang = relationEntryLang;
 	}
 
-	public List<String> getRelationEntryValue() {
+	public List<Map<String, List<String>>> getRelationEntryValue() {
 		return relationEntryValue;
 	}
 
-	public void setRelationEntryValue(List<String> relationEntryValue) {
+	public void setRelationEntryValue(List<Map<String, List<String>>> relationEntryValue) {
 		this.relationEntryValue = relationEntryValue;
 	}
 

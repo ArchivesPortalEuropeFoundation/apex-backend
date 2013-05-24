@@ -451,9 +451,9 @@ public class Eag2012Creator {
 		    
 		    ArrayList<HashMap<String, ?>> childrenresourceRelation = new ArrayList<HashMap<String,?>>();
 		
-		    for(int i=0;this.eag2012.getRelationEntryValue()!=null && i<this.eag2012.getRelationEntryValue().size();i++){//no mandatory repeatable
+		/*TODO    for(int i=0;this.eag2012.getRelationEntryValue()!=null && i<this.eag2012.getRelationEntryValue().size();i++){//no mandatory repeatable
 		    	childrenresourceRelation.add(buildRelationEntry(this.eag2012.getRelationEntryScriptCode().get(i),this.eag2012.getRelationEntryId().get(i),this.eag2012.getRelationEntryLang().get(i),this.eag2012.getRelationEntryValue().get(i)));
-		    } 
+		    } */
 		     childrenresourceRelation.add(buildDescriptiveNote(0,TAB_RELATION,RESOURCE_RELATION,0)); //mandatory no repeatable
 		     
 		     for(int i=0;this.eag2012.getDateSetLang()!=null && i<this.eag2012.getDateSetLang().size();i++){//no mandatory repeatable
@@ -516,9 +516,9 @@ public class Eag2012Creator {
 		   
 		    //Children of eagRelation
 		    ArrayList<HashMap<String, ?>> childrenRelations = new ArrayList<HashMap<String,?>>();
-		    for(int i=0;this.eag2012.getRelationEntryValue()!=null && i<this.eag2012.getRelationEntryValue().size();i++){//no mandatory repeatable
+		/*TODO    for(int i=0;this.eag2012.getRelationEntryValue()!=null && i<this.eag2012.getRelationEntryValue().size();i++){//no mandatory repeatable
 		    	childrenRelations.add(buildRelationEntry(this.eag2012.getRelationEntryScriptCode().get(i),this.eag2012.getRelationEntryId().get(i),this.eag2012.getRelationEntryLang().get(i),this.eag2012.getRelationEntryValue().get(i)));
-		    }
+		    }*/
 		    childrenRelations.add(buildDescriptiveNote(0,TAB_RELATION,EAG_RELATION,0)); //mandatory no repeatable
 		    
 		childeagRelation.put("children", childrenRelations); 
@@ -593,9 +593,9 @@ public class Eag2012Creator {
         childControl.put("nodeValue", null);
        
         ArrayList<HashMap<String, Object>> childControlChildren = new ArrayList<HashMap<String,Object>>();
-        for(int i=0;this.eag2012.getCitationValue()!=null && i<this.eag2012.getCitationValue().size();i++){ // citation mandatory, repeatable
+    /*TODO    for(int i=0;this.eag2012.getCitationValue()!=null && i<this.eag2012.getCitationValue().size();i++){ // citation mandatory, repeatable
           childControlChildren.add(buildCitation(this.eag2012.getCitationId().get(0).get(i),this.eag2012.getCitationLang().get(0).get(i),this.eag2012.getCitationLastDateTimeVerified().get(0).get(i),this.eag2012.getCitationHref().get(0).get(i),this.eag2012.getCitationValue().get(0).get(i)));
-        }
+        }*/
 /* TODO        childControlChildren.add(buildAbbreviation(this.eag2012.getAbbreviationId(),this.eag2012.getAbbreviationLang(),this.eag2012.getAbbreviationValue())); //no-mandatory, no-repeatable */
         childControlChildren.add(buildDescriptiveNote(0,TAB_CONTROL,LOCAL_TYPE_DECLARATION,0)); //no-mandatory,no-repeatable 
         childControl.put("children",childControlChildren);
@@ -639,7 +639,7 @@ public class Eag2012Creator {
         ArrayList<HashMap<String, Object>> childControlChildren = new ArrayList<HashMap<String,Object>>();
 /* TODO        childControlChildren.add(buildAbbreviation(this.eag2012.getAbbreviationId(),this.eag2012.getAbbreviationLang(),this.eag2012.getAbbreviationValue())); //no-mandatory,no-repeatable */
         for(int i=0;this.eag2012.getCitationValue()!=null && i<this.eag2012.getCitationValue().size();i++){ //mandatory, repeatable
-        	childControlChildren.add(buildCitation(this.eag2012.getCitationId().get(0).get(i),this.eag2012.getCitationLang().get(0).get(i),this.eag2012.getCitationLastDateTimeVerified().get(0).get(i),this.eag2012.getCitationHref().get(0).get(i),this.eag2012.getCitationValue().get(0).get(i))); //get(0) is reserve for citation into TAB_CONTROL
+   /*TODO     	childControlChildren.add(buildCitation(this.eag2012.getCitationId().get(0).get(i),this.eag2012.getCitationLang().get(0).get(i),this.eag2012.getCitationLastDateTimeVerified().get(0).get(i),this.eag2012.getCitationHref().get(0).get(i),this.eag2012.getCitationValue().get(0).get(i))); //get(0) is reserve for citation into TAB_CONTROL*/
         }
         childControlChildren.add(buildDescriptiveNote(0,TAB_CONTROL,CONVENTION_DECLARATION,0)); //no-mandatory, no-repeatable
         
@@ -2229,7 +2229,7 @@ public class Eag2012Creator {
      	 childArchguide3.put("nodeValue", directionsValue);
      	 ArrayList<HashMap<String, Object>> childArchguide3Children = new ArrayList<HashMap<String, Object>>();
  	        for(int i=0;this.eag2012.getCitationHref()!=null && this.eag2012.getCitationHref().size()>indexRepo && this.eag2012.getCitationHref().get(indexRepo)!=null && i<this.eag2012.getCitationHref().get(indexRepo).size();i++){ //no mandatory
- 	        	childArchguide3Children.add(buildCitation(this.eag2012.getCitationId().get(indexRepo).get(i),this.eag2012.getCitationLang().get(indexRepo).get(i),this.eag2012.getCitationLastDateTimeVerified().get(indexRepo).get(i),this.eag2012.getCitationHref().get(indexRepo).get(i),this.eag2012.getCitationValue().get(indexRepo).get(i)));
+ 	      /*TODO  	childArchguide3Children.add(buildCitation(this.eag2012.getCitationId().get(indexRepo).get(i),this.eag2012.getCitationLang().get(indexRepo).get(i),this.eag2012.getCitationLastDateTimeVerified().get(indexRepo).get(i),this.eag2012.getCitationHref().get(indexRepo).get(i),this.eag2012.getCitationValue().get(indexRepo).get(i)));*/
  	        }
 	       childArchguide3.put("children", childArchguide3Children);
 		

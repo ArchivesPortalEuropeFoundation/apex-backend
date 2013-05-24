@@ -699,11 +699,254 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		    if(jsonObj.has("control")){
 		    	eag2012 = parseControlJsonObjToEag2012(eag2012, jsonObj);
 		    }
+		    if(jsonObj.has("relations")){
+		    	eag2012 = parseRelationJsonObjToEag2012(eag2012, jsonObj);
+		    }
 		}
 		
 		return eag2012;
 	}
-	
+	private Eag2012 parseRelationJsonObjToEag2012(Eag2012 eag2012, JSONObject jsonObj) throws JSONException{
+		JSONObject relation = jsonObj.getJSONObject("relations");
+		if(relation!=null){
+			//resourceRelation section
+			if(relation.has("resourceRelations")){
+				JSONObject resourceRelations = relation.getJSONObject("resourceRelations");
+				int i=0;
+				while(resourceRelations.has("resourceRelationTable_"+(++i))){
+					JSONObject resourceRelationTable = resourceRelations.getJSONObject("resourceRelationTable_"+i);
+					if(resourceRelationTable.has("textWebsiteOfResource")){
+						List<String> website = eag2012.getResourceRelationHref();
+						if(website==null){
+							website = new ArrayList<String>();
+						}
+						website.add(resourceRelationTable.getString("textWebsiteOfResource"));
+						eag2012.setResourceRelationHref(website);
+					}
+					if(resourceRelationTable.has("selectTypeOfYourRelation")){
+						List<String> typeOfYourRelation = eag2012.getResourceRelationResourceRelationType();
+						if(typeOfYourRelation==null){
+							typeOfYourRelation = new ArrayList<String>();
+						}
+						typeOfYourRelation.add(resourceRelationTable.getString("selectTypeOfYourRelation"));
+						eag2012.setResourceRelationResourceRelationType(typeOfYourRelation);
+					}
+					if(resourceRelationTable.has("textTitleOfRelatedMaterial")){
+						List<Map<String, List<String>>> listRelationEnrtyMap = eag2012.getRelationEntryValue();
+						if(listRelationEnrtyMap==null){
+							listRelationEnrtyMap= new ArrayList<Map<String,List<String>>>();
+						}
+						Map<String,List<String>> relationEntryMap = null;
+						if(listRelationEnrtyMap.size()>i && listRelationEnrtyMap.get(i)!=null){
+							relationEntryMap = listRelationEnrtyMap.get(i);
+						}else{
+							relationEntryMap = new HashMap<String,List<String>>();
+						}
+						List<String> relationEntryList =null;
+						if(relationEntryMap.size()>i && relationEntryMap.get(CreateEAG2012.RESOURCE_RELATION)!=null){
+							relationEntryList= relationEntryMap.get(CreateEAG2012.RESOURCE_RELATION);
+						}else{
+							relationEntryList = new ArrayList<String>();
+						}
+						relationEntryList.add(resourceRelationTable.getString("textTitleOfRelatedMaterial"));
+						relationEntryMap.put(CreateEAG2012.RESOURCE_RELATION, relationEntryList);
+					    if(listRelationEnrtyMap.size()>i){
+					    	listRelationEnrtyMap.set(i, relationEntryMap);
+					    }else{
+					    	listRelationEnrtyMap.add(relationEntryMap);
+					    }
+					    eag2012.setRelationEntryValue(listRelationEnrtyMap);
+					}
+					if(resourceRelationTable.has("textDescriptionOfRelation")){
+						List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
+						 if(descriptiveNotePValue==null){
+							 descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
+						 }
+						 Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
+						 if(descriptiveNotePValue.size()>i && descriptiveNotePValue.get(i)!=null){
+							 descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
+						 }else{
+							 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
+						 }
+						 Map<String, List<String>> descriptiveNoteMapList = null;
+						 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_RELATION)!=null){
+							 descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_RELATION);
+						 }else{
+							 descriptiveNoteMapList = new HashMap<String, List<String>>();
+						 }
+						 List<String> descriptiveNoteList = null;
+						 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.RESOURCE_RELATION)!=null){
+							 descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.RESOURCE_RELATION);
+						 }else{
+							 descriptiveNoteList = new ArrayList<String>();
+						 }
+						 descriptiveNoteList.add(resourceRelationTable.getString("textDescriptionOfRelation"));
+						 descriptiveNoteMapList.put(CreateEAG2012.RESOURCE_RELATION,descriptiveNoteList);
+						 descriptiveNoteMapMapList.put(CreateEAG2012.TAB_RELATION,descriptiveNoteMapList);
+						 if(descriptiveNotePValue.size()>i){
+							 descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
+						 }else{
+							 descriptiveNotePValue.add(descriptiveNoteMapMapList);
+						 }
+						 eag2012.setDescriptiveNotePValue(descriptiveNotePValue);
+					 }
+					if(resourceRelationTable.has("selectLanguageDescriptionOfRelation")){
+						List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePLang();
+						 if(descriptiveNotePValue==null){
+							 descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
+						 }
+						 Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
+						 if(descriptiveNotePValue.size()>i && descriptiveNotePValue.get(i)!=null){
+							 descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
+						 }else{
+							 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
+						 }
+						 Map<String, List<String>> descriptiveNoteMapList = null;
+						 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_RELATION)!=null){
+							 descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_RELATION);
+						 }else{
+							 descriptiveNoteMapList = new HashMap<String, List<String>>();
+						 }
+						 List<String> descriptiveNoteList = null;
+						 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.RESOURCE_RELATION)!=null){
+							 descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.RESOURCE_RELATION);
+						 }else{
+							 descriptiveNoteList = new ArrayList<String>();
+						 }
+						 descriptiveNoteList.add(resourceRelationTable.getString("selectLanguageDescriptionOfRelation"));
+						 descriptiveNoteMapList.put(CreateEAG2012.RESOURCE_RELATION,descriptiveNoteList);
+						 descriptiveNoteMapMapList.put(CreateEAG2012.TAB_RELATION,descriptiveNoteMapList);
+						 if(descriptiveNotePValue.size()>i){
+							 descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
+						 }else{
+							 descriptiveNotePValue.add(descriptiveNoteMapMapList);
+						 }
+						 eag2012.setDescriptiveNotePLang(descriptiveNotePValue);
+					 }	
+				}//end while resourceRelations
+			}//end if resourceRelation
+			
+			//institution Repository section
+			if(relation.has("institutionRelations")){
+				JSONObject institutionRelations = relation.getJSONObject("institutionRelations");
+				int i=0;
+				while(institutionRelations.has("institutionRelationTableTable_"+(++i))){
+					JSONObject institutionRelationTable = institutionRelations.getJSONObject("institutionRelationTable_"+i);
+					if(institutionRelationTable.has("textWebsiteOfDescription")){
+						List<String> website = eag2012.getEagRelationHref();
+						if(website==null){
+							website = new ArrayList<String>();
+						}
+						website.add(institutionRelationTable.getString("textWebsiteOfDescription"));
+						eag2012.setEagRelationHref(website);
+					}
+					if(institutionRelationTable.has("selectTypeOftheRelation")){
+						List<String> typeOftheRelation = eag2012.getEagRelationEagRelationType();
+						if(typeOftheRelation==null){
+							typeOftheRelation = new ArrayList<String>();
+						}
+						typeOftheRelation.add(institutionRelationTable.getString("selectTypeOftheRelation"));
+						eag2012.setEagRelationEagRelationType(typeOftheRelation);
+					}
+					if(institutionRelationTable.has("textTitleOfRelatedInstitution")){
+						List<Map<String, List<String>>> listRelationEnrtyMap = eag2012.getRelationEntryValue();
+						if(listRelationEnrtyMap==null){
+							listRelationEnrtyMap= new ArrayList<Map<String,List<String>>>();
+						}
+						Map<String,List<String>> relationEntryMap = null;
+						if(listRelationEnrtyMap.size()>i && listRelationEnrtyMap.get(i)!=null){
+							relationEntryMap = listRelationEnrtyMap.get(i);
+						}else{
+							relationEntryMap = new HashMap<String,List<String>>();
+						}
+						List<String> relationEntryList =null;
+						if(relationEntryMap.size()>i && relationEntryMap.get(CreateEAG2012.INSTITUTION_RELATIONS)!=null){
+							relationEntryList= relationEntryMap.get(CreateEAG2012.INSTITUTION_RELATIONS);
+						}else{
+							relationEntryList = new ArrayList<String>();
+						}
+						relationEntryList.add(institutionRelationTable.getString("textTitleOfRelatedInstitution"));
+						relationEntryMap.put(CreateEAG2012.INSTITUTION_RELATIONS, relationEntryList);
+					    if(listRelationEnrtyMap.size()>i){
+					    	listRelationEnrtyMap.set(i, relationEntryMap);
+					    }else{
+					    	listRelationEnrtyMap.add(relationEntryMap);
+					    }
+					    eag2012.setRelationEntryValue(listRelationEnrtyMap);
+					}
+					if(institutionRelationTable.has("textInstitutionDescriptionOfRelation")){
+						List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
+						 if(descriptiveNotePValue==null){
+							 descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
+						 }
+						 Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
+						 if(descriptiveNotePValue.size()>i && descriptiveNotePValue.get(i)!=null){
+							 descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
+						 }else{
+							 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
+						 }
+						 Map<String, List<String>> descriptiveNoteMapList = null;
+						 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_RELATION)!=null){
+							 descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_RELATION);
+						 }else{
+							 descriptiveNoteMapList = new HashMap<String, List<String>>();
+						 }
+						 List<String> descriptiveNoteList = null;
+						 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.INSTITUTION_RELATIONS)!=null){
+							 descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.INSTITUTION_RELATIONS);
+						 }else{
+							 descriptiveNoteList = new ArrayList<String>();
+						 }
+						 descriptiveNoteList.add(institutionRelationTable.getString("textInstitutionDescriptionOfRelation"));
+						 descriptiveNoteMapList.put(CreateEAG2012.INSTITUTION_RELATIONS,descriptiveNoteList);
+						 descriptiveNoteMapMapList.put(CreateEAG2012.TAB_RELATION,descriptiveNoteMapList);
+						 if(descriptiveNotePValue.size()>i){
+							 descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
+						 }else{
+							 descriptiveNotePValue.add(descriptiveNoteMapMapList);
+						 }
+						 eag2012.setDescriptiveNotePValue(descriptiveNotePValue);
+					 }
+					if(institutionRelationTable.has("selectLanguageInstitutionDescriptionOfRelation")){
+						List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePLang();
+						 if(descriptiveNotePValue==null){
+							 descriptiveNotePValue = new ArrayList<Map<String, Map<String, List<String>>>>();
+						 }
+						 Map<String, Map<String, List<String>>> descriptiveNoteMapMapList = null;
+						 if(descriptiveNotePValue.size()>i && descriptiveNotePValue.get(i)!=null){
+							 descriptiveNoteMapMapList = descriptiveNotePValue.get(i);
+						 }else{
+							 descriptiveNoteMapMapList = new HashMap<String,Map<String,List<String>>>();
+						 }
+						 Map<String, List<String>> descriptiveNoteMapList = null;
+						 if(descriptiveNoteMapMapList.size()>0 && descriptiveNoteMapMapList.get(CreateEAG2012.TAB_RELATION)!=null){
+							 descriptiveNoteMapList = descriptiveNoteMapMapList.get(CreateEAG2012.TAB_RELATION);
+						 }else{
+							 descriptiveNoteMapList = new HashMap<String, List<String>>();
+						 }
+						 List<String> descriptiveNoteList = null;
+						 if(descriptiveNoteMapList.size()>0 && descriptiveNoteMapList.get(CreateEAG2012.INSTITUTION_RELATIONS)!=null){
+							 descriptiveNoteList = descriptiveNoteMapList.get(CreateEAG2012.INSTITUTION_RELATIONS);
+						 }else{
+							 descriptiveNoteList = new ArrayList<String>();
+						 }
+						 descriptiveNoteList.add(institutionRelationTable.getString("selectLanguageInstitutionDescriptionOfRelation"));
+						 descriptiveNoteMapList.put(CreateEAG2012.INSTITUTION_RELATIONS,descriptiveNoteList);
+						 descriptiveNoteMapMapList.put(CreateEAG2012.TAB_RELATION,descriptiveNoteMapList);
+						 if(descriptiveNotePValue.size()>i){
+							 descriptiveNotePValue.set(i,descriptiveNoteMapMapList);
+						 }else{
+							 descriptiveNotePValue.add(descriptiveNoteMapMapList);
+						 }
+						 eag2012.setDescriptiveNotePLang(descriptiveNotePValue);
+					 }
+				}//end while institution
+			}//end if institution
+			
+		}//end if relation
+		
+		return eag2012;
+	}
 	private Eag2012 parseControlJsonObjToEag2012(Eag2012 eag2012, JSONObject jsonObj) throws JSONException{
 	    JSONObject control = jsonObj.getJSONObject("control");
 		if(control!=null){
@@ -762,23 +1005,30 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
               eag2012.setAbbreviationValue(abbreviation);			
 			}
 			if(control.has("textContactFullName_"+i)){
-				List<List<String>> citationList = eag2012.getCitationValue();
-				if(citationList == null){
-					citationList = new ArrayList<List<String>>();
+				List<Map<String, List<String>>> listCitationMap = eag2012.getCitationValue();
+				if(listCitationMap==null){
+					listCitationMap= new ArrayList<Map<String,List<String>>>();
 				}
-				List<String> citation = null;
-			    if(citationList.size()>0 && citationList.get(0)!=null){
-			    	citation= citationList.get(0);
+				Map<String,List<String>> citationMap = null;
+				if(listCitationMap.size()>i && listCitationMap.get(i)!=null){
+					citationMap = listCitationMap.get(i);
+				}else{
+					citationMap = new HashMap<String,List<String>>();
+				}
+				List<String> citationList =null;
+				if(citationMap.size()>i && citationMap.get(CreateEAG2012.TAB_CONTROL)!=null){
+					citationList= citationMap.get(CreateEAG2012.TAB_CONTROL);
+				}else{
+					citationList = new ArrayList<String>();
+				}
+				citationList.add(control.getString("textContactFullName_"+i));
+				citationMap.put(CreateEAG2012.TAB_CONTROL, citationList);
+			    if(listCitationMap.size()>i){
+			    	listCitationMap.set(i, citationMap);
 			    }else{
-			    	citation = new ArrayList<String>();
+			    	listCitationMap.add(citationMap);
 			    }
-			    citation.add(control.getString("textContactFullName_"+i));
-			    if(citationList.size()>0){
-			    	citationList.set(0, citation);  	
-			    }else{
-			    	citationList.add(citation);
-			    }
-			    eag2012.setCitationValue(citationList);
+			    eag2012.setCitationValue(listCitationMap);
 			}
 			
 		 }//end while
@@ -1731,23 +1981,30 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				  	  eag2012.setDirectionsLang(listDirectionsLangList);
 				  	}
 				  	if(accessTable.has("textTravelLink_"+j)){
-				  		List<List<String>> listCitationList = eag2012.getCitationHref();
-				  		if(listCitationList==null){
-				  			listCitationList=new ArrayList<List<String>>();
-				  		}
-				  		List<String> citationList = null;	
-				  		if(listCitationList.size()>i && (listCitationList.get(i)!=null)){
-				  			citationList=listCitationList.get(i);
-				  		}else{
-				  			citationList = new ArrayList<String>();
-				  		}
-				  		citationList.add(accessTable.getString("textTravelLink_"+j));
-				  		if(listCitationList.size()>i){
-				  			listCitationList.set(i, citationList);
-				  		}else{
-				  			listCitationList.add(citationList);
-				  		}
-				  	  eag2012.setCitationHref(listCitationList);
+				  		List<Map<String, List<String>>> listCitationMap = eag2012.getCitationValue();
+						if(listCitationMap==null){
+							listCitationMap= new ArrayList<Map<String,List<String>>>();
+						}
+						Map<String,List<String>> citationMap = null;
+						if(listCitationMap.size()>i && listCitationMap.get(i)!=null){
+							citationMap = listCitationMap.get(i);
+						}else{
+							citationMap = new HashMap<String,List<String>>();
+						}
+						List<String> citationList =null;
+						if(citationMap.size()>i && citationMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES)!=null){
+							citationList= citationMap.get(CreateEAG2012.TAB_ACCESS_AND_SERVICES);
+						}else{
+							citationList = new ArrayList<String>();
+						}
+						citationList.add(accessTable.getString("textTravelLink_"+j));
+						citationMap.put(CreateEAG2012.TAB_ACCESS_AND_SERVICES, citationList);
+					    if(listCitationMap.size()>i){
+					    	listCitationMap.set(i, citationMap);
+					    }else{
+					    	listCitationMap.add(citationMap);
+					    }
+					    eag2012.setCitationValue(listCitationMap);
 				  	}
 				
 				}//end while directions
@@ -5239,10 +5496,30 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				eag2012.setResourceRelationHref(resourceRelationHrefList);
 			}
 			if(yourInstitution.has("textYIHoldingsGuideLinkTitle")){
-				String relationEntry = yourInstitution.getString("textYIHoldingsGuideLinkTitle");
-				List<String> relationEntryList = new ArrayList<String>();
-				relationEntryList.add(relationEntry);
-				eag2012.setRelationEntryValue(relationEntryList);
+				List<Map<String, List<String>>> listRelationEnrtyMap = eag2012.getRelationEntryValue();
+				if(listRelationEnrtyMap==null){
+					listRelationEnrtyMap= new ArrayList<Map<String,List<String>>>();
+				}
+				Map<String,List<String>> relationEntryMap = null;
+				if(listRelationEnrtyMap.size()>0 && listRelationEnrtyMap.get(0)!=null){
+					relationEntryMap = listRelationEnrtyMap.get(0);
+				}else{
+					relationEntryMap = new HashMap<String,List<String>>();
+				}
+				List<String> relationEntryList =null;
+				if(relationEntryMap.size()>0 && relationEntryMap.get(CreateEAG2012.TAB_YOUR_INSTITUTION)!=null){
+					relationEntryList= relationEntryMap.get(CreateEAG2012.TAB_YOUR_INSTITUTION);
+				}else{
+					relationEntryList = new ArrayList<String>();
+				}
+				relationEntryList.add(yourInstitution.getString("textYIHoldingsGuideLinkTitle"));
+				relationEntryMap.put(CreateEAG2012.TAB_YOUR_INSTITUTION, relationEntryList);
+			    if(listRelationEnrtyMap.size()>0){
+			    	listRelationEnrtyMap.set(0, relationEntryMap);
+			    }else{
+			    	listRelationEnrtyMap.add(relationEntryMap);
+			    }
+			    eag2012.setRelationEntryValue(listRelationEnrtyMap);
 			}
 			if(yourInstitution.has("selectYIContinent")){
 				String continent = yourInstitution.getString("selectYIContinent");
