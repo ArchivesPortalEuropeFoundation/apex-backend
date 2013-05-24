@@ -134,7 +134,7 @@ public class EADParser extends AbstractParser {
 							ecId  = eadContent.getEcId();
 							eadContent = null;
 						}						
-						eadCounts.addEadCounts(CLevelParser.parse(xmlReader, ecId, null, cOrderId++, indexer, upperLevels, fullHierarchy));
+						eadCounts.addEadCounts(CLevelParser.parse(xmlReader, ecId, null, cOrderId++, ead, indexer, upperLevels, fullHierarchy));
 					} else {
 						xmlWriterHolder.writeStartElement(xmlReader);
 					}

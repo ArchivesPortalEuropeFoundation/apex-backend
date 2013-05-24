@@ -132,7 +132,7 @@
 										alt="down" /></a> <a class="order" href="javascript:changeOrder('europeana','false')"><img class="noStyle"
 										src="images/expand/arrow-up.gif" alt="up" /></a></th>
 							</c:when>
-							<c:when test="${results.holdingsGuide}">
+							<c:when test="${results.holdingsGuide or results.sourceGuide}">
 								<th><s:text name="content.message.linked" /></th>
 							</c:when>
 						</c:choose>
@@ -171,7 +171,7 @@
 									</c:choose></td>
 								<td class="${eadResult.europeanaCssClass}"><apenet:resource>${eadResult.europeanaText}</apenet:resource></td>
 							</c:when>
-							<c:when test="${results.holdingsGuide}"><td>${eadResult.findingAidsLinked} / ${eadResult.possibleFindingAidsLinked}</td></c:when>
+							<c:when test="${results.holdingsGuide or results.sourceGuide}"><td class="${eadResult.linkedCssClass}">${eadResult.findingAidsLinked}/ ${eadResult.possibleFindingAidsLinked}</td></c:when>
 
 						</c:choose>
 						<td class="${eadResult.queueCssClass}"><c:if
@@ -240,7 +240,7 @@
 											</option>
 
 										</c:if>
-										<c:if test="${results.holdingsGuide and (eadResult.findingAidsLinked != eadResult.possibleFindingAidsLinked)}">
+										<c:if test="${(results.holdingsGuide or results.sourceGuide) and (eadResult.findingAidsLinked != eadResult.possibleFindingAidsLinked)}">
 											<option value="_blank|getFindingAidsNotLinked.action">
 												<s:text name="content.message.getFindingAidsNotLinked" />
 											</option>
@@ -304,7 +304,7 @@
 								<td>${results.totalChosDeliveredToEuropeana}</td>
 								<td>&nbsp;</td>
 							</c:when>
-							<c:when test="${results.holdingsGuide}"><td>&nbsp;</td></c:when>
+							<c:when test="${results.holdingsGuide or results.sourceGuide}"><td>&nbsp;</td></c:when>
 						</c:choose>
 
 						<td>&nbsp;</td>

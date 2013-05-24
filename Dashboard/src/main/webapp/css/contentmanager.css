@@ -134,6 +134,11 @@
 	font-weight: bold;
 }
 
+#contentmanager .status_warning {
+	color: #F87217;
+	font-weight: bold;
+}
+
 #contentmanager .status_no {
 	font-weight: bold;
 }

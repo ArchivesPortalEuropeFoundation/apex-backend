@@ -11,8 +11,14 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
+import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.CLevel;
+import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.HgSgFaRelation;
+import eu.apenet.persistence.vo.HoldingsGuide;
+import eu.apenet.persistence.vo.SourceGuide;
 
 public class CLevelParser extends AbstractParser {
 	public static final QName CLEVEL = new QName(APENET_EAD, "c");
@@ -28,7 +34,7 @@ public class CLevelParser extends AbstractParser {
 
 
 	public static EADCounts parse(XMLStreamReader xmlReader, Long eadContentId,
-			Long parentId, int orderId, Indexer indexer, List<LevelInfo> upperLevelUnittitles, Map<String, Object> fullHierarchy)
+			Long parentId, int orderId, Ead ead, Indexer indexer, List<LevelInfo> upperLevelUnittitles, Map<String, Object> fullHierarchy)
 			throws Exception {
 		// QName elementName = xmlReader.getName();
 		LinkedList<QName> path = new LinkedList<QName>();
@@ -63,6 +69,7 @@ public class CLevelParser extends AbstractParser {
 						clevel.setLeaf(false);
 						clevel.setXml(stringWriter.toString());
 						HibernateUtil.getDatabaseSession().save(clevel);
+						stringWriter.close();
 						stringWriter = null;
 						if (indexer != null) {
 							IndexData indexData = new IndexData();
@@ -80,7 +87,7 @@ public class CLevelParser extends AbstractParser {
 						clevel = null;
 					}					
 					eadCounts.addEadCounts(CLevelParser.parse(xmlReader, eadContentId,
-							clId, childOrderId++, indexer, unittitles, fullHierarchy));
+							clId, childOrderId++,ead, indexer, unittitles, fullHierarchy));
 
 				} else {
 					add(path, lastElement);
@@ -149,6 +156,7 @@ public class CLevelParser extends AbstractParser {
 			xmlWriterHolder.close();
 			clevel.setXml(stringWriter.toString());
 			HibernateUtil.getDatabaseSession().save(clevel);
+			stringWriter.close();
 			stringWriter = null;
 			if (indexer != null) {
 				IndexData indexData = new IndexData();
@@ -162,6 +170,23 @@ public class CLevelParser extends AbstractParser {
 				eadCounts.addClevel(indexer.parseCLevel(indexData));
 				clevel.setLeaf(true);
 			}						
+			if (clevel.getHrefEadid() != null){
+				if (ead instanceof HoldingsGuide || ead instanceof SourceGuide){
+					Ead linkedFindingAid = DAOFactory.instance().getEadDAO().getEadByEadid(FindingAid.class, ead.getAiId(), clevel.getHrefEadid());
+					if (linkedFindingAid != null){
+						HgSgFaRelation hgSgFaRelation = new HgSgFaRelation();
+						hgSgFaRelation.setFaId(linkedFindingAid.getId());
+						hgSgFaRelation.setAiId(ead.getAiId());
+						hgSgFaRelation.setHgSgClevelId(clevel.getClId());
+						if(ead instanceof HoldingsGuide){
+							hgSgFaRelation.setHgId(ead.getId());
+						}else if(ead instanceof SourceGuide){
+							hgSgFaRelation.setSgId(ead.getId());
+						}
+						HibernateUtil.getDatabaseSession().save(hgSgFaRelation);
+					}
+				}
+			}
 			clId  = clevel.getClId();
 			clevel = null;
 		}	
@@ -171,28 +196,12 @@ public class CLevelParser extends AbstractParser {
 
 	private static void add(LinkedList<QName> path, QName qName) {
 		if (!CLEVEL.equals(qName)) {
-			// String log = "add: (" + qName + ")";
-			// for (QName pathElement : path) {
-			// log += "/" + pathElement.getPrefix() + ":"
-			// + pathElement.getLocalPart();
-			// }
-			// LOG.info(log);
 			path.add(qName);
 		}
 	}
 
 	private static void removeLast(LinkedList<QName> path, QName qName) {
 		if (!CLEVEL.equals(qName)) {
-			// String log = "remove: (" + qName + ")";
-			//
-			// for (QName pathElement : path) {
-			// log += "/" + pathElement.getPrefix() + ":"
-			// + pathElement.getLocalPart();
-			// }
-			// if (path.isEmpty()){
-			// log+="ERROR";
-			// }
-			// LOG.info(log);
 			if (!path.isEmpty()) {
 				path.removeLast();
 			}

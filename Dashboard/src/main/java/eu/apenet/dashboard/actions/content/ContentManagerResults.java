@@ -35,9 +35,9 @@ public class ContentManagerResults {
 			if (XmlType.EAD_FA.equals(xmlType)){
 				this.eadResults.add(new FindingAidResult(ead));
 			}else if (XmlType.EAD_HG.equals(xmlType)){
-				this.eadResults.add(new HoldingsGuideResult(ead));
+				this.eadResults.add(new HoldingsGuideSourceGuideResult(ead));
 			}else {
-				this.eadResults.add(new EadResult(ead));
+				this.eadResults.add(new HoldingsGuideSourceGuideResult(ead));
 			}
 			
 		}
@@ -66,6 +66,9 @@ public class ContentManagerResults {
 	}
 	public boolean isHoldingsGuide(){
 		return XmlType.EAD_HG.equals(xmlType);
+	}
+	public boolean isSourceGuide(){
+		return XmlType.EAD_SG.equals(xmlType);
 	}
 	public Long getTotalConvertedFiles() {
 		return totalConvertedFiles;

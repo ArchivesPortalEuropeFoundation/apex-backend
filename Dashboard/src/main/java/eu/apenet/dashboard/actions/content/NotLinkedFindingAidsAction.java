@@ -60,7 +60,7 @@ public class NotLinkedFindingAidsAction extends AbstractInstitutionAction{
 		getServletRequest().setAttribute("notUploadedFindingAids", cLevelDAO.getCLevelsOutOfSystemByHoldingsGuideId(getId(), resultPerPage, pageNumber));
 		getServletRequest().setAttribute("countNotUploadedFindingAids", cLevelDAO.countCLevelsOutOfSystemByHoldingsGuideId(getId()));
 		getServletRequest().setAttribute("notIndexedFindingAids", faDAO.getFindingAidsByHoldingsGuideId(getId(),false, resultPerPage, pageNumber));
-		getServletRequest().setAttribute("countNotIndexedFindingAids", faDAO.countFindingAidsByHoldingsGuideId(getId(),false));
+		//getServletRequest().setAttribute("countNotIndexedFindingAids", faDAO.countFindingAidsByHoldingsGuideId(getId(),false));
 		return SUCCESS;
 	}
 
