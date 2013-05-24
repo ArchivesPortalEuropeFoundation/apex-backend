@@ -1,6 +1,5 @@
 package eu.apenet.dashboard.actions.content;
 
-import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
@@ -22,9 +21,7 @@ public class FindingAidResult extends EadResult {
         this.noEuropeanaCandidate = EuropeanaState.NO_EUROPEANA_CANDIDATE.equals(findingAid.getEuropeana());
         this.totalNumberOfChos = findingAid.getTotalNumberOfChos();
         hasEseEdmFiles = (convertedToEseEdm || deliveredToEuropeana ) && totalNumberOfChos >0;
-        if (this.isPublished()){
-        	holdingsGuideTitle = DAOFactory.instance().getHoldingsGuideDAO().getLinkedHoldingsGuideTitleByFindingAidEadid(ead.getEadid(), ead.getAiId());
-        }
+        holdingsGuideTitle = findingAid.getHgSgFaRelations().size() + "";
 	}
 
 	public boolean isConvertedToEseEdm() {
