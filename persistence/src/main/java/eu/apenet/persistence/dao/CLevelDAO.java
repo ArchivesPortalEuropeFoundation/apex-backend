@@ -50,12 +50,10 @@ public interface CLevelDAO extends GenericDAO<CLevel, Long> {
 	public Long countCLevelsOutOfSystemByHoldingsGuideId(Integer hgId);
 	public Long countCLevelsByEadId(Integer id,Class<? extends Ead> clazz);
 	
-	public Long countTotalCLevelsByHoldingsGuideId(Integer hgId);
-	
 	public Long countPossibleLinkedCLevels(Integer id,Class<? extends Ead> clazz);
 	public List<CLevel> getLinkedCLevels(Integer id,Class<? extends Ead> clazz);
 	public List<CLevel> getNotLinkedCLevels(Integer id,Class<? extends Ead> clazz);
-	public Long countLinkedCLevels(Integer id,Class<? extends Ead> clazz);
+	public Long countLinkedCLevels(Integer id,Class<? extends Ead> clazz, Boolean published);
 	public Long countNotLinkedCLevels(Integer id,Class<? extends Ead> clazz);	
 }
 

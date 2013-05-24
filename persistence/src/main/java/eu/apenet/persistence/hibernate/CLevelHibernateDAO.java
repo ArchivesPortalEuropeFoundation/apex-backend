@@ -271,28 +271,6 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		return (Long)criteria.uniqueResult();
 	}
 
-
-	/**
-	 * Returns total number of c_level (FindingAids) included into a Holdings
-	 * Guide
-	 * 
-	 * @param hgId
-	 * @return List<CLevel>
-	 */
-	@Override
-	public Long countTotalCLevelsByHoldingsGuideId(Integer id) {
-		Criteria criteria = getSession().createCriteria(getPersistentClass(), "cLevel");
-		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		DetachedCriteria subQuery = DetachedCriteria.forClass(EadContent.class, "eadContent");
-
-		subQuery.add(Restrictions.eq("eadContent.holdingsGuide.id", id));
-		subQuery.setProjection(Property.forName("eadContent.ecId"));
-		criteria.add(Subqueries.propertyIn("cLevel.ecId", subQuery));
-
-		criteria.setProjection(Projections.count("cLevel.clId"));
-		return (Long) criteria.uniqueResult();
-	}
-
 	private Criteria criteriaCriteriaCLevelsOutOfSystemByHoldingsGuideId(Integer hgId) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "cLevel");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -337,19 +315,25 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		return null;
 	}
 	@Override
-	public Long countLinkedCLevels(Integer id, Class<? extends Ead> clazz) {
-		String jpaQuery = "SELECT count(clevel)" + buildLinkedCLevelsFromQuery(id, clazz);
-		TypedQuery<Long> query = getEntityManager().createQuery(jpaQuery, Long.class);		
-		query.setParameter("id", id);
-		return query.getSingleResult();
-	}
-	private String buildLinkedCLevelsFromQuery(Integer id, Class<? extends Ead> clazz) {
+	public Long countLinkedCLevels(Integer id, Class<? extends Ead> clazz, Boolean published) {
 		String varName = "hgId";
 		if (SourceGuide.class.equals(clazz)){
 			varName = "sgId";
 		}
-		return " FROM HgSgFaRelation hgSgFaRelation JOIN hgSgFaRelation.hgSgClevel clevel WHERE hgSgFaRelation." + varName + " = :id)";
+		String jpaQuery = "";
+		if (published == null){
+			jpaQuery = "SELECT count(findingAid) FROM HgSgFaRelation hgSgFaRelation JOIN hgSgFaRelation.findingAid findingAid WHERE hgSgFaRelation." + varName + " = :id";
+		}else {
+			jpaQuery = "SELECT count(findingAid) FROM HgSgFaRelation hgSgFaRelation JOIN hgSgFaRelation.findingAid findingAid WHERE hgSgFaRelation." + varName + " = :id AND findingAid.published = :published";			
+		}
+		TypedQuery<Long> query = getEntityManager().createQuery(jpaQuery, Long.class);		
+		query.setParameter("id", id);
+		if (published != null){
+			query.setParameter("published", published);	
+		}
+		return query.getSingleResult();
 	}
+
 	@Override
 	public List<CLevel> getNotLinkedCLevels(Integer id, Class<? extends Ead> clazz) {
 		String jpaQuery = "SELECT clevel" + buildNotLinkedCLevelsFromQuery(id, clazz);

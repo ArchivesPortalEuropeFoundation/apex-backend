@@ -89,15 +89,6 @@ public class FindingAidHibernateDAO extends AbstractHibernateDAO<FindingAid, Int
 		return (Long)criteria.uniqueResult();
 	}
 
-
-	@Override
-	public Long getFindingAidsLinkedByHoldingsGuide(HoldingsGuide holdingsGuide) {
-		Criteria criteria = getSession().createCriteria(getPersistentClass(), "findingAid");
-		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		criteria.add(Restrictions.eq("holdingsGuide",holdingsGuide));
-		criteria.setProjection(Projections.count("findingAid.id"));
-		return (Long)criteria.uniqueResult();
-	}
 	
 
 	
@@ -114,15 +105,6 @@ public class FindingAidHibernateDAO extends AbstractHibernateDAO<FindingAid, Int
 		return (List<FindingAid>)criteria.list();
 	}
 	
-	/**
-	 * Get the total figure of finding aids indexed into a holdings guide 
-	 */
-	@Override
-	public Long countFindingAidsByHoldingsGuideId(Integer hgId,boolean published){
-		Criteria criteria = createCriteriaForFindingAidsByHoldingsGuide(hgId,true, null);
-		criteria.setProjection(Projections.count("findingAid.id"));
-		return (Long)criteria.uniqueResult();
-	}
 	
 	private Criteria createCriteriaForFindingAidsByHoldingsGuide(Integer hgId,boolean published,Boolean isLinked) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(),"findingAid");
@@ -150,22 +132,4 @@ public class FindingAidHibernateDAO extends AbstractHibernateDAO<FindingAid, Int
 	}
 	
 
-
-	@Override
-	public Long countFindingAidsIndexedByInternalArchivalInstitutionId(String identifier) {
-		Criteria criteria = getSession().createCriteria(getPersistentClass(),"findingAid");
-		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-			DetachedCriteria subQuery = DetachedCriteria.forClass(ArchivalInstitution.class,"archivalInstitution");
-			subQuery.add(Restrictions.eq("archivalInstitution.internalAlId",identifier));
-			subQuery.setProjection(Property.forName("archivalInstitution.id"));
-		criteria.add(Subqueries.propertyIn("findingAid.archivalInstitution.aiId", subQuery));
-		criteria.add(Restrictions.eq("findingAid.published", true));
-		criteria.setProjection(Projections.count("findingAid.id"));
-		Object counter = criteria.uniqueResult();
-		if(counter!=null){
-			return (Long)counter;
-		}else{
-			return new Long(0);
-		}
-	}
 }

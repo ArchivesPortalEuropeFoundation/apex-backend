@@ -16,8 +16,5 @@ public interface FindingAidDAO extends GenericDAO<FindingAid, Integer> {
 	public List<FindingAid> getAllFindingAidByHgId(HoldingsGuide holdingsGuide);
 	public Long getTotalCountOfUnits();
 	public Long getTotalCountOfUnits(Integer aiId);
-	public Long getFindingAidsLinkedByHoldingsGuide(HoldingsGuide hgvo);
 	public List<FindingAid> getFindingAidsByHoldingsGuideId(Integer hgId,boolean published, Integer pageSize, Integer pageNumber);
-	public Long countFindingAidsByHoldingsGuideId(Integer hgId,boolean published);
-	public Long countFindingAidsIndexedByInternalArchivalInstitutionId(String identifier);
 }
