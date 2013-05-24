@@ -29,8 +29,9 @@
 					<td><s:radio  cssClass="typeRadio" list="typeList" name="xmlTypeId" /></td>
 					<th><s:text name="content.message.converted" />:</th>
 					<td><s:checkboxlist list="convertedStatusList" name="convertedStatus" /></td>
-					<th><s:text name="content.message.queue" />:</th>
-					<td><s:checkboxlist list="queuingStatusList" name="queuingStatus" /></td>
+					<th><s:text name="content.message.linkedshort" />:</th>
+					<td><s:checkboxlist list="linkedStatusList" name="linkedStatus" /></td>
+
 
 				</tr>
 				<tr>
@@ -38,8 +39,8 @@
 					<td> </td>
 					<th><s:text name="content.message.validated" />:</th>
 					<td><s:checkboxlist list="validatedStatusList" name="validatedStatus" /></td>
-					<th class="findingAidOptions"><s:text name="content.message.europeana" />:</th>
-					<td class="findingAidOptions"><s:checkboxlist list="europeanaStatusList" name="europeanaStatus" /></td>
+					<th><s:text name="content.message.queue" />:</th>
+					<td><s:checkboxlist list="queuingStatusList" name="queuingStatus" /></td>
 				</tr>
 				<tr>
 					<th></th>
@@ -47,6 +48,8 @@
 
 					<th><s:text name="content.message.published" />:</th>
 					<td><s:checkboxlist list="publishedStatusList" name="publishedStatus" /></td>
+					<th class="findingAidOptions"><s:text name="content.message.europeana" />:</th>
+					<td class="findingAidOptions"><s:checkboxlist list="europeanaStatusList" name="europeanaStatus" /></td>
 
 				</tr>
 				<tr>

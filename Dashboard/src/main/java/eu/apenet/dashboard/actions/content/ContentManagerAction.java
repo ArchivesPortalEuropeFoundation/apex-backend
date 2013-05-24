@@ -36,6 +36,8 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 	private Map<String, String> validatedStatusList = new LinkedHashMap<String, String>();
 	private String[] validatedStatus = new String[] { ValidatedState.NOT_VALIDATED.toString(),
 			ValidatedState.VALIDATED.toString(), ValidatedState.FATAL_ERROR.toString() };
+	private String[] linkedStatus = new String[] {FALSE, TRUE };
+	private Map<String, String> linkedStatusList = new LinkedHashMap<String, String>();
 	private Map<String, String> publishedStatusList = new LinkedHashMap<String, String>();
 	private String[] publishedStatus = new String[] { FALSE, TRUE };
 	private Map<String, String> europeanaStatusList = new LinkedHashMap<String, String>();
@@ -63,8 +65,10 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 		validatedStatusList.put(ValidatedState.VALIDATED.toString(), getText(CONTENT_MESSAGE_YES));
 		validatedStatusList.put(ValidatedState.NOT_VALIDATED.toString(), getText(CONTENT_MESSAGE_NO));
 		validatedStatusList.put(ValidatedState.FATAL_ERROR.toString(), getText(CONTENT_MESSAGE_ERROR));
-		publishedStatusList.put(TRUE, getText(CONTENT_MESSAGE_YES));
-		publishedStatusList.put(FALSE, getText(CONTENT_MESSAGE_NO));
+		linkedStatusList.put(TRUE, getText(CONTENT_MESSAGE_YES));
+		linkedStatusList.put(FALSE, getText(CONTENT_MESSAGE_NO));
+		convertedStatusList.put(TRUE, getText(CONTENT_MESSAGE_YES));
+		convertedStatusList.put(FALSE, getText(CONTENT_MESSAGE_NO));
 		europeanaStatusList.put(EuropeanaState.CONVERTED.toString(), getText("content.message.eseedm"));
 		europeanaStatusList.put(EuropeanaState.NOT_CONVERTED.toString(), getText(CONTENT_MESSAGE_NO));
 		europeanaStatusList.put(EuropeanaState.DELIVERED.toString(), getText("content.message.europeana.delivered"));
@@ -211,6 +215,9 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 			if (eadSearchOptions.getConverted() != null) {
 				convertedStatus = new String[] { eadSearchOptions.getConverted().toString() };
 			}
+			if (eadSearchOptions.getLinked() != null) {
+				linkedStatus = new String[] { eadSearchOptions.getLinked().toString() };
+			}
 			if (eadSearchOptions.getValidated().size() > 0) {
 				validatedStatus = new String[eadSearchOptions.getValidated().size()];
 				for (int i = 0; i < eadSearchOptions.getValidated().size(); i++) {
@@ -255,6 +262,9 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 		eadSearchOptions.setArchivalInstitionId(getAiId());
 		if (convertedStatus != null && convertedStatus.length == 1) {
 			eadSearchOptions.setConverted(Boolean.valueOf(convertedStatus[0]));
+		}
+		if (linkedStatus != null && linkedStatus.length == 1) {
+			eadSearchOptions.setLinked(Boolean.valueOf(linkedStatus[0]));
 		}
 		if (validatedStatus != null && validatedStatus.length >= 1 && validatedStatus.length <= 2) {
 			for (String validatedStatusItem : validatedStatus) {
@@ -406,6 +416,22 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 
 	public void setQueuingStatus(String[] queuingStatus) {
 		this.queuingStatus = queuingStatus;
+	}
+
+	public String[] getLinkedStatus() {
+		return linkedStatus;
+	}
+
+	public void setLinkedStatus(String[] linkedStatus) {
+		this.linkedStatus = linkedStatus;
+	}
+
+	public Map<String, String> getLinkedStatusList() {
+		return linkedStatusList;
+	}
+
+	public void setLinkedStatusList(Map<String, String> linkedStatusList) {
+		this.linkedStatusList = linkedStatusList;
 	}
 
 }
