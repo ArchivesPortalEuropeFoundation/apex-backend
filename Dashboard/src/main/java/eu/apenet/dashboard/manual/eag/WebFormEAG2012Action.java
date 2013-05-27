@@ -4935,7 +4935,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						}else{
 							 year = new ArrayList<String>();
 						}
-						 year.add(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsed_"+j));
+						 year.add(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsedFrom_"+j));
 						if(yearList.size()>0){
 							yearList.set(0,year);
 						}else{
@@ -4950,57 +4950,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							yearValue.add(yearMapMapMap);
 						}
 						eag2012.setFromDateStandardDate(yearValue);
-					/*	List<Map<String, Map<String, Map<String, List<List<String>>>>>> listMapYearsList = eag2012.getFromDateStandardDate();
-						if(listMapYearsList==null){
-							listMapYearsList = new ArrayList<Map<String, Map<String, Map<String, List<List<String>>>>>>();
-						}else{
-							listMapYearsList = eag2012.getDateStandardDate();
-						}
-						Map<String, Map<String, Map<String, List<List<String>>>>> listMapYearsMap = null;
-						if(listMapYearsList.size()>0 && listMapYearsList.get(0)!=null){
-							listMapYearsMap = listMapYearsList.get(0);
-						}else{
-							listMapYearsMap = new HashMap<String, Map<String, Map<String, List<List<String>>>>>();
-						}
-						Map<String, Map<String, List<List<String>>>> listMapYearsMapMap = null;
-						if(listMapYearsMap.size()>0 && listMapYearsMap.get(CreateEAG2012.TAB_IDENTITY)!=null){
-							listMapYearsMapMap = listMapYearsMap.get(CreateEAG2012.TAB_IDENTITY);
-						}else{
-							listMapYearsMapMap = new HashMap<String, Map<String, List<List<String>>>>();
-						}
-						Map<String, List<List<String>>> listMapYearsMapMapMap = null;
-						if(listMapYearsMapMap.size()>0 && listMapYearsMapMap.get(CreateEAG2012.ROOT)!=null){
-							listMapYearsMapMapMap = listMapYearsMapMap.get(CreateEAG2012.ROOT);
-						}else{
-							listMapYearsMapMapMap = new HashMap<String, List<List<String>>>();
-						}
-						List<List<String>> listMapList = null;
-						if(listMapYearsMapMapMap.size()>0 && listMapYearsMapMapMap.get(CreateEAG2012.ROOT_SUBSECTION)!=null){
-							listMapList = listMapYearsMapMapMap.get(CreateEAG2012.ROOT_SUBSECTION);
-						}else{
-							listMapList = new ArrayList<List<String>>();
-						}
-						List<String> list = null;
-						if(listMapList.size()>0){
-							list = listMapList.get(0);
-						}else{
-							list = new ArrayList<String>();
-						}
-						list.add(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsedFrom_"+j));
-						if(listMapList.size()>0){
-							listMapList.set(0,list);
-						}else{
-							listMapList.add(list);
-						}
-						listMapYearsMapMapMap.put(CreateEAG2012.ROOT_SUBSECTION,listMapList);
-						listMapYearsMapMap.put(CreateEAG2012.ROOT, listMapYearsMapMapMap);
-						listMapYearsMap.put(CreateEAG2012.TAB_IDENTITY,listMapYearsMapMap);
-						if(listMapYearsList.size()>0){
-							listMapYearsList.set(0,listMapYearsMap);
-						}else{
-							listMapYearsList.add(listMapYearsMap);
-						}
-						eag2012.setFromDateStandardDate(listMapYearsList);*/
+					
 					}
 					//Identity Range Year To
 					j=0;
@@ -5039,7 +4989,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						}else{
 							 year = new ArrayList<String>();
 						}
-						 year.add(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsed_"+j));
+						 year.add(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsedTo_"+j));
 						if(yearList.size()>0){
 							yearList.set(0,year);
 						}else{
@@ -5054,57 +5004,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							yearValue.add(yearMapMapMap);
 						}
 						eag2012.setToDateStandardDate(yearValue);
-				/*		List<Map<String, Map<String, Map<String, List<List<String>>>>>> listMapYearsList = eag2012.getToDateStandardDate();
-						if(listMapYearsList==null){
-							listMapYearsList = new ArrayList<Map<String, Map<String, Map<String, List<List<String>>>>>>();
-						}else{
-							listMapYearsList = eag2012.getDateStandardDate();
-						}
-						Map<String, Map<String, Map<String, List<List<String>>>>> listMapYearsMap = null;
-						if(listMapYearsList.size()>0 && listMapYearsList.get(0)!=null){
-							listMapYearsMap = listMapYearsList.get(0);
-						}else{
-							listMapYearsMap = new HashMap<String, Map<String, Map<String, List<List<String>>>>>();
-						}
-						Map<String, Map<String, List<List<String>>>> listMapYearsMapMap = null;
-						if(listMapYearsMap.size()>0 && listMapYearsMap.get(CreateEAG2012.TAB_IDENTITY)!=null){
-							listMapYearsMapMap = listMapYearsMap.get(CreateEAG2012.TAB_IDENTITY);
-						}else{
-							listMapYearsMapMap = new HashMap<String, Map<String, List<List<String>>>>();
-						}
-						Map<String, List<List<String>>> listMapYearsMapMapMap = null;
-						if(listMapYearsMapMap.size()>0 && listMapYearsMapMap.get(CreateEAG2012.ROOT)!=null){
-							listMapYearsMapMapMap = listMapYearsMapMap.get(CreateEAG2012.ROOT);
-						}else{
-							listMapYearsMapMapMap = new HashMap<String, List<List<String>>>();
-						}
-						List<List<String>> listMapList = null;
-						if(listMapYearsMapMapMap.size()>0 && listMapYearsMapMapMap.get(CreateEAG2012.ROOT_SUBSECTION)!=null){
-							listMapList = listMapYearsMapMapMap.get(CreateEAG2012.ROOT_SUBSECTION);
-						}else{
-							listMapList = new ArrayList<List<String>>();
-						}
-						List<String> list = null;
-						if(listMapList.size()>0){
-							list = listMapList.get(0);
-						}else{
-							list = new ArrayList<String>();
-						}
-						list.add(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsedTo_"+j));
-						if(listMapList.size()>0){
-							listMapList.set(0,list);
-						}else{
-							listMapList.add(list);
-						}
-						listMapYearsMapMapMap.put(CreateEAG2012.ROOT_SUBSECTION,listMapList);
-						listMapYearsMapMap.put(CreateEAG2012.ROOT, listMapYearsMapMapMap);
-						listMapYearsMap.put(CreateEAG2012.TAB_IDENTITY,listMapYearsMapMap);
-						if(listMapYearsList.size()>0){
-							listMapYearsList.set(0,listMapYearsMap);
-						}else{
-							listMapYearsList.add(listMapYearsMap);
-						}
-						eag2012.setToDateStandardDate(listMapYearsList);*/
+				
 					}
 				}
 			}
