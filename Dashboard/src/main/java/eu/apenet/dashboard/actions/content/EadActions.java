@@ -1,16 +1,23 @@
 package eu.apenet.dashboard.actions.content;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 import java.util.Properties;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.interceptor.ServletRequestAware;
-import org.apache.struts2.interceptor.ServletResponseAware;
-
+import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.utils.ContentUtils;
+import eu.apenet.persistence.dao.CLevelDAO;
+import eu.apenet.persistence.dao.EadDAO;
+import eu.apenet.persistence.dao.HgSgFaRelationDAO;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.CLevel;
+import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.HgSgFaRelation;
 
 public class EadActions extends AbstractEadActions{
 
@@ -146,6 +153,27 @@ public class EadActions extends AbstractEadActions{
 		return null;
 	}
 
-
-
+	public String downloadHgSgStatistics() throws IOException {
+		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+		Ead ead = eadDAO.findById(id, getXmlType().getClazz());
+		SecurityContext.get().checkAuthorized(ead);
+		CLevelDAO clevelDAO = DAOFactory.instance().getCLevelDAO();
+		HgSgFaRelationDAO hgSgFaRelationDAO = DAOFactory.instance().getHgSgFaRelationDAO();
+		String name = APEnetUtilities.convertToFilename(ead.getEadid()) + "-statistics.csv";
+		PrintWriter printWriter = ContentUtils.getWriterToDownload(this.getServletRequest(), getServletResponse(), name, "text/csv");
+		printWriter.println("Holdings guide/Source guide unitid;Holdings guide/Source guide unittitle;Holdings guide/Source guide href eadid;Linked;Findingaid published;Findingaid title");
+		List<CLevel> cLevels = clevelDAO.getNotLinkedCLevels(id, getXmlType().getClazz());
+		for (CLevel cLevel: cLevels){
+			printWriter.println(cLevel.getUnitid() + ";\"" + cLevel.getUnittitle() + "\";" + cLevel.getHrefEadid()+";false");
+		}
+		List<HgSgFaRelation> hgSgFaRelations = hgSgFaRelationDAO.getHgSgFaRelations(id, getXmlType().getClazz(), false);
+		for (HgSgFaRelation hgSgFaRelation: hgSgFaRelations){
+			CLevel cLevel = hgSgFaRelation.getHgSgClevel();
+			FindingAid findingAid = hgSgFaRelation.getFindingAid();
+			printWriter.println(cLevel.getUnitid() + ";\"" + cLevel.getUnittitle() + "\";" + cLevel.getHrefEadid()+";true;" + findingAid.isPublished()+ ";\""+ findingAid.getTitle().replace('"', '\'') + "\"");
+		}
+		printWriter.flush();
+		printWriter.close();
+		return null;
+	}
 }

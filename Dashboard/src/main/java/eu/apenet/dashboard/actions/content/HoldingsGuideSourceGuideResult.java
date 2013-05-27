@@ -2,6 +2,7 @@ package eu.apenet.dashboard.actions.content;
 
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.persistence.dao.CLevelDAO;
+import eu.apenet.persistence.dao.HgSgFaRelationDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead;
 
@@ -15,10 +16,10 @@ public class HoldingsGuideSourceGuideResult extends EadResult {
 		if (this.isPublished()){
 			Class<? extends Ead> clazz = XmlType.getEadType(ead).getClazz();
 			CLevelDAO clevelDAO = DAOFactory.instance().getCLevelDAO();
-			
+			HgSgFaRelationDAO hgSgFaRelationDAO = DAOFactory.instance().getHgSgFaRelationDAO();
 			possibleFindingAidsLinked = clevelDAO.countPossibleLinkedCLevels(ead.getId(), clazz);
-			findingAidsLinkedAndPublished = clevelDAO.countLinkedCLevels(ead.getId(), clazz, true);
-			findingAidsLinked = clevelDAO.countLinkedCLevels(ead.getId(), clazz, null);            		
+			findingAidsLinkedAndPublished = hgSgFaRelationDAO.countHgSgFaRelations(ead.getId(), clazz, true);
+			findingAidsLinked = hgSgFaRelationDAO.countHgSgFaRelations(ead.getId(), clazz, null);            		
 		}
   	}
 	public long getPossibleFindingAidsLinked() {
