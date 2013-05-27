@@ -1,13 +1,8 @@
 package eu.apenet.persistence.hibernate;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
@@ -24,7 +19,6 @@ import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
-import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.SourceGuide;
 
 public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> implements CLevelDAO {
@@ -224,77 +218,6 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 			return (Long) criteria.list().get(0);
 		}
 	}
-
-	@Override
-	public Long countCLevelsByEadId(Integer hgId, Class<? extends Ead> clazz) {
-		Criteria criteria = createCriteriaCLevelsByEadId(hgId, clazz, false);
-		criteria.setProjection(Projections.count("cLevel.ecId"));
-		return (Long) criteria.uniqueResult();
-	}
-
-	private Criteria createCriteriaCLevelsByEadId(Integer id, Class<? extends Ead> clazz, boolean hrefIsNull) {
-		Criteria criteria = getSession().createCriteria(getPersistentClass(), "cLevel");
-		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		DetachedCriteria subQuery = DetachedCriteria.forClass(EadContent.class, "eadContent");
-		if (clazz.equals(HoldingsGuide.class)) {
-			subQuery.add(Restrictions.eq("eadContent.holdingsGuide.id", id));
-		} else if (clazz.equals(FindingAid.class)) {
-			subQuery.add(Restrictions.eq("eadContent.findingAid.id", id));
-		} else if (clazz.equals(SourceGuide.class)) {
-			subQuery.add(Restrictions.eq("eadContent.sourceGuide.id", id));
-		}
-		subQuery.setProjection(Property.forName("eadContent.ecId"));
-		criteria.add(Subqueries.propertyIn("cLevel.ecId", subQuery));
-		if (hrefIsNull) {
-			criteria.add(Restrictions.isNotNull("cLevel.hrefEadid"));
-		}
-		return criteria;
-	}
-
-	/**
-	 * Returns a List<CLevel> which they are not uploaded into an Institution
-	 * 
-	 * @param hgId
-	 * @return List<CLevel>
-	 */
-	@Override
-	public List<CLevel> getCLevelsOutOfSystemByHoldingsGuideId(Integer hgId, Integer pageSize, Integer pageNumber) {
-		Criteria criteria = criteriaCriteriaCLevelsOutOfSystemByHoldingsGuideId(hgId);
-		criteria.setFirstResult(pageSize * (pageNumber - 1));
-		criteria.setMaxResults(pageSize);
-		return (List<CLevel>) criteria.list();
-	}
-	@Override
-	public Long countCLevelsOutOfSystemByHoldingsGuideId(Integer hgId){
-		Criteria criteria = criteriaCriteriaCLevelsOutOfSystemByHoldingsGuideId(hgId);
-		criteria.setProjection(Projections.count("cLevel.clId"));
-		return (Long)criteria.uniqueResult();
-	}
-
-	private Criteria criteriaCriteriaCLevelsOutOfSystemByHoldingsGuideId(Integer hgId) {
-		Criteria criteria = getSession().createCriteria(getPersistentClass(), "cLevel");
-		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		DetachedCriteria subQuery = DetachedCriteria.forClass(EadContent.class, "eadContent");
-		subQuery.setProjection(Property.forName("eadContent.ecId"));
-		subQuery.add(Restrictions.eq("eadContent.holdingsGuide.id", hgId));
-		criteria.add(Subqueries.propertyIn("cLevel.ecId", subQuery));
-		DetachedCriteria subQuery2 = DetachedCriteria.forClass(FindingAid.class, "findingAid");
-		subQuery2.setProjection(Property.forName("findingAid.eadid"));
-		criteria.add(Subqueries.propertyNotIn("cLevel.hrefEadid", subQuery2));
-		criteria.add(Restrictions.isNotNull("hrefEadid"));
-		return criteria;
-	}
-
-	/**
-	 * Returns a list of CLevels (FindingAid) into a Holdings Guide indexed
-	 */
-	@Override
-	public List<CLevel> getCLevelsWithinSystemByHoldingsGuideId(Integer hgId) {
-		Criteria criteria = createCriteriaCLevelsByEadId(hgId, HoldingsGuide.class, true);
-		return (List<CLevel>) criteria.list();
-	}
-
-
 	@Override
 	public Long countPossibleLinkedCLevels(Integer id, Class<? extends Ead> clazz) {
 		String jpaQuery = "SELECT count(clevel)" + buildPossibleLinkedCLevels(id, clazz);
@@ -309,30 +232,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		}
 		return " FROM CLevel clevel JOIN clevel.eadContent eadContent WHERE eadContent." + varName + " = :id AND clevel.hrefEadid IS NOT NULL";
 	}
-	@Override
-	public List<CLevel> getLinkedCLevels(Integer id, Class<? extends Ead> clazz) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Long countLinkedCLevels(Integer id, Class<? extends Ead> clazz, Boolean published) {
-		String varName = "hgId";
-		if (SourceGuide.class.equals(clazz)){
-			varName = "sgId";
-		}
-		String jpaQuery = "";
-		if (published == null){
-			jpaQuery = "SELECT count(findingAid) FROM HgSgFaRelation hgSgFaRelation JOIN hgSgFaRelation.findingAid findingAid WHERE hgSgFaRelation." + varName + " = :id";
-		}else {
-			jpaQuery = "SELECT count(findingAid) FROM HgSgFaRelation hgSgFaRelation JOIN hgSgFaRelation.findingAid findingAid WHERE hgSgFaRelation." + varName + " = :id AND findingAid.published = :published";			
-		}
-		TypedQuery<Long> query = getEntityManager().createQuery(jpaQuery, Long.class);		
-		query.setParameter("id", id);
-		if (published != null){
-			query.setParameter("published", published);	
-		}
-		return query.getSingleResult();
-	}
+
 
 	@Override
 	public List<CLevel> getNotLinkedCLevels(Integer id, Class<? extends Ead> clazz) {
