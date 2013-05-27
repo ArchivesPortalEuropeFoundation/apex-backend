@@ -5,8 +5,6 @@ package eu.apenet.commons.infraestructure;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -575,7 +573,7 @@ public class APEnetEAG {
 	}
 
 	public String getFilename() {
-		return this.getId().replaceAll("[^a-zA-Z0-9\\-\\.]", "_") + ".xml";
+		return APEnetUtilities.convertToFilename(this.getId()) + ".xml";
 	}
 	public void setId(String id) {
 

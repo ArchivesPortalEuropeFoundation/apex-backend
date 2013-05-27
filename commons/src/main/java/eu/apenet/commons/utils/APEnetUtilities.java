@@ -104,5 +104,7 @@ public class APEnetUtilities {
 	public static void setConfig(ApeConfig config) {
 		APEnetUtilities.config = config;
 	}
-    
+    public static String convertToFilename(String name){
+   		return name.replaceAll("[^a-zA-Z0-9\\-\\.]", "_");
+    }
 }
