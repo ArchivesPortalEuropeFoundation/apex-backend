@@ -50,7 +50,7 @@
 								  <s:a action="login" namespace="/"><s:property value="getText('label.login.login')"/></s:a>	                 			
 	                    	</c:when>
 	                    	<c:otherwise>
-								<c:out value="${securityContext.name}"/>&nbsp;|&nbsp;<c:if test="${securityContext.child}"><a href="logout.action?parent=true"><s:property value="getText('label.login.logout.toparent')"/><c:out value="${securityContext.parentName}"/></a>&nbsp;|&nbsp;</c:if>					
+								<c:out value="${securityContext.name}"/>&nbsp;|&nbsp;<c:if test="${securityContext.child}"><a href="logout.action?parent=true"><s:property value="getText('label.login.logout.toparent')"/>&nbsp;<c:out value="${securityContext.parentName}"/></a>&nbsp;|&nbsp;</c:if>					
 								<s:a action="logout"  namespace="/"><s:property value="getText('label.login.logout')"/></s:a>&nbsp;|&nbsp;<s:a action="view"  namespace="/"><s:property value="getText('label.edit.user')"/></s:a>	              
 	                    	</c:otherwise>
 	                    </c:choose>    
