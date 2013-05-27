@@ -229,7 +229,7 @@
 											<option value="_blank|preview.action">
 												<s:text name="content.message.preview" />
 											</option>
-											<option value="_blank|download.action">
+											<option value="_self|download.action">
 												<s:text name="content.message.download" />
 											</option>
 
@@ -240,9 +240,9 @@
 											</option>
 
 										</c:if>
-										<c:if test="${(results.holdingsGuide or results.sourceGuide) and (eadResult.findingAidsLinked != eadResult.possibleFindingAidsLinked)}">
-											<option value="_blank|getFindingAidsNotLinked.action">
-												<s:text name="content.message.getFindingAidsNotLinked" />
+										<c:if test="${(results.holdingsGuide or results.sourceGuide) and (eadResult.findingAidsLinkedAndPublished != eadResult.possibleFindingAidsLinked)}">
+											<option value="_self|downloadHgSgStatistics.action">
+												<s:text name="content.message.download.statistics" />
 											</option>
 										
 										</c:if>
@@ -259,7 +259,7 @@
 												</option>
 											</c:if>
 											<c:if test="${eadResult.hasEseEdmFiles}">
-												<option value="_blank|downloadEse.action">
+												<option value="_self|downloadEse.action">
 													<s:text name="content.message.download.ese" />
 												</option>
 											</c:if>
