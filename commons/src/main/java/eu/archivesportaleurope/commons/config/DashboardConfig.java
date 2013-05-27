@@ -5,7 +5,6 @@ import javax.xml.xpath.XPathFactoryConfigurationException;
 
 import eu.apenet.commons.exceptions.BadConfigurationException;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.commons.utils.SecurityLevel;
 
 
 public class DashboardConfig extends ApePortalAndDashboardConfig{
@@ -66,6 +65,7 @@ public class DashboardConfig extends ApePortalAndDashboardConfig{
 	@Override
 	protected void initBeforeFinalize() {
         try {
+        	System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
        		xpathFactory = XPathFactory.newInstance(XPathFactory.DEFAULT_OBJECT_MODEL_URI,"org.apache.xpath.jaxp.XPathFactoryImpl", this.getClass().getClassLoader());
 		} catch (XPathFactoryConfigurationException e) {
 			throw new BadConfigurationException(e);
