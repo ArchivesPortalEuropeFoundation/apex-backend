@@ -13,7 +13,7 @@
 	                    displayEadFrontPage, generateTreeJSON, displayEadIntroduction, displayEadDidContent, displayCContent,
 						batchAction,
 	                    displayConvertEseBatch, startConvertEseBatch,
-	                    generateTreeJSONWithoutPreface, hgTreeCreation,
+	                    generateTreeJSONWithoutPreface, hgTreeCreation,downloadHgSgStatistics,
 	                    
 	                    GoDashboard, dashboardHome, GoDashboardByInstitutionManager,
 	                    

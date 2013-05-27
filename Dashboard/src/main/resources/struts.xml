@@ -689,8 +689,7 @@
             </result>
         </action>
 
-        <action name="getFindingAidsNotLinked" class="eu.apenet.dashboard.actions.content.NotLinkedFindingAidsAction"> 
-            <result name="success" type="tiles">notLinkedFindingAids</result>
+        <action name="downloadHgSgStatistics" class="eu.apenet.dashboard.actions.content.EadActions" method="downloadHgSgStatistics"> 
 			<result name="error" type="tiles">error</result>
         </action>
         

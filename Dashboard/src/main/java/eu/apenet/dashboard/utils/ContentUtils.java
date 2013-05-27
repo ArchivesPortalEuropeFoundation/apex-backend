@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -63,6 +64,7 @@ import eu.apenet.persistence.vo.UpFile;
  */
 public class ContentUtils {
 
+	private static final String MIME_TYPE_APPLICATION_XML = "application/xml";
 	private static final Logger LOGGER = Logger.getLogger(ContentUtils.class);
 	// private Partner partner;
 	private final static String PREFIX = "_remove";
@@ -760,7 +762,7 @@ public class ContentUtils {
 
 	}
 	public static void downloadXml(HttpServletRequest request, HttpServletResponse response, File file) throws IOException{
-		download(request, response, file, "application/xml");
+		download(request, response, file, MIME_TYPE_APPLICATION_XML);
 	}
 	public static void download (HttpServletRequest request, HttpServletResponse response, File file, String contentType) throws IOException{
 		if (file.exists()){
@@ -773,7 +775,7 @@ public class ContentUtils {
 	}
 	public static void download (HttpServletRequest request, HttpServletResponse response, InputStream inputStream, String name, String contentType) throws IOException{
 		String browserType=(String)request.getHeader("User-Agent");
-		if(browserType.indexOf("MSIE") > 0){
+		if(MIME_TYPE_APPLICATION_XML.equals(contentType) && browserType.indexOf("MSIE") > 0){
 			response.setContentType("application/file-download");
 		}else {
 			response.setContentType(contentType);
@@ -795,5 +797,18 @@ public class ContentUtils {
 			outputStream.flush();
 			outputStream.close();
         }
+	}
+	public static PrintWriter getWriterToDownload(HttpServletRequest request, HttpServletResponse response, String name, String contentType) throws IOException{
+		String browserType=(String)request.getHeader("User-Agent");
+		if(MIME_TYPE_APPLICATION_XML.equals(contentType) && browserType.indexOf("MSIE") > 0){
+			response.setContentType("application/file-download");
+		}else {
+			response.setContentType(contentType);
+		}
+
+		response.setBufferSize(4096);
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("content-disposition", "attachment;filename=" + name);
+		return new PrintWriter(response.getOutputStream());
 	}
 }
