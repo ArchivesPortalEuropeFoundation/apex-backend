@@ -19,14 +19,14 @@ import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
 import eu.archivesportaleurope.persistence.jpa.AbstractJpaTestCase;
 //import eu.apenet.persistence.vo.FileState;
-
+@Ignore
 public class ArchivalInstitutionDAOTest extends AbstractJpaTestCase{
 
 	private int id = 13;
 	private int aiId = 377;
 	private Class<? extends Ead> clazz = HoldingsGuide.class;
 
-	@Test
+	@Test @Ignore
 	public void testGetRootArchivalInstitutionsByCountryId() throws FileNotFoundException {
 		CLevelDAO clevelDAO = DAOFactory.instance().getCLevelDAO();
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
