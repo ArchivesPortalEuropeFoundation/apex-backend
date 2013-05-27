@@ -15,13 +15,13 @@
 				<s:property value="getText('label.ai.relations.websiteOfResource')" />:
 			</td>
 			<td>
-				<input type="text" id="textWebsiteOfResource" value="<s:property value="#websiteOfResource" />" onchange="relationsLinkToYourHolndingsGuideChanged();" />
+				<input type="text" id="textWebsiteOfResource" value="${loader.resourceRelationHref}" onchange="relationsLinkToYourHolndingsGuideChanged();" />
 			</td>
 			<td id="tdTypeOfRelation">
 				<label for="selectTypeOfYourRelation"><s:property value="getText('label.ai.relations.typeOfRelation')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectTypeOfYourRelation" list="typeYourRelationList"></s:select>
+				<s:select theme="simple" id="selectTypeOfYourRelation" list="typeYourRelationList" value="resourceRelationType"></s:select>
 			</td>
 		</tr>
 
@@ -30,7 +30,7 @@
 				<s:property value="getText('label.ai.relations.titleOfRelatedMaterial')" />:
 			</td>
 			<td>
-				<input type="text" id="textTitleOfRelatedMaterial" value="<s:property value="#titleOfRelatedMaterial" />" onchange="relationsLinkToYourHolndingsGuideTitleChanged();" />
+				<input type="text" id="textTitleOfRelatedMaterial" value="${loader.resourceRelationrelationEntry}" onchange="relationsLinkToYourHolndingsGuideTitleChanged();" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -41,13 +41,13 @@
 				<s:property value="getText('label.ai.relations.descriptionOfRelation')" />:
 			</td>
 			<td>
-				<input type="text" id="textDescriptionOfRelation" value="<s:property value="#descriptionOfRelation" />" />
+				<input type="text" id="textDescriptionOfRelation" value="${loader.resourceRelationrelationEntryDescription}" />
 			</td>
 			<td id="tdLanguageDescriptionOfRelation">
 				<label for="selectLanguageDescriptionOfRelation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectLanguageDescriptionOfRelation" list="languageList"></s:select>
+				<s:select theme="simple" id="selectLanguageDescriptionOfRelation" list="languageList" value="resourceRelationrelationEntryDescriptionLang"></s:select>
 			</td>
 		</tr>
 	</table>
@@ -75,13 +75,13 @@
 				<s:property value="getText('label.ai.relations.websiteOfDescription')" />:
 			</td>
 			<td>
-				<input type="text" id="textWebsiteOfDescription" value="<s:property value="#websiteOfDescription" />" />
+				<input type="text" id="textWebsiteOfDescription" value="${loader.eagRelationHref}" />
 			</td>
 			<td id="tdInstitutionTypeOfRelation">
 				<label for="selectTypeOftheRelation"><s:property value="getText('label.ai.relations.institutionTypeOfRelation')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectTypeOftheRelation" list="typeTheRelationList"></s:select>
+				<s:select theme="simple" id="selectTypeOftheRelation" list="typeTheRelationList" value="eagRelationType"></s:select>
 			</td>
 			<td colspan="2">
 			</td>
@@ -93,7 +93,7 @@
 				<s:property value="getText('label.ai.relations.titleOfRelatedInstitution')" />:
 			</td>
 			<td>
-				<input type="text" id="textTitleOfRelatedInstitution" value="<s:property value="#titleOfRelatedInstitution" />" />
+				<input type="text" id="textTitleOfRelatedInstitution" value="${loader.eagRelationrelationEntry}" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -104,13 +104,13 @@
 				<s:property value="getText('label.ai.relations.descriptionOfRelation')" />:
 			</td>
 			<td>
-				<input type="text" id="textInstitutionDescriptionOfRelation" value="<s:property value="#institutionDescriptionOfRelation" />" />
+				<input type="text" id="textInstitutionDescriptionOfRelation" value="${loader.eagRelationrelationEntryDescription}" />
 			</td>
 			<td id="tdLanguageInstitutionDescriptionOfRelation">
 				<label for="selectLanguageInstitutionDescriptionOfRelation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectLanguageInstitutionDescriptionOfRelation" list="languageList"></s:select>
+				<s:select theme="simple" id="selectLanguageInstitutionDescriptionOfRelation" list="languageList" value="eagRelationrelationEntryDescriptionLang"></s:select>
 			</td>
 		</tr>
 	</table>

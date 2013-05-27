@@ -15,13 +15,13 @@
 				<label for="textRepositoryHistory"><s:property value="getText('label.ai.description.repositoryHistory')" />:</label>
 			</td>
 			<td>
-				<textarea id="textRepositoryHistory"></textarea>
+				<textarea id="textRepositoryHistory" >${loader.repositorhist}</textarea>
 			</td>
 			<td id="tdLanguageRepositoryHistory" class="labelLeft">
 				<label for="selectLanguageRepositoryHistory"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectLanguageRepositoryHistory" list="languageList"></s:select>
+				<s:select theme="simple" id="selectLanguageRepositoryHistory" list="languageList" value="repositorhistLang"></s:select>
 			</td>
 		</tr>
 
@@ -38,7 +38,7 @@
 				<label for="textDateOfRepositoryFoundation"><s:property value="getText('label.ai.description.dateOfRepositoryFoundation')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textDateOfRepositoryFoundation" value="<s:property value="#dateOfRepositoryFoundation" />" />
+				<input type="text" id="textDateOfRepositoryFoundation" value="${loader.repositorFoundDate}" />
 			</td>
 			<td colspan="2"></td>
 		</tr>
@@ -48,13 +48,13 @@
 				<label for="textRuleOfRepositoryFoundation"><s:property value="getText('label.ai.description.ruleOfRepositoryFoundation')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textRuleOfRepositoryFoundation" value="<s:property value="#ruleOfRepositoryFoundation" />" />
+				<input type="text" id="textRuleOfRepositoryFoundation" value="${loader.repositorFoundRule}" />
 			</td>
 			<td id="tdLanguageRuleOfRepositoryFoundation" class="labelLeft">
 				<label for="selectLanguageRuleOfRepositoryFoundation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectLanguageRuleOfRepositoryFoundation" list="languageList"></s:select>
+				<s:select theme="simple" id="selectLanguageRuleOfRepositoryFoundation" list="languageList" value="repositorFoundRuleLang"></s:select>
 			</td>
 		</tr>
 
@@ -71,7 +71,7 @@
 				<label for="textDateOfRepositorySuppression"><s:property value="getText('label.ai.description.dateOfRepositorySuppression')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textDateOfRepositorySuppression" value="<s:property value="#dateOfRepositorySuppression" />" />
+				<input type="text" id="textDateOfRepositorySuppression" value="${loader.repositorSupDate}" />
 			</td>
 			<td colspan="2"></td>
 		</tr>
@@ -81,13 +81,13 @@
 				<label for="textRuleOfRepositorySuppression"><s:property value="getText('label.ai.description.ruleOfRepositorySuppression')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textRuleOfRepositorySuppression" value="<s:property value="#ruleOfRepositorySuppression" />" />
+				<input type="text" id="textRuleOfRepositorySuppression" value="${loader.repositorSupRule}" />
 			</td>
 			<td id="tdLanguageRuleOfRepositorySuppression" class="labelLeft">
 				<label for="selectLanguageRuleOfRepositorySuppression"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectLanguageRuleOfRepositorySuppression" list="languageList"></s:select>
+				<s:select theme="simple" id="selectLanguageRuleOfRepositorySuppression" list="languageList" value="repositorSupRuleLang"></s:select>
 			</td>
 		</tr>
 
@@ -111,13 +111,13 @@
 				<label for="textUnitOfAdministrativeStructure"><s:property value="getText('label.ai.description.unitOfAdministrativeStructure')" />:</label>
 			</td>
 			<td>
-				<textarea id="textUnitOfAdministrativeStructure"></textarea>
+				<textarea id="textUnitOfAdministrativeStructure">${loader.adminunit}</textarea>
 			</td>
 			<td id="tdLanguageUnitOfAdministrativeStructure" class="labelLeft">
 				<label for="selectLanguageUnitOfAdministrativeStructure"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectLanguageUnitOfAdministrativeStructure" list="languageList"></s:select>
+				<s:select theme="simple" id="selectLanguageUnitOfAdministrativeStructure" list="languageList" value="adminunitLang"></s:select>
 			</td>
 		</tr>
 
@@ -141,13 +141,13 @@
 				<label for="textBuilding"><s:property value="getText('label.ai.description.building')" />:</label>
 			</td>
 			<td>
-				<textarea id="textBuilding"></textarea>
+				<textarea id="textBuilding">${loader.building}</textarea>
 			</td>
 			<td id="tdLanguageBuilding" class="labelLeft">
 				<label for="selectLanguageBuilding"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectLanguageBuilding" list="languageList"></s:select>
+				<s:select theme="simple" id="selectLanguageBuilding" list="languageList" value="buildingLang"></s:select>
 			</td>
 		</tr>
 
@@ -164,7 +164,7 @@
 				<label for="textRepositoryArea"><s:property value="getText('label.ai.description.repositoryArea')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textRepositoryArea" value="<s:property value="#repositoryArea" />" />
+				<input type="text" id="textRepositoryArea" value="${loader.repositorarea}" />
 			</td>
 			<td colspan="2"></td>
 		</tr>
@@ -174,7 +174,7 @@
 				<label for="textLengthOfShelf"><s:property value="getText('label.ai.description.lengthOfShelf')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textLengthOfShelf" value="<s:property value="#lengthOfShelf" />" />
+				<input type="text" id="textLengthOfShelf" value="${loader.lengthshelf}" />
 			</td>
 			<td colspan="2"></td>
 		</tr>
@@ -191,13 +191,13 @@
 				<label for="textArchivalAndOtherHoldings"><s:property value="getText('label.ai.description.archivalAndOtherHoldings')" />:</label>
 			</td>
 			<td>
-				<textarea id="textArchivalAndOtherHoldings"></textarea>
+				<textarea id="textArchivalAndOtherHoldings">${loader.holdings}</textarea>
 			</td>
 			<td id="tdLanguageArchivalAndOtherHoldings" class="labelLeft">
 				<label for="selectLanguageArchivalAndOtherHoldings"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectLanguageArchivalAndOtherHoldings" list="languageList"></s:select>
+				<s:select theme="simple" id="selectLanguageArchivalAndOtherHoldings" list="languageList" value="holdingsLang"></s:select>
 			</td>
 		</tr>
 
@@ -221,7 +221,7 @@
 				<label for="textYearWhenThisNameWasUsed_1"><s:property value="getText('label.ai.tabs.commons.year')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textYearWhenThisNameWasUsed_1" value=""/>
+				<input type="text" id="textYearWhenThisNameWasUsed_1" value="${loader.holdingsDate}"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -243,7 +243,7 @@
 				<label for="textExtent"><s:property value="getText('label.ai.description.extent')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textExtent" value="<s:property value="#extent" />" />
+				<input type="text" id="textExtent" value="${loader.extent}" />
 			</td>
 			<td colspan="2"></td>
 		</tr>

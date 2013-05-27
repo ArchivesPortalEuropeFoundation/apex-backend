@@ -19,6 +19,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.manual.eag.utils.CreateEAG2012;
+import eu.apenet.dashboard.manual.eag.utils.EAG2012Loader;
 import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.dpt.utils.eag2012.namespace.EagNamespaceMapper;
 import eu.apenet.dpt.utils.util.LanguageIsoList;
@@ -135,6 +136,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	private String toDateStandardDate;
 	private String repositoryTypeValue;		// Will be an ordered list.
 
+	private String eagPath;
+	
+	public String getEagPath(){
+		return this.eagPath;
+	}
+
 	// Contact.
 
 	// Access and Services.
@@ -145,13 +152,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 
 	// Relations.
 
-	/**
-	 * Empty constructor.
-	 */
-	public WebFormEAG2012Action() {
-		super();
-	}
-
+	
 	public Map<String,String> getLanguageList() {
 		Map<String,String> languages = new LinkedHashMap<String,String>();
 		languages.put(WebFormEAG2012Action.OPTION_NONE, "---");
@@ -612,7 +613,23 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 
 	@Override
 	public String execute() throws Exception {
-		return SUCCESS;
+		ArchivalInstitution archivalInstitution = null;
+		String state = SUCCESS;
+		try {
+			archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId());
+			if(archivalInstitution!=null){
+				eagPath = archivalInstitution.getEagPath();
+				if(eagPath!=null && !eagPath.isEmpty()){
+					state = INPUT;
+				}
+			}
+		} catch (Exception e) {
+			log.error("Show/Edit EAG2012 Exception: "+e.getMessage());
+		}
+		if(state.equals(SUCCESS)){
+			fillDefaultLoaderValues();
+		}
+		return state;
 	}
 	
 	/**
@@ -633,6 +650,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	}
 	
 	private String form;
+
+	private EAG2012Loader loader;
+	
+	public EAG2012Loader getLoader(){
+		return this.loader;
+	}
 	
 	public void setForm(String form){
 		this.form = form;
@@ -642,6 +665,24 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		return this.form;
 	}
 
+	public String editWebFormEAG2012(){
+		String path = File.separatorChar+this.getCountryCode()+File.separatorChar+getAiId()+File.separatorChar+EAG_PATH+File.separatorChar+"eag2012.xml";
+		String state = INPUT;
+		if(new File(APEnetUtilities.getConfig().getRepoDirPath() + path).exists()){
+			this.loader = new EAG2012Loader(getAiId());
+			this.loader.fillEag2012();
+			log.info("Loader: "+this.loader.toString()+" has been charged.");
+		}else{
+			try {
+				execute(); //default action
+			} catch (Exception e) {
+				log.error("ERROR trying to launch default action (execute): "+e.getCause());
+			}
+			state = SUCCESS;
+		}
+		return state;
+	}
+	
 	public String createEAG2012(){
 		Eag2012 eag2012 = null;
 		try{
@@ -683,6 +724,53 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			
 		}
 		return SUCCESS;
+	}
+
+	private void fillDefaultLoaderValues() { //TODO, now only works with main repository
+		loader = new EAG2012Loader();
+		//your institution
+		loader.setAgent(getPersonResponsibleForDescription());
+		loader.setCountryCode(getCountryCode());
+		loader.setOtherRepositorId(getIdOfInstitution());
+		loader.setRecordId(getIdUsedInAPE());
+		loader.setAutform(getNameOfInstitution());
+		loader.setParform(getParallelNameOfInstitution());
+		//identity
+//		loader.setCountryCode(getCountryCode());
+		loader.setOtherRepositorId(getIdOfInstitution());
+//		loader.setRecordId(getIdUsedInAPE());
+		loader.setAutform(getNameOfInstitution());
+		loader.setParform(getParallelNameOfInstitution());
+		//contact
+//		loader.setStreet(getStreetOfTheInstitution());
+//		loader.setMunicipalityPostalcode(getCityOfTheInstitution());
+//		loader.setLocalentity(getDistrictOfTheInstitution());
+//		loader.setSecondem(getCountyOfTheInstitution());
+//		loader.setFirstdem(getRegionOfTheInstitution());
+//		loader.setCountry(getCountryOfTheInstitution());
+//		loader.setLatitude(getLatitudeOfTheInstitution());
+//		loader.setLongitude(getLongitudeOfTheInstitution());
+//		loader.setTelephone(getTelephoneOfTheInstitution());
+//		loader.setFax(getFaxOfTheInstitution());
+//		loader.setEmail(getEmailOfTheInstitution());
+//		loader.setEmailTitle(getLinkTitleForEmailOfTheInstitution());
+//		loader.setWebpage(getWebOfTheInstitution());
+//		loader.setWebpageTitle(getLinkTitleForWebOfTheInstitution());
+		//access and services
+		//description
+		//control
+//		loader.setRecordId(getIdUsedInAPE());
+//		loader.setAgent(getPersonResponsibleForDescription());
+//		loader.setAbbreviation(getContactAbbreviation());
+//		loader.setCitation(getContactFullName());
+		//relations
+//		loader.setResourceRelationHref(getWebsiteOfResource());
+//		loader.setResourceRelationrelationEntry(getTitleOfRelatedMaterial());
+//		loader.setResourceRelationrelationEntryDescription(getDescriptionOfRelation());
+//		loader.setEagRelationHref(getWebsiteOfDescription());
+//		loader.setEagRelationrelationEntry(getTitleOfRelatedInstitution());
+//		loader.setEagRelationrelationEntryDescription(getInstitutionDescriptionOfRelation());
+		
 	}
 
 	private Eag2012 getAndFillEag2012Object() throws JSONException {
@@ -4950,7 +5038,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							yearValue.add(yearMapMapMap);
 						}
 						eag2012.setFromDateStandardDate(yearValue);
-					
+						
 					}
 					//Identity Range Year To
 					j=0;

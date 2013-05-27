@@ -15,13 +15,13 @@
 					<label for="textContactStreetOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.street')" /><span class="required">*</span>:</label>
 				</td>
 				<td>
-					<input type="text" id="textContactStreetOfTheInstitution" value="<s:property value="#streetOfTheInstitution" />" disabled="disabled" />
+					<input type="text" id="textContactStreetOfTheInstitution" value="${loader.street}" disabled="disabled" />
 				</td>
 				<td id="tdLanguageVisitorAddress" class="labelLeft">
 					<label for="selectLanguageVisitorAddress" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" /><span class="required">*</span>:</label>
 				</td>
 				<td>
-					<s:select theme="simple" id="selectLanguageVisitorAddress" list="languageList" disabled="true"></s:select>
+					<s:select theme="simple" id="selectLanguageVisitorAddress" list="languageList" disabled="true" value="streetLang"></s:select>
 				</td>
 			</tr>
 
@@ -30,7 +30,7 @@
 					<label for="textContactCityOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')" /><span class="required">*</span>:</label>
 				</td>
 				<td>
-					<input type="text" id="textContactCityOfTheInstitution" value="<s:property value="#cityOfTheInstitution" />" disabled="disabled" />
+					<input type="text" id="textContactCityOfTheInstitution" value="${loader.municipalityPostalcode}" disabled="disabled" />
 				</td>
 				<td colspan="2">
 				</td>
@@ -38,10 +38,10 @@
 
 			<tr>
 				<td id="tdDistrictOfTheInstitution">
-					<label for="textContactCityOfTheInstitution"><s:property value="getText('label.ai.contact.districtOfTheInstitution')" />:</label>
+					<label for="textContactDistrictOfTheInstitution"><s:property value="getText('label.ai.contact.districtOfTheInstitution')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textContactDistrictOfTheInstitution" value="<s:property value="#districtOfTheInstitution" />" />
+					<input type="text" id="textContactDistrictOfTheInstitution" value="${loader.localentity}" />
 				</td>
 				<td colspan="2">
 				</td>
@@ -52,7 +52,7 @@
 					<label for="textContactCountyOfTheInstitution"><s:property value="getText('label.ai.contact.countyOfTheInstitution')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textContactCountyOfTheInstitution" value="<s:property value="#countyOfTheInstitution" />" />
+					<input type="text" id="textContactCountyOfTheInstitution" value="${loader.secondem}" />
 				</td>
 				<td colspan="2">
 				</td>
@@ -63,7 +63,7 @@
 					<label for="textContactRegionOfTheInstitution"><s:property value="getText('label.ai.contact.regionOfTheInstitution')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textContactRegionOfTheInstitution" value="<s:property value="#regionOfTheInstitution" />" />
+					<input type="text" id="textContactRegionOfTheInstitution" value="${loader.firstdem}" />
 				</td>
 				<td colspan="2">
 				</td>
@@ -74,7 +74,7 @@
 					<label for="textContactCountryOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.country')" /><span class="required">*</span>:</label>
 				</td>
 				<td>
-					<input type="text" id="textContactCountryOfTheInstitution" value="<s:property value="#countryOfTheInstitution" />" disabled="disabled" />
+					<input type="text" id="textContactCountryOfTheInstitution" value="${loader.country}" disabled="disabled" />
 				</td>
 				<td colspan="2">
 				</td>
@@ -91,13 +91,13 @@
 					<label for="textContactLatitudeOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.latitude')" /></label>
 				</td>
 				<td>
-					<input type="text" id="textContactLatitudeOfTheInstitution" value="<s:property value="#latitudeOfTheInstitution" />" disabled="disabled" />
+					<input type="text" id="textContactLatitudeOfTheInstitution" value="${loader.latitude}" disabled="disabled" />
 				</td>
 				<td class="labelLeft">
 					<label for="textContactLongitudeOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.longitude')" /></label>
 				</td>
 				<td>
-					<input type="text" id="textContactLongitudeOfTheInstitution" value="<s:property value="#longitudeOfTheInstitution" />" disabled="disabled" />
+					<input type="text" id="textContactLongitudeOfTheInstitution" value="${loader.longitude}" disabled="disabled" />
 				</td>
 			</tr>
 		</table></td></tr>
@@ -128,7 +128,7 @@
 				
 			</td>
 			<td>
-				<s:select theme="simple" id="selectContinentOfTheInstitution" list="continentOfTheInstitutionList" disabled="true"></s:select>
+				<s:select theme="simple" id="selectContinentOfTheInstitution" list="continentOfTheInstitutionList" disabled="true" value="geogarea"></s:select>
 			</td>
 			<td colspan="2" ></td>
 		</tr>
@@ -138,7 +138,7 @@
 				<label for="textContactTelephoneOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.telephone')" /></label>:
 			</td>
 			<td>
-				<input type="text" id="textContactTelephoneOfTheInstitution" value="<s:property value="#telephoneOfTheInstitution" />" disabled="disabled" />
+				<input type="text" id="textContactTelephoneOfTheInstitution" value="${loader.telephone}" disabled="disabled" />
 			</td>
 			<td id="tdAddFurtherTelephoneOfTheInstitution" colspan="2">
 				<input id="buttonAddFurtherTelephoneOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherTelephoneNumbers")' />" onclick="addFurtherTelephoneOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
@@ -149,7 +149,7 @@
 				<label for="textContactFaxOfTheInstitution"><s:property value="getText('label.ai.contact.faxOfTheInstitution')" /></label>:
 			</td>
 			<td>
-				<input type="text" id="textContactFaxOfTheInstitution" value="<s:property value="#faxOfTheInstitution" />" />
+				<input type="text" id="textContactFaxOfTheInstitution" value="${loader.fax}" />
 			</td>
 			<td id="tdAddFurtherFaxOfTheInstitution" colspan="2">
 				<input id="buttonAddFurtherFaxOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherFaxOfTheInstitution")' />" onclick="addFurtherFaxOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
@@ -160,13 +160,13 @@
 				<label for="textContactEmailOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.emailAddress')" /></label>:
 			</td>
 			<td>
-				<input type="text" id="textContactEmailOfTheInstitution" value="<s:property value="#emailOfTheInstitution" />" disabled="disabled" />
+				<input type="text" id="textContactEmailOfTheInstitution" value="${loader.email}" disabled="disabled" />
 			</td>
 			<td class="labelLeft">
 				<label for="textContactLinkTitleForEmailOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.linkTitle')" /></label>:
 			</td>
 			<td>
-				<input type="text" id="textContactLinkTitleForEmailOfTheInstitution" value="<s:property value="#linkTitleForEmailOfTheInstitution" />" onchange="contactEmailOfInstitutionLinkChanged();" />
+				<input type="text" id="textContactLinkTitleForEmailOfTheInstitution" value="${loader.emailTitle}" onchange="contactEmailOfInstitutionLinkChanged();" />
 			</td>
 		</tr>
 
@@ -181,13 +181,13 @@
 				<label for="textContactWebOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textContactWebOfTheInstitution" value="<s:property value="#webOfTheInstitution" />" disabled="disabled" />
+				<input type="text" id="textContactWebOfTheInstitution" value="${loader.webpage}" disabled="disabled" />
 			</td>
 			<td class="labelLeft">
 				<label for="textContactLinkTitleForWebOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.linkTitle')" /></label>:
 			</td>
 			<td>
-				<input type="text" id="textContactLinkTitleForWebOfTheInstitution" value="<s:property value="#linkTitleForWebOfTheInstitution" />" onchange="contactWebOfInstitutionLinkChanged();" />
+				<input type="text" id="textContactLinkTitleForWebOfTheInstitution" value="${loader.webpageTitle}" onchange="contactWebOfInstitutionLinkChanged();" />
 			</td>
 		</tr>
 

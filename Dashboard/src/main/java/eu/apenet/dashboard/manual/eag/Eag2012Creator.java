@@ -746,7 +746,7 @@ public class Eag2012Creator {
 	        
 	        ArrayList<HashMap<String, Object>> childControl1Children = new ArrayList<HashMap<String,Object>>();
 	        
-	        childControl1Children.add(buildAgent(this.eag2012.getAgentId(),this.eag2012.getAgentLang(),this.eag2012.getAgentValue())); //mandatory, non-repeatable
+/* TODO	        childControl1Children.add(buildAgent(this.eag2012.getAgentId(),this.eag2012.getAgentLang(),this.eag2012.getAgentValue())); //mandatory, non-repeatable */
 	       
 	        childControl1Children.add(buildAgentType(this.eag2012.getAgentTypeId(),this.eag2012.getAgentValue())); //mandatory, non-repeatable
 	       

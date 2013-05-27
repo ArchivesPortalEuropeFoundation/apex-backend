@@ -60,6 +60,14 @@
 
 		<action name="createeag2012withmenu" class="eu.apenet.dashboard.manual.eag.WebFormEAG2012Action">
 			<result name="success" type="tiles">webFormEAG2012</result>
+			<result name="input" type="redirectAction">
+				<param name="actionName">editWebFormEAG2012</param>
+			</result>
+		</action>
+
+		<action name="editWebFormEAG2012" class="eu.apenet.dashboard.manual.eag.WebFormEAG2012Action" method="editWebFormEAG2012">
+			<result name="input" type="tiles">webFormEAG2012WithMenu</result>
+			<result name="success" type="tiles">webFormEAG2012</result>
 		</action>
 		
 		<action name="storeEAG2012" class="eu.apenet.dashboard.manual.eag.WebFormEAG2012Action" method="createEAG2012" >

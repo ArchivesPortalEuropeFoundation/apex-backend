@@ -8,7 +8,7 @@
 				<label  for="textIdentityCountryCodeOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.countryCode')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textIdentityCountryCodeOfTheInstitution" value="${countryCode}" disabled="disabled" />
+				<input type="text" id="textIdentityCountryCodeOfTheInstitution" value="${loader.countryCode}" disabled="disabled" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -19,13 +19,13 @@
 				<label  for="textIdentityIdentifierOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.identifierOfTheInstitution')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textIdentityIdentifierOfTheInstitution" value="${idOfInstitution}" disabled="disabled" />
+				<input type="text" id="textIdentityIdentifierOfTheInstitution" value="${loader.otherRepositorId}" disabled="disabled" />
 			</td>
 			<td id="tdIdUsedInAPE" class="labelLeft">
 				<label  for="textIdentityIdUsedInAPE"><s:property value="getText('label.ai.tabs.commons.idUsedInAPE')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textIdentityIdUsedInAPE" value="${idUsedInAPE}" disabled="disabled" />
+				<input type="text" id="textIdentityIdUsedInAPE" value="${loader.recordId}" disabled="disabled" />
 			</td>
 		</tr>
 	</table>
@@ -36,13 +36,13 @@
 				<label for="textNameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.nameOfTheInstitution')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textNameOfTheInstitution" value="${nameOfInstitution}" disabled="disabled" />
+				<input type="text" id="textNameOfTheInstitution" value="${loader.autform}" disabled="disabled" />
 			</td>
 			<td id="tdNameOfTheInstitutionLanguage" class="labelLeft">
 				<label for="noti_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="noti_languageList" list="languageList" disabled="true"></s:select>
+				<s:select theme="simple" id="noti_languageList" list="languageList" disabled="true" value="autformLang"></s:select>
 			</td>
 		</tr>
 	</table>
@@ -61,13 +61,13 @@
 				<label for="textParallelNameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.parallelNameOfTheInstitution')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textParallelNameOfTheInstitution" value="${parallelNameOfInstitution}" disabled="disabled" />
+				<input type="text" id="textParallelNameOfTheInstitution" value="${loader.parform}" disabled="disabled" />
 			</td>
 			<td id="tdNameOfTheInstitutionLanguage" class="labelLeft">
 				<label for="pnoti_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="pnoti_languageList" list="languageList" disabled="true"></s:select>
+				<s:select theme="simple" id="pnoti_languageList" list="languageList" disabled="true" value="parformLang"></s:select>
 			</td>
 		</tr>
 	</table>

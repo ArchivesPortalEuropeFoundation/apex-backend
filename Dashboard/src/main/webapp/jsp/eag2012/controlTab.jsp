@@ -8,7 +8,7 @@
 				<label for="textDescriptionIdentifier"><s:property value="getText('label.ai.control.descriptionIdentifier')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textDescriptionIdentifier" value="${idUsedInAPE}" disabled="disabled" />
+				<input type="text" id="textDescriptionIdentifier" value="${loader.recordId}" disabled="disabled" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -19,13 +19,13 @@
 				<label for="textPesonResponsible"><s:property value="getText('label.ai.control.pesonresponsible')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textPesonResponsible" value="${personResponsibleForDescription}" onchange="controlPersonResponsibleForDescriptionChanged();" />
+				<input type="text" id="textPesonResponsible" value="${loader.agent}" onchange="controlPersonResponsibleForDescriptionChanged();" />
 			</td>
 			<td id="tdLanguagePesonresponsible" class="labelLeft">
 				<label for="selectLanguagePesonresponsible"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectLanguagePesonresponsible" list="languageList"></s:select>
+				<s:select theme="simple" id="selectLanguagePesonresponsible" list="languageList" value="agentLang"></s:select>
 			</td>
 		</tr>
 
@@ -41,7 +41,7 @@
 				<label for="selectDescriptionLanguage"><s:property value="getText('label.ai.control.descriptionLanguage')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectDescriptionLanguage" cssClass="selectControlTab" list="languageList"></s:select>
+				<s:select theme="simple" id="selectDescriptionLanguage" cssClass="selectControlTab" list="languageList" value="language"></s:select>
 			</td>
 			<td colspan="2">
 			</td>
@@ -51,7 +51,7 @@
 				<label for="selectDescriptionScript"><s:property value="getText('label.ai.control.descriptionScript')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectDescriptionScript" cssClass="selectControlTab"  list="scriptList"></s:select>
+				<s:select theme="simple" id="selectDescriptionScript" cssClass="selectControlTab"  list="scriptList" value="script"></s:select>
 			</td>
 			<td colspan="2">
 			</td>
@@ -74,7 +74,7 @@
 				<label for="textContactAbbreviation"><s:property value="getText('label.ai.control.abbreviation')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textContactAbbreviation" value="<s:property value="#contactAbbreviation" />" />
+				<input type="text" id="textContactAbbreviation" value="${loader.abbreviation}" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -84,7 +84,7 @@
 				<label for="textContactFullName"><s:property value="getText('label.ai.control.fullName')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textContactFullName" value="<s:property value="#contactFullName" />" />
+				<input type="text" id="textContactFullName" value="${loader.citation}" />
 			</td>
 			<td colspan="2">
 			</td>

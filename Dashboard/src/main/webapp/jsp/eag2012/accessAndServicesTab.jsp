@@ -8,13 +8,13 @@
 				<label for="textOpeningTimes"><s:property value="getText('label.ai.accessAndServices.openingTimes')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textOpeningTimes" onchange="aSOpeningHoursOfInstitutionChanged();" />
+				<input type="text" id="textOpeningTimes" onchange="aSOpeningHoursOfInstitutionChanged();" value="${loader.opening}" />
 			</td>
 			<td class="labelLeft">
 				<label for="selectLanguageOpeningTimes" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectLanguageOpeningTimes" list="languageList"></s:select>
+				<s:select theme="simple" id="selectLanguageOpeningTimes" list="languageList" value="openingLang"></s:select>
 			</td>
 		</tr>
 
@@ -31,13 +31,13 @@
 				<label for="textClosingDates"><s:property value="getText('label.ai.tabs.commons.closingDates')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textClosingDates" onchange="aSClosingHoursOfInstitutionChanged();" />
+				<input type="text" id="textClosingDates" onchange="aSClosingHoursOfInstitutionChanged();" value="${loader.closing}" />
 			</td>
 			<td class="labelLeft">
 				<label for="selectLanguageClosingDates" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectLanguageClosingDates" list="languageList"></s:select>
+				<s:select theme="simple" id="selectLanguageClosingDates" list="languageList" value="closingLang"></s:select>
 			</td>
 		</tr>
 
@@ -54,13 +54,13 @@
 				<label for="textTravellingDirections"><s:property value="getText('label.ai.accessAndServices.travellingDirections')" />:</label>
 			</td>
 			<td>
-				<textarea id="textTravellingDirections"></textarea>
+				<textarea id="textTravellingDirections">${loader.directions}</textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectASATDSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASATDSelectLanguage" list="languageList"></s:select>
+				<s:select theme="simple" id="selectASATDSelectLanguage" list="languageList" value="directionsLang"></s:select>
 			</td>
 		</tr>
 
@@ -69,7 +69,7 @@
 				<label for="textTravelLink"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 			</td>
 			<td colspan="2">
-				<input type="text" id="textTravelLink" />
+				<input type="text" id="textTravelLink" value="${loader.citationHref}" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -88,7 +88,7 @@
 				<label for="selectASAccesibleToThePublic"><s:property value="getText('label.ai.accessAndServices.accesibleToThePublic')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASAccesibleToThePublic" list="yesNoList" onchange="aSAccessibleToThePublicChanged();"></s:select>
+				<s:select theme="simple" id="selectASAccesibleToThePublic" list="yesNoList" onchange="aSAccessibleToThePublicChanged();" value="accessQuestion"></s:select>
 			</td>
 			<td colspan="2">
 			</td>
@@ -99,13 +99,13 @@
 				<label for="textASAccessRestrictions"><s:property value="getText('label.ai.accessAndServices.accessRestrictions')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASAccessRestrictions" />
+				<input type="text" id="textASAccessRestrictions" value="${loader.restaccess}" onchange="aSFutherAccessInformationChanged();" />
 			</td>
 			<td class="labelLeft">
 				<label for="selectASARSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASARSelectLanguage" list="languageList"></s:select>
+				<s:select theme="simple" id="selectASARSelectLanguage" list="languageList" value="restaccessLang"></s:select>
 			</td>
 		</tr>
 
@@ -122,13 +122,13 @@
 				<label for="textASTermOfUse"><s:property value="getText('label.ai.accessAndServices.termsOfUse')" />:</label>
 			</td>
 			<td>
-				<textarea id="textASTermOfUse"></textarea>
+				<textarea id="textASTermOfUse">${loader.termsOfUse}</textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectASAFTOUSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASAFTOUSelectLanguage" list="languageList"></s:select>
+				<s:select theme="simple" id="selectASAFTOUSelectLanguage" list="languageList" value="termsOfUseLang"></s:select>
 			</td>
 		</tr>
 
@@ -137,7 +137,7 @@
 				<label for="textASTOULink"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTOULink" />
+				<input type="text" id="textASTOULink" value="${loader.termsOfUseHref}" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -156,7 +156,7 @@
 				<label for="selectASFacilitiesForDisabledPeopleAvailable"><s:property value="getText('label.ai.accessAndServices.facilitiesForDisabledPeopleAvailable')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASFacilitiesForDisabledPeopleAvailable" list="yesNoList" onchange="aSFacilitiesForDisabledPeopleAvailableChanged();"></s:select>
+				<s:select theme="simple" id="selectASFacilitiesForDisabledPeopleAvailable" list="yesNoList" onchange="aSFacilitiesForDisabledPeopleAvailableChanged();" value="accessibilityQuestion"></s:select>
 			</td>
 		</tr>
 
@@ -165,13 +165,13 @@
 				<label for="textASAccessibility"><s:property value="getText('label.ai.accessAndServices.accesibility')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASAccessibility" />
+				<input type="text" id="textASAccessibility" value="${loader.accessibility}" onchange="aSFutherInformationOnExistingFacilitiesChanged();" />
 			</td>
 			<td class="labelLeft">
-				<label for="selectASASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				<label for="selectASASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASASelectLanguage" list="languageList"></s:select>
+				<s:select theme="simple" id="selectASASelectLanguage" list="languageList" value="accessibilityLang"></s:select>
 			</td>
 		</tr>
 
@@ -630,11 +630,7 @@
 			<td>
 				<s:select theme="simple" id="selectASTSRSMicroform" list="yesNoList"></s:select>
 			</td>
-			<td class="labelLeft">
-				<label for="textASTSRSMicroformDescription"><s:property value="getText('label.ai.accessAndServices.description')" />:</label>
-			</td>
-			<td>
-				<input type="text" id="textASTSRSMicroformDescription" />
+			<td colspan="2">
 			</td>
 		</tr>
 
@@ -645,11 +641,7 @@
 			<td>
 				<s:select theme="simple" id="selectASTSRSPhotographServices" list="yesNoList"></s:select>
 			</td>
-			<td class="labelLeft">
-				<label for="textASTSRSPhotographServicesDescription"><s:property value="getText('label.ai.accessAndServices.description')" />:</label>
-			</td>
-			<td>
-				<input type="text" id="textASTSRSPhotographServicesDescription" />
+			<td colspan="2">
 			</td>
 		</tr>
 
@@ -660,11 +652,7 @@
 			<td>
 				<s:select theme="simple" id="selectASTSRSDigitalServices" list="yesNoList"></s:select>
 			</td>
-			<td class="labelLeft">
-				<label for="textASTSRSDigitalServicesDescription"><s:property value="getText('label.ai.accessAndServices.description')" />:</label>
-			</td>
-			<td>
-				<input type="text" id="textASTSRSDigitalServicesDescription" />
+			<td colspan="2">
 			</td>
 		</tr>
 
@@ -675,11 +663,7 @@
 			<td>
 				<s:select theme="simple" id="selectASTSRSPhotocopyServices" list="yesNoList"></s:select>
 			</td>
-			<td class="labelLeft">
-				<label for="textASTSRSPhotocopyServicesDescription"><s:property value="getText('label.ai.accessAndServices.description')" />:</label>
-			</td>
-			<td>
-				<input type="text" id="textASTSRSPhotocopyServicesDescription" />
+			<td colspan="2">
 			</td>
 		</tr>
 
