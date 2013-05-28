@@ -208,10 +208,7 @@
 		</action>
 		
 		<action name="updateContentmanager" class="eu.apenet.dashboard.actions.content.ContentManagerAction"> 
-			<result name="success" type="redirectAction">
-				<param name="actionName">contentmanager</param>
-				<param name="ajax">${ajax}</param>
-			</result>
+			<result name="success">/jsp/contentmanager/contentmanager-results.jsp</result>
 		</action>
 		
 		
