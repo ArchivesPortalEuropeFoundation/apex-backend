@@ -14,7 +14,11 @@
 				<label for="selectLanguageOpeningTimes" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectLanguageOpeningTimes" list="languageList" value="openingLang"></s:select>
+				<select id="selectLanguageOpeningTimes" >
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.openingLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -37,7 +41,11 @@
 				<label for="selectLanguageClosingDates" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectLanguageClosingDates" list="languageList" value="closingLang"></s:select>
+				<select id="selectLanguageClosingDates">
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.closingLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -60,7 +68,11 @@
 				<label for="selectASATDSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASATDSelectLanguage" list="languageList" value="directionsLang"></s:select>
+				<select id="selectASATDSelectLanguage">
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.directionsLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -88,7 +100,11 @@
 				<label for="selectASAccesibleToThePublic"><s:property value="getText('label.ai.accessAndServices.accesibleToThePublic')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASAccesibleToThePublic" list="yesNoList" onchange="aSAccessibleToThePublicChanged();" value="accessQuestion"></s:select>
+				<select id="selectASAccesibleToThePublic" onchange="aSAccessibleToThePublicChanged();">
+					<s:iterator value="yesNoList" var="yesno"> 
+						<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.accessQuestion}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 			<td colspan="2">
 			</td>
@@ -105,7 +121,11 @@
 				<label for="selectASARSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASARSelectLanguage" list="languageList" value="restaccessLang"></s:select>
+				<select id="selectASARSelectLanguage" onchange="aSAccessibleToThePublicChanged();">
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.restaccessLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -128,7 +148,11 @@
 				<label for="selectASAFTOUSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASAFTOUSelectLanguage" list="languageList" value="termsOfUseLang"></s:select>
+				<select id="selectASAFTOUSelectLanguage">
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.termsOfUseLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -156,7 +180,11 @@
 				<label for="selectASFacilitiesForDisabledPeopleAvailable"><s:property value="getText('label.ai.accessAndServices.facilitiesForDisabledPeopleAvailable')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASFacilitiesForDisabledPeopleAvailable" list="yesNoList" onchange="aSFacilitiesForDisabledPeopleAvailableChanged();" value="accessibilityQuestion"></s:select>
+				<select id="selectASFacilitiesForDisabledPeopleAvailable" onchange="aSFacilitiesForDisabledPeopleAvailableChanged();">
+					<s:iterator value="yesNoList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.accessibilityQuestion}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -171,7 +199,11 @@
 				<label for="selectASASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASASelectLanguage" list="languageList" value="accessibilityLang"></s:select>
+				<select id="selectASASelectLanguage">
+					<s:iterator value="yesNoList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.accessibilityLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -271,7 +303,11 @@
 				<label for="selectASSRPhotographAllowance"><s:property value="getText('label.ai.accessAndServices.photographAllowance')"/>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASSRPhotographAllowance" list="photographList"></s:select>
+				<select id="selectASSRPhotographAllowance">
+					<s:iterator value="photographList" var="photograph"> 
+						<option value="<s:property value="#photograph.key" />"><s:property value="#photograph.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -286,7 +322,11 @@
 				<label for="selectReadersTickectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectReadersTickectLanguage" list="languageList"></s:select>
+				<select id="selectReadersTickectLanguage">
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.accessibilityLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -320,7 +360,11 @@
 				<label for="selectASSRAFOIUSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASSRAFOIUSelectLanguage" list="languageList"></s:select>
+				<select id="selectASSRAFOIUSelectLanguage">
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -354,7 +398,11 @@
 				<label for="textASSRRSSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="textASSRRSSelectLanguage" list="languageList"></s:select>
+				<select id="textASSRRSSelectLanguage">
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -371,7 +419,11 @@
 				<span><s:property value="getText('label.ai.accessAndServices.library')" /></span>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASLibrary" list="yesNoList"></s:select>
+				<select id="selectASLibrary">
+					<s:iterator value="yesNoList" var="yesno"> 
+						<option value="<s:property value="#yesno.key" />"><s:property value="#yesno.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 			<td colspan="2">
 			</td>
@@ -438,7 +490,11 @@
 				<label for="selectASInternetAccess"><span><s:property value="getText('label.ai.accessAndServices.internetAccess')" /></span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASInternetAccess" list="yesNoList"></s:select>
+				<select id="selectASInternetAccess">
+					<s:iterator value="yesNoList" var="yesno"> 
+						<option value="<s:property value="#yesno.key" />"><s:property value="#yesno.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 			<td colspan="2">
 			</td>
@@ -455,7 +511,11 @@
 				<label for="selectASDSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASDSelectLanguage" list="languageList"></s:select>
+				<select id="selectASDSelectLanguage">
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -478,7 +538,11 @@
 				<span><label for="selectASTSRestaurationLab"><s:property value="getText('label.ai.accessAndServices.restaurationLab')" />:</label></span>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASTSRestaurationLab" list="yesNoList"></s:select>
+				<select id="selectASTSRestaurationLab">
+					<s:iterator value="yesNoList" var="yesno"> 
+						<option value="<s:property value="#yesno.key" />"><s:property value="#yesno.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 			<td colspan="2">
 			</td>
@@ -495,7 +559,11 @@
 				<label for="selectASTSSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASTSSelectLanguage" list="languageList"></s:select>
+				<select id="selectASTSSelectLanguage">
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -553,7 +621,11 @@
 				<label for="selectASTSReproductionService"><s:property value="getText('label.ai.accessAndServices.reproductionService')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASTSReproductionService" list="yesNoList"></s:select>
+				<select id="selectASTSReproductionService">
+					<s:iterator value="yesNoList" var="yesno"> 
+						<option value="<s:property value="#yesno.key" />"><s:property value="#yesno.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 			<td colspan="2">
 			</td>
@@ -570,7 +642,11 @@
 				<label for="selectASTSRSSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASTSRSSelectLanguage" list="languageList"></s:select>
+				<select id="selectASTSRSSelectLanguage">
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -628,7 +704,11 @@
 				<label for="selectASTSRSMicroform"><s:property value="getText('label.ai.accessAndServices.microformServices')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASTSRSMicroform" list="yesNoList"></s:select>
+				<select id="selectASTSRSMicroform">
+					<s:iterator value="yesNoList" var="yesno"> 
+						<option value="<s:property value="#yesno.key" />"><s:property value="#yesno.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 			<td colspan="2">
 			</td>
@@ -639,7 +719,11 @@
 				<label for="selectASTSRSPhotographServices"><s:property value="getText('label.ai.accessAndServices.photographServices')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASTSRSPhotographServices" list="yesNoList"></s:select>
+				<select id="selectASTSRSPhotographServices">
+					<s:iterator value="yesNoList" var="yesno"> 
+						<option value="<s:property value="#yesno.key" />"><s:property value="#yesno.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 			<td colspan="2">
 			</td>
@@ -650,7 +734,11 @@
 				<label for="selectASTSRSDigitalServices"><s:property value="getText('label.ai.accessAndServices.digitalServices')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASTSRSDigitalServices" list="yesNoList"></s:select>
+				<select id="selectASTSRSDigitalServices">
+					<s:iterator value="yesNoList" var="yesno"> 
+						<option value="<s:property value="#yesno.key" />"><s:property value="#yesno.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 			<td colspan="2">
 			</td>
@@ -661,7 +749,11 @@
 				<label for="selectASTSRSPhotocopyServices"><s:property value="getText('label.ai.accessAndServices.photocopyServices')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASTSRSPhotocopyServices" list="yesNoList"></s:select>
+				<select id="selectASTSRSPhotocopyServices">
+					<s:iterator value="yesNoList" var="yesno"> 
+						<option value="<s:property value="#yesno.key" />"><s:property value="#yesno.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 			<td colspan="2">
 			</td>
@@ -685,7 +777,11 @@
 				<label for="selectASReSeRefreshmentSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASReSeRefreshmentSelectLanguage" list="languageList"></s:select>
+				<select id="selectASReSeRefreshmentSelectLanguage">
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -700,7 +796,11 @@
 				<label for="selectASReSeExhibitionSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASReSeExhibitionSelectLanguage" list="languageList"></s:select>
+				<select id="selectASReSeExhibitionSelectLanguage">
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -738,7 +838,11 @@
 				<label for="selectASReSeToursAndSessionsSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASReSeToursAndSessionsSelectLanguage" list="languageList"></s:select>
+				<select id="selectASReSeToursAndSessionsSelectLanguage">
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -776,7 +880,11 @@
 				<label for="selectASReSeOtherServicesSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectASReSeOtherServicesSelectLanguage" list="languageList"></s:select>
+				<select id="selectASReSeOtherServicesSelectLanguage">
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 

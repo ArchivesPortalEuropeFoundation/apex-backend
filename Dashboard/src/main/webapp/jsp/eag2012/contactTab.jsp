@@ -21,7 +21,11 @@
 					<label for="selectLanguageVisitorAddress" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" /><span class="required">*</span>:</label>
 				</td>
 				<td>
-					<s:select theme="simple" id="selectLanguageVisitorAddress" list="languageList" disabled="true" value="streetLang"></s:select>
+					<select id="selectLanguageVisitorAddress" disabled="disabled">
+						<s:iterator value="languageList" var="language"> 
+							<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.streetLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+						</s:iterator>
+					</select>
 				</td>
 			</tr>
 
@@ -128,7 +132,11 @@
 				
 			</td>
 			<td>
-				<s:select theme="simple" id="selectContinentOfTheInstitution" list="continentOfTheInstitutionList" disabled="true" value="geogarea"></s:select>
+				<select id="selectContinentOfTheInstitution">
+					<s:iterator value="continentOfTheInstitutionList" var="continent"> 
+						<option value="<s:property value="#continent.key" />"<s:if test="%{#continent.key == loader.geogarea}" > selected=selected </s:if>><s:property value="#continent.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 			<td colspan="2" ></td>
 		</tr>

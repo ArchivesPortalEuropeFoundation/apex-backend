@@ -62,7 +62,11 @@
 				<label for="selectYINOTISelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectYINOTISelectLanguage" list="languageList" onchange="nameOfInstitutionLanguageChanged();" value="#loader.autformLang" ></s:select>
+				<select id="selectYINOTISelectLanguage" onchange="nameOfInstitutionLanguageChanged();" >
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.autformLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -84,7 +88,11 @@
 				<label for="selectYIPNOTISelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td class="labelLeftselect">
-				<s:select theme="simple" id="selectYIPNOTISelectLanguage" list="languageList" onchange="parallelNameOfInstitutionLanguageChanged();" value="parformLang"></s:select>
+				<select id="selectYIPNOTISelectLanguage" onchange="parallelNameOfInstitutionLanguageChanged();" >
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.parformLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 	</table>
@@ -107,7 +115,11 @@
 				<label for="selectYIVASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectYIVASelectLanguage" list="languageList" onchange="streetOfInstitutionLanguageChanged();" value="streetLang"></s:select>
+				<select id="selectYIVASelectLanguage" onchange="streetOfInstitutionLanguageChanged();" >
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.streetLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -183,7 +195,11 @@
 				<label for="selectYIContinent" ><s:property value="getText('label.ai.tabs.commons.continent')"/>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectYIContinent" list="continentOfTheInstitutionList" onchange="continentOfInstitutionChanged();" value="geogarea"></s:select>
+				<select id="selectYIContinent" onchange="continentOfInstitutionChanged();" >
+					<s:iterator value="continentOfTheInstitutionList" var="continent"> 
+						<option value="<s:property value="#continent.key" />"<s:if test="%{#continent.key == loader.geogarea}" > selected=selected </s:if>><s:property value="#continent.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -257,7 +273,11 @@
 				<label for="selectAccessibleToThePublic" ><s:property value="getText('label.ai.yourinstitution.accessibleToThePublic')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectAccessibleToThePublic" list="yesNoList" onchange="accessibleToThePublicChanged();" value="accessQuestion"></s:select>
+				<select id="selectAccessibleToThePublic" onchange="accessibleToThePublicChanged();" >
+					<s:iterator value="yesNoList" var="yesno"> 
+						<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.accessQuestion}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 			<td colspan="2" class="labelLeft">
 				<input type="button" id="buttonFutherAccessInformation" value="<s:property value="getText('label.ai.yourinstitution.addFurtherAccessInformation')"/>" onclick="yiFutherAccessInformation();" />
@@ -269,7 +289,11 @@
 				<label for="selectFacilitiesForDisabledPeopleAvailable" ><s:property value="getText('label.ai.yourinstitution.facilitiesForFisabledPeopleAvailable')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectFacilitiesForDisabledPeopleAvailable" list="yesNoList" onchange="facilitiesForDisabledPeopleAvailableChanged();" value="accessibilityQuestion"></s:select>
+				<select id="selectFacilitiesForDisabledPeopleAvailable" onchange="facilitiesForDisabledPeopleAvailableChanged();" >
+					<s:iterator value="yesNoList" var="yesno"> 
+						<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.accessibilityQuestion}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 			<td colspan="2" class="labelLeft">
 				<input type="button" id="buttonAddFutherInformationOnExistingFacilities" value="<s:property value="getText('label.ai.yourinstitution.addFutherInformationOnExistingFacilities')"/>" onclick="yiAddFutherInformationOnExistingFacilities();" />

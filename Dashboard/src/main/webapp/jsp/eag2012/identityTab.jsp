@@ -42,7 +42,11 @@
 				<label for="noti_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="noti_languageList" list="languageList" disabled="true" value="autformLang"></s:select>
+				<select id="noti_languageList" disabled="disabled" >
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.autformLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 	</table>
@@ -67,7 +71,11 @@
 				<label for="pnoti_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="pnoti_languageList" list="languageList" disabled="true" value="parformLang"></s:select>
+				<select id="pnoti_languageList" disabled="disabled" >
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.parformLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 	</table>
@@ -98,7 +106,11 @@
 				<label for="textSelectTypeOfTheInstitution"><s:property value="getText('label.ai.identity.selectTypeOfTheInstitution')" />:</label>
 			</td>
 			<td>
-				<s:select name="selectTypeOfTheInstitution" id="selectTypeOfTheInstitution" list="typeOfInstitutionList"  value="repositoryType" multiple="true" size="4"></s:select>
+				<select id="selectTypeOfTheInstitution" multiple="multiple" size="4">
+					<s:iterator value="typeOfInstitutionList" var="type"> 
+						<option value="<s:property value="#type.key" />"<s:if test="%{#type.key == loader.repositoryType}" > selected=selected </s:if>><s:property value="#type.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 			<td colspan="2">
 			</td>
