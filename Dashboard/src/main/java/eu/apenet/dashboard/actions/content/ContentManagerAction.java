@@ -55,6 +55,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 	private boolean orderByAscending = false;
 	private String searchTerms;
 	private String searchTermsField;
+	private boolean updateSearchResults = false;
 	private boolean ajax = false;
 
 	public ContentManagerAction() {}
@@ -196,17 +197,23 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 		}
 		getServletRequest().setAttribute("results", results);
 		getServletRequest().setAttribute("harvestingStarted", EadService.isHarvestingStarted());
-		if (ajax) {
-			return SUCCESS_AJAX;
-		} else {
-			return SUCCESS;
-		}
+		return SUCCESS;
 	}
 
 	@Override
 	public String execute() throws Exception {
-		getServletRequest().getSession().setAttribute(EAD_SEARCH_OPTIONS, createNewEadSearchOptions());
-		return SUCCESS;
+		EadSearchOptions eadSearchOptions = null;;
+		if (updateSearchResults){
+			eadSearchOptions = (EadSearchOptions) getServletRequest().getSession().getAttribute(EAD_SEARCH_OPTIONS);
+			eadSearchOptions.setPageNumber(pageNumber);
+			eadSearchOptions.setOrderByAscending(orderByAscending);
+			eadSearchOptions.setOrderByField(orderByField);
+			eadSearchOptions.setPageSize(resultPerPage);
+		}else {
+			eadSearchOptions = createNewEadSearchOptions();
+		}
+		getServletRequest().getSession().setAttribute(EAD_SEARCH_OPTIONS, eadSearchOptions);
+		return input();
 	}
 
 	private EadSearchOptions initFromExistingEadSearchOptions() {
@@ -432,6 +439,14 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 
 	public void setLinkedStatusList(Map<String, String> linkedStatusList) {
 		this.linkedStatusList = linkedStatusList;
+	}
+
+	public boolean isUpdateSearchResults() {
+		return updateSearchResults;
+	}
+
+	public void setUpdateSearchResults(boolean updateSearchResults) {
+		this.updateSearchResults = updateSearchResults;
 	}
 
 }
