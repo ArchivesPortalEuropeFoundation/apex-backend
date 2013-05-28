@@ -4,7 +4,7 @@
     <parent>
         <artifactId>portal-project</artifactId>
         <groupId>eu.archivesportaleurope</groupId>
-        <version>1.2.3-SNAPSHOT</version>
+        <version>1.2.3</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>OAIHarvester</artifactId>
