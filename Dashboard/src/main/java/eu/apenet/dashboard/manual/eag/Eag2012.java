@@ -32,10 +32,217 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
  * into one object.
  */
 public class Eag2012 {
-	
+	// Constants.
 	private static final String OTHERRECORDID_PATH = "/eag/archguide/otherRecordId";
 
-	public static final String REPOSITORY_ROLE_HEAD_QUARTER = "HeadQuarters";
+	public static final String OPTION_YES = "yes";	// Constant for value "yes".
+	public static final String OPTION_NO = "no";	// ConsEag2012ant for value "no".
+
+	public static final String OPTION_NONE = "none";				// Constant for value "none".
+
+	// Constants for repository role options.
+	public static final String OPTION_ROLE_HEADQUARTERS = "headquarters";	// Constant for value "headquarters".
+	public static final String OPTION_ROLE_BRANCH = "branch";				// Constant for value "branch".
+	public static final String OPTION_ROLE_INTERIM = "interim";				// Constant for value "interim".
+
+	// Constants for repository role texts.
+	public static final String OPTION_ROLE_HEADQUARTERS_TEXT = "Head quarter";	// Constant for value "Head quarter".
+	public static final String OPTION_ROLE_BRANCH_TEXT = "Branch";				// Constant for value "Branch".
+	public static final String OPTION_ROLE_INTERIM_TEXT = "Interim archive";	// Constant for value "Interim archive".
+
+	// Constants for repository type options.
+	public static final String OPTION_NATIONAL = "national";		// Constant for value "national".
+	public static final String OPTION_REGIONAL = "regional";		// Constant for value "regional".
+	public static final String OPTION_COUNTY = "county";			// Constant for value "county".
+	public static final String OPTION_MUNICIPAL = "municipal";		// Constant for value "municipal".
+	public static final String OPTION_SPECIALISED = "specialised";	// Constant for value "specialised".
+	public static final String OPTION_PRIVATE = "private";			// Constant for value "private".
+	public static final String OPTION_CHURCH = "church";			// Constant for value "church".
+	public static final String OPTION_BUSINESS = "business";		// Constant for value "business".
+	public static final String OPTION_UNIVERSITY = "university";	// Constant for value "university".
+	public static final String OPTION_MEDIA = "media";				// Constant for value "media".
+	public static final String OPTION_POLITICAL = "political";		// Constant for value "political".
+	public static final String OPTION_CULTURAL = "cultural";		// Constant for value "cultural".
+
+	// Constants for repository type texts.
+	public static final String OPTION_NATIONAL_TEXT = "National archives";	// Constant for value "national".
+	public static final String OPTION_REGIONAL_TEXT = "Regional archives";	// Constant for value "regional".
+	public static final String OPTION_COUNTY_TEXT = "County/Local authority archives";	// Constant for value "county".
+	public static final String OPTION_MUNICIPAL_TEXT = "Municipal archives";	// Constant for value "municipal".
+	public static final String OPTION_SPECIALISED_TEXT = "Specialised governmental archives";	// Constant for value "specialised".
+	public static final String OPTION_PRIVATE_TEXT = "Private persons and family archives";	// Constant for value "private".
+	public static final String OPTION_CHURCH_TEXT = "Church and religious archives";	// Constant for value "church".
+	public static final String OPTION_BUSINESS_TEXT = "Business archives";	// Constant for value "business".
+	public static final String OPTION_UNIVERSITY_TEXT = "University and research archives";	// Constant for value "university".
+	public static final String OPTION_MEDIA_TEXT = "Media archives";	// Constant for value "media".
+	public static final String OPTION_POLITICAL_TEXT = "Archives of political parties, of popular/labour movement and other non-governmental organisations, associations, agencies and foundations";	// Constant for value "political".
+	public static final String OPTION_CULTURAL_TEXT = "Specialised non-governmental archives and archives of other cultural (heritage) institutions";	// Constant for value "cultural".
+
+	// Constants for continents options.
+	public static final String OPTION_EUROPE = "europe";			// Constant for value "europe".
+	public static final String OPTION_AFRICA = "africa";			// Constant for value "africa".
+	public static final String OPTION_ANTARCTICA = "antarctica";	// Constant for value "antarctica".
+	public static final String OPTION_ASIA = "asia";				// Constant for value "asia".
+	public static final String OPTION_AUSTRALIA = "australia";		// Constant for value "australia".
+	public static final String OPTION_NORTH_AMERICA = "northAmerica";	// Constant for value "northAmerica".
+	public static final String OPTION_SOUTH_AMERICA = "southAmerica";	// Constant for value "southAmerica".
+
+	// Constants for continents texts.
+	public static final String OPTION_EUROPE_TEXT = "Europe";			// Constant for value "Europe".
+	public static final String OPTION_AFRICA_TEXT = "Africa";			// Constant for value "Africa".
+	public static final String OPTION_ANTARCTICA_TEXT = "Antarctica";	// Constant for value "Antarctica".
+	public static final String OPTION_ASIA_TEXT = "Asia";				// Constant for value "Asia".
+	public static final String OPTION_AUSTRALIA_TEXT = "Australia";		// Constant for value "Australia".
+	public static final String OPTION_NORTH_AMERICA_TEXT = "North America";	// Constant for value "North America".
+	public static final String OPTION_SOUTH_AMERICA_TEXT = "South America";	// Constant for value "South America".
+
+	// Constants for photographAllowance options.
+	public static final String OPTION_DEPENDING = "depending";		// Constant for value "depending".
+	public static final String OPTION_WITHOUT = "without";			// Constant for value "without".
+
+	// Constants for photographAllowance text.
+	public static final String OPTION_DEPENDING_TEXT = "depending on the material";		// Constant for value "depending on the material".
+	public static final String OPTION_WITHOUT_TEXT = "yes (without flash)";			// Constant for value "yes (without flash)".
+
+	// Constants for relationType options.
+	public static final String OPTION_CREATOR = "creator";			// Constant for value "creator".
+	public static final String OPTION_SUBJECT = "subject";			// Constant for value "subject".
+	public static final String OPTION_OTHER = "other";				// Constant for value "other".
+
+	// Constants for relationType texts.
+	public static final String OPTION_CREATOR_TEXT = "creatorOf";	// Constant for value "creatorOf".
+	public static final String OPTION_SUBJECT_TEXT = "creatorOf";	// Constant for value "subjectOf".
+	public static final String OPTION_OTHER_TEXT = "other";			// Constant for value "other".
+
+	// Constants for eagRelationType options.
+	public static final String OPTION_CHILD = "child";				// Constant for value "child".
+	public static final String OPTION_PARENT = "parent";			// Constant for value "parent".
+	public static final String OPTION_EARLIER = "earlier";			// Constant for value "earlier".
+	public static final String OPTION_LATER = "later";				// Constant for value "later".
+	public static final String OPTION_ASSOCIATIVE = "associative";	// Constant for value "associative".
+
+	// Constants for eagRelationType texts.
+	public static final String OPTION_CHILD_TEXT = "hierarchical-child";	// Constant for value "hierarchical-child".
+	public static final String OPTION_PARENT_TEXT = "hierarchical-parent";	// Constant for value "hierarchical-parent".
+	public static final String OPTION_EARLIER_TEXT = "temporal-earlier";	// Constant for value "temporal-earlier".
+	public static final String OPTION_LATER_TEXT = "temporal-later";		// Constant for value "temporal-later".
+	public static final String OPTION_ASSOCIATIVE_TEXT = "associative";		// Constant for value "associative".
+
+	public static final String OPTION_SCRIPT_ARAB = "Arab";	// Constant for value "Arab".
+	public static final String OPTION_SCRIPT_ARMN = "Armn";	// Constant for value "Armn".
+	public static final String OPTION_SCRIPT_CPRT = "Cprt";	// Constant for value "Cprt".
+	public static final String OPTION_SCRIPT_CYRL = "Cyrl";	// Constant for value "Cyrl".
+	public static final String OPTION_SCRIPT_GEOR = "Geor";	// Constant for value "Geor".
+	public static final String OPTION_SCRIPT_GREK = "Grek";	// Constant for value "Grek".
+	public static final String OPTION_SCRIPT_HEBR = "Hebr";	// Constant for value "Hebr".
+	public static final String OPTION_SCRIPT_LATN = "Latn";	// Constant for value "Latn".
+	public static final String OPTION_SCRIPT_TEXT_ARAB = "Arab";	// Constant for value "Arab".
+	public static final String OPTION_SCRIPT_TEXT_ARMN = "Armn";	// Constant for value "Armn".
+	public static final String OPTION_SCRIPT_TEXT_CPRT = "Cprt";	// Constant for value "Cprt".
+	public static final String OPTION_SCRIPT_TEXT_CYRL = "Cyrl";	// Constant for value "Cyrl".
+	public static final String OPTION_SCRIPT_TEXT_GEOR = "Geor";	// Constant for value "Geor".
+	public static final String OPTION_SCRIPT_TEXT_GREK = "Grek";	// Constant for value "Grek".
+	public static final String OPTION_SCRIPT_TEXT_HEBR = "Hebr";	// Constant for value "Hebr".
+	public static final String OPTION_SCRIPT_TEXT_LATN = "Latin";	// Constant for value "Latin".
+
+	public static final String EAG_PATH = "EAG";	// Constat for value "EAG".
+
+	// Content for eag.
+	public static final String EAG_XMLNS = "http://www.archivesportaleurope.net/profiles/APEnet_EAG/";
+	public static final String XML_AUDIENCE = "external";
+	public static final String XML_BASE = "http://www.archivesportaleurope.net/";
+
+	public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+	public static final String DATE_FORMAT_HUMAN = "dd.MM.yyyy";
+
+	// Content for agent.
+	public static final String AGENT_AUTOMATICALLY = "automatically created agent";
+
+	// Content for agencyType.
+	public static final String AGENT_TYPE_MACHINE = "machine";
+	public static final String AGENT_TYPE_HUMAN = "human";
+
+	// Content for otherRecordId.
+	public static final String LOCAL_TYPE = "localId";
+
+	// Content for localControl.
+	public static final String LOCAL_TYPE_CONTROL = "detailLevel";
+	public static final String CONTROL_SCRIPT_COD = "Latn";
+	public static final String CONTROL_TRANSLITERATION = "http://www.archivesportaleurope.eu/scripts/EAG/";
+	public static final String CONTROL_VOCABULARY_SOURCE = "http://www.archivesportaleurope.eu/vocabularies/EAG/";
+	public static final String EXTENDED = "extended";
+
+	// Constants for TABs indexes.
+	public static final String TAB_YOUR_INSTITUTION = "your_institution";
+	public static final String TAB_IDENTITY = "identity";
+	public static final String TAB_CONTACT = "contact";
+	public static final String TAB_ACCESS_AND_SERVICES = "access_and_services";
+	public static final String TAB_DESCRIPTION = "description";
+	public static final String TAB_CONTROL = "control";
+	public static final String TAB_RELATION = "relation";
+
+	// Constants for address.
+	public static final String VISITORS_ADDRESS = "visitors address";
+	public static final String POSTAL_ADDRESS = "postal address";
+
+	// Content for eventType.
+	public static final String EVENTTYPE_CANCELLED = "cancelled";
+	public static final String EVENTTYPE_CREATED = "created";
+	public static final String EVENTTYPE_DELETED = "deleted";
+	public static final String EVENTTYPE_DELETED_MERGED = "deletedMerged";
+	public static final String EVENTTYPE_DELETED_REPLACED = "deletedReplaced";
+	public static final String EVENTTYPE_DELETED_SPLIT = "deletedSplit";
+	public static final String EVENTTYPE_DERIVED = "derived";
+	public static final String EVENTTYPE_REVISED = "revised";
+	public static final String EVENTTYPE_NEW = "new";
+
+	// Content for units.
+	public static final String UNIT_SITE = "site";
+	public static final String UNIT_BOOK = "book";
+	public static final String UNIT_TITLE = "title";
+	public static final String UNIT_SQUARE_METRE = "squaremetre";
+	public static final String UNIT_LINEAR_METRE = "linearmetre";
+
+	// Constants for section indexes.
+	public static final String ROOT = "root";
+	public static final String LANGUAGE_DECLARATIONS = "languageDeclaration";
+	public static final String RESOURCE_RELATION = "resourceRelation";
+	public static final String EAG_RELATION = "eagRelation";
+	public static final String LOCAL_TYPE_DECLARATION = "localTypeDeclaration";
+	public static final String CONVENTION_DECLARATION = "conventionDeclaration";
+	public static final String MAINTENANCE_AGENCY = "maintenanceAgency";
+	public static final String SOURCE = "source";
+	public static final String REPOSITORY = "repository";
+	public static final String OTHER_SERVICES = "otherServices";
+	public static final String TOURS_SESSIONS = "toursSessions";
+	public static final String EXHIBITION = "exhibition";
+	public static final String REFRESHMENT = "refreshment";
+	public static final String RESTORATION_LAB = "restorationlab";
+	public static final String REPRODUCTIONSER = "reproductionser";
+	public static final String INTERNET_ACCESS = "internetAccess";
+	public static final String RESEARCH_SERVICES = "researchServices";
+	public static final String HOLDINGS = "holdings";
+	public static final String BUILDING = "building";
+	public static final String REPOSITORHIST = "repositorhist";
+	public static final String LIBRARY = "library";
+	public static final String SEARCHROOM = "searchroom";
+	public static final String INSTITUTION_RELATIONS = "institution_relations";
+
+	// Constants for subsection indexes
+	public static final String ROOT_SUBSECTION = "root_section";
+	public static final String WORKING_PLACES = "workingPlaces";
+	public static final String COMPUTER_PLACES = "computerPlaces";
+	public static final String MICROFILM = "microfilm";
+	public static final String MONOGRAPHIC_PUBLICATION ="monographicPublication";
+    public static final String SERIAL_PUBLICATION ="serialPublication";
+    public static final String REPOSITOR_FOUND ="repositorfound";
+    public static final String REPOSITOR_SUP ="repositorsup";
+	public static final String BUILDING_AREA = "building_area";
+	public static final String BUILDING_LENGTH = "building_length";
+	public static final String HOLDING_EXTENT = "holding_extent";
+	public static final String HOLDING_SUBSECTION = "holding_subsection";
+
+	// Variables.
 	
 	private String repositoryId;
 	private String otherRepositorId;

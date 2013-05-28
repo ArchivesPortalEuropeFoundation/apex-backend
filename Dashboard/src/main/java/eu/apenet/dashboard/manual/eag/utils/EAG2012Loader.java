@@ -2153,7 +2153,7 @@ public class EAG2012Loader{
 					for (int i = 0; i < repository.getLocation().size(); i++) {
 						Location location = repository.getLocation().get(i);
 						// TODO: Review for multiple translations.
-						if (location.getLocalType().equalsIgnoreCase(CreateEAG2012.VISITORS_ADDRESS)) {
+						if (location.getLocalType().equalsIgnoreCase(Eag2012.VISITORS_ADDRESS)) {
 							// Street.
 							this.setStreet(location.getStreet().getContent());
 							this.setStreetLang(location.getStreet().getLang());
@@ -2169,7 +2169,7 @@ public class EAG2012Loader{
 							this.setLongitude(location.getLongitude());
 						}
 						// TODO: Review for multiple translations.
-						if (location.getLocalType().equalsIgnoreCase(CreateEAG2012.POSTAL_ADDRESS)) {
+						if (location.getLocalType().equalsIgnoreCase(Eag2012.POSTAL_ADDRESS)) {
 							// Postal street.
 							this.setStreetPostal(location.getStreet().getContent());
 							this.setStreetPostalLang(location.getStreet().getLang());
@@ -2300,7 +2300,7 @@ public class EAG2012Loader{
 					for (int i = 0; i < repository.getLocation().size(); i++) {
 						Location location = repository.getLocation().get(i);
 						// TODO: Review for multiple translations.
-						if (location.getLocalType().equalsIgnoreCase(CreateEAG2012.VISITORS_ADDRESS)) {
+						if (location.getLocalType().equalsIgnoreCase(Eag2012.VISITORS_ADDRESS)) {
 							// Street.
 							this.setStreet(location.getStreet().getContent());
 							this.setStreetLang(location.getStreet().getLang());
@@ -2308,14 +2308,20 @@ public class EAG2012Loader{
 							this.setMunicipalityPostalcode(location.getMunicipalityPostalcode().getContent());
 							this.setMunicipalityPostalcodeLang(location.getStreet().getLang());
 							// District/quarter in town.
-							this.setLocalentity(location.getLocalentity().getContent());
-							this.setLocalentityLang(location.getLocalentity().getLang());
+							if (location.getLocalentity() != null) {
+								this.setLocalentity(location.getLocalentity().getContent());
+								this.setLocalentityLang(location.getLocalentity().getLang());
+							}
 							//County/local authority.
-							this.setSecondem(location.getSecondem().getContent());
-							this.setSecondemLang(location.getSecondem().getLang());
+							if (location.getSecondem() != null) {
+								this.setSecondem(location.getSecondem().getContent());
+								this.setSecondemLang(location.getSecondem().getLang());
+							}
 							// Autonomous community / region.
-							this.setFirstdem(location.getFirstdem().getContent());
-							this.setFirstdemLang(location.getFirstdem().getLang());
+							if (location.getFirstdem() != null) {
+								this.setFirstdem(location.getFirstdem().getContent());
+								this.setFirstdemLang(location.getFirstdem().getLang());
+							}
 							// Country.
 							this.setCountry(location.getCountry().getContent());
 							this.setCountryLang(location.getCountry().getLang());
@@ -2325,7 +2331,7 @@ public class EAG2012Loader{
 							this.setLongitude(location.getLongitude());
 						}
 						// TODO: Review for multiple translations.
-						if (location.getLocalType().equalsIgnoreCase(CreateEAG2012.POSTAL_ADDRESS)) {
+						if (location.getLocalType().equalsIgnoreCase(Eag2012.POSTAL_ADDRESS)) {
 							// Postal street.
 							this.setStreetPostal(location.getStreet().getContent());
 							this.setStreetPostalLang(location.getStreet().getLang());
@@ -2390,7 +2396,7 @@ public class EAG2012Loader{
 							// TODO: Review for multiple values.
 							for (int j = 0; j < repository.getDirections().size(); j++) {
 								// TODO: Review schema
-								this.setDirections(repository.getDirections().get(i).getContent().get(j).toString());
+//								this.setDirections(repository.getDirections().get(i).getContent().get(j).toString());
 							}
 						}
 						// Travelling directions language.
@@ -2609,7 +2615,9 @@ public class EAG2012Loader{
 			if (!this.eag.getControl().getConventionDeclaration().isEmpty()) {
 				// TODO: Review for multiple values.
 				for (int i = 0; i < this.eag.getControl().getConventionDeclaration().size(); i++) {
-					this.setLanguage(this.eag.getControl().getConventionDeclaration().get(i).getAbbreviation().getContent());
+					if (this.eag.getControl().getConventionDeclaration().get(i).getAbbreviation() != null) {
+						this.setLanguage(this.eag.getControl().getConventionDeclaration().get(i).getAbbreviation().getContent());
+					}
 					if (!this.eag.getControl().getConventionDeclaration().get(i).getCitation().isEmpty()) {
 						// TODO: Review for multiple values.
 						for (int j = 0; j < this.eag.getControl().getConventionDeclaration().get(i).getCitation().size(); j++) {
@@ -2666,7 +2674,7 @@ public class EAG2012Loader{
 				if (!this.eag.getRelations().getEagRelation().get(i).getRelationEntry().isEmpty()) {
 					// TODO: Review for multiple values.
 					for (int j = 0; j < this.eag.getRelations().getEagRelation().size(); j++) {
-						this.setEagRelationrelationEntry(this.eag.getRelations().getEagRelation().get(i).getRelationEntry().get(j).getContent());
+//						this.setEagRelationrelationEntry(this.eag.getRelations().getEagRelation().get(i).getRelationEntry().get(j).getContent());
 					}
 				}
 

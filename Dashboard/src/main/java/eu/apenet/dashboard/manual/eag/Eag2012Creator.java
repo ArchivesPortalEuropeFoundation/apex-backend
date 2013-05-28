@@ -1419,7 +1419,7 @@ public class Eag2012Creator {
 	     		childArchguide2Children.add(buildRepositoryName((this.eag2012.getRepositoryNameLang()!=null && this.eag2012.getRepositoryNameLang().size()>indexRepo)?this.eag2012.getRepositoryNameLang().get(indexRepo):null,(this.eag2012.getRepositoryNameValue()!=null && this.eag2012.getRepositoryNameValue().size()>indexRepo)?this.eag2012.getRepositoryNameValue().get(indexRepo):null));
 	        	childArchguide2Children.add(buildRepositoryRole((this.eag2012.getRepositoryRoleValue()!=null && this.eag2012.getRepositoryRoleValue().size()>indexRepo)?this.eag2012.getRepositoryRoleValue().get(indexRepo):null)); //no mandatory not repeatable
      		}else{
-     			childArchguide2Children.add(buildRepositoryRole(Eag2012.REPOSITORY_ROLE_HEAD_QUARTER)); //no mandatory not repeatable
+     			childArchguide2Children.add(buildRepositoryRole(Eag2012.OPTION_ROLE_HEADQUARTERS)); //no mandatory not repeatable
      		}
         	childArchguide2Children.add(buildGeogarea(indexRepo)); //mandatory not repeatable
 //        	if(indexRepo>0){

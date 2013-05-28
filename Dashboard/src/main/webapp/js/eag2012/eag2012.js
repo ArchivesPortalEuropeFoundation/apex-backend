@@ -360,7 +360,7 @@ var clickIdentityAction = function(text1){
 		var texts ="";
 		$("select#" + $(this).attr("id") + " option").each(function(){
 			if($(this).attr("selected")) {
-				texts += $(this).text() + '_';
+				texts += $(this).attr("value") + '_';
 			}
 		});
 		texts = texts.substring(0, (texts.length - 1));
@@ -529,7 +529,11 @@ function checkContactTab(currentTab, text1) {
 		}
 		if ($(this).parent().parent().parent().parent().attr("id").indexOf("contactTableVisitorsAddress") == -1) {
 			if ($(this).parent().parent().parent().parent().attr("id").indexOf("contactTablePostalAddress") == -1) {
-				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+				if ($(this).attr("id") == "textContactFaxOfTheInstitution") {
+					jsonData += "'"+$(this).attr("id")+"_1' : '"+$(this).attr("value")+"'";
+				} else {
+					jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+				}
 			}
 		}
 
@@ -1398,6 +1402,11 @@ function addFurtherEmailsOfTheInstitution(text1){
 	$("table#contactTable"+currentTab+" tr#"+newId+" label[for='textContactLinkTitleForEmailOfTheInstitution']").attr("for","textContactLinkTitleForEmailOfTheInstitution_"+(count+1));
 	$("table#contactTable"+currentTab+" tr#"+newId+" input#textContactLinkTitleForEmailOfTheInstitution").attr("id","textContactLinkTitleForEmailOfTheInstitution_"+(count+1));
 	$("table#contactTable"+currentTab+" tr#"+newId+" input#textContactEmailOfTheInstitution_"+(count+1)).removeAttr("disabled");
+
+	// Reset parametters.
+	$("table#contactTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function addAnotherFormOfTheAuthorizedName(text1){
@@ -1753,6 +1762,11 @@ function addFurtherTelephoneOfTheInstitution(text1){
 	$("table#contactTable"+currentTab+" tr#"+newId+" label[for='textContactTelephoneOfTheInstitution']").attr("for","textContactTelephoneOfTheInstitution_"+(count+1));
 	$("table#contactTable"+currentTab+" tr#"+newId+" input#textContactTelephoneOfTheInstitution").attr("id","textContactTelephoneOfTheInstitution_"+(count+1));
 	$("table#contactTable"+currentTab+" tr#"+newId+" input#textContactTelephoneOfTheInstitution_"+(count+1)).removeAttr("disabled");
+
+	// Reset parametters and enable fields.
+	$("table#contactTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function addFurtherFaxOfTheInstitution(text1){
@@ -1787,6 +1801,11 @@ function addFurtherFaxOfTheInstitution(text1){
 	$("table#contactTable"+currentTab+" tr#"+newId+" td#tdFaxOfTheInstitution").attr("id","tdFaxOfTheInstitution_"+(count+1));
 	$("table#contactTable"+currentTab+" tr#"+newId+" label[for='textContactFaxOfTheInstitution']").attr("for","textContactFaxOfTheInstitution_"+(count+1));
 	$("table#contactTable"+currentTab+" tr#"+newId+" input#textContactFaxOfTheInstitution").attr("id","textContactFaxOfTheInstitution_"+(count+1));
+
+	// Reset parametters and enable fields.
+	$("table#contactTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function addFurtherWebsOfTheInstitution(text1){
@@ -1831,6 +1850,11 @@ function addFurtherWebsOfTheInstitution(text1){
 	$("table#contactTable"+currentTab+" tr#"+newId+" input#textContactLinkTitleForWebOfTheInstitution").attr("id","textContactLinkTitleForWebOfTheInstitution_"+(count+1));
 	$("table#contactTable"+currentTab+" tr#"+newId+" input#textContactWebOfTheInstitution_"+(count+1)).removeAttr("disabled");
 	$("table#contactTable"+currentTab+" tr#"+newId+" td#tdLabelTextContactWebOfTheInstitution").find("span").remove();
+
+	// Reset parametters and enable fields.
+	$("table#contactTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function aSAddOpeningTimes(text1){
@@ -1941,11 +1965,7 @@ function aSAddTravellingDirections(text1){
 	var tr2HTML = "<tr id=\""+target1+"\">";
 	tr2HTML += $("table#accessAndServicesTable"+currentTab+" tr#trTravellingDirections").clone().html();
 	tr2HTML += "</tr>\n";
-	if(count==1){
-		tr2HTML += "<tr id=\""+target2+"\">"+$("table#accessAndServicesTable"+currentTab+" tr#tr2TravellingDirections").clone().html();
-	}else{
-		tr2HTML += "<tr id=\""+target2+"\">"+$("table#accessAndServicesTable"+currentTab+" tr#tr2TravellingDirections_"+(count)).clone().html();
-	}
+	tr2HTML += "<tr id=\""+target2+"\">"+$("table#accessAndServicesTable"+currentTab+" tr#tr2TravellingDirections").clone().html();
 	tr2HTML += "</tr>";
 	$(lastId).after(tr2HTML);
 	//update elements
@@ -1955,6 +1975,14 @@ function aSAddTravellingDirections(text1){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textTravelLink").attr("id","textTravelLink_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" label[for='selectASATDSelectLanguage']").attr("for","selectASATDSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" select#selectASATDSelectLanguage").attr("id","selectASATDSelectLanguage_"+(count+1));
+
+	// Reset parametters and enable fields.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function addFutherAccessInformation(text1){
@@ -2023,11 +2051,7 @@ function aSAddFutherTermOfUse(text1){
 	var tr2HTML = "<tr id=\""+target1+"\">";
 	tr2HTML += $("table#accessAndServicesTable"+currentTab+" tr#trASAddFutherTermOfUse").clone().html();
 	tr2HTML += "</tr>\n";
-	if(count==1){
-		tr2HTML += "<tr id=\""+target2+"\">"+$("table#accessAndServicesTable"+currentTab+" tr#tr2ASAddFutherTermOfUse").clone().html();
-	}else{
-		tr2HTML += "<tr id=\""+target2+"\">"+$("table#accessAndServicesTable"+currentTab+" tr#tr2ASAddFutherTermOfUse_"+(count)).clone().html();
-	}
+	tr2HTML += "<tr id=\""+target2+"\">"+$("table#accessAndServicesTable"+currentTab+" tr#tr2ASAddFutherTermOfUse").clone().html();
 	tr2HTML += "</tr>";
 	$(lastId).after(tr2HTML);
 	//update elements
@@ -2037,6 +2061,14 @@ function aSAddFutherTermOfUse(text1){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textASTOULink").attr("id","textASTOULink_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" label[for='textASTOULink']").attr("for","textASTOULink_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" select#selectASAFTOUSelectLanguage").attr("id","selectASAFTOUSelectLanguage_"+(count+1));
+
+	// Reset parametters and enable fields.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function addAccessibilityInformation(text1){
@@ -2121,6 +2153,11 @@ function aSSRAddDescriptionOfYourComputerPlaces(property1, property2, text1){
 		$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input#textDescriptionOfYourComputerPlaces").attr("id","textDescriptionOfYourComputerPlaces_"+(count+1));
 		$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='selectDescriptionOfYourComputerPlaces']").attr("for","selectDescriptionOfYourComputerPlaces_"+(count+1));
 		$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectDescriptionOfYourComputerPlaces").attr("id","selectDescriptionOfYourComputerPlaces_"+(count+1));
+
+		// Reset parametters and enable fields.
+		$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
+			$(this).val(""); // Clean all input_text.
+		});
 	}
 }
 
@@ -2153,11 +2190,7 @@ function aSSRAddReadersTicket(text1){
 	var tr2HTML = "<tr id=\""+target1+"\">";
 	tr2HTML += $("table#accessAndServicesTable"+currentTab+" tr#trASSRReadersTicket").clone().html();
 	tr2HTML += "</tr>\n";
-	if(count==1){
-		tr2HTML += "<tr id=\""+target2+"\">"+$("table#accessAndServicesTable"+currentTab+" tr#tr2ASSRReadersTicket").clone().html();
-	} else{
-		tr2HTML += "<tr id=\""+target2+"\">"+$("table#accessAndServicesTable"+currentTab+" tr#tr2ASSRReadersTicket_"+(count)).clone().html();
-	}
+	tr2HTML += "<tr id=\""+target2+"\">"+$("table#accessAndServicesTable"+currentTab+" tr#tr2ASSRReadersTicket").clone().html();
 	tr2HTML += "</tr>";
 	$(lastId).after(tr2HTML);
 
@@ -2168,6 +2201,14 @@ function aSSRAddReadersTicket(text1){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" select#selectReadersTickectLanguage").attr("id","selectReadersTickectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" label[for='textASSRRTLink']").attr("for","textASSRRTLink_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textASSRRTLink").attr("id","textASSRRTLink_"+(count+1));
+
+	// Reset parametters and enable fields.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function aSSRAddFurtherOrderInformation(text1){
@@ -2199,11 +2240,7 @@ function aSSRAddFurtherOrderInformation(text1){
 	var tr2HTML = "<tr id=\""+target1+"\">";
 	tr2HTML += $("table#accessAndServicesTable"+currentTab+" tr#trASSRAddFurtherOrderInformation").clone().html();
 	tr2HTML += "</tr>\n";
-	if(count==1){
-		tr2HTML += "<tr id=\""+target2+"\">"+$("table#accessAndServicesTable"+currentTab+" tr#tr2ASSRAddFurtherOrderInformation").clone().html();
-	} else{
-		tr2HTML += "<tr id=\""+target2+"\">"+$("table#accessAndServicesTable"+currentTab+" tr#tr2ASSRAddFurtherOrderInformation_"+(count)).clone().html();
-	}
+	tr2HTML += "<tr id=\""+target2+"\">"+$("table#accessAndServicesTable"+currentTab+" tr#tr2ASSRAddFurtherOrderInformation").clone().html();
 	tr2HTML += "</tr>";
 	$(lastId).after(tr2HTML);
 
@@ -2214,6 +2251,14 @@ function aSSRAddFurtherOrderInformation(text1){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" select#selectASSRAFOIUSelectLanguage").attr("id","selectASSRAFOIUSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" label[for='textASSRAOLink']").attr("for","textASSRAOLink_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textASSRAOLink").attr("id","textASSRAOLink_"+(count+1));
+
+	// Reset parametters and enable fields.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function aSAddResearchServices(text1){
@@ -2246,6 +2291,11 @@ function aSAddResearchServices(text1){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input#textASSRResearchServices").attr("id","textASSRResearchServices_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='textASSRRSSelectLanguage']").attr("for","textASSRRSSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#textASSRRSSelectLanguage").attr("id","textASSRRSSelectLanguage_"+(count+1));
+
+	// Reset parametters and enable fields.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function aSPIAAddInternetAccessInformation(text1){
@@ -2278,6 +2328,11 @@ function aSPIAAddInternetAccessInformation(text1){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input#textASDescription").attr("id","textASDescription_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='selectASDSelectLanguage']").attr("for","selectASDSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASDSelectLanguage").attr("id","selectASDSelectLanguage_"+(count+1));
+
+	// Reset parametters and enable fields.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function addADescriptionOfYourRestaurationLab(text1){
@@ -2310,6 +2365,11 @@ function addADescriptionOfYourRestaurationLab(text1){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input#textASTSDescriptionOfRestaurationLab").attr("id","textASTSDescriptionOfRestaurationLab_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='selectASTSSelectLanguage']").attr("for","selectASTSSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASTSSelectLanguage").attr("id","selectASTSSelectLanguage_"+(count+1));
+
+	// Reset parametters and enable fields.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function aSAddADescriptionOfYourReproductionService(text1){
@@ -2342,6 +2402,11 @@ function aSAddADescriptionOfYourReproductionService(text1){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input#textASTSDescriptionOfReproductionService").attr("id","textASTSDescriptionOfReproductionService_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='selectASTSRSSelectLanguage']").attr("for","selectASTSRSSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASTSRSSelectLanguage").attr("id","selectASTSRSSelectLanguage_"+(count+1));
+
+	// Reset parametters and enable fields.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function aSReSeAddExhibition(text1){
@@ -2387,6 +2452,14 @@ function aSReSeAddExhibition(text1){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textASReSeWebpage").attr("id","textASReSeWebpage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" label[for='textASReSeWebpageLinkTitle']").attr("for","textASReSeWebpageLinkTitle_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textASReSeWebpageLinkTitle").attr("id","textASReSeWebpageLinkTitle_"+(count+1));
+
+	// Reset parametters and enable fields.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function aSReSeToursAndSessions(text1){
@@ -2432,6 +2505,14 @@ function aSReSeToursAndSessions(text1){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textASReSeTSWebpage").attr("id","textASReSeTSWebpage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" label[for='textASReSeWebpageTSLinkTitle']").attr("for","textASReSeWebpageTSLinkTitle_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textASReSeWebpageTSLinkTitle").attr("id","textASReSeWebpageTSLinkTitle_"+(count+1));
+
+	// Reset parametters and enable fields.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function aSAddServices(text1){
@@ -2481,6 +2562,14 @@ function aSAddServices(text1){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textASReSeOSWebpage").attr("id","textASReSeOSWebpage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" label[for='textASReSeWebpageOSLinkTitle']").attr("for","textASReSeWebpageOSLinkTitle_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textASReSeWebpageOSLinkTitle").attr("id","textASReSeWebpageOSLinkTitle_"+(count+1));
+
+	// Reset parametters and enable fields.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function descriptionAddHistoryDescription(text1){
@@ -2515,6 +2604,11 @@ function descriptionAddHistoryDescription(text1){
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textRepositoryHistory").attr("id","textRepositoryHistory_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageRepositoryHistory']").attr("for","selectLanguageRepositoryHistory_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageRepositoryHistory").attr("id","selectLanguageRepositoryHistory_"+(count+1));
+
+	// Reset parametters and enable fields.
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function descriptionAddFoundationInformation(text1){
@@ -2548,6 +2642,11 @@ function descriptionAddFoundationInformation(text1){
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" input#textRuleOfRepositoryFoundation").attr("id","textRuleOfRepositoryFoundation_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageRuleOfRepositoryFoundation']").attr("for","selectLanguageRuleOfRepositoryFoundation_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageRuleOfRepositoryFoundation").attr("id","selectLanguageRuleOfRepositoryFoundation_"+(count+1));
+
+	// Reset parametters and enable fields.
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function descriptionAddSuppressionInformation(text1){
@@ -2581,6 +2680,11 @@ function descriptionAddSuppressionInformation(text1){
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" input#textRuleOfRepositorySuppression").attr("id","textRuleOfRepositorySuppression_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageRuleOfRepositorySuppression']").attr("for","selectLanguageRuleOfRepositorySuppression_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageRuleOfRepositorySuppression").attr("id","selectLanguageRuleOfRepositorySuppression_"+(count+1));
+
+	// Reset parametters and enable fields.
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function descriptionAddAdministrationUnits(text1){
@@ -2615,6 +2719,11 @@ function descriptionAddAdministrationUnits(text1){
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textUnitOfAdministrativeStructure").attr("id","textUnitOfAdministrativeStructure_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageUnitOfAdministrativeStructure']").attr("for","selectLanguageUnitOfAdministrativeStructure_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageUnitOfAdministrativeStructure").attr("id","selectLanguageUnitOfAdministrativeStructure_"+(count+1));
+
+	// Reset parametters and enable fields.
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function descriptionAddBuildingDescription(text1){
@@ -2649,6 +2758,11 @@ function descriptionAddBuildingDescription(text1){
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textBuilding").attr("id","textBuilding_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageBuilding']").attr("for","selectLanguageBuilding_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageBuilding").attr("id","selectLanguageBuilding_"+(count+1));
+
+	// Reset parametters and enable fields.
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function descriptionAddAnotherArchivalDescription(text1) {
@@ -2683,6 +2797,11 @@ function descriptionAddAnotherArchivalDescription(text1) {
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textArchivalAndOtherHoldings").attr("id","textArchivalAndOtherHoldings_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageArchivalAndOtherHoldings']").attr("for","selectLanguageArchivalAndOtherHoldings_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageArchivalAndOtherHoldings").attr("id","selectLanguageArchivalAndOtherHoldings_"+(count+1));
+
+	// Reset parametters and enable fields.
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function controlAddFurtherLangsAnsScripts(text1){
@@ -2719,6 +2838,14 @@ function controlAddFurtherLangsAnsScripts(text1){
 	$("table#controlTable tr#"+target2+" select#selectDescriptionScript").attr("id","selectDescriptionScript_"+(count+1));
 	$("table#controlTable tr#"+target1+" td#tdDescriptionLanguage").find("span").remove();
 	$("table#controlTable tr#"+target2+" td#tdDescriptionScript").find("span").remove();
+
+	// Reset parametters and enable fields.
+	$("table#controlTable tr#"+target1+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
+	$("table#controlTable tr#"+target2+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function addContactAbbreviation(text1){
@@ -2754,6 +2881,14 @@ function addContactAbbreviation(text1){
 	$("table#controlTable tr#"+target1+" input#textContactAbbreviation").attr("id","textContactAbbreviation_"+(count+1));
 	$("table#controlTable tr#"+target2+" label[for='textContactFullName']").attr("for","textContactFullName_"+(count+1));
 	$("table#controlTable tr#"+target2+" input#textContactFullName").attr("id","textContactFullName_"+(count+1));
+
+	// Reset parametters and enable fields.
+	$("table#controlTable tr#"+target1+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
+	$("table#controlTable tr#"+target2+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 }
 
 function relationAddNewResourceRelation(text1){
