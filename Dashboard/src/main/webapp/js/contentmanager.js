@@ -1,18 +1,29 @@
 function initContentManager() {
     clearFAsFromSession();
     hideOrShowSelectAllFAsWindow();
-	initType();
+	initSearchOptions();
 	initSubpage();
+
 }
-function initType() {
+function initSearchOptions() {
 	$(".typeRadio").click(function(event) {
 		if ($(this).val() == 0){
 			$(".findingAidOptions").removeClass("hidden");
 		}else {
 			$(".findingAidOptions").addClass("hidden");
 		}
+		performNewSearch();
 	});
-
+	$("#searchTerms").focus();
+	$("#searchTerms").keypress(function(event) {
+		if (event.keyCode == 13) {
+			performNewSearch();
+		}
+	});
+	$("#searchButton").click(function(event) {
+		event.preventDefault();
+		performNewSearch();
+	});
 }
 function initSubpage() {
 	$(".actions input").click(

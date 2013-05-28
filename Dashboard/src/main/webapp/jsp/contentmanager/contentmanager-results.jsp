@@ -63,13 +63,12 @@
 	</form>
 </div>
 <div id="ead-results" class="box">
-	<s:form id="updateCurrentSearch" action="updateContentmanager" theme="simple">
+	<s:form id="updateCurrentSearch" action="updateContentmanager" theme="simple" method="POST">
 		<s:hidden name="pageNumber" />
 		<s:hidden name="orderByField" />
 		<s:hidden name="orderByAscending" />
 		<s:hidden name="xmlTypeId" />
-		<input name="ajax" type="hidden" value="true" />
-
+		<input name="updateSearchResults" type="hidden" value="true" />
 		<div id="ead-results-header" class="boxtitle">
 			<div id="numberOfResults">
 				<span class="bold"><s:text name="content.message.results" />:</span>

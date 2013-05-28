@@ -53,9 +53,11 @@
 
 				</tr>
 				<tr>
-					<td colspan="7"><s:textfield name="searchTerms" /> 
+					<th></th>
+					<td> </td>
+					<td colspan="5"><s:textfield name="searchTerms" /> 
 						<s:select cssClass="small left"	list="searchTermsFieldList" name="searchTermsField" />
-						<input type="submit" id="searchButton" value="<s:text name="content.message.search" />" class="mainButton">
+						<input type="submit" id="searchButton" value="<s:text name="content.message.search" />" class="mainButton"/>
 					</td>
 				</tr>
 			</table> 
