@@ -47,7 +47,7 @@ public class UnpublishTask extends AbstractEadTask {
 				else
 					eadContent = eadContentDAO.getEadContentBySourceGuideId(ead.getId());
 				if (eadContent != null)
-					eadContentDAO.deleteSimple(eadContent);
+					eadContentDAO.delete(eadContent);
 
 				logger.debug("Changing EAD (" + xmlType.getName() + ") state of the EAD with eadid " + ead.getEadid());
 				ContentUtils.changeSearchable(ead, false);

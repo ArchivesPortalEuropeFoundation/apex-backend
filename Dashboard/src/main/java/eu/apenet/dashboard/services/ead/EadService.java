@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.exceptions.APEnetRuntimeException;
@@ -182,7 +181,7 @@ public class EadService {
 			File file = new File(filename);
 			File aiDir = file.getParentFile();
 			ContentUtils.deleteFile(file, false);
-			if (aiDir.listFiles().length == 0){
+			if (aiDir.exists() && aiDir.listFiles().length == 0){
 				ContentUtils.deleteFile(aiDir, false);
 			}
 		}
@@ -386,8 +385,8 @@ public class EadService {
 			QueueItem queueItem = fillQueueItem(ead, queueAction, preferences);
 			ead.setQueuing(QueuingState.READY);
 			eadDAO.updateSimple(ead);
-			eads.remove(size - 1);
 			indexqueueDao.updateSimple(queueItem);
+			eads.remove(size - 1);
 		}
 		JpaUtil.commitDatabaseTransaction();
 	}
