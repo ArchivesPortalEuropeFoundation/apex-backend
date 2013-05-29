@@ -87,7 +87,7 @@
 			<td class="labelLeft">
 				<label for="selectYIPNOTISelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
-			<td class="labelLeftselect">
+			<td>
 				<select id="selectYIPNOTISelectLanguage" onchange="parallelNameOfInstitutionLanguageChanged();" >
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.parformLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
@@ -244,7 +244,7 @@
 
 		<tr>
 			<td>
-				<label for="textYIOpeningTimes" ><s:property value="getText('label.ai.yourinstitution.openingTimes')"/><span class="required">*</span>:</label>
+				<label for="textYIOpeningTimes" ><s:property value="getText('label.ai.tabs.commons.openingTimes')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
 				<input type="text" id="textYIOpeningTimes" onchange="openingHoursOfInstitutionChanged();" value="${loader.opening}" />

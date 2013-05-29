@@ -5,7 +5,7 @@
 	<table id="accessAndServicesTable">
 		<tr id="trASOpeningTimes">
 			<td id="tdOpeningTimes">
-				<label for="textOpeningTimes"><s:property value="getText('label.ai.accessAndServices.openingTimes')" /><span class="required">*</span>:</label>
+				<label for="textOpeningTimes"><s:property value="getText('label.ai.tabs.commons.openingTimes')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
 				<input type="text" id="textOpeningTimes" onchange="aSOpeningHoursOfInstitutionChanged();" value="${loader.opening}" />
@@ -766,7 +766,7 @@
 			
 		</tr>
 
-		<tr>
+		<tr id="trASReSeRefreshment">
 			<td>
 				<label for="textASReSeRefreshment"><s:property value="getText('label.ai.accessAndServices.refreshment')" />:</label>
 			</td>
@@ -782,6 +782,14 @@
 						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>
+			</td>
+		</tr>
+
+		<tr>
+			<td colspan="2">
+				<input type="button" id="buttonASReSeAddFurtherRefreshment" value="<s:property value="getText('label.ai.accessAndServices.addFurtherRefreshmentInformation')"/>" onclick="aSReSeAddFurtherRefreshment('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+			</td>
+			<td colspan="2">
 			</td>
 		</tr>
 

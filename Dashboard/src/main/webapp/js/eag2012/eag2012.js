@@ -773,7 +773,8 @@ function checkAccessAndServicesTab(currentTab, text1) {
 			|| $(this).attr("id") == "textASReSeWebpageTSLinkTitle"
 			|| $(this).attr("id") == "textASReSeOtherServices"
 			|| $(this).attr("id") == "textASReSeOSWebpage"
-			|| $(this).attr("id") == "textASReSeWebpageOSLinkTitle") {
+			|| $(this).attr("id") == "textASReSeWebpageOSLinkTitle"
+			|| $(this).attr("id") == "textASReSeRefreshment") {
 				jsonData += "'"+$(this).attr("id")+"_1' : '"+$(this).attr("value")+"'";
 		} else {
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
@@ -809,7 +810,8 @@ function checkAccessAndServicesTab(currentTab, text1) {
 			|| $(this).attr("id") == "selectASTSRSSelectLanguage"
 			|| $(this).attr("id") == "selectASReSeExhibitionSelectLanguage"
 			|| $(this).attr("id") == "selectASReSeToursAndSessionsSelectLanguage"
-			|| $(this).attr("id") == "selectASReSeOtherServicesSelectLanguage") {
+			|| $(this).attr("id") == "selectASReSeOtherServicesSelectLanguage"
+			|| $(this).attr("id") == "selectASReSeRefreshmentSelectLanguage") {
 				jsonData += "'"+$(this).attr("id")+"_1' : '"+$(this).attr("value")+"'";
 		} else {
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
@@ -2405,6 +2407,43 @@ function aSAddADescriptionOfYourReproductionService(text1){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASTSRSSelectLanguage").attr("id","selectASTSRSSelectLanguage_"+(count+1));
 
 	// Reset parametters and enable fields.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
+}
+
+function aSReSeAddFurtherRefreshment(text1) {
+	var currentTab = getCurrentTab();
+	var count = $("table#accessAndServicesTable"+currentTab+" tr[id^='trASReSeRefreshment']").length;
+
+	var id = "";
+	if (count > 1) {
+		id +="_"+count;
+	}
+
+	var refreshment = $("table#accessAndServicesTable"+currentTab+" tr#trASReSeRefreshment"+id+" input#textASReSeRefreshment"+id).attr("value");
+	var refreshmentLanguage = $("table#accessAndServicesTable"+currentTab+" tr#trASReSeRefreshment"+id+" select#selectASReSeRefreshmentSelectLanguage"+id).attr("value");
+
+	if (refreshment == null || refreshment == ""
+			|| refreshmentLanguage == "none") {
+		alertEmptyFields(text1);
+		return;
+	}
+
+	var newId = "trASReSeRefreshment_"+(count+1);
+	var trHtml = "<tr id=\""+newId+"\">"+$("table#accessAndServicesTable"+currentTab+" tr[id='trASReSeRefreshment']").clone().html()+"</tr>";
+	var lastId = "table#accessAndServicesTable"+currentTab+" tr#trASReSeRefreshment";
+	if(count>1){
+		lastId+="_"+(count);
+	}
+	$(lastId).after(trHtml);
+	//update last content
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='textASReSeRefreshment']").attr("for","textASReSeRefreshment_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input#textASReSeRefreshment").attr("id","textASReSeRefreshment_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='selectASReSeRefreshmentSelectLanguage']").attr("for","selectASReSeRefreshmentSelectLanguage_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASReSeRefreshmentSelectLanguage").attr("id","selectASReSeRefreshmentSelectLanguage_"+(count+1));
+
+	// Reset parametters.
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
 	});

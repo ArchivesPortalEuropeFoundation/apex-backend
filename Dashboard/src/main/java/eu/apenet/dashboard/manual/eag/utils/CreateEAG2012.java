@@ -2144,7 +2144,12 @@ public class CreateEAG2012 {
 												repository.getServices().setRecreationalServices(new RecreationalServices());
 											}
 
-											Refreshment refreshment = new Refreshment();
+											Refreshment refreshment = null;
+											if (repository.getServices().getRecreationalServices().getRefreshment() == null) {
+												refreshment = new Refreshment();
+											} else {
+												refreshment = repository.getServices().getRecreationalServices().getRefreshment();
+											}
 
 											if (refreshment.getDescriptiveNote() == null) {
 												refreshment.setDescriptiveNote(new DescriptiveNote());
