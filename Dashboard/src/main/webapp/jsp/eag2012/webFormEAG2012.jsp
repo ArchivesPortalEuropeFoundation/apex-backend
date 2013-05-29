@@ -4,6 +4,9 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/eag2012/eag2012.css" type="text/css"/>
 
 <div id="eag2012Div">
+	<div id="validationEAG2012ErrorsDiv">
+		<s:actionmessage id="validationEAG2012Errors" />
+	</div>
 	<form id="webformeag2012" name="webformeag2012" method="POST" action="storeEAG2012.action">
 		<div id="eag2012Tabs" class="corner-all helper-clearfix">
 			<a id="repositories"></a>
@@ -80,7 +83,7 @@
 			</div>
 		</div>
 		<table><tr><td>
-			<input type="button" id="buttonSaveEAG2012" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" onclick="clickSaveAction(this.form, '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.errorYourInstitution')" />', '<s:property value="getText('label.ai.tabs.commons.errorIdentity')" />', '<s:property value="getText('label.ai.tabs.commons.errorContact')" />', '<s:property value="getText('label.ai.tabs.commons.errorAccessAndServices')" />', '<s:property value="getText('label.ai.tabs.commons.errorDesription')" />', '<s:property value="getText('label.ai.tabs.commons.errorControl')" />', '<s:property value="getText('label.ai.tabs.commons.errorRelations')" />');" />
+			<input type="button" id="buttonSaveEAG2012" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" onclick="clickSaveAction(this.form, '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.success')" />','<s:property value="getText('label.ai.tabs.commons.errorYourInstitution')" />', '<s:property value="getText('label.ai.tabs.commons.errorIdentity')" />', '<s:property value="getText('label.ai.tabs.commons.errorContact')" />', '<s:property value="getText('label.ai.tabs.commons.errorAccessAndServices')" />', '<s:property value="getText('label.ai.tabs.commons.errorDesription')" />', '<s:property value="getText('label.ai.tabs.commons.errorControl')" />', '<s:property value="getText('label.ai.tabs.commons.errorRelations')" />');" />
 	    </td></tr></table>
 	
 	</form>

@@ -71,9 +71,8 @@
 		</action>
 		
 		<action name="storeEAG2012" class="eu.apenet.dashboard.manual.eag.WebFormEAG2012Action" method="createEAG2012" >
-			<result name="success" type="redirectAction">
-				<param name="actionName">index</param>
-			</result>
+			<result name="input" type="tiles">webFormEAG2012WithMenu</result>
+			<result name="success" type="tiles">webFormEAG2012</result>
 		</action>
 
 		<action name="createsimpleeag" class="eu.apenet.dashboard.manual.ReadEAGAction"> 
@@ -955,4 +954,3 @@
         	</action>        	        	          	         	 	      	
 	</package>
 </struts>
-

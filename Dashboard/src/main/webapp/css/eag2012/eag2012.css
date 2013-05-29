@@ -1,5 +1,13 @@
 @CHARSET "UTF-8";
 
+#validationEAG2012ErrorsDiv, #validationEAG2012Errors {
+	border: none;
+	width: 100%;
+	color: red;
+	padding-top: 5px;
+	font-weight: bold;
+}
+
 #eag2012Div .tab_header {
 	border: 1px solid #79B7E7;
 	border-top-right-radius: 5px;
