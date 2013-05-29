@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
 
+<div id="headerContainer">
+</div>
+
 <div id="accessAndServicesTabContent">
 	<table id="accessAndServicesTable">
 		<tr id="trASOpeningTimes">
@@ -285,10 +288,10 @@
 		</tr>
 
 		<tr id="trASSRAddDescriptionOfYourComputerPlaces">
-			<td colspan="2">
+			<td colspan="3">
 				<input type="button" id="buttonASSRAddadescriptionofyourcomputerplaces" value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourComputerPlaces')"/>" onclick="aSSRAddDescriptionOfYourComputerPlaces('<s:property value="getText('label.ai.accessAndServices.descriptionOfComputerPlaces')"/>', '<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
 			</td>
-			<td colspan="2">
+			<td>
 			</td>
 		</tr>
 
@@ -520,10 +523,10 @@
 		</tr>
 
 		<tr>
-			<td colspan="2">
+			<td colspan="3">
 				<input type="button" id="buttonASPIAAddInternetAccessInformation" value="<s:property value="getText('label.ai.accessAndServices.addInternetAccessInformation')" />" onclick="aSPIAAddInternetAccessInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
 			</td>
-			<td colspan="2">
+			<td>
 			</td>
 		</tr>
 
@@ -568,10 +571,10 @@
 		</tr>
 
 		<tr>
-			<td colspan="2">
+			<td colspan="3">
 				<input type="button" id="buttonAddADescriptionOfYourRestaurationLab" value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourRestaurationLab')"/>" onclick="addADescriptionOfYourRestaurationLab('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
 			</td>
-			<td colspan="2">
+			<td>
 			</td>
 		</tr>
 
@@ -651,10 +654,10 @@
 		</tr>
 
 		<tr>
-			<td colspan="2">
+			<td colspan="3">
 				<input type="button" id="buttonASAddADescriptionOfYourReproductionService"value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourReproductionService')"/>" onclick="aSAddADescriptionOfYourReproductionService('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
 			</td>
-			<td colspan="2">
+			<td>
 			</td>
 		</tr>
 
@@ -786,10 +789,10 @@
 		</tr>
 
 		<tr>
-			<td colspan="2">
+			<td colspan="3">
 				<input type="button" id="buttonASReSeAddFurtherRefreshment" value="<s:property value="getText('label.ai.accessAndServices.addFurtherRefreshmentInformation')"/>" onclick="aSReSeAddFurtherRefreshment('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
 			</td>
-			<td colspan="2">
+			<td>
 			</td>
 		</tr>
 

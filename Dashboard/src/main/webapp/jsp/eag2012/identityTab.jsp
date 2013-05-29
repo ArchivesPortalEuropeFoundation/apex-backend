@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
 
+<div id="headerContainer">
+</div>
+
 <div id="identityTabContent" style="float:left;width:100%;">
 	<table id="identityTable">
 		<tr>
@@ -53,8 +56,10 @@
 
 	<table id="identityButtonAddNames">
 		<tr>
-			<td colspan="2"><input id="buttonAddAnotherFormOfTheAuthorizedName" type="button" value="<s:property value='getText("label.ai.identity.addAnotherFormOfTheAuthorizedName")' />" onclick="addAnotherFormOfTheAuthorizedName('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/></td>
-			<td colspan="2">
+			<td colspan="3">
+				<input id="buttonAddAnotherFormOfTheAuthorizedName" type="button" value="<s:property value='getText("label.ai.identity.addAnotherFormOfTheAuthorizedName")' />" onclick="addAnotherFormOfTheAuthorizedName('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
+			</td>
+			<td>
 			</td>
 		</tr>
 	</table>

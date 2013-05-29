@@ -28,6 +28,25 @@
 	width: 100%;
 }
 
+#headerContainer {
+	-moz-border-bottom-colors: none;
+	-moz-border-image: none;
+	-moz-border-left-colors: none;
+	-moz-border-right-colors: none;
+	-moz-border-top-colors: none;
+	background: url("../../images/eag2012/tabbg.jpg") repeat scroll 0 0 #99CCFF;
+	border-color: #79B7E7 #79B7E7 -moz-use-text-color;
+	border-style: solid solid none;
+	border-top-right-radius: 25px;
+	border-width: 1px 1px 0;
+	clear: both;
+	float: left;
+	height: 24px;
+	width: 100%;
+	margin-left: -1px;
+	margin-top: -1px;
+}
+
 #container {
 	border-color: #00A0DF #00A0DF -moz-use-text-color;
 	border-style: solid solid none;
@@ -135,6 +154,8 @@
 #eag2012Div table {
 	float: left;
 	width: 100%;
+	padding-right: 18px;
+	padding-left: 18px;
 }
 
 #eag2012Div td,th {
@@ -143,16 +164,22 @@
 }
 
 #eag2012Div td label {
-	/*width:auto;*/
-	
+	width: 25%;
 }
 
 #buttonSaveEAG2012 {
-	margin-right: 10px;
+	margin-right: 20px;
 	margin-bottom: 5px;
 }
 
 #eag2012Div input {
+	font-family: "Arial",sans-serif;
+	font-size: 12px;
+}
+
+#eag2012Div select {
+	font-family: "Arial",sans-serif;
+	font-size: 12px;
 	color: black;
 }
 
@@ -173,7 +200,6 @@
 
 #eag2012Div .rightButton {
 	float: right;
-	width: 10%;
 }
 
 #eag2012Div .marginTop {
@@ -203,8 +229,6 @@ textarea {
 
 input[type="button"] {
 	text-align: center;
-	margin-left: 5px;
-	margin: 5px;
 	font-weight: bold;
 	padding-left: 5px;
 	padding-right: 5px;
@@ -212,7 +236,9 @@ input[type="button"] {
 	padding-bottom: 3px;
 	border-radius: 15px;
 	display: inline-block;
-	letter-spacing: 0.8px color:   #006CB0;
+	vertical-align: top;
+	letter-spacing: 0.8px;
+	color: #006CB0;
 	background-color: #E9F3FA;
 	border: 1px solid #00A0DF;
 }
@@ -223,23 +249,24 @@ input[type="button"]:hover {
 	border-radius: 15px;
 }
 
-#buttonAddFurtherTelephoneOfTheInstitution,#buttonAddFurtherFaxOfTheInstitution
-	{
-	margin-left: 30px;
+#buttonAddFutherInformationOnExistingFacilities {
+	display: inline-block;
+	vertical-align: top;
+	white-space:normal;
+	line-height:norma;
+}
+
+#buttonAccessAndServiceTabCheck, #buttonContactTabCheck, #buttonControlTabCheck,
+#buttonDescriptionTabCheck, #buttonIdentityTabCheck, #buttonRelationsTabCheck,
+#buttonYourInstitutionTabCheck {
+	margin-right: 10px;
 }
 
 input[type="text"] {
 	width: 200px;
 	padding-left: 6px;
 	font-weight: bold;
-}
-
-#tdIdentifierOfTheInstitution {
-	padding-right: 6px;
-}
-
-#usedLanguagesLabel {
-	padding-top: 5px;
+	color: black;
 }
 
 #bodyt {
@@ -284,17 +311,5 @@ p.fieldRequired {
 
 .labelLeft {
 	padding-left: 20px;
-}
-
-.labelLeftselect {
-	padding-left: 10px;
-}
-
-#tdLanguageRuleOfRepositorySuppression,#tdLanguageRuleOfRepositoryFoundation,
-#tdLanguageRuleOfRepositorySuppression,#tdLanguageUnitOfAdministrativeStructure,
-#tdLanguageBuilding,#tdLanguageArchivalAndOtherHoldings,#tdLanguageRepositoryHistory,
-#tdDateOfHoldingsTo,#tdLanguagePesonresponsible,#tdTypeOfRelation,
-#tdLanguageDescriptionOfRelation,#tdInstitutionTypeOfRelation,
-#tdLanguageInstitutionDescriptionOfRelation {
-	padding-left: 40px;
+	width: 25%;
 }

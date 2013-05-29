@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
 
+<div id="headerContainer">
+</div>
+
 <div id="relationsTabContent">
 	<table id="resourceRelationTable_1">
 		<tr>
@@ -17,7 +20,7 @@
 			<td>
 				<input type="text" id="textWebsiteOfResource" value="${loader.resourceRelationHref}" onchange="relationsLinkToYourHolndingsGuideChanged();" />
 			</td>
-			<td id="tdTypeOfRelation">
+			<td id="tdTypeOfRelation" class="labelLeft">
 				<label for="selectTypeOfYourRelation"><s:property value="getText('label.ai.relations.typeOfRelation')" />:</label>
 			</td>
 			<td>
@@ -47,7 +50,7 @@
 			<td>
 				<input type="text" id="textDescriptionOfRelation" value="${loader.resourceRelationrelationEntryDescription}" />
 			</td>
-			<td id="tdLanguageDescriptionOfRelation">
+			<td id="tdLanguageDescriptionOfRelation" class="labelLeft">
 				<label for="selectLanguageDescriptionOfRelation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
@@ -85,7 +88,7 @@
 			<td>
 				<input type="text" id="textWebsiteOfDescription" value="${loader.eagRelationHref}" />
 			</td>
-			<td id="tdInstitutionTypeOfRelation">
+			<td id="tdInstitutionTypeOfRelation" class="labelLeft">
 				<label for="selectTypeOftheRelation"><s:property value="getText('label.ai.relations.institutionTypeOfRelation')" />:</label>
 			</td>
 			<td>
@@ -118,7 +121,7 @@
 			<td>
 				<input type="text" id="textInstitutionDescriptionOfRelation" value="${loader.eagRelationrelationEntryDescription}" />
 			</td>
-			<td id="tdLanguageInstitutionDescriptionOfRelation">
+			<td id="tdLanguageInstitutionDescriptionOfRelation" class="labelLeft">
 				<label for="selectLanguageInstitutionDescriptionOfRelation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
