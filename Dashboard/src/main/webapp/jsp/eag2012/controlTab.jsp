@@ -25,7 +25,11 @@
 				<label for="selectLanguagePesonresponsible"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectLanguagePesonresponsible" list="languageList" value="agentLang"></s:select>
+				<select id="selectLanguagePesonresponsible">
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.agentLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -41,7 +45,11 @@
 				<label for="selectDescriptionLanguage"><s:property value="getText('label.ai.control.descriptionLanguage')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectDescriptionLanguage" cssClass="selectControlTab" list="languageList" value="language"></s:select>
+				<select id="selectDescriptionLanguage" class="selectControlTab">
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.language}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 			<td colspan="2">
 			</td>
@@ -51,7 +59,11 @@
 				<label for="selectDescriptionScript"><s:property value="getText('label.ai.control.descriptionScript')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectDescriptionScript" cssClass="selectControlTab"  list="scriptList" value="script"></s:select>
+				<select id="selectDescriptionScript" class="selectControlTab">
+					<s:iterator value="scriptList" var="script"> 
+						<option value="<s:property value="#script.key" />"<s:if test="%{#script.key == loader.script}" > selected=selected </s:if>><s:property value="#script.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 			<td colspan="2">
 			</td>

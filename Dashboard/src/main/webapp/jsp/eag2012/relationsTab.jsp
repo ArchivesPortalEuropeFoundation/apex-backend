@@ -21,7 +21,11 @@
 				<label for="selectTypeOfYourRelation"><s:property value="getText('label.ai.relations.typeOfRelation')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectTypeOfYourRelation" list="typeYourRelationList" value="resourceRelationType"></s:select>
+				<select id="selectTypeOfYourRelation" >
+					<s:iterator value="typeYourRelationList" var="relation"> 
+						<option value="<s:property value="#relation.key" />"<s:if test="%{#relation.key == loader.resourceRelationType}" > selected=selected </s:if>><s:property value="#relation.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
@@ -47,7 +51,11 @@
 				<label for="selectLanguageDescriptionOfRelation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectLanguageDescriptionOfRelation" list="languageList" value="resourceRelationrelationEntryDescriptionLang"></s:select>
+				<select id="selectLanguageDescriptionOfRelation" >
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.resourceRelationrelationEntryDescriptionLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 	</table>
@@ -81,7 +89,11 @@
 				<label for="selectTypeOftheRelation"><s:property value="getText('label.ai.relations.institutionTypeOfRelation')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectTypeOftheRelation" list="typeTheRelationList" value="eagRelationType"></s:select>
+				<select id="selectTypeOftheRelation" >
+					<s:iterator value="typeTheRelationList" var="relation"> 
+						<option value="<s:property value="#relation.key" />"><s:property value="#relation.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 			<td colspan="2">
 			</td>
@@ -110,7 +122,11 @@
 				<label for="selectLanguageInstitutionDescriptionOfRelation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<s:select theme="simple" id="selectLanguageInstitutionDescriptionOfRelation" list="languageList" value="eagRelationrelationEntryDescriptionLang"></s:select>
+				<select id="selectLanguageInstitutionDescriptionOfRelation" >
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.eagRelationrelationEntryDescriptionLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 	</table>
