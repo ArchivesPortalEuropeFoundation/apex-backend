@@ -159,38 +159,77 @@
 									</td>
 								</tr>
 							</xsl:if>
-
-							<!-- repositoryType -->
-							<xsl:if test="/eag:eag/eag:archguide/eag:identity/eag:repositoryType/text()">
+						
+							<!-- geogarea -->
+							<xsl:if test="current()/eag:geogarea/text()">
 								<tr>
 									<td class="header">
-										<xsl:value-of select="ape:resource('eagcontent.typeofarchive')"/>
+										<xsl:value-of select="ape:resource('eag2012.option.geogarea')"/>
 									</td>
 									<td>
-										<xsl:for-each select="/eag:eag/eag:archguide/eag:identity/eag:repositoryType">
-											<div>
-												<xsl:value-of select="."/>
-											</div>
-										</xsl:for-each>
+										<xsl:variable name="geo" select="current()/eag:geogarea/text()"></xsl:variable>
+										<div>
+											<xsl:choose>
+												<xsl:when test="$geo = 'Europe'">
+													<xsl:value-of select = "ape:resource('eag2012.option.continent.europe')"/>
+												</xsl:when>
+												<xsl:when test="$geo = 'Africa'">
+													<xsl:value-of select = "ape:resource('eag2012.option.continent.africa')"/>
+												</xsl:when>
+												<xsl:when test="$geo = 'North America'">
+													<xsl:value-of select = "ape:resource('eag2012.option.continent.northAmerica')"/>
+												</xsl:when>
+												<xsl:when test="$geo = 'South America'">
+													<xsl:value-of select = "ape:resource('eag2012.option.continent.southAmerica')"/>
+												</xsl:when>
+												<xsl:when test="$geo = 'Antarctica'">
+													<xsl:value-of select = "ape:resource('eag2012.option.continent.antarctica')"/>
+												</xsl:when>
+												<xsl:when test="$geo = 'Asia'">
+													<xsl:value-of select = "ape:resource('eag2012.option.continent.asia')"/>
+												</xsl:when>
+												<xsl:when test="$geo = 'Australia'">
+													<xsl:value-of select = "ape:resource('eag2012.option.continent.australia')"/>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:text></xsl:text>
+												</xsl:otherwise>
+											</xsl:choose>
+										</div>
 									</td>
 								</tr>
 							</xsl:if>
-
+							
 							<!-- roleofthearchive -->
-							<!-- <xsl:if test= "$repository = 'Head quarter'"> -->
-							<xsl:if test="eag:repositoryRole and eag:repositoryRole/text() != ''">
+							<xsl:if test="current()/eag:repositoryRole and current()/eag:repositoryRole/text() != ''">
 								<tr>
 									<td class="header">
 										<xsl:value-of select="ape:resource('eagcontent.roleofthearchive')"/>
 									</td>
 									<td>
-										<xsl:value-of select="eag:repositoryRole"/>
+										<xsl:variable name="role" select="current()/eag:repositoryRole/text()"></xsl:variable>
+										<div>
+											<xsl:choose>
+												<xsl:when test="$role = 'Branch'">
+													<xsl:value-of select = "ape:resource('eag2012.option.role.branch')"/>
+												</xsl:when>
+												<xsl:when test="$role = 'Headquarter'">
+													<xsl:value-of select = "ape:resource('eag2012.option.role.headquarters')"/>
+												</xsl:when>
+												<xsl:when test="/eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:repositoryRole/text() = 'Interim archive'">
+													<xsl:value-of select = "ape:resource('eag2012.option.role.interimArchive')"/>
+												</xsl:when>	
+												<xsl:otherwise>
+													<xsl:text></xsl:text>
+												</xsl:otherwise>
+											</xsl:choose>
+										</div>
 									</td>
 								</tr>
 							</xsl:if>
 						</tbody>
 					</table>
-
+									
 					<!-- ACCESS INFORMATION -->
 					<table class="aiSection accessDisplay">
 						<thead>
@@ -428,11 +467,32 @@
 										<xsl:value-of select="ape:resource('eagcontent.photographAllowance')"/>
 									</td>
 									<td>
-										<xsl:value-of select="eag:services/eag:searchroom/eag:photographAllowance"/>
+										<xsl:variable name="photo"  select="eag:services/eag:searchroom/eag:photographAllowance/text()"></xsl:variable>
+											<xsl:for-each select="$photo">
+										<div>
+											<xsl:choose>
+												<xsl:when test="$photo = 'no'">
+													<xsl:value-of select = "ape:resource('eag2012.option.no')"/>
+												</xsl:when>
+												<xsl:when test="$photo = 'yes'">
+													<xsl:value-of select = "ape:resource('eag2012.option.yes')"/>
+												</xsl:when>
+												<xsl:when test="$photo = 'depending on the material'">
+													<xsl:value-of select = "ape:resource('eag2012.option.photograph.depending')"/>
+												</xsl:when>
+												<xsl:when test="$photo = 'Yes (without flash)'">
+													<xsl:value-of select = "ape:resource('eag2012.option.photograph.without')"/>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:text></xsl:text>
+												</xsl:otherwise>
+											</xsl:choose>
+										</div>
+									</xsl:for-each>
 									</td>
 								</tr>
 							</xsl:if>
-
+							
 							<!-- internetAccess -->
 							<xsl:if test="eag:services/eag:internetAccess">
 								<tr>
@@ -1052,6 +1112,88 @@
 						</td>
 					</tr>
 				</xsl:if>
+				
+				<!-- repositoryType -->			
+				<xsl:if test="./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text()">
+					<tr>
+						<td class="header">
+							<xsl:value-of select="ape:resource('eagcontent.typeofarchive')"/>
+						</td>
+						<td>
+							<!-- if there are one or more -->
+							<xsl:for-each select="./eag:eag/eag:archguide/eag:identity/eag:repositoryType">
+<!-- 								<xsl:if test="not(position() = last())">
+									<xsl:text>, </xsl:text>
+								</xsl:if> --> 
+								<xsl:choose>
+									<xsl:when test="current()/text() = 'Business archives'">
+										<p>
+											<xsl:value-of select = "ape:resource('eag2012.option.institutionType.businessArchives')"/>
+										</p>
+									</xsl:when>
+									<xsl:when test="current()/text() = 'Church and religious archives'">
+										<p>
+											<xsl:value-of select = "ape:resource('eag2012.option.institutionType.churchArchives')"/>
+										</p>
+									</xsl:when>
+									<xsl:when test="current()/text() = 'County/Local authority archives'">
+										<p>
+											<xsl:value-of select = "ape:resource('eag2012.option.institutionType.countyArchives')"/>
+										</p>
+									</xsl:when>
+									<xsl:when test="current()/text() = 'Specialised non-governmental archives and archives of other cultural (heritage) institutions'">
+										<p>
+											<xsl:value-of select = "ape:resource('eag2012.option.institutionType.culturalArchives')"/>
+										</p>
+									</xsl:when>
+									<xsl:when test="current()/text() = 'Media archives'">
+										<p>	
+											<xsl:value-of select = "ape:resource('eag2012.option.institutionType.mediaArchives')"/>
+										</p>
+									</xsl:when>
+									<xsl:when test="current()/text() = 'Municipal archives'">
+										<p>	
+											<xsl:value-of select = "ape:resource('eag2012.option.institutionType.municipalArchives')"/>
+										</p>
+									</xsl:when>
+									<xsl:when test="current()/text() = 'National archives'">
+										<p>	
+											<xsl:value-of select = "ape:resource('eag2012.option.institutionType.nationalArchives')"/>
+										</p>
+									</xsl:when>
+									<xsl:when test="current()/text() = 'Archives of political parties, of popular/labour movement and other non-governmental organisations, associations, agencies and foundations'">
+										<p>	
+											<xsl:value-of select = "ape:resource('eag2012.option.institutionType.politicalArchives')"/>
+										</p>
+									</xsl:when>
+									<xsl:when test="current()/text() = 'Private persons and family archives'">
+										<p>	
+											<xsl:value-of select = "ape:resource('eag2012.option.institutionType.privateArchives')"/>
+										</p>
+									</xsl:when>
+									<xsl:when test="current()/text() = 'Regional archives'">
+										<p>	
+											<xsl:value-of select = "ape:resource('eag2012.option.institutionType.regionalArchives')"/>
+										</p>
+									</xsl:when>
+									<xsl:when test="current()/text() = 'Specialised governmental archives'">
+										<p>	
+											<xsl:value-of select = "ape:resource('eag2012.option.institutionType.specialisedArchives')"/>
+										</p>
+									</xsl:when>
+									<xsl:when test="current()/text() = 'University and research archives'">
+										<p>	
+											<xsl:value-of select = "ape:resource('eag2012.option.institutionType.universityArchives')"/>
+										</p>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:text> </xsl:text>
+									</xsl:otherwise>
+								</xsl:choose>
+							 </xsl:for-each> 
+						</td>
+					</tr>
+				</xsl:if>
 
 				<!-- lastupdate -->
 				<xsl:if test="./eag:eag/eag:control/eag:maintenanceHistory/eag:maintenanceEvent/eag:eventDateTime/text()">
@@ -1281,7 +1423,7 @@
 		</xsl:if>
 	</xsl:template>
 	
-		<!-- template for date -->
+	<!-- template for date -->
 	<xsl:template match="eag:date">
 		<xsl:for-each select="eag:date">
 			<xsl:value-of select="."/>
@@ -1292,7 +1434,7 @@
 		</xsl:for-each>
 	</xsl:template>
 	
-		<!-- template for dateRange -->
+	<!-- template for dateRange -->
 	<xsl:template match="eag:dateRange">
 		<xsl:if test="position() != 1">
 			<xsl:text>, </xsl:text>
