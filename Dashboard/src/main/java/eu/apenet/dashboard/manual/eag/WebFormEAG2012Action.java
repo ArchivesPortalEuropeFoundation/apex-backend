@@ -681,7 +681,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 				jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 				jaxbMarshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new EagNamespaceMapper());
-				eagFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + path));
+				// Save in a temporal file.
+				String tempPath = path.replace(".xml", "_temp.xml");
+				eagFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + tempPath));
 
 				jaxbMarshaller.marshal(eag, eagFile);
 
@@ -692,7 +694,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					log.info("EAG is valid");
 
                     // Check the <recordId> content.
-					
+
+					// Move temp file to final file.
+					File eagFinalFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + path));
+					FileUtils.forceDelete(eagFinalFile);
+					FileUtils.moveFile(eagFile, eagFinalFile);
 				} else {
 					this.setWarnings(apEnetEAGDashboard.showWarnings());
 					//The EAG has been neither validated nor converted.
@@ -703,8 +709,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						addActionMessage(warning);
 					}
 
-					// Delete file created.
-    				FileUtils.forceDelete(eagFile);
+					// Delete temporal file created.
+					FileUtils.forceDelete(eagFile);
 				}
 			} catch (JAXBException jaxbe) {
 				log.info(jaxbe.getMessage());
