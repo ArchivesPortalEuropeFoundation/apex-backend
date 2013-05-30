@@ -20,10 +20,18 @@ import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.manual.eag.Eag2012;
 import eu.apenet.dpt.utils.eag2012.Autform;
 import eu.apenet.dpt.utils.eag2012.Eag;
+import eu.apenet.dpt.utils.eag2012.Email;
+import eu.apenet.dpt.utils.eag2012.Library;
 import eu.apenet.dpt.utils.eag2012.Location;
+import eu.apenet.dpt.utils.eag2012.P;
 import eu.apenet.dpt.utils.eag2012.Parform;
+import eu.apenet.dpt.utils.eag2012.RecreationalServices;
 import eu.apenet.dpt.utils.eag2012.Repository;
+import eu.apenet.dpt.utils.eag2012.Restorationlab;
+import eu.apenet.dpt.utils.eag2012.Searchroom;
+import eu.apenet.dpt.utils.eag2012.Telephone;
 import eu.apenet.dpt.utils.eag2012.Timetable;
+import eu.apenet.dpt.utils.eag2012.Webpage;
 import eu.apenet.dpt.utils.util.LanguageConverter;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
@@ -112,12 +120,83 @@ public class EAG2012Loader{
     private String termsOfUse;
     private String termsOfUseLang;
     private String termsOfUseHref;
+    private String searchRoomTelephone;
+    private String searchRoomEmail;
+    private String searchRoomEmailLink;
+    private String searchRoomWebpage;
+    private String searchRoomWebpageLink;
+    private String searchRoomWorkPlaces;
+    private String searchRoomComputerPlaces;
+    private String searchRoomMicrofilmReaders;
+    private String searchRoomPhotographAllowance;
+    private String searchRoomPhotographAllowanceContent;
+    private String searchRoomPhotographAllowanceHref;
+    private String searchRoomPhotographAllowanceLang;
+    private String searchRoomAdvancedOrdersContent;
+    private String searchRoomAdvancedOrdersLang;
+    private String searchRoomAdvancedOrdersHref;
+    private String searchRoomResearchServicesContent;
+    private String searchRoomResearchServicesLang;
+    
+    private String libraryQuestion;
+    private String libraryTelephone;
+    private String libraryEmailContent;
+    private String libraryEmailHref;
+    private String libraryWebpageContent;
+    private String libraryWebpageHref;
+    private String libraryMonographPublication;
+    private String librarySerialPublication;
+    private String libraryInternetAccessQuestion;
+    private String libraryDescription;
+    private String libraryDescriptionLang;
+    
+    private String technicalServicesQuestion;
+    private String technicalServicesDescription;
+    private String technicalServicesDescriptionLang;
+    private String technicalServicesTelephone;
+    private String technicalServicesEmail;
+    private String technicalServicesEmailLink;
+    private String technicalServicesEmailLang;
+    private String technicalServicesWebpageLink;
+    private String technicalServicesWebpage;
+    private String technicalServicesWebpageLang;
+    
+    private String reproductionserQuestion;
+    private String reproductionserDescription;
+    private String reproductionserDescriptionLang;
+    private String reproductionserTelephone;
+    private String reproductionserEmail;
+    private String reproductionserEmailLink;
+    private String reproductionserEmailLang;
+    private String reproductionserWebpage;
+    private String reproductionserWebpageLink;
+    private String reproductionserWebpageLang;
+    private String microfilmServices;
+    private String photographicServices;
+    private String digitisationServices;
+    private String photocopyingServices;
+    private String recreationalServicesRefreshmentArea;
+    private String recreationalServicesRefreshmentAreaLang;
+    private String recreationalServicesExhibition;
+    private String recreationalServicesExhibitionLang;
+    private String recreationalServicesWeb;
+    private String recreationalServicesWebLink;
+    private String toursSessionGuidesAndSessionsContent;
+    private String toursSessionGuidesAndSessionsLang;
+    private String toursSessionGuidesAndSessionsWebpage;
+    private String toursSessionGuidesAndSessionsWebpageTitle;
+    private String otherServices;
+    private String otherServicesLang;
+    private String otherServicesWebpage;
+    private String otherServicesLink;
+
 
 	// Description.
     private String repositorhist;
     private String repositorhistLang;
     private String repositorFoundDate;
-    private String repositorFoundDateLocalType;
+
+	private String repositorFoundDateLocalType;
     private String repositorFoundDateNotAfter;
     private String repositorFoundDateNotBefore;
     private String repositorFoundDateStandardDate;
@@ -232,53 +311,39 @@ public class EAG2012Loader{
 	public Integer getId() {
 		return this.aiId;
 	}
-	
 	public void setId(Integer aiId){
 		this.aiId = aiId;
 	}
-
 	/**
 	 * @return the agent
 	 */
 	public String getAgent() {
 		return this.agent;
 	}
-
 	/**
 	 * @param agent the agent to set
 	 */
 	public void setAgent(String agent) {
 		this.agent = agent;
 	}
-
 	/**
 	 * @return the countryCode
 	 */
 	public String getCountryCode() {
 		return this.countryCode;
 	}
-
 	/**
 	 * @param countryCode the countryCode to set
 	 */
 	public void setCountryCode(String countryCode) {
 		this.countryCode = countryCode;
 	}
-	
-	/**
-	 * @return the otherRepositorId
-	 */
 	public String getOtherRepositorId() {
 		return this.otherRepositorId;
 	}
-
-	/**
-	 * @param otherRepositorId the otherRepositorId to set
-	 */
 	public void setOtherRepositorId(String otherRepositorId) {
 		this.otherRepositorId = otherRepositorId;
 	}
-
 	/**
 	* Returns the into ISO_2Characteres.
 	* @return CC 
@@ -286,10 +351,6 @@ public class EAG2012Loader{
 	public String getInitialCountryCode() {
 		return new ArchivalLandscape().getmyCountry();
 	}
-
-	/**
-	 * @return the recordId
-	 */
 	public String getRecordId() {
 		return this.recordId;
 	}
@@ -302,1749 +363,1167 @@ public class EAG2012Loader{
 	public String getIdUsedInAPE(){
 		return Eag2012.generatesISOCode(getId());
 	}
-
-	/**
-	 * @param recordId the recordId to set
-	 */
 	public void setRecordId(String recordId) {
 		this.recordId = recordId;
 	}
-
-	/**
-	 * @return the autform
-	 */
 	public String getAutform() {
 		return this.autform;
 	}
-
-	/**
-	 * @param autform the autform to set
-	 */
 	public void setAutform(String autform) {
 		this.autform = autform;
 	}
-
-	/**
-	 * @return the autformLang
-	 */
 	public String getAutformLang() {
 		return this.autformLang;
 	}
-
-	/**
-	 * @param autformLang the autformLang to set
-	 */
 	public void setAutformLang(String autformLang) {
 		this.autformLang = autformLang;
 	}
-	/**
-	 * @return the parform
-	 */
 	public String getParform() {
 		return this.parform;
 	}
-
-	/**
-	 * @param parform the parform to set
-	 */
 	public void setParform(String parform) {
 		this.parform = parform;
 	}
-
-	/**
-	 * @return the parformLang
-	 */
 	public String getParformLang() {
 		return this.parformLang;
 	}
-
-	/**
-	 * @param parformLang the parformLang to set
-	 */
 	public void setParformLang(String parformLang) {
 		this.parformLang = parformLang;
 	}
-
-	/**
-	 * @return the localType
-	 */
 	public String getLocalType() {
 		return this.localType;
 	}
-
-	/**
-	 * @param localType the localType to set
-	 */
 	public void setLocalType(String localType) {
 		this.localType = localType;
 	}
-
-	/**
-	 * @return the longitude
-	 */
 	public String getLongitude() {
 		return this.longitude;
 	}
-
-	/**
-	 * @param longitude the longitude to set
-	 */
 	public void setLongitude(String longitude) {
 		this.longitude = longitude;
 	}
-
-	/**
-	 * @return the latitude
-	 */
 	public String getLatitude() {
 		return this.latitude;
 	}
-
-	/**
-	 * @param latitude the latitude to set
-	 */
 	public void setLatitude(String latitude) {
 		this.latitude = latitude;
 	}
-
-	/**
-	 * @return the country
-	 */
 	public String getCountry() {
 		return this.country;
 	}
-
-	/**
-	 * @param country the country to set
-	 */
 	public void setCountry(String country) {
 		this.country = country;
 	}
-
-	/**
-	 * @return the countryLang
-	 */
 	public String getCountryLang() {
 		return this.countryLang;
 	}
-
-	/**
-	 * @param countryLang the countryLang to set
-	 */
 	public void setCountryLang(String countryLang) {
 		this.countryLang = countryLang;
 	}
-
-	/**
-	 * @return the firstdem
-	 */
 	public String getFirstdem() {
 		return this.firstdem;
 	}
-
-	/**
-	 * @param firstdem the firstdem to set
-	 */
 	public void setFirstdem(String firstdem) {
 		this.firstdem = firstdem;
 	}
-
-	/**
-	 * @return the firstdemLang
-	 */
 	public String getFirstdemLang() {
 		return this.firstdemLang;
 	}
-
-	/**
-	 * @param firstdemLang the firstdemLang to set
-	 */
 	public void setFirstdemLang(String firstdemLang) {
 		this.firstdemLang = firstdemLang;
 	}
-
-	/**
-	 * @return the secondem
-	 */
 	public String getSecondem() {
 		return this.secondem;
 	}
-
-	/**
-	 * @param secondem the secondem to set
-	 */
 	public void setSecondem(String secondem) {
 		this.secondem = secondem;
 	}
-
-	/**
-	 * @return the secondemLang
-	 */
 	public String getSecondemLang() {
 		return this.secondemLang;
 	}
-
-	/**
-	 * @param secondemLang the secondemLang to set
-	 */
 	public void setSecondemLang(String secondemLang) {
 		this.secondemLang = secondemLang;
 	}
-
-	/**
-	 * @return the municipalityPostalcode
-	 */
 	public String getMunicipalityPostalcode() {
 		return this.municipalityPostalcode;
 	}
-
-	/**
-	 * @param municipalityPostalcode the municipalityPostalcode to set
-	 */
 	public void setMunicipalityPostalcode(String municipalityPostalcode) {
 		this.municipalityPostalcode = municipalityPostalcode;
 	}
-
-	/**
-	 * @return the municipalityPostalcodeLang
-	 */
 	public String getMunicipalityPostalcodeLang() {
 		return this.municipalityPostalcodeLang;
 	}
-
-	/**
-	 * @param municipalityPostalcodeLang the municipalityPostalcodeLang to set
-	 */
 	public void setMunicipalityPostalcodeLang(String municipalityPostalcodeLang) {
 		this.municipalityPostalcodeLang = municipalityPostalcodeLang;
 	}
-
-	/**
-	 * @return the localentity
-	 */
 	public String getLocalentity() {
 		return this.localentity;
 	}
-
-	/**
-	 * @param localentity the localentity to set
-	 */
 	public void setLocalentity(String localentity) {
 		this.localentity = localentity;
 	}
-
-	/**
-	 * @return the localentityLang
-	 */
 	public String getLocalentityLang() {
 		return this.localentityLang;
 	}
-
-	/**
-	 * @param localentityLang the localentityLang to set
-	 */
 	public void setLocalentityLang(String localentityLang) {
 		this.localentityLang = localentityLang;
 	}
-
-	/**
-	 * @return the street
-	 */
 	public String getStreet() {
 		return this.street;
 	}
-
-	/**
-	 * @param street the street to set
-	 */
 	public void setStreet(String street) {
 		this.street = street;
 	}
-
-	/**
-	 * @return the streetLang
-	 */
 	public String getStreetLang() {
 		return this.streetLang;
 	}
-
-	/**
-	 * @param streetLang the streetLang to set
-	 */
 	public void setStreetLang(String streetLang) {
 		this.streetLang = streetLang;
 	}
-
-	/**
-	 * @return the municipalityPostalcodePostal
-	 */
 	public String getMunicipalityPostalcodePostal() {
 		return this.municipalityPostalcodePostal;
 	}
-
-	/**
-	 * @param municipalityPostalcodePostal the municipalityPostalcodePostal to set
-	 */
 	public void setMunicipalityPostalcodePostal(String municipalityPostalcodePostal) {
 		this.municipalityPostalcodePostal = municipalityPostalcodePostal;
 	}
-
-	/**
-	 * @return the municipalityPostalcodePostalLang
-	 */
 	public String getMunicipalityPostalcodePostalLang() {
 		return this.municipalityPostalcodePostalLang;
 	}
-
-	/**
-	 * @param municipalityPostalcodePostalLang the municipalityPostalcodePostalLang to set
-	 */
 	public void setMunicipalityPostalcodePostalLang(String municipalityPostalcodePostalLang) {
 		this.municipalityPostalcodePostalLang = municipalityPostalcodePostalLang;
 	}
-
-	/**
-	 * @return the streetPostal
-	 */
 	public String getStreetPostal() {
 		return this.streetPostal;
 	}
-
-	/**
-	 * @param streetPostal the streetPostal to set
-	 */
 	public void setStreetPostal(String streetPostal) {
 		this.streetPostal = streetPostal;
 	}
-
-	/**
-	 * @return the streetPostalLang
-	 */
 	public String getStreetPostalLang() {
 		return this.streetPostalLang;
 	}
-
-	/**
-	 * @param streetPostalLang the streetPostalLang to set
-	 */
 	public void setStreetPostalLang(String streetPostalLang) {
 		this.streetPostalLang = streetPostalLang;
 	}
-
-	/**
-	 * @return the geogarea
-	 */
 	public String getGeogarea() {
 		return this.geogarea;
 	}
-
-	/**
-	 * @param geogarea the geogarea to set
-	 */
 	public void setGeogarea(String geogarea) {
 		this.geogarea = geogarea;
 	}
-
-	/**
-	 * @return the telephone
-	 */
 	public String getTelephone() {
 		return this.telephone;
 	}
-
-	/**
-	 * @param telephone the telephone to set
-	 */
 	public void setTelephone(String telephone) {
 		this.telephone = telephone;
 	}
-
-	/**
-	 * @return the email
-	 */
 	public String getEmail() {
 		return this.email;
 	}
-
-	/**
-	 * @param email the email to set
-	 */
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-	/**
-	 * @return the emailTitle
-	 */
 	public String getEmailTitle() {
 		return this.emailTitle;
 	}
-
-	/**
-	 * @param emailTitle the emailTitle to set
-	 */
 	public void setEmailTitle(String emailTitle) {
 		this.emailTitle = emailTitle;
 	}
-
-	/**
-	 * @return the emailLang
-	 */
 	public String getEmailLang() {
 		return this.emailLang;
 	}
-
-	/**
-	 * @param emailLang the emailLang to set
-	 */
 	public void setEmailLang(String emailLang) {
 		this.emailLang = emailLang;
 	}
-
-	/**
-	 * @return the webpage
-	 */
 	public String getWebpage() {
 		return this.webpage;
 	}
-
-	/**
-	 * @param webpage the webpage to set
-	 */
 	public void setWebpage(String webpage) {
 		this.webpage = webpage;
 	}
-
-	/**
-	 * @return the webpageTitle
-	 */
 	public String getWebpageTitle() {
 		return this.webpageTitle;
 	}
-
-	/**
-	 * @param webpageTitle the webpageTitle to set
-	 */
 	public void setWebpageTitle(String webpageTitle) {
 		this.webpageTitle = webpageTitle;
 	}
-
-	/**
-	 * @return the webpageLang
-	 */
 	public String getWebpageLang() {
 		return this.webpageLang;
 	}
-
-	/**
-	 * @param webpageLang the webpageLang to set
-	 */
 	public void setWebpageLang(String webpageLang) {
 		this.webpageLang = webpageLang;
 	}
-
-	/**
-	 * @return the opening
-	 */
 	public String getOpening() {
 		return this.opening;
 	}
-
-	/**
-	 * @param opening the opening to set
-	 */
 	public void setOpening(String opening) {
 		this.opening = opening;
 	}
-
-	/**
-	 * @return the openingLang
-	 */
 	public String getOpeningLang() {
 		return this.openingLang;
 	}
-
-	/**
-	 * @param openingLang the openingLang to set
-	 */
 	public void setOpeningLang(String openingLang) {
 		this.openingLang = openingLang;
 	}
-
-	/**
-	 * @return the closing
-	 */
 	public String getClosing() {
 		return this.closing;
 	}
-
-	/**
-	 * @param closing the closing to set
-	 */
 	public void setClosing(String closing) {
 		this.closing = closing;
 	}
-
-	/**
-	 * @return the closingLang
-	 */
 	public String getClosingLang() {
 		return this.closingLang;
 	}
-
-	/**
-	 * @param closingLang the closingLang to set
-	 */
 	public void setClosingLang(String closingLang) {
 		this.closingLang = closingLang;
 	}
-
-	/**
-	 * @return the accessQuestion
-	 */
 	public String getAccessQuestion() {
 		return this.accessQuestion;
 	}
-
-	/**
-	 * @param accessQuestion the accessQuestion to set
-	 */
 	public void setAccessQuestion(String accessQuestion) {
 		this.accessQuestion = accessQuestion;
 	}
-
-	/**
-	 * @return the restaccess
-	 */
 	public String getRestaccess() {
 		return this.restaccess;
 	}
-
-	/**
-	 * @param restaccess the restaccess to set
-	 */
 	public void setRestaccess(String restaccess) {
 		this.restaccess = restaccess;
 	}
-
-	/**
-	 * @return the restaccessLang
-	 */
 	public String getRestaccessLang() {
 		return this.restaccessLang;
 	}
-
-	/**
-	 * @param restaccessLang the restaccessLang to set
-	 */
 	public void setRestaccessLang(String restaccessLang) {
 		this.restaccessLang = restaccessLang;
 	}
-
-	/**
-	 * @return the accessibility
-	 */
 	public String getAccessibility() {
 		return this.accessibility;
 	}
-
-	/**
-	 * @param accessibility the accessibility to set
-	 */
 	public void setAccessibility(String accessibility) {
 		this.accessibility = accessibility;
 	}
-
-	/**
-	 * @return the accessibilityQuestion
-	 */
 	public String getAccessibilityQuestion() {
 		return this.accessibilityQuestion;
 	}
-
-	/**
-	 * @param accessibilityQuestion the accessibilityQuestion to set
-	 */
 	public void setAccessibilityQuestion(String accessibilityQuestion) {
 		this.accessibilityQuestion = accessibilityQuestion;
 	}
-
-	/**
-	 * @return the accessibilityLang
-	 */
 	public String getAccessibilityLang() {
 		return this.accessibilityLang;
 	}
-
-	/**
-	 * @param accessibilityLang the accessibilityLang to set
-	 */
 	public void setAccessibilityLang(String accessibilityLang) {
 		this.accessibilityLang = accessibilityLang;
 	}
-
-	/**
-	 * @return the resourceRelationHref
-	 */
 	public String getResourceRelationHref() {
 		return this.resourceRelationHref;
 	}
-
-	/**
-	 * @param resourceRelationHref the resourceRelationHref to set
-	 */
 	public void setResourceRelationHref(String resourceRelationHref) {
 		this.resourceRelationHref = resourceRelationHref;
 	}
-
-	/**
-	 * @return the resourceRelationLang
-	 */
 	public String getResourceRelationLang() {
 		return this.resourceRelationLang;
 	}
-
-	/**
-	 * @param resourceRelationLang the resourceRelationLang to set
-	 */
 	public void setResourceRelationLang(String resourceRelationLang) {
 		this.resourceRelationLang = resourceRelationLang;
 	}
-
-	/**
-	 * @return the resourceRelationType
-	 */
 	public String getResourceRelationType() {
 		return this.resourceRelationType;
 	}
-
-	/**
-	 * @param resourceRelationType the resourceRelationType to set
-	 */
 	public void setResourceRelationType(String resourceRelationType) {
 		this.resourceRelationType = resourceRelationType;
 	}
-
-	/**
-	 * @return the resourceRelationrelationEntry
-	 */
 	public String getResourceRelationrelationEntry() {
 		return this.resourceRelationrelationEntry;
 	}
-
-	/**
-	 * @param resourceRelationrelationEntry the resourceRelationrelationEntry to set
-	 */
 	public void setResourceRelationrelationEntry(
 			String resourceRelationrelationEntry) {
 		this.resourceRelationrelationEntry = resourceRelationrelationEntry;
 	}
-
-	/**
-	 * @return the resourceRelationrelationEntryLocalType
-	 */
 	public String getResourceRelationrelationEntryLocalType() {
 		return this.resourceRelationrelationEntryLocalType;
 	}
-
-	/**
-	 * @param resourceRelationrelationEntryLocalType the resourceRelationrelationEntryLocalType to set
-	 */
 	public void setResourceRelationrelationEntryLocalType(
 			String resourceRelationrelationEntryLocalType) {
 		this.resourceRelationrelationEntryLocalType = resourceRelationrelationEntryLocalType;
 	}
-
-	/**
-	 * @return the resourceRelationrelationEntryScriptCode
-	 */
 	public String getResourceRelationrelationEntryScriptCode() {
 		return this.resourceRelationrelationEntryScriptCode;
 	}
-
-	/**
-	 * @param resourceRelationrelationEntryScriptCode the resourceRelationrelationEntryScriptCode to set
-	 */
 	public void setResourceRelationrelationEntryScriptCode(
 			String resourceRelationrelationEntryScriptCode) {
 		this.resourceRelationrelationEntryScriptCode = resourceRelationrelationEntryScriptCode;
 	}
-
-	/**
-	 * @return the resourceRelationrelationEntryTransliteration
-	 */
 	public String getResourceRelationrelationEntryTransliteration() {
 		return this.resourceRelationrelationEntryTransliteration;
 	}
-
-	/**
-	 * @param resourceRelationrelationEntryTransliteration the resourceRelationrelationEntryTransliteration to set
-	 */
 	public void setResourceRelationrelationEntryTransliteration(
 			String resourceRelationrelationEntryTransliteration) {
 		this.resourceRelationrelationEntryTransliteration = resourceRelationrelationEntryTransliteration;
 	}
-
-	/**
-	 * @return the resourceRelationrelationEntryLang
-	 */
 	public String getResourceRelationrelationEntryLang() {
 		return this.resourceRelationrelationEntryLang;
 	}
-
-	/**
-	 * @param resourceRelationrelationEntryLang the resourceRelationrelationEntryLang to set
-	 */
 	public void setResourceRelationrelationEntryLang(
 			String resourceRelationrelationEntryLang) {
 		this.resourceRelationrelationEntryLang = resourceRelationrelationEntryLang;
 	}
-
-	/**
-	 * @return the resourceRelationrelationEntryDescription
-	 */
 	public String getResourceRelationrelationEntryDescription() {
 		return this.resourceRelationrelationEntryDescription;
 	}
-
-	/**
-	 * @param resourceRelationrelationEntryDescription the resourceRelationrelationEntryDescription to set
-	 */
 	public void setResourceRelationrelationEntryDescription(
 			String resourceRelationrelationEntryDescription) {
 		this.resourceRelationrelationEntryDescription = resourceRelationrelationEntryDescription;
 	}
-
-	/**
-	 * @return the resourceRelationrelationEntryDescriptionLang
-	 */
 	public String getResourceRelationrelationEntryDescriptionLang() {
 		return this.resourceRelationrelationEntryDescriptionLang;
 	}
-
-	/**
-	 * @param resourceRelationrelationEntryDescriptionLang the resourceRelationrelationEntryDescriptionLang to set
-	 */
 	public void setResourceRelationrelationEntryDescriptionLang(
 			String resourceRelationrelationEntryDescriptionLang) {
 		this.resourceRelationrelationEntryDescriptionLang = resourceRelationrelationEntryDescriptionLang;
 	}
-
-	/**
-	 * @return the repositoryType
-	 */
 	public List<String> getRepositoryType() {
         if (this.repositoryType == null) {
         	this.repositoryType = new ArrayList<String>();
         }
 		return this.repositoryType;
 	}
-
-	/**
-	 * @param repositoryType the repositoryType to set
-	 */
 	public void setRepositoryType(List<String> repositoryType) {
 		this.repositoryType = repositoryType;
 	}
-
-	/**
-	 * @return the fax
-	 */
 	public String getFax() {
 		return this.fax;
 	}
-
-	/**
-	 * @param fax the fax to set
-	 */
 	public void setFax(String fax) {
 		this.fax = fax;
 	}
-
-	/**
-	 * @return the repositorhist
-	 */
 	public String getRepositorhist() {
 		return this.repositorhist;
 	}
-
-	/**
-	 * @return the directions
-	 */
 	public String getDirections() {
 		return this.directions;
 	}
-
-	/**
-	 * @param directions the directions to set
-	 */
 	public void setDirections(String directions) {
 		this.directions = directions;
 	}
-
-	/**
-	 * @return the directionsLang
-	 */
 	public String getDirectionsLang() {
 		return this.directionsLang;
 	}
-
-	/**
-	 * @param directionsLang the directionsLang to set
-	 */
 	public void setDirectionsLang(String directionsLang) {
 		this.directionsLang = directionsLang;
 	}
-
-	/**
-	 * @return the citationHref
-	 */
 	public String getCitationHref() {
 		return this.citationHref;
 	}
-
-	/**
-	 * @param citationHref the citationHref to set
-	 */
 	public void setCitationHref(String citationHref) {
 		this.citationHref = citationHref;
 	}
-
-	/**
-	 * @return the termsOfUse
-	 */
 	public String getTermsOfUse() {
 		return this.termsOfUse;
 	}
-
-	/**
-	 * @param termsOfUse the termsOfUse to set
-	 */
 	public void setTermsOfUse(String termsOfUse) {
 		this.termsOfUse = termsOfUse;
 	}
-
-	/**
-	 * @return the termsOfUseLang
-	 */
 	public String getTermsOfUseLang() {
 		return this.termsOfUseLang;
 	}
-
-	/**
-	 * @param termsOfUseLang the termsOfUseLang to set
-	 */
 	public void setTermsOfUseLang(String termsOfUseLang) {
 		this.termsOfUseLang = termsOfUseLang;
 	}
-
-	/**
-	 * @return the termsOfUseHref
-	 */
 	public String getTermsOfUseHref() {
 		return this.termsOfUseHref;
 	}
-
-	/**
-	 * @param termsOfUseHref the termsOfUseHref to set
-	 */
 	public void setTermsOfUseHref(String termsOfUseHref) {
 		this.termsOfUseHref = termsOfUseHref;
 	}
-
-	/**
-	 * @param repositorhist the repositorhist to set
-	 */
 	public void setRepositorhist(String repositorhist) {
 		this.repositorhist = repositorhist;
 	}
-
-	/**
-	 * @return the repositorhistLang
-	 */
 	public String getRepositorhistLang() {
 		return this.repositorhistLang;
 	}
-
-	/**
-	 * @param repositorhistLang the repositorhistLang to set
-	 */
 	public void setRepositorhistLang(String repositorhistLang) {
 		this.repositorhistLang = repositorhistLang;
 	}
-
-	/**
-	 * @return the repositorFoundDate
-	 */
 	public String getRepositorFoundDate() {
 		return this.repositorFoundDate;
 	}
-
-	/**
-	 * @param repositorFoundDate the repositorFoundDate to set
-	 */
 	public void setRepositorFoundDate(String repositorFoundDate) {
 		this.repositorFoundDate = repositorFoundDate;
 	}
-
-	/**
-	 * @return the repositorFoundDateLocalType
-	 */
 	public String getRepositorFoundDateLocalType() {
 		return this.repositorFoundDateLocalType;
 	}
-
-	/**
-	 * @param repositorFoundDateLocalType the repositorFoundDateLocalType to set
-	 */
 	public void setRepositorFoundDateLocalType(
 			String repositorFoundDateLocalType) {
 		this.repositorFoundDateLocalType = repositorFoundDateLocalType;
 	}
-
-	/**
-	 * @return the repositorFoundDateNotAfter
-	 */
 	public String getRepositorFoundDateNotAfter() {
 		return this.repositorFoundDateNotAfter;
 	}
-
-	/**
-	 * @param repositorFoundDateNotAfter the repositorFoundDateNotAfter to set
-	 */
 	public void setRepositorFoundDateNotAfter(
 			String repositorFoundDateNotAfter) {
 		this.repositorFoundDateNotAfter = repositorFoundDateNotAfter;
 	}
-
-	/**
-	 * @return the repositorFoundDateNotBefore
-	 */
 	public String getRepositorFoundDateNotBefore() {
 		return this.repositorFoundDateNotBefore;
 	}
-
-	/**
-	 * @param repositorFoundDateNotBefore the repositorFoundDateNotBefore to set
-	 */
 	public void setRepositorFoundDateNotBefore(
 			String repositorFoundDateNotBefore) {
 		this.repositorFoundDateNotBefore = repositorFoundDateNotBefore;
 	}
-
-	/**
-	 * @return the repositorFoundDateStandardDate
-	 */
 	public String getRepositorFoundDateStandardDate() {
 		return this.repositorFoundDateStandardDate;
 	}
-
-	/**
-	 * @param repositorFoundDateStandardDate the repositorFoundDateStandardDate to set
-	 */
 	public void setRepositorFoundDateStandardDate(
 			String repositorFoundDateStandardDate) {
 		this.repositorFoundDateStandardDate = repositorFoundDateStandardDate;
 	}
-
-	/**
-	 * @return the repositorFoundDateLang
-	 */
 	public String getRepositorFoundDateLang() {
 		return this.repositorFoundDateLang;
 	}
-
-	/**
-	 * @param repositorFoundDateLang the repositorFoundDateLang to set
-	 */
 	public void setRepositorFoundDateLang(String repositorFoundDateLang) {
 		this.repositorFoundDateLang = repositorFoundDateLang;
 	}
-
-	/**
-	 * @return the repositorFoundRule
-	 */
 	public String getRepositorFoundRule() {
 		return this.repositorFoundRule;
 	}
-
-	/**
-	 * @param repositorFoundRule the repositorFoundRule to set
-	 */
 	public void setRepositorFoundRule(String repositorFoundRule) {
 		this.repositorFoundRule = repositorFoundRule;
 	}
-
-	/**
-	 * @return the repositorFoundRuleLang
-	 */
 	public String getRepositorFoundRuleLang() {
 		return this.repositorFoundRuleLang;
 	}
-
-	/**
-	 * @param repositorFoundRuleLang the repositorFoundRuleLang to set
-	 */
 	public void setRepositorFoundRuleLang(String repositorFoundRuleLang) {
 		this.repositorFoundRuleLang = repositorFoundRuleLang;
 	}
-
-	/**
-	 * @return the repositorSupDate
-	 */
 	public String getRepositorSupDate() {
 		return this.repositorSupDate;
 	}
-
-	/**
-	 * @param repositorSupDate the repositorSupDate to set
-	 */
 	public void setRepositorSupDate(String repositorSupDate) {
 		this.repositorSupDate = repositorSupDate;
 	}
-
-	/**
-	 * @return the repositorSupDateLocalType
-	 */
 	public String getRepositorSupDateLocalType() {
 		return this.repositorSupDateLocalType;
 	}
-
-	/**
-	 * @param repositorSupDateLocalType the repositorSupDateLocalType to set
-	 */
 	public void setRepositorSupDateLocalType(String repositorSupDateLocalType) {
 		this.repositorSupDateLocalType = repositorSupDateLocalType;
 	}
-
-	/**
-	 * @return the repositorSupDateNotAfter
-	 */
 	public String getRepositorSupDateNotAfter() {
 		return this.repositorSupDateNotAfter;
 	}
-
-	/**
-	 * @param repositorSupDateNotAfter the repositorSupDateNotAfter to set
-	 */
 	public void setRepositorSupDateNotAfter(String repositorSupDateNotAfter) {
 		this.repositorSupDateNotAfter = repositorSupDateNotAfter;
 	}
-
-	/**
-	 * @return the repositorSupDateNotBefore
-	 */
 	public String getRepositorSupDateNotBefore() {
 		return this.repositorSupDateNotBefore;
 	}
-
-	/**
-	 * @param repositorSupDateNotBefore the repositorSupDateNotBefore to set
-	 */
 	public void setRepositorSupDateNotBefore(String repositorSupDateNotBefore) {
 		this.repositorSupDateNotBefore = repositorSupDateNotBefore;
 	}
-
-	/**
-	 * @return the repositorSupDateStandardDate
-	 */
 	public String getRepositorSupDateStandardDate() {
 		return this.repositorSupDateStandardDate;
 	}
-
-	/**
-	 * @param repositorSupDateStandardDate the repositorSupDateStandardDate to set
-	 */
 	public void setRepositorSupDateStandardDate(
 			String repositorSupDateStandardDate) {
 		this.repositorSupDateStandardDate = repositorSupDateStandardDate;
 	}
-
-	/**
-	 * @return the repositorSupDateLang
-	 */
 	public String getRepositorSupDateLang() {
 		return this.repositorSupDateLang;
 	}
-
-	/**
-	 * @param repositorSupDateLang the repositorSupDateLang to set
-	 */
 	public void setRepositorSupDateLang(String repositorSupDateLang) {
 		this.repositorSupDateLang = repositorSupDateLang;
 	}
-
-	/**
-	 * @return the repositorSupRule
-	 */
 	public String getRepositorSupRule() {
 		return this.repositorSupRule;
 	}
-
-	/**
-	 * @param repositorSupRule the repositorSupRule to set
-	 */
 	public void setRepositorSupRule(String repositorSupRule) {
 		this.repositorSupRule = repositorSupRule;
 	}
-
-	/**
-	 * @return the repositorSupRuleLang
-	 */
 	public String getRepositorSupRuleLang() {
 		return this.repositorSupRuleLang;
 	}
-
-	/**
-	 * @param repositorSupRuleLang the repositorSupRuleLang to set
-	 */
 	public void setRepositorSupRuleLang(String repositorSupRuleLang) {
 		this.repositorSupRuleLang = repositorSupRuleLang;
 	}
-
-	/**
-	 * @return the adminunit
-	 */
 	public String getAdminunit() {
 		return this.adminunit;
 	}
-
-	/**
-	 * @param adminunit the adminunit to set
-	 */
 	public void setAdminunit(String adminunit) {
 		this.adminunit = adminunit;
 	}
-
-	/**
-	 * @return the adminunitLang
-	 */
 	public String getAdminunitLang() {
 		return this.adminunitLang;
 	}
-
-	/**
-	 * @param adminunitLang the adminunitLang to set
-	 */
 	public void setAdminunitLang(String adminunitLang) {
 		this.adminunitLang = adminunitLang;
 	}
-
-	/**
-	 * @return the building
-	 */
 	public String getBuilding() {
 		return this.building;
 	}
-
-	/**
-	 * @param building the building to set
-	 */
 	public void setBuilding(String building) {
 		this.building = building;
 	}
-
-	/**
-	 * @return the buildingLang
-	 */
 	public String getBuildingLang() {
 		return this.buildingLang;
 	}
-
-	/**
-	 * @param buildingLang the buildingLang to set
-	 */
 	public void setBuildingLang(String buildingLang) {
 		this.buildingLang = buildingLang;
 	}
-
-	/**
-	 * @return the repositorarea
-	 */
 	public String getRepositorarea() {
 		return this.repositorarea;
 	}
-
-	/**
-	 * @param repositorarea the repositorarea to set
-	 */
 	public void setRepositorarea(String repositorarea) {
 		this.repositorarea = repositorarea;
 	}
-
-	/**
-	 * @return the repositorareaUnit
-	 */
 	public String getRepositorareaUnit() {
 		return this.repositorareaUnit;
 	}
-
-	/**
-	 * @param repositorareaUnit the repositorareaUnit to set
-	 */
 	public void setRepositorareaUnit(String repositorareaUnit) {
 		this.repositorareaUnit = repositorareaUnit;
 	}
-
-	/**
-	 * @return the lengthshelf
-	 */
 	public String getLengthshelf() {
 		return this.lengthshelf;
 	}
-
-	/**
-	 * @param lengthshelf the lengthshelf to set
-	 */
 	public void setLengthshelf(String lengthshelf) {
 		this.lengthshelf = lengthshelf;
 	}
-
-	/**
-	 * @return the lengthshelfUnit
-	 */
 	public String getLengthshelfUnit() {
 		return this.lengthshelfUnit;
 	}
-
-	/**
-	 * @param lengthshelfUnit the lengthshelfUnit to set
-	 */
 	public void setLengthshelfUnit(String lengthshelfUnit) {
 		this.lengthshelfUnit = lengthshelfUnit;
 	}
-
-	/**
-	 * @return the holdings
-	 */
 	public String getHoldings() {
 		return this.holdings;
 	}
-
-	/**
-	 * @param holdings the holdings to set
-	 */
 	public void setHoldings(String holdings) {
 		this.holdings = holdings;
 	}
-
-	/**
-	 * @return the holdingsLang
-	 */
 	public String getHoldingsLang() {
 		return this.holdingsLang;
 	}
-
-	/**
-	 * @param holdingsLang the holdingsLang to set
-	 */
 	public void setHoldingsLang(String holdingsLang) {
 		this.holdingsLang = holdingsLang;
 	}
-
-	/**
-	 * @return the holdingsDate
-	 */
 	public String getHoldingsDate() {
 		return this.holdingsDate;
 	}
-
-	/**
-	 * @param holdingsDate the holdingsDate to set
-	 */
 	public void setHoldingsDate(String holdingsDate) {
 		this.holdingsDate = holdingsDate;
 	}
-
-	/**
-	 * @return the holdingsDateLocalType
-	 */
 	public String getHoldingsDateLocalType() {
 		return this.holdingsDateLocalType;
 	}
-
-	/**
-	 * @param holdingsDateLocalType the holdingsDateLocalType to set
-	 */
 	public void setHoldingsDateLocalType(String holdingsDateLocalType) {
 		this.holdingsDateLocalType = holdingsDateLocalType;
 	}
-
-	/**
-	 * @return the holdingsDateNotAfter
-	 */
 	public String getHoldingsDateNotAfter() {
 		return this.holdingsDateNotAfter;
 	}
-
-	/**
-	 * @param holdingsDateNotAfter the holdingsDateNotAfter to set
-	 */
 	public void setHoldingsDateNotAfter(String holdingsDateNotAfter) {
 		this.holdingsDateNotAfter = holdingsDateNotAfter;
 	}
-
-	/**
-	 * @return the holdingsDateNotBefore
-	 */
 	public String getHoldingsDateNotBefore() {
 		return this.holdingsDateNotBefore;
 	}
-
-	/**
-	 * @param holdingsDateNotBefore the holdingsDateNotBefore to set
-	 */
 	public void setHoldingsDateNotBefore(String holdingsDateNotBefore) {
 		this.holdingsDateNotBefore = holdingsDateNotBefore;
 	}
-
-	/**
-	 * @return the holdingsDateStandardDate
-	 */
 	public String getHoldingsDateStandardDate() {
 		return this.holdingsDateStandardDate;
 	}
-
-	/**
-	 * @param holdingsDateStandardDate the holdingsDateStandardDate to set
-	 */
 	public void setHoldingsDateStandardDate(String holdingsDateStandardDate) {
 		this.holdingsDateStandardDate = holdingsDateStandardDate;
 	}
-
-	/**
-	 * @return the holdingsDateLang
-	 */
 	public String getHoldingsDateLang() {
 		return this.holdingsDateLang;
 	}
-
-	/**
-	 * @param holdingsDateLang the holdingsDateLang to set
-	 */
 	public void setHoldingsDateLang(String holdingsDateLang) {
 		this.holdingsDateLang = holdingsDateLang;
 	}
-
-	/**
-	 * @return the holdingsDateRangeLocalType
-	 */
 	public String getHoldingsDateRangeLocalType() {
 		return this.holdingsDateRangeLocalType;
 	}
-
-	/**
-	 * @param holdingsDateRangeLocalType the holdingsDateRangeLocalType to set
-	 */
 	public void setHoldingsDateRangeLocalType(
 			String holdingsDateRangeLocalType) {
 		this.holdingsDateRangeLocalType = holdingsDateRangeLocalType;
 	}
-
-	/**
-	 * @return the holdingsDateRangeFromDate
-	 */
 	public String getHoldingsDateRangeFromDate() {
 		return this.holdingsDateRangeFromDate;
 	}
-
-	/**
-	 * @param holdingsDateRangeFromDate the holdingsDateRangeFromDate to set
-	 */
 	public void setHoldingsDateRangeFromDate(String holdingsDateRangeFromDate) {
 		this.holdingsDateRangeFromDate = holdingsDateRangeFromDate;
 	}
-
-	/**
-	 * @return the holdingsDateRangeFromDateNoAfter
-	 */
 	public String getHoldingsDateRangeFromDateNoAfter() {
 		return this.holdingsDateRangeFromDateNoAfter;
 	}
-
-	/**
-	 * @param holdingsDateRangeFromDateNoAfter the holdingsDateRangeFromDateNoAfter to set
-	 */
 	public void setHoldingsDateRangeFromDateNoAfter(
 			String holdingsDateRangeFromDateNoAfter) {
 		this.holdingsDateRangeFromDateNoAfter = holdingsDateRangeFromDateNoAfter;
 	}
-
-	/**
-	 * @return the holdingsDateRangeFromDateNoBefore
-	 */
 	public String getHoldingsDateRangeFromDateNoBefore() {
 		return this.holdingsDateRangeFromDateNoBefore;
 	}
-
-	/**
-	 * @param holdingsDateRangeFromDateNoBefore the holdingsDateRangeFromDateNoBefore to set
-	 */
 	public void setHoldingsDateRangeFromDateNoBefore(
 			String holdingsDateRangeFromDateNoBefore) {
 		this.holdingsDateRangeFromDateNoBefore = holdingsDateRangeFromDateNoBefore;
 	}
-
-	/**
-	 * @return the holdingsDateRangeFromDateStandardDate
-	 */
 	public String getHoldingsDateRangeFromDateStandardDate() {
 		return this.holdingsDateRangeFromDateStandardDate;
 	}
-
-	/**
-	 * @param holdingsDateRangeFromDateStandardDate the holdingsDateRangeFromDateStandardDate to set
-	 */
 	public void setHoldingsDateRangeFromDateStandardDate(
 			String holdingsDateRangeFromDateStandardDate) {
 		this.holdingsDateRangeFromDateStandardDate = holdingsDateRangeFromDateStandardDate;
 	}
-
-	/**
-	 * @return the holdingsDateRangeFromDateLang
-	 */
 	public String getHoldingsDateRangeFromDateLang() {
 		return this.holdingsDateRangeFromDateLang;
 	}
-
-	/**
-	 * @param holdingsDateRangeFromDateLang the holdingsDateRangeFromDateLang to set
-	 */
 	public void setHoldingsDateRangeFromDateLang(
 			String holdingsDateRangeFromDateLang) {
 		this.holdingsDateRangeFromDateLang = holdingsDateRangeFromDateLang;
 	}
-
-	/**
-	 * @return the holdingsDateRangeToDate
-	 */
 	public String getHoldingsDateRangeToDate() {
 		return this.holdingsDateRangeToDate;
 	}
-
-	/**
-	 * @param holdingsDateRangeToDate the holdingsDateRangeToDate to set
-	 */
 	public void setHoldingsDateRangeToDate(String holdingsDateRangeToDate) {
 		this.holdingsDateRangeToDate = holdingsDateRangeToDate;
 	}
-
-	/**
-	 * @return the holdingsDateRangeToDateNoAfter
-	 */
 	public String getHoldingsDateRangeToDateNoAfter() {
 		return this.holdingsDateRangeToDateNoAfter;
 	}
-
-	/**
-	 * @param holdingsDateRangeToDateNoAfter the holdingsDateRangeToDateNoAfter to set
-	 */
 	public void setHoldingsDateRangeToDateNoAfter(
 			String holdingsDateRangeToDateNoAfter) {
 		this.holdingsDateRangeToDateNoAfter = holdingsDateRangeToDateNoAfter;
 	}
-
-	/**
-	 * @return the holdingsDateRangeToDateNoBefore
-	 */
 	public String getHoldingsDateRangeToDateNoBefore() {
 		return this.holdingsDateRangeToDateNoBefore;
 	}
-
-	/**
-	 * @param holdingsDateRangeToDateNoBefore the holdingsDateRangeToDateNoBefore to set
-	 */
 	public void setHoldingsDateRangeToDateNoBefore(
 			String holdingsDateRangeToDateNoBefore) {
 		this.holdingsDateRangeToDateNoBefore = holdingsDateRangeToDateNoBefore;
 	}
-
-	/**
-	 * @return the holdingsDateRangeToDateStandardDate
-	 */
 	public String getHoldingsDateRangeToDateStandardDate() {
 		return this.holdingsDateRangeToDateStandardDate;
 	}
-
-	/**
-	 * @param holdingsDateRangeToDateStandardDate the holdingsDateRangeToDateStandardDate to set
-	 */
 	public void setHoldingsDateRangeToDateStandardDate(
 			String holdingsDateRangeToDateStandardDate) {
 		this.holdingsDateRangeToDateStandardDate = holdingsDateRangeToDateStandardDate;
 	}
-
-	/**
-	 * @return the holdingsDateRangeToDateLang
-	 */
 	public String getHoldingsDateRangeToDateLang() {
 		return this.holdingsDateRangeToDateLang;
 	}
-
-	/**
-	 * @param holdingsDateRangeToDateLang the holdingsDateRangeToDateLang to set
-	 */
 	public void setHoldingsDateRangeToDateLang(
 			String holdingsDateRangeToDateLang) {
 		this.holdingsDateRangeToDateLang = holdingsDateRangeToDateLang;
 	}
-
-	/**
-	 * @return the extent
-	 */
 	public String getExtent() {
 		return this.extent;
 	}
-
-	/**
-	 * @param extent the extent to set
-	 */
 	public void setExtent(String extent) {
 		this.extent = extent;
 	}
-
-	/**
-	 * @return the extentUnit
-	 */
 	public String getExtentUnit() {
 		return this.extentUnit;
 	}
-
-	/**
-	 * @param extentUnit the extentUnit to set
-	 */
 	public void setExtentUnit(String extentUnit) {
 		this.extentUnit = extentUnit;
 	}
-
-	/**
-	 * @return the agentLang
-	 */
 	public String getAgentLang() {
 		return this.agentLang;
 	}
-
-	/**
-	 * @param agentLang the agentLang to set
-	 */
 	public void setAgentLang(String agentLang) {
 		this.agentLang = agentLang;
 	}
-
-	/**
-	 * @return the agencyCode
-	 */
 	public String getAgencyCode() {
 		return this.agencyCode;
 	}
-
-	/**
-	 * @param agencyCode the agencyCode to set
-	 */
 	public void setAgencyCode(String agencyCode) {
 		this.agencyCode = agencyCode;
 	}
-
-	/**
-	 * @return the language
-	 */
 	public String getLanguage() {
 		return this.language;
 	}
-
-	/**
-	 * @param language the language to set
-	 */
 	public void setLanguage(String language) {
 		this.language = language;
 	}
-
-	/**
-	 * @return the script
-	 */
 	public String getScript() {
 		return this.script;
 	}
-
-	/**
-	 * @param script the script to set
-	 */
 	public void setScript(String script) {
 		this.script = script;
 	}
-
-	/**
-	 * @return the abbreviation
-	 */
 	public String getAbbreviation() {
 		return this.abbreviation;
 	}
-
-	/**
-	 * @param abbreviation the abbreviation to set
-	 */
 	public void setAbbreviation(String abbreviation) {
 		this.abbreviation = abbreviation;
 	}
-
-	/**
-	 * @return the citation
-	 */
 	public String getCitation() {
 		return this.citation;
 	}
-
-	/**
-	 * @param citation the citation to set
-	 */
 	public void setCitation(String citation) {
 		this.citation = citation;
 	}
-
-	/**
-	 * @return the eagRelationType
-	 */
 	public String getEagRelationType() {
 		return this.eagRelationType;
 	}
-
-	/**
-	 * @param eagRelationType the eagRelationType to set
-	 */
 	public void setEagRelationType(String eagRelationType) {
 		this.eagRelationType = eagRelationType;
 	}
-
-	/**
-	 * @return the eagRelationHref
-	 */
 	public String getEagRelationHref() {
 		return this.eagRelationHref;
 	}
-
-	/**
-	 * @param eagRelationHref the eagRelationHref to set
-	 */
 	public void setEagRelationHref(String eagRelationHref) {
 		this.eagRelationHref = eagRelationHref;
 	}
-
-	/**
-	 * @return the eagRelationLang
-	 */
 	public String getEagRelationLang() {
 		return this.eagRelationLang;
 	}
-
-	/**
-	 * @param eagRelationLang the eagRelationLang to set
-	 */
 	public void setEagRelationLang(String eagRelationLang) {
 		this.eagRelationLang = eagRelationLang;
 	}
-
-	/**
-	 * @return the eagRelationrelationEntry
-	 */
 	public String getEagRelationrelationEntry() {
 		return this.eagRelationrelationEntry;
 	}
-
-	/**
-	 * @param eagRelationrelationEntry the eagRelationrelationEntry to set
-	 */
 	public void setEagRelationrelationEntry(String eagRelationrelationEntry) {
 		this.eagRelationrelationEntry = eagRelationrelationEntry;
 	}
-
-	/**
-	 * @return the eagRelationrelationEntryLocalType
-	 */
 	public String getEagRelationrelationEntryLocalType() {
 		return this.eagRelationrelationEntryLocalType;
 	}
-
-	/**
-	 * @param eagRelationrelationEntryLocalType the eagRelationrelationEntryLocalType to set
-	 */
 	public void setEagRelationrelationEntryLocalType(
 			String eagRelationrelationEntryLocalType) {
 		this.eagRelationrelationEntryLocalType = eagRelationrelationEntryLocalType;
 	}
-
-	/**
-	 * @return the eagRelationrelationEntryScriptCode
-	 */
 	public String getEagRelationrelationEntryScriptCode() {
 		return this.eagRelationrelationEntryScriptCode;
 	}
-
-	/**
-	 * @param eagRelationrelationEntryScriptCode the eagRelationrelationEntryScriptCode to set
-	 */
 	public void setEagRelationrelationEntryScriptCode(
 			String eagRelationrelationEntryScriptCode) {
 		this.eagRelationrelationEntryScriptCode = eagRelationrelationEntryScriptCode;
 	}
-
-	/**
-	 * @return the eagRelationrelationEntryTransliteration
-	 */
 	public String getEagRelationrelationEntryTransliteration() {
 		return this.eagRelationrelationEntryTransliteration;
 	}
-
-	/**
-	 * @param eagRelationrelationEntryTransliteration the eagRelationrelationEntryTransliteration to set
-	 */
 	public void setEagRelationrelationEntryTransliteration(
 			String eagRelationrelationEntryTransliteration) {
 		this.eagRelationrelationEntryTransliteration = eagRelationrelationEntryTransliteration;
 	}
-
-	/**
-	 * @return the eagRelationrelationEntryLang
-	 */
 	public String getEagRelationrelationEntryLang() {
 		return this.eagRelationrelationEntryLang;
 	}
-
-	/**
-	 * @param eagRelationrelationEntryLang the eagRelationrelationEntryLang to set
-	 */
 	public void setEagRelationrelationEntryLang(
 			String eagRelationrelationEntryLang) {
 		this.eagRelationrelationEntryLang = eagRelationrelationEntryLang;
 	}
-
-	/**
-	 * @return the eagRelationrelationEntryDescription
-	 */
 	public String getEagRelationrelationEntryDescription() {
 		return this.eagRelationrelationEntryDescription;
 	}
 
-	/**
-	 * @param eagRelationrelationEntryDescription the eagRelationrelationEntryDescription to set
-	 */
 	public void setEagRelationrelationEntryDescription(
 			String eagRelationrelationEntryDescription) {
 		this.eagRelationrelationEntryDescription = eagRelationrelationEntryDescription;
 	}
-
-	/**
-	 * @return the eagRelationrelationEntryDescriptionLang
-	 */
 	public String getEagRelationrelationEntryDescriptionLang() {
 		return this.eagRelationrelationEntryDescriptionLang;
 	}
-
-	/**
-	 * @param eagRelationrelationEntryDescriptionLang the eagRelationrelationEntryDescriptionLang to set
-	 */
-	public void setEagRelationrelationEntryDescriptionLang(
-			String eagRelationrelationEntryDescriptionLang) {
+	public void setEagRelationrelationEntryDescriptionLang(String eagRelationrelationEntryDescriptionLang) {
 		this.eagRelationrelationEntryDescriptionLang = eagRelationrelationEntryDescriptionLang;
+	}
+	/** Access and services **/
+	public String getSearchRoomTelephone() {
+		return searchRoomTelephone;
+	}
+	public void setSearchRoomTelephone(String searchRoomTelephone) {
+		this.searchRoomTelephone = searchRoomTelephone;
+	}
+	public String getSearchRoomEmail() {
+		return searchRoomEmail;
+	}
+	public void setSearchRoomEmail(String searchRoomEmail) {
+		this.searchRoomEmail = searchRoomEmail;
+	}
+	public String getSearchRoomEmailLink() {
+		return searchRoomEmailLink;
+	}
+	public void setSearchRoomEmailLink(String searchRoomEmailLink) {
+		this.searchRoomEmailLink = searchRoomEmailLink;
+	}
+	public String getSearchRoomWebpage() {
+		return searchRoomWebpage;
+	}
+	public void setSearchRoomWebpage(String searchRoomWebpage) {
+		this.searchRoomWebpage = searchRoomWebpage;
+	}
+	public String getSearchRoomWebpageLink() {
+		return searchRoomWebpageLink;
+	}
+	public void setSearchRoomWebpageLink(String searchRoomWebpageLink) {
+		this.searchRoomWebpageLink = searchRoomWebpageLink;
+	}
+	public String getSearchRoomWorkPlaces() {
+		return searchRoomWorkPlaces;
+	}
+	public void setSearchRoomWorkPlaces(String searchRoomWorkPlaces) {
+		this.searchRoomWorkPlaces = searchRoomWorkPlaces;
+	}
+	public String getSearchRoomComputerPlaces() {
+		return searchRoomComputerPlaces;
+	}
+	public void setSearchRoomComputerPlaces(String searchRoomComputerPlaces) {
+		this.searchRoomComputerPlaces = searchRoomComputerPlaces;
+	}
+	public String getSearchRoomMicrofilmReaders() {
+		return searchRoomMicrofilmReaders;
+	}
+	public void setSearchRoomMicrofilmReaders(String searchRoomMicrofilmReaders) {
+		this.searchRoomMicrofilmReaders = searchRoomMicrofilmReaders;
+	}
+	public String getSearchRoomPhotographAllowance() {
+		return searchRoomPhotographAllowance;
+	}
+	public void setSearchRoomPhotographAllowance(String searchRoomPhotographAllowance) {
+		this.searchRoomPhotographAllowance = searchRoomPhotographAllowance;
+	}
+	public String getSearchRoomPhotographAllowanceContent() {
+		return searchRoomPhotographAllowanceContent;
+	}
+	public void setSearchRoomPhotographAllowanceContent(String searchRoomPhotographAllowanceContent) {
+		this.searchRoomPhotographAllowanceContent = searchRoomPhotographAllowanceContent;
+	}
+	public String getSearchRoomPhotographAllowanceHref() {
+		return searchRoomPhotographAllowanceHref;
+	}
+	public void setSearchRoomPhotographAllowanceHref(String searchRoomPhotographAllowanceHref) {
+		this.searchRoomPhotographAllowanceHref = searchRoomPhotographAllowanceHref;
+	}
+	public String getSearchRoomPhotographAllowanceLang() {
+		return searchRoomPhotographAllowanceLang;
+	}
+	public void setSearchRoomPhotographAllowanceLang(String searchRoomPhotographAllowanceLang) {
+		this.searchRoomPhotographAllowanceLang = searchRoomPhotographAllowanceLang;
+	}
+	public String getSearchRoomAdvancedOrdersContent() {
+		return searchRoomAdvancedOrdersContent;
+	}
+	public void setSearchRoomAdvancedOrdersContent(String searchRoomAdvancedOrdersContent) {
+		this.searchRoomAdvancedOrdersContent = searchRoomAdvancedOrdersContent;
+	}
+	public String getSearchRoomAdvancedOrdersLang() {
+		return searchRoomAdvancedOrdersLang;
+	}
+	public void setSearchRoomAdvancedOrdersLang(String searchRoomAdvancedOrdersLang) {
+		this.searchRoomAdvancedOrdersLang = searchRoomAdvancedOrdersLang;
+	}
+	public String getSearchRoomAdvancedOrdersHref() {
+		return searchRoomAdvancedOrdersHref;
+	}
+	public void setSearchRoomAdvancedOrdersHref(String searchRoomAdvancedOrdersHref) {
+		this.searchRoomAdvancedOrdersHref = searchRoomAdvancedOrdersHref;
+	}
+	public String getSearchRoomResearchServicesContent() {
+		return searchRoomResearchServicesContent;
+	}
+	public void setSearchRoomResearchServicesContent(String searchRoomResearchServicesContent) {
+		this.searchRoomResearchServicesContent = searchRoomResearchServicesContent;
+	}
+	public String getSearchRoomResearchServicesLang() {
+		return searchRoomResearchServicesLang;
+	}
+	public void setSearchRoomResearchServicesLang(String searchRoomResearchServicesLang) {
+		this.searchRoomResearchServicesLang = searchRoomResearchServicesLang;
+	}
+	public String getLibraryQuestion(){
+		return this.libraryQuestion;
+	}
+	public void setLibraryQuestion(String libraryQuestion){
+		this.libraryQuestion = libraryQuestion;
+	}
+	public String getLibraryTelephone() {
+		return libraryTelephone;
+	}
+	public void setLibraryTelephone(String libraryTelephone) {
+		this.libraryTelephone = libraryTelephone;
+	}
+	public String getLibraryEmailContent() {
+		return libraryEmailContent;
+	}
+	public void setLibraryEmailContent(String libraryEmailContent) {
+		this.libraryEmailContent = libraryEmailContent;
+	}
+	public String getLibraryEmailHref() {
+		return libraryEmailHref;
+	}
+	public void setLibraryEmailHref(String libraryEmailHref) {
+		this.libraryEmailHref = libraryEmailHref;
+	}
+	public String getLibraryWebpageContent() {
+		return libraryWebpageContent;
+	}
+	public void setLibraryWebpageContent(String libraryWebpageContent) {
+		this.libraryWebpageContent = libraryWebpageContent;
+	}
+	public String getLibraryWebpageHref() {
+		return libraryWebpageHref;
+	}
+	public void setLibraryWebpageHref(String libraryWebpageHref) {
+		this.libraryWebpageHref = libraryWebpageHref;
+	}
+	public String getLibraryMonographPublication() {
+		return libraryMonographPublication;
+	}
+	public void setLibraryMonographPublication(String libraryMonographPublication) {
+		this.libraryMonographPublication = libraryMonographPublication;
+	}
+	public String getLibrarySerialPublication() {
+		return librarySerialPublication;
+	}
+	public void setLibrarySerialPublication(String librarySerialPublication) {
+		this.librarySerialPublication = librarySerialPublication;
+	}
+	public String getLibraryInternetAccessQuestion() {
+		return libraryInternetAccessQuestion;
+	}
+	public void setLibraryInternetAccessQuestion(String libraryInternetAccessQuestion) {
+		this.libraryInternetAccessQuestion = libraryInternetAccessQuestion;
+	}
+	public String getLibraryDescription() {
+		return libraryDescription;
+	}
+	public void setLibraryDescription(String libraryDescription) {
+		this.libraryDescription = libraryDescription;
+	}
+	public String getLibraryDescriptionLang() {
+		return libraryDescriptionLang;
+	}
+	public void setLibraryDescriptionLang(String libraryDescriptionLang) {
+		this.libraryDescriptionLang = libraryDescriptionLang;
+	}
+	public String getTechnicalServicesQuestion() {
+		return technicalServicesQuestion;
+	}
+	public void setTechnicalServicesQuestion(String technicalServicesQuestion) {
+		this.technicalServicesQuestion = technicalServicesQuestion;
+	}
+	public String getTechnicalServicesDescription() {
+		return technicalServicesDescription;
+	}
+	public void setTechnicalServicesDescription(String technicalServicesDescription) {
+		this.technicalServicesDescription = technicalServicesDescription;
+	}
+	public String getTechnicalServicesDescriptionLang() {
+		return technicalServicesDescriptionLang;
+	}
+	public void setTechnicalServicesDescriptionLang(String technicalServicesDescriptionLang) {
+		this.technicalServicesDescriptionLang = technicalServicesDescriptionLang;
+	}
+	public String getTechnicalServicesTelephone() {
+		return technicalServicesTelephone;
+	}
+	public void setTechnicalServicesTelephone(String technicalServicesTelephone) {
+		this.technicalServicesTelephone = technicalServicesTelephone;
+	}
+	public String getTechnicalServicesEmail() {
+		return technicalServicesEmail;
+	}
+	public void setTechnicalServicesEmail(String technicalServicesEmail) {
+		this.technicalServicesEmail = technicalServicesEmail;
+	}
+	public String getTechnicalServicesEmailLink() {
+		return technicalServicesEmailLink;
+	}
+	public void setTechnicalServicesEmailLink(String technicalServicesEmailLink) {
+		this.technicalServicesEmailLink = technicalServicesEmailLink;
+	}
+	public String getTechnicalServicesEmailLang() {
+		return technicalServicesEmailLang;
+	}
+	public void setTechnicalServicesEmailLang(String technicalServicesEmailLang) {
+		this.technicalServicesEmailLang = technicalServicesEmailLang;
+	}
+	public String getTechnicalServicesWebpageLink() {
+		return technicalServicesWebpageLink;
+	}
+	public void setTechnicalServicesWebpageLink(String technicalServicesWebpageLink) {
+		this.technicalServicesWebpageLink = technicalServicesWebpageLink;
+	}
+	public String getTechnicalServicesWebpage() {
+		return technicalServicesWebpage;
+	}
+	public void setTechnicalServicesWebpage(String technicalServicesWebpage) {
+		this.technicalServicesWebpage = technicalServicesWebpage;
+	}
+	public String getTechnicalServicesWebpageLang() {
+		return technicalServicesWebpageLang;
+	}
+	public void setTechnicalServicesWebpageLang(String technicalServicesWebpageLang) {
+		this.technicalServicesWebpageLang = technicalServicesWebpageLang;
+	}
+	public String getReproductionserQuestion() {
+		return reproductionserQuestion;
+	}
+	public void setReproductionserQuestion(String reproductionserQuestion) {
+		this.reproductionserQuestion = reproductionserQuestion;
+	}
+	public String getReproductionserDescription() {
+		return reproductionserDescription;
+	}
+	public void setReproductionserDescription(String reproductionserDescription) {
+		this.reproductionserDescription = reproductionserDescription;
+	}
+	public String getReproductionserDescriptionLang() {
+		return reproductionserDescriptionLang;
+	}
+	public void setReproductionserDescriptionLang(String reproductionserDescriptionLang) {
+		this.reproductionserDescriptionLang = reproductionserDescriptionLang;
+	}
+	public String getReproductionserTelephone() {
+		return reproductionserTelephone;
+	}
+	public void setReproductionserTelephone(String reproductionserTelephone) {
+		this.reproductionserTelephone = reproductionserTelephone;
+	}
+	public String getReproductionserEmail() {
+		return reproductionserEmail;
+	}
+	public void setReproductionserEmail(String reproductionserEmail) {
+		this.reproductionserEmail = reproductionserEmail;
+	}
+	public String getReproductionserEmailLink() {
+		return reproductionserEmailLink;
+	}
+	public void setReproductionserEmailLink(String reproductionserEmailLink) {
+		this.reproductionserEmailLink = reproductionserEmailLink;
+	}
+	public String getReproductionserEmailLang() {
+		return reproductionserEmailLang;
+	}
+	public void setReproductionserEmailLang(String reproductionserEmailLang) {
+		this.reproductionserEmailLang = reproductionserEmailLang;
+	}
+	public String getReproductionserWebpage() {
+		return reproductionserWebpage;
+	}
+	public void setReproductionserWebpage(String reproductionserWebpage) {
+		this.reproductionserWebpage = reproductionserWebpage;
+	}
+	public String getReproductionserWebpageLink() {
+		return reproductionserWebpageLink;
+	}
+	public void setReproductionserWebpageLink(String reproductionserWebpageLink) {
+		this.reproductionserWebpageLink = reproductionserWebpageLink;
+	}
+	public String getReproductionserWebpageLang() {
+		return reproductionserWebpageLang;
+	}
+	public void setReproductionserWebpageLang(String reproductionserWebpageLang) {
+		this.reproductionserWebpageLang = reproductionserWebpageLang;
+	}
+	public String getMicrofilmServices() {
+		return microfilmServices;
+	}
+	public void setMicrofilmServices(String microfilmServices) {
+		this.microfilmServices = microfilmServices;
+	}
+	public String getPhotographicServices() {
+		return photographicServices;
+	}
+	public void setPhotographicServices(String photographicServices) {
+		this.photographicServices = photographicServices;
+	}
+	public String getDigitisationServices() {
+		return digitisationServices;
+	}
+	public void setDigitisationServices(String digitisationServices) {
+		this.digitisationServices = digitisationServices;
+	}
+	public String getPhotocopyingServices() {
+		return photocopyingServices;
+	}
+	public void setPhotocopyingServices(String photocopyingServices) {
+		this.photocopyingServices = photocopyingServices;
+	}
+	public String getRecreationalServicesRefreshmentArea() {
+		return recreationalServicesRefreshmentArea;
+	}
+	public void setRecreationalServicesRefreshmentArea(String recreationalServicesRefreshmentArea) {
+		this.recreationalServicesRefreshmentArea = recreationalServicesRefreshmentArea;
+	}
+	public String getRecreationalServicesRefreshmentAreaLang() {
+		return recreationalServicesRefreshmentAreaLang;
+	}
+	public void setRecreationalServicesRefreshmentAreaLang(String recreationalServicesRefreshmentAreaLang) {
+		this.recreationalServicesRefreshmentAreaLang = recreationalServicesRefreshmentAreaLang;
+	}
+	public String getRecreationalServicesExhibition() {
+		return recreationalServicesExhibition;
+	}
+	public void setRecreationalServicesExhibition(String recreationalServicesExhibition) {
+		this.recreationalServicesExhibition = recreationalServicesExhibition;
+	}
+	public String getRecreationalServicesExhibitionLang() {
+		return recreationalServicesExhibitionLang;
+	}
+	public void setRecreationalServicesExhibitionLang(String recreationalServicesExhibitionLang) {
+		this.recreationalServicesExhibitionLang = recreationalServicesExhibitionLang;
+	}
+	public String getRecreationalServicesWeb() {
+		return recreationalServicesWeb;
+	}
+	public void setRecreationalServicesWeb(String recreationalServicesWeb) {
+		this.recreationalServicesWeb = recreationalServicesWeb;
+	}
+	public String getRecreationalServicesWebLink() {
+		return recreationalServicesWebLink;
+	}
+	public void setRecreationalServicesWebLink(String recreationalServicesWebLink) {
+		this.recreationalServicesWebLink = recreationalServicesWebLink;
+	}
+	public String getToursSessionGuidesAndSessionsContent() {
+		return toursSessionGuidesAndSessionsContent;
+	}
+	public void setToursSessionGuidesAndSessionsContent(String toursSessionGuidesAndSessionsContent) {
+		this.toursSessionGuidesAndSessionsContent = toursSessionGuidesAndSessionsContent;
+	}
+	public String getToursSessionGuidesAndSessionsLang() {
+		return toursSessionGuidesAndSessionsLang;
+	}
+	public void setToursSessionGuidesAndSessionsLang(String toursSessionGuidesAndSessionsLang) {
+		this.toursSessionGuidesAndSessionsLang = toursSessionGuidesAndSessionsLang;
+	}
+	public String getToursSessionGuidesAndSessionsWebpage() {
+		return toursSessionGuidesAndSessionsWebpage;
+	}
+	public void setToursSessionGuidesAndSessionsWebpage(String toursSessionGuidesAndSessionsWebpage) {
+		this.toursSessionGuidesAndSessionsWebpage = toursSessionGuidesAndSessionsWebpage;
+	}
+	public String getToursSessionGuidesAndSessionsWebpageTitle() {
+		return toursSessionGuidesAndSessionsWebpageTitle;
+	}
+	public void setToursSessionGuidesAndSessionsWebpageTitle(String toursSessionGuidesAndSessionsWebpageTitle) {
+		this.toursSessionGuidesAndSessionsWebpageTitle = toursSessionGuidesAndSessionsWebpageTitle;
+	}
+	public String getOtherServices() {
+		return otherServices;
+	}
+	public void setOtherServices(String otherServices) {
+		this.otherServices = otherServices;
+	}
+	public String getOtherServicesLang() {
+		return otherServicesLang;
+	}
+	public void setOtherServicesLang(String otherServicesLang) {
+		this.otherServicesLang = otherServicesLang;
+	}
+	public String getOtherServicesWebpage() {
+		return otherServicesWebpage;
+	}
+	public void setOtherServicesWebpage(String otherServicesWebpage) {
+		this.otherServicesWebpage = otherServicesWebpage;
+	}
+	public String getOtherServicesLink() {
+		return otherServicesLink;
+	}
+	public void setOtherServicesLink(String otherServicesLink) {
+		this.otherServicesLink = otherServicesLink;
 	}
 	
 	public String editWebFormEAG2012() throws Exception {
@@ -2415,6 +1894,197 @@ public class EAG2012Loader{
 						}
 					}
 				}
+				
+				// Searchroom
+				if(repository.getServices().getSearchroom()!=null){
+					Searchroom searchRoom = repository.getServices().getSearchroom();
+					for (int i = 0; i < searchRoom.getContact().getTelephone().size(); i++) {
+						this.setSearchRoomTelephone(searchRoom.getContact().getTelephone().get(i).getContent());
+					}
+					for (int i = 0; i < searchRoom.getContact().getEmail().size(); i++) {
+						this.setSearchRoomEmail(searchRoom.getContact().getEmail().get(i).getHref());
+						this.setSearchRoomEmailLink(searchRoom.getContact().getEmail().get(i).getContent());
+					}
+					for (int i = 0; i < searchRoom.getWebpage().size(); i++) {
+						this.setSearchRoomWebpage(searchRoom.getWebpage().get(i).getHref());
+						this.setSearchRoomWebpageLink(searchRoom.getWebpage().get(i).getContent());
+					}
+					this.setSearchRoomWorkPlaces(searchRoom.getWorkPlaces().getNum().getContent());
+					if(searchRoom.getComputerPlaces()!=null && searchRoom.getComputerPlaces().getDescriptiveNote()!=null){
+						for (int i = 0; i < searchRoom.getComputerPlaces().getDescriptiveNote().getP().size(); i++) {
+							this.setSearchRoomComputerPlaces(searchRoom.getComputerPlaces().getDescriptiveNote().getP().get(i).getContent());
+						}
+					}
+					this.setSearchRoomMicrofilmReaders(searchRoom.getMicrofilmPlaces().getNum().getContent());
+					this.setSearchRoomPhotographAllowance(searchRoom.getPhotographAllowance().getValue());
+					for (int i = 0; i < searchRoom.getReadersTicket().size(); i++) {
+						this.setSearchRoomPhotographAllowanceContent(searchRoom.getReadersTicket().get(i).getContent());
+						this.setSearchRoomPhotographAllowanceHref(searchRoom.getReadersTicket().get(i).getHref());
+						this.setSearchRoomPhotographAllowanceLang(searchRoom.getReadersTicket().get(i).getLang());
+					}
+					for (int i = 0; i < searchRoom.getAdvancedOrders().size(); i++) {
+						this.setSearchRoomAdvancedOrdersContent(searchRoom.getAdvancedOrders().get(i).getContent());
+						this.setSearchRoomAdvancedOrdersLang(searchRoom.getAdvancedOrders().get(i).getLang());
+						this.setSearchRoomAdvancedOrdersHref(searchRoom.getAdvancedOrders().get(i).getHref());
+					}
+					for (int i = 0; i < searchRoom.getResearchServices().size(); i++) {
+						if(searchRoom.getResearchServices().get(i).getDescriptiveNote()!=null){
+							for(int j = 0; j < searchRoom.getResearchServices().get(i).getDescriptiveNote().getP().size(); j++) {
+								this.setSearchRoomResearchServicesContent(searchRoom.getResearchServices().get(i).getDescriptiveNote().getP().get(j).getContent());
+								this.setSearchRoomResearchServicesLang(searchRoom.getResearchServices().get(i).getDescriptiveNote().getP().get(j).getLang());
+							}
+						}
+					}
+				}
+				
+				// Library
+				Library library = repository.getServices().getLibrary();
+				this.setLibraryQuestion(library.getQuestion());
+				if(library.getContact() != null){
+					if(library.getContact().getTelephone()!=null){
+						for (int i = 0; i < library.getContact().getTelephone().size(); i++) {
+							this.setLibraryTelephone(library.getContact().getTelephone().get(i).getContent());
+						}
+					}
+					if(library.getContact().getEmail()!=null){
+						for (int i = 0; i < library.getContact().getEmail().size(); i++) {
+							this.setLibraryEmailContent(library.getContact().getEmail().get(i).getContent());
+							this.setLibraryEmailHref(library.getContact().getEmail().get(i).getHref());
+						}
+					}
+					if(library.getWebpage()!=null){
+						for (int i = 0; i < library.getWebpage().size(); i++) {
+							this.setLibraryWebpageContent(library.getWebpage().get(i).getContent());
+							this.setLibraryWebpageHref(library.getWebpage().get(i).getHref());
+						}
+					}
+				}
+				if(library.getMonographicpub()!=null){
+					this.setLibraryMonographPublication(library.getMonographicpub().getNum().getContent());
+				}
+				if(library.getSerialpub()!=null){
+					this.setLibrarySerialPublication(library.getSerialpub().getNum().getContent());
+				}
+				List<P> ps = null;
+				if(repository.getServices().getInternetAccess()!=null){
+					this.setLibraryInternetAccessQuestion(repository.getServices().getInternetAccess().getQuestion());
+					if(repository.getServices().getInternetAccess().getDescriptiveNote()!=null){
+						ps = repository.getServices().getInternetAccess().getDescriptiveNote().getP();
+						for (int i = 0; i < ps.size(); i++) {
+							this.setLibraryDescription(ps.get(i).getContent());
+							this.setLibraryDescriptionLang(ps.get(i).getLang());
+						}
+					}
+				}
+				
+				// Technical Services
+				this.setTechnicalServicesQuestion(repository.getServices().getTechservices().getRestorationlab().getQuestion());
+				if(repository.getServices().getTechservices().getRestorationlab().getDescriptiveNote()!=null){
+					ps = repository.getServices().getTechservices().getRestorationlab().getDescriptiveNote().getP();
+					for (int i = 0; i < ps.size(); i++) {
+						this.setTechnicalServicesDescription(ps.get(i).getContent());
+						this.setTechnicalServicesDescriptionLang(ps.get(i).getLang());
+					}
+				}
+				List<Telephone> telephones = null;
+				List<Email> emails = null;
+				List<Webpage> webpages = null;
+				if(repository.getServices().getTechservices().getRestorationlab()!=null){
+					if(repository.getServices().getTechservices().getRestorationlab().getContact()!=null){
+						telephones = repository.getServices().getTechservices().getRestorationlab().getContact().getTelephone();
+						for (int i = 0; i < telephones.size(); i++) {
+							this.setTechnicalServicesTelephone(telephones.get(i).getContent());
+						}
+						emails = repository.getServices().getTechservices().getRestorationlab().getContact().getEmail();
+						for (int i = 0; i < emails.size(); i++) {
+							this.setTechnicalServicesEmail(emails.get(i).getHref());
+							this.setTechnicalServicesEmailLink(emails.get(i).getContent());
+							this.setTechnicalServicesEmailLang(emails.get(i).getLang());
+						}
+					}
+					if(repository.getServices().getTechservices().getRestorationlab().getWebpage()!=null){
+						webpages = repository.getServices().getTechservices().getRestorationlab().getWebpage();
+						for (int i = 0; i < webpages.size(); i++) {
+							this.setTechnicalServicesWebpageLink(webpages.get(i).getContent());
+							this.setTechnicalServicesWebpage(webpages.get(i).getHref());
+							this.setTechnicalServicesWebpageLang(webpages.get(i).getLang());
+						}
+					}
+				}
+				if(repository.getServices().getTechservices().getReproductionser()!=null){
+					this.setReproductionserQuestion(repository.getServices().getTechservices().getReproductionser().getQuestion());
+					if(repository.getServices().getTechservices().getReproductionser().getDescriptiveNote()!=null){
+						ps = repository.getServices().getTechservices().getReproductionser().getDescriptiveNote().getP();
+						for (int i = 0; i < ps.size(); i++) {
+							this.setReproductionserDescription(ps.get(i).getContent());
+							this.setReproductionserDescriptionLang(ps.get(i).getLang());
+						}
+					}
+					if(repository.getServices().getTechservices().getReproductionser().getContact()!=null){
+						telephones = repository.getServices().getTechservices().getReproductionser().getContact().getTelephone();
+						for (int i = 0; i < telephones.size(); i++) {
+							this.setReproductionserTelephone(telephones.get(i).getContent());
+						}
+						emails = repository.getServices().getTechservices().getReproductionser().getContact().getEmail();
+						for (int i = 0; i < emails.size(); i++) {
+							this.setReproductionserEmail(emails.get(i).getHref());
+							this.setReproductionserEmailLink(emails.get(i).getContent());
+							this.setReproductionserEmailLang(emails.get(i).getLang());
+						}
+						webpages = repository.getServices().getTechservices().getReproductionser().getWebpage();
+						for (int i = 0; i < webpages.size(); i++) {
+							this.setReproductionserWebpageLink(webpages.get(i).getContent());
+							this.setReproductionserWebpage(webpages.get(i).getHref());
+							this.setReproductionserWebpageLang(webpages.get(i).getLang());
+						}
+					}
+					
+					this.setMicrofilmServices(repository.getServices().getTechservices().getReproductionser().getMicroformser().getQuestion());
+					this.setPhotographicServices(repository.getServices().getTechservices().getReproductionser().getPhotographser().getQuestion());
+					this.setDigitisationServices(repository.getServices().getTechservices().getReproductionser().getDigitalser().getQuestion());
+					this.setPhotocopyingServices(repository.getServices().getTechservices().getReproductionser().getPhotocopyser().getQuestion());
+				}
+				
+				// Recreational services
+				RecreationalServices recreationalServices = repository.getServices().getRecreationalServices();
+				if(recreationalServices!=null){
+					if(recreationalServices.getRefreshment()!=null && recreationalServices.getRefreshment().getDescriptiveNote()!=null){
+						for (int i = 0; i < recreationalServices.getRefreshment().getDescriptiveNote().getP().size(); i++) {
+							this.setRecreationalServicesRefreshmentArea(recreationalServices.getRefreshment().getDescriptiveNote().getP().get(i).getContent());
+							this.setRecreationalServicesRefreshmentAreaLang(recreationalServices.getRefreshment().getDescriptiveNote().getP().get(i).getLang());
+						}
+					}
+					if(recreationalServices.getExhibition()!=null){
+						for (int i = 0; i < recreationalServices.getExhibition().size(); i++) {
+							for (int j = 0; j < recreationalServices.getExhibition().get(i).getDescriptiveNote().getP().size(); j++) {
+								this.setRecreationalServicesExhibition(recreationalServices.getExhibition().get(i).getDescriptiveNote().getP().get(j).getContent());
+								this.setRecreationalServicesExhibitionLang(recreationalServices.getExhibition().get(i).getDescriptiveNote().getP().get(j).getLang());
+							}
+							this.setRecreationalServicesWeb(recreationalServices.getExhibition().get(i).getWebpage().getHref());
+							this.setRecreationalServicesWebLink(recreationalServices.getExhibition().get(i).getWebpage().getContent());
+						}
+					}
+					if(recreationalServices.getToursSessions()!=null){
+						for (int i = 0; i < recreationalServices.getToursSessions().size(); i++) {
+							for (int j = 0; j < recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().size(); j++) {
+								this.setToursSessionGuidesAndSessionsContent(recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().get(j).getContent());
+								this.setToursSessionGuidesAndSessionsLang(recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().get(j).getLang());
+							}
+							this.setToursSessionGuidesAndSessionsWebpage(recreationalServices.getToursSessions().get(i).getWebpage().getHref());
+							this.setToursSessionGuidesAndSessionsWebpageTitle(recreationalServices.getToursSessions().get(i).getWebpage().getContent());
+						}
+					}
+					if(recreationalServices.getOtherServices()!=null){
+						for (int i = 0; i < recreationalServices.getOtherServices().size(); i++) {
+							for (int j = 0; j < recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().size(); j++) {
+								this.setOtherServices(recreationalServices.getOtherServices().get(i).getDescriptiveNote().getP().get(j).getContent());
+								this.setOtherServicesLang(recreationalServices.getOtherServices().get(i).getDescriptiveNote().getP().get(j).getLang());
+							}
+							this.setOtherServicesWebpage(recreationalServices.getOtherServices().get(i).getWebpage().getHref());
+							this.setOtherServicesLink(recreationalServices.getOtherServices().get(i).getWebpage().getContent());
+						}
+					}
+				}
 			}
 		}
 	}
@@ -2699,6 +2369,5 @@ public class EAG2012Loader{
 	
 	public String toString(){
 		return "Loader with record id: "+this.recordId;
-		
 	}
 }

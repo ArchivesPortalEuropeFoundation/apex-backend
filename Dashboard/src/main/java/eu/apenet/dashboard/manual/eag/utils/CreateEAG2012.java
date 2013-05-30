@@ -399,7 +399,7 @@ public class CreateEAG2012 {
 
 					// eag/relations/eagRelation/relationEntry
 					if (Eag2012.INSTITUTION_RELATIONS.equalsIgnoreCase(sectionValueKey)) {
-						for (int j = 0; j < valueList.size(); j++) {
+						for (int j = 0; j < valueList.size() && !valueList.get(j).isEmpty(); j++) {
 							EagRelation eagRelation = new EagRelation();
 
 							// eag/relations/eagRelation/eagRelationType

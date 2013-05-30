@@ -2846,7 +2846,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }else{
 							 advanceOrderLang = new ArrayList<String>();
 						 }
-						 advanceOrderLang.add(accessTable.getString(target2));
+						 advanceOrderLang.add(accessTable.getString(target3));
 						 if(advancedOrdersLang.size()>i){
 							 advancedOrdersLang.set(i,advanceOrderLang);
 						 }else{
@@ -2857,7 +2857,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				 }while(accessTable.has(target1) && accessTable.has(target2) && accessTable.has(target3));
 				 
 				 target1 = "textASSRResearchServices";
-				 target2 = "selectASASelectLanguage";
+				 target2 = "textASSRRSSelectLanguage";
 				 targetNumber=1;
 				 do{
 					 target1=(target1.indexOf("_")!=-1?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;

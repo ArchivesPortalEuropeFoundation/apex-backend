@@ -229,7 +229,7 @@
 				<label for="textASSRTelephone"><s:property value="getText('label.ai.tabs.commons.telephone')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRTelephone" />
+				<input type="text" id="textASSRTelephone" value="${loader.searchRoomTelephone}"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -240,13 +240,13 @@
 				<label for="textASSREmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSREmailAddress" />
+				<input type="text" id="textASSREmailAddress" value="${loader.searchRoomEmail}" />
 			</td>
 			<td class="labelLeft">
 				<label for="textASSREmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSREmailLinkTitle" />
+				<input type="text" id="textASSREmailLinkTitle" value="${loader.searchRoomEmailLink}" />
 			</td>
 		</tr>
 
@@ -255,13 +255,13 @@
 				<label for="textASSRWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRWebpage" />
+				<input type="text" id="textASSRWebpage" value="${loader.searchRoomWebpage}"/>
 			</td>
 			<td class="labelLeft">
 				<label for="textASSRWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRWebpageLinkTitle" />
+				<input type="text" id="textASSRWebpageLinkTitle" value="${loader.searchRoomWebpageLink}" />
 			</td>
 		</tr>
 
@@ -270,7 +270,7 @@
 				<label for="textASSRWorkPlaces"><s:property value="getText('label.ai.accessAndServices.workPlaces')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRWorkPlaces" />
+				<input type="text" id="textASSRWorkPlaces" value="${loader.searchRoomWorkPlaces}" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -281,7 +281,7 @@
 				<label for="textASSRComputerPlaces"><s:property value="getText('label.ai.accessAndServices.computerPlaces')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRComputerPlaces" />
+				<input type="text" id="textASSRComputerPlaces" value="${loader.searchRoomComputerPlaces}" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -300,7 +300,7 @@
 				<label for="textASSRMicrofilmPlaces"><s:property value="getText('label.ai.accessAndServices.microfilmPlaces')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRMicrofilmPlaces" />
+				<input type="text" id="textASSRMicrofilmPlaces" value="${loader.searchRoomMicrofilmReaders}" />
 			</td>
 			<td class="labelLeft">
 				<label for="selectASSRPhotographAllowance"><s:property value="getText('label.ai.accessAndServices.photographAllowance')"/>:</label>
@@ -308,7 +308,7 @@
 			<td>
 				<select id="selectASSRPhotographAllowance">
 					<s:iterator value="photographList" var="photograph"> 
-						<option value="<s:property value="#photograph.key" />"><s:property value="#photograph.value" /></option>
+						<option value="<s:property value="#photograph.key" />" <s:if test="%{#photograph.key == loader.searchRoomPhotographAllowance}"> selected=selected </s:if>><s:property value="#photograph.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -319,7 +319,7 @@
 				<label for="textASSRReadersTicket"><s:property value="getText('label.ai.accessAndServices.readersTicket')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRReadersTicket" />
+				<input type="text" id="textASSRReadersTicket" value="${loader.searchRoomPhotographAllowanceContent}" />
 			</td>
 			<td class="labelLeft">
 				<label for="selectReadersTickectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -327,7 +327,7 @@
 			<td>
 				<select id="selectReadersTickectLanguage">
 					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.accessibilityLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.searchRoomPhotographAllowanceLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -338,7 +338,7 @@
 				<label for="textASSRRTLink"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRRTLink" />
+				<input type="text" id="textASSRRTLink" value="${loader.searchRoomPhotographAllowanceContent}" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -357,7 +357,7 @@
 				<label for="textASSRAdvancedOrders"><s:property value="getText('label.ai.accessAndServices.advancedOrders')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRAdvancedOrders" />
+				<input type="text" id="textASSRAdvancedOrders" value="${loader.searchRoomAdvancedOrdersContent}" />
 			</td>
 			<td class="labelLeft">
 				<label for="selectASSRAFOIUSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -365,7 +365,7 @@
 			<td>
 				<select id="selectASSRAFOIUSelectLanguage">
 					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.searchRoomAdvancedOrdersLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -376,7 +376,7 @@
 				<label for="textASSRAOLink"><s:property value="getText('label.ai.accessAndServices.link')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRAOLink" />
+				<input type="text" id="textASSRAOLink" value="${loader.searchRoomAdvancedOrdersHref}" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -395,7 +395,7 @@
 				<label for="textASSRResearchServices"><s:property value="getText('label.ai.accessAndServices.researchServices')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRResearchServices" />
+				<input type="text" id="textASSRResearchServices" value="${loader.searchRoomResearchServicesContent}" />
 			</td>
 			<td class="labelLeft">
 				<label for="textASSRRSSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -403,7 +403,7 @@
 			<td>
 				<select id="textASSRRSSelectLanguage">
 					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.searchRoomResearchServicesLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -424,7 +424,7 @@
 			<td>
 				<select id="selectASLibrary">
 					<s:iterator value="yesNoList" var="yesno"> 
-						<option value="<s:property value="#yesno.key" />"><s:property value="#yesno.value" /></option>
+						<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.libraryQuestion}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -437,7 +437,7 @@
 				<label for="textASLTelephone"><s:property value="getText('label.ai.tabs.commons.telephone')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASLTelephone" />
+				<input type="text" id="textASLTelephone" value="${loader.libraryTelephone}" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -448,13 +448,13 @@
 				<label for="textASLEmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASLEmailAddress" />
+				<input type="text" id="textASLEmailAddress" value="${loader.libraryEmailHref}" />
 			</td>
 			<td class="labelLeft">
 				<label for="textASLEmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASLEmailLinkTitle" />
+				<input type="text" id="textASLEmailLinkTitle" value="${loader.libraryEmailContent}" />
 			</td>
 		</tr>
 
@@ -463,13 +463,13 @@
 				<label for="textASLWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASLWebpage" />
+				<input type="text" id="textASLWebpage" value="${loader.libraryWebpageHref }" />
 			</td>
 			<td class="labelLeft">
 				<label for="textASLWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASLWebpageLinkTitle" />
+				<input type="text" id="textASLWebpageLinkTitle" value="${loader.libraryWebpageContent }"/>
 			</td>
 		</tr>
 
@@ -478,13 +478,13 @@
 				<label for="textASLMonographocPublication"><s:property value="getText('label.ai.accessAndServices.monographicPublication')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASLMonographocPublication" />
+				<input type="text" id="textASLMonographocPublication" value="${loader.libraryMonographPublication }" />
 			</td>
 			<td class="labelLeft">
 				<label for="textASLSerialPublication"><s:property value="getText('label.ai.accessAndServices.serialPublication')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASLSerialPublication" />
+				<input type="text" id="textASLSerialPublication" value="${loader.librarySerialPublication }" />
 			</td>
 		</tr>
 
@@ -495,7 +495,7 @@
 			<td>
 				<select id="selectASInternetAccess">
 					<s:iterator value="yesNoList" var="yesno"> 
-						<option value="<s:property value="#yesno.key" />"><s:property value="#yesno.value" /></option>
+						<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.libraryInternetAccessQuestion}" > selected=selected </s:if> ><s:property value="#yesno.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -508,15 +508,15 @@
 				<label for="textASDescription"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASDescription" />
+				<input type="text" id="textASDescription" value="${loader.libraryDescription }" />
 			</td>
 			<td class="labelLeft">
 				<label for="selectASDSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
 				<select id="selectASDSelectLanguage">
-					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+					<s:iterator value="languageList" var="language">
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.libraryDescriptionLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -543,7 +543,7 @@
 			<td>
 				<select id="selectASTSRestaurationLab">
 					<s:iterator value="yesNoList" var="yesno"> 
-						<option value="<s:property value="#yesno.key" />"><s:property value="#yesno.value" /></option>
+						<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.technicalServicesQuestion}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -556,7 +556,7 @@
 				<label for="textASTSDescriptionOfRestaurationLab"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSDescriptionOfRestaurationLab" />
+				<input type="text" id="textASTSDescriptionOfRestaurationLab" value="${loader.technicalServicesDescription }"/>
 			</td>
 			<td class="labelLeft">
 				<label for="selectASTSSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -564,7 +564,7 @@
 			<td>
 				<select id="selectASTSSelectLanguage">
 					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.technicalServicesDescriptionLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -583,7 +583,7 @@
 				<label for="textASTSTelephone"><s:property value="getText('label.ai.tabs.commons.telephone')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSTelephone" />
+				<input type="text" id="textASTSTelephone" value="${loader.technicalServicesTelephone}"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -594,13 +594,13 @@
 				<label for="textASRSEmail"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASRSEmail" />
+				<input type="text" id="textASRSEmail" value="${loader.technicalServicesEmail }" />
 			</td>
 			<td class="labelLeft">
 				<label for="textASRSEmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASRSEmailLinkTitle" />
+				<input type="text" id="textASRSEmailLinkTitle" value="${loader.technicalServicesEmailLink }" />
 			</td>
 		</tr>
 
@@ -609,13 +609,13 @@
 				<label for="textASRSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASRSWebpage" />
+				<input type="text" id="textASRSWebpage" value="${loader.technicalServicesWebpage }" />
 			</td>
 			<td class="labelLeft">
 				<label for="textASRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASRSWebpageLinkTitle" />
+				<input type="text" id="textASRSWebpageLinkTitle" value="${loader.technicalServicesWebpageLink }" />
 			</td>
 		</tr>
 
@@ -626,7 +626,7 @@
 			<td>
 				<select id="selectASTSReproductionService">
 					<s:iterator value="yesNoList" var="yesno"> 
-						<option value="<s:property value="#yesno.key" />"><s:property value="#yesno.value" /></option>
+						<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.reproductionserQuestion}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -639,7 +639,7 @@
 				<label for="textASTSDescriptionOfReproductionService"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSDescriptionOfReproductionService" />
+				<input type="text" id="textASTSDescriptionOfReproductionService" value="${loader.reproductionserDescription}"/>
 			</td>
 			<td class="labelLeft">
 				<label for="selectASTSRSSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -647,7 +647,7 @@
 			<td>
 				<select id="selectASTSRSSelectLanguage">
 					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.reproductionserDescriptionLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -666,7 +666,7 @@
 				<label for="textASTSRSTelephone"><s:property value="getText('label.ai.tabs.commons.telephone')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSRSTelephone" />
+				<input type="text" id="textASTSRSTelephone" value="${loader.reproductionserTelephone }" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -677,13 +677,13 @@
 				<label for="textASTSRSEmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSRSEmailAddress" />
+				<input type="text" id="textASTSRSEmailAddress" value="${loader.reproductionserEmailLink }" />
 			</td>
 			<td class="labelLeft">
 				<label for="textASTSEmailAddressLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSEmailAddressLinkTitle" />
+				<input type="text" id="textASTSEmailAddressLinkTitle" value="${loader.reproductionserEmail }" />
 			</td>
 		</tr>
 
@@ -692,13 +692,13 @@
 				<label for="textASTSRSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSRSWebpage" />
+				<input type="text" id="textASTSRSWebpage" value="${loader.reproductionserWebpageLink }" />
 			</td>
 			<td class="labelLeft">
 				<label for="textASTSRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSRSWebpageLinkTitle" />
+				<input type="text" id="textASTSRSWebpageLinkTitle" value="${loader.reproductionserWebpage }" />
 			</td>
 		</tr>
 
@@ -709,7 +709,7 @@
 			<td>
 				<select id="selectASTSRSMicroform">
 					<s:iterator value="yesNoList" var="yesno"> 
-						<option value="<s:property value="#yesno.key" />"><s:property value="#yesno.value" /></option>
+						<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.microfilmServices}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -724,7 +724,7 @@
 			<td>
 				<select id="selectASTSRSPhotographServices">
 					<s:iterator value="yesNoList" var="yesno"> 
-						<option value="<s:property value="#yesno.key" />"><s:property value="#yesno.value" /></option>
+						<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.photographicServices}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -739,7 +739,7 @@
 			<td>
 				<select id="selectASTSRSDigitalServices">
 					<s:iterator value="yesNoList" var="yesno"> 
-						<option value="<s:property value="#yesno.key" />"><s:property value="#yesno.value" /></option>
+						<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.digitisationServices}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -754,7 +754,7 @@
 			<td>
 				<select id="selectASTSRSPhotocopyServices">
 					<s:iterator value="yesNoList" var="yesno"> 
-						<option value="<s:property value="#yesno.key" />"><s:property value="#yesno.value" /></option>
+						<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.photocopyingServices}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -774,7 +774,7 @@
 				<label for="textASReSeRefreshment"><s:property value="getText('label.ai.accessAndServices.refreshment')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeRefreshment" />
+				<input type="text" id="textASReSeRefreshment" value="${loader.recreationalServicesRefreshmentArea }"/>
 			</td>
 			<td class="labelLeft">
 				<label for="selectASReSeRefreshmentSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -782,7 +782,7 @@
 			<td>
 				<select id="selectASReSeRefreshmentSelectLanguage">
 					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.recreationalServicesRefreshmentAreaLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -801,7 +801,7 @@
 				<label for="textASReSeExhibition"><s:property value="getText('label.ai.accessAndServices.exhibition')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeExhibition" />
+				<input type="text" id="textASReSeExhibition" value="${loader.recreationalServicesExhibition }"/>
 			</td>
 			<td class="labelLeft">
 				<label for="selectASReSeExhibitionSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -809,7 +809,7 @@
 			<td>
 				<select id="selectASReSeExhibitionSelectLanguage">
 					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.recreationalServicesExhibitionLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -820,13 +820,13 @@
 				<label for="textASReSeWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeWebpage" />
+				<input type="text" id="textASReSeWebpage" value="${loader.recreationalServicesWebLink }" />
 			</td>
 			<td class="labelLeft">
 				<label for="textASReSeWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeWebpageLinkTitle" />
+				<input type="text" id="textASReSeWebpageLinkTitle" value="${loader.recreationalServicesWeb }" />
 			</td>
 		</tr>
 
@@ -843,7 +843,7 @@
 				<label for="textASReSeToursAndSessions" ><s:property value="getText('label.ai.accessAndServices.toursAndSessions')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeToursAndSessions" />
+				<input type="text" id="textASReSeToursAndSessions" value="${loader.toursSessionGuidesAndSessionsContent }"/>
 			</td>
 			<td class="labelLeft">
 				<label for="selectASReSeToursAndSessionsSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -851,7 +851,7 @@
 			<td>
 				<select id="selectASReSeToursAndSessionsSelectLanguage">
 					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.toursSessionGuidesAndSessionsLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -862,13 +862,13 @@
 				<label for="textASReSeTSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeTSWebpage" />
+				<input type="text" id="textASReSeTSWebpage" value="${loader.toursSessionGuidesAndSessionsWebpage }"/>
 			</td>
 			<td class="labelLeft">
 				<label for="textASReSeWebpageTSLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeWebpageTSLinkTitle" />
+				<input type="text" id="textASReSeWebpageTSLinkTitle" value="${loader.toursSessionGuidesAndSessionsWebpageTitle }"/>
 			</td>
 		</tr>
 
@@ -885,7 +885,7 @@
 				<label for="textASReSeOtherServices" ><s:property value="getText('label.ai.accessAndServices.otherServices')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeOtherServices" />
+				<input type="text" id="textASReSeOtherServices" value="${loader.otherServices }" />
 			</td>
 			<td class="labelLeft">
 				<label for="selectASReSeOtherServicesSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -893,7 +893,7 @@
 			<td>
 				<select id="selectASReSeOtherServicesSelectLanguage">
 					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.otherServicesLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -904,13 +904,13 @@
 				<label for="textASReSeOSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeOSWebpage" />
+				<input type="text" id="textASReSeOSWebpage" value="${loader.otherServicesWebpage }" />
 			</td>
 			<td class="labelLeft">
 				<label for="textASReSeWebpageOSLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeWebpageOSLinkTitle" />
+				<input type="text" id="textASReSeWebpageOSLinkTitle" value="${loader.otherServicesLink }" />
 			</td>
 		</tr>
 
