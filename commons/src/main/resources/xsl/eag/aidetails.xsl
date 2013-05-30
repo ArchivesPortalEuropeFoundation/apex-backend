@@ -46,9 +46,8 @@
 						</thead>
 						<tbody>
 
-							<!-- visitors Address -->
-							<xsl:if
-								test="eag:location[not(@localType) or @localType='visitors address']">
+							<!-- visitors Address only shown if there are values-->
+							<xsl:if test="eag:location[not(@localType) or @localType='visitors address']">
 								<tr>
 									<td class="header">
 										<xsl:value-of select="ape:resource('eagcontent.visitorsaddress')"/>
@@ -67,7 +66,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- localentity -->
+							<!-- local entity only shown if there are values-->
 							<xsl:if test="eag:location[not(@localType) or @localType='visitors address']/eag:localentity/text()">
 								<tr class="longDisplay">
 									<td class="header">
@@ -79,7 +78,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- secondem -->
+							<!-- secondem only shown if there are values-->
 							<xsl:if test="eag:location[not(@localType) or @localType='visitors address']/eag:secondem/text()">
 								<tr class="longDisplay">
 									<td class="header">
@@ -91,7 +90,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- firstdem -->
+							<!-- firstdem only shown if there are values-->
 							<xsl:if test="eag:location/eag:firstdem/text()">
 								<tr class="longDisplay">
 									<td class="header">
@@ -103,7 +102,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- postal address -->
+							<!-- postal address only shown if there are values-->
 							<xsl:if test="eag:location[@localType='postal address']">
 								<tr class="longDisplay">
 									<td class="header">
@@ -123,7 +122,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- country -->
+							<!-- country only shown if there are values-->
 							<xsl:if test="eag:location[not(@localType) or @localType='visitors address']/eag:country/text()">
 								<tr>
 									<td class="header">
@@ -133,18 +132,20 @@
 										<xsl:value-of select="eag:location[not(@localType) or @localType='visitors address']/eag:country"/>
 									</td>
 								</tr>
+							
+								<xsl:call-template name="email">
+									<xsl:with-param name="class" select="'header'"/>
+								</xsl:call-template>
+								<xsl:call-template name="webpage">
+									<xsl:with-param name="class" select="'header'"/>
+								</xsl:call-template>
+								<xsl:call-template name="telephone">
+									<xsl:with-param name="class" select="'header'"/>
+								</xsl:call-template>
+							
 							</xsl:if>
-							<xsl:call-template name="email">
-								<xsl:with-param name="class" select="'header'"/>
-							</xsl:call-template>
-							<xsl:call-template name="webpage">
-								<xsl:with-param name="class" select="'header'"/>
-							</xsl:call-template>
-							<xsl:call-template name="telephone">
-								<xsl:with-param name="class" select="'header'"/>
-							</xsl:call-template>
 
-							<!-- fax -->
+							<!-- fax only shown if there are values-->
 							<xsl:if test="eag:fax and eag:fax/text() != ''">
 								<tr class="longDisplay">
 									<td class="header">
@@ -160,7 +161,7 @@
 								</tr>
 							</xsl:if>
 						
-							<!-- geogarea -->
+							<!-- geogarea only shown if there are values-->
 							<xsl:if test="current()/eag:geogarea/text()">
 								<tr>
 									<td class="header">
@@ -200,7 +201,7 @@
 								</tr>
 							</xsl:if>
 							
-							<!-- roleofthearchive -->
+							<!-- roleofthearchive only shown if there are values-->
 							<xsl:if test="current()/eag:repositoryRole and current()/eag:repositoryRole/text() != ''">
 								<tr>
 									<td class="header">
@@ -249,7 +250,7 @@
 						</thead>
 						<tbody>
 
-							<!-- opening -->
+							<!-- opening only shown if there are values-->
 							<xsl:if test="eag:timetable/eag:opening/text()">
 								<tr>
 									<td class="header">
@@ -261,7 +262,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- closing -->
+							<!-- closing only shown if there are values-->
 							<xsl:if test="eag:timetable/eag:closing/text()">
 								<tr>
 									<td class="header">
@@ -273,7 +274,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- directions and citations -->
+							<!-- directions and citations goes to template-->
 							<xsl:if test="eag:directions">
 								<xsl:call-template name="multilanguageWithChilds">
 									<xsl:with-param name="title">
@@ -285,7 +286,7 @@
 							</xsl:if>
 
 
-							<!-- accessconditions -->
+							<!-- accessconditions only shown if there are values-->
 							<xsl:if test="eag:access">
 								<tr>
 									<td class="header">
@@ -304,7 +305,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- restaccess -->
+							<!-- restaccess only shown if there are values-->
 							<xsl:if test="eag:access/eag:restaccess/text()">
 								<tr>
 									<td class="header">
@@ -318,7 +319,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- accessibility -->
+							<!-- accessibility only shown if there are values-->
 							<xsl:if test="eag:accessibility">
 								<tr class="longDisplay">
 									<td class="header">
@@ -348,7 +349,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- termsOfUse -->
+							<!-- termsOfUse only shown if there are values-->
 							<xsl:if test="eag:access/eag:termsOfUse">
 								<xsl:call-template name="multilanguageWithChilds">
 									<xsl:with-param name="title">
@@ -359,7 +360,7 @@
 								</xsl:call-template>
 							</xsl:if>
 
-							<!-- readersTicket -->
+							<!-- readersTicket shown template-->
 							<xsl:if test="eag:services/eag:searchroom/eag:readersTicket">
 								<xsl:call-template name="multilanguageWithChilds">
 									<xsl:with-param name="title">
@@ -369,9 +370,8 @@
 								</xsl:call-template>
 							</xsl:if>
 
-							<!-- searchroom -->
-							<xsl:if
-								test="eag:services/eag:searchroom/eag:workPlaces/eag:num/text()">
+							<!-- searchroom only shown if there are values-->
+							<xsl:if test="eag:services/eag:searchroom/eag:workPlaces/eag:num/text()">
 								<tr>
 									<td class="header">
 										<xsl:value-of select="ape:resource('eagcontent.searchroom')"/>
@@ -382,7 +382,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- advancedOrders -->
+							<!-- advancedOrders only shown if there are values-->
 							<xsl:if test="eag:services/eag:searchroom/eag:advancedOrders">
 								<xsl:call-template name="multilanguageWithChilds">
 									<xsl:with-param name="title">
@@ -392,7 +392,7 @@
 								</xsl:call-template>
 							</xsl:if>
 
-							<!-- contact searchroom -->
+							<!-- contact searchroom only shown if there are values-->
 							<xsl:if test="eag:services/eag:searchroom/eag:contact">
 								<tr class="longDisplay">
 									<td class="header subInfoHeader" colspan="2">
@@ -416,9 +416,8 @@
 								</xsl:call-template>
 							</xsl:if>
 
-							<!-- researchServices -->
-							<xsl:if
-								test="eag:services/eag:searchroom/eag:researchServices/eag:descriptiveNote/eag:p/text()">
+							<!-- researchServices only shown if there are values-->
+							<xsl:if test="eag:services/eag:searchroom/eag:researchServices/eag:descriptiveNote/eag:p/text()">
 								<tr class="longDisplay">
 									<td class="header">
 										<xsl:value-of select="ape:resource('eagcontent.archivesresearchservice')"/>
@@ -431,7 +430,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- computerPlaces -->
+							<!-- computerPlaces only shown if there are values-->
 							<xsl:if test="eag:services/eag:searchroom/eag:computerPlaces">
 								<tr class="longDisplay">
 									<td class="header">
@@ -446,9 +445,8 @@
 								</tr>
 							</xsl:if>
 
-							<!-- microfilmPlaces -->
-							<xsl:if
-								test="eag:services/eag:searchroom/eag:microfilmPlaces/eag:num/text()">
+							<!-- microfilmPlaces only shown if there are values-->
+							<xsl:if test="eag:services/eag:searchroom/eag:microfilmPlaces/eag:num/text()">
 								<tr class="longDisplay">
 									<td class="header">
 										<xsl:value-of select="ape:resource('eagcontent.microfilmplaces')"/>
@@ -459,9 +457,8 @@
 								</tr>
 							</xsl:if>
 
-							<!-- photographAllowance -->
-							<xsl:if
-								test="eag:services/eag:searchroom/eag:photographAllowance/text()">
+							<!-- photographAllowance only shown if there are values-->
+							<xsl:if test="eag:services/eag:searchroom/eag:photographAllowance/text()">
 								<tr class="longDisplay">
 									<td class="header">
 										<xsl:value-of select="ape:resource('eagcontent.photographAllowance')"/>
@@ -493,7 +490,7 @@
 								</tr>
 							</xsl:if>
 							
-							<!-- internetAccess -->
+							<!-- internetAccess only shown if there are values-->
 							<xsl:if test="eag:services/eag:internetAccess">
 								<tr>
 									<td class="header">
@@ -511,8 +508,7 @@
 									</td>
 								</tr>
 
-								<xsl:if
-									test="eag:services/eag:internetAccess[@question='yes']/eag:descriptiveNote/eag:p/text()">
+								<xsl:if test="eag:services/eag:internetAccess[@question='yes']/eag:descriptiveNote/eag:p/text()">
 									<tr>
 										<td class="header"></td>
 										<td>
@@ -524,7 +520,7 @@
 								</xsl:if>
 							</xsl:if>
 
-							<!-- library -->
+							<!-- library only shown if there are values-->
 							<xsl:if test="eag:services/eag:library and (eag:services/eag:library[@question='yes']/eag:monographicpub/eag:num/text() != '' or eag:services/eag:library[@question='yes']/eag:serialpub/eag:num/text() != '')">
 								<tr>
 									<td class="header">
@@ -544,7 +540,7 @@
 									</td>
 								</tr>
 
-								<!-- contact library -->
+								<!-- contact library shown only if there is library-->
 								<xsl:if test="eag:services/eag:library/eag:contact">
 									<tr class="longDisplay">
 										<td class="header subInfoHeader" colspan="2">
@@ -569,7 +565,7 @@
 								</xsl:if>
 							</xsl:if>
 
-							<!-- reproductionser -->
+							<!-- reproductionser only shown if there are values-->
 							<xsl:if test="eag:services/eag:techservices/eag:reproductionser">
 								<tr class="longDisplay">
 									<td class="header">
@@ -590,9 +586,8 @@
 								</tr>
 							</xsl:if>
 
-							<!-- digitalser -->
-							<xsl:if
-								test="eag:services/eag:techservices/eag:reproductionser/eag:digitalser">
+							<!-- digitalser only shown if there are values-->
+							<xsl:if test="eag:services/eag:techservices/eag:reproductionser/eag:digitalser">
 								<tr class="longDisplay">
 									<td class="header">
 										<xsl:value-of select="ape:resource('eagcontent.digitisationservice')"/>
@@ -610,9 +605,8 @@
 								</tr>
 							</xsl:if>
 
-							<!-- photocopyser -->
-							<xsl:if
-								test="eag:services/eag:techservices/eag:reproductionser/eag:photocopyser">
+							<!-- photocopyser only shown if there are values-->
+							<xsl:if test="eag:services/eag:techservices/eag:reproductionser/eag:photocopyser">
 								<tr class="longDisplay">
 									<td class="header">
 										<xsl:value-of select="ape:resource('eagcontent.photocopyingservice')"/>
@@ -630,9 +624,8 @@
 								</tr>
 							</xsl:if>
 
-							<!-- photographser -->
-							<xsl:if
-								test="eag:services/eag:techservices/eag:reproductionser/eag:photographser">
+							<!-- photographser only shown if there are values-->
+							<xsl:if test="eag:services/eag:techservices/eag:reproductionser/eag:photographser">
 								<tr class="longDisplay">
 									<td class="header">
 										<xsl:value-of select="ape:resource('eagcontent.photographicservice')"/>
@@ -650,9 +643,8 @@
 								</tr>
 							</xsl:if>
 
-							<!-- microformser -->
-							<xsl:if
-								test="eag:services/eag:techservices/eag:reproductionser/eag:microformser">
+							<!-- microformser only shown if there are values-->
+							<xsl:if test="eag:services/eag:techservices/eag:reproductionser/eag:microformser">
 								<tr class="longDisplay">
 									<td class="header">
 										<xsl:value-of select="ape:resource('eagcontent.microfilmservice')"/>
@@ -670,9 +662,8 @@
 								</tr>
 							</xsl:if>
 
-							<!-- contact reproductionser -->
-							<xsl:if
-								test="eag:services/eag:techservices/eag:reproductionser/eag:contact">
+							<!-- contact reproductionser only shown if there are values-->
+							<xsl:if test="eag:services/eag:techservices/eag:reproductionser/eag:contact">
 								<tr class="longDisplay">
 									<td class="header subInfoHeader" colspan="2">
 										<xsl:value-of select="ape:resource('eagcontent.reproductionsservicecontact')"/>
@@ -695,7 +686,7 @@
 								</xsl:call-template>
 							</xsl:if>
 
-							<!-- restorationlab -->
+							<!-- restorationlab only shown if there are values-->
 							<xsl:if test="eag:services/eag:techservices/eag:restorationlab">
 								<tr class="longDisplay">
 									<td class="header">
@@ -716,9 +707,8 @@
 								</tr>
 							</xsl:if>
 
-							<!-- contact restorationlab -->
-							<xsl:if
-								test="eag:services/eag:techservices/eag:restorationlab/eag:contact">
+							<!-- contact restorationlab only shown if there are values-->
+							<xsl:if test="eag:services/eag:techservices/eag:restorationlab/eag:contact">
 								<tr class="longDisplay">
 									<td class="header subInfoHeader" colspan="2">
 										<xsl:value-of select="ape:resource('eagcontent.restorationlabcontact')"/>
@@ -741,7 +731,7 @@
 								</xsl:call-template>
 							</xsl:if>
 
-							<!-- refreshment -->
+							<!-- refreshment only shown if there are values-->
 							<xsl:if test="eag:services/eag:recreationalServices/eag:refreshment">
 								<tr class="longDisplay">
 									<td class="header">
@@ -755,7 +745,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- exhibition -->
+							<!-- exhibition only shown if there are values-->
 							<xsl:if test="eag:services/eag:recreationalServices/eag:exhibition">
 								<tr class="longDisplay">
 									<td class="header">
@@ -777,7 +767,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- toursSession -->
+							<!-- toursSession only shown if there are values-->
 							<xsl:if test="eag:services/eag:recreationalservices/eag:toursSessions">
 								<tr class="longDisplay">
 									<td class="header">
@@ -799,7 +789,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- otherServices -->
+							<!-- otherServices only shown if there are values-->
 							<xsl:if test="eag:services/eag:recreationalServices/eag:otherServices">
 								<tr class="longDisplay">
 									<td class="header">
@@ -820,6 +810,8 @@
 									</td>
 								</tr>
 							</xsl:if>
+							
+							<!-- associatedrepositories only shown if there are values-->
 							<xsl:if test="count(current()/parent::node()/eag:repository)> 1">
 								<tr>
 									<td class="header">
@@ -866,7 +858,7 @@
 						</thead>
 						<tbody>
 
-							<!-- holdings -->
+							<!-- holdings only shown if there are values-->
 							<xsl:if test="eag:holdings/eag:descriptiveNote/eag:p/text()">
 								<tr class="longDisplay">
 									<td class="header">
@@ -880,7 +872,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- extent -->
+							<!-- extent only shown if there are values-->
 							<xsl:if test="eag:holdings/eag:extent/eag:num/text()">
 								<tr>
 									<td class="header">
@@ -892,7 +884,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- dates of holdings -->
+							<!-- dates of holdings only shown if there are values-->
 							<xsl:if test="eag:holdings/eag:dateSet">
 								<tr>
 									<td class="header">
@@ -904,7 +896,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- repositorhist -->
+							<!-- repositorhist only shown if there are values-->
 							<xsl:if test="eag:repositorhist/eag:descriptiveNote/eag:p/text()">
 								<tr class="longDisplay">
 									<td class="header">
@@ -918,7 +910,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- date of repositorfound -->
+							<!-- date of repositorfound only shown if there are values-->
 							<xsl:if test="eag:repositorfound/eag:date/text()">
 								<tr class="longDisplay">
 									<td class="subHeader">
@@ -930,7 +922,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- rule of repositorfound -->
+							<!-- rule of repositorfound only shown if there are values-->
 							<xsl:if test="eag:repositorfound/eag:rule/text()">
 								<tr class="longDisplay">
 									<td class="subHeader">
@@ -942,9 +934,8 @@
 								</tr>
 							</xsl:if>
 
-							<!-- date of repositorsup -->
-							<xsl:if
-								test="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:repositorsup/eag:date/text()">
+							<!-- date of repositorsup only shown if there are values-->
+							<xsl:if test="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:repositorsup/eag:date/text()">
 								<tr class="longDisplay">
 									<td class="subHeader">
 										<xsl:value-of select="ape:resource('eagcontent.daterepositorsup')"/>
@@ -956,7 +947,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- rule of repositorsup -->
+							<!-- rule of repositorsup only shown if there are values-->
 							<xsl:if test="eag:repositorsup/eag:rule/text()">
 								<tr class="longDisplay">
 									<td class="subHeader">
@@ -968,7 +959,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- adminunit -->
+							<!-- adminunit only shown if there are values-->
 							<xsl:if test="eag:adminhierarchy/eag:adminunit/text()">
 								<tr class="longDisplay">
 									<td class="header">
@@ -982,9 +973,8 @@
 								</tr>
 							</xsl:if>
 
-							<!-- building -->
-							<xsl:if
-								test="eag:buildinginfo/eag:building/eag:descriptiveNote/eag:p/text()">
+							<!-- building only shown if there are values-->
+							<xsl:if test="eag:buildinginfo/eag:building/eag:descriptiveNote/eag:p/text()">
 								<tr class="longDisplay">
 									<td class="header">
 										<xsl:value-of select="ape:resource('eagcontent.archivebuilding')"/>
@@ -997,7 +987,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- repositorarea -->
+							<!-- repositorarea only shown if there are values-->
 							<xsl:if test="eag:buildinginfo/eag:repositorarea/eag:num/text()">
 								<tr class="longDisplay">
 									<td class="header">
@@ -1009,7 +999,7 @@
 								</tr>
 							</xsl:if>
 
-							<!-- lengthshelf -->
+							<!-- lengthshelf only shown if there are values-->
 							<xsl:if test="eag:buildinginfo/eag:lengthshelf/eag:num/text()">
 								<tr class="longDisplay">
 									<td class="header">
@@ -1050,7 +1040,7 @@
 			</thead>
 			<tbody>
 
-				<!-- relationEntry -->
+				<!-- relationEntry and links to related resources-->
 				<xsl:choose>
 					<xsl:when test="./eag:eag/eag:relations/eag:resourceRelation/@href">
 						<tr>
@@ -1099,7 +1089,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 
-				<!-- nonpreform and useDates -->
+				<!-- nonpreform and useDates only shown if there are values-->
 				<xsl:if test="./eag:eag/eag:archguide/eag:identity/eag:nonpreform">
 					<tr class="longDisplay">
 						<td class="header">
@@ -1113,7 +1103,7 @@
 					</tr>
 				</xsl:if>
 				
-				<!-- repositoryType -->			
+				<!-- repositoryType only shown if there are values-->			
 				<xsl:if test="./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text()">
 					<tr>
 						<td class="header">
@@ -1195,7 +1185,7 @@
 					</tr>
 				</xsl:if>
 
-				<!-- lastupdate -->
+				<!-- lastupdate only shown if there are values-->
 				<xsl:if test="./eag:eag/eag:control/eag:maintenanceHistory/eag:maintenanceEvent/eag:eventDateTime/text()">
 					<tr>
 						<td class="header">
@@ -1211,6 +1201,7 @@
 		</table>
 	</xsl:template>
 
+	<!-- template for email-->
 	<xsl:template name="email">
 		<xsl:param name="parent" select="current()"/>
 		<xsl:param name="class"/>
@@ -1241,6 +1232,7 @@
 		</xsl:if>
 	</xsl:template>
 
+	<!-- template for webpage-->
 	<xsl:template name="webpage">
 		<xsl:param name="parent" select="current()"/>
 		<xsl:param name="class"/>
@@ -1271,6 +1263,7 @@
 		</xsl:if>
 	</xsl:template>
 
+	<!-- template for telephone-->
 	<xsl:template name="telephone">
 		<xsl:param name="parent" select="current()"/>
 		<xsl:param name="class"/>
@@ -1291,6 +1284,7 @@
 		</xsl:if>
 	</xsl:template>
 
+	<!-- template for language-->
 	<xsl:template name="multilanguage">
 		<xsl:param name="list"/>
 		<xsl:choose>
@@ -1330,6 +1324,7 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<!-- template for language nonpreform-->
 	<xsl:template name="multilanguageNoperform">
 		<xsl:param name="list"/>
 		<xsl:choose>
@@ -1369,6 +1364,7 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<!-- template for nonpreform-->
 	<xsl:template match="eag:nonpreform">
 		<xsl:value-of select="text()"/>
 		<!-- when there are only 1 dateSet -->
@@ -1456,6 +1452,7 @@
 		</xsl:for-each>
 	</xsl:template>
 
+	<!-- template for multilanguage-->
 	<xsl:template name="multilanguageWithChilds">
 		<xsl:param name="title"/>
 		<xsl:param name="class" select="'header'"/>
@@ -1507,6 +1504,7 @@
 		</xsl:if>
 	</xsl:template>
 
+	<!-- template for variuos-->
 	<xsl:template match="eag:advancedOrders | eag:readersTicket | eag:termsOfUse | eag:citation">
 		<xsl:choose>
 			<xsl:when test="./@href">
@@ -1528,6 +1526,7 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<!-- template for citation-->
 	<xsl:template match="eag:directions">
 		<xsl:value-of select="text()"/>
 		<xsl:for-each select="eag:citation">
@@ -1537,6 +1536,7 @@
 		</xsl:for-each>
 	</xsl:template>
 
+	<!-- template for numeric values-->
 	<xsl:template match="eag:num">
 		<xsl:variable name="unit" select="concat('eagcontent.num.unit.', ./@unit)"/>
 		<xsl:value-of select="text()"/>
