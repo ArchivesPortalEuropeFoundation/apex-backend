@@ -205,6 +205,9 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 		EadSearchOptions eadSearchOptions = null;;
 		if (updateSearchResults){
 			eadSearchOptions = (EadSearchOptions) getServletRequest().getSession().getAttribute(EAD_SEARCH_OPTIONS);
+			if (eadSearchOptions == null){
+				eadSearchOptions = createNewEadSearchOptions();
+			}
 			eadSearchOptions.setPageNumber(pageNumber);
 			eadSearchOptions.setOrderByAscending(orderByAscending);
 			eadSearchOptions.setOrderByField(orderByField);
