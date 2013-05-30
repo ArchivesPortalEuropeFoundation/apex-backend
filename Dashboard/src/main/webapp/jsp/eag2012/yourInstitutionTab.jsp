@@ -5,7 +5,7 @@
 </div>
 
 <div id="yourInstitutionTabContent">
-	<table id="yourInstitutionTable_1">	
+	<table id="yourInstitutionTable_1" class="tablePadding">	
 		<tr>
 			<td id="yourInstitutionLabel" colspan="4">
 				<s:property value="getText('label.ai.tab.yourinstitution.title')" />
@@ -100,7 +100,7 @@
 		</tr>
 	</table>
 
-	<table id="yiTableVisitorsAddress_1">
+	<table id="yiTableVisitorsAddress_1" class="tablePadding">
 		<tr>
 			<td id="visitorAdressLabel" colspan="4">
 				<s:property value="getText('label.ai.tabs.commons.visitorAddress')" />
@@ -170,7 +170,7 @@
 		</tr>
 	</table>
 
-	<table id="yiTableOthers">
+	<table id="yiTableOthers" class="tablePadding">
 		<tr>
 			<td colspan="2">
 				<input type="button" id="buttonAddVisitorsAddressTranslation" value="<s:property value="getText('label.ai.tabs.commons.addFurtherVisitorsAddress')"/>" onclick="yiAddVisitorsAddressTranslation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />

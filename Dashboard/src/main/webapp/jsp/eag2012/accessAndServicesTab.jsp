@@ -5,7 +5,7 @@
 </div>
 
 <div id="accessAndServicesTabContent">
-	<table id="accessAndServicesTable">
+	<table id="accessAndServicesTable" class="tablePadding">
 		<tr id="trASOpeningTimes">
 			<td id="tdOpeningTimes">
 				<label for="textOpeningTimes"><s:property value="getText('label.ai.tabs.commons.openingTimes')" /><span class="required">*</span>:</label>

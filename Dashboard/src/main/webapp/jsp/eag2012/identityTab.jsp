@@ -5,7 +5,7 @@
 </div>
 
 <div id="identityTabContent" style="float:left;width:100%;">
-	<table id="identityTable">
+	<table id="identityTable" class="tablePadding">
 		<tr>
 			<td id="countryCodeFieldColumn">
 				<label  for="textIdentityCountryCodeOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.countryCode')" /><span class="required">*</span>:</label>
@@ -33,7 +33,7 @@
 		</tr>
 	</table>
 
-	<table id="identityTableNameOfTheInstitution_1">
+	<table id="identityTableNameOfTheInstitution_1" class="tablePadding">
 		<tr id="trNameOfTheInstitution">
 			<td id="tdNameOfTheInstitution">
 				<label for="textNameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.nameOfTheInstitution')" /><span class="required">*</span>:</label>
@@ -54,7 +54,7 @@
 		</tr>
 	</table>
 
-	<table id="identityButtonAddNames">
+	<table id="identityButtonAddNames" class="tablePadding">
 		<tr>
 			<td colspan="3">
 				<input id="buttonAddAnotherFormOfTheAuthorizedName" type="button" value="<s:property value='getText("label.ai.identity.addAnotherFormOfTheAuthorizedName")' />" onclick="addAnotherFormOfTheAuthorizedName('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
@@ -64,7 +64,7 @@
 		</tr>
 	</table>
 
-	<table id="identityTableParallelNameOfTheInstitution_1">
+	<table id="identityTableParallelNameOfTheInstitution_1" class="tablePadding">
 		<tr class="marginTop" id="trParallelNameOfTheInstitution" >
 			<td>
 				<label for="textParallelNameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.parallelNameOfTheInstitution')" />:</label>
@@ -85,7 +85,7 @@
 		</tr>
 	</table>
 
-	<table id="identityButtonAddParallelNames">
+	<table id="identityButtonAddParallelNames" class="tablePadding">
 		<tr>
 			<td colspan="2">
 				<input type="button" id="buttonAddParallelNameOfTheInstitution" value="<s:property value='getText("label.ai.identity.addAnotherParallelNameOfTheInstitution")' />" onclick="addParallelNameOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
@@ -95,7 +95,7 @@
 		</tr>
 	</table>
 
-	<table id="identityButtonAddFormerlyUsedName">
+	<table id="identityButtonAddFormerlyUsedName" class="tablePadding">
 		<tr id="trAddMoreAnotherFormerlyUsedName">
 			<td colspan="2">
 				<input type="button" id="buttonAddMoreAnotherFormerlyUsedName" value="<s:property value='getText("label.ai.identity.addAnotherFormerlyUsedName")' />" onclick="addMoreAnotherFormerlyUsedName('<s:property value="getText('label.ai.identity.formerlyUsedName')" />', '<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />', '<s:property value="getText('label.ai.identity.datesWhenThisNameWasUsed')" />', '<s:property value="getText('label.ai.tabs.commons.year')" />', '<s:property value="getText('label.ai.tabs.commons.addSingleYear')" />', '<s:property value="getText('label.ai.tabs.commons.addYearRange')" />', '<s:property value="getText('label.ai.tabs.commons.yearFrom')" />', '<s:property value="getText('label.ai.tabs.commons.textTo')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
@@ -105,7 +105,7 @@
 		</tr>
 	</table>
 
-	<table id="identitySelectTypeOfTheInstitution">
+	<table id="identitySelectTypeOfTheInstitution" class="tablePadding">
 		<tr>
 			<td>
 				<label for="textSelectTypeOfTheInstitution"><s:property value="getText('label.ai.identity.selectTypeOfTheInstitution')" />:</label>

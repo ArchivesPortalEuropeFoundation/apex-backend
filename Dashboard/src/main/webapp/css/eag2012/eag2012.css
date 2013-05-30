@@ -154,6 +154,9 @@
 #eag2012Div table {
 	float: left;
 	width: 100%;
+}
+
+.tablePadding {
 	padding-right: 18px;
 	padding-left: 18px;
 }

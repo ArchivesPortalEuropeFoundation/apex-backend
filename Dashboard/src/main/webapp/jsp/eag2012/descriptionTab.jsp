@@ -5,7 +5,7 @@
 </div>
 
 <div id=descriptionTabContent>
-	<table id="descriptionTable">
+	<table id="descriptionTable" class="tablePadding">
 		<tr>
 			<td id="repositoryLabel" colspan="4">
 				<s:property value="getText('label.ai.description.repositoryDescription')" />

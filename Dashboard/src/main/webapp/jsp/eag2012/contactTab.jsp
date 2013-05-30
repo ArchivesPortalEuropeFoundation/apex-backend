@@ -5,7 +5,7 @@
 </div>
 
 <div id="contactTabContent">
-	<table id="contactTable">
+	<table id="contactTable" class="tablePadding">
 		<tr id="trVisitorsAddressLabel"><td colspan="4"><table id="contactTableVisitorsAddress_1">
 			<tr>
 				<td id="visitorAdressLabel" colspan="4">

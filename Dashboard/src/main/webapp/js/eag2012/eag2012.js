@@ -1109,7 +1109,7 @@ function yiAddVisitorsAddressTranslation(text1) {
 	if (street != null && street != "" && valanguage != "none"
 			&& city != null && city != "" && country != null && country != "") {
 		var clone = $("table[id^='yiTableVisitorsAddress_"+counter+"']").clone();
-		clone = "<table id='"+("yiTableVisitorsAddress_"+(counter+1))+"'>"+clone.html()+"</table>";
+		clone = "<table id='"+("yiTableVisitorsAddress_"+(counter+1))+"' class=\"tablePadding\">"+clone.html()+"</table>";
 		$("table[id^='yiTableVisitorsAddress_"+counter+"']").after(clone);
 		// Reset parametters.
 		$("table#yiTableVisitorsAddress_"+(counter+1)+" input[type='text']").each(function(){
@@ -1127,7 +1127,7 @@ function yiAddPostalAddressIfDifferent(text1, text2, text3, text4) {
 
 	var select = '<select id="selectYIPASelectLanguage">'+$("#selectYIPNOTISelectLanguage").html()+'</select>';
 
-	$("table#yiTableOthers").before('<table id="yiTablePostalAddress_1">'+
+	$("table#yiTableOthers").before('<table id="yiTablePostalAddress_1" class=\"tablePadding\">'+
 		'<tr id="yiPostalAddressLabel">'+
 			'<td id="postalAddressLabel" colspan="4">'+text1+
 			'</td>'+
@@ -1168,7 +1168,7 @@ function yiAddPostalAddressTranslation(text1) {
 	if (street != null && street != "" && valanguage != "none"
 		&& city != null && city != "") {
 		var clone = $("table[id^='yiTablePostalAddress_"+counter+"']").clone();
-		clone = "<table id='"+("yiTablePostalAddress_"+(counter+1))+"'>"+clone.html()+"</table>";
+		clone = "<table id='"+("yiTablePostalAddress_"+(counter+1))+"' class=\"tablePadding\">"+clone.html()+"</table>";
 		$("table[id^='yiTablePostalAddress_"+counter+"']").after(clone);
 		// Reset parametters.
 		$("table#yiTablePostalAddress_"+(counter+1)+" input[type='text']").each(function(){
@@ -1224,9 +1224,9 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7){
 	localId = "yourInstitutionTable_"+(counter+1);
 	$("#eag2012tabs_institution_tabs").append("<li><a id=\"tab_"+localId+"\" href=\"#repositories\" >"+text2+" "+(counter)+"</a></li>");
 	//clone and put the 3 new tables
-	$("div#tab-contact").append("<table id=\"contactTable_"+(counter+1)+"\">"+$("table#contactTable").clone().html()+"</table>");
-	$("div#tab-accessAndServices").append("<table id=\"accessAndServicesTable_"+(counter+1)+"\">"+$("table#accessAndServicesTable").clone().html()+"</table>");
-	$("div#tab-description").append("<table id=\"descriptionTable_"+(counter+1)+"\">"+$("table#descriptionTable").clone().html()+"</table>");
+	$("div#tab-contact").append("<table id=\"contactTable_"+(counter+1)+"\" class=\"tablePadding\">"+$("table#contactTable").clone().html()+"</table>");
+	$("div#tab-accessAndServices").append("<table id=\"accessAndServicesTable_"+(counter+1)+"\" class=\"tablePadding\">"+$("table#accessAndServicesTable").clone().html()+"</table>");
+	$("div#tab-description").append("<table id=\"descriptionTable_"+(counter+1)+"\" class=\"tablePadding\">"+$("table#descriptionTable").clone().html()+"</table>");
 
 	// Remove attr "disabled" for all elements in "contact" tab.
 	$("table#contactTable_"+(counter+1)+" input#textContactStreetOfTheInstitution").removeAttr("disabled");
@@ -1427,7 +1427,7 @@ function addAnotherFormOfTheAuthorizedName(text1){
 	}
 
 	var clone = $("table[id^='identityTableNameOfTheInstitution_"+counter+"']").clone();
-	clone = "<table id='"+("identityTableNameOfTheInstitution_"+(counter+1))+"'>"+clone.html()+"</table>";
+	clone = "<table id='"+("identityTableNameOfTheInstitution_"+(counter+1))+"' class=\"tablePadding\">"+clone.html()+"</table>";
 	$("table[id^='identityTableNameOfTheInstitution_"+counter+"']").after(clone);
 	// Reset parametters.
 	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" input[type='text']").each(function(){
@@ -1454,7 +1454,7 @@ function addParallelNameOfTheInstitution(text1){
 	}
 
 	var clone = $("table[id^='identityTableParallelNameOfTheInstitution_"+counter+"']").clone();
-	clone = "<table id='"+("identityTableParallelNameOfTheInstitution_"+(counter+1))+"'>"+clone.html()+"</table>";
+	clone = "<table id='"+("identityTableParallelNameOfTheInstitution_"+(counter+1))+"' class=\"tablePadding\">"+clone.html()+"</table>";
 	$("table[id^='identityTableParallelNameOfTheInstitution_"+counter+"']").after(clone);
 	// Reset parametters.
 	$("table#identityTableParallelNameOfTheInstitution_"+(counter+1)+" input[type='text']").each(function(){
@@ -1469,7 +1469,7 @@ function addMoreAnotherFormerlyUsedName(text1, text2, text3, text4, text5, text6
 	var select = '<select id="tfun_languageList">'+$("#pnoti_languageList").html()+'</select>';
 
 	if (counter == 0) {
-		$("table#identityButtonAddFormerlyUsedName").before('<table id="identityTableFormerlyUsedName_1">'+
+		$("table#identityButtonAddFormerlyUsedName").before('<table id="identityTableFormerlyUsedName_1" class="tablePadding">'+
 			'<tr id="trTextFormerlyUsedName" class="marginTop">'+
 				'<td>'+
 					'<label for="textFormerlyUsedName">'+text1+':</label>'+
@@ -1522,7 +1522,7 @@ function addMoreAnotherFormerlyUsedName(text1, text2, text3, text4, text5, text6
 			return;
 		}
 
-		$("table#identityButtonAddFormerlyUsedName").before('<table id="identityTableFormerlyUsedName_'+(counter+1)+'">'+
+		$("table#identityButtonAddFormerlyUsedName").before('<table id="identityTableFormerlyUsedName_'+(counter+1)+'" class="tablePadding">'+
 			'<tr id="trTextFormerlyUsedName" class="marginTop">'+
 				'<td>'+
 					'<label for="textFormerlyUsedName">'+text1+':</label>'+
@@ -2944,7 +2944,7 @@ function relationAddNewResourceRelation(text1){
 	}
 
 	var clone = $("table[id^='resourceRelationTable_"+counter+"']").clone();
-	clone = "<table id='"+("resourceRelationTable_"+(counter+1))+"'>"+clone.html()+"</table>";
+	clone = "<table id='"+("resourceRelationTable_"+(counter+1))+"' class=\"tablePadding\">"+clone.html()+"</table>";
 	$("table[id^='resourceRelationTable_"+counter+"']").after(clone);
 	// Reset parametters.
 	$("table#resourceRelationTable_"+(counter+1)+" input[type='text']").each(function(){
@@ -2970,7 +2970,7 @@ function relationAddNewInstitutionRelation(text1){
 	}
 
 	var clone = $("table[id^='institutionRelationTable_"+counter+"']").clone();
-	clone = "<table id='"+("institutionRelationTable_"+(counter+1))+"'>"+clone.html()+"</table>";
+	clone = "<table id='"+("institutionRelationTable_"+(counter+1))+"' class=\"tablePadding\">"+clone.html()+"</table>";
 	$("table[id^='institutionRelationTable_"+counter+"']").after(clone);
 	// Reset parametters.
 	$("table#institutionRelationTable_"+(counter+1)+" input[type='text']").each(function(){

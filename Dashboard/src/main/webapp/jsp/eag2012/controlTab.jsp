@@ -5,7 +5,7 @@
 </div>
 
 <div id="controlTabContent">
-	<table id="controlTable">
+	<table id="controlTable" class="tablePadding">
 		<tr>
 			<td id="tdDescriptionIdentifier">
 				<label for="textDescriptionIdentifier"><s:property value="getText('label.ai.control.descriptionIdentifier')" /><span class="required">*</span>:</label>
