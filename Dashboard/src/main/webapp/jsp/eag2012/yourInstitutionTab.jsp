@@ -40,18 +40,26 @@
 				<input type="text" id="textYIIdentifierOfTheInstitution" value="${loader.otherRepositorId}" onchange="idOfInstitutionChanged();" />
 			</td>
 			<td class="labelLeft">
+			  <label for="textYICodeISL"><s:property value="getText('label.ai.tabs.commons.codeISL')"/></label>
+			</td>
+			<td>
+			  <select id="selectYICodeISIL" onclick="codeISILChanged();">
+			  	<s:iterator value="yesNoList" var="list">
+			  		<option value='<s:property value="#list.key"/>' <s:if test='%{newEag && #list.key=="no"}'>selected=selected</s:if>><s:property value="#list.value"/></option>
+			  	</s:iterator>
+			  </select>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<input type="button" id="buttonAddFutherIds" value="<s:property value="getText('label.ai.yourinstitution.addFutherIds')" />" onclick="addFurtherIds('<s:property value="getText('label.ai.yourinstitution.futherId')" />','<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />','<s:property value="getText('label.ai.tabs.commons.codeISL')" />');" />
+			</td>
+			<td class="labelLeft">
 				<label for="textYIIdUsedInAPE"><s:property value="getText('label.ai.tabs.commons.idUsedInAPE')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYIIdUsedInAPE" value="${loader.recordId}" disabled="disabled" />
-			</td>
-		</tr>
-
-		<tr>
-			<td colspan="3">
-			</td>
-			<td>
-				<input type="button" id="buttonAddFutherIds" value="<s:property value="getText('label.ai.yourinstitution.addFutherIds')" />" onclick="addFurtherIds('<s:property value="getText('label.ai.yourinstitution.futherId')" />','<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				<input type="hidden" id="recordIdHidden" value="${loader.recordId}"/>
+				<input type="text" id="textYIIdUsedInAPE" value="<s:if test="%{!newEag}">${loader.recordId}</s:if>" disabled="disabled" />
 			</td>
 		</tr>
 		<tr>

@@ -584,6 +584,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		}
 		if(state.equals(SUCCESS)){
 			fillDefaultLoaderValues();
+		}else{
+			newEag = false;
 		}
 		return state;
 	}
@@ -608,6 +610,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	private String form;
 
 	private EAG2012Loader loader;
+
+	private boolean newEag;
+	
+	public Boolean isNewEag(){
+		return this.newEag;
+	}
 	
 	public EAG2012Loader getLoader(){
 		return this.loader;
@@ -625,10 +633,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		String path = File.separatorChar+this.getCountryCode()+File.separatorChar+getAiId()+File.separatorChar+Eag2012.EAG_PATH+File.separatorChar+"eag2012.xml";
 		String state = INPUT;
 		if(new File(APEnetUtilities.getConfig().getRepoDirPath() + path).exists()){
+			newEag = false;
 			this.loader = new EAG2012Loader(getAiId());
 			this.loader.fillEag2012();
 			log.info("Loader: "+this.loader.toString()+" has been charged.");
 		}else{
+			newEag = true;
 			try {
 				execute(); //default action
 			} catch (Exception e) {
@@ -739,6 +749,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	}
 
 	private void fillDefaultLoaderValues() { //TODO, now only works with main repository
+		newEag = true;
 		loader = new EAG2012Loader();
 		//your institution
 		loader.setAgent(getPersonResponsibleForDescription());
@@ -5152,11 +5163,16 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			eag2012.setRecordIdValue(yourInstitution.getString("textYIIdUsedInAPE"));
 			//looper
 			List<String> otherRepositorIds = new ArrayList<String>();
-			for(int i=0;yourInstitution.has("otherRepositorId_"+(i));i++){
+			List<String> localtypeOtherRepositorIds =new ArrayList<String>();
+			for(int i=0;yourInstitution.has("otherRepositorId_"+(i)) && yourInstitution.has("selectOtherRepositorIdCodeISIL_"+i);i++){
 				otherRepositorIds.add(yourInstitution.getString("otherRepositorId_"+(i)));
+				localtypeOtherRepositorIds.add(yourInstitution.getString("selectOtherRepositorIdCodeISIL_"+i));
 			}
 			if(otherRepositorIds.size()>0){
 				eag2012.setOtherRecordIdValue(otherRepositorIds);
+			}
+			if(localtypeOtherRepositorIds.size()>0){
+				eag2012.setOtherRecordIdLocalType(localtypeOtherRepositorIds);
 			}
 			List<String> tempList = new ArrayList<String>();
 			if(yourInstitution.has("textYINameOfTheInstitution")){

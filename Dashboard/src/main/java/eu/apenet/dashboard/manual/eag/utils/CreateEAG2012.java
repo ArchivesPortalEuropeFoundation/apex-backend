@@ -95,7 +95,7 @@ public class CreateEAG2012 {
 			for (int i = 0; i < this.eag2012.getOtherRecordIdValue().size(); i++) {
 				OtherRecordId otherRecordId = new OtherRecordId();
 				otherRecordId.setValue(this.eag2012.getOtherRecordIdValue().get(i));
-				otherRecordId.setLocalType(Eag2012.LOCAL_TYPE);
+				otherRecordId.setLocalType(this.eag2012.getOtherRecordIdLocalType().get(i));
 				this.eag.getControl().getOtherRecordId().add(otherRecordId);
 			}
 		}

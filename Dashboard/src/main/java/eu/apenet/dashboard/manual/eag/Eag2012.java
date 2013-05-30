@@ -252,6 +252,7 @@ public class Eag2012 {
 	private String recordIdValue;
 	private List<String> otherRecordIdId;
 	private List<String> otherRecordIdValue;
+	private List<String> otherRecordIdLocalType;
 	private String sourcesId;
 	private String sourcesLang;
 	private List<String> sourceHref;
@@ -525,6 +526,14 @@ public class Eag2012 {
 
 	public void setOtherRecordIdValue(List<String> otherRecordIdValue) {
 		this.otherRecordIdValue = otherRecordIdValue;
+	}
+
+	public List<String> getOtherRecordIdLocalType() {
+		return otherRecordIdLocalType;
+	}
+
+	public void setOtherRecordIdLocalType(List<String> otherRecordIdLocalType) {
+		this.otherRecordIdLocalType = otherRecordIdLocalType;
 	}
 
 	public String getSourcesId() {

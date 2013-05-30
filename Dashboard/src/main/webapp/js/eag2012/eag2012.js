@@ -1192,16 +1192,41 @@ function yiAddFutherInformationOnExistingFacilities() {
 	$("#buttonAddFutherInformationOnExistingFacilities").hide();
 }
 
-function addFurtherIds(text1, text2){
+function addFurtherIds(text1, text2, text3){
 	var counter = $("input[id^='otherRepositorId']").length;
+	var select = '<select id="selectOtherRepositorIdCodeISIL_'+($("input[id^='otherRepositorId']").length)+'" onclick="codeISILChanged('+($("input[id^='otherRepositorId']").length)+');">'+$("#selectYICodeISIL").html()+'</select>';
 	if (counter == 0) {
-		$("input#buttonAddFutherIds").parent().parent().before("<tr><td colspan=\"2\"></td><td class='labelLeft'><label for=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\"> "+text1+":</label></td><td><input type=\"text\" id=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\" /></td></tr>");
+		$("input#buttonAddFutherIds").parent().parent().before("<tr><td><label for=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\"> "+text1+":</label></td><td><input type=\"text\" id=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\" /></td><td class=\"labelLeft\">"+text3+"</td><td>"+select+"</td></tr>");
+		$("select#selectOtherRepositorIdCodeISIL_"+counter).attr("value", "no");
 	} else {
 		var value = $("input#otherRepositorId_" + (counter-1)).attr("value");
 		if (value != null && value != "") {
-			$("input#buttonAddFutherIds").parent().parent().before("<tr><td colspan=\"2\"></td><td class='labelLeft'><label for=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\"> "+text1+":</label></td><td><input type=\"text\" id=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\" /></td></tr>");
+			$("input#buttonAddFutherIds").parent().parent().before("<tr><td><label for=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\"> "+text1+":</label></td><td><input type=\"text\" id=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\" /></td><td class=\"labelLeft\">"+text3+"</td><td>"+select+"</td></tr>");
+		$("select#selectOtherRepositorIdCodeISIL_"+counter).attr("value", "no");
 		} else {
 			alertEmptyFields(text2);
+		}
+	}
+	if($("input[id^='otherRepositorId']").length>0){
+		if($("#selectYICodeISIL").val()=="yes"){
+			$("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
+				$(this).attr("disabled","disabled");
+			});
+		}else{
+			var stop = -1;
+			$("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(i,v){
+				if($(this).val()=="yes"){
+					stop = i;
+					$("#selectYICodeISIL").attr("disabled","disabled");
+				}
+			});
+			$("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(i,v){
+				if(stop>-1 && stop!=i){
+					$(this).attr("disabled","disabled");
+				}else{
+					$(this).removeAttr("disabled");
+				}
+			});
 		}
 	}
 }
@@ -3134,3 +3159,50 @@ function relationsLinkToYourHolndingsGuideChanged(){
 function relationsLinkToYourHolndingsGuideTitleChanged(){
 	$("#textYIHoldingsGuideLinkTitle").attr("value", $("table#resourceRelationTable_1 #textTitleOfRelatedMaterial").val());
 }
+
+function codeISILChanged(index){
+	if(index==undefined){
+		if($("#selectYICodeISIL").val()=="yes"){
+			$("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
+				$(this).attr("disabled","disabled");
+			});
+		}else{
+			$("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
+				$(this).removeAttr("disabled");
+			});
+		}
+	}else{
+            if($("#selectOtherRepositorIdCodeISIL_"+index).val()=="yes" && index!=undefined){
+               var check = index;
+               $("#selectYICodeISIL").attr("disabled","disabled");
+               $("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(i,v){
+            	   	if(i!=check){
+            	   		$(this).attr("disabled","disabled");
+            	   	}
+	   			});
+             }else{
+                $("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
+				  $(this).removeAttr("disabled");
+			  });
+                 $("#selectYICodeISIL").removeAttr("disabled");
+           
+           }
+        }
+	var id = "";
+	if(index==undefined && $("#selectYICodeISIL").val()=="yes"){
+		id = $("#textYIIdentifierOfTheInstitution").val();
+	}else if($("#selectOtherRepositorIdCodeISIL_"+index).val()=="yes" && index!=undefined){
+		id = $("#otherRepositorId_"+index).val();
+	}else{  
+            id = $("#recordIdHidden").val();	
+	}
+	$("#textYIIdUsedInAPE").attr("value",id);
+	$("#textIdentityIdUsedInAPE").attr("value",id);
+	$("#textDescriptionIdentifier").attr("value",id);
+	
+}
+
+
+
+
+
