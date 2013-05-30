@@ -1084,6 +1084,78 @@
 					</xsl:otherwise>
 				</xsl:choose>
 
+				<!-- associatedrepositories only shown if there are values-->
+				<xsl:choose>
+					<xsl:when test="./eag:eag/eag:relations/eag:eagRelation/@href">
+						<tr>
+							<td class="header">
+								<xsl:value-of select="ape:resource('eagcontent.associatedrepositories')"/>:
+							</td>
+							<td>
+								<xsl:for-each select="./eag:eag/eag:relations/eag:eagRelation/eag:relationEntry">
+									<xsl:variable name="link" select="current()/parent::node()/@href"></xsl:variable>
+										<xsl:choose>
+											<xsl:when test="$link and $link != '' and text()">
+												<div>
+													<xsl:if test="starts-with($link, 'http')">
+														<a href="{$link}" target="_blank">
+															<xsl:value-of select="text()"/>
+														</a>
+													</xsl:if>
+													<xsl:if test="not(starts-with($link, 'http'))">
+														<a href="{$link}">
+															<xsl:value-of select="text()"/>
+														</a>
+													</xsl:if>
+													<xsl:if test="current()/parent::node()/eag:descriptiveNote/eag:p/text()">
+														<div>
+															<p id="descriptiveNoteOnEAGRelation">
+																<xsl:call-template name="multilanguageWithoutP">
+																	<xsl:with-param name="list" select="current()/parent::node()/eag:descriptiveNote/eag:p"></xsl:with-param>
+																</xsl:call-template>
+															</p>
+														</div>
+													</xsl:if>
+												</div>
+											</xsl:when>
+											<xsl:when test="$link and $link != ''">
+												<div>
+													<xsl:if test="starts-with($link, 'http')">
+														<a href="{$link}" target="_blank">
+															<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
+														</a>
+													</xsl:if>
+													<xsl:if test="not(starts-with($link, 'http'))">
+														<a href="{$link}">
+															<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
+														</a>
+													</xsl:if>
+												</div>
+											</xsl:when>
+											<xsl:when test="text()">
+												<div>
+													<xsl:value-of select="text()"/>
+												</div>
+											</xsl:when>
+										</xsl:choose>
+								</xsl:for-each>
+							</td>
+						</tr>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:if test="./eag:eag/eag:relations/eag:eagRelation/eag:relationEntry/text()">
+							<tr>
+								<td class="header">
+									<xsl:value-of select="ape:resource('eagcontent.associatedrepositories')"/>
+								</td>
+								<td>
+									<xsl:value-of select="./eag:eag/eag:relations/eag:eagRelation/eag:relationEntry"/>
+								</td>
+							</tr>
+						</xsl:if>
+					</xsl:otherwise>
+				</xsl:choose>
+
 				<!-- nonpreform and useDates only shown if there are values-->
 				<xsl:if test="./eag:eag/eag:archguide/eag:identity/eag:nonpreform">
 					<tr class="longDisplay">
@@ -1314,6 +1386,38 @@
 					<p>
 						<xsl:value-of select="."/>
 					</p>
+				</xsl:for-each>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<!-- template for language-->
+	<xsl:template name="multilanguageWithoutP">
+		<xsl:param name="list"/>
+		<xsl:choose>
+			<xsl:when test="count($list) > 1">
+				<xsl:choose>
+					<xsl:when test="$list[@xml:lang = $language.selected]">
+						<xsl:for-each select="$list[@xml:lang = $language.selected]">
+							<xsl:value-of select="."/>
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:when test="$list[@xml:lang = $language.default]">
+						<xsl:for-each select="$list[@xml:lang = $language.default]">
+							<xsl:value-of select="."/>
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
+						<xsl:for-each select="$list[@xml:lang = $language.first]">
+								<xsl:value-of select="."/>
+						</xsl:for-each>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:for-each select="$list">
+						<xsl:value-of select="."/>
 				</xsl:for-each>
 			</xsl:otherwise>
 		</xsl:choose>
