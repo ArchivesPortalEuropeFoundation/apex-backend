@@ -22,6 +22,25 @@
 				<xsl:if test="count(current()/parent::node()/eag:repository)> 1">
 					<h3 class="repositoryName">
 						<xsl:value-of select="./eag:repositoryName"></xsl:value-of>
+						<xsl:variable name="role" select="./eag:repositoryRole/text()"></xsl:variable>
+						<xsl:if test="$role">
+							<xsl:text> (</xsl:text>
+							<xsl:choose>
+								<xsl:when test="$role = 'Branch'">
+									<xsl:value-of select = "ape:resource('eag2012.option.role.branch')"/>
+								</xsl:when>
+								<xsl:when test="$role = 'Head quarter'">
+									<xsl:value-of select = "ape:resource('eag2012.option.role.headquarters')"/>
+								</xsl:when>
+								<xsl:when test="$role = 'Interim archive'">
+									<xsl:value-of select = "ape:resource('eag2012.option.role.interimArchive')"/>
+								</xsl:when>	
+								<xsl:otherwise>
+									<xsl:text></xsl:text>
+								</xsl:otherwise>
+							</xsl:choose>
+							<xsl:text>)</xsl:text>
+						</xsl:if>
 					</h3>
 				</xsl:if>
 				<div class="repositoryInfo">
@@ -46,8 +65,8 @@
 						</thead>
 						<tbody>
 
-							<!-- visitors Address only shown if there are values-->
-							<xsl:if test="eag:location[not(@localType) or @localType='visitors address']">
+							<!-- visitors Address only shown if there are values -->
+							<xsl:if test="eag:location[not(@localType) or @localType='visitors address'] and eag:location[not(@localType) or @localType='visitors address']/eag:street/text() and eag:location[not(@localType) or @localType='visitors address']/eag:municipalityPostalcode/text()">
 								<tr>
 									<td class="header">
 										<xsl:value-of select="ape:resource('eagcontent.visitorsaddress')"/>
@@ -103,7 +122,7 @@
 							</xsl:if>
 
 							<!-- postal address only shown if there are values-->
-							<xsl:if test="eag:location[@localType='postal address']">
+							<xsl:if test="eag:location[@localType='postal address'] and eag:location[@localType='postal address']/eag:street/text() and eag:location[@localType='postal address']/eag:municipalityPostalcode/text() and eag:location[@localType='postal address']/eag:municipalityPostalcode/text()">
 								<tr class="longDisplay">
 									<td class="header">
 										<xsl:value-of select="ape:resource('eagcontent.postaladdress')"></xsl:value-of>
@@ -214,10 +233,10 @@
 												<xsl:when test="$role = 'Branch'">
 													<xsl:value-of select = "ape:resource('eag2012.option.role.branch')"/>
 												</xsl:when>
-												<xsl:when test="$role = 'Headquarter'">
+												<xsl:when test="$role = 'Head quarter'">
 													<xsl:value-of select = "ape:resource('eag2012.option.role.headquarters')"/>
 												</xsl:when>
-												<xsl:when test="/eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:repositoryRole/text() = 'Interim archive'">
+												<xsl:when test="$role = 'Interim archive'">
 													<xsl:value-of select = "ape:resource('eag2012.option.role.interimArchive')"/>
 												</xsl:when>	
 												<xsl:otherwise>
@@ -393,7 +412,7 @@
 							</xsl:if>
 
 							<!-- contact searchroom only shown if there are values-->
-							<xsl:if test="eag:services/eag:searchroom/eag:contact">
+							<xsl:if test="eag:services/eag:searchroom/eag:contact and eag:services/eag:searchroom/eag:contact/eag:telephone/text() and eag:services/eag:searchroom/eag:contact/eag:email/@href != '' and eag:services/eag:searchroom/eag:webpage/@href != ''">
 								<tr class="longDisplay">
 									<td class="header subInfoHeader" colspan="2">
 										<xsl:value-of select="ape:resource('eagcontent.searchroomcontact')"/>
@@ -541,7 +560,7 @@
 								</tr>
 
 								<!-- contact library shown only if there is library-->
-								<xsl:if test="eag:services/eag:library/eag:contact">
+								<xsl:if test="eag:services/eag:library/eag:contact and eag:services/eag:library/eag:contact/eag:telephone/text() and eag:services/eag:library/eag:contact/eag:email/@href != '' and eag:services/eag:library/eag:webpage/@href != ''">
 									<tr class="longDisplay">
 										<td class="header subInfoHeader" colspan="2">
 											<xsl:value-of select="ape:resource('eagcontent.librarycontact')"/>
@@ -663,7 +682,7 @@
 							</xsl:if>
 
 							<!-- contact reproductionser only shown if there are values-->
-							<xsl:if test="eag:services/eag:techservices/eag:reproductionser/eag:contact">
+							<xsl:if test="eag:services/eag:techservices/eag:reproductionser/eag:contact and eag:services/eag:techservices/eag:reproductionser/eag:contact/eag:telephone/text() and eag:services/eag:techservices/eag:reproductionser/eag:contact/eag:email/@href != '' and eag:services/eag:techservices/eag:reproductionser/eag:webpage/@href != ''">
 								<tr class="longDisplay">
 									<td class="header subInfoHeader" colspan="2">
 										<xsl:value-of select="ape:resource('eagcontent.reproductionsservicecontact')"/>
@@ -708,7 +727,7 @@
 							</xsl:if>
 
 							<!-- contact restorationlab only shown if there are values-->
-							<xsl:if test="eag:services/eag:techservices/eag:restorationlab/eag:contact">
+							<xsl:if test="eag:services/eag:techservices/eag:restorationlab/eag:contact and eag:services/eag:techservices/eag:restorationlab/eag:contact/eag:telephone/text() and eag:services/eag:techservices/eag:restorationlab/eag:contact/eag:email/@href != '' and eag:services/eag:techservices/eag:restorationlab/eag:webpage/@href != ''">
 								<tr class="longDisplay">
 									<td class="header subInfoHeader" colspan="2">
 										<xsl:value-of select="ape:resource('eagcontent.restorationlabcontact')"/>
@@ -732,7 +751,7 @@
 							</xsl:if>
 
 							<!-- refreshment only shown if there are values-->
-							<xsl:if test="eag:services/eag:recreationalServices/eag:refreshment">
+							<xsl:if test="eag:services/eag:recreationalServices/eag:refreshment/eag:descriptiveNote/eag:p/text()">
 								<tr class="longDisplay">
 									<td class="header">
 										<xsl:value-of select="ape:resource('eagcontent.refreshmentarea')"/>
@@ -806,30 +825,6 @@
 													<xsl:value-of select="."/>
 												</a>
 											</div>
-										</xsl:for-each>
-									</td>
-								</tr>
-							</xsl:if>
-							
-							<!-- associatedrepositories only shown if there are values-->
-							<xsl:if test="count(current()/parent::node()/eag:repository)> 1">
-								<tr>
-									<td class="header">
-										<xsl:value-of select="ape:resource('eagcontent.associatedrepositories')"/>
-									</td>
-									<td>
-										<xsl:for-each select="current()/parent::node()/eag:repository">
-											<xsl:variable name="otherRepositoryId" select="position()"/>
-											<xsl:if test="$id != $otherRepositoryId">
-												<div>
-													<a href="javascript:displayRepository('{$otherRepositoryId}');">
-														<xsl:value-of select="./eag:repositoryName"/>
-														<xsl:text> (</xsl:text>
-														<xsl:value-of select="./eag:repositoryRole"/>
-														<xsl:text>)</xsl:text>
-													</a>
-												</div>
-											</xsl:if>
 										</xsl:for-each>
 									</td>
 								</tr>
@@ -1206,7 +1201,7 @@
 		<xsl:param name="parent" select="current()"/>
 		<xsl:param name="class"/>
 		<xsl:param name="trClass" select="''"/>
-		<xsl:if test="$parent/eag:email/@href">
+		<xsl:if test="$parent/eag:email/@href and $parent/eag:email/@href != ''">
 			<tr class="{$trClass}">
 				<td class="{$class}">
 					<xsl:value-of select="ape:resource('eagcontent.email')"/>
@@ -1237,7 +1232,7 @@
 		<xsl:param name="parent" select="current()"/>
 		<xsl:param name="class"/>
 		<xsl:param name="trClass" select="''"/>
-		<xsl:if test="$parent/eag:webpage/@href">
+		<xsl:if test="$parent/eag:webpage/@href and $parent/eag:webpage/@href != ''">
 			<tr class="{$trClass}">
 				<td class="{$class}">
 					<xsl:value-of select="ape:resource('eagcontent.webpage')"/>
@@ -1268,7 +1263,7 @@
 		<xsl:param name="parent" select="current()"/>
 		<xsl:param name="class"/>
 		<xsl:param name="trClass" select="''"/>
-		<xsl:if test="$parent/eag:telephone">
+		<xsl:if test="$parent/eag:telephone and $parent/eag:telephone/text()">
 			<tr class="{$trClass}">
 				<td class="{$class}">
 					<xsl:value-of select="ape:resource('eagcontent.tel')"/>
