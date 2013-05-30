@@ -665,20 +665,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			String loadPath = archivalInstitution.getEagPath();
 			File eagFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + loadPath));
 
-			try {
-				InputStream eagStream = FileUtils.openInputStream(eagFile);
+			if (loadPath != null && !loadPath.isEmpty()) {
+				try {
+					InputStream eagStream = FileUtils.openInputStream(eagFile);
 
-				JAXBContext jaxbContext = JAXBContext.newInstance(Eag.class);
-				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-	            eag = (Eag) jaxbUnmarshaller.unmarshal(eagStream);
+					JAXBContext jaxbContext = JAXBContext.newInstance(Eag.class);
+					Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+		            eag = (Eag) jaxbUnmarshaller.unmarshal(eagStream);
 
-	            eagStream.close();		
-			} catch (JAXBException jaxbe) {
-				log.info(jaxbe.getMessage());
-				jaxbe.printStackTrace();
-			} catch (IOException ioe) {
-				log.info(ioe.getMessage());
-				ioe.printStackTrace();
+		            eagStream.close();		
+				} catch (JAXBException jaxbe) {
+					log.info(jaxbe.getMessage());
+				} catch (IOException ioe) {
+					log.info(ioe.getMessage());
+				}
 			}
 
 			// Fill EAG2012 JAXB object.
@@ -694,6 +694,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				// Save in a temporal file.
 				String tempPath = path.replace(".xml", "_temp.xml");
 				eagFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + tempPath));
+				
+				if (!eagFile.exists()) {
+					FileUtils.writeStringToFile(eagFile, "new file");
+				}
 
 				jaxbMarshaller.marshal(eag, eagFile);
 
@@ -703,12 +707,25 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				if (apEnetEAGDashboard.validate()) {
 					log.info("EAG is valid");
 
-                    // Check the <recordId> content.
-
 					// Move temp file to final file.
 					File eagFinalFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + path));
-					FileUtils.forceDelete(eagFinalFile);
+					try {
+						FileUtils.forceDelete(eagFinalFile);
+					} catch (IOException e) {
+						log.error(e.getMessage(),e);
+					}
 					FileUtils.moveFile(eagFile, eagFinalFile);
+
+					//store ddbb path
+					ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
+					archivalInstitution = archivalInstitutionDao.getArchivalInstitution(getAiId());
+					if(archivalInstitution!=null){
+						archivalInstitution.setEagPath(path);
+						archivalInstitutionDao.store(archivalInstitution);
+						log.info("EAG2012 stored to "+path);
+					}else{
+						log.error("Could not be stored EAG2012 path, reason: null archival institution");
+					}
 				} else {
 					this.setWarnings(apEnetEAGDashboard.showWarnings());
 					//The EAG has been neither validated nor converted.
@@ -731,17 +748,6 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				log.error(e.getMessage());
 			} catch (IOException e) {
 				log.error(e.getMessage(),e);
-			}
-			
-			//store ddbb path
-			ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
-			archivalInstitution = archivalInstitutionDao.getArchivalInstitution(getAiId());
-			if(archivalInstitution!=null){
-				archivalInstitution.setEagPath(path);
-				archivalInstitutionDao.store(archivalInstitution);
-				log.info("EAG2012 stored to "+path);
-			}else{
-				log.error("Could not be stored EAG2012 path, reason: null archival institution");
 			}
 			
 		}
