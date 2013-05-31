@@ -721,6 +721,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					archivalInstitution = archivalInstitutionDao.getArchivalInstitution(getAiId());
 					if(archivalInstitution!=null){
 						archivalInstitution.setEagPath(path);
+						archivalInstitution.setRepositorycode(eag2012.getRecordIdValue());
 						archivalInstitutionDao.store(archivalInstitution);
 						log.info("EAG2012 stored to "+path);
 					}else{
