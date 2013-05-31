@@ -10,12 +10,9 @@ import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.UpdateSolrServerHolder;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.utils.ContentUtils;
-import eu.apenet.persistence.dao.EadContentDAO;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead;
-import eu.apenet.persistence.vo.EadContent;
-import eu.apenet.persistence.vo.HoldingsGuide;
 
 public class UnpublishTask extends AbstractEadTask {
 
@@ -27,7 +24,7 @@ public class UnpublishTask extends AbstractEadTask {
 		return ead.isPublished();
 	}
 	@Override
-	protected void execute(Ead ead, Properties properties) throws Exception {
+	public void execute(Ead ead, Properties properties) throws Exception {
 		if (valid(ead)) {
 			try {
 				EadDAO eadDAO = DAOFactory.instance().getEadDAO();
@@ -35,18 +32,6 @@ public class UnpublishTask extends AbstractEadTask {
 				logger.debug("Removing the EAD (" + xmlType.getName() + ") with eadid '" + ead.getEadid()
 						+ "' from the index");
 				deleteFromSolr(ead.getEadid(), ead.getAiId());
-				EadContentDAO eadContentDAO = DAOFactory.instance().getEadContentDAO();
-				EadContent eadContent;
-
-				if (xmlType.equals(XmlType.EAD_HG))
-					eadContent = eadContentDAO.getEadContentByHoldingsGuideId(ead.getId());
-				else if (xmlType.equals(XmlType.EAD_FA))
-					eadContent = eadContentDAO.getEadContentByFindingAidId(ead.getId());
-				else
-					eadContent = eadContentDAO.getEadContentBySourceGuideId(ead.getId());
-				if (eadContent != null)
-					eadContentDAO.delete(eadContent);
-
 				logger.debug("Changing EAD (" + xmlType.getName() + ") state of the EAD with eadid " + ead.getEadid());
 				ContentUtils.changeSearchable(ead, false);
 				ead.setTotalNumberOfUnits(0l);

@@ -4,7 +4,10 @@ import java.util.Properties;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.dashboard.indexing.EADParser;
+import eu.apenet.dashboard.services.ead.publish.database.DatabaseEadPublisher;
+import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.EadContent;
 import eu.apenet.persistence.vo.ValidatedState;
 
 public class PublishTask extends AbstractEadTask {
@@ -12,12 +15,28 @@ public class PublishTask extends AbstractEadTask {
 		return ValidatedState.VALIDATED.equals(ead.getValidated()) && !ead.isPublished();
 	}
 	@Override
-	protected void execute(Ead ead, Properties properties) throws Exception {
+	public void execute(Ead ead, Properties properties) throws Exception {
 		if (valid(ead)) {
 			try {
 				long startTime = System.currentTimeMillis();
-				EADParser.parseEadAndIndex(ead);
-				logAction(ead, true, System.currentTimeMillis()-startTime);
+				/*
+				 * there is something wrong
+				 */
+				if (ead.getEadContents().size() > 1){
+					for (EadContent eadContent: ead.getEadContents()){
+						DAOFactory.instance().getEadContentDAO().delete(eadContent);
+					}
+				}
+				String message = null;
+				if (ead.getEadContent() == null){
+					message = "xml";
+					EADParser.parseEadAndIndex(ead);					
+				}else {
+					message = "database";
+					DatabaseEadPublisher.publish(ead);
+				}
+
+				logAction(ead, message, true, System.currentTimeMillis()-startTime);
 			} catch (Exception e) {
 				logAction(ead, false);
 				throw new APEnetException("Could not publish the file with ID: " + ead.getId(), e);
