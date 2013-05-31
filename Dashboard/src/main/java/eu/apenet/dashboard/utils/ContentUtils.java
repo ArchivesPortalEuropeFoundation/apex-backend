@@ -40,11 +40,9 @@ import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
-import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EadSearchOptions;
-import eu.apenet.persistence.dao.HoldingsGuideDAO;
 import eu.apenet.persistence.dao.SentMailRegisterDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -576,9 +574,7 @@ public class ContentUtils {
 	// rebuilds the
 	// global archival landscape
 	public static void addLinkHGtoAL(HoldingsGuide hg) {
-		ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
-		ArchivalInstitution archivalInstitution = archivalInstitutionDao
-				.findById(hg.getArchivalInstitution().getAiId());
+		ArchivalInstitution archivalInstitution = hg.getArchivalInstitution();
 		LOGGER.info("Modifying Archival Landscape because of HG file modification for Archival Institution id: "
 				+ hg.getArchivalInstitution().getAiId());
 
@@ -637,8 +633,6 @@ public class ContentUtils {
 					// The local archival landscape already has a repository tag
 					// so it is necessary to change its value
 					Element extrefNode = null;
-					Node otherfindaid = parentNodeList.item(j);
-					NodeList repositoryChildren = otherfindaid.getChildNodes();
 					NodeList otherNode = doc.getElementsByTagName("otherfindaid");
 					Boolean extrefFound = false;
 					if (otherNode.item(0).hasChildNodes()) {
@@ -659,9 +653,6 @@ public class ContentUtils {
 									// check if the str doesn't exist in ddbb I
 									// have to delete
 									ArchivalInstitution ai = hg.getArchivalInstitution();
-									HoldingsGuide hg2 = new HoldingsGuide();
-									List<String> collection = new ArrayList<String>();
-									HoldingsGuideDAO holdingsGuideDao = DAOFactory.instance().getHoldingsGuideDAO();
 									boolean hgFound = DAOFactory.instance().getEadDAO()
 											.isEadidUsed(str, ai.getAiId(), HoldingsGuide.class) != null;
 									if (!hgFound) {
@@ -756,9 +747,6 @@ public class ContentUtils {
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}
-
-		archivalInstitutionDao = null;
-		archivalInstitution = null;
 
 	}
 	public static void downloadXml(HttpServletRequest request, HttpServletResponse response, File file) throws IOException{

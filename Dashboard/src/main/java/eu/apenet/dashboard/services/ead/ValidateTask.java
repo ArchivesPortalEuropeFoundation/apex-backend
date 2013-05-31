@@ -17,13 +17,14 @@ import org.xml.sax.helpers.LocatorImpl;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.Xsd_enum;
-import eu.apenet.persistence.dao.WarningsDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.ValidatedState;
 import eu.apenet.persistence.vo.Warnings;
 
@@ -131,6 +132,9 @@ public class ValidateTask extends AbstractEadTask {
 					}
 				}
 				DAOFactory.instance().getEadDAO().store(ead);
+				if (ead instanceof HoldingsGuide) {
+					ContentUtils.addLinkHGtoAL((HoldingsGuide)ead);
+				}
 				logAction(ead, true);
 			} catch (Exception e) {
 				logAction(ead, false);
