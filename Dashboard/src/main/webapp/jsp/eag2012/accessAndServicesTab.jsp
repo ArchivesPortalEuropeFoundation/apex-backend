@@ -621,7 +621,7 @@
 
 		<tr>
 			<td id="reproductionServiceLabel">
-				<label for="selectASTSReproductionService"><s:property value="getText('label.ai.accessAndServices.reproductionService')" /><span class="required">*</span>:</label>
+				<label for="selectASTSReproductionService"><s:property value="getText('label.ai.accessAndServices.reproductionService')" />:</label>
 			</td>
 			<td>
 				<select id="selectASTSReproductionService">
