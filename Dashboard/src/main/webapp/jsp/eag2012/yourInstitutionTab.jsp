@@ -178,7 +178,7 @@
 		</tr>
 	</table>
 
-	<table id="yiTableOthers" class="tablePadding">
+	<table id="yiTableButtonAddVisitorsAddress" class="tablePadding">
 		<tr>
 			<td colspan="2">
 				<input type="button" id="buttonAddVisitorsAddressTranslation" value="<s:property value="getText('label.ai.tabs.commons.addFurtherVisitorsAddress')"/>" onclick="yiAddVisitorsAddressTranslation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
@@ -186,7 +186,9 @@
 			<td colspan="2">
 			</td>
 		</tr>
+	</table>
 
+	<table id="yiTableOthers" class="tablePadding">
 		<tr>
 			<td colspan="4">
 				<input type="button" id="buttonAddPostalAddressIfDifferent" value="<s:property value="getText('label.ai.tabs.commons.addPostalAddressIfDifferent')"/>" onclick="yiAddPostalAddressIfDifferent('<s:property value="getText('label.ai.yourinstitution.postalAddress')" />', '<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />', '<s:property value="getText('label.ai.tabs.commons.street')" />', '<s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')" />')" />

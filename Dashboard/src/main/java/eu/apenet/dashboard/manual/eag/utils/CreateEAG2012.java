@@ -900,7 +900,11 @@ public class CreateEAG2012 {
 								if (location.getCountry() == null) {
 									location.setCountry(new Country());
 								}
-								location.getCountry().setContent(postalCountryList.get(j));
+								if (postalCountryList.size() > j) {
+									location.getCountry().setContent(postalCountryList.get(j));
+								} else {
+									location.getCountry().setContent(postalCountryList.get(0));
+								}
 								// eag/archguide/desc/repositories/repository/location/country/lang
 								if (!Eag2012.OPTION_NONE.equalsIgnoreCase(language)) {
 									location.getCountry().setLang(language);

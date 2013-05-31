@@ -1139,7 +1139,7 @@ function yiAddPostalAddressIfDifferent(text1, text2, text3, text4) {
 				'<input type="text" id="textYIPAStreet" />'+
 			'</td>'+
 			'<td id="yiPostalAddressLanguage" class="labelLeft">'+
-				'<label for="selectYIPASelectLanguage">'+text2+'<span class="required">*</span>:</label>'+
+				'<label for="selectYIPASelectLanguage">'+text2+':</label>'+
 			'</td>'+
 			'<td>'+select+
 			'</td>'+
@@ -1161,10 +1161,9 @@ function yiAddPostalAddressTranslation(text1) {
 	var counter = $("table[id^='yiTablePostalAddress_']").length;
 
 	var street = $("table#yiTablePostalAddress_"+counter+" input#textYIPAStreet").attr("value");
-	var valanguage = $("table#yiTablePostalAddress_"+counter+" select#selectYIPASelectLanguage").attr("value");
 	var city = $("table#yiTablePostalAddress_"+counter+" input#textYIPACity").attr("value");
 
-	if (street != null && street != "" && valanguage != "none"
+	if (street != null && street != ""
 		&& city != null && city != "") {
 		var clone = $("table[id^='yiTablePostalAddress_"+counter+"']").clone();
 		clone = "<table id='"+("yiTablePostalAddress_"+(counter+1))+"' class=\"tablePadding\">"+clone.html()+"</table>";
@@ -1173,6 +1172,8 @@ function yiAddPostalAddressTranslation(text1) {
 		$("table#yiTablePostalAddress_"+(counter+1)+" input[type='text']").each(function(){
 			$(this).val(""); // Clean all input_text.
 		});
+		// Remove "*".
+		$("table#yiTablePostalAddress_"+(counter+1)).find("span").remove();
 	} else {
 		alertEmptyFields(text1);
 	}
@@ -1698,11 +1699,10 @@ function contactAddVisitorsAddressTranslation(text1) {
 function contactAddPostalAddressIfDifferent(property1, property2, property3, property4) {
 	var currentTab = getCurrentTab();
 	var select = '<select id="selectContactLanguagePostalAddress">'+$("#selectLanguageVisitorAddress").html()+'</select>';
-	var counter = $("table#contactTable"+currentTab+" table[id^='contactTableVisitorsAddress_']").length;
 
 	$("table#contactTable"+currentTab+" input#buttonContactAddPostalAddressIfDifferent").hide();
 
-	$("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter).after('<tr><td><table id="contactTablePostalAddress_1">'+
+	$("table#contactTable"+currentTab+" tr#trButtonContactAddPostalAddressIfDifferent").after('<tr><td colspan="4"><table id="contactTablePostalAddress_1">'+
 		'<tr id="trContactPostalAddressLabel">'+
 			'<td id="postalAddressLabel" colspan="4">'+property1+
 			'</td>'+
@@ -1737,10 +1737,9 @@ function contactAddPostalAddressTranslation(text1) {
 	var counter = $("table#contactTable"+currentTab+" table[id^='contactTablePostalAddress_']").length;
 
 	var street = $("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+counter+" input#textContactPAStreet").attr("value");
-	var valanguage = $("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+counter+" select#selectContactLanguagePostalAddress").attr("value");
 	var city = $("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+counter+" input#textContactPACity").attr("value");
 
-	if (street == null || street == "" || valanguage == "none"
+	if (street == null || street == ""
 			|| city == null || city == "") {
 		alertEmptyFields(text1);
 		return;
@@ -3197,8 +3196,3 @@ function codeISILChanged(index){
 	$("#textDescriptionIdentifier").attr("value",id);
 	
 }
-
-
-
-
-
