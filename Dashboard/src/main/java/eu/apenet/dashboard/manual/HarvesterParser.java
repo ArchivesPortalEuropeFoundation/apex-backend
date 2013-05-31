@@ -1,17 +1,26 @@
 package eu.apenet.dashboard.manual;
 
-import eu.apenet.commons.exceptions.APEnetException;
-import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.actions.ajax.EditEadAction;
-import eu.apenet.dashboard.indexing.AbstractParser;
-import eu.apenet.dashboard.indexing.EADNamespaceContext;
-import eu.apenet.dashboard.indexing.EADParser;
-import eu.apenet.persistence.dao.*;
-import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.hibernate.HibernateUtil;
-import eu.apenet.persistence.vo.*;
-import eu.apenet.dpt.utils.service.TransformationTool;
-import eu.apenet.dpt.utils.util.SeparateFinnishFiles;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -22,18 +31,23 @@ import org.codehaus.stax2.XMLStreamReader2;
 import org.codehaus.stax2.XMLStreamWriter2;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 
-import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import java.io.*;
-import java.util.*;
+import eu.apenet.commons.exceptions.APEnetException;
+import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.services.ead.xml.AbstractParser;
+import eu.apenet.dashboard.services.ead.xml.EADNamespaceContext;
+import eu.apenet.dpt.utils.service.TransformationTool;
+import eu.apenet.dpt.utils.util.SeparateFinnishFiles;
+import eu.apenet.persistence.dao.CLevelDAO;
+import eu.apenet.persistence.dao.EadContentDAO;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.hibernate.HibernateUtil;
+import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.CLevel;
+import eu.apenet.persistence.vo.EadContent;
+import eu.apenet.persistence.vo.FileType;
+import eu.apenet.persistence.vo.UpFile;
+import eu.apenet.persistence.vo.UploadMethod;
 
 /**
  * User: Yoann Moranville

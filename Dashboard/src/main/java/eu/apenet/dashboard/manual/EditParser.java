@@ -1,10 +1,15 @@
 package eu.apenet.dashboard.manual;
 
-import eu.apenet.dashboard.actions.ajax.EditEadAction;
-import eu.apenet.dashboard.indexing.AbstractParser;
-import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.CLevel;
-import eu.apenet.persistence.vo.EadContent;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -13,14 +18,11 @@ import org.codehaus.stax2.XMLOutputFactory2;
 import org.codehaus.stax2.XMLStreamReader2;
 import org.codehaus.stax2.XMLStreamWriter2;
 
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.List;
-import java.util.Map;
+import eu.apenet.dashboard.actions.ajax.EditEadAction;
+import eu.apenet.dashboard.services.ead.xml.AbstractParser;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.CLevel;
+import eu.apenet.persistence.vo.EadContent;
 
 /**
  * User: Yoann Moranville
