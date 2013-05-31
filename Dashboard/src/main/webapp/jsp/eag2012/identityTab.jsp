@@ -42,7 +42,7 @@
 				<input type="text" id="textNameOfTheInstitution" value="${loader.autform}" disabled="disabled" />
 			</td>
 			<td id="tdNameOfTheInstitutionLanguage" class="labelLeft">
-				<label for="noti_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" /><span class="required">*</span>:</label>
+				<label for="noti_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
 				<select id="noti_languageList" disabled="disabled" >

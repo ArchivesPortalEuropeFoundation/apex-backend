@@ -1102,11 +1102,10 @@ function yiAddVisitorsAddressTranslation(text1) {
 	var counter = $("table[id^='yiTableVisitorsAddress_']").length;
 
 	var street = $("table#yiTableVisitorsAddress_"+counter+" input#textYIStreet").attr("value");
-	var valanguage = $("table#yiTableVisitorsAddress_"+counter+" select#selectYIVASelectLanguage").attr("value");
 	var city = $("table#yiTableVisitorsAddress_"+counter+" input#textYICity").attr("value");
 	var country = $("table#yiTableVisitorsAddress_"+counter+" input#textYICountry").attr("value");
 
-	if (street != null && street != "" && valanguage != "none"
+	if (street != null && street != ""
 			&& city != null && city != "" && country != null && country != "") {
 		var clone = $("table[id^='yiTableVisitorsAddress_"+counter+"']").clone();
 		clone = "<table id='"+("yiTableVisitorsAddress_"+(counter+1))+"' class=\"tablePadding\">"+clone.html()+"</table>";
@@ -1442,10 +1441,8 @@ function addAnotherFormOfTheAuthorizedName(text1){
 
 	if (counter > 1) {
 		var nameOfInstitution = $("table#identityTableNameOfTheInstitution_"+counter+" input#textNameOfTheInstitution").attr("value");
-		var nameOfInstitutionLanguage = $("table#identityTableNameOfTheInstitution_"+counter+" select#noti_languageList").attr("value");
 
-		if (nameOfInstitution == null || nameOfInstitution == ""
-				|| nameOfInstitutionLanguage == "none") {
+		if (nameOfInstitution == null || nameOfInstitution == "") {
 			alertEmptyFields(text1);
 			return;
 		}
@@ -1671,14 +1668,13 @@ function contactAddVisitorsAddressTranslation(text1) {
 	var counter = $("table#contactTable"+currentTab+" table[id^='contactTableVisitorsAddress_']").length;
 
 	var street = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" input#textContactStreetOfTheInstitution").attr("value");
-	var valanguage = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" select#selectLanguageVisitorAddress").attr("value");
 	var city = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" input#textContactCityOfTheInstitution").attr("value");
 //	var district = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" input#textContactDistrictOfTheInstitution").attr("value");
 //	var county = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" input#textContactCountyOfTheInstitution").attr("value");
 //	var region = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" input#textContactRegionOfTheInstitution").attr("value");
 	var country = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" input#textContactCountryOfTheInstitution").attr("value");
 
-	if (street == null || street == "" || valanguage == "none"
+	if (street == null || street == "" 
 			|| city == null || city == "" /*|| district == null || district == ""
 			|| county == null || county == "" || region == null || region == "" */
 			|| country == null || country == "") {
