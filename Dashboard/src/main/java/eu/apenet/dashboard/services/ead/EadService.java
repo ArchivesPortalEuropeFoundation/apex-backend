@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.exceptions.APEnetRuntimeException;
@@ -114,7 +113,7 @@ public class EadService {
 	public static void publish(XmlType xmlType, Integer id) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
-		SecurityContext.get().checkAuthorized(ead);
+		//SecurityContext.get().checkAuthorized(ead);
 		if (PublishTask.valid(ead)) {
 			addToQueue(ead, QueueAction.PUBLISH, null);
 		}

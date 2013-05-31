@@ -133,7 +133,8 @@ public class ConvertTask extends AbstractEadTask {
 				logger.debug("Converted file takes name of original file.");
 				FileUtils.copyFile(outputfile, file);
 				outputfile.delete();
-				DAOFactory.instance().getEadDAO().store(ead);
+				ead = DAOFactory.instance().getEadDAO().store(ead);
+				LinkingService.linkWithHgOrSg(ead);
 				logAction(ead, true);
 			} catch (Exception e) {
 				logAction(ead, false);

@@ -19,7 +19,6 @@ import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
 import eu.apenet.persistence.vo.UpFile;
-import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class CreateEadTask extends AbstractEadTask {
 
@@ -92,13 +91,12 @@ public class CreateEadTask extends AbstractEadTask {
 
 			if (uploadDir.listFiles().length == 0)
 				FileUtils.forceDelete(uploadDir);
+			LinkingService.linkWithHgOrSg(newEad);
 			logAction(xmlType, fileName, null);
 			return newEad;
 
 		} catch (Exception e) {
 			logAction(xmlType, fileName, e);
-			
-			JpaUtil.rollbackDatabaseTransaction();
 			throw new APEnetException("Could not create the file with from: " + upFile.getFilename(), e);
 		}
 	}
@@ -124,7 +122,7 @@ public class CreateEadTask extends AbstractEadTask {
 		} else if (xmlType == XmlType.EAD_HG) {
 			return startPath + "HG" + APEnetUtilities.FILESEPARATOR;
 		} else if (xmlType == XmlType.EAD_SG) {
-			return startPath + "HG" + APEnetUtilities.FILESEPARATOR;
+			return startPath + "SG" + APEnetUtilities.FILESEPARATOR;
 		}
 		return null;
 	}
