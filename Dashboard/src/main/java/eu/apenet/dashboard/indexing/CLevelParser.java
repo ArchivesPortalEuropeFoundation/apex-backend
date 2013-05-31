@@ -11,6 +11,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
+import eu.apenet.dashboard.services.ead.LinkingService;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.CLevel;
@@ -171,21 +172,7 @@ public class CLevelParser extends AbstractParser {
 				clevel.setLeaf(true);
 			}						
 			if (clevel.getHrefEadid() != null){
-				if (ead instanceof HoldingsGuide || ead instanceof SourceGuide){
-					Ead linkedFindingAid = DAOFactory.instance().getEadDAO().getEadByEadid(FindingAid.class, ead.getAiId(), clevel.getHrefEadid());
-					if (linkedFindingAid != null){
-						HgSgFaRelation hgSgFaRelation = new HgSgFaRelation();
-						hgSgFaRelation.setFaId(linkedFindingAid.getId());
-						hgSgFaRelation.setAiId(ead.getAiId());
-						hgSgFaRelation.setHgSgClevelId(clevel.getClId());
-						if(ead instanceof HoldingsGuide){
-							hgSgFaRelation.setHgId(ead.getId());
-						}else if(ead instanceof SourceGuide){
-							hgSgFaRelation.setSgId(ead.getId());
-						}
-						HibernateUtil.getDatabaseSession().save(hgSgFaRelation);
-					}
-				}
+				LinkingService.linkWithoutCommit(ead, clevel);
 			}
 			clId  = clevel.getClId();
 			clevel = null;
