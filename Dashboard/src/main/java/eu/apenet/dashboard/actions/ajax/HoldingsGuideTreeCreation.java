@@ -31,11 +31,11 @@ import org.xml.sax.InputSource;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.indexing.AbstractParser;
-import eu.apenet.dashboard.indexing.EADNamespaceContext;
-import eu.apenet.dashboard.indexing.EADParser;
 import eu.apenet.dashboard.manual.ReconstructEadFile;
 import eu.apenet.dashboard.manual.hgTreeCreation.CLevelTreeNode;
+import eu.apenet.dashboard.services.ead.xml.AbstractParser;
+import eu.apenet.dashboard.services.ead.xml.EADNamespaceContext;
+import eu.apenet.dashboard.services.ead.xml.XmlEadParser;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.HibernateUtil;
@@ -79,7 +79,7 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
                 if(stateOfHG.equals(ERROR))
                     return ERROR;
                 if(stateOfHG.equals(SUCCESS))
-                    EADParser.parseEad(holdingsGuide);
+                    XmlEadParser.parseEad(holdingsGuide);
                 getAllFindingAids(holdingsGuide.getArchivalInstitution()); //In order to retrieve it a load time and have the data in the session
             } else if(aiId != null){
                 getAllFindingAids(DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId));

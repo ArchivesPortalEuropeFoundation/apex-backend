@@ -15,10 +15,10 @@ import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.exception.NotAuthorizedException;
-import eu.apenet.dashboard.indexing.EADParser;
 import eu.apenet.dashboard.manual.EditParser;
 import eu.apenet.dashboard.manual.ReconstructEadFile;
 import eu.apenet.dashboard.security.SecurityContext;
+import eu.apenet.dashboard.services.ead.xml.XmlEadParser;
 import eu.apenet.persistence.dao.EadContentDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.HibernateUtil;
@@ -120,7 +120,7 @@ public class EditEadAction extends AjaxControllerAbstractAction {
             		throw new APEnetException(getText("editEadAction.faStateNotCompliant"));
             	}
             }
-            EADParser.parseEad(ead);
+            XmlEadParser.parseEad(ead);
 
             writer.append(new JSONObject().put("dbEntriesCreated", true).toString());
             writer.close();
