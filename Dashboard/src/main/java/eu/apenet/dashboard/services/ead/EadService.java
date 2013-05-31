@@ -113,7 +113,7 @@ public class EadService {
 	public static void publish(XmlType xmlType, Integer id) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
-		//SecurityContext.get().checkAuthorized(ead);
+		SecurityContext.get().checkAuthorized(ead);
 		if (PublishTask.valid(ead)) {
 			addToQueue(ead, QueueAction.PUBLISH, null);
 		}
