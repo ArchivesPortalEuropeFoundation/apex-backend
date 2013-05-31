@@ -36,6 +36,7 @@ import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.solr.UpdateSolrServerHolder;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.services.ead.xml.EADNamespaceContext;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.WarningsDAO;
