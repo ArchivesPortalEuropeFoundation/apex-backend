@@ -179,10 +179,7 @@ public class EADParser extends AbstractParser {
 				indexer.commitAll(eadCounts);
 			}
 			HibernateUtil.commitDatabaseTransaction();
-			if (indexer != null && ead instanceof HoldingsGuide) {
-				ContentUtils.addLinkHGtoAL((HoldingsGuide)ead);
-			}
-			
+		
 		} catch (Exception de) {
 			if ((initialFilePath!=null) &&(initialFilePath.contains(APEnetUtilities.FILESEPARATOR))){
                 LOG.error("Something has happened in parse method: " +de);
