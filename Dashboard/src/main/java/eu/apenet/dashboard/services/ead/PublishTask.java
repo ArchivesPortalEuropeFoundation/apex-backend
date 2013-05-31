@@ -3,8 +3,8 @@ package eu.apenet.dashboard.services.ead;
 import java.util.Properties;
 
 import eu.apenet.commons.exceptions.APEnetException;
-import eu.apenet.dashboard.indexing.EADParser;
-import eu.apenet.dashboard.services.ead.publish.database.DatabaseEadPublisher;
+import eu.apenet.dashboard.services.ead.database.DatabaseEadPublisher;
+import eu.apenet.dashboard.services.ead.xml.XmlEadParser;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
@@ -30,7 +30,7 @@ public class PublishTask extends AbstractEadTask {
 				String message = null;
 				if (ead.getEadContent() == null){
 					message = "xml";
-					EADParser.parseEadAndIndex(ead);					
+					XmlEadParser.parseEadAndPublish(ead);					
 				}else {
 					message = "database";
 					DatabaseEadPublisher.publish(ead);

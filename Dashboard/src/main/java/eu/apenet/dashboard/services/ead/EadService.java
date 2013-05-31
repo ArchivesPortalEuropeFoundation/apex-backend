@@ -14,8 +14,8 @@ import org.apache.log4j.Logger;
 import eu.apenet.commons.exceptions.APEnetRuntimeException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.indexing.EADParser;
 import eu.apenet.dashboard.security.SecurityContext;
+import eu.apenet.dashboard.services.ead.xml.XmlEadParser;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EadSearchOptions;
@@ -49,7 +49,7 @@ public class EadService {
 		SecurityContext.get().checkAuthorized(ead);
 		if (ead.getEadContent() == null) {
 			try {
-				EADParser.parseEad(ead);
+				XmlEadParser.parseEad(ead);
 			} catch (Exception e) {
 				throw new APEnetRuntimeException(e);
 			}
