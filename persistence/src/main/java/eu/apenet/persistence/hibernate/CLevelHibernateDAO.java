@@ -257,6 +257,21 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		}
 		return " FROM CLevel clevel JOIN clevel.eadContent eadContent WHERE eadContent." + varName + " = :id AND clevel.hrefEadid IS NOT NULL AND clevel.clId NOT IN (SELECT hgSgFaRelation.hgSgClevelId FROM HgSgFaRelation hgSgFaRelation WHERE hgSgFaRelation." + varName + " = :id)";
 	}
+
+	@Override
+	public List<CLevel> getClevelsFromSgOrHg(Integer aiId, String eadid) {
+		String jpaQuery =  "SELECT clevel FROM CLevel clevel JOIN clevel.eadContent eadContent WHERE clevel.hrefEadid = :eadid AND " +
+				"clevel.clId NOT IN (SELECT hgSgFaRelation.hgSgClevelId FROM HgSgFaRelation hgSgFaRelation WHERE hgSgFaRelation.hgSgClevelId =  clevel.clId) AND" +
+				"(eadContent.hgId IN " +
+				"(SELECT holdingsGuide.id FROM HoldingsGuide holdingsGuide WHERE holdingsGuide.aiId = :aiId)" +
+				"OR eadContent.sgId IN " +
+				"(SELECT sourceGuide.id FROM SourceGuide sourceGuide WHERE sourceGuide.aiId = :aiId)" +
+				")" ;
+		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);		
+		query.setParameter("aiId", aiId);
+		query.setParameter("eadid", eadid);
+		return query.getResultList();
+	}
 	
 
 }

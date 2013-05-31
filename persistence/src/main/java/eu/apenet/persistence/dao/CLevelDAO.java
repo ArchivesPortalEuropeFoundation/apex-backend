@@ -46,6 +46,7 @@ public interface CLevelDAO extends GenericDAO<CLevel, Long> {
 
 	public List<CLevel> getNotLinkedCLevels(Integer id,Class<? extends Ead> clazz);
 
-	public Long countNotLinkedCLevels(Integer id,Class<? extends Ead> clazz);	
+	public Long countNotLinkedCLevels(Integer id,Class<? extends Ead> clazz);
+	public List<CLevel> getClevelsFromSgOrHg(Integer aiId, String eadid);
 }
 
