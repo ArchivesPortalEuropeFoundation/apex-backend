@@ -578,6 +578,14 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				if(eagPath!=null && !eagPath.isEmpty()){
 					state = INPUT;
 				}
+				String tempPath = File.separatorChar+this.getCountryCode()+File.separatorChar+archivalInstitution.getAiId()+File.separatorChar+Eag2012.EAG_PATH+File.separatorChar+"eag2012_temp.xml";
+				if (new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath).exists()) {
+					this.loader = new EAG2012Loader(getAiId());
+					this.loader.fillEag2012();
+					log.info("Loader: "+this.loader.toString()+" has been charged.");
+
+					state = INPUT;
+				}
 			}
 		} catch (Exception e) {
 			log.error("Show/Edit EAG2012 Exception: "+e.getMessage());
@@ -631,8 +639,36 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 
 	public String editWebFormEAG2012(){
 		String path = File.separatorChar+this.getCountryCode()+File.separatorChar+getAiId()+File.separatorChar+Eag2012.EAG_PATH+File.separatorChar+"eag2012.xml";
+		String tempPath = path.replace(".xml", "_temp.xml");
 		String state = INPUT;
-		if(new File(APEnetUtilities.getConfig().getRepoDirPath() + path).exists()){
+		if (new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath).exists()){
+			newEag = false;
+			this.loader = new EAG2012Loader(getAiId());
+			this.loader.fillEag2012();
+			log.info("Loader: "+this.loader.toString()+" has been charged.");
+
+			try {
+				// Check if messages already added.
+				if (getActionMessages() == null || getActionMessages().isEmpty()) {
+					log.debug("Beginning EAG validation");
+					APEnetEAGDashboard apEnetEAGDashboard = new APEnetEAGDashboard(this.getAiId(), new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath).getAbsolutePath());
+					if (!apEnetEAGDashboard.validate()) {
+						this.setWarnings(apEnetEAGDashboard.showWarnings());
+						//The EAG has been neither validated nor converted.
+						log.warn("The file " + new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath).getName() + " is not valid");
+						for (int i = 0; i < this.getWarnings().size(); i++) {
+							String warning = this.getWarnings().get(i).replace("<br/>", "");
+							log.debug(warning);
+							addActionMessage(warning);
+						}
+					}
+				}
+			} catch (SAXException saxE) {
+				log.error(saxE.getMessage(),saxE);
+			} catch (APEnetException apeE) {
+				log.error(apeE.getMessage(),apeE);
+			}
+		} else if(new File(APEnetUtilities.getConfig().getRepoDirPath() + path).exists()){
 			newEag = false;
 			this.loader = new EAG2012Loader(getAiId());
 			this.loader.fillEag2012();
@@ -658,14 +694,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		}
 		if(eag2012!=null){
 			String path = File.separatorChar+this.getCountryCode()+File.separatorChar+getAiId()+File.separatorChar+Eag2012.EAG_PATH+File.separatorChar+"eag2012.xml";
+			String tempPath = path.replace(".xml", "_temp.xml");
 
 			// Load XML.
 			Eag eag = null;
 			ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId());
 			String loadPath = archivalInstitution.getEagPath();
-			File eagFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + loadPath));
+			File eagFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + tempPath));
 
-			if (loadPath != null && !loadPath.isEmpty()) {
+			if (!eagFile.exists() && loadPath != null && !loadPath.isEmpty()) {
+				eagFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + loadPath));
+			}
+
+			if (eagFile.exists()) {
 				try {
 					InputStream eagStream = FileUtils.openInputStream(eagFile);
 
@@ -692,18 +733,17 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 				jaxbMarshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new EagNamespaceMapper());
 				// Save in a temporal file.
-				String tempPath = path.replace(".xml", "_temp.xml");
-				eagFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + tempPath));
-				
-				if (!eagFile.exists()) {
-					FileUtils.writeStringToFile(eagFile, "new file");
+				File eagTempFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + tempPath));
+
+				if (!eagTempFile.exists()) {
+					FileUtils.writeStringToFile(eagTempFile, "new file");
 				}
 
-				jaxbMarshaller.marshal(eag, eagFile);
+				jaxbMarshaller.marshal(eag, eagTempFile);
 
 				// It is necessary to validate the file against APEnet EAG schema.
 				log.debug("Beginning EAG validation");
-				APEnetEAGDashboard apEnetEAGDashboard = new APEnetEAGDashboard(this.getAiId(), eagFile.getAbsolutePath());
+				APEnetEAGDashboard apEnetEAGDashboard = new APEnetEAGDashboard(this.getAiId(), eagTempFile.getAbsolutePath());
 				if (apEnetEAGDashboard.validate()) {
 					log.info("EAG is valid");
 
@@ -714,7 +754,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					} catch (IOException e) {
 						log.error(e.getMessage(),e);
 					}
-					FileUtils.moveFile(eagFile, eagFinalFile);
+					FileUtils.moveFile(eagTempFile, eagFinalFile);
 
 					//store ddbb path
 					ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
@@ -736,13 +776,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						log.debug(warning);
 						addActionMessage(warning);
 					}
-
-					// Delete temporal file created.
-					FileUtils.forceDelete(eagFile);
 				}
 			} catch (JAXBException jaxbe) {
 				log.info(jaxbe.getMessage());
-				jaxbe.printStackTrace();
 			} catch (APEnetException e) {
 				log.error(e.getMessage(),e);
 			} catch (SAXException e) {
@@ -750,9 +786,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			} catch (IOException e) {
 				log.error(e.getMessage(),e);
 			}
-			
 		}
-		return editWebFormEAG2012();
+		return this.editWebFormEAG2012();
 	}
 
 	private void fillDefaultLoaderValues() { //TODO, now only works with main repository

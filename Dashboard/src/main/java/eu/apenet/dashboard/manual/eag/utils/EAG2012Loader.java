@@ -27,7 +27,6 @@ import eu.apenet.dpt.utils.eag2012.P;
 import eu.apenet.dpt.utils.eag2012.Parform;
 import eu.apenet.dpt.utils.eag2012.RecreationalServices;
 import eu.apenet.dpt.utils.eag2012.Repository;
-import eu.apenet.dpt.utils.eag2012.Restorationlab;
 import eu.apenet.dpt.utils.eag2012.Searchroom;
 import eu.apenet.dpt.utils.eag2012.Telephone;
 import eu.apenet.dpt.utils.eag2012.Timetable;
@@ -281,7 +280,14 @@ public class EAG2012Loader{
 		Eag eag = null;
 		ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getId());
 		String path = archivalInstitution.getEagPath();
-		File eagFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + path));
+		String alCountry = new ArchivalLandscape().getmyCountry();
+		String tempPath = File.separatorChar+alCountry+File.separatorChar+archivalInstitution.getAiId()+File.separatorChar+Eag2012.EAG_PATH+File.separatorChar+"eag2012_temp.xml";
+		File eagFile = null;
+		if (new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath).exists()) {
+			eagFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + tempPath));
+		} else {
+			eagFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + path));
+		}
 
 		try {
 			InputStream eagStream = FileUtils.openInputStream(eagFile);
@@ -293,10 +299,8 @@ public class EAG2012Loader{
             eagStream.close();			
 		} catch (JAXBException jaxbe) {
 			log.info(jaxbe.getMessage());
-			jaxbe.printStackTrace();
 		} catch (IOException ioe) {
 			log.info(ioe.getMessage());
-			ioe.printStackTrace();
 		}
 		if (eag == null) {
 			this.setCountryCode(this.getInitialCountryCode());
