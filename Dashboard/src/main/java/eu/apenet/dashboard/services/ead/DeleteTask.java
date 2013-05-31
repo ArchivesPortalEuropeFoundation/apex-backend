@@ -15,6 +15,7 @@ import eu.apenet.persistence.vo.Ese;
 import eu.apenet.persistence.vo.EseState;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.HoldingsGuide;
 
 public class DeleteTask extends AbstractEadTask {
 
@@ -60,6 +61,8 @@ public class DeleteTask extends AbstractEadTask {
                 }
 				ContentUtils.deleteFile(APEnetUtilities.getConfig().getRepoDirPath() + ead.getPathApenetead());
 				EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+				if (ead instanceof HoldingsGuide)
+					ContentUtils.removeHoldingsGuideFromArchivalLandscape((HoldingsGuide) ead);
 				eadDAO.delete(ead);
 				logAction(ead, true);
 			} catch (Exception e) {

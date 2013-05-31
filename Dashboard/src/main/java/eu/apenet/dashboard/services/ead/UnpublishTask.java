@@ -35,8 +35,6 @@ public class UnpublishTask extends AbstractEadTask {
 				logger.debug("Removing the EAD (" + xmlType.getName() + ") with eadid '" + ead.getEadid()
 						+ "' from the index");
 				deleteFromSolr(ead.getEadid(), ead.getAiId());
-				if (ead instanceof HoldingsGuide)
-					ContentUtils.removeHoldingsGuideFromArchivalLandscape((HoldingsGuide) ead);
 				EadContentDAO eadContentDAO = DAOFactory.instance().getEadContentDAO();
 				EadContent eadContent;
 
