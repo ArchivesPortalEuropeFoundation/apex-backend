@@ -206,7 +206,7 @@ public class ExistingFilesChecker {
 			// The file has XML format
 			String eadid = "";
             try {
-                eadid = this.extractAttributeFromEad(this.uploadedFilesPath + fileUnit.getFileName(), "eadheader/eadid", null, true).trim();
+                eadid = extractAttributeFromEad(this.uploadedFilesPath + fileUnit.getFileName(), "eadheader/eadid", null, true).trim();
             } catch (WstxParsingException e){
                 LOG.error("File was not correct XML.", e);
                 additionalErrors += e.getMessage();
@@ -599,25 +599,8 @@ public class ExistingFilesChecker {
                             // It is necessary to remove the entry from up_file table
                         	
                             //Ead ead = instantiateCorrectEadType(xmlType);
-                            String fileShortPath = instantiateCorrectDirPath(xmlType) + fileUnit.getFileName();
                             try {
                             	EadService.create(xmlType, upFileDao.findById(fileUnit.getFileId()), archivalInstitutionId);
-//                                ead.setEadid(eadid);
-//                                try {
-//                                    ead.setTitle(extractAttributeFromEad(uploadedFilesPath + fileUnit.getFileName(), "eadheader/filedesc/titlestmt/titleproper", null, true).trim());
-//                                } catch (WstxParsingException e){
-//                                    ead.setTitle("");
-//                                }
-//
-//                                ead.setUploadDate(new Date());
-                              //ead.setPathApenetead(fileShortPath);
-//
-//                                UpFile upFile = upFileDao.findById(fileUnit.getFileId());
-//                                ead.setUploadMethod(upFile.getUploadMethod());
-//                                ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(archivalInstitutionId);
-//                                ead.setArchivalInstitution(archivalInstitution);
-//                                ead.setConverted(isConverted);
-//                                DAOFactory.instance().getEadDAO().store(ead);
 
                             } catch (Exception e) {
                                 LOG.error("The EAD which eadid is '" + eadid + "' could not be stored in table [Database Rollback]. Error:" + e.getMessage());
@@ -625,26 +608,6 @@ public class ExistingFilesChecker {
                                 dataBaseCommitError = true;
                             } finally {
 
-//                                if (!dataBaseCommitError) {
-//                                    try {
-//                                        deleteFileFromDDBB(fileUnit.getFileId());
-//                                    } catch (Exception e) {
-//                                        dataBaseCommitError = true;
-//                                        LOG.error("Error removing file which id is " + fileUnit.getFileId() + " from up_file table in Database");
-//                                    }
-//                                }
-//                            }
-//
-//                            if (!dataBaseCommitError) {
-//                                try {
-//                                    insertFileToTempFiles(uploadedFilesPath + fileUnit.getFileName(), APEnetUtilities.getConfig().getRepoDirPath() + fileShortPath);
-//                                    // Register operation
-//                                    LOG.info("The EAD " + fileUnit.getFileName() + " has been stored in the temporal repository");
-//                                    ChangeControl.logOperation(ead, "Upload EAD");
-//                                } catch (APEnetException ex) {
-//                                    LOG.error("The file " + fileUnit.getFileName() + " could not be stored or removed: " + ex.getMessage(), ex);
-//                                }
-//                            }
                             }
                             return STATUS_NO_EXIST;
                         }
