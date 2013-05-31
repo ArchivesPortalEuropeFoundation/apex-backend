@@ -70,7 +70,7 @@
 				<input type="text" id="textYINameOfTheInstitution" value="${loader.autform}" onchange="nameOfInstitutionChanged();" />
 			</td>
 			<td class="labelLeft">
-				<label for="selectYINOTISelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/><span class="required">*</span>:</label>
+				<label for="selectYINOTISelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
 				<select id="selectYINOTISelectLanguage" onchange="nameOfInstitutionLanguageChanged();" >
@@ -123,7 +123,7 @@
 				<input type="text" id="textYIStreet" onchange="streetOfInstitutionChanged();" value="${loader.street}" />
 			</td>
 			<td class="labelLeft">
-				<label for="selectYIVASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/><span class="required">*</span>:</label>
+				<label for="selectYIVASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
 				<select id="selectYIVASelectLanguage" onchange="streetOfInstitutionLanguageChanged();" >

@@ -21,7 +21,7 @@
 					<input type="text" id="textContactStreetOfTheInstitution" value="${loader.street}" disabled="disabled" />
 				</td>
 				<td id="tdLanguageVisitorAddress" class="labelLeft">
-					<label for="selectLanguageVisitorAddress" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" /><span class="required">*</span>:</label>
+					<label for="selectLanguageVisitorAddress" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 				</td>
 				<td>
 					<select id="selectLanguageVisitorAddress" disabled="disabled">

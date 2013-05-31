@@ -119,7 +119,7 @@ var clickYourInstitutionAction = function(text1){
 
 	// Mandatory elements
 	var yiMandatoryElements = new Array("textYIInstitutionCountryCode", "textYIIdentifierOfTheInstitution",
-	                           "textYINameOfTheInstitution", "selectYINOTISelectLanguage");
+	                           "textYINameOfTheInstitution");
 
 	var jsonData = "{";
 	
@@ -168,7 +168,7 @@ var clickYourInstitutionAction = function(text1){
 	});
 	jsonData += ",'visitorsAddress':{";
 	for(var j=0; j<visitorsAddress.length; j++) {
-		var yiMEVisitorsAddress = new Array("selectYIVASelectLanguage", "textYIStreet",
+		var yiMEVisitorsAddress = new Array("textYIStreet",
 				"textYICity", "textYICountry");
 		
 		if(jsonData.substring(jsonData.length-1)!='{'){
@@ -583,7 +583,7 @@ function checkContactTab(currentTab, text1) {
 	jsonData += ",'visitorsAddress':{";
 	for(var j=0; j<visitorsAddress.length; j++) {
 		var contactVAMandatoryElements = new Array("textContactStreetOfTheInstitution", "textContactCityOfTheInstitution",
-				"textContactCountryOfTheInstitution", "selectLanguageVisitorAddress");
+				"textContactCountryOfTheInstitution");
 
 		if(jsonData.substring(jsonData.length-1)!='{'){
 			if(jsonData.substring(jsonData.length-1)!=','){

@@ -1597,7 +1597,7 @@ public class EAG2012Loader{
 		if (!this.eag.getArchguide().getIdentity().getAutform().isEmpty()) {
 			for (int i = 0; i < this.eag.getArchguide().getIdentity().getAutform().size(); i++) {
 				Autform autform = this.eag.getArchguide().getIdentity().getAutform().get(i);
-				if (autform.getLang().equalsIgnoreCase(this.getCountryCode())) {
+				if (autform!=null && autform.getLang()!=null && autform.getLang().equalsIgnoreCase(this.getCountryCode())) {
 					this.setAutform(autform.getContent());
 					this.setAutformLang((autform.getLang()!=null)?new Locale(LanguageConverter.get639_1Code(autform.getLang())).getISO3Language():null);
 				}
