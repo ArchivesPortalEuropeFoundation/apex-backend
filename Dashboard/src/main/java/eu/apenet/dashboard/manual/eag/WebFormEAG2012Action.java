@@ -1140,8 +1140,6 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				String agentValue=control.getString("textPesonResponsible");
 				eag2012.setAgentValue(agentValue);
 			}
-//			String target1 = "selectDescriptionLanguage";
-//			String target2 = "selectDescriptionScript";
 			int i = 1;
 			while(control.has("selectDescriptionLanguage_"+i) || (control.has("selectDescriptionScript_"+i))){
 				List<String> listLanguageCode = eag2012.getLanguageLanguageCode();
@@ -1170,28 +1168,6 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				}
 
 				i++;
-
-
-//				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
-//				target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
-//				targetNumber++;
-//				//used language and scripts for description
-//				List<String> listLanguageCode = eag2012.getLanguageLanguageCode();
-//				List<String> listScript = eag2012.getScriptScriptCode();
-//				if(control.has(target1)){
-//					if(listLanguageCode==null){
-//						listLanguageCode = new ArrayList<String>();
-//					}
-//					listLanguageCode.add(control.getString(target1));
-//					eag2012.setLanguageLanguageCode(listLanguageCode);
-//				}
-//				if(control.has(target2)){
-//					if(listScript==null){
-//						listScript = new ArrayList<String>();
-//					}
-//					listScript.add(control.getString(target2));
-//					eag2012.setScriptScriptCode(listScript);
-//				}
 			}
 		  //convention declaration	
 		  i=0;

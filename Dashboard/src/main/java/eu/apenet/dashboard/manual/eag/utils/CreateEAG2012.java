@@ -211,10 +211,6 @@ public class CreateEAG2012 {
 				&& this.eag2012.getScriptScriptCode() != null
 				&& !this.eag2012.getScriptScriptCode().isEmpty()) {
 			for (int i = 0; i < this.eag2012.getLanguageLanguageCode().size(); i++) {
-				if (this.eag.getControl().getLanguageDeclarations() == null) {
-					this.eag.getControl().setLanguageDeclarations(new LanguageDeclarations());
-				}
-
 				LanguageDeclaration languageDeclaration = new LanguageDeclaration();
 
 				if (!Eag2012.OPTION_NONE.equalsIgnoreCase(this.eag2012.getLanguageLanguageCode().get(i))) {
@@ -233,6 +229,9 @@ public class CreateEAG2012 {
 
 				if (languageDeclaration.getLanguage() != null
 						|| languageDeclaration.getScript() != null) {
+					if (this.eag.getControl().getLanguageDeclarations() == null) {
+						this.eag.getControl().setLanguageDeclarations(new LanguageDeclarations());
+					}
 					this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().add(languageDeclaration);
 				}
 			}
