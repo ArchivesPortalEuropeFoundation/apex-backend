@@ -40,9 +40,10 @@ public class FindingAid extends Ead {
 	/*
 	 * states
 	 */
-	private boolean converted = false;;
+	private boolean converted = false;
 	private ValidatedState validated = ValidatedState.NOT_VALIDATED;
-	private boolean published = false;;
+	private boolean published = false;
+	private boolean dynamic = false;
 	private QueuingState queuing = QueuingState.NO;
 	private EuropeanaState europeana = EuropeanaState.NOT_CONVERTED;
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -247,4 +248,13 @@ public class FindingAid extends Ead {
             return null;
         return set.iterator().next();
     }
+
+	public boolean isDynamic() {
+		return dynamic;
+	}
+
+	public void setDynamic(boolean dynamic) {
+		this.dynamic = dynamic;
+	}
+    
 }

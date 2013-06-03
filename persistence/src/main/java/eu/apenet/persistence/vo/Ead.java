@@ -51,6 +51,8 @@ public abstract class Ead  implements Serializable{
     @Deprecated
 	public abstract Set<EadContent> getEadContents() ;
 	public abstract void setEadContents(Set<EadContent> eadContents) ;
+	public abstract boolean isDynamic();
+	public abstract void setDynamic(boolean dynamic);
 	
     public EadContent getEadContent() {
         Set<EadContent> set = getEadContents();

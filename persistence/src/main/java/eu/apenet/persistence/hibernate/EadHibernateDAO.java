@@ -36,6 +36,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
 		criteria.add(Restrictions.eq("eadid", eadid));
 		criteria.add(Restrictions.eq("published", true));
+		criteria.setMaxResults(1);
 		List<Integer> result = criteria.list();
 		if (result.size() > 0)
 			return result.get(0);
@@ -149,6 +150,9 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		}
 		if (eadSearchOptions.getConverted() != null) {
 			whereClause.add(criteriaBuilder.equal(from.get("converted"), eadSearchOptions.getConverted()));
+		}
+		if (eadSearchOptions.getDynamic() != null) {
+			whereClause.add(criteriaBuilder.equal(from.get("dynamic"), eadSearchOptions.getDynamic()));
 		}
 		if (eadSearchOptions.getValidated().size() > 0) {
 			List<Predicate> validatedPredicated = new ArrayList<Predicate>();

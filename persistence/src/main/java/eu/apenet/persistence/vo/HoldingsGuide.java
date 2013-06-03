@@ -40,9 +40,10 @@ public class HoldingsGuide extends Ead {
 	/*
 	 * states
 	 */
-	private boolean converted = false;;
+	private boolean converted = false;
 	private ValidatedState validated = ValidatedState.NOT_VALIDATED;
-	private boolean published = false;;
+	private boolean published = false;
+	private boolean dynamic = false;
 	private QueuingState queuing = QueuingState.NO;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="um_id")
@@ -211,6 +212,14 @@ public class HoldingsGuide extends Ead {
 
 	public void setQueuing(QueuingState queuing) {
 		this.queuing = queuing;
+	}
+
+	public boolean isDynamic() {
+		return dynamic;
+	}
+
+	public void setDynamic(boolean dynamic) {
+		this.dynamic = dynamic;
 	}
 
 

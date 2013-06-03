@@ -6,18 +6,13 @@ import javax.persistence.TypedQuery;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.Subqueries;
 
 import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
-import eu.apenet.persistence.vo.EadContent;
-import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
 
@@ -270,6 +265,14 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);		
 		query.setParameter("aiId", aiId);
 		query.setParameter("eadid", eadid);
+		return query.getResultList();
+	}
+
+	@Override
+	public List<CLevel> getParentCLevels(Long eadContentId) {
+		String jpaQuery =  "SELECT clevel FROM CLevel clevel WHERE clevel.leaf = false AND clevel.ecId = :eadContentId  ORDER BY clevel.unittitle" ;
+		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);		
+		query.setParameter("eadContentId", eadContentId);
 		return query.getResultList();
 	}
 	
