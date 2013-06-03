@@ -135,7 +135,7 @@
 				
 			</td>
 			<td>
-				<select id="selectContinentOfTheInstitution">
+				<select id="selectContinentOfTheInstitution" disabled="disabled">
 					<s:iterator value="continentOfTheInstitutionList" var="continent"> 
 						<option value="<s:property value="#continent.key" />"<s:if test="%{#continent.key == loader.geogarea}" > selected=selected </s:if>><s:property value="#continent.value" /></option>
 					</s:iterator>

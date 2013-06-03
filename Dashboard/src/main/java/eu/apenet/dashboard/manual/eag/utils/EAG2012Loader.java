@@ -19,6 +19,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.manual.eag.Eag2012;
 import eu.apenet.dpt.utils.eag2012.Autform;
+import eu.apenet.dpt.utils.eag2012.Citation;
 import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.dpt.utils.eag2012.Email;
 import eu.apenet.dpt.utils.eag2012.Library;
@@ -115,6 +116,7 @@ public class EAG2012Loader{
 	// Access and Services.
     private String directions;
     private String directionsLang;
+    private String directionsCitationHref;
     private String citationHref;
     private String termsOfUse;
     private String termsOfUseLang;
@@ -244,6 +246,7 @@ public class EAG2012Loader{
     private String agentLang;
     private String agencyCode;
     private String language;
+    private String languageDeclaration;
     private String script;
     private String abbreviation;
     private String citation;
@@ -281,7 +284,9 @@ public class EAG2012Loader{
 		ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getId());
 		String path = archivalInstitution.getEagPath();
 		String alCountry = new ArchivalLandscape().getmyCountry();
-		String tempPath = File.separatorChar+alCountry+File.separatorChar+archivalInstitution.getAiId()+File.separatorChar+Eag2012.EAG_PATH+File.separatorChar+"eag2012_temp.xml";
+		String basePath = APEnetUtilities.FILESEPARATOR + alCountry + APEnetUtilities.FILESEPARATOR +
+				this.getId() + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;
+		String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;
 		File eagFile = null;
 		if (new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath).exists()) {
 			eagFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + tempPath));
@@ -713,6 +718,14 @@ public class EAG2012Loader{
 	public void setDirectionsLang(String directionsLang) {
 		this.directionsLang = directionsLang;
 	}
+	public String getDirectionsCitationHref() {
+		return this.directionsCitationHref;
+	}
+
+	public void setDirectionsCitationHref(String directionsCitationHref) {
+		this.directionsCitationHref = directionsCitationHref;
+	}
+
 	public String getCitationHref() {
 		return this.citationHref;
 	}
@@ -1048,6 +1061,14 @@ public class EAG2012Loader{
 	public void setLanguage(String language) {
 		this.language = language;
 	}
+	public String getLanguageDeclaration() {
+		return this.languageDeclaration;
+	}
+
+	public void setLanguageDeclaration(String languageDeclaration) {
+		this.languageDeclaration = languageDeclaration;
+	}
+
 	public String getScript() {
 		return this.script;
 	}
@@ -1669,7 +1690,25 @@ public class EAG2012Loader{
 
 				// Continent.
 				if (repository.getGeogarea() != null) {
-					this.setGeogarea(repository.getGeogarea().getValue());
+					String geogareaValue = repository.getGeogarea().getValue();
+
+					if (Eag2012.OPTION_AFRICA_TEXT.equalsIgnoreCase(geogareaValue)) {
+						geogareaValue = Eag2012.OPTION_AFRICA;
+					} else if (Eag2012.OPTION_ANTARCTICA_TEXT.equalsIgnoreCase(geogareaValue)) {
+						geogareaValue = Eag2012.OPTION_ANTARCTICA;
+					} else if (Eag2012.OPTION_ASIA_TEXT.equalsIgnoreCase(geogareaValue)) {
+						geogareaValue = Eag2012.OPTION_ASIA;
+					} else if (Eag2012.OPTION_AUSTRALIA_TEXT.equalsIgnoreCase(geogareaValue)) {
+						geogareaValue = Eag2012.OPTION_AUSTRALIA;
+					} else if (Eag2012.OPTION_EUROPE_TEXT.equalsIgnoreCase(geogareaValue)) {
+						geogareaValue = Eag2012.OPTION_EUROPE;
+					} else if (Eag2012.OPTION_NORTH_AMERICA_TEXT.equalsIgnoreCase(geogareaValue)) {
+						geogareaValue = Eag2012.OPTION_NORTH_AMERICA;
+					} else if (Eag2012.OPTION_SOUTH_AMERICA_TEXT.equalsIgnoreCase(geogareaValue)) {
+						geogareaValue = Eag2012.OPTION_SOUTH_AMERICA;
+					}
+					
+					this.setGeogarea(geogareaValue);
 				}
 
 				// Telephone.
@@ -1766,7 +1805,35 @@ public class EAG2012Loader{
 		// Select type of institution.
 		if (!this.eag.getArchguide().getIdentity().getRepositoryType().isEmpty()) {
 			for (int i = 0; i < this.eag.getArchguide().getIdentity().getRepositoryType().size(); i++) {
-				this.getRepositoryType().add(this.eag.getArchguide().getIdentity().getRepositoryType().get(i).getValue());
+				String value = this.eag.getArchguide().getIdentity().getRepositoryType().get(i).getValue();
+
+				if (Eag2012.OPTION_NATIONAL_TEXT.equalsIgnoreCase(value)) {
+					value = Eag2012.OPTION_NATIONAL;
+				} else if (Eag2012.OPTION_REGIONAL_TEXT.equalsIgnoreCase(value)) {
+					value = Eag2012.OPTION_REGIONAL;
+				} else if (Eag2012.OPTION_COUNTY_TEXT.equalsIgnoreCase(value)) {
+					value = Eag2012.OPTION_COUNTY;
+				} else if (Eag2012.OPTION_MUNICIPAL_TEXT.equalsIgnoreCase(value)) {
+					value = Eag2012.OPTION_MUNICIPAL;
+				} else if (Eag2012.OPTION_SPECIALISED_TEXT.equalsIgnoreCase(value)) {
+					value = Eag2012.OPTION_SPECIALISED;
+				} else if (Eag2012.OPTION_PRIVATE_TEXT.equalsIgnoreCase(value)) {
+					value = Eag2012.OPTION_PRIVATE;
+				} else if (Eag2012.OPTION_CHURCH_TEXT.equalsIgnoreCase(value)) {
+					value = Eag2012.OPTION_CHURCH;
+				} else if (Eag2012.OPTION_BUSINESS_TEXT.equalsIgnoreCase(value)) {
+					value = Eag2012.OPTION_BUSINESS;
+				} else if (Eag2012.OPTION_UNIVERSITY_TEXT.equalsIgnoreCase(value)) {
+					value = Eag2012.OPTION_UNIVERSITY;
+				} else if (Eag2012.OPTION_MEDIA_TEXT.equalsIgnoreCase(value)) {
+					value = Eag2012.OPTION_MEDIA;
+				} else if (Eag2012.OPTION_POLITICAL_TEXT.equalsIgnoreCase(value)) {
+					value = Eag2012.OPTION_POLITICAL;
+				} else if (Eag2012.OPTION_CULTURAL_TEXT.equalsIgnoreCase(value)) {
+					value = Eag2012.OPTION_CULTURAL;
+				}
+
+				this.getRepositoryType().add(value);
 			}
 		}
 	}
@@ -1881,9 +1948,17 @@ public class EAG2012Loader{
 						// Travelling directions.
 						if (!repository.getDirections().get(i).getContent().isEmpty()) {
 							// TODO: Review for multiple values.
-							for (int j = 0; j < repository.getDirections().size(); j++) {
-								// TODO: Review schema
-//								this.setDirections(repository.getDirections().get(i).getContent().get(j).toString());
+							for (int j = 0; j < repository.getDirections().get(i).getContent().size(); j++) {
+								if (repository.getDirections().get(i).getContent().get(j) instanceof String
+										&& repository.getDirections().get(i).getContent().get(j) != null
+										&& !repository.getDirections().get(i).getContent().get(j).toString().isEmpty()
+										&& !repository.getDirections().get(i).getContent().get(j).toString().equals("\n\t\t\t\t\t")) {
+									this.setDirections(repository.getDirections().get(i).getContent().get(j).toString());
+								}
+								if (repository.getDirections().get(i).getContent().get(j) instanceof Citation) {
+									Citation citation = (Citation) repository.getDirections().get(i).getContent().get(j);
+									this.setDirectionsCitationHref(citation.getHref());
+								}
 							}
 						}
 						// Travelling directions language.
@@ -2282,8 +2357,14 @@ public class EAG2012Loader{
 			if (!this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().isEmpty()) {
 				// TODO: Review for multiple values.
 				for (int i = 0; i < this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().size(); i++) {
-					this.setLanguage(this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getLanguage().getLanguageCode());
-					this.setScript(this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getScript().getScriptCode());
+					if (this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getLanguage()!= null
+							&& this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getLanguage().getLanguageCode() != null) {
+						this.setLanguageDeclaration(this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getLanguage().getLanguageCode());
+					}
+					if (this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getScript() != null
+							&& this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getScript().getScriptCode() != null) {
+						this.setScript(this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getScript().getScriptCode());
+					}
 				}
 			}
 		}
@@ -2325,7 +2406,19 @@ public class EAG2012Loader{
 
 				// Type of your relation.
 				if (this.eag.getRelations().getResourceRelation().get(i).getResourceRelationType() != null) {
-					this.setResourceRelationType(this.eag.getRelations().getResourceRelation().get(i).getResourceRelationType());
+					String resourceRelationTypeValue = this.eag.getRelations().getResourceRelation().get(i).getResourceRelationType();
+
+					if (Eag2012.OPTION_CREATOR_TEXT.equalsIgnoreCase(resourceRelationTypeValue)) {
+						resourceRelationTypeValue = Eag2012.OPTION_CREATOR;
+					}
+					if (Eag2012.OPTION_SUBJECT_TEXT.equalsIgnoreCase(resourceRelationTypeValue)) {
+						resourceRelationTypeValue = Eag2012.OPTION_SUBJECT;
+					}
+					if (Eag2012.OPTION_OTHER_TEXT.equalsIgnoreCase(resourceRelationTypeValue)) {
+						resourceRelationTypeValue = Eag2012.OPTION_OTHER;
+					}
+
+					this.setResourceRelationType(resourceRelationTypeValue);
 				}
 
 				// Description of relation.
@@ -2358,7 +2451,25 @@ public class EAG2012Loader{
 
 				// Type of your relation.
 				if (this.eag.getRelations().getEagRelation().get(i).getEagRelationType() != null) {
-					this.setResourceRelationType(this.eag.getRelations().getEagRelation().get(i).getEagRelationType());
+					String eagRelationType = this.eag.getRelations().getEagRelation().get(i).getEagRelationType();
+
+					if (Eag2012.OPTION_CHILD.equalsIgnoreCase(eagRelationType)) {
+						eagRelationType = Eag2012.OPTION_CHILD_TEXT;
+					}
+					if (Eag2012.OPTION_PARENT.equalsIgnoreCase(eagRelationType)) {
+						eagRelationType = Eag2012.OPTION_PARENT_TEXT;
+					}
+					if (Eag2012.OPTION_EARLIER.equalsIgnoreCase(eagRelationType)) {
+						eagRelationType = Eag2012.OPTION_EARLIER_TEXT;
+					}
+					if (Eag2012.OPTION_LATER.equalsIgnoreCase(eagRelationType)) {
+						eagRelationType = Eag2012.OPTION_LATER_TEXT;
+					}
+					if (Eag2012.OPTION_ASSOCIATIVE.equalsIgnoreCase(eagRelationType)) {
+						eagRelationType = Eag2012.OPTION_ASSOCIATIVE_TEXT;
+					}
+
+					this.setResourceRelationType(eagRelationType);
 				}
 
 				// Description of relation.

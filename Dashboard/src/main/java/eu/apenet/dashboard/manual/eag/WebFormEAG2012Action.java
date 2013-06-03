@@ -578,7 +578,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				if(eagPath!=null && !eagPath.isEmpty()){
 					state = INPUT;
 				}
-				String tempPath = File.separatorChar+this.getCountryCode()+File.separatorChar+archivalInstitution.getAiId()+File.separatorChar+Eag2012.EAG_PATH+File.separatorChar+"eag2012_temp.xml";
+				String basePath = APEnetUtilities.FILESEPARATOR + this.getCountryCode() + APEnetUtilities.FILESEPARATOR +
+						this.getAiId() + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;
+				String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;
 				if (new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath).exists()) {
 					this.loader = new EAG2012Loader(getAiId());
 					this.loader.fillEag2012();
@@ -638,8 +640,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	}
 
 	public String editWebFormEAG2012(){
-		String path = File.separatorChar+this.getCountryCode()+File.separatorChar+getAiId()+File.separatorChar+Eag2012.EAG_PATH+File.separatorChar+"eag2012.xml";
-		String tempPath = path.replace(".xml", "_temp.xml");
+		String basePath = APEnetUtilities.FILESEPARATOR + this.getCountryCode() + APEnetUtilities.FILESEPARATOR +
+				this.getAiId() + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;
+		ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId());
+		String path = archivalInstitution.getEagPath();
+		String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;
 		String state = INPUT;
 		if (new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath).exists()){
 			newEag = false;
@@ -693,8 +698,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			log.error(e.getMessage());
 		}
 		if(eag2012!=null){
-			String path = File.separatorChar+this.getCountryCode()+File.separatorChar+getAiId()+File.separatorChar+Eag2012.EAG_PATH+File.separatorChar+"eag2012.xml";
-			String tempPath = path.replace(".xml", "_temp.xml");
+			String basePath = APEnetUtilities.FILESEPARATOR + this.getCountryCode() + APEnetUtilities.FILESEPARATOR +
+					this.getAiId() + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;
+			String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;
 
 			// Load XML.
 			Eag eag = null;
@@ -728,6 +734,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 
 			// Save XML.
 			try {
+				String path = basePath + eag.getControl().getRecordId().getValue().replaceAll("[^a-zA-Z0-9\\-\\.]", "_") + ".xml";
+
 				JAXBContext jaxbContext = JAXBContext.newInstance(Eag.class);
 				Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 				jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -1132,33 +1140,61 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				String agentValue=control.getString("textPesonResponsible");
 				eag2012.setAgentValue(agentValue);
 			}
-			String target1 = "selectDescriptionLanguage";
-			String target2 = "selectDescriptionScript";
-			int targetNumber = 1;
-			do{
-				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
-				target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
-				targetNumber++;
-				//used language and scripts for description
-				if(control.has(target1)){
-					List<String> listLanguageCode = eag2012.getLanguageLanguageCode();
-					if(listLanguageCode==null){
-						listLanguageCode = new ArrayList<String>();
-					}
-					listLanguageCode.add(control.getString(target1));
+//			String target1 = "selectDescriptionLanguage";
+//			String target2 = "selectDescriptionScript";
+			int i = 1;
+			while(control.has("selectDescriptionLanguage_"+i) || (control.has("selectDescriptionScript_"+i))){
+				List<String> listLanguageCode = eag2012.getLanguageLanguageCode();
+				if(listLanguageCode==null){
+					listLanguageCode = new ArrayList<String>();
+				}
+
+				if(control.has("selectDescriptionLanguage_"+i)){
+					listLanguageCode.add(control.getString("selectDescriptionLanguage_"+i));
 					eag2012.setLanguageLanguageCode(listLanguageCode);
 				}
-				if(control.has(target2)){
-					List<String> listScript = eag2012.getScriptScriptCode();
-					if(listScript==null){
-						listScript = new ArrayList<String>();
-					}
-					listScript.add(control.getString(target2));
+
+				List<String> listScript = eag2012.getScriptScriptCode();
+				if(listScript==null){
+					listScript = new ArrayList<String>();
+				}
+				if(control.has("selectDescriptionScript_"+i)){
+					listScript.add(control.getString("selectDescriptionScript_"+i));
 					eag2012.setScriptScriptCode(listScript);
 				}
-			}while(control.has(target1) && control.has(target2));
+
+				if (listLanguageCode.size() > listScript.size()) {
+					listScript.add("");
+				} else if (listLanguageCode.size() < listScript.size()) {
+					listLanguageCode.add("");
+				}
+
+				i++;
+
+
+//				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+//				target2 = ((target2.indexOf("_")!=-1)?target2.substring(0,target2.indexOf("_")):target2)+"_"+targetNumber;
+//				targetNumber++;
+//				//used language and scripts for description
+//				List<String> listLanguageCode = eag2012.getLanguageLanguageCode();
+//				List<String> listScript = eag2012.getScriptScriptCode();
+//				if(control.has(target1)){
+//					if(listLanguageCode==null){
+//						listLanguageCode = new ArrayList<String>();
+//					}
+//					listLanguageCode.add(control.getString(target1));
+//					eag2012.setLanguageLanguageCode(listLanguageCode);
+//				}
+//				if(control.has(target2)){
+//					if(listScript==null){
+//						listScript = new ArrayList<String>();
+//					}
+//					listScript.add(control.getString(target2));
+//					eag2012.setScriptScriptCode(listScript);
+//				}
+			}
 		  //convention declaration	
-		  int i=0;
+		  i=0;
 		  while(control.has("textContactAbbreviation_"+(++i)) && (control.has("textContactFullName_"+i))){
 			if(control.has("textContactAbbreviation_"+i)){
 			  List<String> abbreviation = eag2012.getAbbreviationValue();
@@ -5587,7 +5623,6 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			    }else{
 			    	closingValues.add(closingMap);
 			    }
-			 //TODO   eag2012.setClosingStandardDate(closingValues);
 				eag2012.setClosingValue(closingValues);
 			}
 			

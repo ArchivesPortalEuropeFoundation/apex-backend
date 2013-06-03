@@ -38,7 +38,7 @@ public class Eag2012 {
 	public static final String OPTION_YES = "yes";	// Constant for value "yes".
 	public static final String OPTION_NO = "no";	// ConsEag2012ant for value "no".
 
-	public static final String OPTION_NONE = "none";				// Constant for value "none".
+	public static final String OPTION_NONE = "none";	// Constant for value "none".
 
 	// Constants for repository role options.
 	public static final String OPTION_ROLE_HEADQUARTERS = "headquarters";	// Constant for value "headquarters".
@@ -97,17 +97,17 @@ public class Eag2012 {
 	public static final String OPTION_SOUTH_AMERICA_TEXT = "South America";	// Constant for value "South America".
 
 	// Constants for photographAllowance options.
-	public static final String OPTION_DEPENDING = "depending";		// Constant for value "depending".
-	public static final String OPTION_WITHOUT = "without";			// Constant for value "without".
+	public static final String OPTION_DEPENDING = "depending";	// Constant for value "depending".
+	public static final String OPTION_WITHOUT = "without";		// Constant for value "without".
 
 	// Constants for photographAllowance text.
-	public static final String OPTION_DEPENDING_TEXT = "depending on the material";		// Constant for value "depending on the material".
+	public static final String OPTION_DEPENDING_TEXT = "depending on the material";	// Constant for value "depending on the material".
 	public static final String OPTION_WITHOUT_TEXT = "yes (without flash)";			// Constant for value "yes (without flash)".
 
 	// Constants for relationType options.
-	public static final String OPTION_CREATOR = "creator";			// Constant for value "creator".
-	public static final String OPTION_SUBJECT = "subject";			// Constant for value "subject".
-	public static final String OPTION_OTHER = "other";				// Constant for value "other".
+	public static final String OPTION_CREATOR = "creator";	// Constant for value "creator".
+	public static final String OPTION_SUBJECT = "subject";	// Constant for value "subject".
+	public static final String OPTION_OTHER = "other";		// Constant for value "other".
 
 	// Constants for relationType texts.
 	public static final String OPTION_CREATOR_TEXT = "creatorOf";	// Constant for value "creatorOf".
@@ -128,6 +128,7 @@ public class Eag2012 {
 	public static final String OPTION_LATER_TEXT = "temporal-later";		// Constant for value "temporal-later".
 	public static final String OPTION_ASSOCIATIVE_TEXT = "associative";		// Constant for value "associative".
 
+	// Constants for scriptCode options.
 	public static final String OPTION_SCRIPT_ARAB = "Arab";	// Constant for value "Arab".
 	public static final String OPTION_SCRIPT_ARMN = "Armn";	// Constant for value "Armn".
 	public static final String OPTION_SCRIPT_CPRT = "Cprt";	// Constant for value "Cprt".
@@ -136,6 +137,8 @@ public class Eag2012 {
 	public static final String OPTION_SCRIPT_GREK = "Grek";	// Constant for value "Grek".
 	public static final String OPTION_SCRIPT_HEBR = "Hebr";	// Constant for value "Hebr".
 	public static final String OPTION_SCRIPT_LATN = "Latn";	// Constant for value "Latn".
+
+	// Constants for scriptCode texts.
 	public static final String OPTION_SCRIPT_TEXT_ARAB = "Arab";	// Constant for value "Arab".
 	public static final String OPTION_SCRIPT_TEXT_ARMN = "Armn";	// Constant for value "Armn".
 	public static final String OPTION_SCRIPT_TEXT_CPRT = "Cprt";	// Constant for value "Cprt".
@@ -146,6 +149,9 @@ public class Eag2012 {
 	public static final String OPTION_SCRIPT_TEXT_LATN = "Latin";	// Constant for value "Latin".
 
 	public static final String EAG_PATH = "EAG";	// Constat for value "EAG".
+
+	// Constant for the EAG temporary file (when are problems in validation).
+	public static final String EAG_TEMP_FILE_NAME = "eag2012_temp.xml";
 
 	// Content for eag.
 	public static final String EAG_XMLNS = "http://www.archivesportaleurope.net/profiles/APEnet_EAG/";

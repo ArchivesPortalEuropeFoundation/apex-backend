@@ -50,7 +50,7 @@
 			<td>
 				<select id="selectDescriptionLanguage" class="selectControlTab">
 					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.language}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.languageDeclaration}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>
 			</td>

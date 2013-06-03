@@ -84,7 +84,7 @@
 				<label for="textTravelLink"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 			</td>
 			<td colspan="2">
-				<input type="text" id="textTravelLink" value="${loader.citationHref}" />
+				<input type="text" id="textTravelLink" value="${loader.directionsCitationHref}" />
 			</td>
 			<td colspan="2">
 			</td>
