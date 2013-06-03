@@ -19,7 +19,7 @@
 
 		<tr>
 			<td id="tdPesonResponsible">
-				<label for="textPesonResponsible"><s:property value="getText('label.ai.control.pesonresponsible')" /><span class="required">*</span>:</label>
+				<label for="textPesonResponsible"><s:property value="getText('label.ai.control.pesonresponsible')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textPesonResponsible" value="${loader.agent}" onchange="controlPersonResponsibleForDescriptionChanged();" />
@@ -45,7 +45,7 @@
 
 		<tr id="trControlAddFurtherLangsAnsScriptsOne">
 			<td id="tdDescriptionLanguage">
-				<label for="selectDescriptionLanguage"><s:property value="getText('label.ai.control.descriptionLanguage')" /><span class="required">*</span>:</label>
+				<label for="selectDescriptionLanguage"><s:property value="getText('label.ai.control.descriptionLanguage')" />:</label>
 			</td>
 			<td>
 				<select id="selectDescriptionLanguage" class="selectControlTab">
@@ -59,7 +59,7 @@
 		</tr>
 		<tr id="trControlAddFurtherLangsAnsScriptsTwo">
 			<td id="tdDescriptionScript">
-				<label for="selectDescriptionScript"><s:property value="getText('label.ai.control.descriptionScript')" /><span class="required">*</span>:</label>
+				<label for="selectDescriptionScript"><s:property value="getText('label.ai.control.descriptionScript')" />:</label>
 			</td>
 			<td>
 				<select id="selectDescriptionScript" class="selectControlTab">

@@ -909,9 +909,6 @@ var clickControlAction = function(text1){
 	// Delete old checks
 	deleteChecks();
 
-	// Mandatory elements
-	var controlMandatoryElements = new Array("selectDescriptionLanguage", "selectDescriptionScript");
-
 	var jsonData = "{";
 		//content from texts
 		$("table#controlTable input[type='text']").each(function(){
@@ -938,30 +935,8 @@ var clickControlAction = function(text1){
 			} else {
 				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 			}
-
-			// Check fill mandatory fields.
-			if ($(this).attr("value") != 'none') {
-				var position = controlMandatoryElements.indexOf($(this).attr("id"));
-				if (position != -1) {
-					controlMandatoryElements.splice(position, 1);
-				}
-			}
 		});
 	jsonData += "}";
-
-	for (var i = 0; i < controlMandatoryElements.length; i++) {
-		var element = document.getElementById(controlMandatoryElements[i].toString());
-		var subelement = document.createElement('p');
-		
-		subelement.appendChild(document.createTextNode(text1));
-		subelement.id = controlMandatoryElements[i].toString() + '_required';
-		subelement.className="fieldRequired";
-		element.parentNode.insertBefore(subelement, element.nextSibling);
-	}
-
-	if (controlMandatoryElements.length != 0) {
-		return false;
-	}
 
 	return jsonData;
 };

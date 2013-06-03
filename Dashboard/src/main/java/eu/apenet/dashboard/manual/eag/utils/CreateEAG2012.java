@@ -209,20 +209,23 @@ public class CreateEAG2012 {
 		if (this.eag2012.getLanguageLanguageCode() != null
 				&& this.eag2012.getScriptScriptCode() != null) {
 			for (int i = 0; i < this.eag2012.getLanguageLanguageCode().size(); i++) {
-				if (this.eag.getControl().getLanguageDeclarations() == null) {
-					this.eag.getControl().setLanguageDeclarations(new LanguageDeclarations());
+				if (!Eag2012.OPTION_NONE.equalsIgnoreCase(this.eag2012.getLanguageLanguageCode().get(i))
+						&& !Eag2012.OPTION_NONE.equalsIgnoreCase(this.eag2012.getScriptScriptCode().get(i))) {
+					if (this.eag.getControl().getLanguageDeclarations() == null) {
+						this.eag.getControl().setLanguageDeclarations(new LanguageDeclarations());
+					}
+					Language language = new Language();
+					language.setLanguageCode(this.eag2012.getLanguageLanguageCode().get(i));
+	
+					Script script = new Script();
+					script.setScriptCode(this.eag2012.getScriptScriptCode().get(i));
+	
+					LanguageDeclaration languageDeclaration = new LanguageDeclaration();
+					languageDeclaration.setLanguage(language);
+					languageDeclaration.setScript(script);
+	
+					this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().add(languageDeclaration);
 				}
-				Language language = new Language();
-				language.setLanguageCode(this.eag2012.getLanguageLanguageCode().get(i));
-
-				Script script = new Script();
-				script.setScriptCode(this.eag2012.getScriptScriptCode().get(i));
-
-				LanguageDeclaration languageDeclaration = new LanguageDeclaration();
-				languageDeclaration.setLanguage(language);
-				languageDeclaration.setScript(script);
-
-				this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().add(languageDeclaration);
 			}
 		}
 
