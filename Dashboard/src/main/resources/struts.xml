@@ -614,6 +614,25 @@
 			</result>
 		</action>
 		
+		<action name="displayLinkToHgSg" class="eu.apenet.dashboard.actions.content.LinkToHgSgAction" method="input" > 
+			<result name="success" type="tiles">content.linktohgsg</result>
+			<result name="input" type="tiles">content.linktohgsg</result>
+		</action>
+		
+		<action name="displayLinkToHgSgAjax" class="eu.apenet.dashboard.actions.content.LinkToHgSgAction" method="retrieveClevels" > 
+			<result name="success">/jsp/contentmanager/linktohgsg-ajax.jsp</result>
+		</action>
+		
+		<action name="linkToHgSg" class="eu.apenet.dashboard.actions.content.LinkToHgSgAction"> 
+			<result name="input" type="tiles">content.linktohgsg</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">contentmanager</param>
+			</result>
+			<result name="cancel" type="redirectAction">
+				<param name="actionName">contentmanager</param>
+			</result>
+		</action>
+		
 		<action name="downloadEse" class="eu.apenet.dashboard.ead2ese.DownloadEseXmlAction"> 
 			<result name="download" type="stream">
  				<param name="contentType">application/file-download</param> 
