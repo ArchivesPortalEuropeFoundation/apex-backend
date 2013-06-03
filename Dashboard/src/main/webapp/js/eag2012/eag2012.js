@@ -3011,8 +3011,14 @@ function streetOfInstitutionChanged(){
 }
 
 function streetOfInstitutionLanguageChanged(){
-	$("table#contactTable_1 table#contactTableVisitorsAddress_1 #selectLanguageVisitorAddress").attr("value", $("table#yiTableVisitorsAddress_1 #selectYIVASelectLanguage").val());
+	if(($("table#yiTableVisitorsAddress_1 #selectYIVASelectLanguage").val()!="none") && ($("table#yiTableVisitorsAddress_1 #selectYIVASelectLanguage").val()!=null)){
+	   $("table#contactTable_1 table#contactTableVisitorsAddress_1 #selectLanguageVisitorAddress").attr("value", $("table#yiTableVisitorsAddress_1 #selectYIVASelectLanguage").val());
+	   $("table#contactTable_1 table#contactTableVisitorsAddress_1 #selectLanguageVisitorAddress").attr("disabled","disabled");
+	}else{
+		 $("table#contactTable_1 table#contactTableVisitorsAddress_1 #selectLanguageVisitorAddress").removeAttr("disabled");
+	}
 }
+	
 
 function cityOfInstitutionChanged(){
 	$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactCityOfTheInstitution").attr("value", $("table#yiTableVisitorsAddress_1 #textYICity").val());
@@ -3023,11 +3029,20 @@ function countryOfInstitutionChanged(){
 }
 
 function latitudeOfInstitutionChanged(){
-	$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").attr("value", $("table#yiTableVisitorsAddress_1 #textYILatitude").val());
+	if(($("table#yiTableVisitorsAddress_1 #textYILatitude").val()!="") && ($("table#yiTableVisitorsAddress_1 #textYILatitude").val()!=null)){
+	  $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").attr("value", $("table#yiTableVisitorsAddress_1 #textYILatitude").val());
+      $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").attr("disabled","disabled");
+	}else{
+		$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").removeAttr("disabled");
+	}
 }
-
 function longitudeOfInstitutionChanged(){
-	$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").attr("value", $("table#yiTableVisitorsAddress_1 #textYILongitude").val());
+	if(($("table#yiTableVisitorsAddress_1 #textYILongitude").val()!="") && ($("table#yiTableVisitorsAddress_1 #textYILongitude").val()!=null)){
+	   $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").attr("value", $("table#yiTableVisitorsAddress_1 #textYILongitude").val());
+       $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").attr("disabled","disabled");
+	}else{
+		$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").removeAttr("disabled");
+	}
 }
 
 function continentOfInstitutionChanged(){
@@ -3035,11 +3050,23 @@ function continentOfInstitutionChanged(){
 }
 
 function telephoneOfInstitutionChanged(){
-	$("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").attr("value", $("table#yiTableOthers #textYITelephone").val());
+	 if(($("table#yiTableOthers #textYITelephone").val()!="") && ($("table#yiTableOthers #textYITelephone").val()!=null)){
+		$("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").attr("value", $("table#yiTableOthers #textYITelephone").val());
+		$("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").attr("disabled","disabled");
+	}else{
+	    $("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").removeAttr("disabled");
+	    
+	}
+	 
 }
 
 function emailOfInstitutionChanged(){
-	$("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution").attr("value", $("table#yiTableOthers #textYIEmailAddress").val());
+	if(($("table#yiTableOthers #textYIEmailAddress").val()!="") && ($("table#yiTableOthers #textYIEmailAddress").val()!=null)){
+	  $("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution").attr("value", $("table#yiTableOthers #textYIEmailAddress").val());
+      $("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution").attr("disabled","disabled");
+	}else{
+		$("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution").removeAttr("disabled");
+	}
 }
 
 function emailOfInstitutionLinkChanged(){
@@ -3047,9 +3074,13 @@ function emailOfInstitutionLinkChanged(){
 }
 
 function webOfInstitutionChanged(){
-	$("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution").attr("value", $("table#yiTableOthers #textYIWebpage").val());
+	if(($("table#yiTableOthers #textYIWebpage").val()!="") && ($("table#yiTableOthers #textYIWebpage").val()!=null)){
+	  $("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution").attr("value", $("table#yiTableOthers #textYIWebpage").val());
+      $("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution").attr("disabled","disabled");
+	}else{
+		$("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution").removeAttr("disabled");
+	}
 }
-
 function openingHoursOfInstitutionChanged(){
 	$("table#accessAndServicesTable_1 tr#trASOpeningTimes #textOpeningTimes").attr("value", $("table#yiTableOthers #textYIOpeningTimes").val());
 }
@@ -3170,4 +3201,28 @@ function codeISILChanged(index){
 	$("#textIdentityIdUsedInAPE").attr("value",id);
 	$("#textDescriptionIdentifier").attr("value",id);
 	
+}
+function contactTelephoneChanged(){
+    var id = $("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").val();
+    $("table#yiTableOthers #textYITelephone").attr("value",id);
+}
+function contactEmailChanged(){
+	var id = $("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution").val();
+	$("table#yiTableOthers #textYIEmailAddress").attr("value",id);
+}
+function contactWebpageChanged(){
+	var id = $("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution").val();
+	$("table#yiTableOthers #textYIWebpage").attr("value",id);
+}
+function contactLatitudeChanged(){
+	var id = $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").val();
+	$("table#yiTableVisitorsAddress_1 #textYILatitude").attr("value",id);
+}
+function contactLongitudeChanged(){
+	var id =  $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").val();
+	$("table#yiTableVisitorsAddress_1 #textYILongitude").attr("value",id);
+}
+function contactStreetLanguageChanged(){
+	var id =  $("table#contactTable_1 table#contactTableVisitorsAddress_1 #selectLanguageVisitorAddress").val();
+	$("table#yiTableVisitorsAddress_1 #selectYIVASelectLanguage").attr("value",id);
 }

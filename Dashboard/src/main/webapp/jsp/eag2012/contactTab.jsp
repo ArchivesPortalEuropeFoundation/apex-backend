@@ -24,7 +24,7 @@
 					<label for="selectLanguageVisitorAddress" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 				</td>
 				<td>
-					<select id="selectLanguageVisitorAddress" disabled="disabled">
+					<select id="selectLanguageVisitorAddress" onchange="contactStreetLanguageChanged();">
 						<s:iterator value="languageList" var="language"> 
 							<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.streetLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 						</s:iterator>
@@ -98,13 +98,13 @@
 					<label for="textContactLatitudeOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.latitude')" /></label>
 				</td>
 				<td>
-					<input type="text" id="textContactLatitudeOfTheInstitution" value="${loader.latitude}" disabled="disabled" />
+					<input type="text" id="textContactLatitudeOfTheInstitution" value="${loader.latitude}" onchange="contactLatitudeChanged();"/>
 				</td>
 				<td class="labelLeft">
 					<label for="textContactLongitudeOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.longitude')" /></label>
 				</td>
 				<td>
-					<input type="text" id="textContactLongitudeOfTheInstitution" value="${loader.longitude}" disabled="disabled" />
+					<input type="text" id="textContactLongitudeOfTheInstitution" value="${loader.longitude}" onchange="contactLongitudeChanged();"/>
 				</td>
 			</tr>
 		</table></td></tr>
@@ -149,7 +149,7 @@
 				<label for="textContactTelephoneOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.telephone')" /></label>:
 			</td>
 			<td>
-				<input type="text" id="textContactTelephoneOfTheInstitution" value="${loader.telephone}" disabled="disabled" />
+				<input type="text" id="textContactTelephoneOfTheInstitution" value="${loader.telephone}" onchange="contactTelephoneChanged();"/>
 			</td>
 			<td id="tdAddFurtherTelephoneOfTheInstitution" colspan="2">
 				<input id="buttonAddFurtherTelephoneOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherTelephoneNumbers")' />" onclick="addFurtherTelephoneOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
@@ -171,7 +171,7 @@
 				<label for="textContactEmailOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.emailAddress')" /></label>:
 			</td>
 			<td>
-				<input type="text" id="textContactEmailOfTheInstitution" value="${loader.email}" disabled="disabled" />
+				<input type="text" id="textContactEmailOfTheInstitution" value="${loader.email}" onchange="contactEmailChanged();"/>
 			</td>
 			<td class="labelLeft">
 				<label for="textContactLinkTitleForEmailOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.linkTitle')" /></label>:
@@ -192,7 +192,7 @@
 				<label for="textContactWebOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textContactWebOfTheInstitution" value="${loader.webpage}" disabled="disabled" />
+				<input type="text" id="textContactWebOfTheInstitution" value="${loader.webpage}" onchange="contactWebpageChanged();" />
 			</td>
 			<td class="labelLeft">
 				<label for="textContactLinkTitleForWebOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.linkTitle')" /></label>:
