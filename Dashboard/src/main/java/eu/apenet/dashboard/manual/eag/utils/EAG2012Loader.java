@@ -1579,8 +1579,12 @@ public class EAG2012Loader{
 		}
 
 		// Country code.
-		if (this.eag.getArchguide().getIdentity().getRepositorid() != null) {
+		if (this.eag.getArchguide().getIdentity().getRepositorid() != null
+				&& this.eag.getArchguide().getIdentity().getRepositorid().getCountrycode() !=  null
+				&& !this.eag.getArchguide().getIdentity().getRepositorid().getCountrycode().isEmpty()) {
 			this.setCountryCode(this.eag.getArchguide().getIdentity().getRepositorid().getCountrycode());
+		} else {
+			this.setCountryCode(new ArchivalLandscape().getmyCountry());
 		}
 
 		// Identifier of the institution.
