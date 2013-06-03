@@ -239,6 +239,11 @@
 											</option>
 
 										</c:if>
+										<c:if test="${eadResult.published}">
+											<option value="action|unpublish">
+												<s:text name="content.message.unpublish" />
+											</option>
+										</c:if>
 										<c:if test="${(results.holdingsGuide or results.sourceGuide) and (eadResult.findingAidsLinkedAndPublished != eadResult.possibleFindingAidsLinked)}">
 											<option value="_self|downloadHgSgStatistics.action">
 												<s:text name="content.message.download.statistics" />
@@ -273,12 +278,13 @@
 													<s:text name="content.message.delete.europeana" />
 												</option>
 											</c:if>
+											<c:if test="${eadResult.validated}">
+												<option value="_self|displayLinkToHgSg.action">
+													<s:text name="content.message.linktohgsg" />
+												</option>									
+											</c:if>
 										</c:if>
-										<c:if test="${eadResult.published}">
-											<option value="action|unpublish">
-												<s:text name="content.message.unpublish" />
-											</option>
-										</c:if>
+
 										<option value="action|delete">
 											<s:text name="content.message.delete" />
 										</option>
