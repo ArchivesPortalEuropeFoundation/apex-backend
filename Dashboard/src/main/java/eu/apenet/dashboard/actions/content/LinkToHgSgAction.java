@@ -43,6 +43,7 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 	public String input() throws IOException, SAXException, ParserConfigurationException{
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		EadSearchOptions eadSearchOptions = new EadSearchOptions();
+		eadSearchOptions.setPublished(false);
 		eadSearchOptions.setDynamic(true);
 		eadSearchOptions.setEadClazz(HoldingsGuide.class);
 		List<Ead> temp = eadDAO.getEads(eadSearchOptions);

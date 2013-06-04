@@ -16,6 +16,7 @@ public class ContentManagerResults {
 	private Long totalPublishedUnits = 0l;
 	private Long totalChos = 0l;
 	private Long totalChosDeliveredToEuropeana = 0l;
+	private boolean hasDynamicHgSg = false;
 	private EadSearchOptions eadSearchOptions;
 	private XmlType xmlType;
 	
@@ -110,6 +111,12 @@ public class ContentManagerResults {
 	}
 	public void setTotalNumberOfResults(Long totalNumberOfResults) {
 		this.totalNumberOfResults = totalNumberOfResults;
+	}
+	public boolean isHasDynamicHgSg() {
+		return hasDynamicHgSg;
+	}
+	public void setHasDynamicHgSg(boolean hasDynamicHgSg) {
+		this.hasDynamicHgSg = hasDynamicHgSg;
 	}
 	
 }

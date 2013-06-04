@@ -11,7 +11,9 @@ import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.QueuingState;
+import eu.apenet.persistence.vo.SourceGuide;
 import eu.apenet.persistence.vo.ValidatedState;
 
 public class ContentManagerAction extends AbstractInstitutionAction{
@@ -195,6 +197,17 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 			}
 
 		}
+		
+		EadSearchOptions dynamicEadSearchOptions = new EadSearchOptions();
+		dynamicEadSearchOptions.setPublished(false);
+		dynamicEadSearchOptions.setDynamic(true);
+		dynamicEadSearchOptions.setEadClazz(HoldingsGuide.class);
+		boolean hasDynamicHgSg = eadDAO.existEads(dynamicEadSearchOptions);
+		if (!hasDynamicHgSg){
+			dynamicEadSearchOptions.setEadClazz(SourceGuide.class);
+			hasDynamicHgSg = eadDAO.existEads(dynamicEadSearchOptions);
+		}
+		results.setHasDynamicHgSg(hasDynamicHgSg);
 		getServletRequest().setAttribute("results", results);
 		getServletRequest().setAttribute("harvestingStarted", EadService.isHarvestingStarted());
 		return SUCCESS;
