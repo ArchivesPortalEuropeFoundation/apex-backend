@@ -71,6 +71,9 @@ public class XmlCLevelParser extends AbstractParser {
 						HibernateUtil.getDatabaseSession().save(clevel);
 						stringWriter.close();
 						stringWriter = null;
+						if (clevel.getHrefEadid() != null){
+							LinkingService.linkWithoutCommit(ead, clevel);
+						}
 						if (solrPublisher != null) {
 							PublishData publishData = new PublishData();
 							publishData.setXml(clevel.getXml());
