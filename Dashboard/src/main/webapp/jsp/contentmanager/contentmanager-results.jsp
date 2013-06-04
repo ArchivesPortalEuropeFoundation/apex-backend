@@ -240,7 +240,7 @@
 												<s:text name="content.message.publish" />
 											</option>
 										</c:if>
-										<c:if test="${eadResult.editable}">
+										<c:if test="${false and eadResult.editable}">
 											<option value="_blank|editEad.action">
 												<s:text name="label.edit" />
 											</option>
