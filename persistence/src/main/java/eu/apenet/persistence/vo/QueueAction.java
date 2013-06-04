@@ -48,7 +48,12 @@ public enum QueueAction {
 	public boolean isOverwriteAction() {
 		return OVERWRITE.equals(this);
 	}
-
+	public boolean isDynamicAction() {
+		return DYNAMIC.equals(this);
+	}
+	public boolean isStaticAction() {
+		return STATIC.equals(this);
+	}
 	public String getResourceName() {
 		return resourceName;
 	}
