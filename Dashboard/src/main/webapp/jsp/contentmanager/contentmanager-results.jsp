@@ -36,21 +36,25 @@
 				<option value="publish">
 					<s:text name="content.message.publish" />
 				</option>
-				<option value="displayEseConvert">
-					<s:text name="content.message.convert.ese" />
-				</option>
-				<option value="deliverToEuropeana">
-					<s:text name="content.message.deliver.europeana" />
-				</option>
+				<c:if test="${results.findingAid}">
+					<option value="displayEseConvert">
+						<s:text name="content.message.convert.ese" />
+					</option>
+					<option value="deliverToEuropeana">
+						<s:text name="content.message.deliver.europeana" />
+					</option>
+				</c:if>
 				<option value="unpublish">
 					<s:text name="content.message.unpublish" />
 				</option>
-				<option value="deleteFromEuropeana">
-					<s:text name="content.message.delete.europeana" />
-				</option>
-				<option value="deleteEseEdm">
-					<s:text name="content.message.delete.ese" />
-				</option>
+				<c:if test="${results.findingAid}">
+					<option value="deleteFromEuropeana">
+						<s:text name="content.message.delete.europeana" />
+					</option>
+					<option value="deleteEseEdm">
+						<s:text name="content.message.delete.ese" />
+					</option>
+				</c:if>
 				<option value="deleteFromQueue">
 					<s:text name="content.message.delete.queue" />
 				</option>	
@@ -132,6 +136,7 @@
 										src="images/expand/arrow-up.gif" alt="up" /></a></th>
 							</c:when>
 							<c:when test="${results.holdingsGuide or results.sourceGuide}">
+								<th><s:text name="content.message.dynamic" /></th>
 								<th><s:text name="content.message.linked" /></th>
 							</c:when>
 						</c:choose>
@@ -170,7 +175,10 @@
 									</c:choose></td>
 								<td class="${eadResult.europeanaCssClass}"><apenet:resource>${eadResult.europeanaText}</apenet:resource></td>
 							</c:when>
-							<c:when test="${results.holdingsGuide or results.sourceGuide}"><td class="${eadResult.linkedCssClass}">${eadResult.findingAidsLinked}/ ${eadResult.possibleFindingAidsLinked}</td></c:when>
+							<c:when test="${results.holdingsGuide or results.sourceGuide}">
+								<td class="${eadResult.dynamicCssClass}"><apenet:resource>${eadResult.dynamicText}</apenet:resource></td>
+								<td class="${eadResult.linkedCssClass}">${eadResult.findingAidsLinked}/ ${eadResult.possibleFindingAidsLinked}</td>
+							</c:when>
 
 						</c:choose>
 						<td class="${eadResult.queueCssClass}"><c:if
@@ -228,10 +236,11 @@
 											<option value="_blank|preview.action">
 												<s:text name="content.message.preview" />
 											</option>
-											<option value="_self|download.action">
-												<s:text name="content.message.download" />
-											</option>
-
+											<c:if test="${not eadResult.dynamic}">
+												<option value="_self|download.action">
+													<s:text name="content.message.download" />
+												</option>
+											</c:if>
 										</c:if>
 										<c:if test="${eadResult.containWarnings}">
 											<option value="colorbox|showwarnings.action?iswarning=true">
@@ -309,7 +318,7 @@
 								<td>${results.totalChosDeliveredToEuropeana}</td>
 								<td>&nbsp;</td>
 							</c:when>
-							<c:when test="${results.holdingsGuide or results.sourceGuide}"><td>&nbsp;</td></c:when>
+							<c:when test="${results.holdingsGuide or results.sourceGuide}"><td>&nbsp;</td><td>&nbsp;</td></c:when>
 						</c:choose>
 
 						<td>&nbsp;</td>
