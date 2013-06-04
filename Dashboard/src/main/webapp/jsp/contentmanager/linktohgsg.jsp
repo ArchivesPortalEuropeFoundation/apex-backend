@@ -23,6 +23,11 @@
 		<tr>
 			<td class="inputLabel"><s:label key="dashboard.hgcreation.selectclevel" for="selectCLevel" />:</td>
 			<td id="selectClevelTd"><s:select id="selectCLevel" name="parentCLevelId" list="clevels" listKey="value" listValue="content" required="true"></s:select></td>
+		</tr>
+		<tr>
+			<td class="inputLabel"><s:label key="dashboard.hgcreation.selectprefixmethod" for="selectPrefixMethod" />:</td>
+			<td><s:radio name="selectPrefixMethod" list="selectPrefixMethodSet" listKey="value" listValue="content" id="selectPrefixMethod"></s:radio>
+			</td>
 		</tr>			
 		<tr>
 			<td colspan="2"><s:submit action="linkToHgSg" key="dashboard.hgcreation.addfindingaids"  cssClass="mainButton"/> <s:submit action="contentmanager"

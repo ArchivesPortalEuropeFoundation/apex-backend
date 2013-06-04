@@ -426,9 +426,9 @@ public class EadService {
 			eadSearchOptions.setEuropeana(EuropeanaState.CONVERTED);
 		}
 		else if (QueueAction.CHANGE_TO_STATIC.equals(queueAction)) {
-			eadSearchOptions.setDynamic(false);
-		}else if (QueueAction.CHANGE_TO_DYNAMIC.equals(queueAction)) {
 			eadSearchOptions.setDynamic(true);
+		}else if (QueueAction.CHANGE_TO_DYNAMIC.equals(queueAction)) {
+			eadSearchOptions.setDynamic(false);
 		}
 		eadSearchOptions.setQueuing(QueuingState.NO);
 		JpaUtil.beginDatabaseTransaction();

@@ -137,6 +137,10 @@ function performBatchEadAction() {
 		window.open(
 				json['action'] + ".action?batchItems=" + json['batchItems'],
 				"_self");
+	} else if (json['action'] == "displayLinkToHgSg") {
+		window.open(
+				json['action'] + ".action?batchItems=" + json['batchItems'],
+				"_self");
 	} else {
 		$.post("batchEadActions.action", formData, function(data) {
 			if(data.indexOf("error")>-1){

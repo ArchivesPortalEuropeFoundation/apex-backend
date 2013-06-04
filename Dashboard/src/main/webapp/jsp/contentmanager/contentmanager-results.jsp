@@ -43,6 +43,19 @@
 					<option value="deliverToEuropeana">
 						<s:text name="content.message.deliver.europeana" />
 					</option>
+					<c:if test="${results.hasDynamicHgSg}">
+						<option value="displayLinkToHgSg">
+						<s:text name="content.message.linktohgsg" />
+						</option>									
+					</c:if>
+				</c:if>
+				<c:if test="${results.holdingsGuide or results.sourceGuide}">				
+					<option value="changeToStatic">
+						<s:text name="content.message.static.change" />
+					</option>
+					<option value="changeToDynamic">
+						<s:text name="content.message.dynamic.change" />
+					</option>
 				</c:if>
 				<option value="unpublish">
 					<s:text name="content.message.unpublish" />
@@ -177,7 +190,7 @@
 							</c:when>
 							<c:when test="${results.holdingsGuide or results.sourceGuide}">
 								<td class="${eadResult.dynamicCssClass}"><apenet:resource>${eadResult.dynamicText}</apenet:resource></td>
-								<td class="${eadResult.linkedCssClass}">${eadResult.findingAidsLinked}/ ${eadResult.possibleFindingAidsLinked}</td>
+								<td class="${eadResult.linkedCssClass}"><c:if test="${eadResult.published or eadResult.dynamic}">${eadResult.findingAidsLinked}/ ${eadResult.possibleFindingAidsLinked}</c:if></td>
 							</c:when>
 
 						</c:choose>
@@ -240,7 +253,7 @@
 												<option value="_self|download.action">
 													<s:text name="content.message.download" />
 												</option>
-											</c:if>
+											</c:if>								
 										</c:if>
 										<c:if test="${eadResult.containWarnings}">
 											<option value="colorbox|showwarnings.action?iswarning=true">
@@ -253,11 +266,24 @@
 												<s:text name="content.message.unpublish" />
 											</option>
 										</c:if>
-										<c:if test="${(results.holdingsGuide or results.sourceGuide) and (eadResult.findingAidsLinkedAndPublished != eadResult.possibleFindingAidsLinked)}">
+										<c:if test="${results.holdingsGuide or results.sourceGuide}">
+											<c:if test="${eadResult.findingAidsLinkedAndPublished != eadResult.possibleFindingAidsLinked}">
 											<option value="_self|downloadHgSgStatistics.action">
 												<s:text name="content.message.download.statistics" />
 											</option>
-										
+											</c:if>
+											<c:choose>
+											<c:when test="${eadResult.dynamic}">
+												<option value="action|changeToStatic">
+													<s:text name="content.message.static.change" />
+												</option>
+											</c:when>
+											<c:otherwise>
+												<option value="action|changeToDynamic">
+													<s:text name="content.message.dynamic.change" />
+												</option>
+											</c:otherwise>
+											</c:choose>										
 										</c:if>
 										<c:if test="${results.findingAid}">
 											<c:if

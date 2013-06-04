@@ -36,14 +36,13 @@ import eu.apenet.persistence.vo.EadContent;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HgSgFaRelation;
 import eu.apenet.persistence.vo.HoldingsGuide;
-import eu.apenet.persistence.vo.QueueItem;
-import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.SourceGuide;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class LinkingService {
 	protected static final Logger LOGGER = Logger.getLogger(LinkingService.class);
-
+    public static final String PREFIX_EADID = "eadid";
+    public static final String PREFIX_UNITID = "unitid";
 	public static boolean linkWithoutCommit(Ead hgOrSg, CLevel clevel) {
 		if (hgOrSg instanceof HoldingsGuide || hgOrSg instanceof SourceGuide) {
 			Ead linkedFindingAid = DAOFactory.instance().getEadDAO()
@@ -92,13 +91,13 @@ public class LinkingService {
 		return false;
 	}
 
-	public static boolean addFindingaidToHgOrSg(Integer id, Integer aiId, Long ecId, Long parentCLevelId) {
+	public static boolean addFindingaidToHgOrSg(Integer id, Integer aiId, Long ecId, Long parentCLevelId, String prefixMethod) {
 		List<Integer> ids = new ArrayList<Integer>();
 		ids.add(id);
-		return addFindingaidsToHgOrSg(ids, aiId, ecId, parentCLevelId);
+		return addFindingaidsToHgOrSg(ids, aiId, ecId, parentCLevelId, prefixMethod);
 	}
 
-	public static boolean addFindingaidsToHgOrSg(List<Integer> ids, Integer aiId, Long ecId, Long parentCLevelId) {
+	public static boolean addFindingaidsToHgOrSg(List<Integer> ids, Integer aiId, Long ecId, Long parentCLevelId, String prefixMethod) {
 
 		EadSearchOptions eadSearchOptions = new EadSearchOptions();
 		eadSearchOptions.setPageSize(0);
@@ -107,10 +106,10 @@ public class LinkingService {
 		if (ids != null && ids.size() > 0) {
 			eadSearchOptions.setIds(ids);
 		}
-		return addFindingaidsToHgOrSg(eadSearchOptions, ecId, parentCLevelId);
+		return addFindingaidsToHgOrSg(eadSearchOptions, ecId, parentCLevelId, prefixMethod);
 	}
 
-	public static boolean addFindingaidsToHgOrSg(EadSearchOptions eadSearchOptions, Long ecId, Long parentCLevelId) {
+	public static boolean addFindingaidsToHgOrSg(EadSearchOptions eadSearchOptions, Long ecId, Long parentCLevelId, String prefixMethod) {
 
 		SecurityContext.get().checkAuthorized(eadSearchOptions.getArchivalInstitionId());
 		EadContent eadContent = DAOFactory.instance().getEadContentDAO().findById(ecId);
@@ -158,10 +157,18 @@ public class LinkingService {
 				cLevel.setLevel("item");
 				cLevel.setXml(cLevelXml);
 				cLevel.setUnitid(unitidString);
-				cLevel.setUnittitle(unittitleString);
+				String newUnittitle = "";
+				if (PREFIX_EADID.equals(prefixMethod)){
+					newUnittitle = ead.getEadid() + " - ";
+				}else if (PREFIX_UNITID.equals(prefixMethod)){
+					newUnittitle = unitidString + " - ";
+				}
+				newUnittitle = newUnittitle + unittitleString;
+				cLevel.setUnittitle(newUnittitle);
 				cLevel.setOrderId(sizeChildren++);
 				cLevel.setParentClId(parentCLevelId);
 				cLevel.setEcId(ecId);
+				cLevel.setHrefEadid(ead.getEadid());
 				JpaUtil.getEntityManager().persist(cLevel);
 				HgSgFaRelation hgSgFaRelation = new HgSgFaRelation();
 				hgSgFaRelation.setFaId(ead.getId());

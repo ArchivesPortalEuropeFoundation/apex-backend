@@ -12,11 +12,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.SAXException;
 
-import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
-import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.services.ead.LinkingService;
 import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.dao.EadDAO;
@@ -25,15 +23,17 @@ import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.HoldingsGuide;
-import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.SourceGuide;
 
 public class LinkToHgSgAction  extends AbstractInstitutionAction{
-    protected static final String UTF8 = "utf-8";
+
+	protected static final String UTF8 = "utf-8";
 	private String id;
 	private String batchItems;
     private Set<SelectItem> dynamicHgSgs = new TreeSet<SelectItem>();
     private Set<SelectItem> clevels = new TreeSet<SelectItem>();
+    private Set<SelectItem> selectPrefixMethodSet = new TreeSet<SelectItem>();
+    private String selectPrefixMethod;
     private String ecId;
     private String parentCLevelId;
 	/**
@@ -41,6 +41,9 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 	 */
 	private static final long serialVersionUID = 1L;
 	public String input() throws IOException, SAXException, ParserConfigurationException{
+		selectPrefixMethodSet.add(new SelectItem("", getText("dashboard.hgcreation.prefix.nothing")));
+		selectPrefixMethodSet.add(new SelectItem(LinkingService.PREFIX_UNITID, getText("dashboard.hgcreation.prefix.unitid")));
+		selectPrefixMethodSet.add(new SelectItem(LinkingService.PREFIX_EADID, getText("dashboard.hgcreation.prefix.eadid")));
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		EadSearchOptions eadSearchOptions = new EadSearchOptions();
 		eadSearchOptions.setPublished(false);
@@ -93,14 +96,14 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 			parentCLevelIdLong = Long.parseLong(parentCLevelId);
 		}
 		if (StringUtils.isBlank(batchItems)){
-			LinkingService.addFindingaidToHgOrSg(Integer.parseInt(id), getAiId(), ecIdLong, parentCLevelIdLong);
+			LinkingService.addFindingaidToHgOrSg(Integer.parseInt(id), getAiId(), ecIdLong, parentCLevelIdLong, selectPrefixMethod);
 		}else {
 			if (BatchEadActions.SELECTED_ITEMS.equals(batchItems)) {
 
 				List<Integer> ids = (List<Integer>) getServletRequest().getSession().getAttribute(
 						AjaxControllerAbstractAction.LIST_IDS);
 				if (ids != null) {
-					LinkingService.addFindingaidsToHgOrSg(ids, getAiId(), ecIdLong, parentCLevelIdLong);
+					LinkingService.addFindingaidsToHgOrSg(ids, getAiId(), ecIdLong, parentCLevelIdLong, selectPrefixMethod);
 					return SUCCESS;
 				} else {
 					return ERROR;
@@ -109,10 +112,10 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 			} else if (BatchEadActions.SEARCHED_ITEMS.equals(batchItems)) {
 				EadSearchOptions eadSearchOptions = (EadSearchOptions)getServletRequest().getSession()
 						.getAttribute(ContentManagerAction.EAD_SEARCH_OPTIONS);
-				LinkingService.addFindingaidsToHgOrSg(eadSearchOptions, ecIdLong, parentCLevelIdLong);
+				LinkingService.addFindingaidsToHgOrSg(eadSearchOptions, ecIdLong, parentCLevelIdLong, selectPrefixMethod);
 				return SUCCESS;
 			} else {
-				LinkingService.addFindingaidsToHgOrSg(null, ecIdLong, parentCLevelIdLong);
+				LinkingService.addFindingaidsToHgOrSg(null, ecIdLong, parentCLevelIdLong, selectPrefixMethod);
 				return SUCCESS;
 			}
 		}
@@ -171,6 +174,22 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 
 	public void setParentCLevelId(String parentCLevelId) {
 		this.parentCLevelId = parentCLevelId;
+	}
+
+	public Set<SelectItem> getSelectPrefixMethodSet() {
+		return selectPrefixMethodSet;
+	}
+
+	public void setSelectPrefixMethodSet(Set<SelectItem> selectPrefixMethodSet) {
+		this.selectPrefixMethodSet = selectPrefixMethodSet;
+	}
+
+	public String getSelectPrefixMethod() {
+		return selectPrefixMethod;
+	}
+
+	public void setSelectPrefixMethod(String selectPrefixMethod) {
+		this.selectPrefixMethod = selectPrefixMethod;
 	}
 
     
