@@ -23,7 +23,7 @@
 					<h3 class="repositoryName">
 						<xsl:value-of select="./eag:repositoryName"></xsl:value-of>
 						<xsl:variable name="role" select="./eag:repositoryRole/text()"></xsl:variable>
-						<xsl:if test="$role">
+						<xsl:if test="$role and ($role = 'Branch' or $role = 'Head quarter' or $role = 'Interim archive')">
 							<xsl:text> (</xsl:text>
 							<xsl:choose>
 								<xsl:when test="$role = 'Branch'">
@@ -130,7 +130,7 @@
 									<td class="postalAddress">
 										<xsl:if test="eag:location[@localType='postal address']/eag:street/text()">
 											<xsl:value-of select="eag:location[@localType='postal address']/eag:street"/>
-											<xsl:if test="eag:location[@localType='postal address']/eag:municipalityPostalcode/text()">
+											<xsl:if test="eag:location[@localType='postal address']/eag:municipalityPostalcode/text() and eag:location[@localType='postal address']/eag:municipalityPostalcode/text() != ''">
 												<xsl:text>, </xsl:text>
 											</xsl:if>
 										</xsl:if>
@@ -142,7 +142,7 @@
 							</xsl:if>
 
 							<!-- country only shown if there are values-->
-							<xsl:if test="eag:location[not(@localType) or @localType='visitors address']/eag:country/text()">
+							<xsl:if test="eag:location[not(@localType) or @localType='visitors address']/eag:country and eag:location[not(@localType) or @localType='visitors address']/eag:country/text() != ''">
 								<tr>
 									<td class="header">
 										<xsl:value-of select="ape:resource('eagcontent.country')"/>
@@ -179,49 +179,9 @@
 									</td>
 								</tr>
 							</xsl:if>
-						
-							<!-- geogarea only shown if there are values-->
-							<xsl:if test="current()/eag:geogarea/text()">
-								<tr>
-									<td class="header">
-										<xsl:value-of select="ape:resource('eag2012.option.geogarea')"/>
-									</td>
-									<td>
-										<xsl:variable name="geo" select="current()/eag:geogarea/text()"></xsl:variable>
-										<div>
-											<xsl:choose>
-												<xsl:when test="$geo = 'Europe'">
-													<xsl:value-of select = "ape:resource('eag2012.option.continent.europe')"/>
-												</xsl:when>
-												<xsl:when test="$geo = 'Africa'">
-													<xsl:value-of select = "ape:resource('eag2012.option.continent.africa')"/>
-												</xsl:when>
-												<xsl:when test="$geo = 'North America'">
-													<xsl:value-of select = "ape:resource('eag2012.option.continent.northAmerica')"/>
-												</xsl:when>
-												<xsl:when test="$geo = 'South America'">
-													<xsl:value-of select = "ape:resource('eag2012.option.continent.southAmerica')"/>
-												</xsl:when>
-												<xsl:when test="$geo = 'Antarctica'">
-													<xsl:value-of select = "ape:resource('eag2012.option.continent.antarctica')"/>
-												</xsl:when>
-												<xsl:when test="$geo = 'Asia'">
-													<xsl:value-of select = "ape:resource('eag2012.option.continent.asia')"/>
-												</xsl:when>
-												<xsl:when test="$geo = 'Australia'">
-													<xsl:value-of select = "ape:resource('eag2012.option.continent.australia')"/>
-												</xsl:when>
-												<xsl:otherwise>
-													<xsl:text></xsl:text>
-												</xsl:otherwise>
-											</xsl:choose>
-										</div>
-									</td>
-								</tr>
-							</xsl:if>
 							
 							<!-- roleofthearchive only shown if there are values-->
-							<xsl:if test="current()/eag:repositoryRole and current()/eag:repositoryRole/text() != ''">
+							<xsl:if test="current()/eag:repositoryRole and current()/eag:repositoryRole/text() != ''  and (current()/eag:repositoryRole/text() = 'Branch' or current()/eag:repositoryRole/text() = 'Head quarter' or current()/eag:repositoryRole/text() = 'Interim archive')">
 								<tr>
 									<td class="header">
 										<xsl:value-of select="ape:resource('eagcontent.roleofthearchive')"/>
@@ -356,20 +316,23 @@
 									</td>
 								</tr>
 							</xsl:if>
+
+							<!-- accessibility text only shown if there are values-->
 							<xsl:if test="eag:accessibility/text()">
 								<tr title="repository">
 									<td class="header">
-										<xsl:value-of
-											select="ape:resource('eagcontent.facilitiesfordisabledpersons')"/>
+										<xsl:value-of select="ape:resource('eagcontent.facilitiesfordisabledpersons')"/>
 									</td>
 									<td>
-										<xsl:value-of select="eag:accessibility"/>
+										<xsl:call-template name="multilanguage">
+											<xsl:with-param name="list" select="eag:accessibility"></xsl:with-param>
+										</xsl:call-template>
 									</td>
 								</tr>
 							</xsl:if>
 
 							<!-- termsOfUse only shown if there are values-->
-							<xsl:if test="eag:access/eag:termsOfUse">
+							<xsl:if test="eag:access/eag:termsOfUse and eag:access/eag:termsOfUse/text()">
 								<xsl:call-template name="multilanguageWithChilds">
 									<xsl:with-param name="title">
 										<xsl:value-of select="ape:resource('eagcontent.termsofuse')"/><xsl:text>:</xsl:text>
@@ -412,7 +375,7 @@
 							</xsl:if>
 
 							<!-- contact searchroom only shown if there are values-->
-							<xsl:if test="eag:services/eag:searchroom/eag:contact and eag:services/eag:searchroom/eag:contact/eag:telephone/text() and eag:services/eag:searchroom/eag:contact/eag:email/@href != '' and eag:services/eag:searchroom/eag:webpage/@href != ''">
+							<xsl:if test="eag:services/eag:searchroom/eag:contact and (eag:services/eag:searchroom/eag:contact/eag:telephone/text() or eag:services/eag:searchroom/eag:contact/eag:email/@href != '' or eag:services/eag:searchroom/eag:webpage/@href != '')">
 								<tr class="longDisplay">
 									<td class="header subInfoHeader" colspan="2">
 										<xsl:value-of select="ape:resource('eagcontent.searchroomcontact')"/>
@@ -450,22 +413,26 @@
 							</xsl:if>
 
 							<!-- computerPlaces only shown if there are values-->
-							<xsl:if test="eag:services/eag:searchroom/eag:computerPlaces">
+							<xsl:if test="eag:services/eag:searchroom/eag:computerPlaces and ((eag:services/eag:searchroom/eag:computerPlaces/eag:num and eag:services/eag:searchroom/eag:computerPlaces/eag:num/text() and eag:services/eag:searchroom/eag:computerPlaces/eag:num/text() != '') or (eag:services/eag:searchroom/eag:computerPlaces/eag:descriptiveNote/eag:p and eag:services/eag:searchroom/eag:computerPlaces/eag:descriptiveNote/eag:p/text() and eag:services/eag:searchroom/eag:computerPlaces/eag:descriptiveNote/eag:p/text() != ''))">
 								<tr class="longDisplay">
 									<td class="header">
 										<xsl:value-of select="ape:resource('eagcontent.computerplaces')"/>
 									</td>
 									<td>
-										<xsl:apply-templates select="eag:services/eag:searchroom/eag:computerPlaces/eag:num"/>
-										<xsl:call-template name="multilanguage">
-											<xsl:with-param name="list" select="eag:services/eag:searchroom/eag:computerPlaces/eag:descriptiveNote/eag:p"/>
-										</xsl:call-template>
+										<xsl:if test="eag:services/eag:searchroom/eag:computerPlaces/eag:num and eag:services/eag:searchroom/eag:computerPlaces/eag:num/text() and eag:services/eag:searchroom/eag:computerPlaces/eag:num/text() != ''">
+											<xsl:apply-templates select="eag:services/eag:searchroom/eag:computerPlaces/eag:num"/>
+										</xsl:if>
+										<xsl:if test="eag:services/eag:searchroom/eag:computerPlaces/eag:descriptiveNote/eag:p and eag:services/eag:searchroom/eag:computerPlaces/eag:descriptiveNote/eag:p/text() and eag:services/eag:searchroom/eag:computerPlaces/eag:descriptiveNote/eag:p/text() != ''">
+											<xsl:call-template name="multilanguage">
+												<xsl:with-param name="list" select="eag:services/eag:searchroom/eag:computerPlaces/eag:descriptiveNote/eag:p"/>
+											</xsl:call-template>
+										</xsl:if>
 									</td>
 								</tr>
 							</xsl:if>
 
 							<!-- microfilmPlaces only shown if there are values-->
-							<xsl:if test="eag:services/eag:searchroom/eag:microfilmPlaces/eag:num/text()">
+							<xsl:if test="eag:services/eag:searchroom/eag:microfilmPlaces/eag:num/text() and eag:services/eag:searchroom/eag:microfilmPlaces/eag:num/text() != ''">
 								<tr class="longDisplay">
 									<td class="header">
 										<xsl:value-of select="ape:resource('eagcontent.microfilmplaces')"/>
@@ -546,7 +513,9 @@
 										<xsl:value-of select="ape:resource('eagcontent.library')"/>
 									</td>
 									<td>
-										<xsl:apply-templates select="eag:services/eag:library[@question='yes']/eag:monographicpub/eag:num"/>
+										<xsl:if test="eag:services/eag:library[@question='yes']/eag:monographicpub/eag:num/text()">
+											<xsl:apply-templates select="eag:services/eag:library[@question='yes']/eag:monographicpub/eag:num"/>
+										</xsl:if>
 										<xsl:if test="eag:services/eag:library[@question='yes']/eag:serialpub/eag:num/text()">
 											<xsl:if test="eag:services/eag:library[@question='yes']/eag:monographicpub/eag:num/text()">
 												<xsl:text>, </xsl:text>
@@ -560,7 +529,7 @@
 								</tr>
 
 								<!-- contact library shown only if there is library-->
-								<xsl:if test="eag:services/eag:library/eag:contact and eag:services/eag:library/eag:contact/eag:telephone/text() and eag:services/eag:library/eag:contact/eag:email/@href != '' and eag:services/eag:library/eag:webpage/@href != ''">
+								<xsl:if test="eag:services/eag:library/eag:contact and (eag:services/eag:library/eag:contact/eag:telephone/text() or eag:services/eag:library/eag:contact/eag:email/@href != '' or eag:services/eag:library/eag:webpage/@href != '')">
 									<tr class="longDisplay">
 										<td class="header subInfoHeader" colspan="2">
 											<xsl:value-of select="ape:resource('eagcontent.librarycontact')"/>
@@ -592,10 +561,13 @@
 									</td>
 									<td>
 										<xsl:choose>
-											<xsl:when test="eag:services/eag:techservices/eag:reproductionser[@question='yes']">
+											<xsl:when test="eag:services/eag:techservices/eag:reproductionser[@question='yes'] and eag:services/eag:techservices/eag:reproductionser[@question='yes']/eag:descriptiveNote/eag:p/text()">
 												<xsl:call-template name="multilanguage">
 													<xsl:with-param name="list" select="eag:services/eag:techservices/eag:reproductionser/eag:descriptiveNote/eag:p"/>
 												</xsl:call-template>
+											</xsl:when>
+											<xsl:when test="eag:services/eag:techservices/eag:reproductionser[@question='yes']">
+												<xsl:value-of select="ape:resource('eagcontent.yesreproductionser')"/>
 											</xsl:when>
 											<xsl:otherwise>
 												<xsl:value-of select="ape:resource('eagcontent.noreproductionser')"/>
@@ -682,7 +654,7 @@
 							</xsl:if>
 
 							<!-- contact reproductionser only shown if there are values-->
-							<xsl:if test="eag:services/eag:techservices/eag:reproductionser/eag:contact and eag:services/eag:techservices/eag:reproductionser/eag:contact/eag:telephone/text() and eag:services/eag:techservices/eag:reproductionser/eag:contact/eag:email/@href != '' and eag:services/eag:techservices/eag:reproductionser/eag:webpage/@href != ''">
+							<xsl:if test="eag:services/eag:techservices/eag:reproductionser/eag:contact and (eag:services/eag:techservices/eag:reproductionser/eag:contact/eag:telephone/text() or eag:services/eag:techservices/eag:reproductionser/eag:contact/eag:email/@href != '' or eag:services/eag:techservices/eag:reproductionser/eag:webpage/@href != '')">
 								<tr class="longDisplay">
 									<td class="header subInfoHeader" colspan="2">
 										<xsl:value-of select="ape:resource('eagcontent.reproductionsservicecontact')"/>
@@ -713,10 +685,13 @@
 									</td>
 									<td>
 										<xsl:choose>
-											<xsl:when test="eag:services/eag:techservices/eag:restorationlab[@question='yes']">
+											<xsl:when test="eag:services/eag:techservices/eag:restorationlab[@question='yes'] and eag:services/eag:techservices/eag:restorationlab[@question='yes']/eag:descriptiveNote/eag:p/text()">
 												<xsl:call-template name="multilanguage">
 													<xsl:with-param name="list" select="eag:services/eag:techservices/eag:restorationlab/eag:descriptiveNote/eag:p"/>
 												</xsl:call-template>
+											</xsl:when>
+											<xsl:when test="eag:services/eag:techservices/eag:restorationlab[@question='yes']">
+												<xsl:value-of select="ape:resource('eagcontent.yesrestorationlab')"/>
 											</xsl:when>
 											<xsl:otherwise>
 												<xsl:value-of select="ape:resource('eagcontent.norestorationlab')"/>
@@ -765,7 +740,7 @@
 							</xsl:if>
 
 							<!-- exhibition only shown if there are values-->
-							<xsl:if test="eag:services/eag:recreationalServices/eag:exhibition">
+							<xsl:if test="eag:services/eag:recreationalServices/eag:exhibition and (eag:services/eag:recreationalServices/eag:exhibition/eag:webpage/@href != '' or eag:services/eag:recreationalServices/eag:exhibition/eag:descriptiveNote/eag:p/text())">
 								<tr class="longDisplay">
 									<td class="header">
 										<xsl:value-of select="ape:resource('eagcontent.exhibition')"/>
@@ -774,20 +749,29 @@
 										<xsl:call-template name="multilanguage">
 											<xsl:with-param name="list" select="eag:services/eag:recreationalServices/eag:exhibition/eag:descriptiveNote/eag:p"/>
 										</xsl:call-template>
-										<xsl:for-each select="eag:services/eag:recreationalServices/eag:toursSessions/eag:webpage">
-											<xsl:variable name="webpage" select="@href"/>
-											<div>
-												<a href="{$webpage}" target="_blank">
-													<xsl:value-of select="."/>
-												</a>
-											</div>
+										<xsl:for-each select="eag:services/eag:recreationalServices/eag:exhibition/eag:webpage">
+											<xsl:variable name="webpage" select="current()/@href"/>
+											<xsl:if test="$webpage and $webpage != ''">
+												<div>
+													<a href="{$webpage}" target="_blank">
+														<xsl:choose>
+															<xsl:when test="text()">
+																<xsl:value-of select="."/>
+															</xsl:when>
+															<xsl:otherwise>
+																<xsl:value-of select="$webpage"/>
+															</xsl:otherwise>
+														</xsl:choose>
+													</a>
+												</div>
+											</xsl:if>
 										</xsl:for-each>
 									</td>
 								</tr>
 							</xsl:if>
 
 							<!-- toursSession only shown if there are values-->
-							<xsl:if test="eag:services/eag:recreationalservices/eag:toursSessions">
+							<xsl:if test="eag:services/eag:recreationalServices/eag:toursSessions and (eag:services/eag:recreationalServices/eag:toursSessions/eag:webpage/@href != '' or eag:services/eag:recreationalServices/eag:toursSessions/eag:descriptiveNote/eag:p/text())">
 								<tr class="longDisplay">
 									<td class="header">
 										<xsl:value-of select="ape:resource('eagcontent.guidedtour')"/>
@@ -797,19 +781,28 @@
 											<xsl:with-param name="list" select="eag:services/eag:recreationalServices/eag:toursSessions/eag:descriptiveNote/eag:p"/>
 										</xsl:call-template>
 										<xsl:for-each select="eag:services/eag:recreationalServices/eag:toursSessions/eag:webpage">
-											<xsl:variable name="webpage" select="@href"/>
-											<div>
-												<a href="{$webpage}" target="_blank">
-													<xsl:value-of select="."/>
-												</a>
-											</div>
+											<xsl:variable name="webpage" select="current()/@href"/>
+											<xsl:if test="$webpage and $webpage != ''">
+												<div>
+													<a href="{$webpage}" target="_blank">
+														<xsl:choose>
+															<xsl:when test="text()">
+																<xsl:value-of select="."/>
+															</xsl:when>
+															<xsl:otherwise>
+																<xsl:value-of select="$webpage"/>
+															</xsl:otherwise>
+														</xsl:choose>
+													</a>
+												</div>
+											</xsl:if>
 										</xsl:for-each>
 									</td>
 								</tr>
 							</xsl:if>
 
 							<!-- otherServices only shown if there are values-->
-							<xsl:if test="eag:services/eag:recreationalServices/eag:otherServices">
+							<xsl:if test="eag:services/eag:recreationalServices/eag:otherServices and (eag:services/eag:recreationalServices/eag:otherServices/eag:webpage/@href != '' or eag:services/eag:recreationalServices/eag:otherServices/eag:descriptiveNote/eag:p/text())">
 								<tr class="longDisplay">
 									<td class="header">
 										<xsl:value-of select="ape:resource('eagcontent.otherservices')"/>
@@ -819,12 +812,21 @@
 											<xsl:with-param name="list" select="eag:services/eag:recreationalServices/eag:otherServices/eag:descriptiveNote/eag:p"/>
 										</xsl:call-template>
 										<xsl:for-each select="eag:services/eag:recreationalServices/eag:otherServices/eag:webpage">
-											<xsl:variable name="webpage" select="@href"/>
-											<div>
-												<a href="{$webpage}" target="_blank">
-													<xsl:value-of select="."/>
-												</a>
-											</div>
+											<xsl:variable name="webpage" select="current()/@href"/>
+											<xsl:if test="$webpage and $webpage != ''">
+												<div>
+													<a href="{$webpage}" target="_blank">
+														<xsl:choose>
+															<xsl:when test="text()">
+																<xsl:value-of select="."/>
+															</xsl:when>
+															<xsl:otherwise>
+																<xsl:value-of select="$webpage"/>
+															</xsl:otherwise>
+														</xsl:choose>
+													</a>
+												</div>
+											</xsl:if>
 										</xsl:for-each>
 									</td>
 								</tr>
@@ -1146,7 +1148,7 @@
 						<xsl:if test="./eag:eag/eag:relations/eag:eagRelation/eag:relationEntry/text()">
 							<tr>
 								<td class="header">
-									<xsl:value-of select="ape:resource('eagcontent.associatedrepositories')"/>
+									<xsl:value-of select="ape:resource('eagcontent.associatedrepositories')"/>:
 								</td>
 								<td>
 									<xsl:value-of select="./eag:eag/eag:relations/eag:eagRelation/eag:relationEntry"/>
@@ -1281,18 +1283,20 @@
 				<td>
 					<xsl:for-each select="$parent/eag:email">
 						<xsl:variable name="email" select="@href"/>
-						<div>
-							<a href="mailto:{$email}" target="_blank">
-								<xsl:choose>
-									<xsl:when test="text()">
-										<xsl:value-of select="."/>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:value-of select="$email"/>
-									</xsl:otherwise>
-								</xsl:choose>
-							</a>
-						</div>
+						<xsl:if test="$email and $email != ''">
+							<div>
+								<a href="mailto:{$email}" target="_blank">
+									<xsl:choose>
+										<xsl:when test="text()">
+											<xsl:value-of select="."/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="$email"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</a>
+							</div>
+						</xsl:if>
 					</xsl:for-each>
 				</td>
 			</tr>
@@ -1312,18 +1316,20 @@
 				<td>
 					<xsl:for-each select="$parent/eag:webpage">
 						<xsl:variable name="webpage" select="@href"/>
-						<div>
-							<a href="{$webpage}" target="_blank">
-								<xsl:choose>
-									<xsl:when test="text()">
-										<xsl:value-of select="."/>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:value-of select="$webpage"/>
-									</xsl:otherwise>
-								</xsl:choose>
-							</a>
-						</div>
+						<xsl:if test="$webpage and $webpage != ''">
+							<div>
+								<a href="{$webpage}" target="_blank">
+									<xsl:choose>
+										<xsl:when test="text()">
+											<xsl:value-of select="."/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="$webpage"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</a>
+							</div>
+						</xsl:if>
 					</xsl:for-each>
 				</td>
 			</tr>
@@ -1357,14 +1363,14 @@
 		<xsl:choose>
 			<xsl:when test="count($list) > 1">
 				<xsl:choose>
-					<xsl:when test="$list[@xml:lang = $language.selected]">
+					<xsl:when test="$list[@xml:lang = $language.selected] and$list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
 						<xsl:for-each select="$list[@xml:lang = $language.selected]">
 							<p>
 								<xsl:value-of select="."/>
 							</p>
 						</xsl:for-each>
 					</xsl:when>
-					<xsl:when test="$list[@xml:lang = $language.default]">
+					<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
 						<xsl:for-each select="$list[@xml:lang = $language.default]">
 							<p>
 								<xsl:value-of select="."/>
@@ -1566,14 +1572,14 @@
 					<xsl:choose>
 						<xsl:when test="count($list) > 1">
 							<xsl:choose>
-								<xsl:when test="$list[@xml:lang = $language.selected]">
+								<xsl:when test="$list[@xml:lang = $language.selected] and (($list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != '') or ($list[@xml:lang = $language.selected]/@href and $list[@xml:lang = $language.selected]/@href != ''))">
 									<xsl:for-each select="$list[@xml:lang = $language.selected]">
 										<p>
 											<xsl:apply-templates select="."/>
 										</p>
 									</xsl:for-each>
 								</xsl:when>
-								<xsl:when test="$list[@xml:lang = $language.default]">
+								<xsl:when test="$list[@xml:lang = $language.default] and (($list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != '') or ($list[@xml:lang = $language.default]/@href and $list[@xml:lang = $language.default]/@href != ''))">
 									<xsl:for-each select="$list[@xml:lang = $language.default]">
 										<p>
 											<xsl:apply-templates select="."/>
@@ -1606,7 +1612,7 @@
 	<!-- template for variuos-->
 	<xsl:template match="eag:advancedOrders | eag:readersTicket | eag:termsOfUse | eag:citation">
 		<xsl:choose>
-			<xsl:when test="./@href">
+			<xsl:when test="./@href and ./@href != ''">
 				<xsl:variable name="href" select="./@href"/>
 				<a href="{$href}" target="_blank">
 					<xsl:choose>
