@@ -664,13 +664,14 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						log.warn("The file " + new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath).getName() + " is not valid");
 						for (int i = 0; i < this.getWarnings().size(); i++) {
 							String warning = this.getWarnings().get(i).replace("<br/>", "");
-							if (warning.contains("of element 'recordId' is not valid")) {
-								this.loader.setRecordId(this.getIdUsedInAPE());
-								this.loader.setRecordIdISIL(Eag2012.OPTION_NO);
-							}
 							log.debug(warning);
 							if (!warning.contains("for type 'recordId'")) {
 								addActionMessage(warning);
+							}
+							if (warning.contains("of element 'recordId' is not valid")) {
+								this.loader.setRecordId(this.getIdUsedInAPE());
+								this.loader.setRecordIdISIL(Eag2012.OPTION_NO);
+								addActionMessage(this.getText("label.ai.error.defaultIdUsedInAPE") + " ("+ this.getIdUsedInAPE() +")");
 							}
 						}
 					}
@@ -800,6 +801,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						log.debug(warning);
 						if (!warning.contains("for type 'recordId'")) {
 							addActionMessage(warning);
+						}
+						if (warning.contains("of element 'recordId' is not valid")) {
+							addActionMessage(this.getText("label.ai.error.defaultIdUsedInAPE") + " ("+ this.getIdUsedInAPE() +")");
 						}
 					}
 				}
