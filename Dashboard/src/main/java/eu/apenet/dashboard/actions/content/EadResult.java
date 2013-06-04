@@ -26,6 +26,7 @@ public class EadResult {
 	private String date;
 	private boolean converted;
 	private boolean published;
+	private boolean dynamic;
 	private boolean validated;
 	private boolean validatedFatalError;
 	private boolean queueReady;
@@ -45,6 +46,7 @@ public class EadResult {
         this.date = FORMATTER.format(ead.getUploadDate());
         this.converted = ead.isConverted();
         this.published = ead.isPublished();
+        this.dynamic = ead.isDynamic();
         this.validated = ValidatedState.VALIDATED.equals(ead.getValidated());
         this.validatedFatalError = ValidatedState.FATAL_ERROR.equals(ead.getValidated());
         this.units = ead.getTotalNumberOfUnits();
@@ -189,6 +191,9 @@ public class EadResult {
                 return true;
         }
 		return false;
+	}
+	public boolean isDynamic() {
+		return dynamic;
 	}
 	
 }
