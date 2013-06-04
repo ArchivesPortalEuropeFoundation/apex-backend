@@ -7,7 +7,7 @@ public enum QueueAction {
 	CONVERT_TO_ESE_EDM("content.message.convert.ese"),DELETE_ESE_EDM("content.message.delete.ese"), 
 	DELIVER_TO_EUROPEANA("content.message.deliver.europeana"), DELETE_FROM_EUROPEANA("content.message.delete.europeana" ), 
 	UNPUBLISH_ALL("content.message.unpublish.all"), OVERWRITE("content.message.overwrite"), 
-	DYNAMIC("content.message.dynamic"), STATIC("content.message.static");
+	CHANGE_TO_DYNAMIC("content.message.dynamic.change"), CHANGE_TO_STATIC("content.message.static.change");
 
 	private String resourceName;
 	private QueueAction(String resourceName){
@@ -48,11 +48,11 @@ public enum QueueAction {
 	public boolean isOverwriteAction() {
 		return OVERWRITE.equals(this);
 	}
-	public boolean isDynamicAction() {
-		return DYNAMIC.equals(this);
+	public boolean isCreateDynamicEadAction() {
+		return CHANGE_TO_DYNAMIC.equals(this);
 	}
-	public boolean isStaticAction() {
-		return STATIC.equals(this);
+	public boolean isCreateStaticEadAction() {
+		return CHANGE_TO_STATIC.equals(this);
 	}
 	public String getResourceName() {
 		return resourceName;
