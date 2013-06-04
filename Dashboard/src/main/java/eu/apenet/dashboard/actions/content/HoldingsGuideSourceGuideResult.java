@@ -41,4 +41,11 @@ public class HoldingsGuideSourceGuideResult extends EadResult {
 			return STATUS_ERROR;
 		}
 	}
+	public String getDynamicCssClass(){
+		if (isDynamic()){
+			return STATUS_NO;
+		}else {
+			return STATUS_OK;
+		}
+	}
 }

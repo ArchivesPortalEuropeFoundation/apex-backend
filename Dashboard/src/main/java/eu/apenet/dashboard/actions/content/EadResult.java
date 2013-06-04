@@ -144,6 +144,13 @@ public class EadResult {
 			return CONTENT_MESSAGE_NO;
 		}
 	}
+	public String getDynamicText(){
+		if (dynamic){
+			return CONTENT_MESSAGE_YES;
+		} else {
+			return CONTENT_MESSAGE_NO;
+		}
+	}
 	public String getIndexedText(){
 		if (published){
 			return getUnits()+"";

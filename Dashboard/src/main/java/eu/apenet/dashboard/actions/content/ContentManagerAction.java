@@ -202,12 +202,9 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 		dynamicEadSearchOptions.setPublished(false);
 		dynamicEadSearchOptions.setDynamic(true);
 		dynamicEadSearchOptions.setEadClazz(HoldingsGuide.class);
-		boolean hasDynamicHgSg = eadDAO.existEads(dynamicEadSearchOptions);
-		if (!hasDynamicHgSg){
-			dynamicEadSearchOptions.setEadClazz(SourceGuide.class);
-			hasDynamicHgSg = eadDAO.existEads(dynamicEadSearchOptions);
-		}
-		results.setHasDynamicHgSg(hasDynamicHgSg);
+		results.setHasDynamicHg(eadDAO.existEads(dynamicEadSearchOptions));
+		dynamicEadSearchOptions.setEadClazz(SourceGuide.class);
+		results.setHasDynamicSg(eadDAO.existEads(dynamicEadSearchOptions));
 		getServletRequest().setAttribute("results", results);
 		getServletRequest().setAttribute("harvestingStarted", EadService.isHarvestingStarted());
 		return SUCCESS;
