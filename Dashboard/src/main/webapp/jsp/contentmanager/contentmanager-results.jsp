@@ -278,7 +278,7 @@
 													<s:text name="content.message.delete.europeana" />
 												</option>
 											</c:if>
-											<c:if test="${eadResult.validated}">
+											<c:if test="${eadResult.validated and results.hasDynamicHgSg}">
 												<option value="_self|displayLinkToHgSg.action">
 													<s:text name="content.message.linktohgsg" />
 												</option>									
