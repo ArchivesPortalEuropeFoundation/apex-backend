@@ -36,6 +36,7 @@ import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead.xml.AbstractParser;
 import eu.apenet.dashboard.services.ead.xml.EADNamespaceContext;
+import eu.apenet.dashboard.services.ead.xml.EadCreator;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.SeparateFinnishFiles;
 import eu.apenet.persistence.dao.CLevelDAO;
