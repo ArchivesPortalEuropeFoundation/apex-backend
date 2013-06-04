@@ -1,7 +1,13 @@
 package eu.apenet.persistence.vo;
 
 public enum QueueAction {
-	VALIDATE("content.message.validate"), CONVERT("content.message.convert"), PUBLISH("content.message.publish"), CONVERT_VALIDATE_PUBLISH("content.message.doitall"), UNPUBLISH("content.message.unpublish"), DELETE("content.message.delete"), CONVERT_TO_ESE_EDM("content.message.convert.ese"),DELETE_ESE_EDM("content.message.delete.ese"), DELIVER_TO_EUROPEANA("content.message.deliver.europeana"), DELETE_FROM_EUROPEANA("content.message.delete.europeana" ), UNPUBLISH_ALL("content.message.unpublish.all"), OVERWRITE("content.message.overwrite");
+	VALIDATE("content.message.validate"), CONVERT("content.message.convert"), 
+	PUBLISH("content.message.publish"), CONVERT_VALIDATE_PUBLISH("content.message.doitall"), 
+	UNPUBLISH("content.message.unpublish"), DELETE("content.message.delete"), 
+	CONVERT_TO_ESE_EDM("content.message.convert.ese"),DELETE_ESE_EDM("content.message.delete.ese"), 
+	DELIVER_TO_EUROPEANA("content.message.deliver.europeana"), DELETE_FROM_EUROPEANA("content.message.delete.europeana" ), 
+	UNPUBLISH_ALL("content.message.unpublish.all"), OVERWRITE("content.message.overwrite"), 
+	DYNAMIC("content.message.dynamic"), STATIC("content.message.static");
 
 	private String resourceName;
 	private QueueAction(String resourceName){
