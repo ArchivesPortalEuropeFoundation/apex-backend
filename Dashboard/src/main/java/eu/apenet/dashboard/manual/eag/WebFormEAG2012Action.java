@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -663,8 +664,23 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						log.warn("The file " + new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath).getName() + " is not valid");
 						for (int i = 0; i < this.getWarnings().size(); i++) {
 							String warning = this.getWarnings().get(i).replace("<br/>", "");
+							if (warning.contains("of element 'recordId' is not valid")) {
+								this.loader.setRecordId(this.getIdUsedInAPE());
+								this.loader.setRecordIdISIL(Eag2012.OPTION_NO);
+							}
 							log.debug(warning);
-							addActionMessage(warning);
+							if (!warning.contains("for type 'recordId'")) {
+								addActionMessage(warning);
+							}
+						}
+					}
+				} else {
+					Iterator<String> warningsIt = this.getActionMessages().iterator();
+					while (warningsIt.hasNext()) {
+						String warning = warningsIt.next();
+						if (warning.contains("of element 'recordId' is not valid")) {
+							this.loader.setRecordId(this.getIdUsedInAPE());
+							this.loader.setRecordIdISIL(Eag2012.OPTION_NO);
 						}
 					}
 				}
@@ -782,7 +798,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					for (int i = 0; i < this.getWarnings().size(); i++) {
 						String warning = this.getWarnings().get(i).replace("<br/>", "");
 						log.debug(warning);
-						addActionMessage(warning);
+						if (!warning.contains("for type 'recordId'")) {
+							addActionMessage(warning);
+						}
 					}
 				}
 			} catch (JAXBException jaxbe) {

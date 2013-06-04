@@ -100,7 +100,8 @@ public class EAG2012Loader{
     
 
 	// Your institution tab.
-// TODO:
+    private String recordIdISIL;
+
 	// Identity tab.
     private List<String> repositoryType;
 
@@ -688,6 +689,14 @@ public class EAG2012Loader{
 			String resourceRelationrelationEntryDescriptionLang) {
 		this.resourceRelationrelationEntryDescriptionLang = resourceRelationrelationEntryDescriptionLang;
 	}
+	public String getRecordIdISIL() {
+		return this.recordIdISIL;
+	}
+
+	public void setRecordIdISIL(String recordIdISIL) {
+		this.recordIdISIL = recordIdISIL;
+	}
+
 	public List<String> getRepositoryType() {
         if (this.repositoryType == null) {
         	this.repositoryType = new ArrayList<String>();
@@ -1611,6 +1620,14 @@ public class EAG2012Loader{
 		// Identifier of the institution.
 		if (this.eag.getArchguide().getIdentity().getOtherRepositorId() != null) {
 			this.setOtherRepositorId(this.eag.getArchguide().getIdentity().getOtherRepositorId().getContent());
+			if (this.eag.getControl().getRecordId() != null) {
+				if (this.eag.getArchguide().getIdentity().getOtherRepositorId().getContent().equalsIgnoreCase(this.eag.getControl().getRecordId().getValue())) {
+					this.setRecordIdISIL(Eag2012.OPTION_YES);
+				} else {
+					this.setRecordIdISIL(Eag2012.OPTION_NO);
+				}
+			}
+				
 		}
 
 		// ID used in APE.
@@ -1952,7 +1969,7 @@ public class EAG2012Loader{
 								if (repository.getDirections().get(i).getContent().get(j) instanceof String
 										&& repository.getDirections().get(i).getContent().get(j) != null
 										&& !repository.getDirections().get(i).getContent().get(j).toString().isEmpty()
-										&& !repository.getDirections().get(i).getContent().get(j).toString().equals("\n\t\t\t\t\t")) {
+										&& !repository.getDirections().get(i).getContent().get(j).toString().startsWith("\n")) {
 									this.setDirections(repository.getDirections().get(i).getContent().get(j).toString());
 								}
 								if (repository.getDirections().get(i).getContent().get(j) instanceof Citation) {

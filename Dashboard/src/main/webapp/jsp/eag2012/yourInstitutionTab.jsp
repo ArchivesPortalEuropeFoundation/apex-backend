@@ -45,7 +45,7 @@
 			<td>
 			  <select id="selectYICodeISIL" onclick="codeISILChanged();">
 			  	<s:iterator value="yesNoList" var="list">
-			  		<option value='<s:property value="#list.key"/>' <s:if test='%{newEag && #list.key=="no"}'>selected=selected</s:if>><s:property value="#list.value"/></option>
+			  		<option value='<s:property value="#list.key"/>' <s:if test='%{newEag && #list.key=="no"}'>selected=selected</s:if><s:if test='%{#list.key == loader.recordIdISIL}'>selected=selected</s:if>><s:property value="#list.value"/></option>
 			  	</s:iterator>
 			  </select>
 			</td>
