@@ -3,16 +3,16 @@ package eu.apenet.dashboard.services.ead;
 import java.util.Properties;
 
 import eu.apenet.commons.exceptions.APEnetException;
-import eu.apenet.dashboard.services.ead.database.DatabaseEadPublisher;
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead.xml.XmlEadParser;
+import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead;
-import eu.apenet.persistence.vo.EadContent;
 import eu.apenet.persistence.vo.ValidatedState;
 
-public class PublishTask extends AbstractEadTask {
+public class ChangeDynamicTask extends AbstractEadTask {
 	public static boolean valid(Ead ead){
-		return ValidatedState.VALIDATED.equals(ead.getValidated()) && !ead.isPublished();
+		return ValidatedState.VALIDATED.equals(ead.getValidated());
 	}
 	@Override
 	public void execute(Ead ead, Properties properties) throws Exception {
@@ -23,20 +23,15 @@ public class PublishTask extends AbstractEadTask {
 				 * there is something wrong
 				 */
 				if (ead.getEadContents().size() > 1){
-					for (EadContent eadContent: ead.getEadContents()){
-						DAOFactory.instance().getEadContentDAO().delete(eadContent);
-					}
+					throw new APEnetException(this.getActionName() + " More than one eadcontent found. Please republish.");
 				}
-				String message = null;
-				if (ead.getEadContent() == null){
-					message = "xml";
-					XmlEadParser.parseEadAndPublish(ead);					
-				}else {
-					message = "database";
-					DatabaseEadPublisher.publish(ead);
+				if (!ead.isPublished() && ead.getEadContent() == null){
+					XmlEadParser.parseEad(ead);				
 				}
-
-				logAction(ead, message, System.currentTimeMillis()-startTime);
+				ContentUtils.deleteFile(APEnetUtilities.getConfig().getRepoDirPath() + ead.getPathApenetead());
+				ead.setDynamic(true);
+				DAOFactory.instance().getEadDAO().store(ead);
+				logAction(ead, System.currentTimeMillis()-startTime);
 			} catch (Exception e) {
 				logAction(ead, e);
 				throw new APEnetException(this.getActionName() + " " + e.getMessage(), e);
@@ -46,6 +41,6 @@ public class PublishTask extends AbstractEadTask {
 
 	@Override
 	protected String getActionName() {
-		return "publish";
+		return "dynamic";
 	}
 }

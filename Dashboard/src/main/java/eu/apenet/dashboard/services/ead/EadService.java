@@ -185,6 +185,23 @@ public class EadService {
 		}
 	}
 
+	public static void makeStatic(XmlType xmlType, Integer id) throws Exception {
+		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+		Ead ead = eadDAO.findById(id, xmlType.getClazz());
+		SecurityContext.get().checkAuthorized(ead);
+		if (ChangeStaticTask.valid(ead)) {
+			addToQueue(ead, QueueAction.CHANGE_TO_STATIC, null);
+		}
+	}
+
+	public static void makeDynamic(XmlType xmlType, Integer id) throws Exception {
+		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+		Ead ead = eadDAO.findById(id, xmlType.getClazz());
+		SecurityContext.get().checkAuthorized(ead);
+		if (ChangeDynamicTask.valid(ead)) {
+			addToQueue(ead, QueueAction.CHANGE_TO_DYNAMIC, null);
+		}
+	}
 	public static void deleteFromQueue(XmlType xmlType, Integer id) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		JpaUtil.beginDatabaseTransaction();
@@ -333,6 +350,13 @@ public class EadService {
 				if (queueItem.getAction().isDeliverToEuropeanaAction()) {
 					new DeliverToEuropeanaTask().execute(ead, preferences);
 				}
+				if (queueItem.getAction().isCreateStaticEadAction()) {
+					new ChangeStaticTask().execute(ead, preferences);
+				}
+
+				if (queueItem.getAction().isCreateDynamicEadAction()) {
+					new ChangeDynamicTask().execute(ead, preferences);
+				}
 				ead.setQueuing(QueuingState.NO);
 				eadDAO.store(ead);
 				queueItemDAO.delete(queueItem);
@@ -400,6 +424,11 @@ public class EadService {
 			eadSearchOptions.setEuropeana(EuropeanaState.DELIVERED);
 		}else if (QueueAction.DELETE_ESE_EDM.equals(queueAction)) {
 			eadSearchOptions.setEuropeana(EuropeanaState.CONVERTED);
+		}
+		else if (QueueAction.CHANGE_TO_STATIC.equals(queueAction)) {
+			eadSearchOptions.setDynamic(false);
+		}else if (QueueAction.CHANGE_TO_DYNAMIC.equals(queueAction)) {
+			eadSearchOptions.setDynamic(true);
 		}
 		eadSearchOptions.setQueuing(QueuingState.NO);
 		JpaUtil.beginDatabaseTransaction();

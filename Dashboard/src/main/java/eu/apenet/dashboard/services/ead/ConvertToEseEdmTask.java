@@ -168,10 +168,10 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 				}
 				
 				eadDAO.store(findingAid);
-				logAction(ead, true);
+				logAction(ead);
 			} catch (Exception e) {
-				logAction(ead, false);
-				throw new APEnetException("Could not convert to ese/edm the file with ID: " + ead.getId(), e);
+				logAction(ead, e);
+				throw new APEnetException(this.getActionName() + " " + e.getMessage(), e);
 			}
 
 		}

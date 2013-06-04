@@ -20,28 +20,26 @@ public abstract class AbstractEadTask {
 
 	protected abstract String getActionName();
 
-	protected void logAction(Ead ead, boolean success) {
+	protected void logAction(Ead ead) {
+		logAction(ead, null);
+	}
+	
+	protected void logAction(Ead ead, Exception e) {
 		XmlType xmlType = XmlType.getEadType(ead);
 		String successString = "succeed";
-		if (!success) {
+		if (e != null) {
 			successString = "failed";
 		}
 		logger.info("Ead " + ead.getEadid() + "(" + xmlType.getName() + "): " + getActionName() + " - " + successString);
 	}
-	protected void logAction(Ead ead, boolean success, long milliseconds) {
+	protected void logAction(Ead ead, long milliseconds) {
 		XmlType xmlType = XmlType.getEadType(ead);
 		String successString = "succeed";
-		if (!success) {
-			successString = "failed";
-		}
 		logger.info("Ead " + ead.getEadid() + "(" + xmlType.getName() + "): " + getActionName() + " - " + successString + " - " + milliseconds +"ms");
 	}
-	protected void logAction(Ead ead, String message, boolean success, long milliseconds) {
+	protected void logAction(Ead ead, String message,long milliseconds) {
 		XmlType xmlType = XmlType.getEadType(ead);
 		String successString = "succeed";
-		if (!success) {
-			successString = "failed";
-		}
 		logger.info("Ead " + ead.getEadid() + "(" + xmlType.getName() + "): " + getActionName() + " - " + message + " - " + successString + " - " + milliseconds +"ms");
 	}
 	protected static boolean isBeingHarvested () {

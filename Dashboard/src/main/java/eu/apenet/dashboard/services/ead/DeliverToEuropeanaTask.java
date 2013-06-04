@@ -56,13 +56,12 @@ public class DeliverToEuropeanaTask extends AbstractEadTask {
 					findingAid.setEuropeana(EuropeanaState.DELIVERED);
 					eadDAO.updateSimple(findingAid);
 					JpaUtil.commitDatabaseTransaction();
-					logAction(ead, true);
+					logAction(ead);
 
 				}
-
 			} catch (Exception e) {
-				logAction(ead, false);
-				throw new APEnetException("Could not delete ese/edm the file with ID: " + ead.getId(), e);
+				logAction(ead, e);
+				throw new APEnetException(this.getActionName() + " " + e.getMessage(), e);
 			}
 		}
 

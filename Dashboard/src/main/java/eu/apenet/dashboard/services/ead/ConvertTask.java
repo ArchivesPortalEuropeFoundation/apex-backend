@@ -135,10 +135,10 @@ public class ConvertTask extends AbstractEadTask {
 				outputfile.delete();
 				ead = DAOFactory.instance().getEadDAO().store(ead);
 				LinkingService.linkWithHgOrSg(ead);
-				logAction(ead, true);
+				logAction(ead);
 			} catch (Exception e) {
-				logAction(ead, false);
-				throw new APEnetException("Could not convert the file with ID: " + ead.getId(), e);
+				logAction(ead, e);
+				throw new APEnetException(this.getActionName() + " " + e.getMessage(), e);
 			}
 		}
 	}

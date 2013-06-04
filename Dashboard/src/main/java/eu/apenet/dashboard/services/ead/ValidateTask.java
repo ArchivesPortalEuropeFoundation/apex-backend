@@ -135,9 +135,9 @@ public class ValidateTask extends AbstractEadTask {
 				if (ead instanceof HoldingsGuide) {
 					ContentUtils.addLinkHGtoAL((HoldingsGuide)ead);
 				}
-				logAction(ead, true);
+				logAction(ead);
 			} catch (Exception e) {
-				logAction(ead, false);
+				logAction(ead, e);
 				throw new APEnetException("Could not validate the file with ID: " + ead.getId(), e);
 			}
 		}

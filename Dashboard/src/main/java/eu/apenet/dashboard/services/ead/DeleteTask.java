@@ -64,10 +64,10 @@ public class DeleteTask extends AbstractEadTask {
 				if (ead instanceof HoldingsGuide)
 					ContentUtils.removeHoldingsGuideFromArchivalLandscape((HoldingsGuide) ead);
 				eadDAO.delete(ead);
-				logAction(ead, true);
+				logAction(ead);
 			} catch (Exception e) {
-				logAction(ead, false);
-				throw new APEnetException("Could not delete the file with ID: " + ead.getId(), e);
+				logAction(ead, e);
+				throw new APEnetException(this.getActionName() + " " + e.getMessage(), e);
 			}
 		}
 

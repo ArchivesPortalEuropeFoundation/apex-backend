@@ -70,10 +70,10 @@ public class DeleteEseEdmTask extends AbstractEadTask {
 				}
 				findingAid.setEuropeana(EuropeanaState.NOT_CONVERTED);
 				eadDAO.store(findingAid);
-				logAction(ead, true);
+				logAction(ead);
 			} catch (Exception e) {
-				logAction(ead, false);
-				throw new APEnetException("Could not delete ese/edm the file with ID: " + ead.getId(), e);
+				logAction(ead, e);
+				throw new APEnetException(this.getActionName() + " " + e.getMessage(), e);
 			}
 		}
 
