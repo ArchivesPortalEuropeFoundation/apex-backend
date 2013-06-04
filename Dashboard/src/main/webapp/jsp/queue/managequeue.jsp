@@ -89,9 +89,7 @@
 							<input type="hidden" name="queueItemId" value="${item.id}" />
 							<s:submit key="content.message.delete.queue"></s:submit>
 						</s:form></td>
-					<td><pre>
-							<c:out value="${item.errors}" />
-						</pre></td>
+					<td><c:out value="${item.errors}" /></td>
 
 				</tr>
 			</c:forEach>
