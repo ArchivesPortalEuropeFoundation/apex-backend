@@ -22,6 +22,8 @@ public abstract class AbstractEadActions extends AbstractInstitutionAction{
 	private static final String DELETE_FROM_QUEUE = "deleteFromQueue";	
 	private static final String DELETE_FROM_EUROPEANA = "deleteFromEuropeana";	
 	private static final String DELIVER_TO_EUROPEANA = "deliverToEuropeana";	
+	private static final String STATIC = "changeToStatic";
+	private static final String DYNAMIC = "changeToDynamic";
 	/**
 	 * 
 	 */
@@ -83,6 +85,10 @@ public abstract class AbstractEadActions extends AbstractInstitutionAction{
 			return deliverToEuropeana();
 		}else if(DELETE_FROM_QUEUE.equals(action)){
 			return deleteFromQueue();
+		}else if(DYNAMIC.equals(action)){
+			return changeToDynamic();
+		}else if(STATIC.equals(action)){
+			return changeToStatic();
 		}
 		return ERROR;
 	}
@@ -99,4 +105,6 @@ public abstract class AbstractEadActions extends AbstractInstitutionAction{
 	public abstract String deleteFromEuropeana();
 	public abstract String deliverToEuropeana();
 	public abstract String deleteFromQueue();
+	public abstract String changeToDynamic();
+	public abstract String changeToStatic();
 }

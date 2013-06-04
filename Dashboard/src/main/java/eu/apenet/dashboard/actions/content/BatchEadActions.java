@@ -58,6 +58,16 @@ public class BatchEadActions extends AbstractEadActions {
 	public String deliverToEuropeana() {
 		return addBatchToQueue(QueueAction.DELIVER_TO_EUROPEANA);
 	}
+	
+	@Override
+	public String changeToDynamic() {
+		return addBatchToQueue(QueueAction.CHANGE_TO_DYNAMIC);
+	}
+
+	@Override
+	public String changeToStatic() {
+		return addBatchToQueue(QueueAction.CHANGE_TO_STATIC);
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

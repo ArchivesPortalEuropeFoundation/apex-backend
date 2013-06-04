@@ -152,6 +152,29 @@ public class EadActions extends AbstractEadActions{
 
 		return null;
 	}
+	
+
+	@Override
+	public String changeToDynamic() {
+		try {
+			EadService.makeDynamic(getXmlType(), id);
+			return SUCCESS;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return ERROR;
+		}
+	}
+
+	@Override
+	public String changeToStatic() {
+		try {
+			EadService.makeStatic(getXmlType(), id);
+			return SUCCESS;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return ERROR;
+		}
+	}
 
 	public String downloadHgSgStatistics() throws IOException {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();

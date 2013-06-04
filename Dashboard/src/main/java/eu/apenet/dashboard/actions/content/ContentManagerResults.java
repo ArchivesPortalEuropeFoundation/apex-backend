@@ -126,6 +126,6 @@ public class ContentManagerResults {
 		this.hasDynamicSg = hasDynamicSg;
 	}
 	public boolean isHasDynamicHgSg() {
-		return hasDynamicSg && hasDynamicHg;
+		return hasDynamicSg || hasDynamicHg;
 	}
 }
