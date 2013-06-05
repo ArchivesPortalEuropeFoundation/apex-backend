@@ -148,7 +148,9 @@
 										<xsl:value-of select="ape:resource('eagcontent.country')"/>
 									</td>
 									<td>
-										<xsl:value-of select="eag:location[not(@localType) or @localType='visitors address']/eag:country"/>
+										<xsl:call-template name="multilanguage">
+											<xsl:with-param name="list" select="eag:location[not(@localType) or @localType='visitors address']/eag:country"></xsl:with-param>
+										</xsl:call-template>
 									</td>
 								</tr>
 							
@@ -254,7 +256,7 @@
 							</xsl:if>
 
 							<!-- directions and citations goes to template-->
-							<xsl:if test="eag:directions">
+							<xsl:if test="eag:directions and eag:directions/text() or (eag:directions/eag:citation and eag:directions/eag:citation/@href and eag:directions/eag:citation/@href != '') ">
 								<xsl:call-template name="multilanguageWithChilds">
 									<xsl:with-param name="title">
 										<xsl:value-of select="ape:resource('eagcontent.directions')"/>
@@ -834,181 +836,182 @@
 						</tbody>
 					</table>
 
-					<table class="aiSection archivesDisplay">
-						<thead>
-							<tr>
-								<th colspan="2">
-									<xsl:value-of select="ape:resource('eagcontent.archivesandholdings')"/>
-									<!-- Check if occult parts exists -->
-									<xsl:if test="eag:holdings/eag:descriptiveNote/eag:p/text() or eag:repositorhist/eag:descriptiveNote/eag:p/text() or eag:repositorfound/eag:date/text() or eag:repositorfound/eag:rule/text() or ./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:repositorsup/eag:date/text() or eag:repositorsup/eag:rule/text() or eag:adminhierarchy/eag:adminunit/text() or eag:buildinginfo/eag:building/eag:descriptiveNote/eag:p/text() or eag:buildinginfo/eag:repositorarea/eag:num/text() or eag:buildinginfo/eag:lengthshelf/eag:num/text()">
-										<xsl:text> (</xsl:text>
-										<a class="displayLinkSeeMore" href="javascript:seeMore('archivesDisplay','{$id}');">
-											<xsl:value-of select="ape:resource('eagcontent.seemore')"/>
-										</a>
-										<a class="displayLinkSeeLess" href="javascript:seeLess('archivesDisplay','{$id}');">
-											<xsl:value-of select="ape:resource('eagcontent.seeless')"/>
-										</a>
-										<xsl:text>)</xsl:text>
-									</xsl:if>
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-
-							<!-- holdings only shown if there are values-->
-							<xsl:if test="eag:holdings/eag:descriptiveNote/eag:p/text()">
-								<tr class="longDisplay">
-									<td class="header">
-										<xsl:value-of select="ape:resource('eagcontent.holdings')"/>
-									</td>
-									<td>
-										<xsl:call-template name="multilanguage">
-											<xsl:with-param name="list" select="eag:holdings/eag:descriptiveNote/eag:p"/>
-										</xsl:call-template>
-									</td>
-								</tr>
-							</xsl:if>
-
-							<!-- extent only shown if there are values-->
-							<xsl:if test="eag:holdings/eag:extent/eag:num/text()">
+					<xsl:if test="eag:holdings or eag:holdings/eag:descriptiveNote/eag:p/text() or eag:holdings/eag:extent/eag:num/text() or eag:holdings/eag:dateSet or eag:holdings/eag:dateSet/eag:date/text() or (eag:holdings/eag:dateSet/eag:dateRange/eag:fromDate/text() and eag:holdings/eag:dateSet/eag:dateRange/eag:toDate/text()) or eag:repositorhist/eag:descriptiveNote/eag:p/text() or eag:repositorfound/eag:date/text() or eag:repositorfound/eag:rule/text() or eag:repositorsup/eag:date/text() or eag:repositorsup/eag:rule/text() or eag:adminhierarchy/eag:adminunit/text() or eag:buildinginfo/eag:building/eag:descriptiveNote/eag:p/text() or eag:buildinginfo/eag:repositorarea/eag:num/text() or eag:buildinginfo/eag:lengthshelf/eag:num/text()">
+						<table class="aiSection archivesDisplay">
+							<thead>
 								<tr>
-									<td class="header">
-										<xsl:value-of select="ape:resource('eagcontent.extentholdings')"/>
-									</td>
-									<td>
-										<xsl:apply-templates select="eag:holdings/eag:extent/eag:num"/>
-									</td>
+									<th colspan="2">
+										<xsl:value-of select="ape:resource('eagcontent.archivesandholdings')"/>
+										<!-- Check if occult parts exists -->
+										<xsl:if test="eag:holdings/eag:descriptiveNote/eag:p/text() or eag:repositorhist/eag:descriptiveNote/eag:p/text() or eag:repositorfound/eag:date/text() or eag:repositorfound/eag:rule/text() or eag:repositorsup/eag:date/text() or eag:repositorsup/eag:rule/text() or eag:adminhierarchy/eag:adminunit/text() or eag:buildinginfo/eag:building/eag:descriptiveNote/eag:p/text() or eag:buildinginfo/eag:repositorarea/eag:num/text() or eag:buildinginfo/eag:lengthshelf/eag:num/text()">
+											<xsl:text> (</xsl:text>
+											<a class="displayLinkSeeMore" href="javascript:seeMore('archivesDisplay','{$id}');">
+												<xsl:value-of select="ape:resource('eagcontent.seemore')"/>
+											</a>
+											<a class="displayLinkSeeLess" href="javascript:seeLess('archivesDisplay','{$id}');">
+												<xsl:value-of select="ape:resource('eagcontent.seeless')"/>
+											</a>
+											<xsl:text>)</xsl:text>
+										</xsl:if>
+									</th>
 								</tr>
-							</xsl:if>
-
-							<!-- dates of holdings only shown if there are values-->
-							<xsl:if test="eag:holdings/eag:dateSet">
-								<tr>
-									<td class="header">
-										<xsl:value-of select="ape:resource('eagcontent.datesholdings')"/>
-									</td>
-									<td>
-										<xsl:apply-templates select="eag:holdings/eag:dateSet"/>
-									</td>
-								</tr>
-							</xsl:if>
-
-							<!-- repositorhist only shown if there are values-->
-							<xsl:if test="eag:repositorhist/eag:descriptiveNote/eag:p/text()">
-								<tr class="longDisplay">
-									<td class="header">
-										<xsl:value-of select="ape:resource('eagcontent.historyofthearchives')"/>
-									</td>
-									<td>
-										<xsl:call-template name="multilanguage">
-											<xsl:with-param name="list" select="eag:repositorhist/eag:descriptiveNote/eag:p"></xsl:with-param>
-										</xsl:call-template>
-									</td>
-								</tr>
-							</xsl:if>
-
-							<!-- date of repositorfound only shown if there are values-->
-							<xsl:if test="eag:repositorfound/eag:date/text()">
-								<tr class="longDisplay">
-									<td class="subHeader">
-										<xsl:value-of select="ape:resource('eagcontent.daterepositorfound')"/>
-									</td>
-									<td>
-										<xsl:value-of select="eag:repositorfound/eag:date"/>
-									</td>
-								</tr>
-							</xsl:if>
-
-							<!-- rule of repositorfound only shown if there are values-->
-							<xsl:if test="eag:repositorfound/eag:rule/text()">
-								<tr class="longDisplay">
-									<td class="subHeader">
-										<xsl:value-of select="ape:resource('eagcontent.rulerepositorfound')"/>
-									</td>
-									<td>
-										<xsl:value-of select="eag:repositorfound/eag:rule"/>
-									</td>
-								</tr>
-							</xsl:if>
-
-							<!-- date of repositorsup only shown if there are values-->
-							<xsl:if test="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:repositorsup/eag:date/text()">
-								<tr class="longDisplay">
-									<td class="subHeader">
-										<xsl:value-of select="ape:resource('eagcontent.daterepositorsup')"/>
-									</td>
-									<td>
-										<xsl:value-of
-											select="./eag:eag/eag:archguide/eag:desc/eag:repositories/eag:repository/eag:repositorsup/eag:date"/>
-									</td>
-								</tr>
-							</xsl:if>
-
-							<!-- rule of repositorsup only shown if there are values-->
-							<xsl:if test="eag:repositorsup/eag:rule/text()">
-								<tr class="longDisplay">
-									<td class="subHeader">
-										<xsl:value-of select="ape:resource('eagcontent.rulerepositorsup')"/>
-									</td>
-									<td>
-										<xsl:value-of select="eag:repositorsup/eag:rule"/>
-									</td>
-								</tr>
-							</xsl:if>
-
-							<!-- adminunit only shown if there are values-->
-							<xsl:if test="eag:adminhierarchy/eag:adminunit/text()">
-								<tr class="longDisplay">
-									<td class="header">
-										<xsl:value-of select="ape:resource('eagcontent.archivedepartment')"/>
-									</td>
-									<td>
-										<xsl:call-template name="multilanguage">
-											<xsl:with-param name="list" select="eag:adminhierarchy/eag:adminunit"/>
-										</xsl:call-template>
-									</td>
-								</tr>
-							</xsl:if>
-
-							<!-- building only shown if there are values-->
-							<xsl:if test="eag:buildinginfo/eag:building/eag:descriptiveNote/eag:p/text()">
-								<tr class="longDisplay">
-									<td class="header">
-										<xsl:value-of select="ape:resource('eagcontent.archivebuilding')"/>
-									</td>
-									<td>
-										<xsl:call-template name="multilanguage">
-											<xsl:with-param name="list" select="eag:buildinginfo/eag:building/eag:descriptiveNote/eag:p"/>
-										</xsl:call-template>
-									</td>
-								</tr>
-							</xsl:if>
-
-							<!-- repositorarea only shown if there are values-->
-							<xsl:if test="eag:buildinginfo/eag:repositorarea/eag:num/text()">
-								<tr class="longDisplay">
-									<td class="header">
-										<xsl:value-of select="ape:resource('eagcontent.buildingarea')"/>
-									</td>
-									<td>
-										<xsl:apply-templates select="eag:buildinginfo/eag:repositorarea/eag:num"/>
-									</td>
-								</tr>
-							</xsl:if>
-
-							<!-- lengthshelf only shown if there are values-->
-							<xsl:if test="eag:buildinginfo/eag:lengthshelf/eag:num/text()">
-								<tr class="longDisplay">
-									<td class="header">
-										<xsl:value-of select="ape:resource('eagcontent.lengthshelfavailable')"/>
-									</td>
-									<td>
-										<xsl:apply-templates select="eag:buildinginfo/eag:lengthshelf/eag:num"/>
-									</td>
-								</tr>
-							</xsl:if>
-						</tbody>
-					</table>
+							</thead>
+							<tbody>
+	
+								<!-- holdings only shown if there are values-->
+								<xsl:if test="eag:holdings/eag:descriptiveNote/eag:p/text()">
+									<tr class="longDisplay">
+										<td class="header">
+											<xsl:value-of select="ape:resource('eagcontent.holdings')"/>
+										</td>
+										<td>
+											<xsl:call-template name="multilanguage">
+												<xsl:with-param name="list" select="eag:holdings/eag:descriptiveNote/eag:p"/>
+											</xsl:call-template>
+										</td>
+									</tr>
+								</xsl:if>
+	
+								<!-- extent only shown if there are values-->
+								<xsl:if test="eag:holdings/eag:extent/eag:num/text()">
+									<tr>
+										<td class="header">
+											<xsl:value-of select="ape:resource('eagcontent.extentholdings')"/>
+										</td>
+										<td>
+											<xsl:apply-templates select="eag:holdings/eag:extent/eag:num"/>
+										</td>
+									</tr>
+								</xsl:if>
+	
+								<!-- dates of holdings only shown if there are values-->
+								<xsl:if test="eag:holdings/eag:dateSet and (eag:holdings/eag:dateSet/eag:date/text() or (eag:holdings/eag:dateSet/eag:dateRange/eag:fromDate/text() and eag:holdings/eag:dateSet/eag:dateRange/eag:toDate/text()))">
+									<tr>
+										<td class="header">
+											<xsl:value-of select="ape:resource('eagcontent.datesholdings')"/>
+										</td>
+										<td>
+											<xsl:apply-templates select="eag:holdings/eag:dateSet"/>
+										</td>
+									</tr>
+								</xsl:if>
+	
+								<!-- repositorhist only shown if there are values-->
+								<xsl:if test="eag:repositorhist/eag:descriptiveNote/eag:p/text()">
+									<tr class="longDisplay">
+										<td class="header">
+											<xsl:value-of select="ape:resource('eagcontent.historyofthearchives')"/>
+										</td>
+										<td>
+											<xsl:call-template name="multilanguage">
+												<xsl:with-param name="list" select="eag:repositorhist/eag:descriptiveNote/eag:p"></xsl:with-param>
+											</xsl:call-template>
+										</td>
+									</tr>
+								</xsl:if>
+	
+								<!-- date of repositorfound only shown if there are values-->
+								<xsl:if test="eag:repositorfound/eag:date/text()">
+									<tr class="longDisplay">
+										<td class="subHeader">
+											<xsl:value-of select="ape:resource('eagcontent.daterepositorfound')"/>
+										</td>
+										<td>
+											<xsl:value-of select="eag:repositorfound/eag:date"/>
+										</td>
+									</tr>
+								</xsl:if>
+	
+								<!-- rule of repositorfound only shown if there are values-->
+								<xsl:if test="eag:repositorfound/eag:rule/text()">
+									<tr class="longDisplay">
+										<td class="subHeader">
+											<xsl:value-of select="ape:resource('eagcontent.rulerepositorfound')"/>
+										</td>
+										<td>
+											<xsl:value-of select="eag:repositorfound/eag:rule"/>
+										</td>
+									</tr>
+								</xsl:if>
+	
+								<!-- date of repositorsup only shown if there are values-->
+								<xsl:if test="eag:repositorsup/eag:date/text()">
+									<tr class="longDisplay">
+										<td class="subHeader">
+											<xsl:value-of select="ape:resource('eagcontent.daterepositorsup')"/>
+										</td>
+										<td>
+											<xsl:value-of select="eag:repositorsup/eag:date"/>
+										</td>
+									</tr>
+								</xsl:if>
+	
+								<!-- rule of repositorsup only shown if there are values-->
+								<xsl:if test="eag:repositorsup/eag:rule/text()">
+									<tr class="longDisplay">
+										<td class="subHeader">
+											<xsl:value-of select="ape:resource('eagcontent.rulerepositorsup')"/>
+										</td>
+										<td>
+											<xsl:value-of select="eag:repositorsup/eag:rule"/>
+										</td>
+									</tr>
+								</xsl:if>
+	
+								<!-- adminunit only shown if there are values-->
+								<xsl:if test="eag:adminhierarchy/eag:adminunit/text()">
+									<tr class="longDisplay">
+										<td class="header">
+											<xsl:value-of select="ape:resource('eagcontent.archivedepartment')"/>
+										</td>
+										<td>
+											<xsl:call-template name="multilanguage">
+												<xsl:with-param name="list" select="eag:adminhierarchy/eag:adminunit"/>
+											</xsl:call-template>
+										</td>
+									</tr>
+								</xsl:if>
+	
+								<!-- building only shown if there are values-->
+								<xsl:if test="eag:buildinginfo/eag:building/eag:descriptiveNote/eag:p/text()">
+									<tr class="longDisplay">
+										<td class="header">
+											<xsl:value-of select="ape:resource('eagcontent.archivebuilding')"/>
+										</td>
+										<td>
+											<xsl:call-template name="multilanguage">
+												<xsl:with-param name="list" select="eag:buildinginfo/eag:building/eag:descriptiveNote/eag:p"/>
+											</xsl:call-template>
+										</td>
+									</tr>
+								</xsl:if>
+	
+								<!-- repositorarea only shown if there are values-->
+								<xsl:if test="eag:buildinginfo/eag:repositorarea/eag:num/text()">
+									<tr class="longDisplay">
+										<td class="header">
+											<xsl:value-of select="ape:resource('eagcontent.buildingarea')"/>
+										</td>
+										<td>
+											<xsl:apply-templates select="eag:buildinginfo/eag:repositorarea/eag:num"/>
+										</td>
+									</tr>
+								</xsl:if>
+	
+								<!-- lengthshelf only shown if there are values-->
+								<xsl:if test="eag:buildinginfo/eag:lengthshelf/eag:num/text()">
+									<tr class="longDisplay">
+										<td class="header">
+											<xsl:value-of select="ape:resource('eagcontent.lengthshelfavailable')"/>
+										</td>
+										<td>
+											<xsl:apply-templates select="eag:buildinginfo/eag:lengthshelf/eag:num"/>
+										</td>
+									</tr>
+								</xsl:if>
+							</tbody>
+						</table>
+					</xsl:if>
 					<!-- END LOOP -->
 				</div>
 			</div>
@@ -1022,7 +1025,7 @@
 					<th colspan="2">
 						<xsl:value-of select="ape:resource('eagcontent.other')"/>
 						<!-- Check if occult parts exists -->
-						<xsl:if test="./eag:eag/eag:archguide/eag:identity/eag:nonpreform">
+						<xsl:if test="./eag:eag/eag:archguide/eag:identity/eag:nonpreform and ./eag:eag/eag:archguide/eag:identity/eag:nonpreform/text() and ./eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates and ((eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:date and eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:date/text()) or (eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateRange and eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateRange/eag:fromDate/text() and eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateRange/eag:toDate/text()) or (eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateSet/eag:date and eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateSet/eag:date/text()) or (eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateSet/eag:dateRange and eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateSet/eag:dateRange/eag:fromDate/text() and eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateSet/eag:dateRange/eag:toDate/text()))">
 							<xsl:text> (</xsl:text>
 							<a class="displayLinkSeeMore" href="javascript:seeMore('otherDisplay');">
 								<xsl:value-of select="ape:resource('eagcontent.seemore')"/>
@@ -1039,7 +1042,7 @@
 
 				<!-- relationEntry and links to related resources-->
 				<xsl:choose>
-					<xsl:when test="./eag:eag/eag:relations/eag:resourceRelation/@href">
+					<xsl:when test="./eag:eag/eag:relations/eag:resourceRelation/@href and ./eag:eag/eag:relations/eag:resourceRelation/eag:relationEntry/text()">
 						<tr>
 							<td class="header">
 								<xsl:value-of select="ape:resource('eagcontent.relatedresource')"/>:
@@ -1088,7 +1091,7 @@
 
 				<!-- associatedrepositories only shown if there are values-->
 				<xsl:choose>
-					<xsl:when test="./eag:eag/eag:relations/eag:eagRelation/@href">
+					<xsl:when test="./eag:eag/eag:relations/eag:eagRelation/@href and ./eag:eag/eag:relations/eag:eagRelation/eag:relationEntry/text()">
 						<tr>
 							<td class="header">
 								<xsl:value-of select="ape:resource('eagcontent.associatedrepositories')"/>:
@@ -1159,7 +1162,7 @@
 				</xsl:choose>
 
 				<!-- nonpreform and useDates only shown if there are values-->
-				<xsl:if test="./eag:eag/eag:archguide/eag:identity/eag:nonpreform">
+				<xsl:if test="./eag:eag/eag:archguide/eag:identity/eag:nonpreform and ./eag:eag/eag:archguide/eag:identity/eag:nonpreform/text() and ./eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates and ((eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:date and eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:date/text()) or (eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateRange and eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateRange/eag:fromDate/text() and eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateRange/eag:toDate/text()) or (eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateSet/eag:date and eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateSet/eag:date/text()) or (eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateSet/eag:dateRange and eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateSet/eag:dateRange/eag:fromDate/text() and eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateSet/eag:dateRange/eag:toDate/text()))">
 					<tr class="longDisplay">
 						<td class="header">
 							<xsl:value-of select="ape:resource('eagcontent.alternative')"/>
@@ -1171,9 +1174,9 @@
 						</td>
 					</tr>
 				</xsl:if>
-				
+
 				<!-- repositoryType only shown if there are values-->			
-				<xsl:if test="./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text()">
+				<xsl:if test="./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() and (./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'Business archives' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'Church and religious archives' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'County/Local authority archives' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'Specialised non-governmental archives and archives of other cultural (heritage) institutions' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'Media archives' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'Municipal archives' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'National archives' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'Archives of political parties, of popular/labour movement and other non-governmental organisations, associations, agencies and foundations' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'Private persons and family archives' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'Regional archives' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'Specialised governmental archives' or ./eag:eag/eag:archguide/eag:identity/eag:repositoryType/text() = 'University and research archives')">
 					<tr>
 						<td class="header">
 							<xsl:value-of select="ape:resource('eagcontent.typeofarchive')"/>
@@ -1255,13 +1258,13 @@
 				</xsl:if>
 
 				<!-- lastupdate only shown if there are values-->
-				<xsl:if test="./eag:eag/eag:control/eag:maintenanceHistory/eag:maintenanceEvent/eag:eventDateTime/text()">
+				<xsl:variable name="numberOfMaintenanceEvent" select="count(./eag:eag/eag:control/eag:maintenanceHistory/eag:maintenanceEvent)"/>
+				<xsl:if test="./eag:eag/eag:control/eag:maintenanceHistory/eag:maintenanceEvent[$numberOfMaintenanceEvent]/eag:eventDateTime/text()">
 					<tr>
 						<td class="header">
 							<xsl:value-of select="ape:resource('eagcontent.lastupdate')"/>:
 						</td>
 						<td>
-							<xsl:variable name="numberOfMaintenanceEvent" select="count(./eag:eag/eag:control/eag:maintenanceHistory/eag:maintenanceEvent)"/>
 							<xsl:value-of select="./eag:eag/eag:control/eag:maintenanceHistory/eag:maintenanceEvent[$numberOfMaintenanceEvent]/eag:eventDateTime"/>
 						</td>
 					</tr>
@@ -1435,14 +1438,14 @@
 		<xsl:choose>
 			<xsl:when test="count($list) > 1">
 				<xsl:choose>
-					<xsl:when test="$list[@xml:lang = $language.selected]">
+					<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text()">
 						<xsl:for-each select="$list[@xml:lang = $language.selected]">
 							<p>
 								<xsl:apply-templates select="."/>
 							</p>
 						</xsl:for-each>
 					</xsl:when>
-					<xsl:when test="$list[@xml:lang = $language.default]">
+					<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text()">
 						<xsl:for-each select="$list[@xml:lang = $language.default]">
 							<p>
 								<xsl:apply-templates select="."/>
@@ -1452,18 +1455,22 @@
 					<xsl:otherwise>
 						<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
 						<xsl:for-each select="$list[@xml:lang = $language.first]">
-							<p>
-								<xsl:apply-templates select="."/>
-							</p>
+							<xsl:if test="current()/text()">
+								<p>
+									<xsl:apply-templates select="."/>
+								</p>
+							</xsl:if>
 						</xsl:for-each>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:for-each select="$list">
-					<p>
-						<xsl:apply-templates select="."/>
-					</p>
+					<xsl:if test="current()/text()">
+						<p>
+							<xsl:apply-templates select="."/>
+						</p>
+					</xsl:if>
 				</xsl:for-each>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -1471,54 +1478,59 @@
 
 	<!-- template for nonpreform-->
 	<xsl:template match="eag:nonpreform">
-		<xsl:value-of select="text()"/>
-		<!-- when there are only 1 dateSet -->
-		<xsl:if test="./eag:useDates/eag:dateSet">
-			<xsl:text> (</xsl:text>
-			<xsl:apply-templates select="./eag:useDates/eag:dateSet"/>
-			<xsl:text>)</xsl:text>
+		<xsl:if test="./text() and ./text() != ''">
+			<xsl:value-of select="text()"/>
+			<!-- when there are only 1 dateSet -->
+			<xsl:if test="./eag:useDates/eag:dateSet and ((./eag:useDates/eag:dateRange and ./eag:useDates/eag:dateRange/eag:fromDate/text() and ./eag:useDates/eag:dateRange/eag:toDate/text()) or (./eag:useDates/eag:date and ./eag:useDates/eag:date/text()))">
+				<xsl:text> (</xsl:text>
+				<xsl:apply-templates select="./eag:useDates/eag:dateSet"/>
+				<xsl:text>)</xsl:text>
+			</xsl:if>
+			<!-- when there are only 1 dateRange -->
+			<xsl:if test="./eag:useDates/eag:dateRange and ./eag:useDates/eag:dateRange/eag:fromDate/text() and ./eag:useDates/eag:dateRange/eag:toDate/text()">
+				<xsl:text> (</xsl:text>
+				<xsl:apply-templates select="./eag:useDates/eag:dateRange"/>
+				<xsl:text>)</xsl:text>
+			</xsl:if>
+			<!-- when there are only 1 date -->
+			<xsl:if test="./eag:useDates/eag:date and ./eag:useDates/eag:date/text()">
+				<xsl:text> (</xsl:text>
+				<xsl:apply-templates select="./eag:useDates/eag:date"/>
+				<xsl:text>)</xsl:text>
+			</xsl:if>
 		</xsl:if>
-		<!-- when there are only 1 dateRange -->
-		<xsl:if test="./eag:useDates/eag:dateRange">
-			<xsl:text> (</xsl:text>
-			<xsl:apply-templates select="./eag:useDates/eag:dateRange"/>
-			<xsl:text>)</xsl:text>
-		</xsl:if>
-		<!-- when there are only 1 date -->
-		<xsl:if test="./eag:useDates/eag:date">
-			<xsl:text> (</xsl:text>
-			<xsl:apply-templates select="./eag:useDates/eag:date"/>
-			<xsl:text>)-</xsl:text>
-		</xsl:if>
-		
 	</xsl:template>
 
 	<!-- template for dateSet -->
 	<xsl:template match="eag:dateSet">
 		<xsl:if test="eag:dateRange or eag:date">
 			<xsl:for-each select="eag:date">
-				<xsl:value-of select="."/>
-				<xsl:if test="position() != last()">
-					<xsl:text>, </xsl:text>
+				<xsl:if test="current()/text()">
+					<xsl:value-of select="."/>
+					<xsl:if test="position() != last()">
+						<xsl:text>, </xsl:text>
+					</xsl:if>
 				</xsl:if>
 			</xsl:for-each>
-			<xsl:if test="eag:dateRange and eag:date">
+			<xsl:if test="eag:dateRange and eag:dateRange/eag:fromDate/text() and eag:dateRange/eag:toDate/text() and eag:date/text()">
 				<xsl:text>, </xsl:text>
 			</xsl:if>
 			<xsl:for-each select="eag:dateRange">
-				<xsl:value-of select="./eag:fromDate"/>
-				<xsl:variable name="var" select="./eag:toDate"></xsl:variable>
-				<xsl:choose>
-					<xsl:when test="string(number(substring($var,1,2)))!='NaN'">
-						<xsl:text> - </xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text> </xsl:text>
-					</xsl:otherwise>
-				</xsl:choose>
-				<xsl:value-of select="./eag:toDate"/>
-				<xsl:if test="position() != last()">
-					<xsl:text>, </xsl:text>
+				<xsl:if test="./eag:fromDate/text() and ./eag:toDate/text()">
+					<xsl:value-of select="./eag:fromDate"/>
+					<xsl:variable name="var" select="./eag:toDate"></xsl:variable>
+					<xsl:choose>
+						<xsl:when test="string(number(substring($var,1,2)))!='NaN'">
+							<xsl:text> - </xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text> </xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:value-of select="./eag:toDate"/>
+					<xsl:if test="position() != last()">
+						<xsl:text>, </xsl:text>
+					</xsl:if>
 				</xsl:if>
 			</xsl:for-each>
 		</xsl:if>
@@ -1527,34 +1539,40 @@
 	<!-- template for date -->
 	<xsl:template match="eag:date">
 		<xsl:for-each select="eag:date">
-			<xsl:value-of select="."/>
-			<xsl:if test="position() != last()">
-				<xsl:text>, </xsl:text>
+			<xsl:if test="current()/text()">
+				<xsl:value-of select="."/>
+				<xsl:if test="position() != last()">
+					<xsl:text>, </xsl:text>
+				</xsl:if>
+				<xsl:value-of select="./eag:toDate"/>
 			</xsl:if>
-			<xsl:value-of select="./eag:toDate"/>
 		</xsl:for-each>
 	</xsl:template>
 	
 	<!-- template for dateRange -->
 	<xsl:template match="eag:dateRange">
-		<xsl:if test="position() != 1">
-			<xsl:text>, </xsl:text>
-		</xsl:if>
-		<xsl:value-of select="./eag:fromDate"/><xsl:text> - </xsl:text>
-		<xsl:value-of select="./eag:toDate"/>
-		<xsl:for-each select="eag:dateRange">
-			<xsl:value-of select="./eag:fromDate"/>
-			<xsl:variable name="var" select="./eag:toDate"></xsl:variable>
-			<xsl:value-of select="./eag:toDate"/>
-			<xsl:if test="position() != last()">
+		<xsl:if test="./eag:fromDate/text() and ./eag:toDate/text()">
+			<xsl:if test="position() != 1">
 				<xsl:text>, </xsl:text>
 			</xsl:if>
-			<xsl:choose>
-				<xsl:when test="string(number(substring($var,1,2)))!='NaN'">
-					<xsl:text> - </xsl:text>
-				</xsl:when>
-			</xsl:choose>
-		</xsl:for-each>
+			<xsl:value-of select="./eag:fromDate"/><xsl:text> - </xsl:text>
+			<xsl:value-of select="./eag:toDate"/>
+			<xsl:for-each select="eag:dateRange">
+				<xsl:if test="current()/eag:fromDate/text() and current()/eag:toDate/text()">
+					<xsl:value-of select="./eag:fromDate"/>
+					<xsl:variable name="var" select="./eag:toDate"></xsl:variable>
+					<xsl:value-of select="./eag:toDate"/>
+					<xsl:if test="position() != last()">
+						<xsl:text>, </xsl:text>
+					</xsl:if>
+					<xsl:choose>
+						<xsl:when test="string(number(substring($var,1,2)))!='NaN'">
+							<xsl:text> - </xsl:text>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:if>
+			</xsl:for-each>
+		</xsl:if>
 	</xsl:template>
 
 	<!-- template for multilanguage-->
