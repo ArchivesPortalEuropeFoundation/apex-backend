@@ -58,7 +58,8 @@
 				<label for="textYIIdUsedInAPE"><s:property value="getText('label.ai.tabs.commons.idUsedInAPE')"/>:</label>
 			</td>
 			<td>
-				<input type="hidden" id="recordIdHidden" value="${loader.recordId}"/>
+			    <%-- <input type="hidden" id="selfrecordId" value="${loader.selfRecordId}"/> --%>
+				<input type="hidden" id="recordIdHidden" value="${loader.selfRecordId}"/>
 				<input type="text" id="textYIIdUsedInAPE" value="<s:if test="%{!newEag}">${loader.recordId}</s:if>" disabled="disabled" />
 			</td>
 		</tr>
@@ -158,7 +159,7 @@
 
 		<tr>
 			<td id="coordinatesLabel" colspan="4">
-				<s:property value="getText('label.ai.tabs.commons.coordinates')" />
+				<a href="http://itouchmap.com/latlong.html" target="_blank"><s:property value="getText('label.ai.tabs.commons.coordinates')" /></a>
 			</td>
 		</tr>
 

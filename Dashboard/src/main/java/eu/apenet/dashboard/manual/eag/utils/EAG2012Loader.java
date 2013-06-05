@@ -60,6 +60,7 @@ public class EAG2012Loader{
     private String countryCode;
     private String otherRepositorId;
     private String recordId;
+    private String selfRecordId;
     private String autform;
     private String autformLang;
     private String parform;
@@ -309,9 +310,10 @@ public class EAG2012Loader{
 		} catch (IOException ioe) {
 			log.info(ioe.getMessage());
 		}
+		this.setRecordId(this.getIdUsedInAPE());
+		this.setSelfRecordId(this.getIdUsedInAPE());
 		if (eag == null) {
 			this.setCountryCode(this.getInitialCountryCode());
-			this.setRecordId(this.getIdUsedInAPE());
 			log.info("no previous EAG file");
 		} else {
 			this.eag = eag;
@@ -368,6 +370,14 @@ public class EAG2012Loader{
 		return this.recordId;
 	}
 	
+	public String getSelfRecordId() {
+		return selfRecordId;
+	}
+
+	public void setSelfRecordId(String selfRecordId) {
+		this.selfRecordId = selfRecordId;
+	}
+
 	/**
 	 * Generates unique isocode for ID used in APE.
 	 * 
@@ -1635,8 +1645,11 @@ public class EAG2012Loader{
 			if (this.eag.getControl().getRecordId() != null) {
 				if (this.eag.getArchguide().getIdentity().getOtherRepositorId().getContent().equalsIgnoreCase(this.eag.getControl().getRecordId().getValue())) {
 					this.setRecordIdISIL(Eag2012.OPTION_YES);
+					this.setRecordId(this.eag.getControl().getRecordId().getValue());
 				} else {
 					this.setRecordIdISIL(Eag2012.OPTION_NO);
+					this.setRecordId(this.getRecordId());
+					this.setSelfRecordId(this.getIdUsedInAPE());
 				}
 			}
 				

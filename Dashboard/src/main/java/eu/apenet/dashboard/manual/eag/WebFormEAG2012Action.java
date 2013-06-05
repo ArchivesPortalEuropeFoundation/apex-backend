@@ -849,6 +849,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		loader.setCountryCode(getCountryCode());
 		loader.setOtherRepositorId(getIdOfInstitution());
 		loader.setRecordId(getIdUsedInAPE());
+		loader.setSelfRecordId(getIdUsedInAPE());
 		loader.setAutform(getNameOfInstitution());
 		loader.setParform(getParallelNameOfInstitution());
 		//identity

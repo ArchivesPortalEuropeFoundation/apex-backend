@@ -295,7 +295,7 @@ p.fieldRequired {
 	font-weight: bold;
 }
 
-#coordinatesLabel {
+#coordinatesLabel a{
 	color: #00A0DF;
 	text-decoration: underline;
 }
