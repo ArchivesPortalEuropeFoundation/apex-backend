@@ -584,8 +584,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;
 				if (new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath).exists()) {
 					this.loader = new EAG2012Loader(getAiId());
-					this.loader.fillEag2012();
+					boolean result = this.loader.fillEag2012();
 					log.info("Loader: "+this.loader.toString()+" has been charged.");
+
+					if (!result) {
+						addActionMessage(this.getText("label.ai.error.loadingEAGFile"));
+					}
 
 					state = INPUT;
 				}
@@ -650,7 +654,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		if (new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath).exists()){
 			newEag = false;
 			this.loader = new EAG2012Loader(getAiId());
-			this.loader.fillEag2012();
+			boolean result = this.loader.fillEag2012();
 			log.info("Loader: "+this.loader.toString()+" has been charged.");
 
 			try {
@@ -696,11 +700,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			} catch (APEnetException apeE) {
 				log.error(apeE.getMessage(),apeE);
 			}
+
+			if (!result) {
+				addActionMessage(this.getText("label.ai.error.loadingEAGFile"));
+			}
 		} else if(new File(APEnetUtilities.getConfig().getRepoDirPath() + path).exists()){
 			newEag = false;
 			this.loader = new EAG2012Loader(getAiId());
-			this.loader.fillEag2012();
+			boolean result = this.loader.fillEag2012();
 			log.info("Loader: "+this.loader.toString()+" has been charged.");
+
+			if (!result) {
+				addActionMessage(this.getText("label.ai.error.loadingEAGFile"));
+			}
 		}else{
 			newEag = true;
 			try {

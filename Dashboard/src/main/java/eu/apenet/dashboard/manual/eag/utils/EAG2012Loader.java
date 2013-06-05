@@ -280,7 +280,8 @@ public class EAG2012Loader{
 
 	// Getters and setters.
 
-	public void fillEag2012() {
+	public boolean fillEag2012() {
+		boolean result = true;
 		Eag eag = null;
 		ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getId());
 		String path = archivalInstitution.getEagPath();
@@ -314,8 +315,10 @@ public class EAG2012Loader{
 			log.info("no previous EAG file");
 		} else {
 			this.eag = eag;
-			this.loadValuesEAG2012();
+			result = this.loadValuesEAG2012();
 		}
+
+		return result;
 	}
 
 	public Integer getId() {
@@ -1580,7 +1583,14 @@ public class EAG2012Loader{
 	/**
 	 * Input method.
 	 */
-	public void loadValuesEAG2012() {
+	public boolean loadValuesEAG2012() {
+		if (this.eag.getControl() == null && this.eag.getArchguide() == null
+				&& this.eag.getRelations() == null) {
+			this.setCountryCode(new ArchivalLandscape().getmyCountry());
+			this.setRecordId(Eag2012.generatesISOCode(this.getId()));
+			return false;
+		}
+
 		// Fill values of "Your institution" tab.
 		loadYourinstitutionTabValues();
 		// Fill values of "Identity" tab.
@@ -1595,6 +1605,8 @@ public class EAG2012Loader{
 		loadControlTabValues();
 		// Fill values of "Relations" tab.
 		loadRelationsTabValues();
+
+		return true;
 	}
 
 	/**
