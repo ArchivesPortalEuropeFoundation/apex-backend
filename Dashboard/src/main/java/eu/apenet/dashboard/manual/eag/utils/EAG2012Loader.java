@@ -1628,6 +1628,10 @@ public class EAG2012Loader{
 				}
 			}
 				
+		} else {
+			// TODO: Cargar el de recordId
+			this.setOtherRepositorId(this.eag.getControl().getRecordId().getValue());
+			this.setRecordIdISIL(Eag2012.OPTION_YES);
 		}
 
 		// ID used in APE.

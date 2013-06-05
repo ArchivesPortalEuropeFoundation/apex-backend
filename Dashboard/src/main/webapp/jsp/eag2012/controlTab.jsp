@@ -11,7 +11,7 @@
 				<label for="textDescriptionIdentifier"><s:property value="getText('label.ai.control.descriptionIdentifier')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textDescriptionIdentifier" value="${loader.recordId}" disabled="disabled" />
+				<input type="text" id="textDescriptionIdentifier" value="<s:if test="%{!newEag}">${loader.recordId}</s:if>" disabled="disabled" />
 			</td>
 			<td colspan="2">
 			</td>

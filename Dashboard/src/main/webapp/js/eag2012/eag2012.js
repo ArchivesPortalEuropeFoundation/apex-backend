@@ -1171,12 +1171,12 @@ function addFurtherIds(text1, text2, text3){
 	var counter = $("input[id^='otherRepositorId']").length;
 	var select = '<select id="selectOtherRepositorIdCodeISIL_'+($("input[id^='otherRepositorId']").length)+'" onclick="codeISILChanged('+($("input[id^='otherRepositorId']").length)+');">'+$("#selectYICodeISIL").html()+'</select>';
 	if (counter == 0) {
-		$("input#buttonAddFutherIds").parent().parent().before("<tr><td><label for=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\"> "+text1+":</label></td><td><input type=\"text\" id=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\" /></td><td class=\"labelLeft\">"+text3+"</td><td>"+select+"</td></tr>");
+		$("input#buttonAddFutherIds").parent().parent().before("<tr><td><label for=\"otherRepositorId_"+($("input[id^='otherRepositorId'] ").length)+"\" > "+text1+":</label></td><td><input type=\"text\" id=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\" onclick=\"idOfInstitutionChanged('"+($("input[id^='otherRepositorId']").length)+"');\" onkeyup=\"idOfInstitutionChanged('"+($("input[id^='otherRepositorId']").length)+"');\" /></td><td class=\"labelLeft\">"+text3+"</td><td>"+select+"</td></tr>");
 		$("select#selectOtherRepositorIdCodeISIL_"+counter).attr("value", "no");
 	} else {
 		var value = $("input#otherRepositorId_" + (counter-1)).attr("value");
 		if (value != null && value != "") {
-			$("input#buttonAddFutherIds").parent().parent().before("<tr><td><label for=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\"> "+text1+":</label></td><td><input type=\"text\" id=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\" /></td><td class=\"labelLeft\">"+text3+"</td><td>"+select+"</td></tr>");
+			$("input#buttonAddFutherIds").parent().parent().before("<tr><td><label for=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\"> "+text1+":</label></td><td><input type=\"text\" id=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\" onclick=\"idOfInstitutionChanged('"+($("input[id^='otherRepositorId']").length)+"');\" onkeyup=\"idOfInstitutionChanged('"+($("input[id^='otherRepositorId']").length)+"');\" /></td><td class=\"labelLeft\">"+text3+"</td><td>"+select+"</td></tr>");
 		$("select#selectOtherRepositorIdCodeISIL_"+counter).attr("value", "no");
 		} else {
 			alertEmptyFields(text2);
@@ -2986,10 +2986,28 @@ function personResponsibleForDescriptionChanged(){
 	$("#textPesonResponsible").attr("value", $("#textYIPersonInstitutionResposibleForTheDescription").val());
 }
 
-function idOfInstitutionChanged(){
-	$("#textIdentityIdentifierOfTheInstitution").attr("value", $("#textYIIdentifierOfTheInstitution").val());
+function idOfInstitutionChanged(index){
+  $("#textIdentityIdentifierOfTheInstitution").attr("value", $("#textYIIdentifierOfTheInstitution").val());
+  
+  if(index==undefined){
+     if($("#selectYICodeISIL").val()=="yes"){
+       $("#textYIIdUsedInAPE").attr("value",$("#textYIIdentifierOfTheInstitution").val());
+       $("#textIdentityIdUsedInAPE").attr("value",$("#textYIIdentifierOfTheInstitution").val());
+       $("#textDescriptionIdentifier").attr("value",$("#textYIIdentifierOfTheInstitution").val());
+     }else{
+	    var id = $("#recordIdHidden").val();
+	    $("#textYIIdUsedInAPE").attr("value",id);
+	    $("#textIdentityIdUsedInAPE").attr("value", id);
+	    $("#textDescriptionIdentifier").attr("value",id);
+     }
+  }else{
+	  if($("#selectOtherRepositorIdCodeISIL_"+index).val()=="yes" && index!=undefined){
+		   $("#textYIIdUsedInAPE").attr("value",$("#otherRepositorId_"+index).val());
+	       $("#textIdentityIdUsedInAPE").attr("value",$("#otherRepositorId_"+index).val());
+	       $("#textDescriptionIdentifier").attr("value",$("#otherRepositorId_"+index).val());
+	     }
+	  }
 }
-
 function nameOfInstitutionChanged(){
 	$("#textNameOfTheInstitution").attr("value", $("#textYINameOfTheInstitution").val());
 }
@@ -3011,7 +3029,7 @@ function streetOfInstitutionChanged(){
 }
 
 function streetOfInstitutionLanguageChanged(){
-	if(($("table#yiTableVisitorsAddress_1 #selectYIVASelectLanguage").val()!="none") && ($("table#yiTableVisitorsAddress_1 #selectYIVASelectLanguage").val()!=null)){
+	if(($("table#yiTableVisitorsAddress_1 #selectYIVASelectLanguage").val()!="noneidOfInstitutionChanged()") && ($("table#yiTableVisitorsAddress_1 #selectYIVASelectLanguage").val()!=null)){
 	   $("table#contactTable_1 table#contactTableVisitorsAddress_1 #selectLanguageVisitorAddress").attr("value", $("table#yiTableVisitorsAddress_1 #selectYIVASelectLanguage").val());
 	   $("table#contactTable_1 table#contactTableVisitorsAddress_1 #selectLanguageVisitorAddress").attr("disabled","disabled");
 	}else{
@@ -3054,10 +3072,8 @@ function telephoneOfInstitutionChanged(){
 		$("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").attr("value", $("table#yiTableOthers #textYITelephone").val());
 		$("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").attr("disabled","disabled");
 	}else{
-	    $("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").removeAttr("disabled");
-	    
-	}
-	 
+	    $("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").removeAttr("disabled");  
+	} 
 }
 
 function emailOfInstitutionChanged(){
@@ -3186,8 +3202,7 @@ function codeISILChanged(index){
 				  $(this).removeAttr("disabled");
 			  });
                  $("#selectYICodeISIL").removeAttr("disabled");
-           
-           }
+            }
         }
 	var id = "";
 	if(index==undefined && $("#selectYICodeISIL").val()=="yes"){
@@ -3200,6 +3215,7 @@ function codeISILChanged(index){
 	$("#textYIIdUsedInAPE").attr("value",id);
 	$("#textIdentityIdUsedInAPE").attr("value",id);
 	$("#textDescriptionIdentifier").attr("value",id);
+	$("#textIdentityIdentifierOfTheInstitution").attr("value",$("#textYIIdentifierOfTheInstitution").val());
 	
 }
 function contactTelephoneChanged(){

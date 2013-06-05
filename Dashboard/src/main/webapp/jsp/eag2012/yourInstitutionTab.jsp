@@ -37,7 +37,7 @@
 				<label for="textYIIdentifierOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.identifierOfTheInstitution')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYIIdentifierOfTheInstitution" value="${loader.otherRepositorId}" onchange="idOfInstitutionChanged();" />
+				<input type="text" id="textYIIdentifierOfTheInstitution" value="${loader.otherRepositorId}" onKeyUp="idOfInstitutionChanged();" onChange="idOfInstitutionChanged();"/>
 			</td>
 			<td class="labelLeft">
 			  <label for="textYICodeISL"><s:property value="getText('label.ai.tabs.commons.codeISL')"/></label>

@@ -673,13 +673,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								this.loader.setRecordIdISIL(Eag2012.OPTION_NO);
 								addActionMessage(this.getText("label.ai.error.defaultIdUsedInAPE") + " ("+ this.getIdUsedInAPE() +")");
 							}
+							if (warning.contains("recordId already used")) {
+								this.loader.setRecordId(this.getIdUsedInAPE());
+								this.loader.setRecordIdISIL(Eag2012.OPTION_NO);
+								addActionMessage(this.getText("label.ai.error.defaultIdUsedInAPE") + " ("+ this.getIdUsedInAPE() +")");
+							}
 						}
 					}
 				} else {
 					Iterator<String> warningsIt = this.getActionMessages().iterator();
 					while (warningsIt.hasNext()) {
 						String warning = warningsIt.next();
-						if (warning.contains("of element 'recordId' is not valid")) {
+						if (warning.contains("of element 'recordId' is not valid")
+								|| warning.contains("recordId already used")) {
 							this.loader.setRecordId(this.getIdUsedInAPE());
 							this.loader.setRecordIdISIL(Eag2012.OPTION_NO);
 						}
@@ -805,6 +811,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						if (warning.contains("of element 'recordId' is not valid")) {
 							addActionMessage(this.getText("label.ai.error.defaultIdUsedInAPE") + " ("+ this.getIdUsedInAPE() +")");
 						}
+						if (warning.contains("recordId already used")) {
+							addActionMessage(this.getText("label.ai.error.defaultIdUsedInAPE") + " ("+ this.getIdUsedInAPE() +")");
+						}
 					}
 				}
 			} catch (JAXBException jaxbe) {
@@ -832,10 +841,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		loader.setParform(getParallelNameOfInstitution());
 		//identity
 //		loader.setCountryCode(getCountryCode());
-		loader.setOtherRepositorId(getIdOfInstitution());
+//		loader.setOtherRepositorId(getIdOfInstitution());
 //		loader.setRecordId(getIdUsedInAPE());
-		loader.setAutform(getNameOfInstitution());
-		loader.setParform(getParallelNameOfInstitution());
+//		loader.setAutform(getNameOfInstitution());
+//		loader.setParform(getParallelNameOfInstitution());
 		//contact
 //		loader.setStreet(getStreetOfTheInstitution());
 //		loader.setMunicipalityPostalcode(getCityOfTheInstitution());
@@ -5234,22 +5243,40 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			//used afterwards
 			//eag2012.setCountryValue(yourInstitution.get("textYIInstitutionCountryCode").toString()); //this tag is used into each repository. TODO, needs to be parsed to ISO3_Characters
 			//eag2012.setRepositoridRepositorycode(yourInstitution.getString("textYIIdentifierOfTheInstitution"));
-			eag2012.setOtherRepositorId(yourInstitution.getString("textYIIdentifierOfTheInstitution"));
-			eag2012.setRepositoridRepositorycode(eag2012.getOtherRepositorId());
+			
+			
+		//	  eag2012.setOtherRepositorId(yourInstitution.getString("textYIIdentifierOfTheInstitution"));
+			
+		//	eag2012.setRepositoridRepositorycode(eag2012.getOtherRepositorId());
 			eag2012.setRecordIdValue(yourInstitution.getString("textYIIdUsedInAPE"));
 			//looper
-			List<String> otherRepositorIds = new ArrayList<String>();
-			List<String> localtypeOtherRepositorIds =new ArrayList<String>();
+			List<String> otherRecordIds = new ArrayList<String>();
+			List<String> localtypeOtherRecordIds =new ArrayList<String>();
+			String localTypeNo = yourInstitution.getString("selectYICodeISIL");
+			otherRecordIds.add(yourInstitution.getString("textYIIdentifierOfTheInstitution"));
+			localtypeOtherRecordIds.add(yourInstitution.getString("selectYICodeISIL"));
+	
+			if(Eag2012.OPTION_NO.equalsIgnoreCase(localTypeNo)) {
+				eag2012.setOtherRepositorId(yourInstitution.getString("textYIIdentifierOfTheInstitution"));
+			 
+			}
+			eag2012.setRepositoridRepositorycode(yourInstitution.getString("textYIIdUsedInAPE"));
+			
 			for(int i=0;yourInstitution.has("otherRepositorId_"+(i)) && yourInstitution.has("selectOtherRepositorIdCodeISIL_"+i);i++){
-				otherRepositorIds.add(yourInstitution.getString("otherRepositorId_"+(i)));
-				localtypeOtherRepositorIds.add(yourInstitution.getString("selectOtherRepositorIdCodeISIL_"+i));
+				localTypeNo = yourInstitution.getString("selectOtherRepositorIdCodeISIL_"+(i));
+				if((Eag2012.OPTION_NO.equalsIgnoreCase(localTypeNo)) && eag2012.getOtherRepositorId()==null){
+				  eag2012.setOtherRepositorId(yourInstitution.getString("otherRepositorId_"+(i)));	
+				}
+				otherRecordIds.add(yourInstitution.getString("otherRepositorId_"+(i)));
+				localtypeOtherRecordIds.add(yourInstitution.getString("selectOtherRepositorIdCodeISIL_"+i));
 			}
-			if(otherRepositorIds.size()>0){
-				eag2012.setOtherRecordIdValue(otherRepositorIds);
+			if(otherRecordIds.size()>0){
+				eag2012.setOtherRecordIdValue(otherRecordIds);
 			}
-			if(localtypeOtherRepositorIds.size()>0){
-				eag2012.setOtherRecordIdLocalType(localtypeOtherRepositorIds);
+			if(localtypeOtherRecordIds.size()>0){
+				eag2012.setOtherRecordIdLocalType(localtypeOtherRecordIds);
 			}
+			
 			List<String> tempList = new ArrayList<String>();
 			if(yourInstitution.has("textYINameOfTheInstitution")){
 				tempList.add(yourInstitution.getString("textYINameOfTheInstitution"));

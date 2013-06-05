@@ -28,7 +28,7 @@
 				<label  for="textIdentityIdUsedInAPE"><s:property value="getText('label.ai.tabs.commons.idUsedInAPE')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textIdentityIdUsedInAPE" value="${loader.recordId}" disabled="disabled" />
+				<input type="text" id="textIdentityIdUsedInAPE" value="<s:if test="%{!newEag}">${loader.recordId}</s:if>" disabled="disabled" />
 			</td>
 		</tr>
 	</table>

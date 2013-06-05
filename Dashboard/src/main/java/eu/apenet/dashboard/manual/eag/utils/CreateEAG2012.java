@@ -517,12 +517,14 @@ public class CreateEAG2012 {
 		}
 		this.eag.getArchguide().getIdentity().getRepositorid().setCountrycode(this.eag2012.getRepositoridCountrycode());
 		// eag/archguide/identity/repositorid/repositorycode
-		this.eag.getArchguide().getIdentity().getRepositorid().setRepositorycode(this.eag2012.getOtherRepositorId());
+		this.eag.getArchguide().getIdentity().getRepositorid().setRepositorycode(this.eag2012.getRepositoridRepositorycode());
 		// eag/archguide/identity/otherRepositorid
-		if (this.eag.getArchguide().getIdentity().getOtherRepositorId() == null) {
-			this.eag.getArchguide().getIdentity().setOtherRepositorId(new OtherRepositorId());
+		if (this.eag2012.getOtherRepositorId() != null && !this.eag2012.getOtherRepositorId().isEmpty()) {
+			if (this.eag.getArchguide().getIdentity().getOtherRepositorId() == null) {
+				this.eag.getArchguide().getIdentity().setOtherRepositorId(new OtherRepositorId());
+			}
+			this.eag.getArchguide().getIdentity().getOtherRepositorId().setContent(this.eag2012.getOtherRepositorId());
 		}
-		this.eag.getArchguide().getIdentity().getOtherRepositorId().setContent(this.eag2012.getOtherRepositorId());
 		// eag/archguide/identity/autform
 		if (this.eag2012.getAutformValue() != null) {
 			for (int i = 0; i < this.eag2012.getAutformValue().size(); i++) {
