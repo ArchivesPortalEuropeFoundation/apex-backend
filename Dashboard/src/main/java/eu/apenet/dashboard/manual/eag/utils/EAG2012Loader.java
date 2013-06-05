@@ -1839,6 +1839,7 @@ public class EAG2012Loader{
 				this.setResourceRelationHref(this.eag.getRelations().getResourceRelation().get(i).getHref());
 				if (this.eag.getRelations().getResourceRelation().get(i).getRelationEntry() != null) {
 					this.setResourceRelationrelationEntry(this.eag.getRelations().getResourceRelation().get(i).getRelationEntry().getContent());
+					this.setResourceRelationLang(this.eag.getRelations().getResourceRelation().get(i).getRelationEntry().getLang());
 				}
 			}
 		}
@@ -2027,40 +2028,60 @@ public class EAG2012Loader{
 				// Searchroom
 				if(repository.getServices().getSearchroom()!=null){
 					Searchroom searchRoom = repository.getServices().getSearchroom();
-					for (int i = 0; i < searchRoom.getContact().getTelephone().size(); i++) {
-						this.setSearchRoomTelephone(searchRoom.getContact().getTelephone().get(i).getContent());
+					if(searchRoom.getContact()!=null){
+						if(searchRoom.getContact().getTelephone()!=null){
+							for (int i = 0; i < searchRoom.getContact().getTelephone().size(); i++) {
+								this.setSearchRoomTelephone(searchRoom.getContact().getTelephone().get(i).getContent());
+							}
+						}
+						if(searchRoom.getContact().getEmail()!=null){
+							for (int i = 0; i < searchRoom.getContact().getEmail().size(); i++) {
+								this.setSearchRoomEmail(searchRoom.getContact().getEmail().get(i).getHref());
+								this.setSearchRoomEmailLink(searchRoom.getContact().getEmail().get(i).getContent());
+							}
+						}
 					}
-					for (int i = 0; i < searchRoom.getContact().getEmail().size(); i++) {
-						this.setSearchRoomEmail(searchRoom.getContact().getEmail().get(i).getHref());
-						this.setSearchRoomEmailLink(searchRoom.getContact().getEmail().get(i).getContent());
+					if(searchRoom.getWebpage()!=null){
+						for (int i = 0; i < searchRoom.getWebpage().size(); i++) {
+							this.setSearchRoomWebpage(searchRoom.getWebpage().get(i).getHref());
+							this.setSearchRoomWebpageLink(searchRoom.getWebpage().get(i).getContent());
+						}
 					}
-					for (int i = 0; i < searchRoom.getWebpage().size(); i++) {
-						this.setSearchRoomWebpage(searchRoom.getWebpage().get(i).getHref());
-						this.setSearchRoomWebpageLink(searchRoom.getWebpage().get(i).getContent());
+					if(searchRoom.getWorkPlaces()!=null && searchRoom.getWorkPlaces().getNum()!=null){
+						this.setSearchRoomWorkPlaces(searchRoom.getWorkPlaces().getNum().getContent());
 					}
-					this.setSearchRoomWorkPlaces(searchRoom.getWorkPlaces().getNum().getContent());
 					if(searchRoom.getComputerPlaces()!=null && searchRoom.getComputerPlaces().getDescriptiveNote()!=null){
 						for (int i = 0; i < searchRoom.getComputerPlaces().getDescriptiveNote().getP().size(); i++) {
 							this.setSearchRoomComputerPlaces(searchRoom.getComputerPlaces().getDescriptiveNote().getP().get(i).getContent());
 						}
 					}
-					this.setSearchRoomMicrofilmReaders(searchRoom.getMicrofilmPlaces().getNum().getContent());
-					this.setSearchRoomPhotographAllowance(searchRoom.getPhotographAllowance().getValue());
-					for (int i = 0; i < searchRoom.getReadersTicket().size(); i++) {
-						this.setSearchRoomPhotographAllowanceContent(searchRoom.getReadersTicket().get(i).getContent());
-						this.setSearchRoomPhotographAllowanceHref(searchRoom.getReadersTicket().get(i).getHref());
-						this.setSearchRoomPhotographAllowanceLang(searchRoom.getReadersTicket().get(i).getLang());
+					if(searchRoom.getMicrofilmPlaces()!=null && searchRoom.getMicrofilmPlaces().getNum()!=null){
+						this.setSearchRoomMicrofilmReaders(searchRoom.getMicrofilmPlaces().getNum().getContent());
 					}
-					for (int i = 0; i < searchRoom.getAdvancedOrders().size(); i++) {
-						this.setSearchRoomAdvancedOrdersContent(searchRoom.getAdvancedOrders().get(i).getContent());
-						this.setSearchRoomAdvancedOrdersLang(searchRoom.getAdvancedOrders().get(i).getLang());
-						this.setSearchRoomAdvancedOrdersHref(searchRoom.getAdvancedOrders().get(i).getHref());
+					if(searchRoom.getPhotographAllowance()!=null){
+						this.setSearchRoomPhotographAllowance(searchRoom.getPhotographAllowance().getValue());
 					}
-					for (int i = 0; i < searchRoom.getResearchServices().size(); i++) {
-						if(searchRoom.getResearchServices().get(i).getDescriptiveNote()!=null){
-							for(int j = 0; j < searchRoom.getResearchServices().get(i).getDescriptiveNote().getP().size(); j++) {
-								this.setSearchRoomResearchServicesContent(searchRoom.getResearchServices().get(i).getDescriptiveNote().getP().get(j).getContent());
-								this.setSearchRoomResearchServicesLang(searchRoom.getResearchServices().get(i).getDescriptiveNote().getP().get(j).getLang());
+					if(searchRoom.getReadersTicket()!=null){
+						for (int i = 0; i < searchRoom.getReadersTicket().size(); i++) {
+							this.setSearchRoomPhotographAllowanceContent(searchRoom.getReadersTicket().get(i).getContent());
+							this.setSearchRoomPhotographAllowanceHref(searchRoom.getReadersTicket().get(i).getHref());
+							this.setSearchRoomPhotographAllowanceLang(searchRoom.getReadersTicket().get(i).getLang());
+						}
+					}
+					if(searchRoom.getAdvancedOrders()!=null){
+						for (int i = 0; i < searchRoom.getAdvancedOrders().size(); i++) {
+							this.setSearchRoomAdvancedOrdersContent(searchRoom.getAdvancedOrders().get(i).getContent());
+							this.setSearchRoomAdvancedOrdersLang(searchRoom.getAdvancedOrders().get(i).getLang());
+							this.setSearchRoomAdvancedOrdersHref(searchRoom.getAdvancedOrders().get(i).getHref());
+						}
+					}
+					if(searchRoom.getResearchServices()!=null){
+						for (int i = 0; i < searchRoom.getResearchServices().size(); i++) {
+							if(searchRoom.getResearchServices().get(i).getDescriptiveNote()!=null){
+								for(int j = 0; j < searchRoom.getResearchServices().get(i).getDescriptiveNote().getP().size(); j++) {
+									this.setSearchRoomResearchServicesContent(searchRoom.getResearchServices().get(i).getDescriptiveNote().getP().get(j).getContent());
+									this.setSearchRoomResearchServicesLang(searchRoom.getResearchServices().get(i).getDescriptiveNote().getP().get(j).getLang());
+								}
 							}
 						}
 					}

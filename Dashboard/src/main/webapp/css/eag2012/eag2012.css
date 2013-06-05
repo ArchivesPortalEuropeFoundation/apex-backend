@@ -252,7 +252,7 @@ input[type="button"]:hover {
 	border-radius: 15px;
 }
 
-#buttonAddFutherInformationOnExistingFacilities {
+#buttonAddFutherInformationOnExistingFacilities, #buttonAddFutherInformationOnExistingFacilities2 {
 	display: inline-block;
 	vertical-align: top;
 	white-space:normal;

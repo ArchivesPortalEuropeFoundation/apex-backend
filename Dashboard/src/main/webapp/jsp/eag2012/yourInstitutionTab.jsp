@@ -226,7 +226,7 @@
 			</td>
 		</tr>
 
-		<tr>
+		<tr id="trTextYIEmail">
 			<td>
 				<label for="textYIEmailAddress" ><s:property value="getText('label.ai.tabs.commons.emailAddress')"/>:</label>
 			</td>
@@ -234,14 +234,30 @@
 				<input type="text" id="textYIEmailAddress" onchange="emailOfInstitutionChanged();" value="${loader.email}" />
 			</td>
 			<td class="labelLeft">
+				<label for="selectTextYILangEmail"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+			</td>
+			<td>
+				<select id="selectTextYILangEmail" >
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.emailLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
+			</td>
+		</tr>
+		<tr id="trTextYILangEmail">
+			<td>
 				<label for="textYIEmailLinkTitle" ><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
 				<input type="text" id="textYIEmailLinkTitle" onchange="emailOfInstitutionLinkChanged();" value="${loader.emailTitle}" />
 			</td>
 		</tr>
-
-		<tr>
+		<tr id="trButtonAFEOTInstitution">
+			<td>
+				<input id="buttonAddFurtherEmailsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherEmailsAddresses")' />" onclick="addYIFurtherEmailsOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+			</td>
+		</tr>
+		<tr id="trButtonYIWebpage">
 			<td>
 				<label for="textYIWebpage" ><s:property value="getText('label.ai.tabs.commons.webpage')"/>:</label>
 			</td>
@@ -249,24 +265,68 @@
 				<input type="text" id="textYIWebpage" onchange="webOfInstitutionChanged();" value="${loader.webpage}" />
 			</td>
 			<td class="labelLeft">
+				<label for="selectTextYILangWebpage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+			</td>
+			<td>
+				<select id="selectTextYILangWebpage" >
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.webpageLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
+			</td>
+		</tr>
+		<tr id="trButtonYILangWebpage">
+			<td>
 				<label for="textYIWebpageLinkTitle" ><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
 				<input type="text" id="textYIWebpageLinkTitle" onchange="webOfInstitutionLinkChanged();" value="${loader.webpageTitle}" />
 			</td>
 		</tr>
-
-		<tr>
+		<tr id="trButtonAFWOTInstitution">
+			<td id="tdAddFurtherWebsOfTheInstitution" colspan="2">
+				<input id="buttonAddFurtherWebsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherWebpages")' />" onclick="addYIFurtherWebsOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+			</td>
+		</tr>
+		<tr id="trTextYIOpeningTimes">
 			<td>
 				<label for="textYIOpeningTimes" ><s:property value="getText('label.ai.tabs.commons.openingTimes')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
 				<input type="text" id="textYIOpeningTimes" onchange="openingHoursOfInstitutionChanged();" value="${loader.opening}" />
 			</td>
-			<td colspan="2">
+			<td class="labelLeft">
+				<label for="selectTextYIOpeningTimes"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/><span class="required">*</span>:</label>
+			</td>
+			<td>
+				<select id="selectTextYIOpeningTimes" onchange="duplicateOpeningTimesLanguage();" >
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.openingLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td id="tdASAddOpeningTimes" colspan="2">
+				<input type="button" id="buttonASAddOpeningTimes"  value="<s:property value='getText("label.ai.accessAndServices.addOpeningTimes")' />" onclick="yIAddOpeningTimes('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
 			</td>
 		</tr>
 
+		<tr id="fieldClosingDates" <s:if test="loader.closing==null || %(loader.closing.length()>0)">style="display:none;"</s:if>>
+			<td><label for="yourInstitutionClosingDates"><s:property value="getText('label.ai.yourinstitution.closingDates')"/>:</label></td>
+			<td><input type="text" id="yourInstitutionClosingDates" onchange="closingHoursOfInstitutionChanged();" value="${loader.closing}" /></td>
+			<td class="labelLeft">
+				<label for="selectTextYIClosingTimes"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+			</td>
+			<td>
+				<select id="selectTextYIClosingTimes" onchange="duplicateClosingTimesLanguage();">
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.closingLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
+			</td>
+		</tr>
+		<s:if test="loader.closing==null || %(loader.closing.length()>0)">
 		<tr>
 			<td>
 				<input type="button" id="buttonAddClosingDates" value="<s:property value="getText('label.ai.tabs.commons.closingDates')"/>" onclick="yiAddClosingDates();" />
@@ -274,10 +334,11 @@
 			<td colspan="3">
 			</td>
 		</tr>
-
-		<tr id="fieldClosingDates" style="display:none;">
-			<td><label for="yourInstitutionClosingDates"><s:property value="getText('label.ai.yourinstitution.closingDates')"/>:</label></td>
-			<td><input type="text" id="yourInstitutionClosingDates" onchange="closingHoursOfInstitutionChanged();" value="${loader.closing}" /></td>
+		</s:if>
+		<tr id="trYIbuttonAddClosingDates"<s:if test="loader.closing==null || %(loader.closing.length()>0)"> style="display:none;"</s:if>>
+			<td id="tdASAddClosingDates" colspan="2">
+				<input type="button" id="buttonASAddClosingDates"  value="<s:property value='getText("label.ai.accessAndServices.addClosingDates")' />" onclick="yIAddClosingDates2('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+			</td>
 			<td colspan="2">
 			</td>
 		</tr>
@@ -297,10 +358,34 @@
 				<input type="button" id="buttonFutherAccessInformation" value="<s:property value="getText('label.ai.yourinstitution.addFurtherAccessInformation')"/>" onclick="yiFutherAccessInformation();" />
 			</td>
 		</tr>
-
+		
+		<tr id="trYIButtonFutherAccessInformation" style="display:none;">
+			<td>
+				<label for="futherAccessInformation"><s:property value="getText('label.ai.accessAndServices.accessRestrictions')" />:</label>
+			</td>
+			<td>
+				<input type="text" id="futherAccessInformation" onchange="futherAccessInformationChanged();" />
+			</td>
+			<td class="labelLeft">
+				<label for="selectFutherAccessInformation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+			</td>
+			<td>
+				<select id="selectFutherAccessInformation" onchange="duplicateAccessInformation();">
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.furtherAccessInformationLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2"></td>
+			<td colspan="2" class="labelLeft">
+				<input type="button" id="buttonFutherAccessInformation2" style="display:none;" value="<s:property value="getText('label.ai.yourinstitution.addFurtherAccessInformation')"/>" onclick="yiFutherAccessInformation2('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+			</td>
+		</tr>
 		<tr>
 			<td>
-				<label for="selectFacilitiesForDisabledPeopleAvailable" ><s:property value="getText('label.ai.yourinstitution.facilitiesForFisabledPeopleAvailable')"/><span class="required">*</span>:</label>
+				<label for="selectFacilitiesForDisabledPeopleAvailable" ><s:property value="getText('label.ai.yourinstitution.facilitiesForFisabledPeopleAvailable')"/>:</label>
 			</td>
 			<td>
 				<select id="selectFacilitiesForDisabledPeopleAvailable" onchange="facilitiesForDisabledPeopleAvailableChanged();" >
@@ -313,8 +398,40 @@
 				<input type="button" id="buttonAddFutherInformationOnExistingFacilities" value="<s:property value="getText('label.ai.yourinstitution.addFutherInformationOnExistingFacilities')"/>" onclick="yiAddFutherInformationOnExistingFacilities();" />
 			</td>
 		</tr>
-
+		<tr id="trButtonAddFutherInformationOnExistingFacilities" style="display:none;">
+			<td>
+				<label for="futherInformationOnExistingFacilities"><s:property value="getText('label.ai.accessAndServices.accesibility')" />:</label>
+			</td>
+			<td>
+				<input type="text" id="futherInformationOnExistingFacilities" onchange="futherInformationOnExistingFacilitiesChanged();" />		
+			</td>
+			<td class="labelLeft">
+				<label for="selectFutherAccessInformationOnExistingFacilities"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/><span class="required">*</span>:</label>
+			</td>
+			<td>
+				<select id="selectFutherAccessInformationOnExistingFacilities" onchange="duplicateFutherAccessInformationOnExistingFacilitiesLanguage();">
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.furtherAccessInformationOnExistingFacilities}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
+			</td>
+		</tr>
 		<tr>
+			<td colspan="2"> </td>
+			<td colspan="2" class="labelLeft">
+				<input type="button" id="buttonAddFutherInformationOnExistingFacilities2" style="display:none;" value="<s:property value="getText('label.ai.yourinstitution.addFutherInformationOnExistingFacilities')"/>" onclick="yiAddFutherInformationOnExistingFacilities2('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+			</td>
+		</tr>
+
+		<tr id="trButtonFutherAccessInformation" style="display:none;">
+			<td colspan="2">
+				<input type="text" id="futherAccessInformation" onchange="futherAccessInformationChanged();" />
+			</td>
+			<td colspan="2" class="labelLeft">
+				<input type="button" style="display:none;" id="buttonAddFutherInformationOnExistingFacilities2" value="<s:property value="getText('label.ai.yourinstitution.addFutherInformationOnExistingFacilities')"/>" onclick="yiAddFutherInformationOnExistingFacilities();" />
+			</td>
+		</tr>
+		<tr id="trYIReferencetoHoldingsguide">
 			<td>
 				<label for="textReferencetoyourinstitutionsholdingsguide" ><s:property value="getText('label.ai.yourinstitution.referenceToYourInstitutionsHoldingsGuide')"/>:</label>
 			</td>
@@ -326,6 +443,26 @@
 			</td>
 			<td>
 				<input type="text" id="textYIHoldingsGuideLinkTitle" onchange="linkToYourHolndingsGuideTitleChanged();" value="${loader.resourceRelationrelationEntry}" />
+			</td>
+		</tr>
+		<tr id="trYIReferenceto2Holdingsguide" style="display:none;"><%-- waiting for ticket decision #543 --%>
+			<td colspan="2"></td>
+			<td class="labelLeft">
+				<label for="selectYIReferencetoHoldingsguide"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/><span class="required">*</span>:</label>
+			</td>
+			<td>
+				<select id="selectYIReferencetoHoldingsguide" >
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.resourceRelationLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
+			</td>
+		</tr>
+		<tr style="display:none;"><%-- waiting for ticket decision #543 --%>
+			<td colspan="2">
+			</td>
+			<td colspan="2" class="labelLeft">
+				<input type="button" id="buttonAddReferencetoyourinstitutionsholdingsguide" value="<s:property value="getText('label.ai.yourinstitution.add')"/>" onclick="yiAddReferencetoyourinstitutionsholdingsguide();" />
 			</td>
 		</tr>
 

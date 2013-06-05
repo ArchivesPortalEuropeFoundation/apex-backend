@@ -930,11 +930,18 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				while(resourceRelations.has("resourceRelationTable_"+(++i))){
 					JSONObject resourceRelationTable = resourceRelations.getJSONObject("resourceRelationTable_"+i);
 					if(resourceRelationTable.has("textWebsiteOfResource")){
-						List<String> website = eag2012.getResourceRelationHref();
+						Map<String, List<String>> website = eag2012.getResourceRelationHref();
 						if(website==null){
-							website = new ArrayList<String>();
+							website = new HashMap<String, List<String>>();
 						}
-						website.add(resourceRelationTable.getString("textWebsiteOfResource"));
+						List<String> listWebsite = null;
+						if(website.size()>0 && website.get(Eag2012.TAB_RELATION)!=null){
+							listWebsite = website.get(Eag2012.TAB_RELATION);
+						}else{
+							listWebsite = new ArrayList<String>();
+						}
+						listWebsite.add(resourceRelationTable.getString("textWebsiteOfResource"));
+						website.put(Eag2012.TAB_RELATION,listWebsite);
 						eag2012.setResourceRelationHref(website);
 					}
 					if(resourceRelationTable.has("selectTypeOfYourRelation")){
@@ -5479,191 +5486,370 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				telephones.add(telephonesMap);
 				eag2012.setTelephoneValue(telephones);
 			}
-			if(yourInstitution.has("textYIEmailAddress")){
-				List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailHref();
-				if(listMapEmailList==null){
-					listMapEmailList = new ArrayList<Map<String, Map<String, List<String>>>>();
+			int targetNumber = 1;
+			String target1 = "textYIEmailAddress";
+			do{
+				if(yourInstitution.has(target1)){
+					List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailHref();
+					if(listMapEmailList==null){
+						listMapEmailList = new ArrayList<Map<String, Map<String, List<String>>>>();
+					}
+					Map<String, Map<String, List<String>>> email = null;
+					if(listMapEmailList.size()>0 && listMapEmailList.get(0)!=null){
+						email = listMapEmailList.get(0);
+					}else{
+						email = new HashMap<String, Map<String, List<String>>>();
+					}
+					List<String> listEmail = null;
+					Map<String,List<String>> emailMap = null;
+					if(email.size()>0 && email.get(Eag2012.TAB_YOUR_INSTITUTION)!=null){
+						emailMap = email.get(Eag2012.TAB_YOUR_INSTITUTION);
+					}else{
+						emailMap = new HashMap<String,List<String>>();
+					}
+					if(emailMap.size()>0 && emailMap.get(Eag2012.ROOT)!=null){
+						listEmail = emailMap.get(Eag2012.ROOT);
+					}else{
+						listEmail = new ArrayList<String>();
+					}
+					listEmail.add(yourInstitution.getString(target1));
+					emailMap.put(Eag2012.ROOT,listEmail); //root section, here there is only one mails list
+					email.put(Eag2012.TAB_YOUR_INSTITUTION, emailMap);
+					if(listMapEmailList.size()>0){
+						listMapEmailList.set(0,email);
+					}else{
+						listMapEmailList.add(email);
+					}
+					eag2012.setEmailHref(listMapEmailList);
 				}
-				Map<String, Map<String, List<String>>> email = null;
-				if(listMapEmailList.size()>0 && listMapEmailList.get(0)!=null){
-					email = listMapEmailList.get(0);
-				}else{
-					email = new HashMap<String, Map<String, List<String>>>();
+				targetNumber++;
+				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+			}while(yourInstitution.has(target1));
+			targetNumber = 1;
+			target1 = "textYIEmailLinkTitle";
+			do{
+				if(yourInstitution.has(target1)){
+					List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailValue();
+					if(listMapEmailList==null){
+						listMapEmailList = new ArrayList<Map<String, Map<String, List<String>>>>();
+					}
+					Map<String, Map<String, List<String>>> email = null;
+					if(listMapEmailList.size()>0 && listMapEmailList.get(0)!=null){
+						email = listMapEmailList.get(0);
+					}else{
+						email = new HashMap<String, Map<String, List<String>>>();
+					}
+					List<String> listEmail = null;
+					Map<String,List<String>> emailMap = null;
+					if(email.size()>0 && email.get(Eag2012.TAB_YOUR_INSTITUTION)!=null){
+						emailMap = email.get(Eag2012.TAB_YOUR_INSTITUTION);
+					}else{
+						emailMap = new HashMap<String,List<String>>();
+					}
+					if(emailMap.size()>0 && emailMap.get(Eag2012.ROOT)!=null){
+						listEmail = emailMap.get(Eag2012.ROOT);
+					}else{
+						listEmail = new ArrayList<String>();
+					}
+					listEmail.add(yourInstitution.getString(target1));
+					emailMap.put(Eag2012.ROOT,listEmail); //root section, here there is only one mails list
+					email.put(Eag2012.TAB_YOUR_INSTITUTION, emailMap);
+					if(listMapEmailList.size()>0){
+						listMapEmailList.set(0,email);
+					}else{
+						listMapEmailList.add(email);
+					}
+					eag2012.setEmailValue(listMapEmailList);
 				}
-				List<String> listEmail = null;
-				Map<String,List<String>> emailMap = null;
-				if(email.size()>0 && email.get(Eag2012.TAB_YOUR_INSTITUTION)!=null){
-					emailMap = email.get(Eag2012.TAB_YOUR_INSTITUTION);
-				}else{
-					emailMap = new HashMap<String,List<String>>();
+				targetNumber++;
+				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+			}while(yourInstitution.has(target1));
+			targetNumber = 1;
+			target1 = "selectTextYILangEmail";
+			do{
+				if(yourInstitution.has(target1)){
+					List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailLang();
+					if(listMapEmailList==null){
+						listMapEmailList = new ArrayList<Map<String, Map<String, List<String>>>>();
+					}
+					Map<String, Map<String, List<String>>> email = null;
+					if(listMapEmailList.size()>0 && listMapEmailList.get(0)!=null){
+						email = listMapEmailList.get(0);
+					}else{
+						email = new HashMap<String, Map<String, List<String>>>();
+					}
+					List<String> listEmail = null;
+					Map<String,List<String>> emailMap = null;
+					if(email.size()>0 && email.get(Eag2012.TAB_YOUR_INSTITUTION)!=null){
+						emailMap = email.get(Eag2012.TAB_YOUR_INSTITUTION);
+					}else{
+						emailMap = new HashMap<String,List<String>>();
+					}
+					if(emailMap.size()>0 && emailMap.get(Eag2012.ROOT)!=null){
+						listEmail = emailMap.get(Eag2012.ROOT);
+					}else{
+						listEmail = new ArrayList<String>();
+					}
+					listEmail.add(yourInstitution.getString(target1));
+					emailMap.put(Eag2012.ROOT,listEmail); //root section, here there is only one mails list
+					email.put(Eag2012.TAB_YOUR_INSTITUTION, emailMap);
+					if(listMapEmailList.size()>0){
+						listMapEmailList.set(0,email);
+					}else{
+						listMapEmailList.add(email);
+					}
+					eag2012.setEmailLang(listMapEmailList);
 				}
-				if(emailMap.size()>0 && emailMap.get(Eag2012.ROOT)!=null){
-					listEmail = emailMap.get(Eag2012.ROOT);
-				}else{
-					listEmail = new ArrayList<String>();
+				targetNumber++;
+				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+			}while(yourInstitution.has(target1));
+			targetNumber = 1;
+			target1 = "textYIWebpage";
+			do{
+				if(yourInstitution.has(target1)){
+					List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getWebpageHref();
+					if(listMapEmailList==null){
+						listMapEmailList = new ArrayList<Map<String, Map<String, List<String>>>>();
+					}
+					Map<String, Map<String, List<String>>> email = null;
+					if(listMapEmailList.size()>0 && listMapEmailList.get(0)!=null){
+						email = listMapEmailList.get(0);
+					}else{
+						email = new HashMap<String, Map<String, List<String>>>();
+					}
+					List<String> listEmail = null;
+					Map<String,List<String>> emailMap = null;
+					if(email.size()>0 && email.get(Eag2012.TAB_YOUR_INSTITUTION)!=null){
+						emailMap = email.get(Eag2012.TAB_YOUR_INSTITUTION);
+					}else{
+						emailMap = new HashMap<String,List<String>>();
+					}
+					if(emailMap.size()>0 && emailMap.get(Eag2012.ROOT)!=null){
+						listEmail = emailMap.get(Eag2012.ROOT);
+					}else{
+						listEmail = new ArrayList<String>();
+					}
+					listEmail.add(yourInstitution.getString(target1));
+					emailMap.put(Eag2012.ROOT,listEmail); //root section, here there is only one mails list
+					email.put(Eag2012.TAB_YOUR_INSTITUTION, emailMap);
+					if(listMapEmailList.size()>0){
+						listMapEmailList.set(0,email);
+					}else{
+						listMapEmailList.add(email);
+					}
+					eag2012.setWebpageHref(listMapEmailList);
 				}
-				listEmail.add(yourInstitution.getString("textYIEmailAddress"));
-				emailMap.put(Eag2012.ROOT,listEmail); //root section, here there is only one mails list
-				email.put(Eag2012.TAB_YOUR_INSTITUTION, emailMap);
-				if(listMapEmailList.size()>0){
-					listMapEmailList.set(0,email);
-				}else{
-					listMapEmailList.add(email);
+				targetNumber++;
+				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+			}while(yourInstitution.has(target1));
+			targetNumber = 1;
+			target1 = "textYIWebpageLinkTitle";
+			do{
+				if(yourInstitution.has(target1)){
+					List<Map<String, Map<String, List<String>>>> listMapWebpagelList = eag2012.getWebpageValue();
+					if(listMapWebpagelList==null){
+						listMapWebpagelList = new ArrayList<Map<String, Map<String, List<String>>>>();
+					}
+					Map<String, Map<String, List<String>>> email = null;
+					if(listMapWebpagelList.size()>0 && listMapWebpagelList.get(0)!=null){
+						email = listMapWebpagelList.get(0);
+					}else{
+						email = new HashMap<String, Map<String, List<String>>>();
+					}
+					List<String> listEmail = null;
+					Map<String,List<String>> emailMap = null;
+					if(email.size()>0 && email.get(Eag2012.TAB_YOUR_INSTITUTION)!=null){
+						emailMap = email.get(Eag2012.TAB_YOUR_INSTITUTION);
+					}else{
+						emailMap = new HashMap<String,List<String>>();
+					}
+					if(emailMap.size()>0 && emailMap.get(Eag2012.ROOT)!=null){
+						listEmail = emailMap.get(Eag2012.ROOT);
+					}else{
+						listEmail = new ArrayList<String>();
+					}
+					listEmail.add(yourInstitution.getString(target1));
+					emailMap.put(Eag2012.ROOT,listEmail); //root section, here there is only one mails list
+					email.put(Eag2012.TAB_YOUR_INSTITUTION, emailMap);
+					if(listMapWebpagelList.size()>0){
+						listMapWebpagelList.set(0,email);
+					}else{
+						listMapWebpagelList.add(email);
+					}
+					eag2012.setWebpageValue(listMapWebpagelList);
 				}
-				eag2012.setEmailHref(listMapEmailList); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(mailsHref) }
-			}
-			if(yourInstitution.has("textYIEmailLinkTitle")){
-				List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailValue();
-				if(listMapEmailList==null){
-					listMapEmailList = new ArrayList<Map<String, Map<String, List<String>>>>();
-				}
-				Map<String, Map<String, List<String>>> email = null;
-				if(listMapEmailList.size()>0 && listMapEmailList.get(0)!=null){
-					email = listMapEmailList.get(0);
-				}else{
-					email = new HashMap<String, Map<String, List<String>>>();
-				}
-				List<String> listEmail = null;
-				Map<String,List<String>> emailMap = null;
-				if(email.size()>0 && email.get(Eag2012.TAB_YOUR_INSTITUTION)!=null){
-					emailMap = email.get(Eag2012.TAB_YOUR_INSTITUTION);
-				}else{
-					emailMap = new HashMap<String,List<String>>();
-				}
-				if(emailMap.size()>0 && emailMap.get(Eag2012.ROOT)!=null){
-					listEmail = emailMap.get(Eag2012.ROOT);
-				}else{
-					listEmail = new ArrayList<String>();
-				}
-				listEmail.add(yourInstitution.getString("textYIEmailLinkTitle"));
-				emailMap.put(Eag2012.ROOT,listEmail); //root section, here there is only one mails list
-				email.put(Eag2012.TAB_YOUR_INSTITUTION, emailMap);
-				if(listMapEmailList.size()>0){
-					listMapEmailList.set(0,email);
-				}else{
-					listMapEmailList.add(email);
-				}
-				eag2012.setEmailValue(listMapEmailList); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(mailsTitle) }
-			}
-			if(yourInstitution.has("textYIWebpage")){
-				List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getWebpageHref();
-				if(listMapEmailList==null){
-					listMapEmailList = new ArrayList<Map<String, Map<String, List<String>>>>();
-				}
-				Map<String, Map<String, List<String>>> email = null;
-				if(listMapEmailList.size()>0 && listMapEmailList.get(0)!=null){
-					email = listMapEmailList.get(0);
-				}else{
-					email = new HashMap<String, Map<String, List<String>>>();
-				}
-				List<String> listEmail = null;
-				Map<String,List<String>> emailMap = null;
-				if(email.size()>0 && email.get(Eag2012.TAB_YOUR_INSTITUTION)!=null){
-					emailMap = email.get(Eag2012.TAB_YOUR_INSTITUTION);
-				}else{
-					emailMap = new HashMap<String,List<String>>();
-				}
-				if(emailMap.size()>0 && emailMap.get(Eag2012.ROOT)!=null){
-					listEmail = emailMap.get(Eag2012.ROOT);
-				}else{
-					listEmail = new ArrayList<String>();
-				}
-				listEmail.add(yourInstitution.getString("textYIWebpage"));
-				emailMap.put(Eag2012.ROOT,listEmail); //root section, here there is only one mails list
-				email.put(Eag2012.TAB_YOUR_INSTITUTION, emailMap);
-				if(listMapEmailList.size()>0){
-					listMapEmailList.set(0,email);
-				}else{
-					listMapEmailList.add(email);
-				}
-				eag2012.setWebpageHref(listMapEmailList); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(webpageHref) }
-			}
-			if(yourInstitution.has("textYIWebpageLinkTitle")){
-				List<Map<String, Map<String, List<String>>>> listMapWebpagelList = eag2012.getWebpageValue();
-				if(listMapWebpagelList==null){
-					listMapWebpagelList = new ArrayList<Map<String, Map<String, List<String>>>>();
-				}
-				Map<String, Map<String, List<String>>> email = null;
-				if(listMapWebpagelList.size()>0 && listMapWebpagelList.get(0)!=null){
-					email = listMapWebpagelList.get(0);
-				}else{
-					email = new HashMap<String, Map<String, List<String>>>();
-				}
-				List<String> listEmail = null;
-				Map<String,List<String>> emailMap = null;
-				if(email.size()>0 && email.get(Eag2012.TAB_YOUR_INSTITUTION)!=null){
-					emailMap = email.get(Eag2012.TAB_YOUR_INSTITUTION);
-				}else{
-					emailMap = new HashMap<String,List<String>>();
-				}
-				if(emailMap.size()>0 && emailMap.get(Eag2012.ROOT)!=null){
-					listEmail = emailMap.get(Eag2012.ROOT);
-				}else{
-					listEmail = new ArrayList<String>();
-				}
-				listEmail.add(yourInstitution.getString("textYIWebpageLinkTitle"));
-				emailMap.put(Eag2012.ROOT,listEmail); //root section, here there is only one mails list
-				email.put(Eag2012.TAB_YOUR_INSTITUTION, emailMap);
-				if(listMapWebpagelList.size()>0){
-					listMapWebpagelList.set(0,email);
-				}else{
-					listMapWebpagelList.add(email);
-				}
-				eag2012.setWebpageValue(listMapWebpagelList); //first repo (index_0) (your_institution), first tab (index_TAB_YOUR_INSTITUTION), unique element {list.set(webpageTitle) }
-			}
-			if(yourInstitution.has("textYIOpeningTimes")){
-				List<Map<String,List<String>>> openingValues = eag2012.getOpeningValue();
-				 if(openingValues == null){
-				   openingValues = new ArrayList<Map<String,List<String>>>();  
-				 }
-				 Map<String, List<String>> openingMap = null;
-				 if((openingValues.size() > 0) && (openingValues.get(0)!=null)){
-				   openingMap = openingValues.get(0);	  
-				 }else{
-					 openingMap = new HashMap<String,List<String>>();
-				 }
-				List<String> openingList = null;
-				if((openingMap.size()>0) && (openingMap.get(Eag2012.TAB_YOUR_INSTITUTION)!=null)){
-					openingList = openingMap.get(Eag2012.TAB_YOUR_INSTITUTION);
-				}else{
-					openingList = new ArrayList<String>();
-				}
-				openingList.add(yourInstitution.getString("textYIOpeningTimes"));
-				openingMap.put(Eag2012.TAB_YOUR_INSTITUTION, openingList);
-			    if(openingValues.size() > 0){
-				   openingValues.set(0,openingMap);
-			    }else{
-			    	openingValues.add(openingMap);
-			    }
-			    eag2012.setOpeningValue(openingValues);
-			}
-			if(yourInstitution.has("yourInstitutionClosingDates")){
-				List<Map<String,List<String>>> closingValues = eag2012.getClosingStandardDate();
-				 if(closingValues == null){
-					 closingValues = new ArrayList<Map<String,List<String>>>();  
-				 }
-				 Map<String, List<String>> closingMap = null;
-				 if((closingValues.size() > 0) && (closingValues.get(0)!=null)){
-					 closingMap = closingValues.get(0);	  
-				 }else{
-					 closingMap = new HashMap<String,List<String>>();
-				 }
-				List<String> closingList = null;
-				if((closingMap.size()>0) && (closingMap.get(Eag2012.TAB_YOUR_INSTITUTION)!=null)){
-					closingList = closingMap.get(Eag2012.TAB_YOUR_INSTITUTION);
-				}else{
-					closingList = new ArrayList<String>();
-				}
-				closingList.add(yourInstitution.getString("yourInstitutionClosingDates"));
-				closingMap.put(Eag2012.TAB_YOUR_INSTITUTION, closingList);
-			    if(closingValues.size() > 0){
-			    	closingValues.set(0,closingMap);
-			    }else{
-			    	closingValues.add(closingMap);
-			    }
-				eag2012.setClosingValue(closingValues);
-			}
+				targetNumber++;
+				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+			}while(yourInstitution.has(target1));
 			
+			targetNumber = 1;
+			target1 = "selectTextYILangWebpage";
+			do{
+				if(yourInstitution.has(target1)){
+					List<Map<String, Map<String, List<String>>>> listMapWebpagelList = eag2012.getWebpageLang();
+					if(listMapWebpagelList==null){
+						listMapWebpagelList = new ArrayList<Map<String, Map<String, List<String>>>>();
+					}
+					Map<String, Map<String, List<String>>> email = null;
+					if(listMapWebpagelList.size()>0 && listMapWebpagelList.get(0)!=null){
+						email = listMapWebpagelList.get(0);
+					}else{
+						email = new HashMap<String, Map<String, List<String>>>();
+					}
+					List<String> listWebpage = null;
+					Map<String,List<String>> webpageMap = null;
+					if(email.size()>0 && email.get(Eag2012.TAB_YOUR_INSTITUTION)!=null){
+						webpageMap = email.get(Eag2012.TAB_YOUR_INSTITUTION);
+					}else{
+						webpageMap = new HashMap<String,List<String>>();
+					}
+					if(webpageMap.size()>0 && webpageMap.get(Eag2012.ROOT)!=null){
+						listWebpage = webpageMap.get(Eag2012.ROOT);
+					}else{
+						listWebpage = new ArrayList<String>();
+					}
+					listWebpage.add(yourInstitution.getString(target1));
+					webpageMap.put(Eag2012.ROOT,listWebpage); //root section, here there is only one mails list
+					email.put(Eag2012.TAB_YOUR_INSTITUTION, webpageMap);
+					if(listMapWebpagelList.size()>0){
+						listMapWebpagelList.set(0,email);
+					}else{
+						listMapWebpagelList.add(email);
+					}
+					eag2012.setWebpageLang(listMapWebpagelList);
+				}
+				targetNumber++;
+				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+			}while(yourInstitution.has(target1));
+			
+			targetNumber = 1;
+			target1 = "textYIOpeningTimes";
+			do{
+				if(yourInstitution.has(target1)){
+					List<Map<String,List<String>>> openingValues = eag2012.getOpeningValue();
+					 if(openingValues == null){
+					   openingValues = new ArrayList<Map<String,List<String>>>();  
+					 }
+					 Map<String, List<String>> openingMap = null;
+					 if((openingValues.size() > 0) && (openingValues.get(0)!=null)){
+					   openingMap = openingValues.get(0);	  
+					 }else{
+						 openingMap = new HashMap<String,List<String>>();
+					 }
+					List<String> openingList = null;
+					if((openingMap.size()>0) && (openingMap.get(Eag2012.TAB_YOUR_INSTITUTION)!=null)){
+						openingList = openingMap.get(Eag2012.TAB_YOUR_INSTITUTION);
+					}else{
+						openingList = new ArrayList<String>();
+					}
+					openingList.add(yourInstitution.getString(target1));
+					openingMap.put(Eag2012.TAB_YOUR_INSTITUTION, openingList);
+				    if(openingValues.size() > 0){
+					   openingValues.set(0,openingMap);
+				    }else{
+				    	openingValues.add(openingMap);
+				    }
+				    eag2012.setOpeningValue(openingValues);
+				}
+				targetNumber++;
+				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+			}while(yourInstitution.has(target1));
+			targetNumber = 1;
+			target1 = "selectTextYIOpeningTimes";
+			do{
+				if(yourInstitution.has(target1)){
+					List<Map<String,List<String>>> openingValues = eag2012.getOpeningLang();
+					 if(openingValues == null){
+					   openingValues = new ArrayList<Map<String,List<String>>>();  
+					 }
+					 Map<String, List<String>> openingMap = null;
+					 if((openingValues.size() > 0) && (openingValues.get(0)!=null)){
+					   openingMap = openingValues.get(0);	  
+					 }else{
+						 openingMap = new HashMap<String,List<String>>();
+					 }
+					List<String> openingList = null;
+					if((openingMap.size()>0) && (openingMap.get(Eag2012.TAB_YOUR_INSTITUTION)!=null)){
+						openingList = openingMap.get(Eag2012.TAB_YOUR_INSTITUTION);
+					}else{
+						openingList = new ArrayList<String>();
+					}
+					openingList.add(yourInstitution.getString(target1));
+					openingMap.put(Eag2012.TAB_YOUR_INSTITUTION, openingList);
+				    if(openingValues.size() > 0){
+					   openingValues.set(0,openingMap);
+				    }else{
+				    	openingValues.add(openingMap);
+				    }
+				    eag2012.setOpeningLang(openingValues);
+				}
+				targetNumber++;
+				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+			}while(yourInstitution.has(target1));
+			targetNumber = 1;
+			target1 = "yourInstitutionClosingDates";
+			do{
+				if(yourInstitution.has(target1)){
+					List<Map<String,List<String>>> closingValues = eag2012.getClosingStandardDate();
+					 if(closingValues == null){
+						 closingValues = new ArrayList<Map<String,List<String>>>();  
+					 }
+					 Map<String, List<String>> closingMap = null;
+					 if((closingValues.size() > 0) && (closingValues.get(0)!=null)){
+						 closingMap = closingValues.get(0);	  
+					 }else{
+						 closingMap = new HashMap<String,List<String>>();
+					 }
+					List<String> closingList = null;
+					if((closingMap.size()>0) && (closingMap.get(Eag2012.TAB_YOUR_INSTITUTION)!=null)){
+						closingList = closingMap.get(Eag2012.TAB_YOUR_INSTITUTION);
+					}else{
+						closingList = new ArrayList<String>();
+					}
+					closingList.add(yourInstitution.getString(target1));
+					closingMap.put(Eag2012.TAB_YOUR_INSTITUTION, closingList);
+				    if(closingValues.size() > 0){
+				    	closingValues.set(0,closingMap);
+				    }else{
+				    	closingValues.add(closingMap);
+				    }
+					eag2012.setClosingStandardDate(closingValues);
+				}
+				targetNumber++;
+				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+			}while(yourInstitution.has(target1));
+			targetNumber = 1;
+			target1 = "selectTextYIClosingTimes";
+			do{
+				if(yourInstitution.has(target1)){
+					List<Map<String,List<String>>> closingValues = eag2012.getClosingLang();
+					 if(closingValues == null){
+						 closingValues = new ArrayList<Map<String,List<String>>>();  
+					 }
+					 Map<String, List<String>> closingMap = null;
+					 if((closingValues.size() > 0) && (closingValues.get(0)!=null)){
+						 closingMap = closingValues.get(0);	  
+					 }else{
+						 closingMap = new HashMap<String,List<String>>();
+					 }
+					List<String> closingList = null;
+					if((closingMap.size()>0) && (closingMap.get(Eag2012.TAB_YOUR_INSTITUTION)!=null)){
+						closingList = closingMap.get(Eag2012.TAB_YOUR_INSTITUTION);
+					}else{
+						closingList = new ArrayList<String>();
+					}
+					closingList.add(yourInstitution.getString(target1));
+					closingMap.put(Eag2012.TAB_YOUR_INSTITUTION, closingList);
+				    if(closingValues.size() > 0){
+				    	closingValues.set(0,closingMap);
+				    }else{
+				    	closingValues.add(closingMap);
+				    }
+					eag2012.setClosingLang(closingValues);
+				}
+				targetNumber++;
+				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+			}while(yourInstitution.has(target1));
 			if(yourInstitution.has("selectAccessibleToThePublic")){
 				List<Map<String, String>> accessQuestions = eag2012.getAccessQuestion();
 				if(accessQuestions == null){
@@ -5683,94 +5869,70 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				}
 				eag2012.setAccessQuestion(accessQuestions);
 			}
-			if(yourInstitution.has("futherAccessInformation")){
-				List<Map<String, List<String>>> restAccessValue = eag2012.getRestaccessValue();
-				if(restAccessValue == null){
-					restAccessValue = new ArrayList<Map<String, List<String>>>(); 
+			targetNumber = 1;
+			target1 = "futherAccessInformation";
+			do{
+				if(yourInstitution.has(target1)){
+					List<Map<String, List<String>>> restAccessValue = eag2012.getRestaccessValue();
+					if(restAccessValue == null){
+						restAccessValue = new ArrayList<Map<String, List<String>>>(); 
+					}
+					Map<String, List<String>> restAccessMap = null;
+					if(restAccessValue.size()>0 && restAccessValue.get(0)!=null){
+						restAccessMap = restAccessValue.get(0);
+					}else{
+						restAccessMap = new HashMap<String, List<String>>(); 
+					}
+					List<String> restAccessList = null;
+					if(restAccessMap.size()>0 && restAccessMap.get(Eag2012.TAB_YOUR_INSTITUTION)!=null){
+						restAccessList = restAccessMap.get(Eag2012.TAB_YOUR_INSTITUTION);
+					}else{
+						restAccessList = new ArrayList<String>();
+					}
+					restAccessList.add(yourInstitution.getString(target1));
+					restAccessMap.put(Eag2012.TAB_YOUR_INSTITUTION, restAccessList);
+					if(restAccessValue.size()>0){
+						restAccessValue.set(0,restAccessMap);
+					}else{
+						restAccessValue.add(restAccessMap);
+					}
+					eag2012.setRestaccessValue(restAccessValue); 
 				}
-				Map<String, List<String>> restAccessMap = null;
-				if(restAccessValue.size()>0 && restAccessValue.get(0)!=null){
-					restAccessMap = restAccessValue.get(0);
-				}else{
-					restAccessMap = new HashMap<String, List<String>>(); 
+				targetNumber++;
+				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+			}while(yourInstitution.has(target1));
+			targetNumber = 1;
+			target1 = "selectFutherAccessInformation";
+			do{
+				if(yourInstitution.has(target1)){
+					List<Map<String, List<String>>> restAccessValue = eag2012.getRestaccessLang();
+					if(restAccessValue == null){
+						restAccessValue = new ArrayList<Map<String, List<String>>>(); 
+					}
+					Map<String, List<String>> restAccessMap = null;
+					if(restAccessValue.size()>0 && restAccessValue.get(0)!=null){
+						restAccessMap = restAccessValue.get(0);
+					}else{
+						restAccessMap = new HashMap<String, List<String>>(); 
+					}
+					List<String> restAccessList = null;
+					if(restAccessMap.size()>0 && restAccessMap.get(Eag2012.TAB_YOUR_INSTITUTION)!=null){
+						restAccessList = restAccessMap.get(Eag2012.TAB_YOUR_INSTITUTION);
+					}else{
+						restAccessList = new ArrayList<String>();
+					}
+					restAccessList.add(yourInstitution.getString(target1));
+					restAccessMap.put(Eag2012.TAB_YOUR_INSTITUTION, restAccessList);
+					if(restAccessValue.size()>0){
+						restAccessValue.set(0,restAccessMap);
+					}else{
+						restAccessValue.add(restAccessMap);
+					}
+					eag2012.setRestaccessLang(restAccessValue); 
 				}
-				List<String> restAccessList = null;
-				if(restAccessMap.size()>0 && restAccessMap.get(Eag2012.TAB_YOUR_INSTITUTION)!=null){
-					restAccessList = restAccessMap.get(Eag2012.TAB_YOUR_INSTITUTION);
-				}else{
-					restAccessList = new ArrayList<String>();
-				}
-				restAccessList.add(yourInstitution.getString("futherAccessInformation"));
-				restAccessMap.put(Eag2012.TAB_YOUR_INSTITUTION, restAccessList);
-				if(restAccessValue.size()>0){
-					restAccessValue.set(0,restAccessMap);
-				}else{
-					restAccessValue.add(restAccessMap);
-				}
-				eag2012.setRestaccessValue(restAccessValue); 
-			}
-			if(yourInstitution.has("futherInformationOnExistingFacilities")){
-				List<Map<String, List<String>>> accessibilityValue =eag2012.getAccessibilityValue();
-				if(accessibilityValue == null){
-					accessibilityValue = new ArrayList<Map<String, List<String>>>();	
-				}
-				Map<String, List<String>> accessibilityMap = null;
-				if(accessibilityValue.size()>0 && accessibilityValue.get(0)!= null){
-				  accessibilityMap = accessibilityValue.get(0);	
-				}else{
-					accessibilityMap = new HashMap<String, List<String>>();
-				}
-				List<String> accessibilityList = null;
-				if(accessibilityMap.size()>0 && accessibilityMap.get(Eag2012.TAB_YOUR_INSTITUTION) != null){
-					accessibilityList = accessibilityMap.get(Eag2012.TAB_YOUR_INSTITUTION);
-				}else{
-					accessibilityList = new ArrayList<String>();
-				}
-				accessibilityList.add(yourInstitution.getString("futherInformationOnExistingFacilities"));
-				accessibilityMap.put(Eag2012.TAB_YOUR_INSTITUTION, accessibilityList);
-				if(accessibilityValue.size()>0){
-					accessibilityValue.set(0,accessibilityMap);
-				}else{
-					accessibilityValue.add(accessibilityMap);
-				}
-				eag2012.setAccessibilityValue(accessibilityValue); 	
-			}
-			if(yourInstitution.has("textReferencetoyourinstitutionsholdingsguide")){
-				String resourceRelationHref = yourInstitution.getString("textReferencetoyourinstitutionsholdingsguide");
-				List<String> resourceRelationHrefList = new ArrayList<String>();
-				resourceRelationHrefList.add(resourceRelationHref);
-				eag2012.setResourceRelationHref(resourceRelationHrefList);
-			}
-			if(yourInstitution.has("textYIHoldingsGuideLinkTitle")){
-				List<Map<String, List<String>>> listRelationEnrtyMap = eag2012.getRelationEntryValue();
-				if(listRelationEnrtyMap==null){
-					listRelationEnrtyMap= new ArrayList<Map<String,List<String>>>();
-				}
-				Map<String,List<String>> relationEntryMap = null;
-				if(listRelationEnrtyMap.size()>0 && listRelationEnrtyMap.get(0)!=null){
-					relationEntryMap = listRelationEnrtyMap.get(0);
-				}else{
-					relationEntryMap = new HashMap<String,List<String>>();
-				}
-				List<String> relationEntryList =null;
-				if(relationEntryMap.size()>0 && relationEntryMap.get(Eag2012.TAB_YOUR_INSTITUTION)!=null){
-					relationEntryList= relationEntryMap.get(Eag2012.TAB_YOUR_INSTITUTION);
-				}else{
-					relationEntryList = new ArrayList<String>();
-				}
-				relationEntryList.add(yourInstitution.getString("textYIHoldingsGuideLinkTitle"));
-				relationEntryMap.put(Eag2012.TAB_YOUR_INSTITUTION, relationEntryList);
-			    if(listRelationEnrtyMap.size()>0){
-			    	listRelationEnrtyMap.set(0, relationEntryMap);
-			    }else{
-			    	listRelationEnrtyMap.add(relationEntryMap);
-			    }
-			    eag2012.setRelationEntryValue(listRelationEnrtyMap);
-			}
-			if(yourInstitution.has("selectYIContinent")){
-				String continent = yourInstitution.getString("selectYIContinent");
-				eag2012.setGeogareaValue(continent);
-			}
+				targetNumber++;
+				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+			}while(yourInstitution.has(target1));
 			if(yourInstitution.has("selectFacilitiesForDisabledPeopleAvailable")){
 				List<Map<String, String>> accessibilityQuestions = eag2012.getAccessibilityQuestion();
 				if(accessibilityQuestions == null){
@@ -5789,6 +5951,161 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					accessibilityQuestions.add(accessibilityQuestionRepo);
 				}
 				eag2012.setAccessibilityQuestion(accessibilityQuestions);	
+			}
+			targetNumber = 1;
+			target1 = "futherInformationOnExistingFacilities";
+			do{
+				if(yourInstitution.has(target1)){
+					List<Map<String, List<String>>> accessibilityValue =eag2012.getAccessibilityValue();
+					if(accessibilityValue == null){
+						accessibilityValue = new ArrayList<Map<String, List<String>>>();	
+					}
+					Map<String, List<String>> accessibilityMap = null;
+					if(accessibilityValue.size()>0 && accessibilityValue.get(0)!= null){
+					  accessibilityMap = accessibilityValue.get(0);	
+					}else{
+						accessibilityMap = new HashMap<String, List<String>>();
+					}
+					List<String> accessibilityList = null;
+					if(accessibilityMap.size()>0 && accessibilityMap.get(Eag2012.TAB_YOUR_INSTITUTION) != null){
+						accessibilityList = accessibilityMap.get(Eag2012.TAB_YOUR_INSTITUTION);
+					}else{
+						accessibilityList = new ArrayList<String>();
+					}
+					accessibilityList.add(yourInstitution.getString(target1));
+					accessibilityMap.put(Eag2012.TAB_YOUR_INSTITUTION, accessibilityList);
+					if(accessibilityValue.size()>0){
+						accessibilityValue.set(0,accessibilityMap);
+					}else{
+						accessibilityValue.add(accessibilityMap);
+					}
+					eag2012.setAccessibilityValue(accessibilityValue); 	
+				}
+				targetNumber++;
+				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+			}while(yourInstitution.has(target1));
+			targetNumber = 1;
+			target1 = "selectFutherAccessInformationOnExistingFacilities";
+			do{
+				if(yourInstitution.has(target1)){
+					List<Map<String, List<String>>> accessibilityValue =eag2012.getAccessibilityLang();
+					if(accessibilityValue == null){
+						accessibilityValue = new ArrayList<Map<String, List<String>>>();	
+					}
+					Map<String, List<String>> accessibilityMap = null;
+					if(accessibilityValue.size()>0 && accessibilityValue.get(0)!= null){
+					  accessibilityMap = accessibilityValue.get(0);	
+					}else{
+						accessibilityMap = new HashMap<String, List<String>>();
+					}
+					List<String> accessibilityList = null;
+					if(accessibilityMap.size()>0 && accessibilityMap.get(Eag2012.TAB_YOUR_INSTITUTION) != null){
+						accessibilityList = accessibilityMap.get(Eag2012.TAB_YOUR_INSTITUTION);
+					}else{
+						accessibilityList = new ArrayList<String>();
+					}
+					accessibilityList.add(yourInstitution.getString(target1));
+					accessibilityMap.put(Eag2012.TAB_YOUR_INSTITUTION, accessibilityList);
+					if(accessibilityValue.size()>0){
+						accessibilityValue.set(0,accessibilityMap);
+					}else{
+						accessibilityValue.add(accessibilityMap);
+					}
+					eag2012.setAccessibilityLang(accessibilityValue); 	
+				}
+				targetNumber++;
+				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+			}while(yourInstitution.has(target1));
+			target1 = "textReferencetoyourinstitutionsholdingsguide";
+			targetNumber = 1;
+			do{
+				if(yourInstitution.has(target1)){
+					Map<String, List<String>> resourceRelationHref = eag2012.getResourceRelationHref();
+					if(resourceRelationHref==null){
+						resourceRelationHref = new HashMap<String, List<String>>();
+					}
+					List<String> resourceList = null;
+					if(resourceRelationHref.size()>0 && resourceRelationHref.get(Eag2012.TAB_YOUR_INSTITUTION)!=null){
+						resourceList = resourceRelationHref.get(Eag2012.TAB_YOUR_INSTITUTION); 
+					}else{
+						resourceList = new ArrayList<String>();
+					}
+					resourceList.add(yourInstitution.getString(target1));
+					resourceRelationHref.put(Eag2012.TAB_YOUR_INSTITUTION, resourceList);
+					eag2012.setResourceRelationHref(resourceRelationHref);
+				}
+				targetNumber++;
+				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+			}while(yourInstitution.has(target1));
+			target1 = "textYIHoldingsGuideLinkTitle";
+			targetNumber = 1;
+			do{
+				if(yourInstitution.has(target1)){
+					List<Map<String, List<String>>> listRelationEnrtyMap = eag2012.getRelationEntryValue();
+					if(listRelationEnrtyMap==null){
+						listRelationEnrtyMap= new ArrayList<Map<String,List<String>>>();
+					}
+					Map<String,List<String>> relationEntryMap = null;
+					if(listRelationEnrtyMap.size()>0 && listRelationEnrtyMap.get(0)!=null){
+						relationEntryMap = listRelationEnrtyMap.get(0);
+					}else{
+						relationEntryMap = new HashMap<String,List<String>>();
+					}
+					List<String> relationEntryList =null;
+					if(relationEntryMap.size()>0 && relationEntryMap.get(Eag2012.TAB_YOUR_INSTITUTION)!=null){
+						relationEntryList= relationEntryMap.get(Eag2012.TAB_YOUR_INSTITUTION);
+					}else{
+						relationEntryList = new ArrayList<String>();
+					}
+					relationEntryList.add(yourInstitution.getString(target1));
+					relationEntryMap.put(Eag2012.TAB_YOUR_INSTITUTION, relationEntryList);
+				    if(listRelationEnrtyMap.size()>0){
+				    	listRelationEnrtyMap.set(0, relationEntryMap);
+				    }else{
+				    	listRelationEnrtyMap.add(relationEntryMap);
+				    }
+				    eag2012.setRelationEntryValue(listRelationEnrtyMap);
+				}
+				targetNumber++;
+				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+			}while(yourInstitution.has(target1));
+			
+			target1 = "selectYIReferencetoHoldingsguide";
+			targetNumber = 1;
+			do{
+				if(yourInstitution.has(target1)){
+					List<Map<String, List<String>>> listRelationEnrtyMap = eag2012.getRelationEntryLang();
+					if(listRelationEnrtyMap==null){
+						listRelationEnrtyMap= new ArrayList<Map<String,List<String>>>();
+					}
+					Map<String,List<String>> relationEntryMap = null;
+					if(listRelationEnrtyMap.size()>0 && listRelationEnrtyMap.get(0)!=null){
+						relationEntryMap = listRelationEnrtyMap.get(0);
+					}else{
+						relationEntryMap = new HashMap<String,List<String>>();
+					}
+					List<String> relationEntryList =null;
+					if(relationEntryMap.size()>0 && relationEntryMap.get(Eag2012.TAB_YOUR_INSTITUTION)!=null){
+						relationEntryList= relationEntryMap.get(Eag2012.TAB_YOUR_INSTITUTION);
+					}else{
+						relationEntryList = new ArrayList<String>();
+					}
+					relationEntryList.add(yourInstitution.getString(target1));
+					relationEntryMap.put(Eag2012.TAB_YOUR_INSTITUTION, relationEntryList);
+				    if(listRelationEnrtyMap.size()>0){
+				    	listRelationEnrtyMap.set(0, relationEntryMap);
+				    }else{
+				    	listRelationEnrtyMap.add(relationEntryMap);
+				    }
+				    eag2012.setRelationEntryLang(listRelationEnrtyMap);
+				}
+				targetNumber++;
+				target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;
+			}while(yourInstitution.has(target1));
+			
+			if(yourInstitution.has("selectYIContinent")){
+				String continent = yourInstitution.getString("selectYIContinent");
+				eag2012.setGeogareaValue(continent);
 			}
 		}
 		return eag2012;

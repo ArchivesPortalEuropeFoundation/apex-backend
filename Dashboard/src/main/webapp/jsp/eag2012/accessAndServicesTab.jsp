@@ -203,7 +203,7 @@
 			</td>
 			<td>
 				<select id="selectASASelectLanguage">
-					<s:iterator value="yesNoList" var="language"> 
+					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.accessibilityLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>

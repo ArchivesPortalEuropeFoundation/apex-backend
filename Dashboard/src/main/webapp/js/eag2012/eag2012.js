@@ -1157,14 +1157,105 @@ function yiAddPostalAddressTranslation(text1) {
 function yiAddClosingDates() {
 	$("#buttonAddClosingDates").hide();
 	$("table#yiTableOthers tr#fieldClosingDates").show();
+	$("table#yiTableOthers tr#trYIbuttonAddClosingDates").show();
+	
 }
 function yiFutherAccessInformation() {
-	$("#buttonFutherAccessInformation").hide();
-	$("#buttonFutherAccessInformation").after('<input type="text" id="futherAccessInformation" onchange="futherAccessInformationChanged();" />');
+	$("#buttonFutherAccessInformation").remove();
+	$("#trYIButtonFutherAccessInformation").show();
+	$("#buttonFutherAccessInformation2").show();
 }
-function yiAddFutherInformationOnExistingFacilities() {
-	$("#buttonAddFutherInformationOnExistingFacilities").after('<input type="text" id="futherInformationOnExistingFacilities" onchange="futherInformationOnExistingFacilitiesChanged();" />');
-	$("#buttonAddFutherInformationOnExistingFacilities").hide();
+function yiFutherAccessInformation2(text1){
+	var count = $("tr[id^='trYIButtonFutherAccessInformation']").length;
+	var target = null;
+	if(count==1){
+		target = "#trYIButtonFutherAccessInformation";
+	}else{
+		target = "#trYIButtonFutherAccessInformation_"+count;
+	}
+	var clone = $(target).clone();
+	clone.find("[id^='futherAccessInformation']").attr("id","futherAccessInformation_"+(count+1));
+	clone.find("[id^='selectFutherAccessInformation']").attr("id","selectFutherAccessInformation_"+(count+1));
+	clone.find("[id^='selectFutherAccessInformation']").removeAttr("onchange");
+	clone.attr("id","trYIButtonFutherAccessInformation_"+(count+1));
+	var wrongField = false;
+	var furtherValue = clone.find("input[id^='futherAccessInformation']").val();
+	var furtherSelect = null;
+	if(count>1){
+		furtherSelect = $("#selectFutherAccessInformation_"+count).attr("value");
+	}else{
+		furtherSelect = $("#selectFutherAccessInformation").attr("value");
+	}
+	if(furtherValue.length<=0 || furtherSelect=="none"){
+		wrongField = true;
+	}
+	clone.find("[id^='futherAccessInformation']").attr("value","");
+	if(wrongField){
+		alert(text1);
+	}else{
+		$(target).after(clone);
+	}
+}
+function yiAddFutherInformationOnExistingFacilities(){
+	$("tr#trButtonAddFutherInformationOnExistingFacilities").show();
+	$("input#buttonAddFutherInformationOnExistingFacilities").hide();
+	$("input#buttonAddFutherInformationOnExistingFacilities2").show();
+}
+function yiAddFutherInformationOnExistingFacilities2(text1) {
+	var count = $("tr[id^='trButtonAddFutherInformationOnExistingFacilities']").length;
+	var target = null;
+	if(count==1){
+		target = "tr#trButtonAddFutherInformationOnExistingFacilities";
+	}else{
+		target = "tr#trButtonAddFutherInformationOnExistingFacilities_"+count;
+	}
+	var clone = $(target).clone();
+	clone.find("[id^='futherInformationOnExistingFacilities']").attr("id","futherInformationOnExistingFacilities_"+(count+1));
+	clone.find("[id^='selectFutherAccessInformationOnExistingFacilities']").attr("id","selectFutherAccessInformationOnExistingFacilities_"+(count+1));
+	clone.attr("id","trButtonAddFutherInformationOnExistingFacilities_"+(count+1));
+	var wrongField = false;
+	var furtherValue = clone.find("input[id^='futherInformationOnExistingFacilities']").val();
+	var furtherSelect = null;
+	if(count>1){
+		furtherSelect = $("#selectFutherAccessInformationOnExistingFacilities_"+count).attr("value");
+	}else{
+		furtherSelect = $("#selectFutherAccessInformationOnExistingFacilities").attr("value");
+	}
+	if(furtherValue.length<=0 || furtherSelect=="none"){
+		wrongField = true;
+	}
+	clone.find("[id^='futherInformationOnExistingFacilities']").attr("value","");
+	if(wrongField){
+		alert(text1);
+	}else{
+		$(target).after(clone);
+	}
+}
+function yiAddReferencetoyourinstitutionsholdingsguide(){
+	var count = $("table#yiTableOthers tr[id^='trYIReferencetoHoldingsguide']").length;
+	var clone = null;
+	var clone2 = null;
+	var target = null;
+	var target2 = null;
+	if(count==1){
+		target = "table#yiTableOthers tr#trYIReferencetoHoldingsguide";
+		target2 = "table#yiTableOthers tr#trYIReferenceto2Holdingsguide";
+	}else{
+		target = "table#yiTableOthers tr#trYIReferencetoHoldingsguide_"+count;
+		target2 = "table#yiTableOthers tr#trYIReferenceto2Holdingsguide_"+count;
+	}
+	clone = $(target).clone();
+	clone.find("[id^='textReferencetoyourinstitutionsholdingsguide']").attr("id","textReferencetoyourinstitutionsholdingsguide_"+(count+1));
+	clone.find("[id^='textYIHoldingsGuideLinkTitle']").attr("id","textYIHoldingsGuideLinkTitle_"+(count+1));
+	clone.find("[id^='textYIHoldingsGuideLinkTitle']").attr("value","");
+	clone.find("[id^='textYIEmailAddress']").attr("id","textYIEmailAddress_"+(count+1));
+	clone.find("[id^='textYIEmailAddress']").attr("value","");
+	clone2 = $(target2).clone();
+	clone.attr("id","trYIReferencetoHoldingsguide_"+(count+1));
+	clone2.attr("id","trYIReferenceto2Holdingsguide_"+(count+1));
+	clone2.find("[id^='selectYIReferencetoHoldingsguide']").attr("id","selectYIReferencetoHoldingsguide_"+(count+1));
+	$(target2).after(clone2);
+	$(target2).after(clone);
 }
 
 function addFurtherIds(text1, text2, text3){
@@ -1361,6 +1452,170 @@ function getCurrentTab(){
 		currentTab = "_1";
 	}
 	return currentTab;
+}
+
+function addYIFurtherEmailsOfTheInstitution(text1){
+	var count = $("table#yiTableOthers tr[id^='trTextYIEmail']").length;
+	var clone = null;
+	var clone2 = null;
+	var target = null;
+	var target2 = null;
+	if(count==1){
+		target = "table#yiTableOthers tr#trTextYIEmail";
+		target2 = "table#yiTableOthers tr#trTextYILangEmail";
+	}else{
+		target = "table#yiTableOthers tr#trTextYIEmail_"+count;
+		target2 = "table#yiTableOthers tr#trTextYILangEmail_"+count;
+	}
+	clone = $(target).clone();
+	clone2 = $(target2).clone();
+	clone2.find("[id^='textYIEmailLinkTitle']").attr("id","textYIEmailLinkTitle_"+(count+1));
+	clone.find("[id^='textYIEmailAddress']").attr("id","textYIEmailAddress_"+(count+1));
+	clone.find("[id^='selectTextYILangEmail']").attr("id","selectTextYILangEmail_"+(count+1));
+	clone2.attr("id","trTextYILangEmail_"+(count+1));
+	clone.attr("id","trTextYIEmail_"+(count+1));
+	clone2.attr("id","trTextYILangEmail_"+(count+1));
+	//check values
+	var wrongField = false;
+	if($("#textYIEmailAddress"+((count>1)?("_"+count):"")).val().length<=0 ||
+			$("#selectTextYILangEmail"+((count>1)?("_"+count):""))=="none" ||
+			$("#textYIEmailLinkTitle"+((count>1)?("_"+count):"")).val().length<=0){
+		wrongField = true;
+	}
+	clone.find("[id^='textYIEmailLinkTitle']").attr("value","");
+	clone2.find("[id^='textYIEmailLinkTitle']").attr("value","");
+	clone2.find("[id^='textYIWebpageLinkTitle']").attr("value","");
+	if(wrongField){
+		alert(text1);
+	}else{
+		$(target2).after(clone2);
+		$(target2).after(clone);
+	}
+}
+function addYIFurtherWebsOfTheInstitution(text1){
+	var count = $("table#yiTableOthers tr[id^='trButtonYIWebpage']").length;
+	var clone = null;
+	var target = null;
+	var target2 = null;
+	if(count==1){
+		target = "table#yiTableOthers tr#trButtonYIWebpage";
+		target2 = "table#yiTableOthers tr#trButtonYILangWebpage";
+	}else{
+		target = "table#yiTableOthers tr#trButtonYIWebpage_"+count;
+		target2 = "table#yiTableOthers tr#trButtonYILangWebpage_"+count;
+	}
+	clone = $(target).clone();
+	if(count>1){
+		clone.find("[id^='textYIWebpage_']").attr("id","textYIWebpage_"+(count+1));
+	}else{
+		clone.find("#textYIWebpage").attr("id","textYIWebpage_"+(count+1));
+	}
+	clone.attr("id","trButtonYIWebpage_"+(count+1));
+	clone.find("[id^='selectTextYILangWebpage']").attr("id","selectTextYILangWebpage_"+(count+1));
+	clone2 = $(target2).clone();
+	clone2.find("[id^='textYIWebpageLinkTitle']").attr("id","textYIWebpageLinkTitle_"+(count+1));
+	//check values
+	var wrongField = false;
+	if(clone2.find("[id^='textYIWebpageLinkTitle']").val().length<=0 ||
+			clone.find("[id^='selectTextYILangWebpage'] :selected").val()=="none" ||
+			clone.find("[id^='textYIWebpage']").val().length<=0){
+		wrongField = true;
+	}
+	
+	clone2.find("[id^='textYIWebpageLinkTitle']").attr("value","");
+	clone2.attr("id","trButtonYILangWebpage_"+(count+1));
+	if(wrongField){
+		alert(text1);
+	}else{
+		$(target2).after(clone2);
+		$(target2).after(clone);
+	}
+}
+function yIAddOpeningTimes(text1){
+	var count = $("table#yiTableOthers tr[id^='trTextYIOpeningTimes']").length;
+	var clone = null;
+	var target = "";
+	if(count==1){
+		target = "table#yiTableOthers tr[id='trTextYIOpeningTimes']";
+	}else{
+		target = "table#yiTableOthers tr[id='trTextYIOpeningTimes_"+count+"']";
+	}
+	clone = $(target).clone();
+	clone.find("[id^='textYIOpeningTimes']").attr("id","textYIOpeningTimes_"+(count+1));
+	clone.find("[id^='selectTextYIOpeningTimes']").attr("id","selectTextYIOpeningTimes_"+(count+1));
+	clone.find("[id^='selectTextYIOpeningTimes']").removeAttr("onchange");
+	clone.attr("id","trTextYIOpeningTimes_"+(count+1));
+	var wrongField = false;
+	if(clone.find("[id^='textYIOpeningTimes']").val().length<=0 ||
+			clone.find("[id^='selectTextYIOpeningTimes'] :selected").val()=="none"){
+		wrongField = true;
+	}
+	clone.find("[id^='textYIOpeningTimes']").attr("value","");
+	if(wrongField){
+		alert(text1);
+	}else{
+		$(target).after(clone);
+	}
+}
+function duplicateOpeningTimesLanguage(){
+	var value = $("#selectTextYIOpeningTimes :selected").val();
+	$("#selectLanguageOpeningTimes option").each(function(){
+		if(value==$(this).val()){
+			$(this).attr("selected","selected");
+		}
+	});
+}
+function duplicateClosingTimesLanguage(){
+	var value = $("#selectTextYIClosingTimes :selected").val();
+	$("#selectLanguageClosingDates option").each(function(){
+		if(value==$(this).val()){
+			$(this).attr("selected","selected");
+		}
+	});
+}
+function duplicateAccessInformation(){
+	var value = $("#selectFutherAccessInformation :selected").val();
+	$("#selectASARSelectLanguage option").each(function(){
+		if(value==$(this).val()){
+			$(this).attr("selected","selected");
+		}
+	});
+}
+function duplicateFutherAccessInformationOnExistingFacilitiesLanguage(){
+	var value = $("#selectFutherAccessInformationOnExistingFacilities :selected").val();
+	$("#selectASASelectLanguage option").each(function(){
+		if(value==$(this).val()){
+			$(this).attr("selected","selected");
+		}
+	});
+}
+function yIAddClosingDates2(text1){
+	var count = $("table#yiTableOthers tr[id^='fieldClosingDates']").length;
+	var clone = null;
+	var target = "";
+	if(count==1){
+		target = "table#yiTableOthers tr[id='fieldClosingDates']";
+	}else{
+		target = "table#yiTableOthers tr[id='fieldClosingDates_"+count+"']";
+	}
+	clone = $(target).clone();
+	clone.find("[id^='yourInstitutionClosingDates']").attr("id","yourInstitutionClosingDates_"+(count+1));
+	clone.find("[id^='selectTextYIClosingTimes']").attr("id","selectTextYIClosingTimes_"+(count+1));
+	clone.find("[id^='selectTextYIClosingTimes']").removeAttr("onchange");
+	clone.attr("id","fieldClosingDates_"+(count+1));
+	//check values
+	var wrongField = false;
+	if(clone.find("[id^='yourInstitutionClosingDates']").val().length<=0 ||
+			clone.find("[id^='selectTextYIClosingTimes'] :selected").val()=="none"){
+		wrongField = true;
+	}
+	clone.find("[id^='yourInstitutionClosingDates']").attr("value","");
+	if(wrongField){
+		alert(text1);
+	}else{
+		$(target).after(clone);
+	}
+	
 }
 
 function addFurtherEmailsOfTheInstitution(text1){

@@ -425,8 +425,10 @@ public class Eag2012 {
 	private List<Map<String,List<String>>> ruleValue;
 	private List<Map<String, Map<String, List<String>>>> webpageHref;
 	private List<Map<String, Map<String, List<String>>>> webpageValue;
+	private List<Map<String, Map<String, List<String>>>> webpageLang;
 	private List<Map<String, Map<String, List<String>>>> emailHref;
 	private List<Map<String, Map<String, List<String>>>> emailValue;
+	private List<Map<String, Map<String, List<String>>>> emailLang;
 	private List<Map<String,List<String> >> faxValue;
 	private List<Map<String, Map<String, List<String>>>> telephoneValue;
 	private List<Map<String, List<String>>> relationEntryScriptCode;
@@ -446,8 +448,8 @@ public class Eag2012 {
 	private List<String> resourceRelationResourceRelationType;
 	private List<String> resourceRelationLastDateTimeVerified;
 	private List<String> resourceRelationId;
-	private List<String> resourceRelationLang;
-	private List<String> resourceRelationHref;
+	private Map<String,List<String>> resourceRelationLang;
+	private Map<String,List<String>> resourceRelationHref;
 	private String relationsId;
 	private String relationsLang;
 	private List<String> placeEntryValue;
@@ -2044,19 +2046,19 @@ public class Eag2012 {
 		this.resourceRelationId = resourceRelationId;
 	}
 
-	public List<String> getResourceRelationLang() {
+	public Map<String,List<String>> getResourceRelationLang() {
 		return resourceRelationLang;
 	}
 
-	public void setResourceRelationLang(List<String> resourceRelationLang) {
+	public void setResourceRelationLang(Map<String,List<String>> resourceRelationLang) {
 		this.resourceRelationLang = resourceRelationLang;
 	}
 
-	public List<String> getResourceRelationHref() {
+	public Map<String,List<String>> getResourceRelationHref() {
 		return resourceRelationHref;
 	}
 
-	public void setResourceRelationHref(List<String> resourceRelationHref) {
+	public void setResourceRelationHref(Map<String,List<String>> resourceRelationHref) {
 		this.resourceRelationHref = resourceRelationHref;
 	}
 
@@ -2106,6 +2108,22 @@ public class Eag2012 {
 
 	public void setCitiesLang(List<List<String>> citiesLang) {
 		this.citiesLang = citiesLang;
+	}
+
+	public List<Map<String, Map<String, List<String>>>> getEmailLang() {
+		return emailLang;
+	}
+
+	public void setEmailLang(List<Map<String, Map<String, List<String>>>> emailLang) {
+		this.emailLang = emailLang;
+	}
+
+	public List<Map<String, Map<String, List<String>>>> getWebpageLang() {
+		return webpageLang;
+	}
+
+	public void setWebpageLang(List<Map<String, Map<String, List<String>>>> webpageLang) {
+		this.webpageLang = webpageLang;
 	}
 
 	/**
