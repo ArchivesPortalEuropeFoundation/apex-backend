@@ -1487,12 +1487,15 @@ function addYIFurtherEmailsOfTheInstitution(text1){
 	clone.find("[id^='selectTextYILangEmail']").attr("id","selectTextYILangEmail_"+(count+1));
 	clone2.attr("id","trTextYILangEmail_"+(count+1));
 	clone.attr("id","trTextYIEmail_"+(count+1));
-	clone2.attr("id","trTextYILangEmail_"+(count+1));
+	//clone2.attr("id","textYIEmailLinkTitle"+(count+1));
 	//check values
 	var wrongField = false;
-	if($("#textYIEmailAddress"+((count>1)?("_"+count):"")).val().length<=0 ||
-			$("#selectTextYILangEmail"+((count>1)?("_"+count):""))=="none" ||
-			$("#textYIEmailLinkTitle"+((count>1)?("_"+count):"")).val().length<=0){
+	var textC1 = clone.find("[id^='textYIEmailAddress']").val();
+	var textC2 = $("#selectTextYILangEmail"+((count>1)?("_"+count):"")).val();
+	var textC3 = clone2.find("[id^='textYIEmailLinkTitle']").val(); 
+	if(textC1.length<=0 ||
+			textC2=="none" ||
+			textC3.length<=0){
 		wrongField = true;
 	}
 	clone.find("[id^='textYIEmailLinkTitle']").attr("value","");
