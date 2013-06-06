@@ -1493,9 +1493,7 @@ function addYIFurtherEmailsOfTheInstitution(text1){
 	var textC1 = clone.find("[id^='textYIEmailAddress']").val();
 	var textC2 = $("#selectTextYILangEmail"+((count>1)?("_"+count):"")).val();
 	var textC3 = clone2.find("[id^='textYIEmailLinkTitle']").val(); 
-	if(textC1.length<=0 ||
-			textC2=="none" ||
-			textC3.length<=0){
+	if(textC1.length<=0 || textC2=="none" || textC3.length<=0){
 		wrongField = true;
 	}
 	clone.find("[id^='textYIEmailLinkTitle']").attr("value","");
@@ -1532,12 +1530,12 @@ function addYIFurtherWebsOfTheInstitution(text1){
 	clone2.find("[id^='textYIWebpageLinkTitle']").attr("id","textYIWebpageLinkTitle_"+(count+1));
 	//check values
 	var wrongField = false;
-	if(clone2.find("[id^='textYIWebpageLinkTitle']").val().length<=0 ||
-			clone.find("[id^='selectTextYILangWebpage'] :selected").val()=="none" ||
-			clone.find("[id^='textYIWebpage']").val().length<=0){
+	var textC1 = clone2.find("[id^='textYIWebpageLinkTitle']").val();
+	var textC2 = $("#selectTextYILangWebpage"+((count>1)?("_"+count):"")).val();
+	var textC3 = clone.find("[id^='textYIWebpage']").val();
+	if(textC1.length<=0 || textC2=="none" || textC3.length<=0){
 		wrongField = true;
 	}
-	
 	clone2.find("[id^='textYIWebpageLinkTitle']").attr("value","");
 	clone2.attr("id","trButtonYILangWebpage_"+(count+1));
 	if(wrongField){
@@ -1562,8 +1560,9 @@ function yIAddOpeningTimes(text1){
 	clone.find("[id^='selectTextYIOpeningTimes']").removeAttr("onchange");
 	clone.attr("id","trTextYIOpeningTimes_"+(count+1));
 	var wrongField = false;
-	if(clone.find("[id^='textYIOpeningTimes']").val().length<=0 ||
-			clone.find("[id^='selectTextYIOpeningTimes'] :selected").val()=="none"){
+	var textC1 = clone.find("[id^='textYIOpeningTimes']").val();
+	var textC2 = $("#selectTextYIOpeningTimes"+((count>1)?("_"+count):"")).val();
+	if(textC1.length<=0 || textC2=="none"){
 		wrongField = true;
 	}
 	clone.find("[id^='textYIOpeningTimes']").attr("value","");
@@ -1621,8 +1620,9 @@ function yIAddClosingDates2(text1){
 	clone.attr("id","fieldClosingDates_"+(count+1));
 	//check values
 	var wrongField = false;
-	if(clone.find("[id^='yourInstitutionClosingDates']").val().length<=0 ||
-			clone.find("[id^='selectTextYIClosingTimes'] :selected").val()=="none"){
+	var textC1 = clone.find("[id^='yourInstitutionClosingDates']").val();
+	var textC2 = $("#selectTextYIClosingTimes"+((count>1)?("_"+count):"")).val();
+	if(textC1.length<=0 || textC2=="none"){
 		wrongField = true;
 	}
 	clone.find("[id^='yourInstitutionClosingDates']").attr("value","");
