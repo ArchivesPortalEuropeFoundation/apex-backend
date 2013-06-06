@@ -206,10 +206,14 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 
     public String executeNoPreface() {
         try {
-			String findingAidIdString = request.getParameter("findingAidId");
-			String holdingsGuideIdString = request.getParameter("holdingsGuideId");
-			String isWithUrlString = request.getParameter("isWithUrl");
+			String fileIdString = request.getParameter("fileId");
 			String xmlTypeIdString = request.getParameter("xmlTypeId");
+			String parentIdString = request.getParameter("parentId");
+			String ecIdString = request.getParameter("ecId");
+			String cIdString = request.getParameter("cId");
+			String orderIdString = request.getParameter("orderId");
+			String maxString = request.getParameter("max");
+            String isWithUrlString = request.getParameter("isWithUrl");
             boolean isWithUrl = true;
 
             if (StringUtils.isNotBlank(isWithUrlString)) {
@@ -227,15 +231,11 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 			String path = request.getContextPath();
 			CLevelDAO clevelDAO = DAOFactory.instance().getCLevelDAO();
 			EadContentDAO eadContentDAO = DAOFactory.instance().getEadContentDAO();
+			Integer fileId = new Integer(fileIdString);
+            XmlType xmlType = XmlType.getType(new Integer(xmlTypeIdString));
+			long localStartTime = System.currentTimeMillis();
+            EadContent eadContent = DAOFactory.instance().getEadDAO().findById(fileId, xmlType.getClazz()).getEadContent();
 
-            EadContent eadContent = null;
-            if (findingAidIdString != null && findingAidIdString.trim().length() > 0) {
-				Integer findingAidId = new Integer(findingAidIdString);
-				eadContent = eadContentDAO.getEadContentByFindingAidId(findingAidId);
-            } else if (holdingsGuideIdString != null && holdingsGuideIdString.trim().length() > 0){
-                Integer holdingsGuideId = new Integer(holdingsGuideIdString);
-				eadContent = eadContentDAO.getEadContentByHoldingsGuideId(holdingsGuideId);
-            }
             if(eadContent == null)
                 throw new APEnetException(getText("generateTreeJSON.APEnetException.no.correct.FA"));
 
