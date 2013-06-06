@@ -1424,6 +1424,7 @@ public class APEnetEAGDashboard extends APEnetEAG {
 						HibernateUtil.closeDatabaseSession();
 						log.error("FATAL ERROR. Error during Database or File System commits when an EAG file was uploading via HTTP protocol. Please, check inconsistencies in Database and File system for archival institution which id is: " + this.getAiId(), e);
 					}
+					log.error(e.getMessage());
 				}
 			}
 			if (value.equals("correct")){
