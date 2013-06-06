@@ -350,7 +350,7 @@
     }
     .contextMenu {
         position: absolute;
-        width: 240px;
+        width: 440px;
         z-index: 99999;
         border: solid 1px #CCC;
         background: #EEE;
@@ -442,19 +442,12 @@
             <li class="add">
                 <a href="#add" id="hrefAdd"><s:property value="getText('dashboard.hgcreation.btn.addnewlevel')" /></a>
             </li>
-            <li class="addFA">
-                <a href="#addFA" id="hrefAddFA"><s:property value="getText('dashboard.hgcreation.btn.addfa')" /></a>
-            </li>
             <li class="delete">
                 <a href="#delete" id="hrefDelete"><s:property value="getText('dashboard.hgcreation.btn.deletelevel')" /></a>
             </li>
             <li class="separator"></li>
             <li class="cancel">
-                <a href="#cancel" id="hrefCancel"><s:property value="getText('dashboard.hgcreation.btn.cancel')" /></a>
-            </li>
-            <li class="separator"></li>
-            <li class="save">
-                <a href="#save" id="hrefSave"><s:property value="getText('dashboard.hgcreation.btn.save')" /></a>
+                <a href="#cancel" id="hrefCancel"><s:property value="getText('dashboard.hgcreation.quit')" /></a>
             </li>
         </ul>
     </div>
