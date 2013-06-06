@@ -50,6 +50,28 @@
 					$("div#contactTabContent table#contactTable").attr("id","contactTable_1");
 					$("div#accessAndServicesTabContent table#accessAndServicesTable").attr("id","accessAndServicesTable_1");
 					$("div#descriptionTabContent table#descriptionTable").attr("id","descriptionTable_1");
+					
+					//postal address - your institution tab
+					var postalField1 = "<s:property value="loader.streetPostal"/>";
+					var postalField2 = "<s:property value="loader.municipalityPostalcodePostal"/>";
+					var postalField3 = "<s:property value="loader.streetPostalLang"/>";
+					//alert(postalField1+","+postalField2+","+postalField3);
+					if(postalField1.length>0 || postalField2.length>0 || postalField3.length>0){
+						yiAddPostalAddressIfDifferent('<s:property value="getText('label.ai.yourinstitution.postalAddress')" />', '<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />', '<s:property value="getText('label.ai.tabs.commons.street')" />', '<s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')" />');
+						$("#textYIPAStreet").attr("value",postalField1);
+						$("#textYIPACity").attr("value",postalField2);
+						$("#selectYIPASelectLanguage").attr("value",postalField3);
+					}
+					var furtherAccessInformation = "<s:property value="loader.restaccess"/>";
+					var furtherAccessInformationLang = "<s:property value="loader.restaccessLang"/>";
+					if(furtherAccessInformation.length>0 || furtherAccessInformationLang.length>0){
+						yiFutherAccessInformation();
+					}
+					var accessibilityInformation = "<s:property value="loader.accessibility"/>";
+					var accessibilityInformationLang = "<s:property value="loader.accessibilityLang"/>";
+					if(accessibilityInformation.length>0 || accessibilityInformationLang.length>0){
+						yiAddFutherInformationOnExistingFacilities();
+					}
 				});
 			</script>
 			<div id="container">

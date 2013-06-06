@@ -364,15 +364,15 @@
 				<label for="futherAccessInformation"><s:property value="getText('label.ai.accessAndServices.accessRestrictions')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="futherAccessInformation" onchange="futherAccessInformationChanged();" />
+				<input type="text" id="futherAccessInformation" onchange="futherAccessInformationChanged();" value="<s:property value="loader.restaccess"/>"/>
 			</td>
 			<td class="labelLeft">
 				<label for="selectFutherAccessInformation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
 				<select id="selectFutherAccessInformation" onchange="duplicateAccessInformation();">
-					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.furtherAccessInformationLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					<s:iterator value="languageList" var="language">
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.restaccessLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -403,7 +403,7 @@
 				<label for="futherInformationOnExistingFacilities"><s:property value="getText('label.ai.accessAndServices.accesibility')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="futherInformationOnExistingFacilities" onchange="futherInformationOnExistingFacilitiesChanged();" />		
+				<input type="text" id="futherInformationOnExistingFacilities" onchange="futherInformationOnExistingFacilitiesChanged();" value="<s:property value="loader.accessibility"/>" />		
 			</td>
 			<td class="labelLeft">
 				<label for="selectFutherAccessInformationOnExistingFacilities"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -411,7 +411,7 @@
 			<td>
 				<select id="selectFutherAccessInformationOnExistingFacilities" onchange="duplicateFutherAccessInformationOnExistingFacilitiesLanguage();">
 					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.furtherAccessInformationOnExistingFacilities}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.accessibilityLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>
 			</td>

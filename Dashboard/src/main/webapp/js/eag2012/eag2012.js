@@ -225,8 +225,7 @@ var clickYourInstitutionAction = function(text1){
 	});
 	jsonData += ",'postalAddress':{";
 	for(var j=0; j<postalAddress.length; j++) {
-		var yiMEPostalAddress = new Array("selectYIPASelectLanguage", "textYIPAStreet",
-				"textYIPACity");
+		var yiMEPostalAddress = new Array("textYIPAStreet", "textYIPACity");
 		
 		if(jsonData.substring(jsonData.length-1)!='{'){
 			jsonData += ",";
