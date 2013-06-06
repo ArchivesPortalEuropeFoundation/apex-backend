@@ -462,7 +462,7 @@
 			<td colspan="2">
 			</td>
 			<td colspan="2" class="labelLeft">
-				<input type="button" id="buttonAddReferencetoyourinstitutionsholdingsguide" value="<s:property value="getText('label.ai.tabs.commons.pleaseFillData')"/>" onclick="yiAddReferencetoyourinstitutionsholdingsguide('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				<input type="button" id="buttonAddReferencetoyourinstitutionsholdingsguide" value="<s:property value="getText('label.ai.relations.addNewResourceRelation')"/>" onclick="yiAddReferencetoyourinstitutionsholdingsguide('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
 			</td>
 		</tr>
 
