@@ -44,6 +44,7 @@ public class EditEadAction extends AjaxControllerAbstractAction {
     private Long id;
     private Long faId;
     private Long hgId;
+    private Integer fileId;
     private int xmlTypeId;
     private Map<String, String> formValues;
     private String type;
@@ -100,8 +101,17 @@ public class EditEadAction extends AjaxControllerAbstractAction {
     public void setType(String type){
         this.type = type;
     }
+    
 
-    public String createDbEntries(){
+	public Integer getFileId() {
+		return fileId;
+	}
+
+	public void setFileId(Integer fileId) {
+		this.fileId = fileId;
+	}
+
+	public String createDbEntries(){
         XmlType xmlType = XmlType.getType(xmlTypeId);
         LOG.trace("Identifier of EAD: " + id + ", is XmlType: " + xmlType.getName());
         Writer writer = null;
@@ -152,15 +162,11 @@ public class EditEadAction extends AjaxControllerAbstractAction {
                 CLevel cLevel = DAOFactory.instance().getCLevelDAO().findById(id);
                 if(cLevel != null)
                     obj.put("xml", new EditParser().xmlToHtml(cLevel, null));
-            } else if(faId != null && faId != -1 && xmlType == XmlType.EAD_FA){
-                EadContent eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFindingAidId(faId.intValue());
+            } else if(fileId != null && fileId != -1 && xmlType != null){
+                EadContent eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFileId(fileId, xmlType.getClazz());
                 if(eadContent != null)
                     obj.put("xml", new EditParser().xmlToHtml(null, eadContent));
-            } else if(hgId != null && hgId != -1 && xmlType == XmlType.EAD_HG){
-                EadContent eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByHoldingsGuideId(hgId.intValue());
-                if(eadContent != null)
-                    obj.put("xml", new EditParser().xmlToHtml(null, eadContent));
-            }
+            } 
             writer.append(obj.toString());
             writer.close();
         } catch (Exception e){
@@ -254,29 +260,29 @@ public class EditEadAction extends AjaxControllerAbstractAction {
      * @return null since we use the HttpResponse to write JSON data directly to the page
      */
     public String deleteDatabaseEntries(){
-        Long faId = new Long(getServletRequest().getParameter("faId"));
-        Long hgId = new Long(getServletRequest().getParameter("hgId"));
-
-        ArchivalInstitution archivalInstitution;
-        if(faId != null)
-            archivalInstitution = DAOFactory.instance().getFindingAidDAO().findById(faId.intValue()).getArchivalInstitution();
-        else
-            archivalInstitution = DAOFactory.instance().getHoldingsGuideDAO().findById(hgId.intValue()).getArchivalInstitution();
-
-        try {
-            SecurityContext.get().checkAuthorized(archivalInstitution);
-            EadContentDAO eadContentDAO = DAOFactory.instance().getEadContentDAO();
-            EadContent oldEadContent;
-            if(faId != null)
-                oldEadContent = eadContentDAO.getEadContentByFindingAidId(faId.intValue());
-            else
-                oldEadContent = eadContentDAO.getEadContentByHoldingsGuideId(hgId.intValue());
-            if(oldEadContent != null)
-                eadContentDAO.delete(oldEadContent);
-            LOG.trace("DB entries erased!");
-        } catch (NotAuthorizedException e){
-            LOG.error("Not authorized to delete this FA...");
-        }
+//        Long faId = new Long(getServletRequest().getParameter("faId"));
+//        Long hgId = new Long(getServletRequest().getParameter("hgId"));
+//
+//        ArchivalInstitution archivalInstitution;
+//        if(faId != null)
+//            archivalInstitution = DAOFactory.instance().getFindingAidDAO().findById(faId.intValue()).getArchivalInstitution();
+//        else
+//            archivalInstitution = DAOFactory.instance().getHoldingsGuideDAO().findById(hgId.intValue()).getArchivalInstitution();
+//
+//        try {
+//            SecurityContext.get().checkAuthorized(archivalInstitution);
+//            EadContentDAO eadContentDAO = DAOFactory.instance().getEadContentDAO();
+//            EadContent oldEadContent;
+//            if(faId != null)
+//                oldEadContent = eadContentDAO.getEadContentByFindingAidId(faId.intValue());
+//            else
+//                oldEadContent = eadContentDAO.getEadContentByHoldingsGuideId(hgId.intValue());
+//            if(oldEadContent != null)
+//                eadContentDAO.delete(oldEadContent);
+//            LOG.trace("DB entries erased!");
+//        } catch (NotAuthorizedException e){
+//            LOG.error("Not authorized to delete this FA...");
+//        }
         return null;
     }
 

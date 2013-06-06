@@ -2,48 +2,33 @@ package eu.apenet.dashboard.actions.ajax;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Date;
 
 import javax.servlet.http.HttpSession;
 import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 
 import eu.apenet.commons.exceptions.APEnetException;
+import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.manual.hgTreeCreation.CLevelTreeNode;
+import eu.apenet.dashboard.services.ead.CreateEadTask;
 import eu.apenet.dashboard.services.ead.xml.AbstractParser;
-import eu.apenet.dashboard.services.ead.xml.EADNamespaceContext;
 import eu.apenet.dashboard.services.ead.xml.ReconstructEadFile;
-import eu.apenet.dashboard.services.ead.xml.XmlEadParser;
-import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.CLevel;
+import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
 import eu.apenet.persistence.vo.FileType;
-import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.UpFile;
 import eu.apenet.persistence.vo.UploadMethod;
@@ -69,64 +54,30 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
 
     @Override
     public String execute() {
-        try {
-        	Integer aiId = getAiId();
-            if(hgId != null){
-                int hgIdInt = Integer.parseInt(hgId);
-                HoldingsGuide holdingsGuide = DAOFactory.instance().getHoldingsGuideDAO().findById(hgIdInt);
-                String stateOfHG = holdingsGuideIsNotIndexed(holdingsGuide);
-                LOG.info("State of HG: " + stateOfHG);
-                if(stateOfHG.equals(ERROR))
-                    return ERROR;
-                if(stateOfHG.equals(SUCCESS))
-                    XmlEadParser.parseEad(holdingsGuide);
-                getAllFindingAids(holdingsGuide.getArchivalInstitution()); //In order to retrieve it a load time and have the data in the session
-            } else if(aiId != null){
-                getAllFindingAids(DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId));
-            }
-            return SUCCESS;
-        } catch (Exception e){
-            LOG.error("Error executing HG tree creation page", e);
-            return ERROR;
-        }
+//        try {
+//        	Integer aiId = getAiId();
+//            if(hgId != null){
+//                int hgIdInt = Integer.parseInt(hgId);
+//                HoldingsGuide holdingsGuide = DAOFactory.instance().getHoldingsGuideDAO().findById(hgIdInt);
+//                String stateOfHG = holdingsGuideIsNotIndexed(holdingsGuide);
+//                LOG.info("State of HG: " + stateOfHG);
+//                if(stateOfHG.equals(ERROR))
+//                    return ERROR;
+//                if(stateOfHG.equals(SUCCESS))
+//                    XmlEadParser.parseEad(holdingsGuide);
+//                getAllFindingAids(holdingsGuide.getArchivalInstitution()); //In order to retrieve it a load time and have the data in the session
+//            } else if(aiId != null){
+//                getAllFindingAids(DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId));
+//            }
+//            return SUCCESS;
+//        } catch (Exception e){
+//            LOG.error("Error executing HG tree creation page", e);
+//            return ERROR;
+//        }
+        return SUCCESS;
     }
 
-    public String getPossibleFAs() throws Exception {
-        Writer writer = openOutputWriter();
 
-        List<FindingAid> findingAids = getAllFindingAids(DAOFactory.instance().getArchivalInstitutionDAO().findById(getAiId()));
-
-        JSONArray possibleFAs = new JSONArray();
-        JSONObject simpleFA;
-        for(FindingAid findingAid : findingAids){
-            simpleFA = new JSONObject();
-            simpleFA.put("id", findingAid.getId());
-            simpleFA.put("eadId", findingAid.getEadid());
-            simpleFA.put("title", findingAid.getTitle());
-            possibleFAs.put(simpleFA);
-        }
-        writer.append(possibleFAs.toString());
-        writer.close();
-
-        return null;
-    }
-
-    private List<FindingAid> getAllFindingAids(ArchivalInstitution archivalInstitution){
-        if(session == null)
-            session = getServletRequest().getSession();
-
-        List<FindingAid> findingAids;
-
-        if(session.getAttribute(ALL_FINDING_AIDS_SESSION) == null)
-            findingAids = DAOFactory.instance().getFindingAidDAO().getFindingAidsNotLinked(archivalInstitution.getAiId());
-        else {
-            findingAids = (List<FindingAid>) session.getAttribute(ALL_FINDING_AIDS_SESSION);
-        }
-
-        session.setAttribute(ALL_FINDING_AIDS_SESSION, findingAids);
-
-        return findingAids;
-    }
 
     public String holdingsGuideIsNotIndexed(HoldingsGuide holdingsGuide){
         if(holdingsGuide.isPublished()){
@@ -157,10 +108,25 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
             CLevelTreeNode levelTreeNode = createCLevelTreeNode();
             ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId());
             StringWriter eadContentXml = createEadContentData(archivalInstitution, levelTreeNode);
-
+            JpaUtil.beginDatabaseTransaction();
             EadContent eadContent;
             if(StringUtils.isEmpty(getServletRequest().getParameter("dataToEdit"))){
+            	Ead holdingsGuide = new HoldingsGuide();
+            	holdingsGuide.setEadid(levelTreeNode.getUnitid());
+            	holdingsGuide.setTitle(levelTreeNode.getUnittitle());
+            	holdingsGuide.setDynamic(true);
+            	holdingsGuide.setValidated(ValidatedState.VALIDATED);
+            	holdingsGuide.setConverted(true);
+            	holdingsGuide.setUploadDate(new Date());
+            	holdingsGuide.setAiId(getAiId());
+            	holdingsGuide.setArchivalInstitution(archivalInstitution);
+                UploadMethod uploadMethod = DAOFactory.instance().getUploadMethodDAO().getUploadMethodByMethod(UploadMethod.HTTP);
+            	holdingsGuide.setUploadMethod(uploadMethod);
+            	String startPath = CreateEadTask.getPath(XmlType.EAD_HG, archivalInstitution);
+            	holdingsGuide.setPathApenetead(APEnetUtilities.getDashboardConfig().getRepoDirPath() + startPath+ APEnetUtilities.convertToFilename(levelTreeNode.getUnitid())+ ".xml");
+            	holdingsGuide = DAOFactory.instance().getEadDAO().store(holdingsGuide);
                 eadContent = createDummyEadContent();
+                eadContent.setHgId(holdingsGuide.getId());
                 eadContent.setEadid(levelTreeNode.getUnitid());
                 eadContent.setTitleproper(levelTreeNode.getUnittitle());
                 eadContent.setUnittitle(levelTreeNode.getUnittitle());
@@ -182,11 +148,8 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
             }
 
 
-            JpaUtil.beginDatabaseTransaction();
+           
             eadContent = DAOFactory.instance().getEadContentDAO().store(eadContent);
-            JpaUtil.commitDatabaseTransaction();
-            JpaUtil.closeDatabaseSession();
-
             String eadContentNewId = "ec_" + eadContent.getEcId();
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("success", true).put("newId", eadContentNewId).put("dataToEdit", true);
@@ -254,10 +217,7 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
                 cLevel.setOrderId(sizeChildren.intValue());
             }
 
-            JpaUtil.beginDatabaseTransaction();
             cLevel = DAOFactory.instance().getCLevelDAO().store(cLevel);
-            JpaUtil.commitDatabaseTransaction();
-            JpaUtil.closeDatabaseSession();
 
             String cLevelNewId = "cl_" + cLevel.getClId();
             JSONObject jsonObject = new JSONObject();
@@ -328,13 +288,6 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
         CLevel cLevel = new CLevel();
         cLevel.setLeaf(false);
         cLevel.setLevel("series");
-        return cLevel;
-    }
-
-    private CLevel createDummyCLevelItem() {
-        CLevel cLevel = new CLevel();
-        cLevel.setLeaf(true);
-        cLevel.setLevel("item");
         return cLevel;
     }
 
@@ -458,121 +411,21 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
         }
     }
 
-    public String addFAsToCurrentLevel() {
-        try {
-            Writer writer = openOutputWriter();
-            Integer aiId = getAiId();
-            //To get the FA to be a <c> part of HG
-            String[] faIdentifiers = getServletRequest().getParameter("selectedFAs").replace("[", "").replace("]", "").split(",");
-
-            XPath xPath = APEnetUtilities.getDashboardConfig().getXpathFactory().newXPath();
-            xPath.setNamespaceContext(new EADNamespaceContext());
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setNamespaceAware(true);
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc;
-            XPathExpression unittitleExpr = xPath.compile("/ead:c/ead:did/ead:unittitle/text()");
-            XPathExpression unitidExpr = xPath.compile("/ead:c/ead:did/ead:unitid/text()");
-
-            if(StringUtils.isEmpty(getServletRequest().getParameter("key"))){
-                throw new APEnetException("The parameter key can not be null or empty");
-            }
-            String fullStr = getServletRequest().getParameter("key");
-            String keyId = fullStr.substring(3);
-            String type = fullStr.substring(0, 2);
-
-            int sizeChildren = 0;
-            if(type.equals(TYPE_C_LEVEL))
-                sizeChildren = DAOFactory.instance().getCLevelDAO().countChildCLevels(Long.parseLong(keyId)).intValue();
-            else if(type.equals(TYPE_EAD_CONTENT))
-                sizeChildren = DAOFactory.instance().getCLevelDAO().countTopCLevels(Long.parseLong(keyId)).intValue();
-
-            JSONArray jsonArray = new JSONArray();
-            JSONObject jsonObject;
-
-            for(String faIdentifier : faIdentifiers){
-                FindingAid findingAid = DAOFactory.instance().getFindingAidDAO().findById(Integer.parseInt(faIdentifier));
-                InputStream xslIs = TransformationTool.class.getResourceAsStream("/xsl/fa2hg.xsl");
-
-                String filePath = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + findingAid.getPathApenetead();
-                File faFile;
-                if(!(faFile = new File(filePath)).exists())
-                    faFile = new File(APEnetUtilities.getConfig().getRepoDirPath() + findingAid.getPathApenetead());
-                InputStream fileIs = FileUtils.openInputStream(faFile);
-
-                File outputTemp = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + aiId + APEnetUtilities.FILESEPARATOR + ".temp_file.xml");
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("addXMLNS", "true");
-                TransformationTool.createTransformation(fileIs, outputTemp, xslIs, params, false, false, null, true, null);
-                String cLevelXml = FileUtils.readFileToString(outputTemp, UTF8); //UTF8 important!
-
-                doc = builder.parse(new InputSource(new StringReader(cLevelXml)));
-                doc.getDocumentElement().normalize();
-
-                String unittitleString = (String) unittitleExpr.evaluate(doc, XPathConstants.STRING);
-                String unitidString = (String) unitidExpr.evaluate(doc, XPathConstants.STRING);
-
-                CLevel cLevel = createDummyCLevelItem();
-                cLevel.setXml(cLevelXml);
-                cLevel.setUnitid(unitidString);
-                cLevel.setUnittitle(unittitleString);
-                cLevel.setOrderId(sizeChildren++);
-
-                if(type.equals(TYPE_C_LEVEL))
-                    cLevel.setParentClId(Long.parseLong(keyId));
-                else if(type.equals(TYPE_EAD_CONTENT))
-                    cLevel.setEcId(Long.parseLong(keyId));
-
-                JpaUtil.beginDatabaseTransaction();
-                cLevel = DAOFactory.instance().getCLevelDAO().store(cLevel);
-                JpaUtil.commitDatabaseTransaction();
-                JpaUtil.closeDatabaseSession();
-
-                jsonObject = new JSONObject();
-                jsonObject.put("identifier", cLevel.getUnitid()).put("title", cLevel.getUnittitle()).put("isFolder", false).put("key", TYPE_C_LEVEL + "_" + cLevel.getClId());
-                jsonArray.put(jsonObject);
-            }
-
-            deleteFAsFromList(faIdentifiers);
-
-            jsonObject = new JSONObject();
-            jsonObject.put("success", true).put("data", jsonArray);
-            writer.append(jsonObject.toString());
-            LOG.info("Sending jsonObj: " + jsonObject.toString());
-            writer.close();
-        } catch (Exception e) {
-            LOG.error("Error", e);
-        }
-        return null;
-    }
-
-    private void deleteFAsFromList(String[] faIdentifiers){
-        List<String> faIdentifierStr = Arrays.asList(faIdentifiers);
-
-        if(session == null)
-            session = getServletRequest().getSession();
-
-        if(session.getAttribute(ALL_FINDING_AIDS_SESSION) != null){
-            List<FindingAid> findingAids = (List<FindingAid>) session.getAttribute(ALL_FINDING_AIDS_SESSION);
-            for(int i = 0; i < findingAids.size(); i++){
-                FindingAid fa = findingAids.get(i);
-                if(faIdentifierStr.contains(fa.getId() + "")){
-                    findingAids.remove(fa);
-                    i--;
-                }
-            }
-            session.setAttribute(ALL_FINDING_AIDS_SESSION, findingAids);
-        }
-    }
 
     public String deleteLevelHG(){
         Writer writer = null;
         try {
             writer = openOutputWriter();
-            if(StringUtils.isEmpty(getServletRequest().getParameter("key")))
+            String keyString = null;
+            if (StringUtils.isNotBlank(getServletRequest().getParameter("id"))){
+            	keyString = getServletRequest().getParameter("id");
+            }else if(StringUtils.isNotBlank(getServletRequest().getParameter("key"))){
+                String fullStr = getServletRequest().getParameter("key");
+                keyString = fullStr.substring(3);
+            }else {
                 throw new APEnetException(getText("holdingsGuideTreeCreation.keyNotBeNullOrEmpty"));
-            String fullStr = getServletRequest().getParameter("key");
-            String keyString = fullStr.substring(3);
+            }
+
             CLevel cLevel = DAOFactory.instance().getCLevelDAO().findById(Long.parseLong(keyString));
             DAOFactory.instance().getCLevelDAO().delete(cLevel);
             writer.append(new JSONObject().put("success", true).toString());
