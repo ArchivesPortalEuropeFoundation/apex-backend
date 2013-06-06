@@ -56,7 +56,6 @@ public class CreateEadTask extends AbstractEadTask {
 			} catch (WstxParsingException e) {
 			}
 			ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
-			String countryIso = archivalInstitution.getCountry().getIsoname().trim();
 
 			Ead newEad = null;
 			if (XmlType.EAD_FA.equals(xmlType))
@@ -72,7 +71,7 @@ public class CreateEadTask extends AbstractEadTask {
 			newEad.setConverted(isConverted);
 			newEad.setUploadDate(new Date());
 			// / STORING THE NEW FINDING AID IN THE FILE SYSTEM ///
-			String startPath = getPath(xmlType, countryIso, aiId) + upFile.getFilename();
+			String startPath = getPath(xmlType, archivalInstitution) + upFile.getFilename();
 			newEad.setPathApenetead(startPath);
 			newEad.setUploadMethod(upFile.getUploadMethod());
 			newEad = DAOFactory.instance().getEadDAO().store(newEad);
@@ -114,9 +113,10 @@ public class CreateEadTask extends AbstractEadTask {
 		
 	}
 
-	public String getPath(XmlType xmlType, String countryIso, Integer archivalInstitutionId) {
+	public static String getPath(XmlType xmlType,ArchivalInstitution archivalInstitution) {
+		String countryIso = archivalInstitution.getCountry().getIsoname().trim();
 		String startPath = APEnetUtilities.FILESEPARATOR + countryIso + APEnetUtilities.FILESEPARATOR
-				+ archivalInstitutionId + APEnetUtilities.FILESEPARATOR;
+				+ archivalInstitution.getAiId() + APEnetUtilities.FILESEPARATOR;
 		if (xmlType == XmlType.EAD_FA) {
 			return startPath + "FA" + APEnetUtilities.FILESEPARATOR;
 		} else if (xmlType == XmlType.EAD_HG) {
