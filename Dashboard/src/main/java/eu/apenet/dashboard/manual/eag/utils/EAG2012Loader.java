@@ -2188,11 +2188,20 @@ public class EAG2012Loader{
 							this.setReproductionserWebpageLang(webpages.get(i).getLang());
 						}
 					}
-					
-					this.setMicrofilmServices(repository.getServices().getTechservices().getReproductionser().getMicroformser().getQuestion());
-					this.setPhotographicServices(repository.getServices().getTechservices().getReproductionser().getPhotographser().getQuestion());
-					this.setDigitisationServices(repository.getServices().getTechservices().getReproductionser().getDigitalser().getQuestion());
-					this.setPhotocopyingServices(repository.getServices().getTechservices().getReproductionser().getPhotocopyser().getQuestion());
+					if(repository.getServices().getTechservices().getReproductionser()!=null){
+						if(repository.getServices().getTechservices().getReproductionser().getMicroformser()!=null){
+							this.setMicrofilmServices(repository.getServices().getTechservices().getReproductionser().getMicroformser().getQuestion());
+						}
+						if(repository.getServices().getTechservices().getReproductionser().getPhotographser()!=null){
+							this.setPhotographicServices(repository.getServices().getTechservices().getReproductionser().getPhotographser().getQuestion());
+						}
+						if(repository.getServices().getTechservices().getReproductionser().getDigitalser()!=null){
+							this.setDigitisationServices(repository.getServices().getTechservices().getReproductionser().getDigitalser().getQuestion());
+						}
+						if(repository.getServices().getTechservices().getReproductionser().getPhotocopyser()!=null){
+							this.setPhotocopyingServices(repository.getServices().getTechservices().getReproductionser().getPhotocopyser().getQuestion());
+						}
+					}
 				}
 				
 				// Recreational services
