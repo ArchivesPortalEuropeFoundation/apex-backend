@@ -1654,7 +1654,7 @@ public class EAG2012Loader{
 			}
 				
 		} else {
-			// TODO: Cargar el de recordId
+			// Load the recordId value
 			this.setOtherRepositorId(this.eag.getControl().getRecordId().getValue());
 			this.setRecordIdISIL(Eag2012.OPTION_YES);
 		}

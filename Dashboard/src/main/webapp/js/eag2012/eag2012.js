@@ -1256,9 +1256,7 @@ function yiAddReferencetoyourinstitutionsholdingsguide(text1){
 	var title = $("#textYIHoldingsGuideLinkTitle"+((count>1)?("_"+count):"")).val();
 	var select = $("#selectYIReferencetoHoldingsguide"+((count>1)?("_"+count):"")).val();
 	var link = $("#textReferencetoyourinstitutionsholdingsguide"+((count>1)?("_"+count):"")).val();
-	if(title.length<=0 ||
-			select=="none" ||
-			link.length<=0){
+	if(title.length<=0 || select=="none" || link.length<=0){
 		wrongField = true;
 	}
 	clone.find("[id^='textYIEmailAddress']").attr("value","");

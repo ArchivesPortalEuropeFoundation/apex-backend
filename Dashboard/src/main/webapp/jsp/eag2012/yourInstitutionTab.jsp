@@ -406,7 +406,7 @@
 				<input type="text" id="futherInformationOnExistingFacilities" onchange="futherInformationOnExistingFacilitiesChanged();" />		
 			</td>
 			<td class="labelLeft">
-				<label for="selectFutherAccessInformationOnExistingFacilities"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/><span class="required">*</span>:</label>
+				<label for="selectFutherAccessInformationOnExistingFacilities"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
 				<select id="selectFutherAccessInformationOnExistingFacilities" onchange="duplicateFutherAccessInformationOnExistingFacilitiesLanguage();">
