@@ -406,28 +406,21 @@
 
     <definition name="eadEdition" extends="DefaultLayout">
         <put-attribute name="title" value="dashboard.eadedition.title"/>
-        <put-attribute name="body" value="/jsp/eadEdition/index.jsp"/>
+        <put-attribute name="body" value="/jsp/eadEdition/eadcontent.jsp"/>
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/jquery/jquery-ui-1.8.9.custom.min.js"/>
 	        <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
             <add-attribute type="string" value="/js/jquery/splitter.js"/>
 	        <add-attribute type="string" value="/js/dynatree/jquery.dynatree.js"/>
+	        <add-attribute type="string" value="/js/eadedition.js"/>    
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>
+             <add-attribute type="string" value="/css/eadedition.css"/>         
         </put-list-attribute>
     </definition>
 
-    <definition name="viewThreads" extends="DefaultLayout">
-        <put-attribute name="title" value="dashboard.viewthreads.title"/>
-        <put-attribute name="body" value="/jsp/viewThreads.jsp"/>
-        <put-list-attribute name="jsfilesInternal">
-            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
-            <add-attribute type="string" value="/js/jquery/jquery-ui-1.8.9.custom.min.js"/>
-	        <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
-        </put-list-attribute>
-    </definition>
 	<definition name="ead2ese.convert" extends="DefaultLayout">
 		<put-attribute name="title" value="dashboard.convert.title" />	
 		<put-attribute name="body" value="/jsp/ead2ese/convert.jsp" />	
@@ -459,10 +452,12 @@
 	        <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
             <add-attribute type="string" value="/js/dynatree/jquery.dynatree.js"/>
             <add-attribute type="string" value="/js/colorbox/jquery.colorbox-min.js"/>
+            <add-attribute type="string" value="/js/hgSgTreeCreation.js"/>            
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>
             <add-attribute type="string" value="/css/colorbox.css"/>
+            <add-attribute type="string" value="/css/hgSgTreeCreation.css"/>          
         </put-list-attribute>
     </definition>
     
