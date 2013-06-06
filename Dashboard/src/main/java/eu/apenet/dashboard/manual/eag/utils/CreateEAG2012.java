@@ -7,10 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-
-import com.opensymphony.xwork2.util.logging.Logger;
-
 import eu.apenet.dashboard.manual.eag.Eag2012;
 import eu.apenet.dpt.utils.eag2012.*;
 
@@ -2087,10 +2083,35 @@ public class CreateEAG2012 {
 												if (repository.getHoldings() == null) {
 													repository.setHoldings(new Holdings());
 												}
-												if (repository.getHoldings().getDateSet() == null) {
-													repository.getHoldings().setDateSet(new DateSet());
+
+												if (repository.getHoldings().getDate() == null
+														&& repository.getHoldings().getDateRange() == null
+														&& repository.getHoldings().getDateSet() == null) {
+													repository.getHoldings().setDate(date);
+												} else {
+													DateSet dateSet = null;
+													if (repository.getHoldings().getDateSet() == null) {
+														dateSet = new DateSet();
+													} else {
+														dateSet = repository.getHoldings().getDateSet();
+													}
+
+													// Recover previous single element.
+													if (repository.getHoldings().getDate() != null) {
+														Date previousDate = repository.getHoldings().getDate();
+														repository.getHoldings().setDate(null);
+														dateSet.getDateOrDateRange().add(previousDate);
+													}
+													if (repository.getHoldings().getDateRange() != null) {
+														DateRange previousDateRange = repository.getHoldings().getDateRange();
+														repository.getHoldings().setDateRange(null);
+														dateSet.getDateOrDateRange().add(previousDateRange);
+													}
+
+													dateSet.getDateOrDateRange().add(date);
+
+													repository.getHoldings().setDateSet(dateSet);
 												}
-												repository.getHoldings().getDateSet().getDateOrDateRange().add(date);
 											}
 										}
 									}
@@ -2161,10 +2182,35 @@ public class CreateEAG2012 {
 												if (repository.getHoldings() == null) {
 													repository.setHoldings(new Holdings());
 												}
-												if (repository.getHoldings().getDateSet() == null) {
-													repository.getHoldings().setDateSet(new DateSet());
+
+												if (repository.getHoldings().getDate() == null
+														&& repository.getHoldings().getDateRange() == null
+														&& repository.getHoldings().getDateSet() == null) {
+													repository.getHoldings().setDateRange(dateRange);
+												} else {
+													DateSet dateSet = null;
+													if (repository.getHoldings().getDateSet() == null) {
+														dateSet = new DateSet();
+													} else {
+														dateSet = repository.getHoldings().getDateSet();
+													}
+
+													// Recover previous single element.
+													if (repository.getHoldings().getDate() != null) {
+														Date previousDate = repository.getHoldings().getDate();
+														repository.getHoldings().setDate(null);
+														dateSet.getDateOrDateRange().add(previousDate);
+													}
+													if (repository.getHoldings().getDateRange() != null) {
+														DateRange previousDateRange = repository.getHoldings().getDateRange();
+														repository.getHoldings().setDateRange(null);
+														dateSet.getDateOrDateRange().add(previousDateRange);
+													}
+
+													dateSet.getDateOrDateRange().add(dateRange);
+
+													repository.getHoldings().setDateSet(dateSet);
 												}
-												repository.getHoldings().getDateSet().getDateOrDateRange().add(dateRange);
 											}
 										}
 									}
@@ -2761,19 +2807,37 @@ public class CreateEAG2012 {
 														index = l;
 													}
 												}
+												boolean emptyUseDates = false;
 												if (useDates == null) {
 													useDates = new UseDates();
+													emptyUseDates = true;
 												}
 
-												DateSet dateSet = null;
-												if (useDates.getDateSet() == null) {
-													dateSet = new DateSet();
+												if (emptyUseDates) {
+													useDates.setDate(date);
 												} else {
-													dateSet = useDates.getDateSet();
+													DateSet dateSet = null;
+													if (useDates.getDateSet() == null) {
+														dateSet = new DateSet();
+													} else {
+														dateSet = useDates.getDateSet();
+													}
+
+													// Recover previous single element.
+													if (useDates.getDate() != null) {
+														Date previousDate = useDates.getDate();
+														useDates.setDate(null);
+														dateSet.getDateOrDateRange().add(previousDate);
+													}
+													if (useDates.getDateRange() != null) {
+														DateRange previousDateRange = useDates.getDateRange();
+														useDates.setDateRange(null);
+														dateSet.getDateOrDateRange().add(previousDateRange);
+													}
+		
+													dateSet.getDateOrDateRange().add(date);
+													useDates.setDateSet(dateSet);
 												}
-	
-												dateSet.getDateOrDateRange().add(date);
-												useDates.setDateSet(dateSet);
 	
 												if (index == 0) {
 													nonpreform.getContent().add(useDates);
@@ -2854,19 +2918,37 @@ public class CreateEAG2012 {
 														index = l;
 													}
 												}
+												boolean emptyUseDates = false;
 												if (useDates == null) {
 													useDates = new UseDates();
+													emptyUseDates = true;
 												}
 
-												DateSet dateSet = null;
-												if (useDates.getDateSet() == null) {
-													dateSet = new DateSet();
+												if (emptyUseDates) {
+													useDates.setDateRange(dateRange);
 												} else {
-													dateSet = useDates.getDateSet();
-												}
+													DateSet dateSet = null;
+													if (useDates.getDateSet() == null) {
+														dateSet = new DateSet();
+													} else {
+														dateSet = useDates.getDateSet();
+													}
 
-												dateSet.getDateOrDateRange().add(dateRange);
-												useDates.setDateSet(dateSet);
+													// Recover previous single element.
+													if (useDates.getDate() != null) {
+														Date previousDate = useDates.getDate();
+														useDates.setDate(null);
+														dateSet.getDateOrDateRange().add(previousDate);
+													}
+													if (useDates.getDateRange() != null) {
+														DateRange previousDateRange = useDates.getDateRange();
+														useDates.setDateRange(null);
+														dateSet.getDateOrDateRange().add(previousDateRange);
+													}
+
+													dateSet.getDateOrDateRange().add(dateRange);
+													useDates.setDateSet(dateSet);
+												}
 
 												if (index == 0) {
 													nonpreform.getContent().add(useDates);
