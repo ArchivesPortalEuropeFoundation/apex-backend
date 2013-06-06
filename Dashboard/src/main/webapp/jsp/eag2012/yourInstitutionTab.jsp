@@ -296,7 +296,7 @@
 				<input type="text" id="textYIOpeningTimes" onchange="openingHoursOfInstitutionChanged();" value="${loader.opening}" />
 			</td>
 			<td class="labelLeft">
-				<label for="selectTextYIOpeningTimes"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/><span class="required">*</span>:</label>
+				<label for="selectTextYIOpeningTimes"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
 				<select id="selectTextYIOpeningTimes" onchange="duplicateOpeningTimesLanguage();" >
