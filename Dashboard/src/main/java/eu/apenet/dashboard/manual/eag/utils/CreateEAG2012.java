@@ -803,7 +803,7 @@ public class CreateEAG2012 {
 							// Visitor address lists.
 							List<String> streetLangList = streetLangMap.get(streetLangKey);
 							List<String> latitudeList = latitudeMap.get(latitudeKey);
-							List<String> longitudeList = latitudeMap.get(longitudeKey);
+							List<String> longitudeList = longitudeMap.get(longitudeKey);
 							List<String> countryList = countryMap.get(countryKey);
 							List<String> firstdemList = this.eag2012.getFirstdemValue().get(i);
 							List<String> secondemList = this.eag2012.getSecondemValue().get(i);
