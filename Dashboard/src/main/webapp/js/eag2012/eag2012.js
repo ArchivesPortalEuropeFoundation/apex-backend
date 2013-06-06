@@ -1780,7 +1780,26 @@ function addMoreAnotherFormerlyUsedName(text1, text2, text3, text4, text5, text6
 		var formerlyUsedNameLanguage = $("table#identityTableFormerlyUsedName_"+counter+" select#tfun_languageList").attr("value");
 
 		var counterYears = $("table#identityTableFormerlyUsedName_"+counter+" input[id^='textYearWhenThisNameWasUsed_']").length;
-		var year = $("table#identityTableFormerlyUsedName_"+counter+" input#textYearWhenThisNameWasUsed_"+counterYears).attr("value");
+		var singleYear = $("table#identityTableFormerlyUsedName_"+counter+" input#textYearWhenThisNameWasUsed_"+counterYears).attr("value");
+		var year = singleYear;
+
+		if (year == null || year == "") {
+			if (counterYears > 1) {
+				year = $("table#identityTableFormerlyUsedName_"+counter+" input#textYearWhenThisNameWasUsed_"+(counterYears-1)).attr("value");
+			} else {
+				var counterYearsFrom = $("table#identityTableFormerlyUsedName_"+counter+" input[id^='textYearWhenThisNameWasUsedFrom_']").length;
+				var yearFrom = $("table#identityTableFormerlyUsedName_"+counter+" input#textYearWhenThisNameWasUsedFrom_"+counterYearsFrom).attr("value");
+				var yearTo = $("table#identityTableFormerlyUsedName_"+counter+" input#textYearWhenThisNameWasUsedFrom_"+counterYearsFrom).attr("value");
+
+				if (yearFrom == null || yearFrom == "" || yearTo == null || yearTo == "") {
+					if (counterYearsFrom > 1) {
+						year = $("table#identityTableFormerlyUsedName_"+counter+" input#textYearWhenThisNameWasUsedFrom_"+(counterYearsFrom-1)).attr("value"); 
+					}
+				} else {
+					year = yearFrom;
+				}
+			}
+		}
 
 		if (formerlyUsedName == null || formerlyUsedName == ""
 				|| formerlyUsedNameLanguage == "none"
