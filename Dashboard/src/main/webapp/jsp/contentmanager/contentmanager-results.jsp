@@ -12,6 +12,11 @@
 
 <div id="batchBlock">
 	<form id="batchActionsForm">
+	<c:if test="${results.holdingsGuide}">
+		<div class="left">
+			<a href="hgTreeCreation.action"><s:text name="dashboard.hgcreation.title"/></a>
+		</div>
+		</c:if>
 		<div class="right">
 			<span class="bold">
 			<s:actionerror />
