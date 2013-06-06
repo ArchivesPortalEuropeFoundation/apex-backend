@@ -13,7 +13,7 @@
 	                    displayEadFrontPage, generateTreeJSON, displayEadIntroduction, displayEadDidContent, displayCContent,
 						batchAction,
 	                    displayConvertEseBatch, startConvertEseBatch,
-	                    generateTreeJSONWithoutPreface, <!-- hgTreeCreation ,-->downloadHgSgStatistics,displayLinkToHgSg,displayLinkToHgSgAjax,linkToHgSg,
+	                    generateTreeJSONWithoutPreface, downloadHgSgStatistics,displayLinkToHgSg,displayLinkToHgSgAjax,linkToHgSg,
 	                    
 	                    GoDashboard, dashboardHome, GoDashboardByInstitutionManager,
 	                    
@@ -37,9 +37,9 @@
 	                    hasCpfReady, displayCpfInformation,
 
                         <!-- hg creation 
-	                    hgTreeCreation, getPossibleFAs, addEadContentData, addCLevelData, addFAsToCurrentLevel, deleteLevelHG,
+	                     getPossibleFAs, addEadContentData, addCLevelData, addFAsToCurrentLevel, deleteLevelHG,
                         createHoldingsGuide,-->
-                        
+                        hgTreeCreation, addEadContentData, addCLevelData,deleteLevelHG,
                         <!-- unload -->
                         unload;
 		</group>
