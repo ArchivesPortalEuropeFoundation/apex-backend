@@ -416,22 +416,22 @@ public class CreateEAG2012 {
 							}
 							resourceRelation.setRelationEntry(relationEntry);
 							boolean found = false;
-							if (Eag2012.RESOURCE_RELATION.equalsIgnoreCase(sectionValueKey)){ //TODO: needs a decision from current situation from ticket 543 
+							//if (Eag2012.RESOURCE_RELATION.equalsIgnoreCase(sectionValueKey)){ //TODO: current situation from ticket 543 
 								for(int x=0;x<this.eag.getRelations().getResourceRelation().size();x++){
 									if(this.eag.getRelations().getResourceRelation().get(x)!=null && this.eag.getRelations().getResourceRelation().get(x).getHref()!=null && this.eag.getRelations().getResourceRelation().get(x).getHref().equalsIgnoreCase(resourceRelation.getHref()) && 
 											this.eag.getRelations().getResourceRelation().get(x).getRelationEntry()!=null && this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang()!=null && this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang().equalsIgnoreCase(relationEntry.getLang())){
 										found = true;
 										if(resourceRelation.getDescriptiveNote()!=null){ //priority for descriptive note
-											//TODO: needs a decision from current situation from ticket 543 
+											//TODO: current situation from ticket 543 
 											this.eag.getRelations().getResourceRelation().set(x,resourceRelation);
 										}
 									}
 								}
 								if(!found){
-									//TODO: needs a decision from current situation from ticket 543
+									//TODO: current situation from ticket 543
 									this.eag.getRelations().getResourceRelation().add(resourceRelation);
 								}
-							}
+							//}
 						}
 					}
 

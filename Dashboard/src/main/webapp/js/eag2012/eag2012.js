@@ -1231,7 +1231,7 @@ function yiAddFutherInformationOnExistingFacilities2(text1) {
 		$(target).after(clone);
 	}
 }
-function yiAddReferencetoyourinstitutionsholdingsguide(){
+function yiAddReferencetoyourinstitutionsholdingsguide(text1){
 	var count = $("table#yiTableOthers tr[id^='trYIReferencetoHoldingsguide']").length;
 	var clone = null;
 	var clone2 = null;
@@ -1245,17 +1245,30 @@ function yiAddReferencetoyourinstitutionsholdingsguide(){
 		target2 = "table#yiTableOthers tr#trYIReferenceto2Holdingsguide_"+count;
 	}
 	clone = $(target).clone();
+	clone2 = $(target2).clone();
 	clone.find("[id^='textReferencetoyourinstitutionsholdingsguide']").attr("id","textReferencetoyourinstitutionsholdingsguide_"+(count+1));
 	clone.find("[id^='textYIHoldingsGuideLinkTitle']").attr("id","textYIHoldingsGuideLinkTitle_"+(count+1));
-	clone.find("[id^='textYIHoldingsGuideLinkTitle']").attr("value","");
 	clone.find("[id^='textYIEmailAddress']").attr("id","textYIEmailAddress_"+(count+1));
-	clone.find("[id^='textYIEmailAddress']").attr("value","");
-	clone2 = $(target2).clone();
 	clone.attr("id","trYIReferencetoHoldingsguide_"+(count+1));
 	clone2.attr("id","trYIReferenceto2Holdingsguide_"+(count+1));
 	clone2.find("[id^='selectYIReferencetoHoldingsguide']").attr("id","selectYIReferencetoHoldingsguide_"+(count+1));
-	$(target2).after(clone2);
-	$(target2).after(clone);
+	var wrongField = false;
+	var title = $("#textYIHoldingsGuideLinkTitle"+((count>1)?("_"+count):"")).val();
+	var select = $("#selectYIReferencetoHoldingsguide"+((count>1)?("_"+count):"")).val();
+	var link = $("#textReferencetoyourinstitutionsholdingsguide"+((count>1)?("_"+count):"")).val();
+	if(title.length<=0 ||
+			select=="none" ||
+			link.length<=0){
+		wrongField = true;
+	}
+	clone.find("[id^='textYIEmailAddress']").attr("value","");
+	clone.find("[id^='textYIHoldingsGuideLinkTitle']").attr("value","");
+	if(wrongField){
+		alert(text1);
+	}else{
+		$(target2).after(clone2);
+		$(target2).after(clone);
+	}
 }
 
 function addFurtherIds(text1, text2, text3){

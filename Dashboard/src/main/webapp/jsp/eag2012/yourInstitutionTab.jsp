@@ -445,10 +445,10 @@
 				<input type="text" id="textYIHoldingsGuideLinkTitle" onchange="linkToYourHolndingsGuideTitleChanged();" value="${loader.resourceRelationrelationEntry}" />
 			</td>
 		</tr>
-		<tr id="trYIReferenceto2Holdingsguide" style="display:none;"><%-- waiting for ticket decision #543 --%>
+		<tr id="trYIReferenceto2Holdingsguide" ><%-- waiting for ticket decision #543 --%>
 			<td colspan="2"></td>
 			<td class="labelLeft">
-				<label for="selectYIReferencetoHoldingsguide"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/><span class="required">*</span>:</label>
+				<label for="selectYIReferencetoHoldingsguide"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
 				<select id="selectYIReferencetoHoldingsguide" >
@@ -458,11 +458,11 @@
 				</select>
 			</td>
 		</tr>
-		<tr style="display:none;"><%-- waiting for ticket decision #543 --%>
+		<tr><%-- waiting for ticket decision #543 --%>
 			<td colspan="2">
 			</td>
 			<td colspan="2" class="labelLeft">
-				<input type="button" id="buttonAddReferencetoyourinstitutionsholdingsguide" value="<s:property value="getText('label.ai.yourinstitution.add')"/>" onclick="yiAddReferencetoyourinstitutionsholdingsguide();" />
+				<input type="button" id="buttonAddReferencetoyourinstitutionsholdingsguide" value="<s:property value="getText('label.ai.tabs.commons.pleaseFillData')"/>" onclick="yiAddReferencetoyourinstitutionsholdingsguide('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
 			</td>
 		</tr>
 
