@@ -2451,7 +2451,7 @@ public class EAG2012Loader{
 				// TODO: Review for multiple values.
 				for (int i = 0; i < this.eag.getControl().getConventionDeclaration().size(); i++) {
 					if (this.eag.getControl().getConventionDeclaration().get(i).getAbbreviation() != null) {
-						this.setLanguage(this.eag.getControl().getConventionDeclaration().get(i).getAbbreviation().getContent());
+						this.setAbbreviation(this.eag.getControl().getConventionDeclaration().get(i).getAbbreviation().getContent());
 					}
 					if (!this.eag.getControl().getConventionDeclaration().get(i).getCitation().isEmpty()) {
 						// TODO: Review for multiple values.
