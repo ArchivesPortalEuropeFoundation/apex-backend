@@ -1096,40 +1096,39 @@ public class CreateEAG2012 {
 		if (this.eag2012.getEmailValue() != null || this.eag2012.getEmailHref() != null) {
 			for (int i = 0; i < this.eag2012.getEmailValue().size(); i++) {
 				Map<String, Map<String, List<String>>> tabsValueMap = this.eag2012.getEmailValue().get(i);
-				Map<String, Map<String, List<String>>> tabsHrefMap = this.eag2012.getEmailHref().get(i);
-				Map<String, Map<String, List<String>>> tabsLangMap = this.eag2012.getEmailLang().get(i);
+				Map<String, Map<String, List<String>>> tabsHrefMap = (this.eag2012.getEmailHref()!=null && this.eag2012.getEmailHref().size()>i)?this.eag2012.getEmailHref().get(i):null;
+				Map<String, Map<String, List<String>>> tabsLangMap = (this.eag2012.getEmailLang()!=null && this.eag2012.getEmailLang().size()>i)?this.eag2012.getEmailLang().get(i):null;
 				// Repository
 				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
 
 				Iterator<String> tabsValueIt = tabsValueMap.keySet().iterator();
-				Iterator<String> tabsHrefIt = tabsHrefMap.keySet().iterator();
-				Iterator<String> tabsLangIt = tabsLangMap.keySet().iterator();
+				Iterator<String> tabsHrefIt = (tabsHrefMap!=null)?tabsHrefMap.keySet().iterator():null;
+				Iterator<String> tabsLangIt = (tabsLangMap!=null)?tabsLangMap.keySet().iterator():null;
 				while (tabsValueIt.hasNext()) {
 					String tabValueKey = tabsValueIt.next();
-					String tabHrefKey = tabsHrefIt.next();
-					String tabLangKey = (tabsLangIt.hasNext())?tabsLangIt.next():null;
+					String tabHrefKey = (tabsHrefIt!=null && tabsHrefIt.hasNext())?tabsHrefIt.next():null;
+					String tabLangKey = (tabsLangIt!=null && tabsLangIt.hasNext())?tabsLangIt.next():null;
 					Map<String, List<String>> sectionValueMap = tabsValueMap.get(tabValueKey);
-					Map<String, List<String>> sectionHrefMap = tabsHrefMap.get(tabHrefKey);
+					Map<String, List<String>> sectionHrefMap = (tabsHrefMap!=null)?tabsHrefMap.get(tabHrefKey):null;
 					Map<String, List<String>> sectionLangMap = (tabLangKey!=null)?tabsLangMap.get(tabLangKey):null;
-					Iterator<String> sectionValueIt = sectionValueMap.keySet().iterator();
-					Iterator<String> sectionHrefIt = sectionHrefMap.keySet().iterator();
+					Iterator<String> sectionValueIt = (sectionValueMap!=null)?sectionValueMap.keySet().iterator():null;
+					Iterator<String> sectionHrefIt = (sectionHrefMap!=null)?sectionHrefMap.keySet().iterator():null;
 					Iterator<String> sectionLangIt = (sectionLangMap!=null)?sectionLangMap.keySet().iterator():null;
 					while (sectionValueIt.hasNext()) {
 						String sectionValueKey = sectionValueIt.next();
-						String sectionHrefKey = sectionHrefIt.next();
-						String sectionLangKey = (sectionLangIt!=null)?sectionLangIt.next():null;
+						String sectionHrefKey = (sectionHrefIt!=null && sectionHrefIt.hasNext())?sectionHrefIt.next():null;
+						String sectionLangKey = (sectionLangIt!=null && sectionLangIt.hasNext())?sectionLangIt.next():null;
 						List<String> emailValueList = sectionValueMap.get(sectionValueKey);
-						List<String> emailHrefList = sectionHrefMap.get(sectionHrefKey);
-						List<String> emailLangList = (sectionLangMap!=null && sectionLangKey!=null)?sectionLangMap.get(sectionLangKey):null;
+						List<String> emailHrefList = (sectionHrefMap!=null)?sectionHrefMap.get(sectionHrefKey):null;
+						List<String> emailLangList = (sectionLangMap!=null)?sectionLangMap.get(sectionLangKey):null;
 						for (int k = 0; k < emailValueList.size(); k++) {
-							if (emailValueList.get(k) == null
-									|| emailValueList.get(k).isEmpty()) {
+							if (emailValueList.get(k) == null || emailValueList.get(k).isEmpty()) {
 								break;
 							}
 
 							Email email = new Email();
 							email.setContent(emailValueList.get(k));
-							email.setHref(emailHrefList.get(k));
+							email.setHref((emailHrefList!=null && emailHrefList.size()>k)?emailHrefList.get(k):null);
 							email.setLang((emailLangList!=null && emailLangList.size()>k)?emailLangList.get(k):null);
 							if (Eag2012.ROOT.equalsIgnoreCase(sectionValueKey)
 									&& Eag2012.ROOT.equalsIgnoreCase(sectionHrefKey)) {
@@ -1215,34 +1214,33 @@ public class CreateEAG2012 {
 		if (this.eag2012.getWebpageValue() != null || this.eag2012.getWebpageHref() != null) {
 			for (int i = 0; i < this.eag2012.getWebpageValue().size(); i++) {
 				Map<String, Map<String, List<String>>> tabsValueMap = this.eag2012.getWebpageValue().get(i);
-				Map<String, Map<String, List<String>>> tabsHrefMap = this.eag2012.getWebpageHref().get(i);
-				Map<String, Map<String, List<String>>> tabsLangMap = this.eag2012.getWebpageLang().get(i);
+				Map<String, Map<String, List<String>>> tabsHrefMap = (this.eag2012.getWebpageHref()!=null && this.eag2012.getWebpageHref().size()>i)?this.eag2012.getWebpageHref().get(i):null;
+				Map<String, Map<String, List<String>>> tabsLangMap = (this.eag2012.getWebpageLang()!=null && this.eag2012.getWebpageLang().size()>i)?this.eag2012.getWebpageLang().get(i):null;
 				// Repository
 				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
 
 				Iterator<String> tabsValueIt = tabsValueMap.keySet().iterator();
-				Iterator<String> tabsHrefIt = tabsHrefMap.keySet().iterator();
-				Iterator<String> tabsLangIt = tabsLangMap.keySet().iterator();
+				Iterator<String> tabsHrefIt = (tabsHrefMap!=null)?tabsHrefMap.keySet().iterator():null;
+				Iterator<String> tabsLangIt = (tabsLangMap!=null)?tabsLangMap.keySet().iterator():null;
 				while (tabsValueIt.hasNext()) {
 					String tabValueKey = tabsValueIt.next();
-					String tabHrefKey = tabsHrefIt.next();
-					String tabLangKey = (tabsLangIt.hasNext())?tabsLangIt.next():null;
+					String tabHrefKey = (tabsHrefIt!=null && tabsHrefIt.hasNext())?tabsHrefIt.next():null;
+					String tabLangKey = (tabsLangIt!=null && tabsLangIt.hasNext())?tabsLangIt.next():null;
 					Map<String, List<String>> sectionValueMap = tabsValueMap.get(tabValueKey);
-					Map<String, List<String>> sectionHrefMap = tabsHrefMap.get(tabHrefKey);
+					Map<String, List<String>> sectionHrefMap = (tabsHrefMap!=null)?tabsHrefMap.get(tabHrefKey):null;
 					Map<String, List<String>> sectionLangMap = (tabLangKey!=null)?tabsLangMap.get(tabLangKey):null;
 					Iterator<String> sectionValueIt = sectionValueMap.keySet().iterator();
-					Iterator<String> sectionHrefIt = sectionHrefMap.keySet().iterator();
+					Iterator<String> sectionHrefIt = (sectionHrefMap!=null)?sectionHrefMap.keySet().iterator():null;
 					Iterator<String> sectionLangIt = (sectionLangMap!=null)?sectionLangMap.keySet().iterator():null;
 					while (sectionValueIt.hasNext()) {
 						String sectionValueKey = sectionValueIt.next();
 						String sectionHrefKey = sectionHrefIt.next();
 						String sectionLangKey = (sectionLangIt!=null && sectionLangIt.hasNext())?sectionLangIt.next():null;
 						List<String> webpageValueList = sectionValueMap.get(sectionValueKey);
-						List<String> webpageHrefList = sectionHrefMap.get(sectionHrefKey);
+						List<String> webpageHrefList = (sectionHrefMap!=null)?sectionHrefMap.get(sectionHrefKey):null;
 						List<String> webpageLangList = (sectionLangKey!=null)?sectionLangMap.get(sectionLangKey):null;
 						for (int k = 0; k < webpageValueList.size(); k++) {
-							if (webpageValueList.get(k) == null
-									|| webpageValueList.get(k).isEmpty()) {
+							if (webpageValueList.get(k) == null || webpageValueList.get(k).isEmpty()) {
 								break;
 							}
 
