@@ -3339,6 +3339,7 @@ function latitudeOfInstitutionChanged(){
       $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").attr("disabled","disabled");
 	}else{
 		$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").removeAttr("disabled");
+		$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").val("");
 	}
 }
 function longitudeOfInstitutionChanged(){
@@ -3347,6 +3348,7 @@ function longitudeOfInstitutionChanged(){
        $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").attr("disabled","disabled");
 	}else{
 		$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").removeAttr("disabled");
+		$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").val("");
 	}
 }
 
@@ -3359,7 +3361,8 @@ function telephoneOfInstitutionChanged(){
 		$("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").attr("value", $("table#yiTableOthers #textYITelephone").val());
 		$("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").attr("disabled","disabled");
 	}else{
-	    $("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").removeAttr("disabled");  
+	    $("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").removeAttr("disabled");
+	    $("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").val("");
 	} 
 }
 
@@ -3369,6 +3372,7 @@ function emailOfInstitutionChanged(){
       $("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution").attr("disabled","disabled");
 	}else{
 		$("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution").removeAttr("disabled");
+		$("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution").val("");
 	}
 }
 
@@ -3382,6 +3386,7 @@ function webOfInstitutionChanged(){
       $("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution").attr("disabled","disabled");
 	}else{
 		$("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution").removeAttr("disabled");
+		$("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution").val("");
 	}
 }
 function openingHoursOfInstitutionChanged(){
