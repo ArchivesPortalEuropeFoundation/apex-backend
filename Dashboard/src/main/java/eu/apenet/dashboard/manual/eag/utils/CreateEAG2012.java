@@ -254,9 +254,9 @@ public class CreateEAG2012 {
 							conventionDeclaration.getCitation().add(citation);
 
 							// eag/control/conventionDeclaration/abbreviation
-							if (this.eag2012.getAbbreviationValue().get(i) != null && !this.eag2012.getAbbreviationValue().get(i).isEmpty()) {
+							if (this.eag2012.getAbbreviationValue()!=null && this.eag2012.getAbbreviationValue().size()>j && this.eag2012.getAbbreviationValue().get(j) != null && !this.eag2012.getAbbreviationValue().get(j).isEmpty()) {
 								Abbreviation abbreviation = new Abbreviation();
-								abbreviation.setContent(this.eag2012.getAbbreviationValue().get(i));
+								abbreviation.setContent(this.eag2012.getAbbreviationValue().get(j));
 
 								conventionDeclaration.setAbbreviation(abbreviation);
 							}
