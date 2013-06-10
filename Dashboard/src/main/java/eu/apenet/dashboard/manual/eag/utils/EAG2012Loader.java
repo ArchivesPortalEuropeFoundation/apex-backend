@@ -2050,10 +2050,8 @@ public class EAG2012Loader{
 					if(searchRoom.getWorkPlaces()!=null && searchRoom.getWorkPlaces().getNum()!=null){
 						this.setSearchRoomWorkPlaces(searchRoom.getWorkPlaces().getNum().getContent());
 					}
-					if(searchRoom.getComputerPlaces()!=null && searchRoom.getComputerPlaces().getDescriptiveNote()!=null){
-						for (int i = 0; i < searchRoom.getComputerPlaces().getDescriptiveNote().getP().size(); i++) {
-							this.setSearchRoomComputerPlaces(searchRoom.getComputerPlaces().getDescriptiveNote().getP().get(i).getContent());
-						}
+					if(searchRoom.getComputerPlaces()!=null && searchRoom.getComputerPlaces().getNum()!=null){
+						this.setSearchRoomComputerPlaces(searchRoom.getComputerPlaces().getNum().getContent());
 					}
 					if(searchRoom.getMicrofilmPlaces()!=null && searchRoom.getMicrofilmPlaces().getNum()!=null){
 						this.setSearchRoomMicrofilmReaders(searchRoom.getMicrofilmPlaces().getNum().getContent());
