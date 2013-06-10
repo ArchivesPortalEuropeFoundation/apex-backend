@@ -48,7 +48,7 @@
 				<s:property value="getText('label.ai.relations.descriptionOfRelation')" />:
 			</td>
 			<td>
-				<input type="text" id="textDescriptionOfRelation" value="${loader.resourceRelationrelationEntryDescription}" />
+				<input type="text" id="textDescriptionOfRelation" value="${loader.eagRelationrelationEntryDescription}" />
 			</td>
 			<td id="tdLanguageDescriptionOfRelation" class="labelLeft">
 				<label for="selectLanguageDescriptionOfRelation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -56,7 +56,7 @@
 			<td>
 				<select id="selectLanguageDescriptionOfRelation" >
 					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.resourceRelationrelationEntryDescriptionLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.eagRelationrelationEntryDescriptionLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -94,7 +94,7 @@
 			<td>
 				<select id="selectTypeOftheRelation" >
 					<s:iterator value="typeTheRelationList" var="relation"> 
-						<option value="<s:property value="#relation.key" />"><s:property value="#relation.value" /></option>
+						<option value="<s:property value="#relation.key" />" <s:if test="loader.resourceRelationType == #relation.value">selected="selected"</s:if>><s:property value="#relation.value" /></option>
 					</s:iterator>
 				</select>
 			</td>

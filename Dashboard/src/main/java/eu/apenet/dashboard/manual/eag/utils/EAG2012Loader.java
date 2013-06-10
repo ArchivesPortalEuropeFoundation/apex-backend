@@ -2516,7 +2516,8 @@ public class EAG2012Loader{
 			for (int i = 0; i < this.eag.getRelations().getEagRelation().size(); i++) {
 				// Website of the description of the institution.
 				this.setEagRelationHref(this.eag.getRelations().getEagRelation().get(i).getHref());
-
+//				this.setEagRelationLang(this.eag.getRelations().getEagRelation().get(i).getLang());
+				
 				// Title & ID of the related institution.
 				if (!this.eag.getRelations().getEagRelation().get(i).getRelationEntry().isEmpty()) {
 					// TODO: Review for multiple values.
@@ -2528,7 +2529,7 @@ public class EAG2012Loader{
 				// Type of your relation.
 				if (this.eag.getRelations().getEagRelation().get(i).getEagRelationType() != null) {
 					String eagRelationType = this.eag.getRelations().getEagRelation().get(i).getEagRelationType();
-
+					
 					if (Eag2012.OPTION_CHILD.equalsIgnoreCase(eagRelationType)) {
 						eagRelationType = Eag2012.OPTION_CHILD_TEXT;
 					}
@@ -2550,6 +2551,11 @@ public class EAG2012Loader{
 
 				// Description of relation.
 				if (this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote() != null) {
+					if(this.eag.getRelations().getEagRelation().get(i).getRelationEntry()!=null){
+						for(int x=0;x<this.eag.getRelations().getEagRelation().get(i).getRelationEntry().size();x++){
+							this.setEagRelationrelationEntry(this.eag.getRelations().getEagRelation().get(i).getRelationEntry().get(x).getContent());
+						}	
+					}
 					if (!this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().isEmpty()) {
 						// TODO: Review for multiple values.
 						for (int j = 0; j < this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().size(); j++) {
