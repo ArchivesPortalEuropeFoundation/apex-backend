@@ -2549,13 +2549,14 @@ public class EAG2012Loader{
 					this.setResourceRelationType(eagRelationType);
 				}
 
+				if(this.eag.getRelations().getEagRelation().get(i).getRelationEntry()!=null){
+					for(int x=0;x<this.eag.getRelations().getEagRelation().get(i).getRelationEntry().size();x++){
+						this.setEagRelationrelationEntry(this.eag.getRelations().getEagRelation().get(i).getRelationEntry().get(x).getContent());
+					}
+				}
+				
 				// Description of relation.
 				if (this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote() != null) {
-					if(this.eag.getRelations().getEagRelation().get(i).getRelationEntry()!=null){
-						for(int x=0;x<this.eag.getRelations().getEagRelation().get(i).getRelationEntry().size();x++){
-							this.setEagRelationrelationEntry(this.eag.getRelations().getEagRelation().get(i).getRelationEntry().get(x).getContent());
-						}	
-					}
 					if (!this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().isEmpty()) {
 						// TODO: Review for multiple values.
 						for (int j = 0; j < this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().size(); j++) {
