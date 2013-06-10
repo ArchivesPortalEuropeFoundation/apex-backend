@@ -921,7 +921,7 @@ public class CreateEAG2012 {
 						String postalStreetKey = postalStreetIt.next();
 
 						// Rest of tabs.
-						if (!postalStreetLangKey.equalsIgnoreCase(Eag2012.TAB_YOUR_INSTITUTION))  {
+//						if (!postalStreetLangKey.equalsIgnoreCase(Eag2012.TAB_YOUR_INSTITUTION))  {
 							// Postal address lists.
 							List<String> postalStreetLangList = postalStreetLangMap.get(postalStreetLangKey);
 							List<String> postalCountryList = postalCountryMap.get(postalCountryKey);
@@ -963,10 +963,22 @@ public class CreateEAG2012 {
 								if (!Eag2012.OPTION_NONE.equalsIgnoreCase(language)) {
 									location.getStreet().setLang(language);
 								}
-			
-								repository.getLocation().add(location);
+								//TODO: add looper only for check repeated fields for different contact and your_institution tabs information
+								boolean found = false;
+								for(int x=0;!found && x<repository.getLocation().size();x++){
+									Location target = repository.getLocation().get(x);
+									if(target.getStreet()!=null && target.getStreet().getContent()!=null && target.getStreet().getContent().equalsIgnoreCase(postalStreetList.get(j)) && 
+											Eag2012.POSTAL_ADDRESS.equalsIgnoreCase(target.getLocalType())&&
+											target.getMunicipalityPostalcode().getContent() != null &&
+											target.getMunicipalityPostalcode().getContent().equalsIgnoreCase(postalCitiesList.get(j)) ){
+										found = true;
+									}
+								}
+								if(!found){
+									repository.getLocation().add(location);
+								}
 							}
-						}
+//						}
 					}
 				}
 			}

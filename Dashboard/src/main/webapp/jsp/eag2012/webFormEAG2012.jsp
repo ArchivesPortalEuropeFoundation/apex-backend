@@ -51,7 +51,7 @@
 					$("div#accessAndServicesTabContent table#accessAndServicesTable").attr("id","accessAndServicesTable_1");
 					$("div#descriptionTabContent table#descriptionTable").attr("id","descriptionTable_1");
 					
-					//postal address - your institution tab
+					//postal address - your institution tab and contact tab
 					var postalField1 = "<s:property value="loader.streetPostal"/>";
 					var postalField2 = "<s:property value="loader.municipalityPostalcodePostal"/>";
 					var postalField3 = "<s:property value="loader.streetPostalLang"/>";
@@ -61,6 +61,10 @@
 						$("#textYIPAStreet").attr("value",postalField1);
 						$("#textYIPACity").attr("value",postalField2);
 						$("#selectYIPASelectLanguage").attr("value",postalField3);
+						contactAddPostalAddressIfDifferent('<s:property value="getText('label.ai.contact.postalAddress')" />','<s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>','<s:property value="getText('label.ai.tabs.commons.street')"/>','<s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')"/>');
+						$("#textContactPAStreet").attr("value",postalField1);
+						$("#textContactPACity").attr("value",postalField2);
+						$("#selectContactLanguagePostalAddress").attr("value",postalField3);
 					}
 					var furtherAccessInformation = "<s:property value="loader.restaccess"/>";
 					var furtherAccessInformationLang = "<s:property value="loader.restaccessLang"/>";

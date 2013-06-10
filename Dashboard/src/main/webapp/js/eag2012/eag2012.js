@@ -1098,7 +1098,7 @@ function yiAddVisitorsAddressTranslation(text1) {
 function yiAddPostalAddressIfDifferent(text1, text2, text3, text4) {
 	$("#buttonAddPostalAddressIfDifferent").hide();
 
-	var select = '<select id="selectYIPASelectLanguage">'+$("#selectYIPNOTISelectLanguage").html()+'</select>';
+	var select = '<select id="selectYIPASelectLanguage" onchange="postalAddressLanguageChanged();" >'+$("#selectYIPNOTISelectLanguage").html()+'</select>';
 
 	$("table#yiTableOthers").before('<table id="yiTablePostalAddress_1" class=\"tablePadding\">'+
 		'<tr id="yiPostalAddressLabel">'+
@@ -1110,7 +1110,7 @@ function yiAddPostalAddressIfDifferent(text1, text2, text3, text4) {
 				'<label for="textYIPAStreet">'+text3+'<span class="required">*</span>:</label>'+
 			'</td>'+
 			'<td>'+
-				'<input type="text" id="textYIPAStreet" />'+
+				'<input type="text" id="textYIPAStreet" onchange="postalAddressStreetChanged();" />'+
 			'</td>'+
 			'<td id="yiPostalAddressLanguage" class="labelLeft">'+
 				'<label for="selectYIPASelectLanguage">'+text2+':</label>'+
@@ -1123,17 +1123,18 @@ function yiAddPostalAddressIfDifferent(text1, text2, text3, text4) {
 				'<label for="textYIPACity">'+text4+'<span class="required">*</span>:</label>'+
 			'</td>'+
 			'<td>'+
-				'<input type="text" id="textYIPACity" />'+
+				'<input type="text" id="textYIPACity" onchange="postalAddressCityChanged();" />'+
 			'</td>'+
 		'</tr></table>');
 
 	$("table#yiTableOthers tr#yiPostalAddressTranslation").show();
-	
+	contactAddPostalAddressIfDifferent(text1, text2, text3, text4);
+
 }
 
 function yiAddPostalAddressTranslation(text1) {
 	var counter = $("table[id^='yiTablePostalAddress_']").length;
-
+//	var currentTab = getCurrentTab();
 	var street = $("table#yiTablePostalAddress_"+counter+" input#textYIPAStreet").attr("value");
 	var city = $("table#yiTablePostalAddress_"+counter+" input#textYIPACity").attr("value");
 
@@ -1148,6 +1149,7 @@ function yiAddPostalAddressTranslation(text1) {
 		});
 		// Remove "*".
 		$("table#yiTablePostalAddress_"+(counter+1)).find("span").remove();
+	//	$("table#contactTable"+currentTab+" tr#trButtonContacPostalAddressTranslation").show();
 	} else {
 		alertEmptyFields(text1);
 	}
@@ -1960,7 +1962,7 @@ function contactAddVisitorsAddressTranslation(text1) {
 
 function contactAddPostalAddressIfDifferent(property1, property2, property3, property4) {
 	var currentTab = getCurrentTab();
-	var select = '<select id="selectContactLanguagePostalAddress">'+$("#selectLanguageVisitorAddress").html()+'</select>';
+	var select = '<select id="selectContactLanguagePostalAddress" onchange="contactAddressLanguageChanged();">'+$("#selectLanguageVisitorAddress").html()+'</select>';
 
 	$("table#contactTable"+currentTab+" input#buttonContactAddPostalAddressIfDifferent").hide();
 
@@ -1971,10 +1973,10 @@ function contactAddPostalAddressIfDifferent(property1, property2, property3, pro
 		'</tr>'+
 		'<tr id="contactPostalAddressStreet">'+
 			'<td>'+
-				'<label for="textContactPAStreet">'+property3+':</label>'+
+				'<label for="textContactPAStreet">'+property3+'<span class="required">*</span>:</label>'+
 			'</td>'+
 			'<td>'+
-				'<input type="text" id="textContactPAStreet" />'+
+				'<input type="text" id="textContactPAStreet" onchange="contactAddressStreetChanged();" />'+
 			'</td>'+
 			'<td id="contactPostalAddressLanguage">'+
 				'<label for="selectContactLanguagePostalAddress">'+property2+':</label>'+
@@ -1984,13 +1986,13 @@ function contactAddPostalAddressIfDifferent(property1, property2, property3, pro
 		'</tr>'+
 		'<tr id="contactPostalAddressCity">'+
 			'<td>'+
-				'<label for="textContactPACity">'+property4+':</label>'+
+				'<label for="textContactPACity">'+property4+'<span class="required">*</span>:</label>'+
 			'</td>'+
 			'<td>'+
-				'<input type="text" id="textContactPACity" />'+
+				'<input type="text" id="textContactPACity" onchange="contactAddressCityChanged();"/>'+
 			'</td>'+
 		'</tr></table></td></tr>');
-
+  
 	$("table#contactTable"+currentTab+" tr#trButtonContacPostalAddressTranslation").show();
 }
 
@@ -2014,6 +2016,8 @@ function contactAddPostalAddressTranslation(text1) {
 	$("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+(counter+1)+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
 	});
+	// Remove "*".
+	$("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+(counter+1)).find("span").remove();
 }
 
 function addFurtherTelephoneOfTheInstitution(text1){
@@ -3332,11 +3336,45 @@ function cityOfInstitutionChanged(){
 function countryOfInstitutionChanged(){
 	$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactCountryOfTheInstitution").attr("value", $("table#yiTableVisitorsAddress_1 #textYICountry").val());
 }
+function contactAddressCityChanged(){
+	var value = $("table#contactTable_1 table#contactTablePostalAddress_1 #textContactPACity").val();
+	$("table#yiTablePostalAddress_1 #textYIPACity").attr("value",value);	
+}
+function contactAddressStreetChanged(){
+	var value = $("table#contactTable_1 table#contactTablePostalAddress_1 #textContactPAStreet").val();
+	$("table#yiTablePostalAddress_1 #textYIPAStreet").attr("value",value);
+}
+function contactAddressLanguageChanged(){
+	var value = $("table#contactTable_1 table#contactTablePostalAddress_1 #selectContactLanguagePostalAddress").val();
+	$("table#yiTablePostalAddress_1 #selectYIPASelectLanguage").attr("value",value);
+}
+function postalAddressStreetChanged(){
+	if(($("table#yiTablePostalAddress_1 #textYIPAStreet").val()!="") && ($("table#yiTablePostalAddress_1 #textYIPAStreet").val()!=null)){
+	    $("table#contactTable_1 table#contactTablePostalAddress_1 #textContactPAStreet").attr("value", $("table#yiTablePostalAddress_1 #textYIPAStreet").val());  
+	}else{
+		$("table#contactTable_1 table#contactTablePostalAddress_1 #textContactPAStreet").val("");
+	}
+}
+function postalAddressCityChanged(){
+	if(($("table#yiTablePostalAddress_1 #textYIPACity").val()!="") && ($("table#yiTablePostalAddress_1 #textYIPACity").val()!=null)){
+	    $("table#contactTable_1 table#contactTablePostalAddress_1 #textContactPACity").attr("value", $("table#yiTablePostalAddress_1 #textYIPACity").val());
+	}else{
+		$("table#contactTable_1 table#contactTablePostalAddress_1 #textContactPACity").val("");
+	}
+
+}
+function postalAddressLanguageChanged(){
+   var value = $("table#yiTablePostalAddress_1 #selectYIPASelectLanguage").val();
+   $("table#contactTable_1 table#contactTablePostalAddress_1 #selectContactLanguagePostalAddress option").each(function(){
+	    	if($(this).val()==value){$(this).attr("selected","selected");}
+    });
+	  
+}
 
 function latitudeOfInstitutionChanged(){
 	if(($("table#yiTableVisitorsAddress_1 #textYILatitude").val()!="") && ($("table#yiTableVisitorsAddress_1 #textYILatitude").val()!=null)){
 	  $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").attr("value", $("table#yiTableVisitorsAddress_1 #textYILatitude").val());
-      $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").attr("disabled","disabled");
+    //  $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").attr("disabled","disabled");
 	}else{
 		$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").removeAttr("disabled");
 		$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").val("");
@@ -3345,7 +3383,7 @@ function latitudeOfInstitutionChanged(){
 function longitudeOfInstitutionChanged(){
 	if(($("table#yiTableVisitorsAddress_1 #textYILongitude").val()!="") && ($("table#yiTableVisitorsAddress_1 #textYILongitude").val()!=null)){
 	   $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").attr("value", $("table#yiTableVisitorsAddress_1 #textYILongitude").val());
-       $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").attr("disabled","disabled");
+    //   $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").attr("disabled","disabled");
 	}else{
 		$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").removeAttr("disabled");
 		$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").val("");
@@ -3359,7 +3397,7 @@ function continentOfInstitutionChanged(){
 function telephoneOfInstitutionChanged(){
 	 if(($("table#yiTableOthers #textYITelephone").val()!="") && ($("table#yiTableOthers #textYITelephone").val()!=null)){
 		$("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").attr("value", $("table#yiTableOthers #textYITelephone").val());
-		$("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").attr("disabled","disabled");
+		//$("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").attr("disabled","disabled");
 	}else{
 	    $("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").removeAttr("disabled");
 	    $("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").val("");
@@ -3369,7 +3407,7 @@ function telephoneOfInstitutionChanged(){
 function emailOfInstitutionChanged(){
 	if(($("table#yiTableOthers #textYIEmailAddress").val()!="") && ($("table#yiTableOthers #textYIEmailAddress").val()!=null)){
 	  $("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution").attr("value", $("table#yiTableOthers #textYIEmailAddress").val());
-      $("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution").attr("disabled","disabled");
+   //   $("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution").attr("disabled","disabled");
 	}else{
 		$("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution").removeAttr("disabled");
 		$("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution").val("");
@@ -3383,7 +3421,7 @@ function emailOfInstitutionLinkChanged(){
 function webOfInstitutionChanged(){
 	if(($("table#yiTableOthers #textYIWebpage").val()!="") && ($("table#yiTableOthers #textYIWebpage").val()!=null)){
 	  $("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution").attr("value", $("table#yiTableOthers #textYIWebpage").val());
-      $("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution").attr("disabled","disabled");
+    //  $("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution").attr("disabled","disabled");
 	}else{
 		$("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution").removeAttr("disabled");
 		$("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution").val("");
