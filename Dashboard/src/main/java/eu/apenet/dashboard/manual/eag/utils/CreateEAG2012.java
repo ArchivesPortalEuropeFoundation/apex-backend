@@ -1474,7 +1474,11 @@ public class CreateEAG2012 {
 						if (!repository.getTimetable().getOpening().isEmpty()) {
 							for (int k = 0;!found && k < repository.getTimetable().getOpening().size(); k++) {
 								Opening opening = repository.getTimetable().getOpening().get(k);
-								if (opening.getContent()!=null && opening.getContent().equalsIgnoreCase(openingValueList.get(j)) && opening.getLang()!=null && opening.getLang().equalsIgnoreCase(openingLangList.get(j))) {
+								if (opening.getContent()!=null && 
+										opening.getContent().equalsIgnoreCase(openingValueList.get(j)) && (
+										(opening.getLang()!=null && opening.getLang().equalsIgnoreCase(openingLangList.get(j))) || 
+										(opening.getLang()==null && (openingLangList.size()<=j || openingLangList.get(j)==null || openingLangList.get(j).equalsIgnoreCase("none")))
+										)) {
 									found = true;
 								}
 							}
@@ -1483,8 +1487,7 @@ public class CreateEAG2012 {
 						if (!found) {
 							Opening opening = new Opening();
 							opening.setContent(openingValueList.get(j));
-							if (openingLangList != null
-									&& !Eag2012.OPTION_NONE.equalsIgnoreCase(openingLangList.get(j))) {
+							if (openingLangList != null && !Eag2012.OPTION_NONE.equalsIgnoreCase(openingLangList.get(j))) {
 								opening.setLang(openingLangList.get(j));
 							}
 							repository.getTimetable().getOpening().add(opening);
@@ -1522,7 +1525,11 @@ public class CreateEAG2012 {
 						if (!repository.getTimetable().getClosing().isEmpty()) {
 							for (int k = 0;!found && k < repository.getTimetable().getClosing().size(); k++) {
 								Closing closing = repository.getTimetable().getClosing().get(k);
-								if (closing.getContent()!=null && closing.getContent().equalsIgnoreCase(closingValueList.get(j)) && closing.getLang()!=null && closing.getLang().equalsIgnoreCase(closingLangList.get(j))) {
+								if (closing.getContent()!=null && 
+										closing.getContent().equalsIgnoreCase(closingValueList.get(j)) && (
+											(closing.getLang()!=null && closing.getLang()!=null && closing.getLang().equalsIgnoreCase(closingLangList.get(j)) ) ||
+											(closing.getLang()==null && (closingLangList==null || closingLangList.size()<=j || closingLangList.get(j).equalsIgnoreCase("none") ) ) )
+										) {
 									found = true;
 								}
 							}
@@ -1531,12 +1538,12 @@ public class CreateEAG2012 {
 						if (!found) {
 							Closing closing = new Closing();
 							closing.setContent(closingValueList.get(j));
-							if (closingLangList !=  null
-									&& !Eag2012.OPTION_NONE.equalsIgnoreCase(closingLangList.get(j))) {
+							if (closingLangList !=  null && !Eag2012.OPTION_NONE.equalsIgnoreCase(closingLangList.get(j))) {
 								closing.setLang(closingLangList.get(j));
 							}
-		
-							repository.getTimetable().getClosing().add(closing);
+							if(closing.getContent()!=null && !closing.getContent().isEmpty()){
+								repository.getTimetable().getClosing().add(closing);
+							}
 						}
 					}
 				}
