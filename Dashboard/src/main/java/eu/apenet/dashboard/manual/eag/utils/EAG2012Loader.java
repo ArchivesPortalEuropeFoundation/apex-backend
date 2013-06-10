@@ -1833,7 +1833,7 @@ public class EAG2012Loader{
 		}
 
 		// Reference to your institution’s holdings guide.
-		if (!this.eag.getRelations().getResourceRelation().isEmpty()) {
+		if (this.eag.getRelations()!=null && this.eag.getRelations().getResourceRelation()!=null && !this.eag.getRelations().getResourceRelation().isEmpty()) {
 			// TODO: Review for multiple values.
 			for (int i = 0; i < this.eag.getRelations().getResourceRelation().size(); i++) {
 				this.setResourceRelationHref(this.eag.getRelations().getResourceRelation().get(i).getHref());
@@ -2026,7 +2026,7 @@ public class EAG2012Loader{
 				}
 				
 				// Searchroom
-				if(repository.getServices().getSearchroom()!=null){
+				if(repository.getServices()!=null && repository.getServices().getSearchroom()!=null){
 					Searchroom searchRoom = repository.getServices().getSearchroom();
 					if(searchRoom.getContact()!=null){
 						if(searchRoom.getContact().getTelephone()!=null){
@@ -2086,159 +2086,167 @@ public class EAG2012Loader{
 				}
 				
 				// Library
-				Library library = repository.getServices().getLibrary();
-				this.setLibraryQuestion(library.getQuestion());
-				if(library.getContact() != null){
-					if(library.getContact().getTelephone()!=null){
-						for (int i = 0; i < library.getContact().getTelephone().size(); i++) {
-							this.setLibraryTelephone(library.getContact().getTelephone().get(i).getContent());
+				if(repository.getServices()!=null){
+					Library library = repository.getServices().getLibrary();
+					if(library!=null){
+						this.setLibraryQuestion(library.getQuestion());
+						if(library.getContact() != null){
+							if(library.getContact().getTelephone()!=null){
+								for (int i = 0; i < library.getContact().getTelephone().size(); i++) {
+									this.setLibraryTelephone(library.getContact().getTelephone().get(i).getContent());
+								}
+							}
+							if(library.getContact().getEmail()!=null){
+								for (int i = 0; i < library.getContact().getEmail().size(); i++) {
+									this.setLibraryEmailContent(library.getContact().getEmail().get(i).getContent());
+									this.setLibraryEmailHref(library.getContact().getEmail().get(i).getHref());
+								}
+							}
+							if(library.getWebpage()!=null){
+								for (int i = 0; i < library.getWebpage().size(); i++) {
+									this.setLibraryWebpageContent(library.getWebpage().get(i).getContent());
+									this.setLibraryWebpageHref(library.getWebpage().get(i).getHref());
+								}
+							}
+						}
+						if(library.getMonographicpub()!=null){
+							this.setLibraryMonographPublication(library.getMonographicpub().getNum().getContent());
+						}
+						if(library.getSerialpub()!=null){
+							this.setLibrarySerialPublication(library.getSerialpub().getNum().getContent());
 						}
 					}
-					if(library.getContact().getEmail()!=null){
-						for (int i = 0; i < library.getContact().getEmail().size(); i++) {
-							this.setLibraryEmailContent(library.getContact().getEmail().get(i).getContent());
-							this.setLibraryEmailHref(library.getContact().getEmail().get(i).getHref());
-						}
-					}
-					if(library.getWebpage()!=null){
-						for (int i = 0; i < library.getWebpage().size(); i++) {
-							this.setLibraryWebpageContent(library.getWebpage().get(i).getContent());
-							this.setLibraryWebpageHref(library.getWebpage().get(i).getHref());
-						}
-					}
-				}
-				if(library.getMonographicpub()!=null){
-					this.setLibraryMonographPublication(library.getMonographicpub().getNum().getContent());
-				}
-				if(library.getSerialpub()!=null){
-					this.setLibrarySerialPublication(library.getSerialpub().getNum().getContent());
 				}
 				List<P> ps = null;
-				if(repository.getServices().getInternetAccess()!=null){
-					this.setLibraryInternetAccessQuestion(repository.getServices().getInternetAccess().getQuestion());
-					if(repository.getServices().getInternetAccess().getDescriptiveNote()!=null){
-						ps = repository.getServices().getInternetAccess().getDescriptiveNote().getP();
-						for (int i = 0; i < ps.size(); i++) {
-							this.setLibraryDescription(ps.get(i).getContent());
-							this.setLibraryDescriptionLang(ps.get(i).getLang());
-						}
-					}
-				}
-				
-				// Technical Services
-				this.setTechnicalServicesQuestion(repository.getServices().getTechservices().getRestorationlab().getQuestion());
-				if(repository.getServices().getTechservices().getRestorationlab().getDescriptiveNote()!=null){
-					ps = repository.getServices().getTechservices().getRestorationlab().getDescriptiveNote().getP();
-					for (int i = 0; i < ps.size(); i++) {
-						this.setTechnicalServicesDescription(ps.get(i).getContent());
-						this.setTechnicalServicesDescriptionLang(ps.get(i).getLang());
-					}
-				}
-				List<Telephone> telephones = null;
-				List<Email> emails = null;
-				List<Webpage> webpages = null;
-				if(repository.getServices().getTechservices().getRestorationlab()!=null){
-					if(repository.getServices().getTechservices().getRestorationlab().getContact()!=null){
-						telephones = repository.getServices().getTechservices().getRestorationlab().getContact().getTelephone();
-						for (int i = 0; i < telephones.size(); i++) {
-							this.setTechnicalServicesTelephone(telephones.get(i).getContent());
-						}
-						emails = repository.getServices().getTechservices().getRestorationlab().getContact().getEmail();
-						for (int i = 0; i < emails.size(); i++) {
-							this.setTechnicalServicesEmail(emails.get(i).getHref());
-							this.setTechnicalServicesEmailLink(emails.get(i).getContent());
-							this.setTechnicalServicesEmailLang(emails.get(i).getLang());
-						}
-					}
-					if(repository.getServices().getTechservices().getRestorationlab().getWebpage()!=null){
-						webpages = repository.getServices().getTechservices().getRestorationlab().getWebpage();
-						for (int i = 0; i < webpages.size(); i++) {
-							this.setTechnicalServicesWebpageLink(webpages.get(i).getContent());
-							this.setTechnicalServicesWebpage(webpages.get(i).getHref());
-							this.setTechnicalServicesWebpageLang(webpages.get(i).getLang());
-						}
-					}
-				}
-				if(repository.getServices().getTechservices().getReproductionser()!=null){
-					this.setReproductionserQuestion(repository.getServices().getTechservices().getReproductionser().getQuestion());
-					if(repository.getServices().getTechservices().getReproductionser().getDescriptiveNote()!=null){
-						ps = repository.getServices().getTechservices().getReproductionser().getDescriptiveNote().getP();
-						for (int i = 0; i < ps.size(); i++) {
-							this.setReproductionserDescription(ps.get(i).getContent());
-							this.setReproductionserDescriptionLang(ps.get(i).getLang());
-						}
-					}
-					if(repository.getServices().getTechservices().getReproductionser().getContact()!=null){
-						telephones = repository.getServices().getTechservices().getReproductionser().getContact().getTelephone();
-						for (int i = 0; i < telephones.size(); i++) {
-							this.setReproductionserTelephone(telephones.get(i).getContent());
-						}
-						emails = repository.getServices().getTechservices().getReproductionser().getContact().getEmail();
-						for (int i = 0; i < emails.size(); i++) {
-							this.setReproductionserEmail(emails.get(i).getHref());
-							this.setReproductionserEmailLink(emails.get(i).getContent());
-							this.setReproductionserEmailLang(emails.get(i).getLang());
-						}
-						webpages = repository.getServices().getTechservices().getReproductionser().getWebpage();
-						for (int i = 0; i < webpages.size(); i++) {
-							this.setReproductionserWebpageLink(webpages.get(i).getContent());
-							this.setReproductionserWebpage(webpages.get(i).getHref());
-							this.setReproductionserWebpageLang(webpages.get(i).getLang());
-						}
-					}
-					if(repository.getServices().getTechservices().getReproductionser()!=null){
-						if(repository.getServices().getTechservices().getReproductionser().getMicroformser()!=null){
-							this.setMicrofilmServices(repository.getServices().getTechservices().getReproductionser().getMicroformser().getQuestion());
-						}
-						if(repository.getServices().getTechservices().getReproductionser().getPhotographser()!=null){
-							this.setPhotographicServices(repository.getServices().getTechservices().getReproductionser().getPhotographser().getQuestion());
-						}
-						if(repository.getServices().getTechservices().getReproductionser().getDigitalser()!=null){
-							this.setDigitisationServices(repository.getServices().getTechservices().getReproductionser().getDigitalser().getQuestion());
-						}
-						if(repository.getServices().getTechservices().getReproductionser().getPhotocopyser()!=null){
-							this.setPhotocopyingServices(repository.getServices().getTechservices().getReproductionser().getPhotocopyser().getQuestion());
-						}
-					}
-				}
-				
-				// Recreational services
-				RecreationalServices recreationalServices = repository.getServices().getRecreationalServices();
-				if(recreationalServices!=null){
-					if(recreationalServices.getRefreshment()!=null && recreationalServices.getRefreshment().getDescriptiveNote()!=null){
-						for (int i = 0; i < recreationalServices.getRefreshment().getDescriptiveNote().getP().size(); i++) {
-							this.setRecreationalServicesRefreshmentArea(recreationalServices.getRefreshment().getDescriptiveNote().getP().get(i).getContent());
-							this.setRecreationalServicesRefreshmentAreaLang(recreationalServices.getRefreshment().getDescriptiveNote().getP().get(i).getLang());
-						}
-					}
-					if(recreationalServices.getExhibition()!=null){
-						for (int i = 0; i < recreationalServices.getExhibition().size(); i++) {
-							for (int j = 0; j < recreationalServices.getExhibition().get(i).getDescriptiveNote().getP().size(); j++) {
-								this.setRecreationalServicesExhibition(recreationalServices.getExhibition().get(i).getDescriptiveNote().getP().get(j).getContent());
-								this.setRecreationalServicesExhibitionLang(recreationalServices.getExhibition().get(i).getDescriptiveNote().getP().get(j).getLang());
+				if(repository.getServices()!=null){
+					
+					if(repository.getServices().getInternetAccess()!=null){
+						this.setLibraryInternetAccessQuestion(repository.getServices().getInternetAccess().getQuestion());
+						if(repository.getServices().getInternetAccess().getDescriptiveNote()!=null){
+							ps = repository.getServices().getInternetAccess().getDescriptiveNote().getP();
+							for (int i = 0; i < ps.size(); i++) {
+								this.setLibraryDescription(ps.get(i).getContent());
+								this.setLibraryDescriptionLang(ps.get(i).getLang());
 							}
-							this.setRecreationalServicesWeb(recreationalServices.getExhibition().get(i).getWebpage().getHref());
-							this.setRecreationalServicesWebLink(recreationalServices.getExhibition().get(i).getWebpage().getContent());
 						}
 					}
-					if(recreationalServices.getToursSessions()!=null){
-						for (int i = 0; i < recreationalServices.getToursSessions().size(); i++) {
-							for (int j = 0; j < recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().size(); j++) {
-								this.setToursSessionGuidesAndSessionsContent(recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().get(j).getContent());
-								this.setToursSessionGuidesAndSessionsLang(recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().get(j).getLang());
+
+					// Technical Services
+					if(repository.getServices().getTechservices()!=null){
+						this.setTechnicalServicesQuestion(repository.getServices().getTechservices().getRestorationlab().getQuestion());
+						if(repository.getServices().getTechservices().getRestorationlab().getDescriptiveNote()!=null){
+							ps = repository.getServices().getTechservices().getRestorationlab().getDescriptiveNote().getP();
+							for (int i = 0; i < ps.size(); i++) {
+								this.setTechnicalServicesDescription(ps.get(i).getContent());
+								this.setTechnicalServicesDescriptionLang(ps.get(i).getLang());
 							}
-							this.setToursSessionGuidesAndSessionsWebpage(recreationalServices.getToursSessions().get(i).getWebpage().getHref());
-							this.setToursSessionGuidesAndSessionsWebpageTitle(recreationalServices.getToursSessions().get(i).getWebpage().getContent());
+						}
+						List<Telephone> telephones = null;
+						List<Email> emails = null;
+						List<Webpage> webpages = null;
+						if(repository.getServices().getTechservices().getRestorationlab()!=null){
+							if(repository.getServices().getTechservices().getRestorationlab().getContact()!=null){
+								telephones = repository.getServices().getTechservices().getRestorationlab().getContact().getTelephone();
+								for (int i = 0; i < telephones.size(); i++) {
+									this.setTechnicalServicesTelephone(telephones.get(i).getContent());
+								}
+								emails = repository.getServices().getTechservices().getRestorationlab().getContact().getEmail();
+								for (int i = 0; i < emails.size(); i++) {
+									this.setTechnicalServicesEmail(emails.get(i).getHref());
+									this.setTechnicalServicesEmailLink(emails.get(i).getContent());
+									this.setTechnicalServicesEmailLang(emails.get(i).getLang());
+								}
+							}
+							if(repository.getServices().getTechservices().getRestorationlab().getWebpage()!=null){
+								webpages = repository.getServices().getTechservices().getRestorationlab().getWebpage();
+								for (int i = 0; i < webpages.size(); i++) {
+									this.setTechnicalServicesWebpageLink(webpages.get(i).getContent());
+									this.setTechnicalServicesWebpage(webpages.get(i).getHref());
+									this.setTechnicalServicesWebpageLang(webpages.get(i).getLang());
+								}
+							}
+						}
+						if(repository.getServices().getTechservices().getReproductionser()!=null){
+							this.setReproductionserQuestion(repository.getServices().getTechservices().getReproductionser().getQuestion());
+							if(repository.getServices().getTechservices().getReproductionser().getDescriptiveNote()!=null){
+								ps = repository.getServices().getTechservices().getReproductionser().getDescriptiveNote().getP();
+								for (int i = 0; i < ps.size(); i++) {
+									this.setReproductionserDescription(ps.get(i).getContent());
+									this.setReproductionserDescriptionLang(ps.get(i).getLang());
+								}
+							}
+							if(repository.getServices().getTechservices().getReproductionser().getContact()!=null){
+								telephones = repository.getServices().getTechservices().getReproductionser().getContact().getTelephone();
+								for (int i = 0; i < telephones.size(); i++) {
+									this.setReproductionserTelephone(telephones.get(i).getContent());
+								}
+								emails = repository.getServices().getTechservices().getReproductionser().getContact().getEmail();
+								for (int i = 0; i < emails.size(); i++) {
+									this.setReproductionserEmail(emails.get(i).getHref());
+									this.setReproductionserEmailLink(emails.get(i).getContent());
+									this.setReproductionserEmailLang(emails.get(i).getLang());
+								}
+								webpages = repository.getServices().getTechservices().getReproductionser().getWebpage();
+								for (int i = 0; i < webpages.size(); i++) {
+									this.setReproductionserWebpageLink(webpages.get(i).getContent());
+									this.setReproductionserWebpage(webpages.get(i).getHref());
+									this.setReproductionserWebpageLang(webpages.get(i).getLang());
+								}
+							}
+							if(repository.getServices().getTechservices().getReproductionser()!=null){
+								if(repository.getServices().getTechservices().getReproductionser().getMicroformser()!=null){
+									this.setMicrofilmServices(repository.getServices().getTechservices().getReproductionser().getMicroformser().getQuestion());
+								}
+								if(repository.getServices().getTechservices().getReproductionser().getPhotographser()!=null){
+									this.setPhotographicServices(repository.getServices().getTechservices().getReproductionser().getPhotographser().getQuestion());
+								}
+								if(repository.getServices().getTechservices().getReproductionser().getDigitalser()!=null){
+									this.setDigitisationServices(repository.getServices().getTechservices().getReproductionser().getDigitalser().getQuestion());
+								}
+								if(repository.getServices().getTechservices().getReproductionser().getPhotocopyser()!=null){
+									this.setPhotocopyingServices(repository.getServices().getTechservices().getReproductionser().getPhotocopyser().getQuestion());
+								}
+							}
 						}
 					}
-					if(recreationalServices.getOtherServices()!=null){
-						for (int i = 0; i < recreationalServices.getOtherServices().size(); i++) {
-							for (int j = 0; j < recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().size(); j++) {
-								this.setOtherServices(recreationalServices.getOtherServices().get(i).getDescriptiveNote().getP().get(j).getContent());
-								this.setOtherServicesLang(recreationalServices.getOtherServices().get(i).getDescriptiveNote().getP().get(j).getLang());
+					// Recreational services
+					RecreationalServices recreationalServices = repository.getServices().getRecreationalServices();
+					if(recreationalServices!=null){
+						if(recreationalServices.getRefreshment()!=null && recreationalServices.getRefreshment().getDescriptiveNote()!=null){
+							for (int i = 0; i < recreationalServices.getRefreshment().getDescriptiveNote().getP().size(); i++) {
+								this.setRecreationalServicesRefreshmentArea(recreationalServices.getRefreshment().getDescriptiveNote().getP().get(i).getContent());
+								this.setRecreationalServicesRefreshmentAreaLang(recreationalServices.getRefreshment().getDescriptiveNote().getP().get(i).getLang());
 							}
-							this.setOtherServicesWebpage(recreationalServices.getOtherServices().get(i).getWebpage().getHref());
-							this.setOtherServicesLink(recreationalServices.getOtherServices().get(i).getWebpage().getContent());
+						}
+						if(recreationalServices.getExhibition()!=null){
+							for (int i = 0; i < recreationalServices.getExhibition().size(); i++) {
+								for (int j = 0; j < recreationalServices.getExhibition().get(i).getDescriptiveNote().getP().size(); j++) {
+									this.setRecreationalServicesExhibition(recreationalServices.getExhibition().get(i).getDescriptiveNote().getP().get(j).getContent());
+									this.setRecreationalServicesExhibitionLang(recreationalServices.getExhibition().get(i).getDescriptiveNote().getP().get(j).getLang());
+								}
+								this.setRecreationalServicesWeb(recreationalServices.getExhibition().get(i).getWebpage().getHref());
+								this.setRecreationalServicesWebLink(recreationalServices.getExhibition().get(i).getWebpage().getContent());
+							}
+						}
+						if(recreationalServices.getToursSessions()!=null){
+							for (int i = 0; i < recreationalServices.getToursSessions().size(); i++) {
+								for (int j = 0; j < recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().size(); j++) {
+									this.setToursSessionGuidesAndSessionsContent(recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().get(j).getContent());
+									this.setToursSessionGuidesAndSessionsLang(recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().get(j).getLang());
+								}
+								this.setToursSessionGuidesAndSessionsWebpage(recreationalServices.getToursSessions().get(i).getWebpage().getHref());
+								this.setToursSessionGuidesAndSessionsWebpageTitle(recreationalServices.getToursSessions().get(i).getWebpage().getContent());
+							}
+						}
+						if(recreationalServices.getOtherServices()!=null){
+							for (int i = 0; i < recreationalServices.getOtherServices().size(); i++) {
+								for (int j = 0; j < recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().size(); j++) {
+									this.setOtherServices(recreationalServices.getOtherServices().get(i).getDescriptiveNote().getP().get(j).getContent());
+									this.setOtherServicesLang(recreationalServices.getOtherServices().get(i).getDescriptiveNote().getP().get(j).getLang());
+								}
+								this.setOtherServicesWebpage(recreationalServices.getOtherServices().get(i).getWebpage().getHref());
+								this.setOtherServicesLink(recreationalServices.getOtherServices().get(i).getWebpage().getContent());
+							}
 						}
 					}
 				}
@@ -2466,100 +2474,102 @@ public class EAG2012Loader{
 	 * Method to load all values of "Relations" tab.
 	 */
 	private void loadRelationsTabValues() {
-		// Resource relations.
-		if (!this.eag.getRelations().getResourceRelation().isEmpty()) {
-			// TODO: Review for multiple values.
-			for (int i = 0; i < this.eag.getRelations().getResourceRelation().size(); i++) {
-				// Website of your resource.
-				this.setResourceRelationHref(this.eag.getRelations().getResourceRelation().get(i).getHref());
+		if(this.eag.getRelations()!=null){
+			// Resource relations.
+			if (this.eag.getRelations().getResourceRelation()!=null && !this.eag.getRelations().getResourceRelation().isEmpty()) {
+				// TODO: Review for multiple values.
+				for (int i = 0; i < this.eag.getRelations().getResourceRelation().size(); i++) {
+					// Website of your resource.
+					this.setResourceRelationHref(this.eag.getRelations().getResourceRelation().get(i).getHref());
 
-				// Title & ID of the related material.
-				if (this.eag.getRelations().getResourceRelation().get(i).getRelationEntry() != null) {
-					this.setResourceRelationrelationEntry(this.eag.getRelations().getResourceRelation().get(i).getRelationEntry().getContent());
-				}
-
-				// Type of your relation.
-				if (this.eag.getRelations().getResourceRelation().get(i).getResourceRelationType() != null) {
-					String resourceRelationTypeValue = this.eag.getRelations().getResourceRelation().get(i).getResourceRelationType();
-
-					if (Eag2012.OPTION_CREATOR_TEXT.equalsIgnoreCase(resourceRelationTypeValue)) {
-						resourceRelationTypeValue = Eag2012.OPTION_CREATOR;
-					}
-					if (Eag2012.OPTION_SUBJECT_TEXT.equalsIgnoreCase(resourceRelationTypeValue)) {
-						resourceRelationTypeValue = Eag2012.OPTION_SUBJECT;
-					}
-					if (Eag2012.OPTION_OTHER_TEXT.equalsIgnoreCase(resourceRelationTypeValue)) {
-						resourceRelationTypeValue = Eag2012.OPTION_OTHER;
+					// Title & ID of the related material.
+					if (this.eag.getRelations().getResourceRelation().get(i).getRelationEntry() != null) {
+						this.setResourceRelationrelationEntry(this.eag.getRelations().getResourceRelation().get(i).getRelationEntry().getContent());
 					}
 
-					this.setResourceRelationType(resourceRelationTypeValue);
-				}
+					// Type of your relation.
+					if (this.eag.getRelations().getResourceRelation().get(i).getResourceRelationType() != null) {
+						String resourceRelationTypeValue = this.eag.getRelations().getResourceRelation().get(i).getResourceRelationType();
 
-				// Description of relation.
-				if (this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote() != null) {
-					if (!this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote().getP().isEmpty()) {
-						// TODO: Review for multiple values.
-						for (int j = 0; j < this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote().getP().size(); j++) {
-							this.setResourceRelationrelationEntryDescription(this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote().getP().get(j).getContent());
-							this.setResourceRelationrelationEntryDescriptionLang(this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote().getP().get(j).getLang());
+						if (Eag2012.OPTION_CREATOR_TEXT.equalsIgnoreCase(resourceRelationTypeValue)) {
+							resourceRelationTypeValue = Eag2012.OPTION_CREATOR;
+						}
+						if (Eag2012.OPTION_SUBJECT_TEXT.equalsIgnoreCase(resourceRelationTypeValue)) {
+							resourceRelationTypeValue = Eag2012.OPTION_SUBJECT;
+						}
+						if (Eag2012.OPTION_OTHER_TEXT.equalsIgnoreCase(resourceRelationTypeValue)) {
+							resourceRelationTypeValue = Eag2012.OPTION_OTHER;
+						}
+
+						this.setResourceRelationType(resourceRelationTypeValue);
+					}
+
+					// Description of relation.
+					if (this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote() != null) {
+						if (!this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote().getP().isEmpty()) {
+							// TODO: Review for multiple values.
+							for (int j = 0; j < this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote().getP().size(); j++) {
+								this.setResourceRelationrelationEntryDescription(this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote().getP().get(j).getContent());
+								this.setResourceRelationrelationEntryDescriptionLang(this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote().getP().get(j).getLang());
+							}
 						}
 					}
 				}
 			}
-		}
 
-		// Institution/Repository relation.
-		if (!this.eag.getRelations().getEagRelation().isEmpty()) {
-			// TODO: Review for multiple values.
-			for (int i = 0; i < this.eag.getRelations().getEagRelation().size(); i++) {
-				// Website of the description of the institution.
-				this.setEagRelationHref(this.eag.getRelations().getEagRelation().get(i).getHref());
-//				this.setEagRelationLang(this.eag.getRelations().getEagRelation().get(i).getLang());
-				
-				// Title & ID of the related institution.
-				if (!this.eag.getRelations().getEagRelation().get(i).getRelationEntry().isEmpty()) {
-					// TODO: Review for multiple values.
-					for (int j = 0; j < this.eag.getRelations().getEagRelation().size(); j++) {
-//						this.setEagRelationrelationEntry(this.eag.getRelations().getEagRelation().get(i).getRelationEntry().get(j).getContent());
-					}
-				}
-
-				// Type of your relation.
-				if (this.eag.getRelations().getEagRelation().get(i).getEagRelationType() != null) {
-					String eagRelationType = this.eag.getRelations().getEagRelation().get(i).getEagRelationType();
+			// Institution/Repository relation.
+			if (this.eag.getRelations().getEagRelation()!=null && !this.eag.getRelations().getEagRelation().isEmpty()) {
+				// TODO: Review for multiple values.
+				for (int i = 0; i < this.eag.getRelations().getEagRelation().size(); i++) {
+					// Website of the description of the institution.
+					this.setEagRelationHref(this.eag.getRelations().getEagRelation().get(i).getHref());
+//					this.setEagRelationLang(this.eag.getRelations().getEagRelation().get(i).getLang());
 					
-					if (Eag2012.OPTION_CHILD.equalsIgnoreCase(eagRelationType)) {
-						eagRelationType = Eag2012.OPTION_CHILD_TEXT;
-					}
-					if (Eag2012.OPTION_PARENT.equalsIgnoreCase(eagRelationType)) {
-						eagRelationType = Eag2012.OPTION_PARENT_TEXT;
-					}
-					if (Eag2012.OPTION_EARLIER.equalsIgnoreCase(eagRelationType)) {
-						eagRelationType = Eag2012.OPTION_EARLIER_TEXT;
-					}
-					if (Eag2012.OPTION_LATER.equalsIgnoreCase(eagRelationType)) {
-						eagRelationType = Eag2012.OPTION_LATER_TEXT;
-					}
-					if (Eag2012.OPTION_ASSOCIATIVE.equalsIgnoreCase(eagRelationType)) {
-						eagRelationType = Eag2012.OPTION_ASSOCIATIVE_TEXT;
-					}
-
-					this.setResourceRelationType(eagRelationType);
-				}
-
-				if(this.eag.getRelations().getEagRelation().get(i).getRelationEntry()!=null){
-					for(int x=0;x<this.eag.getRelations().getEagRelation().get(i).getRelationEntry().size();x++){
-						this.setEagRelationrelationEntry(this.eag.getRelations().getEagRelation().get(i).getRelationEntry().get(x).getContent());
-					}
-				}
-				
-				// Description of relation.
-				if (this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote() != null) {
-					if (!this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().isEmpty()) {
+					// Title & ID of the related institution.
+					if (!this.eag.getRelations().getEagRelation().get(i).getRelationEntry().isEmpty()) {
 						// TODO: Review for multiple values.
-						for (int j = 0; j < this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().size(); j++) {
-							this.setEagRelationrelationEntryDescription(this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().get(j).getContent());
-							this.setEagRelationrelationEntryDescriptionLang(this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().get(j).getLang());
+						for (int j = 0; j < this.eag.getRelations().getEagRelation().size(); j++) {
+//							this.setEagRelationrelationEntry(this.eag.getRelations().getEagRelation().get(i).getRelationEntry().get(j).getContent());
+						}
+					}
+
+					// Type of your relation.
+					if (this.eag.getRelations().getEagRelation().get(i).getEagRelationType() != null) {
+						String eagRelationType = this.eag.getRelations().getEagRelation().get(i).getEagRelationType();
+						
+						if (Eag2012.OPTION_CHILD.equalsIgnoreCase(eagRelationType)) {
+							eagRelationType = Eag2012.OPTION_CHILD_TEXT;
+						}
+						if (Eag2012.OPTION_PARENT.equalsIgnoreCase(eagRelationType)) {
+							eagRelationType = Eag2012.OPTION_PARENT_TEXT;
+						}
+						if (Eag2012.OPTION_EARLIER.equalsIgnoreCase(eagRelationType)) {
+							eagRelationType = Eag2012.OPTION_EARLIER_TEXT;
+						}
+						if (Eag2012.OPTION_LATER.equalsIgnoreCase(eagRelationType)) {
+							eagRelationType = Eag2012.OPTION_LATER_TEXT;
+						}
+						if (Eag2012.OPTION_ASSOCIATIVE.equalsIgnoreCase(eagRelationType)) {
+							eagRelationType = Eag2012.OPTION_ASSOCIATIVE_TEXT;
+						}
+
+						this.setResourceRelationType(eagRelationType);
+					}
+
+					if(this.eag.getRelations().getEagRelation().get(i).getRelationEntry()!=null){
+						for(int x=0;x<this.eag.getRelations().getEagRelation().get(i).getRelationEntry().size();x++){
+							this.setEagRelationrelationEntry(this.eag.getRelations().getEagRelation().get(i).getRelationEntry().get(x).getContent());
+						}
+					}
+					
+					// Description of relation.
+					if (this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote() != null) {
+						if (!this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().isEmpty()) {
+							// TODO: Review for multiple values.
+							for (int j = 0; j < this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().size(); j++) {
+								this.setEagRelationrelationEntryDescription(this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().get(j).getContent());
+								this.setEagRelationrelationEntryDescriptionLang(this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().get(j).getLang());
+							}
 						}
 					}
 				}
