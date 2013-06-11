@@ -3380,6 +3380,47 @@ function postalAddressLanguageChanged(){
     });
 	  
 }
+function checkSelectASTSReproductionService(attr){
+	var value = $("#"+attr+" #selectASTSReproductionService").val();
+	if(value=="none"){
+		$("#"+attr+" #selectASTSRSMicroform option[value='none']").attr("selected","selected");
+		$("#"+attr+" #selectASTSRSMicroform").attr("disabled","disabled");
+		$("#"+attr+" #selectASTSRSPhotographServices option[value='none']").attr("selected","selected");
+		$("#"+attr+" #selectASTSRSPhotographServices").attr("disabled","disabled");
+		$("#"+attr+" #selectASTSRSDigitalServices option[value='none']").attr("selected","selected");
+		$("#"+attr+" #selectASTSRSDigitalServices").attr("disabled","disabled");
+		$("#"+attr+" #selectASTSRSPhotocopyServices option[value='none']").attr("selected","selected");
+		$("#"+attr+" #selectASTSRSPhotocopyServices").attr("disabled","disabled");
+		$("#"+attr+" #selectASTSRSSelectLanguage option[value='none']").attr("selected","selected");
+		$("#"+attr+" #selectASTSRSSelectLanguage").attr("disabled","disabled");
+		$("#"+attr+" #textASTSRSWebpageLinkTitle").val("");
+		$("#"+attr+" #textASTSRSWebpageLinkTitle").attr("disabled","disabled");
+		$("#"+attr+" #textASTSRSWebpage").val("");
+		$("#"+attr+" #textASTSRSWebpage").attr("disabled","disabled");
+		$("#"+attr+" #textASTSEmailAddressLinkTitle").val("");
+		$("#"+attr+" #textASTSEmailAddressLinkTitle").attr("disabled","disabled");
+		$("#"+attr+" #textASTSRSEmailAddress").val("");
+		$("#"+attr+" #textASTSRSEmailAddress").attr("disabled","disabled");
+		$("#"+attr+" #textASTSRSTelephone").val("");
+		$("#"+attr+" #textASTSRSTelephone").attr("disabled","disabled");
+		$("#"+attr+" #textASTSDescriptionOfReproductionService").val("");
+		$("#"+attr+" #textASTSDescriptionOfReproductionService").attr("disabled","disabled");
+		$("#"+attr+" #buttonASAddADescriptionOfYourReproductionService").attr("disabled","disabled");
+	}else{
+		$("#"+attr+" #textASTSRSWebpageLinkTitle").removeAttr("disabled");
+		$("#"+attr+" #textASTSRSWebpage").removeAttr("disabled");
+		$("#"+attr+" #textASTSEmailAddressLinkTitle").removeAttr("disabled");
+		$("#"+attr+" #textASTSRSEmailAddress").removeAttr("disabled");
+		$("#"+attr+" #textASTSRSTelephone").removeAttr("disabled");
+		$("#"+attr+" #selectASTSRSSelectLanguage").removeAttr("disabled");
+		$("#"+attr+" #textASTSDescriptionOfReproductionService").removeAttr("disabled");
+		$("#"+attr+" #selectASTSRSMicroform").removeAttr("disabled");
+		$("#"+attr+" #selectASTSRSPhotographServices").removeAttr("disabled");
+		$("#"+attr+" #selectASTSRSDigitalServices").removeAttr("disabled");
+		$("#"+attr+" #selectASTSRSPhotocopyServices").removeAttr("disabled");
+		$("#"+attr+" #buttonASAddADescriptionOfYourReproductionService").removeAttr("disabled");
+	}
+}
 
 function latitudeOfInstitutionChanged(){
 	if(($("table#yiTableVisitorsAddress_1 #textYILatitude").val()!="") && ($("table#yiTableVisitorsAddress_1 #textYILatitude").val()!=null)){

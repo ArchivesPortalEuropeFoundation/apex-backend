@@ -423,7 +423,7 @@
 			</td>
 			<td>
 				<select id="selectASLibrary">
-					<s:iterator value="yesNoList" var="yesno"> 
+					<s:iterator value="noneYesNoList" var="yesno"> 
 						<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.libraryQuestion}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
 					</s:iterator>
 				</select>
@@ -494,7 +494,7 @@
 			</td>
 			<td>
 				<select id="selectASInternetAccess">
-					<s:iterator value="yesNoList" var="yesno"> 
+					<s:iterator value="noneYesNoList" var="yesno"> 
 						<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.libraryInternetAccessQuestion}" > selected=selected </s:if> ><s:property value="#yesno.value" /></option>
 					</s:iterator>
 				</select>
@@ -542,7 +542,7 @@
 			</td>
 			<td>
 				<select id="selectASTSRestaurationLab">
-					<s:iterator value="yesNoList" var="yesno"> 
+					<s:iterator value="noneYesNoList" var="yesno"> 
 						<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.technicalServicesQuestion}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
 					</s:iterator>
 				</select>
@@ -621,11 +621,11 @@
 
 		<tr>
 			<td id="reproductionServiceLabel">
-				<label for="selectASTSReproductionService"><s:property value="getText('label.ai.accessAndServices.reproductionService')" />:</label>
+				<label for="selectASTSReproductionService"><s:property value="getText('label.ai.accessAndServices.reproductionService')"/>:</label>
 			</td>
 			<td>
-				<select id="selectASTSReproductionService">
-					<s:iterator value="yesNoList" var="yesno"> 
+				<select id="selectASTSReproductionService" onchange="checkSelectASTSReproductionService($(this).parent().parent().parent().parent().attr('id'));" >
+					<s:iterator value="noneYesNoList" var="yesno"> 
 						<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.reproductionserQuestion}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
 					</s:iterator>
 				</select>
@@ -708,7 +708,7 @@
 			</td>
 			<td>
 				<select id="selectASTSRSMicroform">
-					<s:iterator value="yesNoList" var="yesno"> 
+					<s:iterator value="noneYesNoList" var="yesno"> 
 						<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.microfilmServices}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
 					</s:iterator>
 				</select>
@@ -723,7 +723,7 @@
 			</td>
 			<td>
 				<select id="selectASTSRSPhotographServices">
-					<s:iterator value="yesNoList" var="yesno"> 
+					<s:iterator value="noneYesNoList" var="yesno"> 
 						<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.photographicServices}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
 					</s:iterator>
 				</select>
@@ -738,7 +738,7 @@
 			</td>
 			<td>
 				<select id="selectASTSRSDigitalServices">
-					<s:iterator value="yesNoList" var="yesno"> 
+					<s:iterator value="noneYesNoList" var="yesno"> 
 						<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.digitisationServices}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
 					</s:iterator>
 				</select>
@@ -753,7 +753,7 @@
 			</td>
 			<td>
 				<select id="selectASTSRSPhotocopyServices">
-					<s:iterator value="yesNoList" var="yesno"> 
+					<s:iterator value="noneYesNoList" var="yesno"> 
 						<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.photocopyingServices}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
 					</s:iterator>
 				</select>

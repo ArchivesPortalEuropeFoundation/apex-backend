@@ -2133,8 +2133,8 @@ public class EAG2012Loader{
 
 					// Technical Services
 					if(repository.getServices().getTechservices()!=null){
-						this.setTechnicalServicesQuestion(repository.getServices().getTechservices().getRestorationlab().getQuestion());
-						if(repository.getServices().getTechservices().getRestorationlab().getDescriptiveNote()!=null){
+						this.setTechnicalServicesQuestion((repository.getServices().getTechservices().getRestorationlab()!=null)?repository.getServices().getTechservices().getRestorationlab().getQuestion():Eag2012.OPTION_NONE);
+						if(repository.getServices().getTechservices().getRestorationlab()!=null && repository.getServices().getTechservices().getRestorationlab().getDescriptiveNote()!=null){
 							ps = repository.getServices().getTechservices().getRestorationlab().getDescriptiveNote().getP();
 							for (int i = 0; i < ps.size(); i++) {
 								this.setTechnicalServicesDescription(ps.get(i).getContent());
@@ -2167,7 +2167,9 @@ public class EAG2012Loader{
 							}
 						}
 						if(repository.getServices().getTechservices().getReproductionser()!=null){
-							this.setReproductionserQuestion(repository.getServices().getTechservices().getReproductionser().getQuestion());
+							if(repository.getServices().getTechservices().getReproductionser().getQuestion()!=null && !repository.getServices().getTechservices().getReproductionser().getQuestion().equalsIgnoreCase(Eag2012.OPTION_NONE)){
+								this.setReproductionserQuestion(repository.getServices().getTechservices().getReproductionser().getQuestion());
+							}
 							if(repository.getServices().getTechservices().getReproductionser().getDescriptiveNote()!=null){
 								ps = repository.getServices().getTechservices().getReproductionser().getDescriptiveNote().getP();
 								for (int i = 0; i < ps.size(); i++) {
@@ -2194,16 +2196,16 @@ public class EAG2012Loader{
 								}
 							}
 							if(repository.getServices().getTechservices().getReproductionser()!=null){
-								if(repository.getServices().getTechservices().getReproductionser().getMicroformser()!=null){
+								if(repository.getServices().getTechservices().getReproductionser().getMicroformser()!=null && repository.getServices().getTechservices().getReproductionser().getMicroformser().getQuestion()!=null && !repository.getServices().getTechservices().getReproductionser().getMicroformser().getQuestion().equalsIgnoreCase(Eag2012.OPTION_NONE)){
 									this.setMicrofilmServices(repository.getServices().getTechservices().getReproductionser().getMicroformser().getQuestion());
 								}
-								if(repository.getServices().getTechservices().getReproductionser().getPhotographser()!=null){
+								if(repository.getServices().getTechservices().getReproductionser().getPhotographser()!=null && repository.getServices().getTechservices().getReproductionser().getPhotographser().getQuestion()!=null && !repository.getServices().getTechservices().getReproductionser().getPhotographser().getQuestion().equalsIgnoreCase(Eag2012.OPTION_NONE)){
 									this.setPhotographicServices(repository.getServices().getTechservices().getReproductionser().getPhotographser().getQuestion());
 								}
-								if(repository.getServices().getTechservices().getReproductionser().getDigitalser()!=null){
+								if(repository.getServices().getTechservices().getReproductionser().getDigitalser()!=null && repository.getServices().getTechservices().getReproductionser().getDigitalser().getQuestion()!=null && !repository.getServices().getTechservices().getReproductionser().getDigitalser().getQuestion().equalsIgnoreCase(Eag2012.OPTION_NONE)){
 									this.setDigitisationServices(repository.getServices().getTechservices().getReproductionser().getDigitalser().getQuestion());
 								}
-								if(repository.getServices().getTechservices().getReproductionser().getPhotocopyser()!=null){
+								if(repository.getServices().getTechservices().getReproductionser().getPhotocopyser()!=null && repository.getServices().getTechservices().getReproductionser().getPhotocopyser().getQuestion()!=null && !repository.getServices().getTechservices().getReproductionser().getPhotocopyser().getQuestion().equalsIgnoreCase(Eag2012.OPTION_NONE)){
 									this.setPhotocopyingServices(repository.getServices().getTechservices().getReproductionser().getPhotocopyser().getQuestion());
 								}
 							}

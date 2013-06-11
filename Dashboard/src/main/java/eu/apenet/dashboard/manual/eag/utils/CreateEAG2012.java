@@ -260,8 +260,9 @@ public class CreateEAG2012 {
 
 								conventionDeclaration.setAbbreviation(abbreviation);
 							}
-
-							this.eag.getControl().getConventionDeclaration().add(conventionDeclaration);
+							if(citation.getContent()!=null && !citation.getContent().isEmpty()){
+								this.eag.getControl().getConventionDeclaration().add(conventionDeclaration);
+							}
 						}
 					}
 				}
@@ -410,7 +411,9 @@ public class CreateEAG2012 {
 									}
 								}
 							}
-							resourceRelation.setRelationEntry(relationEntry);
+							if(relationEntry.getContent()!=null && !relationEntry.getContent().isEmpty()){
+								resourceRelation.setRelationEntry(relationEntry);
+							}
 							boolean found = false;
 							//if (Eag2012.RESOURCE_RELATION.equalsIgnoreCase(sectionValueKey)){ //TODO: current situation from ticket 543 
 								for(int x=0;x<this.eag.getRelations().getResourceRelation().size();x++){
@@ -425,7 +428,9 @@ public class CreateEAG2012 {
 								}
 								if(!found){
 									//TODO: current situation from ticket 543
-									this.eag.getRelations().getResourceRelation().add(resourceRelation);
+									if(resourceRelation.getRelationEntry()!=null || (resourceRelation.getHref()!=null && !resourceRelation.getHref().isEmpty())){
+										this.eag.getRelations().getResourceRelation().add(resourceRelation);
+									}
 								}
 							//}
 						}
@@ -524,6 +529,7 @@ public class CreateEAG2012 {
 							eagRelation.getRelationEntry().add(relationEntry);
 							this.eag.getRelations().getEagRelation().add(eagRelation);
 						}
+						this.eag.setRelations(null);
 					}
 				}
 			}
@@ -673,15 +679,15 @@ public class CreateEAG2012 {
 		// eag/archguide/desc/repositories/repository/repositoryName
 		// Main institution.
 		Repository mainRepository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
-		RepositoryName repositoryName = null;
-		if (mainRepository.getRepositoryName() == null) {
-			repositoryName = new RepositoryName();
-		} else {
-			repositoryName = mainRepository.getRepositoryName();
-		}
-		repositoryName.setContent(this.eag2012.getAutformValue().get(0));
-
-		mainRepository.setRepositoryName(repositoryName);
+//		RepositoryName repositoryName = null;
+//		if (mainRepository.getRepositoryName() == null) {
+//			repositoryName = new RepositoryName();
+//		} else {
+//			repositoryName = mainRepository.getRepositoryName();
+//		}
+//		repositoryName.setContent(this.eag2012.getAutformValue().get(0));
+//		
+//		mainRepository.setRepositoryName(repositoryName);
 
 		// Rest of repositories.
 		if (this.eag2012.getRepositoryNameValue() != null) {
@@ -702,15 +708,15 @@ public class CreateEAG2012 {
 
 		// eag/archguide/desc/repositories/repository/repositoryRole
 		// Main institution.
-		RepositoryRole repositoryRole = null;
-		if (mainRepository.getRepositoryRole() == null) {
-			repositoryRole = new RepositoryRole();
-		} else {
-			repositoryRole = mainRepository.getRepositoryRole();
-		}
-		repositoryRole.setValue(Eag2012.OPTION_ROLE_HEADQUARTERS_TEXT);
-
-		mainRepository.setRepositoryRole(repositoryRole);
+//		RepositoryRole repositoryRole = null;
+//		if (mainRepository.getRepositoryRole() == null) {
+//			repositoryRole = new RepositoryRole();
+//		} else {
+//			repositoryRole = mainRepository.getRepositoryRole();
+//		}
+//		repositoryRole.setValue(Eag2012.OPTION_ROLE_HEADQUARTERS_TEXT);
+//
+//		mainRepository.setRepositoryRole(repositoryRole);
 
 		// Rest of repositories.
 		if (this.eag2012.getRepositoryRoleValue() != null) {
@@ -1408,8 +1414,10 @@ public class CreateEAG2012 {
 						Citation citation = new Citation();
 						citation.setHref(citationHrefList.get(j));
 	
-						directions.getContent().add(citation);
-						repository.getDirections().add(directions);
+						if((directionsValueList.get(j)!=null && !directionsValueList.get(j).isEmpty()) || (citation.getHref()!=null && !citation.getHref().isEmpty())){
+							directions.getContent().add(citation);
+							repository.getDirections().add(directions);
+						}
 					}
 				}
 			}
@@ -1917,53 +1925,59 @@ public class CreateEAG2012 {
 		// eag/archguide/desc/repositories/repository/services/library/question
 		if (this.eag2012.getLibraryQuestion() != null) {
 			for (int i = 0; i < this.eag2012.getLibraryQuestion().size(); i++) {
-				// Repository
-				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
-				if (repository.getServices() == null) {
-					repository.setServices(new Services());
+				if(!this.eag2012.getLibraryQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)){
+					// Repository
+					Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+					if (repository.getServices() == null) {
+						repository.setServices(new Services());
+					}
+					if (repository.getServices().getLibrary() == null) {
+						repository.getServices().setLibrary(new Library());
+					}
+				
+					repository.getServices().getLibrary().setQuestion(this.eag2012.getLibraryQuestion().get(i));
 				}
-				if (repository.getServices().getLibrary() == null) {
-					repository.getServices().setLibrary(new Library());
-				}
-
-				repository.getServices().getLibrary().setQuestion(this.eag2012.getLibraryQuestion().get(i));
 			}
 		}
 
 		// eag/archguide/desc/repositories/repository/services/internetAccess
 		if (this.eag2012.getInternetAccessQuestion() != null) {
 			for (int i = 0; i < this.eag2012.getInternetAccessQuestion().size(); i++) {
-				// Repository
-				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
-				if (repository.getServices() == null) {
-					repository.setServices(new Services());
-				}
-				if (repository.getServices().getInternetAccess() == null) {
-					repository.getServices().setInternetAccess(new InternetAccess());
-				}
+				if(!this.eag2012.getInternetAccessQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)){
+					// Repository
+					Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+					if (repository.getServices() == null) {
+						repository.setServices(new Services());
+					}
+					if (repository.getServices().getInternetAccess() == null) {
+						repository.getServices().setInternetAccess(new InternetAccess());
+					}
 
-				repository.getServices().getInternetAccess().setQuestion(this.eag2012.getInternetAccessQuestion().get(i));
-				getDescriptiveNote(repository.getServices().getInternetAccess());
+					repository.getServices().getInternetAccess().setQuestion(this.eag2012.getInternetAccessQuestion().get(i));
+					getDescriptiveNote(repository.getServices().getInternetAccess());
+				}
 			}
 		}
 
 		// eag/archguide/desc/repositories/repository/services/techservices/restorationlab
 		if (this.eag2012.getRestorationlabQuestion() != null) {
 			for (int i = 0; i < this.eag2012.getRestorationlabQuestion().size(); i++) {
-				// Repository
-				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
-				if (repository.getServices() == null) {
-					repository.setServices(new Services());
-				}
-				if (repository.getServices().getTechservices() == null) {
-					repository.getServices().setTechservices(new Techservices());
-				}
-				if (repository.getServices().getTechservices().getRestorationlab() == null) {
-					repository.getServices().getTechservices().setRestorationlab(new Restorationlab());
-				}
+				if(!this.eag2012.getRestorationlabQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)){
+					// Repository
+					Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+					if (repository.getServices() == null) {
+						repository.setServices(new Services());
+					}
+					if (repository.getServices().getTechservices() == null) {
+						repository.getServices().setTechservices(new Techservices());
+					}
+					if (repository.getServices().getTechservices().getRestorationlab() == null) {
+						repository.getServices().getTechservices().setRestorationlab(new Restorationlab());
+					}
 
-				repository.getServices().getTechservices().getRestorationlab().setQuestion(this.eag2012.getRestorationlabQuestion().get(i));
-				getDescriptiveNote(repository.getServices().getTechservices().getRestorationlab());
+					repository.getServices().getTechservices().getRestorationlab().setQuestion(this.eag2012.getRestorationlabQuestion().get(i));
+					getDescriptiveNote(repository.getServices().getTechservices().getRestorationlab());
+				}
 			}
 		}
 
@@ -1972,55 +1986,65 @@ public class CreateEAG2012 {
 			for (int i = 0; i < this.eag2012.getReproductionserQuestion().size(); i++) {
 				// Repository
 				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
-				if (repository.getServices() == null) {
-					repository.setServices(new Services());
-				}
-				if (repository.getServices().getTechservices() == null) {
-					repository.getServices().setTechservices(new Techservices());
-				}
-				if (repository.getServices().getTechservices().getReproductionser() == null) {
-					repository.getServices().getTechservices().setReproductionser(new Reproductionser());
-				}
-
-				// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/question
-				repository.getServices().getTechservices().getReproductionser().setQuestion(this.eag2012.getReproductionserQuestion().get(i));
-
-				// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/descriptiveNote
-				getDescriptiveNote(repository.getServices().getTechservices().getReproductionser());
-
-				// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/microformser
-				if (this.eag2012.getMicroformserQuestion() != null && !this.eag2012.getMicroformserQuestion().isEmpty()) {
-					if (repository.getServices().getTechservices().getReproductionser().getMicroformser() == null) {
-						repository.getServices().getTechservices().getReproductionser().setMicroformser(new Microformser());
+				
+				if(this.eag2012.getReproductionserQuestion().get(i)!=null && 
+						(!this.eag2012.getReproductionserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE) || 
+						!this.eag2012.getMicroformserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE) || 
+						!this.eag2012.getPhotographserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE) || 
+						!this.eag2012.getDigitalserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE) || 
+						!this.eag2012.getPhotocopyserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)
+								)){
+					if (repository.getServices() == null) {
+						repository.setServices(new Services());
 					}
-					repository.getServices().getTechservices().getReproductionser().getMicroformser().setQuestion(this.eag2012.getMicroformserQuestion().get(i));
-				}
-
-				// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/photographser
-				if (this.eag2012.getPhotographserQuestion() != null && !this.eag2012.getPhotographserQuestion().isEmpty()) {
-					if (repository.getServices().getTechservices().getReproductionser().getPhotographser() == null) {
-						repository.getServices().getTechservices().getReproductionser().setPhotographser(new Photographser());
+					if (repository.getServices().getTechservices() == null) {
+						repository.getServices().setTechservices(new Techservices());
 					}
-					repository.getServices().getTechservices().getReproductionser().getPhotographser().setQuestion(this.eag2012.getPhotographserQuestion().get(i));
-				}
-
-				// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/digitalser
-				if (this.eag2012.getDigitalserQuestion() != null && !this.eag2012.getDigitalserQuestion().isEmpty()) {
-					if (repository.getServices().getTechservices().getReproductionser().getDigitalser() == null) {
-						repository.getServices().getTechservices().getReproductionser().setDigitalser(new Digitalser());
-					}
-					repository.getServices().getTechservices().getReproductionser().getDigitalser().setQuestion(this.eag2012.getDigitalserQuestion().get(i));
-				}
-
-				// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/photocopyser
-				if (this.eag2012.getPhotocopyserQuestion() != null && !this.eag2012.getPhotocopyserQuestion().isEmpty()) {
-					if(repository.getServices().getTechservices().getReproductionser()==null){
+					if (repository.getServices().getTechservices().getReproductionser() == null) {
 						repository.getServices().getTechservices().setReproductionser(new Reproductionser());
 					}
-					if (repository.getServices().getTechservices().getReproductionser().getPhotocopyser() == null) {
-						repository.getServices().getTechservices().getReproductionser().setPhotocopyser(new Photocopyser());
+					// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/question
+					if(!this.eag2012.getReproductionserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)){
+						repository.getServices().getTechservices().getReproductionser().setQuestion(this.eag2012.getReproductionserQuestion().get(i));
 					}
-					repository.getServices().getTechservices().getReproductionser().getPhotocopyser().setQuestion(this.eag2012.getPhotocopyserQuestion().get(i));
+					
+					// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/descriptiveNote
+					getDescriptiveNote(repository.getServices().getTechservices().getReproductionser());
+
+					// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/microformser
+					if (this.eag2012.getMicroformserQuestion() != null && !this.eag2012.getMicroformserQuestion().isEmpty() && !this.eag2012.getMicroformserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+						if (repository.getServices().getTechservices().getReproductionser().getMicroformser() == null) {
+							repository.getServices().getTechservices().getReproductionser().setMicroformser(new Microformser());
+						}
+						repository.getServices().getTechservices().getReproductionser().getMicroformser().setQuestion(this.eag2012.getMicroformserQuestion().get(i));
+					}
+
+					// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/photographser
+					if (this.eag2012.getPhotographserQuestion() != null && !this.eag2012.getPhotographserQuestion().isEmpty() && !this.eag2012.getPhotographserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+						if (repository.getServices().getTechservices().getReproductionser().getPhotographser() == null) {
+							repository.getServices().getTechservices().getReproductionser().setPhotographser(new Photographser());
+						}
+						repository.getServices().getTechservices().getReproductionser().getPhotographser().setQuestion(this.eag2012.getPhotographserQuestion().get(i));
+					}
+
+					// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/digitalser
+					if (this.eag2012.getDigitalserQuestion() != null && !this.eag2012.getDigitalserQuestion().isEmpty() && !this.eag2012.getDigitalserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+						if (repository.getServices().getTechservices().getReproductionser().getDigitalser() == null) {
+							repository.getServices().getTechservices().getReproductionser().setDigitalser(new Digitalser());
+						}
+						repository.getServices().getTechservices().getReproductionser().getDigitalser().setQuestion(this.eag2012.getDigitalserQuestion().get(i));
+					}
+
+					// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/photocopyser
+					if (this.eag2012.getPhotocopyserQuestion() != null && !this.eag2012.getPhotocopyserQuestion().isEmpty() && !this.eag2012.getPhotocopyserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+						if(repository.getServices().getTechservices().getReproductionser()==null){
+							repository.getServices().getTechservices().setReproductionser(new Reproductionser());
+						}
+						if (repository.getServices().getTechservices().getReproductionser().getPhotocopyser() == null) {
+							repository.getServices().getTechservices().getReproductionser().setPhotocopyser(new Photocopyser());
+						}
+						repository.getServices().getTechservices().getReproductionser().getPhotocopyser().setQuestion(this.eag2012.getPhotocopyserQuestion().get(i));
+					}
 				}
 			}
 		}

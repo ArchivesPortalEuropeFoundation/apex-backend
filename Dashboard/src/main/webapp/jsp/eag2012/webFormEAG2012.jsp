@@ -77,6 +77,32 @@
 					if(accessibilityInformation.length>0 || accessibilityInformationLang.length>0){
 						yiAddFutherInformationOnExistingFacilities();
 					}
+					$("#selectASTSReproductionService").each(function(){
+						if($(this).val()=="none"){
+							var parent = $(this).parent().parent().parent().parent().attr("id");
+							$("#"+parent+" #selectASTSRSMicroform").attr("disabled","disabled");
+							$("#"+parent+" #selectASTSRSPhotographServices").attr("disabled","disabled");
+							$("#"+parent+" #selectASTSRSDigitalServices").attr("disabled","disabled");
+							$("#"+parent+" #selectASTSRSPhotocopyServices").attr("disabled","disabled");
+							$("#"+parent+" #selectASTSRSMicroform option[value='none']").attr("selected","selected");
+							$("#"+parent+" #selectASTSRSMicroform").attr("disabled","disabled");
+							$("#"+parent+" #selectASTSRSPhotographServices option[value='none']").attr("selected","selected");
+							$("#"+parent+" #selectASTSRSPhotographServices").attr("disabled","disabled");
+							$("#"+parent+" #selectASTSRSDigitalServices option[value='none']").attr("selected","selected");
+							$("#"+parent+" #selectASTSRSDigitalServices").attr("disabled","disabled");
+							$("#"+parent+" #selectASTSRSPhotocopyServices option[value='none']").attr("selected","selected");
+							$("#"+parent+" #selectASTSRSPhotocopyServices").attr("disabled","disabled");
+							$("#"+parent+" #selectASTSRSSelectLanguage option[value='none']").attr("selected","selected");
+							$("#"+parent+" #selectASTSRSSelectLanguage").attr("disabled","disabled");
+							$("#"+parent+" #textASTSRSWebpageLinkTitle").attr("disabled","disabled");
+							$("#"+parent+" #textASTSRSWebpage").attr("disabled","disabled");
+							$("#"+parent+" #textASTSEmailAddressLinkTitle").attr("disabled","disabled");
+							$("#"+parent+" #textASTSRSEmailAddress").attr("disabled","disabled");
+							$("#"+parent+" #textASTSRSTelephone").attr("disabled","disabled");
+							$("#"+parent+" #textASTSDescriptionOfReproductionService").attr("disabled","disabled");
+							$("#"+parent+" #buttonASAddADescriptionOfYourReproductionService").attr("disabled","disabled");
+						}
+					});
 				});
 			</script>
 			<div id="container">

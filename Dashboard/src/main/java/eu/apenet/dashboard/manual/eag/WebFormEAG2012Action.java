@@ -52,6 +52,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	 */
 
     private Map<String,String> yesNoMap = new HashMap<String,String>();
+    private Map<String,String> noneYesNoMap = new LinkedHashMap<String,String>();
     private Map<String,String> typeOfInstitutionMap = new LinkedHashMap<String,String>();
     private Map<String,String> continentOfInstitutionMap = new LinkedHashMap<String,String>();
     private Map<String,String> photographMap = new LinkedHashMap<String,String>();
@@ -113,6 +114,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		this.getYesNoMap().put(Eag2012.OPTION_YES, getText("label.ai.tabs.commons.option.yes"));
 		this.getYesNoMap().put(Eag2012.OPTION_NO, getText("label.ai.tabs.commons.option.no"));
 		return this.getYesNoMap();
+	}
+	public Map<String,String> getNoneYesNoList() {
+		this.getNoneYesNoMap().put(Eag2012.OPTION_NONE, "---");
+		this.getNoneYesNoMap().put(Eag2012.OPTION_YES, getText("label.ai.tabs.commons.option.yes"));
+		this.getNoneYesNoMap().put(Eag2012.OPTION_NO, getText("label.ai.tabs.commons.option.no"));
+		return this.getNoneYesNoMap();
 	}
 
 	public Map<String,String> getTypeOfInstitutionList() {
@@ -192,6 +199,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	 */
 	public Map<String,String> getYesNoMap() {
 		return this.yesNoMap;
+	}
+	
+	public Map<String,String> getNoneYesNoMap(){
+		return this.noneYesNoMap;
 	}
 
 	/**

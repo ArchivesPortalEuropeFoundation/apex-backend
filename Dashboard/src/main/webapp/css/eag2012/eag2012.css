@@ -252,6 +252,13 @@ input[type="button"]:hover {
 	border-radius: 15px;
 }
 
+input[type="button"]:disabled {
+	color: #A4AFB6;
+	background-color: #E8E6E2;
+	border-radius: 15px;
+	cursor: auto;
+}
+
 #buttonAddFutherInformationOnExistingFacilities, #buttonAddFutherInformationOnExistingFacilities2, #buttonAddReferencetoyourinstitutionsholdingsguide {
 	display: inline-block;
 	vertical-align: top;
