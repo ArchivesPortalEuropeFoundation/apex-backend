@@ -394,7 +394,7 @@ public class CreateEAG2012 {
 														}
 
 														if (Eag2012.RESOURCE_RELATION.equalsIgnoreCase(sectionPValuesKey)
-																&& Eag2012.RESOURCE_RELATION.equalsIgnoreCase(sectionLangKey)) {
+																&& Eag2012.RESOURCE_RELATION.equalsIgnoreCase(sectionPLangKey)) {
 															DescriptiveNote descriptiveNote = null;
 															if (resourceRelation.getDescriptiveNote() == null) {
 																descriptiveNote = new DescriptiveNote();
@@ -529,7 +529,9 @@ public class CreateEAG2012 {
 							eagRelation.getRelationEntry().add(relationEntry);
 							this.eag.getRelations().getEagRelation().add(eagRelation);
 						}
-						this.eag.setRelations(null);
+						if(this.eag.getRelations().getEagRelation()==null || this.eag.getRelations().getEagRelation().isEmpty()){
+							this.eag.setRelations(null);
+						}
 					}
 				}
 			}
