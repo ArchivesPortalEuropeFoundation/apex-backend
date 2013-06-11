@@ -50,6 +50,33 @@
 			  </select>
 			</td>
 		</tr>
+
+		<s:if test="%{loader.otherRecordId.size() > 0}">
+			<s:iterator var="current" value="loader.otherRecordId" status="status">
+				<tr>
+					<td>
+						<label for="otherRepositorId_<s:property value="#status.index" />"> <s:property value="getText('label.ai.yourinstitution.futherId')" />:</label>
+					</td>
+					<td>
+						<input type="text" id="otherRepositorId_<s:property value="#status.index" />" value="<s:property value="#current" />" onclick="idOfInstitutionChanged('<s:property value="#status.index" />');" onkeyup="idOfInstitutionChanged('<s:property value="#status.index" />');" />
+					</td>
+					<td class="labelLeft">
+						<label for="selectOtherRepositorIdCodeISIL_<s:property value="#status.index" />"> <s:property value="getText('label.ai.tabs.commons.codeISL')" />:</label>
+					</td>
+					<td>
+						<select id="selectOtherRepositorIdCodeISIL_<s:property value="#status.index" />" onclick="codeISILChanged('<s:property value="#status.index" />');">
+						  	<s:iterator value="yesNoList" var="list">
+						  		<option value='<s:property value="#list.key"/>'
+						  			<s:if test='%{#list.key == "no" && #current != loader.recordId}'>selected=selected</s:if>>
+						  			<s:property value="#list.value"/>
+						  		</option>
+						  	</s:iterator>
+						</select>
+					</td>
+				</tr>
+			</s:iterator>
+		</s:if>
+
 		<tr>
 			<td colspan="2">
 				<input type="button" id="buttonAddFutherIds" value="<s:property value="getText('label.ai.yourinstitution.addFutherIds')" />" onclick="addFurtherIds('<s:property value="getText('label.ai.yourinstitution.futherId')" />','<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />','<s:property value="getText('label.ai.tabs.commons.codeISL')" />');" />
@@ -63,6 +90,7 @@
 				<input type="text" id="textYIIdUsedInAPE" value="<s:if test="%{!newEag}">${loader.recordId}</s:if>" disabled="disabled" />
 			</td>
 		</tr>
+
 		<tr>
 			<td>
 				<label for="textYINameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.nameOfTheInstitution')"/><span class="required">*</span>:</label>
@@ -109,75 +137,200 @@
 		</tr>
 	</table>
 
-	<table id="yiTableVisitorsAddress_1" class="tablePadding">
-		<tr>
-			<td id="visitorAdressLabel" colspan="4">
-				<s:property value="getText('label.ai.tabs.commons.visitorAddress')" />
-			</td>
-			
-		</tr>
-		<tr>
-			<td>
-				<label for="textYIStreet"><s:property value="getText('label.ai.tabs.commons.street')"/><span class="required">*</span>:</label>
-			</td>
-			<td>
-				<input type="text" id="textYIStreet" onchange="streetOfInstitutionChanged();" value="${loader.street}" />
-			</td>
-			<td class="labelLeft">
-				<label for="selectYIVASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
-			</td>
-			<td>
-				<select id="selectYIVASelectLanguage" onchange="streetOfInstitutionLanguageChanged();" >
-					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.streetLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
-					</s:iterator>
-				</select>
-			</td>
-		</tr>
+	<s:if test="%{loader.yiStreet.size() > 0}">
+		<s:set var="counter" value="0"/>
+		<s:iterator var="current" value="loader.yiStreet" status="status">
+			<table id="yiTableVisitorsAddress_<s:property value="%{#status.index + 1}" />" class="tablePadding">
+				<tr>
+					<td id="visitorAdressLabel" colspan="4">
+						<s:property value="getText('label.ai.tabs.commons.visitorAddress')" />
+					</td>
+				</tr>
+	
+				<tr>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<label for="textYIStreet"><s:property value="getText('label.ai.tabs.commons.street')"/><span class="required">*</span>:</label>
+						</s:if>
+						<s:else>
+							<label for="textYIStreet"><s:property value="getText('label.ai.tabs.commons.street')"/>:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<input type="text" id="textYIStreet" onchange="streetOfInstitutionChanged();" value="<s:property value="#current" />" />
+						</s:if>
+						<s:else>
+							<input type="text" id="textYIStreet" value="<s:property value="#current" />" />
+						</s:else>
+					</td>
+					<td class="labelLeft">
+						<label for="selectYIVASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<select id="selectYIVASelectLanguage" onchange="streetOfInstitutionLanguageChanged();" >
+						</s:if>
+						<s:else>
+							<select id="selectYIVASelectLanguage">
+						</s:else>
+							<s:iterator value="languageList" var="language"> 
+								<option value="<s:property value="#language.key" />"
+									<s:if test="%{#language.key == loader.yiStreetLang[#counter]}" > selected=selected </s:if>>
+									<s:property value="#language.value" />
+								</option>
+							</s:iterator>
+						</select>
+					</td>
+				</tr>
+	
+				<tr>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<label for="textYICity"><s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')"/><span class="required">*</span>:</label>
+						</s:if>
+						<s:else>
+							<label for="textYICity"><s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')"/>:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<input type="text" id="textYICity" onchange="cityOfInstitutionChanged();" value="<s:property value="loader.yiMunicipalityPostalcode[#counter]" />" />
+						</s:if>
+						<s:else>
+							<input type="text" id="textYICity" value="<s:property value="loader.yiMunicipalityPostalcode[#counter]" />" />
+						</s:else>
+					</td>
+					<td colspan="2">
+					</td>
+				</tr>
 
-		<tr>
-			<td>
-				<label for="textYICity"><s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')"/><span class="required">*</span>:</label>
-			</td>
-			<td>
-				<input type="text" id="textYICity" onchange="cityOfInstitutionChanged();" value="${loader.municipalityPostalcode}" />
-			</td>
-			<td colspan="2">
-			</td>
-		</tr>
+				<tr>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<label for="textYICountry"><s:property value="getText('label.ai.tabs.commons.country')"/><span class="required">*</span>:</label>
+						</s:if>
+						<s:else>
+							<label for="textYICountry"><s:property value="getText('label.ai.tabs.commons.country')"/>:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<input type="text" id="textYICountry" onchange="countryOfInstitutionChanged();" value="<s:property value="loader.yiCountry[#counter]" />" />
+						</s:if>
+						<s:else>
+							<input type="text" id="textYICountry" value="<s:property value="loader.yiCountry[#counter]" />" />
+						</s:else>
+					</td>
+					<td colspan="2">
+					</td>
+				</tr>
 
-		<tr>
-			<td>
-				<label for="textYICountry"><s:property value="getText('label.ai.tabs.commons.country')"/><span class="required">*</span>:</label>
-			</td>
-			<td>
-				<input type="text" id="textYICountry" onchange="countryOfInstitutionChanged();" value="${loader.country}" />
-			</td>
-			<td colspan="2">
-			</td>
-		</tr>
+				<tr>
+					<td id="coordinatesLabel" colspan="4">
+						<a href="http://itouchmap.com/latlong.html" target="_blank"><s:property value="getText('label.ai.tabs.commons.coordinates')" /></a>
+					</td>
+				</tr>
+	
+				<tr>
+					<td>
+						<label for="textYILatitude"><s:property value="getText('label.ai.tabs.commons.latitude')"/></label>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<input type="text" id="textYILatitude" onchange="latitudeOfInstitutionChanged();" value="<s:property value="loader.yiLatitude[#counter]" />" />
+						</s:if>
+						<s:else>
+							<input type="text" id="textYILatitude" value="<s:property value="loader.yiLatitude[#counter]" />" />
+						</s:else>
+					</td>
+					<td class="labelLeft">
+						<label for="textYILongitude"><s:property value="getText('label.ai.tabs.commons.longitude')"/></label>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<input type="text" id="textYILongitude" onchange="longitudeOfInstitutionChanged();" value="<s:property value="loader.yiLongitude[#counter]" />" />
+						</s:if>
+						<s:else>
+							<input type="text" id="textYILongitude" value="<s:property value="loader.yiLongitude[#counter]" />" />
+						</s:else>
+					</td>
+				</tr>
+			</table>
+			<s:set var="counter" value="%{#counter + 1}"/>
+		</s:iterator>
+	</s:if>
+	<s:else>
+		<table id="yiTableVisitorsAddress_1" class="tablePadding">
+			<tr>
+				<td id="visitorAdressLabel" colspan="4">
+					<s:property value="getText('label.ai.tabs.commons.visitorAddress')" />
+				</td>
+			</tr>
 
-		<tr>
-			<td id="coordinatesLabel" colspan="4">
-				<a href="http://itouchmap.com/latlong.html" target="_blank"><s:property value="getText('label.ai.tabs.commons.coordinates')" /></a>
-			</td>
-		</tr>
+			<tr>
+				<td>
+					<label for="textYIStreet"><s:property value="getText('label.ai.tabs.commons.street')"/><span class="required">*</span>:</label>
+				</td>
+				<td>
+					<input type="text" id="textYIStreet" onchange="streetOfInstitutionChanged();" />
+				</td>
+				<td class="labelLeft">
+					<label for="selectYIVASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				</td>
+				<td>
+					<select id="selectYIVASelectLanguage" onchange="streetOfInstitutionLanguageChanged();" >
+						<s:iterator value="languageList" var="language"> 
+							<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+						</s:iterator>
+					</select>
+				</td>
+			</tr>
 
-		<tr>
-			<td>
-				<label for="textYILatitude"><s:property value="getText('label.ai.tabs.commons.latitude')"/></label>
-			</td>
-			<td>
-				<input type="text" id="textYILatitude" onchange="latitudeOfInstitutionChanged();" value="${loader.latitude}" />
-			</td>
-			<td class="labelLeft">
-				<label for="textYILongitude"><s:property value="getText('label.ai.tabs.commons.longitude')"/></label>
-			</td>
-			<td>
-				<input type="text" id="textYILongitude" onchange="longitudeOfInstitutionChanged();" value="${loader.longitude}" />
-			</td>
-		</tr>
-	</table>
+			<tr>
+				<td>
+					<label for="textYICity"><s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')"/><span class="required">*</span>:</label>
+				</td>
+				<td>
+					<input type="text" id="textYICity" onchange="cityOfInstitutionChanged();" />
+				</td>
+				<td colspan="2">
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<label for="textYICountry"><s:property value="getText('label.ai.tabs.commons.country')"/><span class="required">*</span>:</label>
+				</td>
+				<td>
+					<input type="text" id="textYICountry" onchange="countryOfInstitutionChanged();" />
+				</td>
+				<td colspan="2">
+				</td>
+			</tr>
+
+			<tr>
+				<td id="coordinatesLabel" colspan="4">
+					<a href="http://itouchmap.com/latlong.html" target="_blank"><s:property value="getText('label.ai.tabs.commons.coordinates')" /></a>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<label for="textYILatitude"><s:property value="getText('label.ai.tabs.commons.latitude')"/></label>
+				</td>
+				<td>
+					<input type="text" id="textYILatitude" onchange="latitudeOfInstitutionChanged();" />
+				</td>
+				<td class="labelLeft">
+					<label for="textYILongitude"><s:property value="getText('label.ai.tabs.commons.longitude')"/></label>
+				</td>
+				<td>
+					<input type="text" id="textYILongitude" onchange="longitudeOfInstitutionChanged();" />
+				</td>
+			</tr>
+		</table>
+	</s:else>
 
 	<table id="yiTableButtonAddVisitorsAddress" class="tablePadding">
 		<tr>
@@ -189,14 +342,96 @@
 		</tr>
 	</table>
 
+	<s:if test="%{loader.yiStreetPostal.size() > 0}">
+		<s:set var="counter" value="0"/>
+		<s:iterator var="current" value="loader.yiStreetPostal" status="status">
+			<table id="yiTablePostalAddress_<s:property value="%{#status.index + 1}" />" class="tablePadding">
+				<tr id="yiPostalAddressLabel">
+					<td id="postalAddressLabel" colspan="4">
+						<s:property value="getText('label.ai.yourinstitution.postalAddress')" />
+					</td>
+				</tr>
+	
+				<tr id="yiPostalAddressStreet">
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<label for="textYIPAStreet"><s:property value="getText('label.ai.tabs.commons.street')" /><span class="required">*</span>:</label>
+						</s:if>
+						<s:else>
+							<label for="textYIPAStreet"><s:property value="getText('label.ai.tabs.commons.street')" />:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<input type="text" id="textYIPAStreet" onchange="postalAddressStreetChanged();" value="<s:property value="#current" />" />
+						</s:if>
+						<s:else>
+							<input type="text" id="textYIPAStreet" value="<s:property value="#current" />" />
+						</s:else>
+					</td>
+					<td id="yiPostalAddressLanguage" class="labelLeft">
+						<label for="selectYIPASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<select id="selectYIPASelectLanguage" onchange="postalAddressLanguageChanged();">
+						</s:if>
+						<s:else>
+							<select id="selectYIPASelectLanguage">
+						</s:else>
+							<s:iterator value="languageList" var="language"> 
+								<option value="<s:property value="#language.key" />"
+									<s:if test="%{#language.key == loader.yiStreetPostalLang[#counter]}" > selected=selected </s:if>>
+									<s:property value="#language.value" />
+								</option>
+							</s:iterator>	
+						</select>
+					</td>
+				</tr>
+	
+				<tr id="yiPostalAddressCity">
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<label for="textYIPACity"><s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')" /><span class="required">*</span>:</label>
+						</s:if>
+						<s:else>
+							<label for="textYIPACity"><s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')" />:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<input type="text" id="textYIPACity" onchange="postalAddressCityChanged();" value="<s:property value="loader.yiMunicipalityPostalcodePostal[#counter]" />" />
+						</s:if>
+						<s:else>
+							<input type="text" id="textYIPACity" value="<s:property value="loader.yiMunicipalityPostalcodePostal[#counter]" />" />
+						</s:else>
+					</td>
+					<td colspan="2">
+					</td>
+				</tr>
+			</table>
+			<s:set var="counter" value="%{#counter + 1}"/>
+		</s:iterator>
+	</s:if>
+
 	<table id="yiTableOthers" class="tablePadding">
 		<tr>
 			<td colspan="4">
-				<input type="button" id="buttonAddPostalAddressIfDifferent" value="<s:property value="getText('label.ai.tabs.commons.addPostalAddressIfDifferent')"/>" onclick="yiAddPostalAddressIfDifferent('<s:property value="getText('label.ai.yourinstitution.postalAddress')" />', '<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />', '<s:property value="getText('label.ai.tabs.commons.street')" />', '<s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')" />')" />
+				<s:if test="%{loader.yiStreetPostal.size() > 0}">
+					<input type="button" id="buttonAddPostalAddressIfDifferent" value="<s:property value="getText('label.ai.tabs.commons.addPostalAddressIfDifferent')"/>" onclick="yiAddPostalAddressIfDifferent('<s:property value="getText('label.ai.yourinstitution.postalAddress')" />', '<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />', '<s:property value="getText('label.ai.tabs.commons.street')" />', '<s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')" />')" style="display:none;" />
+				</s:if>
+				<s:else>
+					<input type="button" id="buttonAddPostalAddressIfDifferent" value="<s:property value="getText('label.ai.tabs.commons.addPostalAddressIfDifferent')"/>" onclick="yiAddPostalAddressIfDifferent('<s:property value="getText('label.ai.yourinstitution.postalAddress')" />', '<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />', '<s:property value="getText('label.ai.tabs.commons.street')" />', '<s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')" />')" />
+				</s:else>
 			</td>
 		</tr>
 
-		<tr id="yiPostalAddressTranslation" style="display:none;">
+		<s:if test="%{loader.yiStreetPostal.size() > 0}">
+			<tr id="yiPostalAddressTranslation">
+		</s:if>
+		<s:else>
+			<tr id="yiPostalAddressTranslation" style="display:none;">
+		</s:else>
 			<td colspan="2">
 				<input type="button" id="buttonAddPostalAddressTranslation" value="<s:property value="getText('label.ai.yourinstitution.addPostalAddressTranslation')"/>" onclick="yiAddPostalAddressTranslation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
 			</td>
@@ -206,7 +441,7 @@
 
 		<tr>
 			<td>
-				<label for="selectYIContinent" ><s:property value="getText('label.ai.tabs.commons.continent')"/>:</label>
+				<label for="selectYIContinent" ><s:property value="getText('label.ai.tabs.commons.continent')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
 				<select id="selectYIContinent" onchange="continentOfInstitutionChanged();" >
@@ -226,245 +461,789 @@
 			</td>
 		</tr>
 
-		<tr id="trTextYIEmail">
-			<td>
-				<label for="textYIEmailAddress" ><s:property value="getText('label.ai.tabs.commons.emailAddress')"/>:</label>
-			</td>
-			<td>
-				<input type="text" id="textYIEmailAddress" onchange="emailOfInstitutionChanged();" value="${loader.email}" />
-			</td>
-			<td class="labelLeft">
-				<label for="selectTextYILangEmail"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
-			</td>
-			<td>
-				<select id="selectTextYILangEmail" >
-					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.emailLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
-					</s:iterator>
-				</select>
-			</td>
-		</tr>
-		<tr id="trTextYILangEmail">
-			<td>
-				<label for="textYIEmailLinkTitle" ><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
-			</td>
-			<td>
-				<input type="text" id="textYIEmailLinkTitle" onchange="emailOfInstitutionLinkChanged();" value="${loader.emailTitle}" />
-			</td>
-		</tr>
-		<tr id="trButtonAFEOTInstitution">
-			<td>
-				<input id="buttonAddFurtherEmailsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherEmailsAddresses")' />" onclick="addYIFurtherEmailsOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
-			</td>
-		</tr>
-		<tr id="trButtonYIWebpage">
-			<td>
-				<label for="textYIWebpage" ><s:property value="getText('label.ai.tabs.commons.webpage')"/>:</label>
-			</td>
-			<td>
-				<input type="text" id="textYIWebpage" onchange="webOfInstitutionChanged();" value="${loader.webpage}" />
-			</td>
-			<td class="labelLeft">
-				<label for="selectTextYILangWebpage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
-			</td>
-			<td>
-				<select id="selectTextYILangWebpage" >
-					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.webpageLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
-					</s:iterator>
-				</select>
-			</td>
-		</tr>
-		<tr id="trButtonYILangWebpage">
-			<td>
-				<label for="textYIWebpageLinkTitle" ><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
-			</td>
-			<td>
-				<input type="text" id="textYIWebpageLinkTitle" onchange="webOfInstitutionLinkChanged();" value="${loader.webpageTitle}" />
-			</td>
-		</tr>
-		<tr id="trButtonAFWOTInstitution">
-			<td id="tdAddFurtherWebsOfTheInstitution" colspan="2">
-				<input id="buttonAddFurtherWebsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherWebpages")' />" onclick="addYIFurtherWebsOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
-			</td>
-		</tr>
-		<tr id="trTextYIOpeningTimes">
-			<td>
-				<label for="textYIOpeningTimes" ><s:property value="getText('label.ai.tabs.commons.openingTimes')"/><span class="required">*</span>:</label>
-			</td>
-			<td>
-				<input type="text" id="textYIOpeningTimes" onchange="openingHoursOfInstitutionChanged();" value="${loader.opening}" />
-			</td>
-			<td class="labelLeft">
-				<label for="selectTextYIOpeningTimes"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
-			</td>
-			<td>
-				<select id="selectTextYIOpeningTimes" onchange="duplicateOpeningTimesLanguage();" >
-					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.openingLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
-					</s:iterator>
-				</select>
-			</td>
-		</tr>
+		<s:if test="%{loader.yiEmail.size() > 0}">
+			<s:set var="counter" value="0"/>
+			<s:iterator var="current" value="loader.yiEmail" status="status">
+				<s:if test="%{#status.index == 0}">
+					<tr id="trTextYIEmail">
+				</s:if>
+				<s:else>
+					<tr id="trTextYIEmail_<s:property value="%{#status.index + 1}" />">
+				</s:else>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<label for="textYIEmailAddress" ><s:property value="getText('label.ai.tabs.commons.emailAddress')"/>:</label>
+						</s:if>
+						<s:else>
+							<label for="textYIEmailAddress_<s:property value="%{#status.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.emailAddress')"/>:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<input type="text" id="textYIEmailAddress" onchange="emailOfInstitutionChanged();" value="<s:property value="#current" />" />
+						</s:if>
+						<s:else>
+							<input type="text" id="textYIEmailAddress_<s:property value="%{#status.index + 1}" />" value="<s:property value="#current" />" />
+						</s:else>
+					</td>
+					<td class="labelLeft">
+						<s:if test="%{#status.index == 0}">
+							<label for="selectTextYILangEmail"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+						</s:if>
+						<s:else>
+							<label for="selectTextYILangEmail_<s:property value="%{#status.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<select id="selectTextYILangEmail">
+						</s:if>
+						<s:else>
+							<select id="selectTextYILangEmail_<s:property value="%{#status.index + 1}" />" >
+						</s:else>
+							<s:iterator value="languageList" var="language"> 
+								<option value="<s:property value="#language.key" />"
+									<s:if test="%{#language.key == loader.yiEmailLang[#counter]}" > selected=selected </s:if>>
+									<s:property value="#language.value" />
+								</option>
+							</s:iterator>
+						</select>
+					</td>
+				</tr>
+
+				<s:if test="%{#status.index == 0}">
+					<tr id="trTextYILangEmail">
+				</s:if>
+				<s:else>
+					<tr id="trTextYILangEmail_<s:property value="%{#status.index + 1}" />">
+				</s:else>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<label for="textYIEmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+						</s:if>
+						<s:else>
+							<label for="textYIEmailLinkTitle_<s:property value="%{#status.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<input type="text" id="textYIEmailLinkTitle" onchange="emailOfInstitutionLinkChanged();" value="<s:property value="loader.yiEmailTitle[#counter]" />" />
+						</s:if>
+						<s:else>
+							<input type="text" id="textYIEmailLinkTitle_<s:property value="%{#status.index + 1}" />" value="<s:property value="loader.yiEmailTitle[#counter]" />" />
+						</s:else>
+					</td>
+					<td colspan="2">
+					</td>
+				</tr>
+				<s:set var="counter" value="%{#counter + 1}"/>
+			</s:iterator>
+
+			<tr id="trButtonAFEOTInstitution">
+				<td colspan="2">
+					<input id="buttonAddFurtherEmailsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherEmailsAddresses")' />" onclick="addYIFurtherEmailsOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				</td>
+				<td colspan="2">
+				</td>
+			</tr>
+		</s:if>
+		<s:else>
+			<tr id="trTextYIEmail">
+				<td>
+					<label for="textYIEmailAddress" ><s:property value="getText('label.ai.tabs.commons.emailAddress')"/>:</label>
+				</td>
+				<td>
+					<input type="text" id="textYIEmailAddress" onchange="emailOfInstitutionChanged();" />
+				</td>
+				<td class="labelLeft">
+					<label for="selectTextYILangEmail"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				</td>
+				<td>
+					<select id="selectTextYILangEmail" >
+						<s:iterator value="languageList" var="language"> 
+							<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+						</s:iterator>
+					</select>
+				</td>
+			</tr>
+
+			<tr id="trTextYILangEmail">
+				<td>
+					<label for="textYIEmailLinkTitle" ><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+				</td>
+				<td>
+					<input type="text" id="textYIEmailLinkTitle" onchange="emailOfInstitutionLinkChanged();" />
+				</td>
+			</tr>
+
+			<tr id="trButtonAFEOTInstitution">
+				<td colspan="2">
+					<input id="buttonAddFurtherEmailsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherEmailsAddresses")' />" onclick="addYIFurtherEmailsOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				</td>
+				<td colspan="2">
+				</td>
+			</tr>
+		</s:else>
+
+		<s:if test="%{loader.yiWebpage.size() > 0}">
+			<s:set var="counter" value="0"/>
+			<s:iterator var="current" value="loader.yiWebpage" status="status">
+				<s:if test="%{#status.index == 0}">
+					<tr id="trButtonYIWebpage">
+				</s:if>
+				<s:else>
+					<tr id="trButtonYIWebpage_<s:property value="%{#status.index + 1}" />">
+				</s:else>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<label for="textYIWebpage" ><s:property value="getText('label.ai.tabs.commons.webpage')"/>:</label>
+						</s:if>
+						<s:else>
+							<label for="textYIWebpage_<s:property value="%{#status.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.webpage')"/>:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<input type="text" id="textYIWebpage" onchange="webOfInstitutionChanged();" value="<s:property value="#current" />" />
+						</s:if>
+						<s:else>
+							<input type="text" id="textYIWebpage_<s:property value="%{#status.index + 1}" />" value="<s:property value="#current" />" />
+						</s:else>
+					</td>
+					<td class="labelLeft">
+						<s:if test="%{#status.index == 0}">
+							<label for="selectTextYILangWebpage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+						</s:if>
+						<s:else>
+							<label for="selectTextYILangWebpage_<s:property value="%{#status.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<select id="selectTextYILangWebpage">
+						</s:if>
+						<s:else>
+							<select id="selectTextYILangWebpage_<s:property value="%{#status.index + 1}" />" >
+						</s:else>
+							<s:iterator value="languageList" var="language"> 
+								<option value="<s:property value="#language.key" />"
+									<s:if test="%{#language.key == loader.yiWebpageLang[#counter]}" > selected=selected </s:if>>
+									<s:property value="#language.value" />
+								</option>
+							</s:iterator>
+						</select>
+					</td>
+				</tr>
+
+				<s:if test="%{#status.index == 0}">
+					<tr id="trButtonYILangWebpage">
+				</s:if>
+				<s:else>
+					<tr id="trButtonYILangWebpage_<s:property value="%{#status.index + 1}" />">
+				</s:else>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<label for="textYIWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+						</s:if>
+						<s:else>
+							<label for="textYIWebpageLinkTitle_<s:property value="%{#status.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<input type="text" id="textYIWebpageLinkTitle" onchange="webOfInstitutionLinkChanged();" value="<s:property value="loader.yiWebpageTitle[#counter]" />" />
+						</s:if>
+						<s:else>
+							<input type="text" id="textYIWebpageLinkTitle_<s:property value="%{#status.index + 1}" />" value="<s:property value="loader.yiWebpageTitle[#counter]" />" />
+						</s:else>
+					</td>
+					<td colspan="2">
+					</td>
+				</tr>
+				<s:set var="counter" value="%{#counter + 1}"/>
+			</s:iterator>
+
+			<tr id="trButtonAFWOTInstitution">
+				<td id="tdAddFurtherWebsOfTheInstitution" colspan="2">
+					<input id="buttonAddFurtherWebsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherWebpages")' />" onclick="addYIFurtherWebsOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				</td>
+			</tr>
+		</s:if>
+		<s:else>
+			<tr id="trButtonYIWebpage">
+				<td>
+					<label for="textYIWebpage" ><s:property value="getText('label.ai.tabs.commons.webpage')"/>:</label>
+				</td>
+				<td>
+					<input type="text" id="textYIWebpage" onchange="webOfInstitutionChanged();" />
+				</td>
+				<td class="labelLeft">
+					<label for="selectTextYILangWebpage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				</td>
+				<td>
+					<select id="selectTextYILangWebpage" >
+						<s:iterator value="languageList" var="language"> 
+							<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+						</s:iterator>
+					</select>
+				</td>
+			</tr>
+
+			<tr id="trButtonYILangWebpage">
+				<td>
+					<label for="textYIWebpageLinkTitle" ><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+				</td>
+				<td>
+					<input type="text" id="textYIWebpageLinkTitle" onchange="webOfInstitutionLinkChanged();" />
+				</td>
+			</tr>
+
+			<tr id="trButtonAFWOTInstitution">
+				<td id="tdAddFurtherWebsOfTheInstitution" colspan="2">
+					<input id="buttonAddFurtherWebsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherWebpages")' />" onclick="addYIFurtherWebsOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				</td>
+			</tr>
+		</s:else>
+
+		<s:if test="%{loader.yiOpening.size() > 0}">
+			<s:set var="counter" value="0"/>
+			<s:iterator var="current" value="loader.yiOpening" status="status">
+				<s:if test="%{#status.index == 0}">
+					<tr id="trTextYIOpeningTimes">
+				</s:if>
+				<s:else>
+					<tr id="trTextYIOpeningTimes_<s:property value="%{#status.index + 1}" />">
+				</s:else>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<label for="textYIOpeningTimes" ><s:property value="getText('label.ai.tabs.commons.openingTimes')"/><span class="required">*</span>:</label>
+						</s:if>
+						<s:else>
+							<label for="textYIOpeningTimes_<s:property value="%{#status.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.openingTimes')"/>:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<input type="text" id="textYIOpeningTimes" onchange="openingHoursOfInstitutionChanged();" value="<s:property value="#current" />" />
+						</s:if>
+						<s:else>
+							<input type="text" id="textYIOpeningTimes_<s:property value="%{#status.index + 1}" />" value="<s:property value="#current" />" />
+						</s:else>
+					</td>
+					<td class="labelLeft">
+						<s:if test="%{#status.index == 0}">
+							<label for="selectTextYIOpeningTimes"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+						</s:if>
+						<s:else>
+							<label for="selectTextYIOpeningTimes_<s:property value="%{#status.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<select id="selectTextYIOpeningTimes" onchange="duplicateOpeningTimesLanguage();" >
+						</s:if>
+						<s:else>
+							<select id="selectTextYIOpeningTimes_<s:property value="%{#status.index + 1}" />" >
+						</s:else>
+							<s:iterator value="languageList" var="language"> 
+								<option value="<s:property value="#language.key" />"
+									<s:if test="%{#language.key == loader.yiOpeningLang[#counter]}" > selected=selected </s:if>>
+									<s:property value="#language.value" />
+								</option>
+							</s:iterator>
+						</select>
+					</td>
+				</tr>
+				<s:set var="counter" value="%{#counter + 1}"/>
+			</s:iterator>
+		</s:if>
+		<s:else>
+			<tr id="trTextYIOpeningTimes">
+				<td>
+					<label for="textYIOpeningTimes" ><s:property value="getText('label.ai.tabs.commons.openingTimes')"/><span class="required">*</span>:</label>
+				</td>
+				<td>
+					<input type="text" id="textYIOpeningTimes" onchange="openingHoursOfInstitutionChanged();" value="${loader.opening}" />
+				</td>
+				<td class="labelLeft">
+					<label for="selectTextYIOpeningTimes"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				</td>
+				<td>
+					<select id="selectTextYIOpeningTimes" onchange="duplicateOpeningTimesLanguage();" >
+						<s:iterator value="languageList" var="language"> 
+							<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.openingLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+						</s:iterator>
+					</select>
+				</td>
+			</tr>
+		</s:else>
+
 		<tr>
 			<td id="tdASAddOpeningTimes" colspan="2">
 				<input type="button" id="buttonASAddOpeningTimes"  value="<s:property value='getText("label.ai.accessAndServices.addOpeningTimes")' />" onclick="yIAddOpeningTimes('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
 			</td>
 		</tr>
 
-		<tr id="fieldClosingDates" <s:if test="loader.closing==null || %(loader.closing.length()>0)">style="display:none;"</s:if>>
-			<td><label for="yourInstitutionClosingDates"><s:property value="getText('label.ai.yourinstitution.closingDates')"/>:</label></td>
-			<td><input type="text" id="yourInstitutionClosingDates" onchange="closingHoursOfInstitutionChanged();" value="${loader.closing}" /></td>
-			<td class="labelLeft">
-				<label for="selectTextYIClosingTimes"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
-			</td>
-			<td>
-				<select id="selectTextYIClosingTimes" onchange="duplicateClosingTimesLanguage();">
-					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.closingLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
-					</s:iterator>
-				</select>
-			</td>
-		</tr>
-		<s:if test="loader.closing==null || %(loader.closing.length()>0)">
-		<tr>
-			<td>
-				<input type="button" id="buttonAddClosingDates" value="<s:property value="getText('label.ai.tabs.commons.closingDates')"/>" onclick="yiAddClosingDates();" />
-			</td>
-			<td colspan="3">
-			</td>
-		</tr>
+		<s:if test="%{loader.yiClosing.size() > 0}">
+			<s:set var="counter" value="0"/>
+			<s:iterator var="current" value="loader.yiClosing" status="status">
+				<s:if test="%{#status.index == 0}">
+					<tr id="fieldClosingDates">
+				</s:if>
+				<s:else>
+					<tr id="fieldClosingDates_<s:property value="%{#status.index + 1}" />">
+				</s:else>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<label for="yourInstitutionClosingDates" ><s:property value="getText('label.ai.tabs.commons.closingDates')"/><span class="required">*</span>:</label>
+						</s:if>
+						<s:else>
+							<label for="yourInstitutionClosingDates_<s:property value="%{#status.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.closingDates')"/>:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<input type="text" id="yourInstitutionClosingDates" onchange="closingHoursOfInstitutionChanged();" value="<s:property value="#current" />" />
+						</s:if>
+						<s:else>
+							<input type="text" id="yourInstitutionClosingDates_<s:property value="%{#status.index + 1}" />" value="<s:property value="#current" />" />
+						</s:else>
+					</td>
+					<td class="labelLeft">
+						<s:if test="%{#status.index == 0}">
+							<label for="selectTextYIOpeningTimes"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+						</s:if>
+						<s:else>
+							<label for="selectTextYIOpeningTimes_<s:property value="%{#status.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<select id="selectTextYIClosingTimes" onchange="duplicateClosingTimesLanguage();" >
+						</s:if>
+						<s:else>
+							<select id="selectTextYIClosingTimes_<s:property value="%{#status.index + 1}" />" >
+						</s:else>
+							<s:iterator value="languageList" var="language"> 
+								<option value="<s:property value="#language.key" />"
+									<s:if test="%{#language.key == loader.yiClosingLang[#counter]}" > selected=selected </s:if>>
+									<s:property value="#language.value" />
+								</option>
+							</s:iterator>
+						</select>
+					</td>
+				</tr>
+				<s:set var="counter" value="%{#counter + 1}"/>
+			</s:iterator>
+
+			<tr id="trYIbuttonAddClosingDates">
+				<td id="tdASAddClosingDates" colspan="2">
+					<input type="button" id="buttonASAddClosingDates"  value="<s:property value='getText("label.ai.accessAndServices.addClosingDates")' />" onclick="yIAddClosingDates2('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				</td>
+				<td colspan="2">
+				</td>
+			</tr>
 		</s:if>
-		<tr id="trYIbuttonAddClosingDates"<s:if test="loader.closing==null || %(loader.closing.length()>0)"> style="display:none;"</s:if>>
-			<td id="tdASAddClosingDates" colspan="2">
-				<input type="button" id="buttonASAddClosingDates"  value="<s:property value='getText("label.ai.accessAndServices.addClosingDates")' />" onclick="yIAddClosingDates2('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
-			</td>
-			<td colspan="2">
-			</td>
-		</tr>
+		<s:else>
+			<tr id="fieldClosingDates" style="display:none;">
+				<td>
+					<label for="yourInstitutionClosingDates"><s:property value="getText('label.ai.yourinstitution.closingDates')"/>:</label>
+				</td>
+				<td>
+					<input type="text" id="yourInstitutionClosingDates" onchange="closingHoursOfInstitutionChanged();" />
+				</td>
+				<td class="labelLeft">
+					<label for="selectTextYIClosingTimes"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				</td>
+				<td>
+					<select id="selectTextYIClosingTimes" onchange="duplicateClosingTimesLanguage();">
+						<s:iterator value="languageList" var="language"> 
+							<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+						</s:iterator>
+					</select>
+				</td>
+			</tr>
 
-		<tr>
-			<td>
-				<label for="selectAccessibleToThePublic" ><s:property value="getText('label.ai.yourinstitution.accessibleToThePublic')"/><span class="required">*</span>:</label>
-			</td>
-			<td>
-				<select id="selectAccessibleToThePublic" onchange="accessibleToThePublicChanged();" >
-					<s:iterator value="yesNoList" var="yesno"> 
-						<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.accessQuestion}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
-					</s:iterator>
-				</select>
-			</td>
-			<td colspan="2" class="labelLeft">
-				<input type="button" id="buttonFutherAccessInformation" value="<s:property value="getText('label.ai.yourinstitution.addFurtherAccessInformation')"/>" onclick="yiFutherAccessInformation();" />
-			</td>
-		</tr>
-		
-		<tr id="trYIButtonFutherAccessInformation" style="display:none;">
-			<td>
-				<label for="futherAccessInformation"><s:property value="getText('label.ai.accessAndServices.accessRestrictions')" />:</label>
-			</td>
-			<td>
-				<input type="text" id="futherAccessInformation" onchange="futherAccessInformationChanged();" value="<s:property value="loader.restaccess"/>"/>
-			</td>
-			<td class="labelLeft">
-				<label for="selectFutherAccessInformation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
-			</td>
-			<td>
-				<select id="selectFutherAccessInformation" onchange="duplicateAccessInformation();">
-					<s:iterator value="languageList" var="language">
-						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.restaccessLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
-					</s:iterator>
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2"></td>
-			<td colspan="2" class="labelLeft">
-				<input type="button" id="buttonFutherAccessInformation2" style="display:none;" value="<s:property value="getText('label.ai.yourinstitution.addFurtherAccessInformation')"/>" onclick="yiFutherAccessInformation2('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label for="selectFacilitiesForDisabledPeopleAvailable" ><s:property value="getText('label.ai.yourinstitution.facilitiesForFisabledPeopleAvailable')"/>:</label>
-			</td>
-			<td>
-				<select id="selectFacilitiesForDisabledPeopleAvailable" onchange="facilitiesForDisabledPeopleAvailableChanged();" >
-					<s:iterator value="yesNoList" var="yesno"> 
-						<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.accessibilityQuestion}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
-					</s:iterator>
-				</select>
-			</td>
-			<td colspan="2" class="labelLeft">
-				<input type="button" id="buttonAddFutherInformationOnExistingFacilities" value="<s:property value="getText('label.ai.yourinstitution.addFutherInformationOnExistingFacilities')"/>" onclick="yiAddFutherInformationOnExistingFacilities();" />
-			</td>
-		</tr>
-		<tr id="trButtonAddFutherInformationOnExistingFacilities" style="display:none;">
-			<td>
-				<label for="futherInformationOnExistingFacilities"><s:property value="getText('label.ai.accessAndServices.accesibility')" />:</label>
-			</td>
-			<td>
-				<input type="text" id="futherInformationOnExistingFacilities" onchange="futherInformationOnExistingFacilitiesChanged();" value="<s:property value="loader.accessibility"/>" />		
-			</td>
-			<td class="labelLeft">
-				<label for="selectFutherAccessInformationOnExistingFacilities"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
-			</td>
-			<td>
-				<select id="selectFutherAccessInformationOnExistingFacilities" onchange="duplicateFutherAccessInformationOnExistingFacilitiesLanguage();">
-					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.accessibilityLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
-					</s:iterator>
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2"> </td>
-			<td colspan="2" class="labelLeft">
-				<input type="button" id="buttonAddFutherInformationOnExistingFacilities2" style="display:none;" value="<s:property value="getText('label.ai.yourinstitution.addFutherInformationOnExistingFacilities')"/>" onclick="yiAddFutherInformationOnExistingFacilities2('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
-			</td>
-		</tr>
+			<tr id="trYIbuttonAddClosingDates" style="display:none;">
+				<td id="tdASAddClosingDates" colspan="2">
+					<input type="button" id="buttonASAddClosingDates"  value="<s:property value='getText("label.ai.accessAndServices.addClosingDates")' />" onclick="yIAddClosingDates2('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				</td>
+				<td colspan="2">
+				</td>
+			</tr>
 
-		<tr id="trButtonFutherAccessInformation" style="display:none;">
-			<td colspan="2">
-				<input type="text" id="futherAccessInformation" onchange="futherAccessInformationChanged();" />
-			</td>
-			<td colspan="2" class="labelLeft">
-				<input type="button" style="display:none;" id="buttonAddFutherInformationOnExistingFacilities2" value="<s:property value="getText('label.ai.yourinstitution.addFutherInformationOnExistingFacilities')"/>" onclick="yiAddFutherInformationOnExistingFacilities();" />
-			</td>
-		</tr>
-		<tr id="trYIReferencetoHoldingsguide">
-			<td>
-				<label for="textReferencetoyourinstitutionsholdingsguide" ><s:property value="getText('label.ai.yourinstitution.referenceToYourInstitutionsHoldingsGuide')"/>:</label>
-			</td>
-			<td>
-				<input type="text" id="textReferencetoyourinstitutionsholdingsguide" onchange="linkToYourHolndingsGuideChanged();" value="${loader.resourceRelationHref}" />
-			</td>
-			<td class="labelLeft">
-				<label for="textYIHoldingsGuideLinkTitle" ><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
-			</td>
-			<td>
-				<input type="text" id="textYIHoldingsGuideLinkTitle" onchange="linkToYourHolndingsGuideTitleChanged();" value="${loader.resourceRelationrelationEntry}" />
-			</td>
-		</tr>
-		<tr id="trYIReferenceto2Holdingsguide" ><%-- waiting for ticket decision #543 --%>
-			<td colspan="2"></td>
-			<td class="labelLeft">
-				<label for="selectYIReferencetoHoldingsguide"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
-			</td>
-			<td>
-				<select id="selectYIReferencetoHoldingsguide" >
-					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.resourceRelationLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
-					</s:iterator>
-				</select>
-			</td>
-		</tr>
-		<tr><%-- waiting for ticket decision #543 --%>
-			<td colspan="2">
-			</td>
-			<td colspan="2" class="labelLeft">
-				<input type="button" id="buttonAddReferencetoyourinstitutionsholdingsguide" value="<s:property value="getText('label.ai.relations.addNewResourceRelation')"/>" onclick="yiAddReferencetoyourinstitutionsholdingsguide('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
-			</td>
-		</tr>
+			<tr>
+				<td>
+					<input type="button" id="buttonAddClosingDates" value="<s:property value="getText('label.ai.tabs.commons.closingDates')"/>" onclick="yiAddClosingDates();" />
+				</td>
+				<td colspan="3">
+				</td>
+			</tr>
+		</s:else>
+
+		<s:if test="%{loader.yiRestaccess.size() > 0}">
+			<tr>
+				<td>
+					<label for="selectAccessibleToThePublic" ><s:property value="getText('label.ai.yourinstitution.accessibleToThePublic')"/><span class="required">*</span>:</label>
+				</td>
+				<td>
+					<select id="selectAccessibleToThePublic" onchange="accessibleToThePublicChanged();" >
+						<s:iterator value="yesNoList" var="yesno"> 
+							<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.accessQuestion}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
+						</s:iterator>
+					</select>
+				</td>
+				<td colspan="2">
+				</td>
+			</tr>
+
+			<s:set var="counter" value="0"/>
+			<s:iterator var="current" value="loader.yiRestaccess" status="status">
+				<s:if test="%{#status.index == 0}">
+					<tr id="trYIButtonFutherAccessInformation">
+				</s:if>
+				<s:else>
+					<tr id="trYIButtonFutherAccessInformation_<s:property value="%{#status.index + 1}" />">
+				</s:else>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<label for="futherAccessInformation" ><s:property value="getText('label.ai.accessAndServices.accessRestrictions')"/><span class="required">*</span>:</label>
+						</s:if>
+						<s:else>
+							<label for="futherAccessInformation_<s:property value="%{#status.index + 1}" />" ><s:property value="getText('label.ai.accessAndServices.accessRestrictions')"/>:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<input type="text" id="futherAccessInformation" onchange="futherAccessInformationChanged();" value="<s:property value="#current" />" />
+						</s:if>
+						<s:else>
+							<input type="text" id="futherAccessInformation_<s:property value="%{#status.index + 1}" />" value="<s:property value="#current" />" />
+						</s:else>
+					</td>
+					<td class="labelLeft">
+						<s:if test="%{#status.index == 0}">
+							<label for="selectFutherAccessInformation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+						</s:if>
+						<s:else>
+							<label for="selectFutherAccessInformation_<s:property value="%{#status.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<select id="selectFutherAccessInformation" onchange="duplicateAccessInformation();" >
+						</s:if>
+						<s:else>
+							<select id="selectFutherAccessInformation_<s:property value="%{#status.index + 1}" />" >
+						</s:else>
+							<s:iterator value="languageList" var="language"> 
+								<option value="<s:property value="#language.key" />"
+									<s:if test="%{#language.key == loader.yiRestaccessLang[#counter]}" > selected=selected </s:if>>
+									<s:property value="#language.value" />
+								</option>
+							</s:iterator>
+						</select>
+					</td>
+				</tr>
+				<s:set var="counter" value="%{#counter + 1}"/>
+			</s:iterator>
+
+			<tr>
+				<td colspan="2">
+				</td>
+				<td colspan="2">
+					<input type="button" id="buttonFutherAccessInformation2" value="<s:property value="getText('label.ai.yourinstitution.addFurtherAccessInformation')"/>" onclick="yiFutherAccessInformation2('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				</td>
+			</tr>
+		</s:if>
+		<s:else>
+			<tr>
+				<td>
+					<label for="selectAccessibleToThePublic" ><s:property value="getText('label.ai.yourinstitution.accessibleToThePublic')"/><span class="required">*</span>:</label>
+				</td>
+				<td>
+					<select id="selectAccessibleToThePublic" onchange="accessibleToThePublicChanged();" >
+						<s:iterator value="yesNoList" var="yesno"> 
+							<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.accessQuestion}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
+						</s:iterator>
+					</select>
+				</td>
+				<td colspan="2" class="labelLeft">
+					<input type="button" id="buttonFutherAccessInformation" value="<s:property value="getText('label.ai.yourinstitution.addFurtherAccessInformation')"/>" onclick="yiFutherAccessInformation();" />
+				</td>
+			</tr>
+
+			<tr id="trYIButtonFutherAccessInformation" style="display:none;">
+				<td>
+					<label for="futherAccessInformation"><s:property value="getText('label.ai.accessAndServices.accessRestrictions')" />:</label>
+				</td>
+				<td>
+					<input type="text" id="futherAccessInformation" onchange="futherAccessInformationChanged();"/>
+				</td>
+				<td class="labelLeft">
+					<label for="selectFutherAccessInformation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				</td>
+				<td>
+					<select id="selectFutherAccessInformation" onchange="duplicateAccessInformation();">
+						<s:iterator value="languageList" var="language">
+							<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+						</s:iterator>
+					</select>
+				</td>
+			</tr>
+			
+			<tr>
+				<td colspan="2">
+				</td>
+				<td colspan="2" class="labelLeft">
+					<input type="button" id="buttonFutherAccessInformation2" style="display:none;" value="<s:property value="getText('label.ai.yourinstitution.addFurtherAccessInformation')"/>" onclick="yiFutherAccessInformation2('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				</td>
+			</tr>
+		</s:else>
+
+		<s:if test="%{loader.yiAccessibility.size() > 0}">
+			<tr>
+				<td>
+					<label for="selectFacilitiesForDisabledPeopleAvailable" ><s:property value="getText('label.ai.yourinstitution.facilitiesForFisabledPeopleAvailable')"/><span class="required">*</span>:</label>
+				</td>
+				<td>
+					<select id="selectFacilitiesForDisabledPeopleAvailable" onchange="facilitiesForDisabledPeopleAvailableChanged();" >
+						<s:iterator value="yesNoList" var="yesno"> 
+							<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.accessibilityQuestion}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
+						</s:iterator>
+					</select>
+				</td>
+				<td colspan="2">
+				</td>
+			</tr>
+
+			<s:set var="counter" value="0"/>
+			<s:iterator var="current" value="loader.yiAccessibility" status="status">
+				<s:if test="%{#status.index == 0}">
+					<tr id="trButtonAddFutherInformationOnExistingFacilities">
+				</s:if>
+				<s:else>
+					<tr id="trButtonAddFutherInformationOnExistingFacilities_<s:property value="%{#status.index + 1}" />">
+				</s:else>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<label for="futherInformationOnExistingFacilities" ><s:property value="getText('label.ai.accessAndServices.accesibility')"/>:</label>
+						</s:if>
+						<s:else>
+							<label for="futherInformationOnExistingFacilities_<s:property value="%{#status.index + 1}" />" ><s:property value="getText('label.ai.accessAndServices.accesibility')"/>:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<input type="text" id="futherInformationOnExistingFacilities" onchange="futherInformationOnExistingFacilitiesChanged();" value="<s:property value="#current" />" />
+						</s:if>
+						<s:else>
+							<input type="text" id="futherInformationOnExistingFacilities_<s:property value="%{#status.index + 1}" />" value="<s:property value="#current" />" />
+						</s:else>
+					</td>
+					<td class="labelLeft">
+						<s:if test="%{#status.index == 0}">
+							<label for="selectFutherAccessInformationOnExistingFacilities"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+						</s:if>
+						<s:else>
+							<label for="selectFutherAccessInformationOnExistingFacilities_<s:property value="%{#status.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<select id="selectFutherAccessInformationOnExistingFacilities" onchange="duplicateFutherAccessInformationOnExistingFacilitiesLanguage();" >
+						</s:if>
+						<s:else>
+							<select id="selectFutherAccessInformationOnExistingFacilities_<s:property value="%{#status.index + 1}" />" >
+						</s:else>
+							<s:iterator value="languageList" var="language"> 
+								<option value="<s:property value="#language.key" />"
+									<s:if test="%{#language.key == loader.yiAccessibilityLang[#counter]}" > selected=selected </s:if>>
+									<s:property value="#language.value" />
+								</option>
+							</s:iterator>
+						</select>
+					</td>
+				</tr>
+				<s:set var="counter" value="%{#counter + 1}"/>
+			</s:iterator>
+
+			<tr>
+				<td colspan="2">
+				</td>
+				<td colspan="2" class="labelLeft">
+					<input type="button" id="buttonAddFutherInformationOnExistingFacilities2" value="<s:property value="getText('label.ai.yourinstitution.addFutherInformationOnExistingFacilities')"/>" onclick="yiAddFutherInformationOnExistingFacilities2('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				</td>
+			</tr>
+		</s:if>
+		<s:else>
+			<tr id="trButtonAddFutherInformationOnExistingFacilities" style="display:none;">
+				<td>
+					<label for="futherInformationOnExistingFacilities"><s:property value="getText('label.ai.accessAndServices.accesibility')" />:</label>
+				</td>
+				<td>
+					<input type="text" id="futherInformationOnExistingFacilities" onchange="futherInformationOnExistingFacilitiesChanged();" />		
+				</td>
+				<td class="labelLeft">
+					<label for="selectFutherAccessInformationOnExistingFacilities"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				</td>
+				<td>
+					<select id="selectFutherAccessInformationOnExistingFacilities" onchange="duplicateFutherAccessInformationOnExistingFacilitiesLanguage();">
+						<s:iterator value="languageList" var="language"> 
+							<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+						</s:iterator>
+					</select>
+				</td>
+			</tr>
+
+			<tr>
+				<td colspan="2"> </td>
+				<td colspan="2" class="labelLeft">
+					<input type="button" id="buttonAddFutherInformationOnExistingFacilities2" style="display:none;" value="<s:property value="getText('label.ai.yourinstitution.addFutherInformationOnExistingFacilities')"/>" onclick="yiAddFutherInformationOnExistingFacilities2('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<label for="selectFacilitiesForDisabledPeopleAvailable" ><s:property value="getText('label.ai.yourinstitution.facilitiesForFisabledPeopleAvailable')"/><span class="required">*</span>:</label>
+				</td>
+				<td>
+					<select id="selectFacilitiesForDisabledPeopleAvailable" onchange="facilitiesForDisabledPeopleAvailableChanged();" >
+						<s:iterator value="yesNoList" var="yesno"> 
+							<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.accessibilityQuestion}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
+						</s:iterator>
+					</select>
+				</td>
+				<td colspan="2" class="labelLeft">
+					<input type="button" id="buttonAddFutherInformationOnExistingFacilities" value="<s:property value="getText('label.ai.yourinstitution.addFutherInformationOnExistingFacilities')"/>" onclick="yiAddFutherInformationOnExistingFacilities();" />
+				</td>
+			</tr>
+		</s:else>
+
+		<s:if test="%{loader.yiResourceRelationHref.size() > 0}">
+			<s:set var="counter" value="0"/>
+			<s:iterator var="current" value="loader.yiResourceRelationHref" status="status">
+				<s:if test="%{#status.index == 0}">
+					<tr id="trYIReferencetoHoldingsguide">
+				</s:if>
+				<s:else>
+					<tr id="trYIReferencetoHoldingsguide_<s:property value="%{#status.index + 1}" />">
+				</s:else>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<label for="textReferencetoyourinstitutionsholdingsguide" ><s:property value="getText('label.ai.yourinstitution.referenceToYourInstitutionsHoldingsGuide')"/>:</label>
+						</s:if>
+						<s:else>
+							<label for="textReferencetoyourinstitutionsholdingsguide_<s:property value="%{#status.index + 1}" />" ><s:property value="getText('label.ai.yourinstitution.referenceToYourInstitutionsHoldingsGuide')"/>:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<input type="text" id="textReferencetoyourinstitutionsholdingsguide" onchange="linkToYourHolndingsGuideChanged();" value="<s:property value="#current" />" />
+						</s:if>
+						<s:else>
+							<input type="text" id="textReferencetoyourinstitutionsholdingsguide_<s:property value="%{#status.index + 1}" />" value="<s:property value="#current" />" />
+						</s:else>
+					</td>
+					<td class="labelLeft">
+						<s:if test="%{#status.index == 0}">
+							<label for="textYIHoldingsGuideLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+						</s:if>
+						<s:else>
+							<label for="textYIHoldingsGuideLinkTitle_<s:property value="%{#status.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<input type="text" id="textYIHoldingsGuideLinkTitle" onchange="linkToYourHolndingsGuideTitleChanged();" value="<s:property value="loader.yiResourceRelationrelationEntry[#counter]" />" />
+						</s:if>
+						<s:else>
+							<input type="text" id="textYIHoldingsGuideLinkTitle_<s:property value="%{#status.index + 1}" />" value="<s:property value="loader.yiResourceRelationrelationEntry[#counter]" />" />
+						</s:else>
+					</td>
+				</tr>
+
+				<s:if test="%{#status.index == 0}">
+					<tr id="trYIReferenceto2Holdingsguide"><%-- waiting for ticket decision #543 --%>
+				</s:if>
+				<s:else>
+					<tr id="trYIReferenceto2Holdingsguide_<s:property value="%{#status.index + 1}" />"><%-- waiting for ticket decision #543 --%>
+				</s:else>
+					<td colspan="2">
+					</td>
+					<td class="labelLeft">
+						<s:if test="%{#status.index == 0}">
+							<label for="selectYIReferencetoHoldingsguide"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+						</s:if>
+						<s:else>
+							<label for="selectYIReferencetoHoldingsguide_<s:property value="%{#status.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<select id="selectYIReferencetoHoldingsguide">
+						</s:if>
+						<s:else>
+							<select id="selectYIReferencetoHoldingsguide_<s:property value="%{#status.index + 1}" />" >
+						</s:else>
+							<s:iterator value="languageList" var="language"> 
+								<option value="<s:property value="#language.key" />"
+									<s:if test="%{#language.key == loader.yiResourceRelationrelationLang[#counter]}" > selected=selected </s:if>>
+									<s:property value="#language.value" />
+								</option>
+							</s:iterator>
+						</select>
+					</td>
+				</tr><%-- waiting for ticket decision #543 --%>
+				<s:set var="counter" value="%{#counter + 1}"/>
+			</s:iterator>
+
+			<tr>
+				<td colspan="2">
+				</td>
+				<td colspan="2" class="labelLeft">
+					<input type="button" id="buttonAddReferencetoyourinstitutionsholdingsguide" value="<s:property value="getText('label.ai.relations.addNewResourceRelation')"/>" onclick="yiAddReferencetoyourinstitutionsholdingsguide('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				</td>
+			</tr>
+		</s:if>
+		<s:else>
+			<tr id="trYIReferencetoHoldingsguide">
+				<td>
+					<label for="textReferencetoyourinstitutionsholdingsguide" ><s:property value="getText('label.ai.yourinstitution.referenceToYourInstitutionsHoldingsGuide')"/>:</label>
+				</td>
+				<td>
+					<input type="text" id="textReferencetoyourinstitutionsholdingsguide" onchange="linkToYourHolndingsGuideChanged();" />
+				</td>
+				<td class="labelLeft">
+					<label for="textYIHoldingsGuideLinkTitle" ><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+				</td>
+				<td>
+					<input type="text" id="textYIHoldingsGuideLinkTitle" onchange="linkToYourHolndingsGuideTitleChanged();" />
+				</td>
+			</tr>
+
+			<tr id="trYIReferenceto2Holdingsguide" ><%-- waiting for ticket decision #543 --%>
+				<td colspan="2"></td>
+				<td class="labelLeft">
+					<label for="selectYIReferencetoHoldingsguide"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				</td>
+				<td>
+					<select id="selectYIReferencetoHoldingsguide" >
+						<s:iterator value="languageList" var="language"> 
+							<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+						</s:iterator>
+					</select>
+				</td>
+			</tr>
+
+			<tr><%-- waiting for ticket decision #543 --%>
+				<td colspan="2">
+				</td>
+				<td colspan="2" class="labelLeft">
+					<input type="button" id="buttonAddReferencetoyourinstitutionsholdingsguide" value="<s:property value="getText('label.ai.relations.addNewResourceRelation')"/>" onclick="yiAddReferencetoyourinstitutionsholdingsguide('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				</td>
+			</tr>
+		</s:else>
 
 		<tr>
 			<td id="tdButtonsYourInstitutionTab" colspan="4">

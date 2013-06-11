@@ -240,7 +240,7 @@ var clickYourInstitutionAction = function(text1){
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 
 			// Check fill mandatory fields.
-			if ($(this).attr("value") != '') {
+			if ($(this).attr("value") != '' && j == 0) {
 				var position = yiMEPostalAddress.indexOf($(this).attr("id"));
 				if (position != -1) {
 					yiMEPostalAddress.splice(position, 1);
@@ -255,14 +255,14 @@ var clickYourInstitutionAction = function(text1){
 			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
 
 			// Check fill mandatory fields.
-			if ($(this).attr("value") != 'none') {
+			if ($(this).attr("value") != 'none' && j == 0) {
 				var position = yiMEPostalAddress.indexOf($(this).attr("id"));
 				if (position != -1) {
 					yiMEPostalAddress.splice(position, 1);
 				}
 			}
 		});
-		if(yiMEPostalAddress.length>0){
+		if(yiMEPostalAddress.length>0 && j == 0){
 			validationArray.push(postalAddress[j],yiMEPostalAddress);
 		}
 		jsonData += "}";
@@ -1088,6 +1088,7 @@ function yiAddVisitorsAddressTranslation(text1) {
 		$("table#yiTableVisitorsAddress_"+(counter+1)+" input[type='text']").each(function(){
 			$(this).val(""); // Clean all input_text.
 		});
+		$("table#yiTableVisitorsAddress_"+(counter+1)+" #selectYIVASelectLanguage").attr("value","none");
 		// Remove "*".
 		$("table#yiTableVisitorsAddress_"+(counter+1)).find("span").remove();
 	} else {
@@ -1130,11 +1131,8 @@ function yiAddPostalAddressIfDifferent(text1, text2, text3, text4,control) {
 	$("table#yiTableOthers tr#yiPostalAddressTranslation").show();
 	if(!control){
 		control=true;
-		contactAddPostalAddressIfDifferent(text1, text2, text3, text4,control);
-		
+		contactAddPostalAddressIfDifferent(text1, text2, text3, text4,control);	
 	}
-	
-
 }
 
 function yiAddPostalAddressTranslation(text1) {
@@ -1151,6 +1149,7 @@ function yiAddPostalAddressTranslation(text1) {
 		$("table#yiTablePostalAddress_"+(counter+1)+" input[type='text']").each(function(){
 			$(this).val(""); // Clean all input_text.
 		});
+		$("table#yiTablePostalAddress_"+(counter+1)+" #selectYIPASelectLanguage").attr("value","none");
 		// Remove "*".
 		$("table#yiTablePostalAddress_"+(counter+1)).find("span").remove();
 	
@@ -1185,16 +1184,19 @@ function yiFutherAccessInformation2(text1){
 	clone.attr("id","trYIButtonFutherAccessInformation_"+(count+1));
 	var wrongField = false;
 	var furtherValue = clone.find("input[id^='futherAccessInformation']").val();
-	var furtherSelect = null;
+	/* var furtherSelect = null;
 	if(count>1){
 		furtherSelect = $("#selectFutherAccessInformation_"+count).attr("value");
 	}else{
 		furtherSelect = $("#selectFutherAccessInformation").attr("value");
-	}
-	if(furtherValue.length<=0 || furtherSelect=="none"){
+	} */
+	if(furtherValue.length<=0/* || furtherSelect=="none"*/){
 		wrongField = true;
 	}
 	clone.find("[id^='futherAccessInformation']").attr("value","");
+	clone.find("[id^='futherAccessInformation']").removeAttr("onchange");
+	clone.find("[id^='selectFutherAccessInformation']").attr("value","none");
+	clone.find("[id^='selectFutherAccessInformation']").removeAttr("onchange");
 	if(wrongField){
 		alert(text1);
 	}else{
@@ -1220,16 +1222,19 @@ function yiAddFutherInformationOnExistingFacilities2(text1) {
 	clone.attr("id","trButtonAddFutherInformationOnExistingFacilities_"+(count+1));
 	var wrongField = false;
 	var furtherValue = clone.find("input[id^='futherInformationOnExistingFacilities']").val();
-	var furtherSelect = null;
+	/* var furtherSelect = null;
 	if(count>1){
 		furtherSelect = $("#selectFutherAccessInformationOnExistingFacilities_"+count).attr("value");
 	}else{
 		furtherSelect = $("#selectFutherAccessInformationOnExistingFacilities").attr("value");
-	}
-	if(furtherValue.length<=0 || furtherSelect=="none"){
+	} */
+	if(furtherValue.length<=0/* || furtherSelect=="none"*/){
 		wrongField = true;
 	}
 	clone.find("[id^='futherInformationOnExistingFacilities']").attr("value","");
+	clone.find("[id^='futherInformationOnExistingFacilities']").removeAttr("onchange");
+	clone.find("[id^='selectFutherAccessInformationOnExistingFacilities']").attr("value","none");
+	clone.find("[id^='selectFutherAccessInformationOnExistingFacilities']").removeAttr("onchange");
 	if(wrongField){
 		alert(text1);
 	}else{
@@ -1259,13 +1264,15 @@ function yiAddReferencetoyourinstitutionsholdingsguide(text1){
 	clone2.find("[id^='selectYIReferencetoHoldingsguide']").attr("id","selectYIReferencetoHoldingsguide_"+(count+1));
 	var wrongField = false;
 	var title = $("#textYIHoldingsGuideLinkTitle"+((count>1)?("_"+count):"")).val();
-	var select = $("#selectYIReferencetoHoldingsguide"+((count>1)?("_"+count):"")).val();
+	// var select = $("#selectYIReferencetoHoldingsguide"+((count>1)?("_"+count):"")).val();
 	var link = $("#textReferencetoyourinstitutionsholdingsguide"+((count>1)?("_"+count):"")).val();
-	if(title.length<=0 || select=="none" || link.length<=0){
+	if(title.length<=0 /*|| select=="none" */|| link.length<=0){
 		wrongField = true;
 	}
-	clone.find("[id^='textYIEmailAddress']").attr("value","");
+	clone.find("[id^='textReferencetoyourinstitutionsholdingsguide']").removeAttr("onchange");
 	clone.find("[id^='textYIHoldingsGuideLinkTitle']").attr("value","");
+	clone.find("[id^='textYIHoldingsGuideLinkTitle']").removeAttr("onchange");
+	clone.find("[id^='selectYIReferencetoHoldingsguide']").attr("value","none");
 	if(wrongField){
 		alert(text1);
 	}else{
@@ -1494,14 +1501,13 @@ function addYIFurtherEmailsOfTheInstitution(text1){
 	//check values
 	var wrongField = false;
 	var textC1 = clone.find("[id^='textYIEmailAddress']").val();
-	var textC2 = $("#selectTextYILangEmail"+((count>1)?("_"+count):"")).val();
+	// var textC2 = $("#selectTextYILangEmail"+((count>1)?("_"+count):"")).val();
 	var textC3 = clone2.find("[id^='textYIEmailLinkTitle']").val(); 
-	if(textC1.length<=0 || textC2=="none" || textC3.length<=0){
+	if(textC1.length<=0 /*|| textC2=="none" */|| textC3.length<=0){
 		wrongField = true;
 	}
-	clone.find("[id^='textYIEmailLinkTitle']").attr("value","");
+	clone.find("[id^='selectTextYILangEmail']").attr("value","none");
 	clone2.find("[id^='textYIEmailLinkTitle']").attr("value","");
-	clone2.find("[id^='textYIWebpageLinkTitle']").attr("value","");
 	if(wrongField){
 		alert(text1);
 	}else{
@@ -1534,11 +1540,12 @@ function addYIFurtherWebsOfTheInstitution(text1){
 	//check values
 	var wrongField = false;
 	var textC1 = clone2.find("[id^='textYIWebpageLinkTitle']").val();
-	var textC2 = $("#selectTextYILangWebpage"+((count>1)?("_"+count):"")).val();
+	// var textC2 = $("#selectTextYILangWebpage"+((count>1)?("_"+count):"")).val();
 	var textC3 = clone.find("[id^='textYIWebpage']").val();
-	if(textC1.length<=0 || textC2=="none" || textC3.length<=0){
+	if(textC1.length<=0 /*|| textC2=="none" */|| textC3.length<=0){
 		wrongField = true;
 	}
+	clone.find("[id^='selectTextYILangWebpage']").attr("value","none");
 	clone2.find("[id^='textYIWebpageLinkTitle']").attr("value","");
 	clone2.attr("id","trButtonYILangWebpage_"+(count+1));
 	if(wrongField){
@@ -1564,11 +1571,12 @@ function yIAddOpeningTimes(text1){
 	clone.attr("id","trTextYIOpeningTimes_"+(count+1));
 	var wrongField = false;
 	var textC1 = clone.find("[id^='textYIOpeningTimes']").val();
-	var textC2 = $("#selectTextYIOpeningTimes"+((count>1)?("_"+count):"")).val();
-	if(textC1.length<=0 || textC2=="none"){
+	// var textC2 = $("#selectTextYIOpeningTimes"+((count>1)?("_"+count):"")).val();
+	if(textC1.length<=0/* || textC2=="none"*/){
 		wrongField = true;
 	}
 	clone.find("[id^='textYIOpeningTimes']").attr("value","");
+	clone.find("[id^='selectTextYIOpeningTimes']").attr("value","none");
 	if(wrongField){
 		alert(text1);
 	}else{
@@ -1624,11 +1632,12 @@ function yIAddClosingDates2(text1){
 	//check values
 	var wrongField = false;
 	var textC1 = clone.find("[id^='yourInstitutionClosingDates']").val();
-	var textC2 = $("#selectTextYIClosingTimes"+((count>1)?("_"+count):"")).val();
-	if(textC1.length<=0 || textC2=="none"){
+	// var textC2 = $("#selectTextYIClosingTimes"+((count>1)?("_"+count):"")).val();
+	if(textC1.length<=0/* || textC2=="none"*/){
 		wrongField = true;
 	}
 	clone.find("[id^='yourInstitutionClosingDates']").attr("value","");
+	clone.find("[id^='selectTextYIClosingTimes']").attr("value","none");
 	if(wrongField){
 		alert(text1);
 	}else{
@@ -2001,9 +2010,7 @@ function contactAddPostalAddressIfDifferent(property1, property2, property3, pro
 	if(!control && currentTab == "_1"){
 		control=true;
 		yiAddPostalAddressIfDifferent(property1, property2, property3, property4,control);
-		
 	}
-	
 }
 
 function contactAddPostalAddressTranslation(text1) {
@@ -3599,6 +3606,15 @@ function codeISILChanged(index){
 	$("#textIdentityIdentifierOfTheInstitution").attr("value",$("#textYIIdentifierOfTheInstitution").val());
 	
 }
+
+function loadDisableSelectsForFurtheIds() {
+	$("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(index){
+		if ($(this).attr("value") == "yes") {
+			codeISILChanged(index);
+		}
+	});
+}
+
 function contactTelephoneChanged(){
     var id = $("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").val();
     $("table#yiTableOthers #textYITelephone").attr("value",id);

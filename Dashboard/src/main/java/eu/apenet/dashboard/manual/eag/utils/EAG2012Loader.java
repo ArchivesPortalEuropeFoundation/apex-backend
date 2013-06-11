@@ -24,10 +24,12 @@ import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.dpt.utils.eag2012.Email;
 import eu.apenet.dpt.utils.eag2012.Library;
 import eu.apenet.dpt.utils.eag2012.Location;
+import eu.apenet.dpt.utils.eag2012.OtherRecordId;
 import eu.apenet.dpt.utils.eag2012.P;
 import eu.apenet.dpt.utils.eag2012.Parform;
 import eu.apenet.dpt.utils.eag2012.RecreationalServices;
 import eu.apenet.dpt.utils.eag2012.Repository;
+import eu.apenet.dpt.utils.eag2012.ResourceRelation;
 import eu.apenet.dpt.utils.eag2012.Searchroom;
 import eu.apenet.dpt.utils.eag2012.Telephone;
 import eu.apenet.dpt.utils.eag2012.Timetable;
@@ -58,6 +60,8 @@ public class EAG2012Loader{
 	// Common to various tabs.
     private String agent;
     private String countryCode;
+    private List<String> otherRecordId;
+    private List<String> otherRecordIdLocalType;
     private String otherRepositorId;
     private String recordId;
     private String selfRecordId;
@@ -74,30 +78,58 @@ public class EAG2012Loader{
     private String municipalityPostalcodeLang;
     private String street;
     private String streetLang;
+    private List<String> yiLongitude;
+    private List<String> yiLatitude;
+    private List<String> yiCountry;
+    private List<String> yiCountryLang;
+    private List<String> yiMunicipalityPostalcode;
+    private List<String> yiMunicipalityPostalcodeLang;
+    private List<String> yiStreet;
+    private List<String> yiStreetLang;
     private String municipalityPostalcodePostal;
     private String municipalityPostalcodePostalLang;
     private String streetPostal;
     private String streetPostalLang;
+    private List<String> yiMunicipalityPostalcodePostal;
+    private List<String> yiMunicipalityPostalcodePostalLang;
+    private List<String> yiStreetPostal;
+    private List<String> yiStreetPostalLang;
     private String geogarea;
     private String telephone;
     private String email;
     private String emailTitle;
     private String emailLang;
+    private List<String> yiEmail;
+    private List<String> yiEmailTitle;
+    private List<String> yiEmailLang;
     private String webpage;
     private String webpageTitle;
     private String webpageLang;
+    private List<String> yiWebpage;
+    private List<String> yiWebpageTitle;
+    private List<String> yiWebpageLang;
     private String opening;
     private String openingLang;
+    private List<String> yiOpening;
+    private List<String> yiOpeningLang;
     private String closing;
     private String closingLang;
+    private List<String> yiClosing;
+    private List<String> yiClosingLang;
     private String accessQuestion;
     private String restaccess;
     private String restaccessLang;
-    private String accessibility;
+    private List<String> yiRestaccess;
+    private List<String> yiRestaccessLang;
     private String accessibilityQuestion;
+    private String accessibility;
     private String accessibilityLang;
+    private List<String> yiAccessibility;
+    private List<String> yiAccessibilityLang;
     private String resourceRelationHref;
     private String resourceRelationrelationEntry;
+    private List<String> yiResourceRelationHref;
+    private List<String> yiResourceRelationrelationEntry;
     
 
 	// Your institution tab.
@@ -256,6 +288,7 @@ public class EAG2012Loader{
 	// Relations.
     private String resourceRelationType;
     private String resourceRelationLang;
+    private List<String> yiResourceRelationLang;
     private String resourceRelationrelationEntryLocalType;
     private String resourceRelationrelationEntryScriptCode;
     private String resourceRelationrelationEntryTransliteration;
@@ -353,6 +386,53 @@ public class EAG2012Loader{
 	public void setCountryCode(String countryCode) {
 		this.countryCode = countryCode;
 	}
+	/**
+	 * @return the otherRecordId
+	 */
+	public List<String> getOtherRecordId() {
+		if (this.otherRecordId == null) {
+			this.otherRecordId = new ArrayList<String>();
+		}
+		return this.otherRecordId;
+	}
+
+	/**
+	 * @param otherRecordId the otherRecordId to set
+	 */
+	public void setOtherRecordId(List<String> otherRecordId) {
+		this.otherRecordId = otherRecordId;
+	}
+
+	/**
+	 * @param otherRecordId the otherRecordId to add
+	 */
+	public void addOtherRecordId(String otherRecordId) {
+		this.getOtherRecordId().add(otherRecordId);
+	}
+	/**
+	 * @return the otherRecordIdLocalType
+	 */
+	public List<String> getOtherRecordIdLocalType() {
+		if (this.otherRecordIdLocalType == null) {
+			this.otherRecordIdLocalType = new ArrayList<String>();
+		}
+		return this.otherRecordIdLocalType;
+	}
+
+	/**
+	 * @param otherRecordIdLocalType the otherRecordIdLocalType to set
+	 */
+	public void setOtherRecordIdLocalType(List<String> otherRecordIdLocalType) {
+		this.otherRecordIdLocalType = otherRecordIdLocalType;
+	}
+
+	/**
+	 * @param otherRecordIdLocalType the otherRecordIdLocalType to add
+	 */
+	public void addOtherRecordIdLocalType(String otherRecordIdLocalType) {
+		this.getOtherRecordIdLocalType().add(otherRecordIdLocalType);
+	}
+
 	public String getOtherRepositorId() {
 		return this.otherRepositorId;
 	}
@@ -503,6 +583,199 @@ public class EAG2012Loader{
 	public void setStreetLang(String streetLang) {
 		this.streetLang = streetLang;
 	}
+	/**
+	 * @return the yiLongitude
+	 */
+	public List<String> getYiLongitude() {
+		if (this.yiLongitude == null) {
+			this.yiLongitude = new ArrayList<String>();
+		}
+		return this.yiLongitude;
+	}
+
+	/**
+	 * @param yiLongitude the yiLongitude to set
+	 */
+	public void setYiLongitude(List<String> yiLongitude) {
+		this.yiLongitude = yiLongitude;
+	}
+
+	/**
+	 * @param yiLongitude the yiLongitude to add
+	 */
+	public void addYiLongitude(String yiLongitude) {
+		this.getYiLongitude().add(yiLongitude);
+	}
+
+	/**
+	 * @return the yiLatitude
+	 */
+	public List<String> getYiLatitude() {
+		if (this.yiLatitude == null) {
+			this.yiLatitude = new ArrayList<String>();
+		}
+		return this.yiLatitude;
+	}
+
+	/**
+	 * @param yiLatitude the yiLatitude to set
+	 */
+	public void setYiLatitude(List<String> yiLatitude) {
+		this.yiLatitude = yiLatitude;
+	}
+
+	/**
+	 * @param yiLatitude the yiLatitude to add
+	 */
+	public void addYiLatitude(String yiLatitude) {
+		this.getYiLatitude().add(yiLatitude);
+	}
+
+	/**
+	 * @return the yiCountry
+	 */
+	public List<String> getYiCountry() {
+		if (this.yiCountry == null) {
+			this.yiCountry = new ArrayList<String>();
+		}
+		return this.yiCountry;
+	}
+
+	/**
+	 * @param yiCountry the yiCountry to set
+	 */
+	public void setYiCountry(List<String> yiCountry) {
+		this.yiCountry = yiCountry;
+	}
+
+	/**
+	 * @param yiCountry the yiCountry to add
+	 */
+	public void addYiCountry(String yiCountry) {
+		this.getYiCountry().add(yiCountry);
+	}
+
+	/**
+	 * @return the yiCountryLang
+	 */
+	public List<String> getYiCountryLang() {
+		if (this.yiCountryLang == null) {
+			this.yiCountryLang = new ArrayList<String>();
+		}
+		return this.yiCountryLang;
+	}
+
+	/**
+	 * @param yiCountryLang the yiCountryLang to set
+	 */
+	public void setYiCountryLang(List<String> yiCountryLang) {
+		this.yiCountryLang = yiCountryLang;
+	}
+
+	/**
+	 * @param yiCountryLang the yiCountryLang to add
+	 */
+	public void addYiCountryLang(String yiCountryLang) {
+		this.getYiCountryLang().add(yiCountryLang);
+	}
+
+	/**
+	 * @return the yiMunicipalityPostalcode
+	 */
+	public List<String> getYiMunicipalityPostalcode() {
+		if (this.yiMunicipalityPostalcode == null) {
+			this.yiMunicipalityPostalcode = new ArrayList<String>();
+		}
+		return this.yiMunicipalityPostalcode;
+	}
+
+	/**
+	 * @param yiMunicipalityPostalcode the yiMunicipalityPostalcode to set
+	 */
+	public void setYiMunicipalityPostalcode(List<String> yiMunicipalityPostalcode) {
+		this.yiMunicipalityPostalcode = yiMunicipalityPostalcode;
+	}
+
+	/**
+	 * @param yiMunicipalityPostalcode the yiMunicipalityPostalcode to add
+	 */
+	public void addYiMunicipalityPostalcode(String yiMunicipalityPostalcode) {
+		this.getYiMunicipalityPostalcode().add(yiMunicipalityPostalcode);
+	}
+
+	/**
+	 * @return the yiMunicipalityPostalcodeLang
+	 */
+	public List<String> getYiMunicipalityPostalcodeLang() {
+		if (this.yiMunicipalityPostalcodeLang == null) {
+			this.yiMunicipalityPostalcodeLang = new ArrayList<String>();
+		}
+		return this.yiMunicipalityPostalcodeLang;
+	}
+
+	/**
+	 * @param yiMunicipalityPostalcodeLang the yiMunicipalityPostalcodeLang to set
+	 */
+	public void setYiMunicipalityPostalcodeLang(
+			List<String> yiMunicipalityPostalcodeLang) {
+		this.yiMunicipalityPostalcodeLang = yiMunicipalityPostalcodeLang;
+	}
+
+	/**
+	 * @param yiMunicipalityPostalcodeLang the yiMunicipalityPostalcodeLang to add
+	 */
+	public void addYiMunicipalityPostalcodeLang(String yiMunicipalityPostalcodeLang) {
+		this.getYiMunicipalityPostalcodeLang().add(yiMunicipalityPostalcodeLang);
+	}
+
+	/**
+	 * @return the yiStreet
+	 */
+	public List<String> getYiStreet() {
+		if (this.yiStreet == null) {
+			this.yiStreet = new ArrayList<String>();
+		}
+		return this.yiStreet;
+	}
+
+	/**
+	 * @param yiStreet the yiStreet to set
+	 */
+	public void setYiStreet(List<String> yiStreet) {
+		this.yiStreet = yiStreet;
+	}
+
+	/**
+	 * @param yiStreet the yiStreet to add
+	 */
+	public void addYiStreet(String yiStreet) {
+		this.getYiStreet().add(yiStreet);
+	}
+
+	/**
+	 * @return the yiStreetLang
+	 */
+	public List<String> getYiStreetLang() {
+		if (this.yiStreetLang == null) {
+			this.yiStreetLang = new ArrayList<String>();
+		}
+		return this.yiStreetLang;
+	}
+
+	/**
+	 * @param yiStreetLang the yiStreetLang to set
+	 */
+	public void setYiStreetLang(List<String> yiStreetLang) {
+		this.yiStreetLang = yiStreetLang;
+	}
+
+	/**
+	 * @param yiStreetLang the yiStreetLang to add
+	 */
+	public void addYiStreetLang(String yiStreetLang) {
+		this.getYiStreetLang().add(yiStreetLang);
+	}
+
 	public String getMunicipalityPostalcodePostal() {
 		return this.municipalityPostalcodePostal;
 	}
@@ -527,6 +800,104 @@ public class EAG2012Loader{
 	public void setStreetPostalLang(String streetPostalLang) {
 		this.streetPostalLang = streetPostalLang;
 	}
+	/**
+	 * @return the yiMunicipalityPostalcodePostal
+	 */
+	public List<String> getYiMunicipalityPostalcodePostal() {
+		if (this.yiMunicipalityPostalcodePostal == null) {
+			this.yiMunicipalityPostalcodePostal = new ArrayList<String>();
+		}
+		return this.yiMunicipalityPostalcodePostal;
+	}
+
+	/**
+	 * @param yiMunicipalityPostalcodePostal the yiMunicipalityPostalcodePostal to set
+	 */
+	public void setYiMunicipalityPostalcodePostal(
+			List<String> yiMunicipalityPostalcodePostal) {
+		this.yiMunicipalityPostalcodePostal = yiMunicipalityPostalcodePostal;
+	}
+
+	/**
+	 * @param yiMunicipalityPostalcodePostal the yiMunicipalityPostalcodePostal to add
+	 */
+	public void addYiMunicipalityPostalcodePostal(String yiMunicipalityPostalcodePostal) {
+		this.getYiMunicipalityPostalcodePostal().add(yiMunicipalityPostalcodePostal);
+	}
+
+	/**
+	 * @return the yiMunicipalityPostalcodePostalLang
+	 */
+	public List<String> getYiMunicipalityPostalcodePostalLang() {
+		if (this.yiMunicipalityPostalcodePostalLang == null) {
+			this.yiMunicipalityPostalcodePostalLang = new ArrayList<String>();
+		}
+		return this.yiMunicipalityPostalcodePostalLang;
+	}
+
+	/**
+	 * @param yiMunicipalityPostalcodePostalLang the yiMunicipalityPostalcodePostalLang to set
+	 */
+	public void setYiMunicipalityPostalcodePostalLang(
+			List<String> yiMunicipalityPostalcodePostalLang) {
+		this.yiMunicipalityPostalcodePostalLang = yiMunicipalityPostalcodePostalLang;
+	}
+
+	/**
+	 * @param yiMunicipalityPostalcodePostalLang the yiMunicipalityPostalcodePostalLang to add
+	 */
+	public void addYiMunicipalityPostalcodePostalLang(String yiMunicipalityPostalcodePostalLang) {
+		this.getYiMunicipalityPostalcodePostalLang().add(yiMunicipalityPostalcodePostalLang);
+	}
+
+	/**
+	 * @return the yiStreetPostal
+	 */
+	public List<String> getYiStreetPostal() {
+		if (this.yiStreetPostal == null) {
+			this.yiStreetPostal = new ArrayList<String>();
+		}
+		return this.yiStreetPostal;
+	}
+
+	/**
+	 * @param yiStreetPostal the yiStreetPostal to set
+	 */
+	public void setYiStreetPostal(List<String> yiStreetPostal) {
+		this.yiStreetPostal = yiStreetPostal;
+	}
+
+	/**
+	 * @param yiStreetPostal the yiStreetPostal to add
+	 */
+	public void addYiStreetPostal(String yiStreetPostal) {
+		this.getYiStreetPostal().add(yiStreetPostal);
+	}
+
+	/**
+	 * @return the yiStreetPostalLang
+	 */
+	public List<String> getYiStreetPostalLang() {
+		if (this.yiStreetPostalLang == null) {
+			this.yiStreetPostalLang = new ArrayList<String>();
+		}
+		return this.yiStreetPostalLang;
+	}
+
+	/**
+	 * @param yiStreetPostalLang the yiStreetPostalLang to set
+	 */
+	public void setYiStreetPostalLang(List<String> yiStreetPostalLang) {
+		this.yiStreetPostalLang = yiStreetPostalLang;
+	}
+
+	/**
+	 * @param yiStreetPostalLang the yiStreetPostalLang to add
+	 */
+	public void addYiStreetPostalLang(String yiStreetPostalLang) {
+		this.getYiStreetPostalLang().add(yiStreetPostalLang);
+	}
+
 	public String getGeogarea() {
 		return this.geogarea;
 	}
@@ -557,6 +928,78 @@ public class EAG2012Loader{
 	public void setEmailLang(String emailLang) {
 		this.emailLang = emailLang;
 	}
+	/**
+	 * @return the yiEmail
+	 */
+	public List<String> getYiEmail() {
+		if (this.yiEmail == null) {
+			this.yiEmail = new ArrayList<String>();
+		}
+		return this.yiEmail;
+	}
+
+	/**
+	 * @param yiEmail the yiEmail to set
+	 */
+	public void setYiEmail(List<String> yiEmail) {
+		this.yiEmail = yiEmail;
+	}
+
+	/**
+	 * @param yiEmail the yiEmail to add
+	 */
+	public void addYiEmail(String yiEmail) {
+		this.getYiEmail().add(yiEmail);
+	}
+
+	/**
+	 * @return the yiEmailTitle
+	 */
+	public List<String> getYiEmailTitle() {
+		if (this.yiEmailTitle == null) {
+			this.yiEmailTitle = new ArrayList<String>();
+		}
+		return this.yiEmailTitle;
+	}
+
+	/**
+	 * @param yiEmailTitle the yiEmailTitle to set
+	 */
+	public void setYiEmailTitle(List<String> yiEmailTitle) {
+		this.yiEmailTitle = yiEmailTitle;
+	}
+
+	/**
+	 * @param yiEmailTitle the yiEmailTitle to add
+	 */
+	public void addYiEmailTitle(String yiEmailTitle) {
+		this.getYiEmailTitle().add(yiEmailTitle);
+	}
+
+	/**
+	 * @return the yiEmailLang
+	 */
+	public List<String> getYiEmailLang() {
+		if (this.yiEmailLang == null) {
+			this.yiEmailLang = new ArrayList<String>();
+		}
+		return this.yiEmailLang;
+	}
+
+	/**
+	 * @param yiEmailLang the yiEmailLang to set
+	 */
+	public void setYiEmailLang(List<String> yiEmailLang) {
+		this.yiEmailLang = yiEmailLang;
+	}
+
+	/**
+	 * @param yiEmailLang the yiEmailLang to add
+	 */
+	public void addYiEmailLang(String yiEmailLang) {
+		this.getYiEmailLang().add(yiEmailLang);
+	}
+
 	public String getWebpage() {
 		return this.webpage;
 	}
@@ -575,6 +1018,78 @@ public class EAG2012Loader{
 	public void setWebpageLang(String webpageLang) {
 		this.webpageLang = webpageLang;
 	}
+	/**
+	 * @return the yiWebpage
+	 */
+	public List<String> getYiWebpage() {
+		if (this.yiWebpage == null) {
+			this.yiWebpage = new ArrayList<String>();
+		}
+		return this.yiWebpage;
+	}
+
+	/**
+	 * @param yiWebpage the yiWebpage to set
+	 */
+	public void setYiWebpage(List<String> yiWebpage) {
+		this.yiWebpage = yiWebpage;
+	}
+
+	/**
+	 * @param yiWebpage the yiWebpage to add
+	 */
+	public void addYiWebpage(String yiWebpage) {
+		this.getYiWebpage().add(yiWebpage);
+	}
+
+	/**
+	 * @return the yiWebpageTitle
+	 */
+	public List<String> getYiWebpageTitle() {
+		if (this.yiWebpageTitle == null) {
+			this.yiWebpageTitle = new ArrayList<String>();
+		}
+		return this.yiWebpageTitle;
+	}
+
+	/**
+	 * @param yiWebpageTitle the yiWebpageTitle to set
+	 */
+	public void setYiWebpageTitle(List<String> yiWebpageTitle) {
+		this.yiWebpageTitle = yiWebpageTitle;
+	}
+
+	/**
+	 * @param yiWebpageTitle the yiWebpageTitle to add
+	 */
+	public void addYiWebpageTitle(String yiWebpageTitle) {
+		this.getYiWebpageTitle().add(yiWebpageTitle);
+	}
+
+	/**
+	 * @return the yiWebpageLang
+	 */
+	public List<String> getYiWebpageLang() {
+		if (this.yiWebpageLang == null) {
+			this.yiWebpageLang = new ArrayList<String>();
+		}
+		return this.yiWebpageLang;
+	}
+
+	/**
+	 * @param yiWebpageLang the yiWebpageLang to set
+	 */
+	public void setYiWebpageLang(List<String> yiWebpageLang) {
+		this.yiWebpageLang = yiWebpageLang;
+	}
+
+	/**
+	 * @param yiWebpageLang the yiWebpageLang to add
+	 */
+	public void addYiWebpageLang(String yiWebpageLang) {
+		this.getYiWebpageLang().add(yiWebpageLang);
+	}
+
 	public String getOpening() {
 		return this.opening;
 	}
@@ -587,6 +1102,54 @@ public class EAG2012Loader{
 	public void setOpeningLang(String openingLang) {
 		this.openingLang = openingLang;
 	}
+	/**
+	 * @return the yiOpening
+	 */
+	public List<String> getYiOpening() {
+		if (this.yiOpening == null) {
+			this.yiOpening = new ArrayList<String>();
+		}
+		return this.yiOpening;
+	}
+
+	/**
+	 * @param yiOpening the yiOpening to set
+	 */
+	public void setYiOpening(List<String> yiOpening) {
+		this.yiOpening = yiOpening;
+	}
+
+	/**
+	 * @param yiOpening the yiOpening to add
+	 */
+	public void addYiOpening(String yiOpening) {
+		this.getYiOpening().add(yiOpening);
+	}
+
+	/**
+	 * @return the yiOpeningLang
+	 */
+	public List<String> getYiOpeningLang() {
+		if (this.yiOpeningLang == null) {
+			this.yiOpeningLang = new ArrayList<String>();
+		}
+		return this.yiOpeningLang;
+	}
+
+	/**
+	 * @param yiOpeningLang the yiOpeningLang to set
+	 */
+	public void setYiOpeningLang(List<String> yiOpeningLang) {
+		this.yiOpeningLang = yiOpeningLang;
+	}
+
+	/**
+	 * @param yiOpeningLang the yiOpeningLang to add
+	 */
+	public void addYiOpeningLang(String yiOpeningLang) {
+		this.getYiOpeningLang().add(yiOpeningLang);
+	}
+
 	public String getClosing() {
 		return this.closing;
 	}
@@ -599,6 +1162,54 @@ public class EAG2012Loader{
 	public void setClosingLang(String closingLang) {
 		this.closingLang = closingLang;
 	}
+	/**
+	 * @return the yiClosing
+	 */
+	public List<String> getYiClosing() {
+		if (this.yiClosing == null) {
+			this.yiClosing = new ArrayList<String>();
+		}
+		return this.yiClosing;
+	}
+
+	/**
+	 * @param yiClosing the yiClosing to set
+	 */
+	public void setYiClosing(List<String> yiClosing) {
+		this.yiClosing = yiClosing;
+	}
+
+	/**
+	 * @param yiClosing the yiClosing to add
+	 */
+	public void addYiClosing(String yiClosing) {
+		this.getYiClosing().add(yiClosing);
+	}
+
+	/**
+	 * @return the yiClosingLang
+	 */
+	public List<String> getYiClosingLang() {
+		if (this.yiClosingLang == null) {
+			this.yiClosingLang = new ArrayList<String>();
+		}
+		return yiClosingLang;
+	}
+
+	/**
+	 * @param yiClosingLang the yiClosingLang to set
+	 */
+	public void setYiClosingLang(List<String> yiClosingLang) {
+		this.yiClosingLang = yiClosingLang;
+	}
+
+	/**
+	 * @param yiClosingLang the yiClosingLang to add
+	 */
+	public void addYiClosingLang(String yiClosingLang) {
+		this.getYiClosingLang().add(yiClosingLang);
+	}
+
 	public String getAccessQuestion() {
 		return this.accessQuestion;
 	}
@@ -617,6 +1228,54 @@ public class EAG2012Loader{
 	public void setRestaccessLang(String restaccessLang) {
 		this.restaccessLang = restaccessLang;
 	}
+	/**
+	 * @return the yiRestaccess
+	 */
+	public List<String> getYiRestaccess() {
+		if (this.yiRestaccess == null) {
+			this.yiRestaccess = new ArrayList<String>();
+		}
+		return this.yiRestaccess;
+	}
+
+	/**
+	 * @param yiRestaccess the yiRestaccess to set
+	 */
+	public void setYiRestaccess(List<String> yiRestaccess) {
+		this.yiRestaccess = yiRestaccess;
+	}
+
+	/**
+	 * @param yiRestaccess the yiRestaccess to add
+	 */
+	public void addYiRestaccess(String yiRestaccess) {
+		this.getYiRestaccess().add(yiRestaccess);
+	}
+
+	/**
+	 * @return the yiRestaccessLang
+	 */
+	public List<String> getYiRestaccessLang() {
+		if (this.yiRestaccessLang == null) {
+			this.yiRestaccessLang = new ArrayList<String>();
+		}
+		return this.yiRestaccessLang;
+	}
+
+	/**
+	 * @param yiRestaccessLang the yiRestaccessLang to set
+	 */
+	public void setYiRestaccessLang(List<String> yiRestaccessLang) {
+		this.yiRestaccessLang = yiRestaccessLang;
+	}
+
+	/**
+	 * @param yiRestaccessLang the yiRestaccessLang to add
+	 */
+	public void addYiRestaccessLang(String yiRestaccessLang) {
+		this.getYiRestaccessLang().add(yiRestaccessLang);
+	}
+
 	public String getAccessibility() {
 		return this.accessibility;
 	}
@@ -635,6 +1294,54 @@ public class EAG2012Loader{
 	public void setAccessibilityLang(String accessibilityLang) {
 		this.accessibilityLang = accessibilityLang;
 	}
+	/**
+	 * @return the yiAccessibility
+	 */
+	public List<String> getYiAccessibility() {
+		if (this.yiAccessibility == null) {
+			this.yiAccessibility = new ArrayList<String>();
+		}
+		return yiAccessibility;
+	}
+
+	/**
+	 * @param yiAccessibility the yiAccessibility to set
+	 */
+	public void setYiAccessibility(List<String> yiAccessibility) {
+		this.yiAccessibility = yiAccessibility;
+	}
+
+	/**
+	 * @param yiAccessibility the yiAccessibility to add
+	 */
+	public void addYiAccessibility(String yiAccessibility) {
+		this.getYiAccessibility().add(yiAccessibility);
+	}
+
+	/**
+	 * @return the yiAccessibilityLang
+	 */
+	public List<String> getYiAccessibilityLang() {
+		if (this.yiAccessibilityLang == null) {
+			this.yiAccessibilityLang = new ArrayList<String>();
+		}
+		return this.yiAccessibilityLang;
+	}
+
+	/**
+	 * @param yiAccessibilityLang the yiAccessibilityLang to set
+	 */
+	public void setYiAccessibilityLang(List<String> yiAccessibilityLang) {
+		this.yiAccessibilityLang = yiAccessibilityLang;
+	}
+
+	/**
+	 * @param yiAccessibilityLang the yiAccessibilityLang to add
+	 */
+	public void addYiAccessibilityLang(String yiAccessibilityLang) {
+		this.getYiAccessibilityLang().add(yiAccessibilityLang);
+	}
+
 	public String getResourceRelationHref() {
 		return this.resourceRelationHref;
 	}
@@ -647,6 +1354,78 @@ public class EAG2012Loader{
 	public void setResourceRelationLang(String resourceRelationLang) {
 		this.resourceRelationLang = resourceRelationLang;
 	}
+	/**
+	 * @return the yiResourceRelationHref
+	 */
+	public List<String> getYiResourceRelationHref() {
+		if (this.yiResourceRelationHref == null) {
+			this.yiResourceRelationHref = new ArrayList<String>();
+		}
+		return this.yiResourceRelationHref;
+	}
+
+	/**
+	 * @param yiResourceRelationHref the yiResourceRelationHref to set
+	 */
+	public void setYiResourceRelationHref(List<String> yiResourceRelationHref) {
+		this.yiResourceRelationHref = yiResourceRelationHref;
+	}
+
+	/**
+	 * @param yiResourceRelationHref the yiResourceRelationHref to add
+	 */
+	public void addYiResourceRelationHref(String yiResourceRelationHref) {
+		this.getYiResourceRelationHref().add(yiResourceRelationHref);
+	}
+
+	/**
+	 * @return the yiResourceRelationrelationEntry
+	 */
+	public List<String> getYiResourceRelationrelationEntry() {
+		if (this.yiResourceRelationrelationEntry == null) {
+			this.yiResourceRelationrelationEntry = new ArrayList<String>();
+		}
+		return this.yiResourceRelationrelationEntry;
+	}
+
+	/**
+	 * @param yiResourceRelationrelationEntry the yiResourceRelationrelationEntry to set
+	 */
+	public void setYiResourceRelationrelationEntry(List<String> yiResourceRelationrelationEntry) {
+		this.yiResourceRelationrelationEntry = yiResourceRelationrelationEntry;
+	}
+
+	/**
+	 * @param yiResourceRelationrelationEntry the yiResourceRelationrelationEntry to add
+	 */
+	public void addYiResourceRelationrelationEntry(String yiResourceRelationrelationEntry) {
+		this.getYiResourceRelationrelationEntry().add(yiResourceRelationrelationEntry);
+	}
+
+	/**
+	 * @return the yiResourceRelationLang
+	 */
+	public List<String> getYiResourceRelationLang() {
+		if (this.yiResourceRelationLang == null) {
+			this.yiResourceRelationLang = new ArrayList<String>();
+		}
+		return this.yiResourceRelationLang;
+	}
+
+	/**
+	 * @param yiResourceRelationLang the yiResourceRelationLang to set
+	 */
+	public void setYiResourceRelationLang(List<String> yiResourceRelationLang) {
+		this.yiResourceRelationLang = yiResourceRelationLang;
+	}
+
+	/**
+	 * @param yiResourceRelationLang the yiResourceRelationLang to add
+	 */
+	public void addYiResourceRelationLang(String yiResourceRelationLang) {
+		this.getYiResourceRelationLang().add(yiResourceRelationLang);
+	}
+
 	public String getResourceRelationType() {
 		return this.resourceRelationType;
 	}
@@ -1632,6 +2411,7 @@ public class EAG2012Loader{
 
 		// Country code.
 		if (this.eag.getArchguide().getIdentity().getRepositorid() != null
+				&& this.eag.getArchguide().getIdentity() != null
 				&& this.eag.getArchguide().getIdentity().getRepositorid().getCountrycode() !=  null
 				&& !this.eag.getArchguide().getIdentity().getRepositorid().getCountrycode().isEmpty()) {
 			this.setCountryCode(this.eag.getArchguide().getIdentity().getRepositorid().getCountrycode());
@@ -1640,7 +2420,8 @@ public class EAG2012Loader{
 		}
 
 		// Identifier of the institution.
-		if (this.eag.getArchguide().getIdentity().getOtherRepositorId() != null) {
+		if (this.eag.getArchguide().getIdentity() != null
+				&& this.eag.getArchguide().getIdentity().getOtherRepositorId() != null) {
 			this.setOtherRepositorId(this.eag.getArchguide().getIdentity().getOtherRepositorId().getContent());
 			if (this.eag.getControl().getRecordId() != null) {
 				if (this.eag.getArchguide().getIdentity().getOtherRepositorId().getContent().equalsIgnoreCase(this.eag.getControl().getRecordId().getValue())) {
@@ -1657,6 +2438,23 @@ public class EAG2012Loader{
 			// Load the recordId value
 			this.setOtherRepositorId(this.eag.getControl().getRecordId().getValue());
 			this.setRecordIdISIL(Eag2012.OPTION_YES);
+		}
+
+		// Further IDs.
+		if (!this.eag.getControl().getOtherRecordId().isEmpty()) {
+			for (int i = 0; i < this.eag.getControl().getOtherRecordId().size(); i++) {
+				OtherRecordId otherRecordId = this.eag.getControl().getOtherRecordId().get(i);
+				if (!otherRecordId.getValue().equalsIgnoreCase(this.getRecordId())
+						&& !otherRecordId.getValue().equalsIgnoreCase(this.getOtherRepositorId())) {
+					this.addOtherRecordId(otherRecordId.getValue());
+					if (otherRecordId.getLocalType() != null
+							&& !otherRecordId.getLocalType().isEmpty()) {
+						this.addOtherRecordIdLocalType(otherRecordId.getLocalType());
+					} else {
+						this.addOtherRecordIdLocalType(Eag2012.OPTION_NO);
+					}
+				}
+			}
 		}
 
 		// ID used in APE.
@@ -1733,6 +2531,108 @@ public class EAG2012Loader{
 						}
 					}
 				}
+				// Visitor & Postal address for institution.
+				if (!repository.getLocation().isEmpty()) {
+					for (int i = 0; i < repository.getLocation().size(); i++) {
+						Location location = repository.getLocation().get(i);
+						if (location.getLocalType().equalsIgnoreCase(Eag2012.VISITORS_ADDRESS)) {
+							// Street.
+							if (location.getStreet() != null) {
+								if (location.getStreet().getContent() != null
+										&& !location.getStreet().getContent().isEmpty()) {
+									this.addYiStreet(location.getStreet().getContent());
+								} else {
+									this.addYiStreet("");
+								}
+								if (location.getStreet().getLang() != null
+										&& !location.getStreet().getLang().isEmpty()) {
+									this.addYiStreetLang(location.getStreet().getLang());
+								} else {
+									this.addYiStreetLang(Eag2012.OPTION_NONE);
+								}
+							}
+							// City.
+							if (location.getMunicipalityPostalcode() != null) {
+								if (location.getMunicipalityPostalcode().getContent() != null
+										&& !location.getMunicipalityPostalcode().getContent().isEmpty()) {
+									this.addYiMunicipalityPostalcode(location.getMunicipalityPostalcode().getContent());
+								} else {
+									this.addYiMunicipalityPostalcode("");
+								}
+								if (location.getMunicipalityPostalcode().getLang() != null
+										&& !location.getMunicipalityPostalcode().getLang().isEmpty()) {
+									this.addYiMunicipalityPostalcodeLang(location.getMunicipalityPostalcode().getLang());
+								} else if (location.getStreet().getLang() != null
+										&& !location.getStreet().getLang().isEmpty()) {
+									this.addYiMunicipalityPostalcodeLang(location.getStreet().getLang());
+								} else {
+									this.addYiMunicipalityPostalcodeLang(Eag2012.OPTION_NONE);
+								}
+							}
+							// Country.
+							if (location.getCountry() != null) {
+								if (location.getCountry().getContent() != null
+										&& !location.getCountry().getContent().isEmpty()) {
+									this.addYiCountry(location.getCountry().getContent());
+								} else {
+									this.addYiCountry("");
+								}
+								if (location.getCountry().getLang() != null
+										&& !location.getCountry().getLang().isEmpty()) {
+									this.addYiCountryLang(location.getCountry().getLang());
+								} else if (location.getStreet().getLang() != null
+										&& !location.getStreet().getLang().isEmpty()) {
+									this.addYiCountryLang(location.getStreet().getLang());
+								} else {
+									this.addYiCountryLang(Eag2012.OPTION_NONE);
+								}
+							}
+							// Latitude.
+							if (location.getLatitude() != null) {
+								this.addYiLatitude(location.getLatitude());
+							}
+							// Longitude.
+							if (location.getLongitude() != null) {
+								this.addYiLongitude(location.getLongitude());
+							}
+						}
+						if (location.getLocalType().equalsIgnoreCase(Eag2012.POSTAL_ADDRESS)) {
+							// Postal street.
+							if (location.getStreet() != null) {
+								if (location.getStreet().getContent() != null
+										&& !location.getStreet().getContent().isEmpty()) {
+									this.addYiStreetPostal(location.getStreet().getContent());
+								} else {
+									this.addYiStreetPostal("");
+								}
+								if (location.getStreet().getLang() != null
+										&& !location.getStreet().getLang().isEmpty()) {
+									this.addYiStreetPostalLang(location.getStreet().getLang());
+								} else {
+									this.addYiStreetPostalLang(Eag2012.OPTION_NONE);
+								}
+							}
+							// Postal city.
+							if (location.getMunicipalityPostalcode() != null) {
+								if (location.getMunicipalityPostalcode().getContent() != null
+										&& !location.getMunicipalityPostalcode().getContent().isEmpty()) {
+									this.addYiMunicipalityPostalcodePostal(location.getMunicipalityPostalcode().getContent());
+								} else {
+									this.addYiMunicipalityPostalcodePostal("");
+								}
+								if (location.getMunicipalityPostalcode().getLang() != null
+										&& !location.getMunicipalityPostalcode().getLang().isEmpty()) {
+									this.addYiMunicipalityPostalcodePostalLang(location.getMunicipalityPostalcode().getLang());
+								} else if (location.getStreet().getLang() != null
+										&& !location.getStreet().getLang().isEmpty()) {
+									this.addYiMunicipalityPostalcodePostalLang(location.getStreet().getLang());
+								} else {
+									this.addYiMunicipalityPostalcodePostalLang(Eag2012.OPTION_NONE);
+								}
+							}
+						}
+					}
+				}
 
 				// Continent.
 				if (repository.getGeogarea() != null) {
@@ -1773,6 +2673,23 @@ public class EAG2012Loader{
 						this.setEmailTitle(repository.getEmail().get(i).getContent());
 						this.setEmailLang(repository.getEmail().get(i).getLang());
 					}
+
+					// E-mail address for institution.
+					for (int i = 0; i < repository.getEmail().size(); i++) {
+						this.addYiEmail(repository.getEmail().get(i).getHref());
+						if (repository.getEmail().get(i).getContent() != null
+								&& !repository.getEmail().get(i).getContent().isEmpty()) {
+							this.addYiEmailTitle(repository.getEmail().get(i).getContent());
+						} else {
+							this.addYiEmailTitle("");
+						}
+						if (repository.getEmail().get(i).getLang() != null
+								&& !repository.getEmail().get(i).getLang().isEmpty()) {
+							this.addYiEmailLang(repository.getEmail().get(i).getLang());
+						} else {
+							this.addYiEmailLang(Eag2012.OPTION_NONE);
+						}
+					}
 				}
 
 				// Webpage.
@@ -1782,6 +2699,23 @@ public class EAG2012Loader{
 						this.setWebpage(repository.getWebpage().get(i).getHref());
 						this.setWebpageTitle(repository.getWebpage().get(i).getContent());
 						this.setWebpageLang(repository.getWebpage().get(i).getLang());
+					}
+
+					// Webpage address for institution.
+					for (int i = 0; i < repository.getWebpage().size(); i++) {
+						this.addYiWebpage(repository.getWebpage().get(i).getHref());
+						if (repository.getWebpage().get(i).getContent() != null
+								&& !repository.getWebpage().get(i).getContent().isEmpty()) {
+							this.addYiWebpageTitle(repository.getWebpage().get(i).getContent());
+						} else {
+							this.addYiWebpageTitle("");
+						}
+						if (repository.getWebpage().get(i).getLang() != null
+								&& !repository.getWebpage().get(i).getLang().isEmpty()) {
+							this.addYiWebpageLang(repository.getWebpage().get(i).getLang());
+						} else {
+							this.addYiWebpageLang(Eag2012.OPTION_NONE);
+						}
 					}
 				}
 
@@ -1796,6 +2730,19 @@ public class EAG2012Loader{
 							this.setOpening(timetable.getOpening().get(i).getContent());
 							this.setOpeningLang(timetable.getOpening().get(i).getLang());
 						}
+						// Opening times for institution.
+						for (int i = 0; i < timetable.getOpening().size(); i++) {
+							this.addYiOpening(timetable.getOpening().get(i).getContent());
+							if (!timetable.getOpening().isEmpty()
+									&& timetable.getOpening().size() >= i
+									&& timetable.getOpening().get(i).getLang() != null
+									&& !timetable.getOpening().get(i).getLang().isEmpty()) {
+								this.addYiOpeningLang(timetable.getOpening().get(i).getLang());
+							} else {
+								this.addYiOpeningLang(Eag2012.OPTION_NONE);
+							}
+						}
+						
 					}
 
 					// Closing dates.
@@ -1804,6 +2751,18 @@ public class EAG2012Loader{
 						for (int i = 0; i < timetable.getClosing().size(); i++) {
 							this.setClosing(timetable.getClosing().get(i).getContent());
 							this.setClosingLang(timetable.getClosing().get(i).getLang());
+						}
+						// Closing dates for institution.
+						for (int i = 0; i < timetable.getClosing().size(); i++) {
+							this.addYiClosing(timetable.getClosing().get(i).getContent());
+							if (!timetable.getClosing().isEmpty()
+									&& timetable.getClosing().size() >= i
+									&& timetable.getClosing().get(i).getLang() != null
+									&& !timetable.getClosing().get(i).getLang().isEmpty()) {
+								this.addYiClosingLang(timetable.getClosing().get(i).getLang());
+							} else {
+								this.addYiClosingLang(Eag2012.OPTION_NONE);
+							}
 						}
 					}
 				}
@@ -1817,6 +2776,18 @@ public class EAG2012Loader{
 							this.setRestaccess(repository.getAccess().getRestaccess().get(i).getContent());
 							this.setRestaccessLang(repository.getAccess().getRestaccess().get(i).getLang());
 						}
+
+						// Accessible to the public for institution.
+						for (int i = 0; i < repository.getAccess().getRestaccess().size(); i++) {
+							this.addYiRestaccess(repository.getAccess().getRestaccess().get(i).getContent());
+							if (repository.getAccess().getRestaccess().size() >= i
+									&& repository.getAccess().getRestaccess().get(i).getLang() != null
+									&& !repository.getAccess().getRestaccess().get(i).getLang().isEmpty()) {
+								this.addYiRestaccessLang(repository.getAccess().getRestaccess().get(i).getLang());
+							} else {
+								this.addYiRestaccessLang(Eag2012.OPTION_NONE);
+							}
+						}
 					}
 				}
 
@@ -1825,8 +2796,23 @@ public class EAG2012Loader{
 					// TODO: Review for multiple values.
 					for (int i = 0; i < repository.getAccessibility().size(); i++) {
 						this.setAccessibilityQuestion(repository.getAccessibility().get(i).getQuestion());
-						this.setAccessibility(repository.getAccessibility().get(i).getContent());
-						this.setAccessibilityLang(repository.getAccessibility().get(i).getLang());
+						if (repository.getAccessibility().get(i).getContent() != null
+								&& !repository.getAccessibility().get(i).getContent().isEmpty()) {
+							this.setAccessibility(repository.getAccessibility().get(i).getContent());
+							this.setAccessibilityLang(repository.getAccessibility().get(i).getLang());
+						}
+					}
+
+					// Facilities for disabled people available for institution.
+					for (int i = 0; i < repository.getAccessibility().size(); i++) {
+						this.addYiAccessibility(repository.getAccessibility().get(i).getContent());
+						if (repository.getAccessibility().size() >= i
+								&& repository.getAccessibility().get(i).getLang() != null
+								&& !repository.getAccessibility().get(i).getLang().isEmpty()) {
+							this.addYiAccessibilityLang(repository.getAccessibility().get(i).getLang());
+						} else {
+							this.addYiAccessibilityLang(Eag2012.OPTION_NONE);
+						}
 					}
 				}
 			}
@@ -1840,6 +2826,30 @@ public class EAG2012Loader{
 				if (this.eag.getRelations().getResourceRelation().get(i).getRelationEntry() != null) {
 					this.setResourceRelationrelationEntry(this.eag.getRelations().getResourceRelation().get(i).getRelationEntry().getContent());
 					this.setResourceRelationLang(this.eag.getRelations().getResourceRelation().get(i).getRelationEntry().getLang());
+				}
+			}
+
+			// Reference to your institution’s holdings guide for institution.
+			for (int i = 0; i < this.eag.getRelations().getResourceRelation().size(); i++) {
+				ResourceRelation resourceRelation = this.eag.getRelations().getResourceRelation().get(i);
+
+				if (Eag2012.OPTION_CREATOR_TEXT.equalsIgnoreCase(resourceRelation.getResourceRelationType())) {
+					this.addYiResourceRelationHref(resourceRelation.getHref());
+					if (resourceRelation.getRelationEntry() != null) {
+						if (resourceRelation.getRelationEntry().getContent() != null
+								&& !resourceRelation.getRelationEntry().getContent().isEmpty()) {
+							this.addYiResourceRelationrelationEntry(resourceRelation.getRelationEntry().getContent());
+						} else {
+							this.addYiResourceRelationrelationEntry("");
+						}
+
+						if (resourceRelation.getRelationEntry().getLang() != null
+								&& !resourceRelation.getRelationEntry().getLang().isEmpty()) {
+							this.addYiResourceRelationLang(resourceRelation.getRelationEntry().getLang());
+						} else {
+							this.addYiResourceRelationLang(Eag2012.OPTION_NONE);
+						}
+					}
 				}
 			}
 		}

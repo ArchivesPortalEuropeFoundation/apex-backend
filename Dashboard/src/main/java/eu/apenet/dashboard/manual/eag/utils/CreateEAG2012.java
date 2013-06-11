@@ -93,10 +93,13 @@ public class CreateEAG2012 {
 		// eag/control/otherRecordId
 		if (this.eag2012.getOtherRecordIdValue() != null) {
 			for (int i = 0; i < this.eag2012.getOtherRecordIdValue().size(); i++) {
-				OtherRecordId otherRecordId = new OtherRecordId();
-				otherRecordId.setValue(this.eag2012.getOtherRecordIdValue().get(i));
-				otherRecordId.setLocalType(this.eag2012.getOtherRecordIdLocalType().get(i));
-				this.eag.getControl().getOtherRecordId().add(otherRecordId);
+				if (this.eag2012.getOtherRecordIdValue().get(i) != null
+						&& !this.eag2012.getOtherRecordIdValue().get(i).isEmpty()) {
+					OtherRecordId otherRecordId = new OtherRecordId();
+					otherRecordId.setValue(this.eag2012.getOtherRecordIdValue().get(i));
+					otherRecordId.setLocalType(this.eag2012.getOtherRecordIdLocalType().get(i));
+					this.eag.getControl().getOtherRecordId().add(otherRecordId);
+				}
 			}
 		}
 
@@ -803,7 +806,7 @@ public class CreateEAG2012 {
 						String streetKey = streetIt.next();
 
 						// Rest of tabs.
-						if (!streetLangKey.equalsIgnoreCase(Eag2012.TAB_YOUR_INSTITUTION))  {
+//						if (!streetLangKey.equalsIgnoreCase(Eag2012.TAB_YOUR_INSTITUTION))  {
 							// Visitor address lists.
 							List<String> streetLangList = streetLangMap.get(streetLangKey);
 							List<String> latitudeList = latitudeMap.get(latitudeKey);
@@ -830,15 +833,19 @@ public class CreateEAG2012 {
 									location.setLongitude(longitudeList.get(j));
 								}
 								// eag/archguide/desc/repositories/repository/location/country
-								if (location.getCountry() == null) {
-									location.setCountry(new Country());
+								if (countryList.get(j) != null
+										&& !countryList.get(j).isEmpty()) {
+									if (location.getCountry() == null) {
+										location.setCountry(new Country());
+									}
+									location.getCountry().setContent(countryList.get(j));
+									// eag/archguide/desc/repositories/repository/location/country/lang
+									if (!Eag2012.OPTION_NONE.equalsIgnoreCase(language)) {
+										location.getCountry().setLang(language);
+									}
 								}
-								location.getCountry().setContent(countryList.get(j));
-								// eag/archguide/desc/repositories/repository/location/country/lang
-								if (!Eag2012.OPTION_NONE.equalsIgnoreCase(language)) {
-									location.getCountry().setLang(language);
-								}
-								if (firstdemList.get(j) != null
+								if (firstdemList.size() > j
+										&& firstdemList.get(j) != null
 										&& !firstdemList.get(j).isEmpty()) {
 									// eag/archguide/desc/repositories/repository/location/firstdem
 									if (location.getFirstdem() == null) {
@@ -852,7 +859,8 @@ public class CreateEAG2012 {
 										}
 									}
 								}
-								if (secondemList.get(j) != null
+								if (secondemList.size() > j
+										&& secondemList.get(j) != null
 										&& !secondemList.get(j).isEmpty()) {
 									// eag/archguide/desc/repositories/repository/location/secondem
 									if (location.getSecondem() == null) {
@@ -866,16 +874,20 @@ public class CreateEAG2012 {
 										}
 									}
 								}
-								// eag/archguide/desc/repositories/repository/location/municipalityPostalcode
-								if (location.getMunicipalityPostalcode() == null) {
-									location.setMunicipalityPostalcode(new MunicipalityPostalcode());
+								if (citiesList.get(j) != null
+										&& !citiesList.get(j).isEmpty()) {
+									// eag/archguide/desc/repositories/repository/location/municipalityPostalcode
+									if (location.getMunicipalityPostalcode() == null) {
+										location.setMunicipalityPostalcode(new MunicipalityPostalcode());
+									}
+									location.getMunicipalityPostalcode().setContent(citiesList.get(j));
+									// eag/archguide/desc/repositories/repository/location/municipalityPostalcode/lang
+									if (!Eag2012.OPTION_NONE.equalsIgnoreCase(language)) {
+										location.getMunicipalityPostalcode().setLang(language);
+									}
 								}
-								location.getMunicipalityPostalcode().setContent(citiesList.get(j));
-								// eag/archguide/desc/repositories/repository/location/municipalityPostalcode/lang
-								if (!Eag2012.OPTION_NONE.equalsIgnoreCase(language)) {
-									location.getMunicipalityPostalcode().setLang(language);
-								}
-								if (localentityList.get(j) != null
+								if (localentityList.size() > j
+										&& localentityList.get(j) != null
 										&& !localentityList.get(j).isEmpty()) {
 									// eag/archguide/desc/repositories/repository/location/localentity
 									if (location.getLocalentity() == null) {
@@ -889,19 +901,45 @@ public class CreateEAG2012 {
 										}
 									}
 								}
-								// eag/archguide/desc/repositories/repository/location/street
-								if (location.getStreet() == null) {
-									location.setStreet(new Street());
+								if(streetList.get(j) != null
+										&& ! streetList.get(j).isEmpty()) {
+									// eag/archguide/desc/repositories/repository/location/street
+									if (location.getStreet() == null) {
+										location.setStreet(new Street());
+									}
+									location.getStreet().setContent(streetList.get(j));
+									// eag/archguide/desc/repositories/repository/location/street/lang
+									if (!Eag2012.OPTION_NONE.equalsIgnoreCase(language)) {
+										location.getStreet().setLang(language);
+									}
 								}
-								location.getStreet().setContent(streetList.get(j));
-								// eag/archguide/desc/repositories/repository/location/street/lang
-								if (!Eag2012.OPTION_NONE.equalsIgnoreCase(language)) {
-									location.getStreet().setLang(language);
+								//TODO: add looper only for check repeated fields for different contact and your_institution tabs information
+								boolean found = false;
+								for (int x = 0; !found && x < repository.getLocation().size(); x++) {
+									Location target = repository.getLocation().get(x);
+									if (target.getStreet() != null && target.getStreet().getContent() != null
+											&& target.getStreet().getContent().equalsIgnoreCase(streetList.get(j))
+											&& Eag2012.VISITORS_ADDRESS.equalsIgnoreCase(target.getLocalType())
+											&& target.getMunicipalityPostalcode().getContent() != null
+											&& target.getMunicipalityPostalcode().getContent().equalsIgnoreCase(citiesList.get(j))
+											&& target.getCountry().getContent() != null
+											&& target.getCountry().getContent().equalsIgnoreCase(countryList.get(j))) {
+										found = true;
+									}
 								}
-	
-								repository.getLocation().add(location);
+								if (!found
+										&& (location.getCountry() != null
+										|| location.getFirstdem() != null
+										|| location.getLatitude() != null
+										|| location.getLocalentity() != null
+										|| location.getLongitude() != null
+										|| location.getMunicipalityPostalcode() != null
+										|| location.getSecondem() != null
+										|| location.getStreet() != null)) {
+									repository.getLocation().add(location);
+								}							
 							}
-						}
+//						}
 					}
 				}
 
@@ -940,36 +978,44 @@ public class CreateEAG2012 {
 								String language = postalStreetLangList.get(j);
 								// eag/archguide/desc/repositories/repository/location/type
 								location.setLocalType(Eag2012.POSTAL_ADDRESS);
-								// eag/archguide/desc/repositories/repository/location/country
-								if (location.getCountry() == null) {
-									location.setCountry(new Country());
+								if (postalCountryList.size() > 0) {
+									// eag/archguide/desc/repositories/repository/location/country
+									if (location.getCountry() == null) {
+										location.setCountry(new Country());
+									}
+									if (postalCountryList.size() > j) {
+										location.getCountry().setContent(postalCountryList.get(j));
+									} else {
+										location.getCountry().setContent(postalCountryList.get(0));
+									}
+									// eag/archguide/desc/repositories/repository/location/country/lang
+									if (!Eag2012.OPTION_NONE.equalsIgnoreCase(language)) {
+										location.getCountry().setLang(language);
+									}
 								}
-								if (postalCountryList.size() > j) {
-									location.getCountry().setContent(postalCountryList.get(j));
-								} else {
-									location.getCountry().setContent(postalCountryList.get(0));
+								if (postalCitiesList.get(j) != null
+										&& !postalCitiesList.get(j).isEmpty()) {
+									// eag/archguide/desc/repositories/repository/location/municipalityPostalcode
+									if (location.getMunicipalityPostalcode() == null) {
+										location.setMunicipalityPostalcode(new MunicipalityPostalcode());
+									}
+									location.getMunicipalityPostalcode().setContent(postalCitiesList.get(j));
+									// eag/archguide/desc/repositories/repository/location/municipalityPostalcode/lang
+									if (!Eag2012.OPTION_NONE.equalsIgnoreCase(language)) {
+										location.getMunicipalityPostalcode().setLang(language);
+									}
 								}
-								// eag/archguide/desc/repositories/repository/location/country/lang
-								if (!Eag2012.OPTION_NONE.equalsIgnoreCase(language)) {
-									location.getCountry().setLang(language);
-								}
-								// eag/archguide/desc/repositories/repository/location/municipalityPostalcode
-								if (location.getMunicipalityPostalcode() == null) {
-									location.setMunicipalityPostalcode(new MunicipalityPostalcode());
-								}
-								location.getMunicipalityPostalcode().setContent(postalCitiesList.get(j));
-								// eag/archguide/desc/repositories/repository/location/municipalityPostalcode/lang
-								if (!Eag2012.OPTION_NONE.equalsIgnoreCase(language)) {
-									location.getMunicipalityPostalcode().setLang(language);
-								}
-								// eag/archguide/desc/repositories/repository/location/street
-								if (location.getStreet() == null) {
-									location.setStreet(new Street());
-								}
-								location.getStreet().setContent(postalStreetList.get(j));
-								// eag/archguide/desc/repositories/repository/location/street/lang
-								if (!Eag2012.OPTION_NONE.equalsIgnoreCase(language)) {
-									location.getStreet().setLang(language);
+								if (postalStreetList.get(j) != null
+										&& !postalStreetList.get(j).isEmpty()) {
+									// eag/archguide/desc/repositories/repository/location/street
+									if (location.getStreet() == null) {
+										location.setStreet(new Street());
+									}
+									location.getStreet().setContent(postalStreetList.get(j));
+									// eag/archguide/desc/repositories/repository/location/street/lang
+									if (!Eag2012.OPTION_NONE.equalsIgnoreCase(language)) {
+										location.getStreet().setLang(language);
+									}
 								}
 								//TODO: add looper only for check repeated fields for different contact and your_institution tabs information
 								boolean found = false;
@@ -982,7 +1028,12 @@ public class CreateEAG2012 {
 										found = true;
 									}
 								}
-								if(!found){
+								if(!found
+										&& ((location.getCountry() != null
+											&& location.getCountry().getContent() != null
+											&& !location.getCountry().getContent().isEmpty())
+										|| location.getMunicipalityPostalcode() != null
+										|| location.getStreet() != null)){
 									repository.getLocation().add(location);
 								}
 							}
@@ -1149,7 +1200,13 @@ public class CreateEAG2012 {
 							Email email = new Email();
 							email.setContent(emailValueList.get(k));
 							email.setHref((emailHrefList!=null && emailHrefList.size()>k)?emailHrefList.get(k):null);
-							email.setLang((emailLangList!=null && emailLangList.size()>k)?emailLangList.get(k):null);
+							if (emailLangList != null
+									&& emailLangList.size() > k
+									&& emailLangList.get(k) != null
+									&& !emailLangList.get(k).isEmpty()
+									&& !Eag2012.OPTION_NONE.equalsIgnoreCase(emailLangList.get(k))) {
+								email.setLang(emailLangList.get(k));
+							}
 							if (Eag2012.ROOT.equalsIgnoreCase(sectionValueKey)
 									&& Eag2012.ROOT.equalsIgnoreCase(sectionHrefKey)) {
 									repository.getEmail().add(email);
@@ -1267,7 +1324,13 @@ public class CreateEAG2012 {
 							Webpage webpage= new Webpage();
 							webpage.setContent(webpageValueList.get(k));
 							webpage.setHref(webpageHrefList.get(k));
-							webpage.setLang((webpageLangList!=null && webpageLangList.size()>k)?webpageLangList.get(k):null);
+							if (webpageLangList != null
+									&& webpageLangList.size() > k
+									&& webpageLangList.get(k) != null
+									&& !webpageLangList.get(k).isEmpty()
+									&& !Eag2012.OPTION_NONE.equalsIgnoreCase(webpageLangList.get(k))) {
+								webpage.setLang(webpageLangList.get(k));
+							}
 							if (Eag2012.ROOT.equalsIgnoreCase(sectionValueKey)
 									&& Eag2012.ROOT.equalsIgnoreCase(sectionHrefKey)) {
 								repository.getWebpage().add(webpage);
@@ -1507,12 +1570,16 @@ public class CreateEAG2012 {
 						}
 
 						if (!found) {
-							Opening opening = new Opening();
-							opening.setContent(openingValueList.get(j));
-							if (openingLangList != null && !Eag2012.OPTION_NONE.equalsIgnoreCase(openingLangList.get(j))) {
-								opening.setLang(openingLangList.get(j));
+							if (openingValueList.get(j) != null
+									&& !openingValueList.get(j).isEmpty()) {
+								Opening opening = new Opening();
+								opening.setContent(openingValueList.get(j));
+								if (openingLangList != null
+										&& !Eag2012.OPTION_NONE.equalsIgnoreCase(openingLangList.get(j))) {
+									opening.setLang(openingLangList.get(j));
+								}
+								repository.getTimetable().getOpening().add(opening);
 							}
-							repository.getTimetable().getOpening().add(opening);
 						}
 					}
 				}
@@ -1558,12 +1625,15 @@ public class CreateEAG2012 {
 						}
 
 						if (!found) {
-							Closing closing = new Closing();
-							closing.setContent(closingValueList.get(j));
-							if (closingLangList !=  null && !Eag2012.OPTION_NONE.equalsIgnoreCase(closingLangList.get(j))) {
-								closing.setLang(closingLangList.get(j));
-							}
-							if(closing.getContent()!=null && !closing.getContent().isEmpty()){
+							if (closingValueList.get(j) != null
+									&& !closingValueList.get(j).isEmpty()) {
+								Closing closing = new Closing();
+								closing.setContent(closingValueList.get(j));
+								if (closingLangList !=  null
+										&& !Eag2012.OPTION_NONE.equalsIgnoreCase(closingLangList.get(j))) {
+									closing.setLang(closingLangList.get(j));
+								}
+			
 								repository.getTimetable().getClosing().add(closing);
 							}
 						}
@@ -1626,13 +1696,16 @@ public class CreateEAG2012 {
 									}
 								}
 								if(!exit){
-									Restaccess restaccess = new Restaccess();
-									restaccess.setContent(accessValueList.get(j));
-									if (accessLangList != null
-											&& !Eag2012.OPTION_NONE.equalsIgnoreCase(accessLangList.get(j))) {
-										restaccess.setLang(accessLangList.get(j));
+									if (accessValueList.get(j) != null
+											&& !accessValueList.get(j).isEmpty()) {
+										Restaccess restaccess = new Restaccess();
+										restaccess.setContent(accessValueList.get(j));
+										if (accessLangList != null
+												&& !Eag2012.OPTION_NONE.equalsIgnoreCase(accessLangList.get(j))) {
+											restaccess.setLang(accessLangList.get(j));
+										}
+										repository.getAccess().getRestaccess().add(restaccess);
 									}
-									repository.getAccess().getRestaccess().add(restaccess);
 								}
 							}
 						}
@@ -1733,13 +1806,17 @@ public class CreateEAG2012 {
 											list.clear();
 										}
 									}
-									Accessibility accessibility = new Accessibility();
-									accessibility.setContent(accessibilityValueList.get(j));
-									if (accessibilityLangList != null && !Eag2012.OPTION_NONE.equalsIgnoreCase(accessibilityLangList.get(j))) {
-										accessibility.setLang(accessibilityLangList.get(j));
+
+									if (accessibilityValueList.get(j) != null
+											&& !accessibilityValueList.get(j).isEmpty()) {
+										Accessibility accessibility = new Accessibility();
+										accessibility.setContent(accessibilityValueList.get(j));
+										if (accessibilityLangList != null && !Eag2012.OPTION_NONE.equalsIgnoreCase(accessibilityLangList.get(j))) {
+											accessibility.setLang(accessibilityLangList.get(j));
+										}
+										accessibility.setQuestion(question);
+										list.add(accessibility);
 									}
-									accessibility.setQuestion(question);
-									list.add(accessibility);
 									repository.setAccessibility(list);
 								}
 							}
