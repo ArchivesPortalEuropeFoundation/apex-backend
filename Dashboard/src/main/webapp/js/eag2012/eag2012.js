@@ -1095,9 +1095,9 @@ function yiAddVisitorsAddressTranslation(text1) {
 	}
 }
 
-function yiAddPostalAddressIfDifferent(text1, text2, text3, text4) {
+function yiAddPostalAddressIfDifferent(text1, text2, text3, text4,control) {
 	$("#buttonAddPostalAddressIfDifferent").hide();
-
+   // var control = true;
 	var select = '<select id="selectYIPASelectLanguage" onchange="postalAddressLanguageChanged();" >'+$("#selectYIPNOTISelectLanguage").html()+'</select>';
 
 	$("table#yiTableOthers").before('<table id="yiTablePostalAddress_1" class=\"tablePadding\">'+
@@ -1128,13 +1128,17 @@ function yiAddPostalAddressIfDifferent(text1, text2, text3, text4) {
 		'</tr></table>');
 
 	$("table#yiTableOthers tr#yiPostalAddressTranslation").show();
-	contactAddPostalAddressIfDifferent(text1, text2, text3, text4);
+	if(!control){
+		control=true;
+		contactAddPostalAddressIfDifferent(text1, text2, text3, text4,control);
+		
+	}
+	
 
 }
 
 function yiAddPostalAddressTranslation(text1) {
 	var counter = $("table[id^='yiTablePostalAddress_']").length;
-//	var currentTab = getCurrentTab();
 	var street = $("table#yiTablePostalAddress_"+counter+" input#textYIPAStreet").attr("value");
 	var city = $("table#yiTablePostalAddress_"+counter+" input#textYIPACity").attr("value");
 
@@ -1149,7 +1153,7 @@ function yiAddPostalAddressTranslation(text1) {
 		});
 		// Remove "*".
 		$("table#yiTablePostalAddress_"+(counter+1)).find("span").remove();
-	//	$("table#contactTable"+currentTab+" tr#trButtonContacPostalAddressTranslation").show();
+	
 	} else {
 		alertEmptyFields(text1);
 	}
@@ -1960,10 +1964,10 @@ function contactAddVisitorsAddressTranslation(text1) {
 	$("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+(counter+1)).find("span").remove();
 }
 
-function contactAddPostalAddressIfDifferent(property1, property2, property3, property4) {
+function contactAddPostalAddressIfDifferent(property1, property2, property3, property4,control) {
 	var currentTab = getCurrentTab();
 	var select = '<select id="selectContactLanguagePostalAddress" onchange="contactAddressLanguageChanged();">'+$("#selectLanguageVisitorAddress").html()+'</select>';
-
+    
 	$("table#contactTable"+currentTab+" input#buttonContactAddPostalAddressIfDifferent").hide();
 
 	$("table#contactTable"+currentTab+" tr#trButtonContactAddPostalAddressIfDifferent").after('<tr><td colspan="4"><table id="contactTablePostalAddress_1">'+
@@ -1994,6 +1998,12 @@ function contactAddPostalAddressIfDifferent(property1, property2, property3, pro
 		'</tr></table></td></tr>');
   
 	$("table#contactTable"+currentTab+" tr#trButtonContacPostalAddressTranslation").show();
+	if(!control && currentTab == "_1"){
+		control=true;
+		yiAddPostalAddressIfDifferent(property1, property2, property3, property4,control);
+		
+	}
+	
 }
 
 function contactAddPostalAddressTranslation(text1) {

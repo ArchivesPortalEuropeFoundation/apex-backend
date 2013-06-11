@@ -57,11 +57,12 @@
 					var postalField3 = "<s:property value="loader.streetPostalLang"/>";
 					//alert(postalField1+","+postalField2+","+postalField3);
 					if(postalField1.length>0 || postalField2.length>0 || postalField3.length>0){
-						yiAddPostalAddressIfDifferent('<s:property value="getText('label.ai.yourinstitution.postalAddress')" />', '<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />', '<s:property value="getText('label.ai.tabs.commons.street')" />', '<s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')" />');
+						var control=true;
+						yiAddPostalAddressIfDifferent('<s:property value="getText('label.ai.yourinstitution.postalAddress')" />', '<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />', '<s:property value="getText('label.ai.tabs.commons.street')" />', '<s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')" />',control);
 						$("#textYIPAStreet").attr("value",postalField1);
 						$("#textYIPACity").attr("value",postalField2);
 						$("#selectYIPASelectLanguage").attr("value",postalField3);
-						contactAddPostalAddressIfDifferent('<s:property value="getText('label.ai.contact.postalAddress')" />','<s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>','<s:property value="getText('label.ai.tabs.commons.street')"/>','<s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')"/>');
+						contactAddPostalAddressIfDifferent('<s:property value="getText('label.ai.contact.postalAddress')" />','<s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>','<s:property value="getText('label.ai.tabs.commons.street')"/>','<s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')"/>',control);
 						$("#textContactPAStreet").attr("value",postalField1);
 						$("#textContactPACity").attr("value",postalField2);
 						$("#selectContactLanguagePostalAddress").attr("value",postalField3);
