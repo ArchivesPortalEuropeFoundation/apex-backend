@@ -354,13 +354,19 @@ public class CreateEAG2012 {
 									}
 								}
 							}
-							if(this.eag2012.getResourceRelationHref() != null && this.eag2012.getResourceRelationHref().get(Eag2012.TAB_YOUR_INSTITUTION)!=null && !this.eag2012.getResourceRelationHref().get(Eag2012.TAB_YOUR_INSTITUTION).isEmpty()){
-								resourceRelation.setHref(this.eag2012.getResourceRelationHref().get(Eag2012.TAB_YOUR_INSTITUTION).get(j));
+							if(Eag2012.TAB_YOUR_INSTITUTION.equalsIgnoreCase(sectionValueKey)){
+								if(this.eag2012.getResourceRelationHref() != null && this.eag2012.getResourceRelationHref().get(Eag2012.TAB_YOUR_INSTITUTION)!=null && !this.eag2012.getResourceRelationHref().get(Eag2012.TAB_YOUR_INSTITUTION).isEmpty()){
+									resourceRelation.setHref(this.eag2012.getResourceRelationHref().get(Eag2012.TAB_YOUR_INSTITUTION).get(j));
+								}
+							}else if(Eag2012.RESOURCE_RELATION.equalsIgnoreCase(sectionValueKey)){
+								if(this.eag2012.getResourceRelationHref() != null && this.eag2012.getResourceRelationHref().get(Eag2012.RESOURCE_RELATION)!=null && !this.eag2012.getResourceRelationHref().get(Eag2012.RESOURCE_RELATION).isEmpty()){
+									resourceRelation.setHref(this.eag2012.getResourceRelationHref().get(Eag2012.RESOURCE_RELATION).get(j));
+								}
 							}
 
 							RelationEntry relationEntry = new RelationEntry();
 							relationEntry.setContent(valueList.get(j));
-							relationEntry.setLang((langList!=null && langList.size()>j)?langList.get(j):null);
+							relationEntry.setLang((langList!=null && langList.size()>j && !langList.get(j).equalsIgnoreCase(Eag2012.OPTION_NONE) )?langList.get(j):null);
 
 							// eag/relations/resourceRelation/descriptiveNote/P
 							if (this.eag2012.getDescriptiveNotePValue() != null
@@ -532,7 +538,7 @@ public class CreateEAG2012 {
 							eagRelation.getRelationEntry().add(relationEntry);
 							this.eag.getRelations().getEagRelation().add(eagRelation);
 						}
-						if(this.eag.getRelations().getEagRelation()==null || this.eag.getRelations().getEagRelation().isEmpty()){
+						if((this.eag.getRelations().getEagRelation().isEmpty() && this.eag.getRelations().getResourceRelation().isEmpty()) ){
 							this.eag.setRelations(null);
 						}
 					}
