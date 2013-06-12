@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -889,8 +890,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		//control
 //		loader.setRecordId(getIdUsedInAPE());
 //		loader.setAgent(getPersonResponsibleForDescription());
-//		loader.setAbbreviation(getContactAbbreviation());
-//		loader.setCitation(getContactFullName());
+		loader.setAbbreviation(getContactAbbreviation());
+		loader.setCitation(getContactFullName());
 		//relations
 //		loader.setResourceRelationHref(getWebsiteOfResource());
 //		loader.setResourceRelationrelationEntry(getTitleOfRelatedMaterial());
@@ -898,6 +899,30 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 //		loader.setEagRelationHref(getWebsiteOfDescription());
 //		loader.setEagRelationrelationEntry(getTitleOfRelatedInstitution());
 //		loader.setEagRelationrelationEntryDescription(getInstitutionDescriptionOfRelation());
+	}
+
+	private List<String> getContactFullName() {
+		List<String> citations = new LinkedList<String>();
+		citations.add("EAG (Encoded Archival Guide) 2012");
+		citations.add("International Standard for Describing Institutions with Archival Holdings");
+		citations.add("Codes for the representation of names of languages — Part 2: Alpha-3 code");
+		citations.add("Codes for the representation of names of countries and their subdivisions – Part 1: Country codes");
+		citations.add("Data elements and interchange formats – Information interchange – Representation of dates and times");
+		citations.add("International Standard Identifier for Libraries and Related Organisations");
+		citations.add("Codes for the representation of names of scripts");
+		return citations;
+	}
+
+	private List<String> getContactAbbreviation() {
+		List<String> abbreviations = new LinkedList<String>();
+		abbreviations.add("EAG");
+		abbreviations.add("ISDIAH");
+		abbreviations.add("ISO 639-2b");
+		abbreviations.add("ISO 3166-1");
+		abbreviations.add("ISO 8601");
+		abbreviations.add("ISO 15511");
+		abbreviations.add("ISO 15924");
+		return abbreviations;
 	}
 
 	private Eag2012 getAndFillEag2012Object() throws JSONException {

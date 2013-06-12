@@ -282,8 +282,8 @@ public class EAG2012Loader{
     private String language;
     private String languageDeclaration;
     private String script;
-    private String abbreviation;
-    private String citation;
+    private List<String> abbreviation;
+    private List<String> citation;
 
 	// Relations.
     private String resourceRelationType;
@@ -1876,16 +1876,16 @@ public class EAG2012Loader{
 	public void setScript(String script) {
 		this.script = script;
 	}
-	public String getAbbreviation() {
+	public List<String> getAbbreviation() {
 		return this.abbreviation;
 	}
-	public void setAbbreviation(String abbreviation) {
+	public void setAbbreviation(List<String> abbreviation) {
 		this.abbreviation = abbreviation;
 	}
-	public String getCitation() {
+	public List<String> getCitation() {
 		return this.citation;
 	}
-	public void setCitation(String citation) {
+	public void setCitation(List<String> citation) {
 		this.citation = citation;
 	}
 	public String getEagRelationType() {
@@ -3469,12 +3469,22 @@ public class EAG2012Loader{
 				// TODO: Review for multiple values.
 				for (int i = 0; i < this.eag.getControl().getConventionDeclaration().size(); i++) {
 					if (this.eag.getControl().getConventionDeclaration().get(i).getAbbreviation() != null) {
-						this.setAbbreviation(this.eag.getControl().getConventionDeclaration().get(i).getAbbreviation().getContent());
+						List<String> abbreviations = this.getAbbreviation();
+						if(abbreviations==null){
+							abbreviations = new ArrayList<String>();
+						}
+						abbreviations.add(this.eag.getControl().getConventionDeclaration().get(i).getAbbreviation().getContent());
+						this.setAbbreviation(abbreviations);
 					}
 					if (!this.eag.getControl().getConventionDeclaration().get(i).getCitation().isEmpty()) {
 						// TODO: Review for multiple values.
 						for (int j = 0; j < this.eag.getControl().getConventionDeclaration().get(i).getCitation().size(); j++) {
-							this.setCitation(this.eag.getControl().getConventionDeclaration().get(i).getCitation().get(j).getContent());
+							List<String> citations = this.getCitation();
+							if(citations==null){
+								citations = new ArrayList<String>();
+							}
+							citations.add(this.eag.getControl().getConventionDeclaration().get(i).getCitation().get(j).getContent());
+							this.setCitation(citations);
 						}
 					}
 				}

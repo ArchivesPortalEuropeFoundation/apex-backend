@@ -84,26 +84,30 @@
 			</td>
 			
 		</tr>
-		<tr id="trContactAbbreviationOne">
-			<td id="tdContactAbbreviation">
-				<label for="textContactAbbreviation"><s:property value="getText('label.ai.control.abbreviation')" />:</label>
-			</td>
-			<td>
-				<input type="text" id="textContactAbbreviation" value="${loader.abbreviation}" />
-			</td>
-			<td colspan="2">
-			</td>
-		</tr>
-		<tr id="trContactAbbreviationTwo">
-			<td id="tdContactFullName">
-				<label for="textContactFullName"><s:property value="getText('label.ai.control.fullName')" />:</label>
-			</td>
-			<td>
-				<input type="text" id="textContactFullName" value="${loader.citation}" />
-			</td>
-			<td colspan="2">
-			</td>
-		</tr>
+		<s:if test="loader.citation.size()==loader.abbreviation.size()">
+			<s:iterator var="abbreviation" value="loader.abbreviation" status="status">
+			<tr id="trContactAbbreviationOne">
+				<td id="tdContactAbbreviation">
+					<label for="textContactAbbreviation<s:if test="#status.index>0">_<s:property value="(#status.index+1)"/></s:if>"><s:property value="getText('label.ai.control.abbreviation')" />:</label>
+				</td>
+				<td>
+					<input type="text" id="textContactAbbreviation<s:if test="#status.index>0">_<s:property value="(#status.index+1)"/></s:if>" value="<s:property value="#abbreviation"/>" />
+				</td>
+				<td colspan="2">
+				</td>
+			</tr>
+			<tr id="trContactAbbreviationTwo">
+				<td id="tdContactFullName">
+					<label for="textContactFullName<s:if test="#status.index>0">_<s:property value="(#status.index+1)"/></s:if>"><s:property value="getText('label.ai.control.fullName')" />:</label>
+				</td>
+				<td>
+					<input type="text" id="textContactFullName<s:if test="#status.index>0">_<s:property value="(#status.index+1)"/></s:if>" value="<s:property value="loader.citation.get(#status.index)" />" />
+				</td>
+				<td colspan="2">
+				</td>
+			</tr>
+			</s:iterator>
+		</s:if>
 		<tr>
 			<td id="tdAddFurtherRules" colspan="2">
 				<input type="button" id="buttonControlAddFurtherRules" onclick="addContactAbbreviation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.control.addFurtherRules")' />" />
