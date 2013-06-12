@@ -352,6 +352,7 @@
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="success" type="tiles">viewAL</result>
 			<result name="error" type="tiles">ALnotFound</result>
+			<result name="notExists" type="tiles">ALnotExists</result>
 		</action>
 		
 		<action name="generatePreviewALTreeJSON" class="eu.apenet.dashboard.tree.GeneratePreviewALTreeJSONAction"> 
@@ -376,32 +377,38 @@
 		<action name="moveUpAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="upAnInstitution"> 
 			<result name="success" type="tiles">editAL</result>
 			<result name="error" type="tiles">ALnotFound</result>
+			<result name="notExists" type="tiles">ALnotExists</result>
 		</action>
 
 		<action name="moveDownAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="downAnInstitution"> 
 			<result name="success" type="tiles">editAL</result>
 			<result name="error" type="tiles">ALnotFound</result>
+			<result name="notExists" type="tiles">ALnotExists</result>
 		</action>
 
 		<action name="editElement" class="eu.apenet.dashboard.archivallandscape.EditAction" method="editArchivalLandscapeElement"> 
 			<result name="success" type="tiles">editAL</result>
 			<result name="error" type="tiles">ALnotFound</result>
+			<result name="notExists" type="tiles">ALnotExists</result>
 		</action>
 		
 		<action name="editTarget" class="eu.apenet.dashboard.archivallandscape.EditAction" method="editArchivalLandscapeTarget"> 
 			<result name="success" type="tiles">editAL</result>
 			<result name="error" type="tiles">ALnotFound</result>
+			<result name="notExists" type="tiles">ALnotExists</result>
 		</action>
 
 		<action name="deleteTarget" class="eu.apenet.dashboard.archivallandscape.EditAction" method="deleteAlternativeNameTarget"> 
 			<result name="success" type="tiles">editAL</result>
 			<result name="error" type="tiles">ALnotFound</result>
+			<result name="notExists" type="tiles">ALnotExists</result>
 		</action>
 		
 		<!-- First form edit - Button add -->
 		<action name="addAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="addArchivalLandscape"> 
 			<result name="success" type="tiles">editAL</result>
 			<result name="error" type="tiles">ALnotFound</result>
+			<result name="notExists" type="tiles">ALnotExists</result>
 		</action>
 
 		<!-- First form edit - Button edit -->
@@ -410,6 +417,7 @@
 			<result name="input" type="tiles">editAL</result>
 			<result name="success" type="tiles">editAL</result>
 			<result name="error" type="tiles">ALnotFound</result>
+			<result name="notExists" type="tiles">ALnotExists</result>
 		</action>
 
 		<!-- Second form edit - Button add -->
@@ -417,6 +425,7 @@
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="success" type="tiles">editAL</result>
 			<result name="error" type="tiles">ALnotFound</result>
+			<result name="notExists" type="tiles">ALnotExists</result>
 		</action>
 
 		<action name="feditAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="finishAddArchivalLandscape"> 
@@ -468,6 +477,7 @@
 				<param name="bufferSize">4096</param>
 			</result>
 			<result name="error" type="tiles">ALnotFound</result>
+			<result name="notExists" type="tiles">ALnotExists</result>
 		</action>
         <!--<action name="downloadAL_fromDB" class="eu.apenet.dashboard.uploadALAction" method="downloadAL">-->
             <!--<interceptor-ref name="changeLanguageStack"/>-->
@@ -479,6 +489,7 @@
                 <!--<param name="bufferSize">4096</param>-->
             <!--</result>-->
             <!--<result name="error" type="tiles">ALnotFound</result>-->
+			<!--<result name="notExists" type="tiles">ALnotExists</result>-->
         <!--</action>-->
 		
 		<action name="changeAlIdentifiers" class="eu.apenet.dashboard.actions.ChangeAlIdentifiersAction"> 
@@ -500,6 +511,7 @@
 				<param name="actionName">dashboardHome</param>
 			</result>			
 			<result name="error" type="tiles">ALnotFound</result>
+			<result name="notExists" type="tiles">ALnotExists</result>
 		</action>		
 
 		<action name="selectArchive" class="eu.apenet.dashboard.GoDashboardAction" method="selectArchive"> 
@@ -507,6 +519,7 @@
 				<param name="actionName">dashboardHome</param>
 			</result>
 			<result name="error" type="tiles">ALnotFound</result>
+			<result name="notExists" type="tiles">ALnotExists</result>
 		</action>	
 
 		<action name="login" class="eu.apenet.dashboard.actions.LoginAction"> 
@@ -538,6 +551,7 @@
 		<action name="changeNode" class="eu.apenet.dashboard.archivallandscape.EditAction" method="moveANodeToOtherPlaces"> 
 			<result name="success" type="tiles">editAL</result>
 			<result name="error" type="tiles">ALnotFound</result>
+			<result name="notExists" type="tiles">ALnotExists</result>
 		</action>
 
 		<action name="edit" class="eu.apenet.dashboard.actions.EditAction"> 
@@ -744,6 +758,7 @@
         <action name="showLanguages" class="eu.apenet.dashboard.archivallandscape.EditAction" method="seeLanguagesForArchivalLandscapeElement">  
                 <result name="success" type="tiles">editAL</result> 
                 <result name="error" type="tiles">ALnotFound</result> 
+			<result name="notExists" type="tiles">ALnotExists</result>
         </action>
         
         <action name="hgTreeCreation" class="eu.apenet.dashboard.actions.ajax.HoldingsGuideTreeCreation"> 

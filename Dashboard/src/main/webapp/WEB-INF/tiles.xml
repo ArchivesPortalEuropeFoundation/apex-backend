@@ -281,6 +281,11 @@
 		<put-attribute name="title" value="dashboard.alnotfound.title" />
 		<put-attribute name="body" value="/jsp/ALnotFound.jsp" />	
 	</definition> 	
+
+	<definition name="ALnotExists" extends="ArchivalLandscapeLayout" >
+		<put-attribute name="title" value="dashboard.alnotexists.title" />
+		<put-attribute name="body" value="/jsp/ALnotExists.jsp" />	
+	</definition>
 	
 
 	<definition name="changeInstitutionManager" extends="ArchivalLandscapeLayout">
@@ -321,6 +326,12 @@
 		<put-attribute name="menu" value="/jsp/templates/blank.jsp" />
 		<put-attribute name="body" value="/jsp/ALnotFoundByInstitutionManager.jsp" />	
 	</definition> 	
+
+	<definition name="ALnotExistsByInstitutionManager" extends="DefaultLayout" >
+		<put-attribute name="title" value="dashboard.alnotexists.title" />
+		<put-attribute name="menu" value="/jsp/templates/blank.jsp" />
+		<put-attribute name="body" value="/jsp/ALnotFoundByInstitutionManager.jsp" />	
+	</definition>
 	
 	<definition name="changeAlIdentifiers" extends="ArchivalLandscapeLayout" >
 		<put-attribute name="title" value="dashboard.changealidentifiers.title" />

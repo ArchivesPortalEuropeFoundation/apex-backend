@@ -202,6 +202,9 @@ public class EditAction extends eu.apenet.dashboard.archivallandscape.AbstractEd
 		}
 		String path = a.getmyPath(a.getmyCountry()) + "tmp" + APEnetUtilities.FILESEPARATOR + a.getmyCountry()
 				+ "AL.xml";
+		if (!(new File(path).exists())) {
+			return "notExists";
+		}
 		fillCountryCIdentifier(path);
 		if (state == null && getALElement() != null) {
 			return ERROR; // NOT SAVED

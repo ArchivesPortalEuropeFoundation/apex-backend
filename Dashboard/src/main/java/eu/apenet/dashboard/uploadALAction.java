@@ -551,8 +551,11 @@ public class uploadALAction extends AbstractAction{
 						} catch (Exception e) {
 							LOGGER.error("FATAL ERROR. The rollback of index or in repository could not be done successfully. A manually review of the AL of: " + a.getmyCountry() + " must be done");
 						}
-						if (result != INPUT)
+						if (result != INPUT) {
 							addActionMessage(getText("al.message.error.overwrite"));
+							addActionMessage(getText("al.message.error.overwrite.two"));
+							addActionMessage(getText("al.message.error.overwrite.hasEAD"));
+						}
 					}else
 					{	
 						try{
@@ -616,7 +619,7 @@ public class uploadALAction extends AbstractAction{
 	        	}
 				else
 				{
-					return "error";
+					return "notExists";
 
 				}
 			} catch (Exception e){
