@@ -35,7 +35,7 @@
     margin: 0 0 -1px;
     overflow: hidden;
     padding: 0;
-    position: relative
+    position: relative;
 }
 #headerContainer {
 	-moz-border-bottom-colors: none;
