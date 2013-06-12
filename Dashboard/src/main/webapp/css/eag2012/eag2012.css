@@ -27,7 +27,16 @@
 #eag2012TabsContainer {
 	width: 100%;
 }
-
+#eag2012TabsContainer li{
+	background: none repeat scroll 0 0 #E9F3FA;
+    border-top-right-radius: 5px;
+    color: #CCCCCC;
+    float: left;
+    margin: 0 0 -1px;
+    overflow: hidden;
+    padding: 0;
+    position: relative
+}
 #headerContainer {
 	-moz-border-bottom-colors: none;
 	-moz-border-image: none;
