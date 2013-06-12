@@ -317,7 +317,7 @@ public class CreateEAG2012 {
 	 */
 	private void fillRelations() {
 		// eag/relations/resourceRelation/relationEntry
-		if (this.eag2012.getRelationEntryValue() != null) {
+ 		if (this.eag2012.getRelationEntryValue() != null) {
 			for (int i = 0; i < this.eag2012.getRelationEntryValue().size(); i++) {
 				Map<String, List<String>> sectionValueMap = this.eag2012.getRelationEntryValue().get(i);
 				Map<String, List<String>> sectionLangMap = this.eag2012.getRelationEntryLang().get(i);
@@ -427,7 +427,10 @@ public class CreateEAG2012 {
 							//if (Eag2012.RESOURCE_RELATION.equalsIgnoreCase(sectionValueKey)){ //TODO: current situation from ticket 543 
 								for(int x=0;x<this.eag.getRelations().getResourceRelation().size();x++){
 									if(this.eag.getRelations().getResourceRelation().get(x)!=null && this.eag.getRelations().getResourceRelation().get(x).getHref()!=null && this.eag.getRelations().getResourceRelation().get(x).getHref().equalsIgnoreCase(resourceRelation.getHref()) && 
-											this.eag.getRelations().getResourceRelation().get(x).getRelationEntry()!=null && this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang()!=null && this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang().equalsIgnoreCase(relationEntry.getLang())){
+											this.eag.getRelations().getResourceRelation().get(x).getRelationEntry()!=null && (
+													(this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang()!=null && 
+													this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang().equalsIgnoreCase(relationEntry.getLang()) ) || 
+													(this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang()==null && (relationEntry.getLang()==null || relationEntry.getLang().equalsIgnoreCase(Eag2012.OPTION_NONE)) ) )  ){
 										found = true;
 										if(resourceRelation.getDescriptiveNote()!=null){ //priority for descriptive note
 											//TODO: current situation from ticket 543 
