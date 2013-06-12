@@ -1481,7 +1481,7 @@
 		<xsl:if test="./text() and ./text() != ''">
 			<xsl:value-of select="text()"/>
 			<!-- when there are only 1 dateSet -->
-			<xsl:if test="./eag:useDates/eag:dateSet and ((./eag:useDates/eag:dateRange and ./eag:useDates/eag:dateRange/eag:fromDate/text() and ./eag:useDates/eag:dateRange/eag:toDate/text()) or (./eag:useDates/eag:date and ./eag:useDates/eag:date/text()))">
+			<xsl:if test="./eag:useDates/eag:dateSet and ((./eag:useDates/eag:dateSet/eag:dateRange and ./eag:useDates/eag:dateSet/eag:dateRange/eag:fromDate/text() and ./eag:useDates/eag:dateSet/eag:dateRange/eag:toDate/text()) or (./eag:useDates/eag:dateSet/eag:date and ./eag:useDates/eag:dateSet/eag:date/text()))">
 				<xsl:text> (</xsl:text>
 				<xsl:apply-templates select="./eag:useDates/eag:dateSet"/>
 				<xsl:text>)</xsl:text>
@@ -1536,17 +1536,22 @@
 		</xsl:if>
 	</xsl:template>
 	
-	<!-- template for date -->
 	<xsl:template match="eag:date">
-		<xsl:for-each select="eag:date">
-			<xsl:if test="current()/text()">
-				<xsl:value-of select="."/>
-				<xsl:if test="position() != last()">
-					<xsl:text>, </xsl:text>
-				</xsl:if>
-				<xsl:value-of select="./eag:toDate"/>
+		<xsl:if test="./text()">
+			<xsl:if test="position() != 1">
+				<xsl:text>, </xsl:text>
 			</xsl:if>
-		</xsl:for-each>
+			<xsl:value-of select="text()"/>
+			<xsl:for-each select="eag:date">
+				<xsl:if test="current()/text()">
+					<xsl:value-of select="."/>
+					<xsl:if test="position() != last()">
+						<xsl:text>, </xsl:text>
+					</xsl:if>
+					<xsl:value-of select="current()"/>
+				</xsl:if>
+			</xsl:for-each>
+		</xsl:if>
 	</xsl:template>
 	
 	<!-- template for dateRange -->
@@ -1555,7 +1560,16 @@
 			<xsl:if test="position() != 1">
 				<xsl:text>, </xsl:text>
 			</xsl:if>
-			<xsl:value-of select="./eag:fromDate"/><xsl:text> - </xsl:text>
+			<xsl:value-of select="./eag:fromDate"/>
+			<xsl:variable name="var" select="./eag:toDate"></xsl:variable>
+			<xsl:choose>
+				<xsl:when test="string(number(substring($var,1,2)))!='NaN'">
+					<xsl:text> - </xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text> </xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
 			<xsl:value-of select="./eag:toDate"/>
 			<xsl:for-each select="eag:dateRange">
 				<xsl:if test="current()/eag:fromDate/text() and current()/eag:toDate/text()">
@@ -1569,6 +1583,9 @@
 						<xsl:when test="string(number(substring($var,1,2)))!='NaN'">
 							<xsl:text> - </xsl:text>
 						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text> </xsl:text>
+						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:if>
 			</xsl:for-each>
