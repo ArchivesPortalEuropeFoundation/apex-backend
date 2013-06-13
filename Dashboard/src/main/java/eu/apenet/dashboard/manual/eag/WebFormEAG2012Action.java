@@ -804,10 +804,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 
 					// Move temp file to final file.
 					File eagFinalFile = new File((APEnetUtilities.getConfig().getRepoDirPath() + path));
-					try {
-						FileUtils.forceDelete(eagFinalFile);
-					} catch (IOException e) {
-						log.error(e.getMessage(),e);
+					if (eagFinalFile.exists()) {
+						try {
+							FileUtils.forceDelete(eagFinalFile);
+						} catch (IOException e) {
+							log.error(e.getMessage(),e);
+						}
 					}
 					FileUtils.moveFile(eagTempFile, eagFinalFile);
 
