@@ -3224,7 +3224,7 @@ public class EAG2012Loader{
 					// Recreational services
 					RecreationalServices recreationalServices = repository.getServices().getRecreationalServices();
 					if(recreationalServices!=null){
-						if(recreationalServices.getRefreshment()!=null && recreationalServices.getRefreshment().getDescriptiveNote()!=null){
+						if(recreationalServices.getRefreshment()!=null && recreationalServices.getRefreshment().getDescriptiveNote()!=null && recreationalServices.getRefreshment().getDescriptiveNote().getP()!=null){
 							for (int i = 0; i < recreationalServices.getRefreshment().getDescriptiveNote().getP().size(); i++) {
 								this.setRecreationalServicesRefreshmentArea(recreationalServices.getRefreshment().getDescriptiveNote().getP().get(i).getContent());
 								this.setRecreationalServicesRefreshmentAreaLang(recreationalServices.getRefreshment().getDescriptiveNote().getP().get(i).getLang());
@@ -3232,32 +3232,44 @@ public class EAG2012Loader{
 						}
 						if(recreationalServices.getExhibition()!=null){
 							for (int i = 0; i < recreationalServices.getExhibition().size(); i++) {
-								for (int j = 0; j < recreationalServices.getExhibition().get(i).getDescriptiveNote().getP().size(); j++) {
-									this.setRecreationalServicesExhibition(recreationalServices.getExhibition().get(i).getDescriptiveNote().getP().get(j).getContent());
-									this.setRecreationalServicesExhibitionLang(recreationalServices.getExhibition().get(i).getDescriptiveNote().getP().get(j).getLang());
+								if(recreationalServices.getExhibition().get(i).getDescriptiveNote()!=null && recreationalServices.getExhibition().get(i).getDescriptiveNote().getP()!=null){
+									for (int j = 0; j < recreationalServices.getExhibition().get(i).getDescriptiveNote().getP().size(); j++) {
+										this.setRecreationalServicesExhibition(recreationalServices.getExhibition().get(i).getDescriptiveNote().getP().get(j).getContent());
+										this.setRecreationalServicesExhibitionLang(recreationalServices.getExhibition().get(i).getDescriptiveNote().getP().get(j).getLang());
+									}
 								}
-								this.setRecreationalServicesWeb(recreationalServices.getExhibition().get(i).getWebpage().getHref());
-								this.setRecreationalServicesWebLink(recreationalServices.getExhibition().get(i).getWebpage().getContent());
+								if(recreationalServices.getExhibition().get(i).getWebpage()!=null){
+									this.setRecreationalServicesWeb(recreationalServices.getExhibition().get(i).getWebpage().getHref());
+									this.setRecreationalServicesWebLink(recreationalServices.getExhibition().get(i).getWebpage().getContent());
+								}
 							}
 						}
 						if(recreationalServices.getToursSessions()!=null){
 							for (int i = 0; i < recreationalServices.getToursSessions().size(); i++) {
-								for (int j = 0; j < recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().size(); j++) {
-									this.setToursSessionGuidesAndSessionsContent(recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().get(j).getContent());
-									this.setToursSessionGuidesAndSessionsLang(recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().get(j).getLang());
+								if(recreationalServices.getToursSessions().get(i).getDescriptiveNote()!=null && recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP()!=null){
+									for (int j = 0; j < recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().size(); j++) {
+										this.setToursSessionGuidesAndSessionsContent(recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().get(j).getContent());
+										this.setToursSessionGuidesAndSessionsLang(recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().get(j).getLang());
+									}
 								}
-								this.setToursSessionGuidesAndSessionsWebpage(recreationalServices.getToursSessions().get(i).getWebpage().getHref());
-								this.setToursSessionGuidesAndSessionsWebpageTitle(recreationalServices.getToursSessions().get(i).getWebpage().getContent());
+								if(recreationalServices.getToursSessions().get(i).getWebpage()!=null){
+									this.setToursSessionGuidesAndSessionsWebpage(recreationalServices.getToursSessions().get(i).getWebpage().getHref());
+									this.setToursSessionGuidesAndSessionsWebpageTitle(recreationalServices.getToursSessions().get(i).getWebpage().getContent());
+								}
 							}
 						}
 						if(recreationalServices.getOtherServices()!=null){
 							for (int i = 0; i < recreationalServices.getOtherServices().size(); i++) {
-								for (int j = 0; j < recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().size(); j++) {
-									this.setOtherServices(recreationalServices.getOtherServices().get(i).getDescriptiveNote().getP().get(j).getContent());
-									this.setOtherServicesLang(recreationalServices.getOtherServices().get(i).getDescriptiveNote().getP().get(j).getLang());
+								if(recreationalServices.getToursSessions().get(i).getDescriptiveNote()!=null && recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP()!=null){
+									for (int j = 0; j < recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().size(); j++) {
+										this.setOtherServices(recreationalServices.getOtherServices().get(i).getDescriptiveNote().getP().get(j).getContent());
+										this.setOtherServicesLang(recreationalServices.getOtherServices().get(i).getDescriptiveNote().getP().get(j).getLang());
+									}
 								}
-								this.setOtherServicesWebpage(recreationalServices.getOtherServices().get(i).getWebpage().getHref());
-								this.setOtherServicesLink(recreationalServices.getOtherServices().get(i).getWebpage().getContent());
+								if(recreationalServices.getOtherServices().get(i).getWebpage()!=null){
+									this.setOtherServicesWebpage(recreationalServices.getOtherServices().get(i).getWebpage().getHref());
+									this.setOtherServicesLink(recreationalServices.getOtherServices().get(i).getWebpage().getContent());
+								}
 							}
 						}
 					}

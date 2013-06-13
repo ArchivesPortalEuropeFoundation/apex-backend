@@ -1201,11 +1201,10 @@ public class CreateEAG2012 {
 						List<String> emailValueList = sectionValueMap.get(sectionValueKey);
 						List<String> emailHrefList = (sectionHrefMap!=null)?sectionHrefMap.get(sectionHrefKey):null;
 						List<String> emailLangList = (sectionLangMap!=null)?sectionLangMap.get(sectionLangKey):null;
-						for (int k = 0; k < emailValueList.size(); k++) {
-							if (emailValueList.get(k) == null || emailValueList.get(k).isEmpty()) {
+						for (int k = 0; k < emailValueList.size() || (emailHrefList!=null && k < emailHrefList.size()); k++) {
+							if ((emailValueList.get(k) == null || emailValueList.get(k).isEmpty()) && (emailHrefList.get(k) == null || emailHrefList.get(k).isEmpty())) {
 								break;
 							}
-
 							Email email = new Email();
 							email.setContent(emailValueList.get(k));
 							email.setHref((emailHrefList!=null && emailHrefList.size()>k)?emailHrefList.get(k):null);
@@ -1325,8 +1324,8 @@ public class CreateEAG2012 {
 						List<String> webpageValueList = sectionValueMap.get(sectionValueKey);
 						List<String> webpageHrefList = (sectionHrefMap!=null)?sectionHrefMap.get(sectionHrefKey):null;
 						List<String> webpageLangList = (sectionLangKey!=null)?sectionLangMap.get(sectionLangKey):null;
-						for (int k = 0; k < webpageValueList.size(); k++) {
-							if (webpageValueList.get(k) == null || webpageValueList.get(k).isEmpty()) {
+						for (int k = 0; k < webpageValueList.size() || (webpageHrefList!=null && webpageHrefList.size()>k); k++) {
+							if (webpageValueList.get(k) == null || webpageValueList.get(k).isEmpty() && (webpageHrefList.get(k) == null || webpageHrefList.get(k).isEmpty())) {
 								break;
 							}
 
