@@ -1158,12 +1158,6 @@ function yiAddPostalAddressTranslation(text1) {
 	}
 }
 
-function yiAddClosingDates() {
-	$("#buttonAddClosingDates").hide();
-	$("table#yiTableOthers tr#fieldClosingDates").show();
-	$("table#yiTableOthers tr#trYIbuttonAddClosingDates").show();
-	
-}
 function yiFutherAccessInformation() {
 	$("#buttonFutherAccessInformation").remove();
 	$("#trYIButtonFutherAccessInformation").show();

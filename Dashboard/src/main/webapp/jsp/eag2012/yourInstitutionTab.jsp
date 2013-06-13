@@ -845,7 +845,7 @@
 			</tr>
 		</s:if>
 		<s:else>
-			<tr id="fieldClosingDates" style="display:none;">
+			<tr id="fieldClosingDates">
 				<td>
 					<label for="yourInstitutionClosingDates"><s:property value="getText('label.ai.yourinstitution.closingDates')"/>:</label>
 				</td>
@@ -864,19 +864,11 @@
 				</td>
 			</tr>
 
-			<tr id="trYIbuttonAddClosingDates" style="display:none;">
+			<tr id="trYIbuttonAddClosingDates">
 				<td id="tdASAddClosingDates" colspan="2">
 					<input type="button" id="buttonASAddClosingDates"  value="<s:property value='getText("label.ai.accessAndServices.addClosingDates")' />" onclick="yIAddClosingDates2('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
 				</td>
 				<td colspan="2">
-				</td>
-			</tr>
-
-			<tr>
-				<td>
-					<input type="button" id="buttonAddClosingDates" value="<s:property value="getText('label.ai.tabs.commons.closingDates')"/>" onclick="yiAddClosingDates();" />
-				</td>
-				<td colspan="3">
 				</td>
 			</tr>
 		</s:else>
