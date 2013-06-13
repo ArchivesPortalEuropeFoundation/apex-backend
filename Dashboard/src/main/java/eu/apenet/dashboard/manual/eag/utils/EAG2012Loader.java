@@ -2805,13 +2805,16 @@ public class EAG2012Loader{
 
 					// Facilities for disabled people available for institution.
 					for (int i = 0; i < repository.getAccessibility().size(); i++) {
-						this.addYiAccessibility(repository.getAccessibility().get(i).getContent());
-						if (repository.getAccessibility().size() >= i
-								&& repository.getAccessibility().get(i).getLang() != null
-								&& !repository.getAccessibility().get(i).getLang().isEmpty()) {
-							this.addYiAccessibilityLang(repository.getAccessibility().get(i).getLang());
-						} else {
-							this.addYiAccessibilityLang(Eag2012.OPTION_NONE);
+						if (repository.getAccessibility().get(i).getContent() != null
+								&& !repository.getAccessibility().get(i).getContent().isEmpty()) {
+							this.addYiAccessibility(repository.getAccessibility().get(i).getContent());
+							if (repository.getAccessibility().size() >= i
+									&& repository.getAccessibility().get(i).getLang() != null
+									&& !repository.getAccessibility().get(i).getLang().isEmpty()) {
+								this.addYiAccessibilityLang(repository.getAccessibility().get(i).getLang());
+							} else {
+								this.addYiAccessibilityLang(Eag2012.OPTION_NONE);
+							}
 						}
 					}
 				}
