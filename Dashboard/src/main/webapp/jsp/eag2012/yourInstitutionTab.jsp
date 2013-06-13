@@ -1077,6 +1077,22 @@
 			</tr>
 		</s:if>
 		<s:else>
+			<tr>
+				<td>
+					<label for="selectFacilitiesForDisabledPeopleAvailable" ><s:property value="getText('label.ai.yourinstitution.facilitiesForFisabledPeopleAvailable')"/><span class="required">*</span>:</label>
+				</td>
+				<td>
+					<select id="selectFacilitiesForDisabledPeopleAvailable" onchange="facilitiesForDisabledPeopleAvailableChanged();" >
+						<s:iterator value="yesNoList" var="yesno"> 
+							<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.accessibilityQuestion}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
+						</s:iterator>
+					</select>
+				</td>
+				<td colspan="2" class="labelLeft">
+					<input type="button" id="buttonAddFutherInformationOnExistingFacilities" value="<s:property value="getText('label.ai.yourinstitution.addFutherInformationOnExistingFacilities')"/>" onclick="yiAddFutherInformationOnExistingFacilities();" />
+				</td>
+			</tr>
+
 			<tr id="trButtonAddFutherInformationOnExistingFacilities" style="display:none;">
 				<td>
 					<label for="futherInformationOnExistingFacilities"><s:property value="getText('label.ai.accessAndServices.accesibility')" />:</label>
@@ -1100,22 +1116,6 @@
 				<td colspan="2"> </td>
 				<td colspan="2" class="labelLeft">
 					<input type="button" id="buttonAddFutherInformationOnExistingFacilities2" style="display:none;" value="<s:property value="getText('label.ai.yourinstitution.addFutherInformationOnExistingFacilities')"/>" onclick="yiAddFutherInformationOnExistingFacilities2('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
-				</td>
-			</tr>
-
-			<tr>
-				<td>
-					<label for="selectFacilitiesForDisabledPeopleAvailable" ><s:property value="getText('label.ai.yourinstitution.facilitiesForFisabledPeopleAvailable')"/><span class="required">*</span>:</label>
-				</td>
-				<td>
-					<select id="selectFacilitiesForDisabledPeopleAvailable" onchange="facilitiesForDisabledPeopleAvailableChanged();" >
-						<s:iterator value="yesNoList" var="yesno"> 
-							<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.accessibilityQuestion}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
-						</s:iterator>
-					</select>
-				</td>
-				<td colspan="2" class="labelLeft">
-					<input type="button" id="buttonAddFutherInformationOnExistingFacilities" value="<s:property value="getText('label.ai.yourinstitution.addFutherInformationOnExistingFacilities')"/>" onclick="yiAddFutherInformationOnExistingFacilities();" />
 				</td>
 			</tr>
 		</s:else>
