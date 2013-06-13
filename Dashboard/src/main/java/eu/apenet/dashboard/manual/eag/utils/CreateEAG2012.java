@@ -692,7 +692,7 @@ public class CreateEAG2012 {
 
 		// eag/archguide/desc/repositories/repository/repositoryName
 		// Main institution.
-		Repository mainRepository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
+//		Repository mainRepository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
 //		RepositoryName repositoryName = null;
 //		if (mainRepository.getRepositoryName() == null) {
 //			repositoryName = new RepositoryName();
@@ -1810,7 +1810,8 @@ public class CreateEAG2012 {
 									String question = null;
 									if(list.size()>0){
 										question = repository.getAccessibility().get(0).getQuestion();
-										if(list.size()==1 && (list.get(0).getLang()==null || list.get(0).getLang().isEmpty())){
+										if(list.size()==1 && (list.get(0).getLang()==null || list.get(0).getLang().isEmpty())
+												&& (list.get(0).getContent()==null || list.get(0).getContent().isEmpty())){
 											list.clear();
 										}
 									}
@@ -1824,8 +1825,8 @@ public class CreateEAG2012 {
 										}
 										accessibility.setQuestion(question);
 										list.add(accessibility);
+										repository.setAccessibility(list);
 									}
-									repository.setAccessibility(list);
 								}
 							}
 						}
