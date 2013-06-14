@@ -3392,8 +3392,12 @@ function checkSelectASTSReproductionService(attr){
 		$("#"+attr+" #selectASTSRSDigitalServices").attr("disabled","disabled");
 		$("#"+attr+" #selectASTSRSPhotocopyServices option[value='none']").attr("selected","selected");
 		$("#"+attr+" #selectASTSRSPhotocopyServices").attr("disabled","disabled");
-		$("#"+attr+" #selectASTSRSSelectLanguage option[value='none']").attr("selected","selected");
-		$("#"+attr+" #selectASTSRSSelectLanguage").attr("disabled","disabled");
+		$("#"+attr+" [id^='selectASTSRSSelectLanguage'] option[value='none']").each(function(){
+			$(this).attr("selected","selected");
+		});
+		$("#"+attr+" [id^='selectASTSRSSelectLanguage']").each(function(){
+			$(this).attr("disabled","disabled");
+		});
 		$("#"+attr+" #textASTSRSWebpageLinkTitle").val("");
 		$("#"+attr+" #textASTSRSWebpageLinkTitle").attr("disabled","disabled");
 		$("#"+attr+" #textASTSRSWebpage").val("");
@@ -3405,7 +3409,10 @@ function checkSelectASTSReproductionService(attr){
 		$("#"+attr+" #textASTSRSTelephone").val("");
 		$("#"+attr+" #textASTSRSTelephone").attr("disabled","disabled");
 		$("#"+attr+" #textASTSDescriptionOfReproductionService").val("");
-		$("#"+attr+" #textASTSDescriptionOfReproductionService").attr("disabled","disabled");
+		$("#"+attr+" [id^='textASTSDescriptionOfReproductionService']").each(function(){
+			$(this).val("");
+			$(this).attr("disabled","disabled");
+		});
 		$("#"+attr+" #buttonASAddADescriptionOfYourReproductionService").attr("disabled","disabled");
 	}else{
 		$("#"+attr+" #textASTSRSWebpageLinkTitle").removeAttr("disabled");
@@ -3413,8 +3420,12 @@ function checkSelectASTSReproductionService(attr){
 		$("#"+attr+" #textASTSEmailAddressLinkTitle").removeAttr("disabled");
 		$("#"+attr+" #textASTSRSEmailAddress").removeAttr("disabled");
 		$("#"+attr+" #textASTSRSTelephone").removeAttr("disabled");
-		$("#"+attr+" #selectASTSRSSelectLanguage").removeAttr("disabled");
-		$("#"+attr+" #textASTSDescriptionOfReproductionService").removeAttr("disabled");
+		$("#"+attr+" [id^='selectASTSRSSelectLanguage']").each(function(){
+			$(this).removeAttr("disabled");
+		});
+		$("#"+attr+" [id^='textASTSDescriptionOfReproductionService']").each(function(){
+			$(this).removeAttr("disabled");
+		});
 		$("#"+attr+" #selectASTSRSMicroform").removeAttr("disabled");
 		$("#"+attr+" #selectASTSRSPhotographServices").removeAttr("disabled");
 		$("#"+attr+" #selectASTSRSDigitalServices").removeAttr("disabled");
