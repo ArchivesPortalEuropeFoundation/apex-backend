@@ -67,9 +67,9 @@ public class Eag2012 {
 	// Constants for repository type texts.
 	public static final String OPTION_NATIONAL_TEXT = "National archives";	// Constant for value "national".
 	public static final String OPTION_REGIONAL_TEXT = "Regional archives";	// Constant for value "regional".
-	public static final String OPTION_COUNTY_TEXT = "County/Local authority archives";	// Constant for value "county".
+	public static final String OPTION_COUNTY_TEXT = "County/local authority archives";	// Constant for value "county".
 	public static final String OPTION_MUNICIPAL_TEXT = "Municipal archives";	// Constant for value "municipal".
-	public static final String OPTION_SPECIALISED_TEXT = "Specialised governmental archives";	// Constant for value "specialised".
+	public static final String OPTION_SPECIALISED_TEXT = "Specialised government archives";	// Constant for value "specialised".
 	public static final String OPTION_PRIVATE_TEXT = "Private persons and family archives";	// Constant for value "private".
 	public static final String OPTION_CHURCH_TEXT = "Church and religious archives";	// Constant for value "church".
 	public static final String OPTION_BUSINESS_TEXT = "Business archives";	// Constant for value "business".
@@ -111,7 +111,7 @@ public class Eag2012 {
 
 	// Constants for relationType texts.
 	public static final String OPTION_CREATOR_TEXT = "creatorOf";	// Constant for value "creatorOf".
-	public static final String OPTION_SUBJECT_TEXT = "creatorOf";	// Constant for value "subjectOf".
+	public static final String OPTION_SUBJECT_TEXT = "subjectOf";	// Constant for value "subjectOf".
 	public static final String OPTION_OTHER_TEXT = "other";			// Constant for value "other".
 
 	// Constants for eagRelationType options.
@@ -2202,6 +2202,13 @@ public class Eag2012 {
 	    		otherRepositorId+="0";
 	    	}
 	    	otherRepositorId+=archivalInstitutionId.toString();
+	    	ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
+	    	Long finalFigure = new Long("99999999999");
+	    	// TODO: Improve performance.
+	    	while(!aiDao.isRepositoryCodeAvailable(otherRepositorId, archivalInstitutionId)){ //check value
+	    		otherRepositorId = finalFigure.toString(); //generate by final list of possible values
+	    		finalFigure--;
+	    	}
 		}
     	return otherRepositorId;
 	}

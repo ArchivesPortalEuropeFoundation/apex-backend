@@ -1038,10 +1038,7 @@ public class CreateEAG2012 {
 									}
 								}
 								if(!found
-										&& ((location.getCountry() != null
-											&& location.getCountry().getContent() != null
-											&& !location.getCountry().getContent().isEmpty())
-										|| location.getMunicipalityPostalcode() != null
+										&& (location.getMunicipalityPostalcode() != null
 										|| location.getStreet() != null)){
 									repository.getLocation().add(location);
 								}

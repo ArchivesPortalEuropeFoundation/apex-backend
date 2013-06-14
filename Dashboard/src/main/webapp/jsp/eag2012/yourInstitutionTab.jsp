@@ -1180,7 +1180,7 @@
 						</s:else>
 							<s:iterator value="languageList" var="language"> 
 								<option value="<s:property value="#language.key" />"
-									<s:if test="%{#language.key == loader.yiResourceRelationrelationLang[#counter]}" > selected=selected </s:if>>
+									<s:if test="%{#language.key == loader.yiResourceRelationLang[#counter]}" > selected=selected </s:if>>
 									<s:property value="#language.value" />
 								</option>
 							</s:iterator>

@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -20,10 +19,13 @@ import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.manual.eag.Eag2012;
 import eu.apenet.dpt.utils.eag2012.Autform;
 import eu.apenet.dpt.utils.eag2012.Citation;
+import eu.apenet.dpt.utils.eag2012.Date;
+import eu.apenet.dpt.utils.eag2012.DateRange;
 import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.dpt.utils.eag2012.Email;
 import eu.apenet.dpt.utils.eag2012.Library;
 import eu.apenet.dpt.utils.eag2012.Location;
+import eu.apenet.dpt.utils.eag2012.Nonpreform;
 import eu.apenet.dpt.utils.eag2012.OtherRecordId;
 import eu.apenet.dpt.utils.eag2012.P;
 import eu.apenet.dpt.utils.eag2012.Parform;
@@ -33,8 +35,8 @@ import eu.apenet.dpt.utils.eag2012.ResourceRelation;
 import eu.apenet.dpt.utils.eag2012.Searchroom;
 import eu.apenet.dpt.utils.eag2012.Telephone;
 import eu.apenet.dpt.utils.eag2012.Timetable;
+import eu.apenet.dpt.utils.eag2012.UseDates;
 import eu.apenet.dpt.utils.eag2012.Webpage;
-import eu.apenet.dpt.utils.util.LanguageConverter;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 
@@ -67,8 +69,12 @@ public class EAG2012Loader{
     private String selfRecordId;
     private String autform;
     private String autformLang;
+    private List<String> idAutform;
+    private List<String> idAutformLang;
     private String parform;
     private String parformLang;
+    private List<String> idParform;
+    private List<String> idParformLang;
     private String localType;
     private String longitude;
     private String latitude;
@@ -136,6 +142,11 @@ public class EAG2012Loader{
     private String recordIdISIL;
 
 	// Identity tab.
+    private List<String> nonpreform;
+    private List<String> nonpreformLang;
+    private List<List<String>> nonpreformDate;
+    private List<List<String>> nonpreformDateFrom;
+    private List<List<String>> nonpreformDateTo;
     private List<String> repositoryType;
 
 	// Contact.
@@ -481,6 +492,54 @@ public class EAG2012Loader{
 	public void setAutformLang(String autformLang) {
 		this.autformLang = autformLang;
 	}
+	/**
+	 * @return the idAutform
+	 */
+	public List<String> getIdAutform() {
+		if (this.idAutform == null) {
+			this.idAutform = new ArrayList<String>();
+		}
+		return this.idAutform;
+	}
+
+	/**
+	 * @param idAutform the idAutform to set
+	 */
+	public void setIdAutform(List<String> idAutform) {
+		this.idAutform = idAutform;
+	}
+
+	/**
+	 * @param idAutform the idAutform to add
+	 */
+	public void addIdAutform(String idAutform) {
+		this.getIdAutform().add(idAutform);
+	}
+
+	/**
+	 * @return the idAutformLang
+	 */
+	public List<String> getIdAutformLang() {
+		if (this.idAutformLang == null) {
+			this.idAutformLang = new ArrayList<String>();
+		}
+		return this.idAutformLang;
+	}
+
+	/**
+	 * @param idAutformLang the idAutformLang to set
+	 */
+	public void setIdAutformLang(List<String> idAutformLang) {
+		this.idAutformLang = idAutformLang;
+	}
+
+	/**
+	 * @param idAutformLang the idAutformLang to add
+	 */
+	public void addIdAutformLang(String idAutformLang) {
+		this.getIdAutformLang().add(idAutformLang);
+	}
+
 	public String getParform() {
 		return this.parform;
 	}
@@ -493,6 +552,54 @@ public class EAG2012Loader{
 	public void setParformLang(String parformLang) {
 		this.parformLang = parformLang;
 	}
+	/**
+	 * @return the idParform
+	 */
+	public List<String> getIdParform() {
+		if (this.idParform == null) {
+			this.idParform = new ArrayList<String>();
+		}
+		return this.idParform;
+	}
+
+	/**
+	 * @param idParform the idParform to set
+	 */
+	public void setIdParform(List<String> idParform) {
+		this.idParform = idParform;
+	}
+
+	/**
+	 * @param idParform the idParform to add
+	 */
+	public void addIdParform(String idParform) {
+		this.getIdParform().add(idParform);
+	}
+
+	/**
+	 * @return the idParformLang
+	 */
+	public List<String> getIdParformLang() {
+		if (this.idParformLang == null) {
+			this.idParformLang = new ArrayList<String>();
+		}
+		return this.idParformLang;
+	}
+
+	/**
+	 * @param idParformLang the idParformLang to set
+	 */
+	public void setIdParformLang(List<String> idParformLang) {
+		this.idParformLang = idParformLang;
+	}
+
+	/**
+	 * @param idParformLang the idParformLang to add
+	 */
+	public void addIdParformLang(String idParformLang) {
+		this.getIdParformLang().add(idParformLang);
+	}
+
 	public String getLocalType() {
 		return this.localType;
 	}
@@ -1489,6 +1596,127 @@ public class EAG2012Loader{
 		this.recordIdISIL = recordIdISIL;
 	}
 
+	/**
+	 * @return the nonpreform
+	 */
+	public List<String> getNonpreform() {
+		if (this.nonpreform == null) {
+			this.nonpreform = new ArrayList<String>();
+		}
+		return this.nonpreform;
+	}
+
+	/**
+	 * @param nonpreform the nonpreform to set
+	 */
+	public void setNonpreform(List<String> nonpreform) {
+		this.nonpreform = nonpreform;
+	}
+
+	/**
+	 * @param nonpreform the nonpreform to add
+	 */
+	public void addNonpreform(String nonpreform) {
+		this.getNonpreform().add(nonpreform);
+	}
+
+	/**
+	 * @return the nonpreformLang
+	 */
+	public List<String> getNonpreformLang() {
+		if (this.nonpreformLang == null) {
+			this.nonpreformLang = new ArrayList<String>();
+		}
+		return this.nonpreformLang;
+	}
+
+	/**
+	 * @param nonpreformLang the nonpreformLang to set
+	 */
+	public void setNonpreformLang(List<String> nonpreformLang) {
+		this.nonpreformLang = nonpreformLang;
+	}
+
+	/**
+	 * @param nonpreformLang the nonpreformLang to add
+	 */
+	public void addNonpreformLang(String nonpreformLang) {
+		this.getNonpreformLang().add(nonpreformLang);
+	}
+
+	/**
+	 * @return the nonpreformDate
+	 */
+	public List<List<String>> getNonpreformDate() {
+		if (this.nonpreformDate == null) {
+			this.nonpreformDate = new ArrayList<List<String>>();
+			
+		}
+		return this.nonpreformDate;
+	}
+
+	/**
+	 * @param nonpreformDate the nonpreformDate to set
+	 */
+	public void setNonpreformDate(List<List<String>> nonpreformDate) {
+		this.nonpreformDate = nonpreformDate;
+	}
+
+	/**
+	 * @param nonpreformDate the nonpreformDate to add
+	 */
+	public void addNonpreformDate(List<String> nonpreformDate) {
+		this.getNonpreformDate().add(nonpreformDate);
+	}
+
+	/**
+	 * @return the nonpreformDateFrom
+	 */
+	public List<List<String>> getNonpreformDateFrom() {
+		if (this.nonpreformDateFrom == null) {
+			this.nonpreformDateFrom = new ArrayList<List<String>>();
+		}
+		return this.nonpreformDateFrom;
+	}
+
+	/**
+	 * @param nonpreformDateFrom the nonpreformDateFrom to set
+	 */
+	public void setNonpreformDateFrom(List<List<String>> nonpreformDateFrom) {
+		this.nonpreformDateFrom = nonpreformDateFrom;
+	}
+
+	/**
+	 * @param nonpreformDateFrom the nonpreformDateFrom to add
+	 */
+	public void addNonpreformDateFrom(List<String> nonpreformDateFrom) {
+		this.getNonpreformDateFrom().add(nonpreformDateFrom);
+	}
+
+	/**
+	 * @return the nonpreformDateTo
+	 */
+	public List<List<String>> getNonpreformDateTo() {
+		if (this.nonpreformDateTo == null) {
+			this.nonpreformDateTo = new ArrayList<List<String>>();
+		}
+		return this.nonpreformDateTo;
+	}
+
+	/**
+	 * @param nonpreformDateTo the nonpreformDateTo to set
+	 */
+	public void setNonpreformDateTo(List<List<String>> nonpreformDateTo) {
+		this.nonpreformDateTo = nonpreformDateTo;
+	}
+
+	/**
+	 * @param nonpreformDateTo the nonpreformDateTo to add
+	 */
+	public void addNonpreformDateTo(List<String> nonpreformDateTo) {
+		this.getNonpreformDateTo().add(nonpreformDateTo);
+	}
+
 	public List<String> getRepositoryType() {
         if (this.repositoryType == null) {
         	this.repositoryType = new ArrayList<String>();
@@ -1497,6 +1725,13 @@ public class EAG2012Loader{
 	}
 	public void setRepositoryType(List<String> repositoryType) {
 		this.repositoryType = repositoryType;
+	}
+
+	/**
+	 * @param repositoryType the repositoryType to add
+	 */
+	public void addRepositoryType(String repositoryType) {
+		this.getRepositoryType().add(repositoryType);
 	}
 	public String getFax() {
 		return this.fax;
@@ -2466,17 +2701,25 @@ public class EAG2012Loader{
 		if (!this.eag.getArchguide().getIdentity().getAutform().isEmpty()) {
 			for (int i = 0; i < this.eag.getArchguide().getIdentity().getAutform().size(); i++) {
 				Autform autform = this.eag.getArchguide().getIdentity().getAutform().get(i);
-				if (autform!=null && autform.getLang()!=null && autform.getLang().equalsIgnoreCase(this.getCountryCode())) {
-					this.setAutform(autform.getContent());
-					this.setAutformLang((autform.getLang()!=null)?new Locale(LanguageConverter.get639_1Code(autform.getLang())).getISO3Language():null);
+//				if (autform!=null && autform.getLang()!=null && autform.getLang().equalsIgnoreCase(this.getCountryCode())) {
+//					this.setAutform(autform.getContent());
+//					this.setAutformLang((autform.getLang()!=null)?new Locale(LanguageConverter.get639_1Code(autform.getLang())).getISO3Language():null);
+//				}
+				if (autform != null && autform.getContent() != null && !autform.getContent().isEmpty()) {
+					this.addIdAutform(autform.getContent());
+					if (autform.getLang() != null && !autform.getLang().isEmpty()) {
+						this.addIdAutformLang(autform.getLang());
+					} else {
+						this.addIdAutformLang(Eag2012.OPTION_NONE);
+					}
 				}
 			}
-			if (this.getAutform() == null || this.getAutform() == "") {
+//			if (this.getAutform() == null || this.getAutform() == "") {
 				this.setAutform(this.eag.getArchguide().getIdentity().getAutform().get(0).getContent());
 				String lang = this.eag.getArchguide().getIdentity().getAutform().get(0).getLang();
 				this.setAutformLang(lang);
 //				this.setAutformLang((lang!=null)?new Locale(LanguageConverter.get639_1Code(lang)).getISO3Country():lang);
-			}
+//			}
 		}
 
 		// Parallel name of the institution.
@@ -2484,14 +2727,22 @@ public class EAG2012Loader{
 			for (int i = 0; i < this.eag.getArchguide().getIdentity().getParform().size(); i++) {
 				Parform parform = this.eag.getArchguide().getIdentity().getParform().get(i);
 //				if (parform.getLang().equalsIgnoreCase(this.getCountryCode())) {
-					this.setParform(parform.getContent());
-					this.setParformLang(parform.getLang());
+//					this.setParform(parform.getContent());
+//					this.setParformLang(parform.getLang());
 //				}
+				if (parform != null && parform.getContent() != null && !parform.getContent().isEmpty()) {
+					this.addIdParform(parform.getContent());
+					if (parform.getLang() != null && !parform.getLang().isEmpty()) {
+						this.addIdParformLang(parform.getLang());
+					} else {
+						this.addIdParformLang(Eag2012.OPTION_NONE);
+					}
+				}
 			}
-			if (this.getParform() == null || this.getParform() == "") {
+//			if (this.getParform() == null || this.getParform() == "") {
 				this.setParform(this.eag.getArchguide().getIdentity().getParform().get(0).getContent());
 				this.setParformLang(this.eag.getArchguide().getIdentity().getParform().get(0).getLang());
-			}
+//			}
 		}
 
 		// Institution info.
@@ -2507,14 +2758,44 @@ public class EAG2012Loader{
 						// TODO: Review for multiple translations.
 						if (location.getLocalType().equalsIgnoreCase(Eag2012.VISITORS_ADDRESS)) {
 							// Street.
-							this.setStreet(location.getStreet().getContent());
-							this.setStreetLang(location.getStreet().getLang());
+							if (location.getStreet() != null) {
+								if (location.getStreet().getContent() != null
+										&& !location.getStreet().getContent().isEmpty()) {
+									this.setStreet(location.getStreet().getContent());
+								}
+								if (location.getStreet().getLang() != null
+										&& !location.getStreet().getLang().isEmpty()) {
+									this.setStreetLang(location.getStreet().getLang());
+								} else {
+									this.setStreetLang(Eag2012.OPTION_NONE);
+								}
+							}
 							// City.
-							this.setMunicipalityPostalcode(location.getMunicipalityPostalcode().getContent());
-							this.setMunicipalityPostalcodeLang(location.getStreet().getLang());
+							if (location.getMunicipalityPostalcode() != null) {
+								if (location.getMunicipalityPostalcode().getContent() != null
+										&& !location.getMunicipalityPostalcode().getContent().isEmpty()) {
+									this.setMunicipalityPostalcode(location.getMunicipalityPostalcode().getContent());
+								}
+								if (location.getMunicipalityPostalcode().getLang() != null
+										&& !location.getMunicipalityPostalcode().getLang().isEmpty()) {
+									this.setMunicipalityPostalcodeLang(location.getStreet().getLang());
+								} else {
+									this.setMunicipalityPostalcodeLang(Eag2012.OPTION_NONE);
+								}
+							}
 							// Country.
-							this.setCountry(location.getCountry().getContent());
-							this.setCountryLang(location.getCountry().getLang());
+							if (location.getCountry() != null) {
+								if (location.getCountry().getContent() != null
+										&& !location.getCountry().getContent().isEmpty()) {
+									this.setCountry(location.getCountry().getContent());
+								}
+								if (location.getCountry().getLang() != null
+										&& !location.getCountry().getLang().isEmpty()) {
+									this.setCountryLang(location.getCountry().getLang());
+								} else {
+									this.setCountryLang(Eag2012.OPTION_NONE);
+								}
+							}
 							// Latitude.
 							this.setLatitude(location.getLatitude());
 							// Longitude.
@@ -2523,11 +2804,31 @@ public class EAG2012Loader{
 						// TODO: Review for multiple translations.
 						if (location.getLocalType().equalsIgnoreCase(Eag2012.POSTAL_ADDRESS)) {
 							// Postal street.
-							this.setStreetPostal(location.getStreet().getContent());
-							this.setStreetPostalLang(location.getStreet().getLang());
+							if (location.getStreet() != null) {
+								if (location.getStreet().getContent() != null
+										&& !location.getStreet().getContent().isEmpty()) {
+									this.setStreetPostal(location.getStreet().getContent());
+								}
+								if (location.getStreet().getLang() != null
+										&& !location.getStreet().getLang().isEmpty()) {
+									this.setStreetPostalLang(location.getStreet().getLang());
+								} else {
+									this.setStreetPostalLang(Eag2012.OPTION_NONE);
+								}
+							}
 							// Postal city.
-							this.setMunicipalityPostalcodePostal(location.getMunicipalityPostalcode().getContent());
-							this.setMunicipalityPostalcodePostalLang(location.getStreet().getLang());
+							if (location.getMunicipalityPostalcode() != null) {
+								if (location.getMunicipalityPostalcode().getContent() != null
+										&& !location.getMunicipalityPostalcode().getContent().isEmpty()) {
+									this.setMunicipalityPostalcodePostal(location.getMunicipalityPostalcode().getContent());
+								}
+								if (location.getMunicipalityPostalcode().getLang() != null
+										&& !location.getMunicipalityPostalcode().getLang().isEmpty()) {
+									this.setMunicipalityPostalcodePostalLang(location.getStreet().getLang());
+								} else {
+									this.setMunicipalityPostalcodePostalLang(Eag2012.OPTION_NONE);
+								}
+							}
 						}
 					}
 				}
@@ -2590,10 +2891,14 @@ public class EAG2012Loader{
 							// Latitude.
 							if (location.getLatitude() != null) {
 								this.addYiLatitude(location.getLatitude());
+							} else {
+								this.addYiLatitude("");
 							}
 							// Longitude.
 							if (location.getLongitude() != null) {
 								this.addYiLongitude(location.getLongitude());
+							} else {
+								this.addYiLongitude("");
 							}
 						}
 						if (location.getLocalType().equalsIgnoreCase(Eag2012.POSTAL_ADDRESS)) {
@@ -2623,7 +2928,8 @@ public class EAG2012Loader{
 								if (location.getMunicipalityPostalcode().getLang() != null
 										&& !location.getMunicipalityPostalcode().getLang().isEmpty()) {
 									this.addYiMunicipalityPostalcodePostalLang(location.getMunicipalityPostalcode().getLang());
-								} else if (location.getStreet().getLang() != null
+								} else if (location.getStreet() != null
+										&& location.getStreet().getLang() != null
 										&& !location.getStreet().getLang().isEmpty()) {
 									this.addYiMunicipalityPostalcodePostalLang(location.getStreet().getLang());
 								} else {
@@ -2862,6 +3168,125 @@ public class EAG2012Loader{
 	 * Method to load all values of "Identity" tab.
 	 */
 	private void loadIdentityTabValues() {
+		//  Formerly used names of the institution.
+		if (!this.eag.getArchguide().getIdentity().getNonpreform().isEmpty()) {
+			for (int i = 0; i < this.eag.getArchguide().getIdentity().getNonpreform().size(); i++) {
+				Nonpreform nonpreform = this.eag.getArchguide().getIdentity().getNonpreform().get(i);
+				if (nonpreform != null && !nonpreform.getContent().isEmpty()) {
+					// Lang.
+					if (nonpreform.getLang() != null && !nonpreform.getLang().isEmpty()) {
+						this.addNonpreformLang(nonpreform.getLang());
+					} else {
+						this.addNonpreformLang(Eag2012.OPTION_NONE);
+					}
+
+					// Value and dates.
+					for (int j = 0; j < nonpreform.getContent().size(); j++) {
+						Object object = nonpreform.getContent().get(j);
+
+						// Value.
+						if (object != null && object instanceof String) {
+							if (!((String) object).startsWith("\n")) {
+								this.addNonpreform((String) object);
+							}
+						} else if (object != null && object instanceof UseDates) {
+							// Dates.
+							UseDates useDates = (UseDates) object;
+							if (useDates != null) {
+								if (useDates.getDate() != null && useDates.getDate().getContent() != null
+										&& !useDates.getDate().getContent().isEmpty()) {
+									List<String> dateList = new ArrayList<String>();
+									dateList.add(useDates.getDate().getContent());
+									this.addNonpreformDate(dateList);
+								}
+								if (useDates.getDateRange() != null
+										&& ((useDates.getDateRange().getFromDate() != null
+											&& useDates.getDateRange().getFromDate().getContent() != null
+											&& !useDates.getDateRange().getFromDate().getContent().isEmpty())
+										|| (useDates.getDateRange().getToDate() != null
+											&& useDates.getDateRange().getToDate().getContent() != null
+											&& !useDates.getDateRange().getToDate().getContent().isEmpty()))) {
+									List<String> dateFromList = new ArrayList<String>();
+									if (useDates.getDateRange().getFromDate() != null
+											&& useDates.getDateRange().getFromDate() != null
+											&& useDates.getDateRange().getFromDate().getContent() != null
+											&& !useDates.getDateRange().getFromDate().getContent().isEmpty()) {
+										dateFromList.add(useDates.getDateRange().getFromDate().getContent());
+									} else {
+										dateFromList.add("");
+									}
+									List<String> dateToList = new ArrayList<String>();
+									if (useDates.getDateRange().getToDate() != null
+											&& useDates.getDateRange().getToDate() != null
+											&& useDates.getDateRange().getToDate().getContent() != null
+											&& !useDates.getDateRange().getToDate().getContent().isEmpty()) {
+										dateToList.add(useDates.getDateRange().getToDate().getContent());
+									} else {
+										dateToList.add("");
+									}
+
+									this.addNonpreformDateFrom(dateFromList);
+									this.addNonpreformDateTo(dateToList);
+								}
+								if (useDates.getDateSet() != null && !useDates.getDateSet().getDateOrDateRange().isEmpty()) {
+									List<String> dateList = new ArrayList<String>();
+									List<String> dateFromList = new ArrayList<String>();
+									List<String> dateToList = new ArrayList<String>();
+									for (int k = 0; k < useDates.getDateSet().getDateOrDateRange().size(); k ++) {
+										Object dateObject = useDates.getDateSet().getDateOrDateRange().get(k);
+										if (dateObject instanceof Date) {
+											Date date = (Date) dateObject;
+											if (date != null && date.getContent() != null
+												&& !date.getContent().isEmpty()) {
+												dateList.add(date.getContent());
+											}
+										}
+										if (dateObject instanceof DateRange) {
+											DateRange dateRange = (DateRange) dateObject;
+											if (dateRange != null
+													&& ((dateRange.getFromDate() != null
+														&& dateRange.getFromDate().getContent() != null
+														&& !dateRange.getFromDate().getContent().isEmpty())
+													|| (dateRange.getToDate() != null
+														&& dateRange.getToDate().getContent() != null
+														&& !dateRange.getToDate().getContent().isEmpty()))) {
+												if (dateRange.getFromDate() != null
+														&& dateRange.getFromDate() != null
+														&& dateRange.getFromDate().getContent() != null
+														&& !dateRange.getFromDate().getContent().isEmpty()) {
+													dateFromList.add(dateRange.getFromDate().getContent());
+												} else {
+													dateFromList.add("");
+												}
+												if (dateRange.getToDate() != null
+														&& dateRange.getToDate() != null
+														&& dateRange.getToDate().getContent() != null
+														&& !dateRange.getToDate().getContent().isEmpty()) {
+													dateToList.add(dateRange.getToDate().getContent());
+												} else {
+													dateToList.add("");
+												}
+											}
+										}
+									}
+									this.addNonpreformDate(dateList);
+									this.addNonpreformDateFrom(dateFromList);
+									this.addNonpreformDateTo(dateToList);
+								}
+							}
+						}
+					}
+				} 
+				// Check if list of "Date" and "DateRange" has the same size.
+				if (this.getNonpreformDate().size() > this.getNonpreformDateFrom().size()) {
+					this.getNonpreformDateFrom().add(new ArrayList<String>());
+					this.getNonpreformDateTo().add(new ArrayList<String>());
+				} else if (this.getNonpreformDate().size() < this.getNonpreformDateFrom().size()) {
+					this.getNonpreformDate().add(new ArrayList<String>());
+				}
+			}
+		}
+
 		// Select type of institution.
 		if (!this.eag.getArchguide().getIdentity().getRepositoryType().isEmpty()) {
 			for (int i = 0; i < this.eag.getArchguide().getIdentity().getRepositoryType().size(); i++) {
@@ -2893,7 +3318,7 @@ public class EAG2012Loader{
 					value = Eag2012.OPTION_CULTURAL;
 				}
 
-				this.getRepositoryType().add(value);
+				this.addRepositoryType(value);
 			}
 		}
 	}
@@ -2947,11 +3372,39 @@ public class EAG2012Loader{
 						// TODO: Review for multiple translations.
 						if (location.getLocalType().equalsIgnoreCase(Eag2012.POSTAL_ADDRESS)) {
 							// Postal street.
-							this.setStreetPostal(location.getStreet().getContent());
-							this.setStreetPostalLang(location.getStreet().getLang());
+							if (location.getStreet() != null) {
+								if (location.getStreet().getContent() != null
+										&& !location.getStreet().getContent().isEmpty()) {
+									this.setStreetPostal(location.getStreet().getContent());
+								} else {
+									this.setStreetPostal("");
+								}
+								if (location.getStreet().getLang() != null
+										&& !location.getStreet().getLang().isEmpty()) {
+									this.setStreetPostalLang(location.getStreet().getLang());
+								} else {
+									this.setStreetPostalLang(Eag2012.OPTION_NONE);
+								}
+							}
 							// Postal city.
-							this.setMunicipalityPostalcodePostal(location.getMunicipalityPostalcode().getContent());
-							this.setMunicipalityPostalcodePostalLang(location.getStreet().getLang());
+							if (location.getMunicipalityPostalcode() != null) {
+								if (location.getMunicipalityPostalcode().getContent() != null
+										&& !location.getMunicipalityPostalcode().getContent().isEmpty()) {
+									this.setMunicipalityPostalcodePostal(location.getMunicipalityPostalcode().getContent());
+								} else {
+									this.setMunicipalityPostalcodePostal("");
+								}
+								if (location.getMunicipalityPostalcode().getLang() != null
+										&& !location.getMunicipalityPostalcode().getLang().isEmpty()) {
+									this.setMunicipalityPostalcodePostalLang(location.getMunicipalityPostalcode().getLang());
+								} else if (location.getStreet() != null
+										&& location.getStreet().getLang() != null
+										&& !location.getStreet().getLang().isEmpty()) {
+									this.setMunicipalityPostalcodePostalLang(location.getStreet().getLang());
+								} else {
+									this.setMunicipalityPostalcodePostalLang(Eag2012.OPTION_NONE);
+								}
+							}
 						}
 					}
 
@@ -3574,23 +4027,23 @@ public class EAG2012Loader{
 					if (this.eag.getRelations().getEagRelation().get(i).getEagRelationType() != null) {
 						String eagRelationType = this.eag.getRelations().getEagRelation().get(i).getEagRelationType();
 						
-						if (Eag2012.OPTION_CHILD.equalsIgnoreCase(eagRelationType)) {
-							eagRelationType = Eag2012.OPTION_CHILD_TEXT;
+						if (Eag2012.OPTION_CHILD_TEXT.equalsIgnoreCase(eagRelationType)) {
+							eagRelationType = Eag2012.OPTION_CHILD;
 						}
-						if (Eag2012.OPTION_PARENT.equalsIgnoreCase(eagRelationType)) {
-							eagRelationType = Eag2012.OPTION_PARENT_TEXT;
+						if (Eag2012.OPTION_PARENT_TEXT.equalsIgnoreCase(eagRelationType)) {
+							eagRelationType = Eag2012.OPTION_PARENT;
 						}
-						if (Eag2012.OPTION_EARLIER.equalsIgnoreCase(eagRelationType)) {
-							eagRelationType = Eag2012.OPTION_EARLIER_TEXT;
+						if (Eag2012.OPTION_EARLIER_TEXT.equalsIgnoreCase(eagRelationType)) {
+							eagRelationType = Eag2012.OPTION_EARLIER;
 						}
-						if (Eag2012.OPTION_LATER.equalsIgnoreCase(eagRelationType)) {
-							eagRelationType = Eag2012.OPTION_LATER_TEXT;
+						if (Eag2012.OPTION_LATER_TEXT.equalsIgnoreCase(eagRelationType)) {
+							eagRelationType = Eag2012.OPTION_LATER;
 						}
-						if (Eag2012.OPTION_ASSOCIATIVE.equalsIgnoreCase(eagRelationType)) {
-							eagRelationType = Eag2012.OPTION_ASSOCIATIVE_TEXT;
+						if (Eag2012.OPTION_ASSOCIATIVE_TEXT.equalsIgnoreCase(eagRelationType)) {
+							eagRelationType = Eag2012.OPTION_ASSOCIATIVE;
 						}
 
-						this.setResourceRelationType(eagRelationType);
+						this.setEagRelationType(eagRelationType);
 					}
 
 					if(this.eag.getRelations().getEagRelation().get(i).getRelationEntry()!=null){

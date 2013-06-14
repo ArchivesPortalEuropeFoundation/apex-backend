@@ -1708,6 +1708,7 @@ function addAnotherFormOfTheAuthorizedName(text1){
 	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
 	});
+	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" tr#trNameOfTheInstitution select#noti_languageList").attr("value","none");
 	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" tr#trNameOfTheInstitution input#textNameOfTheInstitution").removeAttr("disabled");
 	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" tr#trNameOfTheInstitution td#tdNameOfTheInstitution").find("span").remove();
 	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" tr#trNameOfTheInstitution select#noti_languageList").removeAttr("disabled");
@@ -1719,10 +1720,10 @@ function addParallelNameOfTheInstitution(text1){
 
 	if (counter > 1) {
 		var nameOfInstitution = $("table#identityTableParallelNameOfTheInstitution_"+counter+" input#textParallelNameOfTheInstitution").attr("value");
-		var nameOfInstitutionLanguage = $("table#identityTableParallelNameOfTheInstitution_"+counter+" select#pnoti_languageList").attr("value");
+		// var nameOfInstitutionLanguage = $("table#identityTableParallelNameOfTheInstitution_"+counter+" select#pnoti_languageList").attr("value");
 
 		if (nameOfInstitution == null || nameOfInstitution == ""
-				|| nameOfInstitutionLanguage == "none") {
+				/*|| nameOfInstitutionLanguage == "none"*/) {
 			alertEmptyFields(text1);
 			return;
 		}
@@ -1735,6 +1736,7 @@ function addParallelNameOfTheInstitution(text1){
 	$("table#identityTableParallelNameOfTheInstitution_"+(counter+1)+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
 	});
+	$("table#identityTableParallelNameOfTheInstitution_"+(counter+1)+" tr#trParallelNameOfTheInstitution select#pnoti_languageList").attr("value","none");
 	$("table#identityTableParallelNameOfTheInstitution_"+(counter+1)+" tr#trParallelNameOfTheInstitution input#textParallelNameOfTheInstitution").removeAttr("disabled");
 	$("table#identityTableParallelNameOfTheInstitution_"+(counter+1)+" tr#trParallelNameOfTheInstitution select#pnoti_languageList").removeAttr("disabled");
 }
@@ -1783,9 +1785,10 @@ function addMoreAnotherFormerlyUsedName(text1, text2, text3, text4, text5, text6
 				'<td colspan="2">'+
 				'</td>'+
 			'</tr></table>');
+		$("table#identityTableFormerlyUsedName_1 tr#trTextFormerlyUsedName select#tfun_languageList").attr("value", "none");
 	} else {
 		var formerlyUsedName = $("table#identityTableFormerlyUsedName_"+counter+" input#textFormerlyUsedName").attr("value");
-		var formerlyUsedNameLanguage = $("table#identityTableFormerlyUsedName_"+counter+" select#tfun_languageList").attr("value");
+		// var formerlyUsedNameLanguage = $("table#identityTableFormerlyUsedName_"+counter+" select#tfun_languageList").attr("value");
 
 		var counterYears = $("table#identityTableFormerlyUsedName_"+counter+" input[id^='textYearWhenThisNameWasUsed_']").length;
 		var singleYear = $("table#identityTableFormerlyUsedName_"+counter+" input#textYearWhenThisNameWasUsed_"+counterYears).attr("value");
@@ -1810,7 +1813,7 @@ function addMoreAnotherFormerlyUsedName(text1, text2, text3, text4, text5, text6
 		}
 
 		if (formerlyUsedName == null || formerlyUsedName == ""
-				|| formerlyUsedNameLanguage == "none"
+				/*|| formerlyUsedNameLanguage == "none"*/
 				|| year == null || year == "") {
 			alertEmptyFields(text9);
 			return;
@@ -1855,6 +1858,7 @@ function addMoreAnotherFormerlyUsedName(text1, text2, text3, text4, text5, text6
 				'<td colspan="2">'+
 				'</td>'+
 			'</tr></table>');
+		$("table#identityTableFormerlyUsedName_"+(counter+1)+" tr#trTextFormerlyUsedName select#tfun_languageList").attr("value", "none");
 	}
 }
 

@@ -94,7 +94,7 @@
 			<td>
 				<select id="selectTypeOftheRelation" >
 					<s:iterator value="typeTheRelationList" var="relation"> 
-						<option value="<s:property value="#relation.key" />" <s:if test="loader.resourceRelationType == #relation.value">selected="selected"</s:if>><s:property value="#relation.value" /></option>
+						<option value="<s:property value="#relation.key" />" <s:if test="loader.eagRelationType == #relation.key">selected="selected"</s:if>><s:property value="#relation.value" /></option>
 					</s:iterator>
 				</select>
 			</td>

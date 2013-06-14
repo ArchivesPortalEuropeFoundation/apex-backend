@@ -5269,6 +5269,16 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						eag2012.setToDateStandardDate(yearValue);
 					}	//end if toDate			
 				}//end While rangeDates
+				// Check if list of "Date" and "DateRange" has the same size.
+				List<List<String>> dateList = eag2012.getDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT).get(Eag2012.ROOT_SUBSECTION);
+				List<List<String>> dateFromList = eag2012.getFromDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT).get(Eag2012.ROOT_SUBSECTION);
+				List<List<String>> dateToList = eag2012.getToDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT).get(Eag2012.ROOT_SUBSECTION);
+				if (dateList.size() > dateFromList.size()) {
+					dateFromList.add(new ArrayList<String>());
+					dateToList.add(new ArrayList<String>());
+				} else if (dateList.size() < dateFromList.size()) {
+					dateList.add(new ArrayList<String>());
+				}
 			  }//end while 
 			}//end if formerly name
 			//Identity Type of the Institution

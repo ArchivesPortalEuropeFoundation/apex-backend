@@ -33,26 +33,69 @@
 		</tr>
 	</table>
 
-	<table id="identityTableNameOfTheInstitution_1" class="tablePadding">
-		<tr id="trNameOfTheInstitution">
-			<td id="tdNameOfTheInstitution">
-				<label for="textNameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.nameOfTheInstitution')" /><span class="required">*</span>:</label>
-			</td>
-			<td>
-				<input type="text" id="textNameOfTheInstitution" value="${loader.autform}" disabled="disabled" />
-			</td>
-			<td id="tdNameOfTheInstitutionLanguage" class="labelLeft">
-				<label for="noti_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
-			</td>
-			<td>
-				<select id="noti_languageList" disabled="disabled" >
-					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.autformLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
-					</s:iterator>
-				</select>
-			</td>
-		</tr>
-	</table>
+	<s:if test="%{loader.idAutform.size() > 0}">
+		<s:set var="counter" value="0"/>
+		<s:iterator var="current" value="loader.idAutform" status="status">
+			<table id="identityTableNameOfTheInstitution_<s:property value="%{#status.index + 1}" />" class="tablePadding">
+				<tr id="trNameOfTheInstitution">
+					<td id="tdNameOfTheInstitution">
+						<s:if test="%{#status.index == 0}">
+							<label for="textNameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.nameOfTheInstitution')" /><span class="required">*</span>:</label>
+						</s:if>
+						<s:else>
+							<label for="textNameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.nameOfTheInstitution')" />:</label>
+						</s:else>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<input type="text" id="textNameOfTheInstitution" value="<s:property value="#current" />" disabled="disabled" />
+						</s:if>
+						<s:else>
+							<input type="text" id="textNameOfTheInstitution" value="<s:property value="#current" />" />
+						</s:else>
+					</td>
+					<td id="tdNameOfTheInstitutionLanguage" class="labelLeft">
+						<label for="noti_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<select id="noti_languageList" disabled="disabled" >
+						</s:if>
+						<s:else>
+							<select id="noti_languageList">
+						</s:else>
+							<s:iterator value="languageList" var="language"> 
+								<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.idAutformLang[#counter]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+							</s:iterator>
+						</select>
+					</td>
+				</tr>
+			</table>
+			<s:set var="counter" value="%{#counter + 1}"/>
+		</s:iterator>
+	</s:if>
+	<s:else>
+		<table id="identityTableNameOfTheInstitution_1" class="tablePadding">
+			<tr id="trNameOfTheInstitution">
+				<td id="tdNameOfTheInstitution">
+					<label for="textNameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.nameOfTheInstitution')" /><span class="required">*</span>:</label>
+				</td>
+				<td>
+					<input type="text" id="textNameOfTheInstitution" disabled="disabled" />
+				</td>
+				<td id="tdNameOfTheInstitutionLanguage" class="labelLeft">
+					<label for="noti_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+				</td>
+				<td>
+					<select id="noti_languageList" disabled="disabled" >
+						<s:iterator value="languageList" var="language"> 
+							<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+						</s:iterator>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</s:else>
 
 	<table id="identityButtonAddNames" class="tablePadding">
 		<tr>
@@ -64,26 +107,65 @@
 		</tr>
 	</table>
 
-	<table id="identityTableParallelNameOfTheInstitution_1" class="tablePadding">
-		<tr class="marginTop" id="trParallelNameOfTheInstitution" >
-			<td>
-				<label for="textParallelNameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.parallelNameOfTheInstitution')" />:</label>
-			</td>
-			<td>
-				<input type="text" id="textParallelNameOfTheInstitution" value="${loader.parform}" disabled="disabled" />
-			</td>
-			<td id="tdNameOfTheInstitutionLanguage" class="labelLeft">
-				<label for="pnoti_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
-			</td>
-			<td>
-				<select id="pnoti_languageList" disabled="disabled" >
-					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.parformLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
-					</s:iterator>
-				</select>
-			</td>
-		</tr>
-	</table>
+
+	<s:if test="%{loader.idParform.size() > 0}">
+		<s:set var="counter" value="0"/>
+		<s:iterator var="current" value="loader.idParform" status="status">
+			<table id="identityTableParallelNameOfTheInstitution_<s:property value="%{#status.index + 1}" />" class="tablePadding">
+				<tr class="marginTop" id="trParallelNameOfTheInstitution" >
+					<td>
+						<label for="textParallelNameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.parallelNameOfTheInstitution')" />:</label>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<input type="text" id="textParallelNameOfTheInstitution" value="<s:property value="#current" />" disabled="disabled" />
+						</s:if>
+						<s:else>
+							<input type="text" id="textParallelNameOfTheInstitution" value="<s:property value="#current" />" />
+						</s:else>
+					</td>
+					<td id="tdNameOfTheInstitutionLanguage" class="labelLeft">
+						<label for="pnoti_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+					</td>
+					<td>
+						<s:if test="%{#status.index == 0}">
+							<select id="pnoti_languageList" disabled="disabled" >
+						</s:if>
+						<s:else>
+							<select id="pnoti_languageList">
+						</s:else>
+							<s:iterator value="languageList" var="language"> 
+								<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.idParformLang[#counter]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+							</s:iterator>
+						</select>
+					</td>
+				</tr>
+			</table>
+			<s:set var="counter" value="%{#counter + 1}"/>
+		</s:iterator>
+	</s:if>
+	<s:else>
+		<table id="identityTableParallelNameOfTheInstitution_1" class="tablePadding">
+			<tr class="marginTop" id="trParallelNameOfTheInstitution" >
+				<td>
+					<label for="textParallelNameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.parallelNameOfTheInstitution')" />:</label>
+				</td>
+				<td>
+					<input type="text" id="textParallelNameOfTheInstitution" disabled="disabled" />
+				</td>
+				<td id="tdNameOfTheInstitutionLanguage" class="labelLeft">
+					<label for="pnoti_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+				</td>
+				<td>
+					<select id="pnoti_languageList" disabled="disabled" >
+						<s:iterator value="languageList" var="language"> 
+							<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+						</s:iterator>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</s:else>
 
 	<table id="identityButtonAddParallelNames" class="tablePadding">
 		<tr>
@@ -94,6 +176,102 @@
 			</td>
 		</tr>
 	</table>
+
+	<s:if test="%{loader.nonpreform.size() > 0}">
+			<s:set var="counter" value="0"/>
+			<s:iterator var="current" value="loader.nonpreform" status="status">
+				<table id="identityTableFormerlyUsedName_<s:property value="%{#status.index + 1}" />" class="tablePadding">
+					<tr id="trTextFormerlyUsedName" class="marginTop">
+						<td>
+							<label for="textFormerlyUsedName"><s:property value="getText('label.ai.identity.formerlyUsedName')" /></label>
+						</td>
+						<td>
+							<input type="text" id="textFormerlyUsedName" value="<s:property value="#current" />" />
+						</td>
+						<td class="labelLeft">
+							<label for="tfun_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" /></label>
+						</td>
+						<td>
+							<select id="tfun_languageList">
+								<s:iterator value="languageList" var="language"> 
+									<option value="<s:property value="#language.key" />"
+										<s:if test="%{#language.key == loader.nonpreformLang[#counter]}" > selected=selected </s:if>>
+										<s:property value="#language.value" />
+									</option>
+								</s:iterator>
+							</select>
+						</td>
+					</tr>
+
+					<tr id="trLabelDatesWhenThisNameWasUsed">
+						<td colspan="4">
+							<label for="textDatesWhenThisNameWasUsed"><s:property value="getText('label.ai.identity.datesWhenThisNameWasUsed')" /></label>
+						</td>
+					</tr>
+
+					<s:if test="%{loader.nonpreformDate.size() > 0 && loader.nonpreformDate[#counter].size() > 0}">
+						<s:iterator var="internalCurrent" value="loader.nonpreformDate[#counter]" status="internalStatus">
+							<tr id="trYearWhenThisNameWasUsed_<s:property value="%{#internalStatus.index + 1}" />">
+								<td>
+									<label for="textYearWhenThisNameWasUsed_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.year')" /></label>
+								</td>
+								<td>
+									<input type="text" id="textYearWhenThisNameWasUsed_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />"/>
+								</td>
+								<td colspan="2">
+								</td>
+							</tr>
+						</s:iterator>
+					</s:if>
+					<s:else>
+						<tr id="trYearWhenThisNameWasUsed_1">
+							<td>
+								<label for="textYearWhenThisNameWasUsed_1"><s:property value="getText('label.ai.tabs.commons.year')" /></label>
+							</td>
+							<td>
+								<input type="text" id="textYearWhenThisNameWasUsed_1"/>
+							</td>
+							<td colspan="2">
+							</td>
+						</tr>
+					</s:else>
+
+					<s:if test="%{loader.nonpreformDateFrom.size() > 0 && loader.nonpreformDateFrom[#counter].size() > 0 && loader.nonpreformDateTo.size() > 0 && loader.nonpreformDateTo[#counter].size() > 0 && loader.nonpreformDateFrom[#counter].size() == loader.nonpreformDateTo[#counter].size()}">
+						<s:set var="internalCounter" value="0"/>
+						<s:set var="internalValue" value="loader.nonpreformDateTo[#counter]"/>
+						<s:iterator var="internalCurrent" value="loader.nonpreformDateFrom[#counter]" status="internalStatus">
+							<tr id="trYearRangeWhenThisNameWasUsed_<s:property value="%{#internalStatus.index + 1}" />">
+								<td>
+									<label for="textIdentityYearFrom_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.yearFrom')" /></label>
+								</td>
+								<td>
+									<input type="text" id="textYearWhenThisNameWasUsedFrom_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+								</td>
+								<td class="labelLeft">
+									<label for="textYearWhenThisNameWasUsedTo_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.textTo')" /></label>
+								</td>
+								<td>
+									<input type="text" id="textYearWhenThisNameWasUsedTo_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalValue[#internalCounter]" />" />
+								</td>
+							</tr>
+							<s:set var="internalCounter" value="%{#internalCounter + 1}"/>
+						</s:iterator>
+					</s:if>
+
+					<tr>
+						<td>
+							<input type="button" id="buttonAddSingleYear" value="<s:property value="getText('label.ai.tabs.commons.addSingleYear')" />" onclick="addSingleYear($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+						</td>
+						<td>
+							<input type="button" id="buttonAddYearRange" value="<s:property value="getText('label.ai.tabs.commons.addYearRange')" />" onclick="addRangeYear($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.yearFrom')" />', '<s:property value="getText('label.ai.tabs.commons.textTo')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+						</td>
+						<td colspan="2">
+						</td>
+					</tr>
+				</table>
+			<s:set var="counter" value="%{#counter + 1}"/>
+		</s:iterator>
+	</s:if>
 
 	<table id="identityButtonAddFormerlyUsedName" class="tablePadding">
 		<tr id="trAddMoreAnotherFormerlyUsedName">
@@ -113,7 +291,16 @@
 			<td>
 				<select id="selectTypeOfTheInstitution" multiple="multiple" size="4">
 					<s:iterator value="typeOfInstitutionList" var="type"> 
-						<option value="<s:property value="#type.key" />"<s:if test="%{#type.key == loader.repositoryType}" > selected=selected </s:if>><s:property value="#type.value" /></option>
+						<option value="<s:property value="#type.key" />"
+							<s:set var="isSelected" value="false"/>
+							<s:iterator var="current" value="loader.repositoryType" status="status">
+								<s:if test="%{#type.key == #current}">
+									<s:set var="isSelected" value="true"/>
+								</s:if>
+							</s:iterator>
+							<s:if test="%{#isSelected}" > selected=selected </s:if>>
+							<s:property value="#type.value" />
+						</option>
 					</s:iterator>
 				</select>
 			</td>
