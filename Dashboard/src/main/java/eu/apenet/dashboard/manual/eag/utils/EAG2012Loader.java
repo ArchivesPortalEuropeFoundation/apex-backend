@@ -3523,7 +3523,14 @@ public class EAG2012Loader{
 						this.setSearchRoomMicrofilmReaders(searchRoom.getMicrofilmPlaces().getNum().getContent());
 					}
 					if(searchRoom.getPhotographAllowance()!=null){
-						this.setSearchRoomPhotographAllowance(searchRoom.getPhotographAllowance().getValue());
+						String photographAllowanceValue = searchRoom.getPhotographAllowance().getValue();
+						if (Eag2012.OPTION_DEPENDING_TEXT.equalsIgnoreCase(photographAllowanceValue)) {
+							photographAllowanceValue = Eag2012.OPTION_DEPENDING;
+						} else if (Eag2012.OPTION_WITHOUT_TEXT.equalsIgnoreCase(photographAllowanceValue)) {
+							photographAllowanceValue = Eag2012.OPTION_WITHOUT;
+						}
+
+						this.setSearchRoomPhotographAllowance(photographAllowanceValue);
 					}
 					if(searchRoom.getReadersTicket()!=null){
 						for (int i = 0; i < searchRoom.getReadersTicket().size(); i++) {
