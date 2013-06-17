@@ -795,7 +795,7 @@
 				</s:else>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<label for="yourInstitutionClosingDates" ><s:property value="getText('label.ai.tabs.commons.closingDates')"/><span class="required">*</span>:</label>
+							<label for="yourInstitutionClosingDates" ><s:property value="getText('label.ai.tabs.commons.closingDates')"/>:</label>
 						</s:if>
 						<s:else>
 							<label for="yourInstitutionClosingDates_<s:property value="%{#status.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.closingDates')"/>:</label>
