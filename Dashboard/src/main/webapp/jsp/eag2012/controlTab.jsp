@@ -108,6 +108,28 @@
 			</tr>
 			</s:iterator>
 		</s:if>
+		<s:else>
+			<tr id="trContactAbbreviationOne">
+				<td id="tdContactAbbreviation">
+					<label for="textContactAbbreviation"><s:property value="getText('label.ai.control.abbreviation')" />:</label>
+				</td>
+				<td>
+					<input type="text" id="textContactAbbreviation" value="<s:property value="#abbreviation"/>" />
+				</td>
+				<td colspan="2">
+				</td>
+			</tr>
+			<tr id="trContactAbbreviationTwo">
+				<td id="tdContactFullName">
+					<label for="textContactFullName<s:if test="#status.index>0">_<s:property value="(#status.index+1)"/></s:if>"><s:property value="getText('label.ai.control.fullName')" />:</label>
+				</td>
+				<td>
+					<input type="text" id="textContactFullName<s:if test="#status.index>0">_<s:property value="(#status.index+1)"/></s:if>" value="<s:property value="loader.citation.get(#status.index)" />" />
+				</td>
+				<td colspan="2">
+				</td>
+			</tr>
+		</s:else>
 		<tr>
 			<td id="tdAddFurtherRules" colspan="2">
 				<input type="button" id="buttonControlAddFurtherRules" onclick="addContactAbbreviation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.control.addFurtherRules")' />" />
