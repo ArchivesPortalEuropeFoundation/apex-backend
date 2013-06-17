@@ -5280,7 +5280,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							&& eag2012.getDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT).get(Eag2012.ROOT_SUBSECTION) != null) {
 						dateList = eag2012.getDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT).get(Eag2012.ROOT_SUBSECTION);
 					} else {
-						Map<String, List<List<String>>> datesMap = new HashMap<>();
+						Map<String, List<List<String>>> datesMap = new HashMap<String, List<List<String>>>();
 						datesMap.put(Eag2012.ROOT_SUBSECTION, new ArrayList<List<String>>());
 						Map<String, Map<String, List<List<String>>>> datesMapMap = new HashMap<String, Map<String, List<List<String>>>>();
 						datesMapMap.put(Eag2012.ROOT, datesMap);
@@ -5299,7 +5299,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							&& eag2012.getFromDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT).get(Eag2012.ROOT_SUBSECTION) != null) {
 						dateFromList = eag2012.getFromDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT).get(Eag2012.ROOT_SUBSECTION);
 					} else {
-						Map<String, List<List<String>>> datesMap = new HashMap<>();
+						Map<String, List<List<String>>> datesMap = new HashMap<String, List<List<String>>>();
 						datesMap.put(Eag2012.ROOT_SUBSECTION, new ArrayList<List<String>>());
 						Map<String, Map<String, List<List<String>>>> datesMapMap = new HashMap<String, Map<String, List<List<String>>>>();
 						datesMapMap.put(Eag2012.ROOT, datesMap);
@@ -5318,7 +5318,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							&& eag2012.getToDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT).get(Eag2012.ROOT_SUBSECTION) != null) {
 						dateToList = eag2012.getToDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT).get(Eag2012.ROOT_SUBSECTION);
 					}else {
-						Map<String, List<List<String>>> datesMap = new HashMap<>();
+						Map<String, List<List<String>>> datesMap = new HashMap<String, List<List<String>>>();
 						datesMap.put(Eag2012.ROOT_SUBSECTION, new ArrayList<List<String>>());
 						Map<String, Map<String, List<List<String>>>> datesMapMap = new HashMap<String, Map<String, List<List<String>>>>();
 						datesMapMap.put(Eag2012.ROOT, datesMap);
