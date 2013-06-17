@@ -17,7 +17,7 @@
 				<label for="selectLanguageOpeningTimes" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<select id="selectLanguageOpeningTimes" >
+				<select id="selectLanguageOpeningTimes" onchange="aSOpeningHoursOfInstitutionLangChanged();">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.openingLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 					</s:iterator>
@@ -44,7 +44,7 @@
 				<label for="selectLanguageClosingDates" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<select id="selectLanguageClosingDates">
+				<select id="selectLanguageClosingDates" onchange="aSClosingHoursOfInstitutionLangChanged();">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.closingLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 					</s:iterator>
@@ -124,7 +124,7 @@
 				<label for="selectASARSelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<select id="selectASARSelectLanguage" onchange="aSAccessibleToThePublicChanged();">
+				<select id="selectASARSelectLanguage" onchange="aSFutherAccessInformationLangChanged();">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.restaccessLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 					</s:iterator>
@@ -202,7 +202,7 @@
 				<label for="selectASASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<select id="selectASASelectLanguage">
+				<select id="selectASASelectLanguage" onchange="aSFutherInformationOnExistingFacilitiesLangChanged();">
 					<s:iterator value="languageList" var="language"> 
 						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.accessibilityLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 					</s:iterator>

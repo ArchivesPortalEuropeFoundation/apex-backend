@@ -811,10 +811,10 @@
 					</td>
 					<td class="labelLeft">
 						<s:if test="%{#status.index == 0}">
-							<label for="selectTextYIOpeningTimes"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+							<label for="selectTextYIClosingTimes"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 						</s:if>
 						<s:else>
-							<label for="selectTextYIOpeningTimes_<s:property value="%{#status.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+							<label for="selectTextYIClosingTimes_<s:property value="%{#status.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 						</s:else>
 					</td>
 					<td>

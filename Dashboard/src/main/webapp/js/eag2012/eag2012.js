@@ -3534,8 +3534,16 @@ function aSOpeningHoursOfInstitutionChanged(){
 	$("table#yiTableOthers #textYIOpeningTimes").attr("value", $("table#accessAndServicesTable_1 tr#trASOpeningTimes #textOpeningTimes").val());
 }
 
+function aSOpeningHoursOfInstitutionLangChanged(){
+	$("table#yiTableOthers #selectTextYIOpeningTimes").attr("value", $("table#accessAndServicesTable_1 tr#trASOpeningTimes #selectLanguageOpeningTimes").val());
+}
+
 function aSClosingHoursOfInstitutionChanged(){
 	$("table#yiTableOthers #yourInstitutionClosingDates").attr("value", $("table#accessAndServicesTable_1 tr#trASClosingDates #textClosingDates").val());
+}
+
+function aSClosingHoursOfInstitutionLangChanged(){
+	$("table#yiTableOthers #selectTextYIClosingTimes").attr("value", $("table#accessAndServicesTable_1 tr#trASClosingDates #selectLanguageClosingDates").val());
 }
 
 function aSAccessibleToThePublicChanged() {
@@ -3546,12 +3554,20 @@ function aSFutherAccessInformationChanged() {
 	$("table#yiTableOthers #futherAccessInformation").attr("value", $("table#accessAndServicesTable_1 #textASAccessRestrictions").val());
 }
 
+function aSFutherAccessInformationLangChanged() {
+	$("table#yiTableOthers #selectFutherAccessInformation").attr("value", $("table#accessAndServicesTable_1 #selectASARSelectLanguage").val());
+}
+
 function aSFacilitiesForDisabledPeopleAvailableChanged() {
 	$("table#yiTableOthers #selectFacilitiesForDisabledPeopleAvailable").attr("value", $().val("table#accessAndServicesTable_1 #selectASFacilitiesForDisabledPeopleAvailable"));
 }
 
 function aSFutherInformationOnExistingFacilitiesChanged() {
 	$("table#yiTableOthers #futherInformationOnExistingFacilities").attr("value", $("table#accessAndServicesTable_1 #textASAccessibility").val());
+}
+
+function aSFutherInformationOnExistingFacilitiesLangChanged() {
+	$("table#yiTableOthers #selectFutherAccessInformationOnExistingFacilities").attr("value", $("table#accessAndServicesTable_1 #selectASASelectLanguage").val());
 }
 
 function controlPersonResponsibleForDescriptionChanged(){
