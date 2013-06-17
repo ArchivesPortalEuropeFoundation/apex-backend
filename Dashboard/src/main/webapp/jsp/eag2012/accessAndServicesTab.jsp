@@ -820,13 +820,13 @@
 				<label for="textASReSeWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeWebpage" value="${loader.recreationalServicesWebLink }" />
+				<input type="text" id="textASReSeWebpage" value="${loader.recreationalServicesWeb }" />
 			</td>
 			<td class="labelLeft">
 				<label for="textASReSeWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeWebpageLinkTitle" value="${loader.recreationalServicesWeb }" />
+				<input type="text" id="textASReSeWebpageLinkTitle" value="${loader.recreationalServicesWebLink }" />
 			</td>
 		</tr>
 
