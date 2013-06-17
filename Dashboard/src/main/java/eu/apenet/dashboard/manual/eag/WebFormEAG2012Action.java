@@ -5270,15 +5270,72 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					}	//end if toDate			
 				}//end While rangeDates
 				// Check if list of "Date" and "DateRange" has the same size.
-				List<List<String>> dateList = eag2012.getDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT).get(Eag2012.ROOT_SUBSECTION);
-				List<List<String>> dateFromList = eag2012.getFromDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT).get(Eag2012.ROOT_SUBSECTION);
-				List<List<String>> dateToList = eag2012.getToDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT).get(Eag2012.ROOT_SUBSECTION);
-				if (dateList.size() > dateFromList.size()) {
-					dateFromList.add(new ArrayList<String>());
-					dateToList.add(new ArrayList<String>());
-				} else if (dateList.size() < dateFromList.size()) {
-					dateList.add(new ArrayList<String>());
-				}
+					List<List<String>> dateList = null;
+					List<List<String>> dateFromList = null;
+					List<List<String>> dateToList = null;
+					if (eag2012.getDateStandardDate() != null && !eag2012.getDateStandardDate().isEmpty()
+							&& eag2012.getDateStandardDate().get(0) != null
+							&& eag2012.getDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY) != null
+							&& eag2012.getDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT) != null
+							&& eag2012.getDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT).get(Eag2012.ROOT_SUBSECTION) != null) {
+						dateList = eag2012.getDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT).get(Eag2012.ROOT_SUBSECTION);
+					} else {
+						Map<String, List<List<String>>> datesMap = new HashMap<>();
+						datesMap.put(Eag2012.ROOT_SUBSECTION, new ArrayList<List<String>>());
+						Map<String, Map<String, List<List<String>>>> datesMapMap = new HashMap<String, Map<String, List<List<String>>>>();
+						datesMapMap.put(Eag2012.ROOT, datesMap);
+						HashMap<String, Map<String, Map<String, List<List<String>>>>> datesMapMapMap = new HashMap<String, Map<String, Map<String, List<List<String>>>>>();
+						datesMapMapMap.put(Eag2012.TAB_IDENTITY, datesMapMap);
+						List<Map<String, Map<String, Map<String, List<List<String>>>>>> dateStandardDate = new ArrayList<Map<String, Map<String, Map<String, List<List<String>>>>>>();
+						dateStandardDate.add(datesMapMapMap);
+
+						eag2012.setDateStandardDate(dateStandardDate);
+						dateList = eag2012.getDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT).get(Eag2012.ROOT_SUBSECTION);
+					}
+					if (eag2012.getFromDateStandardDate() != null && !eag2012.getFromDateStandardDate().isEmpty()
+							&& eag2012.getFromDateStandardDate().get(0) != null
+							&& eag2012.getFromDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY) != null
+							&& eag2012.getFromDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT) != null
+							&& eag2012.getFromDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT).get(Eag2012.ROOT_SUBSECTION) != null) {
+						dateFromList = eag2012.getFromDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT).get(Eag2012.ROOT_SUBSECTION);
+					} else {
+						Map<String, List<List<String>>> datesMap = new HashMap<>();
+						datesMap.put(Eag2012.ROOT_SUBSECTION, new ArrayList<List<String>>());
+						Map<String, Map<String, List<List<String>>>> datesMapMap = new HashMap<String, Map<String, List<List<String>>>>();
+						datesMapMap.put(Eag2012.ROOT, datesMap);
+						HashMap<String, Map<String, Map<String, List<List<String>>>>> datesMapMapMap = new HashMap<String, Map<String, Map<String, List<List<String>>>>>();
+						datesMapMapMap.put(Eag2012.TAB_IDENTITY, datesMapMap);
+						List<Map<String, Map<String, Map<String, List<List<String>>>>>> dateStandardDate = new ArrayList<Map<String, Map<String, Map<String, List<List<String>>>>>>();
+						dateStandardDate.add(datesMapMapMap);
+
+						eag2012.setFromDateStandardDate(dateStandardDate);
+						dateFromList = eag2012.getFromDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT).get(Eag2012.ROOT_SUBSECTION);
+					}
+					if (eag2012.getToDateStandardDate() != null && !eag2012.getToDateStandardDate().isEmpty()
+							&& eag2012.getToDateStandardDate().get(0) != null
+							&& eag2012.getToDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY) != null
+							&& eag2012.getToDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT) != null
+							&& eag2012.getToDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT).get(Eag2012.ROOT_SUBSECTION) != null) {
+						dateToList = eag2012.getToDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT).get(Eag2012.ROOT_SUBSECTION);
+					}else {
+						Map<String, List<List<String>>> datesMap = new HashMap<>();
+						datesMap.put(Eag2012.ROOT_SUBSECTION, new ArrayList<List<String>>());
+						Map<String, Map<String, List<List<String>>>> datesMapMap = new HashMap<String, Map<String, List<List<String>>>>();
+						datesMapMap.put(Eag2012.ROOT, datesMap);
+						HashMap<String, Map<String, Map<String, List<List<String>>>>> datesMapMapMap = new HashMap<String, Map<String, Map<String, List<List<String>>>>>();
+						datesMapMapMap.put(Eag2012.TAB_IDENTITY, datesMapMap);
+						List<Map<String, Map<String, Map<String, List<List<String>>>>>> dateStandardDate = new ArrayList<Map<String, Map<String, Map<String, List<List<String>>>>>>();
+						dateStandardDate.add(datesMapMapMap);
+
+						eag2012.setToDateStandardDate(dateStandardDate);
+						dateToList = eag2012.getToDateStandardDate().get(0).get(Eag2012.TAB_IDENTITY).get(Eag2012.ROOT).get(Eag2012.ROOT_SUBSECTION);
+					}
+					if (dateList.size() > dateFromList.size()) {
+						dateFromList.add(new ArrayList<String>());
+						dateToList.add(new ArrayList<String>());
+					} else if (dateList.size() < dateFromList.size()) {
+						dateList.add(new ArrayList<String>());
+					}
 			  }//end while 
 			}//end if formerly name
 			//Identity Type of the Institution
