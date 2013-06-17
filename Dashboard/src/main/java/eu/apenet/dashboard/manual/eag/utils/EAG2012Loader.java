@@ -2778,7 +2778,7 @@ public class EAG2012Loader{
 								}
 								if (location.getMunicipalityPostalcode().getLang() != null
 										&& !location.getMunicipalityPostalcode().getLang().isEmpty()) {
-									this.setMunicipalityPostalcodeLang(location.getStreet().getLang());
+									this.setMunicipalityPostalcodeLang(location.getMunicipalityPostalcode().getLang());
 								} else {
 									this.setMunicipalityPostalcodeLang(Eag2012.OPTION_NONE);
 								}
@@ -2824,7 +2824,7 @@ public class EAG2012Loader{
 								}
 								if (location.getMunicipalityPostalcode().getLang() != null
 										&& !location.getMunicipalityPostalcode().getLang().isEmpty()) {
-									this.setMunicipalityPostalcodePostalLang(location.getStreet().getLang());
+									this.setMunicipalityPostalcodePostalLang(location.getMunicipalityPostalcode().getLang());
 								} else {
 									this.setMunicipalityPostalcodePostalLang(Eag2012.OPTION_NONE);
 								}
