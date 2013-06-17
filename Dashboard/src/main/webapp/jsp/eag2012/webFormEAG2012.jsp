@@ -36,11 +36,22 @@
 					<a href="#tab-relations"><s:property value="getText('label.ai.tab.relations.title')" /></a>
 				</li>
 			</ul>
+			<input type="hidden" id="currentTab" value="" />
 			<script type="text/javascript">
 				$(document).ready(function(){
+					var text = '<s:property value="getText('label.ai.tabs.commons.fieldRequired')"/>';
+					var e1 = '<s:property value="getText('label.ai.tabs.commons.errorYourInstitution')"/>';
+					var e2 = '<s:property value="getText('label.ai.tabs.commons.errorIdentity')"/>';	
+					var e3 = '<s:property value="getText('label.ai.tabs.commons.errorContact')"/>';
+					var e4 = '<s:property value="getText('label.ai.tabs.commons.errorAccessAndServices')"/>';
+					var e5 = '<s:property value="getText('label.ai.tabs.commons.errorDesription')"/>';
+					var e6 = '<s:property value="getText('label.ai.tabs.commons.errorControl')" />';
+					var e7 = '<s:property value="getText('label.ai.tabs.commons.errorRelations')"/>';
+			 					
 					hideAndShow("tab-","tab-yourInstitution");
+					$("#currentTab").attr("value","tab-yourInstitution");
 					$("a[href^='#tab-']").click(function(){
-						hideAndShow("tab-",$(this).attr("href").substring(1));
+							hideAndShow("tab-",$(this).attr("href").substring(1));
 					});
 					//clone contact, "access and services" and description
 					$("div#divTempContainter").append($("table#contactTable").clone());
@@ -137,9 +148,14 @@
 			  </div>
 			</div>
 		</div>
-		<table><tr><td>
-			<input type="button" id="buttonSaveEAG2012" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" onclick="clickSaveAction(this.form, '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.success')" />','<s:property value="getText('label.ai.tabs.commons.errorYourInstitution')" />', '<s:property value="getText('label.ai.tabs.commons.errorIdentity')" />', '<s:property value="getText('label.ai.tabs.commons.errorContact')" />', '<s:property value="getText('label.ai.tabs.commons.errorAccessAndServices')" />', '<s:property value="getText('label.ai.tabs.commons.errorDesription')" />', '<s:property value="getText('label.ai.tabs.commons.errorControl')" />', '<s:property value="getText('label.ai.tabs.commons.errorRelations')" />');" />
-	    </td></tr></table>
+		<table>
+			<tr>
+				<td>
+		  			<input type="button" id="buttonSaveEAG2012" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" onclick="clickSaveAction(this.form, '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.success')" />','<s:property value="getText('label.ai.tabs.commons.errorYourInstitution')" />', '<s:property value="getText('label.ai.tabs.commons.errorIdentity')" />', '<s:property value="getText('label.ai.tabs.commons.errorContact')" />', '<s:property value="getText('label.ai.tabs.commons.errorAccessAndServices')" />', '<s:property value="getText('label.ai.tabs.commons.errorDesription')" />', '<s:property value="getText('label.ai.tabs.commons.errorControl')" />', '<s:property value="getText('label.ai.tabs.commons.errorRelations')" />');" />
+		  			<input type="button" id="buttonExitEAG2012" value="<s:property value='getText("label.ai.tabs.commons.button.exit")' />" onclick="clickExitAction();" />
+	    		</td>
+	    	</tr>
+	    </table>
 	
 	</form>
 	<div id="divTempContainter" style="display:none;"></div>

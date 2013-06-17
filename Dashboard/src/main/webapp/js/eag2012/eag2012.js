@@ -9,6 +9,7 @@ function hideAndShow(idPrefix,shown){
 		});
 		$("div[id='"+shown+"']").show();
 		$("ul#eag2012TabsContainer li a[href='#"+shown+"']").addClass("eag2012currenttab");
+		$("#currentTab").attr("value",shown);	
 		if(shown=="tab-accessAndServices" || shown=="tab-contact" || shown=="tab-description"){
 			var id = "";
 			$("ul#eag2012tabs_institution_tabs li a").each(function(){
@@ -44,6 +45,10 @@ function hideAndShow(idPrefix,shown){
 			});
 		}
 	}
+}
+function clickExitAction(){
+	//exit the form without save
+	location.href="dashboardHome.action";
 }
 
 function clickSaveAction(form, text1, text2, error1, error2, error3, error4, error5, error6, error7) {
@@ -1016,6 +1021,54 @@ var clickRelationsAction = function(text1){
 	return jsonData;
 };
 
+function checkAndShowPreviousTab(table, text1, text2){
+	//Check table passed.
+	var id = $(table).attr("id");
+	
+	if (id == "relationsOtherTable"){
+	   if (!clickRelationsAction(text1)) {
+			alertFillFieldsBeforeChangeTab(text2);
+			return;
+		}else {
+			$("ul#eag2012TabsContainer a[href='#tab-control']").trigger('click');
+		}	
+	}else if (id == "controlTable"){
+		if (!clickControlAction(text1)) {
+			alertFillFieldsBeforeChangeTab(text2);
+			return;
+		} else {
+			$("ul#eag2012TabsContainer a[href='#tab-description']").trigger('click');
+		}
+	}else if(id.indexOf("descriptionTable") != -1) {
+		if (!clickDescriptionAction(text1)) {
+			alertFillFieldsBeforeChangeTab(text2);
+			return;
+		} else {
+			$("ul#eag2012TabsContainer a[href='#tab-accessAndServices']").trigger('click');
+		}
+	} else if (id.indexOf("accessAndServicesTable") != -1) {
+		if (!clickAccessAndServicesAction(text1)) {
+			alertFillFieldsBeforeChangeTab(text2);
+			return;
+		} else {
+			$("ul#eag2012TabsContainer a[href='#tab-contact']").trigger('click');
+		}
+	} else if (id.indexOf("contactTable") != -1) {
+		if (!clickContactAction(text1)) {
+			alertFillFieldsBeforeChangeTab(text2);
+			return;
+		} else {
+			$("ul#eag2012TabsContainer a[href='#tab-identity']").trigger('click');
+		}
+	} else if (id == "identitySelectTypeOfTheInstitution") {
+		if (!clickIdentityAction(text1)) {
+			alertFillFieldsBeforeChangeTab(text2);
+			return;
+		} else {
+			$("ul#eag2012TabsContainer a[href='#tab-yourInstitution']").trigger('click');
+		}
+	}
+}
 function checkAndShowNextTab(table, text1, text2){
 	// Check table passed.
 	var id =  $(table).attr("id");
@@ -1314,6 +1367,10 @@ function addFurtherIds(text1, text2, text3){
 	}
 }
 
+function showTabOfFirstInstitution() {
+	hideAndShow("tab-", "tab-yourInstitution");
+}
+
 function addRepositories(text1, text2, text3, text4, text5, text6, text7){
 	var counter = $("table[id^='yourInstitutionTable_']").length;
 	var clone = $("table[id^='yourInstitutionTable_"+counter+"']").clone();
@@ -1327,7 +1384,7 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7){
 	var localId = "";
 	if(counter==1){
 		localId = "yourInstitutionTable_"+counter;
-		$("#eag2012tabs_institution_tabs").append("<li><a id=\"tab_"+localId+"\" href=\"#repositories\" >"+text1+"</a></li>");
+		$("#eag2012tabs_institution_tabs").append("<li onclick=\"showTabOfFirstInstitution();\"><a id=\"tab_"+localId+"\" href=\"#repositories\" >"+text1+"</a></li>");
 	}
 	localId = "yourInstitutionTable_"+(counter+1);
 	$("#eag2012tabs_institution_tabs").append("<li><a id=\"tab_"+localId+"\" href=\"#repositories\" >"+text2+" "+(counter)+"</a></li>");
@@ -1354,6 +1411,8 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7){
 
 	// Remove "Next tab" button from tab "description".
 	$("table#descriptionTable_"+(counter+1)+" td#tdButtonsDescriptionTab #buttonDescriptionTabNext").remove();
+    // Remove "Previous tab" button from tab "contact"
+	$("table#contactTable_"+(counter+1)+" td#tdButtonsContactTab #buttonContactTabPrevious").remove();
 
 	//fill values with the current "your institution" values provided by user
 	//contact tab
@@ -1411,7 +1470,6 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7){
 	$("table#accessAndServicesTable_"+(counter+1)+" #textClosingDates").attr("value",closing);
 	$("table#accessAndServicesTable_"+(counter+1)+" #selectASAccesibleToThePublic option").eq(accessPublic).prop("selected",true);
 	$("table#accessAndServicesTable_"+(counter+1)+" #selectASFacilitiesForDisabledPeopleAvailable").attr("value",accessibilityDisabledPeople);
-	
 	$("table#"+localId).show();
 	$("a[id^='tab_']").click(function(){
 		$("a[id^='tab_']").each(function(){
@@ -1443,17 +1501,16 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7){
 				var id = $(this).parent().attr("id");
 				if(id.indexOf("tab-yourInstitution")>-1 || id.indexOf("tab-identity")>-1 || id.indexOf("tab-control")>-1 || id.indexOf("tab-relations")>-1){
 					$(this).addClass("eag2012disabled");
-					$("ul#eag2012TabsContainer a[href='#tab-contact']").trigger('click');
 				}
 			});
 //			if($("ul#eag2012TabsContainer a .eag2012currenttab").hasClass("eag2012disabled")){
 //				$("ul#eag2012TabsContainer a[href='#tab-contact']").trigger('click');
 //			}
+			$("ul#eag2012TabsContainer a[href='#tab-contact']").trigger('click');
 		}
 	});
 	$("a#tab_"+localId).trigger('click');
 	$("a#tab-contact").parent().trigger('click');
-	
 	//current tab
 	$("table#yourInstitutionTable_"+(counter+1)+" input#buttonYourInstitutionTabCheck").click(clickYourInstitutionAction);
 }

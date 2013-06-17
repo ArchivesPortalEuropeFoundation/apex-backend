@@ -178,8 +178,13 @@
 #eag2012Div td label {
 	width: 25%;
 }
-
+#buttonExitEAG2012{
+	float:right;
+	/*margin-right: 20px;
+	margin-bottom: 5px;*/
+}
 #buttonSaveEAG2012 {
+	float:right;
 	margin-right: 20px;
 	margin-bottom: 5px;
 }
@@ -275,9 +280,9 @@ input[type="button"]:disabled {
 	line-height:norma;
 }
 
-#buttonAccessAndServiceTabCheck, #buttonContactTabCheck, #buttonControlTabCheck,
-#buttonDescriptionTabCheck, #buttonIdentityTabCheck, #buttonRelationsTabCheck,
-#buttonYourInstitutionTabCheck {
+#buttonAccessAndServiceTabPrevious, #buttonContactTabPrevious, #buttonControlTabPrevious,
+#buttonDescriptionTabPrevious, #buttonIdentityTabPrevious, #buttonRelationsTabPrevious,
+#buttonYourInstitutionTabPrevious {
 	margin-right: 10px;
 }
 

@@ -145,7 +145,7 @@
 
 		<tr>
 			<td id="tdButtonsDescriptionTab" colspan="4">
-				<input type="button" id="buttonRelationsTabCheck" value="<s:property value='getText("label.ai.tabs.commons.button.check")' />" class="rightButton" onclick="clickRelationsAction('<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />');"/>
+			    <input type="button" id="buttonRelationsTabPrevious" value="<s:property value='getText("label.ai.tabs.commons.button.previousTab")' />" class="rightButton" onclick="checkAndShowPreviousTab($(this).parent().parent().parent().parent(),'<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />','<s:property value="getText('label.ai.tabs.commons.pleaseFillMandatoryFields')" />');" />
 			</td>
 		</tr>
 
