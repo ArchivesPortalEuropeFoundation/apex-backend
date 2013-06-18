@@ -29,6 +29,7 @@ import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.manual.APEnetEAGDashboard;
 import eu.apenet.dashboard.manual.eag.utils.CreateEAG2012;
 import eu.apenet.dashboard.manual.eag.utils.EAG2012Loader;
+import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.dpt.utils.eag2012.namespace.EagNamespaceMapper;
 import eu.apenet.dpt.utils.util.LanguageIsoList;
@@ -742,7 +743,11 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		try{
 			eag2012 = getAndFillEag2012Object();
 		}catch (JSONException e) {
-			log.error(e.getMessage());
+			log.error(SecurityContext.get() + " unable to submit JSON parameters");
+			if (log.isDebugEnabled()){
+				log.debug(e.getMessage());
+			}
+			
 		}
 		if(eag2012!=null){
 			String basePath = APEnetUtilities.FILESEPARATOR + this.getCountryCode() + APEnetUtilities.FILESEPARATOR +
