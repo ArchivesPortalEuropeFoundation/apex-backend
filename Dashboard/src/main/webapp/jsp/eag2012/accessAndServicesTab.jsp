@@ -338,7 +338,7 @@
 				<label for="textASSRRTLink"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRRTLink" value="${loader.searchRoomPhotographAllowanceContent}" />
+				<input type="text" id="textASSRRTLink" value="${loader.searchRoomPhotographAllowanceHref}" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -677,13 +677,13 @@
 				<label for="textASTSRSEmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSRSEmailAddress" value="${loader.reproductionserEmailLink }" />
+				<input type="text" id="textASTSRSEmailAddress" value="${loader.reproductionserEmail }" />
 			</td>
 			<td class="labelLeft">
 				<label for="textASTSEmailAddressLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSEmailAddressLinkTitle" value="${loader.reproductionserEmail }" />
+				<input type="text" id="textASTSEmailAddressLinkTitle" value="${loader.reproductionserEmailLink }" />
 			</td>
 		</tr>
 
@@ -692,13 +692,13 @@
 				<label for="textASTSRSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSRSWebpage" value="${loader.reproductionserWebpageLink }" />
+				<input type="text" id="textASTSRSWebpage" value="${loader.reproductionserWebpage }" />
 			</td>
 			<td class="labelLeft">
 				<label for="textASTSRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSRSWebpageLinkTitle" value="${loader.reproductionserWebpage }" />
+				<input type="text" id="textASTSRSWebpageLinkTitle" value="${loader.reproductionserWebpageLink }" />
 			</td>
 		</tr>
 

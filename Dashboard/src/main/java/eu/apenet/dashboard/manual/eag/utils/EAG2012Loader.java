@@ -3767,15 +3767,15 @@ public class EAG2012Loader{
 
 				// Date of repository foundation.
 				if (repository.getRepositorfound() != null) {
-					this.setRepositorFoundDate(repository.getRepositorfound().getDate().getContent());
-					this.setRepositorFoundDateLang(repository.getRepositorfound().getDate().getLang());
-					this.setRepositorFoundDateLocalType(repository.getRepositorfound().getDate().getLocalType());
-					this.setRepositorFoundDateNotAfter(repository.getRepositorfound().getDate().getNotAfter());
-					this.setRepositorFoundDateNotBefore(repository.getRepositorfound().getDate().getNotBefore());
-					this.setRepositorFoundDateStandardDate(repository.getRepositorfound().getDate().getStandardDate());
+					this.setRepositorFoundDate((repository.getRepositorfound().getDate()!=null)?repository.getRepositorfound().getDate().getContent():null);
+					this.setRepositorFoundDateLang((repository.getRepositorfound().getDate()!=null)?repository.getRepositorfound().getDate().getLang():null);
+					this.setRepositorFoundDateLocalType((repository.getRepositorfound().getDate()!=null)?repository.getRepositorfound().getDate().getLocalType():null);
+					this.setRepositorFoundDateNotAfter((repository.getRepositorfound().getDate()!=null)?repository.getRepositorfound().getDate().getNotAfter():null);
+					this.setRepositorFoundDateNotBefore((repository.getRepositorfound().getDate()!=null)?repository.getRepositorfound().getDate().getNotBefore():null);
+					this.setRepositorFoundDateStandardDate((repository.getRepositorfound().getDate()!=null)?repository.getRepositorfound().getDate().getStandardDate():null);
 
 					// Rule of repository foundation.
-					if (!repository.getRepositorfound().getRule().isEmpty()) {
+					if (repository.getRepositorfound().getRule()!=null && !repository.getRepositorfound().getRule().isEmpty()) {
 						// TODO: Review for multiple values.
 						for (int i = 0; i < repository.getRepositorfound().getRule().size(); i++) {
 							this.setRepositorFoundRule(repository.getRepositorfound().getRule().get(i).getContent());
@@ -3786,15 +3786,15 @@ public class EAG2012Loader{
 
 				// Date of repository suppression.
 				if (repository.getRepositorsup() != null) {
-					this.setRepositorSupDate(repository.getRepositorsup().getDate().getContent());
-					this.setRepositorSupDateLang(repository.getRepositorsup().getDate().getLang());
-					this.setRepositorSupDateLocalType(repository.getRepositorsup().getDate().getLocalType());
-					this.setRepositorSupDateNotAfter(repository.getRepositorsup().getDate().getNotAfter());
-					this.setRepositorSupDateNotBefore(repository.getRepositorsup().getDate().getNotBefore());
-					this.setRepositorSupDateStandardDate(repository.getRepositorsup().getDate().getStandardDate());
+					this.setRepositorSupDate((repository.getRepositorsup().getDate()!=null)?repository.getRepositorsup().getDate().getContent():null);
+					this.setRepositorSupDateLang((repository.getRepositorsup().getDate()!=null)?repository.getRepositorsup().getDate().getLang():null);
+					this.setRepositorSupDateLocalType((repository.getRepositorsup().getDate()!=null)?repository.getRepositorsup().getDate().getLocalType():null);
+					this.setRepositorSupDateNotAfter((repository.getRepositorsup().getDate()!=null)?repository.getRepositorsup().getDate().getNotAfter():null);
+					this.setRepositorSupDateNotBefore((repository.getRepositorsup().getDate()!=null)?repository.getRepositorsup().getDate().getNotBefore():null);
+					this.setRepositorSupDateStandardDate((repository.getRepositorsup().getDate()!=null)?repository.getRepositorsup().getDate().getStandardDate():null);
 
 					// Rule of repository suppression.
-					if (!repository.getRepositorsup().getRule().isEmpty()) {
+					if (repository.getRepositorsup().getRule()!=null && !repository.getRepositorsup().getRule().isEmpty()) {
 						// TODO: Review for multiple values.
 						for (int i = 0; i < repository.getRepositorsup().getRule().size(); i++) {
 							this.setRepositorSupRule(repository.getRepositorsup().getRule().get(i).getContent());
@@ -3805,11 +3805,11 @@ public class EAG2012Loader{
 
 				// Unit of administrative structure.
 				if (repository.getAdminhierarchy() != null) {
-					if (!repository.getAdminhierarchy().getAdminunit().isEmpty()) {
+					if (repository.getAdminhierarchy().getAdminunit()!=null && !repository.getAdminhierarchy().getAdminunit().isEmpty()) {
 						// TODO: Review for multiple values.
 						for (int i = 0; i < repository.getAdminhierarchy().getAdminunit().size(); i++) {
-							this.setAdminunit(repository.getAdminhierarchy().getAdminunit().get(i).getContent());
-							this.setAdminunitLang(repository.getAdminhierarchy().getAdminunit().get(i).getLang());
+							this.setAdminunit((repository.getAdminhierarchy().getAdminunit().get(i)!=null)?repository.getAdminhierarchy().getAdminunit().get(i).getContent():null);
+							this.setAdminunitLang((repository.getAdminhierarchy().getAdminunit().get(i)!=null)?repository.getAdminhierarchy().getAdminunit().get(i).getLang():null);
 						}
 					}
 				}
@@ -3818,24 +3818,24 @@ public class EAG2012Loader{
 				if (repository.getBuildinginfo() != null) {
 					if (repository.getBuildinginfo().getBuilding() != null) {
 						if (repository.getBuildinginfo().getBuilding().getDescriptiveNote() != null) {
-							if (!repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().isEmpty()) {
+							if (repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP()!=null && !repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().isEmpty()) {
 								// TODO: Review for multiple values.
 								for (int i = 0; i < repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().size(); i++) {
-									this.setBuilding(repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().get(i).getContent());
-									this.setBuildingLang(repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().get(i).getLang());
+									this.setBuilding((repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().get(i)!=null)?repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().get(i).getContent():null);
+									this.setBuildingLang((repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().get(i)!=null)?repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().get(i).getLang():null);
 								}
 							}
 						}
 					}
 
 					// Repository Area.
-					if (repository.getBuildinginfo().getRepositorarea() != null) {
+					if (repository.getBuildinginfo().getRepositorarea() != null && repository.getBuildinginfo().getRepositorarea().getNum()!=null) {
 						this.setRepositorarea(repository.getBuildinginfo().getRepositorarea().getNum().getContent());
 						this.setRepositorareaUnit(repository.getBuildinginfo().getRepositorarea().getNum().getUnit());
 					}
 
 					// Length of shelf.
-					if (repository.getBuildinginfo().getLengthshelf() != null) {
+					if (repository.getBuildinginfo().getLengthshelf() != null && repository.getBuildinginfo().getLengthshelf().getNum()!=null) {
 						this.setLengthshelf(repository.getBuildinginfo().getLengthshelf().getNum().getContent());
 						this.setLengthshelfUnit(repository.getBuildinginfo().getLengthshelf().getNum().getUnit());
 					}
@@ -3847,8 +3847,8 @@ public class EAG2012Loader{
 						if (!repository.getHoldings().getDescriptiveNote().getP().isEmpty()) {
 							// TODO: Review for multiple values.
 							for (int i = 0; i < repository.getHoldings().getDescriptiveNote().getP().size(); i++) {
-								this.setHoldings(repository.getHoldings().getDescriptiveNote().getP().get(i).getContent());
-								this.setHoldingsLang(repository.getHoldings().getDescriptiveNote().getP().get(i).getLang());
+								this.setHoldings((repository.getHoldings().getDescriptiveNote().getP().get(i)!=null)?repository.getHoldings().getDescriptiveNote().getP().get(i).getContent():null);
+								this.setHoldingsLang((repository.getHoldings().getDescriptiveNote().getP().get(i)!=null)?repository.getHoldings().getDescriptiveNote().getP().get(i).getLang():null);
 							}
 						}
 					}
