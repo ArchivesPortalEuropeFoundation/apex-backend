@@ -165,6 +165,13 @@ public final class SecurityContext implements HttpSessionBindingListener{
 		if (parent != null) {
 			result += " (" + parent.toString() + ") ";
 		}
+		if (!isAdmin()){
+			result += " - " + countryIsoname  + " ";
+			if (selectedInstitution != null){
+				result += selectedInstitution.getId();
+			}
+			result += " - ";
+		}
 		return result;
 	}
 
