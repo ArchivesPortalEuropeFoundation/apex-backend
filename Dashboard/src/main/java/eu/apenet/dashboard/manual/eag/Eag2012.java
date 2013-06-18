@@ -2197,7 +2197,8 @@ public class Eag2012 {
 		String otherRepositorId = null;
 		if(archivalInstitutionId>0){
 			int zeroes = 11-archivalInstitutionId.toString().length();
-			otherRepositorId = new ArchivalLandscape().getmyCountry()+"-";
+			String countryCode = new ArchivalLandscape().getmyCountry()+"-";
+			otherRepositorId = countryCode;
 	    	for(int x=0;x<zeroes;x++){
 	    		otherRepositorId+="0";
 	    	}
@@ -2206,7 +2207,7 @@ public class Eag2012 {
 	    	Long finalFigure = new Long("99999999999");
 	    	// TODO: Improve performance.
 	    	while(!aiDao.isRepositoryCodeAvailable(otherRepositorId, archivalInstitutionId)){ //check value
-	    		otherRepositorId = finalFigure.toString(); //generate by final list of possible values
+	    		otherRepositorId = countryCode + finalFigure.toString(); //generate by final list of possible values
 	    		finalFigure--;
 	    	}
 		}
