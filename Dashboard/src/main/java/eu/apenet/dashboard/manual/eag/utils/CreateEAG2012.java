@@ -6,6 +6,7 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import eu.apenet.dashboard.manual.eag.Eag2012;
 import eu.apenet.dpt.utils.eag2012.*;
@@ -2283,7 +2284,10 @@ public class CreateEAG2012 {
 											}
 
 											Date date = new Date();
-											date.setStandardDate(valueList.get(k));
+											String valueStandardDate = parseDate(valueList.get(k));
+											if (valueStandardDate != null && !valueStandardDate.isEmpty()){
+												date.setStandardDate(valueStandardDate);
+											}
 											date.setContent(valueList.get(k));
 	
 											if (Eag2012.REPOSITOR_FOUND.equalsIgnoreCase(subsectionValueKey)) {
@@ -2315,7 +2319,10 @@ public class CreateEAG2012 {
 											}
 
 											Date date = new Date();
-											date.setStandardDate(valueList.get(k));
+											String valueStandardDate = parseDate(valueList.get(k));
+											if (valueStandardDate != null && !valueStandardDate.isEmpty()){
+												date.setStandardDate(valueStandardDate);
+											}
 											date.setContent(valueList.get(k));
 	
 											if (Eag2012.HOLDING_SUBSECTION.equalsIgnoreCase(subsectionValueKey)) {
@@ -2405,11 +2412,17 @@ public class CreateEAG2012 {
 											}
 
 											FromDate fromDate = new FromDate();
-											fromDate.setStandardDate(valueFromList.get(k));
+											String valueStandardDate = parseDate(valueFromList.get(k));
+											if (valueStandardDate != null && !valueStandardDate.isEmpty()){
+												fromDate.setStandardDate(valueStandardDate);
+											}
 											fromDate.setContent(valueFromList.get(k));
 	
 											ToDate toDate = new ToDate();
-											toDate.setStandardDate(valueToList.get(k));
+										    valueStandardDate = parseDate(valueToList.get(k));
+											if (valueStandardDate != null && !valueStandardDate.isEmpty()){
+												toDate.setStandardDate(valueStandardDate);
+											}
 											toDate.setContent(valueToList.get(k));
 
 											DateRange dateRange = new DateRange();
@@ -2460,6 +2473,21 @@ public class CreateEAG2012 {
 				}
 			}
 		}
+	}
+
+	private String parseDate(String formatDate) {
+		boolean pattern1 = Pattern.matches("\\d{4}", formatDate);
+		boolean pattern2 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{2}", formatDate);
+		boolean pattern3 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{2}[\\-\\./:\\s]\\d{2}", formatDate);
+
+		if (pattern1){
+			return formatDate;
+		} else if (pattern2 || pattern3) {
+			formatDate = formatDate.replaceAll("[\\./:\\s]", "-");
+			return formatDate;
+		}
+
+		return null;
 	}
 
 	/**
@@ -3040,7 +3068,10 @@ public class CreateEAG2012 {
 											}
 
 											Date date = new Date();
-											date.setStandardDate(valueList.get(k));
+											String valueStandardDate = parseDate(valueList.get(k));
+											if (valueStandardDate != null && !valueStandardDate.isEmpty()){
+												date.setStandardDate(valueStandardDate);
+											}
 											date.setContent(valueList.get(k));
 
 											if (Eag2012.ROOT_SUBSECTION.equalsIgnoreCase(subsectionValueKey)) {
@@ -3143,11 +3174,17 @@ public class CreateEAG2012 {
 											}
 
 											FromDate fromDate = new FromDate();
-											fromDate.setStandardDate(valueFromList.get(k));
+											String valueStandardDate = parseDate(valueFromList.get(k));
+											if (valueStandardDate != null && !valueStandardDate.isEmpty()){
+												fromDate.setStandardDate(valueStandardDate);
+											}
 											fromDate.setContent(valueFromList.get(k));
 	
 											ToDate toDate = new ToDate();
-											toDate.setStandardDate(valueToList.get(k));
+											valueStandardDate = parseDate(valueToList.get(k));
+											if (valueStandardDate != null && !valueStandardDate.isEmpty()){
+												toDate.setStandardDate(valueStandardDate);
+											}
 											toDate.setContent(valueToList.get(k));
 	
 											DateRange dateRange = new DateRange();
