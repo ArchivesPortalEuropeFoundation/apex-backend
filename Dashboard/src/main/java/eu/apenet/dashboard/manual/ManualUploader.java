@@ -391,13 +391,13 @@ public abstract class ManualUploader {
             		        /////////// LAST MODIFICATIONS REGARDING TICKET #652 -- Begin
             		        /////////////////////////////////////////////////////////////
             				// Remove this block and uncomment the other one if 'Link to holdings guide' default text is wanted again within EAG web form
-            				if (eag.getEagEmptyInformation()) {
-            					//The EAG file should contain the default message added in case Information is empty
-            					result = "success_noInformation";
-            				}
-            				else {
+//            				if (false) {
+//            					//The EAG file should contain the default message added in case Information is empty
+//            					result = "success_noInformation";
+//            				}
+//            				else {
             					result = "success";	
-            				}
+//            				}
 
         				}
         				    					
