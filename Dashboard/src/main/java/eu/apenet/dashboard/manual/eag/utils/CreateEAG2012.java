@@ -613,16 +613,19 @@ public class CreateEAG2012 {
 		// eag/archguide/identity/nonpreform
 		if (this.eag2012.getNonpreformValue() != null){
 			for (int i = 0; i < this.eag2012.getNonpreformValue().size(); i++) {
-				Nonpreform nonpreform = new Nonpreform();
-				if (!Eag2012.OPTION_NONE.equalsIgnoreCase(this.eag2012.getNonpreformLang().get(i))) {
-					nonpreform.setLang(this.eag2012.getNonpreformLang().get(i));
+				if (this.eag2012.getNonpreformValue().get(i) != null
+						&& !this.eag2012.getNonpreformValue().get(i).isEmpty()) {
+					Nonpreform nonpreform = new Nonpreform();
+					if (!Eag2012.OPTION_NONE.equalsIgnoreCase(this.eag2012.getNonpreformLang().get(i))) {
+						nonpreform.setLang(this.eag2012.getNonpreformLang().get(i));
+					}
+					nonpreform.getContent().add(this.eag2012.getNonpreformValue().get(i));
+	
+					// eag/archguide/identity/nonpreform/dates
+					getNompreformDates(nonpreform, i);
+	
+					this.eag.getArchguide().getIdentity().getNonpreform().add(nonpreform);
 				}
-				nonpreform.getContent().add(this.eag2012.getNonpreformValue().get(i));
-
-				// eag/archguide/identity/nonpreform/dates
-				getNompreformDates(nonpreform, i);
-
-				this.eag.getArchguide().getIdentity().getNonpreform().add(nonpreform);
 			}
 		}
 		
@@ -830,9 +833,18 @@ public class CreateEAG2012 {
 							List<String> latitudeList = latitudeMap.get(latitudeKey);
 							List<String> longitudeList = longitudeMap.get(longitudeKey);
 							List<String> countryList = countryMap.get(countryKey);
-							List<String> firstdemList = this.eag2012.getFirstdemValue().get(i);
-							List<String> secondemList = this.eag2012.getSecondemValue().get(i);
-							List<String> localentityList = this.eag2012.getLocalentityValue().get(i);
+							List<String> firstdemList = null;
+							if (this.eag2012.getFirstdemValue() != null) {
+								firstdemList = this.eag2012.getFirstdemValue().get(i);
+							}
+							List<String> secondemList = null;
+							if (this.eag2012.getSecondemValue() != null) {
+								secondemList = this.eag2012.getSecondemValue().get(i);
+							}
+							List<String> localentityList = null;
+							if (this.eag2012.getLocalentityValue() != null) {
+								localentityList = this.eag2012.getLocalentityValue().get(i);
+							}
 							List<String> citiesList = citiesMap.get(citiesKey);
 							List<String> streetList = streetMap.get(streetKey);
 							for (int j = 0; j < streetLangList.size(); j++) {
@@ -862,7 +874,7 @@ public class CreateEAG2012 {
 										location.getCountry().setLang(language);
 									}
 								}
-								if (firstdemList.size() > j
+								if (firstdemList != null && firstdemList.size() > j
 										&& firstdemList.get(j) != null
 										&& !firstdemList.get(j).isEmpty()) {
 									// eag/archguide/desc/repositories/repository/location/firstdem
@@ -877,7 +889,7 @@ public class CreateEAG2012 {
 										}
 									}
 								}
-								if (secondemList.size() > j
+								if (secondemList != null && secondemList.size() > j
 										&& secondemList.get(j) != null
 										&& !secondemList.get(j).isEmpty()) {
 									// eag/archguide/desc/repositories/repository/location/secondem
@@ -904,7 +916,7 @@ public class CreateEAG2012 {
 										location.getMunicipalityPostalcode().setLang(language);
 									}
 								}
-								if (localentityList.size() > j
+								if (localentityList != null && localentityList.size() > j
 										&& localentityList.get(j) != null
 										&& !localentityList.get(j).isEmpty()) {
 									// eag/archguide/desc/repositories/repository/location/localentity
