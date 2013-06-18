@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.manual.eag.Eag2012;
+import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.utils.ZipManager;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.HibernateUtil;
@@ -181,7 +182,6 @@ public abstract class ManualUploader {
 		File tempDir = new File(tempPath); 
     	this.filesNotUploaded = new ArrayList<String>();
     	this.filesUploaded = new ArrayList<String>();    	
-		log.info("Checking eadtype: "+uploadType);
     	if (uploadType.equals("EAD")) {
 			
     		// Uncomment this line if xsl and xslt files are permitted again
@@ -238,7 +238,7 @@ public abstract class ManualUploader {
                                 throw new APEnetException("Error storing the file " + fileName + " in temporal up repository. Error: " + e.getMessage());
                             }
                         } else if (contentType.equals("zip")) {
-                            log.info("Archival Institution which id is " + archivalInstitutionId + " is uploading the zip file " + fileName + ". Unzipping..." );
+                            log.info(SecurityContext.get() + "Uploading the zip file " + fileName + ". Unzipping..." );
                             zipManager = new ZipManager(tempPath);
                             zipManager.unzip(fullFileName);
 
@@ -258,17 +258,16 @@ public abstract class ManualUploader {
                                 throw new APEnetException("The temporal directory " + tempPath + " could not be removed from tmp directory. Error: " + e.getMessage());
                             }
 
-                            log.info("Files ingested succesfully. Next step: File validation (ExistingFilesChecker)");
                             return ActionSupport.SUCCESS;
                         }
                     } catch (APEnetException ape) {
-                        log.error(ape.getMessage());
+                    	log.error(SecurityContext.get() + ape.getMessage());
                         return ActionSupport.INPUT;
                     }
 	    		}    		
 			} else {
 				//The format is not allowed
-				log.error("The file " + fileName + " has a format not allowed. File not uploaded and removed automatically");
+				log.warn(SecurityContext.get() + "The file " + fileName + " has a format not allowed. File not uploaded and removed automatically");
 				filesNotUploaded.add(fileName);
 				result = "success";
 			}
@@ -293,7 +292,7 @@ public abstract class ManualUploader {
     					File sfile = new File(fullFileName);
     					//sfile.mkdir();
     					FileUtils.copyFile(file, sfile);
-    					log.info("The file: " + fileName + " has been copied to: " + fullFileName);
+    					log.info(SecurityContext.get() + "The file: " + fileName + " has been copied to: " + fullFileName);
     					//sfile.renameTo(new File(path + "temp" + APEnetUtilities.FILESEPARATOR + a.getmyCountry() + "AL.xml"));
     					this.setArchivalInstitutionsToDelete(a.getArchivalInstitutionsToDelete());
     					this.setArchivalInstitutionsNameNotChanged(a.getArchivalInstitutionsNameNotChanged());
@@ -307,24 +306,22 @@ public abstract class ManualUploader {
     					FileUtils.copyFile(file, theFile);
     					result = "success";
     					this.filesUploaded.add(fileName);    					
-    					log.error("There were no file in the AL repository for " + a.getmyCountry() + ".");    					
+    					log.warn(SecurityContext.get() + "There were no file in the AL repository for " + a.getmyCountry() + ".");    					
 	    			}
     			}else
     			{
-    				log.info("The file AL could not be uploaded because is not a xml");
+    				log.warn(SecurityContext.get() + "The file AL could not be uploaded because is not a xml");
     				this.filesNotUploaded.add(fileName);
     				result = "input";
     			}
 	    	} catch (Exception e) {
-	    		log.error("The file AL could not be uploaded. Some errors occurrs in process");
+	    		log.error(SecurityContext.get() + "The file AL could not be uploaded. Some errors occurrs in process");
 	    		result = "input";	    			
 	    	}
 
 		}else {
 			//HTTP EAG upload
 			path = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitutionId.toString() + APEnetUtilities.FILESEPARATOR;
-    		
-    		log.info("Archival institution ID " + archivalInstitutionId + " uploads an EAG.");
     		try {       
 				if (contentType.equals("xml")){
 					
@@ -335,10 +332,8 @@ public abstract class ManualUploader {
     				FileUtils.copyFile(file, source);
 	    		    
     				//It is necessary to validate the file against APEnet EAG schema
-                    log.debug("Beginning EAG validation");
                     APEnetEAGDashboard eag = new APEnetEAGDashboard(archivalInstitutionId, file.getAbsolutePath());
     				if (eag.validate()){
-                        log.info("EAG is valid");
                         
                         //check the <recordId> content
                         //eag.setEagPath(fullFileName); //temp used for looking forward target tag
@@ -410,7 +405,7 @@ public abstract class ManualUploader {
     				else{
                         warnings_eag = eag.showWarnings();
     					//The EAG has been neither validated nor converted 
-    					log.warn("The file " + fileName + " is not valid");
+    					log.warn(SecurityContext.get() + "The file " + fileName + " is not valid");
     					this.filesNotUploaded.add(fileName);
     					result = "error_eagnotvalidatednotconverted";
     				}
@@ -420,19 +415,19 @@ public abstract class ManualUploader {
 				}
 				else {
 					//The format is not allowed
-					log.error("The file type is not XML. Format not allowed.");
+					log.warn(SecurityContext.get() + "The file type is not XML. Format not allowed.");
 					this.filesNotUploaded.add(fileName);
 					result = "error_formatnotallowed";
 				}
 
 	    	} catch (SAXException e){
-                log.error(e.getMessage());
+               log.error(SecurityContext.get() + e.getMessage());
                 warnings_eag = new ArrayList<String>();
                 warnings_eag.add("The file uploaded is not a correct XML, please see the following exception to know the problem:<br/>" + e.getMessage());
                 this.filesNotUploaded.add(fileName);
 	    		result = "error_parsing";
             } catch (Exception e) {
-	    	    log.error(e.getMessage(),e);
+            	log.error(SecurityContext.get() + e.getMessage(),e);
 				this.filesNotUploaded.add(fileName);
 	    		result = "error_eagnotstored";
 	    	}
