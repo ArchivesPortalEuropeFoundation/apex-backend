@@ -1326,138 +1326,138 @@ public class CreateEAG2012 {
 						List<String> webpageLangList = (sectionLangKey!=null)?sectionLangMap.get(sectionLangKey):null;
 						for (int k = 0; k < webpageValueList.size() || (webpageHrefList!=null && webpageHrefList.size()>k); k++) {
 							if (webpageValueList.get(k) == null || webpageValueList.get(k).isEmpty() && (webpageHrefList.get(k) == null || webpageHrefList.get(k).isEmpty())) {
-								break;
-							}
-
-							Webpage webpage= new Webpage();
-							webpage.setContent(webpageValueList.get(k));
-							webpage.setHref(webpageHrefList.get(k));
-							if (webpageLangList != null
-									&& webpageLangList.size() > k
-									&& webpageLangList.get(k) != null
-									&& !webpageLangList.get(k).isEmpty()
-									&& !Eag2012.OPTION_NONE.equalsIgnoreCase(webpageLangList.get(k))) {
-								webpage.setLang(webpageLangList.get(k));
-							}
-							if (Eag2012.ROOT.equalsIgnoreCase(sectionValueKey) && 
-									(Eag2012.ROOT.equalsIgnoreCase(sectionHrefKey) || sectionHrefKey==null )) {
-								repository.getWebpage().add(webpage);
-							}
-
-							// eag/archguide/desc/repositories/repository/services/searchroom
-							if (Eag2012.SEARCHROOM.equalsIgnoreCase(sectionValueKey) && 
-									(Eag2012.SEARCHROOM.equalsIgnoreCase(sectionHrefKey) || sectionHrefKey==null )) {
-								if (repository.getServices() == null) {
-									repository.setServices(new Services());
+								exhibitionToursAndOtherServicesDescriptiveNotes(exhibitions,tours,otherServices);
+							}else{
+								Webpage webpage= new Webpage();
+								webpage.setContent(webpageValueList.get(k));
+								webpage.setHref(webpageHrefList.get(k));
+								if (webpageLangList != null
+										&& webpageLangList.size() > k
+										&& webpageLangList.get(k) != null
+										&& !webpageLangList.get(k).isEmpty()
+										&& !Eag2012.OPTION_NONE.equalsIgnoreCase(webpageLangList.get(k))) {
+									webpage.setLang(webpageLangList.get(k));
 								}
-								if (repository.getServices().getSearchroom() == null) {
-									repository.getServices().setSearchroom(new Searchroom());
-								}
-	
-								repository.getServices().getSearchroom().getWebpage().add(webpage);
-							}
-
-							// eag/archguide/desc/repositories/repository/services/library
-							if (Eag2012.LIBRARY.equalsIgnoreCase(sectionValueKey) && 
-									(Eag2012.LIBRARY.equalsIgnoreCase(sectionHrefKey) || sectionHrefKey==null )) {
-								if (repository.getServices() == null) {
-									repository.setServices(new Services());
-								}
-								if (repository.getServices().getLibrary() == null) {
-									repository.getServices().setLibrary(new Library());
-								}
-	
-								repository.getServices().getLibrary().getWebpage().add(webpage);
-							}
-
-							// eag/archguide/desc/repositories/repository/services/techservices/restorationlab
-							if (Eag2012.RESTORATION_LAB.equalsIgnoreCase(sectionValueKey) && 
-									(Eag2012.RESTORATION_LAB.equalsIgnoreCase(sectionHrefKey) || sectionHrefKey==null )) {
-								if (repository.getServices() == null) {
-									repository.setServices(new Services());
-								}
-								if (repository.getServices().getTechservices() == null) {
-									repository.getServices().setTechservices(new Techservices());
-								}
-								if (repository.getServices().getTechservices().getRestorationlab() == null) {
-									repository.getServices().getTechservices().setRestorationlab(new Restorationlab());
-								}
-	
-								repository.getServices().getTechservices().getRestorationlab().getWebpage().add(webpage);
-							}
-
-							// eag/archguide/desc/repositories/repository/services/techservices/reproductionser
-							if (Eag2012.REPRODUCTIONSER.equalsIgnoreCase(sectionValueKey) && 
-									(Eag2012.REPRODUCTIONSER.equalsIgnoreCase(sectionHrefKey) || sectionHrefKey==null )) {
-								if (repository.getServices() == null) {
-									repository.setServices(new Services());
-								}
-								if (repository.getServices().getTechservices() == null) {
-									repository.getServices().setTechservices(new Techservices());
-								}
-								if (repository.getServices().getTechservices().getReproductionser() == null) {
-									repository.getServices().getTechservices().setReproductionser(new Reproductionser());
-								}
-	
-								repository.getServices().getTechservices().getReproductionser().getWebpage().add(webpage);
-							}
-
-							//TODO: changed implementation for exhibition, tours section and other services
-							// eag/archguide/desc/repositories/repository/services/recreationalServices/exhibition
-							if (Eag2012.EXHIBITION.equalsIgnoreCase(sectionValueKey) && 
-									(Eag2012.EXHIBITION.equalsIgnoreCase(sectionHrefKey) || sectionHrefKey==null )) {
-								exhibitions = true;
-								if (repository.getServices() == null) {
-									repository.setServices(new Services());
-								}
-								if (repository.getServices().getRecreationalServices() == null) {
-									repository.getServices().setRecreationalServices(new RecreationalServices());
-								}
-								if (repository.getServices().getRecreationalServices().getExhibition().size() < (k + 1)) {
-									repository.getServices().getRecreationalServices().getExhibition().add(new Exhibition());
+								if (Eag2012.ROOT.equalsIgnoreCase(sectionValueKey) && 
+										(Eag2012.ROOT.equalsIgnoreCase(sectionHrefKey) || sectionHrefKey==null )) {
+									repository.getWebpage().add(webpage);
 								}
 
-								Exhibition exhibition = repository.getServices().getRecreationalServices().getExhibition().get(k);
-								getDescriptiveNote(exhibition, k);
-								exhibition.setWebpage(webpage);
-							}
-
-							// eag/archguide/desc/repositories/repository/services/recreationalServices/toursSessions
-							if (Eag2012.TOURS_SESSIONS.equalsIgnoreCase(sectionValueKey) && 
-									(Eag2012.TOURS_SESSIONS.equalsIgnoreCase(sectionHrefKey) || sectionHrefKey==null )) {
-								tours = true;
-								if (repository.getServices() == null) {
-									repository.setServices(new Services());
-								}
-								if (repository.getServices().getRecreationalServices() == null) {
-									repository.getServices().setRecreationalServices(new RecreationalServices());
-								}
-								if (repository.getServices().getRecreationalServices().getToursSessions().size() < (k + 1)) {
-									repository.getServices().getRecreationalServices().getToursSessions().add(new ToursSessions());
+								// eag/archguide/desc/repositories/repository/services/searchroom
+								if (Eag2012.SEARCHROOM.equalsIgnoreCase(sectionValueKey) && 
+										(Eag2012.SEARCHROOM.equalsIgnoreCase(sectionHrefKey) || sectionHrefKey==null )) {
+									if (repository.getServices() == null) {
+										repository.setServices(new Services());
+									}
+									if (repository.getServices().getSearchroom() == null) {
+										repository.getServices().setSearchroom(new Searchroom());
+									}
+		
+									repository.getServices().getSearchroom().getWebpage().add(webpage);
 								}
 
-								ToursSessions toursSessions = repository.getServices().getRecreationalServices().getToursSessions().get(k);
-								getDescriptiveNote(toursSessions, k);
-								toursSessions.setWebpage(webpage);
-							}
-
-							// eag/archguide/desc/repositories/repository/services/recreationalServices/otherServices
-							if (Eag2012.OTHER_SERVICES.equalsIgnoreCase(sectionValueKey) && 
-									(Eag2012.OTHER_SERVICES.equalsIgnoreCase(sectionHrefKey) || sectionHrefKey==null )) {
-								otherServices = true;
-								if (repository.getServices() == null) {
-									repository.setServices(new Services());
-								}
-								if (repository.getServices().getRecreationalServices() == null) {
-									repository.getServices().setRecreationalServices(new RecreationalServices());
-								}
-								if (repository.getServices().getRecreationalServices().getOtherServices().size() < (k + 1)) {
-									repository.getServices().getRecreationalServices().getOtherServices().add(new OtherServices());
+								// eag/archguide/desc/repositories/repository/services/library
+								if (Eag2012.LIBRARY.equalsIgnoreCase(sectionValueKey) && 
+										(Eag2012.LIBRARY.equalsIgnoreCase(sectionHrefKey) || sectionHrefKey==null )) {
+									if (repository.getServices() == null) {
+										repository.setServices(new Services());
+									}
+									if (repository.getServices().getLibrary() == null) {
+										repository.getServices().setLibrary(new Library());
+									}
+		
+									repository.getServices().getLibrary().getWebpage().add(webpage);
 								}
 
-								OtherServices otherService = repository.getServices().getRecreationalServices().getOtherServices().get(k);
-								getDescriptiveNote(otherService, k);
-								otherService.setWebpage(webpage);
+								// eag/archguide/desc/repositories/repository/services/techservices/restorationlab
+								if (Eag2012.RESTORATION_LAB.equalsIgnoreCase(sectionValueKey) && 
+										(Eag2012.RESTORATION_LAB.equalsIgnoreCase(sectionHrefKey) || sectionHrefKey==null )) {
+									if (repository.getServices() == null) {
+										repository.setServices(new Services());
+									}
+									if (repository.getServices().getTechservices() == null) {
+										repository.getServices().setTechservices(new Techservices());
+									}
+									if (repository.getServices().getTechservices().getRestorationlab() == null) {
+										repository.getServices().getTechservices().setRestorationlab(new Restorationlab());
+									}
+		
+									repository.getServices().getTechservices().getRestorationlab().getWebpage().add(webpage);
+								}
+
+								// eag/archguide/desc/repositories/repository/services/techservices/reproductionser
+								if (Eag2012.REPRODUCTIONSER.equalsIgnoreCase(sectionValueKey) && 
+										(Eag2012.REPRODUCTIONSER.equalsIgnoreCase(sectionHrefKey) || sectionHrefKey==null )) {
+									if (repository.getServices() == null) {
+										repository.setServices(new Services());
+									}
+									if (repository.getServices().getTechservices() == null) {
+										repository.getServices().setTechservices(new Techservices());
+									}
+									if (repository.getServices().getTechservices().getReproductionser() == null) {
+										repository.getServices().getTechservices().setReproductionser(new Reproductionser());
+									}
+		
+									repository.getServices().getTechservices().getReproductionser().getWebpage().add(webpage);
+								}
+
+								//TODO: changed implementation for exhibition, tours section and other services
+								// eag/archguide/desc/repositories/repository/services/recreationalServices/exhibition
+								if (Eag2012.EXHIBITION.equalsIgnoreCase(sectionValueKey) && 
+										(Eag2012.EXHIBITION.equalsIgnoreCase(sectionHrefKey) || sectionHrefKey==null )) {
+									exhibitions = true;
+									if (repository.getServices() == null) {
+										repository.setServices(new Services());
+									}
+									if (repository.getServices().getRecreationalServices() == null) {
+										repository.getServices().setRecreationalServices(new RecreationalServices());
+									}
+									if (repository.getServices().getRecreationalServices().getExhibition().size() < (k + 1)) {
+										repository.getServices().getRecreationalServices().getExhibition().add(new Exhibition());
+									}
+
+									Exhibition exhibition = repository.getServices().getRecreationalServices().getExhibition().get(k);
+									getDescriptiveNote(exhibition, k);
+									exhibition.setWebpage(webpage);
+								}
+
+								// eag/archguide/desc/repositories/repository/services/recreationalServices/toursSessions
+								if (Eag2012.TOURS_SESSIONS.equalsIgnoreCase(sectionValueKey) && 
+										(Eag2012.TOURS_SESSIONS.equalsIgnoreCase(sectionHrefKey) || sectionHrefKey==null )) {
+									tours = true;
+									if (repository.getServices() == null) {
+										repository.setServices(new Services());
+									}
+									if (repository.getServices().getRecreationalServices() == null) {
+										repository.getServices().setRecreationalServices(new RecreationalServices());
+									}
+									if (repository.getServices().getRecreationalServices().getToursSessions().size() < (k + 1)) {
+										repository.getServices().getRecreationalServices().getToursSessions().add(new ToursSessions());
+									}
+
+									ToursSessions toursSessions = repository.getServices().getRecreationalServices().getToursSessions().get(k);
+									getDescriptiveNote(toursSessions, k);
+									toursSessions.setWebpage(webpage);
+								}
+
+								// eag/archguide/desc/repositories/repository/services/recreationalServices/otherServices
+								if (Eag2012.OTHER_SERVICES.equalsIgnoreCase(sectionValueKey) && 
+										(Eag2012.OTHER_SERVICES.equalsIgnoreCase(sectionHrefKey) || sectionHrefKey==null )) {
+									otherServices = true;
+									if (repository.getServices() == null) {
+										repository.setServices(new Services());
+									}
+									if (repository.getServices().getRecreationalServices() == null) {
+										repository.getServices().setRecreationalServices(new RecreationalServices());
+									}
+									if (repository.getServices().getRecreationalServices().getOtherServices().size() < (k + 1)) {
+										repository.getServices().getRecreationalServices().getOtherServices().add(new OtherServices());
+									}
+
+									OtherServices otherService = repository.getServices().getRecreationalServices().getOtherServices().get(k);
+									getDescriptiveNote(otherService, k);
+									otherService.setWebpage(webpage);
+								}
 							}
 						}
 						if(!exhibitions || !tours || !otherServices){
@@ -2225,54 +2225,6 @@ public class CreateEAG2012 {
 						}
 					}
 				}
-			}
-			
-			
-			// eag/archguide/desc/repositories/repository/services/recreationalServices/exhibition
-			for(int k = 0;!exhibitions && k<repository.getServices().getRecreationalServices().getExhibition().size();k++){
-					if (repository.getServices() == null) {
-						repository.setServices(new Services());
-					}
-					if (repository.getServices().getRecreationalServices() == null) {
-						repository.getServices().setRecreationalServices(new RecreationalServices());
-					}
-					if (repository.getServices().getRecreationalServices().getExhibition().size() < (k + 1)) {
-						repository.getServices().getRecreationalServices().getExhibition().add(new Exhibition());
-					}
-
-					Exhibition exhibition = repository.getServices().getRecreationalServices().getExhibition().get(k);
-					getDescriptiveNote(exhibition, k);
-			}
-			// eag/archguide/desc/repositories/repository/services/recreationalServices/toursSessions
-			for(int k=0;!tours && k<repository.getServices().getRecreationalServices().getToursSessions().size();k++){
-					if (repository.getServices() == null) {
-						repository.setServices(new Services());
-					}
-					if (repository.getServices().getRecreationalServices() == null) {
-						repository.getServices().setRecreationalServices(new RecreationalServices());
-					}
-					if (repository.getServices().getRecreationalServices().getToursSessions().size() < (k + 1)) {
-						repository.getServices().getRecreationalServices().getToursSessions().add(new ToursSessions());
-					}
-
-					ToursSessions toursSessions = repository.getServices().getRecreationalServices().getToursSessions().get(k);
-					getDescriptiveNote(toursSessions, k);
-			}
-			
-			// eag/archguide/desc/repositories/repository/services/recreationalServices/otherServices
-			for(int k=0;!otherServices && k<repository.getServices().getRecreationalServices().getOtherServices().size();k++){
-				if (repository.getServices() == null) {
-					repository.setServices(new Services());
-				}
-				if (repository.getServices().getRecreationalServices() == null) {
-					repository.getServices().setRecreationalServices(new RecreationalServices());
-				}
-				if (repository.getServices().getRecreationalServices().getOtherServices().size() < (k + 1)) {
-					repository.getServices().getRecreationalServices().getOtherServices().add(new OtherServices());
-				}
-
-				OtherServices otherService = repository.getServices().getRecreationalServices().getOtherServices().get(k);
-				getDescriptiveNote(otherService, k);
 			}
 		}
 	}
