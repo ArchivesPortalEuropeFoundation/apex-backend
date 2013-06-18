@@ -75,15 +75,6 @@
 			<result name="success" type="tiles">webFormEAG2012</result>
 		</action>
 
-		<action name="createsimpleeag" class="eu.apenet.dashboard.manual.ReadEAGAction"> 
-			<interceptor-ref name="changeLanguageStack"/>
-			<result name="success" type="tiles">webformeag</result>
-		</action>
-		
-		<action name="createsimpleeagwithmenu" class="eu.apenet.dashboard.manual.ReadEAGAction"> 
-			<interceptor-ref name="changeLanguageStack"/>
-			<result name="success" type="tiles">webformeagwithmenu</result>
-		</action>
 		
 		<action name="changeainame" class="eu.apenet.dashboard.manual.ChangeAInameAction"> 
 			<interceptor-ref name="changeLanguageStack"/>
@@ -96,18 +87,6 @@
 			<result name="success" type="tiles">webformainame</result>
 			<result name="error" type="tiles">webformainame</result>
 			<result name="input" type="tiles">webformainame</result>
-		</action>
-		
-		<action name="uploadsimpleeag" class="eu.apenet.dashboard.manual.WebFormUploadEAGAction" method="uploadEAG"> 
-			<result name="success" type="tiles">index</result>
-			<result name="error" type="tiles">eagfirstcreation</result>
-			<result name="input" type="tiles">webformeag</result>
-		</action>
-
-		<action name="uploadsimpleeagwithmenu" class="eu.apenet.dashboard.manual.WebFormUploadEAGAction" method="uploadEAG"> 
-			<result name="success" type="tiles">index</result>
-			<result name="error" type="tiles">uploadeagerrorswithmenu</result>
-			<result name="input" type="tiles">webformeag</result>
 		</action>
 
 		<action name="uploadowneag" class="eu.apenet.dashboard.manual.HTTPUploadEAGAction"> 
