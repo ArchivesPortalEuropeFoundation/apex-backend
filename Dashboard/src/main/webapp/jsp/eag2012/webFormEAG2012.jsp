@@ -116,6 +116,15 @@
 							$("#"+parent+" #buttonASAddADescriptionOfYourReproductionService").attr("disabled","disabled");
 						}
 					});
+					//last checks for urls
+					$("table#yiTableOthers input[id^='textReferencetoyourinstitutionsholdingsguide']").each(function(){
+						var message = "<s:property value="getText('label.eag.eagwithurlwarnings')"/>";
+						checkWebpages($(this),message);
+					});
+					$("table#resourceRelationTable_1 input[id^='textWebsiteOfResource']").each(function(){
+						var message = "<s:property value="getText('label.eag.eagwithurlwarnings')"/>";
+						checkWebpages($(this),message);
+					});
 				});
 			</script>
 			<div id="container">
@@ -151,7 +160,7 @@
 		<table>
 			<tr>
 				<td>
-		  			<input type="button" id="buttonSaveEAG2012" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" onclick="clickSaveAction(this.form, '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.success')" />','<s:property value="getText('label.ai.tabs.commons.errorYourInstitution')" />', '<s:property value="getText('label.ai.tabs.commons.errorIdentity')" />', '<s:property value="getText('label.ai.tabs.commons.errorContact')" />', '<s:property value="getText('label.ai.tabs.commons.errorAccessAndServices')" />', '<s:property value="getText('label.ai.tabs.commons.errorDesription')" />', '<s:property value="getText('label.ai.tabs.commons.errorControl')" />', '<s:property value="getText('label.ai.tabs.commons.errorRelations')" />');" />
+		  			<input type="button" id="buttonSaveEAG2012" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" onclick="clickSaveAction(this.form, '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.success')" />','<s:property value="getText('label.ai.tabs.commons.errorYourInstitution')" />', '<s:property value="getText('label.ai.tabs.commons.errorIdentity')" />', '<s:property value="getText('label.ai.tabs.commons.errorContact')" />', '<s:property value="getText('label.ai.tabs.commons.errorAccessAndServices')" />', '<s:property value="getText('label.ai.tabs.commons.errorDesription')" />', '<s:property value="getText('label.ai.tabs.commons.errorControl')" />', '<s:property value="getText('label.ai.tabs.commons.errorRelations')" />','<s:property value="getText('label.eag.eagwithurlwarnings')"/>');" />
 		  			<input type="button" id="buttonExitEAG2012" value="<s:property value='getText("label.ai.tabs.commons.button.exit")' />" onclick="clickExitAction();" />
 	    		</td>
 	    	</tr>

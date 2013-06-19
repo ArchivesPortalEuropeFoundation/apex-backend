@@ -51,9 +51,9 @@ function clickExitAction(){
 	location.href="dashboardHome.action";
 }
 
-function clickSaveAction(form, text1, text2, error1, error2, error3, error4, error5, error6, error7) {
+function clickSaveAction(form, text1, text2, error1, error2, error3, error4, error5, error6, error7,message) {
 	// Check fill mandatory fields in tab "your institution".
-	var jsonDataYourInstitution =  clickYourInstitutionAction(text1);
+	var jsonDataYourInstitution =  clickYourInstitutionAction(text1,message);
 	if (!jsonDataYourInstitution) {
 		alert(error1);
 		return;
@@ -95,7 +95,7 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 	}
 
 	// Check fill mandatory fields in tab "relations".
-	var jsonDataRelations =  clickRelationsAction(text1);
+	var jsonDataRelations =  clickRelationsAction(text1,message);
 	if (!jsonDataRelations) {
 		alert(error7);
 		return;
@@ -118,7 +118,21 @@ function deleteChecks() {
 	$('.fieldRequired').remove();
 }
 
-var clickYourInstitutionAction = function(text1){
+function checkWebpages(target,message){
+	var checkFails = false;
+	var value = target.val();
+	if(value && value.length>0){
+		value = value.toLowerCase();
+		if(!(value.indexOf("https://")==0 || value.indexOf("http://")==0 || value.indexOf("ftp://")==0)){ 
+			var pFieldError = "<p id=\""+$(this).attr("id")+"_w_required\" class=\"fieldRequired\">"+message+"</p>";
+			target.after(pFieldError);
+			checkFails = true;
+		}
+	}
+	return checkFails;
+}
+
+var clickYourInstitutionAction = function(text1,messageRightWeb){
 	// Delete old checks
 	deleteChecks();
 
@@ -294,6 +308,13 @@ var clickYourInstitutionAction = function(text1){
 			}
 		}
 	});
+	var additionalChecks = false;
+	$("table#yiTableOthers input[id^='textReferencetoyourinstitutionsholdingsguide']").each(function(){
+		if(!additionalChecks){
+			additionalChecks = checkWebpages($(this),messageRightWeb);
+		}
+	});
+	
 	//select options selected
 	$("#yiTableOthers select").each(function(){
 		if(jsonData.charAt(jsonData.length-1)!=':'){
@@ -330,7 +351,7 @@ var clickYourInstitutionAction = function(text1){
 		}
 	}
 
-	if (yiMandatoryElements.length != 0 || validationArray.length != 0) {
+	if (yiMandatoryElements.length != 0 || validationArray.length != 0 || additionalChecks) {
 		return false;
 	}
 
@@ -945,7 +966,7 @@ var clickControlAction = function(text1){
 	return jsonData;
 };
 
-var clickRelationsAction = function(text1){
+var clickRelationsAction = function(text1,messageWebpage){
 	var jsonData = "{";
 
 	// Resource relations.
@@ -980,6 +1001,12 @@ var clickRelationsAction = function(text1){
 		});
 		jsonData += "}";
 	}
+	var failWebpageCheck = false;
+	$("table#resourceRelationTable_1 input[id^='textWebsiteOfResource']").each(function(){
+		if(!failWebpageCheck){
+			failWebpageCheck = checkWebpages($(this),messageWebpage);
+		}
+	});
 	
 	jsonData += "}";
 
@@ -1017,16 +1044,18 @@ var clickRelationsAction = function(text1){
 	}
 	
 	jsonData += "}}";
-
+	if(failWebpageCheck){
+		return false;
+	}
 	return jsonData;
 };
 
-function checkAndShowPreviousTab(table, text1, text2){
+function checkAndShowPreviousTab(table, text1, text2,messageWebpage){
 	//Check table passed.
 	var id = $(table).attr("id");
 	
 	if (id == "relationsOtherTable"){
-	   if (!clickRelationsAction(text1)) {
+	   if (!clickRelationsAction(text1,messageWebpage)) {
 			alertFillFieldsBeforeChangeTab(text2);
 			return;
 		}else {
@@ -1074,7 +1103,7 @@ function checkAndShowNextTab(table, text1, text2){
 	var id =  $(table).attr("id");
 
 	if (id == "yiTableOthers") {
-		if (!clickYourInstitutionAction(text1)) {
+		if (!clickYourInstitutionAction(text1,messageRightWeb)) {
 			alertFillFieldsBeforeChangeTab(text2);
 			return;
 		} else {
@@ -1115,7 +1144,7 @@ function checkAndShowNextTab(table, text1, text2){
 		} else {
 			$("ul#eag2012TabsContainer a[href='#tab-relations']").trigger('click');
 		}
-	}
+	} 
 }
 
 function checkFillValue(element) {

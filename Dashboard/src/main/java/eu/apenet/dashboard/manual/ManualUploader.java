@@ -31,6 +31,7 @@ import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -333,11 +334,15 @@ public abstract class ManualUploader {
 	    		    
     				//It is necessary to validate the file against APEnet EAG schema
                     APEnetEAGDashboard eag = new APEnetEAGDashboard(archivalInstitutionId, file.getAbsolutePath());
+                    Document tempDoc = null;
+                    DocumentBuilder docBuilder = null;
+                    DocumentBuilderFactory dbfac = null;
     				if (eag.validate()){
                         
                         //check the <recordId> content
                         //eag.setEagPath(fullFileName); //temp used for looking forward target tag
                         String recordIdValue = eag.lookingForwardElementContent("/eag/control/recordId");
+                        boolean changed = false;
                         if(recordIdValue!=null && recordIdValue.endsWith(MAGIC_KEY)){
                         	//replace value with a consecutive unique value
                         	ArchivalLandscape archivalLandscape = new ArchivalLandscape();
@@ -347,12 +352,11 @@ public abstract class ManualUploader {
                         		newRecordIdValue+="0";
                         	}
                         	newRecordIdValue+=archivalInstitutionId.toString();
-                        	DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
+                        	dbfac = DocumentBuilderFactory.newInstance();
                             dbfac.setNamespaceAware(true);
-                    		DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
-                    		Document tempDoc = docBuilder.parse(fullFileName);
+                            docBuilder = dbfac.newDocumentBuilder();
+                    		tempDoc = docBuilder.parse(fullFileName);
                     		NodeList recordsIds = tempDoc.getElementsByTagName("recordId");
-                    		boolean changed = false;
                     		for(int i=0;i<recordsIds.getLength() && !changed;i++){
                     			Node currentNode = recordsIds.item(i);
                     			Node parent = currentNode.getParentNode();
@@ -364,11 +368,42 @@ public abstract class ManualUploader {
                     				}
                     			}
                     		}
-                    		TransformerFactory tf = TransformerFactory.newInstance(); // Save changes
+                        }
+                        //TODO, change it with the check for webpages, use the eag.lookingForwardElemens 
+                        //from APEnetEAGDashboard class. issue #597, this step checks if the user has 
+                        //written good links into the system (which starts with right prefix).
+                        String href = eag.extractAttributeFromEag("eag/relations/resourceRelation", "href",true);
+                        boolean showWarnings = false;
+                        if(href!=null && !href.isEmpty() && !href.equals("error")){
+                        	if(tempDoc == null){
+                        		dbfac = DocumentBuilderFactory.newInstance();
+                                dbfac.setNamespaceAware(true);
+                        		docBuilder = dbfac.newDocumentBuilder();
+                        		tempDoc = docBuilder.parse(fullFileName);
+                        	}
+                    		//first check resource relations
+                    		NodeList resourceRelations = tempDoc.getElementsByTagName("resourceRelation");
+                    		if(resourceRelations!=null && resourceRelations.getLength()>0){
+                    			for(int i=0;!showWarnings && i<resourceRelations.getLength();i++){
+                    				Node resourceRelation = resourceRelations.item(i);
+                    				if(resourceRelation.hasAttributes()){
+                    					NamedNodeMap resourceRelationsAttributes = resourceRelation.getAttributes();
+                    					Node resourceRelationHrefAttribute = resourceRelationsAttributes.getNamedItem("href");
+                    					if(resourceRelationHrefAttribute!=null){
+                    						String hrefValue = resourceRelationHrefAttribute.getTextContent();
+                    						if(hrefValue!=null && !hrefValue.isEmpty() && !(href.toLowerCase().startsWith("http://") || href.toLowerCase().startsWith("https://") || href.toLowerCase().startsWith("ftp://")) ){
+                    							showWarnings = true; //marked to be used next to inform to user
+                    						}
+                    					}
+                    				}
+                    			}
+                    		}
+                        }
+                        if(changed){
+                        	TransformerFactory tf = TransformerFactory.newInstance(); // Save changes
                     		Transformer transformer = tf.newTransformer();
                     		transformer.transform(new DOMSource(tempDoc), new StreamResult(new File(fullFileName)));
                         }
-
     					//The EAG has been validated so it has to be stored in /mnt/repo/country/aiid/EAG/
     					//and it is necessary to update archival_institution table
         				result = eag.saveEAGviaHTTP(fullFileName);
@@ -387,7 +422,9 @@ public abstract class ManualUploader {
         				}
         				else{
             				this.filesUploaded.add(fileName);
-            				
+            				if(showWarnings)
+            					result = "success_with_url_warning";
+            				else
             		        /////////// LAST MODIFICATIONS REGARDING TICKET #652 -- Begin
             		        /////////////////////////////////////////////////////////////
             				// Remove this block and uncomment the other one if 'Link to holdings guide' default text is wanted again within EAG web form

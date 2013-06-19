@@ -111,11 +111,13 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
                 uploader_http = new ManualHTTPUploader(uploadMethod);
         	    result = uploader_http.uploadFile(uploadType, this.getHttpFileFileName(), this.getHttpFile(), format, archivalInstitutionId, uploadMethod);
         	    
-        	    if (result.equals("success")) {
+        	    if (result.equals("success") || result.equals("success_with_url_warning")) {
         	    	this.filesNotUploaded = this.uploader_http.getFilesNotUploaded();
         	    	this.filesUploaded = this.uploader_http.getFilesUploaded();
-        	    	
         	    	addActionMessage(getText("label.eag.eagcorrectlyuploaded"));
+        	    	if(result.equals("success_with_url_warning")){
+        	    		addActionMessage(getText("label.eag.eagwithurlwarnings"));
+        	    	}
         	    	result = SUCCESS;
         	    }
         	    else if (result.equals("success_noInformation")){
