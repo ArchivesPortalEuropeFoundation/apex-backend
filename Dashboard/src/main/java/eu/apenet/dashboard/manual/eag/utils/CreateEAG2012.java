@@ -951,8 +951,10 @@ public class CreateEAG2012 {
 									if (target.getStreet() != null && target.getStreet().getContent() != null
 											&& target.getStreet().getContent().equalsIgnoreCase(streetList.get(j))
 											&& Eag2012.VISITORS_ADDRESS.equalsIgnoreCase(target.getLocalType())
+											&& target.getMunicipalityPostalcode()!= null
 											&& target.getMunicipalityPostalcode().getContent() != null
 											&& target.getMunicipalityPostalcode().getContent().equalsIgnoreCase(citiesList.get(j))
+											&& target.getCountry() != null
 											&& target.getCountry().getContent() != null
 											&& target.getCountry().getContent().equalsIgnoreCase(countryList.get(j))) {
 										found = true;
@@ -1052,10 +1054,13 @@ public class CreateEAG2012 {
 								boolean found = false;
 								for(int x=0;!found && x<repository.getLocation().size();x++){
 									Location target = repository.getLocation().get(x);
-									if(target !=null && target.getStreet()!=null && target.getStreet().getContent()!=null && target.getStreet().getContent().equalsIgnoreCase(postalStreetList.get(j)) && 
-											Eag2012.POSTAL_ADDRESS.equalsIgnoreCase(target.getLocalType()) &&
-											target.getMunicipalityPostalcode()!=null && target.getMunicipalityPostalcode().getContent() != null &&
-											target.getMunicipalityPostalcode().getContent().equalsIgnoreCase(postalCitiesList.get(j)) ){
+									if(target !=null && target.getStreet()!=null
+											&& target.getStreet().getContent()!=null 
+											&& target.getStreet().getContent().equalsIgnoreCase(postalStreetList.get(j)) 
+											&& Eag2012.POSTAL_ADDRESS.equalsIgnoreCase(target.getLocalType())
+											&& target.getMunicipalityPostalcode()!=null
+											&& target.getMunicipalityPostalcode().getContent() != null
+											&& target.getMunicipalityPostalcode().getContent().equalsIgnoreCase(postalCitiesList.get(j)) ){
 										found = true;
 									}
 								}

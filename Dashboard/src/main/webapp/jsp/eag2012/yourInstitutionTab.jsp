@@ -137,9 +137,9 @@
 		</tr>
 	</table>
 
-	<s:if test="%{loader.yiStreet.size() > 0}">
+	<s:if test="%{loader.yiNumberOfVisitorsAddress.size() > 0}">
 		<s:set var="counter" value="0"/>
-		<s:iterator var="current" value="loader.yiStreet" status="status">
+		<s:iterator var="current" value="loader.yiNumberOfVisitorsAddress" status="status">
 			<table id="yiTableVisitorsAddress_<s:property value="%{#status.index + 1}" />" class="tablePadding">
 				<tr>
 					<td id="visitorAdressLabel" colspan="4">
@@ -158,10 +158,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYIStreet" onchange="streetOfInstitutionChanged();" value="<s:property value="#current" />" />
+							<input type="text" id="textYIStreet" onchange="streetOfInstitutionChanged();" value="<s:property value="loader.yiStreet[#counter]" />" />
 						</s:if>
 						<s:else>
-							<input type="text" id="textYIStreet" value="<s:property value="#current" />" />
+							<input type="text" id="textYIStreet" value="<s:property value="loader.yiStreet[#counter]" />" />
 						</s:else>
 					</td>
 					<td class="labelLeft">
@@ -342,9 +342,9 @@
 		</tr>
 	</table>
 
-	<s:if test="%{loader.yiStreetPostal.size() > 0}">
+	<s:if test="%{loader.yiNumberOfPostalAddress.size() > 0}">
 		<s:set var="counter" value="0"/>
-		<s:iterator var="current" value="loader.yiStreetPostal" status="status">
+		<s:iterator var="current" value="loader.yiNumberOfPostalAddress" status="status">
 			<table id="yiTablePostalAddress_<s:property value="%{#status.index + 1}" />" class="tablePadding">
 				<tr id="yiPostalAddressLabel">
 					<td id="postalAddressLabel" colspan="4">
@@ -363,10 +363,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYIPAStreet" onchange="postalAddressStreetChanged();" value="<s:property value="#current" />" />
+							<input type="text" id="textYIPAStreet" onchange="postalAddressStreetChanged();" value="<s:property value="loader.yiStreetPostal[#counter]" />" />
 						</s:if>
 						<s:else>
-							<input type="text" id="textYIPAStreet" value="<s:property value="#current" />" />
+							<input type="text" id="textYIPAStreet" value="<s:property value="loader.yiStreetPostal[#counter]" />" />
 						</s:else>
 					</td>
 					<td id="yiPostalAddressLanguage" class="labelLeft">
@@ -417,7 +417,7 @@
 	<table id="yiTableOthers" class="tablePadding">
 		<tr>
 			<td colspan="4">
-				<s:if test="%{loader.yiStreetPostal.size() > 0}">
+				<s:if test="%{loader.yiNumberOfPostalAddress.size() > 0}">
 					<input type="button" id="buttonAddPostalAddressIfDifferent" value="<s:property value="getText('label.ai.tabs.commons.addPostalAddressIfDifferent')"/>" onclick="yiAddPostalAddressIfDifferent('<s:property value="getText('label.ai.yourinstitution.postalAddress')" />', '<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />', '<s:property value="getText('label.ai.tabs.commons.street')" />', '<s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')" />')" style="display:none;" />
 				</s:if>
 				<s:else>
@@ -426,7 +426,7 @@
 			</td>
 		</tr>
 
-		<s:if test="%{loader.yiStreetPostal.size() > 0}">
+		<s:if test="%{loader.yiNumberOfPostalAddress.size() > 0}">
 			<tr id="yiPostalAddressTranslation">
 		</s:if>
 		<s:else>
@@ -461,9 +461,9 @@
 			</td>
 		</tr>
 
-		<s:if test="%{loader.yiEmail.size() > 0}">
+		<s:if test="%{loader.yiNumberOfEmailAddress.size() > 0}">
 			<s:set var="counter" value="0"/>
-			<s:iterator var="current" value="loader.yiEmail" status="status">
+			<s:iterator var="current" value="loader.yiNumberOfEmailAddress" status="status">
 				<s:if test="%{#status.index == 0}">
 					<tr id="trTextYIEmail">
 				</s:if>
@@ -480,10 +480,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYIEmailAddress" onchange="emailOfInstitutionChanged();" value="<s:property value="#current" />" />
+							<input type="text" id="textYIEmailAddress" onchange="emailOfInstitutionChanged();" value="<s:property value="loader.yiEmail[#counter]" />" />
 						</s:if>
 						<s:else>
-							<input type="text" id="textYIEmailAddress_<s:property value="%{#status.index + 1}" />" value="<s:property value="#current" />" />
+							<input type="text" id="textYIEmailAddress_<s:property value="%{#status.index + 1}" />" value="<s:property value="loader.yiEmail[#counter]" />" />
 						</s:else>
 					</td>
 					<td class="labelLeft">
@@ -585,9 +585,9 @@
 			</tr>
 		</s:else>
 
-		<s:if test="%{loader.yiWebpage.size() > 0}">
+		<s:if test="%{loader.yiNumberOfWebpageAddress.size() > 0}">
 			<s:set var="counter" value="0"/>
-			<s:iterator var="current" value="loader.yiWebpage" status="status">
+			<s:iterator var="current" value="loader.yiNumberOfWebpageAddress" status="status">
 				<s:if test="%{#status.index == 0}">
 					<tr id="trButtonYIWebpage">
 				</s:if>
@@ -604,10 +604,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYIWebpage" onchange="webOfInstitutionChanged();" value="<s:property value="#current" />" />
+							<input type="text" id="textYIWebpage" onchange="webOfInstitutionChanged();" value="<s:property value="loader.yiWebpage[#counter]" />" />
 						</s:if>
 						<s:else>
-							<input type="text" id="textYIWebpage_<s:property value="%{#status.index + 1}" />" value="<s:property value="#current" />" />
+							<input type="text" id="textYIWebpage_<s:property value="%{#status.index + 1}" />" value="<s:property value="loader.yiWebpage[#counter]" />" />
 						</s:else>
 					</td>
 					<td class="labelLeft">

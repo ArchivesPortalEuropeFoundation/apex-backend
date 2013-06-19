@@ -39,28 +39,33 @@
 			<input type="hidden" id="currentTab" value="" />
 			<script type="text/javascript">
 				$(document).ready(function(){
-					var text = '<s:property value="getText('label.ai.tabs.commons.fieldRequired')"/>';
-					var e1 = '<s:property value="getText('label.ai.tabs.commons.errorYourInstitution')"/>';
-					var e2 = '<s:property value="getText('label.ai.tabs.commons.errorIdentity')"/>';	
-					var e3 = '<s:property value="getText('label.ai.tabs.commons.errorContact')"/>';
-					var e4 = '<s:property value="getText('label.ai.tabs.commons.errorAccessAndServices')"/>';
-					var e5 = '<s:property value="getText('label.ai.tabs.commons.errorDesription')"/>';
-					var e6 = '<s:property value="getText('label.ai.tabs.commons.errorControl')" />';
-					var e7 = '<s:property value="getText('label.ai.tabs.commons.errorRelations')"/>';
-			 					
 					hideAndShow("tab-","tab-yourInstitution");
 					$("#currentTab").attr("value","tab-yourInstitution");
 					$("a[href^='#tab-']").click(function(){
 							hideAndShow("tab-",$(this).attr("href").substring(1));
 					});
 					//clone contact, "access and services" and description
-					$("div#divTempContainter").append($("table#contactTable").clone());
+					var numberOfRepos = '<s:property value="loader.numberOfRepositories" />';
+					if (numberOfRepos == 0) {
+						$("div#divTempContainter").append($("table#contactTable").clone());
+					} else {
+						$("div#divTempContainter").append($("table#contactTable"));
+					}
 					$("div#divTempContainter").append($("table#accessAndServicesTable").clone());
 					$("div#divTempContainter").append($("table#descriptionTable").clone());
 					//update new table names
-					$("div#contactTabContent table#contactTable").attr("id","contactTable_1");
+					if (numberOfRepos == 0) {
+						$("div#contactTabContent table#contactTable").attr("id","contactTable_1");
+						$("div#contactTabContent table#contactTable_1").show();
+						$("div#contactTabContent").show();
+					}
 					$("div#accessAndServicesTabContent table#accessAndServicesTable").attr("id","accessAndServicesTable_1");
 					$("div#descriptionTabContent table#descriptionTable").attr("id","descriptionTable_1");
+
+					// Load repository tabs if necessary.
+					var labelInstitution = '<s:property value="getText('label.ai.yourinstitution.institution')" />';
+					var labelRepository = '<s:property value="getText('label.ai.yourinstitution.repository')" />';
+					loadRepositories(labelInstitution, labelRepository, numberOfRepos);
 					
 					//postal address - your institution tab and contact tab
 					var postalField1 = "<s:property value="loader.streetPostal"/>";
@@ -69,10 +74,6 @@
 					//alert(postalField1+","+postalField2+","+postalField3);
 					if(postalField1.length>0 || postalField2.length>0 || postalField3.length>0){
 						var control=true;
-//						yiAddPostalAddressIfDifferent('<s:property value="getText('label.ai.yourinstitution.postalAddress')" />', '<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />', '<s:property value="getText('label.ai.tabs.commons.street')" />', '<s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')" />',control);
-//						$("#textYIPAStreet").attr("value",postalField1);
-//						$("#textYIPACity").attr("value",postalField2);
-//						$("#selectYIPASelectLanguage").attr("value",postalField3);
 						contactAddPostalAddressIfDifferent('<s:property value="getText('label.ai.contact.postalAddress')" />','<s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>','<s:property value="getText('label.ai.tabs.commons.street')"/>','<s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')"/>',control);
 						$("#textContactPAStreet").attr("value",postalField1);
 						$("#textContactPACity").attr("value",postalField2);

@@ -44,7 +44,6 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
  * Class for load an EAG2012 XML file into a JAXB object.
  */
 public class EAG2012Loader{
-
 	/**
 	 * Logger.
 	 */
@@ -60,262 +59,304 @@ public class EAG2012Loader{
 
 	// Attributes.
 	// Common to various tabs.
-    private String agent;
-    private String countryCode;
-    private List<String> otherRecordId;
-    private List<String> otherRecordIdLocalType;
-    private String otherRepositorId;
-    private String recordId;
-    private String selfRecordId;
-    private String autform;
-    private String autformLang;
-    private List<String> idAutform;
-    private List<String> idAutformLang;
-    private String parform;
-    private String parformLang;
-    private List<String> idParform;
-    private List<String> idParformLang;
-    private String localType;
-    private String longitude;
-    private String latitude;
-    private String country;
-    private String countryLang;
-    private String municipalityPostalcode;
-    private String municipalityPostalcodeLang;
-    private String street;
-    private String streetLang;
-    private List<String> yiLongitude;
-    private List<String> yiLatitude;
-    private List<String> yiCountry;
-    private List<String> yiCountryLang;
-    private List<String> yiMunicipalityPostalcode;
-    private List<String> yiMunicipalityPostalcodeLang;
-    private List<String> yiStreet;
-    private List<String> yiStreetLang;
-    private String municipalityPostalcodePostal;
-    private String municipalityPostalcodePostalLang;
-    private String streetPostal;
-    private String streetPostalLang;
-    private List<String> yiMunicipalityPostalcodePostal;
-    private List<String> yiMunicipalityPostalcodePostalLang;
-    private List<String> yiStreetPostal;
-    private List<String> yiStreetPostalLang;
-    private String geogarea;
-    private String telephone;
-    private String email;
-    private String emailTitle;
-    private String emailLang;
-    private List<String> yiEmail;
-    private List<String> yiEmailTitle;
-    private List<String> yiEmailLang;
-    private String webpage;
-    private String webpageTitle;
-    private String webpageLang;
-    private List<String> yiWebpage;
-    private List<String> yiWebpageTitle;
-    private List<String> yiWebpageLang;
-    private String opening;
-    private String openingLang;
-    private List<String> yiOpening;
-    private List<String> yiOpeningLang;
-    private String closing;
-    private String closingLang;
-    private List<String> yiClosing;
-    private List<String> yiClosingLang;
-    private String accessQuestion;
-    private String restaccess;
-    private String restaccessLang;
-    private List<String> yiRestaccess;
-    private List<String> yiRestaccessLang;
-    private String accessibilityQuestion;
-    private String accessibility;
-    private String accessibilityLang;
-    private List<String> yiAccessibility;
-    private List<String> yiAccessibilityLang;
-    private String resourceRelationHref;
-    private String resourceRelationrelationEntry;
-    private List<String> yiResourceRelationHref;
-    private List<String> yiResourceRelationrelationEntry;
-    
+	private String agent;
+	private String countryCode;
+	private List<String> otherRecordId;
+	private List<String> otherRecordIdLocalType;
+	private String otherRepositorId;
+	private String recordId;
+	private String selfRecordId;
+	private String autform;
+	private String autformLang;
+	private List<String> idAutform;
+	private List<String> idAutformLang;
+	private String parform;
+	private String parformLang;
+	private List<String> idParform;
+	private List<String> idParformLang;
+	private String localType;
+	private String longitude;
+	private String latitude;
+	private String country;
+	private String countryLang;
+	private String municipalityPostalcode;
+	private String municipalityPostalcodeLang;
+	private String street;
+	private String streetLang;
+	private List<String> yiNumberOfVisitorsAddress;
+	private List<String> yiLongitude;
+	private List<String> yiLatitude;
+	private List<String> yiCountry;
+	private List<String> yiCountryLang;
+	private List<String> yiMunicipalityPostalcode;
+	private List<String> yiMunicipalityPostalcodeLang;
+	private List<String> yiStreet;
+	private List<String> yiStreetLang;
+	private String municipalityPostalcodePostal;
+	private String municipalityPostalcodePostalLang;
+	private String streetPostal;
+	private String streetPostalLang;
+	private List<String> yiNumberOfPostalAddress;
+	private List<String> yiMunicipalityPostalcodePostal;
+	private List<String> yiMunicipalityPostalcodePostalLang;
+	private List<String> yiStreetPostal;
+	private List<String> yiStreetPostalLang;
+	private String geogarea;
+	private String telephone;
+	private String email;
+	private String emailTitle;
+	private String emailLang;
+	private List<String> yiNumberOfEmailAddress;
+	private List<String> yiEmail;
+	private List<String> yiEmailTitle;
+	private List<String> yiEmailLang;
+	private String webpage;
+	private String webpageTitle;
+	private String webpageLang;
+	private List<String> yiNumberOfWebpageAddress;
+	private List<String> yiWebpage;
+	private List<String> yiWebpageTitle;
+	private List<String> yiWebpageLang;
+	private String opening;
+	private String openingLang;
+	private List<String> yiOpening;
+	private List<String> yiOpeningLang;
+	private String closing;
+	private String closingLang;
+	private List<String> yiClosing;
+	private List<String> yiClosingLang;
+	private String accessQuestion;
+	private String restaccess;
+	private String restaccessLang;
+	private List<String> yiRestaccess;
+	private List<String> yiRestaccessLang;
+	private String accessibilityQuestion;
+	private String accessibility;
+	private String accessibilityLang;
+	private List<String> yiAccessibilityQuestion;
+	private List<String> yiAccessibility;
+	private List<String> yiAccessibilityLang;
+	private String resourceRelationHref;
+	private String resourceRelationrelationEntry;
+	private List<String> yiResourceRelationHref;
+	private List<String> yiResourceRelationrelationEntry;
+
+	// Repo tabs.
+	private int numberOfRepositories;
 
 	// Your institution tab.
-    private String recordIdISIL;
+	private String recordIdISIL;
 
 	// Identity tab.
-    private List<String> nonpreform;
-    private List<String> nonpreformLang;
-    private List<List<String>> nonpreformDate;
-    private List<List<String>> nonpreformDateFrom;
-    private List<List<String>> nonpreformDateTo;
-    private List<String> repositoryType;
+	private List<List<String>> repositoryName;
+	private List<List<String>> repositoryRole;
+	private List<String> nonpreform;
+	private List<String> nonpreformLang;
+	private List<List<String>> nonpreformDate;
+	private List<List<String>> nonpreformDateFrom;
+	private List<List<String>> nonpreformDateTo;
+	private List<String> repositoryType;
 
 	// Contact.
-    private String firstdem;
-    private String firstdemLang;
-    private String localentity;
-    private String localentityLang;
-    private String secondem;
-    private String secondemLang;
-    private String fax;
+	private List<List<String>> contactNumberOfVisitorsAddress;
+	private List<List<String>> contactLatitude;
+	private List<List<String>> contactLongitude;
+	private List<List<String>> contactCountry;
+	private List<List<String>> contactCountryLang;
+	private List<List<String>> contactFirstdem;
+	private List<List<String>> contactFirstdemLang;
+	private List<List<String>> contactSecondem;
+	private List<List<String>> contactSecondemLang;
+	private List<List<String>> contactMunicipality;
+	private List<List<String>> contactMunicipalityLang;
+	private List<List<String>> contactLocalentity;
+	private List<List<String>> contactLocalentityLang;
+	private List<List<String>> contactStreet;
+	private List<List<String>> contactStreetLang;
+	private List<List<String>> contactNumberOfPostalAddress;
+	private List<List<String>> contactPostalCountry;
+	private List<List<String>> contactPostalCountryLang;
+	private List<List<String>> contactPostalMunicipality;
+	private List<List<String>> contactPostalMunicipalityLang;
+	private List<List<String>> contactPostalStreet;
+	private List<List<String>> contactPostalStreetLang;
+	private List<List<String>> contactContinent;
+	private List<List<String>> contactTelephone;
+	private List<List<String>> contactFax;
+	private List<List<String>> contactNumberOfEmailAddress;
+	private List<List<String>> contactEmailHref;
+	private List<List<String>> contactEmailTitle;
+	private List<List<String>> contactEmailLang;
+	private List<List<String>> contactNumberOfWebpageAddress;
+	private List<List<String>> contactWebpageHref;
+	private List<List<String>> contactWebpageTitle;
+	private List<List<String>> contactWebpageLang;
+	
+	private String firstdem;		// TODO: Will be remove
+	private String firstdemLang;	// TODO: Will be remove
+	private String localentity;		// TODO: Will be remove
+	private String localentityLang;	// TODO: Will be remove
+	private String secondem;		// TODO: Will be remove
+	private String secondemLang;	// TODO: Will be remove
+	private String fax;				// TODO: Will be remove
 
 	// Access and Services.
-    private String directions;
-    private String directionsLang;
-    private String directionsCitationHref;
-    private String citationHref;
-    private String termsOfUse;
-    private String termsOfUseLang;
-    private String termsOfUseHref;
-    private String searchRoomTelephone;
-    private String searchRoomEmail;
-    private String searchRoomEmailLink;
-    private String searchRoomWebpage;
-    private String searchRoomWebpageLink;
-    private String searchRoomWorkPlaces;
-    private String searchRoomComputerPlaces;
-    private String searchRoomMicrofilmReaders;
-    private String searchRoomPhotographAllowance;
-    private String searchRoomPhotographAllowanceContent;
-    private String searchRoomPhotographAllowanceHref;
-    private String searchRoomPhotographAllowanceLang;
-    private String searchRoomAdvancedOrdersContent;
-    private String searchRoomAdvancedOrdersLang;
-    private String searchRoomAdvancedOrdersHref;
-    private String searchRoomResearchServicesContent;
-    private String searchRoomResearchServicesLang;
-    
-    private String libraryQuestion;
-    private String libraryTelephone;
-    private String libraryEmailContent;
-    private String libraryEmailHref;
-    private String libraryWebpageContent;
-    private String libraryWebpageHref;
-    private String libraryMonographPublication;
-    private String librarySerialPublication;
-    private String libraryInternetAccessQuestion;
-    private String libraryDescription;
-    private String libraryDescriptionLang;
-    
-    private String technicalServicesQuestion;
-    private String technicalServicesDescription;
-    private String technicalServicesDescriptionLang;
-    private String technicalServicesTelephone;
-    private String technicalServicesEmail;
-    private String technicalServicesEmailLink;
-    private String technicalServicesEmailLang;
-    private String technicalServicesWebpageLink;
-    private String technicalServicesWebpage;
-    private String technicalServicesWebpageLang;
-    
-    private String reproductionserQuestion;
-    private String reproductionserDescription;
-    private String reproductionserDescriptionLang;
-    private String reproductionserTelephone;
-    private String reproductionserEmail;
-    private String reproductionserEmailLink;
-    private String reproductionserEmailLang;
-    private String reproductionserWebpage;
-    private String reproductionserWebpageLink;
-    private String reproductionserWebpageLang;
-    private String microfilmServices;
-    private String photographicServices;
-    private String digitisationServices;
-    private String photocopyingServices;
-    private String recreationalServicesRefreshmentArea;
-    private String recreationalServicesRefreshmentAreaLang;
-    private String recreationalServicesExhibition;
-    private String recreationalServicesExhibitionLang;
-    private String recreationalServicesWeb;
-    private String recreationalServicesWebLink;
-    private String toursSessionGuidesAndSessionsContent;
-    private String toursSessionGuidesAndSessionsLang;
-    private String toursSessionGuidesAndSessionsWebpage;
-    private String toursSessionGuidesAndSessionsWebpageTitle;
-    private String otherServices;
-    private String otherServicesLang;
-    private String otherServicesWebpage;
-    private String otherServicesLink;
+	private String directions;
+	private String directionsLang;
+	private String directionsCitationHref;
+	private String citationHref;
+	private String termsOfUse;
+	private String termsOfUseLang;
+	private String termsOfUseHref;
+	private String searchRoomTelephone;
+	private String searchRoomEmail;
+	private String searchRoomEmailLink;
+	private String searchRoomWebpage;
+	private String searchRoomWebpageLink;
+	private String searchRoomWorkPlaces;
+	private String searchRoomComputerPlaces;
+	private String searchRoomMicrofilmReaders;
+	private String searchRoomPhotographAllowance;
+	private String searchRoomPhotographAllowanceContent;
+	private String searchRoomPhotographAllowanceHref;
+	private String searchRoomPhotographAllowanceLang;
+	private String searchRoomAdvancedOrdersContent;
+	private String searchRoomAdvancedOrdersLang;
+	private String searchRoomAdvancedOrdersHref;
+	private String searchRoomResearchServicesContent;
+	private String searchRoomResearchServicesLang;
 
+	private String libraryQuestion;
+	private String libraryTelephone;
+	private String libraryEmailContent;
+	private String libraryEmailHref;
+	private String libraryWebpageContent;
+	private String libraryWebpageHref;
+	private String libraryMonographPublication;
+	private String librarySerialPublication;
+	private String libraryInternetAccessQuestion;
+	private String libraryDescription;
+	private String libraryDescriptionLang;
+
+	private String technicalServicesQuestion;
+	private String technicalServicesDescription;
+	private String technicalServicesDescriptionLang;
+	private String technicalServicesTelephone;
+	private String technicalServicesEmail;
+	private String technicalServicesEmailLink;
+	private String technicalServicesEmailLang;
+	private String technicalServicesWebpageLink;
+	private String technicalServicesWebpage;
+	private String technicalServicesWebpageLang;
+
+	private String reproductionserQuestion;
+	private String reproductionserDescription;
+	private String reproductionserDescriptionLang;
+	private String reproductionserTelephone;
+	private String reproductionserEmail;
+	private String reproductionserEmailLink;
+	private String reproductionserEmailLang;
+	private String reproductionserWebpage;
+	private String reproductionserWebpageLink;
+	private String reproductionserWebpageLang;
+	private String microfilmServices;
+	private String photographicServices;
+	private String digitisationServices;
+	private String photocopyingServices;
+	private String recreationalServicesRefreshmentArea;
+	private String recreationalServicesRefreshmentAreaLang;
+	private String recreationalServicesExhibition;
+	private String recreationalServicesExhibitionLang;
+	private String recreationalServicesWeb;
+	private String recreationalServicesWebLink;
+	private String toursSessionGuidesAndSessionsContent;
+	private String toursSessionGuidesAndSessionsLang;
+	private String toursSessionGuidesAndSessionsWebpage;
+	private String toursSessionGuidesAndSessionsWebpageTitle;
+	private String otherServices;
+	private String otherServicesLang;
+	private String otherServicesWebpage;
+	private String otherServicesLink;
 
 	// Description.
-    private String repositorhist;
-    private String repositorhistLang;
-    private String repositorFoundDate;
+	private String repositorhist;
+	private String repositorhistLang;
+	private String repositorFoundDate;
 
 	private String repositorFoundDateLocalType;
-    private String repositorFoundDateNotAfter;
-    private String repositorFoundDateNotBefore;
-    private String repositorFoundDateStandardDate;
-    private String repositorFoundDateLang;
-    private String repositorFoundRule;
-    private String repositorFoundRuleLang;
-    private String repositorSupDate;
-    private String repositorSupDateLocalType;
-    private String repositorSupDateNotAfter;
-    private String repositorSupDateNotBefore;
-    private String repositorSupDateStandardDate;
-    private String repositorSupDateLang;
-    private String repositorSupRule;
-    private String repositorSupRuleLang;
-    private String adminunit;
-    private String adminunitLang;
-    private String building;
-    private String buildingLang;
-    private String repositorarea;
-    private String repositorareaUnit;
-    private String lengthshelf;
-    private String lengthshelfUnit;
-    private String holdings;
-    private String holdingsLang;
-    private String holdingsDate;
-    private String holdingsDateLocalType;
-    private String holdingsDateNotAfter;
-    private String holdingsDateNotBefore;
-    private String holdingsDateStandardDate;
-    private String holdingsDateLang;
-    private String holdingsDateRangeLocalType;
-    private String holdingsDateRangeFromDate;
-    private String holdingsDateRangeFromDateNoAfter;
-    private String holdingsDateRangeFromDateNoBefore;
-    private String holdingsDateRangeFromDateStandardDate;
-    private String holdingsDateRangeFromDateLang;
-    private String holdingsDateRangeToDate;
-    private String holdingsDateRangeToDateNoAfter;
-    private String holdingsDateRangeToDateNoBefore;
-    private String holdingsDateRangeToDateStandardDate;
-    private String holdingsDateRangeToDateLang;
-    private String extent;
-    private String extentUnit;
-    
+	private String repositorFoundDateNotAfter;
+	private String repositorFoundDateNotBefore;
+	private String repositorFoundDateStandardDate;
+	private String repositorFoundDateLang;
+	private String repositorFoundRule;
+	private String repositorFoundRuleLang;
+	private String repositorSupDate;
+	private String repositorSupDateLocalType;
+	private String repositorSupDateNotAfter;
+	private String repositorSupDateNotBefore;
+	private String repositorSupDateStandardDate;
+	private String repositorSupDateLang;
+	private String repositorSupRule;
+	private String repositorSupRuleLang;
+	private String adminunit;
+	private String adminunitLang;
+	private String building;
+	private String buildingLang;
+	private String repositorarea;
+	private String repositorareaUnit;
+	private String lengthshelf;
+	private String lengthshelfUnit;
+	private String holdings;
+	private String holdingsLang;
+	private String holdingsDate;
+	private String holdingsDateLocalType;
+	private String holdingsDateNotAfter;
+	private String holdingsDateNotBefore;
+	private String holdingsDateStandardDate;
+	private String holdingsDateLang;
+	private String holdingsDateRangeLocalType;
+	private String holdingsDateRangeFromDate;
+	private String holdingsDateRangeFromDateNoAfter;
+	private String holdingsDateRangeFromDateNoBefore;
+	private String holdingsDateRangeFromDateStandardDate;
+	private String holdingsDateRangeFromDateLang;
+	private String holdingsDateRangeToDate;
+	private String holdingsDateRangeToDateNoAfter;
+	private String holdingsDateRangeToDateNoBefore;
+	private String holdingsDateRangeToDateStandardDate;
+	private String holdingsDateRangeToDateLang;
+	private String extent;
+	private String extentUnit;
+
 	// Control.
-    private String agentLang;
-    private String agencyCode;
-    private String language;
-    private String languageDeclaration;
-    private String script;
-    private List<String> abbreviation;
-    private List<String> citation;
+	private String agentLang;
+	private String agencyCode;
+	private String language;
+	private String languageDeclaration;
+	private String script;
+	private List<String> abbreviation;
+	private List<String> citation;
 
 	// Relations.
-    private String resourceRelationType;
-    private String resourceRelationLang;
-    private List<String> yiResourceRelationLang;
-    private String resourceRelationrelationEntryLocalType;
-    private String resourceRelationrelationEntryScriptCode;
-    private String resourceRelationrelationEntryTransliteration;
-    private String resourceRelationrelationEntryLang;
-    private String resourceRelationrelationEntryDescription;
-    private String resourceRelationrelationEntryDescriptionLang;
-    private String eagRelationType;
-    private String eagRelationHref;
-    private String eagRelationLang;
-    private String eagRelationrelationEntry;
-    private String eagRelationrelationEntryLocalType;
-    private String eagRelationrelationEntryScriptCode;
-    private String eagRelationrelationEntryTransliteration;
-    private String eagRelationrelationEntryLang;
-    private String eagRelationrelationEntryDescription;
-    private String eagRelationrelationEntryDescriptionLang;
+	private String resourceRelationType;
+	private String resourceRelationLang;
+	private List<String> yiResourceRelationLang;
+	private String resourceRelationrelationEntryLocalType;
+	private String resourceRelationrelationEntryScriptCode;
+	private String resourceRelationrelationEntryTransliteration;
+	private String resourceRelationrelationEntryLang;
+	private String resourceRelationrelationEntryDescription;
+	private String resourceRelationrelationEntryDescriptionLang;
+	private String eagRelationType;
+	private String eagRelationHref;
+	private String eagRelationLang;
+	private String eagRelationrelationEntry;
+	private String eagRelationrelationEntryLocalType;
+	private String eagRelationrelationEntryScriptCode;
+	private String eagRelationrelationEntryTransliteration;
+	private String eagRelationrelationEntryLang;
+	private String eagRelationrelationEntryDescription;
+	private String eagRelationrelationEntryDescriptionLang;
     
 	public EAG2012Loader(Integer aiId) {
 		this.aiId = aiId;
@@ -346,9 +387,9 @@ public class EAG2012Loader{
 
 			JAXBContext jaxbContext = JAXBContext.newInstance(Eag.class);
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            eag = (Eag) jaxbUnmarshaller.unmarshal(eagStream);
+			eag = (Eag) jaxbUnmarshaller.unmarshal(eagStream);
 
-            eagStream.close();			
+			eagStream.close();
 		} catch (JAXBException jaxbe) {
 			log.info(jaxbe.getMessage());
 		} catch (IOException ioe) {
@@ -1300,7 +1341,7 @@ public class EAG2012Loader{
 		if (this.yiClosingLang == null) {
 			this.yiClosingLang = new ArrayList<String>();
 		}
-		return yiClosingLang;
+		return this.yiClosingLang;
 	}
 
 	/**
@@ -1402,13 +1443,37 @@ public class EAG2012Loader{
 		this.accessibilityLang = accessibilityLang;
 	}
 	/**
+	 * @return the yiAccessibilityQuestion
+	 */
+	public List<String> getYiAccessibilityQuestion() {
+		if (this.yiAccessibilityQuestion == null) {
+			this.yiAccessibilityQuestion = new ArrayList<String>();
+		}
+		return this.yiAccessibilityQuestion;
+	}
+
+	/**
+	 * @param yiAccessibilityQuestion the yiAccessibilityQuestion to set
+	 */
+	public void setYiAccessibilityQuestion(List<String> yiAccessibilityQuestion) {
+		this.yiAccessibilityQuestion = yiAccessibilityQuestion;
+	}
+
+	/**
+	 * @param yiAccessibilityQuestion the yiAccessibilityQuestion to add
+	 */
+	public void addYiAccessibilityQuestion(String yiAccessibilityQuestion) {
+		this.getYiAccessibilityQuestion().add(yiAccessibilityQuestion);
+	}
+
+	/**
 	 * @return the yiAccessibility
 	 */
 	public List<String> getYiAccessibility() {
 		if (this.yiAccessibility == null) {
 			this.yiAccessibility = new ArrayList<String>();
 		}
-		return yiAccessibility;
+		return this.yiAccessibility;
 	}
 
 	/**
@@ -1533,6 +1598,142 @@ public class EAG2012Loader{
 		this.getYiResourceRelationLang().add(yiResourceRelationLang);
 	}
 
+	/**
+	 * @return the yiNumberOfVisitorsAddress
+	 */
+	public List<String> getYiNumberOfVisitorsAddress() {
+		if (this.yiNumberOfVisitorsAddress == null) {
+			this.yiNumberOfVisitorsAddress = new ArrayList<String>();
+		}
+		return this.yiNumberOfVisitorsAddress;
+	}
+
+	/**
+	 * @param yiNumberOfVisitorsAddress the yiNumberOfVisitorsAddress to set
+	 */
+	public void setYiNumberOfVisitorsAddress(List<String> yiNumberOfVisitorsAddress) {
+		this.yiNumberOfVisitorsAddress = yiNumberOfVisitorsAddress;
+	}
+
+	/**
+	 * @param yiNumberOfVisitorsAddress the yiNumberOfVisitorsAddress to add
+	 */
+	public void addYiNumberOfVisitorsAddress(String yiNumberOfVisitorsAddress) {
+		this.getYiNumberOfVisitorsAddress().add(yiNumberOfVisitorsAddress);
+	}
+
+	/**
+	 * @return the yiNumberOfPostalAddress
+	 */
+	public List<String> getYiNumberOfPostalAddress() {
+		if (this.yiNumberOfPostalAddress == null) {
+			this.yiNumberOfPostalAddress = new ArrayList<String>();
+		}
+		return this.yiNumberOfPostalAddress;
+	}
+
+	/**
+	 * @param yiNumberOfPostalAddress the yiNumberOfPostalAddress to set
+	 */
+	public void setYiNumberOfPostalAddress(List<String> yiNumberOfPostalAddress) {
+		this.yiNumberOfPostalAddress = yiNumberOfPostalAddress;
+	}
+
+	/**
+	 * @param yiNumberOfPostalAddress the yiNumberOfPostalAddress to add
+	 */
+	public void addYiNumberOfPostalAddress(String yiNumberOfPostalAddress) {
+		this.getYiNumberOfPostalAddress().add(yiNumberOfPostalAddress);
+	}
+
+	/**
+	 * @return the yiNumberOfEmailAddress
+	 */
+	public List<String> getYiNumberOfEmailAddress() {
+		if (this.yiNumberOfEmailAddress == null) {
+			this.yiNumberOfEmailAddress = new ArrayList<String>();
+		}
+		return this.yiNumberOfEmailAddress;
+	}
+
+	/**
+	 * @param yiNumberOfEmailAddress the yiNumberOfEmailAddress to set
+	 */
+	public void setYiNumberOfEmailAddress(List<String> yiNumberOfEmailAddress) {
+		this.yiNumberOfEmailAddress = yiNumberOfEmailAddress;
+	}
+
+	/**
+	 * @param yiNumberOfEmailAddress the yiNumberOfEmailAddress to add
+	 */
+	public void addYiNumberOfEmailAddress(String yiNumberOfEmailAddress) {
+		this.getYiNumberOfEmailAddress().add(yiNumberOfEmailAddress);
+	}
+
+	/**
+	 * @return the yiNumberOfWebpageAddress
+	 */
+	public List<String> getYiNumberOfWebpageAddress() {
+		if (this.yiNumberOfWebpageAddress == null) {
+			this.yiNumberOfWebpageAddress = new ArrayList<String>();
+		}
+		return this.yiNumberOfWebpageAddress;
+	}
+
+	/**
+	 * @param yiNumberOfWebpageAddress the yiNumberOfWebpageAddress to set
+	 */
+	public void setYiNumberOfWebpageAddress(List<String> yiNumberOfWebpageAddress) {
+		this.yiNumberOfWebpageAddress = yiNumberOfWebpageAddress;
+	}
+
+	/**
+	 * @param yiNumberOfWebpageAddress the yiNumberOfWebpageAddress to add
+	 */
+	public void addYiNumberOfWebpageAddress(String yiNumberOfWebpageAddress) {
+		this.getYiNumberOfWebpageAddress().add(yiNumberOfWebpageAddress);
+	}
+
+	/**
+	 * @return the numberOfRepositories
+	 */
+	public int getNumberOfRepositories() {
+		return this.numberOfRepositories;
+	}
+
+	/**
+	 * @param numberOfRepositories the numberOfRepositories to set
+	 */
+	public void setNumberOfRepositories(int numberOfRepositories) {
+		this.numberOfRepositories = numberOfRepositories;
+	}
+
+// TODO:
+//	/**
+//	 * @return the numberOfRepositories
+//	 */
+//	public List<String> getNumberOfRepositories() {
+//		if (this.numberOfRepositories == null) {
+//			this.numberOfRepositories = new ArrayList<String>();
+//		}
+//		return this.numberOfRepositories;
+//	}
+//
+//	/**
+//	 * @param numberOfRepositories the numberOfRepositories to set
+//	 */
+//	public void setNumberOfRepositories(List<String> numberOfRepositories) {
+//		this.numberOfRepositories = numberOfRepositories;
+//	}
+//
+//	/**
+//	 * @param numberOfRepositories the numberOfRepositories to add
+//	 */
+//	public void addNumberOfRepositories(String numberOfRepositories) {
+//		this.getNumberOfRepositories().add(numberOfRepositories);
+//	}
+//	FIN TODO:
+
 	public String getResourceRelationType() {
 		return this.resourceRelationType;
 	}
@@ -1594,6 +1795,54 @@ public class EAG2012Loader{
 
 	public void setRecordIdISIL(String recordIdISIL) {
 		this.recordIdISIL = recordIdISIL;
+	}
+
+	/**
+	 * @return the repositoryName
+	 */
+	public List<List<String>> getRepositoryName() {
+		if (this.repositoryName == null) {
+			this.repositoryName = new ArrayList<List<String>>();
+		}
+		return this.repositoryName;
+	}
+
+	/**
+	 * @param repositoryName the repositoryName to set
+	 */
+	public void setRepositoryName(List<List<String>> repositoryName) {
+		this.repositoryName = repositoryName;
+	}
+
+	/**
+	 * @param repositoryName the repositoryName to add
+	 */
+	public void addRepositoryName(List<String> repositoryName) {
+		this.getRepositoryName().add(repositoryName);
+	}
+
+	/**
+	 * @return the repositoryRole
+	 */
+	public List<List<String>> getRepositoryRole() {
+		if (this.repositoryRole == null) {
+			this.repositoryRole = new ArrayList<List<String>>();
+		}
+		return this.repositoryRole;
+	}
+
+	/**
+	 * @param repositoryRole the repositoryRole to set
+	 */
+	public void setRepositoryRole(List<List<String>> repositoryRole) {
+		this.repositoryRole = repositoryRole;
+	}
+
+	/**
+	 * @param repositoryRole the repositoryRole to add
+	 */
+	public void addRepositoryRole(List<String> repositoryRole) {
+		this.getRepositoryRole().add(repositoryRole);
 	}
 
 	/**
@@ -1733,6 +1982,806 @@ public class EAG2012Loader{
 	public void addRepositoryType(String repositoryType) {
 		this.getRepositoryType().add(repositoryType);
 	}
+
+	/**
+	 * @return the contactLatitude
+	 */
+	public List<List<String>> getContactLatitude() {
+        if (this.contactLatitude == null) {
+        	this.contactLatitude = new ArrayList<List<String>>();
+        }
+		return this.contactLatitude;
+	}
+
+	/**
+	 * @param contactLatitude the contactLatitude to set
+	 */
+	public void setContactLatitude(List<List<String>> contactLatitude) {
+		this.contactLatitude = contactLatitude;
+	}
+
+	/**
+	 * @param contactLatitude the contactLatitude to add
+	 */
+	public void addContactLatitude(List<String> contactLatitude) {
+		this.getContactLatitude().add(contactLatitude);
+	}
+
+	/**
+	 * @return the contactLongitude
+	 */
+	public List<List<String>> getContactLongitude() {
+        if (this.contactLongitude == null) {
+        	this.contactLongitude = new ArrayList<List<String>>();
+        }
+		return this.contactLongitude;
+	}
+
+	/**
+	 * @param contactLongitude the contactLongitude to set
+	 */
+	public void setContactLongitude(List<List<String>> contactLongitude) {
+		this.contactLongitude = contactLongitude;
+	}
+
+	/**
+	 * @param contactLongitude the contactLongitude to add
+	 */
+	public void addContactLongitude(List<String> contactLongitude) {
+		this.getContactLongitude().add(contactLongitude);
+	}
+
+	/**
+	 * @return the contactCountry
+	 */
+	public List<List<String>> getContactCountry() {
+        if (this.contactCountry == null) {
+        	this.contactCountry = new ArrayList<List<String>>();
+        }
+		return this.contactCountry;
+	}
+
+	/**
+	 * @param contactCountry the contactCountry to set
+	 */
+	public void setContactCountry(List<List<String>> contactCountry) {
+		this.contactCountry = contactCountry;
+	}
+
+	/**
+	 * @param contactCountry the contactCountry to add
+	 */
+	public void addContactCountry(List<String> contactCountry) {
+		this.getContactCountry().add(contactCountry);
+	}
+
+	/**
+	 * @return the contactCountryLang
+	 */
+	public List<List<String>> getContactCountryLang() {
+        if (this.contactCountryLang == null) {
+        	this.contactCountryLang = new ArrayList<List<String>>();
+        }
+		return this.contactCountryLang;
+	}
+
+	/**
+	 * @param contactCountryLang the contactCountryLang to set
+	 */
+	public void setContactCountryLang(List<List<String>> contactCountryLang) {
+		this.contactCountryLang = contactCountryLang;
+	}
+
+	/**
+	 * @param contactCountryLang the contactCountryLang to add
+	 */
+	public void addContactCountryLang(List<String> contactCountryLang) {
+		this.getContactCountryLang().add(contactCountryLang);
+	}
+
+	/**
+	 * @return the contactFirstdem
+	 */
+	public List<List<String>> getContactFirstdem() {
+        if (this.contactFirstdem == null) {
+        	this.contactFirstdem = new ArrayList<List<String>>();
+        }
+		return this.contactFirstdem;
+	}
+
+	/**
+	 * @param contactFirstdem the contactFirstdem to set
+	 */
+	public void setContactFirstdem(List<List<String>> contactFirstdem) {
+		this.contactFirstdem = contactFirstdem;
+	}
+
+	/**
+	 * @param contactFirstdem the contactFirstdem to add
+	 */
+	public void addContactFirstdem(List<String> contactFirstdem) {
+		this.getContactFirstdem().add(contactFirstdem);
+	}
+
+	/**
+	 * @return the contactFirstdemLang
+	 */
+	public List<List<String>> getContactFirstdemLang() {
+        if (this.contactFirstdemLang == null) {
+        	this.contactFirstdemLang = new ArrayList<List<String>>();
+        }
+		return this.contactFirstdemLang;
+	}
+
+	/**
+	 * @param contactFirstdemLang the contactFirstdemLang to set
+	 */
+	public void setContactFirstdemLang(List<List<String>> contactFirstdemLang) {
+		this.contactFirstdemLang = contactFirstdemLang;
+	}
+
+	/**
+	 * @param contactFirstdemLang the contactFirstdemLang to add
+	 */
+	public void addContactFirstdemLang(List<String> contactFirstdemLang) {
+		this.getContactFirstdemLang().add(contactFirstdemLang);
+	}
+
+	/**
+	 * @return the contactSecondem
+	 */
+	public List<List<String>> getContactSecondem() {
+        if (this.contactSecondem == null) {
+        	this.contactSecondem = new ArrayList<List<String>>();
+        }
+		return this.contactSecondem;
+	}
+
+	/**
+	 * @param contactSecondem the contactSecondem to set
+	 */
+	public void setContactSecondem(List<List<String>> contactSecondem) {
+		this.contactSecondem = contactSecondem;
+	}
+
+	/**
+	 * @param contactSecondem the contactSecondem to add
+	 */
+	public void addContactSecondem(List<String> contactSecondem) {
+		this.getContactSecondem().add(contactSecondem);
+	}
+
+	/**
+	 * @return the contactSecondemLang
+	 */
+	public List<List<String>> getContactSecondemLang() {
+        if (this.contactSecondemLang == null) {
+        	this.contactSecondemLang = new ArrayList<List<String>>();
+        }
+		return this.contactSecondemLang;
+	}
+
+	/**
+	 * @param contactSecondemLang the contactSecondemLang to set
+	 */
+	public void setContactSecondemLang(List<List<String>> contactSecondemLang) {
+		this.contactSecondemLang = contactSecondemLang;
+	}
+
+	/**
+	 * @param contactSecondemLang the contactSecondemLang to add
+	 */
+	public void addContactSecondemLang(List<String> contactSecondemLang) {
+		this.getContactSecondemLang().add(contactSecondemLang);
+	}
+
+	/**
+	 * @return the contactMunicipality
+	 */
+	public List<List<String>> getContactMunicipality() {
+        if (this.contactMunicipality == null) {
+        	this.contactMunicipality = new ArrayList<List<String>>();
+        }
+		return this.contactMunicipality;
+	}
+
+	/**
+	 * @param contactMunicipality the contactMunicipality to set
+	 */
+	public void setContactMunicipality(List<List<String>> contactMunicipality) {
+		this.contactMunicipality = contactMunicipality;
+	}
+
+	/**
+	 * @param contactMunicipality the contactMunicipality to add
+	 */
+	public void addContactMunicipality(List<String> contactMunicipality) {
+		this.getContactMunicipality().add(contactMunicipality);
+	}
+
+	/**
+	 * @return the contactMunicipalityLang
+	 */
+	public List<List<String>> getContactMunicipalityLang() {
+        if (this.contactMunicipalityLang == null) {
+        	this.contactMunicipalityLang = new ArrayList<List<String>>();
+        }
+		return this.contactMunicipalityLang;
+	}
+
+	/**
+	 * @param contactMunicipalityLang the contactMunicipalityLang to set
+	 */
+	public void setContactMunicipalityLang(
+			List<List<String>> contactMunicipalityLang) {
+		this.contactMunicipalityLang = contactMunicipalityLang;
+	}
+
+	/**
+	 * @param contactMunicipalityLang the contactMunicipalityLang to add
+	 */
+	public void addContactMunicipalityLang(List<String> contactMunicipalityLang) {
+		this.getContactMunicipalityLang().add(contactMunicipalityLang);
+	}
+
+	/**
+	 * @return the contactLocalentity
+	 */
+	public List<List<String>> getContactLocalentity() {
+        if (this.contactLocalentity == null) {
+        	this.contactLocalentity = new ArrayList<List<String>>();
+        }
+		return this.contactLocalentity;
+	}
+
+	/**
+	 * @param contactLocalentity the contactLocalentity to set
+	 */
+	public void setContactLocalentity(List<List<String>> contactLocalentity) {
+		this.contactLocalentity = contactLocalentity;
+	}
+
+	/**
+	 * @param contactLocalentity the contactLocalentity to add
+	 */
+	public void addContactLocalentity(List<String> contactLocalentity) {
+		this.getContactLocalentity().add(contactLocalentity);
+	}
+
+	/**
+	 * @return the contactLocalentityLang
+	 */
+	public List<List<String>> getContactLocalentityLang() {
+        if (this.contactLocalentityLang == null) {
+        	this.contactLocalentityLang = new ArrayList<List<String>>();
+        }
+		return this.contactLocalentityLang;
+	}
+
+	/**
+	 * @param contactLocalentityLang the contactLocalentityLang to set
+	 */
+	public void setContactLocalentityLang(List<List<String>> contactLocalentityLang) {
+		this.contactLocalentityLang = contactLocalentityLang;
+	}
+
+	/**
+	 * @param contactLocalentityLang the contactLocalentityLang to add
+	 */
+	public void addContactLocalentityLang(List<String> contactLocalentityLang) {
+		this.getContactLocalentityLang().add(contactLocalentityLang);
+	}
+
+	/**
+	 * @return the contactStreet
+	 */
+	public List<List<String>> getContactStreet() {
+        if (this.contactStreet == null) {
+        	this.contactStreet = new ArrayList<List<String>>();
+        }
+		return this.contactStreet;
+	}
+
+	/**
+	 * @param contactStreet the contactStreet to set
+	 */
+	public void setContactStreet(List<List<String>> contactStreet) {
+		this.contactStreet = contactStreet;
+	}
+
+	/**
+	 * @param contactStreet the contactStreet to add
+	 */
+	public void addContactStreet(List<String> contactStreet) {
+		this.getContactStreet().add(contactStreet);
+	}
+
+	/**
+	 * @return the contactStreetLang
+	 */
+	public List<List<String>> getContactStreetLang() {
+        if (this.contactStreetLang == null) {
+        	this.contactStreetLang = new ArrayList<List<String>>();
+        }
+		return this.contactStreetLang;
+	}
+
+	/**
+	 * @param contactStreetLang the contactStreetLang to set
+	 */
+	public void setContactStreetLang(List<List<String>> contactStreetLang) {
+		this.contactStreetLang = contactStreetLang;
+	}
+
+	/**
+	 * @param contactStreetLang the contactStreetLang to add
+	 */
+	public void addContactStreetLang(List<String> contactStreetLang) {
+		this.getContactStreetLang().add(contactStreetLang);
+	}
+
+	/**
+	 * @return the contactPostalCountry
+	 */
+	public List<List<String>> getContactPostalCountry() {
+        if (this.contactPostalCountry == null) {
+        	this.contactPostalCountry = new ArrayList<List<String>>();
+        }
+		return this.contactPostalCountry;
+	}
+
+	/**
+	 * @param contactPostalCountry the contactPostalCountry to set
+	 */
+	public void setContactPostalCountry(List<List<String>> contactPostalCountry) {
+		this.contactPostalCountry = contactPostalCountry;
+	}
+
+	/**
+	 * @param contactPostalCountry the contactPostalCountry to add
+	 */
+	public void addContactPostalCountry(List<String> contactPostalCountry) {
+		this.getContactPostalCountry().add(contactPostalCountry);
+	}
+
+	/**
+	 * @return the contactPostalCountryLang
+	 */
+	public List<List<String>> getContactPostalCountryLang() {
+        if (this.contactPostalCountryLang == null) {
+        	this.contactPostalCountryLang = new ArrayList<List<String>>();
+        }
+		return this.contactPostalCountryLang;
+	}
+
+	/**
+	 * @param contactPostalCountryLang the contactPostalCountryLang to set
+	 */
+	public void setContactPostalCountryLang(
+			List<List<String>> contactPostalCountryLang) {
+		this.contactPostalCountryLang = contactPostalCountryLang;
+	}
+
+	/**
+	 * @param contactPostalCountryLang the contactPostalCountryLang to add
+	 */
+	public void addContactPostalCountryLang(List<String> contactPostalCountryLang) {
+		this.getContactPostalCountryLang().add(contactPostalCountryLang);
+	}
+
+	/**
+	 * @return the contactPostalMunicipality
+	 */
+	public List<List<String>> getContactPostalMunicipality() {
+        if (this.contactPostalMunicipality == null) {
+        	this.contactPostalMunicipality = new ArrayList<List<String>>();
+        }
+		return this.contactPostalMunicipality;
+	}
+
+	/**
+	 * @param contactPostalMunicipality the contactPostalMunicipality to set
+	 */
+	public void setContactPostalMunicipality(
+			List<List<String>> contactPostalMunicipality) {
+		this.contactPostalMunicipality = contactPostalMunicipality;
+	}
+
+	/**
+	 * @param contactPostalMunicipality the contactPostalMunicipality to add
+	 */
+	public void addContactPostalMunicipality(List<String> contactPostalMunicipality) {
+		this.getContactPostalMunicipality().add(contactPostalMunicipality);
+	}
+
+	/**
+	 * @return the contactPostalMunicipalityLang
+	 */
+	public List<List<String>> getContactPostalMunicipalityLang() {
+        if (this.contactPostalMunicipalityLang == null) {
+        	this.contactPostalMunicipalityLang = new ArrayList<List<String>>();
+        }
+		return this.contactPostalMunicipalityLang;
+	}
+
+	/**
+	 * @param contactPostalMunicipalityLang the contactPostalMunicipalityLang to set
+	 */
+	public void setContactPostalMunicipalityLang(
+			List<List<String>> contactPostalMunicipalityLang) {
+		this.contactPostalMunicipalityLang = contactPostalMunicipalityLang;
+	}
+
+	/**
+	 * @param contactPostalMunicipalityLang the contactPostalMunicipalityLang to add
+	 */
+	public void addContactPostalMunicipalityLang(List<String> contactPostalMunicipalityLang) {
+		this.getContactPostalMunicipalityLang().add(contactPostalMunicipalityLang);
+	}
+
+	/**
+	 * @return the contactPostalStreet
+	 */
+	public List<List<String>> getContactPostalStreet() {
+        if (this.contactPostalStreet == null) {
+        	this.contactPostalStreet = new ArrayList<List<String>>();
+        }
+		return this.contactPostalStreet;
+	}
+
+	/**
+	 * @param contactPostalStreet the contactPostalStreet to set
+	 */
+	public void setContactPostalStreet(List<List<String>> contactPostalStreet) {
+		this.contactPostalStreet = contactPostalStreet;
+	}
+
+	/**
+	 * @param contactPostalStreet the contactPostalStreet to add
+	 */
+	public void addContactPostalStreet(List<String> contactPostalStreet) {
+		this.getContactPostalStreet().add(contactPostalStreet);
+	}
+
+	/**
+	 * @return the contactPostalStreetLang
+	 */
+	public List<List<String>> getContactPostalStreetLang() {
+        if (this.contactPostalStreetLang == null) {
+        	this.contactPostalStreetLang = new ArrayList<List<String>>();
+        }
+		return this.contactPostalStreetLang;
+	}
+
+	/**
+	 * @param contactPostalStreetLang the contactPostalStreetLang to set
+	 */
+	public void setContactPostalStreetLang(
+			List<List<String>> contactPostalStreetLang) {
+		this.contactPostalStreetLang = contactPostalStreetLang;
+	}
+
+	/**
+	 * @param contactPostalStreetLang the contactPostalStreetLang to add
+	 */
+	public void addContactPostalStreetLang(List<String> contactPostalStreetLang) {
+		this.getContactPostalStreetLang().add(contactPostalStreetLang);
+	}
+
+	/**
+	 * @return the contactContinent
+	 */
+	public List<List<String>> getContactContinent() {
+        if (this.contactContinent == null) {
+        	this.contactContinent = new ArrayList<List<String>>();
+        }
+		return this.contactContinent;
+	}
+
+	/**
+	 * @param contactContinent the contactContinent to set
+	 */
+	public void setContactContinent(List<List<String>> contactContinent) {
+		this.contactContinent = contactContinent;
+	}
+
+	/**
+	 * @param contactPostalStreetLang the contactPostalStreetLang to add
+	 */
+	public void addContactContinent(List<String> contactContinent) {
+		this.getContactContinent().add(contactContinent);
+	}
+
+	/**
+	 * @return the contactTelephone
+	 */
+	public List<List<String>> getContactTelephone() {
+        if (this.contactTelephone == null) {
+        	this.contactTelephone = new ArrayList<List<String>>();
+        }
+		return this.contactTelephone;
+	}
+
+	/**
+	 * @param contactTelephone the contactTelephone to set
+	 */
+	public void setContactTelephone(List<List<String>> contactTelephone) {
+		this.contactTelephone = contactTelephone;
+	}
+
+	/**
+	 * @param contactTelephone the contactTelephone to add
+	 */
+	public void addContactTelephone(List<String> contactTelephone) {
+		this.getContactTelephone().add(contactTelephone);
+	}
+
+	/**
+	 * @return the contactFax
+	 */
+	public List<List<String>> getContactFax() {
+        if (this.contactFax == null) {
+        	this.contactFax = new ArrayList<List<String>>();
+        }
+		return this.contactFax;
+	}
+
+	/**
+	 * @param contactFax the contactFax to set
+	 */
+	public void setContactFax(List<List<String>> contactFax) {
+		this.contactFax = contactFax;
+	}
+
+	/**
+	 * @param contactFax the contactFax to add
+	 */
+	public void addContactFax(List<String> contactFax) {
+		this.getContactFax().add(contactFax);
+	}
+
+	/**
+	 * @return the contactEmailHref
+	 */
+	public List<List<String>> getContactEmailHref() {
+        if (this.contactEmailHref == null) {
+        	this.contactEmailHref = new ArrayList<List<String>>();
+        }
+		return this.contactEmailHref;
+	}
+
+	/**
+	 * @param contactEmailHref the contactEmailHref to set
+	 */
+	public void setContactEmailHref(List<List<String>> contactEmailHref) {
+		this.contactEmailHref = contactEmailHref;
+	}
+
+	/**
+	 * @param contactEmailHref the contactEmailHref to add
+	 */
+	public void addContactEmailHref(List<String> contactEmailHref) {
+		this.getContactEmailHref().add(contactEmailHref);
+	}
+
+	/**
+	 * @return the contactEmailTitle
+	 */
+	public List<List<String>> getContactEmailTitle() {
+        if (this.contactEmailTitle == null) {
+        	this.contactEmailTitle = new ArrayList<List<String>>();
+        }
+		return this.contactEmailTitle;
+	}
+
+	/**
+	 * @param contactEmailTitle the contactEmailTitle to set
+	 */
+	public void setContactEmailTitle(List<List<String>> contactEmailTitle) {
+		this.contactEmailTitle = contactEmailTitle;
+	}
+
+	/**
+	 * @param contactEmailTitle the contactEmailTitle to add
+	 */
+	public void addContactEmailTitle(List<String> contactEmailTitle) {
+		this.getContactEmailTitle().add(contactEmailTitle);
+	}
+
+	/**
+	 * @return the contactEmailLang
+	 */
+	public List<List<String>> getContactEmailLang() {
+        if (this.contactEmailLang == null) {
+        	this.contactEmailLang = new ArrayList<List<String>>();
+        }
+		return this.contactEmailLang;
+	}
+
+	/**
+	 * @param contactEmailLang the contactEmailLang to set
+	 */
+	public void setContactEmailLang(List<List<String>> contactEmailLang) {
+		this.contactEmailLang = contactEmailLang;
+	}
+
+	/**
+	 * @param contactEmailLang the contactEmailLang to add
+	 */
+	public void addContactEmailLang(List<String> contactEmailLang) {
+		this.getContactEmailLang().add(contactEmailLang);
+	}
+
+	/**
+	 * @return the contactWebpageHref
+	 */
+	public List<List<String>> getContactWebpageHref() {
+        if (this.contactWebpageHref == null) {
+        	this.contactWebpageHref = new ArrayList<List<String>>();
+        }
+		return this.contactWebpageHref;
+	}
+
+	/**
+	 * @param contactWebpageHref the contactWebpageHref to set
+	 */
+	public void setContactWebpageHref(List<List<String>> contactWebpageHref) {
+		this.contactWebpageHref = contactWebpageHref;
+	}
+
+	/**
+	 * @param contactWebpageHref the contactWebpageHref to add
+	 */
+	public void addContactWebpageHref(List<String> contactWebpageHref) {
+		this.getContactWebpageHref().add(contactWebpageHref);
+	}
+
+	/**
+	 * @return the contactWebpageTitle
+	 */
+	public List<List<String>> getContactWebpageTitle() {
+        if (this.contactWebpageTitle == null) {
+        	this.contactWebpageTitle = new ArrayList<List<String>>();
+        }
+		return this.contactWebpageTitle;
+	}
+
+	/**
+	 * @param contactWebpageTitle the contactWebpageTitle to set
+	 */
+	public void setContactWebpageTitle(List<List<String>> contactWebpageTitle) {
+		this.contactWebpageTitle = contactWebpageTitle;
+	}
+
+	/**
+	 * @param contactWebpageTitle the contactWebpageTitle to add
+	 */
+	public void addContactWebpageTitle(List<String> contactWebpageTitle) {
+		this.getContactWebpageTitle().add(contactWebpageTitle);
+	}
+
+	/**
+	 * @return the contactWebpageLang
+	 */
+	public List<List<String>> getContactWebpageLang() {
+        if (this.contactWebpageLang == null) {
+        	this.contactWebpageLang = new ArrayList<List<String>>();
+        }
+		return this.contactWebpageLang;
+	}
+
+	/**
+	 * @param contactWebpageLang the contactWebpageLang to set
+	 */
+	public void setContactWebpageLang(List<List<String>> contactWebpageLang) {
+		this.contactWebpageLang = contactWebpageLang;
+	}
+
+	/**
+	 * @param contactWebpageLang the contactWebpageLang to add
+	 */
+	public void addContactWebpageLang(List<String> contactWebpageLang) {
+		this.getContactWebpageLang().add(contactWebpageLang);
+	}
+
+	/**
+	 * @return the contactNumberOfVisitorsAddress
+	 */
+	public List<List<String>> getContactNumberOfVisitorsAddress() {
+        if (this.contactNumberOfVisitorsAddress == null) {
+        	this.contactNumberOfVisitorsAddress = new ArrayList<List<String>>();
+        }
+		return this.contactNumberOfVisitorsAddress;
+	}
+
+	/**
+	 * @param contactNumberOfVisitorsAddress the contactNumberOfVisitorsAddress to set
+	 */
+	public void setContactNumberOfVisitorsAddress(
+			List<List<String>> contactNumberOfVisitorsAddress) {
+		this.contactNumberOfVisitorsAddress = contactNumberOfVisitorsAddress;
+	}
+
+	/**
+	 * @param contactNumberOfVisitorsAddress the contactNumberOfVisitorsAddress to add
+	 */
+	public void addContactNumberOfVisitorsAddress(List<String> contactNumberOfVisitorsAddress) {
+		this.getContactNumberOfVisitorsAddress().add(contactNumberOfVisitorsAddress);
+	}
+
+	/**
+	 * @return the contactNumberOfPostalAddress
+	 */
+	public List<List<String>> getContactNumberOfPostalAddress() {
+        if (this.contactNumberOfPostalAddress == null) {
+        	this.contactNumberOfPostalAddress = new ArrayList<List<String>>();
+        }
+		return this.contactNumberOfPostalAddress;
+	}
+
+	/**
+	 * @param contactNumberOfPostalAddress the contactNumberOfPostalAddress to set
+	 */
+	public void setContactNumberOfPostalAddress(
+			List<List<String>> contactNumberOfPostalAddress) {
+		this.contactNumberOfPostalAddress = contactNumberOfPostalAddress;
+	}
+
+	/**
+	 * @param contactNumberOfPostalAddress the contactNumberOfPostalAddress to add
+	 */
+	public void addContactNumberOfPostalAddress(List<String> contactNumberOfPostalAddress) {
+		this.getContactNumberOfPostalAddress().add(contactNumberOfPostalAddress);
+	}
+
+	/**
+	 * @return the contactNumberOfEmailAddress
+	 */
+	public List<List<String>> getContactNumberOfEmailAddress() {
+        if (this.contactNumberOfEmailAddress == null) {
+        	this.contactNumberOfEmailAddress = new ArrayList<List<String>>();
+        }
+		return this.contactNumberOfEmailAddress;
+	}
+
+	/**
+	 * @param contactNumberOfEmailAddress the contactNumberOfEmailAddress to set
+	 */
+	public void setContactNumberOfEmailAddress(List<List<String>> contactNumberOfEmailAddress) {
+		this.contactNumberOfEmailAddress = contactNumberOfEmailAddress;
+	}
+
+	/**
+	 * @param contactNumberOfEmailAddress the contactNumberOfEmailAddress to add
+	 */
+	public void addContactNumberOfEmailAddress(List<String> contactNumberOfEmailAddress) {
+		this.getContactNumberOfEmailAddress().add(contactNumberOfEmailAddress);
+	}
+
+	/**
+	 * @return the contactNumberOfWebpageAddress
+	 */
+	public List<List<String>> getContactNumberOfWebpageAddress() {
+        if (this.contactNumberOfWebpageAddress == null) {
+        	this.contactNumberOfWebpageAddress = new ArrayList<List<String>>();
+        }
+		return this.contactNumberOfWebpageAddress;
+	}
+
+	/**
+	 * @param contactNumberOfWebpageAddress the contactNumberOfWebpageAddress to set
+	 */
+	public void setContactNumberOfWebpageAddress(List<List<String>> contactNumberOfWebpageAddress) {
+		this.contactNumberOfWebpageAddress = contactNumberOfWebpageAddress;
+	}
+
+	/**
+	 * @param contactNumberOfWebpageAddress the contactNumberOfWebpageAddress to add
+	 */
+	public void addContactNumberOfWebpageAddress(List<String> contactNumberOfWebpageAddress) {
+		this.getContactNumberOfWebpageAddress().add(contactNumberOfWebpageAddress);
+	}
+
 	public String getFax() {
 		return this.fax;
 	}
@@ -2608,11 +3657,20 @@ public class EAG2012Loader{
 	 * Input method.
 	 */
 	public boolean loadValuesEAG2012() {
-		if (this.eag.getControl() == null && this.eag.getArchguide() == null
-				&& this.eag.getRelations() == null) {
+		if (this.eag == null
+				|| (this.eag.getControl() == null && this.eag.getArchguide() == null
+				&& this.eag.getRelations() == null)) {
 			this.setCountryCode(new ArchivalLandscape().getmyCountry());
 			this.setRecordId(Eag2012.generatesISOCode(this.getId()));
 			return false;
+		}
+
+		// Fill number of repositories.
+		if (this.eag != null && this.eag.getArchguide() != null
+				&& this.eag.getArchguide().getDesc() != null
+				&& this.eag.getArchguide().getDesc().getRepositories() != null
+				&& !this.eag.getArchguide().getDesc().getRepositories().getRepository().isEmpty()) {
+			this.setNumberOfRepositories(this.eag.getArchguide().getDesc().getRepositories().getRepository().size());
 		}
 
 		// Fill values of "Your institution" tab.
@@ -2638,15 +3696,17 @@ public class EAG2012Loader{
 	 */
 	private void loadYourinstitutionTabValues() {
 		// Person/institution responsible for the description.
-		if (!this.eag.getControl().getMaintenanceHistory().getMaintenanceEvent().isEmpty()) {
+		if (this.eag.getControl() != null && this.eag.getControl().getMaintenanceHistory() != null
+				&& !this.eag.getControl().getMaintenanceHistory().getMaintenanceEvent().isEmpty()) {
 			if (this.eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(this.eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size()-1).getAgent() != null) {
 				this.setAgent(this.eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(this.eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size()-1).getAgent().getContent());
 			}
 		}
 
 		// Country code.
-		if (this.eag.getArchguide().getIdentity().getRepositorid() != null
+		if (this.eag.getArchguide() != null
 				&& this.eag.getArchguide().getIdentity() != null
+				&& this.eag.getArchguide().getIdentity().getRepositorid() != null
 				&& this.eag.getArchguide().getIdentity().getRepositorid().getCountrycode() !=  null
 				&& !this.eag.getArchguide().getIdentity().getRepositorid().getCountrycode().isEmpty()) {
 			this.setCountryCode(this.eag.getArchguide().getIdentity().getRepositorid().getCountrycode());
@@ -2655,10 +3715,16 @@ public class EAG2012Loader{
 		}
 
 		// Identifier of the institution.
-		if (this.eag.getArchguide().getIdentity() != null
-				&& this.eag.getArchguide().getIdentity().getOtherRepositorId() != null) {
+		if (this.eag.getArchguide() != null
+				&& this.eag.getArchguide().getIdentity() != null
+				&& this.eag.getArchguide().getIdentity().getOtherRepositorId() != null
+				&& this.eag.getArchguide().getIdentity().getOtherRepositorId().getContent() != null
+				&& !this.eag.getArchguide().getIdentity().getOtherRepositorId().getContent().isEmpty()) {
 			this.setOtherRepositorId(this.eag.getArchguide().getIdentity().getOtherRepositorId().getContent());
-			if (this.eag.getControl().getRecordId() != null) {
+			if (this.eag.getControl() != null
+					&& this.eag.getControl().getRecordId() != null
+					&& this.eag.getControl().getRecordId().getValue() != null
+					&& !this.eag.getControl().getRecordId().getValue().isEmpty()) {
 				if (this.eag.getArchguide().getIdentity().getOtherRepositorId().getContent().equalsIgnoreCase(this.eag.getControl().getRecordId().getValue())) {
 					this.setRecordIdISIL(Eag2012.OPTION_YES);
 					this.setRecordId(this.eag.getControl().getRecordId().getValue());
@@ -2667,8 +3733,7 @@ public class EAG2012Loader{
 					this.setRecordId(this.getRecordId());
 					this.setSelfRecordId(this.getIdUsedInAPE());
 				}
-			}
-				
+			}	
 		} else {
 			// Load the recordId value
 			this.setOtherRepositorId(this.eag.getControl().getRecordId().getValue());
@@ -2676,10 +3741,12 @@ public class EAG2012Loader{
 		}
 
 		// Further IDs.
-		if (!this.eag.getControl().getOtherRecordId().isEmpty()) {
+		if (this.eag.getControl() != null
+				&& !this.eag.getControl().getOtherRecordId().isEmpty()) {
 			for (int i = 0; i < this.eag.getControl().getOtherRecordId().size(); i++) {
 				OtherRecordId otherRecordId = this.eag.getControl().getOtherRecordId().get(i);
-				if (!otherRecordId.getValue().equalsIgnoreCase(this.getRecordId())
+				if (otherRecordId.getValue() != null && !otherRecordId.getValue().isEmpty()
+						&& !otherRecordId.getValue().equalsIgnoreCase(this.getRecordId())
 						&& !otherRecordId.getValue().equalsIgnoreCase(this.getOtherRepositorId())) {
 					this.addOtherRecordId(otherRecordId.getValue());
 					if (otherRecordId.getLocalType() != null
@@ -2693,18 +3760,19 @@ public class EAG2012Loader{
 		}
 
 		// ID used in APE.
-		if (this.eag.getControl().getRecordId() != null) {
+		if (this.eag.getControl() != null 
+				&& this.eag.getControl().getRecordId() != null
+				&& this.eag.getControl().getRecordId().getValue() != null
+				&& !this.eag.getControl().getRecordId().getValue().isEmpty()) {
 			this.setRecordId(this.eag.getControl().getRecordId().getValue());
 		}
 
 		// Name of the institution.
-		if (!this.eag.getArchguide().getIdentity().getAutform().isEmpty()) {
+		if (this.eag.getArchguide() != null
+				&& this.eag.getArchguide().getIdentity() != null
+				&& !this.eag.getArchguide().getIdentity().getAutform().isEmpty()) {
 			for (int i = 0; i < this.eag.getArchguide().getIdentity().getAutform().size(); i++) {
 				Autform autform = this.eag.getArchguide().getIdentity().getAutform().get(i);
-//				if (autform!=null && autform.getLang()!=null && autform.getLang().equalsIgnoreCase(this.getCountryCode())) {
-//					this.setAutform(autform.getContent());
-//					this.setAutformLang((autform.getLang()!=null)?new Locale(LanguageConverter.get639_1Code(autform.getLang())).getISO3Language():null);
-//				}
 				if (autform != null && autform.getContent() != null && !autform.getContent().isEmpty()) {
 					this.addIdAutform(autform.getContent());
 					if (autform.getLang() != null && !autform.getLang().isEmpty()) {
@@ -2714,22 +3782,17 @@ public class EAG2012Loader{
 					}
 				}
 			}
-//			if (this.getAutform() == null || this.getAutform() == "") {
-				this.setAutform(this.eag.getArchguide().getIdentity().getAutform().get(0).getContent());
-				String lang = this.eag.getArchguide().getIdentity().getAutform().get(0).getLang();
-				this.setAutformLang(lang);
-//				this.setAutformLang((lang!=null)?new Locale(LanguageConverter.get639_1Code(lang)).getISO3Country():lang);
-//			}
+			// First name of the institution.
+			this.setAutform(this.eag.getArchguide().getIdentity().getAutform().get(0).getContent());
+			this.setAutformLang(this.eag.getArchguide().getIdentity().getAutform().get(0).getLang());
 		}
 
 		// Parallel name of the institution.
-		if (!this.eag.getArchguide().getIdentity().getParform().isEmpty()) {
+		if (this.eag.getArchguide() != null
+				&& this.eag.getArchguide().getIdentity() != null
+				&& !this.eag.getArchguide().getIdentity().getParform().isEmpty()) {
 			for (int i = 0; i < this.eag.getArchguide().getIdentity().getParform().size(); i++) {
 				Parform parform = this.eag.getArchguide().getIdentity().getParform().get(i);
-//				if (parform.getLang().equalsIgnoreCase(this.getCountryCode())) {
-//					this.setParform(parform.getContent());
-//					this.setParformLang(parform.getLang());
-//				}
 				if (parform != null && parform.getContent() != null && !parform.getContent().isEmpty()) {
 					this.addIdParform(parform.getContent());
 					if (parform.getLang() != null && !parform.getLang().isEmpty()) {
@@ -2739,104 +3802,24 @@ public class EAG2012Loader{
 					}
 				}
 			}
-//			if (this.getParform() == null || this.getParform() == "") {
-				this.setParform(this.eag.getArchguide().getIdentity().getParform().get(0).getContent());
-				this.setParformLang(this.eag.getArchguide().getIdentity().getParform().get(0).getLang());
-//			}
+			// First parallel name of the institution.
+			this.setParform(this.eag.getArchguide().getIdentity().getParform().get(0).getContent());
+			this.setParformLang(this.eag.getArchguide().getIdentity().getParform().get(0).getLang());
 		}
 
 		// Institution info.
-		if (this.eag.getArchguide().getDesc().getRepositories() != null) {
+		if (this.eag.getArchguide() != null && this.eag.getArchguide().getDesc() != null
+				&& this.eag.getArchguide().getDesc().getRepositories() != null) {
 			if (!this.eag.getArchguide().getDesc().getRepositories().getRepository().isEmpty()) {
 				// First repository equals institution.
 				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
 
-				// Visitor & Postal address.
-				if (!repository.getLocation().isEmpty()) {
-					for (int i = 0; i < repository.getLocation().size(); i++) {
-						Location location = repository.getLocation().get(i);
-						// TODO: Review for multiple translations.
-						if (location.getLocalType().equalsIgnoreCase(Eag2012.VISITORS_ADDRESS)) {
-							// Street.
-							if (location.getStreet() != null) {
-								if (location.getStreet().getContent() != null
-										&& !location.getStreet().getContent().isEmpty()) {
-									this.setStreet(location.getStreet().getContent());
-								}
-								if (location.getStreet().getLang() != null
-										&& !location.getStreet().getLang().isEmpty()) {
-									this.setStreetLang(location.getStreet().getLang());
-								} else {
-									this.setStreetLang(Eag2012.OPTION_NONE);
-								}
-							}
-							// City.
-							if (location.getMunicipalityPostalcode() != null) {
-								if (location.getMunicipalityPostalcode().getContent() != null
-										&& !location.getMunicipalityPostalcode().getContent().isEmpty()) {
-									this.setMunicipalityPostalcode(location.getMunicipalityPostalcode().getContent());
-								}
-								if (location.getMunicipalityPostalcode().getLang() != null
-										&& !location.getMunicipalityPostalcode().getLang().isEmpty()) {
-									this.setMunicipalityPostalcodeLang(location.getMunicipalityPostalcode().getLang());
-								} else {
-									this.setMunicipalityPostalcodeLang(Eag2012.OPTION_NONE);
-								}
-							}
-							// Country.
-							if (location.getCountry() != null) {
-								if (location.getCountry().getContent() != null
-										&& !location.getCountry().getContent().isEmpty()) {
-									this.setCountry(location.getCountry().getContent());
-								}
-								if (location.getCountry().getLang() != null
-										&& !location.getCountry().getLang().isEmpty()) {
-									this.setCountryLang(location.getCountry().getLang());
-								} else {
-									this.setCountryLang(Eag2012.OPTION_NONE);
-								}
-							}
-							// Latitude.
-							this.setLatitude(location.getLatitude());
-							// Longitude.
-							this.setLongitude(location.getLongitude());
-						}
-						// TODO: Review for multiple translations.
-						if (location.getLocalType().equalsIgnoreCase(Eag2012.POSTAL_ADDRESS)) {
-							// Postal street.
-							if (location.getStreet() != null) {
-								if (location.getStreet().getContent() != null
-										&& !location.getStreet().getContent().isEmpty()) {
-									this.setStreetPostal(location.getStreet().getContent());
-								}
-								if (location.getStreet().getLang() != null
-										&& !location.getStreet().getLang().isEmpty()) {
-									this.setStreetPostalLang(location.getStreet().getLang());
-								} else {
-									this.setStreetPostalLang(Eag2012.OPTION_NONE);
-								}
-							}
-							// Postal city.
-							if (location.getMunicipalityPostalcode() != null) {
-								if (location.getMunicipalityPostalcode().getContent() != null
-										&& !location.getMunicipalityPostalcode().getContent().isEmpty()) {
-									this.setMunicipalityPostalcodePostal(location.getMunicipalityPostalcode().getContent());
-								}
-								if (location.getMunicipalityPostalcode().getLang() != null
-										&& !location.getMunicipalityPostalcode().getLang().isEmpty()) {
-									this.setMunicipalityPostalcodePostalLang(location.getMunicipalityPostalcode().getLang());
-								} else {
-									this.setMunicipalityPostalcodePostalLang(Eag2012.OPTION_NONE);
-								}
-							}
-						}
-					}
-				}
 				// Visitor & Postal address for institution.
 				if (!repository.getLocation().isEmpty()) {
 					for (int i = 0; i < repository.getLocation().size(); i++) {
 						Location location = repository.getLocation().get(i);
 						if (location.getLocalType().equalsIgnoreCase(Eag2012.VISITORS_ADDRESS)) {
+							this.addYiNumberOfVisitorsAddress("");
 							// Street.
 							if (location.getStreet() != null) {
 								if (location.getStreet().getContent() != null
@@ -2863,7 +3846,8 @@ public class EAG2012Loader{
 								if (location.getMunicipalityPostalcode().getLang() != null
 										&& !location.getMunicipalityPostalcode().getLang().isEmpty()) {
 									this.addYiMunicipalityPostalcodeLang(location.getMunicipalityPostalcode().getLang());
-								} else if (location.getStreet().getLang() != null
+								} else if (location.getStreet() != null
+										&& location.getStreet().getLang() != null
 										&& !location.getStreet().getLang().isEmpty()) {
 									this.addYiMunicipalityPostalcodeLang(location.getStreet().getLang());
 								} else {
@@ -2881,7 +3865,8 @@ public class EAG2012Loader{
 								if (location.getCountry().getLang() != null
 										&& !location.getCountry().getLang().isEmpty()) {
 									this.addYiCountryLang(location.getCountry().getLang());
-								} else if (location.getStreet().getLang() != null
+								} else if (location.getStreet() != null
+										&& location.getStreet().getLang() != null
 										&& !location.getStreet().getLang().isEmpty()) {
 									this.addYiCountryLang(location.getStreet().getLang());
 								} else {
@@ -2902,6 +3887,7 @@ public class EAG2012Loader{
 							}
 						}
 						if (location.getLocalType().equalsIgnoreCase(Eag2012.POSTAL_ADDRESS)) {
+							this.addYiNumberOfPostalAddress("");
 							// Postal street.
 							if (location.getStreet() != null) {
 								if (location.getStreet().getContent() != null
@@ -2941,48 +3927,35 @@ public class EAG2012Loader{
 				}
 
 				// Continent.
-				if (repository.getGeogarea() != null) {
-					String geogareaValue = repository.getGeogarea().getValue();
-
-					if (Eag2012.OPTION_AFRICA_TEXT.equalsIgnoreCase(geogareaValue)) {
-						geogareaValue = Eag2012.OPTION_AFRICA;
-					} else if (Eag2012.OPTION_ANTARCTICA_TEXT.equalsIgnoreCase(geogareaValue)) {
-						geogareaValue = Eag2012.OPTION_ANTARCTICA;
-					} else if (Eag2012.OPTION_ASIA_TEXT.equalsIgnoreCase(geogareaValue)) {
-						geogareaValue = Eag2012.OPTION_ASIA;
-					} else if (Eag2012.OPTION_AUSTRALIA_TEXT.equalsIgnoreCase(geogareaValue)) {
-						geogareaValue = Eag2012.OPTION_AUSTRALIA;
-					} else if (Eag2012.OPTION_EUROPE_TEXT.equalsIgnoreCase(geogareaValue)) {
-						geogareaValue = Eag2012.OPTION_EUROPE;
-					} else if (Eag2012.OPTION_NORTH_AMERICA_TEXT.equalsIgnoreCase(geogareaValue)) {
-						geogareaValue = Eag2012.OPTION_NORTH_AMERICA;
-					} else if (Eag2012.OPTION_SOUTH_AMERICA_TEXT.equalsIgnoreCase(geogareaValue)) {
-						geogareaValue = Eag2012.OPTION_SOUTH_AMERICA;
-					}
-					
-					this.setGeogarea(geogareaValue);
+				if (repository.getGeogarea() != null
+						&& repository.getGeogarea().getValue() != null
+						&& !repository.getGeogarea().getValue().isEmpty()) {
+					this.setGeogarea(getGeogareaString(repository.getGeogarea().getValue()));
 				}
 
 				// Telephone.
 				if (!repository.getTelephone().isEmpty()) {
-					// TODO: Review for multiple values.
-					for (int i = 0; i < repository.getTelephone().size(); i++) {
-						this.setTelephone(repository.getTelephone().get(i).getContent());
-					}
+					this.setTelephone(repository.getTelephone().get(0).getContent());
 				}
 
 				// E-mail address.
 				if (!repository.getEmail().isEmpty()) {
-					// TODO: Review for multiple values.
-					for (int i = 0; i < repository.getEmail().size(); i++) {
-						this.setEmail(repository.getEmail().get(i).getHref());
-						this.setEmailTitle(repository.getEmail().get(i).getContent());
-						this.setEmailLang(repository.getEmail().get(i).getLang());
-					}
+//					// TODO: Review for multiple values.
+//					for (int i = 0; i < repository.getEmail().size(); i++) {
+//						this.setEmail(repository.getEmail().get(i).getHref());
+//						this.setEmailTitle(repository.getEmail().get(i).getContent());
+//						this.setEmailLang(repository.getEmail().get(i).getLang());
+//					}
 
 					// E-mail address for institution.
 					for (int i = 0; i < repository.getEmail().size(); i++) {
-						this.addYiEmail(repository.getEmail().get(i).getHref());
+						this.addYiNumberOfEmailAddress("");
+						if (repository.getEmail().get(i).getHref() != null
+								&& !repository.getEmail().get(i).getHref().isEmpty()) {
+							this.addYiEmail(repository.getEmail().get(i).getHref());
+						} else {
+							this.addYiEmail("");
+						}
 						if (repository.getEmail().get(i).getContent() != null
 								&& !repository.getEmail().get(i).getContent().isEmpty()) {
 							this.addYiEmailTitle(repository.getEmail().get(i).getContent());
@@ -3000,16 +3973,22 @@ public class EAG2012Loader{
 
 				// Webpage.
 				if (!repository.getWebpage().isEmpty()) {
-					// TODO: Review for multiple values.
-					for (int i = 0; i < repository.getWebpage().size(); i++) {
-						this.setWebpage(repository.getWebpage().get(i).getHref());
-						this.setWebpageTitle(repository.getWebpage().get(i).getContent());
-						this.setWebpageLang(repository.getWebpage().get(i).getLang());
-					}
+//					// TODO: Review for multiple values.
+//					for (int i = 0; i < repository.getWebpage().size(); i++) {
+//						this.setWebpage(repository.getWebpage().get(i).getHref());
+//						this.setWebpageTitle(repository.getWebpage().get(i).getContent());
+//						this.setWebpageLang(repository.getWebpage().get(i).getLang());
+//					}
 
 					// Webpage address for institution.
 					for (int i = 0; i < repository.getWebpage().size(); i++) {
-						this.addYiWebpage(repository.getWebpage().get(i).getHref());
+						this.addYiNumberOfWebpageAddress("");
+						if (repository.getWebpage().get(i).getHref() != null
+								&& !repository.getWebpage().get(i).getHref().isEmpty()) {
+							this.addYiWebpage(repository.getWebpage().get(i).getHref());
+						} else {
+							this.addYiWebpage("");
+						}
 						if (repository.getWebpage().get(i).getContent() != null
 								&& !repository.getWebpage().get(i).getContent().isEmpty()) {
 							this.addYiWebpageTitle(repository.getWebpage().get(i).getContent());
@@ -3036,9 +4015,17 @@ public class EAG2012Loader{
 							this.setOpening(timetable.getOpening().get(i).getContent());
 							this.setOpeningLang(timetable.getOpening().get(i).getLang());
 						}
+
 						// Opening times for institution.
 						for (int i = 0; i < timetable.getOpening().size(); i++) {
-							this.addYiOpening(timetable.getOpening().get(i).getContent());
+							if (!timetable.getOpening().isEmpty()
+									&& timetable.getOpening().size() >= i
+									&& timetable.getOpening().get(i).getContent() != null
+									&& !timetable.getOpening().get(i).getContent().isEmpty()) {
+								this.addYiOpening(timetable.getOpening().get(i).getContent());
+							} else {
+								this.addYiOpening("");
+							}
 							if (!timetable.getOpening().isEmpty()
 									&& timetable.getOpening().size() >= i
 									&& timetable.getOpening().get(i).getLang() != null
@@ -3048,7 +4035,6 @@ public class EAG2012Loader{
 								this.addYiOpeningLang(Eag2012.OPTION_NONE);
 							}
 						}
-						
 					}
 
 					// Closing dates.
@@ -3058,9 +4044,17 @@ public class EAG2012Loader{
 							this.setClosing(timetable.getClosing().get(i).getContent());
 							this.setClosingLang(timetable.getClosing().get(i).getLang());
 						}
+
 						// Closing dates for institution.
 						for (int i = 0; i < timetable.getClosing().size(); i++) {
-							this.addYiClosing(timetable.getClosing().get(i).getContent());
+							if (!timetable.getClosing().isEmpty()
+									&& timetable.getClosing().size() >= i
+									&& timetable.getClosing().get(i).getContent() != null
+									&& !timetable.getClosing().get(i).getContent().isEmpty()) {
+								this.addYiClosing(timetable.getClosing().get(i).getContent());
+							} else {
+								this.addYiClosing("");
+							}
 							if (!timetable.getClosing().isEmpty()
 									&& timetable.getClosing().size() >= i
 									&& timetable.getClosing().get(i).getLang() != null
@@ -3075,7 +4069,13 @@ public class EAG2012Loader{
 
 				// Accessible to the public.
 				if (repository.getAccess() != null) {
-					this.setAccessQuestion(repository.getAccess().getQuestion());
+					if (repository.getAccess().getQuestion() != null
+							&& !repository.getAccess().getQuestion().isEmpty()) {
+						this.setAccessQuestion(repository.getAccess().getQuestion());
+					} else {
+						this.setAccessQuestion(Eag2012.OPTION_NO);
+					}
+
 					if (!repository.getAccess().getRestaccess().isEmpty()) {
 						// TODO: Review for multiple values.
 						for (int i = 0; i < repository.getAccess().getRestaccess().size(); i++) {
@@ -3085,7 +4085,13 @@ public class EAG2012Loader{
 
 						// Accessible to the public for institution.
 						for (int i = 0; i < repository.getAccess().getRestaccess().size(); i++) {
-							this.addYiRestaccess(repository.getAccess().getRestaccess().get(i).getContent());
+							if (repository.getAccess().getRestaccess().size() >= i
+									&& repository.getAccess().getRestaccess().get(i).getContent() != null
+									&& !repository.getAccess().getRestaccess().get(i).getContent().isEmpty()) {
+								this.addYiRestaccess(repository.getAccess().getRestaccess().get(i).getContent());
+							} else {
+								this.addYiRestaccess("");
+							}
 							if (repository.getAccess().getRestaccess().size() >= i
 									&& repository.getAccess().getRestaccess().get(i).getLang() != null
 									&& !repository.getAccess().getRestaccess().get(i).getLang().isEmpty()) {
@@ -3111,6 +4117,13 @@ public class EAG2012Loader{
 
 					// Facilities for disabled people available for institution.
 					for (int i = 0; i < repository.getAccessibility().size(); i++) {
+						if (repository.getAccessibility().get(i).getQuestion() != null
+								&& !repository.getAccessibility().get(i).getQuestion().isEmpty()) {
+							this.addYiAccessibilityQuestion(repository.getAccessibility().get(i).getQuestion());
+						} else {
+							this.addYiAccessibilityQuestion(Eag2012.OPTION_NO);
+						}
+
 						if (repository.getAccessibility().get(i).getContent() != null
 								&& !repository.getAccessibility().get(i).getContent().isEmpty()) {
 							this.addYiAccessibility(repository.getAccessibility().get(i).getContent());
@@ -3128,7 +4141,7 @@ public class EAG2012Loader{
 		}
 
 		// Reference to your institution’s holdings guide.
-		if (this.eag.getRelations()!=null && this.eag.getRelations().getResourceRelation()!=null && !this.eag.getRelations().getResourceRelation().isEmpty()) {
+		if (this.eag.getRelations()!=null && !this.eag.getRelations().getResourceRelation().isEmpty()) {
 			// TODO: Review for multiple values.
 			for (int i = 0; i < this.eag.getRelations().getResourceRelation().size(); i++) {
 				this.setResourceRelationHref(this.eag.getRelations().getResourceRelation().get(i).getHref());
@@ -3142,8 +4155,15 @@ public class EAG2012Loader{
 			for (int i = 0; i < this.eag.getRelations().getResourceRelation().size(); i++) {
 				ResourceRelation resourceRelation = this.eag.getRelations().getResourceRelation().get(i);
 
-				if (Eag2012.OPTION_CREATOR_TEXT.equalsIgnoreCase(resourceRelation.getResourceRelationType())) {
-					this.addYiResourceRelationHref(resourceRelation.getHref());
+				if (resourceRelation.getResourceRelationType() != null
+						&& !resourceRelation.getResourceRelationType().isEmpty()
+						&& Eag2012.OPTION_CREATOR_TEXT.equalsIgnoreCase(resourceRelation.getResourceRelationType())) {
+					if (resourceRelation.getHref() != null
+							&& !resourceRelation.getHref().isEmpty()) {
+						this.addYiResourceRelationHref(resourceRelation.getHref());
+					} else {
+						this.addYiResourceRelationHref("");
+					}
 					if (resourceRelation.getRelationEntry() != null) {
 						if (resourceRelation.getRelationEntry().getContent() != null
 								&& !resourceRelation.getRelationEntry().getContent().isEmpty()) {
@@ -3169,7 +4189,8 @@ public class EAG2012Loader{
 	 */
 	private void loadIdentityTabValues() {
 		//  Formerly used names of the institution.
-		if (!this.eag.getArchguide().getIdentity().getNonpreform().isEmpty()) {
+		if (this.eag.getArchguide() != null && this.eag.getArchguide().getIdentity() != null
+				&& !this.eag.getArchguide().getIdentity().getNonpreform().isEmpty()) {
 			for (int i = 0; i < this.eag.getArchguide().getIdentity().getNonpreform().size(); i++) {
 				Nonpreform nonpreform = this.eag.getArchguide().getIdentity().getNonpreform().get(i);
 				if (nonpreform != null && !nonpreform.getContent().isEmpty()) {
@@ -3288,37 +4309,41 @@ public class EAG2012Loader{
 		}
 
 		// Select type of institution.
-		if (!this.eag.getArchguide().getIdentity().getRepositoryType().isEmpty()) {
+		if (this.eag.getArchguide() != null && this.eag.getArchguide().getIdentity() != null
+				&& !this.eag.getArchguide().getIdentity().getRepositoryType().isEmpty()) {
 			for (int i = 0; i < this.eag.getArchguide().getIdentity().getRepositoryType().size(); i++) {
-				String value = this.eag.getArchguide().getIdentity().getRepositoryType().get(i).getValue();
+				if (this.eag.getArchguide().getIdentity().getRepositoryType().get(i).getValue() != null
+						&& !this.eag.getArchguide().getIdentity().getRepositoryType().get(i).getValue().isEmpty()) {
+					String value = this.eag.getArchguide().getIdentity().getRepositoryType().get(i).getValue();
 
-				if (Eag2012.OPTION_NATIONAL_TEXT.equalsIgnoreCase(value)) {
-					value = Eag2012.OPTION_NATIONAL;
-				} else if (Eag2012.OPTION_REGIONAL_TEXT.equalsIgnoreCase(value)) {
-					value = Eag2012.OPTION_REGIONAL;
-				} else if (Eag2012.OPTION_COUNTY_TEXT.equalsIgnoreCase(value)) {
-					value = Eag2012.OPTION_COUNTY;
-				} else if (Eag2012.OPTION_MUNICIPAL_TEXT.equalsIgnoreCase(value)) {
-					value = Eag2012.OPTION_MUNICIPAL;
-				} else if (Eag2012.OPTION_SPECIALISED_TEXT.equalsIgnoreCase(value)) {
-					value = Eag2012.OPTION_SPECIALISED;
-				} else if (Eag2012.OPTION_PRIVATE_TEXT.equalsIgnoreCase(value)) {
-					value = Eag2012.OPTION_PRIVATE;
-				} else if (Eag2012.OPTION_CHURCH_TEXT.equalsIgnoreCase(value)) {
-					value = Eag2012.OPTION_CHURCH;
-				} else if (Eag2012.OPTION_BUSINESS_TEXT.equalsIgnoreCase(value)) {
-					value = Eag2012.OPTION_BUSINESS;
-				} else if (Eag2012.OPTION_UNIVERSITY_TEXT.equalsIgnoreCase(value)) {
-					value = Eag2012.OPTION_UNIVERSITY;
-				} else if (Eag2012.OPTION_MEDIA_TEXT.equalsIgnoreCase(value)) {
-					value = Eag2012.OPTION_MEDIA;
-				} else if (Eag2012.OPTION_POLITICAL_TEXT.equalsIgnoreCase(value)) {
-					value = Eag2012.OPTION_POLITICAL;
-				} else if (Eag2012.OPTION_CULTURAL_TEXT.equalsIgnoreCase(value)) {
-					value = Eag2012.OPTION_CULTURAL;
+					if (Eag2012.OPTION_NATIONAL_TEXT.equalsIgnoreCase(value)) {
+						value = Eag2012.OPTION_NATIONAL;
+					} else if (Eag2012.OPTION_REGIONAL_TEXT.equalsIgnoreCase(value)) {
+						value = Eag2012.OPTION_REGIONAL;
+					} else if (Eag2012.OPTION_COUNTY_TEXT.equalsIgnoreCase(value)) {
+						value = Eag2012.OPTION_COUNTY;
+					} else if (Eag2012.OPTION_MUNICIPAL_TEXT.equalsIgnoreCase(value)) {
+						value = Eag2012.OPTION_MUNICIPAL;
+					} else if (Eag2012.OPTION_SPECIALISED_TEXT.equalsIgnoreCase(value)) {
+						value = Eag2012.OPTION_SPECIALISED;
+					} else if (Eag2012.OPTION_PRIVATE_TEXT.equalsIgnoreCase(value)) {
+						value = Eag2012.OPTION_PRIVATE;
+					} else if (Eag2012.OPTION_CHURCH_TEXT.equalsIgnoreCase(value)) {
+						value = Eag2012.OPTION_CHURCH;
+					} else if (Eag2012.OPTION_BUSINESS_TEXT.equalsIgnoreCase(value)) {
+						value = Eag2012.OPTION_BUSINESS;
+					} else if (Eag2012.OPTION_UNIVERSITY_TEXT.equalsIgnoreCase(value)) {
+						value = Eag2012.OPTION_UNIVERSITY;
+					} else if (Eag2012.OPTION_MEDIA_TEXT.equalsIgnoreCase(value)) {
+						value = Eag2012.OPTION_MEDIA;
+					} else if (Eag2012.OPTION_POLITICAL_TEXT.equalsIgnoreCase(value)) {
+						value = Eag2012.OPTION_POLITICAL;
+					} else if (Eag2012.OPTION_CULTURAL_TEXT.equalsIgnoreCase(value)) {
+						value = Eag2012.OPTION_CULTURAL;
+					}
+
+					this.addRepositoryType(value);
 				}
-
-				this.addRepositoryType(value);
 			}
 		}
 	}
@@ -3328,119 +4353,391 @@ public class EAG2012Loader{
 	 */
 	private void loadContactTabValues() {
 		// Repositories info.
-		if (this.eag.getArchguide().getDesc().getRepositories() != null) {
-			if (!this.eag.getArchguide().getDesc().getRepositories().getRepository().isEmpty()) {
-				// TODO: Review for multiple repositories.
-				// First repository equals institution.
-				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
-
-				// Visitor & Postal address.
-				if (!repository.getLocation().isEmpty()) {
-					for (int i = 0; i < repository.getLocation().size(); i++) {
-						Location location = repository.getLocation().get(i);
-						// TODO: Review for multiple translations.
-						if (location.getLocalType().equalsIgnoreCase(Eag2012.VISITORS_ADDRESS)) {
-							// Street.
-							this.setStreet(location.getStreet().getContent());
-							this.setStreetLang(location.getStreet().getLang());
-							// City.
-							this.setMunicipalityPostalcode(location.getMunicipalityPostalcode().getContent());
-							this.setMunicipalityPostalcodeLang(location.getStreet().getLang());
-							// District/quarter in town.
-							if (location.getLocalentity() != null) {
-								this.setLocalentity(location.getLocalentity().getContent());
-								this.setLocalentityLang(location.getLocalentity().getLang());
-							}
-							//County/local authority.
-							if (location.getSecondem() != null) {
-								this.setSecondem(location.getSecondem().getContent());
-								this.setSecondemLang(location.getSecondem().getLang());
-							}
-							// Autonomous community / region.
-							if (location.getFirstdem() != null) {
-								this.setFirstdem(location.getFirstdem().getContent());
-								this.setFirstdemLang(location.getFirstdem().getLang());
-							}
-							// Country.
-							this.setCountry(location.getCountry().getContent());
-							this.setCountryLang(location.getCountry().getLang());
-							// Latitude.
-							this.setLatitude(location.getLatitude());
-							// Longitude.
-							this.setLongitude(location.getLongitude());
+		if (this.eag.getArchguide() != null && this.eag.getArchguide().getDesc() != null
+				&& this.eag.getArchguide().getDesc().getRepositories() != null
+				&& !this.eag.getArchguide().getDesc().getRepositories().getRepository().isEmpty()) {
+			// For each repository
+			for (int i = 0; i < this.eag.getArchguide().getDesc().getRepositories().getRepository().size(); i++) {
+				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+				if (repository != null) {
+					// Repository name.
+					List<String> stringList = new ArrayList<String>();
+					if (repository.getRepositoryName() != null
+							&& repository.getRepositoryName().getContent() != null
+							&& !repository.getRepositoryName().getContent().isEmpty()) {
+						stringList.add(repository.getRepositoryName().getContent());
+					} else {
+						stringList.add("");
+					}
+					this.addRepositoryName(stringList);
+	
+					// Repository role.
+					stringList = new ArrayList<String>();
+					if (repository.getRepositoryRole() != null
+							&& repository.getRepositoryRole().getValue() != null
+							&& !repository.getRepositoryRole().getValue().isEmpty()) {
+						String roleValue = repository.getRepositoryRole().getValue();
+						if (roleValue != null && !roleValue.isEmpty()
+								&& Eag2012.OPTION_ROLE_BRANCH_TEXT.equalsIgnoreCase(roleValue)) {
+							roleValue = Eag2012.OPTION_ROLE_BRANCH;
+						} else if (roleValue != null && !roleValue.isEmpty()
+								&& Eag2012.OPTION_ROLE_HEADQUARTERS_TEXT.equalsIgnoreCase(roleValue)) {
+							roleValue = Eag2012.OPTION_ROLE_HEADQUARTERS;
+						} else if (roleValue != null && !roleValue.isEmpty()
+								&& Eag2012.OPTION_ROLE_INTERIM_TEXT.equalsIgnoreCase(roleValue)) {
+							roleValue = Eag2012.OPTION_ROLE_INTERIM;
 						}
-						// TODO: Review for multiple translations.
-						if (location.getLocalType().equalsIgnoreCase(Eag2012.POSTAL_ADDRESS)) {
-							// Postal street.
-							if (location.getStreet() != null) {
-								if (location.getStreet().getContent() != null
-										&& !location.getStreet().getContent().isEmpty()) {
-									this.setStreetPostal(location.getStreet().getContent());
+
+						stringList.add(roleValue);
+					} else {
+						stringList.add("");
+					}
+					this.addRepositoryRole(stringList);
+	
+					// Visitor & Postal address.
+					List<String> numberVisitorAdrressList = new ArrayList<String>();
+					List<String> latitudeList = new ArrayList<String>();
+					List<String> longitudeList = new ArrayList<String>();
+					List<String> countryList = new ArrayList<String>();
+					List<String> countryLangList = new ArrayList<String>();
+					List<String> firstdemList = new ArrayList<String>();
+					List<String> firstdemLangList = new ArrayList<String>();
+					List<String> secondemList = new ArrayList<String>();
+					List<String> secondemLangList = new ArrayList<String>();
+					List<String> municipalityList = new ArrayList<String>();
+					List<String> municipalityLangList = new ArrayList<String>();
+					List<String> localentityList = new ArrayList<String>();
+					List<String> localentityLangList = new ArrayList<String>();
+					List<String> streetList = new ArrayList<String>();
+					List<String> streetLangList = new ArrayList<String>();
+
+					List<String> numberPostalAdrressList = new ArrayList<String>();
+					List<String> postalCountryList = new ArrayList<String>();
+					List<String> postalCountryLangList = new ArrayList<String>();
+					List<String> postalMunicipalityList = new ArrayList<String>();
+					List<String> postalMunicipalityLangList = new ArrayList<String>();
+					List<String> postalStreetList = new ArrayList<String>();
+					List<String> postalStreetLangList = new ArrayList<String>();
+					if (!repository.getLocation().isEmpty()) {
+						for (int j = 0; j < repository.getLocation().size(); j++) {
+							Location location = repository.getLocation().get(j);
+							if (location.getLocalType() != null
+									&& location.getLocalType().equalsIgnoreCase(Eag2012.VISITORS_ADDRESS)) {
+								numberVisitorAdrressList.add("");
+								// Latitude.
+								if (location.getLatitude() != null) {
+									latitudeList.add(location.getLatitude());
 								} else {
-									this.setStreetPostal("");
+									latitudeList.add("");
 								}
-								if (location.getStreet().getLang() != null
-										&& !location.getStreet().getLang().isEmpty()) {
-									this.setStreetPostalLang(location.getStreet().getLang());
+								// Longitude.
+								if (location.getLongitude() != null) {
+									longitudeList.add(location.getLongitude());
 								} else {
-									this.setStreetPostalLang(Eag2012.OPTION_NONE);
+									longitudeList.add("");
+								}
+								// Country.
+								if (location.getCountry() != null) {
+									if (location.getCountry().getContent() != null
+											&& !location.getCountry().getContent().isEmpty()) {
+										countryList.add(location.getCountry().getContent());
+									} else {
+										countryList.add("");
+									}
+									if (location.getCountry().getLang() != null
+											&& !location.getCountry().getLang().isEmpty()) {
+										countryLangList.add(location.getCountry().getLang());
+									} else {
+										countryLangList.add(Eag2012.OPTION_NONE);
+									}
+								} else {
+									countryList.add("");
+									countryLangList.add(Eag2012.OPTION_NONE);
+								}
+								// Autonomous community / region.
+								if (location.getFirstdem() != null) {
+									if (location.getFirstdem().getContent() != null
+											&& !location.getFirstdem().getContent().isEmpty()) {
+										firstdemList.add(location.getFirstdem().getContent());
+									} else {
+										firstdemList.add("");
+									}
+									if (location.getFirstdem().getLang() != null
+											&& !location.getFirstdem().getLang().isEmpty()) {
+										firstdemLangList.add(location.getFirstdem().getLang());
+									} else {
+										firstdemLangList.add(Eag2012.OPTION_NONE);
+									}
+								} else {
+									firstdemList.add("");
+									firstdemLangList.add(Eag2012.OPTION_NONE);
+								}
+								//County/local authority.
+								if (location.getSecondem() != null) {
+									if (location.getSecondem().getContent() != null
+											&& !location.getSecondem().getContent().isEmpty()) {
+										secondemList.add(location.getSecondem().getContent());
+									} else {
+										secondemList.add("");
+									}
+									if (location.getSecondem().getLang() != null
+											&& !location.getSecondem().getLang().isEmpty()) {
+										secondemLangList.add(location.getSecondem().getLang());
+									} else {
+										secondemLangList.add(Eag2012.OPTION_NONE);
+									}
+								} else {
+									secondemList.add("");
+									secondemLangList.add(Eag2012.OPTION_NONE);
+								}
+								// City.
+								if (location.getMunicipalityPostalcode() != null) {
+									if (location.getMunicipalityPostalcode().getContent() != null
+											&& !location.getMunicipalityPostalcode().getContent().isEmpty()) {
+										municipalityList.add(location.getMunicipalityPostalcode().getContent());
+									} else {
+										municipalityList.add("");
+									}
+									if (location.getMunicipalityPostalcode().getLang() != null
+											&& !location.getMunicipalityPostalcode().getLang().isEmpty()) {
+										municipalityLangList.add(location.getMunicipalityPostalcode().getLang());
+									} else {
+										municipalityLangList.add(Eag2012.OPTION_NONE);
+									}
+								} else {
+									municipalityList.add("");
+									municipalityLangList.add(Eag2012.OPTION_NONE);
+								}
+								// District/quarter in town.
+								if (location.getLocalentity() != null) {
+									if (location.getLocalentity().getContent() != null
+											&& !location.getLocalentity().getContent().isEmpty()) {
+										localentityList.add(location.getLocalentity().getContent());
+									} else {
+										localentityList.add("");
+									}
+									if (location.getLocalentity().getLang() != null
+											&& !location.getLocalentity().getLang().isEmpty()) {
+										localentityLangList.add(location.getLocalentity().getLang());
+									} else {
+										localentityLangList.add(Eag2012.OPTION_NONE);
+									}
+								} else {
+									localentityList.add("");
+									localentityLangList.add(Eag2012.OPTION_NONE);
+								}
+								// Street.
+								if (location.getStreet() != null) {
+									if (location.getStreet().getContent() != null
+											&& !location.getStreet().getContent().isEmpty()) {
+										streetList.add(location.getStreet().getContent());
+									} else {
+										streetList.add("");
+									}
+									if (location.getStreet().getLang() != null
+											&& !location.getStreet().getLang().isEmpty()) {
+										streetLangList.add(location.getStreet().getLang());
+									} else {
+										streetLangList.add(Eag2012.OPTION_NONE);
+									}
+								} else {
+									streetList.add("");
+									streetLangList.add(Eag2012.OPTION_NONE);
 								}
 							}
-							// Postal city.
-							if (location.getMunicipalityPostalcode() != null) {
-								if (location.getMunicipalityPostalcode().getContent() != null
-										&& !location.getMunicipalityPostalcode().getContent().isEmpty()) {
-									this.setMunicipalityPostalcodePostal(location.getMunicipalityPostalcode().getContent());
+	
+							if (location.getLocalType().equalsIgnoreCase(Eag2012.POSTAL_ADDRESS)) {
+								numberPostalAdrressList.add("");
+								// Country.
+								if (location.getCountry() != null) {
+									if (location.getCountry().getContent() != null
+											&& !location.getCountry().getContent().isEmpty()) {
+										postalCountryList.add(location.getCountry().getContent());
+									} else {
+										postalCountryList.add("");
+									}
+									if (location.getCountry().getLang() != null
+											&& !location.getCountry().getLang().isEmpty()) {
+										postalCountryLangList.add(location.getCountry().getLang());
+									} else {
+										postalCountryLangList.add(Eag2012.OPTION_NONE);
+									}
 								} else {
-									this.setMunicipalityPostalcodePostal("");
+									postalCountryList.add("");
+									postalCountryLangList.add(Eag2012.OPTION_NONE);
 								}
-								if (location.getMunicipalityPostalcode().getLang() != null
-										&& !location.getMunicipalityPostalcode().getLang().isEmpty()) {
-									this.setMunicipalityPostalcodePostalLang(location.getMunicipalityPostalcode().getLang());
-								} else if (location.getStreet() != null
-										&& location.getStreet().getLang() != null
-										&& !location.getStreet().getLang().isEmpty()) {
-									this.setMunicipalityPostalcodePostalLang(location.getStreet().getLang());
+								// Postal city.
+								if (location.getMunicipalityPostalcode() != null) {
+									if (location.getMunicipalityPostalcode().getContent() != null
+											&& !location.getMunicipalityPostalcode().getContent().isEmpty()) {
+										postalMunicipalityList.add(location.getMunicipalityPostalcode().getContent());
+									} else {
+										postalMunicipalityList.add("");
+									}
+									if (location.getMunicipalityPostalcode().getLang() != null
+											&& !location.getMunicipalityPostalcode().getLang().isEmpty()) {
+										postalMunicipalityLangList.add(location.getMunicipalityPostalcode().getLang());
+									} else {
+										postalMunicipalityLangList.add(Eag2012.OPTION_NONE);
+									}
 								} else {
-									this.setMunicipalityPostalcodePostalLang(Eag2012.OPTION_NONE);
+									postalMunicipalityList.add("");
+									postalMunicipalityLangList.add(Eag2012.OPTION_NONE);
+								}
+								// Postal street.
+								if (location.getStreet() != null) {
+									if (location.getStreet().getContent() != null
+											&& !location.getStreet().getContent().isEmpty()) {
+										postalStreetList.add(location.getStreet().getContent());
+									} else {
+										postalStreetList.add("");
+									}
+									if (location.getStreet().getLang() != null
+											&& !location.getStreet().getLang().isEmpty()) {
+										postalStreetLangList.add(location.getStreet().getLang());
+									} else {
+										postalStreetLangList.add(Eag2012.OPTION_NONE);
+									}
+								} else {
+									postalStreetList.add("");
+									postalStreetLangList.add(Eag2012.OPTION_NONE);
 								}
 							}
 						}
 					}
+					this.addContactNumberOfVisitorsAddress(numberVisitorAdrressList);
+					this.addContactLatitude(latitudeList);
+					this.addContactLongitude(longitudeList);
+					this.addContactCountry(countryList);
+					this.addContactCountryLang(countryLangList);
+					this.addContactFirstdem(firstdemList);
+					this.addContactFirstdemLang(firstdemLangList);
+					this.addContactSecondem(secondemList);
+					this.addContactSecondemLang(secondemLangList);
+					this.addContactMunicipality(municipalityList);
+					this.addContactMunicipalityLang(municipalityLangList);
+					this.addContactLocalentity(localentityList);
+					this.addContactLocalentityLang(localentityLangList);
+					this.addContactStreet(streetList);
+					this.addContactStreetLang(streetLangList);
 
-					// Fax.
+					this.addContactNumberOfPostalAddress(numberPostalAdrressList);
+					this.addContactPostalCountry(postalCountryList);
+					this.addContactPostalCountryLang(postalCountryLangList);
+					this.addContactPostalMunicipality(postalMunicipalityList);
+					this.addContactPostalMunicipalityLang(postalMunicipalityLangList);
+					this.addContactPostalStreet(postalStreetList);
+					this.addContactPostalStreetLang(postalStreetLangList);
+
+					// Continent.
+					stringList = new ArrayList<String>();
+					if (repository.getGeogarea() != null
+							&& repository.getGeogarea().getValue() != null
+							&& !repository.getGeogarea().getValue().isEmpty()) {
+						stringList.add(getGeogareaString(repository.getGeogarea().getValue()));
+					}
+					this.addContactContinent(stringList);
+
+					// Telephone.
+					stringList = new ArrayList<String>();
+					if (!repository.getTelephone().isEmpty()) {
+						for (int j = 0; j < repository.getTelephone().size(); j++) {
+							if (repository.getTelephone().get(j).getContent() != null
+									&& !repository.getTelephone().get(j).getContent().isEmpty()) {
+								stringList.add(repository.getTelephone().get(j).getContent());
+							} else {
+								stringList.add("");
+							}
+						}
+					}
+					this.addContactTelephone(stringList);
+
+					// Fax
+					stringList = new ArrayList<String>();
 					if (!repository.getFax().isEmpty()) {
-						// TODO: Review for multiple values.
-						for (int i = 0; i < repository.getFax().size(); i++) {
-							this.setFax(repository.getFax().get(i).getContent());
+						for (int j = 0; j < repository.getFax().size(); j++) {
+							if (repository.getFax().get(j).getContent() != null
+									&& !repository.getFax().get(j).getContent().isEmpty()) {
+								stringList.add(repository.getFax().get(j).getContent());
+							} else {
+								stringList.add("");
+							}
 						}
 					}
+					this.addContactFax(stringList);
 
 					// E-mail address.
+					List<String> numberEmailList = new ArrayList<String>();
+					List<String> emailHrefList = new ArrayList<String>();
+					List<String> emailTitleList = new ArrayList<String>();
+					List<String> emailLangList = new ArrayList<String>();
 					if (!repository.getEmail().isEmpty()) {
-						// TODO: Review for multiple values.
-						for (int i = 0; i < repository.getEmail().size(); i++) {
-							this.setEmail(repository.getEmail().get(i).getHref());
-							this.setEmailTitle(repository.getEmail().get(i).getContent());
-							this.setEmailLang(repository.getEmail().get(i).getLang());
+						for (int j = 0; j < repository.getEmail().size(); j++) {
+							numberEmailList.add("");
+							// Href.
+							if (repository.getEmail().get(j).getHref() != null
+									&& !repository.getEmail().get(j).getHref().isEmpty()) {
+								emailHrefList.add(repository.getEmail().get(j).getHref());
+							} else {
+								emailHrefList.add("");
+							}
+							// Title.
+							if (repository.getEmail().get(j).getContent() != null
+									&& !repository.getEmail().get(j).getContent().isEmpty()) {
+								emailTitleList.add(repository.getEmail().get(j).getContent());
+							} else {
+								emailTitleList.add("");
+							}
+							// Lang.
+							if (repository.getEmail().get(j).getLang() != null
+									&& !repository.getEmail().get(j).getLang().isEmpty()) {
+								emailLangList.add(repository.getEmail().get(j).getLang());
+							} else {
+								emailLangList.add("");
+							}
 						}
 					}
+					this.addContactNumberOfEmailAddress(numberEmailList);
+					this.addContactEmailHref(emailHrefList);
+					this.addContactEmailTitle(emailTitleList);
+					this.addContactEmailLang(emailLangList);
 
 					// Webpage.
-					if (!repository.getWebpage().isEmpty()) {
-						// TODO: Review for multiple values.
-						for (int i = 0; i < repository.getWebpage().size(); i++) {
-							this.setWebpage(repository.getWebpage().get(i).getHref());
-							this.setWebpageTitle(repository.getWebpage().get(i).getContent());
-							this.setWebpageLang(repository.getWebpage().get(i).getLang());
+					List<String> numberWebpageList = new ArrayList<String>();
+					List<String> webpageHrefList = new ArrayList<String>();
+					List<String> webpageTitleList = new ArrayList<String>();
+					List<String> webpageLangList = new ArrayList<String>();
+					for (int j = 0; j < repository.getWebpage().size(); j++) {
+						numberWebpageList.add("");
+						// Href.
+						if (repository.getWebpage().get(j).getHref() != null
+								&& !repository.getWebpage().get(j).getHref().isEmpty()) {
+							webpageHrefList.add(repository.getWebpage().get(j).getHref());
+						} else {
+							webpageHrefList.add("");
+						}
+						// Title.
+						if (repository.getWebpage().get(j).getContent() != null
+								&& !repository.getWebpage().get(j).getContent().isEmpty()) {
+							webpageTitleList.add(repository.getWebpage().get(j).getContent());
+						} else {
+							webpageTitleList.add("");
+						}
+						// Lang.
+						if (repository.getWebpage().get(j).getLang() != null
+								&& !repository.getWebpage().get(j).getLang().isEmpty()) {
+							webpageLangList.add(repository.getWebpage().get(j).getLang());
+						} else {
+							webpageLangList.add("");
 						}
 					}
+					this.addContactNumberOfWebpageAddress(numberWebpageList);
+					this.addContactWebpageHref(webpageHrefList);
+					this.addContactWebpageTitle(webpageTitleList);
+					this.addContactWebpageLang(webpageLangList);
 				}
 			}
 		}
-		
-
-
 	}
 
 	/**
@@ -4076,5 +5373,30 @@ public class EAG2012Loader{
 	
 	public String toString(){
 		return "Loader with record id: "+this.recordId;
+	}
+
+	/**
+	 * Method to recover the value to set in XML file for "<geogarea>"
+	 */
+	private String getGeogareaString(final String geogarea) {
+		String geogareaValue = geogarea;
+
+		if (Eag2012.OPTION_AFRICA_TEXT.equalsIgnoreCase(geogareaValue)) {
+			geogareaValue = Eag2012.OPTION_AFRICA;
+		} else if (Eag2012.OPTION_ANTARCTICA_TEXT.equalsIgnoreCase(geogareaValue)) {
+			geogareaValue = Eag2012.OPTION_ANTARCTICA;
+		} else if (Eag2012.OPTION_ASIA_TEXT.equalsIgnoreCase(geogareaValue)) {
+			geogareaValue = Eag2012.OPTION_ASIA;
+		} else if (Eag2012.OPTION_AUSTRALIA_TEXT.equalsIgnoreCase(geogareaValue)) {
+			geogareaValue = Eag2012.OPTION_AUSTRALIA;
+		} else if (Eag2012.OPTION_EUROPE_TEXT.equalsIgnoreCase(geogareaValue)) {
+			geogareaValue = Eag2012.OPTION_EUROPE;
+		} else if (Eag2012.OPTION_NORTH_AMERICA_TEXT.equalsIgnoreCase(geogareaValue)) {
+			geogareaValue = Eag2012.OPTION_NORTH_AMERICA;
+		} else if (Eag2012.OPTION_SOUTH_AMERICA_TEXT.equalsIgnoreCase(geogareaValue)) {
+			geogareaValue = Eag2012.OPTION_SOUTH_AMERICA;
+		}
+
+		return geogareaValue;
 	}
 }
