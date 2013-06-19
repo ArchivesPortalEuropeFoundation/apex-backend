@@ -1749,13 +1749,11 @@ function addFurtherEmailsOfTheInstitution(text1){
 function addAnotherFormOfTheAuthorizedName(text1){
 	var counter = $("table[id^='identityTableNameOfTheInstitution_']").length;
 
-	if (counter > 1) {
-		var nameOfInstitution = $("table#identityTableNameOfTheInstitution_"+counter+" input#textNameOfTheInstitution").attr("value");
+	var nameOfInstitution = $("table#identityTableNameOfTheInstitution_"+counter+" input#textNameOfTheInstitution").attr("value");
 
-		if (nameOfInstitution == null || nameOfInstitution == "") {
-			alertEmptyFields(text1);
-			return;
-		}
+	if (nameOfInstitution == null || nameOfInstitution == "") {
+		alertEmptyFields(text1);
+		return;
 	}
 
 	var clone = $("table[id^='identityTableNameOfTheInstitution_"+counter+"']").clone();
@@ -1775,15 +1773,13 @@ function addAnotherFormOfTheAuthorizedName(text1){
 function addParallelNameOfTheInstitution(text1){
 	var counter = $("table[id^='identityTableParallelNameOfTheInstitution_']").length;
 
-	if (counter > 1) {
-		var nameOfInstitution = $("table#identityTableParallelNameOfTheInstitution_"+counter+" input#textParallelNameOfTheInstitution").attr("value");
-		// var nameOfInstitutionLanguage = $("table#identityTableParallelNameOfTheInstitution_"+counter+" select#pnoti_languageList").attr("value");
+	var nameOfInstitution = $("table#identityTableParallelNameOfTheInstitution_"+counter+" input#textParallelNameOfTheInstitution").attr("value");
+	// var nameOfInstitutionLanguage = $("table#identityTableParallelNameOfTheInstitution_"+counter+" select#pnoti_languageList").attr("value");
 
-		if (nameOfInstitution == null || nameOfInstitution == ""
-				/*|| nameOfInstitutionLanguage == "none"*/) {
-			alertEmptyFields(text1);
-			return;
-		}
+	if (nameOfInstitution == null || nameOfInstitution == ""
+			/*|| nameOfInstitutionLanguage == "none"*/) {
+		alertEmptyFields(text1);
+		return;
 	}
 
 	var clone = $("table[id^='identityTableParallelNameOfTheInstitution_"+counter+"']").clone();
