@@ -3575,11 +3575,11 @@ public class EAG2012Loader{
 									this.setLibraryEmailHref(library.getContact().getEmail().get(i).getHref());
 								}
 							}
-							if(library.getWebpage()!=null){
-								for (int i = 0; i < library.getWebpage().size(); i++) {
-									this.setLibraryWebpageContent(library.getWebpage().get(i).getContent());
-									this.setLibraryWebpageHref(library.getWebpage().get(i).getHref());
-								}
+						}
+						if(library.getWebpage()!=null){
+							for (int i = 0; i < library.getWebpage().size(); i++) {
+								this.setLibraryWebpageContent(library.getWebpage().get(i).getContent());
+								this.setLibraryWebpageHref(library.getWebpage().get(i).getHref());
 							}
 						}
 						if(library.getMonographicpub()!=null){
