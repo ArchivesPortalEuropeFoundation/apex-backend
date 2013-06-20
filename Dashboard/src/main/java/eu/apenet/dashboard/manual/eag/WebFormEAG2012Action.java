@@ -960,7 +960,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		Eag2012 eag2012 = null;
 		if(this.form!=null && !this.form.isEmpty()){
 			eag2012 = new Eag2012();
-			JSONObject jsonObj = new JSONObject(this.form);
+			JSONObject jsonObj = new JSONObject(this.form.trim());
 			if(jsonObj.has("yourInstitution")){ //first_tab -> 'yourInstitution' : array[{},..,{}]
 				eag2012 = parseYourInstitutionJsonObjToEag2012(eag2012,jsonObj);				
 			}

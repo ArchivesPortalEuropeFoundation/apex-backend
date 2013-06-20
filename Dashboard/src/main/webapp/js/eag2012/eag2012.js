@@ -147,7 +147,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 		if(jsonData.length>1){
 			jsonData += ",";
 		}
-		jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 
 		// Check fill mandatory fields.
 		if ($(this).attr("value") != '') {
@@ -162,7 +162,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 		if(jsonData.charAt(jsonData.length-1)!=':'){
 			jsonData += ",";
 		}
-		jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 
 		// Check fill mandatory fields.
 		if ($(this).attr("value") != 'none') {
@@ -200,7 +200,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
 			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 
 			// Check fill mandatory fields.
 			if ($(this).attr("value") != '' && j == 0) {
@@ -215,7 +215,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 			if(jsonData.charAt(jsonData.length-1)!=':'){
 				jsonData += ",";
 			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 
 			// Check fill mandatory fields.
 			if ($(this).attr("value") != 'none' && j == 0) {
@@ -256,7 +256,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
 			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 
 			// Check fill mandatory fields.
 			if ($(this).attr("value") != '' && j == 0) {
@@ -271,7 +271,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 			if(jsonData.charAt(jsonData.length-1)!=':'){
 				jsonData += ",";
 			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 
 			// Check fill mandatory fields.
 			if ($(this).attr("value") != 'none' && j == 0) {
@@ -298,7 +298,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 			&& jsonData.charAt(jsonData.length-1)!='{'){
 			jsonData += ",";
 		}
-		jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 
 		// Check fill mandatory fields.
 		if ($(this).attr("value") != '') {
@@ -320,7 +320,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 		if(jsonData.charAt(jsonData.length-1)!=':'){
 			jsonData += ",";
 		}
-		jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 	});
 	if(yiMERepositories.length>0){
 		validationArray.push("yiTableOthers",yiMERepositories);
@@ -367,14 +367,14 @@ var clickIdentityAction = function(text1){
 		if(jsonData.length>1){
 			jsonData += ",";
 		}
-		jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 	});
 	//content from selects
 	$("table#identityTable select").each(function(){
 		if(jsonData.charAt(jsonData.length-1)!=':'){
 			jsonData += ",";
 		}
-		jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+		jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 	});
 
 	// Table identityTable.
@@ -386,7 +386,7 @@ var clickIdentityAction = function(text1){
 		var texts ="";
 		$("select#" + $(this).attr("id") + " option").each(function(){
 			if($(this).attr("selected")) {
-				texts += $(this).attr("value") + '_';
+				texts += $.trim($(this).attr("value")) + '_';
 			}
 		});
 		texts = texts.substring(0, (texts.length - 1));
@@ -416,14 +416,14 @@ var clickIdentityAction = function(text1){
 				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
 			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 		});
 		//select options selected
 		$("#"+institutionNames[j]+" select").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'){
 				jsonData += ",";
 			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 		});
 		jsonData += "}";
 	}
@@ -451,14 +451,14 @@ var clickIdentityAction = function(text1){
 				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
 			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 		});
 		//select options selected
 		$("#"+parallelNames[j]+" select").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'){
 				jsonData += ",";
 			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 		});
 		jsonData += "}";
 	}
@@ -486,14 +486,14 @@ var clickIdentityAction = function(text1){
 				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
 			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 		});
 		//select options selected
 		$("#"+formerlyNames[j]+" select").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'){
 				jsonData += ",";
 			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 		});
 		jsonData += "}";
 	}
@@ -556,15 +556,15 @@ function checkContactTab(currentTab, text1) {
 		if ($(this).parent().parent().parent().parent().attr("id").indexOf("contactTableVisitorsAddress") == -1) {
 			if ($(this).parent().parent().parent().parent().attr("id").indexOf("contactTablePostalAddress") == -1) {
 				if ($(this).attr("id") == "textContactFaxOfTheInstitution") {
-					jsonData += "'"+$(this).attr("id")+"_1' : '"+$(this).attr("value")+"'";
+					jsonData += "'"+$(this).attr("id")+"_1' : '"+$.trim($(this).attr("value"))+"'";
 				} else {
-					jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+					jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 				}
 			}
 		}
 
 		// Check fill mandatory fields.
-		if ($(this).attr("value") != '') {
+		if ($.trim($(this).attr("value")) != '') {
 			var position = contactMandatoryElements.indexOf($(this).attr("id"));
 			if (position != -1) {
 				contactMandatoryElements.splice(position, 1);
@@ -580,12 +580,12 @@ function checkContactTab(currentTab, text1) {
 		}
 		if ($(this).parent().parent().parent().parent().attr("id").indexOf("contactTableVisitorsAddress") == -1) {
 			if ($(this).parent().parent().parent().parent().attr("id").indexOf("contactTablePostalAddress") == -1) {
-				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+				jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 			}
 		}
 
 		// Check fill mandatory fields.
-		if ($(this).attr("value") != 'none') {
+		if ($.trim($(this).attr("value")) != 'none') {
 			var position = contactMandatoryElements.indexOf($(this).attr("id"));
 			if (position != -1) {
 				contactMandatoryElements.splice(position, 1);
@@ -625,11 +625,11 @@ function checkContactTab(currentTab, text1) {
 				}
 			}
 			if ($(this).parent().parent().parent().parent().parent().parent().parent().parent().parent().attr("id").indexOf("divTempContainter") == -1) {
-				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+				jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 			}
 
 			// Check fill mandatory fields.
-			if ($(this).attr("value") != '' && j == 0) {
+			if ($.trim($(this).attr("value")) != '' && j == 0) {
 				var position = contactVAMandatoryElements.indexOf($(this).attr("id"));
 				if (position != -1) {
 					contactVAMandatoryElements.splice(position, 1);
@@ -644,11 +644,11 @@ function checkContactTab(currentTab, text1) {
 				}
 			}
 			if ($(this).parent().parent().parent().parent().parent().parent().parent().parent().parent().attr("id").indexOf("divTempContainter") == -1) {
-				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+				jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 			}
 
 			// Check fill mandatory fields.
-			if ($(this).attr("value") != 'none' && j == 0) {
+			if ($.trim($(this).attr("value")) != 'none' && j == 0) {
 				var position = contactVAMandatoryElements.indexOf($(this).attr("id"));
 				if (position != -1) {
 					contactVAMandatoryElements.splice(position, 1);
@@ -684,14 +684,14 @@ function checkContactTab(currentTab, text1) {
 				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
 			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 		});
 		//select options selected
 		$("table#contactTable" + currentTab + " table#"+postalAddress[j]+" select").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'){
 				jsonData += ",";
 			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 		});
 		jsonData += "}";
 	}
@@ -765,9 +765,9 @@ function checkAccessAndServicesTab(currentTab, text1) {
 		}
 		if ($(this).attr("id") == "textTravellingDirections"
 			|| $(this).attr("id") == "textASTermOfUse") {
-				jsonData += "'"+$(this).attr("id")+"_1' : '"+$(this).attr("value")+"'";
+				jsonData += "'"+$(this).attr("id")+"_1' : '"+$.trim($(this).attr("value"))+"'";
 		} else {
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 		}
 	});
 	//content from texts
@@ -800,13 +800,13 @@ function checkAccessAndServicesTab(currentTab, text1) {
 			|| $(this).attr("id") == "textASReSeOSWebpage"
 			|| $(this).attr("id") == "textASReSeWebpageOSLinkTitle"
 			|| $(this).attr("id") == "textASReSeRefreshment") {
-				jsonData += "'"+$(this).attr("id")+"_1' : '"+$(this).attr("value")+"'";
+				jsonData += "'"+$(this).attr("id")+"_1' : '"+$.trim($(this).attr("value"))+"'";
 		} else {
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 		}
 
 		// Check fill mandatory fields.
-		if ($(this).attr("value") != '') {
+		if ($.trim($(this).attr("value")) != '') {
 			var position = aasMandatoryElements.indexOf($(this).attr("id"));
 			if (position != -1) {
 				aasMandatoryElements.splice(position, 1);
@@ -837,9 +837,9 @@ function checkAccessAndServicesTab(currentTab, text1) {
 			|| $(this).attr("id") == "selectASReSeToursAndSessionsSelectLanguage"
 			|| $(this).attr("id") == "selectASReSeOtherServicesSelectLanguage"
 			|| $(this).attr("id") == "selectASReSeRefreshmentSelectLanguage") {
-				jsonData += "'"+$(this).attr("id")+"_1' : '"+$(this).attr("value")+"'";
+				jsonData += "'"+$(this).attr("id")+"_1' : '"+$.trim($(this).attr("value"))+"'";
 		} else {
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 		}
 	});
 	jsonData += "}";
@@ -892,9 +892,9 @@ function checkDescriptionTab(currentTab, text1) {
 			|| $(this).attr("id") == "textUnitOfAdministrativeStructure"
 			|| $(this).attr("id") == "textBuilding"
 			|| $(this).attr("id") == "textArchivalAndOtherHoldings") {
-			jsonData += "'"+$(this).attr("id")+"_1' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"_1' : '"+$.trim($(this).attr("value"))+"'";
 		} else {
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 		}
 	});
 	//content from texts
@@ -904,9 +904,9 @@ function checkDescriptionTab(currentTab, text1) {
 		}
 		if ($(this).attr("id") == "textRuleOfRepositoryFoundation"
 			|| $(this).attr("id") == "textRuleOfRepositorySuppression") {
-			jsonData += "'"+$(this).attr("id")+"_1' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"_1' : '"+$.trim($(this).attr("value"))+"'";
 		} else {
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 		}
 	});
 	//content from selects
@@ -920,9 +920,9 @@ function checkDescriptionTab(currentTab, text1) {
 			|| $(this).attr("id") == "selectLanguageArchivalAndOtherHoldings"
 			|| $(this).attr("id") == "selectLanguageRuleOfRepositoryFoundation"
 			|| $(this).attr("id") == "selectLanguageRuleOfRepositorySuppression") {
-			jsonData += "'"+$(this).attr("id")+"_1' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"_1' : '"+$.trim($(this).attr("value"))+"'";
 		} else {
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 		}
 	});
 	jsonData += "}";
@@ -941,11 +941,11 @@ var clickControlAction = function(text1){
 				jsonData += ",";
 			}
 			if ($(this).attr("id") == "textContactAbbreviation") {
-				jsonData += "'"+$(this).attr("id")+"_1' : '"+$(this).attr("value")+"'";
+				jsonData += "'"+$(this).attr("id")+"_1' : '"+$.trim($(this).attr("value"))+"'";
 			}else if ($(this).attr("id") == "textContactFullName") {
-				jsonData += "'"+$(this).attr("id")+"_1' : '"+$(this).attr("value")+"'";
+				jsonData += "'"+$(this).attr("id")+"_1' : '"+$.trim($(this).attr("value"))+"'";
 			} else {
-				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+				jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 			}
 		});
 		//content from selects
@@ -954,11 +954,11 @@ var clickControlAction = function(text1){
 				jsonData += ",";
 			}
 			if ($(this).attr("id") == "selectDescriptionLanguage") {
-				jsonData += "'"+$(this).attr("id")+"_1' : '"+$(this).attr("value")+"'";
+				jsonData += "'"+$(this).attr("id")+"_1' : '"+$.trim($(this).attr("value"))+"'";
 			}else if ($(this).attr("id") == "selectDescriptionScript") {
-				jsonData += "'"+$(this).attr("id")+"_1' : '"+$(this).attr("value")+"'";
+				jsonData += "'"+$(this).attr("id")+"_1' : '"+$.trim($(this).attr("value"))+"'";
 			} else {
-				jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+				jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 			}
 		});
 	jsonData += "}";
@@ -990,14 +990,14 @@ var clickRelationsAction = function(text1,messageWebpage){
 				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
 			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 		});
 		//select options selected
 		$("#"+resourceRelations[j]+" select").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'){
 				jsonData += ",";
 			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 		});
 		jsonData += "}";
 	}
@@ -1031,14 +1031,14 @@ var clickRelationsAction = function(text1,messageWebpage){
 				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
 			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 		});
 		//select options selected
 		$("#"+institutionRelations[j]+" select").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'){
 				jsonData += ",";
 			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$(this).attr("value")+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 		});
 		jsonData += "}";
 	}
