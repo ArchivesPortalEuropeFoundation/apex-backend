@@ -1189,7 +1189,7 @@ function yiAddVisitorsAddressTranslation(text1) {
 function yiAddPostalAddressIfDifferent(text1, text2, text3, text4,control) {
 	$("#buttonAddPostalAddressIfDifferent").hide();
    // var control = true;
-	var select = '<select id="selectYIPASelectLanguage" onchange="postalAddressLanguageChanged();" >'+$("#selectYIPNOTISelectLanguage").html()+'</select>';
+	var select = '<select id="selectYIPASelectLanguage" onchange="postalAddressLanguageChanged($(this).parent().parent().parent().parent());" >'+$("#selectYIPNOTISelectLanguage").html()+'</select>';
 
 	$("table#yiTableOthers").before('<table id="yiTablePostalAddress_1" class=\"tablePadding\">'+
 		'<tr id="yiPostalAddressLabel">'+
@@ -1201,7 +1201,7 @@ function yiAddPostalAddressIfDifferent(text1, text2, text3, text4,control) {
 				'<label for="textYIPAStreet">'+text3+'<span class="required">*</span>:</label>'+
 			'</td>'+
 			'<td>'+
-				'<input type="text" id="textYIPAStreet" onchange="postalAddressStreetChanged();" />'+
+				'<input type="text" id="textYIPAStreet" onchange="postalAddressStreetChanged($(this).parent().parent().parent().parent());" />'+
 			'</td>'+
 			'<td id="yiPostalAddressLanguage" class="labelLeft">'+
 				'<label for="selectYIPASelectLanguage">'+text2+':</label>'+
@@ -1214,7 +1214,7 @@ function yiAddPostalAddressIfDifferent(text1, text2, text3, text4,control) {
 				'<label for="textYIPACity">'+text4+'<span class="required">*</span>:</label>'+
 			'</td>'+
 			'<td>'+
-				'<input type="text" id="textYIPACity" onchange="postalAddressCityChanged();" />'+
+				'<input type="text" id="textYIPACity" onchange="postalAddressCityChanged($(this).parent().parent().parent().parent());" />'+
 			'</td>'+
 		'</tr></table>');
 
@@ -2115,7 +2115,7 @@ function contactAddVisitorsAddressTranslation(text1) {
 
 function contactAddPostalAddressIfDifferent(property1, property2, property3, property4,control) {
 	var currentTab = getCurrentTab();
-	var select = '<select id="selectContactLanguagePostalAddress" onchange="contactAddressLanguageChanged();">'+$("#selectLanguageVisitorAddress").html()+'</select>';
+	var select = '<select id="selectContactLanguagePostalAddress" onchange="contactAddressLanguageChanged($(this).parent().parent().parent().parent());">'+$("#selectLanguageVisitorAddress").html()+'</select>';
     
 	$("table#contactTable"+currentTab+" input#buttonContactAddPostalAddressIfDifferent").hide();
 
@@ -2129,7 +2129,7 @@ function contactAddPostalAddressIfDifferent(property1, property2, property3, pro
 				'<label for="textContactPAStreet">'+property3+'<span class="required">*</span>:</label>'+
 			'</td>'+
 			'<td>'+
-				'<input type="text" id="textContactPAStreet" onchange="contactAddressStreetChanged();" />'+
+				'<input type="text" id="textContactPAStreet" onchange="contactAddressStreetChanged($(this).parent().parent().parent().parent());" />'+
 			'</td>'+
 			'<td id="contactPostalAddressLanguage">'+
 				'<label for="selectContactLanguagePostalAddress">'+property2+':</label>'+
@@ -2142,7 +2142,7 @@ function contactAddPostalAddressIfDifferent(property1, property2, property3, pro
 				'<label for="textContactPACity">'+property4+'<span class="required">*</span>:</label>'+
 			'</td>'+
 			'<td>'+
-				'<input type="text" id="textContactPACity" onchange="contactAddressCityChanged();"/>'+
+				'<input type="text" id="textContactPACity" onchange="contactAddressCityChanged($(this).parent().parent().parent().parent());"/>'+
 			'</td>'+
 		'</tr></table></td></tr>');
   
@@ -3446,60 +3446,113 @@ function parallelNameOfInstitutionLanguageChanged(){
 	$("#pnoti_languageList").attr("value", $("#selectYIPNOTISelectLanguage").val());
 }
 
-function streetOfInstitutionChanged(){
-	$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactStreetOfTheInstitution").attr("value", $("table#yiTableVisitorsAddress_1 #textYIStreet").val());
+function streetOfInstitutionChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
+
+	$("table#contactTable_1 table#contactTableVisitorsAddress" + id + " #textContactStreetOfTheInstitution").attr("value", $("table#yiTableVisitorsAddress" + id + " #textYIStreet").val());
 }
 
-function streetOfInstitutionLanguageChanged(){
-	if(($("table#yiTableVisitorsAddress_1 #selectYIVASelectLanguage").val()!="noneidOfInstitutionChanged()") && ($("table#yiTableVisitorsAddress_1 #selectYIVASelectLanguage").val()!=null)){
-	   $("table#contactTable_1 table#contactTableVisitorsAddress_1 #selectLanguageVisitorAddress").attr("value", $("table#yiTableVisitorsAddress_1 #selectYIVASelectLanguage").val());
-	   $("table#contactTable_1 table#contactTableVisitorsAddress_1 #selectLanguageVisitorAddress").attr("disabled","disabled");
+function contactStreetOfInstitutionChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
+
+	$("table#yiTableVisitorsAddress" + id + " #textYIStreet").attr("value", $("table#contactTable_1 table#contactTableVisitorsAddress" + id + " #textContactStreetOfTheInstitution").val());
+}
+
+function streetOfInstitutionLanguageChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
+
+	if(($("table#yiTableVisitorsAddress" + id + " #selectYIVASelectLanguage").val()!="noneidOfInstitutionChanged()") && ($("table#yiTableVisitorsAddress" + id + " #selectYIVASelectLanguage").val()!=null)){
+		$("table#contactTable_1 table#contactTableVisitorsAddress" + id + " #selectLanguageVisitorAddress").attr("value", $("table#yiTableVisitorsAddress" + id + " #selectYIVASelectLanguage").val());
+		if (id == "_1") {
+			$("table#contactTable_1 table#contactTableVisitorsAddress" + id + " #selectLanguageVisitorAddress").attr("disabled","disabled");
+		}
 	}else{
-		 $("table#contactTable_1 table#contactTableVisitorsAddress_1 #selectLanguageVisitorAddress").removeAttr("disabled");
+		if (id == "_1") {
+			$("table#contactTable_1 table#contactTableVisitorsAddress" + id + " #selectLanguageVisitorAddress").removeAttr("disabled");
+		}
 	}
 }
-	
 
-function cityOfInstitutionChanged(){
-	$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactCityOfTheInstitution").attr("value", $("table#yiTableVisitorsAddress_1 #textYICity").val());
+function contactCityOfInstitutionChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
+
+	$("table#yiTableVisitorsAddress" + id + " #textYICity").attr("value", $("table#contactTable_1 table#contactTableVisitorsAddress" + id + " #textContactCityOfTheInstitution").val());
 }
 
-function countryOfInstitutionChanged(){
-	$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactCountryOfTheInstitution").attr("value", $("table#yiTableVisitorsAddress_1 #textYICountry").val());
+function cityOfInstitutionChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
+
+	$("table#contactTable_1 table#contactTableVisitorsAddress" + id + " #textContactCityOfTheInstitution").attr("value", $("table#yiTableVisitorsAddress" + id + " #textYICity").val());
 }
-function contactAddressCityChanged(){
-	var value = $("table#contactTable_1 table#contactTablePostalAddress_1 #textContactPACity").val();
-	$("table#yiTablePostalAddress_1 #textYIPACity").attr("value",value);	
+
+function countryOfInstitutionChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
+
+	$("table#contactTable_1 table#contactTableVisitorsAddress" + id + " #textContactCountryOfTheInstitution").attr("value", $("table#yiTableVisitorsAddress" + id + " #textYICountry").val());
 }
-function contactAddressStreetChanged(){
-	var value = $("table#contactTable_1 table#contactTablePostalAddress_1 #textContactPAStreet").val();
-	$("table#yiTablePostalAddress_1 #textYIPAStreet").attr("value",value);
+
+function contactCountryOfInstitutionChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
+
+	$("table#yiTableVisitorsAddress" + id + " #textYICountry").attr("value", $("table#contactTable_1 table#contactTableVisitorsAddress" + id + " #textContactCountryOfTheInstitution").val());
 }
-function contactAddressLanguageChanged(){
-	var value = $("table#contactTable_1 table#contactTablePostalAddress_1 #selectContactLanguagePostalAddress").val();
-	$("table#yiTablePostalAddress_1 #selectYIPASelectLanguage").attr("value",value);
+function contactAddressCityChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
+
+	var value = $("table#contactTable_1 table#contactTablePostalAddress" + id + " #textContactPACity").val();
+	$("table#yiTablePostalAddress" + id + " #textYIPACity").attr("value",value);	
 }
-function postalAddressStreetChanged(){
-	if(($("table#yiTablePostalAddress_1 #textYIPAStreet").val()!="") && ($("table#yiTablePostalAddress_1 #textYIPAStreet").val()!=null)){
-	    $("table#contactTable_1 table#contactTablePostalAddress_1 #textContactPAStreet").attr("value", $("table#yiTablePostalAddress_1 #textYIPAStreet").val());  
+function contactAddressStreetChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
+
+	var value = $("table#contactTable_1 table#contactTablePostalAddress" + id + " #textContactPAStreet").val();
+	$("table#yiTablePostalAddress" + id + " #textYIPAStreet").attr("value",value);
+}
+function contactAddressLanguageChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
+
+	var value = $("table#contactTable_1 table#contactTablePostalAddress" + id + " #selectContactLanguagePostalAddress").val();
+	$("table#yiTablePostalAddress" + id + " #selectYIPASelectLanguage").attr("value",value);
+}
+function postalAddressStreetChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
+
+	if(($("table#yiTablePostalAddress" + id + " #textYIPAStreet").val()!="") && ($("table#yiTablePostalAddress" + id + " #textYIPAStreet").val()!=null)){
+	    $("table#contactTable_1 table#contactTablePostalAddress" + id + " #textContactPAStreet").attr("value", $("table#yiTablePostalAddress" + id + " #textYIPAStreet").val());  
 	}else{
-		$("table#contactTable_1 table#contactTablePostalAddress_1 #textContactPAStreet").val("");
+		$("table#contactTable_1 table#contactTablePostalAddress" + id + " #textContactPAStreet").val("");
 	}
 }
-function postalAddressCityChanged(){
-	if(($("table#yiTablePostalAddress_1 #textYIPACity").val()!="") && ($("table#yiTablePostalAddress_1 #textYIPACity").val()!=null)){
-	    $("table#contactTable_1 table#contactTablePostalAddress_1 #textContactPACity").attr("value", $("table#yiTablePostalAddress_1 #textYIPACity").val());
-	}else{
-		$("table#contactTable_1 table#contactTablePostalAddress_1 #textContactPACity").val("");
-	}
+function postalAddressCityChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
 
+	if(($("table#yiTablePostalAddress" + id + " #textYIPACity").val()!="") && ($("table#yiTablePostalAddress" + id + " #textYIPACity").val()!=null)){
+	    $("table#contactTable_1 table#contactTablePostalAddress" + id + " #textContactPACity").attr("value", $("table#yiTablePostalAddress" + id + " #textYIPACity").val());
+	}else{
+		$("table#contactTable_1 table#contactTablePostalAddress" + id + " #textContactPACity").val("");
+	}
 }
-function postalAddressLanguageChanged(){
-   var value = $("table#yiTablePostalAddress_1 #selectYIPASelectLanguage").val();
-   $("table#contactTable_1 table#contactTablePostalAddress_1 #selectContactLanguagePostalAddress option").each(function(){
-	    	if($(this).val()==value){$(this).attr("selected","selected");}
-    });
-	  
+
+function postalAddressLanguageChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
+
+	var value = $("table#yiTablePostalAddress" + id + " #selectYIPASelectLanguage").val();
+	$("table#contactTable_1 table#contactTablePostalAddress" + id + " #selectContactLanguagePostalAddress option").each(function(){
+		if($(this).val()==value){$(this).attr("selected","selected");}
+	});
 }
 function checkSelectASTSReproductionService(attr){
 	var value = $("#"+attr+" #selectASTSReproductionService").val();
@@ -3554,22 +3607,28 @@ function checkSelectASTSReproductionService(attr){
 	}
 }
 
-function latitudeOfInstitutionChanged(){
-	if(($("table#yiTableVisitorsAddress_1 #textYILatitude").val()!="") && ($("table#yiTableVisitorsAddress_1 #textYILatitude").val()!=null)){
-	  $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").attr("value", $("table#yiTableVisitorsAddress_1 #textYILatitude").val());
+function latitudeOfInstitutionChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
+
+	if(($("table#yiTableVisitorsAddress" + id + " #textYILatitude").val()!="") && ($("table#yiTableVisitorsAddress" + id + " #textYILatitude").val()!=null)){
+	  $("table#contactTable_1 table#contactTableVisitorsAddress" + id + " #textContactLatitudeOfTheInstitution").attr("value", $("table#yiTableVisitorsAddress" + id + " #textYILatitude").val());
     //  $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").attr("disabled","disabled");
 	}else{
 		//$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").removeAttr("disabled");
-		$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").val("");
+		$("table#contactTable_1 table#contactTableVisitorsAddress" + id + " #textContactLatitudeOfTheInstitution").val("");
 	}
 }
-function longitudeOfInstitutionChanged(){
-	if(($("table#yiTableVisitorsAddress_1 #textYILongitude").val()!="") && ($("table#yiTableVisitorsAddress_1 #textYILongitude").val()!=null)){
-	   $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").attr("value", $("table#yiTableVisitorsAddress_1 #textYILongitude").val());
+function longitudeOfInstitutionChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
+
+	if(($("table#yiTableVisitorsAddress" + id + " #textYILongitude").val()!="") && ($("table#yiTableVisitorsAddress" + id + " #textYILongitude").val()!=null)){
+	   $("table#contactTable_1 table#contactTableVisitorsAddress" + id + " #textContactLongitudeOfTheInstitution").attr("value", $("table#yiTableVisitorsAddress" + id + " #textYILongitude").val());
     //   $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").attr("disabled","disabled");
 	}else{
 		//$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").removeAttr("disabled");
-		$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").val("");
+		$("table#contactTable_1 table#contactTableVisitorsAddress" + id + " #textContactLongitudeOfTheInstitution").val("");
 	}
 }
 
@@ -3577,39 +3636,109 @@ function continentOfInstitutionChanged(){
 	$("table#contactTable_1 #selectContinentOfTheInstitution").attr("value", $("table#yiTableOthers #selectYIContinent").val());
 }
 
-function telephoneOfInstitutionChanged(){
-	 if(($("table#yiTableOthers #textYITelephone").val()!="") && ($("table#yiTableOthers #textYITelephone").val()!=null)){
-		$("table#contactTable_1 tr#trTelephoneOfTheInstitution_1 #textContactTelephoneOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYITelephone").val());
-		//$("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").attr("disabled","disabled");
-	}else{
-	  //  $("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").removeAttr("disabled");
-	    $("table#contactTable_1 tr#trTelephoneOfTheInstitution_1 #textContactTelephoneOfTheInstitution_1").val("");
-	} 
-}
+function telephoneOfInstitutionChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
 
-function emailOfInstitutionChanged(){
-	if(($("table#yiTableOthers #textYIEmailAddress").val()!="") && ($("table#yiTableOthers #textYIEmailAddress").val()!=null)){
-	  $("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYIEmailAddress").val());
-   //   $("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution").attr("disabled","disabled");
-	}else{
-	//	$("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution").removeAttr("disabled");
-		$("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution_1").val("");
+	if (id.startsWith("_"))  {
+		if(($("table#yiTableOthers #textYITelephone" + id).val()!="") && ($("table#yiTableOthers #textYITelephone" + id).val()!=null)){
+			if (id == null || id == "") {
+				$("table#contactTable_1 tr#trTelephoneOfTheInstitution_1 #textContactTelephoneOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYITelephone").val());
+	//			$("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").attr("disabled","disabled");
+			} else {
+				$("table#contactTable_1 tr#trTelephoneOfTheInstitution" + id + " #textContactTelephoneOfTheInstitution" + id).attr("value", $("table#yiTableOthers #textYITelephone" + id).val());
+			} 
+		}else{
+			 if (id == null || id == "") {
+	//			$("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").removeAttr("disabled");
+				$("table#contactTable_1 tr#trTelephoneOfTheInstitution_1 #textContactTelephoneOfTheInstitution_1").val("");
+			 } else {
+				$("table#contactTable_1 tr#trTelephoneOfTheInstitution" + id + " #textContactTelephoneOfTheInstitution" + id).val("");
+			 }
+		}
+	} else {
+		if(($("table#yiTableOthers #textYITelephone").val()!="") && ($("table#yiTableOthers #textYITelephone").val()!=null)){
+			$("table#contactTable_1 tr#trTelephoneOfTheInstitution_1 #textContactTelephoneOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYITelephone").val());
+//			$("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").attr("disabled","disabled");
+		}else{
+//			$("table#contactTable_1 tr#trTelephoneOfTheInstitution #textContactTelephoneOfTheInstitution").removeAttr("disabled");
+			$("table#contactTable_1 tr#trTelephoneOfTheInstitution_1 #textContactTelephoneOfTheInstitution_1").val("");
+		}
 	}
 }
 
-function emailOfInstitutionLinkChanged(){
-	$("table#contactTable_1 tr#trEmailOfTheInstitution #textContactLinkTitleForEmailOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYIEmailLinkTitle").val());
-}
+function emailOfInstitutionChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
 
-function webOfInstitutionChanged(){
-	if(($("table#yiTableOthers #textYIWebpage").val()!="") && ($("table#yiTableOthers #textYIWebpage").val()!=null)){
-	  $("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYIWebpage").val());
-    //  $("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution").attr("disabled","disabled");
-	}else{
-		//$("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution").removeAttr("disabled");
-		$("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution_1").val("");
+	if (id.startsWith("_"))  {
+		if(($("table#yiTableOthers #textYIEmailAddress" + id).val()!="") && ($("table#yiTableOthers #textYIEmailAddress" + id).val()!=null)){
+			if (id == null || id == "") {
+				$("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYIEmailAddress").val());
+		//		$("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution").attr("disabled","disabled");
+			} else {
+				$("table#contactTable_1 tr#trEmailOfTheInstitution" + id + " #textContactEmailOfTheInstitution" + id).attr("value", $("table#yiTableOthers #textYIEmailAddress" + id).val());
+			}
+		}else{
+			if (id == null || id == "") {
+	//			$("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution").removeAttr("disabled");
+				$("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution_1").val("");
+			} else {
+				$("table#contactTable_1 tr#trEmailOfTheInstitution" + id + " #textContactEmailOfTheInstitution" + id).val("");
+			}
+		}
+	} else {
+		if(($("table#yiTableOthers #textYIEmailAddress").val()!="") && ($("table#yiTableOthers #textYIEmailAddress").val()!=null)){
+			$("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYIEmailAddress").val());
+		}else{
+	//		$("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution").removeAttr("disabled");
+			$("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution_1").val("");
+		}
 	}
 }
+
+function emailOfInstitutionLinkChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
+
+	if (id.startsWith("_"))  {
+		$("table#contactTable_1 tr#trEmailOfTheInstitution" + id + " #textContactLinkTitleForEmailOfTheInstitution" + id).attr("value", $("table#yiTableOthers #textYIEmailLinkTitle" + id).val());
+	} else {
+		$("table#contactTable_1 tr#trEmailOfTheInstitution #textContactLinkTitleForEmailOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYIEmailLinkTitle").val());
+	}
+}
+
+function webOfInstitutionChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
+
+	if (id.startsWith("_"))  {
+		if(($("table#yiTableOthers #textYIWebpage" + id).val()!="") && ($("table#yiTableOthers #textYIWebpage" + id).val()!=null)){
+			if (id == null || id == "") {
+				$("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYIWebpage").val());
+				//  $("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution").attr("disabled","disabled");
+			} else {
+				$("table#contactTable_1 tr#trWebOfTheInstitution" + id + " #textContactWebOfTheInstitution" + id).attr("value", $("table#yiTableOthers #textYIWebpage" + id).val());
+			}
+		}else{
+			if (id == null || id == "") {
+				//$("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution").removeAttr("disabled");
+				$("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution_1").val("");
+			} else {
+				$("table#contactTable_1 tr#trWebOfTheInstitution" + id + " #textContactWebOfTheInstitution" + id).val("");
+			}
+		}
+	} else {
+		if(($("table#yiTableOthers #textYIWebpage").val()!="") && ($("table#yiTableOthers #textYIWebpage").val()!=null)){
+			$("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYIWebpage").val());
+			//  $("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution").attr("disabled","disabled");
+		} else {
+			//$("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution").removeAttr("disabled");
+			$("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution_1").val("");
+		}
+	}
+}
+
 function openingHoursOfInstitutionChanged(){
 	$("table#accessAndServicesTable_1 tr#trASOpeningTimes #textOpeningTimes").attr("value", $("table#yiTableOthers #textYIOpeningTimes").val());
 }
@@ -3634,16 +3763,37 @@ function futherInformationOnExistingFacilitiesChanged() {
 	$("table#accessAndServicesTable_1 #textASAccessibility").attr("value", $("table#yiTableOthers #futherInformationOnExistingFacilities").val());
 }
 
-function webOfInstitutionLinkChanged(){
-	$("table#contactTable_1 tr#trWebOfTheInstitution #textContactLinkTitleForWebOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYIWebpageLinkTitle").val());
+function webOfInstitutionLinkChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
+
+	if (id.startsWith("_"))  {
+		$("table#contactTable_1 tr#trWebOfTheInstitution" + id + " #textContactLinkTitleForWebOfTheInstitution" + id).attr("value", $("table#yiTableOthers #textYIWebpageLinkTitle" + id).val());
+	} else {
+		$("table#contactTable_1 tr#trWebOfTheInstitution #textContactLinkTitleForWebOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYIWebpageLinkTitle").val());
+	}
 }
 
-function contactEmailOfInstitutionLinkChanged(){
-	$("table#yiTableOthers #textYIEmailLinkTitle").attr("value", $("table#contactTable_1 tr#trEmailOfTheInstitution #textContactLinkTitleForEmailOfTheInstitution_1").val());
+function contactEmailOfInstitutionLinkChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
+
+	if (id == "_1") {
+		$("table#yiTableOthers #textYIEmailLinkTitle").attr("value", $("table#contactTable_1 tr#trEmailOfTheInstitution #textContactLinkTitleForEmailOfTheInstitution_1").val());
+	}else {
+		$("table#yiTableOthers #textYIEmailLinkTitle" + id).attr("value", $("table#contactTable_1 tr#trEmailOfTheInstitution" + id + " #textContactLinkTitleForEmailOfTheInstitution" + id).val());
+	}
 }
 
-function contactWebOfInstitutionLinkChanged(){
-	$("table#yiTableOthers #textYIWebpageLinkTitle").attr("value", $("table#contactTable_1 tr#trWebOfTheInstitution #textContactLinkTitleForWebOfTheInstitution_1").val());
+function contactWebOfInstitutionLinkChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
+
+	if (id == "_1") {
+		$("table#yiTableOthers #textYIWebpageLinkTitle").attr("value", $("table#contactTable_1 tr#trWebOfTheInstitution #textContactLinkTitleForWebOfTheInstitution_1").val());
+	} else {
+		$("table#yiTableOthers #textYIWebpageLinkTitle" + id).attr("value", $("table#contactTable_1 tr#trWebOfTheInstitution" + id + " #textContactLinkTitleForWebOfTheInstitution" + id).val());
+	}
 }
 
 function aSOpeningHoursOfInstitutionChanged(){
@@ -3790,27 +3940,58 @@ function loadDisableSelectsForFurtheIds() {
 	});
 }
 
-function contactTelephoneChanged(){
-    var id = $("table#contactTable_1 tr#trTelephoneOfTheInstitution_1 #textContactTelephoneOfTheInstitution_1").val();
-    $("table#yiTableOthers #textYITelephone").attr("value",id);
+function contactTelephoneChanged(name){
+	var parentId = name.attr("id");
+	parentId = parentId.substring(parentId.lastIndexOf("_"));
+
+    var id = $("table#contactTable_1 tr#trTelephoneOfTheInstitution" + parentId + " #textContactTelephoneOfTheInstitution" + parentId).val();
+    if (parentId == "_1") {
+    	$("table#yiTableOthers #textYITelephone").attr("value",id);
+    }
 }
-function contactEmailChanged(){
-	var id = $("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution_1").val();
-	$("table#yiTableOthers #textYIEmailAddress").attr("value",id);
+function contactEmailChanged(name){
+	var parentId = name.attr("id");
+	parentId = parentId.substring(parentId.lastIndexOf("_"));
+
+	if (parentId == "_1") {
+		var id = $("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution" + parentId).val();
+		$("table#yiTableOthers #textYIEmailAddress").attr("value",id);
+	} else {
+		var id = $("table#contactTable_1 tr#trEmailOfTheInstitution" + parentId + " #textContactEmailOfTheInstitution" + parentId).val();
+		$("table#yiTableOthers #textYIEmailAddress" + parentId).attr("value",id);
+	}
 }
-function contactWebpageChanged(){
-	var id = $("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution_1").val();
-	$("table#yiTableOthers #textYIWebpage").attr("value",id);
+function contactWebpageChanged(name){
+	var parentId = name.attr("id");
+	parentId = parentId.substring(parentId.lastIndexOf("_"));
+
+
+	if (parentId == "_1") {
+		var id = $("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution" + parentId).val();
+		$("table#yiTableOthers #textYIWebpage").attr("value",id);
+	} else {
+		var id = $("table#contactTable_1 tr#trWebOfTheInstitution" + parentId + " #textContactWebOfTheInstitution" + parentId).val();
+		$("table#yiTableOthers #textYIWebpage" + parentId).attr("value",id);
+	}
 }
-function contactLatitudeChanged(){
-	var id = $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").val();
-	$("table#yiTableVisitorsAddress_1 #textYILatitude").attr("value",id);
+function contactLatitudeChanged(name){
+	var parentId = name.attr("id");
+	parentId = parentId.substring(parentId.lastIndexOf("_"));
+
+	var id = $("table#contactTable_1 table#contactTableVisitorsAddress" + parentId + " #textContactLatitudeOfTheInstitution").val();
+	$("table#yiTableVisitorsAddress" + parentId + " #textYILatitude").attr("value",id);
 }
-function contactLongitudeChanged(){
-	var id =  $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").val();
-	$("table#yiTableVisitorsAddress_1 #textYILongitude").attr("value",id);
+function contactLongitudeChanged(name){
+	var parentId = name.attr("id");
+	parentId = parentId.substring(parentId.lastIndexOf("_"));
+
+	var id =  $("table#contactTable_1 table#contactTableVisitorsAddress" + parentId + " #textContactLongitudeOfTheInstitution").val();
+	$("table#yiTableVisitorsAddress" + parentId + " #textYILongitude").attr("value",id);
 }
-function contactStreetLanguageChanged(){
-	var id =  $("table#contactTable_1 table#contactTableVisitorsAddress_1 #selectLanguageVisitorAddress").val();
-	$("table#yiTableVisitorsAddress_1 #selectYIVASelectLanguage").attr("value",id);
+function contactStreetLanguageChanged(name){
+	var parentId = name.attr("id");
+	parentId = parentId.substring(parentId.lastIndexOf("_"));
+
+	var id =  $("table#contactTable_1 table#contactTableVisitorsAddress" + parentId + " #selectLanguageVisitorAddress").val();
+	$("table#yiTableVisitorsAddress" + parentId + " #selectYIVASelectLanguage").attr("value",id);
 }

@@ -58,9 +58,13 @@
 						$("div#contactTabContent table#contactTable").attr("id","contactTable_1");
 						$("div#contactTabContent table#contactTable_1").show();
 						$("div#contactTabContent").show();
+						$("div#accessAndServicesTabContent table#accessAndServicesTable").attr("id","accessAndServicesTable_1");
+						$("div#accessAndServicesTabContent table#accessAndServicesTable_1").show();
+						$("div#accessAndServicesTabContent").show();
+						$("div#descriptionTabContent table#descriptionTable").attr("id","descriptionTable_1");
+						$("div#descriptionTabContent table#descriptionTable_1").show();
+						$("div#descriptionTabContent").show();
 					}
-					$("div#accessAndServicesTabContent table#accessAndServicesTable").attr("id","accessAndServicesTable_1");
-					$("div#descriptionTabContent table#descriptionTable").attr("id","descriptionTable_1");
 
 					// Load repository tabs if necessary.
 					var labelInstitution = '<s:property value="getText('label.ai.yourinstitution.institution')" />';

@@ -157,23 +157,13 @@
 						</s:else>
 					</td>
 					<td>
-						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYIStreet" onchange="streetOfInstitutionChanged();" value="<s:property value="loader.yiStreet[#counter]" />" />
-						</s:if>
-						<s:else>
-							<input type="text" id="textYIStreet" value="<s:property value="loader.yiStreet[#counter]" />" />
-						</s:else>
+						<input type="text" id="textYIStreet" onchange="streetOfInstitutionChanged($(this).parent().parent().parent().parent());" value="<s:property value="loader.yiStreet[#counter]" />" />
 					</td>
 					<td class="labelLeft">
 						<label for="selectYIVASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 					</td>
 					<td>
-						<s:if test="%{#status.index == 0}">
-							<select id="selectYIVASelectLanguage" onchange="streetOfInstitutionLanguageChanged();" >
-						</s:if>
-						<s:else>
-							<select id="selectYIVASelectLanguage">
-						</s:else>
+						<select id="selectYIVASelectLanguage" onchange="streetOfInstitutionLanguageChanged($(this).parent().parent().parent().parent());" >
 							<s:iterator value="languageList" var="language"> 
 								<option value="<s:property value="#language.key" />"
 									<s:if test="%{#language.key == loader.yiStreetLang[#counter]}" > selected=selected </s:if>>
@@ -194,12 +184,7 @@
 						</s:else>
 					</td>
 					<td>
-						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYICity" onchange="cityOfInstitutionChanged();" value="<s:property value="loader.yiMunicipalityPostalcode[#counter]" />" />
-						</s:if>
-						<s:else>
-							<input type="text" id="textYICity" value="<s:property value="loader.yiMunicipalityPostalcode[#counter]" />" />
-						</s:else>
+						<input type="text" id="textYICity" onchange="cityOfInstitutionChanged($(this).parent().parent().parent().parent());" value="<s:property value="loader.yiMunicipalityPostalcode[#counter]" />" />
 					</td>
 					<td colspan="2">
 					</td>
@@ -215,12 +200,7 @@
 						</s:else>
 					</td>
 					<td>
-						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYICountry" onchange="countryOfInstitutionChanged();" value="<s:property value="loader.yiCountry[#counter]" />" />
-						</s:if>
-						<s:else>
-							<input type="text" id="textYICountry" value="<s:property value="loader.yiCountry[#counter]" />" />
-						</s:else>
+						<input type="text" id="textYICountry" onchange="countryOfInstitutionChanged($(this).parent().parent().parent().parent());" value="<s:property value="loader.yiCountry[#counter]" />" />
 					</td>
 					<td colspan="2">
 					</td>
@@ -237,23 +217,13 @@
 						<label for="textYILatitude"><s:property value="getText('label.ai.tabs.commons.latitude')"/></label>
 					</td>
 					<td>
-						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYILatitude" onchange="latitudeOfInstitutionChanged();" value="<s:property value="loader.yiLatitude[#counter]" />" />
-						</s:if>
-						<s:else>
-							<input type="text" id="textYILatitude" value="<s:property value="loader.yiLatitude[#counter]" />" />
-						</s:else>
+						<input type="text" id="textYILatitude" onchange="latitudeOfInstitutionChanged($(this).parent().parent().parent().parent());" value="<s:property value="loader.yiLatitude[#counter]" />" />
 					</td>
 					<td class="labelLeft">
 						<label for="textYILongitude"><s:property value="getText('label.ai.tabs.commons.longitude')"/></label>
 					</td>
 					<td>
-						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYILongitude" onchange="longitudeOfInstitutionChanged();" value="<s:property value="loader.yiLongitude[#counter]" />" />
-						</s:if>
-						<s:else>
-							<input type="text" id="textYILongitude" value="<s:property value="loader.yiLongitude[#counter]" />" />
-						</s:else>
+						<input type="text" id="textYILongitude" onchange="longitudeOfInstitutionChanged($(this).parent().parent().parent().parent());" value="<s:property value="loader.yiLongitude[#counter]" />" />
 					</td>
 				</tr>
 			</table>
@@ -273,13 +243,13 @@
 					<label for="textYIStreet"><s:property value="getText('label.ai.tabs.commons.street')"/><span class="required">*</span>:</label>
 				</td>
 				<td>
-					<input type="text" id="textYIStreet" onchange="streetOfInstitutionChanged();" />
+					<input type="text" id="textYIStreet" onchange="streetOfInstitutionChanged($(this).parent().parent().parent().parent());" />
 				</td>
 				<td class="labelLeft">
 					<label for="selectYIVASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 				</td>
 				<td>
-					<select id="selectYIVASelectLanguage" onchange="streetOfInstitutionLanguageChanged();" >
+					<select id="selectYIVASelectLanguage" onchange="streetOfInstitutionLanguageChanged($(this).parent().parent().parent().parent());" >
 						<s:iterator value="languageList" var="language"> 
 							<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
 						</s:iterator>
@@ -292,7 +262,7 @@
 					<label for="textYICity"><s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')"/><span class="required">*</span>:</label>
 				</td>
 				<td>
-					<input type="text" id="textYICity" onchange="cityOfInstitutionChanged();" />
+					<input type="text" id="textYICity" onchange="cityOfInstitutionChanged($(this).parent().parent().parent().parent());" />
 				</td>
 				<td colspan="2">
 				</td>
@@ -303,7 +273,7 @@
 					<label for="textYICountry"><s:property value="getText('label.ai.tabs.commons.country')"/><span class="required">*</span>:</label>
 				</td>
 				<td>
-					<input type="text" id="textYICountry" onchange="countryOfInstitutionChanged();" />
+					<input type="text" id="textYICountry" onchange="countryOfInstitutionChanged($(this).parent().parent().parent().parent());" />
 				</td>
 				<td colspan="2">
 				</td>
@@ -320,13 +290,13 @@
 					<label for="textYILatitude"><s:property value="getText('label.ai.tabs.commons.latitude')"/></label>
 				</td>
 				<td>
-					<input type="text" id="textYILatitude" onchange="latitudeOfInstitutionChanged();" />
+					<input type="text" id="textYILatitude" onchange="latitudeOfInstitutionChanged($(this).parent().parent().parent().parent());" />
 				</td>
 				<td class="labelLeft">
 					<label for="textYILongitude"><s:property value="getText('label.ai.tabs.commons.longitude')"/></label>
 				</td>
 				<td>
-					<input type="text" id="textYILongitude" onchange="longitudeOfInstitutionChanged();" />
+					<input type="text" id="textYILongitude" onchange="longitudeOfInstitutionChanged($(this).parent().parent().parent().parent());" />
 				</td>
 			</tr>
 		</table>
@@ -362,23 +332,13 @@
 						</s:else>
 					</td>
 					<td>
-						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYIPAStreet" onchange="postalAddressStreetChanged();" value="<s:property value="loader.yiStreetPostal[#counter]" />" />
-						</s:if>
-						<s:else>
-							<input type="text" id="textYIPAStreet" value="<s:property value="loader.yiStreetPostal[#counter]" />" />
-						</s:else>
+						<input type="text" id="textYIPAStreet" onchange="postalAddressStreetChanged($(this).parent().parent().parent().parent());" value="<s:property value="loader.yiStreetPostal[#counter]" />" />
 					</td>
 					<td id="yiPostalAddressLanguage" class="labelLeft">
 						<label for="selectYIPASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 					</td>
 					<td>
-						<s:if test="%{#status.index == 0}">
-							<select id="selectYIPASelectLanguage" onchange="postalAddressLanguageChanged();">
-						</s:if>
-						<s:else>
-							<select id="selectYIPASelectLanguage">
-						</s:else>
+						<select id="selectYIPASelectLanguage" onchange="postalAddressLanguageChanged($(this).parent().parent().parent().parent());">
 							<s:iterator value="languageList" var="language"> 
 								<option value="<s:property value="#language.key" />"
 									<s:if test="%{#language.key == loader.yiStreetPostalLang[#counter]}" > selected=selected </s:if>>
@@ -399,12 +359,7 @@
 						</s:else>
 					</td>
 					<td>
-						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYIPACity" onchange="postalAddressCityChanged();" value="<s:property value="loader.yiMunicipalityPostalcodePostal[#counter]" />" />
-						</s:if>
-						<s:else>
-							<input type="text" id="textYIPACity" value="<s:property value="loader.yiMunicipalityPostalcodePostal[#counter]" />" />
-						</s:else>
+						<input type="text" id="textYIPACity" onchange="postalAddressCityChanged($(this).parent().parent().parent().parent());" value="<s:property value="loader.yiMunicipalityPostalcodePostal[#counter]" />" />
 					</td>
 					<td colspan="2">
 					</td>
@@ -457,7 +412,7 @@
 				<label for="textYITelephone" ><s:property value="getText('label.ai.tabs.commons.telephone')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYITelephone" onchange="telephoneOfInstitutionChanged();" value="${loader.telephone}" />
+				<input type="text" id="textYITelephone" onchange="telephoneOfInstitutionChanged($(this));" value="${loader.telephone}" />
 			</td>
 		</tr>
 
@@ -480,10 +435,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYIEmailAddress" onchange="emailOfInstitutionChanged();" value="<s:property value="loader.yiEmail[#counter]" />" />
+							<input type="text" id="textYIEmailAddress" onchange="emailOfInstitutionChanged($(this));" value="<s:property value="loader.yiEmail[#counter]" />" />
 						</s:if>
 						<s:else>
-							<input type="text" id="textYIEmailAddress_<s:property value="%{#status.index + 1}" />" value="<s:property value="loader.yiEmail[#counter]" />" />
+							<input type="text" id="textYIEmailAddress_<s:property value="%{#status.index + 1}" />" onchange="emailOfInstitutionChanged($(this));" value="<s:property value="loader.yiEmail[#counter]" />" />
 						</s:else>
 					</td>
 					<td class="labelLeft">
@@ -527,10 +482,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYIEmailLinkTitle" onchange="emailOfInstitutionLinkChanged();" value="<s:property value="loader.yiEmailTitle[#counter]" />" />
+							<input type="text" id="textYIEmailLinkTitle" onchange="emailOfInstitutionLinkChanged($(this));" value="<s:property value="loader.yiEmailTitle[#counter]" />" />
 						</s:if>
 						<s:else>
-							<input type="text" id="textYIEmailLinkTitle_<s:property value="%{#status.index + 1}" />" value="<s:property value="loader.yiEmailTitle[#counter]" />" />
+							<input type="text" id="textYIEmailLinkTitle_<s:property value="%{#status.index + 1}" />" onchange="emailOfInstitutionLinkChanged($(this));" value="<s:property value="loader.yiEmailTitle[#counter]" />" />
 						</s:else>
 					</td>
 					<td colspan="2">
@@ -553,7 +508,7 @@
 					<label for="textYIEmailAddress" ><s:property value="getText('label.ai.tabs.commons.emailAddress')"/>:</label>
 				</td>
 				<td>
-					<input type="text" id="textYIEmailAddress" onchange="emailOfInstitutionChanged();" />
+					<input type="text" id="textYIEmailAddress" onchange="emailOfInstitutionChanged($(this));" />
 				</td>
 				<td class="labelLeft">
 					<label for="selectTextYILangEmail"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -572,7 +527,7 @@
 					<label for="textYIEmailLinkTitle" ><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 				</td>
 				<td>
-					<input type="text" id="textYIEmailLinkTitle" onchange="emailOfInstitutionLinkChanged();" />
+					<input type="text" id="textYIEmailLinkTitle" onchange="emailOfInstitutionLinkChanged($(this));" />
 				</td>
 			</tr>
 
@@ -604,10 +559,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYIWebpage" onchange="webOfInstitutionChanged();" value="<s:property value="loader.yiWebpage[#counter]" />" />
+							<input type="text" id="textYIWebpage" onchange="webOfInstitutionChanged($(this));" value="<s:property value="loader.yiWebpage[#counter]" />" />
 						</s:if>
 						<s:else>
-							<input type="text" id="textYIWebpage_<s:property value="%{#status.index + 1}" />" value="<s:property value="loader.yiWebpage[#counter]" />" />
+							<input type="text" id="textYIWebpage_<s:property value="%{#status.index + 1}" />" onchange="webOfInstitutionChanged($(this));" value="<s:property value="loader.yiWebpage[#counter]" />" />
 						</s:else>
 					</td>
 					<td class="labelLeft">
@@ -651,10 +606,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYIWebpageLinkTitle" onchange="webOfInstitutionLinkChanged();" value="<s:property value="loader.yiWebpageTitle[#counter]" />" />
+							<input type="text" id="textYIWebpageLinkTitle" onchange="webOfInstitutionLinkChanged($(this));" value="<s:property value="loader.yiWebpageTitle[#counter]" />" />
 						</s:if>
 						<s:else>
-							<input type="text" id="textYIWebpageLinkTitle_<s:property value="%{#status.index + 1}" />" value="<s:property value="loader.yiWebpageTitle[#counter]" />" />
+							<input type="text" id="textYIWebpageLinkTitle_<s:property value="%{#status.index + 1}" />" onchange="webOfInstitutionLinkChanged($(this));" value="<s:property value="loader.yiWebpageTitle[#counter]" />" />
 						</s:else>
 					</td>
 					<td colspan="2">
@@ -675,7 +630,7 @@
 					<label for="textYIWebpage" ><s:property value="getText('label.ai.tabs.commons.webpage')"/>:</label>
 				</td>
 				<td>
-					<input type="text" id="textYIWebpage" onchange="webOfInstitutionChanged();" />
+					<input type="text" id="textYIWebpage" onchange="webOfInstitutionChanged($(this));" />
 				</td>
 				<td class="labelLeft">
 					<label for="selectTextYILangWebpage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -694,7 +649,7 @@
 					<label for="textYIWebpageLinkTitle" ><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 				</td>
 				<td>
-					<input type="text" id="textYIWebpageLinkTitle" onchange="webOfInstitutionLinkChanged();" />
+					<input type="text" id="textYIWebpageLinkTitle" onchange="webOfInstitutionLinkChanged($(this));" />
 				</td>
 			</tr>
 
