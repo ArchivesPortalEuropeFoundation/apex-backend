@@ -4965,6 +4965,8 @@ public class EAG2012Loader{
 									this.setReproductionserEmailLink(emails.get(i).getContent());
 									this.setReproductionserEmailLang(emails.get(i).getLang());
 								}
+							}
+							if(repository.getServices().getTechservices().getReproductionser().getWebpage()!=null){
 								webpages = repository.getServices().getTechservices().getReproductionser().getWebpage();
 								for (int i = 0; i < webpages.size(); i++) {
 									this.setReproductionserWebpageLink(webpages.get(i).getContent());
