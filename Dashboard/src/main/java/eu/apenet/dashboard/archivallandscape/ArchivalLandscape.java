@@ -775,6 +775,7 @@ public class ArchivalLandscape extends ActionSupport{
 		            //StoreAI
 		            log.debug("Storing in database the institution "+ this.ai.getAiname());
 		            this.aiDao.insertSimple(this.ai);
+		            ContentUtils.updateContainsSearchableItemsInAiGroups(this.ai);
 		            this.archivalInstitutionsToInsert.add(this.ai);
 		            
 		            //Store the alternative names of the archival institution
@@ -861,6 +862,7 @@ public class ArchivalLandscape extends ActionSupport{
 		            		this.ai.setInternalAlId(archivalLandscapeNode.getInternal_al_id());
 		            		log.debug("Updating the parent in database of the institution "+ this.ai.getAiname());
 	            			this.aiDao.updateSimple(this.ai);
+	            			ContentUtils.updateContainsSearchableItemsInAiGroups(this.ai);
 			            	ais.remove(i);
 			            	upload = false;
 		            	}
@@ -888,6 +890,7 @@ public class ArchivalLandscape extends ActionSupport{
 				         //StoreAI
 				         log.debug("Storing in database the institution "+ this.ai.getAiname());
 				         this.aiDao.insertSimple(this.ai);
+				         ContentUtils.updateContainsSearchableItemsInAiGroups(this.ai);
 				         this.archivalInstitutionsToInsert.add(this.ai);
 		         		
 				         //Store the alternative names of the archival institution
