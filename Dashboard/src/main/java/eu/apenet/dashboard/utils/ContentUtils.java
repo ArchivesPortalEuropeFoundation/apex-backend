@@ -351,18 +351,35 @@ public class ContentUtils {
 		ead.setPublished(searchable);
 
 	}
-
+	public static void updateContainsSearchableItemsInAiGroups(ArchivalInstitution child){
+		ArchivalInstitution parent = child.getParent();
+		if (parent != null){
+			if (child.isContainSearchableItems() && !parent.isContainSearchableItems()){		
+				parent.setContainSearchableItems(true);
+				DAOFactory.instance().getArchivalInstitutionDAO().insertSimple(parent);
+				LOGGER.info("AI: '" + parent.getAiname() + "' has now searchable items");
+			}else if (!child.isContainSearchableItems() && parent.isContainSearchableItems()){
+				boolean containSearchableItems = false;
+				for (ArchivalInstitution tempChild: parent.getChildArchivalInstitutions()){
+					if (tempChild.getAiId() != child.getAiId()){
+						containSearchableItems = containSearchableItems || tempChild.isContainSearchableItems();
+					}
+				}
+				if (!containSearchableItems){
+					parent.setContainSearchableItems(false);
+					DAOFactory.instance().getArchivalInstitutionDAO().insertSimple(parent);
+					LOGGER.info("AI: '" + parent.getAiname() + "' has now no searchable items left");
+				}
+			}
+		}
+	}
 	private static void changeContainsSearchableItems(ArchivalInstitution ai, boolean searchable) {
 		if (searchable != ai.isContainSearchableItems()) {
 			if (searchable == true) {
 				LOGGER.info("AI: '" + ai.getAiname() + "' has now searchable items");
 				ai.setContainSearchableItems(searchable);
-				ArchivalInstitution parent = ai.getParent();
-				if (parent == null) {
-					DAOFactory.instance().getArchivalInstitutionDAO().insertSimple(ai);
-				} else {
-					changeContainsSearchableItems(parent, searchable);
-				}
+				DAOFactory.instance().getArchivalInstitutionDAO().insertSimple(ai);
+				updateContainsSearchableItemsInAiGroups(ai);
 			} else {
 				EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 				EadSearchOptions eadSearchOptions = new EadSearchOptions();
@@ -370,14 +387,14 @@ public class ContentUtils {
 				eadSearchOptions.setPublished(true);
 				eadSearchOptions.setEadClazz(FindingAid.class);
 
-				long numberOfEads = eadDAO.countEads(eadSearchOptions);
-				if (numberOfEads <= 1) {
+				boolean eadExist = eadDAO.existEads(eadSearchOptions);
+				if (!eadExist) {
 					eadSearchOptions.setEadClazz(HoldingsGuide.class);
-					numberOfEads += eadDAO.countEads(eadSearchOptions);
-					if (numberOfEads <= 1) {
+					eadExist =  eadDAO.existEads(eadSearchOptions);
+					if (!eadExist) {
 						eadSearchOptions.setEadClazz(SourceGuide.class);
-						numberOfEads += eadDAO.countEads(eadSearchOptions);
-						if (numberOfEads <= 1) {
+						eadExist =  eadDAO.existEads(eadSearchOptions);
+						if (!eadExist) {
 							LOGGER.info("AI: '" + ai.getAiname() + "' has now no searchable items left");
 							ai.setContainSearchableItems(searchable);
 							ArchivalInstitution parent = ai.getParent();
