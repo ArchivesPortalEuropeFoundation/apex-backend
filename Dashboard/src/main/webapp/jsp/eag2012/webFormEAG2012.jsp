@@ -122,6 +122,11 @@
 						var message = "<s:property value="getText('label.eag.eagwithurlwarnings')"/>";
 						checkWebpages($(this),message);
 					});
+					checkWebpages($("table#yiTableOthers input#textYIWebpage"),"<s:property value="getText('label.eag.eagwithurlwarnings')"/>");
+					$("table#yiTableOthers input[id^='textYIWebpage_']").each(function(){
+						var message = "<s:property value="getText('label.eag.eagwithurlwarnings')"/>";
+						checkWebpages($(this),message);
+					});
 					$("table#resourceRelationTable_1 input[id^='textWebsiteOfResource']").each(function(){
 						var message = "<s:property value="getText('label.eag.eagwithurlwarnings')"/>";
 						checkWebpages($(this),message);

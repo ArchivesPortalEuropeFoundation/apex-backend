@@ -1047,6 +1047,32 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					    }
 					    eag2012.setRelationEntryValue(listRelationEnrtyMap);
 					}
+					if(resourceRelationTable.has("selectTitleOfRelatedMaterialLang")){
+						List<Map<String, List<String>>> listRelationEntryMap = eag2012.getRelationEntryLang();
+						if(listRelationEntryMap==null){
+							listRelationEntryMap= new ArrayList<Map<String,List<String>>>();
+						}
+						Map<String,List<String>> relationEntryMap = null;
+						if(listRelationEntryMap.size()>0 && listRelationEntryMap.get(0)!=null){
+							relationEntryMap = listRelationEntryMap.get(0);
+						}else{
+							relationEntryMap = new HashMap<String,List<String>>();
+						}
+						List<String> relationEntryList =null;
+						if(relationEntryMap.size()>0 && relationEntryMap.get(Eag2012.RESOURCE_RELATION)!=null){
+							relationEntryList= relationEntryMap.get(Eag2012.RESOURCE_RELATION);
+						}else{
+							relationEntryList = new ArrayList<String>();
+						}
+						relationEntryList.add(resourceRelationTable.getString("selectTitleOfRelatedMaterialLang"));
+						relationEntryMap.put(Eag2012.RESOURCE_RELATION, relationEntryList);
+					    if(listRelationEntryMap.size()>0){
+					    	listRelationEntryMap.set(0, relationEntryMap);
+					    }else{
+					    	listRelationEntryMap.add(relationEntryMap);
+					    }
+					    eag2012.setRelationEntryLang(listRelationEntryMap);
+					}
 					if(resourceRelationTable.has("textDescriptionOfRelation")){
 						List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
 						 if(descriptiveNotePValue==null){

@@ -314,6 +314,14 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 			additionalChecks = checkWebpages($(this),messageRightWeb);
 		}
 	});
+	if(!additionalChecks){
+		checkWebpages($("table#yiTableOthers input#textYIWebpage"),messageRightWeb);
+		$("table#yiTableOthers input[id^='textYIWebpage_']").each(function(){
+			if(!additionalChecks){
+				additionalChecks = checkWebpages($(this),messageRightWeb);
+			}
+		});
+	}
 	
 	//select options selected
 	$("#yiTableOthers select").each(function(){

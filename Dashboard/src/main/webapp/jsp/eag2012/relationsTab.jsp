@@ -39,7 +39,15 @@
 			<td>
 				<input type="text" id="textTitleOfRelatedMaterial" value="${loader.resourceRelationrelationEntry}" onchange="relationsLinkToYourHolndingsGuideTitleChanged();" />
 			</td>
-			<td colspan="2">
+			<td class="labelLeft">
+				<label for="selectTitleOfRelatedMaterialLang"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+			</td>
+			<td>
+				<select id="selectTitleOfRelatedMaterialLang" >
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.resourceRelationLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
 
