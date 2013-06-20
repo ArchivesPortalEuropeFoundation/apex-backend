@@ -309,7 +309,6 @@ public class FillOrderAL extends ActionSupport {
 		        		if (alNodes.get(h).getInternal_al_id().equals(ais.get(i).getInternalAlId()))
 			            	{	
 		            		this.ai = ais.get(i);
-		            		ArchivalInstitution oldParent = ai.getParent();
 		            		//If the item stored in database has the same parent in the archival landscape, check the languages
 		            		if ((alNodes.get(h).getParent_internal_al_id()== null) && (ais.get(i).getParent() ==null))
 		            		{
@@ -345,10 +344,6 @@ public class FillOrderAL extends ActionSupport {
 		            		this.ai.setInternalAlId(alNodes.get(h).getInternal_al_id());
 		            		log.debug("Updating the parent in database of the institution "+ this.ai.getAiname());
 	            			this.aiDao.updateSimple(this.ai);
-	            			ContentUtils.updateContainsSearchableItemsInAiGroups(this.ai);
-	            			if (this.ai.getParentAiId() != null && oldParent.getAiId() != this.ai.getParentAiId()){
-	            				ContentUtils.updateContainsSearchableItemsInOldAiGroups(oldParent);
-	            			}
 			            	ais.remove(i);
 		            	}
 		        		  else{

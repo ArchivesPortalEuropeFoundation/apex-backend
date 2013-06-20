@@ -351,14 +351,21 @@ public class ContentUtils {
 		ead.setPublished(searchable);
 
 	}
-	public static void updateContainsSearchableItemsInAiGroups(ArchivalInstitution child){
+	public static void updateContainsSearchableItemsInAiGroups(ArchivalInstitution archivalInstitution){
+		if (archivalInstitution.isGroup()){
+			updateContainsSearchableItemsInOldAiGroups(archivalInstitution);
+		}else {
+			updateContainsSearchableItemsInNewAiGroups(archivalInstitution);
+		}
+	}
+	private static void updateContainsSearchableItemsInNewAiGroups(ArchivalInstitution child){
 		ArchivalInstitution parent = child.getParent();
 		if (parent != null){
 			if (child.isContainSearchableItems() && !parent.isContainSearchableItems()){		
 				parent.setContainSearchableItems(true);
 				DAOFactory.instance().getArchivalInstitutionDAO().insertSimple(parent);
 				LOGGER.info("AI: '" + parent.getAiname() + "' has now searchable items");
-				updateContainsSearchableItemsInAiGroups(parent);
+				updateContainsSearchableItemsInNewAiGroups(parent);
 			}else if (!child.isContainSearchableItems() && parent.isContainSearchableItems()){
 				boolean containSearchableItems = false;
 				for (ArchivalInstitution tempChild: parent.getChildArchivalInstitutions()){
@@ -370,21 +377,22 @@ public class ContentUtils {
 					parent.setContainSearchableItems(false);
 					DAOFactory.instance().getArchivalInstitutionDAO().insertSimple(parent);
 					LOGGER.info("AI: '" + parent.getAiname() + "' has now no searchable items left");
-					updateContainsSearchableItemsInAiGroups(parent);
+					updateContainsSearchableItemsInNewAiGroups(parent);
 				}
 			}
 		}
 	}
-	public static void updateContainsSearchableItemsInOldAiGroups(ArchivalInstitution oldParent){
+	private static void updateContainsSearchableItemsInOldAiGroups(ArchivalInstitution oldParent){
 		boolean containSearchableItems = false;
 		for (ArchivalInstitution tempChild: oldParent.getChildArchivalInstitutions()){
 				containSearchableItems = containSearchableItems || tempChild.isContainSearchableItems();
+
 		}
 		if (!containSearchableItems){
 			oldParent.setContainSearchableItems(false);
 			DAOFactory.instance().getArchivalInstitutionDAO().insertSimple(oldParent);
 			LOGGER.info("AI: '" + oldParent.getAiname() + "' has now no searchable items left");
-			updateContainsSearchableItemsInAiGroups(oldParent);
+			updateContainsSearchableItemsInNewAiGroups(oldParent);
 		}		
 	}
 	private static void changeContainsSearchableItems(ArchivalInstitution ai, boolean searchable) {

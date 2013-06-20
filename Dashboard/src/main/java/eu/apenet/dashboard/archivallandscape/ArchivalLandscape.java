@@ -803,7 +803,6 @@ public class ArchivalLandscape extends ActionSupport{
 		         		//If the institution already exists, don't store in database
 		            	if (archivalLandscapeNode.getInternal_al_id().equals(archivalInstitution.getInternalAlId())) {
 		            		this.ai = archivalInstitution;
-		            		ArchivalInstitution oldParent = ai.getParent();
 		            		//If the item stored in database has the same parent in the archival landscape, check the languages
 		            		if ((archivalLandscapeNode.getParent_internal_al_id()== null) && (archivalInstitution.getParent() ==null))
 		            		{
@@ -864,9 +863,6 @@ public class ArchivalLandscape extends ActionSupport{
 		            		log.debug("Updating the parent in database of the institution "+ this.ai.getAiname());
 	            			this.aiDao.updateSimple(this.ai);
 	            			ContentUtils.updateContainsSearchableItemsInAiGroups(this.ai);
-	            			if (this.ai.getParentAiId() != null && oldParent.getAiId() != this.ai.getParentAiId()){
-	            				ContentUtils.updateContainsSearchableItemsInOldAiGroups(oldParent);
-	            			}
 			            	ais.remove(i);
 			            	upload = false;
 		            	}
