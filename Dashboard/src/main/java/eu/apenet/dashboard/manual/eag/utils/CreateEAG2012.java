@@ -2481,13 +2481,20 @@ public class CreateEAG2012 {
 	}
 
 	private String parseDate(String formatDate) {
-		boolean pattern1 = Pattern.matches("\\d{4}", formatDate);
-		boolean pattern2 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{2}", formatDate);
-		boolean pattern3 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{2}[\\-\\./:\\s]\\d{2}", formatDate);
-
+		boolean pattern1 = Pattern.matches("\\d{4}", formatDate); //yyyy
+		boolean pattern2 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{2}", formatDate); //yyyy-MM
+		boolean pattern3 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{2}[\\-\\./:\\s]\\d{2}", formatDate); //yyyy-MM-dd
+		boolean pattern4 = Pattern.matches("\\d{2}[\\-\\./:\\s]\\d{2}[\\-\\./:\\s]\\d{4}", formatDate); //dd-MM-yyyy
+		if (pattern4){
+			String yearStandardDate = formatDate.substring(6);
+			String monthStandardDate = formatDate.substring(2,6);
+			String dateStandardDate = formatDate.substring(0,2);
+			String reverseString =yearStandardDate+monthStandardDate+dateStandardDate;
+	         formatDate = formatDate.replaceAll(formatDate, reverseString);
+		}
 		if (pattern1){
 			return formatDate;
-		} else if (pattern2 || pattern3) {
+		} else if (pattern2 || pattern3 || pattern4) {
 			formatDate = formatDate.replaceAll("[\\./:\\s]", "-");
 			return formatDate;
 		}
