@@ -3725,9 +3725,10 @@ public class EAG2012Loader{
 					&& this.eag.getControl().getRecordId() != null
 					&& this.eag.getControl().getRecordId().getValue() != null
 					&& !this.eag.getControl().getRecordId().getValue().isEmpty()) {
-				if (this.eag.getArchguide().getIdentity().getOtherRepositorId().getContent().equalsIgnoreCase(this.eag.getControl().getRecordId().getValue())) {
+				if (!this.eag.getArchguide().getIdentity().getOtherRepositorId().getContent().equalsIgnoreCase(this.eag.getControl().getRecordId().getValue())) {
 					this.setRecordIdISIL(Eag2012.OPTION_YES);
 					this.setRecordId(this.eag.getControl().getRecordId().getValue());
+					this.setSelfRecordId(this.getIdUsedInAPE());
 				} else {
 					this.setRecordIdISIL(Eag2012.OPTION_NO);
 					this.setRecordId(this.getRecordId());
@@ -3745,9 +3746,15 @@ public class EAG2012Loader{
 				&& !this.eag.getControl().getOtherRecordId().isEmpty()) {
 			for (int i = 0; i < this.eag.getControl().getOtherRecordId().size(); i++) {
 				OtherRecordId otherRecordId = this.eag.getControl().getOtherRecordId().get(i);
-				if (otherRecordId.getValue() != null && !otherRecordId.getValue().isEmpty()
-						&& !otherRecordId.getValue().equalsIgnoreCase(this.getRecordId())
-						&& !otherRecordId.getValue().equalsIgnoreCase(this.getOtherRepositorId())) {
+				if (i == 0) {
+					this.setOtherRepositorId(otherRecordId.getValue());
+					if (this.getRecordId() != null && !this.getRecordId().isEmpty()
+							&& this.getOtherRepositorId().equalsIgnoreCase(this.getRecordId())) {
+						this.setRecordIdISIL(Eag2012.OPTION_YES);
+					} else {
+						this.setRecordIdISIL(Eag2012.OPTION_NO);
+					}
+				} else {
 					this.addOtherRecordId(otherRecordId.getValue());
 					if (otherRecordId.getLocalType() != null
 							&& !otherRecordId.getLocalType().isEmpty()) {
