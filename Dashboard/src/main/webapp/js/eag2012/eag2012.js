@@ -1050,7 +1050,7 @@ var clickRelationsAction = function(text1,messageWebpage){
 	return jsonData;
 };
 
-function checkAndShowPreviousTab(table, text1, text2,messageWebpage){
+function checkAndShowPreviousTab(table, text1, text2, messageWebpage){
 	//Check table passed.
 	var id = $(table).attr("id");
 	
@@ -1098,7 +1098,7 @@ function checkAndShowPreviousTab(table, text1, text2,messageWebpage){
 		}
 	}
 }
-function checkAndShowNextTab(table, text1, text2){
+function checkAndShowNextTab(table, text1, text2 ,messageRightWeb){
 	// Check table passed.
 	var id =  $(table).attr("id");
 
