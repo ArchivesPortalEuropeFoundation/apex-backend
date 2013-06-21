@@ -3409,27 +3409,55 @@ function personResponsibleForDescriptionChanged(){
 }
 
 function idOfInstitutionChanged(index){
-  $("#textIdentityIdentifierOfTheInstitution").attr("value", $("#textYIIdentifierOfTheInstitution").val());
-  
-  if(index==undefined){
-     if($("#selectYICodeISIL").val()=="yes"){
-       $("#textYIIdUsedInAPE").attr("value",$("#textYIIdentifierOfTheInstitution").val());
-       $("#textIdentityIdUsedInAPE").attr("value",$("#textYIIdentifierOfTheInstitution").val());
-       $("#textDescriptionIdentifier").attr("value",$("#textYIIdentifierOfTheInstitution").val());
-     }else{
-	    var id = $("#recordIdHidden").val();
-	    $("#textYIIdUsedInAPE").attr("value",id);
-	    $("#textIdentityIdUsedInAPE").attr("value", id);
-	    $("#textDescriptionIdentifier").attr("value",id);
-     }
-  }else{
-	  if($("#selectOtherRepositorIdCodeISIL_"+index).val()=="yes" && index!=undefined){
-		   $("#textYIIdUsedInAPE").attr("value",$("#otherRepositorId_"+index).val());
-	       $("#textIdentityIdUsedInAPE").attr("value",$("#otherRepositorId_"+index).val());
-	       $("#textDescriptionIdentifier").attr("value",$("#otherRepositorId_"+index).val());
+	  var countrycode = $("#textYIInstitutionCountryCode").val();
+	  var pattern = countrycode + "-[a-zA-Z0-9:\/\\-]{1,11}";
+	  var identifier = $("#textYIIdentifierOfTheInstitution").val();
+	  var matched = identifier.match(pattern);
+	  
+	  $("#textIdentityIdentifierOfTheInstitution").attr("value", $("#textYIIdentifierOfTheInstitution").val());
+	  
+	  if(index==undefined){
+	     if($("#selectYICodeISIL").val()=="yes"){
+	        if(matched==null || matched != identifier){
+	           $("#selectYICodeISIL").attr("value","no");
+	           alert("Error, \""+identifier+"\" is not a ISIL code");	
+	           $("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
+			      $(this).removeAttr("disabled");
+		        });
+	       }else{
+	          $("#textYIIdUsedInAPE").attr("value",$("#textYIIdentifierOfTheInstitution").val());
+	          $("#textIdentityIdUsedInAPE").attr("value",$("#textYIIdentifierOfTheInstitution").val());
+	          $("#textDescriptionIdentifier").attr("value",$("#textYIIdentifierOfTheInstitution").val());
+	      }
+	     }else{
+		    var id = $("#recordIdHidden").val();
+		    $("#textYIIdUsedInAPE").attr("value",id);
+		    $("#textIdentityIdUsedInAPE").attr("value", id);
+		    $("#textDescriptionIdentifier").attr("value",id);
 	     }
-	  }
-}
+	  }else{
+		  if($("#selectOtherRepositorIdCodeISIL_"+index).val()=="yes" && index!=undefined){
+	              var furtherId = $("#otherRepositorId_"+index).val();
+	              var matched1 = furtherId.match(pattern);
+	              if(matched1==null || matched1 != furtherId){
+	                 $("#selectOtherRepositorIdCodeISIL_"+index).attr("value","no");
+		             alert("Error, \""+furtherId+"\" is not a ISIL code");
+	                 $("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
+			             $(this).removeAttr("disabled");
+		              });
+	                 $("#selectYICodeISIL").removeAttr("disabled");	
+	                 var id = $("#recordIdHidden").val();
+		             $("#textYIIdUsedInAPE").attr("value",id);
+		             $("#textIdentityIdUsedInAPE").attr("value", id);
+		             $("#textDescriptionIdentifier").attr("value",id);
+	               }else{
+		            $("#textYIIdUsedInAPE").attr("value",$("#otherRepositorId_"+index).val());
+		            $("#textIdentityIdUsedInAPE").attr("value",$("#otherRepositorId_"+index).val());
+		            $("#textDescriptionIdentifier").attr("value",$("#otherRepositorId_"+index).val());
+	               }
+		     }
+		 }
+	}
 function nameOfInstitutionChanged(){
 	$("#textNameOfTheInstitution").attr("value", $("#textYINameOfTheInstitution").val());
 }
@@ -3863,16 +3891,16 @@ function codeISILChanged(index){
 	var matched = identifier.match(pattern);
 	if(index==undefined){
 		if($("#selectYICodeISIL").val()=="yes"){
-                    if(matched==null || matched != identifier){
-                        $("#selectYICodeISIL").attr("value","no");
+            if(matched==null || matched != identifier){
+                $("#selectYICodeISIL").attr("value","no");
 		        alert("Error, \""+identifier+"\" is not a ISIL code");	
-                        $("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
-				$(this).removeAttr("disabled");
-			});	
-                      }else{
-			$("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
-				$(this).attr("disabled","disabled");
-			});
+                $("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
+				    $(this).removeAttr("disabled");
+			     });	
+             }else{
+			   $("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
+				  $(this).attr("disabled","disabled");
+			   });
                       }
 		}else{
 			$("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
@@ -3888,21 +3916,21 @@ function codeISILChanged(index){
                         $("#selectOtherRepositorIdCodeISIL_"+index).attr("value","no");
 			            alert("Error, \""+furtherId+"\" is not a ISIL code");
                         $("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
-				  $(this).removeAttr("disabled");
-			  });
-                 $("#selectYICodeISIL").removeAttr("disabled");	
+				           $(this).removeAttr("disabled");
+			            });
+                      $("#selectYICodeISIL").removeAttr("disabled");	
                       }else{
                          $("#selectYICodeISIL").attr("disabled","disabled");
                          $("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(i,v){
-            	   	    if(i!=check){
-            	   		$(this).attr("disabled","disabled");
-            	   	     }
-	   		});
+            	   	        if(i!=check){
+            	   		       $(this).attr("disabled","disabled");
+            	   	        }
+	   		             });
                       }
              }else{
                 $("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
 				  $(this).removeAttr("disabled");
-			  });
+		        });
                  $("#selectYICodeISIL").removeAttr("disabled");
             }
         }
@@ -3912,8 +3940,8 @@ function codeISILChanged(index){
                        $("#selectYICodeISIL").attr("value","no");
 			           alert("Error, \""+identifier+"\" is not a ISIL code");	
                       }else{
-		           id = $("#textYIIdentifierOfTheInstitution").val();
-                         } 
+		                id = $("#textYIIdentifierOfTheInstitution").val();
+                       } 
 	}else if($("#selectOtherRepositorIdCodeISIL_"+index).val()=="yes" && index!=undefined){
 		 var furtherId = $("#otherRepositorId_"+index).val();
          var matched1 = furtherId.match(pattern);
@@ -3921,7 +3949,7 @@ function codeISILChanged(index){
                         $("#selectOtherRepositorIdCodeISIL_"+index).attr("value","no");
 			            alert("Error, \""+furtherId+"\" is not a ISIL code");	
                       }else{
-		         id = $("#otherRepositorId_"+index).val();
+		                 id = $("#otherRepositorId_"+index).val();
                      }
 	}else{  
             id = $("#recordIdHidden").val();	
