@@ -70,8 +70,8 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 		validatedStatusList.put(ValidatedState.FATAL_ERROR.toString(), getText(CONTENT_MESSAGE_ERROR));
 		linkedStatusList.put(TRUE, getText(CONTENT_MESSAGE_YES));
 		linkedStatusList.put(FALSE, getText(CONTENT_MESSAGE_NO));
-		convertedStatusList.put(TRUE, getText(CONTENT_MESSAGE_YES));
-		convertedStatusList.put(FALSE, getText(CONTENT_MESSAGE_NO));
+		publishedStatusList.put(TRUE, getText(CONTENT_MESSAGE_YES));
+		publishedStatusList.put(FALSE, getText(CONTENT_MESSAGE_NO));
 		europeanaStatusList.put(EuropeanaState.CONVERTED.toString(), getText("content.message.eseedm"));
 		europeanaStatusList.put(EuropeanaState.NOT_CONVERTED.toString(), getText(CONTENT_MESSAGE_NO));
 		europeanaStatusList.put(EuropeanaState.DELIVERED.toString(), getText("content.message.europeana.delivered"));
