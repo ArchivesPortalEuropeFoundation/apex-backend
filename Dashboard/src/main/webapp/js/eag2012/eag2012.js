@@ -1498,8 +1498,17 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7){
 	$("table#contactTable_"+(counter+1)+" input#textContactWebOfTheInstitution").removeAttr("disabled");
 
 	// Remove attr "onchange" for all elements in "contact" tab.
-	$("table#contactTable_"+(counter+1)+" input#textContactLinkTitleForEmailOfTheInstitution").removeAttr("onchange");
-	$("table#contactTable_"+(counter+1)+" input#textContactLinkTitleForWebOfTheInstitution").removeAttr("onchange");
+	$("table#contactTable_"+(counter+1)+" input#textContactStreetOfTheInstitution").removeAttr("onchange");
+	$("table#contactTable_"+(counter+1)+" select#selectLanguageVisitorAddress").removeAttr("onchange");
+	$("table#contactTable_"+(counter+1)+" input#textContactCityOfTheInstitution").removeAttr("onchange");
+	$("table#contactTable_"+(counter+1)+" input#textContactCountryOfTheInstitution").removeAttr("onchange");
+	$("table#contactTable_"+(counter+1)+" input#textContactLatitudeOfTheInstitution").removeAttr("onchange");
+	$("table#contactTable_"+(counter+1)+" input#textContactLongitudeOfTheInstitution").removeAttr("onchange");
+	$("table#contactTable_"+(counter+1)+" input#textContactTelephoneOfTheInstitution_1").removeAttr("onchange");
+	$("table#contactTable_"+(counter+1)+" input#textContactEmailOfTheInstitution_1").removeAttr("onchange");
+	$("table#contactTable_"+(counter+1)+" input#textContactLinkTitleForEmailOfTheInstitution_1").removeAttr("onchange");
+	$("table#contactTable_"+(counter+1)+" input#textContactWebOfTheInstitution_1").removeAttr("onchange");
+	$("table#contactTable_"+(counter+1)+" input#textContactLinkTitleForWebOfTheInstitution_1").removeAttr("onchange");
 
 	// Remove "Next tab" button from tab "description".
 	$("table#descriptionTable_"+(counter+1)+" td#tdButtonsDescriptionTab #buttonDescriptionTabNext").remove();
@@ -1646,7 +1655,7 @@ function addYIFurtherEmailsOfTheInstitution(text1){
 	var textC1 = clone.find("[id^='textYIEmailAddress']").val();
 	// var textC2 = $("#selectTextYILangEmail"+((count>1)?("_"+count):"")).val();
 	var textC3 = clone2.find("[id^='textYIEmailLinkTitle']").val(); 
-	if(textC1.length<=0 /*|| textC2=="none" */|| textC3.length<=0){
+	if(textC1.length<=0 /*|| textC2=="none" */&& textC3.length<=0){
 		wrongField = true;
 	}
 	clone.find("[id^='selectTextYILangEmail']").attr("value","none");
@@ -1685,7 +1694,7 @@ function addYIFurtherWebsOfTheInstitution(text1){
 	var textC1 = clone2.find("[id^='textYIWebpageLinkTitle']").val();
 	// var textC2 = $("#selectTextYILangWebpage"+((count>1)?("_"+count):"")).val();
 	var textC3 = clone.find("[id^='textYIWebpage']").val();
-	if(textC1.length<=0 /*|| textC2=="none" */|| textC3.length<=0){
+	if(textC1.length<=0 /*|| textC2=="none" */&& textC3.length<=0){
 		wrongField = true;
 	}
 	clone.find("[id^='selectTextYILangWebpage']").attr("value","none");
@@ -1805,8 +1814,8 @@ function addFurtherEmailsOfTheInstitution(text1){
 		title = $("table#contactTable"+currentTab+" tr#trEmailOfTheInstitution_"+count+" input#textContactLinkTitleForEmailOfTheInstitution_"+count).attr("value");
 	}
 
-	if (email == null || email == ""
-			|| title == null || title == "") {
+	if ((email == null || email == "")
+			&& (title == null || title == "")) {
 			alertEmptyFields(text1);
 			return;
 	}
@@ -2115,7 +2124,25 @@ function contactAddVisitorsAddressTranslation(text1) {
 
 function contactAddPostalAddressIfDifferent(property1, property2, property3, property4,control) {
 	var currentTab = getCurrentTab();
-	var select = '<select id="selectContactLanguagePostalAddress" onchange="contactAddressLanguageChanged($(this).parent().parent().parent().parent());">'+$("#selectLanguageVisitorAddress").html()+'</select>';
+	var selectContactLanguagePostalAddressOnChange = '<select id="selectContactLanguagePostalAddress" onchange="contactAddressLanguageChanged($(this).parent().parent().parent().parent());">'+$("#selectLanguageVisitorAddress").html()+'</select>';
+	var selectContactLanguagePostalAddressNoChange = '<select id="selectContactLanguagePostalAddress">'+$("#selectLanguageVisitorAddress").html()+'</select>';
+	var selectContactLanguagePostalAddress = "";
+	var textContactPAStreetOnChange = '<input type="text" id="textContactPAStreet" onchange="contactAddressStreetChanged($(this).parent().parent().parent().parent());" />';
+	var textContactPAStreetNoChange = '<input type="text" id="textContactPAStreet" />';
+	var textContactPAStreet = "";
+	var textContactPACityOnChange = '<input type="text" id="textContactPACity" onchange="contactAddressCityChanged($(this).parent().parent().parent().parent());"/>';
+	var textContactPACityNoChange = '<input type="text" id="textContactPACity" />';
+	var textContactPACity = "";
+
+	if (currentTab == "_1") {
+		textContactPAStreet = textContactPAStreetOnChange;
+		textContactPACity = textContactPACityOnChange;
+		selectContactLanguagePostalAddress = selectContactLanguagePostalAddressOnChange;
+	} else {
+		textContactPAStreet = textContactPAStreetNoChange;
+		textContactPACity = textContactPACityNoChange;
+		selectContactLanguagePostalAddress = selectContactLanguagePostalAddressNoChange;
+	}
     
 	$("table#contactTable"+currentTab+" input#buttonContactAddPostalAddressIfDifferent").hide();
 
@@ -2128,21 +2155,19 @@ function contactAddPostalAddressIfDifferent(property1, property2, property3, pro
 			'<td>'+
 				'<label for="textContactPAStreet">'+property3+'<span class="required">*</span>:</label>'+
 			'</td>'+
-			'<td>'+
-				'<input type="text" id="textContactPAStreet" onchange="contactAddressStreetChanged($(this).parent().parent().parent().parent());" />'+
+			'<td>'+textContactPAStreet+
 			'</td>'+
 			'<td id="contactPostalAddressLanguage">'+
 				'<label for="selectContactLanguagePostalAddress">'+property2+':</label>'+
 			'</td>'+
-			'<td>'+select+
+			'<td>'+selectContactLanguagePostalAddress+
 			'</td>'+
 		'</tr>'+
 		'<tr id="contactPostalAddressCity">'+
 			'<td>'+
 				'<label for="textContactPACity">'+property4+'<span class="required">*</span>:</label>'+
 			'</td>'+
-			'<td>'+
-				'<input type="text" id="textContactPACity" onchange="contactAddressCityChanged($(this).parent().parent().parent().parent());"/>'+
+			'<td>'+textContactPACity+
 			'</td>'+
 		'</tr></table></td></tr>');
   
@@ -2248,8 +2273,8 @@ function addFurtherWebsOfTheInstitution(text1){
 		title = $("table#contactTable"+currentTab+" tr#trWebOfTheInstitution_"+count+" input#textContactLinkTitleForWebOfTheInstitution_"+count).attr("value");
 	}
 
-	if (web == null || web == ""
-			|| title == null || title == "") {
+	if ((web == null || web == "")
+			&& (title == null || title == "")) {
 			alertEmptyFields(text1);
 			return;
 	}
