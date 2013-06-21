@@ -248,6 +248,9 @@ public class Eag2012 {
 	public static final String HOLDING_EXTENT = "holding_extent";
 	public static final String HOLDING_SUBSECTION = "holding_subsection";
 
+	public static final String SPECIAL_RETURN_STRING_N = "_-_SPECIAL-RETURN-N-CHARACTER_-_";
+	public static final String SPECIAL_RETURN_STRING_R = "_-_SPECIAL-RETURN-R-CHARACTER_-_";
+
 	// Variables.
 	private String repositoryId;
 	private String otherRepositorId;
