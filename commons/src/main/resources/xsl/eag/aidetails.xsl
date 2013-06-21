@@ -836,7 +836,7 @@
 						</tbody>
 					</table>
 
-					<xsl:if test="eag:holdings or eag:holdings/eag:descriptiveNote/eag:p/text() or eag:holdings/eag:extent/eag:num/text() or eag:holdings/eag:dateSet or eag:holdings/eag:dateSet/eag:date/text() or (eag:holdings/eag:dateSet/eag:dateRange/eag:fromDate/text() and eag:holdings/eag:dateSet/eag:dateRange/eag:toDate/text()) or eag:repositorhist/eag:descriptiveNote/eag:p/text() or eag:repositorfound/eag:date/text() or eag:repositorfound/eag:rule/text() or eag:repositorsup/eag:date/text() or eag:repositorsup/eag:rule/text() or eag:adminhierarchy/eag:adminunit/text() or eag:buildinginfo/eag:building/eag:descriptiveNote/eag:p/text() or eag:buildinginfo/eag:repositorarea/eag:num/text() or eag:buildinginfo/eag:lengthshelf/eag:num/text()">
+					<xsl:if test="eag:holdings or eag:holdings/eag:descriptiveNote/eag:p/text() or eag:holdings/eag:extent/eag:num/text() or eag:holdings/eag:date/text() or (eag:holdings/eag:dateRange/eag:fromDate/text() and eag:holdings/eag:dateRange/eag:toDate/text()) or eag:holdings/eag:dateSet or eag:holdings/eag:dateSet/eag:date/text() or (eag:holdings/eag:dateSet/eag:dateRange/eag:fromDate/text() and eag:holdings/eag:dateSet/eag:dateRange/eag:toDate/text()) or eag:repositorhist/eag:descriptiveNote/eag:p/text() or eag:repositorfound/eag:date/text() or eag:repositorfound/eag:rule/text() or eag:repositorsup/eag:date/text() or eag:repositorsup/eag:rule/text() or eag:adminhierarchy/eag:adminunit/text() or eag:buildinginfo/eag:building/eag:descriptiveNote/eag:p/text() or eag:buildinginfo/eag:repositorarea/eag:num/text() or eag:buildinginfo/eag:lengthshelf/eag:num/text()">
 						<table class="aiSection archivesDisplay">
 							<thead>
 								<tr>
@@ -885,13 +885,25 @@
 								</xsl:if>
 	
 								<!-- dates of holdings only shown if there are values-->
-								<xsl:if test="eag:holdings/eag:dateSet and (eag:holdings/eag:dateSet/eag:date/text() or (eag:holdings/eag:dateSet/eag:dateRange/eag:fromDate/text() and eag:holdings/eag:dateSet/eag:dateRange/eag:toDate/text()))">
+								<xsl:if test="eag:holdings/eag:date/text() or (eag:holdings/eag:dateRange/eag:fromDate/text() and eag:holdings/eag:dateRange/eag:toDate/text()) or (eag:holdings/eag:dateSet and (eag:holdings/eag:dateSet/eag:date/text() or (eag:holdings/eag:dateSet/eag:dateRange/eag:fromDate/text() and eag:holdings/eag:dateSet/eag:dateRange/eag:toDate/text())))">
 									<tr>
 										<td class="header">
 											<xsl:value-of select="ape:resource('eagcontent.datesholdings')"/>
 										</td>
 										<td>
-											<xsl:apply-templates select="eag:holdings/eag:dateSet"/>
+											<!-- when there are only 1 dateSet -->
+											<xsl:if test="eag:holdings/eag:dateSet and ((eag:holdings/eag:dateSet/eag:dateRange and eag:holdings/eag:dateSet/eag:dateRange/eag:fromDate/text() and eag:holdings/eag:dateSet/eag:dateRange/eag:toDate/text()) or (eag:holdings/eag:dateSet/eag:date and eag:holdings/eag:dateSet/eag:date/text()))">
+												<xsl:apply-templates select="eag:holdings/eag:dateSet"/>
+											</xsl:if>
+											<!-- when there are only 1 dateRange -->
+											<xsl:if test="eag:holdings/eag:dateRange and eag:holdings/eag:dateRange/eag:fromDate/text() and eag:holdings/eag:dateRange/eag:toDate/text()">
+												<xsl:apply-templates select="eag:holdings/eag:dateRange"/>
+											</xsl:if>
+											<!-- when there are only 1 date -->
+											<xsl:if test="eag:holdings/eag:date and eag:holdings/eag:date/text()">
+												<xsl:apply-templates select="eag:holdings/eag:date"/>
+											</xsl:if>
+											
 										</td>
 									</tr>
 								</xsl:if>
