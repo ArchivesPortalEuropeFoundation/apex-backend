@@ -94,7 +94,8 @@
 						yiAddFutherInformationOnExistingFacilities();
 					}
 					// Set editables code ISIL selects.
-					loadDisableSelectsForFurtheIds();
+                                        var text = '<s:property value="getText('label.ai.tabs.commons.errorISIL')" />';
+					loadDisableSelectsForFurtheIds(text);
 					$("#selectASTSReproductionService").each(function(){
 						if($(this).val()=="none"){
 							var parent = $(this).parent().parent().parent().parent().attr("id");

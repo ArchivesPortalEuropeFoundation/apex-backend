@@ -37,13 +37,13 @@
 				<label for="textYIIdentifierOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.identifierOfTheInstitution')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYIIdentifierOfTheInstitution" value="${loader.otherRepositorId}" onKeyUp="idOfInstitutionChanged();" onChange="idOfInstitutionChanged();"/>
+				<input type="text" id="textYIIdentifierOfTheInstitution" value="${loader.otherRepositorId}" onKeyup="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>');"/>
 			</td>
 			<td class="labelLeft">
 			  <label for="textYICodeISL"><s:property value="getText('label.ai.tabs.commons.codeISL')"/></label>
 			</td>
 			<td>
-			  <select id="selectYICodeISIL" onclick="codeISILChanged();">
+			  <select id="selectYICodeISIL" onclick="codeISILChanged('<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>');">
 			  	<s:iterator value="yesNoList" var="list">
 			  		<option value='<s:property value="#list.key"/>' <s:if test='%{newEag && #list.key=="no"}'>selected=selected</s:if><s:if test='%{#list.key == loader.recordIdISIL}'>selected=selected</s:if>><s:property value="#list.value"/></option>
 			  	</s:iterator>
@@ -58,13 +58,13 @@
 						<label for="otherRepositorId_<s:property value="#status.index" />"> <s:property value="getText('label.ai.yourinstitution.futherId')" />:</label>
 					</td>
 					<td>
-						<input type="text" id="otherRepositorId_<s:property value="#status.index" />" value="<s:property value="#current" />" onclick="idOfInstitutionChanged('<s:property value="#status.index" />');" onkeyup="idOfInstitutionChanged('<s:property value="#status.index" />');" />
+						<input type="text" id="otherRepositorId_<s:property value="#status.index" />" value="<s:property value="#current" />" onclick="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>','<s:property value="#status.index" />');" onkeyup="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>','<s:property value="#status.index" />');" />
 					</td>
 					<td class="labelLeft">
 						<label for="selectOtherRepositorIdCodeISIL_<s:property value="#status.index" />"> <s:property value="getText('label.ai.tabs.commons.codeISL')" />:</label>
 					</td>
 					<td>
-						<select id="selectOtherRepositorIdCodeISIL_<s:property value="#status.index" />" onclick="codeISILChanged('<s:property value="#status.index" />');">
+						<select id="selectOtherRepositorIdCodeISIL_<s:property value="#status.index" />" onclick="codeISILChanged('<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>','<s:property value="#status.index" />');">
 						  	<s:iterator value="yesNoList" var="list">
 						  		<option value='<s:property value="#list.key"/>'
 						  			<s:if test='%{#list.key == "no" && #current != loader.recordId}'>selected=selected</s:if>>
@@ -79,7 +79,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonAddFutherIds" value="<s:property value="getText('label.ai.yourinstitution.addFutherIds')" />" onclick="addFurtherIds('<s:property value="getText('label.ai.yourinstitution.futherId')" />','<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />','<s:property value="getText('label.ai.tabs.commons.codeISL')" />');" />
+				<input type="button" id="buttonAddFutherIds" value="<s:property value="getText('label.ai.yourinstitution.addFutherIds')" />" onclick="addFurtherIds('<s:property value="getText('label.ai.yourinstitution.futherId')" />','<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />','<s:property value="getText('label.ai.tabs.commons.codeISL')" />','<s:property value="getText('label.ai.tabs.commons.repeatISIL')" />','<s:property value="getText('label.ai.tabs.commons.errorISIL')" />');" />
 			</td>
 			<td class="labelLeft">
 				<label for="textYIIdUsedInAPE"><s:property value="getText('label.ai.tabs.commons.idUsedInAPE')"/>:</label>
