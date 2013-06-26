@@ -2210,7 +2210,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
              
               //opening times and opening langs 
 				
-				int j=0;			
+				int j=0;
 				while(accessTable.has("textOpeningTimes_"+(++j)) && (accessTable.has("selectLanguageOpeningTimes_"+(j)))){
 				  if(accessTable.has("textOpeningTimes_"+j)){
 				     List<Map<String,List<String>>> openingValues = eag2012.getOpeningValue();
@@ -2224,7 +2224,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 openingMap = new HashMap<String,List<String>>();
 					 }
 					List<String> openingList = null;
-					if((openingMap.size()>i) && (openingMap.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null)){
+					if((openingMap.size()>0) && (openingMap.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null)){
 						openingList = openingMap.get(Eag2012.TAB_ACCESS_AND_SERVICES);
 					}else{
 						openingList = new ArrayList<String>();
@@ -2250,7 +2250,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 openingMap = new HashMap<String,List<String>>();
 						 }
 						List<String> openingList = null;
-						if((openingMap.size()>i) && (openingMap.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null)){
+						if((openingMap.size()>0) && (openingMap.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null)){
 							openingList = openingMap.get(Eag2012.TAB_ACCESS_AND_SERVICES);
 						}else{
 							openingList = new ArrayList<String>();

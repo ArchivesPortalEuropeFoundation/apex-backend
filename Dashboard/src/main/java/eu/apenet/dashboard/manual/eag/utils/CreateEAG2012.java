@@ -1454,7 +1454,7 @@ public class CreateEAG2012 {
 									}
 
 									Exhibition exhibition = repository.getServices().getRecreationalServices().getExhibition().get(k);
-									getDescriptiveNote(exhibition, k);
+									getDescriptiveNote(exhibition, k, i);
 									exhibition.setWebpage(webpage);
 								}
 
@@ -1473,7 +1473,7 @@ public class CreateEAG2012 {
 									}
 
 									ToursSessions toursSessions = repository.getServices().getRecreationalServices().getToursSessions().get(k);
-									getDescriptiveNote(toursSessions, k);
+									getDescriptiveNote(toursSessions, k, i);
 									toursSessions.setWebpage(webpage);
 								}
 
@@ -1492,7 +1492,7 @@ public class CreateEAG2012 {
 									}
 
 									OtherServices otherService = repository.getServices().getRecreationalServices().getOtherServices().get(k);
-									getDescriptiveNote(otherService, k);
+									getDescriptiveNote(otherService, k, i);
 									otherService.setWebpage(webpage);
 								}
 							}
@@ -2089,7 +2089,7 @@ public class CreateEAG2012 {
 					}
 
 					repository.getServices().getInternetAccess().setQuestion(this.eag2012.getInternetAccessQuestion().get(i));
-					getDescriptiveNote(repository.getServices().getInternetAccess(), -1);
+					getDescriptiveNote(repository.getServices().getInternetAccess(), -1, i);
 				}
 			}
 		}
@@ -2111,7 +2111,7 @@ public class CreateEAG2012 {
 					}
 
 					repository.getServices().getTechservices().getRestorationlab().setQuestion(this.eag2012.getRestorationlabQuestion().get(i));
-					getDescriptiveNote(repository.getServices().getTechservices().getRestorationlab(), -1);
+					getDescriptiveNote(repository.getServices().getTechservices().getRestorationlab(), -1, i);
 				}
 			}
 		}
@@ -2144,7 +2144,7 @@ public class CreateEAG2012 {
 					}
 					
 					// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/descriptiveNote
-					getDescriptiveNote(repository.getServices().getTechservices().getReproductionser(), -1);
+					getDescriptiveNote(repository.getServices().getTechservices().getReproductionser(), -1, i);
 
 					// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/microformser
 					if (this.eag2012.getMicroformserQuestion() != null && !this.eag2012.getMicroformserQuestion().isEmpty() && !this.eag2012.getMicroformserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
@@ -2192,9 +2192,11 @@ public class CreateEAG2012 {
 		for(int i=0;i<this.eag.getArchguide().getDesc().getRepositories().getRepository().size();i++){
 			Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
 			if (this.eag2012.getDescriptiveNotePValue() != null && this.eag2012.getDescriptiveNotePLang() != null) {
-				for (int x = 0; x < this.eag2012.getDescriptiveNotePValue().size(); x++) {
-					Map<String, Map<String, List<String>>> tabsValueMap = this.eag2012.getDescriptiveNotePValue().get(x);
-					Map<String, Map<String, List<String>>> tabsLangMap = this.eag2012.getDescriptiveNotePLang().get(x);
+//				for (int x = 0; x < this.eag2012.getDescriptiveNotePValue().size(); x++) {
+				if (this.eag2012.getDescriptiveNotePValue().get(i) != null
+						&& this.eag2012.getDescriptiveNotePLang().get(i) != null) {
+					Map<String, Map<String, List<String>>> tabsValueMap = this.eag2012.getDescriptiveNotePValue().get(i);
+					Map<String, Map<String, List<String>>> tabsLangMap = this.eag2012.getDescriptiveNotePLang().get(i);
 					Iterator<String> tabsValueIt = tabsValueMap.keySet().iterator();
 					Iterator<String> tabsLangIt = tabsLangMap.keySet().iterator();
 					while (tabsValueIt.hasNext()) {
@@ -2226,7 +2228,7 @@ public class CreateEAG2012 {
 											repository.getServices().getRecreationalServices().getExhibition().add(new Exhibition());
 										}
 										Exhibition exhibition = repository.getServices().getRecreationalServices().getExhibition().get(k);
-										getDescriptiveNote(exhibition, k);
+										getDescriptiveNote(exhibition, k, i);
 									}
 									// eag/archguide/desc/repositories/repository/services/recreationalServices/toursSessions/descriptiveNote/P
 									if (!tours && Eag2012.TOURS_SESSIONS.equalsIgnoreCase(sectionValueKey) && Eag2012.TOURS_SESSIONS.equalsIgnoreCase(sectionLangKey)) {
@@ -2240,7 +2242,7 @@ public class CreateEAG2012 {
 											repository.getServices().getRecreationalServices().getToursSessions().add(new ToursSessions());
 										}
 										ToursSessions toursSessions = repository.getServices().getRecreationalServices().getToursSessions().get(k);
-										getDescriptiveNote(toursSessions, k);
+										getDescriptiveNote(toursSessions, k, i);
 									}
 									// eag/archguide/desc/repositories/repository/services/recreationalServices/otherServices/descriptiveNote/P
 									if (!otherServices && Eag2012.OTHER_SERVICES.equalsIgnoreCase(sectionValueKey) && Eag2012.OTHER_SERVICES.equalsIgnoreCase(sectionLangKey)) {
@@ -2255,7 +2257,7 @@ public class CreateEAG2012 {
 										}
 
 										OtherServices otherService = repository.getServices().getRecreationalServices().getOtherServices().get(k);
-										getDescriptiveNote(otherService, k);
+										getDescriptiveNote(otherService, k, i);
 									}
 								}
 							}
@@ -2524,9 +2526,11 @@ public class CreateEAG2012 {
 				// Recover descriptiveNote for research services.
 				if (this.eag2012.getDescriptiveNotePValue() != null
 						&& this.eag2012.getDescriptiveNotePLang() != null) {
-					for (int j = 0; j < this.eag2012.getDescriptiveNotePValue().size(); j++) {
-						Map<String, Map<String, List<String>>> tabsValueMap = this.eag2012.getDescriptiveNotePValue().get(j);
-						Map<String, Map<String, List<String>>> tabsLangMap = this.eag2012.getDescriptiveNotePLang().get(j);
+//					for (int j = 0; j < this.eag2012.getDescriptiveNotePValue().size(); j++) {
+					if (this.eag2012.getDescriptiveNotePValue().get(i) != null
+							&& this.eag2012.getDescriptiveNotePLang().get(i) != null) {
+						Map<String, Map<String, List<String>>> tabsValueMap = this.eag2012.getDescriptiveNotePValue().get(i);
+						Map<String, Map<String, List<String>>> tabsLangMap = this.eag2012.getDescriptiveNotePLang().get(i);
 						Iterator<String> tabsValueIt = tabsValueMap.keySet().iterator();
 						Iterator<String> tabsLangIt = tabsLangMap.keySet().iterator();
 						while (tabsValueIt.hasNext()) {
@@ -2749,7 +2753,7 @@ public class CreateEAG2012 {
 											computerPlaces.setNum(num);
 
 											// eag/archguide/desc/repositories/repository/services/searchroom/ComputerPlaces/descriptiveNote
-											getDescriptiveNote(computerPlaces, -1);
+											getDescriptiveNote(computerPlaces, -1, i);
 
 											repository.getServices().getSearchroom().setComputerPlaces(computerPlaces);
 										}
@@ -2933,12 +2937,14 @@ public class CreateEAG2012 {
 	 *
 	 * @param object The object to add the descriptive note.
 	 */
-	private void getDescriptiveNote(final Object object, final int index) {
+	private void getDescriptiveNote(final Object object, final int index, final int repoIndex) {
 		if (this.eag2012.getDescriptiveNotePValue() != null
 				&& this.eag2012.getDescriptiveNotePLang() != null) {
-			for (int i = 0; i < this.eag2012.getDescriptiveNotePValue().size(); i++) {
-				Map<String, Map<String, List<String>>> tabsValueMap = this.eag2012.getDescriptiveNotePValue().get(i);
-				Map<String, Map<String, List<String>>> tabsLangMap = this.eag2012.getDescriptiveNotePLang().get(i);
+//			for (int i = 0; i < this.eag2012.getDescriptiveNotePValue().size(); i++) {
+			if (this.eag2012.getDescriptiveNotePValue().get(repoIndex) != null
+					&& this.eag2012.getDescriptiveNotePLang().get(repoIndex) != null) {
+				Map<String, Map<String, List<String>>> tabsValueMap = this.eag2012.getDescriptiveNotePValue().get(repoIndex);
+				Map<String, Map<String, List<String>>> tabsLangMap = this.eag2012.getDescriptiveNotePLang().get(repoIndex);
 				Iterator<String> tabsValueIt = tabsValueMap.keySet().iterator();
 				Iterator<String> tabsLangIt = tabsLangMap.keySet().iterator();
 				while (tabsValueIt.hasNext()) {
