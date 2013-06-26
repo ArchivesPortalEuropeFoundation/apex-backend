@@ -1751,7 +1751,7 @@ function duplicateOpeningTimesLanguage(name){
 	var id = name.attr("id");
 	id = id.substring(id.lastIndexOf("_"));
 
-	if (id.startsWith("_"))  {
+	if (id.indexOf("_") != "-1")  {
 		var value = $("#selectTextYIOpeningTimes" + id + " :selected").val();
 		$("table#accessAndServicesTable_1 tr#trASOpeningTimes" + id + " #selectLanguageOpeningTimes" + id + " option").each(function(){
 			if(value==$(this).val()){
@@ -1772,7 +1772,7 @@ function duplicateClosingTimesLanguage(name){
 	var id = name.attr("id");
 	id = id.substring(id.lastIndexOf("_"));
 
-	if (id.startsWith("_"))  {
+	if (id.indexOf("_") != "-1")  {
 		var value = $("#selectTextYIClosingTimes" + id + " :selected").val();
 		$("table#accessAndServicesTable_1 tr#trASClosingDates" + id + " #selectLanguageClosingDates" + id + " option").each(function(){
 			if(value==$(this).val()){
@@ -1793,7 +1793,7 @@ function duplicateAccessInformation(name){
 	var id = name.attr("id");
 	id = id.substring(id.lastIndexOf("_"));
 
-	if (id.startsWith("_"))  {
+	if (id.indexOf("_") != "-1")  {
 		var value = $("tr#trYIButtonFutherAccessInformation" + id + " #selectFutherAccessInformation" + id + " :selected").val();
 		$("table#accessAndServicesTable_1 tr#trASAccessRestrictions" + id + " #selectASARSelectLanguage" + id + " option").each(function(){
 			if(value==$(this).val()){
@@ -1814,7 +1814,7 @@ function duplicateFutherAccessInformationOnExistingFacilitiesLanguage(name){
 	var id = name.attr("id");
 	id = id.substring(id.lastIndexOf("_"));
 
-	if (id.startsWith("_"))  {
+	if (id.indexOf("_") != "-1")  {
 		var value = $("tr#trButtonAddFutherInformationOnExistingFacilities" + id + " #selectFutherAccessInformationOnExistingFacilities" + id + " :selected").val();
 		$("table#accessAndServicesTable_1 tr#trAccessibilityInformation" + id + " #selectASARSelectLanguage" + id + " option").each(function(){
 			if(value==$(this).val()){
@@ -3740,7 +3740,7 @@ function telephoneOfInstitutionChanged(name){
 	var id = name.attr("id");
 	id = id.substring(id.lastIndexOf("_"));
 
-	if (id.startsWith("_"))  {
+	if (id.indexOf("_") != "-1")  {
 		if(($("table#yiTableOthers #textYITelephone" + id).val()!="") && ($("table#yiTableOthers #textYITelephone" + id).val()!=null)){
 			if (id == null || id == "") {
 				$("table#contactTable_1 tr#trTelephoneOfTheInstitution_1 #textContactTelephoneOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYITelephone").val());
@@ -3771,7 +3771,7 @@ function emailOfInstitutionChanged(name){
 	var id = name.attr("id");
 	id = id.substring(id.lastIndexOf("_"));
 
-	if (id.startsWith("_"))  {
+	if (id.indexOf("_") != "-1")  {
 		if(($("table#yiTableOthers #textYIEmailAddress" + id).val()!="") && ($("table#yiTableOthers #textYIEmailAddress" + id).val()!=null)){
 			if (id == null || id == "") {
 				$("table#contactTable_1 tr#trEmailOfTheInstitution #textContactEmailOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYIEmailAddress").val());
@@ -3801,7 +3801,7 @@ function emailOfInstitutionLinkChanged(name){
 	var id = name.attr("id");
 	id = id.substring(id.lastIndexOf("_"));
 
-	if (id.startsWith("_"))  {
+	if (id.indexOf("_") != "-1")  {
 		$("table#contactTable_1 tr#trEmailOfTheInstitution" + id + " #textContactLinkTitleForEmailOfTheInstitution" + id).attr("value", $("table#yiTableOthers #textYIEmailLinkTitle" + id).val());
 	} else {
 		$("table#contactTable_1 tr#trEmailOfTheInstitution #textContactLinkTitleForEmailOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYIEmailLinkTitle").val());
@@ -3812,7 +3812,7 @@ function webOfInstitutionChanged(name){
 	var id = name.attr("id");
 	id = id.substring(id.lastIndexOf("_"));
 
-	if (id.startsWith("_"))  {
+	if (id.indexOf("_") != "-1")  {
 		if(($("table#yiTableOthers #textYIWebpage" + id).val()!="") && ($("table#yiTableOthers #textYIWebpage" + id).val()!=null)){
 			if (id == null || id == "") {
 				$("table#contactTable_1 tr#trWebOfTheInstitution #textContactWebOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYIWebpage").val());
@@ -3843,7 +3843,7 @@ function openingHoursOfInstitutionChanged(name){
 	var id = name.attr("id");
 	id = id.substring(id.lastIndexOf("_"));
 
-	if (id.startsWith("_"))  {
+	if (id.indexOf("_") != "-1")  {
 		$("table#accessAndServicesTable_1 tr#trASOpeningTimes" + id + " #textOpeningTimes" + id).attr("value", $("table#yiTableOthers #textYIOpeningTimes" + id).val());
 	} else {
 		$("table#accessAndServicesTable_1 tr#trASOpeningTimes_1 #textOpeningTimes_1").attr("value", $("table#yiTableOthers #textYIOpeningTimes").val());
@@ -3854,7 +3854,7 @@ function closingHoursOfInstitutionChanged(name){
 	var id = name.attr("id");
 	id = id.substring(id.lastIndexOf("_"));
 
-	if (id.startsWith("_"))  {
+	if (id.indexOf("_") != "-1")  {
 		$("table#accessAndServicesTable_1 tr#trASClosingDates" + id + " #textClosingDates" + id).attr("value", $("table#yiTableOthers #yourInstitutionClosingDates" + id).val());
 	} else {
 		$("table#accessAndServicesTable_1 tr#trASClosingDates_1 #textClosingDates_1").attr("value", $("table#yiTableOthers #yourInstitutionClosingDates").val());
@@ -3869,7 +3869,7 @@ function futherAccessInformationChanged(name){
 	var id = name.attr("id");
 	id = id.substring(id.lastIndexOf("_"));
 
-	if (id.startsWith("_"))  {
+	if (id.indexOf("_") != "-1")  {
 		$("table#accessAndServicesTable_1 #textASAccessRestrictions" + id).attr("value", $("table#yiTableOthers #futherAccessInformation" + id).val());
 	} else {
 		$("table#accessAndServicesTable_1 #textASAccessRestrictions_1").attr("value", $("table#yiTableOthers #futherAccessInformation").val());
@@ -3884,7 +3884,7 @@ function futherInformationOnExistingFacilitiesChanged(name){
 	var id = name.attr("id");
 	id = id.substring(id.lastIndexOf("_"));
 
-	if (id.startsWith("_")) {
+	if (id.indexOf("_") != "-1") {
 		$("table#accessAndServicesTable_1 #textASAccessibility" + id).attr("value", $("table#yiTableOthers #futherInformationOnExistingFacilities" + id).val());
 	} else {
 		$("table#accessAndServicesTable_1 #textASAccessibility_1").attr("value", $("table#yiTableOthers #futherInformationOnExistingFacilities").val());
@@ -3895,7 +3895,7 @@ function webOfInstitutionLinkChanged(name){
 	var id = name.attr("id");
 	id = id.substring(id.lastIndexOf("_"));
 
-	if (id.startsWith("_"))  {
+	if (id.indexOf("_") != "-1")  {
 		$("table#contactTable_1 tr#trWebOfTheInstitution" + id + " #textContactLinkTitleForWebOfTheInstitution" + id).attr("value", $("table#yiTableOthers #textYIWebpageLinkTitle" + id).val());
 	} else {
 		$("table#contactTable_1 tr#trWebOfTheInstitution #textContactLinkTitleForWebOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYIWebpageLinkTitle").val());
