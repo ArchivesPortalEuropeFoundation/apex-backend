@@ -20,7 +20,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.noggit.JSONUtil;
 import org.xml.sax.SAXException;
 
 import eu.apenet.commons.exceptions.APEnetException;
@@ -922,8 +921,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		//control
 //		loader.setRecordId(getIdUsedInAPE());
 //		loader.setAgent(getPersonResponsibleForDescription());
-		loader.setAbbreviation(getContactAbbreviation());
-		loader.setCitation(getContactFullName());
+		loader.setControlAbbreviation(getContactAbbreviation());
+		loader.setControlCitation(getContactFullName());
+		loader.setControlNumberOfRules(getNumberOfRules());
 		//relations
 //		loader.setResourceRelationHref(getWebsiteOfResource());
 //		loader.setResourceRelationrelationEntry(getTitleOfRelatedMaterial());
@@ -931,6 +931,14 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 //		loader.setEagRelationHref(getWebsiteOfDescription());
 //		loader.setEagRelationrelationEntry(getTitleOfRelatedInstitution());
 //		loader.setEagRelationrelationEntryDescription(getInstitutionDescriptionOfRelation());
+	}
+
+	private List<String> getNumberOfRules() {
+		List<String> number = new ArrayList<String>();
+		for (int i = 0; i < loader.getControlAbbreviation().size(); i++) {
+			number.add("");
+		}
+		return number;
 	}
 
 	private List<String> getContactFullName() {
@@ -2576,7 +2584,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					}// end while accessibility
 				
 				 //search_room section
-				 if(accessTable.has("textASSRTelephone")){
+				 if(accessTable.has("textASSRTelephone_1")){
 					 List<Map<String, Map<String, List<String>>>> telephones = eag2012.getTelephoneValue();
 					 if(telephones==null){
 						 telephones = new ArrayList<Map<String, Map<String, List<String>>>>();
@@ -2599,7 +2607,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }else{
 						 telephonesList = new ArrayList<String>();
 					 }
-					 telephonesList.add(replaceIfExistsSpecialReturnString(accessTable.getString("textASSRTelephone")));
+					 telephonesList.add(replaceIfExistsSpecialReturnString(accessTable.getString("textASSRTelephone_1")));
 					 telephonesMapList.put(Eag2012.SEARCHROOM, telephonesList);
 					 telephonesMap.put(Eag2012.TAB_ACCESS_AND_SERVICES,telephonesMapList);
 					 if(telephones.size()>i){
@@ -3176,7 +3184,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 eag2012.setLibraryQuestion(libraryList);
 					
 					 }
-					 if(accessTable.has("textASLTelephone")){
+					 if(accessTable.has("textASLTelephone_1")){
 						 List<Map<String, Map<String, List<String>>>> telephones = eag2012.getTelephoneValue();
 						 if(telephones==null){
 							 telephones = new ArrayList<Map<String, Map<String, List<String>>>>();
@@ -3199,7 +3207,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }else{
 							 telephonesList = new ArrayList<String>();
 						 }
-						 telephonesList.add(replaceIfExistsSpecialReturnString(accessTable.getString("textASLTelephone")));
+						 telephonesList.add(replaceIfExistsSpecialReturnString(accessTable.getString("textASLTelephone_1")));
 						 telephonesMapList.put(Eag2012.LIBRARY, telephonesList);
 						 telephonesMap.put(Eag2012.TAB_ACCESS_AND_SERVICES,telephonesMapList);
 						 if(telephones.size()>i){
@@ -3613,7 +3621,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 					 }while(accessTable.has(target1) && accessTable.has(target2));
 				     
-					 if(accessTable.has("textASTSTelephone")){
+					 if(accessTable.has("textASTSTelephone_1")){
 						 List<Map<String, Map<String, List<String>>>> telephones = eag2012.getTelephoneValue();
 						 if(telephones==null){
 							 telephones = new ArrayList<Map<String, Map<String, List<String>>>>();
@@ -3636,7 +3644,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }else{
 							 telephonesList = new ArrayList<String>();
 						 }
-						 telephonesList.add(replaceIfExistsSpecialReturnString(accessTable.getString("textASTSTelephone")));
+						 telephonesList.add(replaceIfExistsSpecialReturnString(accessTable.getString("textASTSTelephone_1")));
 						 telephonesMapList.put(Eag2012.RESTORATION_LAB, telephonesList);
 						 telephonesMap.put(Eag2012.TAB_ACCESS_AND_SERVICES,telephonesMapList);
 						 if(telephones.size()>i){
@@ -3876,7 +3884,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }
 					 }while(accessTable.has(target1) && accessTable.has(target2));
 				     
-					 if(accessTable.has("textASTSRSTelephone")){
+					 if(accessTable.has("textASTSRSTelephone_1")){
 						 List<Map<String, Map<String, List<String>>>> telephones = eag2012.getTelephoneValue();
 						 if(telephones==null){
 							 telephones = new ArrayList<Map<String, Map<String, List<String>>>>();
@@ -3899,7 +3907,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 }else{
 							 telephonesList = new ArrayList<String>();
 						 }
-						 telephonesList.add(replaceIfExistsSpecialReturnString(accessTable.getString("textASTSRSTelephone")));
+						 telephonesList.add(replaceIfExistsSpecialReturnString(accessTable.getString("textASTSRSTelephone_1")));
 						 telephonesMapList.put(Eag2012.REPRODUCTIONSER, telephonesList);
 						 telephonesMap.put(Eag2012.TAB_ACCESS_AND_SERVICES,telephonesMapList);
 						 if(telephones.size()>i){
@@ -4064,7 +4072,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 //photograph
 					 if(accessTable.has("selectASTSRSPhotographServices")){
 						 String photograph = replaceIfExistsSpecialReturnString(accessTable.getString("selectASTSRSPhotographServices"));
-						 List<String> photographList = eag2012.getMicroformserQuestion();
+						 List<String> photographList = eag2012.getPhotographserQuestion();
 						 if(photographList == null){
 							 photographList = new ArrayList<String>();
 						 }

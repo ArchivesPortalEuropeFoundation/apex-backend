@@ -264,8 +264,17 @@ public class CreateEAG2012 {
 
 								conventionDeclaration.setAbbreviation(abbreviation);
 							}
-							if(citation.getContent()!=null && !citation.getContent().isEmpty()){
-								this.eag.getControl().getConventionDeclaration().add(conventionDeclaration);
+							if(citation.getContent()!=null /*&& !citation.getContent().isEmpty()*/){
+								if (!citation.getContent().isEmpty()) {
+									this.eag.getControl().getConventionDeclaration().add(conventionDeclaration);
+								} else if (conventionDeclaration.getAbbreviation() != null){
+									if (!conventionDeclaration.getCitation().isEmpty()) {
+										for (int k = 0; k < conventionDeclaration.getCitation().size(); k++) {
+											conventionDeclaration.getCitation().remove(k);
+										}
+									}
+									this.eag.getControl().getConventionDeclaration().add(conventionDeclaration);
+								}
 							}
 						}
 					}
@@ -2996,48 +3005,50 @@ public class CreateEAG2012 {
 											p.setLang(langList.get(x));
 										}
 
-										// eag/archguide/desc/repositories/repository/services/searchroom/computerPlaces/descriptiveNote/P
-										if (Eag2012.SEARCHROOM.equalsIgnoreCase(sectionValueKey)
-												&& Eag2012.SEARCHROOM.equalsIgnoreCase(sectionLangKey)) {
-											if (object instanceof ComputerPlaces) {
-												ComputerPlaces computerPlaces = (ComputerPlaces) object;
-												if (computerPlaces.getDescriptiveNote() == null) {
-													computerPlaces.setDescriptiveNote(new DescriptiveNote());
-												}
-												computerPlaces.getDescriptiveNote().getP().add(p);
-											}
-										}
-										// eag/archguide/desc/repositories/repository/services/internetAccess/descriptiveNote/P
-										if (Eag2012.INTERNET_ACCESS.equalsIgnoreCase(sectionValueKey)
-												&& Eag2012.INTERNET_ACCESS.equalsIgnoreCase(sectionLangKey)) {
-											if (object instanceof InternetAccess) {
-													InternetAccess internetAccess = (InternetAccess) object;
-													if (internetAccess.getDescriptiveNote() == null) {
-														internetAccess.setDescriptiveNote(new DescriptiveNote());
+										if (p.getContent() != null && !p.getContent().isEmpty()) {
+											// eag/archguide/desc/repositories/repository/services/searchroom/computerPlaces/descriptiveNote/P
+											if (Eag2012.SEARCHROOM.equalsIgnoreCase(sectionValueKey)
+													&& Eag2012.SEARCHROOM.equalsIgnoreCase(sectionLangKey)) {
+												if (object instanceof ComputerPlaces) {
+													ComputerPlaces computerPlaces = (ComputerPlaces) object;
+													if (computerPlaces.getDescriptiveNote() == null) {
+														computerPlaces.setDescriptiveNote(new DescriptiveNote());
 													}
-													internetAccess.getDescriptiveNote().getP().add(p);
-											}
-										}
-										// eag/archguide/desc/repositories/repository/services/techservices/restorationlab/descriptiveNote/P
-										if (Eag2012.RESTORATION_LAB.equalsIgnoreCase(sectionValueKey)
-												&& Eag2012.RESTORATION_LAB.equalsIgnoreCase(sectionLangKey)) {
-											if (object instanceof Restorationlab) {
-												Restorationlab restorationlab = (Restorationlab) object;
-												if (restorationlab.getDescriptiveNote() == null) {
-													restorationlab.setDescriptiveNote(new DescriptiveNote());
+													computerPlaces.getDescriptiveNote().getP().add(p);
 												}
-												restorationlab.getDescriptiveNote().getP().add(p);
 											}
-										}
-										// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/descriptiveNote/P
-										if (Eag2012.REPRODUCTIONSER.equalsIgnoreCase(sectionValueKey)
-												&& Eag2012.REPRODUCTIONSER.equalsIgnoreCase(sectionLangKey)) {
-											if (object instanceof Reproductionser) {
-												Reproductionser reproductionser = (Reproductionser) object;
-												if (reproductionser.getDescriptiveNote() == null) {
-													reproductionser.setDescriptiveNote(new DescriptiveNote());
+											// eag/archguide/desc/repositories/repository/services/internetAccess/descriptiveNote/P
+											if (Eag2012.INTERNET_ACCESS.equalsIgnoreCase(sectionValueKey)
+													&& Eag2012.INTERNET_ACCESS.equalsIgnoreCase(sectionLangKey)) {
+												if (object instanceof InternetAccess) {
+														InternetAccess internetAccess = (InternetAccess) object;
+														if (internetAccess.getDescriptiveNote() == null) {
+															internetAccess.setDescriptiveNote(new DescriptiveNote());
+														}
+														internetAccess.getDescriptiveNote().getP().add(p);
 												}
-												reproductionser.getDescriptiveNote().getP().add(p);
+											}
+											// eag/archguide/desc/repositories/repository/services/techservices/restorationlab/descriptiveNote/P
+											if (Eag2012.RESTORATION_LAB.equalsIgnoreCase(sectionValueKey)
+													&& Eag2012.RESTORATION_LAB.equalsIgnoreCase(sectionLangKey)) {
+												if (object instanceof Restorationlab) {
+													Restorationlab restorationlab = (Restorationlab) object;
+													if (restorationlab.getDescriptiveNote() == null) {
+														restorationlab.setDescriptiveNote(new DescriptiveNote());
+													}
+													restorationlab.getDescriptiveNote().getP().add(p);
+												}
+											}
+											// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/descriptiveNote/P
+											if (Eag2012.REPRODUCTIONSER.equalsIgnoreCase(sectionValueKey)
+													&& Eag2012.REPRODUCTIONSER.equalsIgnoreCase(sectionLangKey)) {
+												if (object instanceof Reproductionser) {
+													Reproductionser reproductionser = (Reproductionser) object;
+													if (reproductionser.getDescriptiveNote() == null) {
+														reproductionser.setDescriptiveNote(new DescriptiveNote());
+													}
+													reproductionser.getDescriptiveNote().getP().add(p);
+												}
 											}
 										}
 									}

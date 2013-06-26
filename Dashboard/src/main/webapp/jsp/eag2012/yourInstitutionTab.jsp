@@ -679,10 +679,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYIOpeningTimes" onchange="openingHoursOfInstitutionChanged();" value="<s:property value="#current" />" />
+							<input type="text" id="textYIOpeningTimes" onchange="openingHoursOfInstitutionChanged($(this));" value="<s:property value="#current" />" />
 						</s:if>
 						<s:else>
-							<input type="text" id="textYIOpeningTimes_<s:property value="%{#status.index + 1}" />" value="<s:property value="#current" />" />
+							<input type="text" id="textYIOpeningTimes_<s:property value="%{#status.index + 1}" />" onchange="openingHoursOfInstitutionChanged($(this));" value="<s:property value="#current" />" />
 						</s:else>
 					</td>
 					<td class="labelLeft">
@@ -695,10 +695,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<select id="selectTextYIOpeningTimes" onchange="duplicateOpeningTimesLanguage();" >
+							<select id="selectTextYIOpeningTimes" onchange="duplicateOpeningTimesLanguage($(this));">
 						</s:if>
 						<s:else>
-							<select id="selectTextYIOpeningTimes_<s:property value="%{#status.index + 1}" />" >
+							<select id="selectTextYIOpeningTimes_<s:property value="%{#status.index + 1}" />" onchange="duplicateOpeningTimesLanguage($(this));">
 						</s:else>
 							<s:iterator value="languageList" var="language"> 
 								<option value="<s:property value="#language.key" />"
@@ -718,13 +718,13 @@
 					<label for="textYIOpeningTimes" ><s:property value="getText('label.ai.tabs.commons.openingTimes')"/><span class="required">*</span>:</label>
 				</td>
 				<td>
-					<input type="text" id="textYIOpeningTimes" onchange="openingHoursOfInstitutionChanged();" value="${loader.opening}" />
+					<input type="text" id="textYIOpeningTimes" onchange="openingHoursOfInstitutionChanged($(this));" value="${loader.opening}" />
 				</td>
 				<td class="labelLeft">
 					<label for="selectTextYIOpeningTimes"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 				</td>
 				<td>
-					<select id="selectTextYIOpeningTimes" onchange="duplicateOpeningTimesLanguage();" >
+					<select id="selectTextYIOpeningTimes" onchange="duplicateOpeningTimesLanguage($(this));" >
 						<s:iterator value="languageList" var="language"> 
 							<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.openingLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
 						</s:iterator>
@@ -758,10 +758,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="yourInstitutionClosingDates" onchange="closingHoursOfInstitutionChanged();" value="<s:property value="#current" />" />
+							<input type="text" id="yourInstitutionClosingDates" onchange="closingHoursOfInstitutionChanged($(this));" value="<s:property value="#current" />" />
 						</s:if>
 						<s:else>
-							<input type="text" id="yourInstitutionClosingDates_<s:property value="%{#status.index + 1}" />" value="<s:property value="#current" />" />
+							<input type="text" id="yourInstitutionClosingDates_<s:property value="%{#status.index + 1}" />" onchange="closingHoursOfInstitutionChanged($(this));" value="<s:property value="#current" />" />
 						</s:else>
 					</td>
 					<td class="labelLeft">
@@ -774,10 +774,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<select id="selectTextYIClosingTimes" onchange="duplicateClosingTimesLanguage();" >
+							<select id="selectTextYIClosingTimes" onchange="duplicateClosingTimesLanguage($(this));" >
 						</s:if>
 						<s:else>
-							<select id="selectTextYIClosingTimes_<s:property value="%{#status.index + 1}" />" >
+							<select id="selectTextYIClosingTimes_<s:property value="%{#status.index + 1}" />" onchange="duplicateClosingTimesLanguage($(this));">
 						</s:else>
 							<s:iterator value="languageList" var="language"> 
 								<option value="<s:property value="#language.key" />"
@@ -805,13 +805,13 @@
 					<label for="yourInstitutionClosingDates"><s:property value="getText('label.ai.yourinstitution.closingDates')"/>:</label>
 				</td>
 				<td>
-					<input type="text" id="yourInstitutionClosingDates" onchange="closingHoursOfInstitutionChanged();" />
+					<input type="text" id="yourInstitutionClosingDates" onchange="closingHoursOfInstitutionChanged($(this));" />
 				</td>
 				<td class="labelLeft">
 					<label for="selectTextYIClosingTimes"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 				</td>
 				<td>
-					<select id="selectTextYIClosingTimes" onchange="duplicateClosingTimesLanguage();">
+					<select id="selectTextYIClosingTimes" onchange="duplicateClosingTimesLanguage($(this));">
 						<s:iterator value="languageList" var="language"> 
 							<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
 						</s:iterator>
@@ -862,10 +862,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="futherAccessInformation" onchange="futherAccessInformationChanged();" value="<s:property value="#current" />" />
+							<input type="text" id="futherAccessInformation" onchange="futherAccessInformationChanged($(this));" value="<s:property value="#current" />" />
 						</s:if>
 						<s:else>
-							<input type="text" id="futherAccessInformation_<s:property value="%{#status.index + 1}" />" value="<s:property value="#current" />" />
+							<input type="text" id="futherAccessInformation_<s:property value="%{#status.index + 1}" />" onchange="futherAccessInformationChanged($(this));" value="<s:property value="#current" />" />
 						</s:else>
 					</td>
 					<td class="labelLeft">
@@ -878,10 +878,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<select id="selectFutherAccessInformation" onchange="duplicateAccessInformation();" >
+							<select id="selectFutherAccessInformation" onchange="duplicateAccessInformation($(this));" >
 						</s:if>
 						<s:else>
-							<select id="selectFutherAccessInformation_<s:property value="%{#status.index + 1}" />" >
+							<select id="selectFutherAccessInformation_<s:property value="%{#status.index + 1}" />" onchange="duplicateAccessInformation($(this));" >
 						</s:else>
 							<s:iterator value="languageList" var="language"> 
 								<option value="<s:property value="#language.key" />"
@@ -925,13 +925,13 @@
 					<label for="futherAccessInformation"><s:property value="getText('label.ai.accessAndServices.accessRestrictions')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="futherAccessInformation" onchange="futherAccessInformationChanged();"/>
+					<input type="text" id="futherAccessInformation" onchange="futherAccessInformationChanged($(this));"/>
 				</td>
 				<td class="labelLeft">
 					<label for="selectFutherAccessInformation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 				</td>
 				<td>
-					<select id="selectFutherAccessInformation" onchange="duplicateAccessInformation();">
+					<select id="selectFutherAccessInformation" onchange="duplicateAccessInformation($(this));">
 						<s:iterator value="languageList" var="language">
 							<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
 						</s:iterator>
@@ -982,10 +982,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="futherInformationOnExistingFacilities" onchange="futherInformationOnExistingFacilitiesChanged();" value="<s:property value="#current" />" />
+							<input type="text" id="futherInformationOnExistingFacilities" onchange="futherInformationOnExistingFacilitiesChanged($(this));" value="<s:property value="#current" />" />
 						</s:if>
 						<s:else>
-							<input type="text" id="futherInformationOnExistingFacilities_<s:property value="%{#status.index + 1}" />" value="<s:property value="#current" />" />
+							<input type="text" id="futherInformationOnExistingFacilities_<s:property value="%{#status.index + 1}" />" onchange="futherInformationOnExistingFacilitiesChanged($(this));" value="<s:property value="#current" />" />
 						</s:else>
 					</td>
 					<td class="labelLeft">
@@ -998,10 +998,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<select id="selectFutherAccessInformationOnExistingFacilities" onchange="duplicateFutherAccessInformationOnExistingFacilitiesLanguage();" >
+							<select id="selectFutherAccessInformationOnExistingFacilities" onchange="duplicateFutherAccessInformationOnExistingFacilitiesLanguage($(this));" >
 						</s:if>
 						<s:else>
-							<select id="selectFutherAccessInformationOnExistingFacilities_<s:property value="%{#status.index + 1}" />" >
+							<select id="selectFutherAccessInformationOnExistingFacilities_<s:property value="%{#status.index + 1}" />" onchange="duplicateFutherAccessInformationOnExistingFacilitiesLanguage($(this));">
 						</s:else>
 							<s:iterator value="languageList" var="language"> 
 								<option value="<s:property value="#language.key" />"
@@ -1045,13 +1045,13 @@
 					<label for="futherInformationOnExistingFacilities"><s:property value="getText('label.ai.accessAndServices.accesibility')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="futherInformationOnExistingFacilities" onchange="futherInformationOnExistingFacilitiesChanged();" />		
+					<input type="text" id="futherInformationOnExistingFacilities" onchange="futherInformationOnExistingFacilitiesChanged($(this));" />		
 				</td>
 				<td class="labelLeft">
 					<label for="selectFutherAccessInformationOnExistingFacilities"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 				</td>
 				<td>
-					<select id="selectFutherAccessInformationOnExistingFacilities" onchange="duplicateFutherAccessInformationOnExistingFacilitiesLanguage();">
+					<select id="selectFutherAccessInformationOnExistingFacilities" onchange="duplicateFutherAccessInformationOnExistingFacilitiesLanguage($(this));">
 						<s:iterator value="languageList" var="language"> 
 							<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
 						</s:iterator>

@@ -22,21 +22,16 @@ import eu.apenet.dpt.utils.eag2012.Citation;
 import eu.apenet.dpt.utils.eag2012.Date;
 import eu.apenet.dpt.utils.eag2012.DateRange;
 import eu.apenet.dpt.utils.eag2012.Eag;
-import eu.apenet.dpt.utils.eag2012.Email;
 import eu.apenet.dpt.utils.eag2012.Library;
 import eu.apenet.dpt.utils.eag2012.Location;
 import eu.apenet.dpt.utils.eag2012.Nonpreform;
 import eu.apenet.dpt.utils.eag2012.OtherRecordId;
-import eu.apenet.dpt.utils.eag2012.P;
 import eu.apenet.dpt.utils.eag2012.Parform;
-import eu.apenet.dpt.utils.eag2012.RecreationalServices;
 import eu.apenet.dpt.utils.eag2012.Repository;
 import eu.apenet.dpt.utils.eag2012.ResourceRelation;
 import eu.apenet.dpt.utils.eag2012.Searchroom;
-import eu.apenet.dpt.utils.eag2012.Telephone;
 import eu.apenet.dpt.utils.eag2012.Timetable;
 import eu.apenet.dpt.utils.eag2012.UseDates;
-import eu.apenet.dpt.utils.eag2012.Webpage;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 
@@ -191,92 +186,120 @@ public class EAG2012Loader{
 	private List<List<String>> contactWebpageHref;
 	private List<List<String>> contactWebpageTitle;
 	private List<List<String>> contactWebpageLang;
-	
-	private String firstdem;		// TODO: Will be remove
-	private String firstdemLang;	// TODO: Will be remove
-	private String localentity;		// TODO: Will be remove
-	private String localentityLang;	// TODO: Will be remove
-	private String secondem;		// TODO: Will be remove
-	private String secondemLang;	// TODO: Will be remove
-	private String fax;				// TODO: Will be remove
 
-	// Access and Services.
-	private String directions;
-	private String directionsLang;
-	private String directionsCitationHref;
-	private String citationHref;
-	private String termsOfUse;
-	private String termsOfUseLang;
-	private String termsOfUseHref;
-	private String searchRoomTelephone;
-	private String searchRoomEmail;
-	private String searchRoomEmailLink;
-	private String searchRoomWebpage;
-	private String searchRoomWebpageLink;
-	private String searchRoomWorkPlaces;
-	private String searchRoomComputerPlaces;
-	private String searchRoomMicrofilmReaders;
-	private String searchRoomPhotographAllowance;
-	private String searchRoomPhotographAllowanceContent;
-	private String searchRoomPhotographAllowanceHref;
-	private String searchRoomPhotographAllowanceLang;
-	private String searchRoomAdvancedOrdersContent;
-	private String searchRoomAdvancedOrdersLang;
-	private String searchRoomAdvancedOrdersHref;
-	private String searchRoomResearchServicesContent;
-	private String searchRoomResearchServicesLang;
-
-	private String libraryQuestion;
-	private String libraryTelephone;
-	private String libraryEmailContent;
-	private String libraryEmailHref;
-	private String libraryWebpageContent;
-	private String libraryWebpageHref;
-	private String libraryMonographPublication;
-	private String librarySerialPublication;
-	private String libraryInternetAccessQuestion;
-	private String libraryDescription;
-	private String libraryDescriptionLang;
-
-	private String technicalServicesQuestion;
-	private String technicalServicesDescription;
-	private String technicalServicesDescriptionLang;
-	private String technicalServicesTelephone;
-	private String technicalServicesEmail;
-	private String technicalServicesEmailLink;
-	private String technicalServicesEmailLang;
-	private String technicalServicesWebpageLink;
-	private String technicalServicesWebpage;
-	private String technicalServicesWebpageLang;
-
-	private String reproductionserQuestion;
-	private String reproductionserDescription;
-	private String reproductionserDescriptionLang;
-	private String reproductionserTelephone;
-	private String reproductionserEmail;
-	private String reproductionserEmailLink;
-	private String reproductionserEmailLang;
-	private String reproductionserWebpage;
-	private String reproductionserWebpageLink;
-	private String reproductionserWebpageLang;
-	private String microfilmServices;
-	private String photographicServices;
-	private String digitisationServices;
-	private String photocopyingServices;
-	private String recreationalServicesRefreshmentArea;
-	private String recreationalServicesRefreshmentAreaLang;
-	private String recreationalServicesExhibition;
-	private String recreationalServicesExhibitionLang;
-	private String recreationalServicesWeb;
-	private String recreationalServicesWebLink;
-	private String toursSessionGuidesAndSessionsContent;
-	private String toursSessionGuidesAndSessionsLang;
-	private String toursSessionGuidesAndSessionsWebpage;
-	private String toursSessionGuidesAndSessionsWebpageTitle;
-	private String otherServices;
-	private String otherServicesLang;
-	private String otherServicesWebpage;
-	private String otherServicesLink;
+	// Access and Services, general.
+	private List<List<String>> asOpening;
+	private List<List<String>> asOpeningLang;
+	private List<List<String>> asClosing;
+	private List<List<String>> asClosingLang;
+	private List<List<String>> asNumberOfDirections;
+	private List<List<String>> asDirections;
+	private List<List<String>> asDirectionsLang;
+	private List<List<String>> asDirectionsCitationHref;
+	private List<List<String>> asAccessQuestion;
+	private List<List<String>> asRestaccess;
+	private List<List<String>> asRestaccessLang;
+	private List<List<String>> asNumberOfTermsOfUse;
+	private List<List<String>> asTermsOfUse;
+	private List<List<String>> asTermsOfUseLang;
+	private List<List<String>> asTermsOfUseHref;
+	private List<List<String>> asAccessibilityQuestion;
+	private List<List<String>> asAccessibility;
+	private List<List<String>> asAccessibilityLang;
+	// Access and Services, searchroom.
+	private List<List<String>> asSearchRoomTelephone;
+	private List<List<String>> asSearchRoomNumberOfEmail;
+	private List<List<String>> asSearchRoomEmailHref;
+	private List<List<String>> asSearchRoomEmailTitle;
+	private List<List<String>> asSearchRoomEmailLang;
+	private List<List<String>> asSearchRoomNumberOfWebpage;
+	private List<List<String>> asSearchRoomWebpageHref;
+	private List<List<String>> asSearchRoomWebpageTitle;
+	private List<List<String>> asSearchRoomWebpageLang;
+	private List<List<String>> asSearchRoomWorkPlaces;
+	private List<List<String>> asSearchRoomComputerPlaces;
+	private List<List<String>> asSearchRoomComputerPlacesDescription;
+	private List<List<String>> asSearchRoomComputerPlacesDescriptionLang;
+	private List<List<String>> asSearchRoomMicrofilmReaders;
+	private List<List<String>> asSearchRoomPhotographAllowance;
+	private List<List<String>> asSearchRoomNumberOfReadersTicket;
+	private List<List<String>> asSearchRoomReadersTicketHref;
+	private List<List<String>> asSearchRoomReadersTicketContent;
+	private List<List<String>> asSearchRoomReadersTicketLang;
+	private List<List<String>> asSearchRoomNumberOfAdvancedOrders;
+	private List<List<String>> asSearchRoomAdvancedOrdersHref;
+	private List<List<String>> asSearchRoomAdvancedOrdersContent;
+	private List<List<String>> asSearchRoomAdvancedOrdersLang;
+	private List<List<String>> asSearchRoomResearchServicesContent;
+	private List<List<String>> asSearchRoomResearchServicesLang;
+	// Access and Services, library.
+	private List<List<String>> asLibraryQuestion;
+	private List<List<String>> asLibraryTelephone;
+	private List<List<String>> asLibraryNumberOfEmail;
+	private List<List<String>> asLibraryEmailHref;
+	private List<List<String>> asLibraryEmailTitle;
+	private List<List<String>> asLibraryEmailLang;
+	private List<List<String>> asLibraryNumberOfWebpage;
+	private List<List<String>> asLibraryWebpageHref;
+	private List<List<String>> asLibraryWebpageTitle;
+	private List<List<String>> asLibraryWebpageLang;
+	private List<List<String>> asLibraryMonographPublication;
+	private List<List<String>> asLibrarySerialPublication;
+	// Access and Services, internet access.
+	private List<List<String>> asInternetAccessQuestion;
+	private List<List<String>> asInternetAccessDescription;
+	private List<List<String>> asInternetAccessDescriptionLang;
+	// Access and Services, technical services, restauration laboratory.
+	private List<List<String>> asRestorationlabQuestion;
+	private List<List<String>> asRestorationlabDescription;
+	private List<List<String>> asRestorationlabDescriptionLang;
+	private List<List<String>> asRestorationlabTelephone;
+	private List<List<String>> asRestorationlabNumberOfEmail;
+	private List<List<String>> asRestorationlabEmailHref;
+	private List<List<String>> asRestorationlabEmailTitle;
+	private List<List<String>> asRestorationlabEmailLang;
+	private List<List<String>> asRestorationlabNumberOfWebpage;
+	private List<List<String>> asRestorationlabWebpageHref;
+	private List<List<String>> asRestorationlabWebpageTitle;
+	private List<List<String>> asRestorationlabWebpageLang;
+	// Access and Services, technical services, reproduction service.
+	private List<List<String>> asReproductionserQuestion;
+	private List<List<String>> asReproductionserDescription;
+	private List<List<String>> asReproductionserDescriptionLang;
+	private List<List<String>> asReproductionserTelephone;
+	private List<List<String>> asReproductionserNumberOfEmail;
+	private List<List<String>> asReproductionserEmailHref;
+	private List<List<String>> asReproductionserEmailTitle;
+	private List<List<String>> asReproductionserEmailLang;
+	private List<List<String>> asReproductionserNumberOfWebpage;
+	private List<List<String>> asReproductionserWebpageHref;
+	private List<List<String>> asReproductionserWebpageTitle;
+	private List<List<String>> asReproductionserWebpageLang;
+	private List<List<String>> asReproductionserMicrofilmServices;
+	private List<List<String>> asReproductionserPhotographicServices;
+	private List<List<String>> asReproductionserDigitisationServices;
+	private List<List<String>> asReproductionserPhotocopyingServices;
+	// Access and Services, recreational services.
+	private List<List<String>> asRecreationalServicesRefreshmentArea;
+	private List<List<String>> asRecreationalServicesRefreshmentAreaLang;
+	private List<List<String>> asRSNumberOfExhibition;
+	private List<List<String>> asRSExhibition;
+	private List<List<String>> asRSExhibitionLang;
+	private List<List<String>> asRSExhibitionWebpageHref;
+	private List<List<String>> asRSExhibitionWebpageTitle;
+	private List<List<String>> asRSExhibitionWebpageLang;
+	private List<List<String>> asRSNumberOfToursSessions;
+	private List<List<String>> asRSToursSessions;
+	private List<List<String>> asRSToursSessionsLang;
+	private List<List<String>> asRSToursSessionsWebpageHref;
+	private List<List<String>> asRSToursSessionsWebpageTitle;
+	private List<List<String>> asRSToursSessionsWebpageLang;
+	private List<List<String>> asRSNumberOfOtherServices;
+	private List<List<String>> asRSOtherServices;
+	private List<List<String>> asRSOtherServicesLang;
+	private List<List<String>> asRSOtherServicesWebpageHref;
+	private List<List<String>> asRSOtherServicesWebpageTitle;
+	private List<List<String>> asRSOtherServicesWebpageLang;
 
 	// Description.
 	private String repositorhist;
@@ -329,13 +352,14 @@ public class EAG2012Loader{
 	private String extentUnit;
 
 	// Control.
-	private String agentLang;
-	private String agencyCode;
-	private String language;
-	private String languageDeclaration;
-	private String script;
-	private List<String> abbreviation;
-	private List<String> citation;
+	private String controlAgentLang;
+	private String controlAgencyCode;
+	private List<String> controlNumberOfLanguages;
+	private List<String> controlLanguageDeclaration;
+	private List<String> controlScript;
+	private List<String> controlNumberOfRules;
+	private List<String> controlAbbreviation;
+	private List<String> controlCitation;
 
 	// Relations.
 	private String resourceRelationType;
@@ -671,30 +695,6 @@ public class EAG2012Loader{
 	public void setCountryLang(String countryLang) {
 		this.countryLang = countryLang;
 	}
-	public String getFirstdem() {
-		return this.firstdem;
-	}
-	public void setFirstdem(String firstdem) {
-		this.firstdem = firstdem;
-	}
-	public String getFirstdemLang() {
-		return this.firstdemLang;
-	}
-	public void setFirstdemLang(String firstdemLang) {
-		this.firstdemLang = firstdemLang;
-	}
-	public String getSecondem() {
-		return this.secondem;
-	}
-	public void setSecondem(String secondem) {
-		this.secondem = secondem;
-	}
-	public String getSecondemLang() {
-		return this.secondemLang;
-	}
-	public void setSecondemLang(String secondemLang) {
-		this.secondemLang = secondemLang;
-	}
 	public String getMunicipalityPostalcode() {
 		return this.municipalityPostalcode;
 	}
@@ -706,18 +706,6 @@ public class EAG2012Loader{
 	}
 	public void setMunicipalityPostalcodeLang(String municipalityPostalcodeLang) {
 		this.municipalityPostalcodeLang = municipalityPostalcodeLang;
-	}
-	public String getLocalentity() {
-		return this.localentity;
-	}
-	public void setLocalentity(String localentity) {
-		this.localentity = localentity;
-	}
-	public String getLocalentityLang() {
-		return this.localentityLang;
-	}
-	public void setLocalentityLang(String localentityLang) {
-		this.localentityLang = localentityLang;
 	}
 	public String getStreet() {
 		return this.street;
@@ -1707,32 +1695,6 @@ public class EAG2012Loader{
 	public void setNumberOfRepositories(int numberOfRepositories) {
 		this.numberOfRepositories = numberOfRepositories;
 	}
-
-// TODO:
-//	/**
-//	 * @return the numberOfRepositories
-//	 */
-//	public List<String> getNumberOfRepositories() {
-//		if (this.numberOfRepositories == null) {
-//			this.numberOfRepositories = new ArrayList<String>();
-//		}
-//		return this.numberOfRepositories;
-//	}
-//
-//	/**
-//	 * @param numberOfRepositories the numberOfRepositories to set
-//	 */
-//	public void setNumberOfRepositories(List<String> numberOfRepositories) {
-//		this.numberOfRepositories = numberOfRepositories;
-//	}
-//
-//	/**
-//	 * @param numberOfRepositories the numberOfRepositories to add
-//	 */
-//	public void addNumberOfRepositories(String numberOfRepositories) {
-//		this.getNumberOfRepositories().add(numberOfRepositories);
-//	}
-//	FIN TODO:
 
 	public String getResourceRelationType() {
 		return this.resourceRelationType;
@@ -2782,58 +2744,2622 @@ public class EAG2012Loader{
 		this.getContactNumberOfWebpageAddress().add(contactNumberOfWebpageAddress);
 	}
 
-	public String getFax() {
-		return this.fax;
+	/**
+	 * @return the asOpening
+	 */
+	public List<List<String>> getAsOpening() {
+		if (this.asOpening == null) {
+			this.asOpening = new ArrayList<List<String>>();
+		}
+		return this.asOpening;
 	}
-	public void setFax(String fax) {
-		this.fax = fax;
+
+	/**
+	 * @param asOpening the asOpening to set
+	 */
+	public void setAsOpening(List<List<String>> asOpening) {
+		this.asOpening = asOpening;
 	}
+
+	/**
+	 * @param asOpening the asOpening to add
+	 */
+	public void addAsOpening(List<String> asOpening) {
+		this.getAsOpening().add(asOpening);
+	}
+
+	/**
+	 * @return the asOpeningLang
+	 */
+	public List<List<String>> getAsOpeningLang() {
+		if (this.asOpeningLang == null) {
+			this.asOpeningLang = new ArrayList<List<String>>();
+		}
+		return this.asOpeningLang;
+	}
+
+	/**
+	 * @param asOpeningLang the asOpeningLang to set
+	 */
+	public void setAsOpeningLang(List<List<String>> asOpeningLang) {
+		this.asOpeningLang = asOpeningLang;
+	}
+
+	/**
+	 * @param asOpeningLang the asOpeningLang to add
+	 */
+	public void addAsOpeningLang(List<String> asOpeningLang) {
+		this.getAsOpeningLang().add(asOpeningLang);
+	}
+
+	/**
+	 * @return the asClosing
+	 */
+	public List<List<String>> getAsClosing() {
+		if (this.asClosing == null) {
+			this.asClosing = new ArrayList<List<String>>();
+		}
+		return this.asClosing;
+	}
+
+	/**
+	 * @param asClosing the asClosing to set
+	 */
+	public void setAsClosing(List<List<String>> asClosing) {
+		this.asClosing = asClosing;
+	}
+
+	/**
+	 * @param asClosing the asClosing to add
+	 */
+	public void addAsClosing(List<String> asClosing) {
+		this.getAsClosing().add(asClosing);
+	}
+
+	/**
+	 * @return the asClosingLang
+	 */
+	public List<List<String>> getAsClosingLang() {
+		if (this.asClosingLang == null) {
+			this.asClosingLang = new ArrayList<List<String>>();
+		}
+		return this.asClosingLang;
+	}
+
+	/**
+	 * @param asClosingLang the asClosingLang to set
+	 */
+	public void setAsClosingLang(List<List<String>> asClosingLang) {
+		this.asClosingLang = asClosingLang;
+	}
+
+	/**
+	 * @param asClosingLang the asClosingLang to add
+	 */
+	public void addAsClosingLang(List<String> asClosingLang) {
+		this.getAsClosingLang().add(asClosingLang);
+	}
+
+	/**
+	 * @return the asNumberOfDirections
+	 */
+	public List<List<String>> getAsNumberOfDirections() {
+		if (this.asNumberOfDirections == null) {
+			this.asNumberOfDirections = new ArrayList<List<String>>();
+		}
+		return this.asNumberOfDirections;
+	}
+
+	/**
+	 * @param asNumberOfDirections the asNumberOfDirections to set
+	 */
+	public void setAsNumberOfDirections(List<List<String>> asNumberOfDirections) {
+		this.asNumberOfDirections = asNumberOfDirections;
+	}
+
+	/**
+	 * @param asNumberOfDirections the asNumberOfDirections to add
+	 */
+	public void addAsNumberOfDirections(List<String> asNumberOfDirections) {
+		this.getAsNumberOfDirections().add(asNumberOfDirections);
+	}
+
+	/**
+	 * @return the asDirections
+	 */
+	public List<List<String>> getAsDirections() {
+		if (this.asDirections == null) {
+			this.asDirections = new ArrayList<List<String>>();
+		}
+		return this.asDirections;
+	}
+
+	/**
+	 * @param asDirections the asDirections to set
+	 */
+	public void setAsDirections(List<List<String>> asDirections) {
+		this.asDirections = asDirections;
+	}
+
+	/**
+	 * @param asDirections the asDirections to add
+	 */
+	public void addAsDirections(List<String> asDirections) {
+		this.getAsDirections().add(asDirections);
+	}
+
+	/**
+	 * @return the asDirectionsLang
+	 */
+	public List<List<String>> getAsDirectionsLang() {
+		if (this.asDirectionsLang == null) {
+			this.asDirectionsLang = new ArrayList<List<String>>();
+		}
+		return this.asDirectionsLang;
+	}
+
+	/**
+	 * @param asDirectionsLang the asDirectionsLang to set
+	 */
+	public void setAsDirectionsLang(List<List<String>> asDirectionsLang) {
+		this.asDirectionsLang = asDirectionsLang;
+	}
+
+	/**
+	 * @param asDirectionsLang the asDirectionsLang to add
+	 */
+	public void addAsDirectionsLang(List<String> asDirectionsLang) {
+		this.getAsDirectionsLang().add(asDirectionsLang);
+	}
+
+	/**
+	 * @return the asDirectionsCitationHref
+	 */
+	public List<List<String>> getAsDirectionsCitationHref() {
+		if (this.asDirectionsCitationHref == null) {
+			this.asDirectionsCitationHref = new ArrayList<List<String>>();
+		}
+		return this.asDirectionsCitationHref;
+	}
+
+	/**
+	 * @param asDirectionsCitationHref the asDirectionsCitationHref to set
+	 */
+	public void setAsDirectionsCitationHref(
+			List<List<String>> asDirectionsCitationHref) {
+		this.asDirectionsCitationHref = asDirectionsCitationHref;
+	}
+
+	/**
+	 * @param asDirectionsCitationHref the asDirectionsCitationHref to add
+	 */
+	public void addAsDirectionsCitationHref(List<String> asDirectionsCitationHref) {
+		this.getAsDirectionsCitationHref().add(asDirectionsCitationHref);
+	}
+
+	/**
+	 * @return the asAccessQuestion
+	 */
+	public List<List<String>> getAsAccessQuestion() {
+		if (this.asAccessQuestion == null) {
+			this.asAccessQuestion = new ArrayList<List<String>>();
+		}
+		return this.asAccessQuestion;
+	}
+
+	/**
+	 * @param asAccessQuestion the asAccessQuestion to set
+	 */
+	public void setAsAccessQuestion(List<List<String>> asAccessQuestion) {
+		this.asAccessQuestion = asAccessQuestion;
+	}
+
+	/**
+	 * @param asAccessQuestion the asAccessQuestion to add
+	 */
+	public void addAsAccessQuestion(List<String> asAccessQuestion) {
+		this.getAsAccessQuestion().add(asAccessQuestion);
+	}
+
+	/**
+	 * @return the asRestaccess
+	 */
+	public List<List<String>> getAsRestaccess() {
+		if (this.asRestaccess == null) {
+			this.asRestaccess = new ArrayList<List<String>>();
+		}
+		return this.asRestaccess;
+	}
+
+	/**
+	 * @param asRestaccess the asRestaccess to set
+	 */
+	public void setAsRestaccess(List<List<String>> asRestaccess) {
+		this.asRestaccess = asRestaccess;
+	}
+
+	/**
+	 * @param asRestaccess the asRestaccess to add
+	 */
+	public void addAsRestaccess(List<String> asRestaccess) {
+		this.getAsRestaccess().add(asRestaccess);
+	}
+
+	/**
+	 * @return the asRestaccessLang
+	 */
+	public List<List<String>> getAsRestaccessLang() {
+		if (this.asRestaccessLang == null) {
+			this.asRestaccessLang = new ArrayList<List<String>>();
+		}
+		return this.asRestaccessLang;
+	}
+
+	/**
+	 * @param asRestaccessLang the asRestaccessLang to set
+	 */
+	public void setAsRestaccessLang(List<List<String>> asRestaccessLang) {
+		this.asRestaccessLang = asRestaccessLang;
+	}
+
+	/**
+	 * @param asRestaccessLang the asRestaccessLang to add
+	 */
+	public void addAsRestaccessLang(List<String> asRestaccessLang) {
+		this.getAsRestaccessLang().add(asRestaccessLang);
+	}
+
+	/**
+	 * @return the asNumberOfTermsOfUse
+	 */
+	public List<List<String>> getAsNumberOfTermsOfUse() {
+		if (this.asNumberOfTermsOfUse == null) {
+			this.asNumberOfTermsOfUse = new ArrayList<List<String>>();
+		}
+		return this.asNumberOfTermsOfUse;
+	}
+
+	/**
+	 * @param asNumberOfTermsOfUse the asNumberOfTermsOfUse to set
+	 */
+	public void setAsNumberOfTermsOfUse(List<List<String>> asNumberOfTermsOfUse) {
+		this.asNumberOfTermsOfUse = asNumberOfTermsOfUse;
+	}
+
+	/**
+	 * @param asNumberOfTermsOfUse the asNumberOfTermsOfUse to add
+	 */
+	public void addAsNumberOfTermsOfUse(List<String> asNumberOfTermsOfUse) {
+		this.getAsNumberOfTermsOfUse().add(asNumberOfTermsOfUse);
+	}
+
+	/**
+	 * @return the asTermsOfUse
+	 */
+	public List<List<String>> getAsTermsOfUse() {
+		if (this.asTermsOfUse == null) {
+			this.asTermsOfUse = new ArrayList<List<String>>();
+		}
+		return this.asTermsOfUse;
+	}
+
+	/**
+	 * @param asTermsOfUse the asTermsOfUse to set
+	 */
+	public void setAsTermsOfUse(List<List<String>> asTermsOfUse) {
+		this.asTermsOfUse = asTermsOfUse;
+	}
+
+	/**
+	 * @param asTermsOfUse the asTermsOfUse to add
+	 */
+	public void addAsTermsOfUse(List<String> asTermsOfUse) {
+		this.getAsTermsOfUse().add(asTermsOfUse);
+	}
+
+	/**
+	 * @return the asTermsOfUseLang
+	 */
+	public List<List<String>> getAsTermsOfUseLang() {
+		if (this.asTermsOfUseLang == null) {
+			this.asTermsOfUseLang = new ArrayList<List<String>>();
+		}
+		return this.asTermsOfUseLang;
+	}
+
+	/**
+	 * @param asTermsOfUseLang the asTermsOfUseLang to set
+	 */
+	public void setAsTermsOfUseLang(List<List<String>> asTermsOfUseLang) {
+		this.asTermsOfUseLang = asTermsOfUseLang;
+	}
+
+	/**
+	 * @param asTermsOfUseLang the asTermsOfUseLang to add
+	 */
+	public void addAsTermsOfUseLang(List<String> asTermsOfUseLang) {
+		this.getAsTermsOfUseLang().add(asTermsOfUseLang);
+	}
+
+	/**
+	 * @return the asTermsOfUseHref
+	 */
+	public List<List<String>> getAsTermsOfUseHref() {
+		if (this.asTermsOfUseHref == null) {
+			this.asTermsOfUseHref = new ArrayList<List<String>>();
+		}
+		return this.asTermsOfUseHref;
+	}
+
+	/**
+	 * @param asTermsOfUseHref the asTermsOfUseHref to set
+	 */
+	public void setAsTermsOfUseHref(List<List<String>> asTermsOfUseHref) {
+		this.asTermsOfUseHref = asTermsOfUseHref;
+	}
+
+	/**
+	 * @param asTermsOfUseHref the asTermsOfUseHref to add
+	 */
+	public void addAsTermsOfUseHref(List<String> asTermsOfUseHref) {
+		this.getAsTermsOfUseHref().add(asTermsOfUseHref);
+	}
+
+	/**
+	 * @return the asAccessibilityQuestion
+	 */
+	public List<List<String>> getAsAccessibilityQuestion() {
+		if (this.asAccessibilityQuestion == null) {
+			this.asAccessibilityQuestion = new ArrayList<List<String>>();
+		}
+		return this.asAccessibilityQuestion;
+	}
+
+	/**
+	 * @param asAccessibilityQuestion the asAccessibilityQuestion to set
+	 */
+	public void setAsAccessibilityQuestion(
+			List<List<String>> asAccessibilityQuestion) {
+		this.asAccessibilityQuestion = asAccessibilityQuestion;
+	}
+
+	/**
+	 * @param asAccessibilityQuestion the asAccessibilityQuestion to add
+	 */
+	public void addAsAccessibilityQuestion(List<String> asAccessibilityQuestion) {
+		this.getAsAccessibilityQuestion().add(asAccessibilityQuestion);
+	}
+
+	/**
+	 * @return the asAccessibility
+	 */
+	public List<List<String>> getAsAccessibility() {
+		if (this.asAccessibility == null) {
+			this.asAccessibility = new ArrayList<List<String>>();
+		}
+		return this.asAccessibility;
+	}
+
+	/**
+	 * @param asAccessibility the asAccessibility to set
+	 */
+	public void setAsAccessibility(List<List<String>> asAccessibility) {
+		this.asAccessibility = asAccessibility;
+	}
+
+	/**
+	 * @param asAccessibility the asAccessibility to add
+	 */
+	public void addAsAccessibility(List<String> asAccessibility) {
+		this.getAsAccessibility().add(asAccessibility);
+	}
+
+	/**
+	 * @return the asAccessibilityLang
+	 */
+	public List<List<String>> getAsAccessibilityLang() {
+		if (this.asAccessibilityLang == null) {
+			this.asAccessibilityLang = new ArrayList<List<String>>();
+		}
+		return this.asAccessibilityLang;
+	}
+
+	/**
+	 * @param asAccessibilityLang the asAccessibilityLang to set
+	 */
+	public void setAsAccessibilityLang(List<List<String>> asAccessibilityLang) {
+		this.asAccessibilityLang = asAccessibilityLang;
+	}
+
+	/**
+	 * @param asAccessibilityLang the asAccessibilityLang to add
+	 */
+	public void addAsAccessibilityLang(List<String> asAccessibilityLang) {
+		this.getAsAccessibilityLang().add(asAccessibilityLang);
+	}
+
+	/**
+	 * @return the asSearchRoomTelephone
+	 */
+	public List<List<String>> getAsSearchRoomTelephone() {
+		if (this.asSearchRoomTelephone == null) {
+			this.asSearchRoomTelephone = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomTelephone;
+	}
+
+	/**
+	 * @param asSearchRoomTelephone the asSearchRoomTelephone to set
+	 */
+	public void setAsSearchRoomTelephone(List<List<String>> asSearchRoomTelephone) {
+		this.asSearchRoomTelephone = asSearchRoomTelephone;
+	}
+
+	/**
+	 * @param asSearchRoomTelephone the asSearchRoomTelephone to add
+	 */
+	public void addAsSearchRoomTelephone(List<String> asSearchRoomTelephone) {
+		this.getAsSearchRoomTelephone().add(asSearchRoomTelephone);
+	}
+
+	/**
+	 * @return the asSearchRoomNumberOfEmail
+	 */
+	public List<List<String>> getAsSearchRoomNumberOfEmail() {
+		if (this.asSearchRoomNumberOfEmail == null) {
+			this.asSearchRoomNumberOfEmail = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomNumberOfEmail;
+	}
+
+	/**
+	 * @param asSearchRoomNumberOfEmail the asSearchRoomNumberOfEmail to set
+	 */
+	public void setAsSearchRoomNumberOfEmail(
+			List<List<String>> asSearchRoomNumberOfEmail) {
+		this.asSearchRoomNumberOfEmail = asSearchRoomNumberOfEmail;
+	}
+
+	/**
+	 * @param asSearchRoomNumberOfEmail the asSearchRoomNumberOfEmail to add
+	 */
+	public void addAsSearchRoomNumberOfEmail(List<String> asSearchRoomNumberOfEmail) {
+		this.getAsSearchRoomNumberOfEmail().add(asSearchRoomNumberOfEmail);
+	}
+
+	/**
+	 * @return the asSearchRoomEmailHref
+	 */
+	public List<List<String>> getAsSearchRoomEmailHref() {
+		if (this.asSearchRoomEmailHref == null) {
+			this.asSearchRoomEmailHref = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomEmailHref;
+	}
+
+	/**
+	 * @param asSearchRoomEmailHref the asSearchRoomEmailHref to set
+	 */
+	public void setAsSearchRoomEmailHref(List<List<String>> asSearchRoomEmailHref) {
+		this.asSearchRoomEmailHref = asSearchRoomEmailHref;
+	}
+
+	/**
+	 * @param asSearchRoomEmailHref the asSearchRoomEmailHref to add
+	 */
+	public void addAsSearchRoomEmailHref(List<String> asSearchRoomEmailHref) {
+		this.getAsSearchRoomEmailHref().add(asSearchRoomEmailHref);
+	}
+
+	/**
+	 * @return the asSearchRoomEmailTitle
+	 */
+	public List<List<String>> getAsSearchRoomEmailTitle() {
+		if (this.asSearchRoomEmailTitle == null) {
+			this.asSearchRoomEmailTitle = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomEmailTitle;
+	}
+
+	/**
+	 * @param asSearchRoomEmailTitle the asSearchRoomEmailTitle to set
+	 */
+	public void setAsSearchRoomEmailTitle(List<List<String>> asSearchRoomEmailTitle) {
+		this.asSearchRoomEmailTitle = asSearchRoomEmailTitle;
+	}
+
+	/**
+	 * @param asSearchRoomEmailTitle the asSearchRoomEmailTitle to add
+	 */
+	public void addAsSearchRoomEmailTitle(List<String> asSearchRoomEmailTitle) {
+		this.getAsSearchRoomEmailTitle().add(asSearchRoomEmailTitle);
+	}
+
+	/**
+	 * @return the asSearchRoomEmailLang
+	 */
+	public List<List<String>> getAsSearchRoomEmailLang() {
+		if (this.asSearchRoomEmailLang == null) {
+			this.asSearchRoomEmailLang = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomEmailLang;
+	}
+
+	/**
+	 * @param asSearchRoomEmailLang the asSearchRoomEmailLang to set
+	 */
+	public void setAsSearchRoomEmailLang(List<List<String>> asSearchRoomEmailLang) {
+		this.asSearchRoomEmailLang = asSearchRoomEmailLang;
+	}
+
+	/**
+	 * @param asSearchRoomEmailLang the asSearchRoomEmailLang to add
+	 */
+	public void addAsSearchRoomEmailLang(List<String> asSearchRoomEmailLang) {
+		this.getAsSearchRoomEmailLang().add(asSearchRoomEmailLang);
+	}
+
+	/**
+	 * @return the asSearchRoomNumberOfWebpage
+	 */
+	public List<List<String>> getAsSearchRoomNumberOfWebpage() {
+		if (this.asSearchRoomNumberOfWebpage == null) {
+			this.asSearchRoomNumberOfWebpage = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomNumberOfWebpage;
+	}
+
+	/**
+	 * @param asSearchRoomNumberOfWebpage the asSearchRoomNumberOfWebpage to set
+	 */
+	public void setAsSearchRoomNumberOfWebpage(
+			List<List<String>> asSearchRoomNumberOfWebpage) {
+		this.asSearchRoomNumberOfWebpage = asSearchRoomNumberOfWebpage;
+	}
+
+	/**
+	 * @param asSearchRoomNumberOfWebpage the asSearchRoomNumberOfWebpage to add
+	 */
+	public void addAsSearchRoomNumberOfWebpage(List<String> asSearchRoomNumberOfWebpage) {
+		this.getAsSearchRoomNumberOfWebpage().add(asSearchRoomNumberOfWebpage);
+	}
+
+	/**
+	 * @return the asSearchRoomWebpageHref
+	 */
+	public List<List<String>> getAsSearchRoomWebpageHref() {
+		if (this.asSearchRoomWebpageHref == null) {
+			this.asSearchRoomWebpageHref = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomWebpageHref;
+	}
+
+	/**
+	 * @param asSearchRoomWebpageHref the asSearchRoomWebpageHref to set
+	 */
+	public void setAsSearchRoomWebpageHref(
+			List<List<String>> asSearchRoomWebpageHref) {
+		this.asSearchRoomWebpageHref = asSearchRoomWebpageHref;
+	}
+
+	/**
+	 * @param asSearchRoomWebpageHref the asSearchRoomWebpageHref to add
+	 */
+	public void addAsSearchRoomWebpageHref(List<String> asSearchRoomWebpageHref) {
+		this.getAsSearchRoomWebpageHref().add(asSearchRoomWebpageHref);
+	}
+
+	/**
+	 * @return the asSearchRoomWebpageTitle
+	 */
+	public List<List<String>> getAsSearchRoomWebpageTitle() {
+		if (this.asSearchRoomWebpageTitle == null) {
+			this.asSearchRoomWebpageTitle = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomWebpageTitle;
+	}
+
+	/**
+	 * @param asSearchRoomWebpageTitle the asSearchRoomWebpageTitle to set
+	 */
+	public void setAsSearchRoomWebpageTitle(
+			List<List<String>> asSearchRoomWebpageTitle) {
+		this.asSearchRoomWebpageTitle = asSearchRoomWebpageTitle;
+	}
+
+	/**
+	 * @param asSearchRoomWebpageTitle the asSearchRoomWebpageTitle to add
+	 */
+	public void addAsSearchRoomWebpageTitle(List<String> asSearchRoomWebpageTitle) {
+		this.getAsSearchRoomWebpageTitle().add(asSearchRoomWebpageTitle);
+	}
+
+	/**
+	 * @return the asSearchRoomWebpageLang
+	 */
+	public List<List<String>> getAsSearchRoomWebpageLang() {
+		if (this.asSearchRoomWebpageLang == null) {
+			this.asSearchRoomWebpageLang = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomWebpageLang;
+	}
+
+	/**
+	 * @param asSearchRoomWebpageLang the asSearchRoomWebpageLang to set
+	 */
+	public void setAsSearchRoomWebpageLang(
+			List<List<String>> asSearchRoomWebpageLang) {
+		this.asSearchRoomWebpageLang = asSearchRoomWebpageLang;
+	}
+
+	/**
+	 * @param asSearchRoomWebpageLang the asSearchRoomWebpageLang to add
+	 */
+	public void addAsSearchRoomWebpageLang(List<String> asSearchRoomWebpageLang) {
+		this.getAsSearchRoomWebpageLang().add(asSearchRoomWebpageLang);
+	}
+
+	/**
+	 * @return the asSearchRoomWorkPlaces
+	 */
+	public List<List<String>> getAsSearchRoomWorkPlaces() {
+		if (this.asSearchRoomWorkPlaces == null) {
+			this.asSearchRoomWorkPlaces = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomWorkPlaces;
+	}
+
+	/**
+	 * @param asSearchRoomWorkPlaces the asSearchRoomWorkPlaces to set
+	 */
+	public void setAsSearchRoomWorkPlaces(List<List<String>> asSearchRoomWorkPlaces) {
+		this.asSearchRoomWorkPlaces = asSearchRoomWorkPlaces;
+	}
+
+	/**
+	 * @param asSearchRoomWorkPlaces the asSearchRoomWorkPlaces to add
+	 */
+	public void addAsSearchRoomWorkPlaces(List<String> asSearchRoomWorkPlaces) {
+		this.getAsSearchRoomWorkPlaces().add(asSearchRoomWorkPlaces);
+	}
+
+	/**
+	 * @return the asSearchRoomComputerPlaces
+	 */
+	public List<List<String>> getAsSearchRoomComputerPlaces() {
+		if (this.asSearchRoomComputerPlaces == null) {
+			this.asSearchRoomComputerPlaces = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomComputerPlaces;
+	}
+
+	/**
+	 * @param asSearchRoomComputerPlaces the asSearchRoomComputerPlaces to set
+	 */
+	public void setAsSearchRoomComputerPlaces(
+			List<List<String>> asSearchRoomComputerPlaces) {
+		this.asSearchRoomComputerPlaces = asSearchRoomComputerPlaces;
+	}
+
+	/**
+	 * @param asSearchRoomComputerPlaces the asSearchRoomComputerPlaces to add
+	 */
+	public void addAsSearchRoomComputerPlaces(List<String> asSearchRoomComputerPlaces) {
+		this.getAsSearchRoomComputerPlaces().add(asSearchRoomComputerPlaces);
+	}
+
+	/**
+	 * @return the asSearchRoomComputerPlacesDescription
+	 */
+	public List<List<String>> getAsSearchRoomComputerPlacesDescription() {
+		if (this.asSearchRoomComputerPlacesDescription == null) {
+			this.asSearchRoomComputerPlacesDescription = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomComputerPlacesDescription;
+	}
+
+	/**
+	 * @param asSearchRoomComputerPlacesDescription the asSearchRoomComputerPlacesDescription to set
+	 */
+	public void setAsSearchRoomComputerPlacesDescription(
+			List<List<String>> asSearchRoomComputerPlacesDescription) {
+		this.asSearchRoomComputerPlacesDescription = asSearchRoomComputerPlacesDescription;
+	}
+
+	/**
+	 * @param asSearchRoomComputerPlacesDescription the asSearchRoomComputerPlacesDescription to add
+	 */
+	public void addAsSearchRoomComputerPlacesDescription(List<String> asSearchRoomComputerPlacesDescription) {
+		this.getAsSearchRoomComputerPlacesDescription().add(asSearchRoomComputerPlacesDescription);
+	}
+
+	/**
+	 * @return the asSearchRoomComputerPlacesDescriptionLang
+	 */
+	public List<List<String>> getAsSearchRoomComputerPlacesDescriptionLang() {
+		if (this.asSearchRoomComputerPlacesDescriptionLang == null) {
+			this.asSearchRoomComputerPlacesDescriptionLang = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomComputerPlacesDescriptionLang;
+	}
+
+	/**
+	 * @param asSearchRoomComputerPlacesDescriptionLang the asSearchRoomComputerPlacesDescriptionLang to set
+	 */
+	public void setAsSearchRoomComputerPlacesDescriptionLang(
+			List<List<String>> asSearchRoomComputerPlacesDescriptionLang) {
+		this.asSearchRoomComputerPlacesDescriptionLang = asSearchRoomComputerPlacesDescriptionLang;
+	}
+
+	/**
+	 * @param asSearchRoomComputerPlacesDescriptionLang the asSearchRoomComputerPlacesDescriptionLang to add
+	 */
+	public void addAsSearchRoomComputerPlacesDescriptionLang(List<String> asSearchRoomComputerPlacesDescriptionLang) {
+		this.getAsSearchRoomComputerPlacesDescriptionLang().add(asSearchRoomComputerPlacesDescriptionLang);
+	}
+
+	/**
+	 * @return the asSearchRoomMicrofilmReaders
+	 */
+	public List<List<String>> getAsSearchRoomMicrofilmReaders() {
+		if (this.asSearchRoomMicrofilmReaders == null) {
+			this.asSearchRoomMicrofilmReaders = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomMicrofilmReaders;
+	}
+
+	/**
+	 * @param asSearchRoomMicrofilmReaders the asSearchRoomMicrofilmReaders to set
+	 */
+	public void setAsSearchRoomMicrofilmReaders(
+			List<List<String>> asSearchRoomMicrofilmReaders) {
+		this.asSearchRoomMicrofilmReaders = asSearchRoomMicrofilmReaders;
+	}
+
+	/**
+	 * @param asSearchRoomMicrofilmReaders the asSearchRoomMicrofilmReaders to add
+	 */
+	public void addAsSearchRoomMicrofilmReaders(List<String> asSearchRoomMicrofilmReaders) {
+		this.getAsSearchRoomMicrofilmReaders().add(asSearchRoomMicrofilmReaders);
+	}
+
+	/**
+	 * @return the asSearchRoomPhotographAllowance
+	 */
+	public List<List<String>> getAsSearchRoomPhotographAllowance() {
+		if (this.asSearchRoomPhotographAllowance == null) {
+			this.asSearchRoomPhotographAllowance = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomPhotographAllowance;
+	}
+
+	/**
+	 * @param asSearchRoomPhotographAllowance the asSearchRoomPhotographAllowance to set
+	 */
+	public void setAsSearchRoomPhotographAllowance(
+			List<List<String>> asSearchRoomPhotographAllowance) {
+		this.asSearchRoomPhotographAllowance = asSearchRoomPhotographAllowance;
+	}
+
+	/**
+	 * @param asSearchRoomPhotographAllowance the asSearchRoomPhotographAllowance to add
+	 */
+	public void addAsSearchRoomPhotographAllowance(List<String> asSearchRoomPhotographAllowance) {
+		this.getAsSearchRoomPhotographAllowance().add(asSearchRoomPhotographAllowance);
+	}
+
+	/**
+	 * @return the asSearchRoomNumberOfReadersTicket
+	 */
+	public List<List<String>> getAsSearchRoomNumberOfReadersTicket() {
+		if (this.asSearchRoomNumberOfReadersTicket == null) {
+			this.asSearchRoomNumberOfReadersTicket = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomNumberOfReadersTicket;
+	}
+
+	/**
+	 * @param asSearchRoomNumberOfReadersTicket the asSearchRoomNumberOfReadersTicket to set
+	 */
+	public void setAsSearchRoomNumberOfReadersTicket(
+			List<List<String>> asSearchRoomNumberOfReadersTicket) {
+		this.asSearchRoomNumberOfReadersTicket = asSearchRoomNumberOfReadersTicket;
+	}
+
+	/**
+	 * @param asSearchRoomNumberOfReadersTicket the asSearchRoomNumberOfReadersTicket to add
+	 */
+	public void addAsSearchRoomNumberOfReadersTicket(List<String> asSearchRoomNumberOfReadersTicket) {
+		this.getAsSearchRoomNumberOfReadersTicket().add(asSearchRoomNumberOfReadersTicket);
+	}
+
+	/**
+	 * @return the asSearchRoomReadersTicketHref
+	 */
+	public List<List<String>> getAsSearchRoomReadersTicketHref() {
+		if (this.asSearchRoomReadersTicketHref == null) {
+			this.asSearchRoomReadersTicketHref = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomReadersTicketHref;
+	}
+
+	/**
+	 * @param asSearchRoomReadersTicketHref the asSearchRoomReadersTicketHref to set
+	 */
+	public void setAsSearchRoomReadersTicketHref(
+			List<List<String>> asSearchRoomReadersTicketHref) {
+		this.asSearchRoomReadersTicketHref = asSearchRoomReadersTicketHref;
+	}
+
+	/**
+	 * @param asSearchRoomReadersTicketHref the asSearchRoomReadersTicketHref to add
+	 */
+	public void addAsSearchRoomReadersTicketHref(List<String> asSearchRoomReadersTicketHref) {
+		this.getAsSearchRoomReadersTicketHref().add(asSearchRoomReadersTicketHref);
+	}
+
+	/**
+	 * @return the asSearchRoomReadersTicketContent
+	 */
+	public List<List<String>> getAsSearchRoomReadersTicketContent() {
+		if (this.asSearchRoomReadersTicketContent == null) {
+			this.asSearchRoomReadersTicketContent = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomReadersTicketContent;
+	}
+
+	/**
+	 * @param asSearchRoomReadersTicketContent the asSearchRoomReadersTicketContent to set
+	 */
+	public void setAsSearchRoomReadersTicketContent(
+			List<List<String>> asSearchRoomReadersTicketContent) {
+		this.asSearchRoomReadersTicketContent = asSearchRoomReadersTicketContent;
+	}
+
+	/**
+	 * @param asSearchRoomReadersTicketContent the asSearchRoomReadersTicketContent to add
+	 */
+	public void addAsSearchRoomReadersTicketContent(List<String> asSearchRoomReadersTicketContent) {
+		this.getAsSearchRoomReadersTicketContent().add(asSearchRoomReadersTicketContent);
+	}
+
+	/**
+	 * @return the asSearchRoomReadersTicketLang
+	 */
+	public List<List<String>> getAsSearchRoomReadersTicketLang() {
+		if (this.asSearchRoomReadersTicketLang == null) {
+			this.asSearchRoomReadersTicketLang = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomReadersTicketLang;
+	}
+
+	/**
+	 * @param asSearchRoomReadersTicketLang the asSearchRoomReadersTicketLang to set
+	 */
+	public void setAsSearchRoomReadersTicketLang(
+			List<List<String>> asSearchRoomReadersTicketLang) {
+		this.asSearchRoomReadersTicketLang = asSearchRoomReadersTicketLang;
+	}
+
+	/**
+	 * @param asSearchRoomReadersTicketLang the asSearchRoomReadersTicketLang to add
+	 */
+	public void addAsSearchRoomReadersTicketLang(List<String> asSearchRoomReadersTicketLang) {
+		this.getAsSearchRoomReadersTicketLang().add(asSearchRoomReadersTicketLang);
+	}
+
+	/**
+	 * @return the asSearchRoomNumberOfAdvancedOrders
+	 */
+	public List<List<String>> getAsSearchRoomNumberOfAdvancedOrders() {
+		if (this.asSearchRoomNumberOfAdvancedOrders == null) {
+			this.asSearchRoomNumberOfAdvancedOrders = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomNumberOfAdvancedOrders;
+	}
+
+	/**
+	 * @param asSearchRoomNumberOfAdvancedOrders the asSearchRoomNumberOfAdvancedOrders to set
+	 */
+	public void setAsSearchRoomNumberOfAdvancedOrders(
+			List<List<String>> asSearchRoomNumberOfAdvancedOrders) {
+		this.asSearchRoomNumberOfAdvancedOrders = asSearchRoomNumberOfAdvancedOrders;
+	}
+
+	/**
+	 * @param asSearchRoomNumberOfAdvancedOrders the asSearchRoomNumberOfAdvancedOrders to add
+	 */
+	public void addAsSearchRoomNumberOfAdvancedOrders(List<String> asSearchRoomNumberOfAdvancedOrders) {
+		this.getAsSearchRoomNumberOfAdvancedOrders().add(asSearchRoomNumberOfAdvancedOrders);
+	}
+
+	/**
+	 * @return the asSearchRoomAdvancedOrdersHref
+	 */
+	public List<List<String>> getAsSearchRoomAdvancedOrdersHref() {
+		if (this.asSearchRoomAdvancedOrdersHref == null) {
+			this.asSearchRoomAdvancedOrdersHref = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomAdvancedOrdersHref;
+	}
+
+	/**
+	 * @param asSearchRoomAdvancedOrdersHref the asSearchRoomAdvancedOrdersHref to set
+	 */
+	public void setAsSearchRoomAdvancedOrdersHref(
+			List<List<String>> asSearchRoomAdvancedOrdersHref) {
+		this.asSearchRoomAdvancedOrdersHref = asSearchRoomAdvancedOrdersHref;
+	}
+
+	/**
+	 * @param asSearchRoomAdvancedOrdersHref the asSearchRoomAdvancedOrdersHref to add
+	 */
+	public void addAsSearchRoomAdvancedOrdersHref(List<String> asSearchRoomAdvancedOrdersHref) {
+		this.getAsSearchRoomAdvancedOrdersHref().add(asSearchRoomAdvancedOrdersHref);
+	}
+
+	/**
+	 * @return the asSearchRoomAdvancedOrdersContent
+	 */
+	public List<List<String>> getAsSearchRoomAdvancedOrdersContent() {
+		if (this.asSearchRoomAdvancedOrdersContent == null) {
+			this.asSearchRoomAdvancedOrdersContent = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomAdvancedOrdersContent;
+	}
+
+	/**
+	 * @param asSearchRoomAdvancedOrdersContent the asSearchRoomAdvancedOrdersContent to set
+	 */
+	public void setAsSearchRoomAdvancedOrdersContent(
+			List<List<String>> asSearchRoomAdvancedOrdersContent) {
+		this.asSearchRoomAdvancedOrdersContent = asSearchRoomAdvancedOrdersContent;
+	}
+
+	/**
+	 * @param asSearchRoomAdvancedOrdersContent the asSearchRoomAdvancedOrdersContent to add
+	 */
+	public void addAsSearchRoomAdvancedOrdersContent(List<String> asSearchRoomAdvancedOrdersContent) {
+		this.getAsSearchRoomAdvancedOrdersContent().add(asSearchRoomAdvancedOrdersContent);
+	}
+
+	/**
+	 * @return the asSearchRoomAdvancedOrdersLang
+	 */
+	public List<List<String>> getAsSearchRoomAdvancedOrdersLang() {
+		if (this.asSearchRoomAdvancedOrdersLang == null) {
+			this.asSearchRoomAdvancedOrdersLang = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomAdvancedOrdersLang;
+	}
+
+	/**
+	 * @param asSearchRoomAdvancedOrdersLang the asSearchRoomAdvancedOrdersLang to set
+	 */
+	public void setAsSearchRoomAdvancedOrdersLang(
+			List<List<String>> asSearchRoomAdvancedOrdersLang) {
+		this.asSearchRoomAdvancedOrdersLang = asSearchRoomAdvancedOrdersLang;
+	}
+
+	/**
+	 * @param asSearchRoomAdvancedOrdersLang the asSearchRoomAdvancedOrdersLang to add
+	 */
+	public void addAsSearchRoomAdvancedOrdersLang(List<String> asSearchRoomAdvancedOrdersLang) {
+		this.getAsSearchRoomAdvancedOrdersLang().add(asSearchRoomAdvancedOrdersLang);
+	}
+
+	/**
+	 * @return the asSearchRoomResearchServicesContent
+	 */
+	public List<List<String>> getAsSearchRoomResearchServicesContent() {
+		if (this.asSearchRoomResearchServicesContent == null) {
+			this.asSearchRoomResearchServicesContent = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomResearchServicesContent;
+	}
+
+	/**
+	 * @param asSearchRoomResearchServicesContent the asSearchRoomResearchServicesContent to set
+	 */
+	public void setAsSearchRoomResearchServicesContent(
+			List<List<String>> asSearchRoomResearchServicesContent) {
+		this.asSearchRoomResearchServicesContent = asSearchRoomResearchServicesContent;
+	}
+
+	/**
+	 * @param asSearchRoomResearchServicesContent the asSearchRoomResearchServicesContent to add
+	 */
+	public void addAsSearchRoomResearchServicesContent(List<String> asSearchRoomResearchServicesContent) {
+		this.getAsSearchRoomResearchServicesContent().add(asSearchRoomResearchServicesContent);
+	}
+
+	/**
+	 * @return the asSearchRoomResearchServicesLang
+	 */
+	public List<List<String>> getAsSearchRoomResearchServicesLang() {
+		if (this.asSearchRoomResearchServicesLang == null) {
+			this.asSearchRoomResearchServicesLang = new ArrayList<List<String>>();
+		}
+		return this.asSearchRoomResearchServicesLang;
+	}
+
+	/**
+	 * @param asSearchRoomResearchServicesLang the asSearchRoomResearchServicesLang to set
+	 */
+	public void setAsSearchRoomResearchServicesLang(
+			List<List<String>> asSearchRoomResearchServicesLang) {
+		this.asSearchRoomResearchServicesLang = asSearchRoomResearchServicesLang;
+	}
+
+	/**
+	 * @param asSearchRoomResearchServicesLang the asSearchRoomResearchServicesLang to add
+	 */
+	public void addAsSearchRoomResearchServicesLang(List<String> asSearchRoomResearchServicesLang) {
+		this.getAsSearchRoomResearchServicesLang().add(asSearchRoomResearchServicesLang);
+	}
+
+	/**
+	 * @return the asLibraryQuestion
+	 */
+	public List<List<String>> getAsLibraryQuestion() {
+		if (this.asLibraryQuestion == null) {
+			this.asLibraryQuestion = new ArrayList<List<String>>();
+		}
+		return this.asLibraryQuestion;
+	}
+
+	/**
+	 * @param asLibraryQuestion the asLibraryQuestion to set
+	 */
+	public void setAsLibraryQuestion(List<List<String>> asLibraryQuestion) {
+		this.asLibraryQuestion = asLibraryQuestion;
+	}
+
+	/**
+	 * @param asLibraryQuestion the asLibraryQuestion to add
+	 */
+	public void addAsLibraryQuestion(List<String> asLibraryQuestion) {
+		this.getAsLibraryQuestion().add(asLibraryQuestion);
+	}
+
+	/**
+	 * @return the asLibraryTelephone
+	 */
+	public List<List<String>> getAsLibraryTelephone() {
+		if (this.asLibraryTelephone == null) {
+			this.asLibraryTelephone = new ArrayList<List<String>>();
+		}
+		return this.asLibraryTelephone;
+	}
+
+	/**
+	 * @param asLibraryTelephone the asLibraryTelephone to set
+	 */
+	public void setAsLibraryTelephone(List<List<String>> asLibraryTelephone) {
+		this.asLibraryTelephone = asLibraryTelephone;
+	}
+
+	/**
+	 * @param asLibraryTelephone the asLibraryTelephone to add
+	 */
+	public void addAsLibraryTelephone(List<String> asLibraryTelephone) {
+		this.getAsLibraryTelephone().add(asLibraryTelephone);
+	}
+
+	/**
+	 * @return the asLibraryNumberOfEmail
+	 */
+	public List<List<String>> getAsLibraryNumberOfEmail() {
+		if (this.asLibraryNumberOfEmail == null) {
+			this.asLibraryNumberOfEmail = new ArrayList<List<String>>();
+		}
+		return this.asLibraryNumberOfEmail;
+	}
+
+	/**
+	 * @param asLibraryNumberOfEmail the asLibraryNumberOfEmail to set
+	 */
+	public void setAsLibraryNumberOfEmailNumberOfEmail(
+			List<List<String>> asLibraryNumberOfEmail) {
+		this.asLibraryNumberOfEmail = asLibraryNumberOfEmail;
+	}
+
+	/**
+	 * @param asLibraryNumberOfEmail the asLibraryNumberOfEmail to add
+	 */
+	public void addAsLibraryNumberOfEmailNumberOfEmail(List<String> asLibraryNumberOfEmail) {
+		this.getAsLibraryNumberOfEmail().add(asLibraryNumberOfEmail);
+	}
+
+	/**
+	 * @return the asLibraryEmailHref
+	 */
+	public List<List<String>> getAsLibraryEmailHref() {
+		if (this.asLibraryEmailHref == null) {
+			this.asLibraryEmailHref = new ArrayList<List<String>>();
+		}
+		return this.asLibraryEmailHref;
+	}
+
+	/**
+	 * @param asLibraryEmailHref the asLibraryEmailHref to set
+	 */
+	public void setAsLibraryEmailHref(List<List<String>> asLibraryEmailHref) {
+		this.asLibraryEmailHref = asLibraryEmailHref;
+	}
+
+	/**
+	 * @param asLibraryEmailHref the asLibraryEmailHref to add
+	 */
+	public void addAsLibraryEmailHref(List<String> asLibraryEmailHref) {
+		this.getAsLibraryEmailHref().add(asLibraryEmailHref);
+	}
+
+	/**
+	 * @return the asLibraryEmailTitle
+	 */
+	public List<List<String>> getAsLibraryEmailTitle() {
+		if (this.asLibraryEmailTitle == null) {
+			this.asLibraryEmailTitle = new ArrayList<List<String>>();
+		}
+		return this.asLibraryEmailTitle;
+	}
+
+	/**
+	 * @param asLibraryEmailTitle the asLibraryEmailTitle to set
+	 */
+	public void setAsLibraryEmailTitle(List<List<String>> asLibraryEmailTitle) {
+		this.asLibraryEmailTitle = asLibraryEmailTitle;
+	}
+
+	/**
+	 * @param asLibraryEmailTitle the asLibraryEmailTitle to add
+	 */
+	public void addAsLibraryEmailTitle(List<String> asLibraryEmailTitle) {
+		this.getAsLibraryEmailTitle().add(asLibraryEmailTitle);
+	}
+
+	/**
+	 * @return the asLibraryEmailLang
+	 */
+	public List<List<String>> getAsLibraryEmailLang() {
+		if (this.asLibraryEmailLang == null) {
+			this.asLibraryEmailLang = new ArrayList<List<String>>();
+		}
+		return this.asLibraryEmailLang;
+	}
+
+	/**
+	 * @param asLibraryEmailLang the asLibraryEmailLang to set
+	 */
+	public void setAsLibraryEmailLang(List<List<String>> asLibraryEmailLang) {
+		this.asLibraryEmailLang = asLibraryEmailLang;
+	}
+
+	/**
+	 * @param asLibraryEmailLang the asLibraryEmailLang to add
+	 */
+	public void addAsLibraryEmailLang(List<String> asLibraryEmailLang) {
+		this.getAsLibraryEmailLang().add(asLibraryEmailLang);
+	}
+
+	/**
+	 * @return the asLibraryNumberOfWebpage
+	 */
+	public List<List<String>> getAsLibraryNumberOfWebpage() {
+		if (this.asLibraryNumberOfWebpage == null) {
+			this.asLibraryNumberOfWebpage = new ArrayList<List<String>>();
+		}
+		return this.asLibraryNumberOfWebpage;
+	}
+
+	/**
+	 * @param asLibraryNumberOfWebpage the asLibraryNumberOfWebpage to set
+	 */
+	public void setAsLibraryNumberOfWebpage(
+			List<List<String>> asLibraryNumberOfWebpage) {
+		this.asLibraryNumberOfWebpage = asLibraryNumberOfWebpage;
+	}
+
+	/**
+	 * @param asLibraryNumberOfWebpage the asLibraryNumberOfWebpage to add
+	 */
+	public void addAsLibraryNumberOfWebpage(List<String> asLibraryNumberOfWebpage) {
+		this.getAsLibraryNumberOfWebpage().add(asLibraryNumberOfWebpage);
+	}
+
+	/**
+	 * @return the asLibraryWebpageHref
+	 */
+	public List<List<String>> getAsLibraryWebpageHref() {
+		if (this.asLibraryWebpageHref == null) {
+			this.asLibraryWebpageHref = new ArrayList<List<String>>();
+		}
+		return this.asLibraryWebpageHref;
+	}
+
+	/**
+	 * @param asLibraryWebpageHref the asLibraryWebpageHref to set
+	 */
+	public void setAsLibraryWebpageHref(List<List<String>> asLibraryWebpageHref) {
+		this.asLibraryWebpageHref = asLibraryWebpageHref;
+	}
+
+	/**
+	 * @param asLibraryWebpageHref the asLibraryWebpageHref to add
+	 */
+	public void addAsLibraryWebpageHref(List<String> asLibraryWebpageHref) {
+		this.getAsLibraryWebpageHref().add(asLibraryWebpageHref);
+	}
+
+	/**
+	 * @return the asLibraryWebpageTitle
+	 */
+	public List<List<String>> getAsLibraryWebpageTitle() {
+		if (this.asLibraryWebpageTitle == null) {
+			this.asLibraryWebpageTitle = new ArrayList<List<String>>();
+		}
+		return this.asLibraryWebpageTitle;
+	}
+
+	/**
+	 * @param asLibraryWebpageTitle the asLibraryWebpageTitle to set
+	 */
+	public void setAsLibraryWebpageTitle(List<List<String>> asLibraryWebpageTitle) {
+		this.asLibraryWebpageTitle = asLibraryWebpageTitle;
+	}
+
+	/**
+	 * @param asLibraryWebpageTitle the asLibraryWebpageTitle to add
+	 */
+	public void addAsLibraryWebpageTitle(List<String> asLibraryWebpageTitle) {
+		this.getAsLibraryWebpageTitle().add(asLibraryWebpageTitle);
+	}
+
+	/**
+	 * @return the asLibraryWebpageLang
+	 */
+	public List<List<String>> getAsLibraryWebpageLang() {
+		if (this.asLibraryWebpageLang == null) {
+			this.asLibraryWebpageLang = new ArrayList<List<String>>();
+		}
+		return this.asLibraryWebpageLang;
+	}
+
+	/**
+	 * @param asLibraryWebpageLang the asLibraryWebpageLang to set
+	 */
+	public void setAsLibraryWebpageLang(List<List<String>> asLibraryWebpageLang) {
+		this.asLibraryWebpageLang = asLibraryWebpageLang;
+	}
+
+	/**
+	 * @param asLibraryWebpageLang the asLibraryWebpageLang to add
+	 */
+	public void addAsLibraryWebpageLang(List<String> asLibraryWebpageLang) {
+		this.getAsLibraryWebpageLang().add(asLibraryWebpageLang);
+	}
+
+	/**
+	 * @return the asLibraryMonographPublication
+	 */
+	public List<List<String>> getAsLibraryMonographPublication() {
+		if (this.asLibraryMonographPublication == null) {
+			this.asLibraryMonographPublication = new ArrayList<List<String>>();
+		}
+		return this.asLibraryMonographPublication;
+	}
+
+	/**
+	 * @param asLibraryMonographPublication the asLibraryMonographPublication to set
+	 */
+	public void setAsLibraryMonographPublication(
+			List<List<String>> asLibraryMonographPublication) {
+		this.asLibraryMonographPublication = asLibraryMonographPublication;
+	}
+
+	/**
+	 * @param asLibraryMonographPublication the asLibraryMonographPublication to add
+	 */
+	public void addAsLibraryMonographPublication(List<String> asLibraryMonographPublication) {
+		this.getAsLibraryMonographPublication().add(asLibraryMonographPublication);
+	}
+
+	/**
+	 * @return the asLibrarySerialPublication
+	 */
+	public List<List<String>> getAsLibrarySerialPublication() {
+		if (this.asLibrarySerialPublication == null) {
+			this.asLibrarySerialPublication = new ArrayList<List<String>>();
+		}
+		return this.asLibrarySerialPublication;
+	}
+
+	/**
+	 * @param asLibrarySerialPublication the asLibrarySerialPublication to set
+	 */
+	public void setAsLibrarySerialPublication(
+			List<List<String>> asLibrarySerialPublication) {
+		this.asLibrarySerialPublication = asLibrarySerialPublication;
+	}
+
+	/**
+	 * @param asLibrarySerialPublication the asLibrarySerialPublication to add
+	 */
+	public void addAsLibrarySerialPublication(List<String> asLibrarySerialPublication) {
+		this.getAsLibrarySerialPublication().add(asLibrarySerialPublication);
+	}
+
+	/**
+	 * @return the asInternetAccessQuestion
+	 */
+	public List<List<String>> getAsInternetAccessQuestion() {
+		if (this.asInternetAccessQuestion == null) {
+			this.asInternetAccessQuestion = new ArrayList<List<String>>();
+		}
+		return this.asInternetAccessQuestion;
+	}
+
+	/**
+	 * @param asInternetAccessQuestion the asInternetAccessQuestion to set
+	 */
+	public void setAsInternetAccessQuestion(
+			List<List<String>> asInternetAccessQuestion) {
+		this.asInternetAccessQuestion = asInternetAccessQuestion;
+	}
+
+	/**
+	 * @param asInternetAccessQuestion the asInternetAccessQuestion to add
+	 */
+	public void addAsInternetAccessQuestion(List<String> asInternetAccessQuestion) {
+		this.getAsInternetAccessQuestion().add(asInternetAccessQuestion);
+	}
+
+	/**
+	 * @return the asInternetAccessDescription
+	 */
+	public List<List<String>> getAsInternetAccessDescription() {
+		if (this.asInternetAccessDescription == null) {
+			this.asInternetAccessDescription = new ArrayList<List<String>>();
+		}
+		return this.asInternetAccessDescription;
+	}
+
+	/**
+	 * @param asInternetAccessDescription the asInternetAccessDescription to set
+	 */
+	public void setAsInternetAccessDescription(
+			List<List<String>> asInternetAccessDescription) {
+		this.asInternetAccessDescription = asInternetAccessDescription;
+	}
+
+	/**
+	 * @param asInternetAccessDescription the asInternetAccessDescription to add
+	 */
+	public void addAsInternetAccessDescription(List<String> asInternetAccessDescription) {
+		this.getAsInternetAccessDescription().add(asInternetAccessDescription);
+	}
+
+	/**
+	 * @return the asInternetAccessDescriptionLang
+	 */
+	public List<List<String>> getAsInternetAccessDescriptionLang() {
+		if (this.asInternetAccessDescriptionLang == null) {
+			this.asInternetAccessDescriptionLang = new ArrayList<List<String>>();
+		}
+		return this.asInternetAccessDescriptionLang;
+	}
+
+	/**
+	 * @param asInternetAccessDescriptionLang the asInternetAccessDescriptionLang to set
+	 */
+	public void setAsInternetAccessDescriptionLang(
+			List<List<String>> asInternetAccessDescriptionLang) {
+		this.asInternetAccessDescriptionLang = asInternetAccessDescriptionLang;
+	}
+
+	/**
+	 * @param asInternetAccessDescriptionLang the asInternetAccessDescriptionLang to add
+	 */
+	public void addAsInternetAccessDescriptionLang(List<String> asInternetAccessDescriptionLang) {
+		this.getAsInternetAccessDescriptionLang().add(asInternetAccessDescriptionLang);
+	}
+
+	/**
+	 * @return the asRestorationlabQuestion
+	 */
+	public List<List<String>> getAsRestorationlabQuestion() {
+		if (this.asRestorationlabQuestion == null) {
+			this.asRestorationlabQuestion = new ArrayList<List<String>>();
+		}
+		return this.asRestorationlabQuestion;
+	}
+
+	/**
+	 * @param asRestorationlabQuestion the asRestorationlabQuestion to set
+	 */
+	public void setAsRestorationlabQuestion(
+			List<List<String>> asRestorationlabQuestion) {
+		this.asRestorationlabQuestion = asRestorationlabQuestion;
+	}
+
+	/**
+	 * @param asRestorationlabQuestion the asRestorationlabQuestion to add
+	 */
+	public void addAsRestorationlabQuestion(List<String> asRestorationlabQuestion) {
+		this.getAsRestorationlabQuestion().add(asRestorationlabQuestion);
+	}
+
+	/**
+	 * @return the asRestorationlabDescription
+	 */
+	public List<List<String>> getAsRestorationlabDescription() {
+		if (this.asRestorationlabDescription == null) {
+			this.asRestorationlabDescription = new ArrayList<List<String>>();
+		}
+		return this.asRestorationlabDescription;
+	}
+
+	/**
+	 * @param asRestorationlabDescription the asRestorationlabDescription to set
+	 */
+	public void setAsRestorationlabDescription(
+			List<List<String>> asRestorationlabDescription) {
+		this.asRestorationlabDescription = asRestorationlabDescription;
+	}
+
+	/**
+	 * @param asRestorationlabDescription the asRestorationlabDescription to add
+	 */
+	public void addAsRestorationlabDescription(List<String> asRestorationlabDescription) {
+		this.getAsRestorationlabDescription().add(asRestorationlabDescription);
+	}
+
+	/**
+	 * @return the asRestorationlabDescriptionLang
+	 */
+	public List<List<String>> getAsRestorationlabDescriptionLang() {
+		if (this.asRestorationlabDescriptionLang == null) {
+			this.asRestorationlabDescriptionLang = new ArrayList<List<String>>();
+		}
+		return this.asRestorationlabDescriptionLang;
+	}
+
+	/**
+	 * @param asRestorationlabDescriptionLang the asRestorationlabDescriptionLang to set
+	 */
+	public void setAsRestorationlabDescriptionLang(
+			List<List<String>> asRestorationlabDescriptionLang) {
+		this.asRestorationlabDescriptionLang = asRestorationlabDescriptionLang;
+	}
+
+	/**
+	 * @param asRestorationlabDescriptionLang the asRestorationlabDescriptionLang to add
+	 */
+	public void addAsRestorationlabDescriptionLang(List<String> asRestorationlabDescriptionLang) {
+		this.getAsRestorationlabDescriptionLang().add(asRestorationlabDescriptionLang);
+	}
+
+	/**
+	 * @return the asRestorationlabTelephone
+	 */
+	public List<List<String>> getAsRestorationlabTelephone() {
+		if (this.asRestorationlabTelephone == null) {
+			this.asRestorationlabTelephone = new ArrayList<List<String>>();
+		}
+		return this.asRestorationlabTelephone;
+	}
+
+	/**
+	 * @param asRestorationlabTelephone the asRestorationlabTelephone to set
+	 */
+	public void setAsRestorationlabTelephone(
+			List<List<String>> asRestorationlabTelephone) {
+		this.asRestorationlabTelephone = asRestorationlabTelephone;
+	}
+
+	/**
+	 * @param asRestorationlabTelephone the asRestorationlabTelephone to add
+	 */
+	public void addAsRestorationlabTelephone(List<String> asRestorationlabTelephone) {
+		this.getAsRestorationlabTelephone().add(asRestorationlabTelephone);
+	}
+
+	/**
+	 * @return the asRestorationlabNumberOfEmail
+	 */
+	public List<List<String>> getAsRestorationlabNumberOfEmail() {
+		if (this.asRestorationlabNumberOfEmail == null) {
+			this.asRestorationlabNumberOfEmail = new ArrayList<List<String>>();
+		}
+		return this.asRestorationlabNumberOfEmail;
+	}
+
+	/**
+	 * @param asRestorationlabNumberOfEmail the asRestorationlabNumberOfEmail to set
+	 */
+	public void setAsRestorationlabNumberOfEmailNumberOfEmail(
+			List<List<String>> asRestorationlabNumberOfEmail) {
+		this.asRestorationlabNumberOfEmail = asRestorationlabNumberOfEmail;
+	}
+
+	/**
+	 * @param asRestorationlabNumberOfEmail the asRestorationlabNumberOfEmail to add
+	 */
+	public void addAsRestorationlabNumberOfEmailNumberOfEmail(List<String> asRestorationlabNumberOfEmail) {
+		this.getAsRestorationlabNumberOfEmail().add(asRestorationlabNumberOfEmail);
+	}
+
+	/**
+	 * @return the asRestorationlabEmailHref
+	 */
+	public List<List<String>> getAsRestorationlabEmailHref() {
+		if (this.asRestorationlabEmailHref == null) {
+			this.asRestorationlabEmailHref = new ArrayList<List<String>>();
+		}
+		return this.asRestorationlabEmailHref;
+	}
+
+	/**
+	 * @param asRestorationlabEmailHref the asRestorationlabEmailHref to set
+	 */
+	public void setAsRestorationlabEmailHref(
+			List<List<String>> asRestorationlabEmailHref) {
+		this.asRestorationlabEmailHref = asRestorationlabEmailHref;
+	}
+
+	/**
+	 * @param asRestorationlabEmailHref the asRestorationlabEmailHref to add
+	 */
+	public void addAsRestorationlabEmailHref(List<String> asRestorationlabEmailHref) {
+		this.getAsRestorationlabEmailHref().add(asRestorationlabEmailHref);
+	}
+
+	/**
+	 * @return the asRestorationlabEmailTitle
+	 */
+	public List<List<String>> getAsRestorationlabEmailTitle() {
+		if (this.asRestorationlabEmailTitle == null) {
+			this.asRestorationlabEmailTitle = new ArrayList<List<String>>();
+		}
+		return this.asRestorationlabEmailTitle;
+	}
+
+	/**
+	 * @param asRestorationlabEmailTitle the asRestorationlabEmailTitle to set
+	 */
+	public void setAsRestorationlabEmailTitle(
+			List<List<String>> asRestorationlabEmailTitle) {
+		this.asRestorationlabEmailTitle = asRestorationlabEmailTitle;
+	}
+
+	/**
+	 * @param asRestorationlabEmailTitle the asRestorationlabEmailTitle to add
+	 */
+	public void addAsRestorationlabEmailTitle(List<String> asRestorationlabEmailTitle) {
+		this.getAsRestorationlabEmailTitle().add(asRestorationlabEmailTitle);
+	}
+
+	/**
+	 * @return the asRestorationlabEmailLang
+	 */
+	public List<List<String>> getAsRestorationlabEmailLang() {
+		if (this.asRestorationlabEmailLang == null) {
+			this.asRestorationlabEmailLang = new ArrayList<List<String>>();
+		}
+		return this.asRestorationlabEmailLang;
+	}
+
+	/**
+	 * @param asRestorationlabEmailLang the asRestorationlabEmailLang to set
+	 */
+	public void setAsRestorationlabEmailLang(
+			List<List<String>> asRestorationlabEmailLang) {
+		this.asRestorationlabEmailLang = asRestorationlabEmailLang;
+	}
+
+	/**
+	 * @param asRestorationlabEmailLang the asRestorationlabEmailLang to add
+	 */
+	public void addAsRestorationlabEmailLang(List<String> asRestorationlabEmailLang) {
+		this.getAsRestorationlabEmailLang().add(asRestorationlabEmailLang);
+	}
+
+	/**
+	 * @return the asRestorationlabNumberOfWebpage
+	 */
+	public List<List<String>> getAsRestorationlabNumberOfWebpage() {
+		if (this.asRestorationlabNumberOfWebpage == null) {
+			this.asRestorationlabNumberOfWebpage = new ArrayList<List<String>>();
+		}
+		return this.asRestorationlabNumberOfWebpage;
+	}
+
+	/**
+	 * @param asRestorationlabNumberOfWebpage the asRestorationlabNumberOfWebpage to set
+	 */
+	public void setAsRestorationlabNumberOfEmailNumberOfWebpage(
+			List<List<String>> asRestorationlabNumberOfWebpage) {
+		this.asRestorationlabNumberOfWebpage = asRestorationlabNumberOfWebpage;
+	}
+
+	/**
+	 * @param asRestorationlabNumberOfWebpage the asRestorationlabNumberOfWebpage to add
+	 */
+	public void addAsRestorationlabNumberOfEmailNumberOfWebpage(List<String> asRestorationlabNumberOfWebpage) {
+		this.getAsRestorationlabNumberOfWebpage().add(asRestorationlabNumberOfWebpage);
+	}
+
+	/**
+	 * @return the asRestorationlabWebpageHref
+	 */
+	public List<List<String>> getAsRestorationlabWebpageHref() {
+		if (this.asRestorationlabWebpageHref == null) {
+			this.asRestorationlabWebpageHref = new ArrayList<List<String>>();
+		}
+		return this.asRestorationlabWebpageHref;
+	}
+
+	/**
+	 * @param asRestorationlabWebpageHref the asRestorationlabWebpageHref to set
+	 */
+	public void setAsRestorationlabWebpageHref(
+			List<List<String>> asRestorationlabWebpageHref) {
+		this.asRestorationlabWebpageHref = asRestorationlabWebpageHref;
+	}
+
+	/**
+	 * @param asRestorationlabWebpageHref the asRestorationlabWebpageHref to add
+	 */
+	public void addAsRestorationlabWebpageHref(List<String> asRestorationlabWebpageHref) {
+		this.getAsRestorationlabWebpageHref().add(asRestorationlabWebpageHref);
+	}
+
+	/**
+	 * @return the asRestorationlabWebpageTitle
+	 */
+	public List<List<String>> getAsRestorationlabWebpageTitle() {
+		if (this.asRestorationlabWebpageTitle == null) {
+			this.asRestorationlabWebpageTitle = new ArrayList<List<String>>();
+		}
+		return this.asRestorationlabWebpageTitle;
+	}
+
+	/**
+	 * @param asRestorationlabWebpageTitle the asRestorationlabWebpageTitle to set
+	 */
+	public void setAsRestorationlabWebpageTitle(
+			List<List<String>> asRestorationlabWebpageTitle) {
+		this.asRestorationlabWebpageTitle = asRestorationlabWebpageTitle;
+	}
+
+	/**
+	 * @param asRestorationlabWebpageTitle the asRestorationlabWebpageTitle to add
+	 */
+	public void addAsRestorationlabWebpageTitle(List<String> asRestorationlabWebpageTitle) {
+		this.getAsRestorationlabWebpageTitle().add(asRestorationlabWebpageTitle);
+	}
+
+	/**
+	 * @return the asRestorationlabWebpageLang
+	 */
+	public List<List<String>> getAsRestorationlabWebpageLang() {
+		if (this.asRestorationlabWebpageLang == null) {
+			this.asRestorationlabWebpageLang = new ArrayList<List<String>>();
+		}
+		return this.asRestorationlabWebpageLang;
+	}
+
+	/**
+	 * @param asRestorationlabWebpageLang the asRestorationlabWebpageLang to set
+	 */
+	public void setAsRestorationlabWebpageLang(
+			List<List<String>> asRestorationlabWebpageLang) {
+		this.asRestorationlabWebpageLang = asRestorationlabWebpageLang;
+	}
+
+	/**
+	 * @param asRestorationlabWebpageLang the asRestorationlabWebpageLang to add
+	 */
+	public void addAsRestorationlabWebpageLang(List<String> asRestorationlabWebpageLang) {
+		this.getAsRestorationlabWebpageLang().add(asRestorationlabWebpageLang);
+	}
+
+	/**
+	 * @return the asReproductionserQuestion
+	 */
+	public List<List<String>> getAsReproductionserQuestion() {
+		if (this.asReproductionserQuestion == null) {
+			this.asReproductionserQuestion = new ArrayList<List<String>>();
+		}
+		return this.asReproductionserQuestion;
+	}
+
+	/**
+	 * @param asReproductionserQuestion the asReproductionserQuestion to set
+	 */
+	public void setAsReproductionserQuestion(
+			List<List<String>> asReproductionserQuestion) {
+		this.asReproductionserQuestion = asReproductionserQuestion;
+	}
+
+	/**
+	 * @param asReproductionserQuestion the asReproductionserQuestion to add
+	 */
+	public void addAsReproductionserQuestion(List<String> asReproductionserQuestion) {
+		this.getAsReproductionserQuestion().add(asReproductionserQuestion);
+	}
+
+	/**
+	 * @return the asReproductionserDescription
+	 */
+	public List<List<String>> getAsReproductionserDescription() {
+		if (this.asReproductionserDescription == null) {
+			this.asReproductionserDescription = new ArrayList<List<String>>();
+		}
+		return this.asReproductionserDescription;
+	}
+
+	/**
+	 * @param asReproductionserDescription the asReproductionserDescription to set
+	 */
+	public void setAsReproductionserDescription(
+			List<List<String>> asReproductionserDescription) {
+		this.asReproductionserDescription = asReproductionserDescription;
+	}
+
+	/**
+	 * @param asReproductionserDescription the asReproductionserDescription to add
+	 */
+	public void addAsReproductionserDescription(List<String> asReproductionserDescription) {
+		this.getAsReproductionserDescription().add(asReproductionserDescription);
+	}
+
+	/**
+	 * @return the asReproductionserDescriptionLang
+	 */
+	public List<List<String>> getAsReproductionserDescriptionLang() {
+		if (this.asReproductionserDescriptionLang == null) {
+			this.asReproductionserDescriptionLang = new ArrayList<List<String>>();
+		}
+		return this.asReproductionserDescriptionLang;
+	}
+
+	/**
+	 * @param asReproductionserDescriptionLang the asReproductionserDescriptionLang to set
+	 */
+	public void setAsReproductionserDescriptionLang(
+			List<List<String>> asReproductionserDescriptionLang) {
+		this.asReproductionserDescriptionLang = asReproductionserDescriptionLang;
+	}
+
+	/**
+	 * @param asReproductionserDescriptionLang the asReproductionserDescriptionLang to add
+	 */
+	public void addAsReproductionserDescriptionLang(List<String> asReproductionserDescriptionLang) {
+		this.getAsReproductionserDescriptionLang().add(asReproductionserDescriptionLang);
+	}
+
+	/**
+	 * @return the asReproductionserTelephone
+	 */
+	public List<List<String>> getAsReproductionserTelephone() {
+		if (this.asReproductionserTelephone == null) {
+			this.asReproductionserTelephone = new ArrayList<List<String>>();
+		}
+		return this.asReproductionserTelephone;
+	}
+
+	/**
+	 * @param asReproductionserTelephone the asReproductionserTelephone to set
+	 */
+	public void setAsReproductionserTelephone(
+			List<List<String>> asReproductionserTelephone) {
+		this.asReproductionserTelephone = asReproductionserTelephone;
+	}
+
+	/**
+	 * @param asReproductionserTelephone the asReproductionserTelephone to add
+	 */
+	public void addAsReproductionserTelephone(List<String> asReproductionserTelephone) {
+		this.getAsReproductionserTelephone().add(asReproductionserTelephone);
+	}
+
+	/**
+	 * @return the asReproductionserNumberOfEmail
+	 */
+	public List<List<String>> getAsReproductionserNumberOfEmail() {
+		if (this.asReproductionserNumberOfEmail == null) {
+			this.asReproductionserNumberOfEmail = new ArrayList<List<String>>();
+		}
+		return this.asReproductionserNumberOfEmail;
+	}
+
+	/**
+	 * @param asReproductionserNumberOfEmail the asReproductionserNumberOfEmail to set
+	 */
+	public void setAsReproductionserNumberOfEmailNumberOfEmail(
+			List<List<String>> asReproductionserNumberOfEmail) {
+		this.asRestorationlabNumberOfEmail = asReproductionserNumberOfEmail;
+	}
+
+	/**
+	 * @param asReproductionserNumberOfEmail the asReproductionserNumberOfEmail to add
+	 */
+	public void addAsReproductionserNumberOfEmailNumberOfEmail(List<String> asReproductionserNumberOfEmail) {
+		this.getAsReproductionserNumberOfEmail().add(asReproductionserNumberOfEmail);
+	}
+
+	/**
+	 * @return the asReproductionserEmailHref
+	 */
+	public List<List<String>> getAsReproductionserEmailHref() {
+		if (this.asReproductionserEmailHref == null) {
+			this.asReproductionserEmailHref = new ArrayList<List<String>>();
+		}
+		return this.asReproductionserEmailHref;
+	}
+
+	/**
+	 * @param asReproductionserEmailHref the asReproductionserEmailHref to set
+	 */
+	public void setAsReproductionserEmailHref(
+			List<List<String>> asReproductionserEmailHref) {
+		this.asReproductionserEmailHref = asReproductionserEmailHref;
+	}
+
+	/**
+	 * @param asReproductionserEmailHref the asReproductionserEmailHref to add
+	 */
+	public void addAsReproductionserEmailHref(List<String> asReproductionserEmailHref) {
+		this.getAsReproductionserEmailHref().add(asReproductionserEmailHref);
+	}
+
+	/**
+	 * @return the asReproductionserEmailTitle
+	 */
+	public List<List<String>> getAsReproductionserEmailTitle() {
+		if (this.asReproductionserEmailTitle == null) {
+			this.asReproductionserEmailTitle = new ArrayList<List<String>>();
+		}
+		return this.asReproductionserEmailTitle;
+	}
+
+	/**
+	 * @param asReproductionserEmailTitle the asReproductionserEmailTitle to set
+	 */
+	public void setAsReproductionserEmailTitle(
+			List<List<String>> asReproductionserEmailTitle) {
+		this.asReproductionserEmailTitle = asReproductionserEmailTitle;
+	}
+
+	/**
+	 * @param asReproductionserEmailTitle the asReproductionserEmailTitle to add
+	 */
+	public void addAsReproductionserEmailTitle(List<String> asReproductionserEmailTitle) {
+		this.getAsReproductionserEmailTitle().add(asReproductionserEmailTitle);
+	}
+
+	/**
+	 * @return the asReproductionserEmailLang
+	 */
+	public List<List<String>> getAsReproductionserEmailLang() {
+		if (this.asReproductionserEmailLang == null) {
+			this.asReproductionserEmailLang = new ArrayList<List<String>>();
+		}
+		return this.asReproductionserEmailLang;
+	}
+
+	/**
+	 * @param asReproductionserEmailLang the asReproductionserEmailLang to set
+	 */
+	public void setAsReproductionserEmailLang(
+			List<List<String>> asReproductionserEmailLang) {
+		this.asReproductionserEmailLang = asReproductionserEmailLang;
+	}
+
+	/**
+	 * @param asReproductionserEmailLang the asReproductionserEmailLang to add
+	 */
+	public void addAsReproductionserEmailLang(List<String> asReproductionserEmailLang) {
+		this.getAsReproductionserEmailLang().add(asReproductionserEmailLang);
+	}
+
+	/**
+	 * @return the asReproductionserNumberOfWebpage
+	 */
+	public List<List<String>> getAsReproductionserNumberOfWebpage() {
+		if (this.asReproductionserNumberOfWebpage == null) {
+			this.asReproductionserNumberOfWebpage = new ArrayList<List<String>>();
+		}
+		return this.asReproductionserNumberOfWebpage;
+	}
+
+	/**
+	 * @param asReproductionserNumberOfWebpage the asReproductionserNumberOfWebpage to set
+	 */
+	public void setAsReproductionserNumberOfEmailNumberOfWebpage(
+			List<List<String>> asReproductionserNumberOfWebpage) {
+		this.asReproductionserNumberOfWebpage = asReproductionserNumberOfWebpage;
+	}
+
+	/**
+	 * @param asReproductionserNumberOfWebpage the asReproductionserNumberOfWebpage to add
+	 */
+	public void addAsReproductionserNumberOfEmailNumberOfWebpage(List<String> asReproductionserNumberOfWebpage) {
+		this.getAsReproductionserNumberOfWebpage().add(asReproductionserNumberOfWebpage);
+	}
+
+	/**
+	 * @return the asReproductionserWebpageHref
+	 */
+	public List<List<String>> getAsReproductionserWebpageHref() {
+		if (this.asReproductionserWebpageHref == null) {
+			this.asReproductionserWebpageHref = new ArrayList<List<String>>();
+		}
+		return this.asReproductionserWebpageHref;
+	}
+
+	/**
+	 * @param asReproductionserWebpageHref the asReproductionserWebpageHref to set
+	 */
+	public void setAsReproductionserWebpageHref(
+			List<List<String>> asReproductionserWebpageHref) {
+		this.asReproductionserWebpageHref = asReproductionserWebpageHref;
+	}
+
+	/**
+	 * @param asReproductionserWebpageHref the asReproductionserWebpageHref to add
+	 */
+	public void addAsReproductionserWebpageHref(List<String> asReproductionserWebpageHref) {
+		this.getAsReproductionserWebpageHref().add(asReproductionserWebpageHref);
+	}
+
+	/**
+	 * @return the asReproductionserWebpageTitle
+	 */
+	public List<List<String>> getAsReproductionserWebpageTitle() {
+		if (this.asReproductionserWebpageTitle == null) {
+			this.asReproductionserWebpageTitle = new ArrayList<List<String>>();
+		}
+		return this.asReproductionserWebpageTitle;
+	}
+
+	/**
+	 * @param asReproductionserWebpageTitle the asReproductionserWebpageTitle to set
+	 */
+	public void setAsReproductionserWebpageTitle(
+			List<List<String>> asReproductionserWebpageTitle) {
+		this.asReproductionserWebpageTitle = asReproductionserWebpageTitle;
+	}
+
+	/**
+	 * @param asReproductionserWebpageTitle the asReproductionserWebpageTitle to add
+	 */
+	public void addAsReproductionserWebpageTitle(List<String> asReproductionserWebpageTitle) {
+		this.getAsReproductionserWebpageTitle().add(asReproductionserWebpageTitle);
+	}
+
+	/**
+	 * @return the asReproductionserWebpageLang
+	 */
+	public List<List<String>> getAsReproductionserWebpageLang() {
+		if (this.asReproductionserWebpageLang == null) {
+			this.asReproductionserWebpageLang = new ArrayList<List<String>>();
+		}
+		return this.asReproductionserWebpageLang;
+	}
+
+	/**
+	 * @param asReproductionserWebpageLang the asReproductionserWebpageLang to set
+	 */
+	public void setAsReproductionserWebpageLang(
+			List<List<String>> asReproductionserWebpageLang) {
+		this.asReproductionserWebpageLang = asReproductionserWebpageLang;
+	}
+
+	/**
+	 * @param asReproductionserWebpageLang the asReproductionserWebpageLang to add
+	 */
+	public void addAsReproductionserWebpageLang(List<String> asReproductionserWebpageLang) {
+		this.getAsReproductionserWebpageLang().add(asReproductionserWebpageLang);
+	}
+
+	/**
+	 * @return the asReproductionserMicrofilmServices
+	 */
+	public List<List<String>> getAsReproductionserMicrofilmServices() {
+		if (this.asReproductionserMicrofilmServices == null) {
+			this.asReproductionserMicrofilmServices = new ArrayList<List<String>>();
+		}
+		return this.asReproductionserMicrofilmServices;
+	}
+
+	/**
+	 * @param asReproductionserMicrofilmServices the asReproductionserMicrofilmServices to set
+	 */
+	public void setAsReproductionserMicrofilmServices(
+			List<List<String>> asReproductionserMicrofilmServices) {
+		this.asReproductionserMicrofilmServices = asReproductionserMicrofilmServices;
+	}
+
+	/**
+	 * @param asReproductionserMicrofilmServices the asReproductionserMicrofilmServices to add
+	 */
+	public void addAsReproductionserMicrofilmServices(List<String> asReproductionserMicrofilmServices) {
+		this.getAsReproductionserMicrofilmServices().add(asReproductionserMicrofilmServices);
+	}
+
+	/**
+	 * @return the asReproductionserPhotographicServices
+	 */
+	public List<List<String>> getAsReproductionserPhotographicServices() {
+		if (this.asReproductionserPhotographicServices == null) {
+			this.asReproductionserPhotographicServices = new ArrayList<List<String>>();
+		}
+		return this.asReproductionserPhotographicServices;
+	}
+
+	/**
+	 * @param asReproductionserPhotographicServices the asReproductionserPhotographicServices to set
+	 */
+	public void setAsReproductionserPhotographicServices(
+			List<List<String>> asReproductionserPhotographicServices) {
+		this.asReproductionserPhotographicServices = asReproductionserPhotographicServices;
+	}
+
+	/**
+	 * @param asReproductionserPhotographicServices the asReproductionserPhotographicServices to add
+	 */
+	public void addAsReproductionserPhotographicServices(List<String> asReproductionserPhotographicServices) {
+		this.getAsReproductionserPhotographicServices().add(asReproductionserPhotographicServices);
+	}
+
+	/**
+	 * @return the asReproductionserDigitisationServices
+	 */
+	public List<List<String>> getAsReproductionserDigitisationServices() {
+		if (this.asReproductionserDigitisationServices == null) {
+			this.asReproductionserDigitisationServices = new ArrayList<List<String>>();
+		}
+		return this.asReproductionserDigitisationServices;
+	}
+
+	/**
+	 * @param asReproductionserDigitisationServices the asReproductionserDigitisationServices to set
+	 */
+	public void setAsReproductionserDigitisationServices(
+			List<List<String>> asReproductionserDigitisationServices) {
+		this.asReproductionserDigitisationServices = asReproductionserDigitisationServices;
+	}
+
+	/**
+	 * @param asReproductionserDigitisationServices the asReproductionserDigitisationServices to add
+	 */
+	public void addAsReproductionserDigitisationServices(List<String> asReproductionserDigitisationServices) {
+		this.getAsReproductionserDigitisationServices().add(asReproductionserDigitisationServices);
+	}
+
+	/**
+	 * @return the asReproductionserPhotocopyingServices
+	 */
+	public List<List<String>> getAsReproductionserPhotocopyingServices() {
+		if (this.asReproductionserPhotocopyingServices == null) {
+			this.asReproductionserPhotocopyingServices = new ArrayList<List<String>>();
+		}
+		return this.asReproductionserPhotocopyingServices;
+	}
+
+	/**
+	 * @param asReproductionserPhotocopyingServices the asReproductionserPhotocopyingServices to set
+	 */
+	public void setAsReproductionserPhotocopyingServices(
+			List<List<String>> asReproductionserPhotocopyingServices) {
+		this.asReproductionserPhotocopyingServices = asReproductionserPhotocopyingServices;
+	}
+
+	/**
+	 * @param asReproductionserPhotocopyingServices the asReproductionserPhotocopyingServices to add
+	 */
+	public void addAsReproductionserPhotocopyingServices(List<String> asReproductionserPhotocopyingServices) {
+		this.getAsReproductionserPhotocopyingServices().add(asReproductionserPhotocopyingServices);
+	}
+
+	/**
+	 * @return the asRecreationalServicesRefreshmentArea
+	 */
+	public List<List<String>> getAsRecreationalServicesRefreshmentArea() {
+		if (this.asRecreationalServicesRefreshmentArea == null) {
+			this.asRecreationalServicesRefreshmentArea = new ArrayList<List<String>>();
+		}
+		return this.asRecreationalServicesRefreshmentArea;
+	}
+
+	/**
+	 * @param asRecreationalServicesRefreshmentArea the asRecreationalServicesRefreshmentArea to set
+	 */
+	public void setAsRecreationalServicesRefreshmentArea(
+			List<List<String>> asRecreationalServicesRefreshmentArea) {
+		this.asRecreationalServicesRefreshmentArea = asRecreationalServicesRefreshmentArea;
+	}
+
+	/**
+	 * @param asRecreationalServicesRefreshmentArea the asRecreationalServicesRefreshmentArea to add
+	 */
+	public void addAsRecreationalServicesRefreshmentArea(List<String> asRecreationalServicesRefreshmentArea) {
+		this.getAsRecreationalServicesRefreshmentArea().add(asRecreationalServicesRefreshmentArea);
+	}
+
+	/**
+	 * @return the asRecreationalServicesRefreshmentAreaLang
+	 */
+	public List<List<String>> getAsRecreationalServicesRefreshmentAreaLang() {
+		if (this.asRecreationalServicesRefreshmentAreaLang == null) {
+			this.asRecreationalServicesRefreshmentAreaLang = new ArrayList<List<String>>();
+		}
+		return this.asRecreationalServicesRefreshmentAreaLang;
+	}
+
+	/**
+	 * @param asRecreationalServicesRefreshmentAreaLang the asRecreationalServicesRefreshmentAreaLang to set
+	 */
+	public void setAsRecreationalServicesRefreshmentAreaLang(
+			List<List<String>> asRecreationalServicesRefreshmentAreaLang) {
+		this.asRecreationalServicesRefreshmentAreaLang = asRecreationalServicesRefreshmentAreaLang;
+	}
+
+	/**
+	 * @param asRecreationalServicesRefreshmentAreaLang the asRecreationalServicesRefreshmentAreaLang to add
+	 */
+	public void addAsRecreationalServicesRefreshmentAreaLang(List<String> asRecreationalServicesRefreshmentAreaLang) {
+		this.getAsRecreationalServicesRefreshmentAreaLang().add(asRecreationalServicesRefreshmentAreaLang);
+	}
+
+	/**
+	 * @return the asRSNumberOfExhibition
+	 */
+	public List<List<String>> getAsRSNumberOfExhibition() {
+		if (this.asRSNumberOfExhibition == null) {
+			this.asRSNumberOfExhibition = new ArrayList<List<String>>();
+		}
+		return this.asRSNumberOfExhibition;
+	}
+
+	/**
+	 * @param asRSNumberOfExhibition the asRSNumberOfExhibition to set
+	 */
+	public void setAsRSNumberOfExhibition(List<List<String>> asRSNumberOfExhibition) {
+		this.asRSNumberOfExhibition = asRSNumberOfExhibition;
+	}
+
+	/**
+	 * @param asRSNumberOfExhibition the asRSNumberOfExhibition to add
+	 */
+	public void addAsRSNumberOfExhibition(List<String> asRSNumberOfExhibition) {
+		this.getAsRSNumberOfExhibition().add(asRSNumberOfExhibition);
+	}
+
+	/**
+	 * @return the asRSExhibition
+	 */
+	public List<List<String>> getAsRSExhibition() {
+		if (this.asRSExhibition == null) {
+			this.asRSExhibition = new ArrayList<List<String>>();
+		}
+		return this.asRSExhibition;
+	}
+
+	/**
+	 * @param asRSExhibition the asRSExhibition to set
+	 */
+	public void setAsRSExhibition(List<List<String>> asRSExhibition) {
+		this.asRSExhibition = asRSExhibition;
+	}
+
+	/**
+	 * @param asRSExhibition the asRSExhibition to add
+	 */
+	public void addAsRSExhibition(List<String> asRSExhibition) {
+		this.getAsRSExhibition().add(asRSExhibition);
+	}
+
+	/**
+	 * @return the asRSExhibitionLang
+	 */
+	public List<List<String>> getAsRSExhibitionLang() {
+		if (this.asRSExhibitionLang == null) {
+			this.asRSExhibitionLang = new ArrayList<List<String>>();
+		}
+		return this.asRSExhibitionLang;
+	}
+
+	/**
+	 * @param asRSExhibitionLang the asRSExhibitionLang to set
+	 */
+	public void setAsRSExhibitionLang(List<List<String>> asRSExhibitionLang) {
+		this.asRSExhibitionLang = asRSExhibitionLang;
+	}
+
+	/**
+	 * @param asRSExhibitionLang the asRSExhibitionLang to add
+	 */
+	public void addAsRSExhibitionLang(List<String> asRSExhibitionLang) {
+		this.getAsRSExhibitionLang().add(asRSExhibitionLang);
+	}
+
+	/**
+	 * @return the asRSExhibitionWebpageHref
+	 */
+	public List<List<String>> getAsRSExhibitionWebpageHref() {
+		if (this.asRSExhibitionWebpageHref == null) {
+			this.asRSExhibitionWebpageHref = new ArrayList<List<String>>();
+		}
+		return this.asRSExhibitionWebpageHref;
+	}
+
+	/**
+	 * @param asRSExhibitionWebpageHref the asRSExhibitionWebpageHref to set
+	 */
+	public void setAsRSExhibitionWebpageHref(
+			List<List<String>> asRSExhibitionWebpageHref) {
+		this.asRSExhibitionWebpageHref = asRSExhibitionWebpageHref;
+	}
+
+	/**
+	 * @param asRSExhibitionWebpageHref the asRSExhibitionWebpageHref to add
+	 */
+	public void addAsRSExhibitionWebpageHref(List<String> asRSExhibitionWebpageHref) {
+		this.getAsRSExhibitionWebpageHref().add(asRSExhibitionWebpageHref);
+	}
+
+	/**
+	 * @return the asRSExhibitionWebpageTitle
+	 */
+	public List<List<String>> getAsRSExhibitionWebpageTitle() {
+		if (this.asRSExhibitionWebpageTitle == null) {
+			this.asRSExhibitionWebpageTitle = new ArrayList<List<String>>();
+		}
+		return this.asRSExhibitionWebpageTitle;
+	}
+
+	/**
+	 * @param asRSExhibitionWebpageTitle the asRSExhibitionWebpageTitle to set
+	 */
+	public void setAsRSExhibitionWebpageTitle(
+			List<List<String>> asRSExhibitionWebpageTitle) {
+		this.asRSExhibitionWebpageTitle = asRSExhibitionWebpageTitle;
+	}
+
+	/**
+	 * @param asRSExhibitionWebpageTitle the asRSExhibitionWebpageTitle to add
+	 */
+	public void addAsRSExhibitionWebpageTitle(List<String> asRSExhibitionWebpageTitle) {
+		this.getAsRSExhibitionWebpageTitle().add(asRSExhibitionWebpageTitle);
+	}
+
+	/**
+	 * @return the asRSExhibitionWebpageLang
+	 */
+	public List<List<String>> getAsRSExhibitionWebpageLang() {
+		if (this.asRSExhibitionWebpageLang == null) {
+			this.asRSExhibitionWebpageLang = new ArrayList<List<String>>();
+		}
+		return this.asRSExhibitionWebpageLang;
+	}
+
+	/**
+	 * @param asRSExhibitionWebpageLang the asRSExhibitionWebpageLang to set
+	 */
+	public void setAsRSExhibitionWebpageLang(
+			List<List<String>> asRSExhibitionWebpageLang) {
+		this.asRSExhibitionWebpageLang = asRSExhibitionWebpageLang;
+	}
+
+	/**
+	 * @param asRSExhibitionWebpageLang the asRSExhibitionWebpageLang to add
+	 */
+	public void addAsRSExhibitionWebpageLang(List<String> asRSExhibitionWebpageLang) {
+		this.getAsRSExhibitionWebpageLang().add(asRSExhibitionWebpageLang);
+	}
+
+	/**
+	 * @return the asRSNumberOfToursSessions
+	 */
+	public List<List<String>> getAsRSNumberOfToursSessions() {
+		if (this.asRSNumberOfToursSessions == null) {
+			this.asRSNumberOfToursSessions = new ArrayList<List<String>>();
+		}
+		return this.asRSNumberOfToursSessions;
+	}
+
+	/**
+	 * @param asRSNumberOfToursSessions the asRSNumberOfToursSessions to set
+	 */
+	public void setAsRSNumberOfToursSessions(
+			List<List<String>> asRSNumberOfToursSessions) {
+		this.asRSNumberOfToursSessions = asRSNumberOfToursSessions;
+	}
+
+	/**
+	 * @param asRSNumberOfToursSessions the asRSNumberOfToursSessions to add
+	 */
+	public void addAsRSNumberOfToursSessions(List<String> asRSNumberOfToursSessions) {
+		this.getAsRSNumberOfToursSessions().add(asRSNumberOfToursSessions);
+	}
+
+	/**
+	 * @return the asRSToursSessions
+	 */
+	public List<List<String>> getAsRSToursSessions() {
+		if (this.asRSToursSessions == null) {
+			this.asRSToursSessions = new ArrayList<List<String>>();
+		}
+		return this.asRSToursSessions;
+	}
+
+	/**
+	 * @param asRSToursSessions the asRSToursSessions to set
+	 */
+	public void setAsRSToursSessions(List<List<String>> asRSToursSessions) {
+		this.asRSToursSessions = asRSToursSessions;
+	}
+
+	/**
+	 * @param asRSToursSessions the asRSToursSessions to add
+	 */
+	public void addAsRSToursSessions(List<String> asRSToursSessions) {
+		this.getAsRSToursSessions().add(asRSToursSessions);
+	}
+
+	/**
+	 * @return the asRSToursSessionsLang
+	 */
+	public List<List<String>> getAsRSToursSessionsLang() {
+		if (this.asRSToursSessionsLang == null) {
+			this.asRSToursSessionsLang = new ArrayList<List<String>>();
+		}
+		return this.asRSToursSessionsLang;
+	}
+
+	/**
+	 * @param asRSToursSessionsLang the asRSToursSessionsLang to set
+	 */
+	public void setAsRSToursSessionsLang(List<List<String>> asRSToursSessionsLang) {
+		this.asRSToursSessionsLang = asRSToursSessionsLang;
+	}
+
+	/**
+	 * @param asRSToursSessionsLang the asRSToursSessionsLang to add
+	 */
+	public void addAsRSToursSessionsLang(List<String> asRSToursSessionsLang) {
+		this.getAsRSToursSessionsLang().add(asRSToursSessionsLang);
+	}
+
+	/**
+	 * @return the asRSToursSessionsWebpageHref
+	 */
+	public List<List<String>> getAsRSToursSessionsWebpageHref() {
+		if (this.asRSToursSessionsWebpageHref == null) {
+			this.asRSToursSessionsWebpageHref = new ArrayList<List<String>>();
+		}
+		return this.asRSToursSessionsWebpageHref;
+	}
+
+	/**
+	 * @param asRSToursSessionsWebpageHref the asRSToursSessionsWebpageHref to set
+	 */
+	public void setAsRSToursSessionsWebpageHref(
+			List<List<String>> asRSToursSessionsWebpageHref) {
+		this.asRSToursSessionsWebpageHref = asRSToursSessionsWebpageHref;
+	}
+
+	/**
+	 * @param asRSToursSessionsWebpageHref the asRSToursSessionsWebpageHref to add
+	 */
+	public void addAsRSToursSessionsWebpageHref(List<String> asRSToursSessionsWebpageHref) {
+		this.getAsRSToursSessionsWebpageHref().add(asRSToursSessionsWebpageHref);
+	}
+
+	/**
+	 * @return the asRSToursSessionsWebpageTitle
+	 */
+	public List<List<String>> getAsRSToursSessionsWebpageTitle() {
+		if (this.asRSToursSessionsWebpageTitle == null) {
+			this.asRSToursSessionsWebpageTitle = new ArrayList<List<String>>();
+		}
+		return this.asRSToursSessionsWebpageTitle;
+	}
+
+	/**
+	 * @param asRSToursSessionsWebpageTitle the asRSToursSessionsWebpageTitle to set
+	 */
+	public void setAsRSToursSessionsWebpageTitle(
+			List<List<String>> asRSToursSessionsWebpageTitle) {
+		this.asRSToursSessionsWebpageTitle = asRSToursSessionsWebpageTitle;
+	}
+
+	/**
+	 * @param asRSToursSessionsWebpageTitle the asRSToursSessionsWebpageTitle to add
+	 */
+	public void addAsRSToursSessionsWebpageTitle(List<String> asRSToursSessionsWebpageTitle) {
+		this.getAsRSToursSessionsWebpageTitle().add(asRSToursSessionsWebpageTitle);
+	}
+
+	/**
+	 * @return the asRSToursSessionsWebpageLang
+	 */
+	public List<List<String>> getAsRSToursSessionsWebpageLang() {
+		if (this.asRSToursSessionsWebpageLang == null) {
+			this.asRSToursSessionsWebpageLang = new ArrayList<List<String>>();
+		}
+		return this.asRSToursSessionsWebpageLang;
+	}
+
+	/**
+	 * @param asRSToursSessionsWebpageLang the asRSToursSessionsWebpageLang to set
+	 */
+	public void setAsRSToursSessionsWebpageLang(
+			List<List<String>> asRSToursSessionsWebpageLang) {
+		this.asRSToursSessionsWebpageLang = asRSToursSessionsWebpageLang;
+	}
+
+	/**
+	 * @param asRSToursSessionsWebpageLang the asRSToursSessionsWebpageLang to add
+	 */
+	public void addAsRSToursSessionsWebpageLang(List<String> asRSToursSessionsWebpageLang) {
+		this.getAsRSToursSessionsWebpageLang().add(asRSToursSessionsWebpageLang);
+	}
+
+	/**
+	 * @return the asRSNumberOfOtherServices
+	 */
+	public List<List<String>> getAsRSNumberOfOtherServices() {
+		if (this.asRSNumberOfOtherServices == null) {
+			this.asRSNumberOfOtherServices = new ArrayList<List<String>>();
+		}
+		return this.asRSNumberOfOtherServices;
+	}
+
+	/**
+	 * @param asRSNumberOfOtherServices the asRSNumberOfOtherServices to set
+	 */
+	public void setAsRSNumberOfOtherServices(
+			List<List<String>> asRSNumberOfOtherServices) {
+		this.asRSNumberOfOtherServices = asRSNumberOfOtherServices;
+	}
+
+	/**
+	 * @param asRSNumberOfOtherServices the asRSNumberOfOtherServices to add
+	 */
+	public void addAsRSNumberOfOtherServices(List<String> asRSNumberOfOtherServices) {
+		this.getAsRSNumberOfOtherServices().add(asRSNumberOfOtherServices);
+	}
+
+	/**
+	 * @return the asRSOtherServices
+	 */
+	public List<List<String>> getAsRSOtherServices() {
+		if (this.asRSOtherServices == null) {
+			this.asRSOtherServices = new ArrayList<List<String>>();
+		}
+		return this.asRSOtherServices;
+	}
+
+	/**
+	 * @param asRSOtherServices the asRSOtherServices to set
+	 */
+	public void setAsRSOtherServices(List<List<String>> asRSOtherServices) {
+		this.asRSOtherServices = asRSOtherServices;
+	}
+
+	/**
+	 * @param asRSOtherServices the asRSOtherServices to add
+	 */
+	public void addAsRSOtherServices(List<String> asRSOtherServices) {
+		this.getAsRSOtherServices().add(asRSOtherServices);
+	}
+
+	/**
+	 * @return the asRSOtherServicesLang
+	 */
+	public List<List<String>> getAsRSOtherServicesLang() {
+		if (this.asRSOtherServicesLang == null) {
+			this.asRSOtherServicesLang = new ArrayList<List<String>>();
+		}
+		return this.asRSOtherServicesLang;
+	}
+
+	/**
+	 * @param asRSOtherServicesLang the asRSOtherServicesLang to set
+	 */
+	public void setAsRSOtherServicesLang(List<List<String>> asRSOtherServicesLang) {
+		this.asRSOtherServicesLang = asRSOtherServicesLang;
+	}
+
+	/**
+	 * @param asRSOtherServicesLang the asRSOtherServicesLang to add
+	 */
+	public void addAsRSOtherServicesLang(List<String> asRSOtherServicesLang) {
+		this.getAsRSOtherServicesLang().add(asRSOtherServicesLang);
+	}
+
+	/**
+	 * @return the asRSOtherServicesWebpageHref
+	 */
+	public List<List<String>> getAsRSOtherServicesWebpageHref() {
+		if (this.asRSOtherServicesWebpageHref == null) {
+			this.asRSOtherServicesWebpageHref = new ArrayList<List<String>>();
+		}
+		return this.asRSOtherServicesWebpageHref;
+	}
+
+	/**
+	 * @param asRSOtherServicesWebpageHref the asRSOtherServicesWebpageHref to set
+	 */
+	public void setAsRSOtherServicesWebpageHref(
+			List<List<String>> asRSOtherServicesWebpageHref) {
+		this.asRSOtherServicesWebpageHref = asRSOtherServicesWebpageHref;
+	}
+
+	/**
+	 * @param asRSOtherServicesWebpageHref the asRSOtherServicesWebpageHref to add
+	 */
+	public void addAsRSOtherServicesWebpageHref(List<String> asRSOtherServicesWebpageHref) {
+		this.getAsRSOtherServicesWebpageHref().add(asRSOtherServicesWebpageHref);
+	}
+
+	/**
+	 * @return the asRSOtherServicesWebpageTitle
+	 */
+	public List<List<String>> getAsRSOtherServicesWebpageTitle() {
+		if (this.asRSOtherServicesWebpageTitle == null) {
+			this.asRSOtherServicesWebpageTitle = new ArrayList<List<String>>();
+		}
+		return this.asRSOtherServicesWebpageTitle;
+	}
+
+	/**
+	 * @param asRSOtherServicesWebpageTitle the asRSOtherServicesWebpageTitle to set
+	 */
+	public void setAsRSOtherServicesWebpageTitle(
+			List<List<String>> asRSOtherServicesWebpageTitle) {
+		this.asRSOtherServicesWebpageTitle = asRSOtherServicesWebpageTitle;
+	}
+
+	/**
+	 * @param asRSOtherServicesWebpageTitle the asRSOtherServicesWebpageTitle to add
+	 */
+	public void addAsRSOtherServicesWebpageTitle(List<String> asRSOtherServicesWebpageTitle) {
+		this.getAsRSOtherServicesWebpageTitle().add(asRSOtherServicesWebpageTitle);
+	}
+
+	/**
+	 * @return the asRSOtherServicesWebpageLang
+	 */
+	public List<List<String>> getAsRSOtherServicesWebpageLang() {
+		if (this.asRSOtherServicesWebpageLang == null) {
+			this.asRSOtherServicesWebpageLang = new ArrayList<List<String>>();
+		}
+		return this.asRSOtherServicesWebpageLang;
+	}
+
+	/**
+	 * @param asRSOtherServicesWebpageLang the asRSOtherServicesWebpageLang to set
+	 */
+	public void setAsRSOtherServicesWebpageLang(
+			List<List<String>> asRSOtherServicesWebpageLang) {
+		this.asRSOtherServicesWebpageLang = asRSOtherServicesWebpageLang;
+	}
+
+	/**
+	 * @param asRSOtherServicesWebpageLang the asRSOtherServicesWebpageLang to add
+	 */
+	public void addAsRSOtherServicesWebpageLang(List<String> asRSOtherServicesWebpageLang) {
+		this.getAsRSOtherServicesWebpageLang().add(asRSOtherServicesWebpageLang);
+	}
+
 	public String getRepositorhist() {
 		return this.repositorhist;
-	}
-	public String getDirections() {
-		return this.directions;
-	}
-	public void setDirections(String directions) {
-		this.directions = directions;
-	}
-	public String getDirectionsLang() {
-		return this.directionsLang;
-	}
-	public void setDirectionsLang(String directionsLang) {
-		this.directionsLang = directionsLang;
-	}
-	public String getDirectionsCitationHref() {
-		return this.directionsCitationHref;
-	}
-
-	public void setDirectionsCitationHref(String directionsCitationHref) {
-		this.directionsCitationHref = directionsCitationHref;
-	}
-
-	public String getCitationHref() {
-		return this.citationHref;
-	}
-	public void setCitationHref(String citationHref) {
-		this.citationHref = citationHref;
-	}
-	public String getTermsOfUse() {
-		return this.termsOfUse;
-	}
-	public void setTermsOfUse(String termsOfUse) {
-		this.termsOfUse = termsOfUse;
-	}
-	public String getTermsOfUseLang() {
-		return this.termsOfUseLang;
-	}
-	public void setTermsOfUseLang(String termsOfUseLang) {
-		this.termsOfUseLang = termsOfUseLang;
-	}
-	public String getTermsOfUseHref() {
-		return this.termsOfUseHref;
-	}
-	public void setTermsOfUseHref(String termsOfUseHref) {
-		this.termsOfUseHref = termsOfUseHref;
 	}
 	public void setRepositorhist(String repositorhist) {
 		this.repositorhist = repositorhist;
@@ -3128,50 +5654,180 @@ public class EAG2012Loader{
 	public void setExtentUnit(String extentUnit) {
 		this.extentUnit = extentUnit;
 	}
-	public String getAgentLang() {
-		return this.agentLang;
-	}
-	public void setAgentLang(String agentLang) {
-		this.agentLang = agentLang;
-	}
-	public String getAgencyCode() {
-		return this.agencyCode;
-	}
-	public void setAgencyCode(String agencyCode) {
-		this.agencyCode = agencyCode;
-	}
-	public String getLanguage() {
-		return this.language;
-	}
-	public void setLanguage(String language) {
-		this.language = language;
-	}
-	public String getLanguageDeclaration() {
-		return this.languageDeclaration;
+
+	/**
+	 * @return the controlAgentLang
+	 */
+	public String getControlAgentLang() {
+		return this.controlAgentLang;
 	}
 
-	public void setLanguageDeclaration(String languageDeclaration) {
-		this.languageDeclaration = languageDeclaration;
+	/**
+	 * @param controlAgentLang the controlAgentLang to set
+	 */
+	public void setControlAgentLang(String controlAgentLang) {
+		this.controlAgentLang = controlAgentLang;
 	}
 
-	public String getScript() {
-		return this.script;
+	/**
+	 * @return the controlAgencyCode
+	 */
+	public String getControlAgencyCode() {
+		return this.controlAgencyCode;
 	}
-	public void setScript(String script) {
-		this.script = script;
+
+	/**
+	 * @param controlAgencyCode the controlAgencyCode to set
+	 */
+	public void setControlAgencyCode(String controlAgencyCode) {
+		this.controlAgencyCode = controlAgencyCode;
 	}
-	public List<String> getAbbreviation() {
-		return this.abbreviation;
+
+	/**
+	 * @return the controlLanguageDeclaration
+	 */
+	public List<String> getControlLanguageDeclaration() {
+		if (this.controlLanguageDeclaration == null) {
+			this.controlLanguageDeclaration = new ArrayList<String>();
+		}
+		return this.controlLanguageDeclaration;
 	}
-	public void setAbbreviation(List<String> abbreviation) {
-		this.abbreviation = abbreviation;
+
+	/**
+	 * @param controlLanguageDeclaration the controlLanguageDeclaration to set
+	 */
+	public void setControlLanguageDeclaration(
+			List<String> controlLanguageDeclaration) {
+		this.controlLanguageDeclaration = controlLanguageDeclaration;
 	}
-	public List<String> getCitation() {
-		return this.citation;
+
+	/**
+	 * @param controlLanguageDeclaration the controlLanguageDeclaration to add
+	 */
+	public void addControlLanguageDeclaration(String controlLanguageDeclaration) {
+		this.getControlLanguageDeclaration().add(controlLanguageDeclaration);
 	}
-	public void setCitation(List<String> citation) {
-		this.citation = citation;
+
+	/**
+	 * @return the controlScript
+	 */
+	public List<String> getControlScript() {
+		if (this.controlScript == null) {
+			this.controlScript = new ArrayList<String>();
+		}
+		return this.controlScript;
 	}
+
+	/**
+	 * @param controlScript the controlScript to set
+	 */
+	public void setControlScript(List<String> controlScript) {
+		this.controlScript = controlScript;
+	}
+
+	/**
+	 * @param controlScript the controlScript to add
+	 */
+	public void addControlScript(String controlScript) {
+		this.getControlScript().add(controlScript);
+	}
+
+	/**
+	 * @return the controlNumberOfLanguages
+	 */
+	public List<String> getControlNumberOfLanguages() {
+		if (this.controlNumberOfLanguages == null) {
+			this.controlNumberOfLanguages = new ArrayList<String>();
+		}
+		return this.controlNumberOfLanguages;
+	}
+
+	/**
+	 * @param controlNumberOfLanguages the controlNumberOfLanguages to set
+	 */
+	public void setControlNumberOfLanguages(List<String> controlNumberOfLanguages) {
+		this.controlNumberOfLanguages = controlNumberOfLanguages;
+	}
+
+	/**
+	 * @param controlNumberOfLanguages the controlNumberOfLanguages to add
+	 */
+	public void addControlNumberOfLanguages(String controlNumberOfLanguages) {
+		this.getControlNumberOfLanguages().add(controlNumberOfLanguages);
+	}
+
+	/**
+	 * @return the controlNumberOfRules
+	 */
+	public List<String> getControlNumberOfRules() {
+		if (this.controlNumberOfRules == null) {
+			this.controlNumberOfRules = new ArrayList<String>();
+		}
+		return this.controlNumberOfRules;
+	}
+
+	/**
+	 * @param controlNumberOfRules the controlNumberOfRules to set
+	 */
+	public void setControlNumberOfRules(List<String> controlNumberOfRules) {
+		this.controlNumberOfRules = controlNumberOfRules;
+	}
+
+	/**
+	 * @param controlNumberOfRules the controlNumberOfRules to add
+	 */
+	public void addControlNumberOfRules(String controlNumberOfRules) {
+		this.getControlNumberOfRules().add(controlNumberOfRules);
+	}
+
+	/**
+	 * @return the controlAbbreviation
+	 */
+	public List<String> getControlAbbreviation() {
+		if (this.controlAbbreviation == null) {
+			this.controlAbbreviation = new ArrayList<String>();
+		}
+		return this.controlAbbreviation;
+	}
+
+	/**
+	 * @param controlAbbreviation the controlAbbreviation to set
+	 */
+	public void setControlAbbreviation(List<String> controlAbbreviation) {
+		this.controlAbbreviation = controlAbbreviation;
+	}
+
+	/**
+	 * @param controlAbbreviation the controlAbbreviation to add
+	 */
+	public void addControlAbbreviation(String controlAbbreviation) {
+		this.getControlAbbreviation().add(controlAbbreviation);
+	}
+
+	/**
+	 * @return the controlCitation
+	 */
+	public List<String> getControlCitation() {
+		if (this.controlCitation == null) {
+			this.controlCitation = new ArrayList<String>();
+		}
+		return this.controlCitation;
+	}
+
+	/**
+	 * @param controlCitation the controlCitation to set
+	 */
+	public void setControlCitation(List<String> controlCitation) {
+		this.controlCitation = controlCitation;
+	}
+
+	/**
+	 * @param controlCitation the controlCitation to add
+	 */
+	public void addControlCitation(String controlCitation) {
+		this.getControlCitation().add(controlCitation);
+	}
+
 	public String getEagRelationType() {
 		return this.eagRelationType;
 	}
@@ -3238,404 +5894,7 @@ public class EAG2012Loader{
 	public void setEagRelationrelationEntryDescriptionLang(String eagRelationrelationEntryDescriptionLang) {
 		this.eagRelationrelationEntryDescriptionLang = eagRelationrelationEntryDescriptionLang;
 	}
-	/** Access and services **/
-	public String getSearchRoomTelephone() {
-		return searchRoomTelephone;
-	}
-	public void setSearchRoomTelephone(String searchRoomTelephone) {
-		this.searchRoomTelephone = searchRoomTelephone;
-	}
-	public String getSearchRoomEmail() {
-		return searchRoomEmail;
-	}
-	public void setSearchRoomEmail(String searchRoomEmail) {
-		this.searchRoomEmail = searchRoomEmail;
-	}
-	public String getSearchRoomEmailLink() {
-		return searchRoomEmailLink;
-	}
-	public void setSearchRoomEmailLink(String searchRoomEmailLink) {
-		this.searchRoomEmailLink = searchRoomEmailLink;
-	}
-	public String getSearchRoomWebpage() {
-		return searchRoomWebpage;
-	}
-	public void setSearchRoomWebpage(String searchRoomWebpage) {
-		this.searchRoomWebpage = searchRoomWebpage;
-	}
-	public String getSearchRoomWebpageLink() {
-		return searchRoomWebpageLink;
-	}
-	public void setSearchRoomWebpageLink(String searchRoomWebpageLink) {
-		this.searchRoomWebpageLink = searchRoomWebpageLink;
-	}
-	public String getSearchRoomWorkPlaces() {
-		return searchRoomWorkPlaces;
-	}
-	public void setSearchRoomWorkPlaces(String searchRoomWorkPlaces) {
-		this.searchRoomWorkPlaces = searchRoomWorkPlaces;
-	}
-	public String getSearchRoomComputerPlaces() {
-		return searchRoomComputerPlaces;
-	}
-	public void setSearchRoomComputerPlaces(String searchRoomComputerPlaces) {
-		this.searchRoomComputerPlaces = searchRoomComputerPlaces;
-	}
-	public String getSearchRoomMicrofilmReaders() {
-		return searchRoomMicrofilmReaders;
-	}
-	public void setSearchRoomMicrofilmReaders(String searchRoomMicrofilmReaders) {
-		this.searchRoomMicrofilmReaders = searchRoomMicrofilmReaders;
-	}
-	public String getSearchRoomPhotographAllowance() {
-		return searchRoomPhotographAllowance;
-	}
-	public void setSearchRoomPhotographAllowance(String searchRoomPhotographAllowance) {
-		this.searchRoomPhotographAllowance = searchRoomPhotographAllowance;
-	}
-	public String getSearchRoomPhotographAllowanceContent() {
-		return searchRoomPhotographAllowanceContent;
-	}
-	public void setSearchRoomPhotographAllowanceContent(String searchRoomPhotographAllowanceContent) {
-		this.searchRoomPhotographAllowanceContent = searchRoomPhotographAllowanceContent;
-	}
-	public String getSearchRoomPhotographAllowanceHref() {
-		return searchRoomPhotographAllowanceHref;
-	}
-	public void setSearchRoomPhotographAllowanceHref(String searchRoomPhotographAllowanceHref) {
-		this.searchRoomPhotographAllowanceHref = searchRoomPhotographAllowanceHref;
-	}
-	public String getSearchRoomPhotographAllowanceLang() {
-		return searchRoomPhotographAllowanceLang;
-	}
-	public void setSearchRoomPhotographAllowanceLang(String searchRoomPhotographAllowanceLang) {
-		this.searchRoomPhotographAllowanceLang = searchRoomPhotographAllowanceLang;
-	}
-	public String getSearchRoomAdvancedOrdersContent() {
-		return searchRoomAdvancedOrdersContent;
-	}
-	public void setSearchRoomAdvancedOrdersContent(String searchRoomAdvancedOrdersContent) {
-		this.searchRoomAdvancedOrdersContent = searchRoomAdvancedOrdersContent;
-	}
-	public String getSearchRoomAdvancedOrdersLang() {
-		return searchRoomAdvancedOrdersLang;
-	}
-	public void setSearchRoomAdvancedOrdersLang(String searchRoomAdvancedOrdersLang) {
-		this.searchRoomAdvancedOrdersLang = searchRoomAdvancedOrdersLang;
-	}
-	public String getSearchRoomAdvancedOrdersHref() {
-		return searchRoomAdvancedOrdersHref;
-	}
-	public void setSearchRoomAdvancedOrdersHref(String searchRoomAdvancedOrdersHref) {
-		this.searchRoomAdvancedOrdersHref = searchRoomAdvancedOrdersHref;
-	}
-	public String getSearchRoomResearchServicesContent() {
-		return searchRoomResearchServicesContent;
-	}
-	public void setSearchRoomResearchServicesContent(String searchRoomResearchServicesContent) {
-		this.searchRoomResearchServicesContent = searchRoomResearchServicesContent;
-	}
-	public String getSearchRoomResearchServicesLang() {
-		return searchRoomResearchServicesLang;
-	}
-	public void setSearchRoomResearchServicesLang(String searchRoomResearchServicesLang) {
-		this.searchRoomResearchServicesLang = searchRoomResearchServicesLang;
-	}
-	public String getLibraryQuestion(){
-		return this.libraryQuestion;
-	}
-	public void setLibraryQuestion(String libraryQuestion){
-		this.libraryQuestion = libraryQuestion;
-	}
-	public String getLibraryTelephone() {
-		return libraryTelephone;
-	}
-	public void setLibraryTelephone(String libraryTelephone) {
-		this.libraryTelephone = libraryTelephone;
-	}
-	public String getLibraryEmailContent() {
-		return libraryEmailContent;
-	}
-	public void setLibraryEmailContent(String libraryEmailContent) {
-		this.libraryEmailContent = libraryEmailContent;
-	}
-	public String getLibraryEmailHref() {
-		return libraryEmailHref;
-	}
-	public void setLibraryEmailHref(String libraryEmailHref) {
-		this.libraryEmailHref = libraryEmailHref;
-	}
-	public String getLibraryWebpageContent() {
-		return libraryWebpageContent;
-	}
-	public void setLibraryWebpageContent(String libraryWebpageContent) {
-		this.libraryWebpageContent = libraryWebpageContent;
-	}
-	public String getLibraryWebpageHref() {
-		return libraryWebpageHref;
-	}
-	public void setLibraryWebpageHref(String libraryWebpageHref) {
-		this.libraryWebpageHref = libraryWebpageHref;
-	}
-	public String getLibraryMonographPublication() {
-		return libraryMonographPublication;
-	}
-	public void setLibraryMonographPublication(String libraryMonographPublication) {
-		this.libraryMonographPublication = libraryMonographPublication;
-	}
-	public String getLibrarySerialPublication() {
-		return librarySerialPublication;
-	}
-	public void setLibrarySerialPublication(String librarySerialPublication) {
-		this.librarySerialPublication = librarySerialPublication;
-	}
-	public String getLibraryInternetAccessQuestion() {
-		return libraryInternetAccessQuestion;
-	}
-	public void setLibraryInternetAccessQuestion(String libraryInternetAccessQuestion) {
-		this.libraryInternetAccessQuestion = libraryInternetAccessQuestion;
-	}
-	public String getLibraryDescription() {
-		return libraryDescription;
-	}
-	public void setLibraryDescription(String libraryDescription) {
-		this.libraryDescription = libraryDescription;
-	}
-	public String getLibraryDescriptionLang() {
-		return libraryDescriptionLang;
-	}
-	public void setLibraryDescriptionLang(String libraryDescriptionLang) {
-		this.libraryDescriptionLang = libraryDescriptionLang;
-	}
-	public String getTechnicalServicesQuestion() {
-		return technicalServicesQuestion;
-	}
-	public void setTechnicalServicesQuestion(String technicalServicesQuestion) {
-		this.technicalServicesQuestion = technicalServicesQuestion;
-	}
-	public String getTechnicalServicesDescription() {
-		return technicalServicesDescription;
-	}
-	public void setTechnicalServicesDescription(String technicalServicesDescription) {
-		this.technicalServicesDescription = technicalServicesDescription;
-	}
-	public String getTechnicalServicesDescriptionLang() {
-		return technicalServicesDescriptionLang;
-	}
-	public void setTechnicalServicesDescriptionLang(String technicalServicesDescriptionLang) {
-		this.technicalServicesDescriptionLang = technicalServicesDescriptionLang;
-	}
-	public String getTechnicalServicesTelephone() {
-		return technicalServicesTelephone;
-	}
-	public void setTechnicalServicesTelephone(String technicalServicesTelephone) {
-		this.technicalServicesTelephone = technicalServicesTelephone;
-	}
-	public String getTechnicalServicesEmail() {
-		return technicalServicesEmail;
-	}
-	public void setTechnicalServicesEmail(String technicalServicesEmail) {
-		this.technicalServicesEmail = technicalServicesEmail;
-	}
-	public String getTechnicalServicesEmailLink() {
-		return technicalServicesEmailLink;
-	}
-	public void setTechnicalServicesEmailLink(String technicalServicesEmailLink) {
-		this.technicalServicesEmailLink = technicalServicesEmailLink;
-	}
-	public String getTechnicalServicesEmailLang() {
-		return technicalServicesEmailLang;
-	}
-	public void setTechnicalServicesEmailLang(String technicalServicesEmailLang) {
-		this.technicalServicesEmailLang = technicalServicesEmailLang;
-	}
-	public String getTechnicalServicesWebpageLink() {
-		return technicalServicesWebpageLink;
-	}
-	public void setTechnicalServicesWebpageLink(String technicalServicesWebpageLink) {
-		this.technicalServicesWebpageLink = technicalServicesWebpageLink;
-	}
-	public String getTechnicalServicesWebpage() {
-		return technicalServicesWebpage;
-	}
-	public void setTechnicalServicesWebpage(String technicalServicesWebpage) {
-		this.technicalServicesWebpage = technicalServicesWebpage;
-	}
-	public String getTechnicalServicesWebpageLang() {
-		return technicalServicesWebpageLang;
-	}
-	public void setTechnicalServicesWebpageLang(String technicalServicesWebpageLang) {
-		this.technicalServicesWebpageLang = technicalServicesWebpageLang;
-	}
-	public String getReproductionserQuestion() {
-		return reproductionserQuestion;
-	}
-	public void setReproductionserQuestion(String reproductionserQuestion) {
-		this.reproductionserQuestion = reproductionserQuestion;
-	}
-	public String getReproductionserDescription() {
-		return reproductionserDescription;
-	}
-	public void setReproductionserDescription(String reproductionserDescription) {
-		this.reproductionserDescription = reproductionserDescription;
-	}
-	public String getReproductionserDescriptionLang() {
-		return reproductionserDescriptionLang;
-	}
-	public void setReproductionserDescriptionLang(String reproductionserDescriptionLang) {
-		this.reproductionserDescriptionLang = reproductionserDescriptionLang;
-	}
-	public String getReproductionserTelephone() {
-		return reproductionserTelephone;
-	}
-	public void setReproductionserTelephone(String reproductionserTelephone) {
-		this.reproductionserTelephone = reproductionserTelephone;
-	}
-	public String getReproductionserEmail() {
-		return reproductionserEmail;
-	}
-	public void setReproductionserEmail(String reproductionserEmail) {
-		this.reproductionserEmail = reproductionserEmail;
-	}
-	public String getReproductionserEmailLink() {
-		return reproductionserEmailLink;
-	}
-	public void setReproductionserEmailLink(String reproductionserEmailLink) {
-		this.reproductionserEmailLink = reproductionserEmailLink;
-	}
-	public String getReproductionserEmailLang() {
-		return reproductionserEmailLang;
-	}
-	public void setReproductionserEmailLang(String reproductionserEmailLang) {
-		this.reproductionserEmailLang = reproductionserEmailLang;
-	}
-	public String getReproductionserWebpage() {
-		return reproductionserWebpage;
-	}
-	public void setReproductionserWebpage(String reproductionserWebpage) {
-		this.reproductionserWebpage = reproductionserWebpage;
-	}
-	public String getReproductionserWebpageLink() {
-		return reproductionserWebpageLink;
-	}
-	public void setReproductionserWebpageLink(String reproductionserWebpageLink) {
-		this.reproductionserWebpageLink = reproductionserWebpageLink;
-	}
-	public String getReproductionserWebpageLang() {
-		return reproductionserWebpageLang;
-	}
-	public void setReproductionserWebpageLang(String reproductionserWebpageLang) {
-		this.reproductionserWebpageLang = reproductionserWebpageLang;
-	}
-	public String getMicrofilmServices() {
-		return microfilmServices;
-	}
-	public void setMicrofilmServices(String microfilmServices) {
-		this.microfilmServices = microfilmServices;
-	}
-	public String getPhotographicServices() {
-		return photographicServices;
-	}
-	public void setPhotographicServices(String photographicServices) {
-		this.photographicServices = photographicServices;
-	}
-	public String getDigitisationServices() {
-		return digitisationServices;
-	}
-	public void setDigitisationServices(String digitisationServices) {
-		this.digitisationServices = digitisationServices;
-	}
-	public String getPhotocopyingServices() {
-		return photocopyingServices;
-	}
-	public void setPhotocopyingServices(String photocopyingServices) {
-		this.photocopyingServices = photocopyingServices;
-	}
-	public String getRecreationalServicesRefreshmentArea() {
-		return recreationalServicesRefreshmentArea;
-	}
-	public void setRecreationalServicesRefreshmentArea(String recreationalServicesRefreshmentArea) {
-		this.recreationalServicesRefreshmentArea = recreationalServicesRefreshmentArea;
-	}
-	public String getRecreationalServicesRefreshmentAreaLang() {
-		return recreationalServicesRefreshmentAreaLang;
-	}
-	public void setRecreationalServicesRefreshmentAreaLang(String recreationalServicesRefreshmentAreaLang) {
-		this.recreationalServicesRefreshmentAreaLang = recreationalServicesRefreshmentAreaLang;
-	}
-	public String getRecreationalServicesExhibition() {
-		return recreationalServicesExhibition;
-	}
-	public void setRecreationalServicesExhibition(String recreationalServicesExhibition) {
-		this.recreationalServicesExhibition = recreationalServicesExhibition;
-	}
-	public String getRecreationalServicesExhibitionLang() {
-		return recreationalServicesExhibitionLang;
-	}
-	public void setRecreationalServicesExhibitionLang(String recreationalServicesExhibitionLang) {
-		this.recreationalServicesExhibitionLang = recreationalServicesExhibitionLang;
-	}
-	public String getRecreationalServicesWeb() {
-		return recreationalServicesWeb;
-	}
-	public void setRecreationalServicesWeb(String recreationalServicesWeb) {
-		this.recreationalServicesWeb = recreationalServicesWeb;
-	}
-	public String getRecreationalServicesWebLink() {
-		return recreationalServicesWebLink;
-	}
-	public void setRecreationalServicesWebLink(String recreationalServicesWebLink) {
-		this.recreationalServicesWebLink = recreationalServicesWebLink;
-	}
-	public String getToursSessionGuidesAndSessionsContent() {
-		return toursSessionGuidesAndSessionsContent;
-	}
-	public void setToursSessionGuidesAndSessionsContent(String toursSessionGuidesAndSessionsContent) {
-		this.toursSessionGuidesAndSessionsContent = toursSessionGuidesAndSessionsContent;
-	}
-	public String getToursSessionGuidesAndSessionsLang() {
-		return toursSessionGuidesAndSessionsLang;
-	}
-	public void setToursSessionGuidesAndSessionsLang(String toursSessionGuidesAndSessionsLang) {
-		this.toursSessionGuidesAndSessionsLang = toursSessionGuidesAndSessionsLang;
-	}
-	public String getToursSessionGuidesAndSessionsWebpage() {
-		return toursSessionGuidesAndSessionsWebpage;
-	}
-	public void setToursSessionGuidesAndSessionsWebpage(String toursSessionGuidesAndSessionsWebpage) {
-		this.toursSessionGuidesAndSessionsWebpage = toursSessionGuidesAndSessionsWebpage;
-	}
-	public String getToursSessionGuidesAndSessionsWebpageTitle() {
-		return toursSessionGuidesAndSessionsWebpageTitle;
-	}
-	public void setToursSessionGuidesAndSessionsWebpageTitle(String toursSessionGuidesAndSessionsWebpageTitle) {
-		this.toursSessionGuidesAndSessionsWebpageTitle = toursSessionGuidesAndSessionsWebpageTitle;
-	}
-	public String getOtherServices() {
-		return otherServices;
-	}
-	public void setOtherServices(String otherServices) {
-		this.otherServices = otherServices;
-	}
-	public String getOtherServicesLang() {
-		return otherServicesLang;
-	}
-	public void setOtherServicesLang(String otherServicesLang) {
-		this.otherServicesLang = otherServicesLang;
-	}
-	public String getOtherServicesWebpage() {
-		return otherServicesWebpage;
-	}
-	public void setOtherServicesWebpage(String otherServicesWebpage) {
-		this.otherServicesWebpage = otherServicesWebpage;
-	}
-	public String getOtherServicesLink() {
-		return otherServicesLink;
-	}
-	public void setOtherServicesLink(String otherServicesLink) {
-		this.otherServicesLink = otherServicesLink;
-	}
-	
+
 	public String editWebFormEAG2012() throws Exception {
 		if(eagPath!=null && !eagPath.isEmpty() && aiId!=null){
 			try{
@@ -3945,16 +6204,8 @@ public class EAG2012Loader{
 					this.setTelephone(repository.getTelephone().get(0).getContent());
 				}
 
-				// E-mail address.
+				// E-mail address for institution.
 				if (!repository.getEmail().isEmpty()) {
-//					// TODO: Review for multiple values.
-//					for (int i = 0; i < repository.getEmail().size(); i++) {
-//						this.setEmail(repository.getEmail().get(i).getHref());
-//						this.setEmailTitle(repository.getEmail().get(i).getContent());
-//						this.setEmailLang(repository.getEmail().get(i).getLang());
-//					}
-
-					// E-mail address for institution.
 					for (int i = 0; i < repository.getEmail().size(); i++) {
 						this.addYiNumberOfEmailAddress("");
 						if (repository.getEmail().get(i).getHref() != null
@@ -3978,16 +6229,8 @@ public class EAG2012Loader{
 					}
 				}
 
-				// Webpage.
+				// Webpage for institution.
 				if (!repository.getWebpage().isEmpty()) {
-//					// TODO: Review for multiple values.
-//					for (int i = 0; i < repository.getWebpage().size(); i++) {
-//						this.setWebpage(repository.getWebpage().get(i).getHref());
-//						this.setWebpageTitle(repository.getWebpage().get(i).getContent());
-//						this.setWebpageLang(repository.getWebpage().get(i).getLang());
-//					}
-
-					// Webpage address for institution.
 					for (int i = 0; i < repository.getWebpage().size(); i++) {
 						this.addYiNumberOfWebpageAddress("");
 						if (repository.getWebpage().get(i).getHref() != null
@@ -4017,12 +6260,6 @@ public class EAG2012Loader{
 
 					// Opening times.
 					if (!timetable.getOpening().isEmpty()) {
-						// TODO: Review for multiple values.
-						for (int i = 0; i < timetable.getOpening().size(); i++) {
-							this.setOpening(timetable.getOpening().get(i).getContent());
-							this.setOpeningLang(timetable.getOpening().get(i).getLang());
-						}
-
 						// Opening times for institution.
 						for (int i = 0; i < timetable.getOpening().size(); i++) {
 							if (!timetable.getOpening().isEmpty()
@@ -4046,12 +6283,6 @@ public class EAG2012Loader{
 
 					// Closing dates.
 					if (!timetable.getClosing().isEmpty()) {
-						// TODO: Review for multiple values.
-						for (int i = 0; i < timetable.getClosing().size(); i++) {
-							this.setClosing(timetable.getClosing().get(i).getContent());
-							this.setClosingLang(timetable.getClosing().get(i).getLang());
-						}
-
 						// Closing dates for institution.
 						for (int i = 0; i < timetable.getClosing().size(); i++) {
 							if (!timetable.getClosing().isEmpty()
@@ -4084,12 +6315,6 @@ public class EAG2012Loader{
 					}
 
 					if (!repository.getAccess().getRestaccess().isEmpty()) {
-						// TODO: Review for multiple values.
-						for (int i = 0; i < repository.getAccess().getRestaccess().size(); i++) {
-							this.setRestaccess(repository.getAccess().getRestaccess().get(i).getContent());
-							this.setRestaccessLang(repository.getAccess().getRestaccess().get(i).getLang());
-						}
-
 						// Accessible to the public for institution.
 						for (int i = 0; i < repository.getAccess().getRestaccess().size(); i++) {
 							if (repository.getAccess().getRestaccess().size() >= i
@@ -4112,26 +6337,18 @@ public class EAG2012Loader{
 
 				// Facilities for disabled people available.
 				if (!repository.getAccessibility().isEmpty()) {
-					// TODO: Review for multiple values.
-					for (int i = 0; i < repository.getAccessibility().size(); i++) {
-						this.setAccessibilityQuestion(repository.getAccessibility().get(i).getQuestion());
-						if (repository.getAccessibility().get(i).getContent() != null
-								&& !repository.getAccessibility().get(i).getContent().isEmpty()) {
-							this.setAccessibility(repository.getAccessibility().get(i).getContent());
-							this.setAccessibilityLang(repository.getAccessibility().get(i).getLang());
-						}
-					}
-
 					// Facilities for disabled people available for institution.
 					for (int i = 0; i < repository.getAccessibility().size(); i++) {
-						if (repository.getAccessibility().get(i).getQuestion() != null
+						if (repository.getAccessibility().size() >= i
+								&& repository.getAccessibility().get(i).getQuestion() != null
 								&& !repository.getAccessibility().get(i).getQuestion().isEmpty()) {
 							this.addYiAccessibilityQuestion(repository.getAccessibility().get(i).getQuestion());
 						} else {
 							this.addYiAccessibilityQuestion(Eag2012.OPTION_NO);
 						}
 
-						if (repository.getAccessibility().get(i).getContent() != null
+						if (repository.getAccessibility().size() >= i
+								&& repository.getAccessibility().get(i).getContent() != null
 								&& !repository.getAccessibility().get(i).getContent().isEmpty()) {
 							this.addYiAccessibility(repository.getAccessibility().get(i).getContent());
 							if (repository.getAccessibility().size() >= i
@@ -4752,296 +6969,1230 @@ public class EAG2012Loader{
 	 */
 	private void loadAccessAndServicesTabValues() {
 		// Repositories info.
-		if (this.eag.getArchguide().getDesc().getRepositories() != null) {
-			if (!this.eag.getArchguide().getDesc().getRepositories().getRepository().isEmpty()) {
-				// TODO: Review for multiple repositories.
-				// First repository equals institution.
-				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
+		if (this.eag.getArchguide() != null && this.eag.getArchguide().getDesc() != null
+				&& this.eag.getArchguide().getDesc().getRepositories() != null
+				&& !this.eag.getArchguide().getDesc().getRepositories().getRepository().isEmpty()) {
+			// For each repository
+			for (int i = 0; i < this.eag.getArchguide().getDesc().getRepositories().getRepository().size(); i++) {
+				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
+				if (repository != null) {
+					// Timetable info
+					List<String> openingList = new ArrayList<String>();
+					List<String> openingLangList = new ArrayList<String>();
+					List<String> closingList = new ArrayList<String>();
+					List<String> closingLangList = new ArrayList<String>();
+					if (repository.getTimetable() != null) {
+						Timetable timetable = repository.getTimetable();
 
-				// Travelling directions.
-				if (!repository.getDirections().isEmpty()) {
-					// TODO: Review for multiple values.
-					for (int i = 0; i < repository.getDirections().size(); i++) {
-						// Travelling directions.
-						if (!repository.getDirections().get(i).getContent().isEmpty()) {
-							// TODO: Review for multiple values.
-							for (int j = 0; j < repository.getDirections().get(i).getContent().size(); j++) {
-								if (repository.getDirections().get(i).getContent().get(j) instanceof String
-										&& repository.getDirections().get(i).getContent().get(j) != null
-										&& !repository.getDirections().get(i).getContent().get(j).toString().isEmpty()
-										&& !repository.getDirections().get(i).getContent().get(j).toString().startsWith("\n")) {
-									this.setDirections(repository.getDirections().get(i).getContent().get(j).toString());
+						// Opening times.
+						if (!timetable.getOpening().isEmpty()) {
+							for (int j = 0; j < timetable.getOpening().size(); j++) {
+								if (!timetable.getOpening().isEmpty()
+										&& timetable.getOpening().size() >= j
+										&& timetable.getOpening().get(j).getContent() != null
+										&& !timetable.getOpening().get(j).getContent().isEmpty()) {
+									openingList.add(timetable.getOpening().get(j).getContent());
+								} else {
+									openingList.add("");
 								}
-								if (repository.getDirections().get(i).getContent().get(j) instanceof Citation) {
-									Citation citation = (Citation) repository.getDirections().get(i).getContent().get(j);
-									this.setDirectionsCitationHref(citation.getHref());
+								if (!timetable.getOpening().isEmpty()
+										&& timetable.getOpening().size() >= j
+										&& timetable.getOpening().get(j).getLang() != null
+										&& !timetable.getOpening().get(j).getLang().isEmpty()) {
+									openingLangList.add(timetable.getOpening().get(j).getLang());
+								} else {
+									openingLangList.add(Eag2012.OPTION_NONE);
 								}
 							}
-						}
-						// Travelling directions language.
-						this.setDirectionsLang(repository.getDirections().get(i).getLang());
-					}
-				}
-
-				// Terms of use.
-				if (repository.getAccess() != null) {
-					if (!repository.getAccess().getTermsOfUse().isEmpty()) {
-						// TODO: Review for multiple values.
-						for (int i = 0; i < repository.getAccess().getTermsOfUse().size(); i++) {
-							this.setTermsOfUse(repository.getAccess().getTermsOfUse().get(i).getContent());
-							this.setTermsOfUseLang(repository.getAccess().getTermsOfUse().get(i).getLang());
-							this.setTermsOfUseHref(repository.getAccess().getTermsOfUse().get(i).getHref());
-						}
-					}
-				}
-				
-				// Searchroom
-				if(repository.getServices()!=null && repository.getServices().getSearchroom()!=null){
-					Searchroom searchRoom = repository.getServices().getSearchroom();
-					if(searchRoom.getContact()!=null){
-						if(searchRoom.getContact().getTelephone()!=null){
-							for (int i = 0; i < searchRoom.getContact().getTelephone().size(); i++) {
-								this.setSearchRoomTelephone(searchRoom.getContact().getTelephone().get(i).getContent());
-							}
-						}
-						if(searchRoom.getContact().getEmail()!=null){
-							for (int i = 0; i < searchRoom.getContact().getEmail().size(); i++) {
-								this.setSearchRoomEmail(searchRoom.getContact().getEmail().get(i).getHref());
-								this.setSearchRoomEmailLink(searchRoom.getContact().getEmail().get(i).getContent());
-							}
-						}
-					}
-					if(searchRoom.getWebpage()!=null){
-						for (int i = 0; i < searchRoom.getWebpage().size(); i++) {
-							this.setSearchRoomWebpage(searchRoom.getWebpage().get(i).getHref());
-							this.setSearchRoomWebpageLink(searchRoom.getWebpage().get(i).getContent());
-						}
-					}
-					if(searchRoom.getWorkPlaces()!=null && searchRoom.getWorkPlaces().getNum()!=null){
-						this.setSearchRoomWorkPlaces(searchRoom.getWorkPlaces().getNum().getContent());
-					}
-					if(searchRoom.getComputerPlaces()!=null && searchRoom.getComputerPlaces().getNum()!=null){
-						this.setSearchRoomComputerPlaces(searchRoom.getComputerPlaces().getNum().getContent());
-					}
-					if(searchRoom.getMicrofilmPlaces()!=null && searchRoom.getMicrofilmPlaces().getNum()!=null){
-						this.setSearchRoomMicrofilmReaders(searchRoom.getMicrofilmPlaces().getNum().getContent());
-					}
-					if(searchRoom.getPhotographAllowance()!=null){
-						String photographAllowanceValue = searchRoom.getPhotographAllowance().getValue();
-						if (Eag2012.OPTION_DEPENDING_TEXT.equalsIgnoreCase(photographAllowanceValue)) {
-							photographAllowanceValue = Eag2012.OPTION_DEPENDING;
-						} else if (Eag2012.OPTION_WITHOUT_TEXT.equalsIgnoreCase(photographAllowanceValue)) {
-							photographAllowanceValue = Eag2012.OPTION_WITHOUT;
 						}
 
-						this.setSearchRoomPhotographAllowance(photographAllowanceValue);
-					}
-					if(searchRoom.getReadersTicket()!=null){
-						for (int i = 0; i < searchRoom.getReadersTicket().size(); i++) {
-							this.setSearchRoomPhotographAllowanceContent(searchRoom.getReadersTicket().get(i).getContent());
-							this.setSearchRoomPhotographAllowanceHref(searchRoom.getReadersTicket().get(i).getHref());
-							this.setSearchRoomPhotographAllowanceLang(searchRoom.getReadersTicket().get(i).getLang());
-						}
-					}
-					if(searchRoom.getAdvancedOrders()!=null){
-						for (int i = 0; i < searchRoom.getAdvancedOrders().size(); i++) {
-							this.setSearchRoomAdvancedOrdersContent(searchRoom.getAdvancedOrders().get(i).getContent());
-							this.setSearchRoomAdvancedOrdersLang(searchRoom.getAdvancedOrders().get(i).getLang());
-							this.setSearchRoomAdvancedOrdersHref(searchRoom.getAdvancedOrders().get(i).getHref());
-						}
-					}
-					if(searchRoom.getResearchServices()!=null){
-						for (int i = 0; i < searchRoom.getResearchServices().size(); i++) {
-							if(searchRoom.getResearchServices().get(i).getDescriptiveNote()!=null){
-								for(int j = 0; j < searchRoom.getResearchServices().get(i).getDescriptiveNote().getP().size(); j++) {
-									this.setSearchRoomResearchServicesContent(searchRoom.getResearchServices().get(i).getDescriptiveNote().getP().get(j).getContent());
-									this.setSearchRoomResearchServicesLang(searchRoom.getResearchServices().get(i).getDescriptiveNote().getP().get(j).getLang());
+						// Closing dates.
+						if (!timetable.getClosing().isEmpty()) {
+							// Closing dates for institution.
+							for (int j = 0; j < timetable.getClosing().size(); j++) {
+								if (!timetable.getClosing().isEmpty()
+										&& timetable.getClosing().size() >= j
+										&& timetable.getClosing().get(j).getContent() != null
+										&& !timetable.getClosing().get(j).getContent().isEmpty()) {
+									closingList.add(timetable.getClosing().get(j).getContent());
+								} else {
+									closingList.add("");
+								}
+								if (!timetable.getClosing().isEmpty()
+										&& timetable.getClosing().size() >= j
+										&& timetable.getClosing().get(j).getLang() != null
+										&& !timetable.getClosing().get(j).getLang().isEmpty()) {
+									closingLangList.add(timetable.getClosing().get(j).getLang());
+								} else {
+									closingLangList.add(Eag2012.OPTION_NONE);
 								}
 							}
 						}
 					}
-				}
-				
-				// Library
-				if(repository.getServices()!=null){
-					Library library = repository.getServices().getLibrary();
-					if(library!=null){
-						this.setLibraryQuestion(library.getQuestion());
-						if(library.getContact() != null){
-							if(library.getContact().getTelephone()!=null){
-								for (int i = 0; i < library.getContact().getTelephone().size(); i++) {
-									this.setLibraryTelephone(library.getContact().getTelephone().get(i).getContent());
+					this.addAsOpening(openingList);
+					this.addAsOpeningLang(openingLangList);
+					this.addAsClosing(closingList);
+					this.addAsClosingLang(closingLangList);
+
+					// Travelling directions.
+					List<String> numberOfDirectios = new ArrayList<String>();
+					List<String> directiosValue = new ArrayList<String>();
+					List<String> directiosLang = new ArrayList<String>();
+					List<String> directiosHref = new ArrayList<String>();
+					if (!repository.getDirections().isEmpty()) {
+						for (int j = 0; j < repository.getDirections().size(); j++) {
+							numberOfDirectios.add("");
+							if (repository.getDirections().get(j) != null
+									&& !repository.getDirections().get(j).getContent().isEmpty()) {
+								// TODO: Review for multiple values.
+								for (int k = 0; k < repository.getDirections().get(j).getContent().size(); k++) {
+									if (repository.getDirections().get(j).getContent().get(k) != null
+											&& repository.getDirections().get(j).getContent().get(k) instanceof String
+											&& repository.getDirections().get(j).getContent().get(k).toString() != null
+											&& !repository.getDirections().get(j).getContent().get(k).toString().isEmpty()
+											&& !repository.getDirections().get(j).getContent().get(k).toString().startsWith("\n")) {
+										directiosValue.add(repository.getDirections().get(j).getContent().get(k).toString());
+									}
+									if (repository.getDirections().get(j).getContent().get(k) != null
+											&& repository.getDirections().get(j).getContent().get(k) instanceof Citation) {
+										Citation citation = (Citation) repository.getDirections().get(j).getContent().get(k);
+										if (citation.getHref() != null
+												&& !citation.getHref().isEmpty()) {
+											directiosHref.add(citation.getHref());
+										} else {
+											directiosHref.add("");
+										}
+									}
 								}
 							}
-							if(library.getContact().getEmail()!=null){
-								for (int i = 0; i < library.getContact().getEmail().size(); i++) {
-									this.setLibraryEmailContent(library.getContact().getEmail().get(i).getContent());
-									this.setLibraryEmailHref(library.getContact().getEmail().get(i).getHref());
-								}
+
+							// Travelling directions language.
+							if (repository.getDirections().get(j) != null
+									&& repository.getDirections().get(j).getLang() != null
+									&& !repository.getDirections().get(j).getLang().isEmpty()) {
+								directiosLang.add(repository.getDirections().get(j).getLang());
+							} else {
+								directiosLang.add(Eag2012.OPTION_NONE);
 							}
-						}
-						if(library.getWebpage()!=null){
-							for (int i = 0; i < library.getWebpage().size(); i++) {
-								this.setLibraryWebpageContent(library.getWebpage().get(i).getContent());
-								this.setLibraryWebpageHref(library.getWebpage().get(i).getHref());
-							}
-						}
-						if(library.getMonographicpub()!=null){
-							this.setLibraryMonographPublication(library.getMonographicpub().getNum().getContent());
-						}
-						if(library.getSerialpub()!=null){
-							this.setLibrarySerialPublication(library.getSerialpub().getNum().getContent());
 						}
 					}
-				}
-				List<P> ps = null;
-				if(repository.getServices()!=null){
+					this.addAsNumberOfDirections(numberOfDirectios);
+					this.addAsDirections(directiosValue);
+					this.addAsDirectionsLang(directiosLang);
+					this.addAsDirectionsCitationHref(directiosHref);
+
+					// Accessible to the public.
+					List<String> accessQuestion = new ArrayList<String>();
+					List<String> accessValue = new ArrayList<String>();
+					List<String> accessLang = new ArrayList<String>();
+					if (repository.getAccess() != null) {
+						if (repository.getAccess().getQuestion() != null
+								&& !repository.getAccess().getQuestion().isEmpty()) {
+							accessQuestion.add(repository.getAccess().getQuestion());
+						} else {
+							accessQuestion.add(Eag2012.OPTION_NO);
+						}
+
+						if (!repository.getAccess().getRestaccess().isEmpty()) {
+							for (int j = 0; j < repository.getAccess().getRestaccess().size(); j++) {
+								if (repository.getAccess().getRestaccess().size() >= j
+										&& repository.getAccess().getRestaccess().get(j).getContent() != null
+										&& !repository.getAccess().getRestaccess().get(j).getContent().isEmpty()) {
+									accessValue.add(repository.getAccess().getRestaccess().get(j).getContent());
+								} else {
+									accessValue.add("");
+								}
+								if (repository.getAccess().getRestaccess().size() >= j
+										&& repository.getAccess().getRestaccess().get(j).getLang() != null
+										&& !repository.getAccess().getRestaccess().get(j).getLang().isEmpty()) {
+									accessLang.add(repository.getAccess().getRestaccess().get(j).getLang());
+								} else {
+									accessLang.add(Eag2012.OPTION_NONE);
+								}
+							}
+						}
+					}
+					this.addAsAccessQuestion(accessQuestion);
+					this.addAsRestaccess(accessValue);
+					this.addAsRestaccessLang(accessLang);
+	
+					// Terms of use.
+					List<String> numberOfTermsOfUse = new ArrayList<String>();
+					List<String> termsOfUseValue = new ArrayList<String>();
+					List<String> termsOfUseHref = new ArrayList<String>();
+					List<String> termsOfUseLang = new ArrayList<String>();
+					if (repository.getAccess() != null
+							&& !repository.getAccess().getTermsOfUse().isEmpty()) {
+						for (int j = 0; j < repository.getAccess().getTermsOfUse().size(); j++) {
+							numberOfTermsOfUse.add("");
+							termsOfUseValue.add(repository.getAccess().getTermsOfUse().get(j).getContent());
+							termsOfUseLang.add(repository.getAccess().getTermsOfUse().get(j).getLang());
+							termsOfUseHref.add(repository.getAccess().getTermsOfUse().get(j).getHref());
+						}
+					}
+					this.addAsNumberOfTermsOfUse(numberOfTermsOfUse);
+					this.addAsTermsOfUse(termsOfUseValue);
+					this.addAsTermsOfUseHref(termsOfUseHref);
+					this.addAsTermsOfUseLang(termsOfUseLang);
+
+					// Facilities for disabled people available.
+					List<String> accesibilityQuestion = new ArrayList<String>();
+					List<String> accesibilityValue = new ArrayList<String>();
+					List<String> accesibilityLang = new ArrayList<String>();
+					if (!repository.getAccessibility().isEmpty()) {
+						for (int j = 0; j < repository.getAccessibility().size(); j++) {
+							if (repository.getAccessibility().size() >= j
+									&& repository.getAccessibility().get(j).getQuestion() != null
+									&& !repository.getAccessibility().get(j).getQuestion().isEmpty()) {
+								accesibilityQuestion.add(repository.getAccessibility().get(j).getQuestion());
+							} else {
+								accesibilityQuestion.add(Eag2012.OPTION_NO);
+							}
+
+							if (repository.getAccessibility().size() >= j
+									&& repository.getAccessibility().get(j).getContent() != null
+									&& !repository.getAccessibility().get(j).getContent().isEmpty()) {
+								accesibilityValue.add(repository.getAccessibility().get(j).getContent());
+
+								if (repository.getAccessibility().size() >= j
+										&& repository.getAccessibility().get(j).getLang() != null
+										&& !repository.getAccessibility().get(j).getLang().isEmpty()) {
+									accesibilityLang.add(repository.getAccessibility().get(j).getLang());
+								} else {
+									accesibilityLang.add(Eag2012.OPTION_NONE);
+								}
+							}
+						}
+					}
+					this.addAsAccessibilityQuestion(accesibilityQuestion);
+					this.addAsAccessibility(accesibilityValue);
+					this.addAsAccessibilityLang(accesibilityLang);
 					
-					if(repository.getServices().getInternetAccess()!=null){
-						this.setLibraryInternetAccessQuestion(repository.getServices().getInternetAccess().getQuestion());
-						if(repository.getServices().getInternetAccess().getDescriptiveNote()!=null){
-							ps = repository.getServices().getInternetAccess().getDescriptiveNote().getP();
-							for (int i = 0; i < ps.size(); i++) {
-								this.setLibraryDescription(ps.get(i).getContent());
-								this.setLibraryDescriptionLang(ps.get(i).getLang());
+					// Searchroom.
+					List<String> srTelephone = new ArrayList<String>();
+					List<String> srNumberOfEmail = new ArrayList<String>();
+					List<String> srEmailHref = new ArrayList<String>();
+					List<String> srEmailTitle = new ArrayList<String>();
+					List<String> srNumberOfWebpage = new ArrayList<String>();
+					List<String> srWebpageHref = new ArrayList<String>();
+					List<String> srWebpageTitle = new ArrayList<String>();
+					List<String> srWorkingPlaces = new ArrayList<String>();
+					List<String> srComputerPlacesNum = new ArrayList<String>();
+					List<String> srComputerPlacesValue = new ArrayList<String>();
+					List<String> srComputerPlacesLang = new ArrayList<String>();
+					List<String> srMicrofilmReadersNum = new ArrayList<String>();
+					List<String> srPhotographAllowance = new ArrayList<String>();
+					List<String> srNumberOfReadersTicket = new ArrayList<String>();
+					List<String> srReadersTicket = new ArrayList<String>();
+					List<String> srReadersTicketHref = new ArrayList<String>();
+					List<String> srReadersTicketLang = new ArrayList<String>();
+					List<String> srNumberOfAdvancedOrders = new ArrayList<String>();
+					List<String> srAdvancedOrders = new ArrayList<String>();
+					List<String> srAdvancedOrdersHref = new ArrayList<String>();
+					List<String> srAdvancedOrdersLang = new ArrayList<String>();
+					List<String> srResearchServices = new ArrayList<String>();
+					List<String> srResearchServicesLang = new ArrayList<String>();
+					if (repository.getServices() != null && repository.getServices().getSearchroom() != null) {
+						Searchroom searchRoom = repository.getServices().getSearchroom();
+						// Contact.
+						if (searchRoom.getContact() != null) {
+							// Contact -Telephone.
+							if (!searchRoom.getContact().getTelephone().isEmpty()) {
+								for (int j = 0; j < searchRoom.getContact().getTelephone().size(); j++) {
+									if (searchRoom.getContact().getTelephone().get(j).getContent() != null
+											&& !searchRoom.getContact().getTelephone().get(j).getContent().isEmpty()) {
+										srTelephone.add(searchRoom.getContact().getTelephone().get(j).getContent());
+									} else {
+										srTelephone.add("");
+									}
+								}
+							} else {
+								srTelephone.add("");
+							}
+							// Contact -Email.
+							if (!searchRoom.getContact().getEmail().isEmpty()) {
+								for (int j = 0; j < searchRoom.getContact().getEmail().size(); j++) {
+									srNumberOfEmail.add("");
+									if (searchRoom.getContact().getEmail().get(j).getHref() != null
+											&& !searchRoom.getContact().getEmail().get(j).getHref().isEmpty()) {
+										srEmailHref.add(searchRoom.getContact().getEmail().get(j).getHref());
+									} else {
+										srEmailHref.add("");
+									}
+									if (searchRoom.getContact().getEmail().get(j).getContent() != null
+											&& !searchRoom.getContact().getEmail().get(j).getContent().isEmpty()) {
+										srEmailTitle.add(searchRoom.getContact().getEmail().get(j).getContent());
+									} else {
+										srEmailTitle.add("");
+									}
+								}
+							} else {
+								srNumberOfEmail.add("");
+								srEmailHref.add("");
+								srEmailTitle.add("");
 							}
 						}
-					}
 
-					// Technical Services
-					if(repository.getServices().getTechservices()!=null){
-						this.setTechnicalServicesQuestion((repository.getServices().getTechservices().getRestorationlab()!=null)?repository.getServices().getTechservices().getRestorationlab().getQuestion():Eag2012.OPTION_NONE);
-						if(repository.getServices().getTechservices().getRestorationlab()!=null && repository.getServices().getTechservices().getRestorationlab().getDescriptiveNote()!=null){
-							ps = repository.getServices().getTechservices().getRestorationlab().getDescriptiveNote().getP();
-							for (int i = 0; i < ps.size(); i++) {
-								this.setTechnicalServicesDescription(ps.get(i).getContent());
-								this.setTechnicalServicesDescriptionLang(ps.get(i).getLang());
+						// Webpage
+						if (!searchRoom.getWebpage().isEmpty()) {
+							for (int j = 0; j < searchRoom.getWebpage().size(); j++) {
+								srNumberOfWebpage.add("");
+								if (searchRoom.getWebpage().get(j).getHref() != null
+										&& !searchRoom.getWebpage().get(j).getHref().isEmpty()) {
+									srWebpageHref.add(searchRoom.getWebpage().get(j).getHref());
+								} else {
+									srWebpageHref.add("");
+								}
+								if (searchRoom.getWebpage().get(j).getContent() != null
+										&& !searchRoom.getWebpage().get(j).getContent().isEmpty()) {
+									srWebpageTitle.add(searchRoom.getWebpage().get(j).getContent());
+								} else {
+									srWebpageTitle.add("");
+								}
 							}
+						} else {
+							srNumberOfWebpage.add("");
+							srWebpageHref.add("");
+							srWebpageTitle.add("");
 						}
-						List<Telephone> telephones = null;
-						List<Email> emails = null;
-						List<Webpage> webpages = null;
-						if(repository.getServices().getTechservices().getRestorationlab()!=null){
-							if(repository.getServices().getTechservices().getRestorationlab().getContact()!=null){
-								telephones = repository.getServices().getTechservices().getRestorationlab().getContact().getTelephone();
-								for (int i = 0; i < telephones.size(); i++) {
-									this.setTechnicalServicesTelephone(telephones.get(i).getContent());
-								}
-								emails = repository.getServices().getTechservices().getRestorationlab().getContact().getEmail();
-								for (int i = 0; i < emails.size(); i++) {
-									this.setTechnicalServicesEmail(emails.get(i).getHref());
-									this.setTechnicalServicesEmailLink(emails.get(i).getContent());
-									this.setTechnicalServicesEmailLang(emails.get(i).getLang());
-								}
-							}
-							if(repository.getServices().getTechservices().getRestorationlab().getWebpage()!=null){
-								webpages = repository.getServices().getTechservices().getRestorationlab().getWebpage();
-								for (int i = 0; i < webpages.size(); i++) {
-									this.setTechnicalServicesWebpageLink(webpages.get(i).getContent());
-									this.setTechnicalServicesWebpage(webpages.get(i).getHref());
-									this.setTechnicalServicesWebpageLang(webpages.get(i).getLang());
-								}
-							}
+
+						// Number of working places.
+						if (searchRoom.getWorkPlaces() !=null
+								&& searchRoom.getWorkPlaces().getNum() !=null 
+								&& searchRoom.getWorkPlaces().getNum().getContent() != null
+								&& !searchRoom.getWorkPlaces().getNum().getContent().isEmpty()) {
+							srWorkingPlaces.add(searchRoom.getWorkPlaces().getNum().getContent());
+						} else {
+							srWorkingPlaces.add("");
 						}
-						if(repository.getServices().getTechservices().getReproductionser()!=null){
-							if(repository.getServices().getTechservices().getReproductionser().getQuestion()!=null && !repository.getServices().getTechservices().getReproductionser().getQuestion().equalsIgnoreCase(Eag2012.OPTION_NONE)){
-								this.setReproductionserQuestion(repository.getServices().getTechservices().getReproductionser().getQuestion());
+
+						// Number of computer places.
+						if (searchRoom.getComputerPlaces() != null
+								&& searchRoom.getComputerPlaces().getNum() != null
+								&& searchRoom.getComputerPlaces().getNum().getContent() != null
+								&& !searchRoom.getComputerPlaces().getNum().getContent().isEmpty()) {
+							srComputerPlacesNum.add(searchRoom.getComputerPlaces().getNum().getContent());
+
+							// Description of computer places.
+							if (searchRoom.getComputerPlaces().getDescriptiveNote() != null
+									&& !searchRoom.getComputerPlaces().getDescriptiveNote().getP().isEmpty()) {
+								for (int j = 0; j < searchRoom.getComputerPlaces().getDescriptiveNote().getP().size(); j++) {
+									if (searchRoom.getComputerPlaces().getDescriptiveNote().getP().get(j) != null
+											&& searchRoom.getComputerPlaces().getDescriptiveNote().getP().get(j).getContent() != null
+											&& !searchRoom.getComputerPlaces().getDescriptiveNote().getP().get(j).getContent().isEmpty()) {
+										srComputerPlacesValue.add(searchRoom.getComputerPlaces().getDescriptiveNote().getP().get(j).getContent());
+
+										if (searchRoom.getComputerPlaces().getDescriptiveNote().getP().get(j).getLang() != null
+												&& !searchRoom.getComputerPlaces().getDescriptiveNote().getP().get(j).getLang().isEmpty()) {
+											srComputerPlacesLang.add(searchRoom.getComputerPlaces().getDescriptiveNote().getP().get(j).getLang());
+										} else {
+											srComputerPlacesLang.add(Eag2012.OPTION_NONE);
+										}
+									} else {
+										srComputerPlacesValue.add("");
+										srComputerPlacesLang.add(Eag2012.OPTION_NONE);
+									}
+								}
+							} else {
+								srComputerPlacesValue.add("");
+								srComputerPlacesLang.add(Eag2012.OPTION_NONE);
 							}
-							if(repository.getServices().getTechservices().getReproductionser().getDescriptiveNote()!=null){
-								ps = repository.getServices().getTechservices().getReproductionser().getDescriptiveNote().getP();
-								for (int i = 0; i < ps.size(); i++) {
-									this.setReproductionserDescription(ps.get(i).getContent());
-									this.setReproductionserDescriptionLang(ps.get(i).getLang());
+						} else {
+							srComputerPlacesNum.add("");
+							srComputerPlacesValue.add("");
+							srComputerPlacesLang.add(Eag2012.OPTION_NONE);
+						}
+
+						// Number of microfilm/fiche readers.
+						if (searchRoom.getMicrofilmPlaces() != null
+								&& searchRoom.getMicrofilmPlaces().getNum() != null
+								&& searchRoom.getMicrofilmPlaces().getNum().getContent() != null
+								&& !searchRoom.getMicrofilmPlaces().getNum().getContent().isEmpty()) {
+							srMicrofilmReadersNum.add(searchRoom.getMicrofilmPlaces().getNum().getContent());
+						} else {
+							srMicrofilmReadersNum.add("");
+						}
+
+						// Photograph allowance.
+						if (searchRoom.getPhotographAllowance() != null
+								&& searchRoom.getPhotographAllowance().getValue() != null
+								&& !searchRoom.getPhotographAllowance().getValue().isEmpty()) {
+							String photographAllowanceValue = searchRoom.getPhotographAllowance().getValue();
+							if (Eag2012.OPTION_DEPENDING_TEXT.equalsIgnoreCase(photographAllowanceValue)) {
+								photographAllowanceValue = Eag2012.OPTION_DEPENDING;
+							} else if (Eag2012.OPTION_WITHOUT_TEXT.equalsIgnoreCase(photographAllowanceValue)) {
+								photographAllowanceValue = Eag2012.OPTION_WITHOUT;
+							}
+	
+							srPhotographAllowance.add(photographAllowanceValue);
+						} else {
+							srPhotographAllowance.add(Eag2012.OPTION_NONE);
+						}
+
+						// Readerʼs ticket.
+						if (!searchRoom.getReadersTicket().isEmpty()) {
+							for (int j = 0; j < searchRoom.getReadersTicket().size(); j++) {
+								srNumberOfReadersTicket.add("");
+								if (searchRoom.getReadersTicket().get(j) != null
+										&& searchRoom.getReadersTicket().get(j).getContent() != null
+										&& !searchRoom.getReadersTicket().get(j).getContent().isEmpty()) {
+									srReadersTicket.add(searchRoom.getReadersTicket().get(j).getContent());
+								} else {
+									srReadersTicket.add("");
+								}
+
+								if (searchRoom.getReadersTicket().get(j) != null
+										&& searchRoom.getReadersTicket().get(j).getHref() != null
+										&& !searchRoom.getReadersTicket().get(j).getHref().isEmpty()) {
+									srReadersTicketHref.add(searchRoom.getReadersTicket().get(j).getHref());
+								} else {
+									srReadersTicketHref.add("");
+								}
+
+								if (searchRoom.getReadersTicket().get(j) != null
+										&& searchRoom.getReadersTicket().get(j).getLang() != null
+										&& !searchRoom.getReadersTicket().get(j).getLang().isEmpty()) {
+									srReadersTicketLang.add(searchRoom.getReadersTicket().get(j).getLang());
+								} else {
+									srReadersTicketLang.add("");
 								}
 							}
-							if(repository.getServices().getTechservices().getReproductionser().getContact()!=null){
-								telephones = repository.getServices().getTechservices().getReproductionser().getContact().getTelephone();
-								for (int i = 0; i < telephones.size(); i++) {
-									this.setReproductionserTelephone(telephones.get(i).getContent());
+						} else {
+							srNumberOfReadersTicket.add("");
+							srReadersTicket.add("");
+							srReadersTicketHref.add("");
+							srReadersTicketLang.add(Eag2012.OPTION_NONE);
+						}
+
+						// Advanced orders.
+						if (!searchRoom.getAdvancedOrders().isEmpty()) {
+							for (int j = 0; j < searchRoom.getAdvancedOrders().size(); j++) {
+								srNumberOfAdvancedOrders.add("");
+								if (searchRoom.getAdvancedOrders().get(j) != null
+										&& searchRoom.getAdvancedOrders().get(j).getContent() != null
+										&& !searchRoom.getAdvancedOrders().get(j).getContent().isEmpty()) {
+									srAdvancedOrders.add(searchRoom.getAdvancedOrders().get(j).getContent());
+								} else {
+									srAdvancedOrders.add("");
 								}
-								emails = repository.getServices().getTechservices().getReproductionser().getContact().getEmail();
-								for (int i = 0; i < emails.size(); i++) {
-									this.setReproductionserEmail(emails.get(i).getHref());
-									this.setReproductionserEmailLink(emails.get(i).getContent());
-									this.setReproductionserEmailLang(emails.get(i).getLang());
+
+								if (searchRoom.getAdvancedOrders().get(j) != null
+										&& searchRoom.getAdvancedOrders().get(j).getHref() != null
+										&& !searchRoom.getAdvancedOrders().get(j).getHref().isEmpty()) {
+									srAdvancedOrdersHref.add(searchRoom.getAdvancedOrders().get(j).getHref());
+								} else {
+									srAdvancedOrdersHref.add("");
+								}
+
+								if (searchRoom.getAdvancedOrders().get(j) != null
+										&& searchRoom.getAdvancedOrders().get(j).getLang() != null
+										&& !searchRoom.getAdvancedOrders().get(j).getLang().isEmpty()) {
+									srAdvancedOrdersLang.add(searchRoom.getAdvancedOrders().get(j).getLang());
+								} else {
+									srAdvancedOrdersLang.add("");
 								}
 							}
-							if(repository.getServices().getTechservices().getReproductionser().getWebpage()!=null){
-								webpages = repository.getServices().getTechservices().getReproductionser().getWebpage();
-								for (int i = 0; i < webpages.size(); i++) {
-									this.setReproductionserWebpageLink(webpages.get(i).getContent());
-									this.setReproductionserWebpage(webpages.get(i).getHref());
-									this.setReproductionserWebpageLang(webpages.get(i).getLang());
+						} else {
+							srNumberOfAdvancedOrders.add("");
+							srAdvancedOrders.add("");
+							srAdvancedOrdersHref.add("");
+							srAdvancedOrdersLang.add(Eag2012.OPTION_NONE);
+						}
+
+						// Research services.
+						if (!searchRoom.getResearchServices().isEmpty()) {
+							for (int j = 0; j < searchRoom.getResearchServices().size(); j++) {
+								if (searchRoom.getResearchServices().get(j) != null
+										&& searchRoom.getResearchServices().get(j).getDescriptiveNote() != null
+										&& !searchRoom.getResearchServices().get(j).getDescriptiveNote().getP().isEmpty()) {
+									for(int k = 0; k < searchRoom.getResearchServices().get(j).getDescriptiveNote().getP().size(); k++) {
+										if (searchRoom.getResearchServices().get(j).getDescriptiveNote().getP().get(k) != null
+												&& searchRoom.getResearchServices().get(j).getDescriptiveNote().getP().get(k).getContent() != null
+												&& !searchRoom.getResearchServices().get(j).getDescriptiveNote().getP().get(k).getContent().isEmpty()) {
+											srResearchServices.add(searchRoom.getResearchServices().get(j).getDescriptiveNote().getP().get(k).getContent());
+										} else {
+											srResearchServices.add("");
+										}
+
+										if (searchRoom.getResearchServices().get(j).getDescriptiveNote().getP().get(k) != null
+												&& searchRoom.getResearchServices().get(j).getDescriptiveNote().getP().get(k).getLang() != null
+												&& !searchRoom.getResearchServices().get(j).getDescriptiveNote().getP().get(k).getLang().isEmpty()) {
+											srResearchServicesLang.add(searchRoom.getResearchServices().get(j).getDescriptiveNote().getP().get(k).getLang());
+										} else {
+											srResearchServicesLang.add("");
+										}
+									}
+								} else {
+									srResearchServices.add("");
+									srResearchServicesLang.add(Eag2012.OPTION_NONE);
 								}
 							}
-							if(repository.getServices().getTechservices().getReproductionser()!=null){
-								if(repository.getServices().getTechservices().getReproductionser().getMicroformser()!=null && repository.getServices().getTechservices().getReproductionser().getMicroformser().getQuestion()!=null && !repository.getServices().getTechservices().getReproductionser().getMicroformser().getQuestion().equalsIgnoreCase(Eag2012.OPTION_NONE)){
-									this.setMicrofilmServices(repository.getServices().getTechservices().getReproductionser().getMicroformser().getQuestion());
-								}
-								if(repository.getServices().getTechservices().getReproductionser().getPhotographser()!=null && repository.getServices().getTechservices().getReproductionser().getPhotographser().getQuestion()!=null && !repository.getServices().getTechservices().getReproductionser().getPhotographser().getQuestion().equalsIgnoreCase(Eag2012.OPTION_NONE)){
-									this.setPhotographicServices(repository.getServices().getTechservices().getReproductionser().getPhotographser().getQuestion());
-								}
-								if(repository.getServices().getTechservices().getReproductionser().getDigitalser()!=null && repository.getServices().getTechservices().getReproductionser().getDigitalser().getQuestion()!=null && !repository.getServices().getTechservices().getReproductionser().getDigitalser().getQuestion().equalsIgnoreCase(Eag2012.OPTION_NONE)){
-									this.setDigitisationServices(repository.getServices().getTechservices().getReproductionser().getDigitalser().getQuestion());
-								}
-								if(repository.getServices().getTechservices().getReproductionser().getPhotocopyser()!=null && repository.getServices().getTechservices().getReproductionser().getPhotocopyser().getQuestion()!=null && !repository.getServices().getTechservices().getReproductionser().getPhotocopyser().getQuestion().equalsIgnoreCase(Eag2012.OPTION_NONE)){
-									this.setPhotocopyingServices(repository.getServices().getTechservices().getReproductionser().getPhotocopyser().getQuestion());
-								}
-							}
+						} else {
+							srResearchServices.add("");
+							srResearchServicesLang.add(Eag2012.OPTION_NONE);
 						}
 					}
+					this.addAsSearchRoomTelephone(srTelephone);
+					this.addAsSearchRoomNumberOfEmail(srNumberOfEmail);
+					this.addAsSearchRoomEmailHref(srEmailHref);
+					this.addAsSearchRoomEmailTitle(srEmailTitle);
+					this.addAsSearchRoomNumberOfWebpage(srNumberOfWebpage);
+					this.addAsSearchRoomWebpageHref(srWebpageHref);
+					this.addAsSearchRoomWebpageTitle(srWebpageTitle);
+					this.addAsSearchRoomWorkPlaces(srWorkingPlaces);
+					this.addAsSearchRoomComputerPlaces(srComputerPlacesNum);
+					this.addAsSearchRoomComputerPlacesDescription(srComputerPlacesValue);
+					this.addAsSearchRoomComputerPlacesDescriptionLang(srComputerPlacesLang);
+					this.addAsSearchRoomMicrofilmReaders(srMicrofilmReadersNum);
+					this.addAsSearchRoomPhotographAllowance(srPhotographAllowance);
+					this.addAsSearchRoomNumberOfReadersTicket(srNumberOfReadersTicket);
+					this.addAsSearchRoomReadersTicketContent(srReadersTicket);
+					this.addAsSearchRoomReadersTicketHref(srReadersTicketHref);
+					this.addAsSearchRoomReadersTicketLang(srReadersTicketLang);
+					this.addAsSearchRoomNumberOfAdvancedOrders(srNumberOfAdvancedOrders);
+					this.addAsSearchRoomAdvancedOrdersContent(srAdvancedOrders);
+					this.addAsSearchRoomAdvancedOrdersHref(srAdvancedOrdersHref);
+					this.addAsSearchRoomAdvancedOrdersLang(srAdvancedOrdersLang);
+					this.addAsSearchRoomResearchServicesContent(srResearchServices);
+					this.addAsSearchRoomResearchServicesLang(srResearchServicesLang);
+					
+					// Library
+					List<String> libQuestion = new ArrayList<String>();
+					List<String> libTelephone = new ArrayList<String>();
+					List<String> libNumberOfEmail = new ArrayList<String>();
+					List<String> libEmailHref = new ArrayList<String>();
+					List<String> libEmailTitle = new ArrayList<String>();
+					List<String> libNumberOfWebpage = new ArrayList<String>();
+					List<String> libWebpageHref = new ArrayList<String>();
+					List<String> libWebpageTitle = new ArrayList<String>();
+					List<String> libMonographicPubNum = new ArrayList<String>();
+					List<String> libSerialPubNum = new ArrayList<String>();
+					if (repository.getServices() != null
+							&& repository.getServices().getLibrary() != null) {
+						Library library = repository.getServices().getLibrary();
+
+						// Question.
+						if (library.getQuestion() != null
+								&& !library.getQuestion().isEmpty()) {
+							libQuestion.add(library.getQuestion());
+						} else {
+							libQuestion.add(Eag2012.OPTION_NONE);
+						}
+
+						// Contact.
+						if (library.getContact() != null) {
+							if (!library.getContact().getTelephone().isEmpty()) {
+								for (int j = 0; j < library.getContact().getTelephone().size(); j++) {
+									if (library.getContact().getTelephone().get(j) != null
+											&& library.getContact().getTelephone().get(j).getContent() != null
+											&& !library.getContact().getTelephone().get(j).getContent().isEmpty()) {
+										libTelephone.add(library.getContact().getTelephone().get(j).getContent());
+									} else {
+										libTelephone.add("");
+									}
+								}
+							} else {
+								libTelephone.add("");
+							}
+
+							if (!library.getContact().getEmail().isEmpty()) {
+								for (int j = 0; j < library.getContact().getEmail().size(); j++) {
+									libNumberOfEmail.add("");
+									if (library.getContact().getEmail().get(j) != null
+											&& library.getContact().getEmail().get(j).getContent() != null
+											&& !library.getContact().getEmail().get(j).getContent().isEmpty()) {
+										libEmailTitle.add(library.getContact().getEmail().get(j).getContent());
+									} else {
+										libEmailTitle.add("");
+									}
+
+									if (library.getContact().getEmail().get(j) != null
+											&& library.getContact().getEmail().get(j).getHref() != null
+											&& !library.getContact().getEmail().get(j).getHref().isEmpty()) {
+										libEmailHref.add(library.getContact().getEmail().get(j).getHref());
+									} else {
+										libEmailHref.add("");
+									}
+								}
+							} else {
+								libNumberOfEmail.add("");
+								libEmailHref.add("");
+								libEmailTitle.add("");
+							}
+						} else {
+							libTelephone.add("");
+							libNumberOfEmail.add("");
+							libEmailHref.add("");
+							libEmailTitle.add("");
+						}
+
+						// Webpage.
+						if (!library.getWebpage().isEmpty()){
+							for (int j = 0; j < library.getWebpage().size(); j++) {
+								libNumberOfWebpage.add("");
+								if (library.getWebpage().get(j) != null
+										&& library.getWebpage().get(j).getContent() != null
+										&& !library.getWebpage().get(j).getContent().isEmpty()) {
+									libWebpageTitle.add(library.getWebpage().get(j).getContent());
+								} else {
+									libWebpageTitle.add("");
+								}
+
+								if (library.getWebpage().get(j) != null
+										&& library.getWebpage().get(j).getHref() != null
+										&& !library.getWebpage().get(j).getHref().isEmpty()) {
+									libWebpageHref.add(library.getWebpage().get(j).getHref());
+								} else {
+									libWebpageHref.add("");
+								}
+							}
+						} else {
+							libNumberOfWebpage.add("");
+							libWebpageHref.add("");
+							libWebpageTitle.add("");
+						}
+
+						// Monographic publications.
+						if (library.getMonographicpub() != null
+								&& library.getMonographicpub().getNum() != null
+								&& library.getMonographicpub().getNum().getContent() != null
+								&& !library.getMonographicpub().getNum().getContent().isEmpty()) {
+							libMonographicPubNum.add(library.getMonographicpub().getNum().getContent());
+						} else {
+							libMonographicPubNum.add("");
+						}
+
+						// Serial publications.
+						if (library.getSerialpub() != null
+								&& library.getSerialpub().getNum() != null
+								&& library.getSerialpub().getNum().getContent() != null
+								&& !library.getSerialpub().getNum().getContent().isEmpty()) {
+							libSerialPubNum.add(library.getSerialpub().getNum().getContent());
+						} else {
+							libSerialPubNum.add("");
+						}
+					}
+					this.addAsLibraryQuestion(libQuestion);
+					this.addAsLibraryTelephone(libTelephone);
+					this.addAsLibraryNumberOfEmailNumberOfEmail(libNumberOfEmail);
+					this.addAsLibraryEmailHref(libEmailHref);
+					this.addAsLibraryEmailTitle(libEmailTitle);
+					this.addAsLibraryNumberOfWebpage(libNumberOfWebpage);
+					this.addAsLibraryWebpageHref(libWebpageHref);
+					this.addAsLibraryWebpageTitle(libWebpageTitle);
+					this.addAsLibraryMonographPublication(libMonographicPubNum);
+					this.addAsLibrarySerialPublication(libSerialPubNum);
+
+					// Internet access.
+					List<String> iaQuestion = new ArrayList<String>();
+					List<String> iaValue = new ArrayList<String>();
+					List<String> iaLang = new ArrayList<String>();
+					if(repository.getServices() != null
+							&& repository.getServices().getInternetAccess() != null) {
+						if (repository.getServices().getInternetAccess().getQuestion() != null
+								&& !repository.getServices().getInternetAccess().getQuestion().isEmpty()) {
+							iaQuestion.add(repository.getServices().getInternetAccess().getQuestion());
+						} else {
+							iaQuestion.add(Eag2012.OPTION_NONE);
+						}
+
+						if (repository.getServices().getInternetAccess().getDescriptiveNote() != null
+								&& !repository.getServices().getInternetAccess().getDescriptiveNote().getP().isEmpty()) {
+							for (int j = 0; j < repository.getServices().getInternetAccess().getDescriptiveNote().getP().size(); j++) {
+								if (repository.getServices().getInternetAccess().getDescriptiveNote().getP().get(j) != null
+										&& repository.getServices().getInternetAccess().getDescriptiveNote().getP().get(j).getContent() != null
+										&& !repository.getServices().getInternetAccess().getDescriptiveNote().getP().get(j).getContent().isEmpty()) {
+									iaValue.add(repository.getServices().getInternetAccess().getDescriptiveNote().getP().get(j).getContent());
+								} else {
+									iaValue.add("");
+								}
+
+								if (repository.getServices().getInternetAccess().getDescriptiveNote().getP().get(j) != null
+										&& repository.getServices().getInternetAccess().getDescriptiveNote().getP().get(j).getLang() != null
+										&& !repository.getServices().getInternetAccess().getDescriptiveNote().getP().get(j).getLang().isEmpty()) {
+									iaLang.add(repository.getServices().getInternetAccess().getDescriptiveNote().getP().get(j).getLang());
+								} else {
+									iaLang.add("");
+								}
+							}
+						} else {
+							iaValue.add("");
+							iaLang.add("");
+						}
+					}
+					this.addAsInternetAccessQuestion(iaQuestion);
+					this.addAsInternetAccessDescription(iaValue);
+					this.addAsInternetAccessDescriptionLang(iaLang);
+
+					// Technical services.
+					// Restoration laboratory.
+					List<String> tsRLQuestion = new ArrayList<String>();
+					List<String> tsRLValue = new ArrayList<String>();
+					List<String> tsRLValueLang = new ArrayList<String>();
+					List<String> tsRLTelephone = new ArrayList<String>();
+					List<String> tsRLNumberOfEmail = new ArrayList<String>();
+					List<String> tsRLEmailHref = new ArrayList<String>();
+					List<String> tsRLEmailTitle = new ArrayList<String>();
+					List<String> tsRLNumberOfWebpage = new ArrayList<String>();
+					List<String> tsRLWebpageHref = new ArrayList<String>();
+					List<String> tsRLWebpageTitle = new ArrayList<String>();
+					if (repository.getServices() != null
+							&& repository.getServices().getTechservices() != null
+							&& repository.getServices().getTechservices().getRestorationlab() != null) {
+						// Question.
+						if (repository.getServices().getTechservices().getRestorationlab().getQuestion() != null
+								&& !repository.getServices().getTechservices().getRestorationlab().getQuestion().isEmpty()) {
+							tsRLQuestion.add(repository.getServices().getTechservices().getRestorationlab().getQuestion());
+						} else {
+							tsRLQuestion.add(Eag2012.OPTION_NONE);
+						}
+
+						// Description.
+						if (repository.getServices().getTechservices().getRestorationlab().getDescriptiveNote() != null
+								&& !repository.getServices().getTechservices().getRestorationlab().getDescriptiveNote().getP().isEmpty()) {
+							for (int j = 0; j < repository.getServices().getTechservices().getRestorationlab().getDescriptiveNote().getP().size(); j++) {
+								if (repository.getServices().getTechservices().getRestorationlab().getDescriptiveNote().getP().get(j) != null
+										&& repository.getServices().getTechservices().getRestorationlab().getDescriptiveNote().getP().get(j).getContent() != null
+										&& !repository.getServices().getTechservices().getRestorationlab().getDescriptiveNote().getP().get(j).getContent().isEmpty()) {
+									tsRLValue.add(repository.getServices().getTechservices().getRestorationlab().getDescriptiveNote().getP().get(j).getContent());
+
+									if (repository.getServices().getTechservices().getRestorationlab().getDescriptiveNote().getP().get(j).getLang() != null
+											&& !repository.getServices().getTechservices().getRestorationlab().getDescriptiveNote().getP().get(j).getLang().isEmpty()) {
+										tsRLValueLang.add(repository.getServices().getTechservices().getRestorationlab().getDescriptiveNote().getP().get(j).getLang());
+									} else {
+										tsRLValueLang.add(Eag2012.OPTION_NONE);
+									}
+								} else {
+									tsRLValue.add("");
+									tsRLValueLang.add(Eag2012.OPTION_NONE);
+								}
+							}
+						} else {
+							tsRLValue.add("");
+							tsRLValueLang.add(Eag2012.OPTION_NONE);
+						}
+						
+
+						// Contact.
+						if (repository.getServices().getTechservices().getRestorationlab().getContact() != null) {
+							if (!repository.getServices().getTechservices().getRestorationlab().getContact().getTelephone().isEmpty()) {
+								for (int j = 0; j < repository.getServices().getTechservices().getRestorationlab().getContact().getTelephone().size(); j++) {
+									if (repository.getServices().getTechservices().getRestorationlab().getContact().getTelephone().get(j) != null
+											&& repository.getServices().getTechservices().getRestorationlab().getContact().getTelephone().get(j).getContent() != null
+											&& !repository.getServices().getTechservices().getRestorationlab().getContact().getTelephone().get(j).getContent().isEmpty()) {
+										tsRLTelephone.add(repository.getServices().getTechservices().getRestorationlab().getContact().getTelephone().get(j).getContent());
+									} else {
+										tsRLTelephone.add("");
+									}
+								}
+							} else {
+								tsRLTelephone.add("");
+							}
+
+							if (!repository.getServices().getTechservices().getRestorationlab().getContact().getEmail().isEmpty()) {
+								for (int j = 0; j < repository.getServices().getTechservices().getRestorationlab().getContact().getEmail().size(); j++) {
+									tsRLNumberOfEmail.add("");
+									if (repository.getServices().getTechservices().getRestorationlab().getContact().getEmail().get(j) != null
+											&& repository.getServices().getTechservices().getRestorationlab().getContact().getEmail().get(j).getContent() != null
+											&& !repository.getServices().getTechservices().getRestorationlab().getContact().getEmail().get(j).getContent().isEmpty()) {
+										tsRLEmailTitle.add(repository.getServices().getTechservices().getRestorationlab().getContact().getEmail().get(j).getContent());
+									} else {
+										tsRLEmailTitle.add("");
+									}
+
+									if (repository.getServices().getTechservices().getRestorationlab().getContact().getEmail().get(j) != null
+											&& repository.getServices().getTechservices().getRestorationlab().getContact().getEmail().get(j).getHref() != null
+											&& !repository.getServices().getTechservices().getRestorationlab().getContact().getEmail().get(j).getHref().isEmpty()) {
+										tsRLEmailHref.add(repository.getServices().getTechservices().getRestorationlab().getContact().getEmail().get(j).getHref());
+									} else {
+										tsRLEmailHref.add("");
+									}
+								}
+							} else {
+								tsRLNumberOfEmail.add("");
+								tsRLEmailHref.add("");
+								tsRLEmailTitle.add("");
+							}
+						} else {
+							tsRLNumberOfEmail.add("");
+							tsRLEmailHref.add("");
+							tsRLEmailTitle.add("");
+							tsRLTelephone.add("");
+						}
+
+						// Webpage
+						if (!repository.getServices().getTechservices().getRestorationlab().getWebpage().isEmpty()) {
+							for (int j = 0; j < repository.getServices().getTechservices().getRestorationlab().getWebpage().size(); j++) {
+								tsRLNumberOfWebpage.add("");
+								if (repository.getServices().getTechservices().getRestorationlab().getWebpage().get(j) != null
+										&& repository.getServices().getTechservices().getRestorationlab().getWebpage().get(j).getContent() != null
+										&& !repository.getServices().getTechservices().getRestorationlab().getWebpage().get(j).getContent().isEmpty()) {
+									tsRLWebpageTitle.add(repository.getServices().getTechservices().getRestorationlab().getWebpage().get(j).getContent());
+								} else {
+									tsRLWebpageTitle.add("");
+								}
+
+								if (repository.getServices().getTechservices().getRestorationlab().getWebpage().get(j) != null
+										&& repository.getServices().getTechservices().getRestorationlab().getWebpage().get(j).getHref() != null
+										&& !repository.getServices().getTechservices().getRestorationlab().getWebpage().get(j).getHref().isEmpty()) {
+									tsRLWebpageHref.add(repository.getServices().getTechservices().getRestorationlab().getWebpage().get(j).getHref());
+								} else {
+									tsRLWebpageHref.add("");
+								}
+							}
+						} else {
+							tsRLNumberOfWebpage.add("");
+							tsRLWebpageHref.add("");
+							tsRLWebpageTitle.add("");
+						}
+					}
+					this.addAsRestorationlabQuestion(tsRLQuestion);
+					this.addAsRestorationlabDescription(tsRLValue);
+					this.addAsRestorationlabDescriptionLang(tsRLValueLang);
+					this.addAsRestorationlabTelephone(tsRLTelephone);
+					this.addAsRestorationlabNumberOfEmailNumberOfEmail(tsRLNumberOfEmail);
+					this.addAsRestorationlabEmailHref(tsRLEmailHref);
+					this.addAsRestorationlabEmailTitle(tsRLEmailTitle);
+					this.addAsRestorationlabNumberOfEmailNumberOfWebpage(tsRLNumberOfWebpage);
+					this.addAsRestorationlabWebpageHref(tsRLWebpageHref);
+					this.addAsRestorationlabWebpageTitle(tsRLWebpageTitle);
+
+					// Reproduction services.
+					List<String> tsRSQuestion = new ArrayList<String>();
+					List<String> tsRSValue = new ArrayList<String>();
+					List<String> tsRSValueLang = new ArrayList<String>();
+					List<String> tsRSTelephone = new ArrayList<String>();
+					List<String> tsRSNumberOfEmail = new ArrayList<String>();
+					List<String> tsRSEmailHref = new ArrayList<String>();
+					List<String> tsRSEmailTitle = new ArrayList<String>();
+					List<String> tsRSNumberOfWebpage = new ArrayList<String>();
+					List<String> tsRSWebpageHref = new ArrayList<String>();
+					List<String> tsRSWebpageTitle = new ArrayList<String>();
+					List<String> tsRSMicroformser = new ArrayList<String>();
+					List<String> tsRSPhotographser = new ArrayList<String>();
+					List<String> tsRSDigitalser = new ArrayList<String>();
+					List<String> tsRSPhotocopyser = new ArrayList<String>();
+					if (repository.getServices() != null
+							&& repository.getServices().getTechservices() != null
+							&& repository.getServices().getTechservices().getReproductionser() != null) {
+						// Question.
+						if (repository.getServices().getTechservices().getReproductionser().getQuestion() != null
+								&& !repository.getServices().getTechservices().getReproductionser().getQuestion().isEmpty()) {
+							tsRSQuestion.add(repository.getServices().getTechservices().getReproductionser().getQuestion());
+						} else {
+							tsRSQuestion.add(Eag2012.OPTION_NONE);
+						}
+
+						// Description.
+						if (repository.getServices().getTechservices().getReproductionser().getDescriptiveNote() != null
+								&& !repository.getServices().getTechservices().getReproductionser().getDescriptiveNote().getP().isEmpty()) {
+							for (int j = 0; j < repository.getServices().getTechservices().getReproductionser().getDescriptiveNote().getP().size(); j++) {
+								if (repository.getServices().getTechservices().getReproductionser().getDescriptiveNote().getP().get(j) != null
+										&& repository.getServices().getTechservices().getReproductionser().getDescriptiveNote().getP().get(j).getContent() != null
+										&& !repository.getServices().getTechservices().getReproductionser().getDescriptiveNote().getP().get(j).getContent().isEmpty()) {
+									tsRSValue.add(repository.getServices().getTechservices().getReproductionser().getDescriptiveNote().getP().get(j).getContent());
+
+									if (repository.getServices().getTechservices().getReproductionser().getDescriptiveNote().getP().get(j).getLang() != null
+											&& !repository.getServices().getTechservices().getReproductionser().getDescriptiveNote().getP().get(j).getLang().isEmpty()) {
+										tsRSValueLang.add(repository.getServices().getTechservices().getReproductionser().getDescriptiveNote().getP().get(j).getLang());
+									} else {
+										tsRSValueLang.add(Eag2012.OPTION_NONE);
+									}
+								} else {
+									tsRSValue.add("");
+									tsRSValueLang.add(Eag2012.OPTION_NONE);
+								}
+							}
+						} else {
+							tsRSValue.add("");
+							tsRSValueLang.add(Eag2012.OPTION_NONE);
+						}
+
+						// Contact.
+						if (repository.getServices().getTechservices().getReproductionser().getContact() != null) {
+							if (!repository.getServices().getTechservices().getReproductionser().getContact().getTelephone().isEmpty()) {
+								for (int j = 0; j < repository.getServices().getTechservices().getReproductionser().getContact().getTelephone().size(); j++) {
+									if (repository.getServices().getTechservices().getReproductionser().getContact().getTelephone().get(j) != null
+											&& repository.getServices().getTechservices().getReproductionser().getContact().getTelephone().get(j).getContent() != null
+											&& !repository.getServices().getTechservices().getReproductionser().getContact().getTelephone().get(j).getContent().isEmpty()) {
+										tsRSTelephone.add(repository.getServices().getTechservices().getReproductionser().getContact().getTelephone().get(j).getContent());
+									} else {
+										tsRSTelephone.add("");
+									}
+								}
+							} else {
+								tsRSTelephone.add("");
+							}
+
+							if (!repository.getServices().getTechservices().getReproductionser().getContact().getEmail().isEmpty()) {
+								for (int j = 0; j < repository.getServices().getTechservices().getReproductionser().getContact().getEmail().size(); j++) {
+									tsRSNumberOfEmail.add("");
+									if (repository.getServices().getTechservices().getReproductionser().getContact().getEmail().get(j) != null
+											&& repository.getServices().getTechservices().getReproductionser().getContact().getEmail().get(j).getContent() != null
+											&& !repository.getServices().getTechservices().getReproductionser().getContact().getEmail().get(j).getContent().isEmpty()) {
+										tsRSEmailTitle.add(repository.getServices().getTechservices().getReproductionser().getContact().getEmail().get(j).getContent());
+									} else {
+										tsRSEmailTitle.add("");
+									}
+
+									if (repository.getServices().getTechservices().getReproductionser().getContact().getEmail().get(j) != null
+											&& repository.getServices().getTechservices().getReproductionser().getContact().getEmail().get(j).getHref() != null
+											&& !repository.getServices().getTechservices().getReproductionser().getContact().getEmail().get(j).getHref().isEmpty()) {
+										tsRSEmailHref.add(repository.getServices().getTechservices().getReproductionser().getContact().getEmail().get(j).getHref());
+									} else {
+										tsRSEmailHref.add("");
+									}
+								}
+							} else {
+								tsRSNumberOfEmail.add("");
+								tsRSEmailHref.add("");
+								tsRSEmailTitle.add("");
+							}
+						} else {
+							tsRSNumberOfEmail.add("");
+							tsRSEmailHref.add("");
+							tsRSEmailTitle.add("");
+							tsRSTelephone.add("");
+						}
+
+						// Webpage
+						if (!repository.getServices().getTechservices().getReproductionser().getWebpage().isEmpty()) {
+							for (int j = 0; j < repository.getServices().getTechservices().getReproductionser().getWebpage().size(); j++) {
+								tsRSNumberOfWebpage.add("");
+								if (repository.getServices().getTechservices().getReproductionser().getWebpage().get(j) != null
+										&& repository.getServices().getTechservices().getReproductionser().getWebpage().get(j).getContent() != null
+										&& !repository.getServices().getTechservices().getReproductionser().getWebpage().get(j).getContent().isEmpty()) {
+									tsRSWebpageTitle.add(repository.getServices().getTechservices().getReproductionser().getWebpage().get(j).getContent());
+								} else {
+									tsRSWebpageTitle.add("");
+								}
+
+								if (repository.getServices().getTechservices().getReproductionser().getWebpage().get(j) != null
+										&& repository.getServices().getTechservices().getReproductionser().getWebpage().get(j).getHref() != null
+										&& !repository.getServices().getTechservices().getReproductionser().getWebpage().get(j).getHref().isEmpty()) {
+									tsRSWebpageHref.add(repository.getServices().getTechservices().getReproductionser().getWebpage().get(j).getHref());
+								} else {
+									tsRSWebpageHref.add("");
+								}
+							}
+						} else {
+							tsRSNumberOfWebpage.add("");
+							tsRSWebpageHref.add("");
+							tsRSWebpageTitle.add("");
+						}
+
+						// Microformser.
+						if (repository.getServices().getTechservices().getReproductionser().getMicroformser() != null
+								&& repository.getServices().getTechservices().getReproductionser().getMicroformser().getQuestion() != null
+								&& !repository.getServices().getTechservices().getReproductionser().getMicroformser().getQuestion().isEmpty()) {
+							tsRSMicroformser.add(repository.getServices().getTechservices().getReproductionser().getMicroformser().getQuestion());
+						} else {
+							tsRSMicroformser.add(Eag2012.OPTION_NONE);
+						}
+
+						// Photographser.
+						if (repository.getServices().getTechservices().getReproductionser().getPhotographser() != null
+								&& repository.getServices().getTechservices().getReproductionser().getPhotographser().getQuestion() != null
+								&& !repository.getServices().getTechservices().getReproductionser().getPhotographser().getQuestion().isEmpty()) {
+							tsRSPhotographser.add(repository.getServices().getTechservices().getReproductionser().getPhotographser().getQuestion());
+						} else {
+							tsRSPhotographser.add(Eag2012.OPTION_NONE);
+						}
+
+						// Digitalser.
+						if (repository.getServices().getTechservices().getReproductionser().getDigitalser() != null
+								&& repository.getServices().getTechservices().getReproductionser().getDigitalser().getQuestion() != null
+								&& !repository.getServices().getTechservices().getReproductionser().getDigitalser().getQuestion().isEmpty()) {
+							tsRSDigitalser.add(repository.getServices().getTechservices().getReproductionser().getDigitalser().getQuestion());
+						} else {
+							tsRSDigitalser.add(Eag2012.OPTION_NONE);
+						}
+
+						// Photocopyser.
+						if (repository.getServices().getTechservices().getReproductionser().getPhotocopyser() != null
+								&& repository.getServices().getTechservices().getReproductionser().getPhotocopyser().getQuestion() != null
+								&& !repository.getServices().getTechservices().getReproductionser().getPhotocopyser().getQuestion().isEmpty()) {
+							tsRSPhotocopyser.add(repository.getServices().getTechservices().getReproductionser().getPhotocopyser().getQuestion());
+						} else {
+							tsRSPhotocopyser.add(Eag2012.OPTION_NONE);
+						}
+					}
+					this.addAsReproductionserQuestion(tsRSQuestion);
+					this.addAsReproductionserDescription(tsRSValue);
+					this.addAsReproductionserDescriptionLang(tsRSValueLang);
+					this.addAsReproductionserTelephone(tsRSTelephone);
+					this.addAsReproductionserNumberOfEmailNumberOfEmail(tsRSNumberOfEmail);
+					this.addAsReproductionserEmailHref(tsRSEmailHref);
+					this.addAsReproductionserEmailTitle(tsRSEmailTitle);
+					this.addAsReproductionserNumberOfEmailNumberOfWebpage(tsRSNumberOfWebpage);
+					this.addAsReproductionserWebpageHref(tsRSWebpageHref);
+					this.addAsReproductionserWebpageTitle(tsRSWebpageTitle);
+					this.addAsReproductionserMicrofilmServices(tsRSMicroformser);
+					this.addAsReproductionserPhotographicServices(tsRSPhotographser);
+					this.addAsReproductionserDigitisationServices(tsRSDigitalser);
+					this.addAsReproductionserPhotocopyingServices(tsRSPhotocopyser);
+
 					// Recreational services
-					RecreationalServices recreationalServices = repository.getServices().getRecreationalServices();
-					if(recreationalServices!=null){
-						if(recreationalServices.getRefreshment()!=null && recreationalServices.getRefreshment().getDescriptiveNote()!=null && recreationalServices.getRefreshment().getDescriptiveNote().getP()!=null){
-							for (int i = 0; i < recreationalServices.getRefreshment().getDescriptiveNote().getP().size(); i++) {
-								this.setRecreationalServicesRefreshmentArea(recreationalServices.getRefreshment().getDescriptiveNote().getP().get(i).getContent());
-								this.setRecreationalServicesRefreshmentAreaLang(recreationalServices.getRefreshment().getDescriptiveNote().getP().get(i).getLang());
+					List<String> rsRefreshment = new ArrayList<String>();
+					List<String> rsRefreshmentLang = new ArrayList<String>();
+					List<String> rsNumberOfExhibitions = new ArrayList<String>();
+					List<String> rsExhibition = new ArrayList<String>();
+					List<String> rsExhibitionLang = new ArrayList<String>();
+					List<String> rsExhibitionWebpage = new ArrayList<String>();
+					List<String> rsExhibitionWebpageTitle = new ArrayList<String>();
+					List<String> rsNumberOfToursSessions = new ArrayList<String>();
+					List<String> rsToursSessions = new ArrayList<String>();
+					List<String> rsToursSessionsLang = new ArrayList<String>();
+					List<String> rsToursSessionsWebpage = new ArrayList<String>();
+					List<String> rsToursSessionsWebpageTitle = new ArrayList<String>();
+					List<String> rsNumberOfOtherServices = new ArrayList<String>();
+					List<String> rsOtherServices = new ArrayList<String>();
+					List<String> rsOtherServicesLang = new ArrayList<String>();
+					List<String> rsOtherServicesWebpage = new ArrayList<String>();
+					List<String> rsOtherServicesWebpageTitle = new ArrayList<String>();
+					if (repository.getServices() != null
+							&& repository.getServices().getRecreationalServices() != null) {
+						// Refresment area.
+						if (repository.getServices().getRecreationalServices().getRefreshment() != null
+								&& repository.getServices().getRecreationalServices().getRefreshment().getDescriptiveNote() != null
+								&& !repository.getServices().getRecreationalServices().getRefreshment().getDescriptiveNote().getP().isEmpty()) {
+							for (int j = 0; j < repository.getServices().getRecreationalServices().getRefreshment().getDescriptiveNote().getP().size(); j++) {
+								if (repository.getServices().getRecreationalServices().getRefreshment().getDescriptiveNote().getP().get(j) != null
+										&& repository.getServices().getRecreationalServices().getRefreshment().getDescriptiveNote().getP().get(j).getContent() != null
+										&& !repository.getServices().getRecreationalServices().getRefreshment().getDescriptiveNote().getP().get(j).getContent().isEmpty()) {
+									rsRefreshment.add(repository.getServices().getRecreationalServices().getRefreshment().getDescriptiveNote().getP().get(j).getContent());
+								} else {
+									rsRefreshment.add("");
+								}
+
+								if (repository.getServices().getRecreationalServices().getRefreshment().getDescriptiveNote().getP().get(j) != null
+										&& repository.getServices().getRecreationalServices().getRefreshment().getDescriptiveNote().getP().get(j).getLang() != null
+										&& !repository.getServices().getRecreationalServices().getRefreshment().getDescriptiveNote().getP().get(j).getLang().isEmpty()) {
+									rsRefreshmentLang.add(repository.getServices().getRecreationalServices().getRefreshment().getDescriptiveNote().getP().get(j).getLang());
+								} else {
+									rsRefreshmentLang.add(Eag2012.OPTION_NONE);
+								}
 							}
+						} else {
+							rsRefreshment.add("");
+							rsRefreshmentLang.add(Eag2012.OPTION_NONE);
 						}
-						if(recreationalServices.getExhibition()!=null){
-							for (int i = 0; i < recreationalServices.getExhibition().size(); i++) {
-								if(recreationalServices.getExhibition().get(i).getDescriptiveNote()!=null && recreationalServices.getExhibition().get(i).getDescriptiveNote().getP()!=null){
-									for (int j = 0; j < recreationalServices.getExhibition().get(i).getDescriptiveNote().getP().size(); j++) {
-										this.setRecreationalServicesExhibition(recreationalServices.getExhibition().get(i).getDescriptiveNote().getP().get(j).getContent());
-										this.setRecreationalServicesExhibitionLang(recreationalServices.getExhibition().get(i).getDescriptiveNote().getP().get(j).getLang());
+
+						// Exhibitions.
+						if (!repository.getServices().getRecreationalServices().getExhibition().isEmpty()) {
+							for (int j = 0; j < repository.getServices().getRecreationalServices().getExhibition().size(); j++) {
+								rsNumberOfExhibitions.add("");
+								if (repository.getServices().getRecreationalServices().getExhibition().get(j) != null) {
+									// Description.
+									if (repository.getServices().getRecreationalServices().getExhibition().get(j).getDescriptiveNote() != null
+											&& repository.getServices().getRecreationalServices().getExhibition().get(j).getDescriptiveNote().getP() != null
+											&& !repository.getServices().getRecreationalServices().getExhibition().get(j).getDescriptiveNote().getP().isEmpty()) {
+										for (int k = 0; k < repository.getServices().getRecreationalServices().getExhibition().get(j).getDescriptiveNote().getP().size(); k++) {
+											if (repository.getServices().getRecreationalServices().getExhibition().get(j).getDescriptiveNote().getP().get(k) != null
+													&& repository.getServices().getRecreationalServices().getExhibition().get(j).getDescriptiveNote().getP().get(k).getContent() != null
+													&& !repository.getServices().getRecreationalServices().getExhibition().get(j).getDescriptiveNote().getP().get(k).getContent().isEmpty()) {
+												rsExhibition.add(repository.getServices().getRecreationalServices().getExhibition().get(j).getDescriptiveNote().getP().get(k).getContent());
+											} else {
+												rsExhibition.add("");
+											}
+
+											if (repository.getServices().getRecreationalServices().getExhibition().get(j).getDescriptiveNote().getP().get(k) != null
+													&& repository.getServices().getRecreationalServices().getExhibition().get(j).getDescriptiveNote().getP().get(k).getLang() != null
+													&& !repository.getServices().getRecreationalServices().getExhibition().get(j).getDescriptiveNote().getP().get(k).getLang().isEmpty()) {
+												rsExhibitionLang.add(repository.getServices().getRecreationalServices().getExhibition().get(j).getDescriptiveNote().getP().get(k).getLang());
+											} else {
+												rsExhibitionLang.add(Eag2012.OPTION_NONE);
+											}
+										}
+									} else {
+										rsExhibition.add("");
+										rsExhibitionLang.add(Eag2012.OPTION_NONE);
 									}
-								}
-								if(recreationalServices.getExhibition().get(i).getWebpage()!=null){
-									this.setRecreationalServicesWeb(recreationalServices.getExhibition().get(i).getWebpage().getHref());
-									this.setRecreationalServicesWebLink(recreationalServices.getExhibition().get(i).getWebpage().getContent());
+
+									// Webpage.
+									if (repository.getServices().getRecreationalServices().getExhibition().get(j) != null
+											&& repository.getServices().getRecreationalServices().getExhibition().get(j).getWebpage() != null) {
+										if (repository.getServices().getRecreationalServices().getExhibition().get(j).getWebpage().getHref() != null
+												&& !repository.getServices().getRecreationalServices().getExhibition().get(j).getWebpage().getHref().isEmpty()) {
+											rsExhibitionWebpage.add(repository.getServices().getRecreationalServices().getExhibition().get(j).getWebpage().getHref());
+										} else {
+											rsExhibitionWebpage.add("");
+										}
+
+										if (repository.getServices().getRecreationalServices().getExhibition().get(j).getWebpage().getContent() != null
+												&& !repository.getServices().getRecreationalServices().getExhibition().get(j).getWebpage().getContent().isEmpty()) {
+											rsExhibitionWebpageTitle.add(repository.getServices().getRecreationalServices().getExhibition().get(j).getWebpage().getContent());
+										} else {
+											rsExhibitionWebpageTitle.add("");
+										}
+									} else {
+										rsExhibitionWebpage.add("");
+										rsExhibitionWebpageTitle.add("");
+									}
+								} else {
+									rsExhibition.add("");
+									rsExhibitionLang.add(Eag2012.OPTION_NONE);
+									rsExhibitionWebpage.add("");
+									rsExhibitionWebpageTitle.add("");
 								}
 							}
+						} else {
+							rsNumberOfExhibitions.add("");
+							rsExhibition.add("");
+							rsExhibitionLang.add(Eag2012.OPTION_NONE);
+							rsExhibitionWebpage.add("");
+							rsExhibitionWebpageTitle.add("");
 						}
-						if(recreationalServices.getToursSessions()!=null){
-							for (int i = 0; i < recreationalServices.getToursSessions().size(); i++) {
-								if(recreationalServices.getToursSessions().get(i).getDescriptiveNote()!=null && recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP()!=null){
-									for (int j = 0; j < recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().size(); j++) {
-										this.setToursSessionGuidesAndSessionsContent(recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().get(j).getContent());
-										this.setToursSessionGuidesAndSessionsLang(recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().get(j).getLang());
+
+						// Tours and Sessions.
+						if (!repository.getServices().getRecreationalServices().getToursSessions().isEmpty()) {
+							for (int j = 0; j < repository.getServices().getRecreationalServices().getToursSessions().size(); j++) {
+								rsNumberOfToursSessions.add("");
+								if (repository.getServices().getRecreationalServices().getToursSessions().get(j) != null) {
+									// Description.
+									if (repository.getServices().getRecreationalServices().getToursSessions().get(j).getDescriptiveNote() != null
+											&& repository.getServices().getRecreationalServices().getToursSessions().get(j).getDescriptiveNote().getP() != null
+											&& !repository.getServices().getRecreationalServices().getToursSessions().get(j).getDescriptiveNote().getP().isEmpty()) {
+										for (int k = 0; k < repository.getServices().getRecreationalServices().getToursSessions().get(j).getDescriptiveNote().getP().size(); k++) {
+											if (repository.getServices().getRecreationalServices().getToursSessions().get(j).getDescriptiveNote().getP().get(k) != null
+													&& repository.getServices().getRecreationalServices().getToursSessions().get(j).getDescriptiveNote().getP().get(k).getContent() != null
+													&& !repository.getServices().getRecreationalServices().getToursSessions().get(j).getDescriptiveNote().getP().get(k).getContent().isEmpty()) {
+												rsToursSessions.add(repository.getServices().getRecreationalServices().getToursSessions().get(j).getDescriptiveNote().getP().get(k).getContent());
+											} else {
+												rsToursSessions.add("");
+											}
+
+											if (repository.getServices().getRecreationalServices().getToursSessions().get(j).getDescriptiveNote().getP().get(k) != null
+													&& repository.getServices().getRecreationalServices().getToursSessions().get(j).getDescriptiveNote().getP().get(k).getLang() != null
+													&& !repository.getServices().getRecreationalServices().getToursSessions().get(j).getDescriptiveNote().getP().get(k).getLang().isEmpty()) {
+												rsToursSessionsLang.add(repository.getServices().getRecreationalServices().getToursSessions().get(j).getDescriptiveNote().getP().get(k).getLang());
+											} else {
+												rsToursSessionsLang.add(Eag2012.OPTION_NONE);
+											}
+										}
+									} else {
+										rsToursSessions.add("");
+										rsToursSessionsLang.add(Eag2012.OPTION_NONE);
 									}
-								}
-								if(recreationalServices.getToursSessions().get(i).getWebpage()!=null){
-									this.setToursSessionGuidesAndSessionsWebpage(recreationalServices.getToursSessions().get(i).getWebpage().getHref());
-									this.setToursSessionGuidesAndSessionsWebpageTitle(recreationalServices.getToursSessions().get(i).getWebpage().getContent());
+
+									// Webpage.
+									if (repository.getServices().getRecreationalServices().getToursSessions().get(j) != null
+											&& repository.getServices().getRecreationalServices().getToursSessions().get(j).getWebpage() != null) {
+										if (repository.getServices().getRecreationalServices().getToursSessions().get(j).getWebpage().getHref() != null
+												&& !repository.getServices().getRecreationalServices().getToursSessions().get(j).getWebpage().getHref().isEmpty()) {
+											rsToursSessionsWebpage.add(repository.getServices().getRecreationalServices().getToursSessions().get(j).getWebpage().getHref());
+										} else {
+											rsToursSessionsWebpage.add("");
+										}
+
+										if (repository.getServices().getRecreationalServices().getToursSessions().get(j).getWebpage().getContent() != null
+												&& !repository.getServices().getRecreationalServices().getToursSessions().get(j).getWebpage().getContent().isEmpty()) {
+											rsToursSessionsWebpageTitle.add(repository.getServices().getRecreationalServices().getToursSessions().get(j).getWebpage().getContent());
+										} else {
+											rsToursSessionsWebpageTitle.add("");
+										}
+									} else {
+										rsToursSessionsWebpage.add("");
+										rsToursSessionsWebpageTitle.add("");
+									}
+								} else {
+									rsToursSessions.add("");
+									rsToursSessionsLang.add(Eag2012.OPTION_NONE);
+									rsToursSessionsWebpage.add("");
+									rsToursSessionsWebpageTitle.add("");
 								}
 							}
+						} else {
+							rsNumberOfToursSessions.add("");
+							rsToursSessions.add("");
+							rsToursSessionsLang.add(Eag2012.OPTION_NONE);
+							rsToursSessionsWebpage.add("");
+							rsToursSessionsWebpageTitle.add("");
 						}
-						if(recreationalServices.getOtherServices()!=null){
-							for (int i = 0; i < recreationalServices.getOtherServices().size(); i++) {
-								if(recreationalServices.getToursSessions().get(i).getDescriptiveNote()!=null && recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP()!=null){
-									for (int j = 0; j < recreationalServices.getToursSessions().get(i).getDescriptiveNote().getP().size(); j++) {
-										this.setOtherServices(recreationalServices.getOtherServices().get(i).getDescriptiveNote().getP().get(j).getContent());
-										this.setOtherServicesLang(recreationalServices.getOtherServices().get(i).getDescriptiveNote().getP().get(j).getLang());
+
+						// Other services.
+						if (!repository.getServices().getRecreationalServices().getOtherServices().isEmpty()) {
+							for (int j = 0; j < repository.getServices().getRecreationalServices().getOtherServices().size(); j++) {
+								rsNumberOfOtherServices.add("");
+								if (repository.getServices().getRecreationalServices().getOtherServices().get(j) != null) {
+									// Description.
+									if (repository.getServices().getRecreationalServices().getOtherServices().get(j).getDescriptiveNote() != null
+											&& repository.getServices().getRecreationalServices().getOtherServices().get(j).getDescriptiveNote().getP() != null
+											&& !repository.getServices().getRecreationalServices().getOtherServices().get(j).getDescriptiveNote().getP().isEmpty()) {
+										for (int k = 0; k < repository.getServices().getRecreationalServices().getOtherServices().get(j).getDescriptiveNote().getP().size(); k++) {
+											if (repository.getServices().getRecreationalServices().getOtherServices().get(j).getDescriptiveNote().getP().get(k) != null
+													&& repository.getServices().getRecreationalServices().getOtherServices().get(j).getDescriptiveNote().getP().get(k).getContent() != null
+													&& !repository.getServices().getRecreationalServices().getOtherServices().get(j).getDescriptiveNote().getP().get(k).getContent().isEmpty()) {
+												rsOtherServices.add(repository.getServices().getRecreationalServices().getOtherServices().get(j).getDescriptiveNote().getP().get(k).getContent());
+											} else {
+												rsOtherServices.add("");
+											}
+
+											if (repository.getServices().getRecreationalServices().getOtherServices().get(j).getDescriptiveNote().getP().get(k) != null
+													&& repository.getServices().getRecreationalServices().getOtherServices().get(j).getDescriptiveNote().getP().get(k).getLang() != null
+													&& !repository.getServices().getRecreationalServices().getOtherServices().get(j).getDescriptiveNote().getP().get(k).getLang().isEmpty()) {
+												rsOtherServicesLang.add(repository.getServices().getRecreationalServices().getOtherServices().get(j).getDescriptiveNote().getP().get(k).getLang());
+											} else {
+												rsOtherServicesLang.add(Eag2012.OPTION_NONE);
+											}
+										}
+									} else {
+										rsOtherServices.add("");
+										rsOtherServicesLang.add(Eag2012.OPTION_NONE);
 									}
-								}
-								if(recreationalServices.getOtherServices().get(i).getWebpage()!=null){
-									this.setOtherServicesWebpage(recreationalServices.getOtherServices().get(i).getWebpage().getHref());
-									this.setOtherServicesLink(recreationalServices.getOtherServices().get(i).getWebpage().getContent());
+
+									// Webpage.
+									if (repository.getServices().getRecreationalServices().getOtherServices().get(j) != null
+											&& repository.getServices().getRecreationalServices().getOtherServices().get(j).getWebpage() != null) {
+										if (repository.getServices().getRecreationalServices().getOtherServices().get(j).getWebpage().getHref() != null
+												&& !repository.getServices().getRecreationalServices().getOtherServices().get(j).getWebpage().getHref().isEmpty()) {
+											rsOtherServicesWebpage.add(repository.getServices().getRecreationalServices().getOtherServices().get(j).getWebpage().getHref());
+										} else {
+											rsOtherServicesWebpage.add("");
+										}
+
+										if (repository.getServices().getRecreationalServices().getOtherServices().get(j).getWebpage().getContent() != null
+												&& !repository.getServices().getRecreationalServices().getOtherServices().get(j).getWebpage().getContent().isEmpty()) {
+											rsOtherServicesWebpageTitle.add(repository.getServices().getRecreationalServices().getOtherServices().get(j).getWebpage().getContent());
+										} else {
+											rsOtherServicesWebpageTitle.add("");
+										}
+									} else {
+										rsOtherServicesWebpage.add("");
+										rsOtherServicesWebpageTitle.add("");
+									}
+								} else {
+									rsOtherServices.add("");
+									rsOtherServicesLang.add(Eag2012.OPTION_NONE);
+									rsOtherServicesWebpage.add("");
+									rsOtherServicesWebpageTitle.add("");
 								}
 							}
+						} else {
+							rsNumberOfOtherServices.add("");
+							rsOtherServices.add("");
+							rsOtherServicesLang.add(Eag2012.OPTION_NONE);
+							rsOtherServicesWebpage.add("");
+							rsOtherServicesWebpageTitle.add("");
 						}
 					}
+					this.addAsRecreationalServicesRefreshmentArea(rsRefreshment);
+					this.addAsRecreationalServicesRefreshmentAreaLang(rsRefreshmentLang);
+					this.addAsRSNumberOfExhibition(rsNumberOfExhibitions);
+					this.addAsRSExhibition(rsExhibition);
+					this.addAsRSExhibitionLang(rsExhibitionLang);
+					this.addAsRSExhibitionWebpageHref(rsExhibitionWebpage);
+					this.addAsRSExhibitionWebpageTitle(rsExhibitionWebpageTitle);
+					this.addAsRSNumberOfToursSessions(rsNumberOfToursSessions);
+					this.addAsRSToursSessions(rsToursSessions);
+					this.addAsRSToursSessionsLang(rsToursSessionsLang);
+					this.addAsRSToursSessionsWebpageHref(rsToursSessionsWebpage);
+					this.addAsRSToursSessionsWebpageTitle(rsToursSessionsWebpageTitle);
+					this.addAsRSNumberOfOtherServices(rsNumberOfOtherServices);
+					this.addAsRSOtherServices(rsOtherServices);
+					this.addAsRSOtherServicesLang(rsOtherServicesLang);
+					this.addAsRSOtherServicesWebpageHref(rsOtherServicesWebpage);
+					this.addAsRSOtherServicesWebpageTitle(rsOtherServicesWebpageTitle);
 				}
 			}
 		}
@@ -5207,66 +8358,73 @@ public class EAG2012Loader{
 	 */
 	private void loadControlTabValues() {
 		// Lang of person/institution responsible for the description.
-		if (!this.eag.getControl().getMaintenanceHistory().getMaintenanceEvent().isEmpty()) {
+		if (this.eag.getControl() != null && this.eag.getControl().getMaintenanceHistory() != null
+				&& !this.eag.getControl().getMaintenanceHistory().getMaintenanceEvent().isEmpty()) {
 			if (this.eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(this.eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size()-1).getAgent() != null) {
-				this.setAgentLang(this.eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(this.eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size()-1).getAgent().getLang());
+				this.setControlAgentLang(this.eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(this.eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size()-1).getAgent().getLang());
 			}
 		}
 
 		// Identifier of responsible institution.
-		if (this.eag.getControl().getMaintenanceAgency() != null) {
-			if (this.eag.getControl().getMaintenanceAgency().getAgencyCode() != null) {
-				this.setAgencyCode(this.eag.getControl().getMaintenanceAgency().getAgencyCode().getContent());
-			}
-		}
-
-		// Identifier of responsible institution.
-		if (this.eag.getControl().getMaintenanceAgency() != null) {
-			if (this.eag.getControl().getMaintenanceAgency().getAgencyCode() != null) {
-				this.setAgencyCode(this.eag.getControl().getMaintenanceAgency().getAgencyCode().getContent());
+		if (this.eag.getControl() != null && this.eag.getControl().getMaintenanceAgency() != null) {
+			if (this.eag.getControl().getMaintenanceAgency().getAgencyCode() != null
+					&& this.eag.getControl().getMaintenanceAgency().getAgencyCode().getContent() != null
+					&& !this.eag.getControl().getMaintenanceAgency().getAgencyCode().getContent().isEmpty()) {
+				this.setControlAgencyCode(this.eag.getControl().getMaintenanceAgency().getAgencyCode().getContent());
 			}
 		}
 
 		// Used languages and scripts for the description.
-		if (this.eag.getControl().getLanguageDeclarations() != null) {
+		if (this.eag.getControl() != null && this.eag.getControl().getLanguageDeclarations() != null) {
 			if (!this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().isEmpty()) {
-				// TODO: Review for multiple values.
 				for (int i = 0; i < this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().size(); i++) {
-					if (this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getLanguage()!= null
-							&& this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getLanguage().getLanguageCode() != null) {
-						this.setLanguageDeclaration(this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getLanguage().getLanguageCode());
+					this.addControlNumberOfLanguages("");
+					if (this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i) != null
+							&& this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getLanguage() != null
+							&& this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getLanguage().getLanguageCode() != null
+							&& !this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getLanguage().getLanguageCode().isEmpty()) {
+						this.addControlLanguageDeclaration(this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getLanguage().getLanguageCode());
+					} else {
+						this.addControlLanguageDeclaration("");
 					}
-					if (this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getScript() != null
-							&& this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getScript().getScriptCode() != null) {
-						this.setScript(this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getScript().getScriptCode());
+					if (this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i) != null
+							&& this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getScript() != null
+							&& this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getScript().getScriptCode() != null
+							&& !this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getScript().getScriptCode().isEmpty()) {
+						this.addControlScript(this.eag.getControl().getLanguageDeclarations().getLanguageDeclaration().get(i).getScript().getScriptCode());
+					} else {
+						this.addControlScript("");
 					}
 				}
 			}
 		}
 
 		//Used rules / conventions / standards.
-		if (this.eag.getControl().getConventionDeclaration() != null) {
+		if (this.eag.getControl() != null && this.eag.getControl().getConventionDeclaration() != null) {
 			if (!this.eag.getControl().getConventionDeclaration().isEmpty()) {
-				// TODO: Review for multiple values.
 				for (int i = 0; i < this.eag.getControl().getConventionDeclaration().size(); i++) {
-					if (this.eag.getControl().getConventionDeclaration().get(i).getAbbreviation() != null) {
-						List<String> abbreviations = this.getAbbreviation();
-						if(abbreviations==null){
-							abbreviations = new ArrayList<String>();
-						}
-						abbreviations.add(this.eag.getControl().getConventionDeclaration().get(i).getAbbreviation().getContent());
-						this.setAbbreviation(abbreviations);
+					this.addControlNumberOfRules("");
+					if (this.eag.getControl().getConventionDeclaration().get(i) != null
+							&& this.eag.getControl().getConventionDeclaration().get(i).getAbbreviation() != null
+							&& this.eag.getControl().getConventionDeclaration().get(i).getAbbreviation().getContent() != null
+							&& !this.eag.getControl().getConventionDeclaration().get(i).getAbbreviation().getContent().isEmpty()) {
+						this.addControlAbbreviation(this.eag.getControl().getConventionDeclaration().get(i).getAbbreviation().getContent());
+					} else {
+						this.addControlAbbreviation("");
 					}
-					if (!this.eag.getControl().getConventionDeclaration().get(i).getCitation().isEmpty()) {
-						// TODO: Review for multiple values.
+					if (this.eag.getControl().getConventionDeclaration().get(i) != null
+							&& !this.eag.getControl().getConventionDeclaration().get(i).getCitation().isEmpty()) {
 						for (int j = 0; j < this.eag.getControl().getConventionDeclaration().get(i).getCitation().size(); j++) {
-							List<String> citations = this.getCitation();
-							if(citations==null){
-								citations = new ArrayList<String>();
+							if (this.eag.getControl().getConventionDeclaration().get(i).getCitation().get(j) != null
+									&& this.eag.getControl().getConventionDeclaration().get(i).getCitation().get(j).getContent() != null
+									&& !this.eag.getControl().getConventionDeclaration().get(i).getCitation().get(j).getContent().isEmpty()) {
+								this.addControlCitation(this.eag.getControl().getConventionDeclaration().get(i).getCitation().get(j).getContent());
+							} else {
+								this.addControlCitation("");
 							}
-							citations.add(this.eag.getControl().getConventionDeclaration().get(i).getCitation().get(j).getContent());
-							this.setCitation(citations);
 						}
+					} else {
+						this.addControlCitation("");
 					}
 				}
 			}
