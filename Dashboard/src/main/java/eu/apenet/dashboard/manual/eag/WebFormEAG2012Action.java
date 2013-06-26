@@ -1499,7 +1499,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }else{
 						 dates = new ArrayList<String>();
 					 }
-					 dates.add(replaceIfExistsSpecialReturnString(descriptionTable.getString("textDateOfRepositoryFoundation")));
+					 String stringWithoutBreaks = replaceIfExistsSpecialReturnString(descriptionTable.getString("textDateOfRepositoryFoundation"));
+					 if (stringWithoutBreaks.indexOf("%5C") > -1){
+						 String escapeString = stringWithoutBreaks.replaceAll("%5C", "\\\\");
+						 dates.add(escapeString);
+					 }else{
+						 dates.add(stringWithoutBreaks);
+					 }
 					 if(datesList.size()>0){
 						 datesList.set(0, dates);
 					 }else{
@@ -1609,7 +1615,14 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }else{
 						 dates = new ArrayList<String>();
 					 }
-					 dates.add(replaceIfExistsSpecialReturnString(descriptionTable.getString("textDateOfRepositorySuppression")));
+					 String stringWithoutBreaks = replaceIfExistsSpecialReturnString(descriptionTable.getString("textDateOfRepositorySuppression"));
+					 if (stringWithoutBreaks.indexOf("%5C") > -1){
+						 String escapeString = stringWithoutBreaks.replaceAll("%5C", "\\\\");
+						 dates.add(escapeString);
+					 }else{
+						 dates.add(stringWithoutBreaks);
+					 }
+				//	 dates.add(replaceIfExistsSpecialReturnString(descriptionTable.getString("textDateOfRepositorySuppression")));
 					 listDates.add(dates);
 					 datesMap.put(Eag2012.REPOSITOR_SUP, listDates);
 					 dateMapMap.put(Eag2012.REPOSITORHIST, datesMap);
@@ -1994,7 +2007,14 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					   }else{
 						   dates = new ArrayList<String>();
 					   }
-					   dates.add(replaceIfExistsSpecialReturnString(descriptionTable.getString("textYearWhenThisNameWasUsed_"+j)));
+					   String stringWithoutBreaks = replaceIfExistsSpecialReturnString(descriptionTable.getString("textYearWhenThisNameWasUsed_"+j));
+					   if (stringWithoutBreaks.indexOf("%5C") > -1){
+						  String escapeString = stringWithoutBreaks.replaceAll("%5C", "\\\\");
+						  dates.add(escapeString);
+						}else{
+							 dates.add(stringWithoutBreaks);
+						}
+					//   dates.add(replaceIfExistsSpecialReturnString(descriptionTable.getString("textYearWhenThisNameWasUsed_"+j)));
 					   if(listDates.size()>0){
 						   listDates.set(0,dates);  
 					   }else{
@@ -2049,7 +2069,14 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						   }else{
 							   dates = new ArrayList<String>();
 						   }
-						   dates.add(replaceIfExistsSpecialReturnString(descriptionTable.getString("textYearWhenThisNameWasUsedFrom_"+j)));
+						   String stringWithoutBreaks = replaceIfExistsSpecialReturnString(descriptionTable.getString("textYearWhenThisNameWasUsedFrom_"+j));
+						   if (stringWithoutBreaks.indexOf("%5C") > -1){
+							  String escapeString = stringWithoutBreaks.replaceAll("%5C", "\\\\");
+							  dates.add(escapeString);
+							}else{
+								 dates.add(stringWithoutBreaks);
+							}
+						//   dates.add(replaceIfExistsSpecialReturnString(descriptionTable.getString("textYearWhenThisNameWasUsedFrom_"+j)));
 						   if(listDates.size()>0){
 							   listDates.set(0, dates);  
 						   }else{
@@ -2100,7 +2127,14 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						   }else{
 							   dates = new ArrayList<String>();
 						   }
-						   dates.add(replaceIfExistsSpecialReturnString(descriptionTable.getString("textYearWhenThisNameWasUsedTo_"+j)));
+						   String stringWithoutBreaks = replaceIfExistsSpecialReturnString(descriptionTable.getString("textYearWhenThisNameWasUsedTo_"+j));
+						   if (stringWithoutBreaks.indexOf("%5C") > -1){
+							  String escapeString = stringWithoutBreaks.replaceAll("%5C", "\\\\");
+							  dates.add(escapeString);
+							}else{
+								 dates.add(stringWithoutBreaks);
+							}
+					//	   dates.add(replaceIfExistsSpecialReturnString(descriptionTable.getString("textYearWhenThisNameWasUsedTo_"+j)));
 						   if(listDates.size()>0){
 							   listDates.set(0, dates);  
 						   }else{
@@ -5229,7 +5263,14 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						}else{
 							 year = new ArrayList<String>();
 						}
-						year.add(replaceIfExistsSpecialReturnString(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsed_"+j)));
+						String stringWithoutBreaks = replaceIfExistsSpecialReturnString(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsed_"+j));
+						if (stringWithoutBreaks.indexOf("%5C") > -1){
+							String escapeString = stringWithoutBreaks.replaceAll("%5C", "\\\\");
+							year.add(escapeString);
+						}else{
+							 year.add(stringWithoutBreaks);
+						}
+					//	year.add(replaceIfExistsSpecialReturnString(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsed_"+j)));
 						if(yearList.size()>0 && yearList.size()>(i-1)){
 							yearList.set((i-1),year);
 						}else{
@@ -5283,7 +5324,14 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						}else{
 							 year = new ArrayList<String>();
 						}
-						year.add(replaceIfExistsSpecialReturnString(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsedFrom_"+j)));
+						String stringWithoutBreaks = replaceIfExistsSpecialReturnString(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsedFrom_"+j));
+						if (stringWithoutBreaks.indexOf("%5C") > -1){
+							String escapeString = stringWithoutBreaks.replaceAll("%5C", "\\\\");
+							year.add(escapeString);
+						}else{
+							 year.add(stringWithoutBreaks);
+						}
+					//	year.add(replaceIfExistsSpecialReturnString(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsedFrom_"+j)));
 						if(yearList.size()>0 && yearList.size()>(i-1)){
 							yearList.set((i-1),year);
 						}else{
@@ -5336,7 +5384,14 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						}else{
 							 year = new ArrayList<String>();
 						}
-						 year.add(replaceIfExistsSpecialReturnString(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsedTo_"+j)));
+						String stringWithoutBreaks = replaceIfExistsSpecialReturnString(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsedTo_"+j));
+						if (stringWithoutBreaks.indexOf("%5C") > -1){
+							String escapeString = stringWithoutBreaks.replaceAll("%5C", "\\\\");
+							year.add(escapeString);
+						}else{
+							 year.add(stringWithoutBreaks);
+						}
+					//	 year.add(replaceIfExistsSpecialReturnString(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsedTo_"+j)));
 						if(yearList.size()>0 && yearList.size()>(i-1)){
 							yearList.set((i-1),year);
 						}else{

@@ -489,13 +489,24 @@ var clickIdentityAction = function(text1){
 		}
 		jsonData += "'"+formerlyNames[j]+"':{";
 		//input type text
+		var jsonDataYear = "";
 		$("#"+formerlyNames[j]+" input[type='text']").each(function(){
-			if(jsonData.charAt(jsonData.length-1)!=':'
-				&& jsonData.charAt(jsonData.length-1)!='{'){
-				jsonData += ",";
-			}
-			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
+			if ($(this).attr("id").indexOf("textYearWhenThisNameWasUsed") != "-1"
+				|| $(this).attr("id").indexOf("textYearWhenThisNameWasUsedFrom")!="-1"
+				|| $(this).attr("id").indexOf("textYearWhenThisNameWasUsedTo")!="-1"){
+			     if(jsonDataYear.length>1){
+				     jsonDataYear += ",";
+			     }
+			  jsonDataYear += "'"+$(this).attr("id")+"' : '"+$.trim(escapeDate($(this)))+"'";
+		    } else {
+			   if(jsonData.charAt(jsonData.length-1)!=':'
+				   && jsonData.charAt(jsonData.length-1)!='{'){
+				  jsonData += ",";
+			   }
+			   jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
+		    }
 		});
+		jsonData += "," + jsonDataYear;
 		//select options selected
 		$("#"+formerlyNames[j]+" select").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'){
@@ -906,17 +917,32 @@ function checkDescriptionTab(currentTab, text1) {
 		}
 	});
 	//content from texts
+	var jsonDataYear = "";
 	$("table#descriptionTable" + currentTab + " input[type='text']").each(function(){
-		if(jsonData.length>1){
-			jsonData += ",";
-		}
-		if ($(this).attr("id") == "textRuleOfRepositoryFoundation"
-			|| $(this).attr("id") == "textRuleOfRepositorySuppression") {
-			jsonData += "'"+$(this).attr("id")+"_1' : '"+$.trim($(this).attr("value"))+"'";
+		if ($(this).attr("id") == "textDateOfRepositoryFoundation"
+				|| $(this).attr("id") == "textDateOfRepositorySuppression"
+				|| $(this).attr("id").indexOf("textYearWhenThisNameWasUsed") != "-1"
+				|| $(this).attr("id").indexOf("textYearWhenThisNameWasUsedFrom") != "-1"
+				|| $(this).attr("id").indexOf("textYearWhenThisNameWasUsedTo") != "-1") {
+			if(jsonDataYear.length>1){
+				jsonDataYear += ",";
+			}
+			jsonDataYear += "'"+$(this).attr("id")+"' : '"+$.trim(escapeDate($(this)))+"'";
 		} else {
-			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
+			if(jsonData.length>1){
+				jsonData += ",";
+			}
+
+			if ($(this).attr("id") == "textRuleOfRepositoryFoundation"
+				|| $(this).attr("id") == "textRuleOfRepositorySuppression") {
+				jsonData += "'"+$(this).attr("id")+"_1' : '"+$.trim($(this).attr("value"))+"'";
+			} else {
+				jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
+			}
 		}
 	});
+	jsonData += "," + jsonDataYear;
+
 	//content from selects
 	$("table#descriptionTable" + currentTab + " select").each(function(){
 		if(jsonData.charAt(jsonData.length-1)!=':'){
@@ -4183,4 +4209,11 @@ function contactStreetLanguageChanged(name){
 
 	var id =  $("table#contactTable_1 table#contactTableVisitorsAddress" + parentId + " #selectLanguageVisitorAddress").val();
 	$("table#yiTableVisitorsAddress" + parentId + " #selectYIVASelectLanguage").attr("value",id);
+}
+function escapeDate(name){
+	var date = name.val();
+	if(date.indexOf("\\") > -1 ){
+		date = escape(date);
+	}
+	return date;
 }
