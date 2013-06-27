@@ -37,7 +37,7 @@
 				<label for="textYIIdentifierOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.identifierOfTheInstitution')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYIIdentifierOfTheInstitution" value="${loader.otherRepositorId}" onKeyup="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>');"/>
+				<input type="text" id="textYIIdentifierOfTheInstitution" value="${loader.otherRepositorId}" onKeyup="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>');firstIdAndNoISIL();"/>
 			</td>
 			<td class="labelLeft">
 			  <label for="textYICodeISL"><s:property value="getText('label.ai.tabs.commons.codeISL')"/></label>
@@ -854,7 +854,7 @@
 				</s:else>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<label for="futherAccessInformation" ><s:property value="getText('label.ai.accessAndServices.accessRestrictions')"/><span class="required">*</span>:</label>
+							<label for="futherAccessInformation" ><s:property value="getText('label.ai.accessAndServices.accessRestrictions')"/>:</label>
 						</s:if>
 						<s:else>
 							<label for="futherAccessInformation_<s:property value="%{#status.index + 1}" />" ><s:property value="getText('label.ai.accessAndServices.accessRestrictions')"/>:</label>

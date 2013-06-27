@@ -2534,7 +2534,7 @@ function addFutherAccessInformation(text1){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
 	});
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" select#selectASARSelectLanguage_" + (count + 1)).attr("value","none");
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASARSelectLanguage_" + (count + 1)).attr("value","none");
 }
 
 function aSAddFutherTermOfUse(text1){
@@ -3556,6 +3556,18 @@ function idOfInstitutionChanged(text, text1, index){
 	//		 }
 	}
 }
+
+function firstIdAndNoISIL() {
+	var idUsedInAPE = $("#textYIIdUsedInAPE").val();
+
+	if (idUsedInAPE == null || idUsedInAPE == "") {
+		var id = $("#recordIdHidden").val();
+		$("#textYIIdUsedInAPE").attr("value",id);
+		$("#textIdentityIdUsedInAPE").attr("value", id);
+		$("#textDescriptionIdentifier").attr("value",id);
+	}
+}
+
 function nameOfInstitutionChanged(){
 	$("#textNameOfTheInstitution").attr("value", $("#textYINameOfTheInstitution").val());
 }
@@ -3705,8 +3717,8 @@ function checkSelectASTSReproductionService(attr){
 		$("#"+attr+" #textASTSEmailAddressLinkTitle").attr("disabled","disabled");
 		$("#"+attr+" #textASTSRSEmailAddress").val("");
 		$("#"+attr+" #textASTSRSEmailAddress").attr("disabled","disabled");
-		$("#"+attr+" #textASTSRSTelephone").val("");
-		$("#"+attr+" #textASTSRSTelephone").attr("disabled","disabled");
+		$("#"+attr+" #textASTSRSTelephone_1").val("");
+		$("#"+attr+" #textASTSRSTelephone_1").attr("disabled","disabled");
 		$("#"+attr+" #textASTSDescriptionOfReproductionService").val("");
 		$("#"+attr+" [id^='textASTSDescriptionOfReproductionService']").each(function(){
 			$(this).val("");
@@ -3718,7 +3730,7 @@ function checkSelectASTSReproductionService(attr){
 		$("#"+attr+" #textASTSRSWebpage").removeAttr("disabled");
 		$("#"+attr+" #textASTSEmailAddressLinkTitle").removeAttr("disabled");
 		$("#"+attr+" #textASTSRSEmailAddress").removeAttr("disabled");
-		$("#"+attr+" #textASTSRSTelephone").removeAttr("disabled");
+		$("#"+attr+" #textASTSRSTelephone_1").removeAttr("disabled");
 		$("#"+attr+" [id^='selectASTSRSSelectLanguage']").each(function(){
 			$(this).removeAttr("disabled");
 		});
@@ -4149,9 +4161,20 @@ function loadDisableSelectsForFurtheIds(text) {
 		}
 	});
 
-	var codeISIL = $("select[id^='selectYICodeISIL']");
-	if (codeISIL.attr("value") == "yes") {
-		codeISILChanged(text);
+	// To check the field "Identifier of the institution".
+	codeISILChangedOnLoad();
+}
+
+function codeISILChangedOnLoad() {
+	var idOfInstitution = $("#textYIIdentifierOfTheInstitution").val();
+	var idUsedInAPE = $("#textYIIdUsedInAPE").val();
+
+	if (idOfInstitution == idUsedInAPE && idUsedInAPE !=null && idUsedInAPE != "") {
+		$("#selectYICodeISIL").attr("value","yes");
+
+		$("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
+			$(this).attr("disabled","disabled");
+		});
 	}
 }
 
