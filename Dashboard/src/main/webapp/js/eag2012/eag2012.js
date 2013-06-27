@@ -3143,38 +3143,33 @@ function descriptionAddHistoryDescription(text1){
 	// trAddHistory
 	var count = $("table#descriptionTable"+currentTab+" tr[id^='trRepositoryHistory']").length;
 
-	var id = "";
-	if (count > 1) {
-		id +="_"+count;
-	}
+	var id = "_"+count;
 
 	var history = $("table#descriptionTable"+currentTab+" tr#trRepositoryHistory"+id+" textarea#textRepositoryHistory"+id).attr("value");
-	var historyLanguage = $("table#descriptionTable"+currentTab+" tr#trRepositoryHistory"+id+" select#selectLanguageRepositoryHistory"+id).attr("value");
+	// var historyLanguage = $("table#descriptionTable"+currentTab+" tr#trRepositoryHistory"+id+" select#selectLanguageRepositoryHistory"+id).attr("value");
 
 	if (history == null || history == ""
-			|| historyLanguage == "none") {
+			/*|| historyLanguage == "none"*/) {
 		alertEmptyFields(text1);
 		return;
 	}
 
 	var newId = "trRepositoryHistory_"+(count+1);
-	var trHtml = "<tr id=\""+newId+"\">"+$("table#descriptionTable"+currentTab+" tr[id='trRepositoryHistory']").clone().html()+"</tr>";
-	var lastId= "table#descriptionTable"+currentTab+" tr#trRepositoryHistory";
+	var trHtml = "<tr id=\""+newId+"\">"+$("table#descriptionTable"+currentTab+" tr[id='trRepositoryHistory_1']").clone().html()+"</tr>";
+	var lastId= "table#descriptionTable"+currentTab+" tr#trRepositoryHistory_" + count;
 
-	if(count>1){
-		lastId += "_" + (count);
-	}
 	$(lastId).after(trHtml);
 	// update last content
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='textRepositoryHistory']").attr("for","textRepositoryHistory_"+(count+1));
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textRepositoryHistory").attr("id","textRepositoryHistory_"+(count+1));
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageRepositoryHistory']").attr("for","selectLanguageRepositoryHistory_"+(count+1));
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageRepositoryHistory").attr("id","selectLanguageRepositoryHistory_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" td#tdRepositoryHistory_1").attr("id","tdRepositoryHistory_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='textRepositoryHistory_1']").attr("for","textRepositoryHistory_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textRepositoryHistory_1").attr("id","textRepositoryHistory_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" td#tdLanguageRepositoryHistory_1").attr("id","tdLanguageRepositoryHistory_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageRepositoryHistory_1']").attr("for","selectLanguageRepositoryHistory_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageRepositoryHistory_1").attr("id","selectLanguageRepositoryHistory_"+(count+1));
 
 	// Reset parametters and enable fields.
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
-	});
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textRepositoryHistory_" + (count + 1)).attr("value","");
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageRepositoryHistory_" + (count + 1)).attr("value","none");
 }
 
 function descriptionAddFoundationInformation(text1){
@@ -3182,37 +3177,35 @@ function descriptionAddFoundationInformation(text1){
 	//trRuleOfRepositoryFoundation
 	var count = $("table#descriptionTable"+currentTab+" tr[id^='trRuleOfRepositoryFoundation']").length;
 
-	var id = "";
-	if (count > 1) {
-		id +="_"+count;
-	}
+	var id = "_"+count;
 
 	var foundation = $("table#descriptionTable"+currentTab+" tr#trRuleOfRepositoryFoundation"+id+" input#textRuleOfRepositoryFoundation"+id).attr("value");
-	var foundationLanguage = $("table#descriptionTable"+currentTab+" tr#trRuleOfRepositoryFoundation"+id+" select#selectLanguageRuleOfRepositoryFoundation"+id).attr("value");
+	// var foundationLanguage = $("table#descriptionTable"+currentTab+" tr#trRuleOfRepositoryFoundation"+id+" select#selectLanguageRuleOfRepositoryFoundation"+id).attr("value");
 
 	if (foundation == null || foundation == ""
-			|| foundationLanguage == "none") {
+			/*|| foundationLanguage == "none"*/) {
 		alertEmptyFields(text1);
 		return;
 	}
 
 	var newId = "trRuleOfRepositoryFoundation_"+(count+1);
-	var trHtml = "<tr id=\""+newId+"\">"+$("table#descriptionTable"+currentTab+" tr[id='trRuleOfRepositoryFoundation']").clone().html()+"</tr>";
-	var lastId = "table#descriptionTable"+currentTab+" tr#trRuleOfRepositoryFoundation";
-	if(count>1){
-		lastId+="_"+(count);
-	}
+	var trHtml = "<tr id=\""+newId+"\">"+$("table#descriptionTable"+currentTab+" tr[id='trRuleOfRepositoryFoundation_1']").clone().html()+"</tr>";
+	var lastId = "table#descriptionTable"+currentTab+" tr#trRuleOfRepositoryFoundation_" + count;
+
 	$(lastId).after(trHtml);
 	//update last content
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='textRuleOfRepositoryFoundation']").attr("for","textRuleOfRepositoryFoundation_"+(count+1));
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" input#textRuleOfRepositoryFoundation").attr("id","textRuleOfRepositoryFoundation_"+(count+1));
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageRuleOfRepositoryFoundation']").attr("for","selectLanguageRuleOfRepositoryFoundation_"+(count+1));
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageRuleOfRepositoryFoundation").attr("id","selectLanguageRuleOfRepositoryFoundation_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" td#tdRuleOfRepositoryFoundation_1").attr("id","tdRuleOfRepositoryFoundation_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='textRuleOfRepositoryFoundation_1']").attr("for","textRuleOfRepositoryFoundation_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" input#textRuleOfRepositoryFoundation_1").attr("id","textRuleOfRepositoryFoundation_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" td#tdLanguageRuleOfRepositoryFoundation_1").attr("id","tdLanguageRuleOfRepositoryFoundation_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageRuleOfRepositoryFoundation_1']").attr("for","selectLanguageRuleOfRepositoryFoundation_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageRuleOfRepositoryFoundation_1").attr("id","selectLanguageRuleOfRepositoryFoundation_"+(count+1));
 
 	// Reset parametters and enable fields.
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
 	});
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageRuleOfRepositoryFoundation_" + (count + 1)).attr("value","none");
 }
 
 function descriptionAddSuppressionInformation(text1){
@@ -3220,37 +3213,35 @@ function descriptionAddSuppressionInformation(text1){
 	//trDescriptionAddSuppressionInformation
 	var count = $("table#descriptionTable"+currentTab+" tr[id^='trDescriptionAddSuppressionInformation']").length;
 
-	var id = "";
-	if (count > 1) {
-		id +="_"+count;
-	}
+	var id = "_"+count;
 
 	var suppress = $("table#descriptionTable"+currentTab+" tr#trDescriptionAddSuppressionInformation"+id+" input#textRuleOfRepositorySuppression"+id).attr("value");
-	var suppressLanguage = $("table#descriptionTable"+currentTab+" tr#trDescriptionAddSuppressionInformation"+id+" select#selectLanguageRuleOfRepositorySuppression"+id).attr("value");
+	// var suppressLanguage = $("table#descriptionTable"+currentTab+" tr#trDescriptionAddSuppressionInformation"+id+" select#selectLanguageRuleOfRepositorySuppression"+id).attr("value");
 
 	if (suppress == null || suppress == ""
-			|| suppressLanguage == "none") {
+			/*|| suppressLanguage == "none"*/) {
 		alertEmptyFields(text1);
 		return;
 	}
 
 	var newId = "trDescriptionAddSuppressionInformation_"+(count+1);
-	var trHtml = "<tr id=\""+newId+"\">"+$("table#descriptionTable"+currentTab+" tr[id='trDescriptionAddSuppressionInformation']").clone().html()+"</tr>";
-	var lastId = "table#descriptionTable"+currentTab+" tr#trDescriptionAddSuppressionInformation";
-	if(count>1){
-		lastId+="_"+(count);
-	}
+	var trHtml = "<tr id=\""+newId+"\">"+$("table#descriptionTable"+currentTab+" tr[id='trDescriptionAddSuppressionInformation_1']").clone().html()+"</tr>";
+	var lastId = "table#descriptionTable"+currentTab+" tr#trDescriptionAddSuppressionInformation_" + count;
+
 	$(lastId).after(trHtml);
 	//update last content
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='textRuleOfRepositorySuppression']").attr("for","textRuleOfRepositorySuppression_"+(count+1));
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" input#textRuleOfRepositorySuppression").attr("id","textRuleOfRepositorySuppression_"+(count+1));
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageRuleOfRepositorySuppression']").attr("for","selectLanguageRuleOfRepositorySuppression_"+(count+1));
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageRuleOfRepositorySuppression").attr("id","selectLanguageRuleOfRepositorySuppression_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" td#tdRuleOfRepositorySuppression_1").attr("id","tdRuleOfRepositorySuppression_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='textRuleOfRepositorySuppression_1']").attr("for","textRuleOfRepositorySuppression_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" input#textRuleOfRepositorySuppression_1").attr("id","textRuleOfRepositorySuppression_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" td#tdLanguageRuleOfRepositorySuppression_1").attr("id","tdLanguageRuleOfRepositorySuppression_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageRuleOfRepositorySuppression_1']").attr("for","selectLanguageRuleOfRepositorySuppression_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageRuleOfRepositorySuppression_1").attr("id","selectLanguageRuleOfRepositorySuppression_"+(count+1));
 
 	// Reset parametters and enable fields.
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
 	});
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageRuleOfRepositorySuppression_" + (count + 1)).attr("value","none");
 }
 
 function descriptionAddAdministrationUnits(text1){
@@ -3258,38 +3249,33 @@ function descriptionAddAdministrationUnits(text1){
 	var currentTab = getCurrentTab();
 	var count = $("table#descriptionTable"+currentTab+" tr[id^='trDescriptionAddAdministrationUnits']").length;
 
-	var id = "";
-	if (count > 1) {
-		id +="_"+count;
-	}
+	var id = "_"+count;
 
 	var unit = $("table#descriptionTable"+currentTab+" tr#trDescriptionAddAdministrationUnits"+id+" textarea#textUnitOfAdministrativeStructure"+id).attr("value");
-	var unitLanguage = $("table#descriptionTable"+currentTab+" tr#trDescriptionAddAdministrationUnits"+id+" select#selectLanguageUnitOfAdministrativeStructure"+id).attr("value");
+	// var unitLanguage = $("table#descriptionTable"+currentTab+" tr#trDescriptionAddAdministrationUnits"+id+" select#selectLanguageUnitOfAdministrativeStructure"+id).attr("value");
 
 	if (unit == null || unit == ""
-			|| unitLanguage == "none") {
+			/*|| unitLanguage == "none"*/) {
 		alertEmptyFields(text1);
 		return;
 	}
 
 	var newId = "trDescriptionAddAdministrationUnits_"+(count+1);
-	var trHtml = "<tr id=\""+newId+"\">"+$("table#descriptionTable"+currentTab+" tr[id='trDescriptionAddAdministrationUnits']").clone().html()+"</tr>";
-	var lastId = "table#descriptionTable"+currentTab+" tr#trDescriptionAddAdministrationUnits";
+	var trHtml = "<tr id=\""+newId+"\">"+$("table#descriptionTable"+currentTab+" tr[id='trDescriptionAddAdministrationUnits_1']").clone().html()+"</tr>";
+	var lastId = "table#descriptionTable"+currentTab+" tr#trDescriptionAddAdministrationUnits_" + count;
 
-	if(count>1){
-		lastId+="_"+(count);
-	}
 	$(lastId).after(trHtml);
 	//update last content
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='textUnitOfAdministrativeStructure']").attr("for","textUnitOfAdministrativeStructure_"+(count+1));
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textUnitOfAdministrativeStructure").attr("id","textUnitOfAdministrativeStructure_"+(count+1));
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageUnitOfAdministrativeStructure']").attr("for","selectLanguageUnitOfAdministrativeStructure_"+(count+1));
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageUnitOfAdministrativeStructure").attr("id","selectLanguageUnitOfAdministrativeStructure_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" td#tdUnitOfAdministrativeStructure_1").attr("id","tdUnitOfAdministrativeStructure_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='textUnitOfAdministrativeStructure_1']").attr("for","textUnitOfAdministrativeStructure_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textUnitOfAdministrativeStructure_1").attr("id","textUnitOfAdministrativeStructure_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" td#tdLanguageUnitOfAdministrativeStructure_1").attr("id","tdLanguageUnitOfAdministrativeStructure_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageUnitOfAdministrativeStructure_1']").attr("for","selectLanguageUnitOfAdministrativeStructure_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageUnitOfAdministrativeStructure_1").attr("id","selectLanguageUnitOfAdministrativeStructure_"+(count+1));
 
 	// Reset parametters and enable fields.
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
-	});
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textUnitOfAdministrativeStructure_" + (count + 1)).attr("value","");
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageUnitOfAdministrativeStructure_" + (count + 1)).attr("value","none");
 }
 
 function descriptionAddBuildingDescription(text1){
@@ -3297,38 +3283,33 @@ function descriptionAddBuildingDescription(text1){
 	var currentTab = getCurrentTab();
 	var count = $("table#descriptionTable"+currentTab+" tr[id^='trBuildingDescription']").length;
 
-	var id = "";
-	if (count > 1) {
-		id +="_"+count;
-	}
+	var id = "_"+count;
 
 	var building = $("table#descriptionTable"+currentTab+" tr#trBuildingDescription"+id+" textarea#textBuilding"+id).attr("value");
-	var buildingLanguage = $("table#descriptionTable"+currentTab+" tr#trBuildingDescription"+id+" select#selectLanguageBuilding"+id).attr("value");
+	// var buildingLanguage = $("table#descriptionTable"+currentTab+" tr#trBuildingDescription"+id+" select#selectLanguageBuilding"+id).attr("value");
 
 	if (building == null || building == ""
-			|| buildingLanguage == "none") {
+			/*|| buildingLanguage == "none"*/) {
 		alertEmptyFields(text1);
 		return;
 	}
 
 	var newId = "trBuildingDescription_"+(count+1);
-	var trHtml = "<tr id=\""+newId+"\">"+$("table#descriptionTable"+currentTab+" tr[id='trBuildingDescription']").clone().html()+"</tr>";
-	var lastId = "table#descriptionTable"+currentTab+" tr#trBuildingDescription";
+	var trHtml = "<tr id=\""+newId+"\">"+$("table#descriptionTable"+currentTab+" tr[id='trBuildingDescription_1']").clone().html()+"</tr>";
+	var lastId = "table#descriptionTable"+currentTab+" tr#trBuildingDescription_" + count;
 
-	if(count>1){
-		lastId+="_"+(count);
-	}
 	$(lastId).after(trHtml);
 	//update last content
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='textBuilding']").attr("for","textBuilding_"+(count+1));
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textBuilding").attr("id","textBuilding_"+(count+1));
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageBuilding']").attr("for","selectLanguageBuilding_"+(count+1));
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageBuilding").attr("id","selectLanguageBuilding_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" td#tdBuilding_1").attr("id","tdBuilding_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='textBuilding_1']").attr("for","textBuilding_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textBuilding_1").attr("id","textBuilding_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" td#tdLanguageBuilding_1").attr("id","tdLanguageBuilding_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageBuilding_1']").attr("for","selectLanguageBuilding_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageBuilding_1").attr("id","selectLanguageBuilding_"+(count+1));
 
 	// Reset parametters and enable fields.
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
-	});
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textBuilding_" + (count + 1)).attr("value","");
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageBuilding_" + (count + 1)).attr("value","none");
 }
 
 function descriptionAddAnotherArchivalDescription(text1) {
@@ -3336,38 +3317,33 @@ function descriptionAddAnotherArchivalDescription(text1) {
 	var currentTab = getCurrentTab();
 	var count = $("table#descriptionTable"+currentTab+" tr[id^='trArchivalAndOtherHoldings']").length;
 
-	var id = "";
-	if (count > 1) {
-		id +="_"+count;
-	}
+	var id = "_"+count;
 
 	var archival = $("table#descriptionTable"+currentTab+" tr#trArchivalAndOtherHoldings"+id+" textarea#textArchivalAndOtherHoldings"+id).attr("value");
-	var archivalLanguage = $("table#descriptionTable"+currentTab+" tr#trArchivalAndOtherHoldings"+id+" select#selectLanguageArchivalAndOtherHoldings"+id).attr("value");
+	// var archivalLanguage = $("table#descriptionTable"+currentTab+" tr#trArchivalAndOtherHoldings"+id+" select#selectLanguageArchivalAndOtherHoldings"+id).attr("value");
 
 	if (archival == null || archival == ""
-			|| archivalLanguage == "none") {
+			/*|| archivalLanguage == "none"*/) {
 		alertEmptyFields(text1);
 		return;
 	}
 
 	var newId = "trArchivalAndOtherHoldings_"+(count+1);
-	var trHtml = "<tr id=\""+newId+"\">"+$("table#descriptionTable"+currentTab+" tr[id='trArchivalAndOtherHoldings']").clone().html()+"</tr>";
-	var lastId = "table#descriptionTable"+currentTab+" tr#trArchivalAndOtherHoldings";
-
-	if(count>1){
-		lastId+="_"+(count);
-	}
+	var trHtml = "<tr id=\""+newId+"\">"+$("table#descriptionTable"+currentTab+" tr[id='trArchivalAndOtherHoldings_1']").clone().html()+"</tr>";
+	var lastId = "table#descriptionTable"+currentTab+" tr#trArchivalAndOtherHoldings_" + count;
+	
 	$(lastId).after(trHtml);
 	//update last content
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='textArchivalAndOtherHoldings']").attr("for","textArchivalAndOtherHoldings_"+(count+1));
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textArchivalAndOtherHoldings").attr("id","textArchivalAndOtherHoldings_"+(count+1));
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageArchivalAndOtherHoldings']").attr("for","selectLanguageArchivalAndOtherHoldings_"+(count+1));
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageArchivalAndOtherHoldings").attr("id","selectLanguageArchivalAndOtherHoldings_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" td#tdArchivalAndOtherHoldings_1").attr("id","tdArchivalAndOtherHoldings_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='textArchivalAndOtherHoldings_1']").attr("for","textArchivalAndOtherHoldings_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textArchivalAndOtherHoldings_1").attr("id","textArchivalAndOtherHoldings_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" td#tdLanguageArchivalAndOtherHoldings_1").attr("id","tdLanguageArchivalAndOtherHoldings_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageArchivalAndOtherHoldings_1']").attr("for","selectLanguageArchivalAndOtherHoldings_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageArchivalAndOtherHoldings_1").attr("id","selectLanguageArchivalAndOtherHoldings_"+(count+1));
 
 	// Reset parametters and enable fields.
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
-	});
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textArchivalAndOtherHoldings_" + (count + 1)).attr("value","");
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageArchivalAndOtherHoldings_" + (count + 1)).attr("value","none");
 }
 
 function controlAddFurtherLangsAnsScripts(text1){

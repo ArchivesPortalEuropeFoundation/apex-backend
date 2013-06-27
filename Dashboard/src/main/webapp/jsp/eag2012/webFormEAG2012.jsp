@@ -111,14 +111,14 @@
 							$("#"+parent+" #selectASTSRSDigitalServices").attr("disabled","disabled");
 							$("#"+parent+" #selectASTSRSPhotocopyServices option[value='none']").attr("selected","selected");
 							$("#"+parent+" #selectASTSRSPhotocopyServices").attr("disabled","disabled");
-							$("#"+parent+" #selectASTSRSSelectLanguage option[value='none']").attr("selected","selected");
-							$("#"+parent+" #selectASTSRSSelectLanguage").attr("disabled","disabled");
+							$("#"+parent+" #selectASTSRSSelectLanguage_1 option[value='none']").attr("selected","selected");
+							$("#"+parent+" #selectASTSRSSelectLanguage_1").attr("disabled","disabled");
 							$("#"+parent+" #textASTSRSWebpageLinkTitle").attr("disabled","disabled");
 							$("#"+parent+" #textASTSRSWebpage").attr("disabled","disabled");
 							$("#"+parent+" #textASTSEmailAddressLinkTitle").attr("disabled","disabled");
 							$("#"+parent+" #textASTSRSEmailAddress").attr("disabled","disabled");
-							$("#"+parent+" #textASTSRSTelephone").attr("disabled","disabled");
-							$("#"+parent+" #textASTSDescriptionOfReproductionService").attr("disabled","disabled");
+							$("#"+parent+" #textASTSRSTelephone_1").attr("disabled","disabled");
+							$("#"+parent+" #textASTSDescriptionOfReproductionService_1").attr("disabled","disabled");
 							$("#"+parent+" #buttonASAddADescriptionOfYourReproductionService").attr("disabled","disabled");
 						}
 					});

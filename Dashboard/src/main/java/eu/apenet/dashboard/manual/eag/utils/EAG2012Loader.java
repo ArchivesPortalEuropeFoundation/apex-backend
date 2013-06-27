@@ -301,55 +301,34 @@ public class EAG2012Loader{
 	private List<List<String>> asRSOtherServicesWebpageTitle;
 	private List<List<String>> asRSOtherServicesWebpageLang;
 
-	// Description.
-	private String repositorhist;
-	private String repositorhistLang;
-	private String repositorFoundDate;
-
-	private String repositorFoundDateLocalType;
-	private String repositorFoundDateNotAfter;
-	private String repositorFoundDateNotBefore;
-	private String repositorFoundDateStandardDate;
-	private String repositorFoundDateLang;
-	private String repositorFoundRule;
-	private String repositorFoundRuleLang;
-	private String repositorSupDate;
-	private String repositorSupDateLocalType;
-	private String repositorSupDateNotAfter;
-	private String repositorSupDateNotBefore;
-	private String repositorSupDateStandardDate;
-	private String repositorSupDateLang;
-	private String repositorSupRule;
-	private String repositorSupRuleLang;
-	private String adminunit;
-	private String adminunitLang;
-	private String building;
-	private String buildingLang;
-	private String repositorarea;
-	private String repositorareaUnit;
-	private String lengthshelf;
-	private String lengthshelfUnit;
-	private String holdings;
-	private String holdingsLang;
-	private String holdingsDate;
-	private String holdingsDateLocalType;
-	private String holdingsDateNotAfter;
-	private String holdingsDateNotBefore;
-	private String holdingsDateStandardDate;
-	private String holdingsDateLang;
-	private String holdingsDateRangeLocalType;
-	private String holdingsDateRangeFromDate;
-	private String holdingsDateRangeFromDateNoAfter;
-	private String holdingsDateRangeFromDateNoBefore;
-	private String holdingsDateRangeFromDateStandardDate;
-	private String holdingsDateRangeFromDateLang;
-	private String holdingsDateRangeToDate;
-	private String holdingsDateRangeToDateNoAfter;
-	private String holdingsDateRangeToDateNoBefore;
-	private String holdingsDateRangeToDateStandardDate;
-	private String holdingsDateRangeToDateLang;
-	private String extent;
-	private String extentUnit;
+	// Description, repository description.
+	private List<List<String>> descRepositorhist;
+	private List<List<String>> descRepositorhistLang;
+	private List<List<String>> descRepositorFoundDate;
+	private List<List<String>> descRepositorFoundRule;
+	private List<List<String>> descRepositorFoundRuleLang;
+	private List<List<String>> descRepositorSupDate;
+	private List<List<String>> descRepositorSupRule;
+	private List<List<String>> descRepositorSupRuleLang;
+	// Description, administrative structure.
+	private List<List<String>> descAdminunit;
+	private List<List<String>> descAdminunitLang;
+	// Description, building description.
+	private List<List<String>> descBuilding;
+	private List<List<String>> descBuildingLang;
+	private List<List<String>> descRepositorarea;
+	private List<List<String>> descRepositorareaUnit;
+	private List<List<String>> descLengthshelf;
+	private List<List<String>> descLengthshelfUnit;
+	// Description, holding description.
+	private List<List<String>> descHoldings;
+	private List<List<String>> descHoldingsLang;
+	private List<List<String>> descHoldingsDate;
+	private List<List<String>> descNumberOfHoldingsDateRange;
+	private List<List<String>> descHoldingsDateRangeFromDate;
+	private List<List<String>> descHoldingsDateRangeToDate;
+	private List<List<String>> descExtent;
+	private List<List<String>> descExtentUnit;
 
 	// Control.
 	private String controlAgentLang;
@@ -3859,7 +3838,7 @@ public class EAG2012Loader{
 	/**
 	 * @param asLibraryNumberOfEmail the asLibraryNumberOfEmail to set
 	 */
-	public void setAsLibraryNumberOfEmailNumberOfEmail(
+	public void setAsLibraryNumberOfEmail(
 			List<List<String>> asLibraryNumberOfEmail) {
 		this.asLibraryNumberOfEmail = asLibraryNumberOfEmail;
 	}
@@ -3867,7 +3846,7 @@ public class EAG2012Loader{
 	/**
 	 * @param asLibraryNumberOfEmail the asLibraryNumberOfEmail to add
 	 */
-	public void addAsLibraryNumberOfEmailNumberOfEmail(List<String> asLibraryNumberOfEmail) {
+	public void addAsLibraryNumberOfEmail(List<String> asLibraryNumberOfEmail) {
 		this.getAsLibraryNumberOfEmail().add(asLibraryNumberOfEmail);
 	}
 
@@ -4278,7 +4257,7 @@ public class EAG2012Loader{
 	/**
 	 * @param asRestorationlabNumberOfEmail the asRestorationlabNumberOfEmail to set
 	 */
-	public void setAsRestorationlabNumberOfEmailNumberOfEmail(
+	public void setAsRestorationlabNumberOfEmail(
 			List<List<String>> asRestorationlabNumberOfEmail) {
 		this.asRestorationlabNumberOfEmail = asRestorationlabNumberOfEmail;
 	}
@@ -4286,7 +4265,7 @@ public class EAG2012Loader{
 	/**
 	 * @param asRestorationlabNumberOfEmail the asRestorationlabNumberOfEmail to add
 	 */
-	public void addAsRestorationlabNumberOfEmailNumberOfEmail(List<String> asRestorationlabNumberOfEmail) {
+	public void addAsRestorationlabNumberOfEmail(List<String> asRestorationlabNumberOfEmail) {
 		this.getAsRestorationlabNumberOfEmail().add(asRestorationlabNumberOfEmail);
 	}
 
@@ -4378,7 +4357,7 @@ public class EAG2012Loader{
 	/**
 	 * @param asRestorationlabNumberOfWebpage the asRestorationlabNumberOfWebpage to set
 	 */
-	public void setAsRestorationlabNumberOfEmailNumberOfWebpage(
+	public void setAsRestorationlabNumberOfWebpage(
 			List<List<String>> asRestorationlabNumberOfWebpage) {
 		this.asRestorationlabNumberOfWebpage = asRestorationlabNumberOfWebpage;
 	}
@@ -4386,7 +4365,7 @@ public class EAG2012Loader{
 	/**
 	 * @param asRestorationlabNumberOfWebpage the asRestorationlabNumberOfWebpage to add
 	 */
-	public void addAsRestorationlabNumberOfEmailNumberOfWebpage(List<String> asRestorationlabNumberOfWebpage) {
+	public void addAsRestorationlabNumberOfWebpage(List<String> asRestorationlabNumberOfWebpage) {
 		this.getAsRestorationlabNumberOfWebpage().add(asRestorationlabNumberOfWebpage);
 	}
 
@@ -4578,7 +4557,7 @@ public class EAG2012Loader{
 	/**
 	 * @param asReproductionserNumberOfEmail the asReproductionserNumberOfEmail to set
 	 */
-	public void setAsReproductionserNumberOfEmailNumberOfEmail(
+	public void setAsReproductionserNumberOfEmail(
 			List<List<String>> asReproductionserNumberOfEmail) {
 		this.asRestorationlabNumberOfEmail = asReproductionserNumberOfEmail;
 	}
@@ -4586,7 +4565,7 @@ public class EAG2012Loader{
 	/**
 	 * @param asReproductionserNumberOfEmail the asReproductionserNumberOfEmail to add
 	 */
-	public void addAsReproductionserNumberOfEmailNumberOfEmail(List<String> asReproductionserNumberOfEmail) {
+	public void addAsReproductionserNumberOfEmail(List<String> asReproductionserNumberOfEmail) {
 		this.getAsReproductionserNumberOfEmail().add(asReproductionserNumberOfEmail);
 	}
 
@@ -4678,7 +4657,7 @@ public class EAG2012Loader{
 	/**
 	 * @param asReproductionserNumberOfWebpage the asReproductionserNumberOfWebpage to set
 	 */
-	public void setAsReproductionserNumberOfEmailNumberOfWebpage(
+	public void setAsReproductionserNumberOfWebpage(
 			List<List<String>> asReproductionserNumberOfWebpage) {
 		this.asReproductionserNumberOfWebpage = asReproductionserNumberOfWebpage;
 	}
@@ -4686,7 +4665,7 @@ public class EAG2012Loader{
 	/**
 	 * @param asReproductionserNumberOfWebpage the asReproductionserNumberOfWebpage to add
 	 */
-	public void addAsReproductionserNumberOfEmailNumberOfWebpage(List<String> asReproductionserNumberOfWebpage) {
+	public void addAsReproductionserNumberOfWebpage(List<String> asReproductionserNumberOfWebpage) {
 		this.getAsReproductionserNumberOfWebpage().add(asReproductionserNumberOfWebpage);
 	}
 
@@ -5358,301 +5337,585 @@ public class EAG2012Loader{
 		this.getAsRSOtherServicesWebpageLang().add(asRSOtherServicesWebpageLang);
 	}
 
-	public String getRepositorhist() {
-		return this.repositorhist;
-	}
-	public void setRepositorhist(String repositorhist) {
-		this.repositorhist = repositorhist;
-	}
-	public String getRepositorhistLang() {
-		return this.repositorhistLang;
-	}
-	public void setRepositorhistLang(String repositorhistLang) {
-		this.repositorhistLang = repositorhistLang;
-	}
-	public String getRepositorFoundDate() {
-		return this.repositorFoundDate;
-	}
-	public void setRepositorFoundDate(String repositorFoundDate) {
-		this.repositorFoundDate = repositorFoundDate;
-	}
-	public String getRepositorFoundDateLocalType() {
-		return this.repositorFoundDateLocalType;
-	}
-	public void setRepositorFoundDateLocalType(
-			String repositorFoundDateLocalType) {
-		this.repositorFoundDateLocalType = repositorFoundDateLocalType;
-	}
-	public String getRepositorFoundDateNotAfter() {
-		return this.repositorFoundDateNotAfter;
-	}
-	public void setRepositorFoundDateNotAfter(
-			String repositorFoundDateNotAfter) {
-		this.repositorFoundDateNotAfter = repositorFoundDateNotAfter;
-	}
-	public String getRepositorFoundDateNotBefore() {
-		return this.repositorFoundDateNotBefore;
-	}
-	public void setRepositorFoundDateNotBefore(
-			String repositorFoundDateNotBefore) {
-		this.repositorFoundDateNotBefore = repositorFoundDateNotBefore;
-	}
-	public String getRepositorFoundDateStandardDate() {
-		return this.repositorFoundDateStandardDate;
-	}
-	public void setRepositorFoundDateStandardDate(
-			String repositorFoundDateStandardDate) {
-		this.repositorFoundDateStandardDate = repositorFoundDateStandardDate;
-	}
-	public String getRepositorFoundDateLang() {
-		return this.repositorFoundDateLang;
-	}
-	public void setRepositorFoundDateLang(String repositorFoundDateLang) {
-		this.repositorFoundDateLang = repositorFoundDateLang;
-	}
-	public String getRepositorFoundRule() {
-		return this.repositorFoundRule;
-	}
-	public void setRepositorFoundRule(String repositorFoundRule) {
-		this.repositorFoundRule = repositorFoundRule;
-	}
-	public String getRepositorFoundRuleLang() {
-		return this.repositorFoundRuleLang;
-	}
-	public void setRepositorFoundRuleLang(String repositorFoundRuleLang) {
-		this.repositorFoundRuleLang = repositorFoundRuleLang;
-	}
-	public String getRepositorSupDate() {
-		return this.repositorSupDate;
-	}
-	public void setRepositorSupDate(String repositorSupDate) {
-		this.repositorSupDate = repositorSupDate;
-	}
-	public String getRepositorSupDateLocalType() {
-		return this.repositorSupDateLocalType;
-	}
-	public void setRepositorSupDateLocalType(String repositorSupDateLocalType) {
-		this.repositorSupDateLocalType = repositorSupDateLocalType;
-	}
-	public String getRepositorSupDateNotAfter() {
-		return this.repositorSupDateNotAfter;
-	}
-	public void setRepositorSupDateNotAfter(String repositorSupDateNotAfter) {
-		this.repositorSupDateNotAfter = repositorSupDateNotAfter;
-	}
-	public String getRepositorSupDateNotBefore() {
-		return this.repositorSupDateNotBefore;
-	}
-	public void setRepositorSupDateNotBefore(String repositorSupDateNotBefore) {
-		this.repositorSupDateNotBefore = repositorSupDateNotBefore;
-	}
-	public String getRepositorSupDateStandardDate() {
-		return this.repositorSupDateStandardDate;
-	}
-	public void setRepositorSupDateStandardDate(
-			String repositorSupDateStandardDate) {
-		this.repositorSupDateStandardDate = repositorSupDateStandardDate;
-	}
-	public String getRepositorSupDateLang() {
-		return this.repositorSupDateLang;
-	}
-	public void setRepositorSupDateLang(String repositorSupDateLang) {
-		this.repositorSupDateLang = repositorSupDateLang;
-	}
-	public String getRepositorSupRule() {
-		return this.repositorSupRule;
-	}
-	public void setRepositorSupRule(String repositorSupRule) {
-		this.repositorSupRule = repositorSupRule;
-	}
-	public String getRepositorSupRuleLang() {
-		return this.repositorSupRuleLang;
-	}
-	public void setRepositorSupRuleLang(String repositorSupRuleLang) {
-		this.repositorSupRuleLang = repositorSupRuleLang;
-	}
-	public String getAdminunit() {
-		return this.adminunit;
-	}
-	public void setAdminunit(String adminunit) {
-		this.adminunit = adminunit;
-	}
-	public String getAdminunitLang() {
-		return this.adminunitLang;
-	}
-	public void setAdminunitLang(String adminunitLang) {
-		this.adminunitLang = adminunitLang;
-	}
-	public String getBuilding() {
-		return this.building;
-	}
-	public void setBuilding(String building) {
-		this.building = building;
-	}
-	public String getBuildingLang() {
-		return this.buildingLang;
-	}
-	public void setBuildingLang(String buildingLang) {
-		this.buildingLang = buildingLang;
-	}
-	public String getRepositorarea() {
-		return this.repositorarea;
-	}
-	public void setRepositorarea(String repositorarea) {
-		this.repositorarea = repositorarea;
-	}
-	public String getRepositorareaUnit() {
-		return this.repositorareaUnit;
-	}
-	public void setRepositorareaUnit(String repositorareaUnit) {
-		this.repositorareaUnit = repositorareaUnit;
-	}
-	public String getLengthshelf() {
-		return this.lengthshelf;
-	}
-	public void setLengthshelf(String lengthshelf) {
-		this.lengthshelf = lengthshelf;
-	}
-	public String getLengthshelfUnit() {
-		return this.lengthshelfUnit;
-	}
-	public void setLengthshelfUnit(String lengthshelfUnit) {
-		this.lengthshelfUnit = lengthshelfUnit;
-	}
-	public String getHoldings() {
-		return this.holdings;
-	}
-	public void setHoldings(String holdings) {
-		this.holdings = holdings;
-	}
-	public String getHoldingsLang() {
-		return this.holdingsLang;
-	}
-	public void setHoldingsLang(String holdingsLang) {
-		this.holdingsLang = holdingsLang;
-	}
-	public String getHoldingsDate() {
-		return this.holdingsDate;
-	}
-	public void setHoldingsDate(String holdingsDate) {
-		this.holdingsDate = holdingsDate;
-	}
-	public String getHoldingsDateLocalType() {
-		return this.holdingsDateLocalType;
-	}
-	public void setHoldingsDateLocalType(String holdingsDateLocalType) {
-		this.holdingsDateLocalType = holdingsDateLocalType;
-	}
-	public String getHoldingsDateNotAfter() {
-		return this.holdingsDateNotAfter;
-	}
-	public void setHoldingsDateNotAfter(String holdingsDateNotAfter) {
-		this.holdingsDateNotAfter = holdingsDateNotAfter;
-	}
-	public String getHoldingsDateNotBefore() {
-		return this.holdingsDateNotBefore;
-	}
-	public void setHoldingsDateNotBefore(String holdingsDateNotBefore) {
-		this.holdingsDateNotBefore = holdingsDateNotBefore;
-	}
-	public String getHoldingsDateStandardDate() {
-		return this.holdingsDateStandardDate;
-	}
-	public void setHoldingsDateStandardDate(String holdingsDateStandardDate) {
-		this.holdingsDateStandardDate = holdingsDateStandardDate;
-	}
-	public String getHoldingsDateLang() {
-		return this.holdingsDateLang;
-	}
-	public void setHoldingsDateLang(String holdingsDateLang) {
-		this.holdingsDateLang = holdingsDateLang;
-	}
-	public String getHoldingsDateRangeLocalType() {
-		return this.holdingsDateRangeLocalType;
-	}
-	public void setHoldingsDateRangeLocalType(
-			String holdingsDateRangeLocalType) {
-		this.holdingsDateRangeLocalType = holdingsDateRangeLocalType;
-	}
-	public String getHoldingsDateRangeFromDate() {
-		return this.holdingsDateRangeFromDate;
-	}
-	public void setHoldingsDateRangeFromDate(String holdingsDateRangeFromDate) {
-		this.holdingsDateRangeFromDate = holdingsDateRangeFromDate;
-	}
-	public String getHoldingsDateRangeFromDateNoAfter() {
-		return this.holdingsDateRangeFromDateNoAfter;
-	}
-	public void setHoldingsDateRangeFromDateNoAfter(
-			String holdingsDateRangeFromDateNoAfter) {
-		this.holdingsDateRangeFromDateNoAfter = holdingsDateRangeFromDateNoAfter;
-	}
-	public String getHoldingsDateRangeFromDateNoBefore() {
-		return this.holdingsDateRangeFromDateNoBefore;
-	}
-	public void setHoldingsDateRangeFromDateNoBefore(
-			String holdingsDateRangeFromDateNoBefore) {
-		this.holdingsDateRangeFromDateNoBefore = holdingsDateRangeFromDateNoBefore;
-	}
-	public String getHoldingsDateRangeFromDateStandardDate() {
-		return this.holdingsDateRangeFromDateStandardDate;
-	}
-	public void setHoldingsDateRangeFromDateStandardDate(
-			String holdingsDateRangeFromDateStandardDate) {
-		this.holdingsDateRangeFromDateStandardDate = holdingsDateRangeFromDateStandardDate;
-	}
-	public String getHoldingsDateRangeFromDateLang() {
-		return this.holdingsDateRangeFromDateLang;
-	}
-	public void setHoldingsDateRangeFromDateLang(
-			String holdingsDateRangeFromDateLang) {
-		this.holdingsDateRangeFromDateLang = holdingsDateRangeFromDateLang;
-	}
-	public String getHoldingsDateRangeToDate() {
-		return this.holdingsDateRangeToDate;
-	}
-	public void setHoldingsDateRangeToDate(String holdingsDateRangeToDate) {
-		this.holdingsDateRangeToDate = holdingsDateRangeToDate;
-	}
-	public String getHoldingsDateRangeToDateNoAfter() {
-		return this.holdingsDateRangeToDateNoAfter;
-	}
-	public void setHoldingsDateRangeToDateNoAfter(
-			String holdingsDateRangeToDateNoAfter) {
-		this.holdingsDateRangeToDateNoAfter = holdingsDateRangeToDateNoAfter;
-	}
-	public String getHoldingsDateRangeToDateNoBefore() {
-		return this.holdingsDateRangeToDateNoBefore;
-	}
-	public void setHoldingsDateRangeToDateNoBefore(
-			String holdingsDateRangeToDateNoBefore) {
-		this.holdingsDateRangeToDateNoBefore = holdingsDateRangeToDateNoBefore;
-	}
-	public String getHoldingsDateRangeToDateStandardDate() {
-		return this.holdingsDateRangeToDateStandardDate;
-	}
-	public void setHoldingsDateRangeToDateStandardDate(
-			String holdingsDateRangeToDateStandardDate) {
-		this.holdingsDateRangeToDateStandardDate = holdingsDateRangeToDateStandardDate;
-	}
-	public String getHoldingsDateRangeToDateLang() {
-		return this.holdingsDateRangeToDateLang;
-	}
-	public void setHoldingsDateRangeToDateLang(
-			String holdingsDateRangeToDateLang) {
-		this.holdingsDateRangeToDateLang = holdingsDateRangeToDateLang;
-	}
-	public String getExtent() {
-		return this.extent;
-	}
-	public void setExtent(String extent) {
-		this.extent = extent;
-	}
-	public String getExtentUnit() {
-		return this.extentUnit;
-	}
-	public void setExtentUnit(String extentUnit) {
-		this.extentUnit = extentUnit;
+	/**
+	 * @return the descRepositorhist
+	 */
+	public List<List<String>> getDescRepositorhist() {
+		if (this.descRepositorhist == null) {
+			this.descRepositorhist = new ArrayList<List<String>>();
+		}
+		return this.descRepositorhist;
+	}
+
+	/**
+	 * @param descRepositorhist the descRepositorhist to set
+	 */
+	public void setDescRepositorhist(List<List<String>> descRepositorhist) {
+		this.descRepositorhist = descRepositorhist;
+	}
+
+	/**
+	 * @param descRepositorhist the descRepositorhist to add
+	 */
+	public void addDescRepositorhist(List<String> descRepositorhist) {
+		this.getDescRepositorhist().add(descRepositorhist);
+	}
+
+	/**
+	 * @return the descRepositorhistLang
+	 */
+	public List<List<String>> getDescRepositorhistLang() {
+		if (this.descRepositorhistLang == null) {
+			this.descRepositorhistLang = new ArrayList<List<String>>();
+		}
+		return this.descRepositorhistLang;
+	}
+
+	/**
+	 * @param descRepositorhistLang the descRepositorhistLang to set
+	 */
+	public void setDescRepositorhistLang(List<List<String>> descRepositorhistLang) {
+		this.descRepositorhistLang = descRepositorhistLang;
+	}
+
+	/**
+	 * @param descRepositorhistLang the descRepositorhistLang to add
+	 */
+	public void addDescRepositorhistLang(List<String> descRepositorhistLang) {
+		this.getDescRepositorhistLang().add(descRepositorhistLang);
+	}
+
+	/**
+	 * @return the descRepositorFoundDate
+	 */
+	public List<List<String>> getDescRepositorFoundDate() {
+		if (this.descRepositorFoundDate == null) {
+			this.descRepositorFoundDate = new ArrayList<List<String>>();
+		}
+		return this.descRepositorFoundDate;
+	}
+
+	/**
+	 * @param descRepositorFoundDate the descRepositorFoundDate to set
+	 */
+	public void setDescRepositorFoundDate(List<List<String>> descRepositorFoundDate) {
+		this.descRepositorFoundDate = descRepositorFoundDate;
+	}
+
+	/**
+	 * @param descRepositorFoundDate the descRepositorFoundDate to add
+	 */
+	public void addDescRepositorFoundDate(List<String> descRepositorFoundDate) {
+		this.getDescRepositorFoundDate().add(descRepositorFoundDate);
+	}
+
+	/**
+	 * @return the descRepositorFoundRule
+	 */
+	public List<List<String>> getDescRepositorFoundRule() {
+		if (this.descRepositorFoundRule == null) {
+			this.descRepositorFoundRule = new ArrayList<List<String>>();
+		}
+		return this.descRepositorFoundRule;
+	}
+
+	/**
+	 * @param descRepositorFoundRule the descRepositorFoundRule to set
+	 */
+	public void setDescRepositorFoundRule(List<List<String>> descRepositorFoundRule) {
+		this.descRepositorFoundRule = descRepositorFoundRule;
+	}
+
+	/**
+	 * @param descRepositorFoundRule the descRepositorFoundRule to add
+	 */
+	public void addDescRepositorFoundRule(List<String> descRepositorFoundRule) {
+		this.getDescRepositorFoundRule().add(descRepositorFoundRule);
+	}
+
+	/**
+	 * @return the descRepositorFoundRuleLang
+	 */
+	public List<List<String>> getDescRepositorFoundRuleLang() {
+		if (this.descRepositorFoundRuleLang == null) {
+			this.descRepositorFoundRuleLang = new ArrayList<List<String>>();
+		}
+		return this.descRepositorFoundRuleLang;
+	}
+
+	/**
+	 * @param descRepositorFoundRuleLang the descRepositorFoundRuleLang to set
+	 */
+	public void setDescRepositorFoundRuleLang(
+			List<List<String>> descRepositorFoundRuleLang) {
+		this.descRepositorFoundRuleLang = descRepositorFoundRuleLang;
+	}
+
+	/**
+	 * @param descRepositorFoundRuleLang the descRepositorFoundRuleLang to add
+	 */
+	public void addDescRepositorFoundRuleLang(List<String> descRepositorFoundRuleLang) {
+		this.getDescRepositorFoundRuleLang().add(descRepositorFoundRuleLang);
+	}
+
+	/**
+	 * @return the descRepositorSupDate
+	 */
+	public List<List<String>> getDescRepositorSupDate() {
+		if (this.descRepositorSupDate == null) {
+			this.descRepositorSupDate = new ArrayList<List<String>>();
+		}
+		return this.descRepositorSupDate;
+	}
+
+	/**
+	 * @param descRepositorSupDate the descRepositorSupDate to set
+	 */
+	public void setDescRepositorSupDate(List<List<String>> descRepositorSupDate) {
+		this.descRepositorSupDate = descRepositorSupDate;
+	}
+
+	/**
+	 * @param descRepositorSupDate the descRepositorSupDate to add
+	 */
+	public void addDescRepositorSupDate(List<String> descRepositorSupDate) {
+		this.getDescRepositorSupDate().add(descRepositorSupDate);
+	}
+
+	/**
+	 * @return the descRepositorSupRule
+	 */
+	public List<List<String>> getDescRepositorSupRule() {
+		if (this.descRepositorSupRule == null) {
+			this.descRepositorSupRule = new ArrayList<List<String>>();
+		}
+		return this.descRepositorSupRule;
+	}
+
+	/**
+	 * @param descRepositorSupRule the descRepositorSupRule to set
+	 */
+	public void setDescRepositorSupRule(List<List<String>> descRepositorSupRule) {
+		this.descRepositorSupRule = descRepositorSupRule;
+	}
+
+	/**
+	 * @param descRepositorSupRule the descRepositorSupRule to add
+	 */
+	public void addDescRepositorSupRule(List<String> descRepositorSupRule) {
+		this.getDescRepositorSupRule().add(descRepositorSupRule);
+	}
+
+	/**
+	 * @return the descRepositorSupRuleLang
+	 */
+	public List<List<String>> getDescRepositorSupRuleLang() {
+		if (this.descRepositorSupRuleLang == null) {
+			this.descRepositorSupRuleLang = new ArrayList<List<String>>();
+		}
+		return this.descRepositorSupRuleLang;
+	}
+
+	/**
+	 * @param descRepositorSupRuleLang the descRepositorSupRuleLang to set
+	 */
+	public void setDescRepositorSupRuleLang(
+			List<List<String>> descRepositorSupRuleLang) {
+		this.descRepositorSupRuleLang = descRepositorSupRuleLang;
+	}
+
+	/**
+	 * @param descRepositorSupRuleLang the descRepositorSupRuleLang to add
+	 */
+	public void addDescRepositorSupRuleLang(List<String> descRepositorSupRuleLang) {
+		this.getDescRepositorSupRuleLang().add(descRepositorSupRuleLang);
+	}
+
+	/**
+	 * @return the descAdminunit
+	 */
+	public List<List<String>> getDescAdminunit() {
+		if (this.descAdminunit == null) {
+			this.descAdminunit = new ArrayList<List<String>>();
+		}
+		return this.descAdminunit;
+	}
+
+	/**
+	 * @param descAdminunit the descAdminunit to set
+	 */
+	public void setDescAdminunit(List<List<String>> descAdminunit) {
+		this.descAdminunit = descAdminunit;
+	}
+
+	/**
+	 * @param descAdminunit the descAdminunit to add
+	 */
+	public void addDescAdminunit(List<String> descAdminunit) {
+		this.getDescAdminunit().add(descAdminunit);
+	}
+
+	/**
+	 * @return the descAdminunitLang
+	 */
+	public List<List<String>> getDescAdminunitLang() {
+		if (this.descAdminunitLang == null) {
+			this.descAdminunitLang = new ArrayList<List<String>>();
+		}
+		return this.descAdminunitLang;
+	}
+
+	/**
+	 * @param descAdminunitLang the descAdminunitLang to set
+	 */
+	public void setDescAdminunitLang(List<List<String>> descAdminunitLang) {
+		this.descAdminunitLang = descAdminunitLang;
+	}
+
+	/**
+	 * @param descAdminunitLang the descAdminunitLang to add
+	 */
+	public void addDescAdminunitLang(List<String> descAdminunitLang) {
+		this.getDescAdminunitLang().add(descAdminunitLang);
+	}
+
+	/**
+	 * @return the descBuilding
+	 */
+	public List<List<String>> getDescBuilding() {
+		if (this.descBuilding == null) {
+			this.descBuilding = new ArrayList<List<String>>();
+		}
+		return this.descBuilding;
+	}
+
+	/**
+	 * @param descBuilding the descBuilding to set
+	 */
+	public void setDescBuilding(List<List<String>> descBuilding) {
+		this.descBuilding = descBuilding;
+	}
+
+	/**
+	 * @param descBuilding the descBuilding to add
+	 */
+	public void addDescBuilding(List<String> descBuilding) {
+		this.getDescBuilding().add(descBuilding);
+	}
+
+	/**
+	 * @return the descBuildingLang
+	 */
+	public List<List<String>> getDescBuildingLang() {
+		if (this.descBuildingLang == null) {
+			this.descBuildingLang = new ArrayList<List<String>>();
+		}
+		return this.descBuildingLang;
+	}
+
+	/**
+	 * @param descBuildingLang the descBuildingLang to set
+	 */
+	public void setDescBuildingLang(List<List<String>> descBuildingLang) {
+		this.descBuildingLang = descBuildingLang;
+	}
+
+	/**
+	 * @param descBuildingLang the descBuildingLang to add
+	 */
+	public void addDescBuildingLang(List<String> descBuildingLang) {
+		this.getDescBuildingLang().add(descBuildingLang);
+	}
+
+	/**
+	 * @return the descRepositorarea
+	 */
+	public List<List<String>> getDescRepositorarea() {
+		if (this.descRepositorarea == null) {
+			this.descRepositorarea = new ArrayList<List<String>>();
+		}
+		return this.descRepositorarea;
+	}
+
+	/**
+	 * @param descRepositorarea the descRepositorarea to set
+	 */
+	public void setDescRepositorarea(List<List<String>> descRepositorarea) {
+		this.descRepositorarea = descRepositorarea;
+	}
+
+	/**
+	 * @param descRepositorarea the descRepositorarea to add
+	 */
+	public void addDescRepositorarea(List<String> descRepositorarea) {
+		this.getDescRepositorarea().add(descRepositorarea);
+	}
+
+	/**
+	 * @return the descRepositorareaUnit
+	 */
+	public List<List<String>> getDescRepositorareaUnit() {
+		if (this.descRepositorareaUnit == null) {
+			this.descRepositorareaUnit = new ArrayList<List<String>>();
+		}
+		return this.descRepositorareaUnit;
+	}
+
+	/**
+	 * @param descRepositorareaUnit the descRepositorareaUnit to set
+	 */
+	public void setDescRepositorareaUnit(List<List<String>> descRepositorareaUnit) {
+		this.descRepositorareaUnit = descRepositorareaUnit;
+	}
+
+	/**
+	 * @param descRepositorareaUnit the descRepositorareaUnit to add
+	 */
+	public void addDescRepositorareaUnit(List<String> descRepositorareaUnit) {
+		this.getDescRepositorareaUnit().add(descRepositorareaUnit);
+	}
+
+	/**
+	 * @return the descLengthshelf
+	 */
+	public List<List<String>> getDescLengthshelf() {
+		if (this.descLengthshelf == null) {
+			this.descLengthshelf = new ArrayList<List<String>>();
+		}
+		return this.descLengthshelf;
+	}
+
+	/**
+	 * @param descLengthshelf the descLengthshelf to set
+	 */
+	public void setDescLengthshelf(List<List<String>> descLengthshelf) {
+		this.descLengthshelf = descLengthshelf;
+	}
+
+	/**
+	 * @param descLengthshelf the descLengthshelf to add
+	 */
+	public void addDescLengthshelf(List<String> descLengthshelf) {
+		this.getDescLengthshelf().add(descLengthshelf);
+	}
+
+	/**
+	 * @return the descLengthshelfUnit
+	 */
+	public List<List<String>> getDescLengthshelfUnit() {
+		if (this.descLengthshelfUnit == null) {
+			this.descLengthshelfUnit = new ArrayList<List<String>>();
+		}
+		return this.descLengthshelfUnit;
+	}
+
+	/**
+	 * @param descLengthshelfUnit the descLengthshelfUnit to set
+	 */
+	public void setDescLengthshelfUnit(List<List<String>> descLengthshelfUnit) {
+		this.descLengthshelfUnit = descLengthshelfUnit;
+	}
+
+	/**
+	 * @param descLengthshelfUnit the descLengthshelfUnit to add
+	 */
+	public void addDescLengthshelfUnit(List<String> descLengthshelfUnit) {
+		this.getDescLengthshelfUnit().add(descLengthshelfUnit);
+	}
+
+	/**
+	 * @return the descHoldings
+	 */
+	public List<List<String>> getDescHoldings() {
+		if (this.descHoldings == null) {
+			this.descHoldings = new ArrayList<List<String>>();
+		}
+		return this.descHoldings;
+	}
+
+	/**
+	 * @param descHoldings the descHoldings to set
+	 */
+	public void setDescHoldings(List<List<String>> descHoldings) {
+		this.descHoldings = descHoldings;
+	}
+
+	/**
+	 * @param descHoldings the descHoldings to add
+	 */
+	public void addDescHoldings(List<String> descHoldings) {
+		this.getDescHoldings().add(descHoldings);
+	}
+
+	/**
+	 * @return the descHoldingsLang
+	 */
+	public List<List<String>> getDescHoldingsLang() {
+		if (this.descHoldingsLang == null) {
+			this.descHoldingsLang = new ArrayList<List<String>>();
+		}
+		return this.descHoldingsLang;
+	}
+
+	/**
+	 * @param descHoldingsLang the descHoldingsLang to set
+	 */
+	public void setDescHoldingsLang(List<List<String>> descHoldingsLang) {
+		this.descHoldingsLang = descHoldingsLang;
+	}
+
+	/**
+	 * @param descHoldingsLang the descHoldingsLang to add
+	 */
+	public void addDescHoldingsLang(List<String> descHoldingsLang) {
+		this.getDescHoldingsLang().add(descHoldingsLang);
+	}
+
+	/**
+	 * @return the descHoldingsDate
+	 */
+	public List<List<String>> getDescHoldingsDate() {
+		if (this.descHoldingsDate == null) {
+			this.descHoldingsDate = new ArrayList<List<String>>();
+		}
+		return this.descHoldingsDate;
+	}
+
+	/**
+	 * @param descHoldingsDate the descHoldingsDate to set
+	 */
+	public void setDescHoldingsDate(List<List<String>> descHoldingsDate) {
+		this.descHoldingsDate = descHoldingsDate;
+	}
+
+	/**
+	 * @param descHoldingsDate the descHoldingsDate to add
+	 */
+	public void addDescHoldingsDate(List<String> descHoldingsDate) {
+		this.getDescHoldingsDate().add(descHoldingsDate);
+	}
+
+	/**
+	 * @return the descNumberOfHoldingsDateRange
+	 */
+	public List<List<String>> getDescNumberOfHoldingsDateRange() {
+		if (this.descNumberOfHoldingsDateRange == null) {
+			this.descNumberOfHoldingsDateRange = new ArrayList<List<String>>();
+		}
+		return this.descNumberOfHoldingsDateRange;
+	}
+
+	/**
+	 * @param descNumberOfHoldingsDateRange the descNumberOfHoldingsDateRange to set
+	 */
+	public void setDescNumberOfHoldingsDateRange(
+			List<List<String>> descNumberOfHoldingsDateRange) {
+		this.descNumberOfHoldingsDateRange = descNumberOfHoldingsDateRange;
+	}
+
+	/**
+	 * @param descNumberOfHoldingsDateRange the descNumberOfHoldingsDateRange to add
+	 */
+	public void addDescNumberOfHoldingsDateRange(List<String> descNumberOfHoldingsDateRange) {
+		this.getDescNumberOfHoldingsDateRange().add(descNumberOfHoldingsDateRange);
+	}
+
+	/**
+	 * @return the descHoldingsDateRangeFromDate
+	 */
+	public List<List<String>> getDescHoldingsDateRangeFromDate() {
+		if (this.descHoldingsDateRangeFromDate == null) {
+			this.descHoldingsDateRangeFromDate = new ArrayList<List<String>>();
+		}
+		return this.descHoldingsDateRangeFromDate;
+	}
+
+	/**
+	 * @param descHoldingsDateRangeFromDate the descHoldingsDateRangeFromDate to set
+	 */
+	public void setDescHoldingsDateRangeFromDate(
+			List<List<String>> descHoldingsDateRangeFromDate) {
+		this.descHoldingsDateRangeFromDate = descHoldingsDateRangeFromDate;
+	}
+
+	/**
+	 * @param descHoldingsDateRangeFromDate the descHoldingsDateRangeFromDate to add
+	 */
+	public void addDescHoldingsDateRangeFromDate(List<String> descHoldingsDateRangeFromDate) {
+		this.getDescHoldingsDateRangeFromDate().add(descHoldingsDateRangeFromDate);
+	}
+
+	/**
+	 * @return the descHoldingsDateRangeToDate
+	 */
+	public List<List<String>> getDescHoldingsDateRangeToDate() {
+		if (this.descHoldingsDateRangeToDate == null) {
+			this.descHoldingsDateRangeToDate = new ArrayList<List<String>>();
+		}
+		return this.descHoldingsDateRangeToDate;
+	}
+
+	/**
+	 * @param descHoldingsDateRangeToDate the descHoldingsDateRangeToDate to set
+	 */
+	public void setDescHoldingsDateRangeToDate(
+			List<List<String>> descHoldingsDateRangeToDate) {
+		this.descHoldingsDateRangeToDate = descHoldingsDateRangeToDate;
+	}
+
+	/**
+	 * @param descHoldingsDateRangeToDate the descHoldingsDateRangeToDate to add
+	 */
+	public void addDescHoldingsDateRangeToDate(List<String> descHoldingsDateRangeToDate) {
+		this.getDescHoldingsDateRangeToDate().add(descHoldingsDateRangeToDate);
+	}
+
+	/**
+	 * @return the descExtent
+	 */
+	public List<List<String>> getDescExtent() {
+		if (this.descExtent == null) {
+			this.descExtent = new ArrayList<List<String>>();
+		}
+		return this.descExtent;
+	}
+
+	/**
+	 * @param descExtent the descExtent to set
+	 */
+	public void setDescExtent(List<List<String>> descExtent) {
+		this.descExtent = descExtent;
+	}
+
+	/**
+	 * @param descExtent the descExtent to add
+	 */
+	public void addDescExtent(List<String> descExtent) {
+		this.getDescExtent().add(descExtent);
+	}
+
+	/**
+	 * @return the descExtentUnit
+	 */
+	public List<List<String>> getDescExtentUnit() {
+		if (this.descExtentUnit == null) {
+			this.descExtentUnit = new ArrayList<List<String>>();
+		}
+		return this.descExtentUnit;
+	}
+
+	/**
+	 * @param descExtentUnit the descExtentUnit to set
+	 */
+	public void setDescExtentUnit(List<List<String>> descExtentUnit) {
+		this.descExtentUnit = descExtentUnit;
+	}
+
+	/**
+	 * @param descExtentUnit the descExtentUnit to add
+	 */
+	public void addDescExtentUnit(List<String> descExtentUnit) {
+		this.getDescExtentUnit().add(descExtentUnit);
 	}
 
 	/**
@@ -7574,7 +7837,7 @@ public class EAG2012Loader{
 					}
 					this.addAsLibraryQuestion(libQuestion);
 					this.addAsLibraryTelephone(libTelephone);
-					this.addAsLibraryNumberOfEmailNumberOfEmail(libNumberOfEmail);
+					this.addAsLibraryNumberOfEmail(libNumberOfEmail);
 					this.addAsLibraryEmailHref(libEmailHref);
 					this.addAsLibraryEmailTitle(libEmailTitle);
 					this.addAsLibraryNumberOfWebpage(libNumberOfWebpage);
@@ -7750,10 +8013,10 @@ public class EAG2012Loader{
 					this.addAsRestorationlabDescription(tsRLValue);
 					this.addAsRestorationlabDescriptionLang(tsRLValueLang);
 					this.addAsRestorationlabTelephone(tsRLTelephone);
-					this.addAsRestorationlabNumberOfEmailNumberOfEmail(tsRLNumberOfEmail);
+					this.addAsRestorationlabNumberOfEmail(tsRLNumberOfEmail);
 					this.addAsRestorationlabEmailHref(tsRLEmailHref);
 					this.addAsRestorationlabEmailTitle(tsRLEmailTitle);
-					this.addAsRestorationlabNumberOfEmailNumberOfWebpage(tsRLNumberOfWebpage);
+					this.addAsRestorationlabNumberOfWebpage(tsRLNumberOfWebpage);
 					this.addAsRestorationlabWebpageHref(tsRLWebpageHref);
 					this.addAsRestorationlabWebpageTitle(tsRLWebpageTitle);
 
@@ -7921,10 +8184,10 @@ public class EAG2012Loader{
 					this.addAsReproductionserDescription(tsRSValue);
 					this.addAsReproductionserDescriptionLang(tsRSValueLang);
 					this.addAsReproductionserTelephone(tsRSTelephone);
-					this.addAsReproductionserNumberOfEmailNumberOfEmail(tsRSNumberOfEmail);
+					this.addAsReproductionserNumberOfEmail(tsRSNumberOfEmail);
 					this.addAsReproductionserEmailHref(tsRSEmailHref);
 					this.addAsReproductionserEmailTitle(tsRSEmailTitle);
-					this.addAsReproductionserNumberOfEmailNumberOfWebpage(tsRSNumberOfWebpage);
+					this.addAsReproductionserNumberOfWebpage(tsRSNumberOfWebpage);
 					this.addAsReproductionserWebpageHref(tsRSWebpageHref);
 					this.addAsReproductionserWebpageTitle(tsRSWebpageTitle);
 					this.addAsReproductionserMicrofilmServices(tsRSMicroformser);
@@ -8203,152 +8466,362 @@ public class EAG2012Loader{
 	 */
 	private void loadDescriptionTabValues() {
 		// Repositories info.
-		if (this.eag.getArchguide().getDesc().getRepositories() != null) {
-			if (!this.eag.getArchguide().getDesc().getRepositories().getRepository().isEmpty()) {
-				// TODO: Review for multiple repositories.
-				// First repository equals institution.
-				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
+		if (this.eag.getArchguide() != null && this.eag.getArchguide().getDesc() != null
+				&& this.eag.getArchguide().getDesc().getRepositories() != null
+				&& !this.eag.getArchguide().getDesc().getRepositories().getRepository().isEmpty()) {
+			// For each repository
+			for (int i = 0; i < this.eag.getArchguide().getDesc().getRepositories().getRepository().size(); i++) {
+				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
 
 				// Repository history.
-				if (repository.getRepositorhist() != null) {
-					if (repository.getRepositorhist().getDescriptiveNote() != null) {
-						if (!repository.getRepositorhist().getDescriptiveNote().getP().isEmpty()) {
-							// TODO: Review for multiple values.
-							for (int i = 0; i < repository.getRepositorhist().getDescriptiveNote().getP().size(); i++) {
-								this.setRepositorhist(repository.getRepositorhist().getDescriptiveNote().getP().get(i).getContent());
-								this.setRepositorhistLang(repository.getRepositorhist().getDescriptiveNote().getP().get(i).getLang());
+				List<String> descRHDescription = new ArrayList<String>();
+				List<String> descRHDescriptionLang = new ArrayList<String>();
+				if (repository.getRepositorhist() != null
+						&& repository.getRepositorhist().getDescriptiveNote() != null
+						&& !repository.getRepositorhist().getDescriptiveNote().getP().isEmpty()) {
+					for (int j = 0; j < repository.getRepositorhist().getDescriptiveNote().getP().size(); j++) {
+						if (repository.getRepositorhist().getDescriptiveNote().getP().get(j) != null
+								&& repository.getRepositorhist().getDescriptiveNote().getP().get(j).getContent() != null
+								&& !repository.getRepositorhist().getDescriptiveNote().getP().get(j).getContent().isEmpty()) {
+							descRHDescription.add(repository.getRepositorhist().getDescriptiveNote().getP().get(j).getContent());
+							if (repository.getRepositorhist().getDescriptiveNote().getP().get(j).getLang() != null
+									&& !repository.getRepositorhist().getDescriptiveNote().getP().get(j).getLang().isEmpty()) {
+								descRHDescriptionLang.add(repository.getRepositorhist().getDescriptiveNote().getP().get(j).getLang());
+							} else {
+								descRHDescriptionLang.add(Eag2012.OPTION_NONE);
 							}
+						} else {
+							descRHDescription.add("");
+							descRHDescriptionLang.add(Eag2012.OPTION_NONE);
 						}
 					}
 				}
+				this.addDescRepositorhist(descRHDescription);
+				this.addDescRepositorhistLang(descRHDescriptionLang);
 
 				// Date of repository foundation.
+				List<String> descRHFoundationDate = new ArrayList<String>();
+				List<String> descRHFoundationRule = new ArrayList<String>();
+				List<String> descRHFoundationLang = new ArrayList<String>();
 				if (repository.getRepositorfound() != null) {
-					this.setRepositorFoundDate((repository.getRepositorfound().getDate()!=null)?repository.getRepositorfound().getDate().getContent():null);
-					this.setRepositorFoundDateLang((repository.getRepositorfound().getDate()!=null)?repository.getRepositorfound().getDate().getLang():null);
-					this.setRepositorFoundDateLocalType((repository.getRepositorfound().getDate()!=null)?repository.getRepositorfound().getDate().getLocalType():null);
-					this.setRepositorFoundDateNotAfter((repository.getRepositorfound().getDate()!=null)?repository.getRepositorfound().getDate().getNotAfter():null);
-					this.setRepositorFoundDateNotBefore((repository.getRepositorfound().getDate()!=null)?repository.getRepositorfound().getDate().getNotBefore():null);
-					this.setRepositorFoundDateStandardDate((repository.getRepositorfound().getDate()!=null)?repository.getRepositorfound().getDate().getStandardDate():null);
+					if (repository.getRepositorfound().getDate() != null
+							&& repository.getRepositorfound().getDate().getContent() != null
+							&& !repository.getRepositorfound().getDate().getContent().isEmpty()) {
+						descRHFoundationDate.add(repository.getRepositorfound().getDate().getContent());
+					} else {
+						descRHFoundationDate.add("");
+					}
 
 					// Rule of repository foundation.
-					if (repository.getRepositorfound().getRule()!=null && !repository.getRepositorfound().getRule().isEmpty()) {
-						// TODO: Review for multiple values.
-						for (int i = 0; i < repository.getRepositorfound().getRule().size(); i++) {
-							this.setRepositorFoundRule(repository.getRepositorfound().getRule().get(i).getContent());
-							this.setRepositorFoundRuleLang(repository.getRepositorfound().getRule().get(i).getLang());
-						}
-					}
-				}
-
-				// Date of repository suppression.
-				if (repository.getRepositorsup() != null) {
-					this.setRepositorSupDate((repository.getRepositorsup().getDate()!=null)?repository.getRepositorsup().getDate().getContent():null);
-					this.setRepositorSupDateLang((repository.getRepositorsup().getDate()!=null)?repository.getRepositorsup().getDate().getLang():null);
-					this.setRepositorSupDateLocalType((repository.getRepositorsup().getDate()!=null)?repository.getRepositorsup().getDate().getLocalType():null);
-					this.setRepositorSupDateNotAfter((repository.getRepositorsup().getDate()!=null)?repository.getRepositorsup().getDate().getNotAfter():null);
-					this.setRepositorSupDateNotBefore((repository.getRepositorsup().getDate()!=null)?repository.getRepositorsup().getDate().getNotBefore():null);
-					this.setRepositorSupDateStandardDate((repository.getRepositorsup().getDate()!=null)?repository.getRepositorsup().getDate().getStandardDate():null);
-
-					// Rule of repository suppression.
-					if (repository.getRepositorsup().getRule()!=null && !repository.getRepositorsup().getRule().isEmpty()) {
-						// TODO: Review for multiple values.
-						for (int i = 0; i < repository.getRepositorsup().getRule().size(); i++) {
-							this.setRepositorSupRule(repository.getRepositorsup().getRule().get(i).getContent());
-							this.setRepositorSupRuleLang(repository.getRepositorsup().getRule().get(i).getLang());
-						}
-					}
-				}
-
-				// Unit of administrative structure.
-				if (repository.getAdminhierarchy() != null) {
-					if (repository.getAdminhierarchy().getAdminunit()!=null && !repository.getAdminhierarchy().getAdminunit().isEmpty()) {
-						// TODO: Review for multiple values.
-						for (int i = 0; i < repository.getAdminhierarchy().getAdminunit().size(); i++) {
-							this.setAdminunit((repository.getAdminhierarchy().getAdminunit().get(i)!=null)?repository.getAdminhierarchy().getAdminunit().get(i).getContent():null);
-							this.setAdminunitLang((repository.getAdminhierarchy().getAdminunit().get(i)!=null)?repository.getAdminhierarchy().getAdminunit().get(i).getLang():null);
-						}
-					}
-				}
-
-				// Building.
-				if (repository.getBuildinginfo() != null) {
-					if (repository.getBuildinginfo().getBuilding() != null) {
-						if (repository.getBuildinginfo().getBuilding().getDescriptiveNote() != null) {
-							if (repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP()!=null && !repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().isEmpty()) {
-								// TODO: Review for multiple values.
-								for (int i = 0; i < repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().size(); i++) {
-									this.setBuilding((repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().get(i)!=null)?repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().get(i).getContent():null);
-									this.setBuildingLang((repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().get(i)!=null)?repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().get(i).getLang():null);
+					if (repository.getRepositorfound().getRule() != null
+							&& !repository.getRepositorfound().getRule().isEmpty()) {
+						for (int j = 0; j < repository.getRepositorfound().getRule().size(); j++) {
+							if (repository.getRepositorfound().getRule().get(j) != null
+									&& repository.getRepositorfound().getRule().get(j).getContent() != null
+									&& !repository.getRepositorfound().getRule().get(j).getContent().isEmpty()) {
+								descRHFoundationRule.add(repository.getRepositorfound().getRule().get(j).getContent());
+								if (repository.getRepositorfound().getRule().get(j).getLang() != null
+										&& !repository.getRepositorfound().getRule().get(j).getLang().isEmpty()) {
+									descRHFoundationLang.add(repository.getRepositorfound().getRule().get(j).getLang());
+								} else {
+									descRHFoundationLang.add(Eag2012.OPTION_NONE);
 								}
+							} else {
+								descRHFoundationRule.add("");
+								descRHFoundationLang.add(Eag2012.OPTION_NONE);
 							}
 						}
+					} else {
+						descRHFoundationRule.add("");
+						descRHFoundationLang.add(Eag2012.OPTION_NONE);
+					}
+				}
+				this.addDescRepositorFoundDate(descRHFoundationDate);
+				this.addDescRepositorFoundRule(descRHFoundationRule);
+				this.addDescRepositorFoundRuleLang(descRHFoundationLang);
+
+				// Date of repository suppression.
+				List<String> descRHSuppressionDate = new ArrayList<String>();
+				List<String> descRHSuppressionRule = new ArrayList<String>();
+				List<String> descRHSuppressionLang = new ArrayList<String>();
+				if (repository.getRepositorsup() != null) {
+					if (repository.getRepositorsup().getDate() != null
+							&& repository.getRepositorsup().getDate().getContent() != null
+							&& !repository.getRepositorsup().getDate().getContent().isEmpty()) {
+						descRHSuppressionDate.add(repository.getRepositorsup().getDate().getContent());
+					} else {
+						descRHSuppressionDate.add("");
+					}
+
+					// Rule of repository suppression.
+					if (repository.getRepositorsup().getRule() != null
+							&& !repository.getRepositorsup().getRule().isEmpty()) {
+						for (int j = 0; j < repository.getRepositorsup().getRule().size(); j++) {
+							if (repository.getRepositorsup().getRule().get(j) != null
+									&& repository.getRepositorsup().getRule().get(j).getContent() != null
+									&& !repository.getRepositorsup().getRule().get(j).getContent().isEmpty()) {
+								descRHSuppressionRule.add(repository.getRepositorsup().getRule().get(j).getContent());
+								if (repository.getRepositorsup().getRule().get(j).getLang() != null
+										&& !repository.getRepositorsup().getRule().get(j).getLang().isEmpty()) {
+									descRHSuppressionLang.add(repository.getRepositorsup().getRule().get(j).getLang());
+								} else {
+									descRHSuppressionLang.add(Eag2012.OPTION_NONE);
+								}
+							} else {
+								descRHSuppressionRule.add("");
+								descRHSuppressionLang.add(Eag2012.OPTION_NONE);
+							}
+						}
+					} else {
+						descRHSuppressionRule.add("");
+						descRHSuppressionLang.add(Eag2012.OPTION_NONE);
+					}
+				}
+				this.addDescRepositorSupDate(descRHSuppressionDate);
+				this.addDescRepositorSupRule(descRHSuppressionRule);
+				this.addDescRepositorSupRuleLang(descRHSuppressionLang);
+
+				// Unit of administrative structure.
+				List<String> descAdminStructure = new ArrayList<String>();
+				List<String> descAdminStructureLang = new ArrayList<String>();
+				if (repository.getAdminhierarchy() != null
+						&& !repository.getAdminhierarchy().getAdminunit().isEmpty()) {
+					for (int j = 0; j < repository.getAdminhierarchy().getAdminunit().size(); j++) {
+						if (repository.getAdminhierarchy().getAdminunit().get(j) != null
+								&& repository.getAdminhierarchy().getAdminunit().get(j).getContent() != null
+								&& !repository.getAdminhierarchy().getAdminunit().get(j).getContent().isEmpty()) {
+							descAdminStructure.add(repository.getAdminhierarchy().getAdminunit().get(j).getContent());
+							if (repository.getAdminhierarchy().getAdminunit().get(j).getLang() != null
+									&& !repository.getAdminhierarchy().getAdminunit().get(j).getLang().isEmpty()) {
+								descAdminStructureLang.add(repository.getAdminhierarchy().getAdminunit().get(j).getLang());
+							} else {
+								descAdminStructureLang.add(Eag2012.OPTION_NONE);
+							}
+						} else {
+							descAdminStructure.add("");
+							descAdminStructureLang.add(Eag2012.OPTION_NONE);
+						}
+					}
+				}
+				this.addDescAdminunit(descAdminStructure);
+				this.addDescAdminunitLang(descAdminStructureLang);
+
+				// Building.
+				List<String> descBuildingDescription = new ArrayList<String>();
+				List<String> descBuildingDescriptionLang = new ArrayList<String>();
+				List<String> descBuildingArea = new ArrayList<String>();
+				List<String> descBuildingAreaUnit = new ArrayList<String>();
+				List<String> descBuildingShelf = new ArrayList<String>();
+				List<String> descBuildingShelfUnit = new ArrayList<String>();
+				if (repository.getBuildinginfo() != null) {
+					if (repository.getBuildinginfo().getBuilding() != null
+							&& repository.getBuildinginfo().getBuilding().getDescriptiveNote() != null
+							&& !repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().isEmpty()) {
+						for (int j = 0; j < repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().size(); j++) {
+							if (repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().get(j) != null
+									&& repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().get(j).getContent() != null
+									&& !repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().get(j).getContent().isEmpty()) {
+								descBuildingDescription.add(repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().get(j).getContent());
+								if (repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().get(j).getLang() != null
+										&& !repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().get(j).getLang().isEmpty()) {
+									descBuildingDescriptionLang.add(repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().get(j).getLang());
+								} else {
+									descBuildingDescriptionLang.add(Eag2012.OPTION_NONE);
+								}
+							} else {
+								descBuildingDescription.add("");
+								descBuildingDescriptionLang.add(Eag2012.OPTION_NONE);
+							}
+						}
+					} else {
+						descBuildingDescription.add("");
+						descBuildingDescriptionLang.add(Eag2012.OPTION_NONE);
 					}
 
 					// Repository Area.
-					if (repository.getBuildinginfo().getRepositorarea() != null && repository.getBuildinginfo().getRepositorarea().getNum()!=null) {
-						this.setRepositorarea(repository.getBuildinginfo().getRepositorarea().getNum().getContent());
-						this.setRepositorareaUnit(repository.getBuildinginfo().getRepositorarea().getNum().getUnit());
+					if (repository.getBuildinginfo().getRepositorarea() != null
+							&& repository.getBuildinginfo().getRepositorarea().getNum() != null
+							&& repository.getBuildinginfo().getRepositorarea().getNum().getContent() != null
+							&& !repository.getBuildinginfo().getRepositorarea().getNum().getContent().isEmpty()) {
+						descBuildingArea.add(repository.getBuildinginfo().getRepositorarea().getNum().getContent());
+
+						if (repository.getBuildinginfo().getRepositorarea().getNum().getUnit() != null
+								&& !repository.getBuildinginfo().getRepositorarea().getNum().getUnit().isEmpty()) {
+							descBuildingAreaUnit.add(repository.getBuildinginfo().getRepositorarea().getNum().getUnit());
+						} else {
+							descBuildingAreaUnit.add("");
+						}
+					} else {
+						descBuildingArea.add("");
+						descBuildingAreaUnit.add("");
 					}
 
 					// Length of shelf.
-					if (repository.getBuildinginfo().getLengthshelf() != null && repository.getBuildinginfo().getLengthshelf().getNum()!=null) {
-						this.setLengthshelf(repository.getBuildinginfo().getLengthshelf().getNum().getContent());
-						this.setLengthshelfUnit(repository.getBuildinginfo().getLengthshelf().getNum().getUnit());
+					if (repository.getBuildinginfo().getLengthshelf() != null
+							&& repository.getBuildinginfo().getLengthshelf().getNum() != null
+							&& repository.getBuildinginfo().getLengthshelf().getNum().getContent() != null
+							&& !repository.getBuildinginfo().getLengthshelf().getNum().getContent().isEmpty()) {
+						descBuildingShelf.add(repository.getBuildinginfo().getLengthshelf().getNum().getContent());
+
+						if (repository.getBuildinginfo().getLengthshelf().getNum().getUnit() != null
+								&& !repository.getBuildinginfo().getLengthshelf().getNum().getUnit().isEmpty()) {
+							descBuildingShelfUnit.add(repository.getBuildinginfo().getLengthshelf().getNum().getUnit());
+						} else {
+							descBuildingShelfUnit.add("");
+						}
+					} else {
+						descBuildingShelf.add("");
+						descBuildingShelfUnit.add("");
 					}
 				}
+				this.addDescBuilding(descBuildingDescription);
+				this.addDescBuildingLang(descBuildingDescriptionLang);
+				this.addDescRepositorarea(descBuildingArea);
+				this.addDescRepositorareaUnit(descBuildingAreaUnit);
+				this.addDescLengthshelf(descBuildingShelf);
+				this.addDescLengthshelfUnit(descBuildingShelfUnit);
 
-				// Holding description.
+				// Building.
+				List<String> descHoldingsDescription = new ArrayList<String>();
+				List<String> descHoldingsDescriptionLang = new ArrayList<String>();
+				List<String> descDateHoldings = new ArrayList<String>();
+				List<String> descNumberOfDateRange = new ArrayList<String>();
+				List<String> descHoldingsDateFrom= new ArrayList<String>();
+				List<String> descHoldingsDateTo = new ArrayList<String>();
+				List<String> descHoldingsExtent = new ArrayList<String>();
+				List<String> descHoldingsExtentUnit = new ArrayList<String>();
 				if (repository.getHoldings() != null) {
-					if (repository.getHoldings().getDescriptiveNote() != null) {
-						if (!repository.getHoldings().getDescriptiveNote().getP().isEmpty()) {
-							// TODO: Review for multiple values.
-							for (int i = 0; i < repository.getHoldings().getDescriptiveNote().getP().size(); i++) {
-								this.setHoldings((repository.getHoldings().getDescriptiveNote().getP().get(i)!=null)?repository.getHoldings().getDescriptiveNote().getP().get(i).getContent():null);
-								this.setHoldingsLang((repository.getHoldings().getDescriptiveNote().getP().get(i)!=null)?repository.getHoldings().getDescriptiveNote().getP().get(i).getLang():null);
+					if (repository.getHoldings().getDescriptiveNote() != null
+							&& !repository.getHoldings().getDescriptiveNote().getP().isEmpty()) {
+						for (int j = 0; j < repository.getHoldings().getDescriptiveNote().getP().size(); j++) {
+							if (repository.getHoldings().getDescriptiveNote().getP().get(j) != null
+									&& repository.getHoldings().getDescriptiveNote().getP().get(j).getContent() != null
+									&& !repository.getHoldings().getDescriptiveNote().getP().get(j).getContent().isEmpty()) {
+								descHoldingsDescription.add(repository.getHoldings().getDescriptiveNote().getP().get(j).getContent());
+								if (repository.getHoldings().getDescriptiveNote().getP().get(j).getLang() != null
+										&& !repository.getHoldings().getDescriptiveNote().getP().get(j).getLang().isEmpty()) {
+									descHoldingsDescriptionLang.add(repository.getHoldings().getDescriptiveNote().getP().get(j).getLang());
+								} else {
+									descHoldingsDescriptionLang.add(Eag2012.OPTION_NONE);
+								}
+							} else {
+								descHoldingsDescription.add("");
+								descHoldingsDescriptionLang.add(Eag2012.OPTION_NONE);
 							}
 						}
+					} else {
+						descHoldingsDescription.add("");
+						descHoldingsDescriptionLang.add(Eag2012.OPTION_NONE);
 					}
-						
+
 					// Date of holdings.
 					if (repository.getHoldings().getDate() != null) {
-						this.setHoldingsDate(repository.getHoldings().getDate().getContent());
-						this.setHoldingsDateLang(repository.getHoldings().getDate().getLang());
-						this.setHoldingsDateLocalType(repository.getHoldings().getDate().getLocalType());
-						this.setHoldingsDateNotAfter(repository.getHoldings().getDate().getNotAfter());
-						this.setHoldingsDateNotBefore(repository.getHoldings().getDate().getNotBefore());
-						this.setHoldingsDateStandardDate(repository.getHoldings().getDate().getStandardDate());
+						if (repository.getHoldings().getDate().getContent() != null
+							&& !repository.getHoldings().getDate().getContent().isEmpty()) {
+						descDateHoldings.add(repository.getHoldings().getDate().getContent());
+						} else {
+							descDateHoldings.add("");
+						}
 					}
-					
+
 					// Date range of holdings.
 					if (repository.getHoldings().getDateRange() != null) {
-						this.setHoldingsDateRangeLocalType(repository.getHoldings().getDateRange().getLocalType());
-
+						descNumberOfDateRange.add("");
 						// From date.
-						if (repository.getHoldings().getDateRange().getFromDate() != null) {
-							this.setHoldingsDateRangeFromDate(repository.getHoldings().getDateRange().getFromDate().getContent());
-							this.setHoldingsDateRangeFromDateNoAfter(repository.getHoldings().getDateRange().getFromDate().getNotAfter());
-							this.setHoldingsDateRangeFromDateNoBefore(repository.getHoldings().getDateRange().getFromDate().getNotBefore());
-							this.setHoldingsDateRangeFromDateStandardDate(repository.getHoldings().getDateRange().getFromDate().getStandardDate());
+						if (repository.getHoldings().getDateRange().getFromDate() != null
+								&& repository.getHoldings().getDateRange().getFromDate().getContent() != null
+								&& !repository.getHoldings().getDateRange().getFromDate().getContent().isEmpty()) {
+							descHoldingsDateFrom.add(repository.getHoldings().getDateRange().getFromDate().getContent());
+						} else {
+							descHoldingsDateFrom.add("");
 						}
 
 						// To date.
-						if (repository.getHoldings().getDateRange().getToDate() != null) {
-							this.setHoldingsDateRangeToDate(repository.getHoldings().getDateRange().getToDate().getContent());
-							this.setHoldingsDateRangeToDateNoAfter(repository.getHoldings().getDateRange().getToDate().getNotAfter());
-							this.setHoldingsDateRangeToDateNoBefore(repository.getHoldings().getDateRange().getToDate().getNotBefore());
-							this.setHoldingsDateRangeToDateStandardDate(repository.getHoldings().getDateRange().getToDate().getStandardDate());
+						if (repository.getHoldings().getDateRange().getToDate() != null
+								&& repository.getHoldings().getDateRange().getToDate().getContent() != null
+								&& !repository.getHoldings().getDateRange().getToDate().getContent().isEmpty()) {
+							descHoldingsDateTo.add(repository.getHoldings().getDateRange().getToDate().getContent());
+						} else {
+							descHoldingsDateTo.add("");
+						}
+					}
+
+					// DateSet of holdings.
+					if (repository.getHoldings().getDateSet() != null) {
+						if (!repository.getHoldings().getDateSet().getDateOrDateRange().isEmpty()) {
+							for (int j = 0; j < repository.getHoldings().getDateSet().getDateOrDateRange().size(); j++) {
+								Object dateObject = repository.getHoldings().getDateSet().getDateOrDateRange().get(j);
+
+								// Date inside DateSet.
+								if (dateObject != null
+										&& dateObject instanceof Date) {
+									Date date = (Date) dateObject;
+									if (date != null
+											&& date.getContent() != null
+											&& !date.getContent().isEmpty()) {
+										descDateHoldings.add(date.getContent());
+									} else {
+										descDateHoldings.add("");
+									}
+								} else if (dateObject != null
+										&& dateObject instanceof DateRange) {
+									// DateRange inside DateSet.
+									DateRange dateRange = (DateRange) dateObject;
+
+									descNumberOfDateRange.add("");
+									// From date.
+									if (dateRange.getFromDate() != null
+											&& dateRange.getFromDate().getContent() != null
+											&& !dateRange.getFromDate().getContent().isEmpty()) {
+										descHoldingsDateFrom.add(dateRange.getFromDate().getContent());
+									} else {
+										descHoldingsDateFrom.add("");
+									}
+
+									// To date.
+									if (dateRange.getToDate() != null
+											&& dateRange.getToDate().getContent() != null
+											&& !dateRange.getToDate().getContent().isEmpty()) {
+										descHoldingsDateTo.add(dateRange.getToDate().getContent());
+									} else {
+										descHoldingsDateTo.add("");
+									}
+								}
+							}
+						} else {
+							descDateHoldings.add("");
+							descNumberOfDateRange.add("");
+							descHoldingsDateFrom.add("");
+							descHoldingsDateTo.add("");
 						}
 					}
 
 					// Extent.
-					if (repository.getHoldings().getExtent() != null) {
-						if (repository.getHoldings().getExtent().getNum() != null) {
-							this.setExtent(repository.getHoldings().getExtent().getNum().getContent());
-							this.setExtentUnit(repository.getHoldings().getExtent().getNum().getUnit());
+					if (repository.getHoldings().getExtent() != null
+							&& repository.getHoldings().getExtent().getNum() != null
+							&& repository.getHoldings().getExtent().getNum().getContent() != null
+							&& !repository.getHoldings().getExtent().getNum().getContent().isEmpty()) {
+						descHoldingsExtent.add(repository.getHoldings().getExtent().getNum().getContent());
+
+						if (repository.getHoldings().getExtent().getNum().getUnit() != null
+								&& !repository.getHoldings().getExtent().getNum().getUnit().isEmpty()) {
+							descHoldingsExtentUnit.add(repository.getHoldings().getExtent().getNum().getUnit());
+						} else {
+							descHoldingsExtentUnit.add("");
 						}
+					} else {
+						descHoldingsExtent.add("");
+						descHoldingsExtentUnit.add("");
 					}
 				}
+				this.addDescHoldings(descHoldingsDescription);
+				this.addDescHoldingsLang(descHoldingsDescriptionLang);
+				this.addDescHoldingsDate(descDateHoldings);
+				this.addDescNumberOfHoldingsDateRange(descNumberOfDateRange);
+				this.addDescHoldingsDateRangeFromDate(descHoldingsDateFrom);
+				this.addDescHoldingsDateRangeToDate(descHoldingsDateTo);
+				this.addDescExtent(descHoldingsExtent);
+				this.addDescExtentUnit(descHoldingsExtentUnit);
 			}
 		}
 	}

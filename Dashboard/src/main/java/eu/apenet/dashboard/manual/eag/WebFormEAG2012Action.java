@@ -1536,7 +1536,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						rulesMap = new HashMap<String,List<String>>();
 					}
 					List<String> rulesList =null;
-					if(rulesMap.size()>i && rulesMap.get(Eag2012.REPOSITOR_FOUND)!=null){
+					if((rulesMap.size()>i || !rulesMap.isEmpty()) && rulesMap.get(Eag2012.REPOSITOR_FOUND)!=null){
 						rulesList= rulesMap.get(Eag2012.REPOSITOR_FOUND);
 					}else{
 						rulesList = new ArrayList<String>();
@@ -1562,7 +1562,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						 rulesLangMap = new HashMap<String,List<String>>();
 					 }
 					 List<String> rulesLangList = null;
-					 if(rulesLangMap.size()>i && rulesLangMap.get(Eag2012.REPOSITOR_FOUND)!=null){
+					 if((rulesLangMap.size()>i || !rulesLangMap.isEmpty()) && rulesLangMap.get(Eag2012.REPOSITOR_FOUND)!=null){
 						rulesLangList=rulesLangMap.get(Eag2012.REPOSITOR_FOUND); 
 					 }else{
 						 rulesLangList = new ArrayList<String>();
@@ -1695,7 +1695,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				 //Administrative structure
 				
 				 String target1 = "textUnitOfAdministrativeStructure";
-				 String target2 = "selectLanguageArchivalAndOtherHoldings";
+				 String target2 = "selectLanguageUnitOfAdministrativeStructure";
 				 int targetNumber = 1;
 				 do{
 					 target1 = ((target1.indexOf("_")!=-1)?target1.substring(0,target1.indexOf("_")):target1)+"_"+targetNumber;

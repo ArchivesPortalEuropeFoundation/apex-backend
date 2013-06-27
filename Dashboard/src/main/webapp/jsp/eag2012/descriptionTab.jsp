@@ -15,26 +15,74 @@
 					</td>
 					
 				</tr>
-		
-				<tr id="trRepositoryHistory">
-					<td id="tdRepositoryHistory">
-						<label for="textRepositoryHistory"><s:property value="getText('label.ai.description.repositoryHistory')" />:</label>
-					</td>
-					<td>
-						<textarea id="textRepositoryHistory" >${loader.repositorhist}</textarea>
-					</td>
-					<td id="tdLanguageRepositoryHistory" class="labelLeft">
-						<label for="selectLanguageRepositoryHistory"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
-					</td>
-					<td>
-						<select id="selectLanguageRepositoryHistory">
-							<s:iterator value="languageList" var="language"> 
-								<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.repositorhistLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
-							</s:iterator>
-						</select>
-					</td>
-				</tr>
-		
+
+				<s:if test="%{loader.descRepositorhist.size() > 0}">
+					<s:set var="repositorhist" value="loader.descRepositorhist[#counter]"/>
+					<s:set var="repositorhistLang" value="loader.descRepositorhistLang[#counter]"/>
+					<s:if test="%{#repositorhist.size() > 0}">
+						<s:iterator var="internalCurrent" value="#repositorhist" status="internalStatus">
+							<tr id="trRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />">
+								<td id="tdRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />">
+									<label for="textRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.description.repositoryHistory')" />:</label>
+								</td>
+								<td>
+									<textarea id="textRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="#internalCurrent" /></textarea>
+								</td>
+								<td id="tdLanguageRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
+									<label for="selectLanguageRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+								</td>
+								<td>
+									<select id="selectLanguageRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />">
+										<s:iterator value="languageList" var="language"> 
+											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #repositorhistLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+										</s:iterator>
+									</select>
+								</td>
+							</tr>
+						</s:iterator>
+					</s:if>
+					<s:else>
+						<tr id="trRepositoryHistory_1">
+							<td id="tdRepositoryHistory_1">
+								<label for="textRepositoryHistory_1"><s:property value="getText('label.ai.description.repositoryHistory')" />:</label>
+							</td>
+							<td>
+								<textarea id="textRepositoryHistory_1" ></textarea>
+							</td>
+							<td id="tdLanguageRepositoryHistory_1" class="labelLeft">
+								<label for="selectLanguageRepositoryHistory_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+							</td>
+							<td>
+								<select id="selectLanguageRepositoryHistory_1">
+									<s:iterator value="languageList" var="language"> 
+										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+									</s:iterator>
+								</select>
+							</td>
+						</tr>
+					</s:else>
+				</s:if>
+				<s:else>
+					<tr id="trRepositoryHistory_1">
+						<td id="tdRepositoryHistory_1">
+							<label for="textRepositoryHistory_1"><s:property value="getText('label.ai.description.repositoryHistory')" />:</label>
+						</td>
+						<td>
+							<textarea id="textRepositoryHistory_1" ></textarea>
+						</td>
+						<td id="tdLanguageRepositoryHistory_1" class="labelLeft">
+							<label for="selectLanguageRepositoryHistory_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+						</td>
+						<td>
+							<select id="selectLanguageRepositoryHistory_1">
+								<s:iterator value="languageList" var="language"> 
+									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+								</s:iterator>
+							</select>
+						</td>
+					</tr>
+				</s:else>
+
 				<tr id="trAddHistoryDescription">
 					<td id="tdAddHistoryDescription" colspan="2">
 						<input type="button" id="buttonAddHistoryDescription" onclick="descriptionAddHistoryDescription('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.description.addHistoryDescription")' />"/>
@@ -42,36 +90,95 @@
 					<td colspan="2">
 					</td>
 				</tr>
-		
+
 				<tr>
 					<td id="tdDateOfRepositoryFoundation">
 						<label for="textDateOfRepositoryFoundation"><s:property value="getText('label.ai.description.dateOfRepositoryFoundation')" />:</label>
 					</td>
 					<td>
-						<input type="text" id="textDateOfRepositoryFoundation" value="${loader.repositorFoundDate}" />
+						<s:if test="%{loader.descRepositorFoundDate.size() > 0}">
+							<s:set var="descRepoFoundDate" value="loader.descRepositorFoundDate[#counter]"/>
+							<s:if test="%{#descRepoFoundDate.size() > 0}">
+								<input type="text" id="textDateOfRepositoryFoundation" value="<s:property value="#descRepoFoundDate[0]" />" />
+							</s:if>
+							<s:else>
+								<input type="text" id="textDateOfRepositoryFoundation" />
+							</s:else>
+						</s:if>
+						<s:else>
+							<input type="text" id="textDateOfRepositoryFoundation" />
+						</s:else>
 					</td>
 					<td colspan="2"></td>
 				</tr>
-		
-				<tr id="trRuleOfRepositoryFoundation">
-					<td id="tdRuleOfRepositoryFoundation">
-						<label for="textRuleOfRepositoryFoundation"><s:property value="getText('label.ai.description.ruleOfRepositoryFoundation')" />:</label>
-					</td>
-					<td>
-						<input type="text" id="textRuleOfRepositoryFoundation" value="${loader.repositorFoundRule}" />
-					</td>
-					<td id="tdLanguageRuleOfRepositoryFoundation" class="labelLeft">
-						<label for="selectLanguageRuleOfRepositoryFoundation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
-					</td>
-					<td>
-						<select id="selectLanguageRuleOfRepositoryFoundation">
-							<s:iterator value="languageList" var="language"> 
-								<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.repositorFoundRuleLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
-							</s:iterator>
-						</select>
-					</td>
-				</tr>
-		
+
+				<s:if test="%{loader.descRepositorFoundRule.size() > 0}">
+					<s:set var="repositorFoundRule" value="loader.descRepositorFoundRule[#counter]"/>
+					<s:set var="repositorFoundRuleLang" value="loader.descRepositorFoundRuleLang[#counter]"/>
+					<s:if test="%{#repositorFoundRule.size() > 0}">
+						<s:iterator var="internalCurrent" value="#repositorFoundRule" status="internalStatus">
+							<tr id="trRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />">
+								<td id="tdRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />">
+									<label for="textRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.description.ruleOfRepositoryFoundation')" />:</label>
+								</td>
+								<td>
+									<input type="text" id="textRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+								</td>
+								<td id="tdLanguageRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
+									<label for="selectLanguageRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+								</td>
+								<td>
+									<select id="selectLanguageRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />">
+										<s:iterator value="languageList" var="language"> 
+											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #repositorFoundRuleLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+										</s:iterator>
+									</select>
+								</td>
+							</tr>
+						</s:iterator>
+					</s:if>
+					<s:else>
+						<tr id="trRuleOfRepositoryFoundation_1">
+							<td id="tdRuleOfRepositoryFoundation_1">
+								<label for="textRuleOfRepositoryFoundation_1"><s:property value="getText('label.ai.description.ruleOfRepositoryFoundation')" />:</label>
+							</td>
+							<td>
+								<input type="text" id="textRuleOfRepositoryFoundation_1" />
+							</td>
+							<td id="tdLanguageRuleOfRepositoryFoundation_1" class="labelLeft">
+								<label for="selectLanguageRuleOfRepositoryFoundation_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+							</td>
+							<td>
+								<select id="selectLanguageRuleOfRepositoryFoundation_1">
+									<s:iterator value="languageList" var="language"> 
+										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+									</s:iterator>
+								</select>
+							</td>
+						</tr>
+					</s:else>
+				</s:if>
+				<s:else>
+					<tr id="trRuleOfRepositoryFoundation_1">
+						<td id="tdRuleOfRepositoryFoundation_1">
+							<label for="textRuleOfRepositoryFoundation_1"><s:property value="getText('label.ai.description.ruleOfRepositoryFoundation')" />:</label>
+						</td>
+						<td>
+							<input type="text" id="textRuleOfRepositoryFoundation_1" />
+						</td>
+						<td id="tdLanguageRuleOfRepositoryFoundation_1" class="labelLeft">
+							<label for="selectLanguageRuleOfRepositoryFoundation_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+						</td>
+						<td>
+							<select id="selectLanguageRuleOfRepositoryFoundation_1">
+								<s:iterator value="languageList" var="language"> 
+									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+								</s:iterator>
+							</select>
+						</td>
+					</tr>
+				</s:else>
+
 				<tr>
 					<td id="tdAddFoundationInformation" colspan="2">
 						<input type="button" id="buttonDescriptionAddFoundationInformation" value="<s:property value='getText("label.ai.description.addRule")' />" onclick="descriptionAddFoundationInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
@@ -79,36 +186,95 @@
 					<td colspan="2">
 					</td>
 				</tr>
-		
+
 				<tr>
 					<td id="tdDateOfRepositorySuppression">
 						<label for="textDateOfRepositorySuppression"><s:property value="getText('label.ai.description.dateOfRepositorySuppression')" />:</label>
 					</td>
 					<td>
-						<input type="text" id="textDateOfRepositorySuppression" value="${loader.repositorSupDate}" />
+						<s:if test="%{loader.descRepositorSupDate.size() > 0}">
+							<s:set var="descRepoSupDate" value="loader.descRepositorSupDate[#counter]"/>
+							<s:if test="%{#descRepoSupDate.size() > 0}">
+								<input type="text" id="textDateOfRepositorySuppression" value="<s:property value="#descRepoSupDate[0]" />" />
+							</s:if>
+							<s:else>
+								<input type="text" id="textDateOfRepositorySuppression" />
+							</s:else>
+						</s:if>
+						<s:else>
+							<input type="text" id="textDateOfRepositorySuppression" />
+						</s:else>
 					</td>
 					<td colspan="2"></td>
 				</tr>
-		
-				<tr id="trDescriptionAddSuppressionInformation">
-					<td id="tdRuleOfRepositorySuppression">
-						<label for="textRuleOfRepositorySuppression"><s:property value="getText('label.ai.description.ruleOfRepositorySuppression')" />:</label>
-					</td>
-					<td>
-						<input type="text" id="textRuleOfRepositorySuppression" value="${loader.repositorSupRule}" />
-					</td>
-					<td id="tdLanguageRuleOfRepositorySuppression" class="labelLeft">
-						<label for="selectLanguageRuleOfRepositorySuppression"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
-					</td>
-					<td>
-						<select id="selectLanguageRuleOfRepositorySuppression">
-							<s:iterator value="languageList" var="language"> 
-								<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.repositorSupRuleLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
-							</s:iterator>
-						</select>
-					</td>
-				</tr>
-		
+
+				<s:if test="%{loader.descRepositorSupRule.size() > 0}">
+					<s:set var="repositorSupRule" value="loader.descRepositorSupRule[#counter]"/>
+					<s:set var="repositorSupRuleLang" value="loader.descRepositorSupRuleLang[#counter]"/>
+					<s:if test="%{#repositorSupRule.size() > 0}">
+						<s:iterator var="internalCurrent" value="#repositorSupRule" status="internalStatus">
+							<tr id="trDescriptionAddSuppressionInformation_<s:property value="%{#internalStatus.index + 1}" />">
+								<td id="tdRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />">
+									<label for="textRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.description.ruleOfRepositorySuppression')" />:</label>
+								</td>
+								<td>
+									<input type="text" id="textRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+								</td>
+								<td id="tdLanguageRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
+									<label for="selectLanguageRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+								</td>
+								<td>
+									<select id="selectLanguageRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />">
+										<s:iterator value="languageList" var="language"> 
+											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #repositorSupRuleLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+										</s:iterator>
+									</select>
+								</td>
+							</tr>
+						</s:iterator>
+					</s:if>
+					<s:else>
+						<tr id="trDescriptionAddSuppressionInformation_1">
+							<td id="tdRuleOfRepositorySuppression_1">
+								<label for="textRuleOfRepositorySuppression_1"><s:property value="getText('label.ai.description.ruleOfRepositorySuppression')" />:</label>
+							</td>
+							<td>
+								<input type="text" id="textRuleOfRepositorySuppression_1" />
+							</td>
+							<td id="tdLanguageRuleOfRepositorySuppression_1" class="labelLeft">
+								<label for="selectLanguageRuleOfRepositorySuppression_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+							</td>
+							<td>
+								<select id="selectLanguageRuleOfRepositorySuppression_1">
+									<s:iterator value="languageList" var="language"> 
+										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+									</s:iterator>
+								</select>
+							</td>
+						</tr>
+					</s:else>
+				</s:if>
+				<s:else>
+					<tr id="trDescriptionAddSuppressionInformation_1">
+						<td id="tdRuleOfRepositorySuppression_1">
+							<label for="textRuleOfRepositorySuppression_1"><s:property value="getText('label.ai.description.ruleOfRepositorySuppression')" />:</label>
+						</td>
+						<td>
+							<input type="text" id="textRuleOfRepositorySuppression_1" />
+						</td>
+						<td id="tdLanguageRuleOfRepositorySuppression_1" class="labelLeft">
+							<label for="selectLanguageRuleOfRepositorySuppression_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+						</td>
+						<td>
+							<select id="selectLanguageRuleOfRepositorySuppression_1">
+								<s:iterator value="languageList" var="language"> 
+									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+								</s:iterator>
+							</select>
+						</td>
+					</tr>
+				</s:else>
+
 				<tr>
 					<td id="tdAddSuppressionInformation" colspan="2">
 						<input type="button" id="buttonDescriptionAddSuppressionInformation" onclick="descriptionAddSuppressionInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.description.addRule")' />"/>
@@ -116,33 +282,81 @@
 					<td colspan="2">
 					</td>
 				</tr>
-		
+
 				<tr>
 					<td id="administrativeLabel" colspan="4">
 						<s:property value="getText('label.ai.description.administrativeStructure')" />
 					</td>
 					
 				</tr>
-		
-				<tr id="trDescriptionAddAdministrationUnits">
-					<td id="tdUnitOfAdministrativeStructure">
-						<label for="textUnitOfAdministrativeStructure"><s:property value="getText('label.ai.description.unitOfAdministrativeStructure')" />:</label>
-					</td>
-					<td>
-						<textarea id="textUnitOfAdministrativeStructure">${loader.adminunit}</textarea>
-					</td>
-					<td id="tdLanguageUnitOfAdministrativeStructure" class="labelLeft">
-						<label for="selectLanguageUnitOfAdministrativeStructure"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
-					</td>
-					<td>
-						<select id="selectLanguageUnitOfAdministrativeStructure">
-							<s:iterator value="languageList" var="language"> 
-								<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.adminunitLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
-							</s:iterator>
-						</select>
-					</td>
-				</tr>
-		
+
+				<s:if test="%{loader.descAdminunit.size() > 0}">
+					<s:set var="adminunit" value="loader.descAdminunit[#counter]"/>
+					<s:set var="adminunitLang" value="loader.descAdminunitLang[#counter]"/>
+					<s:if test="%{#adminunit.size() > 0}">
+						<s:iterator var="internalCurrent" value="#adminunit" status="internalStatus">
+							<tr id="trDescriptionAddAdministrationUnits_<s:property value="%{#internalStatus.index + 1}" />">
+								<td id="tdUnitOfAdministrativeStructure_<s:property value="%{#internalStatus.index + 1}" />">
+									<label for="textUnitOfAdministrativeStructure_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.description.unitOfAdministrativeStructure')" />:</label>
+								</td>
+								<td>
+									<textarea id="textUnitOfAdministrativeStructure_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
+								</td>
+								<td id="tdLanguageUnitOfAdministrativeStructure_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
+									<label for="selectLanguageUnitOfAdministrativeStructure_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+								</td>
+								<td>
+									<select id="selectLanguageUnitOfAdministrativeStructure_<s:property value="%{#internalStatus.index + 1}" />">
+										<s:iterator value="languageList" var="language"> 
+											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #adminunitLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+										</s:iterator>
+									</select>
+								</td>
+							</tr>
+						</s:iterator>
+					</s:if>
+					<s:else>
+						<tr id="trDescriptionAddAdministrationUnits_1">
+							<td id="tdUnitOfAdministrativeStructure_1">
+								<label for="textUnitOfAdministrativeStructure_1"><s:property value="getText('label.ai.description.unitOfAdministrativeStructure')" />:</label>
+							</td>
+							<td>
+								<textarea id="textUnitOfAdministrativeStructure_1"></textarea>
+							</td>
+							<td id="tdLanguageUnitOfAdministrativeStructure_1" class="labelLeft">
+								<label for="selectLanguageUnitOfAdministrativeStructure_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+							</td>
+							<td>
+								<select id="selectLanguageUnitOfAdministrativeStructure_1">
+									<s:iterator value="languageList" var="language"> 
+										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+									</s:iterator>
+								</select>
+							</td>
+						</tr>
+					</s:else>
+				</s:if>
+				<s:else>
+					<tr id="trDescriptionAddAdministrationUnits_1">
+						<td id="tdUnitOfAdministrativeStructure_1">
+							<label for="textUnitOfAdministrativeStructure_1"><s:property value="getText('label.ai.description.unitOfAdministrativeStructure')" />:</label>
+						</td>
+						<td>
+							<textarea id="textUnitOfAdministrativeStructure_1"></textarea>
+						</td>
+						<td id="tdLanguageUnitOfAdministrativeStructure_1" class="labelLeft">
+							<label for="selectLanguageUnitOfAdministrativeStructure_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+						</td>
+						<td>
+							<select id="selectLanguageUnitOfAdministrativeStructure_1">
+								<s:iterator value="languageList" var="language"> 
+									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+								</s:iterator>
+							</select>
+						</td>
+					</tr>
+				</s:else>
+
 				<tr>
 					<td id="tdAddAdministrationUnits" colspan="2">
 						<input type="button" id="buttonDescriptionAddAdministrationUnits" onclick="descriptionAddAdministrationUnits('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.description.addAdministrativeUnit")' />" />
@@ -150,33 +364,81 @@
 					<td colspan="2">
 					</td>
 				</tr>
-		
+
 				<tr>
 					<td id="buildingLabel" colspan="4">
 						<s:property value="getText('label.ai.description.buildingDescription')" />
 					</td>
 					
 				</tr>
-		
-				<tr id="trBuildingDescription">
-					<td id="tdBuilding">
-						<label for="textBuilding"><s:property value="getText('label.ai.description.building')" />:</label>
-					</td>
-					<td>
-						<textarea id="textBuilding">${loader.building}</textarea>
-					</td>
-					<td id="tdLanguageBuilding" class="labelLeft">
-						<label for="selectLanguageBuilding"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
-					</td>
-					<td>
-						<select id="selectLanguageBuilding">
-							<s:iterator value="languageList" var="language"> 
-								<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.buildingLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
-							</s:iterator>
-						</select>
-					</td>
-				</tr>
-		
+
+				<s:if test="%{loader.descBuilding.size() > 0}">
+					<s:set var="building" value="loader.descBuilding[#counter]"/>
+					<s:set var="buildingLang" value="loader.descBuildingLang[#counter]"/>
+					<s:if test="%{#building.size() > 0}">
+						<s:iterator var="internalCurrent" value="#building" status="internalStatus">
+							<tr id="trBuildingDescription_<s:property value="%{#internalStatus.index + 1}" />">
+								<td id="tdBuilding_<s:property value="%{#internalStatus.index + 1}" />">
+									<label for="textBuilding_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.description.building')" />:</label>
+								</td>
+								<td>
+									<textarea id="textBuilding_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
+								</td>
+								<td id="tdLanguageBuilding_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
+									<label for="selectLanguageBuilding_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+								</td>
+								<td>
+									<select id="selectLanguageBuilding_<s:property value="%{#internalStatus.index + 1}" />">
+										<s:iterator value="languageList" var="language"> 
+											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #buildingLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+										</s:iterator>
+									</select>
+								</td>
+							</tr>
+						</s:iterator>
+					</s:if>
+					<s:else>
+						<tr id="trBuildingDescription_1">
+							<td id="tdBuilding_1">
+								<label for="textBuilding_1"><s:property value="getText('label.ai.description.building')" />:</label>
+							</td>
+							<td>
+								<textarea id="textBuilding_1"></textarea>
+							</td>
+							<td id="tdLanguageBuilding_1" class="labelLeft">
+								<label for="selectLanguageBuilding_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+							</td>
+							<td>
+								<select id="selectLanguageBuilding_1">
+									<s:iterator value="languageList" var="language"> 
+										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+									</s:iterator>
+								</select>
+							</td>
+						</tr>
+					</s:else>
+				</s:if>
+				<s:else>
+					<tr id="trBuildingDescription_1">
+						<td id="tdBuilding_1">
+							<label for="textBuilding_1"><s:property value="getText('label.ai.description.building')" />:</label>
+						</td>
+						<td>
+							<textarea id="textBuilding_1"></textarea>
+						</td>
+						<td id="tdLanguageBuilding_1" class="labelLeft">
+							<label for="selectLanguageBuilding_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+						</td>
+						<td>
+							<select id="selectLanguageBuilding_1">
+								<s:iterator value="languageList" var="language"> 
+									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+								</s:iterator>
+							</select>
+						</td>
+					</tr>
+				</s:else>
+
 				<tr>
 					<td id="tdAddBuildingDescription" colspan="2">
 						<input type="button" id="buttonDescriptionBuildingDescription" onclick="descriptionAddBuildingDescription('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.description.addBuildingDescription")' />" />
@@ -184,53 +446,123 @@
 					<td colspan="2">
 					</td>
 				</tr>
-		
+
 				<tr>
 					<td id="tdRepositoryArea">
 						<label for="textRepositoryArea"><s:property value="getText('label.ai.description.repositoryArea')" />:</label>
 					</td>
 					<td>
-						<input type="text" id="textRepositoryArea" value="${loader.repositorarea}" />
+						<s:if test="%{loader.descRepositorarea.size() > 0}">
+							<s:set var="repositorarea" value="loader.descRepositorarea[#counter]"/>
+							<s:if test="%{#repositorarea.size() > 0}">
+								<input type="text" id="textRepositoryArea" value="<s:property value="#repositorarea[0]" />" />
+							</s:if>
+							<s:else>
+								<input type="text" id="textRepositoryArea" />
+							</s:else>
+						</s:if>
+						<s:else>
+							<input type="text" id="textRepositoryArea" />
+						</s:else>
 					</td>
 					<td colspan="2"></td>
 				</tr>
-		
+
 				<tr>
 					<td id="tdLengthOfShelf">
 						<label for="textLengthOfShelf"><s:property value="getText('label.ai.description.lengthOfShelf')" />:</label>
 					</td>
 					<td>
-						<input type="text" id="textLengthOfShelf" value="${loader.lengthshelf}" />
+						<s:if test="%{loader.descLengthshelf.size() > 0}">
+							<s:set var="lengthshelf" value="loader.descLengthshelf[#counter]"/>
+							<s:if test="%{#lengthshelf.size() > 0}">
+								<input type="text" id="textLengthOfShelf" value="<s:property value="#lengthshelf[0]" />" />
+							</s:if>
+							<s:else>
+								<input type="text" id="textLengthOfShelf" />
+							</s:else>
+						</s:if>
+						<s:else>
+							<input type="text" id="textLengthOfShelf" />
+						</s:else>
 					</td>
 					<td colspan="2"></td>
 				</tr>
-		
+
 				<tr>
 					<td id="holdingLabel" colspan="4">
 						<s:property value="getText('label.ai.description.holdingDescription')" />
 					</td>
 					
 				</tr>
-		
-				<tr id="trArchivalAndOtherHoldings">
-					<td id="tdArchivalAndOtherHoldings">
-						<label for="textArchivalAndOtherHoldings"><s:property value="getText('label.ai.description.archivalAndOtherHoldings')" />:</label>
-					</td>
-					<td>
-						<textarea id="textArchivalAndOtherHoldings">${loader.holdings}</textarea>
-					</td>
-					<td id="tdLanguageArchivalAndOtherHoldings" class="labelLeft">
-						<label for="selectLanguageArchivalAndOtherHoldings"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
-					</td>
-					<td>
-						<select id="selectLanguageArchivalAndOtherHoldings">
-							<s:iterator value="languageList" var="language"> 
-								<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.holdingsLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
-							</s:iterator>
-						</select>
-					</td>
-				</tr>
-		
+
+				<s:if test="%{loader.descHoldings.size() > 0}">
+					<s:set var="holdings" value="loader.descHoldings[#counter]"/>
+					<s:set var="holdingsLang" value="loader.descHoldingsLang[#counter]"/>
+					<s:if test="%{#holdings.size() > 0}">
+						<s:iterator var="internalCurrent" value="#holdings" status="internalStatus">
+							<tr id="trArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />">
+								<td id="tdArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />">
+									<label for="textArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.description.archivalAndOtherHoldings')" />:</label>
+								</td>
+								<td>
+									<textarea id="textArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
+								</td>
+								<td id="tdLanguageArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
+									<label for="selectLanguageArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+								</td>
+								<td>
+									<select id="selectLanguageArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />">
+										<s:iterator value="languageList" var="language"> 
+											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #holdingsLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+										</s:iterator>
+									</select>
+								</td>
+							</tr>
+						</s:iterator>
+					</s:if>
+					<s:else>
+						<tr id="trArchivalAndOtherHoldings_1">
+							<td id="tdArchivalAndOtherHoldings_1">
+								<label for="textArchivalAndOtherHoldings_1"><s:property value="getText('label.ai.description.archivalAndOtherHoldings')" />:</label>
+							</td>
+							<td>
+								<textarea id="textArchivalAndOtherHoldings_1"></textarea>
+							</td>
+							<td id="tdLanguageArchivalAndOtherHoldings_1" class="labelLeft">
+								<label for="selectLanguageArchivalAndOtherHoldings_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+							</td>
+							<td>
+								<select id="selectLanguageArchivalAndOtherHoldings_1">
+									<s:iterator value="languageList" var="language"> 
+										<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+									</s:iterator>
+								</select>
+							</td>
+						</tr>
+					</s:else>
+				</s:if>
+				<s:else>
+					<tr id="trArchivalAndOtherHoldings_1">
+						<td id="tdArchivalAndOtherHoldings_1">
+							<label for="textArchivalAndOtherHoldings_1"><s:property value="getText('label.ai.description.archivalAndOtherHoldings')" />:</label>
+						</td>
+						<td>
+							<textarea id="textArchivalAndOtherHoldings_1"></textarea>
+						</td>
+						<td id="tdLanguageArchivalAndOtherHoldings_1" class="labelLeft">
+							<label for="selectLanguageArchivalAndOtherHoldings_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+						</td>
+						<td>
+							<select id="selectLanguageArchivalAndOtherHoldings_1">
+								<s:iterator value="languageList" var="language"> 
+									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+								</s:iterator>
+							</select>
+						</td>
+					</tr>
+				</s:else>
+
 				<tr>
 					<td id="tdAddAnotherArchivalDescription" colspan="2">
 						<input type="button" id="buttonDescriptionAddAnotherArchivalDescription" onclick="descriptionAddAnotherArchivalDescription('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.description.addAnotherArchivalDescription")' />" />
@@ -238,25 +570,79 @@
 					<td colspan="2">
 					</td>
 				</tr>
-		
+
 				<tr>
 					<td colspan="4">
 						<s:property value="getText('label.ai.description.yearsOfTheHoldings')" />
 					</td>
-					
 				</tr>
-		
-				<tr id="trYearWhenThisNameWasUsed_1">
-					<td>
-						<label for="textYearWhenThisNameWasUsed_1"><s:property value="getText('label.ai.tabs.commons.year')" />:</label>
-					</td>
-					<td>
-						<input type="text" id="textYearWhenThisNameWasUsed_1" value="${loader.holdingsDate}"/>
-					</td>
-					<td colspan="2">
-					</td>
-				</tr>
-		
+
+				<s:if test="%{loader.descHoldingsDate.size() > 0}">
+					<s:set var="dateOfHoldings" value="loader.descHoldingsDate[#counter]"/>
+					<s:if test="%{#dateOfHoldings.size() > 0}">
+						<s:iterator var="internalCurrent" value="#dateOfHoldings" status="internalStatus">
+							<tr id="trYearWhenThisNameWasUsed_<s:property value="%{#internalStatus.index + 1}" />">
+								<td>
+									<label for="textYearWhenThisNameWasUsed_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.year')" />:</label>
+								</td>
+								<td>
+									<input type="text" id="textYearWhenThisNameWasUsed_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+								</td>
+								<td colspan="2">
+								</td>
+							</tr>
+						</s:iterator>
+					</s:if>
+					<s:else>
+						<tr id="trYearWhenThisNameWasUsed_1">
+							<td>
+								<label for="textYearWhenThisNameWasUsed_1"><s:property value="getText('label.ai.tabs.commons.year')" />:</label>
+							</td>
+							<td>
+								<input type="text" id="textYearWhenThisNameWasUsed_1" />
+							</td>
+							<td colspan="2">
+							</td>
+						</tr>
+					</s:else>
+				</s:if>
+				<s:else>
+					<tr id="trYearWhenThisNameWasUsed_1">
+						<td>
+							<label for="textYearWhenThisNameWasUsed_1"><s:property value="getText('label.ai.tabs.commons.year')" />:</label>
+						</td>
+						<td>
+							<input type="text" id="textYearWhenThisNameWasUsed_1" />
+						</td>
+						<td colspan="2">
+						</td>
+					</tr>
+				</s:else>
+
+				<s:if test="%{loader.descNumberOfHoldingsDateRange.size() > 0}">
+					<s:set var="holdingsDateRange" value="loader.descNumberOfHoldingsDateRange[#counter]"/>
+					<s:set var="holdingsFromDate" value="loader.descHoldingsDateRangeFromDate[#counter]"/>
+					<s:set var="holdingsToDate" value="loader.descHoldingsDateRangeToDate[#counter]"/>
+					<s:if test="%{#holdingsDateRange.size() > 0}">
+						<s:iterator var="internalCurrent" value="#holdingsDateRange" status="internalStatus">
+							<tr id="trYearRangeWhenThisNameWasUsed_<s:property value="%{#internalStatus.index + 1}" />">
+								<td>
+									<label for="textIdentityYearFrom_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.yearFrom')" />:</label>
+								</td>
+								<td>
+									<input type="text" id="textYearWhenThisNameWasUsedFrom_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#holdingsFromDate[#internalStatus.index]" />" />
+								</td>
+								<td class="labelLeft">
+									<label for="textYearWhenThisNameWasUsedTo_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.textTo')" />:</label>
+								</td>
+								<td>
+									<input type="text" id="textYearWhenThisNameWasUsedTo_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#holdingsToDate[#internalStatus.index]" />" />
+								</td>
+							</tr>
+						</s:iterator>
+					</s:if>
+				</s:if>
+
 				<tr>
 					<td>
 						<input type="button" id="buttonDescriptionAddSingleYear" value="<s:property value="getText('label.ai.tabs.commons.addSingleYear')" />" onclick="addSingleYear($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
@@ -267,17 +653,28 @@
 					<td colspan="2">
 					</td>
 				</tr>
-		
+
 				<tr>
 					<td id="tdExtent">
 						<label for="textExtent"><s:property value="getText('label.ai.description.extent')" />:</label>
 					</td>
 					<td>
-						<input type="text" id="textExtent" value="${loader.extent}" />
+						<s:if test="%{loader.descExtent.size() > 0}">
+							<s:set var="extent" value="loader.descExtent[#counter]"/>
+							<s:if test="%{#extent.size() > 0}">
+								<input type="text" id="textExtent" value="<s:property value="#extent[0]" />" />
+							</s:if>
+							<s:else>
+								<input type="text" id="textExtent" />
+							</s:else>
+						</s:if>
+						<s:else>
+							<input type="text" id="textExtent" />
+						</s:else>
 					</td>
 					<td colspan="2"></td>
 				</tr>
-		
+
 				<tr>
 					<td id="tdButtonsDescriptionTab" colspan="4">
 						<input type="button" id="buttonDescriptionTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" onclick="checkAndShowNextTab($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('label.eag.eagwithurlwarnings')"/>');" />
@@ -300,20 +697,20 @@
 			
 		</tr>
 
-		<tr id="trRepositoryHistory">
-			<td id="tdRepositoryHistory">
-				<label for="textRepositoryHistory"><s:property value="getText('label.ai.description.repositoryHistory')" />:</label>
+		<tr id="trRepositoryHistory_1">
+			<td id="tdRepositoryHistory_1">
+				<label for="textRepositoryHistory_1"><s:property value="getText('label.ai.description.repositoryHistory')" />:</label>
 			</td>
 			<td>
-				<textarea id="textRepositoryHistory" >${loader.repositorhist}</textarea>
+				<textarea id="textRepositoryHistory_1" ></textarea>
 			</td>
-			<td id="tdLanguageRepositoryHistory" class="labelLeft">
-				<label for="selectLanguageRepositoryHistory"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+			<td id="tdLanguageRepositoryHistory_1" class="labelLeft">
+				<label for="selectLanguageRepositoryHistory_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<select id="selectLanguageRepositoryHistory">
+				<select id="selectLanguageRepositoryHistory_1">
 					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.repositorhistLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -332,25 +729,25 @@
 				<label for="textDateOfRepositoryFoundation"><s:property value="getText('label.ai.description.dateOfRepositoryFoundation')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textDateOfRepositoryFoundation" value="${loader.repositorFoundDate}" />
+				<input type="text" id="textDateOfRepositoryFoundation" />
 			</td>
 			<td colspan="2"></td>
 		</tr>
 
-		<tr id="trRuleOfRepositoryFoundation">
-			<td id="tdRuleOfRepositoryFoundation">
-				<label for="textRuleOfRepositoryFoundation"><s:property value="getText('label.ai.description.ruleOfRepositoryFoundation')" />:</label>
+		<tr id="trRuleOfRepositoryFoundation_1">
+			<td id="tdRuleOfRepositoryFoundation_1">
+				<label for="textRuleOfRepositoryFoundation_1"><s:property value="getText('label.ai.description.ruleOfRepositoryFoundation')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textRuleOfRepositoryFoundation" value="${loader.repositorFoundRule}" />
+				<input type="text" id="textRuleOfRepositoryFoundation_1" />
 			</td>
-			<td id="tdLanguageRuleOfRepositoryFoundation" class="labelLeft">
-				<label for="selectLanguageRuleOfRepositoryFoundation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+			<td id="tdLanguageRuleOfRepositoryFoundation_1" class="labelLeft">
+				<label for="selectLanguageRuleOfRepositoryFoundation_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<select id="selectLanguageRuleOfRepositoryFoundation">
+				<select id="selectLanguageRuleOfRepositoryFoundation_1">
 					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.repositorFoundRuleLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -369,25 +766,25 @@
 				<label for="textDateOfRepositorySuppression"><s:property value="getText('label.ai.description.dateOfRepositorySuppression')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textDateOfRepositorySuppression" value="${loader.repositorSupDate}" />
+				<input type="text" id="textDateOfRepositorySuppression" />
 			</td>
 			<td colspan="2"></td>
 		</tr>
 
-		<tr id="trDescriptionAddSuppressionInformation">
-			<td id="tdRuleOfRepositorySuppression">
-				<label for="textRuleOfRepositorySuppression"><s:property value="getText('label.ai.description.ruleOfRepositorySuppression')" />:</label>
+		<tr id="trDescriptionAddSuppressionInformation_1">
+			<td id="tdRuleOfRepositorySuppression_1">
+				<label for="textRuleOfRepositorySuppression_1"><s:property value="getText('label.ai.description.ruleOfRepositorySuppression')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textRuleOfRepositorySuppression" value="${loader.repositorSupRule}" />
+				<input type="text" id="textRuleOfRepositorySuppression_1" />
 			</td>
-			<td id="tdLanguageRuleOfRepositorySuppression" class="labelLeft">
-				<label for="selectLanguageRuleOfRepositorySuppression"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+			<td id="tdLanguageRuleOfRepositorySuppression_1" class="labelLeft">
+				<label for="selectLanguageRuleOfRepositorySuppression_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<select id="selectLanguageRuleOfRepositorySuppression">
+				<select id="selectLanguageRuleOfRepositorySuppression_1">
 					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.repositorSupRuleLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -408,20 +805,20 @@
 			
 		</tr>
 
-		<tr id="trDescriptionAddAdministrationUnits">
-			<td id="tdUnitOfAdministrativeStructure">
-				<label for="textUnitOfAdministrativeStructure"><s:property value="getText('label.ai.description.unitOfAdministrativeStructure')" />:</label>
+		<tr id="trDescriptionAddAdministrationUnits_1">
+			<td id="tdUnitOfAdministrativeStructure_1">
+				<label for="textUnitOfAdministrativeStructure_1"><s:property value="getText('label.ai.description.unitOfAdministrativeStructure')" />:</label>
 			</td>
 			<td>
-				<textarea id="textUnitOfAdministrativeStructure">${loader.adminunit}</textarea>
+				<textarea id="textUnitOfAdministrativeStructure_1"></textarea>
 			</td>
-			<td id="tdLanguageUnitOfAdministrativeStructure" class="labelLeft">
-				<label for="selectLanguageUnitOfAdministrativeStructure"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+			<td id="tdLanguageUnitOfAdministrativeStructure_1" class="labelLeft">
+				<label for="selectLanguageUnitOfAdministrativeStructure_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<select id="selectLanguageUnitOfAdministrativeStructure">
+				<select id="selectLanguageUnitOfAdministrativeStructure_1">
 					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.adminunitLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -442,20 +839,20 @@
 			
 		</tr>
 
-		<tr id="trBuildingDescription">
-			<td id="tdBuilding">
-				<label for="textBuilding"><s:property value="getText('label.ai.description.building')" />:</label>
+		<tr id="trBuildingDescription_1">
+			<td id="tdBuilding_1">
+				<label for="textBuilding_1"><s:property value="getText('label.ai.description.building')" />:</label>
 			</td>
 			<td>
-				<textarea id="textBuilding">${loader.building}</textarea>
+				<textarea id="textBuilding_1"></textarea>
 			</td>
-			<td id="tdLanguageBuilding" class="labelLeft">
-				<label for="selectLanguageBuilding"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+			<td id="tdLanguageBuilding_1" class="labelLeft">
+				<label for="selectLanguageBuilding_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<select id="selectLanguageBuilding">
+				<select id="selectLanguageBuilding_1">
 					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.buildingLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -474,7 +871,7 @@
 				<label for="textRepositoryArea"><s:property value="getText('label.ai.description.repositoryArea')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textRepositoryArea" value="${loader.repositorarea}" />
+				<input type="text" id="textRepositoryArea" />
 			</td>
 			<td colspan="2"></td>
 		</tr>
@@ -484,7 +881,7 @@
 				<label for="textLengthOfShelf"><s:property value="getText('label.ai.description.lengthOfShelf')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textLengthOfShelf" value="${loader.lengthshelf}" />
+				<input type="text" id="textLengthOfShelf" />
 			</td>
 			<td colspan="2"></td>
 		</tr>
@@ -496,20 +893,20 @@
 			
 		</tr>
 
-		<tr id="trArchivalAndOtherHoldings">
-			<td id="tdArchivalAndOtherHoldings">
-				<label for="textArchivalAndOtherHoldings"><s:property value="getText('label.ai.description.archivalAndOtherHoldings')" />:</label>
+		<tr id="trArchivalAndOtherHoldings_1">
+			<td id="tdArchivalAndOtherHoldings_1">
+				<label for="textArchivalAndOtherHoldings_1"><s:property value="getText('label.ai.description.archivalAndOtherHoldings')" />:</label>
 			</td>
 			<td>
-				<textarea id="textArchivalAndOtherHoldings">${loader.holdings}</textarea>
+				<textarea id="textArchivalAndOtherHoldings_1"></textarea>
 			</td>
-			<td id="tdLanguageArchivalAndOtherHoldings" class="labelLeft">
-				<label for="selectLanguageArchivalAndOtherHoldings"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+			<td id="tdLanguageArchivalAndOtherHoldings_1" class="labelLeft">
+				<label for="selectLanguageArchivalAndOtherHoldings_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
-				<select id="selectLanguageArchivalAndOtherHoldings">
+				<select id="selectLanguageArchivalAndOtherHoldings_1">
 					<s:iterator value="languageList" var="language"> 
-						<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.holdingsLang}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
@@ -527,7 +924,6 @@
 			<td colspan="4">
 				<s:property value="getText('label.ai.description.yearsOfTheHoldings')" />
 			</td>
-			
 		</tr>
 
 		<tr id="trYearWhenThisNameWasUsed_1">
@@ -535,7 +931,7 @@
 				<label for="textYearWhenThisNameWasUsed_1"><s:property value="getText('label.ai.tabs.commons.year')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textYearWhenThisNameWasUsed_1" value="${loader.holdingsDate}"/>
+				<input type="text" id="textYearWhenThisNameWasUsed_1" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -557,7 +953,7 @@
 				<label for="textExtent"><s:property value="getText('label.ai.description.extent')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textExtent" value="${loader.extent}" />
+				<input type="text" id="textExtent" />
 			</td>
 			<td colspan="2"></td>
 		</tr>

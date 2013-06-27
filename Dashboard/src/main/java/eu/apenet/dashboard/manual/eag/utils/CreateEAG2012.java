@@ -409,25 +409,24 @@ public class CreateEAG2012 {
 												List<String> langPList = sectionsPLangMap.get(sectionPLangKey);
 												for (int l = 0; l < valuesPList.size(); l++) {
 													if (l == j) {
-														if (valuesPList.get(l) == null || valuesPList.get(l).isEmpty()) {
-															break;
-														}
-														P p = new P();
-														p.setContent(valuesPList.get(l));
-														if (!Eag2012.OPTION_NONE.equalsIgnoreCase(langPList.get(l))) {
-															p.setLang(langPList.get(l));
-														}
-
-														if (Eag2012.RESOURCE_RELATION.equalsIgnoreCase(sectionPValuesKey)
-																&& Eag2012.RESOURCE_RELATION.equalsIgnoreCase(sectionPLangKey)) {
-															DescriptiveNote descriptiveNote = null;
-															if (resourceRelation.getDescriptiveNote() == null) {
-																descriptiveNote = new DescriptiveNote();
-															} else {
-																descriptiveNote = resourceRelation.getDescriptiveNote();
+														if (valuesPList.get(l) != null && !valuesPList.get(l).isEmpty()) {
+															P p = new P();
+															p.setContent(valuesPList.get(l));
+															if (!Eag2012.OPTION_NONE.equalsIgnoreCase(langPList.get(l))) {
+																p.setLang(langPList.get(l));
 															}
-															descriptiveNote.getP().add(p);
-															resourceRelation.setDescriptiveNote(descriptiveNote);
+	
+															if (Eag2012.RESOURCE_RELATION.equalsIgnoreCase(sectionPValuesKey)
+																	&& Eag2012.RESOURCE_RELATION.equalsIgnoreCase(sectionPLangKey)) {
+																DescriptiveNote descriptiveNote = null;
+																if (resourceRelation.getDescriptiveNote() == null) {
+																	descriptiveNote = new DescriptiveNote();
+																} else {
+																	descriptiveNote = resourceRelation.getDescriptiveNote();
+																}
+																descriptiveNote.getP().add(p);
+																resourceRelation.setDescriptiveNote(descriptiveNote);
+															}
 														}
 													}
 												}
@@ -530,25 +529,24 @@ public class CreateEAG2012 {
 												langList = sectionsLangMap.get(sectionLangKey);
 												for (int l = 0; l < valuesList.size(); l++) {
 													if (l == j) {
-														if (valuesList.get(l) == null || valuesList.get(l).isEmpty()) {
-															break;
-														}
-														P p = new P();
-														p.setContent(valuesList.get(l));
-														if (!Eag2012.OPTION_NONE.equalsIgnoreCase(langList.get(l))) {
-															p.setLang(langList.get(l));
-														}
-
-														if (Eag2012.INSTITUTION_RELATIONS.equalsIgnoreCase(sectionValuesKey)
-																&& Eag2012.INSTITUTION_RELATIONS.equalsIgnoreCase(sectionLangKey)) {
-															DescriptiveNote descriptiveNote = null;
-															if (eagRelation.getDescriptiveNote() == null) {
-																descriptiveNote = new DescriptiveNote();
-															} else {
-																descriptiveNote = eagRelation.getDescriptiveNote();
+														if (valuesList.get(l) != null && !valuesList.get(l).isEmpty()) {
+															P p = new P();
+															p.setContent(valuesList.get(l));
+															if (!Eag2012.OPTION_NONE.equalsIgnoreCase(langList.get(l))) {
+																p.setLang(langList.get(l));
 															}
-															descriptiveNote.getP().add(p);
-															eagRelation.setDescriptiveNote(descriptiveNote);
+	
+															if (Eag2012.INSTITUTION_RELATIONS.equalsIgnoreCase(sectionValuesKey)
+																	&& Eag2012.INSTITUTION_RELATIONS.equalsIgnoreCase(sectionLangKey)) {
+																DescriptiveNote descriptiveNote = null;
+																if (eagRelation.getDescriptiveNote() == null) {
+																	descriptiveNote = new DescriptiveNote();
+																} else {
+																	descriptiveNote = eagRelation.getDescriptiveNote();
+																}
+																descriptiveNote.getP().add(p);
+																eagRelation.setDescriptiveNote(descriptiveNote);
+															}
 														}
 													}
 												}
@@ -1367,7 +1365,11 @@ public class CreateEAG2012 {
 								Webpage webpage= new Webpage();
 								webpage.setContent(webpageValueList.get(k));
 								String href = ((webpageHrefList.get(k)!=null && webpageHrefList.get(k).length()>0 && (webpageHrefList.get(k).toLowerCase().startsWith("http://") || webpageHrefList.get(k).toLowerCase().startsWith("ftp://") || webpageHrefList.get(k).toLowerCase().startsWith("https://") ))?webpageHrefList.get(k):(webpageHrefList.get(k)!=null && !webpageHrefList.get(k).isEmpty())?("http://"+webpageHrefList.get(k)):null);
-								webpage.setHref(href);
+
+								if (href != null && !href.isEmpty()) {
+									webpage.setHref(href);
+								}
+
 								if (webpageLangList != null
 										&& webpageLangList.size() > k
 										&& webpageLangList.get(k) != null
@@ -1450,7 +1452,15 @@ public class CreateEAG2012 {
 										repository.getServices().setRecreationalServices(new RecreationalServices());
 									}
 									if (repository.getServices().getRecreationalServices().getExhibition().size() < (k + 1)) {
-										repository.getServices().getRecreationalServices().getExhibition().add(new Exhibition());
+										int diff = (k + 1) -repository.getServices().getRecreationalServices().getExhibition().size();
+										for (int l = 0; l < diff; l++) {
+											repository.getServices().getRecreationalServices().getExhibition().add(new Exhibition());
+											if ((l + 1) != diff) {
+												int size = repository.getServices().getRecreationalServices().getExhibition().size();
+												Exhibition exhibition = repository.getServices().getRecreationalServices().getExhibition().get(size-1);
+												getDescriptiveNote(exhibition, (size - 1), i);
+											}
+										}
 									}
 
 									Exhibition exhibition = repository.getServices().getRecreationalServices().getExhibition().get(k);
@@ -1469,7 +1479,15 @@ public class CreateEAG2012 {
 										repository.getServices().setRecreationalServices(new RecreationalServices());
 									}
 									if (repository.getServices().getRecreationalServices().getToursSessions().size() < (k + 1)) {
-										repository.getServices().getRecreationalServices().getToursSessions().add(new ToursSessions());
+										int diff = (k + 1) -repository.getServices().getRecreationalServices().getToursSessions().size();
+										for (int l = 0; l < diff; l++) {
+											repository.getServices().getRecreationalServices().getToursSessions().add(new ToursSessions());
+											if ((l + 1) != diff) {
+												int size = repository.getServices().getRecreationalServices().getToursSessions().size();
+												ToursSessions toursSessions = repository.getServices().getRecreationalServices().getToursSessions().get(size-1);
+												getDescriptiveNote(toursSessions, (size - 1), i);
+											}
+										}
 									}
 
 									ToursSessions toursSessions = repository.getServices().getRecreationalServices().getToursSessions().get(k);
@@ -1488,7 +1506,15 @@ public class CreateEAG2012 {
 										repository.getServices().setRecreationalServices(new RecreationalServices());
 									}
 									if (repository.getServices().getRecreationalServices().getOtherServices().size() < (k + 1)) {
-										repository.getServices().getRecreationalServices().getOtherServices().add(new OtherServices());
+										int diff = (k + 1) -repository.getServices().getRecreationalServices().getOtherServices().size();
+										for (int l = 0; l < diff; l++) {
+											repository.getServices().getRecreationalServices().getOtherServices().add(new OtherServices());
+											if ((l + 1) != diff) {
+												int size = repository.getServices().getRecreationalServices().getOtherServices().size();
+												OtherServices otherService = repository.getServices().getRecreationalServices().getOtherServices().get(size-1);
+												getDescriptiveNote(otherService, (size - 1), i);
+											}
+										}
 									}
 
 									OtherServices otherService = repository.getServices().getRecreationalServices().getOtherServices().get(k);
@@ -1563,20 +1589,19 @@ public class CreateEAG2012 {
 				List<String> valuesList = this.eag2012.getAdminunitValue().get(i);
 				List<String> langsList = this.eag2012.getAdminunitLang().get(i);
 				for (int j = 0; j < valuesList.size(); j++) {
-					if (valuesList.get(j) == null || valuesList.get(j).isEmpty()) {
-						break;
+					if (valuesList.get(j) != null && !valuesList.get(j).isEmpty()) {
+						if (repository.getAdminhierarchy() == null) {
+							repository.setAdminhierarchy(new Adminhierarchy());
+						}
+	
+						Adminunit adminunit = new Adminunit();
+						adminunit.setContent(valuesList.get(j));
+						if (!Eag2012.OPTION_NONE.equalsIgnoreCase(langsList.get(j))) {
+							adminunit.setLang(langsList.get(j));
+						}
+	
+						repository.getAdminhierarchy().getAdminunit().add(adminunit);
 					}
-					if (repository.getAdminhierarchy() == null) {
-						repository.setAdminhierarchy(new Adminhierarchy());
-					}
-
-					Adminunit adminunit = new Adminunit();
-					adminunit.setContent(valuesList.get(j));
-					if (!Eag2012.OPTION_NONE.equalsIgnoreCase(langsList.get(j))) {
-						adminunit.setLang(langsList.get(j));
-					}
-
-					repository.getAdminhierarchy().getAdminunit().add(adminunit);
 				}
 			}
 		}
@@ -1924,25 +1949,28 @@ public class CreateEAG2012 {
 				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
 
 				for (int j = 0; j < valueList.size(); j++) {
-					if ((valueList.get(j) == null || valueList.get(j).isEmpty())
-							&& (hrefList.get(j) == null || hrefList.get(j).isEmpty())) {
-						break;
-					}
-					if (repository.getServices() == null) {
-						repository.setServices(new Services());
-					}
-					if (repository.getServices().getSearchroom() == null) {
-						repository.getServices().setSearchroom(new Searchroom());
-					}
+					if ((valueList.get(j) != null && !valueList.get(j).isEmpty())
+							|| (hrefList.get(j) != null && !hrefList.get(j).isEmpty())) {
+						if (repository.getServices() == null) {
+							repository.setServices(new Services());
+						}
+						if (repository.getServices().getSearchroom() == null) {
+							repository.getServices().setSearchroom(new Searchroom());
+						}
+	
+						ReadersTicket readersTicket = new ReadersTicket();
+						readersTicket.setContent(valueList.get(j));
 
-					ReadersTicket readersTicket = new ReadersTicket();
-					readersTicket.setContent(valueList.get(j));
-					readersTicket.setHref(hrefList.get(j));
-					if (!Eag2012.OPTION_NONE.equalsIgnoreCase(langList.get(j))) {
-						readersTicket.setLang(langList.get(j));
-					}
+						if (hrefList.get(j) != null && !hrefList.get(j).isEmpty()) {
+							readersTicket.setHref(hrefList.get(j));
+						}
 
-					repository.getServices().getSearchroom().getReadersTicket().add(readersTicket);
+						if (!Eag2012.OPTION_NONE.equalsIgnoreCase(langList.get(j))) {
+							readersTicket.setLang(langList.get(j));
+						}
+	
+						repository.getServices().getSearchroom().getReadersTicket().add(readersTicket);
+					}
 				}
 			}
 		}
@@ -1958,25 +1986,28 @@ public class CreateEAG2012 {
 				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
 
 				for (int j = 0; j < valueList.size(); j++) {
-					if ((valueList.get(j) == null || valueList.get(j).isEmpty())
-							&& (hrefList.get(j) == null || hrefList.get(j).isEmpty())) {
-						break;
-					}
-					if (repository.getServices() == null) {
-						repository.setServices(new Services());
-					}
-					if (repository.getServices().getSearchroom() == null) {
-						repository.getServices().setSearchroom(new Searchroom());
-					}
+					if ((valueList.get(j) != null && !valueList.get(j).isEmpty())
+							|| (hrefList.get(j) != null && !hrefList.get(j).isEmpty())) {
+						if (repository.getServices() == null) {
+							repository.setServices(new Services());
+						}
+						if (repository.getServices().getSearchroom() == null) {
+							repository.getServices().setSearchroom(new Searchroom());
+						}
+	
+						AdvancedOrders advancedOrders = new AdvancedOrders();
+						advancedOrders.setContent(valueList.get(j));
 
-					AdvancedOrders advancedOrders = new AdvancedOrders();
-					advancedOrders.setContent(valueList.get(j));
-					advancedOrders.setHref(hrefList.get(j));
-					if (!Eag2012.OPTION_NONE.equalsIgnoreCase(langList.get(j))) {
-						advancedOrders.setLang(langList.get(j));
-					}
+						if (hrefList.get(j) != null && !hrefList.get(j).isEmpty()) {
+							advancedOrders.setHref(hrefList.get(j));
+						}
 
-					repository.getServices().getSearchroom().getAdvancedOrders().add(advancedOrders);
+						if (!Eag2012.OPTION_NONE.equalsIgnoreCase(langList.get(j))) {
+							advancedOrders.setLang(langList.get(j));
+						}
+	
+						repository.getServices().getSearchroom().getAdvancedOrders().add(advancedOrders);
+					}
 				}
 			}
 		}
@@ -2295,29 +2326,27 @@ public class CreateEAG2012 {
 									for (int j = 0; j < valuesList.size(); j++) {
 										List<String> valueList = valuesList.get(j);
 										for (int k = 0; k < valuesList.size(); k++) {
-											if (valueList.get(k) == null || valueList.get(k).isEmpty()) {
-												break;
-											}
-
-											Date date = new Date();
-											String valueStandardDate = parseDate(valueList.get(k));
-											if (valueStandardDate != null && !valueStandardDate.isEmpty()){
-												date.setStandardDate(valueStandardDate);
-											}
-											date.setContent(valueList.get(k));
-	
-											if (Eag2012.REPOSITOR_FOUND.equalsIgnoreCase(subsectionValueKey)) {
-												// eag/archguide/desc/repositories/repository/repositorfuond/date
-												if (repository.getRepositorfound() == null) {
-													repository.setRepositorfound(new Repositorfound());
+											if (valueList.get(k) != null && !valueList.get(k).isEmpty()) {
+												Date date = new Date();
+												String valueStandardDate = parseDate(valueList.get(k));
+												if (valueStandardDate != null && !valueStandardDate.isEmpty()){
+													date.setStandardDate(valueStandardDate);
 												}
-												repository.getRepositorfound().setDate(date);
-											} else if (Eag2012.REPOSITOR_SUP.equalsIgnoreCase(subsectionValueKey)) {
-												// eag/archguide/desc/repositories/repository/repositorsup/date
-												if (repository.getRepositorsup() == null) {
-													repository.setRepositorsup(new Repositorsup());
+												date.setContent(valueList.get(k));
+		
+												if (Eag2012.REPOSITOR_FOUND.equalsIgnoreCase(subsectionValueKey)) {
+													// eag/archguide/desc/repositories/repository/repositorfuond/date
+													if (repository.getRepositorfound() == null) {
+														repository.setRepositorfound(new Repositorfound());
+													}
+													repository.getRepositorfound().setDate(date);
+												} else if (Eag2012.REPOSITOR_SUP.equalsIgnoreCase(subsectionValueKey)) {
+													// eag/archguide/desc/repositories/repository/repositorsup/date
+													if (repository.getRepositorsup() == null) {
+														repository.setRepositorsup(new Repositorsup());
+													}
+													repository.getRepositorsup().setDate(date);
 												}
-												repository.getRepositorsup().setDate(date);
 											}
 										}
 									}
@@ -2329,50 +2358,47 @@ public class CreateEAG2012 {
 									for (int j = 0; j < valuesList.size(); j++) {
 										List<String> valueList = valuesList.get(j);
 										for (int k = 0; k < valueList.size(); k++) {
-
-											if (valueList.get(k) == null || valueList.get(k).isEmpty()) {
-												break;
-											}
-
-											Date date = new Date();
-											String valueStandardDate = parseDate(valueList.get(k));
-											if (valueStandardDate != null && !valueStandardDate.isEmpty()){
-												date.setStandardDate(valueStandardDate);
-											}
-											date.setContent(valueList.get(k));
-	
-											if (Eag2012.HOLDING_SUBSECTION.equalsIgnoreCase(subsectionValueKey)) {
-												if (repository.getHoldings() == null) {
-													repository.setHoldings(new Holdings());
+											if (valueList.get(k) != null && !valueList.get(k).isEmpty()) {
+												Date date = new Date();
+												String valueStandardDate = parseDate(valueList.get(k));
+												if (valueStandardDate != null && !valueStandardDate.isEmpty()){
+													date.setStandardDate(valueStandardDate);
 												}
-
-												if (repository.getHoldings().getDate() == null
-														&& repository.getHoldings().getDateRange() == null
-														&& repository.getHoldings().getDateSet() == null) {
-													repository.getHoldings().setDate(date);
-												} else {
-													DateSet dateSet = null;
-													if (repository.getHoldings().getDateSet() == null) {
-														dateSet = new DateSet();
+												date.setContent(valueList.get(k));
+		
+												if (Eag2012.HOLDING_SUBSECTION.equalsIgnoreCase(subsectionValueKey)) {
+													if (repository.getHoldings() == null) {
+														repository.setHoldings(new Holdings());
+													}
+	
+													if (repository.getHoldings().getDate() == null
+															&& repository.getHoldings().getDateRange() == null
+															&& repository.getHoldings().getDateSet() == null) {
+														repository.getHoldings().setDate(date);
 													} else {
-														dateSet = repository.getHoldings().getDateSet();
+														DateSet dateSet = null;
+														if (repository.getHoldings().getDateSet() == null) {
+															dateSet = new DateSet();
+														} else {
+															dateSet = repository.getHoldings().getDateSet();
+														}
+	
+														// Recover previous single element.
+														if (repository.getHoldings().getDate() != null) {
+															Date previousDate = repository.getHoldings().getDate();
+															repository.getHoldings().setDate(null);
+															dateSet.getDateOrDateRange().add(previousDate);
+														}
+														if (repository.getHoldings().getDateRange() != null) {
+															DateRange previousDateRange = repository.getHoldings().getDateRange();
+															repository.getHoldings().setDateRange(null);
+															dateSet.getDateOrDateRange().add(previousDateRange);
+														}
+	
+														dateSet.getDateOrDateRange().add(date);
+	
+														repository.getHoldings().setDateSet(dateSet);
 													}
-
-													// Recover previous single element.
-													if (repository.getHoldings().getDate() != null) {
-														Date previousDate = repository.getHoldings().getDate();
-														repository.getHoldings().setDate(null);
-														dateSet.getDateOrDateRange().add(previousDate);
-													}
-													if (repository.getHoldings().getDateRange() != null) {
-														DateRange previousDateRange = repository.getHoldings().getDateRange();
-														repository.getHoldings().setDateRange(null);
-														dateSet.getDateOrDateRange().add(previousDateRange);
-													}
-
-													dateSet.getDateOrDateRange().add(date);
-
-													repository.getHoldings().setDateSet(dateSet);
 												}
 											}
 										}
@@ -2422,62 +2448,60 @@ public class CreateEAG2012 {
 										List<String> valueFromList = valuesFromList.get(j);
 										List<String> valueToList = valuesToList.get(j);
 										for (int k = 0; k < valueFromList.size(); k++) {
-											if ((valueFromList.get(k) == null || valueFromList.get(k).isEmpty())
-													&& (valueToList.get(k) == null || valueToList.get(k).isEmpty())){
-												break;
-											}
-
-											FromDate fromDate = new FromDate();
-											String valueStandardDate = parseDate(valueFromList.get(k));
-											if (valueStandardDate != null && !valueStandardDate.isEmpty()){
-												fromDate.setStandardDate(valueStandardDate);
-											}
-											fromDate.setContent(valueFromList.get(k));
-	
-											ToDate toDate = new ToDate();
-										    valueStandardDate = parseDate(valueToList.get(k));
-											if (valueStandardDate != null && !valueStandardDate.isEmpty()){
-												toDate.setStandardDate(valueStandardDate);
-											}
-											toDate.setContent(valueToList.get(k));
-
-											DateRange dateRange = new DateRange();
-											dateRange.setFromDate(fromDate);
-											dateRange.setToDate(toDate);
-	
-											if (Eag2012.HOLDING_SUBSECTION.equalsIgnoreCase(subsectionValueFromKey)
-													&& Eag2012.HOLDING_SUBSECTION.equalsIgnoreCase(subsectionValueToKey)) {
-												if (repository.getHoldings() == null) {
-													repository.setHoldings(new Holdings());
+											if ((valueFromList.get(k) != null && !valueFromList.get(k).isEmpty())
+													|| (valueToList.get(k) != null && !valueToList.get(k).isEmpty())){
+												FromDate fromDate = new FromDate();
+												String valueStandardDate = parseDate(valueFromList.get(k));
+												if (valueStandardDate != null && !valueStandardDate.isEmpty()){
+													fromDate.setStandardDate(valueStandardDate);
 												}
-
-												if (repository.getHoldings().getDate() == null
-														&& repository.getHoldings().getDateRange() == null
-														&& repository.getHoldings().getDateSet() == null) {
-													repository.getHoldings().setDateRange(dateRange);
-												} else {
-													DateSet dateSet = null;
-													if (repository.getHoldings().getDateSet() == null) {
-														dateSet = new DateSet();
+												fromDate.setContent(valueFromList.get(k));
+		
+												ToDate toDate = new ToDate();
+											    valueStandardDate = parseDate(valueToList.get(k));
+												if (valueStandardDate != null && !valueStandardDate.isEmpty()){
+													toDate.setStandardDate(valueStandardDate);
+												}
+												toDate.setContent(valueToList.get(k));
+	
+												DateRange dateRange = new DateRange();
+												dateRange.setFromDate(fromDate);
+												dateRange.setToDate(toDate);
+		
+												if (Eag2012.HOLDING_SUBSECTION.equalsIgnoreCase(subsectionValueFromKey)
+														&& Eag2012.HOLDING_SUBSECTION.equalsIgnoreCase(subsectionValueToKey)) {
+													if (repository.getHoldings() == null) {
+														repository.setHoldings(new Holdings());
+													}
+	
+													if (repository.getHoldings().getDate() == null
+															&& repository.getHoldings().getDateRange() == null
+															&& repository.getHoldings().getDateSet() == null) {
+														repository.getHoldings().setDateRange(dateRange);
 													} else {
-														dateSet = repository.getHoldings().getDateSet();
+														DateSet dateSet = null;
+														if (repository.getHoldings().getDateSet() == null) {
+															dateSet = new DateSet();
+														} else {
+															dateSet = repository.getHoldings().getDateSet();
+														}
+	
+														// Recover previous single element.
+														if (repository.getHoldings().getDate() != null) {
+															Date previousDate = repository.getHoldings().getDate();
+															repository.getHoldings().setDate(null);
+															dateSet.getDateOrDateRange().add(previousDate);
+														}
+														if (repository.getHoldings().getDateRange() != null) {
+															DateRange previousDateRange = repository.getHoldings().getDateRange();
+															repository.getHoldings().setDateRange(null);
+															dateSet.getDateOrDateRange().add(previousDateRange);
+														}
+	
+														dateSet.getDateOrDateRange().add(dateRange);
+	
+														repository.getHoldings().setDateSet(dateSet);
 													}
-
-													// Recover previous single element.
-													if (repository.getHoldings().getDate() != null) {
-														Date previousDate = repository.getHoldings().getDate();
-														repository.getHoldings().setDate(null);
-														dateSet.getDateOrDateRange().add(previousDate);
-													}
-													if (repository.getHoldings().getDateRange() != null) {
-														DateRange previousDateRange = repository.getHoldings().getDateRange();
-														repository.getHoldings().setDateRange(null);
-														dateSet.getDateOrDateRange().add(previousDateRange);
-													}
-
-													dateSet.getDateOrDateRange().add(dateRange);
-
-													repository.getHoldings().setDateSet(dateSet);
 												}
 											}
 										}
@@ -2549,56 +2573,55 @@ public class CreateEAG2012 {
 									List<String> valuesList = sectionsValueMap.get(sectionValueKey);
 									List<String> langList = sectionsLangMap.get(sectionLangKey);
 									for (int k = 0; k < valuesList.size(); k++) {
-										if (valuesList.get(k) == null || valuesList.get(k).isEmpty()) {
-											break;
-										}
-										P p = new P();
-										p.setContent(valuesList.get(k));
-										if (!Eag2012.OPTION_NONE.equalsIgnoreCase(langList.get(k))) {
-											p.setLang(langList.get(k));
-										}
-
-										// eag/archguide/desc/repositories/repository/services/searchroom/researchServices/descriptiveNote/P
-										if (Eag2012.RESEARCH_SERVICES.equalsIgnoreCase(sectionValueKey)
-												&& Eag2012.RESEARCH_SERVICES.equalsIgnoreCase(sectionLangKey)) {
-											if (repository.getServices() == null) {
-												repository.setServices(new Services());
+										if (valuesList.get(k) != null && !valuesList.get(k).isEmpty()) {
+											P p = new P();
+											p.setContent(valuesList.get(k));
+											if (!Eag2012.OPTION_NONE.equalsIgnoreCase(langList.get(k))) {
+												p.setLang(langList.get(k));
 											}
-											if (repository.getServices().getSearchroom() == null) {
-												repository.getServices().setSearchroom(new Searchroom());
+	
+											// eag/archguide/desc/repositories/repository/services/searchroom/researchServices/descriptiveNote/P
+											if (Eag2012.RESEARCH_SERVICES.equalsIgnoreCase(sectionValueKey)
+													&& Eag2012.RESEARCH_SERVICES.equalsIgnoreCase(sectionLangKey)) {
+												if (repository.getServices() == null) {
+													repository.setServices(new Services());
+												}
+												if (repository.getServices().getSearchroom() == null) {
+													repository.getServices().setSearchroom(new Searchroom());
+												}
+	
+												ResearchServices researchServices = new ResearchServices();
+												if (researchServices.getDescriptiveNote() == null) {
+													researchServices.setDescriptiveNote(new DescriptiveNote());
+												}
+	
+												researchServices.getDescriptiveNote().getP().add(p);
+												repository.getServices().getSearchroom().getResearchServices().add(researchServices);
+											} else  if (Eag2012.REFRESHMENT.equalsIgnoreCase(sectionValueKey)
+													&& Eag2012.REFRESHMENT.equalsIgnoreCase(sectionLangKey)) {
+												// eag/archguide/desc/repositories/repository/services/recreationalSerices/refreshment/descriptiveNote/P
+												if (repository.getServices() == null) {
+													repository.setServices(new Services());
+												}
+												if (repository.getServices().getRecreationalServices() == null) {
+													repository.getServices().setRecreationalServices(new RecreationalServices());
+												}
+	
+												Refreshment refreshment = null;
+												if (repository.getServices().getRecreationalServices().getRefreshment() == null) {
+													refreshment = new Refreshment();
+												} else {
+													refreshment = repository.getServices().getRecreationalServices().getRefreshment();
+												}
+	
+												if (refreshment.getDescriptiveNote() == null) {
+													refreshment.setDescriptiveNote(new DescriptiveNote());
+												}
+	
+												refreshment.getDescriptiveNote().getP().add(p);
+	
+												repository.getServices().getRecreationalServices().setRefreshment(refreshment);
 											}
-
-											ResearchServices researchServices = new ResearchServices();
-											if (researchServices.getDescriptiveNote() == null) {
-												researchServices.setDescriptiveNote(new DescriptiveNote());
-											}
-
-											researchServices.getDescriptiveNote().getP().add(p);
-											repository.getServices().getSearchroom().getResearchServices().add(researchServices);
-										} else  if (Eag2012.REFRESHMENT.equalsIgnoreCase(sectionValueKey)
-												&& Eag2012.REFRESHMENT.equalsIgnoreCase(sectionLangKey)) {
-											// eag/archguide/desc/repositories/repository/services/recreationalSerices/refreshment/descriptiveNote/P
-											if (repository.getServices() == null) {
-												repository.setServices(new Services());
-											}
-											if (repository.getServices().getRecreationalServices() == null) {
-												repository.getServices().setRecreationalServices(new RecreationalServices());
-											}
-
-											Refreshment refreshment = null;
-											if (repository.getServices().getRecreationalServices().getRefreshment() == null) {
-												refreshment = new Refreshment();
-											} else {
-												refreshment = repository.getServices().getRecreationalServices().getRefreshment();
-											}
-
-											if (refreshment.getDescriptiveNote() == null) {
-												refreshment.setDescriptiveNote(new DescriptiveNote());
-											}
-
-											refreshment.getDescriptiveNote().getP().add(p);
-
-											repository.getServices().getRecreationalServices().setRefreshment(refreshment);
 										}
 									}
 								}
@@ -2614,66 +2637,65 @@ public class CreateEAG2012 {
 									List<String> valuesList = sectionsValueMap.get(sectionValueKey);
 									List<String> langList = sectionsLangMap.get(sectionLangKey);
 									for (int k = 0; k < valuesList.size(); k++) {
-										if (valuesList.get(k) == null || valuesList.get(k).isEmpty()) {
-											break;
-										}
-										P p = new P();
-										p.setContent(valuesList.get(k));
-										if (!Eag2012.OPTION_NONE.equalsIgnoreCase(langList.get(k))) {
-											p.setLang(langList.get(k));
-										}
-
-										// eag/archguide/desc/repositories/repository/repositorhist/descriptiveNote/P
-										if (Eag2012.REPOSITORHIST.equalsIgnoreCase(sectionValueKey)
-												&& Eag2012.REPOSITORHIST.equalsIgnoreCase(sectionLangKey)) {
-											Repositorhist repositorhist = null;
-											if (repository.getRepositorhist() == null) {
-												repositorhist = new Repositorhist();
-											} else {
-												repositorhist = repository.getRepositorhist();
+										if (valuesList.get(k) != null && !valuesList.get(k).isEmpty()) {
+											P p = new P();
+											p.setContent(valuesList.get(k));
+											if (!Eag2012.OPTION_NONE.equalsIgnoreCase(langList.get(k))) {
+												p.setLang(langList.get(k));
 											}
-											if (repositorhist.getDescriptiveNote() == null) {
-												repositorhist.setDescriptiveNote(new DescriptiveNote());
+	
+											// eag/archguide/desc/repositories/repository/repositorhist/descriptiveNote/P
+											if (Eag2012.REPOSITORHIST.equalsIgnoreCase(sectionValueKey)
+													&& Eag2012.REPOSITORHIST.equalsIgnoreCase(sectionLangKey)) {
+												Repositorhist repositorhist = null;
+												if (repository.getRepositorhist() == null) {
+													repositorhist = new Repositorhist();
+												} else {
+													repositorhist = repository.getRepositorhist();
+												}
+												if (repositorhist.getDescriptiveNote() == null) {
+													repositorhist.setDescriptiveNote(new DescriptiveNote());
+												}
+	
+												repositorhist.getDescriptiveNote().getP().add(p);
+	
+												repository.setRepositorhist(repositorhist);
+											} else if (Eag2012.BUILDING.equalsIgnoreCase(sectionValueKey)
+													&& Eag2012.BUILDING.equalsIgnoreCase(sectionLangKey)) {
+												// eag/archguide/desc/repositories/repository/buildinginfo/building/descriptiveNote/P
+												Building building = null; 
+												if (repository.getBuildinginfo() == null) {
+													repository.setBuildinginfo(new Buildinginfo());
+													building = new Building();
+												} else {
+													building = repository.getBuildinginfo().getBuilding();
+												}
+	
+												if (building.getDescriptiveNote() == null) {
+													building.setDescriptiveNote(new DescriptiveNote());
+												}
+	
+												building.getDescriptiveNote().getP().add(p);
+	
+												repository.getBuildinginfo().setBuilding(building);
+											} else if (Eag2012.HOLDINGS.equalsIgnoreCase(sectionValueKey)
+													&& Eag2012.HOLDINGS.equalsIgnoreCase(sectionLangKey)) {
+												// eag/archguide/desc/repositories/repository/holdings/descriptiveNote/P
+												Holdings holdings = null;
+												if (repository.getHoldings() == null) {
+													holdings = new Holdings();
+												} else {
+													holdings = repository.getHoldings();
+												}
+	
+												if (holdings.getDescriptiveNote() == null) {
+													holdings.setDescriptiveNote(new DescriptiveNote());
+												}
+	
+												holdings.getDescriptiveNote().getP().add(p);
+	
+												repository.setHoldings(holdings);
 											}
-
-											repositorhist.getDescriptiveNote().getP().add(p);
-
-											repository.setRepositorhist(repositorhist);
-										} else if (Eag2012.BUILDING.equalsIgnoreCase(sectionValueKey)
-												&& Eag2012.BUILDING.equalsIgnoreCase(sectionLangKey)) {
-											// eag/archguide/desc/repositories/repository/buildinginfo/building/descriptiveNote/P
-											Building building = null; 
-											if (repository.getBuildinginfo() == null) {
-												repository.setBuildinginfo(new Buildinginfo());
-												building = new Building();
-											} else {
-												building = repository.getBuildinginfo().getBuilding();
-											}
-
-											if (building.getDescriptiveNote() == null) {
-												building.setDescriptiveNote(new DescriptiveNote());
-											}
-
-											building.getDescriptiveNote().getP().add(p);
-
-											repository.getBuildinginfo().setBuilding(building);
-										} else if (Eag2012.HOLDINGS.equalsIgnoreCase(sectionValueKey)
-												&& Eag2012.HOLDINGS.equalsIgnoreCase(sectionLangKey)) {
-											// eag/archguide/desc/repositories/repository/holdings/descriptiveNote/P
-											Holdings holdings = null;
-											if (repository.getHoldings() == null) {
-												holdings = new Holdings();
-											} else {
-												holdings = repository.getHoldings();
-											}
-
-											if (holdings.getDescriptiveNote() == null) {
-												holdings.setDescriptiveNote(new DescriptiveNote());
-											}
-
-											holdings.getDescriptiveNote().getP().add(p);
-
-											repository.setHoldings(holdings);
 										}
 									}
 								}
@@ -2892,39 +2914,37 @@ public class CreateEAG2012 {
 					List<String> valuesList = subsectionValueMap.get(subsectionValueKey);
 					List<String> langsList = subsectionLangMap.get(subsectionLangKey);
 					for (int j = 0; j < valuesList.size(); j++) {
-						if (valuesList.get(j) == null || valuesList.get(j).isEmpty()) {
-							break;
-						}
-
-						// eag/archguide/desc/repositories/repository/repositorfound/rule
-						if (Eag2012.REPOSITOR_FOUND.equalsIgnoreCase(subsectionValueKey)
-								&& Eag2012.REPOSITOR_FOUND.equalsIgnoreCase(subsectionLangKey)) {
-							if (repository.getRepositorfound() == null) {
-								repository.setRepositorfound(new Repositorfound());
+						if (valuesList.get(j) != null && !valuesList.get(j).isEmpty()) {
+							// eag/archguide/desc/repositories/repository/repositorfound/rule
+							if (Eag2012.REPOSITOR_FOUND.equalsIgnoreCase(subsectionValueKey)
+									&& Eag2012.REPOSITOR_FOUND.equalsIgnoreCase(subsectionLangKey)) {
+								if (repository.getRepositorfound() == null) {
+									repository.setRepositorfound(new Repositorfound());
+								}
+	
+								Rule rule = new Rule();
+								rule.setContent(valuesList.get(j));
+								if (!Eag2012.OPTION_NONE.equalsIgnoreCase(langsList.get(j))) {
+									rule.setLang(langsList.get(j));
+								}
+	
+								repository.getRepositorfound().getRule().add(rule);
 							}
-
-							Rule rule = new Rule();
-							rule.setContent(valuesList.get(j));
-							if (!Eag2012.OPTION_NONE.equalsIgnoreCase(langsList.get(j))) {
-								rule.setLang(langsList.get(j));
+							// eag/archguide/desc/repositories/repository/repositorsup/rule
+							if (Eag2012.REPOSITOR_SUP.equalsIgnoreCase(subsectionValueKey)
+									&& Eag2012.REPOSITOR_SUP.equalsIgnoreCase(subsectionLangKey)) {
+								if (repository.getRepositorsup() == null) {
+									repository.setRepositorsup(new Repositorsup());
+								}
+	
+								Rule rule = new Rule();
+								rule.setContent(valuesList.get(j));
+								if (!Eag2012.OPTION_NONE.equalsIgnoreCase(langsList.get(j))) {
+									rule.setLang(langsList.get(j));
+								}
+	
+								repository.getRepositorsup().getRule().add(rule);
 							}
-
-							repository.getRepositorfound().getRule().add(rule);
-						}
-						// eag/archguide/desc/repositories/repository/repositorsup/rule
-						if (Eag2012.REPOSITOR_SUP.equalsIgnoreCase(subsectionValueKey)
-								&& Eag2012.REPOSITOR_SUP.equalsIgnoreCase(subsectionLangKey)) {
-							if (repository.getRepositorsup() == null) {
-								repository.setRepositorsup(new Repositorsup());
-							}
-
-							Rule rule = new Rule();
-							rule.setContent(valuesList.get(j));
-							if (!Eag2012.OPTION_NONE.equalsIgnoreCase(langsList.get(j))) {
-								rule.setLang(langsList.get(j));
-							}
-
-							repository.getRepositorsup().getRule().add(rule);
 						}
 					}
 				}
@@ -3092,64 +3112,62 @@ public class CreateEAG2012 {
 									if (j == i) {
 										List<String> valueList = valuesList.get(j);
 										for (int k = 0; k < valueList.size(); k++) {
-											if (valueList.get(k) == null || valueList.get(k).isEmpty()) {
-												break;
-											}
-
-											Date date = new Date();
-											String valueStandardDate = parseDate(valueList.get(k));
-											if (valueStandardDate != null && !valueStandardDate.isEmpty()){
-												date.setStandardDate(valueStandardDate);
-											}
-											date.setContent(valueList.get(k));
-
-											if (Eag2012.ROOT_SUBSECTION.equalsIgnoreCase(subsectionValueKey)) {
+											if (valueList.get(k) != null && !valueList.get(k).isEmpty()) {
+												Date date = new Date();
+												String valueStandardDate = parseDate(valueList.get(k));
+												if (valueStandardDate != null && !valueStandardDate.isEmpty()){
+													date.setStandardDate(valueStandardDate);
+												}
+												date.setContent(valueList.get(k));
 	
-												List<Object> nonpreformObjectList = nonpreform.getContent();
-												UseDates useDates = null;
-												int index = 0;
-												for (int l = 0; l < nonpreformObjectList.size(); l++) {
-													if (nonpreformObjectList.get(l) instanceof UseDates) {
-														useDates = (UseDates) nonpreformObjectList.get(l);
-														index = l;
+												if (Eag2012.ROOT_SUBSECTION.equalsIgnoreCase(subsectionValueKey)) {
+		
+													List<Object> nonpreformObjectList = nonpreform.getContent();
+													UseDates useDates = null;
+													int index = 0;
+													for (int l = 0; l < nonpreformObjectList.size(); l++) {
+														if (nonpreformObjectList.get(l) instanceof UseDates) {
+															useDates = (UseDates) nonpreformObjectList.get(l);
+															index = l;
+														}
 													}
-												}
-												boolean emptyUseDates = false;
-												if (useDates == null) {
-													useDates = new UseDates();
-													emptyUseDates = true;
-												}
-
-												if (emptyUseDates) {
-													useDates.setDate(date);
-												} else {
-													DateSet dateSet = null;
-													if (useDates.getDateSet() == null) {
-														dateSet = new DateSet();
+													boolean emptyUseDates = false;
+													if (useDates == null) {
+														useDates = new UseDates();
+														emptyUseDates = true;
+													}
+	
+													if (emptyUseDates) {
+														useDates.setDate(date);
 													} else {
-														dateSet = useDates.getDateSet();
-													}
-
-													// Recover previous single element.
-													if (useDates.getDate() != null) {
-														Date previousDate = useDates.getDate();
-														useDates.setDate(null);
-														dateSet.getDateOrDateRange().add(previousDate);
-													}
-													if (useDates.getDateRange() != null) {
-														DateRange previousDateRange = useDates.getDateRange();
-														useDates.setDateRange(null);
-														dateSet.getDateOrDateRange().add(previousDateRange);
+														DateSet dateSet = null;
+														if (useDates.getDateSet() == null) {
+															dateSet = new DateSet();
+														} else {
+															dateSet = useDates.getDateSet();
+														}
+	
+														// Recover previous single element.
+														if (useDates.getDate() != null) {
+															Date previousDate = useDates.getDate();
+															useDates.setDate(null);
+															dateSet.getDateOrDateRange().add(previousDate);
+														}
+														if (useDates.getDateRange() != null) {
+															DateRange previousDateRange = useDates.getDateRange();
+															useDates.setDateRange(null);
+															dateSet.getDateOrDateRange().add(previousDateRange);
+														}
+			
+														dateSet.getDateOrDateRange().add(date);
+														useDates.setDateSet(dateSet);
 													}
 		
-													dateSet.getDateOrDateRange().add(date);
-													useDates.setDateSet(dateSet);
-												}
-	
-												if (index == 0) {
-													nonpreform.getContent().add(useDates);
-												} else {
-													nonpreform.getContent().set(index, useDates);
+													if (index == 0) {
+														nonpreform.getContent().add(useDates);
+													} else {
+														nonpreform.getContent().set(index, useDates);
+													}
 												}
 											}
 										}
@@ -3197,76 +3215,74 @@ public class CreateEAG2012 {
 										List<String> valueFromList = valuesFromList.get(j);
 										List<String> valueToList = valuesToList.get(j);
 										for (int k = 0; k < valueFromList.size(); k++) {
-											if ((valueFromList.get(k) == null || valueFromList.get(k).isEmpty())
-													&& (valueToList.get(k) == null || valueToList.get(k).isEmpty())){
-												break;
-											}
-
-											FromDate fromDate = new FromDate();
-											String valueStandardDate = parseDate(valueFromList.get(k));
-											if (valueStandardDate != null && !valueStandardDate.isEmpty()){
-												fromDate.setStandardDate(valueStandardDate);
-											}
-											fromDate.setContent(valueFromList.get(k));
+											if ((valueFromList.get(k) != null && !valueFromList.get(k).isEmpty())
+													|| (valueToList.get(k) != null && !valueToList.get(k).isEmpty())){
+												FromDate fromDate = new FromDate();
+												String valueStandardDate = parseDate(valueFromList.get(k));
+												if (valueStandardDate != null && !valueStandardDate.isEmpty()){
+													fromDate.setStandardDate(valueStandardDate);
+												}
+												fromDate.setContent(valueFromList.get(k));
+		
+												ToDate toDate = new ToDate();
+												valueStandardDate = parseDate(valueToList.get(k));
+												if (valueStandardDate != null && !valueStandardDate.isEmpty()){
+													toDate.setStandardDate(valueStandardDate);
+												}
+												toDate.setContent(valueToList.get(k));
+		
+												DateRange dateRange = new DateRange();
+												dateRange.setFromDate(fromDate);
+												dateRange.setToDate(toDate);
 	
-											ToDate toDate = new ToDate();
-											valueStandardDate = parseDate(valueToList.get(k));
-											if (valueStandardDate != null && !valueStandardDate.isEmpty()){
-												toDate.setStandardDate(valueStandardDate);
-											}
-											toDate.setContent(valueToList.get(k));
-	
-											DateRange dateRange = new DateRange();
-											dateRange.setFromDate(fromDate);
-											dateRange.setToDate(toDate);
-
-											if (Eag2012.ROOT_SUBSECTION.equalsIgnoreCase(subsectionValueFromKey)
-													&& Eag2012.ROOT_SUBSECTION.equalsIgnoreCase(subsectionValueToKey)) {
-												List<Object> nonpreformObjectList = nonpreform.getContent();
-												UseDates useDates = null;
-												int index = 0;
-												for (int l = 0; l < nonpreformObjectList.size(); l++) {
-													if (nonpreformObjectList.get(l) instanceof UseDates) {
-														useDates = (UseDates) nonpreformObjectList.get(l);
-														index = l;
+												if (Eag2012.ROOT_SUBSECTION.equalsIgnoreCase(subsectionValueFromKey)
+														&& Eag2012.ROOT_SUBSECTION.equalsIgnoreCase(subsectionValueToKey)) {
+													List<Object> nonpreformObjectList = nonpreform.getContent();
+													UseDates useDates = null;
+													int index = 0;
+													for (int l = 0; l < nonpreformObjectList.size(); l++) {
+														if (nonpreformObjectList.get(l) instanceof UseDates) {
+															useDates = (UseDates) nonpreformObjectList.get(l);
+															index = l;
+														}
 													}
-												}
-												boolean emptyUseDates = false;
-												if (useDates == null) {
-													useDates = new UseDates();
-													emptyUseDates = true;
-												}
-
-												if (emptyUseDates) {
-													useDates.setDateRange(dateRange);
-												} else {
-													DateSet dateSet = null;
-													if (useDates.getDateSet() == null) {
-														dateSet = new DateSet();
+													boolean emptyUseDates = false;
+													if (useDates == null) {
+														useDates = new UseDates();
+														emptyUseDates = true;
+													}
+	
+													if (emptyUseDates) {
+														useDates.setDateRange(dateRange);
 													} else {
-														dateSet = useDates.getDateSet();
+														DateSet dateSet = null;
+														if (useDates.getDateSet() == null) {
+															dateSet = new DateSet();
+														} else {
+															dateSet = useDates.getDateSet();
+														}
+	
+														// Recover previous single element.
+														if (useDates.getDate() != null) {
+															Date previousDate = useDates.getDate();
+															useDates.setDate(null);
+															dateSet.getDateOrDateRange().add(previousDate);
+														}
+														if (useDates.getDateRange() != null) {
+															DateRange previousDateRange = useDates.getDateRange();
+															useDates.setDateRange(null);
+															dateSet.getDateOrDateRange().add(previousDateRange);
+														}
+	
+														dateSet.getDateOrDateRange().add(dateRange);
+														useDates.setDateSet(dateSet);
 													}
-
-													// Recover previous single element.
-													if (useDates.getDate() != null) {
-														Date previousDate = useDates.getDate();
-														useDates.setDate(null);
-														dateSet.getDateOrDateRange().add(previousDate);
+	
+													if (index == 0) {
+														nonpreform.getContent().add(useDates);
+													} else {
+														nonpreform.getContent().set(index, useDates);
 													}
-													if (useDates.getDateRange() != null) {
-														DateRange previousDateRange = useDates.getDateRange();
-														useDates.setDateRange(null);
-														dateSet.getDateOrDateRange().add(previousDateRange);
-													}
-
-													dateSet.getDateOrDateRange().add(dateRange);
-													useDates.setDateSet(dateSet);
-												}
-
-												if (index == 0) {
-													nonpreform.getContent().add(useDates);
-												} else {
-													nonpreform.getContent().set(index, useDates);
 												}
 											}
 										}
