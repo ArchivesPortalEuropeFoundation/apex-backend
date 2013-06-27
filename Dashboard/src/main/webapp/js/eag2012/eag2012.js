@@ -67,14 +67,14 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 	}
 
 	// Check fill mandatory fields in tab "contact".
-	var jsonDataContact =  checkAllContactTabs(text1);
+	var jsonDataContact =  checkAllContactTabs(text1,message);
 	if (!jsonDataContact) {
 		alert(error3);
 		return;
 	}
 
 	// Check fill mandatory fields in tab "access and services".
-	var jsonDataAccessAndServices =  checkAllAccessAndServicesTabs(text1);
+	var jsonDataAccessAndServices =  checkAllAccessAndServicesTabs(text1,message);
 	if (!jsonDataAccessAndServices) {
 		alert(error4);
 		return;
@@ -314,15 +314,12 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 			additionalChecks = checkWebpages($(this),messageRightWeb);
 		}
 	});
-	if(!additionalChecks){
-		checkWebpages($("table#yiTableOthers input#textYIWebpage"),messageRightWeb);
-		$("table#yiTableOthers input[id^='textYIWebpage_']").each(function(){
-			if(!additionalChecks){
-				additionalChecks = checkWebpages($(this),messageRightWeb);
+    var wepageCheck = false;
+	$("table#yiTableOthers input[id^='textYIWebpage']").each(function(){
+			if(!wepageCheck){
+				wepageCheck = checkWebpages($(this),messageRightWeb);
 			}
-		});
-	}
-	
+		});	
 	//select options selected
 	$("#yiTableOthers select").each(function(){
 		if(jsonData.charAt(jsonData.length-1)!=':'){
@@ -359,7 +356,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 		}
 	}
 
-	if (yiMandatoryElements.length != 0 || validationArray.length != 0 || additionalChecks) {
+	if (yiMandatoryElements.length != 0 || validationArray.length != 0 || additionalChecks || wepageCheck) {
 		return false;
 	}
 
@@ -521,13 +518,13 @@ var clickIdentityAction = function(text1){
 	return jsonData;
 };
 
-var clickContactAction = function(text1){
+var clickContactAction = function(text1, message){
 	var currentTab = getCurrentTab();
 
-	return checkContactTab(currentTab, text1);
+	return checkContactTab(currentTab, text1, message);
 };
 
-function checkAllContactTabs(text1) {
+function checkAllContactTabs(text1, message) {
 	var counter = $("table[id^='contactTable_']").length;
 	var jsonData = "{";
 
@@ -538,7 +535,7 @@ function checkAllContactTabs(text1) {
 
 		jsonData += "'contactTable_" + i + "':";
 
-		var check = checkContactTab("_" + i, text1);
+		var check = checkContactTab("_" + i, text1, message);
 
 		if (!check){
 			return false;
@@ -552,7 +549,7 @@ function checkAllContactTabs(text1) {
 	return jsonData;
 };
 
-function checkContactTab(currentTab, text1) {
+function checkContactTab(currentTab, text1, messageWebpage) {
 	// Delete old checks
 	deleteChecks();
 
@@ -610,6 +607,13 @@ function checkContactTab(currentTab, text1) {
 				contactMandatoryElements.splice(position, 1);
 			}
 		}
+	});
+
+	var failWebpageCheck = false;
+	$("table#contactTable" + currentTab + " input[id^='textContactWebOfTheInstitution']").each(function(){
+		if(!failWebpageCheck){
+			failWebpageCheck = checkWebpages($(this), messageWebpage);
+		} 
 	});
 
 	//validation array
@@ -714,7 +718,7 @@ function checkContactTab(currentTab, text1) {
 		});
 		jsonData += "}";
 	}
-	
+
 	jsonData += "}}";
 
 	for (var i = 0; i < contactMandatoryElements.length; i++) {
@@ -731,20 +735,20 @@ function checkContactTab(currentTab, text1) {
 		}
 	}
 
-	if (contactMandatoryElements.length != 0 || validationArray.length != 0) {
+	if (contactMandatoryElements.length != 0 || validationArray.length != 0 || failWebpageCheck) {
 		return false;
 	}
 
 	return jsonData;
 };
 
-var clickAccessAndServicesAction = function(text1){
+var clickAccessAndServicesAction = function(text1, message){
 	var currentTab = getCurrentTab();
 
-	return checkAccessAndServicesTab(currentTab, text1);
+	return checkAccessAndServicesTab(currentTab, text1, message);
 };
 
-function checkAllAccessAndServicesTabs(text1) {
+function checkAllAccessAndServicesTabs(text1, message) {
 	var counter = $("table[id^='accessAndServicesTable_']").length;
 	var jsonData = "{";
 
@@ -755,7 +759,7 @@ function checkAllAccessAndServicesTabs(text1) {
 
 		jsonData += "'accessAndServicesTable_" + i + "':";
 
-		var check = checkAccessAndServicesTab("_" + i, text1);
+		var check = checkAccessAndServicesTab("_" + i, text1, message);
 
 		if (!check){
 			return false;
@@ -769,7 +773,7 @@ function checkAllAccessAndServicesTabs(text1) {
 	return jsonData;
 };
 
-function checkAccessAndServicesTab(currentTab, text1) {
+function checkAccessAndServicesTab(currentTab, text1, messageLink) {
 	// Delete old checks
 	deleteChecks();
 
@@ -832,6 +836,73 @@ function checkAccessAndServicesTab(currentTab, text1) {
 			}
 		}
 	});
+	var failLinkCheck = false;
+	$("table#accessAndServicesTable" + currentTab + " input[id^='textTravelLink_']").each(function(){
+		if(!failLinkCheck){
+			failLinkCheck = checkWebpages($(this),messageLink); 
+		}
+	});
+    var failTermCheck = false; 
+    $("table#accessAndServicesTable" + currentTab + " input[id^='textASTOULink_']").each(function(){
+		if(!failTermCheck){
+			failTermCheck = checkWebpages($(this),messageLink); 
+		}
+	 });
+     var failReaderCheck = false;
+     $("table#accessAndServicesTable" + currentTab + " input[id^='textASSRRTLink_']").each(function(){
+		if(!failReaderCheck){
+			failReaderCheck = checkWebpages($(this),messageLink); 
+		}
+	  });
+      var failFurtherCheck = false;
+      $("table#accessAndServicesTable" + currentTab + " input[id^='textASSRAOLink_']").each(function(){
+		if(!failFurtherCheck){
+			failFurtherCheck = checkWebpages($(this),messageLink); 
+		}
+	   });
+       var failwebpageSearchroom = false;
+       $("table#accessAndServicesTable" + currentTab + " input[id^='textASSRWebpage']").each(function(){
+   		if(!failwebpageSearchroom){
+   			failwebpageSearchroom = checkWebpages($(this),messageLink); 
+   		}
+   	   });
+       var failwebpageInternetAccess = false;
+       $("table#accessAndServicesTable" + currentTab + " input[id^='textASLWebpage']").each(function(){
+   		if(!failwebpageInternetAccess){
+   			failwebpageInternetAccess = checkWebpages($(this),messageLink); 
+   		}
+   	   });
+       var failwebpageDescription = false;
+       $("table#accessAndServicesTable" + currentTab + " input[id^='textASRSWebpage']").each(function(){
+   		if(!failwebpageDescription){
+   			failwebpageDescription = checkWebpages($(this),messageLink); 
+   		}
+   	   });
+   	   var failwebpageTechnical = false;
+       $("table#accessAndServicesTable" + currentTab + " input[id^='textASTSRSWebpage']").each(function(){
+   		if(!failwebpageTechnical){
+   			failwebpageTechnical = checkWebpages($(this),messageLink); 
+   		}
+   	   });
+       var failwebpageExhibition = false;
+       $("table#accessAndServicesTable" + currentTab + " input[id^='textASReSeWebpage_']").each(function(){
+   		if(!failwebpageExhibition){
+   			failwebpageExhibition = checkWebpages($(this),messageLink); 
+   		}
+   	   });
+       var failwebpageToursSession = false;
+       $("table#accessAndServicesTable" + currentTab + " input[id^='textASReSeTSWebpage_']").each(function(){
+   		if(!failwebpageToursSession ){
+   			failwebpageToursSession = checkWebpages($(this),messageLink); 
+   		}
+   	   });
+       var failwebpageServices = false;
+       $("table#accessAndServicesTable" + currentTab + " input[id^='textASReSeOSWebpage_']").each(function(){
+   		if(!failwebpageServices){
+   			failwebpageServices = checkWebpages($(this),messageLink); 
+   		}
+   	   });
+       
 	//content from selects
 	$("table#accessAndServicesTable" + currentTab + " select").each(function(){
 		if(jsonData.charAt(jsonData.length-1)!=':'){
@@ -868,7 +939,7 @@ function checkAccessAndServicesTab(currentTab, text1) {
 		$("table#accessAndServicesTable" + currentTab + " #" + aasMandatoryElements[i]).after(pFieldError);
 	}
 
-	if (aasMandatoryElements.length != 0) {
+	if (aasMandatoryElements.length != 0 || failLinkCheck || failTermCheck || failReaderCheck || failFurtherCheck || failwebpageSearchroom || failwebpageInternetAccess || failwebpageDescription || failwebpageTechnical || failwebpageExhibition || failwebpageToursSession || failwebpageServices) {
 		return false;
 	}
 
@@ -1110,14 +1181,14 @@ function checkAndShowPreviousTab(table, text1, text2, messageWebpage){
 			$("ul#eag2012TabsContainer a[href='#tab-accessAndServices']").trigger('click');
 		}
 	} else if (id.indexOf("accessAndServicesTable") != -1) {
-		if (!clickAccessAndServicesAction(text1)) {
+		if (!clickAccessAndServicesAction(text1, messageWebpage)) {
 			alertFillFieldsBeforeChangeTab(text2);
 			return;
 		} else {
 			$("ul#eag2012TabsContainer a[href='#tab-contact']").trigger('click');
 		}
 	} else if (id.indexOf("contactTable") != -1) {
-		if (!clickContactAction(text1)) {
+		if (!clickContactAction(text1, messageWebpage)) {
 			alertFillFieldsBeforeChangeTab(text2);
 			return;
 		} else {
@@ -1132,7 +1203,7 @@ function checkAndShowPreviousTab(table, text1, text2, messageWebpage){
 		}
 	}
 }
-function checkAndShowNextTab(table, text1, text2 ,messageRightWeb){
+function checkAndShowNextTab(table, text1, text2 , messageRightWeb){
 	// Check table passed.
 	var id =  $(table).attr("id");
 
@@ -1151,14 +1222,14 @@ function checkAndShowNextTab(table, text1, text2 ,messageRightWeb){
 			$("ul#eag2012TabsContainer a[href='#tab-contact']").trigger('click');
 		}
 	} else if (id.indexOf("contactTable") != -1) {
-		if (!clickContactAction(text1)) {
+		if (!clickContactAction(text1, messageRightWeb)) {
 			alertFillFieldsBeforeChangeTab(text2);
 			return;
 		} else {
 			$("ul#eag2012TabsContainer a[href='#tab-accessAndServices']").trigger('click');
 		}
 	} else if (id.indexOf("accessAndServicesTable") != -1) {
-		if (!clickAccessAndServicesAction(text1)) {
+		if (!clickAccessAndServicesAction(text1, messageRightWeb)) {
 			alertFillFieldsBeforeChangeTab(text2);
 			return;
 		} else {

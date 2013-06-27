@@ -361,7 +361,7 @@ public class CreateEAG2012 {
 									// eag/relations/resourceRelation/href
 									if (this.eag2012.getResourceRelationHref() != null && this.eag2012.getResourceRelationHref().get(Eag2012.TAB_RELATION)!=null && !this.eag2012.getResourceRelationHref().get(Eag2012.TAB_RELATION).isEmpty()) {
 										String href = this.eag2012.getResourceRelationHref().get(Eag2012.TAB_RELATION).get(j);
-										href = (href!=null && href.length()>0 && (href.toLowerCase().startsWith("http://") || href.toLowerCase().startsWith("ftp://") || href.toLowerCase().startsWith("https://")) )?href:((href!=null && !href.isEmpty())?((href!=null && !href.isEmpty())?("http://"+href):href):null);
+									//	href = (href!=null && href.length()>0 && (href.toLowerCase().startsWith("http://") || href.toLowerCase().startsWith("ftp://") || href.toLowerCase().startsWith("https://")) )?href:((href!=null && !href.isEmpty())?((href!=null && !href.isEmpty())?("http://"+href):href):null);
 										resourceRelation.setHref(href);
 									}
 								}
@@ -369,13 +369,13 @@ public class CreateEAG2012 {
 							if(Eag2012.TAB_YOUR_INSTITUTION.equalsIgnoreCase(sectionValueKey)){
 								if(this.eag2012.getResourceRelationHref() != null && this.eag2012.getResourceRelationHref().get(Eag2012.TAB_YOUR_INSTITUTION)!=null && !this.eag2012.getResourceRelationHref().get(Eag2012.TAB_YOUR_INSTITUTION).isEmpty()){
 									String href = this.eag2012.getResourceRelationHref().get(Eag2012.TAB_YOUR_INSTITUTION).get(j);
-									href = (href!=null && href.length()>0 && (href.toLowerCase().startsWith("http://") || href.toLowerCase().startsWith("ftp://") || href.toLowerCase().startsWith("https://")) )?href:((href!=null && !href.isEmpty())?((href!=null && !href.isEmpty())?("http://"+href):href):null);
+								//	href = (href!=null && href.length()>0 && (href.toLowerCase().startsWith("http://") || href.toLowerCase().startsWith("ftp://") || href.toLowerCase().startsWith("https://")) )?href:((href!=null && !href.isEmpty())?((href!=null && !href.isEmpty())?("http://"+href):href):null);
 									resourceRelation.setHref(href);
 								}
 							}else if(Eag2012.RESOURCE_RELATION.equalsIgnoreCase(sectionValueKey)){
 								if(this.eag2012.getResourceRelationHref() != null && this.eag2012.getResourceRelationHref().get(Eag2012.RESOURCE_RELATION)!=null && !this.eag2012.getResourceRelationHref().get(Eag2012.RESOURCE_RELATION).isEmpty()){
 									String href = this.eag2012.getResourceRelationHref().get(Eag2012.RESOURCE_RELATION).get(j);
-									href = (href!=null && href.length()>0 && (href.toLowerCase().startsWith("http://") || href.toLowerCase().startsWith("ftp://") || href.toLowerCase().startsWith("https://")) )?((href!=null && !href.isEmpty())?("http://"+href):null):null;
+								//	href = (href!=null && href.length()>0 && (href.toLowerCase().startsWith("http://") || href.toLowerCase().startsWith("ftp://") || href.toLowerCase().startsWith("https://")) )?((href!=null && !href.isEmpty())?("http://"+href):null):null;
 									resourceRelation.setHref(href);
 								}
 							}
@@ -492,11 +492,11 @@ public class CreateEAG2012 {
 								if (this.eag2012.getEagRelationHref() != null && !this.eag2012.getEagRelationHref().isEmpty()) {
 									if (this.eag2012.getEagRelationHref().size() > valueList.size()) {
 										String href = this.eag2012.getEagRelationHref().get(j+1);
-										href = (href!=null && href.length()>0 && (href.toLowerCase().startsWith("http://") || href.toLowerCase().startsWith("ftp://") || href.toLowerCase().startsWith("https://")) )?href:((href!=null && !href.isEmpty())?((href!=null && !href.isEmpty())?("http://"+href):href):null);
+									//	href = (href!=null && href.length()>0 && (href.toLowerCase().startsWith("http://") || href.toLowerCase().startsWith("ftp://") || href.toLowerCase().startsWith("https://")) )?href:((href!=null && !href.isEmpty())?((href!=null && !href.isEmpty())?("http://"+href):href):null);
 										eagRelation.setHref(href);
 									} else {
 										String href = this.eag2012.getEagRelationHref().get(j);
-										href = (href!=null && href.length()>0 && (href.toLowerCase().startsWith("http://") || href.toLowerCase().startsWith("ftp://") || href.toLowerCase().startsWith("https://")) )?href:((href!=null && !href.isEmpty())?((href!=null && !href.isEmpty())?("http://"+href):href):null);
+								//		href = (href!=null && href.length()>0 && (href.toLowerCase().startsWith("http://") || href.toLowerCase().startsWith("ftp://") || href.toLowerCase().startsWith("https://")) )?href:((href!=null && !href.isEmpty())?((href!=null && !href.isEmpty())?("http://"+href):href):null);
 										eagRelation.setHref(href);
 									}
 								}
