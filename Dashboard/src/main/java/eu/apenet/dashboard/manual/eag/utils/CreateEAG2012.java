@@ -478,6 +478,32 @@ public class CreateEAG2012 {
 						}
 					}
 
+					// Pass to first possition all relations with type "Creator of".
+					if (this.eag.getRelations() != null
+							&& !this.eag.getRelations().getResourceRelation().isEmpty()) {
+						List<ResourceRelation> resourceRelationsListCreator = new ArrayList<ResourceRelation>();
+						List<ResourceRelation> resourceRelationsListRest = new ArrayList<ResourceRelation>();
+
+						for (int j = 0; j < this.eag.getRelations().getResourceRelation().size(); j++) {
+							ResourceRelation relation = this.eag.getRelations().getResourceRelation().get(j);
+
+							if (relation.getResourceRelationType() != null
+									&& !relation.getResourceRelationType().isEmpty()
+									&& Eag2012.OPTION_CREATOR_TEXT.equalsIgnoreCase(relation.getResourceRelationType())) {
+								resourceRelationsListCreator.add(relation);
+							} else {
+								resourceRelationsListRest.add(relation);
+							}
+						}
+
+						// Clear the resource reelations old list.
+						this.eag.getRelations().getResourceRelation().clear();
+
+						// Add new values.
+						this.eag.getRelations().getResourceRelation().addAll(resourceRelationsListCreator);
+						this.eag.getRelations().getResourceRelation().addAll(resourceRelationsListRest);
+					}
+
 					// eag/relations/eagRelation/relationEntry
 					if (Eag2012.INSTITUTION_RELATIONS.equalsIgnoreCase(sectionValueKey)) {
 						for (int j = 0; j < valueList.size() && !valueList.get(j).isEmpty(); j++) {

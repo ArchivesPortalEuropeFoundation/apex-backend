@@ -1086,10 +1086,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textReferencetoyourinstitutionsholdingsguide" onchange="linkToYourHolndingsGuideChanged();" value="<s:property value="#current" />" />
+							<input type="text" id="textReferencetoyourinstitutionsholdingsguide" onchange="linkToYourHolndingsGuideChanged($(this));" value="<s:property value="#current" />" />
 						</s:if>
 						<s:else>
-							<input type="text" id="textReferencetoyourinstitutionsholdingsguide_<s:property value="%{#status.index + 1}" />" value="<s:property value="#current" />" />
+							<input type="text" id="textReferencetoyourinstitutionsholdingsguide_<s:property value="%{#status.index + 1}" />" onchange="linkToYourHolndingsGuideChanged($(this));" value="<s:property value="#current" />" />
 						</s:else>
 					</td>
 					<td class="labelLeft">
@@ -1102,10 +1102,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYIHoldingsGuideLinkTitle" onchange="linkToYourHolndingsGuideTitleChanged();" value="<s:property value="loader.yiResourceRelationrelationEntry[#counter]" />" />
+							<input type="text" id="textYIHoldingsGuideLinkTitle" onchange="linkToYourHolndingsGuideTitleChanged($(this));" value="<s:property value="loader.yiResourceRelationrelationEntry[#counter]" />" />
 						</s:if>
 						<s:else>
-							<input type="text" id="textYIHoldingsGuideLinkTitle_<s:property value="%{#status.index + 1}" />" value="<s:property value="loader.yiResourceRelationrelationEntry[#counter]" />" />
+							<input type="text" id="textYIHoldingsGuideLinkTitle_<s:property value="%{#status.index + 1}" />" onchange="linkToYourHolndingsGuideTitleChanged($(this));" value="<s:property value="loader.yiResourceRelationrelationEntry[#counter]" />" />
 						</s:else>
 					</td>
 				</tr>
@@ -1128,10 +1128,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<select id="selectYIReferencetoHoldingsguide">
+							<select id="selectYIReferencetoHoldingsguide" onchange="selectYIReferencetoHoldingsguideChange($(this));">
 						</s:if>
 						<s:else>
-							<select id="selectYIReferencetoHoldingsguide_<s:property value="%{#status.index + 1}" />" >
+							<select id="selectYIReferencetoHoldingsguide_<s:property value="%{#status.index + 1}" />" onchange="selectYIReferencetoHoldingsguideChange($(this));" >
 						</s:else>
 							<s:iterator value="languageList" var="language"> 
 								<option value="<s:property value="#language.key" />"
@@ -1159,13 +1159,13 @@
 					<label for="textReferencetoyourinstitutionsholdingsguide" ><s:property value="getText('label.ai.yourinstitution.referenceToYourInstitutionsHoldingsGuide')"/>:</label>
 				</td>
 				<td>
-					<input type="text" id="textReferencetoyourinstitutionsholdingsguide" onchange="linkToYourHolndingsGuideChanged();" />
+					<input type="text" id="textReferencetoyourinstitutionsholdingsguide" onchange="linkToYourHolndingsGuideChanged($(this));" />
 				</td>
 				<td class="labelLeft">
 					<label for="textYIHoldingsGuideLinkTitle" ><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 				</td>
 				<td>
-					<input type="text" id="textYIHoldingsGuideLinkTitle" onchange="linkToYourHolndingsGuideTitleChanged();" />
+					<input type="text" id="textYIHoldingsGuideLinkTitle" onchange="linkToYourHolndingsGuideTitleChanged($(this));" />
 				</td>
 			</tr>
 
@@ -1175,7 +1175,7 @@
 					<label for="selectYIReferencetoHoldingsguide"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 				</td>
 				<td>
-					<select id="selectYIReferencetoHoldingsguide" >
+					<select id="selectYIReferencetoHoldingsguide" onchange="selectYIReferencetoHoldingsguideChange($(this));">
 						<s:iterator value="languageList" var="language"> 
 							<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
 						</s:iterator>

@@ -131,8 +131,6 @@ public class EAG2012Loader{
 	private List<String> yiAccessibilityQuestion;
 	private List<String> yiAccessibility;
 	private List<String> yiAccessibilityLang;
-	private String resourceRelationHref;
-	private String resourceRelationrelationEntry;
 	private List<String> yiResourceRelationHref;
 	private List<String> yiResourceRelationrelationEntry;
 
@@ -141,6 +139,7 @@ public class EAG2012Loader{
 
 	// Your institution tab.
 	private String recordIdISIL;
+	private List<String> yiResourceRelationLang;
 
 	// Identity tab.
 	private List<List<String>> repositoryName;
@@ -341,26 +340,20 @@ public class EAG2012Loader{
 	private List<String> controlCitation;
 
 	// Relations.
-	private String resourceRelationType;
-	private String resourceRelationLang;
-	private List<String> yiResourceRelationLang;
-	private String resourceRelationrelationEntryLocalType;
-	private String resourceRelationrelationEntryScriptCode;
-	private String resourceRelationrelationEntryTransliteration;
-	private String resourceRelationrelationEntryLang;
-	private String resourceRelationrelationEntryDescription;
-	private String resourceRelationrelationEntryDescriptionLang;
-	private String eagRelationType;
-	private String eagRelationHref;
-	private String eagRelationLang;
-	private String eagRelationrelationEntry;
-	private String eagRelationrelationEntryLocalType;
-	private String eagRelationrelationEntryScriptCode;
-	private String eagRelationrelationEntryTransliteration;
-	private String eagRelationrelationEntryLang;
-	private String eagRelationrelationEntryDescription;
-	private String eagRelationrelationEntryDescriptionLang;
-    
+	private List<String> relationsResourceRelationType;
+	private List<String> relationsResourceRelationHref;
+	private List<String> relationsResourceRelationEntry;
+	private List<String> relationsResourceRelationEntryLang;
+	private List<String> relationsResourceRelationEntryDescription;
+	private List<String> relationsResourceRelationEntryDescriptionLang;
+	private List<String> relationsNumberOfEagRelations;
+	private List<String> relationsEagRelationType;
+	private List<String> relationsEagRelationHref;
+	private List<String> relationsEagRelationEntry;
+	private List<String> relationsEagRelationEntryLang;
+	private List<String> relationsEagRelationEntryDescription;
+	private List<String> relationsEagRelationEntryDescriptionLang;
+
 	public EAG2012Loader(Integer aiId) {
 		this.aiId = aiId;
 	}
@@ -1481,18 +1474,6 @@ public class EAG2012Loader{
 		this.getYiAccessibilityLang().add(yiAccessibilityLang);
 	}
 
-	public String getResourceRelationHref() {
-		return this.resourceRelationHref;
-	}
-	public void setResourceRelationHref(String resourceRelationHref) {
-		this.resourceRelationHref = resourceRelationHref;
-	}
-	public String getResourceRelationLang() {
-		return this.resourceRelationLang;
-	}
-	public void setResourceRelationLang(String resourceRelationLang) {
-		this.resourceRelationLang = resourceRelationLang;
-	}
 	/**
 	 * @return the yiResourceRelationHref
 	 */
@@ -1675,61 +1656,6 @@ public class EAG2012Loader{
 		this.numberOfRepositories = numberOfRepositories;
 	}
 
-	public String getResourceRelationType() {
-		return this.resourceRelationType;
-	}
-	public void setResourceRelationType(String resourceRelationType) {
-		this.resourceRelationType = resourceRelationType;
-	}
-	public String getResourceRelationrelationEntry() {
-		return this.resourceRelationrelationEntry;
-	}
-	public void setResourceRelationrelationEntry(
-			String resourceRelationrelationEntry) {
-		this.resourceRelationrelationEntry = resourceRelationrelationEntry;
-	}
-	public String getResourceRelationrelationEntryLocalType() {
-		return this.resourceRelationrelationEntryLocalType;
-	}
-	public void setResourceRelationrelationEntryLocalType(
-			String resourceRelationrelationEntryLocalType) {
-		this.resourceRelationrelationEntryLocalType = resourceRelationrelationEntryLocalType;
-	}
-	public String getResourceRelationrelationEntryScriptCode() {
-		return this.resourceRelationrelationEntryScriptCode;
-	}
-	public void setResourceRelationrelationEntryScriptCode(
-			String resourceRelationrelationEntryScriptCode) {
-		this.resourceRelationrelationEntryScriptCode = resourceRelationrelationEntryScriptCode;
-	}
-	public String getResourceRelationrelationEntryTransliteration() {
-		return this.resourceRelationrelationEntryTransliteration;
-	}
-	public void setResourceRelationrelationEntryTransliteration(
-			String resourceRelationrelationEntryTransliteration) {
-		this.resourceRelationrelationEntryTransliteration = resourceRelationrelationEntryTransliteration;
-	}
-	public String getResourceRelationrelationEntryLang() {
-		return this.resourceRelationrelationEntryLang;
-	}
-	public void setResourceRelationrelationEntryLang(
-			String resourceRelationrelationEntryLang) {
-		this.resourceRelationrelationEntryLang = resourceRelationrelationEntryLang;
-	}
-	public String getResourceRelationrelationEntryDescription() {
-		return this.resourceRelationrelationEntryDescription;
-	}
-	public void setResourceRelationrelationEntryDescription(
-			String resourceRelationrelationEntryDescription) {
-		this.resourceRelationrelationEntryDescription = resourceRelationrelationEntryDescription;
-	}
-	public String getResourceRelationrelationEntryDescriptionLang() {
-		return this.resourceRelationrelationEntryDescriptionLang;
-	}
-	public void setResourceRelationrelationEntryDescriptionLang(
-			String resourceRelationrelationEntryDescriptionLang) {
-		this.resourceRelationrelationEntryDescriptionLang = resourceRelationrelationEntryDescriptionLang;
-	}
 	public String getRecordIdISIL() {
 		return this.recordIdISIL;
 	}
@@ -6091,71 +6017,326 @@ public class EAG2012Loader{
 		this.getControlCitation().add(controlCitation);
 	}
 
-	public String getEagRelationType() {
-		return this.eagRelationType;
-	}
-	public void setEagRelationType(String eagRelationType) {
-		this.eagRelationType = eagRelationType;
-	}
-	public String getEagRelationHref() {
-		return this.eagRelationHref;
-	}
-	public void setEagRelationHref(String eagRelationHref) {
-		this.eagRelationHref = eagRelationHref;
-	}
-	public String getEagRelationLang() {
-		return this.eagRelationLang;
-	}
-	public void setEagRelationLang(String eagRelationLang) {
-		this.eagRelationLang = eagRelationLang;
-	}
-	public String getEagRelationrelationEntry() {
-		return this.eagRelationrelationEntry;
-	}
-	public void setEagRelationrelationEntry(String eagRelationrelationEntry) {
-		this.eagRelationrelationEntry = eagRelationrelationEntry;
-	}
-	public String getEagRelationrelationEntryLocalType() {
-		return this.eagRelationrelationEntryLocalType;
-	}
-	public void setEagRelationrelationEntryLocalType(
-			String eagRelationrelationEntryLocalType) {
-		this.eagRelationrelationEntryLocalType = eagRelationrelationEntryLocalType;
-	}
-	public String getEagRelationrelationEntryScriptCode() {
-		return this.eagRelationrelationEntryScriptCode;
-	}
-	public void setEagRelationrelationEntryScriptCode(
-			String eagRelationrelationEntryScriptCode) {
-		this.eagRelationrelationEntryScriptCode = eagRelationrelationEntryScriptCode;
-	}
-	public String getEagRelationrelationEntryTransliteration() {
-		return this.eagRelationrelationEntryTransliteration;
-	}
-	public void setEagRelationrelationEntryTransliteration(
-			String eagRelationrelationEntryTransliteration) {
-		this.eagRelationrelationEntryTransliteration = eagRelationrelationEntryTransliteration;
-	}
-	public String getEagRelationrelationEntryLang() {
-		return this.eagRelationrelationEntryLang;
-	}
-	public void setEagRelationrelationEntryLang(
-			String eagRelationrelationEntryLang) {
-		this.eagRelationrelationEntryLang = eagRelationrelationEntryLang;
-	}
-	public String getEagRelationrelationEntryDescription() {
-		return this.eagRelationrelationEntryDescription;
+	/**
+	 * @return the relationsResourceRelationType
+	 */
+	public List<String> getRelationsResourceRelationType() {
+		if (this.relationsResourceRelationType == null) {
+			this.relationsResourceRelationType = new ArrayList<String>();
+		}
+		return this.relationsResourceRelationType;
 	}
 
-	public void setEagRelationrelationEntryDescription(
-			String eagRelationrelationEntryDescription) {
-		this.eagRelationrelationEntryDescription = eagRelationrelationEntryDescription;
+	/**
+	 * @param relationsResourceRelationType the relationsResourceRelationType to set
+	 */
+	public void setRelationsResourceRelationType(
+			List<String> relationsResourceRelationType) {
+		this.relationsResourceRelationType = relationsResourceRelationType;
 	}
-	public String getEagRelationrelationEntryDescriptionLang() {
-		return this.eagRelationrelationEntryDescriptionLang;
+
+	/**
+	 * @param relationsResourceRelationType the relationsResourceRelationType to add
+	 */
+	public void addRelationsResourceRelationType(String relationsResourceRelationType) {
+		this.getRelationsResourceRelationType().add(relationsResourceRelationType);
 	}
-	public void setEagRelationrelationEntryDescriptionLang(String eagRelationrelationEntryDescriptionLang) {
-		this.eagRelationrelationEntryDescriptionLang = eagRelationrelationEntryDescriptionLang;
+
+	/**
+	 * @return the relationsResourceRelationHref
+	 */
+	public List<String> getRelationsResourceRelationHref() {
+		if (this.relationsResourceRelationHref == null) {
+			this.relationsResourceRelationHref = new ArrayList<String>();
+		}
+		return this.relationsResourceRelationHref;
+	}
+
+	/**
+	 * @param relationsResourceRelationHref the relationsResourceRelationHref to set
+	 */
+	public void setRelationsResourceRelationHref(
+			List<String> relationsResourceRelationHref) {
+		this.relationsResourceRelationHref = relationsResourceRelationHref;
+	}
+
+	/**
+	 * @param relationsResourceRelationHref the relationsResourceRelationHref to add
+	 */
+	public void addRelationsResourceRelationHref(String relationsResourceRelationHref) {
+		this.getRelationsResourceRelationHref().add(relationsResourceRelationHref);
+	}
+
+	/**
+	 * @return the relationsResourceRelationEntry
+	 */
+	public List<String> getRelationsResourceRelationEntry() {
+		if (this.relationsResourceRelationEntry == null) {
+			this.relationsResourceRelationEntry = new ArrayList<String>();
+		}
+		return this.relationsResourceRelationEntry;
+	}
+
+	/**
+	 * @param relationsResourceRelationEntry the relationsResourceRelationEntry to set
+	 */
+	public void setRelationsResourceRelationEntry(
+			List<String> relationsResourceRelationEntry) {
+		this.relationsResourceRelationEntry = relationsResourceRelationEntry;
+	}
+
+	/**
+	 * @param relationsResourceRelationEntry the relationsResourceRelationEntry to add
+	 */
+	public void addRelationsResourceRelationEntry(String relationsResourceRelationEntry) {
+		this.getRelationsResourceRelationEntry().add(relationsResourceRelationEntry);
+	}
+
+	/**
+	 * @return the relationsResourceRelationEntryLang
+	 */
+	public List<String> getRelationsResourceRelationEntryLang() {
+		if (this.relationsResourceRelationEntryLang == null) {
+			this.relationsResourceRelationEntryLang = new ArrayList<String>();
+		}
+		return this.relationsResourceRelationEntryLang;
+	}
+
+	/**
+	 * @param relationsResourceRelationEntryLang the relationsResourceRelationEntryLang to set
+	 */
+	public void setRelationsResourceRelationEntryLang(
+			List<String> relationsResourceRelationEntryLang) {
+		this.relationsResourceRelationEntryLang = relationsResourceRelationEntryLang;
+	}
+
+	/**
+	 * @param relationsResourceRelationEntryLang the relationsResourceRelationEntryLang to add
+	 */
+	public void addRelationsResourceRelationEntryLang(String relationsResourceRelationEntryLang) {
+		this.getRelationsResourceRelationEntryLang().add(relationsResourceRelationEntryLang);
+	}
+
+	/**
+	 * @return the relationsResourceRelationEntryDescription
+	 */
+	public List<String> getRelationsResourceRelationEntryDescription() {
+		if (this.relationsResourceRelationEntryDescription == null) {
+			this.relationsResourceRelationEntryDescription = new ArrayList<String>();
+		}
+		return this.relationsResourceRelationEntryDescription;
+	}
+
+	/**
+	 * @param relationsResourceRelationEntryDescription the relationsResourceRelationEntryDescription to set
+	 */
+	public void setRelationsResourceRelationEntryDescription(
+			List<String> relationsResourceRelationEntryDescription) {
+		this.relationsResourceRelationEntryDescription = relationsResourceRelationEntryDescription;
+	}
+
+	/**
+	 * @param relationsResourceRelationEntryDescription the relationsResourceRelationEntryDescription to add
+	 */
+	public void addRelationsResourceRelationEntryDescription(String relationsResourceRelationEntryDescription) {
+		this.getRelationsResourceRelationEntryDescription().add(relationsResourceRelationEntryDescription);
+	}
+
+	/**
+	 * @return the relationsResourceRelationEntryDescriptionLang
+	 */
+	public List<String> getRelationsResourceRelationEntryDescriptionLang() {
+		if (this.relationsResourceRelationEntryDescriptionLang == null) {
+			this.relationsResourceRelationEntryDescriptionLang = new ArrayList<String>();
+		}
+		return this.relationsResourceRelationEntryDescriptionLang;
+	}
+
+	/**
+	 * @param relationsResourceRelationEntryDescriptionLang the relationsResourceRelationEntryDescriptionLang to set
+	 */
+	public void setRelationsResourceRelationEntryDescriptionLang(
+			List<String> relationsResourceRelationEntryDescriptionLang) {
+		this.relationsResourceRelationEntryDescriptionLang = relationsResourceRelationEntryDescriptionLang;
+	}
+
+	/**
+	 * @param relationsResourceRelationEntryDescriptionLang the relationsResourceRelationEntryDescriptionLang to add
+	 */
+	public void addRelationsResourceRelationEntryDescriptionLang(String relationsResourceRelationEntryDescriptionLang) {
+		this.getRelationsResourceRelationEntryDescriptionLang().add(relationsResourceRelationEntryDescriptionLang);
+	}
+
+	/**
+	 * @return the relationsNumberOfEagRelations
+	 */
+	public List<String> getRelationsNumberOfEagRelations() {
+		if (this.relationsNumberOfEagRelations == null) {
+			this.relationsNumberOfEagRelations = new ArrayList<String>();
+		}
+		return this.relationsNumberOfEagRelations;
+	}
+
+	/**
+	 * @param relationsNumberOfEagRelations the relationsNumberOfEagRelations to set
+	 */
+	public void setRelationsNumberOfEagRelations(
+			List<String> relationsNumberOfEagRelations) {
+		this.relationsNumberOfEagRelations = relationsNumberOfEagRelations;
+	}
+
+	/**
+	 * @param relationsNumberOfEagRelations the relationsNumberOfEagRelations to add
+	 */
+	public void addRelationsNumberOfEagRelations(String relationsNumberOfEagRelations) {
+		this.getRelationsNumberOfEagRelations().add(relationsNumberOfEagRelations);
+	}
+
+	/**
+	 * @return the relationsEagRelationType
+	 */
+	public List<String> getRelationsEagRelationType() {
+		if (this.relationsEagRelationType == null) {
+			this.relationsEagRelationType = new ArrayList<String>();
+		}
+		return this.relationsEagRelationType;
+	}
+
+	/**
+	 * @param relationsEagRelationType the relationsEagRelationType to set
+	 */
+	public void setRelationsEagRelationType(List<String> relationsEagRelationType) {
+		this.relationsEagRelationType = relationsEagRelationType;
+	}
+
+	/**
+	 * @param relationsEagRelationType the relationsEagRelationType to add
+	 */
+	public void addRelationsEagRelationType(String relationsEagRelationType) {
+		this.getRelationsEagRelationType().add(relationsEagRelationType);
+	}
+
+	/**
+	 * @return the relationsEagRelationHref
+	 */
+	public List<String> getRelationsEagRelationHref() {
+		if (this.relationsEagRelationHref == null) {
+			this.relationsEagRelationHref = new ArrayList<String>();
+		}
+		return this.relationsEagRelationHref;
+	}
+
+	/**
+	 * @param relationsEagRelationHref the relationsEagRelationHref to set
+	 */
+	public void setRelationsEagRelationHref(List<String> relationsEagRelationHref) {
+		this.relationsEagRelationHref = relationsEagRelationHref;
+	}
+
+	/**
+	 * @param relationsEagRelationHref the relationsEagRelationHref to add
+	 */
+	public void addRelationsEagRelationHref(String relationsEagRelationHref) {
+		this.getRelationsEagRelationHref().add(relationsEagRelationHref);
+	}
+
+	/**
+	 * @return the relationsEagRelationEntry
+	 */
+	public List<String> getRelationsEagRelationEntry() {
+		if (this.relationsEagRelationEntry == null) {
+			this.relationsEagRelationEntry = new ArrayList<String>();
+		}
+		return this.relationsEagRelationEntry;
+	}
+
+	/**
+	 * @param relationsEagRelationEntry the relationsEagRelationEntry to set
+	 */
+	public void setRelationsEagRelationEntry(List<String> relationsEagRelationEntry) {
+		this.relationsEagRelationEntry = relationsEagRelationEntry;
+	}
+
+	/**
+	 * @param relationsEagRelationEntry the relationsEagRelationEntry to add
+	 */
+	public void addRelationsEagRelationEntry(String relationsEagRelationEntry) {
+		this.getRelationsEagRelationEntry().add(relationsEagRelationEntry);
+	}
+
+	/**
+	 * @return the relationsEagRelationEntryLang
+	 */
+	public List<String> getRelationsEagRelationEntryLang() {
+		if (this.relationsEagRelationEntryLang == null) {
+			this.relationsEagRelationEntryLang = new ArrayList<String>();
+		}
+		return this.relationsEagRelationEntryLang;
+	}
+
+	/**
+	 * @param relationsEagRelationEntryLang the relationsEagRelationEntryLang to set
+	 */
+	public void setRelationsEagRelationEntryLang(
+			List<String> relationsEagRelationEntryLang) {
+		this.relationsEagRelationEntryLang = relationsEagRelationEntryLang;
+	}
+
+	/**
+	 * @param relationsEagRelationEntryLang the relationsEagRelationEntryLang to add
+	 */
+	public void addRelationsEagRelationEntryLang(String relationsEagRelationEntryLang) {
+		this.getRelationsEagRelationEntryLang().add(relationsEagRelationEntryLang);
+	}
+
+	/**
+	 * @return the relationsEagRelationEntryDescription
+	 */
+	public List<String> getRelationsEagRelationEntryDescription() {
+		if (this.relationsEagRelationEntryDescription == null) {
+			this.relationsEagRelationEntryDescription = new ArrayList<String>();
+		}
+		return this.relationsEagRelationEntryDescription;
+	}
+
+	/**
+	 * @param relationsEagRelationEntryDescription the relationsEagRelationEntryDescription to set
+	 */
+	public void setRelationsEagRelationEntryDescription(
+			List<String> relationsEagRelationEntryDescription) {
+		this.relationsEagRelationEntryDescription = relationsEagRelationEntryDescription;
+	}
+
+	/**
+	 * @param relationsEagRelationEntryDescription the relationsEagRelationEntryDescription to add
+	 */
+	public void addRelationsEagRelationEntryDescription(String relationsEagRelationEntryDescription) {
+		this.getRelationsEagRelationEntryDescription().add(relationsEagRelationEntryDescription);
+	}
+
+	/**
+	 * @return the relationsEagRelationEntryDescriptionLang
+	 */
+	public List<String> getRelationsEagRelationEntryDescriptionLang() {
+		if (this.relationsEagRelationEntryDescriptionLang == null) {
+			this.relationsEagRelationEntryDescriptionLang = new ArrayList<String>();
+		}
+		return this.relationsEagRelationEntryDescriptionLang;
+	}
+
+	/**
+	 * @param relationsEagRelationEntryDescriptionLang the relationsEagRelationEntryDescriptionLang to set
+	 */
+	public void setRelationsEagRelationEntryDescriptionLang(
+			List<String> relationsEagRelationEntryDescriptionLang) {
+		this.relationsEagRelationEntryDescriptionLang = relationsEagRelationEntryDescriptionLang;
+	}
+
+	/**
+	 * @param relationsEagRelationEntryDescriptionLang the relationsEagRelationEntryDescriptionLang to add
+	 */
+	public void addRelationsEagRelationEntryDescriptionLang(String relationsEagRelationEntryDescriptionLang) {
+		this.getRelationsEagRelationEntryDescriptionLang().add(relationsEagRelationEntryDescriptionLang);
 	}
 
 	public String editWebFormEAG2012() throws Exception {
@@ -6629,15 +6810,6 @@ public class EAG2012Loader{
 
 		// Reference to your institution’s holdings guide.
 		if (this.eag.getRelations()!=null && !this.eag.getRelations().getResourceRelation().isEmpty()) {
-			// TODO: Review for multiple values.
-			for (int i = 0; i < this.eag.getRelations().getResourceRelation().size(); i++) {
-				this.setResourceRelationHref(this.eag.getRelations().getResourceRelation().get(i).getHref());
-				if (this.eag.getRelations().getResourceRelation().get(i).getRelationEntry() != null) {
-					this.setResourceRelationrelationEntry(this.eag.getRelations().getResourceRelation().get(i).getRelationEntry().getContent());
-					this.setResourceRelationLang(this.eag.getRelations().getResourceRelation().get(i).getRelationEntry().getLang());
-				}
-			}
-
 			// Reference to your institution’s holdings guide for institution.
 			for (int i = 0; i < this.eag.getRelations().getResourceRelation().size(); i++) {
 				ResourceRelation resourceRelation = this.eag.getRelations().getResourceRelation().get(i);
@@ -8908,21 +9080,14 @@ public class EAG2012Loader{
 	 * Method to load all values of "Relations" tab.
 	 */
 	private void loadRelationsTabValues() {
-		if(this.eag.getRelations()!=null){
+		if (this.eag.getRelations() != null) {
 			// Resource relations.
-			if (this.eag.getRelations().getResourceRelation()!=null && !this.eag.getRelations().getResourceRelation().isEmpty()) {
-				// TODO: Review for multiple values.
+			if (!this.eag.getRelations().getResourceRelation().isEmpty()) {
 				for (int i = 0; i < this.eag.getRelations().getResourceRelation().size(); i++) {
-					// Website of your resource.
-					this.setResourceRelationHref(this.eag.getRelations().getResourceRelation().get(i).getHref());
-
-					// Title & ID of the related material.
-					if (this.eag.getRelations().getResourceRelation().get(i).getRelationEntry() != null) {
-						this.setResourceRelationrelationEntry(this.eag.getRelations().getResourceRelation().get(i).getRelationEntry().getContent());
-					}
-
 					// Type of your relation.
-					if (this.eag.getRelations().getResourceRelation().get(i).getResourceRelationType() != null) {
+					if (this.eag.getRelations().getResourceRelation().get(i) != null
+							&& this.eag.getRelations().getResourceRelation().get(i).getResourceRelationType() != null
+							&& !this.eag.getRelations().getResourceRelation().get(i).getResourceRelationType().isEmpty()) {
 						String resourceRelationTypeValue = this.eag.getRelations().getResourceRelation().get(i).getResourceRelationType();
 
 						if (Eag2012.OPTION_CREATOR_TEXT.equalsIgnoreCase(resourceRelationTypeValue)) {
@@ -8935,76 +9100,155 @@ public class EAG2012Loader{
 							resourceRelationTypeValue = Eag2012.OPTION_OTHER;
 						}
 
-						this.setResourceRelationType(resourceRelationTypeValue);
+						this.addRelationsResourceRelationType(resourceRelationTypeValue);
+					} else {
+						this.addRelationsResourceRelationType(Eag2012.OPTION_CREATOR);
+					}
+
+					// Website of your resource.
+					if (this.eag.getRelations().getResourceRelation().get(i) != null
+							&& this.eag.getRelations().getResourceRelation().get(i).getHref() != null
+							&& !this.eag.getRelations().getResourceRelation().get(i).getHref().isEmpty()) {
+						this.addRelationsResourceRelationHref(this.eag.getRelations().getResourceRelation().get(i).getHref());
+					} else {
+						this.addRelationsResourceRelationHref("");
+					}
+
+					// Title & ID of the related material.
+					if (this.eag.getRelations().getResourceRelation().get(i) != null
+							&& this.eag.getRelations().getResourceRelation().get(i).getRelationEntry() != null
+							&& this.eag.getRelations().getResourceRelation().get(i).getRelationEntry().getContent() != null
+							&& !this.eag.getRelations().getResourceRelation().get(i).getRelationEntry().getContent().isEmpty()) {						
+						this.addRelationsResourceRelationEntry(this.eag.getRelations().getResourceRelation().get(i).getRelationEntry().getContent());
+
+						if (this.eag.getRelations().getResourceRelation().get(i).getRelationEntry().getLang() != null
+								&& !this.eag.getRelations().getResourceRelation().get(i).getRelationEntry().getLang().isEmpty()) {
+							this.addRelationsResourceRelationEntryLang(this.eag.getRelations().getResourceRelation().get(i).getRelationEntry().getLang());
+						} else {
+							this.addRelationsResourceRelationEntryLang(Eag2012.OPTION_NONE);
+						}
+					} else {
+						this.addRelationsResourceRelationEntry("");
+						this.addRelationsResourceRelationEntryLang(Eag2012.OPTION_NONE);
 					}
 
 					// Description of relation.
-					if (this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote() != null) {
-						if (!this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote().getP().isEmpty()) {
-							// TODO: Review for multiple values.
-							for (int j = 0; j < this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote().getP().size(); j++) {
-								this.setResourceRelationrelationEntryDescription(this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote().getP().get(j).getContent());
-								this.setResourceRelationrelationEntryDescriptionLang(this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote().getP().get(j).getLang());
+					if (this.eag.getRelations().getResourceRelation().get(i) != null
+							&& this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote() != null
+							&& !this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote().getP().isEmpty()) {
+						for (int j = 0; j < this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote().getP().size(); j++) {
+							if (this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote().getP().get(j) != null
+									&& this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote().getP().get(j).getContent() != null
+									&& !this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote().getP().get(j).getContent().isEmpty()) {
+								this.addRelationsResourceRelationEntryDescription(this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote().getP().get(j).getContent());
+
+								if (this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote().getP().get(j).getLang() != null
+										&& !this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote().getP().get(j).getLang().isEmpty()) {
+									this.addRelationsResourceRelationEntryDescriptionLang(this.eag.getRelations().getResourceRelation().get(i).getDescriptiveNote().getP().get(j).getLang());
+								} else {
+									this.addRelationsResourceRelationEntryDescriptionLang(Eag2012.OPTION_NONE);
+								}
+							} else {
+								this.addRelationsResourceRelationEntryDescription("");
+								this.addRelationsResourceRelationEntryDescriptionLang(Eag2012.OPTION_NONE);
 							}
 						}
+					} else {
+						this.addRelationsResourceRelationEntryDescription("");
+						this.addRelationsResourceRelationEntryDescriptionLang(Eag2012.OPTION_NONE);
 					}
 				}
 			}
 
 			// Institution/Repository relation.
-			if (this.eag.getRelations().getEagRelation()!=null && !this.eag.getRelations().getEagRelation().isEmpty()) {
-				// TODO: Review for multiple values.
+			if (!this.eag.getRelations().getEagRelation().isEmpty()) {
 				for (int i = 0; i < this.eag.getRelations().getEagRelation().size(); i++) {
-					// Website of the description of the institution.
-					this.setEagRelationHref(this.eag.getRelations().getEagRelation().get(i).getHref());
-//					this.setEagRelationLang(this.eag.getRelations().getEagRelation().get(i).getLang());
-					
-					// Title & ID of the related institution.
-					if (!this.eag.getRelations().getEagRelation().get(i).getRelationEntry().isEmpty()) {
-						// TODO: Review for multiple values.
-						for (int j = 0; j < this.eag.getRelations().getEagRelation().size(); j++) {
-//							this.setEagRelationrelationEntry(this.eag.getRelations().getEagRelation().get(i).getRelationEntry().get(j).getContent());
-						}
-					}
-
-					// Type of your relation.
-					if (this.eag.getRelations().getEagRelation().get(i).getEagRelationType() != null) {
-						String eagRelationType = this.eag.getRelations().getEagRelation().get(i).getEagRelationType();
+					this.addRelationsNumberOfEagRelations("");
+					// Type of the relation.
+					if (this.eag.getRelations().getEagRelation().get(i) != null
+							&& this.eag.getRelations().getEagRelation().get(i).getEagRelationType() != null
+							&& !this.eag.getRelations().getEagRelation().get(i).getEagRelationType().isEmpty()) {
+						String eagRelationTypeValue = this.eag.getRelations().getEagRelation().get(i).getEagRelationType();
 						
-						if (Eag2012.OPTION_CHILD_TEXT.equalsIgnoreCase(eagRelationType)) {
-							eagRelationType = Eag2012.OPTION_CHILD;
+						if (Eag2012.OPTION_CHILD_TEXT.equalsIgnoreCase(eagRelationTypeValue)) {
+							eagRelationTypeValue = Eag2012.OPTION_CHILD;
 						}
-						if (Eag2012.OPTION_PARENT_TEXT.equalsIgnoreCase(eagRelationType)) {
-							eagRelationType = Eag2012.OPTION_PARENT;
+						if (Eag2012.OPTION_PARENT_TEXT.equalsIgnoreCase(eagRelationTypeValue)) {
+							eagRelationTypeValue = Eag2012.OPTION_PARENT;
 						}
-						if (Eag2012.OPTION_EARLIER_TEXT.equalsIgnoreCase(eagRelationType)) {
-							eagRelationType = Eag2012.OPTION_EARLIER;
+						if (Eag2012.OPTION_EARLIER_TEXT.equalsIgnoreCase(eagRelationTypeValue)) {
+							eagRelationTypeValue = Eag2012.OPTION_EARLIER;
 						}
-						if (Eag2012.OPTION_LATER_TEXT.equalsIgnoreCase(eagRelationType)) {
-							eagRelationType = Eag2012.OPTION_LATER;
+						if (Eag2012.OPTION_LATER_TEXT.equalsIgnoreCase(eagRelationTypeValue)) {
+							eagRelationTypeValue = Eag2012.OPTION_LATER;
 						}
-						if (Eag2012.OPTION_ASSOCIATIVE_TEXT.equalsIgnoreCase(eagRelationType)) {
-							eagRelationType = Eag2012.OPTION_ASSOCIATIVE;
+						if (Eag2012.OPTION_ASSOCIATIVE_TEXT.equalsIgnoreCase(eagRelationTypeValue)) {
+							eagRelationTypeValue = Eag2012.OPTION_ASSOCIATIVE;
 						}
 
-						this.setEagRelationType(eagRelationType);
+						this.addRelationsEagRelationType(eagRelationTypeValue);
+					} else {
+						this.addRelationsEagRelationType(Eag2012.OPTION_NONE);
 					}
 
-					if(this.eag.getRelations().getEagRelation().get(i).getRelationEntry()!=null){
-						for(int x=0;x<this.eag.getRelations().getEagRelation().get(i).getRelationEntry().size();x++){
-							this.setEagRelationrelationEntry(this.eag.getRelations().getEagRelation().get(i).getRelationEntry().get(x).getContent());
-						}
+					// Website of the description of the institution.
+					if (this.eag.getRelations().getEagRelation().get(i) != null
+							&& this.eag.getRelations().getEagRelation().get(i).getHref() != null
+							&& !this.eag.getRelations().getEagRelation().get(i).getHref().isEmpty()) {
+						this.addRelationsEagRelationHref(this.eag.getRelations().getEagRelation().get(i).getHref());
+					} else {
+						this.addRelationsEagRelationHref("");
 					}
-					
-					// Description of relation.
-					if (this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote() != null) {
-						if (!this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().isEmpty()) {
-							// TODO: Review for multiple values.
-							for (int j = 0; j < this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().size(); j++) {
-								this.setEagRelationrelationEntryDescription(this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().get(j).getContent());
-								this.setEagRelationrelationEntryDescriptionLang(this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().get(j).getLang());
+
+					// Title & ID of the related institution.
+					if (this.eag.getRelations().getEagRelation().get(i) != null
+							&& !this.eag.getRelations().getEagRelation().get(i).getRelationEntry().isEmpty()) {
+						for (int j = 0 ; j < this.eag.getRelations().getEagRelation().get(i).getRelationEntry().size(); j++) {
+							if (this.eag.getRelations().getEagRelation().get(i).getRelationEntry().get(j) != null
+									&& this.eag.getRelations().getEagRelation().get(i).getRelationEntry().get(j).getContent() != null
+									&& !this.eag.getRelations().getEagRelation().get(i).getRelationEntry().get(j).getContent().isEmpty()) {
+								this.addRelationsEagRelationEntry(this.eag.getRelations().getEagRelation().get(i).getRelationEntry().get(j).getContent());
+
+								if (this.eag.getRelations().getEagRelation().get(i).getRelationEntry().get(j).getLang() != null
+										&& !this.eag.getRelations().getEagRelation().get(i).getRelationEntry().get(j).getLang().isEmpty()) {
+									this.addRelationsEagRelationEntryLang(this.eag.getRelations().getEagRelation().get(i).getRelationEntry().get(j).getLang());
+								} else {
+									this.addRelationsEagRelationEntryLang(Eag2012.OPTION_NONE);
+								}
+							} else {
+								this.addRelationsEagRelationEntry("");
+								this.addRelationsEagRelationEntryLang(Eag2012.OPTION_NONE);
 							}
 						}
+					} else {
+						this.addRelationsEagRelationEntry("");
+						this.addRelationsEagRelationEntryLang(Eag2012.OPTION_NONE);
+					}
+
+					// Description of relation.
+					if (this.eag.getRelations().getEagRelation().get(i) != null
+							&& this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote() != null
+							&& !this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().isEmpty()) {
+						for (int j = 0; j < this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().size(); j++) {
+							if (this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().get(j) != null
+									&& this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().get(j).getContent() != null
+									&& !this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().get(j).getContent().isEmpty()) {
+								this.addRelationsEagRelationEntryDescription(this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().get(j).getContent());
+
+								if (this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().get(j).getLang() != null
+										&& !this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().get(j).getLang().isEmpty()) {
+									this.addRelationsEagRelationEntryDescriptionLang(this.eag.getRelations().getEagRelation().get(i).getDescriptiveNote().getP().get(j).getLang());
+								} else {
+									this.addRelationsEagRelationEntryDescriptionLang(Eag2012.OPTION_NONE);
+								}
+							} else {
+								this.addRelationsEagRelationEntryDescription("");
+								this.addRelationsEagRelationEntryDescriptionLang(Eag2012.OPTION_NONE);
+							}
+						}
+					} else {
+						this.addRelationsEagRelationEntryDescription("");
+						this.addRelationsEagRelationEntryDescriptionLang(Eag2012.OPTION_NONE);
 					}
 				}
 			}
