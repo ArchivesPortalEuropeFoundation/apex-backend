@@ -44,16 +44,9 @@
             <description/>
             <url-pattern>/*</url-pattern>
         </web-resource-collection>
-        <auth-constraint>
-            <role-name>EdmHarvester</role-name>
-        </auth-constraint>
         <user-data-constraint>
             <description>SSL is required</description>
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
-    <login-config>
-        <auth-method>BASIC</auth-method>
-        <realm-name>OAI PMH Server authentication</realm-name>
-    </login-config>
 </web-app>
