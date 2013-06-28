@@ -46,7 +46,11 @@ public class VerbAction extends ActionSupport implements ServletRequestAware, Se
 	 */
 	public String execute() throws Exception {
 		String url = request.getScheme()+"://"+request.getHeader("Host") + request.getContextPath() + REQUEST_SUFIX;
-		LOG.info(request.getRemoteHost()+ ": " + url + request.getQueryString());
+		String remoteIp = request.getRemoteAddr();
+		if (remoteIp.startsWith("192")){
+			remoteIp = request.getHeader("X-Forwarded-For");
+		}
+		LOG.info(remoteIp+ ": " + url + request.getQueryString());
 		response.setBufferSize(4096);
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/xml");
