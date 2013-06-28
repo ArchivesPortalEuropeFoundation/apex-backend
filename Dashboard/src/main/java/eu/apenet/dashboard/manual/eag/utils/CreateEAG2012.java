@@ -363,6 +363,9 @@ public class CreateEAG2012 {
 										String href = this.eag2012.getResourceRelationHref().get(Eag2012.TAB_RELATION).get(j);
 									//	href = (href!=null && href.length()>0 && (href.toLowerCase().startsWith("http://") || href.toLowerCase().startsWith("ftp://") || href.toLowerCase().startsWith("https://")) )?href:((href!=null && !href.isEmpty())?((href!=null && !href.isEmpty())?("http://"+href):href):null);
 										resourceRelation.setHref(href);
+										if (resourceRelation.getRelationEntry() == null) {
+											resourceRelation.setRelationEntry(new RelationEntry());
+										}
 									}
 								}
 							}
@@ -371,12 +374,18 @@ public class CreateEAG2012 {
 									String href = this.eag2012.getResourceRelationHref().get(Eag2012.TAB_YOUR_INSTITUTION).get(j);
 								//	href = (href!=null && href.length()>0 && (href.toLowerCase().startsWith("http://") || href.toLowerCase().startsWith("ftp://") || href.toLowerCase().startsWith("https://")) )?href:((href!=null && !href.isEmpty())?((href!=null && !href.isEmpty())?("http://"+href):href):null);
 									resourceRelation.setHref(href);
+									if (resourceRelation.getRelationEntry() == null) {
+										resourceRelation.setRelationEntry(new RelationEntry());
+									}
 								}
 							}else if(Eag2012.RESOURCE_RELATION.equalsIgnoreCase(sectionValueKey)){
 								if(this.eag2012.getResourceRelationHref() != null && this.eag2012.getResourceRelationHref().get(Eag2012.RESOURCE_RELATION)!=null && !this.eag2012.getResourceRelationHref().get(Eag2012.RESOURCE_RELATION).isEmpty()){
 									String href = this.eag2012.getResourceRelationHref().get(Eag2012.RESOURCE_RELATION).get(j);
 								//	href = (href!=null && href.length()>0 && (href.toLowerCase().startsWith("http://") || href.toLowerCase().startsWith("ftp://") || href.toLowerCase().startsWith("https://")) )?((href!=null && !href.isEmpty())?("http://"+href):null):null;
 									resourceRelation.setHref(href);
+									if (resourceRelation.getRelationEntry() == null) {
+										resourceRelation.setRelationEntry(new RelationEntry());
+									}
 								}
 							}
 
