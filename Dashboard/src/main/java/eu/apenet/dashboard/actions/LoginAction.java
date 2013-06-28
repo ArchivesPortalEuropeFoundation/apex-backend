@@ -42,6 +42,9 @@ public class LoginAction extends ActionSupport {
 				}else if (LoginResultType.BLOCKED.equals(loginResult.getType())){
 					addActionError(getText("user.blocked"));
 					return INPUT;
+				}else if (LoginResultType.MAINTENANCE_MODE.equals(loginResult.getType())){
+					addActionError(getText("user.maintenancemode"));
+					return INPUT;
 				}else {
 					this.setUsername("");
 					addActionError(getText("emailpassword.invalid"));	
