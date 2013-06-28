@@ -2352,6 +2352,55 @@ public class CreateEAG2012 {
 						}
 
 						repository.getServices().getTechservices().setReproductionser(reproductionser);
+					} else if (!this.eag2012.getMicroformserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)
+						|| !this.eag2012.getPhotographserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)
+						|| !this.eag2012.getDigitalserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)
+						|| !this.eag2012.getPhotocopyserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+						// Check if question is not selected but microformser, photographser, digitalser or photocopyser is selected.
+						if (repository.getServices() == null) {
+							repository.setServices(new Services());
+						}
+						if (repository.getServices().getTechservices() == null) {
+							repository.getServices().setTechservices(new Techservices());
+						}
+						if (repository.getServices().getTechservices().getReproductionser() == null) {
+							repository.getServices().getTechservices().setReproductionser(new Reproductionser());
+						}
+
+						// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/microformser
+						if (this.eag2012.getMicroformserQuestion() != null && !this.eag2012.getMicroformserQuestion().isEmpty() && !this.eag2012.getMicroformserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+							if (repository.getServices().getTechservices().getReproductionser().getMicroformser() == null) {
+								repository.getServices().getTechservices().getReproductionser().setMicroformser(new Microformser());
+							}
+							repository.getServices().getTechservices().getReproductionser().getMicroformser().setQuestion(this.eag2012.getMicroformserQuestion().get(i));
+						}
+
+						// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/photographser
+						if (this.eag2012.getPhotographserQuestion() != null && !this.eag2012.getPhotographserQuestion().isEmpty() && !this.eag2012.getPhotographserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+							if (repository.getServices().getTechservices().getReproductionser().getPhotographser() == null) {
+								repository.getServices().getTechservices().getReproductionser().setPhotographser(new Photographser());
+							}
+							repository.getServices().getTechservices().getReproductionser().getPhotographser().setQuestion(this.eag2012.getPhotographserQuestion().get(i));
+						}
+
+						// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/digitalser
+						if (this.eag2012.getDigitalserQuestion() != null && !this.eag2012.getDigitalserQuestion().isEmpty() && !this.eag2012.getDigitalserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+							if (repository.getServices().getTechservices().getReproductionser().getDigitalser() == null) {
+								repository.getServices().getTechservices().getReproductionser().setDigitalser(new Digitalser());
+							}
+							repository.getServices().getTechservices().getReproductionser().getDigitalser().setQuestion(this.eag2012.getDigitalserQuestion().get(i));
+						}
+
+						// eag/archguide/desc/repositories/repository/services/techservices/reproductionser/photocopyser
+						if (this.eag2012.getPhotocopyserQuestion() != null && !this.eag2012.getPhotocopyserQuestion().isEmpty() && !this.eag2012.getPhotocopyserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+							if(repository.getServices().getTechservices().getReproductionser()==null){
+								repository.getServices().getTechservices().setReproductionser(new Reproductionser());
+							}
+							if (repository.getServices().getTechservices().getReproductionser().getPhotocopyser() == null) {
+								repository.getServices().getTechservices().getReproductionser().setPhotocopyser(new Photocopyser());
+							}
+							repository.getServices().getTechservices().getReproductionser().getPhotocopyser().setQuestion(this.eag2012.getPhotocopyserQuestion().get(i));
+						}
 					}
 				}
 			}
