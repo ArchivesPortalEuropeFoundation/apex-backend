@@ -606,7 +606,7 @@
 										<select id="selectASASelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
 									</s:if>
 									<s:else>
-										<select id="selectASARSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSFutherInformationOnExistingFacilitiesLangChanged($(this));">
+										<select id="selectASASelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSFutherInformationOnExistingFacilitiesLangChanged($(this));">
 									</s:else>
 										<s:iterator value="languageList" var="language"> 
 											<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == #accessibilityLang[#internalStatus.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>

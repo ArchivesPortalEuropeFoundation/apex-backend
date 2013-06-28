@@ -114,7 +114,7 @@
 			<td colspan="3">
 			</td>
 			<td>
-				<input type="button" id="buttonAddRepositories" value="<s:property value="getText('label.ai.yourinstitution.addRepositories')" />"  onclick="addRepositories('<s:property value="getText('label.ai.yourinstitution.institution')" />','<s:property value="getText('label.ai.yourinstitution.repository')" />','<s:property value="getText('label.ai.contact.nameOfRepository')" />','<s:property value="getText('label.ai.contact.roleOfRepository')" />','<s:property value="getText('label.ai.tabs.commons.option.role.headquarters')" />','<s:property value="getText('label.ai.tabs.commons.option.role.branch')" />','<s:property value="getText('label.ai.tabs.commons.option.role.interimArchive')" />');" />
+				<input type="button" id="buttonAddRepositories" value="<s:property value="getText('label.ai.yourinstitution.addRepositories')" />"  onclick="addRepositories('<s:property value="getText('label.ai.yourinstitution.institution')" />','<s:property value="getText('label.ai.yourinstitution.repository')" />','<s:property value="getText('label.ai.contact.nameOfRepository')" />','<s:property value="getText('label.ai.contact.roleOfRepository')" />','<s:property value="getText('label.ai.tabs.commons.option.role.headquarters')" />','<s:property value="getText('label.ai.tabs.commons.option.role.branch')" />','<s:property value="getText('label.ai.tabs.commons.option.role.interimArchive')" />','<s:property value="getText('label.ai.yourinstitution.postalAddress')" />','<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />','<s:property value="getText('label.ai.tabs.commons.street')" />','<s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')" />');" />
 			</td>
 		</tr>
 		<tr>
