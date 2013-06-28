@@ -17,7 +17,9 @@ public class DashboardConfig extends ApePortalAndDashboardConfig{
 	private String emailDashboardFeedbackDestiny;   
     private String xslDirPath;
     private XPathFactory xpathFactory;
-
+    private boolean maintenanceMode = false;
+    private boolean defaultQueueProcessing = true;
+    
 	public String getEuropeanaDirPath() {
 		return europeanaDirPath;
 	}
@@ -89,4 +91,22 @@ public class DashboardConfig extends ApePortalAndDashboardConfig{
 		checkConfigured();
 		this.tempDirPath = tempDirPath;
 	}
+
+	public boolean isMaintenanceMode() {
+		return maintenanceMode;
+	}
+
+	public void setMaintenanceMode(boolean maintenanceMode) {
+		this.maintenanceMode = maintenanceMode;
+	}
+
+	public boolean isDefaultQueueProcessing() {
+		return defaultQueueProcessing;
+	}
+
+	public void setDefaultQueueProcessing(boolean defaultQueueProcessing) {
+		checkConfigured();
+		this.defaultQueueProcessing = defaultQueueProcessing;
+	}
+	
 }
