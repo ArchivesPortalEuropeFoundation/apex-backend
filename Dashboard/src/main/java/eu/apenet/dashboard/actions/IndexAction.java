@@ -1,5 +1,6 @@
 package eu.apenet.dashboard.actions;
 
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.security.SecurityContext;
 
@@ -18,6 +19,9 @@ public class IndexAction extends AbstractAction {
 			else {
 				return SUCCESS;
 			}
+        }
+        if (APEnetUtilities.getDashboardConfig().isMaintenanceMode()){
+        	addActionError(getText("user.maintenancemode"));
         }
         return ERROR;
     }
