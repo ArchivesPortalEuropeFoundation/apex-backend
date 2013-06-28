@@ -1,7 +1,5 @@
 package eu.apenet.dashboard.listener;
 
-import java.util.TimeZone;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
@@ -20,10 +18,10 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 	private static final String XSL_DIR_PATH_DEFAULT = "/mnt/xsl/";
 	private static final String TMP_DIR_PATH = "TMP_DIR_PATH";
 	private static final String TMP_DIR_PATH_DEFAULT = "/mnt/tmp/";
-
+	private static final String DEFAULT_QUEUE_PROCESSING = "DEFAULT_QUEUE_PROCESSING";
+	private static final String MAINTENANCE_MODE = "MAINTENANCE_MODE";
 	private static final String DOMAIN_NAME_MAIN_SERVER = "DOMAIN_NAME_MAIN_SERVER";
 	private static final String DOMAIN_NAME_MAIN_SERVER_DEFAULT = "localhost:8443";
-	
 	@Override
 	public void contextInitializedInternal(ServletContext servletContext) {
 		try {
@@ -31,7 +29,9 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 			init(servletContext, apeConfig);
 			apeConfig.finalizeConfigPhase();
 			APEnetUtilities.setConfig(apeConfig);
-			QueueDaemon.start();
+			if (apeConfig.isDefaultQueueProcessing()){
+				QueueDaemon.start();
+			}
 		} catch (RuntimeException e) {
 			log.fatal("Fatal error while initializing: " + e.getMessage(), e);
 			throw e;
@@ -91,7 +91,15 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 			domainNameMainServer = DOMAIN_NAME_MAIN_SERVER_DEFAULT;
 		}
 		config.setDomainNameMainServer(domainNameMainServer);
-
+		String defaultQueueProcessingString = servletContext.getInitParameter(DEFAULT_QUEUE_PROCESSING);
+		if (StringUtils.isNotBlank(defaultQueueProcessingString)) {
+			config.setDefaultQueueProcessing(Boolean.parseBoolean(defaultQueueProcessingString));
+		}
+		
+		String maintenanceMode = servletContext.getInitParameter(MAINTENANCE_MODE);
+		if (StringUtils.isNotBlank(maintenanceMode)) {
+			config.setMaintenanceMode(Boolean.parseBoolean(maintenanceMode));
+		}
 		super.init(servletContext, config);
 	}
 
