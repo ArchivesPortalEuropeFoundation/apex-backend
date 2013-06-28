@@ -322,7 +322,6 @@
 			</result>
 			<result name="success_admin" type="tiles">indexAdmin</result>				
 			<result name="error" type="tiles">login</result>
-			<result name="SSLRequiredResult" type="tiles">error</result>
 		</action>
 
 
