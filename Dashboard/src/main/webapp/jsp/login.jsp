@@ -16,9 +16,10 @@
 		<s:textfield name="username" key="label.email_address"/>
 		<s:password name="password" key="label.password" cssClass="small"/>
 		<s:checkbox name="dropOtherSession" key="label.login.dropothersession"/>
+					<br/>
+			<br/>
 		<table>
-			<br></br>
-			<br></br>
+
 			<tr>
 				<td><s:submit method="execute" key="label.login" tooltip="Login execution" theme="simple" cssClass="mainButton"/> </td>
 				<td><s:submit action="index" key="label.cancel" onclick="form.onsubmit=null" theme="simple" /></td>
