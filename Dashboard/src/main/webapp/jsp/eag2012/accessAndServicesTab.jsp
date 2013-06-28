@@ -2070,7 +2070,7 @@
 						<label for="selectASTSReproductionService"><s:property value="getText('label.ai.accessAndServices.reproductionService')"/>:</label>
 					</td>
 					<td>
-						<select id="selectASTSReproductionService" onchange="checkSelectASTSReproductionService($(this).parent().parent().parent().parent().attr('id'));" >
+						<select id="selectASTSReproductionService">
 							<s:iterator value="noneYesNoList" var="yesno">
 								<s:if test="%{loader.asReproductionserQuestion.size() > 0}">
 									<s:set var="reproductionserQuestion" value="loader.asReproductionserQuestion[#counter]"/>
@@ -3583,7 +3583,7 @@
 				<label for="selectASTSReproductionService"><s:property value="getText('label.ai.accessAndServices.reproductionService')"/>:</label>
 			</td>
 			<td>
-				<select id="selectASTSReproductionService" onchange="checkSelectASTSReproductionService($(this).parent().parent().parent().parent().attr('id'));" >
+				<select id="selectASTSReproductionService">
 					<s:iterator value="noneYesNoList" var="yesno"> 
 						<option value="<s:property value="#yesno.key" />"><s:property value="#yesno.value" /></option>
 					</s:iterator>
