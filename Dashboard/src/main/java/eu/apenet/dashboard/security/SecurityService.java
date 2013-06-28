@@ -1,11 +1,10 @@
 package eu.apenet.dashboard.security;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.exception.DashboardAPEnetException;
 import eu.apenet.dashboard.security.SecurityService.LoginResult.LoginResultType;
 import eu.apenet.dashboard.security.cipher.BasicDigestPwd;
@@ -15,12 +14,12 @@ import eu.apenet.persistence.dao.UserDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.User;
-import eu.apenet.persistence.vo.UserRole;
 
 public final class SecurityService {
 	private static final Logger LOGGER = Logger.getLogger(SecurityService.class);
 
-	public static LoginResult login(String username, String password, boolean dropOtherSession) throws DashboardAPEnetException {
+	public static LoginResult login(String username, String password, boolean dropOtherSession)
+			throws DashboardAPEnetException {
 		try {
 
 			// Init factory, dao and digest.
@@ -32,20 +31,26 @@ public final class SecurityService {
 			SecurityContext context = null;
 			LoginResultType type = null;
 			if (loginPartner != null) {
-				if (loginPartner.isActive()){
+				if (loginPartner.isActive()) {
 					context = new SecurityContext(loginPartner, false);
-					if (dropOtherSession){
-						SecurityContextContainer.dropOtherSessions(context);
-					}	
-					if (dropOtherSession || SecurityContextContainer.checkAvailability(context)) {
-						context.login();
-						ChangeControl.logOperation(ChangeControl.LOG_IN_OPERATION);
-						type = LoginResultType.LOGGED_IN;
-					} else {
+					if (APEnetUtilities.getDashboardConfig().isMaintenanceMode()&& !context.isAdmin()) {
 						context = null;
-						type = LoginResultType.ALREADY_IN_USE;
+						type = LoginResultType.MAINTENANCE_MODE;
+						LOGGER.info("User login tried with username: " + username + " when in maintenance mode");
+					} else {
+						if (dropOtherSession) {
+							SecurityContextContainer.dropOtherSessions(context);
+						}
+						if (dropOtherSession || SecurityContextContainer.checkAvailability(context)) {
+							context.login();
+							ChangeControl.logOperation(ChangeControl.LOG_IN_OPERATION);
+							type = LoginResultType.LOGGED_IN;
+						} else {
+							context = null;
+							type = LoginResultType.ALREADY_IN_USE;
+						}
 					}
-				}else {
+				} else {
 					context = null;
 					type = LoginResultType.BLOCKED;
 				}
@@ -58,7 +63,9 @@ public final class SecurityService {
 		}
 
 	}
-	public static LoginResult webDavLogin(String username, String password, HttpServletRequest request) throws DashboardAPEnetException {
+
+	public static LoginResult webDavLogin(String username, String password, HttpServletRequest request)
+			throws DashboardAPEnetException {
 		try {
 
 			// Init factory, dao and digest.
@@ -70,11 +77,17 @@ public final class SecurityService {
 			SecurityContext context = null;
 			LoginResultType type = null;
 			if (loginPartner != null) {
-				if (loginPartner.isActive()){
-					context = new SecurityContext(loginPartner ,true);
-					context.login(request);
-					type = LoginResultType.LOGGED_IN;
-				}else {
+				if (loginPartner.isActive()) {
+					context = new SecurityContext(loginPartner, true);
+					if (APEnetUtilities.getDashboardConfig().isMaintenanceMode()&& !context.isAdmin()) {
+						context = null;
+						type = LoginResultType.MAINTENANCE_MODE;
+						LOGGER.info("User login tried with username: " + username + " when in maintenance mode");
+					} else {
+						context.login(request);
+						type = LoginResultType.LOGGED_IN;
+					}
+				} else {
 					context = null;
 					type = LoginResultType.BLOCKED;
 				}
@@ -89,18 +102,19 @@ public final class SecurityService {
 	}
 
 	public static void logout(boolean logoutToParent) {
-		ChangeControl.logOperation(ChangeControl.LOG_OUT_OPERATION);		
+		ChangeControl.logOperation(ChangeControl.LOG_OUT_OPERATION);
 		SecurityContext securityContext = SecurityContext.get();
-		if (securityContext != null){
+		if (securityContext != null) {
 			securityContext.logout(logoutToParent);
 		}
 	}
 
-	public static void deleteSession(String sessionId){
-		if (SecurityContext.get().isAdmin()){
+	public static void deleteSession(String sessionId) {
+		if (SecurityContext.get().isAdmin()) {
 			SecurityContextContainer.dropSession(sessionId);
 		}
 	}
+
 	public static LoginResult loginAsCountryManager(Integer partnerId) {
 		SecurityContext currentSecurityContext = SecurityContext.get();
 		SecurityContext context = null;
@@ -113,7 +127,7 @@ public final class SecurityService {
 				context = new SecurityContext(partner, currentSecurityContext);
 				if (SecurityContextContainer.checkAvailability(context)) {
 					context.login();
-					ChangeControl.logOperation(ChangeControl.LOG_IN_OPERATION);					
+					ChangeControl.logOperation(ChangeControl.LOG_IN_OPERATION);
 					type = LoginResultType.LOGGED_IN;
 				} else {
 					context = null;
@@ -129,56 +143,27 @@ public final class SecurityService {
 		return new LoginResult(context, type);
 
 	}
-	public static LoginResult loginAsCountryManagerOld(Integer selectedCountryId) {
-		SecurityContext currentSecurityContext = SecurityContext.get();
-		SecurityContext context = null;
-		LoginResultType type = null;
-		if (currentSecurityContext != null && currentSecurityContext.isAdmin()) {
-            List<User> partnerList = DAOFactory.instance().getUserDAO()
-                    .getPartnersByCountryAndByRoleType(selectedCountryId, UserRole.ROLE_COUNTRY_MANAGER);
 
-			// create security context;
-			if (partnerList != null && !partnerList.isEmpty()) {
-                User partner = partnerList.get(0);
-				context = new SecurityContext(partner, currentSecurityContext);
-				if (SecurityContextContainer.checkAvailability(context)) {
-					context.login();
-					ChangeControl.logOperation(ChangeControl.LOG_IN_OPERATION);					
-					type = LoginResultType.LOGGED_IN;
-				} else {
-					context = null;
-					type = LoginResultType.ALREADY_IN_USE;
-				}
-
-			} else {
-				type = LoginResultType.NO_PARTNER;
-			}
-		} else {
-			type = LoginResultType.ACCESS_DENIED;
-		}
-		return new LoginResult(context, type);
-
-	}
-	
 	public static LoginResult loginAsInstitutionManager(Integer selectedAiId) {
 		SecurityContext currentSecurityContext = SecurityContext.get();
 		SecurityContext context = null;
 		LoginResultType type = null;
-		if (currentSecurityContext != null && (currentSecurityContext.isAdmin() || currentSecurityContext.isCountryManager()) ) {
+		if (currentSecurityContext != null
+				&& (currentSecurityContext.isAdmin() || currentSecurityContext.isCountryManager())) {
 			ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
 			ArchivalInstitution ai = new ArchivalInstitution();
 			ai = aiDao.getArchivalInstitution(selectedAiId);
 			User partner = ai.getPartner();
 			// create security context;
-				context = new SecurityContext(partner, currentSecurityContext);
-				if (SecurityContextContainer.checkAvailability(context)) {
-					context.login();
-					ChangeControl.logOperation(ChangeControl.LOG_IN_OPERATION);					
-					type = LoginResultType.LOGGED_IN;
-				} else {
-					context = null;
-					type = LoginResultType.ALREADY_IN_USE;
-				}
+			context = new SecurityContext(partner, currentSecurityContext);
+			if (SecurityContextContainer.checkAvailability(context)) {
+				context.login();
+				ChangeControl.logOperation(ChangeControl.LOG_IN_OPERATION);
+				type = LoginResultType.LOGGED_IN;
+			} else {
+				context = null;
+				type = LoginResultType.ALREADY_IN_USE;
+			}
 		} else {
 			type = LoginResultType.ACCESS_DENIED;
 		}
@@ -186,29 +171,28 @@ public final class SecurityService {
 
 	}
 
-	
-	public static void selectArchivalInstitution(Integer aiId){
+	public static void selectArchivalInstitution(Integer aiId) {
 		SecurityContext securityContext = SecurityContext.get();
 		ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
 		ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(aiId);
-		if (archivalInstitution != null){
+		if (archivalInstitution != null) {
 			securityContext.changeArchivalInstitution(archivalInstitution);
 		}
-		
+
 	}
+
 	public static User getCurrentPartner() {
 		UserDAO partnerDao = DAOFactory.instance().getUserDAO();
 		SecurityContext context = SecurityContext.get();
-		if (context == null){
+		if (context == null) {
 			return null;
 		}
 		return partnerDao.findById(context.getPartnerId());
 	}
 
-
 	public static class LoginResult {
 		public enum LoginResultType {
-			LOGGED_IN, ALREADY_IN_USE, INVALID_USERNAME_PASSWORD, ACCESS_DENIED, NO_PARTNER, BLOCKED
+			LOGGED_IN, ALREADY_IN_USE, INVALID_USERNAME_PASSWORD, ACCESS_DENIED, NO_PARTNER, BLOCKED, MAINTENANCE_MODE
 		}
 
 		private SecurityContext context;
