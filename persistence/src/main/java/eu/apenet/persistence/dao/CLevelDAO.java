@@ -8,46 +8,48 @@ import eu.apenet.persistence.vo.Ead;
 /**
  * 
  * @author Bastiaan Verhoef
- *
+ * 
  */
 
 public interface CLevelDAO extends GenericDAO<CLevel, Long> {
-	
 
 	public Long countChildCLevels(Long parentCLevelId);
-	
+
 	public List<CLevel> findChildCLevels(Long parentCLevelId, Integer orderId, Integer maxNumberOfItems);
 
 	public Long countTopCLevels(Long eadContentId);
-	
-    public List<CLevel> getTopClevelsByFileId(Integer fileId, Class<? extends Ead> clazz, int firstResult, int maxResult);
+
+	public CLevel getTopClevelByFileId(Integer fileId, Class<? extends Ead> clazz, int orderId);
+
+	public List<CLevel> getTopClevelsByFileId(Integer fileId, Class<? extends Ead> clazz, int firstResult, int maxResult);
+
 	public List<CLevel> findTopCLevels(Long eadContentId, Integer orderId, Integer maxNumberOfItems);
 
 	public List<String> findChildrenLevels(Long parentId);
-	
+
 	@Deprecated
 	public List<CLevel> findChilds(Long parentId);
 
 	@Deprecated
-	public  List<CLevel> findTopCLevels(Long eadContentId);
+	public List<CLevel> findTopCLevels(Long eadContentId);
 
-    @Deprecated
-    public List<CLevel> findTopCLevelsOrderUnitid(Long eadContentId);
+	@Deprecated
+	public List<CLevel> findTopCLevelsOrderUnitid(Long eadContentId);
 
-    @Deprecated
+	@Deprecated
 	public List<CLevel> findChildrenOrderUnitId(Long parentId);
 
-    public CLevel findByUnitid(String unitid, Long eadContentId);
+	public CLevel findByUnitid(String unitid, Long eadContentId);
 
-    public Long getClIdByUnitid(String unitid, Long eadContentId);
+	public Long getClIdByUnitid(String unitid, Long eadContentId);
 
-	
-	public Long countPossibleLinkedCLevels(Integer id,Class<? extends Ead> clazz);
+	public Long countPossibleLinkedCLevels(Integer id, Class<? extends Ead> clazz);
 
-	public List<CLevel> getNotLinkedCLevels(Integer id,Class<? extends Ead> clazz);
+	public List<CLevel> getNotLinkedCLevels(Integer id, Class<? extends Ead> clazz);
 
-	public Long countNotLinkedCLevels(Integer id,Class<? extends Ead> clazz);
+	public Long countNotLinkedCLevels(Integer id, Class<? extends Ead> clazz);
+
 	public List<CLevel> getClevelsFromSgOrHg(Integer aiId, String eadid);
+
 	public List<CLevel> getParentCLevels(Long eadContentId);
 }
-

@@ -2,6 +2,7 @@ package eu.apenet.persistence.hibernate;
 
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
 import org.apache.log4j.Logger;
@@ -24,7 +25,7 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		String propertyName = "faId";
 		if (clazz.equals(HoldingsGuide.class))
 			propertyName = "hgId";
-		else
+		else if (clazz.equals(SourceGuide.class))
 			propertyName = "sgId";
 		TypedQuery<CLevel> query = getEntityManager().createQuery(
 				"SELECT clevel FROM CLevel clevel WHERE clevel.eadContent." + propertyName
@@ -33,6 +34,24 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		query.setMaxResults(maxResult);
 		query.setFirstResult(firstResult);
 		return query.getResultList();
+	}
+
+	public CLevel getTopClevelByFileId(Integer fileId, Class<? extends Ead> clazz, int orderId) {
+		String propertyName = "faId";
+		if (clazz.equals(HoldingsGuide.class))
+			propertyName = "hgId";
+		else if (clazz.equals(SourceGuide.class))
+			propertyName = "sgId";
+		TypedQuery<CLevel> query = getEntityManager().createQuery(
+				"SELECT clevel FROM CLevel clevel WHERE clevel.eadContent." + propertyName
+						+ " = :fileId AND clevel.parentClId IS NULL AND clevel.orderId = :orderId", CLevel.class);
+		query.setParameter("fileId", fileId);
+		query.setParameter("orderId", orderId);
+		try {
+			return query.getSingleResult();
+		} catch (NoResultException nre) {
+			return null;
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -80,7 +99,6 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		}
 		return (Long) new Long(0);
 	}
-
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -213,21 +231,23 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 			return (Long) criteria.list().get(0);
 		}
 	}
+
 	@Override
 	public Long countPossibleLinkedCLevels(Integer id, Class<? extends Ead> clazz) {
 		String jpaQuery = "SELECT count(clevel)" + buildPossibleLinkedCLevels(id, clazz);
-		TypedQuery<Long> query = getEntityManager().createQuery(jpaQuery, Long.class);		
+		TypedQuery<Long> query = getEntityManager().createQuery(jpaQuery, Long.class);
 		query.setParameter("id", id);
 		return query.getSingleResult();
 	}
+
 	private String buildPossibleLinkedCLevels(Integer id, Class<? extends Ead> clazz) {
 		String varName = "hgId";
-		if (SourceGuide.class.equals(clazz)){
+		if (SourceGuide.class.equals(clazz)) {
 			varName = "sgId";
 		}
-		return " FROM CLevel clevel JOIN clevel.eadContent eadContent WHERE eadContent." + varName + " = :id AND clevel.hrefEadid IS NOT NULL";
+		return " FROM CLevel clevel JOIN clevel.eadContent eadContent WHERE eadContent." + varName
+				+ " = :id AND clevel.hrefEadid IS NOT NULL";
 	}
-
 
 	@Override
 	public List<CLevel> getNotLinkedCLevels(Integer id, Class<? extends Ead> clazz) {
@@ -237,32 +257,34 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		return query.getResultList();
 	}
 
-
 	@Override
 	public Long countNotLinkedCLevels(Integer id, Class<? extends Ead> clazz) {
 		String jpaQuery = "SELECT count(clevel)" + buildNotLinkedCLevelsFromQuery(id, clazz);
-		TypedQuery<Long> query = getEntityManager().createQuery(jpaQuery, Long.class);		
+		TypedQuery<Long> query = getEntityManager().createQuery(jpaQuery, Long.class);
 		query.setParameter("id", id);
 		return query.getSingleResult();
 	}
+
 	private String buildNotLinkedCLevelsFromQuery(Integer id, Class<? extends Ead> clazz) {
 		String varName = "hgId";
-		if (SourceGuide.class.equals(clazz)){
+		if (SourceGuide.class.equals(clazz)) {
 			varName = "sgId";
 		}
-		return " FROM CLevel clevel JOIN clevel.eadContent eadContent WHERE eadContent." + varName + " = :id AND clevel.hrefEadid IS NOT NULL AND clevel.clId NOT IN (SELECT hgSgFaRelation.hgSgClevelId FROM HgSgFaRelation hgSgFaRelation WHERE hgSgFaRelation." + varName + " = :id)";
+		return " FROM CLevel clevel JOIN clevel.eadContent eadContent WHERE eadContent."
+				+ varName
+				+ " = :id AND clevel.hrefEadid IS NOT NULL AND clevel.clId NOT IN (SELECT hgSgFaRelation.hgSgClevelId FROM HgSgFaRelation hgSgFaRelation WHERE hgSgFaRelation."
+				+ varName + " = :id)";
 	}
 
 	@Override
 	public List<CLevel> getClevelsFromSgOrHg(Integer aiId, String eadid) {
-		String jpaQuery =  "SELECT clevel FROM CLevel clevel JOIN clevel.eadContent eadContent WHERE clevel.hrefEadid = :eadid AND " +
-				"clevel.clId NOT IN (SELECT hgSgFaRelation.hgSgClevelId FROM HgSgFaRelation hgSgFaRelation WHERE hgSgFaRelation.hgSgClevelId =  clevel.clId) AND" +
-				"(eadContent.hgId IN " +
-				"(SELECT holdingsGuide.id FROM HoldingsGuide holdingsGuide WHERE holdingsGuide.aiId = :aiId)" +
-				"OR eadContent.sgId IN " +
-				"(SELECT sourceGuide.id FROM SourceGuide sourceGuide WHERE sourceGuide.aiId = :aiId)" +
-				")" ;
-		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);		
+		String jpaQuery = "SELECT clevel FROM CLevel clevel JOIN clevel.eadContent eadContent WHERE clevel.hrefEadid = :eadid AND "
+				+ "clevel.clId NOT IN (SELECT hgSgFaRelation.hgSgClevelId FROM HgSgFaRelation hgSgFaRelation WHERE hgSgFaRelation.hgSgClevelId =  clevel.clId) AND"
+				+ "(eadContent.hgId IN "
+				+ "(SELECT holdingsGuide.id FROM HoldingsGuide holdingsGuide WHERE holdingsGuide.aiId = :aiId)"
+				+ "OR eadContent.sgId IN "
+				+ "(SELECT sourceGuide.id FROM SourceGuide sourceGuide WHERE sourceGuide.aiId = :aiId)" + ")";
+		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);
 		query.setParameter("aiId", aiId);
 		query.setParameter("eadid", eadid);
 		return query.getResultList();
@@ -270,11 +292,10 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 
 	@Override
 	public List<CLevel> getParentCLevels(Long eadContentId) {
-		String jpaQuery =  "SELECT clevel FROM CLevel clevel WHERE clevel.leaf = false AND clevel.ecId = :eadContentId  ORDER BY clevel.unittitle" ;
-		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);		
+		String jpaQuery = "SELECT clevel FROM CLevel clevel WHERE clevel.leaf = false AND clevel.ecId = :eadContentId  ORDER BY clevel.unittitle";
+		TypedQuery<CLevel> query = getEntityManager().createQuery(jpaQuery, CLevel.class);
 		query.setParameter("eadContentId", eadContentId);
 		return query.getResultList();
 	}
-	
 
 }
