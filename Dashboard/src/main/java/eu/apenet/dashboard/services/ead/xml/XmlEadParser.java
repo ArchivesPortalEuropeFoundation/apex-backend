@@ -23,14 +23,15 @@ import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead.publish.EADCounts;
 import eu.apenet.dashboard.services.ead.publish.LevelInfo;
+import eu.apenet.dashboard.services.ead.publish.PublishData;
 import eu.apenet.dashboard.services.ead.publish.SolrPublisher;
-import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class XmlEadParser extends AbstractParser {
 	private static Logger LOG = Logger.getLogger(XmlEadParser.class);
@@ -112,7 +113,7 @@ public class XmlEadParser extends AbstractParser {
 		boolean noCLevelFound = true;
 		Long ecId = null;
 		try {
-			HibernateUtil.beginDatabaseTransaction();
+			JpaUtil.beginDatabaseTransaction();
 			for (int event = xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
 				if (event == XMLStreamConstants.START_ELEMENT) {
 					QName elementName = xmlReader.getName();
@@ -124,12 +125,19 @@ public class XmlEadParser extends AbstractParser {
 							noCLevelFound = false;
 							xmlWriterHolder.close();
 							eadContent.setXml(stringWriter.toString());
-							HibernateUtil.getDatabaseSession().save(eadContent);
+							JpaUtil.getEntityManager().persist(eadContent);
 							stringWriter.close();
 							stringWriter = null;
 							
-                            if(solrPublisher != null)
-                            	eadCounts.addNumberOfDAOs(solrPublisher.parseHeader(eadContent));
+                            if(solrPublisher != null){
+                    			PublishData publishData = new PublishData();
+                    			publishData.setXml(eadContent.getXml());
+                				publishData.setId(ead.getId().longValue());
+                				publishData.setUpperLevelUnittitles(upperLevels);
+                				publishData.setFullHierarchy(fullHierarchy);
+                				publishData.setArchdesc(true);
+                				eadCounts.addNumberOfDAOs(solrPublisher.parseHeader(eadContent, publishData));
+                            }
 							ecId  = eadContent.getEcId();
 							eadContent = null;
 						}						
@@ -165,10 +173,17 @@ public class XmlEadParser extends AbstractParser {
 				noCLevelFound = false;
 				xmlWriterHolder.close();
 				eadContent.setXml(stringWriter.toString());
-				HibernateUtil.getDatabaseSession().save(eadContent);
+				JpaUtil.getEntityManager().persist(eadContent);
 				stringWriter = null;
-                if(solrPublisher != null)
-                	eadCounts.addNumberOfDAOs(solrPublisher.parseHeader(eadContent));
+                if(solrPublisher != null){
+        			PublishData publishData = new PublishData();
+        			publishData.setXml(eadContent.getXml());
+    				publishData.setId(ead.getId().longValue());
+    				publishData.setUpperLevelUnittitles(upperLevels);
+    				publishData.setFullHierarchy(fullHierarchy);
+    				publishData.setArchdesc(true);
+    				eadCounts.addNumberOfDAOs(solrPublisher.parseHeader(eadContent, publishData));
+                }
 				ecId  = eadContent.getEcId();
 				eadContent = null;
 			}									
@@ -177,16 +192,13 @@ public class XmlEadParser extends AbstractParser {
 			if (solrPublisher != null) {
 				solrPublisher.commitAll(eadCounts);
 			}
-			HibernateUtil.commitDatabaseTransaction();
+			JpaUtil.commitDatabaseTransaction();
 		
 		} catch (Exception de) {
 			if ((initialFilePath!=null) &&(initialFilePath.contains(APEnetUtilities.FILESEPARATOR))){
-                LOG.error("Something has happened in parse method: " +de);
-                LOG.error("Starting Parse method rollback... - but we will not move the file back to TMP since it should stay in REPO always");
+                LOG.error("Something has happened in parse method: " + de.getMessage(),de);
 			}
-			
-			HibernateUtil.rollbackDatabaseTransaction();
-			HibernateUtil.closeDatabaseSession();
+			JpaUtil.rollbackDatabaseTransaction();
 			if (solrPublisher != null) {
 				LOG.error(eadid + ": rollback:", de);
 				solrPublisher.rollback();

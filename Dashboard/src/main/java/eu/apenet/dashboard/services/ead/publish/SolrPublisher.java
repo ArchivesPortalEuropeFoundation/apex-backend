@@ -50,6 +50,8 @@ import eu.apenet.persistence.vo.Warnings;
 
 public class SolrPublisher {
 
+	private static final String LEVEL_CLEVEL = "clevel";
+	private static final String LEVEL_ARCHDESC = "archdesc";
 	private static final String WHITE_SPACE = " ";
 	public static final String COLON = ":";
 	private static final Logger LOG = Logger.getLogger(SolrPublisher.class);
@@ -83,20 +85,22 @@ public class SolrPublisher {
 	private static XPathExpression fondTitleExpression;
 	private static XPathExpression countNumberOfDAOsExpression;
 	private static XPathExpression daoRoleAttributeExpression;
-	private static XPathExpression cLevelAttributeExpression;
-	private static XPathExpression cDidExpression;
-	private static XPathExpression cUnitidExpression;
-	private static XPathExpression cOtherUnitidExpression;
-	private static XPathExpression cUnittitleExistExpression;
-	private static XPathExpression cUnittitleExpression;
-	private static XPathExpression cOtherUnittitleExpression;
-	private static XPathExpression cUnitdateExpression;
-	private static XPathExpression cOtherUnitdateExpression;
-	private static XPathExpression cUnitdateNormalExpression;
-	private static XPathExpression cLangmaterialExpression;
-	private static XPathExpression cDidOtherExpression;
-	private static XPathExpression cScopecontentExpression;
-	private static XPathExpression cOtherExpression;
+	private static XPathExpression cLevelExpression;	
+	private static XPathExpression archdescExpression;	
+	private static XPathExpression levelAttributeExpression;
+	private static XPathExpression didExpression;
+	private static XPathExpression unitidExpression;
+	private static XPathExpression otherUnitidExpression;
+	private static XPathExpression unittitleExistExpression;
+	private static XPathExpression unittitleExpression;
+	private static XPathExpression otherUnittitleExpression;
+	private static XPathExpression unitdateExpression;
+	private static XPathExpression otherUnitdateExpression;
+	private static XPathExpression unitdateNormalExpression;
+	private static XPathExpression langmaterialExpression;
+	private static XPathExpression didOtherExpression;
+	private static XPathExpression scopecontentExpression;
+	private static XPathExpression otherExpression;
 	private static XPathExpression displayIntroExpression;
 	private static XPathExpression displayDidExpression;
 	static {
@@ -106,6 +110,8 @@ public class SolrPublisher {
 			eadidIdentifierExpression = XPATH.compile("@identifier");
 			languageExpression = XPATH
 					.compile("/ead:ead/ead:eadheader/ead:profiledesc/ead:langusage/ead:language/@langcode");
+			archdescExpression = XPATH.compile("/ead:ead/ead:archdesc");
+			cLevelExpression = XPATH.compile("/ead:c");
 			archdescLangmaterialExpression = XPATH
 					.compile("/ead:ead/ead:archdesc/ead:did/ead:langmaterial/ead:language/@langcode");
 			archdescUnitidExpression = XPATH.compile("/ead:ead/ead:archdesc/ead:did/ead:unitid/text()");
@@ -116,22 +122,22 @@ public class SolrPublisher {
 			daoRoleAttributeExpression = XPATH.compile("./ead:dao/@xlink:role");
 			// daoRoleAttributeExpression =
 			// XPATH.compile("./ead:dao[not(@xlink:title='thumbnail')]/@xlink:role");
-			cLevelAttributeExpression = XPATH.compile("/ead:c/@level");
-			cDidExpression = XPATH.compile("/ead:c/ead:did");
-			cUnitidExpression = XPATH.compile("./ead:unitid[@type='call number']/text()");
-			cOtherUnitidExpression = XPATH
+			levelAttributeExpression = XPATH.compile("./@level");
+			didExpression = XPATH.compile("./ead:did");
+			unitidExpression = XPATH.compile("./ead:unitid[@type='call number']/text()");
+			otherUnitidExpression = XPATH
 					.compile("./ead:unitid[@type='former call number' or @type='file reference']/text()");
-			cUnittitleExistExpression = XPATH.compile("./ead:unittitle");
-			cUnittitleExpression = XPATH.compile("./ead:unittitle[1]//text()");
-			cOtherUnittitleExpression = XPATH.compile("./ead:unittitle[position() > 1]//text()");
-			cUnitdateExpression = XPATH.compile("./ead:unitdate/text()");
-			cOtherUnitdateExpression = XPATH.compile("./ead:unitdate[position() > 1]//text()");
-			cUnitdateNormalExpression = XPATH.compile("./ead:unitdate/@normal");
-			cLangmaterialExpression = XPATH.compile("./ead:langmaterial/ead:language/@langcode");
-			cDidOtherExpression = XPATH
-					.compile("/ead:c/ead:did/node()[not(name()='unittitle' or name()='unitid' or name()='unitdate' or name()='dao')]//text()");
-			cScopecontentExpression = XPATH.compile("/ead:c/ead:scopecontent//text()");
-			cOtherExpression = XPATH.compile("/ead:c/node()[not(name()='scopecontent' or name()='did')]//text()");
+			unittitleExistExpression = XPATH.compile("./ead:unittitle");
+			unittitleExpression = XPATH.compile("./ead:unittitle[1]//text()");
+			otherUnittitleExpression = XPATH.compile("./ead:unittitle[position() > 1]//text()");
+			unitdateExpression = XPATH.compile("./ead:unitdate/text()");
+			otherUnitdateExpression = XPATH.compile("./ead:unitdate[position() > 1]//text()");
+			unitdateNormalExpression = XPATH.compile("./ead:unitdate/@normal");
+			langmaterialExpression = XPATH.compile("./ead:langmaterial/ead:language/@langcode");
+			didOtherExpression = XPATH
+					.compile("./ead:did/node()[not(name()='unittitle' or name()='unitid' or name()='unitdate' or name()='dao')]//text()");
+			scopecontentExpression = XPATH.compile("./ead:scopecontent//text()");
+			otherExpression = XPATH.compile("./node()[not(name()='scopecontent' or name()='did')]//text()");
 			displayIntroExpression = XPATH.compile("/ead:ead/ead:archdesc/ead:scopecontent or"
 					+ "/ead:ead/ead:archdesc/ead:bioghist or " + "/ead:ead/ead:archdesc/ead:custodhist or "
 					+ "/ead:ead/ead:archdesc/ead:appraisal or " + "/ead:ead/ead:archdesc/ead:processinfo or "
@@ -162,7 +168,7 @@ public class SolrPublisher {
 		eadDao = DAOFactory.instance().getEadDAO();
 	}
 
-	public long parseHeader(EadContent eadContent) throws Exception {
+	public long parseHeader(EadContent eadContent, PublishData publishData) throws Exception {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
 		long numberOfDaos = 0l;
@@ -170,20 +176,18 @@ public class SolrPublisher {
 		archivalinstitution = ead.getArchivalInstitution();
 		isFinalPath = true;
 		currentPath = APEnetUtilities.getConfig().getRepoDirPath() + pathApenetead;
-		/**
-		 * Check the time and check if the backup file exists. If this file
-		 * exists, then it cannot index, for a period.
-		 **/
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document doc = builder.parse(new InputSource(new StringReader(eadContent.getXml())));
 		doc.getDocumentElement().normalize();
 		// Obtain the archival institution.
 
 		numberOfDaos = extractGeneralData(doc, eadContent);
-
+		if (eadContent.isDisplayDid() || eadContent.isDisplayIntro()){
+			Node archdescNode = (Node) archdescExpression.evaluate(doc, XPathConstants.NODE);
+			parseCLevelOrArchdesc(archdescNode,publishData);
+		}
 		return numberOfDaos;
 	}
-
 
 	private long extractGeneralData(Document doc, EadContent eadContent) throws XPathExpressionException {
 		Boolean displayIntro = (Boolean) displayIntroExpression.evaluate(doc, XPathConstants.BOOLEAN);
@@ -224,45 +228,46 @@ public class SolrPublisher {
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document doc = builder.parse(new InputSource(new StringReader(indexData.getXml())));
 		doc.getDocumentElement().normalize();
-		return parseCLevel(doc, indexData);
+		Node cLevelNode = (Node) cLevelExpression.evaluate(doc, XPathConstants.NODE);
+		return parseCLevelOrArchdesc(cLevelNode, indexData);
 	}
 
-	private long parseCLevel(Document document, PublishData indexData) throws Exception {
+	private long parseCLevelOrArchdesc(Node cLevelOrArchdescNode, PublishData publishData) throws Exception {
 		String startdate = null;
 		String enddate = null;
 		String alterdate = "";
-		String attributeLevel = (String) cLevelAttributeExpression.evaluate(document, XPathConstants.STRING);
+		String attributeLevel = (String) levelAttributeExpression.evaluate(cLevelOrArchdescNode, XPathConstants.STRING);
 		// did parsing
-		Node didNode = (Node) cDidExpression.evaluate(document, XPathConstants.NODE);
-		String unitid = removeUnusedCharacters((String) cUnitidExpression.evaluate(didNode, XPathConstants.STRING));
-		String otherunitid = getText((NodeList) cOtherUnitidExpression.evaluate(didNode, XPathConstants.NODESET));
+		Node didNode = (Node) didExpression.evaluate(cLevelOrArchdescNode, XPathConstants.NODE);
+		String unitid = removeUnusedCharacters((String) unitidExpression.evaluate(didNode, XPathConstants.STRING));
+		String otherunitid = getText((NodeList) otherUnitidExpression.evaluate(didNode, XPathConstants.NODESET));
 
-		String unitdatenormal = (String) cUnitdateNormalExpression.evaluate(didNode, XPathConstants.STRING);
+		String unitdatenormal = (String) unitdateNormalExpression.evaluate(didNode, XPathConstants.STRING);
 		Double numberOfDaos = (Double) countNumberOfDAOsExpression.evaluate(didNode, XPathConstants.NUMBER);
 		boolean hasDao = numberOfDaos != null && numberOfDaos > 0;
 		// String roleDao = (String)
 		// daoRoleAttributeExpression.evaluate(didNode, XPathConstants.STRING);
 		Set<String> roleDao = getTextsWithoutMultiplity((NodeList) daoRoleAttributeExpression.evaluate(didNode,
 				XPathConstants.NODESET));
-		String clevelLangmaterial = getText((NodeList) cLangmaterialExpression
+		String clevelLangmaterial = getText((NodeList) langmaterialExpression
 				.evaluate(didNode, XPathConstants.NODESET));
 		String otherinfo = "";
 		String unittitle = "";
-		boolean hasUnittitle = (Boolean) cUnittitleExistExpression.evaluate(didNode, XPathConstants.BOOLEAN);
+		boolean hasUnittitle = (Boolean) unittitleExistExpression.evaluate(didNode, XPathConstants.BOOLEAN);
 		if (hasUnittitle) {
-			unittitle = getText((NodeList) cUnittitleExpression.evaluate(didNode, XPathConstants.NODESET));
+			unittitle = getText((NodeList) unittitleExpression.evaluate(didNode, XPathConstants.NODESET));
 			otherinfo += WHITE_SPACE
-					+ getText((NodeList) cOtherUnittitleExpression.evaluate(didNode, XPathConstants.NODESET));
+					+ getText((NodeList) otherUnittitleExpression.evaluate(didNode, XPathConstants.NODESET));
 		}
-		String unitdate = removeUnusedCharacters((String) cUnitdateExpression.evaluate(didNode, XPathConstants.STRING));
+		String unitdate = removeUnusedCharacters((String) unitdateExpression.evaluate(didNode, XPathConstants.STRING));
 		if (StringUtils.isNotBlank(unitdate)) {
 			otherinfo += WHITE_SPACE
-					+ getText((NodeList) cOtherUnitdateExpression.evaluate(didNode, XPathConstants.NODESET));
+					+ getText((NodeList) otherUnitdateExpression.evaluate(didNode, XPathConstants.NODESET));
 		}
-		otherinfo += WHITE_SPACE + getText((NodeList) cDidOtherExpression.evaluate(document, XPathConstants.NODESET));
+		otherinfo += WHITE_SPACE + getText((NodeList) didOtherExpression.evaluate(cLevelOrArchdescNode, XPathConstants.NODESET));
 		// other parsing
-		String scopecontent = getText((NodeList) cScopecontentExpression.evaluate(document, XPathConstants.NODESET));
-		otherinfo += WHITE_SPACE + getText((NodeList) cOtherExpression.evaluate(document, XPathConstants.NODESET));
+		String scopecontent = getText((NodeList) scopecontentExpression.evaluate(cLevelOrArchdescNode, XPathConstants.NODESET));
+		otherinfo += WHITE_SPACE + getText((NodeList) otherExpression.evaluate(cLevelOrArchdescNode, XPathConstants.NODESET));
 
 		if (StringUtils.isNotBlank(unitid) && (attributeLevel == "fonds") && (existunitid_archdesc == false)) {
 			unitidfond = unitid;
@@ -325,7 +330,7 @@ public class SolrPublisher {
 			langmaterial = archdesc_langmaterial;
 		}
 
-		indexNode(indexData, unitid, otherunitid, scopecontent, unittitle, attributeLevel, startdate, enddate,
+		publishNode(publishData, unitid, otherunitid, scopecontent, unittitle, startdate, enddate,
 				alterdate, hasDao, roleDao, otherinfo, langmaterial);
 		return numberOfDaos.longValue();
 	}
@@ -417,8 +422,8 @@ public class SolrPublisher {
 		return null;
 	}
 
-	private void indexNode(PublishData indexData, String unitid, String otherunitid, String scopecontent, String title,
-			String level, String sdate, String edate, String alterdate, boolean dao, Set<String> roleDao,
+	private void publishNode(PublishData publishData, String unitid, String otherunitid, String scopecontent, String title,
+			 String sdate, String edate, String alterdate, boolean dao, Set<String> roleDao,
 			String otherinfo, String langmaterial) throws MalformedURLException, SolrServerException, IOException {
 		String solrPrefix = SolrValues.FA_PREFIX;
 		String solrType = SolrValues.FA_TYPE;
@@ -436,17 +441,25 @@ public class SolrPublisher {
 			solrDynamicId = SolrFields.SG_DYNAMIC_ID;
 		}
 		SolrInputDocument doc1 = new SolrInputDocument();
-		add(doc1, SolrFields.ID, SolrValues.C_LEVEL_PREFIX + indexData.getClId());
-		if (indexData.getParentId() == null) {
+		if (publishData.isArchdesc()){
+			add(doc1, SolrFields.ID, solrPrefix + publishData.getId());
+		}else {
+			add(doc1, SolrFields.ID, SolrValues.C_LEVEL_PREFIX + publishData.getId());
+		}
+		if (publishData.getParentId() == null) {
 			add(doc1, SolrFields.PARENT_ID, solrPrefix + ead.getId());
 		} else {
-			add(doc1, SolrFields.PARENT_ID, SolrValues.C_LEVEL_PREFIX + indexData.getParentId());
+			add(doc1, SolrFields.PARENT_ID, SolrValues.C_LEVEL_PREFIX + publishData.getParentId());
 		}
 		add(doc1, SolrFields.UNITID, unitid);
 		add(doc1, SolrFields.OTHERUNITID, otherunitid);
 		add(doc1, SolrFields.SCOPECONTENT, scopecontent);
 		add(doc1, SolrFields.TITLE, title);
-		add(doc1, SolrFields.LEVEL, level);
+		if (publishData.isArchdesc()){
+			add(doc1, SolrFields.LEVEL, LEVEL_ARCHDESC);
+		}else {
+			add(doc1, SolrFields.LEVEL, LEVEL_CLEVEL);
+		}
 		add(doc1, SolrFields.START_DATE, sdate);
 		add(doc1, SolrFields.END_DATE, edate);
 		add(doc1, SolrFields.ALTERDATE, alterdate);
@@ -475,14 +488,14 @@ public class SolrPublisher {
 			doc1.addField(SolrFields.ROLEDAO, roleDao);
 		}
 		add(doc1, SolrFields.OTHER, otherinfo);
-		doc1.addField(SolrFields.LEAF, indexData.isLeaf());
+		doc1.addField(SolrFields.LEAF, publishData.isLeaf());
 
 		add(doc1, SolrFields.FOND_ID, solrPrefix + ead.getId());
 		add(doc1, SolrFields.TITLE_OF_FOND, fond + COLON + solrPrefix + ead.getId());
 		add(doc1, SolrFields.TYPE, solrType);
 
-		for (int i = 0; i < indexData.getUpperLevelUnittitles().size(); i++) {
-			LevelInfo levelInfo = indexData.getUpperLevelUnittitles().get(i);
+		for (int i = 0; i < publishData.getUpperLevelUnittitles().size(); i++) {
+			LevelInfo levelInfo = publishData.getUpperLevelUnittitles().get(i);
 			String result = "";
 			String id = null;
 			if (i == 0) {
@@ -497,13 +510,13 @@ public class SolrPublisher {
 			add(doc1, solrDynamic + i + SolrFields.DYNAMIC_STRING_SUFFIX, result);
 			add(doc1, solrDynamicId + i + SolrFields.DYNAMIC_STRING_SUFFIX, id);
 		}
-		if (indexData.getFullHierarchy().size() > 0) {
-			Set<Map.Entry<String, Object>> entries = indexData.getFullHierarchy().entrySet();
+		if (publishData.getFullHierarchy().size() > 0) {
+			Set<Map.Entry<String, Object>> entries = publishData.getFullHierarchy().entrySet();
 			for (Map.Entry<String, Object> entry : entries) {
 				doc1.addField(entry.getKey(), entry.getValue());
 			}
 		}
-		doc1.addField(SolrFields.ORDER_ID, indexData.getOrderId());
+		doc1.addField(SolrFields.ORDER_ID, publishData.getOrderId());
 		docs.add(doc1);
 		if (docs.size() == MAX_NUMBER_OF_PENDING_DOCS) {
 			UpdateSolrServerHolder.getInstance().add(docs);

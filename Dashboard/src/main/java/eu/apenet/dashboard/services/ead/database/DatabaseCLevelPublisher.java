@@ -28,12 +28,16 @@ public class DatabaseCLevelPublisher {
 		EADCounts eadCounts = new EADCounts();
 		PublishData publishData = new PublishData();
 		publishData.setXml(clevel.getXml());
-		publishData.setClId(clevel.getClId());
+		publishData.setId(clevel.getClId());
 		publishData.setParentId(clevel.getParentClId());
 		publishData.setLeaf(clevel.isLeaf());
 		publishData.setUpperLevelUnittitles(upperLevelUnittitles);
 		publishData.setFullHierarchy(fullHierarchy);
-		publishData.setOrderId(clevel.getOrderId());
+		if (publishData.getParentId() == null) {
+			publishData.setOrderId(clevel.getOrderId()+1);
+		}else {
+			publishData.setOrderId(clevel.getOrderId());
+		}
 		eadCounts.addClevel(solrPublisher.parseCLevel(publishData));
 		unittitles.add(new LevelInfo(clevel.getClId(),clevel.getOrderId(), clevel.getUnittitle()));	
 		int childOrderId = 0;

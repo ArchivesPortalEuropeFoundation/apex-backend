@@ -13,6 +13,7 @@ import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead.publish.EADCounts;
 import eu.apenet.dashboard.services.ead.publish.LevelInfo;
+import eu.apenet.dashboard.services.ead.publish.PublishData;
 import eu.apenet.dashboard.services.ead.publish.SolrPublisher;
 import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -62,7 +63,13 @@ public class DatabaseEadPublisher {
 		Class<? extends Ead> clazz = XmlType.getEadType(ead).getClazz();
 		try {
 			JpaUtil.beginDatabaseTransaction();
-			eadCounts.addNumberOfDAOs(solrPublisher.parseHeader(eadContent));
+			PublishData publishData = new PublishData();
+			publishData.setXml(eadContent.getXml());
+			publishData.setId(ead.getId().longValue());
+			publishData.setUpperLevelUnittitles(upperLevels);
+			publishData.setFullHierarchy(fullHierarchy);
+			publishData.setArchdesc(true);
+			eadCounts.addNumberOfDAOs(solrPublisher.parseHeader(eadContent, publishData));
 			int cOrderId = 0;
 			List<CLevel> clevels = clevelDAO.getTopClevelsByFileId(ead.getId(), clazz, cOrderId, NUMBER_OF_CLEVEL_ONCE);
 			while (clevels.size() > 0) {

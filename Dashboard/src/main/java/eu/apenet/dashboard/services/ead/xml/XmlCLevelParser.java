@@ -16,9 +16,9 @@ import eu.apenet.dashboard.services.ead.publish.EADCounts;
 import eu.apenet.dashboard.services.ead.publish.LevelInfo;
 import eu.apenet.dashboard.services.ead.publish.PublishData;
 import eu.apenet.dashboard.services.ead.publish.SolrPublisher;
-import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class XmlCLevelParser extends AbstractParser {
 	public static final QName CLEVEL = new QName(APENET_EAD, "c");
@@ -48,7 +48,6 @@ public class XmlCLevelParser extends AbstractParser {
 		List<LevelInfo> unittitles = new ArrayList<LevelInfo>();
 		unittitles.addAll(upperLevelUnittitles);
 		clevel.setLevel(xmlReader.getAttributeValue(null, LEVEL.getLocalPart()));
-		//HibernateUtil.getDatabaseSession().save(clevel);
 		StringWriter stringWriter = new StringWriter();
 		XMLStreamWriterHolder xmlWriterHolder = new XMLStreamWriterHolder(XMLOutputFactory.newInstance()
 				.createXMLStreamWriter(stringWriter));
@@ -68,7 +67,7 @@ public class XmlCLevelParser extends AbstractParser {
 						xmlWriterHolder.close();
 						clevel.setLeaf(false);
 						clevel.setXml(stringWriter.toString());
-						HibernateUtil.getDatabaseSession().save(clevel);
+						JpaUtil.getEntityManager().persist(clevel);
 						stringWriter.close();
 						stringWriter = null;
 						if (clevel.getHrefEadid() != null){
@@ -77,12 +76,16 @@ public class XmlCLevelParser extends AbstractParser {
 						if (solrPublisher != null) {
 							PublishData publishData = new PublishData();
 							publishData.setXml(clevel.getXml());
-							publishData.setClId(clevel.getClId());
+							publishData.setId(clevel.getClId());
 							publishData.setParentId(parentId);
 							publishData.setLeaf(clevel.isLeaf());
 							publishData.setUpperLevelUnittitles(upperLevelUnittitles);
 							publishData.setFullHierarchy(fullHierarchy);
-							publishData.setOrderId(clevel.getOrderId());
+							if (publishData.getParentId() == null) {
+								publishData.setOrderId(clevel.getOrderId()+1);
+							}else {
+								publishData.setOrderId(clevel.getOrderId());
+							}
 							eadCounts.addClevel(solrPublisher.parseCLevel(publishData));	
 							unittitles.add(new LevelInfo(clevel.getClId(),clevel.getOrderId(), clevel.getUnittitle()));	
 						}						
@@ -158,18 +161,22 @@ public class XmlCLevelParser extends AbstractParser {
 			noCLevelFound = false;
 			xmlWriterHolder.close();
 			clevel.setXml(stringWriter.toString());
-			HibernateUtil.getDatabaseSession().save(clevel);
+			JpaUtil.getEntityManager().persist(clevel);
 			stringWriter.close();
 			stringWriter = null;
 			if (solrPublisher != null) {
 				PublishData publishData = new PublishData();
 				publishData.setXml(clevel.getXml());
-				publishData.setClId(clevel.getClId());
+				publishData.setId(clevel.getClId());
 				publishData.setParentId(parentId);
 				publishData.setLeaf(clevel.isLeaf());
 				publishData.setUpperLevelUnittitles(upperLevelUnittitles);
 				publishData.setFullHierarchy(fullHierarchy);
-				publishData.setOrderId(clevel.getOrderId());
+				if (publishData.getParentId() == null) {
+					publishData.setOrderId(clevel.getOrderId()+1);
+				}else {
+					publishData.setOrderId(clevel.getOrderId());
+				}
 				eadCounts.addClevel(solrPublisher.parseCLevel(publishData));
 				clevel.setLeaf(true);
 			}						
