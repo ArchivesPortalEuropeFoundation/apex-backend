@@ -1289,7 +1289,22 @@ public class CreateEAG2012 {
 							}
 							if (Eag2012.ROOT.equalsIgnoreCase(sectionValueKey)
 									&& Eag2012.ROOT.equalsIgnoreCase(sectionHrefKey)) {
+								boolean found = false;
+
+								if (!repository.getEmail().isEmpty()) {
+									for (int l = 0; !found && l < repository.getEmail().size(); l++) {
+										Email emailCheck = repository.getEmail().get(l);
+										// TODO: Check language when issue #622.
+										if (emailCheck.getHref() != null && emailCheck.getHref().equalsIgnoreCase(email.getHref())
+												&& emailCheck.getContent() != null && emailCheck.getContent().equalsIgnoreCase(email.getContent())) {
+											found = true;
+										}
+									}
+								}
+
+								if (!found) {
 									repository.getEmail().add(email);
+								}	
 							}
 
 							// eag/archguide/desc/repositories/repository/services/searchroom
@@ -1420,7 +1435,22 @@ public class CreateEAG2012 {
 								}
 								if (Eag2012.ROOT.equalsIgnoreCase(sectionValueKey) && 
 										(Eag2012.ROOT.equalsIgnoreCase(sectionHrefKey) || sectionHrefKey==null )) {
-									repository.getWebpage().add(webpage);
+									boolean found = false;
+
+									if (!repository.getWebpage().isEmpty()) {
+										for (int l = 0; !found && l < repository.getWebpage().size(); l++) {
+											Webpage web = repository.getWebpage().get(l);
+											// TODO: Check language when issue #622.
+											if (web.getHref() != null && web.getHref().equalsIgnoreCase(webpage.getHref())
+													&& web.getContent() != null && web.getContent().equalsIgnoreCase(webpage.getContent())) {
+												found = true;
+											}
+										}
+									}
+
+									if (!found) {
+										repository.getWebpage().add(webpage);
+									}
 								}
 
 								// eag/archguide/desc/repositories/repository/services/searchroom
