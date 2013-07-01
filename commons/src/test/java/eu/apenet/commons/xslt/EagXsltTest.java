@@ -22,7 +22,7 @@ public class EagXsltTest {
 
 		TestResourceBundleSource resourceBundleSource = new TestResourceBundleSource();	
 		long xslTreeStartTime = System.currentTimeMillis();
-		EagXslt.displayAiDetails(writer, eagPathFile, resourceBundleSource);
+		EagXslt.displayAiDetails(writer, eagPathFile, resourceBundleSource, null, null);
 	
 		System.out.println("Duration (xslt(" + eagPathFile.getName() + "): "  + (System.currentTimeMillis()-startTime) + " - " +   + (System.currentTimeMillis()-xslTreeStartTime));
 	}

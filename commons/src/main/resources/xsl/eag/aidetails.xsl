@@ -1114,14 +1114,16 @@
 										<xsl:choose>
 											<xsl:when test="$link and $link != '' and text()">
 												<div>
-													<xsl:if test="starts-with($link, 'http')">
+													<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp')">
 														<a href="{$link}" target="_blank">
 															<xsl:value-of select="text()"/>
 														</a>
 													</xsl:if>
-													<xsl:if test="not(starts-with($link, 'http'))">
+													<xsl:if test="not(starts-with($link, 'http')) or not(starts-with($link, 'https')) or not(starts-with($link, 'ftp'))">
+														// TODO: Change this when recovered the correct link.
 														<a href="{$link}">
 															<xsl:value-of select="text()"/>
+															<xsl:value-of select="ape:retrieveRelatedAIIdCall(eag:eag/eag:control/eag:recordId, $link)"/>
 														</a>
 													</xsl:if>
 													<xsl:if test="current()/parent::node()/eag:descriptiveNote/eag:p/text()">

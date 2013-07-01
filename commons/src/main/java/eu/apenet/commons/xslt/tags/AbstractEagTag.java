@@ -17,9 +17,12 @@ public abstract class AbstractEagTag extends SimpleTagSupport {
 	private String eagUrl;
 	private final static Logger LOG = Logger.getLogger(AbstractEagTag.class);
 
+	private String currentAIRepositorCode;
+	private String requiredAIRepositorCode;
+
 	public void doTag() throws JspException, IOException {
 		try {
-			EagXslt.displayAiDetails(this.getJspContext().getOut(), new File(eagUrl), getResourceBundleSource());
+			EagXslt.displayAiDetails(this.getJspContext().getOut(), new File(eagUrl), this.getResourceBundleSource(), this.getCurrentAIRepositorCode(), this.getRequiredAIRepositorCode());
 		} catch (SaxonApiException e) {
 			LOG.error(e.getMessage(), e);
 		}
@@ -33,6 +36,22 @@ public abstract class AbstractEagTag extends SimpleTagSupport {
 
 	public void setEagUrl(String eagUrl) {
 		this.eagUrl = eagUrl;
+	}
+
+	public String getCurrentAIRepositorCode() {
+		return this.currentAIRepositorCode;
+	}
+
+	public void setCurrentAIRepositorCode(String currentAIRepositorCode) {
+		this.currentAIRepositorCode = currentAIRepositorCode;
+	}
+
+	public String getRequiredAIRepositorCode() {
+		return this.requiredAIRepositorCode;
+	}
+
+	public void setRequiredAIRepositorCode(String requiredAIRepositorCode) {
+		this.requiredAIRepositorCode = requiredAIRepositorCode;
 	}
 
 }
