@@ -6634,6 +6634,44 @@ public class EAG2012Loader{
 							}
 						}
 					}
+
+					// Check language for "Visitor address" element.
+					if (!this.getYiStreetLang().isEmpty()) {
+						for (int i = 0; i < this.getYiStreetLang().size(); i++) {
+							if (this.getYiStreetLang().get(i) != null
+									&& this.getYiStreetLang().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+								if (!this.getYiMunicipalityPostalcodeLang().isEmpty()
+										&& this.getYiMunicipalityPostalcodeLang().size() > i
+										&& this.getYiMunicipalityPostalcodeLang().get(i) != null
+										&& !this.getYiMunicipalityPostalcodeLang().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+									this.getYiStreetLang().remove(i);
+									this.getYiStreetLang().add(i, this.getYiMunicipalityPostalcodeLang().get(i));
+								} else if (!this.getYiCountryLang().isEmpty()
+										&& this.getYiCountryLang().size() > i
+										&& this.getYiCountryLang().get(i) != null
+										&& !this.getYiCountryLang().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+									this.getYiStreetLang().remove(i);
+									this.getYiStreetLang().add(i, this.getYiCountryLang().get(i));
+								}
+							}
+						}
+					}
+
+					// Check language for "Postal address" element.
+					if (!this.getYiStreetPostalLang().isEmpty()) {
+						for (int i = 0; i < this.getYiStreetPostalLang().size(); i++) {
+							if (this.getYiStreetPostalLang().get(i) != null
+									&& this.getYiStreetPostalLang().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+								if (!this.getYiMunicipalityPostalcodePostalLang().isEmpty()
+										&& this.getYiMunicipalityPostalcodePostalLang().size() > i
+										&& this.getYiMunicipalityPostalcodePostalLang().get(i) != null
+										&& !this.getYiMunicipalityPostalcodePostalLang().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+									this.getYiStreetPostalLang().remove(i);
+									this.getYiStreetPostalLang().add(i, this.getYiMunicipalityPostalcodePostalLang().get(i));
+								}
+							}
+						}
+					}
 				}
 
 				// Continent.
@@ -7263,6 +7301,62 @@ public class EAG2012Loader{
 								}
 							}
 						}
+
+						// Check language for "Visitor address" element.
+						if (!streetLangList.isEmpty()) {
+							for (int j = 0; j < streetLangList.size(); j++) {
+								if (streetLangList.get(j) != null
+										&& streetLangList.get(j).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+									if (!municipalityLangList.isEmpty()
+											&& municipalityLangList.size() > j
+											&& municipalityLangList.get(j) != null
+											&& !municipalityLangList.get(j).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+										streetLangList.remove(j);
+										streetLangList.add(j, municipalityLangList.get(j));
+									} else if (!countryLangList.isEmpty()
+											&& countryLangList.size() > j
+											&& countryLangList.get(j) != null
+											&& !countryLangList.get(j).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+										streetLangList.remove(j);
+										streetLangList.add(j, countryLangList.get(j));
+									} else if (!firstdemLangList.isEmpty()
+											&& firstdemLangList.size() > j
+											&& firstdemLangList.get(j) != null
+											&& !firstdemLangList.get(j).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+										streetLangList.remove(j);
+										streetLangList.add(j, firstdemLangList.get(j));
+									} else if (!secondemLangList.isEmpty()
+											&& secondemLangList.size() > j
+											&& secondemLangList.get(j) != null
+											&& !secondemLangList.get(j).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+										streetLangList.remove(j);
+										streetLangList.add(j, secondemLangList.get(j));
+									} else if (!localentityLangList.isEmpty()
+											&& localentityLangList.size() > j
+											&& localentityLangList.get(j) != null
+											&& !localentityLangList.get(j).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+										streetLangList.remove(j);
+										streetLangList.add(j, localentityLangList.get(j));
+									}
+								}
+							}
+						}
+
+						// Check language for "Postal address" element.
+						if (!postalStreetLangList.isEmpty()) {
+							for (int j = 0; j < postalStreetLangList.size(); j++) {
+								if (postalStreetLangList.get(j) != null
+										&& postalStreetLangList.get(j).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+									if (!postalMunicipalityLangList.isEmpty()
+											&& postalMunicipalityLangList.size() > j
+											&& postalMunicipalityLangList.get(j) != null
+											&& !postalMunicipalityLangList.get(j).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+										postalStreetLangList.remove(j);
+										postalStreetLangList.add(j, postalMunicipalityLangList.get(j));
+									}
+								}
+							}
+						}
 					}
 					this.addContactNumberOfVisitorsAddress(numberVisitorAdrressList);
 					this.addContactLatitude(latitudeList);
@@ -7280,6 +7374,19 @@ public class EAG2012Loader{
 					this.addContactStreet(streetList);
 					this.addContactStreetLang(streetLangList);
 
+					// Add the language for "Your institution" tab for element "Visitor address".
+					if (i == 0) {
+						for (int j = 0; j < streetLangList.size(); j++) {
+							if (this.getYiStreetLang().size() > j
+									&& this.getYiStreetLang().get(j) != null) {
+								this.getYiStreetLang().remove(j);
+								this.getYiStreetLang().add(j, streetLangList.get(j));
+							} else {
+								this.getYiStreetLang().add(streetLangList.get(j));
+							}
+						}
+					}
+
 					this.addContactNumberOfPostalAddress(numberPostalAdrressList);
 					this.addContactPostalCountry(postalCountryList);
 					this.addContactPostalCountryLang(postalCountryLangList);
@@ -7287,6 +7394,19 @@ public class EAG2012Loader{
 					this.addContactPostalMunicipalityLang(postalMunicipalityLangList);
 					this.addContactPostalStreet(postalStreetList);
 					this.addContactPostalStreetLang(postalStreetLangList);
+
+					// Add the language for "Your institution" tab for element "Postal address".
+					if (i == 0) {
+						for (int j = 0; j < postalStreetLangList.size(); j++) {
+							if (this.getYiStreetPostalLang().size() > j
+									&& this.getYiStreetPostalLang().get(j) != null) {
+								this.getYiStreetPostalLang().remove(j);
+								this.getYiStreetPostalLang().add(j, postalStreetLangList.get(j));
+							} else {
+								this.getYiStreetPostalLang().add(postalStreetLangList.get(j));
+							}
+						}
+					}
 
 					// Continent.
 					stringList = new ArrayList<String>();

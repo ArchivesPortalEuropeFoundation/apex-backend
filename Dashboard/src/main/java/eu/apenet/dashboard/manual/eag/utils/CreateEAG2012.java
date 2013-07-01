@@ -996,15 +996,35 @@ public class CreateEAG2012 {
 								boolean found = false;
 								for (int x = 0; !found && x < repository.getLocation().size(); x++) {
 									Location target = repository.getLocation().get(x);
-									if (target.getStreet() != null && target.getStreet().getContent() != null
-											&& target.getStreet().getContent().equalsIgnoreCase(streetList.get(j))
+									if ((target.getStreet() != null
+												&& target.getStreet().getContent() != null
+												&& target.getStreet().getContent().equalsIgnoreCase(streetList.get(j)))
+											|| (target.getStreet() != null
+												&& target.getStreet().getLang() != null
+												&& target.getStreet().getLang().equalsIgnoreCase(streetLangList.get(j)))
 											&& Eag2012.VISITORS_ADDRESS.equalsIgnoreCase(target.getLocalType())
-											&& target.getMunicipalityPostalcode()!= null
-											&& target.getMunicipalityPostalcode().getContent() != null
-											&& target.getMunicipalityPostalcode().getContent().equalsIgnoreCase(citiesList.get(j))
-											&& target.getCountry() != null
-											&& target.getCountry().getContent() != null
-											&& target.getCountry().getContent().equalsIgnoreCase(countryList.get(j))) {
+											|| (target.getMunicipalityPostalcode()!= null
+												&& target.getMunicipalityPostalcode().getContent() != null
+												&& target.getMunicipalityPostalcode().getContent().equalsIgnoreCase(citiesList.get(j)))
+											|| (target.getCountry() != null
+												&& target.getCountry().getContent() != null
+												&& target.getCountry().getContent().equalsIgnoreCase(countryList.get(j)))
+											|| (target.getLatitude() != null
+												&& target.getLatitude().equalsIgnoreCase(latitudeList.get(j)))
+											|| (target.getLongitude() != null
+												&& target.getLongitude().equalsIgnoreCase(longitudeList.get(j)))
+											|| (firstdemList != null && firstdemList.size() > j
+												&& target.getFirstdem() != null
+												&& target.getFirstdem().getContent() != null
+												&& target.getFirstdem().getContent().equalsIgnoreCase(firstdemList.get(j)))
+											|| (secondemList != null && secondemList.size() > j
+												&& target.getSecondem() != null
+												&& target.getSecondem().getContent() != null
+												&& target.getSecondem().getContent().equalsIgnoreCase(secondemList.get(j)))
+											|| (localentityList != null && localentityList.size() > j
+												&& target.getLocalentity() != null
+												&& target.getLocalentity().getContent() != null
+												&& target.getLocalentity().getContent().equalsIgnoreCase(localentityList.get(j)))) {
 										found = true;
 									}
 								}
@@ -1018,7 +1038,7 @@ public class CreateEAG2012 {
 										|| location.getSecondem() != null
 										|| location.getStreet() != null)) {
 									repository.getLocation().add(location);
-								}							
+								}						
 							}
 //						}
 					}
@@ -1099,22 +1119,43 @@ public class CreateEAG2012 {
 									}
 								}
 								//TODO: add looper only for check repeated fields for different contact and your_institution tabs information
+//								boolean found = false;
+//								for(int x=0;!found && x<repository.getLocation().size();x++){
+//									Location target = repository.getLocation().get(x);
+//									if(target !=null && target.getStreet()!=null
+//											&& target.getStreet().getContent()!=null 
+//											&& target.getStreet().getContent().equalsIgnoreCase(postalStreetList.get(j)) 
+//											&& Eag2012.POSTAL_ADDRESS.equalsIgnoreCase(target.getLocalType())
+//											&& target.getMunicipalityPostalcode()!=null
+//											&& target.getMunicipalityPostalcode().getContent() != null
+//											&& target.getMunicipalityPostalcode().getContent().equalsIgnoreCase(postalCitiesList.get(j)) ){
+//										found = true;
+//									}
+//								}
+//								if(!found
+//										&& (location.getMunicipalityPostalcode() != null
+//										|| location.getStreet() != null)){
+//									repository.getLocation().add(location);
+//								}
 								boolean found = false;
-								for(int x=0;!found && x<repository.getLocation().size();x++){
+								for (int x = 0; !found && x < repository.getLocation().size(); x++) {
 									Location target = repository.getLocation().get(x);
-									if(target !=null && target.getStreet()!=null
-											&& target.getStreet().getContent()!=null 
-											&& target.getStreet().getContent().equalsIgnoreCase(postalStreetList.get(j)) 
+									if ((target.getStreet() != null
+												&& target.getStreet().getContent() != null
+												&& target.getStreet().getContent().equalsIgnoreCase(postalStreetList.get(j)))
+											|| (target.getStreet() != null
+												&& target.getStreet().getLang() != null
+												&& target.getStreet().getLang().equalsIgnoreCase(postalStreetList.get(j)))
 											&& Eag2012.POSTAL_ADDRESS.equalsIgnoreCase(target.getLocalType())
-											&& target.getMunicipalityPostalcode()!=null
-											&& target.getMunicipalityPostalcode().getContent() != null
-											&& target.getMunicipalityPostalcode().getContent().equalsIgnoreCase(postalCitiesList.get(j)) ){
+											|| (target.getMunicipalityPostalcode()!= null
+												&& target.getMunicipalityPostalcode().getContent() != null
+												&& target.getMunicipalityPostalcode().getContent().equalsIgnoreCase(postalCitiesList.get(j)))) {
 										found = true;
 									}
 								}
-								if(!found
+								if (!found
 										&& (location.getMunicipalityPostalcode() != null
-										|| location.getStreet() != null)){
+										|| location.getStreet() != null)) {
 									repository.getLocation().add(location);
 								}
 							}
