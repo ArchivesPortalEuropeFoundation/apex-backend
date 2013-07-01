@@ -18,6 +18,7 @@ public class DashboardConfig extends ApePortalAndDashboardConfig{
     private String xslDirPath;
     private XPathFactory xpathFactory;
     private boolean maintenanceMode = false;
+    private String maintenanceAction;
     private boolean defaultQueueProcessing = true;
     
 	public String getEuropeanaDirPath() {
@@ -107,6 +108,15 @@ public class DashboardConfig extends ApePortalAndDashboardConfig{
 	public void setDefaultQueueProcessing(boolean defaultQueueProcessing) {
 		checkConfigured();
 		this.defaultQueueProcessing = defaultQueueProcessing;
+	}
+
+	public String getMaintenanceAction() {
+		return maintenanceAction;
+	}
+
+	public void setMaintenanceAction(String maintenanceAction) {
+		checkConfigured();
+		this.maintenanceAction = maintenanceAction;
 	}
 	
 }
