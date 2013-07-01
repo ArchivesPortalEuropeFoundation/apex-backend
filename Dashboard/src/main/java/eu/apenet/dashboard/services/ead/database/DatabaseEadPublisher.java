@@ -24,7 +24,6 @@ import eu.apenet.persistence.vo.EadContent;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class DatabaseEadPublisher {
-	private static final int NUMBER_OF_CLEVEL_ONCE = 1;
 	private static final Logger LOG = Logger.getLogger(DatabaseEadPublisher.class);
 
 	public static void publish(Ead ead) throws Exception {
@@ -71,11 +70,11 @@ public class DatabaseEadPublisher {
 			publishData.setArchdesc(true);
 			eadCounts.addNumberOfDAOs(solrPublisher.parseHeader(eadContent, publishData));
 			int cOrderId = 0;
-			List<CLevel> clevels = clevelDAO.getTopClevelsByFileId(ead.getId(), clazz, cOrderId, NUMBER_OF_CLEVEL_ONCE);
-			while (clevels.size() > 0) {
-				eadCounts.addEadCounts(DatabaseCLevelPublisher.publish(clevels.get(0),eadContent.getEcId(),ead, solrPublisher, upperLevels, fullHierarchy));
+			CLevel clevel = clevelDAO.getTopClevelByFileId(ead.getId(), clazz, cOrderId);
+			while (clevel != null) {
+				eadCounts.addEadCounts(DatabaseCLevelPublisher.publish(clevel,eadContent.getEcId(),ead, solrPublisher, upperLevels, fullHierarchy));
 				cOrderId++;
-				clevels = clevelDAO.getTopClevelsByFileId(ead.getId(), clazz, cOrderId, 1);
+				clevel = clevelDAO.getTopClevelByFileId(ead.getId(), clazz, cOrderId);
 //				System.out.println("H:" + eadCounts.getNumberOfUnits());
 			}
 			solrPublisher.commitAll(eadCounts);

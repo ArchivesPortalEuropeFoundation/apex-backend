@@ -17,7 +17,7 @@ import eu.apenet.persistence.vo.Ead;
 
 
 public class DatabaseCLevelPublisher {
-
+	private static final int NUMBER_OF_CLEVEL_ONCE = 1;
 
 	public static EADCounts publish(CLevel clevel, Long eadContentId,
 			Ead ead, SolrPublisher solrPublisher, List<LevelInfo> upperLevelUnittitles, Map<String, Object> fullHierarchy)
@@ -41,14 +41,14 @@ public class DatabaseCLevelPublisher {
 		eadCounts.addClevel(solrPublisher.parseCLevel(publishData));
 		unittitles.add(new LevelInfo(clevel.getClId(),clevel.getOrderId(), clevel.getUnittitle()));	
 		int childOrderId = 0;
-		List<CLevel> clevels = clevelDAO.findChildCLevels(clevel.getClId(), childOrderId, 1);
+		List<CLevel> clevels = clevelDAO.findChildCLevels(clevel.getClId(), childOrderId, NUMBER_OF_CLEVEL_ONCE);
 		while (clevels.size() > 0) {
 			eadCounts.addEadCounts(DatabaseCLevelPublisher.publish(clevels.get(0),eadContentId,ead, solrPublisher, unittitles, fullHierarchy));
 			childOrderId++;
 			if (clevel.getHrefEadid() != null){
 				LinkingService.linkWithoutCommit(ead, clevel);
 			}
-			clevels = clevelDAO.findChildCLevels(clevel.getClId(), childOrderId, 1);
+			clevels = clevelDAO.findChildCLevels(clevel.getClId(), childOrderId, NUMBER_OF_CLEVEL_ONCE);
 		}
 //		if (eadCounts.getNumberOfUnits() > 1){
 //		System.out.println("C:" +eadCounts.getNumberOfUnits());
