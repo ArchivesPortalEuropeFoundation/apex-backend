@@ -716,7 +716,7 @@ public class APEnetEAGDashboard{
 				// which wants to change the EAG file, then the operation is
 				// permitted
 				if (archivalInstitutionList.get(i).getAiId() != this.getAiId()) {
-					log.warn(SecurityContext.get() + "EAG uploaded that countains the name " + this.getName() + " that already exist in another archival institution with id: " + archivalInstitutionList.get(i).getAiId());
+					log.warn(SecurityContext.get() + "EAG uploaded that contains the name " + this.getName() + " that already exist in another archival institution with id: " + archivalInstitutionList.get(i).getAiId());
 					eagAlreadyUploaded = true;
 				}
 			}
