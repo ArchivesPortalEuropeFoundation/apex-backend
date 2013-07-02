@@ -1591,6 +1591,15 @@ function loadRepositories(text1, text2, number) {
 		});
 		$("a#tab_"+localId).trigger('click');
 		$("a#tab-yourInstitution").parent().trigger('click');
+
+		// Load the names of repositories as name of repository tabs.
+		for (var i = 2; i <= count; i++) {
+			var name = $("table#contactTable_" + i + " input#textNameOfRepository").val();
+
+			if (name != null && name != "") {
+				$("a#tab_yourInstitutionTable_" + i).text(name);
+			}
+		}
 	}
 }
 
@@ -1689,9 +1698,9 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7, proper
 	$("table#contactTable_"+(counter+1)+" #textContactLinkTitleForEmailOfTheInstitution_1").attr("value",emailLinkTitle);
 	$("table#contactTable_"+(counter+1)+" #textContactWebOfTheInstitution_1").attr("value",web);
 	$("table#contactTable_"+(counter+1)+" #textContactLinkTitleForWebOfTheInstitution_1").attr("value",webLinkTitle);
-	if ((postalCity =! null && postalCity != "")
-			|| (postalStreet =! null && postalStreet != "")
-			|| (postalStreetLanguage =! null && postalStreetLanguage != "")) {
+	if ((postalCity != null && postalCity != "")
+			|| (postalStreet != null && postalStreet != "")
+			|| (postalStreetLanguage != null && postalStreetLanguage != "")) {
 		var selectContactLanguagePostalAddress = '<select id="selectContactLanguagePostalAddress">'+$("table#contactTable_"+(counter+1)+" #selectLanguageVisitorAddress").html()+'</select>';
 
 		$("table#contactTable_"+(counter+1)+" input#buttonContactAddPostalAddressIfDifferent").hide();
@@ -1738,7 +1747,7 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7, proper
 				"<label for=\"textNameOfRepository\">"+text3+"<span class=\"required\">*</span>:</label>"+
 			"</td>"+
 			"<td>"+
-				"<input type=\"text\" id=\"textNameOfRepository\" />"+
+				"<input type=\"text\" id=\"textNameOfRepository\" onchange=\"contactChangeTabName(" + text2 + ");\" />"+
 			"<td>"+
 				"<label for=\"selectRoleOfRepository\">"+text4+"<span class=\"required\">*</span>:</label>"+
 			"</td>"+
@@ -2005,14 +2014,14 @@ function duplicateFutherAccessInformationOnExistingFacilitiesLanguage(name){
 
 	if (id.indexOf("_") != "-1")  {
 		var value = $("tr#trButtonAddFutherInformationOnExistingFacilities" + id + " #selectFutherAccessInformationOnExistingFacilities" + id + " :selected").val();
-		$("table#accessAndServicesTable_1 tr#trAccessibilityInformation" + id + " #selectASARSelectLanguage" + id + " option").each(function(){
+		$("table#accessAndServicesTable_1 tr#trAccessibilityInformation" + id + " #selectASASelectLanguage" + id + " option").each(function(){
 			if(value==$(this).val()){
 				$(this).attr("selected","selected");
 			}
 		});
 	} else {
 		var value = $("tr#trButtonAddFutherInformationOnExistingFacilities #selectFutherAccessInformationOnExistingFacilities :selected").val();
-		$("table#accessAndServicesTable_1 tr#trAccessibilityInformation_1 #selectASARSelectLanguage_1 option").each(function(){
+		$("table#accessAndServicesTable_1 tr#trAccessibilityInformation_1 #selectASASelectLanguage_1 option").each(function(){
 			if(value==$(this).val()){
 				$(this).attr("selected","selected");
 			}
@@ -2339,6 +2348,19 @@ function addRangeYear(table, text1, text2, text3){
 			labelFor = labelFor.substring(0, (labelFor.lastIndexOf("_") + 1)) + (counter+1);
 			$(this).attr("for", labelFor);
 		});
+	}
+}
+
+function contactChangeTabName(text1) {
+	var currentTab = getCurrentTab();
+	var counter = $("a[id^='tab_yourInstitutionTable_']").length;
+
+	var name = $("table#contactTable"+currentTab+" input#textNameOfRepository").val();
+
+	if (name != null && name != "") {
+		$("a#tab_yourInstitutionTable" + currentTab).text(name);
+	} else {
+		$("a#tab_yourInstitutionTable" + currentTab).text(text1 + " " + (counter - 1));
 	}
 }
 
@@ -4150,9 +4172,9 @@ function aSFutherInformationOnExistingFacilitiesLangChanged(name){
 	id = id.substring(id.lastIndexOf("_"));
 
 	if (id == "_1") {
-		$("table#yiTableOthers #selectFutherAccessInformationOnExistingFacilities").attr("value", $("table#accessAndServicesTable_1 #selectASARSelectLanguage_1").val());
+		$("table#yiTableOthers #selectFutherAccessInformationOnExistingFacilities").attr("value", $("table#accessAndServicesTable_1 #selectASASelectLanguage_1").val());
 	} else {
-		$("table#yiTableOthers #selectFutherAccessInformationOnExistingFacilities" + id).attr("value", $("table#accessAndServicesTable_1 #selectASARSelectLanguage" + id).val());
+		$("table#yiTableOthers #selectFutherAccessInformationOnExistingFacilities" + id).attr("value", $("table#accessAndServicesTable_1 #selectASASelectLanguage" + id).val());
 	}
 }
 

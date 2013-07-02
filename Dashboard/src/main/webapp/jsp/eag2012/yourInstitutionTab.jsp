@@ -956,7 +956,7 @@
 				<td>
 					<select id="selectFacilitiesForDisabledPeopleAvailable" onchange="facilitiesForDisabledPeopleAvailableChanged();" >
 						<s:iterator value="yesNoList" var="yesno"> 
-							<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.accessibilityQuestion}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
+							<option value="<s:property value="#yesno.key" />"<s:if test="%{#yesno.key == loader.yiAccessibilityQuestion[0]}" > selected=selected </s:if>><s:property value="#yesno.value" /></option>
 						</s:iterator>
 					</select>
 				</td>

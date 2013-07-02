@@ -3,6 +3,8 @@ package eu.apenet.dashboard.manual.eag;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,6 +19,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -1501,7 +1504,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 String stringWithoutBreaks = replaceIfExistsSpecialReturnString(descriptionTable.getString("textDateOfRepositoryFoundation"));
 					 if (stringWithoutBreaks.indexOf("%5C") > -1){
-						 String escapeString = stringWithoutBreaks.replaceAll("%5C", "\\\\");
+						 String escapeString = unescapeJsonString(stringWithoutBreaks);
 						 dates.add(escapeString);
 					 }else{
 						 dates.add(stringWithoutBreaks);
@@ -1617,7 +1620,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 String stringWithoutBreaks = replaceIfExistsSpecialReturnString(descriptionTable.getString("textDateOfRepositorySuppression"));
 					 if (stringWithoutBreaks.indexOf("%5C") > -1){
-						 String escapeString = stringWithoutBreaks.replaceAll("%5C", "\\\\");
+						 String escapeString = unescapeJsonString(stringWithoutBreaks);
 						 dates.add(escapeString);
 					 }else{
 						 dates.add(stringWithoutBreaks);
@@ -2009,7 +2012,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					   }
 					   String stringWithoutBreaks = replaceIfExistsSpecialReturnString(descriptionTable.getString("textYearWhenThisNameWasUsed_"+j));
 					   if (stringWithoutBreaks.indexOf("%5C") > -1){
-						  String escapeString = stringWithoutBreaks.replaceAll("%5C", "\\\\");
+						  String escapeString = unescapeJsonString(stringWithoutBreaks);
 						  dates.add(escapeString);
 						}else{
 							 dates.add(stringWithoutBreaks);
@@ -2071,7 +2074,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						   }
 						   String stringWithoutBreaks = replaceIfExistsSpecialReturnString(descriptionTable.getString("textYearWhenThisNameWasUsedFrom_"+j));
 						   if (stringWithoutBreaks.indexOf("%5C") > -1){
-							  String escapeString = stringWithoutBreaks.replaceAll("%5C", "\\\\");
+							  String escapeString = unescapeJsonString(stringWithoutBreaks);
 							  dates.add(escapeString);
 							}else{
 								 dates.add(stringWithoutBreaks);
@@ -2129,7 +2132,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						   }
 						   String stringWithoutBreaks = replaceIfExistsSpecialReturnString(descriptionTable.getString("textYearWhenThisNameWasUsedTo_"+j));
 						   if (stringWithoutBreaks.indexOf("%5C") > -1){
-							  String escapeString = stringWithoutBreaks.replaceAll("%5C", "\\\\");
+							  String escapeString = unescapeJsonString(stringWithoutBreaks);
 							  dates.add(escapeString);
 							}else{
 								 dates.add(stringWithoutBreaks);
@@ -4945,6 +4948,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					
 				}
 				int i=1;
+				if (x > 0) {
+					i = 0;
+				}
 				while(contactTable.has("textContactTelephoneOfTheInstitution_"+(++i))){
 					List<Map<String, Map<String, List<String>>>> telephones = eag2012.getTelephoneValue();
 					if(telephones==null){
@@ -5010,6 +5016,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				}
 				
 				 i=1;
+				 if (x > 0) {
+					 i = 0;
+				 }
 				 while(contactTable.has("textContactEmailOfTheInstitution_"+(++i))){
 					 List<Map<String, Map<String, List<String>>>> listMapEmailList = eag2012.getEmailHref();
 					 if(listMapEmailList==null){
@@ -5044,6 +5053,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 eag2012.setEmailHref(listMapEmailList);
 				 }
 				 i=1;
+				 if (x > 0) {
+					 i = 0;
+				 }
 				 while(contactTable.has("textContactLinkTitleForEmailOfTheInstitution_"+(++i))){
 					 List<Map<String, Map<String, List<String>>>> listMapEmailValueList = eag2012.getEmailValue();
 					 if(listMapEmailValueList==null){
@@ -5079,6 +5091,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 eag2012.setEmailValue(listMapEmailValueList); 	
 				 }
 				 i=1;
+				 if (x > 0) {
+					 i = 0;
+				 }
 				 while(contactTable.has("textContactWebOfTheInstitution_"+(++i))){
 					 List<Map<String, Map<String, List<String>>>> listMapWebpageHrefList = eag2012.getWebpageHref();
 					 if(listMapWebpageHrefList==null){
@@ -5114,6 +5129,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				 }
 			
 				 i=1;
+				 if (x > 0) {
+					 i = 0;
+				 }
 				 while(contactTable.has("textContactLinkTitleForWebOfTheInstitution_"+(++i))){
 					 List<Map<String, Map<String, List<String>>>> listMapWebList = eag2012.getWebpageValue();
 					 if(listMapWebList==null){
@@ -5265,7 +5283,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						}
 						String stringWithoutBreaks = replaceIfExistsSpecialReturnString(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsed_"+j));
 						if (stringWithoutBreaks.indexOf("%5C") > -1){
-							String escapeString = stringWithoutBreaks.replaceAll("%5C", "\\\\");
+							String escapeString = unescapeJsonString(stringWithoutBreaks);
 							year.add(escapeString);
 						}else{
 							 year.add(stringWithoutBreaks);
@@ -5326,7 +5344,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						}
 						String stringWithoutBreaks = replaceIfExistsSpecialReturnString(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsedFrom_"+j));
 						if (stringWithoutBreaks.indexOf("%5C") > -1){
-							String escapeString = stringWithoutBreaks.replaceAll("%5C", "\\\\");
+							String escapeString = unescapeJsonString(stringWithoutBreaks);
 							year.add(escapeString);
 						}else{
 							 year.add(stringWithoutBreaks);
@@ -5386,7 +5404,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						}
 						String stringWithoutBreaks = replaceIfExistsSpecialReturnString(previousNameOfTheArchive.getString("textYearWhenThisNameWasUsedTo_"+j));
 						if (stringWithoutBreaks.indexOf("%5C") > -1){
-							String escapeString = stringWithoutBreaks.replaceAll("%5C", "\\\\");
+							String escapeString = unescapeJsonString(stringWithoutBreaks);
 							year.add(escapeString);
 						}else{
 							 year.add(stringWithoutBreaks);
@@ -6353,5 +6371,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			}
 		}
 		return eag2012;
+	}
+
+	/**
+	 * Method for unescape string.
+	 */
+	private String unescapeJsonString(final String escapeString) {
+		String unescapeString = escapeString;
+
+		try {
+			unescapeString = URLDecoder.decode(escapeString, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			log.error("No date decode possible.");
+		};
+		
+		return StringEscapeUtils.unescapeHtml(unescapeString);
 	}
 }

@@ -17,7 +17,7 @@
 							<label for="textNameOfRepository"><s:property value="getText('label.ai.contact.nameOfRepository')" /><span class="required">*</span>:</label>
 						</td>
 						<td>
-							<input type="text" id="textNameOfRepository" value="<s:property value="#repositoryName[0]" />" />
+							<input type="text" id="textNameOfRepository" value="<s:property value="#repositoryName[0]" />" onchange="contactChangeTabName('<s:property value="getText('label.ai.yourinstitution.repository')" />');" />
 						<td>
 							<label for="selectRoleOfRepository"><s:property value="getText('label.ai.contact.roleOfRepository')" /><span class="required">*</span>:</label>
 						</td>
@@ -609,7 +609,9 @@
 				<tr>
 					<td id="tdButtonsContactTab" colspan="4">
 						<input type="button" id="buttonContactTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" onclick="checkAndShowNextTab($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('label.eag.eagwithurlwarnings')"/>');" />
-						<input type="button" id="buttonContactTabPrevious" value="<s:property value='getText("label.ai.tabs.commons.button.previousTab")' />" class="rightButton" onclick="checkAndShowPreviousTab($(this).parent().parent().parent().parent(),'<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />','<s:property value="getText('label.ai.tabs.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('label.eag.eagwithurlwarnings')"/>');" />
+						<s:if test="%{#counter == 0}">
+							<input type="button" id="buttonContactTabPrevious" value="<s:property value='getText("label.ai.tabs.commons.button.previousTab")' />" class="rightButton" onclick="checkAndShowPreviousTab($(this).parent().parent().parent().parent(),'<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />','<s:property value="getText('label.ai.tabs.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('label.eag.eagwithurlwarnings')"/>');" />
+						</s:if>
 					</td>
 				</tr>
 			</table>

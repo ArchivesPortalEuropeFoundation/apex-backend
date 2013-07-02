@@ -456,11 +456,18 @@ public class CreateEAG2012 {
 							boolean found = false;
 							//if (Eag2012.RESOURCE_RELATION.equalsIgnoreCase(sectionValueKey)){ //TODO: current situation from ticket 543 
 								for(int x=0;x<this.eag.getRelations().getResourceRelation().size();x++){
-									if(this.eag.getRelations().getResourceRelation().get(x)!=null && this.eag.getRelations().getResourceRelation().get(x).getHref()!=null && this.eag.getRelations().getResourceRelation().get(x).getHref().equalsIgnoreCase(resourceRelation.getHref()) && 
-											this.eag.getRelations().getResourceRelation().get(x).getRelationEntry()!=null && (
-													(this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang()!=null && 
-													this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang().equalsIgnoreCase(relationEntry.getLang()) ) || 
-													(this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang()==null && (relationEntry.getLang()==null || relationEntry.getLang().equalsIgnoreCase(Eag2012.OPTION_NONE)) ) )  ){
+									if (this.eag.getRelations().getResourceRelation().get(x) != null
+											&& this.eag.getRelations().getResourceRelation().get(x).getHref() != null
+											&& this.eag.getRelations().getResourceRelation().get(x).getHref().equalsIgnoreCase(resourceRelation.getHref())
+											&& this.eag.getRelations().getResourceRelation().get(x).getRelationEntry() != null
+											&& ((this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang() != null
+												&& this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang().equalsIgnoreCase(relationEntry.getLang()))
+												|| (this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang() == null
+												&& (relationEntry.getLang() == null
+												|| relationEntry.getLang().equalsIgnoreCase(Eag2012.OPTION_NONE)))
+												|| (this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang() == null
+												&& (relationEntry.getContent() == null
+												|| relationEntry.getContent().isEmpty())))){
 										found = true;
 										if(resourceRelation.getDescriptiveNote()!=null){ //priority for descriptive note
 											//TODO: current situation from ticket 543 
@@ -1038,7 +1045,7 @@ public class CreateEAG2012 {
 										|| location.getSecondem() != null
 										|| location.getStreet() != null)) {
 									repository.getLocation().add(location);
-								}						
+								}
 							}
 //						}
 					}
@@ -1118,25 +1125,7 @@ public class CreateEAG2012 {
 										location.getStreet().setLang(language);
 									}
 								}
-								//TODO: add looper only for check repeated fields for different contact and your_institution tabs information
-//								boolean found = false;
-//								for(int x=0;!found && x<repository.getLocation().size();x++){
-//									Location target = repository.getLocation().get(x);
-//									if(target !=null && target.getStreet()!=null
-//											&& target.getStreet().getContent()!=null 
-//											&& target.getStreet().getContent().equalsIgnoreCase(postalStreetList.get(j)) 
-//											&& Eag2012.POSTAL_ADDRESS.equalsIgnoreCase(target.getLocalType())
-//											&& target.getMunicipalityPostalcode()!=null
-//											&& target.getMunicipalityPostalcode().getContent() != null
-//											&& target.getMunicipalityPostalcode().getContent().equalsIgnoreCase(postalCitiesList.get(j)) ){
-//										found = true;
-//									}
-//								}
-//								if(!found
-//										&& (location.getMunicipalityPostalcode() != null
-//										|| location.getStreet() != null)){
-//									repository.getLocation().add(location);
-//								}
+
 								boolean found = false;
 								for (int x = 0; !found && x < repository.getLocation().size(); x++) {
 									Location target = repository.getLocation().get(x);
@@ -2404,21 +2393,44 @@ public class CreateEAG2012 {
 							// Add microformser.
 							if (repository.getServices().getTechservices().getReproductionser().getMicroformser() != null) {
 								reproductionser.setMicroformser(repository.getServices().getTechservices().getReproductionser().getMicroformser());
+							} else if (this.eag2012.getMicroformserQuestion() != null && !this.eag2012.getMicroformserQuestion().isEmpty() && !this.eag2012.getMicroformserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+								if (reproductionser.getMicroformser() == null) {
+									reproductionser.setMicroformser(new Microformser());
+								}
+								reproductionser.getMicroformser().setQuestion(this.eag2012.getMicroformserQuestion().get(i));
 							}
 
 							// Add photographser.
 							if (repository.getServices().getTechservices().getReproductionser().getPhotographser() != null) {
 								reproductionser.setPhotographser(repository.getServices().getTechservices().getReproductionser().getPhotographser());
+							} else if (this.eag2012.getPhotographserQuestion() != null && !this.eag2012.getPhotographserQuestion().isEmpty() && !this.eag2012.getPhotographserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+								if (reproductionser.getPhotographser() == null) {
+									reproductionser.setPhotographser(new Photographser());
+								}
+								reproductionser.getPhotographser().setQuestion(this.eag2012.getPhotographserQuestion().get(i));
 							}
 
 							// Add digitalser.
 							if (repository.getServices().getTechservices().getReproductionser().getDigitalser() != null) {
 								reproductionser.setDigitalser(repository.getServices().getTechservices().getReproductionser().getDigitalser());
+							} else if (this.eag2012.getDigitalserQuestion() != null && !this.eag2012.getDigitalserQuestion().isEmpty() && !this.eag2012.getDigitalserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+								if (reproductionser.getDigitalser() == null) {
+									reproductionser.setDigitalser(new Digitalser());
+								}
+								reproductionser.getDigitalser().setQuestion(this.eag2012.getDigitalserQuestion().get(i));
 							}
 
 							// Add photocopyser.
 							if (repository.getServices().getTechservices().getReproductionser().getPhotocopyser() != null) {
 								reproductionser.setPhotocopyser(repository.getServices().getTechservices().getReproductionser().getPhotocopyser());
+							} else if (this.eag2012.getPhotocopyserQuestion() != null && !this.eag2012.getPhotocopyserQuestion().isEmpty() && !this.eag2012.getPhotocopyserQuestion().get(i).equalsIgnoreCase(Eag2012.OPTION_NONE)) {
+								if(repository.getServices().getTechservices().getReproductionser()==null){
+									repository.getServices().getTechservices().setReproductionser(new Reproductionser());
+								}
+								if (reproductionser.getPhotocopyser() == null) {
+									reproductionser.setPhotocopyser(new Photocopyser());
+								}
+								reproductionser.getPhotocopyser().setQuestion(this.eag2012.getPhotocopyserQuestion().get(i));
 							}
 						}
 

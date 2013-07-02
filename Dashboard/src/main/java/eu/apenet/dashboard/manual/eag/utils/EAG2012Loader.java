@@ -7843,19 +7843,11 @@ public class EAG2012Loader{
 										} else {
 											srComputerPlacesLang.add(Eag2012.OPTION_NONE);
 										}
-									} else {
-										srComputerPlacesValue.add("");
-										srComputerPlacesLang.add(Eag2012.OPTION_NONE);
 									}
 								}
-							} else {
-								srComputerPlacesValue.add("");
-								srComputerPlacesLang.add(Eag2012.OPTION_NONE);
 							}
 						} else {
 							srComputerPlacesNum.add("");
-							srComputerPlacesValue.add("");
-							srComputerPlacesLang.add(Eag2012.OPTION_NONE);
 						}
 
 						// Number of microfilm/fiche readers.
