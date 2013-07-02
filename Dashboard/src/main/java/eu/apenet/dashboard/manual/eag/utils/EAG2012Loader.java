@@ -6535,24 +6535,22 @@ public class EAG2012Loader{
 								if (location.getStreet().getContent() != null
 										&& !location.getStreet().getContent().isEmpty()) {
 									this.addYiStreet(location.getStreet().getContent());
-								} else {
-									this.addYiStreet("");
-								}
+								} 
 								if (location.getStreet().getLang() != null
 										&& !location.getStreet().getLang().isEmpty()) {
 									this.addYiStreetLang(location.getStreet().getLang());
 								} else {
 									this.addYiStreetLang(Eag2012.OPTION_NONE);
 								}
+							}else{
+								this.addYiStreet("");
 							}
 							// City.
 							if (location.getMunicipalityPostalcode() != null) {
 								if (location.getMunicipalityPostalcode().getContent() != null
 										&& !location.getMunicipalityPostalcode().getContent().isEmpty()) {
 									this.addYiMunicipalityPostalcode(location.getMunicipalityPostalcode().getContent());
-								} else {
-									this.addYiMunicipalityPostalcode("");
-								}
+								} 
 								if (location.getMunicipalityPostalcode().getLang() != null
 										&& !location.getMunicipalityPostalcode().getLang().isEmpty()) {
 									this.addYiMunicipalityPostalcodeLang(location.getMunicipalityPostalcode().getLang());
@@ -6563,15 +6561,15 @@ public class EAG2012Loader{
 								} else {
 									this.addYiMunicipalityPostalcodeLang(Eag2012.OPTION_NONE);
 								}
+							}else{
+								this.addYiMunicipalityPostalcode("");
 							}
 							// Country.
 							if (location.getCountry() != null) {
 								if (location.getCountry().getContent() != null
 										&& !location.getCountry().getContent().isEmpty()) {
 									this.addYiCountry(location.getCountry().getContent());
-								} else {
-									this.addYiCountry("");
-								}
+								} 
 								if (location.getCountry().getLang() != null
 										&& !location.getCountry().getLang().isEmpty()) {
 									this.addYiCountryLang(location.getCountry().getLang());
@@ -6582,6 +6580,8 @@ public class EAG2012Loader{
 								} else {
 									this.addYiCountryLang(Eag2012.OPTION_NONE);
 								}
+							}else{
+								this.addYiCountry("");
 							}
 							// Latitude.
 							if (location.getLatitude() != null) {
@@ -6603,24 +6603,26 @@ public class EAG2012Loader{
 								if (location.getStreet().getContent() != null
 										&& !location.getStreet().getContent().isEmpty()) {
 									this.addYiStreetPostal(location.getStreet().getContent());
-								} else {
+								}/* else {
 									this.addYiStreetPostal("");
-								}
+								}*/
 								if (location.getStreet().getLang() != null
 										&& !location.getStreet().getLang().isEmpty()) {
 									this.addYiStreetPostalLang(location.getStreet().getLang());
 								} else {
 									this.addYiStreetPostalLang(Eag2012.OPTION_NONE);
 								}
+							}else{
+								this.addYiStreetPostal("");
 							}
 							// Postal city.
 							if (location.getMunicipalityPostalcode() != null) {
 								if (location.getMunicipalityPostalcode().getContent() != null
 										&& !location.getMunicipalityPostalcode().getContent().isEmpty()) {
 									this.addYiMunicipalityPostalcodePostal(location.getMunicipalityPostalcode().getContent());
-								} else {
+								}/* else {
 									this.addYiMunicipalityPostalcodePostal("");
-								}
+								}*/
 								if (location.getMunicipalityPostalcode().getLang() != null
 										&& !location.getMunicipalityPostalcode().getLang().isEmpty()) {
 									this.addYiMunicipalityPostalcodePostalLang(location.getMunicipalityPostalcode().getLang());
@@ -6631,6 +6633,8 @@ public class EAG2012Loader{
 								} else {
 									this.addYiMunicipalityPostalcodePostalLang(Eag2012.OPTION_NONE);
 								}
+							}else{
+								this.addYiMunicipalityPostalcodePostal("");
 							}
 						}
 					}
