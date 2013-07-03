@@ -21,13 +21,13 @@ import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Lang;
 
 public class EagXslt {
-	private static XsltExecutable getXsltExecutable(String xslUrl, ResourceBundleSource resourceBundleSource, String currentAIRepositorCode, String requiredAIRepositorCode) throws SaxonApiException{
+	private static XsltExecutable getXsltExecutable(String xslUrl, ResourceBundleSource resourceBundleSource, String requiredAIRepositorCode) throws SaxonApiException{
         ClassLoader classLoader = (ClassLoader) Thread.currentThread().getContextClassLoader();
         Source xsltSource = new StreamSource(classLoader.getResourceAsStream(xslUrl));	
         Processor processor = new Processor(false);
         ResourcebundleExtension resourcebundleExtension = new ResourcebundleExtension(resourceBundleSource);
         processor.registerExtensionFunction(resourcebundleExtension);
-        RetrieveRelatedAIIdExtension relatedAIIdExtension = new RetrieveRelatedAIIdExtension(currentAIRepositorCode, requiredAIRepositorCode);
+        RetrieveRelatedAIIdExtension relatedAIIdExtension = new RetrieveRelatedAIIdExtension(requiredAIRepositorCode);
         processor.registerExtensionFunction(relatedAIIdExtension);
         XsltCompiler compiler = processor.newXsltCompiler();
         
@@ -45,7 +45,7 @@ public class EagXslt {
     }
     public static void displayAiDetails(Writer writer, File xmlFile, ResourceBundleSource resourceBundleSource, String language, String currentAIRepositorCode, String requiredAIRepositorCode) throws SaxonApiException{
 		Source xmlSource = new StreamSource(xmlFile);
-    	XsltExecutable executable = getXsltExecutable("xsl/eag/aidetails.xsl", resourceBundleSource, currentAIRepositorCode, requiredAIRepositorCode);
+    	XsltExecutable executable = getXsltExecutable("xsl/eag/aidetails.xsl", resourceBundleSource, requiredAIRepositorCode);
         XsltTransformer transformer = executable.load();
         transformer.setParameter(new QName("language.selected"), new XdmAtomicValue(language));
         transformer.setSource(xmlSource);
@@ -57,7 +57,7 @@ public class EagXslt {
 
 	public static void convertAi(Writer writer, File eagPathFile, ResourceBundleSource resourceBundleSource) throws SaxonApiException {
 		Source xmlSource = new StreamSource(eagPathFile);
-    	XsltExecutable executable = getXsltExecutable("xsl/eag/eag2eag2012.xsl", resourceBundleSource, null, null);
+    	XsltExecutable executable = getXsltExecutable("xsl/eag/eag2eag2012.xsl", resourceBundleSource, null);
         XsltTransformer transformer = executable.load();
         transformer.setSource(xmlSource);
         Serializer serializer = new Serializer();

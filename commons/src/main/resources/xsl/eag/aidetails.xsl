@@ -1120,10 +1120,10 @@
 														</a>
 													</xsl:if>
 													<xsl:if test="not(starts-with($link, 'http')) or not(starts-with($link, 'https')) or not(starts-with($link, 'ftp'))">
-														// TODO: Change this when recovered the correct link.
-														<a href="{$link}">
+														<!-- TODO: Currently, this link is the identifier of the institution. -->
+														<xsl:variable name="internalLink" select="ape:related(current()/parent::node()/@href)"></xsl:variable>
+														<a href="{$internalLink}">
 															<xsl:value-of select="text()"/>
-															<xsl:value-of select="ape:retrieveRelatedAIIdCall(eag:eag/eag:control/eag:recordId, $link)"/>
 														</a>
 													</xsl:if>
 													<xsl:if test="current()/parent::node()/eag:descriptiveNote/eag:p/text()">

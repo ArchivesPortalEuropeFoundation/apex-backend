@@ -1,5 +1,7 @@
 package eu.apenet.commons.xslt.extensions;
 
+import java.util.List;
+
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
@@ -28,12 +30,12 @@ public class RetrieveRelatedAIIdExtension extends ExtensionFunctionDefinition {
 	 * Name of the function to call.
 	 */
 	private static final StructuredQName funcname = new StructuredQName("ape", "http://www.archivesportaleurope.eu/xslt/extensions",
-			"retrieveRelatedAIId");
+			"related");
 //	private static final Logger LOG = Logger.getLogger(RetrieveRelatedAIId.class);
 	private RetrieveRelatedAIIdCall retrieveRelatedAIIdCall;
 
-	public RetrieveRelatedAIIdExtension(final String currentAIRepositorCode, final String requiredAIRepositorCode) {
-		this.retrieveRelatedAIIdCall = new RetrieveRelatedAIIdCall(currentAIRepositorCode, requiredAIRepositorCode);
+	public RetrieveRelatedAIIdExtension(final String requiredAIRepositorCode) {
+		this.retrieveRelatedAIIdCall = new RetrieveRelatedAIIdCall(requiredAIRepositorCode);
 	}
 
 	@Override
@@ -58,11 +60,11 @@ public class RetrieveRelatedAIIdExtension extends ExtensionFunctionDefinition {
 
 	@Override
 	public int getMinimumNumberOfArguments() {
-		return 2;
+		return 1;
 	}
 
 	public int getMaximumNumberOfArguments() {
-		return 2;
+		return 1;
 	}
 
 	class RetrieveRelatedAIIdCall extends ExtensionFunctionCall {
@@ -71,31 +73,35 @@ public class RetrieveRelatedAIIdExtension extends ExtensionFunctionDefinition {
 		 */
 		private static final long serialVersionUID = 6099497471179098886L;
 
-		private String currentAIRepositorCode;
 		private String requiredAIRepositorCode;
 
 		/**
 		 * Constructor.
 		 */
-		public RetrieveRelatedAIIdCall (final String currentAIRepositorCode, final String requiredAIRepositorCode) {
-			this.currentAIRepositorCode = currentAIRepositorCode;
+		public RetrieveRelatedAIIdCall (final String requiredAIRepositorCode) {
 			this.requiredAIRepositorCode = requiredAIRepositorCode;
 		}
 
 		@Override
 		public SequenceIterator call(SequenceIterator[] arguments, XPathContext arg1)
 				throws XPathException {
-			if (arguments.length == 2) {
-//				String firstArgValue = arguments[0].next().getStringValue();
-				String secondArgValue = arguments[1].next().getStringValue();
+			if (arguments.length == 1) {
+				String firstArgValue = arguments[0].next().getStringValue();
 				String value = "";
 
-				if (secondArgValue != null && !secondArgValue.isEmpty()) {
-					ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
-					ArchivalInstitution archivalInstitution = archivalInstitutionDAO.getArchivalInstitutionByAiName(secondArgValue);
-					value = String.valueOf(archivalInstitution.getAiId());
+				ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
+				List<ArchivalInstitution> archivalInstitutionList = null;
+
+				if (firstArgValue != null && !firstArgValue.isEmpty()) {
+					archivalInstitutionList = archivalInstitutionDAO.getArchivalInstitutionsByRepositorycode(firstArgValue);
 				} else if(this.requiredAIRepositorCode != null && !this.requiredAIRepositorCode.isEmpty()) {
-					
+					archivalInstitutionList = archivalInstitutionDAO.getArchivalInstitutionsByRepositorycode(firstArgValue);
+				}
+
+				if (archivalInstitutionList != null
+						&& !archivalInstitutionList.isEmpty()
+						&& archivalInstitutionList.size() > 0) {
+					value = String.valueOf(archivalInstitutionList.get(0).getAiId());
 				}
 
 				return SingletonIterator.makeIterator(new StringValue(value));
