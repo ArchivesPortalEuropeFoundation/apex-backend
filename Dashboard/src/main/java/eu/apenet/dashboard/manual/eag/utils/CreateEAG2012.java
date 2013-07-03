@@ -2018,24 +2018,24 @@ public class CreateEAG2012 {
 				// Repository.
 				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
 
-				if (Eag2012.OPTION_NONE.equalsIgnoreCase(value)) {
-					break;
-				} else if (Eag2012.OPTION_DEPENDING.equalsIgnoreCase(value)) {
-					value = Eag2012.OPTION_DEPENDING_TEXT;
-				} else if (Eag2012.OPTION_WITHOUT.equalsIgnoreCase(value)) {
-					value = Eag2012.OPTION_WITHOUT_TEXT;
-				}
+				if (!Eag2012.OPTION_NONE.equalsIgnoreCase(value)) {
+					if (Eag2012.OPTION_DEPENDING.equalsIgnoreCase(value)) {
+						value = Eag2012.OPTION_DEPENDING_TEXT;
+					} else if (Eag2012.OPTION_WITHOUT.equalsIgnoreCase(value)) {
+						value = Eag2012.OPTION_WITHOUT_TEXT;
+					}
 
-				if (repository.getServices() == null) {
-					repository.setServices(new Services());
-				}
-				if (repository.getServices().getSearchroom() == null) {
-					repository.getServices().setSearchroom(new Searchroom());
-				}
-				PhotographAllowance photographAllowance = new PhotographAllowance();
-				photographAllowance.setValue(value);
+					if (repository.getServices() == null) {
+						repository.setServices(new Services());
+					}
+					if (repository.getServices().getSearchroom() == null) {
+						repository.getServices().setSearchroom(new Searchroom());
+					}
+					PhotographAllowance photographAllowance = new PhotographAllowance();
+					photographAllowance.setValue(value);
 
-				repository.getServices().getSearchroom().setPhotographAllowance(photographAllowance);
+					repository.getServices().getSearchroom().setPhotographAllowance(photographAllowance);
+				}
 			}
 		}
 
@@ -2825,7 +2825,14 @@ public class CreateEAG2012 {
 		}
 		if (pattern1){
 			return formatDate;
-		} else if (pattern2 || pattern3 || pattern4) {
+		} else if (pattern2) {
+			String monthStandardDate = formatDate.substring(5,7);
+
+			if (Integer.parseInt(monthStandardDate) <= 12) {
+				formatDate = formatDate.replaceAll("[\\./:\\s]", "-");
+				return formatDate;
+			}
+		} else if (pattern3 || pattern4) {
 			formatDate = formatDate.replaceAll("[\\./:\\s]", "-");
 			return formatDate;
 		}

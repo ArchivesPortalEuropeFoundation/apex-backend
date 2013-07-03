@@ -110,7 +110,7 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 	"'control':" + jsonDataControl + "," +
 	"'relations':" + jsonDataRelations + "}";
 
-	$('#webformeag2012').append('<textarea name="form" type="hidden">'+jsonData+'</textarea>');
+	$('#webformeag2012').append('<textarea name="form" style="display: none;">'+jsonData+'</textarea>');
 	$('#webformeag2012').submit();
 }
 
