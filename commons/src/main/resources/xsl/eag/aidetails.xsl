@@ -1120,9 +1120,8 @@
 														</a>
 													</xsl:if>
 													<xsl:if test="not(starts-with($link, 'http')) or not(starts-with($link, 'https')) or not(starts-with($link, 'ftp'))">
-														<!-- TODO: Currently, this link is the identifier of the institution. -->
-														<xsl:variable name="internalLink" select="ape:related(current()/parent::node()/@href)"></xsl:variable>
-														<a href="{$internalLink}">
+														<a href="#">
+															<xsl:attribute name="onclick"><script>recoverRelatedInstitution('<xsl:value-of select="ape:related(current()/parent::node()/@href)"></xsl:value-of>');</script></xsl:attribute>
 															<xsl:value-of select="text()"/>
 														</a>
 													</xsl:if>
