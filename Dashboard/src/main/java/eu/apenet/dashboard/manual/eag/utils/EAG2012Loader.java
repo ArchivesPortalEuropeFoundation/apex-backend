@@ -6603,26 +6603,26 @@ public class EAG2012Loader{
 								if (location.getStreet().getContent() != null
 										&& !location.getStreet().getContent().isEmpty()) {
 									this.addYiStreetPostal(location.getStreet().getContent());
-								}/* else {
+								} else {
 									this.addYiStreetPostal("");
-								}*/
+								}
 								if (location.getStreet().getLang() != null
 										&& !location.getStreet().getLang().isEmpty()) {
 									this.addYiStreetPostalLang(location.getStreet().getLang());
 								} else {
 									this.addYiStreetPostalLang(Eag2012.OPTION_NONE);
 								}
-							}else{
+							}/*else{
 								this.addYiStreetPostal("");
-							}
+							}*/
 							// Postal city.
 							if (location.getMunicipalityPostalcode() != null) {
 								if (location.getMunicipalityPostalcode().getContent() != null
 										&& !location.getMunicipalityPostalcode().getContent().isEmpty()) {
 									this.addYiMunicipalityPostalcodePostal(location.getMunicipalityPostalcode().getContent());
-								}/* else {
+								} else {
 									this.addYiMunicipalityPostalcodePostal("");
-								}*/
+								}
 								if (location.getMunicipalityPostalcode().getLang() != null
 										&& !location.getMunicipalityPostalcode().getLang().isEmpty()) {
 									this.addYiMunicipalityPostalcodePostalLang(location.getMunicipalityPostalcode().getLang());
@@ -6633,9 +6633,9 @@ public class EAG2012Loader{
 								} else {
 									this.addYiMunicipalityPostalcodePostalLang(Eag2012.OPTION_NONE);
 								}
-							}else{
+							}/*else{
 								this.addYiMunicipalityPostalcodePostal("");
-							}
+							}*/
 						}
 					}
 

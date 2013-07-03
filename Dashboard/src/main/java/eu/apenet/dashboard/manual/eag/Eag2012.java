@@ -250,6 +250,7 @@ public class Eag2012 {
 
 	public static final String SPECIAL_RETURN_STRING_N = "_-_SPECIAL-RETURN-N-CHARACTER_-_";
 	public static final String SPECIAL_RETURN_STRING_R = "_-_SPECIAL-RETURN-R-CHARACTER_-_";
+	public static final String SPECIAL_RETURN_APOSTROPHE = "%027";
 
 	// Variables.
 	private String repositoryId;

@@ -976,6 +976,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			while(field.contains(Eag2012.SPECIAL_RETURN_STRING_R)){
 				field = field.replace(Eag2012.SPECIAL_RETURN_STRING_R,"\r");
 			}
+			while(field.contains(Eag2012.SPECIAL_RETURN_APOSTROPHE)){
+				field = field.replace(Eag2012.SPECIAL_RETURN_APOSTROPHE,"\'");
+			}
 		}
 		return field;
 	}
@@ -991,6 +994,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			if(this.form.contains("\r")){
 				this.form = this.form.replace("\r",Eag2012.SPECIAL_RETURN_STRING_R);
 			}
+			if(this.form.contains("%27")){
+				this.form = this.form.replace("%27",Eag2012.SPECIAL_RETURN_APOSTROPHE);
+		}
 //			JSONUtil util = new JSONUtil();
 			JSONObject jsonObj = new JSONObject(this.form.trim());
 			this.form = null;
