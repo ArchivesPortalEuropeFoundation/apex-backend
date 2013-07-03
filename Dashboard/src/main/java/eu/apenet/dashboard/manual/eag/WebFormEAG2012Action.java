@@ -996,7 +996,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			}
 			if(this.form.contains("%27")){
 				this.form = this.form.replace("%27",Eag2012.SPECIAL_RETURN_APOSTROPHE);
-		}
+			}
 //			JSONUtil util = new JSONUtil();
 			JSONObject jsonObj = new JSONObject(this.form.trim());
 			this.form = null;
@@ -2159,7 +2159,109 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						   }
 						   eag2012.setToDateStandardDate(dateValue);
 						}	  
-				  }  
+				  }
+				  if (!descriptionTable.has("textYearWhenThisNameWasUsedFrom_"+j) || !descriptionTable.has("textYearWhenThisNameWasUsedTo_"+j)) {
+					  // From date.
+					  List<Map<String, Map<String, Map<String, List<List<String>>>>>> dateValue = eag2012.getFromDateStandardDate();
+					  if(dateValue==null){
+						dateValue = new ArrayList<Map<String,Map<String,Map<String,List<List<String>>>>>>();
+					   }
+					   Map<String, Map<String, Map<String, List<List<String>>>>> dateMapMapMap = null;
+					   if(dateValue.size()>i && dateValue.get(i)!=null){
+						 dateMapMapMap = dateValue.get(i);
+					   }else{
+						  dateMapMapMap = new HashMap<String, Map<String, Map<String, List<List<String>>>>>(); 
+					   }
+					   Map<String, Map<String, List<List<String>>>> dateMapMap = null;
+					   if(dateMapMapMap.size()>0 && dateMapMapMap.get(Eag2012.TAB_DESCRIPTION)!=null){
+						 dateMapMap= dateMapMapMap.get(Eag2012.TAB_DESCRIPTION);
+					   }else{
+						 dateMapMap = new HashMap<String, Map<String, List<List<String>>>>();
+					   }
+					   Map<String, List<List<String>>> datesMap = null;
+					   if(dateMapMap.size()>0 && dateMapMap.get(Eag2012.HOLDINGS)!=null){
+						 datesMap = dateMapMap.get(Eag2012.HOLDINGS);
+					   }else{
+						 datesMap = new HashMap<String, List<List<String>>>();
+					   }
+					   List<List<String>> listDates = null;
+					   if(datesMap.size()>0 && datesMap.get(Eag2012.HOLDING_SUBSECTION)!=null){
+						   listDates = datesMap.get(Eag2012.HOLDING_SUBSECTION);
+					   }else{
+						   listDates = new ArrayList<List<String>>();
+					   }
+					   List<String> dates = null;
+					   if(listDates.size()>0){
+						   dates = listDates.get(0);
+					   }else{
+						   dates = new ArrayList<String>();
+					   }
+					   dates.add("");
+					   if(listDates.size()>0){
+						   listDates.set(0, dates);  
+					   }else{
+						   listDates.add(dates);
+					   }
+					   datesMap.put(Eag2012.HOLDING_SUBSECTION, listDates);
+					   dateMapMap.put(Eag2012.HOLDINGS,datesMap);
+					   dateMapMapMap.put(Eag2012.TAB_DESCRIPTION,dateMapMap);
+					   if( dateValue.size()>i){
+						 dateValue.set(i,dateMapMapMap);
+					   }else{
+						 dateValue.add(dateMapMapMap);
+					   }
+					   eag2012.setFromDateStandardDate(dateValue);
+				   	   // To date.
+					  dateValue = eag2012.getToDateStandardDate();
+					  if(dateValue==null){
+						dateValue = new ArrayList<Map<String, Map<String, Map<String, List<List<String>>>>>>();
+					   }
+					   dateMapMapMap = null;
+					   if(dateValue.size()>i && dateValue.get(i)!=null){
+						 dateMapMapMap = dateValue.get(i);
+					   }else{
+						  dateMapMapMap = new HashMap<String, Map<String, Map<String, List<List<String>>>>>(); 
+					   }
+					   dateMapMap = null;
+					   if(dateMapMapMap.size()>0 && dateMapMapMap.get(Eag2012.TAB_DESCRIPTION)!=null){
+						 dateMapMap= dateMapMapMap.get(Eag2012.TAB_DESCRIPTION);
+					   }else{
+						 dateMapMap = new HashMap<String, Map<String, List<List<String>>>>();
+					   }
+					   datesMap = null;
+					   if(dateMapMap.size()>0 && dateMapMap.get(Eag2012.HOLDINGS)!=null){
+						 datesMap = dateMapMap.get(Eag2012.HOLDINGS);
+					   }else{
+						 datesMap = new HashMap<String, List<List<String>>>();
+					   }
+					   listDates = null;
+					   if(datesMap.size()>0 && datesMap.get(Eag2012.HOLDING_SUBSECTION)!=null){
+						 listDates = datesMap.get(Eag2012.HOLDING_SUBSECTION);
+					   }else{
+						 listDates = new ArrayList<List<String>>();
+					   }
+					   dates = null;
+					   if(listDates.size()>0){
+						   dates = listDates.get(0);
+					   }else{
+						   dates = new ArrayList<String>();
+					   }
+					   dates.add("");
+					   if(listDates.size()>0){
+						   listDates.set(0, dates);  
+					   }else{
+						   listDates.add(dates);
+					   }
+					   datesMap.put(Eag2012.HOLDING_SUBSECTION, listDates);
+					   dateMapMap.put(Eag2012.HOLDINGS,datesMap);
+					   dateMapMapMap.put(Eag2012.TAB_DESCRIPTION,dateMapMap);
+					   if( dateValue.size()>i){
+						 dateValue.set(i,dateMapMapMap);
+					   }else{
+						 dateValue.add(dateMapMapMap);
+					   }
+					   eag2012.setToDateStandardDate(dateValue);
+				  }
 				  //extent
 				  if(descriptionTable.has("textExtent")){
 					  List<Map<String,Map<String,Map<String,List<String>>>>> numValue = eag2012.getNumValue();
@@ -2443,7 +2545,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 restaccess=new HashMap<String,List<String>>();
 						 }
 						 List<String> listRestaccess = null;
-						 if((restaccess.size()>i) && (restaccess.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null)){
+						 if((restaccess.size()>0) && (restaccess.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null)){
 							 listRestaccess=restaccess.get(Eag2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 listRestaccess=new ArrayList<String>();
@@ -2469,7 +2571,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							 restaccessLang=new HashMap<String,List<String>>();
 						 }
 						 List<String> listRestaccess = null;
-						 if((restaccessLang.size()>i) && (restaccessLang.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null)){
+						 if((restaccessLang.size()>0) && (restaccessLang.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null)){
 							 listRestaccess=restaccessLang.get(Eag2012.TAB_ACCESS_AND_SERVICES);
 						 }else{
 							 listRestaccess=new ArrayList<String>();
@@ -2584,7 +2686,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 accesibility=new HashMap<String,List<String>>();
 							 }
 							 List<String> listAccessibility = null;
-							 if((accesibility.size()>i) && (accesibility.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null)){
+							 if((accesibility.size()>0) && (accesibility.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null)){
 								 listAccessibility=accesibility.get(Eag2012.TAB_ACCESS_AND_SERVICES);
 							 }else{
 								 listAccessibility=new ArrayList<String>();
@@ -2610,7 +2712,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								 accessibilityLang=new HashMap<String,List<String>>();
 							 }
 							 List<String> listAccessibility = null;
-							 if(( accessibilityLang.size()>i) && ( accessibilityLang.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null)){
+							 if(( accessibilityLang.size()>0) && ( accessibilityLang.get(Eag2012.TAB_ACCESS_AND_SERVICES)!=null)){
 								 listAccessibility= accessibilityLang.get(Eag2012.TAB_ACCESS_AND_SERVICES);
 							 }else{
 								 listAccessibility=new ArrayList<String>();
@@ -4950,9 +5052,78 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				        }
 						eag2012.setMunicipalityPostalcodeValue(tempListList2);
 						//end listCities
+					} else {
+						// Add values for empty "Postal Address" in the repository.
+						listStreet.add("");
+						listStreetLanguage.add("");
+						listCities.add("");
+
+						//begin listStreet
+						List<Map<String, List<String>>> tempListList2 = null;
+						if(eag2012.getPostalStreetValue()==null){
+							tempListList2 = new ArrayList<Map<String, List<String>>>();
+						}else{
+							tempListList2 = eag2012.getPostalStreetValue();
+						}
+						Map<String, List<String>> tempListMap2 = null;
+						if(tempListList2.size()>x){
+				        	tempListMap2 = tempListList2.get(x);
+				        }else{
+				        	tempListMap2 = new HashMap<String, List<String>>();
+				        }
+				        tempListMap2.put(Eag2012.TAB_CONTACT,listStreet);
+				        if(tempListList2.size()>x){
+				        	tempListList2.set(x,tempListMap2);
+				        }else{
+				        	tempListList2.add(tempListMap2);
+				        }
+						eag2012.setPostalStreetValue(tempListList2);
+						//end listStreet
+						//begin listStreetLanguage
+						tempListList2 = null;
+						if(eag2012.getPostalStreetLang()==null){
+							tempListList2 = new ArrayList<Map<String, List<String>>>();
+						}else{
+							tempListList2 = eag2012.getPostalStreetLang();
+						}
+						tempListMap2 = null;
+						if(tempListList2.size()>x){
+				        	tempListMap2 = tempListList2.get(x);
+				        }else{
+				        	tempListMap2 = new HashMap<String, List<String>>();
+				        }
+				        tempListMap2.put(Eag2012.TAB_CONTACT,listStreetLanguage);
+				        if(tempListList2.size()>x){
+				        	tempListList2.set(x,tempListMap2);
+				        }else{
+				        	tempListList2.add(tempListMap2);
+				        }
+						eag2012.setPostalStreetLang(tempListList2);
+						//end listStreetLanguage
+						//begin listCities
+						tempListList2 = null;
+						if(eag2012.getMunicipalityPostalcodeValue()==null){
+							tempListList2 = new ArrayList<Map<String, List<String>>>();
+						}else{
+							tempListList2 = eag2012.getMunicipalityPostalcodeValue();
+						}
+						tempListMap2 = null;
+						if(tempListList2.size()>x){
+				        	tempListMap2 = tempListList2.get(x);
+				        }else{
+				        	tempListMap2 = new HashMap<String, List<String>>();
+				        }
+				        tempListMap2.put(Eag2012.TAB_CONTACT,listCities);
+				        if(tempListList2.size()>x){
+				        	tempListList2.set(x,tempListMap2);
+				        }else{
+				        	tempListList2.add(tempListMap2);
+				        }
+						eag2012.setMunicipalityPostalcodeValue(tempListList2);
+						//end listCities
 					}
-					
 				}
+
 				int i=1;
 				if (x > 0) {
 					i = 0;

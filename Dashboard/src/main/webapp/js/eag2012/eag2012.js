@@ -110,7 +110,6 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 	"'control':" + jsonDataControl + "," +
 	"'relations':" + jsonDataRelations + "}";
 
-//	$('#webformeag2012').append('<input id="form" name="form" type="hidden" value="'+jsonData+'" />');
 	$('#webformeag2012').append('<textarea name="form" type="hidden">'+jsonData+'</textarea>');
 	$('#webformeag2012').submit();
 }
@@ -207,7 +206,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
 			}
-			    jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
 			// Check fill mandatory fields.
 			if ($(this).attr("value") != '' && j == 0) {
 				var position = yiMEVisitorsAddress.indexOf($(this).attr("id"));
@@ -832,7 +831,7 @@ function checkAccessAndServicesTab(currentTab, text1, messageLink) {
 			|| $(this).attr("id") == "textASReSeOSWebpage"
 			|| $(this).attr("id") == "textASReSeWebpageOSLinkTitle"
 			|| $(this).attr("id") == "textASReSeRefreshment") {
-			    jsonData += "'"+$(this).attr("id")+"_1' : '"+$.trim(escapeApostrophe($(this)))+"'";
+			jsonData += "'"+$(this).attr("id")+"_1' : '"+$.trim(escapeApostrophe($(this)))+"'";
 		} else {
 			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
 		}
@@ -1486,7 +1485,7 @@ function yiAddReferencetoyourinstitutionsholdingsguide(text1){
 	clone.find("[id^='textReferencetoyourinstitutionsholdingsguide']").removeAttr("onchange");
 	clone.find("[id^='textYIHoldingsGuideLinkTitle']").attr("value","");
 	clone.find("[id^='textYIHoldingsGuideLinkTitle']").removeAttr("onchange");
-	clone.find("[id^='selectYIReferencetoHoldingsguide']").attr("value","none");
+	clone2.find("[id^='selectYIReferencetoHoldingsguide']").attr("value","none");
 	if(wrongField){
 		alert(text1);
 	}else{
@@ -1745,7 +1744,7 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7, proper
 				"<label for=\"textNameOfRepository\">"+text3+"<span class=\"required\">*</span>:</label>"+
 			"</td>"+
 			"<td>"+
-				"<input type=\"text\" id=\"textNameOfRepository\" onchange=\"contactChangeTabName(" + text2 + ");\" />"+
+				"<input type=\"text\" id=\"textNameOfRepository\" onchange=\"contactChangeTabName('" + text2 + "');\" />"+
 			"<td>"+
 				"<label for=\"selectRoleOfRepository\">"+text4+"<span class=\"required\">*</span>:</label>"+
 			"</td>"+
@@ -2806,7 +2805,7 @@ function aSSRAddDescriptionOfYourComputerPlaces(property1, property2, text1){
 	var select = '<select id="selectDescriptionOfYourComputerPlaces_1">'+$("#selectLanguageOpeningTimes_1").html()+'</select>';
 
 	if (count == 0) {
-		$("table#accessAndServicesTable_"+(count+1)+" tr#trASSRAddDescriptionOfYourComputerPlaces").before("<tr id=\"trASSRDescriptionOfYourComputerPlaces_1\">"+
+		$("table#accessAndServicesTable"+currentTab+" tr#trASSRAddDescriptionOfYourComputerPlaces").before("<tr id=\"trASSRDescriptionOfYourComputerPlaces_1\">"+
 			"<td id=\"tdDescriptionOfYourComputerPlaces_1\">"+
 				"<label for=\"textDescriptionOfYourComputerPlaces_1\">"+property1+":</label>"+
 			"</td>"+
