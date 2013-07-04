@@ -4,7 +4,7 @@ package eu.archivesportaleurope.commons.config;
 public class ApePortalAndDashboardConfig extends ApeConfig{
     private String solrSearchUrl;
     private String archivalLandscapeDirPath;
-    private boolean newSolrConfiguration = false;
+    private boolean archdescSearchable = true;
     public String getSolrSearchUrl(){
         return solrSearchUrl;
     }
@@ -23,13 +23,14 @@ public class ApePortalAndDashboardConfig extends ApeConfig{
 		this.archivalLandscapeDirPath = archivalLandscapeDirPath;
 	}
 
-	public boolean isNewSolrConfiguration() {
-		return newSolrConfiguration;
+	public boolean isArchdescSearchable() {
+		return archdescSearchable;
 	}
 
-	public void setNewSolrConfiguration(boolean newSolrConfiguration) {
-		checkConfigured();
-		this.newSolrConfiguration = newSolrConfiguration;
+	public void setArchdescSearchable(boolean archdescSearchable) {
+		this.archdescSearchable = archdescSearchable;
 	}
+
+
 	
 }
