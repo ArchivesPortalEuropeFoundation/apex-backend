@@ -996,3 +996,7 @@ h2 {
 #displayEAG {
 	overflow: auto;
 }
+#maintenanceMode {
+	color:red;
+	padding-top: 20px;
+}
