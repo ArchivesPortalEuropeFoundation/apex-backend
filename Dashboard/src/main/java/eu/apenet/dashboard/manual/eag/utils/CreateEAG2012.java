@@ -1003,35 +1003,78 @@ public class CreateEAG2012 {
 								boolean found = false;
 								for (int x = 0; !found && x < repository.getLocation().size(); x++) {
 									Location target = repository.getLocation().get(x);
-									if ((target.getStreet() != null
+
+									// Current lang.
+									String currentLang = Eag2012.OPTION_NONE;
+									if (target.getStreet() != null
+											&& target.getStreet().getLang() != null
+											&& !target.getStreet().getLang().isEmpty()) {
+										currentLang = target.getStreet().getLang();
+									} else if (target.getMunicipalityPostalcode() != null
+											&& target.getMunicipalityPostalcode().getLang() != null
+											&& !target.getMunicipalityPostalcode().getLang().isEmpty()) {
+										currentLang = target.getMunicipalityPostalcode().getLang();
+									} else if (target.getCountry() != null
+											&& target.getCountry().getLang() != null
+											&& !target.getCountry().getLang().isEmpty()) {
+										currentLang = target.getCountry().getLang();
+									} else if (target.getFirstdem() != null
+											&& target.getFirstdem().getLang() != null
+											&& !target.getFirstdem().getLang().isEmpty()) {
+										currentLang = target.getFirstdem().getLang();
+									} else if (target.getSecondem() != null
+											&& target.getSecondem().getLang() != null
+											&& !target.getSecondem().getLang().isEmpty()) {
+										currentLang = target.getSecondem().getLang();
+									} else if (target.getLocalentity() != null
+											&& target.getLocalentity().getLang() != null
+											&& !target.getLocalentity().getLang().isEmpty()) {
+										currentLang = target.getLocalentity().getLang();
+									}
+
+									if (((target.getStreet() != null
 												&& target.getStreet().getContent() != null
 												&& target.getStreet().getContent().equalsIgnoreCase(streetList.get(j)))
-											|| (target.getStreet() != null
-												&& target.getStreet().getLang() != null
-												&& target.getStreet().getLang().equalsIgnoreCase(streetLangList.get(j)))
+												|| (target.getStreet() == null
+													&& streetList.get(j).isEmpty()))
+											&& currentLang.equalsIgnoreCase(streetLangList.get(j))
 											&& Eag2012.VISITORS_ADDRESS.equalsIgnoreCase(target.getLocalType())
-											|| (target.getMunicipalityPostalcode()!= null
+											&& ((target.getMunicipalityPostalcode()!= null
 												&& target.getMunicipalityPostalcode().getContent() != null
 												&& target.getMunicipalityPostalcode().getContent().equalsIgnoreCase(citiesList.get(j)))
-											|| (target.getCountry() != null
+												|| (target.getMunicipalityPostalcode() == null
+													&& citiesList.get(j).isEmpty()))
+											&& ((target.getCountry() != null
 												&& target.getCountry().getContent() != null
 												&& target.getCountry().getContent().equalsIgnoreCase(countryList.get(j)))
-											|| (target.getLatitude() != null
+												|| (target.getCountry() == null
+													&& countryList.get(j).isEmpty()))
+											&& ((target.getLatitude() != null
 												&& target.getLatitude().equalsIgnoreCase(latitudeList.get(j)))
-											|| (target.getLongitude() != null
+												|| (target.getLatitude() == null
+													&& latitudeList.get(j).isEmpty()))
+											&& ((target.getLongitude() != null
 												&& target.getLongitude().equalsIgnoreCase(longitudeList.get(j)))
-											|| (firstdemList != null && firstdemList.size() > j
-												&& target.getFirstdem() != null
-												&& target.getFirstdem().getContent() != null
-												&& target.getFirstdem().getContent().equalsIgnoreCase(firstdemList.get(j)))
-											|| (secondemList != null && secondemList.size() > j
-												&& target.getSecondem() != null
+												|| (target.getLongitude() == null
+													&& longitudeList.get(j).isEmpty()))
+											&& (firstdemList != null && firstdemList.size() > j
+												&& (target.getFirstdem() != null
+													&& target.getFirstdem().getContent() != null
+													&& target.getFirstdem().getContent().equalsIgnoreCase(firstdemList.get(j)))
+												|| (target.getFirstdem() == null
+													&& firstdemList.get(j).isEmpty()))
+											&& (secondemList != null && secondemList.size() > j
+												&& (target.getSecondem() != null
 												&& target.getSecondem().getContent() != null
 												&& target.getSecondem().getContent().equalsIgnoreCase(secondemList.get(j)))
-											|| (localentityList != null && localentityList.size() > j
-												&& target.getLocalentity() != null
-												&& target.getLocalentity().getContent() != null
-												&& target.getLocalentity().getContent().equalsIgnoreCase(localentityList.get(j)))) {
+												|| (target.getSecondem() == null
+													&& secondemList.get(j).isEmpty()))
+											&& (localentityList != null && localentityList.size() > j
+												&& (target.getLocalentity() != null
+													&& target.getLocalentity().getContent() != null
+													&& target.getLocalentity().getContent().equalsIgnoreCase(localentityList.get(j)))
+												|| (target.getLocalentity() == null
+													&& localentityList.get(j).isEmpty()))) {
 										found = true;
 									}
 								}
@@ -1129,16 +1172,31 @@ public class CreateEAG2012 {
 								boolean found = false;
 								for (int x = 0; !found && x < repository.getLocation().size(); x++) {
 									Location target = repository.getLocation().get(x);
-									if ((target.getStreet() != null
-												&& target.getStreet().getContent() != null
-												&& target.getStreet().getContent().equalsIgnoreCase(postalStreetList.get(j)))
-											|| (target.getStreet() != null
-												&& target.getStreet().getLang() != null
-												&& target.getStreet().getLang().equalsIgnoreCase(postalStreetList.get(j)))
+
+									// Current lang.
+									String currentLang = Eag2012.OPTION_NONE;
+									if (target.getStreet() != null
+											&& target.getStreet().getLang() != null
+											&& !target.getStreet().getLang().isEmpty()) {
+										currentLang = target.getStreet().getLang();
+									} else if (target.getMunicipalityPostalcode() != null
+											&& target.getMunicipalityPostalcode().getLang() != null
+											&& !target.getMunicipalityPostalcode().getLang().isEmpty()) {
+										currentLang = target.getMunicipalityPostalcode().getLang();
+									}
+
+									if (((target.getStreet() != null
+											&& target.getStreet().getContent() != null
+											&& target.getStreet().getContent().equalsIgnoreCase(postalStreetList.get(j)))
+											|| (target.getStreet() == null
+												&& postalStreetList.get(j).isEmpty()))
+											&& currentLang.equalsIgnoreCase(postalStreetLangList.get(j))
 											&& Eag2012.POSTAL_ADDRESS.equalsIgnoreCase(target.getLocalType())
-											|| (target.getMunicipalityPostalcode()!= null
+											&& ((target.getMunicipalityPostalcode() != null
 												&& target.getMunicipalityPostalcode().getContent() != null
-												&& target.getMunicipalityPostalcode().getContent().equalsIgnoreCase(postalCitiesList.get(j)))) {
+												&& target.getMunicipalityPostalcode().getContent().equalsIgnoreCase(postalCitiesList.get(j)))
+												|| (target.getMunicipalityPostalcode() == null
+													&& postalCitiesList.get(j).isEmpty()))) {
 										found = true;
 									}
 								}
