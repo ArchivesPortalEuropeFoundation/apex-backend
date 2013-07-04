@@ -11,10 +11,10 @@ import eu.archivesportaleurope.commons.config.ApePortalAndDashboardConfig;
 
 public class ApePortalAndDashboardConfigListener extends APEnetConfigListener {
 	private static final String SOLR_DATA_DIR_PATH = "SOLR_DATA_DIR_PATH";
-	private static final String SOLR_CONTEXT_PATH = "/solr";
+	private static final String SOLR_CONTEXT_PATH = "/solr/eads";
 	
 	private static final String AL_DIR_PATH = "AL_DIR_PATH";
-	private static final String AL_DIR_PATH_DEFAULT = "/mnt/AL/";
+	private static final String AL_DIR_PATH_DEFAULT = "/ape/data/al/";
 	private static final String SOLR_SEARCH_URL = "SOLR_SEARCH_URL";
 	
 	@Override
@@ -40,7 +40,7 @@ public class ApePortalAndDashboardConfigListener extends APEnetConfigListener {
 		}
 		String archivalLandscapeDirPath = servletContext.getInitParameter(AL_DIR_PATH);
 		if (StringUtils.isBlank(archivalLandscapeDirPath)) {
-			log.warn("No " + AL_DIR_PATH + " specified. Using the default: " + AL_DIR_PATH_DEFAULT);
+			log.info("No " + AL_DIR_PATH + " specified. Using the default: " + AL_DIR_PATH_DEFAULT);
 			archivalLandscapeDirPath = AL_DIR_PATH_DEFAULT;
 		}
 		archivalLandscapeDirPath = checkPath(AL_DIR_PATH, archivalLandscapeDirPath);

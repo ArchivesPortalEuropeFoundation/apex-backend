@@ -31,7 +31,7 @@ public class APEnetConfigListener implements ServletContextListener {
 
 
 	private static final String REPOSITORY_DIR_PATH = "REPOSITORY_DIR_PATH";
-	private static final String REPOSITORY_DIR_PATH_DEFAULT = "/mnt/repo/";
+	private static final String REPOSITORY_DIR_PATH_DEFAULT = "/ape/data/repo/";
 	private static final String EMAIL_PREFIX = "EMAIL_PREFIX";
 	private static final String EMAIL_PREFIX_DEFAULT = "[APE] ";
 
@@ -57,7 +57,7 @@ public class APEnetConfigListener implements ServletContextListener {
 		String repositoryDirPath = servletContext.getInitParameter(REPOSITORY_DIR_PATH);
 		repositoryDirPath = checkPath(REPOSITORY_DIR_PATH, repositoryDirPath);
 		if (StringUtils.isBlank(repositoryDirPath)) {
-			log.warn("No " + REPOSITORY_DIR_PATH + " specified. Using the default: " + REPOSITORY_DIR_PATH_DEFAULT);
+			log.info("No " + REPOSITORY_DIR_PATH + " specified. Using the default: " + REPOSITORY_DIR_PATH_DEFAULT);
 			repositoryDirPath = REPOSITORY_DIR_PATH_DEFAULT;
 		}
 		config.setRepoDirPath(repositoryDirPath);
