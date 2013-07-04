@@ -17,7 +17,8 @@
 				<label  for="textYIPersonInstitutionResposibleForTheDescription"><s:property value="getText('label.ai.yourinstitution.personinstitutionresposibleforthedescription')"/>:</label>
 			</td>
 			<td colspan="2" class="labelLeft">
-				<input type="text" id="textYIPersonInstitutionResposibleForTheDescription" class="middleText" value="${loader.agent}" onchange="personResponsibleForDescriptionChanged();" />
+			<input type="text" id="textYIPersonInstitutionResposibleForTheDescription" class="middleText" value="${loader.agent}" onchange="personResponsibleForDescriptionChanged();" /> 
+			  <!-- <textarea  id="textYIPersonInstitutionResposibleForTheDescription" class="middleText" onchange="personResponsibleForDescriptionChanged();" >${loader.agent}</textarea> -->   
 			</td>
 		</tr>
 
@@ -37,7 +38,9 @@
 				<label for="textYIIdentifierOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.identifierOfTheInstitution')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYIIdentifierOfTheInstitution" value="${loader.otherRepositorId}" onKeyup="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>');firstIdAndNoISIL();"/>
+			 <input type="text" id="textYIIdentifierOfTheInstitution" value="${loader.otherRepositorId}" onKeyup="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>');firstIdAndNoISIL();"/>
+			<!--<textarea id="textYIIdentifierOfTheInstitution" onKeyup="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>');firstIdAndNoISIL();">${loader.otherRepositorId}</textarea> -->
+			
 			</td>
 			<td class="labelLeft">
 			  <label for="textYICodeISL"><s:property value="getText('label.ai.tabs.commons.codeISL')"/></label>
@@ -58,7 +61,9 @@
 						<label for="otherRepositorId_<s:property value="#status.index" />"> <s:property value="getText('label.ai.yourinstitution.futherId')" />:</label>
 					</td>
 					<td>
-						<input type="text" id="otherRepositorId_<s:property value="#status.index" />" value="<s:property value="#current" />" onclick="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>','<s:property value="#status.index" />');" onkeyup="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>','<s:property value="#status.index" />');" />
+					  <input type="text" id="otherRepositorId_<s:property value="#status.index" />" value="<s:property value="#current" />" onclick="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>','<s:property value="#status.index" />');" onkeyup="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>','<s:property value="#status.index" />');" />
+					<!--<textarea id="otherRepositorId_<s:property value="#status.index" />" onclick="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>','<s:property value="#status.index" />');" onkeyup="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>','<s:property value="#status.index" />');"><s:property value="#current" /></textarea> -->
+					
 					</td>
 					<td class="labelLeft">
 						<label for="selectOtherRepositorIdCodeISIL_<s:property value="#status.index" />"> <s:property value="getText('label.ai.tabs.commons.codeISL')" />:</label>
@@ -451,10 +456,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<select id="selectTextYILangEmail">
+							<select id="selectTextYILangEmail" onchange="emailOfInstitutionLangChanged($(this));">
 						</s:if>
 						<s:else>
-							<select id="selectTextYILangEmail_<s:property value="%{#status.index + 1}" />" >
+							<select id="selectTextYILangEmail_<s:property value="%{#status.index + 1}" />" onchange="emailOfInstitutionLangChanged($(this));">
 						</s:else>
 							<s:iterator value="languageList" var="language"> 
 								<option value="<s:property value="#language.key" />"
@@ -514,7 +519,7 @@
 					<label for="selectTextYILangEmail"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 				</td>
 				<td>
-					<select id="selectTextYILangEmail" >
+					<select id="selectTextYILangEmail" onchange="emailOfInstitutionLangChanged($(this));">
 						<s:iterator value="languageList" var="language"> 
 							<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
 						</s:iterator>
@@ -575,10 +580,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<select id="selectTextYILangWebpage">
+							<select id="selectTextYILangWebpage" onchange="webLangOfInstitutionChanged($(this));">
 						</s:if>
 						<s:else>
-							<select id="selectTextYILangWebpage_<s:property value="%{#status.index + 1}" />" >
+							<select id="selectTextYILangWebpage_<s:property value="%{#status.index + 1}" />" onchange="webLangOfInstitutionChanged($(this));">
 						</s:else>
 							<s:iterator value="languageList" var="language"> 
 								<option value="<s:property value="#language.key" />"
@@ -636,7 +641,7 @@
 					<label for="selectTextYILangWebpage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 				</td>
 				<td>
-					<select id="selectTextYILangWebpage" >
+					<select id="selectTextYILangWebpage" onchange="webLangOfInstitutionChanged($(this));">
 						<s:iterator value="languageList" var="language"> 
 							<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
 						</s:iterator>

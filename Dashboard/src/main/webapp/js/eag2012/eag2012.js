@@ -1647,6 +1647,7 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7, proper
 	$("table#contactTable_"+(counter+1)+" input#textContactLongitudeOfTheInstitution").removeAttr("onchange");
 	$("table#contactTable_"+(counter+1)+" input#textContactTelephoneOfTheInstitution_1").removeAttr("onchange");
 	$("table#contactTable_"+(counter+1)+" input#textContactEmailOfTheInstitution_1").removeAttr("onchange");
+	$("table#contactTable_"+(counter+1)+" select#selectEmailLanguageOfTheInstitution_1").removeAttr("onchange");
 	$("table#contactTable_"+(counter+1)+" input#textContactLinkTitleForEmailOfTheInstitution_1").removeAttr("onchange");
 	$("table#contactTable_"+(counter+1)+" input#textContactWebOfTheInstitution_1").removeAttr("onchange");
 	$("table#contactTable_"+(counter+1)+" input#textContactLinkTitleForWebOfTheInstitution_1").removeAttr("onchange");
@@ -2069,11 +2070,11 @@ function addFurtherEmailsOfTheInstitution(text1){
 
 	if (count == 1) {
 		email = $("table#contactTable"+currentTab+" tr#trEmailOfTheInstitution input#textContactEmailOfTheInstitution_"+count).attr("value");
-		title = $("table#contactTable"+currentTab+" tr#trEmailOfTheInstitution input#textContactLinkTitleForEmailOfTheInstitution_"+count).attr("value");
+		title = $("table#contactTable"+currentTab+" tr#trLanguageEmailOfTheInstitution input#textContactLinkTitleForEmailOfTheInstitution_"+count).attr("value");
 	} else {
 
 		email = $("table#contactTable"+currentTab+" tr#trEmailOfTheInstitution_"+count+" input#textContactEmailOfTheInstitution_"+count).attr("value");
-		title = $("table#contactTable"+currentTab+" tr#trEmailOfTheInstitution_"+count+" input#textContactLinkTitleForEmailOfTheInstitution_"+count).attr("value");
+		title = $("table#contactTable"+currentTab+" tr#trLanguageEmailOfTheInstitution_"+count+" input#textContactLinkTitleForEmailOfTheInstitution_"+count).attr("value");
 	}
 
 	if ((email == null || email == "")
@@ -2083,26 +2084,34 @@ function addFurtherEmailsOfTheInstitution(text1){
 	}
 
 	var target = "";
+	var target2 = "";
 	if(count==1){
 		target = "table#contactTable"+currentTab+" tr[id='trEmailOfTheInstitution']";
+		target2 = "table#contactTable"+currentTab+" tr[id='trLanguageEmailOfTheInstitution']";
 	}else{
 		target = "table#contactTable"+currentTab+" tr[id='trEmailOfTheInstitution_"+count+"']";
+		target2 = "table#contactTable"+currentTab+" tr[id='trLanguageEmailOfTheInstitution_"+count+"']";
 	}
 
-	clone = $(target).clone();
+	var clone = $(target).clone();
+	var clone2 = $(target2).clone();
 
 	// Rename, remove value, and remove elements.
 	clone.attr("id","trEmailOfTheInstitution_"+(count+1));
 	clone.find("[for^='textContactEmailOfTheInstitution']").attr("for","textContactEmailOfTheInstitution_"+(count+1));
 	clone.find("[id^='textContactEmailOfTheInstitution']").attr("id","textContactEmailOfTheInstitution_"+(count+1));
 	clone.find("[id^='textContactEmailOfTheInstitution']").attr("value","");
-	clone.find("[id^='textContactEmailOfTheInstitution']").removeAttr("onchange");
-	clone.find("[for^='textContactLinkTitleForEmailOfTheInstitution']").attr("for","textContactLinkTitleForEmailOfTheInstitution_"+(count+1));
-	clone.find("[id^='textContactLinkTitleForEmailOfTheInstitution']").attr("id","textContactLinkTitleForEmailOfTheInstitution_"+(count+1));
-	clone.find("[id^='textContactLinkTitleForEmailOfTheInstitution']").attr("value","");
-	clone.find("[id^='textContactLinkTitleForEmailOfTheInstitution']").removeAttr("onchange");
+	clone.find("[for^='selectEmailLanguageOfTheInstitution']").attr("for","selectEmailLanguageOfTheInstitution_"+(count+1));
+	clone.find("[id^='selectEmailLanguageOfTheInstitution']").attr("id","selectEmailLanguageOfTheInstitution_"+(count+1));
+	clone.find("[id^='selectEmailLanguageOfTheInstitution']").attr("value","none");
 
-	$(target).after(clone);
+	clone2.attr("id","trLanguageEmailOfTheInstitution_"+(count+1));
+	clone2.find("[for^='textContactLinkTitleForEmailOfTheInstitution']").attr("for","textContactLinkTitleForEmailOfTheInstitution_"+(count+1));
+	clone2.find("[id^='textContactLinkTitleForEmailOfTheInstitution']").attr("id","textContactLinkTitleForEmailOfTheInstitution_"+(count+1));
+	clone2.find("[id^='textContactLinkTitleForEmailOfTheInstitution']").attr("value","");
+
+	$(target2).after(clone);
+	$(clone).after(clone2);
 }
 
 function addAnotherFormOfTheAuthorizedName(text1){
@@ -2541,11 +2550,11 @@ function addFurtherWebsOfTheInstitution(text1){
 
 	if (count == 1) {
 		web = $("table#contactTable"+currentTab+" tr#trWebOfTheInstitution input#textContactWebOfTheInstitution_"+count).attr("value");
-		title = $("table#contactTable"+currentTab+" tr#trWebOfTheInstitution input#textContactLinkTitleForWebOfTheInstitution_"+count).attr("value");
+		title = $("table#contactTable"+currentTab+" tr#trLanguageWebpageOfTheInstitution input#textContactLinkTitleForWebOfTheInstitution_"+count).attr("value");
 	} else {
 
 		web = $("table#contactTable"+currentTab+" tr#trWebOfTheInstitution_"+count+" input#textContactWebOfTheInstitution_"+count).attr("value");
-		title = $("table#contactTable"+currentTab+" tr#trWebOfTheInstitution_"+count+" input#textContactLinkTitleForWebOfTheInstitution_"+count).attr("value");
+		title = $("table#contactTable"+currentTab+" tr#trLanguageWebpageOfTheInstitution_"+count+" input#textContactLinkTitleForWebOfTheInstitution_"+count).attr("value");
 	}
 
 	if ((web == null || web == "")
@@ -2555,27 +2564,34 @@ function addFurtherWebsOfTheInstitution(text1){
 	}
 
 	var target = "";
+	var target2 ="";
 	if(count==1){
 		target = "table#contactTable"+currentTab+" tr[id='trWebOfTheInstitution']";
+		target2 = "table#contactTable"+currentTab+" tr[id='trLanguageWebpageOfTheInstitution']";
 	}else{
 		target = "table#contactTable"+currentTab+" tr[id='trWebOfTheInstitution_"+count+"']";
+		target2 = "table#contactTable"+currentTab+" tr[id='trLanguageWebpageOfTheInstitution_"+count+"']";
 	}
 
 	clone = $(target).clone();
-
+	var clone2 = $(target2).clone();
 	// Rename, remove value, and remove elements.
 	clone.attr("id","trWebOfTheInstitution_"+(count+1));
 	clone.find("[for^='textContactWebOfTheInstitution']").attr("for","textContactWebOfTheInstitution_"+(count+1));
 	clone.find("[id^='textContactWebOfTheInstitution']").attr("id","textContactWebOfTheInstitution_"+(count+1));
 	clone.find("[id^='textContactWebOfTheInstitution']").attr("value","");
-	clone.find("[id^='textContactWebOfTheInstitution']").removeAttr("onchange");
-	clone.find("[for^='textContactLinkTitleForWebOfTheInstitution']").attr("for","textContactLinkTitleForWebOfTheInstitution_"+(count+1));
-	clone.find("[id^='textContactLinkTitleForWebOfTheInstitution']").attr("id","textContactLinkTitleForWebOfTheInstitution_"+(count+1));
-	clone.find("[id^='textContactLinkTitleForWebOfTheInstitution']").attr("value","");
-	clone.find("[id^='textContactLinkTitleForWebOfTheInstitution']").removeAttr("onchange");
+	clone.find("[for^='selectWebpageLanguageOfTheInstitution']").attr("for","selectWebpageLanguageOfTheInstitution_"+(count+1));
+	clone.find("[id^='selectWebpageLanguageOfTheInstitution']").attr("id","selectWebpageLanguageOfTheInstitution_"+(count+1));
+	clone.find("[id^='selectWebpageLanguageOfTheInstitution']").attr("value","none");
 	clone.find("[id^='undefined_w_required']").remove();
+	
+	clone2.attr("id","trLanguageWebpageOfTheInstitution_"+(count+1));
+	clone2.find("[for^='textContactLinkTitleForWebOfTheInstitution']").attr("for","textContactLinkTitleForWebOfTheInstitution_"+(count+1));
+	clone2.find("[id^='textContactLinkTitleForWebOfTheInstitution']").attr("id","textContactLinkTitleForWebOfTheInstitution_"+(count+1));
+	clone2.find("[id^='textContactLinkTitleForWebOfTheInstitution']").attr("value","");
 
-	$(target).after(clone);
+	$(target2).after(clone);
+	$(clone).after(clone2);
 }
 
 function aSAddOpeningTimes(text1){
@@ -3954,15 +3970,24 @@ function emailOfInstitutionChanged(name){
 		}
 	}
 }
+function emailOfInstitutionLangChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
 
+	if (id.indexOf("_") != "-1")  {
+		$("table#contactTable_1 tr#trEmailOfTheInstitution" + id + " #selectEmailLanguageOfTheInstitution" + id).attr("value", $("table#yiTableOthers #selectTextYILangEmail" + id).val());
+	} else {
+		$("table#contactTable_1 tr#trEmailOfTheInstitution #selectEmailLanguageOfTheInstitution_1").attr("value", $("table#yiTableOthers #selectTextYILangEmail").val());
+	}
+}
 function emailOfInstitutionLinkChanged(name){
 	var id = name.attr("id");
 	id = id.substring(id.lastIndexOf("_"));
 
 	if (id.indexOf("_") != "-1")  {
-		$("table#contactTable_1 tr#trEmailOfTheInstitution" + id + " #textContactLinkTitleForEmailOfTheInstitution" + id).attr("value", $("table#yiTableOthers #textYIEmailLinkTitle" + id).val());
+		$("table#contactTable_1 tr#trLanguageEmailOfTheInstitution" + id + " #textContactLinkTitleForEmailOfTheInstitution" + id).attr("value", $("table#yiTableOthers #textYIEmailLinkTitle" + id).val());
 	} else {
-		$("table#contactTable_1 tr#trEmailOfTheInstitution #textContactLinkTitleForEmailOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYIEmailLinkTitle").val());
+		$("table#contactTable_1 tr#trLanguageEmailOfTheInstitution #textContactLinkTitleForEmailOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYIEmailLinkTitle").val());
 	}
 }
 
@@ -4054,20 +4079,29 @@ function webOfInstitutionLinkChanged(name){
 	id = id.substring(id.lastIndexOf("_"));
 
 	if (id.indexOf("_") != "-1")  {
-		$("table#contactTable_1 tr#trWebOfTheInstitution" + id + " #textContactLinkTitleForWebOfTheInstitution" + id).attr("value", $("table#yiTableOthers #textYIWebpageLinkTitle" + id).val());
+		$("table#contactTable_1 tr#trLanguageWebpageOfTheInstitution" + id + " #textContactLinkTitleForWebOfTheInstitution" + id).attr("value", $("table#yiTableOthers #textYIWebpageLinkTitle" + id).val());
 	} else {
-		$("table#contactTable_1 tr#trWebOfTheInstitution #textContactLinkTitleForWebOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYIWebpageLinkTitle").val());
+		$("table#contactTable_1 tr#trLanguageWebpageOfTheInstitution #textContactLinkTitleForWebOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYIWebpageLinkTitle").val());
 	}
 }
+function webLangOfInstitutionChanged(name){
+	var id = name.attr("id");
+	id = id.substring(id.lastIndexOf("_"));
 
+	if (id.indexOf("_") != "-1")  {
+		$("table#contactTable_1 tr#trWebOfTheInstitution" + id + " #selectWebpageLanguageOfTheInstitution" + id).attr("value", $("table#yiTableOthers #selectTextYILangWebpage" + id).val());
+	} else {
+		$("table#contactTable_1 tr#trWebOfTheInstitution #selectWebpageLanguageOfTheInstitution_1").attr("value", $("table#yiTableOthers #selectTextYILangWebpage").val());
+	}
+}
 function contactEmailOfInstitutionLinkChanged(name){
 	var id = name.attr("id");
 	id = id.substring(id.lastIndexOf("_"));
 
 	if (id == "_1") {
-		$("table#yiTableOthers #textYIEmailLinkTitle").attr("value", $("table#contactTable_1 tr#trEmailOfTheInstitution #textContactLinkTitleForEmailOfTheInstitution_1").val());
+		$("table#yiTableOthers #textYIEmailLinkTitle").attr("value", $("table#contactTable_1 tr#trLanguageEmailOfTheInstitution #textContactLinkTitleForEmailOfTheInstitution_1").val());
 	}else {
-		$("table#yiTableOthers #textYIEmailLinkTitle" + id).attr("value", $("table#contactTable_1 tr#trEmailOfTheInstitution" + id + " #textContactLinkTitleForEmailOfTheInstitution" + id).val());
+		$("table#yiTableOthers #textYIEmailLinkTitle" + id).attr("value", $("table#contactTable_1 tr#trLanguageEmailOfTheInstitution" + id + " #textContactLinkTitleForEmailOfTheInstitution" + id).val());
 	}
 }
 
@@ -4076,9 +4110,9 @@ function contactWebOfInstitutionLinkChanged(name){
 	id = id.substring(id.lastIndexOf("_"));
 
 	if (id == "_1") {
-		$("table#yiTableOthers #textYIWebpageLinkTitle").attr("value", $("table#contactTable_1 tr#trWebOfTheInstitution #textContactLinkTitleForWebOfTheInstitution_1").val());
+		$("table#yiTableOthers #textYIWebpageLinkTitle").attr("value", $("table#contactTable_1 tr#trLanguageWebpageOfTheInstitution #textContactLinkTitleForWebOfTheInstitution_1").val());
 	} else {
-		$("table#yiTableOthers #textYIWebpageLinkTitle" + id).attr("value", $("table#contactTable_1 tr#trWebOfTheInstitution" + id + " #textContactLinkTitleForWebOfTheInstitution" + id).val());
+		$("table#yiTableOthers #textYIWebpageLinkTitle" + id).attr("value", $("table#contactTable_1 tr#trLanguageWebpageOfTheInstitution" + id + " #textContactLinkTitleForWebOfTheInstitution" + id).val());
 	}
 }
 
@@ -4349,6 +4383,19 @@ function contactEmailChanged(name){
 		$("table#yiTableOthers #textYIEmailAddress" + parentId).attr("value",id);
 	}
 }
+function contactEmailLanguageChanged(name){
+	var parentId = name.attr("id");
+	parentId = parentId.substring(parentId.lastIndexOf("_"));
+
+	if (parentId == "_1") {
+		var id = $("table#contactTable_1 tr#trEmailOfTheInstitution #selectEmailLanguageOfTheInstitution" + parentId).val();
+		$("table#yiTableOthers #selectTextYILangEmail").attr("value",id);
+	} else {
+		var id = $("table#contactTable_1 tr#trEmailOfTheInstitution" + parentId + " #selectEmailLanguageOfTheInstitution" + parentId).val();
+		$("table#yiTableOthers #selectTextYILangEmail" + parentId).attr("value",id);
+	}
+	
+}
 function contactWebpageChanged(name){
 	var parentId = name.attr("id");
 	parentId = parentId.substring(parentId.lastIndexOf("_"));
@@ -4360,6 +4407,19 @@ function contactWebpageChanged(name){
 		var id = $("table#contactTable_1 tr#trWebOfTheInstitution" + parentId + " #textContactWebOfTheInstitution" + parentId).val();
 		$("table#yiTableOthers #textYIWebpage" + parentId).attr("value",id);
 	}
+}
+function contactWebpageLangChanged(name){
+	var parentId = name.attr("id");
+	parentId = parentId.substring(parentId.lastIndexOf("_"));
+
+	if (parentId == "_1") {
+		var id = $("table#contactTable_1 tr#trWebOfTheInstitution #selectWebpageLanguageOfTheInstitution" + parentId).val();
+		$("table#yiTableOthers #selectTextYILangWebpage").attr("value",id);
+	} else {
+		var id = $("table#contactTable_1 tr#trWebOfTheInstitution" + parentId + " #selectWebpageLanguageOfTheInstitution" + parentId).val();
+		$("table#yiTableOthers #selectTextYILangWebpage" + parentId).attr("value",id);
+	}
+	
 }
 function contactLatitudeChanged(name){
 	var parentId = name.attr("id");

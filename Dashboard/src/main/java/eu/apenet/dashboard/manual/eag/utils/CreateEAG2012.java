@@ -1382,9 +1382,18 @@ public class CreateEAG2012 {
 								if (!repository.getEmail().isEmpty()) {
 									for (int l = 0; !found && l < repository.getEmail().size(); l++) {
 										Email emailCheck = repository.getEmail().get(l);
-										// TODO: Check language when issue #622.
-										if (emailCheck.getHref() != null && emailCheck.getHref().equalsIgnoreCase(email.getHref())
-												&& emailCheck.getContent() != null && emailCheck.getContent().equalsIgnoreCase(email.getContent())) {
+										// Current lang.
+										String currentLang = null;
+										if (emailCheck.getContent()!=null && emailCheck.getLang() != null
+												&& !emailCheck.getLang().isEmpty()) {
+											currentLang = emailCheck.getLang();
+										} 
+										if ((emailCheck.getHref() != null && emailCheck.getHref().equalsIgnoreCase(email.getHref())
+												|| (emailCheck.getHref() == null && email.getHref().isEmpty()))
+											&& (emailCheck.getContent() != null && emailCheck.getContent().equalsIgnoreCase(email.getContent())
+												|| (emailCheck.getContent() == null && email.getContent().isEmpty()))
+											&& ((currentLang != null && currentLang.equalsIgnoreCase(email.getLang()))
+												|| (currentLang == null && (email.getLang() == null || Eag2012.OPTION_NONE.equalsIgnoreCase(email.getLang()))))) {
 											found = true;
 										}
 									}
@@ -1528,9 +1537,18 @@ public class CreateEAG2012 {
 									if (!repository.getWebpage().isEmpty()) {
 										for (int l = 0; !found && l < repository.getWebpage().size(); l++) {
 											Webpage web = repository.getWebpage().get(l);
-											// TODO: Check language when issue #622.
-											if (web.getHref() != null && web.getHref().equalsIgnoreCase(webpage.getHref())
-													&& web.getContent() != null && web.getContent().equalsIgnoreCase(webpage.getContent())) {
+											// Current lang.
+											String currentLang = null;
+											if (web.getContent()!=null && web.getLang() != null
+													&& !web.getLang().isEmpty()) {
+												currentLang = web.getLang();
+											} 
+											if ((web.getHref() != null && web.getHref().equalsIgnoreCase(webpage.getHref())
+													|| (web.getHref() == null && webpage.getHref().isEmpty()))
+												&& (web.getContent() != null && web.getContent().equalsIgnoreCase(webpage.getContent())
+													|| (web.getContent() == null && webpage.getContent().isEmpty()))
+												&& ((currentLang != null && currentLang.equalsIgnoreCase(webpage.getLang()))
+													|| (currentLang == null && (webpage.getLang() == null || Eag2012.OPTION_NONE.equalsIgnoreCase(webpage.getLang()))))) {
 												found = true;
 											}
 										}

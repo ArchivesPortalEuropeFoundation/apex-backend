@@ -457,6 +457,7 @@
 					<s:set var="internalCounter" value="0"/>
 					<s:set var="emailHref" value="loader.contactEmailHref[#counter]"/>
 					<s:set var="emailTitle" value="loader.contactEmailTitle[#counter]"/>
+					<s:set var="emailLang" value="loader.contactEmailLang[#counter]"/>
 					<s:iterator var="internalCurrent" value="#numberOfEmailAddress" status="internalStatus">
 						<s:if test="%{#internalStatus.index == 0}">
 							<tr id="trEmailOfTheInstitution">
@@ -468,25 +469,38 @@
 								<label for="textContactEmailOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
 							</td>
 							<td>
-								<s:if test="%{#counter > 0}">
-									<input type="text" id="textContactEmailOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#emailHref[#internalCounter]" />" />
-								</s:if>
-								<s:else>
-									<input type="text" id="textContactEmailOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#emailHref[#internalCounter]" />" onchange="contactEmailChanged($(this));"/>
-								</s:else>
+								<input type="text" id="textContactEmailOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#emailHref[#internalCounter]" />" onchange="contactEmailChanged($(this));"/>
 							</td>
 							<td class="labelLeft">
+								<label for="selectEmailLanguageOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+							</td>
+							<td>
+								<select id="selectEmailLanguageOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" onchange="contactEmailLanguageChanged($(this));" >
+									<s:iterator value="languageList" var="language"> 
+										<option value="<s:property value="#language.key" />"
+											<s:if test="%{#language.key == #emailLang[#internalCounter]}" > selected=selected </s:if>>
+											<s:property value="#language.value" />
+										</option>
+									</s:iterator>
+								</select>
+							</td>
+						</tr>
+
+				        <s:if test="%{#counter > 0}">
+					       <tr id="trLanguageEmailOfTheInstitution">
+				        </s:if>
+				        <s:else>
+					       <tr id="trLanguageEmailOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />">
+				        </s:else>
+							<td>
 								<label for="textContactLinkTitleForEmailOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 							</td>
 							<td>
-								<s:if test="%{#counter > 0}">
-									<input type="text" id="textContactLinkTitleForEmailOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#emailTitle[#internalCounter]" />" />
-								</s:if>
-								<s:else>
-									<input type="text" id="textContactLinkTitleForEmailOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#emailTitle[#internalCounter]" />" onchange="contactEmailOfInstitutionLinkChanged($(this));" />
-								</s:else>
+								<input type="text" id="textContactLinkTitleForEmailOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#emailTitle[#internalCounter]" />" onchange="contactEmailOfInstitutionLinkChanged($(this));" />
 							</td>
-						</tr>
+						    <td colspan="2">
+						    </td>
+				    	</tr>
 						<s:set var="internalCounter" value="%{#internalCounter + 1}"/>
 					</s:iterator>
 
@@ -502,23 +516,27 @@
 							<label for="textContactEmailOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
 						</td>
 						<td>
-							<s:if test="%{#counter > 0}">
-								<input type="text" id="textContactEmailOfTheInstitution_1" />
-							</s:if>
-							<s:else>
-								<input type="text" id="textContactEmailOfTheInstitution_1" onchange="contactEmailChanged($(this));"/>
-							</s:else>
+							<input type="text" id="textContactEmailOfTheInstitution_1" onchange="contactEmailChanged($(this));"/>
 						</td>
 						<td class="labelLeft">
+							<label for="selectEmailLanguageOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+						</td>
+						<td>
+							<select id="selectEmailLanguageOfTheInstitution_1" onchange="contactEmailLanguageChanged($(this));">
+								<s:iterator value="languageList" var="language"> 
+									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+								</s:iterator>
+							</select>
+						</td>
+					</tr>
+					<tr id="trLanguageEmailOfTheInstitution" >
+						<td>
 							<label for="textContactLinkTitleForEmailOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 						</td>
 						<td>
-							<s:if test="%{#counter > 0}">
-								<input type="text" id="textContactLinkTitleForEmailOfTheInstitution_1" />
-							</s:if>
-							<s:else>
-								<input type="text" id="textContactLinkTitleForEmailOfTheInstitution_1" onchange="contactEmailOfInstitutionLinkChanged($(this));" />
-							</s:else>
+							<input type="text" id="textContactLinkTitleForEmailOfTheInstitution_1" onchange="contactEmailOfInstitutionLinkChanged($(this));" />
+						</td>
+						<td colspan="2">
 						</td>
 					</tr>
 
@@ -534,6 +552,7 @@
 					<s:set var="internalCounter" value="0"/>
 					<s:set var="webpageHref" value="loader.contactWebpageHref[#counter]"/>
 					<s:set var="webpageTitle" value="loader.contactWebpageTitle[#counter]"/>
+					<s:set var="webpageLang" value="loader.contactWebpageLang[#counter]"/>
 					<s:iterator var="internalCurrent" value="#numberOfWebpageAddress" status="internalStatus">
 						<s:if test="%{#internalStatus.index == 0}">
 							<tr id="trWebOfTheInstitution">
@@ -545,25 +564,37 @@
 								<label for="textContactWebOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 							</td>
 							<td>
-								<s:if test="%{#counter > 0}">
-									<input type="text" id="textContactWebOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#webpageHref[#internalCounter]" />" />
-								</s:if>
-								<s:else>
-									<input type="text" id="textContactWebOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#webpageHref[#internalCounter]" />" onchange="contactWebpageChanged($(this));"/>
-								</s:else>
+								<input type="text" id="textContactWebOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#webpageHref[#internalCounter]" />" onchange="contactWebpageChanged($(this));"/>
 							</td>
 							<td class="labelLeft">
+								<label for="selectWebpageLanguageOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+							</td>
+							<td>
+								<select id="selectWebpageLanguageOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" onchange="contactWebpageLangChanged($(this));">
+									<s:iterator value="languageList" var="language"> 
+										<option value="<s:property value="#language.key" />"
+											<s:if test="%{#language.key == #webpageLang[#internalCounter]}" > selected=selected </s:if>>
+											<s:property value="#language.value" /></option>
+									</s:iterator>
+								</select>
+							</td>
+						</tr>
+
+						<s:if test="%{#internalStatus.index == 0}">
+							<tr id="trLanguageWebpageOfTheInstitution">
+						</s:if>
+						<s:else>
+							<tr id="trLanguageWebpageOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />">
+						</s:else>
+							<td>
 								<label for="textContactLinkTitleForWebOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 							</td>
 							<td>
-								<s:if test="%{#counter > 0}">
-									<input type="text" id="textContactLinkTitleForWebOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#webpageTitle[#internalCounter]" />" />
-								</s:if>
-								<s:else>
-									<input type="text" id="textContactLinkTitleForWebOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#webpageTitle[#internalCounter]" />" onchange="contactWebOfInstitutionLinkChanged($(this));" />
-								</s:else>
+								<input type="text" id="textContactLinkTitleForWebOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#webpageTitle[#internalCounter]" />" onchange="contactWebOfInstitutionLinkChanged($(this));" />
 							</td>
-						</tr>
+							<td colspan="2">
+							</td>
+				    	</tr>
 						<s:set var="internalCounter" value="%{#internalCounter + 1}"/>
 					</s:iterator>
 
@@ -579,25 +610,30 @@
 							<label for="textContactWebOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 						</td>
 						<td>
-							<s:if test="%{#counter > 0}">
-								<input type="text" id="textContactWebOfTheInstitution_1" />
-							</s:if>
-							<s:else>
-								<input type="text" id="textContactWebOfTheInstitution_1" onchange="contactWebpageChanged($(this));"/>
-							</s:else>
+							<input type="text" id="textContactWebOfTheInstitution_1" onchange="contactWebpageChanged($(this));"/>
 						</td>
 						<td class="labelLeft">
-							<label for="textContactLinkTitleForWebOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" /></label>:
+							<label for="selectWebpageLanguageOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 						</td>
 						<td>
-							<s:if test="%{#counter > 0}">
-								<input type="text" id="textContactLinkTitleForWebOfTheInstitution_1" />
-							</s:if>
-							<s:else>
-								<input type="text" id="textContactLinkTitleForWebOfTheInstitution_1" onchange="contactWebOfInstitutionLinkChanged($(this));" />
-							</s:else>
+							<select id="selectWebpageLanguageOfTheInstitution_1" onchange="contactWebpageLangChanged($(this));">
+								<s:iterator value="languageList" var="language"> 
+									<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+								</s:iterator>
+							</select>
 						</td>
 					</tr>
+
+                    <tr id="trLanguageWebpageOfTheInstitution" >
+						<td>
+							<label for="textContactLinkTitleForWebOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+						</td>
+						<td>
+							<input type="text" id="textContactLinkTitleForWebOfTheInstitution_1" onchange="contactWebOfInstitutionLinkChanged($(this));" />
+						</td>
+						<td colspan="2">
+						</td>
+				    </tr>
 
 					<tr>
 						<td id="tdAddFurtherWebsOfTheInstitution" colspan="2">
@@ -791,13 +827,25 @@
 				<input type="text" id="textContactEmailOfTheInstitution_1" onchange="contactEmailChanged($(this));"/>
 			</td>
 			<td class="labelLeft">
-				<label for="textContactLinkTitleForEmailOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+				<label for="selectEmailLanguageOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textContactLinkTitleForEmailOfTheInstitution_1" onchange="contactEmailOfInstitutionLinkChanged($(this));" />
+				<select id="selectEmailLanguageOfTheInstitution" onchange="contactEmailLanguageChanged($(this));">
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
 			</td>
 		</tr>
-
+		<tr id="trLanguageEmailOfTheInstitution" >
+				<td>
+					<label for="textContactLinkTitleForEmailOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+				</td>
+				<td>
+					<input type="text" id="textContactLinkTitleForEmailOfTheInstitution_1" onchange="contactEmailOfInstitutionLinkChanged($(this));" />
+				</td>
+				<td colspan="2"></td>
+		</tr>
 		<tr>
 			<td id="tdAddFurtherEmailsOfTheInstitution" colspan="2">
 				<input id="buttonAddFurtherEmailsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherEmailsAddresses")' />" onclick="addFurtherEmailsOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
@@ -812,13 +860,26 @@
 				<input type="text" id="textContactWebOfTheInstitution_1" onchange="contactWebpageChanged($(this));"/>
 			</td>
 			<td class="labelLeft">
+				<label for="selectWebpageLanguageOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+			</td>
+			<td>
+				<select id="selectWebpageLanguageOfTheInstitution_1" onchange="contactWebpageLangChanged($(this));">
+					<s:iterator value="languageList" var="language"> 
+						<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
+					</s:iterator>
+				</select>
+			</td>
+		</tr>
+        <tr id="trLanguageWebpageOfTheInstitution" >
+			<td>
 				<label for="textContactLinkTitleForWebOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textContactLinkTitleForWebOfTheInstitution_1" onchange="contactWebOfInstitutionLinkChanged($(this));" />
 			</td>
+			<td colspan="2">
+			</td>
 		</tr>
-
 		<tr>
 			<td id="tdAddFurtherWebsOfTheInstitution" colspan="2">
 				<input id="buttonAddFurtherWebsOfTheInstitution" type="button" value="<s:property value='getText("label.ai.contact.addFurtherWebpages")' />" onclick="addFurtherWebsOfTheInstitution('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />

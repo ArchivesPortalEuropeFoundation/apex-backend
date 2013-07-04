@@ -5271,6 +5271,44 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				 if (x > 0) {
 					 i = 0;
 				 }
+				 while(contactTable.has("selectEmailLanguageOfTheInstitution_"+(++i))){
+					 List<Map<String, Map<String, List<String>>>> listMapEmailValueList = eag2012.getEmailLang();
+					 if(listMapEmailValueList==null){
+						 listMapEmailValueList = new ArrayList<Map<String, Map<String, List<String>>>>();
+					 }
+					 Map<String, Map<String, List<String>>> email = null;
+					 if(listMapEmailValueList.size()>x && listMapEmailValueList.get(x)!=null){
+						 email = listMapEmailValueList.get(x);
+					 }else{
+						 email = new HashMap<String, Map<String, List<String>>>();
+					 }
+					 List<String> listEmail = null;
+					 Map<String,List<String>> emailMap = null;
+					 if(email.size()>0 && email.get(Eag2012.TAB_CONTACT)!=null){
+						 emailMap = email.get(Eag2012.TAB_CONTACT);
+					 }else{
+						 emailMap = new HashMap<String,List<String>>();
+					 }
+					 if(emailMap.size()>0 && emailMap.get(Eag2012.ROOT)!=null){
+						 listEmail = emailMap.get(Eag2012.ROOT);
+					 }else{
+						 listEmail = new ArrayList<String>();
+					 }
+					 listEmail.add(replaceIfExistsSpecialReturnString(contactTable.getString("selectEmailLanguageOfTheInstitution_"+i)));
+					  
+					 emailMap.put(Eag2012.ROOT,listEmail); //root section, here there is only one mails list
+					 email.put(Eag2012.TAB_CONTACT, emailMap);
+					 if(listMapEmailValueList.size()>x){
+						 listMapEmailValueList.set(x,email);
+					 }else{
+						 listMapEmailValueList.add(email);
+					 }
+					 eag2012.setEmailLang(listMapEmailValueList); 	
+				 }
+				 i=1;
+				 if (x > 0) {
+					 i = 0;
+				 }
 				 while(contactTable.has("textContactWebOfTheInstitution_"+(++i))){
 					 List<Map<String, Map<String, List<String>>>> listMapWebpageHrefList = eag2012.getWebpageHref();
 					 if(listMapWebpageHrefList==null){
@@ -5304,7 +5342,43 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					 }
 					 eag2012.setWebpageHref(listMapWebpageHrefList); 	
 				 }
-			
+				 i=1;
+				 if (x > 0) {
+					 i = 0;
+				 }
+				 while(contactTable.has("selectWebpageLanguageOfTheInstitution_"+(++i))){
+					 List<Map<String, Map<String, List<String>>>> listMapWebpageHrefList = eag2012.getWebpageLang();
+					 if(listMapWebpageHrefList==null){
+						 listMapWebpageHrefList = new ArrayList<Map<String, Map<String, List<String>>>>();
+					 }
+					 Map<String, Map<String, List<String>>> mapMapListWeb = null;
+					 if(listMapWebpageHrefList.size()>x && listMapWebpageHrefList.get(x)!=null){
+						 mapMapListWeb = listMapWebpageHrefList.get(x);
+					 }else{
+						 mapMapListWeb = new HashMap<String, Map<String, List<String>>>();
+					 }
+					 List<String> listWeb = null;
+					 Map<String,List<String>> webMap = null;
+					 if(mapMapListWeb.size()>0 && mapMapListWeb.get(Eag2012.TAB_CONTACT)!=null){
+						 webMap = mapMapListWeb.get(Eag2012.TAB_CONTACT);
+					 }else{
+						 webMap = new HashMap<String,List<String>>();
+					 }
+					 if(webMap.size()>0 && webMap.get(Eag2012.ROOT)!=null){
+						 listWeb = webMap.get(Eag2012.ROOT);
+					 }else{
+						 listWeb = new ArrayList<String>();
+					 }
+					 listWeb.add(replaceIfExistsSpecialReturnString(contactTable.getString("selectWebpageLanguageOfTheInstitution_"+i)));
+					 webMap.put(Eag2012.ROOT,listWeb);
+					 mapMapListWeb.put(Eag2012.TAB_CONTACT,webMap);
+					 if(listMapWebpageHrefList.size()>x){
+						 listMapWebpageHrefList.set(x,mapMapListWeb);
+					 }else{
+						 listMapWebpageHrefList.add(mapMapListWeb);
+					 }
+					 eag2012.setWebpageLang(listMapWebpageHrefList); 	
+				 }
 				 i=1;
 				 if (x > 0) {
 					 i = 0;
