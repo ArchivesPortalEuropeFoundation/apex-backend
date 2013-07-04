@@ -3,7 +3,6 @@ package eu.apenet.commons.listener;
 import java.io.File;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
 
 import org.apache.commons.lang.StringUtils;
 
