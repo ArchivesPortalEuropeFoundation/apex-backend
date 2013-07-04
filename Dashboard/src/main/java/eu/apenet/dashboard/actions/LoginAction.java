@@ -5,14 +5,14 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
-import com.opensymphony.xwork2.ActionSupport;
-
+import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.security.SecurityService;
 import eu.apenet.dashboard.security.SecurityService.LoginResult;
 import eu.apenet.dashboard.security.SecurityService.LoginResult.LoginResultType;
 
 
-public class LoginAction extends ActionSupport {
+public class LoginAction extends AbstractAction {
 
 	private static final long serialVersionUID = -5297030073907772917L;
 	private Logger log = Logger.getLogger(getClass());
@@ -27,7 +27,9 @@ public class LoginAction extends ActionSupport {
 
 
 	public String execute() throws Exception {
-
+        if (APEnetUtilities.getDashboardConfig().isMaintenanceMode()){
+        	this.getServletRequest().setAttribute("maintenanceMode", true);
+        }
 		if ((this.getUsername() != null) && (this.getPassword() != null)) {
 			LoginResult loginResult = null;
 			try {

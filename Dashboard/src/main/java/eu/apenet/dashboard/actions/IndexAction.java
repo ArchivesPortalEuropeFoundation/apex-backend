@@ -21,7 +21,7 @@ public class IndexAction extends AbstractAction {
 			}
         }
         if (APEnetUtilities.getDashboardConfig().isMaintenanceMode()){
-        	addActionError(getText("user.maintenancemode"));
+        	this.getServletRequest().setAttribute("maintenanceMode", true);
         }
         return ERROR;
     }
