@@ -1,5 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        prepareDateDivTrigger();
+    });
+</script>
+
         <div id="divForm">
         	<div style="align: center;" >
                 <s:actionmessage />
@@ -27,12 +34,17 @@
 	                <s:password name="ftpPwd" key="label.password" />
 	                <s:submit onclick="document.getElementById('stopButton').style.display='block';" method="connectFTP" key="label.ftpconexion" />
 	            </s:form>
-	            <s:form action="harvestOAI" method="POST">
-	                <s:textfield name="oaiUrl" key="labe.url" value="http://" />
-	                <s:textfield name="oaiSet" key="label.setname" />
-	                <s:textfield name="oaiMetadataFormat" key="label.metadataformat" />
-	                <s:select list="oaiType" name="oaiType" key="label.harvesttype"/>
-	                <s:textfield name="oaiToken" key="label.token"/>
+	            <s:form action="harvestOAI" method="POST" theme="simple">
+	                <s:label key="labe.url"/>: <s:textfield name="oaiUrl" key="labe.url" value="http://" /><br/>
+	                <s:label key="label.setname"/>: <s:textfield name="oaiSet" key="label.setname" /><br/>
+	                <s:label key="label.metadataformat"/>: <s:textfield name="oaiMetadataFormat" key="label.metadataformat" /><br/>
+	                <s:label key="label.harvesttype"/>: <s:select list="oaiType" name="oaiType" key="label.harvesttype" id="oaiType" /><br/>
+                    <div id="dates" class="hidden">
+                        <s:label key="label.oai.dates"/>:<br/>
+                        <s:label key="label.oai.from"/>: <s:textfield name="oaiFromDate" key="label.oai.from"/>
+                        <s:label key="label.oai.to"/>: <s:textfield name="oaiToDate" key="label.oai.to"/>
+                    </div>
+	                <%--<s:label key="label.token"/>: <s:textfield name="oaiToken" key="label.token"/>--%>
 	                <s:hidden name="ai_id" value="%{ai_id}" />
 	                <s:submit onclick="document.getElementById('stopButton').style.display='block';" key="label.harvestdata" />
 	            </s:form>

@@ -24,12 +24,14 @@ public class HarvesterAjaxAction extends AjaxControllerAbstractAction {
     private String oaiSet;
     private String oaiToken;
     private String oaiType;
+    private String oaiFromDate;
+    private String oaiToDate;
 
     @Override
     public String execute() {
         resetHarvestedFiles();
         Integer ai_id = getAiId();
-        LOG.info("Providing the Harvest control page for AI_ID=" + ai_id + ", URL=" + oaiUrl + ", METADATAFORMAT=" + oaiMetadataFormat + ", SET=" + oaiSet);
+        LOG.info("Providing the Harvest control page for AI_ID=" + ai_id + ", URL=" + oaiUrl + ", METADATAFORMAT=" + oaiMetadataFormat + ", SET=" + oaiSet + ", FROM=" + oaiFromDate + ", TO=" + oaiToDate);
         if(HarvestingStatus.isHarvesting(ai_id)) {
             LOG.error("This institution is already harvesting, please try again later or contact an administrator");
             addActionError(getText("harvesterAjaxAction.institutionAlreadyHarvesting"));
@@ -46,7 +48,12 @@ public class HarvesterAjaxAction extends AjaxControllerAbstractAction {
             writer = openOutputWriter();
 
             Integer ai_id = getAiId();
-            ManualOAIPMHEADUploader manualUploader = new ManualOAIPMHEADUploader(oaiUrl, oaiMetadataFormat, oaiSet, null, null);
+            if(PT_TYPE.equals(oaiType)) {
+                oaiFromDate = null;
+                oaiToDate = null;
+            }
+
+            ManualOAIPMHEADUploader manualUploader = new ManualOAIPMHEADUploader(oaiUrl, oaiMetadataFormat, oaiSet, oaiFromDate, oaiToDate);
             String pathForFile = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + ai_id + APEnetUtilities.FILESEPARATOR;
             File saveDirectory = new File(pathForFile);
             if(!saveDirectory.exists())

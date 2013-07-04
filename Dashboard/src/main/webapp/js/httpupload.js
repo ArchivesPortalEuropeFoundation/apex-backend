@@ -301,3 +301,13 @@ function upload(warningText,confirmText){
 		alert(warningText);
 	}
 }
+
+function prepareDateDivTrigger() {
+    $("#oaiType").change(function() {
+        if($(this).val() == "Finland - France EAD") {
+            $("#dates").removeClass("hidden");
+        } else if(!$("#dates").hasClass("hidden")){
+            $("#dates").addClass("hidden");
+        }
+    });
+}
