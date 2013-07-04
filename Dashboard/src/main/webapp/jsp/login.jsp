@@ -1,12 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="apenet" uri="http://commons.apenet.eu/tags"%>
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <div id ="body" align="center">
 	<div id="dashboard-login-advantages">
 		<s:text name="user.info.advantages"> </s:text>
 	</div>
+	<c:if test="${maintenanceMode}">
+		<h1 id="maintenanceMode"><s:text name="user.maintenancemode"/></h1>
 
+	</c:if>
 	<s:form action="login" method="post">
 	<br></br>
 	<s:actionerror />
