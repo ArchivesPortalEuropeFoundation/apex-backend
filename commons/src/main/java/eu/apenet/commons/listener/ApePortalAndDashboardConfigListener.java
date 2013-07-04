@@ -14,7 +14,7 @@ public class ApePortalAndDashboardConfigListener extends APEnetConfigListener {
 	
 	private static final String AL_DIR_PATH = "AL_DIR_PATH";
 	private static final String AL_DIR_PATH_DEFAULT = "/ape/data/al/";
-	private static final String SOLR_SEARCH_URL = "SOLR_SEARCH_URL";
+
 	
 	@Override
 	public void contextInitializedInternal(ServletContext servletContext) {
@@ -44,13 +44,7 @@ public class ApePortalAndDashboardConfigListener extends APEnetConfigListener {
 		}
 		archivalLandscapeDirPath = checkPath(AL_DIR_PATH, archivalLandscapeDirPath);
 		config.setArchivalLandscapeDirPath(archivalLandscapeDirPath);
-		String solrSearchUrl = servletContext.getInitParameter(SOLR_SEARCH_URL);
-		if (StringUtils.isBlank(solrSearchUrl)) {
-			log.warn("No " + SOLR_SEARCH_URL + " specified.");
-		} else {
-			log.info(SOLR_SEARCH_URL + ": " + solrSearchUrl);
-		}
-		config.setSolrSearchUrl(solrSearchUrl);		
+
 		super.init(servletContext, config);
 	}
 }
