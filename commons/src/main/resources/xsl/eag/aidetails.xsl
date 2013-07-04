@@ -1114,12 +1114,12 @@
 										<xsl:choose>
 											<xsl:when test="$link and $link != '' and text()">
 												<div>
-													<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp')">
+													<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
 														<a href="{$link}" target="_blank">
 															<xsl:value-of select="text()"/>
 														</a>
 													</xsl:if>
-													<xsl:if test="not(starts-with($link, 'http')) or not(starts-with($link, 'https')) or not(starts-with($link, 'ftp'))">
+													<xsl:if test="not(starts-with($link, 'http')) or not(starts-with($link, 'https')) or not(starts-with($link, 'ftp')) or not(starts-with($link, 'www'))">
 														<a href="#">
 															<xsl:attribute name="onclick"><script>recoverRelatedInstitution('<xsl:value-of select="ape:related(current()/parent::node()/@href)"></xsl:value-of>');</script></xsl:attribute>
 															<xsl:value-of select="text()"/>

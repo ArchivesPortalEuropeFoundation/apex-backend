@@ -123,6 +123,7 @@ function checkWebpages(target,message){
 	var value = target.val();
 	if(value && value.length>0){
 		value = value.toLowerCase();
+		value = $.trim(value);
 		if(!(value.indexOf("https://")==0 || value.indexOf("http://")==0 || value.indexOf("ftp://")==0)){
 			var pFieldError = "<p id=\""+$(this).attr("id")+"_w_required\" class=\"fieldRequired\">"+message+"</p>";
 			var id = target.attr("id");
@@ -1170,6 +1171,8 @@ var clickRelationsAction = function(text1,messageWebpage){
 		jsonData += "}";
 	}
 
+/* Commented due to issue #561 specified that this field will be a complete webpage or a
+ * <recordId> of an EAG file within the APE. 
 	var failInstitutionWebpageCheck = false;
 	$("table[id^='institutionRelationTable_']").each(function(){
 		$("table#" + $(this).attr("id") + " input[id^='textWebsiteOfDescription']").each(function(){
@@ -1178,10 +1181,10 @@ var clickRelationsAction = function(text1,messageWebpage){
 				failInstitutionWebpageCheck = result;
 			}
 		});
-	});
+	});*/
 	
 	jsonData += "}}";
-	if(failWebpageCheck || failInstitutionWebpageCheck){
+	if(failWebpageCheck/* || failInstitutionWebpageCheck*/){
 		return false;
 	}
 	return jsonData;
