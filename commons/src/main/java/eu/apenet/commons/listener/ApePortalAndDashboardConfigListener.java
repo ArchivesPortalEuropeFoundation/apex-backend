@@ -11,7 +11,7 @@ import eu.archivesportaleurope.commons.config.ApePortalAndDashboardConfig;
 
 public class ApePortalAndDashboardConfigListener extends APEnetConfigListener {
 	private static final String SOLR_DATA_DIR_PATH = "SOLR_DATA_DIR_PATH";
-	private static final String SOLR_CONTEXT_PATH = "/solr/eads";
+	private static final String SOLR_CONTEXT_PATH = "/solr";
 	
 	private static final String AL_DIR_PATH = "AL_DIR_PATH";
 	private static final String AL_DIR_PATH_DEFAULT = "/ape/data/al/";
