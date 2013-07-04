@@ -2,7 +2,6 @@ package eu.apenet.dashboard.actions;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Semaphore;
@@ -47,6 +46,7 @@ public class CreateCountryAction extends ActionSupport{
 	private String pathRepo = APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR;
 
 	private Locale tempLocale;
+	private String europeTempCountryCode;
 	static Semaphore sem = new Semaphore(1,true) ;
 	
 	public List<Lang> getLanguagesList() {
@@ -123,7 +123,9 @@ public class CreateCountryAction extends ActionSupport{
 					tempLocale = locales[i];
 				}
 			}
-			if(tempLocale==null || !((this.getIsoCountryName().length()==3 && tempLocale.getISO3Country().toUpperCase().equals(this.getIsoCountryName().toUpperCase())) || (this.getIsoCountryName().length()==2 && tempLocale.getCountry().toUpperCase().equals(this.getIsoCountryName().toUpperCase())))){
+            if(tempLocale == null && (this.getIsoCountryName().equals("EU") || this.getIsoCountryName().equals("EUR"))) {
+                europeTempCountryCode = "EU";
+            } else if(tempLocale==null || !((this.getIsoCountryName().length()==3 && tempLocale.getISO3Country().toUpperCase().equals(this.getIsoCountryName().toUpperCase())) || (this.getIsoCountryName().length()==2 && tempLocale.getCountry().toUpperCase().equals(this.getIsoCountryName().toUpperCase())))){
 				addFieldError("isoCountryName", getText("createCountry.isoCountryNameWrong"));
 			}
 		}
@@ -154,7 +156,11 @@ public class CreateCountryAction extends ActionSupport{
 					HibernateUtil.beginDatabaseTransaction();
                     Country newCountry = new Country();
 					newCountry.setCname(this.getEnglishCountryName().toUpperCase());
-					newCountry.setIsoname(tempLocale.getCountry().toUpperCase());
+                    if(tempLocale != null) {
+					    newCountry.setIsoname(tempLocale.getCountry().toUpperCase());
+                    } else {
+                        newCountry.setIsoname(europeTempCountryCode);
+                    }
 					newCountry.setAlOrder(0);					
 					countryDAO.insertSimple(newCountry);
 					
