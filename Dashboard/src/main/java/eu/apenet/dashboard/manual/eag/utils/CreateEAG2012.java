@@ -457,8 +457,10 @@ public class CreateEAG2012 {
 							//if (Eag2012.RESOURCE_RELATION.equalsIgnoreCase(sectionValueKey)){ //TODO: current situation from ticket 543 
 								for(int x=0;x<this.eag.getRelations().getResourceRelation().size();x++){
 									if (this.eag.getRelations().getResourceRelation().get(x) != null
-											&& this.eag.getRelations().getResourceRelation().get(x).getHref() != null
-											&& this.eag.getRelations().getResourceRelation().get(x).getHref().equalsIgnoreCase(resourceRelation.getHref())
+											&& (this.eag.getRelations().getResourceRelation().get(x).getHref() != null
+												&& this.eag.getRelations().getResourceRelation().get(x).getHref().equalsIgnoreCase(resourceRelation.getHref())
+											|| (this.eag.getRelations().getResourceRelation().get(x).getHref() == null
+												&& resourceRelation.getHref() == null))
 											&& this.eag.getRelations().getResourceRelation().get(x).getRelationEntry() != null
 											&& ((this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang() != null
 												&& this.eag.getRelations().getResourceRelation().get(x).getRelationEntry().getLang().equalsIgnoreCase(relationEntry.getLang()))
@@ -513,7 +515,7 @@ public class CreateEAG2012 {
 
 					// eag/relations/eagRelation/relationEntry
 					if (Eag2012.INSTITUTION_RELATIONS.equalsIgnoreCase(sectionValueKey)) {
-						for (int j = 0; j < valueList.size() && !valueList.get(j).isEmpty(); j++) {
+						for (int j = 0; j < valueList.size(); j++) {
 							EagRelation eagRelation = new EagRelation();
 
 							// eag/relations/eagRelation/eagRelationType
@@ -604,8 +606,42 @@ public class CreateEAG2012 {
 								}
 							}
 							eagRelation.getRelationEntry().add(relationEntry);
-							this.eag.getRelations().getEagRelation().add(eagRelation);
+
+							boolean found = false; 
+							for (int x = 0; x < this.eag.getRelations().getEagRelation().size(); x++){
+								if (this.eag.getRelations().getEagRelation().get(x) != null
+										&& ((this.eag.getRelations().getEagRelation().get(x).getHref() != null
+												&& this.eag.getRelations().getEagRelation().get(x).getHref().equals(eagRelation.getHref()))
+											|| (this.eag.getRelations().getEagRelation().get(x).getHref() == null
+												&& eagRelation.getHref() == null))) {
+									if (!this.eag.getRelations().getEagRelation().get(x).getRelationEntry().isEmpty()) {
+										for (int k = 0; k < this.eag.getRelations().getEagRelation().get(x).getRelationEntry().size(); k++) {
+											RelationEntry relationEntryCheck = this.eag.getRelations().getEagRelation().get(x).getRelationEntry().get(k);
+											if (relationEntryCheck != null
+													&& relationEntryCheck.getContent() != null
+													&& relationEntry.getContent() != null
+													&& relationEntryCheck.getContent().equalsIgnoreCase(relationEntry.getContent())) {
+												found = true;
+												if(eagRelation.getDescriptiveNote()!=null) { //priority for descriptive note
+													this.eag.getRelations().getEagRelation().set(x,eagRelation);
+												}
+											}
+										}
+									} else {
+										found = true;
+										if(eagRelation.getDescriptiveNote()!=null) { //priority for descriptive note
+											this.eag.getRelations().getEagRelation().set(x,eagRelation);
+										}
+									}
+								}
+							}
+							if (!found) {
+								if(eagRelation.getRelationEntry()!=null || (eagRelation.getHref()!=null && !eagRelation.getHref().isEmpty())) {
+									this.eag.getRelations().getEagRelation().add(eagRelation);
+								}
+							}
 						}
+
 						if((this.eag.getRelations().getEagRelation().isEmpty() && this.eag.getRelations().getResourceRelation().isEmpty()) ){
 							this.eag.setRelations(null);
 						}
