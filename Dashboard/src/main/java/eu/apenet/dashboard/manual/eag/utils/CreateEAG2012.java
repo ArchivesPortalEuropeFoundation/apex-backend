@@ -607,37 +607,49 @@ public class CreateEAG2012 {
 							}
 							eagRelation.getRelationEntry().add(relationEntry);
 
-							boolean found = false; 
-							for (int x = 0; x < this.eag.getRelations().getEagRelation().size(); x++){
-								if (this.eag.getRelations().getEagRelation().get(x) != null
-										&& ((this.eag.getRelations().getEagRelation().get(x).getHref() != null
-												&& this.eag.getRelations().getEagRelation().get(x).getHref().equals(eagRelation.getHref()))
-											|| (this.eag.getRelations().getEagRelation().get(x).getHref() == null
-												&& eagRelation.getHref() == null))) {
-									if (!this.eag.getRelations().getEagRelation().get(x).getRelationEntry().isEmpty()) {
-										for (int k = 0; k < this.eag.getRelations().getEagRelation().get(x).getRelationEntry().size(); k++) {
-											RelationEntry relationEntryCheck = this.eag.getRelations().getEagRelation().get(x).getRelationEntry().get(k);
-											if (relationEntryCheck != null
-													&& relationEntryCheck.getContent() != null
-													&& relationEntry.getContent() != null
-													&& relationEntryCheck.getContent().equalsIgnoreCase(relationEntry.getContent())) {
-												found = true;
-												if(eagRelation.getDescriptiveNote()!=null) { //priority for descriptive note
-													this.eag.getRelations().getEagRelation().set(x,eagRelation);
+							if (eagRelation.getDate() != null
+									|| eagRelation.getDateRange() != null
+									|| eagRelation.getDateSet() != null
+									|| eagRelation.getDescriptiveNote() != null
+									|| eagRelation.getEagRelationType() != null
+									|| (eagRelation.getHref() != null && !eagRelation.getHref().isEmpty())
+									|| eagRelation.getLastDateTimeVerified() != null
+									|| (!eagRelation.getRelationEntry().isEmpty()
+											&& eagRelation.getRelationEntry().get(0) != null
+											&& eagRelation.getRelationEntry().get(0).getContent() != null
+											&& !eagRelation.getRelationEntry().get(0).getContent().isEmpty())) {
+								boolean found = false; 
+								for (int x = 0; x < this.eag.getRelations().getEagRelation().size(); x++){
+									if (this.eag.getRelations().getEagRelation().get(x) != null
+											&& ((this.eag.getRelations().getEagRelation().get(x).getHref() != null
+													&& this.eag.getRelations().getEagRelation().get(x).getHref().equals(eagRelation.getHref()))
+												|| (this.eag.getRelations().getEagRelation().get(x).getHref() == null
+													&& eagRelation.getHref() == null))) {
+										if (!this.eag.getRelations().getEagRelation().get(x).getRelationEntry().isEmpty()) {
+											for (int k = 0; k < this.eag.getRelations().getEagRelation().get(x).getRelationEntry().size(); k++) {
+												RelationEntry relationEntryCheck = this.eag.getRelations().getEagRelation().get(x).getRelationEntry().get(k);
+												if (relationEntryCheck != null
+														&& relationEntryCheck.getContent() != null
+														&& relationEntry.getContent() != null
+														&& relationEntryCheck.getContent().equalsIgnoreCase(relationEntry.getContent())) {
+													found = true;
+													if(eagRelation.getDescriptiveNote()!=null) { //priority for descriptive note
+														this.eag.getRelations().getEagRelation().set(x,eagRelation);
+													}
 												}
 											}
-										}
-									} else {
-										found = true;
-										if(eagRelation.getDescriptiveNote()!=null) { //priority for descriptive note
-											this.eag.getRelations().getEagRelation().set(x,eagRelation);
+										} else {
+											found = true;
+											if(eagRelation.getDescriptiveNote()!=null) { //priority for descriptive note
+												this.eag.getRelations().getEagRelation().set(x,eagRelation);
+											}
 										}
 									}
 								}
-							}
-							if (!found) {
-								if(eagRelation.getRelationEntry()!=null || (eagRelation.getHref()!=null && !eagRelation.getHref().isEmpty())) {
-									this.eag.getRelations().getEagRelation().add(eagRelation);
+								if (!found) {
+									if(eagRelation.getRelationEntry()!=null || (eagRelation.getHref()!=null && !eagRelation.getHref().isEmpty())) {
+										this.eag.getRelations().getEagRelation().add(eagRelation);
+									}
 								}
 							}
 						}

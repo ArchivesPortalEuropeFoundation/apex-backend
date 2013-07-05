@@ -1098,7 +1098,7 @@
 															<xsl:value-of select="text()"/>
 														</a>
 													</xsl:if>
-													<xsl:if test="not(starts-with($link, 'http')) or not(starts-with($link, 'https')) or not(starts-with($link, 'ftp')) or not(starts-with($link, 'www'))">
+													<xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
 														<a href="#">
 															<xsl:attribute name="onclick"><script>recoverRelatedInstitution('<xsl:value-of select="ape:related(current()/parent::node()/@href)"></xsl:value-of>');</script></xsl:attribute>
 															<xsl:value-of select="text()"/>
@@ -1117,21 +1117,40 @@
 											</xsl:when>
 											<xsl:when test="$link and $link != ''">
 												<div>
-													<xsl:if test="starts-with($link, 'http')">
+													<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
 														<a href="{$link}" target="_blank">
 															<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
 														</a>
 													</xsl:if>
-													<xsl:if test="not(starts-with($link, 'http'))">
-														<a href="{$link}">
+													<xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
+														<a href="#">
+															<xsl:attribute name="onclick"><script>recoverRelatedInstitution('<xsl:value-of select="ape:related(current()/parent::node()/@href)"></xsl:value-of>');</script></xsl:attribute>
 															<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
 														</a>
+													</xsl:if>
+													<xsl:if test="current()/parent::node()/eag:descriptiveNote/eag:p/text()">
+														<div>
+															<p id="descriptiveNoteOnEAGRelation">
+																<xsl:call-template name="multilanguageWithoutP">
+																	<xsl:with-param name="list" select="current()/parent::node()/eag:descriptiveNote/eag:p"></xsl:with-param>
+																</xsl:call-template>
+															</p>
+														</div>
 													</xsl:if>
 												</div>
 											</xsl:when>
 											<xsl:when test="text()">
 												<div>
 													<xsl:value-of select="text()"/>
+													<xsl:if test="current()/parent::node()/eag:descriptiveNote/eag:p/text()">
+														<div>
+															<p id="descriptiveNoteOnEAGRelation">
+																<xsl:call-template name="multilanguageWithoutP">
+																	<xsl:with-param name="list" select="current()/parent::node()/eag:descriptiveNote/eag:p"></xsl:with-param>
+																</xsl:call-template>
+															</p>
+														</div>
+													</xsl:if>
 												</div>
 											</xsl:when>
 										</xsl:choose>
