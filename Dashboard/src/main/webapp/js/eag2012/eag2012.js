@@ -1651,6 +1651,7 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7, proper
 	$("table#contactTable_"+(counter+1)+" input#textContactLinkTitleForEmailOfTheInstitution_1").removeAttr("onchange");
 	$("table#contactTable_"+(counter+1)+" input#textContactWebOfTheInstitution_1").removeAttr("onchange");
 	$("table#contactTable_"+(counter+1)+" input#textContactLinkTitleForWebOfTheInstitution_1").removeAttr("onchange");
+	$("table#contactTable_"+(counter+1)+" select#selectWebpageLanguageOfTheInstitution_1").removeAttr("onchange");
 
 	// Remove attr "onchange" for all elements in "access and servicess" tab.
 	$("table#accessAndServicesTable_"+(counter+1)+" input#textOpeningTimes_1").removeAttr("onchange");

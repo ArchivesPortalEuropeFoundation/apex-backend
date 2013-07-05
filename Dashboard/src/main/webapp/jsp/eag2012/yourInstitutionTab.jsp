@@ -18,7 +18,6 @@
 			</td>
 			<td colspan="2" class="labelLeft">
 			<input type="text" id="textYIPersonInstitutionResposibleForTheDescription" class="middleText" value="${loader.agent}" onchange="personResponsibleForDescriptionChanged();" /> 
-			  <!-- <textarea  id="textYIPersonInstitutionResposibleForTheDescription" class="middleText" onchange="personResponsibleForDescriptionChanged();" >${loader.agent}</textarea> -->   
 			</td>
 		</tr>
 
@@ -39,8 +38,6 @@
 			</td>
 			<td>
 			 <input type="text" id="textYIIdentifierOfTheInstitution" value="${loader.otherRepositorId}" onKeyup="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>');firstIdAndNoISIL();"/>
-			<!--<textarea id="textYIIdentifierOfTheInstitution" onKeyup="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>');firstIdAndNoISIL();">${loader.otherRepositorId}</textarea> -->
-			
 			</td>
 			<td class="labelLeft">
 			  <label for="textYICodeISL"><s:property value="getText('label.ai.tabs.commons.codeISL')"/></label>
