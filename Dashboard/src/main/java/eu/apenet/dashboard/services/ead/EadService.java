@@ -38,11 +38,13 @@ import eu.apenet.persistence.vo.ValidatedState;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class EadService {
+
 	protected static final Logger LOGGER = Logger.getLogger(EadService.class);
-	
+
 	public static boolean isHarvestingStarted() {
 		return DAOFactory.instance().getResumptionTokenDAO().containsValidResumptionTokens(new Date());
 	}
+
 	public static void createPreviewHTML(XmlType xmlType, Integer id) {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
@@ -55,11 +57,13 @@ public class EadService {
 			}
 		}
 	}
+
 	public static boolean hasEdmPublished(Integer eadId) {
-		
+
 		boolean result;
-		
-		// At the moment, only FA can have ESE files converted. Please, change this behavior if another kind of EAD can have
+
+		// At the moment, only FA can have ESE files converted. Please, change
+		// this behavior if another kind of EAD can have
 		// ESE files converted
 		EseDAO eseDao = DAOFactory.instance().getEseDAO();
 		EseStateDAO eseStateDao = DAOFactory.instance().getEseStateDAO();
@@ -67,16 +71,16 @@ public class EadService {
 		List<Ese> eseList = eseDao.getEsesByFindingAidAndState(eadId, eseState);
 		if (eseList == null || eseList.isEmpty()) {
 			result = false;
-		}
-		else {
+		} else {
 			result = true;
 		}
-		
+
 		eseDao = null;
 		eseStateDao = null;
 		eseState = null;
 		return result;
 	}
+
 	public static File download(Integer id, XmlType xmlType) {
 		Ead ead = DAOFactory.instance().getEadDAO().findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
@@ -202,6 +206,7 @@ public class EadService {
 			addToQueue(ead, QueueAction.CHANGE_TO_DYNAMIC, null);
 		}
 	}
+
 	public static void deleteFromQueue(XmlType xmlType, Integer id) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		JpaUtil.beginDatabaseTransaction();
@@ -216,23 +221,23 @@ public class EadService {
 		JpaUtil.commitDatabaseTransaction();
 	}
 
-	private static void deleteFromQueueInternal(QueueItem queueItem) throws IOException{
+	private static void deleteFromQueueInternal(QueueItem queueItem) throws IOException {
 		UpFile upFile = queueItem.getUpFile();
-		if (upFile != null){
+		if (upFile != null) {
 			String filename = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath();
 			File file = new File(filename);
 			File aiDir = file.getParentFile();
 			ContentUtils.deleteFile(file, false);
-			if (aiDir.exists() && aiDir.listFiles().length == 0){
+			if (aiDir.exists() && aiDir.listFiles().length == 0) {
 				ContentUtils.deleteFile(aiDir, false);
 			}
 		}
 		DAOFactory.instance().getQueueItemDAO().deleteSimple(queueItem);
-		if (upFile != null){
+		if (upFile != null) {
 			DAOFactory.instance().getUpFileDAO().deleteSimple(upFile);
 		}
 	}
-	
+
 	public static void deleteFromQueue(QueueItem queueItem) throws Exception {
 		SecurityContext.get().checkAuthorizedToManageQueue();
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
@@ -417,17 +422,16 @@ public class EadService {
 		} else if (QueueAction.CONVERT_TO_ESE_EDM.equals(queueAction)) {
 			eadSearchOptions.setEuropeana(EuropeanaState.NOT_CONVERTED);
 			eadSearchOptions.setValidated(ValidatedState.VALIDATED);
-		}else if (QueueAction.DELIVER_TO_EUROPEANA.equals(queueAction)) {
+		} else if (QueueAction.DELIVER_TO_EUROPEANA.equals(queueAction)) {
 			eadSearchOptions.setEuropeana(EuropeanaState.CONVERTED);
 
-		}else if (QueueAction.DELETE_FROM_EUROPEANA.equals(queueAction)) {
+		} else if (QueueAction.DELETE_FROM_EUROPEANA.equals(queueAction)) {
 			eadSearchOptions.setEuropeana(EuropeanaState.DELIVERED);
-		}else if (QueueAction.DELETE_ESE_EDM.equals(queueAction)) {
+		} else if (QueueAction.DELETE_ESE_EDM.equals(queueAction)) {
 			eadSearchOptions.setEuropeana(EuropeanaState.CONVERTED);
-		}
-		else if (QueueAction.CHANGE_TO_STATIC.equals(queueAction)) {
+		} else if (QueueAction.CHANGE_TO_STATIC.equals(queueAction)) {
 			eadSearchOptions.setDynamic(true);
-		}else if (QueueAction.CHANGE_TO_DYNAMIC.equals(queueAction)) {
+		} else if (QueueAction.CHANGE_TO_DYNAMIC.equals(queueAction)) {
 			eadSearchOptions.setDynamic(false);
 		}
 		eadSearchOptions.setQueuing(QueuingState.NO);
@@ -443,6 +447,35 @@ public class EadService {
 			indexqueueDao.updateSimple(queueItem);
 		}
 		JpaUtil.commitDatabaseTransaction();
+	}
+
+	public static void updateEverything(EadSearchOptions eadSearchOptions, QueueAction queueAction) throws IOException {
+		QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
+		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+		long itemsLeft = eadDAO.countEads(eadSearchOptions);
+		LOGGER.info(itemsLeft + " " + eadSearchOptions.getEadClazz().getSimpleName() +  " left to add to queue");
+		while (itemsLeft > 0) {
+			JpaUtil.beginDatabaseTransaction();
+			List<Ead> eads = eadDAO.getEads(eadSearchOptions);
+			int size = 0;
+			while ((size = eads.size()) > 0) {
+				Ead ead = eads.get(size - 1);
+				QueueItem queueItem = fillQueueItem(ead, queueAction, null, 1);
+				ead.setQueuing(QueuingState.READY);
+				if (queueAction.isPublishAction()){
+					ead.setPublished(false);
+				}
+				eadDAO.updateSimple(ead);
+				eads.remove(size - 1);
+				indexqueueDao.updateSimple(queueItem);
+			}
+			JpaUtil.commitDatabaseTransaction();
+			itemsLeft = eadDAO.countEads(eadSearchOptions);
+			LOGGER.info(itemsLeft + " " + eadSearchOptions.getEadClazz().getSimpleName() +  " left to add to queue");
+			
+		}
+
+
 	}
 
 	public static void deleteBatchFromQueue(List<Integer> ids, Integer aiId, XmlType xmlType) throws IOException {
@@ -474,7 +507,7 @@ public class EadService {
 			ead.setQueuing(QueuingState.NO);
 			eadDAO.updateSimple(ead);
 			deleteFromQueueInternal(queueItem);
-			eads.remove(size-1);
+			eads.remove(size - 1);
 		}
 		JpaUtil.commitDatabaseTransaction();
 	}
@@ -510,13 +543,18 @@ public class EadService {
 	}
 
 	private static QueueItem fillQueueItem(Ead ead, QueueAction queueAction, Properties preferences) throws IOException {
+		return fillQueueItem(ead, queueAction, preferences, 1000);
+	}
+
+	private static QueueItem fillQueueItem(Ead ead, QueueAction queueAction, Properties preferences, int basePriority)
+			throws IOException {
 		QueueItem queueItem = new QueueItem();
 		queueItem.setQueueDate(new Date());
 		queueItem.setAction(queueAction);
 		if (preferences != null) {
 			queueItem.setPreferences(writeProperties(preferences));
 		}
-		int priority = 1;
+		int priority = basePriority;
 		if (ead instanceof FindingAid) {
 			queueItem.setFindingAid((FindingAid) ead);
 		} else if (ead instanceof HoldingsGuide) {

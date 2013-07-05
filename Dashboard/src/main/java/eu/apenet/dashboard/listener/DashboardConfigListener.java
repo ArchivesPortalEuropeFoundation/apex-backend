@@ -10,16 +10,18 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.archivesportaleurope.commons.config.DashboardConfig;
 
 public class DashboardConfigListener extends ApePortalAndDashboardConfigListener {
+
 	private static final String EMAIL_DASHBOARD_FEEDBACK_DESTINY = "EMAIL_DASHBOARD_FEEDBACK_DESTINY";
 	private static final String EUROPEANA_DIR_PATH = "EUROPEANA_DIR_PATH";
-	private static final String EUROPEANA_DIR_PATH_DEFAULT = "/mnt/europeana/";
+	private static final String EUROPEANA_DIR_PATH_DEFAULT = "/ape/data/europeana/";
 	private static final String SOLR_INDEX_URL = "SOLR_INDEX_URL";
 	private static final String XSL_DIR_PATH = "XSL_DIR_PATH";
-	private static final String XSL_DIR_PATH_DEFAULT = "/mnt/xsl/";
+	private static final String XSL_DIR_PATH_DEFAULT = "/ape/data/xsl/";
 	private static final String TMP_DIR_PATH = "TMP_DIR_PATH";
-	private static final String TMP_DIR_PATH_DEFAULT = "/mnt/tmp/";
+	private static final String TMP_DIR_PATH_DEFAULT = "/ape/data/tmp/";
 	private static final String DEFAULT_QUEUE_PROCESSING = "DEFAULT_QUEUE_PROCESSING";
 	private static final String MAINTENANCE_MODE = "MAINTENANCE_MODE";
+	private static final String MAINTENANCE_ACTION = "MAINTENANCE_ACTION";
 	private static final String DOMAIN_NAME_MAIN_SERVER = "DOMAIN_NAME_MAIN_SERVER";
 	private static final String DOMAIN_NAME_MAIN_SERVER_DEFAULT = "localhost:8443";
 	@Override
@@ -29,6 +31,10 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 			init(servletContext, apeConfig);
 			apeConfig.finalizeConfigPhase();
 			APEnetUtilities.setConfig(apeConfig);
+			if (StringUtils.isNotBlank(apeConfig.getMaintenanceAction())){
+				MaintenanceTask maintenanceTask = new MaintenanceTask();
+				maintenanceTask.start();
+			}
 			if (apeConfig.isDefaultQueueProcessing()){
 				QueueDaemon.start();
 			}
@@ -41,7 +47,7 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 	protected void init(ServletContext servletContext, DashboardConfig config) {
 		String europeanaDirPath = servletContext.getInitParameter(EUROPEANA_DIR_PATH);
 		if (StringUtils.isBlank(europeanaDirPath)) {
-			log.warn("No " + EUROPEANA_DIR_PATH + " specified. Using the default: " + EUROPEANA_DIR_PATH_DEFAULT);
+			log.info("No " + EUROPEANA_DIR_PATH + " specified. Using the default: " + EUROPEANA_DIR_PATH_DEFAULT);
 			europeanaDirPath = EUROPEANA_DIR_PATH_DEFAULT;
 		}
 		europeanaDirPath = checkPath(EUROPEANA_DIR_PATH, europeanaDirPath);
@@ -69,7 +75,7 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 		
 		String xslDirPath = servletContext.getInitParameter(XSL_DIR_PATH);
 		if (StringUtils.isBlank(xslDirPath)) {
-			log.warn("No " + XSL_DIR_PATH + " specified. Using the default: " + XSL_DIR_PATH_DEFAULT);
+			log.info("No " + XSL_DIR_PATH + " specified. Using the default: " + XSL_DIR_PATH_DEFAULT);
 			xslDirPath = XSL_DIR_PATH_DEFAULT;
 		}
 		xslDirPath = checkPath(XSL_DIR_PATH, xslDirPath);
@@ -99,6 +105,14 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 		String maintenanceMode = servletContext.getInitParameter(MAINTENANCE_MODE);
 		if (StringUtils.isNotBlank(maintenanceMode)) {
 			config.setMaintenanceMode(Boolean.parseBoolean(maintenanceMode));
+		}
+		String maintenanceAction = servletContext.getInitParameter(MAINTENANCE_ACTION);
+		if (StringUtils.isNotBlank(maintenanceAction)) {
+			config.setDefaultQueueProcessing(false);
+			config.setMaintenanceMode(true);
+			config.setMaintenanceAction(maintenanceAction);
+			log.info("Maintenance action specified: " + maintenanceAction);
+
 		}
 		super.init(servletContext, config);
 	}
