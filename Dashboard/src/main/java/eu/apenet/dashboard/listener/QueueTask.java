@@ -10,12 +10,14 @@ import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
 import eu.apenet.commons.exceptions.APEnetException;
+import eu.apenet.commons.solr.UpdateSolrServerHolder;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.dao.ResumptionTokenDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.ResumptionToken;
@@ -38,6 +40,7 @@ public class QueueTask implements Runnable {
 	@Override
 	public void run() {
 		LOGGER.info("Queuing process active");
+		boolean hasItemPublished = false;
 		removeOldResumptionTokens();
 		long endTime = System.currentTimeMillis() + duration.getMilliseconds();
 		boolean stopped = false;
@@ -48,7 +51,7 @@ public class QueueTask implements Runnable {
 			} else {
 				try {
 					QueueDaemon.setQueueProcessing(true);
-					processQueue(endTime);
+					hasItemPublished = hasItemPublished || processQueue(endTime);
 				} catch (Throwable e) {
 					LOGGER.error("Stopping processing for a while :" + e.getMessage(), e);
 					try {
@@ -73,6 +76,13 @@ public class QueueTask implements Runnable {
 		}
 
 		LOGGER.info("Queuing process inactive");
+		if (hasItemPublished){
+			try {
+				UpdateSolrServerHolder.getInstance().hardCommit();
+			} catch (Exception de) {
+				LOGGER.error(de.getMessage(),de);
+			}
+		}
 		if (!scheduler.isShutdown()) {
 			scheduler.schedule(new QueueTask(scheduler, duration, delay), delay.getMilliseconds(),
 					TimeUnit.MILLISECONDS);
@@ -90,7 +100,8 @@ public class QueueTask implements Runnable {
 		}
 	}
 
-	public void processQueue(long endTime) throws Exception {
+	public boolean processQueue(long endTime) throws Exception {
+		boolean itemsPublished = false;
 		QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		boolean hasItems = true;
@@ -112,7 +123,8 @@ public class QueueTask implements Runnable {
 					ead.setQueuing(QueuingState.BUSY);
 					eadDAO.updateSimple(ead);
 					JpaUtil.commitDatabaseTransaction();
-					EadService.processQueueItem(queueItem);
+					QueueAction queueAction = EadService.processQueueItem(queueItem);
+					itemsPublished = itemsPublished || queueAction.isPublishAction();
 					hasItems = true;
 				}
 			} catch (Exception e) {
@@ -142,6 +154,7 @@ public class QueueTask implements Runnable {
 			}
 
 		}
+		return itemsPublished;
 
 	}
 

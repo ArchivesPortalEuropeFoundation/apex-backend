@@ -49,14 +49,15 @@ public class XmlEadParser extends AbstractParser {
         }
 	}
 
-    public static void parseEadAndPublish(Ead ead) throws Exception {
+    public static long parseEadAndPublish(Ead ead) throws Exception {
         EadContent oldEadContent = ead.getEadContent();
         if (oldEadContent == null){
-        	parse(ead, new SolrPublisher(ead));
+        	return parse(ead, new SolrPublisher(ead));
         }
+        return 0l;
     }
 
-	private static void parse(Ead ead, SolrPublisher solrPublisher) throws Exception {
+	private static long parse(Ead ead, SolrPublisher solrPublisher) throws Exception {
 		int cOrderId = 0;
 		EadContent eadContent = new EadContent();
         if (solrPublisher != null)
@@ -204,6 +205,11 @@ public class XmlEadParser extends AbstractParser {
 				solrPublisher.rollback();
 			}
 			throw de;
+		}
+		if (solrPublisher != null) {
+			return solrPublisher.getSolrTime();
+		}else {
+			return 0;
 		}
 	}
 

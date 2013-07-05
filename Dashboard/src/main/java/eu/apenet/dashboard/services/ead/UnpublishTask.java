@@ -27,17 +27,18 @@ public class UnpublishTask extends AbstractEadTask {
 	public void execute(Ead ead, Properties properties) throws Exception {
 		if (valid(ead)) {
 			try {
+				long startTime = System.currentTimeMillis();
 				EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 				XmlType xmlType = XmlType.getEadType(ead);
 				logger.debug("Removing the EAD (" + xmlType.getName() + ") with eadid '" + ead.getEadid()
 						+ "' from the index");
-				deleteFromSolr(ead.getEadid(), ead.getAiId());
+				long solrTime = deleteFromSolr(ead.getEadid(), ead.getAiId());
 				logger.debug("Changing EAD (" + xmlType.getName() + ") state of the EAD with eadid " + ead.getEadid());
 				ContentUtils.changeSearchable(ead, false);
 				ead.setTotalNumberOfUnits(0l);
 				ead.setTotalNumberOfUnitsWithDao(0l);
 				eadDAO.store(ead);
-				logAction(ead);
+				logSolrAction(ead, "", solrTime, System.currentTimeMillis()-(startTime+solrTime));
 			} catch (Exception e) {
 				logAction(ead, e);
 				throw new APEnetException(this.getActionName() + " " + e.getMessage(), e);
@@ -45,10 +46,11 @@ public class UnpublishTask extends AbstractEadTask {
 		}
 	}
 
-	private static void deleteFromSolr(String eadid, int aiId) throws SolrServerException, IOException {
+	private static long deleteFromSolr(String eadid, int aiId) throws SolrServerException, IOException {
 		UpdateSolrServerHolder server = UpdateSolrServerHolder.getInstance();
-		server.deleteByQuery("(" + SolrFields.AI_ID + ":" + aiId + " AND " + SolrFields.EADID + ":\"" + eadid + "\")");
-		server.commit();
+		long solrTime = server.deleteByQuery("(" + SolrFields.AI_ID + ":" + aiId + " AND " + SolrFields.EADID + ":\"" + eadid + "\")");
+		solrTime+= server.softCommit();
+		return solrTime;
 
 	}
 }

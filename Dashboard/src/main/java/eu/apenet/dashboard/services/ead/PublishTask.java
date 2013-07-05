@@ -19,6 +19,7 @@ public class PublishTask extends AbstractEadTask {
 		if (valid(ead)) {
 			try {
 				long startTime = System.currentTimeMillis();
+				long solrTime = 0l;
 				/*
 				 * there is something wrong
 				 */
@@ -30,13 +31,13 @@ public class PublishTask extends AbstractEadTask {
 				String message = null;
 				if (ead.getEadContent() == null){
 					message = "xml";
-					XmlEadParser.parseEadAndPublish(ead);					
+					solrTime = XmlEadParser.parseEadAndPublish(ead);					
 				}else {
 					message = "database";
-					DatabaseEadPublisher.publish(ead);
+					solrTime = DatabaseEadPublisher.publish(ead);
 				}
 
-				logAction(ead, message, System.currentTimeMillis()-startTime);
+				logSolrAction(ead, message, solrTime, System.currentTimeMillis()-(startTime+solrTime));
 			} catch (Exception e) {
 				logAction(ead, e);
 				throw new APEnetException(this.getActionName() + " " + e.getMessage(), e);

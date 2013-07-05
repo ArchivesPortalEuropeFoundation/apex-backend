@@ -262,10 +262,9 @@ public class EadService {
 		DAOFactory.instance().getUpFileDAO().delete(upFile);
 	}
 
-	public static boolean processQueueItem(QueueItem queueItem) throws IOException {
+	public static QueueAction processQueueItem(QueueItem queueItem) throws IOException {
 		QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-		boolean processed = false;
 		Ead ead = queueItem.getEad();
 		XmlType xmlType = XmlType.getEadType(ead);
 		LOGGER.info("Process queue item: " + queueItem.getId() + " " + queueItem.getAction() + " " + ead.getEadid()
@@ -274,8 +273,8 @@ public class EadService {
 		if (queueItem.getPreferences() != null) {
 			preferences = readProperties(queueItem.getPreferences());
 		}
-
-		if (queueItem.getAction().isOverwriteAction() || queueItem.getAction().isDeleteAction()) {
+		QueueAction queueAction = queueItem.getAction();
+		if (queueAction.isOverwriteAction() || queueAction.isDeleteAction()) {
 			boolean eadDeleted = false;
 			boolean upFileDeleted = false;
 			UpFile upFile = queueItem.getUpFile();
@@ -285,7 +284,7 @@ public class EadService {
 				queueItem.setUpFile(null);
 				queueItemDAO.store(queueItem);
 
-				if (queueItem.getAction().isOverwriteAction()) {
+				if (queueAction.isOverwriteAction()) {
 					boolean isPublished = ead.isPublished();
 					Integer aiId = ead.getAiId();
 					new DeleteFromEuropeanaTask().execute(ead, preferences);
@@ -302,7 +301,7 @@ public class EadService {
 					}
 					DAOFactory.instance().getUpFileDAO().delete(upFile);
 					upFileDeleted = true;
-				} else if (queueItem.getAction().isDeleteAction()) {
+				} else if (queueAction.isDeleteAction()) {
 					new DeleteFromEuropeanaTask().execute(ead, preferences);
 					new DeleteEseEdmTask().execute(ead, preferences);
 					new UnpublishTask().execute(ead, preferences);
@@ -327,39 +326,39 @@ public class EadService {
 			}
 		} else {
 			try {
-				if (queueItem.getAction().isValidateAction()) {
+				if (queueAction.isValidateAction()) {
 					new ValidateTask().execute(ead, preferences);
 				}
-				if (queueItem.getAction().isConvertAction()) {
+				if (queueAction.isConvertAction()) {
 					new ConvertTask().execute(ead, preferences);
 				}
-				if (queueItem.getAction().isValidateAction()) {
+				if (queueAction.isValidateAction()) {
 					new ValidateTask().execute(ead, preferences);
 				}
-				if (queueItem.getAction().isPublishAction()) {
+				if (queueAction.isPublishAction()) {
 					new PublishTask().execute(ead, preferences);
 				}
-				if (queueItem.getAction().isConvertToEseEdmAction()) {
+				if (queueAction.isConvertToEseEdmAction()) {
 					new ConvertToEseEdmTask().execute(ead, preferences);
 				}
-				if (queueItem.getAction().isUnpublishAction()) {
+				if (queueAction.isUnpublishAction()) {
 					new UnpublishTask().execute(ead, preferences);
 				}
-				if (queueItem.getAction().isDeleteFromEuropeanaAction()) {
+				if (queueAction.isDeleteFromEuropeanaAction()) {
 					new DeleteFromEuropeanaTask().execute(ead, preferences);
 				}
-				if (queueItem.getAction().isDeleteEseEdmAction()) {
+				if (queueAction.isDeleteEseEdmAction()) {
 					new DeleteEseEdmTask().execute(ead, preferences);
 				}
 
-				if (queueItem.getAction().isDeliverToEuropeanaAction()) {
+				if (queueAction.isDeliverToEuropeanaAction()) {
 					new DeliverToEuropeanaTask().execute(ead, preferences);
 				}
-				if (queueItem.getAction().isCreateStaticEadAction()) {
+				if (queueAction.isCreateStaticEadAction()) {
 					new ChangeStaticTask().execute(ead, preferences);
 				}
 
-				if (queueItem.getAction().isCreateDynamicEadAction()) {
+				if (queueAction.isCreateDynamicEadAction()) {
 					new ChangeDynamicTask().execute(ead, preferences);
 				}
 				ead.setQueuing(QueuingState.NO);
@@ -376,10 +375,9 @@ public class EadService {
 
 			}
 		}
-		processed = true;
 		LOGGER.info("Process queue item finished");
 
-		return processed;
+		return queueAction;
 	}
 
 	private static void addToQueue(Ead ead, QueueAction queueAction, Properties preferences, UpFile upFile)

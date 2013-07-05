@@ -17,7 +17,7 @@ import eu.apenet.persistence.vo.SourceGuide;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class MaintenanceTask extends Thread {
-	private static final int MAX_AMOUNT = 100;
+	private static final int MAX_AMOUNT = 1000;
 	private static final Logger LOGGER = Logger.getLogger(MaintenanceTask.class);
 	private static final String REINDEX_ALL = "reindex-all";
 	private static final String DELETE_ALL = "delete-all";
@@ -51,7 +51,6 @@ public class MaintenanceTask extends Thread {
 
 		}else if (DELETE_ALL.equals(APEnetUtilities.getDashboardConfig().getMaintenanceAction())){
 			LOGGER.info("Start to add all files to the queue to delete them");
-			eadSearchOptions.setPublished(true);
 			List<QueuingState> queuingStates = new ArrayList<QueuingState>();
 			queuingStates.add(QueuingState.NO);
 			queuingStates.add(QueuingState.ERROR);
