@@ -26,7 +26,7 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 public class DatabaseEadPublisher {
 	private static final Logger LOG = Logger.getLogger(DatabaseEadPublisher.class);
 
-	public static void publish(Ead ead) throws Exception {
+	public static long publish(Ead ead) throws Exception {
 		CLevelDAO clevelDAO = DAOFactory.instance().getCLevelDAO();
 		EadContent eadContent = ead.getEadContent();
 		eadContent.setVisible(true);
@@ -89,6 +89,7 @@ public class DatabaseEadPublisher {
 			solrPublisher.rollback();
 			throw de;
 		}
+		return solrPublisher.getSolrTime();
 	}
 
 
