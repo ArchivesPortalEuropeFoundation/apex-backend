@@ -124,7 +124,7 @@ public class ConvertAction extends AbstractInstitutionAction {
 
 	@Override
 	protected void buildBreadcrumbs() {
-		addBreadcrumb("content.action", getText("breadcrumb.section.contentmanager"));
+		addBreadcrumb("contentmanager.action", getText("breadcrumb.section.contentmanager"));
 		addBreadcrumb(getText("breadcrumb.section.convertToEse"));
 	}
 
