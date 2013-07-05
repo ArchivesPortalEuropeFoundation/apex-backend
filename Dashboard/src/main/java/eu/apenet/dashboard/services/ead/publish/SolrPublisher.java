@@ -103,6 +103,7 @@ public class SolrPublisher {
 	private static XPathExpression otherExpression;
 	private static XPathExpression displayIntroExpression;
 	private static XPathExpression displayDidExpression;
+	private long solrTime = 0l;
 	static {
 		try {
 			XPATH.setNamespaceContext(new EADNamespaceContext());
@@ -519,7 +520,7 @@ public class SolrPublisher {
 		doc1.addField(SolrFields.ORDER_ID, publishData.getOrderId());
 		docs.add(doc1);
 		if (docs.size() == MAX_NUMBER_OF_PENDING_DOCS) {
-			UpdateSolrServerHolder.getInstance().add(docs);
+			solrTime += UpdateSolrServerHolder.getInstance().add(docs);
 			docs = new ArrayList<SolrInputDocument>();
 		}
 	}
@@ -532,10 +533,10 @@ public class SolrPublisher {
 
 	public void commitAll(EADCounts eadCounts) throws MalformedURLException, SolrServerException, IOException {
 		if (docs.size() > 0) {
-			UpdateSolrServerHolder.getInstance().add(docs);
+			solrTime += UpdateSolrServerHolder.getInstance().add(docs);
 			docs = new ArrayList<SolrInputDocument>();
 		}
-		UpdateSolrServerHolder.getInstance().commit();
+		solrTime += UpdateSolrServerHolder.getInstance().softCommit();
 		removeWarnings();
 		if (!isFinalPath) {
 			String[] otherlist = null;
@@ -585,7 +586,7 @@ public class SolrPublisher {
 	}
 
 	public void rollback() throws SolrServerException, IOException {
-		UpdateSolrServerHolder.getInstance().commit();
+		solrTime += UpdateSolrServerHolder.getInstance().softCommit();
 
 		String solrPrefix = SolrValues.FA_PREFIX;
 		if (xmlType == XmlType.EAD_HG)
@@ -593,12 +594,12 @@ public class SolrPublisher {
 		else if (xmlType == XmlType.EAD_SG)
 			solrPrefix = SolrValues.SG_PREFIX;
 
-		UpdateSolrServerHolder.getInstance().deleteByQuery(SolrFields.FOND_ID + ":" + solrPrefix + ead.getId());
+		solrTime += UpdateSolrServerHolder.getInstance().deleteByQuery(SolrFields.FOND_ID + ":" + solrPrefix + ead.getId());
 		Ead rollBackEad = eadDao.findById(ead.getId(), xmlType.getClazz());
 		ContentUtils.changeSearchable(rollBackEad, false);
 		eadDao.store(rollBackEad);
 
-		UpdateSolrServerHolder.getInstance().commit();
+		solrTime += UpdateSolrServerHolder.getInstance().softCommit();
 	}
 
 	/**
@@ -702,6 +703,10 @@ public class SolrPublisher {
 			}
 		}
 		return results;
+	}
+
+	public long getSolrTime() {
+		return solrTime;
 	}
 
 }
