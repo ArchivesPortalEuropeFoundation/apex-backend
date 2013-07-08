@@ -43,12 +43,12 @@ public class EuropeanaOAIServlet extends HttpServlet {
 		String acceptEncoding = request.getHeader("Accept-Encoding");
 		LOGGER.info(remoteHost + "accepts " + acceptEncoding);
 		OutputStream outputStream = null;
-		if (StringUtils.isNotBlank(acceptEncoding) && acceptEncoding.contains("gzip")){
+//		if (StringUtils.isNotBlank(acceptEncoding) && acceptEncoding.contains("gzip")){
 			response.setHeader("Content-Encoding", "gzip");
 			outputStream = new GZIPOutputStream(response.getOutputStream());
-		}else {
-			outputStream = response.getOutputStream();
-		}
+//		}else {
+//			outputStream = response.getOutputStream();
+//		}
 		XMLStreamWriterHolder writerHolder;
 		try {
 			writerHolder = new XMLStreamWriterHolder(XMLOutputFactory.newInstance()
