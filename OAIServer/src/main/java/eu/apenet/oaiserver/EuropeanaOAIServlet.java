@@ -43,7 +43,7 @@ public class EuropeanaOAIServlet extends HttpServlet {
 		String acceptEncoding = request.getHeader("Accept-Encoding");
 		LOGGER.info(remoteHost + "accepts " + acceptEncoding);
 		OutputStream outputStream = null;
-		if (acceptEncoding.contains("gzip")){
+		if (StringUtils.isNotBlank(acceptEncoding) && acceptEncoding.contains("gzip")){
 			response.setHeader("Content-Encoding", "gzip");
 			outputStream = new GZIPOutputStream(response.getOutputStream());
 		}else {
