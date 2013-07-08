@@ -107,7 +107,19 @@ public abstract class AbstractJpaDAO <T, ID extends Serializable> extends Generi
 		}
 	}
 	
-	
+	@Override
+	public final void delete(Collection<T> entities) {
+		try {
+			JpaUtil.beginDatabaseTransaction();
+			for (T entity : entities) {
+				getEntityManager().remove(entity);
+			}
+			JpaUtil.commitDatabaseTransaction();
+		} catch (HibernateException de) {
+			JpaUtil.rollbackDatabaseTransaction();
+			throw de;
+		}
+	}
 	
 	
     @Override

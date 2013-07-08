@@ -38,6 +38,7 @@ public interface GenericDAO<T, ID extends Serializable> {
     public abstract T update(T entity);
 
     public abstract void delete(T entity);
+    public abstract void delete(Collection<T> entities);
     
     /* Refactoring signatures of down class from Bastiaan proposal */
     

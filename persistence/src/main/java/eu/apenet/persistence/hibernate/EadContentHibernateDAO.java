@@ -67,4 +67,20 @@ public class EadContentHibernateDAO extends AbstractHibernateDAO<EadContent, Lon
 			return result.get(0);
         return null;
     }
+
+	@Override
+	public List<EadContent> getEadContentsByFileId(Integer fileId, Class<? extends Ead> clazz) {
+        Criteria criteria = getSession().createCriteria(getPersistentClass(), "eadContent");
+		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        List<EadContent> result;
+        if(clazz.equals(FindingAid.class))
+        	return  criteria.add(Restrictions.eq("faId", fileId)).list();
+        else if(clazz.equals(HoldingsGuide.class))
+        	return criteria.add(Restrictions.eq("hgId", fileId)).list();
+        else
+            return criteria.add(Restrictions.eq("sgId", fileId)).list();
+
+
+	}
+    
 }

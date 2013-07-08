@@ -1,9 +1,9 @@
 package eu.apenet.persistence.dao;
 
+import java.util.List;
+
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
-import eu.apenet.persistence.vo.FindingAid;
-import eu.apenet.persistence.vo.HoldingsGuide;
 
 /**
  * 
@@ -20,5 +20,7 @@ public interface EadContentDAO extends GenericDAO<EadContent, Long> {
     public EadContent getEadContentByEadid(String eadid);
 
     public EadContent getEadContentByFileId(Integer fileId, Class<? extends Ead> clazz);
+    public List<EadContent> getEadContentsByFileId(Integer fileId, Class<? extends Ead> clazz);
+    
 }
 
