@@ -1685,8 +1685,10 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7, proper
 	var telephone = $("#textYITelephone").val();
 	var email = $("#textYIEmailAddress").val();
 	var emailLinkTitle = $("#textYIEmailLinkTitle").val();
+	var emailLang = $("table#yiTableOthers #selectTextYILangEmail").val();
 	var web = $("#textYIWebpage").val();
 	var webLinkTitle = $("#textYIWebpageLinkTitle").val();
+	var webLang = $("table#yiTableOthers #selectTextYILangWebpage").val();
 	//contact table
 	$("table#contactTable_"+(counter+1)+" #selectContinentOfTheInstitution option").eq(selectedIndex).prop("selected",true);
 	$("table#contactTable_"+(counter+1)+" #selectLanguageVisitorAddress").attr("value",streetLanguage);
@@ -1698,8 +1700,10 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7, proper
 	$("table#contactTable_"+(counter+1)+" #textContactTelephoneOfTheInstitution_1").attr("value",telephone);
 	$("table#contactTable_"+(counter+1)+" #textContactEmailOfTheInstitution_1").attr("value",email);
 	$("table#contactTable_"+(counter+1)+" #textContactLinkTitleForEmailOfTheInstitution_1").attr("value",emailLinkTitle);
+	$("table#contactTable_"+(counter+1)+" #selectEmailLanguageOfTheInstitution").attr("value",emailLang);
 	$("table#contactTable_"+(counter+1)+" #textContactWebOfTheInstitution_1").attr("value",web);
 	$("table#contactTable_"+(counter+1)+" #textContactLinkTitleForWebOfTheInstitution_1").attr("value",webLinkTitle);
+	$("table#contactTable_"+(counter+1)+" #selectWebpageLanguageOfTheInstitution_1").attr("value",webLang);
 	if ((postalCity != null && postalCity != "")
 			|| (postalStreet != null && postalStreet != "")
 			|| (postalStreetLanguage != null && postalStreetLanguage != "")) {
@@ -2088,7 +2092,7 @@ function addFurtherEmailsOfTheInstitution(text1){
 	var target2 = "";
 	if(count==1){
 		target = "table#contactTable"+currentTab+" tr[id='trEmailOfTheInstitution']";
-		target2 = "table#contactTable"+currentTab+" tr[id='trLanguageEmailOfTheInstitution']";
+		target2 = "table#contactTable"+currentTab+" tr[id='trLanguageEmailOfTheInstitution_1']";
 	}else{
 		target = "table#contactTable"+currentTab+" tr[id='trEmailOfTheInstitution_"+count+"']";
 		target2 = "table#contactTable"+currentTab+" tr[id='trLanguageEmailOfTheInstitution_"+count+"']";
@@ -3987,8 +3991,9 @@ function emailOfInstitutionLinkChanged(name){
 
 	if (id.indexOf("_") != "-1")  {
 		$("table#contactTable_1 tr#trLanguageEmailOfTheInstitution" + id + " #textContactLinkTitleForEmailOfTheInstitution" + id).attr("value", $("table#yiTableOthers #textYIEmailLinkTitle" + id).val());
+		
 	} else {
-		$("table#contactTable_1 tr#trLanguageEmailOfTheInstitution #textContactLinkTitleForEmailOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYIEmailLinkTitle").val());
+		$("table#contactTable_1 tr#trLanguageEmailOfTheInstitution_1 #textContactLinkTitleForEmailOfTheInstitution_1").attr("value", $("table#yiTableOthers #textYIEmailLinkTitle").val());
 	}
 }
 
@@ -4098,9 +4103,8 @@ function webLangOfInstitutionChanged(name){
 function contactEmailOfInstitutionLinkChanged(name){
 	var id = name.attr("id");
 	id = id.substring(id.lastIndexOf("_"));
-
 	if (id == "_1") {
-		$("table#yiTableOthers #textYIEmailLinkTitle").attr("value", $("table#contactTable_1 tr#trLanguageEmailOfTheInstitution #textContactLinkTitleForEmailOfTheInstitution_1").val());
+		$("table#yiTableOthers #textYIEmailLinkTitle").attr("value", $("table#contactTable_1 tr#trLanguageEmailOfTheInstitution_1 #textContactLinkTitleForEmailOfTheInstitution_1").val());
 	}else {
 		$("table#yiTableOthers #textYIEmailLinkTitle" + id).attr("value", $("table#contactTable_1 tr#trLanguageEmailOfTheInstitution" + id + " #textContactLinkTitleForEmailOfTheInstitution" + id).val());
 	}

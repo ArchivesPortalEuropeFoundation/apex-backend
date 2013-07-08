@@ -1410,116 +1410,118 @@ public class CreateEAG2012 {
 						List<String> emailHrefList = (sectionHrefMap!=null)?sectionHrefMap.get(sectionHrefKey):null;
 						List<String> emailLangList = (sectionLangMap!=null)?sectionLangMap.get(sectionLangKey):null;
 						for (int k = 0; k < emailValueList.size() || (emailHrefList!=null && k < emailHrefList.size()); k++) {
-							if ((emailValueList.get(k) == null || emailValueList.get(k).isEmpty()) && (emailHrefList.get(k) == null || emailHrefList.get(k).isEmpty())) {
-								break;
-							}
-							Email email = new Email();
-							email.setContent(emailValueList.get(k));
-							email.setHref((emailHrefList!=null && emailHrefList.size()>k)?emailHrefList.get(k):null);
-							if (emailLangList != null
-									&& emailLangList.size() > k
-									&& emailLangList.get(k) != null
-									&& !emailLangList.get(k).isEmpty()
-									&& !Eag2012.OPTION_NONE.equalsIgnoreCase(emailLangList.get(k))) {
-								email.setLang(emailLangList.get(k));
-							}
-							if (Eag2012.ROOT.equalsIgnoreCase(sectionValueKey)
-									&& Eag2012.ROOT.equalsIgnoreCase(sectionHrefKey)) {
-								boolean found = false;
-
-								if (!repository.getEmail().isEmpty()) {
-									for (int l = 0; !found && l < repository.getEmail().size(); l++) {
-										Email emailCheck = repository.getEmail().get(l);
-										// Current lang.
-										String currentLang = null;
-										if (emailCheck.getContent()!=null && emailCheck.getLang() != null
-												&& !emailCheck.getLang().isEmpty()) {
-											currentLang = emailCheck.getLang();
-										} 
-										if ((emailCheck.getHref() != null && emailCheck.getHref().equalsIgnoreCase(email.getHref())
-												|| (emailCheck.getHref() == null && email.getHref().isEmpty()))
-											&& (emailCheck.getContent() != null && emailCheck.getContent().equalsIgnoreCase(email.getContent())
-												|| (emailCheck.getContent() == null && email.getContent().isEmpty()))
-											&& ((currentLang != null && currentLang.equalsIgnoreCase(email.getLang()))
-												|| (currentLang == null && (email.getLang() == null || Eag2012.OPTION_NONE.equalsIgnoreCase(email.getLang()))))) {
-											found = true;
+							if ((emailValueList.get(k) != null
+									&& !emailValueList.get(k).isEmpty()) 
+									|| (emailHrefList.get(k) != null 
+										&& !emailHrefList.get(k).isEmpty())) {
+								Email email = new Email();
+								email.setContent(emailValueList.get(k));
+								email.setHref((emailHrefList!=null && emailHrefList.size()>k)?emailHrefList.get(k):null);
+								if (emailLangList != null
+										&& emailLangList.size() > k
+										&& emailLangList.get(k) != null
+										&& !emailLangList.get(k).isEmpty()
+										&& !Eag2012.OPTION_NONE.equalsIgnoreCase(emailLangList.get(k))) {
+									email.setLang(emailLangList.get(k));
+								}
+								if (Eag2012.ROOT.equalsIgnoreCase(sectionValueKey)
+										&& Eag2012.ROOT.equalsIgnoreCase(sectionHrefKey)) {
+									boolean found = false;
+	
+									if (!repository.getEmail().isEmpty()) {
+										for (int l = 0; !found && l < repository.getEmail().size(); l++) {
+											Email emailCheck = repository.getEmail().get(l);
+											// Current lang.
+											String currentLang = null;
+											if (emailCheck.getContent()!=null && emailCheck.getLang() != null
+													&& !emailCheck.getLang().isEmpty()) {
+												currentLang = emailCheck.getLang();
+											} 
+											if ((emailCheck.getHref() != null && emailCheck.getHref().equalsIgnoreCase(email.getHref())
+													|| (emailCheck.getHref() == null && email.getHref().isEmpty()))
+												&& (emailCheck.getContent() != null && emailCheck.getContent().equalsIgnoreCase(email.getContent())
+													|| (emailCheck.getContent() == null && email.getContent().isEmpty()))
+												&& ((currentLang != null && currentLang.equalsIgnoreCase(email.getLang()))
+													|| (currentLang == null && (email.getLang() == null || Eag2012.OPTION_NONE.equalsIgnoreCase(email.getLang()))))) {
+												found = true;
+											}
 										}
 									}
-								}
-
-								if (!found) {
-									repository.getEmail().add(email);
-								}	
-							}
-
-							// eag/archguide/desc/repositories/repository/services/searchroom
-							if (Eag2012.SEARCHROOM.equalsIgnoreCase(sectionValueKey)
-									&& Eag2012.SEARCHROOM.equalsIgnoreCase(sectionHrefKey)) {
-								if (repository.getServices() == null) {
-									repository.setServices(new Services());
-								}
-								if (repository.getServices().getSearchroom() == null) {
-									repository.getServices().setSearchroom(new Searchroom());
-								}
-								if (repository.getServices().getSearchroom().getContact() == null) {
-									repository.getServices().getSearchroom().setContact(new Contact());
+	
+									if (!found) {
+										repository.getEmail().add(email);
+									}	
 								}
 	
-								repository.getServices().getSearchroom().getContact().getEmail().add(email);
-							}
-
-							// eag/archguide/desc/repositories/repository/services/library
-							if (Eag2012.LIBRARY.equalsIgnoreCase(sectionValueKey)
-									&& Eag2012.LIBRARY.equalsIgnoreCase(sectionHrefKey)) {
-								if (repository.getServices() == null) {
-									repository.setServices(new Services());
-								}
-								if (repository.getServices().getLibrary() == null) {
-									repository.getServices().setLibrary(new Library());
-								}
-								if (repository.getServices().getLibrary().getContact() == null) {
-									repository.getServices().getLibrary().setContact(new Contact());
-								}
-	
-								repository.getServices().getLibrary().getContact().getEmail().add(email);
-							}
-
-							// eag/archguide/desc/repositories/repository/services/techservices/restorationlab
-							if (Eag2012.RESTORATION_LAB.equalsIgnoreCase(sectionValueKey)
-									&& Eag2012.RESTORATION_LAB.equalsIgnoreCase(sectionHrefKey)) {
-								if (repository.getServices() == null) {
-									repository.setServices(new Services());
-								}
-								if (repository.getServices().getTechservices() == null) {
-									repository.getServices().setTechservices(new Techservices());
-								}
-								if (repository.getServices().getTechservices().getRestorationlab() == null) {
-									repository.getServices().getTechservices().setRestorationlab(new Restorationlab());
-								}
-								if (repository.getServices().getTechservices().getRestorationlab().getContact() == null) {
-									repository.getServices().getTechservices().getRestorationlab().setContact(new Contact());
+								// eag/archguide/desc/repositories/repository/services/searchroom
+								if (Eag2012.SEARCHROOM.equalsIgnoreCase(sectionValueKey)
+										&& Eag2012.SEARCHROOM.equalsIgnoreCase(sectionHrefKey)) {
+									if (repository.getServices() == null) {
+										repository.setServices(new Services());
+									}
+									if (repository.getServices().getSearchroom() == null) {
+										repository.getServices().setSearchroom(new Searchroom());
+									}
+									if (repository.getServices().getSearchroom().getContact() == null) {
+										repository.getServices().getSearchroom().setContact(new Contact());
+									}
+		
+									repository.getServices().getSearchroom().getContact().getEmail().add(email);
 								}
 	
-								repository.getServices().getTechservices().getRestorationlab().getContact().getEmail().add(email);
-							}
-
-							// eag/archguide/desc/repositories/repository/services/techservices/reproductionser
-							if (Eag2012.REPRODUCTIONSER.equalsIgnoreCase(sectionValueKey)
-									&& Eag2012.REPRODUCTIONSER.equalsIgnoreCase(sectionHrefKey)) {
-								if (repository.getServices() == null) {
-									repository.setServices(new Services());
-								}
-								if (repository.getServices().getTechservices() == null) {
-									repository.getServices().setTechservices(new Techservices());
-								}
-								if (repository.getServices().getTechservices().getReproductionser() == null) {
-									repository.getServices().getTechservices().setReproductionser(new Reproductionser());
-								}
-								if (repository.getServices().getTechservices().getReproductionser().getContact() == null) {
-									repository.getServices().getTechservices().getReproductionser().setContact(new Contact());
+								// eag/archguide/desc/repositories/repository/services/library
+								if (Eag2012.LIBRARY.equalsIgnoreCase(sectionValueKey)
+										&& Eag2012.LIBRARY.equalsIgnoreCase(sectionHrefKey)) {
+									if (repository.getServices() == null) {
+										repository.setServices(new Services());
+									}
+									if (repository.getServices().getLibrary() == null) {
+										repository.getServices().setLibrary(new Library());
+									}
+									if (repository.getServices().getLibrary().getContact() == null) {
+										repository.getServices().getLibrary().setContact(new Contact());
+									}
+		
+									repository.getServices().getLibrary().getContact().getEmail().add(email);
 								}
 	
-								repository.getServices().getTechservices().getReproductionser().getContact().getEmail().add(email);
+								// eag/archguide/desc/repositories/repository/services/techservices/restorationlab
+								if (Eag2012.RESTORATION_LAB.equalsIgnoreCase(sectionValueKey)
+										&& Eag2012.RESTORATION_LAB.equalsIgnoreCase(sectionHrefKey)) {
+									if (repository.getServices() == null) {
+										repository.setServices(new Services());
+									}
+									if (repository.getServices().getTechservices() == null) {
+										repository.getServices().setTechservices(new Techservices());
+									}
+									if (repository.getServices().getTechservices().getRestorationlab() == null) {
+										repository.getServices().getTechservices().setRestorationlab(new Restorationlab());
+									}
+									if (repository.getServices().getTechservices().getRestorationlab().getContact() == null) {
+										repository.getServices().getTechservices().getRestorationlab().setContact(new Contact());
+									}
+		
+									repository.getServices().getTechservices().getRestorationlab().getContact().getEmail().add(email);
+								}
+	
+								// eag/archguide/desc/repositories/repository/services/techservices/reproductionser
+								if (Eag2012.REPRODUCTIONSER.equalsIgnoreCase(sectionValueKey)
+										&& Eag2012.REPRODUCTIONSER.equalsIgnoreCase(sectionHrefKey)) {
+									if (repository.getServices() == null) {
+										repository.setServices(new Services());
+									}
+									if (repository.getServices().getTechservices() == null) {
+										repository.getServices().setTechservices(new Techservices());
+									}
+									if (repository.getServices().getTechservices().getReproductionser() == null) {
+										repository.getServices().getTechservices().setReproductionser(new Reproductionser());
+									}
+									if (repository.getServices().getTechservices().getReproductionser().getContact() == null) {
+										repository.getServices().getTechservices().getReproductionser().setContact(new Contact());
+									}
+		
+									repository.getServices().getTechservices().getReproductionser().getContact().getEmail().add(email);
+								}
 							}
 						}
 					}
@@ -1592,9 +1594,9 @@ public class CreateEAG2012 {
 												currentLang = web.getLang();
 											} 
 											if ((web.getHref() != null && web.getHref().equalsIgnoreCase(webpage.getHref())
-													|| (web.getHref() == null && webpage.getHref().isEmpty()))
+													|| (web.getHref() == null && (webpage.getHref() == null || webpage.getHref().isEmpty())))
 												&& (web.getContent() != null && web.getContent().equalsIgnoreCase(webpage.getContent())
-													|| (web.getContent() == null && webpage.getContent().isEmpty()))
+													|| (web.getContent() == null && (webpage.getContent() == null || webpage.getContent().isEmpty())))
 												&& ((currentLang != null && currentLang.equalsIgnoreCase(webpage.getLang()))
 													|| (currentLang == null && (webpage.getLang() == null || Eag2012.OPTION_NONE.equalsIgnoreCase(webpage.getLang()))))) {
 												found = true;
