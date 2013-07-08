@@ -13,8 +13,10 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Preparable;
 
 import eu.apenet.dashboard.security.SecurityContext;
+import javax.servlet.ServletContext;
+import org.apache.struts2.util.ServletContextAware;
 
-public abstract class AbstractAction extends ActionSupport  implements Preparable, ServletRequestAware, ServletResponseAware{
+public abstract class AbstractAction extends ActionSupport  implements Preparable, ServletRequestAware, ServletResponseAware, ServletContextAware{
 	/**
 	 * 
 	 */
@@ -25,8 +27,9 @@ public abstract class AbstractAction extends ActionSupport  implements Preparabl
 	}
 	
 	private List<Breadcrumb> breadcrumbRoute = new ArrayList<Breadcrumb>();
-	private HttpServletRequest request;
-	private HttpServletResponse response;	
+	protected HttpServletRequest request;
+	protected HttpServletResponse response;
+        protected ServletContext servletContext;
 	public final List<Breadcrumb> getBreadcrumbRoute(){
 		return this.breadcrumbRoute;
 	}
@@ -62,6 +65,15 @@ public abstract class AbstractAction extends ActionSupport  implements Preparabl
 		return response;
 	}
 
+        public ServletContext getServletContext() {
+            return servletContext;
+        }
+
+        @Override
+        public final void setServletContext(ServletContext servletContext) {
+            this.servletContext = servletContext;
+        }
+        
 	@Override
 	public void prepare() throws Exception {
 		buildBreadcrumbs();

@@ -963,6 +963,10 @@
 					<param name="actionName">institutionManagerManagement</param>	
 					<param name="countryId">${countryId}</param>			
 				</result>  
-        	</action>        	        	          	         	 	      	
-	</package>
+        	</action>
+                <action name="previewEdm" class="eu.apenet.dashboard.actions.PreviewEdmAction">
+                    <result name="success">/jsp/ead2ese/edmpreview.jsp</result>
+                    <!--<result name="error">/jsp/eadcontent/error.jsp</result>-->
+                </action>
+        </package>
 </struts>
