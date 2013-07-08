@@ -147,7 +147,7 @@ public class ConvertTask extends AbstractEadTask {
         Map<String, String> parameters = new HashMap<String, String>();
         String option_default = properties.getProperty("defaultRoleType");
         String option_use_existing = properties.getProperty("useDefaultRoleType");
-        boolean option_use_existing_bool = !Boolean.parseBoolean(option_use_existing);
+        boolean option_use_existing_bool = Boolean.parseBoolean(option_use_existing);
         parameters.put("defaultRoleType", option_default);
         parameters.put("useDefaultRoleType", Boolean.toString(option_use_existing_bool));
         return parameters;
