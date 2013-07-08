@@ -12,6 +12,7 @@ import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import eu.apenet.oaiserver.request.RequestProcessor;
@@ -28,9 +29,13 @@ public class EuropeanaOAIServlet extends HttpServlet {
 	private static Logger LOGGER = Logger.getLogger(EuropeanaOAIServlet.class);
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String url = request.getScheme()+"://"+request.getHeader("Host") + request.getContextPath() + REQUEST_SUFIX + "?";
+		String url = request.getScheme()+"://"+request.getHeader("Host") + request.getContextPath() + REQUEST_SUFIX;
 		String remoteHost = request.getRemoteHost()+ ": ";
-		LOGGER.info(remoteHost + url + request.getQueryString());
+		String logline = remoteHost + url;
+		if (StringUtils.isNotBlank(request.getQueryString())){
+			logline += "?" + request.getQueryString();
+		}
+		LOGGER.info(logline);
 		response.setBufferSize(4096);
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/xml");
