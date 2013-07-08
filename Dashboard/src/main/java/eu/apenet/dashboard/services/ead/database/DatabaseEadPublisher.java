@@ -61,7 +61,6 @@ public class DatabaseEadPublisher {
 		SolrPublisher solrPublisher = new SolrPublisher(ead);
 		Class<? extends Ead> clazz = XmlType.getEadType(ead).getClazz();
 		try {
-			JpaUtil.beginDatabaseTransaction();
 			PublishData publishData = new PublishData();
 			publishData.setXml(eadContent.getXml());
 			publishData.setId(ead.getId().longValue());
@@ -77,6 +76,7 @@ public class DatabaseEadPublisher {
 				clevel = clevelDAO.getTopClevelByFileId(ead.getId(), clazz, cOrderId);
 //				System.out.println("H:" + eadCounts.getNumberOfUnits());
 			}
+			JpaUtil.beginDatabaseTransaction();
 			solrPublisher.commitAll(eadCounts);
 			JpaUtil.commitDatabaseTransaction();
 

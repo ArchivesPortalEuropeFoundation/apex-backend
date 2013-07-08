@@ -50,9 +50,6 @@ public class DatabaseCLevelPublisher {
 			}
 			clevels = clevelDAO.findChildCLevels(clevel.getClId(), childOrderId, NUMBER_OF_CLEVEL_ONCE);
 		}
-//		if (eadCounts.getNumberOfUnits() > 1){
-//		System.out.println("C:" +eadCounts.getNumberOfUnits());
-//		}
 		return eadCounts;
 
 	}

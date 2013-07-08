@@ -1,6 +1,5 @@
 package eu.apenet.dashboard.services.ead.publish;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.MalformedURLException;
@@ -21,7 +20,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -56,10 +54,7 @@ public class SolrPublisher {
 	public static final String COLON = ":";
 	private static final Logger LOG = Logger.getLogger(SolrPublisher.class);
 	public static final DecimalFormat NUMBERFORMAT = new DecimalFormat("00000000");
-	// public static final DecimalFormat SIMPLE_NUMBERFORMAT = new
-	// DecimalFormat("000");
-	//private String provider;
-	//private Country country;
+	private int numberOfPublishedItems = 0;
 	private String language;
 	private String archdesc_langmaterial;
 	private String eadidstring;
@@ -72,9 +67,6 @@ public class SolrPublisher {
 	private Boolean existunitid_archdesc = false;
 	private Collection<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
 	private static final int MAX_NUMBER_OF_PENDING_DOCS = 200;
-	private String pathApenetead;
-	private boolean isFinalPath;
-	private String currentPath;
 	private final static XPath XPATH = APEnetUtilities.getDashboardConfig().getXpathFactory().newXPath();
 	private static XPathExpression eadidExpression;
 	private static XPathExpression eadidIdentifierExpression;
@@ -173,10 +165,7 @@ public class SolrPublisher {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
 		long numberOfDaos = 0l;
-		pathApenetead = ead.getPathApenetead();
 		archivalinstitution = ead.getArchivalInstitution();
-		isFinalPath = true;
-		currentPath = APEnetUtilities.getConfig().getRepoDirPath() + pathApenetead;
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document doc = builder.parse(new InputSource(new StringReader(eadContent.getXml())));
 		doc.getDocumentElement().normalize();
@@ -522,6 +511,8 @@ public class SolrPublisher {
 		if (docs.size() == MAX_NUMBER_OF_PENDING_DOCS) {
 			solrTime += UpdateSolrServerHolder.getInstance().add(docs);
 			docs = new ArrayList<SolrInputDocument>();
+			numberOfPublishedItems += MAX_NUMBER_OF_PENDING_DOCS;
+			LOG.debug(this.eadidstring + " #published: " + numberOfPublishedItems + " time: " + solrTime +"ms" );
 		}
 	}
 
@@ -534,36 +525,12 @@ public class SolrPublisher {
 	public void commitAll(EADCounts eadCounts) throws MalformedURLException, SolrServerException, IOException {
 		if (docs.size() > 0) {
 			solrTime += UpdateSolrServerHolder.getInstance().add(docs);
+			numberOfPublishedItems += docs.size();
+			LOG.debug(this.eadidstring + " #published: " + numberOfPublishedItems + " time: " + solrTime +"ms" );
 			docs = new ArrayList<SolrInputDocument>();
 		}
 		solrTime += UpdateSolrServerHolder.getInstance().softCommit();
 		removeWarnings();
-		if (!isFinalPath) {
-			String[] otherlist = null;
-			if (currentPath.contains(APEnetUtilities.FILESEPARATOR)) {
-				otherlist = pathApenetead.split(APEnetUtilities.FILESEPARATOR);
-			}
-			String foldername = "";
-			if (otherlist[3] != null) {
-				foldername = otherlist[3].trim();
-			}
-			foldername = foldername.replace(".xml", "");
-			ArchivalInstitution archivalInstitution = ead.getArchivalInstitution();
-			String theCountry = archivalInstitution.getCountry().getIsoname().trim();
-			Integer institutionId = archivalInstitution.getAiId();
-			String institutionStr = institutionId.toString().trim();
-			String finalpath2 = APEnetUtilities.FILESEPARATOR + theCountry + APEnetUtilities.FILESEPARATOR
-					+ institutionStr + APEnetUtilities.FILESEPARATOR + "FA" + APEnetUtilities.FILESEPARATOR
-					+ foldername + APEnetUtilities.FILESEPARATOR + foldername + ".xml";
-			if (xmlType == XmlType.EAD_HG || xmlType == XmlType.EAD_SG) {
-				finalpath2 = APEnetUtilities.FILESEPARATOR + theCountry + APEnetUtilities.FILESEPARATOR
-						+ institutionStr + APEnetUtilities.FILESEPARATOR + "HG" + APEnetUtilities.FILESEPARATOR
-						+ foldername + ".xml";
-			}
-			insertFileToRepository(currentPath, APEnetUtilities.getConfig().getRepoDirPath() + finalpath2);
-			ead.setPathApenetead(finalpath2);
-		}
-		// Indexed_Not converted to ESE/EDM
 		ead.setTotalNumberOfDaos(eadCounts.getNumberOfDAOsBelow());
 		if (eadCounts.getNumberOfDAOsBelow() == 0){
 			if (ead instanceof FindingAid){
@@ -600,79 +567,6 @@ public class SolrPublisher {
 		eadDao.store(rollBackEad);
 
 		solrTime += UpdateSolrServerHolder.getInstance().softCommit();
-	}
-
-	/**
-	 * This method deletes the destination file, copies the source file to
-	 * temporal directory and finally deletes the source file if everything is
-	 * ok If the source folder is empty, then the folder will be removed
-	 */
-	private void insertFileToRepository(String srcFilePath, String destFilePath) throws IOException {
-		LOG.info("Since we changed the filePath to be always in REPO, this function should be useless, we return it here if src and dest filePath are equals");
-		if (srcFilePath.equals(destFilePath)) {
-			LOG.info("They are equal");
-			return;
-		}
-
-		Boolean error = false;
-		File srcFile = new File(srcFilePath);
-		File destFile = new File(destFilePath);
-
-		String trash = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR
-				+ "Trash" + APEnetUtilities.FILESEPARATOR;
-		File folderTrash = new File(trash);
-		if (!folderTrash.exists())
-			folderTrash.mkdir();
-
-		try {
-			if ((destFile.exists()) && (srcFile).exists()) {
-
-				String[] otherlist = null;
-				if (destFilePath.contains(APEnetUtilities.FILESEPARATOR)) {
-					otherlist = destFilePath.split(APEnetUtilities.FILESEPARATOR);
-				}
-				String fileName = otherlist[otherlist.length - 1];
-				File file = new File(trash + fileName);
-				if (!file.exists()) {
-					FileUtils.moveFile(destFile, file);
-					LOG.info(destFilePath + " moved to " + trash + fileName);
-				}
-				// FileUtils.forceDelete(destFile);
-			}
-			FileUtils.copyFile(srcFile, destFile);
-			LOG.info("File: " + srcFilePath + " copied to " + destFilePath);
-			// FileUtils.forceDelete(srcFile);
-			String[] otherlist = null;
-			if (srcFilePath.contains(APEnetUtilities.FILESEPARATOR)) {
-				otherlist = srcFilePath.split(APEnetUtilities.FILESEPARATOR);
-			}
-
-			String fileName = otherlist[otherlist.length - 1];
-			File file = new File(trash + fileName);
-			if (!file.exists()) {
-				FileUtils.moveFile(srcFile, file);
-				LOG.info(srcFilePath + " moved to " + trash + fileName);
-			} else
-				FileUtils.forceDelete(srcFile);
-
-			srcFile = null;
-			destFile = null;
-		} catch (IOException ex) {
-			error = true;
-			LOG.error("Insert File to Repository. Error: " + ex.getMessage(), ex);
-			throw ex;
-		} finally {
-			if (!error) {
-				String[] otherlist = null;
-				if (srcFilePath.contains(APEnetUtilities.FILESEPARATOR)) {
-					otherlist = srcFilePath.split(APEnetUtilities.FILESEPARATOR);
-				}
-				String fileName = otherlist[otherlist.length - 1];
-				File file = new File(trash + fileName);
-				if (file.exists())
-					FileUtils.forceDelete(file);
-			}
-		}
 	}
 
 	private static String removeUnusedCharacters(String input) {
