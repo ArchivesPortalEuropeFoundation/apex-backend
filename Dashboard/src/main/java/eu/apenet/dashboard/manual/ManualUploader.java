@@ -27,7 +27,6 @@ import eu.apenet.dashboard.manual.eag.Eag2012;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.utils.ZipManager;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 import org.w3c.dom.Document;
@@ -433,8 +432,25 @@ public abstract class ManualUploader {
 //            					result = "success_noInformation";
 //            				}
 //            				else {
-            					result = "success";	
-//            				}
+            				{
+            					result = "success";
+
+            					// Try to remove the previous temp file.
+            					ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(archivalInstitutionId);
+            					if (archivalInstitution != null) {
+            						String eagPath = archivalInstitution.getEagPath();
+            						String tempEagPath = APEnetUtilities.getConfig().getRepoDirPath();
+            						String eagTempPath = tempEagPath + eagPath.substring(0, (eagPath.lastIndexOf(APEnetUtilities.FILESEPARATOR) + 1)) + Eag2012.EAG_TEMP_FILE_NAME;
+            						File fileTempEag = new File(eagTempPath); 
+            						if (fileTempEag.exists()) {
+            							try {
+            								FileUtils.forceDelete(fileTempEag);
+            							} catch (IOException e) {
+            								log.error(e.getMessage(),e);
+            							}
+            						}
+            					}
+            				}
 
         				}
         				    					
