@@ -1313,6 +1313,16 @@
 		<xsl:choose>
 			<xsl:when test="count($list) > 1">
 				<xsl:choose>
+					<xsl:when test="$language.selected = $language.default">
+						<xsl:for-each select="$list">
+							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+							<xsl:if test="(not($currentLang) or $currentLang = $language.default) and current()/text() and current()/text() != ''">
+								<p>
+									<xsl:value-of select="."/>
+								</p>
+							</xsl:if>
+						</xsl:for-each>
+					</xsl:when>
 					<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
 						<xsl:for-each select="$list[@xml:lang = $language.selected]">
 							<p>
@@ -1321,10 +1331,13 @@
 						</xsl:for-each>
 					</xsl:when>
 					<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
-						<xsl:for-each select="$list[@xml:lang = $language.default]">
-							<p>
-								<xsl:value-of select="."/>
-							</p>
+						<xsl:for-each select="$list">
+							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+							<xsl:if test="not($currentLang) or $currentLang = $language.default">
+								<p>
+									<xsl:value-of select="."/>
+								</p>
+							</xsl:if>
 						</xsl:for-each>
 					</xsl:when>
 					<xsl:otherwise>
