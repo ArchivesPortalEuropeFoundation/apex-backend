@@ -19,6 +19,7 @@ import eu.apenet.dpt.utils.ead2ese.EseFileUtils;
 import eu.apenet.dpt.utils.ead2ese.XMLUtil;
 import eu.apenet.dpt.utils.ead2ese.stax.ESEParser;
 import eu.apenet.dpt.utils.ead2ese.stax.RecordParser;
+import eu.apenet.dpt.utils.ese2edm.EdmConfig;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ese;
@@ -38,7 +39,7 @@ public class EAD2ESEConverter {
 		if (ese.getNumberOfRecords() > 0) {
 			
 			int numberOfFiles = 0;
-			EseConfig config = new EseConfig();
+			EdmConfig config = new EdmConfig(false);
 				int numberOfRecords = ese.getNumberOfRecords();
 				File htmlOutputFile = EseFileUtils.getFile(EseFileUtils.getOutputHTMLDir(APEnetUtilities.getConfig().getRepoDirPath(), ese.getFindingAid().getArchivalInstitution().getCountry().getIsoname(), ese.getFindingAid().getArchivalInstitution().getAiId()), xmlNameRelative + ".html");
 				File htmlDirectory = htmlOutputFile.getParentFile();

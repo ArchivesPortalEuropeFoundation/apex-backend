@@ -967,7 +967,7 @@
 				</result>  
         	</action>
                 <action name="previewEdm" class="eu.apenet.dashboard.actions.PreviewEdmAction">
-                    <result name="success">/jsp/ead2ese/edmpreview.jsp</result>
+                    <result name="success">/jsp/eadcontent/eadcontent.jsp</result>
                     <!--<result name="error">/jsp/eadcontent/error.jsp</result>-->
                 </action>
         </package>

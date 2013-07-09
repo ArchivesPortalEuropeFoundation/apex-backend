@@ -302,11 +302,11 @@
 													<s:text name="content.message.deliver.europeana" />
 												</option>
 											</c:if>
-											<!-- <c:if test="${eadResult.convertedToEseEdm}">
+											<c:if test="${eadResult.convertedToEseEdm}">
                                                                                             <option value="_blank|previewEdm.action">
                                                                                                 <s:text name="content.message.preview.ese" />
                                                                                             </option>
-                                                                                        </c:if> -->
+                                                                                        </c:if>
                                                                                         <c:if test="${eadResult.hasEseEdmFiles}">
 												<option value="_self|downloadEse.action">
 													<s:text name="content.message.download.ese" />
