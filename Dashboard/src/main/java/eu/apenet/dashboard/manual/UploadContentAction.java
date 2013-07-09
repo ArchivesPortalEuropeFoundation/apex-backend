@@ -247,8 +247,13 @@ public class UploadContentAction extends AbstractInstitutionAction {
         session.put("ftpUploader", uploader_ftp);
         try {
             client = uploader_ftp.establishConnection();
-            session.put("ftpClient", client);
-            return SUCCESS;
+            if(client!=null){
+               session.put("ftpClient", client);
+               return SUCCESS;
+            }else{
+            	addActionMessage(getText("uploadContent.errUser"));
+            	return ERROR;
+            }
         } catch (IOException ioe){
             log.error("Could not connect to FTP server '" + ftpUrl + "'.", ioe);
             addActionMessage(getText("uploadContent.errFTP") );
@@ -315,6 +320,8 @@ public class UploadContentAction extends AbstractInstitutionAction {
             writer.close();
         } catch (Exception e){
             log.error("ERROR", e);
+            addActionMessage(getText("uploadContent.errFTP"));
+            return ERROR;
         }
         return null;
     }

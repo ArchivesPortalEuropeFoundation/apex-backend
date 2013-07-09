@@ -276,10 +276,12 @@
 		<!--Upload: Connection to FTP / Tree page -->
 		<action name="connectFTP" class="eu.apenet.dashboard.manual.UploadContentAction" method="connectFTP"> 
 			<result name="success" type="tiles">viewftpfiles</result>
+			<result name="error" type="tiles">error</result>
 		</action>
 		<!--Upload: FTP update AJAX -->
 		<action name="updateFtp" class="eu.apenet.dashboard.manual.UploadContentAction" method="retrieveFtpData"> 
 			<result name="NONE" />
+			<result name="error" type="tiles">error</result>
 		</action>
 		<!--Upload: Connection to FTP / Download files to server -->
 		<action name="saveFtpFiles" class="eu.apenet.dashboard.manual.UploadContentAction" method="saveFtpFiles"> 

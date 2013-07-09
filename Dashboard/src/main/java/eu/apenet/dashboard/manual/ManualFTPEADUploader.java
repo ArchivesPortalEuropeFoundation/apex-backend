@@ -166,7 +166,7 @@ public class ManualFTPEADUploader extends ManualUploader {
     public List<FTPFile> getFTPFiles(FTPClient ftpClient, String folder) throws IOException {
         log.debug("Getting files");
 
-        if(folder!=null)
+        if(folder!=null && !folder.isEmpty())
             ftpClient.changeWorkingDirectory(folder);
         log.debug("Working dir: " + ftpClient.printWorkingDirectory());
         if(StringUtils.isEmpty(userDir))
