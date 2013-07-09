@@ -27,9 +27,9 @@ public abstract class AbstractAction extends ActionSupport  implements Preparabl
 	}
 	
 	private List<Breadcrumb> breadcrumbRoute = new ArrayList<Breadcrumb>();
-	protected HttpServletRequest request;
-	protected HttpServletResponse response;
-        protected ServletContext servletContext;
+	private HttpServletRequest request;
+	private HttpServletResponse response;
+	private ServletContext servletContext;
 	public final List<Breadcrumb> getBreadcrumbRoute(){
 		return this.breadcrumbRoute;
 	}

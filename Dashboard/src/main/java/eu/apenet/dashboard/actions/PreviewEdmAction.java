@@ -49,7 +49,7 @@ public class PreviewEdmAction extends AbstractInstitutionAction{
 
     @Override
     public String execute() throws Exception{
-        Ese ese = getEse(request);
+        Ese ese = getEse(getServletRequest());
         if (ese != null) {
 
             if (ese.getPathHtml() == null) {
@@ -57,7 +57,7 @@ public class PreviewEdmAction extends AbstractInstitutionAction{
                     EAD2ESEConverter.generateHtml(ese);
                 } catch (TransformerException e) {
                     logger.error(e.getMessage(), e);
-                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not create html files.");
+                    getServletResponse().sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not create html files.");
                 }
             }
             if (ese.getPathHtml() != null) {
@@ -66,12 +66,12 @@ public class PreviewEdmAction extends AbstractInstitutionAction{
                     // Do your thing if the file appears to be non-existing.
                     // Throw an exception, or send 404, or show default/warning
                     // page, or just ignore it.
-                    response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+                	getServletResponse().sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
                     return ERROR;
                 } else {
-                    String path = request.getParameter("path");
+                    String path = getServletRequest().getParameter("path");
                     if (StringUtils.isBlank(path)) {
-                        write(file, response);
+                        write(file, getServletResponse());
                     } else {
                         File parentDir = file.getParentFile();
                         File subHtmlFile = EseFileUtils.getFile(parentDir, path);
@@ -80,16 +80,16 @@ public class PreviewEdmAction extends AbstractInstitutionAction{
                             // non-existing.
                             // Throw an exception, or send 404, or show
                             // default/warning page, or just ignore it.
-                            response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+                        	getServletResponse().sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
                             return ERROR;
                         }
-                        write(subHtmlFile, response);
+                        write(subHtmlFile, getServletResponse());
                     }
                 }
             }
 
         } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No parameter id or eseId given.");
+        	getServletResponse().sendError(HttpServletResponse.SC_BAD_REQUEST, "No parameter id or eseId given.");
             return ERROR;
         }
         return SUCCESS;
@@ -103,7 +103,7 @@ public class PreviewEdmAction extends AbstractInstitutionAction{
         if (NumberUtils.isNumber(id1)) {
 //		TODO: this class should be moved to Struts Action
 //              FIXME: replace hard-coded "359" with actual AI id !!!
-			List<Ese> eses = dao.getEses(NumberUtils.toInt(id1), 359);
+			List<Ese> eses = dao.getEses(NumberUtils.toInt(getId()), getAiId());
 			if (eses.size() > 0) {
 				ese = eses.get(0);
 			}
