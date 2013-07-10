@@ -1342,10 +1342,22 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
-						<xsl:for-each select="$list[@xml:lang = $language.first]">
-							<p>
-								<xsl:value-of select="."/>
-							</p>
+						<xsl:for-each select="$list">
+							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+							<xsl:choose>
+								<xsl:when test="not($currentLang)">
+									<p>
+										<xsl:value-of select="."/>
+									</p>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:if test="current()/@xml:lang = $language.first">
+										<p>
+											<xsl:value-of select="."/>
+										</p>
+									</xsl:if>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:for-each>
 					</xsl:otherwise>
 				</xsl:choose>
