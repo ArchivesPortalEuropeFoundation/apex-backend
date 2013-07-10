@@ -61,6 +61,7 @@ public class PreviewEdmAction extends AbstractInstitutionAction{
                 }
             }
             if (ese.getPathHtml() != null) {
+                logger.info(APEnetUtilities.getConfig().getRepoDirPath() + ", " + ese.getPathHtml());
                 File file = EseFileUtils.getRepoFile(APEnetUtilities.getConfig().getRepoDirPath(), ese.getPathHtml());
                 if (!file.exists()) {
                     // Do your thing if the file appears to be non-existing.
@@ -70,6 +71,7 @@ public class PreviewEdmAction extends AbstractInstitutionAction{
                     return ERROR;
                 } else {
                     String path = getServletRequest().getParameter("path");
+                    logger.info(path);
                     if (StringUtils.isBlank(path)) {
                         write(file, getServletResponse());
                     } else {
@@ -96,19 +98,17 @@ public class PreviewEdmAction extends AbstractInstitutionAction{
     }
 
     private Ese getEse(HttpServletRequest request) {
-        //String eseId = request.getParameter("eseId");
+        String eseId = request.getParameter("eseId");
         String id1 = request.getParameter("id");
         Ese ese = null;
         EseDAO dao = DAOFactory.instance().getEseDAO();
         if (NumberUtils.isNumber(id1)) {
-//		TODO: this class should be moved to Struts Action
-//              FIXME: replace hard-coded "359" with actual AI id !!!
 			List<Ese> eses = dao.getEses(NumberUtils.toInt(getId()), getAiId());
 			if (eses.size() > 0) {
 				ese = eses.get(0);
 			}
-        //} else if (NumberUtils.isNumber(eseId)) {
-        //    ese = dao.findById(NumberUtils.toInt(eseId));
+        } else if (NumberUtils.isNumber(eseId)) {
+            ese = dao.findById(NumberUtils.toInt(eseId));
         }
         return ese;
     }

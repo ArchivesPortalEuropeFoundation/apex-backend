@@ -970,5 +970,8 @@
                     <result name="success">/jsp/eadcontent/eadcontent.jsp</result>
                     <!--<result name="error">/jsp/eadcontent/error.jsp</result>-->
                 </action>
+                <action name="htmlPreview" class="eu.apenet.dashboard.actions.HtmlPreviewAction">
+                    <result name="success">/jsp/ead2ese/edmpreview.jsp</result>
+                </action>
         </package>
 </struts>

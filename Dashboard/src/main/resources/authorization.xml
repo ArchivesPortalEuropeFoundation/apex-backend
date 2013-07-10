@@ -11,7 +11,7 @@
 						eadActions, batchEadActions, removeEseForFA, 
 						displayEseConvert, processEseConvert, showwarnings, download, link, removeLink, preview, downloadEse,
 	                    displayEadFrontPage, generateTreeJSON, displayEadIntroduction, displayEadDidContent, displayCContent,
-						batchAction, previewEdm,
+						batchAction, previewEdm, htmlPreview,
 	                    displayConvertEseBatch, startConvertEseBatch,
 	                    generateTreeJSONWithoutPreface, downloadHgSgStatistics,displayLinkToHgSg,displayLinkToHgSgAjax,linkToHgSg,
 	                    
