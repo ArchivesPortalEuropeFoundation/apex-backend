@@ -1228,6 +1228,33 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					    }
 					    eag2012.setRelationEntryValue(listRelationEnrtyMap);
 					}
+					if(institutionRelationTable.has("selectTitleOfRelatedInstitutionLang")){
+						List<Map<String, List<String>>> listRelationEnrtyMap = eag2012.getRelationEntryLang();
+						if(listRelationEnrtyMap==null){
+							listRelationEnrtyMap= new ArrayList<Map<String,List<String>>>();
+						}
+						Map<String,List<String>> relationEntryMap = null;
+						if(listRelationEnrtyMap.size()>0 && listRelationEnrtyMap.get(0)!=null){
+							relationEntryMap = listRelationEnrtyMap.get(0);
+						}else{
+							relationEntryMap = new HashMap<String,List<String>>();
+						}
+						List<String> relationEntryList =null;
+						if(relationEntryMap.size()>0 && relationEntryMap.get(Eag2012.INSTITUTION_RELATIONS)!=null){
+							relationEntryList= relationEntryMap.get(Eag2012.INSTITUTION_RELATIONS);
+						}else{
+							relationEntryList = new ArrayList<String>();
+						}
+						relationEntryList.add(replaceIfExistsSpecialReturnString(institutionRelationTable.getString("selectTitleOfRelatedInstitutionLang")));
+						relationEntryMap.put(Eag2012.INSTITUTION_RELATIONS, relationEntryList);
+					    if(listRelationEnrtyMap.size()>0){
+					    	listRelationEnrtyMap.set(0, relationEntryMap);
+					    }else{
+					    	listRelationEnrtyMap.add(relationEntryMap);
+					    }
+					    eag2012.setRelationEntryLang(listRelationEnrtyMap);
+					}
+					
 					if(institutionRelationTable.has("textInstitutionDescriptionOfRelation")){
 						List<Map<String, Map<String, List<String>>>> descriptiveNotePValue = eag2012.getDescriptiveNotePValue();
 						 if(descriptiveNotePValue==null){

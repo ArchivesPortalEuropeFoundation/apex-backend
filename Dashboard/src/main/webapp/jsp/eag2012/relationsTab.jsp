@@ -190,7 +190,15 @@
 				<td>
 					<input type="text" id="textTitleOfRelatedInstitution" value="<s:property value="loader.relationsEagRelationEntry[#status.index]" />" />
 				</td>
-				<td colspan="2">
+				<td class="labelLeft">
+					<label for="selectTitleOfRelatedInstitutionLang"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+				</td>
+				<td>
+					<select id="selectTitleOfRelatedInstitutionLang" >
+						<s:iterator value="languageList" var="language"> 
+							<option value="<s:property value="#language.key" />"<s:if test="%{#language.key == loader.relationsEagRelationEntryLang[#status.index]}" > selected=selected </s:if>><s:property value="#language.value" /></option>
+						</s:iterator>
+					</select>
 				</td>
 			</tr>
 	
@@ -253,7 +261,15 @@
 				<td>
 					<input type="text" id="textTitleOfRelatedInstitution" />
 				</td>
-				<td colspan="2">
+				<td class="labelLeft">
+					<label for="selectTitleOfRelatedInstitutionLang"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+				</td>
+				<td>
+					<select id="selectTitleOfRelatedInstitutionLang">
+						<s:iterator value="languageList" var="language"> 
+							<option value="<s:property value="#language.key" />" ><s:property value="#language.value" /></option>
+						</s:iterator>
+					</select>
 				</td>
 			</tr>
 	

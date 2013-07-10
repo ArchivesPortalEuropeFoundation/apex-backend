@@ -3613,6 +3613,7 @@ function relationAddNewInstitutionRelation(text1){
 		$(this).val(""); // Clean all input_text.
 	});
     $("table#institutionRelationTable_"+(counter+1)+" select#selectTypeOftheRelation").attr("value","none"); 
+    $("table#institutionRelationTable_"+(counter+1)+" select#selectTitleOfRelatedInstitutionLang").attr("value","none");
     $("table#institutionRelationTable_"+(counter+1)+" select#selectLanguageInstitutionDescriptionOfRelation").attr("value","none");
 }
 

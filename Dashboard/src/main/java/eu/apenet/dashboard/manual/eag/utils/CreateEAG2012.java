@@ -553,7 +553,7 @@ public class CreateEAG2012 {
 
 							RelationEntry relationEntry = new RelationEntry();
 							relationEntry.setContent(valueList.get(j));
-
+							relationEntry.setLang((langList!=null && langList.size()>j && !langList.get(j).equalsIgnoreCase(Eag2012.OPTION_NONE) )?langList.get(j):null);
 							// eag/relations/eagRelation/descriptiveNote/P
 							if (this.eag2012.getDescriptiveNotePValue() != null
 									&& this.eag2012.getDescriptiveNotePLang() != null) {
@@ -576,14 +576,14 @@ public class CreateEAG2012 {
 												String sectionValuesKey = sectionsValueIt.next();
 												sectionLangKey = sectionsLangIt.next();
 												List<String> valuesList = sectionsValueMap.get(sectionValuesKey);
-												langList = sectionsLangMap.get(sectionLangKey);
+												List<String> langPList = sectionsLangMap.get(sectionLangKey);
 												for (int l = 0; l < valuesList.size(); l++) {
 													if (l == j) {
 														if (valuesList.get(l) != null && !valuesList.get(l).isEmpty()) {
 															P p = new P();
 															p.setContent(valuesList.get(l));
-															if (!Eag2012.OPTION_NONE.equalsIgnoreCase(langList.get(l))) {
-																p.setLang(langList.get(l));
+															if (!Eag2012.OPTION_NONE.equalsIgnoreCase(langPList.get(l))) {
+																p.setLang(langPList.get(l));
 															}
 	
 															if (Eag2012.INSTITUTION_RELATIONS.equalsIgnoreCase(sectionValuesKey)
@@ -605,12 +605,15 @@ public class CreateEAG2012 {
 									}
 								}
 							}
-							eagRelation.getRelationEntry().add(relationEntry);
-
+							if((relationEntry.getContent()==null || relationEntry.getContent().isEmpty())
+									&& (eagRelation.getHref() == null || eagRelation.getHref().isEmpty())){
+								eagRelation.setEagRelationType(null);
+							} else {
+								eagRelation.getRelationEntry().add(relationEntry);
+							}
 							if (eagRelation.getDate() != null
 									|| eagRelation.getDateRange() != null
 									|| eagRelation.getDateSet() != null
-									|| eagRelation.getDescriptiveNote() != null
 									|| eagRelation.getEagRelationType() != null
 									|| (eagRelation.getHref() != null && !eagRelation.getHref().isEmpty())
 									|| eagRelation.getLastDateTimeVerified() != null
@@ -628,7 +631,10 @@ public class CreateEAG2012 {
 										if (!this.eag.getRelations().getEagRelation().get(x).getRelationEntry().isEmpty()) {
 											for (int k = 0; k < this.eag.getRelations().getEagRelation().get(x).getRelationEntry().size(); k++) {
 												RelationEntry relationEntryCheck = this.eag.getRelations().getEagRelation().get(x).getRelationEntry().get(k);
-												if (relationEntryCheck != null
+												if (relationEntryCheck != null 
+														&& (relationEntryCheck.getLang()!=null && relationEntryCheck.getLang().equalsIgnoreCase(relationEntry.getLang()))
+														|| (relationEntryCheck.getLang()==null && (relationEntry.getLang()==null || relationEntry.getLang().equalsIgnoreCase(Eag2012.OPTION_NONE)))
+														|| (relationEntryCheck.getLang()==null && (relationEntry.getContent()==null || relationEntry.getContent().isEmpty()))
 														&& relationEntryCheck.getContent() != null
 														&& relationEntry.getContent() != null
 														&& relationEntryCheck.getContent().equalsIgnoreCase(relationEntry.getContent())) {
