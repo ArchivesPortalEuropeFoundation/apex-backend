@@ -1054,7 +1054,7 @@
 
 				<!-- relationEntry and links to related resources-->
 				<xsl:choose>
-					<xsl:when test="./eag:eag/eag:relations/eag:resourceRelation/@href and ./eag:eag/eag:relations/eag:resourceRelation/eag:relationEntry/text()">
+					<xsl:when test="(./eag:eag/eag:relations/eag:resourceRelation/@href and ./eag:eag/eag:relations/eag:resourceRelation/@href != '') or (./eag:eag/eag:relations/eag:resourceRelation/eag:relationEntry/text() and ./eag:eag/eag:relations/eag:resourceRelation/eag:relationEntry/text() != '')">
 						<tr>
 							<td class="header">
 								<xsl:value-of select="ape:resource('eagcontent.relatedresource')"/>:
@@ -1082,7 +1082,7 @@
 
 				<!-- associatedrepositories only shown if there are values-->
 				<xsl:choose>
-					<xsl:when test="./eag:eag/eag:relations/eag:eagRelation/@href and ./eag:eag/eag:relations/eag:eagRelation/eag:relationEntry/text()">
+					<xsl:when test="(./eag:eag/eag:relations/eag:eagRelation/@href and ./eag:eag/eag:relations/eag:eagRelation/@href != '') or (./eag:eag/eag:relations/eag:eagRelation/eag:relationEntry/text() and ./eag:eag/eag:relations/eag:eagRelation/eag:relationEntry/text() != '')">
 						<tr>
 							<td class="header">
 								<xsl:value-of select="ape:resource('eagcontent.associatedrepositories')"/>:
@@ -1363,306 +1363,69 @@
 	<!-- template for language plus link-->
 	<xsl:template name="multilanguageWithLink">
 		<xsl:param name="list"/>
-		<xsl:choose>
-			<xsl:when test="count($list) > 1">
+		<xsl:for-each select="$list">
+			<xsl:variable name="link" select="current()/parent::node()/@href"></xsl:variable>
+			<xsl:variable name="text" select="current()/text()"></xsl:variable>
+			<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+			<div>
 				<xsl:choose>
-					<xsl:when test="$language.selected = $language.default">
-						<xsl:for-each select="$list">
-							<xsl:variable name="link" select="current()/parent::node()/@href"></xsl:variable>
-							<xsl:variable name="text" select="current()/text()"></xsl:variable>
-							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-							<xsl:choose>
-								<xsl:when test="$link and $link != '' and $text and $text != '' and (not($currentLang) or $currentLang = $language.default)">
-									<div>
-										<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-											<a href="{$link}" target="_blank">
-												<xsl:value-of select="$text"/>
-											</a>
-										</xsl:if>
-										<xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
-											<a href="#">
-												<xsl:attribute name="onclick"><script>recoverRelatedInstitution('<xsl:value-of select="ape:related(current()/parent::node()/@href)"></xsl:value-of>');</script></xsl:attribute>
-												<xsl:value-of select="$text"/>
-											</a>
-										</xsl:if>
-										<p>
-											<xsl:call-template name="multilanguage">
-												<xsl:with-param name="list" select="current()/parent::node()/eag:descriptiveNote/eag:p"></xsl:with-param>
-											</xsl:call-template>
-										</p>
-									</div>
-								</xsl:when>
-								<xsl:when test="$link and $link != '' and (not($currentLang) or $currentLang = $language.default)">
-									<div>
-										<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-											<a href="{$link}" target="_blank">
-												<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
-											</a>
-										</xsl:if>
-										<xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
-											<a href="#">
-												<xsl:attribute name="onclick"><script>recoverRelatedInstitution('<xsl:value-of select="ape:related(current()/parent::node()/@href)"></xsl:value-of>');</script></xsl:attribute>
-												<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
-											</a>
-										</xsl:if>
-										<p>
-											<xsl:call-template name="multilanguage">
-												<xsl:with-param name="list" select="current()/parent::node()/eag:descriptiveNote/eag:p"></xsl:with-param>
-											</xsl:call-template>
-										</p>
-									</div>
-								</xsl:when>
-								<xsl:when test="$text and $text != '' and (not($currentLang) or $currentLang = $language.default)">
-									<div>
-										<xsl:value-of select="$text"/>
-										<p>
-											<xsl:call-template name="multilanguage">
-												<xsl:with-param name="list" select="current()/parent::node()/eag:descriptiveNote/eag:p"></xsl:with-param>
-											</xsl:call-template>
-										</p>
-									</div>
-								</xsl:when>
-							</xsl:choose>
-						</xsl:for-each>
-					</xsl:when>
-					<xsl:when test="$list[@xml:lang = $language.selected]">
-						<xsl:for-each select="$list[@xml:lang = $language.selected]">
-							<xsl:variable name="link" select="current()/parent::node()/@href"></xsl:variable>
-							<xsl:variable name="text" select="current()/text()"></xsl:variable>
-								<xsl:choose>
-									<xsl:when test="$link and $link != '' and $text and $text != ''">
-										<div>
-											<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-												<a href="{$link}" target="_blank">
-													<xsl:value-of select="$text"/>
-												</a>
-											</xsl:if>
-											<xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
-												<a href="#">
-													<xsl:attribute name="onclick"><script>recoverRelatedInstitution('<xsl:value-of select="ape:related(current()/parent::node()/@href)"></xsl:value-of>');</script></xsl:attribute>
-													<xsl:value-of select="$text"/>
-												</a>
-											</xsl:if>
-											<p>
-												<xsl:call-template name="multilanguage">
-													<xsl:with-param name="list" select="current()/parent::node()/eag:descriptiveNote/eag:p"></xsl:with-param>
-												</xsl:call-template>
-											</p>
-										</div>
-									</xsl:when>
-									<xsl:when test="$link and $link != ''">
-										<div>
-											<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-												<a href="{$link}" target="_blank">
-													<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
-												</a>
-											</xsl:if>
-											<xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
-												<a href="#">
-													<xsl:attribute name="onclick"><script>recoverRelatedInstitution('<xsl:value-of select="ape:related(current()/parent::node()/@href)"></xsl:value-of>');</script></xsl:attribute>
-													<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
-												</a>
-											</xsl:if>
-											<p>
-												<xsl:call-template name="multilanguage">
-													<xsl:with-param name="list" select="current()/parent::node()/eag:descriptiveNote/eag:p"></xsl:with-param>
-												</xsl:call-template>
-											</p>
-										</div>
-									</xsl:when>
-									<xsl:when test="$text and $text != ''">
-										<div>
+					<xsl:when test="$link and $link != '' and $text and $text != ''">
+							<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
+								<a href="{$link}" target="_blank">
+									<xsl:choose>
+										<xsl:when test="$currentLang = $language.selected or $currentLang = $language.default">
 											<xsl:value-of select="$text"/>
-											<p>
-												<xsl:call-template name="multilanguage">
-													<xsl:with-param name="list" select="current()/parent::node()/eag:descriptiveNote/eag:p"></xsl:with-param>
-												</xsl:call-template>
-											</p>
-										</div>
-									</xsl:when>
-								</xsl:choose>
-						</xsl:for-each>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</a>
+							</xsl:if>
+							<xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
+								<a href="#">
+									<xsl:attribute name="onclick"><script>recoverRelatedInstitution('<xsl:value-of select="ape:related(current()/parent::node()/@href)"></xsl:value-of>');</script></xsl:attribute>
+									<xsl:choose>
+										<xsl:when test="$currentLang = $language.selected or $currentLang = $language.default">
+											<xsl:value-of select="$text"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</a>
+							</xsl:if>
 					</xsl:when>
-					<xsl:when test="$list[@xml:lang = $language.default]">
-						<xsl:for-each select="$list">
-							<xsl:variable name="link" select="current()/parent::node()/@href"></xsl:variable>
-							<xsl:variable name="text" select="current()/text()"></xsl:variable>
-							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-							<xsl:choose>
-								<xsl:when test="$link and $link != '' and $text and $text != '' and (not($currentLang) or $currentLang = $language.default)">
-									<div>
-										<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-											<a href="{$link}" target="_blank">
-												<xsl:value-of select="$text"/>
-											</a>
-										</xsl:if>
-										<xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
-											<a href="#">
-												<xsl:attribute name="onclick"><script>recoverRelatedInstitution('<xsl:value-of select="ape:related(current()/parent::node()/@href)"></xsl:value-of>');</script></xsl:attribute>
-												<xsl:value-of select="$text"/>
-											</a>
-										</xsl:if>
-										<p>
-											<xsl:call-template name="multilanguage">
-												<xsl:with-param name="list" select="current()/parent::node()/eag:descriptiveNote/eag:p"></xsl:with-param>
-											</xsl:call-template>
-										</p>
-									</div>
-								</xsl:when>
-								<xsl:when test="$link and $link != '' and (not($currentLang) or $currentLang = $language.default)">
-									<div>
-										<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-											<a href="{$link}" target="_blank">
-												<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
-											</a>
-										</xsl:if>
-										<xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
-											<a href="#">
-												<xsl:attribute name="onclick"><script>recoverRelatedInstitution('<xsl:value-of select="ape:related(current()/parent::node()/@href)"></xsl:value-of>');</script></xsl:attribute>
-												<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
-											</a>
-										</xsl:if>
-										<p>
-											<xsl:call-template name="multilanguage">
-												<xsl:with-param name="list" select="current()/parent::node()/eag:descriptiveNote/eag:p"></xsl:with-param>
-											</xsl:call-template>
-										</p>
-									</div>
-								</xsl:when>
-								<xsl:when test="$text and $text != '' and (not($currentLang) or $currentLang = $language.default)">
-									<div>
-										<xsl:value-of select="$text"/>
-										<p>
-											<xsl:call-template name="multilanguage">
-												<xsl:with-param name="list" select="current()/parent::node()/eag:descriptiveNote/eag:p"></xsl:with-param>
-											</xsl:call-template>
-										</p>
-									</div>
-								</xsl:when>
-							</xsl:choose>
-						</xsl:for-each>
+					<xsl:when test="$link and $link != ''">
+							<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
+								<a href="{$link}" target="_blank">
+									<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
+								</a>
+							</xsl:if>
+							<xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
+								<a href="#">
+									<xsl:attribute name="onclick"><script>recoverRelatedInstitution('<xsl:value-of select="ape:related(current()/parent::node()/@href)"></xsl:value-of>');</script></xsl:attribute>
+									<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
+								</a>
+							</xsl:if>
 					</xsl:when>
-					<xsl:otherwise>
-						<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
-						<xsl:for-each select="$list">
-							<xsl:variable name="link" select="current()/parent::node()/@href"></xsl:variable>
-							<xsl:variable name="text" select="current()/text()"></xsl:variable>
-							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+					<xsl:when test="$text and $text != ''">
 							<xsl:choose>
-								<xsl:when test="$link and $link != '' and $text and $text != '' and (not($currentLang) or $currentLang = $language.first)">
-									<div>
-										<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-											<a href="{$link}" target="_blank">
-												<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
-											</a>
-										</xsl:if>
-										<xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
-											<a href="#">
-												<xsl:attribute name="onclick"><script>recoverRelatedInstitution('<xsl:value-of select="ape:related(current()/parent::node()/@href)"></xsl:value-of>');</script></xsl:attribute>
-												<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
-											</a>
-										</xsl:if>
-										<p>
-											<xsl:call-template name="multilanguage">
-												<xsl:with-param name="list" select="current()/parent::node()/eag:descriptiveNote/eag:p"></xsl:with-param>
-											</xsl:call-template>
-										</p>
-									</div>
+								<xsl:when test="$currentLang = $language.selected or $currentLang = $language.default">
+									<xsl:value-of select="$text"/>
 								</xsl:when>
-								<xsl:when test="$link and $link != ''  and (not($currentLang) or $currentLang = $language.first)">
-									<div>
-										<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-											<a href="{$link}" target="_blank">
-												<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
-											</a>
-										</xsl:if>
-										<xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
-											<a href="#">
-												<xsl:attribute name="onclick"><script>recoverRelatedInstitution('<xsl:value-of select="ape:related(current()/parent::node()/@href)"></xsl:value-of>');</script></xsl:attribute>
-												<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
-											</a>
-										</xsl:if>
-										<p>
-											<xsl:call-template name="multilanguage">
-												<xsl:with-param name="list" select="current()/parent::node()/eag:descriptiveNote/eag:p"></xsl:with-param>
-											</xsl:call-template>
-										</p>
-									</div>
-								</xsl:when>
-								<xsl:when test="$text and $text != ''  and (not($currentLang) or $currentLang = $language.first)">
-									<div>
-										<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
-										<p>
-											<xsl:call-template name="multilanguage">
-												<xsl:with-param name="list" select="current()/parent::node()/eag:descriptiveNote/eag:p"></xsl:with-param>
-											</xsl:call-template>
-										</p>
-									</div>
-								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
+								</xsl:otherwise>
 							</xsl:choose>
-						</xsl:for-each>
-					</xsl:otherwise>
+					</xsl:when>
 				</xsl:choose>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:for-each select="$list">
-					<xsl:variable name="link" select="current()/parent::node()/@href"></xsl:variable>
-					<xsl:variable name="text" select="current()/text()"></xsl:variable>
-					<xsl:choose>
-						<xsl:when test="$link and $link != '' and $text and $text != ''">
-							<div>
-								<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-									<a href="{$link}" target="_blank">
-										<xsl:value-of select="$text"/>
-									</a>
-								</xsl:if>
-								<xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
-									<a href="#">
-										<xsl:attribute name="onclick"><script>recoverRelatedInstitution('<xsl:value-of select="ape:related(current()/parent::node()/@href)"></xsl:value-of>');</script></xsl:attribute>
-										<xsl:value-of select="$text"/>
-									</a>
-								</xsl:if>
-								<p>
-									<xsl:call-template name="multilanguage">
-										<xsl:with-param name="list" select="current()/parent::node()/eag:descriptiveNote/eag:p"></xsl:with-param>
-									</xsl:call-template>
-								</p>
-							</div>
-						</xsl:when>
-						<xsl:when test="$link and $link != ''">
-							<div>
-								<xsl:if test="starts-with($link, 'http') or starts-with($link, 'https') or starts-with($link, 'ftp') or starts-with($link, 'www')">
-									<a href="{$link}" target="_blank">
-										<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
-									</a>
-								</xsl:if>
-								<xsl:if test="not(starts-with($link, 'http')) and not(starts-with($link, 'https')) and not(starts-with($link, 'ftp')) and not(starts-with($link, 'www'))">
-									<a href="#">
-										<xsl:attribute name="onclick"><script>recoverRelatedInstitution('<xsl:value-of select="ape:related(current()/parent::node()/@href)"></xsl:value-of>');</script></xsl:attribute>
-										<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
-									</a>
-								</xsl:if>
-								<p>
-									<xsl:call-template name="multilanguage">
-										<xsl:with-param name="list" select="current()/parent::node()/eag:descriptiveNote/eag:p"></xsl:with-param>
-									</xsl:call-template>
-								</p>
-							</div>
-						</xsl:when>
-						<xsl:when test="$text and $text != ''">
-							<div>
-								<xsl:value-of select="$text"/>
-								<p>
-									<xsl:call-template name="multilanguage">
-										<xsl:with-param name="list" select="current()/parent::node()/eag:descriptiveNote/eag:p"></xsl:with-param>
-									</xsl:call-template>
-								</p>
-							</div>
-						</xsl:when>
-					</xsl:choose>
-				</xsl:for-each>
-			</xsl:otherwise>
-		</xsl:choose>
+
+				<xsl:call-template name="multilanguage">
+					<xsl:with-param name="list" select="current()/parent::node()/eag:descriptiveNote/eag:p"></xsl:with-param>
+				</xsl:call-template>
+			</div>
+		</xsl:for-each>
 	</xsl:template>
 
 	<!-- template for language-->
