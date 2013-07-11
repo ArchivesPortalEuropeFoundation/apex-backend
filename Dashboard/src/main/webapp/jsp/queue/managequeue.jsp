@@ -46,6 +46,9 @@
 		</c:choose>
 
 	</s:form>
+	<s:form action="deleteAllQueueItemsWithErrors" theme="simple">
+		<s:submit value="Delete all errors from the Queue"></s:submit>
+	</s:form>
 	<h2>First items:</h2>
 	<table class="defaultlayout">
 		<thead>

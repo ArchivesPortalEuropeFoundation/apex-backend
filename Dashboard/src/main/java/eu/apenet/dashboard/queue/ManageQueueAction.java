@@ -2,6 +2,9 @@ package eu.apenet.dashboard.queue;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 
 import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.listener.QueueDaemon;
@@ -11,6 +14,7 @@ import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.QueueItem;
 
 public class ManageQueueAction  extends AbstractAction{
+	private static final Logger LOGGER = Logger.getLogger(ManageQueueAction.class);
 	private static final SimpleDateFormat DATE_TIME = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss"); 
 	private Integer queueItemId;
 	
@@ -52,6 +56,19 @@ public class ManageQueueAction  extends AbstractAction{
 		QueueItemDAO queueDAO =  DAOFactory.instance().getQueueItemDAO();
 		QueueItem queueItem = queueDAO.findById(queueItemId);
 		EadService.deleteFromQueue(queueItem);
+		return SUCCESS;
+	}
+	
+	public String deleteAllQueueItemsWithErrors() throws Exception{
+		QueueItemDAO queueDAO =  DAOFactory.instance().getQueueItemDAO();
+		List<QueueItem> queueItems = queueDAO.getItemsWithErrors();
+		for (QueueItem queueItem: queueItems){
+			try {
+				EadService.deleteFromQueue(queueItem);
+			}catch (Exception e){
+				LOGGER.error(e.getMessage(), e);
+			}
+		}
 		return SUCCESS;
 	}
 	

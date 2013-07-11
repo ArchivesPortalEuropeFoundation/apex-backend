@@ -36,9 +36,6 @@
 	
 	                    hasCpfReady, displayCpfInformation,
 
-                        <!-- hg creation 
-	                     getPossibleFAs, addEadContentData, addCLevelData, addFAsToCurrentLevel, deleteLevelHG,
-                        createHoldingsGuide,-->
                         hgTreeCreation, addEadContentData, addCLevelData,deleteLevelHG,
                         <!-- unload -->
                         unload;
@@ -57,7 +54,7 @@
 			storeAlternativeCountryNames,storeCountry,storeLanguage,viewAdmin,
 			sessionManagement,deleteSession,userManagement,
 			changeToCountryManager,createCountryManager,displayCreateCountryManager,disableCountryManager,enableCountryManager,deleteCountryManager,
-            viewDptVersions, addVersion, deleteVersion, manageQueue, startStopQueue,deleteQueueItem
+            viewDptVersions, addVersion, deleteVersion, manageQueue, startStopQueue,deleteQueueItem,deleteAllQueueItemsWithErrors
 		</group>
 	</groups>
 	<role-mappings>
