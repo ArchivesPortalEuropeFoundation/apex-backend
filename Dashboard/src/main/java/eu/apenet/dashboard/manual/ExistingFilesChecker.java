@@ -528,9 +528,9 @@ public class ExistingFilesChecker {
 	public String overwriteFile(FileUnit fileUnit, String answer,String savechangesEADIDanswer, String canceloverwriteanswer,String eadType, String neweadid) {
 		String result = "ok";
 		Boolean dataBaseCommitError = false;
-		if (answer.equals("Cancel")) {
+		if (answer.equalsIgnoreCase("Cancel")) {
 			result=cancelAnswer(fileUnit);
-		} else if (answer.equals("Overwrite")) {
+		} else if (answer.equalsIgnoreCase("overwrite")) {
 			result=overwriteAnswer(fileUnit);
 		} else {
 		    //Change EADID
