@@ -748,11 +748,8 @@
 										<xsl:value-of select="ape:resource('eagcontent.exhibition')"/>
 									</td>
 									<td>
-										<xsl:call-template name="multilanguage">
-											<xsl:with-param name="list" select="eag:services/eag:recreationalServices/eag:exhibition/eag:descriptiveNote/eag:p"/>
-										</xsl:call-template>
-										<xsl:call-template name="multilaguageWebpage">
-											<xsl:with-param name="list" select="eag:services/eag:recreationalServices/eag:exhibition/eag:webpage"/>
+										<xsl:call-template name="multilanguageRecreationalServices">
+											<xsl:with-param name="list" select="eag:services/eag:recreationalServices/eag:exhibition"/>
 										</xsl:call-template>
 									</td>
 								</tr>
@@ -765,11 +762,8 @@
 										<xsl:value-of select="ape:resource('eagcontent.guidedtour')"/>
 									</td>
 									<td>
-										<xsl:call-template name="multilanguage">
-											<xsl:with-param name="list" select="eag:services/eag:recreationalServices/eag:toursSessions/eag:descriptiveNote/eag:p"/>
-										</xsl:call-template>
-										<xsl:call-template name="multilaguageWebpage">
-											<xsl:with-param name="list" select="eag:services/eag:recreationalServices/eag:toursSessions/eag:webpage"/>
+										<xsl:call-template name="multilanguageRecreationalServices">
+											<xsl:with-param name="list" select="eag:services/eag:recreationalServices/eag:toursSessions"/>
 										</xsl:call-template>
 									</td>
 								</tr>
@@ -782,11 +776,8 @@
 										<xsl:value-of select="ape:resource('eagcontent.otherservices')"/>
 									</td>
 									<td>
-										<xsl:call-template name="multilanguage">
-											<xsl:with-param name="list" select="eag:services/eag:recreationalServices/eag:otherServices/eag:descriptiveNote/eag:p"/>
-										</xsl:call-template>
-										<xsl:call-template name="multilaguageWebpage">
-											<xsl:with-param name="list" select="eag:services/eag:recreationalServices/eag:otherServices/eag:webpage"/>
+										<xsl:call-template name="multilanguageRecreationalServices">
+											<xsl:with-param name="list" select="eag:services/eag:recreationalServices/eag:otherServices"/>
 										</xsl:call-template>
 									</td>
 								</tr>
@@ -1963,80 +1954,72 @@
 		</xsl:for-each>
 	</xsl:template>
 
-	<!-- template for language-->
-	<xsl:template name="multilanguageWithoutP">
-		<xsl:param name="list"/>
-		<xsl:choose>
-			<xsl:when test="count($list) > 1">
-				<xsl:choose>
-					<xsl:when test="$list[@xml:lang = $language.selected]">
-						<xsl:for-each select="$list[@xml:lang = $language.selected]">
-							<xsl:value-of select="."/>
-						</xsl:for-each>
-					</xsl:when>
-					<xsl:when test="$list[@xml:lang = $language.default]">
-						<xsl:for-each select="$list[@xml:lang = $language.default]">
-							<xsl:value-of select="."/>
-						</xsl:for-each>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
-						<xsl:for-each select="$list[@xml:lang = $language.first]">
-								<xsl:value-of select="."/>
-						</xsl:for-each>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:for-each select="$list">
-						<xsl:value-of select="."/>
-				</xsl:for-each>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
 	<!-- template for language nonpreform-->
 	<xsl:template name="multilanguageNoperform">
 		<xsl:param name="list"/>
-		<xsl:choose>
-			<xsl:when test="count($list) > 1">
-				<xsl:choose>
-					<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text()">
-						<xsl:for-each select="$list[@xml:lang = $language.selected]">
-							<p>
-								<xsl:apply-templates select="."/>
-							</p>
-						</xsl:for-each>
-					</xsl:when>
-					<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text()">
-						<xsl:for-each select="$list[@xml:lang = $language.default]">
-							<p>
-								<xsl:apply-templates select="."/>
-							</p>
-						</xsl:for-each>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
-						<xsl:for-each select="$list[@xml:lang = $language.first]">
-							<xsl:if test="current()/text()">
-								<p>
-									<xsl:apply-templates select="."/>
-								</p>
-							</xsl:if>
-						</xsl:for-each>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:for-each select="$list">
-					<xsl:if test="current()/text()">
+			<xsl:choose>
+				<xsl:when test="count($list) > 1">
+					<xsl:choose>
+						<xsl:when test="$language.selected = $language.default">
+							<xsl:for-each select="$list">
+								<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+								<xsl:if test="(not($currentLang) or $currentLang = $language.default) and current()/text() and current()/text() != ''">
+									<p>
+										<xsl:apply-templates select="."/>
+									</p>
+								</xsl:if>
+							</xsl:for-each>
+						</xsl:when>
+						<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
+							<xsl:for-each select="$list">
+								<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+								<xsl:if test="$currentLang = $language.selected or not($currentLang)">
+									<p>
+										<xsl:apply-templates select="."/>
+									</p>
+								</xsl:if>
+							</xsl:for-each>
+						</xsl:when>
+						<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
+							<xsl:for-each select="$list">
+								<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+								<xsl:if test="not($currentLang) or $currentLang = $language.default">
+									<p>
+										<xsl:apply-templates select="."/>
+									</p>
+								</xsl:if>
+							</xsl:for-each>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
+							<xsl:for-each select="$list">
+								<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+								<xsl:choose>
+									<xsl:when test="not($currentLang)">
+										<p>
+											<xsl:apply-templates select="."/>
+										</p>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:if test="$currentLang = $language.first">
+											<p>
+												<xsl:apply-templates select="."/>
+											</p>
+										</xsl:if>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:for-each>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:for-each select="$list">
 						<p>
 							<xsl:apply-templates select="."/>
 						</p>
-					</xsl:if>
-				</xsl:for-each>
-			</xsl:otherwise>
-		</xsl:choose>
+					</xsl:for-each>
+				</xsl:otherwise>
+			</xsl:choose>
 	</xsl:template>
 
 	<!-- template for nonpreform-->
@@ -2155,7 +2138,7 @@
 		</xsl:if>
 	</xsl:template>
 
-	<!-- template for multilanguage-->
+	<!-- template for multilanguage with childs -->
 	<xsl:template name="multilanguageWithChilds">
 		<xsl:param name="title"/>
 		<xsl:param name="class" select="'header'"/>
@@ -2170,26 +2153,54 @@
 					<xsl:choose>
 						<xsl:when test="count($list) > 1">
 							<xsl:choose>
-								<xsl:when test="$list[@xml:lang = $language.selected] and (($list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != '') or ($list[@xml:lang = $language.selected]/@href and $list[@xml:lang = $language.selected]/@href != ''))">
-									<xsl:for-each select="$list[@xml:lang = $language.selected]">
-										<p>
-											<xsl:apply-templates select="."/>
-										</p>
+								<xsl:when test="$language.selected = $language.default">
+									<xsl:for-each select="$list">
+										<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+										<xsl:if test="(not($currentLang) or $currentLang = $language.default) and current()/text() and current()/text() != ''">
+											<p>
+												<xsl:apply-templates select="."/>
+											</p>
+										</xsl:if>
 									</xsl:for-each>
 								</xsl:when>
-								<xsl:when test="$list[@xml:lang = $language.default] and (($list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != '') or ($list[@xml:lang = $language.default]/@href and $list[@xml:lang = $language.default]/@href != ''))">
-									<xsl:for-each select="$list[@xml:lang = $language.default]">
-										<p>
-											<xsl:apply-templates select="."/>
-										</p>
+								<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
+									<xsl:for-each select="$list">
+										<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+										<xsl:if test="$currentLang = $language.selected or not($currentLang)">
+											<p>
+												<xsl:apply-templates select="."/>
+											</p>
+										</xsl:if>
+									</xsl:for-each>
+								</xsl:when>
+								<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
+									<xsl:for-each select="$list">
+										<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+										<xsl:if test="not($currentLang) or $currentLang = $language.default">
+											<p>
+												<xsl:apply-templates select="."/>
+											</p>
+										</xsl:if>
 									</xsl:for-each>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:variable name="language.first" select="$list[1]/@xml:lang"></xsl:variable>
-									<xsl:for-each select="$list[@xml:lang = $language.first]">
-										<p>
-											<xsl:apply-templates select="."/>
-										</p>
+									<xsl:for-each select="$list">
+										<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
+										<xsl:choose>
+											<xsl:when test="not($currentLang)">
+												<p>
+													<xsl:apply-templates select="."/>
+												</p>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:if test="$currentLang = $language.first">
+													<p>
+														<xsl:apply-templates select="."/>
+													</p>
+												</xsl:if>
+											</xsl:otherwise>
+										</xsl:choose>
 									</xsl:for-each>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -2205,6 +2216,23 @@
 				</td>
 			</tr>
 		</xsl:if>
+	</xsl:template>
+
+	<!-- template for language exhibition, toursSessions and otherServices -->
+	<xsl:template name="multilanguageRecreationalServices">
+		<xsl:param name="list"/>
+		<xsl:for-each select="$list">
+			<div>
+				<xsl:variable name="descriptionList" select="current()/eag:descriptiveNote/eag:p"></xsl:variable>
+				<xsl:variable name="webList" select="current()/eag:webpage"></xsl:variable>
+				<xsl:call-template name="multilanguage">
+					<xsl:with-param name="list" select="$descriptionList"/>
+				</xsl:call-template>
+				<xsl:call-template name="multilaguageWebpage">
+					<xsl:with-param name="list" select="$webList"/>
+				</xsl:call-template>
+			</div>
+		</xsl:for-each>
 	</xsl:template>
 
 	<!-- template for variuos-->
