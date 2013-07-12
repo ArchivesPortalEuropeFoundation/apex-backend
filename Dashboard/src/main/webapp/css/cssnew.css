@@ -530,7 +530,7 @@ input[type="submit"],input[type="reset"],input[type="button"] {
     background-color:#EBEBEB;
 	cursor: pointer;
 }
-input[type="submit"]:hover{
+input[type="submit"]:hover,input[type="reset"]:hover,input[type="button"]:hover{
 	    color: #0066CC;
 	    background-color: #DEDEDE;
 }
@@ -544,7 +544,12 @@ input[type="text"],input[type="file"],input[type="password"],textarea
 input:focus {
 	border: 1px solid #00a0df;
 }
-
+/*.passWordButton{
+	margin-left:20px;
+	background: url("../images/mainbutton.png") repeat-x scroll right top #FFFFFF;
+	color: #00384d;
+	font-weight: bold;
+}*/
 input[type="submit"].mainButton {
 	background: url("../images/mainbutton.png") repeat-x scroll right top
 		#FFFFFF;
@@ -585,8 +590,14 @@ textarea {
 	height: 200px;
 }
 
+#passwordTable{
+	padding-top:20px;
+}
 
-
+.userTable{
+	max-width:500px;
+	min-width:500px;
+}
 
 
 .leftSide {

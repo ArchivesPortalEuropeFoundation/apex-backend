@@ -22,7 +22,7 @@ public class EditAction extends AbstractAction {
 
 	private int numberOfCall;
 	private String changeAllow;
-
+	private String messageError;
 	private Logger log = Logger.getLogger(getClass());
 	private String firstName;
 	private String lastName;
@@ -76,22 +76,35 @@ public class EditAction extends AbstractAction {
 			userToUpdate.setSecretQuestion(this.getSecretQuestion());
 			//after editing the user will be logged out and logged in
 			try{
-				if (relog(email,getConfirmPassword(),userToUpdate, changePwd)){
-					addActionMessage(getText("success.user.edit"));
-					return SUCCESS;
-				}
-				else{
-					addActionMessage(getText("oldpassword.notEquals"));
+				if (changePwd) {
+					if (relog(email, this.getNewPassword(),userToUpdate, changePwd)){
+						addActionMessage(getText("success.user.edit"));
+						return SUCCESS;
+					}
+					else{
+						addActionMessage(getText("oldpassword.notEquals"));
+						return ERROR;
+					}
+				} else {
+					if (relog(email, this.getConfirmPassword(),userToUpdate, changePwd)){
+						addActionMessage(getText("success.user.edit"));
+						return SUCCESS;
+					}
+					else{
+						addActionMessage(getText("oldpassword.notEquals"));
+						return ERROR;
+					}
 				}
 			}
 			catch (Exception e) {
 				log.error("Unable to relog " + e.getMessage(), e);
-				return INPUT;
+				//return INPUT;
+				return ERROR;
 			}
 		} else {
 			return INPUT;
 		}
-		return INPUT;
+	//	return INPUT;
 	}
 	
 	private boolean relog(String email, String passw, User userToUpdate, boolean changePwd) throws Exception
@@ -119,6 +132,8 @@ public class EditAction extends AbstractAction {
 					SecurityService.login(email, passw, true);
 					log.trace("relog() method has finished right.");
 					return true;
+				}else{
+					return false;
 				}
 			}
 		}
@@ -126,11 +141,12 @@ public class EditAction extends AbstractAction {
 			log.trace("relog() method is called with " + e);
 			return false;
 		}
-		return false;
+		return true;
 	}
 
 	public boolean validateChangePwd() {
 		boolean result = true;
+		this.setMessageError("true");
 		if (StringUtils.isBlank(getCurrentPassword())){
 			addFieldError("currentPassword", getText("currentPassword.required"));
 			result = false;
@@ -159,9 +175,15 @@ public class EditAction extends AbstractAction {
 					addFieldError("newPassword", getText("password.notStrong"));
 
 				}
-				return false;
+				result = false;
 			}
 		}
+
+		if (!result) {
+			this.setMessageError("false");
+			addActionError(getText("password.errorChange"));
+		}
+		
 		return result;
 	}
 
@@ -295,4 +317,11 @@ public class EditAction extends AbstractAction {
 	public void setConfirmPassword(String confirmPassword) {
 		this.confirmPassword = confirmPassword;
 	}
+	public void setMessageError(String messageError) {
+		this.messageError = messageError;
+	}
+	public String getMessageError() {
+		return messageError;
+	}
+	
 }
