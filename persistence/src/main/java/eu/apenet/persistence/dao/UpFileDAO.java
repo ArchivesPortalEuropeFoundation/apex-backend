@@ -17,4 +17,5 @@ public interface UpFileDAO extends GenericDAO<UpFile, Integer> {
 	public long countNewUpFiles(Integer aiId, FileType fileType);
 	public boolean hasNewUpFiles(Integer aiId, FileType fileType);
 	public List<UpFile> getUpFiles(Integer aiId);
+	public List<UpFile> getAllNotAssociatedFiles() ;
 }
