@@ -12,10 +12,12 @@ import eu.apenet.commons.utils.APEnetUtilities;
 public class UpdateSolrServerHolder {
 	private static final int QUEUE_SIZE = 200;
 	private static final int MAX_THREADS = 2;
+	private static final int MAX_NUMBER_BEFORE_SOFTCOMMIT = 10000;
 	private static final Logger LOGGER = Logger.getLogger(UpdateSolrServerHolder.class);
 	private ConcurrentUpdateSolrServer solrServer;
 	private static UpdateSolrServerHolder instance;
 	private String solrIndexUrl;
+	private int numberOfItemsWithoutSoftCommit = 0;
 
 	private UpdateSolrServerHolder() {
 
@@ -52,6 +54,7 @@ public class UpdateSolrServerHolder {
 			try {
 				long startTime = System.currentTimeMillis();
 				solrServer.add(documents);
+				numberOfItemsWithoutSoftCommit += documents.size();
 				return System.currentTimeMillis() - startTime;
 			} catch (Exception e) {
 				throw new SolrServerException("Could not add documents", e);
@@ -60,12 +63,13 @@ public class UpdateSolrServerHolder {
 			throw new SolrServerException("Solr server " + solrIndexUrl + " is not available");
 		}
 	}
-	
+
 	public long hardCommit() throws SolrServerException {
 		if (isAvailable()) {
 			try {
 				long startTime = System.currentTimeMillis();
-				solrServer.commit(true, true,false);
+				solrServer.commit(true, true, false);
+				numberOfItemsWithoutSoftCommit = 0;
 				LOGGER.info("hardcommit: " + (System.currentTimeMillis() - startTime) + "ms");
 				return System.currentTimeMillis() - startTime;
 			} catch (Exception e) {
@@ -75,13 +79,20 @@ public class UpdateSolrServerHolder {
 			throw new SolrServerException("Solr server " + solrIndexUrl + " is not available");
 		}
 	}
+
 	public long softCommit() throws SolrServerException {
 		if (isAvailable()) {
 			try {
 				long startTime = System.currentTimeMillis();
-				solrServer.commit(true, true,true);
-				LOGGER.info("softcommit: " + (System.currentTimeMillis() - startTime) + "ms");
-				return System.currentTimeMillis() - startTime;
+				if (numberOfItemsWithoutSoftCommit > MAX_NUMBER_BEFORE_SOFTCOMMIT) {
+					solrServer.commit(true, true, true);
+					LOGGER.info("softcommit: " + numberOfItemsWithoutSoftCommit +  " - " + (System.currentTimeMillis() - startTime) + "ms");
+					numberOfItemsWithoutSoftCommit = 0;
+					return System.currentTimeMillis() - startTime;
+				} else {
+					LOGGER.info("softcommit skipped: " + numberOfItemsWithoutSoftCommit);
+					return System.currentTimeMillis() - startTime;
+				}
 			} catch (Exception e) {
 				throw new SolrServerException("Could not commit", e);
 			}
