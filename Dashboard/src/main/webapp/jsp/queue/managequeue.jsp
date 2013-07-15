@@ -46,8 +46,11 @@
 		</c:choose>
 
 	</s:form>
-	<s:form action="deleteAllQueueItemsWithErrors" theme="simple">
+	<s:form action="deleteAllQueueItemsWithErrors" theme="simple" method="post">
 		<s:submit value="Delete all errors from the Queue"></s:submit>
+	</s:form>
+		<s:form action="deleteAllUnusedUploadFiles" theme="simple" method="post">
+		<s:submit value="Delete all unused uploads"></s:submit>
 	</s:form>
 	<h2>First items:</h2>
 	<table class="defaultlayout">
