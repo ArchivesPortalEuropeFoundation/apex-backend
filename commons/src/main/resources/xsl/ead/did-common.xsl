@@ -52,6 +52,9 @@
 		<div class="ead-content">
 			<xsl:for-each select="ead:physfacet">
 				<xsl:apply-templates  mode="other" />
+				<xsl:if test="position() != last()">
+					<xsl:text>, </xsl:text>
+				</xsl:if>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
@@ -69,7 +72,10 @@
 		</h2>
 		<div class="ead-content">
 			<xsl:for-each select="ead:genreform">
-				<xsl:apply-templates  mode="other"/><xsl:text> </xsl:text>
+				<xsl:apply-templates  mode="other"/>
+				<xsl:if test="position() != last()">
+					<xsl:text>, </xsl:text>
+				</xsl:if>
 			</xsl:for-each>
 		</div>
 	</xsl:template>

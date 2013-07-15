@@ -44,6 +44,9 @@
 		<xsl:if test="ead:accruals">
 			<xsl:call-template name="accruals" />
 		</xsl:if>
+		<xsl:if test="ead:acqinfo">
+			<xsl:call-template name="acqinfo" />
+		</xsl:if>
 		<xsl:if test="ead:arrangement">
 			<xsl:call-template name="arrangement" />
 		</xsl:if>
@@ -90,6 +93,27 @@
 		</xsl:if>
 	</xsl:template>
 	<xsl:template match="ead:did">
+		<xsl:for-each select="ead:physdesc">
+            <xsl:choose>
+                <xsl:when test="normalize-space(text()[1])">
+                    <xsl:call-template name="physdescText" />
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:if test="ead:physfacet">
+                        <xsl:call-template name="physfacet" />
+                    </xsl:if>
+                    <xsl:if test="ead:extent">
+                        <xsl:call-template name="extent" />
+                    </xsl:if>
+                    <xsl:if test="ead:genreform">
+                        <xsl:call-template name="genreform" />
+                    </xsl:if>
+                    <xsl:if test="ead:dimensions">
+                        <xsl:call-template name="dimensions" />
+                    </xsl:if>
+                </xsl:otherwise>
+            </xsl:choose>
+		</xsl:for-each>
 		<xsl:if test="ead:note">
 			<xsl:call-template name="note" />
 		</xsl:if>
