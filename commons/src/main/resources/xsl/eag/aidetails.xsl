@@ -2156,14 +2156,14 @@
 								<xsl:when test="$language.selected = $language.default">
 									<xsl:for-each select="$list">
 										<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-										<xsl:if test="(not($currentLang) or $currentLang = $language.default) and current()/text() and current()/text() != ''">
+										<xsl:if test="(not($currentLang) or $currentLang = $language.default)">
 											<p>
 												<xsl:apply-templates select="."/>
 											</p>
 										</xsl:if>
 									</xsl:for-each>
 								</xsl:when>
-								<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
+								<xsl:when test="$list[@xml:lang = $language.selected]">
 									<xsl:for-each select="$list">
 										<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
 										<xsl:if test="$currentLang = $language.selected or not($currentLang)">
@@ -2173,7 +2173,7 @@
 										</xsl:if>
 									</xsl:for-each>
 								</xsl:when>
-								<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
+								<xsl:when test="$list[@xml:lang = $language.default]">
 									<xsl:for-each select="$list">
 										<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
 										<xsl:if test="not($currentLang) or $currentLang = $language.default">
@@ -2235,20 +2235,79 @@
 		</xsl:for-each>
 	</xsl:template>
 
-	<!-- template for variuos-->
-	<xsl:template match="eag:advancedOrders | eag:readersTicket | eag:termsOfUse | eag:citation">
+	<!-- template for advancedOrders -->
+	<xsl:template match="eag:advancedOrders">
 		<xsl:choose>
 			<xsl:when test="./@href and ./@href != ''">
 				<xsl:variable name="href" select="./@href"/>
 				<a href="{$href}" target="_blank">
 					<xsl:choose>
-						<xsl:when test="text()">
+						<xsl:when test="./text() and ./text() != ''">
 							<xsl:value-of select="."/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="$href"/>
+							<xsl:value-of select="ape:resource('eagcontent.advancedorderslink')"/>
 						</xsl:otherwise>
 					</xsl:choose>
+				</a>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="."/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<!-- template for readersTicket -->
+	<xsl:template match="eag:readersTicket">
+		<xsl:choose>
+			<xsl:when test="./@href and ./@href != ''">
+				<xsl:variable name="href" select="./@href"/>
+				<a href="{$href}" target="_blank">
+					<xsl:choose>
+						<xsl:when test="./text() and ./text() != ''">
+							<xsl:value-of select="."/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="ape:resource('eagcontent.readersticketlink')"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</a>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="."/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<!-- template for termsOfUse -->
+	<xsl:template match="eag:termsOfUse">
+		<xsl:choose>
+			<xsl:when test="./@href and ./@href != ''">
+				<xsl:variable name="href" select="./@href"/>
+				<a href="{$href}" target="_blank">
+					<xsl:choose>
+						<xsl:when test="text() and text() != ''">
+							<xsl:value-of select="."/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="ape:resource('eagcontent.termsofuselink')"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</a>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="."/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<!-- template for citation -->
+	<xsl:template match="eag:citation">
+		<xsl:choose>
+			<xsl:when test="./@href and ./@href != ''">
+				<xsl:variable name="href" select="./@href"/>
+				<a href="{$href}" target="_blank">
+					<xsl:value-of select="ape:resource('eagcontent.directionscitation')"/>
 				</a>
 			</xsl:when>
 			<xsl:otherwise>

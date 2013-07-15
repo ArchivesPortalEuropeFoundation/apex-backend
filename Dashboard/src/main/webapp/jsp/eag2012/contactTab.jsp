@@ -486,7 +486,7 @@
 							</td>
 						</tr>
 
-				        <s:if test="%{#counter > 0}">
+				        <s:if test="%{#internalStatus.index == 0}">
 					       <tr id="trLanguageEmailOfTheInstitution">
 				        </s:if>
 				        <s:else>
