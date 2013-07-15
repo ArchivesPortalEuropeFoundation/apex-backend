@@ -28,6 +28,11 @@
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.Object</type>
 		</attribute>
+		<attribute>
+			<name>numberFormat</name>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.Object</type>
+		</attribute>
 	</tag>
 	<tag>
 		<name>paging</name>
