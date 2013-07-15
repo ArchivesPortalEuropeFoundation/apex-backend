@@ -878,7 +878,11 @@
 					<param name="actionName">manageQueue</param>				
 				</result> 
         	</action>    
-        	
+         	<action name="deleteAllUnusedUploadFiles" class="eu.apenet.dashboard.queue.ManageQueueAction" method="deleteAllUnusedUploadFiles">  
+               <result name="success" type="redirectAction">
+					<param name="actionName">manageQueue</param>				
+				</result> 
+        	</action>          	
         	<action name="sessionManagement" class="eu.apenet.dashboard.security.actions.SessionManagementAction"> 
                <result name="success" type="tiles">sessionManagement</result>
         	</action>

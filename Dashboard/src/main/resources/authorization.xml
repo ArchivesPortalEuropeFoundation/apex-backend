@@ -54,7 +54,7 @@
 			storeAlternativeCountryNames,storeCountry,storeLanguage,viewAdmin,
 			sessionManagement,deleteSession,userManagement,
 			changeToCountryManager,createCountryManager,displayCreateCountryManager,disableCountryManager,enableCountryManager,deleteCountryManager,
-            viewDptVersions, addVersion, deleteVersion, manageQueue, startStopQueue,deleteQueueItem,deleteAllQueueItemsWithErrors
+            viewDptVersions, addVersion, deleteVersion, manageQueue, startStopQueue,deleteQueueItem,deleteAllQueueItemsWithErrors,deleteAllUnusedUploadFiles
 		</group>
 	</groups>
 	<role-mappings>
