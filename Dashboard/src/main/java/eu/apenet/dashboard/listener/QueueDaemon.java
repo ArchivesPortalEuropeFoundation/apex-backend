@@ -15,6 +15,8 @@ public class QueueDaemon {
 			scheduler = Executors.newScheduledThreadPool(1);
 			addTask(new Duration(0, 0, 0),new Duration(0, 10, 0) , new Duration(0, 2, 0));
 			LOGGER.info("Queue daemon started");
+		}else if (queueProcessing){
+			LOGGER.info("Could not start Queue daemon, because the queue is still processing");
 		}
 		
 	}
