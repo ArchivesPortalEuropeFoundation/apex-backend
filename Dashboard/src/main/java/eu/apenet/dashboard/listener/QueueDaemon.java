@@ -11,7 +11,7 @@ public class QueueDaemon {
 	private static ScheduledExecutorService scheduler;
 	private static boolean queueProcessing = false;
 	public static synchronized void start(){
-		if (scheduler == null){
+		if (scheduler == null && !queueProcessing){
 			scheduler = Executors.newScheduledThreadPool(1);
 			addTask(new Duration(0, 0, 0),new Duration(0, 10, 0) , new Duration(0, 2, 0));
 			LOGGER.info("Queue daemon started");
