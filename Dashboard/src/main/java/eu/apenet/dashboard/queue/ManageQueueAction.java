@@ -72,6 +72,11 @@ public class ManageQueueAction  extends AbstractAction{
 		return SUCCESS;
 	}
 	
+	public String deleteAllUnusedUploadFiles() throws Exception{
+		EadService.deleteAllUnusedUploadFiles();
+		return SUCCESS;
+	}
+	
 	public String startStopQueue(){
 		if (QueueDaemon.isActive()){
 			QueueDaemon.stop();

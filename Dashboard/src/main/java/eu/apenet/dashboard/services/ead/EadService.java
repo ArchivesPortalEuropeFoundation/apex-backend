@@ -22,6 +22,7 @@ import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.dao.EseStateDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
+import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.Ese;
@@ -40,7 +41,8 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 public class EadService {
 
 	protected static final Logger LOGGER = Logger.getLogger(EadService.class);
-
+	private static final long NOT_USED_TIME = 60*60*24*7;
+	
 	public static boolean isHarvestingStarted() {
 		return DAOFactory.instance().getResumptionTokenDAO().containsValidResumptionTokens(new Date());
 	}
@@ -236,6 +238,29 @@ public class EadService {
 		if (upFile != null) {
 			DAOFactory.instance().getUpFileDAO().deleteSimple(upFile);
 		}
+	}
+
+	public static void deleteAllUnusedUploadFiles() {
+		UpFileDAO upFileDAO = DAOFactory.instance().getUpFileDAO();
+		List<UpFile> upFiles = upFileDAO.getAllNotAssociatedFiles();
+		for (UpFile upFile : upFiles) {
+			String filename = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath();
+			try {
+				
+				File file = new File(filename);
+				if (file.lastModified() < (System.currentTimeMillis() - NOT_USED_TIME)){
+					LOGGER.info("Delete unused file(" + upFile.getId() + ") : " + filename);
+					File aiDir = file.getParentFile();
+					ContentUtils.deleteFile(file, false);
+					if (aiDir.exists() && aiDir.listFiles().length == 0) {
+						ContentUtils.deleteFile(aiDir, false);
+					}
+				}
+			} catch (IOException ioe) {
+				LOGGER.error("Unable to delete unused file(" + upFile.getId() + ") : " + filename, ioe);
+			}
+		}
+
 	}
 
 	public static void deleteFromQueue(QueueItem queueItem) throws Exception {
@@ -451,7 +476,7 @@ public class EadService {
 		QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		long itemsLeft = eadDAO.countEads(eadSearchOptions);
-		LOGGER.info(itemsLeft + " " + eadSearchOptions.getEadClazz().getSimpleName() +  " left to add to queue");
+		LOGGER.info(itemsLeft + " " + eadSearchOptions.getEadClazz().getSimpleName() + " left to add to queue");
 		while (itemsLeft > 0) {
 			JpaUtil.beginDatabaseTransaction();
 			List<Ead> eads = eadDAO.getEads(eadSearchOptions);
@@ -460,7 +485,7 @@ public class EadService {
 				Ead ead = eads.get(size - 1);
 				QueueItem queueItem = fillQueueItem(ead, queueAction, null, 1);
 				ead.setQueuing(QueuingState.READY);
-				if (queueAction.isPublishAction()){
+				if (queueAction.isPublishAction()) {
 					ead.setPublished(false);
 				}
 				eadDAO.updateSimple(ead);
@@ -469,10 +494,9 @@ public class EadService {
 			}
 			JpaUtil.commitDatabaseTransaction();
 			itemsLeft = eadDAO.countEads(eadSearchOptions);
-			LOGGER.info(itemsLeft + " " + eadSearchOptions.getEadClazz().getSimpleName() +  " left to add to queue");
-			
-		}
+			LOGGER.info(itemsLeft + " " + eadSearchOptions.getEadClazz().getSimpleName() + " left to add to queue");
 
+		}
 
 	}
 
