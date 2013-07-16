@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
 import eu.apenet.commons.exceptions.APEnetException;
-import eu.apenet.commons.solr.UpdateSolrServerHolder;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
@@ -40,7 +39,6 @@ public class QueueTask implements Runnable {
 	@Override
 	public void run() {
 		LOGGER.info("Queuing process active");
-		boolean hasItemPublished = false;
 		removeOldResumptionTokens();
 		long endTime = System.currentTimeMillis() + duration.getMilliseconds();
 		boolean stopped = false;
@@ -51,7 +49,7 @@ public class QueueTask implements Runnable {
 			} else {
 				try {
 					QueueDaemon.setQueueProcessing(true);
-					hasItemPublished = hasItemPublished || processQueue(endTime);
+					processQueue(endTime);
 				} catch (Throwable e) {
 					LOGGER.error("Stopping processing for a while :" + e.getMessage(), e);
 					try {
@@ -74,15 +72,7 @@ public class QueueTask implements Runnable {
 			}
 
 		}
-
 		LOGGER.info("Queuing process inactive");
-		if (hasItemPublished){
-			try {
-				UpdateSolrServerHolder.getInstance().hardCommit();
-			} catch (Exception de) {
-				LOGGER.error(de.getMessage(),de);
-			}
-		}
 		if (!scheduler.isShutdown()) {
 			scheduler.schedule(new QueueTask(scheduler, duration, delay), delay.getMilliseconds(),
 					TimeUnit.MILLISECONDS);
