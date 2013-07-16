@@ -529,7 +529,6 @@ public class SolrPublisher {
 			LOG.debug(this.eadidstring + " #published: " + numberOfPublishedItems + " time: " + solrTime +"ms" );
 			docs = new ArrayList<SolrInputDocument>();
 		}
-		solrTime += UpdateSolrServerHolder.getInstance().softCommit();
 		removeWarnings();
 		ead.setTotalNumberOfDaos(eadCounts.getNumberOfDAOsBelow());
 		if (eadCounts.getNumberOfDAOsBelow() == 0){
@@ -553,7 +552,6 @@ public class SolrPublisher {
 	}
 
 	public void rollback() throws SolrServerException, IOException {
-		solrTime += UpdateSolrServerHolder.getInstance().softCommit();
 
 		String solrPrefix = SolrValues.FA_PREFIX;
 		if (xmlType == XmlType.EAD_HG)
@@ -565,8 +563,6 @@ public class SolrPublisher {
 		Ead rollBackEad = eadDao.findById(ead.getId(), xmlType.getClazz());
 		ContentUtils.changeSearchable(rollBackEad, false);
 		eadDao.store(rollBackEad);
-
-		solrTime += UpdateSolrServerHolder.getInstance().softCommit();
 	}
 
 	private static String removeUnusedCharacters(String input) {

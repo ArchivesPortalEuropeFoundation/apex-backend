@@ -48,9 +48,6 @@ public class UnpublishTask extends AbstractEadTask {
 
 	private static long deleteFromSolr(String eadid, int aiId) throws SolrServerException, IOException {
 		UpdateSolrServerHolder server = UpdateSolrServerHolder.getInstance();
-		long solrTime = server.deleteByQuery("(" + SolrFields.AI_ID + ":" + aiId + " AND " + SolrFields.EADID + ":\"" + eadid + "\")");
-		solrTime+= server.softCommit();
-		return solrTime;
-
+		return server.deleteByQuery("(" + SolrFields.AI_ID + ":" + aiId + " AND " + SolrFields.EADID + ":\"" + eadid + "\")");
 	}
 }
