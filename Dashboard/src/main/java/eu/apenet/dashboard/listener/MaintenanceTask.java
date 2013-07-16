@@ -19,7 +19,8 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 public class MaintenanceTask extends Thread {
 	private static final int MAX_AMOUNT = 1000;
 	private static final Logger LOGGER = Logger.getLogger(MaintenanceTask.class);
-	private static final String REINDEX_ALL = "reindex-all";
+	private static final String REPUBLISH_ALL = "republish-all";
+	private static final String REPUBLISH_HG_SG = "republish-hg-sg";
 	private static final String DELETE_ALL = "delete-all";
 
 	public MaintenanceTask() {
@@ -33,8 +34,8 @@ public class MaintenanceTask extends Thread {
 		try {
 			EadSearchOptions eadSearchOptions = new EadSearchOptions();
 			eadSearchOptions.setPageSize(MAX_AMOUNT);
-			if (REINDEX_ALL.equals(APEnetUtilities.getDashboardConfig().getMaintenanceAction())) {
-				LOGGER.info("Start to add all published items to the queue");
+			if (REPUBLISH_ALL.equals(APEnetUtilities.getDashboardConfig().getMaintenanceAction())) {
+				LOGGER.info("Execute command: " + REPUBLISH_ALL);
 				eadSearchOptions.setPublished(true);
 				List<QueuingState> queuingStates = new ArrayList<QueuingState>();
 				queuingStates.add(QueuingState.NO);
@@ -47,6 +48,22 @@ public class MaintenanceTask extends Thread {
 					EadService.updateEverything(eadSearchOptions, QueueAction.PUBLISH);
 					eadSearchOptions.setEadClazz(FindingAid.class);
 					EadService.updateEverything(eadSearchOptions, QueueAction.PUBLISH);
+				} catch (IOException e) {
+					LOGGER.error("unexpected error occurs: " + e.getMessage(), e);
+				}
+
+			} else if (REPUBLISH_HG_SG.equals(APEnetUtilities.getDashboardConfig().getMaintenanceAction())) {
+				LOGGER.info("Execute command: " + REPUBLISH_HG_SG);
+				eadSearchOptions.setPublished(true);
+				List<QueuingState> queuingStates = new ArrayList<QueuingState>();
+				queuingStates.add(QueuingState.NO);
+				queuingStates.add(QueuingState.ERROR);
+				eadSearchOptions.setQueuing(queuingStates);
+				try {
+					eadSearchOptions.setEadClazz(HoldingsGuide.class);
+					EadService.updateEverything(eadSearchOptions, QueueAction.REPUBLISH);
+					eadSearchOptions.setEadClazz(SourceGuide.class);
+					EadService.updateEverything(eadSearchOptions, QueueAction.REPUBLISH);
 				} catch (IOException e) {
 					LOGGER.error("unexpected error occurs: " + e.getMessage(), e);
 				}
