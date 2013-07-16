@@ -7,18 +7,17 @@
 
   <!-- <indexConfig> section could go here, but we want the defaults -->
 <indexConfig>
-	<ramBufferSizeMB>100</ramBufferSizeMB>
+	<ramBufferSizeMB>500</ramBufferSizeMB>
 	<mergeFactor>20</mergeFactor>
 </indexConfig>
   <!-- the default high-performance update handler -->
   <updateHandler class="solr.DirectUpdateHandler2">
      <autoSoftCommit>
-       <maxDocs>1000</maxDocs>
-       <maxTime>1000</maxTime>
+       <maxDocs>10000</maxDocs>
+       <maxTime>180000</maxTime>
      </autoSoftCommit>
      <autoCommit>
-      <maxDocs>1000</maxDocs>
-      <maxTime>10000</maxTime>
+      <maxTime>600000</maxTime>
       <openSearcher>false</openSearcher>
     </autoCommit>
  
@@ -32,20 +31,20 @@
 
     <filterCache
       class="solr.LRUCache"
-      size="512"
-      initialSize="512"
-      autowarmCount="256"/>
+      size="2048"
+      initialSize="1024"
+      autowarmCount="1024"/>
 
     <queryResultCache
       class="solr.LRUCache"
-      size="512"
-      initialSize="512"
-      autowarmCount="256"/>
+      size="2048"
+      initialSize="1024"
+      autowarmCount="1024"/>
 
     <documentCache
       class="solr.LRUCache"
-      size="512"
-      initialSize="512"
+      size="2048"
+      initialSize="1024"
       autowarmCount="0"/>
 
     <enableLazyFieldLoading>true</enableLazyFieldLoading>

@@ -7,7 +7,7 @@
 
   <!-- <indexConfig> section could go here, but we want the defaults -->
 <indexConfig>
-	<ramBufferSizeMB>100</ramBufferSizeMB>
+	<ramBufferSizeMB>200</ramBufferSizeMB>
 	<mergeFactor>20</mergeFactor>
 </indexConfig>
   <!-- the default high-performance update handler -->
@@ -17,11 +17,10 @@
        <maxTime>1000</maxTime>
      </autoSoftCommit>
      <autoCommit>
-      <maxDocs>1000</maxDocs>
-      <maxTime>10000</maxTime>
+      <maxDocs>10000</maxDocs>
+      <maxTime>60000</maxTime>
       <openSearcher>false</openSearcher>
     </autoCommit>
- 
 
   </updateHandler>
 
