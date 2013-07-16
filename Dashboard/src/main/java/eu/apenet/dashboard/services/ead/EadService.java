@@ -363,6 +363,10 @@ public class EadService {
 				if (queueAction.isPublishAction()) {
 					new PublishTask().execute(ead, preferences);
 				}
+				if (queueAction.isRePublishAction()) {
+					new UnpublishTask().execute(ead, preferences);
+					new PublishTask().execute(ead, preferences);
+				}
 				if (queueAction.isConvertToEseEdmAction()) {
 					new ConvertToEseEdmTask().execute(ead, preferences);
 				}
