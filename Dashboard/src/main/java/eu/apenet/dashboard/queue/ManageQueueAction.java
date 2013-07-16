@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import eu.apenet.commons.solr.UpdateSolrServerHolder;
 import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.listener.QueueDaemon;
 import eu.apenet.dashboard.services.ead.EadService;
@@ -74,6 +75,15 @@ public class ManageQueueAction  extends AbstractAction{
 	
 	public String deleteAllUnusedUploadFiles() throws Exception{
 		EadService.deleteAllUnusedUploadFiles();
+		return SUCCESS;
+	}
+	
+	public String forceSolrCommit() throws Exception{
+		try {
+			UpdateSolrServerHolder.getInstance().hardCommit();
+		} catch (Exception de) {
+			LOGGER.error(de.getMessage(),de);
+		}
 		return SUCCESS;
 	}
 	
