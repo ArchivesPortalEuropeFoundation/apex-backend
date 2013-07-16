@@ -21,6 +21,8 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
+import eu.apenet.persistence.vo.HoldingsGuide;
+import eu.apenet.persistence.vo.SourceGuide;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class DatabaseEadPublisher {
@@ -61,6 +63,9 @@ public class DatabaseEadPublisher {
 		SolrPublisher solrPublisher = new SolrPublisher(ead);
 		Class<? extends Ead> clazz = XmlType.getEadType(ead).getClazz();
 		try {
+			if (ead instanceof SourceGuide || ead instanceof HoldingsGuide){
+				JpaUtil.beginDatabaseTransaction();
+			}
 			PublishData publishData = new PublishData();
 			publishData.setXml(eadContent.getXml());
 			publishData.setId(ead.getId().longValue());
@@ -74,9 +79,10 @@ public class DatabaseEadPublisher {
 				eadCounts.addEadCounts(DatabaseCLevelPublisher.publish(clevel,eadContent.getEcId(),ead, solrPublisher, upperLevels, fullHierarchy));
 				cOrderId++;
 				clevel = clevelDAO.getTopClevelByFileId(ead.getId(), clazz, cOrderId);
-//				System.out.println("H:" + eadCounts.getNumberOfUnits());
 			}
-			JpaUtil.beginDatabaseTransaction();
+			if (!(ead instanceof SourceGuide || ead instanceof HoldingsGuide)){
+				JpaUtil.beginDatabaseTransaction();
+			}
 			solrPublisher.commitAll(eadCounts);
 			JpaUtil.commitDatabaseTransaction();
 

@@ -39,15 +39,16 @@ public class DatabaseCLevelPublisher {
 			publishData.setOrderId(clevel.getOrderId());
 		}
 		eadCounts.addClevel(solrPublisher.parseCLevel(publishData));
+		if (clevel.getHrefEadid() != null){
+			System.out.println(clevel.getHrefEadid());
+			LinkingService.linkWithoutCommit(ead, clevel);
+		}
 		unittitles.add(new LevelInfo(clevel.getClId(),clevel.getOrderId(), clevel.getUnittitle()));	
 		int childOrderId = 0;
 		List<CLevel> clevels = clevelDAO.findChildCLevels(clevel.getClId(), childOrderId, NUMBER_OF_CLEVEL_ONCE);
 		while (clevels.size() > 0) {
 			eadCounts.addEadCounts(DatabaseCLevelPublisher.publish(clevels.get(0),eadContentId,ead, solrPublisher, unittitles, fullHierarchy));
 			childOrderId++;
-			if (clevel.getHrefEadid() != null){
-				LinkingService.linkWithoutCommit(ead, clevel);
-			}
 			clevels = clevelDAO.findChildCLevels(clevel.getClId(), childOrderId, NUMBER_OF_CLEVEL_ONCE);
 		}
 		return eadCounts;

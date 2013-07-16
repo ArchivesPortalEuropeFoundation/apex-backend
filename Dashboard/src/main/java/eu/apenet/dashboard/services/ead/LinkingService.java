@@ -29,7 +29,6 @@ import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
@@ -57,7 +56,7 @@ public class LinkingService {
 				} else if (hgOrSg instanceof SourceGuide) {
 					hgSgFaRelation.setSgId(hgOrSg.getId());
 				}
-				HibernateUtil.getDatabaseSession().save(hgSgFaRelation);
+				JpaUtil.getEntityManager().persist(hgSgFaRelation);
 				return true;
 			}
 		}
