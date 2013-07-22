@@ -97,18 +97,31 @@
 		<action name="uploadowneagwithmenu" class="eu.apenet.dashboard.manual.HTTPUploadEAGAction"> 
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="success" type="tiles">httpuploadeagwithmenu</result>
+			<result name="input2" type="tiles">uploadeagold</result>
 		</action>
 
 		<action name="eaghttpupload" class="eu.apenet.dashboard.manual.HTTPUploadEAGAction" method="httpUpload"> 
 			<result name="success" type="tiles">index</result>			
 			<result name="error" type="tiles">uploadeagerrors</result>
 			<result name="input" type="tiles">httpuploadeag</result>
+			<result name="input2" type="tiles">uploadeagold</result>
 		</action>
-		
+		<action name="eagoldhttpupload" class="eu.apenet.dashboard.manual.HTTPUploadEAGAction" method="parseEag02ToEAG2012"> 
+			<result name="success" type="redirectAction">
+		        <param name="actionName">createeag2012withmenu</param>
+		    </result>
+			<result name="error" type="tiles">uploadeagerrors</result>
+		</action>
+		<action name="eagoldnothttpupload" class="eu.apenet.dashboard.manual.HTTPUploadEAGAction" method="removeEag02"> 
+			<result name="success" type="redirectAction">
+		        <param name="actionName">dashboardHome</param>
+		    </result>
+		</action>
 		<action name="eaghttpuploadwithmenu" class="eu.apenet.dashboard.manual.HTTPUploadEAGAction" method="httpUpload"> 
 			<result name="success" type="tiles">index</result>
 			<result name="error" type="tiles">uploadeagerrorswithmenu</result>
 			<result name="input" type="tiles">httpuploadeagwithmenu</result>
+			<result name="input2" type="tiles">uploadeagold</result>
 		</action>		
 
 		<action name="eagcorrectlyuploaded" class="eu.apenet.dashboard.manual.DashboardRedirectionAction"> 

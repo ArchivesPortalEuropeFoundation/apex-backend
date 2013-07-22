@@ -226,6 +226,36 @@ public class APEnetEAGDashboard{
 		}
 		return true;
 	}
+	
+	public Boolean convertEAG02ToEAG2012() throws APEnetException {
+		// EAG file is stored temporally in the location defined in eagPath
+		// attribute
+		File file = new File(this.getEagPath());
+		File outputfile = null;
+		try {
+			InputStream in;
+			final String xslfilename = "eag2eag2012.xsl";
+			outputfile = new File(file.getParentFile(), "converted_" + file.getName());
+			String xslFilePath = APEnetUtilities.getDashboardConfig().getSystemXslDirPath()
+					+ APEnetUtilities.FILESEPARATOR + xslfilename;
+			in = new FileInputStream(file);
+			TransformationTool.createTransformation(in, outputfile, FileUtils.openInputStream(new File(xslFilePath)),
+					null, true, true, null, true, null);
+			in.close();
+			FileUtils.copyFile(outputfile, file);
+		} catch (Exception e) {
+			throw new APEnetException("Exception while converting in APEnet EAG", e);
+		} finally {
+			if (outputfile != null) {
+				try {
+					FileUtils.forceDelete(outputfile);
+				} catch (IOException e) {
+					log.error("Error deleting file: " + outputfile.getName());
+				}
+			}
+		}
+		return true;
+	}
 
 	public List<String> showWarnings() {
 		return warnings_ead;

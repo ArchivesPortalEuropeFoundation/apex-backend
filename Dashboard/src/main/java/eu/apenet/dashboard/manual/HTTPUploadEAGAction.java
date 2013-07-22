@@ -1,9 +1,19 @@
 package eu.apenet.dashboard.manual;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
+import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
+import eu.apenet.persistence.dao.CountryDAO;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.Country;
 
 /**
  * User: Eloy García
@@ -166,6 +176,10 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
         	    	this.filesNotUploaded = this.uploader_http.getFilesNotUploaded();
                     addActionMessage(getText("label.eag.uploadingerror.parsing"));
         	    	result = ERROR;
+        	    }else if (result.equals("display_eag02convertedToeag2012")){
+        	    	this.filesUploaded = this.uploader_http.getFilesUploaded();
+        	    	addActionMessage(getText("label.eag.oldEag"));
+        	    	result = "input2";
         	    }
         	}
         	else {
@@ -180,4 +194,130 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
     	return ERROR;
     }
     
+    public String parseEag02ToEAG2012(){
+		if (this.filesUploaded == null) {
+			this.filesUploaded = new ArrayList<String>();
+		}
+
+		if (this.filesNotUploaded == null) {
+			this.filesNotUploaded = new ArrayList<String>();
+		}
+    	
+    	String result = null;
+    	Integer archivalInstitutionId;
+    	
+    	try{
+    		Integer aiId = getAiId();
+    		String path = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR;
+    		String filename = "";
+    		File dirFile = new File(path);
+    		if (dirFile.isDirectory()) {
+    			File[] fileList = dirFile.listFiles();
+    			for (int i = 0; i < fileList.length; i++) {
+    				filename = fileList[i].getName();
+    			}
+    		}
+    		File file = new File(path + filename);
+    		if (file != null){
+                archivalInstitutionId = aiId;
+                APEnetEAGDashboard eag = new APEnetEAGDashboard(archivalInstitutionId, file.getAbsolutePath());
+        	    if (eag.convertEAG02ToEAG2012()){
+					//The EAG has been converted so it is necessary to validate the file against APEnet EAG schema
+    				if (eag.validate()){
+    					result = eag.saveEAGviaHTTP(file.getAbsolutePath());
+		        	    if (result.equals("error_eagalreadyuploaded")){
+		        	    	this.filesNotUploaded.add(filename);
+		                    addActionMessage(getText("label.eag.uploadingerror.eagalreadyuploaded"));
+		                    result = ERROR;
+		        	    }
+		        	    else if (result.equals("error_eagnotstored")){
+		        	    	this.filesNotUploaded.add(filename);
+		                    addActionMessage(getText("label.eag.uploadingerror.error"));
+		                    result = ERROR;
+		        	    }
+		        	    else if (result.equals("error_database")){
+		        	    	this.filesNotUploaded.add(filename);
+		                    addActionMessage(getText("label.eag.uploadingerror.database"));
+		                    result = ERROR;
+		        	    }
+		        	    else if (result.equals("error_archivallandscape")){
+		        	    	this.filesNotUploaded.add(filename);
+		                    addActionMessage(getText("label.eag.uploadingerror.three"));
+		                    result = ERROR;
+		        	    }
+		        	    else if (result.equals("error_eagnotvalidatednotconverted")) {
+		        	    	this.filesNotUploaded.add(filename);
+		                    warnings_eag = uploader_http.getWarnings_eag();
+		                    addActionMessage(getText("label.eag.uploadingerror.two"));
+		        	    	result = ERROR;
+		        	    }
+		        	    else if (result.equals("error_eagnotconverted")) {
+		        	    	this.filesNotUploaded.add(filename);
+		                    addActionMessage(getText("label.eag.uploadingerror.notconverted"));
+		        	    	result = ERROR;
+		        	    }
+		        	    else if (result.equals("error_parsing")) {
+		        	    	this.filesNotUploaded.add(filename);
+		                    addActionMessage(getText("label.eag.uploadingerror.parsing"));
+		        	    	result = ERROR;
+		        	    } else {
+							//store ddbb path
+							ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
+							ArchivalInstitution archivalInstitution = archivalInstitutionDao.getArchivalInstitution(archivalInstitutionId);
+							if (archivalInstitution != null) {
+								archivalInstitution.setEagPath(eag.getEagPath());
+								String finalPath = APEnetUtilities.getConfig().getRepoDirPath() + eag.getEagPath();
+								eag.setEagPath(finalPath);
+								String repositoryCode = eag.lookingForwardElementContent("/eag/control/recordId");
+								archivalInstitution.setRepositorycode(repositoryCode);
+								archivalInstitutionDao.store(archivalInstitution);
+							} else {
+			        	    	this.filesNotUploaded.add(filename);
+			                    addActionMessage(getText("label.eag.notStored"));
+			        	    	result = ERROR;
+							}
+		        	    	this.filesUploaded.add(filename);
+		        	    	result = SUCCESS;
+		        	    }
+		        	}
+		        	else {
+	        	    	this.filesNotUploaded.add(filename);
+		        		for (int i = 0; i < eag.warnings_ead.size(); i++) {
+		        			addActionMessage(eag.warnings_ead.get(i));
+		        		}
+		        		result = ERROR;
+		        	}
+        	    }
+
+        	    FileUtils.forceDelete(file);
+    		}
+        	return result;
+    	}catch(Exception e){
+    		LOG.error("ERROR trying to upload a file ", e);
+    	}
+    	return ERROR;
+    }
+    
+	public String removeEag02(){
+		 try {
+			Integer aiId = getAiId();
+			String path = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR;
+			String filename = "";
+			File dirFile = new File(path);
+			if (dirFile.isDirectory()) {
+				File[] fileList = dirFile.listFiles();
+				for (int i = 0; i < fileList.length; i++) {
+					filename = fileList[i].getName();
+				}
+			}
+			File file = new File(path + filename);
+			if(file!=null){
+				FileUtils.forceDelete(file);
+				return SUCCESS;	
+			}
+		} catch (Exception e) {
+			LOG.error("ERROR trying to upload a file ", e);
+		}
+		return ERROR;
+	}
 }

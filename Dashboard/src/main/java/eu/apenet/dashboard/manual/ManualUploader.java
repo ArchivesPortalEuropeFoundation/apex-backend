@@ -456,14 +456,27 @@ public abstract class ManualUploader {
         				    					
     				}
     				else{
-                        warnings_eag = eag.showWarnings();
-    					//The EAG has been neither validated nor converted 
-    					log.warn(SecurityContext.get() + "The file " + fileName + " is not valid");
-    					this.filesNotUploaded.add(fileName);
-    					result = "error_eagnotvalidatednotconverted";
+    					//Check if the file is an old EAG
+    					dbfac = DocumentBuilderFactory.newInstance();
+                        dbfac.setNamespaceAware(true);
+                		docBuilder = dbfac.newDocumentBuilder();
+                		tempDoc = docBuilder.parse(fullFileName);
+                		NodeList eagheader = tempDoc.getElementsByTagName("eagheader");
+                		if(eagheader!=null && eagheader.getLength()>0){
+                			this.filesUploaded.add(fileName);
+                			result = "display_eag02convertedToeag2012";
+                		}else{
+	                        warnings_eag = eag.showWarnings();
+	    					//The EAG has been neither validated nor converted 
+	    					log.warn(SecurityContext.get() + "The file " + fileName + " is not valid");
+	    					this.filesNotUploaded.add(fileName);
+	    					result = "error_eagnotvalidatednotconverted";
+                		}
     				}
-    				
-    				FileUtils.forceDelete(source);
+
+    				if (!result.equalsIgnoreCase("display_eag02convertedToeag2012")) {
+    					FileUtils.forceDelete(source);
+    				}
 						    				
 				}
 				else {

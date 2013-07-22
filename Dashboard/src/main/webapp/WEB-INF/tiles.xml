@@ -137,6 +137,11 @@
 		<definition name="uploadeagerrorswithmenu" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.eaguploaderror.title" />
 		<put-attribute name="body" value="/jsp/uploadeagerrors.jsp" />	
+	</definition>
+	<definition name="uploadeagold" extends="dashboardLayout">
+		<put-attribute name="title" value="dashboard.eagupload.title" />
+		<put-attribute name="menu" value="/jsp/indexEAGCreation.jsp" />	
+		<put-attribute name="body" value="/jsp/uploadeagold.jsp" />	
 	</definition>	
 	<definition name="contentproviderinf" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.contentproviderinf.title" />

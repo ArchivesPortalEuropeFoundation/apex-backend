@@ -544,12 +544,17 @@ input[type="text"],input[type="file"],input[type="password"],textarea
 input:focus {
 	border: 1px solid #00a0df;
 }
-/*.passWordButton{
-	margin-left:20px;
-	background: url("../images/mainbutton.png") repeat-x scroll right top #FFFFFF;
-	color: #00384d;
-	font-weight: bold;
-}*/
+
+#eagoldhttpupload_label_ai_tabs_commons_option_yes{
+margin-right:10px;
+
+}
+
+#eagold {
+margin-top:20px;
+margin-left:310px;
+}
+
 input[type="submit"].mainButton {
 	background: url("../images/mainbutton.png") repeat-x scroll right top
 		#FFFFFF;
