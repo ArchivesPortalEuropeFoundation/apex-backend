@@ -1,0 +1,164 @@
+package eu.apenet.persistence.vo;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+
+@Entity
+@Table(name = "ead_content")
+public class EadContent implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7231712945693944551L;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id")
+	private Long ecId;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="fa_id",insertable=false, updatable=false)
+	private FindingAid findingAid;
+	@Column(name = "fa_id")
+	private Integer faId;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="hg_id",insertable=false, updatable=false)
+	private HoldingsGuide holdingsGuide;
+	@Column(name = "hg_id")
+	private Integer hgId;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="sg_id",insertable=false, updatable=false)
+	private SourceGuide sourceGuide;
+	@Column(name = "sg_id")
+	private Integer sgId;
+	private String titleproper;
+	private String eadid;
+	private String unittitle;
+	private String xml;
+	private boolean visible;
+	@Column(name = "display_intro")
+	private boolean displayIntro;
+	@Column(name = "display_did")
+	private boolean displayDid;
+
+	public Ead getEad(){
+		if (findingAid != null){
+			return findingAid;
+		}else if (holdingsGuide != null){
+			return holdingsGuide;
+		}else {
+			return sourceGuide;
+		}
+	}
+
+    public Integer getEadIdentifier(){
+		if (faId != null)
+			return faId;
+		else if (hgId != null)
+			return hgId;
+		else
+			return sgId;
+	}
+	
+	public FindingAid getFindingAid() {
+		return findingAid;
+	}
+	public void setFindingAid(FindingAid findingAid) {
+		this.findingAid = findingAid;
+	}
+
+    public SourceGuide getSourceGuide() {
+        return sourceGuide;
+    }
+
+    public void setSourceGuide(SourceGuide sourceGuide) {
+        this.sourceGuide = sourceGuide;
+    }
+
+    public Integer getSgId() {
+        return sgId;
+    }
+
+    public void setSgId(Integer sgId) {
+        this.sgId = sgId;
+    }
+
+    public String getXml() {
+		return xml;
+	}
+	public void setXml(String xml) {
+		this.xml = xml;
+	}
+	public String getTitleproper() {
+		return titleproper;
+	}
+	public void setTitleproper(String titleproper) {
+		this.titleproper = titleproper;
+	}
+
+	public String getEadid() {
+		return eadid;
+	}
+	public void setEadid(String eadid) {
+		this.eadid = eadid;
+	}
+	public String getUnittitle() {
+		return unittitle;
+	}
+	public void setUnittitle(String unittitle) {
+		this.unittitle = unittitle;
+	}
+
+	public Integer getFaId() {
+		return faId;
+	}
+	public void setFaId(Integer faId) {
+		this.faId = faId;
+	}
+	public Long getEcId() {
+		return ecId;
+	}
+	public void setEcId(Long ecId) {
+		this.ecId = ecId;
+	}
+	public HoldingsGuide getHoldingsGuide() {
+		return holdingsGuide;
+	}
+	public void setHoldingsGuide(HoldingsGuide holdingsGuide) {
+		this.holdingsGuide = holdingsGuide;
+	}
+	public Integer getHgId() {
+		return hgId;
+	}
+	public void setHgId(Integer hgId) {
+		this.hgId = hgId;
+	}
+	public boolean isVisible() {
+		return visible;
+	}
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+	public boolean isDisplayIntro() {
+		return displayIntro;
+	}
+	public void setDisplayIntro(boolean displayIntro) {
+		this.displayIntro = displayIntro;
+	}
+	public boolean isDisplayDid() {
+		return displayDid;
+	}
+	public void setDisplayDid(boolean displayDid) {
+		this.displayDid = displayDid;
+	}
+
+}
