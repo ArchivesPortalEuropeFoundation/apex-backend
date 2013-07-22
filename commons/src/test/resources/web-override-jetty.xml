@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app
+   xmlns="http://java.sun.com/xml/ns/javaee"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+   version="2.5">
+
+  <!-- Override context init parameter for JETTY -->
+  <context-param>
+        <param-name>TMP_DIR_PATH</param-name>
+        <param-value>/Users/yoannmoranville/Work/APEnet/portal_data/tmp/</param-value>
+    </context-param>
+    <context-param>
+        <param-name>REPOSITORY_DIR_PATH</param-name>
+        <param-value>/Users/yoannmoranville/Work/APEnet/portal_data/repo/</param-value>
+    </context-param>
+    <context-param>
+        <param-name>AL_DIR_PATH</param-name>
+        <param-value>/Users/yoannmoranville/Work/APEnet/portal_data/al/</param-value>
+    </context-param>
+    <context-param>
+        <param-name>XSL_DIR_PATH</param-name>
+        <param-value>/Users/yoannmoranville/Work/APEnet/Projects/dpt-project/trunk/xsl/</param-value>
+    </context-param>
+    <context-param>
+        <param-name>EUROPEANA_DIR_PATH</param-name>
+        <param-value>/Users/yoannmoranville/Work/APEnet/portal_data/europeana/</param-value>
+    </context-param>
+    <context-param>
+        <param-name>SOLR_INDEX_URL</param-name>
+        <param-value>http://localhost:8083/solr/eads</param-value>
+    </context-param>
+    <context-param>
+        <param-name>SOLR_SEARCH_URL</param-name>
+        <param-value>http://localhost:8083/solr/eads</param-value>
+        <!--<param-value>http://80.38.128.242:8989/solr/core0</param-value>-->
+    </context-param>
+    <context-param>
+        <param-name>SOLR_DATA_DIR_PATH</param-name>
+        <param-value>/Users/yoannmoranville/Work/APEnet/portal_data/solr_data/</param-value>
+    </context-param>
+    <context-param>
+        <param-name>LOG4J_XML_LOCATION</param-name>
+        <param-value>/Users/yoannmoranville/Work/APEnet/portal_data/jetty-log4j.xml</param-value>
+    </context-param>
+    <context-param>
+        <param-name>INDEX_PASS</param-name>
+        <param-value>pwd</param-value>
+    </context-param>
+    <context-param>
+        <param-name>DIRECT_INDEXING</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>SECURITY_LEVEL</param-name>
+        <param-value>low</param-value>
+    </context-param>
+</web-app>
