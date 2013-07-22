@@ -1,0 +1,339 @@
+@CHARSET "UTF-8";
+
+#validationEAG2012ErrorsDiv, #validationEAG2012Errors {
+	border: none;
+	width: 100%;
+	color: red;
+	padding-top: 5px;
+	font-weight: bold;
+}
+
+#eag2012Div .tab_header {
+	border: 1px solid #79B7E7;
+	border-top-right-radius: 5px;
+	border-bottom: none;
+	clear: both;
+	float: left;
+	width: 100%;
+	height: 24px;
+}
+
+#eag2012Tabs {
+	float: left;
+	width: 100%;
+	line-height: normal;
+}
+
+#eag2012TabsContainer {
+	width: 100%;
+}
+#eag2012TabsContainer li{
+	background: none repeat scroll 0 0 #E9F3FA;
+    border-top-right-radius: 5px;
+    color: #CCCCCC;
+    float: left;
+    margin: 0 0 -1px;
+    overflow: hidden;
+    padding: 0;
+    position: relative;
+}
+#headerContainer {
+	-moz-border-bottom-colors: none;
+	-moz-border-image: none;
+	-moz-border-left-colors: none;
+	-moz-border-right-colors: none;
+	-moz-border-top-colors: none;
+	background: url("../../images/eag2012/tabbg.jpg") repeat scroll 0 0 #99CCFF;
+	border-color: #79B7E7 #79B7E7 -moz-use-text-color;
+	border-style: solid solid none;
+	border-top-right-radius: 25px;
+	border-width: 1px 1px 0;
+	clear: both;
+	float: left;
+	height: 24px;
+	width: 100%;
+	margin-left: -1px;
+	margin-top: -1px;
+}
+
+#container {
+	border-color: #00A0DF #00A0DF -moz-use-text-color;
+	border-style: solid solid none;
+	border-top-right-radius: 25px;
+	border-width: 1px 1px solid;
+	border-bottom: 1px solid #00A0DF;
+	border-top: 1px solid #00A0DF;
+	border-left: 1px solid #00A0DF;
+	border-right: 1px solid #00A0DF;
+	float: left;
+	width: 97%;
+}
+
+#eag2012Tabs ul {
+	margin: 0;
+	padding: 0;
+	list-style: none outside none;
+	height: 24px;
+}
+
+#eag2012Tabs li {
+	float: left;
+	padding: 0;
+	border: 1px solid #00A0DF;
+	border-bottom: hidden;
+	font-weight: bold;
+	color: #000000;
+	-moz-border-radius-topleft: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	background-color: #E9F3FA;
+}
+
+#eag2012Tabs li:hover {
+	background-color: #FFFFFF;
+	font-weight: bold;
+	color: #000000;
+	-moz-border-radius-topleft: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+
+#eag2012Tabs li a {
+	padding: 3px 10px 3px 10px;
+	display: block;
+	text-decoration: none;
+	color: #000000;
+	font-weight: bold;
+	background-color: #E9F3FA;
+	-moz-border-radius-topleft: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+
+#eag2012Tabs li a:hover {
+	background-color: #FFFFFF;
+	font-weight: bold;
+	color: #4D8BCB;
+	-moz-border-radius-topleft: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+
+#eag2012Tabs li a:active {
+	background: url("../../images/eag2012/tabbg.jpg") repeat scroll 0 0 #99CCFF;
+	padding: 3px 10px;
+	-moz-border-radius-topleft: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+
+#eag2012Tabs li a:after,.eag2012currenttab {
+	background: url("../../images/eag2012/tabbg.jpg") repeat scroll 0 0 #99CCFF;
+	padding: 3px 10px;
+	color: #000000;
+	-moz-border-radius-topleft: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+
+#eag2012Tabs .eag2012currenttab:hover {
+	background: url("../../images/eag2012/tabbg.jpg") repeat scroll 0 0 #99CCFF;
+	padding: 3px 10px;
+	color: #000000;
+	-moz-border-radius-topleft: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+
+
+#eag2012Div table {
+	float: left;
+	width: 100%;
+}
+
+.tablePadding {
+	padding-right: 18px;
+	padding-left: 18px;
+}
+
+#eag2012Div td,th {
+	width: 25%;
+	padding-top: 15px;
+}
+
+#eag2012Div td label {
+	width: 25%;
+}
+#buttonExitEAG2012{
+	float:right;
+	/*margin-right: 20px;
+	margin-bottom: 5px;*/
+}
+#buttonSaveEAG2012 {
+	float:right;
+	margin-right: 20px;
+	margin-bottom: 5px;
+}
+
+#eag2012Div input {
+	font-family: "Arial",sans-serif;
+	font-size: 12px;
+}
+
+#eag2012Div select {
+	font-family: "Arial",sans-serif;
+	font-size: 12px;
+	color: black;
+}
+
+#eag2012Div .longButton {
+	float: left;
+	width: 70%;
+}
+
+#eag2012Div .longButtonL {
+	float: left;
+	width: 90%;
+}
+
+#eag2012Div .middleText {
+	float: left;
+	width: 50%;
+}
+
+#eag2012Div .rightButton {
+	float: right;
+}
+
+#eag2012Div .marginTop {
+	margin-top: 15px;
+}
+
+#eag2012Div  #visitorAdressLabel,#postalAddressLabel,#repositoryLabel,#administrativeLabel,
+#buildingLabel,#holdingLabel,#usedLanguagesLabel,#usedRulesLabel,#resourceLabel,
+#institutionLabel,#searchroomLabel,#libraryLabel,#internetAccessLabel,#technicalServicesLabel,
+#restaurationLabLabel,#reproductionServiceLabel,#recreationalServiceLabel,
+#yourInstitutionLabel,#yiPostalAddressLabel {
+	font-weight: bold;
+}
+
+#visitorAdressLabel,#yourInstitutionLabel,#postalAddressLabel,#repositoryLabel,
+#administrativeLabel,#buildingLabel,#holdingLabel,#usedLanguagesLabel,#usedRulesLabel,
+#resourceLabel,#institutionLabel,#searchroomLabel,#technicalServicesLabel,
+#recreationalServiceLabel {
+	border-bottom: 1px solid #00a0df;
+}
+
+textarea {
+	height: 100px;
+	width: 200px;
+	font-weight: bold;
+}
+
+input[type="button"] {
+	text-align: center;
+	font-weight: bold;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	border-radius: 15px;
+	display: inline-block;
+	vertical-align: top;
+	letter-spacing: 0.8px;
+	color: #006CB0;
+	background-color: #E9F3FA;
+	border: 1px solid #00A0DF;
+}
+
+input[type="button"]:hover {
+	color: #00384D;
+	background-color: #BAE0FC;
+	border-radius: 15px;
+}
+
+input[type="button"]:disabled {
+	color: #A4AFB6;
+	background-color: #E8E6E2;
+	border-radius: 15px;
+	cursor: auto;
+}
+
+#buttonAddFutherInformationOnExistingFacilities, #buttonAddFutherInformationOnExistingFacilities2, #buttonAddReferencetoyourinstitutionsholdingsguide {
+	display: inline-block;
+	vertical-align: top;
+	white-space:normal;
+	line-height:norma;
+}
+
+#buttonAccessAndServiceTabPrevious, #buttonContactTabPrevious, #buttonControlTabPrevious,
+#buttonDescriptionTabPrevious, #buttonIdentityTabPrevious, #buttonRelationsTabPrevious,
+#buttonYourInstitutionTabPrevious {
+	margin-right: 10px;
+}
+
+input[type="text"] {
+	width: 200px;
+	padding-left: 6px;
+	font-weight: bold;
+	color: black;
+}
+
+#bodyt {
+	margin-left: 36%;
+	width: 64%;
+}
+
+#eag2012Tabs .eag2012disabled {
+	background: #FFFFFF;
+	cursor: default;
+	color: #a4afb6;
+}
+
+#eag2012Tabs .eag2012disabled:hover {
+	background: #FFFFFF;
+	cursor: default;
+	color: #a4afb6;
+}
+
+p.fieldRequired {
+	color: red;
+	padding-top: 5px;
+	font-weight: bold;
+}
+
+#coordinatesLabel a{
+	color: #00A0DF;
+	text-decoration: underline;
+}
+
+#selectTypeOfTheInstitution,.selectControlTab {
+	width: 200px;
+}
+
+#selectTypeOfTheInstitution option {
+	width: 610px;
+}
+
+#selectDescriptionLanguage option,.selectControlTab option {
+	width: 290px;
+}
+
+.labelLeft {
+	padding-left: 20px;
+	width: 25%;
+}

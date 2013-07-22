@@ -1,0 +1,11 @@
+Dear ${name},
+
+Your account with the e-mail address ${emailAddress} has one new archival institution to manage: '${archivalInstitution}' of country ${country}.
+
+
+Please go to ${dashboardUrl} to manage this archival institution. 
+
+Best wishes,
+
+${userManager}
+Administrator/Country Manager of the Dashboard
