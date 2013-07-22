@@ -1,1 +1,0 @@
-CREATE INDEX archival_institution_repositorycode ON archival_institution (repositorycode);

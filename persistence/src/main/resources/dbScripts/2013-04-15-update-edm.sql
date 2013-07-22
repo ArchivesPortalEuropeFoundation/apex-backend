@@ -1,1 +1,0 @@
-UPDATE finding_aid SET europeana=3, totalnumberofchos=0 WHERE published = TRUE and totalnumberofdaos = 0;
