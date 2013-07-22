@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.archivesportaleurope.backend</groupId>
 	<artifactId>backend-project</artifactId>
-	<version>1.3.13-SNAPSHOT</version>
+	<version>2013-07-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Backend Project</name>
 	<description>Maven Project for building the Dashboard/OAI-PMH server and common libraries</description>
@@ -15,7 +15,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>3.1.1.RELEASE</spring.version>
 		<postgresql.version>9.1-901.jdbc4</postgresql.version>
-        <archivesportaleurope.dptutil.version>1.3.10</archivesportaleurope.dptutil.version>
+        <archivesportaleurope.dptutil.version>2013-07-SNAPSHOT</archivesportaleurope.dptutil.version>
 	</properties>
 
 
@@ -297,7 +297,7 @@
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>eu.apenet</groupId>
+				<groupId>eu.archivesportaleurope.dpt</groupId>
 				<artifactId>DPTutils</artifactId>
 				<version>${archivesportaleurope.dptutil.version}</version>
 			</dependency>

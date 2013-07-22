@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>eu.archivesportaleurope.backend</groupId>
 		<artifactId>backend-project</artifactId>
-		<version>1.3.13-SNAPSHOT</version>
+		<version>2013-07-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>Dashboard</artifactId>
@@ -185,7 +185,7 @@
 			<artifactId>OAIHarvester</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>eu.apenet</groupId>
+			<groupId>eu.archivesportaleurope.dpt</groupId>
 			<artifactId>DPTutils</artifactId>
 			<exclusions>
 				<exclusion>
