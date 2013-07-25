@@ -248,16 +248,24 @@ public class EadService {
 			try {
 				
 				File file = new File(filename);
-				if (file.lastModified() < (System.currentTimeMillis() - NOT_USED_TIME)){
+				boolean shouldDeleted = false;
+				if (file.exists() && file.lastModified() < (System.currentTimeMillis() - NOT_USED_TIME)){
 					LOGGER.info("Delete unused file(" + upFile.getId() + ") : " + filename);
 					File aiDir = file.getParentFile();
 					ContentUtils.deleteFile(file, false);
 					if (aiDir.exists() && aiDir.listFiles().length == 0) {
 						ContentUtils.deleteFile(aiDir, false);
 					}
+					shouldDeleted = true;
+				}else if (!file.exists()){
+					LOGGER.info("Delete not existing file(" + upFile.getId() + ") : " + filename);
+					shouldDeleted = true;
 				}
-			} catch (IOException ioe) {
-				LOGGER.error("Unable to delete unused file(" + upFile.getId() + ") : " + filename, ioe);
+				if (shouldDeleted){
+					upFileDAO.delete(upFile);
+				}
+			} catch (Exception e) {
+				LOGGER.error("Unable to delete unused file(" + upFile.getId() + ") : " + filename, e);
 			}
 		}
 
