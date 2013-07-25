@@ -6,9 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -36,12 +34,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import eu.apenet.commons.ResourceBundleSource;
-import eu.apenet.commons.StrutsResourceBundleSource;
 import eu.apenet.commons.exceptions.APEnetException;
-import eu.apenet.commons.infraestructure.APEnetEAG;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.commons.utils.XMLUtils;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.utils.ContentUtils;
@@ -49,11 +43,9 @@ import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.ArchivalInstitution;
-import eu.apenet.persistence.vo.HoldingsGuide;
 
 /**
  * User: Eloy García
@@ -289,9 +281,10 @@ public class APEnetEAGDashboard{
 			this.setName(this.extractAttributeFromEag("archguide/identity/autform", null, true));
 			// It is necessary to check if this EAG has been updated before for
 			// another archival institution
-			if (this.isEagAlreadyUploaded()) {
-				value = "error_eagalreadyuploaded";
-			} else {
+			// Issue #615: remove the check.
+//			if (this.isEagAlreadyUploaded()) {
+//				value = "error_eagalreadyuploaded";
+//			} else {
 				this.setEagPath(APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname()
 						+ APEnetUtilities.FILESEPARATOR + this.aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG"
 						+ APEnetUtilities.FILESEPARATOR + this.getFilename());
@@ -407,7 +400,7 @@ public class APEnetEAGDashboard{
 					}
 					log.error(e.getMessage());
 				}
-			}
+//			}
 			if (value.equals("correct")) {
 				// It is necessary to insert eagPath in the local Archival
 				// Landscape for the current country and rebuild the global
@@ -961,5 +954,84 @@ public class APEnetEAGDashboard{
         	log.error("Exception getting "+element,e);
         }
 		return text;
+	}
+
+	/**
+	 * Method to recover all the values of the one repeatabale element.
+	 *
+	 * @param element the repeatable element
+	 *
+	 * @return all the values of the element
+	 */
+	public List<String> lookingForwardAllElementContent(String element) {
+		final String CONVERTED_FLAG = "Converted_APEnet_EAG_version_";
+		XMLStreamReader input = null;
+		InputStream sfile = null;
+		XMLInputFactory xmlif = (XMLInputFactory) XMLInputFactory.newInstance();
+		xmlif.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, Boolean.FALSE);
+		xmlif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
+		xmlif.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
+		xmlif.setProperty(XMLInputFactory.IS_COALESCING, Boolean.FALSE);
+
+		List<String> resultList = new ArrayList<String>();
+
+		try {
+			sfile = new FileInputStream(this.eagPath);
+			input = (XMLStreamReader) xmlif.createXMLStreamReader(sfile);
+
+			boolean abort = false;
+			boolean addText = false;
+			String importantData = "";
+
+			String[] pathElements = element.split("/");
+
+			log.debug("Checking EAG file, looking for element " + element + ", path begins with " + pathElements[0]);
+			while (!abort && input.hasNext()) {
+				switch (input.getEventType()) {
+					case XMLEvent.START_DOCUMENT:
+						break;
+					case XMLEvent.START_ELEMENT:
+						if (input.getLocalName().equalsIgnoreCase(pathElements[(pathElements.length - 1)])) {
+							addText = true;
+						}
+						break;
+					case XMLEvent.CHARACTERS:
+						if (addText) {
+							importantData = input.getText();
+							if (importantData.startsWith(CONVERTED_FLAG)) {
+								log.debug("Returning true");
+								resultList.add("true");
+								return resultList;
+							} else {
+								log.debug("Adding " + input.getText());
+								resultList.add(input.getText());
+							}
+							addText = false;
+						}
+						break;
+					case XMLEvent.CDATA:
+						break;
+					case XMLEvent.END_ELEMENT:
+						break;
+				}
+				if (input.hasNext())
+					input.next();
+			}
+		} catch (Exception e) {
+			log.error("Error parsing StAX for file " + this.eagPath, e);
+		} finally {
+			try {
+				input.close();
+				sfile.close();
+			} catch (Exception e) {
+				log.error("Error closing streams" + e.getMessage(), e);
+			}
+		}
+
+		if (resultList.isEmpty()) {
+			log.debug("Returning error");
+			resultList.add("error");
+		}
+		return resultList;
 	}
 }

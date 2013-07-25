@@ -98,7 +98,7 @@
 				<label for="textYINameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.nameOfTheInstitution')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYINameOfTheInstitution" value="${loader.autform}" onchange="nameOfInstitutionChanged();" />
+				<input type="text" id="textYINameOfTheInstitution" value="${loader.autform}" onchange="nameOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutform}');" />
 			</td>
 			<td class="labelLeft">
 				<label for="selectYINOTISelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>

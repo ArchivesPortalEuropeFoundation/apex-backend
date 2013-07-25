@@ -51,7 +51,13 @@ function clickExitAction(){
 	location.href="dashboardHome.action";
 }
 
-function clickSaveAction(form, text1, text2, error1, error2, error3, error4, error5, error6, error7,message) {
+function clickSaveAction(form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, message, institutionName) {
+	// Check if almost one of the authorized name of the institution is the same as the institution's name.
+	var nameOfInstitution = checkNameOfInstitution(error8, institutionName);
+	if (!nameOfInstitution) {
+		return;
+	}
+
 	// Check fill mandatory fields in tab "your institution".
 	var jsonDataYourInstitution =  clickYourInstitutionAction(text1,message);
 	if (!jsonDataYourInstitution) {
@@ -3762,8 +3768,31 @@ function firstIdAndNoISIL() {
 	}
 }
 
-function nameOfInstitutionChanged(){
+function nameOfInstitutionChanged(text, institutionName){
 	$("#textNameOfTheInstitution").attr("value", $("#textYINameOfTheInstitution").val());
+
+	checkNameOfInstitution(text, institutionName);
+}
+
+function checkNameOfInstitution(text, institutionName) {
+	// Check if value for the field "Name of the institution",  in tab "Your Institution", is the same as
+	// the current institution name.
+	if (institutionName != $("#textYINameOfTheInstitution").val()) {
+		// Check if any of the values for the field "Name of the institution", in tab "Identity", is the same as
+		// the current institution name.
+		var exists = false;
+		$("table[id^='identityTableNameOfTheInstitution']").each(function(i){
+			if (institutionName == $("table#identityTableNameOfTheInstitution_" + (i+1) + " #textNameOfTheInstitution").val()) {
+				exists = true;
+			}
+		});
+
+		if (!exists) {
+			alert(text);
+			return false;
+		}
+	}
+	return true;
 }
 
 function nameOfInstitutionLanguageChanged(){

@@ -61,6 +61,7 @@ public class EAG2012Loader{
 	private String otherRepositorId;
 	private String recordId;
 	private String selfRecordId;
+	private String initialAutform;
 	private String autform;
 	private String autformLang;
 	private List<String> idAutform;
@@ -517,6 +518,25 @@ public class EAG2012Loader{
 	public void setRecordId(String recordId) {
 		this.recordId = recordId;
 	}
+
+	/**
+	 * @return the initialAutform
+	 */
+	public String getInitialAutform() {
+		if (this.initialAutform == null
+				|| this.initialAutform.isEmpty()) {
+			this.initialAutform = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getId()).getAiname();
+		}
+		return this.initialAutform;
+	}
+
+	/**
+	 * @param initialAutform the initialAutform to set
+	 */
+	public void setInitialAutform(String initialAutform) {
+		this.initialAutform = initialAutform;
+	}
+
 	public String getAutform() {
 		return this.autform;
 	}

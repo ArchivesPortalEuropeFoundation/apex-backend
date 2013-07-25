@@ -48,10 +48,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textNameOfTheInstitution" value="<s:property value="#current" />" disabled="disabled" />
+							<input type="text" id="textNameOfTheInstitution" value="<s:property value="#current" />" disabled="disabled" onchange="nameOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutform}');" />
 						</s:if>
 						<s:else>
-							<input type="text" id="textNameOfTheInstitution" value="<s:property value="#current" />" />
+							<input type="text" id="textNameOfTheInstitution" value="<s:property value="#current" />" onchange="nameOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutform}');" />
 						</s:else>
 					</td>
 					<td id="tdNameOfTheInstitutionLanguage" class="labelLeft">
@@ -81,7 +81,7 @@
 					<label for="textNameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.nameOfTheInstitution')" /><span class="required">*</span>:</label>
 				</td>
 				<td>
-					<input type="text" id="textNameOfTheInstitution" disabled="disabled" />
+					<input type="text" id="textNameOfTheInstitution" disabled="disabled" onchange="nameOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutform}');" />
 				</td>
 				<td id="tdNameOfTheInstitutionLanguage" class="labelLeft">
 					<label for="noti_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>

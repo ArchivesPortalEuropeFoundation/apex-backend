@@ -337,6 +337,19 @@ public abstract class ManualUploader {
                     DocumentBuilder docBuilder = null;
                     DocumentBuilderFactory dbfac = null;
     				if (eag.validate()){
+    					// Check if any of the "<autform>" values is the same as the institution name.
+    					String institutionName = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(archivalInstitutionId).getAiname();
+    					List<String> autformValueList = eag.lookingForwardAllElementContent("/eag/archguide/identity/autform");
+    					boolean exists = false;
+    					for (int i = 0; !exists && i < autformValueList.size(); i++) {
+    						if (institutionName.equalsIgnoreCase(autformValueList.get(i))) {
+    							exists = true;
+    						}
+    					}
+    					if (!exists) {
+        					this.filesNotUploaded.add(fileName);
+    						return "error_eagnoinstitutionname";
+    					}
                         
                         //check the <recordId> content
                         //eag.setEagPath(fullFileName); //temp used for looking forward target tag
@@ -411,10 +424,11 @@ public abstract class ManualUploader {
         					this.filesNotUploaded.add(fileName);
         					result = "error_eagnotstored";
         				}
-        				else if (result.equals("error_eagalreadyuploaded")) {
-        					this.filesNotUploaded.add(fileName);
-        					result = "error_eagalreadyuploaded";
-        				}
+        				// Issue #615 remove the check.
+//        				else if (result.equals("error_eagalreadyuploaded")) {
+//        					this.filesNotUploaded.add(fileName);
+//        					result = "error_eagalreadyuploaded";
+//        				}
         				else if (result.equals("error_archivallandscape")) {
         					this.filesNotUploaded.add(fileName);
         					result = "error_archivallandscape";

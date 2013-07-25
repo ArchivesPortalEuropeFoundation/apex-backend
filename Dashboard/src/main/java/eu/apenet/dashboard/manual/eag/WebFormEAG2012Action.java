@@ -82,19 +82,17 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	private String repositoridCountryCode;
 	private String otherRepositorIdValue;
 	private String recordIdValue;
-	private String autformValue;			// Will be an ordered list. 
-	private String autformLang;				// Will be an ordered list.
-	private String parformValue;			// Will be an ordered list.
-	private String parformLang;				// Will be an ordered list.
-
-	// Your institution tab.
+	private String autformValue;
+	private String autformLang;
+	private String parformValue;
+	private String parformLang;
 
 	// Identity tab.
-	private String nonpreformValue;			// Will be an ordered list.
-	private String nonpreformLang;			// Will be an ordered list.
+	private String nonpreformValue;
+	private String nonpreformLang;
 	private String fromDateStandardDate;
 	private String toDateStandardDate;
-	private String repositoryTypeValue;		// Will be an ordered list.
+	private String repositoryTypeValue;
 
 	private String eagPath;
 	
@@ -372,6 +370,13 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	/**
 	 * @return the nameOfInstitution
 	 */
+	public String getInitialAutformValue() {
+		return DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId()).getAiname();
+	}
+
+	/**
+	 * @return the nameOfInstitution
+	 */
 	public String getNameOfInstitution() {
 		return this.nameOfInstitution;
 	}
@@ -631,6 +636,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						addActionMessage(this.getText("label.ai.error.loadingEAGFile"));
 					}
 
+					this.loader.setInitialAutform(getInitialAutformValue());
+
 					state = INPUT;
 				}
 			}
@@ -640,7 +647,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		if(state.equals(SUCCESS)){
 			fillDefaultLoaderValues();
 		}else{
-			newEag = false;
+			this.newEag = false;
 		}
 		return state;
 	}
@@ -888,52 +895,62 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	}
 
 	private void fillDefaultLoaderValues() { //TODO, now only works with main repository
-		newEag = true;
-		loader = new EAG2012Loader();
+		this.newEag = true;
+		this.loader = new EAG2012Loader();
 		//your institution
-		loader.setAgent(getPersonResponsibleForDescription());
-		loader.setCountryCode(getCountryCode());
-		loader.setOtherRepositorId(getIdOfInstitution());
-		loader.setRecordId(getIdUsedInAPE());
-		loader.setSelfRecordId(getIdUsedInAPE());
-		loader.setAutform(getNameOfInstitution());
-		loader.setParform(getParallelNameOfInstitution());
+		this.loader.setAgent(getPersonResponsibleForDescription());
+		this.loader.setCountryCode(getCountryCode());
+		this.loader.setOtherRepositorId(getIdOfInstitution());
+		this.loader.setRecordId(getIdUsedInAPE());
+		this.loader.setSelfRecordId(getIdUsedInAPE());
+		String nameOfInstitution = "";
+		if (this.getNameOfInstitution() != null
+				&& !this.getNameOfInstitution().isEmpty())
+		{
+			nameOfInstitution = getNameOfInstitution();
+		} else {
+			nameOfInstitution = getInitialAutformValue(); 
+		}
+		this.loader.setInitialAutform(getInitialAutformValue());
+		this.loader.setAutform(nameOfInstitution);
+		this.loader.addIdAutform(nameOfInstitution);
+		this.loader.setParform(getParallelNameOfInstitution());
 		//identity
-//		loader.setCountryCode(getCountryCode());
-//		loader.setOtherRepositorId(getIdOfInstitution());
-//		loader.setRecordId(getIdUsedInAPE());
-//		loader.setAutform(getNameOfInstitution());
-//		loader.setParform(getParallelNameOfInstitution());
+//		this.loader.setCountryCode(getCountryCode());
+//		this.loader.setOtherRepositorId(getIdOfInstitution());
+//		this.loader.setRecordId(getIdUsedInAPE());
+//		this.loader.setAutform(getNameOfInstitution());
+//		this.loader.setParform(getParallelNameOfInstitution());
 		//contact
-//		loader.setStreet(getStreetOfTheInstitution());
-//		loader.setMunicipalityPostalcode(getCityOfTheInstitution());
-//		loader.setLocalentity(getDistrictOfTheInstitution());
-//		loader.setSecondem(getCountyOfTheInstitution());
-//		loader.setFirstdem(getRegionOfTheInstitution());
-//		loader.setCountry(getCountryOfTheInstitution());
-//		loader.setLatitude(getLatitudeOfTheInstitution());
-//		loader.setLongitude(getLongitudeOfTheInstitution());
-//		loader.setTelephone(getTelephoneOfTheInstitution());
-//		loader.setFax(getFaxOfTheInstitution());
-//		loader.setEmail(getEmailOfTheInstitution());
-//		loader.setEmailTitle(getLinkTitleForEmailOfTheInstitution());
-//		loader.setWebpage(getWebOfTheInstitution());
-//		loader.setWebpageTitle(getLinkTitleForWebOfTheInstitution());
+//		this.loader.setStreet(getStreetOfTheInstitution());
+//		this.loader.setMunicipalityPostalcode(getCityOfTheInstitution());
+//		this.loader.setLocalentity(getDistrictOfTheInstitution());
+//		this.loader.setSecondem(getCountyOfTheInstitution());
+//		this.loader.setFirstdem(getRegionOfTheInstitution());
+//		this.loader.setCountry(getCountryOfTheInstitution());
+//		this.loader.setLatitude(getLatitudeOfTheInstitution());
+//		this.loader.setLongitude(getLongitudeOfTheInstitution());
+//		this.loader.setTelephone(getTelephoneOfTheInstitution());
+//		this.loader.setFax(getFaxOfTheInstitution());
+//		this.loader.setEmail(getEmailOfTheInstitution());
+//		this.loader.setEmailTitle(getLinkTitleForEmailOfTheInstitution());
+//		this.loader.setWebpage(getWebOfTheInstitution());
+//		this.loader.setWebpageTitle(getLinkTitleForWebOfTheInstitution());
 		//access and services
 		//description
 		//control
-//		loader.setRecordId(getIdUsedInAPE());
-//		loader.setAgent(getPersonResponsibleForDescription());
-		loader.setControlAbbreviation(getContactAbbreviation());
-		loader.setControlCitation(getContactFullName());
-		loader.setControlNumberOfRules(getNumberOfRules());
+//		this.loader.setRecordId(getIdUsedInAPE());
+//		this.loader.setAgent(getPersonResponsibleForDescription());
+		this.loader.setControlAbbreviation(getContactAbbreviation());
+		this.loader.setControlCitation(getContactFullName());
+		this.loader.setControlNumberOfRules(getNumberOfRules());
 		//relations
-//		loader.setResourceRelationHref(getWebsiteOfResource());
-//		loader.setResourceRelationrelationEntry(getTitleOfRelatedMaterial());
-//		loader.setResourceRelationrelationEntryDescription(getDescriptionOfRelation());
-//		loader.setEagRelationHref(getWebsiteOfDescription());
-//		loader.setEagRelationrelationEntry(getTitleOfRelatedInstitution());
-//		loader.setEagRelationrelationEntryDescription(getInstitutionDescriptionOfRelation());
+//		this.loader.setResourceRelationHref(getWebsiteOfResource());
+//		this.loader.setResourceRelationrelationEntry(getTitleOfRelatedMaterial());
+//		this.loader.setResourceRelationrelationEntryDescription(getDescriptionOfRelation());
+//		this.loader.setEagRelationHref(getWebsiteOfDescription());
+//		this.loader.setEagRelationrelationEntry(getTitleOfRelatedInstitution());
+//		this.loader.setEagRelationrelationEntryDescription(getInstitutionDescriptionOfRelation());
 	}
 
 	private List<String> getNumberOfRules() {

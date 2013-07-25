@@ -1,7 +1,6 @@
 package eu.apenet.dashboard.manual;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,10 +9,8 @@ import org.apache.commons.io.FileUtils;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.dao.CountryDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
-import eu.apenet.persistence.vo.Country;
 
 /**
  * User: Eloy García
@@ -181,6 +178,11 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
         	    	addActionMessage(getText("label.eag.oldEag"));
         	    	result = "input2";
         	    }
+        	    else if (result.equals("error_eagnoinstitutionname")) {
+        	    	this.filesNotUploaded = this.uploader_http.getFilesNotUploaded();
+                    addActionMessage(getText("label.ai.tabs.commons.errorOnChangeNameOfInstitution"));
+        	    	result = ERROR;
+        	    }
         	}
         	else {
         		//The user has not selected a file to upload
@@ -205,7 +207,7 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
     	
     	String result = null;
     	Integer archivalInstitutionId;
-    	
+
     	try{
     		Integer aiId = getAiId();
     		String path = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR;
