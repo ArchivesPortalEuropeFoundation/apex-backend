@@ -187,6 +187,7 @@ public abstract class ManualUploader {
     		// Uncomment this line if xsl and xslt files are permitted again
     		//if (contentType.equals("zip") || contentType.equals("xml") || contentType.equals("xsl") || contentType.equals("xslt")){
     		if (contentType.equals("zip") || contentType.equals("xml")) {
+                fileName = APEnetUtilities.convertToFilename(fileName);
 				if (contentType.equals("zip"))
     				fullFileName = tempPath + fileName; //The file uploaded is a ZIP file. It's necessary to store it in a temp directory to unzip it
     			else
@@ -591,6 +592,8 @@ public abstract class ManualUploader {
             final String defaultDirPath = APEnetUtilities.FILESEPARATOR + archivalInstitutionId + APEnetUtilities.FILESEPARATOR;
 			for (String fileStr : files) {
 				File srcFile = new File(tempPath + fileStr);
+
+                fileStr = APEnetUtilities.convertToFilename(fileStr);
 				File destFile = new File(path + fileStr);
 			    if (destFile.exists()) {
 			    	// The file already exists in the upload directory. It's necessary to notify to the user
