@@ -8,6 +8,7 @@ import org.apache.commons.io.FileUtils;
 
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
+import eu.apenet.dashboard.manual.eag.utils.ParseEag2012Errors;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
@@ -162,6 +163,11 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
         	    	this.filesNotUploaded = this.uploader_http.getFilesNotUploaded();
                     warnings_eag = uploader_http.getWarnings_eag();
                     addActionMessage(getText("label.eag.uploadingerror.two"));
+                    for (int i = 0; i < warnings_eag.size(); i++) {
+						String warning = warnings_eag.get(i).replace("<br/>", "");
+						ParseEag2012Errors parseEag2012Errors = new ParseEag2012Errors(warning, true, this); 
+						warnings_eag.set(i,parseEag2012Errors.errorsValidation());
+                    }
         	    	result = ERROR;
         	    }
         	    else if (result.equals("error_eagnotconverted")) {
@@ -197,6 +203,7 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
     }
     
     public String parseEag02ToEAG2012(){
+    	//This method parse an old EAG to EAG2012
 		if (this.filesUploaded == null) {
 			this.filesUploaded = new ArrayList<String>();
 		}
@@ -224,7 +231,6 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
                 archivalInstitutionId = aiId;
                 APEnetEAGDashboard eag = new APEnetEAGDashboard(archivalInstitutionId, file.getAbsolutePath());
         	    if (eag.convertEAG02ToEAG2012()){
-					//The EAG has been converted so it is necessary to validate the file against APEnet EAG schema
     				if (eag.validate()){
     					result = eag.saveEAGviaHTTP(file.getAbsolutePath());
 		        	    if (result.equals("error_eagalreadyuploaded")){

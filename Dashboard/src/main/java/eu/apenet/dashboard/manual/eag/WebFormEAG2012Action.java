@@ -32,6 +32,7 @@ import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.manual.APEnetEAGDashboard;
 import eu.apenet.dashboard.manual.eag.utils.CreateEAG2012;
 import eu.apenet.dashboard.manual.eag.utils.EAG2012Loader;
+import eu.apenet.dashboard.manual.eag.utils.ParseEag2012Errors;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.dpt.utils.eag2012.namespace.EagNamespaceMapper;
@@ -716,7 +717,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						for (int i = 0; i < this.getWarnings().size(); i++) {
 							String warning = this.getWarnings().get(i).replace("<br/>", "");
 							log.debug(warning);
-							if (!warning.contains("for type 'recordId'")) {
+							ParseEag2012Errors parseEag2012Errors = new ParseEag2012Errors(warning, true, this); 
+							addActionMessage(parseEag2012Errors.errorsValidation());
+						/*	if (!warning.contains("for type 'recordId'")) {
 								addActionMessage(warning);
 							}
 							if (warning.contains("of element 'recordId' is not valid")) {
@@ -728,7 +731,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 								this.loader.setRecordId(this.getIdUsedInAPE());
 								this.loader.setRecordIdISIL(Eag2012.OPTION_NO);
 								addActionMessage(this.getText("label.ai.error.defaultIdUsedInAPE") + " ("+ this.getIdUsedInAPE() +")");
-							}
+							}*/
 						}
 					}
 				} else {
@@ -749,6 +752,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			}
 
 			if (!result) {
+				getActionMessages();
 				addActionMessage(this.getText("label.ai.error.loadingEAGFile"));
 			}
 		} else if(new File(APEnetUtilities.getConfig().getRepoDirPath() + path).exists()){
@@ -870,7 +874,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					for (int i = 0; i < this.getWarnings().size(); i++) {
 						String warning = this.getWarnings().get(i).replace("<br/>", "");
 						log.debug(warning);
-						if (!warning.contains("for type 'recordId'")) {
+						ParseEag2012Errors parseEag2012Errors = new ParseEag2012Errors(warning,false,this); 
+						addActionMessage(parseEag2012Errors.errorsValidation());
+					/*	if (!warning.contains("for type 'recordId'")) {
 							addActionMessage(warning);
 						}
 						if (warning.contains("of element 'recordId' is not valid")) {
@@ -878,7 +884,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						}
 						if (warning.contains("recordId already used")) {
 							addActionMessage(this.getText("label.ai.error.defaultIdUsedInAPE") + " ("+ this.getIdUsedInAPE() +")");
-						}
+						}*/
 					}
 				}
 			} catch (JAXBException jaxbe) {

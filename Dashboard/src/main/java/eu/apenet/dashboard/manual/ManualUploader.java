@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.manual.eag.Eag2012;
+import eu.apenet.dashboard.manual.eag.utils.ParseEag2012Errors;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.utils.ZipManager;
 import eu.apenet.persistence.factory.DAOFactory;
