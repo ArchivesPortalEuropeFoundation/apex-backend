@@ -63,7 +63,7 @@ public class ParseEag2012Errors{
         }else if(this.getWarning().contains("The element 'languageDeclaration' is missing ")){
 			errorValidation = targetAction.getText("label.ai.error.script");
         }else if(this.getWarning().contains("The element 'script' has been found but should not appear here")){
-			errorValidation = targetAction.getText("label.ai.error.language");
+			errorValidation = targetAction.getText("label.ai.error.script");
         }else if(this.getWarning().contains("The element 'rule' has been found but should not appear here")){
 			errorValidation = targetAction.getText("label.ai.error.rule");
         }else if(this.getWarning().contains("The element 'repositorsup' is missing")){
