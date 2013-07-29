@@ -131,6 +131,10 @@
 							</a>
 						</xsl:when>
 						<xsl:otherwise>
+							<a href="{$href}" target="_blank">
+								<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+								<span class="icon_new_window"><xsl:text> </xsl:text></span>
+							</a>
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>
@@ -170,6 +174,10 @@
 									</a>
 								</xsl:when>
 								<xsl:otherwise>
+									<a href="{$prefix}/{$href}" target="{$href}">
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+										<span class="icon_new_window"><xsl:text> </xsl:text></span>
+									</a>
 								</xsl:otherwise>
 							</xsl:choose>
 						</div>
@@ -208,6 +216,10 @@
 									</a>
 								</xsl:when>
 								<xsl:otherwise>
+									<a href="javascript:void(0)" onclick="window.alert('{$extref.warning}')" class="notIndexed">
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+										<span class="icon_new_window"><xsl:text> </xsl:text></span>
+									</a>
 								</xsl:otherwise>
 							</xsl:choose>
 						</div>
@@ -242,6 +254,9 @@
 									</div>
 								</xsl:when>
 								<xsl:otherwise>
+									<div class="nolink">
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+									</div>
 								</xsl:otherwise>
 							</xsl:choose>
 						</div>			
