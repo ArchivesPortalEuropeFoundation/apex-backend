@@ -99,7 +99,14 @@
 	            			        				
 							<div id="titleListRepeated<s:property value="%{top.eadid}" />">
 		        				<label style="text-align:left;"><s:property value="%{(#stat.index+1) + '- ' + '(' + top.eadType + ') ' + top.fileName}"/></label>
-		        				<div id="right<s:property value="%{top.eadid}" />" style="position:relative; top: -15px;" align="right"><s:select onchange="changeEADID(this, '%{top.eadid}', 'Change');" list="existingFilesChoice" name="existingFilesAnswers" theme="simple"></s:select></div>
+		        				<div id="right<s:property value="%{top.eadid}" />" style="position:relative; top: -15px;" align="right">
+		        					<select id="existingFilesAnswers" onchange="changeEADID(this, '%{top.eadid}', '<s:property value='getText("existingFiles.change")' />');" >
+										<s:iterator value="existingFilesChoice" var="action"> 
+											<option value="<s:property value="#action.key" />"><s:property value="#action.value" /></option>
+										</s:iterator>
+									</select>
+		        					
+		        				</div>
 		        			</div>
 		        			<div id="divGeneralChangeEadid<s:property value="%{top.eadid}" />" style="display:none;">
 		        			
@@ -154,7 +161,10 @@
 							        											
 		        			<div id="titleListEmpty<s:property value="%{#stat.index}" />" style="text-align:left; display:inline;">
 		        				<label style="text-align:left;"><s:property value="%{(#stat.index+1) + '- ' + '(' + top.eadType + ') ' + top.fileName}"/></label>
-		        				<div id="right<s:property value="%{#stat.index}" />" style="position:relative; top: -15px;" align="right"><s:select onchange="changeEADID(this, '%{#stat.index}','Add');" list="existingFilesChoiceAddEADID" name="existingFilesAnswers" theme="simple"></s:select></div>
+		        				<div id="right<s:property value="%{#stat.index}" />" style="position:relative; top: -15px;" align="right">
+			        				<s:select onchange="changeEADID(this, '%{#stat.index}','Add');" list="existingFilesChoiceAddEADID" name="existingFilesAnswers" theme="simple">
+			        				</s:select>
+		        				</div>
 		        			</div> 
 		        			
 		        			<div id="divGeneralAddEadid<s:property value="%{#stat.index}" />" style="display:none;">		        			
