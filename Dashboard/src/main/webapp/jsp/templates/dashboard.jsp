@@ -16,6 +16,20 @@
       <link rel="stylesheet" href="${pageContext.request.contextPath}<tiles:getAsString name="maincss"/>" type="text/css"/>
       <c:forEach var="item" items="${jsInternal}"><script src="${pageContext.request.contextPath}${item}" type="text/javascript"></script></c:forEach>
       <c:forEach var="item" items="${cssInternal}"><link rel="stylesheet" href="${pageContext.request.contextPath}${item}" type="text/css" /></c:forEach>
+		<script type="text/javascript">
+		var gId = 'UA-42624055-1';
+		var hostname = window.location.hostname;
+		if (hostname == "www.archivesportaleurope.net" 
+				|| hostname == "archivesportaleurope.net" 
+				|| hostname == "dashboard.archivesportaleurope.net"){
+			gId = 'UA-37870082-1';
+		} else if (hostname == "contentchecker.archivesportaleurope.net") {
+			gId = 'UA-40082820-1';
+		}
+		var _gaq = _gaq || [];
+		_gaq.push([ '_setAccount', gId ]);
+		_gaq.push([ '_trackPageview' ]);
+		</script>
     </head>
     <body>
     <dashboard:securityContext var="securityContext" />
@@ -121,11 +135,18 @@
                     <div id="footerSupportLogos"><img  src="images/ictpsp_logo.gif"/><img  src="images/eu_logo.gif"/></div>
 
                 </div>
-            <script type="text/javascript">
-                $(document).ready(function() {
-                    loadGoogleAnalytics();
-                });
-	        </script>
         </div>
+	<script type="text/javascript">
+	(function() {
+		var ga = document.createElement('script');
+		ga.type = 'text/javascript';
+		ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl'
+				: 'http://www')
+				+ '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
     </body>
 </html>                
