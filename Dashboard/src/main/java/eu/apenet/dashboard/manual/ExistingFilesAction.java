@@ -1,7 +1,9 @@
 package eu.apenet.dashboard.manual;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -38,7 +40,7 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 	private List<FileUnit> filesWithEmptyEadid;		//This attribute contains all the files with empty EADID.
 	private List<FileUnit> filesNotUploaded;	//This attribute contains all the files not uploaded to APEnet
 	private List<FileUnit> filesBlocked;		//This attribute contains all the files blocked because of Europeana is harvesting and those files are FAs which have ESE files published
-	private List<String> existingFilesChoice; //This list contains all the possible actions a user can do when a file is already stored in his Dashboard
+	private Map<String, String> existingFilesChoice; //This list contains all the possible actions a user can do when a file is already stored in his Dashboard
 	private List<String> existingFilesChoiceAddEADID; //This list contains all the possible actions a user can do when a file contains empty EADID
 	private List<String> existingFilesChoiceOverwriteCancelEADID; //This list contains all the possible actions a user can do when the EADID is repeated and he doesn't want to add a new one.
 	private List<String> existingEADIDAnswersChoice; //This list contains all the possible answer that the action of saving the change of EADID has returned. 
@@ -107,11 +109,11 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 		return filesTypeAnswers;
 	}
 	
-    public List<String> getExistingFilesChoice() {
+    public Map<String, String> getExistingFilesChoice() {
 		return existingFilesChoice;
 	}
 
-	public void setExistingFilesChoice(List<String> existingFilesChoice) {
+	public void setExistingFilesChoice(Map<String, String> existingFilesChoice) {
 		this.existingFilesChoice = existingFilesChoice;
 	}
 	public List<String> getExistingFilesChoiceAddEADID() {
@@ -246,10 +248,10 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 	
     //Constructor
     public ExistingFilesAction(){
-        this.existingFilesChoice = new ArrayList<String>();
-        this.existingFilesChoice.add(OVERWRITE);
-        this.existingFilesChoice.add(CANCEL);
-        this.existingFilesChoice.add(CHANGE);
+        this.existingFilesChoice = new LinkedHashMap<String, String>();
+        this.existingFilesChoice.put(OVERWRITE, getText("existingFiles.overwrite"));
+        this.existingFilesChoice.put(CANCEL, getText("existingFiles.cancel"));
+        this.existingFilesChoice.put(CHANGE, getText("existingFiles.change"));
         this.existingFilesChoiceAddEADID = new ArrayList<String>();
         this.existingFilesChoiceAddEADID.add(CANCEL);
         this.existingFilesChoiceAddEADID.add(ADD);     
