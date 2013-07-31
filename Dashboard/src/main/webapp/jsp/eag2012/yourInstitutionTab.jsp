@@ -17,7 +17,7 @@
 				<label  for="textYIPersonInstitutionResposibleForTheDescription"><s:property value="getText('label.ai.yourinstitution.personinstitutionresposibleforthedescription')"/>:</label>
 			</td>
 			<td colspan="2" class="labelLeft">
-			<input type="text" id="textYIPersonInstitutionResposibleForTheDescription" class="middleText" value="${loader.agent}" onchange="personResponsibleForDescriptionChanged();" /> 
+			   <textarea  id="textYIPersonInstitutionResposibleForTheDescription" class="middleText" onchange="personResponsibleForDescriptionChanged();" >${loader.agent}</textarea>
 			</td>
 		</tr>
 
@@ -37,7 +37,7 @@
 				<label for="textYIIdentifierOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.identifierOfTheInstitution')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-			 <input type="text" id="textYIIdentifierOfTheInstitution" value="${loader.otherRepositorId}" onKeyup="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>');firstIdAndNoISIL();"/>
+			  <textarea id="textYIIdentifierOfTheInstitution" onKeyup="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>');firstIdAndNoISIL();">${loader.otherRepositorId}</textarea>
 			</td>
 			<td class="labelLeft">
 			  <label for="textYICodeISL"><s:property value="getText('label.ai.tabs.commons.codeISL')"/></label>
@@ -58,9 +58,7 @@
 						<label for="otherRepositorId_<s:property value="#status.index" />"> <s:property value="getText('label.ai.yourinstitution.futherId')" />:</label>
 					</td>
 					<td>
-					  <input type="text" id="otherRepositorId_<s:property value="#status.index" />" value="<s:property value="#current" />" onclick="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>','<s:property value="#status.index" />');" onkeyup="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>','<s:property value="#status.index" />');" />
-					<!--<textarea id="otherRepositorId_<s:property value="#status.index" />" onclick="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>','<s:property value="#status.index" />');" onkeyup="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>','<s:property value="#status.index" />');"><s:property value="#current" /></textarea> -->
-					
+					  <textarea id="otherRepositorId_<s:property value="#status.index" />" onclick="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>','<s:property value="#status.index" />');" onkeyup="idOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.repeatISIL')"/>','<s:property value="getText('label.ai.tabs.commons.errorISIL')"/>','<s:property value="#status.index" />');"><s:property value="#current" /></textarea> 
 					</td>
 					<td class="labelLeft">
 						<label for="selectOtherRepositorIdCodeISIL_<s:property value="#status.index" />"> <s:property value="getText('label.ai.tabs.commons.codeISL')" />:</label>
@@ -98,7 +96,7 @@
 				<label for="textYINameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.nameOfTheInstitution')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYINameOfTheInstitution" value="${loader.autform}" onchange="nameOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutform}');" />
+				<textarea id="textYINameOfTheInstitution" onchange="nameOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutform}');">${loader.autform}</textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectYINOTISelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -124,7 +122,7 @@
 				<label for="textYIParallelNameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.parallelNameOfTheInstitution')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textYIParallelNameOfTheInstitution" value="${loader.parform}" onchange="parallelNameOfInstitutionChanged();" />
+				<textarea id="textYIParallelNameOfTheInstitution" onchange="parallelNameOfInstitutionChanged();">${loader.parform}</textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectYIPNOTISelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -159,7 +157,7 @@
 						</s:else>
 					</td>
 					<td>
-						<input type="text" id="textYIStreet" onchange="streetOfInstitutionChanged($(this).parent().parent().parent().parent());" value="<s:property value="loader.yiStreet[#counter]" />" />
+						<textarea id="textYIStreet" onchange="streetOfInstitutionChanged($(this).parent().parent().parent().parent());"><s:property value="loader.yiStreet[#counter]" /></textarea>
 					</td>
 					<td class="labelLeft">
 						<label for="selectYIVASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -186,7 +184,7 @@
 						</s:else>
 					</td>
 					<td>
-						<input type="text" id="textYICity" onchange="cityOfInstitutionChanged($(this).parent().parent().parent().parent());" value="<s:property value="loader.yiMunicipalityPostalcode[#counter]" />" />
+						<textarea id="textYICity" onchange="cityOfInstitutionChanged($(this).parent().parent().parent().parent());"><s:property value="loader.yiMunicipalityPostalcode[#counter]" /></textarea>
 					</td>
 					<td colspan="2">
 					</td>
@@ -202,7 +200,7 @@
 						</s:else>
 					</td>
 					<td>
-						<input type="text" id="textYICountry" onchange="countryOfInstitutionChanged($(this).parent().parent().parent().parent());" value="<s:property value="loader.yiCountry[#counter]" />" />
+						<textarea id="textYICountry" onchange="countryOfInstitutionChanged($(this).parent().parent().parent().parent());"><s:property value="loader.yiCountry[#counter]" /></textarea>
 					</td>
 					<td colspan="2">
 					</td>
@@ -245,7 +243,7 @@
 					<label for="textYIStreet"><s:property value="getText('label.ai.tabs.commons.street')"/><span class="required">*</span>:</label>
 				</td>
 				<td>
-					<input type="text" id="textYIStreet" onchange="streetOfInstitutionChanged($(this).parent().parent().parent().parent());" />
+					<textarea id="textYIStreet" onchange="streetOfInstitutionChanged($(this).parent().parent().parent().parent());"></textarea>	
 				</td>
 				<td class="labelLeft">
 					<label for="selectYIVASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -264,7 +262,7 @@
 					<label for="textYICity"><s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')"/><span class="required">*</span>:</label>
 				</td>
 				<td>
-					<input type="text" id="textYICity" onchange="cityOfInstitutionChanged($(this).parent().parent().parent().parent());" />
+					<textarea id="textYICity" onchange="cityOfInstitutionChanged($(this).parent().parent().parent().parent());"></textarea>	
 				</td>
 				<td colspan="2">
 				</td>
@@ -275,7 +273,7 @@
 					<label for="textYICountry"><s:property value="getText('label.ai.tabs.commons.country')"/><span class="required">*</span>:</label>
 				</td>
 				<td>
-					<input type="text" id="textYICountry" onchange="countryOfInstitutionChanged($(this).parent().parent().parent().parent());" />
+					<textarea id="textYICountry" onchange="countryOfInstitutionChanged($(this).parent().parent().parent().parent());"></textarea>
 				</td>
 				<td colspan="2">
 				</td>
@@ -334,7 +332,7 @@
 						</s:else>
 					</td>
 					<td>
-						<input type="text" id="textYIPAStreet" onchange="postalAddressStreetChanged($(this).parent().parent().parent().parent());" value="<s:property value="loader.yiStreetPostal[#counter]" />" />
+						<textarea id="textYIPAStreet" onchange="postalAddressStreetChanged($(this).parent().parent().parent().parent());"><s:property value="loader.yiStreetPostal[#counter]" /></textarea>	
 					</td>
 					<td id="yiPostalAddressLanguage" class="labelLeft">
 						<label for="selectYIPASelectLanguage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -361,7 +359,7 @@
 						</s:else>
 					</td>
 					<td>
-						<input type="text" id="textYIPACity" onchange="postalAddressCityChanged($(this).parent().parent().parent().parent());" value="<s:property value="loader.yiMunicipalityPostalcodePostal[#counter]" />" />
+						<textarea id="textYIPACity" onchange="postalAddressCityChanged($(this).parent().parent().parent().parent());"><s:property value="loader.yiMunicipalityPostalcodePostal[#counter]" /></textarea>
 					</td>
 					<td colspan="2">
 					</td>
@@ -437,10 +435,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYIEmailAddress" onchange="emailOfInstitutionChanged($(this));" value="<s:property value="loader.yiEmail[#counter]" />" />
+							<textarea id="textYIEmailAddress" onchange="emailOfInstitutionChanged($(this));"><s:property value="loader.yiEmail[#counter]" /></textarea>	
 						</s:if>
 						<s:else>
-							<input type="text" id="textYIEmailAddress_<s:property value="%{#status.index + 1}" />" onchange="emailOfInstitutionChanged($(this));" value="<s:property value="loader.yiEmail[#counter]" />" />
+							<textarea id="textYIEmailAddress_<s:property value="%{#status.index + 1}" />" onchange="emailOfInstitutionChanged($(this));"><s:property value="loader.yiEmail[#counter]" /></textarea>
 						</s:else>
 					</td>
 					<td class="labelLeft">
@@ -484,10 +482,12 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYIEmailLinkTitle" onchange="emailOfInstitutionLinkChanged($(this));" value="<s:property value="loader.yiEmailTitle[#counter]" />" />
+							<!--<input type="text" id="textYIEmailLinkTitle" onchange="emailOfInstitutionLinkChanged($(this));" value="<s:property value="loader.yiEmailTitle[#counter]" />" /> -->
+							<textarea id="textYIEmailLinkTitle" onchange="emailOfInstitutionLinkChanged($(this));"><s:property value="loader.yiEmailTitle[#counter]" /></textarea>
+						
 						</s:if>
 						<s:else>
-							<input type="text" id="textYIEmailLinkTitle_<s:property value="%{#status.index + 1}" />" onchange="emailOfInstitutionLinkChanged($(this));" value="<s:property value="loader.yiEmailTitle[#counter]" />" />
+							<textarea id="textYIEmailLinkTitle_<s:property value="%{#status.index + 1}" />" onchange="emailOfInstitutionLinkChanged($(this));"><s:property value="loader.yiEmailTitle[#counter]" /></textarea>
 						</s:else>
 					</td>
 					<td colspan="2">
@@ -510,7 +510,7 @@
 					<label for="textYIEmailAddress" ><s:property value="getText('label.ai.tabs.commons.emailAddress')"/>:</label>
 				</td>
 				<td>
-					<input type="text" id="textYIEmailAddress" onchange="emailOfInstitutionChanged($(this));" />
+					<textarea id="textYIEmailAddress" onchange="emailOfInstitutionChanged($(this));"></textarea>
 				</td>
 				<td class="labelLeft">
 					<label for="selectTextYILangEmail"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -529,7 +529,7 @@
 					<label for="textYIEmailLinkTitle" ><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 				</td>
 				<td>
-					<input type="text" id="textYIEmailLinkTitle" onchange="emailOfInstitutionLinkChanged($(this));" />
+					<textarea id="textYIEmailLinkTitle" onchange="emailOfInstitutionLinkChanged($(this));"></textarea>
 				</td>
 			</tr>
 
@@ -561,10 +561,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYIWebpage" onchange="webOfInstitutionChanged($(this));" value="<s:property value="loader.yiWebpage[#counter]" />" />
+							<textarea id="textYIWebpage" onchange="webOfInstitutionChanged($(this));"><s:property value="loader.yiWebpage[#counter]" /></textarea>
 						</s:if>
 						<s:else>
-							<input type="text" id="textYIWebpage_<s:property value="%{#status.index + 1}" />" onchange="webOfInstitutionChanged($(this));" value="<s:property value="loader.yiWebpage[#counter]" />" />
+							<textarea id="textYIWebpage_<s:property value="%{#status.index + 1}" />" onchange="webOfInstitutionChanged($(this));"><s:property value="loader.yiWebpage[#counter]" /></textarea>
 						</s:else>
 					</td>
 					<td class="labelLeft">
@@ -608,10 +608,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYIWebpageLinkTitle" onchange="webOfInstitutionLinkChanged($(this));" value="<s:property value="loader.yiWebpageTitle[#counter]" />" />
+							<textarea id="textYIWebpageLinkTitle" onchange="webOfInstitutionLinkChanged($(this));"><s:property value="loader.yiWebpageTitle[#counter]" /></textarea>
 						</s:if>
 						<s:else>
-							<input type="text" id="textYIWebpageLinkTitle_<s:property value="%{#status.index + 1}" />" onchange="webOfInstitutionLinkChanged($(this));" value="<s:property value="loader.yiWebpageTitle[#counter]" />" />
+							<textarea id="textYIWebpageLinkTitle_<s:property value="%{#status.index + 1}" />" onchange="webOfInstitutionLinkChanged($(this));"><s:property value="loader.yiWebpageTitle[#counter]" /></textarea>
 						</s:else>
 					</td>
 					<td colspan="2">
@@ -632,7 +632,7 @@
 					<label for="textYIWebpage" ><s:property value="getText('label.ai.tabs.commons.webpage')"/>:</label>
 				</td>
 				<td>
-					<input type="text" id="textYIWebpage" onchange="webOfInstitutionChanged($(this));" />
+					<textarea id="textYIWebpage" onchange="webOfInstitutionChanged($(this));"></textarea>
 				</td>
 				<td class="labelLeft">
 					<label for="selectTextYILangWebpage"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -651,7 +651,7 @@
 					<label for="textYIWebpageLinkTitle" ><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 				</td>
 				<td>
-					<input type="text" id="textYIWebpageLinkTitle" onchange="webOfInstitutionLinkChanged($(this));" />
+					<textarea id="textYIWebpageLinkTitle" onchange="webOfInstitutionLinkChanged($(this));"></textarea>
 				</td>
 			</tr>
 
@@ -681,10 +681,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYIOpeningTimes" onchange="openingHoursOfInstitutionChanged($(this));" value="<s:property value="#current" />" />
+							<textarea id="textYIOpeningTimes" onchange="openingHoursOfInstitutionChanged($(this));"><s:property value="#current" /></textarea>
 						</s:if>
 						<s:else>
-							<input type="text" id="textYIOpeningTimes_<s:property value="%{#status.index + 1}" />" onchange="openingHoursOfInstitutionChanged($(this));" value="<s:property value="#current" />" />
+							<textarea id="textYIOpeningTimes_<s:property value="%{#status.index + 1}" />" onchange="openingHoursOfInstitutionChanged($(this));"><s:property value="#current" /></textarea>
 						</s:else>
 					</td>
 					<td class="labelLeft">
@@ -720,7 +720,7 @@
 					<label for="textYIOpeningTimes" ><s:property value="getText('label.ai.tabs.commons.openingTimes')"/><span class="required">*</span>:</label>
 				</td>
 				<td>
-					<input type="text" id="textYIOpeningTimes" onchange="openingHoursOfInstitutionChanged($(this));" value="${loader.opening}" />
+					<textarea id="textYIOpeningTimes" onchange="openingHoursOfInstitutionChanged($(this));">${loader.opening}</textarea>
 				</td>
 				<td class="labelLeft">
 					<label for="selectTextYIOpeningTimes"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -760,10 +760,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="yourInstitutionClosingDates" onchange="closingHoursOfInstitutionChanged($(this));" value="<s:property value="#current" />" />
+							<textarea id="yourInstitutionClosingDates" onchange="closingHoursOfInstitutionChanged($(this));"><s:property value="#current" /></textarea>
 						</s:if>
 						<s:else>
-							<input type="text" id="yourInstitutionClosingDates_<s:property value="%{#status.index + 1}" />" onchange="closingHoursOfInstitutionChanged($(this));" value="<s:property value="#current" />" />
+							<textarea id="yourInstitutionClosingDates_<s:property value="%{#status.index + 1}" />" onchange="closingHoursOfInstitutionChanged($(this));"><s:property value="#current" /></textarea>
 						</s:else>
 					</td>
 					<td class="labelLeft">
@@ -807,7 +807,7 @@
 					<label for="yourInstitutionClosingDates"><s:property value="getText('label.ai.yourinstitution.closingDates')"/>:</label>
 				</td>
 				<td>
-					<input type="text" id="yourInstitutionClosingDates" onchange="closingHoursOfInstitutionChanged($(this));" />
+					<textarea id="yourInstitutionClosingDates" onchange="closingHoursOfInstitutionChanged($(this));"></textarea>
 				</td>
 				<td class="labelLeft">
 					<label for="selectTextYIClosingTimes"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -864,10 +864,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="futherAccessInformation" onchange="futherAccessInformationChanged($(this));" value="<s:property value="#current" />" />
+							<textarea id="futherAccessInformation" onchange="futherAccessInformationChanged($(this));"><s:property value="#current" /></textarea>
 						</s:if>
 						<s:else>
-							<input type="text" id="futherAccessInformation_<s:property value="%{#status.index + 1}" />" onchange="futherAccessInformationChanged($(this));" value="<s:property value="#current" />" />
+							<textarea id="futherAccessInformation_<s:property value="%{#status.index + 1}" />" onchange="futherAccessInformationChanged($(this));"><s:property value="#current" /></textarea>
 						</s:else>
 					</td>
 					<td class="labelLeft">
@@ -927,7 +927,7 @@
 					<label for="futherAccessInformation"><s:property value="getText('label.ai.accessAndServices.accessRestrictions')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="futherAccessInformation" onchange="futherAccessInformationChanged($(this));"/>
+					<textarea id="futherAccessInformation" onchange="futherAccessInformationChanged($(this));"></textarea>
 				</td>
 				<td class="labelLeft">
 					<label for="selectFutherAccessInformation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -984,10 +984,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="futherInformationOnExistingFacilities" onchange="futherInformationOnExistingFacilitiesChanged($(this));" value="<s:property value="#current" />" />
+							<textarea id="futherInformationOnExistingFacilities" onchange="futherInformationOnExistingFacilitiesChanged($(this));"><s:property value="#current" /></textarea>
 						</s:if>
 						<s:else>
-							<input type="text" id="futherInformationOnExistingFacilities_<s:property value="%{#status.index + 1}" />" onchange="futherInformationOnExistingFacilitiesChanged($(this));" value="<s:property value="#current" />" />
+							<textarea id="futherInformationOnExistingFacilities_<s:property value="%{#status.index + 1}" />" onchange="futherInformationOnExistingFacilitiesChanged($(this));"><s:property value="#current" /></textarea>
 						</s:else>
 					</td>
 					<td class="labelLeft">
@@ -1047,7 +1047,7 @@
 					<label for="futherInformationOnExistingFacilities"><s:property value="getText('label.ai.accessAndServices.accesibility')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="futherInformationOnExistingFacilities" onchange="futherInformationOnExistingFacilitiesChanged($(this));" />		
+					<textarea id="futherInformationOnExistingFacilities" onchange="futherInformationOnExistingFacilitiesChanged($(this));"></textarea>		
 				</td>
 				<td class="labelLeft">
 					<label for="selectFutherAccessInformationOnExistingFacilities"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -1088,10 +1088,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textReferencetoyourinstitutionsholdingsguide" onchange="linkToYourHolndingsGuideChanged($(this));" value="<s:property value="#current" />" />
+							<textarea id="textReferencetoyourinstitutionsholdingsguide" onchange="linkToYourHolndingsGuideChanged($(this));"><s:property value="#current" /></textarea>
 						</s:if>
 						<s:else>
-							<input type="text" id="textReferencetoyourinstitutionsholdingsguide_<s:property value="%{#status.index + 1}" />" onchange="linkToYourHolndingsGuideChanged($(this));" value="<s:property value="#current" />" />
+							<textarea id="textReferencetoyourinstitutionsholdingsguide_<s:property value="%{#status.index + 1}" />" onchange="linkToYourHolndingsGuideChanged($(this));"><s:property value="#current" /></textarea>
 						</s:else>
 					</td>
 					<td class="labelLeft">
@@ -1104,10 +1104,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textYIHoldingsGuideLinkTitle" onchange="linkToYourHolndingsGuideTitleChanged($(this));" value="<s:property value="loader.yiResourceRelationrelationEntry[#counter]" />" />
+							<textarea id="textYIHoldingsGuideLinkTitle" onchange="linkToYourHolndingsGuideTitleChanged($(this));"><s:property value="loader.yiResourceRelationrelationEntry[#counter]" /></textarea>
 						</s:if>
 						<s:else>
-							<input type="text" id="textYIHoldingsGuideLinkTitle_<s:property value="%{#status.index + 1}" />" onchange="linkToYourHolndingsGuideTitleChanged($(this));" value="<s:property value="loader.yiResourceRelationrelationEntry[#counter]" />" />
+							<textarea id="textYIHoldingsGuideLinkTitle_<s:property value="%{#status.index + 1}" />" onchange="linkToYourHolndingsGuideTitleChanged($(this));"><s:property value="loader.yiResourceRelationrelationEntry[#counter]" /></textarea>
 						</s:else>
 					</td>
 				</tr>
@@ -1161,13 +1161,13 @@
 					<label for="textReferencetoyourinstitutionsholdingsguide" ><s:property value="getText('label.ai.yourinstitution.referenceToYourInstitutionsHoldingsGuide')"/>:</label>
 				</td>
 				<td>
-					<input type="text" id="textReferencetoyourinstitutionsholdingsguide" onchange="linkToYourHolndingsGuideChanged($(this));" />
+					<textarea id="textReferencetoyourinstitutionsholdingsguide" onchange="linkToYourHolndingsGuideChanged($(this));"></textarea>
 				</td>
 				<td class="labelLeft">
 					<label for="textYIHoldingsGuideLinkTitle" ><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 				</td>
 				<td>
-					<input type="text" id="textYIHoldingsGuideLinkTitle" onchange="linkToYourHolndingsGuideTitleChanged($(this));" />
+					<textarea type="text" id="textYIHoldingsGuideLinkTitle" onchange="linkToYourHolndingsGuideTitleChanged($(this));"></textarea>
 				</td>
 			</tr>
 

@@ -122,7 +122,7 @@
 									<label for="textRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.description.ruleOfRepositoryFoundation')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+									<textarea id="textRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td id="tdLanguageRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
 									<label for="selectLanguageRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -143,7 +143,7 @@
 								<label for="textRuleOfRepositoryFoundation_1"><s:property value="getText('label.ai.description.ruleOfRepositoryFoundation')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textRuleOfRepositoryFoundation_1" />
+								<textarea id="textRuleOfRepositoryFoundation_1"></textarea>
 							</td>
 							<td id="tdLanguageRuleOfRepositoryFoundation_1" class="labelLeft">
 								<label for="selectLanguageRuleOfRepositoryFoundation_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -164,7 +164,7 @@
 							<label for="textRuleOfRepositoryFoundation_1"><s:property value="getText('label.ai.description.ruleOfRepositoryFoundation')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textRuleOfRepositoryFoundation_1" />
+							<textarea id="textRuleOfRepositoryFoundation_1"></textarea>
 						</td>
 						<td id="tdLanguageRuleOfRepositoryFoundation_1" class="labelLeft">
 							<label for="selectLanguageRuleOfRepositoryFoundation_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -218,7 +218,7 @@
 									<label for="textRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.description.ruleOfRepositorySuppression')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+									<textarea id="textRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td id="tdLanguageRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
 									<label for="selectLanguageRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -239,7 +239,7 @@
 								<label for="textRuleOfRepositorySuppression_1"><s:property value="getText('label.ai.description.ruleOfRepositorySuppression')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textRuleOfRepositorySuppression_1" />
+								<textarea id="textRuleOfRepositorySuppression_1"></textarea>
 							</td>
 							<td id="tdLanguageRuleOfRepositorySuppression_1" class="labelLeft">
 								<label for="selectLanguageRuleOfRepositorySuppression_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -260,7 +260,7 @@
 							<label for="textRuleOfRepositorySuppression_1"><s:property value="getText('label.ai.description.ruleOfRepositorySuppression')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textRuleOfRepositorySuppression_1" />
+							<textarea id="textRuleOfRepositorySuppression_1"></textarea>
 						</td>
 						<td id="tdLanguageRuleOfRepositorySuppression_1" class="labelLeft">
 							<label for="selectLanguageRuleOfRepositorySuppression_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -741,7 +741,7 @@
 				<label for="textRuleOfRepositoryFoundation_1"><s:property value="getText('label.ai.description.ruleOfRepositoryFoundation')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textRuleOfRepositoryFoundation_1" />
+				<textarea id="textRuleOfRepositoryFoundation_1"></textarea>
 			</td>
 			<td id="tdLanguageRuleOfRepositoryFoundation_1" class="labelLeft">
 				<label for="selectLanguageRuleOfRepositoryFoundation_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -778,7 +778,7 @@
 				<label for="textRuleOfRepositorySuppression_1"><s:property value="getText('label.ai.description.ruleOfRepositorySuppression')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textRuleOfRepositorySuppression_1" />
+				<textarea id="textRuleOfRepositorySuppression_1"></textarea>
 			</td>
 			<td id="tdLanguageRuleOfRepositorySuppression_1" class="labelLeft">
 				<label for="selectLanguageRuleOfRepositorySuppression_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>

@@ -20,7 +20,7 @@
 					<label for="textWebsiteOfResource"><s:property value="getText('label.ai.relations.websiteOfResource')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textWebsiteOfResource" value="<s:property value="loader.relationsResourceRelationHref[#status.index]" />" onchange="relationsLinkToYourHolndingsGuideChanged($(this).parent().parent().parent().parent());" />
+					<textarea id="textWebsiteOfResource" onchange="relationsLinkToYourHolndingsGuideChanged($(this).parent().parent().parent().parent());"><s:property value="loader.relationsResourceRelationHref[#status.index]" /></textarea>
 				</td>
 				<td id="tdTypeOfRelation" class="labelLeft">
 					<label for="selectTypeOfYourRelation"><s:property value="getText('label.ai.relations.typeOfRelation')" />:</label>
@@ -38,7 +38,7 @@
 					<label for="textTitleOfRelatedMaterial"><s:property value="getText('label.ai.relations.titleOfRelatedMaterial')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textTitleOfRelatedMaterial" value="<s:property value="loader.relationsResourceRelationEntry[#status.index]" />" onchange="relationsLinkToYourHolndingsGuideTitleChanged($(this).parent().parent().parent().parent());" />
+					<textarea id="textTitleOfRelatedMaterial" onchange="relationsLinkToYourHolndingsGuideTitleChanged($(this).parent().parent().parent().parent());"><s:property value="loader.relationsResourceRelationEntry[#status.index]" /></textarea>
 				</td>
 				<td class="labelLeft">
 					<label for="selectTitleOfRelatedMaterialLang"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -57,7 +57,7 @@
 					<label for="textDescriptionOfRelation"><s:property value="getText('label.ai.relations.descriptionOfRelation')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textDescriptionOfRelation" value="<s:property value="loader.relationsResourceRelationEntryDescription[#status.index]" />"/>
+					<textarea id="textDescriptionOfRelation"><s:property value="loader.relationsResourceRelationEntryDescription[#status.index]" /></textarea>
 				</td>
 				<td id="tdLanguageDescriptionOfRelation" class="labelLeft">
 					<label for="selectLanguageDescriptionOfRelation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -87,7 +87,7 @@
 					<label for="tdWebsiteOfResource"><s:property value="getText('label.ai.relations.websiteOfResource')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textWebsiteOfResource" onchange="relationsLinkToYourHolndingsGuideChanged($(this).parent().parent().parent().parent());" />
+					<textarea id="textWebsiteOfResource" onchange="relationsLinkToYourHolndingsGuideChanged($(this).parent().parent().parent().parent());"></textarea>
 				</td>
 				<td id="tdTypeOfRelation" class="labelLeft">
 					<label for="selectTypeOfYourRelation"><s:property value="getText('label.ai.relations.typeOfRelation')" />:</label>
@@ -106,7 +106,7 @@
 					<label for="tdTitleOfRelatedMaterial"><s:property value="getText('label.ai.relations.titleOfRelatedMaterial')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textTitleOfRelatedMaterial" onchange="relationsLinkToYourHolndingsGuideTitleChanged($(this).parent().parent().parent().parent());" />
+					<textarea id="textTitleOfRelatedMaterial" onchange="relationsLinkToYourHolndingsGuideTitleChanged($(this).parent().parent().parent().parent());"></textarea>
 				</td>
 				<td class="labelLeft">
 					<label for="selectTitleOfRelatedMaterialLang"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -125,7 +125,7 @@
 					<label for="tdDescriptionOfRelation"><s:property value="getText('label.ai.relations.descriptionOfRelation')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textDescriptionOfRelation"/>
+					<textarea id="textDescriptionOfRelation"></textarea>
 				</td>
 				<td id="tdLanguageDescriptionOfRelation" class="labelLeft">
 					<label for="selectLanguageDescriptionOfRelation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -166,7 +166,7 @@
 					<label for="textWebsiteOfDescription"><s:property value="getText('label.ai.relations.websiteOfDescription')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textWebsiteOfDescription" value="<s:property value="loader.relationsEagRelationHref[#status.index]" />"/>
+					<textarea id="textWebsiteOfDescription"><s:property value="loader.relationsEagRelationHref[#status.index]" /></textarea>
 				</td>
 				<td id="tdInstitutionTypeOfRelation" class="labelLeft">
 					<label for="selectTypeOftheRelation"><s:property value="getText('label.ai.relations.institutionTypeOfRelation')" />:</label>
@@ -188,7 +188,7 @@
 					<label for="textTitleOfRelatedInstitution"><s:property value="getText('label.ai.relations.titleOfRelatedInstitution')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textTitleOfRelatedInstitution" value="<s:property value="loader.relationsEagRelationEntry[#status.index]" />" />
+					<textarea id="textTitleOfRelatedInstitution"><s:property value="loader.relationsEagRelationEntry[#status.index]" /></textarea>
 				</td>
 				<td class="labelLeft">
 					<label for="selectTitleOfRelatedInstitutionLang"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -207,7 +207,7 @@
 					<label for="textInstitutionDescriptionOfRelation"><s:property value="getText('label.ai.relations.descriptionOfRelation')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textInstitutionDescriptionOfRelation" value="<s:property value="loader.relationsEagRelationEntryDescription[#status.index]" />" />
+					<textarea id="textInstitutionDescriptionOfRelation"><s:property value="loader.relationsEagRelationEntryDescription[#status.index]" /></textarea>
 				</td>
 				<td id="tdLanguageInstitutionDescriptionOfRelation" class="labelLeft">
 					<label for="selectLanguageInstitutionDescriptionOfRelation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -237,7 +237,7 @@
 					<label for="textWebsiteOfDescription"><s:property value="getText('label.ai.relations.websiteOfDescription')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textWebsiteOfDescription" />
+					<textarea id="textWebsiteOfDescription"></textarea>
 				</td>
 				<td id="tdInstitutionTypeOfRelation" class="labelLeft">
 					<label for="selectTypeOftheRelation"><s:property value="getText('label.ai.relations.institutionTypeOfRelation')" />:</label>
@@ -259,7 +259,7 @@
 					<label for="textTitleOfRelatedInstitution"><s:property value="getText('label.ai.relations.titleOfRelatedInstitution')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textTitleOfRelatedInstitution" />
+					<textarea id="textTitleOfRelatedInstitution"></textarea>
 				</td>
 				<td class="labelLeft">
 					<label for="selectTitleOfRelatedInstitutionLang"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -278,7 +278,7 @@
 					<label for="textInstitutionDescriptionOfRelation"><s:property value="getText('label.ai.relations.descriptionOfRelation')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textInstitutionDescriptionOfRelation"/>
+					<textarea id="textInstitutionDescriptionOfRelation"></textarea>
 				</td>
 				<td id="tdLanguageInstitutionDescriptionOfRelation" class="labelLeft">
 					<label for="selectLanguageInstitutionDescriptionOfRelation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>

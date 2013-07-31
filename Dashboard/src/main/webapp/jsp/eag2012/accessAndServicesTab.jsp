@@ -25,10 +25,10 @@
 								</td>
 								<td>
 									<s:if test="%{#counter > 0}">
-										<input type="text" id="textOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+										<textarea id="textOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSOpeningHoursOfInstitutionChanged($(this));" value="<s:property value="#internalCurrent" />" />
+										<textarea id="textOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSOpeningHoursOfInstitutionChanged($(this));"><s:property value="#internalCurrent" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
@@ -56,10 +56,10 @@
 							</td>
 							<td>
 								<s:if test="%{#counter > 0}">
-									<input type="text" id="textOpeningTimes_1" />
+									<textarea id="textOpeningTimes_1"></textarea>
 								</s:if>
 								<s:else>
-									<input type="text" id="textOpeningTimes_1" onchange="aSOpeningHoursOfInstitutionChanged($(this));" />
+									<textarea id="textOpeningTimes_1" onchange="aSOpeningHoursOfInstitutionChanged($(this));"></textarea>
 								</s:else>
 							</td>
 							<td class="labelLeft">
@@ -87,10 +87,10 @@
 						</td>
 						<td>
 							<s:if test="%{#counter > 0}">
-								<input type="text" id="textOpeningTimes_1" />
+								<textarea id="textOpeningTimes_1"></textarea>
 							</s:if>
 							<s:else>
-								<input type="text" id="textOpeningTimes_1" onchange="aSOpeningHoursOfInstitutionChanged($(this));" />
+								<textarea id="textOpeningTimes_1" onchange="aSOpeningHoursOfInstitutionChanged($(this));"></textarea>
 							</s:else>
 						</td>
 						<td class="labelLeft">
@@ -130,10 +130,10 @@
 								</td>
 								<td>
 									<s:if test="%{#counter > 0}">
-										<input type="text" id="textClosingDates_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+										<textarea id="textClosingDates_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textClosingDates_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSClosingHoursOfInstitutionChanged($(this));" value="<s:property value="#internalCurrent" />" />
+										<textarea id="textClosingDates_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSClosingHoursOfInstitutionChanged($(this));"><s:property value="#internalCurrent" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
@@ -161,10 +161,10 @@
 							</td>
 							<td>
 								<s:if test="%{#counter > 0}">
-									<input type="text" id="textClosingDates_1" />
+									<textarea id="textClosingDates_1"></textarea>
 								</s:if>
 								<s:else>
-									<input type="text" id="textClosingDates_1" onchange="aSClosingHoursOfInstitutionChanged($(this));"/>
+									<textarea id="textClosingDates_1" onchange="aSClosingHoursOfInstitutionChanged($(this));"></textarea>
 								</s:else>
 							</td>
 							<td class="labelLeft">
@@ -192,10 +192,10 @@
 						</td>
 						<td>
 							<s:if test="%{#counter > 0}">
-								<input type="text" id="textClosingDates_1" />
+								<textarea id="textClosingDates_1"></textarea>
 							</s:if>
 							<s:else>
-								<input type="text" id="textClosingDates_1" onchange="aSClosingHoursOfInstitutionChanged($(this));" />
+								<textarea id="textClosingDates_1" onchange="aSClosingHoursOfInstitutionChanged($(this));"></textarea>
 							</s:else>
 						</td>
 						<td class="labelLeft">
@@ -256,7 +256,7 @@
 									<label for="textTravelLink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 								</td>
 								<td colspan="2">
-									<input type="text" id="textTravelLink_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#directionsHref[#internalCounter]" />" />
+									<textarea id="textTravelLink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#directionsHref[#internalCounter]" /></textarea>
 								</td>
 								<td colspan="2">
 								</td>
@@ -289,7 +289,7 @@
 								<label for="textTravelLink_1"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 							</td>
 							<td colspan="2">
-								<input type="text" id="textTravelLink_1" />
+								<textarea id="textTravelLink_1"></textarea>
 							</td>
 							<td colspan="2">
 							</td>
@@ -321,7 +321,7 @@
 							<label for="textTravelLink_1"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 						</td>
 						<td colspan="2">
-							<input type="text" id="textTravelLink_1" />
+							<textarea id="textTravelLink_1"></textarea>
 						</td>
 						<td colspan="2">
 						</td>
@@ -363,10 +363,10 @@
 								</td>
 								<td>
 									<s:if test="%{#counter > 0}">
-										<input type="text" id="textASAccessRestrictions_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+										<textarea id="textASAccessRestrictions_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASAccessRestrictions_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSFutherAccessInformationChanged($(this));" value="<s:property value="#internalCurrent" />" />
+										<textarea id="textASAccessRestrictions_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSFutherAccessInformationChanged($(this));"><s:property value="#internalCurrent" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
@@ -394,10 +394,10 @@
 							</td>
 							<td>
 								<s:if test="%{#counter > 0}">
-									<input type="text" id="textASAccessRestrictions_1" />
+									<textarea id="textASAccessRestrictions_1"></textarea>
 								</s:if>
 								<s:else>
-									<input type="text" id="textASAccessRestrictions_1" onchange="aSFutherAccessInformationChanged($(this));" />
+									<textarea id="textASAccessRestrictions_1" onchange="aSFutherAccessInformationChanged($(this));"></textarea>
 								</s:else>
 							</td>
 							<td class="labelLeft">
@@ -425,10 +425,10 @@
 						</td>
 						<td>
 							<s:if test="%{#counter > 0}">
-								<input type="text" id="textASAccessRestrictions_1" />
+								<textarea id="textASAccessRestrictions_1"></textarea>
 							</s:if>
 							<s:else>
-								<input type="text" id="textASAccessRestrictions_1" onchange="aSFutherAccessInformationChanged($(this));" />
+								<textarea id="textASAccessRestrictions_1" onchange="aSFutherAccessInformationChanged($(this));"></textarea>
 							</s:else>
 						</td>
 						<td class="labelLeft">
@@ -488,7 +488,7 @@
 									<label for="textASTOULink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 								</td>
 								<td colspan="2">
-									<input type="text" id="textASTOULink_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#termsOfUseHref[#internalStatus.index]" />" />
+									<textarea id="textASTOULink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#termsOfUseHref[#internalStatus.index]" /></textarea>
 								</td>
 								<td colspan="2">
 								</td>
@@ -520,7 +520,7 @@
 								<label for="textASTOULink_1"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASTOULink_1" />
+								<textarea id="textASTOULink_1"></textarea>
 							</td>
 							<td colspan="2">
 							</td>
@@ -552,7 +552,7 @@
 							<label for="textASTOULink_1"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASTOULink_1" />
+							<textarea id="textASTOULink_1"></textarea>
 						</td>
 						<td colspan="2">
 						</td>
@@ -592,10 +592,10 @@
 								</td>
 								<td>
 									<s:if test="%{#counter > 0}">
-										<input type="text" id="textASAccessibility_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+										<textarea id="textASAccessibility_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASAccessibility_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSFutherInformationOnExistingFacilitiesChanged($(this));" value="<s:property value="#internalCurrent" />" />
+										<textarea id="textASAccessibility_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSFutherInformationOnExistingFacilitiesChanged($(this));"><s:property value="#internalCurrent" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
@@ -623,10 +623,10 @@
 							</td>
 							<td>
 								<s:if test="%{#counter > 0}">
-									<input type="text" id="textASAccessibility_1" />
+									<textarea id="textASAccessibility_1"></textarea>
 								</s:if>
 								<s:else>
-									<input type="text" id="textASAccessibility_1" onchange="aSFutherInformationOnExistingFacilitiesChanged($(this));" />
+									<textarea id="textASAccessibility_1" onchange="aSFutherInformationOnExistingFacilitiesChanged($(this));"></textarea>
 								</s:else>
 							</td>
 							<td class="labelLeft">
@@ -654,10 +654,10 @@
 						</td>
 						<td>
 							<s:if test="%{#counter > 0}">
-								<input type="text" id="textASAccessibility_1" />
+								<textarea id="textASAccessibility_1"></textarea>
 							</s:if>
 							<s:else>
-								<input type="text" id="textASAccessibility_1" onchange="aSFutherInformationOnExistingFacilitiesChanged($(this));" />
+								<textarea id="textASAccessibility_1" onchange="aSFutherInformationOnExistingFacilitiesChanged($(this));"></textarea>
 							</s:else>
 						</td>
 						<td class="labelLeft">
@@ -751,10 +751,10 @@
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASSREmailAddress_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#srEmailHref[#internalStatus.index]" />" />
+										<textarea id="textASSREmailAddress_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#srEmailHref[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASSREmailAddress" value="<s:property value="#srEmailHref[#internalStatus.index]" />" />
+										<textarea id="textASSREmailAddress"><s:property value="#srEmailHref[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
@@ -767,10 +767,10 @@
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASSREmailLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#srEmailTitle[#internalStatus.index]" />" />
+										<textarea id="textASSREmailLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#srEmailTitle[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASSREmailLinkTitle" value="<s:property value="#srEmailTitle[#internalStatus.index]" />" />
+										<textarea id="textASSREmailLinkTitle"><s:property value="#srEmailTitle[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 							</tr>
@@ -782,13 +782,13 @@
 								<label for="textASSREmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASSREmailAddress" />
+								<textarea id="textASSREmailAddress"></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="textASSREmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASSREmailLinkTitle" />
+								<textarea id="textASSREmailLinkTitle"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -799,13 +799,13 @@
 							<label for="textASSREmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASSREmailAddress" />
+							<textarea id="textASSREmailAddress"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="textASSREmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASSREmailLinkTitle" />
+							<textarea id="textASSREmailLinkTitle"></textarea>
 						</td>
 					</tr>
 				</s:else>
@@ -827,10 +827,10 @@
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASSRWebpage_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#srWebpageHref[#internalStatus.index]" />" />
+										<textarea id="textASSRWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#srWebpageHref[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASSRWebpage" value="<s:property value="#srWebpageHref[#internalStatus.index]" />" />
+										<textarea id="textASSRWebpage"><s:property value="#srWebpageHref[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
@@ -843,10 +843,10 @@
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASSRWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#srWebpageTitle[#internalStatus.index]" />" />
+										<textarea id="textASSRWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#srWebpageTitle[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASSRWebpageLinkTitle" value="<s:property value="#srWebpageTitle[#internalStatus.index]" />" />
+										<textarea id="textASSRWebpageLinkTitle"><s:property value="#srWebpageTitle[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 							</tr>
@@ -858,13 +858,13 @@
 								<label for="textASSRWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASSRWebpage" />
+								<textarea id="textASSRWebpage"></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="textASSRWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASSRWebpageLinkTitle" />
+								<textarea id="textASSRWebpageLinkTitle"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -875,13 +875,13 @@
 							<label for="textASSRWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASSRWebpage" />
+							<textarea id="textASSRWebpage"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="textASSRWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASSRWebpageLinkTitle" />
+							<textarea id="textASSRWebpageLinkTitle"></textarea>
 						</td>
 					</tr>
 				</s:else>
@@ -1000,7 +1000,7 @@
 									<label for="textDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.descriptionOfComputerPlaces')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+									<textarea id="textDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td id="tdSelectDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
 									<label for="selectDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -1102,7 +1102,7 @@
 									<label for="textASSRReadersTicket_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.readersTicket')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASSRReadersTicket_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#readersTicketContent[#internalStatus.index]" />" />
+									<textarea id="textASSRReadersTicket_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#readersTicketContent[#internalStatus.index]" /></textarea>
 								</td>
 								<td class="labelLeft">
 									<label for="selectReadersTickectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -1121,7 +1121,7 @@
 									<label for="textASSRRTLink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 								</td>
 								<td>
-									<input type="text" id="textASSRRTLink_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#readersTicketHref[#internalStatus.index]" />" />
+									<textarea  id="textASSRRTLink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#readersTicketHref[#internalStatus.index]" /></textarea>
 								</td>
 								<td colspan="2">
 								</td>
@@ -1134,7 +1134,7 @@
 								<label for="textASSRReadersTicket_1"><s:property value="getText('label.ai.accessAndServices.readersTicket')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASSRReadersTicket_1" />
+								<textarea id="textASSRReadersTicket_1"></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="selectReadersTickectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -1153,7 +1153,7 @@
 								<label for="textASSRRTLink_1"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASSRRTLink_1" />
+								<textarea id="textASSRRTLink_1"></textarea>
 							</td>
 							<td colspan="2">
 							</td>
@@ -1166,7 +1166,7 @@
 							<label for="textASSRReadersTicket_1"><s:property value="getText('label.ai.accessAndServices.readersTicket')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASSRReadersTicket_1" />
+							<textarea id="textASSRReadersTicket_1"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="selectReadersTickectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -1185,7 +1185,7 @@
 							<label for="textASSRRTLink_1"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASSRRTLink_1" />
+							<textarea id="textASSRRTLink_1"></textarea>
 						</td>
 						<td colspan="2">
 						</td>
@@ -1212,7 +1212,7 @@
 									<label for="textASSRAdvancedOrders_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.advancedOrders')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASSRAdvancedOrders_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#advancedOrdersContent[#internalStatus.index]" />" />
+									<textarea id="textASSRAdvancedOrders_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#advancedOrdersContent[#internalStatus.index]" /></textarea>
 								</td>
 								<td class="labelLeft">
 									<label for="selectASSRAFOIUSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -1231,7 +1231,7 @@
 									<label for="textASSRAOLink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 								</td>
 								<td>
-									<input type="text" id="textASSRAOLink_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#advancedOrdersHref[#internalStatus.index]" />" />
+									<textarea id="textASSRAOLink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#advancedOrdersHref[#internalStatus.index]" /></textarea>
 								</td>
 								<td colspan="2">
 								</td>
@@ -1244,7 +1244,7 @@
 								<label for="textASSRAdvancedOrders_1"><s:property value="getText('label.ai.accessAndServices.advancedOrders')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASSRAdvancedOrders_1" />
+								<textarea id="textASSRAdvancedOrders_1"></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="selectASSRAFOIUSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -1263,7 +1263,7 @@
 								<label for="textASSRAOLink_1"><s:property value="getText('label.ai.accessAndServices.link')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASSRAOLink_1" />
+								<textarea id="textASSRAOLink_1"></textarea>
 							</td>
 							<td colspan="2">
 							</td>
@@ -1276,7 +1276,7 @@
 							<label for="textASSRAdvancedOrders_1"><s:property value="getText('label.ai.accessAndServices.advancedOrders')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASSRAdvancedOrders_1" />
+							<textarea id="textASSRAdvancedOrders_1"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="selectASSRAFOIUSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -1295,7 +1295,7 @@
 							<label for="textASSRAOLink_1"><s:property value="getText('label.ai.accessAndServices.link')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASSRAOLink_1" />
+							<textarea id="textASSRAOLink_1"></textarea>
 						</td>
 						<td colspan="2">
 						</td>
@@ -1320,7 +1320,7 @@
 									<label for="textASSRResearchServices_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.researchServices')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASSRResearchServices_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+									<textarea id="textASSRResearchServices_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td class="labelLeft">
 									<label for="textASSRRSSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -1341,7 +1341,7 @@
 								<label for="textASSRResearchServices_1"><s:property value="getText('label.ai.accessAndServices.researchServices')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASSRResearchServices_1" />
+								<textarea id="textASSRResearchServices_1"></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="textASSRRSSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -1362,7 +1362,7 @@
 							<label for="textASSRResearchServices_1"><s:property value="getText('label.ai.accessAndServices.researchServices')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASSRResearchServices_1" />
+							<textarea id="textASSRResearchServices_1"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="textASSRRSSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -1477,10 +1477,10 @@
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASLEmailAddress_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#libEmailHref[#internalStatus.index]" />" />
+										<textarea id="textASLEmailAddress_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#libEmailHref[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASLEmailAddress" value="<s:property value="#libEmailHref[#internalStatus.index]" />" />
+										<textarea id="textASLEmailAddress"><s:property value="#libEmailHref[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
@@ -1493,10 +1493,10 @@
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASLEmailLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#libEmailTitle[#internalStatus.index]" />" />
+										<textarea id="textASLEmailLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#libEmailTitle[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASLEmailLinkTitle" value="<s:property value="#libEmailTitle[#internalStatus.index]" />" />
+										<textarea id="textASLEmailLinkTitle"><s:property value="#libEmailTitle[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 							</tr>
@@ -1508,13 +1508,13 @@
 								<label for="textASLEmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASLEmailAddress" />
+								<textarea id="textASLEmailAddress"></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="textASLEmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASLEmailLinkTitle" />
+								<textarea id="textASLEmailLinkTitle"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -1525,13 +1525,13 @@
 							<label for="textASLEmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASLEmailAddress" />
+							<textarea id="textASLEmailAddress"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="textASLEmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASLEmailLinkTitle" />
+							<textarea id="textASLEmailLinkTitle"></textarea>
 						</td>
 					</tr>
 				</s:else>
@@ -1553,10 +1553,10 @@
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASLWebpage_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#libWebpageHref[#internalStatus.index]" />" />
+										<textarea id="textASLWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#libWebpageHref[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASLWebpage" value="<s:property value="#libWebpageHref[#internalStatus.index]" />" />
+										<textarea id="textASLWebpage"><s:property value="#libWebpageHref[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
@@ -1569,10 +1569,10 @@
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASLWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#libWebpageTitle[#internalStatus.index]" />" />
+										<textarea id="textASLWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#libWebpageTitle[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASLWebpageLinkTitle" value="<s:property value="#libWebpageTitle[#internalStatus.index]" />" />
+										<textarea id="textASLWebpageLinkTitle"><s:property value="#libWebpageTitle[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 							</tr>
@@ -1584,13 +1584,13 @@
 								<label for="textASLWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASLWebpage" />
+								<textarea id="textASLWebpage"></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="textASLWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASLWebpageLinkTitle" />
+								<textarea id="textASLWebpageLinkTitle"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -1601,13 +1601,13 @@
 							<label for="textASLWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASLWebpage" />
+							<textarea id="textASLWebpage"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="textASLWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASLWebpageLinkTitle" />
+							<textarea id="textASLWebpageLinkTitle"></textarea>
 						</td>
 					</tr>
 				</s:else>
@@ -1692,7 +1692,7 @@
 									<label for="textASDescription_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.description')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASDescription_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+									<textarea id="textASDescription_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td class="labelLeft">
 									<label for="selectASDSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -1713,7 +1713,7 @@
 								<label for="textASDescription_1"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASDescription_1" />
+								<textarea id="textASDescription_1"></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="selectASDSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -1734,7 +1734,7 @@
 							<label for="textASDescription_1"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASDescription_1" />
+							<textarea id="textASDescription_1"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="selectASDSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -1806,7 +1806,7 @@
 									<label for="textASTSDescriptionOfRestaurationLab_<s:property value="%{#internalStatus.index + 1}" />"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
 								</td>
 								<td>
-									<input type="text" id="textASTSDescriptionOfRestaurationLab_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+									<textarea id="textASTSDescriptionOfRestaurationLab_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td class="labelLeft">
 									<label for="selectASTSSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -1827,7 +1827,7 @@
 								<label for="textASTSDescriptionOfRestaurationLab_1"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASTSDescriptionOfRestaurationLab_1" />
+								<textarea id="textASTSDescriptionOfRestaurationLab_1"></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="selectASTSSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -1848,7 +1848,7 @@
 							<label for="textASTSDescriptionOfRestaurationLab_1"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASTSDescriptionOfRestaurationLab_1" />
+							<textarea id="textASTSDescriptionOfRestaurationLab_1"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="selectASTSSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -1930,10 +1930,10 @@
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASRSEmail_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#restorationlabEmailHref[#internalStatus.index]" />" />
+										<textarea id="textASRSEmail_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#restorationlabEmailHref[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASRSEmail" value="<s:property value="#restorationlabEmailHref[#internalStatus.index]" />" />
+										<textarea id="textASRSEmail"><s:property value="#restorationlabEmailHref[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
@@ -1946,10 +1946,10 @@
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASRSEmailLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#restorationlabEmailTitle[#internalStatus.index]" />" />
+										<textarea id="textASRSEmailLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#restorationlabEmailTitle[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASRSEmailLinkTitle" value="<s:property value="#restorationlabEmailTitle[#internalStatus.index]" />" />
+										<textarea id="textASRSEmailLinkTitle"><s:property value="#restorationlabEmailTitle[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 							</tr>
@@ -1961,13 +1961,13 @@
 								<label for="textASRSEmail"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASRSEmail" />
+								<textarea id="textASRSEmail"></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="textASRSEmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASRSEmailLinkTitle" />
+								<textarea id="textASRSEmailLinkTitle"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -1978,13 +1978,13 @@
 							<label for="textASRSEmail"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASRSEmail" />
+							<textarea id="textASRSEmail"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="textASRSEmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASRSEmailLinkTitle" />
+							<textarea id="textASRSEmailLinkTitle"></textarea>
 						</td>
 					</tr>
 				</s:else>
@@ -2006,10 +2006,10 @@
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASRSWebpage_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#restorationlabWebpageHref[#internalStatus.index]" />" />
+										<textarea id="textASRSWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#restorationlabWebpageHref[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASRSWebpage" value="<s:property value="#restorationlabWebpageHref[#internalStatus.index]" />" />
+										<textarea id="textASRSWebpage"><s:property value="#restorationlabWebpageHref[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
@@ -2022,10 +2022,10 @@
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASRSWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#restorationlabWebpageTitle[#internalStatus.index]" />" />
+										<textarea id="textASRSWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#restorationlabWebpageTitle[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASRSWebpageLinkTitle" value="<s:property value="#restorationlabWebpageTitle[#internalStatus.index]" />" />
+										<textarea id="textASRSWebpageLinkTitle"><s:property value="#restorationlabWebpageTitle[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 							</tr>
@@ -2037,13 +2037,13 @@
 								<label for="textASRSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASRSWebpage" />
+								<textarea id="textASRSWebpage"></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="textASRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASRSWebpageLinkTitle" />
+								<textarea id="textASRSWebpageLinkTitle"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -2054,13 +2054,13 @@
 							<label for="textASRSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASRSWebpage" />
+							<textarea id="textASRSWebpage"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="textASRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASRSWebpageLinkTitle" />
+							<textarea id="textASRSWebpageLinkTitle"></textarea>
 						</td>
 					</tr>
 				</s:else>
@@ -2108,7 +2108,7 @@
 									<label for="textASTSDescriptionOfReproductionService_<s:property value="%{#internalStatus.index + 1}" />"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
 								</td>
 								<td>
-									<input type="text" id="textASTSDescriptionOfReproductionService_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+									<textarea id="textASTSDescriptionOfReproductionService_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td class="labelLeft">
 									<label for="selectASTSRSSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -2129,7 +2129,7 @@
 								<label for="textASTSDescriptionOfReproductionService_1"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASTSDescriptionOfReproductionService_1" />
+								<textarea id="textASTSDescriptionOfReproductionService_1"></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="selectASTSRSSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -2150,7 +2150,7 @@
 							<label for="textASTSDescriptionOfReproductionService_1"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASTSDescriptionOfReproductionService_1" />
+							<textarea id="textASTSDescriptionOfReproductionService_1"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="selectASTSRSSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -2232,10 +2232,10 @@
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASTSRSEmailAddress_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#reproductionserEmailHref[#internalStatus.index]" />" />
+										<textarea id="textASTSRSEmailAddress_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#reproductionserEmailHref[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASTSRSEmailAddress" value="<s:property value="#reproductionserEmailHref[#internalStatus.index]" />" />
+										<textarea id="textASTSRSEmailAddress"><s:property value="#reproductionserEmailHref[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
@@ -2248,10 +2248,10 @@
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASTSEmailAddressLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#reproductionserEmailTitle[#internalStatus.index]" />" />
+										<textarea id="textASTSEmailAddressLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#reproductionserEmailTitle[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASTSEmailAddressLinkTitle" value="<s:property value="#reproductionserEmailTitle[#internalStatus.index]" />" />
+										<textarea id="textASTSEmailAddressLinkTitle"><s:property value="#reproductionserEmailTitle[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 							</tr>
@@ -2263,13 +2263,13 @@
 								<label for="textASTSRSEmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASTSRSEmailAddress" />
+								<textarea id="textASTSRSEmailAddress"></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="textASTSEmailAddressLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASTSEmailAddressLinkTitle" />
+								<textarea id="textASTSEmailAddressLinkTitle"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -2280,13 +2280,13 @@
 							<label for="textASTSRSEmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASTSRSEmailAddress" />
+							<textarea id="textASTSRSEmailAddress"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="textASTSEmailAddressLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASTSEmailAddressLinkTitle" />
+							<textarea id="textASTSEmailAddressLinkTitle"></textarea>
 						</td>
 					</tr>
 				</s:else>
@@ -2308,10 +2308,10 @@
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASTSRSWebpage_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#reproductionserWebpageHref[#internalStatus.index]" />" />
+										<textarea id="textASTSRSWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#reproductionserWebpageHref[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASTSRSWebpage" value="<s:property value="#reproductionserWebpageHref[#internalStatus.index]" />" />
+										<textarea id="textASTSRSWebpage"><s:property value="#reproductionserWebpageHref[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
@@ -2324,10 +2324,10 @@
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASTSRSWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#reproductionserWebpageTitle[#internalStatus.index]" />" />
+										<textarea id="textASTSRSWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#reproductionserWebpageTitle[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASTSRSWebpageLinkTitle" value="<s:property value="#reproductionserWebpageTitle[#internalStatus.index]" />" />
+										<textarea id="textASTSRSWebpageLinkTitle"><s:property value="#reproductionserWebpageTitle[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 							</tr>
@@ -2339,13 +2339,13 @@
 								<label for="textASTSRSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASTSRSWebpage" />
+								<textarea id="textASTSRSWebpage"></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="textASTSRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASTSRSWebpageLinkTitle" />
+								<textarea id="textASTSRSWebpageLinkTitle"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -2356,13 +2356,13 @@
 							<label for="textASTSRSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASTSRSWebpage" />
+							<textarea id="textASTSRSWebpage"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="textASTSRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASTSRSWebpageLinkTitle" />
+							<textarea id="textASTSRSWebpageLinkTitle"></textarea>
 						</td>
 					</tr>
 				</s:else>
@@ -2516,7 +2516,7 @@
 									<label for="textASReSeRefreshment_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.refreshment')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASReSeRefreshment_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+									<textarea id="textASReSeRefreshment_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td class="labelLeft">
 									<label for="selectASReSeRefreshmentSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -2537,7 +2537,7 @@
 								<label for="textASReSeRefreshment_1"><s:property value="getText('label.ai.accessAndServices.refreshment')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASReSeRefreshment_1" />
+								<textarea id="textASReSeRefreshment_1"></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="selectASReSeRefreshmentSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -2558,7 +2558,7 @@
 							<label for="textASReSeRefreshment_1"><s:property value="getText('label.ai.accessAndServices.refreshment')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASReSeRefreshment_1" />
+							<textarea id="textASReSeRefreshment_1"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="selectASReSeRefreshmentSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -2594,7 +2594,7 @@
 									<label for="textASReSeExhibition_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.exhibition')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASReSeExhibition_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#rsExhibition[#internalStatus.index]" />" />
+									<textarea id="textASReSeExhibition_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#rsExhibition[#internalStatus.index]" /></textarea>
 								</td>
 								<td class="labelLeft">
 									<label for="selectASReSeExhibitionSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -2613,13 +2613,13 @@
 									<label for="textASReSeWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.webpage')"/>:</label>
 								</td>
 								<td>
-									<input type="text" id="textASReSeWebpage_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#rsExhibitionWebpageHref[#internalStatus.index]" />" />
+									<textarea id="textASReSeWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#rsExhibitionWebpageHref[#internalStatus.index]" /></textarea>
 								</td>
 								<td class="labelLeft">
 									<label for="textASReSeWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASReSeWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#rsExhibitionWebpageTitle[#internalStatus.index]" />" />
+									<textarea id="textASReSeWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#rsExhibitionWebpageTitle[#internalStatus.index]" /></textarea>
 								</td>
 							</tr>
 						</s:iterator>
@@ -2630,7 +2630,7 @@
 								<label for="textASReSeExhibition_1"><s:property value="getText('label.ai.accessAndServices.exhibition')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASReSeExhibition_1" />
+								<textarea id="textASReSeExhibition_1"></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="selectASReSeExhibitionSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -2649,13 +2649,13 @@
 								<label for="textASReSeWebpage_1"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASReSeWebpage_1" />
+								<textarea id="textASReSeWebpage_1"></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="textASReSeWebpageLinkTitle_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASReSeWebpageLinkTitle_1" />
+								<textarea id="textASReSeWebpageLinkTitle_1"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -2666,7 +2666,7 @@
 							<label for="textASReSeExhibition_1"><s:property value="getText('label.ai.accessAndServices.exhibition')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASReSeExhibition_1" />
+							<textarea id="textASReSeExhibition_1"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="selectASReSeExhibitionSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -2685,13 +2685,13 @@
 							<label for="textASReSeWebpage_1"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASReSeWebpage_1" />
+							<textarea id="textASReSeWebpage_1"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="textASReSeWebpageLinkTitle_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASReSeWebpageLinkTitle_1" />
+							<textarea id="textASReSeWebpageLinkTitle_1"></textarea>
 						</td>
 					</tr>
 				</s:else>
@@ -2717,7 +2717,7 @@
 									<label for="textASReSeToursAndSessions_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.toursAndSessions')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASReSeToursAndSessions_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#rsToursSessions[#internalStatus.index]" />" />
+									<textarea id="textASReSeToursAndSessions_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#rsToursSessions[#internalStatus.index]" /></textarea>
 								</td>
 								<td class="labelLeft">
 									<label for="selectASReSeToursAndSessionsSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -2736,13 +2736,13 @@
 									<label for="textASReSeTSWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.webpage')"/>:</label>
 								</td>
 								<td>
-									<input type="text" id="textASReSeTSWebpage_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#rsToursSessionsWebpageHref[#internalStatus.index]" />" />
+									<textarea id="textASReSeTSWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#rsToursSessionsWebpageHref[#internalStatus.index]" /></textarea>
 								</td>
 								<td class="labelLeft">
 									<label for="textASReSeWebpageTSLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASReSeWebpageTSLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#rsToursSessionsWebpageTitle[#internalStatus.index]" />" />
+									<textarea id="textASReSeWebpageTSLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#rsToursSessionsWebpageTitle[#internalStatus.index]" /></textarea>
 								</td>
 							</tr>
 						</s:iterator>
@@ -2753,7 +2753,7 @@
 								<label for="textASReSeToursAndSessions_1" ><s:property value="getText('label.ai.accessAndServices.toursAndSessions')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASReSeToursAndSessions_1" />
+								<textarea id="textASReSeToursAndSessions_1"></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="selectASReSeToursAndSessionsSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -2772,13 +2772,13 @@
 								<label for="textASReSeTSWebpage_1"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASReSeTSWebpage_1" />
+								<textarea id="textASReSeTSWebpage_1"></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="textASReSeWebpageTSLinkTitle_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASReSeWebpageTSLinkTitle_1" />
+								<textarea id="textASReSeWebpageTSLinkTitle_1"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -2789,7 +2789,7 @@
 							<label for="textASReSeToursAndSessions_1" ><s:property value="getText('label.ai.accessAndServices.toursAndSessions')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASReSeToursAndSessions_1" />
+							<textarea id="textASReSeToursAndSessions_1"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="selectASReSeToursAndSessionsSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -2808,13 +2808,13 @@
 							<label for="textASReSeTSWebpage_1"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASReSeTSWebpage_1" />
+							<textarea id="textASReSeTSWebpage_1"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="textASReSeWebpageTSLinkTitle_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASReSeWebpageTSLinkTitle_1" />
+							<textarea id="textASReSeWebpageTSLinkTitle_1"></textarea>
 						</td>
 					</tr>
 				</s:else>
@@ -2840,7 +2840,7 @@
 									<label for="textASReSeOtherServices_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.otherServices')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASReSeOtherServices_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#rsOtherServices[#internalStatus.index]" />" />
+									<textarea id="textASReSeOtherServices_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#rsOtherServices[#internalStatus.index]" /></textarea>
 								</td>
 								<td class="labelLeft">
 									<label for="selectASReSeOtherServicesSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -2859,13 +2859,13 @@
 									<label for="textASReSeOSWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.webpage')"/>:</label>
 								</td>
 								<td>
-									<input type="text" id="textASReSeOSWebpage_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#rsOtherServicesWebpageHref[#internalStatus.index]" />" />
+									<textarea id="textASReSeOSWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#rsOtherServicesWebpageHref[#internalStatus.index]" /></textarea>
 								</td>
 								<td class="labelLeft">
 									<label for="textASReSeWebpageOSLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASReSeWebpageOSLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#rsOtherServicesWebpageTitle[#internalStatus.index]" />" />
+									<textarea id="textASReSeWebpageOSLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#rsOtherServicesWebpageTitle[#internalStatus.index]" /></textarea>
 								</td>
 							</tr>
 						</s:iterator>
@@ -2876,7 +2876,7 @@
 								<label for="textASReSeOtherServices_1" ><s:property value="getText('label.ai.accessAndServices.otherServices')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASReSeOtherServices_1" />
+								<textarea id="textASReSeOtherServices_1"></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="selectASReSeOtherServicesSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -2895,13 +2895,13 @@
 								<label for="textASReSeOSWebpage_1"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASReSeOSWebpage_1" />
+								<textarea id="textASReSeOSWebpage_1"></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="textASReSeWebpageOSLinkTitle_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASReSeWebpageOSLinkTitle_1" />
+								<textarea id="textASReSeWebpageOSLinkTitle_1"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -2912,7 +2912,7 @@
 							<label for="textASReSeOtherServices_1" ><s:property value="getText('label.ai.accessAndServices.otherServices')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASReSeOtherServices_1" />
+							<textarea id="textASReSeOtherServices_1"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="selectASReSeOtherServicesSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -2931,13 +2931,13 @@
 							<label for="textASReSeOSWebpage_1"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASReSeOSWebpage_1" />
+							<textarea id="textASReSeOSWebpage_1"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="textASReSeWebpageOSLinkTitle_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASReSeWebpageOSLinkTitle_1" />
+							<textarea id="textASReSeWebpageOSLinkTitle_1"></textarea>
 						</td>
 					</tr>
 				</s:else>
@@ -2970,7 +2970,7 @@
 				<label for="textOpeningTimes_1"><s:property value="getText('label.ai.tabs.commons.openingTimes')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textOpeningTimes_1" onchange="aSOpeningHoursOfInstitutionChanged($(this));" />
+				<textarea id="textOpeningTimes_1" onchange="aSOpeningHoursOfInstitutionChanged($(this));"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectLanguageOpeningTimes_1" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -2997,7 +2997,7 @@
 				<label for="textClosingDates_1"><s:property value="getText('label.ai.tabs.commons.closingDates')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textClosingDates_1" onchange="aSClosingHoursOfInstitutionChanged($(this));" />
+				<textarea id="textClosingDates_1" onchange="aSClosingHoursOfInstitutionChanged($(this));"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectLanguageClosingDates_1" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -3043,7 +3043,7 @@
 				<label for="textTravelLink_1"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 			</td>
 			<td colspan="2">
-				<input type="text" id="textTravelLink_1" />
+				<textarea id="textTravelLink_1"></textarea>
 			</td>
 			<td colspan="2">
 			</td>
@@ -3077,7 +3077,7 @@
 				<label for="textASAccessRestrictions_1"><s:property value="getText('label.ai.accessAndServices.accessRestrictions')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASAccessRestrictions_1" onchange="aSFutherAccessInformationChanged($(this));" />
+				<textarea id="textASAccessRestrictions_1" onchange="aSFutherAccessInformationChanged($(this));"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectASARSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -3123,7 +3123,7 @@
 				<label for="textASTOULink_1"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTOULink_1" />
+				<textarea id="textASTOULink_1"></textarea>
 			</td>
 			<td colspan="2">
 			</td>
@@ -3155,7 +3155,7 @@
 				<label for="textASAccessibility_1"><s:property value="getText('label.ai.accessAndServices.accesibility')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASAccessibility_1" onchange="aSFutherInformationOnExistingFacilitiesChanged($(this));" />
+				<textarea id="textASAccessibility_1" onchange="aSFutherInformationOnExistingFacilitiesChanged($(this));"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectASASelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -3199,13 +3199,13 @@
 				<label for="textASSREmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSREmailAddress" />
+				<textarea id="textASSREmailAddress"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="textASSREmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSREmailLinkTitle" />
+				<textarea id="textASSREmailLinkTitle"></textarea>
 			</td>
 		</tr>
 
@@ -3214,13 +3214,13 @@
 				<label for="textASSRWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRWebpage" />
+				<textarea id="textASSRWebpage"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="textASSRWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRWebpageLinkTitle" />
+				<textarea id="textASSRWebpageLinkTitle"></textarea>
 			</td>
 		</tr>
 
@@ -3278,7 +3278,7 @@
 				<label for="textASSRReadersTicket_1"><s:property value="getText('label.ai.accessAndServices.readersTicket')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRReadersTicket_1" />
+				<textarea id="textASSRReadersTicket_1"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectReadersTickectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -3297,7 +3297,7 @@
 				<label for="textASSRRTLink_1"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRRTLink_1" />
+				<textarea id="textASSRRTLink_1"></textarea>
 			</td>
 			<td colspan="2">
 			</td>
@@ -3316,7 +3316,7 @@
 				<label for="textASSRAdvancedOrders_1"><s:property value="getText('label.ai.accessAndServices.advancedOrders')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRAdvancedOrders_1" />
+				<textarea id="textASSRAdvancedOrders_1"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectASSRAFOIUSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -3335,7 +3335,7 @@
 				<label for="textASSRAOLink_1"><s:property value="getText('label.ai.accessAndServices.link')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRAOLink_1" />
+				<textarea id="textASSRAOLink_1"></textarea>
 			</td>
 			<td colspan="2">
 			</td>
@@ -3354,7 +3354,7 @@
 				<label for="textASSRResearchServices_1"><s:property value="getText('label.ai.accessAndServices.researchServices')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRResearchServices_1" />
+				<textarea id="textASSRResearchServices_1"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="textASSRRSSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -3407,13 +3407,13 @@
 				<label for="textASLEmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASLEmailAddress" />
+				<textarea id="textASLEmailAddress"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="textASLEmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASLEmailLinkTitle" />
+				<textarea id="textASLEmailLinkTitle"></textarea>
 			</td>
 		</tr>
 
@@ -3422,13 +3422,13 @@
 				<label for="textASLWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASLWebpage" />
+				<textarea id="textASLWebpage"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="textASLWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASLWebpageLinkTitle" />
+				<textarea id="textASLWebpageLinkTitle"></textarea>
 			</td>
 		</tr>
 
@@ -3467,7 +3467,7 @@
 				<label for="textASDescription_1"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASDescription_1" />
+				<textarea id="textASDescription_1"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectASDSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -3515,7 +3515,7 @@
 				<label for="textASTSDescriptionOfRestaurationLab_1"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSDescriptionOfRestaurationLab_1" />
+				<textarea id="textASTSDescriptionOfRestaurationLab_1"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectASTSSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -3553,13 +3553,13 @@
 				<label for="textASRSEmail"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASRSEmail" />
+				<textarea id="textASRSEmail"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="textASRSEmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASRSEmailLinkTitle" />
+				<textarea id="textASRSEmailLinkTitle"></textarea>
 			</td>
 		</tr>
 
@@ -3568,13 +3568,13 @@
 				<label for="textASRSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASRSWebpage" />
+				<textarea id="textASRSWebpage"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="textASRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASRSWebpageLinkTitle" />
+				<textarea id="textASRSWebpageLinkTitle"></textarea>
 			</td>
 		</tr>
 
@@ -3598,7 +3598,7 @@
 				<label for="textASTSDescriptionOfReproductionService_1"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSDescriptionOfReproductionService_1" />
+				<textarea id="textASTSDescriptionOfReproductionService_1"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectASTSRSSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -3636,13 +3636,13 @@
 				<label for="textASTSRSEmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSRSEmailAddress" />
+				<textarea id="textASTSRSEmailAddress"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="textASTSEmailAddressLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSEmailAddressLinkTitle" />
+				<textarea id="textASTSEmailAddressLinkTitle"></textarea>
 			</td>
 		</tr>
 
@@ -3651,13 +3651,13 @@
 				<label for="textASTSRSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSRSWebpage" />
+				<textarea id="textASTSRSWebpage"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="textASTSRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSRSWebpageLinkTitle" />
+				<textarea id="textASTSRSWebpageLinkTitle"></textarea>
 			</td>
 		</tr>
 
@@ -3733,7 +3733,7 @@
 				<label for="textASReSeRefreshment_1"><s:property value="getText('label.ai.accessAndServices.refreshment')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeRefreshment_1" />
+				<textarea id="textASReSeRefreshment_1"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectASReSeRefreshmentSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -3760,7 +3760,7 @@
 				<label for="textASReSeExhibition_1"><s:property value="getText('label.ai.accessAndServices.exhibition')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeExhibition_1" />
+				<textarea id="textASReSeExhibition_1"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectASReSeExhibitionSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -3779,13 +3779,13 @@
 				<label for="textASReSeWebpage_1"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeWebpage_1" />
+				<textarea id="textASReSeWebpage_1"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="textASReSeWebpageLinkTitle_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeWebpageLinkTitle_1" />
+				<textarea id="textASReSeWebpageLinkTitle_1"></textarea>
 			</td>
 		</tr>
 
@@ -3802,7 +3802,7 @@
 				<label for="textASReSeToursAndSessions_1" ><s:property value="getText('label.ai.accessAndServices.toursAndSessions')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeToursAndSessions_1" />
+				<textarea id="textASReSeToursAndSessions_1"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectASReSeToursAndSessionsSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -3821,13 +3821,13 @@
 				<label for="textASReSeTSWebpage_1"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeTSWebpage_1" />
+				<textarea id="textASReSeTSWebpage_1"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="textASReSeWebpageTSLinkTitle_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeWebpageTSLinkTitle_1" />
+				<textarea id="textASReSeWebpageTSLinkTitle_1"></textarea>
 			</td>
 		</tr>
 
@@ -3844,7 +3844,7 @@
 				<label for="textASReSeOtherServices_1" ><s:property value="getText('label.ai.accessAndServices.otherServices')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeOtherServices_1" />
+				<textarea id="textASReSeOtherServices_1"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectASReSeOtherServicesSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -3863,13 +3863,13 @@
 				<label for="textASReSeOSWebpage_1"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeOSWebpage_1" />
+				<textarea id="textASReSeOSWebpage_1"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="textASReSeWebpageOSLinkTitle_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeWebpageOSLinkTitle_1" />
+				<textarea id="textASReSeWebpageOSLinkTitle_1"></textarea>
 			</td>
 		</tr>
 

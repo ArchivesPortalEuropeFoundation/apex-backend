@@ -237,9 +237,8 @@
 #recreationalServiceLabel {
 	border-bottom: 1px solid #00a0df;
 }
-
 textarea {
-	height: 100px;
+	height:60px;
 	width: 200px;
 	font-weight: bold;
 }

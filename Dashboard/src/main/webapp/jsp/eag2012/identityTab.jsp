@@ -22,7 +22,7 @@
 				<label  for="textIdentityIdentifierOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.identifierOfTheInstitution')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textIdentityIdentifierOfTheInstitution" value="${loader.otherRepositorId}" disabled="disabled" />
+				<textarea id="textIdentityIdentifierOfTheInstitution" disabled="disabled">${loader.otherRepositorId}</textarea>
 			</td>
 			<td id="tdIdUsedInAPE" class="labelLeft">
 				<label  for="textIdentityIdUsedInAPE"><s:property value="getText('label.ai.tabs.commons.idUsedInAPE')" />:</label>
@@ -48,10 +48,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textNameOfTheInstitution" value="<s:property value="#current" />" disabled="disabled" onchange="nameOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutform}');" />
+							<textarea id="textNameOfTheInstitution" disabled="disabled" onchange="nameOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutform}');"><s:property value="#current" /></textarea>
 						</s:if>
 						<s:else>
-							<input type="text" id="textNameOfTheInstitution" value="<s:property value="#current" />" onchange="nameOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutform}');" />
+							<textarea id="textNameOfTheInstitution" onchange="nameOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutform}');"><s:property value="#current" /></textarea>
 						</s:else>
 					</td>
 					<td id="tdNameOfTheInstitutionLanguage" class="labelLeft">
@@ -81,7 +81,7 @@
 					<label for="textNameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.nameOfTheInstitution')" /><span class="required">*</span>:</label>
 				</td>
 				<td>
-					<input type="text" id="textNameOfTheInstitution" disabled="disabled" onchange="nameOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutform}');" />
+					<textarea id="textNameOfTheInstitution" disabled="disabled" onchange="nameOfInstitutionChanged('<s:property value="getText('label.ai.tabs.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutform}');"></textarea>
 				</td>
 				<td id="tdNameOfTheInstitutionLanguage" class="labelLeft">
 					<label for="noti_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -118,10 +118,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<input type="text" id="textParallelNameOfTheInstitution" value="<s:property value="#current" />" disabled="disabled" />
+							<textarea id="textParallelNameOfTheInstitution" disabled="disabled"><s:property value="#current" /></textarea>
 						</s:if>
 						<s:else>
-							<input type="text" id="textParallelNameOfTheInstitution" value="<s:property value="#current" />" />
+							<textarea id="textParallelNameOfTheInstitution"><s:property value="#current" /></textarea>
 						</s:else>
 					</td>
 					<td id="tdNameOfTheInstitutionLanguage" class="labelLeft">
@@ -151,7 +151,7 @@
 					<label for="textParallelNameOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.parallelNameOfTheInstitution')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textParallelNameOfTheInstitution" disabled="disabled" />
+					<textarea id="textParallelNameOfTheInstitution" disabled="disabled"></textarea>
 				</td>
 				<td id="tdNameOfTheInstitutionLanguage" class="labelLeft">
 					<label for="pnoti_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -186,7 +186,7 @@
 							<label for="textFormerlyUsedName"><s:property value="getText('label.ai.identity.formerlyUsedName')" /></label>
 						</td>
 						<td>
-							<input type="text" id="textFormerlyUsedName" value="<s:property value="#current" />" />
+							<textarea id="textFormerlyUsedName"><s:property value="#current" /></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="tfun_languageList"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" /></label>

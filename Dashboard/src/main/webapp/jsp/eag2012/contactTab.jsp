@@ -17,7 +17,7 @@
 							<label for="textNameOfRepository"><s:property value="getText('label.ai.contact.nameOfRepository')" /><span class="required">*</span>:</label>
 						</td>
 						<td>
-							<input type="text" id="textNameOfRepository" value="<s:property value="#repositoryName[0]" />" onchange="contactChangeTabName('<s:property value="getText('label.ai.yourinstitution.repository')" />');" />
+							<textarea id="textNameOfRepository" onchange="contactChangeTabName('<s:property value="getText('label.ai.yourinstitution.repository')" />');"><s:property value="#repositoryName[0]" /></textarea>
 						<td>
 							<label for="selectRoleOfRepository"><s:property value="getText('label.ai.contact.roleOfRepository')" /><span class="required">*</span>:</label>
 						</td>
@@ -67,13 +67,13 @@
 										</td>
 										<td>
 											<s:if test="%{#counter > 0}">
-												<input type="text" id="textContactStreetOfTheInstitution" value="<s:property value="#street[#internalCounter]" />" />
+												<textarea id="textContactStreetOfTheInstitution"><s:property value="#street[#internalCounter]" /></textarea>
 											</s:if>
 											<s:elseif test="%{#internalStatus.index == 0}">
-												<input type="text" id="textContactStreetOfTheInstitution" onchange="contactStreetOfInstitutionChanged($(this).parent().parent().parent().parent());" value="<s:property value="#street[#internalCounter]" />" disabled="disabled" />
+												<textarea id="textContactStreetOfTheInstitution" onchange="contactStreetOfInstitutionChanged($(this).parent().parent().parent().parent());" disabled="disabled"><s:property value="#street[#internalCounter]" /></textarea>
 											</s:elseif>
 											<s:else>
-												<input type="text" id="textContactStreetOfTheInstitution" onchange="contactStreetOfInstitutionChanged($(this).parent().parent().parent().parent());" value="<s:property value="#street[#internalCounter]" />" />
+												<textarea id="textContactStreetOfTheInstitution" onchange="contactStreetOfInstitutionChanged($(this).parent().parent().parent().parent());"><s:property value="#street[#internalCounter]" /></textarea>
 											</s:else>
 										</td>
 										<td id="tdLanguageVisitorAddress" class="labelLeft">
@@ -104,13 +104,13 @@
 										</td>
 										<td>
 											<s:if test="%{#counter > 0}">
-												<input type="text" id="textContactCityOfTheInstitution" value="<s:property value="#municipality[#internalCounter]" />" />
+												<textarea id="textContactCityOfTheInstitution"><s:property value="#municipality[#internalCounter]" /></textarea>
 											</s:if>
 											<s:elseif test="%{#internalStatus.index == 0}">
-												<input type="text" id="textContactCityOfTheInstitution" onchange="contactCityOfInstitutionChanged($(this).parent().parent().parent().parent());" value="<s:property value="#municipality[#internalCounter]" />" disabled="disabled" />
+												<textarea id="textContactCityOfTheInstitution" onchange="contactCityOfInstitutionChanged($(this).parent().parent().parent().parent());" disabled="disabled"><s:property value="#municipality[#internalCounter]" /></textarea>
 											</s:elseif>
 											<s:else>
-												<input type="text" id="textContactCityOfTheInstitution" onchange="contactCityOfInstitutionChanged($(this).parent().parent().parent().parent());" value="<s:property value="#municipality[#internalCounter]" />" />
+												<textarea id="textContactCityOfTheInstitution" onchange="contactCityOfInstitutionChanged($(this).parent().parent().parent().parent());"><s:property value="#municipality[#internalCounter]" /></textarea>
 											</s:else>
 										</td>
 										<td colspan="2">
@@ -122,7 +122,7 @@
 											<label for="textContactDistrictOfTheInstitution"><s:property value="getText('label.ai.contact.districtOfTheInstitution')" />:</label>
 										</td>
 										<td>
-											<input type="text" id="textContactDistrictOfTheInstitution" value="<s:property value="#localentity[#internalCounter]" />" />
+											<textarea id="textContactDistrictOfTheInstitution"><s:property value="#localentity[#internalCounter]" /></textarea>
 										</td>
 										<td colspan="2">
 										</td>
@@ -133,7 +133,7 @@
 											<label for="textContactCountyOfTheInstitution"><s:property value="getText('label.ai.contact.countyOfTheInstitution')" />:</label>
 										</td>
 										<td>
-											<input type="text" id="textContactCountyOfTheInstitution" value="<s:property value="#secondem[#internalCounter]" />" />
+											<textarea id="textContactCountyOfTheInstitution"><s:property value="#secondem[#internalCounter]" /></textarea>
 										</td>
 										<td colspan="2">
 										</td>
@@ -144,7 +144,7 @@
 											<label for="textContactRegionOfTheInstitution"><s:property value="getText('label.ai.contact.regionOfTheInstitution')" />:</label>
 										</td>
 										<td>
-											<input type="text" id="textContactRegionOfTheInstitution" value="<s:property value="#firstdem[#internalCounter]" />" />
+											<textarea id="textContactRegionOfTheInstitution"><s:property value="#firstdem[#internalCounter]" /></textarea>
 										</td>
 										<td colspan="2">
 										</td>
@@ -161,13 +161,13 @@
 										</td>
 										<td>
 											<s:if test="%{#counter > 0}">
-												<input type="text" id="textContactCountryOfTheInstitution" value="<s:property value="#country[#internalCounter]" />" />
+												<textarea id="textContactCountryOfTheInstitution"><s:property value="#country[#internalCounter]" /></textarea>
 											</s:if>
 											<s:elseif test="%{#internalStatus.index == 0}">
-												<input type="text" id="textContactCountryOfTheInstitution" onchange="contactCountryOfInstitutionChanged($(this).parent().parent().parent().parent());" value="<s:property value="#country[#internalCounter]" />" disabled="disabled" />
+												<textarea id="textContactCountryOfTheInstitution" onchange="contactCountryOfInstitutionChanged($(this).parent().parent().parent().parent());" disabled="disabled"><s:property value="#country[#internalCounter]" /></textarea>
 											</s:elseif>
 											<s:else>
-												<input type="text" id="textContactCountryOfTheInstitution" onchange="contactCountryOfInstitutionChanged($(this).parent().parent().parent().parent());" value="<s:property value="#country[#internalCounter]" />" />
+												<textarea id="textContactCountryOfTheInstitution" onchange="contactCountryOfInstitutionChanged($(this).parent().parent().parent().parent());"><s:property value="#country[#internalCounter]" /></textarea>
 											</s:else>
 										</td>
 										<td colspan="2">
@@ -244,10 +244,10 @@
 										</td>
 										<td>
 											<s:if test="%{#counter > 0}">
-												<input type="text" id="textContactPAStreet" value="<s:property value="#postalStreet[#internalCounter]" />" />
+												<textarea id="textContactPAStreet"><s:property value="#postalStreet[#internalCounter]" /></textarea>
 											</s:if>
 											<s:else>
-												<input type="text" id="textContactPAStreet" onchange="contactAddressStreetChanged($(this).parent().parent().parent().parent());" value="<s:property value="#postalStreet[#internalCounter]" />" />
+												<textarea id="textContactPAStreet" onchange="contactAddressStreetChanged($(this).parent().parent().parent().parent());"><s:property value="#postalStreet[#internalCounter]" /></textarea>
 											</s:else>
 										</td>
 										<td id="contactPostalAddressLanguage" class="labelLeft">
@@ -281,10 +281,10 @@
 										</td>
 										<td>
 											<s:if test="%{#counter > 0}">
-												<input type="text" id="textContactPACity" value="<s:property value="#postalMunicipality[#internalCounter]" />" />
+												<textarea id="textContactPACity"><s:property value="#postalMunicipality[#internalCounter]" /></textarea>
 											</s:if>
 											<s:else>
-												<input type="text" id="textContactPACity" onchange="contactAddressCityChanged($(this).parent().parent().parent().parent());" value="<s:property value="#postalMunicipality[#internalCounter]" />" />
+												<textarea id="textContactPACity" onchange="contactAddressCityChanged($(this).parent().parent().parent().parent());"><s:property value="#postalMunicipality[#internalCounter]" /></textarea>
 											</s:else>
 										</td>
 										<td colspan="2">
@@ -469,7 +469,7 @@
 								<label for="textContactEmailOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textContactEmailOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#emailHref[#internalCounter]" />" onchange="contactEmailChanged($(this));"/>
+								<textarea id="textContactEmailOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" onchange="contactEmailChanged($(this));"><s:property value="#emailHref[#internalCounter]" /></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="selectEmailLanguageOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -496,7 +496,7 @@
 								<label for="textContactLinkTitleForEmailOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textContactLinkTitleForEmailOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#emailTitle[#internalCounter]" />" onchange="contactEmailOfInstitutionLinkChanged($(this));" />
+								<textarea id="textContactLinkTitleForEmailOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" onchange="contactEmailOfInstitutionLinkChanged($(this));"><s:property value="#emailTitle[#internalCounter]" /></textarea>
 							</td>
 						    <td colspan="2">
 						    </td>
@@ -516,7 +516,7 @@
 							<label for="textContactEmailOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textContactEmailOfTheInstitution_1" onchange="contactEmailChanged($(this));"/>
+							<textarea id="textContactEmailOfTheInstitution_1" onchange="contactEmailChanged($(this));"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="selectEmailLanguageOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -534,7 +534,7 @@
 							<label for="textContactLinkTitleForEmailOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textContactLinkTitleForEmailOfTheInstitution_1" onchange="contactEmailOfInstitutionLinkChanged($(this));" />
+							<textarea id="textContactLinkTitleForEmailOfTheInstitution_1" onchange="contactEmailOfInstitutionLinkChanged($(this));"></textarea>
 						</td>
 						<td colspan="2">
 						</td>
@@ -564,7 +564,7 @@
 								<label for="textContactWebOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textContactWebOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#webpageHref[#internalCounter]" />" onchange="contactWebpageChanged($(this));"/>
+								<textarea id="textContactWebOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" onchange="contactWebpageChanged($(this));"><s:property value="#webpageHref[#internalCounter]" /></textarea>
 							</td>
 							<td class="labelLeft">
 								<label for="selectWebpageLanguageOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -590,7 +590,7 @@
 								<label for="textContactLinkTitleForWebOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textContactLinkTitleForWebOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#webpageTitle[#internalCounter]" />" onchange="contactWebOfInstitutionLinkChanged($(this));" />
+								<textarea id="textContactLinkTitleForWebOfTheInstitution_<s:property value="%{#internalStatus.index + 1}" />" onchange="contactWebOfInstitutionLinkChanged($(this));"><s:property value="#webpageTitle[#internalCounter]" /></textarea>
 							</td>
 							<td colspan="2">
 							</td>
@@ -610,7 +610,7 @@
 							<label for="textContactWebOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textContactWebOfTheInstitution_1" onchange="contactWebpageChanged($(this));"/>
+							<textarea id="textContactWebOfTheInstitution_1" onchange="contactWebpageChanged($(this));"></textarea>
 						</td>
 						<td class="labelLeft">
 							<label for="selectWebpageLanguageOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -629,7 +629,7 @@
 							<label for="textContactLinkTitleForWebOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textContactLinkTitleForWebOfTheInstitution_1" onchange="contactWebOfInstitutionLinkChanged($(this));" />
+							<textarea id="textContactLinkTitleForWebOfTheInstitution_1" onchange="contactWebOfInstitutionLinkChanged($(this));"></textarea>
 						</td>
 						<td colspan="2">
 						</td>
@@ -671,7 +671,7 @@
 					<label for="textContactStreetOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.street')" /><span class="required">*</span>:</label>
 				</td>
 				<td>
-					<input type="text" id="textContactStreetOfTheInstitution" onchange="contactStreetOfInstitutionChanged($(this).parent().parent().parent().parent());" disabled="disabled" />
+					<textarea id="textContactStreetOfTheInstitution" onchange="contactStreetOfInstitutionChanged($(this).parent().parent().parent().parent());" disabled="disabled"></textarea>
 				</td>
 				<td id="tdLanguageVisitorAddress" class="labelLeft">
 					<label for="selectLanguageVisitorAddress" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -690,7 +690,7 @@
 					<label for="textContactCityOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')" /><span class="required">*</span>:</label>
 				</td>
 				<td>
-					<input type="text" id="textContactCityOfTheInstitution" disabled="disabled" />
+					<textarea id="textContactCityOfTheInstitution" disabled="disabled"></textarea>
 				</td>
 				<td colspan="2">
 				</td>
@@ -701,7 +701,7 @@
 					<label for="textContactDistrictOfTheInstitution"><s:property value="getText('label.ai.contact.districtOfTheInstitution')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textContactDistrictOfTheInstitution" />
+					<textarea id="textContactDistrictOfTheInstitution"></textarea>
 				</td>
 				<td colspan="2">
 				</td>
@@ -712,7 +712,7 @@
 					<label for="textContactCountyOfTheInstitution"><s:property value="getText('label.ai.contact.countyOfTheInstitution')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textContactCountyOfTheInstitution" />
+					<textarea id="textContactCountyOfTheInstitution"></textarea>
 				</td>
 				<td colspan="2">
 				</td>
@@ -723,7 +723,7 @@
 					<label for="textContactRegionOfTheInstitution"><s:property value="getText('label.ai.contact.regionOfTheInstitution')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textContactRegionOfTheInstitution" />
+					<textarea id="textContactRegionOfTheInstitution"></textarea>
 				</td>
 				<td colspan="2">
 				</td>
@@ -734,7 +734,7 @@
 					<label for="textContactCountryOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.country')" /><span class="required">*</span>:</label>
 				</td>
 				<td>
-					<input type="text" id="textContactCountryOfTheInstitution" onchange="contactCountryOfInstitutionChanged($(this).parent().parent().parent().parent());" disabled="disabled" />
+					<textarea id="textContactCountryOfTheInstitution" onchange="contactCountryOfInstitutionChanged($(this).parent().parent().parent().parent());" disabled="disabled"></textarea>
 				</td>
 				<td colspan="2">
 				</td>
@@ -824,7 +824,7 @@
 				<label for="textContactEmailOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textContactEmailOfTheInstitution_1" onchange="contactEmailChanged($(this));"/>
+				<textarea id="textContactEmailOfTheInstitution_1" onchange="contactEmailChanged($(this));"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectEmailLanguageOfTheInstitution"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -842,7 +842,7 @@
 					<label for="textContactLinkTitleForEmailOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textContactLinkTitleForEmailOfTheInstitution_1" onchange="contactEmailOfInstitutionLinkChanged($(this));" />
+					<textarea id="textContactLinkTitleForEmailOfTheInstitution_1" onchange="contactEmailOfInstitutionLinkChanged($(this));"></textarea>
 				</td>
 				<td colspan="2"></td>
 		</tr>
@@ -857,7 +857,7 @@
 				<label for="textContactWebOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textContactWebOfTheInstitution_1" onchange="contactWebpageChanged($(this));"/>
+				<textarea id="textContactWebOfTheInstitution_1" onchange="contactWebpageChanged($(this));"></textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectWebpageLanguageOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
@@ -875,7 +875,7 @@
 				<label for="textContactLinkTitleForWebOfTheInstitution_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textContactLinkTitleForWebOfTheInstitution_1" onchange="contactWebOfInstitutionLinkChanged($(this));" />
+				<textarea id="textContactLinkTitleForWebOfTheInstitution_1" onchange="contactWebOfInstitutionLinkChanged($(this));"></textarea>
 			</td>
 			<td colspan="2">
 			</td>

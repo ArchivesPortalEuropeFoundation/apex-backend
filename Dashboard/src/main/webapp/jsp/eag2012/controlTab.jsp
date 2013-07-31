@@ -22,7 +22,7 @@
 				<label for="textPesonResponsible"><s:property value="getText('label.ai.control.pesonresponsible')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textPesonResponsible" value="${loader.agent}" onchange="controlPersonResponsibleForDescriptionChanged();" />
+				<textarea id="textPesonResponsible" onchange="controlPersonResponsibleForDescriptionChanged();">${loader.agent}</textarea>
 			</td>
 			<td id="tdLanguagePesonresponsible" class="labelLeft">
 				<label for="selectLanguagePesonresponsible"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
@@ -147,7 +147,7 @@
 						<label for="textContactFullName_<s:property value="%{#status.index + 1}" />"><s:property value="getText('label.ai.control.fullName')" />:</label>
 					</td>
 					<td>
-						<input type="text" id="textContactFullName_<s:property value="%{#status.index + 1}" />" value="<s:property value="#usedFullName" />" />
+						<textarea id="textContactFullName_<s:property value="%{#status.index + 1}" />"><s:property value="#usedFullName" /></textarea>
 					</td>
 					<td colspan="2">
 					</td>
@@ -172,7 +172,7 @@
 					<label for="textContactFullName_1"><s:property value="getText('label.ai.control.fullName')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textContactFullName_1" />
+					<textarea id="textContactFullName_1"></textarea>
 				</td>
 				<td colspan="2">
 				</td>
