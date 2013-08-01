@@ -75,13 +75,13 @@ public class HarvesterAjaxAction extends AjaxControllerAbstractAction {
                 else
                     writer.append(new JSONObject().put("finished", true).toString());
             } catch (Exception e){
-                LOG.error("Could not finish harvesting, we start again with previous token", e);
-                writer.append(new JSONObject().put("currentToken", oaiToken).toString());
+                LOG.error("Could not finish harvesting, there is a problem to be checked with oaiToken: " + oaiToken + " - token: " + token, e);
+                writer.append(new JSONObject().put("error", true).toString());
             }
 
             writer.close();
             out.close();
-            LOG.info("Retrieved token: " + token);
+            LOG.debug("Retrieved token: " + token);
 
             final HttpSession session = getServletRequest().getSession();
 
