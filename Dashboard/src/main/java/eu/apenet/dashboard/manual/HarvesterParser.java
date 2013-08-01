@@ -85,9 +85,9 @@ public class HarvesterParser extends AbstractParser {
             if(file == null)
                 throw new Exception("Variable file is null");
 
-            LOG.info("Analyzing stream: " + file.getName());
+            LOG.debug("Analyzing stream: " + file.getName());
             String directory = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("/")+1);
-            LOG.info("Directory: " + directory);
+            LOG.debug("Directory: " + directory);
             SeparateFinnishFiles separateFinnishFiles = new SeparateFinnishFiles();
             List<String> listPaths = separateFinnishFiles.separateFile(file, new File(directory));
             for(String path : listPaths)

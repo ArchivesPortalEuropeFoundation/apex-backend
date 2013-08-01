@@ -58,7 +58,8 @@ public class HarvesterAjaxAction extends AjaxControllerAbstractAction {
             File saveDirectory = new File(pathForFile);
             if(!saveDirectory.exists())
                 saveDirectory.mkdir();
-            String oaiTokenEncoded = APEnetUtilities.encodeString(oaiToken);
+//            String oaiTokenEncoded = APEnetUtilities.encodeString(oaiToken);
+            String oaiTokenEncoded = "token_" + System.currentTimeMillis();
             final File fileOut = new File((StringUtils.isEmpty(oaiTokenEncoded)? pathForFile + "no_token.xml" : pathForFile + oaiTokenEncoded + ".xml"));
             OutputStream out = new FileOutputStream(fileOut);
             String token = "";
@@ -171,5 +172,17 @@ public class HarvesterAjaxAction extends AjaxControllerAbstractAction {
     }
     public void setOaiType(String oaiType) {
         this.oaiType = oaiType;
+    }
+    public String getOaiFromDate() {
+        return oaiFromDate;
+    }
+    public void setOaiFromDate(String oaiFromDate) {
+        this.oaiFromDate = oaiFromDate;
+    }
+    public String getOaiToDate() {
+        return oaiToDate;
+    }
+    public void setOaiToDate(String oaiToDate) {
+        this.oaiToDate = oaiToDate;
     }
 }
