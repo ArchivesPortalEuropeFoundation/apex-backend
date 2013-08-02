@@ -10,20 +10,20 @@
 		<table id="resourceRelationTable_<s:property value="%{#status.index + 1}"/>"class="tablePadding">
 			<tr>
 				<td id="resourceLabel" colspan="4">
-					<label for="resourceLabel"><s:property value="getText('label.ai.relations.resourceRelations')" />:</label>
+					<label for="resourceLabel"><s:property value="getText('eag2012.relations.resourceRelations')" />:</label>
 				</td>
 				
 			</tr>
 	
 			<tr>
 				<td id="tdWebsiteOfResource">
-					<label for="textWebsiteOfResource"><s:property value="getText('label.ai.relations.websiteOfResource')" />:</label>
+					<label for="textWebsiteOfResource"><s:property value="getText('eag2012.relations.linkToResourceRelation')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textWebsiteOfResource" value="<s:property value="loader.relationsResourceRelationHref[#status.index]" />" onchange="relationsLinkToYourHolndingsGuideChanged($(this).parent().parent().parent().parent());" />
+					<textarea id="textWebsiteOfResource" onchange="relationsLinkToYourHolndingsGuideChanged($(this).parent().parent().parent().parent());"><s:property value="loader.relationsResourceRelationHref[#status.index]" /></textarea>
 				</td>
 				<td id="tdTypeOfRelation" class="labelLeft">
-					<label for="selectTypeOfYourRelation"><s:property value="getText('label.ai.relations.typeOfRelation')" />:</label>
+					<label for="selectTypeOfYourRelation"><s:property value="getText('eag2012.relations.typeOfRelation')" />:</label>
 				</td>
 				<td>
 					<select id="selectTypeOfYourRelation" >
@@ -35,13 +35,13 @@
 			</tr>
 			<tr>
 				<td id="tdTitleOfRelatedMaterial">
-					<label for="textTitleOfRelatedMaterial"><s:property value="getText('label.ai.relations.titleOfRelatedMaterial')" />:</label>
+					<label for="textTitleOfRelatedMaterial"><s:property value="getText('eag2012.relations.titleOfRelatedMaterial')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textTitleOfRelatedMaterial" value="<s:property value="loader.relationsResourceRelationEntry[#status.index]" />" onchange="relationsLinkToYourHolndingsGuideTitleChanged($(this).parent().parent().parent().parent());" />
+					<textarea id="textTitleOfRelatedMaterial" onchange="relationsLinkToYourHolndingsGuideTitleChanged($(this).parent().parent().parent().parent());"><s:property value="loader.relationsResourceRelationEntry[#status.index]" /></textarea>
 				</td>
 				<td class="labelLeft">
-					<label for="selectTitleOfRelatedMaterialLang"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+					<label for="selectTitleOfRelatedMaterialLang"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 				</td>
 				<td>
 					<select id="selectTitleOfRelatedMaterialLang" onchange="selectTitleRelatedLangChange($(this).parent().parent().parent().parent());" >
@@ -54,13 +54,13 @@
 	
 			<tr id="trRelationsDescriptionOfRelation">
 				<td id="tdDescriptionOfRelation">
-					<label for="textDescriptionOfRelation"><s:property value="getText('label.ai.relations.descriptionOfRelation')" />:</label>
+					<label for="textDescriptionOfRelation"><s:property value="getText('eag2012.relations.descriptionOfRelation')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textDescriptionOfRelation" value="<s:property value="loader.relationsResourceRelationEntryDescription[#status.index]" />"/>
+					<textarea id="textDescriptionOfRelation"><s:property value="loader.relationsResourceRelationEntryDescription[#status.index]" /></textarea>
 				</td>
 				<td id="tdLanguageDescriptionOfRelation" class="labelLeft">
-					<label for="selectLanguageDescriptionOfRelation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+					<label for="selectLanguageDescriptionOfRelation"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 				</td>
 				<td>
 					<select id="selectLanguageDescriptionOfRelation">
@@ -77,20 +77,20 @@
 		<table id="resourceRelationTable_1" class="tablePadding">
 			<tr>
 				<td id="resourceLabel" colspan="4">
-					<label for="resourceLabel"><s:property value="getText('label.ai.relations.resourceRelations')" />:</label>
+					<label for="resourceLabel"><s:property value="getText('eag2012.relations.resourceRelations')" />:</label>
 				</td>
 				
 			</tr>
 	
 			<tr>
 				<td id="tdWebsiteOfResource">
-					<label for="tdWebsiteOfResource"><s:property value="getText('label.ai.relations.websiteOfResource')" />:</label>
+					<label for="tdWebsiteOfResource"><s:property value="getText('eag2012.relations.linkToResourceRelation')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textWebsiteOfResource" onchange="relationsLinkToYourHolndingsGuideChanged($(this).parent().parent().parent().parent());" />
+					<textarea id="textWebsiteOfResource" onchange="relationsLinkToYourHolndingsGuideChanged($(this).parent().parent().parent().parent());"></textarea>
 				</td>
 				<td id="tdTypeOfRelation" class="labelLeft">
-					<label for="selectTypeOfYourRelation"><s:property value="getText('label.ai.relations.typeOfRelation')" />:</label>
+					<label for="selectTypeOfYourRelation"><s:property value="getText('eag2012.relations.typeOfRelation')" />:</label>
 				</td>
 				<td>
 					<select id="selectTypeOfYourRelation" >
@@ -103,13 +103,13 @@
 	
 			<tr>
 				<td id="tdTitleOfRelatedMaterial">
-					<label for="tdTitleOfRelatedMaterial"><s:property value="getText('label.ai.relations.titleOfRelatedMaterial')" />:</label>
+					<label for="tdTitleOfRelatedMaterial"><s:property value="getText('eag2012.relations.titleOfRelatedMaterial')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textTitleOfRelatedMaterial" onchange="relationsLinkToYourHolndingsGuideTitleChanged($(this).parent().parent().parent().parent());" />
+					<textarea id="textTitleOfRelatedMaterial" onchange="relationsLinkToYourHolndingsGuideTitleChanged($(this).parent().parent().parent().parent());"></textarea>
 				</td>
 				<td class="labelLeft">
-					<label for="selectTitleOfRelatedMaterialLang"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+					<label for="selectTitleOfRelatedMaterialLang"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 				</td>
 				<td>
 					<select id="selectTitleOfRelatedMaterialLang" onchange="selectTitleRelatedLangChange($(this).parent().parent().parent().parent());">
@@ -122,13 +122,13 @@
 	
 			<tr id="trRelationsDescriptionOfRelation">
 				<td id="tdDescriptionOfRelation">
-					<label for="tdDescriptionOfRelation"><s:property value="getText('label.ai.relations.descriptionOfRelation')" />:</label>
+					<label for="tdDescriptionOfRelation"><s:property value="getText('eag2012.relations.descriptionOfRelation')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textDescriptionOfRelation"/>
+					<textarea id="textDescriptionOfRelation"></textarea>
 				</td>
 				<td id="tdLanguageDescriptionOfRelation" class="labelLeft">
-					<label for="selectLanguageDescriptionOfRelation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+					<label for="selectLanguageDescriptionOfRelation"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 				</td>
 				<td>
 					<select id="selectLanguageDescriptionOfRelation" >
@@ -144,7 +144,7 @@
 	<table id="addResourceRelationTable" class="tablePadding">
 		<tr>
 			<td id="tdAddNewResourceRelation" colspan="2">
-				<input type="button" id="buttonRelationAddNewResourceRelation" onclick="relationAddNewResourceRelation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.relations.addNewResourceRelation")' />"/>
+				<input type="button" id="buttonRelationAddNewResourceRelation" onclick="relationAddNewResourceRelation('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" value="<s:property value='getText("eag2012.commons.addNewResourceRelation")' />"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -156,20 +156,20 @@
 		<table id="institutionRelationTable_<s:property value="%{#status.index + 1}"/>" class="tablePadding">
 			<tr>
 				<td id="institutionLabel" colspan="4">
-					<label for="institutionLabel"><s:property value="getText('label.ai.relations.institutionRelation')" />:</label>
+					<label for="institutionLabel"><s:property value="getText('eag2012.relations.descriptionOfRelation')" />:</label>
 				</td>
 				
 			</tr>
 	
 			<tr>
 				<td id="tdWebsiteOfDescription">
-					<label for="textWebsiteOfDescription"><s:property value="getText('label.ai.relations.websiteOfDescription')" />:</label>
+					<label for="textWebsiteOfDescription"><s:property value="getText('eag2012.relations.websiteOfDescription')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textWebsiteOfDescription" value="<s:property value="loader.relationsEagRelationHref[#status.index]" />"/>
+					<textarea id="textWebsiteOfDescription"><s:property value="loader.relationsEagRelationHref[#status.index]" /></textarea>
 				</td>
 				<td id="tdInstitutionTypeOfRelation" class="labelLeft">
-					<label for="selectTypeOftheRelation"><s:property value="getText('label.ai.relations.institutionTypeOfRelation')" />:</label>
+					<label for="selectTypeOftheRelation"><s:property value="getText('eag2012.relations.institutionTypeOfRelation')" />:</label>
 				</td>
 				<td>
 					<select id="selectTypeOftheRelation" >
@@ -185,13 +185,13 @@
 	
 			<tr>
 				<td id="tdTitleOfRelatedInstitution">
-					<label for="textTitleOfRelatedInstitution"><s:property value="getText('label.ai.relations.titleOfRelatedInstitution')" />:</label>
+					<label for="textTitleOfRelatedInstitution"><s:property value="getText('eag2012.relations.titleOfRelatedInstitution')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textTitleOfRelatedInstitution" value="<s:property value="loader.relationsEagRelationEntry[#status.index]" />" />
+					<textarea id="textTitleOfRelatedInstitution"><s:property value="loader.relationsEagRelationEntry[#status.index]" /></textarea>
 				</td>
 				<td class="labelLeft">
-					<label for="selectTitleOfRelatedInstitutionLang"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+					<label for="selectTitleOfRelatedInstitutionLang"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 				</td>
 				<td>
 					<select id="selectTitleOfRelatedInstitutionLang" >
@@ -204,13 +204,13 @@
 	
 			<tr id="trRelationsInstitutionDescriptionOfRelation">
 				<td id="tdInstitutionDescriptionOfRelation">
-					<label for="textInstitutionDescriptionOfRelation"><s:property value="getText('label.ai.relations.descriptionOfRelation')" />:</label>
+					<label for="textInstitutionDescriptionOfRelation"><s:property value="getText('eag2012.relations.descriptionOfRelation')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textInstitutionDescriptionOfRelation" value="<s:property value="loader.relationsEagRelationEntryDescription[#status.index]" />" />
+					<textarea id="textInstitutionDescriptionOfRelation"><s:property value="loader.relationsEagRelationEntryDescription[#status.index]" /></textarea>
 				</td>
 				<td id="tdLanguageInstitutionDescriptionOfRelation" class="labelLeft">
-					<label for="selectLanguageInstitutionDescriptionOfRelation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+					<label for="selectLanguageInstitutionDescriptionOfRelation"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 				</td>
 				<td>
 					<select id="selectLanguageInstitutionDescriptionOfRelation" >
@@ -227,20 +227,20 @@
 	   <table id="institutionRelationTable_1" class="tablePadding">
 			<tr>
 				<td id="institutionLabel" colspan="4">
-					<label for="institutionLabel"><s:property value="getText('label.ai.relations.institutionRelation')" />:</label>
+					<label for="institutionLabel"><s:property value="getText('eag2012.relations.descriptionOfRelation')" />:</label>
 				</td>
 				
 			</tr>
 	
 			<tr>
 				<td id="tdWebsiteOfDescription">
-					<label for="textWebsiteOfDescription"><s:property value="getText('label.ai.relations.websiteOfDescription')" />:</label>
+					<label for="textWebsiteOfDescription"><s:property value="getText('eag2012.relations.websiteOfDescription')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textWebsiteOfDescription" />
+					<textarea id="textWebsiteOfDescription"></textarea>
 				</td>
 				<td id="tdInstitutionTypeOfRelation" class="labelLeft">
-					<label for="selectTypeOftheRelation"><s:property value="getText('label.ai.relations.institutionTypeOfRelation')" />:</label>
+					<label for="selectTypeOftheRelation"><s:property value="getText('eag2012.relations.institutionTypeOfRelation')" />:</label>
 				</td>
 				<td>
 					<select id="selectTypeOftheRelation" >
@@ -256,13 +256,13 @@
 	
 			<tr>
 				<td id="tdTitleOfRelatedInstitution">
-					<label for="textTitleOfRelatedInstitution"><s:property value="getText('label.ai.relations.titleOfRelatedInstitution')" />:</label>
+					<label for="textTitleOfRelatedInstitution"><s:property value="getText('eag2012.relations.titleOfRelatedInstitution')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textTitleOfRelatedInstitution" />
+					<textarea id="textTitleOfRelatedInstitution"></textarea>
 				</td>
 				<td class="labelLeft">
-					<label for="selectTitleOfRelatedInstitutionLang"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+					<label for="selectTitleOfRelatedInstitutionLang"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 				</td>
 				<td>
 					<select id="selectTitleOfRelatedInstitutionLang">
@@ -275,13 +275,13 @@
 	
 			<tr id="trRelationsInstitutionDescriptionOfRelation">
 				<td id="tdInstitutionDescriptionOfRelation">
-					<label for="textInstitutionDescriptionOfRelation"><s:property value="getText('label.ai.relations.descriptionOfRelation')" />:</label>
+					<label for="textInstitutionDescriptionOfRelation"><s:property value="getText('eag2012.relations.descriptionOfRelation')" />:</label>
 				</td>
 				<td>
-					<input type="text" id="textInstitutionDescriptionOfRelation"/>
+					<textarea id="textInstitutionDescriptionOfRelation"></textarea>
 				</td>
 				<td id="tdLanguageInstitutionDescriptionOfRelation" class="labelLeft">
-					<label for="selectLanguageInstitutionDescriptionOfRelation"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+					<label for="selectLanguageInstitutionDescriptionOfRelation"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 				</td>
 				<td>
 					<select id="selectLanguageInstitutionDescriptionOfRelation" >
@@ -296,7 +296,7 @@
 	<table id="relationsOtherTable" class="tablePadding">
 		<tr>
 			<td id="tdAddNewInstitutionRelation" colspan="2">
-				<input type="button" id="buttonAddNewInstitutionRelation" onclick="relationAddNewInstitutionRelation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.relations.addNewInstitutionRelation")' />"/>
+				<input type="button" id="buttonAddNewInstitutionRelation" onclick="relationAddNewInstitutionRelation('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" value="<s:property value='getText("eag2012.relations.addNewInstitutionRelation")' />"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -304,7 +304,7 @@
 
 		<tr>
 			<td id="tdButtonsDescriptionTab" colspan="4">
-			    <input type="button" id="buttonRelationsTabPrevious" value="<s:property value='getText("label.ai.tabs.commons.button.previousTab")' />" class="rightButton" onclick="checkAndShowPreviousTab($(this).parent().parent().parent().parent(),'<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />','<s:property value="getText('label.ai.tabs.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('label.eag.eagwithurlwarnings')"/>','<s:property value="getText('label.eag.eagwithurlwarnings')"/>');" />
+			    <input type="button" id="buttonRelationsTabPrevious" value="<s:property value='getText("eag2012.commons.previousTab")' />" class="rightButton" onclick="checkAndShowPreviousTab($(this).parent().parent().parent().parent(),'<s:property value="getText('eag2012.errors.fieldRequired')" />','<s:property value="getText('eag2012.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>','<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>');" />
 			</td>
 		</tr>
 

@@ -83,17 +83,19 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	private String repositoridCountryCode;
 	private String otherRepositorIdValue;
 	private String recordIdValue;
-	private String autformValue;
-	private String autformLang;
-	private String parformValue;
-	private String parformLang;
+	private String autformValue;			// Will be an ordered list. 
+	private String autformLang;				// Will be an ordered list.
+	private String parformValue;			// Will be an ordered list.
+	private String parformLang;				// Will be an ordered list.
+
+	// Your institution tab.
 
 	// Identity tab.
-	private String nonpreformValue;
-	private String nonpreformLang;
+	private String nonpreformValue;			// Will be an ordered list.
+	private String nonpreformLang;			// Will be an ordered list.
 	private String fromDateStandardDate;
 	private String toDateStandardDate;
-	private String repositoryTypeValue;
+	private String repositoryTypeValue;		// Will be an ordered list.
 
 	private String eagPath;
 	
@@ -116,79 +118,79 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	}
 
 	public Map<String,String> getYesNoList() {
-		this.getYesNoMap().put(Eag2012.OPTION_YES, getText("label.ai.tabs.commons.option.yes"));
-		this.getYesNoMap().put(Eag2012.OPTION_NO, getText("label.ai.tabs.commons.option.no"));
+		this.getYesNoMap().put(Eag2012.OPTION_YES, getText("eag2012.commons.yes"));
+		this.getYesNoMap().put(Eag2012.OPTION_NO, getText("eag2012.commons.no"));
 		return this.getYesNoMap();
 	}
 	public Map<String,String> getNoneYesNoList() {
 		this.getNoneYesNoMap().put(Eag2012.OPTION_NONE, "---");
-		this.getNoneYesNoMap().put(Eag2012.OPTION_YES, getText("label.ai.tabs.commons.option.yes"));
-		this.getNoneYesNoMap().put(Eag2012.OPTION_NO, getText("label.ai.tabs.commons.option.no"));
+		this.getNoneYesNoMap().put(Eag2012.OPTION_YES, getText("eag2012.commons.yes"));
+		this.getNoneYesNoMap().put(Eag2012.OPTION_NO, getText("eag2012.commons.no"));
 		return this.getNoneYesNoMap();
 	}
 
 	public Map<String,String> getRepositoryRoleList() {
 		this.getRepositoryRoleMap().put(Eag2012.OPTION_NONE, "---");
-		this.getRepositoryRoleMap().put(Eag2012.OPTION_ROLE_HEADQUARTERS, getText("label.ai.tabs.commons.option.role.headquarters"));
-		this.getRepositoryRoleMap().put(Eag2012.OPTION_ROLE_BRANCH, getText("label.ai.tabs.commons.option.role.branch"));
-		this.getRepositoryRoleMap().put(Eag2012.OPTION_ROLE_INTERIM, getText("label.ai.tabs.commons.option.role.interimArchive"));
+		this.getRepositoryRoleMap().put(Eag2012.OPTION_ROLE_HEADQUARTERS, getText("eag2012.options.role.headquarters"));
+		this.getRepositoryRoleMap().put(Eag2012.OPTION_ROLE_BRANCH, getText("eag2012.options.role.branch"));
+		this.getRepositoryRoleMap().put(Eag2012.OPTION_ROLE_INTERIM, getText("eag2012.options.role.interimArchive"));
 		return this.getRepositoryRoleMap();
 		
 	}
 
 	public Map<String,String> getTypeOfInstitutionList() {
-		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_NATIONAL,getText("label.ai.tabs.commons.option.institutionType.nationalArchives"));
-		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_REGIONAL,getText("label.ai.tabs.commons.option.institutionType.regionalArchives"));
-		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_COUNTY,getText("label.ai.tabs.commons.option.institutionType.countyArchives"));
-		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_MUNICIPAL,getText("label.ai.tabs.commons.option.institutionType.municipalArchives"));
-		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_SPECIALISED,getText("label.ai.tabs.commons.option.institutionType.specialisedArchives"));
-		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_PRIVATE,getText("label.ai.tabs.commons.option.institutionType.privateArchives"));
-		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_CHURCH,getText("label.ai.tabs.commons.option.institutionType.churchArchives"));
-		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_BUSINESS,getText("label.ai.tabs.commons.option.institutionType.businessArchives"));
-		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_UNIVERSITY,getText("label.ai.tabs.commons.option.institutionType.universityArchives"));
-		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_MEDIA,getText("label.ai.tabs.commons.option.institutionType.mediaArchives"));
-		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_POLITICAL,getText("label.ai.tabs.commons.option.institutionType.politicalArchives"));
-		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_CULTURAL,getText("label.ai.tabs.commons.option.institutionType.culturalArchives"));
+		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_NATIONAL,getText("eag2012.options.institutionType.nationalArchives"));
+		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_REGIONAL,getText("eag2012.options.institutionType.regionalArchives"));
+		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_COUNTY,getText("eag2012.options.institutionType.countyArchives"));
+		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_MUNICIPAL,getText("eag2012.options.institutionType.municipalArchives"));
+		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_SPECIALISED,getText("eag2012.options.institutionType.specialisedArchives"));
+		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_PRIVATE,getText("eag2012.options.institutionType.privateArchives"));
+		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_CHURCH,getText("eag2012.options.institutionType.churchArchives"));
+		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_BUSINESS,getText("eag2012.options.institutionType.businessArchives"));
+		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_UNIVERSITY,getText("eag2012.options.institutionType.universityArchives"));
+		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_MEDIA,getText("eag2012.options.institutionType.mediaArchives"));
+		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_POLITICAL,getText("eag2012.options.institutionType.politicalArchives"));
+		this.getTypeOfInstitutionMap().put(Eag2012.OPTION_CULTURAL,getText("eag2012.options.institutionType.culturalArchives"));
 		return this.getTypeOfInstitutionMap();
 	}
 
 	public Map<String,String> getContinentOfTheInstitutionList() {
-		this.getContinentOfInstitutionMap().put(Eag2012.OPTION_EUROPE,getText("label.ai.tabs.commons.option.continent.europe"));
-		this.getContinentOfInstitutionMap().put(Eag2012.OPTION_AFRICA,getText("label.ai.tabs.commons.option.continent.africa"));
-		this.getContinentOfInstitutionMap().put(Eag2012.OPTION_ANTARCTICA,getText("label.ai.tabs.commons.option.continent.antarctica"));
-		this.getContinentOfInstitutionMap().put(Eag2012.OPTION_ASIA,getText("label.ai.tabs.commons.option.continent.asia"));
-		this.getContinentOfInstitutionMap().put(Eag2012.OPTION_AUSTRALIA,getText("label.ai.tabs.commons.option.continent.australia"));
-		this.getContinentOfInstitutionMap().put(Eag2012.OPTION_NORTH_AMERICA,getText("label.ai.tabs.commons.option.continent.northAmerica"));
-		this.getContinentOfInstitutionMap().put(Eag2012.OPTION_SOUTH_AMERICA,getText("label.ai.tabs.commons.option.continent.southAmerica"));
+		this.getContinentOfInstitutionMap().put(Eag2012.OPTION_EUROPE,getText("eag2012.options.continent.europe"));
+		this.getContinentOfInstitutionMap().put(Eag2012.OPTION_AFRICA,getText("eag2012.options.continent.africa"));
+		this.getContinentOfInstitutionMap().put(Eag2012.OPTION_ANTARCTICA,getText("eag2012.options.continent.antarctica"));
+		this.getContinentOfInstitutionMap().put(Eag2012.OPTION_ASIA,getText("eag2012.options.continent.asia"));
+		this.getContinentOfInstitutionMap().put(Eag2012.OPTION_AUSTRALIA,getText("eag2012.options.continent.australia"));
+		this.getContinentOfInstitutionMap().put(Eag2012.OPTION_NORTH_AMERICA,getText("eag2012.options.continent.northAmerica"));
+		this.getContinentOfInstitutionMap().put(Eag2012.OPTION_SOUTH_AMERICA,getText("eag2012.options.continent.southAmerica"));
 
 		return this.getContinentOfInstitutionMap();
 	}
 
 	public Map<String,String> getPhotographList() {
 		this.getPhotographMap().put(Eag2012.OPTION_NONE, "---");
-		this.getPhotographMap().put(Eag2012.OPTION_DEPENDING,getText("label.ai.tabs.commons.option.photograph.depending"));
-		this.getPhotographMap().put(Eag2012.OPTION_YES, getText("label.ai.tabs.commons.option.yes"));
-		this.getPhotographMap().put(Eag2012.OPTION_WITHOUT,getText("label.ai.tabs.commons.option.photograph.without"));
-		this.getPhotographMap().put(Eag2012.OPTION_NO, getText("label.ai.tabs.commons.option.no"));
+		this.getPhotographMap().put(Eag2012.OPTION_DEPENDING,getText("eag2012.options.photograph.depending"));
+		this.getPhotographMap().put(Eag2012.OPTION_YES, getText("eag2012.commons.yes"));
+		this.getPhotographMap().put(Eag2012.OPTION_WITHOUT,getText("eag2012.options.photograph.without"));
+		this.getPhotographMap().put(Eag2012.OPTION_NO, getText("eag2012.commons.no"));
 
 		return this.getPhotographMap();
 	}
 
 	public Map<String,String> getTypeYourRelationList() {
-		this.getTypeYourRelationMap().put(Eag2012.OPTION_CREATOR,getText("label.ai.tabs.commons.option.typeYourRelation.creator"));
-		this.getTypeYourRelationMap().put(Eag2012.OPTION_SUBJECT,getText("label.ai.tabs.commons.option.typeYourRelation.subject"));
-		this.getTypeYourRelationMap().put(Eag2012.OPTION_OTHER,getText("label.ai.tabs.commons.option.typeYourRelation.other"));
+		this.getTypeYourRelationMap().put(Eag2012.OPTION_CREATOR,getText("eag2012.options.typeYourRelation.creator"));
+		this.getTypeYourRelationMap().put(Eag2012.OPTION_SUBJECT,getText("eag2012.options.typeYourRelation.subject"));
+		this.getTypeYourRelationMap().put(Eag2012.OPTION_OTHER,getText("eag2012.options.typeYourRelation.other"));
 
 		return this.getTypeYourRelationMap();
 	}
 
 	public Map<String,String> getTypeTheRelationList() {
 		this.getTypeTheRelationMap().put(Eag2012.OPTION_NONE, "---");
-		this.getTypeTheRelationMap().put(Eag2012.OPTION_CHILD, getText("label.ai.tabs.commons.option.typeTheRelation.child"));
-		this.getTypeTheRelationMap().put(Eag2012.OPTION_PARENT, getText("label.ai.tabs.commons.option.typeTheRelation.parent"));
-		this.getTypeTheRelationMap().put(Eag2012.OPTION_EARLIER,getText("label.ai.tabs.commons.option.typeTheRelation.earlier"));
-		this.getTypeTheRelationMap().put(Eag2012.OPTION_LATER,getText("label.ai.tabs.commons.option.typeTheRelation.later"));
-		this.getTypeTheRelationMap().put(Eag2012.OPTION_ASSOCIATIVE,getText("label.ai.tabs.commons.option.typeTheRelation.associative"));
+		this.getTypeTheRelationMap().put(Eag2012.OPTION_CHILD, getText("eag2012.options.typeTheRelation.child"));
+		this.getTypeTheRelationMap().put(Eag2012.OPTION_PARENT, getText("eag2012.options.typeTheRelation.parent"));
+		this.getTypeTheRelationMap().put(Eag2012.OPTION_EARLIER,getText("eag2012.options.typeTheRelation.earlier"));
+		this.getTypeTheRelationMap().put(Eag2012.OPTION_LATER,getText("eag2012.options.typeTheRelation.later"));
+		this.getTypeTheRelationMap().put(Eag2012.OPTION_ASSOCIATIVE,getText("eag2012.options.typeTheRelation.associative"));
 		return this.getTypeTheRelationMap();
 	}
 
@@ -634,7 +636,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					log.info("Loader: "+this.loader.toString()+" has been charged.");
 
 					if (!result) {
-						addActionMessage(this.getText("label.ai.error.loadingEAGFile"));
+						addActionMessage(this.getText("eag2012.errors.loadingEAGFile"));
 					}
 
 					this.loader.setInitialAutform(getInitialAutformValue());
@@ -725,12 +727,12 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							if (warning.contains("of element 'recordId' is not valid")) {
 								this.loader.setRecordId(this.getIdUsedInAPE());
 								this.loader.setRecordIdISIL(Eag2012.OPTION_NO);
-								addActionMessage(this.getText("label.ai.error.defaultIdUsedInAPE") + " ("+ this.getIdUsedInAPE() +")");
+								addActionMessage(this.getText("eag2012.errors.defaultIdUsedInAPE") + " ("+ this.getIdUsedInAPE() +")");
 							}
 							if (warning.contains("recordId already used")) {
 								this.loader.setRecordId(this.getIdUsedInAPE());
 								this.loader.setRecordIdISIL(Eag2012.OPTION_NO);
-								addActionMessage(this.getText("label.ai.error.defaultIdUsedInAPE") + " ("+ this.getIdUsedInAPE() +")");
+								addActionMessage(this.getText("eag2012.errors.defaultIdUsedInAPE") + " ("+ this.getIdUsedInAPE() +")");
 							}*/
 						}
 					}
@@ -753,7 +755,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 
 			if (!result) {
 				getActionMessages();
-				addActionMessage(this.getText("label.ai.error.loadingEAGFile"));
+				addActionMessage(this.getText("eag2012.errors.loadingEAGFile"));
 			}
 		} else if(new File(APEnetUtilities.getConfig().getRepoDirPath() + path).exists()){
 			newEag = false;
@@ -762,7 +764,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			log.info("Loader: "+this.loader.toString()+" has been charged.");
 
 			if (!result) {
-				addActionMessage(this.getText("label.ai.error.loadingEAGFile"));
+				addActionMessage(this.getText("eag2012.errors.loadingEAGFile"));
 			}
 		}else{
 			newEag = true;
@@ -880,10 +882,10 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 							addActionMessage(warning);
 						}
 						if (warning.contains("of element 'recordId' is not valid")) {
-							addActionMessage(this.getText("label.ai.error.defaultIdUsedInAPE") + " ("+ this.getIdUsedInAPE() +")");
+							addActionMessage(this.getText("eag2012.errors.defaultIdUsedInAPE") + " ("+ this.getIdUsedInAPE() +")");
 						}
 						if (warning.contains("recordId already used")) {
-							addActionMessage(this.getText("label.ai.error.defaultIdUsedInAPE") + " ("+ this.getIdUsedInAPE() +")");
+							addActionMessage(this.getText("eag2012.errors.defaultIdUsedInAPE") + " ("+ this.getIdUsedInAPE() +")");
 						}*/
 					}
 				}

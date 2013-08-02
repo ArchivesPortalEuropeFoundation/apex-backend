@@ -17,22 +17,22 @@
 							<tr id="trASOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />">
 								<td id="tdOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />">
 									<s:if test="%{#internalStatus.index == 0}">
-										<label for="textOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.openingTimes')" /><span class="required">*</span>:</label>
+										<label for="textOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.openingHours')" /><span class="required">*</span>:</label>
 									</s:if>
 									<s:else>
-										<label for="textOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.openingTimes')" />:</label>
+										<label for="textOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.openingHours')" />:</label>
 									</s:else>
 								</td>
 								<td>
 									<s:if test="%{#counter > 0}">
-										<input type="text" id="textOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+										<textarea id="textOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSOpeningHoursOfInstitutionChanged($(this));" value="<s:property value="#internalCurrent" />" />
+										<textarea id="textOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSOpeningHoursOfInstitutionChanged($(this));"><s:property value="#internalCurrent" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
-									<label for="selectLanguageOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectLanguageOpeningTimes_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<s:if test="%{#counter > 0}">
@@ -52,18 +52,18 @@
 					<s:else>
 						<tr id="trASOpeningTimes_1">
 							<td id="tdOpeningTimes_1">
-								<label for="textOpeningTimes_1"><s:property value="getText('label.ai.tabs.commons.openingTimes')" /><span class="required">*</span>:</label>
+								<label for="textOpeningTimes_1"><s:property value="getText('eag2012.commons.openingHours')" /><span class="required">*</span>:</label>
 							</td>
 							<td>
 								<s:if test="%{#counter > 0}">
-									<input type="text" id="textOpeningTimes_1" />
+									<textarea id="textOpeningTimes_1"></textarea>
 								</s:if>
 								<s:else>
-									<input type="text" id="textOpeningTimes_1" onchange="aSOpeningHoursOfInstitutionChanged($(this));" />
+									<textarea id="textOpeningTimes_1" onchange="aSOpeningHoursOfInstitutionChanged($(this));"></textarea>
 								</s:else>
 							</td>
 							<td class="labelLeft">
-								<label for="selectLanguageOpeningTimes_1" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+								<label for="selectLanguageOpeningTimes_1" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 							</td>
 							<td>
 								<s:if test="%{#counter > 0}">
@@ -83,18 +83,18 @@
 				<s:else>
 					<tr id="trASOpeningTimes_1">
 						<td id="tdOpeningTimes_1">
-							<label for="textOpeningTimes_1"><s:property value="getText('label.ai.tabs.commons.openingTimes')" /><span class="required">*</span>:</label>
+							<label for="textOpeningTimes_1"><s:property value="getText('eag2012.commons.openingHours')" /><span class="required">*</span>:</label>
 						</td>
 						<td>
 							<s:if test="%{#counter > 0}">
-								<input type="text" id="textOpeningTimes_1" />
+								<textarea id="textOpeningTimes_1"></textarea>
 							</s:if>
 							<s:else>
-								<input type="text" id="textOpeningTimes_1" onchange="aSOpeningHoursOfInstitutionChanged($(this));" />
+								<textarea id="textOpeningTimes_1" onchange="aSOpeningHoursOfInstitutionChanged($(this));"></textarea>
 							</s:else>
 						</td>
 						<td class="labelLeft">
-							<label for="selectLanguageOpeningTimes_1" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+							<label for="selectLanguageOpeningTimes_1" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 						</td>
 						<td>
 							<s:if test="%{#counter > 0}">
@@ -113,7 +113,7 @@
 		
 				<tr>
 					<td id="tdASAddOpeningTimes" colspan="2">
-						<input type="button" id="buttonASAddOpeningTimes"  value="<s:property value='getText("label.ai.accessAndServices.addOpeningTimes")' />" onclick="aSAddOpeningTimes('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+						<input type="button" id="buttonASAddOpeningTimes"  value="<s:property value='getText("eag2012.commons.addOpeningHours")' />" onclick="aSAddOpeningTimes('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 					</td>
 					<td colspan="2">
 					</td>
@@ -126,18 +126,18 @@
 						<s:iterator var="internalCurrent" value="#closing" status="internalStatus">
 							<tr id="trASClosingDates_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textClosingDates_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.closingDates')" />:</label>
+									<label for="textClosingDates_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.closingDates')" />:</label>
 								</td>
 								<td>
 									<s:if test="%{#counter > 0}">
-										<input type="text" id="textClosingDates_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+										<textarea id="textClosingDates_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textClosingDates_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSClosingHoursOfInstitutionChanged($(this));" value="<s:property value="#internalCurrent" />" />
+										<textarea id="textClosingDates_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSClosingHoursOfInstitutionChanged($(this));"><s:property value="#internalCurrent" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
-									<label for="selectLanguageClosingDates_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectLanguageClosingDates_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<s:if test="%{#counter > 0}">
@@ -157,18 +157,18 @@
 					<s:else>
 						<tr id="trASClosingDates_1">
 							<td>
-								<label for="textClosingDates_1"><s:property value="getText('label.ai.tabs.commons.closingDates')" />:</label>
+								<label for="textClosingDates_1"><s:property value="getText('eag2012.commons.closingDates')" />:</label>
 							</td>
 							<td>
 								<s:if test="%{#counter > 0}">
-									<input type="text" id="textClosingDates_1" />
+									<textarea id="textClosingDates_1"></textarea>
 								</s:if>
 								<s:else>
-									<input type="text" id="textClosingDates_1" onchange="aSClosingHoursOfInstitutionChanged($(this));"/>
+									<textarea id="textClosingDates_1" onchange="aSClosingHoursOfInstitutionChanged($(this));"></textarea>
 								</s:else>
 							</td>
 							<td class="labelLeft">
-								<label for="selectLanguageClosingDates_1" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+								<label for="selectLanguageClosingDates_1" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 							</td>
 							<td>
 								<s:if test="%{#counter > 0}">
@@ -188,18 +188,18 @@
 				<s:else>
 					<tr id="trASClosingDates_1">
 						<td>
-							<label for="textClosingDates_1"><s:property value="getText('label.ai.tabs.commons.closingDates')" />:</label>
+							<label for="textClosingDates_1"><s:property value="getText('eag2012.commons.closingDates')" />:</label>
 						</td>
 						<td>
 							<s:if test="%{#counter > 0}">
-								<input type="text" id="textClosingDates_1" />
+								<textarea id="textClosingDates_1"></textarea>
 							</s:if>
 							<s:else>
-								<input type="text" id="textClosingDates_1" onchange="aSClosingHoursOfInstitutionChanged($(this));" />
+								<textarea id="textClosingDates_1" onchange="aSClosingHoursOfInstitutionChanged($(this));"></textarea>
 							</s:else>
 						</td>
 						<td class="labelLeft">
-							<label for="selectLanguageClosingDates_1" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+							<label for="selectLanguageClosingDates_1" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 						</td>
 						<td>
 							<s:if test="%{#counter > 0}">
@@ -218,7 +218,7 @@
 
 				<tr>
 					<td id="tdASAddClosingDates" colspan="2">
-						<input type="button" id="buttonASAddClosingDates"  value="<s:property value='getText("label.ai.accessAndServices.addClosingDates")' />" onclick="aSAddClosingDates('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+						<input type="button" id="buttonASAddClosingDates"  value="<s:property value='getText("eag2012.commons.addClosingDates")' />" onclick="aSAddClosingDates('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 					</td>
 					<td colspan="2">
 					</td>
@@ -234,13 +234,13 @@
 						<s:iterator var="internalCurrent" value="#numberOfDirections" status="internalStatus">
 							<tr id="trTravellingDirections_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textTravellingDirections_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.travellingDirections')" />:</label>
+									<label for="textTravellingDirections_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.travellingDirections')" />:</label>
 								</td>
 								<td>
 									<textarea id="textTravellingDirections_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#directions[#internalCounter]" /></textarea>
 								</td>
 								<td class="labelLeft">
-									<label for="selectASATDSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectASATDSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<select id="selectASATDSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
@@ -253,10 +253,10 @@
 
 							<tr id="tr2TravellingDirections_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textTravelLink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
+									<label for="textTravelLink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.link')"/>:</label>
 								</td>
 								<td colspan="2">
-									<input type="text" id="textTravelLink_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#directionsHref[#internalCounter]" />" />
+									<textarea id="textTravelLink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#directionsHref[#internalCounter]" /></textarea>
 								</td>
 								<td colspan="2">
 								</td>
@@ -267,13 +267,13 @@
 					<s:else>
 						<tr id="trTravellingDirections_1">
 							<td>
-								<label for="textTravellingDirections_1"><s:property value="getText('label.ai.accessAndServices.travellingDirections')" />:</label>
+								<label for="textTravellingDirections_1"><s:property value="getText('eag2012.accessAndServices.travellingDirections')" />:</label>
 							</td>
 							<td>
 								<textarea id="textTravellingDirections_1"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="selectASATDSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+								<label for="selectASATDSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							</td>
 							<td>
 								<select id="selectASATDSelectLanguage_1">
@@ -286,10 +286,10 @@
 
 						<tr id="tr2TravellingDirections_1">
 							<td>
-								<label for="textTravelLink_1"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
+								<label for="textTravelLink_1"><s:property value="getText('eag2012.accessAndServices.link')"/>:</label>
 							</td>
 							<td colspan="2">
-								<input type="text" id="textTravelLink_1" />
+								<textarea id="textTravelLink_1"></textarea>
 							</td>
 							<td colspan="2">
 							</td>
@@ -299,13 +299,13 @@
 				<s:else>
 					<tr id="trTravellingDirections_1">
 						<td>
-							<label for="textTravellingDirections_1"><s:property value="getText('label.ai.accessAndServices.travellingDirections')" />:</label>
+							<label for="textTravellingDirections_1"><s:property value="getText('eag2012.accessAndServices.travellingDirections')" />:</label>
 						</td>
 						<td>
 							<textarea id="textTravellingDirections_1"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="selectASATDSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+							<label for="selectASATDSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 						</td>
 						<td>
 							<select id="selectASATDSelectLanguage_1">
@@ -318,10 +318,10 @@
 
 					<tr id="tr2TravellingDirections_1">
 						<td>
-							<label for="textTravelLink_1"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
+							<label for="textTravelLink_1"><s:property value="getText('eag2012.accessAndServices.link')"/>:</label>
 						</td>
 						<td colspan="2">
-							<input type="text" id="textTravelLink_1" />
+							<textarea id="textTravelLink_1"></textarea>
 						</td>
 						<td colspan="2">
 						</td>
@@ -330,7 +330,7 @@
 
 				<tr>
 					<td colspan="2">
-						<input type="button" id="buttonASAddTravellingDirections" value="<s:property value="getText('label.ai.accessAndServices.addTravellingDirections')"/>" onclick="aSAddTravellingDirections('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
+						<input type="button" id="buttonASAddTravellingDirections" value="<s:property value="getText('eag2012.accessAndServices.addTravellingDirections')"/>" onclick="aSAddTravellingDirections('<s:property value="getText('eag2012.commons.pleaseFillData')" />');"/>
 					</td>
 					<td colspan="2">
 					</td>
@@ -339,7 +339,7 @@
 				<s:set var="accesibleToThePublic" value="loader.asAccessQuestion[#counter]"/>
 				<tr>
 					<td>
-						<label for="selectASAccesibleToThePublic"><s:property value="getText('label.ai.accessAndServices.accesibleToThePublic')"/><span class="required">*</span>:</label>
+						<label for="selectASAccesibleToThePublic"><s:property value="getText('eag2012.commons.accessiblePublicl')"/><span class="required">*</span>:</label>
 					</td>
 					<td>
 						<select id="selectASAccesibleToThePublic" onchange="aSAccessibleToThePublicChanged();">
@@ -359,18 +359,18 @@
 						<s:iterator var="internalCurrent" value="#restaccess" status="internalStatus">
 							<tr id="trASAccessRestrictions_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textASAccessRestrictions_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.accessRestrictions')" />:</label>
+									<label for="textASAccessRestrictions_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.accessRestrictions')" />:</label>
 								</td>
 								<td>
 									<s:if test="%{#counter > 0}">
-										<input type="text" id="textASAccessRestrictions_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+										<textarea id="textASAccessRestrictions_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASAccessRestrictions_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSFutherAccessInformationChanged($(this));" value="<s:property value="#internalCurrent" />" />
+										<textarea id="textASAccessRestrictions_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSFutherAccessInformationChanged($(this));"><s:property value="#internalCurrent" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
-									<label for="selectASARSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectASARSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<s:if test="%{#counter > 0}">
@@ -390,18 +390,18 @@
 					<s:else>
 						<tr id="trASAccessRestrictions_1">
 							<td>
-								<label for="textASAccessRestrictions_1"><s:property value="getText('label.ai.accessAndServices.accessRestrictions')" />:</label>
+								<label for="textASAccessRestrictions_1"><s:property value="getText('eag2012.accessAndServices.accessRestrictions')" />:</label>
 							</td>
 							<td>
 								<s:if test="%{#counter > 0}">
-									<input type="text" id="textASAccessRestrictions_1" />
+									<textarea id="textASAccessRestrictions_1"></textarea>
 								</s:if>
 								<s:else>
-									<input type="text" id="textASAccessRestrictions_1" onchange="aSFutherAccessInformationChanged($(this));" />
+									<textarea id="textASAccessRestrictions_1" onchange="aSFutherAccessInformationChanged($(this));"></textarea>
 								</s:else>
 							</td>
 							<td class="labelLeft">
-								<label for="selectASARSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+								<label for="selectASARSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							</td>
 							<td>
 								<s:if test="%{#counter > 0}">
@@ -421,18 +421,18 @@
 				<s:else>
 					<tr id="trASAccessRestrictions_1">
 						<td>
-							<label for="textASAccessRestrictions_1"><s:property value="getText('label.ai.accessAndServices.accessRestrictions')" />:</label>
+							<label for="textASAccessRestrictions_1"><s:property value="getText('eag2012.accessAndServices.accessRestrictions')" />:</label>
 						</td>
 						<td>
 							<s:if test="%{#counter > 0}">
-								<input type="text" id="textASAccessRestrictions_1" />
+								<textarea id="textASAccessRestrictions_1"></textarea>
 							</s:if>
 							<s:else>
-								<input type="text" id="textASAccessRestrictions_1" onchange="aSFutherAccessInformationChanged($(this));" />
+								<textarea id="textASAccessRestrictions_1" onchange="aSFutherAccessInformationChanged($(this));"></textarea>
 							</s:else>
 						</td>
 						<td class="labelLeft">
-							<label for="selectASARSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+							<label for="selectASARSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 						</td>
 						<td>
 							<s:if test="%{#counter > 0}">
@@ -451,7 +451,7 @@
 
 				<tr>
 					<td colspan="2">
-						<input type="button" id="buttonAddFutherAccessInformation" value="<s:property value="getText('label.ai.accessAndServices.addFutherAccessInformation')"/>" onclick="addFutherAccessInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+						<input type="button" id="buttonAddFutherAccessInformation" value="<s:property value="getText('eag2012.commons.addFutherAccessInformation')"/>" onclick="addFutherAccessInformation('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 					</td>
 					<td colspan="2">
 					</td>
@@ -466,13 +466,13 @@
 						<s:iterator var="internalCurrent" value="#numberOfTermsOfUse" status="internalStatus">
 							<tr id="trASAddFutherTermOfUse_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textASTermOfUse_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.termsOfUse')" />:</label>
+									<label for="textASTermOfUse_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.termsOfUse')" />:</label>
 								</td>
 								<td>
 									<textarea id="textASTermOfUse_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#termsOfUse[#internalStatus.index]" /></textarea>
 								</td>
 								<td class="labelLeft">
-									<label for="selectASAFTOUSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectASAFTOUSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<select id="selectASAFTOUSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
@@ -485,10 +485,10 @@
 
 							<tr id="tr2ASAddFutherTermOfUse_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textASTOULink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
+									<label for="textASTOULink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.link')"/>:</label>
 								</td>
 								<td colspan="2">
-									<input type="text" id="textASTOULink_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#termsOfUseHref[#internalStatus.index]" />" />
+									<textarea id="textASTOULink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#termsOfUseHref[#internalStatus.index]" /></textarea>
 								</td>
 								<td colspan="2">
 								</td>
@@ -498,13 +498,13 @@
 					<s:else>
 						<tr id="trASAddFutherTermOfUse_1">
 							<td>
-								<label for="textASTermOfUse_1"><s:property value="getText('label.ai.accessAndServices.termsOfUse')" />:</label>
+								<label for="textASTermOfUse_1"><s:property value="getText('eag2012.accessAndServices.termsOfUse')" />:</label>
 							</td>
 							<td>
 								<textarea id="textASTermOfUse_1"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="selectASAFTOUSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+								<label for="selectASAFTOUSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							</td>
 							<td>
 								<select id="selectASAFTOUSelectLanguage_1">
@@ -517,10 +517,10 @@
 
 						<tr id="tr2ASAddFutherTermOfUse_1">
 							<td>
-								<label for="textASTOULink_1"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
+								<label for="textASTOULink_1"><s:property value="getText('eag2012.accessAndServices.link')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASTOULink_1" />
+								<textarea id="textASTOULink_1"></textarea>
 							</td>
 							<td colspan="2">
 							</td>
@@ -530,13 +530,13 @@
 				<s:else>
 					<tr id="trASAddFutherTermOfUse_1">
 						<td>
-							<label for="textASTermOfUse_1"><s:property value="getText('label.ai.accessAndServices.termsOfUse')" />:</label>
+							<label for="textASTermOfUse_1"><s:property value="getText('eag2012.accessAndServices.termsOfUse')" />:</label>
 						</td>
 						<td>
 							<textarea id="textASTermOfUse_1"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="selectASAFTOUSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+							<label for="selectASAFTOUSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 						</td>
 						<td>
 							<select id="selectASAFTOUSelectLanguage_1">
@@ -549,10 +549,10 @@
 
 					<tr id="tr2ASAddFutherTermOfUse_1">
 						<td>
-							<label for="textASTOULink_1"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
+							<label for="textASTOULink_1"><s:property value="getText('eag2012.accessAndServices.link')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASTOULink_1" />
+							<textarea id="textASTOULink_1"></textarea>
 						</td>
 						<td colspan="2">
 						</td>
@@ -561,7 +561,7 @@
 
 				<tr>
 					<td colspan="2">
-						<input type="button" id="buttonASAddFutherTermOfUse" value="<s:property value="getText('label.ai.accessAndServices.addFurtherTermsOfUse')"/>" onclick="aSAddFutherTermOfUse('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+						<input type="button" id="buttonASAddFutherTermOfUse" value="<s:property value="getText('eag2012.accessAndServices.addFurtherTermsOfUse')"/>" onclick="aSAddFutherTermOfUse('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 					</td>
 					<td colspan="2">
 					</td>
@@ -570,7 +570,7 @@
 				<s:set var="accessibilityToThePublic" value="loader.asAccessibilityQuestion[#counter]"/>
 				<tr>
 					<td>
-						<label for="selectASFacilitiesForDisabledPeopleAvailable"><s:property value="getText('label.ai.accessAndServices.facilitiesForDisabledPeopleAvailable')"/><span class="required">*</span>:</label>
+						<label for="selectASFacilitiesForDisabledPeopleAvailable"><s:property value="getText('eag2012.commons.disabledAccess')"/><span class="required">*</span>:</label>
 					</td>
 					<td>
 						<select id="selectASFacilitiesForDisabledPeopleAvailable" onchange="aSFacilitiesForDisabledPeopleAvailableChanged();">
@@ -588,18 +588,18 @@
 						<s:iterator var="internalCurrent" value="#accessibility" status="internalStatus">
 							<tr id="trAccessibilityInformation_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textASAccessibility_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.accesibility')" />:</label>
+									<label for="textASAccessibility_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.disabledAccess.facilities')" />:</label>
 								</td>
 								<td>
 									<s:if test="%{#counter > 0}">
-										<input type="text" id="textASAccessibility_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+										<textarea id="textASAccessibility_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASAccessibility_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSFutherInformationOnExistingFacilitiesChanged($(this));" value="<s:property value="#internalCurrent" />" />
+										<textarea id="textASAccessibility_<s:property value="%{#internalStatus.index + 1}" />" onchange="aSFutherInformationOnExistingFacilitiesChanged($(this));"><s:property value="#internalCurrent" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
-									<label for="selectASASelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectASASelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<s:if test="%{#counter > 0}">
@@ -619,18 +619,18 @@
 					<s:else>
 						<tr id="trAccessibilityInformation_1">
 							<td>
-								<label for="textASAccessibility_1"><s:property value="getText('label.ai.accessAndServices.accesibility')" />:</label>
+								<label for="textASAccessibility_1"><s:property value="getText('eag2012.commons.disabledAccess.facilities')" />:</label>
 							</td>
 							<td>
 								<s:if test="%{#counter > 0}">
-									<input type="text" id="textASAccessibility_1" />
+									<textarea id="textASAccessibility_1"></textarea>
 								</s:if>
 								<s:else>
-									<input type="text" id="textASAccessibility_1" onchange="aSFutherInformationOnExistingFacilitiesChanged($(this));" />
+									<textarea id="textASAccessibility_1" onchange="aSFutherInformationOnExistingFacilitiesChanged($(this));"></textarea>
 								</s:else>
 							</td>
 							<td class="labelLeft">
-								<label for="selectASASelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+								<label for="selectASASelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 							</td>
 							<td>
 								<s:if test="%{#counter > 0}">
@@ -650,18 +650,18 @@
 				<s:else>
 					<tr id="trAccessibilityInformation_1">
 						<td>
-							<label for="textASAccessibility_1"><s:property value="getText('label.ai.accessAndServices.accesibility')" />:</label>
+							<label for="textASAccessibility_1"><s:property value="getText('eag2012.commons.disabledAccess.facilities')" />:</label>
 						</td>
 						<td>
 							<s:if test="%{#counter > 0}">
-								<input type="text" id="textASAccessibility_1" />
+								<textarea id="textASAccessibility_1"></textarea>
 							</s:if>
 							<s:else>
-								<input type="text" id="textASAccessibility_1" onchange="aSFutherInformationOnExistingFacilitiesChanged($(this));" />
+								<textarea id="textASAccessibility_1" onchange="aSFutherInformationOnExistingFacilitiesChanged($(this));"></textarea>
 							</s:else>
 						</td>
 						<td class="labelLeft">
-							<label for="selectASASelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+							<label for="selectASASelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 						</td>
 						<td>
 							<s:if test="%{#counter > 0}">
@@ -680,7 +680,7 @@
 		
 				<tr>
 					<td colspan="2">
-						<input type="button" id="buttonAddAccessibilityInformation" value="<s:property value="getText('label.ai.accessAndServices.addAccessibilityInformation')"/>" onclick="addAccessibilityInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+						<input type="button" id="buttonAddAccessibilityInformation" value="<s:property value="getText('eag2012.accessAndServices.addAccessibilityInformation')"/>" onclick="addAccessibilityInformation('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 					</td>
 					<td colspan="2">
 					</td>
@@ -688,7 +688,7 @@
 
 				<tr>
 					<td id="searchroomLabel" colspan="4">
-						<span><s:property value="getText('label.ai.accessAndServices.searchroom')" /></span>
+						<span><s:property value="getText('eag2012.accessAndServices.searchroom')" /></span>
 					</td>
 				</tr>
 
@@ -698,7 +698,7 @@
 						<s:iterator var="internalCurrent" value="#searchRoomTelephone" status="internalStatus">
 							<tr>
 								<td>
-									<label for="textASSRTelephone_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.telephone')" />:</label>
+									<label for="textASSRTelephone_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.telephone')" />:</label>
 								</td>
 								<td>
 									<input type="text" id="textASSRTelephone_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
@@ -711,7 +711,7 @@
 					<s:else>
 						<tr>
 							<td>
-								<label for="textASSRTelephone_1"><s:property value="getText('label.ai.tabs.commons.telephone')"/>:</label>
+								<label for="textASSRTelephone_1"><s:property value="getText('eag2012.commons.telephone')"/>:</label>
 							</td>
 							<td>
 								<input type="text" id="textASSRTelephone_1" />
@@ -724,7 +724,7 @@
 				<s:else>
 					<tr>
 						<td>
-							<label for="textASSRTelephone_1"><s:property value="getText('label.ai.tabs.commons.telephone')"/>:</label>
+							<label for="textASSRTelephone_1"><s:property value="getText('eag2012.commons.telephone')"/>:</label>
 						</td>
 						<td>
 							<input type="text" id="textASSRTelephone_1"/>
@@ -743,34 +743,34 @@
 							<tr>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<label for="textASSREmailAddress_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
+										<label for="textASSREmailAddress_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.email')" />:</label>
 									</s:if>
 									<s:else>
-										<label for="textASSREmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
+										<label for="textASSREmailAddress"><s:property value="getText('eag2012.commons.email')" />:</label>
 									</s:else>
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASSREmailAddress_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#srEmailHref[#internalStatus.index]" />" />
+										<textarea id="textASSREmailAddress_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#srEmailHref[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASSREmailAddress" value="<s:property value="#srEmailHref[#internalStatus.index]" />" />
+										<textarea id="textASSREmailAddress"><s:property value="#srEmailHref[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
 									<s:if test="%{#internalStatus.index > 0}">
-										<label for="textASSREmailLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+										<label for="textASSREmailLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.linkTitle')" />:</label>
 									</s:if>
 									<s:else>
-										<label for="textASSREmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+										<label for="textASSREmailLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 									</s:else>
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASSREmailLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#srEmailTitle[#internalStatus.index]" />" />
+										<textarea id="textASSREmailLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#srEmailTitle[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASSREmailLinkTitle" value="<s:property value="#srEmailTitle[#internalStatus.index]" />" />
+										<textarea id="textASSREmailLinkTitle"><s:property value="#srEmailTitle[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 							</tr>
@@ -779,16 +779,16 @@
 					<s:else>
 						<tr>
 							<td>
-								<label for="textASSREmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')"/>:</label>
+								<label for="textASSREmailAddress"><s:property value="getText('eag2012.commons.email')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASSREmailAddress" />
+								<textarea id="textASSREmailAddress"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="textASSREmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+								<label for="textASSREmailLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASSREmailLinkTitle" />
+								<textarea id="textASSREmailLinkTitle"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -796,16 +796,16 @@
 				<s:else>
 					<tr>
 						<td>
-							<label for="textASSREmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')"/>:</label>
+							<label for="textASSREmailAddress"><s:property value="getText('eag2012.commons.email')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASSREmailAddress" />
+							<textarea id="textASSREmailAddress"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="textASSREmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+							<label for="textASSREmailLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASSREmailLinkTitle" />
+							<textarea id="textASSREmailLinkTitle"></textarea>
 						</td>
 					</tr>
 				</s:else>
@@ -819,34 +819,34 @@
 							<tr>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<label for="textASSRWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+										<label for="textASSRWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 									</s:if>
 									<s:else>
-										<label for="textASSRWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+										<label for="textASSRWebpage"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 									</s:else>
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASSRWebpage_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#srWebpageHref[#internalStatus.index]" />" />
+										<textarea id="textASSRWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#srWebpageHref[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASSRWebpage" value="<s:property value="#srWebpageHref[#internalStatus.index]" />" />
+										<textarea id="textASSRWebpage"><s:property value="#srWebpageHref[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
 									<s:if test="%{#internalStatus.index > 0}">
-										<label for="textASSRWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+										<label for="textASSRWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.linkTitle')" />:</label>
 									</s:if>
 									<s:else>
-										<label for="textASSRWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+										<label for="textASSRWebpageLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 									</s:else>
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASSRWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#srWebpageTitle[#internalStatus.index]" />" />
+										<textarea id="textASSRWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#srWebpageTitle[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASSRWebpageLinkTitle" value="<s:property value="#srWebpageTitle[#internalStatus.index]" />" />
+										<textarea id="textASSRWebpageLinkTitle"><s:property value="#srWebpageTitle[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 							</tr>
@@ -855,16 +855,16 @@
 					<s:else>
 						<tr>
 							<td>
-								<label for="textASSRWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')"/>:</label>
+								<label for="textASSRWebpage"><s:property value="getText('eag2012.commons.webpage')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASSRWebpage" />
+								<textarea id="textASSRWebpage"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="textASSRWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+								<label for="textASSRWebpageLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASSRWebpageLinkTitle" />
+								<textarea id="textASSRWebpageLinkTitle"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -872,16 +872,16 @@
 				<s:else>
 					<tr>
 						<td>
-							<label for="textASSRWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')"/>:</label>
+							<label for="textASSRWebpage"><s:property value="getText('eag2012.commons.webpage')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASSRWebpage" />
+							<textarea id="textASSRWebpage"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="textASSRWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+							<label for="textASSRWebpageLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASSRWebpageLinkTitle" />
+							<textarea id="textASSRWebpageLinkTitle"></textarea>
 						</td>
 					</tr>
 				</s:else>
@@ -893,10 +893,10 @@
 							<tr>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<label for="textASSRWorkPlaces_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.workPlaces')" />:</label>
+										<label for="textASSRWorkPlaces_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.workPlaces')" />:</label>
 									</s:if>
 									<s:else>
-										<label for="textASSRWorkPlaces"><s:property value="getText('label.ai.accessAndServices.workPlaces')" />:</label>
+										<label for="textASSRWorkPlaces"><s:property value="getText('eag2012.commons.workPlaces')" />:</label>
 									</s:else>
 								</td>
 								<td>
@@ -915,7 +915,7 @@
 					<s:else>
 						<tr>
 							<td>
-								<label for="textASSRWorkPlaces"><s:property value="getText('label.ai.accessAndServices.workPlaces')"/>:</label>
+								<label for="textASSRWorkPlaces"><s:property value="getText('eag2012.commons.workPlaces')"/>:</label>
 							</td>
 							<td>
 								<input type="text" id="textASSRWorkPlaces" />
@@ -928,7 +928,7 @@
 				<s:else>
 					<tr>
 						<td>
-							<label for="textASSRWorkPlaces"><s:property value="getText('label.ai.accessAndServices.workPlaces')"/>:</label>
+							<label for="textASSRWorkPlaces"><s:property value="getText('eag2012.commons.workPlaces')"/>:</label>
 						</td>
 						<td>
 							<input type="text" id="textASSRWorkPlaces" />
@@ -945,10 +945,10 @@
 							<tr>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<label for="textASSRComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.computerPlaces')" />:</label>
+										<label for="textASSRComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.computerPlaces')" />:</label>
 									</s:if>
 									<s:else>
-										<label for="textASSRComputerPlaces"><s:property value="getText('label.ai.accessAndServices.computerPlaces')" />:</label>
+										<label for="textASSRComputerPlaces"><s:property value="getText('eag2012.accessAndServices.computerPlaces')" />:</label>
 									</s:else>
 								</td>
 								<td>
@@ -967,7 +967,7 @@
 					<s:else>
 						<tr>
 							<td>
-								<label for="textASSRComputerPlaces"><s:property value="getText('label.ai.accessAndServices.computerPlaces')"/>:</label>
+								<label for="textASSRComputerPlaces"><s:property value="getText('eag2012.accessAndServices.computerPlaces')"/>:</label>
 							</td>
 							<td>
 								<input type="text" id="textASSRComputerPlaces" />
@@ -980,7 +980,7 @@
 				<s:else>
 					<tr>
 						<td>
-							<label for="textASSRComputerPlaces"><s:property value="getText('label.ai.accessAndServices.computerPlaces')"/>:</label>
+							<label for="textASSRComputerPlaces"><s:property value="getText('eag2012.accessAndServices.computerPlaces')"/>:</label>
 						</td>
 						<td>
 							<input type="text" id="textASSRComputerPlaces" />
@@ -997,13 +997,13 @@
 						<s:iterator var="internalCurrent" value="#srComputerPlacesDescription" status="internalStatus">
 							<tr id="trASSRDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />">
 								<td id="tdDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />">
-									<label for="textDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.descriptionOfComputerPlaces')" />:</label>
+									<label for="textDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.computerplacesDescription')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+									<textarea id="textDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td id="tdSelectDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
-									<label for="selectDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<select id="selectDescriptionOfYourComputerPlaces_<s:property value="%{#internalStatus.index + 1}" />">
@@ -1016,7 +1016,7 @@
 						</s:iterator>
 						<tr id="trASSRAddDescriptionOfYourComputerPlaces">
 							<td colspan="3">
-								<input type="button" id="buttonASSRAddadescriptionofyourcomputerplaces" value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourComputerPlaces')"/>" onclick="aSSRAddDescriptionOfYourComputerPlaces('<s:property value="getText('label.ai.accessAndServices.descriptionOfComputerPlaces')"/>', '<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+								<input type="button" id="buttonASSRAddadescriptionofyourcomputerplaces" value="<s:property value="getText('eag2012.accessAndServices.addDescription')"/>" onclick="aSSRAddDescriptionOfYourComputerPlaces('<s:property value="getText('eag2012.commons.computerplacesDescription')"/>', '<s:property value="getText('eag2012.commons.selectLanguage')" />', '<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 							</td>
 							<td>
 							</td>
@@ -1025,7 +1025,7 @@
 					<s:else>
 						<tr id="trASSRAddDescriptionOfYourComputerPlaces">
 							<td colspan="3">
-								<input type="button" id="buttonASSRAddadescriptionofyourcomputerplaces" value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourComputerPlaces')"/>" onclick="aSSRAddDescriptionOfYourComputerPlaces('<s:property value="getText('label.ai.accessAndServices.descriptionOfComputerPlaces')"/>', '<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+								<input type="button" id="buttonASSRAddadescriptionofyourcomputerplaces" value="<s:property value="getText('eag2012.accessAndServices.addDescription')"/>" onclick="aSSRAddDescriptionOfYourComputerPlaces('<s:property value="getText('eag2012.commons.computerplacesDescription')"/>', '<s:property value="getText('eag2012.commons.selectLanguage')" />', '<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 							</td>
 							<td>
 							</td>
@@ -1035,7 +1035,7 @@
 				<s:else>
 					<tr id="trASSRAddDescriptionOfYourComputerPlaces">
 						<td colspan="3">
-							<input type="button" id="buttonASSRAddadescriptionofyourcomputerplaces" value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourComputerPlaces')"/>" onclick="aSSRAddDescriptionOfYourComputerPlaces('<s:property value="getText('label.ai.accessAndServices.descriptionOfComputerPlaces')"/>', '<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+							<input type="button" id="buttonASSRAddadescriptionofyourcomputerplaces" value="<s:property value="getText('eag2012.accessAndServices.addDescription')"/>" onclick="aSSRAddDescriptionOfYourComputerPlaces('<s:property value="getText('eag2012.commons.computerplacesDescription')"/>', '<s:property value="getText('eag2012.commons.selectLanguage')" />', '<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 						</td>
 						<td>
 						</td>
@@ -1044,7 +1044,7 @@
 
 				<tr>
 					<td>
-						<label for="textASSRMicrofilmPlaces"><s:property value="getText('label.ai.accessAndServices.microfilmPlaces')"/>:</label>
+						<label for="textASSRMicrofilmPlaces"><s:property value="getText('eag2012.accessAndServices.microfilmPlaces')"/>:</label>
 					</td>
 					<td>
 						<s:if test="%{loader.asSearchRoomMicrofilmReaders.size() > 0}">
@@ -1061,7 +1061,7 @@
 						</s:else>
 					</td>
 					<td class="labelLeft">
-						<label for="selectASSRPhotographAllowance"><s:property value="getText('label.ai.accessAndServices.photographAllowance')"/>:</label>
+						<label for="selectASSRPhotographAllowance"><s:property value="getText('eag2012.accessAndServices.photographAllowance')"/>:</label>
 					</td>
 					<td>
 						<select id="selectASSRPhotographAllowance">
@@ -1099,13 +1099,13 @@
 						<s:iterator var="internalCurrent" value="#numberOfReadersTicket" status="internalStatus">
 							<tr id="trASSRReadersTicket_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textASSRReadersTicket_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.readersTicket')" />:</label>
+									<label for="textASSRReadersTicket_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.readersTicket')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASSRReadersTicket_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#readersTicketContent[#internalStatus.index]" />" />
+									<textarea id="textASSRReadersTicket_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#readersTicketContent[#internalStatus.index]" /></textarea>
 								</td>
 								<td class="labelLeft">
-									<label for="selectReadersTickectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectReadersTickectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<select id="selectReadersTickectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
@@ -1118,10 +1118,10 @@
 
 							<tr id="tr2ASSRReadersTicket_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textASSRRTLink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
+									<label for="textASSRRTLink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.link')"/>:</label>
 								</td>
 								<td>
-									<input type="text" id="textASSRRTLink_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#readersTicketHref[#internalStatus.index]" />" />
+									<textarea  id="textASSRRTLink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#readersTicketHref[#internalStatus.index]" /></textarea>
 								</td>
 								<td colspan="2">
 								</td>
@@ -1131,13 +1131,13 @@
 					<s:else>
 						<tr id="trASSRReadersTicket_1">
 							<td>
-								<label for="textASSRReadersTicket_1"><s:property value="getText('label.ai.accessAndServices.readersTicket')"/>:</label>
+								<label for="textASSRReadersTicket_1"><s:property value="getText('eag2012.accessAndServices.readersTicket')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASSRReadersTicket_1" />
+								<textarea id="textASSRReadersTicket_1"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="selectReadersTickectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+								<label for="selectReadersTickectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							</td>
 							<td>
 								<select id="selectReadersTickectLanguage_1">
@@ -1150,10 +1150,10 @@
 
 						<tr id="tr2ASSRReadersTicket_1">
 							<td>
-								<label for="textASSRRTLink_1"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
+								<label for="textASSRRTLink_1"><s:property value="getText('eag2012.accessAndServices.link')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASSRRTLink_1" />
+								<textarea id="textASSRRTLink_1"></textarea>
 							</td>
 							<td colspan="2">
 							</td>
@@ -1163,13 +1163,13 @@
 				<s:else>
 					<tr id="trASSRReadersTicket_1">
 						<td>
-							<label for="textASSRReadersTicket_1"><s:property value="getText('label.ai.accessAndServices.readersTicket')"/>:</label>
+							<label for="textASSRReadersTicket_1"><s:property value="getText('eag2012.accessAndServices.readersTicket')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASSRReadersTicket_1" />
+							<textarea id="textASSRReadersTicket_1"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="selectReadersTickectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+							<label for="selectReadersTickectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 						</td>
 						<td>
 							<select id="selectReadersTickectLanguage_1">
@@ -1182,10 +1182,10 @@
 
 					<tr id="tr2ASSRReadersTicket_1">
 						<td>
-							<label for="textASSRRTLink_1"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
+							<label for="textASSRRTLink_1"><s:property value="getText('eag2012.accessAndServices.link')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASSRRTLink_1" />
+							<textarea id="textASSRRTLink_1"></textarea>
 						</td>
 						<td colspan="2">
 						</td>
@@ -1194,7 +1194,7 @@
 
 				<tr>
 					<td colspan="2">
-						<input type="button" id="buttonASSRAddReadersTicket" value="<s:property value="getText('label.ai.accessAndServices.addReadersTicket')"/>" onclick="aSSRAddReadersTicket('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
+						<input type="button" id="buttonASSRAddReadersTicket" value="<s:property value="getText('eag2012.accessAndServices.addReadersTicket')"/>" onclick="aSSRAddReadersTicket('<s:property value="getText('eag2012.commons.pleaseFillData')" />');"/>
 					</td>
 					<td colspan="2">
 					</td>
@@ -1209,13 +1209,13 @@
 						<s:iterator var="internalCurrent" value="#numberOfAdvancedOrders" status="internalStatus">
 							<tr id="trASSRAddFurtherOrderInformation_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textASSRAdvancedOrders_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.advancedOrders')" />:</label>
+									<label for="textASSRAdvancedOrders_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.advancedOrders')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASSRAdvancedOrders_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#advancedOrdersContent[#internalStatus.index]" />" />
+									<textarea id="textASSRAdvancedOrders_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#advancedOrdersContent[#internalStatus.index]" /></textarea>
 								</td>
 								<td class="labelLeft">
-									<label for="selectASSRAFOIUSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectASSRAFOIUSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<select id="selectASSRAFOIUSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
@@ -1228,10 +1228,10 @@
 
 							<tr id="tr2ASSRAddFurtherOrderInformation_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textASSRAOLink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
+									<label for="textASSRAOLink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.link')"/>:</label>
 								</td>
 								<td>
-									<input type="text" id="textASSRAOLink_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#advancedOrdersHref[#internalStatus.index]" />" />
+									<textarea id="textASSRAOLink_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#advancedOrdersHref[#internalStatus.index]" /></textarea>
 								</td>
 								<td colspan="2">
 								</td>
@@ -1241,13 +1241,13 @@
 					<s:else>
 						<tr id="trASSRAddFurtherOrderInformation_1">
 							<td>
-								<label for="textASSRAdvancedOrders_1"><s:property value="getText('label.ai.accessAndServices.advancedOrders')" />:</label>
+								<label for="textASSRAdvancedOrders_1"><s:property value="getText('eag2012.accessAndServices.advancedOrders')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASSRAdvancedOrders_1" />
+								<textarea id="textASSRAdvancedOrders_1"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="selectASSRAFOIUSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+								<label for="selectASSRAFOIUSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							</td>
 							<td>
 								<select id="selectASSRAFOIUSelectLanguage_1">
@@ -1260,10 +1260,10 @@
 
 						<tr id="tr2ASSRAddFurtherOrderInformation_1">
 							<td>
-								<label for="textASSRAOLink_1"><s:property value="getText('label.ai.accessAndServices.link')" />:</label>
+								<label for="textASSRAOLink_1"><s:property value="getText('eag2012.accessAndServices.link')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASSRAOLink_1" />
+								<textarea id="textASSRAOLink_1"></textarea>
 							</td>
 							<td colspan="2">
 							</td>
@@ -1273,13 +1273,13 @@
 				<s:else>
 					<tr id="trASSRAddFurtherOrderInformation_1">
 						<td>
-							<label for="textASSRAdvancedOrders_1"><s:property value="getText('label.ai.accessAndServices.advancedOrders')" />:</label>
+							<label for="textASSRAdvancedOrders_1"><s:property value="getText('eag2012.accessAndServices.advancedOrders')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASSRAdvancedOrders_1" />
+							<textarea id="textASSRAdvancedOrders_1"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="selectASSRAFOIUSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+							<label for="selectASSRAFOIUSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 						</td>
 						<td>
 							<select id="selectASSRAFOIUSelectLanguage_1">
@@ -1292,10 +1292,10 @@
 
 					<tr id="tr2ASSRAddFurtherOrderInformation_1">
 						<td>
-							<label for="textASSRAOLink_1"><s:property value="getText('label.ai.accessAndServices.link')" />:</label>
+							<label for="textASSRAOLink_1"><s:property value="getText('eag2012.accessAndServices.link')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASSRAOLink_1" />
+							<textarea id="textASSRAOLink_1"></textarea>
 						</td>
 						<td colspan="2">
 						</td>
@@ -1304,7 +1304,7 @@
 		
 				<tr>
 					<td colspan="2">
-						<input type="button" id="buttonASSRAddFurtherOrderInformation" value="<s:property value="getText('label.ai.accessAndServices.addFurtherOrderInformation')" />" onclick="aSSRAddFurtherOrderInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+						<input type="button" id="buttonASSRAddFurtherOrderInformation" value="<s:property value="getText('eag2012.control.advancedOrders')" />" onclick="aSSRAddFurtherOrderInformation('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 					</td>
 					<td colspan="2">
 					</td>
@@ -1317,13 +1317,13 @@
 						<s:iterator var="internalCurrent" value="#researchServicesContent" status="internalStatus">
 							<tr id="trASSRResearchServices_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textASSRResearchServices_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.researchServices')" />:</label>
+									<label for="textASSRResearchServices_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.researchServices')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASSRResearchServices_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+									<textarea id="textASSRResearchServices_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td class="labelLeft">
-									<label for="textASSRRSSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="textASSRRSSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<select id="textASSRRSSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
@@ -1338,13 +1338,13 @@
 					<s:else>
 						<tr id="trASSRResearchServices_1">
 							<td>
-								<label for="textASSRResearchServices_1"><s:property value="getText('label.ai.accessAndServices.researchServices')"/>:</label>
+								<label for="textASSRResearchServices_1"><s:property value="getText('eag2012.accessAndServices.researchServices')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASSRResearchServices_1" />
+								<textarea id="textASSRResearchServices_1"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="textASSRRSSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+								<label for="textASSRRSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							</td>
 							<td>
 								<select id="textASSRRSSelectLanguage_1">
@@ -1359,13 +1359,13 @@
 				<s:else>
 					<tr id="trASSRResearchServices_1">
 						<td>
-							<label for="textASSRResearchServices_1"><s:property value="getText('label.ai.accessAndServices.researchServices')"/>:</label>
+							<label for="textASSRResearchServices_1"><s:property value="getText('eag2012.accessAndServices.researchServices')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASSRResearchServices_1" />
+							<textarea id="textASSRResearchServices_1"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="textASSRRSSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+							<label for="textASSRRSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 						</td>
 						<td>
 							<select id="textASSRRSSelectLanguage_1">
@@ -1379,7 +1379,7 @@
 
 				<tr>
 					<td colspan="2">
-						<input type="button" id="buttonASAddResearchServices" value="<s:property value="getText('label.ai.accessAndServices.addResearchServices')"/>" onclick="aSAddResearchServices('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+						<input type="button" id="buttonASAddResearchServices" value="<s:property value="getText('eag2012.accessAndServices.addResearchservices')"/>" onclick="aSAddResearchServices('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 					</td>
 					<td colspan="2">
 					</td>
@@ -1387,7 +1387,7 @@
 
 				<tr>
 					<td id="libraryLabel">
-						<span><s:property value="getText('label.ai.accessAndServices.library')" /></span>
+						<span><s:property value="getText('eag2012.accessAndServices.library')" /></span>
 					</td>
 					<td>
 						<select id="selectASLibrary">
@@ -1424,7 +1424,7 @@
 						<s:iterator var="internalCurrent" value="#libraryTelephone" status="internalStatus">
 							<tr>
 								<td>
-									<label for="textASLTelephone_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.telephone')" />:</label>
+									<label for="textASLTelephone_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.telephone')" />:</label>
 								</td>
 								<td>
 									<input type="text" id="textASLTelephone_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
@@ -1437,7 +1437,7 @@
 					<s:else>
 						<tr>
 							<td>
-								<label for="textASLTelephone_1"><s:property value="getText('label.ai.tabs.commons.telephone')" />:</label>
+								<label for="textASLTelephone_1"><s:property value="getText('eag2012.commons.telephone')" />:</label>
 							</td>
 							<td>
 								<input type="text" id="textASLTelephone_1" />
@@ -1450,7 +1450,7 @@
 				<s:else>
 					<tr>
 						<td>
-							<label for="textASLTelephone_1"><s:property value="getText('label.ai.tabs.commons.telephone')" />:</label>
+							<label for="textASLTelephone_1"><s:property value="getText('eag2012.commons.telephone')" />:</label>
 						</td>
 						<td>
 							<input type="text" id="textASLTelephone_1" />
@@ -1469,34 +1469,34 @@
 							<tr>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<label for="textASLEmailAddress_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
+										<label for="textASLEmailAddress_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.email')" />:</label>
 									</s:if>
 									<s:else>
-										<label for="textASLEmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
+										<label for="textASLEmailAddress"><s:property value="getText('eag2012.commons.email')" />:</label>
 									</s:else>
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASLEmailAddress_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#libEmailHref[#internalStatus.index]" />" />
+										<textarea id="textASLEmailAddress_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#libEmailHref[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASLEmailAddress" value="<s:property value="#libEmailHref[#internalStatus.index]" />" />
+										<textarea id="textASLEmailAddress"><s:property value="#libEmailHref[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
 									<s:if test="%{#internalStatus.index > 0}">
-										<label for="textASLEmailLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+										<label for="textASLEmailLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.linkTitle')" />:</label>
 									</s:if>
 									<s:else>
-										<label for="textASLEmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+										<label for="textASLEmailLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 									</s:else>
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASLEmailLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#libEmailTitle[#internalStatus.index]" />" />
+										<textarea id="textASLEmailLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#libEmailTitle[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASLEmailLinkTitle" value="<s:property value="#libEmailTitle[#internalStatus.index]" />" />
+										<textarea id="textASLEmailLinkTitle"><s:property value="#libEmailTitle[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 							</tr>
@@ -1505,16 +1505,16 @@
 					<s:else>
 						<tr>
 							<td>
-								<label for="textASLEmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
+								<label for="textASLEmailAddress"><s:property value="getText('eag2012.commons.email')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASLEmailAddress" />
+								<textarea id="textASLEmailAddress"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="textASLEmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+								<label for="textASLEmailLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASLEmailLinkTitle" />
+								<textarea id="textASLEmailLinkTitle"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -1522,16 +1522,16 @@
 				<s:else>
 					<tr>
 						<td>
-							<label for="textASLEmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
+							<label for="textASLEmailAddress"><s:property value="getText('eag2012.commons.email')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASLEmailAddress" />
+							<textarea id="textASLEmailAddress"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="textASLEmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+							<label for="textASLEmailLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASLEmailLinkTitle" />
+							<textarea id="textASLEmailLinkTitle"></textarea>
 						</td>
 					</tr>
 				</s:else>
@@ -1545,34 +1545,34 @@
 							<tr>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<label for="textASLWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+										<label for="textASLWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 									</s:if>
 									<s:else>
-										<label for="textASLWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+										<label for="textASLWebpage"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 									</s:else>
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASLWebpage_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#libWebpageHref[#internalStatus.index]" />" />
+										<textarea id="textASLWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#libWebpageHref[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASLWebpage" value="<s:property value="#libWebpageHref[#internalStatus.index]" />" />
+										<textarea id="textASLWebpage"><s:property value="#libWebpageHref[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
 									<s:if test="%{#internalStatus.index > 0}">
-										<label for="textASLWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+										<label for="textASLWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.linkTitle')" />:</label>
 									</s:if>
 									<s:else>
-										<label for="textASLWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+										<label for="textASLWebpageLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 									</s:else>
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASLWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#libWebpageTitle[#internalStatus.index]" />" />
+										<textarea id="textASLWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#libWebpageTitle[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASLWebpageLinkTitle" value="<s:property value="#libWebpageTitle[#internalStatus.index]" />" />
+										<textarea id="textASLWebpageLinkTitle"><s:property value="#libWebpageTitle[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 							</tr>
@@ -1581,16 +1581,16 @@
 					<s:else>
 						<tr>
 							<td>
-								<label for="textASLWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+								<label for="textASLWebpage"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASLWebpage" />
+								<textarea id="textASLWebpage"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="textASLWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+								<label for="textASLWebpageLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASLWebpageLinkTitle" />
+								<textarea id="textASLWebpageLinkTitle"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -1598,23 +1598,23 @@
 				<s:else>
 					<tr>
 						<td>
-							<label for="textASLWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+							<label for="textASLWebpage"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASLWebpage" />
+							<textarea id="textASLWebpage"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="textASLWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+							<label for="textASLWebpageLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASLWebpageLinkTitle" />
+							<textarea id="textASLWebpageLinkTitle"></textarea>
 						</td>
 					</tr>
 				</s:else>
 
 				<tr>
 					<td>
-						<label for="textASLMonographocPublication"><s:property value="getText('label.ai.accessAndServices.monographicPublication')" />:</label>
+						<label for="textASLMonographocPublication"><s:property value="getText('eag2012.accessAndServices.monographicPublication')" />:</label>
 					</td>
 					<td>
 						<s:if test="%{loader.asLibraryMonographPublication.size() > 0}">
@@ -1631,7 +1631,7 @@
 						</s:else>
 					</td>
 					<td class="labelLeft">
-						<label for="textASLSerialPublication"><s:property value="getText('label.ai.accessAndServices.serialPublication')"/>:</label>
+						<label for="textASLSerialPublication"><s:property value="getText('eag2012.accessAndServices.serialPublication')"/>:</label>
 					</td>
 					<td>
 						<s:if test="%{loader.asLibrarySerialPublication.size() > 0}">
@@ -1651,7 +1651,7 @@
 
 				<tr>
 					<td id="internetAccessLabel">
-						<label for="selectASInternetAccess"><span><s:property value="getText('label.ai.accessAndServices.internetAccess')" /></span>:</label>
+						<label for="selectASInternetAccess"><span><s:property value="getText('eag2012.accessAndServices.internetAccess')" /></span>:</label>
 					</td>
 					<td>
 						<select id="selectASInternetAccess">
@@ -1689,13 +1689,13 @@
 						<s:iterator var="internalCurrent" value="#internetAccessDescription" status="internalStatus">
 							<tr id="trASPIAAddInternetAccessInformation_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textASDescription_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.description')" />:</label>
+									<label for="textASDescription_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.description')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASDescription_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+									<textarea id="textASDescription_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td class="labelLeft">
-									<label for="selectASDSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectASDSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<select id="selectASDSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
@@ -1710,13 +1710,13 @@
 					<s:else>
 						<tr id="trASPIAAddInternetAccessInformation_1">
 							<td>
-								<label for="textASDescription_1"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
+								<label for="textASDescription_1"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASDescription_1" />
+								<textarea id="textASDescription_1"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="selectASDSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+								<label for="selectASDSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							</td>
 							<td>
 								<select id="selectASDSelectLanguage_1">
@@ -1731,13 +1731,13 @@
 				<s:else>
 					<tr id="trASPIAAddInternetAccessInformation_1">
 						<td>
-							<label for="textASDescription_1"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
+							<label for="textASDescription_1"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASDescription_1" />
+							<textarea id="textASDescription_1"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="selectASDSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+							<label for="selectASDSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 						</td>
 						<td>
 							<select id="selectASDSelectLanguage_1">
@@ -1751,7 +1751,7 @@
 
 				<tr>
 					<td colspan="3">
-						<input type="button" id="buttonASPIAAddInternetAccessInformation" value="<s:property value="getText('label.ai.accessAndServices.addInternetAccessInformation')" />" onclick="aSPIAAddInternetAccessInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+						<input type="button" id="buttonASPIAAddInternetAccessInformation" value="<s:property value="getText('eag2012.isil.addInternetAccess')" />" onclick="aSPIAAddInternetAccessInformation('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 					</td>
 					<td>
 					</td>
@@ -1759,13 +1759,13 @@
 
 				<tr>
 					<td id="technicalServicesLabel" colspan="4">
-						<span><s:property value="getText('label.ai.accessAndServices.technicalServices')" /></span>
+						<span><s:property value="getText('eag2012.accessAndServices.technicalServices')" /></span>
 					</td>
 				</tr>
 
 				<tr>
 					<td id="restaurationLabLabel">
-						<span><label for="selectASTSRestaurationLab"><s:property value="getText('label.ai.accessAndServices.restaurationLab')" />:</label></span>
+						<span><label for="selectASTSRestaurationLab"><s:property value="getText('eag2012.accessAndServices.conservationLab')" />:</label></span>
 					</td>
 					<td>
 						<select id="selectASTSRestaurationLab">
@@ -1803,13 +1803,13 @@
 						<s:iterator var="internalCurrent" value="#restorationlabDescription" status="internalStatus">
 							<tr id="trASTSDescriptionOfRestaurationLab_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textASTSDescriptionOfRestaurationLab_<s:property value="%{#internalStatus.index + 1}" />"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
+									<label for="textASTSDescriptionOfRestaurationLab_<s:property value="%{#internalStatus.index + 1}" />"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 								</td>
 								<td>
-									<input type="text" id="textASTSDescriptionOfRestaurationLab_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+									<textarea id="textASTSDescriptionOfRestaurationLab_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td class="labelLeft">
-									<label for="selectASTSSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectASTSSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<select id="selectASTSSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
@@ -1824,13 +1824,13 @@
 					<s:else>
 						<tr id="trASTSDescriptionOfRestaurationLab_1">
 							<td>
-								<label for="textASTSDescriptionOfRestaurationLab_1"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
+								<label for="textASTSDescriptionOfRestaurationLab_1"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASTSDescriptionOfRestaurationLab_1" />
+								<textarea id="textASTSDescriptionOfRestaurationLab_1"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="selectASTSSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+								<label for="selectASTSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							</td>
 							<td>
 								<select id="selectASTSSelectLanguage_1">
@@ -1845,13 +1845,13 @@
 				<s:else>
 					<tr id="trASTSDescriptionOfRestaurationLab_1">
 						<td>
-							<label for="textASTSDescriptionOfRestaurationLab_1"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
+							<label for="textASTSDescriptionOfRestaurationLab_1"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASTSDescriptionOfRestaurationLab_1" />
+							<textarea id="textASTSDescriptionOfRestaurationLab_1"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="selectASTSSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+							<label for="selectASTSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 						</td>
 						<td>
 							<select id="selectASTSSelectLanguage_1">
@@ -1865,7 +1865,7 @@
 
 				<tr>
 					<td colspan="3">
-						<input type="button" id="buttonAddADescriptionOfYourRestaurationLab" value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourRestaurationLab')"/>" onclick="addADescriptionOfYourRestaurationLab('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
+						<input type="button" id="buttonAddADescriptionOfYourRestaurationLab" value="<s:property value="getText('eag2012.accessAndServices.addDescriptionOfYourRestaurationLab')"/>" onclick="addADescriptionOfYourRestaurationLab('<s:property value="getText('eag2012.commons.pleaseFillData')" />');"/>
 					</td>
 					<td>
 					</td>
@@ -1877,7 +1877,7 @@
 						<s:iterator var="internalCurrent" value="#restorationlabTelephone" status="internalStatus">
 							<tr>
 								<td>
-									<label for="textASTSTelephone_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.telephone')" />:</label>
+									<label for="textASTSTelephone_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.telephone')" />:</label>
 								</td>
 								<td>
 									<input type="text" id="textASTSTelephone_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
@@ -1890,7 +1890,7 @@
 					<s:else>
 						<tr>
 							<td>
-								<label for="textASTSTelephone_1"><s:property value="getText('label.ai.tabs.commons.telephone')" />:</label>
+								<label for="textASTSTelephone_1"><s:property value="getText('eag2012.commons.telephone')" />:</label>
 							</td>
 							<td>
 								<input type="text" id="textASTSTelephone_1" />
@@ -1903,7 +1903,7 @@
 				<s:else>
 					<tr>
 						<td>
-							<label for="textASTSTelephone_1"><s:property value="getText('label.ai.tabs.commons.telephone')" />:</label>
+							<label for="textASTSTelephone_1"><s:property value="getText('eag2012.commons.telephone')" />:</label>
 						</td>
 						<td>
 							<input type="text" id="textASTSTelephone_1" />
@@ -1922,34 +1922,34 @@
 							<tr>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<label for="textASRSEmail_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
+										<label for="textASRSEmail_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.email')" />:</label>
 									</s:if>
 									<s:else>
-										<label for="textASRSEmail"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
+										<label for="textASRSEmail"><s:property value="getText('eag2012.commons.email')" />:</label>
 									</s:else>
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASRSEmail_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#restorationlabEmailHref[#internalStatus.index]" />" />
+										<textarea id="textASRSEmail_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#restorationlabEmailHref[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASRSEmail" value="<s:property value="#restorationlabEmailHref[#internalStatus.index]" />" />
+										<textarea id="textASRSEmail"><s:property value="#restorationlabEmailHref[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
 									<s:if test="%{#internalStatus.index > 0}">
-										<label for="textASRSEmailLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+										<label for="textASRSEmailLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.linkTitle')" />:</label>
 									</s:if>
 									<s:else>
-										<label for="textASRSEmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+										<label for="textASRSEmailLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 									</s:else>
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASRSEmailLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#restorationlabEmailTitle[#internalStatus.index]" />" />
+										<textarea id="textASRSEmailLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#restorationlabEmailTitle[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASRSEmailLinkTitle" value="<s:property value="#restorationlabEmailTitle[#internalStatus.index]" />" />
+										<textarea id="textASRSEmailLinkTitle"><s:property value="#restorationlabEmailTitle[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 							</tr>
@@ -1958,16 +1958,16 @@
 					<s:else>
 						<tr>
 							<td>
-								<label for="textASRSEmail"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
+								<label for="textASRSEmail"><s:property value="getText('eag2012.commons.email')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASRSEmail" />
+								<textarea id="textASRSEmail"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="textASRSEmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+								<label for="textASRSEmailLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASRSEmailLinkTitle" />
+								<textarea id="textASRSEmailLinkTitle"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -1975,16 +1975,16 @@
 				<s:else>
 					<tr>
 						<td>
-							<label for="textASRSEmail"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
+							<label for="textASRSEmail"><s:property value="getText('eag2012.commons.email')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASRSEmail" />
+							<textarea id="textASRSEmail"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="textASRSEmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+							<label for="textASRSEmailLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASRSEmailLinkTitle" />
+							<textarea id="textASRSEmailLinkTitle"></textarea>
 						</td>
 					</tr>
 				</s:else>
@@ -1998,34 +1998,34 @@
 							<tr>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<label for="textASRSWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+										<label for="textASRSWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 									</s:if>
 									<s:else>
-										<label for="textASRSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+										<label for="textASRSWebpage"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 									</s:else>
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASRSWebpage_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#restorationlabWebpageHref[#internalStatus.index]" />" />
+										<textarea id="textASRSWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#restorationlabWebpageHref[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASRSWebpage" value="<s:property value="#restorationlabWebpageHref[#internalStatus.index]" />" />
+										<textarea id="textASRSWebpage"><s:property value="#restorationlabWebpageHref[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
 									<s:if test="%{#internalStatus.index > 0}">
-										<label for="textASRSWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+										<label for="textASRSWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.linkTitle')" />:</label>
 									</s:if>
 									<s:else>
-										<label for="textASRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+										<label for="textASRSWebpageLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 									</s:else>
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASRSWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#restorationlabWebpageTitle[#internalStatus.index]" />" />
+										<textarea id="textASRSWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#restorationlabWebpageTitle[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASRSWebpageLinkTitle" value="<s:property value="#restorationlabWebpageTitle[#internalStatus.index]" />" />
+										<textarea id="textASRSWebpageLinkTitle"><s:property value="#restorationlabWebpageTitle[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 							</tr>
@@ -2034,16 +2034,16 @@
 					<s:else>
 						<tr>
 							<td>
-								<label for="textASRSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+								<label for="textASRSWebpage"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASRSWebpage" />
+								<textarea id="textASRSWebpage"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="textASRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+								<label for="textASRSWebpageLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASRSWebpageLinkTitle" />
+								<textarea id="textASRSWebpageLinkTitle"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -2051,23 +2051,23 @@
 				<s:else>
 					<tr>
 						<td>
-							<label for="textASRSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+							<label for="textASRSWebpage"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASRSWebpage" />
+							<textarea id="textASRSWebpage"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="textASRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+							<label for="textASRSWebpageLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASRSWebpageLinkTitle" />
+							<textarea id="textASRSWebpageLinkTitle"></textarea>
 						</td>
 					</tr>
 				</s:else>
 
 				<tr>
 					<td id="reproductionServiceLabel">
-						<label for="selectASTSReproductionService"><s:property value="getText('label.ai.accessAndServices.reproductionService')"/>:</label>
+						<label for="selectASTSReproductionService"><s:property value="getText('eag2012.accessAndServices.reproductionService')"/>:</label>
 					</td>
 					<td>
 						<select id="selectASTSReproductionService">
@@ -2105,13 +2105,13 @@
 						<s:iterator var="internalCurrent" value="#reproductionserDescription" status="internalStatus">
 							<tr id="trASTSDescriptionOfReproductionService_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textASTSDescriptionOfReproductionService_<s:property value="%{#internalStatus.index + 1}" />"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
+									<label for="textASTSDescriptionOfReproductionService_<s:property value="%{#internalStatus.index + 1}" />"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 								</td>
 								<td>
-									<input type="text" id="textASTSDescriptionOfReproductionService_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+									<textarea id="textASTSDescriptionOfReproductionService_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td class="labelLeft">
-									<label for="selectASTSRSSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectASTSRSSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<select id="selectASTSRSSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
@@ -2126,13 +2126,13 @@
 					<s:else>
 						<tr id="trASTSDescriptionOfReproductionService_1">
 							<td>
-								<label for="textASTSDescriptionOfReproductionService_1"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
+								<label for="textASTSDescriptionOfReproductionService_1"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASTSDescriptionOfReproductionService_1" />
+								<textarea id="textASTSDescriptionOfReproductionService_1"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="selectASTSRSSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+								<label for="selectASTSRSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							</td>
 							<td>
 								<select id="selectASTSRSSelectLanguage_1">
@@ -2147,13 +2147,13 @@
 				<s:else>
 					<tr id="trASTSDescriptionOfReproductionService_1">
 						<td>
-							<label for="textASTSDescriptionOfReproductionService_1"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
+							<label for="textASTSDescriptionOfReproductionService_1"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASTSDescriptionOfReproductionService_1" />
+							<textarea id="textASTSDescriptionOfReproductionService_1"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="selectASTSRSSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+							<label for="selectASTSRSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 						</td>
 						<td>
 							<select id="selectASTSRSSelectLanguage_1">
@@ -2167,7 +2167,7 @@
 		
 				<tr>
 					<td colspan="3">
-						<input type="button" id="buttonASAddADescriptionOfYourReproductionService"value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourReproductionService')"/>" onclick="aSAddADescriptionOfYourReproductionService('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+						<input type="button" id="buttonASAddADescriptionOfYourReproductionService"value="<s:property value="getText('eag2012.accessAndServices.addDescriptionOfYourReproductionService')"/>" onclick="aSAddADescriptionOfYourReproductionService('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 					</td>
 					<td>
 					</td>
@@ -2179,7 +2179,7 @@
 						<s:iterator var="internalCurrent" value="#reproductionserTelephone" status="internalStatus">
 							<tr>
 								<td>
-									<label for="textASTSRSTelephone_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.telephone')" />:</label>
+									<label for="textASTSRSTelephone_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.telephone')" />:</label>
 								</td>
 								<td>
 									<input type="text" id="textASTSRSTelephone_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
@@ -2192,7 +2192,7 @@
 					<s:else>
 						<tr>
 							<td>
-								<label for="textASTSRSTelephone_1"><s:property value="getText('label.ai.tabs.commons.telephone')" />:</label>
+								<label for="textASTSRSTelephone_1"><s:property value="getText('eag2012.commons.telephone')" />:</label>
 							</td>
 							<td>
 								<input type="text" id="textASTSRSTelephone_1" />
@@ -2205,7 +2205,7 @@
 				<s:else>
 					<tr>
 						<td>
-							<label for="textASTSRSTelephone_1"><s:property value="getText('label.ai.tabs.commons.telephone')" />:</label>
+							<label for="textASTSRSTelephone_1"><s:property value="getText('eag2012.commons.telephone')" />:</label>
 						</td>
 						<td>
 							<input type="text" id="textASTSRSTelephone_1" />
@@ -2224,34 +2224,34 @@
 							<tr>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<label for="textASTSRSEmailAddress_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
+										<label for="textASTSRSEmailAddress_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.email')" />:</label>
 									</s:if>
 									<s:else>
-										<label for="textASTSRSEmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
+										<label for="textASTSRSEmailAddress"><s:property value="getText('eag2012.commons.email')" />:</label>
 									</s:else>
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASTSRSEmailAddress_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#reproductionserEmailHref[#internalStatus.index]" />" />
+										<textarea id="textASTSRSEmailAddress_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#reproductionserEmailHref[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASTSRSEmailAddress" value="<s:property value="#reproductionserEmailHref[#internalStatus.index]" />" />
+										<textarea id="textASTSRSEmailAddress"><s:property value="#reproductionserEmailHref[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
 									<s:if test="%{#internalStatus.index > 0}">
-										<label for="textASTSEmailAddressLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+										<label for="textASTSEmailAddressLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.linkTitle')" />:</label>
 									</s:if>
 									<s:else>
-										<label for="textASTSEmailAddressLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+										<label for="textASTSEmailAddressLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 									</s:else>
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASTSEmailAddressLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#reproductionserEmailTitle[#internalStatus.index]" />" />
+										<textarea id="textASTSEmailAddressLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#reproductionserEmailTitle[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASTSEmailAddressLinkTitle" value="<s:property value="#reproductionserEmailTitle[#internalStatus.index]" />" />
+										<textarea id="textASTSEmailAddressLinkTitle"><s:property value="#reproductionserEmailTitle[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 							</tr>
@@ -2260,16 +2260,16 @@
 					<s:else>
 						<tr>
 							<td>
-								<label for="textASTSRSEmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
+								<label for="textASTSRSEmailAddress"><s:property value="getText('eag2012.commons.email')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASTSRSEmailAddress" />
+								<textarea id="textASTSRSEmailAddress"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="textASTSEmailAddressLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+								<label for="textASTSEmailAddressLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASTSEmailAddressLinkTitle" />
+								<textarea id="textASTSEmailAddressLinkTitle"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -2277,16 +2277,16 @@
 				<s:else>
 					<tr>
 						<td>
-							<label for="textASTSRSEmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
+							<label for="textASTSRSEmailAddress"><s:property value="getText('eag2012.commons.email')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASTSRSEmailAddress" />
+							<textarea id="textASTSRSEmailAddress"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="textASTSEmailAddressLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+							<label for="textASTSEmailAddressLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASTSEmailAddressLinkTitle" />
+							<textarea id="textASTSEmailAddressLinkTitle"></textarea>
 						</td>
 					</tr>
 				</s:else>
@@ -2300,34 +2300,34 @@
 							<tr>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<label for="textASTSRSWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+										<label for="textASTSRSWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 									</s:if>
 									<s:else>
-										<label for="textASTSRSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+										<label for="textASTSRSWebpage"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 									</s:else>
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASTSRSWebpage_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#reproductionserWebpageHref[#internalStatus.index]" />" />
+										<textarea id="textASTSRSWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#reproductionserWebpageHref[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASTSRSWebpage" value="<s:property value="#reproductionserWebpageHref[#internalStatus.index]" />" />
+										<textarea id="textASTSRSWebpage"><s:property value="#reproductionserWebpageHref[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 								<td class="labelLeft">
 									<s:if test="%{#internalStatus.index > 0}">
-										<label for="textASTSRSWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+										<label for="textASTSRSWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.linkTitle')" />:</label>
 									</s:if>
 									<s:else>
-										<label for="textASTSRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+										<label for="textASTSRSWebpageLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 									</s:else>
 								</td>
 								<td>
 									<s:if test="%{#internalStatus.index > 0}">
-										<input type="text" id="textASTSRSWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#reproductionserWebpageTitle[#internalStatus.index]" />" />
+										<textarea id="textASTSRSWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#reproductionserWebpageTitle[#internalStatus.index]" /></textarea>
 									</s:if>
 									<s:else>
-										<input type="text" id="textASTSRSWebpageLinkTitle" value="<s:property value="#reproductionserWebpageTitle[#internalStatus.index]" />" />
+										<textarea id="textASTSRSWebpageLinkTitle"><s:property value="#reproductionserWebpageTitle[#internalStatus.index]" /></textarea>
 									</s:else>
 								</td>
 							</tr>
@@ -2336,16 +2336,16 @@
 					<s:else>
 						<tr>
 							<td>
-								<label for="textASTSRSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+								<label for="textASTSRSWebpage"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASTSRSWebpage" />
+								<textarea id="textASTSRSWebpage"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="textASTSRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+								<label for="textASTSRSWebpageLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 							</td>
 							<td>
-								<input type="text" id="textASTSRSWebpageLinkTitle" />
+								<textarea id="textASTSRSWebpageLinkTitle"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -2353,23 +2353,23 @@
 				<s:else>
 					<tr>
 						<td>
-							<label for="textASTSRSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+							<label for="textASTSRSWebpage"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASTSRSWebpage" />
+							<textarea id="textASTSRSWebpage"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="textASTSRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+							<label for="textASTSRSWebpageLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 						</td>
 						<td>
-							<input type="text" id="textASTSRSWebpageLinkTitle" />
+							<textarea id="textASTSRSWebpageLinkTitle"></textarea>
 						</td>
 					</tr>
 				</s:else>
 
 				<tr>
 					<td>
-						<label for="selectASTSRSMicroform"><s:property value="getText('label.ai.accessAndServices.microformServices')" />:</label>
+						<label for="selectASTSRSMicroform"><s:property value="getText('eag2012.accessAndServices.microformServices')" />:</label>
 					</td>
 					<td>
 						<select id="selectASTSRSMicroform">
@@ -2402,7 +2402,7 @@
 
 				<tr>
 					<td>
-						<label for="selectASTSRSPhotographServices"><s:property value="getText('label.ai.accessAndServices.photographServices')" />:</label>
+						<label for="selectASTSRSPhotographServices"><s:property value="getText('eag2012.accessAndServices.photographServices')" />:</label>
 					</td>
 					<td>
 						<select id="selectASTSRSPhotographServices">
@@ -2435,7 +2435,7 @@
 
 				<tr>
 					<td>
-						<label for="selectASTSRSDigitalServices"><s:property value="getText('label.ai.accessAndServices.digitalServices')" />:</label>
+						<label for="selectASTSRSDigitalServices"><s:property value="getText('eag2012.accessAndServices.digitalServices')" />:</label>
 					</td>
 					<td>
 						<select id="selectASTSRSDigitalServices">
@@ -2468,7 +2468,7 @@
 
 				<tr>
 					<td>
-						<label for="selectASTSRSPhotocopyServices"><s:property value="getText('label.ai.accessAndServices.photocopyServices')" />:</label>
+						<label for="selectASTSRSPhotocopyServices"><s:property value="getText('eag2012.accessAndServices.photocopyServices')" />:</label>
 					</td>
 					<td>
 						<select id="selectASTSRSPhotocopyServices">
@@ -2501,7 +2501,7 @@
 
 				<tr>
 					<td id="recreationalServiceLabel" colspan="4">
-						<span><s:property value="getText('label.ai.accessAndServices.recreationalServices')"/></span>
+						<span><s:property value="getText('eag2012.accessAndServices.recreationalServices')"/></span>
 					</td>
 					
 				</tr>
@@ -2513,13 +2513,13 @@
 						<s:iterator var="internalCurrent" value="#recreationalServicesRefreshmentArea" status="internalStatus">
 							<tr id="trASReSeRefreshment_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textASReSeRefreshment_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.refreshment')" />:</label>
+									<label for="textASReSeRefreshment_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.refreshment')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASReSeRefreshment_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
+									<textarea id="textASReSeRefreshment_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td class="labelLeft">
-									<label for="selectASReSeRefreshmentSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectASReSeRefreshmentSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<select id="selectASReSeRefreshmentSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
@@ -2534,13 +2534,13 @@
 					<s:else>
 						<tr id="trASReSeRefreshment_1">
 							<td>
-								<label for="textASReSeRefreshment_1"><s:property value="getText('label.ai.accessAndServices.refreshment')" />:</label>
+								<label for="textASReSeRefreshment_1"><s:property value="getText('eag2012.accessAndServices.refreshment')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASReSeRefreshment_1" />
+								<textarea id="textASReSeRefreshment_1"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="selectASReSeRefreshmentSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+								<label for="selectASReSeRefreshmentSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							</td>
 							<td>
 								<select id="selectASReSeRefreshmentSelectLanguage_1">
@@ -2555,13 +2555,13 @@
 				<s:else>
 					<tr id="trASReSeRefreshment_1">
 						<td>
-							<label for="textASReSeRefreshment_1"><s:property value="getText('label.ai.accessAndServices.refreshment')" />:</label>
+							<label for="textASReSeRefreshment_1"><s:property value="getText('eag2012.accessAndServices.refreshment')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASReSeRefreshment_1" />
+							<textarea id="textASReSeRefreshment_1"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="selectASReSeRefreshmentSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+							<label for="selectASReSeRefreshmentSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 						</td>
 						<td>
 							<select id="selectASReSeRefreshmentSelectLanguage_1">
@@ -2575,7 +2575,7 @@
 
 				<tr>
 					<td colspan="3">
-						<input type="button" id="buttonASReSeAddFurtherRefreshment" value="<s:property value="getText('label.ai.accessAndServices.addFurtherRefreshmentInformation')"/>" onclick="aSReSeAddFurtherRefreshment('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+						<input type="button" id="buttonASReSeAddFurtherRefreshment" value="<s:property value="getText('eag2012.accessAndServices.addFurtherRefreshmentInformation')"/>" onclick="aSReSeAddFurtherRefreshment('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 					</td>
 					<td>
 					</td>
@@ -2591,13 +2591,13 @@
 						<s:iterator var="internalCurrent" value="#numberOfExhibition" status="internalStatus">
 							<tr id="trASReSeExhibition_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textASReSeExhibition_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.exhibition')" />:</label>
+									<label for="textASReSeExhibition_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.exhibition')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASReSeExhibition_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#rsExhibition[#internalStatus.index]" />" />
+									<textarea id="textASReSeExhibition_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#rsExhibition[#internalStatus.index]" /></textarea>
 								</td>
 								<td class="labelLeft">
-									<label for="selectASReSeExhibitionSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectASReSeExhibitionSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<select id="selectASReSeExhibitionSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
@@ -2610,16 +2610,16 @@
 
 							<tr id="tr2ASReSeExhibition_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textASReSeWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.webpage')"/>:</label>
+									<label for="textASReSeWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.webpage')"/>:</label>
 								</td>
 								<td>
-									<input type="text" id="textASReSeWebpage_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#rsExhibitionWebpageHref[#internalStatus.index]" />" />
+									<textarea id="textASReSeWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#rsExhibitionWebpageHref[#internalStatus.index]" /></textarea>
 								</td>
 								<td class="labelLeft">
-									<label for="textASReSeWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+									<label for="textASReSeWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.linkTitle')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASReSeWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#rsExhibitionWebpageTitle[#internalStatus.index]" />" />
+									<textarea id="textASReSeWebpageLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#rsExhibitionWebpageTitle[#internalStatus.index]" /></textarea>
 								</td>
 							</tr>
 						</s:iterator>
@@ -2627,13 +2627,13 @@
 					<s:else>
 						<tr id="trASReSeExhibition_1">
 							<td>
-								<label for="textASReSeExhibition_1"><s:property value="getText('label.ai.accessAndServices.exhibition')" />:</label>
+								<label for="textASReSeExhibition_1"><s:property value="getText('eag2012.accessAndServices.exhibition')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASReSeExhibition_1" />
+								<textarea id="textASReSeExhibition_1"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="selectASReSeExhibitionSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+								<label for="selectASReSeExhibitionSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							</td>
 							<td>
 								<select id="selectASReSeExhibitionSelectLanguage_1">
@@ -2646,16 +2646,16 @@
 
 						<tr id="tr2ASReSeExhibition_1">
 							<td>
-								<label for="textASReSeWebpage_1"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+								<label for="textASReSeWebpage_1"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASReSeWebpage_1" />
+								<textarea id="textASReSeWebpage_1"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="textASReSeWebpageLinkTitle_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+								<label for="textASReSeWebpageLinkTitle_1"><s:property value="getText('eag2012.commons.linkTitle')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASReSeWebpageLinkTitle_1" />
+								<textarea id="textASReSeWebpageLinkTitle_1"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -2663,13 +2663,13 @@
 				<s:else>
 					<tr id="trASReSeExhibition_1">
 						<td>
-							<label for="textASReSeExhibition_1"><s:property value="getText('label.ai.accessAndServices.exhibition')" />:</label>
+							<label for="textASReSeExhibition_1"><s:property value="getText('eag2012.accessAndServices.exhibition')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASReSeExhibition_1" />
+							<textarea id="textASReSeExhibition_1"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="selectASReSeExhibitionSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+							<label for="selectASReSeExhibitionSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 						</td>
 						<td>
 							<select id="selectASReSeExhibitionSelectLanguage_1">
@@ -2682,23 +2682,23 @@
 
 					<tr id="tr2ASReSeExhibition_1">
 						<td>
-							<label for="textASReSeWebpage_1"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+							<label for="textASReSeWebpage_1"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASReSeWebpage_1" />
+							<textarea id="textASReSeWebpage_1"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="textASReSeWebpageLinkTitle_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+							<label for="textASReSeWebpageLinkTitle_1"><s:property value="getText('eag2012.commons.linkTitle')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASReSeWebpageLinkTitle_1" />
+							<textarea id="textASReSeWebpageLinkTitle_1"></textarea>
 						</td>
 					</tr>
 				</s:else>
 
 				<tr>
 					<td colspan="2">
-						<input type="button" id="buttonASReSeAddExhibition" value="<s:property value="getText('label.ai.accessAndServices.addExhibition')"/>" onclick="aSReSeAddExhibition('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+						<input type="button" id="buttonASReSeAddExhibition" value="<s:property value="getText('eag2012.accessAndServices.addExhibitions')"/>" onclick="aSReSeAddExhibition('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 					</td>
 					<td colspan="2">
 					</td>
@@ -2714,13 +2714,13 @@
 						<s:iterator var="internalCurrent" value="#numberOfToursSessions" status="internalStatus">
 							<tr id="trASReSeToursAndSessions_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textASReSeToursAndSessions_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.toursAndSessions')" />:</label>
+									<label for="textASReSeToursAndSessions_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.toursAndSessions')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASReSeToursAndSessions_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#rsToursSessions[#internalStatus.index]" />" />
+									<textarea id="textASReSeToursAndSessions_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#rsToursSessions[#internalStatus.index]" /></textarea>
 								</td>
 								<td class="labelLeft">
-									<label for="selectASReSeToursAndSessionsSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectASReSeToursAndSessionsSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<select id="selectASReSeToursAndSessionsSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
@@ -2733,16 +2733,16 @@
 
 							<tr id="tr2ASReSeToursAndSessions_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textASReSeTSWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.webpage')"/>:</label>
+									<label for="textASReSeTSWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.webpage')"/>:</label>
 								</td>
 								<td>
-									<input type="text" id="textASReSeTSWebpage_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#rsToursSessionsWebpageHref[#internalStatus.index]" />" />
+									<textarea id="textASReSeTSWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#rsToursSessionsWebpageHref[#internalStatus.index]" /></textarea>
 								</td>
 								<td class="labelLeft">
-									<label for="textASReSeWebpageTSLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+									<label for="textASReSeWebpageTSLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.linkTitle')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASReSeWebpageTSLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#rsToursSessionsWebpageTitle[#internalStatus.index]" />" />
+									<textarea id="textASReSeWebpageTSLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#rsToursSessionsWebpageTitle[#internalStatus.index]" /></textarea>
 								</td>
 							</tr>
 						</s:iterator>
@@ -2750,13 +2750,13 @@
 					<s:else>
 						<tr id="trASReSeToursAndSessions_1">
 							<td>
-								<label for="textASReSeToursAndSessions_1" ><s:property value="getText('label.ai.accessAndServices.toursAndSessions')" />:</label>
+								<label for="textASReSeToursAndSessions_1" ><s:property value="getText('eag2012.accessAndServices.toursAndSessions')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASReSeToursAndSessions_1" />
+								<textarea id="textASReSeToursAndSessions_1"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="selectASReSeToursAndSessionsSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+								<label for="selectASReSeToursAndSessionsSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							</td>
 							<td>
 								<select id="selectASReSeToursAndSessionsSelectLanguage_1">
@@ -2769,16 +2769,16 @@
 
 						<tr id="tr2ASReSeToursAndSessions_1">
 							<td>
-								<label for="textASReSeTSWebpage_1"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+								<label for="textASReSeTSWebpage_1"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASReSeTSWebpage_1" />
+								<textarea id="textASReSeTSWebpage_1"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="textASReSeWebpageTSLinkTitle_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+								<label for="textASReSeWebpageTSLinkTitle_1"><s:property value="getText('eag2012.commons.linkTitle')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASReSeWebpageTSLinkTitle_1" />
+								<textarea id="textASReSeWebpageTSLinkTitle_1"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -2786,13 +2786,13 @@
 				<s:else>
 					<tr id="trASReSeToursAndSessions_1">
 						<td>
-							<label for="textASReSeToursAndSessions_1" ><s:property value="getText('label.ai.accessAndServices.toursAndSessions')" />:</label>
+							<label for="textASReSeToursAndSessions_1" ><s:property value="getText('eag2012.accessAndServices.toursAndSessions')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASReSeToursAndSessions_1" />
+							<textarea id="textASReSeToursAndSessions_1"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="selectASReSeToursAndSessionsSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+							<label for="selectASReSeToursAndSessionsSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 						</td>
 						<td>
 							<select id="selectASReSeToursAndSessionsSelectLanguage_1">
@@ -2805,23 +2805,23 @@
 
 					<tr id="tr2ASReSeToursAndSessions_1">
 						<td>
-							<label for="textASReSeTSWebpage_1"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+							<label for="textASReSeTSWebpage_1"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASReSeTSWebpage_1" />
+							<textarea id="textASReSeTSWebpage_1"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="textASReSeWebpageTSLinkTitle_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+							<label for="textASReSeWebpageTSLinkTitle_1"><s:property value="getText('eag2012.commons.linkTitle')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASReSeWebpageTSLinkTitle_1" />
+							<textarea id="textASReSeWebpageTSLinkTitle_1"></textarea>
 						</td>
 					</tr>
 				</s:else>
 
 				<tr>
 					<td colspan="2">
-						<input type="button" id="buttonASReSeToursAndSessions" value="<s:property value="getText('label.ai.accessAndServices.addToursAndSessions')"/>" onclick="aSReSeToursAndSessions('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
+						<input type="button" id="buttonASReSeToursAndSessions" value="<s:property value="getText('eag2012.accessAndServices.addToursSessions')"/>" onclick="aSReSeToursAndSessions('<s:property value="getText('eag2012.commons.pleaseFillData')" />');"/>
 					</td>
 					<td colspan="2">
 					</td>
@@ -2837,13 +2837,13 @@
 						<s:iterator var="internalCurrent" value="#numberOfOtherServices" status="internalStatus">
 							<tr id="trASReSeOtherServices_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textASReSeOtherServices_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.accessAndServices.otherServices')" />:</label>
+									<label for="textASReSeOtherServices_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.accessAndServices.otherServices')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASReSeOtherServices_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#rsOtherServices[#internalStatus.index]" />" />
+									<textarea id="textASReSeOtherServices_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#rsOtherServices[#internalStatus.index]" /></textarea>
 								</td>
 								<td class="labelLeft">
-									<label for="selectASReSeOtherServicesSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectASReSeOtherServicesSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<select id="selectASReSeOtherServicesSelectLanguage_<s:property value="%{#internalStatus.index + 1}" />">
@@ -2856,16 +2856,16 @@
 
 							<tr id="tr2ASReSeOtherServices_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textASReSeOSWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.webpage')"/>:</label>
+									<label for="textASReSeOSWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.webpage')"/>:</label>
 								</td>
 								<td>
-									<input type="text" id="textASReSeOSWebpage_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#rsOtherServicesWebpageHref[#internalStatus.index]" />" />
+									<textarea id="textASReSeOSWebpage_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#rsOtherServicesWebpageHref[#internalStatus.index]" /></textarea>
 								</td>
 								<td class="labelLeft">
-									<label for="textASReSeWebpageOSLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+									<label for="textASReSeWebpageOSLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.linkTitle')" />:</label>
 								</td>
 								<td>
-									<input type="text" id="textASReSeWebpageOSLinkTitle_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#rsOtherServicesWebpageTitle[#internalStatus.index]" />" />
+									<textarea id="textASReSeWebpageOSLinkTitle_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#rsOtherServicesWebpageTitle[#internalStatus.index]" /></textarea>
 								</td>
 							</tr>
 						</s:iterator>
@@ -2873,13 +2873,13 @@
 					<s:else>
 						<tr id="trASReSeOtherServices_1">
 							<td>
-								<label for="textASReSeOtherServices_1" ><s:property value="getText('label.ai.accessAndServices.otherServices')" />:</label>
+								<label for="textASReSeOtherServices_1" ><s:property value="getText('eag2012.accessAndServices.otherServices')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASReSeOtherServices_1" />
+								<textarea id="textASReSeOtherServices_1"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="selectASReSeOtherServicesSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+								<label for="selectASReSeOtherServicesSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 							</td>
 							<td>
 								<select id="selectASReSeOtherServicesSelectLanguage_1">
@@ -2892,16 +2892,16 @@
 
 						<tr id="tr2ASReSeOtherServices_1">
 							<td>
-								<label for="textASReSeOSWebpage_1"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+								<label for="textASReSeOSWebpage_1"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASReSeOSWebpage_1" />
+								<textarea id="textASReSeOSWebpage_1"></textarea>
 							</td>
 							<td class="labelLeft">
-								<label for="textASReSeWebpageOSLinkTitle_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+								<label for="textASReSeWebpageOSLinkTitle_1"><s:property value="getText('eag2012.commons.linkTitle')" />:</label>
 							</td>
 							<td>
-								<input type="text" id="textASReSeWebpageOSLinkTitle_1" />
+								<textarea id="textASReSeWebpageOSLinkTitle_1"></textarea>
 							</td>
 						</tr>
 					</s:else>
@@ -2909,13 +2909,13 @@
 				<s:else>
 					<tr id="trASReSeOtherServices_1">
 						<td>
-							<label for="textASReSeOtherServices_1" ><s:property value="getText('label.ai.accessAndServices.otherServices')" />:</label>
+							<label for="textASReSeOtherServices_1" ><s:property value="getText('eag2012.accessAndServices.otherServices')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASReSeOtherServices_1" />
+							<textarea id="textASReSeOtherServices_1"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="selectASReSeOtherServicesSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+							<label for="selectASReSeOtherServicesSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 						</td>
 						<td>
 							<select id="selectASReSeOtherServicesSelectLanguage_1">
@@ -2928,23 +2928,23 @@
 
 					<tr id="tr2ASReSeOtherServices_1">
 						<td>
-							<label for="textASReSeOSWebpage_1"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+							<label for="textASReSeOSWebpage_1"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASReSeOSWebpage_1" />
+							<textarea id="textASReSeOSWebpage_1"></textarea>
 						</td>
 						<td class="labelLeft">
-							<label for="textASReSeWebpageOSLinkTitle_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+							<label for="textASReSeWebpageOSLinkTitle_1"><s:property value="getText('eag2012.commons.linkTitle')" />:</label>
 						</td>
 						<td>
-							<input type="text" id="textASReSeWebpageOSLinkTitle_1" />
+							<textarea id="textASReSeWebpageOSLinkTitle_1"></textarea>
 						</td>
 					</tr>
 				</s:else>
 
 				<tr>
 					<td colspan="2">
-						<input type="button" id="buttonASAddServices" value="<s:property value="getText('label.ai.accessAndServices.addSevices')"/>" onclick="aSAddServices('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
+						<input type="button" id="buttonASAddServices" value="<s:property value="getText('eag2012.accessAndServices.addOtherServices')"/>" onclick="aSAddServices('<s:property value="getText('eag2012.commons.pleaseFillData')" />');"/>
 					</td>
 					<td colspan="2">
 					</td>
@@ -2952,8 +2952,8 @@
 
 				<tr>
 					<td id="tdButtonsAccessAndServiceTab" colspan="4">
-						<input type="button" id="buttonAccessAndServiceTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" onclick="checkAndShowNextTab($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('label.eag.eagwithurlwarnings')"/>');" />
-						<input type="button" id="buttonAccessAndServiceTabPrevious" value="<s:property value='getText("label.ai.tabs.commons.button.previousTab")' />" class="rightButton" onclick="checkAndShowPreviousTab($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('label.eag.eagwithurlwarnings')"/>');" />
+						<input type="button" id="buttonAccessAndServiceTabNext" value="<s:property value='getText("eag2012.commons.nextTab")' />" class="rightButton" onclick="checkAndShowNextTab($(this).parent().parent().parent().parent(), '<s:property value="getText('eag2012.errors.fieldRequired')" />', '<s:property value="getText('eag2012.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>');" />
+						<input type="button" id="buttonAccessAndServiceTabPrevious" value="<s:property value='getText("eag2012.commons.previousTab")' />" class="rightButton" onclick="checkAndShowPreviousTab($(this).parent().parent().parent().parent(), '<s:property value="getText('eag2012.errors.fieldRequired')" />', '<s:property value="getText('eag2012.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>');" />
 					</td>
 				</tr>
 			</table>
@@ -2967,13 +2967,13 @@
 	<table id="accessAndServicesTable" class="tablePadding">
 		<tr id="trASOpeningTimes_1">
 			<td id="tdOpeningTimes_1">
-				<label for="textOpeningTimes_1"><s:property value="getText('label.ai.tabs.commons.openingTimes')" /><span class="required">*</span>:</label>
+				<label for="textOpeningTimes_1"><s:property value="getText('eag2012.commons.openingHours')" /><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textOpeningTimes_1" onchange="aSOpeningHoursOfInstitutionChanged($(this));" />
+				<textarea id="textOpeningTimes_1" onchange="aSOpeningHoursOfInstitutionChanged($(this));"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="selectLanguageOpeningTimes_1" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+				<label for="selectLanguageOpeningTimes_1" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
 				<select id="selectLanguageOpeningTimes_1" onchange="aSOpeningHoursOfInstitutionLangChanged($(this));">
@@ -2986,7 +2986,7 @@
 
 		<tr>
 			<td id="tdASAddOpeningTimes" colspan="2">
-				<input type="button" id="buttonASAddOpeningTimes"  value="<s:property value='getText("label.ai.accessAndServices.addOpeningTimes")' />" onclick="aSAddOpeningTimes('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				<input type="button" id="buttonASAddOpeningTimes"  value="<s:property value='getText("eag2012.commons.addOpeningHours")' />" onclick="aSAddOpeningTimes('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -2994,13 +2994,13 @@
 
 		<tr id="trASClosingDates_1">
 			<td>
-				<label for="textClosingDates_1"><s:property value="getText('label.ai.tabs.commons.closingDates')" />:</label>
+				<label for="textClosingDates_1"><s:property value="getText('eag2012.commons.closingDates')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textClosingDates_1" onchange="aSClosingHoursOfInstitutionChanged($(this));" />
+				<textarea id="textClosingDates_1" onchange="aSClosingHoursOfInstitutionChanged($(this));"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="selectLanguageClosingDates_1" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+				<label for="selectLanguageClosingDates_1" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
 				<select id="selectLanguageClosingDates_1" onchange="aSClosingHoursOfInstitutionLangChanged($(this));">
@@ -3013,7 +3013,7 @@
 
 		<tr>
 			<td id="tdASAddClosingDates" colspan="2">
-				<input type="button" id="buttonASAddClosingDates"  value="<s:property value='getText("label.ai.accessAndServices.addClosingDates")' />" onclick="aSAddClosingDates('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				<input type="button" id="buttonASAddClosingDates"  value="<s:property value='getText("eag2012.commons.addClosingDates")' />" onclick="aSAddClosingDates('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -3021,13 +3021,13 @@
 
 		<tr id="trTravellingDirections_1">
 			<td>
-				<label for="textTravellingDirections_1"><s:property value="getText('label.ai.accessAndServices.travellingDirections')" />:</label>
+				<label for="textTravellingDirections_1"><s:property value="getText('eag2012.accessAndServices.travellingDirections')" />:</label>
 			</td>
 			<td>
 				<textarea id="textTravellingDirections_1"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="selectASATDSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				<label for="selectASATDSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
 				<select id="selectASATDSelectLanguage_1">
@@ -3040,10 +3040,10 @@
 
 		<tr id="tr2TravellingDirections_1">
 			<td>
-				<label for="textTravelLink_1"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
+				<label for="textTravelLink_1"><s:property value="getText('eag2012.accessAndServices.link')"/>:</label>
 			</td>
 			<td colspan="2">
-				<input type="text" id="textTravelLink_1" />
+				<textarea id="textTravelLink_1"></textarea>
 			</td>
 			<td colspan="2">
 			</td>
@@ -3051,7 +3051,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonASAddTravellingDirections" value="<s:property value="getText('label.ai.accessAndServices.addTravellingDirections')"/>" onclick="aSAddTravellingDirections('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
+				<input type="button" id="buttonASAddTravellingDirections" value="<s:property value="getText('eag2012.accessAndServices.addTravellingDirections')"/>" onclick="aSAddTravellingDirections('<s:property value="getText('eag2012.commons.pleaseFillData')" />');"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -3059,7 +3059,7 @@
 
 		<tr>
 			<td>
-				<label for="selectASAccesibleToThePublic"><s:property value="getText('label.ai.accessAndServices.accesibleToThePublic')"/><span class="required">*</span>:</label>
+				<label for="selectASAccesibleToThePublic"><s:property value="getText('eag2012.commons.accessiblePublicl')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
 				<select id="selectASAccesibleToThePublic" onchange="aSAccessibleToThePublicChanged();">
@@ -3074,13 +3074,13 @@
 
 		<tr id="trASAccessRestrictions_1">
 			<td>
-				<label for="textASAccessRestrictions_1"><s:property value="getText('label.ai.accessAndServices.accessRestrictions')" />:</label>
+				<label for="textASAccessRestrictions_1"><s:property value="getText('eag2012.accessAndServices.accessRestrictions')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASAccessRestrictions_1" onchange="aSFutherAccessInformationChanged($(this));" />
+				<textarea id="textASAccessRestrictions_1" onchange="aSFutherAccessInformationChanged($(this));"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="selectASARSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				<label for="selectASARSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
 				<select id="selectASARSelectLanguage_1" onchange="aSFutherAccessInformationLangChanged($(this));">
@@ -3093,7 +3093,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonAddFutherAccessInformation" value="<s:property value="getText('label.ai.accessAndServices.addFutherAccessInformation')"/>" onclick="addFutherAccessInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				<input type="button" id="buttonAddFutherAccessInformation" value="<s:property value="getText('eag2012.commons.addFutherAccessInformation')"/>" onclick="addFutherAccessInformation('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -3101,13 +3101,13 @@
 
 		<tr id="trASAddFutherTermOfUse_1">
 			<td>
-				<label for="textASTermOfUse_1"><s:property value="getText('label.ai.accessAndServices.termsOfUse')" />:</label>
+				<label for="textASTermOfUse_1"><s:property value="getText('eag2012.accessAndServices.termsOfUse')" />:</label>
 			</td>
 			<td>
 				<textarea id="textASTermOfUse_1"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="selectASAFTOUSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				<label for="selectASAFTOUSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
 				<select id="selectASAFTOUSelectLanguage_1">
@@ -3120,10 +3120,10 @@
 
 		<tr id="tr2ASAddFutherTermOfUse_1">
 			<td>
-				<label for="textASTOULink_1"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
+				<label for="textASTOULink_1"><s:property value="getText('eag2012.accessAndServices.link')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTOULink_1" />
+				<textarea id="textASTOULink_1"></textarea>
 			</td>
 			<td colspan="2">
 			</td>
@@ -3131,7 +3131,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonASAddFutherTermOfUse" value="<s:property value="getText('label.ai.accessAndServices.addFurtherTermsOfUse')"/>" onclick="aSAddFutherTermOfUse('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				<input type="button" id="buttonASAddFutherTermOfUse" value="<s:property value="getText('eag2012.accessAndServices.addFurtherTermsOfUse')"/>" onclick="aSAddFutherTermOfUse('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -3139,7 +3139,7 @@
 
 		<tr>
 			<td>
-				<label for="selectASFacilitiesForDisabledPeopleAvailable"><s:property value="getText('label.ai.accessAndServices.facilitiesForDisabledPeopleAvailable')"/><span class="required">*</span>:</label>
+				<label for="selectASFacilitiesForDisabledPeopleAvailable"><s:property value="getText('eag2012.commons.disabledAccess')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
 				<select id="selectASFacilitiesForDisabledPeopleAvailable" onchange="aSFacilitiesForDisabledPeopleAvailableChanged();">
@@ -3152,13 +3152,13 @@
 
 		<tr id="trAccessibilityInformation_1">
 			<td>
-				<label for="textASAccessibility_1"><s:property value="getText('label.ai.accessAndServices.accesibility')" />:</label>
+				<label for="textASAccessibility_1"><s:property value="getText('eag2012.commons.disabledAccess.facilities')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASAccessibility_1" onchange="aSFutherInformationOnExistingFacilitiesChanged($(this));" />
+				<textarea id="textASAccessibility_1" onchange="aSFutherInformationOnExistingFacilitiesChanged($(this));"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="selectASASelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+				<label for="selectASASelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
 				<select id="selectASASelectLanguage_1" onchange="aSFutherInformationOnExistingFacilitiesLangChanged($(this));">
@@ -3171,7 +3171,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonAddAccessibilityInformation" value="<s:property value="getText('label.ai.accessAndServices.addAccessibilityInformation')"/>" onclick="addAccessibilityInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				<input type="button" id="buttonAddAccessibilityInformation" value="<s:property value="getText('eag2012.accessAndServices.addAccessibilityInformation')"/>" onclick="addAccessibilityInformation('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -3179,13 +3179,13 @@
 
 		<tr>
 			<td id="searchroomLabel" colspan="4">
-				<span><s:property value="getText('label.ai.accessAndServices.searchroom')" /></span>
+				<span><s:property value="getText('eag2012.accessAndServices.searchroom')" /></span>
 			</td>
 		</tr>
 
 		<tr>
 			<td>
-				<label for="textASSRTelephone_1"><s:property value="getText('label.ai.tabs.commons.telephone')"/>:</label>
+				<label for="textASSRTelephone_1"><s:property value="getText('eag2012.commons.telephone')"/>:</label>
 			</td>
 			<td>
 				<input type="text" id="textASSRTelephone_1" />
@@ -3196,37 +3196,37 @@
 
 		<tr>
 			<td>
-				<label for="textASSREmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')"/>:</label>
+				<label for="textASSREmailAddress"><s:property value="getText('eag2012.commons.email')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSREmailAddress" />
+				<textarea id="textASSREmailAddress"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="textASSREmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+				<label for="textASSREmailLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSREmailLinkTitle" />
+				<textarea id="textASSREmailLinkTitle"></textarea>
 			</td>
 		</tr>
 
 		<tr>
 			<td>
-				<label for="textASSRWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')"/>:</label>
+				<label for="textASSRWebpage"><s:property value="getText('eag2012.commons.webpage')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRWebpage" />
+				<textarea id="textASSRWebpage"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="textASSRWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+				<label for="textASSRWebpageLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRWebpageLinkTitle" />
+				<textarea id="textASSRWebpageLinkTitle"></textarea>
 			</td>
 		</tr>
 
 		<tr>
 			<td>
-				<label for="textASSRWorkPlaces"><s:property value="getText('label.ai.accessAndServices.workPlaces')"/>:</label>
+				<label for="textASSRWorkPlaces"><s:property value="getText('eag2012.commons.workPlaces')"/>:</label>
 			</td>
 			<td>
 				<input type="text" id="textASSRWorkPlaces" />
@@ -3237,7 +3237,7 @@
 
 		<tr>
 			<td>
-				<label for="textASSRComputerPlaces"><s:property value="getText('label.ai.accessAndServices.computerPlaces')"/>:</label>
+				<label for="textASSRComputerPlaces"><s:property value="getText('eag2012.accessAndServices.computerPlaces')"/>:</label>
 			</td>
 			<td>
 				<input type="text" id="textASSRComputerPlaces" />
@@ -3248,7 +3248,7 @@
 
 		<tr id="trASSRAddDescriptionOfYourComputerPlaces">
 			<td colspan="3">
-				<input type="button" id="buttonASSRAddadescriptionofyourcomputerplaces" value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourComputerPlaces')"/>" onclick="aSSRAddDescriptionOfYourComputerPlaces('<s:property value="getText('label.ai.accessAndServices.descriptionOfComputerPlaces')"/>', '<s:property value="getText('label.ai.tabs.commons.selectLanguage')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				<input type="button" id="buttonASSRAddadescriptionofyourcomputerplaces" value="<s:property value="getText('eag2012.accessAndServices.addDescription')"/>" onclick="aSSRAddDescriptionOfYourComputerPlaces('<s:property value="getText('eag2012.commons.computerplacesDescription')"/>', '<s:property value="getText('eag2012.commons.selectLanguage')" />', '<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 			</td>
 			<td>
 			</td>
@@ -3256,13 +3256,13 @@
 
 		<tr>
 			<td>
-				<label for="textASSRMicrofilmPlaces"><s:property value="getText('label.ai.accessAndServices.microfilmPlaces')"/>:</label>
+				<label for="textASSRMicrofilmPlaces"><s:property value="getText('eag2012.accessAndServices.microfilmPlaces')"/>:</label>
 			</td>
 			<td>
 				<input type="text" id="textASSRMicrofilmPlaces" />
 			</td>
 			<td class="labelLeft">
-				<label for="selectASSRPhotographAllowance"><s:property value="getText('label.ai.accessAndServices.photographAllowance')"/>:</label>
+				<label for="selectASSRPhotographAllowance"><s:property value="getText('eag2012.accessAndServices.photographAllowance')"/>:</label>
 			</td>
 			<td>
 				<select id="selectASSRPhotographAllowance">
@@ -3275,13 +3275,13 @@
 
 		<tr id="trASSRReadersTicket_1">
 			<td>
-				<label for="textASSRReadersTicket_1"><s:property value="getText('label.ai.accessAndServices.readersTicket')"/>:</label>
+				<label for="textASSRReadersTicket_1"><s:property value="getText('eag2012.accessAndServices.readersTicket')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRReadersTicket_1" />
+				<textarea id="textASSRReadersTicket_1"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="selectReadersTickectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				<label for="selectReadersTickectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
 				<select id="selectReadersTickectLanguage_1">
@@ -3294,10 +3294,10 @@
 
 		<tr id="tr2ASSRReadersTicket_1">
 			<td>
-				<label for="textASSRRTLink_1"><s:property value="getText('label.ai.accessAndServices.link')"/>:</label>
+				<label for="textASSRRTLink_1"><s:property value="getText('eag2012.accessAndServices.link')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRRTLink_1" />
+				<textarea id="textASSRRTLink_1"></textarea>
 			</td>
 			<td colspan="2">
 			</td>
@@ -3305,7 +3305,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonASSRAddReadersTicket" value="<s:property value="getText('label.ai.accessAndServices.addReadersTicket')"/>" onclick="aSSRAddReadersTicket('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
+				<input type="button" id="buttonASSRAddReadersTicket" value="<s:property value="getText('eag2012.accessAndServices.addReadersTicket')"/>" onclick="aSSRAddReadersTicket('<s:property value="getText('eag2012.commons.pleaseFillData')" />');"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -3313,13 +3313,13 @@
 
 		<tr id="trASSRAddFurtherOrderInformation_1">
 			<td>
-				<label for="textASSRAdvancedOrders_1"><s:property value="getText('label.ai.accessAndServices.advancedOrders')" />:</label>
+				<label for="textASSRAdvancedOrders_1"><s:property value="getText('eag2012.accessAndServices.advancedOrders')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRAdvancedOrders_1" />
+				<textarea id="textASSRAdvancedOrders_1"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="selectASSRAFOIUSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				<label for="selectASSRAFOIUSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
 				<select id="selectASSRAFOIUSelectLanguage_1">
@@ -3332,10 +3332,10 @@
 
 		<tr id="tr2ASSRAddFurtherOrderInformation_1">
 			<td>
-				<label for="textASSRAOLink_1"><s:property value="getText('label.ai.accessAndServices.link')" />:</label>
+				<label for="textASSRAOLink_1"><s:property value="getText('eag2012.accessAndServices.link')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRAOLink_1" />
+				<textarea id="textASSRAOLink_1"></textarea>
 			</td>
 			<td colspan="2">
 			</td>
@@ -3343,7 +3343,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonASSRAddFurtherOrderInformation" value="<s:property value="getText('label.ai.accessAndServices.addFurtherOrderInformation')" />" onclick="aSSRAddFurtherOrderInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				<input type="button" id="buttonASSRAddFurtherOrderInformation" value="<s:property value="getText('eag2012.control.advancedOrders')" />" onclick="aSSRAddFurtherOrderInformation('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -3351,13 +3351,13 @@
 
 		<tr id="trASSRResearchServices_1">
 			<td>
-				<label for="textASSRResearchServices_1"><s:property value="getText('label.ai.accessAndServices.researchServices')"/>:</label>
+				<label for="textASSRResearchServices_1"><s:property value="getText('eag2012.accessAndServices.researchServices')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASSRResearchServices_1" />
+				<textarea id="textASSRResearchServices_1"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="textASSRRSSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				<label for="textASSRRSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
 				<select id="textASSRRSSelectLanguage_1">
@@ -3370,7 +3370,7 @@
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonASAddResearchServices" value="<s:property value="getText('label.ai.accessAndServices.addResearchServices')"/>" onclick="aSAddResearchServices('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				<input type="button" id="buttonASAddResearchServices" value="<s:property value="getText('eag2012.accessAndServices.addResearchservices')"/>" onclick="aSAddResearchServices('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -3378,7 +3378,7 @@
 
 		<tr>
 			<td id="libraryLabel">
-				<span><s:property value="getText('label.ai.accessAndServices.library')" /></span>
+				<span><s:property value="getText('eag2012.accessAndServices.library')" /></span>
 			</td>
 			<td>
 				<select id="selectASLibrary">
@@ -3393,7 +3393,7 @@
 
 		<tr>
 			<td>
-				<label for="textASLTelephone_1"><s:property value="getText('label.ai.tabs.commons.telephone')" />:</label>
+				<label for="textASLTelephone_1"><s:property value="getText('eag2012.commons.telephone')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textASLTelephone_1" />
@@ -3404,43 +3404,43 @@
 
 		<tr>
 			<td>
-				<label for="textASLEmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
+				<label for="textASLEmailAddress"><s:property value="getText('eag2012.commons.email')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASLEmailAddress" />
+				<textarea id="textASLEmailAddress"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="textASLEmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+				<label for="textASLEmailLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASLEmailLinkTitle" />
+				<textarea id="textASLEmailLinkTitle"></textarea>
 			</td>
 		</tr>
 
 		<tr>
 			<td>
-				<label for="textASLWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+				<label for="textASLWebpage"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASLWebpage" />
+				<textarea id="textASLWebpage"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="textASLWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+				<label for="textASLWebpageLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASLWebpageLinkTitle" />
+				<textarea id="textASLWebpageLinkTitle"></textarea>
 			</td>
 		</tr>
 
 		<tr>
 			<td>
-				<label for="textASLMonographocPublication"><s:property value="getText('label.ai.accessAndServices.monographicPublication')" />:</label>
+				<label for="textASLMonographocPublication"><s:property value="getText('eag2012.accessAndServices.monographicPublication')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textASLMonographocPublication" />
 			</td>
 			<td class="labelLeft">
-				<label for="textASLSerialPublication"><s:property value="getText('label.ai.accessAndServices.serialPublication')"/>:</label>
+				<label for="textASLSerialPublication"><s:property value="getText('eag2012.accessAndServices.serialPublication')"/>:</label>
 			</td>
 			<td>
 				<input type="text" id="textASLSerialPublication" />
@@ -3449,7 +3449,7 @@
 
 		<tr>
 			<td id="internetAccessLabel">
-				<label for="selectASInternetAccess"><span><s:property value="getText('label.ai.accessAndServices.internetAccess')" /></span>:</label>
+				<label for="selectASInternetAccess"><span><s:property value="getText('eag2012.accessAndServices.internetAccess')" /></span>:</label>
 			</td>
 			<td>
 				<select id="selectASInternetAccess">
@@ -3464,13 +3464,13 @@
 
 		<tr id="trASPIAAddInternetAccessInformation_1">
 			<td>
-				<label for="textASDescription_1"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
+				<label for="textASDescription_1"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASDescription_1" />
+				<textarea id="textASDescription_1"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="selectASDSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				<label for="selectASDSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
 				<select id="selectASDSelectLanguage_1">
@@ -3483,7 +3483,7 @@
 
 		<tr>
 			<td colspan="3">
-				<input type="button" id="buttonASPIAAddInternetAccessInformation" value="<s:property value="getText('label.ai.accessAndServices.addInternetAccessInformation')" />" onclick="aSPIAAddInternetAccessInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				<input type="button" id="buttonASPIAAddInternetAccessInformation" value="<s:property value="getText('eag2012.isil.addInternetAccess')" />" onclick="aSPIAAddInternetAccessInformation('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 			</td>
 			<td>
 			</td>
@@ -3491,13 +3491,13 @@
 
 		<tr>
 			<td id="technicalServicesLabel" colspan="4">
-				<span><s:property value="getText('label.ai.accessAndServices.technicalServices')" /></span>
+				<span><s:property value="getText('eag2012.accessAndServices.technicalServices')" /></span>
 			</td>
 		</tr>
 
 		<tr>
 			<td id="restaurationLabLabel">
-				<span><label for="selectASTSRestaurationLab"><s:property value="getText('label.ai.accessAndServices.restaurationLab')" />:</label></span>
+				<span><label for="selectASTSRestaurationLab"><s:property value="getText('eag2012.accessAndServices.conservationLab')" />:</label></span>
 			</td>
 			<td>
 				<select id="selectASTSRestaurationLab">
@@ -3512,13 +3512,13 @@
 
 		<tr id="trASTSDescriptionOfRestaurationLab_1">
 			<td>
-				<label for="textASTSDescriptionOfRestaurationLab_1"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
+				<label for="textASTSDescriptionOfRestaurationLab_1"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSDescriptionOfRestaurationLab_1" />
+				<textarea id="textASTSDescriptionOfRestaurationLab_1"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="selectASTSSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				<label for="selectASTSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
 				<select id="selectASTSSelectLanguage_1">
@@ -3531,7 +3531,7 @@
 
 		<tr>
 			<td colspan="3">
-				<input type="button" id="buttonAddADescriptionOfYourRestaurationLab" value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourRestaurationLab')"/>" onclick="addADescriptionOfYourRestaurationLab('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
+				<input type="button" id="buttonAddADescriptionOfYourRestaurationLab" value="<s:property value="getText('eag2012.accessAndServices.addDescriptionOfYourRestaurationLab')"/>" onclick="addADescriptionOfYourRestaurationLab('<s:property value="getText('eag2012.commons.pleaseFillData')" />');"/>
 			</td>
 			<td>
 			</td>
@@ -3539,7 +3539,7 @@
 
 		<tr>
 			<td>
-				<label for="textASTSTelephone_1"><s:property value="getText('label.ai.tabs.commons.telephone')" />:</label>
+				<label for="textASTSTelephone_1"><s:property value="getText('eag2012.commons.telephone')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textASTSTelephone_1" />
@@ -3550,37 +3550,37 @@
 
 		<tr>
 			<td>
-				<label for="textASRSEmail"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
+				<label for="textASRSEmail"><s:property value="getText('eag2012.commons.email')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASRSEmail" />
+				<textarea id="textASRSEmail"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="textASRSEmailLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+				<label for="textASRSEmailLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASRSEmailLinkTitle" />
+				<textarea id="textASRSEmailLinkTitle"></textarea>
 			</td>
 		</tr>
 
 		<tr>
 			<td>
-				<label for="textASRSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+				<label for="textASRSWebpage"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASRSWebpage" />
+				<textarea id="textASRSWebpage"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="textASRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+				<label for="textASRSWebpageLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASRSWebpageLinkTitle" />
+				<textarea id="textASRSWebpageLinkTitle"></textarea>
 			</td>
 		</tr>
 
 		<tr>
 			<td id="reproductionServiceLabel">
-				<label for="selectASTSReproductionService"><s:property value="getText('label.ai.accessAndServices.reproductionService')"/>:</label>
+				<label for="selectASTSReproductionService"><s:property value="getText('eag2012.accessAndServices.reproductionService')"/>:</label>
 			</td>
 			<td>
 				<select id="selectASTSReproductionService">
@@ -3595,13 +3595,13 @@
 
 		<tr id="trASTSDescriptionOfReproductionService_1">
 			<td>
-				<label for="textASTSDescriptionOfReproductionService_1"><span><s:property value="getText('label.ai.accessAndServices.description')" /></span>:</label>
+				<label for="textASTSDescriptionOfReproductionService_1"><span><s:property value="getText('eag2012.accessAndServices.description')" /></span>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSDescriptionOfReproductionService_1" />
+				<textarea id="textASTSDescriptionOfReproductionService_1"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="selectASTSRSSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				<label for="selectASTSRSSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
 				<select id="selectASTSRSSelectLanguage_1">
@@ -3614,7 +3614,7 @@
 
 		<tr>
 			<td colspan="3">
-				<input type="button" id="buttonASAddADescriptionOfYourReproductionService"value="<s:property value="getText('label.ai.accessAndServices.addDescriptionOfYourReproductionService')"/>" onclick="aSAddADescriptionOfYourReproductionService('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				<input type="button" id="buttonASAddADescriptionOfYourReproductionService"value="<s:property value="getText('eag2012.accessAndServices.addDescriptionOfYourReproductionService')"/>" onclick="aSAddADescriptionOfYourReproductionService('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 			</td>
 			<td>
 			</td>
@@ -3622,7 +3622,7 @@
 
 		<tr>
 			<td>
-				<label for="textASTSRSTelephone_1"><s:property value="getText('label.ai.tabs.commons.telephone')" />:</label>
+				<label for="textASTSRSTelephone_1"><s:property value="getText('eag2012.commons.telephone')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textASTSRSTelephone_1" />
@@ -3633,37 +3633,37 @@
 
 		<tr>
 			<td>
-				<label for="textASTSRSEmailAddress"><s:property value="getText('label.ai.tabs.commons.emailAddress')" />:</label>
+				<label for="textASTSRSEmailAddress"><s:property value="getText('eag2012.commons.email')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSRSEmailAddress" />
+				<textarea id="textASTSRSEmailAddress"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="textASTSEmailAddressLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+				<label for="textASTSEmailAddressLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSEmailAddressLinkTitle" />
+				<textarea id="textASTSEmailAddressLinkTitle"></textarea>
 			</td>
 		</tr>
 
 		<tr>
 			<td>
-				<label for="textASTSRSWebpage"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+				<label for="textASTSRSWebpage"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSRSWebpage" />
+				<textarea id="textASTSRSWebpage"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="textASTSRSWebpageLinkTitle"><s:property value="getText('label.ai.tabs.commons.linkTitle')"/>:</label>
+				<label for="textASTSRSWebpageLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 			</td>
 			<td>
-				<input type="text" id="textASTSRSWebpageLinkTitle" />
+				<textarea id="textASTSRSWebpageLinkTitle"></textarea>
 			</td>
 		</tr>
 
 		<tr>
 			<td>
-				<label for="selectASTSRSMicroform"><s:property value="getText('label.ai.accessAndServices.microformServices')" />:</label>
+				<label for="selectASTSRSMicroform"><s:property value="getText('eag2012.accessAndServices.microformServices')" />:</label>
 			</td>
 			<td>
 				<select id="selectASTSRSMicroform">
@@ -3678,7 +3678,7 @@
 
 		<tr>
 			<td>
-				<label for="selectASTSRSPhotographServices"><s:property value="getText('label.ai.accessAndServices.photographServices')" />:</label>
+				<label for="selectASTSRSPhotographServices"><s:property value="getText('eag2012.accessAndServices.photographServices')" />:</label>
 			</td>
 			<td>
 				<select id="selectASTSRSPhotographServices">
@@ -3693,7 +3693,7 @@
 
 		<tr>
 			<td>
-				<label for="selectASTSRSDigitalServices"><s:property value="getText('label.ai.accessAndServices.digitalServices')" />:</label>
+				<label for="selectASTSRSDigitalServices"><s:property value="getText('eag2012.accessAndServices.digitalServices')" />:</label>
 			</td>
 			<td>
 				<select id="selectASTSRSDigitalServices">
@@ -3708,7 +3708,7 @@
 
 		<tr>
 			<td>
-				<label for="selectASTSRSPhotocopyServices"><s:property value="getText('label.ai.accessAndServices.photocopyServices')" />:</label>
+				<label for="selectASTSRSPhotocopyServices"><s:property value="getText('eag2012.accessAndServices.photocopyServices')" />:</label>
 			</td>
 			<td>
 				<select id="selectASTSRSPhotocopyServices">
@@ -3723,20 +3723,20 @@
 
 		<tr>
 			<td id="recreationalServiceLabel" colspan="4">
-				<span><s:property value="getText('label.ai.accessAndServices.recreationalServices')"/></span>
+				<span><s:property value="getText('eag2012.accessAndServices.recreationalServices')"/></span>
 			</td>
 			
 		</tr>
 
 		<tr id="trASReSeRefreshment_1">
 			<td>
-				<label for="textASReSeRefreshment_1"><s:property value="getText('label.ai.accessAndServices.refreshment')" />:</label>
+				<label for="textASReSeRefreshment_1"><s:property value="getText('eag2012.accessAndServices.refreshment')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeRefreshment_1" />
+				<textarea id="textASReSeRefreshment_1"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="selectASReSeRefreshmentSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				<label for="selectASReSeRefreshmentSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
 				<select id="selectASReSeRefreshmentSelectLanguage_1">
@@ -3749,7 +3749,7 @@
 
 		<tr>
 			<td colspan="3">
-				<input type="button" id="buttonASReSeAddFurtherRefreshment" value="<s:property value="getText('label.ai.accessAndServices.addFurtherRefreshmentInformation')"/>" onclick="aSReSeAddFurtherRefreshment('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				<input type="button" id="buttonASReSeAddFurtherRefreshment" value="<s:property value="getText('eag2012.accessAndServices.addFurtherRefreshmentInformation')"/>" onclick="aSReSeAddFurtherRefreshment('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 			</td>
 			<td>
 			</td>
@@ -3757,13 +3757,13 @@
 
 		<tr id="trASReSeExhibition_1">
 			<td>
-				<label for="textASReSeExhibition_1"><s:property value="getText('label.ai.accessAndServices.exhibition')" />:</label>
+				<label for="textASReSeExhibition_1"><s:property value="getText('eag2012.accessAndServices.exhibition')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeExhibition_1" />
+				<textarea id="textASReSeExhibition_1"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="selectASReSeExhibitionSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				<label for="selectASReSeExhibitionSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
 				<select id="selectASReSeExhibitionSelectLanguage_1">
@@ -3776,22 +3776,22 @@
 
 		<tr id="tr2ASReSeExhibition_1">
 			<td>
-				<label for="textASReSeWebpage_1"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+				<label for="textASReSeWebpage_1"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeWebpage_1" />
+				<textarea id="textASReSeWebpage_1"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="textASReSeWebpageLinkTitle_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+				<label for="textASReSeWebpageLinkTitle_1"><s:property value="getText('eag2012.commons.linkTitle')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeWebpageLinkTitle_1" />
+				<textarea id="textASReSeWebpageLinkTitle_1"></textarea>
 			</td>
 		</tr>
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonASReSeAddExhibition" value="<s:property value="getText('label.ai.accessAndServices.addExhibition')"/>" onclick="aSReSeAddExhibition('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				<input type="button" id="buttonASReSeAddExhibition" value="<s:property value="getText('eag2012.accessAndServices.addExhibitions')"/>" onclick="aSReSeAddExhibition('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -3799,13 +3799,13 @@
 
 		<tr id="trASReSeToursAndSessions_1">
 			<td>
-				<label for="textASReSeToursAndSessions_1" ><s:property value="getText('label.ai.accessAndServices.toursAndSessions')" />:</label>
+				<label for="textASReSeToursAndSessions_1" ><s:property value="getText('eag2012.accessAndServices.toursAndSessions')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeToursAndSessions_1" />
+				<textarea id="textASReSeToursAndSessions_1"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="selectASReSeToursAndSessionsSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				<label for="selectASReSeToursAndSessionsSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
 				<select id="selectASReSeToursAndSessionsSelectLanguage_1">
@@ -3818,22 +3818,22 @@
 
 		<tr id="tr2ASReSeToursAndSessions_1">
 			<td>
-				<label for="textASReSeTSWebpage_1"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+				<label for="textASReSeTSWebpage_1"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeTSWebpage_1" />
+				<textarea id="textASReSeTSWebpage_1"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="textASReSeWebpageTSLinkTitle_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+				<label for="textASReSeWebpageTSLinkTitle_1"><s:property value="getText('eag2012.commons.linkTitle')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeWebpageTSLinkTitle_1" />
+				<textarea id="textASReSeWebpageTSLinkTitle_1"></textarea>
 			</td>
 		</tr>
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonASReSeToursAndSessions" value="<s:property value="getText('label.ai.accessAndServices.addToursAndSessions')"/>" onclick="aSReSeToursAndSessions('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
+				<input type="button" id="buttonASReSeToursAndSessions" value="<s:property value="getText('eag2012.accessAndServices.addToursSessions')"/>" onclick="aSReSeToursAndSessions('<s:property value="getText('eag2012.commons.pleaseFillData')" />');"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -3841,13 +3841,13 @@
 
 		<tr id="trASReSeOtherServices_1">
 			<td>
-				<label for="textASReSeOtherServices_1" ><s:property value="getText('label.ai.accessAndServices.otherServices')" />:</label>
+				<label for="textASReSeOtherServices_1" ><s:property value="getText('eag2012.accessAndServices.otherServices')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeOtherServices_1" />
+				<textarea id="textASReSeOtherServices_1"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="selectASReSeOtherServicesSelectLanguage_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>:</label>
+				<label for="selectASReSeOtherServicesSelectLanguage_1"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
 			</td>
 			<td>
 				<select id="selectASReSeOtherServicesSelectLanguage_1">
@@ -3860,22 +3860,22 @@
 
 		<tr id="tr2ASReSeOtherServices_1">
 			<td>
-				<label for="textASReSeOSWebpage_1"><s:property value="getText('label.ai.tabs.commons.webpage')" />:</label>
+				<label for="textASReSeOSWebpage_1"><s:property value="getText('eag2012.commons.webpage')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeOSWebpage_1" />
+				<textarea id="textASReSeOSWebpage_1"></textarea>
 			</td>
 			<td class="labelLeft">
-				<label for="textASReSeWebpageOSLinkTitle_1"><s:property value="getText('label.ai.tabs.commons.linkTitle')" />:</label>
+				<label for="textASReSeWebpageOSLinkTitle_1"><s:property value="getText('eag2012.commons.linkTitle')" />:</label>
 			</td>
 			<td>
-				<input type="text" id="textASReSeWebpageOSLinkTitle_1" />
+				<textarea id="textASReSeWebpageOSLinkTitle_1"></textarea>
 			</td>
 		</tr>
 
 		<tr>
 			<td colspan="2">
-				<input type="button" id="buttonASAddServices" value="<s:property value="getText('label.ai.accessAndServices.addSevices')"/>" onclick="aSAddServices('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
+				<input type="button" id="buttonASAddServices" value="<s:property value="getText('eag2012.accessAndServices.addOtherServices')"/>" onclick="aSAddServices('<s:property value="getText('eag2012.commons.pleaseFillData')" />');"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -3883,8 +3883,8 @@
 
 		<tr>
 			<td id="tdButtonsAccessAndServiceTab" colspan="4">
-				<input type="button" id="buttonAccessAndServiceTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" onclick="checkAndShowNextTab($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('label.eag.eagwithurlwarnings')"/>');" />
-				<input type="button" id="buttonAccessAndServiceTabPrevious" value="<s:property value='getText("label.ai.tabs.commons.button.previousTab")' />" class="rightButton" onclick="checkAndShowPreviousTab($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('label.eag.eagwithurlwarnings')"/>');" />
+				<input type="button" id="buttonAccessAndServiceTabNext" value="<s:property value='getText("eag2012.commons.nextTab")' />" class="rightButton" onclick="checkAndShowNextTab($(this).parent().parent().parent().parent(), '<s:property value="getText('eag2012.errors.fieldRequired')" />', '<s:property value="getText('eag2012.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>');" />
+				<input type="button" id="buttonAccessAndServiceTabPrevious" value="<s:property value='getText("eag2012.commons.previousTab")' />" class="rightButton" onclick="checkAndShowPreviousTab($(this).parent().parent().parent().parent(), '<s:property value="getText('eag2012.errors.fieldRequired')" />', '<s:property value="getText('eag2012.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>');" />
 			</td>
 		</tr>
 	</table>
