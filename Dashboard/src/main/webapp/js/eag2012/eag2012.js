@@ -169,7 +169,21 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 			}
 		}
 	});
-	
+	//textarea 
+	$("table#yourInstitutionTable_1 textarea").each(function(){
+		if(jsonData.length>1){
+			jsonData += ",";
+		}
+		jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
+
+		// Check fill mandatory fields.
+		if ($(this).attr("value") != '') {
+			var position = yiMandatoryElements.indexOf($(this).attr("id"));
+			if (position != -1) {
+				yiMandatoryElements.splice(position, 1);
+			}
+		}
+	});
 	//select options selected
 	$("table#yourInstitutionTable_1 select").each(function(){
 		if(jsonData.charAt(jsonData.length-1)!=':'){
@@ -209,6 +223,21 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 		jsonData += "'"+visitorsAddress[j]+"':{";
 		//input type text
 		$("#"+visitorsAddress[j]+" input[type='text']").each(function(){
+			if(jsonData.charAt(jsonData.length-1)!=':'
+				&& jsonData.charAt(jsonData.length-1)!='{'){
+				jsonData += ",";
+			}
+			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
+			// Check fill mandatory fields.
+			if ($(this).attr("value") != '' && j == 0) {
+				var position = yiMEVisitorsAddress.indexOf($(this).attr("id"));
+				if (position != -1) {
+					yiMEVisitorsAddress.splice(position, 1);
+				}
+			}
+		});
+		//textarea
+		$("#"+visitorsAddress[j]+" textarea").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'
 				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
@@ -262,8 +291,8 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 			jsonData += ",";
 		}
 		jsonData += "'"+postalAddress[j]+"':{";
-		//input type text
-		$("#"+postalAddress[j]+" input[type='text']").each(function(){
+		//textarea
+		$("#"+postalAddress[j]+" textarea").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'
 				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
@@ -318,15 +347,30 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 			}
 		}
 	});
+	//textarea
+	$("#yiTableOthers textarea").each(function(){
+		if(jsonData.charAt(jsonData.length-1)!=':'
+			&& jsonData.charAt(jsonData.length-1)!='{'){
+			jsonData += ",";
+		}
+		jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
+		// Check fill mandatory fields.
+		if ($(this).attr("value") != '') {
+			var position = yiMERepositories.indexOf($(this).attr("id"));
+			if (position != -1) {
+				yiMERepositories.splice(position, 1);
+			}
+		}
+	});
 	var additionalChecks = false;
-	$("table#yiTableOthers input[id^='textReferencetoyourinstitutionsholdingsguide']").each(function(){
+	$("table#yiTableOthers textarea[id^='textReferencetoyourinstitutionsholdingsguide']").each(function(){
 		var result = checkWebpages($(this),messageRightWeb);
 		if (!additionalChecks) {
 			additionalChecks = result;
 		}
 	});
     var wepageCheck = false;
-	$("table#yiTableOthers input[id^='textYIWebpage']").each(function(){
+	$("table#yiTableOthers textarea[id^='textYIWebpage']").each(function(){
 		if($(this).attr("id").indexOf("textYIWebpageLinkTitle") == "-1"){
 			var result = checkWebpages($(this),messageRightWeb);
 			if (!wepageCheck) {
@@ -388,6 +432,13 @@ var clickIdentityAction = function(text1){
 		}
 		jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
 	});
+	//content from textarea
+	$("table#identityTable textarea").each(function(){
+		if(jsonData.length>1){
+			jsonData += ",";
+		}
+		jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
+	});
 	//content from selects
 	$("table#identityTable select").each(function(){
 		if(jsonData.charAt(jsonData.length-1)!=':'){
@@ -429,8 +480,8 @@ var clickIdentityAction = function(text1){
 			jsonData += ",";
 		}
 		jsonData += "'"+institutionNames[j]+"':{";
-		//input type text
-		$("#"+institutionNames[j]+" input[type='text']").each(function(){
+		//textarea
+		$("#"+institutionNames[j]+" textarea").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'
 				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
@@ -464,8 +515,8 @@ var clickIdentityAction = function(text1){
 			jsonData += ",";
 		}
 		jsonData += "'"+parallelNames[j]+"':{";
-		//input type text
-		$("#"+parallelNames[j]+" input[type='text']").each(function(){
+		//textarea
+		$("#"+parallelNames[j]+" textarea").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'
 				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
@@ -499,6 +550,14 @@ var clickIdentityAction = function(text1){
 			jsonData += ",";
 		}
 		jsonData += "'"+formerlyNames[j]+"':{";
+		//textarea
+		$("#"+formerlyNames[j]+" textarea").each(function(){
+			if(jsonData.charAt(jsonData.length-1)!=':'
+				   && jsonData.charAt(jsonData.length-1)!='{'){
+				  jsonData += ",";
+			   }
+				jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
+		});
 		//input type text
 		var jsonDataYear = "";
 		$("#"+formerlyNames[j]+" input[type='text']").each(function(){
@@ -518,6 +577,7 @@ var clickIdentityAction = function(text1){
 		    }
 		});
 		jsonData += "," + jsonDataYear;
+		
 		//select options selected
 		$("#"+formerlyNames[j]+" select").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'){
@@ -601,6 +661,27 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 			}
 		}
 	});
+	//textarea
+	$("table#contactTable" + currentTab + " textarea").each(function(){
+		if(jsonData.length>1){
+			if(jsonData.substring(jsonData.length-1)!=','){
+				jsonData += ",";
+			}
+		}
+		if ($(this).parent().parent().parent().parent().attr("id").indexOf("contactTableVisitorsAddress") == -1) {
+			if ($(this).parent().parent().parent().parent().attr("id").indexOf("contactTablePostalAddress") == -1) {
+					jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
+			}
+		}
+
+		// Check fill mandatory fields.
+		if ($.trim($(this).attr("value")) != '') {
+			var position = contactMandatoryElements.indexOf($(this).attr("id"));
+			if (position != -1) {
+				contactMandatoryElements.splice(position, 1);
+			}
+		}
+	});
 	//content from selects
 	$("table#contactTable" + currentTab + " select").each(function(){
 		if(jsonData.charAt(jsonData.length-1)!=':'){
@@ -624,7 +705,7 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 	});
 
 	var failWebpageCheck = false;
-	$("table#contactTable" + currentTab + " input[id^='textContactWebOfTheInstitution']").each(function(){
+	$("table#contactTable" + currentTab + " textarea[id^='textContactWebOfTheInstitution']").each(function(){
 		var result = checkWebpages($(this),messageWebpage);
 		if (!failWebpageCheck) {
 			failWebpageCheck = result;
@@ -656,6 +737,26 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 		jsonData += "'"+visitorsAddress[j]+"':{";
 		//input type text
 		$("table#contactTable" + currentTab + " table#"+visitorsAddress[j]+" input[type='text']").each(function(){
+			if(jsonData.charAt(jsonData.length-1)!=':'
+				&& jsonData.charAt(jsonData.length-1)!='{'){
+				if(jsonData.substring(jsonData.length-1)!=','){
+					jsonData += ",";
+				}
+			}
+			if ($(this).parent().parent().parent().parent().parent().parent().parent().parent().parent().attr("id").indexOf("divTempContainter") == -1) {
+				jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
+			}
+
+			// Check fill mandatory fields.
+			if ($.trim($(this).attr("value")) != '' && j == 0) {
+				var position = contactVAMandatoryElements.indexOf($(this).attr("id"));
+				if (position != -1) {
+					contactVAMandatoryElements.splice(position, 1);
+				}
+			}
+		});
+		//textarea
+		$("table#contactTable" + currentTab + " table#"+visitorsAddress[j]+" textarea").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'
 				&& jsonData.charAt(jsonData.length-1)!='{'){
 				if(jsonData.substring(jsonData.length-1)!=','){
@@ -716,8 +817,8 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 			jsonData += ",";
 		}
 		jsonData += "'"+postalAddress[j]+"':{";
-		//input type text
-		$("table#contactTable" + currentTab + " table#"+postalAddress[j]+" input[type='text']").each(function(){
+		//textarea
+		$("table#contactTable" + currentTab + " table#"+postalAddress[j]+" textarea").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'
 				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
@@ -802,10 +903,42 @@ function checkAccessAndServicesTab(currentTab, text1, messageLink) {
 			jsonData += ",";
 		}
 		if ($(this).attr("id") == "textTravellingDirections"
-			|| $(this).attr("id") == "textASTermOfUse") {
+			|| $(this).attr("id") == "textASTermOfUse"
+			|| $(this).attr("id") == "textOpeningTimes"
+			|| $(this).attr("id") == "textClosingDates"
+			|| $(this).attr("id") == "textTravelLink"
+			|| $(this).attr("id") == "textASAccessRestrictions"
+			|| $(this).attr("id") == "textASTOULink"
+			|| $(this).attr("id") == "textASAccessibility"
+			|| $(this).attr("id") == "textDescriptionOfYourComputerPlaces"
+			|| $(this).attr("id") == "textASSRReadersTicket"
+			|| $(this).attr("id") == "textASSRRTLink"
+			|| $(this).attr("id") == "textASSRAdvancedOrders"
+			|| $(this).attr("id") == "textASSRAOLink"
+			|| $(this).attr("id") == "textASSRResearchServices"
+			|| $(this).attr("id") == "textASDescription"
+			|| $(this).attr("id") == "textASTSDescriptionOfRestaurationLab"
+			|| $(this).attr("id") == "textASTSDescriptionOfReproductionService"
+			|| $(this).attr("id") == "textASReSeExhibition"
+			|| $(this).attr("id") == "textASReSeWebpage"
+			|| $(this).attr("id") == "textASReSeWebpageLinkTitle"
+			|| $(this).attr("id") == "textASReSeToursAndSessions"
+			|| $(this).attr("id") == "textASReSeTSWebpage"
+			|| $(this).attr("id") == "textASReSeWebpageTSLinkTitle"
+			|| $(this).attr("id") == "textASReSeOtherServices"
+			|| $(this).attr("id") == "textASReSeOSWebpage"
+			|| $(this).attr("id") == "textASReSeWebpageOSLinkTitle"
+			|| $(this).attr("id") == "textASReSeRefreshment") {
 			jsonData += "'"+$(this).attr("id")+"_1' : '"+$.trim(escapeApostrophe($(this)))+"'";
 		} else {
 			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
+		}
+		// Check fill mandatory fields.
+		if ($.trim($(this).attr("value")) != '') {
+			var position = aasMandatoryElements.indexOf($(this).attr("id"));
+			if (position != -1) {
+				aasMandatoryElements.splice(position, 1);
+			}
 		}
 	});
 	//content from texts
@@ -852,73 +985,73 @@ function checkAccessAndServicesTab(currentTab, text1, messageLink) {
 		}
 	});
 	var failLinkCheck = false;
-	$("table#accessAndServicesTable" + currentTab + " input[id^='textTravelLink_']").each(function(){
+	$("table#accessAndServicesTable" + currentTab + " textarea[id^='textTravelLink_']").each(function(){
 		  var result =checkWebpages($(this),messageLink);
 		  if (!failLinkCheck) {
 			failLinkCheck = result;
 		  }
 	});
     var failTermCheck = false; 
-    $("table#accessAndServicesTable" + currentTab + " input[id^='textASTOULink_']").each(function(){
+    $("table#accessAndServicesTable" + currentTab + " textarea[id^='textASTOULink_']").each(function(){
     	var result =checkWebpages($(this),messageLink);
 		if (!failTermCheck) {
 			failTermCheck = result;
 		}
 	});
      var failReaderCheck = false;
-     $("table#accessAndServicesTable" + currentTab + " input[id^='textASSRRTLink_']").each(function(){
+     $("table#accessAndServicesTable" + currentTab + " textarea[id^='textASSRRTLink_']").each(function(){
     	 var result =checkWebpages($(this),messageLink);
  		  if (!failReaderCheck) {
  			 failReaderCheck = result;
  		  }
 	  });
       var failFurtherCheck = false;
-      $("table#accessAndServicesTable" + currentTab + " input[id^='textASSRAOLink_']").each(function(){
+      $("table#accessAndServicesTable" + currentTab + " textarea[id^='textASSRAOLink_']").each(function(){
     	  var result =checkWebpages($(this),messageLink);
  		  if (!failFurtherCheck) {
  			 failFurtherCheck = result;
  		  }
 	   });
        var failwebpageSearchroom = false;
-       $("table#accessAndServicesTable" + currentTab + " input[id^='textASSRWebpage']").each(function(){
+       $("table#accessAndServicesTable" + currentTab + " textarea[id^='textASSRWebpage']").each(function(){
           if($(this).attr("id").indexOf("textASSRWebpageLinkTitle") == "-1"){
         	  	failwebpageSearchroom = checkWebpages($(this),messageLink); 
           }
        });
        var failwebpageInternetAccess = false;
-       $("table#accessAndServicesTable" + currentTab + " input[id^='textASLWebpage']").each(function(){
+       $("table#accessAndServicesTable" + currentTab + " textarea[id^='textASLWebpage']").each(function(){
          if($(this).attr("id").indexOf("textASLWebpageLinkTitle") == "-1"){
     	    	failwebpageInternetAccess = checkWebpages($(this),messageLink);
          }
    	    });
        var failwebpageDescription = false;
-       $("table#accessAndServicesTable" + currentTab + " input[id^='textASRSWebpage']").each(function(){
+       $("table#accessAndServicesTable" + currentTab + " textarea[id^='textASRSWebpage']").each(function(){
     	   if($(this).attr("id").indexOf("textASRSWebpageLinkTitle") == "-1"){
     		   failwebpageDescription = checkWebpages($(this),messageLink);
     	   }
    	   });
    	   var failwebpageTechnical = false;
-       $("table#accessAndServicesTable" + currentTab + " input[id^='textASTSRSWebpage']").each(function(){
+       $("table#accessAndServicesTable" + currentTab + " textarea[id^='textASTSRSWebpage']").each(function(){
    		if($(this).attr("id").indexOf("textASTSRSWebpageLinkTitle") == "-1"){
    			failwebpageTechnical = checkWebpages($(this),messageLink);
    		}   
    	   });
        var failwebpageExhibition = false;
-       $("table#accessAndServicesTable" + currentTab + " input[id^='textASReSeWebpage_']").each(function(){
+       $("table#accessAndServicesTable" + currentTab + " textarea[id^='textASReSeWebpage_']").each(function(){
     	  var result =checkWebpages($(this),messageLink);
   		  if (failwebpageExhibition) {
   			failwebpageExhibition = result;
   		  }
    	   });
        var failwebpageToursSession = false;
-       $("table#accessAndServicesTable" + currentTab + " input[id^='textASReSeTSWebpage_']").each(function(){
+       $("table#accessAndServicesTable" + currentTab + " textarea[id^='textASReSeTSWebpage_']").each(function(){
     	  var result =checkWebpages($(this),messageLink);
    		  if (failwebpageToursSession) {
    			failwebpageToursSession = result;
    		  }
    	   });
        var failwebpageServices = false;
-       $("table#accessAndServicesTable" + currentTab + " input[id^='textASReSeOSWebpage_']").each(function(){
+       $("table#accessAndServicesTable" + currentTab + " textarea[id^='textASReSeOSWebpage_']").each(function(){
     	   var result =checkWebpages($(this),messageLink);
     		  if (failwebpageServices) {
     			  failwebpageServices = result;
@@ -1003,7 +1136,9 @@ function checkDescriptionTab(currentTab, text1) {
 		if ($(this).attr("id") == "textRepositoryHistory"
 			|| $(this).attr("id") == "textUnitOfAdministrativeStructure"
 			|| $(this).attr("id") == "textBuilding"
-			|| $(this).attr("id") == "textArchivalAndOtherHoldings") {
+			|| $(this).attr("id") == "textArchivalAndOtherHoldings"
+			|| $(this).attr("id") == "textRuleOfRepositoryFoundation"
+			|| $(this).attr("id") == "textRuleOfRepositorySuppression") {
 			jsonData += "'"+$(this).attr("id")+"_1' : '"+$.trim(escapeApostrophe($(this)))+"'";
 		} else {
 			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
@@ -1062,14 +1197,23 @@ var clickControlAction = function(text1){
 	deleteChecks();
 
 	var jsonData = "{";
+	    //contents from textarea
+		$("table#controlTable textarea").each(function(){
+			if(jsonData.length>1){
+				jsonData += ",";
+			}
+			if ($(this).attr("id") == "textContactFullName") {
+				jsonData += "'"+$(this).attr("id")+"_1' : '"+$.trim(escapeApostrophe($(this)))+"'";
+			} else {
+				jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
+			}
+		});
 		//content from texts
 		$("table#controlTable input[type='text']").each(function(){
 			if(jsonData.length>1){
 				jsonData += ",";
 			}
 			if ($(this).attr("id") == "textContactAbbreviation") {
-				jsonData += "'"+$(this).attr("id")+"_1' : '"+$.trim(escapeApostrophe($(this)))+"'";
-			}else if ($(this).attr("id") == "textContactFullName") {
 				jsonData += "'"+$(this).attr("id")+"_1' : '"+$.trim(escapeApostrophe($(this)))+"'";
 			} else {
 				jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
@@ -1115,7 +1259,7 @@ var clickRelationsAction = function(text1,messageWebpage){
 		}
 		jsonData += "'"+resourceRelations[j]+"':{";
 		//input type text
-		$("#"+resourceRelations[j]+" input[type='text']").each(function(){
+		$("#"+resourceRelations[j]+" textarea").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'
 				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
@@ -1134,7 +1278,7 @@ var clickRelationsAction = function(text1,messageWebpage){
 
 	var failWebpageCheck = false;
 	$("table[id^='resourceRelationTable_']").each(function(){
-		$("table#" + $(this).attr("id") + " input[id^='textWebsiteOfResource']").each(function(){
+		$("table#" + $(this).attr("id") + " textarea[id^='textWebsiteOfResource']").each(function(){
 			var result = checkWebpages($(this),messageWebpage);
 			if (!failWebpageCheck) {
 				failWebpageCheck = result;
@@ -1160,7 +1304,7 @@ var clickRelationsAction = function(text1,messageWebpage){
 		}
 		jsonData += "'"+institutionRelations[j]+"':{";
 		//input type text
-		$("#"+institutionRelations[j]+" input[type='text']").each(function(){
+		$("#"+institutionRelations[j]+" textarea").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'
 				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
@@ -1303,9 +1447,9 @@ function checkFillValue(element) {
 function yiAddVisitorsAddressTranslation(text1) {
 	var counter = $("table[id^='yiTableVisitorsAddress_']").length;
 
-	var street = $("table#yiTableVisitorsAddress_"+counter+" input#textYIStreet").attr("value");
-	var city = $("table#yiTableVisitorsAddress_"+counter+" input#textYICity").attr("value");
-	var country = $("table#yiTableVisitorsAddress_"+counter+" input#textYICountry").attr("value");
+	var street = $("table#yiTableVisitorsAddress_"+counter+" textarea#textYIStreet").attr("value");
+	var city = $("table#yiTableVisitorsAddress_"+counter+" textarea#textYICity").attr("value");
+	var country = $("table#yiTableVisitorsAddress_"+counter+" textarea#textYICountry").attr("value");
 
 	if (street != null && street != ""
 			&& city != null && city != "" && country != null && country != "") {
@@ -1314,6 +1458,9 @@ function yiAddVisitorsAddressTranslation(text1) {
 		$("table[id^='yiTableVisitorsAddress_"+counter+"']").after(clone);
 		// Reset parametters.
 		$("table#yiTableVisitorsAddress_"+(counter+1)+" input[type='text']").each(function(){
+			$(this).val(""); // Clean all input_text.
+		});
+		$("table#yiTableVisitorsAddress_"+(counter+1)+" textarea").each(function(){
 			$(this).val(""); // Clean all input_text.
 		});
 		$("table#yiTableVisitorsAddress_"+(counter+1)+" #selectYIVASelectLanguage").attr("value","none");
@@ -1339,7 +1486,7 @@ function yiAddPostalAddressIfDifferent(text1, text2, text3, text4,control) {
 				'<label for="textYIPAStreet">'+text3+'<span class="required">*</span>:</label>'+
 			'</td>'+
 			'<td>'+
-				'<input type="text" id="textYIPAStreet" onchange="postalAddressStreetChanged($(this).parent().parent().parent().parent());" />'+
+				'<textarea id="textYIPAStreet" onchange="postalAddressStreetChanged($(this).parent().parent().parent().parent());"></textarea>'+
 			'</td>'+
 			'<td id="yiPostalAddressLanguage" class="labelLeft">'+
 				'<label for="selectYIPASelectLanguage">'+text2+':</label>'+
@@ -1352,7 +1499,7 @@ function yiAddPostalAddressIfDifferent(text1, text2, text3, text4,control) {
 				'<label for="textYIPACity">'+text4+'<span class="required">*</span>:</label>'+
 			'</td>'+
 			'<td>'+
-				'<input type="text" id="textYIPACity" onchange="postalAddressCityChanged($(this).parent().parent().parent().parent());" />'+
+				'<textarea id="textYIPACity" onchange="postalAddressCityChanged($(this).parent().parent().parent().parent());"></textarea>'+
 			'</td>'+
 		'</tr></table>');
 
@@ -1365,8 +1512,8 @@ function yiAddPostalAddressIfDifferent(text1, text2, text3, text4,control) {
 
 function yiAddPostalAddressTranslation(text1) {
 	var counter = $("table[id^='yiTablePostalAddress_']").length;
-	var street = $("table#yiTablePostalAddress_"+counter+" input#textYIPAStreet").attr("value");
-	var city = $("table#yiTablePostalAddress_"+counter+" input#textYIPACity").attr("value");
+	var street = $("table#yiTablePostalAddress_"+counter+" textarea#textYIPAStreet").attr("value");
+	var city = $("table#yiTablePostalAddress_"+counter+" textarea#textYIPACity").attr("value");
 
 	if (street != null && street != ""
 		&& city != null && city != "") {
@@ -1374,7 +1521,7 @@ function yiAddPostalAddressTranslation(text1) {
 		clone = "<table id='"+("yiTablePostalAddress_"+(counter+1))+"' class=\"tablePadding\">"+clone.html()+"</table>";
 		$("table[id^='yiTablePostalAddress_"+counter+"']").after(clone);
 		// Reset parametters.
-		$("table#yiTablePostalAddress_"+(counter+1)+" input[type='text']").each(function(){
+		$("table#yiTablePostalAddress_"+(counter+1)+" textarea").each(function(){
 			$(this).val(""); // Clean all input_text.
 		});
 		$("table#yiTablePostalAddress_"+(counter+1)+" #selectYIPASelectLanguage").attr("value","none");
@@ -1405,7 +1552,7 @@ function yiFutherAccessInformation2(text1){
 	clone.find("[id^='selectFutherAccessInformation']").removeAttr("onchange");
 	clone.attr("id","trYIButtonFutherAccessInformation_"+(count+1));
 	var wrongField = false;
-	var furtherValue = clone.find("input[id^='futherAccessInformation']").val();
+	var furtherValue = clone.find("textarea[id^='futherAccessInformation']").val();
 	/* var furtherSelect = null;
 	if(count>1){
 		furtherSelect = $("#selectFutherAccessInformation_"+count).attr("value");
@@ -1443,7 +1590,7 @@ function yiAddFutherInformationOnExistingFacilities2(text1) {
 	clone.find("[id^='selectFutherAccessInformationOnExistingFacilities']").attr("id","selectFutherAccessInformationOnExistingFacilities_"+(count+1));
 	clone.attr("id","trButtonAddFutherInformationOnExistingFacilities_"+(count+1));
 	var wrongField = false;
-	var furtherValue = clone.find("input[id^='futherInformationOnExistingFacilities']").val();
+	var furtherValue = clone.find("textarea[id^='futherInformationOnExistingFacilities']").val();
 	/* var furtherSelect = null;
 	if(count>1){
 		furtherSelect = $("#selectFutherAccessInformationOnExistingFacilities_"+count).attr("value");
@@ -1504,21 +1651,23 @@ function yiAddReferencetoyourinstitutionsholdingsguide(text1){
 }
 
 function addFurtherIds(text1, text2, text3, text4, text5){
-	var counter = $("input[id^='otherRepositorId']").length;
-	var select = '<select id="selectOtherRepositorIdCodeISIL_'+($("input[id^='otherRepositorId']").length)+'" onclick="codeISILChanged(\''+text5+'\','+($("input[id^='otherRepositorId']").length)+');">'+$("#selectYICodeISIL").html()+'</select>';
+	var counter = $("textarea[id^='otherRepositorId']").length;
+	var select = '<select id="selectOtherRepositorIdCodeISIL_'+($("textarea[id^='otherRepositorId']").length)+'" onclick="codeISILChanged(\''+text5+'\','+($("textarea[id^='otherRepositorId']").length)+');">'+$("#selectYICodeISIL").html()+'</select>';
+
 	if (counter == 0) {
-		$("input#buttonAddFutherIds").parent().parent().before("<tr><td><label for=\"otherRepositorId_"+($("input[id^='otherRepositorId'] ").length)+"\" > "+text1+":</label></td><td><input type=\"text\" id=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\" onclick=\"idOfInstitutionChanged('"+text4+"','"+text5+"','"+($("input[id^='otherRepositorId']").length)+"');\" onkeyup=\"idOfInstitutionChanged('"+text4+"','"+text5+"','"+($("input[id^='otherRepositorId']").length)+"');\" /></td><td class=\"labelLeft\">"+text3+"</td><td>"+select+"</td></tr>");
+		$("input#buttonAddFutherIds").parent().parent().before("<tr><td><label for=\"otherRepositorId_"+($("textarea[id^='otherRepositorId'] ").length)+"\" > "+text1+":</label></td><td><textarea id=\"otherRepositorId_"+($("textarea[id^='otherRepositorId']").length)+"\" onclick=\"idOfInstitutionChanged('"+text4+"','"+text5+"','"+($("textarea[id^='otherRepositorId']").length)+"');\" onkeyup=\"idOfInstitutionChanged('"+text4+"','"+text5+"','"+($("textarea[id^='otherRepositorId']").length)+"');\"></textarea></td><td class=\"labelLeft\">"+text3+"</td><td>"+select+"</td></tr>");
 		$("select#selectOtherRepositorIdCodeISIL_"+counter).attr("value", "no");
 	} else {
-		var value = $("input#otherRepositorId_" + (counter-1)).attr("value");
+		var value = $("textarea#otherRepositorId_" + (counter-1)).attr("value");
+
 		if (value != null && value != "") {
-			$("input#buttonAddFutherIds").parent().parent().before("<tr><td><label for=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\"> "+text1+":</label></td><td><input type=\"text\" id=\"otherRepositorId_"+($("input[id^='otherRepositorId']").length)+"\" onclick=\"idOfInstitutionChanged('"+text4+"','"+text5+"','"+($("input[id^='otherRepositorId']").length)+"');\" onkeyup=\"idOfInstitutionChanged('"+text4+"','"+text5+"','"+($("input[id^='otherRepositorId']").length)+"');\" /></td><td class=\"labelLeft\">"+text3+"</td><td>"+select+"</td></tr>");
-		$("select#selectOtherRepositorIdCodeISIL_"+counter).attr("value", "no");
+			$("input#buttonAddFutherIds").parent().parent().before("<tr><td><label for=\"otherRepositorId_"+($("textarea[id^='otherRepositorId']").length)+"\"> "+text1+":</label></td><td><textarea id=\"otherRepositorId_"+($("textarea[id^='otherRepositorId']").length)+"\" onclick=\"idOfInstitutionChanged('"+text4+"','"+text5+"','"+($("textarea[id^='otherRepositorId']").length)+"');\" onkeyup=\"idOfInstitutionChanged('"+text4+"','"+text5+"','"+($("textarea[id^='otherRepositorId']").length)+"');\"></textarea></td><td class=\"labelLeft\">"+text3+"</td><td>"+select+"</td></tr>");
+			$("select#selectOtherRepositorIdCodeISIL_"+counter).attr("value", "no");
 		} else {
 			alertEmptyFields(text2);
 		}
 	}
-	if($("input[id^='otherRepositorId']").length>0){
+	if($("textarea[id^='otherRepositorId']").length>0){
 		if($("#selectYICodeISIL").val()=="yes"){
 			$("select[id^='selectOtherRepositorIdCodeISIL_']").each(function(){
 				$(this).attr("disabled","disabled");
@@ -1600,7 +1749,7 @@ function loadRepositories(text1, text2, number) {
 
 		// Load the names of repositories as name of repository tabs.
 		for (var i = 2; i <= count; i++) {
-			var name = $("table#contactTable_" + i + " input#textNameOfRepository").val();
+			var name = $("table#contactTable_" + i + " textarea#textNameOfRepository").val();
 
 			if (name != null && name != "") {
 				$("a#tab_yourInstitutionTable_" + i).text(name);
@@ -1618,6 +1767,9 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7, proper
 	$("table#yourInstitutionTable_"+(counter+1)+" input[type='text']").each(function(){
 		$(this).val(""); //clean all input_text
 	});
+	$("table#yourInstitutionTable_"+(counter+1)+" textarea").each(function(){
+		$(this).val(""); //clean all textarea
+	});
 	$("table[id^='yourInstitutionTable_']").hide();
 	var localId = "";
 	if(counter==1){
@@ -1633,42 +1785,42 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7, proper
 	$("div#tab-description").append("<table id=\"descriptionTable_"+(counter+1)+"\" class=\"tablePadding\">"+$("table#descriptionTable").clone().html()+"</table>");
 
 	// Remove attr "disabled" for all elements in "contact" tab.
-	$("table#contactTable_"+(counter+1)+" input#textContactStreetOfTheInstitution").removeAttr("disabled");
+	$("table#contactTable_"+(counter+1)+" textarea#textContactStreetOfTheInstitution").removeAttr("disabled");
 	$("table#contactTable_"+(counter+1)+" select#selectLanguageVisitorAddress").removeAttr("disabled");
-	$("table#contactTable_"+(counter+1)+" input#textContactCityOfTheInstitution").removeAttr("disabled");
-	$("table#contactTable_"+(counter+1)+" input#textContactCountryOfTheInstitution").removeAttr("disabled");
+	$("table#contactTable_"+(counter+1)+" textarea#textContactCityOfTheInstitution").removeAttr("disabled");
+	$("table#contactTable_"+(counter+1)+" textarea#textContactCountryOfTheInstitution").removeAttr("disabled");
 	$("table#contactTable_"+(counter+1)+" input#textContactLatitudeOfTheInstitution").removeAttr("disabled");
 	$("table#contactTable_"+(counter+1)+" input#textContactLongitudeOfTheInstitution").removeAttr("disabled");
 	$("table#contactTable_"+(counter+1)+" select#selectContinentOfTheInstitution").removeAttr("disabled");
 	$("table#contactTable_"+(counter+1)+" input#textContactTelephoneOfTheInstitution").removeAttr("disabled");
-	$("table#contactTable_"+(counter+1)+" input#textContactEmailOfTheInstitution").removeAttr("disabled");
-	$("table#contactTable_"+(counter+1)+" input#textContactWebOfTheInstitution").removeAttr("disabled");
+	$("table#contactTable_"+(counter+1)+" textarea#textContactEmailOfTheInstitution").removeAttr("disabled");
+	$("table#contactTable_"+(counter+1)+" textarea#textContactWebOfTheInstitution").removeAttr("disabled");
 
 	// Remove attr "onchange" for all elements in "contact" tab.
-	$("table#contactTable_"+(counter+1)+" input#textContactStreetOfTheInstitution").removeAttr("onchange");
+	$("table#contactTable_"+(counter+1)+" textarea#textContactStreetOfTheInstitution").removeAttr("onchange");
 	$("table#contactTable_"+(counter+1)+" select#selectLanguageVisitorAddress").removeAttr("onchange");
-	$("table#contactTable_"+(counter+1)+" input#textContactCityOfTheInstitution").removeAttr("onchange");
-	$("table#contactTable_"+(counter+1)+" input#textContactCountryOfTheInstitution").removeAttr("onchange");
+	$("table#contactTable_"+(counter+1)+" textarea#textContactCityOfTheInstitution").removeAttr("onchange");
+	$("table#contactTable_"+(counter+1)+" textarea#textContactCountryOfTheInstitution").removeAttr("onchange");
 	$("table#contactTable_"+(counter+1)+" input#textContactLatitudeOfTheInstitution").removeAttr("onchange");
 	$("table#contactTable_"+(counter+1)+" input#textContactLongitudeOfTheInstitution").removeAttr("onchange");
 	$("table#contactTable_"+(counter+1)+" input#textContactTelephoneOfTheInstitution_1").removeAttr("onchange");
-	$("table#contactTable_"+(counter+1)+" input#textContactEmailOfTheInstitution_1").removeAttr("onchange");
+	$("table#contactTable_"+(counter+1)+" textarea#textContactEmailOfTheInstitution_1").removeAttr("onchange");
 	$("table#contactTable_"+(counter+1)+" select#selectEmailLanguageOfTheInstitution_1").removeAttr("onchange");
-	$("table#contactTable_"+(counter+1)+" input#textContactLinkTitleForEmailOfTheInstitution_1").removeAttr("onchange");
-	$("table#contactTable_"+(counter+1)+" input#textContactWebOfTheInstitution_1").removeAttr("onchange");
-	$("table#contactTable_"+(counter+1)+" input#textContactLinkTitleForWebOfTheInstitution_1").removeAttr("onchange");
+	$("table#contactTable_"+(counter+1)+" textarea#textContactLinkTitleForEmailOfTheInstitution_1").removeAttr("onchange");
+	$("table#contactTable_"+(counter+1)+" textarea#textContactWebOfTheInstitution_1").removeAttr("onchange");
+	$("table#contactTable_"+(counter+1)+" textarea#textContactLinkTitleForWebOfTheInstitution_1").removeAttr("onchange");
 	$("table#contactTable_"+(counter+1)+" select#selectWebpageLanguageOfTheInstitution_1").removeAttr("onchange");
 
 	// Remove attr "onchange" for all elements in "access and servicess" tab.
-	$("table#accessAndServicesTable_"+(counter+1)+" input#textOpeningTimes_1").removeAttr("onchange");
+	$("table#accessAndServicesTable_"+(counter+1)+" textarea#textOpeningTimes_1").removeAttr("onchange");
 	$("table#accessAndServicesTable_"+(counter+1)+" select#selectLanguageOpeningTimes_1").removeAttr("onchange");
-	$("table#accessAndServicesTable_"+(counter+1)+" input#textClosingDates_1").removeAttr("onchange");
+	$("table#accessAndServicesTable_"+(counter+1)+" textarea#textClosingDates_1").removeAttr("onchange");
 	$("table#accessAndServicesTable_"+(counter+1)+" select#selectLanguageClosingDates_1").removeAttr("onchange");
 	$("table#accessAndServicesTable_"+(counter+1)+" select#selectASAccesibleToThePublic").removeAttr("onchange");
-	$("table#accessAndServicesTable_"+(counter+1)+" input#textASAccessRestrictions_1").removeAttr("onchange");
+	$("table#accessAndServicesTable_"+(counter+1)+" textarea#textASAccessRestrictions_1").removeAttr("onchange");
 	$("table#accessAndServicesTable_"+(counter+1)+" select#selectASARSelectLanguage_1").removeAttr("onchange");
 	$("table#accessAndServicesTable_"+(counter+1)+" select#selectASFacilitiesForDisabledPeopleAvailable").removeAttr("onchange");
-	$("table#accessAndServicesTable_"+(counter+1)+" input#textASAccessibility_1").removeAttr("onchange");
+	$("table#accessAndServicesTable_"+(counter+1)+" textarea#textASAccessibility_1").removeAttr("onchange");
 	$("table#accessAndServicesTable_"+(counter+1)+" select#selectASASelectLanguage_1").removeAttr("onchange");
 
 	// Remove "Next tab" button from tab "description".
@@ -1727,7 +1879,7 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7, proper
 					'<label for="textContactPAStreet">'+property3+'<span class="required">*</span>:</label>'+
 				'</td>'+
 				'<td>'+
-				'<input type="text" id="textContactPAStreet" />'+
+				'<textarea id="textContactPAStreet"></textarea>'+
 				'</td>'+
 				'<td id="contactPostalAddressLanguage">'+
 					'<label for="selectContactLanguagePostalAddress">'+property2+':</label>'+
@@ -1740,7 +1892,7 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7, proper
 					'<label for="textContactPACity">'+property4+'<span class="required">*</span>:</label>'+
 				'</td>'+
 				'<td>'+
-				'<input type="text" id="textContactPACity" />'+
+				'<textarea id="textContactPACity"></textarea>'+
 				'</td>'+
 			'</tr></table></td></tr>');
 
@@ -1759,7 +1911,7 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7, proper
 				"<label for=\"textNameOfRepository\">"+text3+"<span class=\"required\">*</span>:</label>"+
 			"</td>"+
 			"<td>"+
-				"<input type=\"text\" id=\"textNameOfRepository\" onchange=\"contactChangeTabName('" + text2 + "');\" />"+
+				"<textarea id=\"textNameOfRepository\" onchange=\"contactChangeTabName('" + text2 + "');\"></textarea>"+
 			"<td>"+
 				"<label for=\"selectRoleOfRepository\">"+text4+"<span class=\"required\">*</span>:</label>"+
 			"</td>"+
@@ -2080,12 +2232,12 @@ function addFurtherEmailsOfTheInstitution(text1){
 	var title = "";
 
 	if (count == 1) {
-		email = $("table#contactTable"+currentTab+" tr#trEmailOfTheInstitution input#textContactEmailOfTheInstitution_"+count).attr("value");
-		title = $("table#contactTable"+currentTab+" tr#trLanguageEmailOfTheInstitution input#textContactLinkTitleForEmailOfTheInstitution_"+count).attr("value");
+		email = $("table#contactTable"+currentTab+" tr#trEmailOfTheInstitution textarea#textContactEmailOfTheInstitution_"+count).attr("value");
+		title = $("table#contactTable"+currentTab+" tr#trLanguageEmailOfTheInstitution textarea#textContactLinkTitleForEmailOfTheInstitution_"+count).attr("value");
 	} else {
 
-		email = $("table#contactTable"+currentTab+" tr#trEmailOfTheInstitution_"+count+" input#textContactEmailOfTheInstitution_"+count).attr("value");
-		title = $("table#contactTable"+currentTab+" tr#trLanguageEmailOfTheInstitution_"+count+" input#textContactLinkTitleForEmailOfTheInstitution_"+count).attr("value");
+		email = $("table#contactTable"+currentTab+" tr#trEmailOfTheInstitution_"+count+" textarea#textContactEmailOfTheInstitution_"+count).attr("value");
+		title = $("table#contactTable"+currentTab+" tr#trLanguageEmailOfTheInstitution_"+count+" textarea#textContactLinkTitleForEmailOfTheInstitution_"+count).attr("value");
 	}
 
 	if ((email == null || email == "")
@@ -2128,7 +2280,7 @@ function addFurtherEmailsOfTheInstitution(text1){
 function addAnotherFormOfTheAuthorizedName(text1){
 	var counter = $("table[id^='identityTableNameOfTheInstitution_']").length;
 
-	var nameOfInstitution = $("table#identityTableNameOfTheInstitution_"+counter+" input#textNameOfTheInstitution").attr("value");
+	var nameOfInstitution = $("table#identityTableNameOfTheInstitution_"+counter+" textarea#textNameOfTheInstitution").attr("value");
 
 	if (nameOfInstitution == null || nameOfInstitution == "") {
 		alertEmptyFields(text1);
@@ -2142,8 +2294,11 @@ function addAnotherFormOfTheAuthorizedName(text1){
 	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
 	});
+	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
+	});
 	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" tr#trNameOfTheInstitution select#noti_languageList").attr("value","none");
-	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" tr#trNameOfTheInstitution input#textNameOfTheInstitution").removeAttr("disabled");
+	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" tr#trNameOfTheInstitution textarea#textNameOfTheInstitution").removeAttr("disabled");
 	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" tr#trNameOfTheInstitution td#tdNameOfTheInstitution").find("span").remove();
 	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" tr#trNameOfTheInstitution select#noti_languageList").removeAttr("disabled");
 	$("table#identityTableNameOfTheInstitution_"+(counter+1)+" tr#trNameOfTheInstitution td#tdNameOfTheInstitutionLanguage").find("span").remove();
@@ -2152,7 +2307,7 @@ function addAnotherFormOfTheAuthorizedName(text1){
 function addParallelNameOfTheInstitution(text1){
 	var counter = $("table[id^='identityTableParallelNameOfTheInstitution_']").length;
 
-	var nameOfInstitution = $("table#identityTableParallelNameOfTheInstitution_"+counter+" input#textParallelNameOfTheInstitution").attr("value");
+	var nameOfInstitution = $("table#identityTableParallelNameOfTheInstitution_"+counter+" textarea#textParallelNameOfTheInstitution").attr("value");
 	// var nameOfInstitutionLanguage = $("table#identityTableParallelNameOfTheInstitution_"+counter+" select#pnoti_languageList").attr("value");
 
 	if (nameOfInstitution == null || nameOfInstitution == ""
@@ -2165,11 +2320,11 @@ function addParallelNameOfTheInstitution(text1){
 	clone = "<table id='"+("identityTableParallelNameOfTheInstitution_"+(counter+1))+"' class=\"tablePadding\">"+clone.html()+"</table>";
 	$("table[id^='identityTableParallelNameOfTheInstitution_"+counter+"']").after(clone);
 	// Reset parametters.
-	$("table#identityTableParallelNameOfTheInstitution_"+(counter+1)+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
+	$("table#identityTableParallelNameOfTheInstitution_"+(counter+1)+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
 	});
 	$("table#identityTableParallelNameOfTheInstitution_"+(counter+1)+" tr#trParallelNameOfTheInstitution select#pnoti_languageList").attr("value","none");
-	$("table#identityTableParallelNameOfTheInstitution_"+(counter+1)+" tr#trParallelNameOfTheInstitution input#textParallelNameOfTheInstitution").removeAttr("disabled");
+	$("table#identityTableParallelNameOfTheInstitution_"+(counter+1)+" tr#trParallelNameOfTheInstitution textarea#textParallelNameOfTheInstitution").removeAttr("disabled");
 	$("table#identityTableParallelNameOfTheInstitution_"+(counter+1)+" tr#trParallelNameOfTheInstitution select#pnoti_languageList").removeAttr("disabled");
 }
 
@@ -2184,7 +2339,7 @@ function addMoreAnotherFormerlyUsedName(text1, text2, text3, text4, text5, text6
 					'<label for="textFormerlyUsedName">'+text1+':</label>'+
 				'</td>'+
 				'<td>'+
-					'<input type="text" id="textFormerlyUsedName" value=""/>'+
+					'<textarea id="textFormerlyUsedName"></textarea>'+
 				'</td>'+
 				'<td class="labelLeft">'+
 					'<label for="tfun_languageList">'+text2+':</label>'+
@@ -2219,7 +2374,7 @@ function addMoreAnotherFormerlyUsedName(text1, text2, text3, text4, text5, text6
 			'</tr></table>');
 		$("table#identityTableFormerlyUsedName_1 tr#trTextFormerlyUsedName select#tfun_languageList").attr("value", "none");
 	} else {
-		var formerlyUsedName = $("table#identityTableFormerlyUsedName_"+counter+" input#textFormerlyUsedName").attr("value");
+		var formerlyUsedName = $("table#identityTableFormerlyUsedName_"+counter+" textarea#textFormerlyUsedName").attr("value");
 		// var formerlyUsedNameLanguage = $("table#identityTableFormerlyUsedName_"+counter+" select#tfun_languageList").attr("value");
 
 		var counterYears = $("table#identityTableFormerlyUsedName_"+counter+" input[id^='textYearWhenThisNameWasUsed_']").length;
@@ -2257,7 +2412,7 @@ function addMoreAnotherFormerlyUsedName(text1, text2, text3, text4, text5, text6
 					'<label for="textFormerlyUsedName">'+text1+':</label>'+
 				'</td>'+
 				'<td>'+
-					'<input type="text" id="textFormerlyUsedName" value=""/>'+
+					'<textarea id="textFormerlyUsedName" value=""/>'+
 				'</td>'+
 				'<td class="labelLeft">'+
 					'<label for="tfun_languageList">'+text2+':</label>'+
@@ -2375,7 +2530,7 @@ function contactChangeTabName(text1) {
 	var currentTab = getCurrentTab();
 	var counter = $("a[id^='tab_yourInstitutionTable_']").length;
 
-	var name = $("table#contactTable"+currentTab+" input#textNameOfRepository").val();
+	var name = $("table#contactTable"+currentTab+" textarea#textNameOfRepository").val();
 
 	if (name != null && name != "") {
 		$("a#tab_yourInstitutionTable" + currentTab).text(name);
@@ -2388,12 +2543,12 @@ function contactAddVisitorsAddressTranslation(text1) {
 	var currentTab = getCurrentTab();
 	var counter = $("table#contactTable"+currentTab+" table[id^='contactTableVisitorsAddress_']").length;
 
-	var street = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" input#textContactStreetOfTheInstitution").attr("value");
-	var city = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" input#textContactCityOfTheInstitution").attr("value");
+	var street = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" textarea#textContactStreetOfTheInstitution").attr("value");
+	var city = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" textarea#textContactCityOfTheInstitution").attr("value");
 //	var district = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" input#textContactDistrictOfTheInstitution").attr("value");
 //	var county = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" input#textContactCountyOfTheInstitution").attr("value");
 //	var region = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" input#textContactRegionOfTheInstitution").attr("value");
-	var country = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" input#textContactCountryOfTheInstitution").attr("value");
+	var country = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" textarea#textContactCountryOfTheInstitution").attr("value");
 
 	if (street == null || street == ""
 			|| city == null || city == "" /*|| district == null || district == ""
@@ -2411,6 +2566,10 @@ function contactAddVisitorsAddressTranslation(text1) {
 		$(this).val(""); // Clean all input_text.
 		$(this).removeAttr("disabled");
 	});
+	$("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+(counter+1)+" textarea").each(function(){
+		$(this).val(""); // Clean all input_text.
+		$(this).removeAttr("disabled");
+	});
 	$("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+(counter+1)+" select").removeAttr("disabled");
 	$("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+(counter+1)+" #selectLanguageVisitorAddress").attr("value","none");
 	// Remove "*".
@@ -2422,11 +2581,11 @@ function contactAddPostalAddressIfDifferent(property1, property2, property3, pro
 	var selectContactLanguagePostalAddressOnChange = '<select id="selectContactLanguagePostalAddress" onchange="contactAddressLanguageChanged($(this).parent().parent().parent().parent());">'+$("#selectLanguageVisitorAddress").html()+'</select>';
 	var selectContactLanguagePostalAddressNoChange = '<select id="selectContactLanguagePostalAddress">'+$("#selectLanguageVisitorAddress").html()+'</select>';
 	var selectContactLanguagePostalAddress = "";
-	var textContactPAStreetOnChange = '<input type="text" id="textContactPAStreet" onchange="contactAddressStreetChanged($(this).parent().parent().parent().parent());" />';
-	var textContactPAStreetNoChange = '<input type="text" id="textContactPAStreet" />';
+	var textContactPAStreetOnChange = '<textarea id="textContactPAStreet" onchange="contactAddressStreetChanged($(this).parent().parent().parent().parent());" />';
+	var textContactPAStreetNoChange = '<textarea id="textContactPAStreet" />';
 	var textContactPAStreet = "";
-	var textContactPACityOnChange = '<input type="text" id="textContactPACity" onchange="contactAddressCityChanged($(this).parent().parent().parent().parent());"/>';
-	var textContactPACityNoChange = '<input type="text" id="textContactPACity" />';
+	var textContactPACityOnChange = '<textarea id="textContactPACity" onchange="contactAddressCityChanged($(this).parent().parent().parent().parent());"/>';
+	var textContactPACityNoChange = '<textarea id="textContactPACity" />';
 	var textContactPACity = "";
 
 	if (currentTab == "_1") {
@@ -2478,8 +2637,8 @@ function contactAddPostalAddressTranslation(text1) {
 	var currentTab = getCurrentTab();
 	var counter = $("table#contactTable"+currentTab+" table[id^='contactTablePostalAddress_']").length;
 
-	var street = $("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+counter+" input#textContactPAStreet").attr("value");
-	var city = $("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+counter+" input#textContactPACity").attr("value");
+	var street = $("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+counter+" textarea#textContactPAStreet").attr("value");
+	var city = $("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+counter+" textarea#textContactPACity").attr("value");
 
 	if (street == null || street == ""
 			|| city == null || city == "") {
@@ -2491,8 +2650,8 @@ function contactAddPostalAddressTranslation(text1) {
 	clone = "<table id='"+("contactTablePostalAddress_"+(counter+1))+"'>"+clone.html()+"</table>";
 	$("table#contactTable"+currentTab+" table[id^='contactTablePostalAddress_"+counter+"']").after(clone);
 	// Reset parametters and enable fields.
-	$("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+(counter+1)+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
+	$("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+(counter+1)+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
 	});
 	$("table#contactTable"+currentTab+" table#contactTablePostalAddress_"+(counter+1)+" #selectContactLanguagePostalAddress").attr("value","none");
 	// Remove "*".
@@ -2560,12 +2719,12 @@ function addFurtherWebsOfTheInstitution(text1){
 	var title = "";
 
 	if (count == 1) {
-		web = $("table#contactTable"+currentTab+" tr#trWebOfTheInstitution input#textContactWebOfTheInstitution_"+count).attr("value");
-		title = $("table#contactTable"+currentTab+" tr#trLanguageWebpageOfTheInstitution input#textContactLinkTitleForWebOfTheInstitution_"+count).attr("value");
+		web = $("table#contactTable"+currentTab+" tr#trWebOfTheInstitution textarea#textContactWebOfTheInstitution_"+count).attr("value");
+		title = $("table#contactTable"+currentTab+" tr#trLanguageWebpageOfTheInstitution textarea#textContactLinkTitleForWebOfTheInstitution_"+count).attr("value");
 	} else {
 
-		web = $("table#contactTable"+currentTab+" tr#trWebOfTheInstitution_"+count+" input#textContactWebOfTheInstitution_"+count).attr("value");
-		title = $("table#contactTable"+currentTab+" tr#trLanguageWebpageOfTheInstitution_"+count+" input#textContactLinkTitleForWebOfTheInstitution_"+count).attr("value");
+		web = $("table#contactTable"+currentTab+" tr#trWebOfTheInstitution_"+count+" textarea#textContactWebOfTheInstitution_"+count).attr("value");
+		title = $("table#contactTable"+currentTab+" tr#trLanguageWebpageOfTheInstitution_"+count+" textarea#textContactLinkTitleForWebOfTheInstitution_"+count).attr("value");
 	}
 
 	if ((web == null || web == "")
@@ -2612,7 +2771,7 @@ function aSAddOpeningTimes(text1){
 
 	var id = "_" + count;
 
-	var opening = $("table#accessAndServicesTable"+currentTab+" tr#trASOpeningTimes"+id+" input#textOpeningTimes"+id).attr("value");
+	var opening = $("table#accessAndServicesTable"+currentTab+" tr#trASOpeningTimes"+id+" textarea#textOpeningTimes"+id).attr("value");
 	// var openingLanguage = $("table#accessAndServicesTable"+currentTab+" tr#trASOpeningTimes"+id+" select#selectLanguageOpeningTimes"+id).attr("value");
 
 	if (opening == null || opening == ""
@@ -2638,6 +2797,9 @@ function aSAddOpeningTimes(text1){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
 	});
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
+	});
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectLanguageOpeningTimes_" + (count + 1)).attr("value","none");
 }
 
@@ -2648,7 +2810,7 @@ function aSAddClosingDates(text1){
 
 	var id = "_"+count;
 
-	var closing = $("table#accessAndServicesTable"+currentTab+" tr#trASClosingDates"+id+" input#textClosingDates"+id).attr("value");
+	var closing = $("table#accessAndServicesTable"+currentTab+" tr#trASClosingDates"+id+" textarea#textClosingDates"+id).attr("value");
 	// var closingLanguage = $("table#accessAndServicesTable"+currentTab+" tr#trASClosingDates"+id+" select#selectLanguageClosingDates"+id).attr("value");
 
 	if (closing == null || closing == ""
@@ -2664,12 +2826,15 @@ function aSAddClosingDates(text1){
 	$(lastId).after(trHtml);
 	// update last content
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='textClosingDates_1']").attr("for","textClosingDates_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input#textClosingDates_1").attr("id","textClosingDates_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" textarea#textClosingDates_1").attr("id","textClosingDates_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='selectLanguageClosingDates_1']").attr("for","selectLanguageClosingDates_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectLanguageClosingDates_1").attr("id","selectLanguageClosingDates_"+(count+1));
 
 	// Reset parametters.
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" textarea").each(function(){
 		$(this).val(""); // Clean all input_text.
 	});
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectLanguageClosingDates_" + (count + 1)).attr("value","none");
@@ -2683,7 +2848,7 @@ function aSAddTravellingDirections(text1){
 
 	var travel = $("table#accessAndServicesTable"+currentTab+" tr#trTravellingDirections"+id+" textarea#textTravellingDirections"+id).attr("value");
 	// var travelLanguage = $("table#accessAndServicesTable"+currentTab+" tr#trTravellingDirections"+id+" select#selectASATDSelectLanguage"+id).attr("value");
-	var travelLink = $("table#accessAndServicesTable"+currentTab+" tr#tr2TravellingDirections"+id+" input#textTravelLink"+id).attr("value");
+	var travelLink = $("table#accessAndServicesTable"+currentTab+" tr#tr2TravellingDirections"+id+" textarea#textTravelLink"+id).attr("value");
 
 	if ((travel == null || travel == "")
 			/*|| travelLanguage == "none"*/
@@ -2706,7 +2871,7 @@ function aSAddTravellingDirections(text1){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" label[for='textTravellingDirections_1']").attr("for","textTravellingDirections_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" textarea#textTravellingDirections_1").attr("id","textTravellingDirections_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" label[for='textTravelLink_1']").attr("for","textTravelLink_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textTravelLink_1").attr("id","textTravelLink_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" textarea#textTravelLink_1").attr("id","textTravelLink_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" label[for='selectASATDSelectLanguage_1']").attr("for","selectASATDSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" select#selectASATDSelectLanguage_1").attr("id","selectASATDSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" p#undefined_w_required").remove();
@@ -2714,8 +2879,8 @@ function aSAddTravellingDirections(text1){
 	// Reset parametters and enable fields.
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" textarea#textTravellingDirections_" + (count + 1)).val("");
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" select#selectASATDSelectLanguage_" + (count + 1)).attr("value","none");
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
 	});
 }
 
@@ -2725,7 +2890,7 @@ function addFutherAccessInformation(text1){
 
 	var id = "_"+count;
 
-	var access = $("table#accessAndServicesTable"+currentTab+" tr#trASAccessRestrictions"+id+" input#textASAccessRestrictions"+id).attr("value");
+	var access = $("table#accessAndServicesTable"+currentTab+" tr#trASAccessRestrictions"+id+" textarea#textASAccessRestrictions"+id).attr("value");
 	// var accessLanguage = $("table#accessAndServicesTable"+currentTab+" tr#trASAccessRestrictions"+id+" select#selectASARSelectLanguage"+id).attr("value");
 
 	if (access == null || access == ""
@@ -2740,13 +2905,13 @@ function addFutherAccessInformation(text1){
 	$(lastId).after(trHtml);
 	//update last content
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='textASAccessRestrictions_1']").attr("for","textASAccessRestrictions_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input#textASAccessRestrictions_1").attr("id","textASAccessRestrictions_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" textarea#textASAccessRestrictions_1").attr("id","textASAccessRestrictions_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='selectASARSelectLanguage_1']").attr("for","selectASARSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASARSelectLanguage_1").attr("id","selectASARSelectLanguage_"+(count+1));
 
 	// Reset parametters.
-	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
 	});
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASARSelectLanguage_" + (count + 1)).attr("value","none");
 }
@@ -2759,7 +2924,7 @@ function aSAddFutherTermOfUse(text1){
 
 	var terms = $("table#accessAndServicesTable"+currentTab+" tr#trASAddFutherTermOfUse"+id+" textarea#textASTermOfUse"+id).attr("value");
 	// var termsLanguage = $("table#accessAndServicesTable"+currentTab+" tr#trASAddFutherTermOfUse"+id+" select#selectASAFTOUSelectLanguage"+id).attr("value");
-	var termsLink = $("table#accessAndServicesTable"+currentTab+" tr#tr2ASAddFutherTermOfUse"+id+" input#textASTOULink"+id).attr("value");
+	var termsLink = $("table#accessAndServicesTable"+currentTab+" tr#tr2ASAddFutherTermOfUse"+id+" textarea#textASTOULink"+id).attr("value");
 
 	if ((terms == null || terms == "")
 			/*|| termsLanguage == "none"*/
@@ -2782,7 +2947,7 @@ function aSAddFutherTermOfUse(text1){
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" label[for='textASTermOfUse_1']").attr("for","textASTermOfUse_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" textarea#textASTermOfUse_1").attr("id","textASTermOfUse_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" label[for='textTravelLink_1']").attr("for","textTravelLink_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textASTOULink_1").attr("id","textASTOULink_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" textarea#textASTOULink_1").attr("id","textASTOULink_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" label[for='textASTOULink_1']").attr("for","textASTOULink_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" select#selectASAFTOUSelectLanguage_1").attr("id","selectASAFTOUSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" p#undefined_w_required").remove();
@@ -2790,8 +2955,8 @@ function aSAddFutherTermOfUse(text1){
 	// Reset parametters and enable fields.
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" textarea#textASTermOfUse_" + (count + 1)).val("");
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" select#selectASAFTOUSelectLanguage_" + (count + 1)).attr("value","none");
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
 	});
 }
 
@@ -2801,7 +2966,7 @@ function addAccessibilityInformation(text1){
 
 	var id = "_"+count;
 
-	var facilities = $("table#accessAndServicesTable"+currentTab+" tr#trAccessibilityInformation"+id+" input#textASAccessibility"+id).attr("value");
+	var facilities = $("table#accessAndServicesTable"+currentTab+" tr#trAccessibilityInformation"+id+" textarea#textASAccessibility"+id).attr("value");
 	// var facilitiesLanguage = $("table#accessAndServicesTable"+currentTab+" tr#trAccessibilityInformation"+id+" select#selectASASelectLanguage"+id).attr("value");
 
 	if (facilities == null || facilities == ""
@@ -2817,13 +2982,13 @@ function addAccessibilityInformation(text1){
 	$(lastId).after(trHtml);
 	//update last content
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='textASAccessibility_1']").attr("for","textASAccessibility_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input#textASAccessibility_1").attr("id","textASAccessibility_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" textarea#textASAccessibility_1").attr("id","textASAccessibility_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='selectASASelectLanguage']_1").attr("for","selectASASelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASASelectLanguage_1").attr("id","selectASASelectLanguage_"+(count+1));
 
 	// Reset parametters.
-	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
 	});
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" select#selectASASelectLanguage_" + (count + 1)).attr("value","none");
 }
@@ -2840,7 +3005,7 @@ function aSSRAddDescriptionOfYourComputerPlaces(property1, property2, text1){
 				"<label for=\"textDescriptionOfYourComputerPlaces_1\">"+property1+":</label>"+
 			"</td>"+
 			"<td>"+
-				"<input type=\"text\" id=\"textDescriptionOfYourComputerPlaces_1\" />"+
+				"<textarea id=\"textDescriptionOfYourComputerPlaces_1\"></textarea>"+
 			"<td id=\"tdSelectDescriptionOfYourComputerPlaces_1\" class=\"labelLeft\">"+
 				"<label for=\"selectDescriptionOfYourComputerPlaces_1\">"+property2+":</label>"+
 			"</td>"+
@@ -2850,7 +3015,7 @@ function aSSRAddDescriptionOfYourComputerPlaces(property1, property2, text1){
 	} else {
 		var id = "_"+count;
 
-		var facilities = $("table#accessAndServicesTable"+currentTab+" tr#trASSRDescriptionOfYourComputerPlaces"+id+" input#textDescriptionOfYourComputerPlaces"+id).attr("value");
+		var facilities = $("table#accessAndServicesTable"+currentTab+" tr#trASSRDescriptionOfYourComputerPlaces"+id+" textarea#textDescriptionOfYourComputerPlaces"+id).attr("value");
 		// var facilitiesLanguage = $("table#accessAndServicesTable"+currentTab+" tr#trASSRDescriptionOfYourComputerPlaces"+id+" select#selectDescriptionOfYourComputerPlaces"+id).attr("value");
 
 		if (facilities == null || facilities == ""
@@ -2866,13 +3031,13 @@ function aSSRAddDescriptionOfYourComputerPlaces(property1, property2, text1){
 		$(lastId).after(trHtml);
 		//update last content
 		$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='textDescriptionOfYourComputerPlaces_1']").attr("for","textDescriptionOfYourComputerPlaces_"+(count+1));
-		$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input#textDescriptionOfYourComputerPlaces_1").attr("id","textDescriptionOfYourComputerPlaces_"+(count+1));
+		$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" textarea#textDescriptionOfYourComputerPlaces_1").attr("id","textDescriptionOfYourComputerPlaces_"+(count+1));
 		$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='selectDescriptionOfYourComputerPlaces_1']").attr("for","selectDescriptionOfYourComputerPlaces_"+(count+1));
 		$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectDescriptionOfYourComputerPlaces_1").attr("id","selectDescriptionOfYourComputerPlaces_"+(count+1));
 
 		// Reset parametters and enable fields.
-		$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
-			$(this).val(""); // Clean all input_text.
+		$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" textarea").each(function(){
+			$(this).val(""); // Clean all textarea.
 		});
 		$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectDescriptionOfYourComputerPlaces_" + (count + 1)).attr("value","none");
 	}
@@ -2884,9 +3049,9 @@ function aSSRAddReadersTicket(text1){
 
 	var id = "_"+count;
 
-	var reader = $("table#accessAndServicesTable"+currentTab+" tr#trASSRReadersTicket"+id+" input#textASSRReadersTicket"+id).attr("value");
+	var reader = $("table#accessAndServicesTable"+currentTab+" tr#trASSRReadersTicket"+id+" textarea#textASSRReadersTicket"+id).attr("value");
 	// var readerLanguage = $("table#accessAndServicesTable"+currentTab+" tr#trASSRReadersTicket"+id+" select#selectReadersTickectLanguage"+id).attr("value");
-	var readerLink = $("table#accessAndServicesTable"+currentTab+" tr#tr2ASSRReadersTicket"+id+" input#textASSRRTLink"+id).attr("value");
+	var readerLink = $("table#accessAndServicesTable"+currentTab+" tr#tr2ASSRReadersTicket"+id+" textarea#textASSRRTLink"+id).attr("value");
 
 	if ((reader == null || reader == "")
 			/*|| readerLanguage == "none"*/
@@ -2908,20 +3073,26 @@ function aSSRAddReadersTicket(text1){
 
 	//update elements
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" label[for='textASSRReadersTicket_1']").attr("for","textASSRReadersTicket_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" input#textASSRReadersTicket_1").attr("id","textASSRReadersTicket_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" textarea#textASSRReadersTicket_1").attr("id","textASSRReadersTicket_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" label[for='selectReadersTickectLanguage_1']").attr("for","selectReadersTickectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" select#selectReadersTickectLanguage_1").attr("id","selectReadersTickectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" label[for='textASSRRTLink_1']").attr("for","textASSRRTLink_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textASSRRTLink_1").attr("id","textASSRRTLink_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" textarea#textASSRRTLink_1").attr("id","textASSRRTLink_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" p#undefined_w_required").remove();
 
 	// Reset parametters and enable fields.
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
 	});
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
+	});
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" select#selectReadersTickectLanguage_" + (count + 1)).attr("value","none");
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
+	});
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
 	});
 }
 
@@ -2931,9 +3102,9 @@ function aSSRAddFurtherOrderInformation(text1){
 
 	var id = "_"+count;
 
-	var further = $("table#accessAndServicesTable"+currentTab+" tr#trASSRAddFurtherOrderInformation"+id+" input#textASSRAdvancedOrders"+id).attr("value");
+	var further = $("table#accessAndServicesTable"+currentTab+" tr#trASSRAddFurtherOrderInformation"+id+" textarea#textASSRAdvancedOrders"+id).attr("value");
 	// var furtherLanguage = $("table#accessAndServicesTable"+currentTab+" tr#trASSRAddFurtherOrderInformation"+id+" select#selectASSRAFOIUSelectLanguage"+id).attr("value");
-	var furtherLink = $("table#accessAndServicesTable"+currentTab+" tr#tr2ASSRAddFurtherOrderInformation"+id+" input#textASSRAOLink"+id).attr("value");
+	var furtherLink = $("table#accessAndServicesTable"+currentTab+" tr#tr2ASSRAddFurtherOrderInformation"+id+" textarea#textASSRAOLink"+id).attr("value");
 
 	if ((further == null || further == "")
 			/*|| furtherLanguage == "none"*/
@@ -2955,20 +3126,26 @@ function aSSRAddFurtherOrderInformation(text1){
 
 	//update elements
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" label[for='textASSRAdvancedOrders_1']").attr("for","textASSRAdvancedOrders_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" input#textASSRAdvancedOrders_1").attr("id","textASSRAdvancedOrders_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" textarea#textASSRAdvancedOrders_1").attr("id","textASSRAdvancedOrders_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" label[for='selectASSRAFOIUSelectLanguage_1']").attr("for","selectASSRAFOIUSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" select#selectASSRAFOIUSelectLanguage_1").attr("id","selectASSRAFOIUSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" label[for='textASSRAOLink_1']").attr("for","textASSRAOLink_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textASSRAOLink_1").attr("id","textASSRAOLink_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" textarea#textASSRAOLink_1").attr("id","textASSRAOLink_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" p#undefined_w_required").remove();
 
 	// Reset parametters and enable fields.
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
 	});
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
+	});
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" select#selectASSRAFOIUSelectLanguage_" + (count + 1)).attr("value","none");
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
+	});
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
 	});
 }
 
@@ -2978,7 +3155,7 @@ function aSAddResearchServices(text1){
 
 	var id = "_"+count;
 
-	var research = $("table#accessAndServicesTable"+currentTab+" tr#trASSRResearchServices"+id+" input#textASSRResearchServices"+id).attr("value");
+	var research = $("table#accessAndServicesTable"+currentTab+" tr#trASSRResearchServices"+id+" textarea#textASSRResearchServices"+id).attr("value");
 	// var researchLanguage = $("table#accessAndServicesTable"+currentTab+" tr#trASSRResearchServices"+id+" select#textASSRRSSelectLanguage"+id).attr("value");
 
 	if (research == null || research == ""
@@ -2994,13 +3171,16 @@ function aSAddResearchServices(text1){
 	$(lastId).after(trHtml);
 	//update last content
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='textASSRResearchServices_1']").attr("for","textASSRResearchServices_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input#textASSRResearchServices_1").attr("id","textASSRResearchServices_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" textarea#textASSRResearchServices_1").attr("id","textASSRResearchServices_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='textASSRRSSelectLanguage_1']").attr("for","textASSRRSSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#textASSRRSSelectLanguage_1").attr("id","textASSRRSSelectLanguage_"+(count+1));
 
 	// Reset parametters and enable fields.
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
+	});
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
 	});
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#textASSRRSSelectLanguage_" + (count + 1)).attr("value","none");
 }
@@ -3011,7 +3191,7 @@ function aSPIAAddInternetAccessInformation(text1){
 
 	var id = "_"+count;
 
-	var description = $("table#accessAndServicesTable"+currentTab+" tr#trASPIAAddInternetAccessInformation"+id+" input#textASDescription"+id).attr("value");
+	var description = $("table#accessAndServicesTable"+currentTab+" tr#trASPIAAddInternetAccessInformation"+id+" textarea#textASDescription"+id).attr("value");
 	// var descriptionLanguage = $("table#accessAndServicesTable"+currentTab+" tr#trASPIAAddInternetAccessInformation"+id+" select#selectASDSelectLanguage"+id).attr("value");
 
 	if (description == null || description == ""
@@ -3027,13 +3207,16 @@ function aSPIAAddInternetAccessInformation(text1){
 	$(lastId).after(trHtml);
 	//update last content
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='textASDescription_1']").attr("for","textASDescription_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input#textASDescription_1").attr("id","textASDescription_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" textarea#textASDescription_1").attr("id","textASDescription_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='selectASDSelectLanguage_1']").attr("for","selectASDSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASDSelectLanguage_1").attr("id","selectASDSelectLanguage_"+(count+1));
 
 	// Reset parametters and enable fields.
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
+	});
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
 	});
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASDSelectLanguage_" + (count + 1)).attr("value","none");
 }
@@ -3044,7 +3227,7 @@ function addADescriptionOfYourRestaurationLab(text1){
 
 	var id = "_"+count;
 
-	var description = $("table#accessAndServicesTable"+currentTab+" tr#trASTSDescriptionOfRestaurationLab"+id+" input#textASTSDescriptionOfRestaurationLab"+id).attr("value");
+	var description = $("table#accessAndServicesTable"+currentTab+" tr#trASTSDescriptionOfRestaurationLab"+id+" textarea#textASTSDescriptionOfRestaurationLab"+id).attr("value");
 	// var descriptionLanguage = $("table#accessAndServicesTable"+currentTab+" tr#trASTSDescriptionOfRestaurationLab"+id+" select#selectASTSSelectLanguage"+id).attr("value");
 
 	if (description == null || description == ""
@@ -3060,13 +3243,13 @@ function addADescriptionOfYourRestaurationLab(text1){
 	$(lastId).after(trHtml);
 	//update last content
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='textASTSDescriptionOfRestaurationLab_1']").attr("for","textASTSDescriptionOfRestaurationLab_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input#textASTSDescriptionOfRestaurationLab_1").attr("id","textASTSDescriptionOfRestaurationLab_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" textarea#textASTSDescriptionOfRestaurationLab_1").attr("id","textASTSDescriptionOfRestaurationLab_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='selectASTSSelectLanguage_1']").attr("for","selectASTSSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASTSSelectLanguage_1").attr("id","selectASTSSelectLanguage_"+(count+1));
 
 	// Reset parametters and enable fields.
-	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
 	});
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASTSSelectLanguage_" + (count + 1)).attr("value","none");
 }
@@ -3077,7 +3260,7 @@ function aSAddADescriptionOfYourReproductionService(text1){
 
 	var id = "_"+count;
 
-	var description = $("table#accessAndServicesTable"+currentTab+" tr#trASTSDescriptionOfReproductionService"+id+" input#textASTSDescriptionOfReproductionService"+id).attr("value");
+	var description = $("table#accessAndServicesTable"+currentTab+" tr#trASTSDescriptionOfReproductionService"+id+" textarea#textASTSDescriptionOfReproductionService"+id).attr("value");
 	// var descriptionLanguage = $("table#accessAndServicesTable"+currentTab+" tr#trASTSDescriptionOfReproductionService"+id+" select#selectASTSRSSelectLanguage"+id).attr("value");
 
 	if (description == null || description == ""
@@ -3093,13 +3276,13 @@ function aSAddADescriptionOfYourReproductionService(text1){
 	$(lastId).after(trHtml);
 	//update last content
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='textASTSDescriptionOfReproductionService_1']").attr("for","textASTSDescriptionOfReproductionService_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input#textASTSDescriptionOfReproductionService_1").attr("id","textASTSDescriptionOfReproductionService_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" textarea#textASTSDescriptionOfReproductionService_1").attr("id","textASTSDescriptionOfReproductionService_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='selectASTSRSSelectLanguage_1']").attr("for","selectASTSRSSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASTSRSSelectLanguage_1").attr("id","selectASTSRSSelectLanguage_"+(count+1));
 
 	// Reset parametters and enable fields.
-	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
 	});
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASTSRSSelectLanguage_" + (count + 1)).attr("value","none");
 }
@@ -3110,7 +3293,7 @@ function aSReSeAddFurtherRefreshment(text1) {
 
 	var id = "_"+count;
 
-	var refreshment = $("table#accessAndServicesTable"+currentTab+" tr#trASReSeRefreshment"+id+" input#textASReSeRefreshment"+id).attr("value");
+	var refreshment = $("table#accessAndServicesTable"+currentTab+" tr#trASReSeRefreshment"+id+" textarea#textASReSeRefreshment"+id).attr("value");
 	// var refreshmentLanguage = $("table#accessAndServicesTable"+currentTab+" tr#trASReSeRefreshment"+id+" select#selectASReSeRefreshmentSelectLanguage"+id).attr("value");
 
 	if (refreshment == null || refreshment == ""
@@ -3126,13 +3309,13 @@ function aSReSeAddFurtherRefreshment(text1) {
 	$(lastId).after(trHtml);
 	//update last content
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='textASReSeRefreshment_1']").attr("for","textASReSeRefreshment_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input#textASReSeRefreshment_1").attr("id","textASReSeRefreshment_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" textarea#textASReSeRefreshment_1").attr("id","textASReSeRefreshment_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" label[for='selectASReSeRefreshmentSelectLanguage_1']").attr("for","selectASReSeRefreshmentSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASReSeRefreshmentSelectLanguage_1").attr("id","selectASReSeRefreshmentSelectLanguage_"+(count+1));
 
 	// Reset parametters.
-	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
 	});
 	$("table#accessAndServicesTable"+currentTab+" tr#"+newId+" select#selectASReSeRefreshmentSelectLanguage_" + (count + 1)).attr("value","none");
 }
@@ -3143,10 +3326,10 @@ function aSReSeAddExhibition(text1){
 
 	var id = "_"+count;
 
-	var exhibition = $("table#accessAndServicesTable"+currentTab+" tr#trASReSeExhibition"+id+" input#textASReSeExhibition"+id).attr("value");
+	var exhibition = $("table#accessAndServicesTable"+currentTab+" tr#trASReSeExhibition"+id+" textarea#textASReSeExhibition"+id).attr("value");
 	//var exhibitionLanguage = $("table#accessAndServicesTable"+currentTab+" tr#trASReSeExhibition"+id+" select#selectASReSeExhibitionSelectLanguage"+id).attr("value");
-	var web = $("table#accessAndServicesTable"+currentTab+" tr#tr2ASReSeExhibition"+id+" input#textASReSeWebpage"+id).attr("value");
-	var webLink = $("table#accessAndServicesTable"+currentTab+" tr#tr2ASReSeExhibition"+id+" input#textASReSeWebpageLinkTitle"+id).attr("value");
+	var web = $("table#accessAndServicesTable"+currentTab+" tr#tr2ASReSeExhibition"+id+" textarea#textASReSeWebpage"+id).attr("value");
+	var webLink = $("table#accessAndServicesTable"+currentTab+" tr#tr2ASReSeExhibition"+id+" textarea#textASReSeWebpageLinkTitle"+id).attr("value");
 
 	if ((exhibition == null || exhibition == "")
 			/*|| exhibitionLanguage == "none"*/
@@ -3168,22 +3351,22 @@ function aSReSeAddExhibition(text1){
 	$(lastId).after(tr2HTML);
 	//update new elements
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" label[for='textASReSeExhibition_1']").attr("for","textASReSeExhibition_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" input#textASReSeExhibition_1").attr("id","textASReSeExhibition_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" textarea#textASReSeExhibition_1").attr("id","textASReSeExhibition_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" label[for='selectASReSeExhibitionSelectLanguage_1']").attr("for","selectASReSeExhibitionSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" select#selectASReSeExhibitionSelectLanguage_1").attr("id","selectASReSeExhibitionSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" label[for='textASReSeWebpage_1']").attr("for","textASReSeWebpage_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textASReSeWebpage_1").attr("id","textASReSeWebpage_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" textarea#textASReSeWebpage_1").attr("id","textASReSeWebpage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" label[for='textASReSeWebpageLinkTitle_1']").attr("for","textASReSeWebpageLinkTitle_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textASReSeWebpageLinkTitle_1").attr("id","textASReSeWebpageLinkTitle_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" textarea#textASReSeWebpageLinkTitle_1").attr("id","textASReSeWebpageLinkTitle_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" p#undefined_w_required").remove();
 
 	// Reset parametters and enable fields.
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
 	});
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" select#selectASReSeExhibitionSelectLanguage_" + (count + 1)).attr("value","none");
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
 	});
 }
 
@@ -3193,10 +3376,10 @@ function aSReSeToursAndSessions(text1){
 
 	var id = "_"+count;
 
-	var tours = $("table#accessAndServicesTable"+currentTab+" tr#trASReSeToursAndSessions"+id+" input#textASReSeToursAndSessions"+id).attr("value");
+	var tours = $("table#accessAndServicesTable"+currentTab+" tr#trASReSeToursAndSessions"+id+" textarea#textASReSeToursAndSessions"+id).attr("value");
 	// var toursLanguage = $("table#accessAndServicesTable"+currentTab+" tr#trASReSeToursAndSessions"+id+" select#selectASReSeToursAndSessionsSelectLanguage"+id).attr("value");
-	var web = $("table#accessAndServicesTable"+currentTab+" tr#tr2ASReSeToursAndSessions"+id+" input#textASReSeTSWebpage"+id).attr("value");
-	var webLink = $("table#accessAndServicesTable"+currentTab+" tr#tr2ASReSeToursAndSessions"+id+" input#textASReSeWebpageTSLinkTitle"+id).attr("value");
+	var web = $("table#accessAndServicesTable"+currentTab+" tr#tr2ASReSeToursAndSessions"+id+" textarea#textASReSeTSWebpage"+id).attr("value");
+	var webLink = $("table#accessAndServicesTable"+currentTab+" tr#tr2ASReSeToursAndSessions"+id+" textarea#textASReSeWebpageTSLinkTitle"+id).attr("value");
 
 	if ((tours == null || tours == "")
 			/*|| toursLanguage == "none"*/
@@ -3218,22 +3401,22 @@ function aSReSeToursAndSessions(text1){
 	$(lastId).after(tr2HTML);
 	//update new elements
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" label[for='textASReSeToursAndSessions_1']").attr("for","textASReSeToursAndSessions_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" input#textASReSeToursAndSessions_1").attr("id","textASReSeToursAndSessions_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" textarea#textASReSeToursAndSessions_1").attr("id","textASReSeToursAndSessions_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" label[for='selectASReSeToursAndSessionsSelectLanguage_1']").attr("for","selectASReSeToursAndSessionsSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" select#selectASReSeToursAndSessionsSelectLanguage_1").attr("id","selectASReSeToursAndSessionsSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" label[for='textASReSeTSWebpage_1']").attr("for","textASReSeTSWebpage_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textASReSeTSWebpage_1").attr("id","textASReSeTSWebpage_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" textarea#textASReSeTSWebpage_1").attr("id","textASReSeTSWebpage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" label[for='textASReSeWebpageTSLinkTitle_1']").attr("for","textASReSeWebpageTSLinkTitle_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textASReSeWebpageTSLinkTitle_1").attr("id","textASReSeWebpageTSLinkTitle_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" textarea#textASReSeWebpageTSLinkTitle_1").attr("id","textASReSeWebpageTSLinkTitle_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" p#undefined_w_required").remove();
 
 	// Reset parametters and enable fields.
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
 	});
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" select#selectASReSeToursAndSessionsSelectLanguage_" + (count + 1)).attr("value","none");
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
 	});
 }
 
@@ -3243,10 +3426,10 @@ function aSAddServices(text1){
 
 	var id = "_"+count;
 
-	var other = $("table#accessAndServicesTable"+currentTab+" tr#trASReSeOtherServices"+id+" input#textASReSeOtherServices"+id).attr("value");
+	var other = $("table#accessAndServicesTable"+currentTab+" tr#trASReSeOtherServices"+id+" textarea#textASReSeOtherServices"+id).attr("value");
 	// var otherLanguage = $("table#accessAndServicesTable"+currentTab+" tr#trASReSeOtherServices"+id+" select#selectASReSeOtherServicesSelectLanguage"+id).attr("value");
-	var web = $("table#accessAndServicesTable"+currentTab+" tr#tr2ASReSeOtherServices"+id+" input#textASReSeOSWebpage"+id).attr("value");
-	var webLink = $("table#accessAndServicesTable"+currentTab+" tr#tr2ASReSeOtherServices"+id+" input#textASReSeWebpageOSLinkTitle"+id).attr("value");
+	var web = $("table#accessAndServicesTable"+currentTab+" tr#tr2ASReSeOtherServices"+id+" textarea#textASReSeOSWebpage"+id).attr("value");
+	var webLink = $("table#accessAndServicesTable"+currentTab+" tr#tr2ASReSeOtherServices"+id+" textarea#textASReSeWebpageOSLinkTitle"+id).attr("value");
 
 	if ((other == null || other == "")
 			/*|| otherLanguage == "none"*/
@@ -3268,22 +3451,22 @@ function aSAddServices(text1){
 	$(lastId).after(tr2HTML);
 	//update new elements
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" label[for='textASReSeOtherServices_1']").attr("for","textASReSeOtherServices_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" input#textASReSeOtherServices_1").attr("id","textASReSeOtherServices_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" textarea#textASReSeOtherServices_1").attr("id","textASReSeOtherServices_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" label[for='selectASReSeOtherServicesSelectLanguage_1']").attr("for","selectASReSeOtherServicesSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" select#selectASReSeOtherServicesSelectLanguage_1").attr("id","selectASReSeOtherServicesSelectLanguage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" label[for='textASReSeOSWebpage_1']").attr("for","textASReSeOSWebpage_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textASReSeOSWebpage_1").attr("id","textASReSeOSWebpage_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" textarea#textASReSeOSWebpage_1").attr("id","textASReSeOSWebpage_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" label[for='textASReSeWebpageOSLinkTitle_1']").attr("for","textASReSeWebpageOSLinkTitle_"+(count+1));
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input#textASReSeWebpageOSLinkTitle_1").attr("id","textASReSeWebpageOSLinkTitle_"+(count+1));
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" textarea#textASReSeWebpageOSLinkTitle_1").attr("id","textASReSeWebpageOSLinkTitle_"+(count+1));
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" p#undefined_w_required").remove();
 
 	// Reset parametters and enable fields.
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
 	});
 	$("table#accessAndServicesTable"+currentTab+" tr#"+target1+" select#selectASReSeOtherServicesSelectLanguage_" + (count + 1)).attr("value","none");
-	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
+	$("table#accessAndServicesTable"+currentTab+" tr#"+target2+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
 	});
 }
 
@@ -3328,7 +3511,7 @@ function descriptionAddFoundationInformation(text1){
 
 	var id = "_"+count;
 
-	var foundation = $("table#descriptionTable"+currentTab+" tr#trRuleOfRepositoryFoundation"+id+" input#textRuleOfRepositoryFoundation"+id).attr("value");
+	var foundation = $("table#descriptionTable"+currentTab+" tr#trRuleOfRepositoryFoundation"+id+" textarea#textRuleOfRepositoryFoundation"+id).attr("value");
 	// var foundationLanguage = $("table#descriptionTable"+currentTab+" tr#trRuleOfRepositoryFoundation"+id+" select#selectLanguageRuleOfRepositoryFoundation"+id).attr("value");
 
 	if (foundation == null || foundation == ""
@@ -3345,7 +3528,7 @@ function descriptionAddFoundationInformation(text1){
 	//update last content
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" td#tdRuleOfRepositoryFoundation_1").attr("id","tdRuleOfRepositoryFoundation_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='textRuleOfRepositoryFoundation_1']").attr("for","textRuleOfRepositoryFoundation_"+(count+1));
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" input#textRuleOfRepositoryFoundation_1").attr("id","textRuleOfRepositoryFoundation_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textRuleOfRepositoryFoundation_1").attr("id","textRuleOfRepositoryFoundation_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" td#tdLanguageRuleOfRepositoryFoundation_1").attr("id","tdLanguageRuleOfRepositoryFoundation_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageRuleOfRepositoryFoundation_1']").attr("for","selectLanguageRuleOfRepositoryFoundation_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageRuleOfRepositoryFoundation_1").attr("id","selectLanguageRuleOfRepositoryFoundation_"+(count+1));
@@ -3353,6 +3536,9 @@ function descriptionAddFoundationInformation(text1){
 	// Reset parametters and enable fields.
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
+	});
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
 	});
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageRuleOfRepositoryFoundation_" + (count + 1)).attr("value","none");
 }
@@ -3364,7 +3550,7 @@ function descriptionAddSuppressionInformation(text1){
 
 	var id = "_"+count;
 
-	var suppress = $("table#descriptionTable"+currentTab+" tr#trDescriptionAddSuppressionInformation"+id+" input#textRuleOfRepositorySuppression"+id).attr("value");
+	var suppress = $("table#descriptionTable"+currentTab+" tr#trDescriptionAddSuppressionInformation"+id+" textarea#textRuleOfRepositorySuppression"+id).attr("value");
 	// var suppressLanguage = $("table#descriptionTable"+currentTab+" tr#trDescriptionAddSuppressionInformation"+id+" select#selectLanguageRuleOfRepositorySuppression"+id).attr("value");
 
 	if (suppress == null || suppress == ""
@@ -3381,7 +3567,7 @@ function descriptionAddSuppressionInformation(text1){
 	//update last content
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" td#tdRuleOfRepositorySuppression_1").attr("id","tdRuleOfRepositorySuppression_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='textRuleOfRepositorySuppression_1']").attr("for","textRuleOfRepositorySuppression_"+(count+1));
-	$("table#descriptionTable"+currentTab+" tr#"+newId+" input#textRuleOfRepositorySuppression_1").attr("id","textRuleOfRepositorySuppression_"+(count+1));
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea#textRuleOfRepositorySuppression_1").attr("id","textRuleOfRepositorySuppression_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" td#tdLanguageRuleOfRepositorySuppression_1").attr("id","tdLanguageRuleOfRepositorySuppression_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" label[for='selectLanguageRuleOfRepositorySuppression_1']").attr("for","selectLanguageRuleOfRepositorySuppression_"+(count+1));
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageRuleOfRepositorySuppression_1").attr("id","selectLanguageRuleOfRepositorySuppression_"+(count+1));
@@ -3389,6 +3575,9 @@ function descriptionAddSuppressionInformation(text1){
 	// Reset parametters and enable fields.
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
+	});
+	$("table#descriptionTable"+currentTab+" tr#"+newId+" textarea").each(function(){
+		$(this).val(""); // Clean all textarea.
 	});
 	$("table#descriptionTable"+currentTab+" tr#"+newId+" select#selectLanguageRuleOfRepositorySuppression_" + (count + 1)).attr("value","none");
 }
@@ -3538,7 +3727,7 @@ function addContactAbbreviation(text1){
 	var id = "_"+count;
 
 	// var abbrev = $("table#controlTable tr#trContactAbbreviationOne"+id+" input#textContactAbbreviation"+id).attr("value");
-	var full = $("table#controlTable tr#trContactAbbreviationTwo"+id+" input#textContactFullName"+id).attr("value");
+	var full = $("table#controlTable tr#trContactAbbreviationTwo"+id+" textarea#textContactFullName"+id).attr("value");
 
 	if (/*(abbrev == null || abbrev == "")
 			&&*/ full == null || full == "") {
@@ -3561,13 +3750,19 @@ function addContactAbbreviation(text1){
 	$("table#controlTable tr#"+target1+" input#textContactAbbreviation_1").attr("id","textContactAbbreviation_"+(count+1));
 	$("table#controlTable tr#"+target2+" td#tdContactFullName_1").attr("id","tdContactFullName_"+(count+1));
 	$("table#controlTable tr#"+target2+" label[for='textContactFullName_1']").attr("for","textContactFullName_"+(count+1));
-	$("table#controlTable tr#"+target2+" input#textContactFullName_1").attr("id","textContactFullName_"+(count+1));
+	$("table#controlTable tr#"+target2+" textarea#textContactFullName_1").attr("id","textContactFullName_"+(count+1));
 
 	// Reset parametters and enable fields.
 	$("table#controlTable tr#"+target1+" input[type='text']").each(function(){
 		$(this).val(""); // Clean all input_text.
 	});
+	$("table#controlTable tr#"+target1+" textarea").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
 	$("table#controlTable tr#"+target2+" input[type='text']").each(function(){
+		$(this).val(""); // Clean all input_text.
+	});
+	$("table#controlTable tr#"+target2+" textarea").each(function(){
 		$(this).val(""); // Clean all input_text.
 	});
 }
@@ -3575,8 +3770,8 @@ function addContactAbbreviation(text1){
 function relationAddNewResourceRelation(text1){
 	var counter = $("table[id^='resourceRelationTable_']").length;
 
-	var web = $("table#resourceRelationTable_"+counter+" input#textWebsiteOfResource").attr("value");
-	var title = $("table#resourceRelationTable_"+counter+" input#textTitleOfRelatedMaterial").attr("value");
+	var web = $("table#resourceRelationTable_"+counter+" textarea#textWebsiteOfResource").attr("value");
+	var title = $("table#resourceRelationTable_"+counter+" textarea#textTitleOfRelatedMaterial").attr("value");
 
 	if ((web == null || web == "")
 			&& (title == null || title == "")) {
@@ -3589,8 +3784,8 @@ function relationAddNewResourceRelation(text1){
 	$("table[id^='resourceRelationTable_"+counter+"']").after(clone);
 	$("table#resourceRelationTable_"+(counter+1)+" p#undefined_w_required").remove();
 	// Reset parametters.
-	$("table#resourceRelationTable_"+(counter+1)+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
+	$("table#resourceRelationTable_"+(counter+1)+" textarea").each(function(){
+		$(this).val(""); // Clean textarea.
 	});
     $("table#resourceRelationTable_"+(counter+1)+" select#selectTypeOfYourRelation").attr("value","creator"); 
     $("table#resourceRelationTable_"+(counter+1)+" select#selectTitleOfRelatedMaterialLang").attr("value","none"); 
@@ -3600,9 +3795,9 @@ function relationAddNewResourceRelation(text1){
 function relationAddNewInstitutionRelation(text1){
 	var counter = $("table[id^='institutionRelationTable_']").length;
 
-	var web = $("table#institutionRelationTable_"+counter+" input#textWebsiteOfDescription").attr("value");
+	var web = $("table#institutionRelationTable_"+counter+" textarea#textWebsiteOfDescription").attr("value");
 	var typeOfTheRelation = $("table#institutionRelationTable_"+counter+" select#selectTypeOftheRelation").attr("value");
-	var title = $("table#institutionRelationTable_"+counter+" input#textTitleOfRelatedInstitution").attr("value");
+	var title = $("table#institutionRelationTable_"+counter+" textarea#textTitleOfRelatedInstitution").attr("value");
 
 	if ((web == null || web == "" || typeOfTheRelation == "none")
 			&& (title == null || title == "" || typeOfTheRelation == "none")) {
@@ -3615,7 +3810,7 @@ function relationAddNewInstitutionRelation(text1){
 	$("table[id^='institutionRelationTable_"+counter+"']").after(clone);
 	$("table#institutionRelationTable_"+(counter+1)+" p#undefined_w_required").remove();
 	// Reset parametters.
-	$("table#institutionRelationTable_"+(counter+1)+" input[type='text']").each(function(){
+	$("table#institutionRelationTable_"+(counter+1)+" textarea").each(function(){
 		$(this).val(""); // Clean all input_text.
 	});
     $("table#institutionRelationTable_"+(counter+1)+" select#selectTypeOftheRelation").attr("value","none"); 

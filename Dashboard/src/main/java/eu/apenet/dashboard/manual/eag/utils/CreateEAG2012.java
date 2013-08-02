@@ -2040,18 +2040,19 @@ public class CreateEAG2012 {
 				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
 
 				for (int j = 0; j < termsOfUseValueList.size(); j++) {
-					if ((termsOfUseValueList.get(j) == null || termsOfUseValueList.get(j).isEmpty()) && (termsOfUseHrefList.get(j)==null || termsOfUseHrefList.get(j).isEmpty() )) {
-						break;
+					if ((termsOfUseValueList.get(j) != null
+								&& !termsOfUseValueList.get(j).isEmpty())
+							|| (termsOfUseHrefList.get(j) != null
+								&& !termsOfUseHrefList.get(j).isEmpty() )) {
+						TermsOfUse termsOfUse = new TermsOfUse();
+						termsOfUse.setContent(termsOfUseValueList.get(j));
+						if (!Eag2012.OPTION_NONE.equalsIgnoreCase(termsOfUseLangList.get(j))) {
+							termsOfUse.setLang(termsOfUseLangList.get(j));
+						}
+						termsOfUse.setHref(termsOfUseHrefList.get(j));
+	
+						repository.getAccess().getTermsOfUse().add(termsOfUse);
 					}
-
-					TermsOfUse termsOfUse = new TermsOfUse();
-					termsOfUse.setContent(termsOfUseValueList.get(j));
-					if (!Eag2012.OPTION_NONE.equalsIgnoreCase(termsOfUseLangList.get(j))) {
-						termsOfUse.setLang(termsOfUseLangList.get(j));
-					}
-					termsOfUse.setHref(termsOfUseHrefList.get(j));
-
-					repository.getAccess().getTermsOfUse().add(termsOfUse);
 				}
 			}
 		}
