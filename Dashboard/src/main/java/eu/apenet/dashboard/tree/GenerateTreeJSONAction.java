@@ -19,10 +19,12 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 import com.opensymphony.xwork2.ActionSupport;
 
 import eu.apenet.commons.utils.DisplayUtils;
+import eu.apenet.dashboard.services.ead.ChangeDynamicTask;
 import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.dao.EadContentDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.CLevel;
+import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
 
 /**
@@ -234,10 +236,22 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 			Integer fileId = new Integer(fileIdString);
             XmlType xmlType = XmlType.getType(new Integer(xmlTypeIdString));
 			long localStartTime = System.currentTimeMillis();
-            EadContent eadContent = DAOFactory.instance().getEadDAO().findById(fileId, xmlType.getClazz()).getEadContent();
+			Ead ead = DAOFactory.instance().getEadDAO().findById(fileId, xmlType.getClazz());
+            EadContent eadContent = ead.getEadContent();
 
-            if(eadContent == null)
-                throw new APEnetException(getText("generateTreeJSON.APEnetException.no.correct.FA"));
+            if (eadContent == null) {
+            	// If is null, probably the EAD never has been published, so,
+            	// try to convert the static EAD into a dynamic EAD.
+            	ChangeDynamicTask changeDynamicTask = new ChangeDynamicTask();
+            	changeDynamicTask.execute(ead, null);
+
+            	// Try to recover the new content of the dynamic EAD. 
+    			eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFileId(fileId, xmlType.getClazz());
+
+    			if (eadContent == null) {
+                	throw new APEnetException(getText("generateTreeJSON.APEnetException.no.correct.FA"));
+    			}
+            }
 
             StringBuilder topCLevelsBuffer = generateCLevelJSON(clevelDAO.findTopCLevels(eadContent.getEcId()), path, isWithUrl);
             writer.write(generateRootJSON(eadContent, topCLevelsBuffer, path, false, false, xmlTypeIdString).toString());

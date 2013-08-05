@@ -304,7 +304,7 @@
 
 		<tr>
 			<td id="tdButtonsDescriptionTab" colspan="4">
-			    <input type="button" id="buttonRelationsTabPrevious" value="<s:property value='getText("eag2012.commons.previousTab")' />" class="rightButton" onclick="checkAndShowPreviousTab($(this).parent().parent().parent().parent(),'<s:property value="getText('eag2012.errors.fieldRequired')" />','<s:property value="getText('eag2012.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>','<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>');" />
+			    <input type="button" id="buttonRelationsTabPrevious" value="<s:property value='getText("eag2012.commons.previousTab")' />" class="rightButton" onclick="checkAndShowPreviousTab($(this).parent().parent().parent().parent(),'<s:property value="getText('eag2012.errors.fieldRequired')" />','<s:property value="getText('eag2012.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>');" />
 			</td>
 		</tr>
 
