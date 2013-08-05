@@ -462,7 +462,7 @@ public class SolrPublisher {
 				add(doc1, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NORMALIZED);
 			}
 		}
-		add(doc1, SolrFields.COUNTRY, archivalinstitution.getCountry().getCname() + COLON + SolrValues.TYPE_GROUP + COLON + archivalinstitution.getCountry().getId());
+		add(doc1, SolrFields.COUNTRY, archivalinstitution.getCountry().getCname().replace(" ", "_") + COLON + SolrValues.TYPE_GROUP + COLON + archivalinstitution.getCountry().getId());
 		doc1.addField(SolrFields.COUNTRY_ID, archivalinstitution.getCountry().getId());
 		add(doc1, SolrFields.LANGUAGE, language);
 		add(doc1, SolrFields.LANGMATERIAL, langmaterial);
