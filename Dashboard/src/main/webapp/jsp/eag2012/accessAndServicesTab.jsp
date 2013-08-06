@@ -339,7 +339,7 @@
 				<s:set var="accesibleToThePublic" value="loader.asAccessQuestion[#counter]"/>
 				<tr>
 					<td>
-						<label for="selectASAccesibleToThePublic"><s:property value="getText('eag2012.commons.accessiblePublicl')"/><span class="required">*</span>:</label>
+						<label for="selectASAccesibleToThePublic"><s:property value="getText('eag2012.commons.accessiblePublic')"/><span class="required">*</span>:</label>
 					</td>
 					<td>
 						<select id="selectASAccesibleToThePublic" onchange="aSAccessibleToThePublicChanged();">
@@ -3059,7 +3059,7 @@
 
 		<tr>
 			<td>
-				<label for="selectASAccesibleToThePublic"><s:property value="getText('eag2012.commons.accessiblePublicl')"/><span class="required">*</span>:</label>
+				<label for="selectASAccesibleToThePublic"><s:property value="getText('eag2012.commons.accessiblePublic')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
 				<select id="selectASAccesibleToThePublic" onchange="aSAccessibleToThePublicChanged();">

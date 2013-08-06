@@ -833,7 +833,7 @@
 		<s:if test="%{loader.yiRestaccess.size() > 0}">
 			<tr>
 				<td>
-					<label for="selectAccessibleToThePublic" ><s:property value="getText('eag2012.commons.accessiblePublicl')"/><span class="required">*</span>:</label>
+					<label for="selectAccessibleToThePublic" ><s:property value="getText('eag2012.commons.accessiblePublic')"/><span class="required">*</span>:</label>
 				</td>
 				<td>
 					<select id="selectAccessibleToThePublic" onchange="accessibleToThePublicChanged();" >
@@ -908,7 +908,7 @@
 		<s:else>
 			<tr>
 				<td>
-					<label for="selectAccessibleToThePublic" ><s:property value="getText('eag2012.commons.accessiblePublicl')"/><span class="required">*</span>:</label>
+					<label for="selectAccessibleToThePublic" ><s:property value="getText('eag2012.commons.accessiblePublic')"/><span class="required">*</span>:</label>
 				</td>
 				<td>
 					<select id="selectAccessibleToThePublic" onchange="accessibleToThePublicChanged();" >
