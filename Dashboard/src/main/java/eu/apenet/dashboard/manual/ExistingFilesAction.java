@@ -2,6 +2,7 @@ package eu.apenet.dashboard.manual;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,7 +13,6 @@ import org.apache.log4j.Logger;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
-import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.FileType;
 
@@ -250,14 +250,14 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
     public ExistingFilesAction(){
         this.existingFilesChoice = new LinkedHashMap<String, String>();
         this.existingFilesChoice.put(OVERWRITE, getText("existingFiles.overwrite"));
+        this.existingFilesChoice.put(CHANGE, getText("existingFiles.change"));       
         this.existingFilesChoice.put(CANCEL, getText("existingFiles.cancel"));
-        this.existingFilesChoice.put(CHANGE, getText("existingFiles.change"));
-        this.existingFilesChoiceAddEADID = new ArrayList<String>();
+        this.existingFilesChoiceAddEADID = new LinkedList<String>();//Linked List to add sorted values
+        this.existingFilesChoiceAddEADID.add(ADD);         
         this.existingFilesChoiceAddEADID.add(CANCEL);
-        this.existingFilesChoiceAddEADID.add(ADD);     
         this.existingFilesChoiceOverwriteCancelEADID = new ArrayList<String>();
+        this.existingFilesChoiceOverwriteCancelEADID.add(OVERWRITE);        
         this.existingFilesChoiceOverwriteCancelEADID.add(CANCEL);
-        this.existingFilesChoiceOverwriteCancelEADID.add(OVERWRITE);
         this.existingEADIDAnswersChoice = new ArrayList<String>();
         this.existingEADIDAnswersChoice.add(KO);
         this.existingEADIDAnswersChoice.add(OK);
