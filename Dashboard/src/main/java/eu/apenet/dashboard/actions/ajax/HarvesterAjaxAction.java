@@ -58,7 +58,8 @@ public class HarvesterAjaxAction extends AjaxControllerAbstractAction {
             File saveDirectory = new File(pathForFile);
             if(!saveDirectory.exists())
                 saveDirectory.mkdir();
-            String oaiTokenEncoded = APEnetUtilities.encodeString(oaiToken);
+//            String oaiTokenEncoded = APEnetUtilities.encodeString(oaiToken);
+            String oaiTokenEncoded = "token_" + System.currentTimeMillis();
             final File fileOut = new File((StringUtils.isEmpty(oaiTokenEncoded)? pathForFile + "no_token.xml" : pathForFile + oaiTokenEncoded + ".xml"));
             OutputStream out = new FileOutputStream(fileOut);
             String token = "";
@@ -75,13 +76,13 @@ public class HarvesterAjaxAction extends AjaxControllerAbstractAction {
                 else
                     writer.append(new JSONObject().put("finished", true).toString());
             } catch (Exception e){
-                LOG.error("Could not finish harvesting, we start again with previous token", e);
-                writer.append(new JSONObject().put("currentToken", oaiToken).toString());
+                LOG.error("Could not finish harvesting, there is a problem to be checked with oaiToken: " + oaiToken + " - token: " + token, e);
+                writer.append(new JSONObject().put("error", true).toString());
             }
 
             writer.close();
             out.close();
-            LOG.info("Retrieved token: " + token);
+            LOG.debug("Retrieved token: " + token);
 
             final HttpSession session = getServletRequest().getSession();
 
@@ -171,5 +172,17 @@ public class HarvesterAjaxAction extends AjaxControllerAbstractAction {
     }
     public void setOaiType(String oaiType) {
         this.oaiType = oaiType;
+    }
+    public String getOaiFromDate() {
+        return oaiFromDate;
+    }
+    public void setOaiFromDate(String oaiFromDate) {
+        this.oaiFromDate = oaiFromDate;
+    }
+    public String getOaiToDate() {
+        return oaiToDate;
+    }
+    public void setOaiToDate(String oaiToDate) {
+        this.oaiToDate = oaiToDate;
     }
 }

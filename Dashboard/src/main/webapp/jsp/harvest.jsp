@@ -15,7 +15,9 @@
             oaiMetadataFormat: '${oaiMetadataFormat}',
             oaiSet: '${oaiSet}',
             oaiType: '${oaiType}',
-            oaiToken: '${oaiToken}'
+            oaiToken: '${oaiToken}',
+            oaiFromDate: '${oaiFromDate}',
+            oaiToDate: '${oaiToDate}'
         };
         ajaxHarvest(data);
     });
@@ -29,13 +31,19 @@
     function ajaxHarvest(data){
         $.post("${pageContext.request.contextPath}/harvesting.action", data, function(databack){
             if(databack != null){
-                $("#harvestInfo").prepend("<s:property value="getText('harvest.currentTesumptionToken')" />" + databack.currentToken + "<br/>");
+                $("#harvestInfo").prepend("<s:property value="getText('harvest.currentTesumptionToken')" />: " + databack.currentToken + "<br/>");
                 if(databack.finished) {
                     continueHarvest = false;
+                    $("#harvestingWheel").html("<img src=\"images/colorbox/loading.gif\" />");
                     checkThreadLevel();
                 }
-
-                if(continueHarvest)
+                if(databack.error) {
+                    $("#harvestInfo").html("<s:property value="getText('harvest.harvestError')" />");
+                    continueHarvest = false;
+                    $("#harvestingWheel").html("");
+                }
+                if(continueHarvest) {
+                    $("#harvestingWheel").html("<img src=\"images/colorbox/loading.gif\" />");
                     ajaxHarvest({
                         oaiUrl: '${oaiUrl}',
                         oaiMetadataFormat: '${oaiMetadataFormat}',
@@ -43,8 +51,7 @@
                         oaiType: '${oaiType}',
                         oaiToken: databack.currentToken
                     });
-                else
-                    $("#harvestingWheel").html("<img src=\"images/colorbox/loading.gif\" />");
+                }
             }
         }, "json");
     }
