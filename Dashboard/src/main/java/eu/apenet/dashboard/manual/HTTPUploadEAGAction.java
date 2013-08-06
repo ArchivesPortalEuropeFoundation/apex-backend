@@ -186,7 +186,7 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
         	    }
         	    else if (result.equals("error_eagnoinstitutionname")) {
         	    	this.filesNotUploaded = this.uploader_http.getFilesNotUploaded();
-                    addActionMessage(getText("label.ai.tabs.commons.errorOnChangeNameOfInstitution"));
+                    addActionMessage(getText("eag2012.commons.errorOnChangeNameOfInstitution"));
         	    	result = ERROR;
         	    }
         	}

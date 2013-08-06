@@ -11,7 +11,7 @@
 			<table id="descriptionTable_<s:property value="%{#status.index + 1}" />" class="tablePadding">
 				<tr>
 					<td id="repositoryLabel" colspan="4">
-						<s:property value="getText('label.ai.description.repositoryDescription')" />
+						<s:property value="getText('eag2012.description.repositoryDescription')" />
 					</td>
 					
 				</tr>
@@ -23,13 +23,13 @@
 						<s:iterator var="internalCurrent" value="#repositorhist" status="internalStatus">
 							<tr id="trRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />">
 								<td id="tdRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />">
-									<label for="textRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.description.repositoryHistory')" />:</label>
+									<label for="textRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.description.repositoryHistory')" />:</label>
 								</td>
 								<td>
 									<textarea id="textRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td id="tdLanguageRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
-									<label for="selectLanguageRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectLanguageRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<select id="selectLanguageRepositoryHistory_<s:property value="%{#internalStatus.index + 1}" />">
@@ -44,13 +44,13 @@
 					<s:else>
 						<tr id="trRepositoryHistory_1">
 							<td id="tdRepositoryHistory_1">
-								<label for="textRepositoryHistory_1"><s:property value="getText('label.ai.description.repositoryHistory')" />:</label>
+								<label for="textRepositoryHistory_1"><s:property value="getText('eag2012.description.repositoryHistory')" />:</label>
 							</td>
 							<td>
 								<textarea id="textRepositoryHistory_1" ></textarea>
 							</td>
 							<td id="tdLanguageRepositoryHistory_1" class="labelLeft">
-								<label for="selectLanguageRepositoryHistory_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+								<label for="selectLanguageRepositoryHistory_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 							</td>
 							<td>
 								<select id="selectLanguageRepositoryHistory_1">
@@ -65,13 +65,13 @@
 				<s:else>
 					<tr id="trRepositoryHistory_1">
 						<td id="tdRepositoryHistory_1">
-							<label for="textRepositoryHistory_1"><s:property value="getText('label.ai.description.repositoryHistory')" />:</label>
+							<label for="textRepositoryHistory_1"><s:property value="getText('eag2012.description.repositoryHistory')" />:</label>
 						</td>
 						<td>
 							<textarea id="textRepositoryHistory_1" ></textarea>
 						</td>
 						<td id="tdLanguageRepositoryHistory_1" class="labelLeft">
-							<label for="selectLanguageRepositoryHistory_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+							<label for="selectLanguageRepositoryHistory_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 						</td>
 						<td>
 							<select id="selectLanguageRepositoryHistory_1">
@@ -85,7 +85,7 @@
 
 				<tr id="trAddHistoryDescription">
 					<td id="tdAddHistoryDescription" colspan="2">
-						<input type="button" id="buttonAddHistoryDescription" onclick="descriptionAddHistoryDescription('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.description.addHistoryDescription")' />"/>
+						<input type="button" id="buttonAddHistoryDescription" onclick="descriptionAddHistoryDescription('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" value="<s:property value='getText("eag2012.isil.addHistoryDescription")' />"/>
 					</td>
 					<td colspan="2">
 					</td>
@@ -93,7 +93,7 @@
 
 				<tr>
 					<td id="tdDateOfRepositoryFoundation">
-						<label for="textDateOfRepositoryFoundation"><s:property value="getText('label.ai.description.dateOfRepositoryFoundation')" />:</label>
+						<label for="textDateOfRepositoryFoundation"><s:property value="getText('eag2012.description.foundationDate')" />:</label>
 					</td>
 					<td>
 						<s:if test="%{loader.descRepositorFoundDate.size() > 0}">
@@ -119,13 +119,13 @@
 						<s:iterator var="internalCurrent" value="#repositorFoundRule" status="internalStatus">
 							<tr id="trRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />">
 								<td id="tdRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />">
-									<label for="textRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.description.ruleOfRepositoryFoundation')" />:</label>
+									<label for="textRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.description.ruleOfRepositoryFoundation')" />:</label>
 								</td>
 								<td>
 									<textarea id="textRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td id="tdLanguageRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
-									<label for="selectLanguageRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectLanguageRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<select id="selectLanguageRuleOfRepositoryFoundation_<s:property value="%{#internalStatus.index + 1}" />">
@@ -140,13 +140,13 @@
 					<s:else>
 						<tr id="trRuleOfRepositoryFoundation_1">
 							<td id="tdRuleOfRepositoryFoundation_1">
-								<label for="textRuleOfRepositoryFoundation_1"><s:property value="getText('label.ai.description.ruleOfRepositoryFoundation')" />:</label>
+								<label for="textRuleOfRepositoryFoundation_1"><s:property value="getText('eag2012.description.ruleOfRepositoryFoundation')" />:</label>
 							</td>
 							<td>
 								<textarea id="textRuleOfRepositoryFoundation_1"></textarea>
 							</td>
 							<td id="tdLanguageRuleOfRepositoryFoundation_1" class="labelLeft">
-								<label for="selectLanguageRuleOfRepositoryFoundation_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+								<label for="selectLanguageRuleOfRepositoryFoundation_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 							</td>
 							<td>
 								<select id="selectLanguageRuleOfRepositoryFoundation_1">
@@ -161,13 +161,13 @@
 				<s:else>
 					<tr id="trRuleOfRepositoryFoundation_1">
 						<td id="tdRuleOfRepositoryFoundation_1">
-							<label for="textRuleOfRepositoryFoundation_1"><s:property value="getText('label.ai.description.ruleOfRepositoryFoundation')" />:</label>
+							<label for="textRuleOfRepositoryFoundation_1"><s:property value="getText('eag2012.description.ruleOfRepositoryFoundation')" />:</label>
 						</td>
 						<td>
 							<textarea id="textRuleOfRepositoryFoundation_1"></textarea>
 						</td>
 						<td id="tdLanguageRuleOfRepositoryFoundation_1" class="labelLeft">
-							<label for="selectLanguageRuleOfRepositoryFoundation_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+							<label for="selectLanguageRuleOfRepositoryFoundation_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 						</td>
 						<td>
 							<select id="selectLanguageRuleOfRepositoryFoundation_1">
@@ -181,7 +181,7 @@
 
 				<tr>
 					<td id="tdAddFoundationInformation" colspan="2">
-						<input type="button" id="buttonDescriptionAddFoundationInformation" value="<s:property value='getText("label.ai.description.addRule")' />" onclick="descriptionAddFoundationInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
+						<input type="button" id="buttonDescriptionAddFoundationInformation" value="<s:property value='getText("eag2012.description.addRule")' />" onclick="descriptionAddFoundationInformation('<s:property value="getText('eag2012.commons.pleaseFillData')" />');"/>
 					</td>
 					<td colspan="2">
 					</td>
@@ -189,7 +189,7 @@
 
 				<tr>
 					<td id="tdDateOfRepositorySuppression">
-						<label for="textDateOfRepositorySuppression"><s:property value="getText('label.ai.description.dateOfRepositorySuppression')" />:</label>
+						<label for="textDateOfRepositorySuppression"><s:property value="getText('eag2012.description.dateArchiveClosure')" />:</label>
 					</td>
 					<td>
 						<s:if test="%{loader.descRepositorSupDate.size() > 0}">
@@ -215,13 +215,13 @@
 						<s:iterator var="internalCurrent" value="#repositorSupRule" status="internalStatus">
 							<tr id="trDescriptionAddSuppressionInformation_<s:property value="%{#internalStatus.index + 1}" />">
 								<td id="tdRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />">
-									<label for="textRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.description.ruleOfRepositorySuppression')" />:</label>
+									<label for="textRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.description.ruleOfRepositorySuppression')" />:</label>
 								</td>
 								<td>
 									<textarea id="textRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td id="tdLanguageRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
-									<label for="selectLanguageRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectLanguageRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<select id="selectLanguageRuleOfRepositorySuppression_<s:property value="%{#internalStatus.index + 1}" />">
@@ -236,13 +236,13 @@
 					<s:else>
 						<tr id="trDescriptionAddSuppressionInformation_1">
 							<td id="tdRuleOfRepositorySuppression_1">
-								<label for="textRuleOfRepositorySuppression_1"><s:property value="getText('label.ai.description.ruleOfRepositorySuppression')" />:</label>
+								<label for="textRuleOfRepositorySuppression_1"><s:property value="getText('eag2012.description.ruleOfRepositorySuppression')" />:</label>
 							</td>
 							<td>
 								<textarea id="textRuleOfRepositorySuppression_1"></textarea>
 							</td>
 							<td id="tdLanguageRuleOfRepositorySuppression_1" class="labelLeft">
-								<label for="selectLanguageRuleOfRepositorySuppression_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+								<label for="selectLanguageRuleOfRepositorySuppression_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 							</td>
 							<td>
 								<select id="selectLanguageRuleOfRepositorySuppression_1">
@@ -257,13 +257,13 @@
 				<s:else>
 					<tr id="trDescriptionAddSuppressionInformation_1">
 						<td id="tdRuleOfRepositorySuppression_1">
-							<label for="textRuleOfRepositorySuppression_1"><s:property value="getText('label.ai.description.ruleOfRepositorySuppression')" />:</label>
+							<label for="textRuleOfRepositorySuppression_1"><s:property value="getText('eag2012.description.ruleOfRepositorySuppression')" />:</label>
 						</td>
 						<td>
 							<textarea id="textRuleOfRepositorySuppression_1"></textarea>
 						</td>
 						<td id="tdLanguageRuleOfRepositorySuppression_1" class="labelLeft">
-							<label for="selectLanguageRuleOfRepositorySuppression_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+							<label for="selectLanguageRuleOfRepositorySuppression_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 						</td>
 						<td>
 							<select id="selectLanguageRuleOfRepositorySuppression_1">
@@ -277,7 +277,7 @@
 
 				<tr>
 					<td id="tdAddSuppressionInformation" colspan="2">
-						<input type="button" id="buttonDescriptionAddSuppressionInformation" onclick="descriptionAddSuppressionInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.description.addRule")' />"/>
+						<input type="button" id="buttonDescriptionAddSuppressionInformation" onclick="descriptionAddSuppressionInformation('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" value="<s:property value='getText("eag2012.description.addRule")' />"/>
 					</td>
 					<td colspan="2">
 					</td>
@@ -285,7 +285,7 @@
 
 				<tr>
 					<td id="administrativeLabel" colspan="4">
-						<s:property value="getText('label.ai.description.administrativeStructure')" />
+						<s:property value="getText('eag2012.description.administrativeStructure')" />
 					</td>
 					
 				</tr>
@@ -297,13 +297,13 @@
 						<s:iterator var="internalCurrent" value="#adminunit" status="internalStatus">
 							<tr id="trDescriptionAddAdministrationUnits_<s:property value="%{#internalStatus.index + 1}" />">
 								<td id="tdUnitOfAdministrativeStructure_<s:property value="%{#internalStatus.index + 1}" />">
-									<label for="textUnitOfAdministrativeStructure_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.description.unitOfAdministrativeStructure')" />:</label>
+									<label for="textUnitOfAdministrativeStructure_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.description.unitOfAdministrativeStructure')" />:</label>
 								</td>
 								<td>
 									<textarea id="textUnitOfAdministrativeStructure_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td id="tdLanguageUnitOfAdministrativeStructure_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
-									<label for="selectLanguageUnitOfAdministrativeStructure_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectLanguageUnitOfAdministrativeStructure_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<select id="selectLanguageUnitOfAdministrativeStructure_<s:property value="%{#internalStatus.index + 1}" />">
@@ -318,13 +318,13 @@
 					<s:else>
 						<tr id="trDescriptionAddAdministrationUnits_1">
 							<td id="tdUnitOfAdministrativeStructure_1">
-								<label for="textUnitOfAdministrativeStructure_1"><s:property value="getText('label.ai.description.unitOfAdministrativeStructure')" />:</label>
+								<label for="textUnitOfAdministrativeStructure_1"><s:property value="getText('eag2012.description.unitOfAdministrativeStructure')" />:</label>
 							</td>
 							<td>
 								<textarea id="textUnitOfAdministrativeStructure_1"></textarea>
 							</td>
 							<td id="tdLanguageUnitOfAdministrativeStructure_1" class="labelLeft">
-								<label for="selectLanguageUnitOfAdministrativeStructure_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+								<label for="selectLanguageUnitOfAdministrativeStructure_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 							</td>
 							<td>
 								<select id="selectLanguageUnitOfAdministrativeStructure_1">
@@ -339,13 +339,13 @@
 				<s:else>
 					<tr id="trDescriptionAddAdministrationUnits_1">
 						<td id="tdUnitOfAdministrativeStructure_1">
-							<label for="textUnitOfAdministrativeStructure_1"><s:property value="getText('label.ai.description.unitOfAdministrativeStructure')" />:</label>
+							<label for="textUnitOfAdministrativeStructure_1"><s:property value="getText('eag2012.description.unitOfAdministrativeStructure')" />:</label>
 						</td>
 						<td>
 							<textarea id="textUnitOfAdministrativeStructure_1"></textarea>
 						</td>
 						<td id="tdLanguageUnitOfAdministrativeStructure_1" class="labelLeft">
-							<label for="selectLanguageUnitOfAdministrativeStructure_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+							<label for="selectLanguageUnitOfAdministrativeStructure_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 						</td>
 						<td>
 							<select id="selectLanguageUnitOfAdministrativeStructure_1">
@@ -359,7 +359,7 @@
 
 				<tr>
 					<td id="tdAddAdministrationUnits" colspan="2">
-						<input type="button" id="buttonDescriptionAddAdministrationUnits" onclick="descriptionAddAdministrationUnits('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.description.addAdministrativeUnit")' />" />
+						<input type="button" id="buttonDescriptionAddAdministrationUnits" onclick="descriptionAddAdministrationUnits('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" value="<s:property value='getText("eag2012.description.addAdministrationUnits")' />" />
 					</td>
 					<td colspan="2">
 					</td>
@@ -367,7 +367,7 @@
 
 				<tr>
 					<td id="buildingLabel" colspan="4">
-						<s:property value="getText('label.ai.description.buildingDescription')" />
+						<s:property value="getText('eag2012.description.buildingDescription')" />
 					</td>
 					
 				</tr>
@@ -379,13 +379,13 @@
 						<s:iterator var="internalCurrent" value="#building" status="internalStatus">
 							<tr id="trBuildingDescription_<s:property value="%{#internalStatus.index + 1}" />">
 								<td id="tdBuilding_<s:property value="%{#internalStatus.index + 1}" />">
-									<label for="textBuilding_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.description.building')" />:</label>
+									<label for="textBuilding_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.description.building')" />:</label>
 								</td>
 								<td>
 									<textarea id="textBuilding_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td id="tdLanguageBuilding_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
-									<label for="selectLanguageBuilding_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectLanguageBuilding_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<select id="selectLanguageBuilding_<s:property value="%{#internalStatus.index + 1}" />">
@@ -400,13 +400,13 @@
 					<s:else>
 						<tr id="trBuildingDescription_1">
 							<td id="tdBuilding_1">
-								<label for="textBuilding_1"><s:property value="getText('label.ai.description.building')" />:</label>
+								<label for="textBuilding_1"><s:property value="getText('eag2012.description.building')" />:</label>
 							</td>
 							<td>
 								<textarea id="textBuilding_1"></textarea>
 							</td>
 							<td id="tdLanguageBuilding_1" class="labelLeft">
-								<label for="selectLanguageBuilding_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+								<label for="selectLanguageBuilding_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 							</td>
 							<td>
 								<select id="selectLanguageBuilding_1">
@@ -421,13 +421,13 @@
 				<s:else>
 					<tr id="trBuildingDescription_1">
 						<td id="tdBuilding_1">
-							<label for="textBuilding_1"><s:property value="getText('label.ai.description.building')" />:</label>
+							<label for="textBuilding_1"><s:property value="getText('eag2012.description.building')" />:</label>
 						</td>
 						<td>
 							<textarea id="textBuilding_1"></textarea>
 						</td>
 						<td id="tdLanguageBuilding_1" class="labelLeft">
-							<label for="selectLanguageBuilding_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+							<label for="selectLanguageBuilding_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 						</td>
 						<td>
 							<select id="selectLanguageBuilding_1">
@@ -441,7 +441,7 @@
 
 				<tr>
 					<td id="tdAddBuildingDescription" colspan="2">
-						<input type="button" id="buttonDescriptionBuildingDescription" onclick="descriptionAddBuildingDescription('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.description.addBuildingDescription")' />" />
+						<input type="button" id="buttonDescriptionBuildingDescription" onclick="descriptionAddBuildingDescription('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" value="<s:property value='getText("eag2012.isil.addBuildingDescription")' />" />
 					</td>
 					<td colspan="2">
 					</td>
@@ -449,7 +449,7 @@
 
 				<tr>
 					<td id="tdRepositoryArea">
-						<label for="textRepositoryArea"><s:property value="getText('label.ai.description.repositoryArea')" />:</label>
+						<label for="textRepositoryArea"><s:property value="getText('eag2012.description.repositoryArea')" />:</label>
 					</td>
 					<td>
 						<s:if test="%{loader.descRepositorarea.size() > 0}">
@@ -470,7 +470,7 @@
 
 				<tr>
 					<td id="tdLengthOfShelf">
-						<label for="textLengthOfShelf"><s:property value="getText('label.ai.description.lengthOfShelf')" />:</label>
+						<label for="textLengthOfShelf"><s:property value="getText('eag2012.description.lengthShelf')" />:</label>
 					</td>
 					<td>
 						<s:if test="%{loader.descLengthshelf.size() > 0}">
@@ -491,7 +491,7 @@
 
 				<tr>
 					<td id="holdingLabel" colspan="4">
-						<s:property value="getText('label.ai.description.holdingDescription')" />
+						<s:property value="getText('eag2012.description.holdingDescription')" />
 					</td>
 					
 				</tr>
@@ -503,13 +503,13 @@
 						<s:iterator var="internalCurrent" value="#holdings" status="internalStatus">
 							<tr id="trArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />">
 								<td id="tdArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />">
-									<label for="textArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.description.archivalAndOtherHoldings')" />:</label>
+									<label for="textArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.description.archivalAndOtherHoldings')" />:</label>
 								</td>
 								<td>
 									<textarea id="textArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="#internalCurrent" /></textarea>
 								</td>
 								<td id="tdLanguageArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />" class="labelLeft">
-									<label for="selectLanguageArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+									<label for="selectLanguageArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 								</td>
 								<td>
 									<select id="selectLanguageArchivalAndOtherHoldings_<s:property value="%{#internalStatus.index + 1}" />">
@@ -524,13 +524,13 @@
 					<s:else>
 						<tr id="trArchivalAndOtherHoldings_1">
 							<td id="tdArchivalAndOtherHoldings_1">
-								<label for="textArchivalAndOtherHoldings_1"><s:property value="getText('label.ai.description.archivalAndOtherHoldings')" />:</label>
+								<label for="textArchivalAndOtherHoldings_1"><s:property value="getText('eag2012.description.archivalAndOtherHoldings')" />:</label>
 							</td>
 							<td>
 								<textarea id="textArchivalAndOtherHoldings_1"></textarea>
 							</td>
 							<td id="tdLanguageArchivalAndOtherHoldings_1" class="labelLeft">
-								<label for="selectLanguageArchivalAndOtherHoldings_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+								<label for="selectLanguageArchivalAndOtherHoldings_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 							</td>
 							<td>
 								<select id="selectLanguageArchivalAndOtherHoldings_1">
@@ -545,13 +545,13 @@
 				<s:else>
 					<tr id="trArchivalAndOtherHoldings_1">
 						<td id="tdArchivalAndOtherHoldings_1">
-							<label for="textArchivalAndOtherHoldings_1"><s:property value="getText('label.ai.description.archivalAndOtherHoldings')" />:</label>
+							<label for="textArchivalAndOtherHoldings_1"><s:property value="getText('eag2012.description.archivalAndOtherHoldings')" />:</label>
 						</td>
 						<td>
 							<textarea id="textArchivalAndOtherHoldings_1"></textarea>
 						</td>
 						<td id="tdLanguageArchivalAndOtherHoldings_1" class="labelLeft">
-							<label for="selectLanguageArchivalAndOtherHoldings_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+							<label for="selectLanguageArchivalAndOtherHoldings_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 						</td>
 						<td>
 							<select id="selectLanguageArchivalAndOtherHoldings_1">
@@ -565,7 +565,7 @@
 
 				<tr>
 					<td id="tdAddAnotherArchivalDescription" colspan="2">
-						<input type="button" id="buttonDescriptionAddAnotherArchivalDescription" onclick="descriptionAddAnotherArchivalDescription('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.description.addAnotherArchivalDescription")' />" />
+						<input type="button" id="buttonDescriptionAddAnotherArchivalDescription" onclick="descriptionAddAnotherArchivalDescription('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" value="<s:property value='getText("eag2012.isil.addArchivalAndOtherHoldingsDescription")' />" />
 					</td>
 					<td colspan="2">
 					</td>
@@ -573,7 +573,7 @@
 
 				<tr>
 					<td colspan="4">
-						<s:property value="getText('label.ai.description.yearsOfTheHoldings')" />
+						<s:property value="getText('eag2012.description.yearsOfTheHoldings')" />
 					</td>
 				</tr>
 
@@ -583,7 +583,7 @@
 						<s:iterator var="internalCurrent" value="#dateOfHoldings" status="internalStatus">
 							<tr id="trYearWhenThisNameWasUsed_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textYearWhenThisNameWasUsed_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.year')" />:</label>
+									<label for="textYearWhenThisNameWasUsed_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.year')" />:</label>
 								</td>
 								<td>
 									<input type="text" id="textYearWhenThisNameWasUsed_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#internalCurrent" />" />
@@ -596,7 +596,7 @@
 					<s:else>
 						<tr id="trYearWhenThisNameWasUsed_1">
 							<td>
-								<label for="textYearWhenThisNameWasUsed_1"><s:property value="getText('label.ai.tabs.commons.year')" />:</label>
+								<label for="textYearWhenThisNameWasUsed_1"><s:property value="getText('eag2012.commons.year')" />:</label>
 							</td>
 							<td>
 								<input type="text" id="textYearWhenThisNameWasUsed_1" />
@@ -609,7 +609,7 @@
 				<s:else>
 					<tr id="trYearWhenThisNameWasUsed_1">
 						<td>
-							<label for="textYearWhenThisNameWasUsed_1"><s:property value="getText('label.ai.tabs.commons.year')" />:</label>
+							<label for="textYearWhenThisNameWasUsed_1"><s:property value="getText('eag2012.commons.year')" />:</label>
 						</td>
 						<td>
 							<input type="text" id="textYearWhenThisNameWasUsed_1" />
@@ -627,13 +627,13 @@
 						<s:iterator var="internalCurrent" value="#holdingsDateRange" status="internalStatus">
 							<tr id="trYearRangeWhenThisNameWasUsed_<s:property value="%{#internalStatus.index + 1}" />">
 								<td>
-									<label for="textIdentityYearFrom_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('label.ai.tabs.commons.yearFrom')" />:</label>
+									<label for="textIdentityYearFrom_<s:property value="%{#internalStatus.index + 1}" />"><s:property value="getText('eag2012.commons.yearFrom')" />:</label>
 								</td>
 								<td>
 									<input type="text" id="textYearWhenThisNameWasUsedFrom_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#holdingsFromDate[#internalStatus.index]" />" />
 								</td>
 								<td class="labelLeft">
-									<label for="textYearWhenThisNameWasUsedTo_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('label.ai.tabs.commons.textTo')" />:</label>
+									<label for="textYearWhenThisNameWasUsedTo_<s:property value="%{#internalStatus.index + 1}" />" ><s:property value="getText('eag2012.commons.to')" />:</label>
 								</td>
 								<td>
 									<input type="text" id="textYearWhenThisNameWasUsedTo_<s:property value="%{#internalStatus.index + 1}" />" value="<s:property value="#holdingsToDate[#internalStatus.index]" />" />
@@ -645,10 +645,10 @@
 
 				<tr>
 					<td>
-						<input type="button" id="buttonDescriptionAddSingleYear" value="<s:property value="getText('label.ai.tabs.commons.addSingleYear')" />" onclick="addSingleYear($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+						<input type="button" id="buttonDescriptionAddSingleYear" value="<s:property value="getText('eag2012.commons.addYearButton')" />" onclick="addSingleYear($(this).parent().parent().parent().parent(), '<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 					</td>
 					<td>
-						<input type="button" id="buttonDescriptionAddYearRange" value="<s:property value="getText('label.ai.tabs.commons.addYearRange')" />" onclick="addRangeYear($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.yearFrom')" />', '<s:property value="getText('label.ai.tabs.commons.textTo')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+						<input type="button" id="buttonDescriptionAddYearRange" value="<s:property value="getText('eag2012.commons.addYearRangeButton')" />" onclick="addRangeYear($(this).parent().parent().parent().parent(), '<s:property value="getText('eag2012.commons.yearFrom')" />', '<s:property value="getText('eag2012.commons.to')" />', '<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 					</td>
 					<td colspan="2">
 					</td>
@@ -656,7 +656,7 @@
 
 				<tr>
 					<td id="tdExtent">
-						<label for="textExtent"><s:property value="getText('label.ai.description.extent')" />:</label>
+						<label for="textExtent"><s:property value="getText('eag2012.description.extent')" />:</label>
 					</td>
 					<td>
 						<s:if test="%{loader.descExtent.size() > 0}">
@@ -678,9 +678,9 @@
 				<tr>
 					<td id="tdButtonsDescriptionTab" colspan="4">
 						<s:if test="%{#counter == 0}">
-							<input type="button" id="buttonDescriptionTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" onclick="checkAndShowNextTab($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('label.eag.eagwithurlwarnings')"/>');" />
+							<input type="button" id="buttonDescriptionTabNext" value="<s:property value='getText("eag2012.commons.nextTab")' />" class="rightButton" onclick="checkAndShowNextTab($(this).parent().parent().parent().parent(), '<s:property value="getText('eag2012.errors.fieldRequired')" />', '<s:property value="getText('eag2012.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>');" />
 						</s:if>
-						<input type="button" id="buttonDescriptionTabPrevious" value="<s:property value='getText("label.ai.tabs.commons.button.previousTab")' />" class="rightButton" onclick="checkAndShowPreviousTab($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('label.eag.eagwithurlwarnings')"/>');" />
+						<input type="button" id="buttonDescriptionTabPrevious" value="<s:property value='getText("eag2012.commons.previousTab")' />" class="rightButton" onclick="checkAndShowPreviousTab($(this).parent().parent().parent().parent(), '<s:property value="getText('eag2012.errors.fieldRequired')" />', '<s:property value="getText('eag2012.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>');" />
 					</td>
 				</tr>
 			</table>
@@ -694,20 +694,20 @@
 	<table id="descriptionTable" class="tablePadding">
 		<tr>
 			<td id="repositoryLabel" colspan="4">
-				<s:property value="getText('label.ai.description.repositoryDescription')" />
+				<s:property value="getText('eag2012.description.repositoryDescription')" />
 			</td>
 			
 		</tr>
 
 		<tr id="trRepositoryHistory_1">
 			<td id="tdRepositoryHistory_1">
-				<label for="textRepositoryHistory_1"><s:property value="getText('label.ai.description.repositoryHistory')" />:</label>
+				<label for="textRepositoryHistory_1"><s:property value="getText('eag2012.description.repositoryHistory')" />:</label>
 			</td>
 			<td>
 				<textarea id="textRepositoryHistory_1" ></textarea>
 			</td>
 			<td id="tdLanguageRepositoryHistory_1" class="labelLeft">
-				<label for="selectLanguageRepositoryHistory_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+				<label for="selectLanguageRepositoryHistory_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
 				<select id="selectLanguageRepositoryHistory_1">
@@ -720,7 +720,7 @@
 
 		<tr id="trAddHistoryDescription">
 			<td id="tdAddHistoryDescription" colspan="2">
-				<input type="button" id="buttonAddHistoryDescription" onclick="descriptionAddHistoryDescription('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.description.addHistoryDescription")' />"/>
+				<input type="button" id="buttonAddHistoryDescription" onclick="descriptionAddHistoryDescription('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" value="<s:property value='getText("eag2012.isil.addHistoryDescription")' />"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -728,7 +728,7 @@
 
 		<tr>
 			<td id="tdDateOfRepositoryFoundation">
-				<label for="textDateOfRepositoryFoundation"><s:property value="getText('label.ai.description.dateOfRepositoryFoundation')" />:</label>
+				<label for="textDateOfRepositoryFoundation"><s:property value="getText('eag2012.description.foundationDate')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textDateOfRepositoryFoundation" />
@@ -738,13 +738,13 @@
 
 		<tr id="trRuleOfRepositoryFoundation_1">
 			<td id="tdRuleOfRepositoryFoundation_1">
-				<label for="textRuleOfRepositoryFoundation_1"><s:property value="getText('label.ai.description.ruleOfRepositoryFoundation')" />:</label>
+				<label for="textRuleOfRepositoryFoundation_1"><s:property value="getText('eag2012.description.ruleOfRepositoryFoundation')" />:</label>
 			</td>
 			<td>
 				<textarea id="textRuleOfRepositoryFoundation_1"></textarea>
 			</td>
 			<td id="tdLanguageRuleOfRepositoryFoundation_1" class="labelLeft">
-				<label for="selectLanguageRuleOfRepositoryFoundation_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+				<label for="selectLanguageRuleOfRepositoryFoundation_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
 				<select id="selectLanguageRuleOfRepositoryFoundation_1">
@@ -757,7 +757,7 @@
 
 		<tr>
 			<td id="tdAddFoundationInformation" colspan="2">
-				<input type="button" id="buttonDescriptionAddFoundationInformation" value="<s:property value='getText("label.ai.description.addRule")' />" onclick="descriptionAddFoundationInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');"/>
+				<input type="button" id="buttonDescriptionAddFoundationInformation" value="<s:property value='getText("eag2012.description.addRule")' />" onclick="descriptionAddFoundationInformation('<s:property value="getText('eag2012.commons.pleaseFillData')" />');"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -765,7 +765,7 @@
 
 		<tr>
 			<td id="tdDateOfRepositorySuppression">
-				<label for="textDateOfRepositorySuppression"><s:property value="getText('label.ai.description.dateOfRepositorySuppression')" />:</label>
+				<label for="textDateOfRepositorySuppression"><s:property value="getText('eag2012.description.dateArchiveClosure')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textDateOfRepositorySuppression" />
@@ -775,13 +775,13 @@
 
 		<tr id="trDescriptionAddSuppressionInformation_1">
 			<td id="tdRuleOfRepositorySuppression_1">
-				<label for="textRuleOfRepositorySuppression_1"><s:property value="getText('label.ai.description.ruleOfRepositorySuppression')" />:</label>
+				<label for="textRuleOfRepositorySuppression_1"><s:property value="getText('eag2012.description.ruleOfRepositorySuppression')" />:</label>
 			</td>
 			<td>
 				<textarea id="textRuleOfRepositorySuppression_1"></textarea>
 			</td>
 			<td id="tdLanguageRuleOfRepositorySuppression_1" class="labelLeft">
-				<label for="selectLanguageRuleOfRepositorySuppression_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+				<label for="selectLanguageRuleOfRepositorySuppression_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
 				<select id="selectLanguageRuleOfRepositorySuppression_1">
@@ -794,7 +794,7 @@
 
 		<tr>
 			<td id="tdAddSuppressionInformation" colspan="2">
-				<input type="button" id="buttonDescriptionAddSuppressionInformation" onclick="descriptionAddSuppressionInformation('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.description.addRule")' />"/>
+				<input type="button" id="buttonDescriptionAddSuppressionInformation" onclick="descriptionAddSuppressionInformation('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" value="<s:property value='getText("eag2012.description.addRule")' />"/>
 			</td>
 			<td colspan="2">
 			</td>
@@ -802,20 +802,20 @@
 
 		<tr>
 			<td id="administrativeLabel" colspan="4">
-				<s:property value="getText('label.ai.description.administrativeStructure')" />
+				<s:property value="getText('eag2012.description.administrativeStructure')" />
 			</td>
 			
 		</tr>
 
 		<tr id="trDescriptionAddAdministrationUnits_1">
 			<td id="tdUnitOfAdministrativeStructure_1">
-				<label for="textUnitOfAdministrativeStructure_1"><s:property value="getText('label.ai.description.unitOfAdministrativeStructure')" />:</label>
+				<label for="textUnitOfAdministrativeStructure_1"><s:property value="getText('eag2012.description.unitOfAdministrativeStructure')" />:</label>
 			</td>
 			<td>
 				<textarea id="textUnitOfAdministrativeStructure_1"></textarea>
 			</td>
 			<td id="tdLanguageUnitOfAdministrativeStructure_1" class="labelLeft">
-				<label for="selectLanguageUnitOfAdministrativeStructure_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+				<label for="selectLanguageUnitOfAdministrativeStructure_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
 				<select id="selectLanguageUnitOfAdministrativeStructure_1">
@@ -828,7 +828,7 @@
 
 		<tr>
 			<td id="tdAddAdministrationUnits" colspan="2">
-				<input type="button" id="buttonDescriptionAddAdministrationUnits" onclick="descriptionAddAdministrationUnits('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.description.addAdministrativeUnit")' />" />
+				<input type="button" id="buttonDescriptionAddAdministrationUnits" onclick="descriptionAddAdministrationUnits('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" value="<s:property value='getText("eag2012.description.addAdministrationUnits")' />" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -836,20 +836,20 @@
 
 		<tr>
 			<td id="buildingLabel" colspan="4">
-				<s:property value="getText('label.ai.description.buildingDescription')" />
+				<s:property value="getText('eag2012.description.buildingDescription')" />
 			</td>
 			
 		</tr>
 
 		<tr id="trBuildingDescription_1">
 			<td id="tdBuilding_1">
-				<label for="textBuilding_1"><s:property value="getText('label.ai.description.building')" />:</label>
+				<label for="textBuilding_1"><s:property value="getText('eag2012.description.building')" />:</label>
 			</td>
 			<td>
 				<textarea id="textBuilding_1"></textarea>
 			</td>
 			<td id="tdLanguageBuilding_1" class="labelLeft">
-				<label for="selectLanguageBuilding_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+				<label for="selectLanguageBuilding_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
 				<select id="selectLanguageBuilding_1">
@@ -862,7 +862,7 @@
 
 		<tr>
 			<td id="tdAddBuildingDescription" colspan="2">
-				<input type="button" id="buttonDescriptionBuildingDescription" onclick="descriptionAddBuildingDescription('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.description.addBuildingDescription")' />" />
+				<input type="button" id="buttonDescriptionBuildingDescription" onclick="descriptionAddBuildingDescription('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" value="<s:property value='getText("eag2012.isil.addBuildingDescription")' />" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -870,7 +870,7 @@
 
 		<tr>
 			<td id="tdRepositoryArea">
-				<label for="textRepositoryArea"><s:property value="getText('label.ai.description.repositoryArea')" />:</label>
+				<label for="textRepositoryArea"><s:property value="getText('eag2012.description.repositoryArea')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textRepositoryArea" />
@@ -880,7 +880,7 @@
 
 		<tr>
 			<td id="tdLengthOfShelf">
-				<label for="textLengthOfShelf"><s:property value="getText('label.ai.description.lengthOfShelf')" />:</label>
+				<label for="textLengthOfShelf"><s:property value="getText('eag2012.description.lengthShelf')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textLengthOfShelf" />
@@ -890,20 +890,20 @@
 
 		<tr>
 			<td id="holdingLabel" colspan="4">
-				<s:property value="getText('label.ai.description.holdingDescription')" />
+				<s:property value="getText('eag2012.description.holdingDescription')" />
 			</td>
 			
 		</tr>
 
 		<tr id="trArchivalAndOtherHoldings_1">
 			<td id="tdArchivalAndOtherHoldings_1">
-				<label for="textArchivalAndOtherHoldings_1"><s:property value="getText('label.ai.description.archivalAndOtherHoldings')" />:</label>
+				<label for="textArchivalAndOtherHoldings_1"><s:property value="getText('eag2012.description.archivalAndOtherHoldings')" />:</label>
 			</td>
 			<td>
 				<textarea id="textArchivalAndOtherHoldings_1"></textarea>
 			</td>
 			<td id="tdLanguageArchivalAndOtherHoldings_1" class="labelLeft">
-				<label for="selectLanguageArchivalAndOtherHoldings_1"><s:property value="getText('label.ai.tabs.commons.selectLanguage')" />:</label>
+				<label for="selectLanguageArchivalAndOtherHoldings_1"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
 			</td>
 			<td>
 				<select id="selectLanguageArchivalAndOtherHoldings_1">
@@ -916,7 +916,7 @@
 
 		<tr>
 			<td id="tdAddAnotherArchivalDescription" colspan="2">
-				<input type="button" id="buttonDescriptionAddAnotherArchivalDescription" onclick="descriptionAddAnotherArchivalDescription('<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" value="<s:property value='getText("label.ai.description.addAnotherArchivalDescription")' />" />
+				<input type="button" id="buttonDescriptionAddAnotherArchivalDescription" onclick="descriptionAddAnotherArchivalDescription('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" value="<s:property value='getText("eag2012.isil.addArchivalAndOtherHoldingsDescription")' />" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -924,13 +924,13 @@
 
 		<tr>
 			<td colspan="4">
-				<s:property value="getText('label.ai.description.yearsOfTheHoldings')" />
+				<s:property value="getText('eag2012.description.yearsOfTheHoldings')" />
 			</td>
 		</tr>
 
 		<tr id="trYearWhenThisNameWasUsed_1">
 			<td>
-				<label for="textYearWhenThisNameWasUsed_1"><s:property value="getText('label.ai.tabs.commons.year')" />:</label>
+				<label for="textYearWhenThisNameWasUsed_1"><s:property value="getText('eag2012.commons.year')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textYearWhenThisNameWasUsed_1" />
@@ -941,10 +941,10 @@
 
 		<tr>
 			<td>
-				<input type="button" id="buttonDescriptionAddSingleYear" value="<s:property value="getText('label.ai.tabs.commons.addSingleYear')" />" onclick="addSingleYear($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				<input type="button" id="buttonDescriptionAddSingleYear" value="<s:property value="getText('eag2012.commons.addYearButton')" />" onclick="addSingleYear($(this).parent().parent().parent().parent(), '<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 			</td>
 			<td>
-				<input type="button" id="buttonDescriptionAddYearRange" value="<s:property value="getText('label.ai.tabs.commons.addYearRange')" />" onclick="addRangeYear($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.yearFrom')" />', '<s:property value="getText('label.ai.tabs.commons.textTo')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillData')" />');" />
+				<input type="button" id="buttonDescriptionAddYearRange" value="<s:property value="getText('eag2012.commons.addYearRangeButton')" />" onclick="addRangeYear($(this).parent().parent().parent().parent(), '<s:property value="getText('eag2012.commons.yearFrom')" />', '<s:property value="getText('eag2012.commons.to')" />', '<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 			</td>
 			<td colspan="2">
 			</td>
@@ -952,7 +952,7 @@
 
 		<tr>
 			<td id="tdExtent">
-				<label for="textExtent"><s:property value="getText('label.ai.description.extent')" />:</label>
+				<label for="textExtent"><s:property value="getText('eag2012.description.extent')" />:</label>
 			</td>
 			<td>
 				<input type="text" id="textExtent" />
@@ -962,8 +962,8 @@
 
 		<tr>
 			<td id="tdButtonsDescriptionTab" colspan="4">
-				<input type="button" id="buttonDescriptionTabNext" value="<s:property value='getText("label.ai.tabs.commons.button.nextTab")' />" class="rightButton" onclick="checkAndShowNextTab($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('label.eag.eagwithurlwarnings')"/>');" />
-				<input type="button" id="buttonDescriptionTabPrevious" value="<s:property value='getText("label.ai.tabs.commons.button.previousTab")' />" class="rightButton" onclick="checkAndShowPreviousTab($(this).parent().parent().parent().parent(), '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('label.eag.eagwithurlwarnings')"/>');" />
+				<input type="button" id="buttonDescriptionTabNext" value="<s:property value='getText("eag2012.commons.nextTab")' />" class="rightButton" onclick="checkAndShowNextTab($(this).parent().parent().parent().parent(), '<s:property value="getText('eag2012.errors.fieldRequired')" />', '<s:property value="getText('eag2012.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>');" />
+				<input type="button" id="buttonDescriptionTabPrevious" value="<s:property value='getText("eag2012.commons.previousTab")' />" class="rightButton" onclick="checkAndShowPreviousTab($(this).parent().parent().parent().parent(), '<s:property value="getText('eag2012.errors.fieldRequired')" />', '<s:property value="getText('eag2012.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>');" />
 			</td>
 		</tr>
 	</table>

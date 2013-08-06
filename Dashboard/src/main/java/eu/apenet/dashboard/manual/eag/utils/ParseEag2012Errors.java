@@ -51,27 +51,27 @@ public class ParseEag2012Errors{
         	errorValidation=null;
         }else if(this.getWarning().contains("cvc-datatype-valid.1.2.3:")){
         	errorDate=errorString(this.getWarning());
-			errorValidation = targetAction.getText("label.ai.error.standardDate")+" '"+errorDate+"' "+targetAction.getText("label.ai.error.formatStandardDate");
+			errorValidation = targetAction.getText("eag2012.errors.standardDate")+" '"+errorDate+"' "+targetAction.getText("eag2012.errors.formatStandardDate");
         }else if(this.getWarning().contains("The element 'location' is missing") || this.getWarning().contains("The element 'street' has been found")
         		|| this.getWarning().contains("The element 'municipalityPostalcode' has been found")
         		|| this.getWarning().contains("The element 'localentity' has been found but should not appear here")){
-			errorValidation = targetAction.getText("label.ai.error.location");
+			errorValidation = targetAction.getText("eag2012.errors.location");
         }else if(this.getWarning().contains("complex-type.4: Attribute 'eagRelationType' must appear on element 'eagRelation'")){
-			errorValidation = targetAction.getText("label.ai.error.eagRelation");
+			errorValidation = targetAction.getText("eag2012.errors.eagRelation");
         }else if(this.getWarning().contains("The element 'conventionDeclaration' is missing ")){
-			errorValidation = targetAction.getText("label.ai.error.fullName");
+			errorValidation = targetAction.getText("eag2012.errors.fullName");
         }else if(this.getWarning().contains("The element 'languageDeclaration' is missing ")){
-			errorValidation = targetAction.getText("label.ai.error.script");
+			errorValidation = targetAction.getText("eag2012.errors.script");
         }else if(this.getWarning().contains("The element 'script' has been found but should not appear here")){
-			errorValidation = targetAction.getText("label.ai.error.script");
+			errorValidation = targetAction.getText("eag2012.errors.script");
         }else if(this.getWarning().contains("The element 'rule' has been found but should not appear here")){
-			errorValidation = targetAction.getText("label.ai.error.rule");
+			errorValidation = targetAction.getText("eag2012.errors.rule");
         }else if(this.getWarning().contains("The element 'repositorsup' is missing")){
-			errorValidation = targetAction.getText("label.ai.error.repositorsup");
+			errorValidation = targetAction.getText("eag2012.errors.repositorsup");
         }else if(this.getWarning().contains("The element 'repositorfound' is missing")){
-			errorValidation = targetAction.getText("label.ai.error.repositorfound");
+			errorValidation = targetAction.getText("eag2012.errors.repositorfound");
         }else if(this.getWarning().contains("The element 'nonpreform' is missing")){
-			errorValidation = targetAction.getText("label.ai.error.nonpreform");
+			errorValidation = targetAction.getText("eag2012.errors.nonpreform");
 		} else if (!this.getWarning().contains("for type 'recordId'")) {
 			errorValidation = this.getWarning();
 		} else if (this.getWarning().contains("of element 'recordId' is not valid")) {

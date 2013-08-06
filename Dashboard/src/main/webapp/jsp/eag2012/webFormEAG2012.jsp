@@ -15,25 +15,25 @@
 			</div>
 			<ul id="eag2012TabsContainer">
 				<li id="tab-yourInstitution">
-					<a href="#tab-yourInstitution"><s:property value="getText('label.ai.tab.yourinstitution.title')" /></a> 
+					<a href="#tab-yourInstitution"><s:property value="getText('eag2012.tab.yourInstitution')" /></a> 
 				</li>
 				<li id="tab-identity">
-					<a href="#tab-identity"><s:property value="getText('label.ai.tab.identity.title')" /></a>
+					<a href="#tab-identity"><s:property value="getText('eag2012.tab.identity')" /></a>
 				</li>
 				<li id="tab-contact">
-					<a href="#tab-contact"><s:property value="getText('label.ai.tab.contact.title')" /></a>
+					<a href="#tab-contact"><s:property value="getText('eag2012.tab.contact')" /></a>
 				</li>
 				<li id="tab-accessAndServices">
-					<a href="#tab-accessAndServices"><s:property value="getText('label.ai.tab.accessAndServices.title')" /></a>
+					<a href="#tab-accessAndServices"><s:property value="getText('eag2012.tab.accessAndServices')" /></a>
 				</li>
 				<li id="tab-description">
-					<a href="#tab-description"><s:property value="getText('label.ai.tab.description.title')" /></a>
+					<a href="#tab-description"><s:property value="getText('eag2012.tab.description')" /></a>
 				</li>
 				<li id="tab-control">
-					<a href="#tab-control"><s:property value="getText('label.ai.tab.control.title')" /></a>
+					<a href="#tab-control"><s:property value="getText('eag2012.tab.control')" /></a>
 				</li>
 				<li id="tab-relations">
-					<a href="#tab-relations"><s:property value="getText('label.ai.tab.relations.title')" /></a>
+					<a href="#tab-relations"><s:property value="getText('eag2012.tab.relations')" /></a>
 				</li>
 			</ul>
 			<input type="hidden" id="currentTab" value="" />
@@ -67,8 +67,8 @@
 					}
 
 					// Load repository tabs if necessary.
-					var labelInstitution = '<s:property value="getText('label.ai.yourinstitution.institution')" />';
-					var labelRepository = '<s:property value="getText('label.ai.yourinstitution.repository')" />';
+					var labelInstitution = '<s:property value="getText('eag2012.yourinstitution.institution')" />';
+					var labelRepository = '<s:property value="getText('eag2012.tab.extraRepository')" />';
 					loadRepositories(labelInstitution, labelRepository, numberOfRepos);
 					
 					//postal address - your institution tab and contact tab
@@ -78,7 +78,7 @@
 					//alert(postalField1+","+postalField2+","+postalField3);
 					if(postalField1.length>0 || postalField2.length>0 || postalField3.length>0){
 						var control=true;
-						contactAddPostalAddressIfDifferent('<s:property value="getText('label.ai.contact.postalAddress')" />','<s:property value="getText('label.ai.tabs.commons.selectLanguage')"/>','<s:property value="getText('label.ai.tabs.commons.street')"/>','<s:property value="getText('label.ai.tabs.commons.cityTownWithPostalcode')"/>',control);
+						contactAddPostalAddressIfDifferent('<s:property value="getText('eag2012.commons.postalAddress')" />','<s:property value="getText('eag2012.commons.selectLanguage')"/>','<s:property value="getText('eag2012.commons.street')"/>','<s:property value="getText('eag2012.commons.cityTownWithPostalcode')"/>',control);
 						$("#textContactPAStreet").attr("value",postalField1);
 						$("#textContactPACity").attr("value",postalField2);
 						$("#selectContactLanguagePostalAddress").attr("value",postalField3);
@@ -94,20 +94,20 @@
 						yiAddFutherInformationOnExistingFacilities();
 					}
 					// Set editables code ISIL selects.
-					var text = '<s:property value="getText('label.ai.tabs.commons.errorISIL')" />';
+					var text = '<s:property value="getText('eag2012.errors.errorISIL')" />';
 					loadDisableSelectsForFurtheIds(text);
 					//last checks for urls
 					$("table#yiTableOthers input[id^='textReferencetoyourinstitutionsholdingsguide']").each(function(){
-						var message = "<s:property value="getText('label.eag.eagwithurlwarnings')"/>";
+						var message = "<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>";
 						checkWebpages($(this),message);
 					});
-					checkWebpages($("table#yiTableOthers input#textYIWebpage"),"<s:property value="getText('label.eag.eagwithurlwarnings')"/>");
+					checkWebpages($("table#yiTableOthers input#textYIWebpage"),"<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>");
 					$("table#yiTableOthers input[id^='textYIWebpage_']").each(function(){
-						var message = "<s:property value="getText('label.eag.eagwithurlwarnings')"/>";
+						var message = "<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>";
 						checkWebpages($(this),message);
 					});
 					$("table#resourceRelationTable_1 input[id^='textWebsiteOfResource']").each(function(){
-						var message = "<s:property value="getText('label.eag.eagwithurlwarnings')"/>";
+						var message = "<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>";
 						checkWebpages($(this),message);
 					});
 				});
@@ -145,8 +145,8 @@
 		<table>
 			<tr>
 				<td>
-		  			<input type="button" id="buttonSaveEAG2012" value="<s:property value='getText("label.ai.tabs.commons.button.save")' />" class="rightButton" onclick="clickSaveAction(this.form, '<s:property value="getText('label.ai.tabs.commons.fieldRequired')" />', '<s:property value="getText('label.ai.tabs.commons.success')" />','<s:property value="getText('label.ai.tabs.commons.errorYourInstitution')" />', '<s:property value="getText('label.ai.tabs.commons.errorIdentity')" />', '<s:property value="getText('label.ai.tabs.commons.errorContact')" />', '<s:property value="getText('label.ai.tabs.commons.errorAccessAndServices')" />', '<s:property value="getText('label.ai.tabs.commons.errorDesription')" />', '<s:property value="getText('label.ai.tabs.commons.errorControl')" />', '<s:property value="getText('label.ai.tabs.commons.errorRelations')" />', '<s:property value="getText('label.ai.tabs.commons.errorOnChangeNameOfInstitution')" />', '<s:property value="getText('label.eag.eagwithurlwarnings')"/>', '${loader.initialAutform}');" />
-		  			<input type="button" id="buttonExitEAG2012" value="<s:property value='getText("label.ai.tabs.commons.button.exit")' />" onclick="clickExitAction();" />
+		  			<input type="button" id="buttonSaveEAG2012" value="<s:property value='getText("eag2012.commons.save")' />" class="rightButton" onclick="clickSaveAction(this.form, '<s:property value="getText('eag2012.errors.fieldRequired')" />', '<s:property value="getText('eag2012.commons.success')" />','<s:property value="getText('eag2012.errors.errorYourInstitution')" />', '<s:property value="getText('eag2012.errors.errorIdentity')" />', '<s:property value="getText('eag2012.errors.errorContact')" />', '<s:property value="getText('eag2012.errors.errorAccessAndServices')" />', '<s:property value="getText('eag2012.errors.errorDesription')" />', '<s:property value="getText('eag2012.errors.errorControl')" />', '<s:property value="getText('eag2012.errors.errorRelations')" />', '<s:property value="getText('eag2012.commons.errorOnChangeNameOfInstitution')" />', '<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>', '${loader.initialAutform}');" />
+		  			<input type="button" id="buttonExitEAG2012" value="<s:property value='getText("eag2012.commons.exit")' />" onclick="clickExitAction();" />
 	    		</td>
 	    	</tr>
 	    </table>
