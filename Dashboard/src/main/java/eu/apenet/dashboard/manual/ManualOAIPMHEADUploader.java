@@ -2,6 +2,7 @@ package eu.apenet.dashboard.manual;
 
 import org.apache.log4j.Logger;
 import org.oclc.oai.harvester.app.RawWriteAPEnet;
+import org.oclc.oai.harvester.app.RawWriteSax;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -31,7 +32,7 @@ public class ManualOAIPMHEADUploader extends ManualUploader {
      */
     public String harvestBegin(OutputStream out) throws Exception {
         try {
-            String token = RawWriteAPEnet.run_getToken(this.oaiServer, this.oaiTimeFrom, this.oaiTimeTo, this.oaiFormat, this.oaiSet, out);
+            String token = RawWriteSax.run_getToken(this.oaiServer, this.oaiTimeFrom, this.oaiTimeTo, this.oaiFormat, this.oaiSet, out);
             LOG.debug("Token: " + token);
             return token;
         } catch (Exception e){
@@ -53,7 +54,7 @@ public class ManualOAIPMHEADUploader extends ManualUploader {
     public String harvesting(OutputStream out, String token) throws Exception {
         if (token != null && !"".equals(token)) {
             if(!token.startsWith("Error record")){
-                token = RawWriteAPEnet.run_getToken(this.oaiServer, token, out);
+                token = RawWriteSax.run_getToken(this.oaiServer, token, out);
                 LOG.debug("Token: " + token);
                 return token;
             } else {

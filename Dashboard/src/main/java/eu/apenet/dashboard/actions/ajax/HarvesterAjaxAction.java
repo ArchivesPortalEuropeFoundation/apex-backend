@@ -51,6 +51,11 @@ public class HarvesterAjaxAction extends AjaxControllerAbstractAction {
             if(PT_TYPE.equals(oaiType)) {
                 oaiFromDate = null;
                 oaiToDate = null;
+            } else {
+                if(StringUtils.isBlank(oaiFromDate))
+                    oaiFromDate = null;
+                if(StringUtils.isBlank(oaiToDate))
+                    oaiToDate = null;
             }
 
             ManualOAIPMHEADUploader manualUploader = new ManualOAIPMHEADUploader(oaiUrl, oaiMetadataFormat, oaiSet, oaiFromDate, oaiToDate);
