@@ -1450,6 +1450,8 @@ function yiAddVisitorsAddressTranslation(text1) {
 	var street = $("table#yiTableVisitorsAddress_"+counter+" textarea#textYIStreet").attr("value");
 	var city = $("table#yiTableVisitorsAddress_"+counter+" textarea#textYICity").attr("value");
 	var country = $("table#yiTableVisitorsAddress_"+counter+" textarea#textYICountry").attr("value");
+	var latitude = $("table#yiTableVisitorsAddress_"+counter+" input#textYILatitude").attr("value");
+	var longitude = $("table#yiTableVisitorsAddress_"+counter+" input#textYILongitude").attr("value");
 
 	if (street != null && street != ""
 			&& city != null && city != "" && country != null && country != "") {
@@ -1458,7 +1460,14 @@ function yiAddVisitorsAddressTranslation(text1) {
 		$("table[id^='yiTableVisitorsAddress_"+counter+"']").after(clone);
 		// Reset parametters.
 		$("table#yiTableVisitorsAddress_"+(counter+1)+" input[type='text']").each(function(){
-			$(this).val(""); // Clean all input_text.
+			var current = $(this).attr("id");
+			if(current!="textYILatitude" && current!="textYILongitude"){
+				$(this).val(""); // Clean all input_text different from latitude or longitude
+			}else if(current=="textYILatitude"){
+				$(this).val(latitude);
+			}else if(current=="textYILongitude"){
+				$(this).val(longitude);
+			}
 		});
 		$("table#yiTableVisitorsAddress_"+(counter+1)+" textarea").each(function(){
 			$(this).val(""); // Clean all input_text.
