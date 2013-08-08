@@ -5,7 +5,7 @@
 
 	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
 	<constant name="struts.devMode" value="false" />
-	<constant name="struts.custom.i18n.resources" value="i18n/ApplicationResources" />
+	<constant name="struts.custom.i18n.resources" value="i18n/ApplicationResources,i18n/eag2012" />
 
 	<!-- To avoid the typical problem of encoding of accents and ensure compatibility with any Operative System, use UTF-8: -->
 	<constant name="struts.i18n.encoding" value="UTF-8" />
