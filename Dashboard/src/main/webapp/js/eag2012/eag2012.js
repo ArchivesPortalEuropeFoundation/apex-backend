@@ -2573,6 +2573,9 @@ function contactAddVisitorsAddressTranslation(text1) {
 //	var region = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" input#textContactRegionOfTheInstitution").attr("value");
 	var country = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" textarea#textContactCountryOfTheInstitution").attr("value");
 
+	var latitude = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" input#textContactLatitudeOfTheInstitution").attr("value");
+	var longitude = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" input#textContactLongitudeOfTheInstitution").attr("value");
+	
 	if (street == null || street == ""
 			|| city == null || city == "" /*|| district == null || district == ""
 			|| county == null || county == "" || region == null || region == "" */
@@ -2586,8 +2589,15 @@ function contactAddVisitorsAddressTranslation(text1) {
 	$("table#contactTable"+currentTab+" table[id^='contactTableVisitorsAddress_"+counter+"']").after(clone);
 	// Reset parametters and enable fields.
 	$("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+(counter+1)+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
-		$(this).removeAttr("disabled");
+		var id = $(this).attr("id");
+		if(id!="textContactLatitudeOfTheInstitution" && id!="textContactLongitudeOfTheInstitution"){
+			$(this).val(""); // Clean all input_text.
+			$(this).removeAttr("disabled");
+		}else if(id=="textContactLatitudeOfTheInstitution"){
+			$(this).val(latitude);
+		}else if(id=="textContactLongitudeOfTheInstitution"){
+			$(this).val(longitude);
+		}
 	});
 	$("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+(counter+1)+" textarea").each(function(){
 		$(this).val(""); // Clean all input_text.
