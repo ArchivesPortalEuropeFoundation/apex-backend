@@ -99,7 +99,7 @@
 							<xsl:if test="eag:location[not(@localType) or @localType='visitors address']/eag:secondem/text()">
 								<tr class="longDisplay">
 									<td class="header">
-										<xsl:value-of select="ape:resource('eag2012.portal.countrylocalauthority')"/><xsl:text>:</xsl:text>
+										<xsl:value-of select="ape:resource('eag2012.portal.countylocalauthority')"/><xsl:text>:</xsl:text>
 									</td>
 									<td>
 										<xsl:call-template name="multilanguage">
