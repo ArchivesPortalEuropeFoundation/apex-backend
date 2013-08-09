@@ -99,17 +99,15 @@
 	            			        				
 							<div id="titleListRepeated<s:property value="%{top.eadid}" />">
 		        				<label style="text-align:left;"><s:property value="%{(#stat.index+1) + '- ' + '(' + top.eadType + ') ' + top.fileName}"/></label>
-		        				<div id="right<s:property value="%{top.eadid}" />" style="align:right;" >
-										<%--<select id="existingFilesAnswers" onchange="changeEADID(this, '%{top.eadid}', '<s:property value='getText("existingFiles.change")' />');" > --%>	
-			        					<select id="existingFilesAnswers" onchange="changeEADID(this, '%{top.eadid}', 'Change');" >
-										<s:iterator value="existingFilesChoice" var="action"> 
+		        				<div id="right<s:property value="%{top.eadid}" />" style="position:relative; top: -15px;" align="right">
+		        					<select onchange="changeEADID(this, '<s:property value="%{top.eadid}" />', 'Change');" name="existingFilesAnswers">
+		        						<s:iterator value="existingFilesChoice" var="action"> 
 											<option value="<s:property value="#action.key" />"><s:property value="#action.value" /></option>
 										</s:iterator>
-									</select>
+		        					</select>
 		        				</div>
 		        			</div>
-		        			<%-- <div id="divGeneralChangeEadid<s:property value="%{top.eadid}" />" style="display:none;"> --%>
-		        			<div id="divGeneralChangeEadid<s:property value="%{top.eadid}" />">
+		        			<div id="divGeneralChangeEadid<s:property value="%{top.eadid}" />" style="display:none;">
 		        			
 	        				<s:hidden name="existingFiles[%{#stat.index}].fileId" value="%{top.fileId}"></s:hidden>
 		       				<s:hidden name="existingFiles[%{#stat.index}].fileType" value="%{top.fileType}"></s:hidden>
@@ -117,10 +115,8 @@
 		       				<s:hidden name="existingFiles[%{#stat.index}].eadType" value="%{top.eadType}"></s:hidden>
 		       				<s:hidden name="existingFiles[%{#stat.index}].eadid" value="%{top.eadid}"></s:hidden>
 		       				<s:hidden name="existingFiles[%{#stat.index}].permId" value="%{top.permId}"></s:hidden>
-		       						       				
 	        				<!-- <s:hidden name="uno" value="%{top.fileId}" /> -->
-	        				<!-- <div id="divChangeEadid<s:property value="%{top.eadid}" />" style="display:none;"> -->
-	        				<div id="divChangeEadid<s:property value="%{top.eadid}" />" style="display:inline;">		        				
+	        				<div id="divChangeEadid<s:property value="%{top.eadid}" />" style="display:none;">		        				
 								<p style="text-align: center; font-weight:bold;"><s:property value="getText('content.message.changeEADID')"/></p><hr/>
 								<p><br></p>
 			        			<label for="textEADID" style="font-weight: bold;"><s:property value="getText('content.message.currentEADID')"/></label> <s:property value="%{top.eadid}" />
@@ -128,7 +124,7 @@
 			        			<span style="font-weight: bold;"><s:property value="getText('content.message.newEADID')"/></span><input type="text" name="arrayneweadid" id="neweadid<s:property value="%{top.eadid}" />" size="30%" style="padding-left:4px;"/>
 			        			<p><br></p>
 			        			
-			        			<input type="button" id="SaveChangesButton<s:property value="%{top.eadid}" />" name="SaveChangesButton<s:property value="%{top.eadid}" />" onclick="var iddivneweadid= 'neweadid' + '<s:property value="%{top.eadid}" />'; var neweadid= document.getElementById(iddivneweadid).value;checkEADIDavailability('<s:property value="%{top.eadid}" />',neweadid, '<s:property value="%{top.fileId}" />');" value="<s:property value="getText('content.message.checkbutton')"/>" /> 
+			        			<input type="button" style="display:none;" id="SaveChangesButton<s:property value="%{top.eadid}" />" name="SaveChangesButton<s:property value="%{top.eadid}" />" onclick="var iddivneweadid= 'neweadid' + '<s:property value="%{top.eadid}" />'; var neweadid= document.getElementById(iddivneweadid).value;checkEADIDavailability('<s:property value="%{top.eadid}" />',neweadid, '<s:property value="%{top.fileId}" />');" value="<s:property value="getText('content.message.checkbutton')"/>" />
 			        			<p><br><br></p>
 			        		</div>
 			        			<p></p>
@@ -139,7 +135,11 @@
 									<br>
 									<div id="divCancelOverwriteEADID<s:property value="%{top.eadid}" />" style="display:none;">
 										<label><s:property value="getText('content.message.OverwriteCancelEadid')"/></label>
-										<s:select onchange="var iddivneweadid= 'neweadid' + '%{top.eadid}'; var neweadid= document.getElementById(iddivneweadid).value;CancelOverwriteExistingEADID(this, '%{top.eadid}', neweadid);" list="existingFilesChoiceOverwriteCancelEADID" name="existingCancelOverwriteEADIDAnswers" theme="simple"></s:select>
+										<select onchange="var iddivneweadid= 'neweadid' + '%{top.eadid}'; var neweadid= document.getElementById(iddivneweadid).value;CancelOverwriteExistingEADID(this, '%{top.eadid}', neweadid);" name="existingCancelOverwriteEADIDAnswers">
+											<s:iterator value="existingFilesChoiceOverwriteCancelEADID" var="actionEFCOCEADID"> 
+												<option value="<s:property value="#actionEFCOCEADID.key" />"><s:property value="#actionEFCOCEADID.value" /></option>
+											</s:iterator>
+										</select>
 									</div>												        			
 		        			</div>
 	            	</s:iterator>
@@ -162,69 +162,50 @@
 			  					  		
 			  		<s:iterator value="filesWithEmptyEadid" status="stat">                                                	        			
 							        											
-		        			<div id="titleListEmpty<s:property value="%{#stat.index}" />" style="text-align:left; display:inline;width:100%;">
+		        			<div id="titleListEmpty<s:property value="%{#stat.index}" />" style="text-align:left; display:inline;">
 		        				<label style="text-align:left;"><s:property value="%{(#stat.index+1) + '- ' + '(' + top.eadType + ') ' + top.fileName}"/></label>
-		        				<div id="right<s:property value="%{#stat.index}" />" style="float:right;" >
-			        				<s:select onchange="changeEADID(this, '%{#stat.index}','Add');" list="existingFilesChoiceAddEADID" name="existingFilesAnswers" theme="simple">
-			        				</s:select>
+		        				<div id="right<s:property value="%{#stat.index}" />" style="position:relative; top: -15px;" align="right">
+		        					<select onchange="changeEADID(this, '<s:property value="%{#stat.index}" />','Add');" name="existingFilesAnswers">
+		        						<s:iterator value="existingFilesChoiceAddEADID" var="actionEFCAEADID"> 
+											<option value="<s:property value="#actionEFCAEADID.key" />"><s:property value="#actionEFCAEADID.value" /></option>
+										</s:iterator>
+		        					</select>
 		        				</div>
 		        			</div> 
 		        			
-		        			<%-- <div id="<s:property value="%{#stat.index}" />" style="display:none;">  --%>
-			        		<div id="divGeneralAddEadid<s:property value="%{#stat.index}" />" style="display:inline;">
-	
-								<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].fileId" value="<s:property value="%{top.fileId}"/>" /> 
-								<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].fileType" value="<s:property value="%{top.fileType}"/>" /> 
-								<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].fileName" value="<s:property value="%{top.fileName}"/>" /> 
-								<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].eadType" value="<s:property value="%{top.eadType}"/>" /> 
-								<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].eadid"	value="<s:property value="%{top.eadid}"/>" /> 
-								<input type="hidden"name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].permId"	value="<s:property value="%{top.permId}"/>" />
-								
-								<!-- <input type="hidden" name="uno" value="<s:property value="%{top.fileId}"/>" />  -->
-								
-								<div id="divAddEadid<s:property value="%{#stat.index}" />"><!-- style="display:none;" -->
-									
-									
-									<p style="text-align: center; font-weight: bold;"> <s:property value="getText('content.message.addEADID')" /></p>
-									<hr />
-									<p>
-										<br>
-									</p>
-									<span style="font-weight: bold;"><s:property value="getText('content.message.newEADID')" /></span>
-									
-										<%--<input type="text" name="arrayneweadid" onkeyup="var neweadid= document.getElementById(iddivneweadid).value;checkEADIDavailability('<s:property value='%{top.eadid}' />',neweadid, '<s:property value="%{top.fileId}" />');"	id="neweadid<s:property value="%{#stat.index}" />" size="30%" style="padding-left: 4px;" /> --%>									
-										<input type="text" name="arrayneweadid" onkeyup="var iddivneweadid= 'neweadid' + '<s:property value="%{#stat.index}" />';var neweadid= document.getElementById(iddivneweadid).value;checkEADIDavailability('<s:property value='%{top.eadid}' />',neweadid, '<s:property value="%{top.fileId}" />');"	id="neweadid<s:property value="%{#stat.index}" />" size="30%" style="padding-left: 4px;" />
-									<p>
-										<br>
-									</p>
-	
-<!-- 									<input type="button" style="display: none;" -->
-									<input type="button" style="display: inline;"
-										id="SaveChangesButton<s:property value="%{#stat.index}" />"
-										name="SaveChangesButton<s:property value="%{#stat.index}" />"
-										onclick="var iddivneweadid= 'neweadid' + '<s:property value="%{#stat.index}" />'; var neweadid= document.getElementById(iddivneweadid).value;checkEADIDavailability('<s:property value="%{#stat.index}" />',neweadid, '<s:property value="%{top.fileId}" />');"
-										value="<s:property value="getText('content.message.checkbutton')"/>" />
-	
-								</div>
-								<p></p>
-								<label
-									id="resultChangeEADID<s:property value="%{#stat.index}" />"></label> <select list="existingEADIDAnswersChoice"
-									name="existingChangeEADIDAnswers"
-									id="existingChangeEADIDAnswers<s:property value="%{#stat.index}" />"
-									style="display: none;">
-									<option value="KO">KO</option>
-								</select> <br>
-								<div
-									id="divCancelOverwriteEADID<s:property value="%{#stat.index}" />"
-									style="display: none;">
-									<label><s:property value="getText('content.message.OverwriteCancelEadid')" /></label>
-									<s:select
-										onchange="var iddivneweadid= 'neweadid' + '%{#stat.index}'; var neweadid= document.getElementById(iddivneweadid).value;CancelOverwriteExistingEADID(this, '%{#stat.index}', neweadid);"
-										list="existingFilesChoiceOverwriteCancelEADID"
-										name="existingCancelOverwriteEADIDAnswers" theme="simple"></s:select>
+		        			<div id="divGeneralAddEadid<s:property value="%{#stat.index}" />" style="display:none;">		        			
+		        			
+	        				<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].fileId" value="<s:property value="%{top.fileId}"/>" />
+		       				<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].fileType" value="<s:property value="%{top.fileType}"/>" />
+		       				<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].fileName" value="<s:property value="%{top.fileName}"/>" />
+		       				<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].eadType" value="<s:property value="%{top.eadType}"/>" />
+		       				<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].eadid" value="<s:property value="%{top.eadid}"/>" />
+		       				<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].permId" value="<s:property value="%{top.permId}"/>" />
+	        				<!-- <input type="hidden" name="uno" value="<s:property value="%{top.fileId}"/>" />  -->	        				
+	        				<div id="divAddEadid<s:property value="%{#stat.index}" />" style="display:none;" >		        				
+								<p style="text-align: center; font-weight:bold;"><s:property value="getText('content.message.addEADID')" /></p><hr/>
+								<p><br></p>			        			
+			        			<span style="font-weight: bold;"><s:property value="getText('content.message.newEADID')"/></span><input type="text" name="arrayneweadid" id="neweadid<s:property value="%{#stat.index}" />" size="30%" style="padding-left:4px;"/>
+			        			<p><br></p>
+			        			
+			        			<input type="button" style="display:none;" id="SaveChangesButton<s:property value="%{#stat.index}" />" name="SaveChangesButton<s:property value="%{#stat.index}" />" onclick="var iddivneweadid= 'neweadid' + '<s:property value="%{#stat.index}" />'; var neweadid= document.getElementById(iddivneweadid).value;checkEADIDavailability('<s:property value="%{#stat.index}" />',neweadid, '<s:property value="%{top.fileId}" />');" value="<s:property value="getText('content.message.checkbutton')"/>" />			        			
+			        			
+			        		</div>
+			        			<p></p>
+									<label id="resultChangeEADID<s:property value="%{#stat.index}" />"></label>									
+									<select list="existingEADIDAnswersChoice" name="existingChangeEADIDAnswers" id="existingChangeEADIDAnswers<s:property value="%{#stat.index}" />" style="display:none;">
+										<option value="KO">KO</option>		
+									</select>
 									<br>
-								</div>
-								<br>		        			
+									<div id="divCancelOverwriteEADID<s:property value="%{#stat.index}" />" style="display:none;">
+										<label><s:property value="getText('content.message.OverwriteCancelEadid')"/></label>
+										<select onchange="var iddivneweadid= 'neweadid' + '%{#stat.index}'; var neweadid= document.getElementById(iddivneweadid).value;CancelOverwriteExistingEADID(this, '%{#stat.index}', neweadid);" name="existingCancelOverwriteEADIDAnswers">
+											<s:iterator value="existingFilesChoiceOverwriteCancelEADID" var="actionEFCOCEADID"> 
+												<option value="<s:property value="#actionEFCOCEADID.key" />"><s:property value="#actionEFCOCEADID.value" /></option>
+											</s:iterator>
+										</select>
+										<br>
+									</div>	<br>		        			
 		        			</div>
        				</s:iterator> 
        				</div>      				
@@ -262,8 +243,7 @@
 	       			</div>
 				</div>
 			</s:if>
-<!-- 			<input type="button" class="mainButton" value="<s:property value='getText("label.accept")' />" name="form_submit" onclick="checkEadIdAndSubmit()" /> -->
-			<input type="button" class="mainButton" id="form_submit" value="<s:property value='getText("label.accept")' />" name="form_submit" onclick="checkEadIdAndSubmit()" disabled="disabled" />
+			<input type="button" class="mainButton" value="<s:property value='getText("label.accept")' />" name="form_submit" onclick="checkEadIdAndSubmit()" />
 			<s:if  test="filesWithEmptyEadid.size()>0 || existingFiles.size()>0" >
 				<!--<s:submit theme="simple" style="font-weight:bold; background-color:#B0D0FF;" key="label.cancel" action="canceloverwriteexistingfiles"/>-->
 			</s:if>
@@ -282,7 +262,7 @@
 					<s:submit theme="simple" key="content.continue.contentmanager" action="contentmanager"/>
 					
 				</form>
-	     </s:else>
+	        </s:else>
 	        <script type="text/javascript">
 	        $(document).ready(function(){
 	        	changes = new Array();
@@ -296,34 +276,26 @@
 	        
 	        function checkEadIdAndSubmit(){
 	        	if(changes.length>0 && $("select#existingFilesAnswers option:selected").val()=="Change EADID"){
-	        		var strOut='<s:property value='getText("content.message.UserHasNotCheckedAvailability")'/>';
-	        		alert(strOut);
+	        		alert('<s:property value='getText("content.message.UserHasNotCheckedAvailability")' />');
 	        	}else{
 	        		$("form#overwriteexistingfiles").attr("action","overwriteexistingfiles.action");//action="overwriteexistingfiles"
 	        		$("form#overwriteexistingfiles").submit();
 	        	}
 	        }
 	        
-	        function showAddEADID(divname,buttonid, eadid){
-	        	var divname="divGeneralAddEadid" + eadid;
-				document.getElementById(divname).style.display='inline';	
-				document.getElementById(buttonid).style.display='inline';
-				var divgeneralname= "divAddEadid" + eadid;
-				document.getElementById(divgeneralname).style.display='inline';
-	        }
-	        
 	        var eadidarray = new Array();
-			
-	        function changeEADID(text,eadid,method)
+			function changeEADID(text,eadid,method)
 			{
 				var textvalue = text.options[text.selectedIndex].value;
 				var buttonid= "SaveChangesButton" + eadid;
-				
+
 				if (method == "Add") {
 					if (textvalue == "Add EADID") {
-						showAddEADID(divname,buttonid, eadid);
-						// Disable accept button.
-						$("input#form_submit").attr("disabled","disabled");
+						var divname="divGeneralAddEadid" + eadid;
+						document.getElementById(divname).style.display='inline';	
+						document.getElementById(buttonid).style.display='inline';
+						var divgeneralname= "divAddEadid" + eadid;
+						document.getElementById(divgeneralname).style.display='inline';
 					}
 					else {
 						var divname="divGeneralAddEadid" + eadid;
@@ -331,29 +303,10 @@
 						document.getElementById(buttonid).style.display='none';
 						var divgeneralname= "divAddEadid" + eadid;
 						document.getElementById(divgeneralname).style.display='none';
-						$("input#form_submit").removeAttr("disabled");
-						
-						//clean textbox
-						$("input[id^='neweadid']").each(function(){
-								$(this).attr("value","");
-						});
-						
-						//clean label
-						$("label[id^='resultChangeEADID']").each(function(){
-							$(this).hide();
-							var strLabelOut=$(this).text();
-							/* eadidarray.remove(strLabelOut); */
-							$(this).text("");					
-						});
-						
-						//clean text and combo too
-						$("label[id^='divCancelOverwriteEADID']").each(function(){
-							$(this).hide();
-						});						
 					}
 				}
 				else if (method=="Change") {
-						if (textvalue == "Change EADID") {
+					if (textvalue == "Change EADID") {
 						var divname= "divChangeEadid" + eadid;
 						document.getElementById(divname).style.display='inline';
 						document.getElementById(buttonid).style.display='inline';
@@ -368,13 +321,12 @@
 						document.getElementById(buttonid).style.display='none';
 						var divgeneralname= "divGeneralChangeEadid" + eadid;
 						document.getElementById(divgeneralname).style.display='none';
-						$("input#form_submit").removeAttr("disabled");
 					}
 				}
 			}
 			
 			function CancelOverwriteExistingEADID(text, eadid, neweadid) {
-				var textvalue = text.options[text.selectedIndex].text;				
+				var textvalue = text.options[text.selectedIndex].value;				
 				var labelanswermessage = "resultChangeEADID" + eadid;
 				if (textvalue == "Cancel"){
 					//Display you will cancel this operation for this file.						
@@ -384,7 +336,6 @@
 					//Display you will overwrite the file with the eadid selected for this one.
 					document.getElementById(labelanswermessage).innerHTML="You will overwrite the file with the eadid selected for this one.";										
 				}
-				$("label#" + labelanswermessage).show();
 			}
 			
 			function checkEADIDavailability(oldeadid, neweadid, fileId) {
@@ -395,13 +346,9 @@
 					    function(dataResponse)
 						{
 							//Show the message.
-							var labelanswermessage = "resultChangeEADID" + dataResponse.eadid;
-							$("label#" + labelanswermessage).show();
+							var labelanswermessage = "resultChangeEADID" + dataResponse.eadid;							
 							document.getElementById(labelanswermessage).innerHTML=dataResponse.message;
 
-							//in case the textbox is empty the user is not allowed to add an empty value to overwrite
-							
-							
 							//Check the availability in the array
 							var value= eadidarray.length;
 							if (value==0){
@@ -423,7 +370,6 @@
 									eadidarray[value] = neweadid;
 								}
 							}
-							$("input#form_submit").attr("disabled","disabled");
 							if (dataResponse.existingChangeEADIDAnswers == "OK") {
 								//changes[oldeadid] = neweadid;
 								if(changes.indexOf(oldeadid)>=0){
@@ -439,7 +385,6 @@
 								document.getElementById(checkavailabilitybutton).style.display='none';
 								var div= "divCancelOverwriteEADID" + dataResponse.eadid;								
 								document.getElementById(div).style.display='none';
-								$("input#form_submit").removeAttr("disabled");
 							}
 							else if (dataResponse.existingChangeEADIDAnswers == "KO") {
 								if(changes.indexOf(oldeadid)){
@@ -451,8 +396,7 @@
 								var select = document.getElementById(selectanswer);
 								select.options[0] = new Option(dataResponse.existingChangeEADIDAnswers, dataResponse.existingChangeEADIDAnswers);								
 								var div= "divCancelOverwriteEADID" + dataResponse.eadid;								
-								document.getElementById(div).style.display='none';
-								$("input#form_submit").attr("disabled","disabled");
+								document.getElementById(div).style.display='inline';
 							}
 						}
 			);
