@@ -328,15 +328,16 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 		for (int j=0;j<this.filesWithEmptyEadid.size(); j++) {
 			String typeAnswer = null;	
 			//Check if existing files to send to overwriteFile the correct data of each file.
-			if (existingfiles) {
-				if (j==0) {
-				    k = k + j;
-				} else {
-			        k++;
-				}
-			} else {
+//			if (existingfiles) {
+//				if (j==0) {
+//				    k = k + j;
+//				} else {
+//			        k++;
+//				}
+//			} else {
 				k = j;
-			}			
+//			}
+			
 			typeAnswer = filesWithEmptyEadid.get(j).getEadType();
 			
 			//existingChangeEADIDAnswers contains the result of changing the EADID. OK or KO
