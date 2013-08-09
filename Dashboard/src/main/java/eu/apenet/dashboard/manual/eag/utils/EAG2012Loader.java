@@ -7063,10 +7063,10 @@ public class EAG2012Loader{
 				if (repository != null) {
 					// Repository name.
 					List<String> stringList = new ArrayList<String>();
-					if (repository.getRepositoryName() != null
-							&& repository.getRepositoryName().getContent() != null
-							&& !repository.getRepositoryName().getContent().isEmpty()) {
-						stringList.add(repository.getRepositoryName().getContent());
+					if (repository.getRepositoryName() != null && repository.getRepositoryName().size()>0 
+							&& repository.getRepositoryName().get(0).getContent() != null
+							&& !repository.getRepositoryName().get(0).getContent().isEmpty()) {
+						stringList.add(repository.getRepositoryName().get(0).getContent());
 					} else {
 						stringList.add("");
 					}

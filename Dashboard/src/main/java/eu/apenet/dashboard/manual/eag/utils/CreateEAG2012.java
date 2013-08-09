@@ -813,46 +813,59 @@ public class CreateEAG2012 {
 		getAllDates();
 
 		// eag/archguide/desc/repositories/repository/repositoryName
-		// Main institution.
-//		Repository mainRepository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
-//		RepositoryName repositoryName = null;
-//		if (mainRepository.getRepositoryName() == null) {
-//			repositoryName = new RepositoryName();
-//		} else {
-//			repositoryName = mainRepository.getRepositoryName();
-//		}
-//		repositoryName.setContent(this.eag2012.getAutformValue().get(0));
-//		
-//		mainRepository.setRepositoryName(repositoryName);
+		// Main institution. 
+		/** ISSUE #684 **/
+		Repository mainRepository = null;
+		if(this.eag2012.getRepositoryNameValue() != null && this.eag2012.getRepositoryNameValue().size()>1){
+			mainRepository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
+			List<RepositoryName> repositoryNames = null;
+			if (mainRepository.getRepositoryName() == null) {
+				repositoryNames = new ArrayList<RepositoryName>();
+			} else {
+				repositoryNames = mainRepository.getRepositoryName();
+			}
+			if(this.eag2012.getAutformValue()!=null && this.eag2012.getAutformLang()!=null && this.eag2012.getAutformValue().size()==this.eag2012.getAutformLang().size()){
+				for(int i=0;i<this.eag2012.getAutformValue().size();i++){
+					RepositoryName repositoryName = new RepositoryName();
+					repositoryName.setContent(this.eag2012.getAutformValue().get(i));
+					repositoryName.setLang(this.eag2012.getAutformLang().get(i));
+					repositoryNames.add(repositoryName);
+				}
+				mainRepository.setRepositoryName(repositoryNames);
+			}
+		}
 
 		// Rest of repositories.
-		if (this.eag2012.getRepositoryNameValue() != null) {
+		if (this.eag2012.getRepositoryNameValue() != null /*&& this.eag2012.getRepositoryNameLang() != null && this.eag2012.getRepositoryNameValue().size()==this.eag2012.getRepositoryNameLang().size()*/) {
 			for (int i = 0; i < this.eag2012.getRepositoryNameValue().size(); i++) {
 				Repository otherRepositories = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i+1);
 
-				RepositoryName otherRepositoryName = null;
+				List<RepositoryName> otherRepositoryNames = null;
 				if (otherRepositories.getRepositoryRole() == null) {
-					otherRepositoryName = new RepositoryName();
+					otherRepositoryNames = new ArrayList<RepositoryName>();
 				} else {
-					otherRepositoryName = otherRepositories.getRepositoryName();
+					otherRepositoryNames = otherRepositories.getRepositoryName();
 				}
+				RepositoryName otherRepositoryName = new RepositoryName();
 				otherRepositoryName.setContent(this.eag2012.getRepositoryNameValue().get(i));
+//				otherRepositoryName.setLang(this.eag2012.getRepositoryNameLang().get(i));
+				otherRepositoryNames.add(otherRepositoryName);
 
-				otherRepositories.setRepositoryName(otherRepositoryName);
+				otherRepositories.setRepositoryName(otherRepositoryNames);
 			}
 		}
 
 		// eag/archguide/desc/repositories/repository/repositoryRole
 		// Main institution.
-//		RepositoryRole repositoryRole = null;
-//		if (mainRepository.getRepositoryRole() == null) {
-//			repositoryRole = new RepositoryRole();
-//		} else {
-//			repositoryRole = mainRepository.getRepositoryRole();
-//		}
-//		repositoryRole.setValue(Eag2012.OPTION_ROLE_HEADQUARTERS_TEXT);
-//
-//		mainRepository.setRepositoryRole(repositoryRole);
+		RepositoryRole repositoryRole = null;
+		if (mainRepository==null || mainRepository.getRepositoryRole() == null) {
+			repositoryRole = new RepositoryRole();
+		} else {
+			repositoryRole = mainRepository.getRepositoryRole();
+		}
+		repositoryRole.setValue(Eag2012.OPTION_ROLE_HEADQUARTERS_TEXT);
+
+		mainRepository.setRepositoryRole(repositoryRole);
 
 		// Rest of repositories.
 		if (this.eag2012.getRepositoryRoleValue() != null) {
