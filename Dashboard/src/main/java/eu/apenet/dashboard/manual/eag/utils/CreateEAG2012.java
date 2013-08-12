@@ -856,17 +856,17 @@ public class CreateEAG2012 {
 		}
 
 		// eag/archguide/desc/repositories/repository/repositoryRole
-		// Main institution.
-		RepositoryRole repositoryRole = null;
-		if (mainRepository==null || mainRepository.getRepositoryRole() == null) {
-			repositoryRole = new RepositoryRole();
-		} else {
-			repositoryRole = mainRepository.getRepositoryRole();
-		}
-		repositoryRole.setValue(Eag2012.OPTION_ROLE_HEADQUARTERS_TEXT);
-
-		mainRepository.setRepositoryRole(repositoryRole);
-
+        // Main institution.
+        if(mainRepository!=null){
+        	RepositoryRole repositoryRole = null;
+        	if(mainRepository.getRepositoryRole()==null){
+        		repositoryRole = new RepositoryRole();
+        	}else{
+        		repositoryRole = mainRepository.getRepositoryRole();
+        	}
+        	repositoryRole.setValue(Eag2012.OPTION_ROLE_HEADQUARTERS_TEXT);
+        	mainRepository.setRepositoryRole(repositoryRole);
+        }
 		// Rest of repositories.
 		if (this.eag2012.getRepositoryRoleValue() != null) {
 			for (int i = 0; i < this.eag2012.getRepositoryRoleValue().size(); i++) {
