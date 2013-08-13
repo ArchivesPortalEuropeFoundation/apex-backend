@@ -464,64 +464,69 @@
     </xsl:template>
     
 	<xsl:template match="ead:bibref" mode="other">
-	<p>
-	<xsl:variable name="nameCount" select="count(ead:name)"></xsl:variable>
-			<xsl:for-each select="ead:name">
-				<xsl:value-of select="ape:highlight(., 'name')" disable-output-escaping="yes" />
-				<xsl:if test="$nameCount > position()">
-					<xsl:text>, </xsl:text>
-				</xsl:if>
-			</xsl:for-each>
-			<xsl:text>: </xsl:text>
-			<xsl:variable name="titleCount" select="count(ead:title)"></xsl:variable>
-			<xsl:for-each select="ead:title">
-				<xsl:value-of select="ape:highlight(., 'title')" disable-output-escaping="yes" />
-				<xsl:if test="$titleCount > position()">
-					<xsl:text>, </xsl:text>
-				</xsl:if>
-			</xsl:for-each>
-			<xsl:text>. </xsl:text>
 	<xsl:choose>
-		<xsl:when test="ead:imprint">		
+		<xsl:when test="ead:imprint">	
+			<p>
 			<xsl:for-each select="ead:imprint">
-					<xsl:variable name="geognameCount" select="count(ead:geogname)"></xsl:variable>
-					<xsl:for-each select="ead:geogname">
-						<xsl:value-of select="." />
-						<xsl:if test="$geognameCount > position()">
-							<xsl:text>, </xsl:text>
-						</xsl:if>
-					</xsl:for-each>
-					<xsl:text>: </xsl:text>
-					<xsl:variable name="publisherCount" select="count(ead:publisher)"></xsl:variable>
-					<xsl:for-each select="ead:publisher">
-						<xsl:value-of select="ape:highlight(., 'other')" disable-output-escaping="yes" />
-						<xsl:if test="$publisherCount > position()">
-							<xsl:text>, </xsl:text>
-						</xsl:if>
-					</xsl:for-each>
-					<xsl:text>, </xsl:text>
-					<xsl:variable name="dateCount" select="count(ead:date)"></xsl:variable>
-					<xsl:for-each select="ead:date">
-						<xsl:value-of select="ape:highlight(., 'other')" disable-output-escaping="yes" />
-						<xsl:if test="$dateCount > position()">
-							<xsl:text>, </xsl:text>
-						</xsl:if>
-					</xsl:for-each>
-					<xsl:text> (</xsl:text>		
-					<xsl:value-of select = "ape:resource('eadcontent.online')"/><xsl:text>: </xsl:text>
-					<xsl:variable name="href" select="./parent::node()/@xlink:href"></xsl:variable>
-					<xsl:choose>
-						<xsl:when test="./parent::node()/@xlink:title">
-							<a href="{$href}" target="_blank"><xsl:value-of select="./parent::node()/@xlink:title"></xsl:value-of></a>
-						</xsl:when>
-						<xsl:otherwise>
-							<a href="{$href}" target="_blank"><xsl:value-of select="$href"></xsl:value-of></a>
-						</xsl:otherwise>
-					</xsl:choose>
-					<xsl:text>).</xsl:text>
+				<p>
+				<xsl:variable name="nameCount" select="count(./parent::node()/ead:name)"></xsl:variable>
+				<xsl:for-each select="./parent::node()/ead:name">
+					<xsl:value-of select="ape:highlight(., 'other')" disable-output-escaping="yes" /> 
+					<xsl:if test="$nameCount > position()">
+						<xsl:text>, </xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+				<xsl:text>: </xsl:text>
+				<xsl:variable name="titleCount" select="count(./parent::node()/ead:title)"></xsl:variable>
+				<xsl:for-each select="./parent::node()/ead:title">
+					<i><xsl:value-of select="ape:highlight(., 'other')" disable-output-escaping="yes" /></i>
+					<xsl:if test="$titleCount > position()">
+						<xsl:text>, </xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+				<xsl:text>. </xsl:text>
+				<xsl:variable name="geognameCount" select="count(ead:geogname)"></xsl:variable>
+				<xsl:for-each select="ead:geogname">
+					<xsl:value-of select="." />
+					<xsl:if test="$geognameCount > position()">
+						<xsl:text>, </xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+				<xsl:text>: </xsl:text>
+				<xsl:variable name="publisherCount" select="count(ead:publisher)"></xsl:variable>
+				<xsl:for-each select="ead:publisher">
+					<xsl:value-of select="ape:highlight(., 'other')" disable-output-escaping="yes" />
+					<xsl:if test="$publisherCount > position()">
+						<xsl:text>, </xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+				<xsl:text>, </xsl:text>
+				<xsl:variable name="dateCount" select="count(ead:date)"></xsl:variable>
+				<xsl:for-each select="ead:date">
+					<xsl:value-of select="ape:highlight(., 'other')" disable-output-escaping="yes" />
+					<xsl:if test="$dateCount > position()">
+						<xsl:text>, </xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+				<xsl:text> (</xsl:text>		
+				<xsl:value-of select = "ape:resource('eadcontent.online')"/><xsl:text>: </xsl:text>
+				<xsl:variable name="href" select="./parent::node()/@xlink:href"></xsl:variable>
+				<xsl:choose>
+					<xsl:when test="./parent::node()/@xlink:title">
+						<a href="{$href}" target="_blank"><xsl:value-of select="./parent::node()/@xlink:title"></xsl:value-of></a>
+					</xsl:when>
+					<xsl:otherwise>
+						<a href="{$href}" target="_blank"><xsl:value-of select="$href"></xsl:value-of></a>
+					</xsl:otherwise>
+				</xsl:choose>
+				<xsl:text>).</xsl:text>
+				</p>
 			</xsl:for-each>
+			</p>	
 		</xsl:when> <!-- ead:imprint -->
 		<xsl:otherwise> 
+			<p>
+			<xsl:value-of select="." /><xsl:text>. </xsl:text>
 			<xsl:text> (</xsl:text>
 			<xsl:value-of select = "ape:resource('eadcontent.online')"/><xsl:text>: </xsl:text>
 			<xsl:variable name="href" select="./@xlink:href"></xsl:variable>
@@ -534,8 +539,8 @@
 				</xsl:otherwise>
 			</xsl:choose>
 			<xsl:text>).</xsl:text>	
+			</p>
 		</xsl:otherwise>
 	</xsl:choose>
-	</p>
 	</xsl:template>
 </xsl:stylesheet>
