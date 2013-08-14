@@ -1399,14 +1399,14 @@
 														<xsl:value-of select="$text"/>
 													</xsl:when>
 													<xsl:otherwise>
-														<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
+														<xsl:value-of select="ape:resource('eagcontent.gotothewebsite')"/>
 													</xsl:otherwise>
 												</xsl:choose>
 											</a>
 										</xsl:when>
 										<xsl:when test="$link and $link != ''">
 											<a href="{$link}" target="_blank">
-												<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
+												<xsl:value-of select="ape:resource('eagcontent.gotothewebsite')"/>
 											</a>
 										</xsl:when>
 										<xsl:when test="$text and $text != ''">
@@ -1415,7 +1415,7 @@
 														<xsl:value-of select="$text"/>
 													</xsl:when>
 													<xsl:otherwise>
-														<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
+														<xsl:value-of select="ape:resource('eagcontent.gotothewebsite')"/>
 													</xsl:otherwise>
 												</xsl:choose>
 										</xsl:when>
@@ -1439,14 +1439,14 @@
 														<xsl:value-of select="$text"/>
 													</xsl:when>
 													<xsl:otherwise>  -->
-														<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
+														<xsl:value-of select="ape:resource('eagcontent.gotothewebsite')"/>
 													<!-- </xsl:otherwise>
 												</xsl:choose>  -->
 											</a>
 										</xsl:when>
 										<xsl:when test="$link and $link != ''">
 											<a href="{$link}" target="_blank">
-												<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
+												<xsl:value-of select="ape:resource('eagcontent.gotothewebsite')"/>
 											</a>
 										</xsl:when>
 										<xsl:when test="$text and $text != ''">
@@ -1455,7 +1455,7 @@
 														<xsl:value-of select="$text"/>
 													</xsl:when>
 													<xsl:otherwise>  -->
-														<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
+														<xsl:value-of select="ape:resource('eagcontent.gotothewebsite')"/>
 												<!-- </xsl:otherwise>
 												</xsl:choose> -->
 										</xsl:when>
@@ -1480,14 +1480,14 @@
 														<xsl:value-of select="$text"/>
 													</xsl:when>
 													<xsl:otherwise>  -->
-														<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
+														<xsl:value-of select="ape:resource('eagcontent.gotothewebsite')"/>
 													<!-- </xsl:otherwise>
 												</xsl:choose>  -->
 											</a>
 										</xsl:when>
 										<xsl:when test="$link and $link != ''">
 											<a href="{$link}" target="_blank">
-												<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
+												<xsl:value-of select="ape:resource('eagcontent.gotothewebsite')"/>
 											</a>
 										</xsl:when>
 										<xsl:when test="$text and $text != ''">
@@ -1496,7 +1496,7 @@
 														<xsl:value-of select="$text"/>
 													</xsl:when>
 													<xsl:otherwise>  -->
-														<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
+														<xsl:value-of select="ape:resource('eagcontent.gotothewebsite')"/>
 													<!-- </xsl:otherwise>
 												</xsl:choose>  -->
 										</xsl:when>
@@ -1521,14 +1521,14 @@
 											<xsl:value-of select="$text"/>
 										</xsl:when>
 										<xsl:otherwise>
-											<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
+											<xsl:value-of select="ape:resource('eagcontent.gotothewebsite')"/>
 										</xsl:otherwise>
 									</xsl:choose>
 								</a>
 							</xsl:when>
 							<xsl:when test="$link and $link != ''">
 								<a href="{$link}" target="_blank">
-									<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
+									<xsl:value-of select="ape:resource('eagcontent.gotothewebsite')"/>
 								</a>
 							</xsl:when>
 							<xsl:when test="$text and $text != ''">
@@ -1537,7 +1537,7 @@
 											<xsl:value-of select="$text"/>
 										</xsl:when>
 										<xsl:otherwise>
-											<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
+											<xsl:value-of select="ape:resource('eagcontent.gotothewebsite')"/>
 										</xsl:otherwise>
 									</xsl:choose>
 							</xsl:when>
