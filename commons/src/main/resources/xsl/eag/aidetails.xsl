@@ -1188,46 +1188,7 @@
 					<xsl:choose>
 						<xsl:when test="count($list) > 1">
 							<xsl:choose>
-								<xsl:when test="$language.selected = $language.default">
-									<xsl:for-each select="$list">
-										<xsl:variable name="email" select="current()/@href"></xsl:variable>
-										<xsl:variable name="text" select="current()/text()"></xsl:variable>
-										<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-										<xsl:if test="(not($currentLang) or $currentLang = $language.default) and ($email or $text)">
-											<div>
-												<xsl:choose>
-													<xsl:when test="$email and $email != '' and $text and $text != ''">
-														<a href="mailto:{$email}" target="_blank">
-															<xsl:choose>
-																<xsl:when test="$currentLang = $language.selected or $currentLang = $language.default">
-																	<xsl:value-of select="$text"/>
-																</xsl:when>
-																<xsl:otherwise>
-																	<xsl:value-of select="ape:resource('eagcontent.contactUsByEmail')"/>
-																</xsl:otherwise>
-															</xsl:choose>
-														</a>
-													</xsl:when>
-													<xsl:when test="$email and $email != ''">
-														<a href="mailto:{$email}" target="_blank">
-															<xsl:value-of select="ape:resource('eagcontent.contactUsByEmail')"/>
-														</a>
-													</xsl:when>
-													<xsl:when test="$text and $text != ''">
-															<xsl:choose>
-																<xsl:when test="$currentLang = $language.selected or $currentLang = $language.default">
-																	<xsl:value-of select="$text"/>
-																</xsl:when>
-																<xsl:otherwise>
-																	<xsl:value-of select="ape:resource('eagcontent.contactUsByEmail')"/>
-																</xsl:otherwise>
-															</xsl:choose>
-													</xsl:when>
-												</xsl:choose>
-											</div>
-										</xsl:if>
-									</xsl:for-each>
-								</xsl:when>
+								
 								<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
 									<xsl:for-each select="$list">
 										<xsl:variable name="email" select="current()/@href"></xsl:variable>
@@ -1260,7 +1221,7 @@
 																</xsl:when>
 																<xsl:otherwise>
 																	<xsl:value-of select="ape:resource('eagcontent.contactUsByEmail')"/>
-																</xsl:otherwise>
+																</xsl:otherwise> 
 															</xsl:choose>
 													</xsl:when>
 												</xsl:choose>
@@ -1278,14 +1239,14 @@
 												<xsl:choose>
 													<xsl:when test="$email and $email != '' and $text and $text != ''">
 														<a href="mailto:{$email}" target="_blank">
-															<xsl:choose>
+															<!-- <xsl:choose>
 																<xsl:when test="$currentLang = $language.selected or $currentLang = $language.default">
 																	<xsl:value-of select="$text"/>
 																</xsl:when>
-																<xsl:otherwise>
+																<xsl:otherwise> -->
 																	<xsl:value-of select="ape:resource('eagcontent.contactUsByEmail')"/>
-																</xsl:otherwise>
-															</xsl:choose>
+																<!-- </xsl:otherwise>
+															</xsl:choose> -->
 														</a>
 													</xsl:when>
 													<xsl:when test="$email and $email != ''">
@@ -1294,14 +1255,14 @@
 														</a>
 													</xsl:when>
 													<xsl:when test="$text and $text != ''">
-															<xsl:choose>
+															<!-- <xsl:choose>
 																<xsl:when test="$currentLang = $language.selected or $currentLang = $language.default">
 																	<xsl:value-of select="$text"/>
 																</xsl:when>
-																<xsl:otherwise>
+																<xsl:otherwise> -->
 																	<xsl:value-of select="ape:resource('eagcontent.contactUsByEmail')"/>
-																</xsl:otherwise>
-															</xsl:choose>
+																<!-- </xsl:otherwise>
+															</xsl:choose> -->
 													</xsl:when>
 												</xsl:choose>
 											</div>
@@ -1319,14 +1280,14 @@
 												<xsl:choose>
 													<xsl:when test="$email and $email != '' and $text and $text != ''">
 														<a href="mailto:{$email}" target="_blank">
-															<xsl:choose>
+															<!-- <xsl:choose>
 																<xsl:when test="$currentLang = $language.first or $currentLang = $language.default">
 																	<xsl:value-of select="$text"/>
 																</xsl:when>
-																<xsl:otherwise>
+																<xsl:otherwise> -->
 																	<xsl:value-of select="ape:resource('eagcontent.contactUsByEmail')"/>
-																</xsl:otherwise>
-															</xsl:choose>
+																<!-- </xsl:otherwise>
+															</xsl:choose> -->
 														</a>
 													</xsl:when>
 													<xsl:when test="$email and $email != ''">
@@ -1335,14 +1296,14 @@
 														</a>
 													</xsl:when>
 													<xsl:when test="$text and $text != ''">
-															<xsl:choose>
+															<!--  <xsl:choose>
 																<xsl:when test="$currentLang = $language.first or $currentLang = $language.default">
 																	<xsl:value-of select="$text"/>
 																</xsl:when>
-																<xsl:otherwise>
+																<xsl:otherwise> -->
 																	<xsl:value-of select="ape:resource('eagcontent.contactUsByEmail')"/>
-																</xsl:otherwise>
-															</xsl:choose>
+																<!-- </xsl:otherwise>
+															</xsl:choose> -->
 													</xsl:when>
 												</xsl:choose>
 											</div>
@@ -1400,18 +1361,20 @@
 		<xsl:param name="parent" select="current()"/>
 		<xsl:param name="class"/>
 		<xsl:param name="trClass" select="''"/>
-		<xsl:if test="$parent/eag:webpage/@href and $parent/eag:webpage/@href != ''">
-			<tr class="{$trClass}">
-				<td class="{$class}">
-					<xsl:value-of select="ape:resource('eagcontent.webpage')"/>
-				</td>
-				<td>
-					<xsl:call-template name="multilaguageWebpage">
-						<xsl:with-param name="list" select="$parent/eag:webpage"/>
-					</xsl:call-template>
-				</td>
-			</tr>
-		</xsl:if>
+		<xsl:choose>
+			<xsl:when test="$parent/eag:webpage/@href and $parent/eag:webpage/@href != ''">
+				<tr class="{$trClass}">
+					<td class="{$class}">
+						<xsl:value-of select="ape:resource('eagcontent.webpage')"/>
+					</td>
+					<td>
+						<xsl:call-template name="multilaguageWebpage">
+							<xsl:with-param name="list" select="$parent/eag:webpage"/>
+						</xsl:call-template>
+					</td>
+				</tr>
+			</xsl:when>
+		</xsl:choose>
 	</xsl:template>
 
 	<!-- template for multilanguage for webpage -->
@@ -1420,46 +1383,7 @@
 		<xsl:choose>
 			<xsl:when test="count($list) > 1">
 				<xsl:choose>
-					<xsl:when test="$language.selected = $language.default">
-						<xsl:for-each select="$list">
-							<xsl:variable name="link" select="current()/@href"></xsl:variable>
-							<xsl:variable name="text" select="current()/text()"></xsl:variable>
-							<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
-							<xsl:if test="(not($currentLang) or $currentLang = $language.default) and ($link or $text)">
-								<div>
-									<xsl:choose>
-										<xsl:when test="$link and $link != '' and $text and $text != ''">
-											<a href="{$link}" target="_blank">
-												<xsl:choose>
-													<xsl:when test="$currentLang = $language.selected or $currentLang = $language.default">
-														<xsl:value-of select="$text"/>
-													</xsl:when>
-													<xsl:otherwise>
-														<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
-													</xsl:otherwise>
-												</xsl:choose>
-											</a>
-										</xsl:when>
-										<xsl:when test="$link and $link != ''">
-											<a href="{$link}" target="_blank">
-												<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
-											</a>
-										</xsl:when>
-										<xsl:when test="$text and $text != ''">
-												<xsl:choose>
-													<xsl:when test="$currentLang = $language.selected or $currentLang = $language.default">
-														<xsl:value-of select="$text"/>
-													</xsl:when>
-													<xsl:otherwise>
-														<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
-													</xsl:otherwise>
-												</xsl:choose>
-										</xsl:when>
-									</xsl:choose>
-								</div>
-							</xsl:if>
-						</xsl:for-each>
-					</xsl:when>
+					
 					<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
 						<xsl:for-each select="$list">
 							<xsl:variable name="link" select="current()/@href"></xsl:variable>
@@ -1510,14 +1434,14 @@
 									<xsl:choose>
 										<xsl:when test="$link and $link != '' and $text and $text != ''">
 											<a href="{$link}" target="_blank">
-												<xsl:choose>
+												<!-- <xsl:choose>
 													<xsl:when test="$currentLang = $language.selected or $currentLang = $language.default">
 														<xsl:value-of select="$text"/>
 													</xsl:when>
-													<xsl:otherwise>
+													<xsl:otherwise>  -->
 														<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
-													</xsl:otherwise>
-												</xsl:choose>
+													<!-- </xsl:otherwise>
+												</xsl:choose>  -->
 											</a>
 										</xsl:when>
 										<xsl:when test="$link and $link != ''">
@@ -1526,14 +1450,14 @@
 											</a>
 										</xsl:when>
 										<xsl:when test="$text and $text != ''">
-												<xsl:choose>
+												<!-- <xsl:choose>
 													<xsl:when test="$currentLang = $language.selected or $currentLang = $language.default">
 														<xsl:value-of select="$text"/>
 													</xsl:when>
-													<xsl:otherwise>
+													<xsl:otherwise>  -->
 														<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
-													</xsl:otherwise>
-												</xsl:choose>
+												<!-- </xsl:otherwise>
+												</xsl:choose> -->
 										</xsl:when>
 									</xsl:choose>
 								</div>
@@ -1551,14 +1475,14 @@
 									<xsl:choose>
 										<xsl:when test="$link and $link != '' and $text and $text != ''">
 											<a href="{$link}" target="_blank">
-												<xsl:choose>
+												<!-- <xsl:choose>
 													<xsl:when test="$currentLang = $language.first or $currentLang = $language.default">
 														<xsl:value-of select="$text"/>
 													</xsl:when>
-													<xsl:otherwise>
+													<xsl:otherwise>  -->
 														<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
-													</xsl:otherwise>
-												</xsl:choose>
+													<!-- </xsl:otherwise>
+												</xsl:choose>  -->
 											</a>
 										</xsl:when>
 										<xsl:when test="$link and $link != ''">
@@ -1567,14 +1491,14 @@
 											</a>
 										</xsl:when>
 										<xsl:when test="$text and $text != ''">
-												<xsl:choose>
+												<!-- <xsl:choose>
 													<xsl:when test="$currentLang = $language.first or $currentLang = $language.default">
 														<xsl:value-of select="$text"/>
 													</xsl:when>
-													<xsl:otherwise>
+													<xsl:otherwise>  -->
 														<xsl:value-of select="ape:resource('eagcontent.linktorelatedresource')"/>
-													</xsl:otherwise>
-												</xsl:choose>
+													<!-- </xsl:otherwise>
+												</xsl:choose>  -->
 										</xsl:when>
 									</xsl:choose>
 								</div>
