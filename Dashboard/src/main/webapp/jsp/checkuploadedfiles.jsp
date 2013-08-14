@@ -290,19 +290,43 @@
 	        	$("div[id^=divChangeEadid]").each(function(){
 	        		var id = $(this).attr("id");
 	        		id = id.substring("divChangeEadid".length);
-	        		//changes[id] = "";
 	        		changes.push(id);
 	        	});	       
 	        	        	
 	        });
 	        
 	        function checkEadIdAndSubmit(){
-	        	if(changes.length>0 && $("select#existingFilesAnswers option:selected").val()=="Change EADID"){
-	        		var strOut='<s:property value='getText("content.message.UserHasNotCheckedAvailability")'/>';
-	        		alert(strOut);
-	        	}else{
-	        		$("form#overwriteexistingfiles").attr("action","overwriteexistingfiles.action");//action="overwriteexistingfiles"
-	        		$("form#overwriteexistingfiles").submit();
+				//control for values of the textbox
+ 	        	var exit=false;
+				//values for the array with errors
+				var value=0;
+				//for each visible div means then have any kind of value
+	        	$("div[id^='divChangeEadid']").each(function(){
+	        		var divID = $(this).attr("id");
+	        		if (document.getElementById(divID).style.display!='none') {
+	        			//value of existing EADID
+	        			var oldEadid = divID.substring("divChangeEadid".length);
+	        			//each file has a control in a combobox "OK / KO""
+	        			var flag= ($("select#existingChangeEADIDAnswers" + oldEadid).val()=="OK");
+	        			if(!flag){
+	        				exit=true;
+	        				filesWithErrors[value++] = oldEadid;
+	        			}
+	        		}
+	        	}); 
+	        	
+	        	if (!exit){
+		        	if(changes.length>0 && $("select#existingFilesAnswers option:selected").val()=="Change EADID"){
+		        		var strOut='<s:property value='getText("content.message.UserHasNotCheckedAvailability")'/>';
+		        		alert(strOut);
+		        	}else{
+		        		$("form#overwriteexistingfiles").attr("action","overwriteexistingfiles.action");//action="overwriteexistingfiles"
+		        		$("form#overwriteexistingfiles").submit();
+		        	}
+	        	}
+	        	else{
+        			var strErr = '<s:property value="getText('content.message.filesEADIDerror')"/>' + " " + filesWithErrors;
+		    		alert(strErr);
 	        	}
 	        }
 	        
@@ -324,6 +348,7 @@
         	}
 	        
 	        var eadidarray = new Array();
+	        var filesWithErrors = new Array();
 			
 	        function changeEADID(text,eadid,method)
 			{
@@ -449,7 +474,6 @@
 								select.options[0] = new Option(dataResponse.existingChangeEADIDAnswers, dataResponse.existingChangeEADIDAnswers);
 								var checkavailabilitybutton = "SaveChangesButton" + dataResponse.eadid;
 								/*Do not hide the check availavility button*/
-								/* document.getElementById(checkavailabilitybutton).style.display='none'; */
 								var div= "divCancelOverwriteEADID" + dataResponse.eadid;								
 								document.getElementById(div).style.display='none';
 								$("input#form_submit").removeAttr("disabled");
