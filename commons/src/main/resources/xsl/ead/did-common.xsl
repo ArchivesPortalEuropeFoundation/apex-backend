@@ -508,7 +508,7 @@
 						<xsl:text>, </xsl:text>
 					</xsl:if>
 				</xsl:for-each>
-				<xsl:text> (</xsl:text>		
+				<xsl:text>. (</xsl:text>		
 				<xsl:value-of select = "ape:resource('eadcontent.online')"/><xsl:text>: </xsl:text>
 				<xsl:variable name="href" select="./parent::node()/@xlink:href"></xsl:variable>
 				<xsl:choose>
@@ -526,8 +526,8 @@
 		</xsl:when> <!-- ead:imprint -->
 		<xsl:otherwise> 
 			<p>
-			<xsl:value-of select="." /><xsl:text>. </xsl:text>
-			<xsl:text> (</xsl:text>
+			<xsl:value-of select="." />
+			<xsl:text>. (</xsl:text>
 			<xsl:value-of select = "ape:resource('eadcontent.online')"/><xsl:text>: </xsl:text>
 			<xsl:variable name="href" select="./@xlink:href"></xsl:variable>
 			<xsl:choose>
