@@ -41,6 +41,8 @@ public class ConvertAction extends AbstractInstitutionAction {
 	private static final String TYPE_TEXT = "TEXT";	// Constant for type "text".
 	private static final String OPTION_YES = "yes";	// Constant for value "yes".
 	private static final String OPTION_NO = "no";		// Constant for value "no".
+	private static final String OPTION_FULL = "full";	// Constant for value "full".
+	private static final String OPTION_MINIMAL = "minimal";		// Constant for value "minimal".
 
 	protected final Logger log = Logger.getLogger(getClass());
 	/**
@@ -51,6 +53,7 @@ public class ConvertAction extends AbstractInstitutionAction {
 	private String batchItems;
 	private String provider = "Archives Portal Europe";
 	private String daoType;
+    private Set<SelectItem> conversionTypeSet = new TreeSet<SelectItem>();
     private Set<SelectItem> typeSet = new TreeSet<SelectItem>();
     private Set<SelectItem> yesNoSet = new TreeSet<SelectItem>();
     private Set<SelectItem> inheritLanguageSet = new TreeSet<SelectItem>();
@@ -64,6 +67,7 @@ public class ConvertAction extends AbstractInstitutionAction {
     private String licenseAdditionalInformation;
     private Map<String, String> dateMappings;
     private String filename;
+    private String conversionType = ConvertAction.OPTION_MINIMAL;
     private String validateLinks = ConvertAction.OPTION_NO;
     private String inheritLanguage = ConvertAction.OPTION_NO;
     //private List<LabelValueBean> languages = new ArrayList<SelectItem>();
@@ -77,6 +81,10 @@ public class ConvertAction extends AbstractInstitutionAction {
     private String textDataProvider;			//Text for the data provider from element "<repository>".
     private boolean dataProviderCheck;			//Select or not the check for the data provider
     private boolean daoTypeCheck = true;
+    private boolean hierarchyPrefixCheck;
+    private boolean inheritFileParentCheck;
+    private boolean inheritOriginationCheck;
+    private boolean inheritLanguageCheck;
     private boolean noLanguageOnClevel = true;
     private boolean noLanguageOnParents;
     private Set<SelectItem> languages = new TreeSet<SelectItem>();
@@ -111,9 +119,6 @@ public class ConvertAction extends AbstractInstitutionAction {
 		if (StringUtils.isBlank(daoType)){
 			addFieldError("daoType",getText("errors.required"));
 		}
-		if (provider.isEmpty()) {
-			addFieldError("provider", getText("errors.required"));
-		}
 
 		if (textDataProvider.isEmpty()) {
 			addFieldError("textDataProvider", getText("errors.required"));
@@ -141,8 +146,10 @@ public class ConvertAction extends AbstractInstitutionAction {
 			String languageDescription = new Locale(language).getDisplayLanguage(Locale.ENGLISH);
 			//String label = language + " (" +  languageDescription + ")"; 
 			languages.add(new SelectItem(language, languageDescription));
-			
-		}  
+		}
+
+		conversionTypeSet.add(new SelectItem(ConvertAction.OPTION_FULL, getText("ead2ese.label.full.conversion")));
+		conversionTypeSet.add(new SelectItem(ConvertAction.OPTION_MINIMAL, getText("ead2ese.label.minimal.conversion")));
 		//list="#{'IMAGE':'Image', 'TEXT':'Text', 'SOUND':'Sound', 'VIDEO':'Video'}"
 		typeSet.add(new SelectItem("", getText("ead2ese.content.selectone")));
 		typeSet.add(new SelectItem("3D", getText("ead2ese.content.type.3D")));
@@ -517,5 +524,89 @@ public class ConvertAction extends AbstractInstitutionAction {
 	public void setNoLanguageOnParents(boolean noLanguageOnParents) {
 		this.noLanguageOnParents = noLanguageOnParents;
 	}
-	
+
+	/**
+	 * @return the conversionTypeSet
+	 */
+	public Set<SelectItem> getConversionTypeSet() {
+		return conversionTypeSet;
+	}
+
+	/**
+	 * @param conversionTypeSet the conversionTypeSet to set
+	 */
+	public void setConversionTypeSet(Set<SelectItem> conversionTypeSet) {
+		this.conversionTypeSet = conversionTypeSet;
+	}
+
+	/**
+	 * @return the conversionType
+	 */
+	public String getConversionType() {
+		return conversionType;
+	}
+
+	/**
+	 * @param conversionType the conversionType to set
+	 */
+	public void setConversionType(String conversionType) {
+		this.conversionType = conversionType;
+	}
+
+	/**
+	 * @return the hierarchyPrefixCheck
+	 */
+	public boolean isHierarchyPrefixCheck() {
+		return hierarchyPrefixCheck;
+	}
+
+	/**
+	 * @param hierarchyPrefixCheck the hierarchyPrefixCheck to set
+	 */
+	public void setHierarchyPrefixCheck(boolean hierarchyPrefixCheck) {
+		this.hierarchyPrefixCheck = hierarchyPrefixCheck;
+	}
+
+	/**
+	 * @return the inheritFileParentCheck
+	 */
+	public boolean isInheritFileParentCheck() {
+		return inheritFileParentCheck;
+	}
+
+	/**
+	 * @param inheritFileParentCheck the inheritFileParentCheck to set
+	 */
+	public void setInheritFileParentCheck(boolean inheritFileParentCheck) {
+		this.inheritFileParentCheck = inheritFileParentCheck;
+	}
+
+	/**
+	 * @return the inheritOriginationCheck
+	 */
+	public boolean isInheritOriginationCheck() {
+		return inheritOriginationCheck;
+	}
+
+	/**
+	 * @param inheritOriginationCheck the inheritOriginationCheck to set
+	 */
+	public void setInheritOriginationCheck(boolean inheritOriginationCheck) {
+		this.inheritOriginationCheck = inheritOriginationCheck;
+	}
+
+	/**
+	 * @return the inheritLanguageCheck
+	 */
+	public boolean isInheritLanguageCheck() {
+		return inheritLanguageCheck;
+	}
+
+	/**
+	 * @param inheritLanguageCheck the inheritLanguageCheck to set
+	 */
+	public void setInheritLanguageCheck(boolean inheritLanguageCheck) {
+		this.inheritLanguageCheck = inheritLanguageCheck;
+	}
+
 }
