@@ -1061,6 +1061,20 @@
 					</xsl:otherwise>
 				</xsl:choose>
 
+				<!-- parform only shown if there is a value-->
+				<xsl:if test="./eag:eag/eag:archguide/eag:identity/eag:parform and ./eag:eag/eag:archguide/eag:identity/eag:parform/text()">
+					<tr class="longDisplay">
+						<td class="header">
+							<xsl:value-of select="ape:resource('eag2012.portal.parformnameofthearchive')"/><xsl:text>:</xsl:text>
+						</td>
+						<td>
+							<xsl:call-template name="multilanguage">
+								<xsl:with-param name="list" select="./eag:eag/eag:archguide/eag:identity/eag:parform"/>
+							</xsl:call-template>
+						</td>
+					</tr>
+				</xsl:if>
+
 				<!-- nonpreform and useDates only shown if there are values-->
 				<xsl:if test="./eag:eag/eag:archguide/eag:identity/eag:nonpreform and ./eag:eag/eag:archguide/eag:identity/eag:nonpreform/text() and ./eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates and ((eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:date and eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:date/text()) or (eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateRange and eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateRange/eag:fromDate/text() and eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateRange/eag:toDate/text()) or (eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateSet/eag:date and eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateSet/eag:date/text()) or (eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateSet/eag:dateRange and eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateSet/eag:dateRange/eag:fromDate/text() and eag:eag/eag:archguide/eag:identity/eag:nonpreform/eag:useDates/eag:dateSet/eag:dateRange/eag:toDate/text()))">
 					<tr class="longDisplay">
