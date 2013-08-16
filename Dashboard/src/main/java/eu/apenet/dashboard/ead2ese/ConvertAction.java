@@ -63,7 +63,7 @@ public class ConvertAction extends AbstractInstitutionAction {
     private String license;
     private String europeanaLicense;
     private String cc_js_result_uri;
-    private String language;
+    private String languageSelection;
     private String licenseAdditionalInformation;
     private Map<String, String> dateMappings;
     private String filename;
@@ -92,8 +92,8 @@ public class ConvertAction extends AbstractInstitutionAction {
 	@Override
 	public void validate() {
 		if (INHERITLANGUAGE_PROVIDE.equals(inheritLanguage)){
-			if (StringUtils.isBlank(language)){
-				addFieldError("language", getText("errors.required"));
+			if (StringUtils.isBlank(languageSelection)){
+				addFieldError("languageSelection", getText("errors.required"));
 			}
 		} else  if (ConvertAction.OPTION_NO.equals(inheritLanguage)) {
 			if (ConvertAction.TYPE_TEXT.equals(daoType)) {
@@ -253,7 +253,7 @@ public class ConvertAction extends AbstractInstitutionAction {
     	config.setInheritOrigination(ConvertAction.OPTION_YES.equals(inheritOrigination));
     	config.setInheritLanguage(ConvertAction.OPTION_YES.equals(inheritLanguage));
     	if (INHERITLANGUAGE_PROVIDE.equals(inheritLanguage)){
-    		String parseLanguages = this.getLanguage().replaceAll(",", "");
+    		String parseLanguages = this.getLanguageSelection().replaceAll(",", "");
     		config.setLanguage(parseLanguages);
     	}
     	config.setType(daoType);
@@ -292,12 +292,12 @@ public class ConvertAction extends AbstractInstitutionAction {
 		this.daoType = daoType;
 	}
 
-	public String getLanguage() {
-		return language;
+	public String getLanguageSelection() {
+		return languageSelection;
 	}
 
-	public void setLanguage(String language) {
-		this.language = language;
+	public void setLanguageSelection(String languageSelection) {
+		this.languageSelection = languageSelection;
 	}
 
 	public Map<String, String> getDateMappings() {

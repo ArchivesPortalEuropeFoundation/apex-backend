@@ -2,6 +2,9 @@
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/ead2ese/ead2ese.css" type="text/css"/>
+
 <script type='text/javascript'>
 	$(function() {
 
@@ -13,7 +16,7 @@
 			$('#hiddenInheritOrigination').show();
 			enableInheritOriginationCheckState();
 			$('#hiddeInheritLanguage').show();
-			enableInheritLanguageCheckState();
+			displayInheritLanguage();
 		});
 
 		$("#conversionTypeminimal").click(function() {
@@ -24,7 +27,7 @@
 			$('#hiddenInheritOrigination').hide();
 			disableInheritOriginationCheckState();
 			$('#hiddeInheritLanguage').hide();
-			disableInheritLanguageCheckState();
+			displayInheritLanguage();
 		});
 
 		$('#inheritLanguageprovide').click(function() {
@@ -172,6 +175,23 @@
 		});
 		$('#hiddenLanguage').hide();
 	}
+
+	function displayInheritLanguage() {
+		if ($("select#selectType").val() == "TEXT") {
+			$("tr#trSelectType").after($("#hiddeInheritLanguage"));
+			$("#hiddeInheritLanguage").after($("#hiddenLanguage"));
+			$('#hiddeInheritLanguage').show();
+			enableInheritLanguageCheckState();
+		} else if ($("#conversionTypefull").attr("checked") == "checked") {
+			$('#hiddeInheritLanguage').show();
+			enableInheritLanguageCheckState();
+			$("#hiddenInheritOrigination").after($("#hiddeInheritLanguage"));
+			$("#hiddeInheritLanguage").after($("#hiddenLanguage"));
+		} else {
+			$('#hiddeInheritLanguage').hide();
+			disableInheritLanguageCheckState();
+		}
+	}
 </script>
 
 <s:form method="POST" theme="simple">
@@ -198,9 +218,9 @@
 				<s:fielderror fieldName="textDataProvider"/>
 			</td>
 		</tr>
-		<tr>
+		<tr id="trSelectType">
 			<td class="inputLabel"><s:label key="ead2ese.label.type" for="selectType" /><span class="required">*</span>:</td>
-			<td><s:select id="selectType" name="daoType" list="typeSet" listKey="value" listValue="content" required="true"></s:select> <s:fielderror fieldName="daoType"/>
+			<td><s:select id="selectType" name="daoType" list="typeSet" listKey="value" listValue="content" required="true" onchange="displayInheritLanguage();"></s:select> <s:fielderror fieldName="daoType"/>
 				<s:checkbox name="daoTypeCheck" id="daoTypeCheck" value="true"></s:checkbox>
 				<s:label key="ead2ese.label.type.file" for="daoType"/>
 			</td>
@@ -274,14 +294,16 @@
 			<c:set var="languageInvisible" value="style=\"display: none;\""></c:set>
 		</s:if>
 		<tr id="hiddenLanguage" ${languageInvisible}>
-			<td class="inputLabel"><s:label key="ead2ese.label.language.select" for="language" /><span class="required">*</span>:</td>
-			<td><s:select name="language" id="language" listKey="value" listValue="content" list="languages" required="true"
-					value="" multiple="true" size="4"></s:select><s:fielderror fieldName="language"/>
+			<td class="inputLabel"><s:label key="ead2ese.label.language.select" for="languageSelection" /><span class="required">*</span>:</td>
+			<td><s:select name="languageSelection" id="languageSelection" listKey="value" listValue="content" list="languages" required="true"
+					value="" multiple="true" size="4"></s:select><s:fielderror fieldName="languageSelection"/>
 			</td>
 		</tr>
 		<tr>
-			<td colspan="2"><s:submit action="processEseConvert" key="ead2ese.label.next"  cssClass="mainButton"/> <s:submit action="contentmanager"
-					key="ead2ese.label.cancel" />
+			<td colspan="2">
+				<br/><br/>
+				<s:submit action="processEseConvert" key="ead2ese.label.next" cssClass="mainButton"/>
+				<s:submit action="contentmanager" key="ead2ese.label.cancel" />
 			</td>
 		</tr>
 	</table>
