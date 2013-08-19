@@ -23,7 +23,7 @@ public class OaiStaxParser {
     private List<String> errors;
     private boolean inError = false;
     private String listSize;
-    private String resumptionToken;
+    private String resumptionToken = "";
     private boolean inResumptionToken;
 
     public OaiStaxParser(InputStream inputStream) throws XMLStreamException {
@@ -65,11 +65,11 @@ public class OaiStaxParser {
                         }
                     }
                 }
-            } else if (event == XMLStreamConstants.CHARACTERS) {
+            } else if (event == XMLStreamConstants.CHARACTERS || event == XMLStreamConstants.CDATA) {
                 if(inError) {
                     errors.add(xmlStreamReader.getText());
                 } else if (inResumptionToken) {
-                    resumptionToken = xmlStreamReader.getText();
+                    resumptionToken += xmlStreamReader.getText();
                 }
             }
         }
