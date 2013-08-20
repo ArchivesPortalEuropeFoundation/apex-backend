@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>eu.archivesportaleurope.backend</groupId>
 		<artifactId>backend-project</artifactId>
-		<version>1.3.19-SNAPSHOT</version>
+		<version>1.3.19</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>Dashboard</artifactId>
