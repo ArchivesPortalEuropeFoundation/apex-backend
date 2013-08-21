@@ -21,9 +21,16 @@
 			<div id="repository_{$id}">
 				<xsl:if test="count(current()/parent::node()/eag:repository)> 1">
 					<h3 class="repositoryName">
-						<xsl:call-template name="multilanguageOnlyOne">
-							<xsl:with-param name="list" select="./eag:repositoryName"></xsl:with-param>
-						</xsl:call-template>
+						<xsl:choose>
+							<xsl:when test="./eag:repositoryName">
+								<xsl:call-template name="multilanguageOnlyOne">
+									<xsl:with-param name="list" select="./eag:repositoryName" ></xsl:with-param>
+								</xsl:call-template>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="/eag:eag/eag:archguide/eag:identity/eag:autform"/>
+							</xsl:otherwise>
+						</xsl:choose>
 						<xsl:variable name="role" select="./eag:repositoryRole/text()"></xsl:variable>
 						<xsl:if test="$role and ($role = 'Branch' or $role = 'Head quarter' or $role = 'Interim archive')">
 							<xsl:text> (</xsl:text>

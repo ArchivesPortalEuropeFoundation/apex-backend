@@ -846,6 +846,8 @@ public class CreateEAG2012 {
 				} else {
 					otherRepositoryNames = otherRepositories.getRepositoryName();
 				}
+				/** ISSUE #694 **/
+				
 				RepositoryName otherRepositoryName = new RepositoryName();
 				otherRepositoryName.setContent(this.eag2012.getRepositoryNameValue().get(i));
 //				otherRepositoryName.setLang(this.eag2012.getRepositoryNameLang().get(i));
