@@ -41,7 +41,8 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 	private List<FileUnit> filesNotUploaded;	//This attribute contains all the files not uploaded to APEnet
 	private List<FileUnit> filesBlocked;		//This attribute contains all the files blocked because of Europeana is harvesting and those files are FAs which have ESE files published
 	private Map<String, String> existingFilesChoice; //This list contains all the possible actions a user can do when a file is already stored in his Dashboard
-	private List<String> existingFilesChoiceAddEADID; //This list contains all the possible actions a user can do when a file contains empty EADID
+//	private List<String> existingFilesChoiceAddEADID; //This list contains all the possible actions a user can do when a file contains empty EADID
+	private Map<String, String> existingFilesChoiceAddEADID; //This list contains all the possible actions a user can do when a file contains empty EADID
 	private List<String> existingFilesChoiceOverwriteCancelEADID; //This list contains all the possible actions a user can do when the EADID is repeated and he doesn't want to add a new one.
 	private List<String> existingEADIDAnswersChoice; //This list contains all the possible answer that the action of saving the change of EADID has returned. 
     private String[] filesTypeAnswers; //This array contains all the answers typed by the user regarding to the decision about if a file is a Finding Aid or a Holdings Guide
@@ -116,12 +117,12 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 	public void setExistingFilesChoice(Map<String, String> existingFilesChoice) {
 		this.existingFilesChoice = existingFilesChoice;
 	}
-	public List<String> getExistingFilesChoiceAddEADID() {
+	public Map<String, String>  getExistingFilesChoiceAddEADID() {
 		return existingFilesChoiceAddEADID;
 	}
 
 	public void setExistingFilesChoiceAddEADID(
-			List<String> existingFilesChoiceAddEADID) {
+			Map<String, String>  existingFilesChoiceAddEADID) {
 		this.existingFilesChoiceAddEADID = existingFilesChoiceAddEADID;
 	}
 
@@ -252,9 +253,12 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
         this.existingFilesChoice.put(OVERWRITE, getText("existingFiles.overwrite"));
         this.existingFilesChoice.put(CHANGE, getText("existingFiles.change"));       
         this.existingFilesChoice.put(CANCEL, getText("existingFiles.cancel"));
-        this.existingFilesChoiceAddEADID = new LinkedList<String>();//Linked List to add sorted values
-        this.existingFilesChoiceAddEADID.add(ADD);         
-        this.existingFilesChoiceAddEADID.add(CANCEL);
+//        this.existingFilesChoiceAddEADID = new LinkedList<String>();//Linked List to add sorted values
+//        this.existingFilesChoiceAddEADID.add(ADD);         
+//        this.existingFilesChoiceAddEADID.add(CANCEL);
+        this.existingFilesChoiceAddEADID = new LinkedHashMap<String, String>();
+        this.existingFilesChoiceAddEADID.put(ADD, getText("existingFiles.add"));
+        this.existingFilesChoiceAddEADID.put(CANCEL, getText("existingFiles.cancel"));
         this.existingFilesChoiceOverwriteCancelEADID = new ArrayList<String>();
         this.existingFilesChoiceOverwriteCancelEADID.add(OVERWRITE);        
         this.existingFilesChoiceOverwriteCancelEADID.add(CANCEL);
@@ -297,12 +301,12 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 	}
 	
 	public String overwriteExistingFiles() {
-		Boolean existingfiles = false;
+//		Boolean existingfiles = false;
 		
 		ExistingFilesChecker checker = new ExistingFilesChecker(this.getAiId());
 		int k = 0;
 		for (int i = 0; i < this.existingFiles.size(); i ++){
-			existingfiles = true;
+//			existingfiles = true;
 			k = this.existingFiles.size();
 			//existingChangeEADIDAnswers contains the result of changing the EADID. OK or KO
 			String typeAnswer = null;
