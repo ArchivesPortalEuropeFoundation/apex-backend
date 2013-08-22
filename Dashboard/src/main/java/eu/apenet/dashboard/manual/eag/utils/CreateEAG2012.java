@@ -818,21 +818,22 @@ public class CreateEAG2012 {
 		Repository mainRepository = null;
 		if(this.eag2012.getRepositoryNameValue() != null && this.eag2012.getRepositoryNameValue().size()>0){
 			mainRepository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
-			List<RepositoryName> repositoryNames = null;
-			if (mainRepository.getRepositoryName() == null) {
-				repositoryNames = new ArrayList<RepositoryName>();
-			} else {
-				repositoryNames = mainRepository.getRepositoryName();
-			}
-			if(this.eag2012.getAutformValue()!=null && this.eag2012.getAutformLang()!=null && this.eag2012.getAutformValue().size()==this.eag2012.getAutformLang().size()){
-				for(int i=0;i<this.eag2012.getAutformValue().size();i++){
-					RepositoryName repositoryName = new RepositoryName();
-					repositoryName.setContent(this.eag2012.getAutformValue().get(i));
-					repositoryName.setLang(this.eag2012.getAutformLang().get(i));
-					repositoryNames.add(repositoryName);
-				}
-				mainRepository.setRepositoryName(repositoryNames);
-			}
+			/** Code related to issue #684 related to #694 decisions **/
+//			List<RepositoryName> repositoryNames = null;
+//			if (mainRepository.getRepositoryName() == null) {
+//				repositoryNames = new ArrayList<RepositoryName>();
+//			} else {
+//				repositoryNames = mainRepository.getRepositoryName();
+//			}
+//			if(this.eag2012.getAutformValue()!=null && this.eag2012.getAutformLang()!=null && this.eag2012.getAutformValue().size()==this.eag2012.getAutformLang().size()){
+//				for(int i=0;i<this.eag2012.getAutformValue().size();i++){
+//					RepositoryName repositoryName = new RepositoryName();
+//					repositoryName.setContent(this.eag2012.getAutformValue().get(i));
+//					repositoryName.setLang(this.eag2012.getAutformLang().get(i));
+//					repositoryNames.add(repositoryName);
+//				}
+//				mainRepository.setRepositoryName(repositoryNames);
+//			}
 		}
 
 		// Rest of repositories.
@@ -846,7 +847,6 @@ public class CreateEAG2012 {
 				} else {
 					otherRepositoryNames = otherRepositories.getRepositoryName();
 				}
-				/** ISSUE #694 **/
 				
 				RepositoryName otherRepositoryName = new RepositoryName();
 				otherRepositoryName.setContent(this.eag2012.getRepositoryNameValue().get(i));
