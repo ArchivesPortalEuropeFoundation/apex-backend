@@ -4810,3 +4810,22 @@ function selectYIReferencetoHoldingsguideChange(name){
 		$("table#resourceRelationTable_1 tr select#selectTitleOfRelatedMaterialLang").attr("value",$("#selectYIReferencetoHoldingsguide").val());
 	}
 }
+
+function disableCoordinates(){
+	var counter = $("table[id^='yiTableVisitorsAddress_']").length;
+	for (var i=1;i<=counter;i++){
+		$("table#yiTableVisitorsAddress_"+i+" input#textYILatitude").attr("disabled","disabled");
+		$("table#yiTableVisitorsAddress_"+i+" input#textYILongitude").attr("disabled","disabled");
+		$("table#contactTableVisitorsAddress_"+i+" input#textContactLatitudeOfTheInstitution").attr("disabled","disabled");	
+		$("table#contactTableVisitorsAddress_"+i+" input#textContactLongitudeOfTheInstitution").attr("disabled","disabled");
+	}
+	$("table#yiTableVisitorsAddress_1 input#textYILatitude").removeAttr("disabled");	
+	$("table#yiTableVisitorsAddress_1 input#textYILongitude").removeAttr("disabled"); 
+	$("table#contactTableVisitorsAddress_1 input#textContactLatitudeOfTheInstitution").removeAttr("disabled");	
+	$("table#contactTableVisitorsAddress_1 input#textContactLongitudeOfTheInstitution").removeAttr("disabled");
+
+}
+
+$(document).ready(function(){
+	disableCoordinates();      	
+}); 
