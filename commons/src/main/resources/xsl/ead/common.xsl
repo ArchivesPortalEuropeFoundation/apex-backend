@@ -26,7 +26,7 @@
 		<xsl:value-of select="." />
 	</xsl:template>	
 	<xsl:template match="ead:unitdate" mode="#all">
-		<xsl:apply-templates mode="#current" />
+		<xsl:apply-templates mode="#current" /><xsl:text> </xsl:text>
 	</xsl:template>	
 	<xsl:template match="ead:lb" mode="#all">
 		<xsl:text disable-output-escaping="yes">&lt;br&gt;</xsl:text>
