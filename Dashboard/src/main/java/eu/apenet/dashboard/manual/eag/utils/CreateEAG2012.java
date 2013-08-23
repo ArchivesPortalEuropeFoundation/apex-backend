@@ -816,7 +816,7 @@ public class CreateEAG2012 {
 		// Main institution. 
 		/** ISSUE #684 **/
 		Repository mainRepository = null;
-		if(this.eag2012.getRepositoryNameValue() != null && this.eag2012.getRepositoryNameValue().size()>1){
+		if(this.eag2012.getRepositoryNameValue() != null && this.eag2012.getRepositoryNameValue().size()>0){
 			mainRepository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
 			/** Code related to issue #684 related to #694 decisions **/
 //			List<RepositoryName> repositoryNames = null;
