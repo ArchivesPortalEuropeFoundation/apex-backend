@@ -294,10 +294,16 @@ public class EditEadAction extends AjaxControllerAbstractAction {
         EadContent eadContent = null;
         XmlType xmlType = XmlType.getType(xmlTypeId);
         if(xmlType == XmlType.EAD_FA){
+        	if(faId==null && fileId!=null){ //in case which faId is null the target value is into fileId
+        		faId = fileId.longValue();
+        	}
             findingAid = DAOFactory.instance().getFindingAidDAO().findById(faId.intValue());
             archivalInstitution = findingAid.getArchivalInstitution();
             eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFindingAidId(faId.intValue());
         } else if (xmlType == XmlType.EAD_HG){
+        	if(hgId==null && fileId!=null){ //in case that hgId is null the target value is into fileId
+        		hgId = fileId.longValue(); 
+        	}
             holdingsGuide = DAOFactory.instance().getHoldingsGuideDAO().findById(hgId.intValue());
             archivalInstitution = holdingsGuide.getArchivalInstitution();
             eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByHoldingsGuideId(hgId.intValue());
@@ -323,9 +329,11 @@ public class EditEadAction extends AjaxControllerAbstractAction {
                 if(findingAid != null){
                     if(ValidatedState.VALIDATED.equals(findingAid.getValidated()))
                         findingAid.setValidated(ValidatedState.NOT_VALIDATED);
+                    	findingAid.setDynamic(false);
                 } else {
                     if(ValidatedState.VALIDATED.equals(holdingsGuide.getValidated()))
                     	holdingsGuide.setValidated(ValidatedState.NOT_VALIDATED);
+                    	holdingsGuide.setDynamic(false);
                 }
                 HibernateUtil.commitDatabaseTransaction();
 

@@ -19,7 +19,8 @@
 		            <p id="editionFormContainer">
                     </p>
                     <div id="controls" class="hidden">
-                   			<input id="deleteButton" type="submit" name="deleteButton" value="Delete"/>
+                   			<input id="deleteButton" type="submit" name="deleteButton" value="<s:property value="getText('content.message.delete')" />"/>
+                   			<input id="saveEADButton" type="button" name="saveEADButton" value="<s:property value="getText('dashboard.hgcreation.sbm.btn.save')" />" />
                     </div>
 		</div>
 	</div>

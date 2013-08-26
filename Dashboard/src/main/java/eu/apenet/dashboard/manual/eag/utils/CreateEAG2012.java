@@ -813,17 +813,28 @@ public class CreateEAG2012 {
 		getAllDates();
 
 		// eag/archguide/desc/repositories/repository/repositoryName
-		// Main institution.
-//		Repository mainRepository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
-//		RepositoryName repositoryName = null;
-//		if (mainRepository.getRepositoryName() == null) {
-//			repositoryName = new RepositoryName();
-//		} else {
-//			repositoryName = mainRepository.getRepositoryName();
-//		}
-//		repositoryName.setContent(this.eag2012.getAutformValue().get(0));
-//		
-//		mainRepository.setRepositoryName(repositoryName);
+		// Main institution. 
+		/** ISSUE #684 **/
+		Repository mainRepository = null;
+		if(this.eag2012.getRepositoryNameValue() != null && this.eag2012.getRepositoryNameValue().size()>0){
+			mainRepository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
+			/** Code related to issue #684 related to #694 decisions **/
+//			List<RepositoryName> repositoryNames = null;
+//			if (mainRepository.getRepositoryName() == null) {
+//				repositoryNames = new ArrayList<RepositoryName>();
+//			} else {
+//				repositoryNames = mainRepository.getRepositoryName();
+//			}
+//			if(this.eag2012.getAutformValue()!=null && this.eag2012.getAutformLang()!=null && this.eag2012.getAutformValue().size()==this.eag2012.getAutformLang().size()){
+//				for(int i=0;i<this.eag2012.getAutformValue().size();i++){
+//					RepositoryName repositoryName = new RepositoryName();
+//					repositoryName.setContent(this.eag2012.getAutformValue().get(i));
+//					repositoryName.setLang(this.eag2012.getAutformLang().get(i));
+//					repositoryNames.add(repositoryName);
+//				}
+//				mainRepository.setRepositoryName(repositoryNames);
+//			}
+		}
 
 		// Rest of repositories.
 		if (this.eag2012.getRepositoryNameValue() != null) {
@@ -843,17 +854,17 @@ public class CreateEAG2012 {
 		}
 
 		// eag/archguide/desc/repositories/repository/repositoryRole
-		// Main institution.
-//		RepositoryRole repositoryRole = null;
-//		if (mainRepository.getRepositoryRole() == null) {
-//			repositoryRole = new RepositoryRole();
-//		} else {
-//			repositoryRole = mainRepository.getRepositoryRole();
-//		}
-//		repositoryRole.setValue(Eag2012.OPTION_ROLE_HEADQUARTERS_TEXT);
-//
-//		mainRepository.setRepositoryRole(repositoryRole);
-
+        // Main institution.
+        if(mainRepository!=null){
+        	RepositoryRole repositoryRole = null;
+        	if(mainRepository.getRepositoryRole()==null){
+        		repositoryRole = new RepositoryRole();
+        	}else{
+        		repositoryRole = mainRepository.getRepositoryRole();
+        	}
+        	repositoryRole.setValue(Eag2012.OPTION_ROLE_HEADQUARTERS_TEXT);
+        	mainRepository.setRepositoryRole(repositoryRole);
+        }
 		// Rest of repositories.
 		if (this.eag2012.getRepositoryRoleValue() != null) {
 			for (int i = 0; i < this.eag2012.getRepositoryRoleValue().size(); i++) {
@@ -2040,19 +2051,18 @@ public class CreateEAG2012 {
 				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
 
 				for (int j = 0; j < termsOfUseValueList.size(); j++) {
-					if ((termsOfUseValueList.get(j) != null
-								&& !termsOfUseValueList.get(j).isEmpty())
-							|| (termsOfUseHrefList.get(j) != null
-								&& !termsOfUseHrefList.get(j).isEmpty() )) {
-						TermsOfUse termsOfUse = new TermsOfUse();
-						termsOfUse.setContent(termsOfUseValueList.get(j));
-						if (!Eag2012.OPTION_NONE.equalsIgnoreCase(termsOfUseLangList.get(j))) {
-							termsOfUse.setLang(termsOfUseLangList.get(j));
-						}
-						termsOfUse.setHref(termsOfUseHrefList.get(j));
-	
-						repository.getAccess().getTermsOfUse().add(termsOfUse);
+					if ((termsOfUseValueList.get(j) == null || termsOfUseValueList.get(j).isEmpty()) && (termsOfUseHrefList.get(j)==null || termsOfUseHrefList.get(j).isEmpty() )) {
+						break;
 					}
+
+					TermsOfUse termsOfUse = new TermsOfUse();
+					termsOfUse.setContent(termsOfUseValueList.get(j));
+					if (!Eag2012.OPTION_NONE.equalsIgnoreCase(termsOfUseLangList.get(j))) {
+						termsOfUse.setLang(termsOfUseLangList.get(j));
+					}
+					termsOfUse.setHref(termsOfUseHrefList.get(j));
+
+					repository.getAccess().getTermsOfUse().add(termsOfUse);
 				}
 			}
 		}
