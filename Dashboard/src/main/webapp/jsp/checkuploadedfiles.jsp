@@ -337,31 +337,7 @@
 		    		alert(strErr);
 	        	}
 	        }
-	        
-        	function hideExistingEADID(eadid,divname,buttonid){
-        		var divname="divGeneralChangeEadid" + eadid;
-				document.getElementById(divname).style.display='none';
-				document.getElementById(buttonid).style.display='none';
-				var divgeneralname= "divChangeEadid" + eadid;
-				document.getElementById(divgeneralname).style.display='none';
-        	}
-        	function showExistingEADID(eadid,divname,buttonid){
-        		var divname="divGeneralChangeEadid" + eadid;
-				document.getElementById(divname).style.display='inline';
-				document.getElementById(buttonid).style.display='inline';
-				var divgeneralname= "divChangeEadid" + eadid;
-				document.getElementById(divgeneralname).style.display='inline';
-				var textboxid = "neweadid" + eadid;
-				document.getElementById(textboxid).focus();
-        	}
-	        function showAddEADID(divname,buttonid, eadid){
-	        	var divname="divGeneralAddEadid" + eadid;
-				document.getElementById(divname).style.display='inline';	
-				document.getElementById(buttonid).style.display='inline';
-				var divgeneralname= "divAddEadid" + eadid;
-				document.getElementById(divgeneralname).style.display='inline';
-	        }
-	        
+	        	        
 	        var eadidarray = new Array();
 	        var filesWithErrors = new Array();
 			//check all inputs to check if the EADID is already used, in case no, remove it from the array
@@ -375,8 +351,11 @@
 				
 				if (method == "Add") {
 					if (textvalue == "Add EADID") {
-						showAddEADID(divname,buttonid, eadid);
-						// Disable accept button.
+			        	var divname="divGeneralAddEadid" + eadid;
+						document.getElementById(divname).style.display='inline';	
+						document.getElementById(buttonid).style.display='inline';
+						var divgeneralname= "divAddEadid" + eadid;
+						document.getElementById(divgeneralname).style.display='inline';						// Disable accept button.
 						$("input#form_submit").attr("disabled","disabled");
 					}
 					else { //Cancel
@@ -385,26 +364,21 @@
 						document.getElementById(buttonid).style.display='none';
 						var divgeneralname= "divAddEadid" + eadid;
 						document.getElementById(divgeneralname).style.display='none';
-						
 						//enable accept button
 						$("input#form_submit").removeAttr("disabled");	
- 						
 						//clean textbox
 						$("input[id^='neweadid']").each(function(){
 								$(this).attr("value","");
 						});
-						
 						//clean label
 						$("label[id^='resultChangeEADID']").each(function(){
 							$(this).hide();
 							var strLabelOut=$(this).text();				
 						});
-						
 						//clean text and combo too
 						$("label[id^='divCancelOverwriteEADID']").each(function(){
 							$(this).hide();
 						});	 		
-						
 						//clean all values from the array when cancel
 						eadidarray.splice(0,eadidarray.length);
 					}
@@ -412,28 +386,35 @@
 				else if (method=="Change") {
 					//files with existing EADID
 					if (textvalue == "Change EADID") {
-						showExistingEADID(eadid,divname,buttonid);
+		        		var divname="divGeneralChangeEadid" + eadid;
+						document.getElementById(divname).style.display='inline';
+						document.getElementById(buttonid).style.display='inline';
+						var divgeneralname= "divChangeEadid" + eadid;
+						document.getElementById(divgeneralname).style.display='inline';
+						var textboxid = "neweadid" + eadid;
+						document.getElementById(textboxid).focus();
 						// Disable accept button.
 						$("input#form_submit").attr("disabled","disabled");
 					}
 					else {
 						//overwrite or cancel
-						hideExistingEADID(eadid,divname,buttonid);
+			       		var divname="divGeneralChangeEadid" + eadid;
+						document.getElementById(divname).style.display='none';
+						document.getElementById(buttonid).style.display='none';
+						var divgeneralname= "divChangeEadid" + eadid;
+						document.getElementById(divgeneralname).style.display='none';
 						//enable accept button
 						$("input#form_submit").removeAttr("disabled");
 						//clean all values from the array when cancel
-						if (textvalue == "Cancel" || textvalue == "Overwrite") {
-							//clean all values from the array when cancel
-							eadidarray.splice(0,eadidarray.length);
-							$("input#form_submit").removeAttr("disabled");
-							//clean textbox
-							$("input#neweadid" + eadid).attr("value","");
-							//clean label
-							$("label#resultChangeEADID" + eadid).hide();
-							var strLabelOut=$("label#resultChangeEADID" + eadid).text();
-							//clean text and combo too
-							$("label#divCancelOverwriteEADID" + eadid).hide();
-						}
+						eadidarray.splice(0,eadidarray.length);
+						$("input#form_submit").removeAttr("disabled");
+						//clean textbox
+						$("input#neweadid" + eadid).attr("value","");
+						//clean label
+						$("label#resultChangeEADID" + eadid).hide();
+						var strLabelOut=$("label#resultChangeEADID" + eadid).text();
+						//clean text and combo too
+						$("label#divCancelOverwriteEADID" + eadid).hide();
 					}
 				}
 			}
@@ -451,33 +432,7 @@
 				}
 				$("label#" + labelanswermessage).show();
 			}
-			
-			function checkEADIDavailavilityTextbox(eadid){
-				var flag=0;
-				$("div[id^='divChangeEadid']").each(function(){
-	        		var divID = $(this).attr("id");
-	        		if (document.getElementById(divID).style.display!='none') {
-	        			//value of existing EADID
-	        			var oldEadid = divID.substring("divChangeEadid".length);
-	        			//search for existing values in neweadid textbox
-	        			if ($("input#neweadid" + oldEadid).val()==$("input#neweadid" + eadid).val()){
-	        				//two or more means repeated EADID 
-	        				flag ++;
-	        			}
-	        		}
-	        	}); 
-    			if(flag>1){
-					return false;
-				}
-				else{
-					return true;
-				}
-			}
-			
-			function isAlreadyInUse(){
-				
-			}
-			
+						
 			function checkEADIDavailability(oldeadid, neweadid, fileId) {
 				$.getJSON("${pageContext.request.contextPath}/generateEadidResponseJSON.action", 
 						{ eadid: oldeadid, 
@@ -510,7 +465,7 @@
 							else {
 								var found=false;
 								for (var i=0; i< value; i++){	
-										if (eadidarray[i]==neweadid){		
+									if (eadidarray[i]==neweadid && ( $.inArray(eadidarrayInText,eadidarray) > -1 )){		
 										found=true;
 										if (dataResponse.existingChangeEADIDAnswers!= "KO"){
 											dataResponse.existingChangeEADIDAnswers= "KO";
@@ -524,12 +479,7 @@
 										eadidarray[value] = neweadid;
 									}
 								} 
- 								
-								//ANY ITEM THAT IS NOT IN THE ON eadidarrayInText ARR HAS TO REMOVE FROM eadidarray							
- 								var diff = $(eadidarray).not(eadidarrayInText).get();
-								eadidarray.splice(eadidarrayInText);
-
-							} 
+ 							} 
 
 							$("input#form_submit").attr("disabled","disabled");
 							if (dataResponse.existingChangeEADIDAnswers == "OK") {
