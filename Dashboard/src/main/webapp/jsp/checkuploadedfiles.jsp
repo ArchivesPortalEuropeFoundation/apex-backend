@@ -332,10 +332,10 @@
 		        		$("form#overwriteexistingfiles").submit();
 		        	}
 	        	}
-	        	else{
+ 	        	else{
         			var strErr = '<s:property value="getText('content.message.filesEADIDerror')"/>' + " " + filesWithErrors;
 		    		alert(strErr);
-	        	}
+	        	} 
 	        }
 	        	        
 	        var eadidarray = new Array();
