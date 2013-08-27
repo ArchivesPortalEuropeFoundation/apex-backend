@@ -17,13 +17,14 @@
                      <li><a title="<s:property value="getText('al.menu.viewal')"/>" href="viewAL.action"> -  <s:text name="al.menu.viewal" /></a>
 	    			 </li>
                      <li><s:a action="downloadAL" target="_blank"> -   <s:property value="getText('al.menu.downloadal')" /></s:a></li>    
-                     <li><s:a action="downloadInstitutionsStatistics"> -   <s:text name="al.menu.statistics.institutions" /></s:a></li>                                    
+                              
                      <li><s:a action="changeAlIdentifiers"> -   <s:property value="getText('al.menu.changeAlIdentifiers')" /></s:a></li>
 				</c:if>
                      <li><br/><span style="font : bold 100% sans-serif;color : #333;text-align : left;"><s:a action="GoDashboard"><s:property value="getText('al.menu.managecontent')"/></s:a></span><br/></li>
                      
                 <c:if test="${securityContext.countryManager}">   
                      <li><s:a action="institutionManagerManagement"> - <s:text name="usermanagement.institution.title"/> </s:a></li>
+                     <li><s:a action="downloadInstitutionsStatistics"> -   <s:text name="al.menu.statistics.institutions" /></s:a></li>      
                     </c:if>
 
                  </ul>
