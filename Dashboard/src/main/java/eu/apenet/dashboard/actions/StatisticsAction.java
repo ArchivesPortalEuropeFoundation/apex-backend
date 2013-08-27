@@ -1,11 +1,19 @@
 package eu.apenet.dashboard.actions;
 
+
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.odftoolkit.simple.SpreadsheetDocument;
+import org.odftoolkit.simple.style.Font;
+import org.odftoolkit.simple.style.StyleTypeDefinitions.CellBordersType;
+import org.odftoolkit.simple.style.StyleTypeDefinitions.FontStyle;
+import org.odftoolkit.simple.table.Cell;
+import org.odftoolkit.simple.table.Table;
 
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractAction;
@@ -55,7 +63,7 @@ public class StatisticsAction extends AbstractAction {
 		return null;
 	}
 
-	public String downloadInstitutionsStatistics() throws IOException {
+	public String downloadInstitutionsStatistics() throws Exception {
 		CountryDAO countryDAO = DAOFactory.instance().getCountryDAO();
 		List<Country> countries = new ArrayList<Country>();
 		if (this.getSecurityContext().isAdmin()) {
@@ -64,10 +72,30 @@ public class StatisticsAction extends AbstractAction {
 			Integer countryId = this.getSecurityContext().getCountryId();
 			countries.add(countryDAO.findById(countryId));
 		}
-		writeCSV(countries);
+		writeODS(countries);
 		return null;
 	}
-
+	private void writeODS(List<Country> countries) throws Exception {
+		ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
+		String name = "countries";
+		if (countries.size() == 1) {
+			name = countries.get(0).getCname();
+		}
+		name = APEnetUtilities.convertToFilename(name + "-institutions-statistics.ods");
+		OutputStream outputStream = ContentUtils.getOutputStreamToDownload(this.getServletRequest(), getServletResponse(),
+				name, "application/vnd.oasis.opendocument.spreadsheet");
+		//printWriter.println(INSTITUTION_HEADER);
+		DocumentWriter documentWriter = new DocumentWriter();
+		for (Country country : countries) {
+			List<ArchivalInstitution> archivalInstitutions = archivalInstitutionDAO
+					.getArchivalInstitutionsByCountryId(country.getId());
+			for (ArchivalInstitution archivalInstitution : archivalInstitutions) {
+				InstitutionStatistics institutionStatistics = getInstitutionStatistics(country, archivalInstitution);
+				documentWriter.addInstitutionStatistics(institutionStatistics);
+			}
+		}
+		documentWriter.save(outputStream);
+	}
 	private void writeCSV(List<Country> countries) throws IOException {
 		ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
 		String name = "countries";
@@ -216,6 +244,105 @@ public class StatisticsAction extends AbstractAction {
 			units += institutionStatistics.units;
 			totalChos += totalChos;
 			totalChosDeliveredToEuropeana += institutionStatistics.totalChosDeliveredToEuropeana;
+		}
+	}
+	private class DocumentWriter {
+		SpreadsheetDocument document;
+		Table table;
+		int rowNumber = 0;
+		public DocumentWriter() throws Exception{
+			document = SpreadsheetDocument.newSpreadsheetDocument();
+	        table = document.getSheetByIndex(0);
+	       
+			int colNumber = 0;
+			fillHeaderCell(colNumber, rowNumber, "Country");
+			colNumber++;
+			fillHeaderCell(colNumber, rowNumber, "Identifier of the institution");
+			colNumber++;
+			fillHeaderCell(colNumber, rowNumber, "EAG");
+			colNumber++;	
+			fillHeaderCell(colNumber, rowNumber, "Has searchable items");
+			colNumber++;					
+			fillHeaderCell(colNumber, rowNumber, "#Published FA");
+			colNumber++;					
+			fillHeaderCell(colNumber, rowNumber, "#Published HG");
+			colNumber++;
+			fillHeaderCell(colNumber, rowNumber, "#Published SG");
+			colNumber++;
+			fillHeaderCell(colNumber, rowNumber, "#Published Descriptive units");
+			colNumber++;
+			fillHeaderCell(colNumber, rowNumber, "#Published DAOs");
+			colNumber++;
+			fillHeaderCell(colNumber, rowNumber,"#EDM(providedCHOs)");
+			colNumber++;	
+			fillHeaderCell(colNumber, rowNumber, "#Delivered to Europeana(providedCHOs)");
+			colNumber++;
+			rowNumber++;
+		}
+		public void save(OutputStream outputStream) throws Exception{
+			document.save(outputStream);
+		}
+		
+		
+		public void addInstitutionStatistics(InstitutionStatistics institutionStatistics){
+			int colNumber = 0;
+			fillCell(colNumber, rowNumber, institutionStatistics.country);
+			colNumber++;
+			fillCell(colNumber, rowNumber, institutionStatistics.archivalInstitution);
+			colNumber++;
+			if (institutionStatistics.hasEag){
+				fillCell(colNumber, rowNumber, institutionStatistics.repositoryCode);
+				colNumber++;	
+				fillCell(colNumber, rowNumber, 1);
+				colNumber++;					
+			}else {
+				colNumber++;	
+				fillCell(colNumber, rowNumber, 0);
+				colNumber++;					
+			}
+			if (institutionStatistics.units > 0){
+				fillCell(colNumber, rowNumber, 1);
+				colNumber++;					
+			}else {
+				fillCell(colNumber, rowNumber, 0);
+				colNumber++;					
+			}
+			fillCell(colNumber, rowNumber,institutionStatistics.findingaids);
+			colNumber++;
+			fillCell(colNumber, rowNumber,institutionStatistics.holdingsguide);
+			colNumber++;
+			fillCell(colNumber, rowNumber,institutionStatistics.sourceguide);
+			colNumber++;	
+			fillCell(colNumber, rowNumber,institutionStatistics.units);
+			colNumber++;
+			fillCell(colNumber, rowNumber,institutionStatistics.daos);
+			colNumber++;
+			fillCell(colNumber, rowNumber,institutionStatistics.totalChos);
+			colNumber++;
+			fillCell(colNumber, rowNumber,institutionStatistics.totalChosDeliveredToEuropeana);
+			colNumber++;	
+			rowNumber++;
+		}
+		private void fillHeaderCell(int col, int row, String stringValue){
+			table.getColumnByIndex(col).setUseOptimalWidth(true);
+			Cell cell = table.getCellByPosition(col, row);
+			Font font = cell.getFont();
+			font.setFontStyle(FontStyle.BOLD);
+			font.setSize(10);
+			cell.setFont(font);
+	        cell.setDisplayText(stringValue);
+		}
+		private void fillCell(int col, int row, String stringValue){
+			Cell cell = table.getCellByPosition(col, row);
+	        cell.setDisplayText(stringValue);
+		}
+		private void fillCell(int col, int row, int stringValue){
+			Cell cell = table.getCellByPosition(col, row);
+	        cell.setDisplayText(stringValue  + "");
+		}
+		private void fillCell(int col, int row, long stringValue){
+			Cell cell = table.getCellByPosition(col, row);
+	        cell.setDisplayText(stringValue  + "");
 		}
 	}
 }
