@@ -6548,7 +6548,7 @@ public class EAG2012Loader{
 				if (!repository.getLocation().isEmpty()) {
 					for (int i = 0; i < repository.getLocation().size(); i++) {
 						Location location = repository.getLocation().get(i);
-						if (location.getLocalType().equalsIgnoreCase(Eag2012.VISITORS_ADDRESS)) {
+						if (location.getLocalType()!=null && location.getLocalType().equalsIgnoreCase(Eag2012.VISITORS_ADDRESS)) {
 							this.addYiNumberOfVisitorsAddress("");
 							// Street.
 							if (location.getStreet() != null) {
@@ -6616,7 +6616,7 @@ public class EAG2012Loader{
 								this.addYiLongitude("");
 							}
 						}
-						if (location.getLocalType().equalsIgnoreCase(Eag2012.POSTAL_ADDRESS)) {
+						if (location.getLocalType()!=null && location.getLocalType().equalsIgnoreCase(Eag2012.POSTAL_ADDRESS)) {
 							this.addYiNumberOfPostalAddress("");
 							// Postal street.
 							if (location.getStreet() != null) {
@@ -7267,7 +7267,7 @@ public class EAG2012Loader{
 								}
 							}
 	
-							if (location.getLocalType().equalsIgnoreCase(Eag2012.POSTAL_ADDRESS)) {
+							if (location.getLocalType()!=null && location.getLocalType().equalsIgnoreCase(Eag2012.POSTAL_ADDRESS)) {
 								numberPostalAdrressList.add("");
 								// Country.
 								if (location.getCountry() != null) {
