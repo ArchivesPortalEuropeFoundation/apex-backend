@@ -185,7 +185,7 @@ public final class SecurityContext implements HttpSessionBindingListener{
 
 	public String getLocalizedCountryName() {
 		ValueStack valueStack = ActionContext.getContext().getValueStack();
-		String countryKey = "country." + countryName.toLowerCase();
+		String countryKey = "country." + countryName.toLowerCase().replace(" ", "_");
 		return TextProviderHelper.getText(countryKey, countryName, valueStack);
 	}
 
