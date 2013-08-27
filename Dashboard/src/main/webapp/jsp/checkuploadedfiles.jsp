@@ -315,7 +315,8 @@
 	        			//value of existing EADID
 	        			var oldEadid = divID.substring("divChangeEadid".length);
 	        			//each file has a control in a combobox "OK / KO""
-	        			var flag= ($("select#existingChangeEADIDAnswers" + oldEadid).val()=="OK");
+	        			var control=$("select#existingChangeEADIDAnswers" + oldEadid).val();
+	        			var flag= (control!="KO");
 	        			if(!flag){
 	        				exit=true;
 	        				filesWithErrors[value++] = oldEadid;
@@ -488,6 +489,7 @@
 									changes.splice(changes.indexOf(oldeadid));
 								}
 								//Change the value of the select OK or KO
+								dataResponse.existingChangeEADIDAnswers= "OK";
 								document.getElementById(labelanswermessage).style.color="green";
 								document.getElementById(labelanswermessage).style.font.bold = "true";
 								var selectanswer = "existingChangeEADIDAnswers" + dataResponse.eadid;
