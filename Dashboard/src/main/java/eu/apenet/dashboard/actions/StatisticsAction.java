@@ -257,6 +257,8 @@ public class StatisticsAction extends AbstractAction {
 			int colNumber = 0;
 			fillHeaderCell(colNumber, rowNumber, "Country");
 			colNumber++;
+			fillHeaderCell(colNumber, rowNumber, "Institution");
+			colNumber++;			
 			fillHeaderCell(colNumber, rowNumber, "Identifier of the institution");
 			colNumber++;
 			fillHeaderCell(colNumber, rowNumber, "EAG");
