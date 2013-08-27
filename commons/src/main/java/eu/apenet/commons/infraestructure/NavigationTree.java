@@ -42,7 +42,7 @@ public class NavigationTree {
 		try {
 			List<Country> cos = DAOFactory.instance().getCountryDAO().getCountriesWithArchivalInstitutionsWithEAG();
             for (Country co : cos) {
-                String otherCountryName = resourceBundleSource.getString("country." + co.getCname().toLowerCase(), co.getCname());
+                String otherCountryName = resourceBundleSource.getString("country." + co.getCname().toLowerCase().replace(" ", "_"), co.getCname());
                 countries.add(new CountryUnit(co, otherCountryName));
             }
 			
