@@ -837,19 +837,23 @@ public class CreateEAG2012 {
 		}
 
 		// Rest of repositories.
-		if (this.eag2012.getRepositoryNameValue() != null) {
+		if (this.eag2012.getRepositoryNameValue() != null /*&& this.eag2012.getRepositoryNameLang() != null && this.eag2012.getRepositoryNameValue().size()==this.eag2012.getRepositoryNameLang().size()*/) {
 			for (int i = 0; i < this.eag2012.getRepositoryNameValue().size(); i++) {
 				Repository otherRepositories = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i+1);
 
-				RepositoryName otherRepositoryName = null;
+				List<RepositoryName> otherRepositoryNames = null;
 				if (otherRepositories.getRepositoryRole() == null) {
-					otherRepositoryName = new RepositoryName();
+					otherRepositoryNames = new ArrayList<RepositoryName>();
 				} else {
-					otherRepositoryName = otherRepositories.getRepositoryName();
+					otherRepositoryNames = otherRepositories.getRepositoryName();
 				}
+				
+				RepositoryName otherRepositoryName = new RepositoryName();
 				otherRepositoryName.setContent(this.eag2012.getRepositoryNameValue().get(i));
+//				otherRepositoryName.setLang(this.eag2012.getRepositoryNameLang().get(i));
+				otherRepositoryNames.add(otherRepositoryName);
 
-				otherRepositories.setRepositoryName(otherRepositoryName);
+				otherRepositories.setRepositoryName(otherRepositoryNames);
 			}
 		}
 
