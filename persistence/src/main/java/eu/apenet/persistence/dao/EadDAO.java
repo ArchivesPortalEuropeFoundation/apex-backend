@@ -34,6 +34,5 @@ public interface EadDAO extends GenericDAO<Ead, Integer> {
 
 	public Long getTotalCountOfUnitsWithDao();
 
-	public Long countFilesbyInstitution(Class<? extends Ead> clazz, Integer aiId);
 
 }
