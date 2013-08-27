@@ -722,6 +722,12 @@
         <action name="downloadHgSgStatistics" class="eu.apenet.dashboard.actions.content.EadActions" method="downloadHgSgStatistics"> 
 			<result name="error" type="tiles">error</result>
         </action>
+        <action name="downloadInstitutionsStatistics" class="eu.apenet.dashboard.actions.StatisticsAction" method="downloadInstitutionsStatistics"> 
+			<result name="error" type="tiles">error</result>
+        </action>
+        <action name="downloadCountriesStatistics" class="eu.apenet.dashboard.actions.StatisticsAction" method="downloadCountriesStatistics"> 
+			<result name="error" type="tiles">error</result>
+        </action>
         
         <!-- Actions used for selection of finding aids in content manager -->
         <action name="addOneFA" class="eu.apenet.dashboard.actions.ajax.SelectFindingAidsAction" method="addOneFA2Session"> 
@@ -867,11 +873,6 @@
 			</action>
 
 
-			<action name="countryState" class="eu.apenet.dashboard.actions.CountryStateAction"> 
-        	<interceptor-ref name="changeLanguageStack"/>  
-               <result name="success" type="tiles">countryState</result>    
-               <result name="error" type="tiles">blank</result>     
-        	</action>
         	<action name="manageQueue" class="eu.apenet.dashboard.queue.ManageQueueAction"> 
 				<result name="success" type="tiles">manageQueue</result>
         	</action>

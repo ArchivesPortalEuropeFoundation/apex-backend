@@ -45,10 +45,10 @@
 			changeInstitutionManager,changeNode,deleteTarget,downloadAL,editAL,editElement,editInstitutionControl,
 			editTarget,feditAL,generateArchivalInstitutionPartPreviewALJSON,generatePreviewALTreeJSON,httpOverwriteAL,httpUploadAL,
 			modifyStructure,moveDownAL,moveUpAL,showEAGPreviewAL,showLanguages,storeAlIdentifier,uploadAL,viewAL,institutionManagerManagement,
-			displayCreateInstitutionManager,deleteInstitutionManager,changeToInstitutionManager,disableInstitutionManager,enableInstitutionManager,createInstitutionManager
+			displayCreateInstitutionManager,deleteInstitutionManager,changeToInstitutionManager,disableInstitutionManager,enableInstitutionManager,createInstitutionManager,downloadInstitutionsStatistics
 		</group>
 		<group name="adminActions">
-			FillPrimaryNameAction,checkEagNamespace,countryState,
+			FillPrimaryNameAction,checkEagNamespace,downloadCountriesStatistics,
 			createCountry,createLanguage,downloadGeneralAL,goCountryAccount,
 			insertAlternativeCountryNames,
 			storeAlternativeCountryNames,storeCountry,storeLanguage,viewAdmin,
