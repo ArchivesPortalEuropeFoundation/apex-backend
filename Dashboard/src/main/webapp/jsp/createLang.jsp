@@ -9,7 +9,7 @@
 			<s:fielderror>
 			
     		<br></br>		
-    		<s:textfield name="englishlanguageName" value="%{englishlanguageName}" key="admin.menu.label.englishcountryname" required="true" ></s:textfield>
+    		<s:textfield name="englishlanguageName" value="%{englishlanguageName}" key="admin.menu.label.englishlanguageName" required="true" ></s:textfield>
     		<s:textfield name="isoLanguageName" value="%{isoLanguageName}" key="admin.menu.label.isocode2" required="true" cssClass="smallest"></s:textfield>
     		<s:textfield name="iso2LanguageName" value="%{iso2LanguageName}" key="admin.menu.label.isocode" required="true" cssClass="smallest"></s:textfield>
     		<s:textfield name="nativeLanguageName" value="%{nativeLanguageName}" key="admin.menu.label.nativelanguagename" required="true" ></s:textfield>
