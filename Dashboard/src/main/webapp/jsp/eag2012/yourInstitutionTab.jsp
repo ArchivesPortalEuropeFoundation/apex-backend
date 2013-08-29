@@ -1167,7 +1167,7 @@
 					<label for="textYIHoldingsGuideLinkTitle" ><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
 				</td>
 				<td>
-					<textarea type="text" id="textYIHoldingsGuideLinkTitle" onchange="linkToYourHolndingsGuideTitleChanged($(this));"></textarea>
+					<textarea type="text" id="textYIHoldingsGuideLinkTitle" onchange="linkToYourHolndingsGuideTitleChanged($(this));" ></textarea>
 				</td>
 			</tr>
 
@@ -1195,7 +1195,9 @@
 		</s:else>
 
 		<tr>
-			<td id="tdButtonsYourInstitutionTab" colspan="4">
+			<td colspan="3">
+			</td>
+			<td id="tdButtonsYourInstitutionTab">
 				<input type="button" id="buttonYourInstitutionTabNext" value="<s:property value='getText("eag2012.commons.nextTab")' />" class="rightButton" onclick="checkAndShowNextTab($(this).parent().parent().parent().parent(), '<s:property value="getText('eag2012.errors.fieldRequired')" />', '<s:property value="getText('eag2012.commons.pleaseFillMandatoryFields')" />','<s:property value="getText('eag2012.commons.eagwithurlwarnings')"/>');" />
 			</td>
 		</tr>
