@@ -92,7 +92,7 @@ public class NavigationTree {
                         Integer numberOfArchivalInstitutions = 0;
                         if (anArchivalInstitutionList.isGroup())
                             numberOfArchivalInstitutions = archivalInstitutionDao.countArchivalInstitutionsByParentAiId(anArchivalInstitutionList.getAiId());
-                        archivalInstitutionUnitList.add(new ArchivalInstitutionUnit(anArchivalInstitutionList.getAiId(), anArchivalInstitutionList.getAiname(), null, anArchivalInstitutionList.getEagPath(), anArchivalInstitutionList.isGroup(), numberOfArchivalInstitutions, getLanguage(), anArchivalInstitutionList.getAlorder()));
+                        archivalInstitutionUnitList.add(new ArchivalInstitutionUnit(anArchivalInstitutionList.getAiId(), anArchivalInstitutionList.getAiname(), null,anArchivalInstitutionList.getRepositorycode(), anArchivalInstitutionList.getEagPath(), anArchivalInstitutionList.isGroup(), numberOfArchivalInstitutions, getLanguage(), anArchivalInstitutionList.getAlorder()));
                     }
 
 		} else if (parentAiId.startsWith("aicontent_") || parentAiId.startsWith("ainocontent_") || parentAiId.startsWith("aigroup_")) {
@@ -108,7 +108,7 @@ public class NavigationTree {
                 Integer numberOfArchivalInstitutions = 0;
                 if (anArchivalInstitutionList.isGroup())
                     numberOfArchivalInstitutions = archivalInstitutionDao.countArchivalInstitutionsByParentAiId(anArchivalInstitutionList.getAiId());
-                archivalInstitutionUnitList.add(new ArchivalInstitutionUnit(anArchivalInstitutionList.getAiId(), anArchivalInstitutionList.getAiname(), null, anArchivalInstitutionList.getEagPath(), anArchivalInstitutionList.isGroup(), numberOfArchivalInstitutions, getLanguage(), anArchivalInstitutionList.getAlorder()));
+                archivalInstitutionUnitList.add(new ArchivalInstitutionUnit(anArchivalInstitutionList.getAiId(), anArchivalInstitutionList.getAiname(), null, anArchivalInstitutionList.getRepositorycode(), anArchivalInstitutionList.getEagPath(), anArchivalInstitutionList.isGroup(), numberOfArchivalInstitutions, getLanguage(), anArchivalInstitutionList.getAlorder()));
             }
 		}
         return archivalInstitutionUnitList;
