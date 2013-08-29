@@ -52,7 +52,14 @@ public class NavigationTree {
         }
         return countries;
 	}
-	
+	public CountryUnit getCountryUnit(Country cos ) throws APEnetException {
+		if (cos != null) {
+            String otherCountryName = resourceBundleSource.getString("country." + cos.getCname().toLowerCase(), cos.getCname());
+            return new CountryUnit(cos, otherCountryName);
+		} else {
+            return new CountryUnit(null, "No Country");
+		}		
+	}
 	//This method obtains all the countries within the Archival Landscape
 	public CountryUnit getCountry(Integer couId) throws APEnetException {
 		try{
