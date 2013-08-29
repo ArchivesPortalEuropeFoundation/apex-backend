@@ -6548,7 +6548,7 @@ public class EAG2012Loader{
 				if (!repository.getLocation().isEmpty()) {
 					for (int i = 0; i < repository.getLocation().size(); i++) {
 						Location location = repository.getLocation().get(i);
-						if (location.getLocalType()!=null && location.getLocalType().equalsIgnoreCase(Eag2012.VISITORS_ADDRESS)) {
+						if ((location.getLocalType()!=null && location.getLocalType().equalsIgnoreCase(Eag2012.VISITORS_ADDRESS)) || (location.getLocalType()==null || location.getLocalType().isEmpty())) { //additional condition commented on #702
 							this.addYiNumberOfVisitorsAddress("");
 							// Street.
 							if (location.getStreet() != null) {
