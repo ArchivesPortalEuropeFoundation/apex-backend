@@ -1,16 +1,14 @@
 package eu.apenet.dashboard.actions;
 
-
-import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.style.Font;
-import org.odftoolkit.simple.style.StyleTypeDefinitions.CellBordersType;
 import org.odftoolkit.simple.style.StyleTypeDefinitions.FontStyle;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
@@ -31,21 +29,21 @@ import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
 
 public class StatisticsAction extends AbstractAction {
-	private static final String INSTITUTION_HEADER = "Country;Institution;Identifier of the institution;EAG;Has searchable items;#Published FA;#Published HG;#Published SG;#Published Descriptive units;#Published DAOs;#EDM(providedCHOs);#Delivered to Europeana(providedCHOs)";
-	private static final String COUNTRY_HEADER = "Country;#Institutions;#Institutions EAG;#Institutions with searchable items;#Published FA;#Published HG;#Published SG;#Published Descriptive units;#Published DAOs;#EDM(providedCHOs);#Delivered to Europeana(providedCHOs)";
+	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7140890005810933129L;
 
-	public String downloadCountriesStatistics() throws IOException {
+	public String downloadCountriesStatistics()  throws Exception {
 		if (this.getSecurityContext().isAdmin()) {
-			String name = APEnetUtilities.convertToFilename("countries-statistics.csv");
+			String name = APEnetUtilities.convertToFilename("countries-statistics-"
+					+ SIMPLE_DATE_FORMAT.format(new Date()) + ".ods");
 			CountryDAO countryDAO = DAOFactory.instance().getCountryDAO();
 			ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
-			PrintWriter printWriter = ContentUtils.getWriterToDownload(this.getServletRequest(), getServletResponse(),
-					name, "text/csv");
-			printWriter.println(COUNTRY_HEADER);
+			OutputStream outputStream = ContentUtils.getOutputStreamToDownload(this.getServletRequest(),
+					getServletResponse(), name, "application/vnd.oasis.opendocument.spreadsheet");
+			CountriesStatisticsDocumentWriter documentWriter = new CountriesStatisticsDocumentWriter();
 			List<Country> countries = countryDAO.findAll();
 			for (Country country : countries) {
 				CountryStatistics countryStatistics = new CountryStatistics(country.getCname());
@@ -54,14 +52,14 @@ public class StatisticsAction extends AbstractAction {
 				for (ArchivalInstitution archivalInstitution : archivalInstitutions) {
 					countryStatistics.addInstitutionStatistics(getInstitutionStatistics(country, archivalInstitution));
 				}
-				printWriter.println(countryStatistics);
+				documentWriter.addStatistics(countryStatistics);
 			}
-
-			printWriter.flush();
-			printWriter.close();
+			documentWriter.save(outputStream);
 		}
 		return null;
 	}
+
+
 
 	public String downloadInstitutionsStatistics() throws Exception {
 		CountryDAO countryDAO = DAOFactory.instance().getCountryDAO();
@@ -72,50 +70,26 @@ public class StatisticsAction extends AbstractAction {
 			Integer countryId = this.getSecurityContext().getCountryId();
 			countries.add(countryDAO.findById(countryId));
 		}
-		writeODS(countries);
-		return null;
-	}
-	private void writeODS(List<Country> countries) throws Exception {
 		ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
 		String name = "countries";
 		if (countries.size() == 1) {
 			name = countries.get(0).getCname();
 		}
-		name = APEnetUtilities.convertToFilename(name + "-institutions-statistics.ods");
-		OutputStream outputStream = ContentUtils.getOutputStreamToDownload(this.getServletRequest(), getServletResponse(),
-				name, "application/vnd.oasis.opendocument.spreadsheet");
-		//printWriter.println(INSTITUTION_HEADER);
-		DocumentWriter documentWriter = new DocumentWriter();
+		name = APEnetUtilities.convertToFilename(name + "-institutions-statistics-"
+				+ SIMPLE_DATE_FORMAT.format(new Date()) + ".ods");
+		OutputStream outputStream = ContentUtils.getOutputStreamToDownload(this.getServletRequest(),
+				getServletResponse(), name, "application/vnd.oasis.opendocument.spreadsheet");
+		InstitutionsStatisticsDocumentWriter documentWriter = new InstitutionsStatisticsDocumentWriter();
 		for (Country country : countries) {
 			List<ArchivalInstitution> archivalInstitutions = archivalInstitutionDAO
 					.getArchivalInstitutionsByCountryId(country.getId());
 			for (ArchivalInstitution archivalInstitution : archivalInstitutions) {
 				InstitutionStatistics institutionStatistics = getInstitutionStatistics(country, archivalInstitution);
-				documentWriter.addInstitutionStatistics(institutionStatistics);
+				documentWriter.addStatistics(institutionStatistics);
 			}
 		}
 		documentWriter.save(outputStream);
-	}
-	private void writeCSV(List<Country> countries) throws IOException {
-		ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
-		String name = "countries";
-		if (countries.size() == 1) {
-			name = countries.get(0).getCname();
-		}
-		name = APEnetUtilities.convertToFilename(name + "-institutions-statistics.csv");
-		PrintWriter printWriter = ContentUtils.getWriterToDownload(this.getServletRequest(), getServletResponse(),
-				name, "text/csv");
-		printWriter.println(INSTITUTION_HEADER);
-		for (Country country : countries) {
-			List<ArchivalInstitution> archivalInstitutions = archivalInstitutionDAO
-					.getArchivalInstitutionsByCountryId(country.getId());
-			for (ArchivalInstitution archivalInstitution : archivalInstitutions) {
-				InstitutionStatistics institutionStatistics = getInstitutionStatistics(country, archivalInstitution);
-				printWriter.println(institutionStatistics);
-			}
-		}
-		printWriter.flush();
-		printWriter.close();
+		return null;
 	}
 
 	private InstitutionStatistics getInstitutionStatistics(Country country, ArchivalInstitution archivalInstitution) {
@@ -183,25 +157,6 @@ public class StatisticsAction extends AbstractAction {
 			this.country = country;
 			this.archivalInstitution = archivalInstitution;
 		}
-
-		@Override
-		public String toString() {
-			String result = "\"" + country + "\";\"" + archivalInstitution + "\";";
-			if (hasEag) {
-				result +=  repositoryCode + ";1;";
-			} else {
-				result += ";0;";
-			}
-			if (units > 0){
-				result += "1;";
-			}else {
-				result += "0;";
-			}
-			result += findingaids + ";" + holdingsguide + ";" + sourceguide + ";" + units + ";" + daos + ";"
-					+ totalChos + ";" + totalChosDeliveredToEuropeana;
-			return result;
-		}
-
 	}
 
 	private static class CountryStatistics {
@@ -221,13 +176,7 @@ public class StatisticsAction extends AbstractAction {
 			this.country = country;
 		}
 
-		@Override
-		public String toString() {
-			String result = "\"" + country + "\";\"" + numberOfInstitutions + "\";" + numberOfInstitutionsWithEag + ";"
-					+ numberOfInstitutionsWithSearchableItems + ";" + findingaids + ";" + holdingsguide + ";"
-					+ sourceguide + ";" + units + ";" + daos + ";" + totalChos + ";" + totalChosDeliveredToEuropeana;
-			return result;
-		}
+
 
 		public void addInstitutionStatistics(InstitutionStatistics institutionStatistics) {
 			numberOfInstitutions++;
@@ -246,27 +195,26 @@ public class StatisticsAction extends AbstractAction {
 			totalChosDeliveredToEuropeana += institutionStatistics.totalChosDeliveredToEuropeana;
 		}
 	}
-	private class DocumentWriter {
-		SpreadsheetDocument document;
-		Table table;
+
+	private class InstitutionsStatisticsDocumentWriter extends DocumentWriter {
+
 		int rowNumber = 0;
-		public DocumentWriter() throws Exception{
-			document = SpreadsheetDocument.newSpreadsheetDocument();
-	        table = document.getSheetByIndex(0);
-	       
+
+		public InstitutionsStatisticsDocumentWriter() throws Exception {
+
 			int colNumber = 0;
 			fillHeaderCell(colNumber, rowNumber, "Country");
 			colNumber++;
 			fillHeaderCell(colNumber, rowNumber, "Institution");
-			colNumber++;			
+			colNumber++;
 			fillHeaderCell(colNumber, rowNumber, "Identifier of the institution");
 			colNumber++;
 			fillHeaderCell(colNumber, rowNumber, "EAG");
-			colNumber++;	
+			colNumber++;
 			fillHeaderCell(colNumber, rowNumber, "Has searchable items");
-			colNumber++;					
+			colNumber++;
 			fillHeaderCell(colNumber, rowNumber, "#Published FA");
-			colNumber++;					
+			colNumber++;
 			fillHeaderCell(colNumber, rowNumber, "#Published HG");
 			colNumber++;
 			fillHeaderCell(colNumber, rowNumber, "#Published SG");
@@ -275,76 +223,151 @@ public class StatisticsAction extends AbstractAction {
 			colNumber++;
 			fillHeaderCell(colNumber, rowNumber, "#Published DAOs");
 			colNumber++;
-			fillHeaderCell(colNumber, rowNumber,"#EDM(providedCHOs)");
-			colNumber++;	
+			fillHeaderCell(colNumber, rowNumber, "#EDM(providedCHOs)");
+			colNumber++;
 			fillHeaderCell(colNumber, rowNumber, "#Delivered to Europeana(providedCHOs)");
 			colNumber++;
 			rowNumber++;
 		}
-		public void save(OutputStream outputStream) throws Exception{
-			document.save(outputStream);
-		}
-		
-		
-		public void addInstitutionStatistics(InstitutionStatistics institutionStatistics){
+
+		public void addStatistics(InstitutionStatistics institutionStatistics) {
 			int colNumber = 0;
 			fillCell(colNumber, rowNumber, institutionStatistics.country);
 			colNumber++;
 			fillCell(colNumber, rowNumber, institutionStatistics.archivalInstitution);
 			colNumber++;
-			if (institutionStatistics.hasEag){
+			if (institutionStatistics.hasEag) {
 				fillCell(colNumber, rowNumber, institutionStatistics.repositoryCode);
-				colNumber++;	
+				colNumber++;
 				fillCell(colNumber, rowNumber, 1);
-				colNumber++;					
-			}else {
-				colNumber++;	
+				colNumber++;
+			} else {
+				colNumber++;
 				fillCell(colNumber, rowNumber, 0);
-				colNumber++;					
+				colNumber++;
 			}
-			if (institutionStatistics.units > 0){
+			if (institutionStatistics.units > 0) {
 				fillCell(colNumber, rowNumber, 1);
-				colNumber++;					
-			}else {
+				colNumber++;
+			} else {
 				fillCell(colNumber, rowNumber, 0);
-				colNumber++;					
+				colNumber++;
 			}
-			fillCell(colNumber, rowNumber,institutionStatistics.findingaids);
+			fillCell(colNumber, rowNumber, institutionStatistics.findingaids);
 			colNumber++;
-			fillCell(colNumber, rowNumber,institutionStatistics.holdingsguide);
+			fillCell(colNumber, rowNumber, institutionStatistics.holdingsguide);
 			colNumber++;
-			fillCell(colNumber, rowNumber,institutionStatistics.sourceguide);
-			colNumber++;	
-			fillCell(colNumber, rowNumber,institutionStatistics.units);
+			fillCell(colNumber, rowNumber, institutionStatistics.sourceguide);
 			colNumber++;
-			fillCell(colNumber, rowNumber,institutionStatistics.daos);
+			fillCell(colNumber, rowNumber, institutionStatistics.units);
 			colNumber++;
-			fillCell(colNumber, rowNumber,institutionStatistics.totalChos);
+			fillCell(colNumber, rowNumber, institutionStatistics.daos);
 			colNumber++;
-			fillCell(colNumber, rowNumber,institutionStatistics.totalChosDeliveredToEuropeana);
-			colNumber++;	
+			fillCell(colNumber, rowNumber, institutionStatistics.totalChos);
+			colNumber++;
+			fillCell(colNumber, rowNumber, institutionStatistics.totalChosDeliveredToEuropeana);
+			colNumber++;
 			rowNumber++;
 		}
-		private void fillHeaderCell(int col, int row, String stringValue){
+
+	}
+
+	private class DocumentWriter {
+		SpreadsheetDocument document;
+		Table table;
+
+		public DocumentWriter() throws Exception {
+			document = SpreadsheetDocument.newSpreadsheetDocument();
+			table = document.getSheetByIndex(0);
+		}
+
+		public void save(OutputStream outputStream) throws Exception {
+			document.save(outputStream);
+		}
+
+		protected void fillHeaderCell(int col, int row, String stringValue) {
 			table.getColumnByIndex(col).setUseOptimalWidth(true);
 			Cell cell = table.getCellByPosition(col, row);
 			Font font = cell.getFont();
 			font.setFontStyle(FontStyle.BOLD);
 			font.setSize(10);
 			cell.setFont(font);
-	        cell.setDisplayText(stringValue);
+			cell.setDisplayText(stringValue);
 		}
-		private void fillCell(int col, int row, String stringValue){
+
+		protected void fillCell(int col, int row, String stringValue) {
 			Cell cell = table.getCellByPosition(col, row);
-	        cell.setDisplayText(stringValue);
+			cell.setDisplayText(stringValue);
 		}
-		private void fillCell(int col, int row, int stringValue){
+
+		protected void fillCell(int col, int row, int stringValue) {
 			Cell cell = table.getCellByPosition(col, row);
-	        cell.setDisplayText(stringValue  + "");
+			cell.setDisplayText(stringValue + "");
 		}
-		private void fillCell(int col, int row, long stringValue){
+
+		protected void fillCell(int col, int row, long stringValue) {
 			Cell cell = table.getCellByPosition(col, row);
-	        cell.setDisplayText(stringValue  + "");
+			cell.setDisplayText(stringValue + "");
 		}
+	}
+
+	private class CountriesStatisticsDocumentWriter extends DocumentWriter {
+		int rowNumber = 0;
+
+		public CountriesStatisticsDocumentWriter() throws Exception {
+
+			int colNumber = 0;
+			fillHeaderCell(colNumber, rowNumber, "Country");
+			colNumber++;
+			fillHeaderCell(colNumber, rowNumber, "#Institutions");
+			colNumber++;
+			fillHeaderCell(colNumber, rowNumber, "#Institutions EAG");
+			colNumber++;
+			fillHeaderCell(colNumber, rowNumber, "#Institutions with searchable items");
+			colNumber++;
+			fillHeaderCell(colNumber, rowNumber, "#Published FA");
+			colNumber++;
+			fillHeaderCell(colNumber, rowNumber, "#Published HG");
+			colNumber++;
+			fillHeaderCell(colNumber, rowNumber, "#Published SG");
+			colNumber++;
+			fillHeaderCell(colNumber, rowNumber, "#Published Descriptive units");
+			colNumber++;
+			fillHeaderCell(colNumber, rowNumber, "#Published DAOs");
+			colNumber++;
+			fillHeaderCell(colNumber, rowNumber, "#EDM(providedCHOs)");
+			colNumber++;
+			fillHeaderCell(colNumber, rowNumber, "#Delivered to Europeana(providedCHOs)");
+			colNumber++;
+			rowNumber++;
+		}
+
+		public void addStatistics(CountryStatistics countryStatistics) {
+			int colNumber = 0;
+			fillCell(colNumber, rowNumber, countryStatistics.country);
+			colNumber++;
+			fillCell(colNumber, rowNumber, countryStatistics.numberOfInstitutions);
+			colNumber++;
+			fillCell(colNumber, rowNumber, countryStatistics.numberOfInstitutionsWithEag);
+			colNumber++;
+			fillCell(colNumber, rowNumber, countryStatistics.numberOfInstitutionsWithSearchableItems);
+			colNumber++;
+			fillCell(colNumber, rowNumber, countryStatistics.findingaids);
+			colNumber++;
+			fillCell(colNumber, rowNumber, countryStatistics.holdingsguide);
+			colNumber++;
+			fillCell(colNumber, rowNumber, countryStatistics.sourceguide);
+			colNumber++;
+			fillCell(colNumber, rowNumber, countryStatistics.units);
+			colNumber++;
+			fillCell(colNumber, rowNumber, countryStatistics.daos);
+			colNumber++;
+			fillCell(colNumber, rowNumber, countryStatistics.totalChos);
+			colNumber++;
+			fillCell(colNumber, rowNumber, countryStatistics.totalChosDeliveredToEuropeana);
+			colNumber++;
+			rowNumber++;
+		}
+
 	}
 }
