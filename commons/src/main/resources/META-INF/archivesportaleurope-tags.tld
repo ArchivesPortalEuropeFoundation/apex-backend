@@ -65,7 +65,11 @@
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.Object</type>
-		</attribute>		
+		</attribute>	
+		<attribute>
+			<name>liferayFriendlyUrl</name>
+			<required>false</required>
+		</attribute>			
 	</tag>		
 	<tag>
 		<name>context</name>
