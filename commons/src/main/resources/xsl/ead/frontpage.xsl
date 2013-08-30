@@ -64,9 +64,6 @@
 					</a>
 				</xsl:if>
 			</div>
-		<div class="subtitle">
-			<xsl:value-of select="ape:resource('eadcontent.introduction')" />
-		</div>
 		<div id="content">
 			<div id="expandableContent">
 				<xsl:apply-templates select="/ead:ead/ead:archdesc" mode="searchable"/>
