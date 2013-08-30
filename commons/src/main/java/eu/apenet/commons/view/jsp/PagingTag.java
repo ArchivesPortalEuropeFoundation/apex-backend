@@ -29,6 +29,8 @@ public class PagingTag extends AbstractPagingTag {
 	private String refreshUrl;
 
 	private String pageNumberId;
+	
+	private String liferayFriendlyUrl;
 
 	protected String getPageLast() {
 		return PAGE_LAST;
@@ -60,6 +62,15 @@ public class PagingTag extends AbstractPagingTag {
 
 	public void setPageNumberId(String pageNumberId) {
 		this.pageNumberId = pageNumberId;
+	}
+	
+
+	public String getLiferayFriendlyUrl() {
+		return liferayFriendlyUrl;
+	}
+
+	public void setLiferayFriendlyUrl(String liferayFriendlyUrl) {
+		this.liferayFriendlyUrl = liferayFriendlyUrl;
 	}
 
 	public void doTag() throws JspException, IOException {
@@ -148,9 +159,13 @@ public class PagingTag extends AbstractPagingTag {
 	protected void addListItemWithLink(StringBuilder builder, String linkName, long pageNumber) {
 		builder.append("<li>");
 		builder.append("<a href=\"");
-		HrefObject hrefObject = new HrefObject(refreshUrl);
-		hrefObject.setParameter(this.getPageNumberId(), pageNumber);
-		builder.append(hrefObject.toString());
+		if (Boolean.parseBoolean(liferayFriendlyUrl)){
+			builder.append(refreshUrl.replaceAll("\\{" + this.getPageNumberId() + "\\}", pageNumber +""));
+		}else {
+			HrefObject hrefObject = new HrefObject(refreshUrl);
+			hrefObject.setParameter(this.getPageNumberId(), pageNumber);
+			builder.append(hrefObject.toString());
+		}
 		builder.append("\">");
 		builder.append(linkName);
 		builder.append("</a>");
