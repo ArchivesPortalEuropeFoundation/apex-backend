@@ -85,7 +85,7 @@ public class EadResult {
 		return validatedFatalError;
 	}
 	public boolean isEditable(){
-		return validated & !published;
+		return false;
 	}
 	public Long getUnits() {
 		return units;

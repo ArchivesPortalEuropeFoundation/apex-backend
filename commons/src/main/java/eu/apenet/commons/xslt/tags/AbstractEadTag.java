@@ -26,9 +26,7 @@ import eu.apenet.commons.xslt.EadXslt;
  */
 public abstract class AbstractEadTag extends SimpleTagSupport {
 	public static final String CDETAILS_CHILD_XSLT = "cdetails-child";
-	public static final String INTRODUCTION_XSLT = "introduction";
 	public static final String FRONTPAGE_XSLT = "frontpage";
-	public static final String DIDCONTENT_XSLT = "didcontent";
 	public static final String CDETAILS_XSLT = "cdetails";
 	private String xml;
 	private String searchTerms;
@@ -43,9 +41,8 @@ public abstract class AbstractEadTag extends SimpleTagSupport {
 	static {
 		xsltUrls.put(CDETAILS_XSLT, "xsl/ead/cdetails.xsl");
 		xsltUrls.put(CDETAILS_CHILD_XSLT, "xsl/ead/cdetails-child.xsl"); 		
-		xsltUrls.put(DIDCONTENT_XSLT, "xsl/ead/didcontent.xsl");
 		xsltUrls.put(FRONTPAGE_XSLT, "xsl/ead/frontpage.xsl");	
-		xsltUrls.put(INTRODUCTION_XSLT, "xsl/ead/introduction.xsl");				
+		
 	}
 	
 	public final void doTag() throws JspException, IOException {

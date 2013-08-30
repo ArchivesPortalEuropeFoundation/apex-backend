@@ -42,7 +42,7 @@ public class NavigationTree {
 		try {
 			List<Country> cos = DAOFactory.instance().getCountryDAO().getCountriesWithArchivalInstitutionsWithEAG();
             for (Country co : cos) {
-                String otherCountryName = resourceBundleSource.getString("country." + co.getCname().toLowerCase(), co.getCname());
+                String otherCountryName = resourceBundleSource.getString("country." + co.getCname().toLowerCase().replace(" ", "_"), co.getCname());
                 countries.add(new CountryUnit(co, otherCountryName));
             }
 			
@@ -52,7 +52,14 @@ public class NavigationTree {
         }
         return countries;
 	}
-	
+	public CountryUnit getCountryUnit(Country cos ) throws APEnetException {
+		if (cos != null) {
+            String otherCountryName = resourceBundleSource.getString("country." + cos.getCname().toLowerCase(), cos.getCname());
+            return new CountryUnit(cos, otherCountryName);
+		} else {
+            return new CountryUnit(null, "No Country");
+		}		
+	}
 	//This method obtains all the countries within the Archival Landscape
 	public CountryUnit getCountry(Integer couId) throws APEnetException {
 		try{
@@ -85,7 +92,7 @@ public class NavigationTree {
                         Integer numberOfArchivalInstitutions = 0;
                         if (anArchivalInstitutionList.isGroup())
                             numberOfArchivalInstitutions = archivalInstitutionDao.countArchivalInstitutionsByParentAiId(anArchivalInstitutionList.getAiId());
-                        archivalInstitutionUnitList.add(new ArchivalInstitutionUnit(anArchivalInstitutionList.getAiId(), anArchivalInstitutionList.getAiname(), null, anArchivalInstitutionList.getEagPath(), anArchivalInstitutionList.isGroup(), numberOfArchivalInstitutions, getLanguage(), anArchivalInstitutionList.getAlorder()));
+                        archivalInstitutionUnitList.add(new ArchivalInstitutionUnit(anArchivalInstitutionList.getAiId(), anArchivalInstitutionList.getAiname(), null,anArchivalInstitutionList.getRepositorycode(), anArchivalInstitutionList.getEagPath(), anArchivalInstitutionList.isGroup(), numberOfArchivalInstitutions, getLanguage(), anArchivalInstitutionList.getAlorder()));
                     }
 
 		} else if (parentAiId.startsWith("aicontent_") || parentAiId.startsWith("ainocontent_") || parentAiId.startsWith("aigroup_")) {
@@ -101,7 +108,7 @@ public class NavigationTree {
                 Integer numberOfArchivalInstitutions = 0;
                 if (anArchivalInstitutionList.isGroup())
                     numberOfArchivalInstitutions = archivalInstitutionDao.countArchivalInstitutionsByParentAiId(anArchivalInstitutionList.getAiId());
-                archivalInstitutionUnitList.add(new ArchivalInstitutionUnit(anArchivalInstitutionList.getAiId(), anArchivalInstitutionList.getAiname(), null, anArchivalInstitutionList.getEagPath(), anArchivalInstitutionList.isGroup(), numberOfArchivalInstitutions, getLanguage(), anArchivalInstitutionList.getAlorder()));
+                archivalInstitutionUnitList.add(new ArchivalInstitutionUnit(anArchivalInstitutionList.getAiId(), anArchivalInstitutionList.getAiname(), null, anArchivalInstitutionList.getRepositorycode(), anArchivalInstitutionList.getEagPath(), anArchivalInstitutionList.isGroup(), numberOfArchivalInstitutions, getLanguage(), anArchivalInstitutionList.getAlorder()));
             }
 		}
         return archivalInstitutionUnitList;

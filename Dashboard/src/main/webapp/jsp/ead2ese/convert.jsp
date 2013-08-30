@@ -2,9 +2,34 @@
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/ead2ese/ead2ese.css" type="text/css"/>
+
 <script type='text/javascript'>
 	$(function() {
-  
+
+		$("#conversionTypefull").click(function() {
+			$('#hiddenHierarchyPrefix').show();
+			enableHierarchyPrefixState();
+			$('#hiddenInheritFileParent').show();
+			enableInheritFileParentCheckState();
+			$('#hiddenInheritOrigination').show();
+			enableInheritOriginationCheckState();
+			$('#hiddeInheritLanguage').show();
+			displayInheritLanguage();
+		});
+
+		$("#conversionTypeminimal").click(function() {
+			$('#hiddenHierarchyPrefix').hide();
+			disableHierarchyPrefixState($('input#hierarchyPrefixInitialValue').val());
+			$('#hiddenInheritFileParent').hide();
+			disableInheritFileParentCheckState();
+			$('#hiddenInheritOrigination').hide();
+			disableInheritOriginationCheckState();
+			$('#hiddeInheritLanguage').hide();
+			displayInheritLanguage();
+		});
+
 		$('#inheritLanguageprovide').click(function() {
 			$('#hiddenLanguage').show();
 		});
@@ -51,45 +76,131 @@
 		});
 
 	});
+
+	function changeHierarchyPrefixState(value) {
+		if ($("#hierarchyPrefixCheck").attr('checked')) {
+			enableHierarchyPrefixState();
+		} else {
+			disableHierarchyPrefixState(value);
+		}
+	}
+
+	function enableHierarchyPrefixState() {
+		$("#hierarchyPrefix").removeAttr('disabled');
+	}
+
+	function disableHierarchyPrefixState(value) {
+		$("#hierarchyPrefix").attr('disabled', 'disabled');
+		$("#hierarchyPrefix").val(value);
+	}
+
+	function changeInheritFileParentCheckState() {
+		if ($("#inheritFileParentCheck").attr('checked')) {
+			enableInheritFileParentCheckState();
+		} else {
+			disableInheritFileParentCheckState();
+		}
+	}
+
+	function enableInheritFileParentCheckState() {
+		$("input[id^='inheritFileParent']").each(function(){
+			$(this).removeAttr('disabled');
+		});
+	}
+
+	function disableInheritFileParentCheckState() {
+		$("input[id^='inheritFileParent']").each(function(){
+			if ($(this).attr("id") != "inheritFileParentCheck") {
+				$(this).attr('disabled', 'disabled');
+				if ($(this).val() == "no") {
+					$(this).attr('checked', 'checked');
+				} else {
+					$(this).removeAttr('checked');
+				}
+			}
+		});
+	}
+
+	function changeInheritOriginationCheckState() {
+		if ($("#inheritOriginationCheck").attr('checked')) {
+			enableInheritOriginationCheckState();
+		} else {
+			disableInheritOriginationCheckState();
+		}
+	}
+
+	function enableInheritOriginationCheckState() {
+		$("input[name^='inheritOrigination']").each(function(){
+			$(this).removeAttr('disabled');
+		});
+	}
+
+	function disableInheritOriginationCheckState() {
+		$("input[name^='inheritOrigination']").each(function(){
+			if ($(this).attr("name") != "inheritOriginationCheck") {
+				$(this).attr('disabled', 'disabled');
+				if ($(this).val() == "no") {
+					$(this).attr('checked', 'checked');
+				} else {
+					$(this).removeAttr('checked');
+				}
+			}
+		});
+	}
+
+	function changeInheritLanguageCheckState() {
+		if ($("#inheritLanguageCheck").attr('checked')) {
+			enableInheritLanguageCheckState();
+		} else {
+			disableInheritLanguageCheckState();
+		}
+	}
+
+	function enableInheritLanguageCheckState() {
+		$("input[id^='inheritLanguage']").each(function(){
+			$(this).removeAttr('disabled');
+		});
+	}
+
+	function disableInheritLanguageCheckState() {
+		$("input[id^='inheritLanguage']").each(function(){
+			if ($(this).attr("id") != "inheritLanguageCheck") {
+				$(this).attr('disabled', 'disabled');
+				if ($(this).val() == "no") {
+					$(this).attr('checked', 'checked');
+				} else {
+					$(this).removeAttr('checked');
+				}
+			}
+		});
+		$('#hiddenLanguage').hide();
+	}
+
+	function displayInheritLanguage() {
+		if ($("select#selectType").val() == "TEXT") {
+			$("tr#trSelectType").after($("#hiddeInheritLanguage"));
+			$("#hiddeInheritLanguage").after($("#hiddenLanguage"));
+			$('#hiddeInheritLanguage').show();
+			enableInheritLanguageCheckState();
+		} else if ($("#conversionTypefull").attr("checked") == "checked") {
+			$('#hiddeInheritLanguage').show();
+			enableInheritLanguageCheckState();
+			$("#hiddenInheritOrigination").after($("#hiddeInheritLanguage"));
+			$("#hiddeInheritLanguage").after($("#hiddenLanguage"));
+		} else {
+			$('#hiddeInheritLanguage').hide();
+			disableInheritLanguageCheckState();
+		}
+	}
 </script>
 
 <s:form method="POST" theme="simple">
 	<table>
 		<tr>
-			<td class="inputLabel"><s:label key="ead2ese.label.type" for="selectType" /><span class="required">*</span>:</td>
-			<td><s:select id="selectType" name="daoType" list="typeSet" listKey="value" listValue="content" required="true"></s:select> <s:fielderror fieldName="daoType"/>
-				<s:checkbox name="daoTypeCheck" id="daoTypeCheck" value="true"></s:checkbox>
-				<s:label key="ead2ese.label.type.file" for="daoType"/>
-			</td>
-		</tr>
-		<tr>
-			<td class="inputLabel"><s:label key="ead2ese.label.hierarchy.prefix" for="hierarchyPrefix" />:</td>
-			<td><s:textfield id="hierarchyPrefix" name="hierarchyPrefix"></s:textfield>
-			</td>
-		</tr>
-		<tr>
-			<td class="inputLabel"><s:label key="ead2ese.label.inherit.parent" for="inheritFileParent" />:</td>
-			<td><s:radio name="inheritFileParent" list="yesNoSet" listKey="value" listValue="content" id="inheritFileParent"></s:radio>
-			</td>
-		</tr>
-		<tr>
-			<td class="inputLabel"><s:label key="ead2ese.label.inherit.origination" for="inheritOrigination" />:</td>
-			<td><s:radio name="inheritOrigination" list="yesNoSet" listKey="value" listValue="content"></s:radio>
-			</td>
-		</tr>
-		<tr>
-			<td class="inputLabel"><s:label key="ead2ese.label.inherit.language" for="inheritLanguage" /><span class="required">*</span>:</td>
-			<td><s:radio name="inheritLanguage" id="inheritLanguage" list="inheritLanguageSet" listKey="value" listValue="content" required="true">
-				</s:radio><s:fielderror fieldName="inheritLanguage"/>
-			</td>
-		</tr>
-		<s:if test="inheritLanguage!='provide'">
-			<c:set var="languageInvisible" value="style=\"display: none;\""></c:set>
-		</s:if>
-		<tr id="hiddenLanguage" ${languageInvisible}>
-			<td class="inputLabel"><s:label key="ead2ese.label.language.select" for="language" /><span class="required">*</span>:</td>
-			<td><s:select name="language" id="language" listKey="value" listValue="content" list="languages" required="true"
-					value="" multiple="true" size="4"></s:select><s:fielderror fieldName="language"/>
+			<td colspan="2" class="inputLabel" style="text-align: center;">
+				<s:label key="ead2ese.label.choose.conversion.type" />:
+				<s:radio name="conversionType" id="conversionType" list="conversionTypeSet" listKey="value" listValue="content" required="true"></s:radio>
+				<br/><br/>
 			</td>
 		</tr>
 		<tr>
@@ -107,11 +218,11 @@
 				<s:fielderror fieldName="textDataProvider"/>
 			</td>
 		</tr>
-		<tr>
-			<td class="inputLabel"><s:label key="ead2ese.label.provider" for="provider" /><span
-				class="required">*</span>:</td>
-			<td><s:textfield id="provider" name="provider" required="true"/>
-				<s:fielderror fieldName="provider"/>
+		<tr id="trSelectType">
+			<td class="inputLabel"><s:label key="ead2ese.label.type" for="selectType" /><span class="required">*</span>:</td>
+			<td><s:select id="selectType" name="daoType" list="typeSet" listKey="value" listValue="content" required="true" onchange="displayInheritLanguage();"></s:select> <s:fielderror fieldName="daoType"/>
+				<s:checkbox name="daoTypeCheck" id="daoTypeCheck" value="true"></s:checkbox>
+				<s:label key="ead2ese.label.type.file" for="daoType"/>
 			</td>
 		</tr>
 		<tr>
@@ -142,10 +253,57 @@
 			<td class="inputLabel"><s:label key="ead2ese.label.license.additional" for="licenseAdditionalInformation" />:</td>
 			<td><s:textarea id="licenseAdditionalInformation" name="licenseAdditionalInformation"/>
 			</td>
-		</tr>					
+		</tr>
+		<s:if test="conversionType=='minimal'">
+			<c:set var="showMinimal" value="style=\"display: none;\""></c:set>
+		</s:if>
+		<tr id="hiddenHierarchyPrefix" ${showMinimal}>
+			<td class="inputLabel">
+				<s:hidden id="hierarchyPrefixInitialValue" value="%{hierarchyPrefix}"></s:hidden>
+				<s:checkbox name="hierarchyPrefixCheck" id="hierarchyPrefixCheck" value="true" onchange="changeHierarchyPrefixState('%{hierarchyPrefix}');"></s:checkbox>
+				<s:label key="ead2ese.label.hierarchy.prefix" for="hierarchyPrefix" />:
+			</td>
+			<td><s:textfield id="hierarchyPrefix" name="hierarchyPrefix"></s:textfield></td>
+		</tr>
+		<tr id="hiddenInheritFileParent" ${showMinimal}>
+			<td class="inputLabel">
+				<s:checkbox name="inheritFileParentCheck" id="inheritFileParentCheck" value="true" onchange="changeInheritFileParentCheckState();"></s:checkbox>
+				<s:label key="ead2ese.label.inherit.parent" for="inheritFileParent" />:
+			</td>
+			<td><s:radio name="inheritFileParent" list="yesNoSet" listKey="value" listValue="content" id="inheritFileParent"></s:radio>
+			</td>
+		</tr>
+		<tr id="hiddenInheritOrigination" ${showMinimal}>
+			<td class="inputLabel">
+				<s:checkbox name="inheritOriginationCheck" id="inheritOriginationCheck" value="true" onchange="changeInheritOriginationCheckState();"></s:checkbox>
+				<s:label key="ead2ese.label.inherit.origination" for="inheritOrigination" />:
+			</td>
+			<td><s:radio name="inheritOrigination" list="yesNoSet" listKey="value" listValue="content"></s:radio>
+			</td>
+		</tr>
+		<tr id="hiddeInheritLanguage" ${showMinimal}>
+			<td class="inputLabel">
+				<s:checkbox name="inheritLanguageCheck" id="inheritLanguageCheck" value="true" onchange="changeInheritLanguageCheckState();"></s:checkbox>
+				<s:label key="ead2ese.label.inherit.language" for="inheritLanguage" /><span class="required">*</span>:
+			</td>
+			<td><s:radio name="inheritLanguage" id="inheritLanguage" list="inheritLanguageSet" listKey="value" listValue="content" required="true">
+				</s:radio><s:fielderror fieldName="inheritLanguage"/>
+			</td>
+		</tr>
+		<s:if test="inheritLanguage!='provide'">
+			<c:set var="languageInvisible" value="style=\"display: none;\""></c:set>
+		</s:if>
+		<tr id="hiddenLanguage" ${languageInvisible}>
+			<td class="inputLabel"><s:label key="ead2ese.label.language.select" for="languageSelection" /><span class="required">*</span>:</td>
+			<td><s:select name="languageSelection" id="languageSelection" listKey="value" listValue="content" list="languages" required="true"
+					value="" multiple="true" size="4"></s:select><s:fielderror fieldName="languageSelection"/>
+			</td>
+		</tr>
 		<tr>
-			<td colspan="2"><s:submit action="processEseConvert" key="ead2ese.label.next"  cssClass="mainButton"/> <s:submit action="contentmanager"
-					key="ead2ese.label.cancel" />
+			<td colspan="2">
+				<br/><br/>
+				<s:submit action="processEseConvert" key="ead2ese.label.next" cssClass="mainButton"/>
+				<s:submit action="contentmanager" key="ead2ese.label.cancel" />
 			</td>
 		</tr>
 	</table>

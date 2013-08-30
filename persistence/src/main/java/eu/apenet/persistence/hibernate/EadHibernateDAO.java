@@ -339,18 +339,4 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		return value;
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Long countFilesbyInstitution(Class<? extends Ead> clazz, Integer aiId) {
-
-		Criteria criteria = getSession().createCriteria(clazz, "ead");
-		criteria = criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
-		List<Long> result = criteria.setProjection(Projections.countDistinct("id")).list();
-		Long value = 0L;
-
-		if (result.size() > 0)
-			value = result.get(0);
-
-		return value;
-	}
 }

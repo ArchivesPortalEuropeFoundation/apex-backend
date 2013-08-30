@@ -25,7 +25,7 @@
 		</div>
 
         <xsl:for-each select="/ead:c/ead:did/ead:unitid[@type='call number']/ead:extptr">
-            <div class="eadidurl">
+            <div class="defaultlayout">
                 <a target="_blank"><xsl:attribute name="href"><xsl:value-of select="@xlink:href" /></xsl:attribute><xsl:value-of select="ape:resource('eadcontent.frontpage.eadid.url')" /></a>
             </div>
         </xsl:for-each>

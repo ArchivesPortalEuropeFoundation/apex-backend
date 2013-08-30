@@ -6548,7 +6548,7 @@ public class EAG2012Loader{
 				if (!repository.getLocation().isEmpty()) {
 					for (int i = 0; i < repository.getLocation().size(); i++) {
 						Location location = repository.getLocation().get(i);
-						if (location.getLocalType().equalsIgnoreCase(Eag2012.VISITORS_ADDRESS)) {
+						if ((location.getLocalType()!=null && location.getLocalType().equalsIgnoreCase(Eag2012.VISITORS_ADDRESS)) || (location.getLocalType()==null || location.getLocalType().isEmpty())) { //additional condition commented on #702
 							this.addYiNumberOfVisitorsAddress("");
 							// Street.
 							if (location.getStreet() != null) {
@@ -6616,7 +6616,7 @@ public class EAG2012Loader{
 								this.addYiLongitude("");
 							}
 						}
-						if (location.getLocalType().equalsIgnoreCase(Eag2012.POSTAL_ADDRESS)) {
+						if (location.getLocalType()!=null && location.getLocalType().equalsIgnoreCase(Eag2012.POSTAL_ADDRESS)) {
 							this.addYiNumberOfPostalAddress("");
 							// Postal street.
 							if (location.getStreet() != null) {
@@ -7083,10 +7083,10 @@ public class EAG2012Loader{
 				if (repository != null) {
 					// Repository name.
 					List<String> stringList = new ArrayList<String>();
-					if (repository.getRepositoryName() != null
-							&& repository.getRepositoryName().getContent() != null
-							&& !repository.getRepositoryName().getContent().isEmpty()) {
-						stringList.add(repository.getRepositoryName().getContent());
+					if (repository.getRepositoryName() != null && repository.getRepositoryName().size()>0 
+							&& repository.getRepositoryName().get(0).getContent() != null
+							&& !repository.getRepositoryName().get(0).getContent().isEmpty()) {
+						stringList.add(repository.getRepositoryName().get(0).getContent());
 					} else {
 						stringList.add("");
 					}
@@ -7267,7 +7267,7 @@ public class EAG2012Loader{
 								}
 							}
 	
-							if (location.getLocalType().equalsIgnoreCase(Eag2012.POSTAL_ADDRESS)) {
+							if (location.getLocalType()!=null && location.getLocalType().equalsIgnoreCase(Eag2012.POSTAL_ADDRESS)) {
 								numberPostalAdrressList.add("");
 								// Country.
 								if (location.getCountry() != null) {

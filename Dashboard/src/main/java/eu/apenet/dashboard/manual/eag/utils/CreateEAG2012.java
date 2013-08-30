@@ -813,47 +813,62 @@ public class CreateEAG2012 {
 		getAllDates();
 
 		// eag/archguide/desc/repositories/repository/repositoryName
-		// Main institution.
-//		Repository mainRepository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
-//		RepositoryName repositoryName = null;
-//		if (mainRepository.getRepositoryName() == null) {
-//			repositoryName = new RepositoryName();
-//		} else {
-//			repositoryName = mainRepository.getRepositoryName();
-//		}
-//		repositoryName.setContent(this.eag2012.getAutformValue().get(0));
-//		
-//		mainRepository.setRepositoryName(repositoryName);
+		// Main institution. 
+		/** ISSUE #684 **/
+		Repository mainRepository = null;
+		if(this.eag2012.getRepositoryNameValue() != null && this.eag2012.getRepositoryNameValue().size()>0){
+			mainRepository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
+			/** Code related to issue #684 related to #694 decisions **/
+//			List<RepositoryName> repositoryNames = null;
+//			if (mainRepository.getRepositoryName() == null) {
+//				repositoryNames = new ArrayList<RepositoryName>();
+//			} else {
+//				repositoryNames = mainRepository.getRepositoryName();
+//			}
+//			if(this.eag2012.getAutformValue()!=null && this.eag2012.getAutformLang()!=null && this.eag2012.getAutformValue().size()==this.eag2012.getAutformLang().size()){
+//				for(int i=0;i<this.eag2012.getAutformValue().size();i++){
+//					RepositoryName repositoryName = new RepositoryName();
+//					repositoryName.setContent(this.eag2012.getAutformValue().get(i));
+//					repositoryName.setLang(this.eag2012.getAutformLang().get(i));
+//					repositoryNames.add(repositoryName);
+//				}
+//				mainRepository.setRepositoryName(repositoryNames);
+//			}
+		}
 
 		// Rest of repositories.
-		if (this.eag2012.getRepositoryNameValue() != null) {
+		if (this.eag2012.getRepositoryNameValue() != null /*&& this.eag2012.getRepositoryNameLang() != null && this.eag2012.getRepositoryNameValue().size()==this.eag2012.getRepositoryNameLang().size()*/) {
 			for (int i = 0; i < this.eag2012.getRepositoryNameValue().size(); i++) {
 				Repository otherRepositories = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i+1);
 
-				RepositoryName otherRepositoryName = null;
+				List<RepositoryName> otherRepositoryNames = null;
 				if (otherRepositories.getRepositoryRole() == null) {
-					otherRepositoryName = new RepositoryName();
+					otherRepositoryNames = new ArrayList<RepositoryName>();
 				} else {
-					otherRepositoryName = otherRepositories.getRepositoryName();
+					otherRepositoryNames = otherRepositories.getRepositoryName();
 				}
+				
+				RepositoryName otherRepositoryName = new RepositoryName();
 				otherRepositoryName.setContent(this.eag2012.getRepositoryNameValue().get(i));
+//				otherRepositoryName.setLang(this.eag2012.getRepositoryNameLang().get(i));
+				otherRepositoryNames.add(otherRepositoryName);
 
-				otherRepositories.setRepositoryName(otherRepositoryName);
+				otherRepositories.setRepositoryName(otherRepositoryNames);
 			}
 		}
 
 		// eag/archguide/desc/repositories/repository/repositoryRole
-		// Main institution.
-//		RepositoryRole repositoryRole = null;
-//		if (mainRepository.getRepositoryRole() == null) {
-//			repositoryRole = new RepositoryRole();
-//		} else {
-//			repositoryRole = mainRepository.getRepositoryRole();
-//		}
-//		repositoryRole.setValue(Eag2012.OPTION_ROLE_HEADQUARTERS_TEXT);
-//
-//		mainRepository.setRepositoryRole(repositoryRole);
-
+        // Main institution.
+        if(mainRepository!=null){
+        	RepositoryRole repositoryRole = null;
+        	if(mainRepository.getRepositoryRole()==null){
+        		repositoryRole = new RepositoryRole();
+        	}else{
+        		repositoryRole = mainRepository.getRepositoryRole();
+        	}
+        	repositoryRole.setValue(Eag2012.OPTION_ROLE_HEADQUARTERS_TEXT);
+        	mainRepository.setRepositoryRole(repositoryRole);
+        }
 		// Rest of repositories.
 		if (this.eag2012.getRepositoryRoleValue() != null) {
 			for (int i = 0; i < this.eag2012.getRepositoryRoleValue().size(); i++) {
@@ -1160,16 +1175,16 @@ public class CreateEAG2012 {
 					Map<String, List<String>> postalStreetMap = this.eag2012.getPostalStreetValue().get(i);
 
 					// Postal address iterators.
-					Iterator<String>  postalStreetLangIt = postalStreetLangMap.keySet().iterator();
-					Iterator<String>  postalCountryIt = postalCountryMap.keySet().iterator();
-					Iterator<String>  postalCitiesIt = postalCitiesMap.keySet().iterator();
-					Iterator<String>  postalStreetIt = postalStreetMap.keySet().iterator();
+					Iterator<String>  postalStreetLangIt = (postalStreetLangMap!=null && postalStreetLangMap.keySet()!=null)?postalStreetLangMap.keySet().iterator():null;;
+					Iterator<String>  postalCountryIt = (postalCountryMap!=null && postalCountryMap.keySet()!=null)?postalCountryMap.keySet().iterator():null;
+					Iterator<String>  postalCitiesIt = (postalCitiesMap!=null && postalCitiesMap.keySet()!=null)?postalCitiesMap.keySet().iterator():null;;
+					Iterator<String>  postalStreetIt = (postalStreetMap!=null && postalStreetMap.keySet()!=null)?postalStreetMap.keySet().iterator():null;;
 					while (postalStreetLangIt.hasNext()) {
 						// Postal address keys.
-						String postalStreetLangKey = postalStreetLangIt.next();
-						String postalCountryKey = postalCountryIt.next();
-						String postalCitiesKey = postalCitiesIt.next();
-						String postalStreetKey = postalStreetIt.next();
+						String postalStreetLangKey = (postalStreetLangIt.hasNext())?postalStreetLangIt.next():null;
+						String postalCountryKey = (postalCountryIt.hasNext())?postalCountryIt.next():null;
+						String postalCitiesKey = (postalCitiesIt.hasNext())?postalCitiesIt.next():null;
+						String postalStreetKey = (postalStreetIt.hasNext())?postalStreetIt.next():null;
 
 						// Rest of tabs.
 //						if (!postalStreetLangKey.equalsIgnoreCase(Eag2012.TAB_YOUR_INSTITUTION))  {
@@ -1178,17 +1193,17 @@ public class CreateEAG2012 {
 							List<String> postalCountryList = postalCountryMap.get(postalCountryKey);
 							List<String> postalCitiesList = postalCitiesMap.get(postalCitiesKey);
 							List<String> postalStreetList = postalStreetMap.get(postalStreetKey);
-							for (int j = 0; j < postalStreetLangList.size(); j++) {
+							for (int j = 0; postalStreetLangList!=null && j < postalStreetLangList.size(); j++) {
 								Location location = new Location();
 								String language = postalStreetLangList.get(j);
 								// eag/archguide/desc/repositories/repository/location/type
 								location.setLocalType(Eag2012.POSTAL_ADDRESS);
-								if (postalCountryList.size() > 0) {
+								if (postalCountryList!=null && postalCountryList.size() > 0) {
 									// eag/archguide/desc/repositories/repository/location/country
 									if (location.getCountry() == null) {
 										location.setCountry(new Country());
 									}
-									if (postalCountryList.size() > j) {
+									if (postalCountryList!=null && postalCountryList.size() > j) {
 										location.getCountry().setContent(postalCountryList.get(j));
 									} else {
 										location.getCountry().setContent(postalCountryList.get(0));
@@ -1198,7 +1213,7 @@ public class CreateEAG2012 {
 										location.getCountry().setLang(language);
 									}
 								}
-								if (postalCitiesList.get(j) != null
+								if (postalCitiesList!=null && postalCitiesList.get(j) != null
 										&& !postalCitiesList.get(j).isEmpty()) {
 									// eag/archguide/desc/repositories/repository/location/municipalityPostalcode
 									if (location.getMunicipalityPostalcode() == null) {
@@ -1210,7 +1225,7 @@ public class CreateEAG2012 {
 										location.getMunicipalityPostalcode().setLang(language);
 									}
 								}
-								if (postalStreetList.get(j) != null
+								if (postalStreetList!=null && postalStreetList.get(j) != null
 										&& !postalStreetList.get(j).isEmpty()) {
 									// eag/archguide/desc/repositories/repository/location/street
 									if (location.getStreet() == null) {
@@ -1224,7 +1239,7 @@ public class CreateEAG2012 {
 								}
 
 								boolean found = false;
-								for (int x = 0; !found && x < repository.getLocation().size(); x++) {
+								for (int x = 0; !found && repository.getLocation()!=null && x < repository.getLocation().size(); x++) {
 									Location target = repository.getLocation().get(x);
 
 									// Current lang.
@@ -2040,19 +2055,18 @@ public class CreateEAG2012 {
 				Repository repository = this.eag.getArchguide().getDesc().getRepositories().getRepository().get(i);
 
 				for (int j = 0; j < termsOfUseValueList.size(); j++) {
-					if ((termsOfUseValueList.get(j) != null
-								&& !termsOfUseValueList.get(j).isEmpty())
-							|| (termsOfUseHrefList.get(j) != null
-								&& !termsOfUseHrefList.get(j).isEmpty() )) {
-						TermsOfUse termsOfUse = new TermsOfUse();
-						termsOfUse.setContent(termsOfUseValueList.get(j));
-						if (!Eag2012.OPTION_NONE.equalsIgnoreCase(termsOfUseLangList.get(j))) {
-							termsOfUse.setLang(termsOfUseLangList.get(j));
-						}
-						termsOfUse.setHref(termsOfUseHrefList.get(j));
-	
-						repository.getAccess().getTermsOfUse().add(termsOfUse);
+					if ((termsOfUseValueList.get(j) == null || termsOfUseValueList.get(j).isEmpty()) && (termsOfUseHrefList.get(j)==null || termsOfUseHrefList.get(j).isEmpty() )) {
+						break;
 					}
+
+					TermsOfUse termsOfUse = new TermsOfUse();
+					termsOfUse.setContent(termsOfUseValueList.get(j));
+					if (!Eag2012.OPTION_NONE.equalsIgnoreCase(termsOfUseLangList.get(j))) {
+						termsOfUse.setLang(termsOfUseLangList.get(j));
+					}
+					termsOfUse.setHref(termsOfUseHrefList.get(j));
+
+					repository.getAccess().getTermsOfUse().add(termsOfUse);
 				}
 			}
 		}

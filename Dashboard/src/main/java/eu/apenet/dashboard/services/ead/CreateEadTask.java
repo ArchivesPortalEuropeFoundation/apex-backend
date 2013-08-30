@@ -72,11 +72,14 @@ public class CreateEadTask extends AbstractEadTask {
 			newEad.setUploadDate(new Date());
 			// / STORING THE NEW FINDING AID IN THE FILE SYSTEM ///
 			String startPath = getPath(xmlType, archivalInstitution) + upFile.getFilename();
+            File destFile = new File(APEnetUtilities.getDashboardConfig().getRepoDirPath() + startPath);
+            if(destFile.exists()) {
+                startPath = getPath(xmlType, archivalInstitution) + System.currentTimeMillis() + "_" + upFile.getFilename();
+                destFile = new File(APEnetUtilities.getDashboardConfig().getRepoDirPath() + startPath);
+            }
 			newEad.setPathApenetead(startPath);
 			newEad.setUploadMethod(upFile.getUploadMethod());
 			newEad = DAOFactory.instance().getEadDAO().store(newEad);
-
-			File destFile = new File(APEnetUtilities.getDashboardConfig().getRepoDirPath() +startPath);
 
 			File srcFile = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath()
 					+ APEnetUtilities.FILESEPARATOR + aiId + APEnetUtilities.FILESEPARATOR + fileName);

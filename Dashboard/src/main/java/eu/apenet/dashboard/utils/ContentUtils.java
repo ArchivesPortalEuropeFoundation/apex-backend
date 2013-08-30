@@ -838,4 +838,17 @@ public class ContentUtils {
 		response.setHeader("content-disposition", "attachment;filename=" + name);
 		return new PrintWriter(response.getOutputStream());
 	}
+	public static OutputStream getOutputStreamToDownload(HttpServletRequest request, HttpServletResponse response, String name, String contentType) throws IOException{
+		String browserType=(String)request.getHeader("User-Agent");
+		if(MIME_TYPE_APPLICATION_XML.equals(contentType) && browserType.indexOf("MSIE") > 0){
+			response.setContentType("application/file-download");
+		}else {
+			response.setContentType(contentType);
+		}
+
+		response.setBufferSize(4096);
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("content-disposition", "attachment;filename=" + name);
+		return response.getOutputStream();
+	}
 }

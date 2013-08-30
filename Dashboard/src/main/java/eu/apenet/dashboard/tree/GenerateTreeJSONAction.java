@@ -274,7 +274,7 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 		    buffer.append(COMMA);
         }
 		buffer.append(FOLDER_WITH_CHILDREN);
-		buffer.append(generateChildrenOfRootJSON(eadContent, childBuffer, path, expand, isWithPreface, xmlTypeIdString));
+		buffer.append(childBuffer);
 		buffer.append(END_ITEM_WITH_RETURN);
 		buffer.append(END_ARRAY);
 		return buffer;
@@ -284,37 +284,6 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 		return generateRootJSON(eadContent, childBuffer, path, expand, true, xmlTypeIdString);
 	}
 
-	private StringBuilder generateChildrenOfRootJSON(EadContent eadContent, StringBuilder childBuffer, String path, boolean expand, boolean isWithPreface, String xmlTypeIdString) {
-		StringBuilder buffer = new StringBuilder();
-		buffer.append(START_ARRAY);
-        buffer.append(START_ITEM);
-        if(isWithPreface){
-            addTitle(buffer, getText("eadcontent.introduction"));
-            buffer.append(COMMA);
-            addUrl(buffer, eadContent, path + "/displayEadIntroduction.action", xmlTypeIdString);
-            buffer.append(END_ITEM_WITH_COMMA);
-            buffer.append(START_ITEM);
-            addTitle(buffer, eadContent.getUnittitle());
-            buffer.append(COMMA);
-            addUrl(buffer, eadContent, path + "/displayEadDidContent.action", xmlTypeIdString);
-        } else {
-            addTitle(buffer, eadContent.getUnittitle());
-            buffer.append(COMMA);
-            addFaId(buffer, eadContent.getFaId()) ;
-        }
-        if (expand) {
-            buffer.append(COMMA);
-            addExpand(buffer);
-        }
-		buffer.append(COMMA);
-
-		buffer.append(FOLDER_WITH_CHILDREN);
-		buffer.append(childBuffer);
-		buffer.append(END_ITEM_WITH_RETURN);
-		buffer.append(END_ARRAY);
-		return buffer;
-
-	}
 
 	private StringBuilder generateCLevelJSON(List<CLevel> clevels, String path, boolean isWithUrl) {
 		StringBuilder buffer = new StringBuilder();

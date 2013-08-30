@@ -39,6 +39,7 @@ public class ArchivalInstitutionUnit implements Comparable<ArchivalInstitutionUn
 	private boolean hasArchivalInstitutions = false;
 	private String language;
 	private Integer alorder; //The order of the archival institution within the Archival Landscape	
+	private String repoCode;
 	
 	//Getters and Setters
 	public void setAiId(Integer aiId) {
@@ -55,6 +56,14 @@ public class ArchivalInstitutionUnit implements Comparable<ArchivalInstitutionUn
 
 	public String getAiname() {
 		return ainame;
+	}
+
+	public String getRepoCode() {
+		return repoCode;
+	}
+
+	public void setRepoCode(String repoCode) {
+		this.repoCode = repoCode;
 	}
 
 	public String getAiScndname() {
@@ -121,13 +130,14 @@ public class ArchivalInstitutionUnit implements Comparable<ArchivalInstitutionUn
 	 * @param pathEAG
 	 * @param language
 	 */
-	public ArchivalInstitutionUnit(Integer aiId, String ainame, String couName, String pathEAG, Boolean isgroup, Integer numberOfArchivalInstitutions, String language, Integer alorder) {
+	public ArchivalInstitutionUnit(Integer aiId, String ainame, String couName, String repoCode,String pathEAG, Boolean isgroup, Integer numberOfArchivalInstitutions, String language, Integer alorder) {
 		
 		this.aiId = aiId;
 		this.ainame = ainame;
 		this.couName = couName;
 		this.pathEAG=pathEAG;
 		this.isgroup = isgroup;
+		this.repoCode = repoCode;
 		this.numberOfArchivalInstitutions = numberOfArchivalInstitutions;
 		
 		this.alorder = alorder;

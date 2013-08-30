@@ -241,6 +241,7 @@ textarea {
 	height:60px;
 	width: 200px;
 	font-weight: bold;
+	overflow: auto;
 }
 
 input[type="button"] {
@@ -251,8 +252,8 @@ input[type="button"] {
 	padding-top: 3px;
 	padding-bottom: 3px;
 	border-radius: 15px;
-	display: inline-block;
-	vertical-align: top;
+	display: inline;
+ 	vertical-align: top;
 	letter-spacing: 0.8px;
 	color: #006CB0;
 	background-color: #E9F3FA;
@@ -273,10 +274,10 @@ input[type="button"]:disabled {
 }
 
 #buttonAddFutherInformationOnExistingFacilities, #buttonAddFutherInformationOnExistingFacilities2, #buttonAddReferencetoyourinstitutionsholdingsguide {
-	display: inline-block;
+	display: inline;
 	vertical-align: top;
 	white-space:normal;
-	line-height:norma;
+	line-height:normal;
 }
 
 #buttonAccessAndServiceTabPrevious, #buttonContactTabPrevious, #buttonControlTabPrevious,
@@ -333,6 +334,5 @@ p.fieldRequired {
 }
 
 .labelLeft {
-	padding-left: 20px;
 	width: 25%;
 }

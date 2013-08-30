@@ -4,29 +4,33 @@
 	xmlns:ape="http://www.archivesportaleurope.eu/xslt/extensions" 	exclude-result-prefixes="xlink xlink xsi ead ape fn #default">
 
 	<xsl:output method="html" indent="yes" version="4.0" encoding="UTF-8" />
-	<xsl:template match="ead:head" mode="#all" />
+	<xsl:template match="ead:head" mode="#all">
+		<h4>
+			<xsl:apply-templates mode="#current" />
+		</h4>
+	</xsl:template>
 	<xsl:template match="ead:p" mode="#all">
 		<p>
 			<xsl:apply-templates mode="#current" />
 		</p>
 	</xsl:template>
 	<xsl:template match="text()" mode="scopecontent">
-		<xsl:value-of select="ape:highlight(., 'scopecontent')" disable-output-escaping="yes" />
+		<xsl:value-of select="ape:highlight(., 'scopecontent')" disable-output-escaping="yes" /><xsl:text> </xsl:text>
 	</xsl:template>
 	<xsl:template match="text()" mode="title">
 		<xsl:value-of select="ape:highlight(., 'title')" disable-output-escaping="yes" />
 	</xsl:template>
 	<xsl:template match="text()" mode="other">
-		<xsl:value-of select="ape:highlight(., 'other')" disable-output-escaping="yes" />
+		<xsl:value-of select="ape:highlight(., 'other')" disable-output-escaping="yes" /><xsl:text> </xsl:text>
 	</xsl:template>
 	<xsl:template match="text()" mode="alterdate">
 		<xsl:value-of select="ape:highlight(., 'alterdate')" disable-output-escaping="yes" />
 	</xsl:template>	
 	<xsl:template match="text()" mode="notsearchable">
-		<xsl:value-of select="." />
+		<xsl:value-of select="." /><xsl:text> </xsl:text>
 	</xsl:template>	
 	<xsl:template match="ead:unitdate" mode="#all">
-		<xsl:apply-templates mode="#current" />
+		<xsl:apply-templates mode="#current" /><xsl:text> </xsl:text>
 	</xsl:template>	
 	<xsl:template match="ead:lb" mode="#all">
 		<xsl:text disable-output-escaping="yes">&lt;br&gt;</xsl:text>
@@ -34,12 +38,12 @@
 	<xsl:template match="ead:emph[@render='bold']" mode="#all">
 		<b>
 			<xsl:apply-templates mode="#current" />
-		</b>
+		</b><xsl:text> </xsl:text>
 	</xsl:template>
 	<xsl:template match="ead:emph[@render='italic']" mode="#all">
 		<i>
 			<xsl:apply-templates mode="#current" />
-		</i>
+		</i><xsl:text> </xsl:text>
 	</xsl:template>
 	<xsl:template match="ead:list[@type='ordered']" mode="#all">
 		<p>
@@ -86,7 +90,7 @@
 							</span>
 						</xsl:otherwise>
 					</xsl:choose>
-				</a>
+				</a><xsl:text> </xsl:text>
 	</xsl:template>
 
 	<xsl:template match="ead:dao" mode="thumbnail">
@@ -263,7 +267,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>
-		</xsl:choose>
+		</xsl:choose><xsl:text> </xsl:text>
 	</xsl:template>
 
 	<xsl:template match="ead:extref" mode="other notsearchable scopecontent">
@@ -383,7 +387,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>
-		</xsl:choose>
+		</xsl:choose><xsl:text> </xsl:text>
 	</xsl:template>
 
 	<xsl:template match="ead:table" mode="#all">

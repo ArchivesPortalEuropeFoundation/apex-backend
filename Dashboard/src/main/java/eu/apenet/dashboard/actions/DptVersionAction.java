@@ -17,7 +17,6 @@ import eu.apenet.persistence.vo.DptUpdate;
  */
 public class DptVersionAction extends AbstractAction{
     private static final long serialVersionUID = 4754804143407258044L;
-    private HttpServletRequest request;
 
     private String versionNb;
     private Long versionId;
@@ -30,7 +29,7 @@ public class DptVersionAction extends AbstractAction{
     @Override
     public String execute() {
         List<DptUpdate> dptUpdates = DAOFactory.instance().getDptUpdateDAO().findAll();
-        request.setAttribute("dptUpdates" , dptUpdates);
+        getServletRequest().setAttribute("dptUpdates" , dptUpdates);
         return SUCCESS;
     }
 

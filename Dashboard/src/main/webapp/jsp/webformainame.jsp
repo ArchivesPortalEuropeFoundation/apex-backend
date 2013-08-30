@@ -23,8 +23,8 @@
 
 		<s:form method="POST">		
 			<s:hidden name="ai_id" value="%{ai_id}"></s:hidden>
-    		<s:textfield name="name" value="%{name}" key="label.ai.changeainame.currentname" cssStyle="width:190%"></s:textfield>
-    		<s:textfield name="newname" value="" key="label.ai.changeainame.newname" cssStyle="width:190%"></s:textfield>
+    		<s:textfield name="name" value="%{name}" key="label.ai.changeainame.currentname"></s:textfield>
+    		<s:textfield name="newname" value="" key="label.ai.changeainame.newname"></s:textfield>
     		<p>&nbsp;<br/><br/></p>
     		<!--<s:textfield name="repeatnewname" value="" key="Repeat new name:" cssStyle="width:190%"></s:textfield>-->    		
     		<s:if test="currentAction == 'changeainame'">

@@ -1450,6 +1450,8 @@ function yiAddVisitorsAddressTranslation(text1) {
 	var street = $("table#yiTableVisitorsAddress_"+counter+" textarea#textYIStreet").attr("value");
 	var city = $("table#yiTableVisitorsAddress_"+counter+" textarea#textYICity").attr("value");
 	var country = $("table#yiTableVisitorsAddress_"+counter+" textarea#textYICountry").attr("value");
+	var latitude = $("table#yiTableVisitorsAddress_"+counter+" input#textYILatitude").attr("value");
+	var longitude = $("table#yiTableVisitorsAddress_"+counter+" input#textYILongitude").attr("value");
 
 	if (street != null && street != ""
 			&& city != null && city != "" && country != null && country != "") {
@@ -1458,7 +1460,16 @@ function yiAddVisitorsAddressTranslation(text1) {
 		$("table[id^='yiTableVisitorsAddress_"+counter+"']").after(clone);
 		// Reset parametters.
 		$("table#yiTableVisitorsAddress_"+(counter+1)+" input[type='text']").each(function(){
-			$(this).val(""); // Clean all input_text.
+			var current = $(this).attr("id");
+			if(current!="textYILatitude" && current!="textYILongitude"){
+				$(this).val(""); // Clean all input_text different from latitude or longitude
+			}else if(current=="textYILatitude"){
+				$(this).val(latitude);
+				$("input#textYILatitude").attr("disabled","disabled");
+			}else if(current=="textYILongitude"){
+				$(this).val(longitude);
+				$("input#textYILongitude").attr("disabled","disabled");
+			}
 		});
 		$("table#yiTableVisitorsAddress_"+(counter+1)+" textarea").each(function(){
 			$(this).val(""); // Clean all input_text.
@@ -1466,6 +1477,10 @@ function yiAddVisitorsAddressTranslation(text1) {
 		$("table#yiTableVisitorsAddress_"+(counter+1)+" #selectYIVASelectLanguage").attr("value","none");
 		// Remove "*".
 		$("table#yiTableVisitorsAddress_"+(counter+1)).find("span").remove();
+		
+		$("table#yiTableVisitorsAddress_1 input#textYILatitude").removeAttr("disabled");	
+		$("table#yiTableVisitorsAddress_1 input#textYILongitude").removeAttr("disabled");	
+		
 	} else {
 		alertEmptyFields(text1);
 	}
@@ -1814,6 +1829,10 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7, proper
 	$("table#contactTable_"+(counter+1)+" textarea#textContactWebOfTheInstitution_1").removeAttr("onchange");
 	$("table#contactTable_"+(counter+1)+" textarea#textContactLinkTitleForWebOfTheInstitution_1").removeAttr("onchange");
 	$("table#contactTable_"+(counter+1)+" select#selectWebpageLanguageOfTheInstitution_1").removeAttr("onchange");
+
+	// Add new attr "onchange" for latitude and longitude elements in "contact" tab.
+	$("table#contactTable_"+(counter+1)+" input#textContactLatitudeOfTheInstitution").change(latitudeOfRepoChanged);
+	$("table#contactTable_"+(counter+1)+" input#textContactLongitudeOfTheInstitution").change(longitudeOfRepoChanged);
 
 	// Remove attr "onchange" for all elements in "access and servicess" tab.
 	$("table#accessAndServicesTable_"+(counter+1)+" textarea#textOpeningTimes_1").removeAttr("onchange");
@@ -2564,6 +2583,9 @@ function contactAddVisitorsAddressTranslation(text1) {
 //	var region = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" input#textContactRegionOfTheInstitution").attr("value");
 	var country = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" textarea#textContactCountryOfTheInstitution").attr("value");
 
+	var latitude = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" input#textContactLatitudeOfTheInstitution").attr("value");
+	var longitude = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+counter+" input#textContactLongitudeOfTheInstitution").attr("value");
+	
 	if (street == null || street == ""
 			|| city == null || city == "" /*|| district == null || district == ""
 			|| county == null || county == "" || region == null || region == "" */
@@ -2577,8 +2599,17 @@ function contactAddVisitorsAddressTranslation(text1) {
 	$("table#contactTable"+currentTab+" table[id^='contactTableVisitorsAddress_"+counter+"']").after(clone);
 	// Reset parametters and enable fields.
 	$("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+(counter+1)+" input[type='text']").each(function(){
-		$(this).val(""); // Clean all input_text.
-		$(this).removeAttr("disabled");
+		var id = $(this).attr("id");
+		if(id!="textContactLatitudeOfTheInstitution" && id!="textContactLongitudeOfTheInstitution"){
+			$(this).val(""); // Clean all input_text.
+			$(this).removeAttr("disabled");
+		}else if(id=="textContactLatitudeOfTheInstitution"){
+			$(this).val(latitude);
+			$("input#textContactLatitudeOfTheInstitution").attr("disabled","disabled");
+		}else if(id=="textContactLongitudeOfTheInstitution"){
+			$(this).val(longitude);
+			$("input#textContactLongitudeOfTheInstitution").attr("disabled","disabled");
+		}
 	});
 	$("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+(counter+1)+" textarea").each(function(){
 		$(this).val(""); // Clean all input_text.
@@ -2588,6 +2619,9 @@ function contactAddVisitorsAddressTranslation(text1) {
 	$("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+(counter+1)+" #selectLanguageVisitorAddress").attr("value","none");
 	// Remove "*".
 	$("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_"+(counter+1)).find("span").remove();
+	
+	$("table#contactTableVisitorsAddress_1 input#textContactLatitudeOfTheInstitution").removeAttr("disabled");	
+	$("table#contactTableVisitorsAddress_1 input#textContactLongitudeOfTheInstitution").removeAttr("disabled");
 }
 
 function contactAddPostalAddressIfDifferent(property1, property2, property3, property4,control) {
@@ -4126,28 +4160,57 @@ function postalAddressLanguageChanged(name){
 }
 
 function latitudeOfInstitutionChanged(name){
-	var id = name.attr("id");
-	id = id.substring(id.lastIndexOf("_"));
-
-	if(($("table#yiTableVisitorsAddress" + id + " #textYILatitude").val()!="") && ($("table#yiTableVisitorsAddress" + id + " #textYILatitude").val()!=null)){
-	  $("table#contactTable_1 table#contactTableVisitorsAddress" + id + " #textContactLatitudeOfTheInstitution").attr("value", $("table#yiTableVisitorsAddress" + id + " #textYILatitude").val());
-    //  $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").attr("disabled","disabled");
-	}else{
-		//$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").removeAttr("disabled");
-		$("table#contactTable_1 table#contactTableVisitorsAddress" + id + " #textContactLatitudeOfTheInstitution").val("");
-	}
+	var parentId = name.attr("id");
+	parentId = parentId.substring(parentId.lastIndexOf("_"));
+	var currentTab = getCurrentTab();
+	var latitudeValue = $("table#yiTableVisitorsAddress"+currentTab+" #textYILatitude").val();
+	
+	$("table#contactTable"+currentTab+" table#contactTableVisitorsAddress" + parentId + " #textContactLatitudeOfTheInstitution").attr("value",latitudeValue);
+	
+	$("table#contactTable"+currentTab+" table[id^=contactTableVisitorsAddress]").each(function(){
+		var id = $(this).attr("id");
+		$("table#contactTable"+currentTab+" table#" + id + " #textContactLatitudeOfTheInstitution").attr("value", latitudeValue);
+	});
+	$("table[id^=yiTableVisitorsAddress]").each(function(){
+		var id = $(this).attr("id");
+		$("table#" + id + " #textYILatitude").attr("value", latitudeValue);
+	});
 }
 function longitudeOfInstitutionChanged(name){
-	var id = name.attr("id");
-	id = id.substring(id.lastIndexOf("_"));
+	var parentId = name.attr("id");
+	parentId = parentId.substring(parentId.lastIndexOf("_"));
+	var currentTab = getCurrentTab();
+	var longitudeValue = $("table#yiTableVisitorsAddress"+currentTab+" #textYILongitude").val();
+	
+	$("table#contactTable"+currentTab+" table#contactTableVisitorsAddress" + parentId + " #textContactLongitudeOfTheInstitution").attr("value",longitudeValue);
+	
+	$("table#contactTable"+currentTab+" table[id^=contactTableVisitorsAddress]").each(function(){
+		var id = $(this).attr("id");
+		$("table#contactTable"+currentTab+" table#" + id + " #textContactLongitudeOfTheInstitution").attr("value", longitudeValue);
+	});
+	$("table[id^=yiTableVisitorsAddress]").each(function(){
+		var id = $(this).attr("id");
+		$("table#" + id + " #textYILongitude").attr("value", longitudeValue);
+	});
+}
 
-	if(($("table#yiTableVisitorsAddress" + id + " #textYILongitude").val()!="") && ($("table#yiTableVisitorsAddress" + id + " #textYILongitude").val()!=null)){
-	   $("table#contactTable_1 table#contactTableVisitorsAddress" + id + " #textContactLongitudeOfTheInstitution").attr("value", $("table#yiTableVisitorsAddress" + id + " #textYILongitude").val());
-    //   $("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").attr("disabled","disabled");
-	}else{
-		//$("table#contactTable_1 table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").removeAttr("disabled");
-		$("table#contactTable_1 table#contactTableVisitorsAddress" + id + " #textContactLongitudeOfTheInstitution").val("");
-	}
+function latitudeOfRepoChanged(){
+	var currentTab = getCurrentTab();
+	var latitudeValue = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").val();
+
+	$("table#contactTable"+currentTab+" table[id^=contactTableVisitorsAddress]").each(function(){
+		var id = $(this).attr("id");
+		$("table#contactTable"+currentTab+" table#" + id + " #textContactLatitudeOfTheInstitution").attr("value", latitudeValue);
+	});
+}
+function longitudeOfRepoChanged(){
+	var currentTab = getCurrentTab();
+	var longitudeValue = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").val();
+	
+	$("table#contactTable"+currentTab+" table[id^=contactTableVisitorsAddress]").each(function(){
+		var id = $(this).attr("id");
+		$("table#contactTable"+currentTab+" table#" + id + " #textContactLongitudeOfTheInstitution").attr("value", longitudeValue);
+	});
 }
 
 function continentOfInstitutionChanged(){
@@ -4668,16 +4731,36 @@ function contactWebpageLangChanged(name){
 function contactLatitudeChanged(name){
 	var parentId = name.attr("id");
 	parentId = parentId.substring(parentId.lastIndexOf("_"));
+	var currentTab = getCurrentTab();
+	var latitudeValue = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_1 #textContactLatitudeOfTheInstitution").val();
 
-	var id = $("table#contactTable_1 table#contactTableVisitorsAddress" + parentId + " #textContactLatitudeOfTheInstitution").val();
-	$("table#yiTableVisitorsAddress" + parentId + " #textYILatitude").attr("value",id);
+	$("table#yiTableVisitorsAddress" + parentId + " #textYILatitude").attr("value",latitudeValue);
+
+	$("table#contactTable"+currentTab+" table[id^=contactTableVisitorsAddress]").each(function(){
+		var id = $(this).attr("id");
+		$("table#contactTable"+currentTab+" table#" + id + " #textContactLatitudeOfTheInstitution").attr("value", latitudeValue);
+	});
+	$("table[id^=yiTableVisitorsAddress]").each(function(){
+		var id = $(this).attr("id");
+		$("table#" + id + " #textYILatitude").attr("value", latitudeValue);
+	});
 }
 function contactLongitudeChanged(name){
 	var parentId = name.attr("id");
 	parentId = parentId.substring(parentId.lastIndexOf("_"));
+	var currentTab = getCurrentTab();
+	var longitudeValue = $("table#contactTable"+currentTab+" table#contactTableVisitorsAddress_1 #textContactLongitudeOfTheInstitution").val();
 
-	var id =  $("table#contactTable_1 table#contactTableVisitorsAddress" + parentId + " #textContactLongitudeOfTheInstitution").val();
-	$("table#yiTableVisitorsAddress" + parentId + " #textYILongitude").attr("value",id);
+	$("table#yiTableVisitorsAddress" + parentId + " #textYILongitude").attr("value",longitudeValue);
+	
+	$("table#contactTable"+currentTab+" table[id^=contactTableVisitorsAddress]").each(function(){
+		var id = $(this).attr("id");
+		$("table#contactTable"+currentTab+" table#" + id + " #textContactLongitudeOfTheInstitution").attr("value", longitudeValue);
+	});
+	$("table[id^=yiTableVisitorsAddress]").each(function(){
+		var id = $(this).attr("id");
+		$("table#" + id + " #textYILongitude").attr("value", longitudeValue);
+	});
 }
 function contactStreetLanguageChanged(name){
 	var parentId = name.attr("id");
@@ -4727,3 +4810,22 @@ function selectYIReferencetoHoldingsguideChange(name){
 		$("table#resourceRelationTable_1 tr select#selectTitleOfRelatedMaterialLang").attr("value",$("#selectYIReferencetoHoldingsguide").val());
 	}
 }
+
+function disableCoordinates(){
+	var counter = $("table[id^='yiTableVisitorsAddress_']").length;
+	for (var i=1;i<=counter;i++){
+		$("table#yiTableVisitorsAddress_"+i+" input#textYILatitude").attr("disabled","disabled");
+		$("table#yiTableVisitorsAddress_"+i+" input#textYILongitude").attr("disabled","disabled");
+		$("table#contactTableVisitorsAddress_"+i+" input#textContactLatitudeOfTheInstitution").attr("disabled","disabled");	
+		$("table#contactTableVisitorsAddress_"+i+" input#textContactLongitudeOfTheInstitution").attr("disabled","disabled");
+	}
+	$("table#yiTableVisitorsAddress_1 input#textYILatitude").removeAttr("disabled");	
+	$("table#yiTableVisitorsAddress_1 input#textYILongitude").removeAttr("disabled"); 
+	$("table#contactTableVisitorsAddress_1 input#textContactLatitudeOfTheInstitution").removeAttr("disabled");	
+	$("table#contactTableVisitorsAddress_1 input#textContactLongitudeOfTheInstitution").removeAttr("disabled");
+
+}
+
+$(document).ready(function(){
+	disableCoordinates();      	
+}); 

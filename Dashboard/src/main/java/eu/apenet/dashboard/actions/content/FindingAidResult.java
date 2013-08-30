@@ -81,7 +81,7 @@ public class FindingAidResult extends EadResult {
 	}
 
 	public boolean isEditable(){
-		return super.isEditable() && !(convertedToEseEdm || deliveredToEuropeana);
+		return isValidated() && !isPublished() && !(convertedToEseEdm || deliveredToEuropeana);
 	}
 
 	public String getHoldingsGuideTitle() {
