@@ -8,14 +8,14 @@
 	<name>Backend Project</name>
 	<description>Maven Project for building the Dashboard/OAI-PMH server and common libraries</description>
 	<scm>
-		<connection>scm:svn:https://build.archivesportaleurope.net/svn/apex/branches/backend-project-1.3</connection>
-		<developerConnection>scm:svn:https://build.archivesportaleurope.net/svn/apex/branches/backend-project-1.3</developerConnection>
+		<connection>scm:svn:https://build.archivesportaleurope.net/svn/apex/trunk</connection>
+		<developerConnection>scm:svn:https://build.archivesportaleurope.net/svn/apex/trunk</developerConnection>
 	</scm>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>3.1.1.RELEASE</spring.version>
 		<postgresql.version>9.1-901.jdbc4</postgresql.version>
-        <archivesportaleurope.dptutil.version>2013-07-SNAPSHOT</archivesportaleurope.dptutil.version>
+        <archivesportaleurope.dptutil.version>2013-08</archivesportaleurope.dptutil.version>
 	</properties>
 
 
