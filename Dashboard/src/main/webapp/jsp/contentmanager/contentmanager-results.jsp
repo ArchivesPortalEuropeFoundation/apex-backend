@@ -21,7 +21,7 @@
 			<span class="bold">
 			<s:actionerror />
 			<s:text name="content.message.batch" />:</span> 
-			<input type="radio" name="batchItems" value="all" onchange="select_all()">
+			<input type="radio" name="batchItems" value="all" onchange="select_all();">
 			<s:text name="content.message.all" />
 			<input type="radio" name="batchItems" value="only_selected" onchange="select_none();" checked="checked"/>
 			<s:text name="content.message.onlyselected" />
@@ -101,6 +101,31 @@
 				<label class="bold" id="pageSizeLabel" for="updateCurrentSearch_resultPerPage"><s:text
 						name="content.message.resultsperpage" />: </label>
 				<s:select name="resultPerPage" list="#{'10':'10','20':'20','30':'30','50':'50','100':'100'}" />
+			</div>
+			<div id="eadRefreshInterval">
+			   <label class="bold" id="pageSizeLabel" for="updateCurrentSearch_resultPerPage"><s:text
+						name="content.message.refreshInterval" />: </label>
+			    <select  id= "refreshInterval" name="refreshInterval" onchange="javascript:refreshIntervalFunc($(this).prop('selectedIndex'));">
+			      <option value="nonRefresh">
+			        <s:text name="content.message.nonRefresh"/>
+			      </option>
+			      <option value="5">
+			        5
+			        <s:text name="content.message.secondsRefresh"/>
+			      </option>
+			      <option value="10">
+			        10
+			        <s:text name="content.message.secondsRefresh"/>
+			      </option>
+			      <option value="15">
+			        15
+			        <s:text name="content.message.secondsRefresh"/>
+			      </option>
+			      <option value="20">
+			        20
+			        <s:text name="content.message.secondsRefresh"/>
+			      </option>
+			    </select>
 			</div>
 			<div id="ead-paging" class="paging">
 				<ape:paging numberOfItems="${results.totalNumberOfResults}" pageSize="${results.eadSearchOptions.pageSize}"

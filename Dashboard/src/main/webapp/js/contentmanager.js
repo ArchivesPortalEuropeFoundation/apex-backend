@@ -173,10 +173,17 @@ function updateCurrentSearchResults(formData) {
 	if (formData == null) {
 		formData = getUpdateCurrentSearchResultsForm();
 	}
+	//check reload part
+	var index = $("select#refreshInterval").prop("selectedIndex");
+	var seconds = $("select#refreshInterval").val();
 	$("#ead-results-container").html("<div class='icon_waiting'></div>");
 	$.post("updateContentmanager.action", formData, function(data) {
 		$("#ead-results-container").html(data);
 		initSubpage();
+		$("select#refreshInterval option").eq(index).prop("selected",true);
+		if(index!=0){ //reloads if different
+			refreshIntervalFunc(index);
+		}
 	});
 }
 function changeOrder(fieldValue, fieldSorting) {
@@ -256,4 +263,21 @@ function prepareSubmitAndCancelBtns() {
     $("#cancelBtnRoleType").bind("click", function(){
         $.fn.colorbox.close();
     });
+}
+function refreshIntervalFunc(lastIndex) {
+	var list = $("select#refreshInterval");
+	var index=list.prop("selectedIndex");
+	var valueOption=list.val();
+	if (index!=0){
+		var action = "reloadBottom("+(index)+","+valueOption+");";
+		if($.isNumeric(lastIndex) && index===lastIndex){
+			setTimeout(action,valueOption*1000);
+		}
+	}
+}
+function reloadBottom(index,seconds) {
+	var selectedIndex = $("select#refreshInterval").prop("selectedIndex");
+	if(index==selectedIndex){
+		updateCurrentSearchResults();
+	}
 }

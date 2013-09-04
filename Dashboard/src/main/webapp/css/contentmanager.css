@@ -98,8 +98,11 @@
 	float: left;
 	padding-left: 100px;
 }
-
-#contentmanager #resultPerPageContainer select {
+#contentmanager #eadRefreshInterval{
+	float:left;
+	padding-left:50px;
+}
+#contentmanager #resultPerPageContainer select , #contentmanager #eadRefreshInterval select{
 	font-size: 9px;
 	padding: 1px;
 }
