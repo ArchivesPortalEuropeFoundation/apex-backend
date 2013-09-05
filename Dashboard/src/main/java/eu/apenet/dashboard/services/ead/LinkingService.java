@@ -44,9 +44,18 @@ public class LinkingService {
     public static final String PREFIX_UNITID = "unitid";
 	public static boolean linkWithoutCommit(Ead hgOrSg, CLevel clevel) {
 		if (hgOrSg instanceof HoldingsGuide || hgOrSg instanceof SourceGuide) {
-			Ead linkedFindingAid = DAOFactory.instance().getEadDAO()
-					.getEadByEadid(FindingAid.class, hgOrSg.getAiId(), clevel.getHrefEadid());
-			if (linkedFindingAid != null) {
+			EadSearchOptions eadSearchOptions = new EadSearchOptions();
+			eadSearchOptions.setArchivalInstitionId(hgOrSg.getAiId());
+			eadSearchOptions.setEadClazz(FindingAid.class);
+			eadSearchOptions.setEadid(clevel.getHrefEadid());
+			eadSearchOptions.setLinkedWithEadClazz(hgOrSg.getClass());
+			eadSearchOptions.setLinkedId(hgOrSg.getId());
+			eadSearchOptions.setLinked(false);
+			eadSearchOptions.setPageSize(1);
+			eadSearchOptions.setPageNumber(1);
+			List<Ead> linkedFindingAids = DAOFactory.instance().getEadDAO().getEads(eadSearchOptions);
+			if (linkedFindingAids.size() > 0) {
+				Ead linkedFindingAid  = linkedFindingAids.get(0);
 				HgSgFaRelation hgSgFaRelation = new HgSgFaRelation();
 				hgSgFaRelation.setFaId(linkedFindingAid.getId());
 				hgSgFaRelation.setAiId(hgOrSg.getAiId());
