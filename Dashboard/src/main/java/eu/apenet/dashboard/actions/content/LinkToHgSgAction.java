@@ -122,6 +122,7 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
    		return SUCCESS;
 	}
 
+	
 	public String getId() {
 		return id;
 	}

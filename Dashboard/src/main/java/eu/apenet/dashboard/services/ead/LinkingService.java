@@ -121,7 +121,11 @@ public class LinkingService {
 
 		SecurityContext.get().checkAuthorized(eadSearchOptions.getArchivalInstitionId());
 		EadContent eadContent = DAOFactory.instance().getEadContentDAO().findById(ecId);
+		Ead hgOrSg = eadContent.getEad();
 		SecurityContext.get().checkAuthorized(eadContent.getEad());
+		eadSearchOptions.setLinked(false);
+		eadSearchOptions.setLinkedId(hgOrSg.getId());
+		eadSearchOptions.setLinkedWithEadClazz(hgOrSg.getClass());
 		try {
 			XPath xPath = APEnetUtilities.getDashboardConfig().getXpathFactory().newXPath();
 			xPath.setNamespaceContext(new EADNamespaceContext());
