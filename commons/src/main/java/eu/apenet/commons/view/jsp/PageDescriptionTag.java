@@ -12,7 +12,6 @@ public class PageDescriptionTag extends AbstractPagingTag {
 
 	private Logger log = Logger.getLogger(PageDescriptionTag.class);
 	private Object numberFormat;
-	
 
 	public void doTag() throws JspException, IOException {
 		try {
@@ -36,28 +35,19 @@ public class PageDescriptionTag extends AbstractPagingTag {
 			throw new JspException(e);
 		}
 	}
-
+	
 	private String formatNumber(long longValue){
-		if (numberFormat != null){
-			NumberFormat numberFormatter = (NumberFormat) numberFormat;
+		if (this.getNumberFormat() != null){
+			NumberFormat numberFormatter = (NumberFormat) this.getNumberFormat();
 			return numberFormatter.format(longValue);
 		}
 		return longValue +"";
 	}
 	private String formatNumber(int intValue){
-		if (numberFormat != null){
-			NumberFormat numberFormatter = (NumberFormat) numberFormat;
+		if (this.getNumberFormat() != null){
+			NumberFormat numberFormatter = (NumberFormat) this.getNumberFormat();
 			return numberFormatter.format(intValue);
 		}
 		return intValue +"";
-	}
-	public Object getNumberFormat() {
-		return numberFormat;
-	}
-
-
-	public void setNumberFormat(Object numberFormat) {
-		this.numberFormat = numberFormat;
-	}
-	
+	}	
 }
