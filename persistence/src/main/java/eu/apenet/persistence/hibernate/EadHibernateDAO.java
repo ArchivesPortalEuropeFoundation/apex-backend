@@ -22,7 +22,9 @@ import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HgSgFaRelation;
+import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.QueuingState;
+import eu.apenet.persistence.vo.SourceGuide;
 import eu.apenet.persistence.vo.ValidatedState;
 
 public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implements EadDAO {
@@ -154,6 +156,9 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		if (eadSearchOptions.getDynamic() != null) {
 			whereClause.add(criteriaBuilder.equal(from.get("dynamic"), eadSearchOptions.getDynamic()));
 		}
+		if (StringUtils.isNotBlank(eadSearchOptions.getEadid())) {
+			whereClause.add(criteriaBuilder.equal(from.get("eadid"), eadSearchOptions.getEadid()));
+		}
 		if (eadSearchOptions.getValidated().size() > 0) {
 			List<Predicate> validatedPredicated = new ArrayList<Predicate>();
 			for (ValidatedState validateState : eadSearchOptions.getValidated()) {
@@ -171,13 +176,21 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 					europeanaPredicated.add(criteriaBuilder.equal(from.get("europeana"), europeanaState));
 				}
 				whereClause.add(criteriaBuilder.or(europeanaPredicated.toArray(new Predicate[0])));
+				
 			}
 			if (eadSearchOptions.getLinked() != null) {
 				Subquery<Long> subquery = cq.subquery(Long.class);
 				Root<HgSgFaRelation> fromHgSgFaRelation = subquery.from(HgSgFaRelation.class);
 				subquery.select(fromHgSgFaRelation.<Long>get("faId"));
-				subquery.where(criteriaBuilder.equal(fromHgSgFaRelation.get("aiId"),eadSearchOptions.getArchivalInstitionId()));
-				subquery.where(criteriaBuilder.equal(fromHgSgFaRelation.<Long>get("faId"),from.get("id")));
+				List<Predicate> subQueryWhereClause = new ArrayList<Predicate>();
+				subQueryWhereClause.add(criteriaBuilder.equal(fromHgSgFaRelation.get("aiId"),eadSearchOptions.getArchivalInstitionId()));
+				subQueryWhereClause.add(criteriaBuilder.equal(fromHgSgFaRelation.<Long>get("faId"),from.get("id")));
+				if (HoldingsGuide.class.equals(eadSearchOptions.getLinkedWithEadClazz())){
+					subQueryWhereClause.add(criteriaBuilder.equal(fromHgSgFaRelation.<Long>get("hgId"),eadSearchOptions.getLinkedId()));
+				}else if (SourceGuide.class.equals(eadSearchOptions.getLinkedWithEadClazz())){
+					subQueryWhereClause.add(criteriaBuilder.equal(fromHgSgFaRelation.<Long>get("sgId"),eadSearchOptions.getLinkedId()));
+				}
+				subquery.where(criteriaBuilder.and(subQueryWhereClause.toArray(new Predicate[0])));
 				if (eadSearchOptions.getLinked()){
 					whereClause.add(criteriaBuilder.exists(subquery));
 				}else {
