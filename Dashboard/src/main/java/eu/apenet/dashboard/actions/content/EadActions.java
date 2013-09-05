@@ -313,17 +313,17 @@ public class EadActions extends AbstractEadActions {
 
         protected void fillCell(int col, int row, String stringValue) {
             Cell cell = table.getCellByPosition(col, row);
-            cell.setDisplayText(stringValue);
+            cell.setStringValue(stringValue + "");
         }
 
         protected void fillCell(int col, int row, int stringValue) {
             Cell cell = table.getCellByPosition(col, row);
-            cell.setDisplayText(stringValue + "");
+            cell.setStringValue(stringValue + "");
         }
 
-        protected void fillCell(int col, int row, long stringValue) {
+        protected void fillCell(int col, int row, long longValue) {
             Cell cell = table.getCellByPosition(col, row);
-            cell.setDisplayText(stringValue + "");
+            cell.setStringValue(longValue + "");
         }
     }
 }
