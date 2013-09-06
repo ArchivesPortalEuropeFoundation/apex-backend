@@ -185,10 +185,12 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 				List<Predicate> subQueryWhereClause = new ArrayList<Predicate>();
 				subQueryWhereClause.add(criteriaBuilder.equal(fromHgSgFaRelation.get("aiId"),eadSearchOptions.getArchivalInstitionId()));
 				subQueryWhereClause.add(criteriaBuilder.equal(fromHgSgFaRelation.<Long>get("faId"),from.get("id")));
-				if (HoldingsGuide.class.equals(eadSearchOptions.getLinkedWithEadClazz())){
-					subQueryWhereClause.add(criteriaBuilder.equal(fromHgSgFaRelation.<Long>get("hgId"),eadSearchOptions.getLinkedId()));
-				}else if (SourceGuide.class.equals(eadSearchOptions.getLinkedWithEadClazz())){
-					subQueryWhereClause.add(criteriaBuilder.equal(fromHgSgFaRelation.<Long>get("sgId"),eadSearchOptions.getLinkedId()));
+				if (eadSearchOptions.getLinkedId() != null){
+					if (HoldingsGuide.class.equals(eadSearchOptions.getLinkedWithEadClazz())){
+						subQueryWhereClause.add(criteriaBuilder.equal(fromHgSgFaRelation.<Long>get("hgId"),eadSearchOptions.getLinkedId()));
+					}else if (SourceGuide.class.equals(eadSearchOptions.getLinkedWithEadClazz())){
+						subQueryWhereClause.add(criteriaBuilder.equal(fromHgSgFaRelation.<Long>get("sgId"),eadSearchOptions.getLinkedId()));
+					}
 				}
 				subquery.where(criteriaBuilder.and(subQueryWhereClause.toArray(new Predicate[0])));
 				if (eadSearchOptions.getLinked()){
