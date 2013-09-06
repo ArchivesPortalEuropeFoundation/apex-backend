@@ -5,29 +5,8 @@
     function bindContextMenu() {
         $("#myMenu .edit a").unbind();
         $("#myMenu .add a").unbind();
-        $("#myMenu .addFA a").unbind();
         $("#myMenu .delete a").unbind();
         $("#myMenu").find("li.disabled").removeClass('disabled');
-        $("#myMenu .addFA a").colorbox(
-            {
-                width:"80%",
-                height:"80%",
-                inline:true,
-                overlayClose:false,
-                escKey:false,
-                onOpen:function(){
-                    $("#myMenu").hide();
-                    $(document).unbind('keydown.cbox_close');
-                    retrieveDataOfFAs();
-                    createAddFAsPanel($("#tree").dynatree("getActiveNode"));
-                },
-                onLoad:function(){
-                    $('#cboxClose').remove();
-                },
-                onCleanup:function(){ $("#myMenu").show(); },
-                href:"#addFAColorbox"
-            }
-        );
         $("#myMenu .add a").colorbox(
             {
                 width:"80%",
@@ -84,55 +63,12 @@
             }
         });
     }
-    function retrieveDataOfFAs(){
-        $("#allFAs").html("<img src='images/waiting.gif' />");
-        $.post("${pageContext.request.contextPath}/getPossibleFAs.action","", function(databack){
-            $("#allFAs").html("");
-            $.each(databack, function(key, value){
-                if(value != null)
-                    $("#allFAs").append("<span class='block' id='"+ value.id +"'><input type='checkbox' name='possibleFAs' class='possibleFAs' value='"+ value.id +"' />" + value.eadId + ": " + value.title + "</span>");
-            });
-        }, "json");
-    }
 
-    function createAddFAsPanel(node){
-        unbindAllBtn();
-        $("#addFAsBtn").click(function(){
-            $(this).unbind('click');
-            var selectedFAs = "[";
-            $.each($(".possibleFAs"), function() {
-                if($(this).attr("checked")){
-                    if(selectedFAs != "[")
-                        selectedFAs += ",";
-                    selectedFAs += $(this).val();
-                }
-            });
-            selectedFAs += "]";
-            $("#waitImg_addFA").css("display", "inline");
-            $("#addFAsBtn").css("display", "none");
-
-            $.post("${pageContext.request.contextPath}/addFAsToCurrentLevel.action", {key: node.data.key, selectedFAs: selectedFAs}, function(databack){
-                if(databack.success){
-                    $("#tree").dynatree("getActiveNode").addChild(databack.data);
-                    $("#waitImg_addFA").css("display", "none");
-                    node.render();
-                    $("#addFAsBtn").css("display", "block");
-                    $.fn.colorbox.close();
-                    $("#tree").dynatree("getActiveNode").expand();
-                }
-            }, "json");
-        });
-        $("#addFAsBtnCancel").click(function(){
-            $(this).unbind('click');
-            $.fn.colorbox.close();
-        });
-    }
 
     function unbindContextMenu(){
         $("#myMenu .edit a").unbind();
         $("#myMenu .add a").unbind();
         $("#myMenu .delete a").unbind();
-        $("#myMenu .addFA a").unbind();
         $("#myMenu").find("li").addClass('disabled');
 
         $("#myMenu li.delete").removeClass('disabled');
@@ -155,11 +91,14 @@
     function unbindAllBtn(){
         $("#editBtnSave").unbind('click');
         $("#editBtnCancel").unbind('click');
-        $("#addFAsBtn").unbind('click');
-        $("#addFAsBtnCancel").unbind('click');
     }
 
     function createEditPanel(node, isCancelable, isAddedLevel){
+    	if(isForEadContent(node.data.key)){
+    		$("#unitid-input").removeClass("hidden").addClass("hidden");
+    	}else {
+    		$("#unitid-input").removeClass("hidden");
+    	}
         unbindAllBtn();
         logMsg("Create Edit Panel With Node: " + node.data.key);
         $("#editTitle").val("");
@@ -306,8 +245,7 @@
     }
 
     $(document).ready(function() {
-        var hgId = "${param['hgId']}";
-        
+       
         createTreeWithoutData();
 
         unbindContextMenu();
@@ -315,19 +253,6 @@
     });
 
     function bindDefaultContextMenu() {
-        $("#myMenu .save a").click(function(){
-            if(confirm('<s:property value="getText('dashboard.hgcreation.saveandquit')" />')){
-                var root = $("#tree").dynatree("getRoot").getChildren()[0];
-                $.post("${pageContext.request.contextPath}/createHoldingsGuide.action", {key: root.data.key}, function(databack){
-                    if(databack.success){
-                        alert('<s:property value="getText('dashboard.hgcreation.saved')" />');
-                        window.location = '${pageContext.request.contextPath}/checkfilesuploaded.action';
-                    } else {
-                        alert("Oups...");
-                    }
-                });
-            }
-        });
         $("#myMenu .cancel a").click(function(){
         	window.location = '${pageContext.request.contextPath}/contentmanager.action';
         });
@@ -450,19 +375,13 @@
         </ul>
     </div>
     <div style="display:none;">
-        <div id="addFAColorbox" class="colorboxLeft">
-            <form>
-                <div id="allFAs"></div>
-                <div id="saveAddFAs"><input type="button" id="addFAsBtn" value="<s:property value="getText('dashboard.hgcreation.sbm.btn.insert')" />"/><input type="button" id="addFAsBtnCancel" value="<s:property value="getText('dashboard.hgcreation.sbm.btn.cancel')" />"/><img id="waitImg_addFA" style="display:none;" src="images/colorbox/loading.gif" /></div>
-            </form>
-        </div>
         <div id="editColorbox" class="colorboxLeft">
             <form>
-                <table border="0">
+                <table>
                     <tr>
                         <td colspan="2" align="center"><b><s:property value="getText('dashboard.hgcreation.label.editdata')" /></b></td>
                     </tr>
-                    <tr>
+                    <tr id="unitid-input">
                         <td class="left"><s:property value="getText('dashboard.hgcreation.label.identifier')" /> (unitid):</td>
                         <td class="right"><input type="text" id="editIdentifier" name="identifier" /></td>
                     </tr>

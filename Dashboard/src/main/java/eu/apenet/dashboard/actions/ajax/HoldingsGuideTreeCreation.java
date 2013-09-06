@@ -85,7 +85,8 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
             EadContent eadContent;
             if(StringUtils.isEmpty(getServletRequest().getParameter("dataToEdit"))){
             	Ead holdingsGuide = new HoldingsGuide();
-            	holdingsGuide.setEadid(levelTreeNode.getUnitid());
+            	String eadid = "HG_" + archivalInstitution.getRepositorycode() + "_"+System.currentTimeMillis();
+            	holdingsGuide.setEadid(eadid);
             	holdingsGuide.setTitle(levelTreeNode.getUnittitle());
             	holdingsGuide.setDynamic(true);
             	holdingsGuide.setValidated(ValidatedState.VALIDATED);
@@ -96,11 +97,11 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
                 UploadMethod uploadMethod = DAOFactory.instance().getUploadMethodDAO().getUploadMethodByMethod(UploadMethod.HTTP);
             	holdingsGuide.setUploadMethod(uploadMethod);
             	String startPath = CreateEadTask.getPath(XmlType.EAD_HG, archivalInstitution);
-            	holdingsGuide.setPathApenetead(startPath+ APEnetUtilities.convertToFilename(levelTreeNode.getUnitid())+ ".xml");
+            	holdingsGuide.setPathApenetead(startPath+ APEnetUtilities.convertToFilename(eadid)+ ".xml");
             	holdingsGuide = DAOFactory.instance().getEadDAO().store(holdingsGuide);
                 eadContent = createDummyEadContent();
                 eadContent.setHgId(holdingsGuide.getId());
-                eadContent.setEadid(levelTreeNode.getUnitid());
+                eadContent.setEadid(eadid);
                 eadContent.setTitleproper(levelTreeNode.getUnittitle());
                 eadContent.setUnittitle(levelTreeNode.getUnittitle());
                 eadContent.setXml(eadContentXml.toString());
@@ -110,8 +111,6 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
                 String keyString = fullStr.substring(3);
 
                 eadContent = DAOFactory.instance().getEadContentDAO().findById(Long.parseLong(keyString));
-                if(!eadContent.getEadid().equals(levelTreeNode.getUnitid()))
-                    eadContent.setEadid(levelTreeNode.getUnitid());
                 if(!eadContent.getTitleproper().equals(levelTreeNode.getUnittitle()))
                     eadContent.setTitleproper(levelTreeNode.getUnittitle());
                 if(!eadContent.getUnittitle().equals(levelTreeNode.getUnittitle()))

@@ -220,7 +220,7 @@
 							</c:when>
 							<c:when test="${results.holdingsGuide or results.sourceGuide}">
 								<td class="${eadResult.dynamicCssClass}"><apenet:resource>${eadResult.dynamicText}</apenet:resource></td>
-								<td class="${eadResult.linkedCssClass}"><c:if test="${eadResult.published or eadResult.dynamic}">${eadResult.findingAidsLinked}/ ${eadResult.possibleFindingAidsLinked}</c:if></td>
+								<td class="${eadResult.linkedCssClass}" title="<s:text name='content.message.linked.tooltip' />"><c:if test="${eadResult.published or eadResult.dynamic}">${eadResult.findingAidsLinkedAndPublished}/${eadResult.findingAidsLinked}/${eadResult.possibleFindingAidsLinked}</c:if></td>
 							</c:when>
 
 						</c:choose>
