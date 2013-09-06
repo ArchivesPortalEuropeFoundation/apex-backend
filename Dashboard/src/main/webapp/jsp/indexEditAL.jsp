@@ -8,7 +8,7 @@
     <div id="hasElementChanged" style="visibility:hidden;"><s:property value="hasElementChanged"/></div>
     <div id="aLandscape" class="aLandscape">
 		<div id="divCountry">
-			<p style="text-align: center;"><s:property value="country"/> <s:property value="getText('al.message.archivallandscape')" /></p><hr/>
+			<p id="titleCountry"><s:property value="country"/> <s:property value="getText('al.message.archivallandscape')" /></p><hr/>
 		<s:if test="{AL}">
 			<s:form name="form" method="post" theme="simple">
 			<div id="divError" class="divError">
@@ -36,7 +36,7 @@
 					<div id="editDiv" class="divAction"><s:property value="getText('al.message.edittarget')" /></div>
 				</div>
 				<div id="stateDiv" class="divStatus"> <s:actionmessage/></div>
-				<div id="divForSubmitButtom" class="filterContainer" style="border:0px;margin-top:5px;margin-bottom:30px;"> </div>
+				<div id="divForSubmitButtom" class="filterContainer"> </div>
 			</div>
 			<script type="text/javascript">
 				function updateStatusWindow(text){
@@ -257,6 +257,9 @@
 					if($("select[name=ALElement] option:selected").index()!=-1){
 						$.post('editElement.action','ALElement='+elementValue,function(response){
 							$("body").html(response);
+							if($("#actionWarning").length>0 && $.trim($("#actionWarning").html()).length==0){
+								$("#actionWarning").remove();
+							}
 							$("select[name=ALElement]")[0].selectedIndex = selectedIndex;
 							$("li[id='li_"+elementValue+"']").addClass("selected"); //for safari and chrome browsers
 							updateStatusWindow('<span style="font-weight:bold;">'+elementName+'</span> <s:property value="getText('al.message.alternativesnamesdisplayed')"/>');
@@ -302,6 +305,7 @@
 					$("#divGroupNodesContainer").append($("#changeNodeDiv"));
 					$("#selectListActionsDiv").remove();
 					$("#divSelectListActionsDiv").remove();
+					$("#actionsSelectDivContainer").append($("#filteList"));
 					$("#actionsSelectDivContainer").append($("#selectOnlyListElements"));
 					$("#actionsSelectDivContainer").append($("#actionsButtons"));
 					$("#showEditLanguagesDiv").append($("#showAlternativeNamesDiv"));
@@ -494,7 +498,7 @@
 								</select>
 							</div>
 							<s:if test="elementLanguages.size()>0">
-								<div id="showAlternativeNamesDiv" style="float:left;width:100%;">
+								<div id="showAlternativeNamesDiv">
 									<p><s:property value="getText('al.message.alternativenames')" /></p>
 									<p class="ALP">
 										<s:if test="%{edit==false || elementLanguages.size()<2}">
@@ -513,28 +517,28 @@
 									</p>
 								</div>
 								<s:if test="%{edit==true}">
-								<div id="editLanguagesDiv" style="float:left;width:100%;">
-									<s:if test="elementLanguages.size()>1">
-									<p><input type="submit" id="submitDeleteTarget" name="action:deleteTarget" value="<s:property value="getText('al.message.deletetarget')"/>"/></p>
-									</s:if>
-									<p class="ALP2"><label for="target" style="float:left;"><s:property value="getText('al.message.anwritelanguage')"/>: </label><input type="text" id="target" name="target" /></p>
-									<label for="languageTarget"><s:property value="getText('al.message.anselectlanguage')"/>: </label>
-									<select id="languageTarget" name="languageTarget">
-										<s:iterator var="row" value="langList">
-											<s:if test='#row.getIsoname().toLowerCase().equals("eng")'>
-												<s:if test="%{!(#firstANCreated.equals(#row.getIsoname().toLowerCase()))}">
-													<option selected="selected" value="<s:property value="#row.getIsoname().toLowerCase()"/>"><s:property value="#row.getLname()" /></option>
+									<div id="editLanguagesDiv">
+										<s:if test="elementLanguages.size()>1">
+											<p><input type="submit" id="submitDeleteTarget" name="action:deleteTarget" value="<s:property value="getText('al.message.deletetarget')"/>"/></p>
+										</s:if>
+										<p class="ALP2"><label for="target" style="float:left;"><s:property value="getText('al.message.anwritelanguage')"/>: </label><input type="text" id="target" name="target" /></p>
+										<label  class="leftSpace" for="languageTarget"><s:property value="getText('al.message.anselectlanguage')"/>: </label>
+										<select id="languageTarget" name="languageTarget">
+											<s:iterator var="row" value="langList">
+												<s:if test='#row.getIsoname().toLowerCase().equals("eng")'>
+													<s:if test="%{!(#firstANCreated.equals(#row.getIsoname().toLowerCase()))}">
+														<option selected="selected" value="<s:property value="#row.getIsoname().toLowerCase()"/>"><s:property value="#row.getLname()" /></option>
+													</s:if>
 												</s:if>
-											</s:if>
-											<s:else>
-												<s:if test="%{!(#firstANCreated.equals(#row.getIsoname().toLowerCase()))}">
-													<option value="<s:property value="#row.getIsoname().toLowerCase()"/>"><s:property value="#row.getLname()" /></option>
-												</s:if>
-											</s:else>
-										</s:iterator>
-									</select>
-									<p><input id="editTargetSubmit" type="submit" name="action:editTarget" value="<s:property value="getText('al.message.editalternativenames')"/>" /> <input id="editTargetCancel" type="submit" name="action:editAL" value="<s:property value="getText('al.message.canceledittarget')"/>" /></p>
-								</div>
+												<s:else>
+													<s:if test="%{!(#firstANCreated.equals(#row.getIsoname().toLowerCase()))}">
+														<option value="<s:property value="#row.getIsoname().toLowerCase()"/>"><s:property value="#row.getLname()" /></option>
+													</s:if>
+												</s:else>
+											</s:iterator>
+										</select>
+										<p><input id="editTargetSubmit" type="submit" name="action:editTarget" value="<s:property value="getText('al.message.editalternativenames')"/>" /> <input id="editTargetCancel" type="submit" name="action:editAL" value="<s:property value="getText('al.message.canceledittarget')"/>" /></p>
+									</div>
 								</s:if>
 							</s:if>
 						</div>

@@ -270,7 +270,13 @@ a:hover {
 	width: 100%;
 	hight: 100%;
 }
-
+#titleCountry{
+	text-align: center;
+	font-weight:bold;
+}
+#divCountry hr{
+	color:#00A0DF;
+}
 .divError {
 	text-align: center;
 	margin-bottom: 8px;
@@ -314,6 +320,7 @@ text-align:  center;
 	width: 90%;
 	margin-left: 5%;
 	margin-right: 5%;
+	margin-top: 15px;
 }
 
 #footerCatInner {
@@ -715,22 +722,66 @@ h2 {
 }
 /***archival landscape***/
 .filterContainer {
-	width: 100%;
+	width: 99%;
+	padding:1px;
 	float: left;
 	border-style: double;
+	border-color:#00A0DF;
 }
 
-.divAction {
-	border: 1px solid;
+.divAction{
+    border: 1px solid #00A0DF;
 	cursor: pointer;
 	width: auto;
 	height: auto;
 	float: left;
 	margin: 5px;
-	padding: 5px;
-	background-color: #dedede;
+	/*padding: 5px;*/
+	background-color: #E9F3FA;
+	color: #006CB0;
+	border-radius:15px 15px 15px 15px;
+	font-weight:bold;
+	letter-spacing: 0.8px;
+    padding: 3px 5px;
+    text-align: center;
+    vertical-align: top;
 }
-
+input#submitDeleteTarget{
+	border: 1px solid #00A0DF;
+	background-color: #E9F3FA;
+	color: #006CB0;
+	border-radius:15px 15px 15px 15px;
+	font-weight:bold;
+	font-family: Arial, sans-serif;
+	font-size:10pt;
+	padding:2px;
+	margin:5px;
+/*	letter-spacing: 0.8px;
+    padding: 3px 5px;
+    text-align: center;
+    vertical-align: top;*/
+}
+#divForSubmitButtom{
+	width:30%;
+	border:1px solid #00A0DF;
+	border-radius:15px 15px 15px 15px;
+	background-color: #E9F3FA;
+    color: #006CB0;
+  /*  border:0px;*/
+    margin-top:5px;
+    margin-bottom:30px;
+    margin-left:250px;
+    font-weight:bold;
+    letter-spacing: 0.8px;
+    padding: 3px 5px;
+    text-align: center;
+    vertical-align: top;
+}
+#divForSubmitButtom:hover, .divAction:hover, input.inputButtonSubmitAL:hover, input#submitDeleteTarget:hover{
+    color: #00384D;
+	background-color: #BAE0FC;
+	border-radius: 15px;
+}
 .divStatus {
 	display: none;
 	z-index: 20;
@@ -749,6 +800,7 @@ h2 {
 .firstFilterDiv {
 	float: left;
 	width: 100%;
+	padding-top:5px;
 }
 
 .inputTextBar {
@@ -786,6 +838,7 @@ h2 {
 	float: left;
 	margin-right: 200px;
 	width: 100%;
+	font-weight:bold;
 }
 
 .selectListElementsAL {
@@ -821,8 +874,11 @@ h2 {
 .ALP2 {
 	margin-top: 10px;
 	margin-bottom: 10px;
+	padding-left:12px;
 }
-
+.leftSpace{
+	padding-left:12px;
+}
 .divSelectListActionsDiv {
 	float: left;
 	text-align: justify;
@@ -836,11 +892,25 @@ h2 {
 	text-align: center;
 }
 
-.inputButtonSubmitAL {
+input.inputButtonSubmitAL{
 	width: 100%;
 	float: left;
 	padding-left: 4px;
+	border:transparent;
+	background-color: #E9F3FA;
+    color: #006CB0;
+    font-weight:bold;
+    letter-spacing: 0.8px;
 }
+#showAlternativeNamesDiv{
+	float:left;
+	width:100%;
+	padding-left:12px;
+}
+.firstFilterDiv, .secondFilterDiv{
+	padding-left:12px;
+}
+
 /***archival landscape***/
 
 /*** check uploaded files  ***/
