@@ -49,7 +49,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 	public List<Ead> getEads(EadSearchOptions eadSearchOptions) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Ead> cq = criteriaBuilder.createQuery(Ead.class);
-		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClazz());
+		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClass());
 		cq.where(buildWhere(from, cq, eadSearchOptions));
 		cq.select(from);
 		/*
@@ -80,7 +80,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 	public boolean existEads(EadSearchOptions eadSearchOptions) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Ead> cq = criteriaBuilder.createQuery(Ead.class);
-		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClazz());
+		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClass());
 		cq.where(buildWhere(from, cq, eadSearchOptions));
 		cq.select(from);
 
@@ -93,7 +93,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 	public Long countEads(EadSearchOptions eadSearchOptions) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
-		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClazz());
+		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClass());
 		cq.where(buildWhere(from, cq, eadSearchOptions));
 		cq.select(criteriaBuilder.countDistinct(from));
 
@@ -104,7 +104,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 	public Long countUnits(EadSearchOptions eadSearchOptions) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
-		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClazz());
+		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClass());
 		cq.where(criteriaBuilder.and(buildWhere(from, cq, eadSearchOptions),
 				criteriaBuilder.greaterThan(from.<Integer> get("totalNumberOfUnits"), 0)));
 		cq.select(criteriaBuilder.sum(from.<Long> get("totalNumberOfUnits")));
@@ -116,7 +116,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 	public Long countDaos(EadSearchOptions eadSearchOptions) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
-		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClazz());
+		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClass());
 		cq.where(criteriaBuilder.and(buildWhere(from, cq, eadSearchOptions),
 				criteriaBuilder.greaterThan(from.<Integer> get("totalNumberOfDaos"), 0)));
 		cq.select(criteriaBuilder.sum(from.<Long> get("totalNumberOfDaos")));
@@ -127,7 +127,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 	public Long countChos(EadSearchOptions eadSearchOptions) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
-		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClazz());
+		Root<? extends Ead> from = cq.from(eadSearchOptions.getEadClass());
 		cq.where(criteriaBuilder.and(buildWhere(from, cq, eadSearchOptions),
 				criteriaBuilder.greaterThan(from.<Integer> get("totalNumberOfChos"), 0)));
 		cq.select(criteriaBuilder.sum(from.<Long> get("totalNumberOfChos")));
@@ -169,7 +169,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		/*
 		 * only if findingaid
 		 */
-		if (FindingAid.class.equals(eadSearchOptions.getEadClazz())) {
+		if (FindingAid.class.equals(eadSearchOptions.getEadClass())) {
 			if (eadSearchOptions.getEuropeana().size() > 0) {
 				List<Predicate> europeanaPredicated = new ArrayList<Predicate>();
 				for (EuropeanaState europeanaState : eadSearchOptions.getEuropeana()) {
@@ -186,9 +186,9 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 				subQueryWhereClause.add(criteriaBuilder.equal(fromHgSgFaRelation.get("aiId"),eadSearchOptions.getArchivalInstitionId()));
 				subQueryWhereClause.add(criteriaBuilder.equal(fromHgSgFaRelation.<Long>get("faId"),from.get("id")));
 				if (eadSearchOptions.getLinkedId() != null){
-					if (HoldingsGuide.class.equals(eadSearchOptions.getLinkedWithEadClazz())){
+					if (HoldingsGuide.class.equals(eadSearchOptions.getLinkedWithEadClass())){
 						subQueryWhereClause.add(criteriaBuilder.equal(fromHgSgFaRelation.<Long>get("hgId"),eadSearchOptions.getLinkedId()));
-					}else if (SourceGuide.class.equals(eadSearchOptions.getLinkedWithEadClazz())){
+					}else if (SourceGuide.class.equals(eadSearchOptions.getLinkedWithEadClass())){
 						subQueryWhereClause.add(criteriaBuilder.equal(fromHgSgFaRelation.<Long>get("sgId"),eadSearchOptions.getLinkedId()));
 					}
 				}
@@ -212,12 +212,12 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 			List<Predicate> orPredicated = new ArrayList<Predicate>();
 			if (eadSearchOptions.getPublishedToAll()) {
 				orPredicated.add(criteriaBuilder.equal(from.get("published"), true));
-				if (FindingAid.class.equals(eadSearchOptions.getEadClazz())) {
+				if (FindingAid.class.equals(eadSearchOptions.getEadClass())) {
 					orPredicated.add(criteriaBuilder.notEqual(from.get("europeana"), EuropeanaState.NOT_CONVERTED));
 				}
 			} else {
 				orPredicated.add(criteriaBuilder.equal(from.get("published"), false));
-				if (FindingAid.class.equals(eadSearchOptions.getEadClazz())) {
+				if (FindingAid.class.equals(eadSearchOptions.getEadClass())) {
 					orPredicated.add(criteriaBuilder.equal(from.get("europeana"), EuropeanaState.NOT_CONVERTED));
 				}
 			}
