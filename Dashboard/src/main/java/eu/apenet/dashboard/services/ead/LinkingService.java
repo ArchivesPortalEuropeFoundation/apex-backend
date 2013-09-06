@@ -149,9 +149,8 @@ public class LinkingService {
 				sizeChildren = DAOFactory.instance().getCLevelDAO().countTopCLevels(ecId).intValue();
 			JpaUtil.beginDatabaseTransaction();
 			List<Ead> eads = DAOFactory.instance().getEadDAO().getEads(eadSearchOptions);
-			int size = 0;
-			while ((size = eads.size()) > 0) {
-				Ead ead = eads.get(size - 1);
+			while (eads.size() > 0) {
+				Ead ead = eads.get(0);
 				InputStream xslIs = TransformationTool.class.getResourceAsStream("/xsl/fa2hg.xsl");
 				Source xsltSource = new StreamSource(xslIs);
 				String filePath = APEnetUtilities.getConfig().getRepoDirPath() + ead.getPathApenetead();
@@ -195,7 +194,7 @@ public class LinkingService {
 				hgSgFaRelation.setHgId(eadContent.getHgId());
 				hgSgFaRelation.setSgId(eadContent.getSgId());
 				JpaUtil.getEntityManager().persist(hgSgFaRelation);
-				eads.remove(size - 1);
+				eads.remove(0);
 			}
 			JpaUtil.commitDatabaseTransaction();
 
