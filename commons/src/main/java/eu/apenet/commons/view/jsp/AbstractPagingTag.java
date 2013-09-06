@@ -11,40 +11,30 @@ public class AbstractPagingTag extends SimpleTagSupport {
 
 	private Object numberOfItems;
 
-	private Object numberFormat;
-	
 	public Object getPageNumber() {
 		return pageNumber;
 	}
-	
-	public Object getPageSize() {
-		return pageSize;
-	}
 
-	public Object getNumberOfItems() {
-		return numberOfItems;
-	}
-	
 	public void setPageNumber(Object pageNumber) {
 		this.pageNumber = pageNumber;
+	}
+
+	public Object getPageSize() {
+		return pageSize;
 	}
 
 	public void setPageSize(Object pageSize) {
 		this.pageSize = pageSize;
 	}
 
+	public Object getNumberOfItems() {
+		return numberOfItems;
+	}
+
 	public void setNumberOfItems(Object numberOfItems) {
 		this.numberOfItems = numberOfItems;
 	}
 
-	public Object getNumberFormat() {
-		return numberFormat;
-	}
-	
-	public void setNumberFormat(Object numberFormat) {
-		this.numberFormat = numberFormat;
-	}
-	
 	public static Integer toInteger(Object object) {
 		if (object != null) {
 			if (object instanceof Integer) {
