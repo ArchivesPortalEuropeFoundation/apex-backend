@@ -188,7 +188,7 @@ public class EadActions extends AbstractEadActions {
         SecurityContext.get().checkAuthorized(ead);
         CLevelDAO clevelDAO = DAOFactory.instance().getCLevelDAO();
         HgSgFaRelationDAO hgSgFaRelationDAO = DAOFactory.instance().getHgSgFaRelationDAO();
-        String name = APEnetUtilities.convertToFilename(ead.getEadid()) + "-statistics" + SIMPLE_DATE_FORMAT.format(new Date()) + ".ods";
+        String name = APEnetUtilities.convertToFilename(ead.getEadid()) + "-statistics-" + SIMPLE_DATE_FORMAT.format(new Date()) + ".ods";
         OutputStream outputStream = ContentUtils.getOutputStreamToDownload(this.getServletRequest(),
                 getServletResponse(), name, "application/vnd.oasis.opendocument.spreadsheet");
         HgSgStatisticsDocumentWriter documentWriter = new HgSgStatisticsDocumentWriter();
