@@ -23,7 +23,7 @@ public class ContentManagerResults {
 	
 	public ContentManagerResults (EadSearchOptions eadSearchOptions){
 		this.eadSearchOptions = eadSearchOptions;
-		xmlType = XmlType.getType(eadSearchOptions.getEadClazz());
+		xmlType = XmlType.getType(eadSearchOptions.getEadClass());
 	}
 	public List<EadResult> getEadResults() {
 		return eadResults;

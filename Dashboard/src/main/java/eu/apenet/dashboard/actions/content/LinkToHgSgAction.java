@@ -48,13 +48,13 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 		EadSearchOptions eadSearchOptions = new EadSearchOptions();
 		eadSearchOptions.setPublished(false);
 		eadSearchOptions.setDynamic(true);
-		eadSearchOptions.setEadClazz(HoldingsGuide.class);
+		eadSearchOptions.setEadClass(HoldingsGuide.class);
 		List<Ead> temp = eadDAO.getEads(eadSearchOptions);
 		for (Ead ead :temp){
 			dynamicHgSgs.add(new SelectItem(ead.getEadContent().getEcId() +"", ead.getTitle()));
 			
 		}
-		eadSearchOptions.setEadClazz(SourceGuide.class);
+		eadSearchOptions.setEadClass(SourceGuide.class);
 		temp = eadDAO.getEads(eadSearchOptions);
 		for (Ead ead :temp){
 			dynamicHgSgs.add(new SelectItem(ead.getEadContent().getEcId() +"", ead.getTitle()));
@@ -70,7 +70,7 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 			for (CLevel clevel :clevelsTemp){
 				clevels.add(new SelectItem(clevel.getClId() +"", clevel.getUnittitle()));
 			}
-			
+			fillFindingAidsInfo();
 		}
 		return SUCCESS;
 	}
@@ -84,7 +84,7 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 			for (CLevel clevel :clevelsTemp){
 				clevels.add(new SelectItem(clevel.getClId() +"", clevel.getUnittitle()));
 			}
-			
+			fillFindingAidsInfo();
 		}
 		return SUCCESS;
 		
@@ -100,6 +100,7 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 		}else {
 			if (BatchEadActions.SELECTED_ITEMS.equals(batchItems)) {
 
+				@SuppressWarnings("unchecked")
 				List<Integer> ids = (List<Integer>) getServletRequest().getSession().getAttribute(
 						AjaxControllerAbstractAction.LIST_IDS);
 				if (ids != null) {
@@ -115,13 +116,43 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 				LinkingService.addFindingaidsToHgOrSg(eadSearchOptions, ecIdLong, parentCLevelIdLong, selectPrefixMethod);
 				return SUCCESS;
 			} else {
-				LinkingService.addFindingaidsToHgOrSg(null, ecIdLong, parentCLevelIdLong, selectPrefixMethod);
+				LinkingService.addFindingaidsToHgOrSg(ecIdLong, parentCLevelIdLong, selectPrefixMethod);
 				return SUCCESS;
 			}
 		}
    		return SUCCESS;
 	}
+	public void fillFindingAidsInfo(){
+		Long ecIdLong = Long.parseLong(ecId);
+		List<Ead> findingAids = null;
+		long totalNumberOfFindingAids = 0;
+		if (StringUtils.isBlank(batchItems)){
+			findingAids = LinkingService.getFindingaidsToLinkToHgOrSg(Integer.parseInt(id), getAiId(), ecIdLong);
+			totalNumberOfFindingAids = LinkingService.countFindingaidsToLinkToHgOrSg(Integer.parseInt(id), getAiId(), ecIdLong);
+		}else {
+			if (BatchEadActions.SELECTED_ITEMS.equals(batchItems)) {
+				@SuppressWarnings("unchecked")
+				List<Integer> ids = (List<Integer>) getServletRequest().getSession().getAttribute(
+						AjaxControllerAbstractAction.LIST_IDS);
+				if (ids != null) {
+					findingAids = LinkingService.getFindingaidsToLinkToHgOrSg(ids, getAiId(), ecIdLong);
+					totalNumberOfFindingAids = LinkingService.countFindingaidsToLinkToHgOrSg(ids, getAiId(), ecIdLong);
+				} else {
+				}
 
+			} else if (BatchEadActions.SEARCHED_ITEMS.equals(batchItems)) {
+				EadSearchOptions eadSearchOptions = (EadSearchOptions)getServletRequest().getSession()
+						.getAttribute(ContentManagerAction.EAD_SEARCH_OPTIONS);
+				findingAids = LinkingService.getFindingaidsToLinkToHgOrSg(eadSearchOptions, ecIdLong);
+				totalNumberOfFindingAids = LinkingService.countFindingaidsToLinkToHgOrSg(eadSearchOptions, ecIdLong);
+			} else {
+				findingAids = LinkingService.getFindingaidsToLinkToHgOrSg(ecIdLong);
+				totalNumberOfFindingAids = LinkingService.countFindingaidsToLinkToHgOrSg(ecIdLong);
+			}
+		}
+		getServletRequest().setAttribute("findingAids", findingAids);
+		getServletRequest().setAttribute("totalNumberOfFindingAids", totalNumberOfFindingAids);
+	}
 	
 	public String getId() {
 		return id;

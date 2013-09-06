@@ -143,6 +143,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 		EadSearchOptions eadSearchOptions = initFromExistingEadSearchOptions();
 		if (eadSearchOptions == null) {
 			eadSearchOptions = createNewEadSearchOptions();
+			getServletRequest().getSession().setAttribute(EAD_SEARCH_OPTIONS, eadSearchOptions);
 		}
 
 		ContentManagerResults results = new ContentManagerResults(eadSearchOptions);
@@ -174,7 +175,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 			publishedSearchOptions.setPublished(true);
 			results.setTotalPublishedUnits(eadDAO.countUnits(publishedSearchOptions));
 		}
-		if (eadSearchOptions.getEadClazz().equals(FindingAid.class)) {
+		if (eadSearchOptions.getEadClass().equals(FindingAid.class)) {
 			/*
 			 * statistics for total delivered daos
 			 */
@@ -201,9 +202,9 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 		EadSearchOptions dynamicEadSearchOptions = new EadSearchOptions();
 		dynamicEadSearchOptions.setPublished(false);
 		dynamicEadSearchOptions.setDynamic(true);
-		dynamicEadSearchOptions.setEadClazz(HoldingsGuide.class);
+		dynamicEadSearchOptions.setEadClass(HoldingsGuide.class);
 		results.setHasDynamicHg(eadDAO.existEads(dynamicEadSearchOptions));
-		dynamicEadSearchOptions.setEadClazz(SourceGuide.class);
+		dynamicEadSearchOptions.setEadClass(SourceGuide.class);
 		results.setHasDynamicSg(eadDAO.existEads(dynamicEadSearchOptions));
 		getServletRequest().setAttribute("results", results);
 		getServletRequest().setAttribute("harvestingStarted", EadService.isHarvestingStarted());
@@ -260,7 +261,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 					queuingStatus[i] = eadSearchOptions.getQueuing().get(i).toString();
 				}
 			}
-			xmlTypeId = XmlType.getType(eadSearchOptions.getEadClazz()).getIdentifier() + "";
+			xmlTypeId = XmlType.getType(eadSearchOptions.getEadClass()).getIdentifier() + "";
 			searchTerms = eadSearchOptions.getSearchTerms();
 			orderByField = eadSearchOptions.getOrderByField();
 			orderByAscending = eadSearchOptions.isOrderByAscending();
@@ -306,7 +307,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 		}
 		eadSearchOptions.setSearchTerms(searchTerms);
 		eadSearchOptions.setSearchTermsField(searchTermsField);
-		eadSearchOptions.setEadClazz(XmlType.getType(Integer.parseInt(xmlTypeId)).getClazz());
+		eadSearchOptions.setEadClass(XmlType.getType(Integer.parseInt(xmlTypeId)).getClazz());
 		return eadSearchOptions;
 	}
 

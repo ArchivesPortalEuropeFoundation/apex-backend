@@ -149,14 +149,14 @@ public class ContentUtils {
 			EadSearchOptions eadSearchOptions = new EadSearchOptions();
 			eadSearchOptions.setArchivalInstitionId(archivalInstitution.getAiId());
 			eadSearchOptions.setPublishedToAll(true);
-			eadSearchOptions.setEadClazz(FindingAid.class);
+			eadSearchOptions.setEadClass(FindingAid.class);
 			boolean hasEads = eadDAO.existEads(eadSearchOptions);
 			if (!hasEads) {
-				eadSearchOptions.setEadClazz(HoldingsGuide.class);
+				eadSearchOptions.setEadClass(HoldingsGuide.class);
 				hasEads = hasEads || eadDAO.existEads(eadSearchOptions);
 			}
 			if (!hasEads) {
-				eadSearchOptions.setEadClazz(SourceGuide.class);
+				eadSearchOptions.setEadClass(SourceGuide.class);
 				hasEads = hasEads || eadDAO.existEads(eadSearchOptions);
 			}
 			return hasEads;
@@ -180,14 +180,14 @@ public class ContentUtils {
 			EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 			EadSearchOptions eadSearchOptions = new EadSearchOptions();
 			eadSearchOptions.setArchivalInstitionId(archivalInstitution.getAiId());
-			eadSearchOptions.setEadClazz(FindingAid.class);
+			eadSearchOptions.setEadClass(FindingAid.class);
 			boolean hasEads = eadDAO.existEads(eadSearchOptions);
 			if (!hasEads) {
-				eadSearchOptions.setEadClazz(HoldingsGuide.class);
+				eadSearchOptions.setEadClass(HoldingsGuide.class);
 				hasEads = hasEads || eadDAO.existEads(eadSearchOptions);
 			}
 			if (!hasEads) {
-				eadSearchOptions.setEadClazz(SourceGuide.class);
+				eadSearchOptions.setEadClass(SourceGuide.class);
 				hasEads = hasEads || eadDAO.existEads(eadSearchOptions);
 			}
 			return hasEads;
@@ -224,14 +224,14 @@ public class ContentUtils {
 			EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 			EadSearchOptions eadSearchOptions = new EadSearchOptions();
 			eadSearchOptions.setArchivalInstitionId(ai.getAiId());
-			eadSearchOptions.setEadClazz(FindingAid.class);
+			eadSearchOptions.setEadClass(FindingAid.class);
 			boolean hasEads = eadDAO.existEads(eadSearchOptions);
 			if (!hasEads) {
-				eadSearchOptions.setEadClazz(HoldingsGuide.class);
+				eadSearchOptions.setEadClass(HoldingsGuide.class);
 				hasEads = hasEads || eadDAO.existEads(eadSearchOptions);
 			}
 			if (!hasEads) {
-				eadSearchOptions.setEadClazz(SourceGuide.class);
+				eadSearchOptions.setEadClass(SourceGuide.class);
 				hasEads = hasEads || eadDAO.existEads(eadSearchOptions);
 			}
 			if (hasEads)
@@ -407,14 +407,14 @@ public class ContentUtils {
 				EadSearchOptions eadSearchOptions = new EadSearchOptions();
 				eadSearchOptions.setArchivalInstitionId(ai.getAiId());
 				eadSearchOptions.setPublished(true);
-				eadSearchOptions.setEadClazz(FindingAid.class);
+				eadSearchOptions.setEadClass(FindingAid.class);
 
 				boolean eadExist = eadDAO.existEads(eadSearchOptions);
 				if (!eadExist) {
-					eadSearchOptions.setEadClazz(HoldingsGuide.class);
+					eadSearchOptions.setEadClass(HoldingsGuide.class);
 					eadExist =  eadDAO.existEads(eadSearchOptions);
 					if (!eadExist) {
-						eadSearchOptions.setEadClazz(SourceGuide.class);
+						eadSearchOptions.setEadClass(SourceGuide.class);
 						eadExist =  eadDAO.existEads(eadSearchOptions);
 						if (!eadExist) {
 							LOGGER.info("AI: '" + ai.getAiname() + "' has now no searchable items left");
