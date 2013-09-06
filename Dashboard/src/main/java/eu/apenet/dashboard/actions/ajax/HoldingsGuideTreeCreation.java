@@ -1,12 +1,10 @@
 package eu.apenet.dashboard.actions.ajax;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Date;
 
-import javax.servlet.http.HttpSession;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -21,16 +19,12 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.manual.hgTreeCreation.CLevelTreeNode;
 import eu.apenet.dashboard.services.ead.CreateEadTask;
 import eu.apenet.dashboard.services.ead.xml.AbstractParser;
-import eu.apenet.dashboard.services.ead.xml.ReconstructEadFile;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
-import eu.apenet.persistence.vo.FileType;
 import eu.apenet.persistence.vo.HoldingsGuide;
-import eu.apenet.persistence.vo.UpFile;
 import eu.apenet.persistence.vo.UploadMethod;
 import eu.apenet.persistence.vo.ValidatedState;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
@@ -42,38 +36,20 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
  * @author Yoann Moranville
  */
 public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
-    private static final String ALL_FINDING_AIDS_SESSION = "FAsSession";
-    private static final String TYPE_EAD_CONTENT = "ec";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1796389317724915629L;
+	private static final String TYPE_EAD_CONTENT = "ec";
     private static final String TYPE_C_LEVEL = "cl";
     private String cId;
     private String hgId;
-    private HttpSession session;
 
 
 
 
     @Override
     public String execute() {
-//        try {
-//        	Integer aiId = getAiId();
-//            if(hgId != null){
-//                int hgIdInt = Integer.parseInt(hgId);
-//                HoldingsGuide holdingsGuide = DAOFactory.instance().getHoldingsGuideDAO().findById(hgIdInt);
-//                String stateOfHG = holdingsGuideIsNotIndexed(holdingsGuide);
-//                LOG.info("State of HG: " + stateOfHG);
-//                if(stateOfHG.equals(ERROR))
-//                    return ERROR;
-//                if(stateOfHG.equals(SUCCESS))
-//                    XmlEadParser.parseEad(holdingsGuide);
-//                getAllFindingAids(holdingsGuide.getArchivalInstitution()); //In order to retrieve it a load time and have the data in the session
-//            } else if(aiId != null){
-//                getAllFindingAids(DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId));
-//            }
-//            return SUCCESS;
-//        } catch (Exception e){
-//            LOG.error("Error executing HG tree creation page", e);
-//            return ERROR;
-//        }
         return SUCCESS;
     }
 
@@ -89,9 +65,6 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
     }
 
     public CLevelTreeNode createCLevelTreeNode(){
-        LOG.info("name: " + getServletRequest().getParameter("name"));
-        LOG.info("identifier: " + getServletRequest().getParameter("identifier"));
-        LOG.info("desc: " + getServletRequest().getParameter("desc"));
         return new CLevelTreeNode(getServletRequest().getParameter("identifier"), getServletRequest().getParameter("name")).setDescription(getServletRequest().getParameter("desc"));
     }
 
@@ -123,7 +96,7 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
                 UploadMethod uploadMethod = DAOFactory.instance().getUploadMethodDAO().getUploadMethodByMethod(UploadMethod.HTTP);
             	holdingsGuide.setUploadMethod(uploadMethod);
             	String startPath = CreateEadTask.getPath(XmlType.EAD_HG, archivalInstitution);
-            	holdingsGuide.setPathApenetead(APEnetUtilities.getDashboardConfig().getRepoDirPath() + startPath+ APEnetUtilities.convertToFilename(levelTreeNode.getUnitid())+ ".xml");
+            	holdingsGuide.setPathApenetead(startPath+ APEnetUtilities.convertToFilename(levelTreeNode.getUnitid())+ ".xml");
             	holdingsGuide = DAOFactory.instance().getEadDAO().store(holdingsGuide);
                 eadContent = createDummyEadContent();
                 eadContent.setHgId(holdingsGuide.getId());
@@ -182,7 +155,6 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
             String fullStr = getServletRequest().getParameter("parentId");
             String parentId = fullStr.substring(3);
             String type = fullStr.substring(0, 2);
-            LOG.info("The getServletRequest() parameter parentId is '" + fullStr + "', so the parentId is '" + parentId + "' and the type is '" + type + "'");
 
             CLevel cLevel;
             if(StringUtils.isEmpty(getServletRequest().getParameter("dataToEdit"))){ //If empty then it is a new to create (new CLEVEL)
@@ -230,59 +202,6 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
         return null;
     }
 
-    public String createHoldingsGuide() {
-        Writer writer = null;
-        try {
-        	Integer aiId = getAiId();
-            writer = openOutputWriter();
-            if(StringUtils.isEmpty(getServletRequest().getParameter("key"))){
-                throw new APEnetException(getText("holdingsGuideTreeCreation.keyParameterNotBeEmpty"));
-            }
-            if(aiId==null){
-                throw new APEnetException(getText("holdingsGuideTreeCreation.aiIdParameterCouldNotBeReadedFromSession"));
-            }
-            String fullStr = getServletRequest().getParameter("key");
-            String keyString = fullStr.substring(3);
-
-            EadContent eadContent = DAOFactory.instance().getEadContentDAO().findById(Long.parseLong(keyString));
-
-            String filePath = "/" + aiId + "/";
-            if(!new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + filePath).exists())
-                new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + filePath).mkdir();
-            String fileName = keyString + ".xml";
-            filePath += fileName;
-
-            ReconstructEadFile.reconstructEadFile(eadContent, APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + filePath);
-            UpFile upFile = new UpFile();
-
-            upFile.setAiId(aiId);
-            upFile.setFileType(FileType.XML);
-            upFile.setFilename(fileName);
-            upFile.setPath(filePath);
-            upFile.setUploadMethod(DAOFactory.instance().getUploadMethodDAO().getUploadMethodByMethod(UploadMethod.HTTP));
-
-            HibernateUtil.beginDatabaseTransaction();
-            DAOFactory.instance().getUpFileDAO().insertSimple(upFile);
-            HibernateUtil.commitDatabaseTransaction();
-            HibernateUtil.closeDatabaseSession();
-
-            writer.append(new JSONObject().put("success", true).toString());
-            writer.close();
-        } catch (Exception e){
-            HibernateUtil.rollbackDatabaseTransaction();
-            HibernateUtil.closeDatabaseSession();
-            LOG.error("Error", e);
-            try {
-                if(writer != null){
-                    writer.append(new JSONObject().put("success", false).toString());
-                    writer.close();
-                }
-            } catch(Exception ex){
-                LOG.error("Error", ex);
-            }
-        }
-        return null;
-    }
 
     private CLevel createDummyCLevel() {
         CLevel cLevel = new CLevel();
