@@ -31,7 +31,7 @@
                 <interceptor-ref name="scopedModelDriven"/>
                 <interceptor-ref name="modelDriven"/>
                 <interceptor-ref name="fileUpload">
-                	<param name="maximumSize">31457280</param>
+                	<param name="maximumSize">104857600</param>
                 </interceptor-ref>
                 <interceptor-ref name="checkbox"/>
                 <interceptor-ref name="staticParams"/>
