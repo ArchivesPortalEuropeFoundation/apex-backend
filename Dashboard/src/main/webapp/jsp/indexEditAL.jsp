@@ -438,144 +438,148 @@
 				
 			</script>
 			<div id="filterSelect">
-				<div class="firstFilterDiv">
-					<label for="textAL"><s:property value="getText('al.message.name')" />:</label>
-					<input type="text" name="textAL" id="textAL" class="inputTextBar" />
-				</div>
-				<div>
-					<div style="float:left;">
-						<div class="secondFilterDiv">
-							<label for="element" style="padding-right:4px;"><s:property value="getText('al.message.element')" />:</label>
-							<select name="element" id="element">
-								<option value="series" ><s:property value="getText('al.message.series')"/></option>
-								<option selected="selected" value="file"><s:property value="getText('al.message.file')"/></option>
-							</select>
-						</div>
-						<div class="secondFilterDiv">
-							<label for="selectedLang"><s:property value="getText('al.message.selectlanguage')"/>:</label>
-							<select name="selectedLang" id="selectedLang" >
-								<s:iterator var="row" value="langList">
-									<s:if test='#row.getIsoname().toLowerCase().equals("eng")'>
-										<option selected="selected" value="<s:property value="#row.getIsoname().toLowerCase()"/>"><s:property value="#row.getLname()" /></option>
-									</s:if>
-									<s:else>
-										<option value="<s:property value="#row.getIsoname()"/>"><s:property value="#row.getLname()" /></option>
-									</s:else>
-								</s:iterator>
-							</select>
-							<input type="submit" class="inputSubmitAL" id="editAL_editAL" name="action:editAL" value="<s:property value="getText('al.message.addtolist')" />"/>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div id="filteList" class="filterListAL">
-				<s:if test="AL.size()==0">
-					<s:property value="getText('al.message.noelements')" />
-				</s:if>
-				<s:elseif test="AL.size()<2">
-						<div class="divFilterThree">
-							<div class="secondFilterDiv">
-								<div style="float:left;width:100%;">
-									<label for="ALElement" class="ALElementLabel"><s:property value="getText('al.message.listal')" /></label>
-								</div>
-								<div style="float:left;width:100%;">
-									<select id="selectOnlyListElements" class="selectListElementsALNoMargin" name="ALElement" id="ALElement" size="2">
-				</s:elseif>
-				<s:else>
-						<div id="selectOnlyListElements" class="divSelectOnlyListElements">
-							<div style="float:left;width:100%;">
-								<label for="ALElement" class="ALElementLabel"><s:property value="getText('al.message.listal')" /></label>
-							</div>
-							<div style="float:left;width:100%;">
-								<select class="divSelectOnlyListElements2" name="ALElement" id="ALElement" size="<s:property value="AL.size()" />">
-				</s:else>								
-							<s:iterator var="row" value="AL">
-									<option class="${row.cssClass}" style="padding-left:${15*row.depth}px;" value="${row.id}" ><s:property value="#row.name" /></option>
-
-								
-							</s:iterator>
-					<s:if test="AL.size()>0">
-								</select>
-							</div>
-							<s:if test="elementLanguages.size()>0">
-								<div id="showAlternativeNamesDiv">
-									<p><s:property value="getText('al.message.alternativenames')" /></p>
-									<p class="ALP">
-										<s:if test="%{edit==false || elementLanguages.size()<2}">
-											<select id="editTarget" name="editTarget" size="<s:property value="elementLanguages.size()" />" disabled="disabled">
-										</s:if>
-										<s:else>
-											<select id="editTarget" name="editTarget" size="<s:property value="elementLanguages.size()" />" >
-										</s:else>
-												<s:iterator status="stat" var="rowLanguage" value="elementLanguages">
-													<s:if test="#stat.index==0">
-														<s:set name="firstANCreated" value="#rowLanguage.substring(0,3)" /> 
-													</s:if>
-													<option value="<s:property value="#rowLanguage" />"><s:property value="#rowLanguage" /></option>
-												</s:iterator>
-											</select>
-									</p>
-								</div>
-								<s:if test="%{edit==true}">
-									<div id="editLanguagesDiv">
-										<s:if test="elementLanguages.size()>1">
-											<p><input type="submit" id="submitDeleteTarget" name="action:deleteTarget" value="<s:property value="getText('al.message.deletetarget')"/>"/></p>
-										</s:if>
-										<p class="ALP2"><label for="target" style="float:left;"><s:property value="getText('al.message.anwritelanguage')"/>: </label><input type="text" id="target" name="target" /></p>
-										<label  class="leftSpace" for="languageTarget"><s:property value="getText('al.message.anselectlanguage')"/>: </label>
-										<select id="languageTarget" name="languageTarget">
-											<s:iterator var="row" value="langList">
-												<s:if test='#row.getIsoname().toLowerCase().equals("eng")'>
-													<s:if test="%{!(#firstANCreated.equals(#row.getIsoname().toLowerCase()))}">
-														<option selected="selected" value="<s:property value="#row.getIsoname().toLowerCase()"/>"><s:property value="#row.getLname()" /></option>
-													</s:if>
-												</s:if>
-												<s:else>
-													<s:if test="%{!(#firstANCreated.equals(#row.getIsoname().toLowerCase()))}">
-														<option value="<s:property value="#row.getIsoname().toLowerCase()"/>"><s:property value="#row.getLname()" /></option>
-													</s:if>
-												</s:else>
-											</s:iterator>
-										</select>
-										<p><input id="editTargetSubmit" type="submit" name="action:editTarget" value="<s:property value="getText('al.message.editalternativenames')"/>" /> <input id="editTargetCancel" type="submit" name="action:editAL" value="<s:property value="getText('al.message.canceledittarget')"/>" /></p>
-									</div>
-								</s:if>
-							</s:if>
-						</div>
-						<div id="divSelectListActionsDiv">
-							<p><input type="submit" id="moveUpAL" name="action:moveUpAL" value="<s:property value="getText('al.message.up')"/>" /></p>
-							<p><input type="submit" id="moveDownAl" name="action:moveDownAL" value="<s:property value="getText('al.message.down')"/>" /></p>
-							<p><input type="submit" id="seeLanguagesSubmit" name="action:showLanguages" value="<s:property value="getText('al.message.showalternativenames')"/>" /></p>
-							<s:if test="elementLanguages.size()>0">
-								<p>
-									<input type="submit" id="seeLanguagesSubmit" name="action:editElement" value="<s:property value="getText('al.message.editalternativenames')"/>" />
-								</p>
-							</s:if>
-						</div>
-						<s:if test="groupList!=null && groupList.size()>0">
-						<div id="divGroupNodes" style="float:left;margin-top:10px;">
-							<p><label for="father" style="float:left;"><s:property value="getText('al.message.selectGroup')" />: </label>
-							<s:if test="groupList.size()>0" >
-								<select id="father" name="father" size="1" >
-								<s:iterator var="row" value="groupList" >
-									<option value="<s:property value="#row.id" />"><s:property value="#row.name" /></option>
-								</s:iterator>
-								</select>
-							</s:if>
-							</p>
-							<%--<s:select id="father" name="father" list="groupList" size="1" theme="simple" />--%>
-							<div class="ALP">
-								<s:submit action="changeNode" id="submitFormGroupNodes" key="al.message.changeGroup" />
-							</div>
-						</div>
+						<div class="firstFilterDiv">
+							<label for="textAL"><s:property value="getText('al.message.name')" />:</label>
+							<input type="text" name="textAL" id="textAL" class="inputTextBar" />
+						</div> <!--end firstFilterDiv-->
+						<div><!--vacio-->
+							<div style="float:left;">
+								<div class="secondFilterDiv">
+									<label for="element" style="padding-right:4px;"><s:property value="getText('al.message.element')" />:</label>
+									<select name="element" id="element">
+										<option value="series" ><s:property value="getText('al.message.series')"/></option>
+										<option selected="selected" value="file"><s:property value="getText('al.message.file')"/></option>
+									</select> <!--end select element-->
+								</div> <!--end secondFilterDiv-->
+								<div class="secondFilterDiv">
+									<label for="selectedLang"><s:property value="getText('al.message.selectlanguage')"/>:</label>
+									<select name="selectedLang" id="selectedLang" >
+										<s:iterator var="row" value="langList">
+											<s:if test='#row.getIsoname().toLowerCase().equals("eng")'>
+												<option selected="selected" value="<s:property value="#row.getIsoname().toLowerCase()"/>"><s:property value="#row.getLname()" /></option>
+											</s:if>
+											<s:else>
+												<option value="<s:property value="#row.getIsoname()"/>"><s:property value="#row.getLname()" /></option>
+											</s:else>
+										</s:iterator>
+									</select>
+									<input type="submit" class="inputSubmitAL" id="editAL_editAL" name="action:editAL" value="<s:property value="getText('al.message.addtolist')" />"/>
+								</div> <!--end secondFilterDiv-->
+							</div> <!--end style-->
+						</div><!--end vacio-->
+				     </div><!--end filterSelect-->
+				     <div id="filteList" class="filterListAL">
+					<s:if test="AL.size()==0">
+						<s:property value="getText('al.message.noelements')" />
 					</s:if>
-					</div>
+					<s:elseif test="AL.size()<2">
+							<div class="divFilterThree">
+								<div class="secondFilterDiv">
+									<div style="float:left;width:100%;"> <!--style 1-->
+										<label for="ALElement" class="ALElementLabel"><s:property value="getText('al.message.listal')" /></label>
+									</div><!--end style 1-->
+									<div style="float:left;width:100%;"> <!--style 2-->
+										<select id="selectOnlyListElements" class="selectListElementsALNoMargin" name="ALElement" id="ALElement" size="2">
+					</s:elseif>
+					<s:else>
+							<div id="selectOnlyListElements" class="divSelectOnlyListElements">
+								<div style="float:left;width:100%;"> <!--style 3-->
+									<label for="ALElement" class="ALElementLabel"><s:property value="getText('al.message.listal')" /></label>
+								</div> <!--end style 3-->
+								<div style="float:left;width:100%;"><!--style 4-->
+									<select class="divSelectOnlyListElements2" name="ALElement" id="ALElement" size="<s:property value="AL.size()" />">
+					</s:else>								
+								<s:iterator var="row" value="AL">
+										<option class="${row.cssClass}" style="padding-left:${15*row.depth}px;" value="${row.id}" ><s:property value="#row.name" /></option>
+								</s:iterator>
+						<s:if test="AL.size()>0"> <!--if 1-->
+									</select> <!--end select divSelectOnlyListElements2-->
+								</div><!--end style 4-->
+								<s:if test="elementLanguages.size()>0"><!--if 2-->
+									<div id="showAlternativeNamesDiv">
+										<p><s:property value="getText('al.message.alternativenames')" /></p>
+										<p class="ALP">
+											<s:if test="%{edit==false || elementLanguages.size()<2}">
+												<select id="editTarget" name="editTarget" size="<s:property value="elementLanguages.size()" />" disabled="disabled">
+											</s:if>
+											<s:else>
+												<select id="editTarget" name="editTarget" size="<s:property value="elementLanguages.size()" />" >
+											</s:else>
+													<s:iterator status="stat" var="rowLanguage" value="elementLanguages">
+														<s:if test="#stat.index==0">
+															<s:set name="firstANCreated" value="#rowLanguage.substring(0,3)" /> 
+														</s:if>
+														<option value="<s:property value="#rowLanguage" />"><s:property value="#rowLanguage" /></option>
+													</s:iterator>
+												</select> <!--end select editTarget-->
+										</p> <!--end ALP-->
+									</div><!--end showAlternativeNamesDiv-->
+									<s:if test="%{edit==true}"> <!--if 3-->
+										<div id="editLanguagesDiv">
+											<s:if test="elementLanguages.size()>1">
+												<p><input type="submit" id="submitDeleteTarget" name="action:deleteTarget" value="<s:property value="getText('al.message.deletetarget')"/>"/></p>
+											</s:if>
+											<p class="ALP2"><label for="target" style="float:left;"><s:property value="getText('al.message.anwritelanguage')"/>: </label><input type="text" id="target" name="target" /></p>
+											<label  class="leftSpace" for="languageTarget"><s:property value="getText('al.message.anselectlanguage')"/>: </label>
+											<select id="languageTarget" name="languageTarget">
+												<s:iterator var="row" value="langList">
+													<s:if test='#row.getIsoname().toLowerCase().equals("eng")'>
+														<s:if test="%{!(#firstANCreated.equals(#row.getIsoname().toLowerCase()))}">
+															<option selected="selected" value="<s:property value="#row.getIsoname().toLowerCase()"/>"><s:property value="#row.getLname()" /></option>
+														</s:if>
+													</s:if>
+													<s:else>
+														<s:if test="%{!(#firstANCreated.equals(#row.getIsoname().toLowerCase()))}">
+															<option value="<s:property value="#row.getIsoname().toLowerCase()"/>"><s:property value="#row.getLname()" /></option>
+														</s:if>
+													</s:else>
+												</s:iterator>
+											</select><!--end select languageTarget-->
+											<p><input id="editTargetSubmit" type="submit" name="action:editTarget" value="<s:property value="getText('al.message.editalternativenames')"/>" /> <input id="editTargetCancel" type="submit" name="action:editAL" value="<s:property value="getText('al.message.canceledittarget')"/>" /></p>
+										</div><!--end editLanguagesDiv-->
+									</s:if><!--end if 3-->
+								</s:if><!--end if 2-->
+							
+							</div><!--end selectOnlyListElements-->
+                           </select><!--end select selectOnlyListElements-->
+                           </div><!--end style 2--> 
+							<div id="divSelectListActionsDiv">
+								<p><input type="submit" id="moveUpAL" name="action:moveUpAL" value="<s:property value="getText('al.message.up')"/>" /></p>
+								<p><input type="submit" id="moveDownAl" name="action:moveDownAL" value="<s:property value="getText('al.message.down')"/>" /></p>
+								<p><input type="submit" id="seeLanguagesSubmit" name="action:showLanguages" value="<s:property value="getText('al.message.showalternativenames')"/>" /></p>
+								<s:if test="elementLanguages.size()>0">
+									<p>
+										<input type="submit" id="seeLanguagesSubmit" name="action:editElement" value="<s:property value="getText('al.message.editalternativenames')"/>" />
+									</p>
+								</s:if>
+							</div><!--end divSelectListActionsDiv-->
+							<s:if test="groupList!=null && groupList.size()>0"><!-- if 4-->
+								<div id="divGroupNodes" style="float:left;margin-top:10px;">
+									<p><label for="father" style="float:left; padding-left:12px;"><s:property value="getText('al.message.selectGroup')" />: </label>
+									<s:if test="groupList.size()>0" > <!--if 5-->
+										<select id="father" name="father" size="1" >
+										<s:iterator var="row" value="groupList" >
+											<option value="<s:property value="#row.id" />"><s:property value="#row.name" /></option>
+										</s:iterator>
+										</select>
+									</s:if><!--end if 5-->
+									</p>
+									<%--<s:select id="father" name="father" list="groupList" size="1" theme="simple" />--%>
+									<div class="ALP">
+										<s:submit action="changeNode" id="submitFormGroupNodes" key="al.message.changeGroup" />
+									</div>
+								</div><!--end divGroupNodes-->
+						       </s:if><!--end if 4-->
+                                                
+						</div> <!--end divFilterThree-->
 					
 					<div>
 						<input class="inputButtonSubmitAL2" type="submit" id="editAL_modifyStructure" name="action:modifyStructure" value="<s:property value="getText('al.message.modify')"  />"/>
-						</s:if>
+						</s:if><!--end if 1-->
 						<input id="finalSubmitButton" class="inputButtonSubmitAL" type="submit" id="editAL_feditAL" onclick="showcurtain();"  name="action:feditAL" value="<s:property value="getText('al.message.finish')" />"/>
 					</div>
+                  </div><!--end filteList-->
+                                   
 				</s:form>
 				</div>
 			</s:if>

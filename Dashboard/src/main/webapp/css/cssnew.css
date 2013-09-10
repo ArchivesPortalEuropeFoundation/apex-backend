@@ -756,10 +756,6 @@ input#submitDeleteTarget{
 	font-size:10pt;
 	padding:2px;
 	margin:5px;
-/*	letter-spacing: 0.8px;
-    padding: 3px 5px;
-    text-align: center;
-    vertical-align: top;*/
 }
 #divForSubmitButtom{
 	width:30%;
@@ -910,7 +906,6 @@ input.inputButtonSubmitAL{
 .firstFilterDiv, .secondFilterDiv{
 	padding-left:12px;
 }
-
 /***archival landscape***/
 
 /*** check uploaded files  ***/

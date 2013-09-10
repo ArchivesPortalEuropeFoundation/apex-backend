@@ -121,11 +121,7 @@
                 </div>                  
                 
             </div>
-            
-            
-        </div>
-
-        <div id="footernavbar">
+             <div id="footernavbar">
                     <div id="footerCatInner">
                         <ul>
 							<li><a id="food1" href="#" title="Navigation guide"><s:property value="getText('label.footer.navigationguide')"/> | </a></li>
@@ -138,6 +134,10 @@
                     <div id="footerSupportLogos"><img  src="images/ictpsp_logo.gif"/><img  src="images/eu_logo.gif"/></div>
 
                 </div>
+            
+        </div>
+
+       
 	<script type="text/javascript">
 	(function() {
 		var ga = document.createElement('script');
