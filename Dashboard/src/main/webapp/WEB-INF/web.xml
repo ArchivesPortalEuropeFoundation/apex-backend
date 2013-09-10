@@ -32,14 +32,6 @@
         <filter-name>struts2</filter-name>
         <url-pattern>*.action</url-pattern>
     </filter-mapping>
-    <filter>
-        <filter-name>GZipFilter</filter-name>
-        <filter-class>eu.apenet.dashboard.webdav.GZipFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>GZipFilter</filter-name>
-        <servlet-name>milton</servlet-name>
-    </filter-mapping>
     <session-config>
         <session-timeout>180</session-timeout>
     </session-config>
@@ -62,16 +54,6 @@
         <param-name>org.apache.tiles.impl.BasicTilesContainer.DEFINITIONS_CONFIG</param-name>
         <param-value>/WEB-INF/tiles.xml, /WEB-INF/tiles-ead2ese.xml</param-value>
     </context-param>
-<!-- 	<servlet>
-        <description></description>
-        <display-name>EseHTMLServlet</display-name>
-        <servlet-name>EseHTMLServlet</servlet-name>
-        <servlet-class>eu.apenet.dashboard.ead2ese.EseFileServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>EseHTMLServlet</servlet-name>
-        <url-pattern>/htmlPreview</url-pattern>
-    </servlet-mapping>-->
 	<servlet>
         <servlet-name>milton</servlet-name>
         <servlet-class>com.bradmcevoy.http.MiltonServlet</servlet-class>        
