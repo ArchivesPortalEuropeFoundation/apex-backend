@@ -30,8 +30,6 @@ public class RawWriteSax {
             InputStream inputStream = new FileInputStream(fileOut);
             return "Error record: " + inputStream.toString();
         }
-//        out.write(listRecordsSax.toString().getBytes("UTF-8"));
-//        out.write("\n".getBytes("UTF-8"));
         return listRecordsSax.getResumptionToken();
     }
     public static String run_getToken(String baseURL, String resumptionToken, File fileOut) throws IOException, ParserConfigurationException, SAXException, TransformerException, NoSuchFieldException, XMLStreamException {
@@ -45,8 +43,6 @@ public class RawWriteSax {
             InputStream inputStream = new FileInputStream(fileOut);
             return "Error record: " + inputStream.toString();
         }
-//        out.write(listRecordsSax.toString().getBytes("UTF-8"));
-//        out.write("\n".getBytes("UTF-8"));
         return listRecordsSax.getResumptionToken();
     }
 }

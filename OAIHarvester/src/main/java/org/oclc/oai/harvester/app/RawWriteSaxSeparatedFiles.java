@@ -1,9 +1,6 @@
 package org.oclc.oai.harvester.app;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -108,7 +105,8 @@ public class RawWriteSaxSeparatedFiles {
                     String item = errors.get(i);
                     System.out.println(item);
                 }
-                System.out.println("Error record: " + listRecordsSax.toString());
+                InputStream inputStream = new FileInputStream(exportFile);
+                System.out.println("Error record: " + inputStream.toString());
                 break;
             }
             resumptionToken = listRecordsSax.getResumptionToken();
@@ -143,7 +141,8 @@ public class RawWriteSaxSeparatedFiles {
                     String item = errors.get(i);
                     System.out.println(item);
                 }
-                System.out.println("Error record: " + listRecordsSax.toString());
+                InputStream inputStream = new FileInputStream(exportFile);
+                System.out.println("Error record: " + inputStream.toString());
                 break;
             }
             String resumptionToken = listRecordsSax.getResumptionToken();
