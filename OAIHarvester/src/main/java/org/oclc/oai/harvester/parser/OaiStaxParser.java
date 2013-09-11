@@ -28,7 +28,7 @@ public class OaiStaxParser {
 
     public OaiStaxParser(InputStream inputStream) throws XMLStreamException {
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-        xmlStreamReader = xmlInputFactory.createXMLStreamReader(inputStream);
+        xmlStreamReader = xmlInputFactory.createXMLStreamReader(inputStream, "UTF-8");
 
         parse();
     }
