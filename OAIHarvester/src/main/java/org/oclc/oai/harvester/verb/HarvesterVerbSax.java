@@ -85,18 +85,9 @@ public abstract class HarvesterVerbSax {
             response = new InflaterInputStream(response);
         }
 
-        resultString = IOUtils.toString(response); //Maybe those 2 lines can be better done...
-        responseStream = IOUtils.toInputStream(resultString);
+        resultString = IOUtils.toString(response, "UTF-8"); //Maybe those 2 lines can be better done...
+        responseStream = IOUtils.toInputStream(resultString, "UTF-8");
         oaiStaxParser = new OaiStaxParser(responseStream);
-//        StringTokenizer tokenizer = new StringTokenizer(getSingleString("/*/@xsi:schemaLocation"), " ");
-//        StringBuilder sb = new StringBuilder();
-//        while (tokenizer.hasMoreTokens()) {
-//            if (sb.length() > 0) {
-//                sb.append(" ");
-//            }
-//            sb.append(tokenizer.nextToken());
-//        }
-//        this.schemaLocation = sb.toString();
     }
 
     /**
