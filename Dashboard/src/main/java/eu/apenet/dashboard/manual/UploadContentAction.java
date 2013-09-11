@@ -276,10 +276,9 @@ public class UploadContentAction extends AbstractInstitutionAction {
         File harvestResult = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + filename);
         String token = "";
         try {
-            OutputStream out = new FileOutputStream(harvestResult);
-            token = uploader_oai.harvestBegin(out);
+            token = uploader_oai.harvestBegin(harvestResult);
             while(token != null)
-                token = uploader_oai.harvesting(out, token);
+                token = uploader_oai.harvesting(harvestResult, token);
 	    	filesUploaded.add(filename);
             createDBentry(filename, "OAI-PMH");
             return SUCCESS;

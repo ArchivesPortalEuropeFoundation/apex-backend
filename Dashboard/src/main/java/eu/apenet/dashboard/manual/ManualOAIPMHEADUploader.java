@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.oclc.oai.harvester.app.RawWriteAPEnet;
 import org.oclc.oai.harvester.app.RawWriteSax;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -30,9 +31,9 @@ public class ManualOAIPMHEADUploader extends ManualUploader {
      * @return The token for the next harvest step
      * @throws Exception is thrown if the server response is wrong
      */
-    public String harvestBegin(OutputStream out) throws Exception {
+    public String harvestBegin(File fileOut) throws Exception {
         try {
-            String token = RawWriteSax.run_getToken(this.oaiServer, this.oaiTimeFrom, this.oaiTimeTo, this.oaiFormat, this.oaiSet, out);
+            String token = RawWriteSax.run_getToken(this.oaiServer, this.oaiTimeFrom, this.oaiTimeTo, this.oaiFormat, this.oaiSet, fileOut);
             LOG.debug("Token: " + token);
             return token;
         } catch (Exception e){
@@ -51,10 +52,10 @@ public class ManualOAIPMHEADUploader extends ManualUploader {
         }
     }
 
-    public String harvesting(OutputStream out, String token) throws Exception {
+    public String harvesting(File fileOut, String token) throws Exception {
         if (token != null && !"".equals(token)) {
             if(!token.startsWith("Error record")){
-                token = RawWriteSax.run_getToken(this.oaiServer, token, out);
+                token = RawWriteSax.run_getToken(this.oaiServer, token, fileOut);
                 LOG.debug("Token: " + token);
                 return token;
             } else {

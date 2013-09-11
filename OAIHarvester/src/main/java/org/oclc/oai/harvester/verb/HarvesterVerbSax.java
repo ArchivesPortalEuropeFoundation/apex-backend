@@ -4,6 +4,7 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.apache.xpath.XPathAPI;
@@ -19,9 +20,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.zip.GZIPInputStream;
@@ -51,11 +50,11 @@ public abstract class HarvesterVerbSax {
     private String requestURL = null;
     private HttpClient httpClient = new HttpClient();
 
-    public HarvesterVerbSax(String requestURL) throws IOException, ParserConfigurationException, SAXException, TransformerException, XMLStreamException {
-        harvest(requestURL);
+    public HarvesterVerbSax(String requestURL, File fileOut) throws IOException, ParserConfigurationException, SAXException, TransformerException, XMLStreamException {
+        harvest(requestURL, fileOut);
     }
 
-    public void harvest(String requestURL) throws IOException, ParserConfigurationException, SAXException, TransformerException, XMLStreamException {
+    public void harvest(String requestURL, File fileOut) throws IOException, ParserConfigurationException, SAXException, TransformerException, XMLStreamException {
         this.requestURL = requestURL;
         LOG.debug("requestURL=" + requestURL);
         GetMethod getMethod = new GetMethod(requestURL);
@@ -85,9 +84,13 @@ public abstract class HarvesterVerbSax {
             response = new InflaterInputStream(response);
         }
 
-        resultString = IOUtils.toString(response, "UTF-8"); //Maybe those 2 lines can be better done...
-        responseStream = IOUtils.toInputStream(resultString, "UTF-8");
-        oaiStaxParser = new OaiStaxParser(responseStream);
+        OutputStream outputStream = new FileOutputStream(fileOut);
+        outputStream.write(IOUtils.toByteArray(response));
+        outputStream.write("\n".getBytes("UTF-8"));
+        outputStream.close();
+
+        response = FileUtils.openInputStream(fileOut);
+        oaiStaxParser = new OaiStaxParser(response);
     }
 
     /**
@@ -118,9 +121,5 @@ public abstract class HarvesterVerbSax {
 
     public String getRequestURL() {
         return requestURL;
-    }
-
-    public String toString() {
-        return resultString;
     }
 }

@@ -5,7 +5,9 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
+import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -16,12 +18,12 @@ import java.net.URLEncoder;
  * @author Yoann Moranville
  */
 public class ListRecordsSax extends HarvesterVerbSax {
-    public ListRecordsSax(String baseURL, String from, String until, String set, String metadataPrefix) throws IOException, ParserConfigurationException, SAXException, TransformerException, XMLStreamException {
-        super(getRequestURL(baseURL, from, until, set, metadataPrefix));
+    public ListRecordsSax(String baseURL, String from, String until, String set, String metadataPrefix, File fileOut) throws IOException, ParserConfigurationException, SAXException, TransformerException, XMLStreamException {
+        super(getRequestURL(baseURL, from, until, set, metadataPrefix), fileOut);
     }
 
-    public ListRecordsSax(String baseURL, String resumptionToken) throws IOException, ParserConfigurationException, SAXException, TransformerException, XMLStreamException {
-        super(getRequestURL(baseURL, resumptionToken));
+    public ListRecordsSax(String baseURL, String resumptionToken, File fileOut) throws IOException, ParserConfigurationException, SAXException, TransformerException, XMLStreamException {
+        super(getRequestURL(baseURL, resumptionToken), fileOut);
     }
 
     private static String getRequestURL(String baseURL, String from, String until, String set, String metadataPrefix) {
