@@ -66,14 +66,14 @@ public class HarvesterAjaxAction extends AjaxControllerAbstractAction {
 //            String oaiTokenEncoded = APEnetUtilities.encodeString(oaiToken);
             String oaiTokenEncoded = "token_" + System.currentTimeMillis();
             final File fileOut = new File((StringUtils.isEmpty(oaiTokenEncoded)? pathForFile + "no_token.xml" : pathForFile + oaiTokenEncoded + ".xml"));
-            OutputStream out = new FileOutputStream(fileOut);
+//            OutputStream out = new FileOutputStream(fileOut);
             String token = "";
 
             try {
                 if(oaiToken == null || "".equals(oaiToken)) {
-                    token = manualUploader.harvestBegin(out);
+                    token = manualUploader.harvestBegin(fileOut);
                 } else {
-                    token = manualUploader.harvesting(out, oaiToken);
+                    token = manualUploader.harvesting(fileOut, oaiToken);
                 }
 
                 if(token != null && !"".equals(token))
@@ -86,7 +86,7 @@ public class HarvesterAjaxAction extends AjaxControllerAbstractAction {
             }
 
             writer.close();
-            out.close();
+//            out.close();
             LOG.debug("Retrieved token: " + token);
 
             final HttpSession session = getServletRequest().getSession();
