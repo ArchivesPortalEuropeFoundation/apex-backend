@@ -2,7 +2,6 @@ package eu.apenet.oaiserver;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -29,6 +28,8 @@ public class EuropeanaOAIServlet extends HttpServlet {
 	private static Logger LOGGER = Logger.getLogger(EuropeanaOAIServlet.class);
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		long startTime = System.currentTimeMillis() ;
+				
 		String url = request.getScheme()+"://"+request.getHeader("Host") + request.getContextPath() + REQUEST_SUFIX;
 		String remoteHost = request.getRemoteHost()+ ": ";
 		String logline = remoteHost + url;
@@ -39,16 +40,7 @@ public class EuropeanaOAIServlet extends HttpServlet {
 		response.setBufferSize(4096);
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/xml");
-
-		String acceptEncoding = request.getHeader("Accept-Encoding");
-		LOGGER.info(remoteHost + "accepts " + acceptEncoding);
-		OutputStream outputStream = null;
-//		if (StringUtils.isNotBlank(acceptEncoding) && acceptEncoding.contains("gzip")){
-			response.setHeader("Content-Encoding", "gzip");
-			outputStream = new GZIPOutputStream(response.getOutputStream());
-//		}else {
-//			outputStream = response.getOutputStream();
-//		}
+		OutputStream outputStream = response.getOutputStream();
 		XMLStreamWriterHolder writerHolder;
 		try {
 			writerHolder = new XMLStreamWriterHolder(XMLOutputFactory.newInstance()
@@ -64,6 +56,7 @@ public class EuropeanaOAIServlet extends HttpServlet {
 		
 		outputStream.flush();
 		outputStream.close();
+		LOGGER.info("Duration: " + (System.currentTimeMillis()-startTime));
 	}
 
 

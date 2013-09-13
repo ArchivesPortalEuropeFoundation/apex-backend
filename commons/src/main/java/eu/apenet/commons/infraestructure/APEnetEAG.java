@@ -878,7 +878,7 @@ public class APEnetEAG {
 		
 			
 			EadSearchOptions eadSearchOptions = new EadSearchOptions();
-			eadSearchOptions.setEadClazz(HoldingsGuide.class);
+			eadSearchOptions.setEadClass(HoldingsGuide.class);
 			eadSearchOptions.setArchivalInstitionId(aiId);
 			eadSearchOptions.setPublished(true);
 			this.holdingsGuideIndexed =  DAOFactory.instance().getEadDAO().getEads(eadSearchOptions);

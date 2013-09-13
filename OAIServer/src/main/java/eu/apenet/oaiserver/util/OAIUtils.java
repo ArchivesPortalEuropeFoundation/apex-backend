@@ -26,7 +26,7 @@ public class OAIUtils {
 	private static final String SET_ATTRIBUTE = "set";
 	public static final String VERB = "verb";
 	private static final String RESUMPTIONTOKEN_ATTRIBUTE = "resumptionToken";
-	public static final long EXPIRATION_TIME_IN_MILLISECONDS = 1000*60*10; //10 minutes
+	public static final long EXPIRATION_TIME_IN_MILLISECONDS = 1000*60*30; //10 minutes
 	public static final String SPECIAL_KEY = "-";
 	private static Logger LOG = Logger.getLogger(OAIUtils.class);
 	public final static String XSI_SCHEMALOCATION = "http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd";

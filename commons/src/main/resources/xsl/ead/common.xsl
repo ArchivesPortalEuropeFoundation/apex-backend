@@ -27,7 +27,7 @@
 		<xsl:value-of select="ape:highlight(., 'alterdate')" disable-output-escaping="yes" />
 	</xsl:template>	
 	<xsl:template match="text()" mode="notsearchable">
-		<xsl:value-of select="." /><xsl:text> </xsl:text>
+		<xsl:value-of select="." />
 	</xsl:template>	
 	<xsl:template match="ead:unitdate" mode="#all">
 		<xsl:apply-templates mode="#current" /><xsl:text> </xsl:text>
@@ -38,12 +38,12 @@
 	<xsl:template match="ead:emph[@render='bold']" mode="#all">
 		<b>
 			<xsl:apply-templates mode="#current" />
-		</b><xsl:text> </xsl:text>
+		</b>
 	</xsl:template>
 	<xsl:template match="ead:emph[@render='italic']" mode="#all">
 		<i>
 			<xsl:apply-templates mode="#current" />
-		</i><xsl:text> </xsl:text>
+		</i>
 	</xsl:template>
 	<xsl:template match="ead:list[@type='ordered']" mode="#all">
 		<p>

@@ -210,7 +210,7 @@ public class ArchivalInstitutionUnit implements Comparable<ArchivalInstitutionUn
 		EadSearchOptions eadSearchOptions = new EadSearchOptions();
 		eadSearchOptions.setArchivalInstitionId(aiId);
 		eadSearchOptions.setPublished(true);
-		eadSearchOptions.setEadClazz(HoldingsGuide.class);
+		eadSearchOptions.setEadClass(HoldingsGuide.class);
 		List<Ead> holdingsGuideList = DAOFactory.instance().getEadDAO().getEads(eadSearchOptions);
 
         List<HoldingsGuideUnit> holdingsGuideUnitList = new ArrayList<HoldingsGuideUnit>();
