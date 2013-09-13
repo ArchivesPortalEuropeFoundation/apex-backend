@@ -43,7 +43,6 @@ public class OaiPmhMetadataParser extends AbstractOaiPmhParser{
 				QName elementName = xmlReader.getName();
 				if (METADATA.equals(elementName)) {
 					foundEndElement = true;
-
 				} else {
 					writeEndElement(xmlReader, xmlWriter);
 				}
@@ -52,6 +51,9 @@ public class OaiPmhMetadataParser extends AbstractOaiPmhParser{
 				event = xmlReader.next();
 			}
 		}
+		xmlWriter.writeEndDocument();
+		xmlWriter.flush();
+		xmlWriter.close();
 		return filename;
 	}
 	protected static void writeEndElement(XMLStreamReader xmlReader, XMLStreamWriter xmlWriter) throws XMLStreamException{
