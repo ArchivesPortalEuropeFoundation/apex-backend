@@ -23,7 +23,7 @@
                         eagcorrectlyuploaded, createeag2012withmenu, storeEAG2012, editWebFormEAG2012, eagoldhttpupload, eagoldnothttpupload,
 
             <!-- Edition of EAD -->
-	                    editEad, editEadCreateDbEntries, editEadXml, editEadXmlSaveLevel, editEadXmlSaveAll, editEadXmlDeleteEntries, editEadGetFields, editEadAddField,
+	                   <!-- editEad, editEadCreateDbEntries, editEadXml, editEadXmlSaveLevel, editEadXmlSaveAll, editEadXmlDeleteEntries, editEadGetFields, editEadAddField, --> 
 	
 	                    <!-- Harvesting -->
 	                    harvestOAI, harvesting, stopHarvest, getThreadLevel, dbToEadAjax,

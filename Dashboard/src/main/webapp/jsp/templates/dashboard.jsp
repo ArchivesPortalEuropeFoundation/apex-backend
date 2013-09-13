@@ -13,6 +13,7 @@
       <meta name="Description" content="APENET" />
       <meta name="Keywords" content="archives portal europe, apenet, europeana" />
       <title><apenet:resource><tiles:getAsString name="title"/></apenet:resource></title>
+      <link rel="stylesheet" href="${pageContext.request.contextPath}/css/global.css" type="text/css"/>
       <link rel="stylesheet" href="${pageContext.request.contextPath}<tiles:getAsString name="maincss"/>" type="text/css"/>
       <c:forEach var="item" items="${jsInternal}"><script src="${pageContext.request.contextPath}${item}" type="text/javascript"></script></c:forEach>
       <c:forEach var="item" items="${cssInternal}"><link rel="stylesheet" href="${pageContext.request.contextPath}${item}" type="text/css" /></c:forEach>

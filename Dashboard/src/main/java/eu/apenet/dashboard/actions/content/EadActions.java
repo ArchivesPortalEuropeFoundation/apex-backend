@@ -188,7 +188,7 @@ public class EadActions extends AbstractEadActions {
         SecurityContext.get().checkAuthorized(ead);
         CLevelDAO clevelDAO = DAOFactory.instance().getCLevelDAO();
         HgSgFaRelationDAO hgSgFaRelationDAO = DAOFactory.instance().getHgSgFaRelationDAO();
-        String name = APEnetUtilities.convertToFilename(ead.getEadid()) + "-statistics" + SIMPLE_DATE_FORMAT.format(new Date()) + ".ods";
+        String name = APEnetUtilities.convertToFilename(ead.getEadid()) + "-statistics-" + SIMPLE_DATE_FORMAT.format(new Date()) + ".ods";
         OutputStream outputStream = ContentUtils.getOutputStreamToDownload(this.getServletRequest(),
                 getServletResponse(), name, "application/vnd.oasis.opendocument.spreadsheet");
         HgSgStatisticsDocumentWriter documentWriter = new HgSgStatisticsDocumentWriter();
@@ -313,17 +313,17 @@ public class EadActions extends AbstractEadActions {
 
         protected void fillCell(int col, int row, String stringValue) {
             Cell cell = table.getCellByPosition(col, row);
-            cell.setDisplayText(stringValue);
+            cell.setStringValue(stringValue + "");
         }
 
         protected void fillCell(int col, int row, int stringValue) {
             Cell cell = table.getCellByPosition(col, row);
-            cell.setDisplayText(stringValue + "");
+            cell.setStringValue(stringValue + "");
         }
 
-        protected void fillCell(int col, int row, long stringValue) {
+        protected void fillCell(int col, int row, long longValue) {
             Cell cell = table.getCellByPosition(col, row);
-            cell.setDisplayText(stringValue + "");
+            cell.setStringValue(longValue + "");
         }
     }
 }

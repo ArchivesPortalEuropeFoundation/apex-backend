@@ -117,7 +117,7 @@ public class QueueTask implements Runnable {
 					itemsPublished = itemsPublished || queueAction.isPublishAction();
 					hasItems = true;
 				}
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				LOGGER.error("queueId: " + queueId + " - " + e.getMessage(), e);
 				JpaUtil.rollbackDatabaseTransaction();
 				/*
@@ -138,7 +138,7 @@ public class QueueTask implements Runnable {
 				 * throw exception when solr has problem, so the queue will stop for a while.
 				 */
 				if (e instanceof APEnetException && e.getCause() instanceof SolrServerException){
-					throw e;
+					throw (Exception) e;
 					
 				}
 			}

@@ -40,7 +40,6 @@ public class DatabaseCLevelPublisher {
 		}
 		eadCounts.addClevel(solrPublisher.parseCLevel(publishData));
 		if (clevel.getHrefEadid() != null){
-			System.out.println(clevel.getHrefEadid());
 			LinkingService.linkWithoutCommit(ead, clevel);
 		}
 		unittitles.add(new LevelInfo(clevel.getClId(),clevel.getOrderId(), clevel.getUnittitle()));	
