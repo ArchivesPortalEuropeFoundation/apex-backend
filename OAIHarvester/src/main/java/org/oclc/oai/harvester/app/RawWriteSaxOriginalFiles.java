@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.oclc.oai.harvester.parser.OaiPmhParser;
+import org.oclc.oai.harvester.parser.OaiPmhRecord;
 import org.oclc.oai.harvester.parser.ResultInfo;
 import org.oclc.oai.harvester.verb.ListRecordsSaxWriteDirectly;
 
@@ -105,6 +106,10 @@ public class RawWriteSaxOriginalFiles {
                 System.out.println("Error record: " + resultInfo.getIdentifier());
                 break;
             }
+    		for (OaiPmhRecord record : resultInfo.getRecords()){
+    			System.out.println(record.getIdentifier() + " - " + record.isDeleted() + " - " + record.getFilename());
+    			
+    		}
             resumptionToken = resultInfo.getNewResumptionToken();
             System.out.println("resumptionToken: " + resumptionToken);
             if (resumptionToken == null || resumptionToken.length() == 0) {
@@ -136,6 +141,10 @@ public class RawWriteSaxOriginalFiles {
                 System.out.println("Error record: " + resultInfo.getIdentifier());
                 break;
             }
+    		for (OaiPmhRecord record : resultInfo.getRecords()){
+    			System.out.println(record.getIdentifier() + " - " + record.isDeleted() + " - " + record.getFilename());
+    			
+    		}
             String resumptionToken = resultInfo.getNewResumptionToken();
             System.out.println("resumptionToken: " + resumptionToken);
             if (resumptionToken == null || resumptionToken.length() == 0) {
