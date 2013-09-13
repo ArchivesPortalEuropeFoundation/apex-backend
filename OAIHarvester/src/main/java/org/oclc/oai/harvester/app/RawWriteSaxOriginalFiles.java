@@ -1,25 +1,20 @@
 package org.oclc.oai.harvester.app;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.transform.TransformerException;
+import org.oclc.oai.harvester.parser.OaiPmhParser;
+import org.oclc.oai.harvester.parser.ResultInfo;
+import org.oclc.oai.harvester.verb.ListRecordsSaxWriteDirectly;
 
-import org.oclc.oai.harvester.verb.ListRecordsSax;
-import org.xml.sax.SAXException;
 
-/**
- * User: Yoann Moranville
- * Date: 06/08/2013
- *
- * @author Yoann Moranville
- */
-public class RawWriteSaxSeparatedFiles {
+public class RawWriteSaxOriginalFiles {
     public static void main(String[] args) {
         try {
             System.out.println(new Date());
@@ -32,7 +27,7 @@ public class RawWriteSaxSeparatedFiles {
                 throw new IllegalArgumentException();
             }
             String baseURL = (String) rootArgs.get(0);
-            String prefix = (String) options.get("-filePrefix");
+            String directory = (String) options.get("-outputDirectory");
             String from = (String) options.get("-from");
             String until = (String) options.get("-until");
             String metadataPrefix = (String) options.get("-metadataPrefix");
@@ -41,12 +36,13 @@ public class RawWriteSaxSeparatedFiles {
             }
             String resumptionToken = (String) options.get("-resumptionToken");
             String setSpec = (String) options.get("-setSpec");
-
+            File outputDirectory = new File(directory);
+            outputDirectory.mkdirs();
             if (resumptionToken != null) {
-                run(baseURL, resumptionToken, prefix);
+                run(baseURL, resumptionToken, outputDirectory);
             }
             else {
-                run(baseURL, from, until, metadataPrefix, setSpec, prefix);
+                run(baseURL, from, until, metadataPrefix, setSpec, outputDirectory);
             }
 
             System.out.println(new Date());
@@ -92,14 +88,13 @@ public class RawWriteSaxSeparatedFiles {
         System.out.println("Elapsed time: " + hours + " hour(s) " + minutes + " minute(s) " + seconds + " second(s)");
     }
 
-    public static void run(String baseURL, String resumptionToken, String prefix)
-            throws IOException, ParserConfigurationException, SAXException, TransformerException, NoSuchFieldException, XMLStreamException {
-        int number = 0;
-        File exportFile = new File(prefix + "-" + number + ".xml");
-        exportFile.getParentFile().mkdirs();
-        ListRecordsSax listRecordsSax = new ListRecordsSax(baseURL, resumptionToken, exportFile);
-        while (listRecordsSax != null) {
-            List<String> errors = listRecordsSax.getErrors();
+    public static void run(String baseURL, String resumptionToken, File outputDirectory)
+            throws Exception {
+        OaiPmhParser oaiPmhParser = new OaiPmhParser(outputDirectory);
+        ListRecordsSaxWriteDirectly listRecordsSax = new ListRecordsSaxWriteDirectly();
+        ResultInfo resultInfo = listRecordsSax.harvest(baseURL, resumptionToken, oaiPmhParser);
+        while (resultInfo != null) {
+            List<String> errors = resultInfo.getErrors();
             if (errors != null && errors.size() > 0) {
                 System.out.println("Found errors");
                 int length = errors.size();
@@ -107,35 +102,30 @@ public class RawWriteSaxSeparatedFiles {
                     String item = errors.get(i);
                     System.out.println(item);
                 }
-                InputStream inputStream = new FileInputStream(exportFile);
-                System.out.println("Error record: " + inputStream.toString());
+                System.out.println("Error record: " + resultInfo.getIdentifier());
                 break;
             }
-            resumptionToken = listRecordsSax.getResumptionToken();
+            resumptionToken = resultInfo.getNewResumptionToken();
             System.out.println("resumptionToken: " + resumptionToken);
             if (resumptionToken == null || resumptionToken.length() == 0) {
-                listRecordsSax = null;
+            	resultInfo = null;
             }
             else {
-                number++;
-                exportFile = new File(prefix + "-" + number + ".xml");
-                listRecordsSax = new ListRecordsSax(baseURL, resumptionToken, exportFile);
+                resultInfo = listRecordsSax.harvest(baseURL, resumptionToken, oaiPmhParser);
             }
         }
     }
 
     public static void run(String baseURL, String from, String until,
-                           String metadataPrefix, String setSpec,
-                           String prefix)
-            throws IOException, ParserConfigurationException, SAXException, TransformerException,
-            NoSuchFieldException, XMLStreamException {
+                           String metadataPrefix, String setSpec,  File outputDirectory)
+            throws Exception {
         int number = 0;
-        File exportFile = new File(prefix + "-" + number + ".xml");
-        exportFile.getParentFile().mkdirs();
-        ListRecordsSax listRecordsSax = new ListRecordsSax(baseURL, from, until, setSpec, metadataPrefix, exportFile);
+        OaiPmhParser oaiPmhParser = new OaiPmhParser(outputDirectory);
+        ListRecordsSaxWriteDirectly listRecordsSax = new ListRecordsSaxWriteDirectly();
+        ResultInfo resultInfo = listRecordsSax.harvest(baseURL, from, until, setSpec, metadataPrefix, oaiPmhParser);
 
-        while (listRecordsSax != null) {
-            List<String> errors = listRecordsSax.getErrors();
+        while (resultInfo != null) {
+            List<String> errors = resultInfo.getErrors();
             if (errors != null && errors.size() > 0) {
                 System.out.println("Found errors");
                 int length = errors.size();
@@ -143,19 +133,17 @@ public class RawWriteSaxSeparatedFiles {
                     String item = errors.get(i);
                     System.out.println(item);
                 }
-                InputStream inputStream = new FileInputStream(exportFile);
-                System.out.println("Error record: " + inputStream.toString());
+                System.out.println("Error record: " + resultInfo.getIdentifier());
                 break;
             }
-            String resumptionToken = listRecordsSax.getResumptionToken();
+            String resumptionToken = resultInfo.getNewResumptionToken();
             System.out.println("resumptionToken: " + resumptionToken);
             if (resumptionToken == null || resumptionToken.length() == 0) {
-                listRecordsSax = null;
+            	resultInfo = null;
             }
             else {
                 number++;
-                exportFile = new File(prefix + "-" + number + ".xml");
-                listRecordsSax = new ListRecordsSax(baseURL, resumptionToken, exportFile);
+                resultInfo = listRecordsSax.harvest(baseURL, resumptionToken, oaiPmhParser);
             }
         }
     }
