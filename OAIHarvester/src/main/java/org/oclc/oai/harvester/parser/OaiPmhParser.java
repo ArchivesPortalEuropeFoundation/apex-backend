@@ -58,10 +58,6 @@ public class OaiPmhParser extends AbstractOaiPmhParser {
 				}
 			}
 		}
-		for (OaiPmhRecord record : resultInfo.getRecords()){
-			System.out.println(record.getIdentifier() + " - " + record.getStatus() + " - " + record.getFilename());
-			
-		}
 		return resultInfo;
 	}
 
