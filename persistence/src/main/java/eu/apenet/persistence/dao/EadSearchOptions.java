@@ -7,6 +7,7 @@ import java.util.List;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.ValidatedState;
 
@@ -17,18 +18,21 @@ public class EadSearchOptions implements Serializable{
 	private static final long serialVersionUID = 7670523402797168198L;
 	private int pageNumber = 1;
 	private int pageSize = 20;
-	private long firstResult = -1;;
+	private long firstResult = -1;
+	private String eadid;
 	private String searchTerms;
 	private String searchTermsField;
 	private String orderByField = "id";
 	private boolean orderByAscending = true;
-	private Class<? extends Ead> eadClazz = FindingAid.class;
+	private Class<? extends Ead> eadClass = FindingAid.class;
 	private Integer archivalInstitionId = null;
 	private Boolean published = null;
 	private Boolean converted = null;
 	private Boolean publishedToAll = null;
 	private Boolean dynamic = null;
 	private Boolean linked = null;
+	private Class<? extends Ead> linkedWithEadClass = HoldingsGuide.class;
+	private Integer linkedId;
 	private List<ValidatedState> validated = new ArrayList<ValidatedState>();
 	private List<EuropeanaState> europeana = new ArrayList<EuropeanaState>();
 	private List<QueuingState> queuing = new ArrayList<QueuingState>();
@@ -44,12 +48,15 @@ public class EadSearchOptions implements Serializable{
 		this.searchTermsField = eadSearchOptions.getSearchTermsField();
 		this.orderByField = eadSearchOptions.getOrderByField();
 		this.orderByAscending = eadSearchOptions.isOrderByAscending();
-		this.eadClazz = eadSearchOptions.getEadClazz();
+		this.eadClass = eadSearchOptions.getEadClass();
 		this.archivalInstitionId = eadSearchOptions.getArchivalInstitionId();
 		this.published = eadSearchOptions.getPublished();
 		this.converted = eadSearchOptions.getConverted();
 		this.publishedToAll = eadSearchOptions.getPublishedToAll();
 		this.linked = eadSearchOptions.getLinked();
+		this.linkedId = eadSearchOptions.getLinkedId();
+		this.linkedWithEadClass = eadSearchOptions.getLinkedWithEadClass();
+		this.eadid = eadSearchOptions.getEadid();
 		this.dynamic = eadSearchOptions.getDynamic();
 		for (ValidatedState validatedState: eadSearchOptions.getValidated()){
 			validated.add(validatedState);
@@ -65,14 +72,14 @@ public class EadSearchOptions implements Serializable{
 		}
 	}
 
-	public Class<? extends Ead> getEadClazz() {
-		return eadClazz;
-	}
 
-	public void setEadClazz(Class<? extends Ead> eadClazz) {
-		this.eadClazz = eadClazz;
-	}
 
+	public Class<? extends Ead> getEadClass() {
+		return eadClass;
+	}
+	public void setEadClass(Class<? extends Ead> eadClass) {
+		this.eadClass = eadClass;
+	}
 	public int getPageNumber() {
 		return pageNumber;
 	}
@@ -214,6 +221,25 @@ public class EadSearchOptions implements Serializable{
 	}
 	public void setDynamic(Boolean dynamic) {
 		this.dynamic = dynamic;
+	}
+
+	public Class<? extends Ead> getLinkedWithEadClass() {
+		return linkedWithEadClass;
+	}
+	public void setLinkedWithEadClass(Class<? extends Ead> linkedWithEadClass) {
+		this.linkedWithEadClass = linkedWithEadClass;
+	}
+	public Integer getLinkedId() {
+		return linkedId;
+	}
+	public void setLinkedId(Integer linkedId) {
+		this.linkedId = linkedId;
+	}
+	public String getEadid() {
+		return eadid;
+	}
+	public void setEadid(String eadid) {
+		this.eadid = eadid;
 	}
 	
 }

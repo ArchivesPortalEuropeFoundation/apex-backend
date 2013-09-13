@@ -70,7 +70,19 @@ public abstract class Ead  implements Serializable{
 	public abstract void setAiId(Integer aiId) ;
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName() + " - (" + getEadid() + "," + getId() + ") ";
+		return this.getEadClass().getSimpleName() + " - (" + getEadid() + "," + getId() + ") ";
+	}
+	public Class<? extends Ead> getEadClass(){
+		if (this instanceof FindingAid){
+			return FindingAid.class;
+		}else if (this instanceof HoldingsGuide){
+			return HoldingsGuide.class;
+		}else if (this instanceof SourceGuide){
+			return SourceGuide.class;
+		}else {
+			return Ead.class;
+		}
+		
 	}
     
 }
