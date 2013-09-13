@@ -740,7 +740,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					Iterator<String> warningsIt = this.getActionMessages().iterator();
 					while (warningsIt.hasNext()) {
 						String warning = warningsIt.next();
-						if (warning.contains("of element 'recordId' is not valid")
+						if (warning!=null && warning.contains("of element 'recordId' is not valid")
 								|| warning.contains("recordId already used")) {
 							this.loader.setRecordId(this.getIdUsedInAPE());
 							this.loader.setRecordIdISIL(Eag2012.OPTION_NO);

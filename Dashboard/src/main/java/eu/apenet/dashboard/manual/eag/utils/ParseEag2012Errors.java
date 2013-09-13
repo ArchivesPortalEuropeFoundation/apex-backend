@@ -54,6 +54,7 @@ public class ParseEag2012Errors{
 			errorValidation = targetAction.getText("eag2012.errors.standardDate")+" '"+errorDate+"' "+targetAction.getText("eag2012.errors.formatStandardDate");
         }else if(this.getWarning().contains("The element 'location' is missing") || this.getWarning().contains("The element 'street' has been found")
         		|| this.getWarning().contains("The element 'municipalityPostalcode' has been found")
+        		|| this.getWarning().contains("The element 'firstdem' has been found")
         		|| this.getWarning().contains("The element 'localentity' has been found but should not appear here")){
 			errorValidation = targetAction.getText("eag2012.errors.location");
         }else if(this.getWarning().contains("complex-type.4: Attribute 'eagRelationType' must appear on element 'eagRelation'")){
