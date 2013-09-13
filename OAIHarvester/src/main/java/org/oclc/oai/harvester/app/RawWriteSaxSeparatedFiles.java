@@ -160,17 +160,17 @@ public class RawWriteSaxSeparatedFiles {
         }
     }
 	public static String getInput(String message) {
-
-		System.out.println(message +" : ");
-
-		try {
-			BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
-			return bufferRead.readLine();
-
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//
+//		System.out.println(message +" : ");
+//
+//		try {
+//			BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
+//			return bufferRead.readLine();
+//
+//
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 		return null;
 
 	}
