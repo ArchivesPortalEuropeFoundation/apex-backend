@@ -11,11 +11,9 @@ import javax.servlet.http.HttpSessionBindingListener;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.util.TextProviderHelper;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
-
+import eu.apenet.commons.StrutsResourceBundleSource;
+import eu.apenet.commons.utils.DisplayUtils;
 import eu.apenet.dashboard.exception.NotAuthorizedException;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
@@ -184,9 +182,8 @@ public final class SecurityContext implements HttpSessionBindingListener{
 	}
 
 	public String getLocalizedCountryName() {
-		ValueStack valueStack = ActionContext.getContext().getValueStack();
-		String countryKey = "country." + countryName.toLowerCase().replace(" ", "_");
-		return TextProviderHelper.getText(countryKey, countryName, valueStack);
+		StrutsResourceBundleSource resourceBundleSource = new StrutsResourceBundleSource();
+		return DisplayUtils.getLocalizedCountryName(resourceBundleSource, countryName);
 	}
 
 	protected void changeArchivalInstitution(ArchivalInstitution archivalInstitution) {
