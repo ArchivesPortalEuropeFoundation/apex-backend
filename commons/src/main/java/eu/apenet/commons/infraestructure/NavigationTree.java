@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 
 import eu.apenet.commons.ResourceBundleSource;
 import eu.apenet.commons.exceptions.APEnetException;
+import eu.apenet.commons.utils.DisplayUtils;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.UserDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -42,8 +43,7 @@ public class NavigationTree {
 		try {
 			List<Country> cos = DAOFactory.instance().getCountryDAO().getCountriesWithArchivalInstitutionsWithEAG();
             for (Country co : cos) {
-                String otherCountryName = resourceBundleSource.getString("country." + co.getCname().toLowerCase().replace(" ", "_"), co.getCname());
-                countries.add(new CountryUnit(co, otherCountryName));
+                countries.add(getCountryUnit(co));
             }
 			
 		} catch (Exception e) {
@@ -52,24 +52,19 @@ public class NavigationTree {
         }
         return countries;
 	}
-	public CountryUnit getCountryUnit(Country cos ) throws APEnetException {
+	private CountryUnit getCountryUnit(Country cos ) throws APEnetException {
 		if (cos != null) {
-            String otherCountryName = resourceBundleSource.getString("country." + cos.getCname().toLowerCase(), cos.getCname());
+			String otherCountryName = DisplayUtils.getLocalizedCountryName(resourceBundleSource, cos);
             return new CountryUnit(cos, otherCountryName);
 		} else {
             return new CountryUnit(null, "No Country");
 		}		
 	}
-	//This method obtains all the countries within the Archival Landscape
+//	//This method obtains all the countries within the Archival Landscape
 	public CountryUnit getCountry(Integer couId) throws APEnetException {
 		try{
 			Country cos = DAOFactory.instance().getCountryDAO().findById(couId);
-			if (cos != null) {
-                String otherCountryName = resourceBundleSource.getString("country." + cos.getCname().toLowerCase(), cos.getCname());
-                return new CountryUnit(cos, otherCountryName);
-			} else {
-                return new CountryUnit(null, "No Country");
-			}
+			return getCountryUnit(cos);
 		} catch (Exception e) {
 			log.error("Error retrieving all the countries within the Archival Landscape.", e);
         	throw new APEnetException(e.getMessage(), e);
