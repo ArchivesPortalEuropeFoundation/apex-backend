@@ -114,7 +114,7 @@ public final class DisplayUtils {
 	}
 
 	public static String getLocalizedCountryName(ResourceBundleSource resourceBundleSource, Country country){
-		return getLocalizedCountryName(resourceBundleSource, country);
+		return getLocalizedCountryName(resourceBundleSource, country.getCname());
 	}
 	public static String getLocalizedCountryName(ResourceBundleSource resourceBundleSource, String countryName){
 		String lowerCaseCountryName = countryName.toLowerCase();
