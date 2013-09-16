@@ -2,6 +2,9 @@ package eu.apenet.commons.utils;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
+import eu.apenet.commons.ResourceBundleSource;
+import eu.apenet.persistence.vo.Country;
+
 public final class DisplayUtils {
 	private static final String OR = "|";
 	private static final int ZERO = 0;
@@ -110,4 +113,13 @@ public final class DisplayUtils {
 		return null;		
 	}
 
+	public static String getLocalizedCountryName(ResourceBundleSource resourceBundleSource, Country country){
+		return getLocalizedCountryName(resourceBundleSource, country);
+	}
+	public static String getLocalizedCountryName(ResourceBundleSource resourceBundleSource, String countryName){
+		String lowerCaseCountryName = countryName.toLowerCase();
+		String key = "country." + lowerCaseCountryName.replaceAll(" ", "_");
+		String defaultValue = lowerCaseCountryName.replaceAll("_", " ");
+		return resourceBundleSource.getString(key, defaultValue);
+	}
 }
