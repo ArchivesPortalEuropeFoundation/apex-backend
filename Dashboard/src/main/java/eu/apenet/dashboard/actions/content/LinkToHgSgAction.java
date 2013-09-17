@@ -10,6 +10,7 @@ import java.util.TreeSet;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import eu.apenet.commons.view.jsp.SelectItem;
@@ -36,6 +37,8 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
     private String selectPrefixMethod;
     private String ecId;
     private String parentCLevelId;
+
+    private static final Logger LOGGER = Logger.getLogger(LinkToHgSgAction.class);
 	/**
 	 * 
 	 */
@@ -126,9 +129,9 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 		Long ecIdLong = Long.parseLong(ecId);
 		List<Ead> findingAids = null;
 		long totalNumberOfFindingAids = 0;
+        LOGGER.info("The ID of my HG is " + id);
+        LOGGER.info("The ai_id I have is " + getAiId());
 		if (StringUtils.isBlank(batchItems)){
-            LOG.info("The ID of my HG is " + id);
-            LOG.info("The ai_id I have is " + getAiId());
 			findingAids = LinkingService.getFindingaidsToLinkToHgOrSg(Integer.parseInt(id), getAiId(), ecIdLong);
 			totalNumberOfFindingAids = LinkingService.countFindingaidsToLinkToHgOrSg(Integer.parseInt(id), getAiId(), ecIdLong);
 		}else {
