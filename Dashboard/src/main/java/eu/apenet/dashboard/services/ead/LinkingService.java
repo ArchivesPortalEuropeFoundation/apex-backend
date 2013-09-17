@@ -254,6 +254,7 @@ public class LinkingService {
 
 		EadSearchOptions eadSearchOptions = new EadSearchOptions();
 		eadSearchOptions.setEadClass(FindingAid.class);
+        eadSearchOptions.setArchivalInstitionId(aiId);
 		if (ids != null && ids.size() > 0) {
 			eadSearchOptions.setIds(ids);
 		}
