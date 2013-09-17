@@ -215,7 +215,6 @@ public class LinkingService {
 	private static List<Ead> getFindingaidsToLinkToHgOrSgInternal(EadSearchOptions eadSearchOptions, Long ecId) {
 		EadContent eadContent = DAOFactory.instance().getEadContentDAO().findById(ecId);
 		Ead hgOrSg = eadContent.getEad();
-        LOGGER.info("EAD: eadid: " + hgOrSg.getEadid() + ", id: " + hgOrSg.getId() + ", aiId: " + hgOrSg.getAiId() + ", ecId: " + ecId);
 		SecurityContext.get().checkAuthorized(hgOrSg);
 		eadSearchOptions.setLinked(false);
 		eadSearchOptions.setLinkedId(hgOrSg.getId());
@@ -255,7 +254,7 @@ public class LinkingService {
 
 		EadSearchOptions eadSearchOptions = new EadSearchOptions();
 		eadSearchOptions.setEadClass(FindingAid.class);
-        eadSearchOptions.setArchivalInstitionId(aiId);
+        eadSearchOptions.setArchivalInstitionId(aiId); //todo: Bastiaan from Yoann: Should we also add this (for fix #726)?
 		if (ids != null && ids.size() > 0) {
 			eadSearchOptions.setIds(ids);
 		}

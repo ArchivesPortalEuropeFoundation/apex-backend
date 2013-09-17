@@ -195,8 +195,7 @@ public final class SecurityContext implements HttpSessionBindingListener{
 		}
 		if (authorized){
 			selectedInstitution = new SelectedArchivalInstitution(archivalInstitution.getAiId(),
-					archivalInstitution.getAiname());
-            LOGGER.info("SelectInstitution is " + selectedInstitution.getName());
+					archivalInstitution.getAiname());			
 		}
 	}
 
@@ -213,10 +212,6 @@ public final class SecurityContext implements HttpSessionBindingListener{
 		}
 	}
 	public void checkAuthorized(Integer id) {
-        if(selectedInstitution == null)
-            LOGGER.error("SelectedInstitution is null...");
-        else
-            LOGGER.error(selectedInstitution.getId() + " is different than " + id);
 		if (selectedInstitution == null|| !selectedInstitution.getId().equals(id)) {
 			throw new NotAuthorizedException("This institution is not selected");
 		}
