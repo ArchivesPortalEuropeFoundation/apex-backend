@@ -215,6 +215,7 @@ public class LinkingService {
 	private static List<Ead> getFindingaidsToLinkToHgOrSgInternal(EadSearchOptions eadSearchOptions, Long ecId) {
 		EadContent eadContent = DAOFactory.instance().getEadContentDAO().findById(ecId);
 		Ead hgOrSg = eadContent.getEad();
+        LOGGER.info("EAD: eadid: " + hgOrSg.getEadid() + ", id: " + hgOrSg.getId() + ", aiId: " + hgOrSg.getAiId() + ", ecId: " + ecId);
 		SecurityContext.get().checkAuthorized(hgOrSg);
 		eadSearchOptions.setLinked(false);
 		eadSearchOptions.setLinkedId(hgOrSg.getId());

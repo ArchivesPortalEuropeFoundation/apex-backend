@@ -129,7 +129,7 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 		Long ecIdLong = Long.parseLong(ecId);
 		List<Ead> findingAids = null;
 		long totalNumberOfFindingAids = 0;
-        LOGGER.info("The ID of my HG is " + id);
+        LOGGER.info("The ID of my selected FA is " + id);
         LOGGER.info("The ai_id I have is " + getAiId());
 		if (StringUtils.isBlank(batchItems)){
 			findingAids = LinkingService.getFindingaidsToLinkToHgOrSg(Integer.parseInt(id), getAiId(), ecIdLong);
