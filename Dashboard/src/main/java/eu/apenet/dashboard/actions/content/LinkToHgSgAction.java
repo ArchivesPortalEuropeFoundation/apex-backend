@@ -49,6 +49,7 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 		selectPrefixMethodSet.add(new SelectItem(LinkingService.PREFIX_EADID, getText("dashboard.hgcreation.prefix.eadid")));
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		EadSearchOptions eadSearchOptions = new EadSearchOptions();
+        eadSearchOptions.setArchivalInstitionId(getAiId());
 		eadSearchOptions.setPublished(false);
 		eadSearchOptions.setDynamic(true);
 		eadSearchOptions.setEadClass(HoldingsGuide.class);
@@ -130,6 +131,7 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 		List<Ead> findingAids = null;
 		long totalNumberOfFindingAids = 0;
         LOGGER.info("The ID of my selected FA is " + id);
+        LOGGER.info("The ecId is " + ecId);
         LOGGER.info("The ai_id I have is " + getAiId());
 		if (StringUtils.isBlank(batchItems)){
 			findingAids = LinkingService.getFindingaidsToLinkToHgOrSg(Integer.parseInt(id), getAiId(), ecIdLong);
