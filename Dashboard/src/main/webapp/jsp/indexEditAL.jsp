@@ -442,7 +442,7 @@
 							<label for="textAL"><s:property value="getText('al.message.name')" />:</label>
 							<input type="text" name="textAL" id="textAL" class="inputTextBar" />
 						</div> <!--end firstFilterDiv-->
-						<div><!--vacio-->
+						<div><!--div1-->
 							<div style="float:left;">
 								<div class="secondFilterDiv">
 									<label for="element" style="padding-right:4px;"><s:property value="getText('al.message.element')" />:</label>
@@ -451,7 +451,7 @@
 										<option selected="selected" value="file"><s:property value="getText('al.message.file')"/></option>
 									</select> <!--end select element-->
 								</div> <!--end secondFilterDiv-->
-								<div class="secondFilterDiv">
+								<div class="secondFilterDiv" id="secondFilterDivLang">
 									<label for="selectedLang"><s:property value="getText('al.message.selectlanguage')"/>:</label>
 									<select name="selectedLang" id="selectedLang" >
 										<s:iterator var="row" value="langList">
@@ -466,7 +466,7 @@
 									<input type="submit" class="inputSubmitAL" id="editAL_editAL" name="action:editAL" value="<s:property value="getText('al.message.addtolist')" />"/>
 								</div> <!--end secondFilterDiv-->
 							</div> <!--end style-->
-						</div><!--end vacio-->
+						</div><!--end div1-->
 				     </div><!--end filterSelect-->
 				     <div id="filteList" class="filterListAL">
 					<s:if test="AL.size()==0">
