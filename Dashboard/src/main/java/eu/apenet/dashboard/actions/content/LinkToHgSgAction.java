@@ -46,6 +46,7 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 		selectPrefixMethodSet.add(new SelectItem(LinkingService.PREFIX_EADID, getText("dashboard.hgcreation.prefix.eadid")));
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		EadSearchOptions eadSearchOptions = new EadSearchOptions();
+        eadSearchOptions.setArchivalInstitionId(getAiId());
 		eadSearchOptions.setPublished(false);
 		eadSearchOptions.setDynamic(true);
 		eadSearchOptions.setEadClass(HoldingsGuide.class);
