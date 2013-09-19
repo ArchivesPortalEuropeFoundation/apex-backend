@@ -84,31 +84,15 @@ public class ConvertAction extends AbstractInstitutionAction {
     private boolean hierarchyPrefixCheck;
     private boolean inheritFileParentCheck;
     private boolean inheritOriginationCheck;
-    private boolean inheritLanguageCheck;
+    private boolean inheritLanguageCheck = true;
     private boolean noLanguageOnClevel = true;
     private boolean noLanguageOnParents;
     private Set<SelectItem> languages = new TreeSet<SelectItem>();
 	
 	@Override
 	public void validate() {
-		if (INHERITLANGUAGE_PROVIDE.equals(inheritLanguage)){
-			if (StringUtils.isBlank(languageSelection)){
-				addFieldError("languageSelection", getText("errors.required"));
-			}
-		} else  if (ConvertAction.OPTION_NO.equals(inheritLanguage)) {
-			if (ConvertAction.TYPE_TEXT.equals(daoType)) {
-				if (noLanguageOnClevel) {
-					addFieldError("inheritLanguage", getText("errors.required")
-						+ getText("errors.clevel.without.langmaterial"));
-				}
-			}
-		} else if (ConvertAction.OPTION_YES.equals(inheritLanguage)) {
-			if (ConvertAction.TYPE_TEXT.equals(daoType)) {
-				if (this.isNoLanguageOnParents()) {
-					addFieldError("inheritLanguage", getText("errors.required")
-						+ getText("errors.fa.without.langmaterial"));
-				}
-			}
+		if (StringUtils.isBlank(languageSelection)){
+			addFieldError("inheritLanguageCheck", getText("errors.required"));
 		}
 
 		if (EUROPEANA.equals(license)){
@@ -251,11 +235,9 @@ public class ConvertAction extends AbstractInstitutionAction {
     	config.setContextInformationPrefix(hierarchyPrefix);
     	config.setInheritElementsFromFileLevel(ConvertAction.OPTION_YES.equals(inheritFileParent));
     	config.setInheritOrigination(ConvertAction.OPTION_YES.equals(inheritOrigination));
-    	config.setInheritLanguage(ConvertAction.OPTION_YES.equals(inheritLanguage));
-    	if (INHERITLANGUAGE_PROVIDE.equals(inheritLanguage)){
-    		String parseLanguages = this.getLanguageSelection().replaceAll(",", "");
-    		config.setLanguage(parseLanguages);
-    	}
+    	config.setInheritLanguage(true);
+    	String parseLanguages = this.getLanguageSelection().replaceAll(",", "");
+    	config.setLanguage(parseLanguages);
     	config.setType(daoType);
     	config.setProvider(provider);
     	if (customDataProvider != null && !customDataProvider.isEmpty()) {

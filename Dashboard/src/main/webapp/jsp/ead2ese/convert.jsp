@@ -15,8 +15,6 @@
 			enableInheritFileParentCheckState();
 			$('#hiddenInheritOrigination').show();
 			enableInheritOriginationCheckState();
-			$('#hiddeInheritLanguage').show();
-			displayInheritLanguage();
 		});
 
 		$("#conversionTypeminimal").click(function() {
@@ -26,8 +24,6 @@
 			disableInheritFileParentCheckState();
 			$('#hiddenInheritOrigination').hide();
 			disableInheritOriginationCheckState();
-			$('#hiddeInheritLanguage').hide();
-			displayInheritLanguage();
 		});
 
 		$('#inheritLanguageprovide').click(function() {
@@ -147,51 +143,6 @@
 			}
 		});
 	}
-
-	function changeInheritLanguageCheckState() {
-		if ($("#inheritLanguageCheck").attr('checked')) {
-			enableInheritLanguageCheckState();
-		} else {
-			disableInheritLanguageCheckState();
-		}
-	}
-
-	function enableInheritLanguageCheckState() {
-		$("input[id^='inheritLanguage']").each(function(){
-			$(this).removeAttr('disabled');
-		});
-	}
-
-	function disableInheritLanguageCheckState() {
-		$("input[id^='inheritLanguage']").each(function(){
-			if ($(this).attr("id") != "inheritLanguageCheck") {
-				$(this).attr('disabled', 'disabled');
-				if ($(this).val() == "no") {
-					$(this).attr('checked', 'checked');
-				} else {
-					$(this).removeAttr('checked');
-				}
-			}
-		});
-		$('#hiddenLanguage').hide();
-	}
-
-	function displayInheritLanguage() {
-		if ($("select#selectType").val() == "TEXT") {
-			$("tr#trSelectType").after($("#hiddeInheritLanguage"));
-			$("#hiddeInheritLanguage").after($("#hiddenLanguage"));
-			$('#hiddeInheritLanguage').show();
-			enableInheritLanguageCheckState();
-		} else if ($("#conversionTypefull").attr("checked") == "checked") {
-			$('#hiddeInheritLanguage').show();
-			enableInheritLanguageCheckState();
-			$("#hiddenInheritOrigination").after($("#hiddeInheritLanguage"));
-			$("#hiddeInheritLanguage").after($("#hiddenLanguage"));
-		} else {
-			$('#hiddeInheritLanguage').hide();
-			disableInheritLanguageCheckState();
-		}
-	}
 </script>
 
 <s:form method="POST" theme="simple">
@@ -220,11 +171,30 @@
 		</tr>
 		<tr id="trSelectType">
 			<td class="inputLabel"><s:label key="ead2ese.label.type" for="selectType" /><span class="required">*</span>:</td>
-			<td><s:select id="selectType" name="daoType" list="typeSet" listKey="value" listValue="content" required="true" onchange="displayInheritLanguage();"></s:select> <s:fielderror fieldName="daoType"/>
+			<td><s:select id="selectType" name="daoType" list="typeSet" listKey="value" listValue="content" required="true"></s:select> <s:fielderror fieldName="daoType"/>
 				<s:checkbox name="daoTypeCheck" id="daoTypeCheck" value="true"></s:checkbox>
 				<s:label key="ead2ese.label.type.file" for="daoType"/>
 			</td>
 		</tr>
+		<tr id="hiddeInheritLanguage">
+			<td class="inputLabel">
+				<s:label key="ead2ese.label.inherit.language" for="inheritLanguage" /><span class="required">*</span>:
+			</td>
+			<td class="tdVertical">
+				<s:select name="languageSelection" id="languageSelection" listKey="value" listValue="content" list="languages" required="true"
+					value="" multiple="true" size="4"></s:select><s:fielderror fieldName="languageSelection"/>
+
+				<s:if test="inheritLanguageCheck==true">
+					<s:checkbox name="inheritLanguageCheck" id="inheritLanguageCheck" value="true"></s:checkbox>
+				</s:if>
+				<s:else>
+					<s:checkbox name="inheritLanguageCheck" id="inheritLanguageCheck" value="false"></s:checkbox>
+				</s:else>
+				<s:label key="ead2ese.label.language.file" for="inheritLanguageCheck"/>
+				<s:fielderror fieldName="inheritLanguageCheck"/>
+			</td>
+		</tr>
+
 		<tr>
 			<td class="inputLabel"><s:label key="ead2ese.label.license" for="license" />:</td>
 			<td><s:radio name="license" id="license" list="licenseSet" listKey="value" listValue="content"></s:radio>
@@ -279,24 +249,6 @@
 				<s:label key="ead2ese.label.inherit.origination" for="inheritOrigination" />:
 			</td>
 			<td><s:radio name="inheritOrigination" list="yesNoSet" listKey="value" listValue="content"></s:radio>
-			</td>
-		</tr>
-		<tr id="hiddeInheritLanguage" ${showMinimal}>
-			<td class="inputLabel">
-				<s:checkbox name="inheritLanguageCheck" id="inheritLanguageCheck" value="true" onchange="changeInheritLanguageCheckState();"></s:checkbox>
-				<s:label key="ead2ese.label.inherit.language" for="inheritLanguage" /><span class="required">*</span>:
-			</td>
-			<td><s:radio name="inheritLanguage" id="inheritLanguage" list="inheritLanguageSet" listKey="value" listValue="content" required="true">
-				</s:radio><s:fielderror fieldName="inheritLanguage"/>
-			</td>
-		</tr>
-		<s:if test="inheritLanguage!='provide'">
-			<c:set var="languageInvisible" value="style=\"display: none;\""></c:set>
-		</s:if>
-		<tr id="hiddenLanguage" ${languageInvisible}>
-			<td class="inputLabel"><s:label key="ead2ese.label.language.select" for="languageSelection" /><span class="required">*</span>:</td>
-			<td><s:select name="languageSelection" id="languageSelection" listKey="value" listValue="content" list="languages" required="true"
-					value="" multiple="true" size="4"></s:select><s:fielderror fieldName="languageSelection"/>
 			</td>
 		</tr>
 		<tr>
