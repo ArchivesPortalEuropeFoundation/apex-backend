@@ -1477,7 +1477,7 @@ function yiAddVisitorsAddressTranslation(text1) {
 		$("table#yiTableVisitorsAddress_"+(counter+1)+" #selectYIVASelectLanguage").attr("value","none");
 		// Remove "*".
 		$("table#yiTableVisitorsAddress_"+(counter+1)).find("span").remove();
-		
+		$("table#yiTableVisitorsAddress_"+(counter+1)).find("p").remove();
 		$("table#yiTableVisitorsAddress_1 input#textYILatitude").removeAttr("disabled");	
 		$("table#yiTableVisitorsAddress_1 input#textYILongitude").removeAttr("disabled");	
 		
@@ -1542,7 +1542,7 @@ function yiAddPostalAddressTranslation(text1) {
 		$("table#yiTablePostalAddress_"+(counter+1)+" #selectYIPASelectLanguage").attr("value","none");
 		// Remove "*".
 		$("table#yiTablePostalAddress_"+(counter+1)).find("span").remove();
-	
+		$("table#yiTablePostalAddress_"+(counter+1)).find("p").remove();
 	} else {
 		alertEmptyFields(text1);
 	}
@@ -2134,6 +2134,7 @@ function yIAddOpeningTimes(text1){
 	clone.find("[id^='selectTextYIOpeningTimes']").attr("value","none");
 	// Remove "*".
 	clone.find("span").remove();
+	clone.find("p").remove();
 	if(wrongField){
 		alert(text1);
 	}else{
