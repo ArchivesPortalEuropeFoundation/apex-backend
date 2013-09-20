@@ -5,3 +5,7 @@ table {
 .inputLabel {
 	width: 30%;
 }
+
+.tdVertical {
+	vertical-align: middle;
+}
