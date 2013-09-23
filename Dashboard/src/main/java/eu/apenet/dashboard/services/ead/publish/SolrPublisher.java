@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
@@ -48,6 +49,12 @@ import eu.apenet.persistence.vo.Warnings;
 
 public class SolrPublisher {
 
+	private static final String DAO_ROLE_UNSPECIFIED = "UNSPECIFIED";
+	private static final String DAO_ROLE_3D = "3D";
+	private static final String DAO_ROLE_VIDEO = "VIDEO";
+	private static final String DAO_ROLE_SOUND = "SOUND";
+	private static final String DAO_ROLE_IMAGE = "IMAGE";
+	private static final String DAO_ROLE_TEXT = "TEXT";
 	private static final String LEVEL_CLEVEL = "clevel";
 	private static final String LEVEL_ARCHDESC = "archdesc";
 	private static final String WHITE_SPACE = " ";
@@ -472,10 +479,8 @@ public class SolrPublisher {
 		add(doc1, SolrFields.EADID, eadidstring);
 		add(doc1, SolrFields.UNITID_OF_FOND, unitidfond);
 		doc1.addField(SolrFields.DAO, dao);
-		if (dao && roleDao.size() == 0) {
-			doc1.addField(SolrFields.ROLEDAO, "UNSPECIFIED");
-		} else if (dao) {
-			doc1.addField(SolrFields.ROLEDAO, roleDao);
+		if (dao){
+			doc1.addField(SolrFields.ROLEDAO, convertToValidDaoRoles(roleDao));
 		}
 		add(doc1, SolrFields.OTHER, otherinfo);
 		doc1.addField(SolrFields.LEAF, publishData.isLeaf());
@@ -599,4 +604,18 @@ public class SolrPublisher {
 		return solrTime;
 	}
 
+	private static Set<String> convertToValidDaoRoles(Set<String> daoRoles){
+		Set<String> result = new HashSet<String>();
+		for (String daoRole: daoRoles){
+			if (DAO_ROLE_TEXT.equalsIgnoreCase(daoRole) || DAO_ROLE_IMAGE.equalsIgnoreCase(daoRole) 
+					||DAO_ROLE_SOUND.equalsIgnoreCase(daoRole) || DAO_ROLE_VIDEO.equalsIgnoreCase(daoRole) 
+					||DAO_ROLE_3D.equalsIgnoreCase(daoRole)){
+				result.add(daoRole.toUpperCase());
+			}
+		}
+		if (result.size() == 0){
+			result.add(DAO_ROLE_UNSPECIFIED);
+		}
+		return result;
+	}
 }
