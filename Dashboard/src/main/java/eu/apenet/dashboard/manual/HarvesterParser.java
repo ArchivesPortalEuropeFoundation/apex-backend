@@ -156,7 +156,7 @@ public class HarvesterParser extends AbstractParser {
 
                         isInsideRecord = true;
                     } else if(isInsideRecord) {
-                        findingAidXmlWriter2.writeStartElement(xmlReader.getPrefix(), xmlReader.getLocalName(), xmlReader.getNamespaceURI());
+                        findingAidXmlWriter2.writeStartElement(xmlReader.getLocalName());
                     }
                 } else if (event == XMLStreamConstants.END_ELEMENT) {
                     if(isInsideRecord)
