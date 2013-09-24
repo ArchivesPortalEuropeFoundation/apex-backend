@@ -81,6 +81,26 @@
                 <xsl:value-of select="text()"/>
             </unitdate>
         </xsl:for-each>
+        <xsl:for-each select="ns3:dc/ns2:format">
+            <physdesc encodinganalog="3.1.5">
+                <extent>
+                    <xsl:value-of select="text()"/>
+                </extent>
+            </physdesc>
+        </xsl:for-each>
+        <xsl:for-each select="ns3:dc/ns2:relation">
+            <dao>
+                <xsl:attribute name="xlink:title" select="'thumbnail'"/>
+                <xsl:attribute name="xlink:href" select="replace(text(), 'vault/?id=', 'thumb/?f=')"/>
+            </dao>
+            <xsl:for-each select="parent::*/*[local-name()='identifier']">
+                <xsl:if test="starts-with(text(), 'http')">
+                    <dao>
+                        <xsl:attribute name="xlink:href" select="replace(text(), 'details?', 'viewer?')"/>
+                    </dao>
+                </xsl:if>
+            </xsl:for-each>
+        </xsl:for-each>
     </xsl:template>
 
     <xsl:template name="notdid">
