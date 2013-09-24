@@ -374,7 +374,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	 * @return the nameOfInstitution
 	 */
 	public String getInitialAutformValue() {
-		return DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId()).getAiname();
+		String aiName = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId()).getAiname();
+		return loader.removeDuplicateWhiteSpaces(aiName);
 	}
 
 	/**

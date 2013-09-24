@@ -527,6 +527,7 @@ public class EAG2012Loader{
 				|| this.initialAutform.isEmpty()) {
 			this.initialAutform = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getId()).getAiname();
 		}
+		this.initialAutform = removeDuplicateWhiteSpaces(this.initialAutform);
 		return this.initialAutform;
 	}
 
@@ -9418,5 +9419,26 @@ public class EAG2012Loader{
 		}
 
 		return geogareaValue;
+	}
+
+	/**
+	 * Method to replace the duplicated whitespaces inside a string.
+	 * @param str
+	 * @return The string without whitespaces.
+	 */
+	public String removeDuplicateWhiteSpaces(final String str) {
+		String strWith = str.trim().replaceAll("[\\s+]", " ");
+		StringBuilder sb = new StringBuilder();
+		boolean space = false;
+		for (int i = 0; i < strWith.length() ; i ++) {
+			if (!space && strWith.charAt(i) == ' ') {
+				sb.append(' ');
+				space = true;
+			} else if (strWith.charAt(i) != ' ') {
+				sb.append(strWith.charAt(i));
+				space = false;
+			}
+		}
+		return sb.toString();
 	}
 }
