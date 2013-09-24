@@ -151,8 +151,8 @@ public class HarvesterParser extends AbstractParser {
                         findingAidXmlWriter2 = (XMLStreamWriter2) xmlOutputFactory.createXMLStreamWriter(findingAidOutputStream2, UTF8);
 
                         findingAidXmlWriter2.writeStartElement(xmlReader.getPrefix(), xmlReader.getLocalName(), xmlReader.getNamespaceURI());
-                        findingAidXmlWriter2.writeNamespace("ns2", "http://purl.org/dc/elements/1.1/");
-                        findingAidXmlWriter2.writeNamespace("ns3", "http://www.openarchives.org/OAI/2.0/oai_dc/");
+                        findingAidXmlWriter2.writeNamespace("dc", "http://purl.org/dc/elements/1.1/");
+                        findingAidXmlWriter2.writeNamespace("oai_dc", "http://www.openarchives.org/OAI/2.0/oai_dc/");
 
                         isInsideRecord = true;
                     } else if(isInsideRecord) {
