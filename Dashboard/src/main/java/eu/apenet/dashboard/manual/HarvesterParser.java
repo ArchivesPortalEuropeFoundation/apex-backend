@@ -334,6 +334,7 @@ public class HarvesterParser extends AbstractParser {
                 listFas.put(id, new ArrayList<String>());
             }
         }
+        LOG.info("There will be " + listFas.size() + " FAs to create!");
 
         for(String id : idsWithTypes.keySet()){
             if(listFas.get(id) != null && listFas.get(id).size() != 0)
