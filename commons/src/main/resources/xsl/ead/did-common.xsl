@@ -143,13 +143,22 @@
 							<xsl:choose>
 								<xsl:when test="./@xlink:role">
 									<xsl:variable name="type" select="fn:lower-case(./@xlink:role)"></xsl:variable>
-									<span class="icon_dao_type_{$type}" title="{$dao.title}">
-										{$dao.title}
-									</span>
+									<xsl:choose>
+										<xsl:when test='$type eq "text" or $type eq "image" or $type eq "sound" or $type eq "video" or $type eq "3d"'>
+											<span class="icon_dao_type_{$type}" title="{$dao.title}">
+												<xsl:value-of select="$dao.title" />
+											</span>								
+										</xsl:when>
+										<xsl:otherwise>
+											<span class="icon_dao_type_unspecified" title="{$dao.title}">
+												<xsl:value-of select="$dao.title" />
+											</span>									
+										</xsl:otherwise>
+									</xsl:choose>
 								</xsl:when>
 								<xsl:otherwise>
 									<span class="icon_dao_type_unspecified" title="{$dao.title}">
-										{$dao.title}
+										<xsl:value-of select="$dao.title" />
 									</span>
 								</xsl:otherwise>
 							</xsl:choose>
