@@ -256,6 +256,11 @@ public class ConvertAction extends AbstractInstitutionAction {
     	}
     	config.setUseExistingDaoRole(daoTypeCheck);
     	config.setRightsAdditionalInformation(licenseAdditionalInformation);
+    	if (ConvertAction.OPTION_MINIMAL.equalsIgnoreCase(this.getConversionType())) {
+    		config.setMinimalConversion(true);
+    	} else {
+    		config.setMinimalConversion(false);
+    	}
     	return config;
 	}
 	public String getProvider() {

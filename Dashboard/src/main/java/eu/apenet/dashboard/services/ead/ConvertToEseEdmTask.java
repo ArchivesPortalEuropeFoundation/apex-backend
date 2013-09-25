@@ -98,6 +98,12 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 						config.setPrefixUrl("http://" + APEnetUtilities.getDashboardConfig().getDomainNameMainServer()
 								+ "/web/guest/ead-display/-/ead/fp");
 						config.setXmlTypeName(FA_XML_TYPE);
+						String minimalConversion = eseConfig.getProperties().getProperty("minimalConversion");
+						if (minimalConversion != null && !minimalConversion.isEmpty()) {
+							config.setMinimalConversion(Boolean.valueOf(minimalConversion));
+						} else {
+							config.setMinimalConversion(eseConfig.isMinimalConversion());
+						}
 						String edmOutputFilename = xmlNameRelative.substring(0, lastIndex) + "-edm"
 								+ xmlNameRelative.substring(lastIndex);
 						File edmOutputFile = EseFileUtils.getFile(outputEDMDir, edmOutputFilename);
