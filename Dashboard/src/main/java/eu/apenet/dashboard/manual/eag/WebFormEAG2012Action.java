@@ -374,7 +374,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	 * @return the nameOfInstitution
 	 */
 	public String getInitialAutformValue() {
-		return DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId()).getAiname();
+		String aiName = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId()).getAiname();
+		return loader.removeDuplicateWhiteSpaces(aiName);
 	}
 
 	/**
@@ -740,8 +741,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					Iterator<String> warningsIt = this.getActionMessages().iterator();
 					while (warningsIt.hasNext()) {
 						String warning = warningsIt.next();
-						if (warning!=null && (warning.contains("of element 'recordId' is not valid")
-								|| warning.contains("recordId already used"))) {
+						if (warning.contains("of element 'recordId' is not valid")
+								|| warning.contains("recordId already used")) {
 							this.loader.setRecordId(this.getIdUsedInAPE());
 							this.loader.setRecordIdISIL(Eag2012.OPTION_NO);
 						}
