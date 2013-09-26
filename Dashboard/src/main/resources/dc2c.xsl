@@ -15,7 +15,7 @@
     <xsl:template match="/">
         <c>
             <xsl:call-template name="level">
-                <xsl:with-param name="level" select="dc/type"/>
+                <xsl:with-param name="level" select="*:dc/*:type"/>
             </xsl:call-template>
             <did>
                 <xsl:call-template name="did"/>
@@ -48,7 +48,7 @@
     </xsl:template>
 
     <xsl:template name="did">
-        <xsl:for-each select="dc/identifier">
+        <xsl:for-each select="*:dc/*:identifier">
             <xsl:if test="not(starts-with(text(), 'http'))">
                 <unitid type="call number" encodinganalog="3.1.1">
                     <xsl:for-each select="parent::*/*[local-name()='identifier']">
@@ -64,37 +64,37 @@
                 </unitid>
             </xsl:if>
         </xsl:for-each>
-        <xsl:if test="dc/title">
+        <xsl:if test="*:dc/*:title">
             <unittitle encodinganalog="3.1.2">
-                <xsl:value-of select="dc/title/text()"/>
+                <xsl:value-of select="*:dc/*:title/text()"/>
             </unittitle>
         </xsl:if>
-        <xsl:if test="dc/publisher">
+        <xsl:if test="*:dc/*:publisher">
             <origination>
-                <xsl:value-of select="dc/publisher"/>
+                <xsl:value-of select="*:dc/*:publisher"/>
             </origination>
         </xsl:if>
-        <xsl:for-each select="dc/date">
+        <xsl:for-each select="*:dc/*:date">
             <unitdate encodinganalog="3.1.3" era="ce" calendar="gregorian">
                 <xsl:value-of select="text()"/>
             </unitdate>
         </xsl:for-each>
-        <xsl:for-each select="dc/format">
+        <xsl:for-each select="*:dc/*:format">
             <physdesc encodinganalog="3.1.5">
                 <extent>
                     <xsl:value-of select="text()"/>
                 </extent>
             </physdesc>
         </xsl:for-each>
-        <xsl:for-each select="dc/relation">
+        <xsl:for-each select="*:dc/*:relation">
             <dao>
                 <xsl:attribute name="xlink:title" select="'thumbnail'"/>
-                <xsl:attribute name="xlink:href" select="replace(text(), 'vault/?id=', 'thumb/?f=')"/>
+                <xsl:attribute name="xlink:href" select="replace(normalize-space(text()), 'vault/\?id=', 'thumb/?f=')"/>
             </dao>
             <xsl:for-each select="parent::*/*[local-name()='identifier']">
                 <xsl:if test="starts-with(text(), 'http')">
                     <dao>
-                        <xsl:attribute name="xlink:href" select="replace(text(), 'details?', 'viewer?')"/>
+                        <xsl:attribute name="xlink:href" select="replace(normalize-space(text()), 'details\?', 'viewer?')"/>
                     </dao>
                 </xsl:if>
             </xsl:for-each>
@@ -102,10 +102,10 @@
     </xsl:template>
 
     <xsl:template name="notdid">
-        <xsl:if test="dc/subject">
+        <xsl:if test="*:dc/*:subject">
             <scopecontent encodinganalog="summary">
                 <p>
-                    <xsl:value-of select="dc/subject"/>
+                    <xsl:value-of select="*:dc/*:subject"/>
                 </p>
             </scopecontent>
         </xsl:if>
