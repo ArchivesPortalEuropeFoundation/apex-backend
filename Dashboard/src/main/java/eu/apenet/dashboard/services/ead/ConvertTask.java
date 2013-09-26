@@ -144,6 +144,8 @@ public class ConvertTask extends AbstractEadTask {
 	}
 
     private Map<String, String> getConversionProperties(Properties properties) {
+        if(properties == null)
+            return new HashMap<String, String>();
         Map<String, String> parameters = new HashMap<String, String>();
         String option_default = properties.getProperty("defaultRoleType");
         String option_use_existing = properties.getProperty("useDefaultRoleType");
