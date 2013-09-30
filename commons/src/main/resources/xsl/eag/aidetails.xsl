@@ -1212,7 +1212,7 @@
 						<xsl:when test="count($list) > 1">
 							<xsl:choose>
 								
-								<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
+								<xsl:when test="$list[@xml:lang = $language.selected]">
 									<xsl:for-each select="$list">
 										<xsl:variable name="email" select="current()/@href"></xsl:variable>
 										<xsl:variable name="text" select="current()/text()"></xsl:variable>
@@ -1231,19 +1231,20 @@
 														</a>
 													</xsl:when>
 													<xsl:when test="$text and $text != ''">
-													     <xsl:value-of select="$text"/>
+													      <xsl:value-of select="$text"/>
 													</xsl:when>
 												</xsl:choose>
 											</div>
 										</xsl:if>
 									</xsl:for-each>
 								</xsl:when>
-								<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
+								<xsl:when test="$list[@xml:lang = $language.default]">
 									<xsl:for-each select="$list">
 										<xsl:variable name="email" select="current()/@href"></xsl:variable>
 										<xsl:variable name="text" select="current()/text()"></xsl:variable>
 										<xsl:variable name="currentLang" select="current()/@xml:lang"></xsl:variable>
 										<xsl:if test="(not($currentLang) or $currentLang = $language.default) and ($email or $text)">
+										<xsl:text>INGLES</xsl:text>
 											<div>
 												<xsl:choose>
 													<xsl:when test="$email and $email != '' and $text and $text != ''">
@@ -1374,7 +1375,7 @@
 		<xsl:choose>
 			<xsl:when test="count($list) > 1">
 				<xsl:choose>
-					<xsl:when test="$list[@xml:lang = $language.selected] and $list[@xml:lang = $language.selected]/text() and $list[@xml:lang = $language.selected]/text() != ''">
+					<xsl:when test="$list[@xml:lang = $language.selected]">
 						<xsl:for-each select="$list">
 							<xsl:variable name="link" select="current()/@href"></xsl:variable>
 							<xsl:variable name="text" select="current()/text()"></xsl:variable>
@@ -1393,14 +1394,14 @@
 											</a>
 										</xsl:when>
 										<xsl:when test="$text and $text != ''">
-										    <xsl:value-of select="$text"/>
+										     <xsl:value-of select="$text"/>
 										</xsl:when>
 									</xsl:choose>
 								</div>
 							</xsl:if>
 						</xsl:for-each>
 					</xsl:when>
-					<xsl:when test="$list[@xml:lang = $language.default] and $list[@xml:lang = $language.default]/text() and $list[@xml:lang = $language.default]/text() != ''">
+					<xsl:when test="$list[@xml:lang = $language.default]">
 						<xsl:for-each select="$list">
 							<xsl:variable name="link" select="current()/@href"></xsl:variable>
 							<xsl:variable name="text" select="current()/text()"></xsl:variable>
@@ -1410,7 +1411,7 @@
 									<xsl:choose>
 										<xsl:when test="$link and $link != '' and $text and $text != ''">
 											<a href="{$link}" target="_blank">
-											  <xsl:value-of select="$text"/>
+											   <xsl:value-of select="$text"/>
 											</a>
 										</xsl:when>
 										<xsl:when test="$link and $link != ''">
@@ -1419,7 +1420,7 @@
 											</a>
 										</xsl:when>
 										<xsl:when test="$text and $text != ''">
-										      <xsl:value-of select="$text"/>
+										    <xsl:value-of select="$text"/>
 										</xsl:when>
 									</xsl:choose>
 								</div>
