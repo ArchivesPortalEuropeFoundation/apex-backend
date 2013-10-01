@@ -163,7 +163,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 
 		// Check fill mandatory fields.
 		if ($(this).attr("value") != '') {
-			var position = yiMandatoryElements.indexOf($(this).attr("id"));
+			var position = $.inArray($(this).attr("id"),yiMandatoryElements);
 			if (position != -1) {
 				yiMandatoryElements.splice(position, 1);
 			}
@@ -178,7 +178,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 
 		// Check fill mandatory fields.
 		if ($(this).attr("value") != '') {
-			var position = yiMandatoryElements.indexOf($(this).attr("id"));
+			var position = $.inArray($(this).attr("id"),yiMandatoryElements);
 			if (position != -1) {
 				yiMandatoryElements.splice(position, 1);
 			}
@@ -193,7 +193,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 
 		// Check fill mandatory fields.
 		if ($(this).attr("value") != 'none') {
-			var position = yiMandatoryElements.indexOf($(this).attr("id"));
+			var position = $.inArray($(this).attr("id"),yiMandatoryElements);
 			if (position != -1) {
 				yiMandatoryElements.splice(position, 1);
 			}
@@ -230,7 +230,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
 			// Check fill mandatory fields.
 			if ($(this).attr("value") != '' && j == 0) {
-				var position = yiMEVisitorsAddress.indexOf($(this).attr("id"));
+				var position = $.inArray($(this).attr("id"),yiMEVisitorsAddress);
 				if (position != -1) {
 					yiMEVisitorsAddress.splice(position, 1);
 				}
@@ -245,7 +245,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
 			// Check fill mandatory fields.
 			if ($(this).attr("value") != '' && j == 0) {
-				var position = yiMEVisitorsAddress.indexOf($(this).attr("id"));
+				var position = $.inArray($(this).attr("id"),yiMEVisitorsAddress);
 				if (position != -1) {
 					yiMEVisitorsAddress.splice(position, 1);
 				}
@@ -260,7 +260,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 
 			// Check fill mandatory fields.
 			if ($(this).attr("value") != 'none' && j == 0) {
-				var position = yiMEVisitorsAddress.indexOf($(this).attr("id"));
+				var position = $.inArray($(this).attr("id"),yiMEVisitorsAddress);
 				if (position != -1) {
 					yiMEVisitorsAddress.splice(position, 1);
 				}
@@ -300,7 +300,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
 			// Check fill mandatory fields.
 			if ($(this).attr("value") != '' && j == 0) {
-				var position = yiMEPostalAddress.indexOf($(this).attr("id"));
+				var position = $.inArray($(this).attr("id"),yiMEPostalAddress);
 				if (position != -1) {
 					yiMEPostalAddress.splice(position, 1);
 				}
@@ -315,7 +315,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 
 			// Check fill mandatory fields.
 			if ($(this).attr("value") != 'none' && j == 0) {
-				var position = yiMEPostalAddress.indexOf($(this).attr("id"));
+				var position = $.inArray($(this).attr("id"),yiMEPostalAddress);
 				if (position != -1) {
 					yiMEPostalAddress.splice(position, 1);
 				}
@@ -341,7 +341,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 		jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
 		// Check fill mandatory fields.
 		if ($(this).attr("value") != '') {
-			var position = yiMERepositories.indexOf($(this).attr("id"));
+			var position = $.inArray($(this).attr("id"),yiMERepositories);
 			if (position != -1) {
 				yiMERepositories.splice(position, 1);
 			}
@@ -356,7 +356,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 		jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
 		// Check fill mandatory fields.
 		if ($(this).attr("value") != '') {
-			var position = yiMERepositories.indexOf($(this).attr("id"));
+			var position = $.inArray($(this).attr("id"),yiMERepositories);
 			if (position != -1) {
 				yiMERepositories.splice(position, 1);
 			}
@@ -655,7 +655,7 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 
 		// Check fill mandatory fields.
 		if ($.trim($(this).attr("value")) != '') {
-			var position = contactMandatoryElements.indexOf($(this).attr("id"));
+			var position = $.inArray($(this).attr("id"),contactMandatoryElements);
 			if (position != -1) {
 				contactMandatoryElements.splice(position, 1);
 			}
@@ -676,7 +676,7 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 
 		// Check fill mandatory fields.
 		if ($.trim($(this).attr("value")) != '') {
-			var position = contactMandatoryElements.indexOf($(this).attr("id"));
+			var position = $.inArray($(this).attr("id"),contactMandatoryElements);
 			if (position != -1) {
 				contactMandatoryElements.splice(position, 1);
 			}
@@ -697,7 +697,7 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 
 		// Check fill mandatory fields.
 		if ($.trim($(this).attr("value")) != 'none') {
-			var position = contactMandatoryElements.indexOf($(this).attr("id"));
+			var position = $.inArray($(this).attr("id"),contactMandatoryElements);
 			if (position != -1) {
 				contactMandatoryElements.splice(position, 1);
 			}
@@ -749,7 +749,7 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 
 			// Check fill mandatory fields.
 			if ($.trim($(this).attr("value")) != '' && j == 0) {
-				var position = contactVAMandatoryElements.indexOf($(this).attr("id"));
+				var position = $.inArray($(this).attr("id"),contactVAMandatoryElements);
 				if (position != -1) {
 					contactVAMandatoryElements.splice(position, 1);
 				}
@@ -769,7 +769,7 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 
 			// Check fill mandatory fields.
 			if ($.trim($(this).attr("value")) != '' && j == 0) {
-				var position = contactVAMandatoryElements.indexOf($(this).attr("id"));
+				var position = $.inArray($(this).attr("id"),contactVAMandatoryElements);
 				if (position != -1) {
 					contactVAMandatoryElements.splice(position, 1);
 				}
@@ -788,7 +788,7 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 
 			// Check fill mandatory fields.
 			if ($.trim($(this).attr("value")) != 'none' && j == 0) {
-				var position = contactVAMandatoryElements.indexOf($(this).attr("id"));
+				var position = $.inArray($(this).attr("id"),contactVAMandatoryElements);
 				if (position != -1) {
 					contactVAMandatoryElements.splice(position, 1);
 				}
@@ -935,7 +935,7 @@ function checkAccessAndServicesTab(currentTab, text1, messageLink) {
 		}
 		// Check fill mandatory fields.
 		if ($.trim($(this).attr("value")) != '') {
-			var position = aasMandatoryElements.indexOf($(this).attr("id"));
+			var position = $.inArray($(this).attr("id"),aasMandatoryElements);
 			if (position != -1) {
 				aasMandatoryElements.splice(position, 1);
 			}
@@ -978,7 +978,7 @@ function checkAccessAndServicesTab(currentTab, text1, messageLink) {
 
 		// Check fill mandatory fields.
 		if ($.trim($(this).attr("value")) != '') {
-			var position = aasMandatoryElements.indexOf($(this).attr("id"));
+			var position = $.inArray($(this).attr("id"),aasMandatoryElements);
 			if (position != -1) {
 				aasMandatoryElements.splice(position, 1);
 			}
