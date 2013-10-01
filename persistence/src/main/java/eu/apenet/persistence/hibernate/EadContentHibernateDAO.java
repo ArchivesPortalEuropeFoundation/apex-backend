@@ -46,7 +46,7 @@ public class EadContentHibernateDAO extends AbstractHibernateDAO<EadContent, Lon
 	public EadContent getEadContentByEadid(String eadid){
         List<EadContent> result = findByCriteria(Restrictions.eq("eadid", eadid));
         if(result.size() > 0)
-			return result.get(0);
+			return result.get(result.size() - 1);
         return null;
     }
 

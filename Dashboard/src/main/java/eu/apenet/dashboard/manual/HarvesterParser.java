@@ -135,9 +135,14 @@ public class HarvesterParser extends AbstractParser {
 
             //We begin a creation of all the C Levels, but we do not know the "order" so we create a dummy eadcontent that will be their "father"
             HibernateUtil.beginDatabaseTransaction();
+            EadContentDAO eadContentDAO = DAOFactory.instance().getEadContentDAO();
+            EadContent oldEadContent;
+            while((oldEadContent = eadContentDAO.getEadContentByEadid("OAI_SET_" + ai_id)) != null)
+                eadContentDAO.delete(oldEadContent);
+
             EadContent eadContent = new EadContent();
             eadContent.setEadid("OAI_SET_" + ai_id);
-            DAOFactory.instance().getEadContentDAO().insertSimple(eadContent);
+            eadContentDAO.insertSimple(eadContent);
             HibernateUtil.commitDatabaseTransaction();
 
 
@@ -334,6 +339,7 @@ public class HarvesterParser extends AbstractParser {
                 listFas.put(id, new ArrayList<String>());
             }
         }
+        LOG.info("There will be " + listFas.size() + " FAs to create!");
 
         for(String id : idsWithTypes.keySet()){
             if(listFas.get(id) != null && listFas.get(id).size() != 0)

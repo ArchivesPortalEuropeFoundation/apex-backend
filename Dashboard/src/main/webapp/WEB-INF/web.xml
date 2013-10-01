@@ -104,7 +104,7 @@
     </context-param>
     <context-param>
         <param-name>LOG_STACKTRACES</param-name>
-        <param-value>true</param-value>
+        <param-value>false</param-value>
     </context-param>
     <error-page>
         <error-code>500</error-code>
