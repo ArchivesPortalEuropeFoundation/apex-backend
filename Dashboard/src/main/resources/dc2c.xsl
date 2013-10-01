@@ -4,12 +4,10 @@
                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:ns3="http://www.openarchives.org/OAI/2.0/oai_dc/"
-                xmlns:ns2="http://purl.org/dc/elements/1.1/"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.loc.gov/ead/ead.xsd"
                 xpath-default-namespace="urn:isbn:1-931666-22-9"
-                exclude-result-prefixes="xsl fo xs ns2 ns3">
+                exclude-result-prefixes="xsl fo xs">
 
     <xsl:output indent="yes" method="xml" />
     <xsl:strip-space elements="*"/>
@@ -17,7 +15,7 @@
     <xsl:template match="/">
         <c>
             <xsl:call-template name="level">
-                <xsl:with-param name="level" select="ns3:dc/ns2:type"/>
+                <xsl:with-param name="level" select="dc/type"/>
             </xsl:call-template>
             <did>
                 <xsl:call-template name="did"/>
@@ -50,7 +48,7 @@
     </xsl:template>
 
     <xsl:template name="did">
-        <xsl:for-each select="ns3:dc/ns2:identifier">
+        <xsl:for-each select="dc/identifier">
             <xsl:if test="not(starts-with(text(), 'http'))">
                 <unitid type="call number" encodinganalog="3.1.1">
                     <xsl:for-each select="parent::*/*[local-name()='identifier']">
@@ -66,28 +64,48 @@
                 </unitid>
             </xsl:if>
         </xsl:for-each>
-        <xsl:if test="ns3:dc/ns2:title">
+        <xsl:if test="dc/title">
             <unittitle encodinganalog="3.1.2">
-                <xsl:value-of select="ns3:dc/ns2:title/text()"/>
+                <xsl:value-of select="dc/title/text()"/>
             </unittitle>
         </xsl:if>
-        <xsl:if test="ns3:dc/ns2:publisher">
+        <xsl:if test="dc/publisher">
             <origination>
-                <xsl:value-of select="ns3:dc/ns2:publisher"/>
+                <xsl:value-of select="dc/publisher"/>
             </origination>
         </xsl:if>
-        <xsl:for-each select="ns3:dc/ns2:date">
+        <xsl:for-each select="dc/date">
             <unitdate encodinganalog="3.1.3" era="ce" calendar="gregorian">
                 <xsl:value-of select="text()"/>
             </unitdate>
         </xsl:for-each>
+        <xsl:for-each select="dc/format">
+            <physdesc encodinganalog="3.1.5">
+                <extent>
+                    <xsl:value-of select="text()"/>
+                </extent>
+            </physdesc>
+        </xsl:for-each>
+        <xsl:for-each select="dc/relation">
+            <dao>
+                <xsl:attribute name="xlink:title" select="'thumbnail'"/>
+                <xsl:attribute name="xlink:href" select="replace(text(), 'vault/?id=', 'thumb/?f=')"/>
+            </dao>
+            <xsl:for-each select="parent::*/*[local-name()='identifier']">
+                <xsl:if test="starts-with(text(), 'http')">
+                    <dao>
+                        <xsl:attribute name="xlink:href" select="replace(text(), 'details?', 'viewer?')"/>
+                    </dao>
+                </xsl:if>
+            </xsl:for-each>
+        </xsl:for-each>
     </xsl:template>
 
     <xsl:template name="notdid">
-        <xsl:if test="ns3:dc/ns2:subject">
+        <xsl:if test="dc/subject">
             <scopecontent encodinganalog="summary">
                 <p>
-                    <xsl:value-of select="ns3:dc/ns2:subject"/>
+                    <xsl:value-of select="dc/subject"/>
                 </p>
             </scopecontent>
         </xsl:if>
