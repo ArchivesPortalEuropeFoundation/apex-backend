@@ -720,29 +720,32 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						for (int i = 0; i < this.getWarnings().size(); i++) {
 							String warning = this.getWarnings().get(i).replace("<br/>", "");
 							log.debug(warning);
-							ParseEag2012Errors parseEag2012Errors = new ParseEag2012Errors(warning, true, this); 
-							addActionMessage(parseEag2012Errors.errorsValidation());
-						/*	if (!warning.contains("for type 'recordId'")) {
-								addActionMessage(warning);
-							}
-							if (warning.contains("of element 'recordId' is not valid")) {
-								this.loader.setRecordId(this.getIdUsedInAPE());
-								this.loader.setRecordIdISIL(Eag2012.OPTION_NO);
-								addActionMessage(this.getText("eag2012.errors.defaultIdUsedInAPE") + " ("+ this.getIdUsedInAPE() +")");
-							}
-							if (warning.contains("recordId already used")) {
-								this.loader.setRecordId(this.getIdUsedInAPE());
-								this.loader.setRecordIdISIL(Eag2012.OPTION_NO);
-								addActionMessage(this.getText("eag2012.errors.defaultIdUsedInAPE") + " ("+ this.getIdUsedInAPE() +")");
+							/*boolean found=false;
+							for(int j = i+1;j < this.getWarnings().size(); j++){
+								String otherWarning=this.getWarnings().get(j).replace("<br/>", "");
+								if((warning.contains("The element 'rule' has been found but should not appear here") && otherWarning.contains("The element 'rule' has been found but should not appear here"))){
+									found=true;
+								}
 							}*/
+							//if(!found){
+								ParseEag2012Errors parseEag2012Errors = new ParseEag2012Errors(warning,false,this); 
+								if (this.getActionMessages() != null && !this.getActionMessages().isEmpty()) {
+									String currentError = parseEag2012Errors.errorsValidation();
+									if (!this.getActionMessages().contains(currentError)) {
+										addActionMessage(parseEag2012Errors.errorsValidation());
+									}
+								} else {
+									addActionMessage(parseEag2012Errors.errorsValidation());
+								}
+							//}
 						}
 					}
 				} else {
 					Iterator<String> warningsIt = this.getActionMessages().iterator();
 					while (warningsIt.hasNext()) {
 						String warning = warningsIt.next();
-						if (warning.contains("of element 'recordId' is not valid")
-								|| warning.contains("recordId already used")) {
+						if (warning!=null && (warning.contains("of element 'recordId' is not valid")
+								|| warning.contains("recordId already used"))) {
 							this.loader.setRecordId(this.getIdUsedInAPE());
 							this.loader.setRecordIdISIL(Eag2012.OPTION_NO);
 						}
@@ -878,16 +881,14 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						String warning = this.getWarnings().get(i).replace("<br/>", "");
 						log.debug(warning);
 						ParseEag2012Errors parseEag2012Errors = new ParseEag2012Errors(warning,false,this); 
-						addActionMessage(parseEag2012Errors.errorsValidation());
-					/*	if (!warning.contains("for type 'recordId'")) {
-							addActionMessage(warning);
+						if (this.getActionMessages() != null && !this.getActionMessages().isEmpty()) {
+							String currentError = parseEag2012Errors.errorsValidation();
+							if (!this.getActionMessages().contains(currentError)) {
+								addActionMessage(parseEag2012Errors.errorsValidation());
+							}
+						} else {
+							addActionMessage(parseEag2012Errors.errorsValidation());
 						}
-						if (warning.contains("of element 'recordId' is not valid")) {
-							addActionMessage(this.getText("eag2012.errors.defaultIdUsedInAPE") + " ("+ this.getIdUsedInAPE() +")");
-						}
-						if (warning.contains("recordId already used")) {
-							addActionMessage(this.getText("eag2012.errors.defaultIdUsedInAPE") + " ("+ this.getIdUsedInAPE() +")");
-						}*/
 					}
 				}
 			} catch (JAXBException jaxbe) {

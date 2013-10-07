@@ -2,6 +2,7 @@ package eu.apenet.dashboard.manual;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -162,12 +163,21 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
         	    else if (result.equals("error_eagnotvalidatednotconverted")) {
         	    	this.filesNotUploaded = this.uploader_http.getFilesNotUploaded();
                     warnings_eag = uploader_http.getWarnings_eag();
+                    List<String> tmp_warnings_eag = new LinkedList<String>();
                     addActionMessage(getText("label.eag.uploadingerror.two"));
                     for (int i = 0; i < warnings_eag.size(); i++) {
 						String warning = warnings_eag.get(i).replace("<br/>", "");
-						ParseEag2012Errors parseEag2012Errors = new ParseEag2012Errors(warning, true, this); 
-						warnings_eag.set(i,parseEag2012Errors.errorsValidation());
+						ParseEag2012Errors parseEag2012Errors = new ParseEag2012Errors(warning,false,this); 
+						if (this.getActionMessages() != null && !this.getActionMessages().isEmpty()) {
+							String currentError = parseEag2012Errors.errorsValidation();
+							if (!this.getActionMessages().contains(currentError)) {
+								tmp_warnings_eag.add(parseEag2012Errors.errorsValidation());
+							}
+						} else {
+							tmp_warnings_eag.add(parseEag2012Errors.errorsValidation());
+						}	
                     }
+                    warnings_eag = tmp_warnings_eag;
         	    	result = ERROR;
         	    }
         	    else if (result.equals("error_eagnotconverted")) {
