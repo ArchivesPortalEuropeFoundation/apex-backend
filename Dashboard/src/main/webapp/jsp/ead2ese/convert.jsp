@@ -198,7 +198,7 @@
 		<tr>
 			<td class="inputLabel"><s:label key="ead2ese.label.license" for="license" />:</td>
 			<td><s:radio name="license" id="license" list="licenseSet" listKey="value" listValue="content"></s:radio>
-			<br/>(<s:label key="ead2ese.content.license.moreinfo"/><s:a href="docs/Europeana%20Rights%20Guidelines.pdf" ><s:property value="getText('ead2ese.content.license.link')" /></s:a>)
+			<br/>(<s:label key="ead2ese.content.license.moreinfo"/><s:a target="_blank" href="docs/Europeana%20Rights%20Guidelines.pdf" ><s:property value="getText('ead2ese.content.license.link')" /></s:a>)
 			</td>
 		</tr>
 		<s:if test="license=='europeana'">
