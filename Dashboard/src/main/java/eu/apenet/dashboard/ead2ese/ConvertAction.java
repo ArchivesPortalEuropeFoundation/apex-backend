@@ -79,37 +79,56 @@ public class ConvertAction extends AbstractInstitutionAction {
     private File mappingsFile;					//The uploaded file
     private String mappingsFileContentType;		//The content type of the file uploaded
     private String textDataProvider;			//Text for the data provider from element "<repository>".
+    private boolean batchConversion;
     private boolean dataProviderCheck;			//Select or not the check for the data provider
     private boolean daoTypeCheck = true;
     private boolean hierarchyPrefixCheck;
     private boolean inheritFileParentCheck;
     private boolean inheritOriginationCheck;
     private boolean inheritLanguageCheck = true;
+//    private boolean languageOfTheMaterialCheck = true;
     private boolean noLanguageOnClevel = true;
     private boolean noLanguageOnParents;
     private Set<SelectItem> languages = new TreeSet<SelectItem>();
 	
 	@Override
 	public void validate() {
-		if (StringUtils.isBlank(languageSelection)){
-			addFieldError("inheritLanguageCheck", getText("errors.required"));
+		if (this.isBatchConversion()) {
+			if (StringUtils.isBlank(this.getLanguageSelection())){
+//				this.addFieldError("languageOfTheMaterialCheck", getText("errors.required"));
+				this.addFieldError("languageSelection", getText("errors.required"));
+			}
+		} else {
+			if (ConvertAction.INHERITLANGUAGE_PROVIDE.equals(this.getInheritLanguage())){
+				if (StringUtils.isBlank(this.getLanguageSelection())){
+					addFieldError("languageSelection", getText("errors.required"));
+				}
+			} else  if (ConvertAction.OPTION_NO.equals(this.getInheritLanguage())) {
+				if (this.isNoLanguageOnClevel()) {
+					addFieldError("inheritLanguage", getText("errors.required")
+						+ getText("errors.clevel.without.langmaterial"));
+				}
+			} else if (ConvertAction.OPTION_YES.equals(this.getInheritLanguage())) {
+				if (this.isNoLanguageOnParents()) {
+					addFieldError("inheritLanguage", getText("errors.required")
+						+ getText("errors.fa.without.langmaterial"));
+				}
+			}
 		}
 
-		if (EUROPEANA.equals(license)){
-			if (StringUtils.isBlank(europeanaLicense)){
+		if (ConvertAction.EUROPEANA.equals(this.getLicense())){
+			if (StringUtils.isBlank(this.getEuropeanaLicense())){
 				addFieldError("europeanaLicense", getText("errors.required"));
 			}
 		}
-		if (StringUtils.isBlank(daoType)){
+		if (StringUtils.isBlank(this.getDaoType())){
 			addFieldError("daoType",getText("errors.required"));
 		}
 
-		if (textDataProvider.isEmpty()) {
+		if (this.getTextDataProvider().isEmpty()) {
 			addFieldError("textDataProvider", getText("errors.required"));
 		}
 	}
-
-
 
 	@Override
 	protected void buildBreadcrumbs() {
@@ -117,11 +136,9 @@ public class ConvertAction extends AbstractInstitutionAction {
 		addBreadcrumb(getText("breadcrumb.section.convertToEse"));
 	}
 
-
     @Override
 	public void prepare() throws Exception {
 		super.prepare();
-
     }
 
 	public ConvertAction() {
@@ -176,7 +193,7 @@ public class ConvertAction extends AbstractInstitutionAction {
 				this.setDataProviderCheck(true);
 			}
 			if (StringUtils.isNotBlank(ead2EseInformation.getLanguageCode())){
-				noLanguageOnClevel = false;			
+				this.setNoLanguageOnClevel(false);			
 			}
 			if (ead2EseInformation.getAlternativeLanguages() != null
 					&& !ead2EseInformation.getAlternativeLanguages().isEmpty()){
@@ -184,18 +201,18 @@ public class ConvertAction extends AbstractInstitutionAction {
 			} else {
 				this.setNoLanguageOnParents(true);
 			}
-			
+
+			this.setBatchConversion(false);
 		}else {		
-			this.setDataProviderCheck(true);			
+			this.setDataProviderCheck(true);
+			this.setBatchConversion(true);
 		}
 		return SUCCESS;
 	}
 
-	
     public String getId() {
 		return id;
 	}
-
 
 	public void setId(String id) {
 		this.id = id;
@@ -230,32 +247,43 @@ public class ConvertAction extends AbstractInstitutionAction {
 		}
    		return SUCCESS;
     }
+
 	protected EseConfig fillConfig(){
     	EseConfig config = new EseConfig();  	
-    	config.setContextInformationPrefix(hierarchyPrefix);
-    	config.setInheritElementsFromFileLevel(ConvertAction.OPTION_YES.equals(inheritFileParent));
-    	config.setInheritOrigination(ConvertAction.OPTION_YES.equals(inheritOrigination));
-    	config.setInheritLanguage(true);
-    	String parseLanguages = this.getLanguageSelection().replaceAll(",", "");
-    	config.setLanguage(parseLanguages);
-    	config.setType(daoType);
-    	config.setProvider(provider);
-    	if (customDataProvider != null && !customDataProvider.isEmpty()) {
-    		config.setDataProvider(customDataProvider);
-    	} else if (textDataProvider != null && !textDataProvider.isEmpty()) {
-    		config.setDataProvider(textDataProvider);
+    	config.setContextInformationPrefix(this.getHierarchyPrefix());
+    	config.setInheritElementsFromFileLevel(ConvertAction.OPTION_YES.equals(this.getInheritFileParent()));
+    	config.setInheritOrigination(ConvertAction.OPTION_YES.equals(this.getInheritOrigination()));
+
+    	if (this.isBatchConversion()) {
+    		config.setInheritLanguage(false);
+    		String parseLanguages = this.getLanguageSelection().replaceAll(",", "");
+    		config.setLanguage(parseLanguages);
+    	} else {
+    		config.setInheritLanguage(ConvertAction.OPTION_YES.equals(this.getInheritLanguage()));
+        	if (ConvertAction.INHERITLANGUAGE_PROVIDE.equals(this.getInheritLanguage())){
+        		String parseLanguages = this.getLanguageSelection().replaceAll(",", "");
+        		config.setLanguage(parseLanguages);
+        	}
     	}
-    	if (EUROPEANA.equals(license)){
-    		config.setRights(europeanaLicense);
-    	}else if(CREATIVECOMMONS_CC0.equals(license)){
+    	
+    	config.setType(this.getDaoType());
+    	config.setProvider(this.getProvider());
+    	if (this.getCustomDataProvider() != null && !this.getCustomDataProvider().isEmpty()) {
+    		config.setDataProvider(this.getCustomDataProvider());
+    	} else if (this.getTextDataProvider() != null && !this.getTextDataProvider().isEmpty()) {
+    		config.setDataProvider(this.getTextDataProvider());
+    	}
+    	if (ConvertAction.EUROPEANA.equals(this.getLicense())){
+    		config.setRights(this.getEuropeanaLicense());
+    	}else if(ConvertAction.CREATIVECOMMONS_CC0.equals(license)){
     		config.setRights("http://creativecommons.org/publicdomain/zero/1.0/");
-    	}else if(CREATIVECOMMONS_CPDM.equals(license)){
+    	}else if(ConvertAction.CREATIVECOMMONS_CPDM.equals(license)){
     		config.setRights("http://creativecommons.org/publicdomain/mark/1.0/");
     	}else {
-    		config.setRights(cc_js_result_uri);
+    		config.setRights(this.getCc_js_result_uri());
     	}
-    	config.setUseExistingDaoRole(daoTypeCheck);
-    	config.setRightsAdditionalInformation(licenseAdditionalInformation);
+    	config.setUseExistingDaoRole(this.isDaoTypeCheck());
+    	config.setRightsAdditionalInformation(this.getLicenseAdditionalInformation());
     	if (ConvertAction.OPTION_MINIMAL.equalsIgnoreCase(this.getConversionType())) {
     		config.setMinimalConversion(true);
     	} else {
@@ -263,6 +291,7 @@ public class ConvertAction extends AbstractInstitutionAction {
     	}
     	return config;
 	}
+
 	public String getProvider() {
 		return provider;
 	}
@@ -327,10 +356,6 @@ public class ConvertAction extends AbstractInstitutionAction {
 		this.hierarchyPrefix = hierarchyPrefix;
 	}
 
-
-
-
-
 	public String getInheritOrigination() {
 		return inheritOrigination;
 	}
@@ -347,30 +372,34 @@ public class ConvertAction extends AbstractInstitutionAction {
 		this.inheritFileParent = inheritFileParent;
 	}
 
-	
 	public Set<SelectItem> getLanguages() {
 		return languages;
 	}
+
 	public void setLanguages(Set<SelectItem> languages) {
 		this.languages = languages;
 	}
 	
-	
 	public String getMappingsFileFileName() {
 		return mappingsFileFileName;
 	}
+
 	public void setMappingsFileFileName(String mappingsFileFileName) {
 		this.mappingsFileFileName = mappingsFileFileName;
 	}
+
 	public File getMappingsFile() {
 		return mappingsFile;
 	}
+
 	public void setMappingsFile(File mappingsFile) {
 		this.mappingsFile = mappingsFile;
 	}
+
 	public String getMappingsFileContentType() {
 		return mappingsFileContentType;
 	}
+
 	public void setMappingsFileContentType(String mappingsFileContentType) {
 		this.mappingsFileContentType = mappingsFileContentType;
 	}
@@ -382,7 +411,6 @@ public class ConvertAction extends AbstractInstitutionAction {
 	public void setCustomDataProvider(String customDataProvider) {
 		this.customDataProvider = customDataProvider;
 	}
-
 
 	public Set<SelectItem> getTypeSet() {
 		return typeSet;
@@ -424,8 +452,6 @@ public class ConvertAction extends AbstractInstitutionAction {
 		this.licenseSet = licenseSet;
 	}
 
-
-
 	public Set<SelectItem> getEuropeanaLicenseSet() {
 		return europeanaLicenseSet;
 	}
@@ -465,9 +491,11 @@ public class ConvertAction extends AbstractInstitutionAction {
 	public void setLicenseAdditionalInformation(String licenseAdditionalInformation) {
 		this.licenseAdditionalInformation = licenseAdditionalInformation;
 	}
+
 	public String getBatchItems() {
 		return batchItems;
 	}
+
 	public void setBatchItems(String batchItems) {
 		this.batchItems = batchItems;
 	}
@@ -516,7 +544,7 @@ public class ConvertAction extends AbstractInstitutionAction {
 	 * @return the conversionTypeSet
 	 */
 	public Set<SelectItem> getConversionTypeSet() {
-		return conversionTypeSet;
+		return this.conversionTypeSet;
 	}
 
 	/**
@@ -530,7 +558,7 @@ public class ConvertAction extends AbstractInstitutionAction {
 	 * @return the conversionType
 	 */
 	public String getConversionType() {
-		return conversionType;
+		return this.conversionType;
 	}
 
 	/**
@@ -544,7 +572,7 @@ public class ConvertAction extends AbstractInstitutionAction {
 	 * @return the hierarchyPrefixCheck
 	 */
 	public boolean isHierarchyPrefixCheck() {
-		return hierarchyPrefixCheck;
+		return this.hierarchyPrefixCheck;
 	}
 
 	/**
@@ -558,7 +586,7 @@ public class ConvertAction extends AbstractInstitutionAction {
 	 * @return the inheritFileParentCheck
 	 */
 	public boolean isInheritFileParentCheck() {
-		return inheritFileParentCheck;
+		return this.inheritFileParentCheck;
 	}
 
 	/**
@@ -572,7 +600,7 @@ public class ConvertAction extends AbstractInstitutionAction {
 	 * @return the inheritOriginationCheck
 	 */
 	public boolean isInheritOriginationCheck() {
-		return inheritOriginationCheck;
+		return this.inheritOriginationCheck;
 	}
 
 	/**
@@ -586,7 +614,7 @@ public class ConvertAction extends AbstractInstitutionAction {
 	 * @return the inheritLanguageCheck
 	 */
 	public boolean isInheritLanguageCheck() {
-		return inheritLanguageCheck;
+		return this.inheritLanguageCheck;
 	}
 
 	/**
@@ -594,6 +622,34 @@ public class ConvertAction extends AbstractInstitutionAction {
 	 */
 	public void setInheritLanguageCheck(boolean inheritLanguageCheck) {
 		this.inheritLanguageCheck = inheritLanguageCheck;
+	}
+
+//	/**
+//	 * @return the languageOfTheMaterialCheck
+//	 */
+//	public boolean isLanguageOfTheMaterialCheck() {
+//		return this.languageOfTheMaterialCheck;
+//	}
+//
+//	/**
+//	 * @param languageOfTheMaterialCheck the languageOfTheMaterialCheck to set
+//	 */
+//	public void setLanguageOfTheMaterialCheck(boolean languageOfTheMaterialCheck) {
+//		this.languageOfTheMaterialCheck = languageOfTheMaterialCheck;
+//	}
+
+	/**
+	 * @return the batchConversion
+	 */
+	public boolean isBatchConversion() {
+		return this.batchConversion;
+	}
+
+	/**
+	 * @param batchConversion the batchConversion to set
+	 */
+	public void setBatchConversion(boolean batchConversion) {
+		this.batchConversion = batchConversion;
 	}
 
 }

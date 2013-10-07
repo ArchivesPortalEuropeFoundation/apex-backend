@@ -143,6 +143,22 @@
 			}
 		});
 	}
+
+	function setMandatoryField() {
+		$("input[name^='inheritLanguage']").each(function() {
+			if ($(this).attr("checked") == "checked") {
+				var text = $("tr#trLanguageOfTheMaterial label[for='languageOfTheMaterial']").text();
+
+				if ($(this).val() == "provide") {
+					text += "*";
+				} else {
+					text = text.replace("*","");
+				}
+
+				$("tr#trLanguageOfTheMaterial label[for='languageOfTheMaterial']").text(text);
+			}
+		});
+	}
 </script>
 
 <s:form method="POST" theme="simple">
@@ -176,29 +192,46 @@
 				<s:label key="ead2ese.label.type.file" for="daoType"/>
 			</td>
 		</tr>
-		<tr id="hiddeInheritLanguage">
+
+		<s:if test="batchConversion==false">
+			<tr id="trInheritLanguage">
+				<td class="inputLabel">
+					<s:label key="ead2ese.label.inherit.language" for="inheritLanguage" /><span class="required">*</span>:
+				</td>
+				<td><s:radio name="inheritLanguage" id="inheritLanguage" list="inheritLanguageSet" listKey="value" listValue="content" required="true" onchange="setMandatoryField();">
+					</s:radio><s:fielderror fieldName="inheritLanguage"/>
+				</td>
+			</tr>
+		</s:if>
+
+		<tr id="trLanguageOfTheMaterial">
 			<td class="inputLabel">
-				<s:label key="ead2ese.label.inherit.language" for="inheritLanguage" /><span class="required">*</span>:
+				<s:if test="batchConversion==true">
+					<s:label key="ead2ese.label.language.material" for="languageOfTheMaterial" /><span class="required">*</span>:
+				</s:if>
+				<s:else>
+					<s:label key="ead2ese.label.language.material" for="languageOfTheMaterial" />:
+				</s:else>
 			</td>
 			<td class="tdVertical">
 				<s:select name="languageSelection" id="languageSelection" listKey="value" listValue="content" list="languages" required="true"
 					value="" multiple="true" size="4"></s:select><s:fielderror fieldName="languageSelection"/>
 
-				<s:if test="inheritLanguageCheck==true">
-					<s:checkbox name="inheritLanguageCheck" id="inheritLanguageCheck" value="true"></s:checkbox>
+<!-- 				<s:if test="languageOfTheMaterialCheck==true">
+					<s:checkbox name="languageOfTheMaterialCheck" id="languageOfTheMaterialCheck" value="true"></s:checkbox>
 				</s:if>
 				<s:else>
-					<s:checkbox name="inheritLanguageCheck" id="inheritLanguageCheck" value="false"></s:checkbox>
+					<s:checkbox name="languageOfTheMaterialCheck" id="languageOfTheMaterialCheck" value="false"></s:checkbox>
 				</s:else>
-				<s:label key="ead2ese.label.language.file" for="inheritLanguageCheck"/>
-				<s:fielderror fieldName="inheritLanguageCheck"/>
+				<s:label key="ead2ese.label.language.file" for="languageOfTheMaterialCheck"/>
+				<s:fielderror fieldName="languageOfTheMaterialCheck"/> -->
 			</td>
 		</tr>
 
 		<tr>
 			<td class="inputLabel"><s:label key="ead2ese.label.license" for="license" />:</td>
 			<td><s:radio name="license" id="license" list="licenseSet" listKey="value" listValue="content"></s:radio>
-			<br/>(<s:label key="ead2ese.content.license.moreinfo"/><s:a href="docs/Europeana%20Rights%20Guidelines.pdf" ><s:property value="getText('ead2ese.content.license.link')" /></s:a>)
+			<br/>(<s:label key="ead2ese.content.license.moreinfo"/><s:a target="_blank" href="docs/Europeana%20Rights%20Guidelines.pdf" ><s:property value="getText('ead2ese.content.license.link')" /></s:a>)
 			</td>
 		</tr>
 		<s:if test="license=='europeana'">
@@ -262,6 +295,7 @@
 	<br></br>
 	<br></br>
 	<s:hidden name="batchItems" />
+	<s:hidden name="batchConversion" />
 	<s:hidden name="id" />
 	<s:hidden name="noLanguageOnClevel"/>
 	<s:hidden name="noLanguageOnParents" />
