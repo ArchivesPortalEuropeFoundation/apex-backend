@@ -720,24 +720,16 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						for (int i = 0; i < this.getWarnings().size(); i++) {
 							String warning = this.getWarnings().get(i).replace("<br/>", "");
 							log.debug(warning);
-							/*boolean found=false;
-							for(int j = i+1;j < this.getWarnings().size(); j++){
-								String otherWarning=this.getWarnings().get(j).replace("<br/>", "");
-								if((warning.contains("The element 'rule' has been found but should not appear here") && otherWarning.contains("The element 'rule' has been found but should not appear here"))){
-									found=true;
-								}
-							}*/
-							//if(!found){
-								ParseEag2012Errors parseEag2012Errors = new ParseEag2012Errors(warning,false,this); 
-								if (this.getActionMessages() != null && !this.getActionMessages().isEmpty()) {
-									String currentError = parseEag2012Errors.errorsValidation();
-									if (!this.getActionMessages().contains(currentError)) {
-										addActionMessage(parseEag2012Errors.errorsValidation());
-									}
-								} else {
+							ParseEag2012Errors parseEag2012Errors = new ParseEag2012Errors(warning,false,this); 
+							if (this.getActionMessages() != null && !this.getActionMessages().isEmpty()) {
+								String currentError = parseEag2012Errors.errorsValidation();
+								if (!this.getActionMessages().contains(currentError)) {
 									addActionMessage(parseEag2012Errors.errorsValidation());
 								}
-							//}
+							} else {
+								addActionMessage(parseEag2012Errors.errorsValidation());
+							}
+							
 						}
 					}
 				} else {
