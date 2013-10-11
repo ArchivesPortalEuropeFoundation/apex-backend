@@ -59,6 +59,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 	private String searchTermsField;
 	private boolean updateSearchResults = false;
 	private boolean ajax = false;
+	private boolean errorLinkHgSg = false;
 
 	public ContentManagerAction() {}
 
@@ -274,7 +275,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 		return eadSearchOptions;
 	}
 
-	private EadSearchOptions createNewEadSearchOptions() {
+	protected EadSearchOptions createNewEadSearchOptions() {
 		EadSearchOptions eadSearchOptions = new EadSearchOptions();
 		eadSearchOptions.setPageNumber(pageNumber);
 		eadSearchOptions.setPageSize(resultPerPage);
@@ -461,6 +462,14 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 
 	public void setUpdateSearchResults(boolean updateSearchResults) {
 		this.updateSearchResults = updateSearchResults;
+	}
+
+	public boolean isErrorLinkHgSg() {
+		return this.errorLinkHgSg;
+	}
+
+	public void setErrorLinkHgSg(boolean errorLinkHgSg) {
+		this.errorLinkHgSg = errorLinkHgSg;
 	}
 
 }
