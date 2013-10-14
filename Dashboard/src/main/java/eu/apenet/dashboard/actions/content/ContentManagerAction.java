@@ -275,7 +275,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 		return eadSearchOptions;
 	}
 
-	protected EadSearchOptions createNewEadSearchOptions() {
+	private EadSearchOptions createNewEadSearchOptions() {
 		EadSearchOptions eadSearchOptions = new EadSearchOptions();
 		eadSearchOptions.setPageNumber(pageNumber);
 		eadSearchOptions.setPageSize(resultPerPage);
