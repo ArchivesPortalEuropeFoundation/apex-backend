@@ -4,8 +4,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="java.util.Locale"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
-<%@ taglib prefix="apenet" uri="http://commons.apenet.eu/tags"%>
-    
 
 <div align="center">  
 	<s:form id="contact" method="POST"> 
@@ -32,5 +30,4 @@
 			</tr>
 		</table>
 	</s:form>	
-</div>l
-
+</div>
