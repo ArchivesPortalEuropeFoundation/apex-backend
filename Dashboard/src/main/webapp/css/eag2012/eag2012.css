@@ -170,11 +170,10 @@
 	padding-left: 18px;
 }
 
-#eag2012Div td,th {
+#eag2012Div td, th{
 	width: 25%;
 	padding-top: 15px;
 }
-
 #eag2012Div td label {
 	width: 25%;
 }
@@ -278,6 +277,9 @@ input[type="button"]:disabled {
 	vertical-align: top;
 	white-space:normal;
 	line-height:normal;
+}
+#buttonAddFutherInformationOnExistingFacilities, #buttonAddFutherInformationOnExistingFacilities2{
+	width:88%;
 }
 
 #buttonAccessAndServiceTabPrevious, #buttonContactTabPrevious, #buttonControlTabPrevious,
