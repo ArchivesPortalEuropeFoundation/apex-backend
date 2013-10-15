@@ -684,32 +684,7 @@ public class APEnetEAGDashboard{
 			}
 
 			if (found) {
-				String archivalLandscapePath = APEnetUtilities.getDashboardConfig().getArchivalLandscapeDirPath()
-						+ APEnetUtilities.FILESEPARATOR + "AL.xml";
-				sfile = new FileInputStream(archivalLandscapePath);
-				doc = dBuilder.parse(sfile);
-				doc.getDocumentElement().normalize();
-				found = false;
-				i = 0;
-
-				nodeList = doc.getElementsByTagName("unittitle");
-				while ((!found) && (i < nodeList.getLength())) {
-					log.debug("unittitle: '" + nodeList.item(i).getTextContent() + "'");
-					if (nodeList.item(i).getTextContent().trim().equals(archivalInstitution.getAiname())) {
-						found = true;
-					} else {
-						i = i + 1;
-					}
-
-				}
-
-				if (found) {
-					value = true;
-				} else {
-					log.info("Archival institution '" + archivalInstitution.getAiname()
-							+ "' was not found in archival landscape ('" + archivalLandscapePath + "')");
-					value = false;
-				}
+				value = true;
 			} else {
 				log.info("Archival institution '" + archivalInstitution.getAiname()
 						+ "' was not found in archival landscape ('" + alPath + "')");
