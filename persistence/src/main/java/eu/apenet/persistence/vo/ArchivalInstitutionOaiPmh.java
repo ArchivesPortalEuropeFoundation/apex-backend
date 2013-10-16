@@ -3,12 +3,7 @@ package eu.apenet.persistence.vo;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "archival_institution_oai_pmh")
@@ -34,6 +29,9 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
 
     @Column(name="ai_id")
     private Integer aiId;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="ai_id", insertable=false, updatable=false)
+    private ArchivalInstitution archivalInstitution;
 
     @Column(name="profile_id")
     private Long profileId;
@@ -111,5 +109,13 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
 
     public void setNextHarvesting(Date nextHarvesting) {
         this.nextHarvesting = nextHarvesting;
+    }
+
+    public ArchivalInstitution getArchivalInstitution() {
+        return archivalInstitution;
+    }
+
+    public void setArchivalInstitution(ArchivalInstitution archivalInstitution) {
+        this.archivalInstitution = archivalInstitution;
     }
 }

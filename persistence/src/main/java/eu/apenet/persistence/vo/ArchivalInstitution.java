@@ -63,9 +63,6 @@ public class ArchivalInstitution implements java.io.Serializable {
 	private boolean containSearchableItems;
 
 	@OneToMany(mappedBy="archivalInstitution")
-	private Set<ArchivalInstitutionOaiPmh> archivalInstitutionOaiPmhs = new HashSet<ArchivalInstitutionOaiPmh>(0);
-	
-	@OneToMany(mappedBy="archivalInstitution")
 	private Set<AiAlternativeName> aiAlternativeNames = new HashSet<AiAlternativeName>(0);
 
 	@OneToMany(mappedBy="parent")
@@ -186,15 +183,6 @@ public class ArchivalInstitution implements java.io.Serializable {
     public void setSourceGuides(Set<SourceGuide> sourceGuides) {
         this.sourceGuides = sourceGuides;
     }
-
-    public Set<ArchivalInstitutionOaiPmh> getArchivalInstitutionOaiPmhs() {
-		return this.archivalInstitutionOaiPmhs;
-	}
-
-	public void setArchivalInstitutionOaiPmhs(
-			Set<ArchivalInstitutionOaiPmh> archivalInstitutionOaiPmhs) {
-		this.archivalInstitutionOaiPmhs = archivalInstitutionOaiPmhs;
-	}
 
 	public Set<AiAlternativeName> getAiAlternativeNames() {
 		return this.aiAlternativeNames;
