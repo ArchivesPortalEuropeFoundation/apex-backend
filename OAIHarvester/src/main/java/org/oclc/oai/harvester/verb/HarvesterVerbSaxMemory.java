@@ -6,6 +6,8 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
 import org.oclc.oai.harvester.parser.other.OaiPmhMemoryParser;
+import org.oclc.oai.harvester.parser.other.metadata.OaiPmhMetadataFormatParser;
+import org.oclc.oai.harvester.parser.other.set.OaiPmhSetParser;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -78,11 +80,11 @@ public class HarvesterVerbSaxMemory {
 //        outputStream.close();
 //
 //        response = FileUtils.openInputStream(fileOut);
-//        if(type.equals(SET)) {
-//            oaiPmhMemoryParser = new OaiPmhMetadataFormatParser();
-//        } else {
-//            oaiPmhMemoryParser = new OaiPmhSetParser();
-//        }
+        if(type.equals(SET)) {
+            oaiPmhMemoryParser = new OaiPmhMetadataFormatParser();
+        } else {
+            oaiPmhMemoryParser = new OaiPmhSetParser();
+        }
     }
 
     /**

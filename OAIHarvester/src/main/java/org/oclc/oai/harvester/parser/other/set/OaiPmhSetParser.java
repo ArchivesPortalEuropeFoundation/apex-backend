@@ -1,4 +1,4 @@
-package org.oclc.oai.harvester.parser;
+package org.oclc.oai.harvester.parser.other.set;
 
 import org.oclc.oai.harvester.parser.other.OaiPmhMemoryParser;
 
