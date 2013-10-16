@@ -1,4 +1,4 @@
-package org.oclc.oai.harvester.parser;
+package org.oclc.oai.harvester.parser.record;
 
 public class OaiPmhRecord {
 	private String identifier;

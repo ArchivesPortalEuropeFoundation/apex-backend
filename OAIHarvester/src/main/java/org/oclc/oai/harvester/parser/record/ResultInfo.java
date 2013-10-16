@@ -1,4 +1,4 @@
-package org.oclc.oai.harvester.parser;
+package org.oclc.oai.harvester.parser.record;
 
 import java.util.ArrayList;
 import java.util.List;
