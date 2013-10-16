@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.oclc.oai.harvester.parser.record.OaiPmhParser;
 import org.oclc.oai.harvester.parser.record.OaiPmhRecord;
 import org.oclc.oai.harvester.parser.record.ResultInfo;
 import org.oclc.oai.harvester.verb.ListRecordsSaxWriteDirectly;
