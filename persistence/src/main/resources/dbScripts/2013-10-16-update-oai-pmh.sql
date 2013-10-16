@@ -4,3 +4,5 @@ ALTER TABLE archival_institution_oai_pmh ALTER COLUMN oai_pmh_id TYPE character 
 ALTER TABLE archival_institution_oai_pmh RENAME COLUMN oai_pmh_id TO oai_pmh_set;
 ALTER TABLE archival_institution_oai_pmh ALTER COLUMN oai_pmh_set DROP NOT NULL;
 ALTER TABLE archival_institution_oai_pmh ADD COLUMN oai_pmh_metadata character varying(255) NOT NULL;
+ALTER TABLE archival_institution_oai_pmh ADD COLUMN profile_id bigint NOT NULL;
+ALTER TABLE archival_institution_oai_pmh ADD COLUMN next_harvesting date NOT NULL;

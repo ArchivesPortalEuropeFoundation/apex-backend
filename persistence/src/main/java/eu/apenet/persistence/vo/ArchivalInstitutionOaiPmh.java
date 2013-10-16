@@ -5,12 +5,9 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -38,17 +35,18 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
     @Column(name="ai_id")
     private Integer aiId;
 
-    public ArchivalInstitutionOaiPmh(Long id, Integer aiId, String url, String set, String metadataPrefix) {
-		this.id = id;
+    @Column(name="profile_id")
+    private Long profileId;
+
+    @Column(name="next_harvesting")
+    private Date nextHarvesting;
+
+    public ArchivalInstitutionOaiPmh(Integer aiId, String url, String metadataPrefix, Long profileId, Date nextHarvesting) {
 		this.aiId = aiId;
-		this.set = set;
 		this.url = url;
         this.metadataPrefix = metadataPrefix;
-	}
-
-	public ArchivalInstitutionOaiPmh(Long id, Integer aiId, String url, String set, String metadataPrefix, Date lastHarvesting) {
-		this(id, aiId, url, set, metadataPrefix);
-        this.lastHarvesting = lastHarvesting;
+        this.profileId = profileId;
+        this.nextHarvesting = nextHarvesting;
 	}
 
     public Long getId() {
@@ -97,5 +95,21 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
 
     public void setAiId(Integer aiId) {
         this.aiId = aiId;
+    }
+
+    public Long getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(Long profileId) {
+        this.profileId = profileId;
+    }
+
+    public Date getNextHarvesting() {
+        return nextHarvesting;
+    }
+
+    public void setNextHarvesting(Date nextHarvesting) {
+        this.nextHarvesting = nextHarvesting;
     }
 }
