@@ -1,17 +1,13 @@
 package org.oclc.oai.harvester.app;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import org.oclc.oai.harvester.parser.OaiPmhParser;
-import org.oclc.oai.harvester.parser.OaiPmhRecord;
-import org.oclc.oai.harvester.parser.ResultInfo;
+import org.oclc.oai.harvester.parser.record.OaiPmhRecord;
+import org.oclc.oai.harvester.parser.record.ResultInfo;
 import org.oclc.oai.harvester.verb.ListRecordsSaxWriteDirectly;
 
 

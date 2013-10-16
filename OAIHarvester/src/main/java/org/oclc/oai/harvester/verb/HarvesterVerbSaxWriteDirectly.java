@@ -11,8 +11,8 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
-import org.oclc.oai.harvester.parser.OaiPmhParser;
-import org.oclc.oai.harvester.parser.ResultInfo;
+import org.oclc.oai.harvester.parser.record.OaiPmhParser;
+import org.oclc.oai.harvester.parser.record.ResultInfo;
 
 /**
  * User: Yoann Moranville

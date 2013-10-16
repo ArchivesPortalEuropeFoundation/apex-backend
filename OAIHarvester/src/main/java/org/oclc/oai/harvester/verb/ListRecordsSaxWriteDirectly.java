@@ -3,8 +3,8 @@ package org.oclc.oai.harvester.verb;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import org.oclc.oai.harvester.parser.OaiPmhParser;
-import org.oclc.oai.harvester.parser.ResultInfo;
+import org.oclc.oai.harvester.parser.record.OaiPmhParser;
+import org.oclc.oai.harvester.parser.record.ResultInfo;
 
 /**
  * User: Yoann Moranville
