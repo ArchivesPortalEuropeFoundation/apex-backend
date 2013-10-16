@@ -26,7 +26,6 @@ import eu.apenet.persistence.dao.UserRoleDAO;
 import eu.apenet.persistence.dao.WarningsDAO;
 import eu.apenet.persistence.hibernate.AiAlternativeNameHibernateDAO;
 import eu.apenet.persistence.hibernate.ArchivalInstitutionHibernateDAO;
-import eu.apenet.persistence.hibernate.ArchivalInstitutionOaiPmhHibernateDAO;
 import eu.apenet.persistence.hibernate.CLevelHibernateDAO;
 import eu.apenet.persistence.hibernate.CouAlternativeNameHibernateDAO;
 import eu.apenet.persistence.hibernate.CountryHibernateDAO;
@@ -48,6 +47,7 @@ import eu.apenet.persistence.hibernate.UserRoleHibernateDAO;
 import eu.apenet.persistence.hibernate.WarningsHibernateDAO;
 import eu.archivesportaleurope.persistence.jpa.dao.HgSgFaRelationJpaDAO;
 import eu.archivesportaleurope.persistence.jpa.dao.UpFileJpaDAO;
+import eu.archivesportaleurope.persistence.jpa.dao.ArchivalInstitutionOaiPmhJpaDAO;
 
 
 /**
@@ -122,11 +122,6 @@ public class HibernateDAOFactory extends DAOFactory {
 	}
 
 	@Override
-	public ArchivalInstitutionOaiPmhDAO getArchivalInstitutionOaiPmhDAO() {
-		return (ArchivalInstitutionOaiPmhDAO) instantiateDAO(ArchivalInstitutionOaiPmhHibernateDAO.class);
-	}
-
-	@Override
 	public CLevelDAO getCLevelDAO() {
 		return (CLevelDAO) instantiateDAO(CLevelHibernateDAO.class);
 	}
@@ -183,4 +178,9 @@ public class HibernateDAOFactory extends DAOFactory {
 		return (HgSgFaRelationDAO) instantiateDAO(HgSgFaRelationJpaDAO.class);
 	}
 
+
+    @Override
+    public ArchivalInstitutionOaiPmhDAO getArchivalInstitutionOaiPmhDAO() {
+        return (ArchivalInstitutionOaiPmhDAO) instantiateDAO(ArchivalInstitutionOaiPmhJpaDAO.class);
+    }
 }

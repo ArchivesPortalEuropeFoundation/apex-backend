@@ -10,8 +10,7 @@ import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
  *
  */
 
-public interface ArchivalInstitutionOaiPmhDAO extends GenericDAO<ArchivalInstitutionOaiPmh, Integer> {
-	public List<ArchivalInstitutionOaiPmh> getArchivalInstitutionOaiPmhs(Integer aiId);
-
+public interface ArchivalInstitutionOaiPmhDAO extends GenericDAO<ArchivalInstitutionOaiPmh, Long> {
+	public List<ArchivalInstitutionOaiPmh> getArchivalInstitutionOaiPmhs(Integer archivalInstitutionId);
 }
 

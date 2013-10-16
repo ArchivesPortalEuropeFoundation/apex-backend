@@ -244,18 +244,8 @@ public class ContentUtils {
 				ArchivalInstitutionOaiPmhDAO aiOaiPmhDao = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
 				List<ArchivalInstitutionOaiPmh> aiOaiPmhs = aiOaiPmhDao.getArchivalInstitutionOaiPmhs(ai.getAiId());
 				for (ArchivalInstitutionOaiPmh anAiOaiPmh : aiOaiPmhs) {
-					LOGGER.debug("Deleting the registries in archival_institution_oai_pmh entity related to the institution: "
-							+ ai.getAiId());
-					ArchivalInstitutionOaiPmh aiOaiPmh = aiOaiPmhDao.findById(anAiOaiPmh.getAioId()); // todo:
-																										// Why
-																										// this
-																										// query?
-																										// Why
-																										// not
-																										// use
-																										// simply
-																										// aiOaiPmhDao.deleteSimple(anAiOaiPmh)?
-					aiOaiPmhDao.deleteSimple(aiOaiPmh);
+					LOGGER.debug("Deleting the registries in archival_institution_oai_pmh entity related to the institution: " + ai.getAiId());
+					aiOaiPmhDao.deleteSimple(anAiOaiPmh);
 				}
 
 				// 2. Delete the Up Files related to this Institution
