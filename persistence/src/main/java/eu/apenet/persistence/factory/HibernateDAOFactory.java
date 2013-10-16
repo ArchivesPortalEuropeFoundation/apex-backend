@@ -49,7 +49,7 @@ import eu.apenet.persistence.hibernate.WarningsHibernateDAO;
 import eu.archivesportaleurope.persistence.jpa.dao.HgSgFaRelationJpaDAO;
 import eu.archivesportaleurope.persistence.jpa.dao.UpFileJpaDAO;
 import eu.archivesportaleurope.persistence.jpa.dao.ArchivalInstitutionOaiPmhJpaDAO;
-//import eu.archivesportaleurope.persistence.jpa.dao.UserprofileJpaDAO;
+import eu.archivesportaleurope.persistence.jpa.dao.UserprofileJpaDAO;
 
 
 /**
@@ -186,8 +186,8 @@ public class HibernateDAOFactory extends DAOFactory {
         return (ArchivalInstitutionOaiPmhDAO) instantiateDAO(ArchivalInstitutionOaiPmhJpaDAO.class);
     }
     
-//    @Override
-//    public UserprofileDAO getUserprofileDAO() {
-//        return (UserprofileDAO) instantiateDAO(UserprofileJpaDAO.class);
-//    }
+    @Override
+    public UserprofileDAO getUserprofileDAO() {
+        return (UserprofileDAO) instantiateDAO(UserprofileJpaDAO.class);
+    }
 }
