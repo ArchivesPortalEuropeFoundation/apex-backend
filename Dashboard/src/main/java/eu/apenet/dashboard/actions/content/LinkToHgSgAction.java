@@ -34,6 +34,8 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
     private Set<SelectItem> clevels = new TreeSet<SelectItem>();
     private Set<SelectItem> selectPrefixMethodSet = new TreeSet<SelectItem>();
     private String selectPrefixMethod;
+    private Set<SelectItem> titleMethodSet = new TreeSet<SelectItem>();
+    private String titleMethod;
     private String ecId;
     private String parentCLevelId;
 	/**
@@ -43,7 +45,9 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 	public String input() throws IOException, SAXException, ParserConfigurationException{
 		selectPrefixMethodSet.add(new SelectItem("", getText("dashboard.hgcreation.prefix.nothing")));
 		selectPrefixMethodSet.add(new SelectItem(LinkingService.PREFIX_UNITID, getText("dashboard.hgcreation.prefix.unitid")));
-		selectPrefixMethodSet.add(new SelectItem(LinkingService.PREFIX_EADID, getText("dashboard.hgcreation.prefix.eadid")));
+		titleMethodSet.add(new SelectItem("", getText("dashboard.hgcreation.unittitle")));
+		titleMethodSet.add(new SelectItem(LinkingService.TITLE_TITLEPROPER, getText("dashboard.hgcreation.titleproper")));
+
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		EadSearchOptions eadSearchOptions = new EadSearchOptions();
         eadSearchOptions.setArchivalInstitionId(getAiId());
@@ -101,7 +105,7 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 		EadSearchOptions eadSearchOptions = (EadSearchOptions)getServletRequest().getSession()
 				.getAttribute(ContentManagerAction.EAD_SEARCH_OPTIONS);
 		if (StringUtils.isBlank(batchItems)){
-			LinkingService.addFindingaidsToHgOrSg(eadSearchOptions,Integer.parseInt(id), ecIdLong, parentCLevelIdLong, selectPrefixMethod);
+			LinkingService.addFindingaidsToHgOrSg(eadSearchOptions,Integer.parseInt(id), ecIdLong, parentCLevelIdLong, selectPrefixMethod, titleMethod);
 		}else {
 
 			if (BatchEadActions.SELECTED_ITEMS.equals(batchItems)) {
@@ -110,17 +114,17 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 				List<Integer> ids = (List<Integer>) getServletRequest().getSession().getAttribute(
 						AjaxControllerAbstractAction.LIST_IDS);
 				if (ids != null) {
-					LinkingService.addFindingaidsToHgOrSg(eadSearchOptions, ids, ecIdLong, parentCLevelIdLong, selectPrefixMethod);
+					LinkingService.addFindingaidsToHgOrSg(eadSearchOptions, ids, ecIdLong, parentCLevelIdLong, selectPrefixMethod, titleMethod);
 					return SUCCESS;
 				} else {
 					return ERROR;
 				}
 
 			} else if (BatchEadActions.SEARCHED_ITEMS.equals(batchItems)) {
-				LinkingService.addFindingaidsToHgOrSg(eadSearchOptions, ecIdLong, parentCLevelIdLong, selectPrefixMethod);
+				LinkingService.addFindingaidsToHgOrSg(eadSearchOptions, ecIdLong, parentCLevelIdLong, selectPrefixMethod, titleMethod);
 				return SUCCESS;
 			} else {
-				LinkingService.addFindingaidsToHgOrSg(getAiId(), ecIdLong, parentCLevelIdLong, selectPrefixMethod);
+				LinkingService.addFindingaidsToHgOrSg(getAiId(), ecIdLong, parentCLevelIdLong, selectPrefixMethod, titleMethod);
 				return SUCCESS;
 			}
 		}
@@ -227,6 +231,22 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 
 	public void setSelectPrefixMethod(String selectPrefixMethod) {
 		this.selectPrefixMethod = selectPrefixMethod;
+	}
+
+	public Set<SelectItem> getTitleMethodSet() {
+		return titleMethodSet;
+	}
+
+	public void setTitleMethodSet(Set<SelectItem> titleMethodSet) {
+		this.titleMethodSet = titleMethodSet;
+	}
+
+	public String getTitleMethod() {
+		return titleMethod;
+	}
+
+	public void setTitleMethod(String titleMethod) {
+		this.titleMethod = titleMethod;
 	}
 
     

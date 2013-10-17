@@ -28,6 +28,11 @@ $(document).ready(function() {
 					id="selectPrefixMethod"></s:radio></td>
 		</tr>
 		<tr>
+			<td class="inputLabel"><s:label key="dashboard.hgcreation.title.source" for="selectTitleMethod" />:</td>
+			<td><s:radio name="titleMethod" list="titleMethodSet" listKey="value" listValue="content"
+					id="selectTitleMethod"></s:radio></td>
+		</tr>
+		<tr>
 			<td colspan="2"><s:submit action="linkToHgSg" key="dashboard.hgcreation.addfindingaids" cssClass="mainButton" />
 				<s:submit action="contentmanager" key="label.cancel" /></td>
 		</tr>
