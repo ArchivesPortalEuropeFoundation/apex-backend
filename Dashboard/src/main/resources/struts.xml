@@ -1002,5 +1002,14 @@
                 <action name="htmlPreview" class="eu.apenet.dashboard.actions.HtmlPreviewAction">
                     <result name="success">/jsp/ead2ese/edmpreview.jsp</result>
                 </action>
-        </package>
+
+        <action name="automaticharvestingcreation" class="eu.apenet.dashboard.actions.AutomaticHarvestingCreationAction">
+            <interceptor-ref name="changeLanguageStack"/>
+            <result name="success" type="tiles">automaticharvestingcreation</result>
+        </action>
+        <action name="harvestingsetsandmetadata" class="eu.apenet.dashboard.actions.AutomaticHarvestingCreationAction" method="getMetadataPrefixesAndSetsFromUrl">
+            <interceptor-ref name="changeLanguageStack"/>
+            <result name="success" type="tiles">automaticharvestingcreation</result>
+        </action>
+    </package>
 </struts>

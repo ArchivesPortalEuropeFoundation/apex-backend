@@ -37,6 +37,7 @@
 	                    hasCpfReady, displayCpfInformation,
 
                         hgTreeCreation, addEadContentData, addCLevelData,deleteLevelHG,
+                        automaticharvestingcreation, harvestingsetsandmetadata,
                         <!-- unload -->
                         unload;
 		</group>

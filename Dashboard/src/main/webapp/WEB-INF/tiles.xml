@@ -341,7 +341,7 @@
 	<definition name="changeAlIdentifiers" extends="ArchivalLandscapeLayout" >
 		<put-attribute name="title" value="dashboard.changealidentifiers.title" />
 		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
-		<put-attribute name="body" value="/jsp/changeAlIdentifiers.jsp" />	
+		<put-attribute name="body" value="/jsp/changeAlIdentifiers.jsp" />
 	</definition>	
 	
 			<!-- END ARCHIVAL LANDSCAPE ACTIONS -->
@@ -476,6 +476,12 @@
             <add-attribute type="string" value="/css/colorbox.css"/>
             <add-attribute type="string" value="/css/hgSgTreeCreation.css"/>          
         </put-list-attribute>
+    </definition>
+
+    <definition name="automaticharvestingcreation" extends="dashboardLayout" >
+        <put-attribute name="title" value="dashboard.menu.automaticharvestingcreation" />
+        <put-attribute name="menu" value="/jsp/indexDashboard.jsp" />
+        <put-attribute name="body" value="/jsp/automaticHarvestingCreation.jsp" />
     </definition>
     
     			<!-- END ARCHIVAL LANDSCAPE ACTIONS -->	

@@ -36,18 +36,22 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
     @Column(name="profile_id")
     private Long profileId;
 
-    @Column(name="next_harvesting")
-    private Date nextHarvesting;
+    @Column(name="interval_harvesting")
+    private Long intervalHarvesting;
+
+    @Column(name="enabled")
+    private boolean enabled;
 
     public ArchivalInstitutionOaiPmh() {
     }
 
-    public ArchivalInstitutionOaiPmh(Integer aiId, String url, String metadataPrefix, Long profileId, Date nextHarvesting) {
+    public ArchivalInstitutionOaiPmh(Integer aiId, String url, String metadataPrefix, Long profileId, Long intervalHarvesting) {
 		this.aiId = aiId;
 		this.url = url;
         this.metadataPrefix = metadataPrefix;
         this.profileId = profileId;
-        this.nextHarvesting = nextHarvesting;
+        this.intervalHarvesting = intervalHarvesting;
+        this.enabled = true;
 	}
 
     public Long getId() {
@@ -106,12 +110,12 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
         this.profileId = profileId;
     }
 
-    public Date getNextHarvesting() {
-        return nextHarvesting;
+    public Long getIntervalHarvesting() {
+        return intervalHarvesting;
     }
 
-    public void setNextHarvesting(Date nextHarvesting) {
-        this.nextHarvesting = nextHarvesting;
+    public void setIntervalHarvesting(Long intervalHarvesting) {
+        this.intervalHarvesting = intervalHarvesting;
     }
 
     public ArchivalInstitution getArchivalInstitution() {
@@ -120,5 +124,13 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
 
     public void setArchivalInstitution(ArchivalInstitution archivalInstitution) {
         this.archivalInstitution = archivalInstitution;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }
