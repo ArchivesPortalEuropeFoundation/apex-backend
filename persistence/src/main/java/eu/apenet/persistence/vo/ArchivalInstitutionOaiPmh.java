@@ -39,6 +39,9 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
     @Column(name="next_harvesting")
     private Date nextHarvesting;
 
+    public ArchivalInstitutionOaiPmh() {
+    }
+
     public ArchivalInstitutionOaiPmh(Integer aiId, String url, String metadataPrefix, Long profileId, Date nextHarvesting) {
 		this.aiId = aiId;
 		this.url = url;
