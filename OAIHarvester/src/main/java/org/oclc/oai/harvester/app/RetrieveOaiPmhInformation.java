@@ -1,19 +1,14 @@
 package org.oclc.oai.harvester.app;
 
+import org.apache.log4j.Logger;
 import org.oclc.oai.harvester.parser.other.OaiPmhElements;
-import org.oclc.oai.harvester.parser.other.OaiPmhMemoryParser;
-import org.oclc.oai.harvester.parser.record.OaiPmhParser;
-import org.oclc.oai.harvester.parser.record.OaiPmhRecord;
-import org.oclc.oai.harvester.parser.record.ResultInfo;
 import org.oclc.oai.harvester.verb.HarvesterVerbSaxMemory;
 import org.oclc.oai.harvester.verb.ListMetadataFormatsSax;
-import org.oclc.oai.harvester.verb.ListRecordsSaxWriteDirectly;
 import org.oclc.oai.harvester.verb.ListSetsSax;
 import org.xml.sax.SAXException;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +24,7 @@ import java.util.List;
  * - set(s) from url
  */
 public abstract class RetrieveOaiPmhInformation {
+    private static final Logger LOG = Logger.getLogger(RetrieveOaiPmhInformation.class);
     public static List<String> retrieveMetadataFormats(String baseURL) throws TransformerException, XMLStreamException, IOException, SAXException {
         return retrieveElements(baseURL, HarvesterVerbSaxMemory.METADATA_FORMAT);
     }

@@ -1,5 +1,7 @@
 package org.oclc.oai.harvester.parser.other;
 
+import org.apache.log4j.Logger;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -14,6 +16,7 @@ import java.util.List;
  * @author Yoann Moranville
  */
 public abstract class OaiPmhMemoryParser {
+    protected static final Logger LOG = Logger.getLogger(OaiPmhMemoryParser.class);
     protected static final String UTF8 = "UTF-8";
     protected static final String OAI_PMH = "http://www.openarchives.org/OAI/2.0/";
 

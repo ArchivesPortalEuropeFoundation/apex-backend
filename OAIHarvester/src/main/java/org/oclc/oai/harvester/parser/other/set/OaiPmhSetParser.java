@@ -17,6 +17,7 @@ import java.util.LinkedList;
  */
 public class OaiPmhSetParser extends OaiPmhMemoryParser {
     private static final QName SET_SPEC_PREFIX = new QName(OAI_PMH, "setSpec");
+    private static final QName LIST_SETS = new QName(OAI_PMH, "ListSets");
 
     public OaiPmhSetParser() {
         super();
@@ -28,19 +29,24 @@ public class OaiPmhSetParser extends OaiPmhMemoryParser {
         boolean foundEndElement = false;
         int event =  xmlReader.next();
         QName lastElement = null;
+        String set = "";
         while(!foundEndElement && event != XMLStreamConstants.END_DOCUMENT){
             if (event == XMLStreamConstants.START_ELEMENT) {
                 lastElement = xmlReader.getName();
                 add(path, lastElement);
             } else if (event == XMLStreamConstants.CHARACTERS) {
                 if (SET_SPEC_PREFIX.equals(lastElement)) {
-                    elements.getElements().add(xmlReader.getText());
+                    set += xmlReader.getText();
                 } else if (RESUMPTION_TOKEN.equals(lastElement)) {
                     elements.setResumptionToken(xmlReader.getText());
                 }
             } else if (event == XMLStreamConstants.END_ELEMENT) {
                 QName elementName = xmlReader.getName();
-                if (SET_SPEC_PREFIX.equals(elementName)) {
+                if(SET_SPEC_PREFIX.equals(elementName)) {
+                    elements.getElements().add(set.trim());
+                    set = "";
+                }
+                if (LIST_SETS.equals(elementName)) {
                     foundEndElement = true;
                 } else {
                     removeLast(path, elementName);

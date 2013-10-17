@@ -17,6 +17,7 @@ import java.util.LinkedList;
  */
 public class OaiPmhMetadataFormatParser extends OaiPmhMemoryParser {
     private static final QName METADATA_PREFIX = new QName(OAI_PMH, "metadataPrefix");
+    private static final QName LIST_METADATA_FORMATS = new QName(OAI_PMH, "ListMetadataFormats");
 
     public OaiPmhMetadataFormatParser() {
         super();
@@ -28,19 +29,24 @@ public class OaiPmhMetadataFormatParser extends OaiPmhMemoryParser {
         boolean foundEndElement = false;
         int event =  xmlReader.next();
         QName lastElement = null;
+        String metadata = "";
         while(!foundEndElement && event != XMLStreamConstants.END_DOCUMENT){
             if (event == XMLStreamConstants.START_ELEMENT) {
                 lastElement = xmlReader.getName();
                 add(path, lastElement);
             } else if (event == XMLStreamConstants.CHARACTERS) {
                 if (METADATA_PREFIX.equals(lastElement)) {
-                    elements.getElements().add(xmlReader.getText());
+                    metadata += xmlReader.getText();
                 } else if (RESUMPTION_TOKEN.equals(lastElement)) {
                     elements.setResumptionToken(xmlReader.getText());
                 }
             } else if (event == XMLStreamConstants.END_ELEMENT) {
                 QName elementName = xmlReader.getName();
                 if (METADATA_PREFIX.equals(elementName)) {
+                    elements.getElements().add(metadata.trim());
+                    metadata = "";
+                }
+                if (LIST_METADATA_FORMATS.equals(elementName)) {
                     foundEndElement = true;
                 } else {
                     removeLast(path, elementName);

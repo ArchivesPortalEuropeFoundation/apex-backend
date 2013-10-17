@@ -84,8 +84,7 @@ public abstract class HarvesterVerbSaxMemory {
 
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
         XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(response, "UTF-8");
-        OaiPmhElements oaiPmhElements = oaiPmhMemoryParser.parse(xmlStreamReader);
-        return oaiPmhElements;
+        return oaiPmhMemoryParser.parse(xmlStreamReader);
     }
 
     public String getRequestURL() {
