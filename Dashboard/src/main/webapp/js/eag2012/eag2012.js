@@ -52,6 +52,7 @@ function clickExitAction(){
 }
 
 function clickSaveAction(form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, message, institutionName) {
+
 	// Check if almost one of the authorized name of the institution is the same as the institution's name.
 	var nameOfInstitution = checkNameOfInstitution(error8, institutionName);
 	if (!nameOfInstitution) {
@@ -4020,16 +4021,15 @@ function nameOfInstitutionChanged(text, institutionName){
 function checkNameOfInstitution(text, institutionName) {
 	// Check if value for the field "Name of the institution",  in tab "Your Institution", is the same as
 	// the current institution name.
-	if (institutionName != $("#textYINameOfTheInstitution").val()) {
+	if (institutionName != escapeDoubleQuote(escapeApostrophe($("#textYINameOfTheInstitution")))) {
 		// Check if any of the values for the field "Name of the institution", in tab "Identity", is the same as
 		// the current institution name.
 		var exists = false;
 		$("table[id^='identityTableNameOfTheInstitution']").each(function(i){
-			if (institutionName == $("table#identityTableNameOfTheInstitution_" + (i+1) + " #textNameOfTheInstitution").val()) {
+			if (institutionName == escapeDoubleQuote(escapeApostrophe($("table#identityTableNameOfTheInstitution_" + (i+1) + " #textNameOfTheInstitution")))) {
 				exists = true;
 			}
 		});
-
 		if (!exists) {
 			alert(text);
 			return false;
@@ -4726,7 +4726,6 @@ function contactWebpageLangChanged(name){
 		var id = $("table#contactTable_1 tr#trWebOfTheInstitution" + parentId + " #selectWebpageLanguageOfTheInstitution" + parentId).val();
 		$("table#yiTableOthers #selectTextYILangWebpage" + parentId).attr("value",id);
 	}
-	
 }
 function contactLatitudeChanged(name){
 	var parentId = name.attr("id");
@@ -4777,6 +4776,7 @@ function escapeDate(name){
 	return date;
 }
 function escapeApostrophe(name){
+	//this function escape the character ' 
 	var apostrophe = name.val();
 	var index = apostrophe.indexOf("\'");
 	while (index > -1){
@@ -4788,6 +4788,20 @@ function escapeApostrophe(name){
 		index = apostrophe.indexOf("\'");
 	}
 	return apostrophe;
+}
+function escapeDoubleQuote(name){
+	//To escape the character "
+	var doubleQuote = name;
+	var indexQuote = doubleQuote.indexOf("\"");
+	while (indexQuote > -1){
+		var subString = doubleQuote.substring(indexQuote, (indexQuote +1));
+		subString = escape(subString);
+		var start = doubleQuote.substring(0, indexQuote);
+		var end = doubleQuote.substring((indexQuote+1));
+		doubleQuote = start + subString + end;
+		indexQuote = doubleQuote.indexOf("\"");
+	}
+	return doubleQuote;
 }
 function selectTitleRelatedLangChange(name){
 	var parentId = name.attr("id");

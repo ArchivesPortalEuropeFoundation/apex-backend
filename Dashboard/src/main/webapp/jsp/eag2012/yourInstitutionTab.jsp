@@ -96,7 +96,7 @@
 				<label for="textYINameOfTheInstitution"><s:property value="getText('eag2012.commons.nameOfInstitution')"/><span class="required">*</span>:</label>
 			</td>
 			<td>
-				<textarea id="textYINameOfTheInstitution" onchange="nameOfInstitutionChanged('<s:property value="getText('eag2012.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutform}');">${loader.autform}</textarea>
+				<textarea id="textYINameOfTheInstitution" onchange="nameOfInstitutionChanged('<s:property value="getText('eag2012.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutformEscaped}');">${loader.autform}</textarea>
 			</td>
 			<td class="labelLeft">
 				<label for="selectYINOTISelectLanguage"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>

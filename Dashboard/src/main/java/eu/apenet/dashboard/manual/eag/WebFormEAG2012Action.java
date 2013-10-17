@@ -921,6 +921,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			nameOfInstitution = getInitialAutformValue(); 
 		}
 		this.loader.setInitialAutform(getInitialAutformValue());
+		this.loader.setInitialAutformEscaped(getInitialAutformValue());
 		this.loader.setAutform(nameOfInstitution);
 		this.loader.addIdAutform(nameOfInstitution);
 		this.loader.setParform(getParallelNameOfInstitution());
