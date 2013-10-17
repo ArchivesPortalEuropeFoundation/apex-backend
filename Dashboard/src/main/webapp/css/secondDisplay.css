@@ -10,17 +10,39 @@ body {
 }
 
 #wrapper {
-    height:100%;
-    width:100%;
+	padding: 3px;
 }
 
+
+#logo {
+	background-image: url("../images/ape/header/logo-header.png");
+	background-color:white;
+	background-repeat: no-repeat;
+    height: 120px;
+    width:320px;   
+    float:left;
+}
 #header {
-    height: 111px;
-    width: 100%;
-    background: url("../images/second_display/2nd_displ_bg.jpg") repeat;
+	background: url("../images/ape/header/header_bg.png");
+    height: 120px;
+    background-repeat:repeat-x;
     overflow: hidden;
+    width: 100%;
 }
-
+.left-header {
+	background-image: url("../images/ape/header/header_left.png");
+	background-repeat: no-repeat;
+    height: 109px;
+    width:555px;    
+    float: left;
+}
+.right-header {
+	background-image: url("../images/ape/header/header_right.png");
+	background-repeat: no-repeat;
+    float: right;
+    height: 109px;
+    width: 121px;
+}
 #header #leftPart {
     float: left;
 }
