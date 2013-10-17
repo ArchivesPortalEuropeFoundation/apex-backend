@@ -57,6 +57,15 @@ public class Userprofile implements Serializable {
     @Column(name = "europeana_inh_origin")
     private Boolean europeanaInheritOrigin = false;
 
+    public Userprofile() {
+    }
+
+    public Userprofile(User user, String nameProfile, Integer fileType) {
+        this.user = user;
+        this.nameProfile = nameProfile;
+        this.fileType = fileType;
+    }
+    
     public Long getId() {
         return id;
     }
