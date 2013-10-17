@@ -18,7 +18,7 @@ public class UserprofileJpaDAO extends AbstractHibernateDAO<Userprofile, Long> i
 
     @Override
     public List<Userprofile> getUserprofiles(Integer userId) {
-        String query = "SELECT userprofile FROM Userprofile userprofile WHERE userprofile.user  = :userId ";
+        String query = "SELECT userprofile FROM Userprofile userprofile WHERE userprofile.user.id = :userId ";
         TypedQuery<Userprofile> typedQuery = getEntityManager().createQuery(query, Userprofile.class);
         typedQuery.setParameter("userId", userId);
         return typedQuery.getResultList();
