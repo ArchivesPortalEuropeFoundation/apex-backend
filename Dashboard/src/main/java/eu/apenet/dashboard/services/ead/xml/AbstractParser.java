@@ -69,7 +69,7 @@ public abstract class AbstractParser {
 			xmlWriter.writeDefaultNamespace(APENET_EAD);
 			xmlWriter.writeNamespace("xlink", XLINK);
 			xmlWriter.writeNamespace("xsi", XSI);
-            xmlWriter.writeAttribute(XSI, "schemaLocation", "urn:isbn:1-931666-22-9 http://www.archivesportaleurope.eu/profiles/APEnet_EAD.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd");
+            xmlWriter.writeAttribute(XSI, "schemaLocation", "urn:isbn:1-931666-22-9 http://schemas.archivesportaleurope.net/profiles/apeEAD_XSD1.0.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd");
             xmlWriter.writeAttribute("audience", "external");
 		}
 	}

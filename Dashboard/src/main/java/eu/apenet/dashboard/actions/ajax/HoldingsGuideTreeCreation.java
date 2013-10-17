@@ -77,15 +77,16 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
     public String addEadContentData(){
         try {
             Writer writer = openOutputWriter();
-
-            CLevelTreeNode levelTreeNode = createCLevelTreeNode();
             ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId());
+            String eadid = "HG_" + archivalInstitution.getRepositorycode() + "_"+System.currentTimeMillis();
+            CLevelTreeNode levelTreeNode = createCLevelTreeNode();
+            levelTreeNode.setUnitid(eadid);
             StringWriter eadContentXml = createEadContentData(archivalInstitution, levelTreeNode);
             JpaUtil.beginDatabaseTransaction();
             EadContent eadContent;
             if(StringUtils.isEmpty(getServletRequest().getParameter("dataToEdit"))){
             	Ead holdingsGuide = new HoldingsGuide();
-            	String eadid = "HG_" + archivalInstitution.getRepositorycode() + "_"+System.currentTimeMillis();
+
             	holdingsGuide.setEadid(eadid);
             	holdingsGuide.setTitle(levelTreeNode.getUnittitle());
             	holdingsGuide.setDynamic(true);
