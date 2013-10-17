@@ -93,3 +93,10 @@
 	float: right;
 	margin-right: 10px;
 }
+
+.warning {
+	font-size: 13px;
+    color: #F87217;
+    font-weight: bold;
+    padding: 5px;
+}
