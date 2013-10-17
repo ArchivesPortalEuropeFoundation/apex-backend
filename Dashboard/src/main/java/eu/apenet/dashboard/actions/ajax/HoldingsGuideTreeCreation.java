@@ -19,6 +19,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.manual.hgTreeCreation.CLevelTreeNode;
 import eu.apenet.dashboard.services.ead.CreateEadTask;
 import eu.apenet.dashboard.services.ead.xml.AbstractParser;
+import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.CLevel;
@@ -251,8 +252,23 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
         writer.writeEndElement();
         writer.writeEndElement();
         writer.writeEndElement();
+        
+        qName = new QName(AbstractParser.APENET_EAD, "revisiondesc");
+        writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
+        qName = new QName(AbstractParser.APENET_EAD, "change");
+        writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
+        qName = new QName(AbstractParser.APENET_EAD, "date");
+        writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
         writer.writeEndElement();
-
+        qName = new QName(AbstractParser.APENET_EAD, "item");
+        writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
+        writer.writeCharacters(TransformationTool.getFullVersion());
+        writer.writeEndElement();
+        writer.writeEndElement();
+        writer.writeEndElement();
+        
+        writer.writeEndElement();
+        
         qName = new QName(AbstractParser.APENET_EAD, "archdesc");
         writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
         writer.writeAttribute("level", "fonds");
