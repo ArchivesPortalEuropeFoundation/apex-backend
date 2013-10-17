@@ -98,28 +98,29 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 		if (StringUtils.isNotBlank(parentCLevelId)){
 			parentCLevelIdLong = Long.parseLong(parentCLevelId);
 		}
+		EadSearchOptions eadSearchOptions = (EadSearchOptions)getServletRequest().getSession()
+				.getAttribute(ContentManagerAction.EAD_SEARCH_OPTIONS);
 		if (StringUtils.isBlank(batchItems)){
-			LinkingService.addFindingaidToHgOrSg(Integer.parseInt(id), getAiId(), ecIdLong, parentCLevelIdLong, selectPrefixMethod);
+			LinkingService.addFindingaidsToHgOrSg(eadSearchOptions,Integer.parseInt(id), ecIdLong, parentCLevelIdLong, selectPrefixMethod);
 		}else {
+
 			if (BatchEadActions.SELECTED_ITEMS.equals(batchItems)) {
 
 				@SuppressWarnings("unchecked")
 				List<Integer> ids = (List<Integer>) getServletRequest().getSession().getAttribute(
 						AjaxControllerAbstractAction.LIST_IDS);
 				if (ids != null) {
-					LinkingService.addFindingaidsToHgOrSg(ids, getAiId(), ecIdLong, parentCLevelIdLong, selectPrefixMethod);
+					LinkingService.addFindingaidsToHgOrSg(eadSearchOptions, ids, ecIdLong, parentCLevelIdLong, selectPrefixMethod);
 					return SUCCESS;
 				} else {
 					return ERROR;
 				}
 
 			} else if (BatchEadActions.SEARCHED_ITEMS.equals(batchItems)) {
-				EadSearchOptions eadSearchOptions = (EadSearchOptions)getServletRequest().getSession()
-						.getAttribute(ContentManagerAction.EAD_SEARCH_OPTIONS);
 				LinkingService.addFindingaidsToHgOrSg(eadSearchOptions, ecIdLong, parentCLevelIdLong, selectPrefixMethod);
 				return SUCCESS;
 			} else {
-				LinkingService.addFindingaidsToHgOrSg(ecIdLong, parentCLevelIdLong, selectPrefixMethod);
+				LinkingService.addFindingaidsToHgOrSg(getAiId(), ecIdLong, parentCLevelIdLong, selectPrefixMethod);
 				return SUCCESS;
 			}
 		}
@@ -129,28 +130,29 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 		Long ecIdLong = Long.parseLong(ecId);
 		List<Ead> findingAids = null;
 		long totalNumberOfFindingAids = 0;
+		EadSearchOptions eadSearchOptions = (EadSearchOptions)getServletRequest().getSession()
+				.getAttribute(ContentManagerAction.EAD_SEARCH_OPTIONS);
 		if (StringUtils.isBlank(batchItems)){
-			findingAids = LinkingService.getFindingaidsToLinkToHgOrSg(Integer.parseInt(id), getAiId(), ecIdLong);
-			totalNumberOfFindingAids = LinkingService.countFindingaidsToLinkToHgOrSg(Integer.parseInt(id), getAiId(), ecIdLong);
+			findingAids = LinkingService.getFindingaidsToLinkToHgOrSg(eadSearchOptions,Integer.parseInt(id), ecIdLong);
+			totalNumberOfFindingAids = LinkingService.countFindingaidsToLinkToHgOrSg(eadSearchOptions,Integer.parseInt(id), ecIdLong);
 		}else {
+
 			if (BatchEadActions.SELECTED_ITEMS.equals(batchItems)) {
 				@SuppressWarnings("unchecked")
 				List<Integer> ids = (List<Integer>) getServletRequest().getSession().getAttribute(
 						AjaxControllerAbstractAction.LIST_IDS);
 				if (ids != null) {
-					findingAids = LinkingService.getFindingaidsToLinkToHgOrSg(ids, getAiId(), ecIdLong);
-					totalNumberOfFindingAids = LinkingService.countFindingaidsToLinkToHgOrSg(ids, getAiId(), ecIdLong);
+					findingAids = LinkingService.getFindingaidsToLinkToHgOrSg(eadSearchOptions,ids, ecIdLong);
+					totalNumberOfFindingAids = LinkingService.countFindingaidsToLinkToHgOrSg(eadSearchOptions,ids, ecIdLong);
 				} else {
 				}
 
 			} else if (BatchEadActions.SEARCHED_ITEMS.equals(batchItems)) {
-				EadSearchOptions eadSearchOptions = (EadSearchOptions)getServletRequest().getSession()
-						.getAttribute(ContentManagerAction.EAD_SEARCH_OPTIONS);
 				findingAids = LinkingService.getFindingaidsToLinkToHgOrSg(eadSearchOptions, ecIdLong);
 				totalNumberOfFindingAids = LinkingService.countFindingaidsToLinkToHgOrSg(eadSearchOptions, ecIdLong);
 			} else {
-				findingAids = LinkingService.getFindingaidsToLinkToHgOrSg(ecIdLong);
-				totalNumberOfFindingAids = LinkingService.countFindingaidsToLinkToHgOrSg(ecIdLong);
+				findingAids = LinkingService.getFindingaidsToLinkToHgOrSg(getAiId(), ecIdLong);
+				totalNumberOfFindingAids = LinkingService.countFindingaidsToLinkToHgOrSg(getAiId(), ecIdLong);
 			}
 		}
 		getServletRequest().setAttribute("findingAids", findingAids);
