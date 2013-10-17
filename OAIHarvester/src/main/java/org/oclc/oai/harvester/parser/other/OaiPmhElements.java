@@ -10,27 +10,35 @@ import java.util.List;
  * @author Yoann Moranville
  */
 public class OaiPmhElements {
-    private List<String> sets;
-    private List<String> metadataFormats;
+    private List<String> elements;
+    private List<String> errors;
+    private String resumptionToken;
 
     public OaiPmhElements() {
-        this.sets = new ArrayList<String>();
-        this.metadataFormats = new ArrayList<String>();
+        this.elements = new ArrayList<String>();
     }
 
-    public List<String> getSets() {
-        return sets;
+    public List<String> getElements() {
+        return elements;
     }
 
-    public void setSets(List<String> sets) {
-        this.sets = sets;
+    public void setElements(List<String> elements) {
+        this.elements = elements;
     }
 
-    public List<String> getMetadataFormats() {
-        return metadataFormats;
+    public List<String> getErrors() {
+        return errors;
     }
 
-    public void setMetadataFormats(List<String> metadataFormats) {
-        this.metadataFormats = metadataFormats;
+    public void setErrors(List<String> errors) {
+        this.errors = errors;
+    }
+
+    public String getResumptionToken() {
+        return resumptionToken;
+    }
+
+    public void setResumptionToken(String resumptionToken) {
+        this.resumptionToken = resumptionToken;
     }
 }

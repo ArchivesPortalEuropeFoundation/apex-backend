@@ -5,6 +5,7 @@ import org.oclc.oai.harvester.parser.other.OaiPmhElements;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.util.LinkedList;
 
@@ -15,13 +16,13 @@ import java.util.LinkedList;
  * @author Yoann Moranville
  */
 public class OaiPmhMetadataFormatParser extends OaiPmhMemoryParser {
-    public static final QName METADATA_PREFIX = new QName(OAI_PMH, "metadataPrefix");
+    private static final QName METADATA_PREFIX = new QName(OAI_PMH, "metadataPrefix");
 
     public OaiPmhMetadataFormatParser() {
         super();
     }
 
-    public OaiPmhElements parse(XMLStreamReader xmlReader) throws Exception {
+    public OaiPmhElements parse(XMLStreamReader xmlReader) throws XMLStreamException {
         LinkedList<QName> path = new LinkedList<QName>();
         OaiPmhElements elements = new OaiPmhElements();
         boolean foundEndElement = false;
@@ -33,7 +34,9 @@ public class OaiPmhMetadataFormatParser extends OaiPmhMemoryParser {
                 add(path, lastElement);
             } else if (event == XMLStreamConstants.CHARACTERS) {
                 if (METADATA_PREFIX.equals(lastElement)) {
-                    elements.getMetadataFormats().add(xmlReader.getText());
+                    elements.getElements().add(xmlReader.getText());
+                } else if (RESUMPTION_TOKEN.equals(lastElement)) {
+                    elements.setResumptionToken(xmlReader.getText());
                 }
             } else if (event == XMLStreamConstants.END_ELEMENT) {
                 QName elementName = xmlReader.getName();

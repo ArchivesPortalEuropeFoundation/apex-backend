@@ -5,13 +5,16 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
+import org.oclc.oai.harvester.parser.other.OaiPmhElements;
 import org.oclc.oai.harvester.parser.other.OaiPmhMemoryParser;
 import org.oclc.oai.harvester.parser.other.metadata.OaiPmhMetadataFormatParser;
 import org.oclc.oai.harvester.parser.other.set.OaiPmhSetParser;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.TransformerException;
 import java.io.*;
 import java.util.ArrayList;
@@ -26,25 +29,24 @@ import java.util.zip.ZipInputStream;
  *
  * @author Yoann Moranville
  */
-public class HarvesterVerbSaxMemory {
+public abstract class HarvesterVerbSaxMemory {
     private static final Logger LOG = Logger.getLogger(HarvesterVerbSaxMemory.class);
-    private static final String SET = "SET";
-    private static final String METADATA_FORMAT = "METADATA_FORMAT";
+    public static final String SET = "SET";
+    public static final String METADATA_FORMAT = "METADATA_FORMAT";
 
-    private InputStream responseStream = null;
-    private OaiPmhMemoryParser oaiPmhMemoryParser = null;
-    private String resultString;
-    private String schemaLocation = null;
+//    private OaiPmhMemoryParser oaiPmhMemoryParser = null;
     private String requestURL = null;
     private HttpClient httpClient = new HttpClient();
-    private List<String> results;
+//    private List<String> results;
 
-    public HarvesterVerbSaxMemory(String requestURL, String type) throws IOException, ParserConfigurationException, SAXException, TransformerException, XMLStreamException {
-        results = new ArrayList<String>();
-        harvest(requestURL, type);
-    }
+//    public HarvesterVerbSaxMemory() {
+//        results = new ArrayList<String>();
+//    }
 
-    public void harvest(String requestURL, String type) throws IOException, ParserConfigurationException, SAXException, TransformerException, XMLStreamException {
+    public abstract OaiPmhElements run(String baseURL) throws TransformerException, XMLStreamException, IOException, SAXException;
+    public abstract OaiPmhElements run(String baseURL, String resumptionToken) throws TransformerException, XMLStreamException, IOException, SAXException;
+
+    public OaiPmhElements harvest(String requestURL, String type) throws IOException, SAXException, TransformerException, XMLStreamException {
         this.requestURL = requestURL;
         LOG.debug("requestURL=" + requestURL);
         GetMethod getMethod = new GetMethod(requestURL);
@@ -54,7 +56,7 @@ public class HarvesterVerbSaxMemory {
         if (httpStatus != HttpStatus.SC_OK) {
             if (httpStatus == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                 LOG.info("Error HTTP response: " + httpStatus + " but we will try to continue...");
-                return;
+                return null;
             }
             throw new IOException("HTTP response: " + HttpStatus.getStatusText(httpStatus));
         }
@@ -73,45 +75,18 @@ public class HarvesterVerbSaxMemory {
         else if ("deflate".equals(contentEncoding)) {
             response = new InflaterInputStream(response);
         }
-
-//        OutputStream outputStream = new FileOutputStream(fileOut);
-//        outputStream.write(IOUtils.toByteArray(response));
-//        outputStream.write("\n".getBytes("UTF-8"));
-//        outputStream.close();
-//
-//        response = FileUtils.openInputStream(fileOut);
-        if(type.equals(SET)) {
+        OaiPmhMemoryParser oaiPmhMemoryParser;
+        if(type.equals(METADATA_FORMAT)) {
             oaiPmhMemoryParser = new OaiPmhMetadataFormatParser();
         } else {
             oaiPmhMemoryParser = new OaiPmhSetParser();
         }
-    }
 
-    /**
-     * Get the OAI response as a DOM object
-     *
-     * @return the DOM for the OAI response
-     */
-    public InputStream getResponseStream() {
-        return responseStream;
+        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(response, "UTF-8");
+        OaiPmhElements oaiPmhElements = oaiPmhMemoryParser.parse(xmlStreamReader);
+        return oaiPmhElements;
     }
-
-    /**
-     * Get the xsi:schemaLocation for the OAI response
-     *
-     * @return the xsi:schemaLocation value
-     */
-    public String getSchemaLocation() {
-        return schemaLocation;
-    }
-
-//    public List<String> getErrors() throws TransformerException {
-//        return oaiStaxParser.getErrors();
-//    }
-//
-//    public String getResumptionToken() {
-//        return oaiStaxParser.getResumptionToken();
-//    }
 
     public String getRequestURL() {
         return requestURL;

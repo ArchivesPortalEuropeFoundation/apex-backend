@@ -1,5 +1,21 @@
 package org.oclc.oai.harvester.app;
 
+import org.oclc.oai.harvester.parser.other.OaiPmhElements;
+import org.oclc.oai.harvester.parser.other.OaiPmhMemoryParser;
+import org.oclc.oai.harvester.parser.record.OaiPmhParser;
+import org.oclc.oai.harvester.parser.record.OaiPmhRecord;
+import org.oclc.oai.harvester.parser.record.ResultInfo;
+import org.oclc.oai.harvester.verb.HarvesterVerbSaxMemory;
+import org.oclc.oai.harvester.verb.ListMetadataFormatsSax;
+import org.oclc.oai.harvester.verb.ListRecordsSaxWriteDirectly;
+import org.oclc.oai.harvester.verb.ListSetsSax;
+import org.xml.sax.SAXException;
+
+import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.TransformerException;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,11 +29,34 @@ import java.util.List;
  * - set(s) from url
  */
 public class RetrieveOaiPmhInformation {
-    public List<String> retrieveMetadataFormats(String url) {
-        return null;
+    public static List<String> retrieveMetadataFormats(String baseURL) throws TransformerException, XMLStreamException, IOException, SAXException {
+        return retrieveElements(baseURL, HarvesterVerbSaxMemory.METADATA_FORMAT);
     }
 
-    public List<String> retrieveSets(String url) {
-        return null;
+    public static List<String> retrieveSets(String baseURL) throws TransformerException, XMLStreamException, IOException, SAXException {
+        return retrieveElements(baseURL, HarvesterVerbSaxMemory.SET);
+    }
+
+    public static List<String> retrieveElements(String baseURL, String type) throws TransformerException, XMLStreamException, IOException, SAXException {
+        List<String> definitiveResults = new ArrayList<String>();
+
+        HarvesterVerbSaxMemory harvesterVerbSaxMemory;
+        if(type.equals(HarvesterVerbSaxMemory.SET)) {
+            harvesterVerbSaxMemory = new ListSetsSax();
+        } else {
+            harvesterVerbSaxMemory = new ListMetadataFormatsSax();
+        }
+
+        OaiPmhElements oaiPmhElements = harvesterVerbSaxMemory.run(baseURL);
+
+        while(oaiPmhElements.getElements() != null && !oaiPmhElements.getElements().isEmpty()) {
+            definitiveResults.addAll(oaiPmhElements.getElements());
+            if (oaiPmhElements.getResumptionToken() == null || oaiPmhElements.getResumptionToken().length() == 0) {
+                oaiPmhElements.setElements(null);
+            } else {
+                oaiPmhElements = harvesterVerbSaxMemory.run(baseURL, oaiPmhElements.getResumptionToken());
+            }
+        }
+        return definitiveResults;
     }
 }
