@@ -28,7 +28,7 @@ import java.util.List;
  * - metadataPrefix(es) from url
  * - set(s) from url
  */
-public class RetrieveOaiPmhInformation {
+public abstract class RetrieveOaiPmhInformation {
     public static List<String> retrieveMetadataFormats(String baseURL) throws TransformerException, XMLStreamException, IOException, SAXException {
         return retrieveElements(baseURL, HarvesterVerbSaxMemory.METADATA_FORMAT);
     }
@@ -37,7 +37,7 @@ public class RetrieveOaiPmhInformation {
         return retrieveElements(baseURL, HarvesterVerbSaxMemory.SET);
     }
 
-    public static List<String> retrieveElements(String baseURL, String type) throws TransformerException, XMLStreamException, IOException, SAXException {
+    private static List<String> retrieveElements(String baseURL, String type) throws TransformerException, XMLStreamException, IOException, SAXException {
         List<String> definitiveResults = new ArrayList<String>();
 
         HarvesterVerbSaxMemory harvesterVerbSaxMemory;

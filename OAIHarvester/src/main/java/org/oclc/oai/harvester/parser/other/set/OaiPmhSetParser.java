@@ -34,7 +34,7 @@ public class OaiPmhSetParser extends OaiPmhMemoryParser {
                 add(path, lastElement);
             } else if (event == XMLStreamConstants.CHARACTERS) {
                 if (SET_SPEC_PREFIX.equals(lastElement)) {
-                    elements.getSets().add(xmlReader.getText());
+                    elements.getElements().add(xmlReader.getText());
                 } else if (RESUMPTION_TOKEN.equals(lastElement)) {
                     elements.setResumptionToken(xmlReader.getText());
                 }
