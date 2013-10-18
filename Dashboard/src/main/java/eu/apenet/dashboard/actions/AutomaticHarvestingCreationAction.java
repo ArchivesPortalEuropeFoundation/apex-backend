@@ -1,6 +1,7 @@
 package eu.apenet.dashboard.actions;
 
 import com.opensymphony.xwork2.ActionSupport;
+import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.dashboard.listener.Duration;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
@@ -44,6 +45,12 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
 
     public String execute() throws Exception {
         step = 0;
+        int partnerId = SecurityContext.get().getPartnerId();
+        userProfiles = DAOFactory.instance().getUserprofileDAO().getUserprofiles(partnerId);
+        if(userProfiles.size() < 1) {
+            addActionError("You need at least one user profile created before creating an automatic OAI-PMH profile");
+            return ERROR;
+        }
         int archivalInstitutionId = SecurityContext.get().getSelectedInstitution().getId();
         ArchivalInstitutionOaiPmhDAO archivalInstitutionOaiPmhDAO = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
         archivalInstitutionOaiPmhs = archivalInstitutionOaiPmhDAO.getArchivalInstitutionOaiPmhs(archivalInstitutionId);
@@ -51,39 +58,56 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
         return SUCCESS;
     }
 
-    public String getMetadataPrefixesAndSetsFromUrl() throws Exception {
-        if(getOaiprofiles() != null) {
-            step = 1;
-            if(getOaiprofiles() != -1) {
-                //We go for edition and not addition...
-            }
-            return SUCCESS;
-        } else if(getUrl() != null) {
-            if(getSelectedMetadataFormat() == null) {
-                step = 2;
-                int partnerId = SecurityContext.get().getPartnerId();
+    public String page2() throws Exception {
+        step = 1;
+        if(getOaiprofiles() != -1) {
+            //We go for edition and not addition...
+            Long oaiProfileId = getOaiprofiles().longValue();
+            ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().findById(oaiProfileId);
+            setUrl(archivalInstitutionOaiPmh.getUrl());
+        }
+        return SUCCESS;
+    }
+
+    public String page3() throws Exception {
+        if(getUrl() != null) {
+            step = 2;
+            int partnerId = SecurityContext.get().getPartnerId();
+            try {
                 metadataFormats = RetrieveOaiPmhInformation.retrieveMetadataFormats(getUrl());
-                sets = RetrieveOaiPmhInformation.retrieveSets(getUrl());
-                userProfiles = DAOFactory.instance().getUserprofileDAO().getUserprofiles(partnerId);
-                intervals = new ArrayList<Interval>(3);
-                intervals.add(new Interval(1, INTERVAL_1_MONTH));
-                intervals.add(new Interval(3, INTERVAL_3_MONTH));
-                intervals.add(new Interval(6, INTERVAL_6_MONTH));
-            } else {
-                step = 3;
-                int archivalInstitutionId = SecurityContext.get().getSelectedInstitution().getId();
-                String intervalHarvest = getIntervalHarvest();
-                ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = new ArchivalInstitutionOaiPmh(archivalInstitutionId, getUrl(), getSelectedMetadataFormat(), Long.parseLong(selectedUserProfile+""), Long.parseLong(intervalHarvest));
-                if(getSelectedSet() != null) {
-                    archivalInstitutionOaiPmh.setSet(getSelectedSet());
-                }
-                JpaUtil.beginDatabaseTransaction();
-                DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().store(archivalInstitutionOaiPmh);
-                JpaUtil.commitDatabaseTransaction();
+                if(metadataFormats == null || metadataFormats.isEmpty())
+                    throw new APEnetException("No metadata formats for this URL: " + getUrl());
+            } catch (Exception e) {
+                addActionError("Sorry, the URL is not a correct repository URL or the repository does not contain any metadata formats...");
+                return ERROR;
             }
+            sets = RetrieveOaiPmhInformation.retrieveSets(getUrl());
+            userProfiles = DAOFactory.instance().getUserprofileDAO().getUserprofiles(partnerId);
+            intervals = new ArrayList<Interval>(3);
+            intervals.add(new Interval(1, INTERVAL_1_MONTH));
+            intervals.add(new Interval(3, INTERVAL_3_MONTH));
+            intervals.add(new Interval(6, INTERVAL_6_MONTH));
             return SUCCESS;
-        } else {
-            addFieldError("url", getText("harvest.automatic.creation.wrongurl"));
+        }
+        addActionError("Sorry, you need to input an URL.");
+        return ERROR;
+    }
+
+    public String saveProfile() throws Exception {
+        try {
+            step = 3;
+            int archivalInstitutionId = SecurityContext.get().getSelectedInstitution().getId();
+            String intervalHarvest = getIntervalHarvest();
+            ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = new ArchivalInstitutionOaiPmh(archivalInstitutionId, getUrl(), getSelectedMetadataFormat(), Long.parseLong(selectedUserProfile+""), Long.parseLong(intervalHarvest));
+            if(getSelectedSet() != null) {
+                archivalInstitutionOaiPmh.setSet(getSelectedSet());
+            }
+            JpaUtil.beginDatabaseTransaction();
+            DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().store(archivalInstitutionOaiPmh);
+            JpaUtil.commitDatabaseTransaction();
+            return SUCCESS;
+        } catch (Exception e) {
+            addActionError("Could not save your new profile, please contact an administrator.");
             return ERROR;
         }
     }

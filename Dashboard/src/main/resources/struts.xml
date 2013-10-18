@@ -1006,10 +1006,21 @@
         <action name="automaticharvestingcreation" class="eu.apenet.dashboard.actions.AutomaticHarvestingCreationAction">
             <interceptor-ref name="changeLanguageStack"/>
             <result name="success" type="tiles">automaticharvestingcreation</result>
+            <result name="error">/jsp/templates/blank.jsp</result>
         </action>
-        <action name="harvestingsetsandmetadata" class="eu.apenet.dashboard.actions.AutomaticHarvestingCreationAction" method="getMetadataPrefixesAndSetsFromUrl">
+        <action name="automaticharvestingcreationpage2" class="eu.apenet.dashboard.actions.AutomaticHarvestingCreationAction" method="page2">
             <interceptor-ref name="changeLanguageStack"/>
             <result name="success" type="tiles">automaticharvestingcreation</result>
+        </action>
+        <action name="automaticharvestingcreationpage3" class="eu.apenet.dashboard.actions.AutomaticHarvestingCreationAction" method="page3">
+            <interceptor-ref name="changeLanguageStack"/>
+            <result name="success" type="tiles">automaticharvestingcreation</result>
+            <result name="error">/jsp/templates/blank.jsp</result>
+        </action>
+        <action name="automaticharvestingcreationsave" class="eu.apenet.dashboard.actions.AutomaticHarvestingCreationAction" method="saveProfile">
+            <interceptor-ref name="changeLanguageStack"/>
+            <result name="success" type="tiles">automaticharvestingcreation</result>
+            <result name="error">/jsp/templates/blank.jsp</result>
         </action>
     </package>
 </struts>

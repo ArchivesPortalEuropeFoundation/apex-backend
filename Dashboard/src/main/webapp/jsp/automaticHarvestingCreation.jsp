@@ -3,11 +3,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <div align="middle">
-    <form action="harvestingsetsandmetadata.action" method="POST">
-        <s:actionerror />
+    <s:actionerror />
 
-        <c:choose>
-            <c:when test="${step == 0}">
+    <c:choose>
+        <c:when test="${step == 0}">
+            <form action="automaticharvestingcreationpage2.action" method="POST">
                 <label for="oaiprofiles">
                     <s:property value="getText('label.harvesting.currentoaipmhprofiles')"/>
                 </label>
@@ -17,14 +17,22 @@
                         <option value="${archivalInstitutionOaiPmh.id}">${archivalInstitutionOaiPmh.url} (${archivalInstitutionOaiPmh.set} - ${archivalInstitutionOaiPmh.metadataPrefix})</option>
                     </c:forEach>
                 </select>
-            </c:when>
-            <c:when test="${step == 1}">
+                <br />
+                <input type="submit" value="<s:property value="getText('label.ok')"/>"/>
+            </form>
+        </c:when>
+        <c:when test="${step == 1}">
+            <form action="automaticharvestingcreationpage3.action" method="POST">
                 <label for="url">
                     <s:property value="getText('label.harvesting.enterurl')"/>
                 </label>
                 <input type="text" id="url" name="url" size="255"/>
-            </c:when>
-            <c:when test="${step == 2}">
+                <br />
+                <input type="submit" value="<s:property value="getText('label.ok')"/>"/>
+            </form>
+        </c:when>
+        <c:when test="${step == 2}">
+            <form action="automaticharvestingcreationsave.action" method="POST">
                 <input type="hidden" id="url" name="url" value="${url}" size="255"/>
                 <c:if test="${not empty sets}">
                     <label for="sets">
@@ -63,15 +71,12 @@
                         <option value="${userProfile.id}">${userProfile.nameProfile}</option>
                     </c:forEach>
                 </select>
-            </c:when>
-            <c:when test="${step == 3}">
-                <s:property value="getText('label.harvesting.congratulations')"/>
-            </c:when>
-        </c:choose>
-
-        <c:if test="${step != 3}">
-            <br />
-            <input type="submit" value="<s:property value="getText('label.ok')"/>"/>
-        </c:if>
-    </form>
+                <br />
+                <input type="submit" value="<s:property value="getText('label.ok')"/>"/>
+            </form>
+        </c:when>
+        <c:when test="${step == 3}">
+            <s:property value="getText('label.harvesting.congratulations')"/>
+        </c:when>
+    </c:choose>
 </div>
