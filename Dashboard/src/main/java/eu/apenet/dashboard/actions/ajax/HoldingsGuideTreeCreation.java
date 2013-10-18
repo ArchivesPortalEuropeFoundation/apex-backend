@@ -28,7 +28,6 @@ import eu.apenet.persistence.vo.EadContent;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.UploadMethod;
 import eu.apenet.persistence.vo.ValidatedState;
-import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 /**
  * User: Yoann Moranville
@@ -83,9 +82,8 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
             CLevelTreeNode levelTreeNode = createCLevelTreeNode();
             levelTreeNode.setUnitid(eadid);
             StringWriter eadContentXml = createEadContentData(archivalInstitution, levelTreeNode);
-            JpaUtil.beginDatabaseTransaction();
             EadContent eadContent;
-            if(StringUtils.isEmpty(getServletRequest().getParameter("dataToEdit"))){
+            if(StringUtils.isEmpty(getServletRequest().getParameter("key"))){
             	Ead holdingsGuide = new HoldingsGuide();
 
             	holdingsGuide.setEadid(eadid);
@@ -108,20 +106,24 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
                 eadContent.setUnittitle(levelTreeNode.getUnittitle());
                 eadContent.setXml(eadContentXml.toString());
             } else { //We just edit the one with DB ID is key
-                LOG.info("Edit key: " + getServletRequest().getParameter("key"));
                 String fullStr = getServletRequest().getParameter("key");
                 String keyString = fullStr.substring(3);
 
                 eadContent = DAOFactory.instance().getEadContentDAO().findById(Long.parseLong(keyString));
+                Ead ead = eadContent.getEad();
                 if(!eadContent.getTitleproper().equals(levelTreeNode.getUnittitle()))
                     eadContent.setTitleproper(levelTreeNode.getUnittitle());
-                if(!eadContent.getUnittitle().equals(levelTreeNode.getUnittitle()))
-                    eadContent.setUnittitle(levelTreeNode.getUnittitle());
+                if(!eadContent.getUnittitle().equals(levelTreeNode.getUnittitle())){
+                	eadContent.setUnittitle(levelTreeNode.getUnittitle());
+                	ead.setTitle(levelTreeNode.getUnittitle());
+                }
+                    
                 if(!eadContent.getXml().equals(eadContentXml.toString()))
                     eadContent.setXml(eadContentXml.toString());
             }
 
-
+            
+            
            
             eadContent = DAOFactory.instance().getEadContentDAO().store(eadContent);
             String eadContentNewId = "ec_" + eadContent.getEcId();
@@ -158,13 +160,15 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
             String type = fullStr.substring(0, 2);
 
             CLevel cLevel;
-            if(StringUtils.isEmpty(getServletRequest().getParameter("dataToEdit"))){ //If empty then it is a new to create (new CLEVEL)
+            boolean addLevel = StringUtils.isEmpty(getServletRequest().getParameter("key"));
+            if(addLevel){ 
+            	//If empty then it is a new to create (new CLEVEL)
                 cLevel = createDummyCLevel();
                 cLevel.setXml(cLevelXml.toString());
                 cLevel.setUnitid(levelTreeNode.getUnitid());
                 cLevel.setUnittitle(levelTreeNode.getUnittitle());
-            } else { //We just edit the one with DB ID is key
-                LOG.info("Edit key: " + getServletRequest().getParameter("key"));
+
+            } else { 
                 fullStr = getServletRequest().getParameter("key");
                 String keyString = fullStr.substring(3);
 
@@ -179,15 +183,18 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
 
             if(type.equals(TYPE_C_LEVEL)){
                 Long ecId = DAOFactory.instance().getCLevelDAO().findById(Long.parseLong(parentId)).getEcId();
-                Long sizeChildren = DAOFactory.instance().getCLevelDAO().countChildCLevels(Long.parseLong(parentId));
-
                 cLevel.setEcId(ecId);
                 cLevel.setParentClId(Long.parseLong(parentId));
-                cLevel.setOrderId(sizeChildren.intValue());
+                if (addLevel){
+	                Long sizeChildren = DAOFactory.instance().getCLevelDAO().countChildCLevels(Long.parseLong(parentId));
+	                cLevel.setOrderId(sizeChildren.intValue());
+                }
             } else if(type.equals(TYPE_EAD_CONTENT)){
                 cLevel.setEcId(Long.parseLong(parentId));
-                Long sizeChildren = DAOFactory.instance().getCLevelDAO().countTopCLevels(Long.parseLong(parentId));
-                cLevel.setOrderId(sizeChildren.intValue());
+                if (addLevel){
+                	Long sizeChildren = DAOFactory.instance().getCLevelDAO().countTopCLevels(Long.parseLong(parentId));
+                	cLevel.setOrderId(sizeChildren.intValue());
+                }
             }
 
             cLevel = DAOFactory.instance().getCLevelDAO().store(cLevel);

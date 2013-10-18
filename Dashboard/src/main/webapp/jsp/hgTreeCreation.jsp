@@ -119,10 +119,15 @@
 
         $("#editBtnSave").click(function(){
             $(this).unbind('click');
+            var params = {name: $("#editTitle").val(), identifier: $("#editIdentifier").val(), desc: $("#editDesc").val()};
+            if (!isAddedLevel){
+            	params["key"]=node.data.key;
+            }
             if(isForEadContent(node.data.key)){
                 $("#waitImg").css("display", "inline");
                 $("#editBtnSave").css("display", "none");
-                $.post("${pageContext.request.contextPath}/addEadContentData.action", {name: $("#editTitle").val(), identifier: $("#editIdentifier").val(), desc: $("#editDesc").val(), key: node.data.key}, function(databack){
+                
+                $.post("${pageContext.request.contextPath}/addEadContentData.action", params , function(databack){
                     if(databack.success){
                         $("#waitImg").css("display", "none");
                         node.data.identifier = $("#editIdentifier").val();
@@ -137,7 +142,8 @@
             } else {
                 $("#waitImg").css("display", "inline");
                 $("#editBtnSave").css("display", "none");
-                $.post("${pageContext.request.contextPath}/addCLevelData.action", {name: $("#editTitle").val(), identifier: $("#editIdentifier").val(), desc: $("#editDesc").val(), key: node.data.key, parentId: node.parent.data.key}, function(databack){
+                params["parentId"]=node.parent.data.key;
+                $.post("${pageContext.request.contextPath}/addCLevelData.action", params, function(databack){
                     if(databack.success){
                         $("#waitImg").css("display", "none");
                         node.data.identifier = $("#editIdentifier").val();
@@ -210,7 +216,7 @@
                     onLoad:function(){
                         $('#cboxClose').remove();
                         $("#tree").dynatree("getTree").activateKey('ec_0');
-                        createEditPanel($("#tree").dynatree("getActiveNode"), false, false);
+                        createEditPanel($("#tree").dynatree("getActiveNode"), false, true);
                     },
                     onCleanup:function(){
                         bindContextMenu();
