@@ -34,6 +34,8 @@ public class Userprofile implements Serializable {
     private UserprofileDefaultUploadAction uploadAction = UserprofileDefaultUploadAction.CONVERT_VALIDATE_PUBLISH;
     @Column(name = "exist_action")
     private UserprofileDefaultExistingFileAction existAction = UserprofileDefaultExistingFileAction.KEEP;
+    @Column(name = "noeadid_action")
+    private Integer noeadidAction;
     @Column(name = "dao_type")
     private UserprofileDefaultDaoType daoType = UserprofileDefaultDaoType.UNSPECIFIED;
     @Column(name = "europeana_dp")
@@ -112,6 +114,14 @@ public class Userprofile implements Serializable {
 
     public void setExistAction(UserprofileDefaultExistingFileAction existAction) {
         this.existAction = existAction;
+    }
+
+    public Integer getNoeadidAction() {
+        return noeadidAction;
+    }
+
+    public void setNoeadidAction(Integer noeadidAction) {
+        this.noeadidAction = noeadidAction;
     }
 
     public UserprofileDefaultDaoType getDaoType() {
