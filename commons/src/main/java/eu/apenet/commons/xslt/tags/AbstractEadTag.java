@@ -57,7 +57,7 @@ public abstract class AbstractEadTag extends SimpleTagSupport {
 				aiIdInt = Integer.parseInt(aiId);
 			}
 			EadXslt.convertEadToHtml(xsltUrls.get(getType()), this.getJspContext().getOut(), xmlSource, searchTerms,
-					highlightFields, getResourceBundleSource(), secondDisplayUrl, aiIdInt, getSolrStopwordsUrl());
+					highlightFields, getResourceBundleSource(), secondDisplayUrl, aiIdInt, isPreview(), getSolrStopwordsUrl());
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 		}
@@ -67,6 +67,8 @@ public abstract class AbstractEadTag extends SimpleTagSupport {
 	protected abstract ResourceBundleSource getResourceBundleSource();
 
 	protected abstract String getSolrStopwordsUrl();
+	
+	protected abstract boolean isPreview();
 
 	public String getXml() {
 		return xml;
