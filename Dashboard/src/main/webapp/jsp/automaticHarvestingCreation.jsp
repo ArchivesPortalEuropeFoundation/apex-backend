@@ -23,16 +23,18 @@
         </c:when>
         <c:when test="${step == 1}">
             <form action="automaticharvestingcreationpage3.action" method="POST">
+                <input type="hidden" id="oaiprofiles" name="oaiprofiles" value="${oaiprofiles}" />
                 <label for="url">
                     <s:property value="getText('label.harvesting.enterurl')"/>
                 </label>
-                <input type="text" id="url" name="url" size="255"/>
+                <input type="text" id="url" name="url" size="255" value="${url}"/>
                 <br />
                 <input type="submit" value="<s:property value="getText('label.ok')"/>"/>
             </form>
         </c:when>
         <c:when test="${step == 2}">
             <form action="automaticharvestingcreationsave.action" method="POST">
+                <input type="hidden" id="oaiprofiles" name="oaiprofiles" value="${oaiprofiles}" />
                 <input type="hidden" id="url" name="url" value="${url}" size="255"/>
                 <c:if test="${not empty sets}">
                     <label for="sets">
@@ -40,7 +42,7 @@
                     </label>
                     <select name="selectedSet" id="sets">
                         <c:forEach var="set" items="${sets}">
-                            <option value="${set}">${set}</option>
+                            <option value="${set}"<c:if test="${selectedSet == set}"> selected="selected"</c:if>>${set}</option>
                         </c:forEach>
                     </select>
                     <br />
@@ -50,7 +52,7 @@
                 </label>
                 <select name="selectedMetadataFormat" id="metadataFormats">
                     <c:forEach var="metadataFormat" items="${metadataFormats}">
-                        <option value="${metadataFormat}">${metadataFormat}</option>
+                        <option value="${metadataFormat}"<c:if test="${selectedMetadataFormat == metadataFormat}"> selected="selected"</c:if>>${metadataFormat}</option>
                     </c:forEach>
                 </select>
                 <br />
@@ -59,7 +61,7 @@
                 </label>
                 <select name="intervalHarvest" id="intervals">
                     <c:forEach var="interval" items="${intervals}">
-                        <option value="${interval.time}">${interval.months}</option>
+                        <option value="${interval.time}"<c:if test="${intervalHarvest == interval.time}"> selected="selected"</c:if>>${interval.months}</option>
                     </c:forEach>
                 </select>
                 <br />
@@ -68,7 +70,7 @@
                 </label>
                 <select name="selectedUserProfile" id="userProfiles">
                     <c:forEach var="userProfile" items="${userProfiles}">
-                        <option value="${userProfile.id}">${userProfile.nameProfile}</option>
+                        <option value="${userProfile.id}"<c:if test="${selectedUserProfile == userProfile.id}"> selected="selected"</c:if>>${userProfile.nameProfile}</option>
                     </c:forEach>
                 </select>
                 <br />

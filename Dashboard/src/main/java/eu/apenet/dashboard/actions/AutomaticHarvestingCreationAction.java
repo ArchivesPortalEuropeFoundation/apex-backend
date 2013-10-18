@@ -87,6 +87,13 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
             intervals.add(new Interval(1, INTERVAL_1_MONTH));
             intervals.add(new Interval(3, INTERVAL_3_MONTH));
             intervals.add(new Interval(6, INTERVAL_6_MONTH));
+            if(getOaiprofiles() != -1) {
+                ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().findById(getOaiprofiles().longValue());
+                setSelectedSet(archivalInstitutionOaiPmh.getSet());
+                setSelectedMetadataFormat(archivalInstitutionOaiPmh.getMetadataPrefix());
+                setSelectedUserProfile(archivalInstitutionOaiPmh.getProfileId().intValue());
+                setIntervalHarvest(archivalInstitutionOaiPmh.getIntervalHarvesting().toString());
+            }
             return SUCCESS;
         }
         addActionError("Sorry, you need to input an URL.");
@@ -96,11 +103,21 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
     public String saveProfile() throws Exception {
         try {
             step = 3;
-            int archivalInstitutionId = SecurityContext.get().getSelectedInstitution().getId();
-            String intervalHarvest = getIntervalHarvest();
-            ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = new ArchivalInstitutionOaiPmh(archivalInstitutionId, getUrl(), getSelectedMetadataFormat(), Long.parseLong(selectedUserProfile+""), Long.parseLong(intervalHarvest));
-            if(getSelectedSet() != null) {
+            ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh;
+            if(getOaiprofiles() != -1) {
+                archivalInstitutionOaiPmh = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().findById(getOaiprofiles().longValue());
                 archivalInstitutionOaiPmh.setSet(getSelectedSet());
+                archivalInstitutionOaiPmh.setUrl(getUrl());
+                archivalInstitutionOaiPmh.setMetadataPrefix(getSelectedMetadataFormat());
+                archivalInstitutionOaiPmh.setProfileId(getSelectedUserProfile().longValue());
+                archivalInstitutionOaiPmh.setIntervalHarvesting(Long.parseLong(getIntervalHarvest()));
+            } else {
+                int archivalInstitutionId = SecurityContext.get().getSelectedInstitution().getId();
+                String intervalHarvest = getIntervalHarvest();
+                archivalInstitutionOaiPmh = new ArchivalInstitutionOaiPmh(archivalInstitutionId, getUrl(), getSelectedMetadataFormat(), getSelectedUserProfile().longValue(), Long.parseLong(intervalHarvest));
+                if(getSelectedSet() != null) {
+                    archivalInstitutionOaiPmh.setSet(getSelectedSet());
+                }
             }
             JpaUtil.beginDatabaseTransaction();
             DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().store(archivalInstitutionOaiPmh);

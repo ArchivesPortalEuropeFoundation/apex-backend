@@ -16,7 +16,7 @@ import java.util.List;
 public class ArchivalInstitutionOaiPmhJpaDAO extends AbstractHibernateDAO<ArchivalInstitutionOaiPmh, Long> implements ArchivalInstitutionOaiPmhDAO {
     @Override
     public List<ArchivalInstitutionOaiPmh> getArchivalInstitutionOaiPmhs(Integer aiId) {
-        String query = "SELECT archivalInstitutionOaiPmh FROM ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh WHERE archivalInstitutionOaiPmh.aiId  = :aiId ";
+        String query = "SELECT archivalInstitutionOaiPmh FROM ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh WHERE archivalInstitutionOaiPmh.aiId  = :aiId ORDER BY archivalInstitutionOaiPmh.id";
         TypedQuery<ArchivalInstitutionOaiPmh> typedQuery = getEntityManager().createQuery(query, ArchivalInstitutionOaiPmh.class);
         typedQuery.setParameter("aiId", aiId);
         return typedQuery.getResultList();
