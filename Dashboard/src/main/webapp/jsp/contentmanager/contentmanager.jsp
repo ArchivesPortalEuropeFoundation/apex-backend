@@ -83,3 +83,7 @@
 		</div>
 	</div>
 </div>
+
+<c:if test="${errorLinkHgSg}">
+	<jsp:include page="linktohgsgerror.jsp" />
+</c:if>

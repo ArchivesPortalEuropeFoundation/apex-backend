@@ -624,6 +624,10 @@
 		<action name="displayLinkToHgSg" class="eu.apenet.dashboard.actions.content.LinkToHgSgAction" method="input" > 
 			<result name="success" type="tiles">content.linktohgsg</result>
 			<result name="input" type="tiles">content.linktohgsg</result>
+		    <result name="errorLinkHgSg" type="redirectAction">
+				<param name="actionName">contentmanager</param>
+				<param name="errorLinkHgSg">true</param>
+			</result>
 		</action>
 		
 		<action name="displayLinkToHgSgAjax" class="eu.apenet.dashboard.actions.content.LinkToHgSgAction" method="retrieveClevels" > 

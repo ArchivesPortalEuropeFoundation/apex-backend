@@ -59,7 +59,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 	private String searchTermsField;
 	private boolean updateSearchResults = false;
 	private boolean ajax = false;
-
+    private boolean errorLinkHgSg = false;
 	public ContentManagerAction() {}
 
     public void prepareJspLists() {
@@ -461,6 +461,13 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 
 	public void setUpdateSearchResults(boolean updateSearchResults) {
 		this.updateSearchResults = updateSearchResults;
+	}
+    public boolean isErrorLinkHgSg() {
+		return this.errorLinkHgSg;
+	}
+
+	public void setErrorLinkHgSg(boolean errorLinkHgSg) {
+		this.errorLinkHgSg = errorLinkHgSg;
 	}
 
 }

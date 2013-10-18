@@ -72,6 +72,8 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 				clevels.add(new SelectItem(clevel.getClId() +"", clevel.getUnittitle()));
 			}
 			fillFindingAidsInfo();
+		}else{
+			return "errorLinkHgSg";
 		}
 		return SUCCESS;
 	}
