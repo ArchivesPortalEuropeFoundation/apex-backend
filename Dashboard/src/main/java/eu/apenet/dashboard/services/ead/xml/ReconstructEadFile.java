@@ -24,6 +24,11 @@ public class ReconstructEadFile {
         EadCreator eadCreator = null;
         OutputStream outputStream = null;
         try {
+        	File file = new File(filePath);
+        	File parentDir = file.getParentFile();
+        	if (!parentDir.exists()){
+        		parentDir.mkdirs();
+        	}
             outputStream = new FileOutputStream(new File(filePath));
 
             CLevelDAO cLevelDAO = DAOFactory.instance().getCLevelDAO();
