@@ -13,5 +13,6 @@
         <li><a href ="automaticharvestingcreation.action"><s:property value="getText('dashboard.menu.automaticharvestingcreation')" /></a></li>
 		<li><a href ="upload.action"><s:property value="getText('dashboard.menu.uploadcontent')" /></a></li>
 		<li><a href ="checkfilesuploaded.action"><s:property value="getText('dashboard.menu.contentmanager')" /></a></li>
+                <li><br/><a href ="edituserprofiles.action"><s:property value="getText('dashboard.menu.editUserprofiles')" /></a><br/></li>
 	</ul>
 </div>

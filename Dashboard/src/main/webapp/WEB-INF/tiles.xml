@@ -229,6 +229,15 @@
             <add-attribute type="string" value="/js/help.js"/>
         </put-list-attribute>
 	</definition>
+        <definition name="userprofilesMain" extends="dashboardLayout">
+		<put-attribute name="title" value="dashboard.menu.editUserprofiles" />
+		<put-attribute name="body" value="/jsp/userprofiles.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+            <add-attribute type="string" value="/js/httpupload.js"/>
+            <add-attribute type="string" value="/js/breadcrumb.js"/>
+        </put-list-attribute>	
+	</definition>
 				<!-- END DASHBOARD ACTIONS -->	
 	
 				<!-- ARCHIVAL LANDSCAPE ACTIONS -->		
@@ -369,54 +378,54 @@
 		<put-attribute name="body" value="/jsp/view.jsp" />
 	</definition>
 	
-	<definition name="edit" extends="dashboardLayout" >
-		<put-attribute name="title" value="DASHBOARD - Edit" />
-		<put-attribute name="body" value="/jsp/edit.jsp" />	
-	</definition>-->
+    <definition name="edit" extends="dashboardLayout" >
+            <put-attribute name="title" value="DASHBOARD - Edit" />
+            <put-attribute name="body" value="/jsp/edit.jsp" />	
+    </definition>-->
 	
-	<definition name="changeForgetPwd" extends="DefaultLayout" >
-		<put-attribute name="title" value="dashboard.changeforgetpwd.title" />
-		<put-attribute name="body" value="/jsp/changeForgetPwd.jsp" />	
-	</definition>
+    <definition name="changeForgetPwd" extends="DefaultLayout" >
+        <put-attribute name="title" value="dashboard.changeforgetpwd.title" />
+        <put-attribute name="body" value="/jsp/changeForgetPwd.jsp" />	
+    </definition>
 	
-	<definition name="sslrequired" extends="DefaultLayout" >
-		<put-attribute name="title" value="dashboard.sslrequired.title" />
-		<put-attribute name="body" value="/jsp/sslrequired.jsp" />	
-	</definition>
+    <definition name="sslrequired" extends="DefaultLayout" >
+        <put-attribute name="title" value="dashboard.sslrequired.title" />
+        <put-attribute name="body" value="/jsp/sslrequired.jsp" />	
+    </definition>
 		
-	<definition name="exception" extends="DefaultLayout" >
-		<put-attribute name="title" value="dashboard.exception.title" />
-		<put-attribute name="body" value="/jsp/exception.jsp" />	
-	</definition>
+    <definition name="exception" extends="DefaultLayout" >
+        <put-attribute name="title" value="dashboard.exception.title" />
+        <put-attribute name="body" value="/jsp/exception.jsp" />	
+    </definition>
 			
-	<definition name="contact" extends="DefaultLayout" >
-		<put-attribute name="title" value="dashboard.contact.title" />
-		<put-attribute name="body" value="/jsp/contact.jsp" />	
-	</definition>
+    <definition name="contact" extends="DefaultLayout" >
+        <put-attribute name="title" value="dashboard.contact.title" />
+        <put-attribute name="body" value="/jsp/contact.jsp" />	
+    </definition>
 	
-	<definition name="termsOfUse" extends="DefaultLayout" >
-		<put-attribute name="title" value="dashboard.termsofuse.title" />
-		<put-attribute name="body" value="/jsp/termsOfUse.jsp" />	
-	</definition>
+    <definition name="termsOfUse" extends="DefaultLayout" >
+        <put-attribute name="title" value="dashboard.termsofuse.title" />
+        <put-attribute name="body" value="/jsp/termsOfUse.jsp" />	
+    </definition>
 	
-	<definition name="error-500" extends="DefaultLayout" >
-		<put-attribute name="title" value="dashboard.error-500.title" />
-		<put-attribute name="body" value="/jsp/errors/500.jsp" />	
-	</definition>
+    <definition name="error-500" extends="DefaultLayout" >
+        <put-attribute name="title" value="dashboard.error-500.title" />
+        <put-attribute name="body" value="/jsp/errors/500.jsp" />	
+    </definition>
 
-	<definition name="error-404" extends="DefaultLayout" >
-		<put-attribute name="title" value="dashboard.error-404.title" />
-		<put-attribute name="body" value="/jsp/errors/404.jsp" />	
-	</definition>
-	<definition name="error-403" extends="DefaultLayout" >
-		<put-attribute name="title" value="authorization.required.title" />
-		<put-attribute name="body" value="/jsp/errors/403.jsp" />	
-	</definition>
+    <definition name="error-404" extends="DefaultLayout" >
+        <put-attribute name="title" value="dashboard.error-404.title" />
+        <put-attribute name="body" value="/jsp/errors/404.jsp" />	
+    </definition>
+    <definition name="error-403" extends="DefaultLayout" >
+        <put-attribute name="title" value="authorization.required.title" />
+        <put-attribute name="body" value="/jsp/errors/403.jsp" />	
+    </definition>
     <definition name="startpage" extends="DefaultLayout">
         <put-attribute name="title" value="dashboard.startpage.title"/>
         <put-attribute name="body" value="/jsp/startpage.jsp"/>
     </definition>
-			<!-- END LOGIN ACTIONS -->
+    <!-- END LOGIN ACTIONS -->
 
 
 
@@ -426,39 +435,39 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/jquery/jquery-ui-1.8.9.custom.min.js"/>
-	        <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
             <add-attribute type="string" value="/js/jquery/splitter.js"/>
-	        <add-attribute type="string" value="/js/dynatree/jquery.dynatree.js"/>
-	        <add-attribute type="string" value="/js/eadedition.js"/>    
+            <add-attribute type="string" value="/js/dynatree/jquery.dynatree.js"/>
+            <add-attribute type="string" value="/js/eadedition.js"/>    
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>
-             <add-attribute type="string" value="/css/eadedition.css"/>         
+            <add-attribute type="string" value="/css/eadedition.css"/>         
         </put-list-attribute>
     </definition>
 
-	<definition name="ead2ese.convert" extends="DefaultLayout">
-		<put-attribute name="title" value="dashboard.convert.title" />	
-		<put-attribute name="body" value="/jsp/ead2ese/convert.jsp" />	
+    <definition name="ead2ese.convert" extends="DefaultLayout">
+        <put-attribute name="title" value="dashboard.convert.title" />	
+        <put-attribute name="body" value="/jsp/ead2ese/convert.jsp" />	
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/jquery/jquery-ui-1.8.9.custom.min.js"/>
-	        <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
-	        <add-attribute type="string" value="/js/breadcrumb.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
+            <add-attribute type="string" value="/js/breadcrumb.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
- 			<add-attribute type="string" value="/css/creativecommons.css"/>
+            <add-attribute type="string" value="/css/creativecommons.css"/>
         </put-list-attribute>	        
-	</definition>
-	<definition name="content.linktohgsg" extends="DefaultLayout">
-		<put-attribute name="title" value="dashboard.hgcreation.linktohgsg.title" />	
-		<put-attribute name="body" value="/jsp/contentmanager/linktohgsg.jsp" />	
+    </definition>
+    <definition name="content.linktohgsg" extends="DefaultLayout">
+        <put-attribute name="title" value="dashboard.hgcreation.linktohgsg.title" />	
+        <put-attribute name="body" value="/jsp/contentmanager/linktohgsg.jsp" />	
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/linktohgsg.js"/> 
         </put-list-attribute>
        
-	</definition>
+    </definition>
 
     <definition name="hgTreeCreation" extends="DefaultLayout">
         <put-attribute name="title" value="dashboard.hgCreation.title"/>
@@ -466,7 +475,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/jquery/jquery-ui-1.8.9.custom.min.js"/>
-	        <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
+            <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
             <add-attribute type="string" value="/js/dynatree/jquery.dynatree.js"/>
             <add-attribute type="string" value="/js/colorbox/jquery.colorbox-min.js"/>
             <add-attribute type="string" value="/js/hgSgTreeCreation.js"/>            
@@ -484,57 +493,57 @@
         <put-attribute name="body" value="/jsp/automaticHarvestingCreation.jsp" />
     </definition>
     
-    			<!-- END ARCHIVAL LANDSCAPE ACTIONS -->	
+    <!-- END ARCHIVAL LANDSCAPE ACTIONS -->	
 	
-				<!-- ADMIN ACTIONS -->		
-	<definition name="indexAdmin" extends="AdminLayout">
-		<put-attribute name="title" value="dashboard.title" />
-		<put-attribute name="body" value="/jsp/templates/blank.jsp" /> 
-	</definition>
-	<definition name="countryCreation" extends="AdminLayout" >
-		<put-attribute name="title" value="dashboard.countrycreation.title" />
-		<put-attribute name="body" value="/jsp/createCountry.jsp" />	
-	</definition>
+    <!-- ADMIN ACTIONS -->		
+    <definition name="indexAdmin" extends="AdminLayout">
+        <put-attribute name="title" value="dashboard.title" />
+        <put-attribute name="body" value="/jsp/templates/blank.jsp" /> 
+    </definition>
+    <definition name="countryCreation" extends="AdminLayout" >
+        <put-attribute name="title" value="dashboard.countrycreation.title" />
+        <put-attribute name="body" value="/jsp/createCountry.jsp" />	
+    </definition>
 
-	<definition name="countryAltNames" extends="AdminLayout" >
-		<put-attribute name="title" value="dashbaord.countryaltnames.title" />
-		<put-attribute name="body" value="/jsp/createAltCountryNames.jsp" />	
-	</definition>
-	<definition name="languageNames" extends="AdminLayout" >
-		<put-attribute name="title" value="dashboard.languagenames.title" />
-		<put-attribute name="body" value="/jsp/createLang.jsp" />	
-	</definition>
-		<definition name="blank" extends="AdminLayout" >
-		<put-attribute name="body" value="/jsp/templates/blank.jsp" />	
-	</definition>
+    <definition name="countryAltNames" extends="AdminLayout" >
+        <put-attribute name="title" value="dashbaord.countryaltnames.title" />
+        <put-attribute name="body" value="/jsp/createAltCountryNames.jsp" />	
+    </definition>
+    <definition name="languageNames" extends="AdminLayout" >
+        <put-attribute name="title" value="dashboard.languagenames.title" />
+        <put-attribute name="body" value="/jsp/createLang.jsp" />	
+    </definition>
+    <definition name="blank" extends="AdminLayout" >
+        <put-attribute name="body" value="/jsp/templates/blank.jsp" />	
+    </definition>
 
-	<definition name="filesFailed" extends="AdminLayout" >		
-		<put-attribute name="body" value="/jsp/queue/filesFailed.jsp" />		
-	</definition>	
-	<definition name="manageQueue" extends="AdminLayout" >	
-		<put-attribute name="title" value="admin.queuemanagement.title" />	
-		<put-attribute name="body" value="/jsp/queue/managequeue.jsp" />		
-	</definition>	
-	<definition name="sessionManagement" extends="DefaultLayout" >
-		<put-attribute name="title" value="dashboard.sessionmanagement.title" />
-		<put-attribute name="body" value="/jsp/security/sessionmanagement.jsp" />	
-	</definition>	
-	<definition name="userManagement" extends="DefaultLayout" >
-		<put-attribute name="title" value="usermanagement.title" />
-		<put-attribute name="body" value="/jsp/security/usermanagement.jsp" />	
-	</definition>
-	<definition name="institutionManagerManagement" extends="DefaultLayout" >
-		<put-attribute name="title" value="usermanagement.institution.title" />
-		<put-attribute name="body" value="/jsp/security/im-management.jsp" />	
-	</definition>
-	<definition name="createCountryManager" extends="DefaultLayout" >
-		<put-attribute name="title" value="usermanagement.create.countrymanager" />
-		<put-attribute name="body" value="/jsp/security/createCountryManager.jsp" />	
-	</definition>	
-	<definition name="createInstitutionManager" extends="DefaultLayout" >
-		<put-attribute name="title" value="usermanagement.create.institutionmanager" />
-		<put-attribute name="body" value="/jsp/security/createInstitutionManager.jsp" />	
-	</definition>
+    <definition name="filesFailed" extends="AdminLayout" >		
+        <put-attribute name="body" value="/jsp/queue/filesFailed.jsp" />		
+    </definition>	
+    <definition name="manageQueue" extends="AdminLayout" >	
+        <put-attribute name="title" value="admin.queuemanagement.title" />	
+        <put-attribute name="body" value="/jsp/queue/managequeue.jsp" />		
+    </definition>	
+    <definition name="sessionManagement" extends="DefaultLayout" >
+        <put-attribute name="title" value="dashboard.sessionmanagement.title" />
+        <put-attribute name="body" value="/jsp/security/sessionmanagement.jsp" />	
+    </definition>	
+    <definition name="userManagement" extends="DefaultLayout" >
+        <put-attribute name="title" value="usermanagement.title" />
+        <put-attribute name="body" value="/jsp/security/usermanagement.jsp" />	
+    </definition>
+    <definition name="institutionManagerManagement" extends="DefaultLayout" >
+        <put-attribute name="title" value="usermanagement.institution.title" />
+        <put-attribute name="body" value="/jsp/security/im-management.jsp" />	
+    </definition>
+    <definition name="createCountryManager" extends="DefaultLayout" >
+        <put-attribute name="title" value="usermanagement.create.countrymanager" />
+        <put-attribute name="body" value="/jsp/security/createCountryManager.jsp" />	
+    </definition>	
+    <definition name="createInstitutionManager" extends="DefaultLayout" >
+        <put-attribute name="title" value="usermanagement.create.institutionmanager" />
+        <put-attribute name="body" value="/jsp/security/createInstitutionManager.jsp" />	
+    </definition>
     <definition name="dptVersion" extends="DefaultLayout">
         <put-attribute name="title" value="dptversion.title"/>
         <put-attribute name="body" value="/jsp/dptversion.jsp"/>
