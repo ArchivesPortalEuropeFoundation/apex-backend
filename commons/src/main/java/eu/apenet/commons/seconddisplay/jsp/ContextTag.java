@@ -38,23 +38,24 @@ public class ContextTag extends SimpleTagSupport{
 		if (!"true".equals(onlyArchives)){
 			hierarchy.add(eadContent.getTitleproper());
 		}
-		
-		ArchivalInstitution ai  = eadContent.getEad().getArchivalInstitution();
-		while (ai != null){
-			hierarchy.add(ai.getAiname());
-			ai = ai.getParent();
-		}
-		hierarchy.add((String) country);
-		int numberOfWhitespaces = 0;
-		for (int i = hierarchy.size() -1; i >=0;i--){
-			//result.append("<span class=\"contextHierarchyItem\">");
-			for (int j = 0; j < numberOfWhitespaces;j++){
-				result.append("&nbsp;&nbsp;&nbsp;");
+		if (eadContent != null){
+			ArchivalInstitution ai  = eadContent.getEad().getArchivalInstitution();
+			while (ai != null){
+				hierarchy.add(ai.getAiname());
+				ai = ai.getParent();
 			}
-			result.append(hierarchy.get(i));
-			//result.append("</span>");
-			result.append("<br/>");
-			numberOfWhitespaces++;
+			hierarchy.add((String) country);
+			int numberOfWhitespaces = 0;
+			for (int i = hierarchy.size() -1; i >=0;i--){
+				//result.append("<span class=\"contextHierarchyItem\">");
+				for (int j = 0; j < numberOfWhitespaces;j++){
+					result.append("&nbsp;&nbsp;&nbsp;");
+				}
+				result.append(hierarchy.get(i));
+				//result.append("</span>");
+				result.append("<br/>");
+				numberOfWhitespaces++;
+			}
 		}
 		this.getJspContext().getOut().print(result);
 
