@@ -427,6 +427,13 @@ public class ExistingFilesChecker {
 					case XMLEvent.CHARACTERS:
 						if (isInsideElement) {
 							importantData = input.getText();
+							if(importantData!=null && (importantData.isEmpty() || importantData.trim()
+									.replaceAll("[\\s &&[^\\n]] "," ") //1. reduce all non-newline whitespaces to a unique space
+									.replaceAll("(?m)^\\s |\\s$","") //2. remove spaces from start or end of the lines
+									.replaceAll("\\n "," ") //3. remove all newlines, compress it in a unique line))
+									.length()==0)){
+								return "empty";
+							}
 							if (importantData.startsWith(CONVERTED_FLAG) || importantData.startsWith(CONVERTED_FLAG_NEW))
 								return "true";
 							else if(isReturningFirstInstance)
