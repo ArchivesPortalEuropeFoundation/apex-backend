@@ -16,4 +16,10 @@ public class EadTag extends AbstractEadTag {
 		return null;
 	}
 
+	@Override
+	protected boolean isPreview() {
+		return true;
+	}
+
+	
 }
