@@ -62,6 +62,7 @@ public class EAG2012Loader{
 	private String recordId;
 	private String selfRecordId;
 	private String initialAutform;
+	private String initialAutformEscaped;
 	private String autform;
 	private String autformLang;
 	private List<String> idAutform;
@@ -536,6 +537,39 @@ public class EAG2012Loader{
 	 */
 	public void setInitialAutform(String initialAutform) {
 		this.initialAutform = initialAutform;
+	}
+
+	/**
+	 * @return the initialAutformEscaped
+	 */
+	public String getInitialAutformEscaped() {
+		if (this.initialAutformEscaped == null
+				|| this.initialAutformEscaped.isEmpty()) {
+			this.initialAutformEscaped = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getId()).getAiname();
+		}
+		this.initialAutformEscaped = removeDuplicateWhiteSpaces(this.initialAutformEscaped);
+		if(this.initialAutformEscaped.contains("\'")){
+		   this.initialAutformEscaped = this.initialAutformEscaped.replaceAll("\'", "%27");
+		}
+		if(this.initialAutformEscaped.contains("\"")){
+		   this.initialAutformEscaped = this.initialAutformEscaped.replaceAll("\"", "%22");
+		}
+		return this.initialAutformEscaped;
+	}
+
+	/**
+	 * @param initialAutformEscaped the initialAutformEscaped to set
+	 */
+	public void setInitialAutformEscaped(String initialAutformEscaped) {
+		this.initialAutformEscaped = removeDuplicateWhiteSpaces(initialAutformEscaped);
+
+		if(this.initialAutformEscaped.contains("\'")){
+		   this.initialAutformEscaped = this.initialAutformEscaped.replaceAll("\'", "%27");
+		}
+
+		if(this.initialAutformEscaped.contains("\"")){
+		   this.initialAutformEscaped = this.initialAutformEscaped.replaceAll("\"", "%22");
+		}
 	}
 
 	public String getAutform() {
