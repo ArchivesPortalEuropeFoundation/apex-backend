@@ -11,6 +11,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link href="${pageContext.request.contextPath}/css/eadcontent/eadcontent.css" type="text/css" rel="stylesheet" />
+<link href='${pageContext.request.contextPath}/css/global.css' rel='stylesheet' type="text/css" />
 <script src="${pageContext.request.contextPath}/js/jquery/jquery_1.4.2.min.js" type="text/javascript"></script>
 <title>${c.unittitle}</title>
 

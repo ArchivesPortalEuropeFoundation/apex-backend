@@ -48,10 +48,10 @@
 					</td>
 					<td>
 						<s:if test="%{#status.index == 0}">
-							<textarea id="textNameOfTheInstitution" disabled="disabled" onchange="nameOfInstitutionChanged('<s:property value="getText('eag2012.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutform}');"><s:property value="#current" /></textarea>
+							<textarea id="textNameOfTheInstitution" disabled="disabled" onchange="nameOfInstitutionChanged('<s:property value="getText('eag2012.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutformEscaped}');"><s:property value="#current" /></textarea>
 						</s:if>
 						<s:else>
-							<textarea id="textNameOfTheInstitution" onchange="nameOfInstitutionChanged('<s:property value="getText('eag2012.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutform}');"><s:property value="#current" /></textarea>
+							<textarea id="textNameOfTheInstitution" onchange="nameOfInstitutionChanged('<s:property value="getText('eag2012.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutformEscaped}');"><s:property value="#current" /></textarea>
 						</s:else>
 					</td>
 					<td id="tdNameOfTheInstitutionLanguage" class="labelLeft">
@@ -81,7 +81,7 @@
 					<label for="textNameOfTheInstitution"><s:property value="getText('eag2012.commons.nameOfInstitution')" /><span class="required">*</span>:</label>
 				</td>
 				<td>
-					<textarea id="textNameOfTheInstitution" disabled="disabled" onchange="nameOfInstitutionChanged('<s:property value="getText('eag2012.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutform}');"></textarea>
+					<textarea id="textNameOfTheInstitution" disabled="disabled" onchange="nameOfInstitutionChanged('<s:property value="getText('eag2012.commons.errorOnChangeNameOfInstitution')" />', '${loader.initialAutformEscaped}');"></textarea>
 				</td>
 				<td id="tdNameOfTheInstitutionLanguage" class="labelLeft">
 					<label for="noti_languageList"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
