@@ -185,6 +185,12 @@ public class EadSearchOptions implements Serializable{
 		this.ids = ids;
 	}
 
+	public void setId(Integer id) {
+		ids = new ArrayList<Integer>();
+		ids.add(id);
+	}
+
+	
 	public long getFirstResult() {
 		return firstResult;
 	}
