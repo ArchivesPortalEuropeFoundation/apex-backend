@@ -26,8 +26,8 @@ public class EadidCheckerExtension extends ExtensionFunctionDefinition {
 	private static final Logger LOG = Logger.getLogger(EadidCheckerExtension.class);
 	private EadidCheckerCall eadidCheckerCall;
 
-	public EadidCheckerExtension(Integer aiId) {
-		this.eadidCheckerCall = new EadidCheckerCall(aiId);
+	public EadidCheckerExtension(Integer aiId, boolean preview) {
+		this.eadidCheckerCall = new EadidCheckerCall(aiId, preview);
 	}
 
 	@Override
@@ -62,9 +62,11 @@ public class EadidCheckerExtension extends ExtensionFunctionDefinition {
 	class EadidCheckerCall extends ExtensionFunctionCall {
 		private static final long serialVersionUID = 6761914863093344493L;
 		private Integer aiId;
+		private boolean preview;
 
-		public EadidCheckerCall(Integer aiId) {
+		public EadidCheckerCall(Integer aiId, boolean preview) {
 			this.aiId = aiId;
+			this.preview = preview;
 		}
 
 		public SequenceIterator call(SequenceIterator[] arguments, XPathContext context) throws XPathException {
@@ -74,7 +76,11 @@ public class EadidCheckerExtension extends ExtensionFunctionDefinition {
 				if (aiId != null) {
 					EadDAO eadDao = DAOFactory.instance().getEadDAO();
 					if (eadDao.isEadidIndexed(eadid, aiId, FindingAid.class)!= null){
-						value = "indexed";
+						if (preview){
+							value = "indexed-preview";
+						}else {
+							value = "indexed";
+						}
 					}else if (eadDao.isEadidUsed(eadid, aiId, FindingAid.class)!= null){
 						value = "notindexed";
 					}

@@ -56,8 +56,13 @@ public abstract class AbstractEadTag extends SimpleTagSupport {
 			if (StringUtils.isNotBlank(aiId)) {
 				aiIdInt = Integer.parseInt(aiId);
 			}
-			EadXslt.convertEadToHtml(xsltUrls.get(getType()), this.getJspContext().getOut(), xmlSource, searchTerms,
-					highlightFields, getResourceBundleSource(), secondDisplayUrl, aiIdInt, getSolrStopwordsUrl());
+			String xslLocation = xsltUrls.get(getType());
+			if (xslLocation == null){
+				LOG.warn("EAD xsl type does not exist: " + getType());
+			}else {
+				EadXslt.convertEadToHtml(xslLocation, this.getJspContext().getOut(), xmlSource, searchTerms,
+					highlightFields, getResourceBundleSource(), secondDisplayUrl, aiIdInt, isPreview(), getSolrStopwordsUrl());
+			}
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 		}
@@ -67,6 +72,8 @@ public abstract class AbstractEadTag extends SimpleTagSupport {
 	protected abstract ResourceBundleSource getResourceBundleSource();
 
 	protected abstract String getSolrStopwordsUrl();
+	
+	protected abstract boolean isPreview();
 
 	public String getXml() {
 		return xml;

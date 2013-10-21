@@ -195,6 +195,48 @@
 							</xsl:choose>
 						</div>
 					</xsl:when>
+					<xsl:when test="ape:linked($href) = 'indexed-preview'">
+						<xsl:variable name="extref.warning" select="ape:resource('error.user.second.display.indexed.preview')"/>
+						<div class="linkButton">
+							<xsl:choose>
+								<xsl:when test="./@xlink:title and text()">
+									<xsl:variable name="title" select="./@xlink:title" />
+									<xsl:variable name="initTitle" select="ape:resource('seconddisplay.view.fa')" />
+									<a href="javascript:void(0)" onclick="window.alert('{$extref.warning}')" title="{$initTitle} '{$title}'">
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+										<xsl:text> '</xsl:text>
+										<xsl:value-of select="text()" />
+										<xsl:text>' </xsl:text>
+										<span class="icon_new_window"><xsl:text> </xsl:text></span>
+									</a>
+								</xsl:when>
+								<xsl:when test="./@xlink:title">
+									<a href="javascript:void(0)" onclick="window.alert('{$extref.warning}')">
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+										<xsl:text> '</xsl:text>
+										<xsl:value-of select="./@xlink:title" />
+										<xsl:text>' </xsl:text>
+										<span class="icon_new_window"><xsl:text> </xsl:text></span>
+									</a>
+								</xsl:when>
+								<xsl:when test="text()">
+									<a href="javascript:void(0)" onclick="window.alert('{$extref.warning}')">
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+										<xsl:text> '</xsl:text>
+										<xsl:value-of select="text()" />
+										<xsl:text>' </xsl:text>
+										<span class="icon_new_window"><xsl:text> </xsl:text></span>
+									</a>
+								</xsl:when>
+								<xsl:otherwise>
+									<a href="javascript:void(0)" onclick="window.alert('{$extref.warning}')">
+										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
+										<span class="icon_new_window"><xsl:text> </xsl:text></span>
+									</a>
+								</xsl:otherwise>
+							</xsl:choose>
+						</div>
+					</xsl:when>					
 					<xsl:when test="ape:linked($href) = 'notindexed' ">
 						<xsl:variable name="extref.warning" select="ape:resource('error.user.second.display.notindexed')"/>
 						<div class="linkButton">
