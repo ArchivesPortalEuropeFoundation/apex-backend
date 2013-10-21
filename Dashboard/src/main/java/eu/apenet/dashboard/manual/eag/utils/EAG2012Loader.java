@@ -367,6 +367,7 @@ public class EAG2012Loader{
 	public boolean fillEag2012() {
 		boolean result = true;
 		Eag eag = null;
+		fillIntitialAutformEscaped();
 		ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getId());
 		String path = archivalInstitution.getEagPath();
 		String alCountry = new ArchivalLandscape().getmyCountry();
@@ -402,7 +403,6 @@ public class EAG2012Loader{
 			this.eag = eag;
 			result = this.loadValuesEAG2012();
 		}
-
 		return result;
 	}
 
@@ -543,6 +543,10 @@ public class EAG2012Loader{
 	 * @return the initialAutformEscaped
 	 */
 	public String getInitialAutformEscaped() {
+		return this.initialAutformEscaped;
+	}
+	
+	public void fillIntitialAutformEscaped(){
 		if (this.initialAutformEscaped == null
 				|| this.initialAutformEscaped.isEmpty()) {
 			this.initialAutformEscaped = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getId()).getAiname();
@@ -554,7 +558,6 @@ public class EAG2012Loader{
 		if(this.initialAutformEscaped.contains("\"")){
 		   this.initialAutformEscaped = this.initialAutformEscaped.replaceAll("\"", "%22");
 		}
-		return this.initialAutformEscaped;
 	}
 
 	/**
@@ -6395,9 +6398,10 @@ public class EAG2012Loader{
 	}
 
 	public String editWebFormEAG2012() throws Exception {
-		if(eagPath!=null && !eagPath.isEmpty() && aiId!=null){
+		if(this.eagPath!=null && !this.eagPath.isEmpty() && this.aiId!=null){
 			try{
-				new EAG2012Loader(aiId);
+				log.debug("launching loader for institution with aiId: "+this.aiId);
+				new EAG2012Loader(this.aiId);
 			}catch(Exception e){
 				log.error("ERROR trying to put EAG parameters to webFormEag2012");
 			}
