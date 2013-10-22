@@ -70,7 +70,7 @@ public class RawWriteSaxOriginalFiles {
 
         }
         catch (IllegalArgumentException e) {
-        	logger.error("wrong parameters");
+        	logger.error("wrong parameters:\nExample: java -jar oaiharvester.jar -outputDirectory OUTPUT_DIR -setSpec SET_SPEC_VALUE [-debug true] [-from 1980-01-01] [-until 1990-01-01] -metadataPrefix METADATAPREFIX OAI_PMH_URL");
         }
         catch (Exception e) {
         	logger.error(e.getMessage(),e);
