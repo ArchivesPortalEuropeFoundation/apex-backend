@@ -34,8 +34,8 @@ public abstract class HarvesterVerbSaxWriteDirectly {
     private String requestURL = null;
     private HttpClient httpClient = new HttpClient();
 
-    protected ResultInfo harvest(String requestURL, OaiPmhParser oaiPmhParser) throws Exception {
-        LOG.debug("requestURL=" + requestURL);
+    protected ResultInfo harvest(String requestURL, OaiPmhParser oaiPmhParser, int numberOfRequests) throws Exception {
+    	LOG.info("requestURL=" + requestURL);
         GetMethod getMethod = new GetMethod(requestURL);
         getMethod.setRequestHeader("User-Agent", "OAIHarvester/2.0");
         getMethod.setRequestHeader("Accept-Encoding", "compress, gzip, identify");
@@ -59,7 +59,7 @@ public abstract class HarvesterVerbSaxWriteDirectly {
             response = new InflaterInputStream(response);
         }
 
-        return oaiPmhParser.parse(response);
+        return oaiPmhParser.parse(response, numberOfRequests);
     }
 
 

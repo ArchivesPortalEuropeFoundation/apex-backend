@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
@@ -56,40 +55,5 @@ public class OaiPmhMetadataParser extends AbstractOaiPmhParser{
 		xmlWriter.close();
 		return filename;
 	}
-	protected static void writeEndElement(XMLStreamReader xmlReader, XMLStreamWriter xmlWriter) throws XMLStreamException{
-		if (xmlWriter != null){
-			xmlWriter.writeEndElement();
-		}		
-	}
 
-	protected static void writeStartElement(XMLStreamReader xmlReader, XMLStreamWriter xmlWriter) throws XMLStreamException{
-		if (xmlWriter != null){
-			QName element = xmlReader.getName();
-			xmlWriter.writeStartElement(element.getPrefix(), element.getLocalPart(), element.getNamespaceURI());
-			for (int i=0; i < xmlReader.getAttributeCount(); i++){
-				xmlWriter.writeAttribute(xmlReader.getAttributePrefix(i), xmlReader.getAttributeNamespace(i), xmlReader.getAttributeLocalName(i), xmlReader.getAttributeValue(i));
-			}
-			for (int i = 0; i < xmlReader.getNamespaceCount(); i++){
-				String prefix = xmlReader.getNamespacePrefix(i);
-				String namespaceURI = xmlReader.getNamespaceURI(i);
-				xmlWriter.writeNamespace(prefix, namespaceURI);
-				if (prefix.isEmpty()){
-					xmlWriter.writeDefaultNamespace(namespaceURI);
-				}
-			}
-		}		
-	}
-
-	
-	protected static void writeCharacters(XMLStreamReader xmlReader, XMLStreamWriter xmlWriter) throws XMLStreamException{
-		if (xmlWriter != null){
-			xmlWriter.writeCharacters(xmlReader.getText());
-		}		
-	}
-	
-	protected static void writeCData(XMLStreamReader xmlReader, XMLStreamWriter xmlWriter) throws XMLStreamException{
-		if (xmlWriter != null){
-			xmlWriter.writeCData(xmlReader.getText());
-		}		
-	}
 }

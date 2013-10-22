@@ -13,12 +13,12 @@ import org.oclc.oai.harvester.parser.record.ResultInfo;
  * @author Yoann Moranville
  */
 public class ListRecordsSaxWriteDirectly extends HarvesterVerbSaxWriteDirectly {
-	public ResultInfo harvest(String baseURL, String from, String until, String set, String metadataPrefix, OaiPmhParser oaiPmhParser) throws Exception {
-        return harvest(getRequestURL(baseURL, from, until, set, metadataPrefix), oaiPmhParser);
+	public ResultInfo harvest(String baseURL, String from, String until, String set, String metadataPrefix, OaiPmhParser oaiPmhParser, int numberOfRequests) throws Exception {
+        return harvest(getRequestURL(baseURL, from, until, set, metadataPrefix), oaiPmhParser, numberOfRequests);
     }
 
-	public ResultInfo harvest(String baseURL, String resumptionToken, OaiPmhParser oaiPmhParser) throws Exception {
-		 return harvest(getRequestURL(baseURL, resumptionToken), oaiPmhParser);
+	public ResultInfo harvest(String baseURL, String resumptionToken, OaiPmhParser oaiPmhParser, int numberOfRequests) throws Exception {
+		 return harvest(getRequestURL(baseURL, resumptionToken), oaiPmhParser, numberOfRequests);
     }
 
     private static String getRequestURL(String baseURL, String from, String until, String set, String metadataPrefix) {
