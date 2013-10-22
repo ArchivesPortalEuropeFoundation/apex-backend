@@ -17,10 +17,10 @@ import javax.persistence.TypedQuery;
 public class UserprofileJpaDAO extends AbstractHibernateDAO<Userprofile, Long> implements UserprofileDAO {
 
     @Override
-    public List<Userprofile> getUserprofiles(Integer userId) {
-        String query = "SELECT userprofile FROM Userprofile userprofile WHERE userprofile.user.id = :userId ";
+    public List<Userprofile> getUserprofiles(Integer aiId) {
+        String query = "SELECT userprofile FROM Userprofile userprofile WHERE userprofile.aiId = :aiId ";
         TypedQuery<Userprofile> typedQuery = getEntityManager().createQuery(query, Userprofile.class);
-        typedQuery.setParameter("userId", userId);
+        typedQuery.setParameter("aiId", aiId);
         return typedQuery.getResultList();
     }
 }

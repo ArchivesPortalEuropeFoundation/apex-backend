@@ -12,5 +12,5 @@ import java.util.List;
  * @author papp
  */
 public interface UserprofileDAO extends GenericDAO<Userprofile, Long>{
-    public List<Userprofile> getUserprofiles(Integer userId);
+    public List<Userprofile> getUserprofiles(Integer aiId);
 }

@@ -23,9 +23,11 @@ public class Userprofile implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "ai_id")
+    private Integer aiId;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "ai_id", insertable = false, updatable = false)
+    private ArchivalInstitution archivalInstitution;
     @Column(name = "name_profile")
     private String nameProfile;
     @Column(name = "file_type")
@@ -35,7 +37,7 @@ public class Userprofile implements Serializable {
     @Column(name = "exist_action")
     private UserprofileDefaultExistingFileAction existAction = UserprofileDefaultExistingFileAction.KEEP;
     @Column(name = "noeadid_action")
-    private Integer noeadidAction;
+    private Integer noeadidAction = 1;
     @Column(name = "dao_type")
     private UserprofileDefaultDaoType daoType = UserprofileDefaultDaoType.UNSPECIFIED;
     @Column(name = "europeana_dp")
@@ -62,12 +64,12 @@ public class Userprofile implements Serializable {
     public Userprofile() {
     }
 
-    public Userprofile(User user, String nameProfile, Integer fileType) {
-        this.user = user;
+    public Userprofile(Integer aiId, String nameProfile, Integer fileType) {
+        this.aiId = aiId;
         this.nameProfile = nameProfile;
         this.fileType = fileType;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -76,12 +78,20 @@ public class Userprofile implements Serializable {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public Integer getAiId() {
+        return aiId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAiId(Integer aiId) {
+        this.aiId = aiId;
+    }
+
+    public ArchivalInstitution getArchivalInstitution() {
+        return archivalInstitution;
+    }
+
+    public void setArchivalInstitution(ArchivalInstitution archivalInstitution) {
+        this.archivalInstitution = archivalInstitution;
     }
 
     public String getNameProfile() {
