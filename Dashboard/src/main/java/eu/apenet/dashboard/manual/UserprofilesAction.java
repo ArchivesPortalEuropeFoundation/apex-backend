@@ -7,11 +7,11 @@ package eu.apenet.dashboard.manual;
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.ArchivalInstitution;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -26,14 +26,17 @@ public class UserprofilesAction extends AbstractInstitutionAction {
     private Set<SelectItem> noEadidActions = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> daoTypes = new LinkedHashSet<SelectItem>();
 
+    private String profileName;
     private String associatedFiletype;
     private String uploadedFileAction;
     private String existingFileAction;
     private String noEadidAction;
     private String daoType;
 
+    private static final Logger LOG = Logger.getLogger(UserprofilesAction.class);
+
     public UserprofilesAction() {
-        ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId());
+        userprofiles = DAOFactory.instance().getUserprofileDAO().getUserprofiles(368);
         associatedFiletypes.add(new SelectItem("1", getText("content.message.fa")));
         associatedFiletypes.add(new SelectItem("2", getText("content.message.hg")));
         associatedFiletypes.add(new SelectItem("3", getText("content.message.sg")));
@@ -105,6 +108,14 @@ public class UserprofilesAction extends AbstractInstitutionAction {
 
     public void setDaoTypes(Set<SelectItem> daoTypes) {
         this.daoTypes = daoTypes;
+    }
+
+    public String getProfileName() {
+        return profileName;
+    }
+
+    public void setProfileName(String profileName) {
+        this.profileName = profileName;
     }
 
     public String getAssociatedFiletype() {
