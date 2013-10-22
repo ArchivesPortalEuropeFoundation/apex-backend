@@ -1,11 +1,18 @@
 package org.oclc.oai.harvester.app;
 
 import java.io.File;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.Priority;
+import org.oclc.oai.harvester.parser.record.DebugOaiPmhParser;
 import org.oclc.oai.harvester.parser.record.OaiPmhParser;
 import org.oclc.oai.harvester.parser.record.OaiPmhRecord;
 import org.oclc.oai.harvester.parser.record.ResultInfo;
@@ -13,10 +20,16 @@ import org.oclc.oai.harvester.verb.ListRecordsSaxWriteDirectly;
 
 
 public class RawWriteSaxOriginalFiles {
+	private static Logger logger;
     public static void main(String[] args) {
+    	ConsoleAppender appender = new ConsoleAppender();
+    	appender.setThreshold(Priority.INFO);
+    	appender.setWriter(new OutputStreamWriter(System.out));
+    	appender.setLayout(new PatternLayout("%d{ABSOLUTE} %-5p - %m%n"));
+    	BasicConfigurator.configure(appender);
         try {
-            System.out.println(new Date());
-            getInput("Press key to start");
+        	logger = Logger.getLogger(RawWriteSaxOriginalFiles.class);
+        	logger.info(new Date());
             long startTime = System.currentTimeMillis();
 
             HashMap options = getOptions(args);
@@ -26,6 +39,8 @@ public class RawWriteSaxOriginalFiles {
             }
             String baseURL = (String) rootArgs.get(0);
             String directory = (String) options.get("-outputDirectory");
+            String debugString = (String) options.get("-debug");
+            boolean debug = Boolean.parseBoolean(debugString);
             String from = (String) options.get("-from");
             String until = (String) options.get("-until");
             String metadataPrefix = (String) options.get("-metadataPrefix");
@@ -36,23 +51,29 @@ public class RawWriteSaxOriginalFiles {
             String setSpec = (String) options.get("-setSpec");
             File outputDirectory = new File(directory);
             outputDirectory.mkdirs();
+            OaiPmhParser oaiPmhParser;
+            if (debug){
+            	oaiPmhParser = new DebugOaiPmhParser(outputDirectory);
+            }else {
+            	oaiPmhParser = new OaiPmhParser(outputDirectory);
+            }
             if (resumptionToken != null) {
-                run(baseURL, resumptionToken, outputDirectory);
+                run(baseURL, resumptionToken, oaiPmhParser);
             }
             else {
-                run(baseURL, from, until, metadataPrefix, setSpec, outputDirectory);
+                run(baseURL, from, until, metadataPrefix, setSpec, oaiPmhParser);
             }
 
-            System.out.println(new Date());
+            logger.info(new Date());
             long stopTime = System.currentTimeMillis();
             calcHMS(stopTime, startTime);
-            getInput("Press key to stop");
+
         }
         catch (IllegalArgumentException e) {
-            System.err.println("tel_oai_harvester <-from date> <-until date> <-metadataPrefix prefix> <-setSpec setName> <-resumptionToken token> <-filePrefix filePrefix (incl. absolute path)> baseURL");
+        	logger.error("wrong parameters");
         }
         catch (Exception e) {
-            e.printStackTrace();
+        	logger.error(e.getMessage(),e);
             System.exit(-1);
         }
     }
@@ -83,79 +104,79 @@ public class RawWriteSaxOriginalFiles {
         minutes = timeInSeconds / 60;
         timeInSeconds = timeInSeconds - (minutes * 60);
         seconds = timeInSeconds;
-        System.out.println("Elapsed time: " + hours + " hour(s) " + minutes + " minute(s) " + seconds + " second(s)");
+        logger.info("Elapsed time: " + hours + " hour(s) " + minutes + " minute(s) " + seconds + " second(s)");
     }
 
-    public static void run(String baseURL, String resumptionToken, File outputDirectory)
+    public static void run(String baseURL, String resumptionToken, OaiPmhParser oaiPmhParser)
             throws Exception {
-        OaiPmhParser oaiPmhParser = new OaiPmhParser(outputDirectory);
+        int number = 0;
+        
         ListRecordsSaxWriteDirectly listRecordsSax = new ListRecordsSaxWriteDirectly();
-        ResultInfo resultInfo = listRecordsSax.harvest(baseURL, resumptionToken, oaiPmhParser);
+        ResultInfo resultInfo = listRecordsSax.harvest(baseURL, resumptionToken, oaiPmhParser, number);
         while (resultInfo != null) {
             List<String> errors = resultInfo.getErrors();
             if (errors != null && errors.size() > 0) {
-                System.out.println("Found errors");
+                logger.info("Found errors");
                 int length = errors.size();
                 for (int i = 0; i < length; ++i) {
                     String item = errors.get(i);
-                    System.out.println(item);
+                    logger.info(item);
                 }
-                System.out.println("Error record: " + resultInfo.getIdentifier());
+                logger.info("Error record: " + resultInfo.getIdentifier());
                 break;
             }
     		for (OaiPmhRecord record : resultInfo.getRecords()){
-    			System.out.println(record.getIdentifier() + " - " + record.isDeleted() + " - " + record.getFilename());
+    			logger.info("IDENTIFIER: "  + record.getIdentifier() + " - DELETED: " + record.isDeleted() + " - FILENAME: " + record.getFilename());
     			
     		}
             resumptionToken = resultInfo.getNewResumptionToken();
-            System.out.println("resumptionToken: " + resumptionToken);
+            logger.info("resumptionToken: '" + resumptionToken + "'");
             if (resumptionToken == null || resumptionToken.length() == 0) {
             	resultInfo = null;
             }
             else {
-                resultInfo = listRecordsSax.harvest(baseURL, resumptionToken, oaiPmhParser);
+                resultInfo = listRecordsSax.harvest(baseURL, resumptionToken, oaiPmhParser, number++);
             }
         }
     }
 
     public static void run(String baseURL, String from, String until,
-                           String metadataPrefix, String setSpec,  File outputDirectory)
+                           String metadataPrefix, String setSpec,  OaiPmhParser oaiPmhParser)
             throws Exception {
         int number = 0;
-        OaiPmhParser oaiPmhParser = new OaiPmhParser(outputDirectory);
         ListRecordsSaxWriteDirectly listRecordsSax = new ListRecordsSaxWriteDirectly();
-        ResultInfo resultInfo = listRecordsSax.harvest(baseURL, from, until, setSpec, metadataPrefix, oaiPmhParser);
+        ResultInfo resultInfo = listRecordsSax.harvest(baseURL, from, until, setSpec, metadataPrefix, oaiPmhParser, number);
 
         while (resultInfo != null) {
             List<String> errors = resultInfo.getErrors();
             if (errors != null && errors.size() > 0) {
-                System.out.println("Found errors");
+                logger.info("Found errors");
                 int length = errors.size();
                 for (int i = 0; i < length; ++i) {
                     String item = errors.get(i);
-                    System.out.println(item);
+                    logger.info(item);
                 }
-                System.out.println("Error record: " + resultInfo.getIdentifier());
+                logger.info("Error record: " + resultInfo.getIdentifier());
                 break;
             }
     		for (OaiPmhRecord record : resultInfo.getRecords()){
-    			System.out.println(record.getIdentifier() + " - " + record.isDeleted() + " - " + record.getFilename());
+    			logger.info("IDENTIFIER: "  + record.getIdentifier() + " - DELETED: " + record.isDeleted() + " - FILENAME: " + record.getFilename());
     			
     		}
             String resumptionToken = resultInfo.getNewResumptionToken();
-            System.out.println("resumptionToken: " + resumptionToken);
+            logger.info("resumptionToken: '" + resumptionToken + "'");
             if (resumptionToken == null || resumptionToken.length() == 0) {
             	resultInfo = null;
             }
             else {
                 number++;
-                resultInfo = listRecordsSax.harvest(baseURL, resumptionToken, oaiPmhParser);
+                resultInfo = listRecordsSax.harvest(baseURL, resumptionToken, oaiPmhParser, number);
             }
         }
     }
 	public static String getInput(String message) {
 
-//		System.out.println(message +" : ");
+//		logger.info(message +" : ");
 //
 //		try {
 //			BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
