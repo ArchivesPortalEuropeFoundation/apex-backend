@@ -10,11 +10,14 @@ package eu.apenet.persistence.vo;
  */
 public enum UserprofileDefaultExistingFileAction {
 
-    OVERWRITE("userprofiles.existing.overwrite"),
-    KEEP("userprofiles.existing.keep");
+    KEEP(0, "userprofiles.existing.keep"),
+    OVERWRITE(1, "userprofiles.existing.overwrite");
+
+    private int id;
     private String resourceName;
 
-    private UserprofileDefaultExistingFileAction(String resourceName) {
+    private UserprofileDefaultExistingFileAction(int id, String resourceName) {
+        this.id = id;
         this.resourceName = resourceName;
     }
 
@@ -24,6 +27,10 @@ public enum UserprofileDefaultExistingFileAction {
 
     public boolean isKeep() {
         return KEEP.equals(this);
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getResourceName() {

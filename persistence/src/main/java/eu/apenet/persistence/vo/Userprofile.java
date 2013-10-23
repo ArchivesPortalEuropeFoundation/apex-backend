@@ -37,7 +37,7 @@ public class Userprofile implements Serializable {
     @Column(name = "exist_action")
     private UserprofileDefaultExistingFileAction existAction = UserprofileDefaultExistingFileAction.KEEP;
     @Column(name = "noeadid_action")
-    private Integer noeadidAction = 1;
+    private UserprofileDefaultNoEadidAction noeadidAction = UserprofileDefaultNoEadidAction.REMOVE;
     @Column(name = "dao_type")
     private UserprofileDefaultDaoType daoType = UserprofileDefaultDaoType.UNSPECIFIED;
     @Column(name = "europeana_dp")
@@ -126,11 +126,11 @@ public class Userprofile implements Serializable {
         this.existAction = existAction;
     }
 
-    public Integer getNoeadidAction() {
+    public UserprofileDefaultNoEadidAction getNoeadidAction() {
         return noeadidAction;
     }
 
-    public void setNoeadidAction(Integer noeadidAction) {
+    public void setNoeadidAction(UserprofileDefaultNoEadidAction noeadidAction) {
         this.noeadidAction = noeadidAction;
     }
 
