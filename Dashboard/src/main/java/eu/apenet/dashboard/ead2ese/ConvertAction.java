@@ -192,15 +192,8 @@ public class ConvertAction extends AbstractInstitutionAction {
 				}
 				this.setDataProviderCheck(true);
 			}
-			if (StringUtils.isNotBlank(ead2EseInformation.getLanguageCode())){
-				this.setNoLanguageOnClevel(false);			
-			}
-			if (ead2EseInformation.getAlternativeLanguages() != null
-					&& !ead2EseInformation.getAlternativeLanguages().isEmpty()){
-				this.setNoLanguageOnParents(false);			
-			} else {
-				this.setNoLanguageOnParents(true);
-			}
+			this.setNoLanguageOnClevel(!ead2EseInformation.isLanguagesOnAllCLevels());
+			this.setNoLanguageOnParents(!ead2EseInformation.isLanguagesOnParent());
 
 			this.setBatchConversion(false);
 		}else {		
