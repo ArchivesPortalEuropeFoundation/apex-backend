@@ -213,7 +213,8 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 			if (eadSearchOptions.getPublishedToAll()) {
 				orPredicated.add(criteriaBuilder.equal(from.get("published"), true));
 				if (FindingAid.class.equals(eadSearchOptions.getEadClass())) {
-					orPredicated.add(criteriaBuilder.notEqual(from.get("europeana"), EuropeanaState.NOT_CONVERTED));
+					orPredicated.add(criteriaBuilder.equal(from.get("europeana"), EuropeanaState.CONVERTED));
+					orPredicated.add(criteriaBuilder.equal(from.get("europeana"), EuropeanaState.DELIVERED));
 				}
 			} else {
 				orPredicated.add(criteriaBuilder.equal(from.get("published"), false));
