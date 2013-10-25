@@ -1,8 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
 
+<script type='text/javascript'>
+$(document).ready(function() {
+	initPage();
+});
+
+</script>
+
 <div id="userprofiles">
-    <s:debug />
+    <%--<s:debug />--%>
     <s:form method="POST" theme="simple">
         <table>
             <tr>
@@ -12,7 +19,7 @@
             </tr>
             <tr>
                 <td>
-                    <s:select name="profilelist" list="userprofiles" listKey="id" listValue="name"></s:select>
+                    <s:select id="profileCb" name="profilelist" list="userprofiles" listKey="value" listValue="content"></s:select>
                     <input type="button" class="rightButton" value="<s:property value='getText("userprofiles.createprofile")' />" />
                 </td>
             </tr>
@@ -36,7 +43,7 @@
             <s:iterator value="uploadedFileActions">
                 <tr>
                     <td>
-                        <s:radio theme="simple" name="uploadedFileAction" list="#{value:content}" />                    
+                        <s:radio theme="simple" name="uploadedFileAction" list="#{value:content}" />
                     </td>
                 </tr>
             </s:iterator>
@@ -60,7 +67,7 @@
             <s:iterator value="noEadidActions">
                 <tr>
                     <td>
-                        <s:radio theme="simple" name="noEadidAction" list="#{value:content}" />                    
+                        <s:radio theme="simple" name="noEadidAction" list="#{value:content}" />
                     </td>
                 </tr>
             </s:iterator>
@@ -72,7 +79,7 @@
             <s:iterator value="daoTypes">
                 <tr>
                     <td>
-                        <s:radio theme="simple" name="daoType" list="#{value:content}" />                    
+                        <s:radio theme="simple" name="daoType" list="#{value:content}" />
                     </td>
                 </tr>
             </s:iterator>

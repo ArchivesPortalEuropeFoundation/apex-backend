@@ -6,11 +6,13 @@ package eu.apenet.dashboard.manual;
 
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
+import eu.apenet.persistence.dao.UserprofileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.Userprofile;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -19,13 +21,14 @@ import org.apache.log4j.Logger;
  */
 public class UserprofilesAction extends AbstractInstitutionAction {
 
-    private List userprofiles = new LinkedList();
+    private Set<SelectItem> userprofiles = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> associatedFiletypes = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> uploadedFileActions = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> existingFileActions = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> noEadidActions = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> daoTypes = new LinkedHashSet<SelectItem>();
 
+    private String profilelist;
     private String profileName;
     private String associatedFiletype;
     private String uploadedFileAction;
@@ -35,39 +38,84 @@ public class UserprofilesAction extends AbstractInstitutionAction {
 
     private static final Logger LOG = Logger.getLogger(UserprofilesAction.class);
 
-    public UserprofilesAction() {
-        userprofiles = DAOFactory.instance().getUserprofileDAO().getUserprofiles(368);
+    @Override
+    public String input() {
+        UserprofileDAO profileDAO = DAOFactory.instance().getUserprofileDAO();
+        List<Userprofile> queryResult = profileDAO.getUserprofiles(368);
+        for (Userprofile entry : queryResult) {
+            userprofiles.add(new SelectItem(Long.toString(entry.getId()), entry.getNameProfile()));
+        }
+        if (userprofiles.size() >= 1) {
+            profilelist = userprofiles.iterator().next().getValue();
+        }
+
         associatedFiletypes.add(new SelectItem("1", getText("content.message.fa")));
         associatedFiletypes.add(new SelectItem("2", getText("content.message.hg")));
         associatedFiletypes.add(new SelectItem("3", getText("content.message.sg")));
-        associatedFiletype = "1";
         uploadedFileActions.add(new SelectItem("1", getText("userprofiles.upload.convertValidatePublish")));
         uploadedFileActions.add(new SelectItem("2", getText("userprofiles.upload.convertValidatePublishEuropeana")));
         uploadedFileActions.add(new SelectItem("3", getText("userprofiles.upload.convert")));
         uploadedFileActions.add(new SelectItem("4", getText("userprofiles.upload.validate")));
         uploadedFileActions.add(new SelectItem("0", getText("userprofiles.upload.nothing")));
-        uploadedFileAction = "1";
         existingFileActions.add(new SelectItem("1", getText("userprofiles.existing.overwrite")));
-        existingFileActions.add(new SelectItem("2", getText("userprofiles.existing.keep")));
-        existingFileAction = "1";
-        noEadidActions.add(new SelectItem("1", getText("userprofiles.noeadid.remove")));
-        noEadidActions.add(new SelectItem("2", getText("userprofiles.noeadid.addLater")));
-        noEadidAction = "1";
+        existingFileActions.add(new SelectItem("0", getText("userprofiles.existing.keep")));
+        noEadidActions.add(new SelectItem("0", getText("userprofiles.noeadid.remove")));
+        noEadidActions.add(new SelectItem("1", getText("userprofiles.noeadid.addLater")));
         daoTypes.add(new SelectItem("1", getText("userprofiles.dao.text")));
         daoTypes.add(new SelectItem("2", getText("userprofiles.dao.image")));
         daoTypes.add(new SelectItem("3", getText("userprofiles.dao.sound")));
         daoTypes.add(new SelectItem("4", getText("userprofiles.dao.video")));
         daoTypes.add(new SelectItem("5", getText("userprofiles.dao.3D")));
         daoTypes.add(new SelectItem("0", getText("userprofiles.dao.unspecified")));
-        daoType = "0";
+
+        if (StringUtils.isNotBlank(profilelist)) {
+            Long profilelistLong = Long.parseLong(profilelist);
+            Userprofile userprofile = profileDAO.findById(profilelistLong);
+            profileName = userprofile.getNameProfile();
+            associatedFiletype = userprofile.getFileType().toString();
+            uploadedFileAction = Integer.toString(userprofile.getUploadAction().getId());
+            existingFileAction = Integer.toString(userprofile.getExistAction().getId());
+            noEadidAction = Integer.toString(userprofile.getNoeadidAction().getId());
+            daoType = Integer.toString(userprofile.getDaoType().getId());
+        }
+        return SUCCESS;
     }
 
-    public List getUserprofiles() {
+    public String retrieveUserprofile() {
+        UserprofileDAO profileDAO = DAOFactory.instance().getUserprofileDAO();
+        if (StringUtils.isNotBlank(profilelist)) {
+            Long profilelistLong = Long.parseLong(profilelist);
+            Userprofile userprofile = profileDAO.findById(profilelistLong);
+            profileName = userprofile.getNameProfile();
+            associatedFiletype = userprofile.getFileType().toString();
+            uploadedFileAction = Integer.toString(userprofile.getUploadAction().getId());
+            existingFileAction = Integer.toString(userprofile.getExistAction().getId());
+            noEadidAction = Integer.toString(userprofile.getNoeadidAction().getId());
+            daoType = Integer.toString(userprofile.getDaoType().getId());
+        }
+        return SUCCESS;
+
+    }
+
+    @Override
+    public String execute() throws Exception {
+        return SUCCESS;
+    }
+
+    public Set<SelectItem> getUserprofiles() {
         return userprofiles;
     }
 
-    public void setUserprofiles(List userprofiles) {
+    public void setUserprofiles(Set<SelectItem> userprofiles) {
         this.userprofiles = userprofiles;
+    }
+
+    public String getProfilelist() {
+        return profilelist;
+    }
+
+    public void setProfilelist(String profilelist) {
+        this.profilelist = profilelist;
     }
 
     public Set<SelectItem> getAssociatedFiletypes() {
