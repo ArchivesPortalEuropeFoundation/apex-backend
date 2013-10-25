@@ -20,7 +20,8 @@ public class DashboardConfig extends ApePortalAndDashboardConfig{
     private boolean maintenanceMode = false;
     private String maintenanceAction;
     private boolean defaultQueueProcessing = true;
-    
+    private boolean defaultHarvestingProcessing = false;
+
 	public String getEuropeanaDirPath() {
 		return europeanaDirPath;
 	}
@@ -110,7 +111,16 @@ public class DashboardConfig extends ApePortalAndDashboardConfig{
 		this.defaultQueueProcessing = defaultQueueProcessing;
 	}
 
-	public String getMaintenanceAction() {
+    public boolean isDefaultHarvestingProcessing() {
+        return defaultHarvestingProcessing;
+    }
+
+    public void setDefaultHarvestingProcessing(boolean defaultHarvestingProcessing) {
+        checkConfigured();
+        this.defaultHarvestingProcessing = defaultHarvestingProcessing;
+    }
+
+    public String getMaintenanceAction() {
 		return maintenanceAction;
 	}
 
