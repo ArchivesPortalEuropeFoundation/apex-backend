@@ -21,6 +21,7 @@
             createsimpleeag, createsimpleeagwithmenu, uploadsimpleeag, uploadsimpleeagwithmenu, uploadowneag, eaghttpuploadwithmenu,
             eaghttpupload, generaterepositorguidePossibleHGTitlePartJSON, generateInformationMessageJSON, uploadowneagwithmenu,
             eagcorrectlyuploaded, createeag2012withmenu, storeEAG2012, editWebFormEAG2012, eagoldhttpupload, eagoldnothttpupload,
+            removeInvalidEAG2012,
 
             <!-- Edition of EAD -->
             <!-- editEad, editEadCreateDbEntries, editEadXml, editEadXmlSaveLevel, editEadXmlSaveAll, editEadXmlDeleteEntries, editEadGetFields, editEadAddField, --> 

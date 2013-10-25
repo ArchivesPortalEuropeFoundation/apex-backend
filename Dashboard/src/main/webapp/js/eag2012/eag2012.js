@@ -48,7 +48,7 @@ function hideAndShow(idPrefix,shown){
 }
 function clickExitAction(){
 	//exit the form without save
-	location.href="dashboardHome.action";
+	location.href="removeInvalidEAG2012.action";
 }
 
 function clickSaveAction(form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, message, institutionName) {

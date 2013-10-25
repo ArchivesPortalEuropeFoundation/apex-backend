@@ -5,6 +5,10 @@ import com.opensymphony.xwork2.ActionSupport;
 import eu.apenet.dashboard.manual.eag.Eag2012;
 import eu.apenet.dashboard.manual.eag.WebFormEAG2012Action;
 
+/**
+ * Class to parse the incomprehensible messages of error to comprehensive messages for the user
+ *
+ */
 public class ParseEag2012Errors{
 
 	private String warning;
@@ -47,7 +51,15 @@ public class ParseEag2012Errors{
         String errorValidation = null; 
         String errorDate;
         
-        if(this.getWarning().contains("in the attribute 'standardDate' of the element ")){
+        if(this.getWarning().contains("Attribute 'question' must appear on element 'restorationlab'.")){
+        	errorValidation = targetAction.getText("eag2012.errors.questionRestorationLab")+targetAction.getText("eag2012.errors.seeTabAccessAndServices");
+        }else if(this.getWarning().contains("Attribute 'question' must appear on element 'internetAccess'.")){
+        	errorValidation = targetAction.getText("eag2012.errors.questionInternetAccess")+targetAction.getText("eag2012.errors.seeTabAccessAndServices");
+        }else if(this.getWarning().contains("Attribute 'question' must appear on element 'library'.")){
+        	errorValidation = targetAction.getText("eag2012.errors.questionLibrary")+targetAction.getText("eag2012.errors.seeTabAccessAndServices");
+        }else if(this.getWarning().contains("Attribute 'question' must appear on element 'reproductionser'.")){
+        	errorValidation = targetAction.getText("eag2012.errors.questionReproductionser")+targetAction.getText("eag2012.errors.seeTabAccessAndServices");
+        }else if(this.getWarning().contains("in the attribute 'standardDate' of the element ")){
         	errorValidation=null;
         }else if(this.getWarning().contains("cvc-datatype-valid.1.2.3:")){
         	errorDate=errorString(this.getWarning());

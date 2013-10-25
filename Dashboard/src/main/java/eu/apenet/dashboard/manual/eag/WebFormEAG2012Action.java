@@ -714,6 +714,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					log.debug("Beginning EAG validation");
 					APEnetEAGDashboard apEnetEAGDashboard = new APEnetEAGDashboard(this.getAiId(), new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath).getAbsolutePath());
 					if (!apEnetEAGDashboard.validate()) {
+						state = "input2"; //define different view for special warning cases
 						this.setWarnings(apEnetEAGDashboard.showWarnings());
 						//The EAG has been neither validated nor converted.
 						log.warn("The file " + new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath).getName() + " is not valid");
@@ -734,6 +735,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					}
 				} else {
 					Iterator<String> warningsIt = this.getActionMessages().iterator();
+					state = "input2"; //define different view for special warning cases
 					while (warningsIt.hasNext()) {
 						String warning = warningsIt.next();
 						if (warning!=null && (warning.contains("of element 'recordId' is not valid")
@@ -866,6 +868,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 						log.error("Could not be stored EAG2012 path, reason: null archival institution");
 					}
 				} else {
+					
 					this.setWarnings(apEnetEAGDashboard.showWarnings());
 					//The EAG has been neither validated nor converted.
 					log.warn("The file " + eagFile.getName() + " is not valid");
@@ -896,6 +899,38 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		return this.editWebFormEAG2012();
 	}
 
+	public String removeInvalidEAG2012(){
+	   String alCountry = new ArchivalLandscape().getmyCountry();
+	   String basePath = APEnetUtilities.FILESEPARATOR + alCountry + APEnetUtilities.FILESEPARATOR +
+					this.getAiId() + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;
+	   String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;
+	   File invalidFile=new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath);
+		if (invalidFile.exists() && invalidFile.isFile()) {
+			try {
+				FileUtils.forceDelete(invalidFile);
+			} catch (IOException e) {
+				log.error("ERROR trying to remove the file " + tempPath, e);
+//				log.error("ERROR trying to remove the file " + tempPath);
+			}
+		}  
+		return SUCCESS;
+	}	
+		/* try { 
+		   String alCountry = new ArchivalLandscape().getmyCountry();
+		   String basePath = APEnetUtilities.FILESEPARATOR + alCountry + APEnetUtilities.FILESEPARATOR +
+						this.getAiId() + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;
+		   String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;
+		   File invalidFile=new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath);
+			if((invalidFile.exists())){
+				FileUtils.forceDelete(invalidFile);
+				return SUCCESS;	
+			}
+		} catch (Exception e) {
+			LOG.error("ERROR trying to remove a file ", e);
+		}
+		return ERROR;
+	}*/
+	
 	private void fillDefaultLoaderValues() { //TODO, now only works with main repository
 		this.newEag = true;
 		this.loader = new EAG2012Loader();

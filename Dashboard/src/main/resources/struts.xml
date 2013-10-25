@@ -56,6 +56,9 @@
             <result name="success" type="tiles">index</result>
             <result name="input" type="tiles">eagfirstcreation</result>
             <result name="error" type="tiles">blank</result>
+            <result name="input2" type="redirectAction">
+                <param name="actionName">editWebFormEAG2012</param>
+            </result>   
         </action>
 
         <action name="createeag2012withmenu" class="eu.apenet.dashboard.manual.eag.WebFormEAG2012Action">
@@ -67,14 +70,26 @@
 
         <action name="editWebFormEAG2012" class="eu.apenet.dashboard.manual.eag.WebFormEAG2012Action" method="editWebFormEAG2012">
             <result name="input" type="tiles">webFormEAG2012WithMenu</result>
+            <result name="input2" type="tiles">webFormEAG2012</result>
             <result name="success" type="tiles">webFormEAG2012</result>
         </action>
 		
         <action name="storeEAG2012" class="eu.apenet.dashboard.manual.eag.WebFormEAG2012Action" method="createEAG2012" >
             <result name="input" type="tiles">webFormEAG2012WithMenu</result>
+            <result name="input2" type="tiles">webFormEAG2012</result>
             <result name="success" type="tiles">webFormEAG2012</result>
         </action>
-
+        
+        <action name="removeInvalidEAG2012" class="eu.apenet.dashboard.manual.eag.WebFormEAG2012Action" method="removeInvalidEAG2012">
+            <result name="success" type="redirectAction">
+                <param name="actionName">dashboardHome</param>
+            </result>
+        
+         <!--   <result name="success" type="redirectAction">
+              <param name="actionName">dashboardHome</param>
+          </result>-->
+          <!-- <result name="success" type="tiles">webFormEAG2012</result> -->
+        </action>
 		
         <action name="changeainame" class="eu.apenet.dashboard.manual.ChangeAInameAction"> 
             <interceptor-ref name="changeLanguageStack"/>
