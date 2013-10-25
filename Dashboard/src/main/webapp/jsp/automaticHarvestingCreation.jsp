@@ -74,6 +74,16 @@
                     </c:forEach>
                 </select>
                 <br />
+                <c:if test="${defaultHarvestingProcessing == 'false'}">
+                    <label for="activation">
+                        <s:property value="getText('label.harvesting.activation')"/>
+                    </label>
+                    <select name="selectedActivation" id="activation">
+                        <option value="true"<c:if test="${selectedActivation == 'true'}"> selected="selected"</c:if>>Active</option>
+                        <option value="false"<c:if test="${selectedActivation == 'false'}"> selected="selected"</c:if>>Idle</option>
+                    </select>
+                    <br />
+                </c:if>
                 <input type="submit" value="<s:property value="getText('label.ok')"/>"/>
             </form>
         </c:when>

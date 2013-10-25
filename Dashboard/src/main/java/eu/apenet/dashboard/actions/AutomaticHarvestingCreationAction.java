@@ -2,6 +2,7 @@ package eu.apenet.dashboard.actions;
 
 import com.opensymphony.xwork2.ActionSupport;
 import eu.apenet.commons.exceptions.APEnetException;
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.listener.Duration;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
@@ -40,8 +41,14 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
     private String selectedSet;
     private String selectedMetadataFormat;
     private Integer selectedUserProfile;
+    private String selectedActivation;
     private String lastHarvestDate; //todo: Propose to the user or not? We could do simply a full harvest at the first time since it is currently hard to know when it was exactly done...
     private String intervalHarvest;
+    private boolean defaultHarvestingProcessing = false;
+
+    public void validate() {
+        defaultHarvestingProcessing = APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing();
+    }
 
     public String execute() throws Exception {
         step = 0;
@@ -53,7 +60,6 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
         }
         ArchivalInstitutionOaiPmhDAO archivalInstitutionOaiPmhDAO = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
         archivalInstitutionOaiPmhs = archivalInstitutionOaiPmhDAO.getArchivalInstitutionOaiPmhs(archivalInstitutionId);
-        LOG.info(archivalInstitutionOaiPmhs.size() + " archivalInstitutionOaiPmh for this archive");
         return SUCCESS;
     }
 
@@ -110,6 +116,7 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
                 setSelectedMetadataFormat(archivalInstitutionOaiPmh.getMetadataPrefix());
                 setSelectedUserProfile(archivalInstitutionOaiPmh.getProfileId().intValue());
                 setIntervalHarvest(archivalInstitutionOaiPmh.getIntervalHarvesting().toString());
+                setSelectedActivation(Boolean.toString(archivalInstitutionOaiPmh.isEnabled()));
             }
             return SUCCESS;
         }
@@ -128,12 +135,23 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
                 archivalInstitutionOaiPmh.setMetadataPrefix(getSelectedMetadataFormat());
                 archivalInstitutionOaiPmh.setProfileId(getSelectedUserProfile().longValue());
                 archivalInstitutionOaiPmh.setIntervalHarvesting(Long.parseLong(getIntervalHarvest()));
+                if(getSelectedActivation() != null) {
+                    if(!archivalInstitutionOaiPmh.isEnabled() && Boolean.parseBoolean(getSelectedActivation())) {
+                        archivalInstitutionOaiPmh.setLastHarvesting(null);
+                        archivalInstitutionOaiPmh.setEnabled(true);
+                    } else if(archivalInstitutionOaiPmh.isEnabled() && !Boolean.parseBoolean(getSelectedActivation())) {
+                        archivalInstitutionOaiPmh.setEnabled(false);
+                    }
+                }
             } else {
                 int archivalInstitutionId = SecurityContext.get().getSelectedInstitution().getId();
                 String intervalHarvest = getIntervalHarvest();
                 archivalInstitutionOaiPmh = new ArchivalInstitutionOaiPmh(archivalInstitutionId, getUrl(), getSelectedMetadataFormat(), getSelectedUserProfile().longValue(), Long.parseLong(intervalHarvest));
                 if(getSelectedSet() != null) {
                     archivalInstitutionOaiPmh.setSet(getSelectedSet());
+                }
+                if(getSelectedActivation() != null) {
+                    archivalInstitutionOaiPmh.setEnabled(Boolean.parseBoolean(getSelectedActivation()));
                 }
             }
             JpaUtil.beginDatabaseTransaction();
@@ -248,6 +266,22 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
 
     public void setIntervals(List<Interval> intervals) {
         this.intervals = intervals;
+    }
+
+    public boolean isDefaultHarvestingProcessing() {
+        return defaultHarvestingProcessing;
+    }
+
+    public void setDefaultHarvestingProcessing(boolean defaultHarvestingProcessing) {
+        defaultHarvestingProcessing = defaultHarvestingProcessing;
+    }
+
+    public String getSelectedActivation() {
+        return selectedActivation;
+    }
+
+    public void setSelectedActivation(String selectedActivation) {
+        this.selectedActivation = selectedActivation;
     }
 
     public class Interval {
