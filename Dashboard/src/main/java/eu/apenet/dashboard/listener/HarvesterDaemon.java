@@ -32,9 +32,9 @@ public class HarvesterDaemon {
                 if(startTonight < 0)
                     startTonight = 0;
                 LOGGER.info("Next harvester task will be started in " + startTonight + " hours.");
-                addTask(new Duration(startTonight, 0, 0), new Duration(5, 0, 0), new Duration(24, 0, 0));
+                addTask(new Duration(startTonight, 1, 0), new Duration(5, 0, 0), new Duration(24, 0, 0));
             } else {
-                addTask(new Duration(0, 0, 0), new Duration(0, 10, 0), new Duration(0, 5, 0));
+                addTask(new Duration(0, 1, 0), new Duration(0, 10, 0), new Duration(0, 5, 0));
             }
 
             LOGGER.info("Harvester daemon started");

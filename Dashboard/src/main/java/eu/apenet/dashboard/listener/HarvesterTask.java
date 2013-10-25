@@ -1,6 +1,7 @@
 package eu.apenet.dashboard.listener;
 
 import eu.apenet.commons.exceptions.APEnetException;
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.dao.EadDAO;
@@ -10,8 +11,17 @@ import eu.apenet.persistence.vo.*;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.oclc.oai.harvester.parser.record.DebugOaiPmhParser;
+import org.oclc.oai.harvester.parser.record.OaiPmhParser;
+import org.oclc.oai.harvester.parser.record.OaiPmhRecord;
+import org.oclc.oai.harvester.parser.record.ResultInfo;
+import org.oclc.oai.harvester.verb.ListRecordsSaxWriteDirectly;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -26,8 +36,9 @@ public class HarvesterTask implements Runnable {
     private static final Logger LOGGER = Logger.getLogger(HarvesterTask.class);
     private Duration duration;
     private Duration delay;
-    private static final long INTERVAL = 10000;
+    private static final Duration INTERVAL = new Duration(0, 10, 0);
     private final ScheduledExecutorService scheduler;
+    private static final int MAX_NUMBER_HARVESTED_FILES_FOR_TEST = 2; //todo: Put at 10, but for first tests, it is faster with 2
 
     public HarvesterTask(ScheduledExecutorService scheduler, Duration maxDuration, Duration delay) {
         this.duration = maxDuration;
@@ -54,17 +65,16 @@ public class HarvesterTask implements Runnable {
                 }
                 stopped = true;
             }
-            if (!stopped && (System.currentTimeMillis() + INTERVAL) < endTime) {
+            if (!stopped && (System.currentTimeMillis() + INTERVAL.getMilliseconds()) < endTime) {
                 cleanUp();
                 try {
-                    Thread.sleep(INTERVAL);
+                    Thread.sleep(INTERVAL.getMilliseconds());
                 } catch (InterruptedException e) {
                 }
             } else {
                 cleanUp();
                 stopped = true;
             }
-
         }
         LOGGER.info("Harvester process inactive");
         if (!scheduler.isShutdown()) {
@@ -87,12 +97,90 @@ public class HarvesterTask implements Runnable {
 
         //Check for each if the interval is right and which one should be done right now
         for(ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh : archivalInstitutionOaiPmhList) {
+            if(scheduler.isShutdown() || System.currentTimeMillis() > endTime) {
+                break;
+            }
             LOGGER.info("Checking if OAI profile is ready to be harvested: " + archivalInstitutionOaiPmh.getUrl() + " (set: " + archivalInstitutionOaiPmh.getSet() + ", metadataPrefix: " + archivalInstitutionOaiPmh.getMetadataPrefix() + ")");
-            if(archivalInstitutionOaiPmh.getLastHarvesting() == null || (archivalInstitutionOaiPmh.getLastHarvesting().getTime() + archivalInstitutionOaiPmh.getIntervalHarvesting() >= System.currentTimeMillis())) { //Ok, do harvest
-                LOGGER.info("This profile will be harvested now");
+            if(archivalInstitutionOaiPmh.isEnabled()) {
+                if(archivalInstitutionOaiPmh.getLastHarvesting() == null || (archivalInstitutionOaiPmh.getLastHarvesting().getTime() + archivalInstitutionOaiPmh.getIntervalHarvesting() >= System.currentTimeMillis())) { //Ok, do harvest
+                    LOGGER.info("This profile will be harvested now");
+
+                    String baseURL = archivalInstitutionOaiPmh.getUrl();
+                    String metadataPrefix = archivalInstitutionOaiPmh.getMetadataPrefix();
+
+                    String from = null;
+                    String until = null;
+                    if(archivalInstitutionOaiPmh.getLastHarvesting() != null) {
+                        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd"); //1980-01-01
+                        from = dateFormatter.format(archivalInstitutionOaiPmh.getLastHarvesting());
+                    }
+
+                    String setSpec = null;
+                    if(archivalInstitutionOaiPmh.getSet() != null) {
+                        setSpec = archivalInstitutionOaiPmh.getSet();
+                    }
+
+                    ArchivalInstitution archivalInstitution = archivalInstitutionOaiPmh.getArchivalInstitution();
+                    String directory = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getAiId() + APEnetUtilities.FILESEPARATOR + "oai_" + System.currentTimeMillis() + APEnetUtilities.FILESEPARATOR;
+                    File outputDirectory = new File(directory);
+                    outputDirectory.mkdirs();
+                    OaiPmhParser oaiPmhParser = new OaiPmhParser(outputDirectory);
+
+                    try {
+                        JpaUtil.beginDatabaseTransaction();
+                        runOai(baseURL, from, until, metadataPrefix, setSpec, oaiPmhParser);
+                        archivalInstitutionOaiPmh.setLastHarvesting(new Date());
+                        if(!APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()) {
+                            archivalInstitutionOaiPmh.setEnabled(false);
+                        }
+
+                        //todo: Create DB for those items
+                        File[] fileHarvested = outputDirectory.listFiles();
+
+                        //todo: Create QUEUE for those items!!!!!!!!!!!!!!!
+
+                        //Delete the directory
+                        outputDirectory.delete();
+
+                        JpaUtil.commitDatabaseTransaction();
+                    } catch (Exception e) {
+                        JpaUtil.rollbackDatabaseTransaction();
+                        LOGGER.error("Harvesting failed - should we put an 'error' flag in the DB?");
+                    }
+                }
             }
         }
 
         return false;
+    }
+
+    private void runOai(String baseURL, String from, String until, String metadataPrefix, String setSpec,  OaiPmhParser oaiPmhParser) throws Exception {
+        int number = 0;
+        ListRecordsSaxWriteDirectly listRecordsSax = new ListRecordsSaxWriteDirectly();
+        ResultInfo resultInfo = listRecordsSax.harvest(baseURL, from, until, setSpec, metadataPrefix, oaiPmhParser, number);
+
+        while (resultInfo != null) {
+            List<String> errors = resultInfo.getErrors();
+            if (errors != null && errors.size() > 0) {
+                LOGGER.info("Found errors");
+                for (String item : errors) {
+                    LOGGER.info(item);
+                }
+                LOGGER.info("Error record: " + resultInfo.getIdentifier());
+                break;
+            }
+
+            String resumptionToken = resultInfo.getNewResumptionToken();
+            LOGGER.info("resumptionToken: '" + resumptionToken + "'");
+            if (resumptionToken == null || resumptionToken.length() == 0) {
+                resultInfo = null;
+            } else {
+                number++;
+                resultInfo = listRecordsSax.harvest(baseURL, resumptionToken, oaiPmhParser, number);
+                if(!APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing() && number > MAX_NUMBER_HARVESTED_FILES_FOR_TEST) {
+                    resultInfo = null;
+                }
+            }
+        }
     }
 }

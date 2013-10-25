@@ -45,13 +45,12 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
 
     public String execute() throws Exception {
         step = 0;
-        int partnerId = SecurityContext.get().getPartnerId();
-        userProfiles = DAOFactory.instance().getUserprofileDAO().getUserprofiles(partnerId);
+        int archivalInstitutionId = SecurityContext.get().getSelectedInstitution().getId();
+        userProfiles = DAOFactory.instance().getUserprofileDAO().getUserprofiles(archivalInstitutionId);
         if(userProfiles.size() < 1) {
             addActionError("You need at least one user profile created before creating an automatic OAI-PMH profile");
             return ERROR;
         }
-        int archivalInstitutionId = SecurityContext.get().getSelectedInstitution().getId();
         ArchivalInstitutionOaiPmhDAO archivalInstitutionOaiPmhDAO = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
         archivalInstitutionOaiPmhs = archivalInstitutionOaiPmhDAO.getArchivalInstitutionOaiPmhs(archivalInstitutionId);
         LOG.info(archivalInstitutionOaiPmhs.size() + " archivalInstitutionOaiPmh for this archive");
@@ -72,7 +71,7 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
     public String page3() throws Exception {
         if(getUrl() != null) {
             step = 2;
-            int partnerId = SecurityContext.get().getPartnerId();
+            int aiId = SecurityContext.get().getSelectedInstitution().getId();
             try {
                 metadataFormats = RetrieveOaiPmhInformation.retrieveMetadataFormats(getUrl());
                 if(metadataFormats == null || metadataFormats.isEmpty())
@@ -81,14 +80,32 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
                 addActionError("Sorry, the URL is not a correct repository URL or the repository does not contain any metadata formats...");
                 return ERROR;
             }
-            sets = RetrieveOaiPmhInformation.retrieveSets(getUrl());
-            userProfiles = DAOFactory.instance().getUserprofileDAO().getUserprofiles(partnerId);
+            List<String> setsInRepository = RetrieveOaiPmhInformation.retrieveSets(getUrl());
+            sets = new ArrayList<String>(setsInRepository);
+            List<ArchivalInstitutionOaiPmh> archivalInstitutionOaiPmhList = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().getArchivalInstitutionOaiPmhs(aiId);
+            userProfiles = DAOFactory.instance().getUserprofileDAO().getUserprofiles(aiId);
+            if(setsInRepository != null) {
+                for(String set : setsInRepository) {
+                    for(ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh : archivalInstitutionOaiPmhList) {
+                        if(archivalInstitutionOaiPmh.getSet().equals(set) && archivalInstitutionOaiPmh.getUrl().equals(getUrl())) {
+                            sets.remove(archivalInstitutionOaiPmh.getSet());
+                        }
+                    }
+                }
+            }
+
+            if(sets.size() == 0 && setsInRepository.size() != 0 && getOaiprofiles() == -1) {
+                addActionError("Sorry, all your sets are already being used in other profiles. you need to delete some profiles to continue, or edit profiles");
+                return ERROR;
+            }
+
             intervals = new ArrayList<Interval>(3);
             intervals.add(new Interval(1, INTERVAL_1_MONTH));
             intervals.add(new Interval(3, INTERVAL_3_MONTH));
             intervals.add(new Interval(6, INTERVAL_6_MONTH));
             if(getOaiprofiles() != -1) {
                 ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().findById(getOaiprofiles().longValue());
+                sets.add(archivalInstitutionOaiPmh.getSet());
                 setSelectedSet(archivalInstitutionOaiPmh.getSet());
                 setSelectedMetadataFormat(archivalInstitutionOaiPmh.getMetadataPrefix());
                 setSelectedUserProfile(archivalInstitutionOaiPmh.getProfileId().intValue());
