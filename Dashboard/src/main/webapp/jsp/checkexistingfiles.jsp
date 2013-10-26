@@ -21,6 +21,7 @@
 	       				<s:hidden name="existingNewXslFilesUploaded[%{#stat.index}].fileId" value="%{top.fileId}"></s:hidden>
 	       				<s:hidden name="existingNewXslFilesUploaded[%{#stat.index}].fileType" value="%{top.fileType}"></s:hidden>
 	       				<s:hidden name="existingNewXslFilesUploaded[%{#stat.index}].fileName" value="%{top.fileName}"></s:hidden>
+	       				<s:hidden name="existingNewXslFilesUploaded[%{#stat.index}].filePath" value="%{top.filePath}"></s:hidden>
 	       			</s:iterator>
 	        	</div>
 	        	<br>
@@ -36,7 +37,8 @@
 	       				<s:hidden name="existingNewXmlFilesUploaded[%{#stat.index}].fileId" value="%{top.fileId}"></s:hidden>
 	       				<s:hidden name="existingNewXmlFilesUploaded[%{#stat.index}].fileType" value="%{top.fileType}"></s:hidden>
 	       				<s:hidden name="existingNewXmlFilesUploaded[%{#stat.index}].fileName" value="%{top.fileName}"></s:hidden>		        			
-	        		</s:iterator>							
+	       				<s:hidden name="existingNewXmlFilesUploaded[%{#stat.index}].filePath" value="%{top.filePath}"></s:hidden>
+	        		</s:iterator>
 	        	</div>
 	        	<br>
 	        	<br>

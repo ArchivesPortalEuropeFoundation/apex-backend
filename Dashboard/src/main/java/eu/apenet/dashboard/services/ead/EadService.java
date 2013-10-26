@@ -226,7 +226,7 @@ public class EadService {
 	private static void deleteFromQueueInternal(QueueItem queueItem) throws IOException {
 		UpFile upFile = queueItem.getUpFile();
 		if (upFile != null) {
-			String filename = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath();
+			String filename = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath() + upFile.getFilename();
 			File file = new File(filename);
 			File aiDir = file.getParentFile();
 			ContentUtils.deleteFile(file, false);
@@ -244,7 +244,7 @@ public class EadService {
 		UpFileDAO upFileDAO = DAOFactory.instance().getUpFileDAO();
 		List<UpFile> upFiles = upFileDAO.getAllNotAssociatedFiles();
 		for (UpFile upFile : upFiles) {
-			String filename = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath();
+			String filename = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath() + upFile.getFilename();
 			try {
 				
 				File file = new File(filename);

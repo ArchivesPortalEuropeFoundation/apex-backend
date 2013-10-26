@@ -674,7 +674,7 @@ public abstract class ManualUploader {
     private UpFile createUpFile(String upDirPath, String filePath, String uploadMethodString, Integer aiId, FileType fileType){
         UpFile upFile = new UpFile();
         upFile.setFilename(filePath);
-        upFile.setPath(upDirPath + filePath);
+        upFile.setPath(upDirPath);
 
         UploadMethod uploadMethod = DAOFactory.instance().getUploadMethodDAO().getUploadMethodByMethod(uploadMethodString);
         upFile.setUploadMethod(uploadMethod);

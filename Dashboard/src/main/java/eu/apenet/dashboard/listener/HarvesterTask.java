@@ -6,6 +6,7 @@ import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
+import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.*;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
@@ -121,7 +122,8 @@ public class HarvesterTask implements Runnable {
                     }
 
                     ArchivalInstitution archivalInstitution = archivalInstitutionOaiPmh.getArchivalInstitution();
-                    String directory = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitution.getAiId() + APEnetUtilities.FILESEPARATOR + "oai_" + System.currentTimeMillis() + APEnetUtilities.FILESEPARATOR;
+                    String subdirectory = APEnetUtilities.FILESEPARATOR + archivalInstitution.getAiId() + APEnetUtilities.FILESEPARATOR + "oai_" + System.currentTimeMillis() + APEnetUtilities.FILESEPARATOR;
+                    String directory = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + subdirectory;
                     File outputDirectory = new File(directory);
                     outputDirectory.mkdirs();
                     OaiPmhParser oaiPmhParser = new OaiPmhParser(outputDirectory);
@@ -134,18 +136,21 @@ public class HarvesterTask implements Runnable {
                             archivalInstitutionOaiPmh.setEnabled(false);
                         }
 
-                        //todo: Create DB for those items
-                        File[] fileHarvested = outputDirectory.listFiles();
+                        File[] harvestedFiles = outputDirectory.listFiles();
+                        UpFileDAO upFileDAO = DAOFactory.instance().getUpFileDAO();
+                        for(File file : harvestedFiles) {
+                            UpFile upFile = createUpFile(subdirectory, file.getName(), UploadMethod.OAI_PMH, archivalInstitution.getAiId(), FileType.XML);
+                            upFileDAO.store(upFile);
+                        }
 
-                        //todo: Create QUEUE for those items!!!!!!!!!!!!!!!
-
-                        //Delete the directory
-                        outputDirectory.delete();
+                        //todo: Create QUEUE for those items!!!!!!!!!!!!!!! Wait for Stefan to be done with profiles?
 
                         JpaUtil.commitDatabaseTransaction();
                     } catch (Exception e) {
                         JpaUtil.rollbackDatabaseTransaction();
                         LOGGER.error("Harvesting failed - should we put an 'error' flag in the DB?");
+                    } finally {
+                        outputDirectory.delete();
                     }
                 }
             }
@@ -182,5 +187,20 @@ public class HarvesterTask implements Runnable {
                 }
             }
         }
+    }
+
+    private UpFile createUpFile(String upDirPath, String filePath, String uploadMethodString, Integer aiId, FileType fileType){
+        UpFile upFile = new UpFile();
+        upFile.setFilename(filePath);
+        upFile.setPath(upDirPath);
+
+        UploadMethod uploadMethod = DAOFactory.instance().getUploadMethodDAO().getUploadMethodByMethod(uploadMethodString);
+        upFile.setUploadMethod(uploadMethod);
+
+        upFile.setAiId(aiId);
+
+        upFile.setFileType(fileType);
+
+        return upFile;
     }
 }

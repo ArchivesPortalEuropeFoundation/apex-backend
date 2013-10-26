@@ -14,7 +14,7 @@
                 <select name="oaiprofiles" id="oaiprofiles">
                     <option value="-1" ><s:property value="getText('label.harvesting.createnewprofile')"/></option>
                     <c:forEach var="archivalInstitutionOaiPmh" items="${archivalInstitutionOaiPmhs}">
-                        <option value="${archivalInstitutionOaiPmh.id}">${archivalInstitutionOaiPmh.url} (${archivalInstitutionOaiPmh.set} - ${archivalInstitutionOaiPmh.metadataPrefix})</option>
+                        <option value="${archivalInstitutionOaiPmh.id}">${archivalInstitutionOaiPmh.url} (${archivalInstitutionOaiPmh.set} - ${archivalInstitutionOaiPmh.metadataPrefix} - ${archivalInstitutionOaiPmh.enabled})</option>
                     </c:forEach>
                 </select>
                 <br />

@@ -425,7 +425,7 @@ public class UploadContentAction extends AbstractInstitutionAction {
         UpFile upFile = new UpFile();
 
         UpFileDAO upFileDao = DAOFactory.instance().getUpFileDAO();
-        upFile.setPath(APEnetUtilities.FILESEPARATOR + "up" + APEnetUtilities.FILESEPARATOR + aiId + APEnetUtilities.FILESEPARATOR + filePath);
+        upFile.setPath(APEnetUtilities.FILESEPARATOR + "up" + APEnetUtilities.FILESEPARATOR + aiId + APEnetUtilities.FILESEPARATOR);
 
         UploadMethodDAO uploadMethodDao = DAOFactory.instance().getUploadMethodDAO();
         UploadMethod uploadMethod = uploadMethodDao.getUploadMethodByMethod(uploadMethodString);

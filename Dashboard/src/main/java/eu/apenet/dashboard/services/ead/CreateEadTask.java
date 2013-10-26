@@ -30,20 +30,19 @@ public class CreateEadTask extends AbstractEadTask {
 	protected Ead execute(XmlType xmlType, UpFile upFile, Integer aiId) throws Exception {
 		String fileName = upFile.getFilename();
 		try {
-			String uploadedFilesPath = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath()
-					+ APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR;
+			String uploadedFilesPath = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath();
 			
 			boolean isConverted;
 			try {
 				isConverted = Boolean.valueOf(ExistingFilesChecker.extractAttributeFromEad(
-						uploadedFilesPath + upFile.getFilename(), "eadheader/revisiondesc/change/item", null, false));
+						uploadedFilesPath + upFile.getPath() + upFile.getFilename(), "eadheader/revisiondesc/change/item", null, false));
 			} catch (Exception e) {
 				isConverted = false;
 			}
 
 			String title;
 			try {
-				title = ExistingFilesChecker.extractAttributeFromEad(uploadedFilesPath + upFile.getFilename(),
+				title = ExistingFilesChecker.extractAttributeFromEad(uploadedFilesPath + upFile.getPath() + upFile.getFilename(),
 						"eadheader/filedesc/titlestmt/titleproper", null, true).trim();
 			} catch (WstxParsingException e) {
 				title = "";
@@ -51,7 +50,7 @@ public class CreateEadTask extends AbstractEadTask {
 
 			String eadid = "";
 			try {
-				eadid = ExistingFilesChecker.extractAttributeFromEad(uploadedFilesPath + upFile.getFilename(),
+				eadid = ExistingFilesChecker.extractAttributeFromEad(uploadedFilesPath + upFile.getPath() + upFile.getFilename(),
 						"eadheader/eadid", null, true).trim();
 			} catch (WstxParsingException e) {
 			}
@@ -82,11 +81,10 @@ public class CreateEadTask extends AbstractEadTask {
 			newEad = DAOFactory.instance().getEadDAO().store(newEad);
 
 			File srcFile = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath()
-					+ APEnetUtilities.FILESEPARATOR + aiId + APEnetUtilities.FILESEPARATOR + fileName);
+					+ upFile.getPath() + fileName);
 
 			FileUtils.copyFile(srcFile, destFile);
-			File uploadDir = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath()
-					+ APEnetUtilities.FILESEPARATOR + aiId + APEnetUtilities.FILESEPARATOR);
+			File uploadDir = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath());
 
 			if (srcFile.exists())
 				FileUtils.forceDelete(srcFile);
@@ -99,7 +97,7 @@ public class CreateEadTask extends AbstractEadTask {
 
 		} catch (Exception e) {
 			logAction(xmlType, fileName, e);
-			throw new APEnetException("Could not create the file with from: " + upFile.getFilename(), e);
+			throw new APEnetException("Could not create the file with from: " + upFile.getPath() + upFile.getFilename(), e);
 		}
 	}
 
@@ -116,7 +114,7 @@ public class CreateEadTask extends AbstractEadTask {
 		
 	}
 
-	public static String getPath(XmlType xmlType,ArchivalInstitution archivalInstitution) {
+	public static String getPath(XmlType xmlType, ArchivalInstitution archivalInstitution) {
 		String countryIso = archivalInstitution.getCountry().getIsoname().trim();
 		String startPath = APEnetUtilities.FILESEPARATOR + countryIso + APEnetUtilities.FILESEPARATOR
 				+ archivalInstitution.getAiId() + APEnetUtilities.FILESEPARATOR;

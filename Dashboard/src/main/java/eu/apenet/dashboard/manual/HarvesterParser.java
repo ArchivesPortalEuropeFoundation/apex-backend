@@ -394,7 +394,7 @@ public class HarvesterParser extends AbstractParser {
             upFile.setAiId(ai_id);
             upFile.setFileType(FileType.XML);
             upFile.setFilename(fileName);
-            upFile.setPath(filePath);
+            upFile.setPath(new File(filePath).getParent());
             upFile.setUploadMethod(DAOFactory.instance().getUploadMethodDAO().getUploadMethodByMethod(UploadMethod.OAI_PMH));
 
 //            HibernateUtil.beginDatabaseTransaction();
@@ -459,7 +459,7 @@ public class HarvesterParser extends AbstractParser {
             upFile.setAiId(ai_id);
             upFile.setFileType(FileType.XML);
             upFile.setFilename(filename);
-            upFile.setPath(APEnetUtilities.FILESEPARATOR + ai_id + APEnetUtilities.FILESEPARATOR + filename);
+            upFile.setPath(APEnetUtilities.FILESEPARATOR + ai_id + APEnetUtilities.FILESEPARATOR);
             upFile.setUploadMethod(DAOFactory.instance().getUploadMethodDAO().getUploadMethodByMethod(UploadMethod.OAI_PMH));
             DAOFactory.instance().getUpFileDAO().store(upFile);
             HibernateUtil.commitDatabaseTransaction();

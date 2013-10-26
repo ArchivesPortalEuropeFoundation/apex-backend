@@ -90,7 +90,7 @@ public class ExistingFilesChecker {
 		// Getting Archival Institution country
 		ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
 		this.archivalInstitutionCountry = archivalInstitutionDao.findById(this.archivalInstitutionId).getCountry().getIsoname();
-		this.uploadedFilesPath = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + this.archivalInstitutionId.toString() + APEnetUtilities.FILESEPARATOR;
+		this.uploadedFilesPath = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath();
 		this.repoPath = APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR;
 		this.xslPath = this.repoPath + this.archivalInstitutionCountry + APEnetUtilities.FILESEPARATOR + this.archivalInstitutionId.toString() + APEnetUtilities.FILESEPARATOR + "XSL" + APEnetUtilities.FILESEPARATOR;
 	}
@@ -111,11 +111,12 @@ public class ExistingFilesChecker {
 			FileUnit fileUnit = new FileUnit();
 			fileUnit.setFileId(aListXml.getId());
 			fileUnit.setFileName(aListXml.getFilename());
+			fileUnit.setFilePath(aListXml.getPath());
 			fileUnit.setFileType(aListXml.getFileType());
 			
 			//It is necessary to check if the XML file uploaded is a Finding Aid or a Holdings Guide
             try {
-			    eadType = extractAttributeFromEad(this.uploadedFilesPath + aListXml.getFilename(), "archdesc", "type", true);
+			    eadType = extractAttributeFromEad(this.uploadedFilesPath + aListXml.getPath() + aListXml.getFilename(), "archdesc", "type", true);
             } catch (WstxParsingException e){
                 //We get the exception just after - so nothing to do here.
             }
@@ -144,6 +145,7 @@ public class ExistingFilesChecker {
 			FileUnit fileUnit = new FileUnit();
 			fileUnit.setFileId(aListXsl.getId());
 			fileUnit.setFileName(aListXsl.getFilename());
+			fileUnit.setFilePath(aListXsl.getPath());
 			fileUnit.setFileType(aListXsl.getFileType());
 			fileUnit.setEadType("");
 			fileUnit.setEadid("");
@@ -192,10 +194,10 @@ public class ExistingFilesChecker {
 				
 				if (!dataBaseCommitError) {
 					try {
-						insertFileToTempFiles(this.uploadedFilesPath + fileUnit.getFileName(), this.repoPath
+						insertFileToTempFiles(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), this.repoPath
                                 + this.archivalInstitutionCountry + APEnetUtilities.FILESEPARATOR
                                 + this.archivalInstitutionId + APEnetUtilities.FILESEPARATOR + "XSL"
-                                + APEnetUtilities.FILESEPARATOR + fileUnit.getFileName());
+                                + APEnetUtilities.FILESEPARATOR + fileUnit.getFileName(), fileUnit.getFilePath());
 					} catch (APEnetException e) {
 						LOG.error("The file " + fileUnit.getFileName() + " could not be removed from the up repository or stored in the temporal repository");
 					}	
@@ -206,13 +208,13 @@ public class ExistingFilesChecker {
 			// The file has XML format
 			String eadid = "";
             try {
-                eadid = extractAttributeFromEad(this.uploadedFilesPath + fileUnit.getFileName(), "eadheader/eadid", null, true).trim();
+                eadid = extractAttributeFromEad(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/eadid", null, true).trim();
             } catch (WstxParsingException e){
                 LOG.error("File was not correct XML.", e);
                 additionalErrors += e.getMessage();
             }
             String err;
-            if((err = XmlChecker.isXmlParseable(new File(this.uploadedFilesPath + fileUnit.getFileName()))) != null){
+            if((err = XmlChecker.isXmlParseable(new File(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName()))) != null){
                 eadid = "error";
                 LOG.error("File was not correct XML.");
                 additionalErrors += "File was not correct XML. Impossible to parse it. Please check if file is XML. Error: " + err;
@@ -220,7 +222,7 @@ public class ExistingFilesChecker {
 
 			boolean isConverted;
             try {
-                isConverted = Boolean.valueOf(extractAttributeFromEad(uploadedFilesPath + fileUnit.getFileName(), "eadheader/revisiondesc/change/item", null, false));
+                isConverted = Boolean.valueOf(extractAttributeFromEad(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/revisiondesc/change/item", null, false));
             } catch (Exception e){
                 if(e instanceof WstxParsingException){
                     eadid = "error";
@@ -235,13 +237,13 @@ public class ExistingFilesChecker {
 
                 try {
                     LOG.info("Validating the EAC-CPF file we just uploaded");
-                    List<SAXParseException> exceptions = DocumentValidation.xmlValidation(uploadedFilesPath + fileUnit.getFileName(), Xsd_enum.XSD_EAC_SCHEMA);
+                    List<SAXParseException> exceptions = DocumentValidation.xmlValidation(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), Xsd_enum.XSD_EAC_SCHEMA);
                     if(exceptions != null){
                         fileUnit.setErrorInformation("The file " + fileUnit.getFileName() + " is not valid with EAC-CPF");
                         throw new APEnetException("The file " + fileUnit.getFileName() + " is not valid with EAC-CPF");
                     }
 
-                    String cpfId = extractAttributeFromEad(uploadedFilesPath + fileUnit.getFileName(), "eac-cpf/control/recordId", null, true);
+                    String cpfId = extractAttributeFromEad(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eac-cpf/control/recordId", null, true);
                     if(StringUtils.isBlank(cpfId)){
                         throw new APEnetException("recordId is empty in the file " + fileUnit.getFileName() + ", so we remove everything");
                     }
@@ -256,7 +258,7 @@ public class ExistingFilesChecker {
                     ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.archivalInstitutionId);
                     cpfContent.setArchivalInstitution(archivalInstitution);
 
-                    cpfContent.setXml(FileUtils.readFileToString(new File(uploadedFilesPath + fileUnit.getFileName()), "utf-8"));
+                    cpfContent.setXml(FileUtils.readFileToString(new File(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName()), "utf-8"));
 
                     HibernateUtil.beginDatabaseTransaction();
                     cpfContentDAO.insertSimple(cpfContent);
@@ -264,10 +266,10 @@ public class ExistingFilesChecker {
                     String dirCpf = repoPath + archivalInstitutionCountry + APEnetUtilities.FILESEPARATOR + archivalInstitutionId + APEnetUtilities.FILESEPARATOR + "CPF";
                     if(!new File(dirCpf).exists())
                         new File(dirCpf).mkdir();
-                    insertFileToTempFiles(uploadedFilesPath + fileUnit.getFileName(), dirCpf + APEnetUtilities.FILESEPARATOR + fileUnit.getFileName());
+                    insertFileToTempFiles(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), dirCpf + APEnetUtilities.FILESEPARATOR + fileUnit.getFileName(), fileUnit.getFilePath());
                     LOG.info("The CPF file " + fileUnit.getFileName() + " has been stored in the REPO directory");
                 } catch (Exception e) {
-                    new File(uploadedFilesPath + fileUnit.getFileName()).delete();
+                    new File(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName()).delete();
                     LOG.error("The EAC-CPF could not be stored in cpfContent table [Database Rollback]. Error:" + e.getMessage(), e);
                     HibernateUtil.rollbackDatabaseTransaction();
                     return "error";
@@ -295,11 +297,11 @@ public class ExistingFilesChecker {
 
                     if (!dataBaseCommitError) {
                         try {
-                            File file = new File(uploadedFilesPath + fileUnit.getFileName());
+                            File file = new File(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName());
                             if (file.exists())
                                 FileUtils.forceDelete(file);
 
-                            File uploadDir = new File(uploadedFilesPath);
+                            File uploadDir = new File(uploadedFilesPath + fileUnit.getFilePath());
                             if (uploadDir.listFiles().length == 0) // There aren't any file in the directory, so it should be removed
                                 FileUtils.forceDelete(uploadDir);
                         } catch (IOException ex) {
@@ -486,13 +488,13 @@ public class ExistingFilesChecker {
         try {
             deleteFileFromDDBB(fileUnit.getFileId());
             try {
-                ContentUtils.deleteFile(uploadedFilesPath + fileUnit.getFileName());
-                File uploadDir = new File(uploadedFilesPath);
+                ContentUtils.deleteFile(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName());
+                File uploadDir = new File(uploadedFilesPath + fileUnit.getFilePath());
                 if (uploadDir.listFiles().length == 0)
                     FileUtils.forceDelete(uploadDir);
                 LOG.info("The file " + fileUnit.getFileName() + " has been deleted successfully.");
             } catch (Exception e) {
-                throw new APEnetException("The file " + fileUnit.getFileName() + " or the directory " + uploadedFilesPath + " could not be removed. Error: " + e.getMessage());
+                throw new APEnetException("The file " + fileUnit.getFileName() + " or the directory " + uploadedFilesPath + fileUnit.getFilePath() + " could not be removed. Error: " + e.getMessage());
             }
         } catch (APEnetException ape){
             LOG.error(ape.getMessage(), ape);
@@ -507,7 +509,7 @@ public class ExistingFilesChecker {
 			// The file is an XSL(t) file
             try {
                 deleteFileFromDDBB(fileUnit.getFileId());
-                insertFileToTempFiles(uploadedFilesPath + fileUnit.getFileName(), xslPath + fileUnit.getFileName());
+                insertFileToTempFiles(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), xslPath + fileUnit.getFileName(), fileUnit.getFilePath());
                 LOG.info("The file " + fileUnit.getFileName() + " has been overwritten");
             } catch (APEnetException ape) {
                 LOG.error(ape.getMessage(), ape);
@@ -552,7 +554,7 @@ public class ExistingFilesChecker {
 
 	    		boolean isConverted;
 	            try {
-	                isConverted = Boolean.valueOf(extractAttributeFromEad(uploadedFilesPath + fileUnit.getFileName(), "eadheader/revisiondesc/change/item", null, false));
+	                isConverted = Boolean.valueOf(extractAttributeFromEad(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/revisiondesc/change/item", null, false));
 	            } catch (Exception e){
 	                if(e instanceof WstxParsingException){
 	                    eadid = STATUS_ERROR;
@@ -567,8 +569,8 @@ public class ExistingFilesChecker {
                     if (eadid.equals(STATUS_ERROR) || "".equals(eadid)) {
                         // It is necessary to remove the file from /mnt/tmp/up folder
                         LOG.info("The EAD " + fileUnit.getFileName() + " doesn't have a proper format: it doesn't have eadid or it has several");
-                        File file = new File(uploadedFilesPath + fileUnit.getFileName());
-                        File uploadDir = new File(uploadedFilesPath);
+                        File file = new File(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName());
+                        File uploadDir = new File(uploadedFilesPath + fileUnit.getFilePath());
                         try {
                             deleteFileFromDDBB(fileUnit.getFileId());
                             try {
@@ -644,11 +646,11 @@ public class ExistingFilesChecker {
 	// temporal directory and finally deletes the source file if everything is
 	// ok
 	// If the source folder is empty, then the folder will be removed
-	private void insertFileToTempFiles(String srcFilePath, String destFilePath) throws APEnetException {
+	private void insertFileToTempFiles(String srcFilePath, String destFilePath, String fileUnitFilePath) throws APEnetException {
         try {
             File srcFile = new File(srcFilePath);
             File destFile = new File(destFilePath);
-            File uploadDir = new File(uploadedFilesPath);
+            File uploadDir = new File(uploadedFilesPath + fileUnitFilePath);
             if (destFile.exists())
                 FileUtils.forceDelete(destFile);
 
@@ -694,7 +696,7 @@ public class ExistingFilesChecker {
         String oldeadid = "";
 
         try{
-            oldeadid = this.extractAttributeFromEad(this.uploadedFilesPath + fileUnit.getFileName(), "eadheader/eadid", null, true).trim();
+            oldeadid = this.extractAttributeFromEad(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/eadid", null, true).trim();
             DocumentBuilder builder = factory.newDocumentBuilder();
             InputStream in = new FileInputStream(path);
             Document doc = builder.parse(in);
@@ -732,7 +734,7 @@ public class ExistingFilesChecker {
                     return STATUS_ERROR;
                 } else {
                     //Change the path into upFile table to the new path.
-                    upfile.setPath(newfilepath);
+                    upfile.setPath(new File(newfilepath).getParent());
                     upFileDao.update(upfile);
                     String oldfname=upfile.getFilename();
                     String newfname= oldfname.replace(".xml", "") + neweadid + ".xml";
