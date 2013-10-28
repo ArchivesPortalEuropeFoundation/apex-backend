@@ -40,15 +40,36 @@ public class UserprofilesAction extends AbstractInstitutionAction {
 
     @Override
     public String input() {
+        setUp();
+
         UserprofileDAO profileDAO = DAOFactory.instance().getUserprofileDAO();
         List<Userprofile> queryResult = profileDAO.getUserprofiles(368);
         for (Userprofile entry : queryResult) {
             userprofiles.add(new SelectItem(Long.toString(entry.getId()), entry.getNameProfile()));
         }
-        if (userprofiles.size() >= 1) {
-            profilelist = userprofiles.iterator().next().getValue();
+        if(profilelist == null) {
+            profilelist = "1";
         }
 
+        if (StringUtils.isNotBlank(profilelist)) {
+            Long profilelistLong = Long.parseLong(profilelist);
+            Userprofile userprofile = profileDAO.findById(profilelistLong);
+            profileName = userprofile.getNameProfile();
+            associatedFiletype = userprofile.getFileType().toString();
+            uploadedFileAction = Integer.toString(userprofile.getUploadAction().getId());
+            existingFileAction = Integer.toString(userprofile.getExistAction().getId());
+            noEadidAction = Integer.toString(userprofile.getNoeadidAction().getId());
+            daoType = Integer.toString(userprofile.getDaoType().getId());
+        }
+        return SUCCESS;
+    }
+
+    @Override
+    public String execute() throws Exception {
+        return SUCCESS;
+    }
+
+    private void setUp() {
         associatedFiletypes.add(new SelectItem("1", getText("content.message.fa")));
         associatedFiletypes.add(new SelectItem("2", getText("content.message.hg")));
         associatedFiletypes.add(new SelectItem("3", getText("content.message.sg")));
@@ -67,39 +88,6 @@ public class UserprofilesAction extends AbstractInstitutionAction {
         daoTypes.add(new SelectItem("4", getText("userprofiles.dao.video")));
         daoTypes.add(new SelectItem("5", getText("userprofiles.dao.3D")));
         daoTypes.add(new SelectItem("0", getText("userprofiles.dao.unspecified")));
-
-        if (StringUtils.isNotBlank(profilelist)) {
-            Long profilelistLong = Long.parseLong(profilelist);
-            Userprofile userprofile = profileDAO.findById(profilelistLong);
-            profileName = userprofile.getNameProfile();
-            associatedFiletype = userprofile.getFileType().toString();
-            uploadedFileAction = Integer.toString(userprofile.getUploadAction().getId());
-            existingFileAction = Integer.toString(userprofile.getExistAction().getId());
-            noEadidAction = Integer.toString(userprofile.getNoeadidAction().getId());
-            daoType = Integer.toString(userprofile.getDaoType().getId());
-        }
-        return SUCCESS;
-    }
-
-    public String retrieveUserprofile() {
-        UserprofileDAO profileDAO = DAOFactory.instance().getUserprofileDAO();
-        if (StringUtils.isNotBlank(profilelist)) {
-            Long profilelistLong = Long.parseLong(profilelist);
-            Userprofile userprofile = profileDAO.findById(profilelistLong);
-            profileName = userprofile.getNameProfile();
-            associatedFiletype = userprofile.getFileType().toString();
-            uploadedFileAction = Integer.toString(userprofile.getUploadAction().getId());
-            existingFileAction = Integer.toString(userprofile.getExistAction().getId());
-            noEadidAction = Integer.toString(userprofile.getNoeadidAction().getId());
-            daoType = Integer.toString(userprofile.getDaoType().getId());
-        }
-        return SUCCESS;
-
-    }
-
-    @Override
-    public String execute() throws Exception {
-        return SUCCESS;
     }
 
     public Set<SelectItem> getUserprofiles() {

@@ -5,18 +5,18 @@
         </group>
         <group name="institutionManagerActions">
             showHome,selectArchive,
-            view, edit,contentmanager,updateContentmanager,			
+            view, edit,contentmanager,updateContentmanager,
             validatechangeainame, changeainame, downloadeag, upload, checkfilesuploaded,
             httpUpload, checkexistingfiles, cancelCheckexistingfiles, overwriteexistingfiles, canceloverwriteexistingfiles,
-            eadActions, batchEadActions, removeEseForFA, 
+            eadActions, batchEadActions, removeEseForFA,
             displayEseConvert, processEseConvert, showwarnings, download, link, removeLink, preview, downloadEse,
             displayEadFrontPage, generateTreeJSON, displayEadIntroduction, displayEadDidContent, displayCContent,
             batchAction, previewEdm, htmlPreview,
             displayConvertEseBatch, startConvertEseBatch,
             generateTreeJSONWithoutPreface, downloadHgSgStatistics,displayLinkToHgSg,displayLinkToHgSgAjax,linkToHgSg,
-	                    
+
             GoDashboard, dashboardHome, GoDashboardByInstitutionManager,
-	                    
+
             <!-- EAG -->
             createsimpleeag, createsimpleeagwithmenu, uploadsimpleeag, uploadsimpleeagwithmenu, uploadowneag, eaghttpuploadwithmenu,
             eaghttpupload, generaterepositorguidePossibleHGTitlePartJSON, generateInformationMessageJSON, uploadowneagwithmenu,
@@ -24,19 +24,19 @@
             removeInvalidEAG2012,
 
             <!-- Edition of EAD -->
-            <!-- editEad, editEadCreateDbEntries, editEadXml, editEadXmlSaveLevel, editEadXmlSaveAll, editEadXmlDeleteEntries, editEadGetFields, editEadAddField, --> 
-	
+            <!-- editEad, editEadCreateDbEntries, editEadXml, editEadXmlSaveLevel, editEadXmlSaveAll, editEadXmlDeleteEntries, editEadGetFields, editEadAddField, -->
+
             <!-- Harvesting -->
             harvestOAI, harvesting, stopHarvest, getThreadLevel, dbToEadAjax,
             <!-- edit userprofiles -->
-            edituserprofiles,
+            userprofiles,
 
             <!-- Uploading -->
             generateEadidResponseJSON, connectFTP, updateFtp, saveFtpFiles,
-	
+
             batchActionAjax, AjaxConversionControllerAction,
             addOneFA, clearFAsFromSession, getFAsFromSession, addAllFAsInSession, checkCurrentConversionOptions, saveConversionOptions,
-	
+
             hasCpfReady, displayCpfInformation,
 
             hgTreeCreation, addEadContentData, addCLevelData,deleteLevelHG,

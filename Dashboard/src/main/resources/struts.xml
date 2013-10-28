@@ -58,7 +58,7 @@
             <result name="error" type="tiles">blank</result>
             <result name="input2" type="redirectAction">
                 <param name="actionName">editWebFormEAG2012</param>
-            </result>   
+            </result>
         </action>
 
         <action name="createeag2012withmenu" class="eu.apenet.dashboard.manual.eag.WebFormEAG2012Action">
@@ -79,7 +79,7 @@
             <result name="input2" type="tiles">webFormEAG2012WithoutCreate</result>
             <result name="success" type="tiles">webFormEAG2012</result>
         </action>
-        
+
         <action name="removeInvalidEAG2012" class="eu.apenet.dashboard.manual.eag.WebFormEAG2012Action" method="removeInvalidEAG2012">
             <result name="success" type="redirectAction">
                 <param name="actionName">dashboardHome</param>
@@ -248,17 +248,17 @@
         </action>
 
         <action name="displayEadFrontPage"
-                        class="eu.apenet.commons.seconddisplay.DisplayEadContentAction">
+                class="eu.apenet.commons.seconddisplay.DisplayEadContentAction">
             <result name="success">/jsp/eadcontent/frontpage.jsp</result>
         </action>
 
         <action name="displayEadIntroduction"
-                        class="eu.apenet.commons.seconddisplay.DisplayEadContentAction">
+                class="eu.apenet.commons.seconddisplay.DisplayEadContentAction">
             <result name="success">/jsp/eadcontent/introduction.jsp</result>
         </action>
 
         <action name="displayEadDidContent"
-                        class="eu.apenet.commons.seconddisplay.DisplayEadContentAction">
+                class="eu.apenet.commons.seconddisplay.DisplayEadContentAction">
             <result name="success">/jsp/eadcontent/didcontent.jsp</result>
         </action>
 
@@ -631,14 +631,14 @@
             </result>
         </action>
 
-		<action name="displayLinkToHgSg" class="eu.apenet.dashboard.actions.content.LinkToHgSgAction" method="input" >
-			<result name="success" type="tiles">content.linktohgsg</result>
-			<result name="input" type="tiles">content.linktohgsg</result>
-		    <result name="errorLinkHgSg" type="redirectAction">
-				<param name="actionName">contentmanager</param>
-				<param name="errorLinkHgSg">true</param>
-			</result>
-		</action>
+        <action name="displayLinkToHgSg" class="eu.apenet.dashboard.actions.content.LinkToHgSgAction" method="input" >
+            <result name="success" type="tiles">content.linktohgsg</result>
+            <result name="input" type="tiles">content.linktohgsg</result>
+            <result name="errorLinkHgSg" type="redirectAction">
+                <param name="actionName">contentmanager</param>
+                <param name="errorLinkHgSg">true</param>
+            </result>
+        </action>
 
         <action name="displayLinkToHgSgAjax" class="eu.apenet.dashboard.actions.content.LinkToHgSgAction" method="retrieveClevels" >
             <result name="success">/jsp/contentmanager/linktohgsg-ajax.jsp</result>
@@ -1036,15 +1036,10 @@
             <result name="success" type="tiles">automaticharvestingcreation</result>
             <result name="error">/jsp/templates/blank.jsp</result>
         </action>
-        <action name="edituserprofiles" class="eu.apenet.dashboard.manual.UserprofilesAction">
+        <action name="userprofiles" class="eu.apenet.dashboard.manual.UserprofilesAction" method="input">
             <interceptor-ref name="changeLanguageStack"/>
-            <result name="input" type="tiles">userprofilesMain</result>
             <result name="success" type="tiles">userprofilesMain</result>
-        </action>
-        <action name="edituserprofiles" class="eu.apenet.dashboard.manual.UserprofilesAction" method="input">
-            <interceptor-ref name="changeLanguageStack"/>
             <result name="input" type="tiles">userprofilesMain</result>
-            <result name="success" type="tiles">userprofilesMain</result>
         </action>
     </package>
 </struts>

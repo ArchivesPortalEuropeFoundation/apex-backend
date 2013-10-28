@@ -1,9 +1,8 @@
 function initPage() {
     $('#profileCb').change(function() {
-        var selected = $("#profileCb").val();
         var params = {profilelist: $("#profileCb").val()};
-        $.get("edituserprofiles.action", params, function(data) {
-            
+        $.get("userprofiles.action", params, function(data) {
+            $("#wrap").html(data);
         });
     });
 }
