@@ -9,6 +9,10 @@ import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.persistence.dao.UserprofileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Userprofile;
+import eu.apenet.persistence.vo.UserprofileDefaultDaoType;
+import eu.apenet.persistence.vo.UserprofileDefaultExistingFileAction;
+import eu.apenet.persistence.vo.UserprofileDefaultNoEadidAction;
+import eu.apenet.persistence.vo.UserprofileDefaultUploadAction;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,17 +41,18 @@ public class UserprofilesAction extends AbstractInstitutionAction {
     private String daoType;
 
     private static final Logger LOG = Logger.getLogger(UserprofilesAction.class);
+    private boolean isNewProfile = false;
 
     @Override
     public String input() {
         setUp();
 
         UserprofileDAO profileDAO = DAOFactory.instance().getUserprofileDAO();
-        List<Userprofile> queryResult = profileDAO.getUserprofiles(368);
+        List<Userprofile> queryResult = profileDAO.getUserprofiles(getAiId());
         for (Userprofile entry : queryResult) {
             userprofiles.add(new SelectItem(Long.toString(entry.getId()), entry.getNameProfile()));
         }
-        if(profilelist == null) {
+        if (profilelist == null) {
             profilelist = "1";
         }
 
@@ -66,6 +71,34 @@ public class UserprofilesAction extends AbstractInstitutionAction {
 
     @Override
     public String execute() throws Exception {
+        UserprofileDAO profileDAO = DAOFactory.instance().getUserprofileDAO();
+        Userprofile profile = profileDAO.findById(Long.parseLong(profilelist));
+
+        profile.setFileType(Integer.parseInt(associatedFiletype));
+        LOG.info(Integer.parseInt(uploadedFileAction));
+        profile.setUploadAction(UserprofileDefaultUploadAction.getUploadAction(uploadedFileAction));
+        profile.setExistAction(UserprofileDefaultExistingFileAction.getExistingFileAction(existingFileAction));
+        profile.setNoeadidAction(UserprofileDefaultNoEadidAction.getExistingFileAction(noEadidAction));
+        profile.setDaoType(UserprofileDefaultDaoType.getDaoType(daoType));
+
+        profileDAO.update(profile);
+        return SUCCESS;
+    }
+
+    public String addProfile() throws Exception {
+        UserprofileDAO profileDAO = DAOFactory.instance().getUserprofileDAO();
+        Userprofile profile = new Userprofile(getAiId(), "", 1);
+        profileDAO.store(profile);
+        return SUCCESS;
+    }
+
+    public String cancel() throws Exception {
+        if (isNewProfile) {
+            UserprofileDAO profileDAO = DAOFactory.instance().getUserprofileDAO();
+            Userprofile profile = profileDAO.findById(Long.parseLong(profilelist));
+            profileDAO.delete(profile);
+            isNewProfile = false;
+        }
         return SUCCESS;
     }
 

@@ -29,7 +29,7 @@
             <!-- Harvesting -->
             harvestOAI, harvesting, stopHarvest, getThreadLevel, dbToEadAjax,
             <!-- edit userprofiles -->
-            userprofiles,
+            userprofiles, addUserprofile, storeUserprofile, cancelUserprofileEditing,
 
             <!-- Uploading -->
             generateEadidResponseJSON, connectFTP, updateFtp, saveFtpFiles,

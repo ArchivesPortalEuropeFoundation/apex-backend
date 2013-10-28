@@ -1039,7 +1039,21 @@
         <action name="userprofiles" class="eu.apenet.dashboard.manual.UserprofilesAction" method="input">
             <interceptor-ref name="changeLanguageStack"/>
             <result name="success" type="tiles">userprofilesMain</result>
-            <result name="input" type="tiles">userprofilesMain</result>
+        </action>
+        <action name="addUserprofile" class="eu.apenet.dashboard.manual.UserprofilesAction" method="addUserprofile">
+            <interceptor-ref name="changeLanguageStack"/>
+            <result name="success" type="tiles">userprofilesMain</result>
+        </action>
+        <action name="storeUserprofile" class="eu.apenet.dashboard.manual.UserprofilesAction">
+            <interceptor-ref name="changeLanguageStack"/>
+            <result name="success" type="redirectAction">
+                <param name="actionName">userprofiles</param>
+            </result>
+        </action>
+        <action name="cancelUserprofileEditing" class="eu.apenet.dashboard.manual.UserprofilesAction" method="cancel">
+            <result name="success" type="redirectAction">
+                <param name="actionName">dashboardHome</param>
+            </result>
         </action>
     </package>
 </struts>

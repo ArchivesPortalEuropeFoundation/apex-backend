@@ -10,7 +10,7 @@ $(document).ready(function() {
 
 <div id="userprofiles">
     <%--<s:debug />--%>
-    <s:form method="POST" theme="simple">
+    <s:form method="POST" theme="simple" action="storeUserprofile">
         <table>
             <tr>
                 <th>
@@ -20,7 +20,7 @@ $(document).ready(function() {
             <tr>
                 <td>
                     <s:select id="profileCb" name="profilelist" list="userprofiles" listKey="value" listValue="content"></s:select>
-                    <input type="button" class="rightButton" value="<s:property value='getText("userprofiles.createprofile")' />" />
+                    <s:submit key="userprofiles.createprofile" action="addUserprofile" />
                 </td>
             </tr>
             <tr>
@@ -91,7 +91,7 @@ $(document).ready(function() {
             <tr>
                 <td>
                     <s:submit key="userprofiles.save" />
-                    <input type="button" class="rightButton" value="<s:property value='getText("userprofiles.cancel")' />" />
+                    <s:submit key="userprofiles.cancel" action="cancelUserprofileEditing" />
                 </td>
             </tr>
         </table>
