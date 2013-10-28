@@ -88,7 +88,16 @@
 			<add-attribute type="string" value="/js/breadcrumb.js"/>
         </put-list-attribute>
 	</definition>
-
+	<definition name="webFormEAG2012WithoutCreate" extends="dashboardLayout">
+		<put-attribute name="title" value="dashboard.eagwebform.title" />
+		<put-attribute name="menu" value="/jsp/eag2012/indexEAG2012Upload.jsp" />
+		<put-attribute name="body" value="/jsp/eag2012/webFormEAG2012.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+			<add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+			<add-attribute type="string" value="/js/eag2012/eag2012.js"/>
+			<add-attribute type="string" value="/js/breadcrumb.js"/>
+        </put-list-attribute>
+	</definition>
 	<definition name="webFormEAG2012WithMenu" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.eagwebform.title" />
 		<put-attribute name="menu" value="/jsp/indexDashboard.jsp" />
