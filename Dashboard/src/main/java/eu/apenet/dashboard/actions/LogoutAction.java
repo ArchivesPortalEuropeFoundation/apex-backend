@@ -13,6 +13,8 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.manual.eag.Eag2012;
 import eu.apenet.dashboard.security.SecurityService;
+import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
+import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 
 /**
@@ -30,7 +32,7 @@ public class LogoutAction extends ActionSupport {
 		log.trace("LogoutAction: execute() method is called");
 		log.trace("LogoutAction: removing the EAG temp files");
 		this.removeInvalidEAGAllInstitutions();
-	    log.trace("LogoutAction: logout user");
+		log.trace("LogoutAction: logout user");	
 		SecurityService.logout("true".equals(parent));
         return SUCCESS;
     }
@@ -44,22 +46,29 @@ public class LogoutAction extends ActionSupport {
 	}
 
     public void removeInvalidEAGAllInstitutions(){
-    	ArchivalLandscape al = new ArchivalLandscape();
-    	String alCountry = new ArchivalLandscape().getmyCountry();
-    	List<ArchivalInstitution> archives = al.showArchives();
-    	for(int i=0;i<archives.size();i++){
-		   String basePath = APEnetUtilities.FILESEPARATOR + alCountry + APEnetUtilities.FILESEPARATOR +
-					archives.get(i).getAiId() + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;
-	       String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;
-	       File invalidFile=new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath);
-	       if (invalidFile.exists() && invalidFile.isFile()) {
-				try {
-					FileUtils.forceDelete(invalidFile);
-				} catch (IOException e) {
-					log.error("ERROR trying to remove the file " + tempPath, e);
-				}
-			}  
-    		
+    	//This function remove all the invalid EAG files
+    	try {
+	    	ArchivalLandscape al = new ArchivalLandscape();
+	    	String alCountry = new ArchivalLandscape().getmyCountry();
+	    	List<ArchivalInstitution> archives = al.showArchives();
+	    	for(int i=0;i<archives.size();i++){
+			   String basePath = APEnetUtilities.FILESEPARATOR + alCountry + APEnetUtilities.FILESEPARATOR +
+						archives.get(i).getAiId() + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;
+		       String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;
+		       File invalidFile=new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath);
+		       if (invalidFile.exists() && invalidFile.isFile()) {
+					try {
+						FileUtils.forceDelete(invalidFile);
+					} catch (IOException e) {
+						log.error("ERROR trying to remove the file " + tempPath, e);
+					}
+				}  
+	    		
+	    	}
+    	}catch (IllegalArgumentException e) {
+    		log.debug("Current user is Admin.");
+    	}catch (Exception e) {
+    		log.error("Error trying recover the Archival Institution.");
     	}
     }
 	    
