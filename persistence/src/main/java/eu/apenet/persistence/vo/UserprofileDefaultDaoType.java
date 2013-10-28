@@ -56,9 +56,9 @@ public enum UserprofileDefaultDaoType {
         return resourceType;
     }
 
-    public static UserprofileDefaultDaoType getDaoType(String name){
+    public static UserprofileDefaultDaoType getDaoType(String id){
         for(UserprofileDefaultDaoType daoType : UserprofileDefaultDaoType.values()){
-            if(daoType.resourceType.equals(name))
+            if(daoType.id == Integer.parseInt(id))
                 return daoType;
         }
         return null;

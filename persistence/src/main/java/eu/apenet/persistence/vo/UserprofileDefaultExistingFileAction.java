@@ -37,9 +37,9 @@ public enum UserprofileDefaultExistingFileAction {
         return resourceName;
     }
 
-    public static UserprofileDefaultExistingFileAction getExistingFileAction(String name) {
+    public static UserprofileDefaultExistingFileAction getExistingFileAction(String id) {
         for (UserprofileDefaultExistingFileAction existingFileAction : UserprofileDefaultExistingFileAction.values()) {
-            if (existingFileAction.resourceName.equals(name)) {
+            if (existingFileAction.id == Integer.parseInt(id)) {
                 return existingFileAction;
             }
         }

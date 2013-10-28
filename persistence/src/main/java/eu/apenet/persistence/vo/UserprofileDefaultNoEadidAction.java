@@ -38,9 +38,9 @@ public enum UserprofileDefaultNoEadidAction {
         return resourceName;
     }
 
-    public static UserprofileDefaultNoEadidAction getExistingFileAction(String name) {
+    public static UserprofileDefaultNoEadidAction getExistingFileAction(String id) {
         for (UserprofileDefaultNoEadidAction noEadidAction : UserprofileDefaultNoEadidAction.values()) {
-            if (noEadidAction.resourceName.equals(name)) {
+            if (noEadidAction.id == Integer.parseInt(id)) {
                 return noEadidAction;
             }
         }

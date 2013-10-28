@@ -48,9 +48,9 @@ public enum UserprofileDefaultUploadAction {
         return id;
     }
 
-    public static UserprofileDefaultUploadAction getUploadAction(String name) {
+    public static UserprofileDefaultUploadAction getUploadAction(String id) {
         for (UserprofileDefaultUploadAction uploadAction : UserprofileDefaultUploadAction.values()) {
-            if (uploadAction.resourceName.equals(name)) {
+            if (uploadAction.id == Integer.parseInt(id)) {
                 return uploadAction;
             }
         }
