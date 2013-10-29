@@ -74,6 +74,7 @@ public class UserprofilesAction extends AbstractInstitutionAction {
         UserprofileDAO profileDAO = DAOFactory.instance().getUserprofileDAO();
         Userprofile profile = profileDAO.findById(Long.parseLong(profilelist));
 
+        profile.setNameProfile(profileName);
         profile.setFileType(Integer.parseInt(associatedFiletype));
         LOG.info(Integer.parseInt(uploadedFileAction));
         profile.setUploadAction(UserprofileDefaultUploadAction.getUploadAction(uploadedFileAction));
