@@ -44,6 +44,11 @@ public class BatchEadActions extends AbstractEadActions {
 		return addBatchToQueue(QueueAction.CONVERT_VALIDATE_PUBLISH, properties);
 	}
 
+    @Override
+    public String convertValidateEad(Properties properties) {
+        return addBatchToQueue(QueueAction.CONVERT_VALIDATE, properties);
+    }
+
 	@Override
 	public String deleteEseEdm() {
 		return addBatchToQueue(QueueAction.DELETE_ESE_EDM);

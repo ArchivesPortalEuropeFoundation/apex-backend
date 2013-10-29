@@ -145,15 +145,23 @@ public class EadService {
 		}
 	}
 
-	public static boolean convertValidatePublish(XmlType xmlType, Integer id, Properties properties) throws IOException {
+	public static boolean convertValidate(XmlType xmlType, Integer id, Properties properties) throws IOException {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		Ead ead = eadDAO.findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
-		if (!ead.isPublished()) {
-			addToQueue(ead, QueueAction.CONVERT_VALIDATE_PUBLISH, properties);
-		}
+        addToQueue(ead, QueueAction.CONVERT_VALIDATE, properties);
 		return true;
 	}
+
+    public static boolean convertValidatePublish(XmlType xmlType, Integer id, Properties properties) throws IOException {
+        EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+        Ead ead = eadDAO.findById(id, xmlType.getClazz());
+        SecurityContext.get().checkAuthorized(ead);
+        if (!ead.isPublished()) {
+            addToQueue(ead, QueueAction.CONVERT_VALIDATE_PUBLISH, properties);
+        }
+        return true;
+    }
 
 	public static void unpublish(XmlType xmlType, Integer id) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();

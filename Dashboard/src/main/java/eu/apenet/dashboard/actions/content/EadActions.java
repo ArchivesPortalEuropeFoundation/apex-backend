@@ -94,6 +94,18 @@ public class EadActions extends AbstractEadActions {
     }
 
     @Override
+    public String convertValidateEad(Properties properties) {
+        try {
+            EadService.convertValidate(getXmlType(), id, properties);
+            return SUCCESS;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return ERROR;
+        }
+
+    }
+
+    @Override
     public String convertValidatePublishEad(Properties properties) {
         try {
             EadService.convertValidatePublish(getXmlType(), id, properties);

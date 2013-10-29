@@ -13,6 +13,7 @@ import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
 public abstract class AbstractEadActions extends AbstractInstitutionAction{
     protected Logger logger = Logger.getLogger(getClass());
 	private static final String CONVERT_VALIDATE_PUBLISH = "convert_validate_publish";
+	private static final String CONVERT_VALIDATE = "convert_validate";
 	private static final String DELETE = "delete";
 	private static final String UNPUBLISH = "unpublish";
 	private static final String PUBLISH = "publish";
@@ -75,6 +76,8 @@ public abstract class AbstractEadActions extends AbstractInstitutionAction{
 			return unpublishEad();
 		}else if (DELETE.equals(action)){
 			return deleteEad();
+        }else if (CONVERT_VALIDATE.equals(action)) {
+            return convertValidateEad(getConversionParameters());
 		}else if(CONVERT_VALIDATE_PUBLISH.equals(action)){
 			return convertValidatePublishEad(getConversionParameters());
 		}else if(DELETE_ESE_EDM.equals(action)){
@@ -100,6 +103,7 @@ public abstract class AbstractEadActions extends AbstractInstitutionAction{
 	public abstract String publishEad();
 	public abstract String unpublishEad();
 	public abstract String deleteEad();
+    public abstract String convertValidateEad(Properties properties);
 	public abstract String convertValidatePublishEad(Properties properties);
 	public abstract String deleteEseEdm();
 	public abstract String deleteFromEuropeana();
