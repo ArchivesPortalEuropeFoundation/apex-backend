@@ -100,11 +100,13 @@ public class LinkingService {
 	}
 
 
-	public static boolean addFindingaidsToHgOrSg(Integer aiId, Long ecId, Long parentCLevelId, String prefixMethod, String titleMethod) {
-		EadSearchOptions eadSearchOptions = new EadSearchOptions();
-		eadSearchOptions.setEadClass(FindingAid.class);		
-		eadSearchOptions.setArchivalInstitionId(aiId);
-		return addFindingaidsToHgOrSgInternal(eadSearchOptions,ecId, parentCLevelId, prefixMethod, titleMethod);
+	public static boolean addAllFindingaidsToHgOrSg(EadSearchOptions eadSearchOptions, Long ecId, Long parentCLevelId, String prefixMethod, String titleMethod) {
+		EadSearchOptions eadSearchOptionsNew = new EadSearchOptions();
+		eadSearchOptionsNew.setEadClass(FindingAid.class);		
+		eadSearchOptionsNew.setArchivalInstitionId(eadSearchOptions.getArchivalInstitionId());
+		eadSearchOptionsNew.setOrderByAscending(eadSearchOptions.isOrderByAscending());
+		eadSearchOptionsNew.setOrderByField(eadSearchOptions.getOrderByField());
+		return addFindingaidsToHgOrSgInternal(eadSearchOptionsNew,ecId, parentCLevelId, prefixMethod, titleMethod);
 	}
 	public static boolean addFindingaidsToHgOrSg(EadSearchOptions eadSearchOptions, Integer id,  Long ecId, Long parentCLevelId, String prefixMethod, String titleMethod) {
 		EadSearchOptions eadSearchOptionsNew = new EadSearchOptions(eadSearchOptions);
@@ -119,22 +121,7 @@ public class LinkingService {
 	public static boolean addFindingaidsToHgOrSg(EadSearchOptions eadSearchOptions, Long ecId, Long parentCLevelId, String prefixMethod, String titleMethod) {
 		return addFindingaidsToHgOrSgInternal(new EadSearchOptions(eadSearchOptions), ecId, parentCLevelId, prefixMethod, titleMethod);
 	}
-	public static void main(String[] args) throws Exception{
-		InputStream xslIs = TransformationTool.class.getResourceAsStream("/xsl/fa2hg-extended.xsl");
-		Source xsltSource = new StreamSource(xslIs);
-		String filePath = "/home/bverhoef/eadfiles/Netherlands/APE_NA_APEnetEADfiles_20110307/DutchFAs_Part_6/APEnet_EAD_NL-HaNA_4.BRF.ead.xml";
-		InputStream fileIs = FileUtils.openInputStream(new File(filePath));
-		Map<String, String> params = new HashMap<String, String>();
-		//params.put("title", "titleproper");
-		//params.put("prefix", "unitid");
-		
-		StringWriter stringWriter = new StringWriter();
 
-		TransformationTool.createTransformation(fileIs, stringWriter, xsltSource, params);
-
-		String cLevelXml = stringWriter.toString();
-		System.out.println(cLevelXml);
-	}
 	private static boolean addFindingaidsToHgOrSgInternal(EadSearchOptions eadSearchOptions, Long ecId, Long parentCLevelId, String prefixMethod, String titleMethod) {
 		EadContent eadContent = DAOFactory.instance().getEadContentDAO().findById(ecId);
 		Ead hgOrSg = eadContent.getEad();
@@ -262,17 +249,21 @@ public class LinkingService {
 		return DAOFactory.instance().getEadDAO().countEads(eadSearchOptions);
 
 	}
-	public static List<Ead> getFindingaidsToLinkToHgOrSg( Integer aiId, Long ecId) {
-		EadSearchOptions eadSearchOptions = new EadSearchOptions();
-		eadSearchOptions.setEadClass(FindingAid.class);	
-		eadSearchOptions.setArchivalInstitionId(aiId);
-		return getFindingaidsToLinkToHgOrSgInternal(eadSearchOptions, ecId);
+	public static List<Ead> getAllFindingaidsToLinkToHgOrSg( EadSearchOptions eadSearchOptions, Long ecId) {
+		EadSearchOptions eadSearchOptionsNew = new EadSearchOptions();
+		eadSearchOptionsNew.setEadClass(FindingAid.class);		
+		eadSearchOptionsNew.setArchivalInstitionId(eadSearchOptions.getArchivalInstitionId());
+		eadSearchOptionsNew.setOrderByAscending(eadSearchOptions.isOrderByAscending());
+		eadSearchOptionsNew.setOrderByField(eadSearchOptions.getOrderByField());
+		return getFindingaidsToLinkToHgOrSgInternal(eadSearchOptionsNew, ecId);
 	}
-	public static long countFindingaidsToLinkToHgOrSg( Integer aiId, Long ecId) {
-		EadSearchOptions eadSearchOptions = new EadSearchOptions();
-		eadSearchOptions.setEadClass(FindingAid.class);	
-		eadSearchOptions.setArchivalInstitionId(aiId);
-		return countFindingaidsToLinkToHgOrSgInternal(eadSearchOptions, ecId);
+	public static long countAllFindingaidsToLinkToHgOrSg( EadSearchOptions eadSearchOptions, Long ecId) {
+		EadSearchOptions eadSearchOptionsNew = new EadSearchOptions();
+		eadSearchOptionsNew.setEadClass(FindingAid.class);		
+		eadSearchOptionsNew.setArchivalInstitionId(eadSearchOptions.getArchivalInstitionId());
+		eadSearchOptionsNew.setOrderByAscending(eadSearchOptions.isOrderByAscending());
+		eadSearchOptionsNew.setOrderByField(eadSearchOptions.getOrderByField());
+		return countFindingaidsToLinkToHgOrSgInternal(eadSearchOptionsNew, ecId);
 
 	}
 

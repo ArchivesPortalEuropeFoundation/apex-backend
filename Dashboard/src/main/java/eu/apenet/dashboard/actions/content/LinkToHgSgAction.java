@@ -124,7 +124,7 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 				LinkingService.addFindingaidsToHgOrSg(eadSearchOptions, ecIdLong, parentCLevelIdLong, selectPrefixMethod, titleMethod);
 				return SUCCESS;
 			} else {
-				LinkingService.addFindingaidsToHgOrSg(getAiId(), ecIdLong, parentCLevelIdLong, selectPrefixMethod, titleMethod);
+				LinkingService.addAllFindingaidsToHgOrSg(eadSearchOptions, ecIdLong, parentCLevelIdLong, selectPrefixMethod, titleMethod);
 				return SUCCESS;
 			}
 		}
@@ -155,8 +155,8 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 				findingAids = LinkingService.getFindingaidsToLinkToHgOrSg(eadSearchOptions, ecIdLong);
 				totalNumberOfFindingAids = LinkingService.countFindingaidsToLinkToHgOrSg(eadSearchOptions, ecIdLong);
 			} else {
-				findingAids = LinkingService.getFindingaidsToLinkToHgOrSg(getAiId(), ecIdLong);
-				totalNumberOfFindingAids = LinkingService.countFindingaidsToLinkToHgOrSg(getAiId(), ecIdLong);
+				findingAids = LinkingService.getAllFindingaidsToLinkToHgOrSg(eadSearchOptions, ecIdLong);
+				totalNumberOfFindingAids = LinkingService.countAllFindingaidsToLinkToHgOrSg(eadSearchOptions, ecIdLong);
 			}
 		}
 		getServletRequest().setAttribute("findingAids", findingAids);
