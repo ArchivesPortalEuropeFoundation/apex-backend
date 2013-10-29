@@ -478,6 +478,19 @@ public final class UserService {
 
 	}
 
+    public static void sendEmailHarvestFinished(boolean success, ArchivalInstitution archivalInstitution, User partner) {
+        EmailComposer emailComposer = new EmailComposer("emails/harvestFinished.txt", "Result of last harvesting process.", true, false);
+        emailComposer.setProperty("archivalInstitution", archivalInstitution.getAutform());
+        emailComposer.setProperty("name", partner.getFirstName());
+        emailComposer.setProperty("base", APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
+        if(success)
+            emailComposer.setProperty("body", "it was successful.");
+        else
+            emailComposer.setProperty("body", "it was not successful. Please contact admin for more information.");
+        Emailer emailer = new Emailer();
+        emailer.sendMessage(partner.getEmailAddress(), null, null, null, emailComposer);
+    }
+
 	public static String getBasePath() {
 
 		HttpServletRequest requestHttp = ServletActionContext.getRequest();

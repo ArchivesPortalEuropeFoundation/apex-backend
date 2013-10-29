@@ -2,6 +2,8 @@ package eu.apenet.dashboard.listener;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.security.SecurityContext;
+import eu.apenet.dashboard.security.UserService;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.dao.EadDAO;
@@ -128,6 +130,14 @@ public class HarvesterTask implements Runnable {
                     outputDirectory.mkdirs();
                     OaiPmhParser oaiPmhParser = new OaiPmhParser(outputDirectory);
 
+                    Integer userId = archivalInstitution.getPartnerId();
+                    User partner;
+                    if(userId == null) {
+                        partner = DAOFactory.instance().getUserDAO().getCountryManagerOfCountry(archivalInstitution.getCountry());
+                    } else {
+                        partner = DAOFactory.instance().getUserDAO().findById(userId);
+                    }
+
                     try {
                         JpaUtil.beginDatabaseTransaction();
                         runOai(baseURL, from, until, metadataPrefix, setSpec, oaiPmhParser);
@@ -146,8 +156,10 @@ public class HarvesterTask implements Runnable {
                         //todo: Create QUEUE for those items!!!!!!!!!!!!!!! Wait for Stefan to be done with profiles?
 
                         JpaUtil.commitDatabaseTransaction();
+                        UserService.sendEmailHarvestFinished(true, archivalInstitution, partner);
                     } catch (Exception e) {
                         JpaUtil.rollbackDatabaseTransaction();
+                        UserService.sendEmailHarvestFinished(false, archivalInstitution, partner);
                         LOGGER.error("Harvesting failed - should we put an 'error' flag in the DB?");
                     } finally {
                         outputDirectory.delete();

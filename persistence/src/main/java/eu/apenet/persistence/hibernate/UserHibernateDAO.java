@@ -2,6 +2,7 @@ package eu.apenet.persistence.hibernate;
 
 import java.util.List;
 
+import eu.apenet.persistence.vo.Country;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Example;
@@ -78,6 +79,15 @@ public class UserHibernateDAO extends AbstractHibernateDAO<User, Integer> implem
 		}		
 		return criteria.list();
 	}
+
+    public User getCountryManagerOfCountry(Country country) {
+        Criteria criteria = getSession().createCriteria(getPersistentClass(), "user");
+        criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        criteria = criteria.createAlias("user.userRole", "userRole");
+        criteria.add(Restrictions.eq("userRole.role", UserRole.ROLE_COUNTRY_MANAGER));
+        criteria.add(Restrictions.eq("user.countryId", country.getId()));
+        return (User)criteria.uniqueResult();
+    }
 
     @SuppressWarnings("unchecked")
     public boolean doesAdminExist() {
