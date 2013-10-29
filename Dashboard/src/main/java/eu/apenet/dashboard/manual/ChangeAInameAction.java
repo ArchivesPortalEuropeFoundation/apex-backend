@@ -23,6 +23,7 @@ import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
+import eu.apenet.dashboard.security.SecurityService;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
@@ -145,8 +146,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 		}		
 		return SUCCESS;
 	}
-	
-	
+
 	@SuppressWarnings("deprecation")
 	public String validateChangeAIname() throws Exception{
 		Integer aiId = this.getAiId();
@@ -308,7 +308,10 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 	    			
 					HibernateUtil.closeDatabaseSession();
 					this.setAllok(true);
-					
+
+					// Refresh institution in session.
+					SecurityService.selectArchivalInstitution(aiId);
+
 				return SUCCESS;
 			}
 			
