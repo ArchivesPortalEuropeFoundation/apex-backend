@@ -656,11 +656,12 @@
 			<xsl:value-of select="ape:resource('eadcontent.dao')" />
 		</h2>
 		<div class="ead-content">
+			<ul class="daolist">
 			<xsl:for-each select='ead:dao[@xlink:title!="thumbnail" or not(@xlink:title)]'>
 				<xsl:variable name="linkPosition" select="position()" />
 				<xsl:variable name="thumbnail" select='parent::node()/ead:dao[@xlink:title="thumbnail"]' />
 				<xsl:variable name="href" select="./@xlink:href" />
-				<a href="{$href}" target="_blank">
+				<li><a href="{$href}" target="_blank">
 					<xsl:variable name="dao.title">
 						<xsl:choose>
 							<xsl:when test="./@xlink:title">
@@ -710,8 +711,9 @@
 							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
-				</a><xsl:text> </xsl:text>
+				</a></li>
 			</xsl:for-each>
+			</ul>
 		</div>
 	</xsl:template>
 	<xsl:template name="origination">
