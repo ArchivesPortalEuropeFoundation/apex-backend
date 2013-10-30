@@ -41,7 +41,6 @@ public class UserprofilesAction extends AbstractInstitutionAction {
     private String daoType;
 
     private static final Logger LOG = Logger.getLogger(UserprofilesAction.class);
-    private boolean isNewProfile = false;
 
     @Override
     public String input() {
@@ -49,11 +48,13 @@ public class UserprofilesAction extends AbstractInstitutionAction {
 
         UserprofileDAO profileDAO = DAOFactory.instance().getUserprofileDAO();
         List<Userprofile> queryResult = profileDAO.getUserprofiles(getAiId());
-        for (Userprofile entry : queryResult) {
-            userprofiles.add(new SelectItem(Long.toString(entry.getId()), entry.getNameProfile()));
-        }
-        if (profilelist == null) {
-            profilelist = "1";
+        if (queryResult != null && !queryResult.isEmpty()) {
+            for (Userprofile entry : queryResult) {
+                userprofiles.add(new SelectItem(Long.toString(entry.getId()), entry.getNameProfile()));
+            }
+            if (profilelist == null) {
+                profilelist = userprofiles.iterator().next().getValue();
+            }
         }
 
         if (StringUtils.isNotBlank(profilelist)) {
@@ -72,34 +73,51 @@ public class UserprofilesAction extends AbstractInstitutionAction {
     @Override
     public String execute() throws Exception {
         UserprofileDAO profileDAO = DAOFactory.instance().getUserprofileDAO();
-        Userprofile profile = profileDAO.findById(Long.parseLong(profilelist));
+        Userprofile profile;
+        if (profilelist.equals("-1")){
+            profile = new Userprofile(getAiId(), "", 1);
+        } else {
+            profile = profileDAO.findById(Long.parseLong(profilelist));
+        }
 
         profile.setNameProfile(profileName);
         profile.setFileType(Integer.parseInt(associatedFiletype));
-        LOG.info(Integer.parseInt(uploadedFileAction));
         profile.setUploadAction(UserprofileDefaultUploadAction.getUploadAction(uploadedFileAction));
         profile.setExistAction(UserprofileDefaultExistingFileAction.getExistingFileAction(existingFileAction));
         profile.setNoeadidAction(UserprofileDefaultNoEadidAction.getExistingFileAction(noEadidAction));
         profile.setDaoType(UserprofileDefaultDaoType.getDaoType(daoType));
 
-        profileDAO.update(profile);
+        if(profilelist.equals("-1")){
+            profileDAO.store(profile);
+        } else {
+            profileDAO.update(profile);
+        }
         return SUCCESS;
     }
 
-    public String addProfile() throws Exception {
+    public String addUserprofile() throws Exception {
+        setUp();
+
         UserprofileDAO profileDAO = DAOFactory.instance().getUserprofileDAO();
-        Userprofile profile = new Userprofile(getAiId(), "", 1);
-        profileDAO.store(profile);
+        List<Userprofile> queryResult = profileDAO.getUserprofiles(getAiId());
+        if (queryResult != null && !queryResult.isEmpty()) {
+            for (Userprofile entry : queryResult) {
+                userprofiles.add(new SelectItem(Long.toString(entry.getId()), entry.getNameProfile()));
+            }
+        }
+        userprofiles.add(new SelectItem("-1", ""));
+        profilelist = "-1";
+            profileName = "";
+            associatedFiletype = "1";
+            uploadedFileAction = "1";
+            existingFileAction = "1";
+            noEadidAction = "0";
+            daoType = "0";
+
         return SUCCESS;
     }
 
     public String cancel() throws Exception {
-        if (isNewProfile) {
-            UserprofileDAO profileDAO = DAOFactory.instance().getUserprofileDAO();
-            Userprofile profile = profileDAO.findById(Long.parseLong(profilelist));
-            profileDAO.delete(profile);
-            isNewProfile = false;
-        }
         return SUCCESS;
     }
 
