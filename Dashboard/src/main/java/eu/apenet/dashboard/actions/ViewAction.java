@@ -1,10 +1,13 @@
 package eu.apenet.dashboard.actions;
 	
-import eu.apenet.dashboard.AbstractAction;
+
+
+import eu.apenet.dashboard.AbstractInstitutionAction;
+import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.security.SecurityService;
 import eu.apenet.persistence.vo.User;
 
-public class ViewAction extends AbstractAction {
+public class ViewAction extends AbstractInstitutionAction {
 	
 	private static final long serialVersionUID = -5957772691331439159L;
 	private String firstName;
@@ -26,18 +29,18 @@ public class ViewAction extends AbstractAction {
 	 */
 	
 	public String execute() throws Exception {
+		SecurityContext securityContext = SecurityContext.get();
 		User userLogged = SecurityService.getCurrentPartner();
 		this.setFirstName(userLogged.getFirstName());
 		this.setLastName(userLogged.getLastName());
 		this.setEmail(userLogged.getEmailAddress());
 		this.setSecretAnswer(userLogged.getSecretAnswer());
 		this.setSecretQuestion(userLogged.getSecretQuestion());
+		if (securityContext.isCountryManager()||securityContext.isInstitutionManager()){
+		   this.removeInvalidEAG(this.getAiId());
+		}
 		return INPUT;
 	}
-	
-	
-
-
 	
 	public String getFirstName() {
 		return firstName;
@@ -78,7 +81,6 @@ public class ViewAction extends AbstractAction {
 	public void setSecretAnswer(String secretAnswer) {
 		this.secretAnswer = secretAnswer;
 	}
-
 	
 }
 

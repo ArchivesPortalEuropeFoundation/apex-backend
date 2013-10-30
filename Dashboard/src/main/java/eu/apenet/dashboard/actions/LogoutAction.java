@@ -13,8 +13,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.manual.eag.Eag2012;
 import eu.apenet.dashboard.security.SecurityService;
-import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.factory.DAOFactory;
+
 import eu.apenet.persistence.vo.ArchivalInstitution;
 
 /**

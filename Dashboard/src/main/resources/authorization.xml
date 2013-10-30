@@ -19,8 +19,8 @@
 
             <!-- EAG -->
             createsimpleeag, createsimpleeagwithmenu, uploadsimpleeag, uploadsimpleeagwithmenu, uploadowneag, eaghttpuploadwithmenu,
-            eaghttpupload, generaterepositorguidePossibleHGTitlePartJSON, generateInformationMessageJSON, uploadowneagwithmenu,
-            eagcorrectlyuploaded, createeag2012withmenu, storeEAG2012, editWebFormEAG2012, eagoldhttpupload, eagoldnothttpupload,
+            eaghttpupload,eaghttpuploadwithtempeag, generaterepositorguidePossibleHGTitlePartJSON, generateInformationMessageJSON, uploadowneagwithmenu,
+            eagcorrectlyuploaded, createeag2012withmenu, storeEAG2012, editWebFormEAG2012, eagoldhttpupload, eagoldnothttpupload, eagoldhttpuploadwithtempeag,
             removeInvalidEAG2012,
 
             <!-- Edition of EAD -->

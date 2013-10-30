@@ -9,6 +9,8 @@ import org.apache.commons.io.FileUtils;
 
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
+import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
+import eu.apenet.dashboard.manual.eag.Eag2012;
 import eu.apenet.dashboard.manual.eag.utils.ParseEag2012Errors;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -88,11 +90,20 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
      */
     @Override
     public String execute(){
-    	
+    	//ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
+		String alCountry = new ArchivalLandscape().getmyCountry();
+		String basePath = APEnetUtilities.FILESEPARATOR + alCountry + APEnetUtilities.FILESEPARATOR +
+				this.getAiId() + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;
+		String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;
+		
     	addActionMessage(getText("label.eag.eagfileselection"));
     	addActionMessage(getText("label.eag.warningeagfileuploading"));
-       
+    	
+    	if (new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath).exists()){
+    		return "input2";
+    	}
     	return SUCCESS;
+    	
     }
 	
 	/**
@@ -191,7 +202,7 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
         	    	result = ERROR;
         	    }else if (result.equals("display_eag02convertedToeag2012")){
         	    	this.filesUploaded = this.uploader_http.getFilesUploaded();
-        	    	addActionMessage(getText("label.eag.oldEag"));
+        	    	addActionMessage(getText("eag2012.commons.oldEag"));
         	    	result = "input2";
         	    }
         	    else if (result.equals("error_eagnoinstitutionname")) {
@@ -203,6 +214,14 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
         	else {
         		//The user has not selected a file to upload
         		addActionMessage(getText("label.uploadfile"));
+        	/*	String alCountry = new ArchivalLandscape().getmyCountry();
+        		String basePath = APEnetUtilities.FILESEPARATOR + alCountry + APEnetUtilities.FILESEPARATOR +
+        				this.getAiId() + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;
+        		String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;
+        		if (new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath).exists()){
+        		   result="invalideag";
+        		
+        		}*/
         		result = INPUT;
         	}
         	return result;

@@ -134,6 +134,11 @@
 		<put-attribute name="menu" value="/jsp/indexEAGCreation.jsp" />
 		<put-attribute name="body" value="/jsp/httpuploadeag.jsp" />
 	</definition>
+	<definition name="httpuploadeagwithtempeag" extends="dashboardLayout">
+		<put-attribute name="title" value="dashboard.eagupload.title" />
+		<put-attribute name="menu" value="/jsp/eag2012/indexEAG2012Upload.jsp" />
+		<put-attribute name="body" value="/jsp/httpuploadwithTempEag.jsp" />
+	</definition>
 	<definition name="httpuploadeagwithmenu" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.eagupload.title" />
 		<put-attribute name="body" value="/jsp/httpuploadeagwithmenu.jsp" />
@@ -141,6 +146,11 @@
 	<definition name="uploadeagerrors" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.eaguploaderror.title" />
 		<put-attribute name="menu" value="/jsp/indexEAGCreation.jsp" />
+		<put-attribute name="body" value="/jsp/uploadeagerrors.jsp" />
+	</definition>
+	<definition name="uploadeagerrorswithtempeag" extends="dashboardLayout">
+		<put-attribute name="title" value="dashboard.eaguploaderror.title" />
+		<put-attribute name="menu" value="/jsp/eag2012/indexEAG2012Upload.jsp" />
 		<put-attribute name="body" value="/jsp/uploadeagerrors.jsp" />
 	</definition>
 		<definition name="uploadeagerrorswithmenu" extends="dashboardLayout">
@@ -151,6 +161,11 @@
 		<put-attribute name="title" value="dashboard.eagupload.title" />
 		<put-attribute name="menu" value="/jsp/indexEAGCreation.jsp" />
 		<put-attribute name="body" value="/jsp/uploadeagold.jsp" />
+	</definition>
+	<definition name="uploadeagoldwithtempeag" extends="dashboardLayout">
+		<put-attribute name="title" value="dashboard.eagupload.title" />
+		<put-attribute name="menu" value="/jsp/eag2012/indexEAG2012Upload.jsp" />
+		<put-attribute name="body" value="/jsp/uploadeagoldwithTempEag.jsp" />
 	</definition>
 	<definition name="contentproviderinf" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.contentproviderinf.title" />

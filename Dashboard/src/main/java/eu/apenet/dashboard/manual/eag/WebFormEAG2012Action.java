@@ -760,7 +760,6 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 			this.loader = new EAG2012Loader(getAiId());
 			boolean result = this.loader.fillEag2012();
 			log.info("Loader: "+this.loader.toString()+" has been charged.");
-
 			if (!result) {
 				addActionMessage(this.getText("eag2012.errors.loadingEAGFile"));
 			}
@@ -899,37 +898,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		return this.editWebFormEAG2012();
 	}
 
-	public String removeInvalidEAG2012(){
-	   String alCountry = new ArchivalLandscape().getmyCountry();
-	   String basePath = APEnetUtilities.FILESEPARATOR + alCountry + APEnetUtilities.FILESEPARATOR +
-					this.getAiId() + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;
-	   String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;
-	   File invalidFile=new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath);
-		if (invalidFile.exists() && invalidFile.isFile()) {
-			try {
-				FileUtils.forceDelete(invalidFile);
-			} catch (IOException e) {
-				log.error("ERROR trying to remove the file " + tempPath, e);
-//				log.error("ERROR trying to remove the file " + tempPath);
-			}
-		}  
-		return SUCCESS;
-	}	
-		/* try { 
-		   String alCountry = new ArchivalLandscape().getmyCountry();
-		   String basePath = APEnetUtilities.FILESEPARATOR + alCountry + APEnetUtilities.FILESEPARATOR +
-						this.getAiId() + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;
-		   String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;
-		   File invalidFile=new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath);
-			if((invalidFile.exists())){
-				FileUtils.forceDelete(invalidFile);
-				return SUCCESS;	
-			}
-		} catch (Exception e) {
-			LOG.error("ERROR trying to remove a file ", e);
-		}
-		return ERROR;
-	}*/
+	public String removeInvalidEAG2012() {
+		return this.removeInvalidEAG(this.getAiId());
+	}
 	
 	private void fillDefaultLoaderValues() { //TODO, now only works with main repository
 		this.newEag = true;
