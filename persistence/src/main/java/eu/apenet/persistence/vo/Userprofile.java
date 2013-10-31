@@ -44,14 +44,18 @@ public class Userprofile implements Serializable {
     private String europeanaDataProvider;
     @Column(name = "europeana_dp_from_file")
     private Boolean europeanaDataProviderFromFile = true;
+    @Column(name = "europeana_dao_type")
+    private Integer europeanaDaoType;
+    @Column(name = "europeana_dao_type_from_file")
+    private Boolean europeanaDaoTypeFromFile = true;
     @Column(name = "europeana_languages")
     private String europeanaLanguages;
     @Column(name = "europeana_languages_from_file")
     private Boolean europeanaLanguagesFromFile = true;
     @Column(name = "europeana_license")
-    private Integer europeanaLicense = 3;
-    @Column(name = "europeana_rights")
-    private Integer europeanaRights;
+    private String europeanaLicense;
+    @Column(name = "europeana_license_details")
+    private String europeanaLicenseDetails;
     @Column(name = "europeana_add_rights")
     private String europeanaAddRights;
     @Column(name = "europeana_hp")
@@ -158,6 +162,22 @@ public class Userprofile implements Serializable {
         this.europeanaDataProviderFromFile = europeanaDataProviderFromFile;
     }
 
+    public Integer getEuropeanaDaoType() {
+        return europeanaDaoType;
+    }
+
+    public void setEuropeanaDaoType(Integer europeanaDaoType) {
+        this.europeanaDaoType = europeanaDaoType;
+    }
+
+    public Boolean getEuropeanaDaoTypeFromFile() {
+        return europeanaDaoTypeFromFile;
+    }
+
+    public void setEuropeanaDaoTypeFromFile(Boolean europeanaDaoTypeFromFile) {
+        this.europeanaDaoTypeFromFile = europeanaDaoTypeFromFile;
+    }
+
     public String getEuropeanaLanguages() {
         return europeanaLanguages;
     }
@@ -174,20 +194,20 @@ public class Userprofile implements Serializable {
         this.europeanaLanguagesFromFile = europeanaLanguagesFromFile;
     }
 
-    public Integer getEuropeanaLicense() {
+    public String getEuropeanaLicense() {
         return europeanaLicense;
     }
 
-    public void setEuropeanaLicense(Integer europeanaLicense) {
+    public void setEuropeanaLicense(String europeanaLicense) {
         this.europeanaLicense = europeanaLicense;
     }
 
-    public Integer getEuropeanaRights() {
-        return europeanaRights;
+    public String getEuropeanaLicenseDetails() {
+        return europeanaLicenseDetails;
     }
 
-    public void setEuropeanaRights(Integer europeanaRights) {
-        this.europeanaRights = europeanaRights;
+    public void setEuropeanaLicenseDetails(String europeanaLicenseDetails) {
+        this.europeanaLicenseDetails = europeanaLicenseDetails;
     }
 
     public String getEuropeanaAddRights() {
