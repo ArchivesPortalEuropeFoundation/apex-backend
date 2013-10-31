@@ -2,15 +2,15 @@
 <%@ taglib prefix="s" uri="/struts-tags"%>
 
 <script type='text/javascript'>
-$(document).ready(function() {
-	initPage();
-});
+    $(document).ready(function() {
+        initPage();
+    });
 
 </script>
 
 <div id="userprofiles">
     <%--<s:debug />--%>
-    <s:form method="POST" theme="simple" action="storeUserprofile">
+    <s:form id="webformUserprofile" method="POST" theme="simple" action="storeUserprofile">
         <table>
             <tr>
                 <th>
@@ -19,7 +19,7 @@ $(document).ready(function() {
             </tr>
             <tr>
                 <td>
-                    <s:select id="profileCb" name="profilelist" list="userprofiles" listKey="value" listValue="content"></s:select>
+                    <s:select id="profileCb" name="profilelist" list="userprofiles" listKey="value" listValue="content" />
                     <s:submit key="userprofiles.createprofile" action="addUserprofile" />
                 </td>
             </tr>
@@ -32,66 +32,43 @@ $(document).ready(function() {
             <tr>
                 <td>
                     <s:label key="userprofiles.associatedFiletype" for="associatedFiletypeCb" />
-                    <s:select id="associatedFiletypeCb" name="associatedFiletype" list="associatedFiletypes" listKey="value" listValue="content"></s:select>
+                    <s:select id="associatedFiletypeCb" name="associatedFiletype" list="associatedFiletypes" listKey="value" listValue="content" />
                 </td>
             </tr>
-            <tr>
-                <th>
-                    <s:label key="userprofiles.defaultActionUpload" />
-                </th>
-            </tr>
-            <s:iterator value="uploadedFileActions">
-                <tr>
-                    <td>
-                        <s:radio theme="simple" name="uploadedFileAction" list="#{value:content}" />
-                    </td>
-                </tr>
-            </s:iterator>
-            <tr>
-                <th>
-                    <s:label key="userprofiles.defaultActionExisting" />
-                </th>
-            </tr>
-            <s:iterator value="existingFileActions">
-                <tr>
-                    <td>
-                        <s:radio theme="simple" name="existingFileAction" list="#{value:content}" />
-                    </td>
-                </tr>
-            </s:iterator>
-            <tr>
-                <th>
-                    <s:label key="userprofiles.defaultActionNoEadid" />
-                </th>
-            </tr>
-            <s:iterator value="noEadidActions">
-                <tr>
-                    <td>
-                        <s:radio theme="simple" name="noEadidAction" list="#{value:content}" />
-                    </td>
-                </tr>
-            </s:iterator>
-            <tr>
-                <th>
-                    <s:label key="userprofiles.defaultDao" />
-                </th>
-            </tr>
-            <s:iterator value="daoTypes">
-                <tr>
-                    <td>
-                        <s:radio theme="simple" name="daoType" list="#{value:content}" />
-                    </td>
-                </tr>
-            </s:iterator>
+        </table>
+        <div id="userprofileTabs" class="corner-all helper-clearfix">
+            <ul id="userprofileTabsContainer">
+                <li id="tab-basic">
+                    <a href="#tab-basic"><s:property value="getText('userprofiles.tab.basic')" /></a>
+                </li>
+                <li id="tab-europeana">
+                    <a href="#tab-europeana"><s:property value="getText('userprofiles.tab.europeana')" /></a>
+                </li>
+            </ul>
+            <input type="hidden" id="currentTab" value="" />
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    hideAndShow("tab-", "tab-basic");
+                    $("#currentTab").attr("value", "tab-basic");
+                    $("a[href^='#tab-']").click(function() {
+                        hideAndShow("tab-", $(this).attr("href").substring(1));
+                    });
+                });
+            </script>
+            <div id="container" class="container">
+                <div id="tab-basic">
+                    <jsp:include page="userprofileBasic.jsp" />
+                </div>
+                <div id="tab-europeana">
+                    <jsp:include page="userprofileEuropeana.jsp" />
+                </div>
+            </div>
+        </div>
+        <table id="saveButtonPanel">
             <tr>
                 <td>
-                    <input type="button" class="rightButton" value="<s:property value='getText("userprofiles.editEuropeanaPreferences")' />" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <s:submit key="userprofiles.save" />
-                    <s:submit key="userprofiles.cancel" action="cancelUserprofileEditing" />
+                    <s:submit id="userprofilesSave" key="userprofiles.save" />
+                    <s:submit id="userprofilesCancel" key="userprofiles.cancel" action="cancelUserprofileEditing" />
                 </td>
             </tr>
         </table>
