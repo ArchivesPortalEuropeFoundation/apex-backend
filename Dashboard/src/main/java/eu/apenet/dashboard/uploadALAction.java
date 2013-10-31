@@ -523,7 +523,7 @@ public class uploadALAction extends AbstractAction{
 							oldFile.renameTo(new File(pathCountryAL));
 							
 							//The general AL file created need to be changed again updating with the former version
-							a.changeAL();
+//							a.changeAL();
 							
 							//The repository files renamed to _old must be changed to the former name for rollbacking
 							for (int i=0; i< this.archivalInstitutionsToDelete.size();i++) {
@@ -669,7 +669,7 @@ public class uploadALAction extends AbstractAction{
 									
 									String resultChangeXml = cAlId.changeIdentifierinAlNode(this.getIdentifierOld(),this.getIdentifier().get(i), path);				
 									if (resultChangeXml.equals(SUCCESS)){				
-										al.changeAL();
+//										al.changeAL();
 										result = SUCCESS;
 										addActionMessage(ai.getAiname() + ":   " + getText("al.message.changeIdentifier.identifierChanged"));
 										HibernateUtil.commitDatabaseTransaction();
@@ -710,10 +710,11 @@ public class uploadALAction extends AbstractAction{
 									//Rollback the changing of the xml files
 									String path = al.getmyPath(al.getmyCountry()) + "tmp/" + al.getmyCountry() + "AL.xml";
 									String resultChangeXml = cAlId.changeIdentifierinAlNode(this.getIdentifier().get(1),this.getIdentifierOld(),path);
-									if (resultChangeXml.equals(SUCCESS))
-										al.changeAL();
-									else
+									if (resultChangeXml.equals(SUCCESS)){
+//										al.changeAL();
+									}else{
 										LOGGER.warn("The changing identifier " + this.getIdentifierOld() + " into " + this.getIdentifier().get(i) + " in the storeIdentifier() rollback could not be done properly. Please review them manually.");
+									}
 								}
 						}
 						catch(Exception e){						

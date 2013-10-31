@@ -15,22 +15,21 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
-import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
+import eu.apenet.dashboard.security.SecurityService;
 import eu.apenet.dashboard.security.SecurityService;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.AiAlternativeName;
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class ChangeAInameAction extends AbstractInstitutionAction {
 
@@ -147,7 +146,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 		return SUCCESS;
 	}
 
-	@SuppressWarnings("deprecation")
+//	@SuppressWarnings("deprecation")
 	public String validateChangeAIname() throws Exception{
 		Integer aiId = this.getAiId();
 		
@@ -156,15 +155,15 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 		//4=the process is changing EAG from file system; 
 		//5=the process is changing AL from file system;
 
-		String isoname="";	
-		String pathAL ="";
+//		String isoname="";	
+//		String pathAL ="";
 		String pathEAG="";
 		String path_copyEAG = "";
-		String path_copyAL ="";
+//		String path_copyAL ="";
 		
 		AiAlternativeNameDAO andao = DAOFactory.instance().getAiAlternativeNameDAO();
 		ArchivalInstitutionDAO aidao = DAOFactory.instance().getArchivalInstitutionDAO();
-		ArchivalLandscape a = new ArchivalLandscape();
+//		ArchivalLandscape a = new ArchivalLandscape();
 		
 		try{
 			if (this.newname.isEmpty()){
@@ -174,7 +173,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 			}
 			else{
 				validateChangeAInameProcessState = 1;	//This variable is in charge of storing the changing process state: 
-			HibernateUtil.beginDatabaseTransaction();
+			JpaUtil.beginDatabaseTransaction();
 			ArchivalInstitution ai = aidao.getArchivalInstitution(aiId);
 			if (ContentUtils.containsPublishedFiles(ai)){
 				addActionError(getText("label.ai.changeainame.published.eads"));
@@ -182,14 +181,14 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 			}
 			AiAlternativeName an = andao.findByAIId_primarykey(ai);			
 			
-			isoname = ai.getCountry().getIsoname();
-			pathAL = APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + isoname + APEnetUtilities.FILESEPARATOR + "AL" + APEnetUtilities.FILESEPARATOR + isoname + "AL.xml";
+//			isoname = ai.getCountry().getIsoname();
+//			pathAL = APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + isoname + APEnetUtilities.FILESEPARATOR + "AL" + APEnetUtilities.FILESEPARATOR + isoname + "AL.xml";
 			pathEAG = APEnetUtilities.getConfig().getRepoDirPath()+ ai.getEagPath();
 			File  EAGfile = new File(pathEAG);
 			path_copyEAG = pathEAG.replace(".xm", "");
 	    	path_copyEAG = path_copyEAG + "_copy.xml";	
-	    	path_copyAL = pathAL.replace(".xm", "");
-        	path_copyAL = path_copyAL + "_copy.xml";
+//	    	path_copyAL = pathAL.replace(".xm", "");
+//        	path_copyAL = path_copyAL + "_copy.xml";
 			
         	
 			/// UPDATE DATABASE ///
@@ -239,74 +238,74 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 			
 			//change the Archival Landscape
 			
-			File  ALfile = new File(pathAL);
-		    File copyALfile = new File (path_copyAL);
-		    if (ALfile.exists()){
-		    	FileUtils.copyFile(ALfile, copyALfile);
-			}
+//			File  ALfile = new File(pathAL);
+//		    File copyALfile = new File (path_copyAL);
+//		    if (ALfile.exists()){
+//		    	FileUtils.copyFile(ALfile, copyALfile);
+//			}
 	        	
-					Boolean changeAL = false;
+//					Boolean changeAL = false;
 					//First, looking for the node c with the attribute id internal_al_id from ddbb.								
-					NodeList nodeCList = null;
+//					NodeList nodeCList = null;
 						
 						
-		        	InputStream sfile2 = new FileInputStream(pathAL);
-		        	doc = dBuilder.parse(sfile2);
-		        	doc.getDocumentElement().normalize();
+//		        	InputStream sfile2 = new FileInputStream(pathAL);
+//		        	doc = dBuilder.parse(sfile2);
+//		        	doc.getDocumentElement().normalize();
 			        	
-		        	nodeCList = doc.getElementsByTagName("c");
-		        	for (int i =0;i<nodeCList.getLength();i++){
-		        		Node nodeC = nodeCList.item(i);
-		        		if (nodeC.hasAttributes()){
-		        			NamedNodeMap attributes = nodeC.getAttributes();
-		        			Node attributeId = attributes.getNamedItem("id");
-		        			if (attributeId != null){
-		        				//Check this value with internal_al_id ddbb
-		        				if (attributeId.getTextContent().equals(ai.getInternalAlId())){		        					
-		        					if (nodeC.hasChildNodes()){
-		        						NodeList nodeDidList = nodeC.getChildNodes();
-		        						for (int k=0;k<nodeDidList.getLength();k++){	        							
-		        							Node nodedid = nodeDidList.item(k);
-		        							if (nodedid.getNodeName().trim().equals("did") && nodedid.hasChildNodes()){
-		        								if (nodedid.hasChildNodes()){
-		        									NodeList unittitlelist = nodedid.getChildNodes();
-		        									for (int t=0;t<unittitlelist.getLength();t++){
-		        										if (unittitlelist.item(t).getNodeName().trim().equals("unittitle")){
-		        											Node unittitlenode = unittitlelist.item(t);
-		        											//LOG.info("Changing <unititle> in AL from " + unittitlenode.getTextContent() + " to " + this.newname);
-		        											unittitlenode.setTextContent(this.newname);
-		        											changeAL= true;
-		        											//LOG.info("The AL has been changed.");
-		        										}
-		        									}
-		        								}
-		        							}
-		        						}
-		        					}
-		        				}
-		        			}
-		        		}
-		        	}
-	    			transformer.transform(new DOMSource(doc), new StreamResult(new File(pathAL))); // Stored
-	    			ALfile =null;
-					copyALfile =null;
+//		        	nodeCList = doc.getElementsByTagName("c");
+//		        	for (int i =0;i<nodeCList.getLength();i++){
+//		        		Node nodeC = nodeCList.item(i);
+//		        		if (nodeC.hasAttributes()){
+//		        			NamedNodeMap attributes = nodeC.getAttributes();
+//		        			Node attributeId = attributes.getNamedItem("id");
+//		        			if (attributeId != null){
+//		        				//Check this value with internal_al_id ddbb
+//		        				if (attributeId.getTextContent().equals(ai.getInternalAlId())){		        					
+//		        					if (nodeC.hasChildNodes()){
+//		        						NodeList nodeDidList = nodeC.getChildNodes();
+//		        						for (int k=0;k<nodeDidList.getLength();k++){	        							
+//		        							Node nodedid = nodeDidList.item(k);
+//		        							if (nodedid.getNodeName().trim().equals("did") && nodedid.hasChildNodes()){
+//		        								if (nodedid.hasChildNodes()){
+//		        									NodeList unittitlelist = nodedid.getChildNodes();
+//		        									for (int t=0;t<unittitlelist.getLength();t++){
+//		        										if (unittitlelist.item(t).getNodeName().trim().equals("unittitle")){
+//		        											Node unittitlenode = unittitlelist.item(t);
+//		        											//LOG.info("Changing <unititle> in AL from " + unittitlenode.getTextContent() + " to " + this.newname);
+//		        											unittitlenode.setTextContent(this.newname);
+//		        											changeAL= true;
+//		        											//LOG.info("The AL has been changed.");
+//		        										}
+//		        									}
+//		        								}
+//		        							}
+//		        						}
+//		        					}
+//		        				}
+//		        			}
+//		        		}
+//		        	}
+//	    			transformer.transform(new DOMSource(doc), new StreamResult(new File(pathAL))); // Stored
+//	    			ALfile =null;
+//					copyALfile =null;
 	    			//--- 6th CHANGE GENERAL AL  ----------------------------------
-	    			a.changeAL();
+//	    			a.changeAL();
 		    			
 		        	validateChangeAInameProcessState = 5;
 					
 					/// FINAL COMMITS ///
 					//Final commit in Database
-					HibernateUtil.commitDatabaseTransaction();
+					JpaUtil.commitDatabaseTransaction();
 					
 					//Delete EAG_copy
 					ContentUtils.deleteFile(path_copyEAG);
 					
 					//Delete AL_copy
 
-	    			ContentUtils.deleteFile(path_copyAL);
+//	    			ContentUtils.deleteFile(path_copyAL);
 	    			
-					HibernateUtil.closeDatabaseSession();
+					JpaUtil.closeDatabaseSession();
 					this.setAllok(true);
 
 					// Refresh institution in session.
@@ -324,15 +323,15 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				//It is necessary to make a Database rollback
 				
 				this.setErrormessage(getText("changeAIname.errDeletingFromDb"));
-				HibernateUtil.rollbackDatabaseTransaction();
-				HibernateUtil.closeDatabaseSession();
+				JpaUtil.rollbackDatabaseTransaction();
+				JpaUtil.closeDatabaseSession();
 				log.error("There were errors during Database Transaction [Database Rollback]. Error: " + e.getMessage());
 			}
 			if (validateChangeAInameProcessState==3 ){
 				log.error("There were errors during updating EAG file [Database Rollback]. Error: " + e.getMessage(),e);
 				//It is necessary to make a Database rollback
-				HibernateUtil.rollbackDatabaseTransaction();
-				HibernateUtil.closeDatabaseSession();
+				JpaUtil.rollbackDatabaseTransaction();
+				JpaUtil.closeDatabaseSession();
 				log.info("Database rollback succeed");
 
 				//It is necessary to make a Index rollback of the FA indexed
@@ -351,15 +350,15 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				EAGfile = null;
 				copyEAGfile = null;
 				
-				HibernateUtil.closeDatabaseSession();
+				JpaUtil.closeDatabaseSession();
 				
 			}
 			
 			if (validateChangeAInameProcessState == 4){
 				log.error("There were errors during updating AL file [Database Rollback, EAG Rollback]. Error: " + e.getMessage(),e);
 				//It is necessary to make a Database rollback
-				HibernateUtil.rollbackDatabaseTransaction();
-				HibernateUtil.closeDatabaseSession();
+				JpaUtil.rollbackDatabaseTransaction();
+				JpaUtil.closeDatabaseSession();
 				log.info("Database rollback succeed");
 
 				//It is necessary to make a Index rollback of the FA indexed
@@ -377,23 +376,23 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				
 				//There were errors during AL modify.
 				//It is necessary to make AL rollback
-				File ALfile = new File (pathAL);
-				File copyALfile = new File (path_copyAL);
-				ContentUtils.deleteFile(pathAL);
-				copyALfile.renameTo(ALfile);
-				log.info("AL of the country rollback succeed");
-				ALfile =null;
-				copyALfile =null;
+//				File ALfile = new File (pathAL);
+//				File copyALfile = new File (path_copyAL);
+//				ContentUtils.deleteFile(pathAL);
+//				copyALfile.renameTo(ALfile);
+//				log.info("AL of the country rollback succeed");
+//				ALfile =null;
+//				copyALfile =null;
 				//--- 6th CHANGE GENERAL AL  ----------------------------------
-    			a.changeAL();
-    			HibernateUtil.closeDatabaseSession();
+//    			a.changeAL();
+				JpaUtil.closeDatabaseSession();
 				
 			}
 			
 			if (validateChangeAInameProcessState == 5){
 				this.setErrormessage("There were errors during final commits");
 				//There were errors during Database, Index or File system commit
-				HibernateUtil.closeDatabaseSession();
+				JpaUtil.closeDatabaseSession();
 				log.error("FATAL ERROR. Error during Database, Index or File System commits. Please, check inconsistencies in Database, Index and File system " + e,e);
 			}
 			this.setAllok(false);

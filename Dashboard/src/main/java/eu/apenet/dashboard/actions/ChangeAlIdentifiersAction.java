@@ -1,39 +1,21 @@
 package eu.apenet.dashboard.actions;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
 import org.apache.log4j.Logger;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Preparable;
 
-import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.archivallandscape.ChangeAlIdentifiers;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.CountryDAO;
-import eu.apenet.persistence.dao.UserDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Country;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 /**
  * Changing the identifiers of the archival landscape items
@@ -123,14 +105,14 @@ public class ChangeAlIdentifiersAction extends ActionSupport implements Preparab
 	public String storeIdentifier(){
 		
 		String result = null;
-		ArchivalLandscape al = new ArchivalLandscape();
+//		ArchivalLandscape al = new ArchivalLandscape();
 		ChangeAlIdentifiers cAlId = new ChangeAlIdentifiers();
 		
 		if ((this.getIdentifier()!= null)) 
 		{
 			try{
 				
-				HibernateUtil.beginDatabaseTransaction();
+				JpaUtil.beginDatabaseTransaction();
 				ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
 				ArchivalInstitution ai = new ArchivalInstitution();
 				
@@ -155,18 +137,18 @@ public class ChangeAlIdentifiersAction extends ActionSupport implements Preparab
 						}
 						else 
 						{
-							String resultChangeXml = changeIdentifierinAlNode(this.getIdentifierOld(),this.getIdentifier());				
-							if (resultChangeXml.equals(SUCCESS)){				
-								al.changeAL();
+//							String resultChangeXml = changeIdentifierinAlNode(this.getIdentifierOld(),this.getIdentifier());				
+//							if (resultChangeXml.equals(SUCCESS)){				
+//								al.changeAL();
 								result = SUCCESS;
 								addActionMessage(getText("al.message.changeIdentifier.identifierChanged"));
-								HibernateUtil.commitDatabaseTransaction();
-								HibernateUtil.closeDatabaseSession();
-							}
-							else{
-								addActionMessage(ai.getAiname() + ":   " + getText("al.message.changeIdentifier.error"));
-								result = ERROR;
-							}
+								JpaUtil.commitDatabaseTransaction();
+								JpaUtil.closeDatabaseSession();
+//							}
+//							else{
+//								addActionMessage(ai.getAiname() + ":   " + getText("al.message.changeIdentifier.error"));
+//								result = ERROR;
+//							}
 						}
 					}
 				}
@@ -185,13 +167,13 @@ public class ChangeAlIdentifiersAction extends ActionSupport implements Preparab
 					try{
 						log.debug("Rollbacking the changing AL identifiers process");
 	
-						HibernateUtil.rollbackDatabaseTransaction();
-						HibernateUtil.closeDatabaseSession();
+						JpaUtil.rollbackDatabaseTransaction();
+						JpaUtil.closeDatabaseSession();
 						
 						//Rollback the changing of the xml files
-						String resultChangeXml = changeIdentifierinAlNode(this.getIdentifier(),this.getIdentifierOld());
-						if (resultChangeXml.equals(SUCCESS))
-							al.changeAL();
+//						String resultChangeXml = changeIdentifierinAlNode(this.getIdentifier(),this.getIdentifierOld());
+//						if (resultChangeXml.equals(SUCCESS))
+//							al.changeAL();
 						/*else
 							log.warn("The changing identifier " + this.getIdentifierOld() + " into " + this.getIdentifier() + " in the storeIdentifier() rollback could not be done properly. Please review them manually.");*/
 					}
@@ -210,59 +192,59 @@ public class ChangeAlIdentifiersAction extends ActionSupport implements Preparab
 	}
 
 	//To change the id attribute in the correspondent c element node, in the xml files.
-	private String changeIdentifierinAlNode(String oldIdentifier, String newIdentifier) {
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder;
-        Boolean changed = false;		
-        ArchivalLandscape al = new ArchivalLandscape();
-		String path = al.getmyPath(al.getmyCountry()) + al.getmyCountry() + "AL.xml";
-        String resultValue= null;
-        
-		try {
-
-			dBuilder = dbFactory.newDocumentBuilder();				        	
-	    	File file = new File  (path);
-			InputStream sfile = new FileInputStream(file);
-	        Document doc = dBuilder.parse(sfile);
-	        doc.getDocumentElement().normalize();	
-	        
-        	NodeList cNodes = doc.getElementsByTagName("c");
-        	for (int i =0;i<cNodes.getLength();i++)
-        	{
-        		NamedNodeMap attributes = cNodes.item(i).getAttributes();
-                Node attribute = attributes.getNamedItem("id");
-                if (attribute.getNodeValue().equals(oldIdentifier)){
-                	attribute.setNodeValue(newIdentifier);
-                	changed = true;
-                }
-        	}
-        	
-        	if (changed)
-        	{
-        		//Write the right node      
-		        Source source = new DOMSource(doc);
-	            Result result = new StreamResult(new java.io.File(path));
-
-	            //Write the XML
-	            Transformer transformer;
-	            transformer = TransformerFactory.newInstance().newTransformer();
-	            transformer.transform(source, result);    
-	            
-	            resultValue = SUCCESS;
-        	}else
-        	{
-        		log.error("Item with this id " + oldIdentifier + " not found in " +file.getName());
-        		log.error("The identifier could not be changed");
-        		resultValue = ERROR;
-        	}
-        	
-		}catch(Exception e){
-			log.error("Error in changing the identifier process in the " + path);
-			log.error(e.getMessage());
-			log.error(e.getStackTrace());
-			resultValue = ERROR;
-		}
-		return resultValue;		
-		
-	}
+//	private String changeIdentifierinAlNode(String oldIdentifier, String newIdentifier) {
+//        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+//        DocumentBuilder dBuilder;
+//        Boolean changed = false;		
+//        ArchivalLandscape al = new ArchivalLandscape();
+//		String path = al.getmyPath(al.getmyCountry()) + al.getmyCountry() + "AL.xml";
+//        String resultValue= null;
+//        
+//		try {
+//
+//			dBuilder = dbFactory.newDocumentBuilder();				        	
+//	    	File file = new File  (path);
+//			InputStream sfile = new FileInputStream(file);
+//	        Document doc = dBuilder.parse(sfile);
+//	        doc.getDocumentElement().normalize();	
+//	        
+//        	NodeList cNodes = doc.getElementsByTagName("c");
+//        	for (int i =0;i<cNodes.getLength();i++)
+//        	{
+//        		NamedNodeMap attributes = cNodes.item(i).getAttributes();
+//                Node attribute = attributes.getNamedItem("id");
+//                if (attribute.getNodeValue().equals(oldIdentifier)){
+//                	attribute.setNodeValue(newIdentifier);
+//                	changed = true;
+//                }
+//        	}
+//        	
+//        	if (changed)
+//        	{
+//        		//Write the right node      
+//		        Source source = new DOMSource(doc);
+//	            Result result = new StreamResult(new java.io.File(path));
+//
+//	            //Write the XML
+//	            Transformer transformer;
+//	            transformer = TransformerFactory.newInstance().newTransformer();
+//	            transformer.transform(source, result);    
+//	            
+//	            resultValue = SUCCESS;
+//        	}else
+//        	{
+//        		log.error("Item with this id " + oldIdentifier + " not found in " +file.getName());
+//        		log.error("The identifier could not be changed");
+//        		resultValue = ERROR;
+//        	}
+//        	
+//		}catch(Exception e){
+//			log.error("Error in changing the identifier process in the " + path);
+//			log.error(e.getMessage());
+//			log.error(e.getStackTrace());
+//			resultValue = ERROR;
+//		}
+//		return resultValue;		
+//		
+//	}
 }

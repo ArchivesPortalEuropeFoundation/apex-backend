@@ -361,7 +361,7 @@ public class EditAction extends eu.apenet.dashboard.archivallandscape.AbstractEd
 					tmpDirectoryToDelete.delete();
 				}
 				log.info("EditAction: archival landscape of " + a.getmyCountry() + " overwrited");
-				a.changeAL();
+//				a.changeAL();
 
 				// The final commits
 				HibernateUtil.commitDatabaseTransaction();
@@ -408,7 +408,7 @@ public class EditAction extends eu.apenet.dashboard.archivallandscape.AbstractEd
 
 					// The general AL file created need to be changed again
 					// updating with the former version of this country's AL
-					a.changeAL();
+//					a.changeAL();
 					// The repository files renamed to _old must be changed to
 					// the former name for rollbacking
 					for (int i = 0; i < this.archivalInstitutionsToDelete.size(); i++) {

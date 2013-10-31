@@ -597,11 +597,11 @@ public class APEnetEAGDashboard{
 				transformer = TransformerFactory.newInstance().newTransformer();
 				transformer.transform(source, result);
 
-				// Finally, it is necessary to rebuild the global Archival
-				// Landscape
-				log.info("Rebuilding the whole AL");
-				ArchivalLandscape archivalLandscape = new ArchivalLandscape(archivalInstitution.getCountry());
-				archivalLandscape.changeAL();
+//				// Finally, it is necessary to rebuild the global Archival
+//				// Landscape
+//				log.info("Rebuilding the whole AL");
+//				ArchivalLandscape archivalLandscape = new ArchivalLandscape(archivalInstitution.getCountry());
+//				archivalLandscape.changeAL();
 
 				result = null;
 				source = null;

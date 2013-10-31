@@ -52,7 +52,7 @@ public class NavigationTree {
         }
         return countries;
 	}
-	private CountryUnit getCountryUnit(Country cos ) throws APEnetException {
+	public CountryUnit getCountryUnit(Country cos ) throws APEnetException {
 		if (cos != null) {
 			String otherCountryName = DisplayUtils.getLocalizedCountryName(resourceBundleSource, cos);
             return new CountryUnit(cos, otherCountryName);

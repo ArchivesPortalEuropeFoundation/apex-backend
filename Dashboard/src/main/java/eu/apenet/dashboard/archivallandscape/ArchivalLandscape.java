@@ -988,15 +988,15 @@ public class ArchivalLandscape extends ActionSupport{
         return bResult;
 	}
 	
-	//Update the general archival landscape with the changes in the AL of this partner	
-	public synchronized void changeAL() {
-			log.debug("Changing the general AL with the changes in the country " + this.getmyCountry() + "...");
-		
-			String pathCountry = this.getmyPath(this.getmyCountry());	
-			pathCountry = pathCountry + this.getmyCountry() + "AL.xml";
-			new Thread( new ChangeArchivalLandscape(this.sem, this.countryName, pathCountry)).start();
-
-	}
+//	//Update the general archival landscape with the changes in the AL of this partner	
+//	public synchronized void changeAL() {
+//			log.debug("Changing the general AL with the changes in the country " + this.getmyCountry() + "...");
+//		
+//			String pathCountry = this.getmyPath(this.getmyCountry());	
+//			pathCountry = pathCountry + this.getmyCountry() + "AL.xml";
+//			new Thread( new ChangeArchivalLandscape(this.sem, this.countryName, pathCountry)).start();
+//
+//	}
 
 }
 

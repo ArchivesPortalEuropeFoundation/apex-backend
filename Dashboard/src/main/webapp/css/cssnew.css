@@ -1083,3 +1083,8 @@ input.inputButtonSubmitAL{
 	color:red;
 	padding-top: 20px;
 }
+.alEUp{
+	height:250px;
+	max-height:250px;
+	overflow:auto;
+}

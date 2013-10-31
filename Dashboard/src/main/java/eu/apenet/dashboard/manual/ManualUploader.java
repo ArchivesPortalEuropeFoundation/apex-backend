@@ -560,7 +560,7 @@ public abstract class ManualUploader {
 				FileUtils.deleteDirectory(tmpDir);
 				
 				//Change the global archival landscape
-				a.changeAL();
+//				a.changeAL();
 				this.setArchivalInstitutionsToDelete(a.getArchivalInstitutionsToDelete());
 				this.setArchivalInstitutionsToInsert(a.getArchivalInstitutionsToInsert());
 				this.setArchivalInstitutionsNameNotChanged(a.getArchivalInstitutionsNameNotChanged());

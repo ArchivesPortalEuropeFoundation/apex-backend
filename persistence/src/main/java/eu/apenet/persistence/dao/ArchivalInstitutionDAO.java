@@ -3,19 +3,13 @@ package eu.apenet.persistence.dao;
 import java.util.Collection;
 import java.util.List;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
-
 import eu.apenet.persistence.vo.ArchivalInstitution;
-import eu.apenet.persistence.vo.User;
 
 /**
  * 
  * @author paul
  *
  */
-
 public interface ArchivalInstitutionDAO extends GenericDAO<ArchivalInstitution, Integer> {
 	public List<ArchivalInstitution> getArchivalInstitutionsWithSearchableItems(Integer countryId, Integer parentAiId);
 	public List<ArchivalInstitution> getRootArchivalInstitutionsByCountryId(Integer countryId);
@@ -27,6 +21,7 @@ public interface ArchivalInstitutionDAO extends GenericDAO<ArchivalInstitution, 
 	public List<ArchivalInstitution> getArchivalInstitutionsByPartnerId(Integer pId);
 	public List<ArchivalInstitution> getArchivalInstitutionsByCountryId(Integer countryId, boolean onlyWithoutPartnerIds);
     public List<ArchivalInstitution> getArchivalInstitutionsByCountryId(Integer countryId);
+    public List<ArchivalInstitution> getArchivalInstitutionsByCountryId(Integer countryId,boolean onlyWithoutPartnerIds,boolean hasContentIndexed);
 	public Long countTotalArchivalInstitutions();
 	//public List<ArchivalInstitution> getGroupsAndArchivalInstitutions(Integer pId, String sortValue, boolean ascending);
 	public List<ArchivalInstitution> getArchivalInstitutionsByRepositorycode(String repositorycode);
@@ -39,5 +34,10 @@ public interface ArchivalInstitutionDAO extends GenericDAO<ArchivalInstitution, 
 	public List<ArchivalInstitution> getGroupsAndArchivalInstitutionsByCountryId(Integer countryId, String sortValue, boolean ascending);
 	public ArchivalInstitution getArchivalInstitutionByInternalAlId(String identifier, Integer countryIdentifier);
 	public Long countArchivalInstitutionsWithContentIndexed();
+	public List<ArchivalInstitution> getArchivalInstitutionsGroupsByCountryId(Integer couId);
+	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdIncluded(Integer countryId,List<ArchivalInstitution> archivalInstitutionIncluded,boolean onlyWithoutPartnerIds);
+	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdUnless(Integer countryId, List<ArchivalInstitution> archivalInstitutionUnless,boolean onlyWithoutPartnerIds);
+	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdUnless(Integer countryId, Collection<String> internalAlIds,boolean onlyWithoutPartnerIds);
+	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdIncluded(Integer countryId, Collection<String> internalAlIds,boolean onlyWithoutPartnerIds);
 }
 

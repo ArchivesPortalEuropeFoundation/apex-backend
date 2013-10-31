@@ -62,7 +62,7 @@ import eu.apenet.persistence.vo.UpFile;
  */
 public class ContentUtils {
 
-	private static final String MIME_TYPE_APPLICATION_XML = "application/xml";
+	public static final String MIME_TYPE_APPLICATION_XML = "application/xml";
 	private static final Logger LOGGER = Logger.getLogger(ContentUtils.class);
 	// private Partner partner;
 	private final static String PREFIX = "_remove";
@@ -570,12 +570,12 @@ public class ContentUtils {
 					transformer.transform(new DOMSource(doc), new StreamResult(new File(path)));
 					LOGGER.info("The file was stored with the target node remove (link): HG-> "
 							+ holdingsGuide.getEadid());
-					// 5. Finally, it is necessary to update the global Archival
-					// Landscape
-					LOGGER.info("Rebuilding the whole AL");
-					ArchivalLandscape archivalLandscape = new ArchivalLandscape(holdingsGuide.getArchivalInstitution()
-							.getCountry());
-					archivalLandscape.changeAL();
+//					// 5. Finally, it is necessary to update the global Archival
+//					// Landscape
+//					LOGGER.info("Rebuilding the whole AL");
+//					ArchivalLandscape archivalLandscape = new ArchivalLandscape(holdingsGuide.getArchivalInstitution()
+//							.getCountry());
+//					archivalLandscape.changeAL();
 
 					return found;
 				}
@@ -736,11 +736,11 @@ public class ContentUtils {
 				transformer = TransformerFactory.newInstance().newTransformer();
 				transformer.transform(source, result);
 
-				// Finally, it is necessary to rebuild the global Archival
-				// Landscape
-				LOGGER.info("Update the whole AL");
-				ArchivalLandscape archivalLandscape = new ArchivalLandscape(hg.getArchivalInstitution().getCountry());
-				archivalLandscape.changeAL();
+//				// Finally, it is necessary to rebuild the global Archival
+//				// Landscape
+//				LOGGER.info("Update the whole AL");
+//				ArchivalLandscape archivalLandscape = new ArchivalLandscape(hg.getArchivalInstitution().getCountry());
+//				archivalLandscape.changeAL();
 
 				result = null;
 				source = null;
