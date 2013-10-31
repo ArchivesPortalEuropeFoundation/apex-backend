@@ -236,6 +236,7 @@ public class LinkingService {
 		eadSearchOptions.setLinkedId(hgOrSg.getId());
 		eadSearchOptions.setLinkedWithEadClass(hgOrSg.getEadClass());
 		eadSearchOptions.setPageSize(100);
+		eadSearchOptions.setPageNumber(1);
 		return DAOFactory.instance().getEadDAO().getEads(eadSearchOptions);
 	}
 	private static long countFindingaidsToLinkToHgOrSgInternal(EadSearchOptions eadSearchOptions, Long ecId) {
