@@ -128,7 +128,10 @@ public class ArchivalInstitution implements java.io.Serializable {
 		this.eagPath = eagPath;
 	}
 
-	public String getRepositorycode() {
+	public String getRepositorycodeForUrl() {
+		if (this.repositorycode != null){
+			return repositorycode.replace('/', '_');
+		}
 		return this.repositorycode;
 	}
 
@@ -139,7 +142,9 @@ public class ArchivalInstitution implements java.io.Serializable {
 	public boolean isContainSearchableItems() {
 		return containSearchableItems;
 	}
-
+	public String getRepositorycode() {
+		return this.repositorycode;
+	}
 	public void setContainSearchableItems(boolean containSearchableItems) {
 		this.containSearchableItems = containSearchableItems;
 	}
