@@ -54,7 +54,32 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CLevel> findChilds(Long parentId) {
+		long startTime = System.currentTimeMillis();
+		Criteria criteria = createChildCLevelsCriteria(parentId);
+		criteria.addOrder(Order.asc("clevel.orderId"));
+		List<CLevel> results = criteria.list();
+		long endTime = System.currentTimeMillis();
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
+		}
 
+		return results;
+	}
+
+	@Override
+	public List<CLevel> findChildrenOrderUnitId(Long parentId) {
+		long startTime = System.currentTimeMillis();
+		Criteria criteria = createChildCLevelsCriteria(parentId);
+		criteria.addOrder(Order.asc("clevel.unitid"));
+		List<CLevel> results = criteria.list();
+		long endTime = System.currentTimeMillis();
+		if (LOG.isDebugEnabled())
+			LOG.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
+		return results;
+	}
 
 	@Override
 	public Long countChildCLevels(Long parentCLevelId) {
@@ -128,6 +153,19 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		return results;
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<CLevel> findTopCLevels(Long eadContentId) {
+		long startTime = System.currentTimeMillis();
+		Criteria criteria = createTopCLevelsCriteria(eadContentId);
+		criteria.addOrder(Order.asc("clevel.orderId"));
+		List<CLevel> results = criteria.list();
+		long endTime = System.currentTimeMillis();
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
+		}
+		return results;
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<String> findChildrenLevels(Long parentId) {
@@ -154,6 +192,17 @@ public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> imple
 		return criteria;
 	}
 
+	@Override
+	public List<CLevel> findTopCLevelsOrderUnitid(Long eadContentId) {
+		long startTime = System.currentTimeMillis();
+		Criteria criteria = createTopCLevelsCriteria(eadContentId);
+		criteria.addOrder(Order.asc("clevel.unitid"));
+		List<CLevel> results = criteria.list();
+		long endTime = System.currentTimeMillis();
+		if (LOG.isDebugEnabled())
+			LOG.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
+		return results;
+	}
 
 	@Override
 	public CLevel findByUnitid(String unitid, Long eadContentId) {

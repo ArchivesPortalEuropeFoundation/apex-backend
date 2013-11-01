@@ -27,6 +27,17 @@ public interface CLevelDAO extends GenericDAO<CLevel, Long> {
 
 	public List<String> findChildrenLevels(Long parentId);
 
+	@Deprecated
+	public List<CLevel> findChilds(Long parentId);
+
+	@Deprecated
+	public List<CLevel> findTopCLevels(Long eadContentId);
+
+	@Deprecated
+	public List<CLevel> findTopCLevelsOrderUnitid(Long eadContentId);
+
+	@Deprecated
+	public List<CLevel> findChildrenOrderUnitId(Long parentId);
 
 	public CLevel findByUnitid(String unitid, Long eadContentId);
 
