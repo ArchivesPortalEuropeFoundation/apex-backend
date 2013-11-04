@@ -1,10 +1,13 @@
 package eu.apenet.dashboard.listener;
 
 import eu.apenet.commons.exceptions.APEnetException;
+import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.manual.ExistingFilesChecker;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.security.UserService;
 import eu.apenet.dashboard.services.ead.EadService;
+import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
@@ -12,6 +15,8 @@ import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.*;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.oclc.oai.harvester.parser.record.DebugOaiPmhParser;
@@ -21,11 +26,9 @@ import org.oclc.oai.harvester.parser.record.ResultInfo;
 import org.oclc.oai.harvester.verb.ListRecordsSaxWriteDirectly;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -148,14 +151,60 @@ public class HarvesterTask implements Runnable {
 
                         File[] harvestedFiles = outputDirectory.listFiles();
                         UpFileDAO upFileDAO = DAOFactory.instance().getUpFileDAO();
+                        List<UpFile> upFiles = new ArrayList<UpFile>(harvestedFiles.length);
                         for(File file : harvestedFiles) {
                             UpFile upFile = createUpFile(subdirectory, file.getName(), UploadMethod.OAI_PMH, archivalInstitution.getAiId(), FileType.XML);
                             upFileDAO.store(upFile);
+                            upFiles.add(upFile);
                         }
 
-                        //todo: Create QUEUE for those items!!!!!!!!!!!!!!! Wait for Stefan to be done with profiles?
-
                         JpaUtil.commitDatabaseTransaction();
+
+
+                        //todo: Create QUEUE for those items
+                        Userprofile userprofile = archivalInstitutionOaiPmh.getUserprofile();
+                        XmlType xmlType = XmlType.getType(userprofile.getFileType());
+
+                        for(UpFile upfile : upFiles) {
+                            //About EADID
+                            String eadid = ExistingFilesChecker.extractAttributeFromEad(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upfile.getPath() + upfile.getFilename(), "eadheader/eadid", null, true).trim();
+                            if(StringUtils.isEmpty(eadid)) {
+                                if(userprofile.getNoeadidAction().equals(UserprofileDefaultNoEadidAction.REMOVE)) {
+                                    deleteUpFile(upfile);
+                                } else if (userprofile.getNoeadidAction().equals(UserprofileDefaultNoEadidAction.ADD_LATER)) {
+                                    //todo: Do nothing actually, right? Just leave the file in the existing file checker (page before content manager)
+                                }
+                            } else {
+                                boolean continueTask = true;
+                                Ead ead;
+                                if((ead = doesFileExist(upfile, eadid, xmlType)) != null) {
+                                    if(userprofile.getExistAction().equals(UserprofileDefaultExistingFileAction.OVERWRITE)) {
+                                        EadService.overwrite(ead, upfile);
+                                    } else if(userprofile.getExistAction().equals(UserprofileDefaultExistingFileAction.KEEP)) {
+                                        deleteUpFile(upfile);
+                                        continueTask = false;
+                                    }
+                                } else {
+                                    EadService.create(xmlType, upfile, upfile.getAiId());
+                                }
+
+//                                if(continueTask) {
+//                                    //todo: After, so when the file is inside the EAD tables so we have a problem, we do not have the identifiers...
+//                                    UserprofileDefaultDaoType daoType = userprofile.getDaoType();
+//                                    if(userprofile.getUploadAction().equals(UserprofileDefaultUploadAction.CONVERT)) {
+//                                        EadService.convert(xmlType, );
+//                                    } else if(userprofile.getUploadAction().equals(UserprofileDefaultUploadAction.VALIDATE)) {
+//                                        EadService.validate(xmlType, );
+//                                    } else if(userprofile.getUploadAction().equals(UserprofileDefaultUploadAction.CONVERT_VALIDATE_PUBLISH)) {
+//                                        EadService.convertValidatePublish(xmlType, );
+//                                    } else if(userprofile.getUploadAction().equals(UserprofileDefaultUploadAction.CONVERT_VALIDATE_PUBLISH_EUROPEANA)) {
+//                                        //todo: in the QueueAction too
+//                                    }
+//                                }
+                            }
+                        }
+
+
                         UserService.sendEmailHarvestFinished(true, archivalInstitution, partner);
                     } catch (Exception e) {
                         JpaUtil.rollbackDatabaseTransaction();
@@ -205,14 +254,26 @@ public class HarvesterTask implements Runnable {
         UpFile upFile = new UpFile();
         upFile.setFilename(filePath);
         upFile.setPath(upDirPath);
+        upFile.setAiId(aiId);
+        upFile.setFileType(fileType);
 
         UploadMethod uploadMethod = DAOFactory.instance().getUploadMethodDAO().getUploadMethodByMethod(uploadMethodString);
         upFile.setUploadMethod(uploadMethod);
 
-        upFile.setAiId(aiId);
-
-        upFile.setFileType(fileType);
-
         return upFile;
+    }
+
+    private static void deleteUpFile(UpFile upFile) throws IOException {
+        JpaUtil.beginDatabaseTransaction();
+        DAOFactory.instance().getUpFileDAO().deleteSimple(upFile);
+        JpaUtil.commitDatabaseTransaction();
+        ContentUtils.deleteFile(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath() + upFile.getFilename());
+        File uploadDir = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath());
+        if (uploadDir.listFiles().length == 0)
+            FileUtils.forceDelete(uploadDir);
+    }
+
+    private static Ead doesFileExist(UpFile upFile, String eadid, XmlType xmlType) {
+        return DAOFactory.instance().getEadDAO().getEadByEadid(xmlType.getClazz(), upFile.getAiId(), eadid);
     }
 }
