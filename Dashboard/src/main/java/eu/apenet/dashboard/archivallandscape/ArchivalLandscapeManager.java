@@ -650,8 +650,8 @@ public class ArchivalLandscapeManager extends AbstractAction{
 						if(oldAlternativeName.getLang().equals(newAlternativeName.getLang())){
 							found = true;
 							oldAlternativeName.setAiAName(newAlternativeName.getAiAName());
-//							oldAlternativeName.setPrimaryName(oldAlternativeName.getPrimaryName()!=null?oldAlternativeName.getPrimaryName():false);
-							newANs.remove(oldAlternativeName);
+							oldAlternativeName.setPrimaryName(newAlternativeName.getPrimaryName()!=null?newAlternativeName.getPrimaryName():false);
+							newANs.remove(newAlternativeName);
 							this.aIANDAO.updateSimple(oldAlternativeName);
 						}
 					}
@@ -660,7 +660,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 					}
 				}
 			}
-			if(!newANs.isEmpty()){
+			if(newANs!=null && !newANs.isEmpty()){
 				Iterator<AiAlternativeName> itANToInsert = newANs.iterator(); //list has been updated including only the items which have to be inserted
 				while(itANToInsert.hasNext()){
 					AiAlternativeName aiAN = itANToInsert.next();
@@ -672,6 +672,9 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		}
 		//3. launch institution update
 		this.aIDAO.updateSimple(oldDDBBInstitution);
+		if(oldDDBBInstitution.isGroup()){
+			this.groupsInsertedIntoDDBB.put(oldDDBBInstitution.getInternalAlId(),oldDDBBInstitution);
+		}
 		this.updatedInstitutions.add(oldDDBBInstitution); //TODO, review if this list is used in other places
 		return state;
 	}
@@ -723,6 +726,17 @@ public class ArchivalLandscapeManager extends AbstractAction{
 				Set<ArchivalInstitution> institutionChildren = currentInstitution.getChildArchivalInstitutions();
 				if(institutionChildren!=null && institutionChildren.size()>0){
 					ArchivalInstitution childParent = this.aIDAO.insertSimple(currentInstitution);
+					Set<AiAlternativeName> alternativeNames = childParent.getAiAlternativeNames();
+					if(alternativeNames!=null){
+						Iterator<AiAlternativeName> alternativeNamesIt = alternativeNames.iterator();
+						while(alternativeNamesIt.hasNext()){
+							AiAlternativeName alternativeName = alternativeNamesIt.next();
+							alternativeName.setArchivalInstitution(childParent);
+							alternativeName.setPrimaryName(alternativeName.getPrimaryName()!=null?alternativeName.getPrimaryName():false); //TODO, change by some check
+							this.aIANDAO.insertSimple(alternativeName);
+							log.debug("Inserted alternative name: "+alternativeName.getAiAName());
+						}
+					}
 					this.insertedInstitutions.add(currentInstitution);
 					log.debug("Inserted parent "+currentInstitution.getInternalAlId()+" with id:"+childParent.getAiId()+" which contain children");
 					insertChildren(institutionChildren,childParent);
@@ -746,7 +760,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	 * 
 	 * @param currentInstitution
 	 */
-	private void insertInstitution(ArchivalInstitution currentInstitution) {
+	private ArchivalInstitution insertInstitution(ArchivalInstitution currentInstitution) {
 		String internalAlId = currentInstitution.getInternalAlId();
 		if(internalAlId==null || internalAlId.isEmpty()){
 			internalAlId = ArchivalLandscapeEditor.getNewinternalIdentifier();
@@ -783,6 +797,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		}
 		this.insertedInstitutions.add(currentInstitution);
 		log.debug("Inserted institution: "+currentInstitution.getAiname());
+		return currentInstitution;
 	}
 
 	/**
@@ -929,14 +944,19 @@ public class ArchivalLandscapeManager extends AbstractAction{
 							archivalInstitution.setAiname(alternativeNameText);
 						}
 						Set<AiAlternativeName> alternativeNames = archivalInstitution.getAiAlternativeNames();
+						boolean primaryName = false; //flag which set if it's the first language
 						if(alternativeNames==null){
 							alternativeNames = new HashSet<AiAlternativeName>();
+						}
+						if(alternativeNames.size()==0){
+							primaryName = true;
 						}
 						if(archivalInstitution.getAiname()==null){
 							archivalInstitution.setAiname(alternativeNameText);
 						}
 						AiAlternativeName alternativeName = new AiAlternativeName();
 						alternativeName.setAiAName(alternativeNameText);
+						alternativeName.setPrimaryName(primaryName);
 						alternativeNames.add(alternativeName);
 						archivalInstitution.setAiAlternativeNames(alternativeNames);
 						Lang lang = null;
