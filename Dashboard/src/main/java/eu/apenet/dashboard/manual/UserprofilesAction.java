@@ -4,6 +4,7 @@
  */
 package eu.apenet.dashboard.manual;
 
+import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.persistence.dao.UserprofileDAO;
@@ -177,7 +178,7 @@ public class UserprofilesAction extends AbstractInstitutionAction {
         userprofiles.add(new SelectItem("-1", ""));
         profilelist = "-1";
         profileName = "";
-        associatedFiletype = "1";
+        associatedFiletype = XmlType.EAD_FA.getIdentifier() + "";
         uploadedFileAction = "1";
         existingFileAction = "1";
         noEadidAction = "0";
@@ -205,9 +206,9 @@ public class UserprofilesAction extends AbstractInstitutionAction {
 
     private void setUp() {
         //basic preferences
-        associatedFiletypes.add(new SelectItem("1", getText("content.message.fa")));
-        associatedFiletypes.add(new SelectItem("2", getText("content.message.hg")));
-        associatedFiletypes.add(new SelectItem("3", getText("content.message.sg")));
+        associatedFiletypes.add(new SelectItem(XmlType.EAD_FA.getIdentifier(), getText("content.message.fa")));
+        associatedFiletypes.add(new SelectItem(XmlType.EAD_HG.getIdentifier(), getText("content.message.hg")));
+        associatedFiletypes.add(new SelectItem(XmlType.EAD_SG.getIdentifier(), getText("content.message.sg")));
         uploadedFileActions.add(new SelectItem("1", getText("userprofiles.upload.convertValidatePublish")));
         uploadedFileActions.add(new SelectItem("2", getText("userprofiles.upload.convertValidatePublishEuropeana")));
         uploadedFileActions.add(new SelectItem("3", getText("userprofiles.upload.convert")));
