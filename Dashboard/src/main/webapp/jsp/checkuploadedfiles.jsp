@@ -167,8 +167,9 @@
 		        				<div id="right<s:property value="%{#stat.index}" />" style="position:relative; top: -15px;" align="right">
 		        					
 		        					<select  id="existingFilesAnswers" onchange="changeEADID(this, '<s:property value="%{#stat.index}" />', 'Add');" name="existingFilesAnswers" style="display:inline;">
-										<s:iterator value="existingFilesChoiceAddEADID" var="action"> 
-											<option value="<s:property value="#action.key" />"><s:property value="#action.value" /></option>
+										<s:iterator value="existingFilesChoiceAddEADID" var="action">
+										<s:set name="tempVar">Add EADID</s:set>
+											<option value="<s:property value="#action.key" />"<s:if test="%{#action.key==#tempVar}" > selected=selected </s:if>><s:property value="#action.value" /></option>
 										</s:iterator>
 		        					</select>
 		        					        					
@@ -197,7 +198,7 @@
 								<!--EAD file with no EADID keyup method over the textbox-->					
 								<input type="text" name="arrayneweadid"
 									id="neweadid<s:property value="%{#stat.index}" />" size="30%"
-									onkeyup="activate('<s:property value="%{top.eadid}" />')" 
+									onkeyup="activate('<s:property value="%{#stat.index}" />')" 
 									style="padding-left: 4px;" />
 	
 								<!--EAD file with no EADID -->
@@ -266,8 +267,8 @@
 	       			</div>
 				</div>
 			</s:if>
-			<input type="button" class="mainButton" id="form_submit" value="<s:property value='getText("label.accept")' />" name="form_submit" onclick="checkEadIdAndSubmit()" />
-			<!-- <input type="button" class="mainButton" id="form_submit" value="<s:property value='getText("label.accept")' />" name="form_submit" onclick="checkEadIdAndSubmit()" disabled="disabled" />  -->
+			<!--  <input type="button" class="mainButton" id="form_submit" value="<s:property value='getText("label.accept")' />" name="form_submit" onclick="checkEadIdAndSubmit()" />-->
+			 <input type="button" class="mainButton" id="form_submit" value="<s:property value='getText("label.accept")' />" name="form_submit" onclick="checkEadIdAndSubmit()" disabled="disabled" /> 
 			<s:if  test="filesWithEmptyEadid.size()>0 || existingFiles.size()>0" >
 			</s:if>
 			  <br>  <br>  <br>  <br>				
@@ -302,8 +303,9 @@
 	        });   
         
 	        function activate(eadid) {
-				$("[id='divChangeEadid"+eadid+"'] [id='SaveChangesButton"+eadid+"']").removeAttr("disabled");
-				$("[id='divChangeEadid"+eadid+"'] [id='resultChangeEADID"+eadid+"']").hide();
+	        	$("input#form_submit").attr("disabled","disabled");
+			    $("input#SaveChangesButton" + eadid).removeAttr("disabled");
+			    $("label#resultChangeEADID" + eadid).hide();
 	        }
 	        
 	        function checkEadIdAndSubmit(){
@@ -358,35 +360,55 @@
 			        	var divname="divGeneralAddEadid" + eadid;
 						document.getElementById(divname).style.display='inline';	
 						document.getElementById(buttonid).style.display='inline';
+					    $("input#SaveChangesButton" + eadid).removeAttr("disabled");
 						var divgeneralname= "divAddEadid" + eadid;
-						document.getElementById(divgeneralname).style.display='inline';						// Disable accept button.
-						$("input#form_submit").attr("disabled","disabled");
-					}
-					else { //Cancel
+						document.getElementById(divgeneralname).style.display='inline';		
+						$("input#form_submit").attr("disabled","disabled");   // Disable accept button.
+					}else { //Cancel
 						var divname="divGeneralAddEadid" + eadid;
-						document.getElementById(divname).style.display='none';
-						document.getElementById(buttonid).style.display='none';
+					    $("input#SaveChangesButton" + eadid).attr("disabled","disabled");
 						var divgeneralname= "divAddEadid" + eadid;
 						document.getElementById(divgeneralname).style.display='none';
-						//enable accept button
-						$("input#form_submit").removeAttr("disabled");	
-						//clean textbox
-						$("input[id^='neweadid']").each(function(){
-								$(this).attr("value","");
+						var enableAccept = true;
+						$("input[id^='SaveChangesButton']").each(function(){
+							var disabled = $(this).attr("disabled");
+							if (disabled == null || disabled != "disabled") {
+								enableAccept = false;
+							}
 						});
+						if (enableAccept) {
+							$("input#form_submit").removeAttr("disabled");
+						} 
+						//clean the value in the eadidarray 
+						var textToRemove = $("input#neweadid" + eadid).val();
+						var indexLabel = parseInt(eadid);
+						var indexArray = eadidarray.indexOf(textToRemove);
+						if (indexLabel > -1 && indexArray > -1){
+							var label = $("label#resultChangeEADID"+indexLabel);
+					    	if(label!=null && label.length){
+					    		var color = label.text();
+					    		if(color=="<s:property value="getText('content.message.EadidAvailable')" />"){
+					    			eadidarray.splice(indexArray,1);
+					    		}
+						     }
+						}
+				
+						document.getElementById(divname).style.display='none';
+						document.getElementById(buttonid).style.display='none';
+						//clean textbox
+						$("input#neweadid" + eadid).attr("value",""); 
 						//clean label
 						$("label[id^='resultChangeEADID']").each(function(){
-							$(this).hide();
-							var strLabelOut=$(this).text();				
-						});
-						//clean text and combo too
-						$("label[id^='divCancelOverwriteEADID']").each(function(){
-							$(this).hide();
-						});	 		
-						//clean all values from the array when cancel
-						eadidarray.splice(0,eadidarray.length);
-					}
-				}
+					        var strLabelOut=$(this).text();	
+					        if(strLabelOut!="<s:property value="getText('content.message.EadidAvailable')" />"){
+					        	$(this).hide();
+					        }  	
+				         });
+						$("label#resultChangeEADID" + eadid).hide(); 
+						
+					}//end Cancel
+				
+				} //end Add
 				else if (method=="Change") {
 					//files with existing EADID
 					if (textvalue == "Change EADID") {
@@ -449,42 +471,37 @@
 							$("label#" + labelanswermessage).show();
 							var object = document.getElementById(labelanswermessage);
 							object.innerHTML=dataResponse.message;
-							var value= eadidarray.length;
+						    
+							var sizeValue= eadidarray.length;
 							
-							//take all using values (used in the inputs)
-							var i=0;
-							$("input[id^='neweadid']").each(function(){
-								if ( $("[id='divChangeEadid"+oldeadid+"']").css("display")!='none') {
-									if ($(this).val()!=""){
-										eadidarrayInText[i++]=$(this).val();
-									}
-								}
-							});
+							if(sizeValue>0){
+			                  //remove all the values in the array
+			                  eadidarray.splice(0,eadidarray.length);
+			                }
+			                $("input[id^='neweadid']").each(function(i,value){
+			                	//for each input keep the value if it is not repeated and not empty
+			                  var textInput= $(value).val();	
+			                   if(eadidarray.length==0){
+			                     if(textInput!=""){
+						            eadidarray.push(textInput);
+					             }
+			                   }else{
+			                    if (textInput!=""){
+				                    var index = eadidarray.indexOf(textInput);
+				                    if (index > -1){
+				                      //the value is repeated
+				                      if (dataResponse.existingChangeEADIDAnswers!= "KO"){
+										 dataResponse.existingChangeEADIDAnswers= "KO";
+										 document.getElementById(labelanswermessage).innerHTML=dataResponse.komessage;
+									  }
+				                    }else{ 
+				                    	//keep the value in the eadidarray
+				                      eadidarray.push(textInput);
+				                    }
+			                    }
+			                   }
+			                });
 														
-							if (value==0){
-								if(neweadid!=""){
-									eadidarray[value] = neweadid;
-								}
-							}
-							else {
-								var found=false;
-								for (var i=0; i< value; i++){	
-									if (eadidarray[i]==neweadid && ( $.inArray(eadidarrayInText,eadidarray) > -1 )){		
-										found=true;
-										if (dataResponse.existingChangeEADIDAnswers!= "KO"){
-											dataResponse.existingChangeEADIDAnswers= "KO";
-											document.getElementById(labelanswermessage).innerHTML=dataResponse.komessage;
-										}
-									}
-								}
- 								if (found==false){
-									value++;
-									if(neweadid!=""){
-										eadidarray[value] = neweadid;
-									}
-								} 
- 							} 
-
 							$("input#form_submit").attr("disabled","disabled");
 							if (dataResponse.existingChangeEADIDAnswers == "OK") {
 								//changes[oldeadid] = neweadid;
@@ -502,8 +519,17 @@
 								/*Do not hide the check availavility button*/
 								var div= "divCancelOverwriteEADID" + dataResponse.eadid;								
 								document.getElementById(div).style.display='none';
-								$("input#form_submit").removeAttr("disabled");
-								$("[id='divChangeEadid"+oldeadid+"'] [id='SaveChangesButton"+oldeadid+"']").attr("disabled","disabled");
+							    $("input#SaveChangesButton" + oldeadid).attr("disabled","disabled");
+							    var enableAccept = true;
+								$("input[id^='SaveChangesButton']").each(function(){
+									var disabled = $(this).attr("disabled");
+									if (disabled == null || disabled != "disabled") {
+										enableAccept = false;
+									}
+								});
+								if (enableAccept) {
+									$("input#form_submit").removeAttr("disabled");
+								} 
 							}
 							else if (dataResponse.existingChangeEADIDAnswers == "KO") {
 								if(changes.indexOf(oldeadid)){
@@ -519,7 +545,7 @@
 								$("input#form_submit").attr("disabled","disabled");
 							}
 						}
-			);
+			    );
 				
 			}
 			
