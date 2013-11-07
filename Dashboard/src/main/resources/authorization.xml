@@ -26,9 +26,6 @@
             <!-- Edition of EAD -->
             <!-- editEad, editEadCreateDbEntries, editEadXml, editEadXmlSaveLevel, editEadXmlSaveAll, editEadXmlDeleteEntries, editEadGetFields, editEadAddField, -->
 
-            <!-- Harvesting -->
-            harvestOAI, harvesting, stopHarvest, getThreadLevel, dbToEadAjax,
-
             <!-- edit userprofiles -->
             userprofiles, addUserprofile, storeUserprofile, cancelUserprofileEditing,
 

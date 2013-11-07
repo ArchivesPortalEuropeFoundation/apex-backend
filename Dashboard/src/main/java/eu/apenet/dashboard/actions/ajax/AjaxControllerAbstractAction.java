@@ -23,14 +23,7 @@ import java.util.Map;
 public abstract class AjaxControllerAbstractAction extends AbstractInstitutionAction {
     private static final long serialVersionUID = -385844504423841865L;
 
-    protected static final String LIST_HARVEST = "listHarvestedFiles";
-    protected static final String LIST_UPLOADED = "listUploadedFiles";
     public static final String LIST_IDS = "listSelectedFAs";
-    protected static final String EAD_METADATA_FORMAT = "ead";
-    protected static final String OAI_DC_METADATA_FORMAT = "oai_dc";
-
-    public final static String FI_TYPE = "Finland - France EAD";
-    public final static String PT_TYPE = "Portugal OAI_DC";
 
     public static final String OPTIONS_USE_EXISTING = "optsUseExisting";
     public static final String OPTIONS_DEFAULT = "optsDefault";
@@ -45,18 +38,6 @@ public abstract class AjaxControllerAbstractAction extends AbstractInstitutionAc
         getServletResponse().setContentType("application/json");
         return new OutputStreamWriter(getServletResponse().getOutputStream(), UTF8);
     }
-
-    protected Map<String, String> getConversionParameters(){
-        Map<String, String> parameters = new HashMap<String, String>();
-        HttpSession session = getServletRequest().getSession();
-        String option_default = (String)session.getAttribute(AjaxControllerAbstractAction.OPTIONS_DEFAULT);
-        String option_use_existing = (String)session.getAttribute(AjaxControllerAbstractAction.OPTIONS_USE_EXISTING);
-        boolean option_use_existing_bool = !Boolean.parseBoolean(option_use_existing);
-        parameters.put("defaultRoleType", option_default);
-        parameters.put("useDefaultRoleType", Boolean.toString(option_use_existing_bool));
-        return parameters;
-    }
-
 
     @Override
     public String execute(){

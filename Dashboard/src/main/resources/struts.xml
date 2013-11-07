@@ -322,23 +322,6 @@
         <action name="saveFtpFiles" class="eu.apenet.dashboard.manual.UploadContentAction" method="saveFtpFiles">
             <result name="success" type="tiles">viewresult</result>
         </action>
-        <!--Upload: Connection to OAI-PMH repository -->
-        <action name="harvestOAI" class="eu.apenet.dashboard.actions.ajax.HarvesterAjaxAction">
-            <result name="success" type="tiles">viewHarvest</result>
-            <result name="error" type="tiles">uploadcontent</result>
-        </action>
-        <action name="harvesting" class="eu.apenet.dashboard.actions.ajax.HarvesterAjaxAction" method="harvest">
-            <result type="stream">
-                <param name="inputName">outputStream</param>
-                <param name="contentType">application/json</param>
-            </result>
-        </action>
-        <action name="stopHarvest" class="eu.apenet.dashboard.actions.ajax.HarvesterAjaxAction" method="stopHarvest">
-            <result type="stream">
-                <param name="inputName">outputStream</param>
-                <param name="contentType">application/json</param>
-            </result>
-        </action>
         <!-- Upload: HTTP file upload -->
         <action name="httpUpload" class="eu.apenet.dashboard.manual.UploadContentAction" method="httpUpload">
             <result name="input" type="tiles">uploaderrorformat</result>
@@ -772,20 +755,6 @@
         </action>
 
         <action name="editEadAddField" class="eu.apenet.dashboard.actions.ajax.EditEadAction" method="addFieldEntry">
-            <result type="stream">
-                <param name="inputName">outputStream</param>
-                <param name="contentType">application/json</param>
-            </result>
-        </action>
-
-        <action name="getThreadLevel" class="eu.apenet.dashboard.actions.ajax.AutomaticCheckAction">
-            <result type="stream">
-                <param name="inputName">outputStream</param>
-                <param name="contentType">application/json</param>
-            </result>
-        </action>
-
-        <action name="dbToEadAjax" class="eu.apenet.dashboard.actions.ajax.AutomaticCheckAction" method="dbToEadAjax">
             <result type="stream">
                 <param name="inputName">outputStream</param>
                 <param name="contentType">application/json</param>

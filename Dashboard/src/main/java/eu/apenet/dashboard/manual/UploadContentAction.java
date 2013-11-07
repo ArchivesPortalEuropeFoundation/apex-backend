@@ -48,7 +48,6 @@ public class UploadContentAction extends AbstractInstitutionAction {
     private List<String> uploadType;
     private final static String HTTP = "HTTP";
     private final static String FTP = "FTP";
-    private final static String OAI = "OAI-PMH";
     
 
     private Integer sessionId; 
@@ -70,7 +69,6 @@ public class UploadContentAction extends AbstractInstitutionAction {
     private ManualHTTPUploader uploader_http;
 
 	private ManualFTPEADUploader uploader_ftp;
-    private ManualOAIPMHEADUploader uploader_oai;
     private FTPClient client;
     
     private String httpFileFileName; 		//The uploaded file name
@@ -96,11 +94,6 @@ public class UploadContentAction extends AbstractInstitutionAction {
         uploadType = new ArrayList<String>();
         uploadType.add(HTTP);
         uploadType.add(FTP);
-        uploadType.add(OAI);
-
-        oaiType = new ArrayList<String>();
-        oaiType.add(AjaxControllerAbstractAction.FI_TYPE);
-        oaiType.add(AjaxControllerAbstractAction.PT_TYPE);
     }
 
     /**
@@ -261,35 +254,6 @@ public class UploadContentAction extends AbstractInstitutionAction {
             return ERROR;
         }
     }
-
-    /**
-     * Harvest the data from a source and to a temporary file
-     * @return The code used by Struts2 dispatcher
-     */
-    public String harvestData(){
-        filesUploaded = new ArrayList<String>();
-        filesNotUploaded = new ArrayList<String>();
-        log.trace(oaiUrl + " - " + oaiSet + " - " + oaiMetadata);
-        uploader_oai = new ManualOAIPMHEADUploader(oaiUrl, oaiMetadata, oaiSet, null, null);
-        //Start harvest here:
-        String filename = "harvest_" + oaiSet + ".xml";
-        File harvestResult = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + filename);
-        String token = "";
-        try {
-            token = uploader_oai.harvestBegin(harvestResult);
-            while(token != null)
-                token = uploader_oai.harvesting(harvestResult, token);
-	    	filesUploaded.add(filename);
-            createDBentry(filename, "OAI-PMH");
-            return SUCCESS;
-        } catch (Exception e) {
-            filesNotUploaded.add(filename);
-            log.error("Harvest failed, last token was: " + token);
-            addActionMessage(getText("uploadContent.errHarvest"));
-            return ERROR;
-        }
-    }
-
 
     /**
      * AJAX call from the JSP page. Retrieves the data (files and directories) from the FTP server
