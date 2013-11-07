@@ -14,6 +14,8 @@ import eu.apenet.persistence.vo.UserprofileDefaultDaoType;
 import eu.apenet.persistence.vo.UserprofileDefaultExistingFileAction;
 import eu.apenet.persistence.vo.UserprofileDefaultNoEadidAction;
 import eu.apenet.persistence.vo.UserprofileDefaultUploadAction;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -64,7 +66,7 @@ public class UserprofilesAction extends AbstractInstitutionAction {
     private String dataProviderCheck;
     private String europeanaDaoType;
     private String europeanaDaoTypeCheck;
-    private String languageSelection;
+    private List<String> languageSelection = new ArrayList<String>();
     private String languageCheck;
     private String license;
     private String europeanaLicense;
@@ -106,7 +108,9 @@ public class UserprofilesAction extends AbstractInstitutionAction {
             dataProviderCheck = Boolean.toString(userprofile.getEuropeanaDataProviderFromFile());
             europeanaDaoType = Integer.toString(userprofile.getEuropeanaDaoType());
             europeanaDaoTypeCheck = Boolean.toString(userprofile.getEuropeanaDaoTypeFromFile());
-            languageSelection = userprofile.getEuropeanaLanguages();
+            String[] tempLang = userprofile.getEuropeanaLanguages().split(" ");
+            languageSelection.addAll(Arrays.asList(tempLang));
+            LOG.info("INPUT -- languageSelection: " + userprofile.getEuropeanaLanguagesFromFile());
             languageCheck = Boolean.toString(userprofile.getEuropeanaLanguagesFromFile());
             license = userprofile.getEuropeanaLicense();
             if (license.equals(EUROPEANA)) {
@@ -117,7 +121,9 @@ public class UserprofilesAction extends AbstractInstitutionAction {
             }
             licenseAdditionalInformation = userprofile.getEuropeanaAddRights();
             hierarchyPrefix = userprofile.getEuropeanaHierarchyPrefix();
+            LOG.info("INPUT -- inheritFileParent: " + userprofile.getEuropeanaInheritElements());
             inheritFileParent = Boolean.toString(userprofile.getEuropeanaInheritElements());
+            LOG.info("INPUT -- inheritOrigination: " + userprofile.getEuropeanaInheritOrigin());
             inheritOrigination = Boolean.toString(userprofile.getEuropeanaInheritOrigin());
         }
         return SUCCESS;
@@ -144,7 +150,14 @@ public class UserprofilesAction extends AbstractInstitutionAction {
         profile.setEuropeanaDataProviderFromFile(Boolean.parseBoolean(dataProviderCheck));
         profile.setEuropeanaDaoType(Integer.parseInt(europeanaDaoType));
         profile.setEuropeanaDaoTypeFromFile(Boolean.parseBoolean(europeanaDaoTypeCheck));
-        profile.setEuropeanaLanguages(languageSelection);
+        StringBuilder langTemp = new StringBuilder();
+        for (int i=0; i < languageSelection.size(); i++) {
+            langTemp.append(languageSelection.get(i));
+            if (i < languageSelection.size() - 1) {
+                langTemp.append(" ");
+            }
+        }
+        profile.setEuropeanaLanguages(langTemp.toString());
         profile.setEuropeanaLanguagesFromFile(Boolean.parseBoolean(languageCheck));
         profile.setEuropeanaLicense(license);
         if (license.equals(EUROPEANA)) {
@@ -188,7 +201,7 @@ public class UserprofilesAction extends AbstractInstitutionAction {
         dataProviderCheck = Boolean.toString(true);
         europeanaDaoType = "";
         europeanaDaoTypeCheck = Boolean.toString(true);
-        languageSelection = "";
+        languageSelection = new ArrayList<String>();
         languageCheck = Boolean.toString(true);
         license = EUROPEANA;
         europeanaLicense = "";
@@ -237,8 +250,8 @@ public class UserprofilesAction extends AbstractInstitutionAction {
         typeSet.add(new SelectItem("3", getText("userprofiles.dao.sound")));
         typeSet.add(new SelectItem("4", getText("userprofiles.dao.video")));
         typeSet.add(new SelectItem("5", getText("userprofiles.dao.3D")));
-        yesNoSet.add(new SelectItem("1", getText("ead2ese.content.yes")));
-        yesNoSet.add(new SelectItem("0", getText("ead2ese.content.no")));
+        yesNoSet.add(new SelectItem("true", getText("ead2ese.content.yes")));
+        yesNoSet.add(new SelectItem("false", getText("ead2ese.content.no")));
         inheritLanguageSet.add(new SelectItem("1", getText("ead2ese.content.yes")));
         inheritLanguageSet.add(new SelectItem("0", getText("ead2ese.content.no")));
         inheritLanguageSet.add(new SelectItem("2", getText("ead2ese.label.language.select")));
@@ -445,11 +458,11 @@ public class UserprofilesAction extends AbstractInstitutionAction {
         this.europeanaDaoTypeCheck = europeanaDaoTypeCheck;
     }
 
-    public String getLanguageSelection() {
+    public List<String> getLanguageSelection() {
         return languageSelection;
     }
 
-    public void setLanguageSelection(String languageSelection) {
+    public void setLanguageSelection(List<String> languageSelection) {
         this.languageSelection = languageSelection;
     }
 

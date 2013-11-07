@@ -51,8 +51,7 @@
                 <s:label key="ead2ese.label.language.material" for="language" />:
             </td>
             <td class="tdVertical">
-                <s:select name="languageSelection" id="languageSelection" listKey="value" listValue="content" list="languages"
-                          value="" multiple="true" size="4" />
+                <s:select name="languageSelection" id="languageSelection" listKey="value" listValue="content" list="languages" multiple="true"/>
                 <s:checkbox name="languageCheck" id="languageOfTheMaterialCheck" value="true" />
                 <s:label key="ead2ese.label.language.file" for="languageOfTheMaterialCheck"/>
             </td>
