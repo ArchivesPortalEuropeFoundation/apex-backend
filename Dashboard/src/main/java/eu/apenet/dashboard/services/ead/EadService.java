@@ -522,7 +522,8 @@ public class EadService {
                             new ValidateTask().execute(newEad);
                             new PublishTask().execute(newEad);
                             if(userprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
-                                //todo: Europeana stuff here
+                                new ConvertToEseEdmTask().execute(newEad); //todo: Add properties
+                                new DeliverToEuropeanaTask().execute(newEad);
                             }
                         }
                         newEad.setQueuing(QueuingState.NO);
