@@ -4,12 +4,17 @@
 <script type='text/javascript'>
     $(document).ready(function() {
         initPage();
+
+        hideAndShow("tab-", "tab-basic");
+        $("#currentTab").attr("value", "tab-basic");
+        $("a[href^='#tab-']").click(function() {
+            hideAndShow("tab-", $(this).attr("href").substring(1));
+        });
     });
 
 </script>
 
 <div id="userprofiles">
-    <%--<s:debug />--%>
     <s:form id="webformUserprofile" method="POST" theme="simple" action="storeUserprofile">
         <table>
             <tr>
@@ -46,15 +51,6 @@
                 </li>
             </ul>
             <input type="hidden" id="currentTab" value="" />
-            <script type="text/javascript">
-                $(document).ready(function() {
-                    hideAndShow("tab-", "tab-basic");
-                    $("#currentTab").attr("value", "tab-basic");
-                    $("a[href^='#tab-']").click(function() {
-                        hideAndShow("tab-", $(this).attr("href").substring(1));
-                    });
-                });
-            </script>
             <div id="container" class="container">
                 <div id="tab-basic">
                     <jsp:include page="userprofileBasic.jsp" />

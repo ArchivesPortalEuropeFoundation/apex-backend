@@ -2,7 +2,10 @@ function initPage() {
     $('#profileCb').change(function() {
         var params = {profilelist: $("#profileCb").val()};
         $.get("userprofiles.action", params, function(data) {
-            $("#wrap").html(data);
+            $("#principal").replaceWith(data);
+            $("body meta").remove();
+            $("body title").remove();
+//            $("body link[type='text/css']").remove();
         });
     });
 }
