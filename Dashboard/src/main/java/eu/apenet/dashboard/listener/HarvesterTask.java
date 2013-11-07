@@ -1,32 +1,19 @@
 package eu.apenet.dashboard.listener;
 
-import eu.apenet.commons.exceptions.APEnetException;
-import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.manual.ExistingFilesChecker;
-import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.security.UserService;
 import eu.apenet.dashboard.services.ead.EadService;
-import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
-import eu.apenet.persistence.dao.EadDAO;
-import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.*;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.oclc.oai.harvester.parser.record.DebugOaiPmhParser;
 import org.oclc.oai.harvester.parser.record.OaiPmhParser;
-import org.oclc.oai.harvester.parser.record.OaiPmhRecord;
 import org.oclc.oai.harvester.parser.record.ResultInfo;
 import org.oclc.oai.harvester.verb.ListRecordsSaxWriteDirectly;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
@@ -159,7 +146,18 @@ public class HarvesterTask implements Runnable {
                         properties.setProperty(QueueItem.EXIST_ACTION, userprofile.getExistAction().getId()+"");
                         properties.setProperty(QueueItem.DAO_TYPE, userprofile.getDaoType().getId()+"");
                         properties.setProperty(QueueItem.UPLOAD_ACTION, userprofile.getUploadAction().getId()+"");
-                        //todo: Add the ones for Europeana too
+                        properties.setProperty(QueueItem.DATA_PROVIDER, userprofile.getEuropeanaDataProvider()+"");
+                        properties.setProperty(QueueItem.DATA_PROVIDER_CHECK, userprofile.getEuropeanaDataProviderFromFile()+"");
+                        properties.setProperty(QueueItem.EUROPEANA_DAO_TYPE, userprofile.getEuropeanaDaoType()+"");
+                        properties.setProperty(QueueItem.EUROPEANA_DAO_TYPE_CHECK, userprofile.getEuropeanaDaoTypeFromFile()+"");
+                        properties.setProperty(QueueItem.LANGUAGES, userprofile.getEuropeanaLanguages()+"");
+                        properties.setProperty(QueueItem.LANGUAGE_CHECK, userprofile.getEuropeanaLanguagesFromFile()+"");
+                        properties.setProperty(QueueItem.LICENSE, userprofile.getEuropeanaLicense()+"");
+                        properties.setProperty(QueueItem.LICENSE_DETAILS, userprofile.getEuropeanaLicenseDetails()+"");
+                        properties.setProperty(QueueItem.LICENSE_ADD_INFO, userprofile.getEuropeanaAddRights()+"");
+                        properties.setProperty(QueueItem.HIERARCHY_PREFIX, userprofile.getEuropeanaHierarchyPrefix()+"");
+                        properties.setProperty(QueueItem.INHERIT_FILE, userprofile.getEuropeanaInheritElements()+"");
+                        properties.setProperty(QueueItem.INHERIT_ORIGINATION, userprofile.getEuropeanaInheritOrigin()+"");
 
                         for(File file : harvestedFiles) {
                             UpFile upFile = createUpFile(subdirectory, file.getName(), UploadMethod.OAI_PMH, archivalInstitution.getAiId(), FileType.XML);

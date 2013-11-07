@@ -24,9 +24,21 @@ public class QueueItem implements java.io.Serializable {
     public static final String EXIST_ACTION = "ape.existaction";
     public static final String DAO_TYPE = "ape.daotype";
     public static final String UPLOAD_ACTION = "ape.uploadaction";
+    public static final String DATA_PROVIDER = "europeana.dataprovider";
+    public static final String DATA_PROVIDER_CHECK = "europeana.dataprovidercheck";
+    public static final String EUROPEANA_DAO_TYPE = "europeana.daotype";
+    public static final String EUROPEANA_DAO_TYPE_CHECK = "europeana.daotypecheck";
+    public static final String LANGUAGES = "europeana.languages";
+    public static final String LANGUAGE_CHECK = "eurpeana.languagecheck";
+    public static final String LICENSE = "europeana.license";
+    public static final String LICENSE_DETAILS = "europeana.licensedetails";
+    public static final String LICENSE_ADD_INFO = "europeana.licenseaddinfo";
+    public static final String HIERARCHY_PREFIX = "europeana.hierarchyprefix";
+    public static final String INHERIT_FILE = "europeana.inheritfile";
+    public static final String INHERIT_ORIGINATION = "europeana.inheritorigination";
 
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -4266955613706066708L;
 	@Id
