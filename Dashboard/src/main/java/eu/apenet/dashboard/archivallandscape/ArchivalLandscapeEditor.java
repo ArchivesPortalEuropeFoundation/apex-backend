@@ -238,7 +238,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			}
 		}else{
 			buffer.append(START_ARRAY);
-			buffer.append(buildNode("error","noInstitutionForAiID")); //TODO, put message problem
+			buffer.append(buildNode("error","noInstitutionForAiID"));
 			buffer.append(END_ARRAY);
 		}
 		return buffer.toString();
@@ -532,7 +532,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			getServletResponse().setContentType("application/json");
 			writer = new OutputStreamWriter(getServletResponse().getOutputStream(),UTF8);
 			String nodeKey = getServletRequest().getParameter("nodeKey");
-			if(nodeKey!=null && nodeKey.contains("_")){ //TODO discriminate by cases: institutions, groups, and isolated country
+			if(nodeKey!=null && nodeKey.contains("_")){
 				String[] keys = nodeKey.split("_");
 				String key = keys[0];
 				StringBuilder response = new StringBuilder();

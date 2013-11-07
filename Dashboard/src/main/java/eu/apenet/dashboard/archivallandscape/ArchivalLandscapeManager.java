@@ -28,7 +28,6 @@ import org.apache.log4j.Logger;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.security.SecurityContext;
-import eu.apenet.dashboard.services.ead.xml.EadCreator;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.dashboard.utils.ZipManager;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
@@ -76,13 +75,17 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	private static final String AL_RELATEDENCODING = "ISAD(G)v2";
 	private static final String AL_ARCHDESC_TYPE = "inventory"; //probably could be "archival_landscape" value like other ALs
 	private static final String AI_DSC_TYPE = "othertype";
+	private static final String COUNTRYCODE = "countrycode";
+	
+	private static final String EADID = "eadid";
 	
 	private static final String AL_FILE_NAME = "AL.xml";
+	
 	private static final String LEVEL = "level";
 	private static final String FONDS = "fonds";
 	private static final String SERIES = "series";
 	private static final String FILE = "file";
-	
+
 	private List<ArchivalInstitution> totalInstitutions;
 	private Map<String,ArchivalInstitution> groupsInsertedIntoDDBB;
 	private List<ArchivalInstitution> updatedInstitutions;
@@ -209,7 +212,15 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		}
 		return found;
 	}
-
+	/**
+	 * Called into parseCollectionToPlainList method.
+	 * Functionality is very similar, but the different is the argument parent.
+	 * 
+	 * Parent is used to get all children and call to himself by recursive-way if needed.
+	 * 
+	 * @param parent
+	 * @return List<ArchivalInstition> plainArchivalInstitutions
+	 */
 	private List<ArchivalInstitution> checkChild(ArchivalInstitution parent){
 		List<ArchivalInstitution> archivalInstitutionList = new ArrayList<ArchivalInstitution>();
 		log.debug("children check for parent: "+parent.getAiname());
@@ -220,7 +231,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 			if(institution.isGroup()){
 				log.debug("Group: "+institution.getAiname()+" parent: "+parent.getAiname());
 				if(institution.getChildArchivalInstitutions()!=null && institution.getChildArchivalInstitutions().size()>0){
-					archivalInstitutionList.addAll(checkChild(institution));
+					archivalInstitutionList.addAll(checkChild(institution)); //recursive call
 				}
 			}else{
 				log.debug("Institution: "+institution.getAiname()+" parent: "+parent.getAiname());
@@ -241,16 +252,19 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	 * @return Structs2-RESPONSE
 	 */
 	private String ingestArchivalLandscapeXML() {
-		Collection<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile);
-		boolean state = false;
-		if(archivalInstitutions!=null){
-			try{
-				state = checkAndUpdateFromToDDBB(archivalInstitutions);
-			}catch(Exception e){
-				log.error("Exception checking institutions with ddbb to be replaced",e);
-			}
-			if(state){
-				return SUCCESS;
+		String countryCode = getXMLEadidCountrycode(this.httpFile);
+		if(countryCode!=null && countryCode.equalsIgnoreCase(SecurityContext.get().getCountryIsoname())){
+			Collection<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile);
+			boolean state = false;
+			if(archivalInstitutions!=null){
+				try{
+					state = checkAndUpdateFromToDDBB(archivalInstitutions);
+				}catch(Exception e){
+					log.error("Exception checking institutions with ddbb to be replaced",e);
+				}
+				if(state){
+					return SUCCESS;
+				}
 			}
 		}
 		return ERROR;
@@ -271,7 +285,8 @@ public class ArchivalLandscapeManager extends AbstractAction{
 				state = 1;
 				this.aIDAO = DAOFactory.instance().getArchivalInstitutionDAO();
 				this.aIANDAO = DAOFactory.instance().getAiAlternativeNameDAO();
-				this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryId(SecurityContext.get().getCountryId(),false); //TODO check if this query affects next checkInstitutionStructure 
+				//first gets all the current ingested institutions into DDBB
+				this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryId(SecurityContext.get().getCountryId(),false);
 				if(this.totalInstitutions!=null && this.totalInstitutions.size()>0){
 					log.warn("Archival landscape could not be ingested directly, there are some institutions to check. Checking...");
 //					Iterator<ArchivalInstitution> currentIt = this.totalInstitutions.iterator();
@@ -283,7 +298,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 					validOperation = checkIfSomeInstitutionIsIngestedAndHasContentIndexed(archivalInstitutions);
 					if(validOperation){
 						JpaUtil.beginDatabaseTransaction();
-						//when valid operation it's able to remove all institutions
+						//when valid operation it's able to manage all ingested institutions/groups
 //						checkUpdateArchivalInstitution(archivalInstitutions); //old check, update-troubles
 						this.deletedInstitutions = new ArrayList<ArchivalInstitution>();
 						
@@ -293,8 +308,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 						log.debug("Updated process has been finished successfull");
 						state = 3;
 						
-						log.debug("Insert process for not updated institutions");
-						
+						log.debug("Inserting process for not updated institutions");
 						//do an insert for rest file institutions
 						insertNotUpdatedInstitutions(archivalInstitutions);
 						log.debug("Done insert process!");
@@ -314,7 +328,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 							JpaUtil.rollbackDatabaseTransaction();
 						}
 					}
-				}else{
+				}else{ //this case is for an ingestion on empty country, only tries to store the target structure 
 					state = 7;
 //					archivalInstitutionsPlainList = null; //clean
 					this.insertedInstitutions = new ArrayList<ArchivalInstitution>();
@@ -421,23 +435,32 @@ public class ArchivalLandscapeManager extends AbstractAction{
 				while(!found && itUpdated.hasNext()){
 					ArchivalInstitution updatedInstitution = itUpdated.next();
 					if(updatedInstitution.getInternalAlId().equals(targetToBeInserted.getInternalAlId())){
-						found = true;
+						found = true; //flag for next logic
 					}
 				}
-				if(!found){
+				if(!found){ //error code to control if an error has happen, if not found launch logic to insert institution
 					log.debug("Institution to be inserted: "+targetToBeInserted.getInternalAlId());
-					insertInstitution(targetToBeInserted); //it's recurse, so it's not needed call to himself
+					insertInstitution(targetToBeInserted); //it's the recurse method, so it's not needed call to himself (insertNotUpdatedInstitutions) 
 				}
 			}
 		}
 	}
-
+	/**
+	 * Method used to delete all institutions not updated or inserted.
+	 * It runs a DDBB query to get all current institutions less the 
+	 * sum of the updatedInstitutions and the insertedInstitutions.
+	 * 
+	 * It just delete all alternative names not used of each unused institutions.
+	 * 
+	 * @return boolean (error situation)
+	 */
 	private boolean deleteSimpleUnusedInstitutions() {
 		boolean error = false;
 		log.debug("Begin delete process for old institutions.");
 		List<ArchivalInstitution> excludedInstitutions = new ArrayList<ArchivalInstitution>();
 		excludedInstitutions.addAll(this.updatedInstitutions);
 		excludedInstitutions.addAll(this.insertedInstitutions);
+		//get all institutions to be deleted from ddbb
 		List<ArchivalInstitution> institutionsToBeDeleted = this.aIDAO.getArchivalInstitutionsByCountryIdUnless(SecurityContext.get().getCountryId(),excludedInstitutions, false);
 		log.debug("Institutions to be deleted: "+institutionsToBeDeleted.size());
 		Iterator<ArchivalInstitution> deleteIt = institutionsToBeDeleted.iterator();
@@ -450,22 +473,40 @@ public class ArchivalLandscapeManager extends AbstractAction{
 					log.debug("Deleting alternative names...");
 					Iterator<AiAlternativeName> itAN = alternativeNames.iterator();
 					while(itAN.hasNext()){
-						this.aIANDAO.deleteSimple(itAN.next());
+						this.aIANDAO.deleteSimple(itAN.next()); //removes each alternative name
 					}
-				}else{
-//					error = true;
 				}
-				this.aIDAO.deleteSimple(targetToBeDeleted);
+//				else{
+//					error = true;
+//				}
+				this.aIDAO.deleteSimple(targetToBeDeleted); //delete unused institution
 				this.deletedInstitutions.add(targetToBeDeleted);
 				log.debug("Deleted institution with aiId: "+targetToBeDeleted.getAiId());
 			}else{
 				log.debug("Detected institution with content indexed, so it could not be deleted. Marked operation like invalid.");
-				error = true;
+				error = true; //flag used to check an error for rollback
 			}
 		}
 		return error;
 	}
-
+	/**
+	 * Parse a Collection<ArchivalInstitutions> currentStructure(Group1,Institution2,Group3,Institution4):
+	 * 
+	 * 1. - Group1
+	 * 1.1 - Group1.1
+	 * 1.1.1 - Institution1.1.1
+	 * 2. - Institution2
+	 * 3. - Group3
+	 * 3.1 - Institution3.1
+	 * 4. Institution4
+	 * 
+	 * to a plain List<ArchivalInstitution> allInstitutions:
+	 * 
+	 * (Group1,Group1.1,Institution1.1.1,Institution2,Group3,Institution3.1,Institution4).
+	 * 
+	 * @param archivalInstitutions
+	 * @return List<ArchivalInstitution>
+	 */
 	private List<ArchivalInstitution> parseCollectionToPlainList(Collection<ArchivalInstitution> archivalInstitutions) {
 		List<ArchivalInstitution> archivalInstitutionsPlainList = new ArrayList<ArchivalInstitution>();
 		if(archivalInstitutions!=null){
@@ -475,7 +516,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 				if(institution.isGroup()){
 					log.debug("Group: "+institution.getAiname());
 					if(institution.getChildArchivalInstitutions()!=null){
-						archivalInstitutionsPlainList.addAll(checkChild(institution));
+						archivalInstitutionsPlainList.addAll(checkChild(institution)); //call to get plain children
 					}
 				}else{
 					log.debug("Institution: "+institution.getAiname());
@@ -508,7 +549,18 @@ public class ArchivalLandscapeManager extends AbstractAction{
 			}
 		}
 	}
-	
+	/**
+	 * This method is recursive, when it's used it has 2 management cases.
+	 * 
+	 * On the one hand is used when first time is called. It tries to get all parent institutions
+	 * and next run into targets from parents to children.
+	 * On the other hand there is the recursive method, institutionUpdate, to fill all targets.
+	 * It's needed to be called each time by one institution (sibbling).
+	 * 
+	 * @param target
+	 * @param archivalInstitutions
+	 * @return boolean (found or not)
+	 */
 	private boolean checkAndUpdateArchivalInstitutions(ArchivalInstitution target,Collection<ArchivalInstitution> archivalInstitutions) {
 		boolean found = false;
 		if(this.positions==null){
@@ -617,7 +669,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	 * @param oldDDBBInstitution
 	 * @param updatedInstitution
 	 */
-	private boolean replaceNode(ArchivalInstitution oldDDBBInstitution,ArchivalInstitution updatedInstitution) { //TODO
+	private boolean replaceNode(ArchivalInstitution oldDDBBInstitution,ArchivalInstitution updatedInstitution) {
 		boolean state = true;
 		//1. update institution information
 		oldDDBBInstitution.setAlorder(updatedInstitution.getAlorder());
@@ -675,12 +727,13 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		if(oldDDBBInstitution.isGroup()){
 			this.groupsInsertedIntoDDBB.put(oldDDBBInstitution.getInternalAlId(),oldDDBBInstitution);
 		}
-		this.updatedInstitutions.add(oldDDBBInstitution); //TODO, review if this list is used in other places
+		this.updatedInstitutions.add(oldDDBBInstitution);
 		return state;
 	}
 
 	/**
-	 * Deletes a simple institution (TODO at this moment it doesn't count children) and his alternative names.
+	 * Deletes a simple institution (this method doesn't 
+	 * take into account count children) and his alternative names.
 	 * 
 	 * @param possibleDeletedInstitution
 	 */
@@ -707,8 +760,13 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	}
 
 	/**
-	 * Recursive function to ingest an Archival Institution 
-	 * to DDBB and his children.
+	 * Recursive function to ingest an Archival Institution to DDBB and his children.
+	 * 
+	 * It loops into archivalInstitution param and next go each by one.
+	 * If target institution is a group (SERIES) it ingests itself and next
+	 * tries to ingests his children.
+	 * If target case is not a group (FILE) it ingest itself by 
+	 * insertInstitution method. 
 	 * 
 	 * @param archivalInstitutions
 	 * @param parent
@@ -732,7 +790,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 						while(alternativeNamesIt.hasNext()){
 							AiAlternativeName alternativeName = alternativeNamesIt.next();
 							alternativeName.setArchivalInstitution(childParent);
-							alternativeName.setPrimaryName(alternativeName.getPrimaryName()!=null?alternativeName.getPrimaryName():false); //TODO, change by some check
+							alternativeName.setPrimaryName(alternativeName.getPrimaryName()!=null?alternativeName.getPrimaryName():false);
 							this.aIANDAO.insertSimple(alternativeName);
 							log.debug("Inserted alternative name: "+alternativeName.getAiAName());
 						}
@@ -755,6 +813,13 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	}
 	/**
 	 * Recursive function to ingest an Archival Institution.
+	 * All the target institutions will be provided from this method.
+	 * This method is used to ingest all institutions each by one with
+	 * a simple method (needs an open transaction first and next a commit).
+	 * 
+	 * Function aggregates institution to global this.groupsInsertedIntoDDBB,
+	 * which it's used onto other methods to be used to put a parent. These 
+	 * parents are stored into a Map<String-InternalAlId,ArchivalInstitution-parent>
 	 * 
 	 * It's called by insertChildren institution.
 	 * 
@@ -777,7 +842,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 			while(alternativeNamesIt.hasNext()){
 				AiAlternativeName alternativeName = alternativeNamesIt.next();
 				alternativeName.setArchivalInstitution(institution);
-				alternativeName.setPrimaryName(alternativeName.getPrimaryName()!=null?alternativeName.getPrimaryName():false); //TODO, change by some check
+				alternativeName.setPrimaryName(alternativeName.getPrimaryName()!=null?alternativeName.getPrimaryName():false);
 				this.aIANDAO.insertSimple(alternativeName);
 				log.debug("Inserted alternative name: "+alternativeName.getAiAName());
 			}
@@ -994,6 +1059,65 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		return archivalInstitutions;
 	}
 	/**
+	 * Open a file, read it and get attribute "countrycode" from
+	 * eadid node.
+	 * 
+	 * @param httpFile
+	 * @return countryCode-String
+	 */
+	private String getXMLEadidCountrycode(File httpFile){
+		String response = "";
+		XMLStreamReader r = null;
+		try {
+			XMLInputFactory factory = XMLInputFactory.newFactory();
+			r = factory.createXMLStreamReader(new FileReader(httpFile));
+			//start reading file
+			boolean exit = false;
+			boolean found = false;
+			while(!exit && r.hasNext()){
+				int event = r.next();
+				switch (event) {
+					case XMLStreamConstants.START_ELEMENT:
+						//check if tag equals eadid
+						if(r.getLocalName().equalsIgnoreCase(EADID)){
+							//read attribute countrycode and put it into response
+							int count = r.getAttributeCount();
+							for(int i=0;!exit && i<count;i++){
+								String attributeName = r.getAttributeLocalName(i);
+								if(attributeName!=null && attributeName.equalsIgnoreCase(COUNTRYCODE)){
+									response = r.getAttributeValue(i);
+									exit = true;
+								}
+							}
+						}
+						break;
+					case XMLStreamConstants.END_ELEMENT:
+						if(found){
+							exit = true;
+						}
+						break;
+				}
+			}
+			//end reading file
+		} catch (FileNotFoundException e) {
+			log.error("File not found reading eadid :: "+httpFile.getAbsolutePath(), e.getCause());
+		} catch (XMLStreamException e) {
+			log.error("Archival Landscape exception reading eadid: ", e);
+		} catch (Exception e){
+			log.error("Exception reading eadid: ", e);
+		} finally {
+			if(r!=null){
+				try {
+					r.close();
+				} catch (XMLStreamException e) {
+					log.error("Archival Landscape reading exception", e.getCause());
+				}
+			}
+		}
+		return response;
+	}
+	
+	/**
 	 * Method which get all the series children, it's used to obtain recursive
 	 * institution series children. 
 	 * @throws XMLStreamException
@@ -1078,8 +1202,13 @@ public class ArchivalLandscapeManager extends AbstractAction{
 						if(archivalInstitution.getAiname()==null){
 							archivalInstitution.setAiname(unittitle);
 						}
+						boolean primaryName = false;
+						if(alternativeNames.size()==0){
+							primaryName = true;
+						}
 						AiAlternativeName alternativeName = new AiAlternativeName();
 						alternativeName.setAiAName(unittitle);
+						alternativeName.setPrimaryName(primaryName);
 						Lang lang = null;
 						List<Lang> languages = DAOFactory.instance().getLangDAO().findAll();
 						for(int i=0;lang==null && i<languages.size();i++){
@@ -1127,7 +1256,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 
 	private ByteArrayOutputStream buildXMlFromDDBB() {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		EadCreator eadCreator = null;
+//		EadCreator eadCreator = null;
 		try {
 //			eadCreator = new EadCreator(outputStream); //TODO, fix EadCreator before use it
 			StringBuilder eadContent = new StringBuilder();
@@ -1166,6 +1295,13 @@ public class ArchivalLandscapeManager extends AbstractAction{
 //					log.error("Exception trying to close writer with EadCreator", e);
 //				}
 //			}
+			if(outputStream!=null){
+				try {
+					outputStream.close();
+				} catch (IOException e) {
+					log.error("Unknown error into buildXMLFromDDBB",e);
+				}
+			}
 		}
 		return outputStream;
 	}
@@ -1221,7 +1357,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 				String lang = couAlternativeName.getLang().getIsoname().toLowerCase(); //TODO, parse to 3_char_isoname
 				alternativeNames.put(lang,couAlternativeName.getCouAnName());
 			}
-			cLevel.append(buildDidNode(alternativeNames,tabs));
+			cLevel.append(buildDidNode(alternativeNames,null,tabs));
 		}
 		ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
 		List<ArchivalInstitution> listCountryArchivalInstitutions = archivalInstitutionDAO.getArchivalInstitutionsByCountryId(country.getId(),true);
@@ -1250,12 +1386,17 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		Set<AiAlternativeName> aiAlternativeNames = archivalInstitution.getAiAlternativeNames();
 		if(aiAlternativeNames!=null){
 			Map<String,String> alternativeNames = new HashMap<String,String>();
+			Map<String,String> mainAlternativeName = new HashMap<String,String>();
 			Iterator<AiAlternativeName> itAlternativeNames = aiAlternativeNames.iterator();
 			while(itAlternativeNames.hasNext()){
 				AiAlternativeName alternativeName = itAlternativeNames.next();
-				alternativeNames.put(alternativeName.getLang().getIsoname(),alternativeName.getAiAName());
+				if(!alternativeName.getPrimaryName()){
+					alternativeNames.put(alternativeName.getLang().getIsoname(),alternativeName.getAiAName());
+				}else{
+					mainAlternativeName.put(alternativeName.getLang().getIsoname(),alternativeName.getAiAName());
+				}
 			}
-			cLevel.append(buildDidNode(alternativeNames, tabs));
+			cLevel.append(buildDidNode(alternativeNames,mainAlternativeName,tabs));
 		}
 		Set<ArchivalInstitution> children = archivalInstitution.getChildArchivalInstitutions();
 		if(children!=null){
@@ -1311,10 +1452,28 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		return openedDsc;
 	}
 
-	private StringBuilder buildDidNode(Map<String, String> alternativeNames, String tabs) {
+	private StringBuilder buildDidNode(Map<String, String> alternativeNames, Map<String, String> mainAlternativeName, String tabs) {
 		StringBuilder didNode = new StringBuilder();
+		//first make main alternative name, which it's the institution name
+		if(mainAlternativeName!=null){
+			didNode.append("\n"+tabs+"\t");
+			didNode.append("<did>");
+			Iterator<String> keyIterator = mainAlternativeName.keySet().iterator(); //should be only one
+			if(keyIterator.hasNext()){
+				String key = keyIterator.next();
+				didNode.append("\n"+tabs+"\t\t");
+				didNode.append("<unittitle");
+				didNode.append(" encodinganalog=\""+AL_GLOBAL_ENCODINGANALOG+"\"");
+				didNode.append(" type=\""+key+"\">");
+				didNode.append(mainAlternativeName.get(key));
+				didNode.append("</unittitle>");
+				didNode.append("\n"+tabs+"\t");
+				didNode.append("</did>");
+			}
+		}
 		didNode.append("\n"+tabs+"\t");
 		didNode.append("<did>");
+		//next make all alternative names
 		Iterator<String> alternativeNamesIterator = alternativeNames.keySet().iterator();
 		while(alternativeNamesIterator.hasNext()){
 			String key = alternativeNamesIterator.next();
@@ -1349,7 +1508,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	}
 
 	private StringBuilder buildEadId() {
-		String countryCode = "";
+		String countryCode = SecurityContext.get().getCountryIsoname();
 		StringBuilder eadId = new StringBuilder();
 		eadId.append("\n\t\t<eadid");
 		eadId.append(" countrycode=\""+countryCode+"\"");
