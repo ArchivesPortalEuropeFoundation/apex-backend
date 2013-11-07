@@ -151,59 +151,24 @@ public class HarvesterTask implements Runnable {
 
                         File[] harvestedFiles = outputDirectory.listFiles();
                         UpFileDAO upFileDAO = DAOFactory.instance().getUpFileDAO();
-                        List<UpFile> upFiles = new ArrayList<UpFile>(harvestedFiles.length);
+
+                        Userprofile userprofile = archivalInstitutionOaiPmh.getUserprofile();
+                        Properties properties = new Properties();
+                        properties.setProperty(QueueItem.XML_TYPE, userprofile.getFileType()+"");
+                        properties.setProperty(QueueItem.NO_EADID_ACTION, userprofile.getNoeadidAction().getId()+"");
+                        properties.setProperty(QueueItem.EXIST_ACTION, userprofile.getExistAction().getId()+"");
+                        properties.setProperty(QueueItem.DAO_TYPE, userprofile.getDaoType().getId()+"");
+                        properties.setProperty(QueueItem.UPLOAD_ACTION, userprofile.getUploadAction().getId()+"");
+                        //todo: Add the ones for Europeana too
+
                         for(File file : harvestedFiles) {
                             UpFile upFile = createUpFile(subdirectory, file.getName(), UploadMethod.OAI_PMH, archivalInstitution.getAiId(), FileType.XML);
-                            upFileDAO.store(upFile);
-                            upFiles.add(upFile);
+                            upFile = upFileDAO.store(upFile);
+//                            JpaUtil.commitDatabaseTransaction();
+                            EadService.useProfileAction(upFile, properties);
                         }
 
                         JpaUtil.commitDatabaseTransaction();
-
-
-                        //todo: Create QUEUE for those items
-                        Userprofile userprofile = archivalInstitutionOaiPmh.getUserprofile();
-                        XmlType xmlType = XmlType.getType(userprofile.getFileType());
-
-                        for(UpFile upfile : upFiles) {
-                            //About EADID
-                            String eadid = ExistingFilesChecker.extractAttributeFromEad(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upfile.getPath() + upfile.getFilename(), "eadheader/eadid", null, true).trim();
-                            if(StringUtils.isEmpty(eadid)) {
-                                if(userprofile.getNoeadidAction().equals(UserprofileDefaultNoEadidAction.REMOVE)) {
-                                    deleteUpFile(upfile);
-                                } else if (userprofile.getNoeadidAction().equals(UserprofileDefaultNoEadidAction.ADD_LATER)) {
-                                    //todo: Do nothing actually, right? Just leave the file in the existing file checker (page before content manager)
-                                }
-                            } else {
-                                boolean continueTask = true;
-                                Ead ead;
-                                if((ead = doesFileExist(upfile, eadid, xmlType)) != null) {
-                                    if(userprofile.getExistAction().equals(UserprofileDefaultExistingFileAction.OVERWRITE)) {
-                                        EadService.overwrite(ead, upfile);
-                                    } else if(userprofile.getExistAction().equals(UserprofileDefaultExistingFileAction.KEEP)) {
-                                        deleteUpFile(upfile);
-                                        continueTask = false;
-                                    }
-                                } else {
-                                    EadService.create(xmlType, upfile, upfile.getAiId());
-                                }
-
-//                                if(continueTask) {
-//                                    //todo: After, so when the file is inside the EAD tables so we have a problem, we do not have the identifiers...
-//                                    UserprofileDefaultDaoType daoType = userprofile.getDaoType();
-//                                    if(userprofile.getUploadAction().equals(UserprofileDefaultUploadAction.CONVERT)) {
-//                                        EadService.convert(xmlType, );
-//                                    } else if(userprofile.getUploadAction().equals(UserprofileDefaultUploadAction.VALIDATE)) {
-//                                        EadService.validate(xmlType, );
-//                                    } else if(userprofile.getUploadAction().equals(UserprofileDefaultUploadAction.CONVERT_VALIDATE_PUBLISH)) {
-//                                        EadService.convertValidatePublish(xmlType, );
-//                                    } else if(userprofile.getUploadAction().equals(UserprofileDefaultUploadAction.CONVERT_VALIDATE_PUBLISH_EUROPEANA)) {
-//                                        //todo: in the QueueAction too
-//                                    }
-//                                }
-                            }
-                        }
-
 
                         UserService.sendEmailHarvestFinished(true, archivalInstitution, partner);
                     } catch (Exception e) {
@@ -261,19 +226,5 @@ public class HarvesterTask implements Runnable {
         upFile.setUploadMethod(uploadMethod);
 
         return upFile;
-    }
-
-    private static void deleteUpFile(UpFile upFile) throws IOException {
-        JpaUtil.beginDatabaseTransaction();
-        DAOFactory.instance().getUpFileDAO().deleteSimple(upFile);
-        JpaUtil.commitDatabaseTransaction();
-        ContentUtils.deleteFile(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath() + upFile.getFilename());
-        File uploadDir = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath());
-        if (uploadDir.listFiles().length == 0)
-            FileUtils.forceDelete(uploadDir);
-    }
-
-    private static Ead doesFileExist(UpFile upFile, String eadid, XmlType xmlType) {
-        return DAOFactory.instance().getEadDAO().getEadByEadid(xmlType.getClazz(), upFile.getAiId(), eadid);
     }
 }

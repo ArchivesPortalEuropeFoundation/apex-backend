@@ -8,7 +8,8 @@ public enum QueueAction {
 	CONVERT_TO_ESE_EDM("content.message.convert.ese"),DELETE_ESE_EDM("content.message.delete.ese"), 
 	DELIVER_TO_EUROPEANA("content.message.deliver.europeana"), DELETE_FROM_EUROPEANA("content.message.delete.europeana" ), 
 	UNPUBLISH_ALL("content.message.unpublish.all"), OVERWRITE("content.message.overwrite"), 
-	CHANGE_TO_DYNAMIC("content.message.dynamic.change"), CHANGE_TO_STATIC("content.message.static.change");
+	CHANGE_TO_DYNAMIC("content.message.dynamic.change"), CHANGE_TO_STATIC("content.message.static.change"),
+    USE_PROFILE("content.message.useprofile");
 
 	private String resourceName;
 	private QueueAction(String resourceName){
@@ -57,6 +58,9 @@ public enum QueueAction {
 	public boolean isCreateStaticEadAction() {
 		return CHANGE_TO_STATIC.equals(this);
 	}
+    public boolean isUseProfileAction() {
+        return USE_PROFILE.equals(this);
+    }
 	public String getResourceName() {
 		return resourceName;
 	}

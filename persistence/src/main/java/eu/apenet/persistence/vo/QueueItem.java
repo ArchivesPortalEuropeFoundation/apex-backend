@@ -19,7 +19,13 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "queue")
 public class QueueItem implements java.io.Serializable {
-	/**
+    public static final String XML_TYPE = "ape.xmltype";
+    public static final String NO_EADID_ACTION = "ape.noeadidaction";
+    public static final String EXIST_ACTION = "ape.existaction";
+    public static final String DAO_TYPE = "ape.daotype";
+    public static final String UPLOAD_ACTION = "ape.uploadaction";
+
+    /**
 	 * 
 	 */
 	private static final long serialVersionUID = -4266955613706066708L;

@@ -9,6 +9,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import com.ctc.wstx.exc.WstxParsingException;
+import eu.apenet.dashboard.manual.ExistingFilesChecker;
+import eu.apenet.persistence.vo.*;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.exceptions.APEnetRuntimeException;
@@ -24,18 +29,6 @@ import eu.apenet.persistence.dao.EseStateDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.Ead;
-import eu.apenet.persistence.vo.Ese;
-import eu.apenet.persistence.vo.EseState;
-import eu.apenet.persistence.vo.EuropeanaState;
-import eu.apenet.persistence.vo.FindingAid;
-import eu.apenet.persistence.vo.HoldingsGuide;
-import eu.apenet.persistence.vo.QueueAction;
-import eu.apenet.persistence.vo.QueueItem;
-import eu.apenet.persistence.vo.QueuingState;
-import eu.apenet.persistence.vo.SourceGuide;
-import eu.apenet.persistence.vo.UpFile;
-import eu.apenet.persistence.vo.ValidatedState;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class EadService {
@@ -297,133 +290,275 @@ public class EadService {
 		addToQueue(oldEad, QueueAction.OVERWRITE, null, upFile);
 	}
 
-	public static void create(XmlType xmlType, UpFile upFile, Integer aiId) throws Exception {
+	public static Ead create(XmlType xmlType, UpFile upFile, Integer aiId) throws Exception {
 		SecurityContext.get().checkAuthorized(aiId);
-		new CreateEadTask().execute(xmlType, upFile, aiId);
+		Ead ead = new CreateEadTask().execute(xmlType, upFile, aiId);
 		DAOFactory.instance().getUpFileDAO().delete(upFile);
+        return ead;
 	}
 
-	public static QueueAction processQueueItem(QueueItem queueItem) throws IOException {
+    public static void useProfileAction(UpFile upFile, Properties properties) throws Exception {
+        //todo: SecurityContext?
+        addToQueue(QueueAction.USE_PROFILE, properties, upFile);
+    }
+
+	public static QueueAction processQueueItem(QueueItem queueItem) throws Exception {
 		QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
-		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-		Ead ead = queueItem.getEad();
-		XmlType xmlType = XmlType.getEadType(ead);
-		LOGGER.info("Process queue item: " + queueItem.getId() + " " + queueItem.getAction() + " " + ead.getEadid()
-				+ "(" + xmlType.getName() + ")");
-		Properties preferences = null;
-		if (queueItem.getPreferences() != null) {
-			preferences = readProperties(queueItem.getPreferences());
-		}
+        EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		QueueAction queueAction = queueItem.getAction();
-		if (queueAction.isOverwriteAction() || queueAction.isDeleteAction()) {
-			boolean eadDeleted = false;
-			boolean upFileDeleted = false;
-			UpFile upFile = queueItem.getUpFile();
-			try {
+        Properties preferences = null;
+        if (queueItem.getPreferences() != null) {
+            preferences = readProperties(queueItem.getPreferences());
+        }
 
-				queueItem.setEad(null);
-				queueItem.setUpFile(null);
-				queueItemDAO.store(queueItem);
+        if (!queueAction.isUseProfileAction()) {
+            Ead ead = queueItem.getEad();
+            XmlType xmlType = XmlType.getEadType(ead);
+            LOGGER.info("Process queue item: " + queueItem.getId() + " " + queueItem.getAction() + " " + ead.getEadid()
+                    + "(" + xmlType.getName() + ")");
 
-				if (queueAction.isOverwriteAction()) {
-					boolean isPublished = ead.isPublished();
-					Integer aiId = ead.getAiId();
-					new DeleteFromEuropeanaTask().execute(ead, preferences);
-					new DeleteEseEdmTask().execute(ead, preferences);
-					new UnpublishTask().execute(ead, preferences);
-					new DeleteTask().execute(ead, preferences);
-					eadDeleted = true;
-					Ead newEad = new CreateEadTask().execute(xmlType, upFile, aiId);
-					if (isPublished) {
-						new ValidateTask().execute(newEad);
-						new ConvertTask().execute(newEad, preferences);
-						new ValidateTask().execute(newEad);
-						new PublishTask().execute(newEad);
-					}
-					DAOFactory.instance().getUpFileDAO().delete(upFile);
-					upFileDeleted = true;
-				} else if (queueAction.isDeleteAction()) {
-					new DeleteFromEuropeanaTask().execute(ead, preferences);
-					new DeleteEseEdmTask().execute(ead, preferences);
-					new UnpublishTask().execute(ead, preferences);
-					new DeleteTask().execute(ead, preferences);
-					eadDeleted = true;
-				}
-				queueItemDAO.delete(queueItem);
-			} catch (Exception e) {
-				if (!eadDeleted) {
-					queueItem.setEad(ead);
-					ead.setQueuing(QueuingState.ERROR);
-					eadDAO.store(ead);
-				}
-				if (!upFileDeleted && upFile != null) {
-					queueItem.setUpFile(upFile);
-				}
-				String err = "eadid: " + ead.getEadid() + " - id: " + ead.getId() + " - type: " + xmlType.getName();
-				LOGGER.error("Error occured: " + err, e);
-				queueItem.setErrors(new Date() + " - " + err + ". Error: " + e.getMessage() + " - " + e.getCause());
-				queueItem.setPriority(0);
-				queueItemDAO.store(queueItem);
-			}
-		} else {
-			try {
-				if (queueAction.isValidateAction()) {
-					new ValidateTask().execute(ead, preferences);
-				}
-				if (queueAction.isConvertAction()) {
-					new ConvertTask().execute(ead, preferences);
-				}
-				if (queueAction.isValidateAction()) {
-					new ValidateTask().execute(ead, preferences);
-				}
-				if (queueAction.isPublishAction()) {
-					new PublishTask().execute(ead, preferences);
-				}
-				if (queueAction.isRePublishAction()) {
-					new UnpublishTask().execute(ead, preferences);
-					new PublishTask().execute(ead, preferences);
-				}
-				if (queueAction.isConvertToEseEdmAction()) {
-					new ConvertToEseEdmTask().execute(ead, preferences);
-				}
-				if (queueAction.isUnpublishAction()) {
-					new UnpublishTask().execute(ead, preferences);
-				}
-				if (queueAction.isDeleteFromEuropeanaAction()) {
-					new DeleteFromEuropeanaTask().execute(ead, preferences);
-				}
-				if (queueAction.isDeleteEseEdmAction()) {
-					new DeleteEseEdmTask().execute(ead, preferences);
-				}
+            if (queueAction.isOverwriteAction() || queueAction.isDeleteAction()) {
+                boolean eadDeleted = false;
+                boolean upFileDeleted = false;
+                UpFile upFile = queueItem.getUpFile();
+                try {
 
-				if (queueAction.isDeliverToEuropeanaAction()) {
-					new DeliverToEuropeanaTask().execute(ead, preferences);
-				}
-				if (queueAction.isCreateStaticEadAction()) {
-					new ChangeStaticTask().execute(ead, preferences);
-				}
+                    queueItem.setEad(null);
+                    queueItem.setUpFile(null);
+                    queueItemDAO.store(queueItem);
 
-				if (queueAction.isCreateDynamicEadAction()) {
-					new ChangeDynamicTask().execute(ead, preferences);
-				}
-				ead.setQueuing(QueuingState.NO);
-				eadDAO.store(ead);
-				queueItemDAO.delete(queueItem);
-			} catch (Exception e) {
-				String err = "eadid: " + ead.getEadid() + " - id: " + ead.getId() + " - type: " + xmlType.getName();
-				LOGGER.error("Error occured: " + err, e);
-				queueItem.setErrors(new Date() + err + ". Error: " + e.getMessage() + "-" + e.getCause());
-				ead.setQueuing(QueuingState.ERROR);
-				eadDAO.store(ead);
-				queueItem.setPriority(0);
-				queueItemDAO.store(queueItem);
+                    if (queueAction.isOverwriteAction()) {
+                        boolean isPublished = ead.isPublished();
+                        Integer aiId = ead.getAiId();
+                        new DeleteFromEuropeanaTask().execute(ead, preferences);
+                        new DeleteEseEdmTask().execute(ead, preferences);
+                        new UnpublishTask().execute(ead, preferences);
+                        new DeleteTask().execute(ead, preferences);
+                        eadDeleted = true;
+                        Ead newEad = new CreateEadTask().execute(xmlType, upFile, aiId);
+                        if (isPublished) {
+                            new ValidateTask().execute(newEad);
+                            new ConvertTask().execute(newEad, preferences);
+                            new ValidateTask().execute(newEad);
+                            new PublishTask().execute(newEad);
+                        }
+                        DAOFactory.instance().getUpFileDAO().delete(upFile);
+                        upFileDeleted = true;
+                    } else if (queueAction.isDeleteAction()) {
+                        new DeleteFromEuropeanaTask().execute(ead, preferences);
+                        new DeleteEseEdmTask().execute(ead, preferences);
+                        new UnpublishTask().execute(ead, preferences);
+                        new DeleteTask().execute(ead, preferences);
+                        eadDeleted = true;
+                    }
+                    queueItemDAO.delete(queueItem);
+                } catch (Exception e) {
+                    if (!eadDeleted) {
+                        queueItem.setEad(ead);
+                        ead.setQueuing(QueuingState.ERROR);
+                        eadDAO.store(ead);
+                    }
+                    if (!upFileDeleted && upFile != null) {
+                        queueItem.setUpFile(upFile);
+                    }
+                    String err = "eadid: " + ead.getEadid() + " - id: " + ead.getId() + " - type: " + xmlType.getName();
+                    LOGGER.error("Error occured: " + err, e);
+                    queueItem.setErrors(new Date() + " - " + err + ". Error: " + e.getMessage() + " - " + e.getCause());
+                    queueItem.setPriority(0);
+                    queueItemDAO.store(queueItem);
+                }
+            } else {
+                try {
+                    if (queueAction.isValidateAction()) {
+                        new ValidateTask().execute(ead, preferences);
+                    }
+                    if (queueAction.isConvertAction()) {
+                        new ConvertTask().execute(ead, preferences);
+                    }
+                    if (queueAction.isValidateAction()) {
+                        new ValidateTask().execute(ead, preferences);
+                    }
+                    if (queueAction.isPublishAction()) {
+                        new PublishTask().execute(ead, preferences);
+                    }
+                    if (queueAction.isRePublishAction()) {
+                        new UnpublishTask().execute(ead, preferences);
+                        new PublishTask().execute(ead, preferences);
+                    }
+                    if (queueAction.isConvertToEseEdmAction()) {
+                        new ConvertToEseEdmTask().execute(ead, preferences);
+                    }
+                    if (queueAction.isUnpublishAction()) {
+                        new UnpublishTask().execute(ead, preferences);
+                    }
+                    if (queueAction.isDeleteFromEuropeanaAction()) {
+                        new DeleteFromEuropeanaTask().execute(ead, preferences);
+                    }
+                    if (queueAction.isDeleteEseEdmAction()) {
+                        new DeleteEseEdmTask().execute(ead, preferences);
+                    }
 
-			}
-		}
+                    if (queueAction.isDeliverToEuropeanaAction()) {
+                        new DeliverToEuropeanaTask().execute(ead, preferences);
+                    }
+                    if (queueAction.isCreateStaticEadAction()) {
+                        new ChangeStaticTask().execute(ead, preferences);
+                    }
+
+                    if (queueAction.isCreateDynamicEadAction()) {
+                        new ChangeDynamicTask().execute(ead, preferences);
+                    }
+                    ead.setQueuing(QueuingState.NO);
+                    eadDAO.store(ead);
+                    queueItemDAO.delete(queueItem);
+                } catch (Exception e) {
+                    String err = "eadid: " + ead.getEadid() + " - id: " + ead.getId() + " - type: " + xmlType.getName();
+                    LOGGER.error("Error occured: " + err, e);
+                    queueItem.setErrors(new Date() + err + ". Error: " + e.getMessage() + "-" + e.getCause());
+                    ead.setQueuing(QueuingState.ERROR);
+                    eadDAO.store(ead);
+                    queueItem.setPriority(0);
+                    queueItemDAO.store(queueItem);
+
+                }
+            }
+        } else { //USE_PROFILE
+            UserprofileDefaultNoEadidAction userprofileDefaultNoEadidAction = UserprofileDefaultNoEadidAction.getExistingFileAction(preferences.getProperty(QueueItem.NO_EADID_ACTION));
+            UserprofileDefaultUploadAction userprofileDefaultUploadAction = UserprofileDefaultUploadAction.getUploadAction(preferences.getProperty(QueueItem.UPLOAD_ACTION));
+            UserprofileDefaultExistingFileAction userprofileDefaultExistingFileAction = UserprofileDefaultExistingFileAction.getExistingFileAction(preferences.getProperty(QueueItem.EXIST_ACTION));
+            UserprofileDefaultDaoType userprofileDefaultDaoType = UserprofileDefaultDaoType.getDaoType(preferences.getProperty(QueueItem.DAO_TYPE));
+            XmlType xmlType = XmlType.getType(Integer.parseInt(preferences.getProperty(QueueItem.XML_TYPE)));
+            LOGGER.info(QueueItem.XML_TYPE);
+            LOGGER.info(xmlType == null);
+            LOGGER.info(xmlType.getName());
+
+
+            //About EADID
+            UpFile upFile = queueItem.getUpFile();
+            LOGGER.info("Process queue item: " + queueItem.getId() + " " + queueItem.getAction() + ", upFile id: " + queueItem.getUpFileId() + "(" + xmlType.getName() + ")");
+
+            String eadid = ExistingFilesChecker.extractAttributeFromEad(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath() + upFile.getFilename(), "eadheader/eadid", null, true).trim();
+            if(StringUtils.isEmpty(eadid)) {
+                if(userprofileDefaultNoEadidAction.isRemove()) {
+                    deleteUpFile(upFile);
+                } else if (userprofileDefaultNoEadidAction.isAddLater()) {
+                    //todo: Do nothing actually, right? Just leave the file in the existing file checker (page before content manager)
+                }
+            } else {
+                boolean continueTask = true;
+                Ead ead;
+                Ead newEad = null;
+                if((ead = doesFileExist(upFile, eadid, xmlType)) != null) {
+                    if(userprofileDefaultExistingFileAction.isOverwrite()) {
+                        boolean eadDeleted = false;
+                        boolean upFileDeleted = false;
+                        try {
+                            queueItem.setEad(null);
+                            queueItem.setUpFile(null);
+                            queueItemDAO.store(queueItem);
+
+                            Integer aiId = ead.getAiId();
+                            new DeleteFromEuropeanaTask().execute(ead, preferences);
+                            new DeleteEseEdmTask().execute(ead, preferences);
+                            new UnpublishTask().execute(ead, preferences);
+                            new DeleteTask().execute(ead, preferences);
+                            eadDeleted = true;
+                            newEad = new CreateEadTask().execute(xmlType, upFile, aiId);
+                            DAOFactory.instance().getUpFileDAO().delete(upFile);
+                            upFileDeleted = true;
+                        } catch (Exception e) {
+                            if (!eadDeleted) {
+                                queueItem.setEad(ead);
+                                ead.setQueuing(QueuingState.ERROR);
+                                eadDAO.store(ead);
+                            }
+                            if (!upFileDeleted && upFile != null) {
+                                queueItem.setUpFile(upFile);
+                            }
+                            String err = "eadid: " + ead.getEadid() + " - id: " + ead.getId() + " - type: " + xmlType.getName();
+                            LOGGER.error("Error occured: " + err, e);
+                            queueItem.setErrors(new Date() + " - " + err + ". Error: " + e.getMessage() + " - " + e.getCause());
+                            queueItem.setPriority(0);
+                            queueItemDAO.store(queueItem);
+                        }
+                    } else if(userprofileDefaultExistingFileAction.isKeep()) {
+                        deleteUpFile(upFile);
+                        continueTask = false;
+                    }
+                } else {
+                    newEad = EadService.create(xmlType, upFile, upFile.getAiId());
+                }
+
+                if(continueTask) {
+                    newEad.setQueuing(QueuingState.BUSY);
+                    eadDAO.store(newEad);
+
+                    Properties conversionProperties = new Properties();
+                    if(userprofileDefaultDaoType == null || userprofileDefaultDaoType.isUnspecified()) {
+                        conversionProperties.put("defaultRoleType", "UNSPECIFIED");
+                    } else {
+                        if(userprofileDefaultDaoType.is3D()) {
+                            conversionProperties.put("defaultRoleType", "3D");
+                        } else if (userprofileDefaultDaoType.isImage()) {
+                            conversionProperties.put("defaultRoleType", "IMAGE");
+                        } else if (userprofileDefaultDaoType.isSound()) {
+                            conversionProperties.put("defaultRoleType", "SOUND");
+                        } else if (userprofileDefaultDaoType.isText()) {
+                            conversionProperties.put("defaultRoleType", "TEXT");
+                        } else if (userprofileDefaultDaoType.isVideo()) {
+                            conversionProperties.put("defaultRoleType", "VIDEO");
+                        }
+                    }
+                    conversionProperties.put("useDefaultRoleType", true); //todo: Take from the userprofile when Stefan adds it
+
+                    try {
+                        if(userprofileDefaultUploadAction.isConvert()) {
+                            new ConvertTask().execute(newEad, conversionProperties);
+                        } else if(userprofileDefaultUploadAction.isValidate()) {
+                            new ValidateTask().execute(newEad);
+                        } else if(userprofileDefaultUploadAction.isConvertValidatePublish() || userprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
+                            new ValidateTask().execute(newEad);
+                            new ConvertTask().execute(newEad, conversionProperties);
+                            new ValidateTask().execute(newEad);
+                            new PublishTask().execute(newEad);
+                            if(userprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
+                                //todo: Europeana stuff here
+                            }
+                        }
+                        newEad.setQueuing(QueuingState.NO);
+                        eadDAO.store(newEad);
+                        queueItemDAO.delete(queueItem);
+                    } catch (Exception e) {
+                        newEad.setQueuing(QueuingState.ERROR);
+                        eadDAO.store(newEad);
+
+                        String err = "eadid: " + newEad.getEadid() + " - id: " + newEad.getId() + " - type: " + xmlType.getName();
+                        LOGGER.error("Error occured: " + err, e);
+                        queueItem.setErrors(new Date() + " - " + err + ". Error: " + e.getMessage() + " - " + e.getCause());
+                        queueItem.setPriority(0);
+                        queueItemDAO.store(queueItem);
+                    }
+                }
+            }
+        }
 		LOGGER.info("Process queue item finished");
 
 		return queueAction;
 	}
+
+    private static void deleteUpFile(UpFile upFile) throws IOException {
+        JpaUtil.beginDatabaseTransaction();
+        DAOFactory.instance().getUpFileDAO().deleteSimple(upFile);
+        JpaUtil.commitDatabaseTransaction();
+        ContentUtils.deleteFile(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath() + upFile.getFilename());
+        File uploadDir = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath());
+        if (uploadDir.listFiles().length == 0)
+            FileUtils.forceDelete(uploadDir);
+    }
+
+    private static Ead doesFileExist(UpFile upFile, String eadid, XmlType xmlType) {
+        return DAOFactory.instance().getEadDAO().getEadByEadid(xmlType.getClazz(), upFile.getAiId(), eadid);
+    }
 
 	private static void addToQueue(Ead ead, QueueAction queueAction, Properties preferences, UpFile upFile)
 			throws IOException {
@@ -444,6 +579,11 @@ public class EadService {
 		QueueItem queueItem = fillQueueItem(ead, queueAction, preferences);
 		indexqueueDao.store(queueItem);
 	}
+
+    private static void addToQueue(QueueAction queueAction, Properties preferences, UpFile upFile) throws IOException {
+        QueueItem queueItem = fillQueueItem(upFile, queueAction, preferences);
+        DAOFactory.instance().getQueueItemDAO().store(queueItem);
+    }
 
 	public static void addBatchToQueue(EadSearchOptions eadSearchOptions, QueueAction queueAction,
 			Properties preferences) throws IOException {
@@ -614,4 +754,22 @@ public class EadService {
 		queueItem.setPriority(priority);
 		return queueItem;
 	}
+
+    private static QueueItem fillQueueItem(UpFile upFile, QueueAction queueAction, Properties preferences) throws IOException {
+        return fillQueueItem(upFile, queueAction, preferences, 1000);
+    }
+
+    private static QueueItem fillQueueItem(UpFile upFile, QueueAction queueAction, Properties preferences, int basePriority) throws IOException {
+        QueueItem queueItem = new QueueItem();
+        queueItem.setQueueDate(new Date());
+        queueItem.setAction(queueAction);
+        if (preferences != null) {
+            queueItem.setPreferences(writeProperties(preferences));
+        }
+
+        queueItem.setUpFile(upFile);
+
+        queueItem.setPriority(basePriority);
+        return queueItem;
+    }
 }
