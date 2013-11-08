@@ -687,6 +687,7 @@ public class ExistingFilesChecker {
         UpFile upfile = upFileDao.findById(fileUnit.getFileId());
 
         String path = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upfile.getPath();
+        String filePath = path + upfile.getFilename();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
         factory.setValidating(false);
@@ -698,7 +699,7 @@ public class ExistingFilesChecker {
         try{
             oldeadid = this.extractAttributeFromEad(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/eadid", null, true).trim();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            InputStream in = new FileInputStream(path);
+            InputStream in = new FileInputStream(filePath);
             Document doc = builder.parse(in);
             doc.getDocumentElement().normalize();
             NodeList eadidList = doc.getElementsByTagName("eadid");
@@ -707,26 +708,24 @@ public class ExistingFilesChecker {
             if (!currenteadid.equals(neweadid)&&(!neweadid.isEmpty())) {
                 LOG.info("Changing the eadid into the file");
                 eadidNode.setTextContent(neweadid);
-                String newfilepath=path.replace(".xml", "") + neweadid + ".xml";
+                String newfilepath=filePath.replace(".xml", "") + neweadid + ".xml";
                 //fileUnit.setFileName(newfileName);
-                Result result1 = new StreamResult(new java.io.File(path));
+                Result result1 = new StreamResult(new File(filePath));
                 Source source = new DOMSource(doc);
                 Transformer transformer;
                 transformer = TransformerFactory.newInstance().newTransformer();
                 transformer.transform(source, result1);
 
                 //Rename file
-                //path = path.replace("/", "\\");
-                //newfilepath = newfilepath.replace("/", "\\");
-                File oldFile = new File(path);
-                File newFile = new File (newfilepath);
+                File oldFile = new File(filePath);
+                File newFile = new File(newfilepath);
                 Boolean success= oldFile.renameTo(newFile);
 
                 //if renaming process fails, the original file will have the original eadid identifier again.
                 if (!success) {
                     LOG.info("Removing the new eadid into the original file because of fail renaming process");
                     eadidNode.setTextContent(oldeadid);
-                    Result result2 = new StreamResult(new java.io.File(path));
+                    Result result2 = new StreamResult(new File(filePath));
                     Source source2 = new DOMSource(doc);
                     Transformer transformer2;
                     transformer2 = TransformerFactory.newInstance().newTransformer();
