@@ -299,8 +299,30 @@
 	        		id = id.substring("divChangeEadid".length);
 	        		changes.push(id);
 	        	});	       
-	        	        	
-	        });   
+
+	        	checkActiveButtonAccept();
+	        });
+
+	        function checkActiveButtonAccept() {
+	        	var isOverwrite = true;
+	        	var existsAdd = false;
+
+	        	$("div#filesWithEADIDrepeated select[id^='existingFilesAnswers']").each(function(){
+	        		if ($(this).val() != "Overwrite") {
+	        			isOverwrite = false;
+	        		}
+	        	});
+
+	        	$("div#filesWithEmptyEadid select[id^='existingFilesAnswers']").each(function(){
+	        		if ($(this).val() == "Add EADID") {
+	        			existsAdd = true;
+	        		}
+	        	});
+
+	        	if (isOverwrite && !existsAdd) {
+		        	$("input#form_submit").removeAttr("disabled");
+	        	}
+	        }
         
 	        function activate(eadid) {
 	        	$("input#form_submit").attr("disabled","disabled");
