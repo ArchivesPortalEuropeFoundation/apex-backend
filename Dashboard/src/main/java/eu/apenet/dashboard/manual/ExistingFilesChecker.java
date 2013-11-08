@@ -686,8 +686,8 @@ public class ExistingFilesChecker {
         UpFileDAO upFileDao = DAOFactory.instance().getUpFileDAO();
         UpFile upfile = upFileDao.findById(fileUnit.getFileId());
 
-        String path = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upfile.getPath();
-        String filePath = path + upfile.getFilename();
+        String path = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath();
+        String filePath = path + upfile.getPath() + upfile.getFilename();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
         factory.setValidating(false);
@@ -732,12 +732,10 @@ public class ExistingFilesChecker {
                     transformer2.transform(source2, result2);
                     return STATUS_ERROR;
                 } else {
-                    //Change the path into upFile table to the new path.
-                    upfile.setPath(new File(newfilepath).getParent());
-                    upFileDao.update(upfile);
                     String oldfname=upfile.getFilename();
                     String newfname= oldfname.replace(".xml", "") + neweadid + ".xml";
                     upfile.setFilename(newfname);
+                    upFileDao.update(upfile);
 
                     fileUnit.setFileName(newfname);
                     fileUnit.setEadid(neweadid);
