@@ -441,8 +441,6 @@ public class EadService {
             if(StringUtils.isEmpty(eadid)) {
                 if(userprofileDefaultNoEadidAction.isRemove()) {
                     deleteUpFile(upFile);
-                } else if (userprofileDefaultNoEadidAction.isAddLater()) {
-                    //todo: Do nothing actually, right? Just leave the file in the existing file checker (page before content manager)
                 }
             } else {
                 boolean continueTask = true;
