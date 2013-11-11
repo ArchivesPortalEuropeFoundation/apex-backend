@@ -30,7 +30,8 @@ import eu.apenet.persistence.vo.Lang;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
-	
+
+	private static final long serialVersionUID = -1631997370424365298L;
 	private static final String TARGET_ACTION = "getALTree.action";
 	private static final String CREATE = "create";
 	private static final String SERIE = "series";
@@ -80,7 +81,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 				if(father!=null && !father.isEmpty() && (father.contains("aigroup_") || father.contains("country_"))){
 					father = father.contains("country_")?null:father.substring("aigroup_".length());
 					log.info("Archival landscape, create node hanging of "+father+" called.");
-					createArchivalInstitution(name,father,type,lang);
+					writer.write(createArchivalInstitution(name,father,type,lang));
 				}else{
 					log.info("Bad father trying to edit archival landscape. Father-> "+father);
 				}
@@ -141,6 +142,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		}finally{
 			try{
 				if(writer!=null){
+					writer.flush();
 					writer.close();
 				}
 			}catch(IOException e){
@@ -174,21 +176,21 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					//name exists, so it's needed an updateSimple operation
 					alternativeName.setAiAName(name);
 					aiAlternativesNamesDAO.updateSimple(alternativeName);
-					buffer.append(buildNode("info","alternativeNameUpdated"));
+					buffer.append(buildNode("info",getText("al.message.editedalternativesnamesdone")));
 				}else{
 					//not exist, so it's needed an insertSimple operation
 					alternativeName.setAiAName(name);
 					alternativeName.setLang(language);
 					aiAlternativesNamesDAO.insertSimple(alternativeName);
-					buffer.append(buildNode("info","alternativeNameCreated"));
+					buffer.append(buildNode("info",getText("al.message.alternativenamecreated")));
 				}
 			}else{
 				if (alternativeName!=null
 						&& alternativeName.getPrimaryName() != null
 						&& alternativeName.getPrimaryName()) {
-					buffer.append(buildNode("error","NotPossibleToModifyTheMainName"));
+					buffer.append(buildNode("error",getText("al.message.notchangedprimaryname")));
 				} else {
-					buffer.append(buildNode("error","badAlternativeName"));
+					buffer.append(buildNode("error",getText("al.message.noElementTextPresent")));
 				}
 			}
 			// The final commits
@@ -196,9 +198,9 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		}else{
 			if (name != null
 					&& name.isEmpty()) {
-				buffer.append(buildNode("error","alternativeNameMustBeFilled"));
+				buffer.append(buildNode("error",getText("al.message.alternativenamemustbefilled")));
 			} else {
-				buffer.append(buildNode("error","badArguments"));
+				buffer.append(buildNode("error",getText("al.message.badarguments")));
 			}
 		}
 		return buffer.toString();
@@ -238,7 +240,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			}
 		}else{
 			buffer.append(START_ARRAY);
-			buffer.append(buildNode("error","noInstitutionForAiID"));
+			buffer.append(buildNode("error","al.message.error.noInstitutions"));
 			buffer.append(END_ARRAY);
 		}
 		return buffer.toString();
@@ -254,7 +256,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			if (ContentUtils.containsPublishedFiles(archivalInstitutionTarget)) {
 				// rollback
 				JpaUtil.rollbackDatabaseTransaction();
-				buffer.append(buildNode("error","al.message.error.not.possible.move"));
+				buffer.append(buildNode("error",getText("al.message.error.not.possible.move")));
 				return buffer.toString();
 			}
 
@@ -276,11 +278,11 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			if(changed){
 				// The final commits
 				JpaUtil.commitDatabaseTransaction();
-				buffer.append(buildNode("info","changedOrder"));
+				buffer.append(buildNode("info",getText("al.message.orderchanged")));
 			}else{
 				// rollback
 				JpaUtil.rollbackDatabaseTransaction();
-				buffer.append(buildNode("error","notChangedOrder-restoredData"));
+				buffer.append(buildNode("error",getText("al.message.ordernotchanged")));
 			}
 		}
 		return buffer.toString();
@@ -326,10 +328,10 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					}
 					archivalInstitutionTarget.setAlorder(aloOrder);
 					aiDao.updateSimple(archivalInstitutionTarget);
-					buffer.append(buildNode("info","changedGroup"));
+					buffer.append(buildNode("info",getText("al.message.groupchanged")));
 				}
 			}else{
-				buffer.append(buildNode("error","groupTargetIsParent")); 
+				buffer.append(buildNode("error",getText("al.message.grouptargetisparent"))); 
 			}
 		}
 		// The final commits
@@ -396,7 +398,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					if(ai.isGroup()){
 						Set<ArchivalInstitution> children = ai.getChildArchivalInstitutions();
 						if(children!=null && children.size()>0){
-							messenger.append(buildNode("error","institutionGroupHasInstitutionChildrens-NotDeleted"));
+							messenger.append(buildNode("error",getText("al.message.grouphaschildren")));
 							rollback = true;
 						}
 					}
@@ -410,10 +412,10 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 							}
 						}
 						aiDao.deleteSimple(ai); //deleteSimple institution
-						messenger.append(buildNode("info","institutionDeleted"));
+						messenger.append(buildNode("info",getText("al.message.institutiondeleted")));
 					}
 				}else{
-					messenger.append(buildNode("error","institutionHasContent-NotDeleted"));
+					messenger.append(buildNode("error",getText("al.message.institutionhascontentnotdeleted")));
 					rollback = true;
 				}
 				if(!rollback){ // The final commits
@@ -463,7 +465,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 				alternativeName.setPrimaryName(true);
 				alternativeName.setArchivalInstitution(archivalInstitution);
 				DAOFactory.instance().getAiAlternativeNameDAO().insertSimple(alternativeName);
-				messenger.append(buildNode("info","institutionCreated"));
+				messenger.append(buildNode("info",getText("al.message.elementEdited")));
 				log.info("Archival institution/group has been created with name: "+name);
 			// The final commits
 				JpaUtil.commitDatabaseTransaction();
@@ -591,13 +593,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		actionName = "showMoveDeleteActions";
 		actionValue = "false";
 		if(archivalInstitution!=null){
-//			ArchivalInstitution parent = archivalInstitution.getParent();
-//			if(parent!=null){
-//				Set<ArchivalInstitution> children = parent.getChildArchivalInstitutions(); //get siblings
-//				if(children!=null && children.size()>1){ //count if there are some siblings additional to target
-					actionValue = "true";
-//				}
-//			}
+			actionValue = "true";
 		}
 		if(response.length()>1){ //take into account put ',' if necesary
 			response.append(",");
@@ -618,7 +614,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			actionName = "hasContentPublished";
 			actionValue = "";
 			if (ContentUtils.containsPublishedFiles(archivalInstitution)) {
-				actionValue = "notPossibleToEditWithContentPublished";
+				actionValue = getText("al.message.notchangedparent");
 			} else {
 				actionValue = "false";
 			}
@@ -705,55 +701,23 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					//name exists, so it's needed a deleteSimple operation
 					alternativeName.setAiAName(name);
 					aiAlternativesNamesDAO.deleteSimple(alternativeName);
-					buffer.append(buildNode("info","alternativeNameDeleted"));
+					buffer.append(buildNode("info",getText("al.message.alternativenameremoved")));
 				}
 			}else{
 				if (alternativeName!=null
 						&& alternativeName.getPrimaryName() != null
 						&& alternativeName.getPrimaryName()) {
-					buffer.append(buildNode("error","NotPossibleToDeleteTheMainName"));
+					buffer.append(buildNode("error",getText("al.message.cannotremovefirstalternativename")));
 				} else {
-					buffer.append(buildNode("error","badAlternativeName"));
+					buffer.append(buildNode("error",getText("al.message.badalternativename")));
 				}
 			}
 			// The final commits
 			JpaUtil.commitDatabaseTransaction();
 		}else{
-			buffer.append(buildNode("error","badArguments"));
+			buffer.append(buildNode("error",getText("al.message.badarguments")));
 		}
 		return buffer.toString();
 	}
 
-//	private String checkAlternativeNamesActions(Integer aiId, String lang) {
-//		StringBuilder buffer = new StringBuilder();
-//		if(aiId!=null && lang!=null){
-//			// Store in data base the operation, the archival institutions
-//			HibernateUtil.beginDatabaseTransaction();
-//			
-//			AiAlternativeNameDAO aiAlternativesNamesDAO = DAOFactory.instance().getAiAlternativeNameDAO();
-//			ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
-//			LangDAO langDAO = DAOFactory.instance().getLangDAO();
-//			Lang language = langDAO.getLangByIsoname(lang.toUpperCase());
-//			ArchivalInstitution ai = archivalInstitutionDAO.getArchivalInstitution(aiId);
-//			AiAlternativeName alternativeName = aiAlternativesNamesDAO.findByAIIdandLang(ai,language);
-//
-//			if(alternativeName!=null
-//					&& alternativeName.getPrimaryName() != null
-//					&& !alternativeName.getPrimaryName()){
-//				if(alternativeName!=null && alternativeName.getAiAName()!=null){ 
-//					//name exists, so it's needed a deleteSimple operation
-//					alternativeName.setAiAName(name);
-//					aiAlternativesNamesDAO.deleteSimple(alternativeName);
-//					buffer.append(buildNode("info","alternativeNameDeleted"));
-//				}
-//			}else{
-//				buffer.append(buildNode("error","badAlternativeName"));
-//			}
-//			// The final commits
-//			HibernateUtil.commitDatabaseTransaction();
-//		}else{
-//			buffer.append(buildNode("error","badArguments"));
-//		}
-//		return buffer.toString();
-//	}
 }

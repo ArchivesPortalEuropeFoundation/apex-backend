@@ -11,12 +11,12 @@
 				<c:if test="${securityContext.countryManager}">
 				     <li><p><br/></p></li>
                      <li><br/><span style="font : bold 100% sans-serif;color : #333;text-align : left"><s:property value="getText('al.menu.manageal')" /> </span><p><br/></p></li>                     
-                     <li><s:a action="editAL"> -  <s:property value="getText('al.menu.edital')" /></s:a></li>
+                     <li><s:a action="ALEditor"> -  <s:property value="getText('al.menu.edital')" /></s:a></li>
                      <%--<li><s:a action="editArchivalLandscape"> -  <s:property value="getText('al.menu.edital')" /> (beta)</s:a></li>--%>
-                     <li><s:a action="uploadAL"> -   <s:property value="getText('al.menu.uploadal')" /></s:a></li>
+                     <li><s:a action="ALUploadForm"> -   <s:property value="getText('al.menu.uploadal')" /></s:a></li>
                      <li><a title="<s:property value="getText('al.menu.viewal')"/>" href="viewAL.action"> -  <s:text name="al.menu.viewal" /></a>
 	    			 </li>
-                     <li><s:a action="downloadAL" target="_blank"> -   <s:property value="getText('al.menu.downloadal')" /></s:a></li>    
+                     <li><s:a action="ALDownload" target="_blank"> -   <s:property value="getText('al.menu.downloadal')" /></s:a></li>    
                               
                      <li><s:a action="changeAlIdentifiers"> -   <s:property value="getText('al.menu.changeAlIdentifiers')" /></s:a></li>
 				</c:if>

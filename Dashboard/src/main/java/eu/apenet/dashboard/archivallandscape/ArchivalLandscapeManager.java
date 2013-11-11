@@ -43,15 +43,17 @@ import eu.apenet.persistence.vo.Lang;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 /**
- * Class supports download and upload actions
+ * Class which supports download and upload actions
  * for Archival Landscape. It's separated for the rest
- * of the Archival Landscape edition because these operations
+ * of the Archival Landscape Edition because these operations
  * only support the last Archival Landscape export/import 
  * operations (download and upload), which are based on DDBB 
  * and not in any File storage. 
  */
 public class ArchivalLandscapeManager extends AbstractAction{
 	
+	private static final long serialVersionUID = 2998755137328333811L;
+
 	private final Logger log = Logger.getLogger(getClass());
 	
 	private static final String AL_XMLNS = "urn:isbn:1-931666-22-9";
@@ -289,17 +291,14 @@ public class ArchivalLandscapeManager extends AbstractAction{
 				this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryId(SecurityContext.get().getCountryId(),false);
 				if(this.totalInstitutions!=null && this.totalInstitutions.size()>0){
 					log.warn("Archival landscape could not be ingested directly, there are some institutions to check. Checking...");
-//					Iterator<ArchivalInstitution> currentIt = this.totalInstitutions.iterator();
 					this.updatedInstitutions = new ArrayList<ArchivalInstitution>();
 					this.insertedInstitutions = new ArrayList<ArchivalInstitution>();
-//					archivalInstitutionsPlainList = null; //clean
 					state = 2;
 					//check if some institution of the new archivalInstitutions is/are into system and has content indexed
 					validOperation = checkIfSomeInstitutionIsIngestedAndHasContentIndexed(archivalInstitutions);
 					if(validOperation){
 						JpaUtil.beginDatabaseTransaction();
 						//when valid operation it's able to manage all ingested institutions/groups
-//						checkUpdateArchivalInstitution(archivalInstitutions); //old check, update-troubles
 						this.deletedInstitutions = new ArrayList<ArchivalInstitution>();
 						
 						this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryId(SecurityContext.get().getCountryId(),true);
@@ -317,7 +316,6 @@ public class ArchivalLandscapeManager extends AbstractAction{
 						//institutions to be deleted = totalDDBBinstitution - (institutionsUpdated + institutionsDeleted)
 						this.deletedInstitutions = new ArrayList<ArchivalInstitution>(); //clean
 						boolean error = deleteSimpleUnusedInstitutions();
-//						checkDeleteArchivalInstitutions(currentIngestedInstitutions);
 						if(!error){
 							state = 5;
 							JpaUtil.commitDatabaseTransaction();
@@ -330,7 +328,6 @@ public class ArchivalLandscapeManager extends AbstractAction{
 					}
 				}else{ //this case is for an ingestion on empty country, only tries to store the target structure 
 					state = 7;
-//					archivalInstitutionsPlainList = null; //clean
 					this.insertedInstitutions = new ArrayList<ArchivalInstitution>();
 					JpaUtil.beginDatabaseTransaction();
 					state = 8;
@@ -385,39 +382,6 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		}
 		return valid;
 	}
-
-	/* additional code not included, remove that unused
-	  	//check if new-parents are the same old-parents
-		ArchivalInstitution ingestedParent = currentIngestedInstitution.getParent();
-		exit = false;
-		if(ingestedParent!=null){
-			ArchivalInstitution foundedArchivalInstitution = null;
-			while(!exit && ingestedParent!=null){
-				Iterator<ArchivalInstitution> aiIt = archivalInstitutions.iterator();
-				while(foundedArchivalInstitution==null && aiIt.hasNext()){
-					foundedArchivalInstitution = searchCurrentArchivalInstitution(aiIt.next(),ingestedParent);
-				}
-				exit = (foundedArchivalInstitution==null); //last level or check error control
-			}
-		}else{
-			//TODO
-		}
-		if(exit && ingestedParent.getParent()==null){ //not possible
-			valid = true;
-		}
-	 */ /*
-	private ArchivalInstitution searchCurrentArchivalInstitution(ArchivalInstitution nextInstitution, ArchivalInstitution ingestedParent) {
-		ArchivalInstitution target = null;
-		if(nextInstitution!=null && ingestedParent!=null){
-			ArchivalInstitution tempInstitution = nextInstitution.getParent();
-			if(tempInstitution!=null){
-				if(tempInstitution.getInternalAlId().equals(ingestedParent.getInternalAlId())){
-					target = tempInstitution;
-				}
-			}
-		}
-		return target;
-	}*/
 
 	/**
 	 * Insert not updated institutions. It should be the rest of the 
@@ -476,9 +440,6 @@ public class ArchivalLandscapeManager extends AbstractAction{
 						this.aIANDAO.deleteSimple(itAN.next()); //removes each alternative name
 					}
 				}
-//				else{
-//					error = true;
-//				}
 				this.aIDAO.deleteSimple(targetToBeDeleted); //delete unused institution
 				this.deletedInstitutions.add(targetToBeDeleted);
 				log.debug("Deleted institution with aiId: "+targetToBeDeleted.getAiId());
@@ -806,8 +767,6 @@ public class ArchivalLandscapeManager extends AbstractAction{
 			}
 		}
 		if(institutionsToBeInserted.size()>0){
-//			this.aIDAO.store(institutionsToBeInserted);
-//			this.insertedInstitutions.addAll(institutionsToBeInserted);
 			log.debug("Inserted institution children with size: "+institutionsToBeInserted.size()+".");
 		}
 	}
@@ -866,33 +825,6 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	}
 
 	/**
-	 * Check if some operation is valid by structure restrictions.
-	 * Returns boolean [which state]
-	 */
-	private boolean checkInstitutionStructure(ArchivalInstitution currentInstitution,List<ArchivalInstitution> archivalInstitutionsPlainList) {
-		boolean validOperation = true;
-		Iterator<ArchivalInstitution> fileIt = archivalInstitutionsPlainList.iterator();
-		while(validOperation && fileIt.hasNext()){
-			ArchivalInstitution fileInstitution = fileIt.next();
-			String fileIdentifier = fileInstitution.getInternalAlId();
-			String currentIdentifier = currentInstitution.getInternalAlId();
-			if(fileIdentifier!=null && currentIdentifier!=null && fileIdentifier.equals(currentIdentifier)){
-				//check parents
-				if(fileInstitution.getParent()!=null && currentInstitution.getParent()!=null){
-					log.debug("CheckInstitutionsStructure: check parents for institution:"+currentInstitution.getInternalAlId());
-					validOperation = checkInstitutionStructure(currentInstitution.getParent(), archivalInstitutionsPlainList);
-				}else if(fileInstitution.getParent()!=null || currentInstitution.getParent()!=null){ //one of both
-					log.debug("CheckInstitutionsStructure: not found parent for some comparable institution:"+currentInstitution.getInternalAlId()+" , marking like invalid operation");
-					validOperation = false;
-				}else{
-					log.debug("CheckInstitutionsStructure: not found parent for some comparable institution:");
-					//this.updatedInstitutions.add(currentInstitution);
-				}
-			}
-		}
-		return validOperation;
-	}
-	/**
 	 * It extracts and returns file institutions. 
 	 * 
 	 * @param archivalInstitutionFile
@@ -930,7 +862,6 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		boolean continueLoop = false;
 		Integer event = null;
 		boolean openLevel = false;
-		int counter = 0;
 		while(validXML && r.hasNext()){
 			if(!continueLoop){
 				event = r.next();
@@ -960,8 +891,6 @@ public class ArchivalLandscapeManager extends AbstractAction{
 							id = level = alternativeNameText = alternativeLangText = "";
 							archivalInstitution = new ArchivalInstitution();
 							archivalInstitution.setParent(null);
-//							archivalInstitution.setAlorder(counter++); //preserve file order
-							counter++;
 							for (int i = 0; i < r.getAttributeCount(); i++) {
 								if(r.getAttributeLocalName(i)!=null && r.getAttributeLocalName(i).trim().equals("id")){
 									id = r.getAttributeValue(i).trim();
@@ -1046,9 +975,6 @@ public class ArchivalLandscapeManager extends AbstractAction{
 					break;
 				case XMLStreamConstants.CHARACTERS:
 					if(!r.isWhiteSpace() && alternativeNameText!=null && archivalInstitution!=null){
-//						if(archivalInstitution!=null && archivalInstitution.getAiname()!=null){
-//							alternativeNameText = archivalInstitution.getAiname();
-//						}
 						alternativeNameText += r.getText().trim()
 						    .replaceAll("[\\s+&&[^\\n]]+"," ")//1. reduce all non-newline whitespaces to a unique space
 						    .replaceAll("(?m)^\\s+|\\s$","")//2. remove spaces from start or end of the lines
@@ -1134,7 +1060,6 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		boolean opened = false;
 		boolean update = true;
 		int counter = 0;
-		int position = 0;
 		while(validXML && r.hasNext()){
 			if(!update){
 				event = r.next();
@@ -1150,8 +1075,6 @@ public class ArchivalLandscapeManager extends AbstractAction{
 							counter++;
 							opened = true;
 							archivalInstitution = new ArchivalInstitution();
-//							archivalInstitution.setAlorder(position++);
-							position++;
 							for (int i = 0; i < r.getAttributeCount(); i++) {
 								if(r.getAttributeLocalName(i)!=null && r.getAttributeLocalName(i).trim().equals("id")){
 									id = r.getAttributeValue(i).trim();
@@ -1228,9 +1151,6 @@ public class ArchivalLandscapeManager extends AbstractAction{
 					break;
 				case XMLStreamConstants.CHARACTERS:
 					if(!r.isWhiteSpace() && unittitle!=null && archivalInstitution!=null){
-//						if(archivalInstitution!=null && archivalInstitution.getAiname()!=null){
-//							unittitle = archivalInstitution.getAiname();
-//						}
 						unittitle += r.getText().trim().replaceAll("[\\s+&&[^\\n]]+"," ")//1. reduce all non-newline whitespaces to a unique space
 						    .replaceAll("(?m)^\\s+|\\s$","")//2. remove spaces from start or end of the lines
 						    .replaceAll("\\n+"," ");//3. remove all newlines, compress it in a unique line
@@ -1277,24 +1197,12 @@ public class ArchivalLandscapeManager extends AbstractAction{
 					eadContent.append(closeArchDesc());
 					
 				eadContent.append(closeEadNode());
-//				eadCreator.writeEadContent(eadContent.toString());
 				outputStream.write(eadContent.toString().getBytes());
 				eadContent = null;
 			}
-//		} catch (XMLStreamException e) {
-//			log.error("Exception trying to call EadCreator() builder",e);
-//		} catch (IOException e) {
-//			log.error("Exception trying to call EadCreator.writeEadContent() method", e);
 		} catch (Exception e){
 			log.error("Unknown error into buildXMLFromDDBB",e);
 		}finally {
-//			if(eadCreator!=null){
-//				try {
-//					eadCreator.closeWriter();
-//				} catch (XMLStreamException e) {
-//					log.error("Exception trying to close writer with EadCreator", e);
-//				}
-//			}
 			if(outputStream!=null){
 				try {
 					outputStream.close();
@@ -1464,7 +1372,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 				didNode.append("\n"+tabs+"\t\t");
 				didNode.append("<unittitle");
 				didNode.append(" encodinganalog=\""+AL_GLOBAL_ENCODINGANALOG+"\"");
-				didNode.append(" type=\""+key+"\">");
+				didNode.append(" type=\""+key.toLowerCase()+"\">");
 				didNode.append(mainAlternativeName.get(key));
 				didNode.append("</unittitle>");
 				didNode.append("\n"+tabs+"\t");
@@ -1480,7 +1388,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 			didNode.append("\n"+tabs+"\t\t");
 			didNode.append("<unittitle");
 			didNode.append(" encodinganalog=\""+AL_GLOBAL_ENCODINGANALOG+"\"");
-			didNode.append(" type=\""+key+"\">");
+			didNode.append(" type=\""+key.toLowerCase()+"\">");
 			didNode.append(alternativeNames.get(key));
 			didNode.append("</unittitle>");
 		}
