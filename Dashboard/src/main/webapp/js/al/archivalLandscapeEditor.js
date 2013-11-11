@@ -20,13 +20,16 @@ function loadUpPart(context,titleDT,countryId){
    					url: context+"/getALTree.action",
    					data: {nodeId: node.data.key}
    				});
+   				cleanInformation();
    			},
    			onActivate: function(node) {
    				$("#divForm").show();
 				loadDownPart(node);
+				cleanInformation()
 			},
 			onDeactivate: function(node) {
 				$("#divForm").hide(); /*loadDownPart(node.data.key);*/
+				cleanInformation()
 			},
 			onSelect: function(select,node){
 				node.select(select);
@@ -45,15 +48,6 @@ function editAlternativeNames(){
 			$(this).prop('selected', true);
 		}
 	});
-//	$("#selectedLang").val("ENG");
-//	var changed = false;
-//	var selection = document.getElementById("selectedLang");
-//	for(var i=0;i<selection.options.length && !changed;i++){
-//        if (selection.options[i].value == "eng") {
-//            selection.selectedIndex = i;
-//            changed = true;
-//        }
-//    }
 	if(document.getElementById("alternativeNames").options.length>1){
 		$("select#alternativeNames").removeAttr("disabled");
 		$("#deleteTargetSubmitDiv").show();
@@ -89,11 +83,11 @@ function sendAlternativeNames(){
 	var text = $("input#target").val();
 	$.post("launchALActions.action",{"action":"create_alternative_name","aiId":aiId,"lang":lang,"name":text},function(d){
 		if(d.info){
-			$("#informationDiv").text(d.info);
+			showInformation(d.info);
 			hideAll();
 			dynatree.reload();
 		}else if(d.error){
-			$("#informationDiv").text(d.error);
+			showInformation(d.error,true);
 		}
 	});
 }
@@ -157,6 +151,10 @@ function loadDownPart(node){
 				$("#deleteDiv").show();
 				$("#divGroupNodesContainer").show();
 				getGroups();
+			}else if(value.info){
+				showInformation(d.info);
+			}else if(value.error){
+				showInformation(d.error,true);
 			}
 		});
 	});
@@ -171,6 +169,13 @@ function appendNode(){
 	var language = $("#selectedLang option:selected").val();
 	if(fatherId.indexOf("_")!=-1){
 		$.post("launchALActions.action",{"action":"create","name":nodeName,"father":fatherId,"type":nodeType,"lang":language},function(e){
+			if(e.info){
+				showInformation(e.info);
+			}else if(e.error){
+				showInformation(e.error,true);
+			}else{
+				cleanInformation();
+			}
 			dynatree.reload();
 		});
 	}
@@ -183,7 +188,19 @@ function deleteNode(){
 	if(aiId.indexOf("_")!=-1){
 		aiId = aiId.substring(aiId.indexOf("_")+1);
 		$.post("launchALActions.action",{"action":"delete","aiId":aiId},function(e){
-			dynatree.reload();
+			var error = false;
+			if(e.info){
+				showInformation(e.info);
+				hideAll();
+			}else if(e.error){
+				showInformation(e.error,true);
+				error = true;
+			}else{
+				cleanInformation();
+			}
+			if(!error){
+				dynatree.reload();
+			}
 		});
 	}
 }
@@ -222,7 +239,7 @@ function moveUp(){
 	var currentId = activeNode.data.key;
 	$.post("launchALActions.action",{"action":"move_up","aiId":currentId},function(d){
 		if (d.error) {
-			$("#informationDiv").text(d.error);
+			showInformation(d.error,true);
 		} else {
 			dynatree.reload();
 		}
@@ -235,8 +252,11 @@ function moveDown(){
 	var currentId = activeNode.data.key;
 	$.post("launchALActions.action",{"action":"move_down","aiId":currentId},function(d){
 		if (d.error) {
-			$("#informationDiv").text(d.error);
-		} else {
+			showInformation(d.error,true);
+		} else{
+			if(d.info){
+				showInformation(d.info);
+			}
 			dynatree.reload();
 		}
 	});
@@ -283,10 +303,10 @@ function changeGroup(){
 	var groupSelect = $("#groupSelect option:selected").val();
 	$.post("launchALActions.action",{"action":"change_group","aiId":currentId,"groupSelected":groupSelect},function(d){
 		if(d.info){
-			$("#informationDiv").text(d.info);
+			showInformation(d.info);
 			dynatree.reload();
 		}else if(d.error){
-			$("#informationDiv").text(d.error);
+			showInformation(d.error,true);
 		}
 	});
 }
@@ -304,9 +324,7 @@ function recoverAlternativeName() {
 			}
 		}
 	});
-
 	$("input#target").attr("value", text);
-
 	checkPossibleAlternativeNamesActions(lang);
 }
 
@@ -318,11 +336,11 @@ function deleteAlternativeNames() {
 	var text = $("input#target").val();
 	$.post("launchALActions.action",{"action":"delete_alternative_name","aiId":aiId,"lang":lang,"name":text},function(d){
 		if(d.info){
-			$("#informationDiv").text(d.info);
+			showInformation(d.info);
 			hideAll();
 			dynatree.reload();
 		}else if(d.error){
-			$("#informationDiv").text(d.error);
+			showInformation(d.error,true);
 		}
 	});
 }
@@ -345,4 +363,20 @@ function checkPossibleAlternativeNamesActions(lang) {
 			}
 		});
 });
+}
+
+function showInformation(information,error){
+	var message = "<span";
+	if(error){
+		message += " style=\"color:red;font-weight:bold;\"";
+	}else{
+		message += " style=\"color:green;\"";
+	}
+	message += ">"+information+"</span>";
+	$("#informationDiv").html(message);
+	$("#informationDiv").fadeIn("slow");
+}
+
+function cleanInformation(){
+	$("#informationDiv").fadeOut("slow");
 }
