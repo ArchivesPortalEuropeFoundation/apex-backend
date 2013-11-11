@@ -10,10 +10,11 @@ import org.apache.log4j.Logger;
 import com.opensymphony.xwork2.ActionSupport;
 
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.manual.eag.Eag2012;
+import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.security.SecurityService;
 
+import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 
 /**
@@ -47,9 +48,9 @@ public class LogoutAction extends ActionSupport {
     public void removeInvalidEAGAllInstitutions(){
     	//This function remove all the invalid EAG files
     	try {
-	    	ArchivalLandscape al = new ArchivalLandscape();
-	    	String alCountry = new ArchivalLandscape().getmyCountry();
-	    	List<ArchivalInstitution> archives = al.showArchives();
+    		String alCountry = SecurityContext.get().getCountryIsoname();
+    		Integer countryId = SecurityContext.get().getCountryId();
+    		List<ArchivalInstitution> archives = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionsNoGroups(countryId);
 	    	for(int i=0;i<archives.size();i++){
 			   String basePath = APEnetUtilities.FILESEPARATOR + alCountry + APEnetUtilities.FILESEPARATOR +
 						archives.get(i).getAiId() + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;

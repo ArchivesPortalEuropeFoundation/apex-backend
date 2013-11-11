@@ -1,12 +1,12 @@
 package eu.apenet.dashboard;
 
-import java.io.File;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
+import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.security.SecurityService;
+import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 
 
@@ -59,29 +59,12 @@ public class GoDashboardAction extends AbstractAction {
 	}
 
 	public String execute() throws Exception{
-
-		ArchivalLandscape al = new ArchivalLandscape();
-		String pathCountry = al.getmyPath(al.getmyCountry());	
-		
-		File[] files = new File(pathCountry).listFiles();    	
-    	if (files != null && files.length > 0) //The directory is not empty
-    	{ 
-    		pathCountry = pathCountry + files[0].getName();
-            log.debug("Read XML file: " + pathCountry);
-            this.archives = al.showArchives();            
-            if (this.archives.size()==0) {
-                log.error("The list of archives is empty for this country: " + pathCountry);
-    			return ERROR;
-            }else if(this.archives.size() == 1){
-            	SecurityService.selectArchivalInstitution(archives.get(0).getAiId());
-            	return "one-archive";
-            }
-            else {
-            	addActionMessage(getText("al.message.instselection"));
-            }
-            return SUCCESS;
-    	}
-    	log.info("GoDashboardAction: execute() There is no archival landscape definition in ('" + pathCountry + "'). User can't go to the Dashboard");
+		Integer countryId = SecurityContext.get().getCountryId();
+		if(countryId!=null){
+			log.debug("Reading archival institutions from DDBB");
+			this.archives = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionsNoGroups(countryId);
+			return SUCCESS;
+		}
     	return ERROR;
 	}
 	public String selectArchive(){

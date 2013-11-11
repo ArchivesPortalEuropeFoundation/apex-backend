@@ -3,9 +3,8 @@ package eu.apenet.dashboard;
 import java.io.File;
 
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
-import eu.apenet.dashboard.manual.APEnetEAGDashboard;
 import eu.apenet.dashboard.manual.eag.Eag2012;
+import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
@@ -33,7 +32,7 @@ public class DashboardHomeAction extends AbstractInstitutionAction {
 		
 		ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
 		ArchivalInstitution  archivalInstitution = archivalInstitutionDao.findById(this.getAiId());
-		String alCountry = new ArchivalLandscape().getmyCountry();
+		String alCountry = SecurityContext.get().getCountryIsoname();
 		String basePath = APEnetUtilities.FILESEPARATOR + alCountry + APEnetUtilities.FILESEPARATOR +
 				this.getAiId() + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;
 		String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;

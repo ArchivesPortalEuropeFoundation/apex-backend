@@ -539,4 +539,20 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 		}
 		return results;
 	}
+
+	@Override
+	public List<ArchivalInstitution> getArchivalInstitutionsNoGroups(Integer countryId) {
+		long startTime = System.currentTimeMillis();
+		List<ArchivalInstitution> results = null;
+		Criteria criteria = buildArchivalInstitutionCriteriaByCountryId(countryId,null,false,null); //archivalInstitution
+		criteria.add(Restrictions.eq("archivalInstitution.group",false));
+		criteria.addOrder(Order.asc("archivalInstitution.partnerId"));
+		criteria.addOrder(Order.asc("archivalInstitution.alorder"));
+		results = criteria.list();
+		long endTime = System.currentTimeMillis();
+		if (log.isDebugEnabled()) {
+			log.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
+		}
+		return results;
+	}
 }

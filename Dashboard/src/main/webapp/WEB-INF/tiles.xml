@@ -362,11 +362,6 @@
 		<put-attribute name="body" value="/jsp/edit.jsp" />
 	</definition>
 
-	<definition name="newViewresult" extends="ArchivalLandscapeLayout">
-		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
-		<put-attribute name="body" value="/jsp/al/viewresult.jsp" />	
-	</definition>
-
 	<definition name="viewresult2" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
 		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />

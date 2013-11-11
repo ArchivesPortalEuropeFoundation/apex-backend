@@ -441,7 +441,9 @@
 		
 		<action name="ALUpload" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="upload">
 			<interceptor-ref name="changeLanguageStack"/>
-			<result name="success" type="tiles">newViewresult</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">viewAL</param>
+			</result>
 			<result name="error" type="tiles">uploaderrorformat2</result>
 		</action>
 		<action name="getALTree" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="getArchivalInstitutionTree"> 
