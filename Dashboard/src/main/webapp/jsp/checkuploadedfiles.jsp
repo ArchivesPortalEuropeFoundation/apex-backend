@@ -119,7 +119,8 @@
 									id="SaveChangesButton<s:property value="%{top.eadid}" />"
 									name="SaveChangesButton<s:property value="%{top.eadid}" />"
 									onclick="getAndCheckEADIDavailability('<s:property value="%{#stat.index}" />','<s:property value='%{top.eadid}' />','<s:property value="%{top.fileId}" />')" 
-									value="<s:property value="getText('content.message.checkbutton')"/>" />
+									value="<s:property value="getText('content.message.checkbutton')"/>"
+									disabled="disabled" />
 															
 			        		</div>
 			        			<p></p>
@@ -443,6 +444,8 @@
 						document.getElementById(textboxid).focus();
 						// Disable accept button.
 						$("input#form_submit").attr("disabled","disabled");
+						// Enable check button.
+					    $("input#" + buttonid).removeAttr("disabled");
 					}
 					else {
 						//overwrite or cancel
