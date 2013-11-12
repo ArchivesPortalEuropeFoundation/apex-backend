@@ -452,7 +452,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 						archivalInstitution.setAlorder(countryChildrens.size());
 					}
 				}
-				archivalInstitution.setPartnerId(SecurityContext.get().getPartnerId());
+//				archivalInstitution.setPartnerId(SecurityContext.get().getPartnerId());
 				archivalInstitution.setInternalAlId(getNewinternalIdentifier());
 				archivalInstitution.setCountryId(SecurityContext.get().getCountryId());
 				archivalInstitution.setContainSearchableItems(false);

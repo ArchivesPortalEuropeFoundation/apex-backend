@@ -646,6 +646,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		}
 		oldDDBBInstitution.setParent(parent);
 		oldDDBBInstitution.setParentAiId(parentAiId);
+//		oldDDBBInstitution.setPartnerId(SecurityContext.get().getPartnerId());
 		oldDDBBInstitution.setAiname(updatedInstitution.getAiname());
 		//2. update alternative names
 		Set<AiAlternativeName> oldAlternativeNames = oldDDBBInstitution.getAiAlternativeNames();
