@@ -511,7 +511,7 @@ public class EadService {
                             new PublishTask().execute(newEad);
                             if(userprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
                                 Properties europeanaProperties = createEuropeanaProperties(preferences);
-                                new ConvertToEseEdmTask().execute(newEad, europeanaProperties); //todo: Add properties
+                                new ConvertToEseEdmTask().execute(newEad, europeanaProperties);
                                 new DeliverToEuropeanaTask().execute(newEad);
                             }
                         }

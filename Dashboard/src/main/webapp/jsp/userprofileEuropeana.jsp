@@ -35,14 +35,14 @@
             <td class="inputLabel"><s:label key="ead2ese.label.dataprovider" for="dataProvider" />:</td>
             <td>
                 <s:textfield id="textDataProvider" name="textDataProvider" />
-                <s:checkbox name="dataProviderCheck" id="dataProviderCheck" value="true" />
+                <s:checkbox name="dataProviderCheck" id="dataProviderCheck" />
                 <s:label key="ead2ese.content.dataprovider.file" for="dataProviderCheck"/>
             </td>
         </tr>
         <tr id="trSelectType">
             <td class="inputLabel"><s:label key="ead2ese.label.type" for="selectType" />:</td>
             <td><s:select id="selectType" name="europeanaDaoType" list="typeSet" listKey="value" listValue="content" />
-                <s:checkbox name="europeanaDaoTypeCheck" id="daoTypeCheck" value="true" />
+                <s:checkbox name="europeanaDaoTypeCheck" id="daoTypeCheck" />
                 <s:label key="ead2ese.label.type.file" for="europeanaDaoType"/>
             </td>
         </tr>
@@ -52,7 +52,7 @@
             </td>
             <td class="tdVertical">
                 <s:select name="languageSelection" id="languageSelection" listKey="value" listValue="content" list="languages" multiple="true"/>
-                <s:checkbox name="languageCheck" id="languageOfTheMaterialCheck" value="true" />
+                <s:checkbox name="languageCheck" id="languageOfTheMaterialCheck" />
                 <s:label key="ead2ese.label.language.file" for="languageOfTheMaterialCheck"/>
             </td>
         </tr>

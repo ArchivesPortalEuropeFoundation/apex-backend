@@ -27,10 +27,11 @@ public class DatabaseConfigurator {
 	}
 
 	public void init() throws NamingException {
+            System.out.println(System.getProperty("db_url"));
 		if (System.getProperty("db_url") == null) {
-			System.setProperty("db_url", "jdbc:postgresql:apenet");
+			System.setProperty("db_url", "jdbc:postgresql:ape");
 			System.setProperty("db_username", "apenet_dashboard");
-			System.setProperty("db_password", "AP3n3tSQLD4sh");
+			System.setProperty("db_password", "AP3SQLD4sh");
 		}
 		String url = System.getProperty("db_url");
 		String username = System.getProperty("db_username");

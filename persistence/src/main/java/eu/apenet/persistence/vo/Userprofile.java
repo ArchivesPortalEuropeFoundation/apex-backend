@@ -40,6 +40,8 @@ public class Userprofile implements Serializable {
     private UserprofileDefaultNoEadidAction noeadidAction = UserprofileDefaultNoEadidAction.REMOVE;
     @Column(name = "dao_type")
     private UserprofileDefaultDaoType daoType = UserprofileDefaultDaoType.UNSPECIFIED;
+    @Column(name = "dao_type_from_file")
+    private Boolean daoTypeFromFile = true;
     @Column(name = "europeana_dp")
     private String europeanaDataProvider;
     @Column(name = "europeana_dp_from_file")
@@ -144,6 +146,14 @@ public class Userprofile implements Serializable {
 
     public void setDaoType(UserprofileDefaultDaoType daoType) {
         this.daoType = daoType;
+    }
+
+    public Boolean getDaoTypeFromFile() {
+        return daoTypeFromFile;
+    }
+
+    public void setDaoTypeFromFile(Boolean daoTypeFromFile) {
+        this.daoTypeFromFile = daoTypeFromFile;
     }
 
     public String getEuropeanaDataProvider() {

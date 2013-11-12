@@ -60,6 +60,7 @@ public class UserprofilesAction extends AbstractInstitutionAction {
     private String existingFileAction;
     private String noEadidAction;
     private String daoType;
+    private String daoTypeCheck;
 
     //fields for Europeana tab components
     private String textDataProvider;
@@ -103,6 +104,7 @@ public class UserprofilesAction extends AbstractInstitutionAction {
             existingFileAction = Integer.toString(userprofile.getExistAction().getId());
             noEadidAction = Integer.toString(userprofile.getNoeadidAction().getId());
             daoType = Integer.toString(userprofile.getDaoType().getId());
+            daoTypeCheck = Boolean.toString(userprofile.getDaoTypeFromFile());
 
             textDataProvider = userprofile.getEuropeanaDataProvider();
             dataProviderCheck = Boolean.toString(userprofile.getEuropeanaDataProviderFromFile());
@@ -145,6 +147,7 @@ public class UserprofilesAction extends AbstractInstitutionAction {
         profile.setExistAction(UserprofileDefaultExistingFileAction.getExistingFileAction(existingFileAction));
         profile.setNoeadidAction(UserprofileDefaultNoEadidAction.getExistingFileAction(noEadidAction));
         profile.setDaoType(UserprofileDefaultDaoType.getDaoType(daoType));
+        profile.setDaoTypeFromFile(Boolean.parseBoolean(daoTypeCheck));
 
         profile.setEuropeanaDataProvider(textDataProvider);
         profile.setEuropeanaDataProviderFromFile(Boolean.parseBoolean(dataProviderCheck));
@@ -196,6 +199,7 @@ public class UserprofilesAction extends AbstractInstitutionAction {
         existingFileAction = "1";
         noEadidAction = "0";
         daoType = "0";
+        daoTypeCheck = Boolean.toString(true);
 
         textDataProvider = getAiname();
         dataProviderCheck = Boolean.toString(true);
@@ -424,6 +428,14 @@ public class UserprofilesAction extends AbstractInstitutionAction {
 
     public void setDaoType(String daoType) {
         this.daoType = daoType;
+    }
+
+    public String getDaoTypeCheck() {
+        return daoTypeCheck;
+    }
+
+    public void setDaoTypeCheck(String daoTypeCheck) {
+        this.daoTypeCheck = daoTypeCheck;
     }
 
     public String getTextDataProvider() {

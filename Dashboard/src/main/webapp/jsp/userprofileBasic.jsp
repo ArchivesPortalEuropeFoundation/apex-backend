@@ -6,52 +6,24 @@
 <div id="basicTabContent">
     <table>
         <tr>
-            <th>
-                <s:label key="userprofiles.defaultActionUpload" />
-            </th>
+            <td><s:label key="userprofiles.defaultActionUpload" /></td>
+            <td><s:select id="uploadedFileAction" name="uploadedFileAction" list="uploadedFileActions" listKey="value" listValue="content" /></td>
         </tr>
-        <s:iterator value="uploadedFileActions">
-            <tr>
-                <td class="tdVertical">
-                    <s:radio theme="simple" name="uploadedFileAction" list="#{value:content}" />
-                </td>
-            </tr>
-        </s:iterator>
         <tr>
-            <th>
-                <s:label key="userprofiles.defaultActionExisting" />
-            </th>
+            <td><s:label key="userprofiles.defaultActionExisting" /></td>
+            <td><s:select id="existingFileAction" name="existingFileAction" list="existingFileActions" listKey="value" listValue="content" /></td>
         </tr>
-        <s:iterator value="existingFileActions">
-            <tr>
-                <td class="tdVertical">
-                    <s:radio theme="simple" name="existingFileAction" list="#{value:content}" />
-                </td>
-            </tr>
-        </s:iterator>
         <tr>
-            <th>
-                <s:label key="userprofiles.defaultActionNoEadid" />
-            </th>
+            <td><s:label key="userprofiles.defaultActionNoEadid" /></td>
+            <td><s:select id="noEadidAction" name="noEadidAction" list="noEadidActions" listKey="value" listValue="content" /></td>
         </tr>
-        <s:iterator value="noEadidActions">
-            <tr>
-                <td class="tdVertical">
-                    <s:radio theme="simple" name="noEadidAction" list="#{value:content}" />
-                </td>
-            </tr>
-        </s:iterator>
         <tr>
-            <th>
-                <s:label key="userprofiles.defaultDao" />
-            </th>
+            <td><s:label key="userprofiles.defaultDao" /></td>
+            <td>
+                <s:select id="daoType" name="daoType" list="daoTypes" listKey="value" listValue="content" />
+                <s:checkbox id="daoTypeCheck" name="daoTypeCheck" />
+                <s:label key="ead2ese.label.type.file" for="daoType"/>
+            </td>
         </tr>
-        <s:iterator value="daoTypes">
-            <tr>
-                <td class="tdVertical">
-                    <s:radio theme="simple" name="daoType" list="#{value:content}" />
-                </td>
-            </tr>
-        </s:iterator>
     </table>
 </div>
