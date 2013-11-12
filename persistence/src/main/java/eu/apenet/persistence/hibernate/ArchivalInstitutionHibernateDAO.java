@@ -303,7 +303,7 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 		return results;
 	}
 
-	public List<ArchivalInstitution> getArchivalInstitutionsWithSearchableItems(Integer countryId, Integer parentAiId) {
+	public List<ArchivalInstitution> getArchivalInstitutionsWithSearchableItems(Integer countryId, Integer parentAiId, boolean onlyRealArchivalInstitutions) {
 		long startTime = System.currentTimeMillis();
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<ArchivalInstitution> cq = criteriaBuilder.createQuery(ArchivalInstitution.class);
@@ -317,7 +317,10 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 		}else {
 			whereClause.add(criteriaBuilder.equal(from.get("parentAiId"), parentAiId));	
 		}
-		whereClause.add(criteriaBuilder.equal(from.get("containSearchableItems"), true));	
+		whereClause.add(criteriaBuilder.equal(from.get("containSearchableItems"), true));
+		if (onlyRealArchivalInstitutions){
+			whereClause.add(criteriaBuilder.equal(from.get("group"), false));
+		}
 		cq.where(criteriaBuilder.and(whereClause.toArray(new Predicate[0])));
 		cq.orderBy(criteriaBuilder.asc(from.get("alorder")));
 		List<ArchivalInstitution> results =  getEntityManager().createQuery(cq).getResultList();
