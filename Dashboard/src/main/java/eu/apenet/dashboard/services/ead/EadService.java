@@ -492,20 +492,10 @@ public class EadService {
                     eadDAO.store(newEad);
 
                     Properties conversionProperties = new Properties();
-                    if(userprofileDefaultDaoType == null || userprofileDefaultDaoType.isUnspecified()) {
+                    if(userprofileDefaultDaoType == null) {
                         conversionProperties.put("defaultRoleType", "UNSPECIFIED");
                     } else {
-                        if(userprofileDefaultDaoType.is3D()) {
-                            conversionProperties.put("defaultRoleType", "3D");
-                        } else if (userprofileDefaultDaoType.isImage()) {
-                            conversionProperties.put("defaultRoleType", "IMAGE");
-                        } else if (userprofileDefaultDaoType.isSound()) {
-                            conversionProperties.put("defaultRoleType", "SOUND");
-                        } else if (userprofileDefaultDaoType.isText()) {
-                            conversionProperties.put("defaultRoleType", "TEXT");
-                        } else if (userprofileDefaultDaoType.isVideo()) {
-                            conversionProperties.put("defaultRoleType", "VIDEO");
-                        }
+                        conversionProperties.put("defaultRoleType", userprofileDefaultDaoType.getDaoText());
                     }
                     conversionProperties.put("useDefaultRoleType", true); //todo: Take from the userprofile when Stefan adds it
 

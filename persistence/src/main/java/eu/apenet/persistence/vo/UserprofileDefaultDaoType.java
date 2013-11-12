@@ -48,6 +48,20 @@ public enum UserprofileDefaultDaoType {
         return UNSPECIFIED.equals(this);
     }
 
+    public String getDaoText() {
+        if(isText())
+            return "TEXT";
+        if(isImage())
+            return "IMAGE";
+        if(isSound())
+            return "SOUND";
+        if(isVideo())
+            return "VIDEO";
+        if(is3D())
+            return "3D";
+        return "UNSPECIFIED";
+    }
+
     public int getId() {
         return id;
     }
