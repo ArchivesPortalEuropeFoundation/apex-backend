@@ -25,11 +25,11 @@ function loadUpPart(context,titleDT,countryId){
    			onActivate: function(node) {
    				$("#divForm").show();
 				loadDownPart(node);
-				cleanInformation()
+				cleanInformation();
 			},
 			onDeactivate: function(node) {
 				$("#divForm").hide(); /*loadDownPart(node.data.key);*/
-				cleanInformation()
+				cleanInformation();
 			},
 			onSelect: function(select,node){
 				node.select(select);
@@ -70,6 +70,7 @@ function editAlternativeNames(){
 }
 
 function cancelEditAlternativeNames(){
+	cleanInformation();
 	$("#editDiv").show();
 	$("select#alternativeNames").attr("disabled","disabled");
 	$("#editLanguagesDiv").hide();
