@@ -50,7 +50,8 @@ public class LogoutAction extends ActionSupport {
     	try {
     		String alCountry = SecurityContext.get().getCountryIsoname();
     		Integer countryId = SecurityContext.get().getCountryId();
-    		List<ArchivalInstitution> archives = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionsNoGroups(countryId);
+    		boolean countryManager = SecurityContext.get().isCountryManager();
+    		List<ArchivalInstitution> archives = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionsNoGroups(countryId,(countryManager)?null:SecurityContext.get().getPartnerId());
 	    	for(int i=0;i<archives.size();i++){
 			   String basePath = APEnetUtilities.FILESEPARATOR + alCountry + APEnetUtilities.FILESEPARATOR +
 						archives.get(i).getAiId() + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;
