@@ -541,13 +541,18 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 	}
 
 	@Override
-	public List<ArchivalInstitution> getArchivalInstitutionsNoGroups(Integer countryId) {
+	public List<ArchivalInstitution> getArchivalInstitutionsNoGroups(Integer countryId,Integer userId) {
 		long startTime = System.currentTimeMillis();
 		List<ArchivalInstitution> results = null;
 		Criteria criteria = buildArchivalInstitutionCriteriaByCountryId(countryId,null,false,null); //archivalInstitution
 		criteria.add(Restrictions.eq("archivalInstitution.group",false));
 		criteria.addOrder(Order.asc("archivalInstitution.partnerId"));
 		criteria.addOrder(Order.asc("archivalInstitution.alorder"));
+		if(userId==null){
+			criteria.add(Restrictions.isNull("archivalInstitution.partnerId"));
+		}else{
+			criteria.add(Restrictions.eq("archivalInstitution.partnerId", userId));
+		}
 		results = criteria.list();
 		long endTime = System.currentTimeMillis();
 		if (log.isDebugEnabled()) {

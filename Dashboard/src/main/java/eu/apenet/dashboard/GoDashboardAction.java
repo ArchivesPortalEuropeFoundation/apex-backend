@@ -62,7 +62,8 @@ public class GoDashboardAction extends AbstractAction {
 		Integer countryId = SecurityContext.get().getCountryId();
 		if(countryId!=null){
 			log.debug("Reading archival institutions from DDBB");
-			this.archives = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionsNoGroups(countryId);
+			boolean countryManager = SecurityContext.get().isCountryManager();
+			this.archives = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionsNoGroups(countryId,(countryManager)?null:SecurityContext.get().getPartnerId());
 			return SUCCESS;
 		}
     	return ERROR;
