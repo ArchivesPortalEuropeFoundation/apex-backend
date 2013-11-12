@@ -112,7 +112,6 @@ public class UserprofilesAction extends AbstractInstitutionAction {
             europeanaDaoTypeCheck = Boolean.toString(userprofile.getEuropeanaDaoTypeFromFile());
             String[] tempLang = userprofile.getEuropeanaLanguages().split(" ");
             languageSelection.addAll(Arrays.asList(tempLang));
-            LOG.info("INPUT -- languageSelection: " + userprofile.getEuropeanaLanguagesFromFile());
             languageCheck = Boolean.toString(userprofile.getEuropeanaLanguagesFromFile());
             license = userprofile.getEuropeanaLicense();
             if (license.equals(EUROPEANA)) {
@@ -123,9 +122,7 @@ public class UserprofilesAction extends AbstractInstitutionAction {
             }
             licenseAdditionalInformation = userprofile.getEuropeanaAddRights();
             hierarchyPrefix = userprofile.getEuropeanaHierarchyPrefix();
-            LOG.info("INPUT -- inheritFileParent: " + userprofile.getEuropeanaInheritElements());
             inheritFileParent = Boolean.toString(userprofile.getEuropeanaInheritElements());
-            LOG.info("INPUT -- inheritOrigination: " + userprofile.getEuropeanaInheritOrigin());
             inheritOrigination = Boolean.toString(userprofile.getEuropeanaInheritOrigin());
         }
         return SUCCESS;
