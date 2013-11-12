@@ -101,6 +101,7 @@ function hideAll(){
 	$("#editorActions").hide();
 	$("#divGroupNodesContainer").hide();
 	$("#editLanguagesDiv").hide();
+	$("input#textAL").val("");
 }
 
 function alternativeNameSelected(){
@@ -178,6 +179,7 @@ function appendNode(){
 				cleanInformation();
 			}
 			dynatree.reload();
+			hideAll();
 		});
 	}
 }
@@ -242,7 +244,9 @@ function moveUp(){
 		if (d.error) {
 			showInformation(d.error,true);
 		} else {
+			showInformation(d.info);
 			dynatree.reload();
+			hideAll();
 		}
 	});
 }
@@ -259,6 +263,7 @@ function moveDown(){
 				showInformation(d.info);
 			}
 			dynatree.reload();
+			hideAll();
 		}
 	});
 }
@@ -306,6 +311,7 @@ function changeGroup(){
 		if(d.info){
 			showInformation(d.info);
 			dynatree.reload();
+			hideAll();
 		}else if(d.error){
 			showInformation(d.error,true);
 		}
