@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import com.ctc.wstx.exc.WstxParsingException;
 import eu.apenet.dashboard.manual.ExistingFilesChecker;
 import eu.apenet.persistence.vo.*;
 import org.apache.commons.io.FileUtils;
@@ -22,6 +21,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.ead.xml.XmlEadParser;
 import eu.apenet.dashboard.utils.ContentUtils;
+import eu.apenet.dpt.utils.ead2ese.EseConfig;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.dao.EseDAO;
@@ -35,7 +35,7 @@ public class EadService {
 
 	protected static final Logger LOGGER = Logger.getLogger(EadService.class);
 	private static final long NOT_USED_TIME = 60*60*24*7;
-	
+
 	public static boolean isHarvestingStarted() {
 		return DAOFactory.instance().getResumptionTokenDAO().containsValidResumptionTokens(new Date());
 	}
@@ -247,7 +247,7 @@ public class EadService {
 		for (UpFile upFile : upFiles) {
 			String filename = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath() + upFile.getFilename();
 			try {
-				
+
 				File file = new File(filename);
 				boolean shouldDeleted = false;
 				if (file.exists() && file.lastModified() < (System.currentTimeMillis() - NOT_USED_TIME)){
@@ -510,7 +510,8 @@ public class EadService {
                             new ValidateTask().execute(newEad);
                             new PublishTask().execute(newEad);
                             if(userprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
-                                new ConvertToEseEdmTask().execute(newEad); //todo: Add properties
+                                Properties europeanaProperties = createEuropeanaProperties(preferences);
+                                new ConvertToEseEdmTask().execute(newEad, europeanaProperties); //todo: Add properties
                                 new DeliverToEuropeanaTask().execute(newEad);
                             }
                         }
@@ -760,5 +761,31 @@ public class EadService {
 
         queueItem.setPriority(basePriority);
         return queueItem;
+    }
+
+    private static Properties createEuropeanaProperties(Properties preferences) {
+    	EseConfig config = new EseConfig();
+    	config.setDataProvider(preferences.getProperty(QueueItem.DATA_PROVIDER));
+    	config.setUseExistingRepository("true".equals(preferences.getProperty(QueueItem.DATA_PROVIDER_CHECK)));
+    	config.setProvider("Archives Portal Europe");
+        config.setType(preferences.getProperty(QueueItem.EUROPEANA_DAO_TYPE));
+    	config.setUseExistingDaoRole("true".equals(preferences.getProperty(QueueItem.EUROPEANA_DAO_TYPE_CHECK)));
+        config.setLanguage(preferences.getProperty(QueueItem.LANGUAGES));
+        config.setUseExistingLanguage("true".equals(preferences.getProperty(QueueItem.LANGUAGE_CHECK)));
+    	config.setInheritLanguage(true);
+        if ("europeana".equals(preferences.getProperty(QueueItem.LICENSE))){
+    		config.setRights(preferences.getProperty(QueueItem.LICENSE_DETAILS));
+    	}else if("cc0".equals(preferences.getProperty(QueueItem.LICENSE))){
+    		config.setRights("http://creativecommons.org/publicdomain/zero/1.0/");
+    	}else if("cpdm".equals(preferences.getProperty(QueueItem.LICENSE))){
+    		config.setRights("http://creativecommons.org/publicdomain/mark/1.0/");
+    	}else {
+    		config.setRights(preferences.getProperty(QueueItem.LICENSE_DETAILS));
+    	}
+    	config.setRightsAdditionalInformation(preferences.getProperty(QueueItem.LICENSE_ADD_INFO));
+    	config.setContextInformationPrefix(preferences.getProperty(QueueItem.HIERARCHY_PREFIX));
+    	config.setInheritElementsFromFileLevel("true".equals(preferences.getProperty(QueueItem.INHERIT_FILE)));
+    	config.setInheritOrigination("true".equals(preferences.getProperty(QueueItem.INHERIT_ORIGINATION)));
+    	return config.getProperties();
     }
 }
