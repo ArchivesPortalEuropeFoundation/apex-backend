@@ -197,7 +197,8 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			JpaUtil.commitDatabaseTransaction();
 		}else{
 			if (name != null
-					&& name.isEmpty()) {
+					&& (name.isEmpty()
+					|| name.trim().isEmpty())) {
 				buffer.append(buildNode("error",getText("al.message.alternativenamemustbefilled")));
 			} else {
 				buffer.append(buildNode("error",getText("al.message.badarguments")));
@@ -484,7 +485,13 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			// The final commits
 				JpaUtil.commitDatabaseTransaction();
 		}else{
-			messenger.append(buildNode("error",getText("al.message.badarguments")));
+			if (name != null
+					&& (name.isEmpty()
+					|| name.trim().isEmpty())) {
+				messenger.append(buildNode("error",getText("al.message.institutionNameMustBeFilled")));
+			} else {
+				messenger.append(buildNode("error",getText("al.message.badarguments")));
+			}
 		}
 		return messenger.toString();
 	}
