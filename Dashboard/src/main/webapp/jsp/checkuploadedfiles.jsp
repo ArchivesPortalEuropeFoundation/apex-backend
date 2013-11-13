@@ -417,6 +417,7 @@
 						}
 				
 						document.getElementById(divname).style.display='none';
+						document.getElementById(buttonid).setAttribute("disabled","disabled");
 						document.getElementById(buttonid).style.display='none';
 						//clean textbox
 						$("input#neweadid" + eadid).attr("value",""); 
@@ -451,13 +452,15 @@
 						//overwrite or cancel
 			       		var divname="divGeneralChangeEadid" + eadid;
 						document.getElementById(divname).style.display='none';
+						document.getElementById(buttonid).setAttribute("disabled","disabled");
 						document.getElementById(buttonid).style.display='none';
 						var divgeneralname= "divChangeEadid" + eadid;
 						document.getElementById(divgeneralname).style.display='none';
 						// Check if is necessary to enable accept button.
 						var enableAccept = true;
 						$("input[id^='SaveChangesButton']").each(function(){
-							var disabled = $(this).attr("disabled");
+							var id = $(this).attr("id");
+							var disabled = document.getElementById(id).getAttribute("disabled");
 							if (disabled == null || disabled != "disabled") {
 								enableAccept = false;
 							}

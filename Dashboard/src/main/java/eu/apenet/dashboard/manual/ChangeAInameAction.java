@@ -213,7 +213,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 					log.error("There were errors during updating EAG file [Database Rollback]. Error: EAG file hasn't any autform value with the curernt name.");
 
 					// Rollback all the changes.
-					rollbackAllChanges(pathEAG, path_copyEAG);
+					rollbackAllChanges(pathEAG, path_copyEAG, true);
 
 					this.setAllok(false);
 
@@ -260,7 +260,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 			}
 			if (validateChangeAInameProcessState==3 ){
 				log.error("There were errors during updating EAG file [Database Rollback]. Error: " + e.getMessage(),e);
-				rollbackAllChanges(pathEAG, path_copyEAG);
+				rollbackAllChanges(pathEAG, path_copyEAG, false);
 			}
 
 			if (validateChangeAInameProcessState == 4){
@@ -279,17 +279,22 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 	 *
 	 * @param pathEAG path to the current EAG file.
 	 * @param path_copyEAG path to the copy of the current EAG file.
+	 * @param existsInAutform if the current name exists in autform element.
 	 *
 	 * @throws IOException IOException
 	 */
-	private void rollbackAllChanges(final String pathEAG, final String path_copyEAG) throws IOException {
+	private void rollbackAllChanges(final String pathEAG, final String path_copyEAG, final boolean existsInAutform) throws IOException {
 		//It is necessary to make a Database rollback
 		JpaUtil.rollbackDatabaseTransaction();
 		JpaUtil.closeDatabaseSession();
 		log.info("Database rollback succeed");
 
-		//It is necessary to make a Index rollback of the FA indexed
-		this.setErrormessage(getText("changeAIname.errUpdatingEAG"));
+		if (existsInAutform) {
+			//It is necessary to make a Index rollback of the FA indexed
+			this.setErrormessage(getText("changeAIname.errUpdatingEAG"));
+		} else {
+			this.setErrormessage(getText("label.ai.changeainame.error.noCurrentNameInAutform"));
+		}
 
 		//There were errors during EAG modify.
 		//It is necessary to make EAG rollback
