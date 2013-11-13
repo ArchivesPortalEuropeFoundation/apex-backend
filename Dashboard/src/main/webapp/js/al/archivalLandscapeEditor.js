@@ -166,17 +166,20 @@ function loadDownPart(node){
 				$("#groupSelect").show();
 				getGroups();
 				hideMoveButtons = true;
-				//change changeNodeDiv onclick evento to an alert for show the received message
+				//change changeNodeDiv, moveUp and moveDown onclick event to show an alert for the received message
 				$("#changeNodeDiv").attr("onclick","showInformation('"+value.hasContentPublished+"',true);");
+				$("#moveUpDiv").attr("onclick","showInformation('"+value.hasContentPublished+"',true);");
+				$("#moveDownDiv").attr("onclick","showInformation('"+value.hasContentPublished+"',true);");
 			}else if(value.info){
 				showInformation(d.info);
 			}else if(value.error){
 				showInformation(d.error,true);
 			}
 		});
-		if(hideMoveButtons){
-			$("#moveUpDiv").hide();
-			$("#moveDownDiv").hide();
+		if(!hideMoveButtons){
+			//restore possible onclick event
+			$("#moveUpDiv").attr("onclick","moveUp();");
+			$("#moveDownDiv").attr("onclick","moveDown();");
 		}
 	});
 }
