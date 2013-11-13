@@ -82,15 +82,17 @@ function sendAlternativeNames(){
 	var aiId = activeNode.data.key;
 	var lang = $("select#selectedLangTranslations option:selected").val();
 	var text = $("input#target").val();
-	$.post("launchALActions.action",{"action":"create_alternative_name","aiId":aiId,"lang":lang,"name":text},function(d){
-		if(d.info){
-			showInformation(d.info);
-			hideAll();
-			dynatree.reload();
-		}else if(d.error){
-			showInformation(d.error,true);
-		}
-	});
+	if($.trim(text).length>0){
+		$.post("launchALActions.action",{"action":"create_alternative_name","aiId":aiId,"lang":lang,"name":text},function(d){
+			if(d.info){
+				showInformation(d.info);
+				hideAll();
+				dynatree.reload();
+			}else if(d.error){
+				showInformation(d.error,true);
+			}
+		});
+	}
 }
 
 function hideAll(){
@@ -153,6 +155,8 @@ function loadDownPart(node){
 				$("#deleteDiv").show();
 				$("#divGroupNodesContainer").show();
 				getGroups();
+			}else if(value.canBeMoved=="true"){
+				$("#divGroupNodesContainer").show();
 			}else if(value.info){
 				showInformation(d.info);
 			}else if(value.error){
@@ -169,7 +173,7 @@ function appendNode(){
 	var activeNode = dynatree.getActiveNode();
 	var fatherId = activeNode.data.key;
 	var language = $("#selectedLang option:selected").val();
-	if(fatherId.indexOf("_")!=-1){
+	if(fatherId.indexOf("_")!=-1 && $.trim(nodeName).length>0){
 		$.post("launchALActions.action",{"action":"create","name":nodeName,"father":fatherId,"type":nodeType,"lang":language},function(e){
 			if(e.info){
 				showInformation(e.info);

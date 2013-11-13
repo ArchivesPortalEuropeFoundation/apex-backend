@@ -154,7 +154,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 	
 	private String createAlternativeNames(Integer aiId,String name,String lang) {
 		StringBuilder buffer = new StringBuilder();
-		if(aiId!=null && name!=null && !name.isEmpty() && lang!=null){
+		if(aiId!=null && name!=null && !name.trim().isEmpty() && lang!=null && !lang.trim().isEmpty()){
 			// Store in data base the operation, the archival institutions
 			JpaUtil.beginDatabaseTransaction();
 			
@@ -443,7 +443,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 
 	private String createArchivalInstitution(String name,String father,String type,String lang){
 		StringBuilder messenger = new StringBuilder();
-		if(name!=null && type!=null){
+		if(name!=null && type!=null && !name.trim().isEmpty() && !type.trim().isEmpty()){
 			// Store in data base the operation, the archival institutions
 			JpaUtil.beginDatabaseTransaction();
 				ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
@@ -483,6 +483,8 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 				log.info("Archival institution/group has been created with name: "+name);
 			// The final commits
 				JpaUtil.commitDatabaseTransaction();
+		}else{
+			messenger.append(buildNode("error",getText("al.message.badarguments")));
 		}
 		return messenger.toString();
 	}
@@ -593,7 +595,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			actionValue = "false";
 		}
 		response.append(buildNode(actionName,actionValue));
-		if(response.length()>1){ //take into account put ',' if necesary
+		if(response.length()>1){ 
 			response.append(",");
 		}
 		actionName = "showAlternatives";
@@ -609,7 +611,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		if(archivalInstitution!=null){
 			actionValue = "true";
 		}
-		if(response.length()>1){ //take into account put ',' if necesary
+		if(response.length()>1){ 
 			response.append(",");
 		}
 		response.append(buildNode(actionName,actionValue));
@@ -619,7 +621,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		}else{
 			actionValue = "false";
 		}
-		if(response.length()>1){ //take into account put ',' if necesary
+		if(response.length()>1){ 
 			response.append(",");
 		}
 		response.append(buildNode(actionName,actionValue));
@@ -627,12 +629,22 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		if (archivalInstitution != null) {
 			actionName = "hasContentPublished";
 			actionValue = "";
-			if (ContentUtils.containsPublishedFiles(archivalInstitution)) {
+			if (archivalInstitution.isContainSearchableItems()) {
 				actionValue = getText("al.message.notchangedparent");
 			} else {
 				actionValue = "false";
 			}
-			if(response.length()>1){ //take into account put ',' if necesary
+			if(response.length()>1){ 
+				response.append(",");
+			}
+			response.append(buildNode(actionName,actionValue));
+			actionName = "canBeMoved";
+			if (archivalInstitution.isContainSearchableItems()) {
+				actionValue = "false";
+			} else {
+				actionValue = "true";
+			}
+			if(response.length()>1){
 				response.append(",");
 			}
 			response.append(buildNode(actionName,actionValue));
