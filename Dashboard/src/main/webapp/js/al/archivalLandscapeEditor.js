@@ -154,9 +154,11 @@ function loadDownPart(node){
 			}else if(value.showDeleteAction=="true"){
 				$("#deleteDiv").show();
 				$("#divGroupNodesContainer").show();
+				$("#groupSelect").show();
 				getGroups();
 			}else if(value.canBeMoved=="true"){
 				$("#divGroupNodesContainer").show();
+				$("#groupSelect").show();
 			}else if(value.info){
 				showInformation(d.info);
 			}else if(value.error){
@@ -234,6 +236,7 @@ function getGroups(){
 		if(groups>0){
 			$("#divGroupNodesContainer").show();
 			$("#changeNodeDiv").before(groupSelect);
+			$("#groupSelect").show();
 		}else{
 			$("#divGroupNodesContainer").hide();
 		}
