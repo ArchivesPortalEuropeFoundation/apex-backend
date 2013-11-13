@@ -129,6 +129,7 @@ function loadDownPart(node){
 	$.post("getALActions.action",{nodeKey:node.data.key},function(e){
 		hideAll();
 		$("#alternativeNames").remove();
+		var hideMoveButtons = false;
 		$.each(e,function(key,value){
 			if(value.enableAddToList=="true"){
 				$("#filterSelectContainer").show();
@@ -164,6 +165,7 @@ function loadDownPart(node){
 				$("#divGroupNodesContainer").show();
 				$("#groupSelect").show();
 				getGroups();
+				hideMoveButtons = true;
 				//change changeNodeDiv onclick evento to an alert for show the received message
 				$("#changeNodeDiv").attr("onclick","showInformation('"+value.hasContentPublished+"',true);");
 			}else if(value.info){
@@ -172,6 +174,10 @@ function loadDownPart(node){
 				showInformation(d.error,true);
 			}
 		});
+		if(hideMoveButtons){
+			$("#moveUpDiv").hide();
+			$("#moveDownDiv").hide();
+		}
 	});
 }
 
