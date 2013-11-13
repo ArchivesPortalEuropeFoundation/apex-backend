@@ -161,7 +161,7 @@ function loadDownPart(node){
 				getGroups();
 				//restore onclick information
 				$("#changeNodeDiv").attr("onclick","changeGroup();");
-			}else if(value.hasContentPublished!=undefined){
+			}else if(value.hasContentPublished!=undefined && value.hasContentPublished!="false"){
 				$("#divGroupNodesContainer").show();
 				$("#groupSelect").show();
 				getGroups();
