@@ -445,7 +445,7 @@
 						// Disable accept button.
 						$("input#form_submit").attr("disabled","disabled");
 						// Enable check button.
-					    $("input#" + buttonid).removeAttr("disabled");
+						document.getElementById(buttonid).removeAttribute("disabled");
 					}
 					else {
 						//overwrite or cancel
