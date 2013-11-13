@@ -327,8 +327,8 @@
         
 	        function activate(eadid) {
 	        	$("input#form_submit").attr("disabled","disabled");
-			    $("input#SaveChangesButton" + eadid).removeAttr("disabled");
-			    $("label#resultChangeEADID" + eadid).hide();
+				document.getElementById("SaveChangesButton" + eadid).disabled=false;
+				document.getElementById("resultChangeEADID" + eadid).style.display='none';
 	        }
 	        
 	        function checkEadIdAndSubmit(){
@@ -454,11 +454,19 @@
 						document.getElementById(buttonid).style.display='none';
 						var divgeneralname= "divChangeEadid" + eadid;
 						document.getElementById(divgeneralname).style.display='none';
-						//enable accept button
-						$("input#form_submit").removeAttr("disabled");
+						// Check if is necessary to enable accept button.
+						var enableAccept = true;
+						$("input[id^='SaveChangesButton']").each(function(){
+							var disabled = $(this).attr("disabled");
+							if (disabled == null || disabled != "disabled") {
+								enableAccept = false;
+							}
+						});
+						if (enableAccept) {
+							$("input#form_submit").removeAttr("disabled");
+						}
 						//clean all values from the array when cancel
 						eadidarray.splice(0,eadidarray.length);
-						$("input#form_submit").removeAttr("disabled");
 						//clean textbox
 						$("input#neweadid" + eadid).attr("value","");
 						//clean label
@@ -481,7 +489,7 @@
 					//Display you will overwrite the file with the eadid selected for this one.
 					document.getElementById(labelanswermessage).innerHTML="You will overwrite the file with the eadid selected for this one.";										
 				}
-				$("label#" + labelanswermessage).show();
+				document.getElementById(labelanswermessage).style.display='block';
 			}
 						
 			function checkEADIDavailability(oldeadid, neweadid, fileId) {
@@ -493,7 +501,7 @@
 						{
 							//Show the message.
 							var labelanswermessage = "resultChangeEADID" + dataResponse.eadid;
-							$("label#" + labelanswermessage).show();
+							document.getElementById(labelanswermessage).style.display='block';
 							var object = document.getElementById(labelanswermessage);
 							object.innerHTML=dataResponse.message;
 						    
@@ -544,7 +552,7 @@
 								/*Do not hide the check availavility button*/
 								var div= "divCancelOverwriteEADID" + dataResponse.eadid;								
 								document.getElementById(div).style.display='none';
-							    $("input#SaveChangesButton" + oldeadid).attr("disabled","disabled");
+								document.getElementById("SaveChangesButton" + oldeadid).disabled=true;
 							    var enableAccept = true;
 								$("input[id^='SaveChangesButton']").each(function(){
 									var disabled = $(this).attr("disabled");

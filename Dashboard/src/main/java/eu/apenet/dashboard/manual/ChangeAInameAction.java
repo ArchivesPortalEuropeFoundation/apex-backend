@@ -2,6 +2,7 @@ package eu.apenet.dashboard.manual;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -22,7 +23,6 @@ import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.security.SecurityService;
-import eu.apenet.dashboard.security.SecurityService;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
@@ -32,17 +32,11 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class ChangeAInameAction extends AbstractInstitutionAction {
-
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2075500483635921910L;
 
 	protected Logger log = Logger.getLogger(getClass());
-	
+
     //Attributes
-	
 	private String name;
 	private String newname;
 	private Integer numberOfFindingAids; //Number of Finding Aids which belong to an archival institution
@@ -55,7 +49,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 									//ReadEAGAction can be called from 
 									//different points within the 
 									//application
-    
+
     //Getters and Setters
 	public String getErrormessage() {
 		return errormessage;
@@ -77,9 +71,6 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 		super.buildBreadcrumbs();
 		addBreadcrumb(getText("breadcrumb.section.changeAIname"));
 	}
-	
-
-	
 
 	public String getName() {
 		return name;
@@ -88,7 +79,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getNewname() {
 		return newname;
 	}
@@ -96,7 +87,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 	public void setNewname(String newname) {
 		this.newname = newname;
 	}
-	
+
 	public Integer getNumberOfFindingAids() {
 		return numberOfFindingAids;
 	}
@@ -104,7 +95,6 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 	public void setNumberOfFindingAids(Integer numberOfFindingAids) {
 		this.numberOfFindingAids = numberOfFindingAids;
 	}
-
 
 	public String getId() {
 		return id;
@@ -114,8 +104,6 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 		this.id = id;
 	}
 
-
-	
 	public void setCurrentAction(String currentAction) {
 		this.currentAction = currentAction;
 	}
@@ -123,48 +111,43 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 	public String getCurrentAction() {
 		return currentAction;
 	}
-	
+
     //Constructor
     public ChangeAInameAction(){
     }
-	
+
     //Methods
 	public String execute() throws Exception{
-
 		//The ai_id is retrieved from the session
 		//This code has been moved to the prepare method
-		
+
 		//The action from where ChangeAInameAction was invoked is retrieved
-		this.setCurrentAction(ServletActionContext.getActionMapping().getName());		
-		
+		this.setCurrentAction(ServletActionContext.getActionMapping().getName());
+
 		ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
 		ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.getAiId());
 		this.name = archivalInstitution.getAiname();
 		if (ContentUtils.containsPublishedFiles(archivalInstitution)){
 			addActionError(getText("label.ai.changeainame.published.eads"));
-		}		
+		}
 		return SUCCESS;
 	}
 
-//	@SuppressWarnings("deprecation")
 	public String validateChangeAIname() throws Exception{
 		Integer aiId = this.getAiId();
-		
-		Integer validateChangeAInameProcessState = 0;	//This variable is in charge of storing the changing process state: 
-		//3=the process is deleting database;
-		//4=the process is changing EAG from file system; 
-		//5=the process is changing AL from file system;
 
-//		String isoname="";	
-//		String pathAL ="";
+		Integer validateChangeAInameProcessState = 0;	//This variable is in charge of storing the changing process state:
+		//0=initial state before start any process;
+		//1=the process starts;
+		//3=the process is deleting database;
+		//4=the process is changing EAG from file system;
+
 		String pathEAG="";
 		String path_copyEAG = "";
-//		String path_copyAL ="";
-		
+
 		AiAlternativeNameDAO andao = DAOFactory.instance().getAiAlternativeNameDAO();
 		ArchivalInstitutionDAO aidao = DAOFactory.instance().getArchivalInstitutionDAO();
-//		ArchivalLandscape a = new ArchivalLandscape();
-		
+
 		try{
 			if (this.newname.isEmpty()){
 				addActionError(getText("changeAIname.noEmptyName"));
@@ -172,148 +155,96 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				return INPUT;
 			}
 			else{
-				validateChangeAInameProcessState = 1;	//This variable is in charge of storing the changing process state: 
-			JpaUtil.beginDatabaseTransaction();
-			ArchivalInstitution ai = aidao.getArchivalInstitution(aiId);
-			if (ContentUtils.containsPublishedFiles(ai)){
-				addActionError(getText("label.ai.changeainame.published.eads"));
-				throw new APEnetException(getText("changeAIname.noDeletePublishedAI"));
-			}
-			AiAlternativeName an = andao.findByAIId_primarykey(ai);			
-			
-//			isoname = ai.getCountry().getIsoname();
-//			pathAL = APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR + isoname + APEnetUtilities.FILESEPARATOR + "AL" + APEnetUtilities.FILESEPARATOR + isoname + "AL.xml";
-			pathEAG = APEnetUtilities.getConfig().getRepoDirPath()+ ai.getEagPath();
-			File  EAGfile = new File(pathEAG);
-			path_copyEAG = pathEAG.replace(".xm", "");
-	    	path_copyEAG = path_copyEAG + "_copy.xml";	
-//	    	path_copyAL = pathAL.replace(".xm", "");
-//        	path_copyAL = path_copyAL + "_copy.xml";
-			
-        	
-			/// UPDATE DATABASE ///
-			an.setAiAName(this.newname);
-			ai.setAiname(this.newname);
-			ai.setAutform(this.newname);
-			andao.updateSimple(an);
-			aidao.updateSimple(ai);
-			
-			validateChangeAInameProcessState = 3;
-			
+				validateChangeAInameProcessState = 1;
+				JpaUtil.beginDatabaseTransaction();
+				ArchivalInstitution ai = aidao.getArchivalInstitution(aiId);
+				if (ContentUtils.containsPublishedFiles(ai)){
+					addActionError(getText("label.ai.changeainame.published.eads"));
+					throw new APEnetException(getText("changeAIname.noDeletePublishedAI"));
+				}
+				AiAlternativeName an = andao.findByAIId_primarykey(ai);
 
-			
-			/// CHANGE EAG ///
-			File copyEAGfile = new File (path_copyEAG);
-        	if (EAGfile.exists()){
-        		FileUtils.copyFile(EAGfile, copyEAGfile);
-        	}
 
-        		
+				pathEAG = APEnetUtilities.getConfig().getRepoDirPath()+ ai.getEagPath();
+				File  EAGfile = new File(pathEAG);
+				path_copyEAG = pathEAG.replace(".xm", "");
+				path_copyEAG = path_copyEAG + "_copy.xml";
 
-			NodeList nodeAutList = null;
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			dbFactory.setNamespaceAware(true);
-	        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();   	 
-	        InputStream sfile = new FileInputStream(pathEAG);
-	        Document doc = dBuilder.parse(sfile);
-	       
-	        doc.getDocumentElement().normalize();
-	        nodeAutList = doc.getElementsByTagNameNS("http://www.archivesportaleurope.eu/profiles/APEnet_EAG/", "autform");
-	        for (int j=0;j<nodeAutList.getLength();j++){
-	        	Node nodeAutform = nodeAutList.item(j);
-	        	if (!nodeAutform.getTextContent().equals(this.newname)){
-	        		nodeAutform.setTextContent(this.newname);
-	        		//LOG.info("EAG has been modified correctly");
-	        	}
-	        }
-	        TransformerFactory tf = TransformerFactory.newInstance();
-    		Transformer transformer = tf.newTransformer();
-    		transformer.transform(new DOMSource(doc), new StreamResult(new File(pathEAG))); // Stored
-    			
-        	validateChangeAInameProcessState=4;
-			EAGfile = null;
-			copyEAGfile = null;
-			
-			/// CHANGE AL FILE ///				
-			
-			//change the Archival Landscape
-			
-//			File  ALfile = new File(pathAL);
-//		    File copyALfile = new File (path_copyAL);
-//		    if (ALfile.exists()){
-//		    	FileUtils.copyFile(ALfile, copyALfile);
-//			}
-	        	
-//					Boolean changeAL = false;
-					//First, looking for the node c with the attribute id internal_al_id from ddbb.								
-//					NodeList nodeCList = null;
-						
-						
-//		        	InputStream sfile2 = new FileInputStream(pathAL);
-//		        	doc = dBuilder.parse(sfile2);
-//		        	doc.getDocumentElement().normalize();
-			        	
-//		        	nodeCList = doc.getElementsByTagName("c");
-//		        	for (int i =0;i<nodeCList.getLength();i++){
-//		        		Node nodeC = nodeCList.item(i);
-//		        		if (nodeC.hasAttributes()){
-//		        			NamedNodeMap attributes = nodeC.getAttributes();
-//		        			Node attributeId = attributes.getNamedItem("id");
-//		        			if (attributeId != null){
-//		        				//Check this value with internal_al_id ddbb
-//		        				if (attributeId.getTextContent().equals(ai.getInternalAlId())){		        					
-//		        					if (nodeC.hasChildNodes()){
-//		        						NodeList nodeDidList = nodeC.getChildNodes();
-//		        						for (int k=0;k<nodeDidList.getLength();k++){	        							
-//		        							Node nodedid = nodeDidList.item(k);
-//		        							if (nodedid.getNodeName().trim().equals("did") && nodedid.hasChildNodes()){
-//		        								if (nodedid.hasChildNodes()){
-//		        									NodeList unittitlelist = nodedid.getChildNodes();
-//		        									for (int t=0;t<unittitlelist.getLength();t++){
-//		        										if (unittitlelist.item(t).getNodeName().trim().equals("unittitle")){
-//		        											Node unittitlenode = unittitlelist.item(t);
-//		        											//LOG.info("Changing <unititle> in AL from " + unittitlenode.getTextContent() + " to " + this.newname);
-//		        											unittitlenode.setTextContent(this.newname);
-//		        											changeAL= true;
-//		        											//LOG.info("The AL has been changed.");
-//		        										}
-//		        									}
-//		        								}
-//		        							}
-//		        						}
-//		        					}
-//		        				}
-//		        			}
-//		        		}
-//		        	}
-//	    			transformer.transform(new DOMSource(doc), new StreamResult(new File(pathAL))); // Stored
-//	    			ALfile =null;
-//					copyALfile =null;
-	    			//--- 6th CHANGE GENERAL AL  ----------------------------------
-//	    			a.changeAL();
-		    			
-		        	validateChangeAInameProcessState = 5;
-					
-					/// FINAL COMMITS ///
-					//Final commit in Database
-					JpaUtil.commitDatabaseTransaction();
-					
-					//Delete EAG_copy
-					ContentUtils.deleteFile(path_copyEAG);
-					
-					//Delete AL_copy
+				/// UPDATE DATABASE ///
+				an.setAiAName(this.newname);
+				ai.setAiname(this.newname);
+				ai.setAutform(this.newname);
+				andao.updateSimple(an);
+				aidao.updateSimple(ai);
 
-//	    			ContentUtils.deleteFile(path_copyAL);
-	    			
-					JpaUtil.closeDatabaseSession();
-					this.setAllok(true);
+				log.info("The process has updated the values in database (transaction not committed yet).");
 
-					// Refresh institution in session.
-					SecurityService.selectArchivalInstitution(aiId);
+				validateChangeAInameProcessState = 3;
+
+				/// CHANGE EAG ///
+				File copyEAGfile = new File (path_copyEAG);
+				if (EAGfile.exists()){
+					FileUtils.copyFile(EAGfile, copyEAGfile);
+				}
+
+				NodeList nodeAutList = null;
+				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+				dbFactory.setNamespaceAware(true);
+				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+				InputStream sfile = new FileInputStream(pathEAG);
+				Document doc = dBuilder.parse(sfile);
+
+				doc.getDocumentElement().normalize();
+				nodeAutList = doc.getElementsByTagNameNS("http://www.archivesportaleurope.net/Portal/profiles/eag_2012/", "autform");
+				boolean autformChanged = false;
+				for (int j=0;j<nodeAutList.getLength() && !autformChanged;j++){
+					Node nodeAutform = nodeAutList.item(j);
+					if (nodeAutform.getTextContent().equals(this.name)
+							&& !autformChanged){
+						nodeAutform.setTextContent(this.newname);
+						autformChanged = true;
+						LOG.debug("<autform> in EAG has been modified correctly");
+					}
+				}
+
+				// Check if the autform is changed.
+				if (!autformChanged) {
+					addActionError(getText("label.ai.changeainame.error.noCurrentNameInAutform"));
+					log.error("There were errors during updating EAG file [Database Rollback]. Error: EAG file hasn't any autform value with the curernt name.");
+
+					// Rollback all the changes.
+					rollbackAllChanges(pathEAG, path_copyEAG);
+
+					this.setAllok(false);
+
+					return ERROR;
+				}
+
+				TransformerFactory tf = TransformerFactory.newInstance();
+				Transformer transformer = tf.newTransformer();
+				transformer.transform(new DOMSource(doc), new StreamResult(new File(pathEAG))); // Stored
+
+				log.info("The process has saved the new EAG file.");
+
+				validateChangeAInameProcessState=4;
+				EAGfile = null;
+				copyEAGfile = null;
+
+				/// FINAL COMMITS ///
+				//Final commit in Database
+				JpaUtil.commitDatabaseTransaction();
+
+				//Delete EAG_copy
+				ContentUtils.deleteFile(path_copyEAG);
+
+				JpaUtil.closeDatabaseSession();
+				this.setAllok(true);
+
+				// Refresh institution in session.
+				SecurityService.selectArchivalInstitution(aiId);
 
 				return SUCCESS;
 			}
-			
 		}
 		catch (Exception e){
 			addActionError(getText("label.ai.changeainame.error"));
@@ -321,7 +252,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 			if (validateChangeAInameProcessState == 1) {
 				//There were errors during Database Transaction
 				//It is necessary to make a Database rollback
-				
+
 				this.setErrormessage(getText("changeAIname.errDeletingFromDb"));
 				JpaUtil.rollbackDatabaseTransaction();
 				JpaUtil.closeDatabaseSession();
@@ -329,67 +260,10 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 			}
 			if (validateChangeAInameProcessState==3 ){
 				log.error("There were errors during updating EAG file [Database Rollback]. Error: " + e.getMessage(),e);
-				//It is necessary to make a Database rollback
-				JpaUtil.rollbackDatabaseTransaction();
-				JpaUtil.closeDatabaseSession();
-				log.info("Database rollback succeed");
-
-				//It is necessary to make a Index rollback of the FA indexed
-				this.setErrormessage(getText("changeAIname.errUploadingEAG"));
-				
-
-
-				
-				//There were errors during EAG modify.
-				//It is necessary to make EAG rollback
-				File EAGfile = new File(pathEAG);
-				File copyEAGfile = new File (path_copyEAG);
-				ContentUtils.deleteFile(pathEAG);
-				copyEAGfile.renameTo(EAGfile);
-				log.info("EAG rollback succeed");
-				EAGfile = null;
-				copyEAGfile = null;
-				
-				JpaUtil.closeDatabaseSession();
-				
+				rollbackAllChanges(pathEAG, path_copyEAG);
 			}
-			
+
 			if (validateChangeAInameProcessState == 4){
-				log.error("There were errors during updating AL file [Database Rollback, EAG Rollback]. Error: " + e.getMessage(),e);
-				//It is necessary to make a Database rollback
-				JpaUtil.rollbackDatabaseTransaction();
-				JpaUtil.closeDatabaseSession();
-				log.info("Database rollback succeed");
-
-				//It is necessary to make a Index rollback of the FA indexed
-				this.setErrormessage(getText("changeAIname.errUpdatingAL"));
-
-				//There were errors during EAG modify.
-				//It is necessary to make EAG rollback			
-				File EAGfile = new File(pathEAG);
-				File copyEAGfile = new File (path_copyEAG);
-				ContentUtils.deleteFile(pathEAG);
-				copyEAGfile.renameTo(EAGfile);
-				log.info("EAG rollback succeed");
-				EAGfile = null;
-				copyEAGfile = null;
-				
-				//There were errors during AL modify.
-				//It is necessary to make AL rollback
-//				File ALfile = new File (pathAL);
-//				File copyALfile = new File (path_copyAL);
-//				ContentUtils.deleteFile(pathAL);
-//				copyALfile.renameTo(ALfile);
-//				log.info("AL of the country rollback succeed");
-//				ALfile =null;
-//				copyALfile =null;
-				//--- 6th CHANGE GENERAL AL  ----------------------------------
-//    			a.changeAL();
-				JpaUtil.closeDatabaseSession();
-				
-			}
-			
-			if (validateChangeAInameProcessState == 5){
 				this.setErrormessage("There were errors during final commits");
 				//There were errors during Database, Index or File system commit
 				JpaUtil.closeDatabaseSession();
@@ -398,5 +272,35 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 			this.setAllok(false);
 			return ERROR;
 		}
-	}	
+	}
+
+	/**
+	 * Method to rollback all the changes due to an error in updating EAG file.
+	 *
+	 * @param pathEAG path to the current EAG file.
+	 * @param path_copyEAG path to the copy of the current EAG file.
+	 *
+	 * @throws IOException IOException
+	 */
+	private void rollbackAllChanges(final String pathEAG, final String path_copyEAG) throws IOException {
+		//It is necessary to make a Database rollback
+		JpaUtil.rollbackDatabaseTransaction();
+		JpaUtil.closeDatabaseSession();
+		log.info("Database rollback succeed");
+
+		//It is necessary to make a Index rollback of the FA indexed
+		this.setErrormessage(getText("changeAIname.errUpdatingEAG"));
+
+		//There were errors during EAG modify.
+		//It is necessary to make EAG rollback
+		File EAGfile = new File(pathEAG);
+		File copyEAGfile = new File (path_copyEAG);
+		ContentUtils.deleteFile(pathEAG);
+		copyEAGfile.renameTo(EAGfile);
+		log.info("EAG rollback succeed");
+		EAGfile = null;
+		copyEAGfile = null;
+
+		JpaUtil.closeDatabaseSession();
+	}
 }
