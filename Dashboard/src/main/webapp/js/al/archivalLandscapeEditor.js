@@ -157,6 +157,15 @@ function loadDownPart(node){
 			}else if(value.canBeMoved=="true"){
 				$("#divGroupNodesContainer").show();
 				$("#groupSelect").show();
+				getGroups();
+				//restore onclick information
+				$("#changeNodeDiv").attr("onclick","changeGroup();");
+			}else if(value.hasContentPublished!=undefined){
+				$("#divGroupNodesContainer").show();
+				$("#groupSelect").show();
+				getGroups();
+				//change changeNodeDiv onclick evento to an alert for show the received message
+				$("#changeNodeDiv").attr("onclick","showInformation('"+value.hasContentPublished+"',true);");
 			}else if(value.info){
 				showInformation(d.info);
 			}else if(value.error){
