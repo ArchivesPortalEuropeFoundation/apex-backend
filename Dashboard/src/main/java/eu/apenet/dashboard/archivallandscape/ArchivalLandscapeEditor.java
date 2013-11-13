@@ -303,30 +303,44 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					if(internalParentId.equals(archivalInstitutionTarget.getCountry().getCname())){
 						parentArchivalInstitution = null;
 					}
-					archivalInstitutionTarget.setParent(parentArchivalInstitution);
 					//last step, reorder old tree nodes and put the current position at the end of the new parent
 					int aloOrder = 0;
+					int oldOrder = 0;
 					if(parentArchivalInstitution!=null){
 						Set<ArchivalInstitution> children = parentArchivalInstitution.getChildArchivalInstitutions();
 						if(children!=null){
-							aloOrder = children.size()-1;
+							aloOrder = children.size();
+							oldOrder = archivalInstitutionTarget.getAlorder();
+							archivalInstitutionTarget.setAlorder(aloOrder);
+						}
+					}else{
+						List<ArchivalInstitution> children = aiDao.getArchivalInstitutionsByCountryId(SecurityContext.get().getCountryId(),true);
+						if(children!=null){
+							aloOrder = children.size();
+							oldOrder = archivalInstitutionTarget.getAlorder();
+							archivalInstitutionTarget.setAlorder(aloOrder);
 						}
 					}
+					archivalInstitutionTarget.setParent(parentArchivalInstitution);
+					List<ArchivalInstitution> siblings = null;
 					if(lastParent!=null){
-						Set<ArchivalInstitution> siblings = lastParent.getChildArchivalInstitutions();
-						if(siblings!=null){
-							aloOrder = siblings.size();
-							Iterator<ArchivalInstitution> itSiblings = siblings.iterator();
-							while(itSiblings.hasNext()){
-								ArchivalInstitution aiTemp = itSiblings.next();
-								if(aiTemp.getAiId()!=archivalInstitutionTarget.getAiId() && aiTemp.getAlorder()>archivalInstitutionTarget.getAlorder()){
-									aiTemp.setAlorder(aiTemp.getAlorder()-1);
-									aiDao.updateSimple(aiTemp);
-								}
+						Set<ArchivalInstitution> tempSiblings = lastParent.getChildArchivalInstitutions();
+						if(tempSiblings!=null){
+							siblings = new ArrayList<ArchivalInstitution>(tempSiblings);
+						}
+					}else{
+						siblings = aiDao.getArchivalInstitutionsByCountryId(SecurityContext.get().getCountryId(),true);
+					}
+					if(siblings!=null){
+						Iterator<ArchivalInstitution> itSiblings = siblings.iterator();
+						while(itSiblings.hasNext()){
+							ArchivalInstitution aiTemp = itSiblings.next();
+							if(oldOrder<aiTemp.getAlorder() && aiTemp.getAiId()!=archivalInstitutionTarget.getAiId() && aiTemp.getAlorder()>archivalInstitutionTarget.getAlorder()){
+								aiTemp.setAlorder(aiTemp.getAlorder()-1);
+								aiDao.updateSimple(aiTemp);
 							}
 						}
 					}
-					archivalInstitutionTarget.setAlorder(aloOrder);
 					aiDao.updateSimple(archivalInstitutionTarget);
 					buffer.append(buildNode("info",getText("al.message.groupchanged")));
 				}
