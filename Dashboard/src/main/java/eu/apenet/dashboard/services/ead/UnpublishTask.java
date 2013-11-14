@@ -13,6 +13,7 @@ import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class UnpublishTask extends AbstractEadTask {
 
@@ -37,7 +38,8 @@ public class UnpublishTask extends AbstractEadTask {
 				ContentUtils.changeSearchable(ead, false);
 				ead.setTotalNumberOfUnits(0l);
 				ead.setTotalNumberOfUnitsWithDao(0l);
-				eadDAO.store(ead);
+				eadDAO.insertSimple(ead);
+				JpaUtil.commitDatabaseTransaction();
 				logSolrAction(ead, "", solrTime, System.currentTimeMillis()-(startTime+solrTime));
 			} catch (Exception e) {
 				logAction(ead, e);
