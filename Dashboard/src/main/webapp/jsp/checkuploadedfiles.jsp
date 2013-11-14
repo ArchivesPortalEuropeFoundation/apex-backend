@@ -420,16 +420,10 @@
 						document.getElementById(buttonid).setAttribute("disabled","disabled");
 						document.getElementById(buttonid).style.display='none';
 						//clean textbox
-						$("input#neweadid" + eadid).attr("value",""); 
+						var textBoxName="neweadid" + eadid;
+						document.getElementById(textBoxName).value = "";
 						//clean label
-						$("label[id^='resultChangeEADID']").each(function(){
-					        var strLabelOut=$(this).text();	
-					        if(strLabelOut!="<s:property value="getText('content.message.EadidAvailable')" />"){
-					        	$(this).hide();
-					        }  	
-				         });
-						$("label#resultChangeEADID" + eadid).hide(); 
-						
+						$("label#resultChangeEADID" + eadid).hide();
 					}//end Cancel
 				
 				} //end Add
@@ -471,12 +465,14 @@
 						//clean all values from the array when cancel
 						eadidarray.splice(0,eadidarray.length);
 						//clean textbox
-						$("input#neweadid" + eadid).attr("value","");
+						var textBoxName="neweadid" + eadid;
+						document.getElementById(textBoxName).value = "";
 						//clean label
-						$("label#resultChangeEADID" + eadid).hide();
-						var strLabelOut=$("label#resultChangeEADID" + eadid).text();
+						var labelName="resultChangeEADID" + eadid;
+						document.getElementById(labelName).style.display='none';
 						//clean text and combo too
-						$("label#divCancelOverwriteEADID" + eadid).hide();
+						var labelCancelName="divCancelOverwriteEADID" + eadid;
+						document.getElementById(labelCancelName).style.display='none';
 					}
 				}
 			}
