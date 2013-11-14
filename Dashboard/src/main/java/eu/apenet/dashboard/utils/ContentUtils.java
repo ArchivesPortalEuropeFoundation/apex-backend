@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -38,7 +39,6 @@ import com.opensymphony.xwork2.Action;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.dao.EadDAO;
@@ -339,6 +339,7 @@ public class ContentUtils {
 	public static void changeSearchable(Ead ead, boolean searchable) {
 		changeContainsSearchableItems(ead.getArchivalInstitution(), searchable);
 		ead.setPublished(searchable);
+		ead.setPublishDate(new Date());
 
 	}
 	public static void updateContainsSearchableItemsInAiGroups(ArchivalInstitution archivalInstitution){
