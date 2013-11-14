@@ -25,6 +25,8 @@ public abstract class Ead  implements Serializable{
 	public abstract void setTitle(String title);
 	public abstract Date getUploadDate();
 	public abstract void setUploadDate(Date uploadDate);
+	public abstract Date getPublishDate();
+	public abstract void setPublishDate(Date publishDate);
 	public abstract String getPathApenetead();
 	public abstract void setPathApenetead(String pathApenetead);
 	public abstract String getEadid();

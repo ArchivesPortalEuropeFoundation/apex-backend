@@ -36,6 +36,8 @@ public class SourceGuide extends Ead {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="upload_date")
 	private Date uploadDate;
+	@Column(name = "publish_date")
+	private Date publishDate;
 	/*
 	 * states
 	 */
@@ -215,6 +217,14 @@ public class SourceGuide extends Ead {
 
 	public void setDynamic(boolean dynamic) {
 		this.dynamic = dynamic;
+	}
+
+	public Date getPublishDate() {
+		return publishDate;
+	}
+
+	public void setPublishDate(Date publishDate) {
+		this.publishDate = publishDate;
 	}
 
 

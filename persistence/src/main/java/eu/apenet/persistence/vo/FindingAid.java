@@ -36,7 +36,8 @@ public class FindingAid extends Ead {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "upload_date")
 	private Date uploadDate;
-
+	@Column(name = "publish_date")
+	private Date publishDate;
 	/*
 	 * states
 	 */
@@ -255,6 +256,14 @@ public class FindingAid extends Ead {
 
 	public void setDynamic(boolean dynamic) {
 		this.dynamic = dynamic;
+	}
+
+	public Date getPublishDate() {
+		return publishDate;
+	}
+
+	public void setPublishDate(Date publishDate) {
+		this.publishDate = publishDate;
 	}
     
 }
