@@ -9,34 +9,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.dpt.utils.service.DocumentValidation;
@@ -44,8 +27,8 @@ import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 /**
  * User: Eloy García
@@ -67,25 +50,22 @@ public class APEnetEAGDashboard{
 
 	protected List<String> warnings_ead;
 	private String name;
-	
+
 	public String getEagPath() {
 		return eagPath;
 	}
-	
 
 	public void setEagPath(String eagPath) {
 		this.eagPath = eagPath;
 	}
-	
+
 	public String getId() {
 		return id;
 	}
 
-
 	public void setId(String id) {
 		this.id = id;
 	}
-
 
 	public String getFilename() {
 		return APEnetUtilities.convertToFilename(this.getId()) + ".xml";
@@ -95,61 +75,50 @@ public class APEnetEAGDashboard{
 		return aiId;
 	}
 
-
 	public void setAiId(Integer aiId) {
 		this.aiId = aiId;
 	}
-
 
 	public List<String> getWarnings_ead() {
 		return warnings_ead;
 	}
 
-
 	public String getName() {
 		return name;
 	}
-
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-
 	// Constructor
 	public APEnetEAGDashboard(Integer aiId, String tempEagPath) {
-		
 		ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
 		ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(aiId);
 
-        this.eagPath = archivalInstitution.getEagPath();        	
-        
+        this.eagPath = archivalInstitution.getEagPath();
+
 		this.aiId = aiId;
 
-		if (this.eagPath == null){			
+		if (this.eagPath == null){
 			if (tempEagPath != null) {
 	        	this.eagPath = tempEagPath;
 	        }
 			this.id = "";
 			this.name = "";
 			if (archivalInstitution != null) {
-				this.name = archivalInstitution.getAiname().toString();				
+				this.name = archivalInstitution.getAiname().toString();
 			}
 		}
 		else {
-
-
 			if (tempEagPath != null) {
 	        	this.eagPath = tempEagPath;
 	        }
 	        else {
-				this.eagPath = APEnetUtilities.getConfig().getRepoDirPath() + this.eagPath;			
+				this.eagPath = APEnetUtilities.getConfig().getRepoDirPath() + this.eagPath;
 	        }
 		}
-	
-			
 	}
-
 
 	// Methods
 	public boolean validate() throws APEnetException, SAXException {
@@ -191,7 +160,6 @@ public class APEnetEAGDashboard{
 				warnings_ead.add("recordId: " + repositoryCode + " already used");
 				return false;
 			}
-
 		} else {
 			warnings_ead.add("recordId does not match pattern: " + pattern);
 			return false;
@@ -218,7 +186,7 @@ public class APEnetEAGDashboard{
 		}
 		return true;
 	}
-	
+
 	public Boolean convertEAG02ToEAG2012() throws APEnetException {
 		// EAG file is stored temporally in the location defined in eagPath
 		// attribute
@@ -253,452 +221,143 @@ public class APEnetEAGDashboard{
 		return warnings_ead;
 	}
 
-
 	// This method stores a new EAG file or overwrites an existing one which has
 	// been uploaded via HTTP
 	public String saveEAGviaHTTP(String sourcePath) {
-
 		String value = "";
 		Integer overwrittingEAGProcess = 0;
 		ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
 		ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.aiId);
 
-		// First, it is necessary to check if global Archival Landscape and
-		// local Archival Landscape are ready for using
-		// and check if the Archival Institution is within the local and global
-		// Archival Landscape files
-		File gArchivalLandscape = new File(APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR
-				+ archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + "AL"
-				+ APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + "AL.xml");
-		File lArchivalLandscape = new File(APEnetUtilities.getDashboardConfig().getArchivalLandscapeDirPath()
-				+ APEnetUtilities.FILESEPARATOR + "AL.xml");
+		// It is necessary to build the path
+		this.setEagPath(sourcePath);
+		this.setId(this.extractAttributeFromEag("control/recordId", null, true));
+		this.setName(this.extractAttributeFromEag("archguide/identity/autform", null, true));
+		
+		// It is necessary to check if this EAG has been updated before for
+		// another archival institution
+		// TODO: Issue #615: remove the check.
+//		if (this.isEagAlreadyUploaded()) {
+//			value = "error_eagalreadyuploaded";
+//		} else {
+			this.setEagPath(APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname()
+					+ APEnetUtilities.FILESEPARATOR + this.aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG"
+					+ APEnetUtilities.FILESEPARATOR + this.getFilename());
+			String storagePath = APEnetUtilities.getConfig().getRepoDirPath() + this.getEagPath();
+			String oldEAGPath = APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR
+					+ archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR
+					+ this.aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR
+					+ "_remove" + getFilename();
+			File source = new File(sourcePath);
+			File destination = new File(storagePath);
 
-		if (gArchivalLandscape.exists() && lArchivalLandscape.exists()
-				&& this.isArchivalInstitutionInArchivalLandscape()) {
-			// It is necessary to build the path
-			this.setEagPath(sourcePath);
-			this.setId(this.extractAttributeFromEag("control/recordId", null, true));
-			this.setName(this.extractAttributeFromEag("archguide/identity/autform", null, true));
-			// It is necessary to check if this EAG has been updated before for
-			// another archival institution
-			// Issue #615: remove the check.
-//			if (this.isEagAlreadyUploaded()) {
-//				value = "error_eagalreadyuploaded";
-//			} else {
-				this.setEagPath(APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname()
-						+ APEnetUtilities.FILESEPARATOR + this.aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG"
-						+ APEnetUtilities.FILESEPARATOR + this.getFilename());
-				String storagePath = APEnetUtilities.getConfig().getRepoDirPath() + this.getEagPath();
-				String oldEAGPath = APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR
-						+ archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR
-						+ this.aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR
-						+ "_remove" + getFilename();
-				File source = new File(sourcePath);
-				File destination = new File(storagePath);
+			try {
+				// Begin transaction with Database
+				JpaUtil.beginDatabaseTransaction();
 
-				try {
+				// The new path, autform and repositorycode are stored in
+				// archival_institution table
+				Date dateNow = new Date();
+				archivalInstitution.setRegistrationDate(dateNow);
+				archivalInstitution.setEagPath(this.getEagPath());
+				archivalInstitution.setAutform(this.getName());
+				archivalInstitution.setRepositorycode(this.getId());
+				archivalInstitutionDao.insertSimple(archivalInstitution);
 
-					// Begin transaction with Database
-					HibernateUtil.beginDatabaseTransaction();
+				overwrittingEAGProcess = 1;
 
-					// The new path, autform and repositorycode are stored in
-					// archival_institution table
-					Date dateNow = new Date();
-					archivalInstitution.setRegistrationDate(dateNow);
-					archivalInstitution.setEagPath(this.getEagPath());
-					archivalInstitution.setAutform(this.getName());
-					archivalInstitution.setRepositorycode(this.getId());
-					archivalInstitutionDao.insertSimple(archivalInstitution);
+				/// UPDATE FILE SYSTEM ///
 
-					overwrittingEAGProcess = 1;
+				// Rename the old EAG to _remove...
+				log.debug("Renaming the EAG to _remove for the archival institution with id: " + this.getAiId());
+				ContentUtils.renameFileToRemove(storagePath);
 
-					// / UPDATE FILE SYSTEM ///
+				overwrittingEAGProcess = 2;
 
-					// Rename the old EAG to _remove...
-					log.debug("Renaming the EAG to _remove for the archival institution with id: " + this.getAiId());
-					ContentUtils.renameFileToRemove(storagePath);
+				// Copy the new EAG
+				FileUtils.copyFile(source, destination);
 
-					overwrittingEAGProcess = 2;
+				overwrittingEAGProcess = 3;
 
-					// Copy the new EAG
-					FileUtils.copyFile(source, destination);
+				/// FINAL COMMITS ///
 
-					overwrittingEAGProcess = 3;
+				// Final commit in the File system
+				// It is necessary to remove the old EAG
+				ContentUtils.deleteFile(oldEAGPath);
 
-					// / FINAL COMMITS ///
+				// Final commit in Database
+				JpaUtil.commitDatabaseTransaction();
 
-					// Final commit in the File system
-					// It is necessary to remove the old EAG
-					ContentUtils.deleteFile(oldEAGPath);
-
-					// Final commit in Database
-					HibernateUtil.commitDatabaseTransaction();
-
-					log.info(SecurityContext.get() + "The EAG " + this.getEagPath()
-							+ " has been created and stored in repository");
-
-					value = "correct";
-
-				} catch (Exception e) {
-
-					value = "error_eagnotstored";
-
-					if (overwrittingEAGProcess == 0) {
-						// There were errors during Database Transaction
-						// It is necessary to make a Database rollback
-						HibernateUtil.rollbackDatabaseTransaction();
-						HibernateUtil.closeDatabaseSession();
-						log.error(
-								"There were errors during Database Transaction while uploading a new EAG via HTTP protocol for archival institution "
-										+ this.getAiId(), e);
-					}
-
-					if (overwrittingEAGProcess == 1) {
-						// There were errors during File System updating
-						// It is necessary to make a Database rollback
-						HibernateUtil.rollbackDatabaseTransaction();
-						HibernateUtil.closeDatabaseSession();
-
-						// It is necessary to make a File System rollback
-						ContentUtils.rollbackRenameFileFromRemove(oldEAGPath);
-
-						log.error(
-								"There were errors during File System updating while uploading a new EAG via HTTP protocol for archival institution "
-										+ this.getAiId(), e);
-					}
-
-					if (overwrittingEAGProcess == 2) {
-						// There were errors during File System updating
-						// It is necessary to make a Database rollback
-						HibernateUtil.rollbackDatabaseTransaction();
-						HibernateUtil.closeDatabaseSession();
-
-						// It is necessary to make a File System rollback
-						// Removing the new EAG for restoring the old one
-						try {
-							ContentUtils.deleteFile(destination.getAbsolutePath());
-						} catch (Exception ex) {
-							log.error(
-									"There were errors during File System updating while uploading a new EAG via HTTP protocol for archival institution "
-											+ this.getAiId() + ". Error removing the new EAG "
-											+ destination.getAbsolutePath(), e);
-						}
-
-						ContentUtils.rollbackRenameFileFromRemove(oldEAGPath);
-
-						log.error("There were errors during File System updating while uploading a new EAG via HTTP protocol for archival institution "
-								+ this.getAiId());
-					}
-
-					if (overwrittingEAGProcess == 3) {
-						// There were errors during Database, Index or File
-						// system commit
-						HibernateUtil.closeDatabaseSession();
-						log.error(
-								"FATAL ERROR. Error during Database or File System commits when an EAG file was uploading via HTTP protocol. Please, check inconsistencies in Database and File system for archival institution which id is: "
-										+ this.getAiId(), e);
-					}
-					log.error(e.getMessage());
-				}
-//			}
-			if (value.equals("correct")) {
-				// It is necessary to insert eagPath in the local Archival
-				// Landscape for the current country and rebuild the global
-				// Archival Landscape
-				value = this.modifyArchivalLandscape();
-			}
-		} else {
-			if (!gArchivalLandscape.exists()) {
-				log.error("gArchivalLandscape does not exist: " + gArchivalLandscape.getAbsolutePath());
-			}
-			if (!lArchivalLandscape.exists()) {
-				log.error("lArchivalLandscape does not exist: " + lArchivalLandscape.getAbsolutePath());
-			}
-			if (!isArchivalInstitutionInArchivalLandscape()) {
-				log.error("No Archival institution in Archival Landscape.");
-			}
-			value = "error_archivallandscape";
-		}
-		return value;
-	}
-
-	// This method inserts the APEnet EAG reference into the local archival
-	// landscape for
-	// a specific country (country related to the archival institution) and
-	// rebuilds the
-	// global archival landscape
-	public String modifyArchivalLandscape() {
-		String value = "";
-		ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
-		ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.aiId);
-		log.info("Modifying Archival Landscape because of EAG file modification for Archival Institution id: "
-				+ this.aiId);
-
-		// It is necessary to insert eagPath in the local Archival Landscape for
-		// the current country
-		// and rebuild the global Archival Landscape
-		try {
-
-			Boolean found = false;
-			Boolean repositoryTagFound = false;
-			int i;
-			int j;
-			Node parentNode = null;
-			NodeList nodeList = null;
-			NodeList parentNodeList = null;
-			i = 0;
-			j = 0;
-
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			InputStream sfile = new FileInputStream(APEnetUtilities.getConfig().getRepoDirPath()
-					+ APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname()
-					+ APEnetUtilities.FILESEPARATOR + "AL" + APEnetUtilities.FILESEPARATOR
-					+ archivalInstitution.getCountry().getIsoname() + "AL.xml");
-			Document doc = dBuilder.parse(sfile);
-			doc.getDocumentElement().normalize();
-
-			nodeList = doc.getElementsByTagName("unittitle");
-			while ((!found) && (i < nodeList.getLength())) {
-				if (nodeList.item(i).getTextContent().trim().equals(archivalInstitution.getAiname())) {
-					parentNode = nodeList.item(i).getParentNode();
-					parentNodeList = parentNode.getChildNodes();
-					j = 0;
-					while ((!repositoryTagFound) && (j < parentNodeList.getLength())) {
-						if ((parentNodeList.item(j).getNodeName().trim().equals("repository"))
-								&& (parentNodeList.item(j).getNodeType() == Node.ELEMENT_NODE)) {
-							repositoryTagFound = true;
-						} else {
-							j = j + 1;
-						}
-					}
-					found = true;
-				} else {
-					i = i + 1;
-				}
-
-			}
-
-			if (found) {
-				log.info("<repository> tag found within the AL file");
-				// Everything is OK and the archival institution has been found
-				// within the archival landscape
-				if (repositoryTagFound) {
-					// The local archival landscape already has a repository tag
-					// so it is necessary to change its value
-					Element extrefNode = null;
-					Node repository = parentNodeList.item(j);
-					NodeList repositoryChildren = repository.getChildNodes();
-					Boolean extrefFound = false;
-					for (int k = 0; k < repositoryChildren.getLength(); k++) {
-
-						if (repositoryChildren.item(k).getNodeName().equals("extref")) {
-							// There is already a extref tag and it is only
-							// needed to change the values
-							log.info("<extref> tag found within the AL file");
-							extrefFound = true;
-							if (repositoryChildren.item(k).hasAttributes()) {
-								// extref has children
-								NamedNodeMap attributes = repositoryChildren.item(k).getAttributes();
-								Node attributeHref = attributes.getNamedItem("xlink:href");
-								Node attributeTitle = attributes.getNamedItem("xlink:title");
-
-								if (attributeHref != null && attributeTitle != null) {
-									// xlink:href attribute exits and
-									// xlink:title attribute exits
-									log.info("xlink:href and xlink:title attributes exist in <repository> tag");
-									attributeHref.setTextContent(APEnetUtilities.getConfig().getRepoDirPath()
-											+ APEnetUtilities.FILESEPARATOR
-											+ archivalInstitution.getCountry().getIsoname()
-											+ APEnetUtilities.FILESEPARATOR + aiId.toString()
-											+ APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR
-											+ getFilename());
-									attributeTitle.setTextContent(archivalInstitution.getAiname() + " EAG");
-									log.info("Changing xlink:href content to "
-											+ APEnetUtilities.getConfig().getRepoDirPath()
-											+ APEnetUtilities.FILESEPARATOR
-											+ archivalInstitution.getCountry().getIsoname()
-											+ APEnetUtilities.FILESEPARATOR + aiId.toString()
-											+ APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR
-											+ getFilename());
-									log.info("Changing xlink:title content to " + archivalInstitution.getAiname()
-											+ " EAG");
-
-								} else {
-									// xlink:href attribute exits or xlink:title
-									// attribute exits
-									// Removing old repository and adding a new
-									// one
-									log.info("xlink:href or xlink:title attributes don't exist. Removing old <repository> tag and adding a new one");
-									Node parent = repositoryChildren.item(k).getParentNode();
-									Node extrefOld = repositoryChildren.item(k);
-									extrefNode = doc.createElement("extref");
-									extrefNode.setAttribute("xlink:href", APEnetUtilities.getConfig().getRepoDirPath()
-											+ APEnetUtilities.FILESEPARATOR
-											+ archivalInstitution.getCountry().getIsoname()
-											+ APEnetUtilities.FILESEPARATOR + aiId.toString()
-											+ APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR
-											+ getFilename());
-									extrefNode.setAttribute("xlink:title", archivalInstitution.getAiname() + " EAG");
-									parent.replaceChild(extrefNode, extrefOld);
-									log.info("xlink:href attribute added with content "
-											+ APEnetUtilities.getConfig().getRepoDirPath()
-											+ APEnetUtilities.FILESEPARATOR
-											+ archivalInstitution.getCountry().getIsoname()
-											+ APEnetUtilities.FILESEPARATOR + aiId.toString()
-											+ APEnetUtilities.FILESEPARATOR + "EAG" + APEnetUtilities.FILESEPARATOR
-											+ getFilename());
-									log.info("xlink:title attribute added with content "
-											+ archivalInstitution.getAiname() + " EAG");
-								}
-							}
-						}
-					}
-
-					if (!extrefFound) {
-						// If there is not a extref tag, it is needed to create
-						// a new one
-						extrefNode = doc.createElement("extref");
-						extrefNode.setAttribute("xlink:href", APEnetUtilities.getConfig().getRepoDirPath()
-								+ APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname()
-								+ APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR
-								+ "EAG" + APEnetUtilities.FILESEPARATOR + getFilename());
-						extrefNode.setAttribute("xlink:title", archivalInstitution.getAiname() + " EAG");
-						repository.appendChild(extrefNode);
-					}
-
-				} else {
-					log.info("<repository> tag not found within the AL file. A new <repository> tag will be inserted");
-					// It is necessary to add a new repository tag within did
-					// tag
-					Element repositoryNode = null;
-					Element extrefNode = null;
-					Node did = nodeList.item(i).getParentNode();
-
-					repositoryNode = doc.createElement("repository");
-					did.appendChild(repositoryNode);
-					extrefNode = doc.createElement("extref");
-					extrefNode.setAttribute("xlink:href", APEnetUtilities.getConfig().getRepoDirPath()
-							+ APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname()
-							+ APEnetUtilities.FILESEPARATOR + aiId.toString() + APEnetUtilities.FILESEPARATOR + "EAG"
-							+ APEnetUtilities.FILESEPARATOR + getFilename());
-					extrefNode.setAttribute("xlink:title", archivalInstitution.getAiname() + " EAG");
-					repositoryNode.appendChild(extrefNode);
-
-				}
-
-				Result result = new StreamResult(new java.io.File(APEnetUtilities.getConfig().getRepoDirPath()
-						+ APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname()
-						+ APEnetUtilities.FILESEPARATOR + "AL" + APEnetUtilities.FILESEPARATOR
-						+ archivalInstitution.getCountry().getIsoname() + "AL.xml"));
-				;
-				Source source = new DOMSource(doc);
-				Transformer transformer;
-				transformer = TransformerFactory.newInstance().newTransformer();
-				transformer.transform(source, result);
-
-//				// Finally, it is necessary to rebuild the global Archival
-//				// Landscape
-//				log.info("Rebuilding the whole AL");
-//				ArchivalLandscape archivalLandscape = new ArchivalLandscape(archivalInstitution.getCountry());
-//				archivalLandscape.changeAL();
-
-				result = null;
-				source = null;
-				transformer = null;
+				log.info(SecurityContext.get() + "The EAG " + this.getEagPath()
+						+ " has been created and stored in repository");
 
 				value = "correct";
-			} else {
-				// The archival institution doesn't exist in the archival
-				// landscape
-				log.error("The archival institution doesn't exist within the archical landscape");
-				value = "error";
-			}
+			} catch (Exception e) {
+				value = "error_eagnotstored";
 
-			nodeList = null;
-			parentNode = null;
-			parentNodeList = null;
-			dbFactory = null;
-			dBuilder = null;
-			sfile = null;
-			doc = null;
-
-		} catch (TransformerConfigurationException e) {
-			log.error("Error configuring Transformer during the creation of " + this.getEagPath() + " file. "
-					+ e.getMessage());
-			value = "error";
-		} catch (TransformerFactoryConfigurationError e) {
-			log.error("Error configuring Transformer Factory during the creation of " + this.getEagPath() + " file. "
-					+ e.getMessage());
-			value = "error";
-		} catch (TransformerException e) {
-			log.error("Transformer error during the creation of " + this.getEagPath() + " file. " + e.getMessage());
-			value = "error";
-		} catch (IOException e) {
-			log.error("The file " + this.getEagPath() + " could not be removed. " + e.getMessage());
-			value = "error";
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			value = "error";
-		}
-
-		archivalInstitutionDao = null;
-		archivalInstitution = null;
-
-		return value;
-	}
-
-	// This method check the existence of the current Archival Institution
-	// within
-	// the Global and Local (for its country) Archival Landscape
-	private Boolean isArchivalInstitutionInArchivalLandscape() {
-
-		Boolean value = false;
-		Boolean found = false;
-		ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
-		ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.aiId);
-		int i = 0;
-		NodeList nodeList = null;
-
-		log.debug("Archival Institution AI NAME: '" + archivalInstitution.getAiname() + "'");
-
-		try {
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			String alPath = APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR
-					+ archivalInstitution.getCountry().getIsoname() + APEnetUtilities.FILESEPARATOR + "AL"
-					+ APEnetUtilities.FILESEPARATOR + archivalInstitution.getCountry().getIsoname() + "AL.xml";
-			InputStream sfile = new FileInputStream(alPath);
-			Document doc = dBuilder.parse(sfile);
-			doc.getDocumentElement().normalize();
-
-			nodeList = doc.getElementsByTagName("unittitle");
-			while ((!found) && (i < nodeList.getLength())) {
-				log.debug("unittitle: '" + nodeList.item(i).getTextContent() + "'");
-				if (nodeList.item(i).getTextContent().trim().equals(archivalInstitution.getAiname())) {
-					found = true;
-				} else {
-					i = i + 1;
+				if (overwrittingEAGProcess == 0) {
+					// There were errors during Database Transaction
+					// It is necessary to make a Database rollback
+					JpaUtil.rollbackDatabaseTransaction();
+					JpaUtil.closeDatabaseSession();
+					log.error(
+							"There were errors during Database Transaction while uploading a new EAG via HTTP protocol for archival institution "
+									+ this.getAiId(), e);
 				}
 
-			}
+				if (overwrittingEAGProcess == 1) {
+					// There were errors during File System updating
+					// It is necessary to make a Database rollback
+					JpaUtil.rollbackDatabaseTransaction();
+					JpaUtil.closeDatabaseSession();
 
-			if (found) {
-				value = true;
-			} else {
-				log.info("Archival institution '" + archivalInstitution.getAiname()
-						+ "' was not found in archival landscape ('" + alPath + "')");
-				value = false;
+					// It is necessary to make a File System rollback
+					ContentUtils.rollbackRenameFileFromRemove(oldEAGPath);
+
+					log.error(
+							"There were errors during File System updating while uploading a new EAG via HTTP protocol for archival institution "
+									+ this.getAiId(), e);
+				}
+
+				if (overwrittingEAGProcess == 2) {
+					// There were errors during File System updating
+					// It is necessary to make a Database rollback
+					JpaUtil.rollbackDatabaseTransaction();
+					JpaUtil.closeDatabaseSession();
+
+					// It is necessary to make a File System rollback
+					// Removing the new EAG for restoring the old one
+					try {
+						ContentUtils.deleteFile(destination.getAbsolutePath());
+					} catch (Exception ex) {
+						log.error(
+								"There were errors during File System updating while uploading a new EAG via HTTP protocol for archival institution "
+										+ this.getAiId() + ". Error removing the new EAG "
+										+ destination.getAbsolutePath(), e);
+					}
+
+					ContentUtils.rollbackRenameFileFromRemove(oldEAGPath);
+
+					log.error("There were errors during File System updating while uploading a new EAG via HTTP protocol for archival institution "
+							+ this.getAiId());
+				}
+
+				if (overwrittingEAGProcess == 3) {
+					// There were errors during Database, Index or File
+					// system commit
+					JpaUtil.closeDatabaseSession();
+					log.error(
+							"FATAL ERROR. Error during Database or File System commits when an EAG file was uploading via HTTP protocol. Please, check inconsistencies in Database and File system for archival institution which id is: "
+									+ this.getAiId(), e);
+				}
+				log.error(e.getMessage());
 			}
-		} catch (Exception e) {
-			log.error("The Archival Landscape (local, global or both) doesn't include this Archival Institution "
-					+ archivalInstitution.getAiname(), e);
-			value = false;
-		}
+//		}
 
 		return value;
 	}
 
+	/* TODO: Issue #615: remove the check.
 	private Boolean isEagAlreadyUploaded() {
 		// It will be necessary to check eagid and autform values in
 		// archival_institution table
@@ -722,7 +381,7 @@ public class APEnetEAGDashboard{
 		warnings_ead.add("Archival institution name already used: " + this.getName() + " already used");
 		
 		return eagAlreadyUploaded;
-	}
+	} */
 
 	//This method extracts the content within a tag inside an EAG (the first one) or
 	//the content within an attribute for the tag
@@ -749,7 +408,7 @@ public class APEnetEAGDashboard{
             String[] pathElements = element.split("/");
             int lenghtPath = pathElements.length;
             int pointerPath = 0;
-            
+
             log.debug("Checking EAG file, looking for element " + element + ", and attribute " + ((attribute==null)?"null":attribute) + ", path begins with " + pathElements[0]);
             while (!abort && input.hasNext()) {
                 switch (input.getEventType()) {
@@ -795,7 +454,7 @@ public class APEnetEAGDashboard{
                                 isInsidePath = false;
                         }
                         if(!isInsidePath && wasInsidePath)
-                            abort = true;    
+                            abort = true;
 						break;
                 }
                 if (input.hasNext())
@@ -814,7 +473,7 @@ public class APEnetEAGDashboard{
         log.debug("Returning error");
         return "error";
 	}
-	
+
 	//This method returns all the same elements of an EAG xml file found
 	public String lookingForward(String element,String attribute,String value){
 		XMLStreamReader input = null;
@@ -840,7 +499,6 @@ public class APEnetEAGDashboard{
 										return value;
 									}
 								}
-								
 							}
 						}
 						break;
@@ -863,6 +521,7 @@ public class APEnetEAGDashboard{
 	    log.debug("Returning error");
 	    return "error"; //Error
 	}
+
 	public String lookingForwardElementContent(String element) {
 		String text = null;
         XMLStreamReader input = null;
