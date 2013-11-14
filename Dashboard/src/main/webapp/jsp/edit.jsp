@@ -3,29 +3,34 @@
 <%@ taglib prefix="s" uri="/struts-tags"%>
 
 <script type='text/javascript'>
-function settings(text)
-{	
-	if ($("#firstName").val()=="" || $("#lastName").val()=="" || $("#email").val()=="" 
-		|| $("#secretQuestion").val()=="" || $("#secretAnswer").val()==""){
+function settings(text){
+	if ($.trim($("#firstName").val()).length==0 || $.trim($("#lastName").val()).length==0 
+			|| $.trim($("#email").val()).length==0 || $.trim($("#secretQuestion").val()).length==0
+			|| $.trim($("#secretAnswer").val()).length==0){
+		if($.trim($("#email").val()).length==0){
+			if($("tr[errorfor='email']").length>0){
+				$("tr[errorfor='email'] span.errorMessage").each(function(){
+					$(this).remove();
+				});
+			}
+		}
 		alert(text);
-		return;
+	}else{
+		if ($("table#passwordTable").is(':visible')) {
+			checkSave(text);
+		}else{
+			$("#changePasswd").hide();
+			$('#okButton').hide();
+			$('#resetButton').hide();
+			$('#MyPass').show();
+			$('#passwordTable').hide();
+		}
 	}
-
-	if ($("table#passwordTable").is(':visible')) {
-		checkSave(text);
-		return;	
-	}
-	$("#changePasswd").hide();
-	$('#okButton').hide();
-	$('#resetButton').hide();
-	$('#MyPass').show();
-	$('#passwordTable').hide();
-	
 }
 
 function checkSave(text) {
 	if($("table#passwordTable").is(':visible')){
-		if ($("#currentPassword").val()=="" || $("#newPassword").val()=="" || $("#rePassword").val()==""){
+		if ($.trim($("#currentPassword").val()).length==0 || $.trim($("#newPassword").val()).length==0 || $.trim($("#rePassword").val()).length==0){
 			alert(text);
 			return;
 		}	

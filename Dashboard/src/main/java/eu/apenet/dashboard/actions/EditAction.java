@@ -1,6 +1,9 @@
 package eu.apenet.dashboard.actions;
 
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -14,6 +17,8 @@ import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.security.SecurityService;
 import eu.apenet.dashboard.security.UserService;
 import eu.apenet.dashboard.security.cipher.BasicDigestPwd;
+import eu.apenet.persistence.dao.UserDAO;
+import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.User;
 
 public class EditAction extends AbstractAction {
@@ -69,9 +74,9 @@ public class EditAction extends AbstractAction {
 								|| !this.getSecretQuestion().equalsIgnoreCase(userToUpdate.getSecretQuestion())
 						)) {
 
-			userToUpdate.setFirstName(this.getFirstName());
-			userToUpdate.setLastName(this.getLastName());
-			userToUpdate.setEmailAddress(this.getEmail());
+			userToUpdate.setFirstName(this.getFirstName().trim());
+			userToUpdate.setLastName(this.getLastName().trim());
+			userToUpdate.setEmailAddress(this.getEmail().trim()); //save the email-address without blanks
 			userToUpdate.setSecretAnswer(this.getSecretAnswer());
 			userToUpdate.setSecretQuestion(this.getSecretQuestion());
 			//after editing the user will be logged out and logged in
@@ -186,8 +191,10 @@ public class EditAction extends AbstractAction {
 		
 		return result;
 	}
-
+	@Override
 	public void validate() {
+		
+		String currentEmail=SecurityService.getCurrentPartner().getEmailAddress(); //the actual e-mail that the partner has
 
 		if (this.getFirstName() != null) {
 			if (this.getFirstName().length() == 0) {
@@ -202,10 +209,18 @@ public class EditAction extends AbstractAction {
 		}
 
 		if (this.getEmail() != null) {
-			if (this.getEmail().length() == 0) {
+			if (this.getEmail().trim().length() == 0) {
 				addFieldError("email", getText("email.required"));
+			}else if (UserService.exitsEmailUser(this.getEmail().trim()) && !currentEmail.equalsIgnoreCase(this.getEmail().trim())) {
+				addFieldError("email", getText("email.alreadyUsed"));	//the e-mail is already in use
+			}else{
+				String expression = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
+	            Pattern pattern = Pattern.compile(expression,Pattern.CASE_INSENSITIVE);
+	            Matcher matcher = pattern.matcher(this.getEmail().trim());
+	            if(!matcher.matches()){
+	                addFieldError("email", getText("email.valid"));  //it's an invalid e-mail
+	            }
 			}
-
 		}
 		if (this.getSecretAnswer() != null) {
 			if (this.getSecretAnswer().length() == 0) {
