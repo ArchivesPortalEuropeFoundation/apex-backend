@@ -35,6 +35,7 @@ public class UnpublishTask extends AbstractEadTask {
 						+ "' from the index");
 				long solrTime = deleteFromSolr(ead.getEadid(), ead.getAiId());
 				logger.debug("Changing EAD (" + xmlType.getName() + ") state of the EAD with eadid " + ead.getEadid());
+				JpaUtil.beginDatabaseTransaction();
 				ContentUtils.changeSearchable(ead, false);
 				ead.setTotalNumberOfUnits(0l);
 				ead.setTotalNumberOfUnitsWithDao(0l);
