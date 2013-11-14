@@ -550,4 +550,444 @@
 		</xsl:for-each>
 		<xsl:text>)</xsl:text>
 	</xsl:template>
+	<xsl:template name="langmaterial">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.language')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:langmaterial">
+				<xsl:apply-templates mode="other"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="repository">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.repository')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:repository">
+				<p>
+					<xsl:apply-templates  mode="other"/><xsl:text> </xsl:text>
+				</p>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="physloc-label">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.physloc')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:value-of select="ead:physloc/@label" />
+		</div>
+	</xsl:template>
+	<xsl:template name="materialspec">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.materialspec')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:materialspec">
+				<xsl:apply-templates  mode="other"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="physfacet">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.physfacet')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:physfacet">
+				<xsl:apply-templates  mode="other" />
+				<xsl:if test="position() != last()">
+					<xsl:text>, </xsl:text>
+				</xsl:if>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="extent">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.extent')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:apply-templates select="ead:extent"  mode="other"/>
+		</div>
+	</xsl:template>
+	<xsl:template name="genreform">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.genreform')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:genreform">
+				<xsl:apply-templates  mode="other"/>
+				<xsl:if test="position() != last()">
+					<xsl:text>, </xsl:text>
+				</xsl:if>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="dimensions">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.dimensions')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:apply-templates select="ead:dimensions"  mode="other"/>
+		</div>
+	</xsl:template>
+    <xsl:template name="physdescText">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.physdesc')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:apply-templates  mode="other"/>
+		</div>
+	</xsl:template>
+	<xsl:template name="note">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.note')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:note">
+				<xsl:apply-templates  mode="other"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="dao" >
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.dao')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select='ead:dao[@xlink:title!="thumbnail" or not(@xlink:title)]'>
+				<xsl:variable name="linkPosition" select="position()" />
+				<xsl:variable name="thumbnail" select='parent::node()/ead:dao[@xlink:title="thumbnail"]' />
+				<xsl:variable name="href" select="./@xlink:href" />
+				<a href="{$href}" target="_blank">
+					<xsl:variable name="dao.title">
+						<xsl:choose>
+							<xsl:when test="./@xlink:title">
+								<xsl:value-of select="./@xlink:title" />
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="ape:resource('eadcontent.dao.notitle')" />
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					<!-- if thumbnail exists -->
+					<xsl:choose>
+						<xsl:when test="$thumbnail">
+							<xsl:choose>
+								<xsl:when test="count($thumbnail) >= $linkPosition">
+									<xsl:variable name="thumbnailHref" select="$thumbnail[$linkPosition]/@xlink:href" />
+									<img width="200px" src="{$thumbnailHref}"  alt="{$dao.title}" title="{$dao.title}"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:variable name="thumbnailHref" select="$thumbnail[1]/@xlink:href" />
+									<img width="200px" src="{$thumbnailHref}" alt="{$dao.title}"  title="{$dao.title}"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test="./@xlink:role">
+									<xsl:variable name="type" select="fn:lower-case(./@xlink:role)"></xsl:variable>
+									<xsl:choose>
+										<xsl:when test='$type eq "text" or $type eq "image" or $type eq "sound" or $type eq "video" or $type eq "3d"'>
+											<span class="icon_dao_type_{$type}" title="{$dao.title}">
+												<xsl:value-of select="$dao.title" />
+											</span>								
+										</xsl:when>
+										<xsl:otherwise>
+											<span class="icon_dao_type_unspecified" title="{$dao.title}">
+												<xsl:value-of select="$dao.title" />
+											</span>									
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:when>
+								<xsl:otherwise>
+									<span class="icon_dao_type_unspecified" title="{$dao.title}">
+										<xsl:value-of select="$dao.title" />
+									</span>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
+				</a><xsl:text> </xsl:text>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="origination">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.origination')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:if test="ead:origination[@label='pre']">
+				<p>
+					<b>
+						<xsl:value-of select="ape:resource('eadcontent.origination.pre')" />
+						:
+					</b>
+					<br />
+					<xsl:for-each select="ead:origination[@label='pre']">
+						<xsl:apply-templates  mode="other"/>
+					</xsl:for-each>
+				</p>
+			</xsl:if>
+			<xsl:if test="ead:origination[@label='final']">
+				<p>
+					<b>
+						<xsl:value-of select="ape:resource('eadcontent.origination.final')" />
+						:
+					</b>
+					<br />
+					<xsl:for-each select="ead:origination[@label='final']">
+						<xsl:apply-templates  mode="other"/>
+					</xsl:for-each>
+				</p>
+			</xsl:if>
+			<xsl:if test="ead:origination[@label='organisational unit']">
+				<p>
+					<b>
+						<xsl:value-of select="ape:resource('eadcontent.origination.orgunit')" />
+						:
+					</b>
+					<br />
+					<xsl:for-each select="ead:origination[@label='organisational unit']">
+						<xsl:apply-templates  mode="other"/>
+					</xsl:for-each>
+				</p>
+			</xsl:if>
+			<xsl:if
+				test="ead:origination[@label!='pre'] and ead:origination[@label!='final'] and ead:origination[@label!='organisational unit']">
+				<p>
+					<xsl:for-each select="ead:origination">
+						<xsl:if test="./@label!='pre' and ./@label!='final' and ./@label!='organisational unit'">
+							<b>
+								<xsl:value-of select="./@label" />
+								:
+							</b>
+							<br />
+							<xsl:apply-templates mode="other"/>
+						</xsl:if>
+					</xsl:for-each>
+				</p>
+			</xsl:if>
+            <xsl:if test="ead:origination[not(@label)]">
+                <p>
+                    <xsl:for-each select="ead:origination[not(@label)]">
+                        <xsl:apply-templates mode="other"/>
+                    </xsl:for-each>
+                </p>
+            </xsl:if>
+		</div>
+	</xsl:template>
+
+	<xsl:template name="scopecontent">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.scopecontent')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:scopecontent">
+				<xsl:apply-templates mode="scopecontent"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="bioghist">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.bioghist')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:bioghist">
+				<xsl:apply-templates  mode="other"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="custodhist">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.custodhist')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:custodhist">
+				<xsl:apply-templates  mode="other"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="appraisal">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.appraisal')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:appraisal">
+				<xsl:apply-templates  mode="other"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="processinfo">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.processinfo')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:processinfo">
+				<xsl:apply-templates  mode="other"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="accruals">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.accruals')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:accruals">
+				<xsl:apply-templates  mode="other"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="arrangement">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.arrangement')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:arrangement">
+				<xsl:apply-templates  mode="other"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="fileplan">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.fileplan')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:fileplan">
+				<xsl:apply-templates  mode="other"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="accessrestrict">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.accessrestrict')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:accessrestrict">
+				<xsl:apply-templates  mode="other"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="userestrict">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.userestrict')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:userestrict">
+				<xsl:apply-templates  mode="other"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="phystech">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.phystech')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:phystech">
+				<xsl:apply-templates  mode="other"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="otherfindaid">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.otherfindaid')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:otherfindaid">
+				<xsl:apply-templates  mode="otherfindingaids"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="relatedmaterial">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.relatedmaterial')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:relatedmaterial">
+				<xsl:apply-templates  mode="other"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="separatedmaterial">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.separatedmaterial')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:separatedmaterial">
+				<xsl:apply-templates  mode="other"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="altformavail">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.altformavail')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:altformavail">
+				<xsl:apply-templates  mode="other"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="originalsloc">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.originalsloc')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:originalsloc">
+				<xsl:apply-templates  mode="other"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="bibliography">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.bibliography')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:bibliography">
+				<xsl:apply-templates  mode="other"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="prefercite">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.prefercite')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:prefercite">
+				<xsl:apply-templates  mode="other"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="odd">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.odd')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:odd">
+				<xsl:apply-templates  mode="other"/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="acqinfo">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.acqinfo')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:acqinfo">
+				<xsl:apply-templates mode="other" />
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+	<xsl:template name="controlaccess">
+		<h2>
+			<xsl:value-of select="ape:resource('eadcontent.controlaccess')" />
+		</h2>
+		<div class="ead-content">
+			<xsl:for-each select="ead:controlaccess">
+				<xsl:apply-templates mode="other" />
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+
 </xsl:stylesheet>

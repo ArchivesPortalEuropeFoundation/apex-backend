@@ -4,7 +4,7 @@
 	xmlns:ape="http://www.archivesportaleurope.eu/xslt/extensions"
 	exclude-result-prefixes="xlink xlink xsi ead ape">
 	<xsl:param name="eadcontent.extref.prefix"/>
-	<xsl:include href="did-common.xsl" />
+	<xsl:include href="common.xsl" />
 	<xsl:output method="html" indent="yes" version="4.0" encoding="UTF-8" />
 	<xsl:template match="/">
 		<xsl:for-each select="/ead:ead/ead:archdesc/ead:did">
