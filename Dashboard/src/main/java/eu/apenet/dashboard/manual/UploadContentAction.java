@@ -23,35 +23,45 @@ import org.json.JSONObject;
 import com.opensymphony.xwork2.ActionContext;
 
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
+import eu.apenet.dashboard.security.SecurityContext;
+import eu.apenet.dashboard.security.SecurityContext.SelectedArchivalInstitution;
+import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.utils.ZipManager;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.dao.UploadMethodDAO;
+import eu.apenet.persistence.dao.UserprofileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.FileType;
+import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.UpFile;
 import eu.apenet.persistence.vo.UploadMethod;
+import eu.apenet.persistence.vo.Userprofile;
+import java.util.LinkedHashSet;
+import java.util.Properties;
+import java.util.Set;
 
 /**
- * User: Yoann Moranville
- * Date: Sep 2, 2010
+ * User: Yoann Moranville Date: Sep 2, 2010
  *
  * @author Yoann Moranville
  */
 public class UploadContentAction extends AbstractInstitutionAction {
- 
-	private static final long serialVersionUID = -1321327143496576377L;
-	private final Logger log = Logger.getLogger(getClass());
 
+    private static final long serialVersionUID = -1321327143496576377L;
+    private final Logger log = Logger.getLogger(getClass());
 
     private List<String> uploadType;
     private final static String HTTP = "HTTP";
     private final static String FTP = "FTP";
-    
 
-    private Integer sessionId; 
-    
+    private Set<SelectItem> userprofiles = new LinkedHashSet<SelectItem>();
+    private String userprofile;
+
+    private Integer sessionId;
+
     private List<String> oaiType;
 
     private String ftpUrl;
@@ -68,9 +78,9 @@ public class UploadContentAction extends AbstractInstitutionAction {
 
     private ManualHTTPUploader uploader_http;
 
-	private ManualFTPEADUploader uploader_ftp;
+    private ManualFTPEADUploader uploader_ftp;
     private FTPClient client;
-    
+
     private String httpFileFileName; 		//The uploaded file name
     private File httpFile;					//The uploaded file
     private String httpFileContentType;		//The content type of the file uploaded
@@ -78,19 +88,17 @@ public class UploadContentAction extends AbstractInstitutionAction {
     private List<String> filesNotUploaded;	//This attribute contains all the files not uploaded because of they are already in the Dashboard (tmp directory) or their format is not allowed
     private List<String> filesUploaded;		//This attribute contains all the files uploaded
 
-	@Override
-	protected void buildBreadcrumbs() {
-		super.buildBreadcrumbs();
-		addBreadcrumb(getText("breadcrumb.section.uploadcontent"));
-	}
-  
-	
+    @Override
+    protected void buildBreadcrumbs() {
+        super.buildBreadcrumbs();
+        addBreadcrumb(getText("breadcrumb.section.uploadcontent"));
+    }
 
-
-	/**
-     * Prepare the Array for the radio button
+    /**
+     * Prepare the Arrays for the radio button and the profilelist
      */
-    public UploadContentAction(){
+    public UploadContentAction() {
+        super();
         uploadType = new ArrayList<String>();
         uploadType.add(HTTP);
         uploadType.add(FTP);
@@ -98,17 +106,35 @@ public class UploadContentAction extends AbstractInstitutionAction {
 
     /**
      * Provides the default option for the radio button
+     *
      * @return The default Radio button option
      */
-    public String getUploadTypeChoice(){
+    public String getUploadTypeChoice() {
         return HTTP;
     }
 
-    public List<String> getUploadType(){
+    public List<String> getUploadType() {
         return uploadType;
     }
-    public void setUploadType(List<String> uploadType){
+
+    public void setUploadType(List<String> uploadType) {
         this.uploadType = uploadType;
+    }
+
+    public Set<SelectItem> getUserprofiles() {
+        return userprofiles;
+    }
+
+    public void setUserprofiles(Set<SelectItem> userprofiles) {
+        this.userprofiles = userprofiles;
+    }
+
+    public String getUserprofile() {
+        return userprofile;
+    }
+
+    public void setUserprofile(String userprofile) {
+        this.userprofile = userprofile;
     }
 
     public List<String> getOaiType() {
@@ -144,13 +170,13 @@ public class UploadContentAction extends AbstractInstitutionAction {
     }
 
     public String getFtpPort() {
-        return ftpPort+"";
+        return ftpPort + "";
     }
 
     public void setFtpPort(String ftpPort) {
         try {
             this.ftpPort = Integer.parseInt(ftpPort);
-        } catch (Exception e){
+        } catch (Exception e) {
             this.ftpPort = 21;
         }
     }
@@ -195,41 +221,52 @@ public class UploadContentAction extends AbstractInstitutionAction {
         this.filesToUpload = filesToUpload;
     }
 
-	public void setHttpFileFileName(String httpFileFileName) {
-		this.httpFileFileName = httpFileFileName;
-	}
+    public void setHttpFileFileName(String httpFileFileName) {
+        this.httpFileFileName = httpFileFileName;
+    }
 
-	public String getHttpFileFileName() {
-		return httpFileFileName;
-	} 
+    public String getHttpFileFileName() {
+        return httpFileFileName;
+    }
 
-	public void setHttpFile(File httpFile) {
-		this.httpFile = httpFile;
-	}
+    public void setHttpFile(File httpFile) {
+        this.httpFile = httpFile;
+    }
 
-	public File getHttpFile() {
-		return httpFile;
-	}
-	
-	public void setHttpFileContentType(String httpFileContentType) {
-		this.httpFileContentType = httpFileContentType;
-	}
+    public File getHttpFile() {
+        return httpFile;
+    }
 
-	public String getHttpFileContentType() {
-		return httpFileContentType;
-	}
+    public void setHttpFileContentType(String httpFileContentType) {
+        this.httpFileContentType = httpFileContentType;
+    }
+
+    public String getHttpFileContentType() {
+        return httpFileContentType;
+    }
 
     public List<String> getFilesNotUploaded() {
-		return filesNotUploaded;
-	}
-    
+        return filesNotUploaded;
+    }
+
     public List<String> getFilesUploaded() {
-		return filesUploaded;
-	}
+        return filesUploaded;
+    }
 
+    @Override
+    public String execute() throws Exception {
+        userprofiles.add(new SelectItem("", "---Choose a profile---"));
+        UserprofileDAO profileDAO = DAOFactory.instance().getUserprofileDAO();
+        List<Userprofile> queryResult = profileDAO.getUserprofiles(getAiId());
+        if (queryResult != null && !queryResult.isEmpty()) {
+            for (Userprofile entry : queryResult) {
+                userprofiles.add(new SelectItem(Long.toString(entry.getId()), entry.getNameProfile()));
+            }
+        }
+        return SUCCESS;
+    }
 
-    
-    public String connectFTP(){
+    public String connectFTP() {
         log.debug(ftpUrl + " - " + ftpPort + " - " + ftpUser + " - " + ftpPwd);
         Map<String, Object> session = ActionContext.getContext().getSession();
         session.put("ftpUrl", ftpUrl);
@@ -240,16 +277,16 @@ public class UploadContentAction extends AbstractInstitutionAction {
         session.put("ftpUploader", uploader_ftp);
         try {
             client = uploader_ftp.establishConnection();
-            if(client!=null){
-               session.put("ftpClient", client);
-               return SUCCESS;
-            }else{
-            	addActionMessage(getText("uploadContent.errUser"));
-            	return ERROR;
+            if (client != null) {
+                session.put("ftpClient", client);
+                return SUCCESS;
+            } else {
+                addActionMessage(getText("uploadContent.errUser"));
+                return ERROR;
             }
-        } catch (IOException ioe){
+        } catch (IOException ioe) {
             log.error("Could not connect to FTP server '" + ftpUrl + "'.", ioe);
-            addActionMessage(getText("uploadContent.errFTP") );
+            addActionMessage(getText("uploadContent.errFTP"));
             addActionError(ioe.getMessage());
             return ERROR;
         }
@@ -257,9 +294,10 @@ public class UploadContentAction extends AbstractInstitutionAction {
 
     /**
      * AJAX call from the JSP page. Retrieves the data (files and directories) from the FTP server
+     *
      * @return A JSON token containing the files and directories to be added to the tree view in the JSP
      */
-    public String retrieveFtpData(){
+    public String retrieveFtpData() {
         String UTF8 = "utf-8";
         try {
             getServletRequest().setCharacterEncoding(UTF8);
@@ -268,10 +306,12 @@ public class UploadContentAction extends AbstractInstitutionAction {
             Writer writer = new OutputStreamWriter(getServletResponse().getOutputStream(), UTF8);
 
             Map<String, Object> session = ActionContext.getContext().getSession();
-            if(uploader_ftp == null)
+            if (uploader_ftp == null) {
                 uploader_ftp = (ManualFTPEADUploader) session.get("ftpUploader");
-            if(client == null)
+            }
+            if (client == null) {
                 client = (FTPClient) session.get("ftpClient");
+            }
 
             String parentName = getServletRequest().getParameter("parentName");
             log.info("ParentName: " + parentName);
@@ -281,7 +321,7 @@ public class UploadContentAction extends AbstractInstitutionAction {
 
             writer.append(s);
             writer.close();
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error("ERROR", e);
             addActionMessage(getText("uploadContent.errFTP"));
             return ERROR;
@@ -291,29 +331,31 @@ public class UploadContentAction extends AbstractInstitutionAction {
 
     /**
      * Saves the select files from the FTP server to APEnet server
+     *
      * @return The code for the Struts2 dispatcher
      */
-    public String saveFtpFiles(){
+    public String saveFtpFiles() {
         log.info("Save the FTP files");
         Integer aiId = getAiId();
         filesUploaded = new ArrayList<String>();
         filesNotUploaded = new ArrayList<String>();
 
         Map<String, Object> session = ActionContext.getContext().getSession();
-        if(uploader_ftp == null)
+        if (uploader_ftp == null) {
             uploader_ftp = (ManualFTPEADUploader) session.get("ftpUploader");
-        if(client == null)
+        }
+        if (client == null) {
             client = (FTPClient) session.get("ftpClient");
-        for(String filePath : filesToUpload) {
+        }
+        for (String filePath : filesToUpload) {
             try {
                 filePath = filePath.substring(filePath.lastIndexOf(APEnetUtilities.FILESEPARATOR) + 1);
                 String fileType = filePath.substring(filePath.lastIndexOf(".") + 1);
                 uploader_ftp.getFile(client, filePath, aiId);
-                if(fileType.equals("xml")){
+                if (fileType.equals("xml")) {
                     filesUploaded.add(filePath);
                     createDBentry(filePath, "FTP");
-                }
-                else if(fileType.equals("zip")){
+                } else if (fileType.equals("zip")) {
                     String filename = filePath.substring(0, filePath.lastIndexOf("."));
                     log.info("Filename: " + filename);
                     log.info("FilePath: " + filePath);
@@ -323,14 +365,17 @@ public class UploadContentAction extends AbstractInstitutionAction {
                     log.info("storeFilePath: " + storeFilePath);
                     log.info("unzipZipPath: " + unzipZipPath);
                     File unzipZipDirFile = new File(unzipZipPath);
-                    if(!unzipZipDirFile.exists())
+                    if (!unzipZipDirFile.exists()) {
                         unzipZipDirFile.mkdir();
+                    }
 
                     ZipManager zipManager = new ZipManager(unzipZipPath);
                     zipManager.unzip(storeFilePath + filename + ".zip");
-                    String[] files = unzipZipDirFile.list( new SuffixFileFilter("xml"));
+                    String[] files = unzipZipDirFile.list(new SuffixFileFilter("xml"));
 
-                    /****/
+                    /**
+                     * *
+                     */
                     for (String file : files) {
                         File srcFile = new File(unzipZipPath + file);
                         File destFile = new File(storeFilePath + file);
@@ -354,15 +399,18 @@ public class UploadContentAction extends AbstractInstitutionAction {
                             }
                         }
                     }
-                    /****/
+                    /**
+                     * *
+                     */
 
                 }
-            } catch (IOException e){
+            } catch (IOException e) {
                 filesNotUploaded.add(filePath);
                 try {
-                    if(uploader_ftp != null && client != null)
+                    if (uploader_ftp != null && client != null) {
                         uploader_ftp.disconnectFTPServer(client);
-                } catch (IOException ioe){
+                    }
+                } catch (IOException ioe) {
                     log.error(ioe);
                     return NONE;
                 }
@@ -381,11 +429,12 @@ public class UploadContentAction extends AbstractInstitutionAction {
 
     /**
      * Will create an entry to the database for the uploaded file
+     *
      * @param filePath The current location of the saved file
      * @param uploadMethodString Depending if the file has been harvest or downloaded from an FTP server
      */
-    private void createDBentry(String filePath, String uploadMethodString){
-    	Integer aiId = getAiId();
+    private void createDBentry(String filePath, String uploadMethodString) {
+        Integer aiId = getAiId();
         UpFile upFile = new UpFile();
 
         UpFileDAO upFileDao = DAOFactory.instance().getUpFileDAO();
@@ -404,31 +453,33 @@ public class UploadContentAction extends AbstractInstitutionAction {
 
     /**
      * Creates the JSON string to be displayed in the web page for FTP Client
+     *
      * @param files A list of FTPFiles that contain all needed information to create a JSON string
      * @return The JSON string containing data to be displayed
      */
-    private String createJSONString(List<FTPFile> files, String parentName){
+    private String createJSONString(List<FTPFile> files, String parentName) {
         JSONArray jsonArray = new JSONArray();
         try {
-            if(files.size() == 0){
+            if (files.size() == 0) {
                 return null;
             }
-            for(FTPFile file : files){
+            for (FTPFile file : files) {
                 JSONObject obj = new JSONObject();
                 obj.put("title", file.getName());
-                if(file.isDirectory()){
+                if (file.isDirectory()) {
                     obj.put("isFolder", true);
                     obj.put("isLazy", true);
                     obj.put("hideCheckbox", true);
                 }
                 String userDir = uploader_ftp.getUserDir();
-                if(StringUtils.contains(parentName, userDir))
+                if (StringUtils.contains(parentName, userDir)) {
                     obj.put("name", parentName + "/" + file.getName());
-                else
+                } else {
                     obj.put("name", userDir + parentName + "/" + file.getName());
+                }
                 jsonArray.put(obj);
             }
-        } catch (JSONException e){
+        } catch (JSONException e) {
             log.error("Error", e);
         }
         return jsonArray.toString();
@@ -436,62 +487,101 @@ public class UploadContentAction extends AbstractInstitutionAction {
 
     /**
      * Creates a path for the name of the tree objects, used to retrieve tree structure
+     *
      * @param directory The directory path of the file
      * @param name The file name of the file
-     * @return A string containing the path of the file in the tree structure 
+     * @return A string containing the path of the file in the tree structure
      */
-    private static String createLink(String directory, String name){
-        if(directory.endsWith("/"))
+    private static String createLink(String directory, String name) {
+        if (directory.endsWith("/")) {
             return directory + name;
+        }
         return directory + "/" + name;
     }
 
-
     /**
      * Upload a File using HTTP protocol
+     *
      * @return The code used by Struts2 dispatcher
      */
-    public String httpUpload(){
+    public String httpUpload() {
 
-    	//The user is executing Upload Content, so uploadType will be EAD
-    	String result = null;
-    	String uploadType = "EAD";
-    	String uploadMethod = "HTTP";
-    	String format = null;
-    	try{
-    		Integer aiId = getAiId();
-        	if (this.getHttpFile()!=null){
-        		//The user has selected a file to upload
-        		format = this.getHttpFileFileName().substring(this.getHttpFileFileName().lastIndexOf(".") + 1).toLowerCase();
+        //The user is executing Upload Content, so uploadType will be EAD
+        String result = null;
+        String uploadType = "EAD";
+        String uploadMethod = "HTTP";
+        String format = null;
+        //UserprofileDAO profileDAO = DAOFactory.instance().getUserprofileDAO();
+        Userprofile profile = null;
+        if (userprofile != null && !userprofile.isEmpty()) {
+            UserprofileDAO profileDAO = DAOFactory.instance().getUserprofileDAO();
+            profile = profileDAO.findById(Long.parseLong(userprofile));
+        }
+        try {
+            Integer aiId = getAiId();
+            if (this.getHttpFile() != null) {
+                //The user has selected a file to upload
+                format = this.getHttpFileFileName().substring(this.getHttpFileFileName().lastIndexOf(".") + 1).toLowerCase();
                 uploader_http = new ManualHTTPUploader(uploadMethod);
-                log.info("Starting uploadFile process for '"+this.getHttpFileFileName()+"' file name.");
-        	    result = uploader_http.uploadFile(uploadType, this.getHttpFileFileName(), this.getHttpFile(), format.toLowerCase(), aiId, uploadMethod);
-        	    if (result.equals("success")) {
-        	    	this.filesNotUploaded = this.uploader_http.getFilesNotUploaded();
-        	    	this.filesUploaded = this.uploader_http.getFilesUploaded();
-        	    	if (filesNotUploaded.size() == 0 && filesUploaded.size() > 0){
-        	    		result = "redirect";
-        	    	}else {
-        	    		result = SUCCESS;
-        	    	}
-        	    }
-        	    else if (result.equals("error")) {
-        	    	result = ERROR;
-        	    }
-        	    else {
-        	    	result = INPUT;
-        	    }
-        	}
-        	else {
-        		//The user has not selected a file to upload
-        		result = "reload";
-        	}
+                log.info("Starting uploadFile process for '" + this.getHttpFileFileName() + "' file name.");
+                result = uploader_http.uploadFile(uploadType, this.getHttpFileFileName(), this.getHttpFile(), format.toLowerCase(), aiId, uploadMethod);
+                if (result.equals("success")) {
+                    this.filesNotUploaded = this.uploader_http.getFilesNotUploaded();
+                    this.filesUploaded = this.uploader_http.getFilesUploaded();
+                    //TODO Add impact of possibly selected userprofile here
+                    if (profile != null) {
+                        Properties properties = retrieveProperties(profile);
+                        UpFileDAO upFileDAO = DAOFactory.instance().getUpFileDAO();
+                        List<UpFile> upFiles = upFileDAO.getNewUpFiles(aiId, FileType.XML);
+                        for (UpFile upFile : upFiles) {
+                            EadService.useProfileAction(upFile, properties);
+                        }
+                        result = SUCCESS;
+                    } else {
+                        if (filesNotUploaded.size() == 0 && filesUploaded.size() > 0) {
+                            result = "redirect";
+                        } else {
+                            result = SUCCESS;
+                        }
+                    }
+                } else if (result.equals("error")) {
+                    result = ERROR;
+                } else {
+                    result = INPUT;
+                }
+            } else {
+                //The user has not selected a file to upload
+                result = "reload";
+            }
             return result;
-    	}catch(Exception e){
-    		log.error("ERROR trying to upload a file",e);
-    		addActionMessage(getText("uploadContent.errHTTP"));
-    	}
-    	return ERROR;
+        } catch (Exception e) {
+            log.error("ERROR trying to upload a file", e);
+            addActionMessage(getText("uploadContent.errHTTP"));
+        }
+        return ERROR;
     }
-    
+
+    private static Properties retrieveProperties(Userprofile userprofile) {
+        Properties properties = new Properties();
+        properties.setProperty(QueueItem.XML_TYPE, userprofile.getFileType()+"");
+        properties.setProperty(QueueItem.NO_EADID_ACTION, userprofile.getNoeadidAction().getId()+"");
+        properties.setProperty(QueueItem.EXIST_ACTION, userprofile.getExistAction().getId()+"");
+        properties.setProperty(QueueItem.DAO_TYPE, userprofile.getDaoType().getId()+"");
+        properties.setProperty(QueueItem.DAO_TYPE_CHECK, userprofile.getDaoTypeFromFile()+"");
+        properties.setProperty(QueueItem.UPLOAD_ACTION, userprofile.getUploadAction().getId()+"");
+        properties.setProperty(QueueItem.DATA_PROVIDER, userprofile.getEuropeanaDataProvider()+"");
+        properties.setProperty(QueueItem.DATA_PROVIDER_CHECK, userprofile.getEuropeanaDataProviderFromFile()+"");
+        properties.setProperty(QueueItem.EUROPEANA_DAO_TYPE, userprofile.getEuropeanaDaoType()+"");
+        properties.setProperty(QueueItem.EUROPEANA_DAO_TYPE_CHECK, userprofile.getEuropeanaDaoTypeFromFile()+"");
+        properties.setProperty(QueueItem.LANGUAGES, userprofile.getEuropeanaLanguages()+"");
+        properties.setProperty(QueueItem.LANGUAGE_CHECK, userprofile.getEuropeanaLanguagesFromFile()+"");
+        properties.setProperty(QueueItem.LICENSE, userprofile.getEuropeanaLicense()+"");
+        properties.setProperty(QueueItem.LICENSE_DETAILS, userprofile.getEuropeanaLicenseDetails()+"");
+        properties.setProperty(QueueItem.LICENSE_ADD_INFO, userprofile.getEuropeanaAddRights()+"");
+        properties.setProperty(QueueItem.HIERARCHY_PREFIX, userprofile.getEuropeanaHierarchyPrefix()+"");
+        properties.setProperty(QueueItem.INHERIT_FILE, userprofile.getEuropeanaInheritElements()+"");
+        properties.setProperty(QueueItem.INHERIT_ORIGINATION, userprofile.getEuropeanaInheritOrigin()+"");
+        return properties;
+    }
+
 }
