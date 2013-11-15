@@ -214,6 +214,7 @@ public class HarvesterTask implements Runnable {
         properties.setProperty(QueueItem.NO_EADID_ACTION, userprofile.getNoeadidAction().getId()+"");
         properties.setProperty(QueueItem.EXIST_ACTION, userprofile.getExistAction().getId()+"");
         properties.setProperty(QueueItem.DAO_TYPE, userprofile.getDaoType().getId()+"");
+        properties.setProperty(QueueItem.DAO_TYPE_CHECK, userprofile.getDaoTypeFromFile()+"");
         properties.setProperty(QueueItem.UPLOAD_ACTION, userprofile.getUploadAction().getId()+"");
         properties.setProperty(QueueItem.DATA_PROVIDER, userprofile.getEuropeanaDataProvider()+"");
         properties.setProperty(QueueItem.DATA_PROVIDER_CHECK, userprofile.getEuropeanaDataProviderFromFile()+"");

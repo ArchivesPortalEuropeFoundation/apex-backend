@@ -23,6 +23,7 @@ public class QueueItem implements java.io.Serializable {
     public static final String NO_EADID_ACTION = "ape.noeadidaction";
     public static final String EXIST_ACTION = "ape.existaction";
     public static final String DAO_TYPE = "ape.daotype";
+    public static final String DAO_TYPE_CHECK = "ape.daotypecheck";
     public static final String UPLOAD_ACTION = "ape.uploadaction";
     public static final String DATA_PROVIDER = "europeana.dataprovider";
     public static final String DATA_PROVIDER_CHECK = "europeana.dataprovidercheck";
