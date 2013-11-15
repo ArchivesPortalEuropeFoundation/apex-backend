@@ -55,7 +55,7 @@
 		</div>
 		<div class="filterContainer" id="divGroupNodesContainer" >
 			<!-- build select here for change_group-select -->
-			<div id="changeNodeDiv" onclick="changeGroup();" class="divAction"><s:property value="getText('al.message.changeGroup')" /></div>
+			<div id="changeNodeDiv" onclick="changeGroup();" class="divActionChangeNode"><s:property value="getText('al.message.changeGroup')" /></div>
 		</div>
 		
 		<div id="alternativesNamesDiv" class="filterContainer">
@@ -68,7 +68,7 @@
 				<label style="float:left;" for="target"><s:property value="getText('al.message.anwritelanguage')"/>: </label>
 				<input type="text" name="target" id="target">
 			</p>
-			<p>
+			<p class="ALP">
 				<label for="selectedLangTranslations" class="leftSpace"><s:property value="getText('al.message.anselectlanguage')"/>: </label>
 				<select name="selectedLangTranslations" id="selectedLangTranslations" onchange="recoverAlternativeName();" >
 					<s:iterator var="row" value="langList">

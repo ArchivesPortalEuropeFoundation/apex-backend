@@ -723,20 +723,43 @@ h2 {
 /***archival landscape***/
 .filterContainer {
 	width: 99%;
-	padding:1px;
+	padding-top:10px;
+	padding-bottom:15px;
+	padding-left:1px;
+	padding-right:1px;
 	float: left;
 	border-style: double;
 	border-color:#00A0DF;
 }
-
+.divActionChangeNode{
+    border: 1px solid #00A0DF;
+	cursor: pointer;
+	width: auto;
+	height: auto;
+	float: left;
+	margin-left:5px;
+	margin-top:2px;
+	margin-bottom:0px;
+	margin-right:5px;
+	background-color: #E9F3FA;
+	color: #006CB0;
+	border-radius:15px 15px 15px 15px;
+	font-weight:bold;
+	letter-spacing: 0.8px;
+    padding: 3px 5px;
+    text-align: center;
+    vertical-align: top;
+}
 .divAction{
     border: 1px solid #00A0DF;
 	cursor: pointer;
 	width: auto;
 	height: auto;
 	float: left;
-	margin: 5px;
-	/*padding: 5px;*/
+	margin-left:5px;
+	margin-top:5px;
+	margin-bottom:0px;
+	margin-right:5px;
 	background-color: #E9F3FA;
 	color: #006CB0;
 	border-radius:15px 15px 15px 15px;
@@ -807,7 +830,7 @@ input#submitDeleteTarget{
 .secondFilterDiv {
 	float: left;
 	width: 100%;
-	padding-top: 2px;
+	padding-top: 2px;	
 }
 #secondFilterDivLang{
 	padding-bottom:10px;
@@ -906,7 +929,16 @@ input.inputButtonSubmitAL{
 	padding-left:12px;
 }
 .firstFilterDiv, .secondFilterDiv{
-	padding-left:12px;
+	padding-left:10px;
+	padding-bottom:5px;
+}
+.secondFilterSelect{
+	float: left;
+	margin: 0px 5px;
+	padding-top: 2px;
+}
+.alternativeNamesSelect{
+	margin-left:5px;
 }
 /***archival landscape***/
 

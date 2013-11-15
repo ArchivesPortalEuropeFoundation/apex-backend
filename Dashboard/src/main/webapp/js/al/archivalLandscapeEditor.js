@@ -153,17 +153,17 @@ function loadDownPart(node){
 			}else if(value.showDeleteAction=="true"){
 				$("#deleteDiv").show();
 				$("#divGroupNodesContainer").show();
-				$("#groupSelect").show();
+				$("div .secondFilterSelect").show();
 				getGroups();
 			}else if(value.canBeMoved=="true"){
 				$("#divGroupNodesContainer").show();
-				$("#groupSelect").show();
+				$("div .secondFilterSelect").show();
 				getGroups();
 				//restore onclick information
 				$("#changeNodeDiv").attr("onclick","changeGroup();");
 			}else if(value.hasContentPublished!=undefined && value.hasContentPublished!="false"){
 				$("#divGroupNodesContainer").show();
-				$("#groupSelect").show();
+				$("div .secondFilterSelect").show();
 				getGroups();
 				hideMoveButtons = true;
 				//change changeNodeDiv, moveUp and moveDown onclick event to show an alert for the received message
@@ -234,8 +234,8 @@ function deleteNode(){
 
 function getGroups(){
 	$.post("launchALActions.action",{"action":"get_groups"},function(d){
-		$("#groupSelect").remove();
-		var groupSelect = "<select id=\"groupSelect\">";
+		$("div .secondFilterSelect").remove();
+		var groupSelect = "<div class=\"secondFilterSelect\"><select id=\"groupSelect\">";
 		var groups = 0;
 		$.each(d,function(k,group){
 			optionStart = "";
@@ -250,11 +250,11 @@ function getGroups(){
 			groupSelect += optionStart+optionEnd;
 			groups++;
 		});
-		groupSelect+= "</select>";
+		groupSelect+= "</select></div>";
 		if(groups>0){
 			$("#divGroupNodesContainer").show();
 			$("#changeNodeDiv").before(groupSelect);
-			$("#groupSelect").show();
+			$("div .secondFilterSelect").show();
 		}else{
 			$("#divGroupNodesContainer").hide();
 		}
@@ -299,7 +299,7 @@ function getAlternativeNames(){
 	var currentId = activeNode.data.key;
 	$.post("launchALActions.action",{"action":"get_alternative_names","aiId":currentId},function(d){
 		if(d.alternativeNames){
-			$("#alternativeNames").remove();
+			$("div .alternativeNamesSelect").remove();
 			optionStart = "";
 			optionEnd = "";
 			var alternativeNamesCounter = 0;
@@ -315,9 +315,9 @@ function getAlternativeNames(){
 				});
 				options += optionStart+optionEnd+"\n";
 			});
-			var groupSelect = "<select "+((alternativeNamesCounter>1)?"":"disabled=\"disabled\"")+" size=\""+alternativeNamesCounter+"\" id=\"alternativeNames\" onclick=\"alternativeNameSelected();\" onkeyup=\"alternativeNameSelected();\" >";
+			var groupSelect = "<div class=\"alternativeNamesSelect\"><select "+((alternativeNamesCounter>1)?"":"disabled=\"disabled\"")+" size=\""+alternativeNamesCounter+"\" id=\"alternativeNames\" onclick=\"alternativeNameSelected();\" onkeyup=\"alternativeNameSelected();\" >";
 			groupSelect += options;
-			groupSelect += "</select>";
+			groupSelect += "</select></div>";
 			$("#alternativesNamesDiv").append(groupSelect);
 			$("#showLanguagesDiv").hide();
 			$("select#alternativeNames").attr("disabled","disabled");
