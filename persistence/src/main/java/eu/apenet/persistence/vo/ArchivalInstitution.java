@@ -61,7 +61,8 @@ public class ArchivalInstitution implements java.io.Serializable {
 	private int alorder;
 	@Column(name = "contain_searchable_items")
 	private boolean containSearchableItems;
-
+	@Column(name = "content_lastmodified_date")
+	private Date contentLastModifiedDate;
 	@OneToMany(mappedBy="archivalInstitution")
 	private Set<AiAlternativeName> aiAlternativeNames = new HashSet<AiAlternativeName>(0);
 
@@ -264,6 +265,14 @@ public class ArchivalInstitution implements java.io.Serializable {
 
 	public void setPartnerId(Integer partnerId) {
 		this.partnerId = partnerId;
+	}
+
+	public Date getContentLastModifiedDate() {
+		return contentLastModifiedDate;
+	}
+
+	public void setContentLastModifiedDate(Date contentLastModifiedDate) {
+		this.contentLastModifiedDate = contentLastModifiedDate;
 	}
 
 }

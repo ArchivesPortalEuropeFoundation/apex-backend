@@ -1,6 +1,5 @@
 package eu.apenet.persistence.vo;
 
-import javax.xml.bind.annotation.XmlType;
 
 
 

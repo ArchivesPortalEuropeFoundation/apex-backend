@@ -6,7 +6,6 @@
 		<non-jta-data-source>java:comp/env/jdbc/APEnetDatabaseDashboard</non-jta-data-source>
 		<class>eu.apenet.persistence.vo.UserRole</class>
 		<class>eu.apenet.persistence.vo.UploadMethod</class>
-		<class>eu.apenet.persistence.vo.FileType</class>
 		<class>eu.apenet.persistence.vo.EseState</class>
 		<class>eu.apenet.persistence.vo.Lang</class>
 		<class>eu.apenet.persistence.vo.User</class>
@@ -14,7 +13,6 @@
 		<class>eu.apenet.persistence.vo.CouAlternativeName</class>
 		<class>eu.apenet.persistence.vo.AiAlternativeName</class>
 		<class>eu.apenet.persistence.vo.UpFile</class>
-		<class>eu.apenet.persistence.vo.MetadataFormat</class>
 		<class>eu.apenet.persistence.vo.ResumptionToken</class>
 		<class>eu.apenet.persistence.vo.SentMailRegister</class>
 		<class>eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh</class>
