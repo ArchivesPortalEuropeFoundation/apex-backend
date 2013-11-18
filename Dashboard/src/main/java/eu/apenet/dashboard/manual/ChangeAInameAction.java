@@ -209,7 +209,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 
 				// Check if the autform is changed.
 				if (!autformChanged) {
-					addActionError(getText("label.ai.changeainame.error.noCurrentNameInAutform"));
+					addActionError(getText("label.ai.changeainame.error"));
 					log.error("There were errors during updating EAG file [Database Rollback]. Error: EAG file hasn't any autform value with the curernt name.");
 
 					// Rollback all the changes.
@@ -289,7 +289,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 		JpaUtil.closeDatabaseSession();
 		log.info("Database rollback succeed");
 
-		if (existsInAutform) {
+		if (!existsInAutform) {
 			//It is necessary to make a Index rollback of the FA indexed
 			this.setErrormessage(getText("changeAIname.errUpdatingEAG"));
 		} else {
