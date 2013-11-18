@@ -193,27 +193,7 @@ public class ContentUtils {
 			return hasEads;
 		}
 	}
-//	public static Long countIndexedContentByInstitutionGroupId(String identifier,boolean isGroup){
 
-//	return counter;
-//}
-//
-//private static Long recursiveCountIndexedContentByInstitutionGroup(String identifier){
-//	Long counter = new Long(0);
-//	ArchivalInstitution aiTemp = new ArchivalInstitution();
-//	aiTemp = (ArchivalInstitution) DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionByInternalAlId(identifier);
-//	Set<ArchivalInstitution> archivalInstitutions = aiTemp.getChildArchivalInstitutions();
-//	Iterator<ArchivalInstitution> iteratorArchivalInstitutions = archivalInstitutions.iterator();
-//	while(iteratorArchivalInstitutions.hasNext()){
-//		aiTemp = iteratorArchivalInstitutions.next();
-//		if(aiTemp.isGroup()){
-//			counter += recursiveCountIndexedContentByInstitutionGroup(aiTemp.getInternalAlId());
-//		}else{
-//			counter += DAOFactory.instance().getFindingAidDAO().countFindingAidsIndexedByInternalArchivalInstitutionId(aiTemp.getInternalAlId());
-//		}
-//	}
-//	return counter;
-//}
 	// Delete an archival institution and all his files (EAG, FA and HG)
 	// associated in the system (DDBB, repository and index)
 	public String deleteArchivalInstitution(ArchivalInstitution ai, boolean execute) throws Exception {
@@ -391,37 +371,44 @@ public class ContentUtils {
 			if (searchable == true) {
 				LOGGER.info("AI: '" + ai.getAiname() + "' has now searchable items");
 				ai.setContainSearchableItems(searchable);
+				ai.setContentLastModifiedDate(new Date());
 				DAOFactory.instance().getArchivalInstitutionDAO().insertSimple(ai);
-				updateContainsSearchableItemsInAiGroups(ai);
+				updateContainsSearchableItemsInNewAiGroups(ai);
 			} else {
 				EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 				EadSearchOptions eadSearchOptions = new EadSearchOptions();
 				eadSearchOptions.setArchivalInstitionId(ai.getAiId());
 				eadSearchOptions.setPublished(true);
 				eadSearchOptions.setEadClass(FindingAid.class);
-
-				boolean eadExist = eadDAO.existEads(eadSearchOptions);
-				if (!eadExist) {
+				long numberOfPublishedEads = eadDAO.countEads(eadSearchOptions);
+				if (numberOfPublishedEads <= 1) {
 					eadSearchOptions.setEadClass(HoldingsGuide.class);
-					eadExist =  eadDAO.existEads(eadSearchOptions);
-					if (!eadExist) {
+					numberOfPublishedEads +=  eadDAO.countEads(eadSearchOptions);
+					if (numberOfPublishedEads <= 1) {
 						eadSearchOptions.setEadClass(SourceGuide.class);
-						eadExist =  eadDAO.existEads(eadSearchOptions);
-						if (!eadExist) {
+						numberOfPublishedEads +=  eadDAO.countEads(eadSearchOptions);
+						if (numberOfPublishedEads == 1) {
 							LOGGER.info("AI: '" + ai.getAiname() + "' has now no searchable items left");
 							ai.setContainSearchableItems(searchable);
+							ai.setContentLastModifiedDate(new Date());
 							ArchivalInstitution parent = ai.getParent();
 							if (parent == null) {
 								DAOFactory.instance().getArchivalInstitutionDAO().insertSimple(ai);
 							} else {
-								changeContainsSearchableItems(parent, searchable);
+								updateContainsSearchableItemsInNewAiGroups(ai);
 							}
 						}
 					}
 				}
+				if (numberOfPublishedEads != 1){
+					ai.setContentLastModifiedDate(new Date());
+					DAOFactory.instance().getArchivalInstitutionDAO().insertSimple(ai);
+				}
 
-				// long numberOfEads = DAOFactory.instance().getEadDAO().e
 			}
+		}else {
+			ai.setContentLastModifiedDate(new Date());
+			DAOFactory.instance().getArchivalInstitutionDAO().insertSimple(ai);
 		}
 
 	}
