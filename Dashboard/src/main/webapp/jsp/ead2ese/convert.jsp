@@ -187,9 +187,10 @@
 		</tr>
 		<tr id="trSelectType">
 			<td class="inputLabel"><s:label key="ead2ese.label.type" for="selectType" /><span class="required">*</span>:</td>
-			<td><s:select id="selectType" name="daoType" list="typeSet" listKey="value" listValue="content" required="true"></s:select> <s:fielderror fieldName="daoType"/>
+			<td><s:select id="selectType" name="daoType" list="typeSet" listKey="value" listValue="content" required="true"></s:select>
 				<s:checkbox name="daoTypeCheck" id="daoTypeCheck" value="true"></s:checkbox>
 				<s:label key="ead2ese.label.type.file" for="daoType"/>
+				<s:fielderror fieldName="daoType"/>
 			</td>
 		</tr>
 
@@ -215,16 +216,17 @@
 			</td>
 			<td class="tdVertical">
 				<s:select name="languageSelection" id="languageSelection" listKey="value" listValue="content" list="languages" required="true"
-					value="" multiple="true" size="4"></s:select><s:fielderror fieldName="languageSelection"/>
+					value="" multiple="true" size="4"></s:select>
 
-<!-- 				<s:if test="languageOfTheMaterialCheck==true">
+				<s:if test="languageOfTheMaterialCheck==true">
 					<s:checkbox name="languageOfTheMaterialCheck" id="languageOfTheMaterialCheck" value="true"></s:checkbox>
 				</s:if>
 				<s:else>
 					<s:checkbox name="languageOfTheMaterialCheck" id="languageOfTheMaterialCheck" value="false"></s:checkbox>
 				</s:else>
 				<s:label key="ead2ese.label.language.file" for="languageOfTheMaterialCheck"/>
-				<s:fielderror fieldName="languageOfTheMaterialCheck"/> -->
+				<s:fielderror fieldName="languageSelection"/>
+<!-- 				<s:fielderror fieldName="languageOfTheMaterialCheck"/> -->
 			</td>
 		</tr>
 

@@ -80,13 +80,13 @@ public class ConvertAction extends AbstractInstitutionAction {
     private String mappingsFileContentType;		//The content type of the file uploaded
     private String textDataProvider;			//Text for the data provider from element "<repository>".
     private boolean batchConversion;
-    private boolean dataProviderCheck;			//Select or not the check for the data provider
+    private boolean dataProviderCheck = true;			//Select or not the check for the data provider
     private boolean daoTypeCheck = true;
     private boolean hierarchyPrefixCheck;
     private boolean inheritFileParentCheck;
     private boolean inheritOriginationCheck;
     private boolean inheritLanguageCheck = true;
-//    private boolean languageOfTheMaterialCheck = true;
+    private boolean languageOfTheMaterialCheck = true;
     private boolean noLanguageOnClevel = true;
     private boolean noLanguageOnParents;
     private Set<SelectItem> languages = new TreeSet<SelectItem>();
@@ -258,7 +258,10 @@ public class ConvertAction extends AbstractInstitutionAction {
         		config.setLanguage(parseLanguages);
         	}
     	}
-    	
+
+    	config.setUseExistingLanguage(this.isLanguageOfTheMaterialCheck());
+    	config.setUseExistingRepository(this.isDataProviderCheck());
+
     	config.setType(this.getDaoType());
     	config.setProvider(this.getProvider());
     	if (this.getCustomDataProvider() != null && !this.getCustomDataProvider().isEmpty()) {
@@ -617,19 +620,19 @@ public class ConvertAction extends AbstractInstitutionAction {
 		this.inheritLanguageCheck = inheritLanguageCheck;
 	}
 
-//	/**
-//	 * @return the languageOfTheMaterialCheck
-//	 */
-//	public boolean isLanguageOfTheMaterialCheck() {
-//		return this.languageOfTheMaterialCheck;
-//	}
-//
-//	/**
-//	 * @param languageOfTheMaterialCheck the languageOfTheMaterialCheck to set
-//	 */
-//	public void setLanguageOfTheMaterialCheck(boolean languageOfTheMaterialCheck) {
-//		this.languageOfTheMaterialCheck = languageOfTheMaterialCheck;
-//	}
+	/**
+	 * @return the languageOfTheMaterialCheck
+	 */
+	public boolean isLanguageOfTheMaterialCheck() {
+		return this.languageOfTheMaterialCheck;
+	}
+
+	/**
+	 * @param languageOfTheMaterialCheck the languageOfTheMaterialCheck to set
+	 */
+	public void setLanguageOfTheMaterialCheck(boolean languageOfTheMaterialCheck) {
+		this.languageOfTheMaterialCheck = languageOfTheMaterialCheck;
+	}
 
 	/**
 	 * @return the batchConversion
