@@ -65,6 +65,14 @@
                     </c:forEach>
                 </select>
                 <br />
+                <label for="weekend">
+                    <s:property value="getText('label.harvesting.weekend')"/>
+                </label>
+                <select name="selectedWeekend" id="weekend">
+                    <option value="false"<c:if test="${selectedWeekend == 'false'}"> selected="selected"</c:if>><s:property value="getText('content.message.no')"/></option>
+                    <option value="true"<c:if test="${selectedWeekend == 'true'}"> selected="selected"</c:if>><s:property value="getText('content.message.yes')"/></option>
+                </select>
+                <br />
                 <label for="userProfiles">
                     <s:property value="getText('label.harvesting.userprofiles')"/>
                 </label>

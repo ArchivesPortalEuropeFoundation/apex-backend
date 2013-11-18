@@ -96,67 +96,79 @@ public class HarvesterTask implements Runnable {
             LOGGER.info("Checking if OAI profile is ready to be harvested: " + archivalInstitutionOaiPmh.getUrl() + " (set: " + archivalInstitutionOaiPmh.getSet() + ", metadataPrefix: " + archivalInstitutionOaiPmh.getMetadataPrefix() + ")");
             if(archivalInstitutionOaiPmh.isEnabled()) {
                 if(archivalInstitutionOaiPmh.getLastHarvesting() == null || (archivalInstitutionOaiPmh.getLastHarvesting().getTime() + archivalInstitutionOaiPmh.getIntervalHarvesting() >= System.currentTimeMillis())) { //Ok, do harvest
-                    LOGGER.info("This profile will be harvested now");
-
-                    String baseURL = archivalInstitutionOaiPmh.getUrl();
-                    String metadataPrefix = archivalInstitutionOaiPmh.getMetadataPrefix();
-
-                    String from = null;
-                    String until = null;
-                    if(archivalInstitutionOaiPmh.getLastHarvesting() != null) {
-                        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd"); //1980-01-01
-                        from = dateFormatter.format(archivalInstitutionOaiPmh.getLastHarvesting());
+                    boolean continueTask = true;
+                    if(archivalInstitutionOaiPmh.isHarvestOnlyWeekend()) {
+                        continueTask = false;
+                        Calendar calendar = Calendar.getInstance();
+                        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+                        if(dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
+                            continueTask = true;
+                        }
                     }
 
-                    String setSpec = null;
-                    if(archivalInstitutionOaiPmh.getSet() != null) {
-                        setSpec = archivalInstitutionOaiPmh.getSet();
-                    }
+                    if(continueTask) {
+                        LOGGER.info("This profile will be harvested now");
 
-                    ArchivalInstitution archivalInstitution = archivalInstitutionOaiPmh.getArchivalInstitution();
-                    String subdirectory = APEnetUtilities.FILESEPARATOR + archivalInstitution.getAiId() + APEnetUtilities.FILESEPARATOR + "oai_" + System.currentTimeMillis() + APEnetUtilities.FILESEPARATOR;
-                    String directory = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + subdirectory;
-                    File outputDirectory = new File(directory);
-                    outputDirectory.mkdirs();
-                    OaiPmhParser oaiPmhParser = new OaiPmhParser(outputDirectory);
+                        String baseURL = archivalInstitutionOaiPmh.getUrl();
+                        String metadataPrefix = archivalInstitutionOaiPmh.getMetadataPrefix();
 
-                    Integer userId = archivalInstitution.getPartnerId();
-                    User partner;
-                    if(userId == null) {
-                        partner = DAOFactory.instance().getUserDAO().getCountryManagerOfCountry(archivalInstitution.getCountry());
-                    } else {
-                        partner = DAOFactory.instance().getUserDAO().findById(userId);
-                    }
-
-                    try {
-                        JpaUtil.beginDatabaseTransaction();
-                        runOai(baseURL, from, until, metadataPrefix, setSpec, oaiPmhParser);
-                        archivalInstitutionOaiPmh.setLastHarvesting(new Date());
-                        if(!APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()) {
-                            archivalInstitutionOaiPmh.setEnabled(false);
+                        String from = null;
+                        String until = null;
+                        if(archivalInstitutionOaiPmh.getLastHarvesting() != null) {
+                            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd"); //1980-01-01
+                            from = dateFormatter.format(archivalInstitutionOaiPmh.getLastHarvesting());
                         }
 
-                        File[] harvestedFiles = outputDirectory.listFiles();
-                        UpFileDAO upFileDAO = DAOFactory.instance().getUpFileDAO();
-
-                        Userprofile userprofile = archivalInstitutionOaiPmh.getUserprofile();
-                        Properties properties = retrieveProperties(userprofile);
-
-                        for(File file : harvestedFiles) {
-                            UpFile upFile = createUpFile(subdirectory, file.getName(), UploadMethod.OAI_PMH, archivalInstitution.getAiId(), FileType.XML);
-                            upFile = upFileDAO.store(upFile);
-                            EadService.useProfileAction(upFile, properties);
+                        String setSpec = null;
+                        if(archivalInstitutionOaiPmh.getSet() != null) {
+                            setSpec = archivalInstitutionOaiPmh.getSet();
                         }
 
-                        JpaUtil.commitDatabaseTransaction();
+                        ArchivalInstitution archivalInstitution = archivalInstitutionOaiPmh.getArchivalInstitution();
+                        String subdirectory = APEnetUtilities.FILESEPARATOR + archivalInstitution.getAiId() + APEnetUtilities.FILESEPARATOR + "oai_" + System.currentTimeMillis() + APEnetUtilities.FILESEPARATOR;
+                        String directory = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + subdirectory;
+                        File outputDirectory = new File(directory);
+                        outputDirectory.mkdirs();
+                        OaiPmhParser oaiPmhParser = new OaiPmhParser(outputDirectory);
 
-                        UserService.sendEmailHarvestFinished(true, archivalInstitution, partner);
-                    } catch (Exception e) {
-                        JpaUtil.rollbackDatabaseTransaction();
-                        UserService.sendEmailHarvestFinished(false, archivalInstitution, partner);
-                        LOGGER.error("Harvesting failed - should we put an 'error' flag in the DB?");
-                    } finally {
-                        outputDirectory.delete();
+                        Integer userId = archivalInstitution.getPartnerId();
+                        User partner;
+                        if(userId == null) {
+                            partner = DAOFactory.instance().getUserDAO().getCountryManagerOfCountry(archivalInstitution.getCountry());
+                        } else {
+                            partner = DAOFactory.instance().getUserDAO().findById(userId);
+                        }
+
+                        try {
+                            JpaUtil.beginDatabaseTransaction();
+                            runOai(baseURL, from, until, metadataPrefix, setSpec, oaiPmhParser);
+                            archivalInstitutionOaiPmh.setLastHarvesting(new Date());
+                            if(!APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()) {
+                                archivalInstitutionOaiPmh.setEnabled(false);
+                            }
+
+                            File[] harvestedFiles = outputDirectory.listFiles();
+                            UpFileDAO upFileDAO = DAOFactory.instance().getUpFileDAO();
+
+                            Userprofile userprofile = archivalInstitutionOaiPmh.getUserprofile();
+                            Properties properties = retrieveProperties(userprofile);
+
+                            for(File file : harvestedFiles) {
+                                UpFile upFile = createUpFile(subdirectory, file.getName(), UploadMethod.OAI_PMH, archivalInstitution.getAiId(), FileType.XML);
+                                upFile = upFileDAO.store(upFile);
+                                EadService.useProfileAction(upFile, properties);
+                            }
+
+                            JpaUtil.commitDatabaseTransaction();
+
+                            UserService.sendEmailHarvestFinished(true, archivalInstitution, partner);
+                        } catch (Exception e) {
+                            JpaUtil.rollbackDatabaseTransaction();
+                            UserService.sendEmailHarvestFinished(false, archivalInstitution, partner);
+                            LOGGER.error("Harvesting failed - should we put an 'error' flag in the DB?");
+                        } finally {
+                            outputDirectory.delete();
+                        }
                     }
                 }
             }

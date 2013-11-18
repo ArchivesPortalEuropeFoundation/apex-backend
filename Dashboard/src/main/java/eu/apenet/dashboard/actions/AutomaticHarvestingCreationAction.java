@@ -42,7 +42,8 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
     private String selectedMetadataFormat;
     private Integer selectedUserProfile;
     private String selectedActivation;
-    private String lastHarvestDate; //todo: Propose to the user or not? We could do simply a full harvest at the first time since it is currently hard to know when it was exactly done...
+    private String selectedWeekend;
+    private String lastHarvestDate;
     private String intervalHarvest;
     private boolean defaultHarvestingProcessing = false;
 
@@ -117,6 +118,7 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
                 setSelectedUserProfile(archivalInstitutionOaiPmh.getProfileId().intValue());
                 setIntervalHarvest(archivalInstitutionOaiPmh.getIntervalHarvesting().toString());
                 setSelectedActivation(Boolean.toString(archivalInstitutionOaiPmh.isEnabled()));
+                setSelectedWeekend(Boolean.toString(archivalInstitutionOaiPmh.isHarvestOnlyWeekend()));
             }
             return SUCCESS;
         }
@@ -135,6 +137,7 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
                 archivalInstitutionOaiPmh.setMetadataPrefix(getSelectedMetadataFormat());
                 archivalInstitutionOaiPmh.setProfileId(getSelectedUserProfile().longValue());
                 archivalInstitutionOaiPmh.setIntervalHarvesting(Long.parseLong(getIntervalHarvest()));
+                archivalInstitutionOaiPmh.setHarvestOnlyWeekend(Boolean.parseBoolean(getSelectedWeekend()));
                 if(getSelectedActivation() != null) {
                     if(!archivalInstitutionOaiPmh.isEnabled() && Boolean.parseBoolean(getSelectedActivation())) {
                         archivalInstitutionOaiPmh.setLastHarvesting(null);
@@ -147,6 +150,7 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
                 int archivalInstitutionId = SecurityContext.get().getSelectedInstitution().getId();
                 String intervalHarvest = getIntervalHarvest();
                 archivalInstitutionOaiPmh = new ArchivalInstitutionOaiPmh(archivalInstitutionId, getUrl(), getSelectedMetadataFormat(), getSelectedUserProfile().longValue(), Long.parseLong(intervalHarvest));
+                archivalInstitutionOaiPmh.setHarvestOnlyWeekend(Boolean.parseBoolean(getSelectedWeekend()));
                 if(getSelectedSet() != null) {
                     archivalInstitutionOaiPmh.setSet(getSelectedSet());
                 }
@@ -282,6 +286,14 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
 
     public void setSelectedActivation(String selectedActivation) {
         this.selectedActivation = selectedActivation;
+    }
+
+    public String getSelectedWeekend() {
+        return selectedWeekend;
+    }
+
+    public void setSelectedWeekend(String selectedWeekend) {
+        this.selectedWeekend = selectedWeekend;
     }
 
     public class Interval {

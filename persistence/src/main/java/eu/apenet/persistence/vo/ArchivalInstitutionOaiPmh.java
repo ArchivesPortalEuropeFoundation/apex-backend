@@ -45,6 +45,9 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
     @Column(name="enabled")
     private boolean enabled;
 
+    @Column(name="harvest_only_weekend")
+    private boolean harvestOnlyWeekend;
+
     public ArchivalInstitutionOaiPmh() {
     }
 
@@ -55,6 +58,7 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
         this.profileId = profileId;
         this.intervalHarvesting = intervalHarvesting;
         this.enabled = true;
+        this.harvestOnlyWeekend = false;
 	}
 
     public Long getId() {
@@ -143,5 +147,17 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public boolean isHarvestOnlyWeekend() {
+        return harvestOnlyWeekend;
+    }
+
+    public void setHarvestOnlyWeekend(boolean harvestOnlyWeekend) {
+        this.harvestOnlyWeekend = harvestOnlyWeekend;
     }
 }

@@ -1,0 +1,1 @@
+ALTER TABLE archival_institution_oai_pmh ADD COLUMN harvest_only_weekend boolean NOT NULL DEFAULT false;
