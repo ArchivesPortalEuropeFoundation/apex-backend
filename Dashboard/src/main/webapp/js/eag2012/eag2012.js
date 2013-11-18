@@ -135,10 +135,10 @@ function checkWebpages(target,message){
 			var pFieldError = "<p id=\""+$(this).attr("id")+"_w_required\" class=\"fieldRequired\">"+message+"</p>";
 			var id = target.attr("id");
 			if (id.indexOf("textWebsiteOfResource") == "-1" && id.indexOf("textWebsiteOfDescription") == "-1") {
-				target.after(pFieldError);
+				target.after(pFieldError); 
 			} else {
 				var parent = target.parent().parent().parent().parent().attr("id");
-				$("table#" + parent + " input#" + id).after(pFieldError);
+				$("table#" + parent + " textarea#" + id).after(pFieldError);
 			}
 			checkFails = true;
 		}
