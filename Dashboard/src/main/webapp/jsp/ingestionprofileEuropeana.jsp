@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/userprofile.css" type="text/css"/>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/ingestionprofile.css" type="text/css"/>
 
 <script type='text/javascript'>
     $(function() {

@@ -73,12 +73,12 @@
                     <option value="true"<c:if test="${selectedWeekend == 'true'}"> selected="selected"</c:if>><s:property value="getText('content.message.yes')"/></option>
                 </select>
                 <br />
-                <label for="userProfiles">
-                    <s:property value="getText('label.harvesting.userprofiles')"/>
+                <label for="ingestionprofiles">
+                    <s:property value="getText('label.harvesting.ingestionprofiles')"/>
                 </label>
-                <select name="selectedUserProfile" id="userProfiles">
-                    <c:forEach var="userProfile" items="${userProfiles}">
-                        <option value="${userProfile.id}"<c:if test="${selectedUserProfile == userProfile.id}"> selected="selected"</c:if>>${userProfile.nameProfile}</option>
+                <select name="selectedIngestionprofile" id="ingestionprofiles">
+                    <c:forEach var="ingestionprofile" items="${ingestionprofiles}">
+                        <option value="${ingestionprofile.id}"<c:if test="${selectedIngestionprofile == ingestionprofile.id}"> selected="selected"</c:if>>${ingestionprofile.nameProfile}</option>
                     </c:forEach>
                 </select>
                 <br />

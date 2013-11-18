@@ -1,7 +1,7 @@
 function initPage() {
     $('#profileCb').change(function() {
         var params = {profilelist: $("#profileCb").val()};
-        $.get("userprofiles.action", params, function(data) {
+        $.get("ingestionprofiles.action", params, function(data) {
             $("#principal").replaceWith(data);
             $("body meta").remove();
             $("body title").remove();
@@ -14,9 +14,9 @@ function hideAndShow(idPrefix, shown) {
     $("div[id^='" + idPrefix + "']").each(function() {
         $(this).hide();
     });
-    $("ul#userprofileTabsContainer li a[href^='#tab']").each(function() {
-        $(this).removeClass("userprofileCurrenttab");
+    $("ul#ingestionprofileTabsContainer li a[href^='#tab']").each(function() {
+        $(this).removeClass("ingestionprofileCurrenttab");
     });
     $("div[id='" + shown + "']").show();
-    $("ul#userprofileTabsContainer li a[href='#" + shown + "']").addClass("userprofileCurrenttab");
+    $("ul#ingestionprofileTabsContainer li a[href='#" + shown + "']").addClass("ingestionprofileCurrenttab");
 }

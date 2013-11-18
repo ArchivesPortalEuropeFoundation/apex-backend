@@ -20,7 +20,7 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
  * User: Eloy García
  * Date: Oct 21, 2010
  *
- * @author Eloy García & Paul
+ * @author Eloy García &  Paul
  */
 public class HTTPUploadEAGAction extends AbstractInstitutionAction {
 

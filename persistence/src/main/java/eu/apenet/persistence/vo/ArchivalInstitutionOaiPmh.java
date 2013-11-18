@@ -37,7 +37,7 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
     private Long profileId;
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="profile_id", insertable=false, updatable=false)
-    private Userprofile userprofile;
+    private Ingestionprofile ingestionprofile;
 
     @Column(name="interval_harvesting")
     private Long intervalHarvesting;
@@ -133,12 +133,12 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
         this.archivalInstitution = archivalInstitution;
     }
 
-    public Userprofile getUserprofile() {
-        return userprofile;
+    public Ingestionprofile getIngestionprofile() {
+        return ingestionprofile;
     }
 
-    public void setUserprofile(Userprofile userprofile) {
-        this.userprofile = userprofile;
+    public void setIngestionprofile(Ingestionprofile ingestionprofile) {
+        this.ingestionprofile = ingestionprofile;
     }
 
     public boolean isEnabled() {

@@ -8,18 +8,18 @@ package eu.apenet.persistence.vo;
  *
  * @author papp
  */
-public enum UserprofileDefaultDaoType {
-    TEXT(1, "userprofiles.dao.text"),
-    IMAGE(2, "userprofiles.dao.image"),
-    SOUND(3, "userprofiles.dao.sound"),
-    VIDEO(4, "userprofiles.dao.video"),
-    THREE_D(5, "userprofiles.dao.3D"),
-    UNSPECIFIED(0, "userprofiles.dao.unspecified");
+public enum IngestionprofileDefaultDaoType {
+    TEXT(1, "ingestionprofiles.dao.text"),
+    IMAGE(2, "ingestionprofiles.dao.image"),
+    SOUND(3, "ingestionprofiles.dao.sound"),
+    VIDEO(4, "ingestionprofiles.dao.video"),
+    THREE_D(5, "ingestionprofiles.dao.3D"),
+    UNSPECIFIED(0, "ingestionprofiles.dao.unspecified");
 
     private int id;
     private String resourceType;
 
-    private UserprofileDefaultDaoType(int id, String resourceType){
+    private IngestionprofileDefaultDaoType(int id, String resourceType){
         this.id = id;
         this.resourceType = resourceType;
     }
@@ -70,8 +70,8 @@ public enum UserprofileDefaultDaoType {
         return resourceType;
     }
 
-    public static UserprofileDefaultDaoType getDaoType(String id){
-        for(UserprofileDefaultDaoType daoType : UserprofileDefaultDaoType.values()){
+    public static IngestionprofileDefaultDaoType getDaoType(String id){
+        for(IngestionprofileDefaultDaoType daoType : IngestionprofileDefaultDaoType.values()){
             if(daoType.id == Integer.parseInt(id))
                 return daoType;
         }

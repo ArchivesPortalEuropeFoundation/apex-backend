@@ -25,10 +25,10 @@ import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * @author Jara Alvarez
- * 
- * To create a new country in the system
- * 
- * 		//      - Insert registers in country and couAlternativeNames entities
+ 
+ To create a new country in the system
+ 
+ 		//      - Insert registers in country and couAlternativeNames entities
 		//		- To create the folders in repo
 		//		- To change the AL.xml with a new node with minimum information
 

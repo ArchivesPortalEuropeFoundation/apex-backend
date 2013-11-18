@@ -8,7 +8,7 @@ import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
-import eu.apenet.persistence.vo.Userprofile;
+import eu.apenet.persistence.vo.Ingestionprofile;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import org.apache.log4j.Logger;
 import org.oclc.oai.harvester.app.RetrieveOaiPmhInformation;
@@ -36,11 +36,11 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
     private String url;
     private List<String> sets;
     private List<String> metadataFormats;
-    private List<Userprofile> userProfiles;
+    private List<Ingestionprofile> ingestionProfiles;
     private List<Interval> intervals;
     private String selectedSet;
     private String selectedMetadataFormat;
-    private Integer selectedUserProfile;
+    private Integer selectedIngestionProfile;
     private String selectedActivation;
     private String selectedWeekend;
     private String lastHarvestDate;
@@ -54,8 +54,8 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
     public String execute() throws Exception {
         step = 0;
         int archivalInstitutionId = SecurityContext.get().getSelectedInstitution().getId();
-        userProfiles = DAOFactory.instance().getUserprofileDAO().getUserprofiles(archivalInstitutionId);
-        if(userProfiles.size() < 1) {
+        ingestionProfiles = DAOFactory.instance().getIngestionprofileDAO().getIngestionprofiles(archivalInstitutionId);
+        if(ingestionProfiles.size() < 1) {
             addActionError("You need at least one user profile created before creating an automatic OAI-PMH profile");
             return ERROR;
         }
@@ -90,7 +90,7 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
             List<String> setsInRepository = RetrieveOaiPmhInformation.retrieveSets(getUrl());
             sets = new ArrayList<String>(setsInRepository);
             List<ArchivalInstitutionOaiPmh> archivalInstitutionOaiPmhList = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().getArchivalInstitutionOaiPmhs(aiId);
-            userProfiles = DAOFactory.instance().getUserprofileDAO().getUserprofiles(aiId);
+            ingestionProfiles = DAOFactory.instance().getIngestionprofileDAO().getIngestionprofiles(aiId);
             if(setsInRepository != null) {
                 for(String set : setsInRepository) {
                     for(ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh : archivalInstitutionOaiPmhList) {
@@ -115,7 +115,7 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
                 sets.add(archivalInstitutionOaiPmh.getSet());
                 setSelectedSet(archivalInstitutionOaiPmh.getSet());
                 setSelectedMetadataFormat(archivalInstitutionOaiPmh.getMetadataPrefix());
-                setSelectedUserProfile(archivalInstitutionOaiPmh.getProfileId().intValue());
+                setSelectedIngestionProfile(archivalInstitutionOaiPmh.getProfileId().intValue());
                 setIntervalHarvest(archivalInstitutionOaiPmh.getIntervalHarvesting().toString());
                 setSelectedActivation(Boolean.toString(archivalInstitutionOaiPmh.isEnabled()));
                 setSelectedWeekend(Boolean.toString(archivalInstitutionOaiPmh.isHarvestOnlyWeekend()));
@@ -135,7 +135,7 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
                 archivalInstitutionOaiPmh.setSet(getSelectedSet());
                 archivalInstitutionOaiPmh.setUrl(getUrl());
                 archivalInstitutionOaiPmh.setMetadataPrefix(getSelectedMetadataFormat());
-                archivalInstitutionOaiPmh.setProfileId(getSelectedUserProfile().longValue());
+                archivalInstitutionOaiPmh.setProfileId(getSelectedIngestionProfile().longValue());
                 archivalInstitutionOaiPmh.setIntervalHarvesting(Long.parseLong(getIntervalHarvest()));
                 archivalInstitutionOaiPmh.setHarvestOnlyWeekend(Boolean.parseBoolean(getSelectedWeekend()));
                 if(getSelectedActivation() != null) {
@@ -149,7 +149,7 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
             } else {
                 int archivalInstitutionId = SecurityContext.get().getSelectedInstitution().getId();
                 String intervalHarvest = getIntervalHarvest();
-                archivalInstitutionOaiPmh = new ArchivalInstitutionOaiPmh(archivalInstitutionId, getUrl(), getSelectedMetadataFormat(), getSelectedUserProfile().longValue(), Long.parseLong(intervalHarvest));
+                archivalInstitutionOaiPmh = new ArchivalInstitutionOaiPmh(archivalInstitutionId, getUrl(), getSelectedMetadataFormat(), getSelectedIngestionProfile().longValue(), Long.parseLong(intervalHarvest));
                 archivalInstitutionOaiPmh.setHarvestOnlyWeekend(Boolean.parseBoolean(getSelectedWeekend()));
                 if(getSelectedSet() != null) {
                     archivalInstitutionOaiPmh.setSet(getSelectedSet());
@@ -248,20 +248,20 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
         this.selectedMetadataFormat = selectedMetadataFormat;
     }
 
-    public List<Userprofile> getUserProfiles() {
-        return userProfiles;
+    public List<Ingestionprofile> getIngestionProfiles() {
+        return ingestionProfiles;
     }
 
-    public void setUserProfiles(List<Userprofile> userProfiles) {
-        this.userProfiles = userProfiles;
+    public void setIngestionProfiles(List<Ingestionprofile> ingestionProfiles) {
+        this.ingestionProfiles = ingestionProfiles;
     }
 
-    public Integer getSelectedUserProfile() {
-        return selectedUserProfile;
+    public Integer getSelectedIngestionProfile() {
+        return selectedIngestionProfile;
     }
 
-    public void setSelectedUserProfile(Integer selectedUserProfile) {
-        this.selectedUserProfile = selectedUserProfile;
+    public void setSelectedIngestionProfile(Integer selectedIngestionProfile) {
+        this.selectedIngestionProfile = selectedIngestionProfile;
     }
 
     public List<Interval> getIntervals() {

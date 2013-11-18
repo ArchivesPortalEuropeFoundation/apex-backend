@@ -9,8 +9,8 @@ import org.apache.log4j.Logger;
 import com.opensymphony.xwork2.ActionSupport;
 /**
  * @author Jara Alvarez
- * 
- * To create a new language in the system
+ 
+ To create a new language in the system
  */
 public class CreateLanguageAction extends ActionSupport {
 

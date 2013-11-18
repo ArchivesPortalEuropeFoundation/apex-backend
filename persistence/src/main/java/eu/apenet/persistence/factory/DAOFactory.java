@@ -27,7 +27,7 @@ import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.dao.UploadMethodDAO;
 import eu.apenet.persistence.dao.UserDAO;
 import eu.apenet.persistence.dao.UserRoleDAO;
-import eu.apenet.persistence.dao.UserprofileDAO;
+import eu.apenet.persistence.dao.IngestionprofileDAO;
 import eu.apenet.persistence.dao.WarningsDAO;
 import eu.apenet.persistence.exception.PersistenceException;
 
@@ -130,5 +130,5 @@ public abstract class DAOFactory {
 	public abstract UserRoleDAO getUserRoleDAO();
     public abstract EadDAO getEadDAO();
     public abstract HgSgFaRelationDAO getHgSgFaRelationDAO();
-    public abstract UserprofileDAO getUserprofileDAO();
+    public abstract IngestionprofileDAO getIngestionprofileDAO();
 }

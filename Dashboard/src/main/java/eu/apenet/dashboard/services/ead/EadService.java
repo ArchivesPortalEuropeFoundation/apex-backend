@@ -416,10 +416,10 @@ public class EadService {
                 }
             }
         } else { //USE_PROFILE
-            UserprofileDefaultNoEadidAction userprofileDefaultNoEadidAction = UserprofileDefaultNoEadidAction.getExistingFileAction(preferences.getProperty(QueueItem.NO_EADID_ACTION));
-            UserprofileDefaultUploadAction userprofileDefaultUploadAction = UserprofileDefaultUploadAction.getUploadAction(preferences.getProperty(QueueItem.UPLOAD_ACTION));
-            UserprofileDefaultExistingFileAction userprofileDefaultExistingFileAction = UserprofileDefaultExistingFileAction.getExistingFileAction(preferences.getProperty(QueueItem.EXIST_ACTION));
-            UserprofileDefaultDaoType userprofileDefaultDaoType = UserprofileDefaultDaoType.getDaoType(preferences.getProperty(QueueItem.DAO_TYPE));
+            IngestionprofileDefaultNoEadidAction ingestionprofileDefaultNoEadidAction = IngestionprofileDefaultNoEadidAction.getExistingFileAction(preferences.getProperty(QueueItem.NO_EADID_ACTION));
+            IngestionprofileDefaultUploadAction ingestionprofileDefaultUploadAction = IngestionprofileDefaultUploadAction.getUploadAction(preferences.getProperty(QueueItem.UPLOAD_ACTION));
+            IngestionprofileDefaultExistingFileAction ingestionprofileDefaultExistingFileAction = IngestionprofileDefaultExistingFileAction.getExistingFileAction(preferences.getProperty(QueueItem.EXIST_ACTION));
+            IngestionprofileDefaultDaoType ingestionprofileDefaultDaoType = IngestionprofileDefaultDaoType.getDaoType(preferences.getProperty(QueueItem.DAO_TYPE));
             XmlType xmlType = XmlType.getType(Integer.parseInt(preferences.getProperty(QueueItem.XML_TYPE)));
             LOGGER.info(QueueItem.XML_TYPE);
             LOGGER.info(xmlType == null);
@@ -432,7 +432,7 @@ public class EadService {
 
             String eadid = ExistingFilesChecker.extractAttributeFromEad(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath() + upFile.getFilename(), "eadheader/eadid", null, true).trim();
             if(StringUtils.isEmpty(eadid)) {
-                if(userprofileDefaultNoEadidAction.isRemove()) {
+                if(ingestionprofileDefaultNoEadidAction.isRemove()) {
                     deleteUpFile(upFile);
                 }
             } else {
@@ -440,7 +440,7 @@ public class EadService {
                 Ead ead;
                 Ead newEad = null;
                 if((ead = doesFileExist(upFile, eadid, xmlType)) != null) {
-                    if(userprofileDefaultExistingFileAction.isOverwrite()) {
+                    if(ingestionprofileDefaultExistingFileAction.isOverwrite()) {
                         boolean eadDeleted = false;
                         boolean upFileDeleted = false;
                         try {
@@ -472,7 +472,7 @@ public class EadService {
                             queueItem.setPriority(0);
                             queueItemDAO.store(queueItem);
                         }
-                    } else if(userprofileDefaultExistingFileAction.isKeep()) {
+                    } else if(ingestionprofileDefaultExistingFileAction.isKeep()) {
                         deleteUpFile(upFile);
                         continueTask = false;
                     }
@@ -485,24 +485,24 @@ public class EadService {
                     eadDAO.store(newEad);
 
                     Properties conversionProperties = new Properties();
-                    if(userprofileDefaultDaoType == null) {
+                    if(ingestionprofileDefaultDaoType == null) {
                         conversionProperties.put("defaultRoleType", "UNSPECIFIED");
                     } else {
-                        conversionProperties.put("defaultRoleType", userprofileDefaultDaoType.getDaoText());
+                        conversionProperties.put("defaultRoleType", ingestionprofileDefaultDaoType.getDaoText());
                     }
-                    conversionProperties.put("useDefaultRoleType", true); //todo: Take from the userprofile when Stefan adds it
+                    conversionProperties.put("useDefaultRoleType", true);
 
                     try {
-                        if(userprofileDefaultUploadAction.isConvert()) {
+                        if(ingestionprofileDefaultUploadAction.isConvert()) {
                             new ConvertTask().execute(newEad, conversionProperties);
-                        } else if(userprofileDefaultUploadAction.isValidate()) {
+                        } else if(ingestionprofileDefaultUploadAction.isValidate()) {
                             new ValidateTask().execute(newEad);
-                        } else if(userprofileDefaultUploadAction.isConvertValidatePublish() || userprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
+                        } else if(ingestionprofileDefaultUploadAction.isConvertValidatePublish() || ingestionprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
                             new ValidateTask().execute(newEad);
                             new ConvertTask().execute(newEad, conversionProperties);
                             new ValidateTask().execute(newEad);
                             new PublishTask().execute(newEad);
-                            if(userprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
+                            if(ingestionprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
                                 Properties europeanaProperties = createEuropeanaProperties(preferences);
                                 new ConvertToEseEdmTask().execute(newEad, europeanaProperties);
                                 new DeliverToEuropeanaTask().execute(newEad);

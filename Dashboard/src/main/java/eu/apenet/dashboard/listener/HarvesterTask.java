@@ -150,8 +150,8 @@ public class HarvesterTask implements Runnable {
                             File[] harvestedFiles = outputDirectory.listFiles();
                             UpFileDAO upFileDAO = DAOFactory.instance().getUpFileDAO();
 
-                            Userprofile userprofile = archivalInstitutionOaiPmh.getUserprofile();
-                            Properties properties = retrieveProperties(userprofile);
+                            Ingestionprofile ingestionprofile = archivalInstitutionOaiPmh.getIngestionprofile();
+                            Properties properties = retrieveProperties(ingestionprofile);
 
                             for(File file : harvestedFiles) {
                                 UpFile upFile = createUpFile(subdirectory, file.getName(), UploadMethod.OAI_PMH, archivalInstitution.getAiId(), FileType.XML);
@@ -220,26 +220,26 @@ public class HarvesterTask implements Runnable {
         return upFile;
     }
 
-    private static Properties retrieveProperties(Userprofile userprofile) {
+    private static Properties retrieveProperties(Ingestionprofile ingestionprofile) {
         Properties properties = new Properties();
-        properties.setProperty(QueueItem.XML_TYPE, userprofile.getFileType()+"");
-        properties.setProperty(QueueItem.NO_EADID_ACTION, userprofile.getNoeadidAction().getId()+"");
-        properties.setProperty(QueueItem.EXIST_ACTION, userprofile.getExistAction().getId()+"");
-        properties.setProperty(QueueItem.DAO_TYPE, userprofile.getDaoType().getId()+"");
-        properties.setProperty(QueueItem.DAO_TYPE_CHECK, userprofile.getDaoTypeFromFile()+"");
-        properties.setProperty(QueueItem.UPLOAD_ACTION, userprofile.getUploadAction().getId()+"");
-        properties.setProperty(QueueItem.DATA_PROVIDER, userprofile.getEuropeanaDataProvider()+"");
-        properties.setProperty(QueueItem.DATA_PROVIDER_CHECK, userprofile.getEuropeanaDataProviderFromFile()+"");
-        properties.setProperty(QueueItem.EUROPEANA_DAO_TYPE, userprofile.getEuropeanaDaoType()+"");
-        properties.setProperty(QueueItem.EUROPEANA_DAO_TYPE_CHECK, userprofile.getEuropeanaDaoTypeFromFile()+"");
-        properties.setProperty(QueueItem.LANGUAGES, userprofile.getEuropeanaLanguages()+"");
-        properties.setProperty(QueueItem.LANGUAGE_CHECK, userprofile.getEuropeanaLanguagesFromFile()+"");
-        properties.setProperty(QueueItem.LICENSE, userprofile.getEuropeanaLicense()+"");
-        properties.setProperty(QueueItem.LICENSE_DETAILS, userprofile.getEuropeanaLicenseDetails()+"");
-        properties.setProperty(QueueItem.LICENSE_ADD_INFO, userprofile.getEuropeanaAddRights()+"");
-        properties.setProperty(QueueItem.HIERARCHY_PREFIX, userprofile.getEuropeanaHierarchyPrefix()+"");
-        properties.setProperty(QueueItem.INHERIT_FILE, userprofile.getEuropeanaInheritElements()+"");
-        properties.setProperty(QueueItem.INHERIT_ORIGINATION, userprofile.getEuropeanaInheritOrigin()+"");
+        properties.setProperty(QueueItem.XML_TYPE, ingestionprofile.getFileType()+"");
+        properties.setProperty(QueueItem.NO_EADID_ACTION, ingestionprofile.getNoeadidAction().getId()+"");
+        properties.setProperty(QueueItem.EXIST_ACTION, ingestionprofile.getExistAction().getId()+"");
+        properties.setProperty(QueueItem.DAO_TYPE, ingestionprofile.getDaoType().getId()+"");
+        properties.setProperty(QueueItem.DAO_TYPE_CHECK, ingestionprofile.getDaoTypeFromFile()+"");
+        properties.setProperty(QueueItem.UPLOAD_ACTION, ingestionprofile.getUploadAction().getId()+"");
+        properties.setProperty(QueueItem.DATA_PROVIDER, ingestionprofile.getEuropeanaDataProvider()+"");
+        properties.setProperty(QueueItem.DATA_PROVIDER_CHECK, ingestionprofile.getEuropeanaDataProviderFromFile()+"");
+        properties.setProperty(QueueItem.EUROPEANA_DAO_TYPE, ingestionprofile.getEuropeanaDaoType()+"");
+        properties.setProperty(QueueItem.EUROPEANA_DAO_TYPE_CHECK, ingestionprofile.getEuropeanaDaoTypeFromFile()+"");
+        properties.setProperty(QueueItem.LANGUAGES, ingestionprofile.getEuropeanaLanguages()+"");
+        properties.setProperty(QueueItem.LANGUAGE_CHECK, ingestionprofile.getEuropeanaLanguagesFromFile()+"");
+        properties.setProperty(QueueItem.LICENSE, ingestionprofile.getEuropeanaLicense()+"");
+        properties.setProperty(QueueItem.LICENSE_DETAILS, ingestionprofile.getEuropeanaLicenseDetails()+"");
+        properties.setProperty(QueueItem.LICENSE_ADD_INFO, ingestionprofile.getEuropeanaAddRights()+"");
+        properties.setProperty(QueueItem.HIERARCHY_PREFIX, ingestionprofile.getEuropeanaHierarchyPrefix()+"");
+        properties.setProperty(QueueItem.INHERIT_FILE, ingestionprofile.getEuropeanaInheritElements()+"");
+        properties.setProperty(QueueItem.INHERIT_ORIGINATION, ingestionprofile.getEuropeanaInheritOrigin()+"");
         return properties;
     }
 

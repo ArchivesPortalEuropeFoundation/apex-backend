@@ -418,14 +418,14 @@
         </action>
 
 		<!-- New archival institution -->
-		<action name="ALEditor" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" > 
+		<action name="ALEditor" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" >
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="success" type="tiles">newEditAL</result>
 		</action>
-		
+
 		<action name="ALDownload" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="download">
 			<result name="download" type="stream">
- 				<param name="contentType">application/file-download</param> 
+ 				<param name="contentType">application/file-download</param>
 				<param name="contentCharSet">UTF-8</param>
 				<param name="inputName">inputStream</param>
 				<param name="contentLength">${fileSize}</param>
@@ -434,11 +434,11 @@
 			</result>
 			<result name="error" type="tiles">ALnotFound</result>
 		</action>
-		
+
 		<action name="ALUploadForm" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" >
 			<result name="success" type="tiles">newUploadAL</result>
 		</action>
-		
+
 		<action name="ALUpload" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="upload">
 			<interceptor-ref name="changeLanguageStack"/>
 			<result name="success" type="redirectAction">
@@ -446,21 +446,21 @@
 			</result>
 			<result name="error" type="tiles">uploaderrorformat2</result>
 		</action>
-		<action name="getALTree" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="getArchivalInstitutionTree"> 
+		<action name="getALTree" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="getArchivalInstitutionTree">
 			<result name="SUCCESS" type="stream">
 				<param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
 			</result>
 		</action>
-		
-		<action name="getALActions" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="getArchivalInstitutionPossibleActions"> 
+
+		<action name="getALActions" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="getArchivalInstitutionPossibleActions">
 			<result name="SUCCESS" type="stream">
 				<param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
 			</result>
 		</action>
-		
-		<action name="launchALActions" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="launchArchivalInstitutionActions"> 
+
+		<action name="launchALActions" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="launchArchivalInstitutionActions">
 			<result name="SUCCESS" type="stream">
 				<param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
@@ -1066,21 +1066,21 @@
             <result name="success" type="tiles">automaticharvestingcreation</result>
             <result name="error">/jsp/templates/blank.jsp</result>
         </action>
-        <action name="userprofiles" class="eu.apenet.dashboard.manual.UserprofilesAction" method="input">
+        <action name="ingestionprofiles" class="eu.apenet.dashboard.manual.IngestionprofilesAction" method="input">
             <interceptor-ref name="changeLanguageStack"/>
-            <result name="success" type="tiles">userprofilesMain</result>
+            <result name="success" type="tiles">ingestionprofilesMain</result>
         </action>
-        <action name="addUserprofile" class="eu.apenet.dashboard.manual.UserprofilesAction" method="addUserprofile">
+        <action name="addIngestionprofile" class="eu.apenet.dashboard.manual.IngestionprofilesAction" method="addIngestionprofile">
             <interceptor-ref name="changeLanguageStack"/>
-            <result name="success" type="tiles">userprofilesMain</result>
+            <result name="success" type="tiles">ingestionprofilesMain</result>
         </action>
-        <action name="storeUserprofile" class="eu.apenet.dashboard.manual.UserprofilesAction">
+        <action name="storeIngestionprofile" class="eu.apenet.dashboard.manual.IngestionprofilesAction">
             <interceptor-ref name="changeLanguageStack"/>
             <result name="success" type="redirectAction">
-                <param name="actionName">userprofiles</param>
+                <param name="actionName">ingestionprofiles</param>
             </result>
         </action>
-        <action name="cancelUserprofileEditing" class="eu.apenet.dashboard.manual.UserprofilesAction" method="cancel">
+        <action name="cancelIngestionprofileEditing" class="eu.apenet.dashboard.manual.IngestionprofilesAction" method="cancel">
             <result name="success" type="redirectAction">
                 <param name="actionName">dashboardHome</param>
             </result>

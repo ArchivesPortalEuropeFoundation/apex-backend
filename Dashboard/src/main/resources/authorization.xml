@@ -26,8 +26,8 @@
             <!-- Edition of EAD -->
             <!-- editEad, editEadCreateDbEntries, editEadXml, editEadXmlSaveLevel, editEadXmlSaveAll, editEadXmlDeleteEntries, editEadGetFields, editEadAddField, -->
 
-            <!-- edit userprofiles -->
-            userprofiles, addUserprofile, storeUserprofile, cancelUserprofileEditing,
+            <!-- edit ingestionprofiles -->
+            ingestionprofiles, addIngestionprofile, storeIngestionprofile, cancelIngestionprofileEditing,
 
             <!-- Uploading -->
             generateEadidResponseJSON, connectFTP, updateFtp, saveFtpFiles,

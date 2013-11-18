@@ -23,10 +23,10 @@ import com.opensymphony.xwork2.Preparable;
 
 /**
  * @author Jara Alvarez
- * 
- * To insert new alternative names for a country in the system
- * 
- * 		//      - Insert registers in couAlternativeNames entities
+ 
+ To insert new alternative names for a country in the system
+ 
+ 		//      - Insert registers in couAlternativeNames entities
 		//		- To change the AL.xml with a new translation
 
  */

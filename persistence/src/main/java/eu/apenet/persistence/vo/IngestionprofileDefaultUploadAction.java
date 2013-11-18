@@ -8,18 +8,18 @@ package eu.apenet.persistence.vo;
  *
  * @author papp
  */
-public enum UserprofileDefaultUploadAction {
+public enum IngestionprofileDefaultUploadAction {
 
-    NOTHING(0, "userprofiles.upload.nothing"),
-    CONVERT_VALIDATE_PUBLISH(1, "userprofiles.upload.convertValidatePublish"),
-    CONVERT_VALIDATE_PUBLISH_EUROPEANA(2, "userprofiles.upload.convertValidatePublishEuropeana"),
-    CONVERT(3, "userprofiles.upload.convert"),
-    VALIDATE(4, "userprofiles.upload.validate");
+    NOTHING(0, "ingestionprofiles.upload.nothing"),
+    CONVERT_VALIDATE_PUBLISH(1, "ingestionprofiles.upload.convertValidatePublish"),
+    CONVERT_VALIDATE_PUBLISH_EUROPEANA(2, "ingestionprofiles.upload.convertValidatePublishEuropeana"),
+    CONVERT(3, "ingestionprofiles.upload.convert"),
+    VALIDATE(4, "ingestionprofiles.upload.validate");
 
     private String resourceName;
     private int id;
 
-    private UserprofileDefaultUploadAction(int id, String resourceName) {
+    private IngestionprofileDefaultUploadAction(int id, String resourceName) {
         this.id = id;
         this.resourceName = resourceName;
     }
@@ -48,8 +48,8 @@ public enum UserprofileDefaultUploadAction {
         return id;
     }
 
-    public static UserprofileDefaultUploadAction getUploadAction(String id) {
-        for (UserprofileDefaultUploadAction uploadAction : UserprofileDefaultUploadAction.values()) {
+    public static IngestionprofileDefaultUploadAction getUploadAction(String id) {
+        for (IngestionprofileDefaultUploadAction uploadAction : IngestionprofileDefaultUploadAction.values()) {
             if (uploadAction.id == Integer.parseInt(id)) {
                 return uploadAction;
             }

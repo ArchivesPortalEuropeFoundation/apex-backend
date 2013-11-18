@@ -13,12 +13,12 @@
             </tr>
 <%--            <tr>
                 <td>
-                    <s:select id="profileCb" list="userprofiles" key="userprofiles.chooseprofile" name="userprofile" listKey="value" listValue="content" />
+                    <s:select id="profileCb" list="ingestionprofiles" key="ingestionprofiles.chooseprofile" name="ingestionprofile" listKey="value" listValue="content" />
                 </td>
             </tr>--%>
         </table>
         <s:form id="httpUpload" method="POST" enctype="multipart/form-data" action="httpUpload">
-            <s:select id="profileCb2" list="userprofiles" key="userprofiles.chooseprofile" name="userprofile" listKey="value" listValue="content" />
+            <s:select id="profileCb2" list="ingestionprofiles" key="ingestionprofiles.chooseprofile" name="ingestionprofile" listKey="value" listValue="content" />
             <p style="margin-top:10px;">
                 <s:file id="httpFile" theme="simple" name="httpFile" key="label.filetoupload"/>
             </p>
@@ -39,15 +39,13 @@
             <s:password name="ftpPwd" key="label.password" />
             <s:submit onclick="document.getElementById('stopButton').style.display='block';" method="connectFTP" key="label.ftpconexion" />
         </s:form>
-        <div style="width:100%;float:left;"><div style="width:50%;float:left;margin-left: -1em;">&nbsp;</div><input id="stopButton" style="display:none;float:left;" type="button" value="<s:property value="getText('label.stop')"/>" onclick="stopBrowser('stopButton', '<s:property value="getText('al.message.canceled')" />')" /></div>
+        <div style="width:100%;float:left;">
+            <div style="width:50%;float:left;margin-left: -1em;">&nbsp;</div>
+            <input id="stopButton" style="display:none;float:left;" type="button" value="<s:property value="getText('label.stop')"/>" onclick="stopBrowser('stopButton', '<s:property value="getText('al.message.canceled')" />')" />
+        </div>
     </div>
 </div>
 <script type="text/javascript">
-    function submit() {
-        alert("Selected userprofile: " + $('#profileCb').attr("value"));
-        document.getElementById('stopButton').style.display='block';
-    }
-
     function changeOptions(option) {
         if (option.value == "FTP") {
             document.getElementById("httpUpload").style.display = "none";

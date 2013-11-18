@@ -16,8 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "userprofile")
-public class Userprofile implements Serializable {
+@Table(name = "ingestionprofile")
+public class Ingestionprofile implements Serializable {
 
     private static final long serialVersionUID = 1383138313831383138L;
     @Id
@@ -33,13 +33,13 @@ public class Userprofile implements Serializable {
     @Column(name = "file_type")
     private Integer fileType;
     @Column(name = "upload_action")
-    private UserprofileDefaultUploadAction uploadAction = UserprofileDefaultUploadAction.CONVERT_VALIDATE_PUBLISH;
+    private IngestionprofileDefaultUploadAction uploadAction = IngestionprofileDefaultUploadAction.CONVERT_VALIDATE_PUBLISH;
     @Column(name = "exist_action")
-    private UserprofileDefaultExistingFileAction existAction = UserprofileDefaultExistingFileAction.KEEP;
+    private IngestionprofileDefaultExistingFileAction existAction = IngestionprofileDefaultExistingFileAction.KEEP;
     @Column(name = "noeadid_action")
-    private UserprofileDefaultNoEadidAction noeadidAction = UserprofileDefaultNoEadidAction.REMOVE;
+    private IngestionprofileDefaultNoEadidAction noeadidAction = IngestionprofileDefaultNoEadidAction.REMOVE;
     @Column(name = "dao_type")
-    private UserprofileDefaultDaoType daoType = UserprofileDefaultDaoType.UNSPECIFIED;
+    private IngestionprofileDefaultDaoType daoType = IngestionprofileDefaultDaoType.UNSPECIFIED;
     @Column(name = "dao_type_from_file")
     private Boolean daoTypeFromFile = true;
     @Column(name = "europeana_dp")
@@ -67,10 +67,10 @@ public class Userprofile implements Serializable {
     @Column(name = "europeana_inh_origin")
     private Boolean europeanaInheritOrigin = false;
 
-    public Userprofile() {
+    public Ingestionprofile() {
     }
 
-    public Userprofile(Integer aiId, String nameProfile, Integer fileType) {
+    public Ingestionprofile(Integer aiId, String nameProfile, Integer fileType) {
         this.aiId = aiId;
         this.nameProfile = nameProfile;
         this.fileType = fileType;
@@ -116,35 +116,35 @@ public class Userprofile implements Serializable {
         this.fileType = fileType;
     }
 
-    public UserprofileDefaultUploadAction getUploadAction() {
+    public IngestionprofileDefaultUploadAction getUploadAction() {
         return uploadAction;
     }
 
-    public void setUploadAction(UserprofileDefaultUploadAction uploadAction) {
+    public void setUploadAction(IngestionprofileDefaultUploadAction uploadAction) {
         this.uploadAction = uploadAction;
     }
 
-    public UserprofileDefaultExistingFileAction getExistAction() {
+    public IngestionprofileDefaultExistingFileAction getExistAction() {
         return existAction;
     }
 
-    public void setExistAction(UserprofileDefaultExistingFileAction existAction) {
+    public void setExistAction(IngestionprofileDefaultExistingFileAction existAction) {
         this.existAction = existAction;
     }
 
-    public UserprofileDefaultNoEadidAction getNoeadidAction() {
+    public IngestionprofileDefaultNoEadidAction getNoeadidAction() {
         return noeadidAction;
     }
 
-    public void setNoeadidAction(UserprofileDefaultNoEadidAction noeadidAction) {
+    public void setNoeadidAction(IngestionprofileDefaultNoEadidAction noeadidAction) {
         this.noeadidAction = noeadidAction;
     }
 
-    public UserprofileDefaultDaoType getDaoType() {
+    public IngestionprofileDefaultDaoType getDaoType() {
         return daoType;
     }
 
-    public void setDaoType(UserprofileDefaultDaoType daoType) {
+    public void setDaoType(IngestionprofileDefaultDaoType daoType) {
         this.daoType = daoType;
     }
 

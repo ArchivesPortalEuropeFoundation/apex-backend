@@ -14,57 +14,57 @@
 
 </script>
 
-<div id="userprofiles">
-    <s:form id="webformUserprofile" method="POST" theme="simple" action="storeUserprofile">
+<div id="ingestionprofiles">
+    <s:form id="webformIngestionprofile" method="POST" theme="simple" action="storeIngestionprofile">
         <table>
             <tr>
                 <th>
-                    <s:label key="userprofiles.chooseprofile" />
+                    <s:label key="ingestionprofiles.chooseprofile" />
                 </th>
             </tr>
             <tr>
                 <td>
-                    <s:select id="profileCb" name="profilelist" list="userprofiles" listKey="value" listValue="content" />
-                    <s:submit key="userprofiles.createprofile" action="addUserprofile" />
+                    <s:select id="profileCb" name="profilelist" list="ingestionprofiles" listKey="value" listValue="content" />
+                    <s:submit key="ingestionprofiles.createprofile" action="addIngestionprofile" />
                 </td>
             </tr>
             <tr>
                 <td>
-                    <s:label key="userprofiles.profilename" for="profilenameTf" />
+                    <s:label key="ingestionprofiles.profilename" for="profilenameTf" />
                     <s:textfield id="profilename" name="profileName" />
                 </td>
             </tr>
             <tr>
                 <td>
-                    <s:label key="userprofiles.associatedFiletype" for="associatedFiletypeCb" />
+                    <s:label key="ingestionprofiles.associatedFiletype" for="associatedFiletypeCb" />
                     <s:select id="associatedFiletypeCb" name="associatedFiletype" list="associatedFiletypes" listKey="value" listValue="content" />
                 </td>
             </tr>
         </table>
-        <div id="userprofileTabs" class="corner-all helper-clearfix">
-            <ul id="userprofileTabsContainer">
+        <div id="ingestionprofileTabs" class="corner-all helper-clearfix">
+            <ul id="ingestionprofileTabsContainer">
                 <li id="tab-basic">
-                    <a href="#tab-basic"><s:property value="getText('userprofiles.tab.basic')" /></a>
+                    <a href="#tab-basic"><s:property value="getText('ingestionprofiles.tab.basic')" /></a>
                 </li>
                 <li id="tab-europeana">
-                    <a href="#tab-europeana"><s:property value="getText('userprofiles.tab.europeana')" /></a>
+                    <a href="#tab-europeana"><s:property value="getText('ingestionprofiles.tab.europeana')" /></a>
                 </li>
             </ul>
             <input type="hidden" id="currentTab" value="" />
             <div id="container" class="container">
                 <div id="tab-basic">
-                    <jsp:include page="userprofileBasic.jsp" />
+                    <jsp:include page="ingestionprofileBasic.jsp" />
                 </div>
                 <div id="tab-europeana">
-                    <jsp:include page="userprofileEuropeana.jsp" />
+                    <jsp:include page="ingestionprofileEuropeana.jsp" />
                 </div>
             </div>
         </div>
         <table id="saveButtonPanel">
             <tr>
                 <td>
-                    <s:submit id="userprofilesSave" key="userprofiles.save" />
-                    <s:submit id="userprofilesCancel" key="userprofiles.cancel" action="cancelUserprofileEditing" />
+                    <s:submit id="ingestionprofilesSave" key="ingestionprofiles.save" />
+                    <s:submit id="ingestionprofilesCancel" key="ingestionprofiles.cancel" action="cancelIngestionprofileEditing" />
                 </td>
             </tr>
         </table>

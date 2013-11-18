@@ -7,13 +7,13 @@ package eu.apenet.dashboard.manual;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
-import eu.apenet.persistence.dao.UserprofileDAO;
+import eu.apenet.persistence.dao.IngestionprofileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.Userprofile;
-import eu.apenet.persistence.vo.UserprofileDefaultDaoType;
-import eu.apenet.persistence.vo.UserprofileDefaultExistingFileAction;
-import eu.apenet.persistence.vo.UserprofileDefaultNoEadidAction;
-import eu.apenet.persistence.vo.UserprofileDefaultUploadAction;
+import eu.apenet.persistence.vo.Ingestionprofile;
+import eu.apenet.persistence.vo.IngestionprofileDefaultDaoType;
+import eu.apenet.persistence.vo.IngestionprofileDefaultExistingFileAction;
+import eu.apenet.persistence.vo.IngestionprofileDefaultNoEadidAction;
+import eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
  *
  * @author papp
  */
-public class UserprofilesAction extends AbstractInstitutionAction {
+public class IngestionprofilesAction extends AbstractInstitutionAction {
 
     private static final String CREATIVECOMMONS_CPDM = "cpdm";
     private static final String CREATIVECOMMONS_CC0 = "cc0";
@@ -37,7 +37,7 @@ public class UserprofilesAction extends AbstractInstitutionAction {
     private static final String INHERITLANGUAGE_PROVIDE = "provide";
 
     //Collections for basic tab
-    private Set<SelectItem> userprofiles = new LinkedHashSet<SelectItem>();
+    private Set<SelectItem> ingestionprofiles = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> associatedFiletypes = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> uploadedFileActions = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> existingFileActions = new LinkedHashSet<SelectItem>();
@@ -78,72 +78,72 @@ public class UserprofilesAction extends AbstractInstitutionAction {
     private String inheritOrigination;
 
     //other fields
-    private static final Logger LOG = Logger.getLogger(UserprofilesAction.class);
+    private static final Logger LOG = Logger.getLogger(IngestionprofilesAction.class);
 
     @Override
     public String input() {
         setUp();
 
-        UserprofileDAO profileDAO = DAOFactory.instance().getUserprofileDAO();
-        List<Userprofile> queryResult = profileDAO.getUserprofiles(getAiId());
+        IngestionprofileDAO profileDAO = DAOFactory.instance().getIngestionprofileDAO();
+        List<Ingestionprofile> queryResult = profileDAO.getIngestionprofiles(getAiId());
         if (queryResult != null && !queryResult.isEmpty()) {
-            for (Userprofile entry : queryResult) {
-                userprofiles.add(new SelectItem(Long.toString(entry.getId()), entry.getNameProfile()));
+            for (Ingestionprofile entry : queryResult) {
+                ingestionprofiles.add(new SelectItem(Long.toString(entry.getId()), entry.getNameProfile()));
             }
             if (profilelist == null) {
-                profilelist = userprofiles.iterator().next().getValue();
+                profilelist = ingestionprofiles.iterator().next().getValue();
             }
         }
 
         if (StringUtils.isNotBlank(profilelist)) {
             Long profilelistLong = Long.parseLong(profilelist);
-            Userprofile userprofile = profileDAO.findById(profilelistLong);
-            profileName = userprofile.getNameProfile();
-            associatedFiletype = userprofile.getFileType().toString();
-            uploadedFileAction = Integer.toString(userprofile.getUploadAction().getId());
-            existingFileAction = Integer.toString(userprofile.getExistAction().getId());
-            noEadidAction = Integer.toString(userprofile.getNoeadidAction().getId());
-            daoType = Integer.toString(userprofile.getDaoType().getId());
-            daoTypeCheck = Boolean.toString(userprofile.getDaoTypeFromFile());
+            Ingestionprofile ingestionprofile = profileDAO.findById(profilelistLong);
+            profileName = ingestionprofile.getNameProfile();
+            associatedFiletype = ingestionprofile.getFileType().toString();
+            uploadedFileAction = Integer.toString(ingestionprofile.getUploadAction().getId());
+            existingFileAction = Integer.toString(ingestionprofile.getExistAction().getId());
+            noEadidAction = Integer.toString(ingestionprofile.getNoeadidAction().getId());
+            daoType = Integer.toString(ingestionprofile.getDaoType().getId());
+            daoTypeCheck = Boolean.toString(ingestionprofile.getDaoTypeFromFile());
 
-            textDataProvider = userprofile.getEuropeanaDataProvider();
-            dataProviderCheck = Boolean.toString(userprofile.getEuropeanaDataProviderFromFile());
-            europeanaDaoType = Integer.toString(userprofile.getEuropeanaDaoType());
-            europeanaDaoTypeCheck = Boolean.toString(userprofile.getEuropeanaDaoTypeFromFile());
-            String[] tempLang = userprofile.getEuropeanaLanguages().split(" ");
+            textDataProvider = ingestionprofile.getEuropeanaDataProvider();
+            dataProviderCheck = Boolean.toString(ingestionprofile.getEuropeanaDataProviderFromFile());
+            europeanaDaoType = Integer.toString(ingestionprofile.getEuropeanaDaoType());
+            europeanaDaoTypeCheck = Boolean.toString(ingestionprofile.getEuropeanaDaoTypeFromFile());
+            String[] tempLang = ingestionprofile.getEuropeanaLanguages().split(" ");
             languageSelection.addAll(Arrays.asList(tempLang));
-            languageCheck = Boolean.toString(userprofile.getEuropeanaLanguagesFromFile());
-            license = userprofile.getEuropeanaLicense();
+            languageCheck = Boolean.toString(ingestionprofile.getEuropeanaLanguagesFromFile());
+            license = ingestionprofile.getEuropeanaLicense();
             if (license.equals(EUROPEANA)) {
-                europeanaLicense = userprofile.getEuropeanaLicenseDetails();
+                europeanaLicense = ingestionprofile.getEuropeanaLicenseDetails();
             }
             if (license.equals(CREATIVECOMMONS)) {
-                cc_js_result_uri = userprofile.getEuropeanaLicenseDetails();
+                cc_js_result_uri = ingestionprofile.getEuropeanaLicenseDetails();
             }
-            licenseAdditionalInformation = userprofile.getEuropeanaAddRights();
-            hierarchyPrefix = userprofile.getEuropeanaHierarchyPrefix();
-            inheritFileParent = Boolean.toString(userprofile.getEuropeanaInheritElements());
-            inheritOrigination = Boolean.toString(userprofile.getEuropeanaInheritOrigin());
+            licenseAdditionalInformation = ingestionprofile.getEuropeanaAddRights();
+            hierarchyPrefix = ingestionprofile.getEuropeanaHierarchyPrefix();
+            inheritFileParent = Boolean.toString(ingestionprofile.getEuropeanaInheritElements());
+            inheritOrigination = Boolean.toString(ingestionprofile.getEuropeanaInheritOrigin());
         }
         return SUCCESS;
     }
 
     @Override
     public String execute() throws Exception {
-        UserprofileDAO profileDAO = DAOFactory.instance().getUserprofileDAO();
-        Userprofile profile;
+        IngestionprofileDAO profileDAO = DAOFactory.instance().getIngestionprofileDAO();
+        Ingestionprofile profile;
         if (profilelist.equals("-1")) {
-            profile = new Userprofile(getAiId(), "", 1);
+            profile = new Ingestionprofile(getAiId(), "", 1);
         } else {
             profile = profileDAO.findById(Long.parseLong(profilelist));
         }
 
         profile.setNameProfile(profileName);
         profile.setFileType(Integer.parseInt(associatedFiletype));
-        profile.setUploadAction(UserprofileDefaultUploadAction.getUploadAction(uploadedFileAction));
-        profile.setExistAction(UserprofileDefaultExistingFileAction.getExistingFileAction(existingFileAction));
-        profile.setNoeadidAction(UserprofileDefaultNoEadidAction.getExistingFileAction(noEadidAction));
-        profile.setDaoType(UserprofileDefaultDaoType.getDaoType(daoType));
+        profile.setUploadAction(IngestionprofileDefaultUploadAction.getUploadAction(uploadedFileAction));
+        profile.setExistAction(IngestionprofileDefaultExistingFileAction.getExistingFileAction(existingFileAction));
+        profile.setNoeadidAction(IngestionprofileDefaultNoEadidAction.getExistingFileAction(noEadidAction));
+        profile.setDaoType(IngestionprofileDefaultDaoType.getDaoType(daoType));
         profile.setDaoTypeFromFile(Boolean.parseBoolean(daoTypeCheck));
 
         profile.setEuropeanaDataProvider(textDataProvider);
@@ -178,17 +178,17 @@ public class UserprofilesAction extends AbstractInstitutionAction {
         return SUCCESS;
     }
 
-    public String addUserprofile() throws Exception {
+    public String addIngestionprofile() throws Exception {
         setUp();
 
-        UserprofileDAO profileDAO = DAOFactory.instance().getUserprofileDAO();
-        List<Userprofile> queryResult = profileDAO.getUserprofiles(getAiId());
+        IngestionprofileDAO profileDAO = DAOFactory.instance().getIngestionprofileDAO();
+        List<Ingestionprofile> queryResult = profileDAO.getIngestionprofiles(getAiId());
         if (queryResult != null && !queryResult.isEmpty()) {
-            for (Userprofile entry : queryResult) {
-                userprofiles.add(new SelectItem(Long.toString(entry.getId()), entry.getNameProfile()));
+            for (Ingestionprofile entry : queryResult) {
+                ingestionprofiles.add(new SelectItem(Long.toString(entry.getId()), entry.getNameProfile()));
             }
         }
-        userprofiles.add(new SelectItem("-1", ""));
+        ingestionprofiles.add(new SelectItem("-1", ""));
         profilelist = "-1";
         profileName = "";
         associatedFiletype = XmlType.EAD_FA.getIdentifier() + "";
@@ -223,21 +223,21 @@ public class UserprofilesAction extends AbstractInstitutionAction {
         associatedFiletypes.add(new SelectItem(XmlType.EAD_FA.getIdentifier(), getText("content.message.fa")));
         associatedFiletypes.add(new SelectItem(XmlType.EAD_HG.getIdentifier(), getText("content.message.hg")));
         associatedFiletypes.add(new SelectItem(XmlType.EAD_SG.getIdentifier(), getText("content.message.sg")));
-        uploadedFileActions.add(new SelectItem("1", getText("userprofiles.upload.convertValidatePublish")));
-        uploadedFileActions.add(new SelectItem("2", getText("userprofiles.upload.convertValidatePublishEuropeana")));
-        uploadedFileActions.add(new SelectItem("3", getText("userprofiles.upload.convert")));
-        uploadedFileActions.add(new SelectItem("4", getText("userprofiles.upload.validate")));
-        uploadedFileActions.add(new SelectItem("0", getText("userprofiles.upload.nothing")));
-        existingFileActions.add(new SelectItem("1", getText("userprofiles.existing.overwrite")));
-        existingFileActions.add(new SelectItem("0", getText("userprofiles.existing.keep")));
-        noEadidActions.add(new SelectItem("0", getText("userprofiles.noeadid.remove")));
-        noEadidActions.add(new SelectItem("1", getText("userprofiles.noeadid.addLater")));
-        daoTypes.add(new SelectItem("1", getText("userprofiles.dao.text")));
-        daoTypes.add(new SelectItem("2", getText("userprofiles.dao.image")));
-        daoTypes.add(new SelectItem("3", getText("userprofiles.dao.sound")));
-        daoTypes.add(new SelectItem("4", getText("userprofiles.dao.video")));
-        daoTypes.add(new SelectItem("5", getText("userprofiles.dao.3D")));
-        daoTypes.add(new SelectItem("0", getText("userprofiles.dao.unspecified")));
+        uploadedFileActions.add(new SelectItem("1", getText("ingestionprofiles.upload.convertValidatePublish")));
+        uploadedFileActions.add(new SelectItem("2", getText("ingestionprofiles.upload.convertValidatePublishEuropeana")));
+        uploadedFileActions.add(new SelectItem("3", getText("ingestionprofiles.upload.convert")));
+        uploadedFileActions.add(new SelectItem("4", getText("ingestionprofiles.upload.validate")));
+        uploadedFileActions.add(new SelectItem("0", getText("ingestionprofiles.upload.nothing")));
+        existingFileActions.add(new SelectItem("1", getText("ingestionprofiles.existing.overwrite")));
+        existingFileActions.add(new SelectItem("0", getText("ingestionprofiles.existing.keep")));
+        noEadidActions.add(new SelectItem("0", getText("ingestionprofiles.noeadid.remove")));
+        noEadidActions.add(new SelectItem("1", getText("ingestionprofiles.noeadid.addLater")));
+        daoTypes.add(new SelectItem("1", getText("ingestionprofiles.dao.text")));
+        daoTypes.add(new SelectItem("2", getText("ingestionprofiles.dao.image")));
+        daoTypes.add(new SelectItem("3", getText("ingestionprofiles.dao.sound")));
+        daoTypes.add(new SelectItem("4", getText("ingestionprofiles.dao.video")));
+        daoTypes.add(new SelectItem("5", getText("ingestionprofiles.dao.3D")));
+        daoTypes.add(new SelectItem("0", getText("ingestionprofiles.dao.unspecified")));
 
         //Europeana preferences
         String[] isoLanguages = Locale.getISOLanguages();
@@ -246,11 +246,11 @@ public class UserprofilesAction extends AbstractInstitutionAction {
             languages.add(new SelectItem(language, languageDescription));
         }
         typeSet.add(new SelectItem("", getText("ead2ese.content.selectone")));
-        typeSet.add(new SelectItem("1", getText("userprofiles.dao.text")));
-        typeSet.add(new SelectItem("2", getText("userprofiles.dao.image")));
-        typeSet.add(new SelectItem("3", getText("userprofiles.dao.sound")));
-        typeSet.add(new SelectItem("4", getText("userprofiles.dao.video")));
-        typeSet.add(new SelectItem("5", getText("userprofiles.dao.3D")));
+        typeSet.add(new SelectItem("1", getText("ingestionprofiles.dao.text")));
+        typeSet.add(new SelectItem("2", getText("ingestionprofiles.dao.image")));
+        typeSet.add(new SelectItem("3", getText("ingestionprofiles.dao.sound")));
+        typeSet.add(new SelectItem("4", getText("ingestionprofiles.dao.video")));
+        typeSet.add(new SelectItem("5", getText("ingestionprofiles.dao.3D")));
         yesNoSet.add(new SelectItem("true", getText("ead2ese.content.yes")));
         yesNoSet.add(new SelectItem("false", getText("ead2ese.content.no")));
         inheritLanguageSet.add(new SelectItem("1", getText("ead2ese.content.yes")));
@@ -267,12 +267,12 @@ public class UserprofilesAction extends AbstractInstitutionAction {
         europeanaLicenseSet.add(new SelectItem("http://www.europeana.eu/rights/unknown/", getText("ead2ese.content.license.europeana.access.unknown")));
     }
 
-    public Set<SelectItem> getUserprofiles() {
-        return userprofiles;
+    public Set<SelectItem> getIngestionprofiles() {
+        return ingestionprofiles;
     }
 
-    public void setUserprofiles(Set<SelectItem> userprofiles) {
-        this.userprofiles = userprofiles;
+    public void setIngestionprofiles(Set<SelectItem> ingestionprofiles) {
+        this.ingestionprofiles = ingestionprofiles;
     }
 
     public String getProfilelist() {

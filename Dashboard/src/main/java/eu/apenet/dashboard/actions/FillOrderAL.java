@@ -49,8 +49,8 @@ import eu.apenet.persistence.vo.Lang;
 
 /**
  * @author Jara Alvarez
- * 
- * Temporary action for fill in the alorder attribute in the archival_institution entity for the first time
+ 
+ Temporary action for fill in the alorder attribute in the archival_institution entity for the first time
  */
 public class FillOrderAL extends ActionSupport {
 

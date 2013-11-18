@@ -10,14 +10,14 @@ package eu.apenet.persistence.vo;
  *
  * @author papp
  */
-public enum UserprofileDefaultNoEadidAction {
-    REMOVE(0, "userprofiles.noeadid.remove"),
-    ADD_LATER(1, "userprofiles.noeadid.addLater");
+public enum IngestionprofileDefaultNoEadidAction {
+    REMOVE(0, "ingestionprofiles.noeadid.remove"),
+    ADD_LATER(1, "ingestionprofiles.noeadid.addLater");
 
     private int id;
     private String resourceName;
 
-    private UserprofileDefaultNoEadidAction(int id, String resourceName) {
+    private IngestionprofileDefaultNoEadidAction(int id, String resourceName) {
         this.id = id;
         this.resourceName = resourceName;
     }
@@ -38,8 +38,8 @@ public enum UserprofileDefaultNoEadidAction {
         return resourceName;
     }
 
-    public static UserprofileDefaultNoEadidAction getExistingFileAction(String id) {
-        for (UserprofileDefaultNoEadidAction noEadidAction : UserprofileDefaultNoEadidAction.values()) {
+    public static IngestionprofileDefaultNoEadidAction getExistingFileAction(String id) {
+        for (IngestionprofileDefaultNoEadidAction noEadidAction : IngestionprofileDefaultNoEadidAction.values()) {
             if (noEadidAction.id == Integer.parseInt(id)) {
                 return noEadidAction;
             }

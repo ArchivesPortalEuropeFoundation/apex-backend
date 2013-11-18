@@ -8,15 +8,15 @@ package eu.apenet.persistence.vo;
  *
  * @author papp
  */
-public enum UserprofileDefaultExistingFileAction {
+public enum IngestionprofileDefaultExistingFileAction {
 
-    KEEP(0, "userprofiles.existing.keep"),
-    OVERWRITE(1, "userprofiles.existing.overwrite");
+    KEEP(0, "ingestionprofiles.existing.keep"),
+    OVERWRITE(1, "ingestionprofiles.existing.overwrite");
 
     private int id;
     private String resourceName;
 
-    private UserprofileDefaultExistingFileAction(int id, String resourceName) {
+    private IngestionprofileDefaultExistingFileAction(int id, String resourceName) {
         this.id = id;
         this.resourceName = resourceName;
     }
@@ -37,8 +37,8 @@ public enum UserprofileDefaultExistingFileAction {
         return resourceName;
     }
 
-    public static UserprofileDefaultExistingFileAction getExistingFileAction(String id) {
-        for (UserprofileDefaultExistingFileAction existingFileAction : UserprofileDefaultExistingFileAction.values()) {
+    public static IngestionprofileDefaultExistingFileAction getExistingFileAction(String id) {
+        for (IngestionprofileDefaultExistingFileAction existingFileAction : IngestionprofileDefaultExistingFileAction.values()) {
             if (existingFileAction.id == Integer.parseInt(id)) {
                 return existingFileAction;
             }

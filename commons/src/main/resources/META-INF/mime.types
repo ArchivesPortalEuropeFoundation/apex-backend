@@ -682,7 +682,7 @@ application/vnd.oasis.opendocument.text-web		oth
 # application/vnd.oipf.spdiscovery+xml
 # application/vnd.oipf.spdlist+xml
 # application/vnd.oipf.ueprofile+xml
-# application/vnd.oipf.userprofile+xml
+# application/vnd.oipf.ingestionprofile+xml
 application/vnd.olpc-sugar			xo
 # application/vnd.oma-scws-config
 # application/vnd.oma-scws-http-request
