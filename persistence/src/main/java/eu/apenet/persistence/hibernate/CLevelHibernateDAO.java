@@ -20,7 +20,32 @@ import eu.apenet.persistence.vo.SourceGuide;
 public class CLevelHibernateDAO extends AbstractHibernateDAO<CLevel, Long> implements CLevelDAO {
 
 	private final static Logger LOG = Logger.getLogger(CLevelHibernateDAO.class);
-
+	@Override
+	public Long countCLevels(Class<? extends Ead> clazz, Integer id){
+		String propertyName = "faId";
+		if (clazz.equals(HoldingsGuide.class))
+			propertyName = "hgId";
+		else if (clazz.equals(SourceGuide.class))
+			propertyName = "sgId";
+		TypedQuery<Long> query = getEntityManager().createQuery(
+				"SELECT COUNT(clevel) FROM CLevel clevel WHERE clevel.eadContent." + propertyName + " = :fileId", Long.class);
+		query.setParameter("fileId", id);		
+		return query.getSingleResult();
+	}
+	@Override
+	public List<CLevel> getCLevels(Class<? extends Ead> clazz, Integer id, int pageNumber, int pageSize){
+		String propertyName = "faId";
+		if (clazz.equals(HoldingsGuide.class))
+			propertyName = "hgId";
+		else if (clazz.equals(SourceGuide.class))
+			propertyName = "sgId";
+		TypedQuery<CLevel> query = getEntityManager().createQuery(
+				"SELECT clevel FROM CLevel clevel WHERE clevel.eadContent." + propertyName+ " = :fileId", CLevel.class);
+		query.setParameter("fileId", id);
+		query.setMaxResults(pageSize);
+		query.setFirstResult(pageSize * (pageNumber - 1));
+		return query.getResultList();
+	}
 	public List<CLevel> getTopClevelsByFileId(Integer fileId, Class<? extends Ead> clazz, int firstResult, int maxResult) {
 		String propertyName = "faId";
 		if (clazz.equals(HoldingsGuide.class))
