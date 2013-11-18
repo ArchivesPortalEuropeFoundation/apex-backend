@@ -328,20 +328,13 @@ public class EadService {
                     queueItemDAO.store(queueItem);
 
                     if (queueAction.isOverwriteAction()) {
-                        boolean isPublished = ead.isPublished();
                         Integer aiId = ead.getAiId();
                         new DeleteFromEuropeanaTask().execute(ead, preferences);
                         new DeleteEseEdmTask().execute(ead, preferences);
                         new UnpublishTask().execute(ead, preferences);
                         new DeleteTask().execute(ead, preferences);
                         eadDeleted = true;
-                        Ead newEad = new CreateEadTask().execute(xmlType, upFile, aiId);
-                        if (isPublished) {
-                            new ValidateTask().execute(newEad);
-                            new ConvertTask().execute(newEad, preferences);
-                            new ValidateTask().execute(newEad);
-                            new PublishTask().execute(newEad);
-                        }
+                        new CreateEadTask().execute(xmlType, upFile, aiId);
                         DAOFactory.instance().getUpFileDAO().delete(upFile);
                         upFileDeleted = true;
                     } else if (queueAction.isDeleteAction()) {
