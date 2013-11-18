@@ -1,0 +1,1 @@
+ALTER TABLE queue DROP CONSTRAINT index_queue_sg_id_fkey, ADD CONSTRAINT index_queue_sg_id_fkey FOREIGN KEY (sg_id) REFERENCES source_guide(id) ON DELETE CASCADE;
