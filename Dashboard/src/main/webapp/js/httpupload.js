@@ -90,7 +90,7 @@ function addConfirm(confirmText) {
 function uploadFirstOption(xmlHttpRequest, confirmText) {
     try {/* HTML5 way, compatible with FIREFOX>3,SAFARI & CHROME*/
         var fd = new FormData();
-        var profile = $('#profileCb').attr("value");
+        var profile = $('#profileCb').val();
         fd.append("httpFile", document.getElementById('httpFile').files[0]);
         fd.append("ingestionprofile", profile);
         xmlHttpRequest.upload.addEventListener("progress", uploadProgress, false);

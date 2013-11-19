@@ -18,7 +18,7 @@
             </tr>--%>
         </table>
         <s:form id="httpUpload" method="POST" enctype="multipart/form-data" action="httpUpload">
-            <s:select id="profileCb2" list="ingestionprofiles" key="ingestionprofiles.chooseprofile" name="ingestionprofile" listKey="value" listValue="content" />
+            <s:select id="profileCb" list="ingestionprofiles" key="ingestionprofiles.chooseprofile" name="ingestionprofile" listKey="value" listValue="content" />
             <p style="margin-top:10px;">
                 <s:file id="httpFile" theme="simple" name="httpFile" key="label.filetoupload"/>
             </p>
