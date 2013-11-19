@@ -2,7 +2,7 @@
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <script type="text/javascript">
     var keyOfElements = 1;
-    function bindContextMenu() {
+    function bindContextMenu(emptyTitle) {
         $("#myMenu .edit a").unbind();
         $("#myMenu .add a").unbind();
         $("#myMenu .delete a").unbind();
@@ -22,7 +22,7 @@
                     $('#cboxClose').remove();
                     //I have to create a level here
                     var node = $("#tree").dynatree("getActiveNode");
-                    var obj = [ { title: 'Empty title', isLazy: false, isFolder: true, key: 'cl_'+keyOfElements }];
+                    var obj = [ { title: emptyTitle, isLazy: false, isFolder: true, key: 'cl_'+keyOfElements }];
                     node.addChild(obj);
                     $("#tree").dynatree("getTree").activateKey('cl_'+keyOfElements++);
                     createEditPanel($("#tree").dynatree("getActiveNode"), true, true);
@@ -173,7 +173,7 @@
         return (key.charAt(0) == 'e');
     }
 
-    function createTreeWithoutData(){
+    function createTreeWithoutData(emptyTitle){
         $("#tree").dynatree({
             fx: {
                 height: "toggle",
@@ -219,7 +219,7 @@
                         createEditPanel($("#tree").dynatree("getActiveNode"), false, true);
                     },
                     onCleanup:function(){
-                        bindContextMenu();
+                        bindContextMenu(emptyTitle);
                         $("#myMenu").show();
                     },
                     href:"#editColorbox"
@@ -229,7 +229,7 @@
             onClick: function(dtnode){
                 logMsg("onClick");
                 if(dtnode.data.isFolder === true)
-                    bindContextMenu();
+                    bindContextMenu(emptyTitle);
                 else
                     unbindContextMenu();
             },
@@ -251,8 +251,9 @@
     }
 
     $(document).ready(function() {
+    	var emptyTitle = '<s:property value="getText(\'dashboard.hgcreation.label.emptyTitle\')" />';
        
-        createTreeWithoutData();
+        createTreeWithoutData(emptyTitle);
 
         unbindContextMenu();
         bindDefaultContextMenu();
@@ -359,7 +360,7 @@
     <div id="left">
         <div id="tree">
             <ul>
-                <li data="isFolder: true, isLazy: false, title: 'Empty title', key: 'ec_0'" id="0"></li>
+                <li data="isFolder: true, isLazy: false, title: '<s:property value="getText(\'dashboard.hgcreation.label.emptyTitle\')" />', key: 'ec_0'" id="0"></li>
             </ul>
         </div>
     </div>

@@ -5,7 +5,7 @@
             }
         });
     }
-    function createTreeWithoutData(message){
+    function createTreeWithoutData(message, emptyTitle){
         $("#tree").dynatree({
             fx: {
                 height: "toggle",
@@ -51,7 +51,7 @@
                         createEditPanel($("#tree").dynatree("getActiveNode"), false, false);
                     },
                     onCleanup:function(){
-                        bindContextMenu();
+                        bindContextMenu(emptyTitle);
                         $("#myMenu").show();
                     },
                     href:"#editColorbox"
@@ -61,7 +61,7 @@
             onClick: function(dtnode){
                 logMsg("onClick");
                 if(dtnode.data.isFolder === true)
-                    bindContextMenu();
+                    bindContextMenu(emptyTitle);
                 else
                     unbindContextMenu();
             },
@@ -82,7 +82,7 @@
         });
     }
     var keyOfElements = 1;
-    function bindContextMenu() {
+    function bindContextMenu(emptyTitle) {
         $("#myMenu .edit a").unbind();
         $("#myMenu .add a").unbind();
         $("#myMenu .addFA a").unbind();
@@ -103,7 +103,7 @@
                     $('#cboxClose').remove();
                     //I have to create a level here
                     var node = $("#tree").dynatree("getActiveNode");
-                    var obj = [ { title: 'Empty title', isLazy: false, isFolder: true, key: 'cl_'+keyOfElements }];
+                    var obj = [ { title: emptyTitle, isLazy: false, isFolder: true, key: 'cl_'+keyOfElements }];
                     node.addChild(obj);
                     $("#tree").dynatree("getTree").activateKey('cl_'+keyOfElements++);
                     createEditPanel($("#tree").dynatree("getActiveNode"), true, true);
