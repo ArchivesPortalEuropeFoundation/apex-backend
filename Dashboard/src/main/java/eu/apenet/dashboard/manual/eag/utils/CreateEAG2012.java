@@ -1150,9 +1150,7 @@ public class CreateEAG2012 {
 								if (!found
 										&& (location.getCountry() != null
 										|| location.getFirstdem() != null
-										|| location.getLatitude() != null
 										|| location.getLocalentity() != null
-										|| location.getLongitude() != null
 										|| location.getMunicipalityPostalcode() != null
 										|| location.getSecondem() != null
 										|| location.getStreet() != null)) {
