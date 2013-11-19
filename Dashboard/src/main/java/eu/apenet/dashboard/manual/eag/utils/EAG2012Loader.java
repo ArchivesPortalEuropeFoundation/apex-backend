@@ -7674,6 +7674,9 @@ public class EAG2012Loader{
 									if (repository.getDirections().get(j).getContent().get(k) != null
 											&& repository.getDirections().get(j).getContent().get(k) instanceof Citation) {
 										Citation citation = (Citation) repository.getDirections().get(j).getContent().get(k);
+										if (k==0){
+											directiosValue.add("");
+										}
 										if (citation.getHref() != null
 												&& !citation.getHref().isEmpty()) {
 											directiosHref.add(citation.getHref());
