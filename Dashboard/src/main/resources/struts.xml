@@ -331,6 +331,7 @@
             </result>
             <result name="error" type="tiles">uploaderrorexisting</result>
             <result name="reload" type="tiles">uploadcontent</result>
+            <result name="profile" type="tiles">successprofileupload</result>
         </action>
 
         <action name="index" class="eu.apenet.dashboard.actions.IndexAction">

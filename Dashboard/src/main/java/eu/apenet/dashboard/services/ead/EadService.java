@@ -421,10 +421,6 @@ public class EadService {
             IngestionprofileDefaultExistingFileAction ingestionprofileDefaultExistingFileAction = IngestionprofileDefaultExistingFileAction.getExistingFileAction(preferences.getProperty(QueueItem.EXIST_ACTION));
             IngestionprofileDefaultDaoType ingestionprofileDefaultDaoType = IngestionprofileDefaultDaoType.getDaoType(preferences.getProperty(QueueItem.DAO_TYPE));
             XmlType xmlType = XmlType.getType(Integer.parseInt(preferences.getProperty(QueueItem.XML_TYPE)));
-            LOGGER.info(QueueItem.XML_TYPE);
-            LOGGER.info(xmlType == null);
-            LOGGER.info(xmlType.getName());
-
 
             //About EADID
             UpFile upFile = queueItem.getUpFile();
