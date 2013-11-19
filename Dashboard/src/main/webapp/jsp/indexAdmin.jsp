@@ -13,6 +13,7 @@
 					<li><s:a action="sessionManagement"><s:property value="getText('admin.menu.sessionmanagement')" /></s:a></li>
 					<li><s:a action="userManagement"><s:property value="getText('admin.menu.usermanagement')" /></s:a></li>						
 					<li><s:a action="manageQueue"><s:text name="admin.queuemanagement.title" /></s:a> </li>
+					<li><s:a action="manageHarvest"><s:text name="admin.harvestmanagement.title" /></s:a> </li>
                  </ul>
          </div>
 
