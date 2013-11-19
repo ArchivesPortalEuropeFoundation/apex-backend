@@ -7,7 +7,7 @@
             showHome,selectArchive,
             view, edit,contentmanager,updateContentmanager,
             validatechangeainame, changeainame, downloadeag, upload, checkfilesuploaded,
-            httpUpload, checkexistingfiles, cancelCheckexistingfiles, overwriteexistingfiles, canceloverwriteexistingfiles,
+            httpUpload, checkexistingfiles, cancelCheckexistingfiles, overwriteexistingfiles, canceloverwriteexistingfiles, processWithProfile,
             eadActions, batchEadActions, removeEseForFA,
             displayEseConvert, processEseConvert, showwarnings, download, link, removeLink, preview, downloadEse,
             displayEadFrontPage, generateTreeJSON, displayEadIntroduction, displayEadDidContent, displayCContent,

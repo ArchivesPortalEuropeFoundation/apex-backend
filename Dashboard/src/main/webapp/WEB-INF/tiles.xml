@@ -236,6 +236,10 @@
 		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
 		<put-attribute name="body" value="/jsp/viewresult.jsp" />
 	</definition>
+    <definition name="processwithprofile" extends="dashboardLayout">
+		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
+		<put-attribute name="body" value="/jsp/processwithprofile.jsp" />
+	</definition>
     <definition name="uploaderrorexisting" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
 		<put-attribute name="body" value="/jsp/uploaderrorexisting.jsp" />

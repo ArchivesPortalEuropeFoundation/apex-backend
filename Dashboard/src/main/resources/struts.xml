@@ -331,6 +331,11 @@
             </result>
             <result name="error" type="tiles">uploaderrorexisting</result>
             <result name="reload" type="tiles">uploadcontent</result>
+            <result name="profile" type="tiles">processwithprofile</result>
+        </action>
+        <!-- Upload: Process with ingestion profile -->
+        <action name="processWithProfile" class="eu.apenet.dashboard.actions.ProcessWithProfileAction">
+            <result name="success" type="tiles">viewresult</result>
         </action>
 
         <action name="index" class="eu.apenet.dashboard.actions.IndexAction">
@@ -417,55 +422,55 @@
             <result name="notExists" type="tiles">ALnotExists</result>
         </action>
 
-		<!-- New archival institution -->
-		<action name="ALEditor" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" >
-			<interceptor-ref name="changeLanguageStack"/>
-			<result name="success" type="tiles">newEditAL</result>
-		</action>
+        <!-- New archival institution -->
+        <action name="ALEditor" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" >
+            <interceptor-ref name="changeLanguageStack"/>
+            <result name="success" type="tiles">newEditAL</result>
+        </action>
 
-		<action name="ALDownload" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="download">
-			<result name="download" type="stream">
- 				<param name="contentType">application/file-download</param>
-				<param name="contentCharSet">UTF-8</param>
-				<param name="inputName">inputStream</param>
-				<param name="contentLength">${fileSize}</param>
-				<param name="contentDisposition">attachment; filename=${fileName}</param>
-				<param name="bufferSize">4096</param>
-			</result>
-			<result name="error" type="tiles">ALnotFound</result>
-		</action>
+        <action name="ALDownload" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="download">
+            <result name="download" type="stream">
+                <param name="contentType">application/file-download</param>
+                <param name="contentCharSet">UTF-8</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentLength">${fileSize}</param>
+                <param name="contentDisposition">attachment; filename=${fileName}</param>
+                <param name="bufferSize">4096</param>
+            </result>
+            <result name="error" type="tiles">ALnotFound</result>
+        </action>
 
-		<action name="ALUploadForm" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" >
-			<result name="success" type="tiles">newUploadAL</result>
-		</action>
+        <action name="ALUploadForm" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" >
+            <result name="success" type="tiles">newUploadAL</result>
+        </action>
 
-		<action name="ALUpload" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="upload">
-			<interceptor-ref name="changeLanguageStack"/>
-			<result name="success" type="redirectAction">
-				<param name="actionName">viewAL</param>
-			</result>
-			<result name="error" type="tiles">uploaderrorformat2</result>
-		</action>
-		<action name="getALTree" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="getArchivalInstitutionTree">
-			<result name="SUCCESS" type="stream">
-				<param name="inputName">outputStream</param>
-				<param name="contentType">application/json</param>
-			</result>
-		</action>
+        <action name="ALUpload" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="upload">
+            <interceptor-ref name="changeLanguageStack"/>
+            <result name="success" type="redirectAction">
+                <param name="actionName">viewAL</param>
+            </result>
+            <result name="error" type="tiles">uploaderrorformat2</result>
+        </action>
+        <action name="getALTree" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="getArchivalInstitutionTree">
+            <result name="SUCCESS" type="stream">
+                <param name="inputName">outputStream</param>
+                <param name="contentType">application/json</param>
+            </result>
+        </action>
 
-		<action name="getALActions" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="getArchivalInstitutionPossibleActions">
-			<result name="SUCCESS" type="stream">
-				<param name="inputName">outputStream</param>
-				<param name="contentType">application/json</param>
-			</result>
-		</action>
+        <action name="getALActions" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="getArchivalInstitutionPossibleActions">
+            <result name="SUCCESS" type="stream">
+                <param name="inputName">outputStream</param>
+                <param name="contentType">application/json</param>
+            </result>
+        </action>
 
-		<action name="launchALActions" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="launchArchivalInstitutionActions">
-			<result name="SUCCESS" type="stream">
-				<param name="inputName">outputStream</param>
-				<param name="contentType">application/json</param>
-			</result>
-		</action>
+        <action name="launchALActions" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="launchArchivalInstitutionActions">
+            <result name="SUCCESS" type="stream">
+                <param name="inputName">outputStream</param>
+                <param name="contentType">application/json</param>
+            </result>
+        </action>
 
         <!-- Second form edit - Button add -->
         <action name="editAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="appendArchivalLandscape">

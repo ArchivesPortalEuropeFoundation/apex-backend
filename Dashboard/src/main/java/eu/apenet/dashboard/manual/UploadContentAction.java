@@ -511,12 +511,6 @@ public class UploadContentAction extends AbstractInstitutionAction {
         String uploadType = "EAD";
         String uploadMethod = "HTTP";
         String format = null;
-        //IngestionprofileDAO profileDAO = DAOFactory.instance().getIngestionprofileDAO();
-        Ingestionprofile profile = null;
-        if (ingestionprofile != null && !ingestionprofile.isEmpty()) {
-            IngestionprofileDAO profileDAO = DAOFactory.instance().getIngestionprofileDAO();
-            profile = profileDAO.findById(Long.parseLong(ingestionprofile));
-        }
         try {
             Integer aiId = getAiId();
             if (this.getHttpFile() != null) {
@@ -528,14 +522,7 @@ public class UploadContentAction extends AbstractInstitutionAction {
                 if (result.equals("success")) {
                     this.filesNotUploaded = this.uploader_http.getFilesNotUploaded();
                     this.filesUploaded = this.uploader_http.getFilesUploaded();
-                    //TODO Add impact of possibly selected ingestionprofile here
-                    if (profile != null) {
-                        Properties properties = retrieveProperties(profile);
-                        UpFileDAO upFileDAO = DAOFactory.instance().getUpFileDAO();
-                        List<UpFile> upFiles = upFileDAO.getNewUpFiles(aiId, FileType.XML);
-                        for (UpFile upFile : upFiles) {
-                            EadService.useProfileAction(upFile, properties);
-                        }
+                    if (ingestionprofile != null && !ingestionprofile.isEmpty()) {
                         result = "profile";
                     } else {
                         if (filesNotUploaded.size() == 0 && filesUploaded.size() > 0) {
@@ -560,28 +547,4 @@ public class UploadContentAction extends AbstractInstitutionAction {
         }
         return ERROR;
     }
-
-    private static Properties retrieveProperties(Ingestionprofile ingestionprofile) {
-        Properties properties = new Properties();
-        properties.setProperty(QueueItem.XML_TYPE, ingestionprofile.getFileType()+"");
-        properties.setProperty(QueueItem.NO_EADID_ACTION, ingestionprofile.getNoeadidAction().getId()+"");
-        properties.setProperty(QueueItem.EXIST_ACTION, ingestionprofile.getExistAction().getId()+"");
-        properties.setProperty(QueueItem.DAO_TYPE, ingestionprofile.getDaoType().getId()+"");
-        properties.setProperty(QueueItem.DAO_TYPE_CHECK, ingestionprofile.getDaoTypeFromFile()+"");
-        properties.setProperty(QueueItem.UPLOAD_ACTION, ingestionprofile.getUploadAction().getId()+"");
-        properties.setProperty(QueueItem.DATA_PROVIDER, ingestionprofile.getEuropeanaDataProvider()+"");
-        properties.setProperty(QueueItem.DATA_PROVIDER_CHECK, ingestionprofile.getEuropeanaDataProviderFromFile()+"");
-        properties.setProperty(QueueItem.EUROPEANA_DAO_TYPE, ingestionprofile.getEuropeanaDaoType()+"");
-        properties.setProperty(QueueItem.EUROPEANA_DAO_TYPE_CHECK, ingestionprofile.getEuropeanaDaoTypeFromFile()+"");
-        properties.setProperty(QueueItem.LANGUAGES, ingestionprofile.getEuropeanaLanguages()+"");
-        properties.setProperty(QueueItem.LANGUAGE_CHECK, ingestionprofile.getEuropeanaLanguagesFromFile()+"");
-        properties.setProperty(QueueItem.LICENSE, ingestionprofile.getEuropeanaLicense()+"");
-        properties.setProperty(QueueItem.LICENSE_DETAILS, ingestionprofile.getEuropeanaLicenseDetails()+"");
-        properties.setProperty(QueueItem.LICENSE_ADD_INFO, ingestionprofile.getEuropeanaAddRights()+"");
-        properties.setProperty(QueueItem.HIERARCHY_PREFIX, ingestionprofile.getEuropeanaHierarchyPrefix()+"");
-        properties.setProperty(QueueItem.INHERIT_FILE, ingestionprofile.getEuropeanaInheritElements()+"");
-        properties.setProperty(QueueItem.INHERIT_ORIGINATION, ingestionprofile.getEuropeanaInheritOrigin()+"");
-        return properties;
-    }
-
 }
