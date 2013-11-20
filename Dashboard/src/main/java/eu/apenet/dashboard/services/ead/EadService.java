@@ -438,7 +438,6 @@ public class EadService {
                 if((ead = doesFileExist(upFile, eadid, xmlType)) != null) {
                     if(ingestionprofileDefaultExistingFileAction.isOverwrite()) {
                         boolean eadDeleted = false;
-                        boolean upFileDeleted = false;
                         try {
                             queueItem.setEad(null);
                             queueItem.setUpFile(null);
@@ -452,14 +451,13 @@ public class EadService {
                             eadDeleted = true;
                             newEad = new CreateEadTask().execute(xmlType, upFile, aiId);
                             DAOFactory.instance().getUpFileDAO().delete(upFile);
-                            upFileDeleted = true;
                         } catch (Exception e) {
                             if (!eadDeleted) {
                                 queueItem.setEad(ead);
                                 ead.setQueuing(QueuingState.ERROR);
                                 eadDAO.store(ead);
                             }
-                            if (!upFileDeleted && upFile != null) {
+                            if (upFile != null) {
                                 queueItem.setUpFile(upFile);
                             }
                             String err = "eadid: " + ead.getEadid() + " - id: " + ead.getId() + " - type: " + xmlType.getName();
@@ -467,6 +465,7 @@ public class EadService {
                             queueItem.setErrors(new Date() + " - " + err + ". Error: " + e.getMessage() + " - " + e.getCause());
                             queueItem.setPriority(0);
                             queueItemDAO.store(queueItem);
+                            continueTask = false;
                         }
                     } else if(ingestionprofileDefaultExistingFileAction.isKeep()) {
                         deleteUpFile(upFile);
