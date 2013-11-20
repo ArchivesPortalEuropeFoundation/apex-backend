@@ -473,7 +473,7 @@ public class EadService {
                         continueTask = false;
                     }
                 } else {
-                    newEad = EadService.create(xmlType, upFile, upFile.getAiId());
+                    newEad = new CreateEadTask().execute(xmlType, upFile, upFile.getAiId());
                 }
 
                 if(continueTask) {
