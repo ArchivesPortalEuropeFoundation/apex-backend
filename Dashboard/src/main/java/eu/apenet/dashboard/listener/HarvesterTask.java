@@ -93,7 +93,6 @@ public class HarvesterTask implements Runnable {
             if(scheduler.isShutdown() || System.currentTimeMillis() > endTime) {
                 break;
             }
-            LOGGER.info("Checking if OAI profile is ready to be harvested: " + archivalInstitutionOaiPmh.getUrl() + " (set: " + archivalInstitutionOaiPmh.getSet() + ", metadataPrefix: " + archivalInstitutionOaiPmh.getMetadataPrefix() + ")");
             if(archivalInstitutionOaiPmh.isEnabled()) {
                 if(archivalInstitutionOaiPmh.getLastHarvesting() == null || (archivalInstitutionOaiPmh.getLastHarvesting().getTime() + archivalInstitutionOaiPmh.getIntervalHarvesting() >= System.currentTimeMillis())) { //Ok, do harvest
                     boolean continueTask = true;
@@ -107,8 +106,7 @@ public class HarvesterTask implements Runnable {
                     }
 
                     if(continueTask) {
-                        LOGGER.info("This profile will be harvested now");
-
+                        LOGGER.info("This profile will be harvested now: " + archivalInstitutionOaiPmh.getUrl() + " (set: " + archivalInstitutionOaiPmh.getSet() + ", metadataPrefix: " + archivalInstitutionOaiPmh.getMetadataPrefix() + ")");
                         String baseURL = archivalInstitutionOaiPmh.getUrl();
                         String metadataPrefix = archivalInstitutionOaiPmh.getMetadataPrefix();
 
