@@ -293,6 +293,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 		}
 		jsonData += "'"+postalAddress[j]+"':{";
 		//textarea
+		var counter=0;  //count the fields empty in postal address
 		$("#"+postalAddress[j]+" textarea").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'
 				&& jsonData.charAt(jsonData.length-1)!='{'){
@@ -305,7 +306,12 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 				if (position != -1) {
 					yiMEPostalAddress.splice(position, 1);
 				}
-			}
+			}else if ($.trim($(this).attr("value")).length == 0){     //the field is empty
+                counter++;
+            }
+            if (counter==2){  //if street and city are empty there aren't required fields 
+               yiMEPostalAddress.splice(0,2);
+            }
 		});
 		//select options selected
 		$("#"+postalAddress[j]+" select").each(function(){
