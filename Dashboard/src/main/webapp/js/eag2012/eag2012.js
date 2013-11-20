@@ -4831,9 +4831,12 @@ function disableCoordinates(){
 	for (var i=1;i<=counter;i++){
 		$("table#yiTableVisitorsAddress_"+i+" input#textYILatitude").attr("disabled","disabled");
 		$("table#yiTableVisitorsAddress_"+i+" input#textYILongitude").attr("disabled","disabled");
-		$("table#contactTableVisitorsAddress_"+i+" input#textContactLatitudeOfTheInstitution").attr("disabled","disabled");	
-		$("table#contactTableVisitorsAddress_"+i+" input#textContactLongitudeOfTheInstitution").attr("disabled","disabled");
 	}
+	$("table[id^=contactTableVisitorsAddress]").each(function(){
+		var id = $(this).attr("id");
+		$("table#" + id + " #textContactLatitudeOfTheInstitution").attr("disabled", "disabled");
+		$("table#" + id + " #textContactLongitudeOfTheInstitution").attr("disabled", "disabled");
+	});
 	$("table#yiTableVisitorsAddress_1 input#textYILatitude").removeAttr("disabled");	
 	$("table#yiTableVisitorsAddress_1 input#textYILongitude").removeAttr("disabled"); 
 	$("table#contactTableVisitorsAddress_1 input#textContactLatitudeOfTheInstitution").removeAttr("disabled");	
