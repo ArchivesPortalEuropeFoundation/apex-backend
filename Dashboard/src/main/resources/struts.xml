@@ -321,6 +321,7 @@
         <!--Upload: Connection to FTP / Download files to server -->
         <action name="saveFtpFiles" class="eu.apenet.dashboard.manual.UploadContentAction" method="saveFtpFiles">
             <result name="success" type="tiles">viewresult</result>
+            <result name="profile" type="tiles">successprofileupload</result>
         </action>
         <!-- Upload: HTTP file upload -->
         <action name="httpUpload" class="eu.apenet.dashboard.manual.UploadContentAction" method="httpUpload">
