@@ -2,6 +2,10 @@
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <div id="divForm">
     <div style="align: center;">
-        It worked, you can log in, you files will proceed according to your profile selection.
+        <p><s:property value="getText('dashboard.uploadcontent.successprofileupload')" /></p>
+            <s:form theme="simple" action="checkexistingfiles.action" id="returnFrm" method="post">
+	        	<s:hidden id="ai_id" name="ai_id" value="%{ai_id}" theme="simple" />
+	        	<p><s:submit key="dashboard.menu.contentmanager" theme="simple" /></p>
+	        </s:form>
     </div>
 </div>
