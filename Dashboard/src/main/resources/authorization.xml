@@ -1,7 +1,7 @@
 <authorization>
     <groups>
         <group name="publicActions">
-            FillOrderAL,changeForgetPwd,changeLanguage,contact,currentState,error-404,error-500,forgetPwd,index,login,startpage,termsOfUse,logout
+            changeForgetPwd,changeLanguage,contact,currentState,error-404,error-500,forgetPwd,index,login,startpage,termsOfUse,logout
         </group>
         <group name="institutionManagerActions">
             showHome,selectArchive,
@@ -43,15 +43,15 @@
             unload;
         </group>
         <group name="countryManagerActions">
-            AjaxGetEmailFromInstituionAction,InstitutionsControl,ListInstitutionsControl,changeAlIdFromUpload,changeAlIdentifiers,
-            changeInstitutionManager,changeNode,deleteTarget,downloadAL,editAL,editElement,editInstitutionControl,
-            editTarget,feditAL,generateArchivalInstitutionPartPreviewALJSON,generatePreviewALTreeJSON,httpOverwriteAL,httpUploadAL,
-            modifyStructure,moveDownAL,moveUpAL,showEAGPreviewAL,showLanguages,storeAlIdentifier,uploadAL,viewAL,institutionManagerManagement,
+            AjaxGetEmailFromInstituionAction,InstitutionsControl,ListInstitutionsControl,changeAlIdentifiers,
+            changeInstitutionManager,changeNode,deleteTarget,editElement,editInstitutionControl,
+            editTarget,generateArchivalInstitutionPartPreviewALJSON,generatePreviewALTreeJSON,
+            modifyStructure,showEAGPreviewAL,showLanguages,storeAlIdentifier,viewAL,institutionManagerManagement,
             displayCreateInstitutionManager,deleteInstitutionManager,changeToInstitutionManager,disableInstitutionManager,enableInstitutionManager,createInstitutionManager,downloadInstitutionsStatistics,
 			ALEditor,getALTree,getALActions,launchALActions,ALDownload,ALUpload,ALUploadForm
         </group>
         <group name="adminActions">
-            FillPrimaryNameAction,checkEagNamespace,downloadCountriesStatistics,
+            checkEagNamespace,downloadCountriesStatistics,
             createCountry,createLanguage,downloadGeneralAL,goCountryAccount,
             insertAlternativeCountryNames,
             storeAlternativeCountryNames,storeCountry,storeLanguage,viewAdmin,

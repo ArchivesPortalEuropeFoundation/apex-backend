@@ -372,52 +372,6 @@
             <result name="input">/jsp/displayEAGPreviewAL.jsp</result>
         </action>
 
-        <action name="moveUpAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="upAnInstitution">
-            <result name="success" type="tiles">editAL</result>
-            <result name="error" type="tiles">ALnotFound</result>
-            <result name="notExists" type="tiles">ALnotExists</result>
-        </action>
-
-        <action name="moveDownAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="downAnInstitution">
-            <result name="success" type="tiles">editAL</result>
-            <result name="error" type="tiles">ALnotFound</result>
-            <result name="notExists" type="tiles">ALnotExists</result>
-        </action>
-
-        <action name="editElement" class="eu.apenet.dashboard.archivallandscape.EditAction" method="editArchivalLandscapeElement">
-            <result name="success" type="tiles">editAL</result>
-            <result name="error" type="tiles">ALnotFound</result>
-            <result name="notExists" type="tiles">ALnotExists</result>
-        </action>
-
-        <action name="editTarget" class="eu.apenet.dashboard.archivallandscape.EditAction" method="editArchivalLandscapeTarget">
-            <result name="success" type="tiles">editAL</result>
-            <result name="error" type="tiles">ALnotFound</result>
-            <result name="notExists" type="tiles">ALnotExists</result>
-        </action>
-
-        <action name="deleteTarget" class="eu.apenet.dashboard.archivallandscape.EditAction" method="deleteAlternativeNameTarget">
-            <result name="success" type="tiles">editAL</result>
-            <result name="error" type="tiles">ALnotFound</result>
-            <result name="notExists" type="tiles">ALnotExists</result>
-        </action>
-
-        <!-- First form edit - Button add -->
-        <action name="addAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="addArchivalLandscape">
-            <result name="success" type="tiles">editAL</result>
-            <result name="error" type="tiles">ALnotFound</result>
-            <result name="notExists" type="tiles">ALnotExists</result>
-        </action>
-
-        <!-- First form edit - Button edit -->
-        <action name="modifyStructure" class="eu.apenet.dashboard.archivallandscape.EditAction" method="modifyArchivalLandscape">
-            <param name="country"></param>
-            <result name="input" type="tiles">editAL</result>
-            <result name="success" type="tiles">editAL</result>
-            <result name="error" type="tiles">ALnotFound</result>
-            <result name="notExists" type="tiles">ALnotExists</result>
-        </action>
-
 		<!-- New archival institution -->
 		<action name="ALEditor" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" >
 			<interceptor-ref name="changeLanguageStack"/>
@@ -467,78 +421,6 @@
 				<param name="contentType">application/json</param>
 			</result>
 		</action>
-
-        <!-- Second form edit - Button add -->
-        <action name="editAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="appendArchivalLandscape">
-            <interceptor-ref name="changeLanguageStack"/>
-            <result name="success" type="tiles">editAL</result>
-            <result name="error" type="tiles">ALnotFound</result>
-            <result name="notExists" type="tiles">ALnotExists</result>
-        </action>
-
-        <action name="feditAL" class="eu.apenet.dashboard.archivallandscape.EditAction" method="finishAddArchivalLandscape">
-            <result name="input" type="redirectAction">
-                <param name="actionName">editAL</param>
-            </result>
-            <result name="success" type="redirectAction">
-                <param name="actionName">index</param>
-            </result>
-            <result name="error" type="redirectAction">
-                <param name="actionName">index</param>
-            </result>
-        </action>
-
-        <action name="uploadAL" class="eu.apenet.dashboard.uploadALAction">
-            <interceptor-ref name="changeLanguageStack"/>
-            <result name="success" type="tiles">uploadAL</result>
-        </action>
-
-        <action name="httpUploadAL" class="eu.apenet.dashboard.uploadALAction" method="httpUploadAL">
-            <result name="input" type="tiles">uploaderrorformat2</result>
-            <result name="success" type="tiles">viewresult2</result>
-            <result name="error" type="tiles">overwriteALoption</result>
-            <result name="none" type="tiles">uploadAL</result>
-        </action>
-
-        <action name="httpOverwriteAL" class="eu.apenet.dashboard.uploadALAction" method="httpoverwriteAL">
-            <result name="success" type="tiles">viewresult2</result>
-            <result name="error" type="tiles">uploadAL</result>
-            <result name="input" type="tiles">uploadALresult</result>
-        </action>
-
-
-        <action name="changeAlIdFromUpload" class="eu.apenet.dashboard.uploadALAction" method="changeAlIdFromUpload">
-            <interceptor-ref name="changeLanguageStack"/>
-            <result name="success" type="tiles">uploadALresult</result>
-            <result name="input" type="tiles">uploadALresult</result>
-            <result name="error" type="tiles">uploadAL</result>
-        </action>
-
-        <action name="downloadAL" class="eu.apenet.dashboard.uploadALAction" method="downloadAL">
-            <interceptor-ref name="changeLanguageStack"/>
-            <result name="download" type="stream">
-                <param name="contentType">application/file-download</param>
-                <param name="contentCharSet">UTF-8</param>
-                <param name="inputName">inputStream</param>
-                <param name="contentLength">${fileSize}</param>
-                <param name="contentDisposition">attachment; filename=${fileName}</param>
-                <param name="bufferSize">4096</param>
-            </result>
-            <result name="error" type="tiles">ALnotFound</result>
-            <result name="notExists" type="tiles">ALnotExists</result>
-        </action>
-        <!--<action name="downloadAL_fromDB" class="eu.apenet.dashboard.uploadALAction" method="downloadAL">-->
-        <!--<interceptor-ref name="changeLanguageStack"/>-->
-        <!--<result name="download" type="stream">-->
-        <!--<param name="contentType">application/xml</param>-->
-        <!--<param name="contentCharSet">UTF-8</param>-->
-        <!--<param name="inputName">inputStream</param>-->
-        <!--<param name="contentDisposition">atachment; filename=${fileName}</param>-->
-        <!--<param name="bufferSize">4096</param>-->
-        <!--</result>-->
-        <!--<result name="error" type="tiles">ALnotFound</result>-->
-        <!--<result name="notExists" type="tiles">ALnotExists</result>-->
-        <!--</action>-->
 
         <action name="changeAlIdentifiers" class="eu.apenet.dashboard.actions.ChangeAlIdentifiersAction">
             <interceptor-ref name="changeLanguageStack"/>
@@ -596,12 +478,6 @@
             <result name="cancel" type="tiles">indexLandscape</result>
         </action>
 
-        <action name="changeNode" class="eu.apenet.dashboard.archivallandscape.EditAction" method="moveANodeToOtherPlaces">
-            <result name="success" type="tiles">editAL</result>
-            <result name="error" type="tiles">ALnotFound</result>
-            <result name="notExists" type="tiles">ALnotExists</result>
-        </action>
-
         <action name="edit" class="eu.apenet.dashboard.actions.EditAction">
             <result name="input" type="tiles">edit</result>
             <result name="success" type="tiles">success</result>
@@ -620,7 +496,6 @@
             <result name="error" type="tiles">error</result>
             <result name="cancel" type="tiles">index</result>
         </action>
-
 
         <action name="checkEagNamespace" class="eu.apenet.dashboard.actions.ajax.EagOperationsAjax">
             <result type="stream">
@@ -799,11 +674,6 @@
                 <param name="contentType">application/json</param>
             </result>
         </action>
-        <action name="showLanguages" class="eu.apenet.dashboard.archivallandscape.EditAction" method="seeLanguagesForArchivalLandscapeElement">
-            <result name="success" type="tiles">editAL</result>
-            <result name="error" type="tiles">ALnotFound</result>
-            <result name="notExists" type="tiles">ALnotExists</result>
-        </action>
 
         <action name="hgTreeCreation" class="eu.apenet.dashboard.actions.ajax.HoldingsGuideTreeCreation">
             <result name="success" type="tiles">hgTreeCreation</result>
@@ -865,16 +735,6 @@
                 <param name="contentType">application/json</param>
             </result>
         </action>
-        <!--Temporary action -->
-        <action name="FillOrderAL" class="eu.apenet.dashboard.actions.FillOrderAL">
-            <result name="success">/jsp/templates/blank.jsp</result>
-            <result name="error">/jsp/templates/blank.jsp</result>
-        </action>
-
-        <action name="FillPrimaryNameAction" class="eu.apenet.dashboard.archivallandscape.FillPrimaryAltInstNameAction">
-            <result name="success">/jsp/templates/blank.jsp</result>
-            <result name="error">/jsp/templates/blank.jsp</result>
-        </action>
 
         <!--  Admin functionalities -->
         <action name="createCountry" class="eu.apenet.dashboard.actions.CreateCountryAction">
@@ -913,10 +773,9 @@
             <result name="error" type="tiles">blank</result>
         </action>
 
-        <action name="downloadGeneralAL" class="eu.apenet.dashboard.actions.DownloadGeneralALAction">
+        <!-- <action name="downloadGeneralAL" class="eu.apenet.dashboard.actions.DownloadGeneralALAction">
             <result name="error" type="tiles">blank</result>
-        </action>
-
+        </action>  -->
 
         <action name="manageQueue" class="eu.apenet.dashboard.queue.ManageQueueAction">
             <result name="success" type="tiles">manageQueue</result>
