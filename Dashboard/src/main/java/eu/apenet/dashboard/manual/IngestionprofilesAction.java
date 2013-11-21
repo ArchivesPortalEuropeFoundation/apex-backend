@@ -81,6 +81,19 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private static final Logger LOG = Logger.getLogger(IngestionprofilesAction.class);
 
     @Override
+    public void validate() {
+        if (this.getProfileName() == null || this.getProfileName().equals("")){
+            addFieldError("profileName", "Please provide a profile name!");
+        }
+        if (this.getEuropeanaDaoType().equals("")){
+            addFieldError("europeanaDaoType", "Please provide a DAO type for Europeana!");
+        }
+        if (this.getLanguageSelection().isEmpty()){
+            addFieldError("languageSelection", "Please provide at least one language for Europeana!");
+        }
+    }
+
+    @Override
     public String input() {
         setUp();
 

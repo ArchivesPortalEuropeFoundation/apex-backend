@@ -41,7 +41,7 @@
         </tr>
         <tr id="trSelectType">
             <td class="inputLabel"><s:label key="ead2ese.label.type" for="selectType" />:</td>
-            <td><s:select id="selectType" name="europeanaDaoType" list="typeSet" listKey="value" listValue="content" />
+            <td><s:select id="edmDaoType" name="europeanaDaoType" list="typeSet" listKey="value" listValue="content" required="true" />
                 <s:checkbox name="europeanaDaoTypeCheck" id="daoTypeCheck" />
                 <s:label key="ead2ese.label.type.file" for="europeanaDaoType"/>
             </td>
@@ -51,7 +51,7 @@
                 <s:label key="ead2ese.label.language.material" for="language" />:
             </td>
             <td class="tdVertical">
-                <s:select name="languageSelection" id="languageSelection" listKey="value" listValue="content" list="languages" multiple="true"/>
+                <s:select name="languageSelection" id="languageselection" listKey="value" listValue="content" list="languages" multiple="true" required="true" />
                 <s:checkbox name="languageCheck" id="languageOfTheMaterialCheck" />
                 <s:label key="ead2ese.label.language.file" for="languageOfTheMaterialCheck"/>
             </td>
