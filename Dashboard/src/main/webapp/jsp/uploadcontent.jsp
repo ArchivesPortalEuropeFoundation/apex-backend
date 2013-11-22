@@ -11,14 +11,20 @@
                     <s:radio list="uploadType" key="label.uploadtype" name="uploadTypeChoice" onclick="changeOptions(this)"/>
                 </td>
             </tr>
-            <tr>
-                <td>
-                    <s:select id="profileCb" list="ingestionprofiles" key="ingestionprofiles.chooseprofile" name="ingestionprofile" listKey="value" listValue="content" />
-                </td>
-            </tr>
+            <%--            <tr>
+                            <td>
+                                <s:select id="profileCb" list="ingestionprofiles" key="ingestionprofiles.chooseprofile" name="ingestionprofile" listKey="value" listValue="content" />
+                            </td>
+                        </tr>--%>
         </table>
         <s:form id="httpUpload" method="POST" enctype="multipart/form-data" action="httpUpload">
-<%--            <s:select id="profileCb" list="ingestionprofiles" key="ingestionprofiles.chooseprofile" name="ingestionprofile" listKey="value" listValue="content" />--%>
+            <table>
+                <tr>
+                    <td>
+                        <s:select id="profileCb" list="ingestionprofiles" key="ingestionprofiles.chooseprofile" name="ingestionprofile" listKey="value" listValue="content" />
+                    </td>
+                </tr>
+            </table>
             <p style="margin-top:10px;">
                 <s:file id="httpFile" theme="simple" name="httpFile" key="label.filetoupload"/>
             </p>

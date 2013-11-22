@@ -6,7 +6,7 @@
 		$("#tree").dynatree({
             checkbox: true,
             fx: { height: "toggle", duration: 200 },
-            
+
             initAjax: {
                 url: "${pageContext.request.contextPath}/updateFtp.action",
                 data: {parentName: ''}
@@ -19,7 +19,7 @@
                     var d = document.getElementById('contentlist');
                     d.removeChild(document.getElementById('node_' + dtnode.data.name));
                 }
-            }, 
+            },
 
             onActivate: function(dtnode) {
 			},
@@ -45,6 +45,7 @@
                     <h3>Selected files:</h3>
                     <ul id="contentlist"/>
                     <s:hidden name="ai_id" value="%{ai_id}" />
+                    <s:select id="profileCb" list="ingestionprofiles" key="ingestionprofiles.chooseprofile" name="ingestionprofile" listKey="value" listValue="content" />
                     <s:submit method="saveFtpFiles" value="Download those FTP files"/>
                 </s:form>
             </div>

@@ -1,9 +1,7 @@
 package eu.apenet.dashboard.manual;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -25,9 +23,6 @@ import com.opensymphony.xwork2.ActionContext;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
-import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
-import eu.apenet.dashboard.security.SecurityContext;
-import eu.apenet.dashboard.security.SecurityContext.SelectedArchivalInstitution;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.utils.ZipManager;
 import eu.apenet.persistence.dao.UpFileDAO;
@@ -256,14 +251,7 @@ public class UploadContentAction extends AbstractInstitutionAction {
 
     @Override
     public String execute() throws Exception {
-        ingestionprofiles.add(new SelectItem("", "---Choose a profile---"));
-        IngestionprofileDAO profileDAO = DAOFactory.instance().getIngestionprofileDAO();
-        List<Ingestionprofile> queryResult = profileDAO.getIngestionprofiles(getAiId());
-        if (queryResult != null && !queryResult.isEmpty()) {
-            for (Ingestionprofile entry : queryResult) {
-                ingestionprofiles.add(new SelectItem(Long.toString(entry.getId()), entry.getNameProfile()));
-            }
-        }
+        initializeProfileList();
         return SUCCESS;
     }
 
@@ -280,6 +268,7 @@ public class UploadContentAction extends AbstractInstitutionAction {
             client = uploader_ftp.establishConnection();
             if (client != null) {
                 session.put("ftpClient", client);
+                initializeProfileList();
                 return SUCCESS;
             } else {
                 addActionMessage(getText("uploadContent.errUser"));
@@ -299,6 +288,7 @@ public class UploadContentAction extends AbstractInstitutionAction {
      * @return A JSON token containing the files and directories to be added to the tree view in the JSP
      */
     public String retrieveFtpData() {
+        initializeProfileList();
         String UTF8 = "utf-8";
         try {
             getServletRequest().setCharacterEncoding(UTF8);
@@ -447,7 +437,7 @@ public class UploadContentAction extends AbstractInstitutionAction {
         UpFile upFile = new UpFile();
 
         UpFileDAO upFileDao = DAOFactory.instance().getUpFileDAO();
-        upFile.setPath(APEnetUtilities.FILESEPARATOR + "up" + APEnetUtilities.FILESEPARATOR + aiId + APEnetUtilities.FILESEPARATOR);
+        upFile.setPath(APEnetUtilities.FILESEPARATOR + aiId + APEnetUtilities.FILESEPARATOR);
 
         UploadMethodDAO uploadMethodDao = DAOFactory.instance().getUploadMethodDAO();
         UploadMethod uploadMethod = uploadMethodDao.getUploadMethodByMethod(uploadMethodString);
@@ -596,6 +586,17 @@ public class UploadContentAction extends AbstractInstitutionAction {
                 EadService.useProfileAction(upFile, properties);
             } catch (Exception ex) {
                 java.util.logging.Logger.getLogger(UploadContentAction.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    private void initializeProfileList() {
+        ingestionprofiles.add(new SelectItem("", "---Choose a profile---"));
+        IngestionprofileDAO profileDAO = DAOFactory.instance().getIngestionprofileDAO();
+        List<Ingestionprofile> queryResult = profileDAO.getIngestionprofiles(getAiId());
+        if (queryResult != null && !queryResult.isEmpty()) {
+            for (Ingestionprofile entry : queryResult) {
+                ingestionprofiles.add(new SelectItem(Long.toString(entry.getId()), entry.getNameProfile()));
             }
         }
     }
