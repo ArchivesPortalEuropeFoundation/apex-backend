@@ -820,17 +820,33 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 	});
 	jsonData += ",'postalAddress':{";
 	for(var j=0; j<postalAddress.length; j++) {
+           var contactPAMandatoryElements = new Array("textContactPAStreet", "textContactPACity");
 		if(jsonData.substring(jsonData.length-1)!='{'){
 			jsonData += ",";
 		}
 		jsonData += "'"+postalAddress[j]+"':{";
 		//textarea
+        var counter=0;  //count the fields empty in postal address
 		$("table#contactTable" + currentTab + " table#"+postalAddress[j]+" textarea").each(function(){
 			if(jsonData.charAt(jsonData.length-1)!=':'
 				&& jsonData.charAt(jsonData.length-1)!='{'){
 				jsonData += ",";
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
+
+                       // Check fill mandatory fields.
+			if ($.trim($(this).attr("value")) != '' && j == 0) {
+				var position = $.inArray($(this).attr("id"),contactPAMandatoryElements);
+				if (position != -1) {
+					contactPAMandatoryElements.splice(position, 1);
+				}
+			}else if ($.trim($(this).attr("value")).length == 0){     //the field is empty
+                              counter++;
+                         }
+                         if (counter==2){  //if street and city are empty there aren't required fields 
+                                  contactPAMandatoryElements.splice(0,2);
+                          }
+
 		});
 		//select options selected
 		$("table#contactTable" + currentTab + " table#"+postalAddress[j]+" select").each(function(){
@@ -839,11 +855,15 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 		});
+                if(contactPAMandatoryElements.length>0 && j == 0){
+			validationArray.push(postalAddress[j],contactPAMandatoryElements);
+		}
+                
 		jsonData += "}";
 	}
 
 	jsonData += "}}";
-
+       
 	for (var i = 0; i < contactMandatoryElements.length; i++) {
 		var pFieldError = "<p id=\""+contactMandatoryElements[i]+"_required\" class=\"fieldRequired\">"+text1+"</p>";
 		$("table#contactTable" + currentTab + " #" + contactMandatoryElements[i]).after(pFieldError);
