@@ -10,7 +10,7 @@
 			<th><s:text name="usermanagement.actions"/></th>
 		</tr>
 	<c:forEach var="countryAndManager" items="${countryAndManagers}">
-		<tr>
+		<tr<c:if test="${!countryAndManager.countryManager.active}"> class="grayedout"</c:if>>
 			<td><a href="institutionManagerManagement.action?countryId=${countryAndManager.country.id}" ><c:out value="${countryAndManager.country.cname}"/></a></td>
 			<c:choose>
 				<c:when test="${empty countryAndManager.countryManager}">

@@ -1120,3 +1120,6 @@ input.inputButtonSubmitAL{
 	max-height:250px;
 	overflow:auto;
 }
+.grayedout{
+	background-color:#a4afb6;
+}
