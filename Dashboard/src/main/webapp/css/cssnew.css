@@ -1017,8 +1017,21 @@ input.inputButtonSubmitAL{
 	border:none;    
 	text-align: center;
 }
-#content_div_table td,  #content_div_table th, table.defaultlayout td, table.defaultlayout th{
-   
+.arrows{
+	float:left;
+	width:100%;
+}
+/*.text{
+	float:left;
+	width:100%;
+}*/
+#content_div_table th{
+    font-size:8pt;
+	padding-left:2px;
+	padding-right:2px;	
+	overflow:hidden;
+}
+#content_div_table td, table.defaultlayout td, table.defaultlayout th{
 	font-size:8pt;
 	padding-left:2px;
 	padding-right:2px;
