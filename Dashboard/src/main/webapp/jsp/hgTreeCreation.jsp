@@ -389,15 +389,15 @@
                         <td colspan="2" align="center"><b><s:property value="getText('dashboard.hgcreation.label.editdata')" /></b></td>
                     </tr>
                     <tr id="unitid-input">
-                        <td class="left"><s:property value="getText('dashboard.hgcreation.label.identifier')" /> (unitid):</td>
+                        <td class="left"><s:property value="getText('dashboard.hgcreation.label.identifier')" /> <s:property value="getText('dashboard.hgcreation.label.unitid')" /></td>
                         <td class="right"><input type="text" id="editIdentifier" name="identifier" /></td>
                     </tr>
                     <tr>
-                        <td class="left"><s:property value="getText('dashboard.hgcreation.label.title')" /> (unittitle):</td>
+                        <td class="left"><s:property value="getText('dashboard.hgcreation.label.title')" /> <s:property value="getText('dashboard.hgcreation.label.unittitle')" /></td>
                         <td class="right"><input type="text" id="editTitle" name="name" /></td>
                     </tr>
                     <tr>
-                        <td class="left"><s:property value="getText('dashboard.hgcreation.label.description')" /> (scopecontent):</td>
+                        <td class="left"><s:property value="getText('dashboard.hgcreation.label.description')" /> <s:property value="getText('dashboard.hgcreation.label.scopecontent')" /></td>
                         <td class="right"><textarea id="editDesc" name="desc" cols="" rows="" style="width:100%; height:200px;"></textarea></td>
                     </tr>
                 </table>
