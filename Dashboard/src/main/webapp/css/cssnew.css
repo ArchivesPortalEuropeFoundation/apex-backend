@@ -1052,6 +1052,7 @@ input.inputButtonSubmitAL{
 }
 #content_div_table td.nocenter{
 	text-align: left;
+	padding-right:15px;
 }
 #content_div_table td.title{
 	text-align: left;
