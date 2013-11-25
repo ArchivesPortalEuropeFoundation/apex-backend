@@ -88,16 +88,14 @@ public class PagingTag extends AbstractPagingTag {
 		int pageNumber = toInteger(this.getPageNumber());
 		int pageSize = toInteger(this.getPageSize());
 		int numberOfPages = (int) Math.ceil((double) numberOfItems / (double) pageSize);
-		if (pageNumber > numberOfPages && numberOfPages > 0) {
+		if (pageNumber > numberOfPages) {
 			pageNumber = numberOfPages;
 		} else if (pageNumber < FIRST_PAGE) {
-			pageNumber = FIRST_PAGE;
-		}else if (numberOfPages == 0){
 			pageNumber = FIRST_PAGE;
 		}
 		StringBuilder description = new StringBuilder();
 		description.append(UL_START_TAG);
-		if (pageNumber == FIRST_PAGE) {
+		if (pageNumber == FIRST_PAGE || numberOfPages == 0) {
 			addListItem(description, getPageFirst());
 			addListItem(description, getPagePrevious());
 		} else {
