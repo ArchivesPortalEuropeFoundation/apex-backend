@@ -13,6 +13,7 @@ import eu.apenet.persistence.dao.CpfContentDAO;
 import eu.apenet.persistence.dao.DptUpdateDAO;
 import eu.apenet.persistence.dao.EadContentDAO;
 import eu.apenet.persistence.dao.EadDAO;
+import eu.apenet.persistence.dao.EadSavedSearchDAO;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.dao.EseStateDAO;
 import eu.apenet.persistence.dao.FindingAidDAO;
@@ -131,4 +132,5 @@ public abstract class DAOFactory {
     public abstract EadDAO getEadDAO();
     public abstract HgSgFaRelationDAO getHgSgFaRelationDAO();
     public abstract IngestionprofileDAO getIngestionprofileDAO();
+    public abstract EadSavedSearchDAO getEadSavedSearchDAO();
 }

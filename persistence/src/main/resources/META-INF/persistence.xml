@@ -27,6 +27,7 @@
 		<class>eu.apenet.persistence.vo.CLevel</class>
 		<class>eu.apenet.persistence.vo.CpfContent</class>
 		<class>eu.apenet.persistence.vo.DptUpdate</class>
+		<class>eu.apenet.persistence.vo.EadSavedSearch</class>
 		<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
 		<properties>
 			<!--<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />-->
