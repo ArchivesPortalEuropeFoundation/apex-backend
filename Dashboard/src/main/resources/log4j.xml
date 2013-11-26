@@ -45,7 +45,7 @@
 		<appender-ref ref="operationsFile" /> 
 	</logger>
 	<logger name="eu.apenet.dashboard.security.SecurityInterceptor">
-		<level value="debug" />
+		<level value="info" />
 		<appender-ref ref="securityFile" /> 
 	</logger>
 	<logger name="eu.apenet.dashboard.services.ead.publish.SolrPublisher">
