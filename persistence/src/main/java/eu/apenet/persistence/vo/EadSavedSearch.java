@@ -69,7 +69,7 @@ public class EadSavedSearch {
 	@Column(name = "refinement_ai")
 	private	String refinementAi;
 	@Column(name = "refinement_fond")
-	private	String refinementFound;	
+	private	String refinementFond;	
 	@Column(name = "refinement_type")
 	private	String refinementType;
 	@Column(name = "refinement_dao")
@@ -91,14 +91,16 @@ public class EadSavedSearch {
 	}
 
 	public boolean isContainsAdvancedSearchOptions() {
-		return false;
+		return element != null || typedocument != null || fromdate != null || todate != null || exactDateSearch == true;	  
 	}
 
 	public boolean isContainsAlSearchOptions() {
-		return false;
+		return alTreeSelectedNodes != null || alTreeExpandedNodes != null;
 	}
 	public boolean isContainsRefinements() {
-		return false;
+		return refinementCountry != null || refinementAi != null || refinementFond != null 
+				|| refinementType != null || refinementDao != null || refinementRoledao != null || refinementDateType != null || refinementStartdate != null ||
+						refinementEnddate != null || refinementFacetSettings != null;
 	}
 	
 	public long getId() {
@@ -239,11 +241,11 @@ public class EadSavedSearch {
 	public void setRefinementAi(String refinementAi) {
 		this.refinementAi = refinementAi;
 	}
-	public String getRefinementFound() {
-		return refinementFound;
+	public String getRefinementFond() {
+		return refinementFond;
 	}
-	public void setRefinementFound(String refinementFound) {
-		this.refinementFound = refinementFound;
+	public void setRefinementFound(String refinementFond) {
+		this.refinementFond = refinementFond;
 	}
 	public String getRefinementType() {
 		return refinementType;
