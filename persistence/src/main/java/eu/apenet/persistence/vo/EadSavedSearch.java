@@ -19,64 +19,274 @@ public class EadSavedSearch {
 	
 	@Column(name = "liferay_user_id")
 	private long liferayUserId;
-	private String label;
-	@Column(name = "public_search")
-	private	boolean publicSearch;
-	
 	@Column(name = "modified_date")
 	private	Date modifiedDate;
-	//search options
+	@Column(name = "public_search")
+	private	boolean publicSearch;
+	private	boolean template;
+	private String description;
 	
-	private String term;
+	/*
+	 * simple search options
+	 */
+	@Column(name = "search_term")
+	private String searchTerm;
+	private	boolean hierarchy;
+	@Column(name = "only_with_daos")
+	private	boolean onlyWithDaos;
+	@Column(name = "method_optional")
+	private	boolean methodOptional;
 
+	/*
+	 * advanced search options
+	 */
+	private String element;	  
+	private String typedocument;	  
+	private String fromdate;
+	private String todate;
+	@Column(name = "exact_date_search")
+	private	boolean exactDateSearch;
+
+	/*
+	 * archival landscape search options
+	 */
+	@Column(name = "al_tree_selected_nodes")
+	private	String alTreeSelectedNodes;	  
+	@Column(name = "al_tree_expanded_nodes")
+	private	String alTreeExpandedNodes;	 
+
+	@Column(name = "results_per_page")
+	private	Integer resultPerPage;	 
+	@Column(name = "pagenumber")
+	private	Integer pageNumber;
+	
+	private	Integer sorting;	 
+	@Column(name = "sorting_asc")
+	private	Boolean sortingAsc;
+
+	@Column(name = "refinement_country")
+	private	String refinementCountry;	
+	@Column(name = "refinement_ai")
+	private	String refinementAi;
+	@Column(name = "refinement_fond")
+	private	String refinementFound;	
+	@Column(name = "refinement_type")
+	private	String refinementType;
+	@Column(name = "refinement_dao")
+	private	Boolean refinementDao;
+	@Column(name = "refinement_roledao")
+	private	String refinementRoledao;
+
+	@Column(name = "refinement_date_type")
+	private	Boolean refinementDateType;
+	@Column(name = "refinement_startdate")
+	private	String refinementStartdate;
+	@Column(name = "refinement_enddate")
+	private	String refinementEnddate;
+	@Column(name = "refinement_facet_settings")
+	private	String refinementFacetSettings;
+	
+	public boolean isContainsSimpleSearchOptions() {
+		return 	hierarchy || onlyWithDaos || methodOptional;
+	}
+
+	public boolean isContainsAdvancedSearchOptions() {
+		return false;
+	}
+
+	public boolean isContainsAlSearchOptions() {
+		return false;
+	}
+	public boolean isContainsRefinements() {
+		return false;
+	}
+	
 	public long getId() {
 		return id;
 	}
-
 	public void setId(long id) {
 		this.id = id;
 	}
-
 	public long getLiferayUserId() {
 		return liferayUserId;
 	}
-
 	public void setLiferayUserId(long liferayUserId) {
 		this.liferayUserId = liferayUserId;
 	}
-
-	public String getLabel() {
-		return label;
-	}
-
-	public void setLabel(String label) {
-		this.label = label;
-	}
-
-
-
-	public boolean isPublicSearch() {
-		return publicSearch;
-	}
-
-	public void setPublicSearch(boolean publicSearch) {
-		this.publicSearch = publicSearch;
-	}
-
-	public String getTerm() {
-		return term;
-	}
-
-	public void setTerm(String term) {
-		this.term = term;
-	}
-
 	public Date getModifiedDate() {
 		return modifiedDate;
 	}
-
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
-	
+	public boolean isPublicSearch() {
+		return publicSearch;
+	}
+	public void setPublicSearch(boolean publicSearch) {
+		this.publicSearch = publicSearch;
+	}
+	public boolean isTemplate() {
+		return template;
+	}
+	public void setTemplate(boolean template) {
+		this.template = template;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getSearchTerm() {
+		return searchTerm;
+	}
+	public void setSearchTerm(String searchTerm) {
+		this.searchTerm = searchTerm;
+	}
+	public boolean isHierarchy() {
+		return hierarchy;
+	}
+	public void setHierarchy(boolean hierarchy) {
+		this.hierarchy = hierarchy;
+	}
+	public boolean isOnlyWithDaos() {
+		return onlyWithDaos;
+	}
+	public void setOnlyWithDaos(boolean onlyWithDaos) {
+		this.onlyWithDaos = onlyWithDaos;
+	}
+	public boolean isMethodOptional() {
+		return methodOptional;
+	}
+	public void setMethodOptional(boolean methodOptional) {
+		this.methodOptional = methodOptional;
+	}
+	public String getElement() {
+		return element;
+	}
+	public void setElement(String element) {
+		this.element = element;
+	}
+	public String getTypedocument() {
+		return typedocument;
+	}
+	public void setTypedocument(String typedocument) {
+		this.typedocument = typedocument;
+	}
+	public String getFromdate() {
+		return fromdate;
+	}
+	public void setFromdate(String fromdate) {
+		this.fromdate = fromdate;
+	}
+	public String getTodate() {
+		return todate;
+	}
+	public void setTodate(String todate) {
+		this.todate = todate;
+	}
+	public boolean isExactDateSearch() {
+		return exactDateSearch;
+	}
+	public void setExactDateSearch(boolean exactDateSearch) {
+		this.exactDateSearch = exactDateSearch;
+	}
+	public String getAlTreeSelectedNodes() {
+		return alTreeSelectedNodes;
+	}
+	public void setAlTreeSelectedNodes(String alTreeSelectedNodes) {
+		this.alTreeSelectedNodes = alTreeSelectedNodes;
+	}
+	public String getAlTreeExpandedNodes() {
+		return alTreeExpandedNodes;
+	}
+	public void setAlTreeExpandedNodes(String alTreeExpandedNodes) {
+		this.alTreeExpandedNodes = alTreeExpandedNodes;
+	}
+	public Integer getResultPerPage() {
+		return resultPerPage;
+	}
+	public void setResultPerPage(Integer resultPerPage) {
+		this.resultPerPage = resultPerPage;
+	}
+	public Integer getPageNumber() {
+		return pageNumber;
+	}
+	public void setPageNumber(Integer pageNumber) {
+		this.pageNumber = pageNumber;
+	}
+	public Integer getSorting() {
+		return sorting;
+	}
+	public void setSorting(Integer sorting) {
+		this.sorting = sorting;
+	}
+	public Boolean isSortingAsc() {
+		return sortingAsc;
+	}
+	public void setSortingAsc(Boolean sortingAsc) {
+		this.sortingAsc = sortingAsc;
+	}
+	public String getRefinementCountry() {
+		return refinementCountry;
+	}
+	public void setRefinementCountry(String refinementCountry) {
+		this.refinementCountry = refinementCountry;
+	}
+	public String getRefinementAi() {
+		return refinementAi;
+	}
+	public void setRefinementAi(String refinementAi) {
+		this.refinementAi = refinementAi;
+	}
+	public String getRefinementFound() {
+		return refinementFound;
+	}
+	public void setRefinementFound(String refinementFound) {
+		this.refinementFound = refinementFound;
+	}
+	public String getRefinementType() {
+		return refinementType;
+	}
+	public void setRefinementType(String refinementType) {
+		this.refinementType = refinementType;
+	}
+	public Boolean getRefinementDao() {
+		return refinementDao;
+	}
+	public void setRefinementDao(Boolean refinementDao) {
+		this.refinementDao = refinementDao;
+	}
+	public String getRefinementRoledao() {
+		return refinementRoledao;
+	}
+	public void setRefinementRoledao(String refinementRoledao) {
+		this.refinementRoledao = refinementRoledao;
+	}
+	public Boolean getRefinementDateType() {
+		return refinementDateType;
+	}
+	public void setRefinementDateType(Boolean refinementDateType) {
+		this.refinementDateType = refinementDateType;
+	}
+	public String getRefinementStartdate() {
+		return refinementStartdate;
+	}
+	public void setRefinementStartdate(String refinementStartdate) {
+		this.refinementStartdate = refinementStartdate;
+	}
+	public String getRefinementEnddate() {
+		return refinementEnddate;
+	}
+	public void setRefinementEnddate(String refinementEnddate) {
+		this.refinementEnddate = refinementEnddate;
+	}
+	public String getRefinementFacetSettings() {
+		return refinementFacetSettings;
+	}
+	public void setRefinementFacetSettings(String refinementFacetSettings) {
+		this.refinementFacetSettings = refinementFacetSettings;
+	}
+
+
 }
