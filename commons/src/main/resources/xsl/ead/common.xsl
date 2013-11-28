@@ -573,12 +573,16 @@
 			</xsl:for-each>
 		</div>
 	</xsl:template>
-	<xsl:template name="physloc-label">
+	<xsl:template name="physloc">
 		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.physloc')" />
 		</h2>
 		<div class="ead-content">
-			<xsl:value-of select="ead:physloc/@label" />
+			<xsl:if test="ead:physloc/@label">
+			    <xsl:value-of select="ead:physloc/@label" />
+			    <xsl:text>: </xsl:text>
+			</xsl:if>
+			<xsl:apply-templates select="ead:physloc"  mode="other"/>
 		</div>
 	</xsl:template>
 	<xsl:template name="materialspec">
