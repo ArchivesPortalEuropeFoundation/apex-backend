@@ -38,8 +38,11 @@ import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.dpt.utils.eag2012.namespace.EagNamespaceMapper;
 import eu.apenet.dpt.utils.util.LanguageIsoList;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
+import eu.apenet.persistence.dao.CoordinatesDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.Coordinates;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 /**
  * Action used to manage and store the new EAG2012.
@@ -866,6 +869,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					}else{
 						log.error("Could not be stored EAG2012 path, reason: null archival institution");
 					}
+
+					// After store the new EAG, review the values to fill the coordinates table.
+					this.insertCoordinatesValues(archivalInstitution);
 				} else {
 					
 					this.setWarnings(apEnetEAGDashboard.showWarnings());
@@ -7078,5 +7084,31 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		};
 		
 		return StringEscapeUtils.unescapeHtml(unescapeString);
+	}
+
+	/**
+	 * Method to insert the new values in Coordinates table.
+	 */
+	private void insertCoordinatesValues(ArchivalInstitution archivalInstitution) {
+		CoordinatesDAO coordinatesDAO = DAOFactory.instance().getCoordinatesDAO();
+		List<Coordinates> coordinatesList = coordinatesDAO.findCoordinatesByArchivalInstitution(archivalInstitution);
+		// Remove the previous coordinates.
+		if (coordinatesList != null && !coordinatesList.isEmpty()) {
+			for (int i = 0; i < coordinatesList.size(); i++) {
+				try {
+					JpaUtil.beginDatabaseTransaction();
+					coordinatesDAO.deleteSimple(coordinatesList.get(i));
+					JpaUtil.commitDatabaseTransaction();
+				} catch (Exception e) {
+					// Rollback current database transaction.
+					JpaUtil.rollbackDatabaseTransaction();
+					log.error("Error trying to delete: " + coordinatesList.get(i).getNameInstitution());
+					log.error(e.getCause());
+				}
+			}
+		}
+
+		Eag2012GeoCoordinatesAction eag2012GeoCoordinatesAction = new Eag2012GeoCoordinatesAction();
+		eag2012GeoCoordinatesAction.insertCoordinates(archivalInstitution);
 	}
 }

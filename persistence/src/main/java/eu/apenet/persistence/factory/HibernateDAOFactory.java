@@ -4,6 +4,7 @@ import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.dao.CLevelDAO;
+import eu.apenet.persistence.dao.CoordinatesDAO;
 import eu.apenet.persistence.dao.CouAlternativeNameDAO;
 import eu.apenet.persistence.dao.CountryDAO;
 import eu.apenet.persistence.dao.CpfContentDAO;
@@ -29,6 +30,7 @@ import eu.apenet.persistence.dao.WarningsDAO;
 import eu.apenet.persistence.hibernate.AiAlternativeNameHibernateDAO;
 import eu.apenet.persistence.hibernate.ArchivalInstitutionHibernateDAO;
 import eu.apenet.persistence.hibernate.CLevelHibernateDAO;
+import eu.apenet.persistence.hibernate.CoordinatesHibernateDAO;
 import eu.apenet.persistence.hibernate.CouAlternativeNameHibernateDAO;
 import eu.apenet.persistence.hibernate.CountryHibernateDAO;
 import eu.apenet.persistence.hibernate.CpfContentHibernateDAO;
@@ -191,6 +193,11 @@ public class HibernateDAOFactory extends DAOFactory {
     @Override
     public IngestionprofileDAO getIngestionprofileDAO() {
         return (IngestionprofileDAO) instantiateDAO(IngestionprofileJpaDAO.class);
+    }
+
+    @Override
+    public CoordinatesDAO getCoordinatesDAO() {
+        return (CoordinatesDAO) instantiateDAO(CoordinatesHibernateDAO.class);
     }
     
     @Override

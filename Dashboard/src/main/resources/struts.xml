@@ -946,5 +946,11 @@
                 <param name="actionName">dashboardHome</param>
             </result>
         </action>
+
+		<!-- Temporary action for recover coordinates. -->
+		<action name="eag2012GeoCoordinates" class="eu.apenet.dashboard.manual.eag.Eag2012GeoCoordinatesAction">
+			<result name="success" type="tiles">indexAdmin</result>
+			<result name="error" type="tiles">indexAdmin</result>
+		</action>
     </package>
 </struts>

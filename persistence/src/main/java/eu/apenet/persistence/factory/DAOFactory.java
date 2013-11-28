@@ -7,6 +7,7 @@ import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.dao.CLevelDAO;
+import eu.apenet.persistence.dao.CoordinatesDAO;
 import eu.apenet.persistence.dao.CouAlternativeNameDAO;
 import eu.apenet.persistence.dao.CountryDAO;
 import eu.apenet.persistence.dao.CpfContentDAO;
@@ -132,5 +133,6 @@ public abstract class DAOFactory {
     public abstract EadDAO getEadDAO();
     public abstract HgSgFaRelationDAO getHgSgFaRelationDAO();
     public abstract IngestionprofileDAO getIngestionprofileDAO();
+    public abstract CoordinatesDAO getCoordinatesDAO();
     public abstract EadSavedSearchDAO getEadSavedSearchDAO();
 }
