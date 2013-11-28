@@ -181,12 +181,13 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 				performanceLogParameters += ",fileId=" + fileId;
 				long localStartTime = System.currentTimeMillis();
                 EadContent eadContent = eadDAO.findById(fileId, xmlType.getClazz()).getEadContent();
-				List<CLevel> clevels = clevelDAO.findTopCLevels(eadContent.getEcId(), orderId, max);
+                
+				List<CLevel> lastCLevels = clevelDAO.findTopCLevels(eadContent.getEcId(), orderId, max);
 //				if (!MORE_VALUE_BEFORE.equalsIgnoreCase(more)){
 //					totalNumberOfCLevels = clevelDAO.countTopCLevels(eadContent.getEcId());
 //				}
 				databaseTimeCost += System.currentTimeMillis() - localStartTime;
-				StringBuilder topCLevelsBuffer = generateCLevelJSON(clevels, path, isWithUrl);
+				StringBuilder topCLevelsBuffer = generateCLevelJSON(lastCLevels, path, isWithUrl);
 				StringBuilder result = generateRootJSON(eadContent, topCLevelsBuffer, path, false, xmlTypeIdString);
 				buildTime = System.currentTimeMillis() - startTime;
 				writer.write(result.toString());
@@ -257,16 +258,20 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 		buffer.append(COMMA);
         if(isWithPreface){
 		    addUrl(buffer, eadContent, path + "/displayEadFrontPage.action", xmlTypeIdString);
-		    buffer.append(COMMA);
+//		    buffer.append(COMMA);
         }
+        buffer.append(COMMA);
+        
 		buffer.append(FOLDER_WITH_CHILDREN);
-		buffer.append(generateChildrenOfRootJSON(eadContent, childBuffer, path, expand, isWithPreface, xmlTypeIdString));
+//		buffer.append(generateChildrenOfRootJSON(eadContent, childBuffer, path, expand, isWithPreface, xmlTypeIdString));
+//		buffer.append(generateLastChildrenJSON(eadContent, childBuffer, path, expand, isWithPreface, xmlTypeIdString));
+		buffer.append(childBuffer);
 		buffer.append(END_ITEM_WITH_RETURN);
 		buffer.append(END_ARRAY);
 		return buffer;
 	}
 
-    private StringBuilder generateRootJSON(EadContent eadContent, StringBuilder childBuffer, String path, boolean expand, String xmlTypeIdString) {
+	private StringBuilder generateRootJSON(EadContent eadContent, StringBuilder childBuffer, String path, boolean expand, String xmlTypeIdString) {
 		return generateRootJSON(eadContent, childBuffer, path, expand, true, xmlTypeIdString);
 	}
 
@@ -296,7 +301,6 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 
 		buffer.append(FOLDER_WITH_CHILDREN);
 		buffer.append(childBuffer);
-		buffer.append(END_ITEM_WITH_RETURN);
 		buffer.append(END_ARRAY);
 		return buffer;
 
