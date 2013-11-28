@@ -290,7 +290,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 				//first gets all the current ingested institutions into DDBB
 				this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryId(SecurityContext.get().getCountryId(),false);
 				if(this.totalInstitutions!=null && this.totalInstitutions.size()>0){
-					log.warn("Archival landscape could not be ingested directly, there are some institutions to check. Checking...");
+					log.debug("Archival landscape could not be ingested directly, there are some institutions to check. Checking...");
 					this.updatedInstitutions = new ArrayList<ArchivalInstitution>();
 					this.insertedInstitutions = new ArrayList<ArchivalInstitution>();
 					state = 2;
