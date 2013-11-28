@@ -106,18 +106,24 @@ public class StatisticsAction extends AbstractAction {
 			// holdings guides
 			searchOptions.setEadClass(HoldingsGuide.class);
 			institutionStatistics.holdingsguide = convertLong(eadDAO.countEads(searchOptions));
-			institutionStatistics.daos = convertLong(eadDAO.countDaos(searchOptions));
-			institutionStatistics.units = convertLong(eadDAO.countUnits(searchOptions));
+			if (institutionStatistics.holdingsguide > 0){
+				institutionStatistics.daos = convertLong(eadDAO.countDaos(searchOptions));
+				institutionStatistics.units = convertLong(eadDAO.countUnits(searchOptions));
+			}
 			// source guides
 			searchOptions.setEadClass(SourceGuide.class);
 			institutionStatistics.sourceguide = convertLong(eadDAO.countEads(searchOptions));
-			institutionStatistics.daos += convertLong(eadDAO.countDaos(searchOptions));
-			institutionStatistics.units += convertLong(eadDAO.countUnits(searchOptions));
+			if (institutionStatistics.sourceguide > 0){
+				institutionStatistics.daos += convertLong(eadDAO.countDaos(searchOptions));
+				institutionStatistics.units += convertLong(eadDAO.countUnits(searchOptions));
+			}
 			// findingaids
 			searchOptions.setEadClass(FindingAid.class);
 			institutionStatistics.findingaids = convertLong(eadDAO.countEads(searchOptions));
-			institutionStatistics.daos = convertLong(eadDAO.countDaos(searchOptions));
-			institutionStatistics.units += convertLong(eadDAO.countUnits(searchOptions));
+			if (institutionStatistics.findingaids > 0){
+				institutionStatistics.daos = convertLong(eadDAO.countDaos(searchOptions));
+				institutionStatistics.units += convertLong(eadDAO.countUnits(searchOptions));
+			}
 
 			searchOptions.setPublished(null);
 			searchOptions.setEuropeana(EuropeanaState.DELIVERED);
@@ -157,6 +163,9 @@ public class StatisticsAction extends AbstractAction {
 			this.country = country;
 			this.archivalInstitution = archivalInstitution;
 		}
+		public boolean containsSearchableItems(){
+			return (findingaids + holdingsguide + sourceguide) > 0;
+		}
 	}
 
 	private static class CountryStatistics {
@@ -183,7 +192,7 @@ public class StatisticsAction extends AbstractAction {
 			if (institutionStatistics.hasEag) {
 				numberOfInstitutionsWithEag++;
 			}
-			if (institutionStatistics.units > 0) {
+			if (institutionStatistics.containsSearchableItems()) {
 				numberOfInstitutionsWithSearchableItems++;
 			}
 			findingaids += institutionStatistics.findingaids;
