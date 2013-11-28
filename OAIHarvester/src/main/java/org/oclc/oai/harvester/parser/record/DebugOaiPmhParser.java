@@ -49,11 +49,9 @@ public class DebugOaiPmhParser extends OaiPmhParser {
 					resultInfo.getErrors().add(xmlStreamReader.getText());
 				} else if (RESUMPTION_TOKEN.equals(lastElement)) {
 					if (resultInfo.getNewResumptionToken() == null) {
-                        if(xmlStreamReader.getText().trim().length() > 0)
-						    resultInfo.setNewResumptionToken(xmlStreamReader.getText());
+                        resultInfo.setNewResumptionToken(xmlStreamReader.getText());
 					}else {
-                        if(xmlStreamReader.getText().trim().length() > 0)
-						    resultInfo.setNewResumptionToken(resultInfo.getNewResumptionToken() + xmlStreamReader.getText());
+                        resultInfo.setNewResumptionToken(resultInfo.getNewResumptionToken() + xmlStreamReader.getText());
 					}
 					
 				}
@@ -64,6 +62,9 @@ public class DebugOaiPmhParser extends OaiPmhParser {
 	            }
 			}else if (event == XMLStreamConstants.END_ELEMENT) {
 				writeEndElement(xmlStreamReader, xmlWriter);
+                if(RESUMPTION_TOKEN.equals(lastElement)) {
+                    lastElement = null;
+                }
 			}
 		}
 
