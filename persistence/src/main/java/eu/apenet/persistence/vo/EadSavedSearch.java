@@ -60,7 +60,7 @@ public class EadSavedSearch {
 	@Column(name = "pagenumber")
 	private	Integer pageNumber;
 	
-	private	Integer sorting;	 
+	private	String sorting;	 
 	@Column(name = "sorting_asc")
 	private	Boolean sortingAsc;
 
@@ -72,13 +72,15 @@ public class EadSavedSearch {
 	private	String refinementFond;	
 	@Column(name = "refinement_type")
 	private	String refinementType;
+	@Column(name = "refinement_level")
+	private	String refinementLevel;
 	@Column(name = "refinement_dao")
-	private	Boolean refinementDao;
+	private	String refinementDao;
 	@Column(name = "refinement_roledao")
 	private	String refinementRoledao;
 
 	@Column(name = "refinement_date_type")
-	private	Boolean refinementDateType;
+	private	String refinementDateType;
 	@Column(name = "refinement_startdate")
 	private	String refinementStartdate;
 	@Column(name = "refinement_enddate")
@@ -99,8 +101,8 @@ public class EadSavedSearch {
 	}
 	public boolean isContainsRefinements() {
 		return refinementCountry != null || refinementAi != null || refinementFond != null 
-				|| refinementType != null || refinementDao != null || refinementRoledao != null || refinementDateType != null || refinementStartdate != null ||
-						refinementEnddate != null || refinementFacetSettings != null;
+				|| refinementType != null || refinementLevel != null || refinementDao != null || refinementRoledao != null || refinementDateType != null || refinementStartdate != null ||
+						refinementEnddate != null;
 	}
 	
 	public long getId() {
@@ -217,10 +219,10 @@ public class EadSavedSearch {
 	public void setPageNumber(Integer pageNumber) {
 		this.pageNumber = pageNumber;
 	}
-	public Integer getSorting() {
+	public String getSorting() {
 		return sorting;
 	}
-	public void setSorting(Integer sorting) {
+	public void setSorting(String sorting) {
 		this.sorting = sorting;
 	}
 	public Boolean isSortingAsc() {
@@ -244,7 +246,7 @@ public class EadSavedSearch {
 	public String getRefinementFond() {
 		return refinementFond;
 	}
-	public void setRefinementFound(String refinementFond) {
+	public void setRefinementFond(String refinementFond) {
 		this.refinementFond = refinementFond;
 	}
 	public String getRefinementType() {
@@ -253,10 +255,10 @@ public class EadSavedSearch {
 	public void setRefinementType(String refinementType) {
 		this.refinementType = refinementType;
 	}
-	public Boolean getRefinementDao() {
+	public String getRefinementDao() {
 		return refinementDao;
 	}
-	public void setRefinementDao(Boolean refinementDao) {
+	public void setRefinementDao(String refinementDao) {
 		this.refinementDao = refinementDao;
 	}
 	public String getRefinementRoledao() {
@@ -265,10 +267,10 @@ public class EadSavedSearch {
 	public void setRefinementRoledao(String refinementRoledao) {
 		this.refinementRoledao = refinementRoledao;
 	}
-	public Boolean getRefinementDateType() {
+	public String getRefinementDateType() {
 		return refinementDateType;
 	}
-	public void setRefinementDateType(Boolean refinementDateType) {
+	public void setRefinementDateType(String refinementDateType) {
 		this.refinementDateType = refinementDateType;
 	}
 	public String getRefinementStartdate() {
@@ -288,6 +290,14 @@ public class EadSavedSearch {
 	}
 	public void setRefinementFacetSettings(String refinementFacetSettings) {
 		this.refinementFacetSettings = refinementFacetSettings;
+	}
+
+	public String getRefinementLevel() {
+		return refinementLevel;
+	}
+
+	public void setRefinementLevel(String refinementLevel) {
+		this.refinementLevel = refinementLevel;
 	}
 
 
