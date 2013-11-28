@@ -50,9 +50,11 @@ public class OaiPmhParser extends AbstractOaiPmhParser {
 					resultInfo.getErrors().add(xmlStreamReader.getText());
 				} else if (RESUMPTION_TOKEN.equals(lastElement)) {
 					if (resultInfo.getNewResumptionToken() == null){
-						resultInfo.setNewResumptionToken(xmlStreamReader.getText());
+                        if(xmlStreamReader.getText().trim().length() > 0)
+						    resultInfo.setNewResumptionToken(xmlStreamReader.getText());
 					}else {
-						resultInfo.setNewResumptionToken(resultInfo.getNewResumptionToken() + xmlStreamReader.getText());
+                        if(xmlStreamReader.getText().trim().length() > 0)
+						    resultInfo.setNewResumptionToken(resultInfo.getNewResumptionToken() + xmlStreamReader.getText());
 					}
 				}
 			}
