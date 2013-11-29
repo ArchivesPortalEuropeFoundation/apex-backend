@@ -163,6 +163,7 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
             JpaUtil.commitDatabaseTransaction();
             return SUCCESS;
         } catch (Exception e) {
+            LOG.error("Could not save the profile...", e);
             addActionError("Could not save your new profile, please contact an administrator.");
             return ERROR;
         }

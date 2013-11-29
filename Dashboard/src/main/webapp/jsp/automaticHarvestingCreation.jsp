@@ -76,9 +76,9 @@
                 <label for="ingestionprofiles">
                     <s:property value="getText('label.harvesting.ingestionprofiles')"/>
                 </label>
-                <select name="selectedIngestionprofile" id="ingestionprofiles">
-                    <c:forEach var="ingestionprofile" items="${ingestionprofiles}">
-                        <option value="${ingestionprofile.id}"<c:if test="${selectedIngestionprofile == ingestionprofile.id}"> selected="selected"</c:if>>${ingestionprofile.nameProfile}</option>
+                <select name="selectedIngestionProfile" id="ingestionProfiles">
+                    <c:forEach var="ingestionProfile" items="${ingestionProfiles}">
+                        <option value="${ingestionProfile.id}"<c:if test="${selectedIngestionProfile == ingestionProfile.id}"> selected="selected"</c:if>>${ingestionProfile.nameProfile}</option>
                     </c:forEach>
                 </select>
                 <br />
