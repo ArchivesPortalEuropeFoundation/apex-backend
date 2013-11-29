@@ -6,7 +6,7 @@ CREATE TABLE coordinates (
     lat numeric,
     lon numeric,
       CONSTRAINT coordinates_archival_institution_fkey FOREIGN KEY (ai_id)
-      REFERENCES archival_institution (id) ON UPDATE NO ACTION ON DELETE CASCADE,
+      REFERENCES archival_institution (id) ON UPDATE NO ACTION ON DELETE CASCADE
 );
 
 REVOKE ALL ON TABLE coordinates FROM PUBLIC;
