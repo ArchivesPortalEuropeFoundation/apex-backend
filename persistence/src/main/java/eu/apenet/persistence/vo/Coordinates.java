@@ -24,9 +24,9 @@ public class Coordinates implements java.io.Serializable {
 	@Column(name = "id", unique = true, nullable = false)
 	private int id;
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_institution", nullable = false)
+	@JoinColumn(name = "ai_id", nullable = false)
 	private ArchivalInstitution archivalInstitution;
-	@Column(name = "id_institution", insertable=false, updatable=false)
+	@Column(name = "ai_id", insertable=false, updatable=false)
 	private int aiId;
 	@Column(name = "name_institution", nullable = false)
 	private String nameInstitution;
