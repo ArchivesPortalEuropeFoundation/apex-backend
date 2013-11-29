@@ -33,7 +33,7 @@ public class EadSavedSearchJpaDAO extends AbstractHibernateDAO<EadSavedSearch, L
 	@Override
 	public List<EadSavedSearch> getEadSavedSearches(Long liferayUserId, int pageNumber, int pageSize) {
 		TypedQuery<EadSavedSearch> query = getEntityManager().createQuery(
-				"SELECT eadSavedSearch FROM EadSavedSearch eadSavedSearch WHERE eadSavedSearch.liferayUserId = :liferayUserId", EadSavedSearch.class);
+				"SELECT eadSavedSearch FROM EadSavedSearch eadSavedSearch WHERE eadSavedSearch.liferayUserId = :liferayUserId ORDER BY eadSavedSearch.modifiedDate DESC" , EadSavedSearch.class);
 		query.setParameter("liferayUserId", liferayUserId);
 		query.setMaxResults(pageSize);
 		query.setFirstResult(pageSize * (pageNumber - 1));
