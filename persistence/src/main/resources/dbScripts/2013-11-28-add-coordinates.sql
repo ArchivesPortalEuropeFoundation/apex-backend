@@ -1,30 +1,13 @@
 CREATE TABLE coordinates (
-    id integer NOT NULL,
-    id_institution integer NOT NULL,
+    id serial NOT NULL,
+    ai_id integer NOT NULL,
     name_institution character varying NOT NULL,
     address character varying NOT NULL,
     lat numeric,
-    lon numeric
+    lon numeric,
+      CONSTRAINT coordinates_archival_institution_fkey FOREIGN KEY (ai_id)
+      REFERENCES archival_institution (id) ON UPDATE NO ACTION ON DELETE CASCADE,
 );
-
-
-ALTER TABLE public.coordinates OWNER TO postgres;
-CREATE SEQUENCE coordinates_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-ALTER TABLE public.coordinates_id_seq OWNER TO postgres;
-ALTER SEQUENCE coordinates_id_seq OWNED BY coordinates.id;
-ALTER TABLE ONLY coordinates ALTER COLUMN id SET DEFAULT nextval('coordinates_id_seq'::regclass);
-SELECT pg_catalog.setval('coordinates_id_seq', 1, false);
-
-ALTER TABLE ONLY coordinates
-    ADD CONSTRAINT id PRIMARY KEY (id);
-ALTER TABLE ONLY coordinates
-    ADD CONSTRAINT coordinates_archival_institution_fk FOREIGN KEY (id_institution) REFERENCES archival_institution(id);
-
 
 REVOKE ALL ON TABLE coordinates FROM PUBLIC;
 REVOKE ALL ON TABLE coordinates FROM postgres;
