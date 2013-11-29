@@ -72,6 +72,10 @@
 		<put-attribute name="menu" value="/jsp/indexEAGCreation.jsp" />
 		<put-attribute name="body" value="/jsp/templates/blank.jsp" />
 	</definition>
+	<definition name="eagsuccesscreated" extends="dashboardLayout">
+		<put-attribute name="title" value="dashboard.eagwebform.title" />
+		<put-attribute name="body" value="/jsp/templates/blank.jsp" />
+	</definition>
 	<definition name="webformeag" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.eagwebform.title" />
 		<put-attribute name="menu" value="/jsp/indexEAGCreation.jsp" />

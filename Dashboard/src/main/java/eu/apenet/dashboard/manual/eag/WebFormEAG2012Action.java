@@ -780,6 +780,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	
 	public String createEAG2012() {
 		Eag2012 eag2012 = null;
+		boolean existEag=false;
 		try{
 			eag2012 = getAndFillEag2012Object();
 		}catch (JSONException e) {
@@ -862,6 +863,9 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 					ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
 					archivalInstitution = archivalInstitutionDao.getArchivalInstitution(getAiId());
 					if(archivalInstitution!=null){
+						if(archivalInstitution.getEagPath()!=null && !archivalInstitution.getEagPath().isEmpty()){
+							existEag=true;
+						}
 						archivalInstitution.setEagPath(path);
 						archivalInstitution.setRepositorycode(eag2012.getRecordIdValue());
 						archivalInstitutionDao.store(archivalInstitution);
@@ -901,7 +905,14 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 				log.error(e.getMessage(),e);
 			}
 		}
-		return this.editWebFormEAG2012();
+		String result = this.editWebFormEAG2012();
+
+		if (!existEag && result.equals(INPUT)) {
+			addActionMessage(this.getText("eag2012.info.eagcorrectlycreated"));
+			result = "successCreated";
+		}
+
+		return result;
 	}
 
 	public String removeInvalidEAG2012() {
