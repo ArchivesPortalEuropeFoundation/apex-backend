@@ -19,16 +19,15 @@ CREATE TABLE ead_saved_search
   todate character varying(10) DEFAULT NULL,
   exact_date_search boolean NOT NULL DEFAULT false,
   
-  al_tree_selected_nodes text,
-  al_tree_expanded_nodes text,
+  al_tree_selected_nodes text DEFAULT NULL,
 
   results_per_page smallint DEFAULT NULL,
   pagenumber integer DEFAULT NULL,
   sorting character varying(128),
   sorting_asc boolean DEFAULT NULL,
   
-  refinement_country character varying(255) DEFAULT NULL,
-  refinement_ai character varying(255) DEFAULT NULL,
+  refinement_country text DEFAULT NULL,
+  refinement_ai text DEFAULT NULL,
   refinement_fond character varying(22) DEFAULT NULL,
   refinement_type character varying(5) DEFAULT NULL,
   refinement_level character varying(15) DEFAULT NULL,  
