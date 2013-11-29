@@ -309,7 +309,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 						
 						log.debug("Inserting process for not updated institutions");
 						//do an insert for rest file institutions
-						insertNotUpdatedInstitutions(archivalInstitutions);
+						insertNotUpdatedInstitutions(archivalInstitutions,null);
 						log.debug("Done insert process!");
 						state = 4;
 //						//now delete all institutions which has not been updated (old institutions are not being processed)
@@ -388,7 +388,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	 * param Collection<ArchivalInstitution> not updated.
 	 * @param archivalInstitutions
 	 */
-	private void insertNotUpdatedInstitutions(Collection<ArchivalInstitution> archivalInstitutions) {
+	private void insertNotUpdatedInstitutions(Collection<ArchivalInstitution> archivalInstitutions,ArchivalInstitution parent) {
 		if(archivalInstitutions!=null){
 			Iterator<ArchivalInstitution> itAI = archivalInstitutions.iterator();
 			while(itAI.hasNext()){
@@ -404,7 +404,12 @@ public class ArchivalLandscapeManager extends AbstractAction{
 				}
 				if(!found){ //error code to control if an error has happen, if not found launch logic to insert institution
 					log.debug("Institution to be inserted: "+targetToBeInserted.getInternalAlId());
+					if(parent!=null){
+						targetToBeInserted.setParent(this.groupsInsertedIntoDDBB.get(parent.getInternalAlId()));
+					}
 					insertInstitution(targetToBeInserted); //it's the recurse method, so it's not needed call to himself (insertNotUpdatedInstitutions) 
+				}else if(targetToBeInserted.isGroup() && targetToBeInserted.getChildArchivalInstitutions()!=null && targetToBeInserted.getChildArchivalInstitutions().size()>0){ //additional check children
+					insertNotUpdatedInstitutions(targetToBeInserted.getChildArchivalInstitutions(),targetToBeInserted);
 				}
 			}
 		}
