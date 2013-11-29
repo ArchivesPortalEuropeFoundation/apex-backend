@@ -1382,7 +1382,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 			didNode.append("\n"+tabs+"\t");
 			didNode.append("<did>");
 			Iterator<String> keyIterator = mainAlternativeName.keySet().iterator(); //should be only one
-			if(keyIterator.hasNext()){
+			if(keyIterator.hasNext()){ //this should only have one unique
 				String key = keyIterator.next();
 				didNode.append("\n"+tabs+"\t\t");
 				didNode.append("<unittitle");
@@ -1390,25 +1390,27 @@ public class ArchivalLandscapeManager extends AbstractAction{
 				didNode.append(" type=\""+key.toLowerCase()+"\">");
 				didNode.append(mainAlternativeName.get(key));
 				didNode.append("</unittitle>");
-				didNode.append("\n"+tabs+"\t");
-				didNode.append("</did>");
 			}
+			if(alternativeNames!=null && alternativeNames.size()>0){
+//				didNode.append("\n"+tabs+"\t");
+//				didNode.append("<did>");
+				//next make all alternative names
+				Iterator<String> alternativeNamesIterator = alternativeNames.keySet().iterator();
+				while(alternativeNamesIterator.hasNext()){
+					String key = alternativeNamesIterator.next();
+					didNode.append("\n"+tabs+"\t\t");
+					didNode.append("<unittitle");
+					didNode.append(" encodinganalog=\""+AL_GLOBAL_ENCODINGANALOG+"\"");
+					didNode.append(" type=\""+key.toLowerCase()+"\">");
+					didNode.append(alternativeNames.get(key));
+					didNode.append("</unittitle>");
+				}
+//				didNode.append("\n"+tabs+"\t");
+//				didNode.append("</did>");
+			}
+			didNode.append("\n"+tabs+"\t");
+			didNode.append("</did>");
 		}
-		didNode.append("\n"+tabs+"\t");
-		didNode.append("<did>");
-		//next make all alternative names
-		Iterator<String> alternativeNamesIterator = alternativeNames.keySet().iterator();
-		while(alternativeNamesIterator.hasNext()){
-			String key = alternativeNamesIterator.next();
-			didNode.append("\n"+tabs+"\t\t");
-			didNode.append("<unittitle");
-			didNode.append(" encodinganalog=\""+AL_GLOBAL_ENCODINGANALOG+"\"");
-			didNode.append(" type=\""+key.toLowerCase()+"\">");
-			didNode.append(alternativeNames.get(key));
-			didNode.append("</unittitle>");
-		}
-		didNode.append("\n"+tabs+"\t");
-		didNode.append("</did>");
 		return didNode;
 	}
 
