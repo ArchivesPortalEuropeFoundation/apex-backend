@@ -426,6 +426,10 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 								aiAnDao.deleteSimple(alternativeNamesIterator.next()); //deleteSimple alternative name
 							}
 						}
+
+						// Delete references in Coordinates table.
+						ArchivalLandscapeManager.deleteCoordinates(ai);
+
 						aiDao.deleteSimple(ai); //deleteSimple institution
 						messenger.append(buildNode("info",getText("al.message.institutiondeleted")));
 					}
