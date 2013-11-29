@@ -24,7 +24,7 @@ public final class SolrFields {
 	public final static String DAO = "dao";
 	public final static String ROLEDAO = "roledao";
 	public final static String TYPE = "type";
-
+	public final static String TIMESTAMP = "timestamp";
 	public final static String COUNTRY_ID = "countryId";
 	public final static String AI_ID = "aiId";	  
 	public final static String FOND_ID = "fondId";	  
