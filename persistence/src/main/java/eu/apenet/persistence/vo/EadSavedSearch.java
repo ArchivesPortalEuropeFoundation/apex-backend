@@ -52,8 +52,6 @@ public class EadSavedSearch {
 	 */
 	@Column(name = "al_tree_selected_nodes")
 	private	String alTreeSelectedNodes;	  
-	@Column(name = "al_tree_expanded_nodes")
-	private	String alTreeExpandedNodes;	 
 
 	@Column(name = "results_per_page")
 	private	Integer resultPerPage;	 
@@ -97,7 +95,7 @@ public class EadSavedSearch {
 	}
 
 	public boolean isContainsAlSearchOptions() {
-		return alTreeSelectedNodes != null || alTreeExpandedNodes != null;
+		return alTreeSelectedNodes != null;
 	}
 	public boolean isContainsRefinements() {
 		return refinementCountry != null || refinementAi != null || refinementFond != null 
@@ -200,12 +198,6 @@ public class EadSavedSearch {
 	}
 	public void setAlTreeSelectedNodes(String alTreeSelectedNodes) {
 		this.alTreeSelectedNodes = alTreeSelectedNodes;
-	}
-	public String getAlTreeExpandedNodes() {
-		return alTreeExpandedNodes;
-	}
-	public void setAlTreeExpandedNodes(String alTreeExpandedNodes) {
-		this.alTreeExpandedNodes = alTreeExpandedNodes;
 	}
 	public Integer getResultPerPage() {
 		return resultPerPage;
