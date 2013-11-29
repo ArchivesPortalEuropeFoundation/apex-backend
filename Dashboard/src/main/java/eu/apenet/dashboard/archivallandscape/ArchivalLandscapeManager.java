@@ -32,12 +32,10 @@ import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.dashboard.utils.ZipManager;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.dao.CoordinatesDAO;
 import eu.apenet.persistence.dao.HoldingsGuideDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AiAlternativeName;
 import eu.apenet.persistence.vo.ArchivalInstitution;
-import eu.apenet.persistence.vo.Coordinates;
 import eu.apenet.persistence.vo.CouAlternativeName;
 import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.HoldingsGuide;
@@ -448,8 +446,6 @@ public class ArchivalLandscapeManager extends AbstractAction{
 					}
 				}
 
-				// Delete references in Coordinates table.
-				ArchivalLandscapeManager.deleteCoordinates(targetToBeDeleted);
 
 				this.aIDAO.deleteSimple(targetToBeDeleted); //delete unused institution
 				this.deletedInstitutions.add(targetToBeDeleted);
@@ -727,8 +723,6 @@ public class ArchivalLandscapeManager extends AbstractAction{
 				checkDeleteArchivalInstitutions(new ArrayList<ArchivalInstitution>(possibleChildren));
 			}
 		}
-		// Delete references in Coordinates table.
-		ArchivalLandscapeManager.deleteCoordinates(possibleDeletedInstitution);
 
 		this.aIDAO.deleteSimple(possibleDeletedInstitution);
 		log.debug("Deleted institution: "+possibleDeletedInstitution.getAiname());
@@ -1474,22 +1468,4 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		return eadNode;
 	}
 
-	/**
-	 * Method to delete the references into table Coordinates to the current archival institution. 
-	 *
-	 * @param archivalInstitution Current Archival institution.
-	 */
-	protected static void deleteCoordinates(ArchivalInstitution archivalInstitution) {
-		CoordinatesDAO coordinatesDAO = DAOFactory.instance().getCoordinatesDAO();
-		List<Coordinates> coordinatesList = coordinatesDAO.findCoordinatesByArchivalInstitution(archivalInstitution);
-		if (coordinatesList != null) {
-			Iterator<Coordinates> coordinatesIt = coordinatesList.iterator();
-			while (coordinatesIt.hasNext()) {
-				Coordinates coordinates = coordinatesIt.next();
-				if (coordinates != null) {
-					coordinatesDAO.deleteSimple(coordinates);
-				}
-			}
-		}
-	}
 } 
