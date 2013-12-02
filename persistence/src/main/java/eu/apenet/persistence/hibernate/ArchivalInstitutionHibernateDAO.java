@@ -171,7 +171,11 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 	public List<ArchivalInstitution> getArchivalInstitutionsByCountryId(Integer countryId, boolean onlyWithoutPartnerIds) {
 		long startTime = System.currentTimeMillis();
 		List<ArchivalInstitution> results = null;
-		Criteria criteria = buildArchivalInstitutionCriteriaByCountryId(countryId,null,onlyWithoutPartnerIds,null);
+		Criteria criteria = createArchivalInstitutionCriteria(false, "ainame", true);
+		criteria.add(Restrictions.eq("countryId", countryId));
+		if (onlyWithoutPartnerIds) {
+			criteria.add(Restrictions.isNull("partnerId"));
+		}
 		results = criteria.list();
 		long endTime = System.currentTimeMillis();
 		if (log.isDebugEnabled()) {
