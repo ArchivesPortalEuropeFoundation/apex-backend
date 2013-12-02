@@ -51,7 +51,7 @@ public class HighlightUtil {
 		return newText;
 	}
 
-	protected List<String> convertSearchTermToWords(String searchTerm, HighlightType type) {
+	public List<String> convertSearchTermToWords(String searchTerm, HighlightType type) {
 		List<String> results = new ArrayList<String>();
 		boolean defaultType = HighlightType.DEFAULT.equals(type);
 		Matcher matcher = NO_WHITESPACE_PATTERN.matcher(searchTerm);
