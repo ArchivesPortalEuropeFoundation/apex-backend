@@ -14,10 +14,12 @@ public class EadSavedSearchJpaDAO extends AbstractHibernateDAO<EadSavedSearch, L
 	@Override
 	public EadSavedSearch getEadSavedSearch(Long id, Long liferayUserId) {
 		EadSavedSearch eadSavedSearch =  findById(id);
-		if (liferayUserId != null && liferayUserId == eadSavedSearch.getLiferayUserId()){
-			return eadSavedSearch;
-		}else if (eadSavedSearch.isPublicSearch()){
-			return eadSavedSearch;
+		if (eadSavedSearch != null){
+			if (liferayUserId != null && liferayUserId == eadSavedSearch.getLiferayUserId()){
+				return eadSavedSearch;
+			}else if (eadSavedSearch.isPublicSearch()){
+				return eadSavedSearch;
+			}
 		}
 		return null;
 	}
