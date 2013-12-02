@@ -21,6 +21,7 @@ public interface ArchivalInstitutionDAO extends GenericDAO<ArchivalInstitution, 
 	public ArchivalInstitution getArchivalInstitutionByAiName(String InstitutionName);
 	public List<ArchivalInstitution> getArchivalInstitutionsByPartnerId(Integer pId);
 	public List<ArchivalInstitution> getArchivalInstitutionsByCountryId(Integer countryId, boolean onlyWithoutPartnerIds);
+	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdForAL(Integer countryId, boolean onlyWithoutPartnerIds);
     public List<ArchivalInstitution> getArchivalInstitutionsByCountryId(Integer countryId);
     public List<ArchivalInstitution> getArchivalInstitutionsByCountryId(Integer countryId,boolean onlyWithoutPartnerIds,boolean hasContentIndexed);
 	public Long countTotalArchivalInstitutions();

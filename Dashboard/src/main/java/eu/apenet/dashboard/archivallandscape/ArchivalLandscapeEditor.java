@@ -320,7 +320,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 							archivalInstitutionTarget.setAlorder(aloOrder);
 						}
 					}else{
-						List<ArchivalInstitution> children = aiDao.getArchivalInstitutionsByCountryId(SecurityContext.get().getCountryId(),true);
+						List<ArchivalInstitution> children = aiDao.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),true);
 						if(children!=null){
 							aloOrder = children.size();
 							oldOrder = archivalInstitutionTarget.getAlorder();
@@ -335,7 +335,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 							siblings = new ArrayList<ArchivalInstitution>(tempSiblings);
 						}
 					}else{
-						siblings = aiDao.getArchivalInstitutionsByCountryId(SecurityContext.get().getCountryId(),true);
+						siblings = aiDao.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),true);
 					}
 					if(siblings!=null){
 						Iterator<ArchivalInstitution> itSiblings = siblings.iterator();
@@ -403,7 +403,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					Set<ArchivalInstitution> children = parent.getChildArchivalInstitutions();
 					childrenIt = children.iterator();
 				}else{ //parent is country
-					List<ArchivalInstitution> children = aiDao.getArchivalInstitutionsByCountryId(SecurityContext.get().getCountryId(), true);
+					List<ArchivalInstitution> children = aiDao.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(), true);
 					childrenIt = children.iterator();
 				}
 				while(childrenIt.hasNext()){
@@ -469,7 +469,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 						}
 					}
 				}else{
-					List<ArchivalInstitution> countryChildrens = aiDao.getArchivalInstitutionsByCountryId(SecurityContext.get().getCountryId(), true);
+					List<ArchivalInstitution> countryChildrens = aiDao.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(), true);
 					if(countryChildrens!=null){
 						archivalInstitution.setAlorder(countryChildrens.size());
 					}

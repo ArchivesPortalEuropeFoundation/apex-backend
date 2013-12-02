@@ -546,7 +546,7 @@ public class ArchivalLandscape extends ActionSupport{
 		this.aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
 		SecurityContext securityContext = SecurityContext.get();
 		if (securityContext.isCountryManager()){
-			return this.aiDao.getArchivalInstitutionsByCountryId(securityContext.getCountryId(), true);
+			return this.aiDao.getArchivalInstitutionsByCountryIdForAL(securityContext.getCountryId(), true);
 		}else if (securityContext.isInstitutionManager()) {
 			return this.aiDao.getArchivalInstitutionsByPartnerId(securityContext.getPartnerId());
 		}

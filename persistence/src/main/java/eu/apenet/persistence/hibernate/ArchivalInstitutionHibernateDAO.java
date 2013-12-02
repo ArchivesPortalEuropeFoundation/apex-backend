@@ -184,6 +184,22 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 
 		return results;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdForAL(Integer countryId, boolean onlyWithoutPartnerIds) {
+		long startTime = System.currentTimeMillis();
+		List<ArchivalInstitution> results = null;
+		Criteria criteria = buildArchivalInstitutionCriteriaByCountryId(countryId,null,onlyWithoutPartnerIds,null);
+		results = criteria.list();
+		long endTime = System.currentTimeMillis();
+		if (log.isDebugEnabled()) {
+			log.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
+		}
+
+		return results;
+	}
+
 	/**
 	 * Criteria instance has been called to "archivalInstitution"
 	 */

@@ -288,7 +288,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 				this.aIDAO = DAOFactory.instance().getArchivalInstitutionDAO();
 				this.aIANDAO = DAOFactory.instance().getAiAlternativeNameDAO();
 				//first gets all the current ingested institutions into DDBB
-				this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryId(SecurityContext.get().getCountryId(),false);
+				this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),false);
 				if(this.totalInstitutions!=null && this.totalInstitutions.size()>0){
 					log.debug("Archival landscape could not be ingested directly, there are some institutions to check. Checking...");
 					this.updatedInstitutions = new ArrayList<ArchivalInstitution>();
@@ -301,7 +301,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 						//when valid operation it's able to manage all ingested institutions/groups
 						this.deletedInstitutions = new ArrayList<ArchivalInstitution>();
 						
-						this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryId(SecurityContext.get().getCountryId(),true);
+						this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),true);
 						
 						checkAndUpdateArchivalInstitutions(null,archivalInstitutions); //new check
 						log.debug("Updated process has been finished successfull");
@@ -1277,7 +1277,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 			cLevel.append(buildDidNode(alternativeNames,null,tabs));
 		}
 		ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
-		List<ArchivalInstitution> listCountryArchivalInstitutions = archivalInstitutionDAO.getArchivalInstitutionsByCountryId(country.getId(),true);
+		List<ArchivalInstitution> listCountryArchivalInstitutions = archivalInstitutionDAO.getArchivalInstitutionsByCountryIdForAL(country.getId(),true);
 		if(listCountryArchivalInstitutions!=null){
 			Iterator<ArchivalInstitution> itArchivalInstitutions = listCountryArchivalInstitutions.iterator();
 			while(itArchivalInstitutions.hasNext()){
