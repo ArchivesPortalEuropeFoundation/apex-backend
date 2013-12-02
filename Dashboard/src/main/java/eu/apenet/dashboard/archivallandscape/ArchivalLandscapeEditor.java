@@ -261,7 +261,12 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 				return buffer.toString();
 			}
 
-			List<ArchivalInstitution> archivalInstitutions = aiDao.getArchivalInstitutionsByParentAiId(archivalInstitutionTarget.getParentAiId());
+			List<ArchivalInstitution> archivalInstitutions = null;
+			if (archivalInstitutionTarget.getParentAiId() != null) {
+				archivalInstitutions = aiDao.getArchivalInstitutionsByParentAiId(archivalInstitutionTarget.getParentAiId());
+			} else {
+				archivalInstitutions = aiDao.getRootArchivalInstitutionsByCountryId(archivalInstitutionTarget.getCountryId());
+			}
 			Iterator<ArchivalInstitution> itArchivalInstitutions = archivalInstitutions.iterator();
 			boolean changed = false; //flag to exit
 			int lastPosition = archivalInstitutionTarget.getAlorder();
