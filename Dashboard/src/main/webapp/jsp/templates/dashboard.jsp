@@ -73,20 +73,26 @@
                      	    <div id="language">
 								<s:form name="languageSelection" id="languageSelection" action="changeLanguage" theme="simple" method="post">
 									<select title="<s:property value="getText('header.chooselanguage')"/>" name="request_locale" id="selectLanguage" onchange="sendLanguageSelectionForm();" >
-										<option title="Deutsch" value="de" ${selectedLanguage['de']}>Deutsch</option>				
+										<option title="Български" value="bg" ${selectedLanguage['bg']}>Български</option>
+										<option title="Hrvatski" value="hr" ${selectedLanguage['hr']}>Hrvatski</option>
+										<option title="Deutsch" value="de" ${selectedLanguage['de']}>Deutsch</option>
+										<option title="Eesti" value="et" ${selectedLanguage['et']}>Eesti</option>				
 										<option title="Ελληνικά" value="el" ${selectedLanguage['el']}>Ελληνικά</option>
 										<option title="English" value="en" ${selectedLanguage['en']}>English</option>
 								        <option title="Español" value="es"${selectedLanguage['es']}>Español</option>				
 										<option title="Français" value="fr" ${selectedLanguage['fr']}>Français</option>
 										<option title="Gaeilge" value="ga" ${selectedLanguage['ga']}>Gaeilge</option>
-										<option title="Hrvatski" value="hr" ${selectedLanguage['hr']}>Hrvatski</option>
 										<option title="íslenska" value="is" ${selectedLanguage['is']}>íslenska</option>
 										<option title="Italiano" value="it" ${selectedLanguage['it']}>Italiano</option>
 										<option title="Latviešu" value="lv" ${selectedLanguage['lv']}>Latviešu</option>
+										<option title="Lietuvių " value="lt" ${selectedLanguage['lt']}>Lietuvių </option>
+										<option title="Magyar" value="hu" ${selectedLanguage['hu']}>Magyar</option>
 										<option title="Malti" value="mt" ${selectedLanguage['mt']}>Malti</option>				
 										<option title="Nederlands" value="nl" ${selectedLanguage['nl']}>Nederlands</option>
+										<option title="Norsk" value="no" ${selectedLanguage['no']}>Norsk</option>
 										<option title="Polski" value="pl" ${selectedLanguage['pl']}>Polski</option>
 										<option title="Português" value="pt" ${selectedLanguage['pt']}>Português</option>
+										<option title="Slovenčina" value="sk" ${selectedLanguage['sk']}>Slovenčina</option>
 										<option title="Slovenščina" value="sl" ${selectedLanguage['sl']}>Slovenščina</option>				
 										<option title="Suomi" value="fi" ${selectedLanguage['fi']}>Suomi</option>
 										<option title="Svenska" value="sv" ${selectedLanguage['sv']}>Svenska</option>   
