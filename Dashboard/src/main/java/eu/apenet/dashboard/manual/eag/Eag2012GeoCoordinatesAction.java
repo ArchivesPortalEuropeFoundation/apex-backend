@@ -72,24 +72,26 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 
 	// Methods
 	public String execute() throws Exception {
-
-		return getInstitutionData();
-	}
-
-	public String getInstitutionData() {
 		log.debug("Start process to fill Coordinates table.");
 		ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
 		List<ArchivalInstitution> archivalInstitution = archivalInstitutionDao.findAll();
 		
 		for (int i = 0; i < archivalInstitution.size(); i++) {
-					this.insertCoordinates(archivalInstitution.get(i));
+			this.insertCoordinates(archivalInstitution.get(i));
+			try {
+				Thread.sleep(250);
+			} catch (InterruptedException e) {
+				log.error("Error trying to sleep thread for action 'eag2012GeoCoordinates' at iteration: " + (i + 1));
+			}
 		}// for I
 		log.debug("End process to fill Coordinates table.");
 		return SUCCESS;
 	}
 
 	/**
-	 * 
+	 * Method to add the coordinates to the coordinates table.
+	 *
+	 * @param archivalInstitution Archival institution to recover the EAG file.
 	 */
 	public void insertCoordinates(final ArchivalInstitution archivalInstitution) {
 		String strPath = "";
