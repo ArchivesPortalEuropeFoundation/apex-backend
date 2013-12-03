@@ -473,6 +473,7 @@ public class EadService {
                     }
                 } else {
                     newEad = new CreateEadTask().execute(xmlType, upFile, upFile.getAiId());
+                    DAOFactory.instance().getUpFileDAO().delete(upFile);
                 }
 
                 if(continueTask) {
