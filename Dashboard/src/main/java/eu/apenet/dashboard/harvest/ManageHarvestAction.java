@@ -51,6 +51,7 @@ public class ManageHarvestAction extends AbstractAction {
         ArchivalInstitutionOaiPmhDAO archivalInstitutionOaiPmhDAO = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
         ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = archivalInstitutionOaiPmhDAO.findById(harvestId.longValue());
         archivalInstitutionOaiPmh.setEnabled(false);
+        archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
         return SUCCESS;
     }
 
@@ -58,6 +59,7 @@ public class ManageHarvestAction extends AbstractAction {
         ArchivalInstitutionOaiPmhDAO archivalInstitutionOaiPmhDAO = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
         ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = archivalInstitutionOaiPmhDAO.findById(harvestId.longValue());
         archivalInstitutionOaiPmh.setEnabled(true);
+        archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
         return SUCCESS;
     }
 

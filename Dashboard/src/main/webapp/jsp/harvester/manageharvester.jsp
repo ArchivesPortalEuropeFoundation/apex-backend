@@ -51,26 +51,26 @@
                 <td><c:out value="${item.archivalInstitution.ainame}" /></td>
                 <td><c:out value="${item.url}" /></td>
                 <td><c:out value="${item.set}" /></td>
-                <td><c:out value="${item.metadata}" /></td>
-                <td><c:out value="${item.userprofile.nameProfile}" /></td>
+                <td><c:out value="${item.metadataPrefix}" /></td>
+                <td><c:out value="${item.ingestionprofile.nameProfile}" /></td>
                 <td>
                     <c:choose>
                         <c:when test="${item.enabled}">
                             <s:form action="idleHarvest" theme="simple">
                                 <input type="hidden" name="harvestId" value="${item.id}" />
-                                <s:submit key="admin.harvestermanagement.harvester.idle" />
+                                <s:submit key="admin.harvestermanagement.harvester.idle" name="idleHarvest" />
                             </s:form>
                         </c:when>
                         <c:otherwise>
                             <s:form action="activateHarvest" theme="simple">
                                 <input type="hidden" name="harvestId" value="${item.id}" />
-                                <s:submit key="admin.harvestermanagement.harvester.activate" />
+                                <s:submit key="admin.harvestermanagement.harvester.activate" name="activateHarvest" />
                             </s:form>
                         </c:otherwise>
                     </c:choose>
                     <s:form action="startHarvest" theme="simple">
                         <input type="hidden" name="harvestId" value="${item.id}" />
-                        <s:submit key="admin.harvestermanagement.harvester.start" disabled="true" />
+                        <s:submit key="admin.harvestermanagement.harvester.start" name="startHarvest" disabled="true" />
                     </s:form>
                 </td>
             </tr>
