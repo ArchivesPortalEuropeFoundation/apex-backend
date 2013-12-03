@@ -1,7 +1,7 @@
 Dear ${name},
 
 
-The last automatic harvest of the data from '${archivalInstitution}' is finished on ${base}.
+The last automatic harvest of the data from '${archivalInstitution}' is finished on ${dashboardBase}.
 Please check online to see if all went as expected.
 
 From our system point of view, ${body}
