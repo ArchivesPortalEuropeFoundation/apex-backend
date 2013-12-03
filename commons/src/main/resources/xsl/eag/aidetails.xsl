@@ -1436,12 +1436,12 @@
 										<div class="webpageNoLang">
 											<xsl:choose>
 												<xsl:when test="$link and $link != '' and $text and $text != ''">
-													<a href="mailto:{$link}" target="_blank">
+													<a href="{$link}" target="_blank">
 													    <xsl:value-of select="$text"/>
 													</a>
 												</xsl:when>
 												<xsl:when test="$link and $link != ''">
-													<a href="mailto:{$link}" target="_blank">
+													<a href="{$link}" target="_blank">
 														<xsl:value-of select="ape:resource('eag2012.portal.gotothewebsite')"/>
 													</a>
 												</xsl:when>
@@ -1458,12 +1458,12 @@
 										<div class="{$classValue}">
 											<xsl:choose>
 												<xsl:when test="$link and $link != '' and $text and $text != ''">
-													<a href="mailto:{$link}" target="_blank">
+													<a href="{$link}" target="_blank">
 													    <xsl:value-of select="$text"/>
 													</a>
 												</xsl:when>
 												<xsl:when test="$link and $link != ''">
-													<a href="mailto:{$link}" target="_blank">
+													<a href="{$link}" target="_blank">
 														<xsl:value-of select="ape:resource('eag2012.portal.gotothewebsite')"/>
 													</a>
 												</xsl:when>
@@ -1573,12 +1573,12 @@
 										<div class="webpageExhibitionNoLang">
 											<xsl:choose>
 												<xsl:when test="$link and $link != '' and $text and $text != ''">
-													<a href="mailto:{$link}" target="_blank">
+													<a href="{$link}" target="_blank">
 													    <xsl:value-of select="$text"/>
 													</a>
 												</xsl:when>
 												<xsl:when test="$link and $link != ''">
-													<a href="mailto:{$link}" target="_blank">
+													<a href="{$link}" target="_blank">
 														<xsl:value-of select="ape:resource('eag2012.portal.gotothewebsite')"/>
 													</a>
 												</xsl:when>
@@ -1595,12 +1595,12 @@
 										<div class="{$classValue}">
 											<xsl:choose>
 												<xsl:when test="$link and $link != '' and $text and $text != ''">
-													<a href="mailto:{$link}" target="_blank">
+													<a href="{$link}" target="_blank">
 													    <xsl:value-of select="$text"/>
 													</a>
 												</xsl:when>
 												<xsl:when test="$link and $link != ''">
-													<a href="mailto:{$link}" target="_blank">
+													<a href="{$link}" target="_blank">
 														<xsl:value-of select="ape:resource('eag2012.portal.gotothewebsite')"/>
 													</a>
 												</xsl:when>
@@ -1768,12 +1768,12 @@
 										<div class="webpageToursSessionsNoLang">
 											<xsl:choose>
 												<xsl:when test="$link and $link != '' and $text and $text != ''">
-													<a href="mailto:{$link}" target="_blank">
+													<a href="{$link}" target="_blank">
 													    <xsl:value-of select="$text"/>
 													</a>
 												</xsl:when>
 												<xsl:when test="$link and $link != ''">
-													<a href="mailto:{$link}" target="_blank">
+													<a href="{$link}" target="_blank">
 														<xsl:value-of select="ape:resource('eag2012.portal.gotothewebsite')"/>
 													</a>
 												</xsl:when>
@@ -1790,12 +1790,12 @@
 										<div class="{$classValue}">
 											<xsl:choose>
 												<xsl:when test="$link and $link != '' and $text and $text != ''">
-													<a href="mailto:{$link}" target="_blank">
+													<a href="{$link}" target="_blank">
 													    <xsl:value-of select="$text"/>
 													</a>
 												</xsl:when>
 												<xsl:when test="$link and $link != ''">
-													<a href="mailto:{$link}" target="_blank">
+													<a href="{$link}" target="_blank">
 														<xsl:value-of select="ape:resource('eag2012.portal.gotothewebsite')"/>
 													</a>
 												</xsl:when>
@@ -1963,12 +1963,12 @@
 										<div class="webpageOtherServicesNoLang">
 											<xsl:choose>
 												<xsl:when test="$link and $link != '' and $text and $text != ''">
-													<a href="mailto:{$link}" target="_blank">
+													<a href="{$link}" target="_blank">
 													    <xsl:value-of select="$text"/>
 													</a>
 												</xsl:when>
 												<xsl:when test="$link and $link != ''">
-													<a href="mailto:{$link}" target="_blank">
+													<a href="{$link}" target="_blank">
 														<xsl:value-of select="ape:resource('eag2012.portal.gotothewebsite')"/>
 													</a>
 												</xsl:when>
@@ -1985,12 +1985,12 @@
 										<div class="{$classValue}">
 											<xsl:choose>
 												<xsl:when test="$link and $link != '' and $text and $text != ''">
-													<a href="mailto:{$link}" target="_blank">
+													<a href="{$link}" target="_blank">
 													    <xsl:value-of select="$text"/>
 													</a>
 												</xsl:when>
 												<xsl:when test="$link and $link != ''">
-													<a href="mailto:{$link}" target="_blank">
+													<a href="{$link}" target="_blank">
 														<xsl:value-of select="ape:resource('eag2012.portal.gotothewebsite')"/>
 													</a>
 												</xsl:when>
