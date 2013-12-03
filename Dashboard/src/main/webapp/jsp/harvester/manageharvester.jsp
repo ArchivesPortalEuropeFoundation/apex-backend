@@ -33,7 +33,7 @@
         </c:choose>
     </s:form>
 
-    <h2>First items (20 max):</h2>
+    <h2>All saved harvest processes:</h2>
     <table class="defaultlayout">
         <thead>
             <tr>
