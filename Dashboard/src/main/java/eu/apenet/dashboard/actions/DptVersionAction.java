@@ -19,6 +19,7 @@ public class DptVersionAction extends AbstractAction{
     private static final long serialVersionUID = 4754804143407258044L;
 
     private String versionNb;
+    private String newVersionNb;
     private Long versionId;
 
     protected void buildBreadcrumbs() {
@@ -34,7 +35,7 @@ public class DptVersionAction extends AbstractAction{
     }
 
     public String addVersion() {
-        DptUpdateService.addDptVersion(versionNb);
+        DptUpdateService.addDptVersion(versionNb, newVersionNb);
         return SUCCESS;
     }
     public String deleteVersion() {
@@ -48,6 +49,14 @@ public class DptVersionAction extends AbstractAction{
 
     public void setVersionNb(String versionNb) {
         this.versionNb = versionNb;
+    }
+
+    public String getNewVersionNb() {
+        return newVersionNb;
+    }
+
+    public void setNewVersionNb(String newVersionNb) {
+        this.newVersionNb = newVersionNb;
     }
 
     public Long getVersionId() {

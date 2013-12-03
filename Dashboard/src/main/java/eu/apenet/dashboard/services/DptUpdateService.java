@@ -13,11 +13,15 @@ import eu.apenet.persistence.vo.DptUpdate;
  * @author Yoann Moranville
  */
 public final class DptUpdateService {
-    public static void addDptVersion(String version){
+    public static void addDptVersion(String version, String newVersion){
         if (SecurityContext.get().isAdmin()) {
-            DptUpdate dptUpdate = new DptUpdate(version);
+            for(DptUpdate dptUpdate : DAOFactory.instance().getDptUpdateDAO().findAll()) {
+                dptUpdate.setNewVersion(newVersion);
+                DAOFactory.instance().getDptUpdateDAO().update(dptUpdate);
+            }
+            DptUpdate dptUpdate = new DptUpdate(version, newVersion);
             DAOFactory.instance().getDptUpdateDAO().store(dptUpdate);
-            ChangeControl.logOperation("Creation of DPT version: " + version);
+            ChangeControl.logOperation("Creation of DPT version: " + version + ", new version is " + newVersion);
         }
     }
     public static void deleteDptVersion(Long id){
