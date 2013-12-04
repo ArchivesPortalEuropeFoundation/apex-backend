@@ -58,7 +58,7 @@
                 <td>
                     <c:choose>
                         <c:when test="${harvestProcessing}">
-                            Harvest is processing, no actions possible
+                            <s:text name="admin.harvestermanagement.harvester.processing.noactions" />
                         </c:when>
                         <c:otherwise>
                             <c:choose>
