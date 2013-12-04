@@ -67,7 +67,7 @@ public class HarvesterDaemon {
         return harvesterProcessing;
     }
 
-    protected static void setHarvesterProcessing(boolean harvesterProcessing) {
+    public static void setHarvesterProcessing(boolean harvesterProcessing) {
         HarvesterDaemon.harvesterProcessing = harvesterProcessing;
     }
 }
