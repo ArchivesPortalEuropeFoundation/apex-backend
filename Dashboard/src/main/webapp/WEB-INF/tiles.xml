@@ -564,6 +564,10 @@
         <put-attribute name="title" value="admin.queuemanagement.title" />
         <put-attribute name="body" value="/jsp/queue/managequeue.jsp" />
     </definition>
+    <definition name="manageHarvest" extends="AdminLayout" >
+        <put-attribute name="title" value="admin.harvestmanagement.title" />
+        <put-attribute name="body" value="/jsp/harvester/manageharvester.jsp" />
+    </definition>
     <definition name="sessionManagement" extends="DefaultLayout" >
         <put-attribute name="title" value="dashboard.sessionmanagement.title" />
         <put-attribute name="body" value="/jsp/security/sessionmanagement.jsp" />

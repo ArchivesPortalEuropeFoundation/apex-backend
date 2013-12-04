@@ -1,11 +1,7 @@
 package eu.apenet.persistence.vo;
 
 import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * User: Yoann Moranville
@@ -21,12 +17,15 @@ public class DptUpdate implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     private String version;
+    @Column(name = "new_version")
+    private String newVersion;
 
     public DptUpdate() {
     }
 
-    public DptUpdate(String version) {
+    public DptUpdate(String version, String newVersion) {
         this.version = version;
+        this.newVersion = newVersion;
     }
 
     public Long getId() {
@@ -43,5 +42,13 @@ public class DptUpdate implements Serializable {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public String getNewVersion() {
+        return newVersion;
+    }
+
+    public void setNewVersion(String newVersion) {
+        this.newVersion = newVersion;
     }
 }

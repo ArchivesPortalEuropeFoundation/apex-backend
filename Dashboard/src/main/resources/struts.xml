@@ -5,7 +5,7 @@
 
     <constant name="struts.enable.DynamicMethodInvocation" value="true" />
     <constant name="struts.devMode" value="false" />
-    <constant name="struts.custom.i18n.resources" value="i18n/ApplicationResources,i18n/eag2012" />
+    <constant name="struts.custom.i18n.resources" value="i18n/ApplicationResources,i18n/eag2012,i18n/admin" />
 
     <!-- To avoid the typical problem of encoding of accents and ensure compatibility with any Operative System, use UTF-8: -->
     <constant name="struts.i18n.encoding" value="UTF-8" />
@@ -778,6 +778,30 @@
         <!-- <action name="downloadGeneralAL" class="eu.apenet.dashboard.actions.DownloadGeneralALAction">
             <result name="error" type="tiles">blank</result>
         </action>  -->
+        <action name="manageHarvest" class="eu.apenet.dashboard.harvest.ManageHarvestAction">
+            <result name="success" type="tiles">manageHarvest</result>
+        </action>
+        <action name="startStopHarvester" class="eu.apenet.dashboard.harvest.ManageHarvestAction" method="startStopHarvester">
+            <result name="success" type="redirectAction">
+                <param name="actionName">manageHarvest</param>
+            </result>
+        </action>
+        <action name="idleHarvest" class="eu.apenet.dashboard.harvest.ManageHarvestAction" method="idleHarvest">
+            <result name="success" type="redirectAction">
+                <param name="actionName">manageHarvest</param>
+            </result>
+        </action>
+        <action name="activateHarvest" class="eu.apenet.dashboard.harvest.ManageHarvestAction" method="activateHarvest">
+            <result name="success" type="redirectAction">
+                <param name="actionName">manageHarvest</param>
+            </result>
+        </action>
+        <action name="startHarvest" class="eu.apenet.dashboard.harvest.ManageHarvestAction" method="startHarvest">
+            <result name="success" type="redirectAction">
+                <param name="actionName">manageHarvest</param>
+            </result>
+        </action>
+
 
         <action name="manageQueue" class="eu.apenet.dashboard.queue.ManageQueueAction">
             <result name="success" type="tiles">manageQueue</result>

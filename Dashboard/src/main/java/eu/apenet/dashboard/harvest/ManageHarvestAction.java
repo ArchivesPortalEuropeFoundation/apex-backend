@@ -51,21 +51,28 @@ public class ManageHarvestAction extends AbstractAction {
         ArchivalInstitutionOaiPmhDAO archivalInstitutionOaiPmhDAO = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
         ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = archivalInstitutionOaiPmhDAO.findById(harvestId.longValue());
         archivalInstitutionOaiPmh.setEnabled(false);
+        archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
         return SUCCESS;
     }
 
     public String activateHarvest() throws Exception {
         ArchivalInstitutionOaiPmhDAO archivalInstitutionOaiPmhDAO = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
         ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = archivalInstitutionOaiPmhDAO.findById(harvestId.longValue());
+        if(!APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()) { //it means on test servers, not prod
+            archivalInstitutionOaiPmh.setLastHarvesting(null);
+        }
         archivalInstitutionOaiPmh.setEnabled(true);
+        archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
         return SUCCESS;
     }
 
     public String startHarvest() throws Exception {
-        ArchivalInstitutionOaiPmhDAO archivalInstitutionOaiPmhDAO = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
-        ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = archivalInstitutionOaiPmhDAO.findById(harvestId.longValue());
-
-        //todo
+//        ArchivalInstitutionOaiPmhDAO archivalInstitutionOaiPmhDAO = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
+//        ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = archivalInstitutionOaiPmhDAO.findById(harvestId.longValue());
+        HarvesterDaemon.setHarvesterProcessing(true);
+        new Thread(
+            new DataHarvester(harvestId.longValue(), false)
+        ).start();
 
         return SUCCESS;
     }

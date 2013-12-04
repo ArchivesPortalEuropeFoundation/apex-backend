@@ -480,9 +480,9 @@ public final class UserService {
 
     public static void sendEmailHarvestFinished(boolean success, ArchivalInstitution archivalInstitution, User partner) {
         EmailComposer emailComposer = new EmailComposer("emails/harvestFinished.txt", "Result of last harvesting process.", true, false);
-        emailComposer.setProperty("archivalInstitution", archivalInstitution.getAutform());
-        emailComposer.setProperty("name", partner.getFirstName());
-        emailComposer.setProperty("base", APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
+        emailComposer.setProperty("archivalInstitution", archivalInstitution.getAiname());
+        emailComposer.setProperty("name", partner.getName());
+        emailComposer.setProperty("dashboardBase", APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
         if(success)
             emailComposer.setProperty("body", "it was successful.");
         else

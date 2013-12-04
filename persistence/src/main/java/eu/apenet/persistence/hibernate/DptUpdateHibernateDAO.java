@@ -16,9 +16,11 @@ import java.util.List;
 public class DptUpdateHibernateDAO extends AbstractHibernateDAO<DptUpdate, Long> implements DptUpdateDAO {
 
     @Override
-    public boolean doesVersionExist(String version) {
+    public DptUpdate doesVersionExist(String version) {
         Criteria criteria = getSession().createCriteria(getPersistentClass());
-        List result = criteria.add(Restrictions.eq("version", version)).list();
-        return result.size() > 0;
+        List<DptUpdate> result = criteria.add(Restrictions.eq("version", version)).list();
+        if(result.size() > 0)
+            return result.get(0);
+        return null;
     }
 }

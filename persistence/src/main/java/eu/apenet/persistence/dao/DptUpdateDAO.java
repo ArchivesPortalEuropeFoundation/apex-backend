@@ -9,5 +9,5 @@ import eu.apenet.persistence.vo.DptUpdate;
  * @author Yoann Moranville
  */
 public interface DptUpdateDAO extends GenericDAO<DptUpdate, Long> {
-    public boolean doesVersionExist(String version);
+    public DptUpdate doesVersionExist(String version);
 }

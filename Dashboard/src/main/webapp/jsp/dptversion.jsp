@@ -5,11 +5,13 @@
     <table class="defaultlayout">
         <tr>
             <th><s:text name="dptversion.version"/></th>
+            <th><s:text name="dptversion.newVersion"/></th>
             <th><s:text name="dptversion.actions"/></th>
         </tr>
         <c:forEach var="dptUpdate" items="${dptUpdates}">
             <tr>
                 <td><c:out value="${dptUpdate.version}"/></td>
+                <td><c:out value="${dptUpdate.newVersion}"/></td>
                 <td>
                     <s:form action="deleteVersion" theme="simple">
                         <input type="hidden" name="versionId" value="${dptUpdate.id}"/>
@@ -18,14 +20,19 @@
                 </td>
             </tr>
         </c:forEach>
-        <tr>
-            <td colspan="2">
-                <s:form action="addVersion" theme="simple">
+        <s:form action="addVersion" theme="simple">
+            <tr>
+                <td>
                     <input type="text" name="versionNb" />
+                </td>
+                <td>
+                    <input type="text" name="newVersionNb" />
+                </td>
+                <td>
                     <s:submit key="dptversion.add" name="add" />
-                </s:form>
-            </td>
-        </tr>
+                </td>
+            </tr>
+        </s:form>
     </table>
 </div>
 

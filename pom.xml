@@ -14,8 +14,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>3.1.1.RELEASE</spring.version>
-		<postgresql.version>9.1-901.jdbc4</postgresql.version>
-        <archivesportaleurope.dptutil.version>2014-01-SNAPSHOT</archivesportaleurope.dptutil.version>
+		<postgresql.version>9.2-1004-jdbc4</postgresql.version>
 	</properties>
 
 
@@ -220,7 +219,7 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>postgresql</groupId>
+				<groupId>org.postgresql</groupId>
 				<artifactId>postgresql</artifactId>
 				<version>${postgresql.version}</version>
 			</dependency>
@@ -299,7 +298,7 @@
 			<dependency>
 				<groupId>eu.archivesportaleurope.dpt</groupId>
 				<artifactId>DPTutils</artifactId>
-				<version>${archivesportaleurope.dptutil.version}</version>
+				<version>2014-01-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>eu.archivesportaleurope.backend</groupId>
