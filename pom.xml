@@ -14,7 +14,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>3.1.1.RELEASE</spring.version>
-		<postgresql.version>9.1-901.jdbc4</postgresql.version>
+		<postgresql.version>9.2-1004-jdbc4</postgresql.version>
         <archivesportaleurope.dptutil.version>1.5.0-beta-1-SNAPSHOT</archivesportaleurope.dptutil.version>
 	</properties>
 
@@ -220,7 +220,7 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>postgresql</groupId>
+				<groupId>org.postgresql</groupId>
 				<artifactId>postgresql</artifactId>
 				<version>${postgresql.version}</version>
 			</dependency>
