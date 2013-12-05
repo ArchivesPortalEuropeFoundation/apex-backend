@@ -61,6 +61,13 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
         this.harvestOnlyWeekend = false;
 	}
 
+    @Override
+    public String toString() {
+        return "Archival Institution: '" + archivalInstitution.getAiname() + "' - url: '" + url +  "' - set: '" + (set != null?set:"no set") +
+                "' - metadataPrefix: '" + metadataPrefix + "' - last harvesting until today: '" + (lastHarvesting!=null?lastHarvesting:"first harvest") +
+                "' - ingestion profile: '" + ingestionprofile.getNameProfile() + "' - interval of harvests: '" + intervalHarvesting + "' - enabled: '" + enabled + "' - to only harvest the week end: '" + harvestOnlyWeekend + "'";
+    }
+
     public Long getId() {
         return id;
     }

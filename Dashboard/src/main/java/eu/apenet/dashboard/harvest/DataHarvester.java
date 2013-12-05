@@ -56,6 +56,8 @@ public class DataHarvester implements Runnable {
             setSpec = archivalInstitutionOaiPmh.getSet();
         }
 
+        String currentInfoArchivalInstitutionOaiPmh = archivalInstitutionOaiPmh.toString();
+
         ArchivalInstitution archivalInstitution = archivalInstitutionOaiPmh.getArchivalInstitution();
         LOGGER.info(archivalInstitution);
         String subdirectory = APEnetUtilities.FILESEPARATOR + archivalInstitution.getAiId() + APEnetUtilities.FILESEPARATOR + "oai_" + System.currentTimeMillis() + APEnetUtilities.FILESEPARATOR;
@@ -93,10 +95,14 @@ public class DataHarvester implements Runnable {
 
             JpaUtil.commitDatabaseTransaction();
 
-            UserService.sendEmailHarvestFinished(true, archivalInstitution, partner);
+            int numberEadHarvested = harvestedFiles.length;
+            UserService.sendEmailHarvestFinished(true, archivalInstitution, partner, numberEadHarvested, currentInfoArchivalInstitutionOaiPmh);
+            LOGGER.info("Harvest completed: harvested " + numberEadHarvested + " EAD files from " + currentInfoArchivalInstitutionOaiPmh);
+            //todo: Add more information in mail - ID and timestamp of first + last harvested file
         } catch (Exception e) {
             JpaUtil.rollbackDatabaseTransaction();
-            UserService.sendEmailHarvestFinished(false, archivalInstitution, partner);
+            UserService.sendEmailHarvestFinished(false, archivalInstitution, partner, 0, currentInfoArchivalInstitutionOaiPmh);
+            LOGGER.error("Harvest failed for " + currentInfoArchivalInstitutionOaiPmh);
             LOGGER.error("Harvesting failed - should we put an 'error' flag in the DB?");
         } finally {
             outputDirectory.delete();
