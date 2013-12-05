@@ -12,6 +12,9 @@ Please see the following information on the harvest:
 In total we harvested ${numberEadHarvested} EAD files with the server information below:
 
 ${infoHarvestedServer}
+
+Oldest file harvested: ${oldestFileHarvested}
+Newest file harvested: ${newestFileHarvested}
 ============================================
 
 Best wishes,

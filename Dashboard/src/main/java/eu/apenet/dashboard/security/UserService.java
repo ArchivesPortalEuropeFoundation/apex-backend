@@ -478,13 +478,15 @@ public final class UserService {
 
 	}
 
-    public static void sendEmailHarvestFinished(boolean success, ArchivalInstitution archivalInstitution, User partner, int numberEadHarvested, String infoHarvestedServer) {
+    public static void sendEmailHarvestFinished(boolean success, ArchivalInstitution archivalInstitution, User partner, int numberEadHarvested, String infoHarvestedServer, String oldestFileHarvested, String newestFileHarvested) {
         EmailComposer emailComposer = new EmailComposer("emails/harvestFinished.txt", "Result of last harvesting process.", true, false);
         emailComposer.setProperty("archivalInstitution", archivalInstitution.getAiname());
         emailComposer.setProperty("name", partner.getName());
         emailComposer.setProperty("dashboardBase", APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
         emailComposer.setProperty("numberEadHarvested", numberEadHarvested+"");
         emailComposer.setProperty("infoHarvestedServer", infoHarvestedServer);
+        emailComposer.setProperty("oldestFileHarvested", oldestFileHarvested);
+        emailComposer.setProperty("newestFileHarvested", newestFileHarvested);
         if(success)
             emailComposer.setProperty("body", "it was successful.");
         else

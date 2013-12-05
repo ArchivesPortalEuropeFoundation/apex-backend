@@ -3,6 +3,7 @@ package org.oclc.oai.harvester.parser.record;
 import java.io.File;
 import java.util.LinkedList;
 
+import javax.xml.bind.DatatypeConverter;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
@@ -11,6 +12,7 @@ public class OaiPmhRecordParser extends AbstractOaiPmhParser{
 	
 	public static final QName HEADER = new QName(OAI_PMH, "header");
 	public static final QName IDENTIFIER = new QName(OAI_PMH, "identifier");
+	public static final QName DATESTAMP = new QName(OAI_PMH, "datestamp");
 	public static final QName STATUS = new QName(OAI_PMH, "status");
 	public OaiPmhRecordParser(File outputDirectory) {
 		super(outputDirectory);
@@ -35,13 +37,21 @@ public class OaiPmhRecordParser extends AbstractOaiPmhParser{
 				}
 				add(path, lastElement);
 			}else if (event == XMLStreamConstants.CHARACTERS) {
-				if (IDENTIFIER.equals(lastElement)) {
-					boolean match = path.size() == 2
-							&& HEADER.equals(path.get(0)) && IDENTIFIER.equals(path.get(1));
-					if (match) {
-						record.setIdentifier(xmlReader.getText());
-					}
-				}
+                if (IDENTIFIER.equals(lastElement)) {
+                    boolean match = path.size() == 2
+                            && HEADER.equals(path.get(0)) && IDENTIFIER.equals(path.get(1));
+                    if (match) {
+                        record.setIdentifier(xmlReader.getText());
+                    }
+                } else if (DATESTAMP.equals(lastElement)) {
+                    boolean match = path.size() == 2
+                            && HEADER.equals(path.get(0)) && DATESTAMP.equals(path.get(1));
+                    if (match) {
+                        try {
+                            record.setTimestamp(DatatypeConverter.parseDateTime(xmlReader.getText()).getTime());
+                        } catch (Exception e) {}
+                    }
+                }
 			}
 			else if (event == XMLStreamConstants.END_ELEMENT) {
 				QName elementName = xmlReader.getName();

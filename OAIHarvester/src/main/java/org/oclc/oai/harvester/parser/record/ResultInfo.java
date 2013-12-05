@@ -30,6 +30,4 @@ public class ResultInfo {
 	public void setNewResumptionToken(String newResumptionToken) {
 		this.newResumptionToken = newResumptionToken;
 	}
-	
-	
 }

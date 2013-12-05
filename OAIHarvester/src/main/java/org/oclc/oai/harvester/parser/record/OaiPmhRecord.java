@@ -1,9 +1,12 @@
 package org.oclc.oai.harvester.parser.record;
 
+import java.util.Date;
+
 public class OaiPmhRecord {
 	private String identifier;
 	private String status;
 	private String filename;
+    private Date timestamp;
 	public String getIdentifier() {
 		return identifier;
 	}
@@ -25,5 +28,10 @@ public class OaiPmhRecord {
 	public boolean isDeleted(){
 		return "deleted".equalsIgnoreCase(status);
 	}
-	
+    public Date getTimestamp() {
+        return timestamp;
+    }
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
 }

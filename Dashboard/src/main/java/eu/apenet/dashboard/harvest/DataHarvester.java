@@ -10,6 +10,7 @@ import eu.apenet.persistence.vo.*;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import org.apache.log4j.Logger;
 import org.oclc.oai.harvester.parser.record.OaiPmhParser;
+import org.oclc.oai.harvester.parser.record.OaiPmhRecord;
 import org.oclc.oai.harvester.parser.record.ResultInfo;
 import org.oclc.oai.harvester.verb.ListRecordsSaxWriteDirectly;
 
@@ -31,6 +32,8 @@ public class DataHarvester implements Runnable {
 
     private long archivalInstitutionOaiPmhId;
     private boolean isNighlySchedule;
+    private DateHarvestModel newestFileHarvested;
+    private DateHarvestModel oldestFileHarvested;
 
     public DataHarvester(long archivalInstitutionOaiPmhId, boolean isNighlySchedule) {
         this.archivalInstitutionOaiPmhId = archivalInstitutionOaiPmhId;
@@ -96,12 +99,11 @@ public class DataHarvester implements Runnable {
             JpaUtil.commitDatabaseTransaction();
 
             int numberEadHarvested = harvestedFiles.length;
-            UserService.sendEmailHarvestFinished(true, archivalInstitution, partner, numberEadHarvested, currentInfoArchivalInstitutionOaiPmh);
-            LOGGER.info("Harvest completed: harvested " + numberEadHarvested + " EAD files from " + currentInfoArchivalInstitutionOaiPmh);
-            //todo: Add more information in mail - ID and timestamp of first + last harvested file
+            UserService.sendEmailHarvestFinished(true, archivalInstitution, partner, numberEadHarvested, currentInfoArchivalInstitutionOaiPmh, oldestFileHarvested.toString(), newestFileHarvested.toString());
+            LOGGER.info("Harvest completed: harvested " + numberEadHarvested + " EAD files from " + currentInfoArchivalInstitutionOaiPmh + " --- Oldest file harvested: " + oldestFileHarvested.toString() + " --- Newest file harvested: " + newestFileHarvested.toString());
         } catch (Exception e) {
             JpaUtil.rollbackDatabaseTransaction();
-            UserService.sendEmailHarvestFinished(false, archivalInstitution, partner, 0, currentInfoArchivalInstitutionOaiPmh);
+            UserService.sendEmailHarvestFinished(false, archivalInstitution, partner, 0, currentInfoArchivalInstitutionOaiPmh, "-", "-");
             LOGGER.error("Harvest failed for " + currentInfoArchivalInstitutionOaiPmh);
             LOGGER.error("Harvesting failed - should we put an 'error' flag in the DB?");
         } finally {
@@ -127,6 +129,19 @@ public class DataHarvester implements Runnable {
                 }
                 LOGGER.info("Error record: " + resultInfo.getIdentifier());
                 break;
+            }
+
+            for(OaiPmhRecord oaiPmhRecord : resultInfo.getRecords()) {
+                if(oldestFileHarvested == null && newestFileHarvested == null) {
+                    oldestFileHarvested = new DateHarvestModel(oaiPmhRecord.getTimestamp(), oaiPmhRecord.getIdentifier());
+                    newestFileHarvested = new DateHarvestModel(oaiPmhRecord.getTimestamp(), oaiPmhRecord.getIdentifier());
+                } else {
+                    if(!newestFileHarvested.isCurrentOlderThanNew(oaiPmhRecord.getTimestamp())) {
+                        newestFileHarvested = new DateHarvestModel(oaiPmhRecord.getTimestamp(), oaiPmhRecord.getIdentifier());
+                    } else if(oldestFileHarvested.isCurrentOlderThanNew(oaiPmhRecord.getTimestamp())) {
+                        oldestFileHarvested = new DateHarvestModel(oaiPmhRecord.getTimestamp(), oaiPmhRecord.getIdentifier());
+                    }
+                }
             }
 
             String resumptionToken = resultInfo.getNewResumptionToken();
@@ -177,5 +192,24 @@ public class DataHarvester implements Runnable {
         properties.setProperty(QueueItem.INHERIT_FILE, ingestionprofile.getEuropeanaInheritElements()+"");
         properties.setProperty(QueueItem.INHERIT_ORIGINATION, ingestionprofile.getEuropeanaInheritOrigin()+"");
         return properties;
+    }
+
+    class DateHarvestModel {
+        private Date datestamp;
+        private String identifier;
+
+        public DateHarvestModel(Date datestamp, String identifier) {
+            this.datestamp = datestamp;
+            this.identifier = identifier;
+        }
+
+        @Override
+        public String toString() {
+            return "datestamp: '" + datestamp + "' - identifier: '" + identifier + "'";
+        }
+
+        public boolean isCurrentOlderThanNew(Date newDate) {
+            return datestamp.after(newDate);
+        }
     }
 }
