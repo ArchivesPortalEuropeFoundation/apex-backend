@@ -83,7 +83,7 @@
 							<xsl:if test="ead:materialspec">
 								<xsl:call-template name="materialspec" />
 							</xsl:if>
-							<xsl:for-each select="ead:physdesc">
+							<xsl:if test="ead:physdesc">
 								<xsl:if test="ead:physfacet">
 									<xsl:call-template name="physfacet" />
 								</xsl:if>
@@ -96,7 +96,7 @@
 								<xsl:if test="ead:dimensions">
 									<xsl:call-template name="dimensions" />
 								</xsl:if>
-							</xsl:for-each>
+							</xsl:if>	
 							<xsl:if test="ead:dao">
 								<xsl:call-template name="dao" />
 							</xsl:if>
