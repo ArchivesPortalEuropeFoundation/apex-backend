@@ -940,6 +940,12 @@ input.inputButtonSubmitAL{
 .alternativeNamesSelect{
 	margin-left:5px;
 }
+#archivalLandscapeEditorDown{
+	width:100%;
+	float:left;
+	padding-bottom:20px;
+}
+
 /***archival landscape***/
 
 /*** check uploaded files  ***/
