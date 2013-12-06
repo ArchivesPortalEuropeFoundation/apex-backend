@@ -1,4 +1,4 @@
-package org.oclc.oai.harvester.app;
+package eu.archivesportaleurope.harvester.oaipmh;
 
 import java.io.File;
 import java.io.OutputStreamWriter;
@@ -19,7 +19,7 @@ import org.oclc.oai.harvester.parser.record.ResultInfo;
 import org.oclc.oai.harvester.verb.ListRecordsSaxWriteDirectly;
 
 
-public class RawWriteSaxOriginalFiles {
+public class ConsoleHarvester {
 	private static Logger logger;
     public static void main(String[] args) {
     	ConsoleAppender appender = new ConsoleAppender();
@@ -28,7 +28,7 @@ public class RawWriteSaxOriginalFiles {
     	appender.setLayout(new PatternLayout("%d{ABSOLUTE} %-5p - %m%n"));
     	BasicConfigurator.configure(appender);
         try {
-        	logger = Logger.getLogger(RawWriteSaxOriginalFiles.class);
+        	logger = Logger.getLogger(ConsoleHarvester.class);
         	logger.info(new Date());
             long startTime = System.currentTimeMillis();
 
