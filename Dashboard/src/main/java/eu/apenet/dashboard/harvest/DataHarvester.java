@@ -102,6 +102,9 @@ public class DataHarvester implements Runnable {
             UserService.sendEmailHarvestFinished(true, archivalInstitution, partner, numberEadHarvested, currentInfoArchivalInstitutionOaiPmh, oldestFileHarvested.toString(), newestFileHarvested.toString());
             LOGGER.info("Harvest completed: harvested " + numberEadHarvested + " EAD files from " + currentInfoArchivalInstitutionOaiPmh + " --- Oldest file harvested: " + oldestFileHarvested.toString() + " --- Newest file harvested: " + newestFileHarvested.toString());
         } catch (Exception e) {
+            if(outputDirectory.exists()) {
+                outputDirectory.delete();
+            }
             JpaUtil.rollbackDatabaseTransaction();
             UserService.sendEmailHarvestFinished(false, archivalInstitution, partner, 0, currentInfoArchivalInstitutionOaiPmh, "-", "-");
             LOGGER.error("Harvest failed for " + currentInfoArchivalInstitutionOaiPmh);
