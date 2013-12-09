@@ -15,8 +15,9 @@ public class OaiPmhHarvester {
 	private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 	private static final Logger LOGGER = Logger.getLogger(OaiPmhHarvester.class);
 
-	public static void runOai(String baseURL, String from, String until, String metadataPrefix, String setSpec,
+	public static HarvestResult runOai(String baseURL, String from, String until, String metadataPrefix, String setSpec,
 			OaiPmhParser oaiPmhParser, File errorDir) throws Exception {
+		HarvestResult harvestResult = new HarvestResult();
 		try {
 			int number = 0;
 			ListRecordsSaxWriteDirectly listRecordsSax = new ListRecordsSaxWriteDirectly();
@@ -42,10 +43,7 @@ public class OaiPmhHarvester {
 				for (OaiPmhRecord record : resultInfo.getRecords()) {
 					LOGGER.info("Record with ID: " + record.getIdentifier() + " retrieved ("
 							+ DATE_TIME_FORMAT.format(record.getTimestamp()) + ")");
-					LOGGER.debug("IDENTIFIER: " + record.getIdentifier() + " - DELETED: " + record.isDeleted()
-							+ " - FILENAME: " + record.getFilename());
-
-				}
+					harvestResult.add(record);							}
 				String resumptionToken = resultInfo.getNewResumptionToken();
 				LOGGER.debug("resumptionToken: '" + resumptionToken + "'");
 				if (StringUtils.isBlank(resumptionToken)) {
@@ -66,5 +64,6 @@ public class OaiPmhHarvester {
 					+ hpe.getNotParsebleResponse().getCanonicalPath());
 			throw hpe;
 		}
+		return harvestResult;
 	}
 }

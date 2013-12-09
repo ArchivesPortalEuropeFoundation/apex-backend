@@ -2,9 +2,7 @@ package eu.archivesportaleurope.harvester.oaipmh;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,9 +12,6 @@ import org.apache.log4j.xml.DOMConfigurator;
 import org.oclc.oai.harvester.app.RetrieveOaiPmhInformation;
 import org.oclc.oai.harvester.parser.record.DebugOaiPmhParser;
 import org.oclc.oai.harvester.parser.record.OaiPmhParser;
-import org.oclc.oai.harvester.parser.record.OaiPmhRecord;
-import org.oclc.oai.harvester.parser.record.ResultInfo;
-import org.oclc.oai.harvester.verb.ListRecordsSaxWriteDirectly;
 
 public class ConsoleHarvester {
 	private static final String YES = "Yes";
@@ -178,7 +173,7 @@ public class ConsoleHarvester {
 			if (debug) {
 				oaiPmhParser = new DebugOaiPmhParser(outputDir);
 			} else {
-				oaiPmhParser = new OaiPmhParser(outputDir);
+				oaiPmhParser = new OaiPmhParser(outputDir, 2);
 			}
 			try {
 				OaiPmhHarvester.runOai(baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser,errorsDir);
