@@ -173,7 +173,7 @@ public class ConsoleHarvester {
 			if (debug) {
 				oaiPmhParser = new DebugOaiPmhParser(outputDir);
 			} else {
-				oaiPmhParser = new OaiPmhParser(outputDir, 2);
+				oaiPmhParser = new OaiPmhParser(outputDir);
 			}
 			try {
 				OaiPmhHarvester.runOai(baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser,errorsDir);
