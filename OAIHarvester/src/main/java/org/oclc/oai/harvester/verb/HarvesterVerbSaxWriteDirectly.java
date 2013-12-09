@@ -42,6 +42,9 @@ public abstract class HarvesterVerbSaxWriteDirectly {
 
 	protected ResultInfo harvest(String requestURL, OaiPmhParser oaiPmhParser, File errorDirectory, int numberOfRequests)
 			throws Exception {
+		if (oaiPmhParser.getMaxNumberOfRequests() != null && numberOfRequests >= oaiPmhParser.getMaxNumberOfRequests()){
+			return null;
+		}
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("requestURL=" + requestURL);
 		}
