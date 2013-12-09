@@ -1,25 +1,17 @@
 package eu.apenet.dashboard.listener;
 
-import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.harvest.DataHarvester;
-import eu.apenet.dashboard.security.UserService;
-import eu.apenet.dashboard.services.ead.EadService;
-import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
-import eu.apenet.persistence.dao.UpFileDAO;
-import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.*;
-import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
-import eu.archivesportaleurope.harvester.oaipmh.parser.record.ResultInfo;
-import eu.archivesportaleurope.persistence.jpa.JpaUtil;
-
-import org.apache.log4j.Logger;
-import org.oclc.oai.harvester.verb.ListRecordsSaxWriteDirectly;
-
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.log4j.Logger;
+
+import eu.apenet.dashboard.harvest.DataHarvester;
+import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 /**
  * User: Yoann Moranville
