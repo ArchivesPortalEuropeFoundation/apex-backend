@@ -9,6 +9,7 @@ public class ResultInfo {
 	private List<String> errors = new ArrayList<String>();
 	private String newResumptionToken;
 	private String identifier;
+	private String requestUrl;
 	public List<OaiPmhRecord> getRecords() {
 		return records;
 	}
@@ -30,4 +31,11 @@ public class ResultInfo {
 	public void setNewResumptionToken(String newResumptionToken) {
 		this.newResumptionToken = newResumptionToken;
 	}
+	public String getRequestUrl() {
+		return requestUrl;
+	}
+	public void setRequestUrl(String requestUrl) {
+		this.requestUrl = requestUrl;
+	}
+	
 }

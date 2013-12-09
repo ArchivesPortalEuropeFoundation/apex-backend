@@ -1,5 +1,6 @@
 package org.oclc.oai.harvester.verb;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -13,12 +14,12 @@ import org.oclc.oai.harvester.parser.record.ResultInfo;
  * @author Yoann Moranville
  */
 public class ListRecordsSaxWriteDirectly extends HarvesterVerbSaxWriteDirectly {
-	public ResultInfo harvest(String baseURL, String from, String until, String set, String metadataPrefix, OaiPmhParser oaiPmhParser, int numberOfRequests) throws Exception {
-        return harvest(getRequestURL(baseURL, from, until, set, metadataPrefix), oaiPmhParser, numberOfRequests);
+	public ResultInfo harvest(String baseURL, String from, String until, String set, String metadataPrefix, OaiPmhParser oaiPmhParser, File errorDirectory, int numberOfRequests) throws Exception {
+        return harvest(getRequestURL(baseURL, from, until, set, metadataPrefix), oaiPmhParser,errorDirectory, numberOfRequests);
     }
 
-	public ResultInfo harvest(String baseURL, String resumptionToken, OaiPmhParser oaiPmhParser, int numberOfRequests) throws Exception {
-		 return harvest(getRequestURL(baseURL, resumptionToken), oaiPmhParser, numberOfRequests);
+	public ResultInfo harvest(String baseURL, String resumptionToken, OaiPmhParser oaiPmhParser,File errorDirectory, int numberOfRequests) throws Exception {
+		 return harvest(getRequestURL(baseURL, resumptionToken), oaiPmhParser, errorDirectory,numberOfRequests);
     }
 
     private static String getRequestURL(String baseURL, String from, String until, String set, String metadataPrefix) {
