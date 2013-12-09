@@ -2,7 +2,7 @@ package eu.archivesportaleurope.harvester.oaipmh;
 
 import java.util.Date;
 
-import org.oclc.oai.harvester.parser.record.OaiPmhRecord;
+import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhRecord;
 
 public class HarvestResult {
     private DateHarvestModel newestFileHarvested;
