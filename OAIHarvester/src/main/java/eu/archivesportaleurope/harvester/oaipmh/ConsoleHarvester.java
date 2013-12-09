@@ -149,6 +149,7 @@ public class ConsoleHarvester {
 		logger.info("===============================================");
 		logger.info("Url of the OAI-PMH server:\t\t" + baseUrl);
 		logger.info("Metadata format:\t\t\t" + metadataFormat);
+		logger.info("Set:\t\t\t" + set);
 		if (fromDate != null)
 			logger.info("From date:\t\t\t\t" + fromDate);
 		if (toDate != null)
