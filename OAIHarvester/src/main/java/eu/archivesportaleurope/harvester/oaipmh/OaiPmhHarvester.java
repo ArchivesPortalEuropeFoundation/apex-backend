@@ -64,6 +64,7 @@ public class OaiPmhHarvester {
 		} catch (HarvesterParserException hpe) {
 			LOGGER.error("Unable to parse XML response from the OAI-PMH server, look at the XML response file at "
 					+ hpe.getNotParsebleResponse().getCanonicalPath());
+			throw hpe;
 		}
 	}
 }
