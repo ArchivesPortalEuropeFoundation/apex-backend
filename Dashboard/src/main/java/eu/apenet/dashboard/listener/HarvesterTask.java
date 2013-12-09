@@ -8,10 +8,11 @@ import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.*;
+import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
+import eu.archivesportaleurope.harvester.oaipmh.parser.record.ResultInfo;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
+
 import org.apache.log4j.Logger;
-import org.oclc.oai.harvester.parser.record.OaiPmhParser;
-import org.oclc.oai.harvester.parser.record.ResultInfo;
 import org.oclc.oai.harvester.verb.ListRecordsSaxWriteDirectly;
 
 import java.io.File;
