@@ -93,7 +93,9 @@ public class ConsoleHarvester {
 		// }else {
 		// oaiPmhParser = new OaiPmhParser(outputDirectory);
 		// }
-		// if (resumptionToken != null) {
+		// if (resumptionToken != null) {					
+		
+
 		// run(baseURL, resumptionToken, oaiPmhParser);
 		// }
 		// else {
@@ -133,8 +135,8 @@ public class ConsoleHarvester {
 					fromDate = getInputEmptyAllowed("Specify a FROM date or leave empty?(e.g. 2010-12-23)");
 					toDate = getInputEmptyAllowed("Specify a TO date or leave empty?(e.g. 2010-12-23)");
 					List<String> saveMethods = new ArrayList<String>();
-					saveMethods.add(SAVE_FULL_OAI_PMH_RESPONSES);
 					saveMethods.add(SAVE_ONLY_THE_METADATA_RECORD_E_G_EAD_OR_EDM_FILES);
+					saveMethods.add(SAVE_FULL_OAI_PMH_RESPONSES);				
 					String saveMethod = getInput("What do you want to store?'", saveMethods);
 					debug = SAVE_FULL_OAI_PMH_RESPONSES.equals(saveMethod);
 				} catch (Exception e) {
