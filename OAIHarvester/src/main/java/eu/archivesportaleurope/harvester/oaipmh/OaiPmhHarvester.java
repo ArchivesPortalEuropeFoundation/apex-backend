@@ -20,6 +20,7 @@ public class OaiPmhHarvester {
 			OaiPmhParser oaiPmhParser, File errorDir) throws Exception {
 		HarvestResult harvestResult = new HarvestResult();
 		try {
+			int numberOfRecords = 0;
 			int number = 0;
 			ListRecordsSaxWriteDirectly listRecordsSax = new ListRecordsSaxWriteDirectly();
 			ResultInfo resultInfo = listRecordsSax.harvest(baseURL, from, until, setSpec, metadataPrefix, oaiPmhParser,
@@ -42,8 +43,13 @@ public class OaiPmhHarvester {
 					break;
 				}
 				for (OaiPmhRecord record : resultInfo.getRecords()) {
-					LOGGER.info("Record with ID: " + record.getIdentifier() + " retrieved ("
+					String action = "retrieved";
+					if (record.isDeleted()){
+						action = "deleted";
+					}
+					LOGGER.info("Record with ID: " + record.getIdentifier() + " "+ action +" ("
 							+ DATE_TIME_FORMAT.format(record.getTimestamp()) + ")");
+					numberOfRecords++;
 					harvestResult.add(record);							}
 				String resumptionToken = resultInfo.getNewResumptionToken();
 				LOGGER.debug("resumptionToken: '" + resumptionToken + "'");
@@ -55,9 +61,9 @@ public class OaiPmhHarvester {
 				}
 			}
 			if (hasErrors) {
-				LOGGER.error(number + " records harvested, but with errors");
+				LOGGER.error(numberOfRecords + " records harvested, but with errors");
 			} else {
-				LOGGER.info(number + " records harvested successfully with no errors");
+				LOGGER.info(numberOfRecords + " records harvested successfully with no errors");
 			}
 			
 		} catch (HarvesterParserException hpe) {
