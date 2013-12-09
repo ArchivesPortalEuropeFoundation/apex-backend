@@ -81,108 +81,116 @@ public class ConsoleHarvester {
 		consoleHarvester.start();
 	}
 
-	public void start() throws Exception {
+	public void start() {
 		logger.info("===============================================");
 		logger.info("Start OAI-PMH Harvester " + ConsoleHarvester.getVersion());
 		logger.info("===============================================");
-		if (properties == null ) {
-			while (metadataFormat == null) {
-				baseUrl = getInput("What is the url of the OAI-PMH server?");
-				try {
-					List<String> metadataFormats = RetrieveOaiPmhInformation.retrieveMetadataFormats(baseUrl);
-					if (metadataFormats == null || metadataFormats.isEmpty()) {
-						logger.error("No metadata formats for this URL: " + baseUrl);
-					} else {
-						metadataFormat = getInput("Which metadata format do you want to use?'", metadataFormats);
+		try {
+			if (properties == null) {
+				while (metadataFormat == null) {
+					baseUrl = getInput("What is the url of the OAI-PMH server?");
+					try {
+						List<String> metadataFormats = RetrieveOaiPmhInformation.retrieveMetadataFormats(baseUrl);
+						if (metadataFormats == null || metadataFormats.isEmpty()) {
+							logger.error("No metadata formats for this URL: " + baseUrl);
+						} else {
+							metadataFormat = getInput("Which metadata format do you want to use?'", metadataFormats);
+						}
+						List<String> setsInRepository = RetrieveOaiPmhInformation.retrieveSets(baseUrl);
+						set = getInput("Which set do you want to use?'", setsInRepository);
+						fromDate = getInputEmptyAllowed("Specify a FROM date or leave empty?(e.g. 2010-12-23)");
+						toDate = getInputEmptyAllowed("Specify a TO date or leave empty?(e.g. 2010-12-23)");
+						List<String> saveMethods = new ArrayList<String>();
+						saveMethods.add(SAVE_ONLY_THE_METADATA_RECORD_E_G_EAD_OR_EDM_FILES);
+						saveMethods.add(SAVE_FULL_OAI_PMH_RESPONSES);
+						String saveMethod = getInput("What do you want to store?'", saveMethods);
+						debug = SAVE_FULL_OAI_PMH_RESPONSES.equals(saveMethod);
+					} catch (Exception e) {
+						logger.error("Sorry, the URL is not a correct repository URL or the repository does not contain any metadata formats...");
 					}
-					List<String> setsInRepository = RetrieveOaiPmhInformation.retrieveSets(baseUrl);
-					set = getInput("Which set do you want to use?'", setsInRepository);
-					fromDate = getInputEmptyAllowed("Specify a FROM date or leave empty?(e.g. 2010-12-23)");
-					toDate = getInputEmptyAllowed("Specify a TO date or leave empty?(e.g. 2010-12-23)");
-					List<String> saveMethods = new ArrayList<String>();
-					saveMethods.add(SAVE_ONLY_THE_METADATA_RECORD_E_G_EAD_OR_EDM_FILES);
-					saveMethods.add(SAVE_FULL_OAI_PMH_RESPONSES);				
-					String saveMethod = getInput("What do you want to store?'", saveMethods);
-					debug = SAVE_FULL_OAI_PMH_RESPONSES.equals(saveMethod);
-				} catch (Exception e) {
-					logger.error("Sorry, the URL is not a correct repository URL or the repository does not contain any metadata formats...");
 				}
-			}
-		}else {
-			baseUrl = properties.getProperty("oai-pmh.url");
-			metadataFormat = properties.getProperty("metadata-format");
-			set = properties.getProperty("set");
-			fromDate = properties.getProperty("from");
-			toDate = properties.getProperty("to");
-			debug = TRUE.equals(properties.getProperty("debug"));
-			silent = TRUE.equals(properties.getProperty("silent"));
-		
-		}
-		logger.info("===============================================");
-		logger.info("Summary of OAI-PMH Harvester parameters");
-		logger.info("===============================================");
-		logger.info("Url of the OAI-PMH server:\t\t" + baseUrl);
-		logger.info("Metadata format:\t\t\t" + metadataFormat);
-		logger.info("Set:\t\t\t\t\t" + set);
-		if (fromDate != null)
-			logger.info("From date:\t\t\t\t" + fromDate);
-		if (toDate != null)
-			logger.info("To date:\t\t\t\t" + toDate);
-		if (debug) {
-			logger.info("Store method:\t\t\t\t" + SAVE_FULL_OAI_PMH_RESPONSES);
-		} else {
-			logger.info("Store method:\t\t\t\t" + SAVE_ONLY_THE_METADATA_RECORD_E_G_EAD_OR_EDM_FILES);
-		}
-		File baseUrlDataDir = new File(dataDir, convertToFilename(baseUrl));
-		File metaDataFormatDataDir = new File(baseUrlDataDir, convertToFilename(metadataFormat));
-		File outputDir = new File(metaDataFormatDataDir, convertToFilename(set));
-		
-		logger.info("Location of the files to be stored:\t" + outputDir.getCanonicalPath());
-		List<String> proceedOptions = new ArrayList<String>();
-		proceedOptions.add(YES);
-		proceedOptions.add("No");
-		String proceed = null;
-		if (silent){
-			proceed = YES;
-		}else {
-			proceed = getInput("Do you want to proceed?", proceedOptions);
-		}
-		if (YES.equals(proceed)){
-	 		outputDir.mkdirs();
-	 		File errorsDir = new File(dataDir, "errors");
-	 		errorsDir.mkdirs();
-			OaiPmhParser oaiPmhParser;
-			if (debug) {
-				oaiPmhParser = new DebugOaiPmhParser(outputDir);
 			} else {
-				oaiPmhParser = new OaiPmhParser(outputDir);
-			}
-			try {
-				long startTime = System.currentTimeMillis();
-				OaiPmhHarvester.runOai(baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser,errorsDir);
-				calcHMS(System.currentTimeMillis(), startTime);
-			}catch (HarvesterParserException hpe){
-				logger.error("Unable to parse XML response from the OAI-PMH server, look at the XML response file at " + hpe.getNotParsebleResponse().getCanonicalPath());
-			}
+				baseUrl = properties.getProperty("oai-pmh.url");
+				metadataFormat = properties.getProperty("metadata-format");
+				set = properties.getProperty("set");
+				fromDate = properties.getProperty("from");
+				toDate = properties.getProperty("to");
+				debug = TRUE.equals(properties.getProperty("debug"));
+				silent = TRUE.equals(properties.getProperty("silent"));
 
+			}
+			logger.info("===============================================");
+			logger.info("Summary of OAI-PMH Harvester parameters");
+			logger.info("===============================================");
+			logger.info("Url of the OAI-PMH server:\t\t" + baseUrl);
+			logger.info("Metadata format:\t\t\t" + metadataFormat);
+			logger.info("Set:\t\t\t\t\t" + set);
+			if (fromDate != null)
+				logger.info("From date:\t\t\t\t" + fromDate);
+			if (toDate != null)
+				logger.info("To date:\t\t\t\t" + toDate);
+			if (debug) {
+				logger.info("Store method:\t\t\t\t" + SAVE_FULL_OAI_PMH_RESPONSES);
+			} else {
+				logger.info("Store method:\t\t\t\t" + SAVE_ONLY_THE_METADATA_RECORD_E_G_EAD_OR_EDM_FILES);
+			}
+			File baseUrlDataDir = new File(dataDir, convertToFilename(baseUrl));
+			File metaDataFormatDataDir = new File(baseUrlDataDir, convertToFilename(metadataFormat));
+			File outputDir = new File(metaDataFormatDataDir, convertToFilename(set));
+
+			logger.info("Location of the files to be stored:\t" + outputDir.getCanonicalPath());
+			logger.info("===============================================");
+			List<String> proceedOptions = new ArrayList<String>();
+			proceedOptions.add(YES);
+			proceedOptions.add("No");
+			String proceed = null;
+			if (silent) {
+				proceed = YES;
+			} else {
+				proceed = getInput("Do you want to proceed?", proceedOptions);
+			}
+			if (YES.equals(proceed)) {
+				outputDir.mkdirs();
+				File errorsDir = new File(dataDir, "errors");
+				errorsDir.mkdirs();
+				OaiPmhParser oaiPmhParser;
+				if (debug) {
+					oaiPmhParser = new DebugOaiPmhParser(outputDir);
+				} else {
+					oaiPmhParser = new OaiPmhParser(outputDir);
+				}
+				try {
+					long startTime = System.currentTimeMillis();
+					OaiPmhHarvester.runOai(baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir);
+					logger.info("===============================================");
+					calcHMS(System.currentTimeMillis(), startTime);
+				} catch (HarvesterParserException hpe) {
+
+				}
+
+			}
+		} catch (Exception e) {
+			logger.error("Unexcepted error occurred: " + e.getMessage(), e);
 		}
+		logger.info("===============================================");
 	}
 
-	private static Map<String, String> getParameters(String[] args){
+	private static Map<String, String> getParameters(String[] args) {
 		Map<String, String> parameters = new HashMap<String, String>();
-		for (String arg: args){
-			if (arg.startsWith("-") && arg.contains("=")){
+		for (String arg : args) {
+			if (arg.startsWith("-") && arg.contains("=")) {
 				String[] splitted = arg.substring(1).split("=");
 				String key = splitted[0];
 				String value = splitted[1];
-				if (StringUtils.isNotBlank(key) && StringUtils.isNotBlank(value)){
+				if (StringUtils.isNotBlank(key) && StringUtils.isNotBlank(value)) {
 					parameters.put(key, value);
 				}
-				
+
 			}
 		}
 		return parameters;
 	}
+
 	private void calcHMS(long stopTime, long startTime) {
 		int hours, minutes, seconds;
 		int timeInSeconds = (int) ((stopTime - startTime) / 1000);
@@ -193,9 +201,6 @@ public class ConsoleHarvester {
 		seconds = timeInSeconds;
 		logger.info("Elapsed time: " + hours + " hour(s) " + minutes + " minute(s) " + seconds + " second(s)");
 	}
-
-
-
 
 	public String getInput(String title, List<String> choices) {
 
