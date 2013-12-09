@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import org.oclc.oai.harvester.parser.record.OaiPmhParser;
-import org.oclc.oai.harvester.parser.record.ResultInfo;
+import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
+import eu.archivesportaleurope.harvester.oaipmh.parser.record.ResultInfo;
 
 /**
  * User: Yoann Moranville

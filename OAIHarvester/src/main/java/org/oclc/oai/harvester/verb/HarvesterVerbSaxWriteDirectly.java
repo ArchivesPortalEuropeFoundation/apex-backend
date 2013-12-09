@@ -16,10 +16,10 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.oclc.oai.harvester.parser.record.OaiPmhParser;
-import org.oclc.oai.harvester.parser.record.ResultInfo;
 
 import eu.archivesportaleurope.harvester.oaipmh.HarvesterParserException;
+import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
+import eu.archivesportaleurope.harvester.oaipmh.parser.record.ResultInfo;
 
 /**
  * User: Yoann Moranville Date: 06/08/2013
