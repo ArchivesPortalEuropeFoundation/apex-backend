@@ -9,7 +9,6 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
-import org.oclc.oai.harvester.app.RetrieveOaiPmhInformation;
 import org.oclc.oai.harvester.parser.record.DebugOaiPmhParser;
 import org.oclc.oai.harvester.parser.record.OaiPmhParser;
 
