@@ -2,9 +2,13 @@ package eu.archivesportaleurope.harvester.oaipmh;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -14,12 +18,14 @@ import eu.archivesportaleurope.harvester.oaipmh.parser.record.DebugOaiPmhParser;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
 
 public class ConsoleHarvester {
+	private static final String TRUE = "true";
+	private static final String BASE_DIR_PARAMETER = "baseDir";
+	private static final String CONF_FILE_PARAMETER = "confFile";
 	private static final String YES = "Yes";
 	private static final String SAVE_ONLY_THE_METADATA_RECORD_E_G_EAD_OR_EDM_FILES = "Save only the metadata record (e.g. EAD or EDM files)";
 	private static final String SAVE_FULL_OAI_PMH_RESPONSES = "Save full OAI-PMH responses";
 
 	private Logger logger;
-	private File confDir;
 	private File dataDir;
 	private String baseUrl;
 	private String metadataFormat;
@@ -27,18 +33,25 @@ public class ConsoleHarvester {
 	private String fromDate;
 	private String toDate;
 	private boolean debug = false;
+	private boolean silent = false;
+	private Properties properties;
 
-	public ConsoleHarvester(File confDir, File dataDir) {
+	public ConsoleHarvester(File confDir, File dataDir, Properties properties) {
 		logger = Logger.getLogger(ConsoleHarvester.class);
-		this.confDir = confDir;
 		this.dataDir = dataDir;
+		this.properties = properties;
 	}
 
 	public static void main(String[] args) throws Exception {
-
+		Map<String, String> parameters = getParameters(args);
 		String baseDirString = ".";
-		if (args.length > 0) {
-			baseDirString = args[0];
+		Properties properties = null;
+		if (parameters.containsKey(BASE_DIR_PARAMETER)) {
+			baseDirString = parameters.get(BASE_DIR_PARAMETER);
+		}
+		if (parameters.containsKey(CONF_FILE_PARAMETER)) {
+			properties = new Properties();
+			properties.load(new FileInputStream(new File(parameters.get(CONF_FILE_PARAMETER))));
 		}
 		File confDir = null;
 		File dataDir = null;
@@ -64,63 +77,15 @@ public class ConsoleHarvester {
 			System.err.println("Log4j not properly configured. " + e.getMessage());
 			System.exit(-1);
 		}
-		ConsoleHarvester consoleHarvester = new ConsoleHarvester(confDir, dataDir);
+		ConsoleHarvester consoleHarvester = new ConsoleHarvester(confDir, dataDir, properties);
 		consoleHarvester.start();
-		// long startTime = System.currentTimeMillis();
-		//
-		// HashMap options = getOptions(args);
-		// List rootArgs = (List) options.get("rootArgs");
-		// if (rootArgs.size() == 0) {
-		// throw new IllegalArgumentException();
-		// }
-		// String baseURL = (String) rootArgs.get(0);
-		// String directory = (String) options.get("-outputDirectory");
-		// String debugString = (String) options.get("-debug");
-		// boolean debug = Boolean.parseBoolean(debugString);
-		// String from = (String) options.get("-from");
-		// String until = (String) options.get("-until");
-		// String metadataPrefix = (String) options.get("-metadataPrefix");
-		// if (metadataPrefix == null) {
-		// metadataPrefix = "oai_dc";
-		// }
-		// String resumptionToken = (String) options.get("-resumptionToken");
-		// String setSpec = (String) options.get("-setSpec");
-		// File outputDirectory = new File(directory);
-		// outputDirectory.mkdirs();
-		// OaiPmhParser oaiPmhParser;
-		// if (debug){
-		// oaiPmhParser = new DebugOaiPmhParser(outputDirectory);
-		// }else {
-		// oaiPmhParser = new OaiPmhParser(outputDirectory);
-		// }
-		// if (resumptionToken != null) {					
-		
-
-		// run(baseURL, resumptionToken, oaiPmhParser);
-		// }
-		// else {
-		// run(baseURL, from, until, metadataPrefix, setSpec, oaiPmhParser);
-		// }
-		//
-		// logger.info(new Date());
-		// long stopTime = System.currentTimeMillis();
-		// calcHMS(stopTime, startTime);
-
-		// }
-		// catch (IllegalArgumentException e) {
-		// logger.error("wrong parameters:\nExample: java -jar oaiharvester.jar -outputDirectory OUTPUT_DIR -setSpec SET_SPEC_VALUE [-debug true] [-from 1980-01-01] [-until 1990-01-01] -metadataPrefix METADATAPREFIX OAI_PMH_URL");
-		// }
-		// catch (Exception e) {
-		// logger.error(e.getMessage(),e);
-		// System.exit(-1);
-		// }
 	}
 
 	public void start() throws Exception {
 		logger.info("===============================================");
 		logger.info("Start OAI-PMH Harvester " + ConsoleHarvester.getVersion());
 		logger.info("===============================================");
-		if (StringUtils.isBlank(baseUrl)) {
+		if (properties == null ) {
 			while (metadataFormat == null) {
 				baseUrl = getInput("What is the url of the OAI-PMH server?");
 				try {
@@ -143,21 +108,30 @@ public class ConsoleHarvester {
 					logger.error("Sorry, the URL is not a correct repository URL or the repository does not contain any metadata formats...");
 				}
 			}
+		}else {
+			baseUrl = properties.getProperty("oai-pmh.url");
+			metadataFormat = properties.getProperty("metadata-format");
+			set = properties.getProperty("set");
+			fromDate = properties.getProperty("from");
+			toDate = properties.getProperty("to");
+			debug = TRUE.equals(properties.getProperty("debug"));
+			silent = TRUE.equals(properties.getProperty("silent"));
+		
 		}
 		logger.info("===============================================");
 		logger.info("Summary of OAI-PMH Harvester parameters");
 		logger.info("===============================================");
 		logger.info("Url of the OAI-PMH server:\t\t" + baseUrl);
 		logger.info("Metadata format:\t\t\t" + metadataFormat);
-		logger.info("Set:\t\t\t" + set);
+		logger.info("Set:\t\t\t\t\t" + set);
 		if (fromDate != null)
 			logger.info("From date:\t\t\t\t" + fromDate);
 		if (toDate != null)
 			logger.info("To date:\t\t\t\t" + toDate);
 		if (debug) {
-			logger.info("Store method:\t\t\t" + SAVE_FULL_OAI_PMH_RESPONSES);
+			logger.info("Store method:\t\t\t\t" + SAVE_FULL_OAI_PMH_RESPONSES);
 		} else {
-			logger.info("Store method:\t\t\t" + SAVE_ONLY_THE_METADATA_RECORD_E_G_EAD_OR_EDM_FILES);
+			logger.info("Store method:\t\t\t\t" + SAVE_ONLY_THE_METADATA_RECORD_E_G_EAD_OR_EDM_FILES);
 		}
 		File baseUrlDataDir = new File(dataDir, convertToFilename(baseUrl));
 		File metaDataFormatDataDir = new File(baseUrlDataDir, convertToFilename(metadataFormat));
@@ -167,7 +141,12 @@ public class ConsoleHarvester {
 		List<String> proceedOptions = new ArrayList<String>();
 		proceedOptions.add(YES);
 		proceedOptions.add("No");
-		String proceed = getInput("Do you want to proceed?", proceedOptions);
+		String proceed = null;
+		if (silent){
+			proceed = YES;
+		}else {
+			proceed = getInput("Do you want to proceed?", proceedOptions);
+		}
 		if (YES.equals(proceed)){
 	 		outputDir.mkdirs();
 	 		File errorsDir = new File(dataDir, "errors");
@@ -179,7 +158,9 @@ public class ConsoleHarvester {
 				oaiPmhParser = new OaiPmhParser(outputDir);
 			}
 			try {
+				long startTime = System.currentTimeMillis();
 				OaiPmhHarvester.runOai(baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser,errorsDir);
+				calcHMS(System.currentTimeMillis(), startTime);
 			}catch (HarvesterParserException hpe){
 				logger.error("Unable to parse XML response from the OAI-PMH server, look at the XML response file at " + hpe.getNotParsebleResponse().getCanonicalPath());
 			}
@@ -187,7 +168,22 @@ public class ConsoleHarvester {
 		}
 	}
 
-	public void calcHMS(long stopTime, long startTime) {
+	private static Map<String, String> getParameters(String[] args){
+		Map<String, String> parameters = new HashMap<String, String>();
+		for (String arg: args){
+			if (arg.startsWith("-") && arg.contains("=")){
+				String[] splitted = arg.substring(1).split("=");
+				String key = splitted[0];
+				String value = splitted[1];
+				if (StringUtils.isNotBlank(key) && StringUtils.isNotBlank(value)){
+					parameters.put(key, value);
+				}
+				
+			}
+		}
+		return parameters;
+	}
+	private void calcHMS(long stopTime, long startTime) {
 		int hours, minutes, seconds;
 		int timeInSeconds = (int) ((stopTime - startTime) / 1000);
 		hours = timeInSeconds / 3600;
