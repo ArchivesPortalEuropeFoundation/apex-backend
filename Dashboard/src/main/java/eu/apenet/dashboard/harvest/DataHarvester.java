@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.oclc.oai.harvester.parser.record.OaiPmhParser;
 
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
@@ -24,6 +23,7 @@ import eu.apenet.persistence.vo.UploadMethod;
 import eu.apenet.persistence.vo.User;
 import eu.archivesportaleurope.harvester.oaipmh.HarvestResult;
 import eu.archivesportaleurope.harvester.oaipmh.OaiPmhHarvester;
+import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 /**
