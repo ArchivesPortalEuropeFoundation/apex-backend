@@ -1,12 +1,14 @@
 package org.oclc.oai.harvester.verb;
 
-import org.oclc.oai.harvester.parser.other.OaiPmhElements;
 import org.xml.sax.SAXException;
+
+import eu.archivesportaleurope.harvester.parser.other.OaiPmhElements;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

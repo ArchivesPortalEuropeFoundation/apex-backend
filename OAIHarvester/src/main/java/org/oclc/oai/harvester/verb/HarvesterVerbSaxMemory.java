@@ -5,17 +5,19 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
-import org.oclc.oai.harvester.parser.other.OaiPmhElements;
-import org.oclc.oai.harvester.parser.other.OaiPmhMemoryParser;
-import org.oclc.oai.harvester.parser.other.metadata.OaiPmhMetadataFormatParser;
-import org.oclc.oai.harvester.parser.other.set.OaiPmhSetParser;
 import org.xml.sax.SAXException;
+
+import eu.archivesportaleurope.harvester.parser.other.OaiPmhElements;
+import eu.archivesportaleurope.harvester.parser.other.OaiPmhMemoryParser;
+import eu.archivesportaleurope.harvester.parser.other.metadata.OaiPmhMetadataFormatParser;
+import eu.archivesportaleurope.harvester.parser.other.set.OaiPmhSetParser;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.TransformerException;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
