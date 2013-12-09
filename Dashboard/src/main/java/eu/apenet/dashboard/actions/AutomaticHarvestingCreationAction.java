@@ -1,6 +1,7 @@
 package eu.apenet.dashboard.actions;
 
 import com.opensymphony.xwork2.ActionSupport;
+
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.listener.Duration;
@@ -9,9 +10,10 @@ import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
 import eu.apenet.persistence.vo.Ingestionprofile;
+import eu.archivesportaleurope.harvester.oaipmh.RetrieveOaiPmhInformation;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
+
 import org.apache.log4j.Logger;
-import org.oclc.oai.harvester.app.RetrieveOaiPmhInformation;
 
 import java.util.ArrayList;
 import java.util.Date;
