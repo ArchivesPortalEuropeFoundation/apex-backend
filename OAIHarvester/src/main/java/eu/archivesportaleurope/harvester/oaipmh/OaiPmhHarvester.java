@@ -1,0 +1,69 @@
+package eu.archivesportaleurope.harvester.oaipmh;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.oclc.oai.harvester.parser.record.OaiPmhParser;
+import org.oclc.oai.harvester.parser.record.OaiPmhRecord;
+import org.oclc.oai.harvester.parser.record.ResultInfo;
+import org.oclc.oai.harvester.verb.ListRecordsSaxWriteDirectly;
+
+public class OaiPmhHarvester {
+	private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+	private static final Logger LOGGER = Logger.getLogger(OaiPmhHarvester.class);
+
+	public static void runOai(String baseURL, String from, String until, String metadataPrefix, String setSpec,
+			OaiPmhParser oaiPmhParser, File errorDir) throws Exception {
+		try {
+			int number = 0;
+			ListRecordsSaxWriteDirectly listRecordsSax = new ListRecordsSaxWriteDirectly();
+			ResultInfo resultInfo = listRecordsSax.harvest(baseURL, from, until, setSpec, metadataPrefix, oaiPmhParser,
+					errorDir, number);
+			boolean hasErrors = false;
+			while (resultInfo != null) {
+				List<String> errors = resultInfo.getErrors();
+				if (errors != null && errors.size() > 0) {
+					LOGGER.error("Found the following errors:");
+					int length = errors.size();
+					for (int i = 0; i < length; ++i) {
+						String item = errors.get(i);
+						if (StringUtils.isNotBlank(item)) {
+							LOGGER.error(item);
+						}
+
+					}
+					LOGGER.error("Url that contains errors: '" + resultInfo.getRequestUrl() + "'");
+					hasErrors = true;
+					break;
+				}
+				for (OaiPmhRecord record : resultInfo.getRecords()) {
+					LOGGER.info("Record with ID: " + record.getIdentifier() + " retrieved ("
+							+ DATE_TIME_FORMAT.format(record.getTimestamp()) + ")");
+					LOGGER.debug("IDENTIFIER: " + record.getIdentifier() + " - DELETED: " + record.isDeleted()
+							+ " - FILENAME: " + record.getFilename());
+
+				}
+				String resumptionToken = resultInfo.getNewResumptionToken();
+				LOGGER.debug("resumptionToken: '" + resumptionToken + "'");
+				if (StringUtils.isBlank(resumptionToken)) {
+					resultInfo = null;
+				} else {
+					number++;
+					resultInfo = listRecordsSax.harvest(baseURL, resumptionToken, oaiPmhParser, errorDir, number);
+				}
+			}
+			if (hasErrors) {
+				LOGGER.error(number + " records harvested, but with errors");
+			} else {
+				LOGGER.info(number + " records harvested successfully with no errors");
+			}
+			
+		} catch (HarvesterParserException hpe) {
+			LOGGER.error("Unable to parse XML response from the OAI-PMH server, look at the XML response file at "
+					+ hpe.getNotParsebleResponse().getCanonicalPath());
+		}
+	}
+}
