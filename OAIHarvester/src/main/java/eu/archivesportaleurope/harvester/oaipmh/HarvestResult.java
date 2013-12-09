@@ -40,7 +40,7 @@ public class HarvestResult {
         }
 	}
 
-	class DateHarvestModel {
+	public static class DateHarvestModel {
         private Date datestamp;
         private String identifier;
 
