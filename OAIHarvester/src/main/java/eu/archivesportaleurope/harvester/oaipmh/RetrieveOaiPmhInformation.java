@@ -1,14 +1,16 @@
 package eu.archivesportaleurope.harvester.oaipmh;
 
 import org.apache.log4j.Logger;
-import org.oclc.oai.harvester.parser.other.OaiPmhElements;
-import org.oclc.oai.harvester.verb.HarvesterVerbSaxMemory;
-import org.oclc.oai.harvester.verb.ListMetadataFormatsSax;
-import org.oclc.oai.harvester.verb.ListSetsSax;
 import org.xml.sax.SAXException;
+
+import eu.archivesportaleurope.harvester.parser.other.OaiPmhElements;
+import eu.archivesportaleurope.harvester.verb.HarvesterVerbSaxMemory;
+import eu.archivesportaleurope.harvester.verb.ListMetadataFormatsSax;
+import eu.archivesportaleurope.harvester.verb.ListSetsSax;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
