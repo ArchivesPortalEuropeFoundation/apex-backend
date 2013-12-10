@@ -17,7 +17,7 @@ public class UpFileJpaDAO extends AbstractHibernateDAO<UpFile, Integer> implemen
 
 	@Override
 	public List<UpFile> getNewUpFiles(Integer aiId, FileType fileType) {
-		return getNewUpFiles(aiId, fileType, MAX_FILES+1);
+		return getNewUpFiles(aiId, fileType, MAX_FILES);
 	}
     @Override
     public List<UpFile> getAllNewUpFiles(Integer aiId, FileType fileType) {
