@@ -10,8 +10,8 @@
     <!-- To avoid the typical problem of encoding of accents and ensure compatibility with any Operative System, use UTF-8: -->
     <constant name="struts.i18n.encoding" value="UTF-8" />
 
-    <!-- The user won't be able to upload files 100 Mbytes or bigger -->
-    <constant name="struts.multipart.maxSize" value="104857600" />
+    <!-- The user won't be able to upload files 200 Mbytes or bigger -->
+    <constant name="struts.multipart.maxSize" value="209715200" />
 
     <!-- Struts2Security: Include configuration template -->
     <include file="struts-security.xml" />
