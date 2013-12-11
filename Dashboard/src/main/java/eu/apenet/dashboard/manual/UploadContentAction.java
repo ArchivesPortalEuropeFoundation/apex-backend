@@ -585,7 +585,7 @@ public class UploadContentAction extends AbstractInstitutionAction {
             try {
                 EadService.useProfileAction(upFile, properties);
             } catch (Exception ex) {
-                java.util.logging.Logger.getLogger(UploadContentAction.class.getName()).log(Level.SEVERE, null, ex);
+                LOG.error("Failed when adding the new up files into the queue", ex);
             }
         }
     }
