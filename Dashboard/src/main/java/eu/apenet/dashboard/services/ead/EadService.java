@@ -30,6 +30,7 @@ import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
+import java.util.Map;
 
 public class EadService {
 
@@ -760,8 +761,26 @@ public class EadService {
     	config.setDataProvider(preferences.getProperty(QueueItem.DATA_PROVIDER));
     	config.setUseExistingRepository("true".equals(preferences.getProperty(QueueItem.DATA_PROVIDER_CHECK)));
     	config.setProvider("Archives Portal Europe");
-        config.setType(preferences.getProperty(QueueItem.EUROPEANA_DAO_TYPE));
-    	config.setUseExistingDaoRole("true".equals(preferences.getProperty(QueueItem.EUROPEANA_DAO_TYPE_CHECK)));
+        String daoType = preferences.getProperty(QueueItem.EUROPEANA_DAO_TYPE);
+        int daoTypeNum = Integer.parseInt(daoType);
+        switch(daoTypeNum){
+            case 1:
+                config.setType("TEXT");
+                break;
+            case 2:
+                config.setType("IMAGE");
+                break;
+            case 3:
+                config.setType("SOUND");
+                break;
+            case 4:
+                config.setType("VIDEO");
+                break;
+            case 5:
+                config.setType("3D");
+                break;
+        }
+        config.setUseExistingDaoRole("true".equals(preferences.getProperty(QueueItem.EUROPEANA_DAO_TYPE_CHECK)));
         config.setLanguage(preferences.getProperty(QueueItem.LANGUAGES));
         config.setUseExistingLanguage("true".equals(preferences.getProperty(QueueItem.LANGUAGE_CHECK)));
     	config.setInheritLanguage(true);
