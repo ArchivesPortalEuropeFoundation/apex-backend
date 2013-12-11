@@ -761,25 +761,7 @@ public class EadService {
     	config.setDataProvider(preferences.getProperty(QueueItem.DATA_PROVIDER));
     	config.setUseExistingRepository("true".equals(preferences.getProperty(QueueItem.DATA_PROVIDER_CHECK)));
     	config.setProvider("Archives Portal Europe");
-        String daoType = preferences.getProperty(QueueItem.EUROPEANA_DAO_TYPE);
-        int daoTypeNum = Integer.parseInt(daoType);
-        switch(daoTypeNum){
-            case 1:
-                config.setType("TEXT");
-                break;
-            case 2:
-                config.setType("IMAGE");
-                break;
-            case 3:
-                config.setType("SOUND");
-                break;
-            case 4:
-                config.setType("VIDEO");
-                break;
-            case 5:
-                config.setType("3D");
-                break;
-        }
+        config.setType(IngestionprofileDefaultDaoType.getDaoType(preferences.getProperty(QueueItem.EUROPEANA_DAO_TYPE)).getDaoText());
         config.setUseExistingDaoRole("true".equals(preferences.getProperty(QueueItem.EUROPEANA_DAO_TYPE_CHECK)));
         config.setLanguage(preferences.getProperty(QueueItem.LANGUAGES));
         config.setUseExistingLanguage("true".equals(preferences.getProperty(QueueItem.LANGUAGE_CHECK)));
