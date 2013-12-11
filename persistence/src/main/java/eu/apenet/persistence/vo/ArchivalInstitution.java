@@ -1,7 +1,9 @@
 package eu.apenet.persistence.vo;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -13,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -67,7 +70,8 @@ public class ArchivalInstitution implements java.io.Serializable {
 	private Set<AiAlternativeName> aiAlternativeNames = new HashSet<AiAlternativeName>(0);
 
 	@OneToMany(mappedBy="parent")
-	private Set<ArchivalInstitution> childArchivalInstitutions = new HashSet<ArchivalInstitution>(0);
+	@OrderColumn(name="alorder")
+	private List<ArchivalInstitution> childArchivalInstitutions = new ArrayList<ArchivalInstitution>(0);
 
 	@OneToMany(mappedBy="archivalInstitution")
 	private Set<FindingAid> findingAids = new HashSet<FindingAid>(0);
@@ -207,11 +211,11 @@ public class ArchivalInstitution implements java.io.Serializable {
 	}
 
 
-	public Set<ArchivalInstitution> getChildArchivalInstitutions() {
+	public List<ArchivalInstitution> getChildArchivalInstitutions() {
 		return childArchivalInstitutions;
 	}
 
-	public void setChildArchivalInstitutions(Set<ArchivalInstitution> childArchivalInstitutions) {
+	public void setChildArchivalInstitutions(List<ArchivalInstitution> childArchivalInstitutions) {
 		this.childArchivalInstitutions = childArchivalInstitutions;
 	}
 

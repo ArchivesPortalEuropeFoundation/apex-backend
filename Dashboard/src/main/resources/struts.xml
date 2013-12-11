@@ -402,6 +402,7 @@
 				<param name="actionName">viewAL</param>
 			</result>
 			<result name="error" type="tiles">uploaderrorformat2</result>
+			<result name="errorContent" type="tiles">uploaderroralcontentpublished</result>
 		</action>
 		<action name="getALTree" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="getArchivalInstitutionTree">
 			<result name="SUCCESS" type="stream">

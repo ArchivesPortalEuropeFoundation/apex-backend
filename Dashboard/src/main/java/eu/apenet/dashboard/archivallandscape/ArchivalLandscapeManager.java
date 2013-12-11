@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -88,6 +90,9 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	private static final String SERIES = "series";
 	private static final String FILE = "file";
 
+	// Error when an institution has content published.
+	private static final String ERROR_CONTENT = "errorContent";
+
 	private List<ArchivalInstitution> totalInstitutions;
 	private Map<String,ArchivalInstitution> groupsInsertedIntoDDBB;
 	private List<ArchivalInstitution> updatedInstitutions;
@@ -103,6 +108,8 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	private AiAlternativeNameDAO aIANDAO;
 
 	private Map<String, Integer> positions;
+
+	private List<String> institutionsWithContent;
 
 	public void setHttpFile(File httpFile){
 		this.httpFile = httpFile;
@@ -132,6 +139,22 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		this.httpFileFileName = httpFileFileName;
 	}
 	
+	public List<String> getInstitutionsWithContent() {
+		return this.institutionsWithContent;
+	}
+
+	public void addInstitutionsWithContent(String institutionsWithContentName) {
+		if (this.getInstitutionsWithContent() == null) {
+			this.institutionsWithContent = new ArrayList<String>();
+		}
+		
+		this.institutionsWithContent.add(institutionsWithContentName);
+	}
+
+	public void setInstitutionsWithContent(List<String> institutionsWithContent) {
+		this.institutionsWithContent = institutionsWithContent;
+	}
+
 	public String upload(){
 		if(this.httpFile!=null && this.httpFileFileName!=null){
 			String path = this.httpFile.getAbsolutePath();
@@ -226,7 +249,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	private List<ArchivalInstitution> checkChild(ArchivalInstitution parent){
 		List<ArchivalInstitution> archivalInstitutionList = new ArrayList<ArchivalInstitution>();
 		log.debug("children check for parent: "+parent.getAiname());
-		Set<ArchivalInstitution> children = parent.getChildArchivalInstitutions();
+		Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(parent.getChildArchivalInstitutions());
 		Iterator<ArchivalInstitution> itChildren = children.iterator();
 		while(itChildren.hasNext()){
 			ArchivalInstitution institution = itChildren.next();
@@ -255,21 +278,18 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	 */
 	private String ingestArchivalLandscapeXML() {
 		String countryCode = getXMLEadidCountrycode(this.httpFile);
+		String state = ERROR;
 		if(countryCode!=null && countryCode.equalsIgnoreCase(SecurityContext.get().getCountryIsoname())){
 			Collection<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile);
-			boolean state = false;
 			if(archivalInstitutions!=null){
 				try{
 					state = checkAndUpdateFromToDDBB(archivalInstitutions);
 				}catch(Exception e){
 					log.error("Exception checking institutions with ddbb to be replaced",e);
 				}
-				if(state){
-					return SUCCESS;
-				}
 			}
 		}
-		return ERROR;
+		return state;
 	}
 
 	/**
@@ -279,8 +299,8 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	 * @param archivalInstitutions
 	 * @return validOperation
 	 */
-	private boolean checkAndUpdateFromToDDBB(Collection<ArchivalInstitution> archivalInstitutions) {
-		boolean validOperation = true; //flag used to rollback the process when some rule is wrong
+	private String checkAndUpdateFromToDDBB(Collection<ArchivalInstitution> archivalInstitutions) {
+		String validOperation = SUCCESS; //flag used to rollback the process when some rule is wrong
 		Integer state = 0;
 		if(archivalInstitutions!=null){
 			try{
@@ -296,7 +316,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 					state = 2;
 					//check if some institution of the new archivalInstitutions is/are into system and has content indexed
 					validOperation = checkIfSomeInstitutionIsIngestedAndHasContentIndexed(archivalInstitutions);
-					if(validOperation){
+					if(validOperation.equalsIgnoreCase(SUCCESS)){
 						JpaUtil.beginDatabaseTransaction();
 						//when valid operation it's able to manage all ingested institutions/groups
 						this.deletedInstitutions = new ArrayList<ArchivalInstitution>();
@@ -306,7 +326,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 						checkAndUpdateArchivalInstitutions(null,archivalInstitutions); //new check
 						log.debug("Updated process has been finished successfull");
 						state = 3;
-						
+
 						log.debug("Inserting process for not updated institutions");
 						//do an insert for rest file institutions
 						insertNotUpdatedInstitutions(archivalInstitutions,null);
@@ -322,7 +342,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 						}else{
 							state = 6;
 							log.debug("Invalid operation detected.");
-							validOperation = false;
+							validOperation = ERROR;
 							JpaUtil.rollbackDatabaseTransaction();
 						}
 					}
@@ -336,7 +356,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 					state = 9;
 				}
 			}catch(Exception e){
-				validOperation = false;
+				validOperation = ERROR;
 				log.error("Some excepton comparing new AL structure with old AL structure. state: "+state, e.getCause());
 				if(!JpaUtil.noTransaction()){
 					JpaUtil.rollbackDatabaseTransaction();
@@ -356,30 +376,42 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	 * 
 	 * @param archivalInstitutions
 	 */
-	private boolean checkIfSomeInstitutionIsIngestedAndHasContentIndexed(Collection<ArchivalInstitution> archivalInstitutions) {
-		boolean valid = true;
+	private String checkIfSomeInstitutionIsIngestedAndHasContentIndexed(Collection<ArchivalInstitution> archivalInstitutions) {
+		String valid = SUCCESS;
 //		boolean exit = false;
 		List<ArchivalInstitution> archivalInstitutionsPlainList = parseCollectionToPlainList(archivalInstitutions); //parse archivalInstitutions structure to plain identifiers list structure
 		if(this.totalInstitutions!=null && this.totalInstitutions.size()>0){
 			Iterator<ArchivalInstitution> itTotalInstitutions = this.totalInstitutions.iterator(); //DDBB ingested institutions
 			//first looper, total institutions ingested into DDBB
-			boolean institutionExists = false;
-			while(valid && !institutionExists && itTotalInstitutions.hasNext()){
+			while(valid.equalsIgnoreCase(SUCCESS) && itTotalInstitutions.hasNext()){
+				boolean institutionExists = false;
 				ArchivalInstitution currentIngestedInstitution = itTotalInstitutions.next();
 				//second loop, new institutions into plain format
 				Iterator<ArchivalInstitution> itAIPlain = archivalInstitutionsPlainList.iterator();
-				while(valid && itAIPlain.hasNext()){
+				while(valid.equalsIgnoreCase(SUCCESS) && !institutionExists && itAIPlain.hasNext()){
 					//compare first looped institution with second looped institution.
 					ArchivalInstitution plainInstitution = itAIPlain.next();
 					if(currentIngestedInstitution.getInternalAlId().equals(plainInstitution.getInternalAlId())){ //detected
 						institutionExists=true;//not needed seek into other branches
 						if(currentIngestedInstitution.isContainSearchableItems()){ //then check if ingested institution has content indexed
-							valid = false;
+							valid = ERROR_CONTENT;
 						}
 					}
 				}
 			}
+
+			// Check the institutions with content published if necessary.
+			if (valid.equalsIgnoreCase(ERROR_CONTENT)) {
+				for (int i =0; i < this.getTotalInstitutions().size() ; i++) {
+					ArchivalInstitution archivalInstitution = this.getTotalInstitutions().get(i);
+					if (archivalInstitution.isContainSearchableItems()
+							&& !archivalInstitution.isGroup()) {
+						this.addInstitutionsWithContent(archivalInstitution.getAiname());
+					}
+				}
+			}
 		}
+
 		return valid;
 	}
 
@@ -577,20 +609,26 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	private boolean checkParents(List<ArchivalInstitution> parentInstitutions,Collection<ArchivalInstitution> archivalInstitutions) {
 		boolean found = false;
 		Iterator<ArchivalInstitution> itParentInstitution = parentInstitutions.iterator();
+		int correction = 0;
 		while(itParentInstitution.hasNext()){
 			ArchivalInstitution currentParent = itParentInstitution.next();
-			log.debug("Checking parent: "+currentParent.getAiname());
-			//check parent
-			found = institutionUpdate(archivalInstitutions,currentParent); //process to check recursively
-			log.debug("Check done, found: "+found);
-			//check child structure
-			if(currentParent.isGroup()){
-				//check each children first
-				Set<ArchivalInstitution> children = currentParent.getChildArchivalInstitutions();
-				if(children!=null && children.size()>0){
-					log.debug("Checking children with size: "+children.size());
-					checkParents(new ArrayList<ArchivalInstitution>(children),archivalInstitutions);
+			if(currentParent!=null){
+				log.debug("Checking parent: "+currentParent.getAiname());
+				//check parent
+				currentParent.setAlorder(currentParent.getAlorder()-correction);
+				found = institutionUpdate(archivalInstitutions,currentParent); //process to check recursively
+				log.debug("Check done, found: "+found);
+				//check child structure
+				if(currentParent.isGroup()){
+					//check each children first
+					Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(currentParent.getChildArchivalInstitutions());
+					if(children!=null && children.size()>0){
+						log.debug("Checking children with size: "+children.size());
+						checkParents(new ArrayList<ArchivalInstitution>(children),archivalInstitutions);
+					}
 				}
+			}else{
+				correction++;
 			}
 		}
 		return found;
@@ -618,7 +656,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 				replaceNode(target,archivalInstitution); //replace node
 				log.debug("Replace done for institution: "+target.getAiname());
 			}else if(archivalInstitution.isGroup()){//not found
-				Set<ArchivalInstitution> children = archivalInstitution.getChildArchivalInstitutions();
+				Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(archivalInstitution.getChildArchivalInstitutions());
 				if(children!=null && children.size()>0){
 					log.debug("Checking children with size: "+children.size());
 					found = institutionUpdate(children,target); //search into his children (not target, only archivalInstitutions provided).
@@ -717,7 +755,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 			}
 		}
 		if(possibleDeletedInstitution.isGroup()){
-			Set<ArchivalInstitution> possibleChildren = possibleDeletedInstitution.getChildArchivalInstitutions();
+			Set<ArchivalInstitution> possibleChildren = new LinkedHashSet<ArchivalInstitution>(possibleDeletedInstitution.getChildArchivalInstitutions());
 			if(possibleChildren!=null && possibleChildren.size()>0){
 				log.debug("Checking children for delete, parent: "+possibleDeletedInstitution.getAiname());
 				checkDeleteArchivalInstitutions(new ArrayList<ArchivalInstitution>(possibleChildren));
@@ -751,7 +789,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 				currentInstitution.setParentAiId(parent.getAiId()); //fix for hibernate map
 			}
 			if(currentInstitution.isGroup()){
-				Set<ArchivalInstitution> institutionChildren = currentInstitution.getChildArchivalInstitutions();
+				Set<ArchivalInstitution> institutionChildren = new LinkedHashSet<ArchivalInstitution>(currentInstitution.getChildArchivalInstitutions());
 				if(institutionChildren!=null && institutionChildren.size()>0){
 					ArchivalInstitution childParent = this.aIDAO.insertSimple(currentInstitution);
 					Set<AiAlternativeName> alternativeNames = childParent.getAiAlternativeNames();
@@ -801,6 +839,9 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		}
 		ArchivalInstitution institution = this.aIDAO.insertSimple(currentInstitution);
 		if(institution!=null && institution.isGroup()){
+			if (this.groupsInsertedIntoDDBB == null) {
+				this.groupsInsertedIntoDDBB = new HashMap<String,ArchivalInstitution>();
+			}
 			this.groupsInsertedIntoDDBB.put(institution.getInternalAlId(),institution);
 		}
 		//alternative names logic
@@ -816,7 +857,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 			}
 		}
 		if(currentInstitution.isGroup()){
-			Set<ArchivalInstitution> childrenToInsert = currentInstitution.getChildArchivalInstitutions();
+			Set<ArchivalInstitution> childrenToInsert = new LinkedHashSet<ArchivalInstitution>(currentInstitution.getChildArchivalInstitutions());
 			if(childrenToInsert!=null && childrenToInsert.size()>0){
 				Iterator<ArchivalInstitution> itInstitutionChildren = childrenToInsert.iterator();
 				while(itInstitutionChildren.hasNext()){
@@ -885,7 +926,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 						if(openLevel && level!=null && level.equals(SERIES)){
 							Set<ArchivalInstitution> children = getXMLArchivalInstitutionLevelChildren(r,archivalInstitution);
 							if(children!=null){
-								archivalInstitution.setChildArchivalInstitutions(children);
+								archivalInstitution.setChildArchivalInstitutions(new LinkedList<ArchivalInstitution>(children));
 								log.debug("Children with size: "+children.size()+" has been added to institution(group) "+archivalInstitution.getAiname());
 							}else{
 								log.error("Bad XML file, has a bad children structure, null received.");
@@ -1098,7 +1139,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 						}else if(level!=null && level.equals(SERIES)){
 							Set<ArchivalInstitution> children = getXMLArchivalInstitutionLevelChildren(r,archivalInstitution);
 							log.debug("Children has been added with size: "+children.size()+" to institution with id: "+id);
-							archivalInstitution.setChildArchivalInstitutions(children);
+							archivalInstitution.setChildArchivalInstitutions(new LinkedList<ArchivalInstitution>(children));
 							update = true; //continue
 						}
 					}else if(localName.equals("unittitle") && archivalInstitution!=null){
@@ -1315,7 +1356,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 			}
 			cLevel.append(buildDidNode(alternativeNames,mainAlternativeName,tabs));
 		}
-		Set<ArchivalInstitution> children = archivalInstitution.getChildArchivalInstitutions();
+		Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(archivalInstitution.getChildArchivalInstitutions());
 		if(children!=null){
 			Iterator<ArchivalInstitution> itChildren = children.iterator();
 			while(itChildren.hasNext()){
