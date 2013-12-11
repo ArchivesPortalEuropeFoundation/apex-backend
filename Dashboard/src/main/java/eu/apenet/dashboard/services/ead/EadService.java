@@ -420,6 +420,7 @@ public class EadService {
             IngestionprofileDefaultUploadAction ingestionprofileDefaultUploadAction = IngestionprofileDefaultUploadAction.getUploadAction(preferences.getProperty(QueueItem.UPLOAD_ACTION));
             IngestionprofileDefaultExistingFileAction ingestionprofileDefaultExistingFileAction = IngestionprofileDefaultExistingFileAction.getExistingFileAction(preferences.getProperty(QueueItem.EXIST_ACTION));
             IngestionprofileDefaultDaoType ingestionprofileDefaultDaoType = IngestionprofileDefaultDaoType.getDaoType(preferences.getProperty(QueueItem.DAO_TYPE));
+            Boolean daoTypeCheck = "true".equals(preferences.getProperty(QueueItem.DAO_TYPE_CHECK));
             XmlType xmlType = XmlType.getType(Integer.parseInt(preferences.getProperty(QueueItem.XML_TYPE)));
 
             //About EADID
@@ -488,7 +489,7 @@ public class EadService {
                     } else {
                         conversionProperties.put("defaultRoleType", ingestionprofileDefaultDaoType.getDaoText());
                     }
-                    conversionProperties.put("useDefaultRoleType", true);
+                    conversionProperties.put("useDefaultRoleType", daoTypeCheck);
 
                     try {
                         if(ingestionprofileDefaultUploadAction.isConvert()) {
