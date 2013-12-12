@@ -1,23 +1,23 @@
 package eu.apenet.dashboard.actions;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
 import com.opensymphony.xwork2.ActionSupport;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.listener.Duration;
+import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
 import eu.apenet.persistence.vo.Ingestionprofile;
 import eu.archivesportaleurope.harvester.oaipmh.RetrieveOaiPmhInformation;
+import eu.archivesportaleurope.harvester.parser.other.OaiPmhElement;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
-
-import org.apache.log4j.Logger;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * User: Yoann Moranville
@@ -26,7 +26,12 @@ import java.util.List;
  * @author Yoann Moranville
  */
 public class AutomaticHarvestingCreationAction extends ActionSupport {
-    private static final Logger LOG = Logger.getLogger(AutomaticHarvestingCreationAction.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7566396853500559421L;
+
+	private static final Logger LOG = Logger.getLogger(AutomaticHarvestingCreationAction.class);
 
     private static final Long INTERVAL_1_MONTH = 2630000000L;
     private static final Long INTERVAL_3_MONTH = 7889230000L;
@@ -36,8 +41,8 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
     private Integer oaiprofiles;
     private List<ArchivalInstitutionOaiPmh> archivalInstitutionOaiPmhs;
     private String url;
-    private List<String> sets;
-    private List<String> metadataFormats;
+    private List<SelectItem> sets = new ArrayList<SelectItem>();;
+    private List<SelectItem> metadataFormats = new ArrayList<SelectItem>();;
     private List<Ingestionprofile> ingestionProfiles;
     private List<Interval> intervals;
     private String selectedSet;
@@ -82,21 +87,21 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
             step = 2;
             int aiId = SecurityContext.get().getSelectedInstitution().getId();
             try {
-                metadataFormats = RetrieveOaiPmhInformation.retrieveMetadataFormats(getUrl());
+                metadataFormats = convert(RetrieveOaiPmhInformation.retrieveMetadataFormats(getUrl()));
                 if(metadataFormats == null || metadataFormats.isEmpty())
                     throw new APEnetException("No metadata formats for this URL: " + getUrl());
             } catch (Exception e) {
                 addActionError("Sorry, the URL is not a correct repository URL or the repository does not contain any metadata formats...");
                 return ERROR;
             }
-            List<String> setsInRepository = RetrieveOaiPmhInformation.retrieveSets(getUrl());
-            sets = new ArrayList<String>(setsInRepository);
+            List<SelectItem> setsInRepository = convert(RetrieveOaiPmhInformation.retrieveSets(getUrl()));
+            sets = new ArrayList<SelectItem>(setsInRepository);
             List<ArchivalInstitutionOaiPmh> archivalInstitutionOaiPmhList = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().getArchivalInstitutionOaiPmhs(aiId);
             ingestionProfiles = DAOFactory.instance().getIngestionprofileDAO().getIngestionprofiles(aiId);
             if(setsInRepository != null) {
-                for(String set : setsInRepository) {
+                for(SelectItem set : setsInRepository) {
                     for(ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh : archivalInstitutionOaiPmhList) {
-                        if(archivalInstitutionOaiPmh.getSet().equals(set) && archivalInstitutionOaiPmh.getUrl().equals(getUrl())) {
+                        if(archivalInstitutionOaiPmh.getSet().equals(set.getValue()) && archivalInstitutionOaiPmh.getUrl().equals(getUrl())) {
                             sets.remove(archivalInstitutionOaiPmh.getSet());
                         }
                     }
@@ -114,7 +119,7 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
             intervals.add(new Interval(6, INTERVAL_6_MONTH));
             if(getOaiprofiles() != -1) {
                 ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().findById(getOaiprofiles().longValue());
-                sets.add(archivalInstitutionOaiPmh.getSet());
+                sets.add(new SelectItem(archivalInstitutionOaiPmh.getSet()));
                 setSelectedSet(archivalInstitutionOaiPmh.getSet());
                 setSelectedMetadataFormat(archivalInstitutionOaiPmh.getMetadataPrefix());
                 setSelectedIngestionProfile(archivalInstitutionOaiPmh.getProfileId().intValue());
@@ -128,6 +133,13 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
         return ERROR;
     }
 
+    private List<SelectItem> convert(List<OaiPmhElement> oaiPmhElements){
+    	List<SelectItem> result = new ArrayList<SelectItem>();
+    	for (OaiPmhElement element: oaiPmhElements){
+    		result.add(new SelectItem(element.getElement(),element.toString()));
+    	}
+    	return result;
+    }
     public String saveProfile() throws Exception {
         try {
             step = 3;
@@ -195,19 +207,19 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
         this.url = url;
     }
 
-    public List<String> getSets() {
+    public List<SelectItem> getSets() {
         return sets;
     }
 
-    public void setSets(List<String> sets) {
+    public void setSets(List<SelectItem> sets) {
         this.sets = sets;
     }
 
-    public List<String> getMetadataFormats() {
+    public List<SelectItem> getMetadataFormats() {
         return metadataFormats;
     }
 
-    public void setMetadataFormats(List<String> metadataFormats) {
+    public void setMetadataFormats(List<SelectItem> metadataFormats) {
         this.metadataFormats = metadataFormats;
     }
 
