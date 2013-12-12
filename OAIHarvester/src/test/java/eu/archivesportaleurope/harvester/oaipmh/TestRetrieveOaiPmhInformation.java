@@ -12,8 +12,8 @@ import java.lang.System;
 public class TestRetrieveOaiPmhInformation {
     @Test
     public void test() {
- //       String url = "http://archives.cantal.fr/oai_pmh.cgi";
-        String url = "http://www.archieven.nl/pls/oai/!pck_oai_pmh.OAIHandler";
+       String url = "http://archives.cantal.fr/oai_pmh.cgi";
+//        String url = "http://www.archieven.nl/pls/oai/!pck_oai_pmh.OAIHandler";
         try {
             System.out.println("Sets:");
             for(OaiPmhElement s : RetrieveOaiPmhInformation.retrieveSets(url)) {

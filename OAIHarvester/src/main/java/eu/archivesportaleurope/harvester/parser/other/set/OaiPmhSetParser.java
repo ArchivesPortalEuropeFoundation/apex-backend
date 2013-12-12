@@ -40,7 +40,6 @@ public class OaiPmhSetParser extends OaiPmhMemoryParser {
                 if (SET_PREFIX.equals(lastElement)) {
                 	oaiPmhElement = new OaiPmhElement();
                 }
-                System.out.println(lastElement);
                 add(path, lastElement);
             } else if (event == XMLStreamConstants.CHARACTERS) {
                 if (SET_SPEC_PREFIX.equals(lastElement)) {
