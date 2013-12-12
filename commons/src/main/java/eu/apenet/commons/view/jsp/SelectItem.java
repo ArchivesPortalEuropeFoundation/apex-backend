@@ -53,5 +53,16 @@ public class SelectItem implements Comparable<SelectItem> {
 		}
 		return content.compareTo(other.content);
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj != null){
+			SelectItem otherItem = (SelectItem) obj;
+			if (value != null && otherItem.getValue() != null){
+				return this.value.equals(otherItem.getValue());
+			}
+		}
+		return false;
+	}
 	
 }
