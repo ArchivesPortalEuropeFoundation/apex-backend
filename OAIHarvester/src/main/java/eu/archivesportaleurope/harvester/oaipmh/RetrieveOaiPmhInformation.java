@@ -1,19 +1,20 @@
 package eu.archivesportaleurope.harvester.oaipmh;
 
-import org.apache.log4j.Logger;
-import org.xml.sax.SAXException;
-
-import eu.archivesportaleurope.harvester.parser.other.OaiPmhElements;
-import eu.archivesportaleurope.harvester.verb.HarvesterVerbSaxMemory;
-import eu.archivesportaleurope.harvester.verb.ListMetadataFormatsSax;
-import eu.archivesportaleurope.harvester.verb.ListSetsSax;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
+
+import eu.archivesportaleurope.harvester.parser.other.OaiPmhElement;
+import eu.archivesportaleurope.harvester.parser.other.OaiPmhElements;
+import eu.archivesportaleurope.harvester.verb.HarvesterVerbSaxMemory;
+import eu.archivesportaleurope.harvester.verb.ListMetadataFormatsSax;
+import eu.archivesportaleurope.harvester.verb.ListSetsSax;
 
 /**
  * User: Yoann Moranville
@@ -27,16 +28,16 @@ import java.util.List;
  */
 public abstract class RetrieveOaiPmhInformation {
     private static final Logger LOG = Logger.getLogger(RetrieveOaiPmhInformation.class);
-    public static List<String> retrieveMetadataFormats(String baseURL) throws TransformerException, XMLStreamException, IOException, SAXException {
+    public static List<OaiPmhElement> retrieveMetadataFormats(String baseURL) throws TransformerException, XMLStreamException, IOException, SAXException {
         return retrieveElements(baseURL, HarvesterVerbSaxMemory.METADATA_FORMAT);
     }
 
-    public static List<String> retrieveSets(String baseURL) throws TransformerException, XMLStreamException, IOException, SAXException {
+    public static List<OaiPmhElement> retrieveSets(String baseURL) throws TransformerException, XMLStreamException, IOException, SAXException {
         return retrieveElements(baseURL, HarvesterVerbSaxMemory.SET);
     }
 
-    private static List<String> retrieveElements(String baseURL, String type) throws TransformerException, XMLStreamException, IOException, SAXException {
-        List<String> definitiveResults = new ArrayList<String>();
+    private static List<OaiPmhElement> retrieveElements(String baseURL, String type) throws TransformerException, XMLStreamException, IOException, SAXException {
+        List<OaiPmhElement> definitiveResults = new ArrayList<OaiPmhElement>();
 
         HarvesterVerbSaxMemory harvesterVerbSaxMemory;
         if(type.equals(HarvesterVerbSaxMemory.SET)) {

@@ -1,5 +1,6 @@
 package eu.archivesportaleurope.harvester.parser.other.metadata;
 
+import eu.archivesportaleurope.harvester.parser.other.OaiPmhElement;
 import eu.archivesportaleurope.harvester.parser.other.OaiPmhElements;
 import eu.archivesportaleurope.harvester.parser.other.OaiPmhMemoryParser;
 
@@ -44,7 +45,7 @@ public class OaiPmhMetadataFormatParser extends OaiPmhMemoryParser {
             } else if (event == XMLStreamConstants.END_ELEMENT) {
                 QName elementName = xmlReader.getName();
                 if (METADATA_PREFIX.equals(elementName)) {
-                    elements.getElements().add(metadata.trim());
+                    elements.getElements().add(new OaiPmhElement(metadata.trim()));
                     metadata = "";
                 }
                 if (LIST_METADATA_FORMATS.equals(elementName)) {

@@ -16,6 +16,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.DebugOaiPmhParser;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
+import eu.archivesportaleurope.harvester.parser.other.OaiPmhElement;
 
 public class ConsoleHarvester {
 	private static final String TRUE = "true";
@@ -90,14 +91,14 @@ public class ConsoleHarvester {
 				while (metadataFormat == null) {
 					baseUrl = getInput("What is the url of the OAI-PMH server?");
 					try {
-						List<String> metadataFormats = RetrieveOaiPmhInformation.retrieveMetadataFormats(baseUrl);
+						List<OaiPmhElement> metadataFormats = RetrieveOaiPmhInformation.retrieveMetadataFormats(baseUrl);
 						if (metadataFormats == null || metadataFormats.isEmpty()) {
 							logger.error("No metadata formats for this URL: " + baseUrl);
 						} else {
-							metadataFormat = getInput("Which metadata format do you want to use?'", metadataFormats);
+							metadataFormat = getInputFromOaiPmhElements("Which metadata format do you want to use?'", metadataFormats);
 						}
-						List<String> setsInRepository = RetrieveOaiPmhInformation.retrieveSets(baseUrl);
-						set = getInput("Which set do you want to use?'", setsInRepository);
+						List<OaiPmhElement> setsInRepository = RetrieveOaiPmhInformation.retrieveSets(baseUrl);
+						set = getInputFromOaiPmhElements("Which set do you want to use?'", setsInRepository);
 						fromDate = getInputEmptyAllowed("Specify a FROM date or leave empty?(e.g. 2010-12-23)");
 						toDate = getInputEmptyAllowed("Specify a TO date or leave empty?(e.g. 2010-12-23)");
 						List<String> saveMethods = new ArrayList<String>();
@@ -232,7 +233,36 @@ public class ConsoleHarvester {
 		return result;
 
 	}
+	public String getInputFromOaiPmhElements(String title, List<OaiPmhElement> choices) {
 
+		String choicesLine = "";
+		for (int i = 0; i < choices.size(); i++) {
+			choicesLine += (i + 1) + "): " + choices.get(i) + "\n";
+		}
+		String result = null;
+		System.out.println(title);
+		System.out.print(choicesLine);
+		while (result == null) {
+			System.out.print("\nChoose one of the following numbers (1-" + choices.size() + "): ");
+			try {
+				BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
+				String input = bufferRead.readLine();
+				if (StringUtils.isNumeric(input)) {
+					int i = Integer.parseInt(input) - 1;
+					if (i >= 0 && i < choices.size()) {
+						result = choices.get(i).getElement();
+					}
+
+				}
+
+			} catch (Exception e) {
+				logger.error("Unable to read input: " + e.getMessage(), e);
+			}
+		}
+
+		return result;
+
+	}
 	public String getInputEmptyAllowed(String title) {
 
 		String result = null;
