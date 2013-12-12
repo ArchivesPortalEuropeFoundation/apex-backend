@@ -169,7 +169,7 @@ public class ConsoleHarvester {
 				}
 
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.error("Unexcepted error occurred: " + e.getMessage(), e);
 		}
 		logger.info("===============================================");
