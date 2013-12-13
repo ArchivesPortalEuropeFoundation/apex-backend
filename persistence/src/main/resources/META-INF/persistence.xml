@@ -29,7 +29,7 @@
 		<class>eu.apenet.persistence.vo.DptUpdate</class>
 		<class>eu.apenet.persistence.vo.Coordinates</class>
 		<class>eu.apenet.persistence.vo.EadSavedSearch</class>
-		<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
+		<shared-cache-mode>NONE</shared-cache-mode>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL82Dialect" />
 			<property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
