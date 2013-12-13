@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -109,7 +110,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 
 	private Map<String, Integer> positions;
 
-	private List<String> institutionsWithContent;
+	private Set<String> institutionsWithContent;
 
 	public void setHttpFile(File httpFile){
 		this.httpFile = httpFile;
@@ -139,19 +140,19 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		this.httpFileFileName = httpFileFileName;
 	}
 	
-	public List<String> getInstitutionsWithContent() {
+	public Set<String> getInstitutionsWithContent() {
 		return this.institutionsWithContent;
 	}
 
 	public void addInstitutionsWithContent(String institutionsWithContentName) {
 		if (this.getInstitutionsWithContent() == null) {
-			this.institutionsWithContent = new ArrayList<String>();
+			this.institutionsWithContent = new LinkedHashSet<String>();
 		}
 		
-		this.institutionsWithContent.add(institutionsWithContentName);
+		this.getInstitutionsWithContent().add(institutionsWithContentName);
 	}
 
-	public void setInstitutionsWithContent(List<String> institutionsWithContent) {
+	public void setInstitutionsWithContent(Set<String> institutionsWithContent) {
 		this.institutionsWithContent = institutionsWithContent;
 	}
 
@@ -383,36 +384,112 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		if(this.totalInstitutions!=null && this.totalInstitutions.size()>0){
 			Iterator<ArchivalInstitution> itTotalInstitutions = this.totalInstitutions.iterator(); //DDBB ingested institutions
 			//first looper, total institutions ingested into DDBB
-			while(valid.equalsIgnoreCase(SUCCESS) && itTotalInstitutions.hasNext()){
+			while(itTotalInstitutions.hasNext()){
 				boolean institutionExists = false;
 				ArchivalInstitution currentIngestedInstitution = itTotalInstitutions.next();
 				//second loop, new institutions into plain format
 				Iterator<ArchivalInstitution> itAIPlain = archivalInstitutionsPlainList.iterator();
-				while(valid.equalsIgnoreCase(SUCCESS) && !institutionExists && itAIPlain.hasNext()){
+				while(!institutionExists && itAIPlain.hasNext()){
 					//compare first looped institution with second looped institution.
 					ArchivalInstitution plainInstitution = itAIPlain.next();
 					if(currentIngestedInstitution.getInternalAlId().equals(plainInstitution.getInternalAlId())){ //detected
 						institutionExists=true;//not needed seek into other branches
-						if(currentIngestedInstitution.isContainSearchableItems()){ //then check if ingested institution has content indexed
-							valid = ERROR_CONTENT;
-						}
-					}
-				}
-			}
+						//then check if ingested institution has content indexed
+						if(currentIngestedInstitution.isContainSearchableItems()){
+							boolean error = false;
+							log.debug("The current institution (" + currentIngestedInstitution.getAiname() + ") has content indexed.");
+							// Checks if the name is changed.
+							if (!currentIngestedInstitution.getAiname().equals(plainInstitution.getAiname())) {
+								log.debug("The current institution (" + currentIngestedInstitution.getAiname() + ") hasn't the same name as the institution to ingest (" + plainInstitution.getAiname() + ").");
+								error = true;
+							}
+							// Checks if the element changed its position inside AL.
+							String pathToCurrentIngestedInstitution = buildParentsNode(currentIngestedInstitution);
+							String pathToPlainInstitution = buildParentsNode(plainInstitution);
+							if (!pathToCurrentIngestedInstitution.equals(pathToPlainInstitution)) {
+								log.debug("The path for the current institution (" + pathToCurrentIngestedInstitution + ") hasn't the same name as the path for the institution to ingest (" + pathToPlainInstitution + ").");
+								error = true;
+							}
 
-			// Check the institutions with content published if necessary.
-			if (valid.equalsIgnoreCase(ERROR_CONTENT)) {
-				for (int i =0; i < this.getTotalInstitutions().size() ; i++) {
-					ArchivalInstitution archivalInstitution = this.getTotalInstitutions().get(i);
-					if (archivalInstitution.isContainSearchableItems()
-							&& !archivalInstitution.isGroup()) {
-						this.addInstitutionsWithContent(archivalInstitution.getAiname());
+							// Add the current element to the display list.
+							if (error) {
+								valid = ERROR_CONTENT;
+								if (currentIngestedInstitution.isGroup()) {
+									// Recover all child institutions that have content indexed.
+									List<ArchivalInstitution> archivalInstitutionList = this.recoverChildInstitutions(currentIngestedInstitution);
+									archivalInstitutionList.add(currentIngestedInstitution);
+									Collections.reverse(archivalInstitutionList);
+									Set<ArchivalInstitution> institutionNamesSet = new LinkedHashSet<ArchivalInstitution>(archivalInstitutionList);
+									if (institutionNamesSet != null && !institutionNamesSet.isEmpty()) {
+										Iterator<ArchivalInstitution> institutionNamesIt = institutionNamesSet.iterator();
+										while (institutionNamesIt.hasNext()) {
+											ArchivalInstitution archivalInstitution = institutionNamesIt.next();
+											if (archivalInstitution.isGroup()) {
+												this.addInstitutionsWithContent(archivalInstitution.getAiname() + " " + this.getText("updateErrorFormatAL.group"));
+											} else {
+												this.addInstitutionsWithContent(archivalInstitution.getAiname() + " " + this.getText("updateErrorFormatAL.institution"));
+											}
+										}
+									}
+								} else {
+									this.addInstitutionsWithContent(currentIngestedInstitution.getAiname() + " " + this.getText("updateErrorFormatAL.institution"));
+								}
+							}
+						}
 					}
 				}
 			}
 		}
 
 		return valid;
+	}
+
+	/**
+	 * Method to recover all child institutions that have content indexed.
+	 *
+	 * @param archivalInstitution Current archival institution to process.
+	 * @return List of archival institution with content published.
+	 */
+	private List<ArchivalInstitution> recoverChildInstitutions(ArchivalInstitution archivalInstitution) {
+		List<ArchivalInstitution> archivalInstitutionList = new ArrayList<ArchivalInstitution>();
+		if (this.aIDAO == null) {
+			this.aIDAO = DAOFactory.instance().getArchivalInstitutionDAO();
+		}
+		List<ArchivalInstitution> aiList = this.aIDAO.getArchivalInstitutionsWithSearchableItems(archivalInstitution.getCountryId(), archivalInstitution.getAiId());
+
+		if (aiList != null && !aiList.isEmpty()) {
+			for (int i = 0; i< aiList.size(); i++) {
+				ArchivalInstitution ai = aiList.get(i);
+				if (ai.isGroup()) {
+					archivalInstitutionList.addAll(recoverChildInstitutions(ai));
+				}
+			}
+		}
+
+		// Add the current elements.
+		archivalInstitutionList.addAll(aiList);
+		return archivalInstitutionList;
+	}
+
+	/**
+	 * Method to construct the path from the current element to the root level.
+	 *
+	 * @param parentArchivalInstitution Element to construct the path.
+	 * @return Path from the current element to root level.
+	 */
+	private String buildParentsNode(ArchivalInstitution parentArchivalInstitution) {
+		StringBuffer parents = new StringBuffer();
+		if(parentArchivalInstitution!=null){
+			parents.append("aigroup_"+parentArchivalInstitution.getInternalAlId());
+			while(parentArchivalInstitution.getParentAiId()!=null){
+				parentArchivalInstitution = parentArchivalInstitution.getParent();
+				parents.append(",");
+				parents.append("aigroup_"+parentArchivalInstitution.getInternalAlId());
+			}
+			parents.append(",");
+		}
+		parents.append("country_"+SecurityContext.get().getCountryId());
+		return parents.toString();
 	}
 
 	/**
