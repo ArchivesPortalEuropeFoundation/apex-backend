@@ -403,7 +403,8 @@ public class ArchivalLandscapeManager extends AbstractAction{
 								log.debug("The current institution (" + currentIngestedInstitution.getAiname() + ") hasn't the same name as the institution to ingest (" + plainInstitution.getAiname() + ").");
 								error = true;
 							}
-							// Checks if the element changed its position inside AL.
+
+							// Checks if the element changed its position inside AL hierarchy.
 							String pathToCurrentIngestedInstitution = buildParentsNode(currentIngestedInstitution);
 							String pathToPlainInstitution = buildParentsNode(plainInstitution);
 							if (!pathToCurrentIngestedInstitution.equals(pathToPlainInstitution)) {
@@ -411,12 +412,19 @@ public class ArchivalLandscapeManager extends AbstractAction{
 								error = true;
 							}
 
-							// Add the current element to the display list.
+							// Checks if the element changed its position inside the group.
+							if (currentIngestedInstitution.getAlorder() != plainInstitution.getAlorder()) {
+								log.debug("The brothers for the current institution (" + currentIngestedInstitution.getAiname() + ") hasn't the same brothers for the institution to ingest (" + plainInstitution.getAiname() + ").");
+								error = true;
+							}
+
 							if (error) {
 								valid = ERROR_CONTENT;
+								log.debug("Creating list of elements affected.");
 								if (currentIngestedInstitution.isGroup()) {
 									// Recover all child institutions that have content indexed.
 									List<ArchivalInstitution> archivalInstitutionList = this.recoverChildInstitutions(currentIngestedInstitution);
+									// Add the current element to the display list.
 									archivalInstitutionList.add(currentIngestedInstitution);
 									Collections.reverse(archivalInstitutionList);
 									Set<ArchivalInstitution> institutionNamesSet = new LinkedHashSet<ArchivalInstitution>(archivalInstitutionList);
@@ -424,15 +432,13 @@ public class ArchivalLandscapeManager extends AbstractAction{
 										Iterator<ArchivalInstitution> institutionNamesIt = institutionNamesSet.iterator();
 										while (institutionNamesIt.hasNext()) {
 											ArchivalInstitution archivalInstitution = institutionNamesIt.next();
-											if (archivalInstitution.isGroup()) {
-												this.addInstitutionsWithContent(archivalInstitution.getAiname() + " " + this.getText("updateErrorFormatAL.group"));
-											} else {
-												this.addInstitutionsWithContent(archivalInstitution.getAiname() + " " + this.getText("updateErrorFormatAL.institution"));
+											if (!archivalInstitution.isGroup()) {
+												this.addInstitutionsWithContent(archivalInstitution.getAiname());
 											}
 										}
 									}
 								} else {
-									this.addInstitutionsWithContent(currentIngestedInstitution.getAiname() + " " + this.getText("updateErrorFormatAL.institution"));
+									this.addInstitutionsWithContent(currentIngestedInstitution.getAiname());
 								}
 							}
 						}
@@ -451,6 +457,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	 * @return List of archival institution with content published.
 	 */
 	private List<ArchivalInstitution> recoverChildInstitutions(ArchivalInstitution archivalInstitution) {
+		log.debug("Recover elements with content indexed for: " + archivalInstitution.getAiname());
 		List<ArchivalInstitution> archivalInstitutionList = new ArrayList<ArchivalInstitution>();
 		if (this.aIDAO == null) {
 			this.aIDAO = DAOFactory.instance().getArchivalInstitutionDAO();
@@ -480,15 +487,16 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	private String buildParentsNode(ArchivalInstitution parentArchivalInstitution) {
 		StringBuffer parents = new StringBuffer();
 		if(parentArchivalInstitution!=null){
-			parents.append("aigroup_"+parentArchivalInstitution.getInternalAlId());
+			log.debug("Building hierarchy for current element: " + parentArchivalInstitution.getAiname());
+			parents.append(parentArchivalInstitution.getInternalAlId());
 			while(parentArchivalInstitution.getParentAiId()!=null){
 				parentArchivalInstitution = parentArchivalInstitution.getParent();
 				parents.append(",");
-				parents.append("aigroup_"+parentArchivalInstitution.getInternalAlId());
+				parents.append(parentArchivalInstitution.getInternalAlId());
 			}
 			parents.append(",");
 		}
-		parents.append("country_"+SecurityContext.get().getCountryId());
+		parents.append(SecurityContext.get().getCountryId());
 		return parents.toString();
 	}
 
