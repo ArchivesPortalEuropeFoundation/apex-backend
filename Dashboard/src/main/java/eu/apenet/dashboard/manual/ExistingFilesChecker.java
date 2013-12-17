@@ -210,7 +210,7 @@ public class ExistingFilesChecker {
             try {
                 eadid = extractAttributeFromEad(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/eadid", null, true).trim();
             } catch (WstxParsingException e){
-                LOG.error("File was not correct XML.", e);
+                LOG.error("File was not correct XML, cause: " + e.getMessage());
                 additionalErrors += e.getMessage();
             }
             String err;
