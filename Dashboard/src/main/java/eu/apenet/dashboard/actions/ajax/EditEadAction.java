@@ -3,13 +3,21 @@ package eu.apenet.dashboard.actions.ajax;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.stream.XMLStreamException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.opensymphony.xwork2.Action;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.types.XmlType;
@@ -19,9 +27,7 @@ import eu.apenet.dashboard.manual.EditParser;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.ead.xml.ReconstructEadFile;
 import eu.apenet.dashboard.services.ead.xml.XmlEadParser;
-import eu.apenet.persistence.dao.EadContentDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
@@ -30,6 +36,7 @@ import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.ValidatedState;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 /**
  * User: Yoann Moranville
@@ -39,72 +46,90 @@ import eu.apenet.persistence.vo.ValidatedState;
  */
 public class EditEadAction extends AjaxControllerAbstractAction {
 
-    private static final long serialVersionUID = 4831971826309950250L;
+	private static final long serialVersionUID = 4831971826309950250L;
 
-    private Long id;
-    private Long faId;
-    private Long hgId;
-    private Integer fileId;
-    private int xmlTypeId;
-    private Map<String, String> formValues;
-    private String type;
-	
+    // Constants for the names.
+	private static final String FORM_NAME = "'formValues'"; // Name of the map with all the values.
+	private static final String C_IDENTIFIER = "c_identifier"; // Name of element <c>.
+	private static final String C_LEVEL = "c_level"; // Name of element <c>.
+	private static final String C_LEVEL_ID = "id"; // Type of XML.
+	private static final String EADID = "eadid"; // Name of element <eadid>.
+	private static final String FILEID = "fileId"; // Key for the identifier of the EAD in DB.
+	private static final String P_ELEMENT = "p"; // Name of element <p>.
+	private static final String UNITDATE = "unitdate"; // Name of element <unitdate>.
+	private static final String UNITDATE_NORMAL = "unitdate_normal"; // Name of element <unitdate_normal>.
+	private static final String UNITID = "unitid"; // Name of element <unitid>.
+	private static final String UNITTITLE = "unittitle"; // Name of element <unittitle>.
+	private static final String UNITTITLE_TYPE = "unittitle_type"; // Name of element <unittitle_type>.
+	private static final String XMLTYPEID = "xmlTypeId"; // Type of XML.
+
+    // Log.
+    private final Logger log = Logger.getLogger(getClass());
+
+	private Long id;
+	private Long faId;
+	private Long hgId;
+	private Integer fileId;
+	private int xmlTypeId;
+	private Map<String, String> formValues;
+	private String type;
+
 	@Override
 	public String execute() {
 		return SUCCESS;
 	}
-	
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		return this.id;
+	}
 
-    public Long getFaId() {
-        return faId;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setFaId(Long faId) {
-        this.faId = faId;
-    }
+	public Long getFaId() {
+		return this.faId;
+	}
 
-    public Long getHgId() {
-        return hgId;
-    }
+	public void setFaId(Long faId) {
+		this.faId = faId;
+	}
 
-    public void setHgId(Long hgId) {
-        this.hgId = hgId;
-    }
+	public Long getHgId() {
+		return this.hgId;
+	}
 
-    public int getXmlTypeId() {
-        return xmlTypeId;
-    }
+	public void setHgId(Long hgId) {
+		this.hgId = hgId;
+	}
 
-    public void setXmlTypeId(int xmlTypeId) {
-        this.xmlTypeId = xmlTypeId;
-    }
+	public int getXmlTypeId() {
+		return this.xmlTypeId;
+	}
 
-    public Map<String, String> getFormValues() {
-        return formValues;
-    }
+	public void setXmlTypeId(int xmlTypeId) {
+		this.xmlTypeId = xmlTypeId;
+	}
 
-    public void setFormValues(Map<String, String> formValues) {
-        this.formValues = formValues;
-    }
+	public Map<String, String> getFormValues() {
+		return this.formValues;
+	}
 
-    public String getType(){
-        return type;
-    }
+	public void setFormValues(Map<String, String> formValues) {
+		this.formValues = formValues;
+	}
 
-    public void setType(String type){
-        this.type = type;
-    }
-    
+	public String getType(){
+	return this.type;
+	}
+
+	public void setType(String type){
+		this.type = type;
+	}
+
 
 	public Integer getFileId() {
-		return fileId;
+		return this.fileId;
 	}
 
 	public void setFileId(Integer fileId) {
@@ -118,7 +143,7 @@ public class EditEadAction extends AjaxControllerAbstractAction {
         try {
             writer = openOutputWriter();
 
-            if(xmlType != XmlType.EAD_FA && xmlType != xmlType.EAD_HG)
+            if(xmlType != XmlType.EAD_FA && xmlType != XmlType.EAD_HG)
                 throw new APEnetException(getText("editEadAction.noXmlTypedefinedOrWrongType"));
 
             Ead ead = DAOFactory.instance().getEadDAO().findById(id.intValue(), xmlType.getClazz());
@@ -181,60 +206,92 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 
     //todo before production: Sanitize user input
     public String saveXmlData() {
-        XmlType xmlType = XmlType.getType(xmlTypeId);
         Writer writer = null;
         try {
+            XmlType xmlType = XmlType.getType(this.getXmlTypeId());
             writer = openOutputWriter();
 
-            if(id != null){
-                CLevel cLevel = DAOFactory.instance().getCLevelDAO().findById(id);
-                String newXml = new EditParser().getNewXmlString(cLevel.getXml(), formValues);
+        	// Check if its necessary to recover formValues.
+        	if (this.getFormValues() == null || this.getFormValues().isEmpty()) {
+        		if (this.recoverMapFormValues().equalsIgnoreCase(Action.ERROR)) {
+        			try {
+                        if(writer != null){
+                            writer.append(new JSONObject().put("saved", false).toString());
+                            writer.close();
+                        }
+                    } catch (Exception ex){
+                        LOG.error("Could not send the JSON to the page...");
+                    }
+        		}
+        	}
+
+        	boolean dataChanged = false;
+
+            if(this.getId() != null){
+                CLevel cLevel = DAOFactory.instance().getCLevelDAO().findById(this.getId());
+                String newXml = new EditParser().getNewXmlString(cLevel.getXml(), this.getFormValues());
                 cLevel.setXml(newXml);
 
                 //Check if unittitle and @level have been changed
-                if(!StringUtils.isEmpty(formValues.get("unittitle"))){
-                    if(!formValues.get("unittitle").equals(cLevel.getUnittitle()))
-                        cLevel.setUnittitle(formValues.get("unittitle"));
+                if(!StringUtils.isEmpty(this.getFormValues().get(EditEadAction.UNITTITLE))){
+                    if(!this.getFormValues().get(EditEadAction.UNITTITLE).equals(cLevel.getUnittitle())) {
+                        cLevel.setUnittitle(this.getFormValues().get(EditEadAction.UNITTITLE));
+                    	dataChanged = true;
+                    }
                 }
-                if(!StringUtils.isEmpty(formValues.get("c_level"))){
-                    if(!formValues.get("c_level").equals(cLevel.getLevel()))
-                        cLevel.setLevel(formValues.get("c_level"));
+                if(!StringUtils.isEmpty(this.getFormValues().get(EditEadAction.C_LEVEL))){
+                    if(!this.getFormValues().get(EditEadAction.C_LEVEL).equals(cLevel.getLevel())) {
+                        cLevel.setLevel(this.getFormValues().get(EditEadAction.C_LEVEL));
+                		dataChanged = true;
+                    }
                 }
-                HibernateUtil.beginDatabaseTransaction();
+                JpaUtil.beginDatabaseTransaction();
                 DAOFactory.instance().getCLevelDAO().update(cLevel);
-                HibernateUtil.commitDatabaseTransaction();
+                JpaUtil.commitDatabaseTransaction();
             } else if(xmlType == XmlType.EAD_FA){
-                EadContent eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFindingAidId(faId.intValue());
-                String newXml = new EditParser().getNewXmlString(eadContent.getXml(), formValues);
+                EadContent eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFindingAidId(this.getFaId().intValue());
+                String newXml = new EditParser().getNewXmlString(eadContent.getXml(), this.getFormValues());
                 eadContent.setXml(newXml);
                 //Check if eadid and unittitle have been changed
-                if(!StringUtils.isEmpty(formValues.get("eadid"))){
-                    if(!formValues.get("eadid").equals(eadContent.getEadid()))
-                        eadContent.setEadid(formValues.get("eadid"));
+                if(!StringUtils.isEmpty(this.getFormValues().get(EditEadAction.EADID))){
+                    if(!this.getFormValues().get(EditEadAction.EADID).equals(eadContent.getEadid())) {
+                        eadContent.setEadid(this.getFormValues().get(EditEadAction.EADID));
+                        dataChanged = true;
+                    }
                 }
-                if(!StringUtils.isEmpty(formValues.get("unittitle"))){
-                    if(!formValues.get("unittitle").equals(eadContent.getUnittitle()))
-                        eadContent.setUnittitle(formValues.get("unittitle"));
+                if(!StringUtils.isEmpty(this.getFormValues().get(EditEadAction.UNITTITLE))){
+                    if(!this.getFormValues().get(EditEadAction.UNITTITLE).equals(eadContent.getUnittitle())) {
+                        eadContent.setUnittitle(this.getFormValues().get(EditEadAction.UNITTITLE));
+                        dataChanged = true;
+                    }
                 }
-                HibernateUtil.beginDatabaseTransaction();
+                JpaUtil.beginDatabaseTransaction();
                 DAOFactory.instance().getEadContentDAO().update(eadContent);
-                HibernateUtil.commitDatabaseTransaction();
-            } else if(xmlType == XmlType.EAD_HG){
-                EadContent eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByHoldingsGuideId(hgId.intValue());
-                String newXml = new EditParser().getNewXmlString(eadContent.getXml(), formValues);
-                eadContent.setXml(newXml);
-                //Check if eadid and unittitle have been changed
-                if(!StringUtils.isEmpty(formValues.get("eadid"))){
-                    if(!formValues.get("eadid").equals(eadContent.getEadid()))
-                        eadContent.setEadid(formValues.get("eadid"));
-                }
-                if(!StringUtils.isEmpty(formValues.get("unittitle"))){
-                    if(!formValues.get("unittitle").equals(eadContent.getUnittitle()))
-                        eadContent.setUnittitle(formValues.get("unittitle"));
-                }
-                HibernateUtil.beginDatabaseTransaction();
-                DAOFactory.instance().getEadContentDAO().update(eadContent);
-                HibernateUtil.commitDatabaseTransaction();
+                JpaUtil.commitDatabaseTransaction();
+            }
+            // TODO: Commented this part due to comment in revision 1596:
+            // "IssueID 693: HG and SG should not be editable."
+//            else if(xmlType == XmlType.EAD_HG){
+//                EadContent eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByHoldingsGuideId(hgId.intValue());
+//                String newXml = new EditParser().getNewXmlString(eadContent.getXml(), formValues);
+//                eadContent.setXml(newXml);
+//                //Check if eadid and unittitle have been changed
+//                if(!StringUtils.isEmpty(formValues.get(EditEadAction.EADID))){
+//                    if(!formValues.get(EditEadAction.EADID).equals(eadContent.getEadid()))
+//                        eadContent.setEadid(formValues.get(EditEadAction.EADID));
+//                }
+//                if(!StringUtils.isEmpty(formValues.get(EditEadAction.UNITTITLE))){
+//                    if(!formValues.get(EditEadAction.UNITTITLE).equals(eadContent.getUnittitle()))
+//                        eadContent.setUnittitle(formValues.get(EditEadAction.UNITTITLE));
+//                }
+//                JpaUtil.beginDatabaseTransaction();
+//                DAOFactory.instance().getEadContentDAO().update(eadContent);
+//                JpaUtil.commitDatabaseTransaction();
+//            }
+
+            // Try to persist the changes in file (if needed).
+            if (dataChanged) {
+            	this.saveAllXmlData();
             }
 
             writer.append(new JSONObject().put("saved", true).toString());
@@ -249,10 +306,273 @@ public class EditEadAction extends AjaxControllerAbstractAction {
                 LOG.error("Could not send the JSON to the page...");
             }
 
-            HibernateUtil.rollbackDatabaseTransaction();
+            JpaUtil.rollbackDatabaseTransaction();
             LOG.error("EXCEPTION", e);
         }
         return null;
+    }
+
+    /**
+     * Method to recover and add the correct values to the map "formValues".
+     * This is derived from issue 180 and bug in Struts2 (see: 
+     * https://issues.apache.org/jira/browse/WW-4176).
+     */
+    private String recoverMapFormValues() {
+    	this.log.debug("Starting process to recover values to change.");
+    	String result = Action.SUCCESS;
+		this.setFormValues(new LinkedHashMap<String, String>());
+		String requestedData = getServletRequest().getParameter(EditEadAction.FORM_NAME);
+		try {
+			JSONObject jsonObject = new JSONObject(requestedData);
+			log.debug("JSONObject recovered.");
+
+			// Sets for different elements.
+			log.debug("Start the process to recover all the information in the JSONObject.");
+			Set<String> xmlTypeSet = new LinkedHashSet<String>();
+			Set<String> idSet = new LinkedHashSet<String>();
+			Set<String> faIdSet = new LinkedHashSet<String>();
+			Set<String> eadIdSet = new LinkedHashSet<String>();
+			Set<String> unitidSet = new LinkedHashSet<String>();
+			Set<String> unittitleSet = new LinkedHashSet<String>();
+			Set<String> unittitleTypeSet = new LinkedHashSet<String>();
+			Set<String> unitdateSet = new LinkedHashSet<String>();
+			Set<String> unitdateNormalSet = new LinkedHashSet<String>();
+			Set<String> cLevelSet = new LinkedHashSet<String>();
+			Set<String> cIdentifierSet = new LinkedHashSet<String>();
+			Set<String> pSet = new LinkedHashSet<String>();
+
+			Iterator<String> keysIt = jsonObject.keys();
+
+			// Check iterator values.
+			while (keysIt.hasNext()) {
+				String key = keysIt.next();
+				if (key.startsWith(EditEadAction.XMLTYPEID)) {
+					xmlTypeSet.add(key);
+				} else if (key.startsWith(EditEadAction.C_LEVEL_ID)) {
+					idSet.add(key);
+				} else if (key.startsWith(EditEadAction.FILEID)) {
+					faIdSet.add(key);
+				} else if (key.startsWith(EditEadAction.EADID)) {
+					eadIdSet.add(key);
+				} else if (key.startsWith(EditEadAction.UNITID)) {
+					unitidSet.add(key);
+				} else if (key.startsWith(EditEadAction.UNITTITLE)) {
+					if (key.startsWith(EditEadAction.UNITTITLE_TYPE)) {
+						unittitleTypeSet.add(key);
+					} else {
+						unittitleSet.add(key);
+					}
+				} else if (key.startsWith(EditEadAction.UNITDATE)) {
+					if (key.startsWith(EditEadAction.UNITDATE_NORMAL)) {
+						unitdateNormalSet.add(key);
+					} else {
+						unitdateSet.add(key);
+					}
+				} else if (key.startsWith(EditEadAction.C_LEVEL)) {
+					cLevelSet.add(key);
+				} else if (key.startsWith(EditEadAction.C_IDENTIFIER)) {
+					cIdentifierSet.add(key);
+				} else if (key.startsWith(EditEadAction.P_ELEMENT)) {
+					pSet.add(key);
+				}
+			}
+
+			String value = "";
+			String key = "";
+			int count = 0;
+
+			// Check if is setted the value of the "xmlTypeId".
+			if (xmlTypeSet != null && !xmlTypeSet.isEmpty()) {
+				key = xmlTypeSet.iterator().next();
+				value = jsonObject.getString(key);
+				try {
+					if (value != null & !value.isEmpty()
+							&& this.getXmlTypeId() != Integer.parseInt(value)) {
+						this.setXmlTypeId(Integer.parseInt(value));
+					}
+				} catch (NumberFormatException nfe) {
+					this.log.error("Error parsing to int the \"xmlTypeId\".");
+					// Due to only finding aids should be editable set this
+					// type by default.
+					this.setXmlTypeId(XmlType.EAD_FA.getIdentifier());
+				}
+			}
+
+			// Check if exists the identifier of the c level in DB.
+			if (this.getId() == null) {
+				if (idSet != null && !idSet.isEmpty()) {
+					key = idSet.iterator().next();
+					value = jsonObject.getString(key);
+					if (value != null) {
+						try {
+							this.setId(Long.valueOf(value.toString()));
+							this.log.debug("Recovered the identifier (in database) of the current c level (" + value + ").");
+						} catch (NumberFormatException nfe) {
+							this.log.error("Error parsing to long identifier (in database) of the c level (" + value + ").");
+						}
+					}
+				}
+			}
+
+			// Check if exists the identifier of the EAD in DB.
+			if (this.getFaId() == null) {
+				if (faIdSet != null && !faIdSet.isEmpty()) {
+					key = faIdSet.iterator().next();
+					value = jsonObject.getString(key);
+					if (value != null) {
+						try {
+							this.setFaId(Long.valueOf(value.toString()));
+							this.log.debug("Recovered the identifier (in database) of the current EAD (" + value + ").");
+						} catch (NumberFormatException nfe) {
+							this.log.error("Error parsing to long identifier (in database) of the EAD (" + value + ").");
+						}
+					}
+				}
+			}
+
+			// Check if exists value for element "<eadid>".
+			if (eadIdSet != null && !eadIdSet.isEmpty()) {
+				count = 0;
+				key = eadIdSet.iterator().next();
+				value = jsonObject.getString(key);
+				if (value != null) {
+					count++;
+					this.getFormValues().put(EditEadAction.EADID + "_" + count, value);
+					this.log.debug("Recovered the EADID (" + value + ").");
+				}
+			}
+
+			// Check if exists value for element "<unitid>".
+			if (unitidSet != null && !unitidSet.isEmpty()) {
+				count = 0;
+				Iterator<String> unitidIt = unitidSet.iterator();
+				while (unitidIt.hasNext()) {
+					key = unitidIt.next();
+					value = jsonObject.getString(key);
+					if (value != null) {
+						count++;
+						this.getFormValues().put(EditEadAction.UNITID + "_" + count, value);
+						this.log.debug("Recovered the new value for element <unitid> (" + value + ").");
+					}
+				}
+			}
+
+			// Check if exists value for element "<unittitle>".
+			if (unittitleSet != null && !unittitleSet.isEmpty()) {
+				count = 0;
+				Iterator<String> unittitleIt = unittitleSet.iterator();
+				while (unittitleIt.hasNext()) {
+					key = unittitleIt.next();
+					value = jsonObject.getString(key);
+					if (value != null) {
+						count++;
+						this.getFormValues().put(EditEadAction.UNITTITLE + "_" + count, value);
+						this.log.debug("Recovered the new value for element <unittitle> (" + value + ").");
+					}
+				}
+			}
+
+			// Check if exists value for element "<unittitle>" attribute "type".
+			if (unittitleTypeSet != null && !unittitleTypeSet.isEmpty()) {
+				count = 0;
+				Iterator<String> unittitleTypeIt = unittitleTypeSet.iterator();
+				while (unittitleTypeIt.hasNext()) {
+					key = unittitleTypeIt.next();
+					value = jsonObject.getString(key);
+					if (value != null) {
+						count++;
+						this.getFormValues().put(EditEadAction.UNITTITLE_TYPE + "_" + count, value);
+						this.log.debug("Recovered the new value for element <unittitle> attribute type (" + value + ").");
+					}
+				}
+			}
+
+			// Check if exists value for element "<unitdate>".
+			if (unitdateSet != null && !unitdateSet.isEmpty()) {
+				count = 0;
+				Iterator<String> unitdateIt = unitdateSet.iterator();
+				while (unitdateIt.hasNext()) {
+					key = unitdateIt.next();
+					value = jsonObject.getString(key);
+					if (value != null) {
+						count++;
+						this.getFormValues().put(EditEadAction.UNITDATE + "_" + count, value);
+						this.log.debug("Recovered the new value for element <unitdate> (" + value + ").");
+					}
+				}
+			}
+
+			// Check if exists value for element "<unitdate>" attribute "normal".
+			if (unitdateNormalSet != null && !unitdateNormalSet.isEmpty()) {
+				count = 0;
+				Iterator<String> unitdateNormalIt = unitdateNormalSet.iterator();
+				while (unitdateNormalIt.hasNext()) {
+					key = unitdateNormalIt.next();
+					value = jsonObject.getString(key);
+					if (value != null) {
+						count++;
+						this.getFormValues().put(EditEadAction.UNITDATE_NORMAL + "_" + count, value);
+						this.log.debug("Recovered the new value for element <unitdate> attribute normal (" + value + ").");
+					}
+				}
+			}
+
+			// Check if exists value for element "<c>" attribute "level".
+			if (cLevelSet != null && !cLevelSet.isEmpty()) {
+				count = 0;
+				Iterator<String> cLevelIt = cLevelSet.iterator();
+				while (cLevelIt.hasNext()) {
+					key = cLevelIt.next();
+					value = jsonObject.getString(key);
+					if (value != null) {
+						count++;
+						this.getFormValues().put(EditEadAction.C_LEVEL + "_" + count, value);
+						this.log.debug("Recovered the new value for element <c>  attribute level (" + value + ").");
+					}
+				}
+			}
+
+			// Check if exists value for element "<c>" attribute "id".
+			if (cIdentifierSet != null && !cIdentifierSet.isEmpty()) {
+				count = 0;
+				Iterator<String> cIdentifierIt = cIdentifierSet.iterator();
+				while (cIdentifierIt.hasNext()) {
+					key = cIdentifierIt.next();
+					value = jsonObject.getString(key);
+					if (value != null) {
+						count++;
+						this.getFormValues().put(EditEadAction.C_IDENTIFIER + "_" + count, value);
+						this.log.debug("Recovered the new value for element <c>  attribute id (" + value + ").");
+					}
+				}
+			}
+
+			// Check if exists value for element "<p>".
+			if (pSet != null && !pSet.isEmpty()) {
+				count = 0;
+				Iterator<String> pIt = pSet.iterator();
+				while (pIt.hasNext()) {
+					key = pIt.next();
+					value = jsonObject.getString(key);
+					if (value != null) {
+						count++;
+						this.getFormValues().put(EditEadAction.P_ELEMENT + "_" + count, value);
+						this.log.debug("Recovered the new value for element <p> (" + value + ").");
+					}
+				}
+			}
+
+    		System.out.println(requestedData);
+    		this.log.debug("Ending process to recover values.");
+		} catch (JSONException e) {
+			this.log.error("Error processing JSON to recover form values.");
+			if (e.getCause() != null) {
+				this.log.error(e.getCause());
+			}
+			result = Action.ERROR;
+		}
+
+		return result;
     }
 
     /**
@@ -325,7 +645,7 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 
                 ReconstructEadFile.reconstructEadFile(eadContent, filePath);
 
-                HibernateUtil.beginDatabaseTransaction();
+                JpaUtil.beginDatabaseTransaction();
                 if(findingAid != null){
                     if(ValidatedState.VALIDATED.equals(findingAid.getValidated()))
                         findingAid.setValidated(ValidatedState.NOT_VALIDATED);
@@ -335,7 +655,7 @@ public class EditEadAction extends AjaxControllerAbstractAction {
                     	holdingsGuide.setValidated(ValidatedState.NOT_VALIDATED);
                     	holdingsGuide.setDynamic(false);
                 }
-                HibernateUtil.commitDatabaseTransaction();
+                JpaUtil.commitDatabaseTransaction();
 
                 writer.append(new JSONObject().put("saved", true).toString());
                 writer.close();
@@ -473,46 +793,46 @@ public class EditEadAction extends AjaxControllerAbstractAction {
                                                 CLevel cLevel = DAOFactory.instance().getCLevelDAO().findById(id);
                                                 String newXml = new EditParser().addInLevel(field, cLevel.getXml(), formValues.get(key));
                                                 try {
-                                                    HibernateUtil.beginDatabaseTransaction();
+                                                	JpaUtil.beginDatabaseTransaction();
                                                     cLevel.setXml(newXml);
-                                                    HibernateUtil.commitDatabaseTransaction();
+                                                    JpaUtil.commitDatabaseTransaction();
                                                     writer.append(new JSONObject().put("saved", true).toString());
                                                 } catch (Exception e){
                                                     LOG.error("Could not save cLevel new XML");
-                                                    HibernateUtil.rollbackDatabaseTransaction();
+                                                    JpaUtil.rollbackDatabaseTransaction();
                                                     writer.append(new JSONObject().put("saved", false).toString());
                                                 } finally {
-                                                    HibernateUtil.closeDatabaseSession();
+                                                	JpaUtil.closeDatabaseSession();
                                                 }
                                             } else if (faId != null){
                                                 EadContent eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFindingAidId(faId.intValue());
                                                 String newXml = new EditParser().addInLevel(field, eadContent.getXml(), formValues.get(key));
                                                 try {
-                                                    HibernateUtil.beginDatabaseTransaction();
+                                                	JpaUtil.beginDatabaseTransaction();
                                                     eadContent.setXml(newXml);
-                                                    HibernateUtil.commitDatabaseTransaction();
+                                                    JpaUtil.commitDatabaseTransaction();
                                                     writer.append(new JSONObject().put("saved", true).toString());
                                                 } catch (Exception e){
                                                     LOG.error("Could not save eadContent new XML");
-                                                    HibernateUtil.rollbackDatabaseTransaction();
+                                                    JpaUtil.rollbackDatabaseTransaction();
                                                     writer.append(new JSONObject().put("saved", false).toString());
                                                 } finally {
-                                                    HibernateUtil.closeDatabaseSession();
+                                                	JpaUtil.closeDatabaseSession();
                                                 }
                                             } else if (hgId != null){
                                                 EadContent eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByHoldingsGuideId(hgId.intValue());
                                                 String newXml = new EditParser().addInLevel(field, eadContent.getXml(), formValues.get(key));
                                                 try {
-                                                    HibernateUtil.beginDatabaseTransaction();
+                                                	JpaUtil.beginDatabaseTransaction();
                                                     eadContent.setXml(newXml);
-                                                    HibernateUtil.commitDatabaseTransaction();
+                                                    JpaUtil.commitDatabaseTransaction();
                                                     writer.append(new JSONObject().put("saved", true).toString());
                                                 } catch (Exception e){
                                                     LOG.error("Could not save eadContent new XML");
-                                                    HibernateUtil.rollbackDatabaseTransaction();
+                                                    JpaUtil.rollbackDatabaseTransaction();
                                                     writer.append(new JSONObject().put("saved", false).toString());
                                                 } finally {
-                                                    HibernateUtil.closeDatabaseSession();
+                                                	JpaUtil.closeDatabaseSession();
                                                 }
                                             }
                                         }
@@ -536,9 +856,9 @@ public class EditEadAction extends AjaxControllerAbstractAction {
         LOG.info("Adding in " + key + ", field " + field.name + "for cLevel id " + cLevel.getClId());
         if((onlyLowLevels && (cLevel.getLevel().equals("item") || cLevel.getLevel().equals("file"))) || !onlyLowLevels){
             String newXml = new EditParser().addInLevel(field, cLevel.getXml(), formValues.get(key));
-            HibernateUtil.beginDatabaseTransaction();
+            JpaUtil.beginDatabaseTransaction();
             cLevel.setXml(newXml);
-            HibernateUtil.commitDatabaseTransaction();
+            JpaUtil.commitDatabaseTransaction();
         }
         List<CLevel> children = DAOFactory.instance().getCLevelDAO().findChilds(cLevel.getClId());
         for(CLevel child : children){
@@ -550,15 +870,15 @@ public class EditEadAction extends AjaxControllerAbstractAction {
      * Fields that are Editable on this Edit page
      */
     public enum EditableFields {
-        UNITTITLE("unittitle"),
-        UNITID("unitid"),
-        UNITDATE("unitdate"),
-        TYPE("unittitle_type"),
-        NORMAL("unitdate_normal"),
-        P("p"),
-        C_LEVEL("c_level"),
-        EADID("eadid"),
-        IDENTIFIER("c_identifier");
+        UNITTITLE(EditEadAction.UNITTITLE),
+        UNITID(EditEadAction.UNITID),
+        UNITDATE(EditEadAction.UNITDATE),
+        TYPE(EditEadAction.UNITTITLE_TYPE),
+        NORMAL(EditEadAction.UNITDATE_NORMAL),
+        P(EditEadAction.P_ELEMENT),
+        C_LEVEL(EditEadAction.C_LEVEL),
+        EADID(EditEadAction.EADID),
+        IDENTIFIER(EditEadAction.C_IDENTIFIER);
 
         String name;
         EditableFields(String name){

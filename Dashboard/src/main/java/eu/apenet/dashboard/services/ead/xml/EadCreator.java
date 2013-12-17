@@ -75,7 +75,16 @@ public class EadCreator extends AbstractParser {
         if(xmlWriter != null) {
             xmlWriter.writeEndElement(); //DSC_ELEMENT
             xmlWriter.writeEndElement(); //ARCHDESC_ELEMENT
-            xmlWriter.writeEndElement(); //EAD_ELEMENT
+            // In some cases, only is needed to close two elements, so we try
+            // to close the third (with the corresponding catch).
+            try {
+            	xmlWriter.writeEndElement(); //EAD_ELEMENT
+            } catch (XMLStreamException xmlse) {
+            	if (!xmlse.getMessage().startsWith("No open start element")) {
+            		LOG.error("Error while closing elements.");
+            		throw xmlse;
+            	}
+            }
         }
     }
 
