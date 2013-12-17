@@ -523,20 +523,21 @@ public class UploadContentAction extends AbstractInstitutionAction {
                 format = this.getHttpFileFileName().substring(this.getHttpFileFileName().lastIndexOf(".") + 1).toLowerCase();
                 uploader_http = new ManualHTTPUploader(uploadMethod);
                 log.info("Starting uploadFile process for '" + this.getHttpFileFileName() + "' file name.");
-                result = uploader_http.uploadFile(uploadType, this.getHttpFileFileName(), this.getHttpFile(), format.toLowerCase(), aiId, uploadMethod);
+                if(profile != null){
+                    result = uploader_http.uploadFile(uploadType, this.getHttpFileFileName(), this.getHttpFile(), format.toLowerCase(), aiId, uploadMethod, profile);
+                } else {
+                    result = uploader_http.uploadFile(uploadType, this.getHttpFileFileName(), this.getHttpFile(), format.toLowerCase(), aiId, uploadMethod);
+                }
                 if (result.equals("success")) {
                     this.filesNotUploaded = this.uploader_http.getFilesNotUploaded();
                     this.filesUploaded = this.uploader_http.getFilesUploaded();
-                    if (profile != null) {
-                        processWithProfile(profile);
-                        result = "profile";
+                    if (filesNotUploaded.isEmpty() && filesUploaded.size() > 0) {
+                        result = "redirect";
                     } else {
-                        if (filesNotUploaded.size() == 0 && filesUploaded.size() > 0) {
-                            result = "redirect";
-                        } else {
-                            result = SUCCESS;
-                        }
+                        result = SUCCESS;
                     }
+                } else if (result.equals("profile")) {
+                    result = "profile";
                 } else if (result.equals("error")) {
                     result = ERROR;
                 } else {

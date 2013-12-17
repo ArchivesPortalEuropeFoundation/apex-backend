@@ -37,22 +37,25 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.opensymphony.xwork2.ActionSupport;
+import eu.apenet.dashboard.services.ead.EadService;
+import eu.apenet.persistence.dao.UpFileDAO;
+import java.util.Properties;
 
 /**
- * 
+ *
  * @author eloy
  *
  */
 
 /** This class is in charge of uploading files to APEnet, unzipping them
  *  if applicable and storing them in UP FILES container
- *  
+ *
  */
 public abstract class ManualUploader {
 
-    
+
 	private static final String MAGIC_KEY = "99999999999";
-    
+
 	private final Logger log = Logger.getLogger(getClass());
 	protected String uploadingMethod;
 	protected ZipManager zipManager;
@@ -61,17 +64,17 @@ public abstract class ManualUploader {
 	private List<String> filesUploaded;
 
     private List<String> warnings_eag;
-    
+
     private List<ArchivalInstitution> archivalInstitutionsToDelete= new ArrayList<ArchivalInstitution>();
     private List<ArchivalInstitution> archivalInstitutionsToInsert= new ArrayList<ArchivalInstitution>();
     private List<AiAlternativeName> archivalInstitutionsNameNotChanged = new ArrayList<AiAlternativeName>();
     private List<AiAlternativeName> archivalInstitutionsNameChanged = new ArrayList<AiAlternativeName>();
     private List<ArchivalInstitution> archivalInstitutionsParentNotChanged = new ArrayList<ArchivalInstitution>();
 	private List<ArchivalInstitution> archivalInstitutionsParentChanged = new ArrayList<ArchivalInstitution>();
-    
+
 	private List<FindingAid> fasDeleted = new ArrayList<FindingAid>();
 	private List<HoldingsGuide> hgsDeleted = new ArrayList<HoldingsGuide>();
-        
+
 	public List<FindingAid> getFasDeleted() {
 		return fasDeleted;
 	}
@@ -119,13 +122,13 @@ public abstract class ManualUploader {
     }
 
 	public ManualUploader() {
-		
+
 	}
 
 	public String upload(){
 		return null;
 	}
-	
+
 	public List<ArchivalInstitution> getArchivalInstitutionsToInsert() {
 		return archivalInstitutionsToInsert;
 	}
@@ -171,20 +174,24 @@ public abstract class ManualUploader {
 		this.archivalInstitutionsParentChanged = archivalInstitutionsParentChanged;
 	}
 
+        public String uploadFile(String uploadType, String fileName, File file, String contentType, Integer archivalInstitutionId, String uploadMethodString){
+            return uploadFile(uploadType, fileName, file, contentType, archivalInstitutionId, uploadMethodString, null);
+        }
+
 	//This method uploads only one file to the Dashboard. It stores this file in a temporal directory
-	public String uploadFile(String uploadType, String fileName, File file, String contentType, Integer archivalInstitutionId, String uploadMethodString){
-        
+	public String uploadFile(String uploadType, String fileName, File file, String contentType, Integer archivalInstitutionId, String uploadMethodString, Ingestionprofile profile){
+
 		String result = null;
         String path = null;
         if (archivalInstitutionId != null)
         	path = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitutionId.toString() + APEnetUtilities.FILESEPARATOR;
 		String fullFileName = "";
-		String tempPath = path + "tmp" + fileName + new Date().getTime() + APEnetUtilities.FILESEPARATOR;	//This is the path in which the zip files are going to be unzipped    	
-		File tempDir = new File(tempPath); 
+		String tempPath = path + "tmp" + fileName + new Date().getTime() + APEnetUtilities.FILESEPARATOR;	//This is the path in which the zip files are going to be unzipped
+		File tempDir = new File(tempPath);
     	this.filesNotUploaded = new ArrayList<String>();
-    	this.filesUploaded = new ArrayList<String>();    	
+    	this.filesUploaded = new ArrayList<String>();
     	if (uploadType.equals("EAD")) {
-			
+
     		// Uncomment this line if xsl and xslt files are permitted again
     		//if (contentType.equals("zip") || contentType.equals("xml") || contentType.equals("xsl") || contentType.equals("xslt")){
     		if (contentType.equals("zip") || contentType.equals("xml")) {
@@ -195,7 +202,7 @@ public abstract class ManualUploader {
     				fullFileName = path + fileName;
 
 	    		File theFile = new File(fullFileName);
-	    		
+
 	    		if(theFile.exists()) {
 	    			result = "error";
                 } else {
@@ -208,12 +215,13 @@ public abstract class ManualUploader {
 
                         if (!contentType.equals("zip")) {
                             filesUploaded.add(fileName);
+                            UpFile upFile;
+
                             try {
                                 //Insert file uploaded into up_file table
                                 JpaUtil.beginDatabaseTransaction();
 
                                 String defaultUpDir = APEnetUtilities.FILESEPARATOR + archivalInstitutionId + APEnetUtilities.FILESEPARATOR;
-                                UpFile upFile;
                                 if (contentType.equals("xml")) {
                                     upFile = createUpFile(defaultUpDir, fileName, uploadMethodString, archivalInstitutionId, FileType.XML);
                                 } else if (contentType.equals("xsl") || contentType.equals("xslt")) {
@@ -235,7 +243,12 @@ public abstract class ManualUploader {
                                 //Copy file into /mnt/tmp/up/ folder
                                 File destFile = new File(path + fileName);
                                 FileUtils.copyFile(file, destFile);
-                                return ActionSupport.SUCCESS;
+                                //If profile was added to upload, directly add file to queue in order to avoid delays for user, else process as usual
+                                if(profile != null){
+                                    processWithProfile(upFile, profile);
+                                    return "profile";
+                                } else
+                                    return ActionSupport.SUCCESS;
                             } catch (IOException e) {
                                 throw new APEnetException("Error storing the file " + fileName + " in temporal up repository. Error: " + e.getMessage());
                             }
@@ -250,7 +263,12 @@ public abstract class ManualUploader {
                                 throw new APEnetException("The file " + fileName + " could not be removed from tmp directory created to unzip a zipped file. Error: " + e.getMessage());
                             }
 
-                            moveToTemp(tempPath, path, "xml", filesNotUploaded, filesUploaded, archivalInstitutionId, uploadMethodString);
+                            //If profile was added to upload, directly add file to queue in order to avoid delays for user, else process as usual
+                            if(profile != null)
+                                moveToTemp(tempPath, path, "xml", filesNotUploaded, filesUploaded, archivalInstitutionId, uploadMethodString, profile);
+                            else
+                                moveToTemp(tempPath, path, "xml", filesNotUploaded, filesUploaded, archivalInstitutionId, uploadMethodString);
+
                             moveToTemp(tempPath, path, "xsl", filesNotUploaded, filesUploaded, archivalInstitutionId, uploadMethodString);
                             moveToTemp(tempPath, path, "other", filesNotUploaded, filesUploaded, archivalInstitutionId, uploadMethodString);
 
@@ -260,13 +278,16 @@ public abstract class ManualUploader {
                                 throw new APEnetException("The temporal directory " + tempPath + " could not be removed from tmp directory. Error: " + e.getMessage());
                             }
 
-                            return ActionSupport.SUCCESS;
+                            if(profile != null)
+                                return "profile";
+                            else
+                                return ActionSupport.SUCCESS;
                         }
                     } catch (APEnetException ape) {
                     	log.error(SecurityContext.get() + ape.getMessage());
                         return ActionSupport.INPUT;
                     }
-	    		}    		
+	    		}
 			} else {
 				//The format is not allowed
 				log.warn(SecurityContext.get() + "The file " + fileName + " has a format not allowed. File not uploaded and removed automatically");
@@ -274,23 +295,23 @@ public abstract class ManualUploader {
 				result = "success";
 			}
     	} else if (uploadType.equals("AL")) { //Upload Archival Landscape
-    		try {				
+    		try {
     			if ((contentType.equals("xml"))) {
     				ArchivalLandscape a = new ArchivalLandscape();
     				path = a.getmyPath(a.getmyCountry());
     				//Create a temporary file
     				fullFileName = path + a.getmyCountry() + "AL.xml"; //fileName
     				File theFile = new File(fullFileName);
-    			
-    				//There's already an AL uploaded for this partner. Actually, it should always be an AL because is created when check if the file to upload is well-formed 
-    				if (theFile.exists() && (theFile.length()>0)) 
-    				{	    			
+
+    				//There's already an AL uploaded for this partner. Actually, it should always be an AL because is created when check if the file to upload is well-formed
+    				if (theFile.exists() && (theFile.length()>0))
+    				{
     					String pathTemp = path + "temp" +APEnetUtilities.FILESEPARATOR;
     					File TempFile = new File(pathTemp);
     					if (!TempFile.exists())
     						TempFile.mkdir();
-    					
-    					fullFileName = path + "temp" + APEnetUtilities.FILESEPARATOR + fileName;					
+
+    					fullFileName = path + "temp" + APEnetUtilities.FILESEPARATOR + fileName;
     					File sfile = new File(fullFileName);
     					//sfile.mkdir();
     					FileUtils.copyFile(file, sfile);
@@ -299,16 +320,16 @@ public abstract class ManualUploader {
     					this.setArchivalInstitutionsToDelete(a.getArchivalInstitutionsToDelete());
     					this.setArchivalInstitutionsNameNotChanged(a.getArchivalInstitutionsNameNotChanged());
     					this.setArchivalInstitutionsNameChanged(a.getArchivalInstitutionsNameChanged());
-	    			
-    					result = "error";	
+
+    					result = "error";
     				}
     				//There's no AL for this country. It has to copy in the repository.
-    				else 
-    				{	 
+    				else
+    				{
     					FileUtils.copyFile(file, theFile);
     					result = "success";
-    					this.filesUploaded.add(fileName);    					
-    					log.warn(SecurityContext.get() + "There were no file in the AL repository for " + a.getmyCountry() + ".");    					
+    					this.filesUploaded.add(fileName);
+    					log.warn(SecurityContext.get() + "There were no file in the AL repository for " + a.getmyCountry() + ".");
 	    			}
     			}else
     			{
@@ -318,21 +339,21 @@ public abstract class ManualUploader {
     			}
 	    	} catch (Exception e) {
 	    		log.error(SecurityContext.get() + "The file AL could not be uploaded. Some errors occurrs in process");
-	    		result = "input";	    			
+	    		result = "input";
 	    	}
 
 		}else {
 			//HTTP EAG upload
 			path = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitutionId.toString() + APEnetUtilities.FILESEPARATOR;
-    		try {       
+    		try {
 				if (contentType.equals("xml")){
-					
+
 					//The format is allowed
 					//The file is copied to /mnt/tmp/tmp/ai_id/
 					fullFileName = path + fileName;
 		    		File source = new File(fullFileName);
     				FileUtils.copyFile(file, source);
-	    		    
+
     				//It is necessary to validate the file against APEnet EAG schema
                     APEnetEAGDashboard eag = new APEnetEAGDashboard(archivalInstitutionId, file.getAbsolutePath());
                     Document tempDoc = null;
@@ -352,7 +373,7 @@ public abstract class ManualUploader {
         					this.filesNotUploaded.add(fileName);
     						return "error_eagnoinstitutionname";
     					}
-                        
+
                         //check the <recordId> content
                         //eag.setEagPath(fullFileName); //temp used for looking forward target tag
                         String recordIdValue = eag.lookingForwardElementContent("/eag/control/recordId");
@@ -383,8 +404,8 @@ public abstract class ManualUploader {
                     			}
                     		}
                         }
-                        //TODO, change it with the check for webpages, use the eag.lookingForwardElemens 
-                        //from APEnetEAGDashboard class. issue #597, this step checks if the user has 
+                        //TODO, change it with the check for webpages, use the eag.lookingForwardElemens
+                        //from APEnetEAGDashboard class. issue #597, this step checks if the user has
                         //written good links into the system (which starts with right prefix).
                         String href = eag.extractAttributeFromEag("eag/relations/resourceRelation", "href",true);
                         boolean showWarnings = false;
@@ -421,7 +442,7 @@ public abstract class ManualUploader {
     					//The EAG has been validated so it has to be stored in /mnt/repo/country/aiid/EAG/
     					//and it is necessary to update archival_institution table
         				result = eag.saveEAGviaHTTP(fullFileName);
-       
+
         				if (result.equals("error_eagnotstored")) {
         					this.filesNotUploaded.add(fileName);
         					result = "error_eagnotstored";
@@ -457,7 +478,7 @@ public abstract class ManualUploader {
             						String eagPath = archivalInstitution.getEagPath();
             						String tempEagPath = APEnetUtilities.getConfig().getRepoDirPath();
             						String eagTempPath = tempEagPath + eagPath.substring(0, (eagPath.lastIndexOf(APEnetUtilities.FILESEPARATOR) + 1)) + Eag2012.EAG_TEMP_FILE_NAME;
-            						File fileTempEag = new File(eagTempPath); 
+            						File fileTempEag = new File(eagTempPath);
             						if (fileTempEag.exists()) {
             							try {
             								FileUtils.forceDelete(fileTempEag);
@@ -469,7 +490,7 @@ public abstract class ManualUploader {
             				}
 
         				}
-        				    					
+
     				}
     				else{
     					//Check if the file is an old EAG
@@ -483,7 +504,7 @@ public abstract class ManualUploader {
                 			result = "display_eag02convertedToeag2012";
                 		}else{
 	                        warnings_eag = eag.showWarnings();
-	    					//The EAG has been neither validated nor converted 
+	    					//The EAG has been neither validated nor converted
 	    					log.warn(SecurityContext.get() + "The file " + fileName + " is not valid");
 	    					this.filesNotUploaded.add(fileName);
 	    					result = "error_eagnotvalidatednotconverted";
@@ -493,7 +514,7 @@ public abstract class ManualUploader {
     				if (!result.equalsIgnoreCase("display_eag02convertedToeag2012")) {
     					FileUtils.forceDelete(source);
     				}
-						    				
+
 				}
 				else {
 					//The format is not allowed
@@ -516,42 +537,42 @@ public abstract class ManualUploader {
 		}
     	return result;
 	}
-	
+
 	//Jara: Overwrite a file of Archival Landscape. The existing file is renamed to name_old.
 	public String overWriteFile(File file, String fileName, String pathFile, boolean execute){
-		
+
 		String result;
 		ArchivalLandscape a = new ArchivalLandscape();
 		String fullFileName = "";
 		String tmpDirectory =pathFile+ "temp" + APEnetUtilities.FILESEPARATOR;
 		File[] files = new File(pathFile).listFiles();
 		this.filesNotUploaded = new ArrayList<String>();
-    	this.filesUploaded = new ArrayList<String>();	
-    		
-		try {				
+    	this.filesUploaded = new ArrayList<String>();
+
+		try {
 			File sfile = new File(tmpDirectory+fileName);
 			//Change the database without commit
 			String resultStore = a.storeArchives(sfile,execute);
-			
-			//this.setFasDeleted(a.getFasDeleted());						
-			//this.setHgsDeleted(a.getHgsDeleted());			
-			
+
+			//this.setFasDeleted(a.getFasDeleted());
+			//this.setHgsDeleted(a.getHgsDeleted());
+
 			//Change the repository renaming the files and not deleted the current one
 			if (!resultStore.equals("error"))
 			{
-				if (files.length > 1) 
+				if (files.length > 1)
 				{
 					/*for (int n=0;n< files.length;n++)
 					{
 						if (files[n].getName().contains("AL.xml"))
-							fullFileName = pathFile + files[n].getName();		
+							fullFileName = pathFile + files[n].getName();
 					}*/
 					fullFileName = pathFile + a.getmyCountry() + "AL.xml";
 				}
 				File theFile = new File(fullFileName);
 				//theFile.delete();
 				theFile.renameTo(new File(a.getmyPath(a.getmyCountry()) + a.getmyCountry() + "AL_old.xml"));
-								
+
 				FileUtils.copyFile(sfile, new File(fullFileName));
 				//theFile.renameTo(new File(a.getmyPath(a.getmyCountry()) + a.getmyCountry() + "AL.xml"));
 				File tmpDir = new File(tmpDirectory);
@@ -569,38 +590,42 @@ public abstract class ManualUploader {
 			}
 			else{
 				result= "error";
-				if (files.length > 1) 
+				if (files.length > 1)
 				{
 					for (int n=0;n< files.length;n++)
 					{
 						if (files[n].getName().contains(".xml"))
-							fullFileName = pathFile + files[n].getName();		
+							fullFileName = pathFile + files[n].getName();
 					}
 				}
 				File theFile = new File(fullFileName);
 				//theFile.delete();
 				theFile.renameTo(new File(a.getmyPath(a.getmyCountry()) + a.getmyCountry() + "AL_old.xml"));
-								
+
 				FileUtils.copyFile(sfile, new File(fullFileName));
 				theFile.renameTo(new File(a.getmyPath(a.getmyCountry()) + a.getmyCountry() + "AL.xml"));
 				File tmpDir = new File(tmpDirectory);
 				if (fileName != null)
 					this.filesUploaded.add(fileName);
-				FileUtils.deleteDirectory(tmpDir);				
+				FileUtils.deleteDirectory(tmpDir);
 			}
-			
+
 		} catch (IOException e) {
 			result = "error";
 			this.filesNotUploaded.add(fileName);
 			log.debug("The file could not be remove. Some errors occurs in process.");
 			log.error(e.getMessage());
-		}				
-		
+		}
+
 		return result;
 	}
-	
+
+        private void moveToTemp (String tempPath, String path, String format, List<String> filesNotUploaded, List<String> filesUploaded, Integer archivalInstitutionId, String uploadMethodString) {
+            moveToTemp(tempPath, path, format, filesNotUploaded, filesUploaded, archivalInstitutionId, uploadMethodString, null);
+        }
+
 	// This method moves all the files extracted from a Zip file to the previous directory (the root directory for the files recently uploaded)
-	private void moveToTemp (String tempPath, String path, String format, List<String> filesNotUploaded, List<String> filesUploaded, Integer archivalInstitutionId, String uploadMethodString) {
+	private void moveToTemp (String tempPath, String path, String format, List<String> filesNotUploaded, List<String> filesUploaded, Integer archivalInstitutionId, String uploadMethodString, Ingestionprofile profile) {
 		File dir = new File(tempPath);
 		if (format.equals("other")) {
 			String[] files = dir.list();
@@ -645,13 +670,18 @@ public abstract class ManualUploader {
                             upFile = createUpFile(defaultDirPath, fileStr, uploadMethodString, archivalInstitutionId, FileType.ZIP);
 
                         DAOFactory.instance().getUpFileDAO().insertSimple(upFile);
-						
+
 						// The file is stored in temp repository and it is necessary to move it
 						log.info("Moving file " + srcFile.getAbsolutePath() + " to " + destFile.getAbsolutePath());
 						FileUtils.moveFile(srcFile, destFile);
 						filesUploaded.add(fileStr);
 
 						JpaUtil.commitDatabaseTransaction();
+
+                                                //If profile was added to upload, directly add file to queue in order to avoid delays for user
+                                                if(profile != null){
+                                                    processWithProfile(upFile, profile);
+                                                }
 					} catch (Exception e) {
 						log.error("Error inserting the file " + fileStr + " in up_table (the user was uploading this file to the Dashboard) or error storing the file in temporal up repository [Database and FileSystem Rollback]. Error: " + e.getMessage());
 						JpaUtil.rollbackDatabaseTransaction();
@@ -683,4 +713,38 @@ public abstract class ManualUploader {
 
         return upFile;
     }
+
+        private static Properties retrieveProperties(Ingestionprofile ingestionprofile) {
+        Properties properties = new Properties();
+        properties.setProperty(QueueItem.XML_TYPE, ingestionprofile.getFileType() + "");
+        properties.setProperty(QueueItem.NO_EADID_ACTION, ingestionprofile.getNoeadidAction().getId() + "");
+        properties.setProperty(QueueItem.EXIST_ACTION, ingestionprofile.getExistAction().getId() + "");
+        properties.setProperty(QueueItem.DAO_TYPE, ingestionprofile.getDaoType().getId() + "");
+        properties.setProperty(QueueItem.DAO_TYPE_CHECK, ingestionprofile.getDaoTypeFromFile() + "");
+        properties.setProperty(QueueItem.UPLOAD_ACTION, ingestionprofile.getUploadAction().getId() + "");
+        properties.setProperty(QueueItem.DATA_PROVIDER, ingestionprofile.getEuropeanaDataProvider() + "");
+        properties.setProperty(QueueItem.DATA_PROVIDER_CHECK, ingestionprofile.getEuropeanaDataProviderFromFile() + "");
+        properties.setProperty(QueueItem.EUROPEANA_DAO_TYPE, ingestionprofile.getEuropeanaDaoType() + "");
+        properties.setProperty(QueueItem.EUROPEANA_DAO_TYPE_CHECK, ingestionprofile.getEuropeanaDaoTypeFromFile() + "");
+        properties.setProperty(QueueItem.LANGUAGES, ingestionprofile.getEuropeanaLanguages() + "");
+        properties.setProperty(QueueItem.LANGUAGE_CHECK, ingestionprofile.getEuropeanaLanguagesFromFile() + "");
+        properties.setProperty(QueueItem.LICENSE, ingestionprofile.getEuropeanaLicense() + "");
+        properties.setProperty(QueueItem.LICENSE_DETAILS, ingestionprofile.getEuropeanaLicenseDetails() + "");
+        properties.setProperty(QueueItem.LICENSE_ADD_INFO, ingestionprofile.getEuropeanaAddRights() + "");
+        properties.setProperty(QueueItem.HIERARCHY_PREFIX, ingestionprofile.getEuropeanaHierarchyPrefix() + "");
+        properties.setProperty(QueueItem.INHERIT_FILE, ingestionprofile.getEuropeanaInheritElements() + "");
+        properties.setProperty(QueueItem.INHERIT_ORIGINATION, ingestionprofile.getEuropeanaInheritOrigin() + "");
+        return properties;
+    }
+
+    private void processWithProfile(UpFile upFile, Ingestionprofile profile) {
+        Properties properties = retrieveProperties(profile);
+        try {
+                EadService.useProfileAction(upFile, properties);
+            } catch (Exception ex) {
+                log.error("Failed when adding the new up files into the queue", ex);
+            }
+    }
+
+
 }
