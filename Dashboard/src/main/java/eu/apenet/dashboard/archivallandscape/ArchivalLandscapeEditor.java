@@ -49,18 +49,25 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 	private String countryId;
 	private List<Lang> langList;
 
+	private void buildBreadcrumb() {
+		super.buildBreadcrumbs();
+		this.addBreadcrumb(null,getText("breadcrumb.section.editArchivalLandscape"));
+	}
+
 	public List<Lang> getLangList(){
 		return this.langList;
 	}
 
 	@Override
 	public String execute() throws Exception {
+		buildBreadcrumb();
 		SecurityContext securityContext = SecurityContext.get();
 		Integer couId = securityContext.getCountryId();
 		this.countryId = couId.toString();
 		this.langList = DAOFactory.instance().getLangDAO().findAll();
 		Collections.sort(this.langList);
 		log.info("Archival Landscape editor for country: "+couId);
+		buildBreadcrumbs();
 		return SUCCESS;
 	}
 	

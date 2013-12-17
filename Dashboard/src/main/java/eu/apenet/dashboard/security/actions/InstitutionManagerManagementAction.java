@@ -18,8 +18,11 @@ public class InstitutionManagerManagementAction extends AbstractAction{
 	private Integer countryId;
 	private Integer aiId;
 	private Integer partnerId;
-
-
+	
+	private void buildBreadcrumb() {
+		super.buildBreadcrumbs();
+		this.addBreadcrumb(null,getText("breadcrumb.section.manageIM"));
+	}
 
 	@Override
 	public String execute() throws Exception {
@@ -32,6 +35,7 @@ public class InstitutionManagerManagementAction extends AbstractAction{
 		// Get all the institutions belong to this list of partners. 
 		// It must take only the institutions that are not group, so the second parameter is false.
 		getServletRequest().setAttribute("ais" , aiDao.getArchivalInstitutionsByCountryId(countryId, false));
+		buildBreadcrumb();
 		 return SUCCESS;
 	}
 	public String disableUser(){
