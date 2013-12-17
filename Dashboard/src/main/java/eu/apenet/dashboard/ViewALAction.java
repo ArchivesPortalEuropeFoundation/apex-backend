@@ -31,34 +31,27 @@ public class ViewALAction extends ActionSupport implements ServletRequestAware {
 		return this.breadcrumbRoute;
 	}
 
-	
 	public Integer getCouId() {
 		return couId;
 	}
-
 
 	public void setCouId(Integer couId) {
 		this.couId = couId;
 	}
 
-
-
 	public Integer getAi_id() {
 		return ai_id;
 	}
 
-
 	public void setAi_id(Integer ai_id) {
 		this.ai_id = ai_id;
 	}
-
 
 	@Override
 	public void setServletRequest(HttpServletRequest request) {
 		this.request = request;
 		
 	}
-
 
 	//Validator
 	@Override
@@ -69,9 +62,7 @@ public class ViewALAction extends ActionSupport implements ServletRequestAware {
 
 	private void buildBreadcrumb() {
 		this.breadcrumbRoute = new ArrayList<Breadcrumb>();
-		Breadcrumb breadcrumb = new Breadcrumb("index.action",getText("breadcrumb.section.dashboard"));
-		this.breadcrumbRoute.add(breadcrumb);
-		breadcrumb = new Breadcrumb(null,getText("breadcrumb.section.previewal"));
+		Breadcrumb breadcrumb = new Breadcrumb(null,getText("breadcrumb.section.previewal"));
 		this.breadcrumbRoute.add(breadcrumb);
 	}
 	
