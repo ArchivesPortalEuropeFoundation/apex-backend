@@ -1,15 +1,15 @@
 package eu.apenet.dashboard.actions;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.opensymphony.xwork2.ActionSupport;
-
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.commons.view.jsp.SelectItem;
+import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -17,6 +17,7 @@ import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
 import eu.apenet.persistence.vo.Ingestionprofile;
 import eu.archivesportaleurope.harvester.oaipmh.RetrieveOaiPmhInformation;
 import eu.archivesportaleurope.harvester.parser.other.OaiPmhElement;
+import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 /**
@@ -25,7 +26,7 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
  *
  * @author Yoann Moranville
  */
-public class AutomaticHarvestingCreationAction extends ActionSupport {
+public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction {
     /**
 	 * 
 	 */
@@ -60,14 +61,13 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
 
     public String execute() throws Exception {
         step = 0;
-        int archivalInstitutionId = SecurityContext.get().getSelectedInstitution().getId();
-        ingestionProfiles = DAOFactory.instance().getIngestionprofileDAO().getIngestionprofiles(archivalInstitutionId);
+        ingestionProfiles = DAOFactory.instance().getIngestionprofileDAO().getIngestionprofiles(getAiId());
         if(ingestionProfiles.size() < 1) {
             addActionError("You need at least one user profile created before creating an automatic OAI-PMH profile");
             return ERROR;
         }
         ArchivalInstitutionOaiPmhDAO archivalInstitutionOaiPmhDAO = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
-        archivalInstitutionOaiPmhs = archivalInstitutionOaiPmhDAO.getArchivalInstitutionOaiPmhs(archivalInstitutionId);
+        archivalInstitutionOaiPmhs = archivalInstitutionOaiPmhDAO.getArchivalInstitutionOaiPmhs(getAiId());
         return SUCCESS;
     }
 
@@ -85,30 +85,43 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
     public String page3() throws Exception {
         if(getUrl() != null) {
             step = 2;
-            int aiId = SecurityContext.get().getSelectedInstitution().getId();
-            try {
-                metadataFormats = convert(RetrieveOaiPmhInformation.retrieveMetadataFormats(getUrl()));
-                if(metadataFormats == null || metadataFormats.isEmpty())
-                    throw new APEnetException("No metadata formats for this URL: " + getUrl());
-            } catch (Exception e) {
-                addActionError("Sorry, the URL is not a correct repository URL or the repository does not contain any metadata formats...");
-                return ERROR;
-            }
-            List<SelectItem> setsInRepository = convert(RetrieveOaiPmhInformation.retrieveSets(getUrl()));
-            sets = new ArrayList<SelectItem>(setsInRepository);
-            List<ArchivalInstitutionOaiPmh> archivalInstitutionOaiPmhList = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().getArchivalInstitutionOaiPmhs(aiId);
-            ingestionProfiles = DAOFactory.instance().getIngestionprofileDAO().getIngestionprofiles(aiId);
-            if(setsInRepository != null) {
-                for(SelectItem set : setsInRepository) {
-                    for(ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh : archivalInstitutionOaiPmhList) {
-                        if(archivalInstitutionOaiPmh.getSet().equals(set.getValue()) && archivalInstitutionOaiPmh.getUrl().equals(getUrl())) {
-                            sets.remove(archivalInstitutionOaiPmh.getSet());
-                        }
-                    }
-                }
-            }
-
-            if(sets.size() == 0 && setsInRepository.size() != 0 && getOaiprofiles() == -1) {
+    		OaiPmhHttpClient oaiPmhHttpClient = null;
+    		List<SelectItem> setsInRepository = null;
+    		try {
+    			oaiPmhHttpClient = new OaiPmhHttpClient();
+	            try {
+	                metadataFormats = convert(RetrieveOaiPmhInformation.retrieveMetadataFormats(getUrl(), oaiPmhHttpClient));
+	                if(metadataFormats == null || metadataFormats.isEmpty())
+	                    throw new APEnetException("No metadata formats for this URL: " + getUrl());
+	            } catch (Exception e) {
+	                addActionError("Sorry, the URL is not a correct repository URL or the repository does not contain any metadata formats...");
+	                return ERROR;
+	            }
+	            setsInRepository = convert(RetrieveOaiPmhInformation.retrieveSets(getUrl(), oaiPmhHttpClient));
+	            sets = new ArrayList<SelectItem>(setsInRepository);
+	            List<ArchivalInstitutionOaiPmh> archivalInstitutionOaiPmhList = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().getArchivalInstitutionOaiPmhs(getAiId());
+	            ingestionProfiles = DAOFactory.instance().getIngestionprofileDAO().getIngestionprofiles(getAiId());
+	            if(setsInRepository != null) {
+	                for(SelectItem set : setsInRepository) {
+	                    for(ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh : archivalInstitutionOaiPmhList) {
+	                        if(archivalInstitutionOaiPmh.getSet().equals(set.getValue()) && archivalInstitutionOaiPmh.getUrl().equals(getUrl())) {
+	                            sets.remove(archivalInstitutionOaiPmh.getSet());
+	                        }
+	                    }
+	                }
+	            }
+    		} catch (Exception e) {
+    			LOG.error("Unexcepted error occurred: " + e.getMessage());
+    		}finally {
+    			if (oaiPmhHttpClient != null){
+    				try {
+    					oaiPmhHttpClient.close();
+    				}catch(  IOException io){
+    					LOG.error("Unexcepted error occurred: " + io.getMessage(), io);
+    				}
+    			}
+    		}
+            if(setsInRepository != null && sets.size() == 0 && setsInRepository.size() != 0 && getOaiprofiles() == -1) {
                 addActionError("Sorry, all your sets are already being used in other profiles. you need to delete some profiles to continue, or edit profiles");
                 return ERROR;
             }
