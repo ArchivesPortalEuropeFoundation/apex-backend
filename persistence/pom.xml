@@ -14,8 +14,8 @@
 		<finalName>${project.artifactId}</finalName>
 		<extensions>
 			<extension>
-			<groupId>postgresql</groupId>
-			<artifactId>postgresql</artifactId>
+				<groupId>org.postgresql</groupId>
+				<artifactId>postgresql</artifactId>
 				<version>${postgresql.version}</version>
 			</extension>
 		</extensions>
@@ -38,8 +38,8 @@
 	</build>
 	<dependencies>
 		<dependency>
-			<groupId>postgresql</groupId>
-			<artifactId>postgresql</artifactId>
+				<groupId>org.postgresql</groupId>
+				<artifactId>postgresql</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
