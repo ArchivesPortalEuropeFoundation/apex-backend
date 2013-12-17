@@ -3,6 +3,7 @@ package eu.archivesportaleurope.harvester.oaipmh;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.DebugOaiPmhParser;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
 import eu.archivesportaleurope.harvester.parser.other.OaiPmhElement;
+import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
 
 public class ConsoleHarvester {
 	private static final String TRUE = "true";
@@ -43,20 +45,21 @@ public class ConsoleHarvester {
 		this.properties = properties;
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		Map<String, String> parameters = getParameters(args);
 		String baseDirString = ".";
 		Properties properties = null;
 		if (parameters.containsKey(BASE_DIR_PARAMETER)) {
 			baseDirString = parameters.get(BASE_DIR_PARAMETER);
 		}
-		if (parameters.containsKey(CONF_FILE_PARAMETER)) {
-			properties = new Properties();
-			properties.load(new FileInputStream(new File(parameters.get(CONF_FILE_PARAMETER))));
-		}
+
 		File confDir = null;
 		File dataDir = null;
 		try {
+			if (parameters.containsKey(CONF_FILE_PARAMETER)) {
+				properties = new Properties();
+				properties.load(new FileInputStream(new File(parameters.get(CONF_FILE_PARAMETER))));
+			}
 			File baseDir = new File(baseDirString);
 			File logsDir = new File(baseDirString, "logs");
 			dataDir = new File(baseDirString, "data");
@@ -82,22 +85,24 @@ public class ConsoleHarvester {
 		consoleHarvester.start();
 	}
 
-	public void start() {
+	public void start(){
 		logger.info("===============================================");
 		logger.info("Start OAI-PMH Harvester " + ConsoleHarvester.getVersion());
 		logger.info("===============================================");
+		OaiPmhHttpClient oaiPmhHttpClient = null;
 		try {
+			oaiPmhHttpClient = new OaiPmhHttpClient();
 			if (properties == null) {
 				while (metadataFormat == null) {
 					baseUrl = getInput("What is the url of the OAI-PMH server?");
 					try {
-						List<OaiPmhElement> metadataFormats = RetrieveOaiPmhInformation.retrieveMetadataFormats(baseUrl);
+						List<OaiPmhElement> metadataFormats = RetrieveOaiPmhInformation.retrieveMetadataFormats(baseUrl, oaiPmhHttpClient);
 						if (metadataFormats == null || metadataFormats.isEmpty()) {
 							logger.error("No metadata formats for this URL: " + baseUrl);
 						} else {
 							metadataFormat = getInputFromOaiPmhElements("Which metadata format do you want to use?'", metadataFormats);
 						}
-						List<OaiPmhElement> setsInRepository = RetrieveOaiPmhInformation.retrieveSets(baseUrl);
+						List<OaiPmhElement> setsInRepository = RetrieveOaiPmhInformation.retrieveSets(baseUrl,oaiPmhHttpClient);
 						set = getInputFromOaiPmhElements("Which set do you want to use?'", setsInRepository);
 						fromDate = getInputEmptyAllowed("Specify a FROM date or leave empty?(e.g. 2010-12-23)");
 						toDate = getInputEmptyAllowed("Specify a TO date or leave empty?(e.g. 2010-12-23)");
@@ -162,7 +167,7 @@ public class ConsoleHarvester {
 				}
 				try {
 					long startTime = System.currentTimeMillis();
-					OaiPmhHarvester.runOai(baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir);
+					OaiPmhHarvester.runOai(baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir, oaiPmhHttpClient);
 					logger.info("===============================================");
 					calcHMS(System.currentTimeMillis(), startTime);
 				} catch (HarvesterParserException hpe) {
@@ -172,6 +177,14 @@ public class ConsoleHarvester {
 			}
 		} catch (Throwable e) {
 			logger.error("Unexcepted error occurred: " + e.getMessage(), e);
+		}finally{
+			if (oaiPmhHttpClient != null){
+				try {
+					oaiPmhHttpClient.close();
+				}catch(  IOException io){
+					logger.error("Unexcepted error occurred: " + io.getMessage(), io);
+				}
+			}
 		}
 		logger.info("===============================================");
 	}

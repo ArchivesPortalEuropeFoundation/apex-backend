@@ -1,18 +1,10 @@
 package eu.archivesportaleurope.harvester.verb;
 
-import org.xml.sax.SAXException;
-
-import eu.archivesportaleurope.harvester.parser.other.OaiPmhElements;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.List;
+
+import eu.archivesportaleurope.harvester.parser.other.OaiPmhElements;
+import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
 
 /**
  * User: Yoann Moranville
@@ -22,11 +14,15 @@ import java.util.List;
  */
 public class ListSetsSax extends HarvesterVerbSaxMemory {
 
-    public OaiPmhElements run(String baseURL) throws TransformerException, XMLStreamException, IOException, SAXException {
+    public ListSetsSax(OaiPmhHttpClient client) {
+		super(client);
+	}
+
+	public OaiPmhElements run(String baseURL) throws Exception {
         return harvest(getRequestURL(baseURL), HarvesterVerbSaxMemory.SET);
     }
 
-    public OaiPmhElements run(String baseURL, String resumptionToken) throws TransformerException, XMLStreamException, IOException, SAXException {
+    public OaiPmhElements run(String baseURL, String resumptionToken) throws Exception {
         return harvest(getRequestURL(baseURL, resumptionToken), HarvesterVerbSaxMemory.SET);
     }
 
