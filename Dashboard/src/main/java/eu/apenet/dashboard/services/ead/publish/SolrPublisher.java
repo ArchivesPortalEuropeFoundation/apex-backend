@@ -589,7 +589,7 @@ public class SolrPublisher {
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			String text = removeUnusedCharacters(nodeList.item(i).getTextContent());
 			if (StringUtils.isNotBlank(text)) {
-				results.add(text);
+				results.add(text.toUpperCase());
 			}
 		}
 		return results;
