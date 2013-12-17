@@ -140,7 +140,7 @@ public class ConsoleHarvester {
 			} else {
 				logger.info("Store method:\t\t\t\t" + SAVE_ONLY_THE_METADATA_RECORD_E_G_EAD_OR_EDM_FILES);
 			}
-			File baseUrlDataDir = new File(dataDir, convertToFilename(baseUrl));
+			File baseUrlDataDir = new File(dataDir, convertToFilename(minimizeBaseUrlDataDir(baseUrl)));
 			File metaDataFormatDataDir = new File(baseUrlDataDir, convertToFilename(metadataFormat));
 			File outputDir = new File(metaDataFormatDataDir, convertToFilename(set));
 
@@ -205,6 +205,11 @@ public class ConsoleHarvester {
 		return parameters;
 	}
 
+	private String minimizeBaseUrlDataDir(String url){
+	       String temp = url.replaceAll("https://", "").replaceAll("http://", "");
+	       String[] splitted = temp.split("/");
+	       return splitted[0];
+	}
 	private void calcHMS(long stopTime, long startTime) {
 		int hours, minutes, seconds;
 		int timeInSeconds = (int) ((stopTime - startTime) / 1000);
