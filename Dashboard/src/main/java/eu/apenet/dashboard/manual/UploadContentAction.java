@@ -415,19 +415,12 @@ public class UploadContentAction extends AbstractInstitutionAction {
             log.error(e);
             return NONE;
         }
-        if (ingestionprofile != null && !ingestionprofile.isEmpty()) {
-            IngestionprofileDAO profileDAO = DAOFactory.instance().getIngestionprofileDAO();
-            Ingestionprofile profile = profileDAO.findById(Long.parseLong(ingestionprofile));
-            if (profile != null) {
-                processWithProfile(profile);
-                return "profile";
-            }
-        }
         return SUCCESS;
     }
 
     /**
-     * Will create an entry to the database for the uploaded file
+     * Will create an entry to the database for the uploaded file;
+     * if file is processed with profile, will directly add it to queue
      *
      * @param filePath The current location of the saved file
      * @param uploadMethodString Depending if the file has been harvest or downloaded from an FTP server
@@ -448,6 +441,8 @@ public class UploadContentAction extends AbstractInstitutionAction {
 
         upFile.setFilename(filePath);
         upFileDao.store(upFile);
+
+        processWithProfile(upFile);
     }
 
     /**
@@ -523,7 +518,7 @@ public class UploadContentAction extends AbstractInstitutionAction {
                 format = this.getHttpFileFileName().substring(this.getHttpFileFileName().lastIndexOf(".") + 1).toLowerCase();
                 uploader_http = new ManualHTTPUploader(uploadMethod);
                 log.info("Starting uploadFile process for '" + this.getHttpFileFileName() + "' file name.");
-                if(profile != null){
+                if (profile != null) {
                     result = uploader_http.uploadFile(uploadType, this.getHttpFileFileName(), this.getHttpFile(), format.toLowerCase(), aiId, uploadMethod, profile);
                 } else {
                     result = uploader_http.uploadFile(uploadType, this.getHttpFileFileName(), this.getHttpFile(), format.toLowerCase(), aiId, uploadMethod);
@@ -578,15 +573,17 @@ public class UploadContentAction extends AbstractInstitutionAction {
         return properties;
     }
 
-    private void processWithProfile(Ingestionprofile profile) {
-        Properties properties = retrieveProperties(profile);
-        UpFileDAO upFileDAO = DAOFactory.instance().getUpFileDAO();
-        List<UpFile> upFiles = upFileDAO.getAllNewUpFiles(getAiId(), FileType.XML);
-        for (UpFile upFile : upFiles) {
-            try {
-                EadService.useProfileAction(upFile, properties);
-            } catch (Exception ex) {
-                LOG.error("Failed when adding the new up files into the queue", ex);
+    private void processWithProfile(UpFile upFile) {
+        if (ingestionprofile != null && !ingestionprofile.isEmpty()) {
+            IngestionprofileDAO profileDAO = DAOFactory.instance().getIngestionprofileDAO();
+            Ingestionprofile profile = profileDAO.findById(Long.parseLong(ingestionprofile));
+            if (profile != null) {
+                Properties properties = retrieveProperties(profile);
+                try {
+                    EadService.useProfileAction(upFile, properties);
+                } catch (Exception ex) {
+                    LOG.error("Failed when adding the new up files into the queue", ex);
+                }
             }
         }
     }
