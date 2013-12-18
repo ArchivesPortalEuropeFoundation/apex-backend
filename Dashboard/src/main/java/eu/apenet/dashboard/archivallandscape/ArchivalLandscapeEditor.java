@@ -11,6 +11,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import eu.apenet.persistence.vo.*;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.infraestructure.ArchivalInstitutionUnit;
@@ -23,10 +24,6 @@ import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.LangDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.AiAlternativeName;
-import eu.apenet.persistence.vo.ArchivalInstitution;
-import eu.apenet.persistence.vo.Country;
-import eu.apenet.persistence.vo.Lang;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
@@ -402,6 +399,8 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			JpaUtil.beginDatabaseTransaction();
 				ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
 				ArchivalInstitution ai = aiDao.findById(new Integer(aiId));
+            deleteHarvestingProfiles(ai.getAiId());
+            deleteIngestionProfiles(ai.getAiId());
 				//update the rest of the orders (all siblings are inconsistents)
 				int oldOrder = ai.getAlorder();
 				ArchivalInstitution parent = ai.getParent();
@@ -457,6 +456,16 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		}
 		return messenger.toString();
 	}
+
+    private void deleteHarvestingProfiles(int aiId) {
+        List<ArchivalInstitutionOaiPmh> archivalInstitutionOaiPmhs = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().getArchivalInstitutionOaiPmhs(aiId);
+        DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().delete(archivalInstitutionOaiPmhs);
+    }
+
+    private void deleteIngestionProfiles(int aiId) {
+        List<Ingestionprofile> ingestionprofiles = DAOFactory.instance().getIngestionprofileDAO().getIngestionprofiles(aiId);
+        DAOFactory.instance().getIngestionprofileDAO().delete(ingestionprofiles);
+    }
 
 	private String createArchivalInstitution(String name,String father,String type,String lang){
 		StringBuilder messenger = new StringBuilder();
