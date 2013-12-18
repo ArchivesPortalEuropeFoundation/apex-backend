@@ -163,7 +163,7 @@
             if(isAddedLevel){
                 var parent = node.parent;
                 node.remove();
-                parent.render();
+                $("#tree").dynatree("getTree").activateKey(parent.data.key);
             }
             $.fn.colorbox.close();
         });
