@@ -79,9 +79,9 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
             Writer writer = openOutputWriter();
             ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(getAiId());
             String eadid = "HG_" + archivalInstitution.getRepositorycode() + "_"+System.currentTimeMillis();
+            eadid = eadid.substring(0,eadid.length()-4);
             CLevelTreeNode levelTreeNode = createCLevelTreeNode();
-            levelTreeNode.setUnitid(eadid);
-            StringWriter eadContentXml = createEadContentData(archivalInstitution, levelTreeNode);
+            StringWriter eadContentXml = createEadContentData(archivalInstitution, levelTreeNode, eadid);
             EadContent eadContent;
             if(StringUtils.isEmpty(getServletRequest().getParameter("key"))){
             	Ead holdingsGuide = new HoldingsGuide();
@@ -218,7 +218,7 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
         return cLevel;
     }
 
-    public StringWriter createEadContentData(ArchivalInstitution archivalInstitution, CLevelTreeNode levelTreeNode) throws XMLStreamException, IOException {
+    public StringWriter createEadContentData(ArchivalInstitution archivalInstitution, CLevelTreeNode levelTreeNode, String eadid) throws XMLStreamException, IOException {
         XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
         StringWriter archdesc = new StringWriter();
         XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(archdesc);
@@ -246,7 +246,7 @@ public class HoldingsGuideTreeCreation extends AjaxControllerAbstractAction {
         writer.writeAttribute("countrycode", archivalInstitution.getCountry().getIsoname());
         writer.writeAttribute("mainagencycode", archivalInstitution.getRepositorycode());
         writer.writeAttribute("identifier", archivalInstitution.getCountry().getIsoname() + "_" + archivalInstitution.getRepositorycode());
-        writer.writeCharacters(levelTreeNode.getUnitid());
+        writer.writeCharacters(eadid);
         writer.writeEndElement();
 
         qName = new QName(AbstractParser.APENET_EAD, "filedesc");
