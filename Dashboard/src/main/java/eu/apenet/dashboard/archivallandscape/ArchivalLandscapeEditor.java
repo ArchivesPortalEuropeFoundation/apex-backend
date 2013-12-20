@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 import eu.apenet.persistence.vo.*;
+
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.infraestructure.ArchivalInstitutionUnit;
@@ -22,6 +23,8 @@ import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
+import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
+import eu.apenet.persistence.dao.IngestionprofileDAO;
 import eu.apenet.persistence.dao.LangDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
@@ -352,7 +355,13 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 						}
 					}
 					aiDao.updateSimple(archivalInstitutionTarget);
+					buffer.append("[");
 					buffer.append(buildNode("info",getText("al.message.groupchanged")));
+//					if(parentArchivalInstitution!=null){
+						buffer.append(COMMA);
+						buffer.append(buildParentsNode(parentArchivalInstitution));
+//					}
+					buffer.append("]");
 				}
 			}else{
 				buffer.append(buildNode("error",getText("al.message.grouptargetisparent"))); 
@@ -361,6 +370,21 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		// The final commits
 		JpaUtil.commitDatabaseTransaction();
 		return buffer.toString();
+	}
+
+	private String buildParentsNode(ArchivalInstitution parentArchivalInstitution) {
+		StringBuffer parents = new StringBuffer();
+		if(parentArchivalInstitution!=null){
+			parents.append("aigroup_"+parentArchivalInstitution.getAiId());
+			while(parentArchivalInstitution.getParentAiId()!=null){
+				parentArchivalInstitution = parentArchivalInstitution.getParent();
+				parents.append(",");
+				parents.append("aigroup_"+parentArchivalInstitution.getAiId());
+			}
+			parents.append(",");
+		}
+		parents.append("country_"+SecurityContext.get().getCountryId());
+		return buildNode("newparents",parents.toString());
 	}
 
 	private String getAllCountryGroups() {
@@ -399,8 +423,8 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			JpaUtil.beginDatabaseTransaction();
 				ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
 				ArchivalInstitution ai = aiDao.findById(new Integer(aiId));
-            deleteHarvestingProfiles(ai.getAiId());
-            deleteIngestionProfiles(ai.getAiId());
+            deleteHarvestingProfiles(ai.getAiId()); //#983
+            deleteIngestionProfiles(ai.getAiId()); //#983
 				//update the rest of the orders (all siblings are inconsistents)
 				int oldOrder = ai.getAlorder();
 				ArchivalInstitution parent = ai.getParent();
@@ -458,13 +482,21 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 	}
 
     private void deleteHarvestingProfiles(int aiId) {
-        List<ArchivalInstitutionOaiPmh> archivalInstitutionOaiPmhs = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().getArchivalInstitutionOaiPmhs(aiId);
-        DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().delete(archivalInstitutionOaiPmhs);
+    	ArchivalInstitutionOaiPmhDAO dao = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
+        List<ArchivalInstitutionOaiPmh> archivalInstitutionOaiPmhs = dao.getArchivalInstitutionOaiPmhs(aiId);
+        Iterator<ArchivalInstitutionOaiPmh> it = archivalInstitutionOaiPmhs.iterator();
+        while(it.hasNext()){
+        	dao.deleteSimple(it.next());
+        }
     }
 
     private void deleteIngestionProfiles(int aiId) {
-        List<Ingestionprofile> ingestionprofiles = DAOFactory.instance().getIngestionprofileDAO().getIngestionprofiles(aiId);
-        DAOFactory.instance().getIngestionprofileDAO().delete(ingestionprofiles);
+    	IngestionprofileDAO profileDAO = DAOFactory.instance().getIngestionprofileDAO();
+        List<Ingestionprofile> ingestionprofiles = profileDAO.getIngestionprofiles(aiId);
+        Iterator<Ingestionprofile> it = ingestionprofiles.iterator();
+        while(it.hasNext()){
+        	profileDAO.deleteSimple(it.next());
+        }
     }
 
 	private String createArchivalInstitution(String name,String father,String type,String lang){
