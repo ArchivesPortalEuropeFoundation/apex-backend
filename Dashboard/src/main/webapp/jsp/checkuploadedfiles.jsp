@@ -333,7 +333,7 @@
     			var string = $("#neweadid"+eadid).val();
 				if($.trim(string).length>0){
 					//begin pattern check
-	                var pattern = new RegExp("^[a-zA-Z0-9\\s)]+$");
+	                var pattern = new RegExp("^[a-zA-Z0-9\\s]+$");
 	                var result = pattern.test(string);
 	                if(!result){
 	                	//The EADID must not include special characters
