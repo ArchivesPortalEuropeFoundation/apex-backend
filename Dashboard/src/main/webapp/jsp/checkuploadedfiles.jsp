@@ -330,7 +330,7 @@
         	    $("input#form_submit").attr("disabled","disabled");
     			document.getElementById("SaveChangesButton" + eadid).disabled=true;
     			document.getElementById("resultChangeEADID" + eadid).style.display='none';
-    			var string = $("#neweadid"+eadid).val();
+    			var string = $("[id='neweadid"+eadid+"']").val();
 				if($.trim(string).length>0){
 					//begin pattern check
 	                var pattern = new RegExp("^[a-zA-Z0-9\\s]+$");
@@ -339,7 +339,7 @@
 	                	//The EADID must not include special characters
 						alert("<s:property value="getText('content.message.EadidWithSpecialCharacter')" />");
 	                	var newString = string.substring(0,string.length-1);
-	                	$("#neweadid"+eadid).val(newString);
+	                	$("[id='neweadid"+eadid+"']").val(newString);
 	                }else{
 	                	document.getElementById("SaveChangesButton" + eadid).disabled=false;
 	                }
