@@ -338,6 +338,8 @@
 	                if(!result){
 	                	//The EADID must not include special characters
 						alert("<s:property value="getText('content.message.EadidWithSpecialCharacter')" />");
+	                	var newString = string.substring(0,string.length-1);
+	                	$("#neweadid"+eadid).val(newString);
 	                }else{
 	                	document.getElementById("SaveChangesButton" + eadid).disabled=false;
 	                }
