@@ -261,7 +261,8 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
 		ArchivalInstitution archivalInstitutionTarget = aiDao.getArchivalInstitution(aiId);
 		if(archivalInstitutionTarget!=null){
-			if (ContentUtils.containsPublishedFiles(archivalInstitutionTarget)) {
+			//if (ContentUtils.containsPublishedFiles(archivalInstitutionTarget)) {
+			if (archivalInstitutionTarget.isContainSearchableItems()) {
 				// rollback
 				JpaUtil.rollbackDatabaseTransaction();
 				buffer.append(buildNode("error",getText("al.message.error.not.possible.move")));
@@ -784,9 +785,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			ArchivalInstitution ai = archivalInstitutionDAO.getArchivalInstitution(aiId);
 			AiAlternativeName alternativeName = aiAlternativesNamesDAO.findByAIIdandLang(ai,language);
 
-			if(alternativeName!=null
-					&& alternativeName.getPrimaryName() != null
-					&& !alternativeName.getPrimaryName()){
+			if(alternativeName!=null && alternativeName.getPrimaryName() != null && !alternativeName.getPrimaryName()){
 				if(alternativeName!=null && alternativeName.getAiAName()!=null){ 
 					//name exists, so it's needed a deleteSimple operation
 					alternativeName.setAiAName(name);
@@ -794,9 +793,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					buffer.append(buildNode("info",getText("al.message.alternativenameremoved")));
 				}
 			}else{
-				if (alternativeName!=null
-						&& alternativeName.getPrimaryName() != null
-						&& alternativeName.getPrimaryName()) {
+				if (alternativeName!=null && alternativeName.getPrimaryName() != null && alternativeName.getPrimaryName()) {
 					buffer.append(buildNode("error",getText("al.message.cannotremovefirstalternativename")));
 				} else {
 					buffer.append(buildNode("error",getText("al.message.badalternativename")));
