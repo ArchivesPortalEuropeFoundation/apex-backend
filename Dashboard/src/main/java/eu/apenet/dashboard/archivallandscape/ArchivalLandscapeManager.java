@@ -94,6 +94,8 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	// Error when an institution has content published.
 	private static final String ERROR_CONTENT = "errorContent";
 
+	private static final String AL_GLOBAL_UNITTITLE = "European countries";
+
 	private List<ArchivalInstitution> totalInstitutions;
 	private Map<String,ArchivalInstitution> groupsInsertedIntoDDBB;
 	private List<ArchivalInstitution> updatedInstitutions;
@@ -1330,6 +1332,15 @@ public class ArchivalLandscapeManager extends AbstractAction{
 					
 					eadContent.append(openArchDesc());
 						eadContent.append(openDsc());
+						
+						eadContent.append("\n\t\t\t<did>");
+							eadContent.append("\n\t\t\t\t<unittitle");
+							eadContent.append(" encodinganalog=\""+AL_GLOBAL_ENCODINGANALOG+"\"");
+							eadContent.append(" type=\"eng\">");
+							eadContent.append(AL_GLOBAL_UNITTITLE);
+							eadContent.append("</unittitle>");
+						eadContent.append("\n\t\t\t</did>");
+						
 							eadContent.append(buildCLevel(countryName,0)); //each archival institution is a C level
 						eadContent.append(closeDsc());
 					eadContent.append(closeArchDesc());
@@ -1403,7 +1414,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 				String lang = couAlternativeName.getLang().getIsoname().toLowerCase(); //TODO, parse to 3_char_isoname
 				alternativeNames.put(lang,couAlternativeName.getCouAnName());
 			}
-			cLevel.append(buildDidNode(alternativeNames,null,tabs));
+			cLevel.append(buildDidNode(null,alternativeNames,tabs));
 		}
 		ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
 		List<ArchivalInstitution> listCountryArchivalInstitutions = archivalInstitutionDAO.getArchivalInstitutionsByCountryIdForAL(country.getId(),true);
@@ -1505,7 +1516,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 			didNode.append("\n"+tabs+"\t");
 			didNode.append("<did>");
 			Iterator<String> keyIterator = mainAlternativeName.keySet().iterator(); //should be only one
-			if(keyIterator.hasNext()){ //this should only have one unique
+			while(keyIterator.hasNext()){ //this should only have one unique
 				String key = keyIterator.next();
 				didNode.append("\n"+tabs+"\t\t");
 				didNode.append("<unittitle");
