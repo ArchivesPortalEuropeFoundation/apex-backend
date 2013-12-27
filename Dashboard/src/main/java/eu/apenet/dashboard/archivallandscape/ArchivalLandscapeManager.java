@@ -1331,8 +1331,6 @@ public class ArchivalLandscapeManager extends AbstractAction{
 					eadContent.append(closeEadHeader());
 					
 					eadContent.append(openArchDesc());
-						eadContent.append(openDsc());
-						
 						eadContent.append("\n\t\t\t<did>");
 							eadContent.append("\n\t\t\t\t<unittitle");
 							eadContent.append(" encodinganalog=\""+AL_GLOBAL_ENCODINGANALOG+"\"");
@@ -1340,7 +1338,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 							eadContent.append(AL_GLOBAL_UNITTITLE);
 							eadContent.append("</unittitle>");
 						eadContent.append("\n\t\t\t</did>");
-						
+						eadContent.append(openDsc());
 							eadContent.append(buildCLevel(countryName,0)); //each archival institution is a C level
 						eadContent.append(closeDsc());
 					eadContent.append(closeArchDesc());
