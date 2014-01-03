@@ -617,10 +617,7 @@ function checkAllContactTabs(text1, message) {
 		if(jsonData.substring(jsonData.length-1)=='}'){
 			jsonData += ",";
 		}
-
 		jsonData += "'contactTable_" + i + "':";
-//		jsonData += "'contactTable" + array[i] + "':";
-
 		var check = checkContactTab("_" + i, text1, message);
 		if (!check){
 			return false;
