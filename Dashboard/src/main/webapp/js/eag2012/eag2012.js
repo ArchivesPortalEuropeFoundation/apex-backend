@@ -611,10 +611,6 @@ var clickContactAction = function(text1, message){
 
 function checkAllContactTabs(text1, message) {
 	var counter = $("table[id^='contactTable_']").length;
-	// for each contactTable_
-	// $(this).attr("id");
-	// id.indexOf("_")
-	// array.put(id.substring(int)
 	var jsonData = "{";
 
 	for (var i = 1; i <= counter; i++) {
