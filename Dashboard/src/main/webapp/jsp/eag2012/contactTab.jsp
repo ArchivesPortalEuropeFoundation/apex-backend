@@ -32,6 +32,11 @@
 							</select>
 						</td>
 					</tr>
+					<tr>
+					  <td colspan="2">
+					   	<input type="button" id="buttonDeleteRepository"  value="<s:property value='getText("eag2012.commons.deleteRepository")' />" onclick="deleteRepository();" />
+					  </td>
+					</tr> 
 				</s:if>
 
 				<s:set var="numberOfVisitorsAddress" value="loader.contactNumberOfVisitorsAddress[#counter]"/>
