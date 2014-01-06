@@ -35,7 +35,7 @@
 	-moz-border-left-colors: none;
 	-moz-border-right-colors: none;
 	-moz-border-top-colors: none;
-	background: url("../../images/eag2012/tabbg.jpg") repeat scroll 0 0 #99CCFF;
+	background: url("../images/eag2012/tabbg.jpg") repeat scroll 0 0 #99CCFF;
 	border-color: #79B7E7 #79B7E7 -moz-use-text-color;
 	border-style: solid solid none;
 	border-top-right-radius: 25px;
@@ -120,7 +120,7 @@
 }
 
 #ingestionprofileTabs li a:active {
-	background: url("../../images/eag2012/tabbg.jpg") repeat scroll 0 0 #99CCFF;
+	background: url("../images/eag2012/tabbg.jpg") repeat scroll 0 0 #99CCFF;
 	padding: 3px 10px;
 	-moz-border-radius-topleft: 5px;
 	-webkit-border-top-left-radius: 5px;
@@ -130,7 +130,7 @@
 }
 
 #ingestionprofileTabs li a:after,.ingestionprofileCurrenttab {
-	background: url("../../images/eag2012/tabbg.jpg") repeat scroll 0 0 #99CCFF;
+	background: url("../images/eag2012/tabbg.jpg") repeat scroll 0 0 #99CCFF;
 	padding: 3px 10px;
 	color: #000000;
 	-moz-border-radius-topleft: 5px;
@@ -141,7 +141,7 @@
 }
 
 #ingestionprofileTabs .ingestionprofileCurrenttab:hover {
-	background: url("../../images/eag2012/tabbg.jpg") repeat scroll 0 0 #99CCFF;
+	background: url("../images/eag2012/tabbg.jpg") repeat scroll 0 0 #99CCFF;
 	padding: 3px 10px;
 	color: #000000;
 	-moz-border-radius-topleft: 5px;
