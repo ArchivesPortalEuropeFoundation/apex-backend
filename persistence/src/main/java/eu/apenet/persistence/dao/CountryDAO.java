@@ -16,5 +16,6 @@ public interface CountryDAO extends GenericDAO<Country, Integer> {
 	public List<Country> getCountriesWithContentIndexedOrderByCName();
 	public List<Country> getCountriesWithArchivalInstitutionsWithEAG();
 	public List<Country> getCountriesWithSearchableItems();
+	public List<Country> getCountries(List<Integer> countryIds);
 }
 

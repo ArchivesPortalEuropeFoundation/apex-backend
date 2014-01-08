@@ -5,6 +5,10 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -157,5 +161,24 @@ private final Logger log = Logger.getLogger(getClass());
 	}
 	
 
+	@Override
+	public List<Country> getCountries(List<Integer> countryIds) {
+		long startTime = System.currentTimeMillis();
+		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Country> cq = criteriaBuilder.createQuery(Country.class);
+		Root<Country> from = cq.from(Country.class);
+		List<Predicate> whereClause = new ArrayList<Predicate>();
+		for (Integer countryId : countryIds) {
+			whereClause.add(criteriaBuilder.equal(from.get("id"), countryId));
+		}
+		cq.where(criteriaBuilder.or(whereClause.toArray(new Predicate[0])));
+		cq.orderBy(criteriaBuilder.asc(from.get("cname")));
+		List<Country> results = getEntityManager().createQuery(cq).getResultList();
+		long endTime = System.currentTimeMillis();
+		if (log.isDebugEnabled()) {
+			log.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
+		}
+		return results;
 
+	}
 }

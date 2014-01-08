@@ -22,9 +22,9 @@ import org.hibernate.criterion.Restrictions;
 
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.vo.ArchivalInstitution;
-import eu.apenet.persistence.vo.Ead;
 
-public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<ArchivalInstitution, Integer> implements ArchivalInstitutionDAO {
+public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<ArchivalInstitution, Integer> implements
+		ArchivalInstitutionDAO {
 
 	private final Logger log = Logger.getLogger(getClass());
 
@@ -189,10 +189,11 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdForAL(Integer countryId, boolean onlyWithoutPartnerIds) {
+	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdForAL(Integer countryId,
+			boolean onlyWithoutPartnerIds) {
 		long startTime = System.currentTimeMillis();
 		List<ArchivalInstitution> results = null;
-		Criteria criteria = buildArchivalInstitutionCriteriaByCountryId(countryId,null,onlyWithoutPartnerIds,null);
+		Criteria criteria = buildArchivalInstitutionCriteriaByCountryId(countryId, null, onlyWithoutPartnerIds, null);
 		results = criteria.list();
 		long endTime = System.currentTimeMillis();
 		if (log.isDebugEnabled()) {
@@ -205,16 +206,17 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 	/**
 	 * Criteria instance has been called to "archivalInstitution"
 	 */
-    private Criteria buildArchivalInstitutionCriteriaByCountryId(Integer countryId,Collection<String> internalAlIds, boolean onlyWithoutPartnerIds,Boolean exclude) {
-    	Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
+	private Criteria buildArchivalInstitutionCriteriaByCountryId(Integer countryId, Collection<String> internalAlIds,
+			boolean onlyWithoutParentIds, Boolean exclude) {
+		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		criteria.add(Restrictions.eq("archivalInstitution.countryId", countryId));
-		if (onlyWithoutPartnerIds) {
+		if (onlyWithoutParentIds) {
 			criteria.add(Restrictions.isNull("archivalInstitution.parentAiId"));
 		}
-		if(internalAlIds!=null && exclude!=null && internalAlIds.size()>0){
-			Criterion restriction = Restrictions.in("archivalInstitution.internalAlId",internalAlIds);
-			if(exclude){
+		if (internalAlIds != null && exclude != null && internalAlIds.size() > 0) {
+			Criterion restriction = Restrictions.in("archivalInstitution.internalAlId", internalAlIds);
+			if (exclude) {
 				restriction = Restrictions.not(restriction);
 			}
 			criteria.add(restriction);
@@ -224,41 +226,39 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 	}
 
 	@SuppressWarnings("unchecked")
-    @Override
-    public List<ArchivalInstitution> getArchivalInstitutionsByCountryId(Integer countryId) {
-        return  getArchivalInstitutionsByCountryId(countryId, false);
-    }
-    
-    @SuppressWarnings("unchecked")
-	public List<ArchivalInstitution> getArchivalInstitutionsWithRepositoryCode(){
+	@Override
+	public List<ArchivalInstitution> getArchivalInstitutionsByCountryId(Integer countryId) {
+		return getArchivalInstitutionsByCountryId(countryId, false);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ArchivalInstitution> getArchivalInstitutionsWithRepositoryCode() {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
-		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);    	
+		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		criteria.addOrder(Order.asc("archivalInstitution.repositorycode"));
 		criteria.add(Restrictions.isNotNull("repositorycode"));
-		return  criteria.list();
-    }
-    
-    @SuppressWarnings("unchecked")
-	public boolean isRepositoryCodeAvailable(String repositorycode, Integer aiId){
+		return criteria.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	public boolean isRepositoryCodeAvailable(String repositorycode, Integer aiId) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
-		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);    	
+		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		criteria.addOrder(Order.asc("archivalInstitution.repositorycode"));
 		criteria.add(Restrictions.eq("repositorycode", repositorycode));
 		criteria.add(Restrictions.ne("aiId", aiId));
 		criteria.setMaxResults(1);
 		List<ArchivalInstitution> results = criteria.list();
-		if (results.size() == 0){
+		if (results.size() == 0) {
 			return true;
-		}else {
+		} else {
 			return false;
 		}
-    }
-
+	}
 
 	private Criteria createArchivalInstitutionCriteria(boolean group, String sortValue, boolean ascending) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		
 
 		criteria.add(Restrictions.eq("group", group));
 		if ("countryId".equals(sortValue)) {
@@ -308,13 +308,14 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		criteria.add(Restrictions.eq("countryId", countryId));
 		criteria.add(Restrictions.isNull("parent"));
-		List<ArchivalInstitution> results =  criteria.list();
+		List<ArchivalInstitution> results = criteria.list();
 		long endTime = System.currentTimeMillis();
 		if (log.isDebugEnabled()) {
 			log.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
 		}
 		return results;
 	}
+
 	@Override
 	public List<ArchivalInstitution> getArchivalInstitutionsWithSearchableItems(Integer countryId, Integer parentAiId) {
 		long startTime = System.currentTimeMillis();
@@ -322,25 +323,25 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 		CriteriaQuery<ArchivalInstitution> cq = criteriaBuilder.createQuery(ArchivalInstitution.class);
 		Root<ArchivalInstitution> from = cq.from(ArchivalInstitution.class);
 		List<Predicate> whereClause = new ArrayList<Predicate>();
-		if (countryId != null){
-			whereClause.add(criteriaBuilder.equal(from.get("countryId"), countryId));	
+		if (countryId != null) {
+			whereClause.add(criteriaBuilder.equal(from.get("countryId"), countryId));
 		}
-		if (parentAiId == null){
+		if (parentAiId == null) {
 			whereClause.add(criteriaBuilder.isNull(from.get("parentAiId")));
-		}else {
-			whereClause.add(criteriaBuilder.equal(from.get("parentAiId"), parentAiId));	
+		} else {
+			whereClause.add(criteriaBuilder.equal(from.get("parentAiId"), parentAiId));
 		}
 		whereClause.add(criteriaBuilder.equal(from.get("containSearchableItems"), true));
 		cq.where(criteriaBuilder.and(whereClause.toArray(new Predicate[0])));
 		cq.orderBy(criteriaBuilder.asc(from.get("alorder")));
-		List<ArchivalInstitution> results =  getEntityManager().createQuery(cq).getResultList();
+		List<ArchivalInstitution> results = getEntityManager().createQuery(cq).getResultList();
 		long endTime = System.currentTimeMillis();
 		if (log.isDebugEnabled()) {
 			log.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
 		}
 		return results;
 	}
-	
+
 	@Override
 	public List<ArchivalInstitution> getArchivalInstitutionsWithoutGroupsWithSearchableItems() {
 		long startTime = System.currentTimeMillis();
@@ -351,13 +352,14 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 		whereClause.add(criteriaBuilder.equal(from.get("containSearchableItems"), true));
 		whereClause.add(criteriaBuilder.equal(from.get("group"), false));
 		cq.where(criteriaBuilder.and(whereClause.toArray(new Predicate[0])));
-		List<ArchivalInstitution> results =  getEntityManager().createQuery(cq).getResultList();
+		List<ArchivalInstitution> results = getEntityManager().createQuery(cq).getResultList();
 		long endTime = System.currentTimeMillis();
 		if (log.isDebugEnabled()) {
 			log.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
 		}
 		return results;
 	}
+
 	private Criteria createArchivalInstitutionByParentAiIdCriteria(Integer parentAiId) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -425,7 +427,7 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 
 		return results;
 	}
-	
+
 	@Override
 	public List<ArchivalInstitution> getArchivalInstitutionsGroupsByCountryId(Integer couId) {
 		long startTime = System.currentTimeMillis();
@@ -435,7 +437,7 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 		if (couId != null) {
 			criteria.add(Restrictions.eq("countryId", couId));
 		}
-		criteria.add(Restrictions.eq("group",true));
+		criteria.add(Restrictions.eq("group", true));
 		results = criteria.list();
 		long endTime = System.currentTimeMillis();
 		if (log.isDebugEnabled()) {
@@ -480,8 +482,8 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
 		Root<ArchivalInstitution> from = cq.from(ArchivalInstitution.class);
 		List<Predicate> whereClause = new ArrayList<Predicate>();
-		whereClause.add(criteriaBuilder.equal(from.get("group"), false));	
-		whereClause.add(criteriaBuilder.equal(from.get("containSearchableItems"), true));	
+		whereClause.add(criteriaBuilder.equal(from.get("group"), false));
+		whereClause.add(criteriaBuilder.equal(from.get("containSearchableItems"), true));
 		cq.where(criteriaBuilder.and(whereClause.toArray(new Predicate[0])));
 		cq.select(criteriaBuilder.countDistinct(from));
 
@@ -489,31 +491,23 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 	}
 
 	@Override
-	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdUnless(Integer countryId,List<ArchivalInstitution> archivalInstitutionUnless,boolean onlyWithoutPartnerIds) {
+	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdUnless(Integer countryId,
+			List<ArchivalInstitution> archivalInstitutionUnless, boolean onlyWithoutPartnerIds) {
 		long startTime = System.currentTimeMillis();
 		List<ArchivalInstitution> results = null;
 		Iterator<ArchivalInstitution> it = archivalInstitutionUnless.iterator();
 		Set<String> internalAlIds = new HashSet<String>();
-		while(it.hasNext()){
+		while (it.hasNext()) {
 			ArchivalInstitution aiLess = it.next();
-			if(aiLess.getInternalAlId()!=null){ //better could be used aiId, but by now is a primitive value, and null checks are not available
+			if (aiLess.getInternalAlId() != null) { // better could be used
+													// aiId, but by now is a
+													// primitive value, and null
+													// checks are not available
 				internalAlIds.add(aiLess.getInternalAlId());
 			}
 		}
-		Criteria criteria = buildArchivalInstitutionCriteriaByCountryId(countryId,internalAlIds,onlyWithoutPartnerIds,true);
-		results = criteria.list();
-		long endTime = System.currentTimeMillis();
-		if (log.isDebugEnabled()) {
-			log.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
-		}
-		return results;
-	}
-	
-	@Override
-	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdUnless(Integer countryId,Collection<String> internalAlIds,boolean onlyWithoutPartnerIds) {
-		long startTime = System.currentTimeMillis();
-		List<ArchivalInstitution> results = null;
-		Criteria criteria = buildArchivalInstitutionCriteriaByCountryId(countryId,internalAlIds,onlyWithoutPartnerIds,true);
+		Criteria criteria = buildArchivalInstitutionCriteriaByCountryId(countryId, internalAlIds,
+				onlyWithoutPartnerIds, true);
 		results = criteria.list();
 		long endTime = System.currentTimeMillis();
 		if (log.isDebugEnabled()) {
@@ -523,31 +517,38 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 	}
 
 	@Override
-	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdIncluded(Integer countryId,List<ArchivalInstitution> archivalInstitutionUnless,boolean onlyWithoutPartnerIds) {
+	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdUnless(Integer countryId,
+			Collection<String> internalAlIds, boolean onlyWithoutPartnerIds) {
+		long startTime = System.currentTimeMillis();
+		List<ArchivalInstitution> results = null;
+		Criteria criteria = buildArchivalInstitutionCriteriaByCountryId(countryId, internalAlIds,
+				onlyWithoutPartnerIds, true);
+		results = criteria.list();
+		long endTime = System.currentTimeMillis();
+		if (log.isDebugEnabled()) {
+			log.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
+		}
+		return results;
+	}
+
+	@Override
+	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdIncluded(Integer countryId,
+			List<ArchivalInstitution> archivalInstitutionUnless, boolean onlyWithoutPartnerIds) {
 		long startTime = System.currentTimeMillis();
 		List<ArchivalInstitution> results = null;
 		Iterator<ArchivalInstitution> it = archivalInstitutionUnless.iterator();
 		Set<String> internalAlIds = new HashSet<String>();
-		while(it.hasNext()){
+		while (it.hasNext()) {
 			ArchivalInstitution aiLess = it.next();
-			if(aiLess.getInternalAlId()!=null){ //better could be used aiId, but by now is a primitive value, and null checks are not available
+			if (aiLess.getInternalAlId() != null) { // better could be used
+													// aiId, but by now is a
+													// primitive value, and null
+													// checks are not available
 				internalAlIds.add(aiLess.getInternalAlId());
 			}
 		}
-		Criteria criteria = buildArchivalInstitutionCriteriaByCountryId(countryId,internalAlIds,onlyWithoutPartnerIds,false);
-		results = criteria.list();
-		long endTime = System.currentTimeMillis();
-		if (log.isDebugEnabled()) {
-			log.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
-		}
-		return results;
-	}
-	
-	@Override
-	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdIncluded(Integer countryId,Collection<String> internalAlIds,boolean onlyWithoutPartnerIds) {
-		long startTime = System.currentTimeMillis();
-		List<ArchivalInstitution> results = null;
-		Criteria criteria = buildArchivalInstitutionCriteriaByCountryId(countryId,internalAlIds,onlyWithoutPartnerIds,false);
+		Criteria criteria = buildArchivalInstitutionCriteriaByCountryId(countryId, internalAlIds,
+				onlyWithoutPartnerIds, false);
 		results = criteria.list();
 		long endTime = System.currentTimeMillis();
 		if (log.isDebugEnabled()) {
@@ -557,11 +558,12 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 	}
 
 	@Override
-	public List<ArchivalInstitution> getArchivalInstitutionsByCountryId(Integer countryId, boolean onlyWithoutPartnerIds,boolean hasContentIndexed) {
+	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdIncluded(Integer countryId,
+			Collection<String> internalAlIds, boolean onlyWithoutPartnerIds) {
 		long startTime = System.currentTimeMillis();
 		List<ArchivalInstitution> results = null;
-		Criteria criteria = buildArchivalInstitutionCriteriaByCountryId(countryId,null,onlyWithoutPartnerIds,null); //archivalInstitution
-		criteria.add(Restrictions.eq("archivalInstitution.containSearchableItems",hasContentIndexed));
+		Criteria criteria = buildArchivalInstitutionCriteriaByCountryId(countryId, internalAlIds,
+				onlyWithoutPartnerIds, false);
 		results = criteria.list();
 		long endTime = System.currentTimeMillis();
 		if (log.isDebugEnabled()) {
@@ -571,16 +573,32 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 	}
 
 	@Override
-	public List<ArchivalInstitution> getArchivalInstitutionsNoGroups(Integer countryId,Integer userId) {
+	public List<ArchivalInstitution> getArchivalInstitutionsByCountryId(Integer countryId,
+			boolean onlyWithoutPartnerIds, boolean hasContentIndexed) {
 		long startTime = System.currentTimeMillis();
 		List<ArchivalInstitution> results = null;
-		Criteria criteria = buildArchivalInstitutionCriteriaByCountryId(countryId,null,false,null); //archivalInstitution
-		criteria.add(Restrictions.eq("archivalInstitution.group",false));
-		criteria.addOrder(Order.asc("archivalInstitution.partnerId"));
-		criteria.addOrder(Order.asc("archivalInstitution.alorder"));
-		if(userId==null){
+		Criteria criteria = buildArchivalInstitutionCriteriaByCountryId(countryId, null, onlyWithoutPartnerIds, null); // archivalInstitution
+		criteria.add(Restrictions.eq("archivalInstitution.containSearchableItems", hasContentIndexed));
+		results = criteria.list();
+		long endTime = System.currentTimeMillis();
+		if (log.isDebugEnabled()) {
+			log.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
+		}
+		return results;
+	}
+
+	@Override
+	public List<ArchivalInstitution> getArchivalInstitutionsNoGroups(Integer countryId, Integer userId) {
+		long startTime = System.currentTimeMillis();
+		List<ArchivalInstitution> results = null;
+		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
+		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		criteria.add(Restrictions.eq("archivalInstitution.countryId", countryId));
+		criteria.add(Restrictions.eq("archivalInstitution.group", false));
+		criteria.addOrder(Order.asc("archivalInstitution.ainame"));
+		if (userId == null) {
 			criteria.add(Restrictions.isNull("archivalInstitution.partnerId"));
-		}else{
+		} else {
 			criteria.add(Restrictions.eq("archivalInstitution.partnerId", userId));
 		}
 		results = criteria.list();
@@ -597,7 +615,7 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 		CriteriaQuery<ArchivalInstitution> cq = criteriaBuilder.createQuery(ArchivalInstitution.class);
 		Root<ArchivalInstitution> from = cq.from(ArchivalInstitution.class);
 		List<Predicate> whereClause = new ArrayList<Predicate>();
-		for (String oaiPmhSet: oaiPmhSets){
+		for (String oaiPmhSet : oaiPmhSets) {
 			whereClause.add(criteriaBuilder.equal(from.get("repositorycode"), oaiPmhSet));
 		}
 		cq.where(criteriaBuilder.or(whereClause.toArray(new Predicate[0])));
@@ -606,6 +624,26 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 		TypedQuery<ArchivalInstitution> query = getEntityManager().createQuery(cq);
 		return query.getResultList();
 	}
-	
-	
+
+	@Override
+	public List<ArchivalInstitution> getArchivalInstitutions(List<Integer> aiIds) {
+		long startTime = System.currentTimeMillis();
+		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<ArchivalInstitution> cq = criteriaBuilder.createQuery(ArchivalInstitution.class);
+		Root<ArchivalInstitution> from = cq.from(ArchivalInstitution.class);
+		List<Predicate> whereClause = new ArrayList<Predicate>();
+		for (Integer aiId : aiIds) {
+			whereClause.add(criteriaBuilder.equal(from.get("aiId"), aiId));
+		}
+		cq.where(criteriaBuilder.or(whereClause.toArray(new Predicate[0])));
+		cq.orderBy(criteriaBuilder.asc(from.get("ainame")));
+		List<ArchivalInstitution> results = getEntityManager().createQuery(cq).getResultList();
+		long endTime = System.currentTimeMillis();
+		if (log.isDebugEnabled()) {
+			log.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
+		}
+		return results;
+
+	}
+
 }
