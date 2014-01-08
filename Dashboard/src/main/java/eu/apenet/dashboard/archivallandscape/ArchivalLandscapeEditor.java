@@ -451,22 +451,15 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					if(ai.isGroup()){
 						Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(ai.getChildArchivalInstitutions());
 						if(children!=null && children.size()>0){
-							messenger.append(buildNode("error",getText("al.message.grouphaschildren")));
-							rollback = true;
+							// #981: Check if childrens has content.
+							if (ai.isContainSearchableItems()) {
+								messenger.append(buildNode("error",getText("al.message.grouphaschildren")));
+								rollback = true;
+							}
 						}
 					}
 					if(!rollback){
-						AiAlternativeNameDAO aiAnDao = DAOFactory.instance().getAiAlternativeNameDAO();
-						List<AiAlternativeName> alternativeNames = aiAnDao.findByAIId(ai);
-						if(alternativeNames!=null){
-							Iterator<AiAlternativeName> alternativeNamesIterator = alternativeNames.iterator();
-							while(alternativeNamesIterator.hasNext()){
-								aiAnDao.deleteSimple(alternativeNamesIterator.next()); //deleteSimple alternative name
-							}
-						}
-
-
-						aiDao.deleteSimple(ai); //deleteSimple institution
+						this.deleteAllAI(ai);
 						messenger.append(buildNode("info",getText("al.message.institutiondeleted")));
 					}
 				}else{
@@ -480,6 +473,36 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 				}
 		}
 		return messenger.toString();
+	}
+
+	/**
+	 * Method to delete recursive the selected element.
+	 *
+	 * @param ai Institution or group to be deleted.
+	 */
+	private void deleteAllAI(ArchivalInstitution ai) {
+		// Check if current institution is group.
+		if (ai.isGroup()) {
+			Set<ArchivalInstitution> childrenSet = new LinkedHashSet<ArchivalInstitution>(ai.getChildArchivalInstitutions());
+			if (childrenSet != null && childrenSet.size() > 0) {
+				Iterator<ArchivalInstitution> childrenIt = childrenSet.iterator();
+				while (childrenIt.hasNext()) {
+					this.deleteAllAI(childrenIt.next());
+				}
+			}
+		}
+
+		AiAlternativeNameDAO aiAnDao = DAOFactory.instance().getAiAlternativeNameDAO();
+		List<AiAlternativeName> alternativeNames = aiAnDao.findByAIId(ai);
+		if(alternativeNames!=null){
+			Iterator<AiAlternativeName> alternativeNamesIterator = alternativeNames.iterator();
+			while(alternativeNamesIterator.hasNext()){
+				aiAnDao.deleteSimple(alternativeNamesIterator.next()); //deleteSimple alternative name
+			}
+		}
+
+		ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
+		aiDao.deleteSimple(ai); //deleteSimple institution
 	}
 
     private void deleteHarvestingProfiles(int aiId) {
