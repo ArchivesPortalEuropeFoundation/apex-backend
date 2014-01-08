@@ -363,6 +363,12 @@
 		<put-attribute name="body" value="/jsp/viewresult.jsp" />
 	</definition>
 
+	<definition name="uploaderroralcontentpublished" extends="ArchivalLandscapeLayout">
+		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
+		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
+		<put-attribute name="body" value="/jsp/al/uploaderrorALContentPublished.jsp" />
+	</definition>
+
 	<definition name="uploaderrorformat2" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
 		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
