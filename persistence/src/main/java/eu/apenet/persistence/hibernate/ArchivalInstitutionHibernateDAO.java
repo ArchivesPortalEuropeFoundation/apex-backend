@@ -627,22 +627,20 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 
 	@Override
 	public List<ArchivalInstitution> getArchivalInstitutions(List<Integer> aiIds) {
-		long startTime = System.currentTimeMillis();
-		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
-		CriteriaQuery<ArchivalInstitution> cq = criteriaBuilder.createQuery(ArchivalInstitution.class);
-		Root<ArchivalInstitution> from = cq.from(ArchivalInstitution.class);
-		List<Predicate> whereClause = new ArrayList<Predicate>();
-		for (Integer aiId : aiIds) {
-			whereClause.add(criteriaBuilder.equal(from.get("aiId"), aiId));
+		if (aiIds != null && aiIds.size() > 0) {
+			CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+			CriteriaQuery<ArchivalInstitution> cq = criteriaBuilder.createQuery(ArchivalInstitution.class);
+			Root<ArchivalInstitution> from = cq.from(ArchivalInstitution.class);
+			List<Predicate> whereClause = new ArrayList<Predicate>();
+			for (Integer aiId : aiIds) {
+				whereClause.add(criteriaBuilder.equal(from.get("aiId"), aiId));
+			}
+			cq.where(criteriaBuilder.or(whereClause.toArray(new Predicate[0])));
+			cq.orderBy(criteriaBuilder.asc(from.get("ainame")));
+			return getEntityManager().createQuery(cq).getResultList();
+		} else {
+			return new ArrayList<ArchivalInstitution>();
 		}
-		cq.where(criteriaBuilder.or(whereClause.toArray(new Predicate[0])));
-		cq.orderBy(criteriaBuilder.asc(from.get("ainame")));
-		List<ArchivalInstitution> results = getEntityManager().createQuery(cq).getResultList();
-		long endTime = System.currentTimeMillis();
-		if (log.isDebugEnabled()) {
-			log.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
-		}
-		return results;
 
 	}
 

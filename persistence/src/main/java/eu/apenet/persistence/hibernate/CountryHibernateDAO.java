@@ -1,7 +1,6 @@
 package eu.apenet.persistence.hibernate;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.TypedQuery;
@@ -26,14 +25,6 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
-//import org.hibernate.FetchMode;
-//import org.hibernate.Query;
-//import org.hibernate.criterion.Projections;
-//import org.hibernate.transform.Transformers;
-
-/**
- * @author Patricia
- */
 
 public class CountryHibernateDAO extends AbstractHibernateDAO<Country, Integer> implements CountryDAO
 {
@@ -163,22 +154,20 @@ private final Logger log = Logger.getLogger(getClass());
 
 	@Override
 	public List<Country> getCountries(List<Integer> countryIds) {
-		long startTime = System.currentTimeMillis();
-		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
-		CriteriaQuery<Country> cq = criteriaBuilder.createQuery(Country.class);
-		Root<Country> from = cq.from(Country.class);
-		List<Predicate> whereClause = new ArrayList<Predicate>();
-		for (Integer countryId : countryIds) {
-			whereClause.add(criteriaBuilder.equal(from.get("id"), countryId));
+		if (countryIds != null && countryIds.size() > 0){
+			CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+			CriteriaQuery<Country> cq = criteriaBuilder.createQuery(Country.class);
+			Root<Country> from = cq.from(Country.class);
+			List<Predicate> whereClause = new ArrayList<Predicate>();
+			for (Integer countryId : countryIds) {
+				whereClause.add(criteriaBuilder.equal(from.get("id"), countryId));
+			}
+			cq.where(criteriaBuilder.or(whereClause.toArray(new Predicate[0])));
+			cq.orderBy(criteriaBuilder.asc(from.get("cname")));
+			return getEntityManager().createQuery(cq).getResultList();
+		}else {
+			return new ArrayList<Country>();
 		}
-		cq.where(criteriaBuilder.or(whereClause.toArray(new Predicate[0])));
-		cq.orderBy(criteriaBuilder.asc(from.get("cname")));
-		List<Country> results = getEntityManager().createQuery(cq).getResultList();
-		long endTime = System.currentTimeMillis();
-		if (log.isDebugEnabled()) {
-			log.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
-		}
-		return results;
 
 	}
 }
