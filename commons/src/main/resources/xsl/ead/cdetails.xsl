@@ -11,9 +11,13 @@
 	</xsl:template>
 
 	<xsl:template name="header">
-		<div class="eadid">
-			<xsl:value-of select="ape:highlight(./ead:did/ead:unitid[@type='call number'], 'unitid')" disable-output-escaping="yes" />			
-		</div>
+		<xsl:for-each select="./ead:did/ead:unitid[@type='call number']">
+			<xsl:if test="position() = 1">
+				<div class="eadid">
+					<xsl:value-of select="ape:highlight(., 'unitid')" disable-output-escaping="yes" />			
+				</div>
+			</xsl:if>
+		</xsl:for-each>
 		<xsl:for-each select="/ead:c/ead:did/ead:unittitle">
 			<div class="titleproper">
 				<xsl:apply-templates mode="title" />
