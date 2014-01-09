@@ -41,7 +41,7 @@
                 <tr>
                     <td>
                         <s:label key="ingestionprofiles.associatedFiletype" for="associatedFiletypeCb" />
-                        <s:select id="associatedFiletypeCb" name="associatedFiletype" list="associatedFiletypes" listKey="value" listValue="content" />
+                        <s:select id="associatedFiletypeCb" name="associatedFiletype" list="associatedFiletypes" listKey="value" listValue="content" onchange="changeDefaultOptionSet();" />
                     </td>
                 </tr>
             </s:if>

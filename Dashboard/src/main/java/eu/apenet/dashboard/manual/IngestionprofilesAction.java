@@ -82,8 +82,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
 
     @Override
     public String input() {
-        setUp();
-
         IngestionprofileDAO profileDAO = DAOFactory.instance().getIngestionprofileDAO();
         List<Ingestionprofile> queryResult = profileDAO.getIngestionprofiles(getAiId());
         if (queryResult != null && !queryResult.isEmpty()) {
@@ -100,7 +98,12 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
             Ingestionprofile ingestionprofile = profileDAO.findById(profilelistLong);
             profileName = ingestionprofile.getNameProfile();
             associatedFiletype = ingestionprofile.getFileType().toString();
-            uploadedFileAction = Integer.toString(ingestionprofile.getUploadAction().getId());
+            if (!associatedFiletype.equals(XmlType.EAD_FA.getIdentifier() + "")
+                    && ingestionprofile.getUploadAction().getId() == 2) {
+                uploadedFileAction = "1";
+            } else {
+                uploadedFileAction = Integer.toString(ingestionprofile.getUploadAction().getId());
+            }
             existingFileAction = Integer.toString(ingestionprofile.getExistAction().getId());
             noEadidAction = Integer.toString(ingestionprofile.getNoeadidAction().getId());
             daoType = Integer.toString(ingestionprofile.getDaoType().getId());
@@ -125,6 +128,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
             inheritFileParent = Boolean.toString(ingestionprofile.getEuropeanaInheritElements());
             inheritOrigination = Boolean.toString(ingestionprofile.getEuropeanaInheritOrigin());
         }
+        setUp();
         return SUCCESS;
     }
 
@@ -228,7 +232,9 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         associatedFiletypes.add(new SelectItem(XmlType.EAD_HG.getIdentifier(), getText("content.message.hg")));
         associatedFiletypes.add(new SelectItem(XmlType.EAD_SG.getIdentifier(), getText("content.message.sg")));
         uploadedFileActions.add(new SelectItem("1", getText("ingestionprofiles.upload.convertValidatePublish")));
-        uploadedFileActions.add(new SelectItem("2", getText("ingestionprofiles.upload.convertValidatePublishEuropeana")));
+        if (associatedFiletype.equals(XmlType.EAD_FA.getIdentifier() + "")) {
+            uploadedFileActions.add(new SelectItem("2", getText("ingestionprofiles.upload.convertValidatePublishEuropeana")));
+        }
         uploadedFileActions.add(new SelectItem("3", getText("ingestionprofiles.upload.convert")));
         uploadedFileActions.add(new SelectItem("4", getText("ingestionprofiles.upload.validate")));
         uploadedFileActions.add(new SelectItem("0", getText("ingestionprofiles.upload.nothing")));
