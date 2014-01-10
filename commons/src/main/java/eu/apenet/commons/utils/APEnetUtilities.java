@@ -19,6 +19,7 @@ import eu.archivesportaleurope.commons.config.DashboardConfig;
  */
 public class APEnetUtilities {
     
+	private static final int MAX_ERROR_LINES = 2;
 	private static ApeConfig config;
 	// Constants
 	private static final Logger LOG = Logger.getLogger(APEnetUtilities.class);
@@ -106,5 +107,35 @@ public class APEnetUtilities {
 	}
     public static String convertToFilename(String name){
    		return name.replaceAll("[^a-zA-Z0-9\\-\\.]", "_");
+    }
+    public static void logThrowable(Throwable throwable){
+    	LOG.error(generateThrowableLog(throwable));
+    }
+    public static String generateThrowableLog(Throwable throwable){
+    	String result = "";
+    	result+= throwable.getClass().getName()+ " " +throwable.getMessage()  + "\n";
+    	result+= generateThrowableStackTraceLog(throwable.getStackTrace());
+    	result+=generateThrowableCauseLog(throwable.getCause(), 0);
+    	return result;
+    }
+    private static String generateThrowableCauseLog(Throwable throwable, int depth){
+    	String result = "";
+    	if (throwable != null){
+    		result+= "Caused by: " +  throwable.getClass().getName()+ " " + throwable.getMessage()  +"\n";
+    		result+= generateThrowableStackTraceLog(throwable.getStackTrace());
+    		result+=generateThrowableCauseLog(throwable.getCause(), depth++);
+    	}
+    	return result;
+    }
+    private static String generateThrowableStackTraceLog(StackTraceElement[] elements){
+    	String result = "";
+    	for (int i = 0; i < MAX_ERROR_LINES && i < elements.length ;i++){
+    		StackTraceElement element = elements[i];
+    		result += "\t" + element.getClassName() + "." + element.getMethodName() + "(" + element.getFileName() + ":" + element.getLineNumber() + ")\n" ;
+    	}
+    	if (elements.length > MAX_ERROR_LINES){
+    		result += "\t... " + (elements.length -MAX_ERROR_LINES) + " more\n";
+    	}
+    	return result;
     }
 }
