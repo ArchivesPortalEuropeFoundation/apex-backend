@@ -42,6 +42,8 @@ public class Ingestionprofile implements Serializable {
     private IngestionprofileDefaultDaoType daoType = IngestionprofileDefaultDaoType.UNSPECIFIED;
     @Column(name = "dao_type_from_file")
     private Boolean daoTypeFromFile = true;
+    @Column(name = "europeana_conversion_type")
+    private Boolean europeanaConversionType;
     @Column(name = "europeana_dp")
     private String europeanaDataProvider;
     @Column(name = "europeana_dp_from_file")
@@ -154,6 +156,14 @@ public class Ingestionprofile implements Serializable {
 
     public void setDaoTypeFromFile(Boolean daoTypeFromFile) {
         this.daoTypeFromFile = daoTypeFromFile;
+    }
+
+    public Boolean getEuropeanaConversionType() {
+        return europeanaConversionType;
+    }
+
+    public void setEuropeanaConversionType(Boolean europeanaConversionType) {
+        this.europeanaConversionType = europeanaConversionType;
     }
 
     public String getEuropeanaDataProvider() {

@@ -779,6 +779,7 @@ public class EadService {
     	config.setContextInformationPrefix(preferences.getProperty(QueueItem.HIERARCHY_PREFIX));
     	config.setInheritElementsFromFileLevel("true".equals(preferences.getProperty(QueueItem.INHERIT_FILE)));
     	config.setInheritOrigination("true".equals(preferences.getProperty(QueueItem.INHERIT_ORIGINATION)));
+        config.setMinimalConversion("true".equals(preferences.getProperty(QueueItem.CONVERSION_TYPE)));
     	return config.getProperties();
     }
 }

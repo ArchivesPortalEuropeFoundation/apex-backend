@@ -45,6 +45,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private Set<SelectItem> daoTypes = new LinkedHashSet<SelectItem>();
 
     //Collections for Europeana tab
+    private Set<SelectItem> conversiontypeSet = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> typeSet = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> yesNoSet = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> inheritLanguageSet = new TreeSet<SelectItem>();
@@ -63,6 +64,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private String daoTypeCheck;
 
     //fields for Europeana tab components
+    private String conversiontype;
     private String textDataProvider;
     private String dataProviderCheck;
     private String europeanaDaoType;
@@ -109,6 +111,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
             daoType = Integer.toString(ingestionprofile.getDaoType().getId());
             daoTypeCheck = Boolean.toString(ingestionprofile.getDaoTypeFromFile());
 
+            conversiontype = Boolean.toString(ingestionprofile.getEuropeanaConversionType());
             textDataProvider = ingestionprofile.getEuropeanaDataProvider();
             dataProviderCheck = Boolean.toString(ingestionprofile.getEuropeanaDataProviderFromFile());
             europeanaDaoType = Integer.toString(ingestionprofile.getEuropeanaDaoType());
@@ -150,6 +153,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         profile.setDaoType(IngestionprofileDefaultDaoType.getDaoType(daoType));
         profile.setDaoTypeFromFile(Boolean.parseBoolean(daoTypeCheck));
 
+        profile.setEuropeanaConversionType(Boolean.parseBoolean(conversiontype));
         profile.setEuropeanaDataProvider(textDataProvider);
         profile.setEuropeanaDataProviderFromFile(Boolean.parseBoolean(dataProviderCheck));
         if (europeanaDaoType == null || europeanaDaoType.isEmpty()) {
@@ -206,6 +210,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         daoType = "0";
         daoTypeCheck = Boolean.toString(true);
 
+        conversiontype = "1";
         textDataProvider = getAiname();
         dataProviderCheck = Boolean.toString(true);
         europeanaDaoType = "";
@@ -250,6 +255,8 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         daoTypes.add(new SelectItem("0", getText("ingestionprofiles.dao.unspecified")));
 
         //Europeana preferences
+        conversiontypeSet.add(new SelectItem("true", "minimal conversion"));
+        conversiontypeSet.add(new SelectItem("false", "full conversion"));
         String[] isoLanguages = Locale.getISOLanguages();
         for (String language : isoLanguages) {
             String languageDescription = new Locale(language).getDisplayLanguage(Locale.ENGLISH);
@@ -331,6 +338,14 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
 
     public void setDaoTypes(Set<SelectItem> daoTypes) {
         this.daoTypes = daoTypes;
+    }
+
+    public Set<SelectItem> getConversiontypeSet() {
+        return conversiontypeSet;
+    }
+
+    public void setConversiontypeSet(Set<SelectItem> conversiontypeSet) {
+        this.conversiontypeSet = conversiontypeSet;
     }
 
     public Set<SelectItem> getTypeSet() {
@@ -443,6 +458,14 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
 
     public void setDaoTypeCheck(String daoTypeCheck) {
         this.daoTypeCheck = daoTypeCheck;
+    }
+
+    public String getConversiontype() {
+        return conversiontype;
+    }
+
+    public void setConversiontype(String conversiontype) {
+        this.conversiontype = conversiontype;
     }
 
     public String getTextDataProvider() {

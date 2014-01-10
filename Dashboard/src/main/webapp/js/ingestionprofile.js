@@ -20,7 +20,7 @@ function hideAndShow(idPrefix, shown) {
     $("ul#ingestionprofileTabsContainer li a[href='#" + shown + "']").addClass("ingestionprofileCurrenttab");
 }
 
-function validateAndSave(profileNameError, edmDaoError, languageError) {
+function validateAndSave(profileNameError, dataProviderError, edmDaoError, languageError, europeanaLicenseError) {
     var profilename = $("#profilename").attr("value");
     if (profilename == null || profilename == "") {
         alert(profileNameError);
@@ -28,6 +28,11 @@ function validateAndSave(profileNameError, edmDaoError, languageError) {
     }
     var upFileAction = $("#uploadedFileAction").attr("value");
     if (upFileAction == "2") {
+        var dataProvider = $("#textDataProvider").attr("value");
+        if (dataProvider == null || dataProvider == "") {
+            alert(dataProviderError);
+            return;
+        }
         var edmDaoType = $("#edmDaoType").attr("value");
         if (edmDaoType == null || edmDaoType == "") {
             alert(edmDaoError);
@@ -37,6 +42,14 @@ function validateAndSave(profileNameError, edmDaoError, languageError) {
         if (languageSelection == null || languageSelection == "") {
             alert(languageError);
             return;
+        }
+        var license = $("#licenseeuropeana").attr("checked");
+        if (license == "checked") {
+            var europeanaLicense = $("#europeanaLicense").attr("value");
+            if (europeanaLicense == null || europeanaLicense == "") {
+                alert(europeanaLicenseError);
+                return;
+            }
         }
     }
     $('#webformIngestionprofile').submit();
