@@ -340,7 +340,7 @@ public class ContentUtils {
 			}else if (!child.isContainSearchableItems() && parent.isContainSearchableItems()){
 				boolean containSearchableItems = false;
 				for (ArchivalInstitution tempChild: parent.getChildArchivalInstitutions()){
-					if (tempChild.getAiId() != child.getAiId()){
+					if (tempChild != null && tempChild.getAiId() != child.getAiId()){
 						containSearchableItems = containSearchableItems || tempChild.isContainSearchableItems();
 					}
 				}
