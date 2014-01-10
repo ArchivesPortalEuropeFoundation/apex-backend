@@ -553,12 +553,12 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		excludedInstitutions.addAll(this.insertedInstitutions);
 		//get all institutions to be deleted from ddbb
 		List<ArchivalInstitution> institutionsToBeDeleted = this.aIDAO.getArchivalInstitutionsByCountryIdUnless(SecurityContext.get().getCountryId(),excludedInstitutions, false);
-		log.debug("Institutions to be deleted: "+institutionsToBeDeleted.size());
+		log.info("Institutions to be deleted: "+institutionsToBeDeleted.size());
 		Iterator<ArchivalInstitution> deleteIt = institutionsToBeDeleted.iterator();
 		while(!error && deleteIt.hasNext()){
 			ArchivalInstitution targetToBeDeleted = deleteIt.next();
 			if(!targetToBeDeleted.isContainSearchableItems()){
-				log.debug("Deleting institution: "+targetToBeDeleted.getInternalAlId());
+				log.info("Deleting institution: "+targetToBeDeleted.getInternalAlId() + " " + targetToBeDeleted.getAiname() + " " + targetToBeDeleted.getAiId());
 				Set<AiAlternativeName> alternativeNames = targetToBeDeleted.getAiAlternativeNames();
 				if(alternativeNames!=null && alternativeNames.size()>0){
 					log.debug("Deleting alternative names...");
