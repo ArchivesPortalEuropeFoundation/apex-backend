@@ -356,8 +356,8 @@ public class EadService {
                         queueItem.setUpFile(upFile);
                     }
                     String err = "eadid: " + ead.getEadid() + " - id: " + ead.getId() + " - type: " + xmlType.getName();
-                    LOGGER.error("Error occured: " + err, e);
-                    queueItem.setErrors(new Date() + " - " + err + ". Error: " + e.getMessage() + " - " + e.getCause());
+                    LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+                    queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
                     queueItem.setPriority(0);
                     queueItemDAO.store(queueItem);
                 }
@@ -407,8 +407,8 @@ public class EadService {
                     queueItemDAO.delete(queueItem);
                 } catch (Exception e) {
                     String err = "eadid: " + ead.getEadid() + " - id: " + ead.getId() + " - type: " + xmlType.getName();
-                    LOGGER.error("Error occured: " + err, e);
-                    queueItem.setErrors(new Date() + err + ". Error: " + e.getMessage() + "-" + e.getCause());
+                    LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+                    queueItem.setErrors(new Date() + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
                     ead.setQueuing(QueuingState.ERROR);
                     eadDAO.store(ead);
                     queueItem.setPriority(0);
@@ -463,8 +463,8 @@ public class EadService {
                                 queueItem.setUpFile(upFile);
                             }
                             String err = "eadid: " + ead.getEadid() + " - id: " + ead.getId() + " - type: " + xmlType.getName();
-                            LOGGER.error("Error occured: " + err, e);
-                            queueItem.setErrors(new Date() + " - " + err + ". Error: " + e.getMessage() + " - " + e.getCause());
+                            LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+                            queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
                             queueItem.setPriority(0);
                             queueItemDAO.store(queueItem);
                             continueTask = false;
@@ -516,8 +516,8 @@ public class EadService {
                         eadDAO.store(newEad);
 
                         String err = "eadid: " + newEad.getEadid() + " - id: " + newEad.getId() + " - type: " + xmlType.getName();
-                        LOGGER.error("Error occured: " + err, e);
-                        queueItem.setErrors(new Date() + " - " + err + ". Error: " + e.getMessage() + " - " + e.getCause());
+                        LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+                        queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
                         queueItem.setPriority(0);
                         queueItemDAO.store(queueItem);
                     }
