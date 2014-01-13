@@ -11,8 +11,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import eu.apenet.persistence.vo.*;
-
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.infraestructure.ArchivalInstitutionUnit;
@@ -23,10 +21,12 @@ import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
-import eu.apenet.persistence.dao.IngestionprofileDAO;
 import eu.apenet.persistence.dao.LangDAO;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.AiAlternativeName;
+import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.Country;
+import eu.apenet.persistence.vo.Lang;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
@@ -424,8 +424,6 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			JpaUtil.beginDatabaseTransaction();
 				ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
 				ArchivalInstitution ai = aiDao.findById(new Integer(aiId));
-            deleteHarvestingProfiles(ai.getAiId()); //#983
-            deleteIngestionProfiles(ai.getAiId()); //#983
 				//update the rest of the orders (all siblings are inconsistents)
 				int oldOrder = ai.getAlorder();
 				ArchivalInstitution parent = ai.getParent();
@@ -459,7 +457,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 						}
 					}
 					if(!rollback){
-						this.deleteAllAI(ai);
+						aiDao.deleteSimple(ai); //deleteSimple institution
 						messenger.append(buildNode("info",getText("al.message.institutiondeleted")));
 					}
 				}else{
@@ -475,53 +473,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		return messenger.toString();
 	}
 
-	/**
-	 * Method to delete recursive the selected element.
-	 *
-	 * @param ai Institution or group to be deleted.
-	 */
-	private void deleteAllAI(ArchivalInstitution ai) {
-		// Check if current institution is group.
-		if (ai.isGroup()) {
-			Set<ArchivalInstitution> childrenSet = new LinkedHashSet<ArchivalInstitution>(ai.getChildArchivalInstitutions());
-			if (childrenSet != null && childrenSet.size() > 0) {
-				Iterator<ArchivalInstitution> childrenIt = childrenSet.iterator();
-				while (childrenIt.hasNext()) {
-					this.deleteAllAI(childrenIt.next());
-				}
-			}
-		}
 
-		AiAlternativeNameDAO aiAnDao = DAOFactory.instance().getAiAlternativeNameDAO();
-		List<AiAlternativeName> alternativeNames = aiAnDao.findByAIId(ai);
-		if(alternativeNames!=null){
-			Iterator<AiAlternativeName> alternativeNamesIterator = alternativeNames.iterator();
-			while(alternativeNamesIterator.hasNext()){
-				aiAnDao.deleteSimple(alternativeNamesIterator.next()); //deleteSimple alternative name
-			}
-		}
-
-		ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
-		aiDao.deleteSimple(ai); //deleteSimple institution
-	}
-
-    private void deleteHarvestingProfiles(int aiId) {
-    	ArchivalInstitutionOaiPmhDAO dao = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
-        List<ArchivalInstitutionOaiPmh> archivalInstitutionOaiPmhs = dao.getArchivalInstitutionOaiPmhs(aiId);
-        Iterator<ArchivalInstitutionOaiPmh> it = archivalInstitutionOaiPmhs.iterator();
-        while(it.hasNext()){
-        	dao.deleteSimple(it.next());
-        }
-    }
-
-    private void deleteIngestionProfiles(int aiId) {
-    	IngestionprofileDAO profileDAO = DAOFactory.instance().getIngestionprofileDAO();
-        List<Ingestionprofile> ingestionprofiles = profileDAO.getIngestionprofiles(aiId);
-        Iterator<Ingestionprofile> it = ingestionprofiles.iterator();
-        while(it.hasNext()){
-        	profileDAO.deleteSimple(it.next());
-        }
-    }
 
 	private String createArchivalInstitution(String name,String father,String type,String lang){
 		StringBuilder messenger = new StringBuilder();
