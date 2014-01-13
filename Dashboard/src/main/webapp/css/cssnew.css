@@ -1136,8 +1136,7 @@ input.inputButtonSubmitAL{
 	padding-top: 20px;
 }
 .alEUp{
-	height:250px;
-	max-height:250px;
+	min-height:250px;
 	overflow:auto;
 }
 .grayedout{
