@@ -173,7 +173,7 @@ public class ContentUtils {
 			boolean hasEads = false;
 			Iterator<ArchivalInstitution> childIterator = archivalInstitution.getChildArchivalInstitutions().iterator();
 			while (!hasEads && childIterator.hasNext()){
-				hasEads = hasEads || containsPublishedFiles(childIterator.next());
+				hasEads = hasEads || containsEads(childIterator.next());
 			}
 			return hasEads;
 		}else {
