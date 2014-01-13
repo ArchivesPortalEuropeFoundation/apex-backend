@@ -429,9 +429,13 @@ public class EadService {
             LOGGER.info("Process queue item: " + queueItem.getId() + " " + queueItem.getAction() + ", upFile id: " + queueItem.getUpFileId() + "(" + xmlType.getName() + ")");
 
             String eadid = ExistingFilesChecker.extractAttributeFromEad(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath() + upFile.getFilename(), "eadheader/eadid", null, true).trim();
-            if(StringUtils.isEmpty(eadid)) {
+            if(StringUtils.isEmpty(eadid) || "empty".equals(eadid)) {
+                LOGGER.info("File has empty eadid!");
+                deleteFromQueue(queueItem);
                 if(ingestionprofileDefaultNoEadidAction.isRemove()) {
                     deleteUpFile(upFile);
+                }
+                if(ingestionprofileDefaultNoEadidAction.isAddLater()) {
                 }
             } else {
                 boolean continueTask = true;
