@@ -30,7 +30,11 @@ import org.apache.log4j.Logger;
  */
 public class IngestionprofilesAction extends AbstractInstitutionAction {
 
-    private static final String CREATIVECOMMONS_CPDM = "cpdm";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 292033613637062110L;
+	private static final String CREATIVECOMMONS_CPDM = "cpdm";
     private static final String CREATIVECOMMONS_CC0 = "cc0";
     private static final String CREATIVECOMMONS = "creativecommons";
     private static final String EUROPEANA = "europeana";
@@ -100,7 +104,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
             Ingestionprofile ingestionprofile = profileDAO.findById(profilelistLong);
             profileName = ingestionprofile.getNameProfile();
             associatedFiletype = ingestionprofile.getFileType().toString();
-            if (!associatedFiletype.equals(XmlType.EAD_FA.getIdentifier() + "")
+            if (!convertToString(XmlType.EAD_FA.getIdentifier()).equals(associatedFiletype)
                     && ingestionprofile.getUploadAction().getId() == 2) {
                 uploadedFileAction = "1";
             } else {
@@ -203,7 +207,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         ingestionprofiles.add(new SelectItem("-1", ""));
         profilelist = "-1";
         profileName = "";
-        associatedFiletype = XmlType.EAD_FA.getIdentifier() + "";
+        associatedFiletype = convertToString(XmlType.EAD_FA.getIdentifier());
         uploadedFileAction = "1";
         existingFileAction = "1";
         noEadidAction = "0";
@@ -237,7 +241,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         associatedFiletypes.add(new SelectItem(XmlType.EAD_HG.getIdentifier(), getText("content.message.hg")));
         associatedFiletypes.add(new SelectItem(XmlType.EAD_SG.getIdentifier(), getText("content.message.sg")));
         uploadedFileActions.add(new SelectItem("1", getText("ingestionprofiles.upload.convertValidatePublish")));
-        if (associatedFiletype.equals(XmlType.EAD_FA.getIdentifier() + "")) {
+        if (convertToString(XmlType.EAD_FA.getIdentifier()).equals(associatedFiletype)) {
             uploadedFileActions.add(new SelectItem("2", getText("ingestionprofiles.upload.convertValidatePublishEuropeana")));
         }
         uploadedFileActions.add(new SelectItem("3", getText("ingestionprofiles.upload.convert")));
@@ -563,5 +567,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     public void setInheritOrigination(String inheritOrigination) {
         this.inheritOrigination = inheritOrigination;
     }
-
+    private String convertToString(int identifier){
+    	return identifier + "";
+    }
 }
