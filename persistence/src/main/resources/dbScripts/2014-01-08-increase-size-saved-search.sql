@@ -1,1 +1,1 @@
-alter table ead_saved_search alter column refinement_roledao character varying(40);
+alter table ead_saved_search alter column refinement_roledao TYPE character varying(40);
