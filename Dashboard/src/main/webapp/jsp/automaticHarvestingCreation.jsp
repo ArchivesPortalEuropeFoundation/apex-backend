@@ -123,7 +123,7 @@
                             </label>
                         </td>
                         <td>
-                            <input type="text" id="lastHarvestDate" name="lastHarvestDate" size="10" />
+                            <input type="text" id="lastHarvestDate" name="lastHarvestDate" size="10" value="${lastHarvestDate}" />
                         </td>
                     </tr>
                     <tr>

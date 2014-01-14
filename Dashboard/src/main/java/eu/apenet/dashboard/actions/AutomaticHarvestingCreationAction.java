@@ -1,6 +1,7 @@
 package eu.apenet.dashboard.actions;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -142,6 +143,7 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
                 setIntervalHarvest(archivalInstitutionOaiPmh.getIntervalHarvesting().toString());
                 setSelectedActivation(Boolean.toString(archivalInstitutionOaiPmh.isEnabled()));
                 setSelectedWeekend(Boolean.toString(archivalInstitutionOaiPmh.isHarvestOnlyWeekend()));
+                setLastHarvestDate(new SimpleDateFormat("dd/MM/yyyy").format(archivalInstitutionOaiPmh.getLastHarvesting()));
             }
             return SUCCESS;
         }
