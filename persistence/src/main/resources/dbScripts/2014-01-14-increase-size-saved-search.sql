@@ -1,0 +1,1 @@
+alter table ead_saved_search alter column refinement_type TYPE character varying(9);
