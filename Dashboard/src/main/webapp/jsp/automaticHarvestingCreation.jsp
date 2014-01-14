@@ -118,6 +118,16 @@
                     </tr>
                     <tr>
                         <td>
+                            <label for="lastHarvestDate">
+                                <s:property value="getText('label.harvesting.lastHarvesting')"/> - dd/MM/YYYY:
+                            </label>
+                        </td>
+                        <td>
+                            <input type="text" id="lastHarvestDate" name="lastHarvestDate" size="10" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <label for="ingestionprofiles">
                                 <s:property value="getText('label.harvesting.ingestionprofiles')"/>
                             </label>
