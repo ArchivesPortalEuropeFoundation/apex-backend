@@ -1,1 +1,1 @@
-ALTER TABLE dpt_update ADD COLUMN new_version character varying 255;
+ALTER TABLE dpt_update ADD COLUMN new_version character varying(255);
