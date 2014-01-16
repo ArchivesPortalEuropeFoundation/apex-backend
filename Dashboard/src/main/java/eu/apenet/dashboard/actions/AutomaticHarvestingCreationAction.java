@@ -177,8 +177,7 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
                     } else if(archivalInstitutionOaiPmh.isEnabled() && !Boolean.parseBoolean(getSelectedActivation())) {
                         archivalInstitutionOaiPmh.setEnabled(false);
                     }
-                }
-                if(getLastHarvestDate() != null) {
+                } else if(getLastHarvestDate() != null) {
                     try {
                         Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).parse(getLastHarvestDate());
                         archivalInstitutionOaiPmh.setLastHarvesting(date);
