@@ -117,6 +117,10 @@ public class ContentUtils {
 		File srcFile = new File(path);
 		deleteFile(srcFile,failOnError);
 	}
+	public static String getDaysFromMilliseconds(Long milliseconds){
+		double days = milliseconds.doubleValue() / 86400000.0d;
+		return ((int)Math.ceil(days)) +"";
+	}
 	public static void deleteFile(File file, boolean failOnError) throws IOException {
 		try {
 			if (file.exists()){
