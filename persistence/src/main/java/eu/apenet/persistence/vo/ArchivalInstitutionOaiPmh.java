@@ -18,6 +18,11 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
 	@Column(name="last_harvesting")
 	private Date lastHarvesting;
 
+	@Column(name="from_date")
+	private String from;
+	
+	private boolean errors;
+	
 	@Column(name="oai_pmh_set")
 	private String set;
 
@@ -47,11 +52,30 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
 
     @Column(name="harvest_only_weekend")
     private boolean harvestOnlyWeekend;
+  
 
+    public String getFrom() {
+		return from;
+	}
+
+
+	public void setFrom(String from) {
+		this.from = from;
+	}
+
+
+	public boolean isErrors() {
+		return errors;
+	}
+
+
+	public void setErrors(boolean errors) {
+		this.errors = errors;
+	}
     public ArchivalInstitutionOaiPmh() {
     }
 
-    public ArchivalInstitutionOaiPmh(Integer aiId, String url, String metadataPrefix, Long profileId, Long intervalHarvesting) {
+	public ArchivalInstitutionOaiPmh(Integer aiId, String url, String metadataPrefix, Long profileId, Long intervalHarvesting) {
 		this.aiId = aiId;
 		this.url = url;
         this.metadataPrefix = metadataPrefix;
