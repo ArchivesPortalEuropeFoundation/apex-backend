@@ -3,9 +3,11 @@ package eu.apenet.dashboard.archivallandscape;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
@@ -31,12 +33,17 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
+import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.tree.DynatreeAction;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.dashboard.utils.ZipManager;
+import eu.apenet.dpt.utils.service.DocumentValidation;
+import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.HoldingsGuideDAO;
@@ -119,6 +126,8 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 
 	private Set<String> institutionsWithContent;
 
+	private List<String> warnings_ead;
+
 	public void setHttpFile(File httpFile){
 		this.httpFile = httpFile;
 	}
@@ -163,7 +172,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		this.institutionsWithContent = institutionsWithContent;
 	}
 
-	public String upload(){
+	public String upload() throws SAXException, APEnetException{
 		String state = ERROR;
 		try {
 			state = checkUnzipAndUpload(this.httpFile,this.httpFileFileName,true);
@@ -172,7 +181,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		} 
 		return state;
 	}
-	private String checkUnzipAndUpload(File httpFile, String httpFileFileName,boolean execute) throws IOException {
+	private String checkUnzipAndUpload(File httpFile, String httpFileFileName,boolean execute) throws IOException, SAXException, APEnetException {
 		if(this.httpFile!=null && ((this.httpFileFileName!=null && execute) || (!execute))){
 			String path = this.httpFile.getAbsolutePath();
 			String format = this.httpFileFileName.substring(this.httpFileFileName.lastIndexOf(".") + 1).toLowerCase();
@@ -301,24 +310,63 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 * 		current system and make ingestion/update logic.
 	 * 
 	 * @return Structs2-RESPONSE
+	 * @throws APEnetException 
+	 * @throws SAXException 
 	 */
-	private String ingestArchivalLandscapeXML() {
-		String countryCode = getXMLEadidCountrycode(this.httpFile);
+	private String ingestArchivalLandscapeXML() throws SAXException, APEnetException {
 		String state = ERROR;
-		if(countryCode!=null && countryCode.equalsIgnoreCase(SecurityContext.get().getCountryIsoname())){
-//			if(this.country==null){
-				this.country = DAOFactory.instance().getCountryDAO().getCountryByCname(SecurityContext.get().getCountryName());
-//			}
-			Collection<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile);
-			if(archivalInstitutions!=null){
-				try{
-					state = checkAndUpdateFromToDDBB(archivalInstitutions);
-				}catch(Exception e){
-					log.error("Exception checking institutions with ddbb to be replaced",e);
+		Boolean firstState = ArchivalLandscape.checkIdentifiers(this.httpFile);
+		
+		if (firstState==null){
+			validateUploadedAL(this.httpFile);
+			state="errorIdentifier";
+			Iterator<String> it = this.warnings_ead.iterator();
+			while(it.hasNext()){
+				addActionMessage(it.next());
+			}
+		}else{
+			String countryCode = getXMLEadidCountrycode(this.httpFile);
+			if(countryCode!=null && countryCode.equalsIgnoreCase(SecurityContext.get().getCountryIsoname())){
+//				if(this.country==null){
+					this.country = DAOFactory.instance().getCountryDAO().getCountryByCname(SecurityContext.get().getCountryName());
+//				}
+				Collection<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile);
+				if(archivalInstitutions!=null){
+					try{
+						state = checkAndUpdateFromToDDBB(archivalInstitutions);
+					}catch(Exception e){
+						log.error("Exception checking institutions with ddbb to be replaced",e);
+					}
 				}
 			}
 		}
-		return state;
+		 return state;
+	}		
+
+	private void validateUploadedAL(File file) throws SAXException, APEnetException {
+		warnings_ead = new ArrayList<String>();
+	//	boolean state = true;
+		Xsd_enum schema = Xsd_enum.XSD_EAD_SCHEMA;
+		try {
+			InputStream in = new FileInputStream(file);
+			List<SAXParseException> exceptions = DocumentValidation.xmlValidation(in, schema);
+			if (exceptions != null) {
+				StringBuilder warn;
+				//state = false;
+				for (SAXParseException exception : exceptions) {
+					warn = new StringBuilder();
+					warn.append("l.").append(exception.getLineNumber()).append(" c.")
+							.append(exception.getColumnNumber()).append(": ").append(exception.getMessage())
+							.append("<br/>");
+					warnings_ead.add(warn.toString());
+				}
+			}
+		} catch (SAXException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new APEnetException("Exception while validating an EAD file", e);
+		}
+	//	return state;
 	}
 	
 	public String displayTrees(){
@@ -326,6 +374,10 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		try {
 			state = checkUnzipAndUpload(this.httpFile,this.httpFileFileName,false);
 		} catch (IOException e) {
+			log.error(e);
+		} catch (SAXException e) {
+			log.error(e);
+		} catch (APEnetException e) {
 			log.error(e);
 		} 
 		return state;

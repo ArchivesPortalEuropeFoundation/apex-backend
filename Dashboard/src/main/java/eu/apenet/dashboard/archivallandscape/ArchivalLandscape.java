@@ -691,7 +691,7 @@ public class ArchivalLandscape extends ActionSupport{
 	 * @param file
 	 * @return boolean
 	 */
-	public boolean checkIdentifiers(File file){
+	public static Boolean checkIdentifiers(File file){
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -704,13 +704,16 @@ public class ArchivalLandscape extends ActionSupport{
 			for(int i=0;i<listTemp.getLength();i++){
 				Element cTemp = (Element)listTemp.item(i);
 				if(cTemp.getAttributes()!=null && cTemp.getAttributes().getNamedItem("id")==null){
-					String identifier = "A"+System.currentTimeMillis()+"-"+(new Float(+Math.random()*1000000).toString());
+					String identifier = generateNewRandomIdentifier();
 					cTemp.setAttribute("id",identifier); //This identifier can be repeated
 					changes = true;
 				}else if(cTemp.getAttributes()!=null && cTemp.getAttributes().getNamedItem("id")!=null){
 					String identifier = cTemp.getAttributes().getNamedItem("id").getNodeValue();
-					if(identifiers.contains(identifier)){
+					if(identifiers.contains(identifier)){ //internal identifier is repeated?
 						return false;
+					}else if(!isValidIdentifier(identifier)){ //is a valid identifier?
+						// return a new state for personalized layout
+						return null;
 					}
 					identifiers.add(identifier);
 				}
@@ -727,6 +730,18 @@ public class ArchivalLandscape extends ActionSupport{
 	}	
 
 	
+	private static String generateNewRandomIdentifier() {
+		return "A"+System.currentTimeMillis()+"-"+(new Float(+Math.random()*1000000).toString());
+	}
+	public static boolean isValidIdentifier(String identifier) {
+		if(identifier.length()>0){
+			char firstCharacter = identifier.charAt(0);
+			if(Character.isLetter(firstCharacter)){
+				return true;
+			}
+		}
+		return false;
+	}
 	//Store in the database the name of the NEW archival institutions uploaded and delete the ones removed
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public String storeArchives(File file, boolean execute) {
