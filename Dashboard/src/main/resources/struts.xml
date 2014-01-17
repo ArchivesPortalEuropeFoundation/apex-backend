@@ -403,7 +403,16 @@
 			</result>
 			<result name="error" type="tiles">uploaderrorformat2</result>
 			<result name="errorContent" type="tiles">uploaderroralcontentpublished</result>
+			<result name="errorContent2" type="tiles">uploaderroralcontentnotpublished</result>
 		</action>
+		
+		<action name="ALDisplayTrees" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="displayTrees">
+			<result name="success" type="stream">
+				<param name="inputName">outputStream</param>
+				<param name="contentType">application/json</param>
+			</result>
+		</action>
+		
 		<action name="getALTree" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="getArchivalInstitutionTree">
 			<result name="SUCCESS" type="stream">
 				<param name="inputName">outputStream</param>

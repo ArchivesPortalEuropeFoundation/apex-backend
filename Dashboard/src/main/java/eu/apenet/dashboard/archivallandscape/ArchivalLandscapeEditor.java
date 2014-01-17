@@ -457,7 +457,8 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 						}
 					}
 					if(!rollback){
-						aiDao.deleteSimple(ai); //deleteSimple institution
+						ArchivalLandscape.deleteContent(ai);
+//						aiDao.deleteSimple(ai); //deleteSimple institution
 						messenger.append(buildNode("info",getText("al.message.institutiondeleted")));
 					}
 				}else{

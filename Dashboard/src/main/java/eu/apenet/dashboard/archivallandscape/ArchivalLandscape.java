@@ -24,6 +24,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -42,13 +43,18 @@ import eu.apenet.dashboard.utils.ChangeControl;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
+import eu.apenet.persistence.dao.EadDAO;
+import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.dao.LangDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AiAlternativeName;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Country;
+import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.Lang;
 import eu.apenet.persistence.vo.SentMailRegister;
+import eu.apenet.persistence.vo.SourceGuide;
 
 /**
  * @author Jara Alvarez
@@ -67,7 +73,7 @@ public class ArchivalLandscape extends ActionSupport{
 	private ArchivalInstitution ai;
 	private ArchivalInstitution ai_parent;
 	private ArchivalInstitutionDAO aiDao;
-	private final Logger log = Logger.getLogger(getClass());
+	private static Logger log = Logger.getLogger(ArchivalLandscape.class);
 	private List<ArchivalInstitution> archivalInstitutionsToDelete= new ArrayList<ArchivalInstitution>();
 	private List<ArchivalInstitution> archivalInstitutionsToInsert= new ArrayList<ArchivalInstitution>();
 	private List<AiAlternativeName> archivalInstitutionsNameNotChanged= new ArrayList<AiAlternativeName>();
@@ -988,6 +994,52 @@ public class ArchivalLandscape extends ActionSupport{
         return bResult;
 	}
 
+	protected static boolean deleteContent(ArchivalInstitution ai) {
+		boolean state = true;
+		ContentUtils cu = new ContentUtils();
+		String resultRemoveAI = "";
+        try {
+        	EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+			EadSearchOptions eadSearchOptions = new EadSearchOptions();
+			eadSearchOptions.setArchivalInstitionId(ai.getAiId());
+			eadSearchOptions.setEadClass(FindingAid.class);
+			boolean hasEads = eadDAO.existEads(eadSearchOptions);
+			if (!hasEads) {
+				eadSearchOptions.setEadClass(HoldingsGuide.class);
+				hasEads = hasEads || eadDAO.existEads(eadSearchOptions);
+			}
+			if (!hasEads) {
+				eadSearchOptions.setEadClass(SourceGuide.class);
+				hasEads = hasEads || eadDAO.existEads(eadSearchOptions);
+			}
+			if (hasEads){
+				state = !hasEads;
+			}else{
+				String path = ai.getEagPath();
+				resultRemoveAI = cu.deleteArchivalInstitution(ai,true);
+				if(path!=null && path.length()>0){ //there are files to be removed
+					log.debug("There are somethings to be removed, checking...");
+					path = path.substring(0,path.indexOf(File.separatorChar+"EAG"));
+					path = path+"_old";
+					String subDir = APEnetUtilities.getConfig().getRepoDirPath();
+					if(resultRemoveAI!=null && resultRemoveAI.equals("ok")){
+						log.debug("Delete operation was ok, deleting _old directory...");
+						FileUtils.deleteDirectory(new File(subDir+path));
+						log.debug("Done!! Finished.");
+					}else{
+						log.debug("Rollback detected, reverting _old to original path...");
+						FileUtils.moveDirectory(new File(subDir+path),new File(subDir+path.substring(0,path.length()-"_old".length())));
+						log.debug("Revert done!");
+					}
+				}else{
+					log.debug("Nothing to be removed.");
+				}
+			}
+		} catch (Exception e) {
+			log.error(e);
+		}
+        return state;
+	}
 }
 
 
