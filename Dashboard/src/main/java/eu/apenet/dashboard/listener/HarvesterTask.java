@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 import eu.apenet.dashboard.harvest.DataHarvester;
+import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
@@ -87,7 +88,12 @@ public class HarvesterTask implements Runnable {
                 break;
             }
             if(archivalInstitutionOaiPmh.isEnabled()) {
-                if(archivalInstitutionOaiPmh.getLastHarvesting() == null || (archivalInstitutionOaiPmh.getLastHarvesting().getTime() + archivalInstitutionOaiPmh.getIntervalHarvesting() >= System.currentTimeMillis())) { //Ok, do harvest
+            	long timeToWait = 0;
+            	if (archivalInstitutionOaiPmh.getLastHarvesting() != null){
+            		timeToWait = archivalInstitutionOaiPmh.getLastHarvesting().getTime() + archivalInstitutionOaiPmh.getIntervalHarvesting() - System.currentTimeMillis();
+            		LOGGER.info(("Harvesting profile (wait "  +ContentUtils.getDaysFromMilliseconds(timeToWait) + " days): " +archivalInstitutionOaiPmh.toMinimalString()));
+            	}
+                if(archivalInstitutionOaiPmh.getLastHarvesting() == null || timeToWait <= 0) { //Ok, do harvest
                     boolean continueTask = true;
                     if(archivalInstitutionOaiPmh.isHarvestOnlyWeekend()) {
                         continueTask = false;
