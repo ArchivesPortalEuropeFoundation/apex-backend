@@ -703,7 +703,7 @@ public class EadService {
 
 	}
 
-	private static Properties readProperties(String string) throws IOException {
+	public static Properties readProperties(String string) throws IOException {
 		StringReader stringReader = new StringReader(string);
 		Properties properties = new Properties();
 		properties.load(stringReader);
