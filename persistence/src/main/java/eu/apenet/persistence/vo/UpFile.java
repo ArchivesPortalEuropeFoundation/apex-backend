@@ -40,7 +40,9 @@ public class UpFile implements java.io.Serializable {
 	private Integer aiId;
 	private String path;
 	private String filename;
-
+	@ManyToOne(fetch = FetchType.LAZY )
+	@JoinColumn(name = "ai_id" , updatable = false, insertable = false)
+	private ArchivalInstitution archivalInstitution;
 
 
 	public int getId() {
@@ -91,6 +93,14 @@ public class UpFile implements java.io.Serializable {
 
 	public String getFilename() {
 		return filename;
+	}
+
+	public ArchivalInstitution getArchivalInstitution() {
+		return archivalInstitution;
+	}
+
+	public void setArchivalInstitution(ArchivalInstitution archivalInstitution) {
+		this.archivalInstitution = archivalInstitution;
 	}
 
 }
