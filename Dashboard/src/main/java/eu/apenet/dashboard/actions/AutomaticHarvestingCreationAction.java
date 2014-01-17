@@ -1,7 +1,6 @@
 package eu.apenet.dashboard.actions;
 
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +13,7 @@ import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
+import eu.apenet.dashboard.harvest.DataHarvester;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -143,7 +143,9 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
                 setIntervalHarvest(archivalInstitutionOaiPmh.getIntervalHarvesting().toString());
                 setSelectedActivation(Boolean.toString(archivalInstitutionOaiPmh.isEnabled()));
                 setSelectedWeekend(Boolean.toString(archivalInstitutionOaiPmh.isHarvestOnlyWeekend()));
-                setLastHarvestDate(new SimpleDateFormat("dd/MM/yyyy").format(archivalInstitutionOaiPmh.getLastHarvesting()));
+                if (archivalInstitutionOaiPmh.getFrom() != null){
+                	setLastHarvestDate(new SimpleDateFormat("dd/MM/yyyy").format(DataHarvester.DATE_FORMATTER.parse(archivalInstitutionOaiPmh.getFrom())));
+                }
             }
             return SUCCESS;
         }
@@ -180,9 +182,9 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
                 } else if(getLastHarvestDate() != null) {
                     try {
                         Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).parse(getLastHarvestDate());
-                        archivalInstitutionOaiPmh.setLastHarvesting(date);
+                        archivalInstitutionOaiPmh.setFrom(DataHarvester.DATE_FORMATTER.format(date));
                     } catch (Exception e) {
-                        archivalInstitutionOaiPmh.setLastHarvesting(null);
+                        archivalInstitutionOaiPmh.setFrom(null);
                     }
                 }
             } else {
@@ -199,9 +201,9 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
                 if(getLastHarvestDate() != null) {
                     try {
                         Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).parse(getLastHarvestDate());
-                        archivalInstitutionOaiPmh.setLastHarvesting(date);
+                        archivalInstitutionOaiPmh.setFrom(DataHarvester.DATE_FORMATTER.format(date));
                     } catch (Exception e) {
-                        archivalInstitutionOaiPmh.setLastHarvesting(null);
+                        archivalInstitutionOaiPmh.setFrom(null);
                     }
                 }
             }
