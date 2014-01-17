@@ -3,6 +3,7 @@ package eu.apenet.dashboard.harvest;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
 
@@ -12,6 +13,8 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.dashboard.security.UserService;
 import eu.apenet.dashboard.services.ead.EadService;
+import eu.apenet.dashboard.utils.ContentUtils;
+import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
@@ -37,6 +40,7 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 public class DataHarvester implements Runnable {
     private static final Logger LOGGER = Logger.getLogger(DataHarvester.class);
     private static final int MAX_NUMBER_HARVESTED_FILES_FOR_TEST = 10;
+    public static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd"); //1980-01-01
 
     private long archivalInstitutionOaiPmhId;
     private boolean isNighlySchedule;
@@ -48,18 +52,24 @@ public class DataHarvester implements Runnable {
 
     public void run() {
         JpaUtil.beginDatabaseTransaction();
-        ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().findById(archivalInstitutionOaiPmhId);
-        LOGGER.info("This profile will be harvested now: " + archivalInstitutionOaiPmh.getUrl() + " (set: " + archivalInstitutionOaiPmh.getSet() + ", metadataPrefix: " + archivalInstitutionOaiPmh.getMetadataPrefix() + ")");
+        ArchivalInstitutionOaiPmhDAO archivalInstitutionOaiPmhDAO = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
+        ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = archivalInstitutionOaiPmhDAO.findById(archivalInstitutionOaiPmhId);
+        
         String baseURL = archivalInstitutionOaiPmh.getUrl();
         String metadataPrefix = archivalInstitutionOaiPmh.getMetadataPrefix();
 
         String from = null;
         String until = null;
-        if(archivalInstitutionOaiPmh.getLastHarvesting() != null) {
-            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd"); //1980-01-01
-            from = dateFormatter.format(archivalInstitutionOaiPmh.getLastHarvesting());
+        if(archivalInstitutionOaiPmh.getFrom() != null) {
+            from = archivalInstitutionOaiPmh.getFrom();
         }
-
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        String newFrom = DATE_FORMATTER.format(calendar.getTime());
+        int days = calendar.get(Calendar.DAY_OF_YEAR) -1;
+        calendar.set(Calendar.DAY_OF_YEAR, days);
+        until =  DATE_FORMATTER.format(calendar.getTime());
+        LOGGER.info("Harvested now: " + archivalInstitutionOaiPmh.getUrl() + " (set: " + archivalInstitutionOaiPmh.getSet() + ", metadataPrefix: " + archivalInstitutionOaiPmh.getMetadataPrefix() + ", from:" + from + ", until:" + until+ ")");
         String setSpec = null;
         if(archivalInstitutionOaiPmh.getSet() != null) {
             setSpec = archivalInstitutionOaiPmh.getSet();
@@ -68,7 +78,6 @@ public class DataHarvester implements Runnable {
         String currentInfoArchivalInstitutionOaiPmh = archivalInstitutionOaiPmh.toString();
 
         ArchivalInstitution archivalInstitution = archivalInstitutionOaiPmh.getArchivalInstitution();
-        LOGGER.info(archivalInstitution);
         String subdirectory = APEnetUtilities.FILESEPARATOR + archivalInstitution.getAiId() + APEnetUtilities.FILESEPARATOR + "oai_" + System.currentTimeMillis() + APEnetUtilities.FILESEPARATOR;
         String directory = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + subdirectory;
         File outputDirectory = new File(directory);
@@ -93,6 +102,7 @@ public class DataHarvester implements Runnable {
         	oaiPmhHttpClient = new OaiPmhHttpClient();
             HarvestResult harvestResult = OaiPmhHarvester.runOai(baseURL, from, until, metadataPrefix, setSpec, oaiPmhParser, errorsDirectory, oaiPmhHttpClient);
             archivalInstitutionOaiPmh.setLastHarvesting(new Date());
+            archivalInstitutionOaiPmh.setFrom(newFrom);
             if(!APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()) {
                 archivalInstitutionOaiPmh.setEnabled(false);
             }
@@ -108,7 +118,7 @@ public class DataHarvester implements Runnable {
                 upFile = upFileDAO.store(upFile);
                 EadService.useProfileAction(upFile, properties);
             }
-
+            archivalInstitutionOaiPmhDAO.updateSimple(archivalInstitutionOaiPmh);
             JpaUtil.commitDatabaseTransaction();
 
             int numberEadHarvested = harvestedFiles.length;
@@ -116,9 +126,25 @@ public class DataHarvester implements Runnable {
             LOGGER.info("Harvest completed: harvested " + numberEadHarvested + " EAD files from " + currentInfoArchivalInstitutionOaiPmh + " --- Oldest file harvested: " + harvestResult.getOldestFileHarvested().toString() + " --- Newest file harvested: " + harvestResult.getNewestFileHarvested().toString());
         } catch (Exception e) {
             JpaUtil.rollbackDatabaseTransaction();
+            ArchivalInstitutionOaiPmh archivalInstitutionOaiPmhNew = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().findById(archivalInstitutionOaiPmhId);
+            if (archivalInstitutionOaiPmhNew.isErrors()){
+            	LOGGER.error("Second time harvesting failed for " + archivalInstitutionOaiPmhNew);
+            	archivalInstitutionOaiPmh.setEnabled(false);
+            }else {
+            	LOGGER.error("First time harvesting failed for " + archivalInstitutionOaiPmhNew);
+            }
+            archivalInstitutionOaiPmhNew.setErrors(true);
+            archivalInstitutionOaiPmhNew.setLastHarvesting(new Date());
+            if(!APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()) {
+                archivalInstitutionOaiPmh.setEnabled(false);
+            }
+            archivalInstitutionOaiPmhDAO.store(archivalInstitutionOaiPmhNew);
             UserService.sendEmailHarvestFinished(false, archivalInstitution, partner, 0, currentInfoArchivalInstitutionOaiPmh, "-", "-");
-            LOGGER.error("Harvest failed for " + currentInfoArchivalInstitutionOaiPmh);
-            LOGGER.error("Harvesting failed - should we put an 'error' flag in the DB?");
+            
+            try {
+				ContentUtils.deleteFile(outputDirectory, false);
+			} catch (IOException e1) {
+			}
         } finally {
 			if (oaiPmhHttpClient != null){
 				try {
