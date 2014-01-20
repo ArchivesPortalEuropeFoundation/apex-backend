@@ -25,6 +25,7 @@ import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.SentMailRegister;
 import eu.apenet.persistence.vo.User;
 import eu.apenet.persistence.vo.UserRole;
+import eu.archivesportaleurope.harvester.oaipmh.HarvestResult.DateHarvestModel;
 
 /**
  * Service for manage users in the Dashboard
@@ -478,15 +479,23 @@ public final class UserService {
 
 	}
 
-    public static void sendEmailHarvestFinished(boolean success, ArchivalInstitution archivalInstitution, User partner, int numberEadHarvested, String infoHarvestedServer, String oldestFileHarvested, String newestFileHarvested) {
+    public static void sendEmailHarvestFinished(boolean success, ArchivalInstitution archivalInstitution, User partner, int numberEadHarvested, String infoHarvestedServer, DateHarvestModel oldestFileHarvested, DateHarvestModel newestFileHarvested) {
         EmailComposer emailComposer = new EmailComposer("emails/harvestFinished.txt", "Result of last harvesting process.", true, false);
         emailComposer.setProperty("archivalInstitution", archivalInstitution.getAiname());
         emailComposer.setProperty("name", partner.getName());
         emailComposer.setProperty("dashboardBase", APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
         emailComposer.setProperty("numberEadHarvested", numberEadHarvested+"");
         emailComposer.setProperty("infoHarvestedServer", infoHarvestedServer);
-        emailComposer.setProperty("oldestFileHarvested", oldestFileHarvested);
-        emailComposer.setProperty("newestFileHarvested", newestFileHarvested);
+        if (oldestFileHarvested != null){
+        	emailComposer.setProperty("oldestFileHarvested", oldestFileHarvested.toString());
+        }else {
+        	emailComposer.setProperty("oldestFileHarvested", "");
+        }
+        if (newestFileHarvested != null){
+        	emailComposer.setProperty("newestFileHarvested", newestFileHarvested.toString());
+        }else {
+        	emailComposer.setProperty("newestFileHarvested", "");
+        }       
         if(success)
             emailComposer.setProperty("body", "it was successful.");
         else

@@ -122,13 +122,15 @@ public class DataHarvester {
                 EadService.useProfileAction(upFile, properties);
             }
             archivalInstitutionOaiPmh.setNewHarvesting(newHarvestingDate);
+            archivalInstitutionOaiPmh.setErrors(false);
             archivalInstitutionOaiPmhDAO.updateSimple(archivalInstitutionOaiPmh);
             JpaUtil.commitDatabaseTransaction();
 
             int numberEadHarvested = harvestedFiles.length;
-            UserService.sendEmailHarvestFinished(true, archivalInstitution, partner, numberEadHarvested, currentInfoArchivalInstitutionOaiPmh, harvestResult.getOldestFileHarvested().toString(), harvestResult.getNewestFileHarvested().toString());
-            LOGGER.info("Harvest completed: harvested " + numberEadHarvested + " EAD files from " + currentInfoArchivalInstitutionOaiPmh + " --- Oldest file harvested: " + harvestResult.getOldestFileHarvested().toString() + " --- Newest file harvested: " + harvestResult.getNewestFileHarvested().toString());
+            UserService.sendEmailHarvestFinished(true, archivalInstitution, partner, numberEadHarvested, currentInfoArchivalInstitutionOaiPmh, harvestResult.getOldestFileHarvested(), harvestResult.getNewestFileHarvested());
+            LOGGER.info("Harvest completed: harvested " + numberEadHarvested + " EAD files from " + currentInfoArchivalInstitutionOaiPmh + " --- Oldest file harvested: " + harvestResult.getOldestFileHarvested() + " --- Newest file harvested: " + harvestResult.getNewestFileHarvested());
         } catch (Exception e) {
+        	LOGGER.info("Error: " + e.getMessage(), e);
             JpaUtil.rollbackDatabaseTransaction();
             ArchivalInstitutionOaiPmh archivalInstitutionOaiPmhNew = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().findById(archivalInstitutionOaiPmhId);
             if (archivalInstitutionOaiPmhNew.isErrors()){
@@ -144,7 +146,7 @@ public class DataHarvester {
                 archivalInstitutionOaiPmh.setEnabled(false);
             }
             archivalInstitutionOaiPmhDAO.store(archivalInstitutionOaiPmhNew);
-            UserService.sendEmailHarvestFinished(false, archivalInstitution, partner, 0, currentInfoArchivalInstitutionOaiPmh, "-", "-");
+            UserService.sendEmailHarvestFinished(false, archivalInstitution, partner, 0, currentInfoArchivalInstitutionOaiPmh, null, null);
             
             try {
 				ContentUtils.deleteFile(outputDirectory, false);

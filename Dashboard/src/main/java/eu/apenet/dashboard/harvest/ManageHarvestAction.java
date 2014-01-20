@@ -71,6 +71,9 @@ public class ManageHarvestAction extends AbstractAction {
     	}else if ("DELETE".equals(selectedAction)){
     		archivalInstitutionOaiPmh.setEnabled(true);
     		archivalInstitutionOaiPmhDAO.delete(archivalInstitutionOaiPmh);
+    	}else if ("FULL".equals(selectedAction)){
+    		archivalInstitutionOaiPmh.setFrom(null);
+    		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
     	}
     	return SUCCESS;
     }
