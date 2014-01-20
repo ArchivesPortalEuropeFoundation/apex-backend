@@ -132,6 +132,8 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	// Variable for the name of the institution without lang.
 	private String aiArchivalInstitutionName;
 
+	private Set<String> institutionsWithContentNotPublished;
+
 	public void setHttpFile(File httpFile){
 		this.httpFile = httpFile;
 	}
@@ -182,6 +184,23 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 
 	public void setAiArchivalInstitutionName(String aiArchivalInstitutionName) {
 		this.aiArchivalInstitutionName = aiArchivalInstitutionName;
+	}
+
+	public Set<String> getInstitutionsWithContentNotPublished() {
+		return this.institutionsWithContentNotPublished;
+	}
+
+	public void addInstitutionsWithContentNotPublished(String institutionsWithContentName) {
+		if (this.getInstitutionsWithContentNotPublished() == null) {
+			this.institutionsWithContentNotPublished = new LinkedHashSet<String>();
+		}
+		
+		this.getInstitutionsWithContentNotPublished().add(institutionsWithContentName);
+	}
+
+	public void setInstitutionsWithContentNotPublished(
+			Set<String> institutionsWithContentNotPublished) {
+		this.institutionsWithContentNotPublished = institutionsWithContentNotPublished;
 	}
 
 	public String upload() throws SAXException, APEnetException{
@@ -342,7 +361,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 //				if(this.country==null){
 					this.country = DAOFactory.instance().getCountryDAO().getCountryByCname(SecurityContext.get().getCountryName());
 //				}
-				Collection<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile);
+				Set<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile);
 				if(archivalInstitutions!=null){
 					try{
 						state = checkAndUpdateFromToDDBB(archivalInstitutions);
@@ -405,7 +424,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			writer = new OutputStreamWriter(getServletResponse().getOutputStream(),UTF8);
 			//begin json part
 			writer.append("{");
-			Collection<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile);
+			Set<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile);
 			if(archivalInstitutions!=null){
 				writer.append("\"newtree\":");
 				writer.append(parseArchivalInstitutionsToJSON(archivalInstitutions));
@@ -830,6 +849,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 				}else{
 					log.debug("NOT Deleted institution with aiId: "+targetToBeDeleted.getAiId()+" by content not deletable.");
 					error = true;
+					this.addInstitutionsWithContentNotPublished(targetToBeDeleted.getAiname());
 				}
 			}else if(!targetToBeDeleted.isGroup()){
 				log.debug("Detected institution with content indexed, so it could not be deleted. Marked operation like invalid.");
@@ -1252,8 +1272,8 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 * 
 	 * @param archivalInstitutionFile
 	 */
-	private Collection<ArchivalInstitution> getInstitutionsByALFile(File archivalInstitutionFile) {
-		Collection<ArchivalInstitution> archivalInstitutions = null;
+	private Set<ArchivalInstitution> getInstitutionsByALFile(File archivalInstitutionFile) {
+		Set<ArchivalInstitution> archivalInstitutions = null;
 		try {
 			XMLInputFactory factory = XMLInputFactory.newFactory();
 			XMLStreamReader r = factory.createXMLStreamReader(new FileReader(archivalInstitutionFile));
@@ -1274,7 +1294,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 * 
 	 * @throws XMLStreamException
 	 */
-	private Collection<ArchivalInstitution> getXMLArchivalInstitutionLevel(XMLStreamReader r) throws XMLStreamException{
+	private Set<ArchivalInstitution> getXMLArchivalInstitutionLevel(XMLStreamReader r) throws XMLStreamException{
 		ArchivalInstitution archivalInstitution = null;
 		Set<ArchivalInstitution> archivalInstitutions = new LinkedHashSet<ArchivalInstitution>();
 		String level = "";
@@ -1472,7 +1492,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 * @throws XMLStreamException
 	 */
 	private Set<ArchivalInstitution> getXMLArchivalInstitutionLevelChildren(XMLStreamReader r, ArchivalInstitution aiParent) throws XMLStreamException {
-		Set<ArchivalInstitution> archivalInstitutions = new HashSet<ArchivalInstitution>();
+		Set<ArchivalInstitution> archivalInstitutions = new LinkedHashSet<ArchivalInstitution>();
 		boolean validXML = true;
 		ArchivalInstitution archivalInstitution = null;
 		Integer event = null;

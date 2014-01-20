@@ -457,7 +457,14 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 						}
 					}
 					if(!rollback){
-						ArchivalLandscape.deleteContent(ai);
+						// Recover each child to delete the EAG file.
+						if (ai.isGroup() 
+								&& ai.getChildArchivalInstitutions() != null
+								&& !ai.getChildArchivalInstitutions().isEmpty()) {
+							this.deleteAIChild(ai);
+						} else {
+							ArchivalLandscape.deleteContent(ai);
+						}
 //						aiDao.deleteSimple(ai); //deleteSimple institution
 						messenger.append(buildNode("info",getText("al.message.institutiondeleted")));
 					}
@@ -474,7 +481,24 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		return messenger.toString();
 	}
 
-
+	/**
+	 * Method to delete each ai.
+	 *
+	 * @param ai
+	 */
+	private void deleteAIChild(ArchivalInstitution ai) {
+		if (ai.isGroup()) {
+			Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(ai.getChildArchivalInstitutions());
+			if (children != null && !children.isEmpty()) {
+				Iterator<ArchivalInstitution> childrenIt = children.iterator();
+				while (childrenIt.hasNext()) {
+					this.deleteAIChild(childrenIt.next());
+				}
+			}
+			
+		}
+		ArchivalLandscape.deleteContent(ai);
+	}
 
 	private String createArchivalInstitution(String name,String father,String type,String lang){
 		StringBuilder messenger = new StringBuilder();

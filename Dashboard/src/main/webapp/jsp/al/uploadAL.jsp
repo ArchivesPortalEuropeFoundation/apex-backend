@@ -8,7 +8,7 @@
 					<s:file id="httpFile" theme="simple" name="httpFile" style="margin-left:3px;"/>
 					<input type="button" id="uploadActionButton" value="<s:property value='getText("label.upload")' />" style="margin-left:6px;"/>
 					<div>						
-						<input type="checkbox" id="checkboxPreview" ></input>
+						<input type="checkbox" id="checkboxPreview" checked="checked"></input>
 						<label for="checkboxPreview" ><s:property value="getText('al.message.previewdifferentsbeforeupload')"/></label>
 					</div>
 				</s:form>

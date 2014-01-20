@@ -593,7 +593,7 @@ public class UploadContentAction extends AbstractInstitutionAction {
     }
 
     private void initializeProfileList() {
-        ingestionprofiles.add(new SelectItem("", "---Choose a profile---"));
+        ingestionprofiles.add(new SelectItem("", "---" + getText("ingestionprofiles.chooseprofile") + "---"));
         IngestionprofileDAO profileDAO = DAOFactory.instance().getIngestionprofileDAO();
         List<Ingestionprofile> queryResult = profileDAO.getIngestionprofiles(getAiId());
         if (queryResult != null && !queryResult.isEmpty()) {

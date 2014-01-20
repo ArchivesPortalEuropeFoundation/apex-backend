@@ -3,5 +3,9 @@
 <div id="fileList" align = "left">
 	<s:property value="getText('updateErrorFormatAL.errors')" /><br>
 	<p>&nbsp;</p>
-	<s:property value="getText('updateErrorFormatAL.error.contentNotPublished.final')" />
+	<s:property value="getText('updateErrorFormatAL.error.contentNotPublished.final')" /><br>
+	<p>&nbsp;</p>
+	<s:iterator var="current" value="institutionsWithContentNotPublished" status="status">
+		<p><s:property value="#current" /></p>
+	</s:iterator>
 </div>
