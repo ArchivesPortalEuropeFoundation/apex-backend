@@ -19,9 +19,14 @@ import java.util.Date;
  * @author Yoann Moranville
  */
 public class ManageHarvestAction extends AbstractAction {
-    private static final Logger LOGGER = Logger.getLogger(ManageHarvestAction.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6086665250239818127L;
+	private static final Logger LOGGER = Logger.getLogger(ManageHarvestAction.class);
     private static final SimpleDateFormat DATE_TIME = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
     private Integer harvestId;
+    private boolean processOnceADay = true;
 
     public Integer getHarvestId() {
         return harvestId;
@@ -39,11 +44,14 @@ public class ManageHarvestAction extends AbstractAction {
 
     public String execute() throws Exception {
         ArchivalInstitutionOaiPmhDAO archivalInstitutionOaiPmhDAO = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
+        processOnceADay = HarvesterDaemon.isProcessOnceADay();
         getServletRequest().setAttribute("numberOfActiveItems", archivalInstitutionOaiPmhDAO.countEnabledItems());
         getServletRequest().setAttribute("archivalInstitutionOaiPmhs", archivalInstitutionOaiPmhDAO.findAll());
         getServletRequest().setAttribute("harvestActive", HarvesterDaemon.isActive());
         getServletRequest().setAttribute("harvestProcessing", HarvesterDaemon.isHarvesterProcessing());
         getServletRequest().setAttribute("currentTime", DATE_TIME.format(new Date()));
+        getServletRequest().setAttribute("dailyHarvesting",processOnceADay );
+        
         return SUCCESS;
     }
 
@@ -81,8 +89,17 @@ public class ManageHarvestAction extends AbstractAction {
         if(HarvesterDaemon.isActive()) {
             HarvesterDaemon.stop();
         } else {
-            HarvesterDaemon.start(APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing());
+            HarvesterDaemon.start(processOnceADay);
         }
         return SUCCESS;
     }
+
+	public boolean isProcessOnceADay() {
+		return processOnceADay;
+	}
+
+	public void setProcessOnceADay(boolean processOnceADay) {
+		this.processOnceADay = processOnceADay;
+	}
+    
 }
