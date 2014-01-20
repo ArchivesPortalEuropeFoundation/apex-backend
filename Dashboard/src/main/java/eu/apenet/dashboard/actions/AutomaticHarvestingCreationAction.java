@@ -183,7 +183,9 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
                 archivalInstitutionOaiPmh.setHarvestOnlyWeekend(Boolean.parseBoolean(getSelectedWeekend()));
                 if(getSelectedActivation() != null) {
                     if(!archivalInstitutionOaiPmh.isEnabled() && Boolean.parseBoolean(getSelectedActivation())) {
-                        archivalInstitutionOaiPmh.setLastHarvesting(null);
+                    	if (!APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()){
+                        	archivalInstitutionOaiPmh.setFrom(null);
+                    	}
                         archivalInstitutionOaiPmh.setEnabled(true);
                     } else if(archivalInstitutionOaiPmh.isEnabled() && !Boolean.parseBoolean(getSelectedActivation())) {
                         archivalInstitutionOaiPmh.setEnabled(false);
