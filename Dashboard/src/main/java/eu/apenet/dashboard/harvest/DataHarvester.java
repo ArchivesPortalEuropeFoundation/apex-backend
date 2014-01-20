@@ -37,7 +37,7 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
  *
  * @author Yoann Moranville
  */
-public class DataHarvester implements Runnable {
+public class DataHarvester {
     private static final Logger LOGGER = Logger.getLogger(DataHarvester.class);
     private static final int MAX_NUMBER_HARVESTED_FILES_FOR_TEST = 10;
     public static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd"); //1980-01-01
@@ -63,12 +63,15 @@ public class DataHarvester implements Runnable {
         if(archivalInstitutionOaiPmh.getFrom() != null) {
             from = archivalInstitutionOaiPmh.getFrom();
         }
+        Date currentDate = new Date();
+        Date newHarvestingDate = new Date(currentDate.getTime() + archivalInstitutionOaiPmh.getIntervalHarvesting());
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
+        calendar.setTime(currentDate);
         String newFrom = DATE_FORMATTER.format(calendar.getTime());
         int days = calendar.get(Calendar.DAY_OF_YEAR) -1;
         calendar.set(Calendar.DAY_OF_YEAR, days);
         until =  DATE_FORMATTER.format(calendar.getTime());
+        
         LOGGER.info("Harvested now: " + archivalInstitutionOaiPmh.getUrl() + " (set: " + archivalInstitutionOaiPmh.getSet() + ", metadataPrefix: " + archivalInstitutionOaiPmh.getMetadataPrefix() + ", from:" + from + ", until:" + until+ ")");
         String setSpec = null;
         if(archivalInstitutionOaiPmh.getSet() != null) {
@@ -118,6 +121,7 @@ public class DataHarvester implements Runnable {
                 upFile = upFileDAO.store(upFile);
                 EadService.useProfileAction(upFile, properties);
             }
+            archivalInstitutionOaiPmh.setNewHarvesting(newHarvestingDate);
             archivalInstitutionOaiPmhDAO.updateSimple(archivalInstitutionOaiPmh);
             JpaUtil.commitDatabaseTransaction();
 
@@ -129,10 +133,11 @@ public class DataHarvester implements Runnable {
             ArchivalInstitutionOaiPmh archivalInstitutionOaiPmhNew = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().findById(archivalInstitutionOaiPmhId);
             if (archivalInstitutionOaiPmhNew.isErrors()){
             	LOGGER.error("Second time harvesting failed for " + archivalInstitutionOaiPmhNew);
-            	archivalInstitutionOaiPmh.setEnabled(false);
+            	archivalInstitutionOaiPmhNew.setEnabled(false);
             }else {
             	LOGGER.error("First time harvesting failed for " + archivalInstitutionOaiPmhNew);
             }
+            archivalInstitutionOaiPmhNew.setNewHarvesting(newHarvestingDate);
             archivalInstitutionOaiPmhNew.setErrors(true);
             archivalInstitutionOaiPmhNew.setLastHarvesting(new Date());
             if(!APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()) {

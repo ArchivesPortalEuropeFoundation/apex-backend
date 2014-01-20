@@ -36,7 +36,7 @@ public class HarvesterDaemon {
                 addTask(new Duration(startTonight, 1, 0), new Duration(5, 0, 0), new Duration(24, 0, 0));
             } else {
             	LOGGER.info("Ten minutes harvesting started.");
-                addTask(new Duration(0, 1, 0), new Duration(0, 10, 0), new Duration(0, 5, 0));
+                addTask(new Duration(0, 0, 0), new Duration(0, 10, 0), new Duration(0, 5, 0));
             }
 
             LOGGER.info("Harvester daemon started");

@@ -1,16 +1,15 @@
 package eu.apenet.dashboard.harvest;
 
-import eu.apenet.commons.utils.APEnetUtilities;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.apache.log4j.Logger;
+
 import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
-import eu.apenet.dashboard.listener.HarvesterTask;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
-import org.apache.log4j.Logger;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * User: Yoann Moranville
@@ -27,6 +26,7 @@ public class ManageHarvestAction extends AbstractAction {
     private static final SimpleDateFormat DATE_TIME = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
     private Integer harvestId;
     private boolean processOnceADay = true;
+    private String selectedAction;
 
     public Integer getHarvestId() {
         return harvestId;
@@ -46,7 +46,8 @@ public class ManageHarvestAction extends AbstractAction {
         ArchivalInstitutionOaiPmhDAO archivalInstitutionOaiPmhDAO = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
         processOnceADay = HarvesterDaemon.isProcessOnceADay();
         getServletRequest().setAttribute("numberOfActiveItems", archivalInstitutionOaiPmhDAO.countEnabledItems());
-        getServletRequest().setAttribute("archivalInstitutionOaiPmhs", archivalInstitutionOaiPmhDAO.findAll());
+        getServletRequest().setAttribute("allOaiProfiles", DisplayHarvestProfileItem.getItems(archivalInstitutionOaiPmhDAO.getArchivalInstitutionOaiPmhs(), new Date()));
+		getServletRequest().setAttribute("firstItems", DisplayHarvestProfileItem.getItems(archivalInstitutionOaiPmhDAO.getFirstItems(), new Date()));
         getServletRequest().setAttribute("harvestActive", HarvesterDaemon.isActive());
         getServletRequest().setAttribute("harvestProcessing", HarvesterDaemon.isHarvesterProcessing());
         getServletRequest().setAttribute("currentTime", DATE_TIME.format(new Date()));
@@ -55,35 +56,25 @@ public class ManageHarvestAction extends AbstractAction {
         return SUCCESS;
     }
 
-    public String idleHarvest() throws Exception {
+    public String manageHarvestItem(){
         ArchivalInstitutionOaiPmhDAO archivalInstitutionOaiPmhDAO = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
         ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = archivalInstitutionOaiPmhDAO.findById(harvestId.longValue());
-        archivalInstitutionOaiPmh.setEnabled(false);
-        archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
-        return SUCCESS;
+    	if ("NOW".equals(selectedAction)){
+    		archivalInstitutionOaiPmh.setNewHarvesting(new Date());
+    		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
+    	}else if ("DISABLE".equals(selectedAction)){
+    		archivalInstitutionOaiPmh.setEnabled(false);
+    		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
+    	}else if ("ENABLE".equals(selectedAction)){
+    		archivalInstitutionOaiPmh.setEnabled(true);
+    		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
+    	}else if ("DELETE".equals(selectedAction)){
+    		archivalInstitutionOaiPmh.setEnabled(true);
+    		archivalInstitutionOaiPmhDAO.delete(archivalInstitutionOaiPmh);
+    	}
+    	return SUCCESS;
     }
 
-    public String activateHarvest() throws Exception {
-        ArchivalInstitutionOaiPmhDAO archivalInstitutionOaiPmhDAO = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
-        ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = archivalInstitutionOaiPmhDAO.findById(harvestId.longValue());
-        if(!APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()) { //it means on test servers, not prod
-            archivalInstitutionOaiPmh.setLastHarvesting(null);
-        }
-        archivalInstitutionOaiPmh.setEnabled(true);
-        archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
-        return SUCCESS;
-    }
-
-    public String startHarvest() throws Exception {
-//        ArchivalInstitutionOaiPmhDAO archivalInstitutionOaiPmhDAO = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
-//        ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = archivalInstitutionOaiPmhDAO.findById(harvestId.longValue());
-        HarvesterDaemon.setHarvesterProcessing(true);
-        new Thread(
-            new DataHarvester(harvestId.longValue(), false)
-        ).start();
-
-        return SUCCESS;
-    }
 
     public String startStopHarvester() {
         if(HarvesterDaemon.isActive()) {
@@ -101,5 +92,15 @@ public class ManageHarvestAction extends AbstractAction {
 	public void setProcessOnceADay(boolean processOnceADay) {
 		this.processOnceADay = processOnceADay;
 	}
+
+	public String getSelectedAction() {
+		return selectedAction;
+	}
+
+	public void setSelectedAction(String selectedAction) {
+		this.selectedAction = selectedAction;
+	}
+
+
     
 }
