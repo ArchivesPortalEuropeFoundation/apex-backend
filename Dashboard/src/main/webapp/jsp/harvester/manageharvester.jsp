@@ -20,6 +20,11 @@
             <th><s:text name="admin.harvestermanagement.harvester.processing" /></th>
             <td>${harvestProcessing}</td>
         </tr>
+        <tr>
+            <th><s:text name="admin.harvestermanagement.harvester.daily" /></th>
+            <td>${dailyHarvesting}</td>
+        </tr>
+        
     </table>
     <s:form action="startStopHarvester" method="post">
         <s:actionerror />
@@ -28,6 +33,7 @@
                 <s:submit key="admin.harvestermanagement.harvester.stop" cssClass="mainButton" name="startButton" />
             </c:when>
             <c:otherwise>
+           		<s:checkbox name="processOnceADay" key="admin.harvestermanagement.harvester.daily"/>
                 <s:submit key="admin.harvestermanagement.harvester.start" cssClass="mainButton" name="startButton" />
             </c:otherwise>
         </c:choose>
