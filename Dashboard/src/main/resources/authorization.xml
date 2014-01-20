@@ -58,7 +58,7 @@
             sessionManagement,deleteSession,userManagement,
             changeToCountryManager,createCountryManager,displayCreateCountryManager,disableCountryManager,enableCountryManager,deleteCountryManager,
             viewDptVersions, addVersion, deleteVersion, manageQueue, startStopQueue,deleteQueueItem,deleteAllQueueItemsWithErrors,deleteAllUnusedUploadFiles,forceSolrCommit,
-            eag2012GeoCoordinates, manageHarvest, startStopHarvester, idleHarvest, activateHarvest, startHarvest, changeIdentifierInDDBB
+            eag2012GeoCoordinates, manageHarvest, startStopHarvester, manageHarvestItem, changeIdentifierInDDBB
         </group>
     </groups>
     <role-mappings>

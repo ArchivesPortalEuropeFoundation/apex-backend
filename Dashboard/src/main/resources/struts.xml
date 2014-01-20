@@ -803,22 +803,11 @@
                 <param name="actionName">manageHarvest</param>
             </result>
         </action>
-        <action name="idleHarvest" class="eu.apenet.dashboard.harvest.ManageHarvestAction" method="idleHarvest">
+        <action name="manageHarvestItem" class="eu.apenet.dashboard.harvest.ManageHarvestAction" method="manageHarvestItem">
             <result name="success" type="redirectAction">
                 <param name="actionName">manageHarvest</param>
             </result>
         </action>
-        <action name="activateHarvest" class="eu.apenet.dashboard.harvest.ManageHarvestAction" method="activateHarvest">
-            <result name="success" type="redirectAction">
-                <param name="actionName">manageHarvest</param>
-            </result>
-        </action>
-        <action name="startHarvest" class="eu.apenet.dashboard.harvest.ManageHarvestAction" method="startHarvest">
-            <result name="success" type="redirectAction">
-                <param name="actionName">manageHarvest</param>
-            </result>
-        </action>
-
 
         <action name="manageQueue" class="eu.apenet.dashboard.queue.ManageQueueAction">
             <result name="success" type="tiles">manageQueue</result>
