@@ -52,6 +52,7 @@ function validateAndSave(profileNameError, dataProviderError, edmDaoError, langu
             }
         }
     }
+    $('#ingestionprofilesSave').attr("disabled", "disabled");
     $('#webformIngestionprofile').submit();
 }
 
