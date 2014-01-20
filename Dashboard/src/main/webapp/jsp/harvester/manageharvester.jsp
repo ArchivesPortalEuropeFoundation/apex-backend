@@ -38,58 +38,112 @@
             </c:otherwise>
         </c:choose>
     </s:form>
+	<h2>First items</h2>
+                <table class="defaultlayout fullWidth">
+			        <thead>
+			            <tr>
+			            	<th>ID</th>
+			             	<th>Country</th>
+			             	<th>Archival Institution</th>
+			                <th><s:text name="label.harvesting.url" /></th>
+			                <th><s:text name="label.harvesting.set" /></th>
+			                <th><s:text name="label.harvesting.metadata" /></th>
+			                <th><s:text name="label.harvesting.lastHarvest" /></th>
+			                <th><s:text name="label.harvesting.newHarvest" /></th>
+			                <th><s:text name="label.harvesting.from" /></th>
+			                <th><s:text name="label.harvesting.userprofile" /></th>
+			                <th><s:text name="label.harvesting.errors" /></th>
+			            </tr>
+			        </thead>
+			        <tbody>
+			        <c:forEach var="item" items="${firstItems}">
 
-    <h2>All saved harvest processes:</h2>
-    <table class="defaultlayout">
-        <thead>
-            <tr>
-                <th><s:text name="admin.harvestermanagement.institution.name" /></th>
-                <th><s:text name="admin.harvestermanagement.oai.url" /></th>
-                <th><s:text name="admin.harvestermanagement.oai.set" /></th>
-                <th><s:text name="admin.harvestermanagement.oai.metadata" /></th>
-                <th><s:text name="admin.harvestermanagement.oai.lastHarvest" /></th>
-                <th><s:text name="admin.harvestermanagement.harvester.userprofile" /></th>
-                <th><s:text name="admin.harvestermanagement.harvester.action" /></th>
-            </tr>
-        </thead>
-        <tbody>
-        <c:forEach var="item" items="${archivalInstitutionOaiPmhs}">
-            <tr>
-                <td><c:out value="${item.archivalInstitution.ainame}" /></td>
-                <td><c:out value="${item.url}" /></td>
-                <td><c:out value="${item.set}" /></td>
-                <td><c:out value="${item.metadataPrefix}" /></td>
-                <td><c:out value="${item.lastHarvesting}" /></td>
-                <td><c:out value="${item.ingestionprofile.nameProfile}" /></td>
-                <td>
-                    <c:choose>
-                        <c:when test="${harvestProcessing}">
-                            <s:text name="admin.harvestermanagement.harvester.processing.noactions" />
-                        </c:when>
-                        <c:otherwise>
-                            <c:choose>
-                                <c:when test="${item.enabled}">
-                                    <s:form action="idleHarvest" theme="simple">
-                                        <input type="hidden" name="harvestId" value="${item.id}" />
-                                        <s:submit key="admin.harvestermanagement.harvester.idle" name="idleHarvest" />
-                                    </s:form>
-                                </c:when>
-                                <c:otherwise>
-                                    <s:form action="activateHarvest" theme="simple">
-                                        <input type="hidden" name="harvestId" value="${item.id}" />
-                                        <s:submit key="admin.harvestermanagement.harvester.activate" name="activateHarvest" />
-                                    </s:form>
-                                </c:otherwise>
-                            </c:choose>
-                            <s:form action="startHarvest" theme="simple">
-                                <input type="hidden" name="harvestId" value="${item.id}" />
-                                <s:submit key="admin.harvestermanagement.harvester.start" name="startHarvest" />
-                            </s:form>
-                        </c:otherwise>
-                    </c:choose>
-                </td>
-            </tr>
-        </c:forEach>
-        </tbody>
-    </table>
+			            <tr class="${item.globalCss}">
+			            	<td><c:out value="${item.id}" /></td>
+			            	<td><c:out value="${item.country}" /></td>
+			            	<td><c:out value="${item.ainame}" /></td>
+			                <td><c:out value="${item.url}" /></td>
+			                <td><c:out value="${item.set}" /></td>
+			                <td><c:out value="${item.metadataPrefix}" /></td>
+			                <td><c:out value="${item.lastHarvesting}" /></td>
+			                <td><c:out value="${item.newHarvesting}" /></td>
+			                <td><c:out value="${item.from}" /></td>
+			                <td><c:out value="${item.ingestionProfile}" /></td>
+			                <td  class="${item.errorCss}"><c:out value="${item.errors}" /></td>
+
+			            </tr>
+			        </c:forEach>
+			        </tbody>
+			    </table>
+    	<h2>All saved harvest processes:</h2>
+                <table class="defaultlayout fullWidth">
+			        <thead>
+			            <tr>
+			            	<th>ID</th>
+			             	<th>Country</th>
+			             	<th>Archival Institution</th>
+			                <th><s:text name="label.harvesting.url" /></th>
+			                <th><s:text name="label.harvesting.set" /></th>
+			                <th><s:text name="label.harvesting.metadata" /></th>
+			                <th><s:text name="label.harvesting.lastHarvest" /></th>
+			                <th><s:text name="label.harvesting.newHarvest" /></th>
+			                <th><s:text name="label.harvesting.from" /></th>
+			                <th><s:text name="label.harvesting.userprofile" /></th>
+			                <th><s:text name="label.harvesting.errors" /></th>
+			                <th>Actions</th>
+			            </tr>
+			        </thead>
+			        <tbody>
+			        <c:forEach var="item" items="${allOaiProfiles}">
+
+			            <tr class="${item.globalCss}">
+			            	<td><c:out value="${item.id}" /></td>
+			            	<td><c:out value="${item.country}" /></td>
+			            	<td><c:out value="${item.ainame}" /></td>
+			                <td><c:out value="${item.url}" /></td>
+			                <td><c:out value="${item.set}" /></td>
+			                <td><c:out value="${item.metadataPrefix}" /></td>
+			                <td><c:out value="${item.lastHarvesting}" /></td>
+			                <td><c:out value="${item.newHarvesting}" /></td>
+			                <td><c:out value="${item.from}" /></td>
+			                <td><c:out value="${item.ingestionProfile}" /></td>
+			                <td  class="${item.errorCss}"><c:out value="${item.errors}" /></td>
+			                <td>
+			                    <c:choose>
+			                        <c:when test="${harvestProcessing}">
+			                            <s:text name="admin.harvestermanagement.harvester.processing.noactions" />
+			                        </c:when>
+			                        <c:otherwise>
+			 
+			                        <s:form action="manageHarvestItem" theme="simple">
+			                        	<input type="hidden" name="harvestId" value="${item.id}" />
+			                        	<select class="selectedAction" name="selectedAction">
+			                            <c:choose>
+			                                <c:when test="${item.enabled}">
+			                                	<option value="NOW">
+													<s:text name="admin.harvestermanagement.harvester.start" />
+												</option>			                                
+			                                	<option value="DISABLE">
+													<s:text name="admin.harvestermanagement.harvester.idle" />
+												</option>
+			                                </c:when>
+			                                <c:otherwise>
+			                                	<option value="ENABLE">
+													<s:text name="admin.harvestermanagement.harvester.activate" />
+												</option>
+			                                	<option value="ENABLE">
+													<s:text name="admin.harvestermanagement.harvester.delete" />
+												</option>
+			                                </c:otherwise>
+			                            </c:choose>
+			                            </select>
+			                            	<input type="submit" value="<s:text name="content.message.go" />" />	
+			                            </s:form>
+			                        </c:otherwise>
+			                    </c:choose>
+			                </td>
+			            </tr>
+			        </c:forEach>
+			        </tbody>
+			    </table>
 </div>

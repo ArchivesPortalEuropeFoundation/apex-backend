@@ -7,30 +7,52 @@
 
     <c:choose>
         <c:when test="${step == 0}">
-            <form action="automaticharvestingcreationpage2.action" method="POST">
-                <table>
-                    <tr>
-                        <td>
-                            <label for="oaiprofiles">
-                                <s:property value="getText('label.harvesting.currentoaipmhprofiles')"/>
-                            </label>
-                        </td>
-                        <td>
-                            <select name="oaiprofiles" id="oaiprofiles">
-                                <option value="-1" ><s:property value="getText('label.harvesting.createnewprofile')"/></option>
-                                <c:forEach var="archivalInstitutionOaiPmh" items="${archivalInstitutionOaiPmhs}">
-                                    <option value="${archivalInstitutionOaiPmh.id}">${archivalInstitutionOaiPmh.url} (${archivalInstitutionOaiPmh.set} - ${archivalInstitutionOaiPmh.metadataPrefix} - ${archivalInstitutionOaiPmh.enabled})</option>
-                                </c:forEach>
-                            </select>
+                <table class="defaultlayout fullWidth">
+			        <thead>
+			            <tr>
+			                <th><s:text name="label.harvesting.url" /></th>
+			                <th><s:text name="label.harvesting.set" /></th>
+			                <th><s:text name="label.harvesting.metadata" /></th>
+			                <th><s:text name="label.harvesting.lastHarvest" /></th>
+			                <th><s:text name="label.harvesting.newHarvest" /></th>
+			                <th><s:text name="label.harvesting.from" /></th>
+			                <th><s:text name="label.harvesting.userprofile" /></th>
+			                <th><s:text name="label.harvesting.errors" /></th>
+			                <th><s:text name="content.message.actions" /></th>
+			            </tr>
+			        </thead>
+			        <tbody>
+			        <c:forEach var="item" items="${harvestProfileItems}">
+
+			            <tr class="${item.globalCss}">
+			                <td><c:out value="${item.url}" /></td>
+			                <td><c:out value="${item.set}" /></td>
+			                <td><c:out value="${item.metadataPrefix}" /></td>
+			                <td><c:out value="${item.lastHarvesting}" /></td>
+			                <td><c:out value="${item.newHarvesting}" /></td>
+			                <td><c:out value="${item.from}" /></td>
+			                <td><c:out value="${item.ingestionProfile}" /></td>
+			                <td  class="${item.errorCss}"><c:out value="${item.errors}" /></td>
+			                <td>
+	                            <s:form action="automaticharvestingcreationpage3.action" method="POST" theme="simple">
+	                               <input type="hidden" name="oaiprofiles" value="${item.id}" />
+	                               <input type="hidden" name="url" value="${item.url}" />
+	                               <s:submit key="dashboard.edit.title" />
+	                            </s:form>
+		
+			                </td>
+			            </tr>
+			        </c:forEach>
+			        <tr>
+                        <td colspan="9">
+	                        <s:form action="automaticharvestingcreationpage2.action" method="POST" theme="simple">
+	                           <input type="hidden" name="oaiprofiles" value="-1" />
+	                          <s:submit key="label.harvesting.createnewprofile" />
+	                        </s:form>           
                         </td>
                     </tr>
-                    <tr>
-                        <td colspan="2">
-                            <input type="submit" value="<s:property value="getText('label.ok')"/>"/>
-                        </td>
-                    </tr>
-                </table>
-            </form>
+			        </tbody>
+			    </table>
         </c:when>
         <c:when test="${step == 1}">
             <form action="automaticharvestingcreationpage3.action" method="POST">
@@ -60,6 +82,16 @@
                 <input type="hidden" id="url" name="url" value="${url}" size="255"/>
                 <table>
                     <c:if test="${not empty sets}">
+	                     <tr>
+	                        <td>
+	                            <label for="url">
+	                                <s:property value="getText('label.harvesting.enterurl')"/>
+	                            </label>
+	                        </td>
+	                        <td>
+	                            <c:out value="${url}"/>
+	                        </td>
+	                    </tr>
                         <tr>
                             <td>
                                 <label for="sets">
@@ -67,11 +99,18 @@
                                 </label>
                             </td>
                             <td>
-                                <select name="selectedSet" id="sets">
-                                    <c:forEach var="set" items="${sets}">
-                                        <option value="${set.value}"<c:if test="${selectedSet == set.value}"> selected="selected"</c:if>>${set.content}</option>
-                                    </c:forEach>
-                                </select>
+                            	<c:choose>
+                            		<c:when test="${oaiprofiles > 0}">
+                            			<c:out value="${selectedSet}"/>
+                            		</c:when>
+                            		<c:otherwise>
+		                                <select name="selectedSet" id="sets">
+		                                    <c:forEach var="set" items="${sets}">
+		                                        <option value="${set.value}"<c:if test="${selectedSet == set.value}"> selected="selected"</c:if>>${set.content}</option>
+		                                    </c:forEach>
+		                                </select>                            		
+                            		</c:otherwise>
+                            	</c:choose>
                             </td>
                         </tr>
                     </c:if>
@@ -82,11 +121,19 @@
                             </label>
                         </td>
                         <td>
-                            <select name="selectedMetadataFormat" id="metadataFormats">
-                                <c:forEach var="metadataFormat" items="${metadataFormats}">
-                                    <option value="${metadataFormat.value}"<c:if test="${selectedMetadataFormat == metadataFormat.value}"> selected="selected"</c:if>>${metadataFormat.content}</option>
-                                </c:forEach>
-                            </select>
+                            	<c:choose>
+                            		<c:when test="${oaiprofiles > 0}">
+                            			<c:out value="${selectedMetadataFormat}"/>
+                            		</c:when>
+                            		<c:otherwise>
+			                            <select name="selectedMetadataFormat" id="metadataFormats">
+			                                <c:forEach var="metadataFormat" items="${metadataFormats}">
+			                                    <option value="${metadataFormat.value}"<c:if test="${selectedMetadataFormat == metadataFormat.value}"> selected="selected"</c:if>>${metadataFormat.content}</option>
+			                                </c:forEach>
+			                            </select>                           		
+                            		</c:otherwise>
+                            	</c:choose>                        
+
                         </td>
                     </tr>
                     <tr>
@@ -116,6 +163,7 @@
                             </select>
                         </td>
                     </tr>
+                    <c:if test="${oaiprofiles == -1}">
                     <tr>
                         <td>
                             <label for="lastHarvestDate">
@@ -126,6 +174,7 @@
                             <input type="text" id="lastHarvestDate" name="lastHarvestDate" size="10" value="${lastHarvestDate}" />
                         </td>
                     </tr>
+                    </c:if>
                     <tr>
                         <td>
                             <label for="ingestionprofiles">
@@ -140,7 +189,6 @@
                             </select>
                         </td>
                     </tr>
-                    <c:if test="${defaultHarvestingProcessing == 'false'}">
                         <tr>
                             <td>
                                 <label for="activation">
@@ -149,12 +197,11 @@
                             </td>
                             <td>
                                 <select name="selectedActivation" id="activation">
-                                    <option value="true"<c:if test="${selectedActivation == 'true'}"> selected="selected"</c:if>>Active</option>
-                                    <option value="false"<c:if test="${selectedActivation == 'false'}"> selected="selected"</c:if>>Idle</option>
+                                    <option value="true"<c:if test="${selectedActivation == 'true'}"> selected="selected"</c:if>><s:text name="label.harvesting.enabled"/></option>
+                                    <option value="false"<c:if test="${selectedActivation == 'false'}"> selected="selected"</c:if>><s:text name="label.harvesting.disabled"/></option>
                                 </select>
                             </td>
                         </tr>
-                    </c:if>
                     <tr>
                         <td colspan="2">
                             <input type="submit" value="<s:property value="getText('label.ok')"/>"/>

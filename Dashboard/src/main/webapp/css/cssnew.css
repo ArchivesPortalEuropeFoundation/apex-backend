@@ -197,8 +197,9 @@ a:hover {
 }
 
 .bodyt {
-	margin-left: 40%;
-	width: 60%;
+    float: right;
+    width: 68%;
+
 }
 
 .texto {
@@ -1141,4 +1142,23 @@ input.inputButtonSubmitAL{
 }
 .grayedout{
 	background-color:#a4afb6;
+}
+
+.harvestProfileReady {
+    color: #008000;
+    font-weight: bold;
+}
+
+
+.harvestProfileDisabled {
+    color: #808080;
+    font-style: italic;
+}
+.harvestProfileErrors {
+    color: #FF0000;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.fullWidth {
+	width: 100%;
 }
