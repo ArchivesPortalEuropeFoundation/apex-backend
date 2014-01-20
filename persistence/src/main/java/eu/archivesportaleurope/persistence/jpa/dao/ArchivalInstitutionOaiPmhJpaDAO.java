@@ -1,12 +1,13 @@
 package eu.archivesportaleurope.persistence.jpa.dao;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.TypedQuery;
+
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.hibernate.AbstractHibernateDAO;
 import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
-import eu.apenet.persistence.vo.QueueItem;
-
-import javax.persistence.TypedQuery;
-import java.util.List;
 
 /**
  * User: Yoann Moranville
@@ -22,8 +23,17 @@ public class ArchivalInstitutionOaiPmhJpaDAO extends AbstractHibernateDAO<Archiv
         typedQuery.setParameter("aiId", aiId);
         return typedQuery.getResultList();
     }
+    
 
     @Override
+	public List<ArchivalInstitutionOaiPmh> getArchivalInstitutionOaiPmhs() {
+        String query = "SELECT archivalInstitutionOaiPmh FROM ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh ORDER BY archivalInstitutionOaiPmh.id ASC";
+        TypedQuery<ArchivalInstitutionOaiPmh> typedQuery = getEntityManager().createQuery(query, ArchivalInstitutionOaiPmh.class);
+        return typedQuery.getResultList();
+	}
+
+
+	@Override
     public Long countEnabledItems() {
         TypedQuery<Long> query = getEntityManager().createQuery("SELECT count(archivalInstitutionOaiPmh) FROM ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh WHERE archivalInstitutionOaiPmh.enabled = 'TRUE'", Long.class);
         query.setMaxResults(1);
@@ -31,9 +41,31 @@ public class ArchivalInstitutionOaiPmhJpaDAO extends AbstractHibernateDAO<Archiv
     }
 
     public List<ArchivalInstitutionOaiPmh> getFirstItems() {
-        TypedQuery<ArchivalInstitutionOaiPmh> query = getEntityManager().createQuery("SELECT archivalInstitutionOaiPmh FROM ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh ORDER BY archivalInstitutionOaiPmh.lastHarvesting desc, archivalInstitutionOaiPmh.id asc", ArchivalInstitutionOaiPmh.class);
+        TypedQuery<ArchivalInstitutionOaiPmh> query = getEntityManager().createQuery("SELECT archivalInstitutionOaiPmh FROM ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh "
+        		+ "WHERE archivalInstitutionOaiPmh.enabled = true "
+        		+ "ORDER BY archivalInstitutionOaiPmh.newHarvesting ASC", ArchivalInstitutionOaiPmh.class);
         query.setMaxResults(20);
         return query.getResultList();
     }
+
+	@Override
+	public  List<ArchivalInstitutionOaiPmh> getReadyItems() {
+		Date currentDate = new Date();
+        TypedQuery<ArchivalInstitutionOaiPmh> typedQuery = getEntityManager().createQuery("SELECT archivalInstitutionOaiPmh FROM ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh "
+        		+ "WHERE archivalInstitutionOaiPmh.enabled = true AND archivalInstitutionOaiPmh.newHarvesting < :currentDate "
+        		+ "ORDER BY archivalInstitutionOaiPmh.newHarvesting ASC", ArchivalInstitutionOaiPmh.class);
+        typedQuery.setParameter("currentDate", currentDate);
+        return typedQuery.getResultList();
+	}
+
+	@Override
+	public List<String> getSets(String url) {
+        TypedQuery<String> typedQuery = getEntityManager().createQuery("SELECT archivalInstitutionOaiPmh.set FROM ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh "
+        		+ "WHERE archivalInstitutionOaiPmh.url  = :url ", String.class);
+        typedQuery.setParameter("url", url);
+        return typedQuery.getResultList();
+
+	}
+
 }
 

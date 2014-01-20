@@ -17,6 +17,9 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
 
 	@Column(name="last_harvesting")
 	private Date lastHarvesting;
+	
+	@Column(name="new_harvesting")
+	private Date newHarvesting;
 
 	@Column(name="from_date")
 	private String from;
@@ -194,4 +197,15 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
     public void setHarvestOnlyWeekend(boolean harvestOnlyWeekend) {
         this.harvestOnlyWeekend = harvestOnlyWeekend;
     }
+
+
+	public Date getNewHarvesting() {
+		return newHarvesting;
+	}
+
+
+	public void setNewHarvesting(Date newHarvesting) {
+		this.newHarvesting = newHarvesting;
+	}
+    
 }
