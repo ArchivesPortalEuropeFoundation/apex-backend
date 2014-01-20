@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import eu.apenet.commons.solr.UpdateSolrServerHolder;
 import eu.apenet.dashboard.AbstractAction;
+import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.dashboard.listener.QueueDaemon;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.QueueItemDAO;
@@ -52,11 +53,12 @@ public class ManageQueueAction  extends AbstractAction{
 		getServletRequest().setAttribute("itemsWithErrors", convert(queueDAO.getItemsWithErrors()));
 		getServletRequest().setAttribute("queueActive", QueueDaemon.isActive());
 		getServletRequest().setAttribute("queueProcessing", QueueDaemon.isQueueProcessing());
-		getServletRequest().setAttribute("harvestingStarted", EadService.isHarvestingStarted());
+		getServletRequest().setAttribute("europeanaHarvestingStarted", EadService.isHarvestingStarted());
+		getServletRequest().setAttribute("dashboardHarvestingStarted",HarvesterDaemon.isHarvesterProcessing());
 		getServletRequest().setAttribute("currentTime", DATE_TIME.format(new Date()));
 		Date endDateTime = DAOFactory.instance().getResumptionTokenDAO().getPossibleEndDateTime();
 		if (endDateTime != null)
-			getServletRequest().setAttribute("harvestingEndTime", DATE_TIME.format(endDateTime));
+			getServletRequest().setAttribute("europeanaHarvestingEndTime", DATE_TIME.format(endDateTime));
 		return SUCCESS;
 	}
 	private List<DisplayQueueItem> convert(List<QueueItem> queueItems){
