@@ -290,7 +290,7 @@ public class EadService {
 		SecurityContext.get().checkAuthorizedToManageQueue();
 		deleteFromQueue(queueItem, true);
 	}
-	
+
 	private static void deleteFromQueue(QueueItem queueItem, boolean deleteUpFile) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		JpaUtil.beginDatabaseTransaction();
@@ -789,9 +789,15 @@ public class EadService {
     		config.setRights(preferences.getProperty(QueueItem.LICENSE_DETAILS));
     	}
     	config.setRightsAdditionalInformation(preferences.getProperty(QueueItem.LICENSE_ADD_INFO));
-    	config.setContextInformationPrefix(preferences.getProperty(QueueItem.HIERARCHY_PREFIX));
-    	config.setInheritElementsFromFileLevel("true".equals(preferences.getProperty(QueueItem.INHERIT_FILE)));
-    	config.setInheritOrigination("true".equals(preferences.getProperty(QueueItem.INHERIT_ORIGINATION)));
+    	if ("false".equals(preferences.getProperty(QueueItem.CONVERSION_TYPE)) && "true".equals(preferences.getProperty(QueueItem.HIERARCHY_PREFIX_CHECK)) && StringUtils.isNotEmpty(preferences.getProperty(QueueItem.HIERARCHY_PREFIX))) {
+            config.setContextInformationPrefix(preferences.getProperty(QueueItem.HIERARCHY_PREFIX));
+        }
+    	if ("false".equals(preferences.getProperty(QueueItem.CONVERSION_TYPE)) && "true".equals(preferences.getProperty(QueueItem.INHERIT_FILE_CHECK)) && "true".equals(preferences.getProperty(QueueItem.INHERIT_FILE))) {
+            config.setInheritElementsFromFileLevel("true".equals(preferences.getProperty(QueueItem.INHERIT_FILE)));
+        }
+    	if ("false".equals(preferences.getProperty(QueueItem.CONVERSION_TYPE)) && "true".equals(preferences.getProperty(QueueItem.INHERIT_ORIGINATION_CHECK)) && "true".equals(preferences.getProperty(QueueItem.INHERIT_ORIGINATION))) {
+            config.setInheritOrigination("true".equals(preferences.getProperty(QueueItem.INHERIT_ORIGINATION)));
+        }
         config.setMinimalConversion("true".equals(preferences.getProperty(QueueItem.CONVERSION_TYPE)));
     	return config.getProperties();
     }

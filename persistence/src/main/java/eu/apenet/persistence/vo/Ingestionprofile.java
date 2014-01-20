@@ -62,10 +62,16 @@ public class Ingestionprofile implements Serializable {
     private String europeanaLicenseDetails;
     @Column(name = "europeana_add_rights")
     private String europeanaAddRights;
+    @Column(name = "europeana_hp_check")
+    private Boolean europeanaHierarchyPrefixCheck = true;
     @Column(name = "europeana_hp")
     private String europeanaHierarchyPrefix;
+    @Column(name = "europeana_inh_elements_check")
+    private Boolean europeanaInheritElementsCheck = true;
     @Column(name = "europeana_inh_elements")
     private Boolean europeanaInheritElements = false;
+    @Column(name = "europeana_inh_origin_check")
+    private Boolean europeanaInheritOriginCheck = true;
     @Column(name = "europeana_inh_origin")
     private Boolean europeanaInheritOrigin = false;
 
@@ -238,6 +244,14 @@ public class Ingestionprofile implements Serializable {
         this.europeanaAddRights = europeanaAddRights;
     }
 
+    public Boolean getEuropeanaHierarchyPrefixCheck() {
+        return europeanaHierarchyPrefixCheck;
+    }
+
+    public void setEuropeanaHierarchyPrefixCheck(Boolean europeanaHierarchyPrefixCheck) {
+        this.europeanaHierarchyPrefixCheck = europeanaHierarchyPrefixCheck;
+    }
+
     public String getEuropeanaHierarchyPrefix() {
         return europeanaHierarchyPrefix;
     }
@@ -246,12 +260,28 @@ public class Ingestionprofile implements Serializable {
         this.europeanaHierarchyPrefix = europeanaHierarchyPrefix;
     }
 
+    public Boolean getEuropeanaInheritElementsCheck() {
+        return europeanaInheritElementsCheck;
+    }
+
+    public void setEuropeanaInheritElementsCheck(Boolean europeanaInheritElementsCheck) {
+        this.europeanaInheritElementsCheck = europeanaInheritElementsCheck;
+    }
+
     public Boolean getEuropeanaInheritElements() {
         return europeanaInheritElements;
     }
 
     public void setEuropeanaInheritElements(Boolean europeanaInheritElements) {
         this.europeanaInheritElements = europeanaInheritElements;
+    }
+
+    public Boolean getEuropeanaInheritOriginCheck() {
+        return europeanaInheritOriginCheck;
+    }
+
+    public void setEuropeanaInheritOriginCheck(Boolean europeanaInheritOriginCheck) {
+        this.europeanaInheritOriginCheck = europeanaInheritOriginCheck;
     }
 
     public Boolean getEuropeanaInheritOrigin() {
