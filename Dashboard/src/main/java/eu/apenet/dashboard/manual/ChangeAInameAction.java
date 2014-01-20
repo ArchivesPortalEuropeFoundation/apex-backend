@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,13 +25,16 @@ import org.w3c.dom.NodeList;
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractInstitutionAction;
+import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.security.SecurityService;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
+import eu.apenet.persistence.dao.CoordinatesDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AiAlternativeName;
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.Coordinates;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class ChangeAInameAction extends AbstractInstitutionAction {
@@ -147,6 +153,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 
 		AiAlternativeNameDAO andao = DAOFactory.instance().getAiAlternativeNameDAO();
 		ArchivalInstitutionDAO aidao = DAOFactory.instance().getArchivalInstitutionDAO();
+		CoordinatesDAO codao = DAOFactory.instance().getCoordinatesDAO();
 
 		try{
 			if (this.newname.isEmpty()){
@@ -164,12 +171,13 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				}
 				AiAlternativeName an = andao.findByAIId_primarykey(ai);
 
+				List<Coordinates> coords = codao.findCoordinatesByArchivalInstitution(ai);
 
 				pathEAG = APEnetUtilities.getConfig().getRepoDirPath()+ ai.getEagPath();
 				File  EAGfile = new File(pathEAG);
 				path_copyEAG = pathEAG.replace(".xm", "");
 				path_copyEAG = path_copyEAG + "_copy.xml";
-
+				
 				/// UPDATE DATABASE ///
 				an.setAiAName(this.newname);
 				ai.setAiname(this.newname);
@@ -177,6 +185,18 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				andao.updateSimple(an);
 				aidao.updateSimple(ai);
 
+				if (coords != null && !coords.isEmpty()) {
+					// loop DB and check archival institution names to fill coordinates names
+					Iterator<Coordinates> coIt = coords.iterator();
+					while(coIt.hasNext()){
+						Coordinates coordinates = coIt.next();
+						coordinates.setNameInstitution(this.newname);
+						codao.updateSimple(coordinates);
+					}
+				}
+
+				
+				
 				log.info("The process has updated the values in database (transaction not committed yet).");
 
 				validateChangeAInameProcessState = 3;

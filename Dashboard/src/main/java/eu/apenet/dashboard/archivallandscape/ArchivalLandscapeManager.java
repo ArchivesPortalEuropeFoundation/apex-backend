@@ -38,6 +38,7 @@ import org.xml.sax.SAXParseException;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.exception.DashboardAPEnetException;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.tree.DynatreeAction;
 import eu.apenet.dashboard.utils.ContentUtils;
@@ -128,6 +129,9 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 
 	private List<String> warnings_ead;
 
+	// Variable for the name of the institution without lang.
+	private String aiArchivalInstitutionName;
+
 	public void setHttpFile(File httpFile){
 		this.httpFile = httpFile;
 	}
@@ -170,6 +174,14 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 
 	public void setInstitutionsWithContent(Set<String> institutionsWithContent) {
 		this.institutionsWithContent = institutionsWithContent;
+	}
+
+	public String getAiArchivalInstitutionName() {
+		return aiArchivalInstitutionName;
+	}
+
+	public void setAiArchivalInstitutionName(String aiArchivalInstitutionName) {
+		this.aiArchivalInstitutionName = aiArchivalInstitutionName;
 	}
 
 	public String upload() throws SAXException, APEnetException{
@@ -341,7 +353,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			}
 		}
 		 return state;
-	}		
+	}
 
 	private void validateUploadedAL(File file) throws SAXException, APEnetException {
 		warnings_ead = new ArrayList<String>();
@@ -527,7 +539,16 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 
 						log.debug("Inserting process for not updated institutions");
 						//do an insert for rest file institutions
-						insertNotUpdatedInstitutions(archivalInstitutions,null);
+						String aiName = insertNotUpdatedInstitutions(archivalInstitutions,null);
+						 if (aiName != null){
+							 // this institution has any lang error and trans may be closed
+							 state = 6;
+							 log.debug("Institution has not lang");
+							 validOperation = "errorLang";//LANG_ERROR
+							 JpaUtil.rollbackDatabaseTransaction();
+							 this.setAiArchivalInstitutionName(aiName);
+							 return validOperation;
+						 }
 						log.debug("Done insert process!");
 						state = 4;
 //						//now delete all institutions which has not been updated (old institutions are not being processed)
@@ -737,7 +758,8 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 * param Collection<ArchivalInstitution> not updated.
 	 * @param archivalInstitutions
 	 */
-	private void insertNotUpdatedInstitutions(Collection<ArchivalInstitution> archivalInstitutions,ArchivalInstitution parent) {
+	private String insertNotUpdatedInstitutions(Collection<ArchivalInstitution> archivalInstitutions,ArchivalInstitution parent) {
+		String strOut = null;
 		if(archivalInstitutions!=null){
 			Iterator<ArchivalInstitution> itAI = archivalInstitutions.iterator();
 			while(itAI.hasNext()){
@@ -756,12 +778,19 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					if(parent!=null){
 						targetToBeInserted.setParent(this.groupsInsertedIntoDDBB.get(parent.getInternalAlId()));
 					}
-					insertInstitution(targetToBeInserted); //it's the recurse method, so it's not needed call to himself (insertNotUpdatedInstitutions) 
+					try{
+						insertInstitution(targetToBeInserted); //it's the recurse method, so it's not needed call to himself (insertNotUpdatedInstitutions)
+					}catch(DashboardAPEnetException e){
+						log.debug("Institution without lang: "+e.getMessage());
+						strOut= e.getMessage();
+						return strOut;
+					}
 				}else if(targetToBeInserted.isGroup() && targetToBeInserted.getChildArchivalInstitutions()!=null && targetToBeInserted.getChildArchivalInstitutions().size()>0){ //additional check children
-					insertNotUpdatedInstitutions(targetToBeInserted.getChildArchivalInstitutions(),targetToBeInserted);
+					strOut=insertNotUpdatedInstitutions(targetToBeInserted.getChildArchivalInstitutions(),targetToBeInserted);
 				}
 			}
 		}
+		return strOut;
 	}
 	/**
 	 * Method used to delete all institutions not updated or inserted.
@@ -1101,8 +1130,9 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 * 
 	 * @param archivalInstitutions
 	 * @param parent
+	 * @throws DashboardAPEnetException 
 	 */
-	private void insertChildren(Collection<ArchivalInstitution> archivalInstitutions,ArchivalInstitution parent) {
+	private void insertChildren(Collection<ArchivalInstitution> archivalInstitutions,ArchivalInstitution parent) throws DashboardAPEnetException {
 		Iterator<ArchivalInstitution> aiIt = archivalInstitutions.iterator();
 		List<ArchivalInstitution> institutionsToBeInserted = new ArrayList<ArchivalInstitution>();
 		while(aiIt.hasNext()){
@@ -1154,12 +1184,23 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 * 
 	 * @param currentInstitution
 	 */
-	private ArchivalInstitution insertInstitution(ArchivalInstitution currentInstitution) {
+	private ArchivalInstitution insertInstitution(ArchivalInstitution currentInstitution) throws DashboardAPEnetException {
 		String internalAlId = currentInstitution.getInternalAlId();
 		if(internalAlId==null || internalAlId.isEmpty()){
 			internalAlId = ArchivalLandscapeEditor.getNewinternalIdentifier();
 			currentInstitution.setInternalAlId(internalAlId);
 		}
+		//loop file and check if lang is not null 
+		Set<AiAlternativeName> aiANSet = currentInstitution.getAiAlternativeNames();
+		Iterator<AiAlternativeName> aiANIt = aiANSet.iterator();
+		while (aiANIt.hasNext()) {
+			AiAlternativeName aiAlternativeName = aiANIt.next();
+			if (aiAlternativeName.getLang() == null) {
+				String strErr = aiAlternativeName.getAiAName();
+				throw new DashboardAPEnetException(strErr, new NullPointerException());
+			}
+		}
+		
 		ArchivalInstitution institution = this.aIDAO.insertSimple(currentInstitution);
 		if(institution!=null && institution.isGroup()){
 			if (this.groupsInsertedIntoDDBB == null) {
