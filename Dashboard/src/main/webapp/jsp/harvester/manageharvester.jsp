@@ -131,11 +131,14 @@
 			                                	<option value="ENABLE">
 													<s:text name="admin.harvestermanagement.harvester.activate" />
 												</option>
-			                                	<option value="ENABLE">
+			                                	<option value="DELETE">
 													<s:text name="admin.harvestermanagement.harvester.delete" />
 												</option>
 			                                </c:otherwise>
 			                            </c:choose>
+			                            		<option value="FULL">
+													Harvest everything
+												</option>
 			                            </select>
 			                            	<input type="submit" value="<s:text name="content.message.go" />" />	
 			                            </s:form>
