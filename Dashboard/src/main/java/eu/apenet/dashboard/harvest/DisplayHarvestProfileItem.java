@@ -24,6 +24,8 @@ public class DisplayHarvestProfileItem {
 	private String intervalHarvesting;
 	private String ingestionProfile;
 	private boolean errors;
+	private String errorMessage;
+	private String errorResponsePath;
     private boolean enabled;
     private boolean harvestOnlyWeekend;
     private boolean readyForHarvesting;
@@ -48,7 +50,9 @@ public class DisplayHarvestProfileItem {
 		this.from = archivalInstitutionOaiPmh.getFrom();
 		this.intervalHarvesting = ContentUtils.getDaysFromMilliseconds(archivalInstitutionOaiPmh.getIntervalHarvesting());
 		this.ingestionProfile = archivalInstitutionOaiPmh.getIngestionprofile().getNameProfile();
-		this.errors = archivalInstitutionOaiPmh.isErrors();
+		this.errors = archivalInstitutionOaiPmh.getErrors() != null;
+		this.errorMessage = archivalInstitutionOaiPmh.getErrors();
+		this.errorResponsePath = archivalInstitutionOaiPmh.getErrorsResponsePath();
 		this.enabled = archivalInstitutionOaiPmh.isEnabled();
 		this.harvestOnlyWeekend = archivalInstitutionOaiPmh.isHarvestOnlyWeekend();
 
@@ -136,6 +140,14 @@ public class DisplayHarvestProfileItem {
 			return "harvestProfileErrors";
 		}
 		return "";
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public String getErrorResponsePath() {
+		return errorResponsePath;
 	}
 
 

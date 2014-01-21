@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 
 import eu.apenet.commons.listener.ApePortalAndDashboardConfigListener;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.utils.ContentUtils;
 import eu.archivesportaleurope.commons.config.DashboardConfig;
 
 public class DashboardConfigListener extends ApePortalAndDashboardConfigListener {
@@ -62,6 +63,8 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 
 		if (StringUtils.isBlank(emailDashboardFeedbackDestiny)) {
 			log.warn("No " + EMAIL_DASHBOARD_FEEDBACK_DESTINY + " specified.");
+			emailDashboardFeedbackDestiny = ContentUtils.getEmailConfiguration(false).get("xmlMail.troubles");
+			
 		} else {
 			log.info(EMAIL_DASHBOARD_FEEDBACK_DESTINY + ": " + emailDashboardFeedbackDestiny);
 		}

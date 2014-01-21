@@ -25,6 +25,7 @@ import eu.apenet.persistence.vo.UpFile;
 import eu.apenet.persistence.vo.UploadMethod;
 import eu.apenet.persistence.vo.User;
 import eu.archivesportaleurope.harvester.oaipmh.HarvestResult;
+import eu.archivesportaleurope.harvester.oaipmh.HarvesterParserException;
 import eu.archivesportaleurope.harvester.oaipmh.OaiPmhHarvester;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
 import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
@@ -76,8 +77,6 @@ public class DataHarvester {
 			setSpec = archivalInstitutionOaiPmh.getSet();
 		}
 
-		String currentInfoArchivalInstitutionOaiPmh = archivalInstitutionOaiPmh.toString();
-
 		ArchivalInstitution archivalInstitution = archivalInstitutionOaiPmh.getArchivalInstitution();
 		String subdirectory = APEnetUtilities.FILESEPARATOR + archivalInstitution.getAiId()
 				+ APEnetUtilities.FILESEPARATOR + "oai_" + System.currentTimeMillis() + APEnetUtilities.FILESEPARATOR;
@@ -92,18 +91,18 @@ public class DataHarvester {
 		} else {
 			oaiPmhParser = new OaiPmhParser(outputDirectory, MAX_NUMBER_HARVESTED_FILES_FOR_TEST);
 		}
-		Integer userId = archivalInstitution.getPartnerId();
-		User partner;
-		if (userId == null) {
+		User partner = archivalInstitution.getPartner();
+		if (partner == null) {
 			partner = DAOFactory.instance().getUserDAO().getCountryManagerOfCountry(archivalInstitution.getCountry());
-		} else {
-			partner = DAOFactory.instance().getUserDAO().findById(userId);
 		}
 		OaiPmhHttpClient oaiPmhHttpClient = null;
 		try {
 			oaiPmhHttpClient = new OaiPmhHttpClient();
 			HarvestResult harvestResult = OaiPmhHarvester.runOai(baseURL, from, until, metadataPrefix, setSpec,
 					oaiPmhParser, errorsDirectory, oaiPmhHttpClient);
+			if (harvestResult.getErrors() != null){
+				throw new OaiPmhErrorsException(harvestResult.getErrors());
+			}
 			archivalInstitutionOaiPmh.setLastHarvesting(new Date());
 			archivalInstitutionOaiPmh.setFrom(newFrom);
 			if (!APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()) {
@@ -123,7 +122,8 @@ public class DataHarvester {
 				EadService.useProfileAction(upFile, properties);
 			}
 			archivalInstitutionOaiPmh.setNewHarvesting(newHarvestingDate);
-			archivalInstitutionOaiPmh.setErrors(false);
+			archivalInstitutionOaiPmh.setErrors(null);
+			archivalInstitutionOaiPmh.setErrorsResponsePath(null);
 			archivalInstitutionOaiPmhDAO.store(archivalInstitutionOaiPmh);
 
 			int numberEadHarvested = harvestedFiles.length;
@@ -131,37 +131,20 @@ public class DataHarvester {
 					+ archivalInstitutionOaiPmh.getId() + "\n" + harvesterProfileLog + "\n --- Oldest file harvested: "
 					+ harvestResult.getOldestFileHarvested() + " --- Newest file harvested: "
 					+ harvestResult.getNewestFileHarvested());
-			UserService
-					.sendEmailHarvestFinished(true, archivalInstitution, partner, numberEadHarvested,
-							harvesterProfileLog, harvestResult.getOldestFileHarvested(),
-							harvestResult.getNewestFileHarvested());
+			UserService.sendEmailHarvestFinished(archivalInstitution, partner, numberEadHarvested, harvesterProfileLog,
+					harvestResult.getOldestFileHarvested(), harvestResult.getNewestFileHarvested());
 
-		} catch (Exception e) {
-			LOGGER.error("Error: " + APEnetUtilities.generateThrowableLog(e));
-			ArchivalInstitutionOaiPmh archivalInstitutionOaiPmhNew = DAOFactory.instance()
-					.getArchivalInstitutionOaiPmhDAO().findById(archivalInstitutionOaiPmhId);
-			if (archivalInstitutionOaiPmhNew.isErrors()) {
-				LOGGER.error("Second time harvesting failed for \nID:" + archivalInstitutionOaiPmhNew.getId() + "\n"
-						+ harvesterProfileLog);
-				archivalInstitutionOaiPmhNew.setEnabled(false);
-			} else {
-				LOGGER.error("First time harvesting failed for \nID:" + archivalInstitutionOaiPmhNew.getId() + "\n"
-						+ harvesterProfileLog);
-			}
-			archivalInstitutionOaiPmhNew.setNewHarvesting(newHarvestingDate);
-			archivalInstitutionOaiPmhNew.setErrors(true);
-			archivalInstitutionOaiPmhNew.setLastHarvesting(new Date());
-			if (!APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()) {
-				archivalInstitutionOaiPmhNew.setEnabled(false);
-			}
-			archivalInstitutionOaiPmhDAO.store(archivalInstitutionOaiPmhNew);
-			UserService.sendEmailHarvestFinished(false, archivalInstitution, partner, 0,
-					currentInfoArchivalInstitutionOaiPmh, null, null);
-
-			try {
-				ContentUtils.deleteFile(outputDirectory, false);
-			} catch (IOException e1) {
-			}
+		}catch (OaiPmhErrorsException oee){
+			String errors = oee.getErrors();
+			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null);
+		}catch (HarvesterParserException hpe){
+			String errors = hpe.getCause().getMessage();
+			LOGGER.error("Error: " + errors);
+			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, hpe.getNotParsebleResponse());
+		}catch (Exception e) {
+			String errors = APEnetUtilities.generateThrowableLog(e);
+			LOGGER.error("Error: " + errors);
+			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null);
 		} finally {
 			if (oaiPmhHttpClient != null) {
 				try {
@@ -173,6 +156,39 @@ public class DataHarvester {
 			if (outputDirectory.exists()) {
 				outputDirectory.delete();
 			}
+		}
+	}
+
+	private void handleExceptions(User partner, String harvesterProfileLog, Date newHarvestingDate, File outputDirectory, String errors, File errorsResponseFile){
+		ArchivalInstitutionOaiPmh archivalInstitutionOaiPmhNew = DAOFactory.instance()
+				.getArchivalInstitutionOaiPmhDAO().findById(archivalInstitutionOaiPmhId);
+		if (archivalInstitutionOaiPmhNew.getErrors() != null) {
+			LOGGER.error("Second time harvesting failed for \nID:" + archivalInstitutionOaiPmhNew.getId() + "\n"
+					+ harvesterProfileLog);
+			archivalInstitutionOaiPmhNew.setEnabled(false);
+		} else {
+			LOGGER.error("First time harvesting failed for \nID:" + archivalInstitutionOaiPmhNew.getId() + "\n"
+					+ harvesterProfileLog);
+		}
+		archivalInstitutionOaiPmhNew.setNewHarvesting(newHarvestingDate);
+		archivalInstitutionOaiPmhNew.setErrors(harvesterProfileLog + "================================================\n\n" + errors);
+		if (errorsResponseFile != null){
+			try {
+				archivalInstitutionOaiPmhNew.setErrorsResponsePath(errorsResponseFile.getCanonicalPath());
+			} catch (IOException e1) {
+			}
+		}
+		archivalInstitutionOaiPmhNew.setLastHarvesting(new Date());
+		if (!APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()) {
+			archivalInstitutionOaiPmhNew.setEnabled(false);
+		}
+		DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().store(archivalInstitutionOaiPmhNew);
+		UserService.sendEmailHarvestFailed(archivalInstitutionOaiPmhNew.getArchivalInstitution(), partner, harvesterProfileLog,
+				errors, archivalInstitutionOaiPmhNew.getErrorsResponsePath());
+
+		try {
+			ContentUtils.deleteFile(outputDirectory, false);
+		} catch (IOException e1) {
 		}
 	}
 
@@ -235,4 +251,17 @@ public class DataHarvester {
 		return result;
 	}
 
+	private static class OaiPmhErrorsException extends Exception {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -291842241354495630L;
+		private String errors;
+		public OaiPmhErrorsException(String errors){
+			this.errors = errors;
+		}
+		public String getErrors(){
+			return this.errors;
+		}
+	}
 }

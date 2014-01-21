@@ -8,34 +8,26 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.apache.struts2.util.TextProviderHelper;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.ValueStack;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
@@ -115,40 +107,45 @@ public class ContentUtils {
 
 	public static void deleteFile(String path, boolean failOnError) throws IOException {
 		File srcFile = new File(path);
-		deleteFile(srcFile,failOnError);
+		deleteFile(srcFile, failOnError);
 	}
-	public static String getDaysFromMilliseconds(Long milliseconds){
+
+	public static String getDaysFromMilliseconds(Long milliseconds) {
 		double days = milliseconds.doubleValue() / 86400000.0d;
-		return ((int)Math.ceil(days)) +"";
+		return ((int) Math.ceil(days)) + "";
 	}
+
 	public static void deleteFile(File file, boolean failOnError) throws IOException {
 		try {
-			if (file.exists()){
+			if (file.exists()) {
 				FileUtils.forceDelete(file);
-			}else {
+			} else {
 				LOGGER.warn(file + " does not exist");
 			}
 		} catch (IOException e) {
-			if (failOnError){
+			if (failOnError) {
 				throw e;
-			}else {
+			} else {
 				LOGGER.error(e.getMessage());
 			}
 		}
 	}
-	public static boolean containsPublishedFiles(String identifier, Integer countryIdentifier){
-		ArchivalInstitution archivalInstitution =  DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionByInternalAlId(identifier, countryIdentifier);
+
+	public static boolean containsPublishedFiles(String identifier, Integer countryIdentifier) {
+		ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO()
+				.getArchivalInstitutionByInternalAlId(identifier, countryIdentifier);
 		return containsPublishedFiles(archivalInstitution);
 	}
-	public static boolean containsPublishedFiles(ArchivalInstitution archivalInstitution){
-		if (archivalInstitution.isGroup()){
+
+	public static boolean containsPublishedFiles(ArchivalInstitution archivalInstitution) {
+		if (archivalInstitution.isGroup()) {
 			boolean hasEads = false;
 			Iterator<ArchivalInstitution> childIterator = archivalInstitution.getChildArchivalInstitutions().iterator();
-			while (!hasEads && childIterator.hasNext()){
+			while (!hasEads && childIterator.hasNext()) {
 				hasEads = hasEads || containsPublishedFiles(childIterator.next());
 			}
 			return hasEads;
-		}else {
+		} else {
 			EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 			EadSearchOptions eadSearchOptions = new EadSearchOptions();
 			eadSearchOptions.setArchivalInstitionId(archivalInstitution.getAiId());
@@ -166,21 +163,24 @@ public class ContentUtils {
 			return hasEads;
 		}
 	}
-	public static boolean containsEads(String identifier, Integer countryIdentifier){
-		ArchivalInstitution archivalInstitution =  DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionByInternalAlId(identifier, countryIdentifier);
+
+	public static boolean containsEads(String identifier, Integer countryIdentifier) {
+		ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO()
+				.getArchivalInstitutionByInternalAlId(identifier, countryIdentifier);
 		if (archivalInstitution == null)
 			return false;
 		return containsEads(archivalInstitution);
 	}
-	public static boolean containsEads(ArchivalInstitution archivalInstitution){
-		if (archivalInstitution.isGroup()){
+
+	public static boolean containsEads(ArchivalInstitution archivalInstitution) {
+		if (archivalInstitution.isGroup()) {
 			boolean hasEads = false;
 			Iterator<ArchivalInstitution> childIterator = archivalInstitution.getChildArchivalInstitutions().iterator();
-			while (!hasEads && childIterator.hasNext()){
+			while (!hasEads && childIterator.hasNext()) {
 				hasEads = hasEads || containsEads(childIterator.next());
 			}
 			return hasEads;
-		}else {
+		} else {
 			EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 			EadSearchOptions eadSearchOptions = new EadSearchOptions();
 			eadSearchOptions.setArchivalInstitionId(archivalInstitution.getAiId());
@@ -228,7 +228,8 @@ public class ContentUtils {
 				ArchivalInstitutionOaiPmhDAO aiOaiPmhDao = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
 				List<ArchivalInstitutionOaiPmh> aiOaiPmhs = aiOaiPmhDao.getArchivalInstitutionOaiPmhs(ai.getAiId());
 				for (ArchivalInstitutionOaiPmh anAiOaiPmh : aiOaiPmhs) {
-					LOGGER.debug("Deleting the registries in archival_institution_oai_pmh entity related to the institution: " + ai.getAiId());
+					LOGGER.debug("Deleting the registries in archival_institution_oai_pmh entity related to the institution: "
+							+ ai.getAiId());
 					aiOaiPmhDao.deleteSimple(anAiOaiPmh);
 				}
 
@@ -326,29 +327,31 @@ public class ContentUtils {
 		ead.setPublishDate(new Date());
 
 	}
-	public static void updateContainsSearchableItemsInAiGroups(ArchivalInstitution archivalInstitution){
-		if (archivalInstitution.isGroup()){
+
+	public static void updateContainsSearchableItemsInAiGroups(ArchivalInstitution archivalInstitution) {
+		if (archivalInstitution.isGroup()) {
 			updateContainsSearchableItemsInOldAiGroups(archivalInstitution);
-		}else {
+		} else {
 			updateContainsSearchableItemsInNewAiGroups(archivalInstitution);
 		}
 	}
-	private static void updateContainsSearchableItemsInNewAiGroups(ArchivalInstitution child){
+
+	private static void updateContainsSearchableItemsInNewAiGroups(ArchivalInstitution child) {
 		ArchivalInstitution parent = child.getParent();
-		if (parent != null){
-			if (child.isContainSearchableItems() && !parent.isContainSearchableItems()){		
+		if (parent != null) {
+			if (child.isContainSearchableItems() && !parent.isContainSearchableItems()) {
 				parent.setContainSearchableItems(true);
 				DAOFactory.instance().getArchivalInstitutionDAO().insertSimple(parent);
 				LOGGER.info("AI: '" + parent.getAiname() + "' has now searchable items");
 				updateContainsSearchableItemsInNewAiGroups(parent);
-			}else if (!child.isContainSearchableItems() && parent.isContainSearchableItems()){
+			} else if (!child.isContainSearchableItems() && parent.isContainSearchableItems()) {
 				boolean containSearchableItems = false;
-				for (ArchivalInstitution tempChild: parent.getChildArchivalInstitutions()){
-					if (tempChild != null && tempChild.getAiId() != child.getAiId()){
+				for (ArchivalInstitution tempChild : parent.getChildArchivalInstitutions()) {
+					if (tempChild != null && tempChild.getAiId() != child.getAiId()) {
 						containSearchableItems = containSearchableItems || tempChild.isContainSearchableItems();
 					}
 				}
-				if (!containSearchableItems){
+				if (!containSearchableItems) {
 					parent.setContainSearchableItems(false);
 					DAOFactory.instance().getArchivalInstitutionDAO().insertSimple(parent);
 					LOGGER.info("AI: '" + parent.getAiname() + "' has now no searchable items left");
@@ -357,19 +360,21 @@ public class ContentUtils {
 			}
 		}
 	}
-	private static void updateContainsSearchableItemsInOldAiGroups(ArchivalInstitution oldParent){
+
+	private static void updateContainsSearchableItemsInOldAiGroups(ArchivalInstitution oldParent) {
 		boolean containSearchableItems = false;
-		for (ArchivalInstitution tempChild: oldParent.getChildArchivalInstitutions()){
-				containSearchableItems = containSearchableItems || tempChild.isContainSearchableItems();
+		for (ArchivalInstitution tempChild : oldParent.getChildArchivalInstitutions()) {
+			containSearchableItems = containSearchableItems || tempChild.isContainSearchableItems();
 
 		}
-		if (!containSearchableItems){
+		if (!containSearchableItems) {
 			oldParent.setContainSearchableItems(false);
 			DAOFactory.instance().getArchivalInstitutionDAO().insertSimple(oldParent);
 			LOGGER.info("AI: '" + oldParent.getAiname() + "' has now no searchable items left");
 			updateContainsSearchableItemsInNewAiGroups(oldParent);
-		}		
+		}
 	}
+
 	private static void changeContainsSearchableItems(ArchivalInstitution ai, boolean searchable) {
 		if (searchable != ai.isContainSearchableItems()) {
 			if (searchable == true) {
@@ -387,10 +392,10 @@ public class ContentUtils {
 				long numberOfPublishedEads = eadDAO.countEads(eadSearchOptions);
 				if (numberOfPublishedEads <= 1) {
 					eadSearchOptions.setEadClass(HoldingsGuide.class);
-					numberOfPublishedEads +=  eadDAO.countEads(eadSearchOptions);
+					numberOfPublishedEads += eadDAO.countEads(eadSearchOptions);
 					if (numberOfPublishedEads <= 1) {
 						eadSearchOptions.setEadClass(SourceGuide.class);
-						numberOfPublishedEads +=  eadDAO.countEads(eadSearchOptions);
+						numberOfPublishedEads += eadDAO.countEads(eadSearchOptions);
 						if (numberOfPublishedEads == 1) {
 							LOGGER.info("AI: '" + ai.getAiname() + "' has now no searchable items left");
 							ai.setContainSearchableItems(searchable);
@@ -404,13 +409,13 @@ public class ContentUtils {
 						}
 					}
 				}
-				if (numberOfPublishedEads != 1){
+				if (numberOfPublishedEads != 1) {
 					ai.setContentLastModifiedDate(new Date());
 					DAOFactory.instance().getArchivalInstitutionDAO().insertSimple(ai);
 				}
 
 			}
-		}else {
+		} else {
 			ai.setContentLastModifiedDate(new Date());
 			DAOFactory.instance().getArchivalInstitutionDAO().insertSimple(ai);
 		}
@@ -455,24 +460,29 @@ public class ContentUtils {
 		return destFile.getPath();
 	}
 
-
-	public static void downloadXml(HttpServletRequest request, HttpServletResponse response, File file) throws IOException{
+	public static void downloadXml(HttpServletRequest request, HttpServletResponse response, File file)
+			throws IOException {
 		download(request, response, file, MIME_TYPE_APPLICATION_XML);
 	}
-	public static void download (HttpServletRequest request, HttpServletResponse response, File file, String contentType) throws IOException{
-		if (file.exists()){
+
+	public static void download(HttpServletRequest request, HttpServletResponse response, File file, String contentType)
+			throws IOException {
+		if (file.exists()) {
 			response.setContentLength((int) file.length());
-			FileInputStream inputStream = new FileInputStream(file);  //read the file
-        	download(request, response, inputStream, file.getName(), contentType);
-		}else {
-			LOGGER.error("File does not exist: "  + file);
+			FileInputStream inputStream = new FileInputStream(file); // read the
+																		// file
+			download(request, response, inputStream, file.getName(), contentType);
+		} else {
+			LOGGER.error("File does not exist: " + file);
 		}
 	}
-	public static void download (HttpServletRequest request, HttpServletResponse response, InputStream inputStream, String name, String contentType) throws IOException{
-		String browserType=(String)request.getHeader("User-Agent");
-		if(MIME_TYPE_APPLICATION_XML.equals(contentType) && browserType.indexOf("MSIE") > 0){
+
+	public static void download(HttpServletRequest request, HttpServletResponse response, InputStream inputStream,
+			String name, String contentType) throws IOException {
+		String browserType = (String) request.getHeader("User-Agent");
+		if (MIME_TYPE_APPLICATION_XML.equals(contentType) && browserType.indexOf("MSIE") > 0) {
 			response.setContentType("application/file-download");
-		}else {
+		} else {
 			response.setContentType(contentType);
 		}
 
@@ -480,24 +490,26 @@ public class ContentUtils {
 		response.setCharacterEncoding("UTF-8");
 		response.setHeader("content-disposition", "attachment;filename=" + name);
 		OutputStream outputStream = response.getOutputStream();
-        try {
-            int c;
-            while ((c = inputStream.read()) != -1) {
-            	outputStream.write(c);
-            }
-        } finally {
-            if (inputStream != null) {
-                inputStream.close();
-            }
+		try {
+			int c;
+			while ((c = inputStream.read()) != -1) {
+				outputStream.write(c);
+			}
+		} finally {
+			if (inputStream != null) {
+				inputStream.close();
+			}
 			outputStream.flush();
 			outputStream.close();
-        }
+		}
 	}
-	public static PrintWriter getWriterToDownload(HttpServletRequest request, HttpServletResponse response, String name, String contentType) throws IOException{
-		String browserType=(String)request.getHeader("User-Agent");
-		if(MIME_TYPE_APPLICATION_XML.equals(contentType) && browserType.indexOf("MSIE") > 0){
+
+	public static PrintWriter getWriterToDownload(HttpServletRequest request, HttpServletResponse response,
+			String name, String contentType) throws IOException {
+		String browserType = (String) request.getHeader("User-Agent");
+		if (MIME_TYPE_APPLICATION_XML.equals(contentType) && browserType.indexOf("MSIE") > 0) {
 			response.setContentType("application/file-download");
-		}else {
+		} else {
 			response.setContentType(contentType);
 		}
 
@@ -506,11 +518,13 @@ public class ContentUtils {
 		response.setHeader("content-disposition", "attachment;filename=" + name);
 		return new PrintWriter(response.getOutputStream());
 	}
-	public static OutputStream getOutputStreamToDownload(HttpServletRequest request, HttpServletResponse response, String name, String contentType) throws IOException{
-		String browserType=(String)request.getHeader("User-Agent");
-		if(MIME_TYPE_APPLICATION_XML.equals(contentType) && browserType.indexOf("MSIE") > 0){
+
+	public static OutputStream getOutputStreamToDownload(HttpServletRequest request, HttpServletResponse response,
+			String name, String contentType) throws IOException {
+		String browserType = (String) request.getHeader("User-Agent");
+		if (MIME_TYPE_APPLICATION_XML.equals(contentType) && browserType.indexOf("MSIE") > 0) {
 			response.setContentType("application/file-download");
-		}else {
+		} else {
 			response.setContentType(contentType);
 		}
 
@@ -518,5 +532,74 @@ public class ContentUtils {
 		response.setCharacterEncoding("UTF-8");
 		response.setHeader("content-disposition", "attachment;filename=" + name);
 		return response.getOutputStream();
+	}
+
+	public static Map<String, String> getEmailConfiguration(boolean localized) {
+		Map<String, String> results = new HashMap<String, String>();
+		try {
+			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			String file_path = "emails/email-configuration.xml";
+			InputStream path = Thread.currentThread().getContextClassLoader().getResourceAsStream(file_path);
+			Document documento = builder.parse(path);
+			if (localized){
+				return readConfigFileLocalized(results, documento);
+			}else {
+				return readConfigFile(results, documento);
+			}
+			
+		} catch (Exception e) {
+			return results;
+		}
+	}
+	public static Map<String, String> readConfigFile(Map<String, String> dropDownTable, Node section) {
+		if (section != null) {
+			NodeList emails = section.getChildNodes();
+			String subject = new String();
+			String to = new String();
+			for (int i = 0; i < emails.getLength(); i++) {
+				Node email = emails.item(i);
+				if (email.hasChildNodes() && !email.getNodeName().equals("subject")
+						&& !email.getNodeName().equals("to")) {
+					dropDownTable = readConfigFile(dropDownTable, email);
+				} else {
+					if (email.getNodeName().equals("subject")) {
+						subject = email.getTextContent();			
+					}
+					if (email.getNodeName().equals("to")) {
+						to = email.getTextContent();
+					}
+				}
+			}
+			if (section.getNodeName().equals("email")) {
+				dropDownTable.put(subject, to);
+			}
+		}
+		return dropDownTable;
+	}
+	public static Map<String, String> readConfigFileLocalized(Map<String, String> dropDownTable, Node section) {
+		ValueStack valueStack = ActionContext.getContext().getValueStack();
+		if (section != null) {
+			NodeList emails = section.getChildNodes();
+			String subject = new String();
+			String to = new String();
+			for (int i = 0; i < emails.getLength(); i++) {
+				Node email = emails.item(i);
+				if (email.hasChildNodes() && !email.getNodeName().equals("subject")
+						&& !email.getNodeName().equals("to")) {
+					dropDownTable = readConfigFileLocalized(dropDownTable, email);
+				} else {
+					if (email.getNodeName().equals("subject")) {
+						subject = TextProviderHelper.getText(email.getTextContent(), null, valueStack);					
+					}
+					if (email.getNodeName().equals("to")) {
+						to = email.getTextContent();
+					}
+				}
+			}
+			if (section.getNodeName().equals("email")) {
+				dropDownTable.put(subject, to);
+			}
+		}
+		return dropDownTable;
 	}
 }
