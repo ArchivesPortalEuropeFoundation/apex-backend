@@ -75,7 +75,7 @@
 			                <td><c:out value="${item.from}" /></td>
 			                <td><c:out value="${item.harvestOnlyWeekend}" /></td>
 			                <td><c:out value="${item.ingestionProfile}" /></td>
-			                <td  class="${item.errorCss}"><c:out value="${item.errors}" /></td>
+			                <td class="${item.errorCss}"><c:out value="${item.errors}" /></td>
 
 			            </tr>
 			        </c:forEach>
@@ -116,7 +116,7 @@
 			                <td><c:out value="${item.harvestOnlyWeekend}" /></td>
 			                <td><c:out value="${item.ingestionProfile}" /></td>
 			                <td  class="${item.errorCss}"><c:out value="${item.errors}" /></td>
-			                <td>
+			                <td class="actions">
 			                    <c:choose>
 			                        <c:when test="${harvestProcessing}">
 			                            <s:text name="admin.harvestermanagement.harvester.processing.noactions" />

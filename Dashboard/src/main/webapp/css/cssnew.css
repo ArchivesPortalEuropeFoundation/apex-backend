@@ -1162,3 +1162,23 @@ input.inputButtonSubmitAL{
 .fullWidth {
 	width: 100%;
 }
+select.selectedAction {
+    font-size: 11px;
+    width: 120px;
+    border-color: #BFBFBF #DEDEDE #DEDEDE #BFBFBF;
+    border-image: none;
+    border-radius: 3px;
+    border-style: solid;
+    border-width: 1px;
+
+}
+
+td.actions {
+    padding-bottom: 2px;
+    padding-top: 2px;
+    text-align: left;
+    width: 150px;
+}
+td.actions input {
+    font-size: 11px;
+}
