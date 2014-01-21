@@ -9,9 +9,11 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.Semaphore;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -81,13 +83,13 @@ public class ArchivalLandscape extends ActionSupport{
 	private List<ArchivalInstitution> archivalInstitutionsParentNotChanged= new ArrayList<ArchivalInstitution>();
 	private List<ArchivalInstitution> archivalInstitutionsParentChanged= new ArrayList<ArchivalInstitution>();
 	private List<SentMailRegister> sentMailRegisterList = new ArrayList<SentMailRegister>();
-	
-
-
 
 	static Semaphore sem = new Semaphore(1,true) ;
     
 	public int j = 0;
+
+	// Set for the duplicate identifiers.
+	private static Set<String> duplicateIdentifiers;
 	
 	//Constructor. Set the partner logged
 	public ArchivalLandscape() {
@@ -184,6 +186,22 @@ public class ArchivalLandscape extends ActionSupport{
 	public void setArchivalInstitutionsParentChanged(
 			List<ArchivalInstitution> archivalInstitutionsParentChanged) {
 		this.archivalInstitutionsParentChanged = archivalInstitutionsParentChanged;
+	}
+
+	public static Set<String> getDuplicateIdentifiers() {
+		return ArchivalLandscape.duplicateIdentifiers;
+	}
+
+	public static void addDuplicateIdentifiers(String duplicateIdentifier) {
+		if (ArchivalLandscape.getDuplicateIdentifiers() == null) {
+			ArchivalLandscape.duplicateIdentifiers = new LinkedHashSet<String>();
+		}
+
+		ArchivalLandscape.getDuplicateIdentifiers().add(duplicateIdentifier);
+	}
+
+	public static void setDuplicateIdentifiers(Set<String> duplicateIdentifiers) {
+		ArchivalLandscape.duplicateIdentifiers = duplicateIdentifiers;
 	}
 
 	//Returns the path of the AL of each country
@@ -701,6 +719,8 @@ public class ArchivalLandscape extends ActionSupport{
 			NodeList listTemp = doc.getElementsByTagName("c");
 			boolean changes = false;
 			List<String> identifiers = new ArrayList<String>(); //list of unique identifiers
+			// Delete the content of "DuplicateIdentifiers".
+			ArchivalLandscape.setDuplicateIdentifiers(null);
 			for(int i=0;i<listTemp.getLength();i++){
 				Element cTemp = (Element)listTemp.item(i);
 				if(cTemp.getAttributes()!=null && cTemp.getAttributes().getNamedItem("id")==null){
@@ -710,7 +730,8 @@ public class ArchivalLandscape extends ActionSupport{
 				}else if(cTemp.getAttributes()!=null && cTemp.getAttributes().getNamedItem("id")!=null){
 					String identifier = cTemp.getAttributes().getNamedItem("id").getNodeValue();
 					if(identifiers.contains(identifier)){ //internal identifier is repeated?
-						return false;
+						// Add the repeated identifiers to the set.
+						ArchivalLandscape.addDuplicateIdentifiers(identifier);
 					}else if(!isValidIdentifier(identifier)){ //is a valid identifier?
 						// return a new state for personalized layout
 						return null;
@@ -718,6 +739,12 @@ public class ArchivalLandscape extends ActionSupport{
 					identifiers.add(identifier);
 				}
 			}
+
+			if (ArchivalLandscape.duplicateIdentifiers != null
+					&& !ArchivalLandscape.duplicateIdentifiers.isEmpty()) {
+				return false;
+			}
+
 			if(changes){
 				TransformerFactory tf = TransformerFactory.newInstance();
 		        Transformer transformer = tf.newTransformer();
@@ -726,6 +753,7 @@ public class ArchivalLandscape extends ActionSupport{
 		} catch (Exception e) {
 			log.error("Checking c identifiers in makeTemporal():"+e.getCause(),e);
 		}
+
 		return true;
 	}	
 
@@ -743,7 +771,6 @@ public class ArchivalLandscape extends ActionSupport{
 		return false;
 	}
 	//Store in the database the name of the NEW archival institutions uploaded and delete the ones removed
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public String storeArchives(File file, boolean execute) {
 		
 		String result = SUCCESS;

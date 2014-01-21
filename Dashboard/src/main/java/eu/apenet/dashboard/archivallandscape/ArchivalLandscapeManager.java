@@ -107,6 +107,9 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	private static final String ERROR_CONTENT = "errorContent";
 	private static final String ERROR_CONTENT_2 = "errorContent2";
 
+	// Error when an institution has duplicated identifiers.
+	private static final String ERROR_DUPLICATE_IDENTIFIERS = "errorDuplicateIdentifiers";
+
 	private static final String AL_GLOBAL_UNITTITLE = "European countries";
 
 	private List<ArchivalInstitution> totalInstitutions;
@@ -133,6 +136,9 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	private String aiArchivalInstitutionName;
 
 	private Set<String> institutionsWithContentNotPublished;
+
+	// Set for the duplicate identifiers.
+	private Set<String> duplicateIdentifiers;
 
 	public void setHttpFile(File httpFile){
 		this.httpFile = httpFile;
@@ -201,6 +207,14 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	public void setInstitutionsWithContentNotPublished(
 			Set<String> institutionsWithContentNotPublished) {
 		this.institutionsWithContentNotPublished = institutionsWithContentNotPublished;
+	}
+
+	public Set<String> getDuplicateIdentifiers() {
+		return this.duplicateIdentifiers;
+	}
+
+	public void setDuplicateIdentifiers(Set<String> duplicateIdentifiers) {
+		this.duplicateIdentifiers = duplicateIdentifiers;
 	}
 
 	public String upload() throws SAXException, APEnetException{
@@ -355,7 +369,10 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			while(it.hasNext()){
 				addActionMessage(it.next());
 			}
-		}else{
+		} else if (!firstState) {
+			this.setDuplicateIdentifiers(ArchivalLandscape.getDuplicateIdentifiers());
+			return ERROR_DUPLICATE_IDENTIFIERS;
+		} else{
 			String countryCode = getXMLEadidCountrycode(this.httpFile);
 			if(countryCode!=null && countryCode.equalsIgnoreCase(SecurityContext.get().getCountryIsoname())){
 //				if(this.country==null){
@@ -564,15 +581,15 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 						log.debug("Inserting process for not updated institutions");
 						//do an insert for rest file institutions
 						String aiName = insertNotUpdatedInstitutions(archivalInstitutions,null);
-						 if (aiName != null){
-							 // this institution has any lang error and trans may be closed
-							 state = 6;
-							 log.debug("Institution has not lang");
-							 validOperation = "errorLang";//LANG_ERROR
-							 JpaUtil.rollbackDatabaseTransaction();
-							 this.setAiArchivalInstitutionName(aiName);
-							 return validOperation;
-						 }
+						if (aiName != null){
+							// this institution has any lang error and trans may be closed
+							state = 6;
+							log.debug("Institution has not lang");
+							validOperation = "errorLang";//LANG_ERROR
+							JpaUtil.rollbackDatabaseTransaction();
+							this.setAiArchivalInstitutionName(aiName);
+							return validOperation;
+						}
 						log.debug("Done insert process!");
 						state = 4;
 //						//now delete all institutions which has not been updated (old institutions are not being processed)

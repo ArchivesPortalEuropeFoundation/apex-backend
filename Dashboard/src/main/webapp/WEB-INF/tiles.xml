@@ -399,6 +399,12 @@
 		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
 		<put-attribute name="body" value="/jsp/al/uploaderrorALIdentifier.jsp" />
 	</definition>
+	
+	<definition name="uploaderroralduplicatedidentifier" extends="ArchivalLandscapeLayout">
+		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
+		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
+		<put-attribute name="body" value="/jsp/al/uploaderrorALDuplicateIdentifier.jsp" />
+	</definition>
 
 	<definition name="errorlandscape" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.errorpage.title" />

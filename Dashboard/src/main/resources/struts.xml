@@ -405,6 +405,7 @@
 			<result name="errorContent" type="tiles">uploaderroralcontentpublished</result>
 			<result name="errorContent2" type="tiles">uploaderroralcontentnotpublished</result>
 			<result name="errorIdentifier" type="tiles">uploaderroralidentifier</result>
+			<result name="errorDuplicateIdentifiers" type="tiles">uploaderroralduplicatedidentifier</result>
 			<result name="errorLang" type="tiles">uploaderrorallangnull</result>
 		</action>
 		
