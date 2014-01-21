@@ -24,7 +24,10 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
 	@Column(name="from_date")
 	private String from;
 	
-	private boolean errors;
+	private String errors;
+	
+	@Column(name="errors_response_path")
+	private String errorsResponsePath;
 	
 	@Column(name="oai_pmh_set")
 	private String set;
@@ -67,15 +70,27 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
 	}
 
 
-	public boolean isErrors() {
+    public String getErrors() {
 		return errors;
 	}
 
 
-	public void setErrors(boolean errors) {
+	public void setErrors(String errors) {
 		this.errors = errors;
 	}
-    public ArchivalInstitutionOaiPmh() {
+
+
+	public String getErrorsResponsePath() {
+		return errorsResponsePath;
+	}
+
+
+	public void setErrorsResponsePath(String errorsResponsePath) {
+		this.errorsResponsePath = errorsResponsePath;
+	}
+
+
+	public ArchivalInstitutionOaiPmh() {
     }
 
 	public ArchivalInstitutionOaiPmh(Integer aiId, String url, String metadataPrefix, Long profileId, Long intervalHarvesting) {
@@ -88,15 +103,6 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
         this.harvestOnlyWeekend = false;
 	}
 
-	public String toMinimalString(){
-        return url + " (set: " + set + ", metadataPrefix: " + metadataPrefix + ", from:" + from + ")";
-	}
-    @Override
-    public String toString() {
-        return "Archival Institution: '" + archivalInstitution.getAiname() + "' - url: '" + url +  "' - set: '" + (set != null?set:"no set") +
-                "' - metadataPrefix: '" + metadataPrefix + "' - last harvesting until yesterday: '" + (from!=null?from:"first harvest") +
-                "' - ingestion profile: '" + ingestionprofile.getNameProfile() + "' - interval of harvests: '" + intervalHarvesting + "' - enabled: '" + enabled + "' - to only harvest the week end: '" + harvestOnlyWeekend + "'";
-    }
 
     public Long getId() {
         return id;
