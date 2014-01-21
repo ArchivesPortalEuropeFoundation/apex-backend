@@ -984,5 +984,12 @@
 			<result name="success" type="tiles">indexAdmin</result>
 			<result name="error" type="tiles">indexAdmin</result>
 		</action>
+		
+		<action name="downloadHarvesterErrorsXml" class="eu.apenet.dashboard.harvest.DownloadHarvesterErrorsAction" method="downloadXml">
+            <result name="error" type="tiles">error</result>
+        </action>
+        <action name="downloadHarvesterErrorsText" class="eu.apenet.dashboard.harvest.DownloadHarvesterErrorsAction" method="downloadText">
+            <result name="error" type="tiles">error</result>
+        </action>
     </package>
 </struts>
