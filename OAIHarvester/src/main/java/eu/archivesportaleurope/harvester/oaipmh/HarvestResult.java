@@ -21,7 +21,7 @@ public class HarvestResult {
 	}
 	public void addErrors(String errors) {
 		if (this.errors == null){
-			this.errors = errors;
+			this.errors = errors + "\n";
 		}else {
 			this.errors += errors + "\n";
 		}
