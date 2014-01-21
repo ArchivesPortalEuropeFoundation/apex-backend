@@ -446,6 +446,8 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 				writer.append("\""+getText("al.message.oldtree")+"\"");
 				writer.append(",\"newtreeMessage\":");
 				writer.append("\""+getText("al.message.newtree")+"\"");
+				writer.append(",\"status\":");
+				writer.append("\""+getText("al.message.previewisbeingdisplayed")+"\"");//Preview is being displayed bellow
 			}
 			writer.append("}");
 			//end json part

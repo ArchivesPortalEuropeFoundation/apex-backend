@@ -56,7 +56,7 @@ function successAlUpload(e){
 		oldDiv = "<div id=\"oldTreeParent\" style=\"width:"+((thereAreChildren)?"50":"100")+"%;float:left;\"><div>"+e.oldtreeMessage+"</div><div id=\"oldtree\"></div></div>";
 	}
 	if(e.newtree){
-		var stateDiv = "<div><span>Upload done!! Preview is being displayed bellow:</span></div>";
+		var stateDiv = "<div style=\"margin-bottom:5px;\"><span>"+e.status+":</span></div>";
 		if(!thereAreChildren){
 			oldDiv = "";
 		}
