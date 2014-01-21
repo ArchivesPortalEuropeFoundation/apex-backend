@@ -257,11 +257,6 @@ input[type="text"] {
 	color: black;
 }
 
-#bodyt {
-	margin-left: 36%;
-	width: 64%;
-}
-
 #ingestionprofileTabs .ingestionprofileDisabled {
 	background: #FFFFFF;
 	cursor: default;
