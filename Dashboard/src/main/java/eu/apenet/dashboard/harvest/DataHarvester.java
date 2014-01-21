@@ -28,7 +28,6 @@ import eu.archivesportaleurope.harvester.oaipmh.HarvestResult;
 import eu.archivesportaleurope.harvester.oaipmh.OaiPmhHarvester;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
 import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
-import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 /**
  * User: Yoann Moranville Date: 04/12/2013
@@ -47,7 +46,6 @@ public class DataHarvester {
 	}
 
 	public void run() {
-		JpaUtil.beginDatabaseTransaction();
 		ArchivalInstitutionOaiPmhDAO archivalInstitutionOaiPmhDAO = DAOFactory.instance()
 				.getArchivalInstitutionOaiPmhDAO();
 		ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = archivalInstitutionOaiPmhDAO
@@ -126,27 +124,29 @@ public class DataHarvester {
 			}
 			archivalInstitutionOaiPmh.setNewHarvesting(newHarvestingDate);
 			archivalInstitutionOaiPmh.setErrors(false);
-			archivalInstitutionOaiPmhDAO.updateSimple(archivalInstitutionOaiPmh);
-			JpaUtil.commitDatabaseTransaction();
+			archivalInstitutionOaiPmhDAO.store(archivalInstitutionOaiPmh);
 
 			int numberEadHarvested = harvestedFiles.length;
-			UserService.sendEmailHarvestFinished(true, archivalInstitution, partner, numberEadHarvested,
-					harvesterProfileLog, harvestResult.getOldestFileHarvested(),
-					harvestResult.getNewestFileHarvested());
-			LOGGER.info("Harvest completed: harvested " + numberEadHarvested + " EAD files from \nID:" + archivalInstitutionOaiPmh.getId()  +"\n" 
-					+ harvesterProfileLog + "\n --- Oldest file harvested: "
+			LOGGER.info("Harvest completed: harvested " + numberEadHarvested + " EAD files from \nID:"
+					+ archivalInstitutionOaiPmh.getId() + "\n" + harvesterProfileLog + "\n --- Oldest file harvested: "
 					+ harvestResult.getOldestFileHarvested() + " --- Newest file harvested: "
 					+ harvestResult.getNewestFileHarvested());
+			UserService
+					.sendEmailHarvestFinished(true, archivalInstitution, partner, numberEadHarvested,
+							harvesterProfileLog, harvestResult.getOldestFileHarvested(),
+							harvestResult.getNewestFileHarvested());
+
 		} catch (Exception e) {
 			LOGGER.error("Error: " + APEnetUtilities.generateThrowableLog(e));
-			JpaUtil.rollbackDatabaseTransaction();
 			ArchivalInstitutionOaiPmh archivalInstitutionOaiPmhNew = DAOFactory.instance()
 					.getArchivalInstitutionOaiPmhDAO().findById(archivalInstitutionOaiPmhId);
 			if (archivalInstitutionOaiPmhNew.isErrors()) {
-				LOGGER.error("Second time harvesting failed for \nID:" + archivalInstitutionOaiPmh.getId() +"\n" + harvesterProfileLog);
+				LOGGER.error("Second time harvesting failed for \nID:" + archivalInstitutionOaiPmh.getId() + "\n"
+						+ harvesterProfileLog);
 				archivalInstitutionOaiPmhNew.setEnabled(false);
 			} else {
-				LOGGER.error("First time harvesting failed for \nID:" + archivalInstitutionOaiPmh.getId() +"\n" + harvesterProfileLog);
+				LOGGER.error("First time harvesting failed for \nID:" + archivalInstitutionOaiPmh.getId() + "\n"
+						+ harvesterProfileLog);
 			}
 			archivalInstitutionOaiPmhNew.setNewHarvesting(newHarvestingDate);
 			archivalInstitutionOaiPmhNew.setErrors(true);
