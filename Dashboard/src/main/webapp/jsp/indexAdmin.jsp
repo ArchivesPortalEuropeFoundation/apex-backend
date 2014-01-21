@@ -7,7 +7,6 @@
 					<li><s:a action="insertAlternativeCountryNames"> - <s:property value="getText('admin.menu.countrytranslations')" />  </s:a></li>
 					<li><s:a action="storeLanguage"> - <s:property value="getText('admin.menu.languagecreation')" /></s:a></li>
 					<li><s:a action="viewDptVersions"> - <s:property value="getText('admin.menu.dptversions')" /></s:a></li>
-					<%--<li><s:a action="downloadGeneralAL" target="_blank"> - <s:property value="getText('admin.menu.downloadal')" /> </s:a></li>--%>
 					<li><s:a action="downloadCountriesStatistics"><s:text name="admin.menu.statistics.countries" /></s:a></li>
 					<li><s:a action="downloadInstitutionsStatistics"><s:text name="al.menu.statistics.institutions" /></s:a></li>
 					<li><s:a action="sessionManagement"><s:property value="getText('admin.menu.sessionmanagement')" /></s:a></li>

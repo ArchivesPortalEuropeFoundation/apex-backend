@@ -73,9 +73,9 @@
 			                <td><c:out value="${item.lastHarvesting}" /></td>
 			                <td><c:out value="${item.newHarvesting}" /></td>
 			                <td><c:out value="${item.from}" /></td>
-			                <td><c:out value="${item.harvestOnlyWeekend}" /></td>
+			                <td><c:if test="${item.harvestOnlyWeekend}"><c:out value="${item.harvestOnlyWeekend}" /></c:if></td>
 			                <td><c:out value="${item.ingestionProfile}" /></td>
-			                <td class="${item.errorCss}"><c:out value="${item.errors}" /></td>
+			                <td class="${item.errorCss}"><c:if test="${item.errors}"><c:out value="${item.errors}" /></c:if></td>
 
 			            </tr>
 			        </c:forEach>
@@ -113,9 +113,16 @@
 			                <td><c:out value="${item.lastHarvesting}" /></td>
 			                <td><c:out value="${item.newHarvesting}" /></td>
 			                <td><c:out value="${item.from}" /></td>
-			                <td><c:out value="${item.harvestOnlyWeekend}" /></td>
+			                <td><c:if test="${item.harvestOnlyWeekend}"><c:out value="${item.harvestOnlyWeekend}" /></c:if></td>
 			                <td><c:out value="${item.ingestionProfile}" /></td>
-			                <td  class="${item.errorCss}"><c:out value="${item.errors}" /></td>
+			                <td  class="${item.errorCss}">
+			                	<c:if test="${item.errors}">
+			                		<a href="downloadHarvesterErrorsText.action?harvestId=${item.id}">ERRORS</a>
+			                		<c:if test="${!empty item.errorResponsePath}">
+			                			<br/><a href="downloadHarvesterErrorsXml.action?harvestId=${item.id}">OAI-PMH Response</a>
+			                		</c:if>
+			                	</c:if>
+			                </td>
 			                <td class="actions">
 			                    <c:choose>
 			                        <c:when test="${harvestProcessing}">
