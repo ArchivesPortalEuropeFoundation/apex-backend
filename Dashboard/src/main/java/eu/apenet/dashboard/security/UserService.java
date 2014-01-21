@@ -510,7 +510,7 @@ public final class UserService {
 	        emailComposer.setProperty("infoHarvestedServer", infoHarvestedServer.replaceAll("\n", "<br/>"));
 	        emailComposer.setProperty("errorMessage",errors);
 	        if (errorsResponsePath != null){
-	        	emailComposer.setProperty("errorFileMessage", "Look at the dashboard for the OAI-PMH response that contains errors\n\n");
+	        	emailComposer.setProperty("errorFileMessage", "Look at the dashboard for the OAI-PMH response that contains errors<br/><br/>");
 	        }else {
 	        	emailComposer.setProperty("errorFileMessage", "");
 	        }
