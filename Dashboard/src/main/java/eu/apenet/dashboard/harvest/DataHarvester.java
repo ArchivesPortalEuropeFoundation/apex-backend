@@ -141,11 +141,11 @@ public class DataHarvester {
 			ArchivalInstitutionOaiPmh archivalInstitutionOaiPmhNew = DAOFactory.instance()
 					.getArchivalInstitutionOaiPmhDAO().findById(archivalInstitutionOaiPmhId);
 			if (archivalInstitutionOaiPmhNew.isErrors()) {
-				LOGGER.error("Second time harvesting failed for \nID:" + archivalInstitutionOaiPmh.getId() + "\n"
+				LOGGER.error("Second time harvesting failed for \nID:" + archivalInstitutionOaiPmhNew.getId() + "\n"
 						+ harvesterProfileLog);
 				archivalInstitutionOaiPmhNew.setEnabled(false);
 			} else {
-				LOGGER.error("First time harvesting failed for \nID:" + archivalInstitutionOaiPmh.getId() + "\n"
+				LOGGER.error("First time harvesting failed for \nID:" + archivalInstitutionOaiPmhNew.getId() + "\n"
 						+ harvesterProfileLog);
 			}
 			archivalInstitutionOaiPmhNew.setNewHarvesting(newHarvestingDate);
