@@ -7,8 +7,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.harvest.DataHarvester;
-import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
@@ -23,7 +23,7 @@ public class HarvesterTask implements Runnable {
 	private static final Logger LOGGER = Logger.getLogger(HarvesterTask.class);
 	private Duration duration;
 	private Duration delay;
-	private static final Duration INTERVAL = new Duration(0, 10, 0);
+	private static final long INTERVAL = 40000;
 	private final ScheduledExecutorService scheduler;
 
 	public HarvesterTask(ScheduledExecutorService scheduler, Duration maxDuration, Duration delay) {
@@ -51,10 +51,10 @@ public class HarvesterTask implements Runnable {
 				}
 				stopped = true;
 			}
-			if (!stopped && (System.currentTimeMillis() + INTERVAL.getMilliseconds()) < endTime) {
+			if (!stopped && !APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing() && (System.currentTimeMillis() + INTERVAL) < endTime) {
 				cleanUp();
 				try {
-					Thread.sleep(INTERVAL.getMilliseconds());
+					Thread.sleep(INTERVAL);
 				} catch (InterruptedException e) {
 				}
 			} else {
@@ -100,7 +100,7 @@ public class HarvesterTask implements Runnable {
 			}
 
 			if (continueTask) {
-				new DataHarvester(archivalInstitutionOaiPmh.getId(), true).run();
+				new DataHarvester(archivalInstitutionOaiPmh.getId()).run();
 			}
 		}
 

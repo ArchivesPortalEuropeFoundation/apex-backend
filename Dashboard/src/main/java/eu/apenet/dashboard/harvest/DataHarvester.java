@@ -10,7 +10,6 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.dashboard.security.UserService;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.utils.ContentUtils;
@@ -43,11 +42,9 @@ public class DataHarvester {
     public static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd"); //1980-01-01
 
     private long archivalInstitutionOaiPmhId;
-    private boolean isNighlySchedule;
 
-    public DataHarvester(long archivalInstitutionOaiPmhId, boolean isNighlySchedule) {
+    public DataHarvester(long archivalInstitutionOaiPmhId) {
         this.archivalInstitutionOaiPmhId = archivalInstitutionOaiPmhId;
-        this.isNighlySchedule = isNighlySchedule;
     }
 
     public void run() {
@@ -162,9 +159,6 @@ public class DataHarvester {
 			}
             if(outputDirectory.exists()) {
                 outputDirectory.delete();
-            }
-            if(!isNighlySchedule) {
-                HarvesterDaemon.setHarvesterProcessing(false);
             }
         }
     }

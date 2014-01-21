@@ -24,6 +24,10 @@
             <th><s:text name="admin.harvestermanagement.harvester.daily" /></th>
             <td>${dailyHarvesting}</td>
         </tr>
+        <tr>
+            <th>Default Harvesting processing</th>
+            <td>${defaultHarvestingProcessing}</td>
+        </tr>
         
     </table>
     <s:form action="startStopHarvester" method="post">
@@ -51,6 +55,7 @@
 			                <th><s:text name="label.harvesting.lastHarvest" /></th>
 			                <th><s:text name="label.harvesting.newHarvest" /></th>
 			                <th><s:text name="label.harvesting.from" /></th>
+			                <th>Only weekend</th>
 			                <th><s:text name="label.harvesting.userprofile" /></th>
 			                <th><s:text name="label.harvesting.errors" /></th>
 			            </tr>
@@ -68,6 +73,7 @@
 			                <td><c:out value="${item.lastHarvesting}" /></td>
 			                <td><c:out value="${item.newHarvesting}" /></td>
 			                <td><c:out value="${item.from}" /></td>
+			                <td><c:out value="${item.harvestOnlyWeekend}" /></td>
 			                <td><c:out value="${item.ingestionProfile}" /></td>
 			                <td  class="${item.errorCss}"><c:out value="${item.errors}" /></td>
 
@@ -88,6 +94,7 @@
 			                <th><s:text name="label.harvesting.lastHarvest" /></th>
 			                <th><s:text name="label.harvesting.newHarvest" /></th>
 			                <th><s:text name="label.harvesting.from" /></th>
+			                <th>Only weekend</th>
 			                <th><s:text name="label.harvesting.userprofile" /></th>
 			                <th><s:text name="label.harvesting.errors" /></th>
 			                <th>Actions</th>
@@ -106,6 +113,7 @@
 			                <td><c:out value="${item.lastHarvesting}" /></td>
 			                <td><c:out value="${item.newHarvesting}" /></td>
 			                <td><c:out value="${item.from}" /></td>
+			                <td><c:out value="${item.harvestOnlyWeekend}" /></td>
 			                <td><c:out value="${item.ingestionProfile}" /></td>
 			                <td  class="${item.errorCss}"><c:out value="${item.errors}" /></td>
 			                <td>

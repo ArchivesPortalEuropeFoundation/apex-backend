@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
@@ -50,6 +51,7 @@ public class ManageHarvestAction extends AbstractAction {
 		getServletRequest().setAttribute("firstItems", DisplayHarvestProfileItem.getItems(archivalInstitutionOaiPmhDAO.getFirstItems(), new Date()));
         getServletRequest().setAttribute("harvestActive", HarvesterDaemon.isActive());
         getServletRequest().setAttribute("harvestProcessing", HarvesterDaemon.isHarvesterProcessing());
+        getServletRequest().setAttribute("defaultHarvestingProcessing", APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing());
         getServletRequest().setAttribute("currentTime", DATE_TIME.format(new Date()));
         getServletRequest().setAttribute("dailyHarvesting",processOnceADay );
         
