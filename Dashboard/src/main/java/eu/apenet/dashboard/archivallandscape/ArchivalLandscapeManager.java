@@ -448,6 +448,9 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 				writer.append("\""+getText("al.message.newtree")+"\"");
 				writer.append(",\"status\":");
 				writer.append("\""+getText("al.message.previewisbeingdisplayed")+"\"");//Preview is being displayed bellow
+			}else{
+				writer.append("\"error\":");
+				writer.append("\""+getText("al.message.error.badarchivallandscapedetected")+"\"");//Preview is being displayed bellow
 			}
 			writer.append("}");
 			//end json part
@@ -1427,7 +1430,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					}
 			}
 		}
-		return archivalInstitutions;
+		return (validXML)?archivalInstitutions:null;
 	}
 	/**
 	 * Open a file, read it and get attribute "countrycode" from
