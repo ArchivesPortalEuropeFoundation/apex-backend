@@ -9,6 +9,7 @@ import org.apache.struts2.ServletActionContext;
 
 import eu.apenet.commons.infraestructure.EmailComposer;
 import eu.apenet.commons.infraestructure.Emailer;
+import eu.apenet.commons.infraestructure.EmailComposer.Priority;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.exception.DashboardAPEnetException;
 import eu.apenet.dashboard.exception.NotAuthorizedException;
@@ -481,7 +482,7 @@ public final class UserService {
 
     public static void sendEmailHarvestFinished( ArchivalInstitution archivalInstitution, User partner, int numberEadHarvested, String infoHarvestedServer, DateHarvestModel oldestFileHarvested, DateHarvestModel newestFileHarvested) {
     	if (partner != null){
-	    	EmailComposer emailComposer = new EmailComposer("emails/harvestFinished.txt", "Last harvesting process of your institution " + archivalInstitution.getAiname() + " SUCCEED", true, false);
+	    	EmailComposer emailComposer = new EmailComposer("emails/harvestFinished.txt", "Last harvesting process SUCCEED of your institution " + archivalInstitution.getAiname(), true, false);
 	        emailComposer.setProperty("archivalInstitution", archivalInstitution.getAiname());
 	        emailComposer.setProperty("name", partner.getName());
 	        emailComposer.setProperty("dashboardBase", APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
@@ -503,7 +504,7 @@ public final class UserService {
     }
     public static void sendEmailHarvestFailed(ArchivalInstitution archivalInstitution, User partner, String infoHarvestedServer, String errors, String errorsResponsePath) {
     	if (partner != null){
-	        EmailComposer emailComposer = new EmailComposer("emails/harvestFailed.txt", "Last harvesting process of your institution " + archivalInstitution.getAiname() + " FAILED", true, true);
+	        EmailComposer emailComposer = new EmailComposer("emails/harvestFailed.txt", "Last harvesting process FAILED of your institution " + archivalInstitution.getAiname(), true, true);
 	        emailComposer.setProperty("archivalInstitution", archivalInstitution.getAiname());
 	        emailComposer.setProperty("name", partner.getName());
 	        emailComposer.setProperty("dashboardBase", APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
@@ -514,6 +515,7 @@ public final class UserService {
 	        }else {
 	        	emailComposer.setProperty("errorFileMessage", "");
 	        }
+	        emailComposer.setPriority(Priority.HIGH);
 	        Emailer emailer = new Emailer();
 	        if (APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()){
 	        	emailer.sendMessage(partner.getEmailAddress(), null, APEnetUtilities.getDashboardConfig().getEmailDashboardFeedbackDestiny(), null, emailComposer);

@@ -138,7 +138,8 @@ public class DataHarvester {
 			String errors = oee.getErrors();
 			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null);
 		}catch (HarvesterParserException hpe){
-			String errors = hpe.getCause().getMessage();
+			String errors = "Url that contains errors: '" + hpe.getRequestUrl() + "'\n\n";
+			errors+= hpe.getCause().getMessage();
 			LOGGER.error("Error: " + errors);
 			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, hpe.getNotParsebleResponse());
 		}catch (Exception e) {
