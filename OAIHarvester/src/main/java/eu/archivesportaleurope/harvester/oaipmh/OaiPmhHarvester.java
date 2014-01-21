@@ -35,6 +35,7 @@ public class OaiPmhHarvester {
 					for (int i = 0; i < length; ++i) {
 						String item = errors.get(i);
 						if (StringUtils.isNotBlank(item)) {
+							harvestResult.addErrors(item);
 							LOGGER.error(item);
 						}
 

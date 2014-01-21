@@ -10,6 +10,7 @@ public class HarvesterParserException extends Exception {
 	 */
 	private static final long serialVersionUID = -382601559328073185L;
 
+
 	public HarvesterParserException(File notParsebleResponse, Throwable cause) {
 		super(cause);
 		this.notParsebleResponse = notParsebleResponse;
