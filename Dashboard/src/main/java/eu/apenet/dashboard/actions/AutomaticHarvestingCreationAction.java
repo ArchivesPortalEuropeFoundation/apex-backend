@@ -185,6 +185,7 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
                     if(!archivalInstitutionOaiPmh.isEnabled() && Boolean.parseBoolean(getSelectedActivation())) {
                     	if (!APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()){
                         	archivalInstitutionOaiPmh.setFrom(null);
+                        	archivalInstitutionOaiPmh.setNewHarvesting(new Date());
                     	}
                         archivalInstitutionOaiPmh.setEnabled(true);
                     } else if(archivalInstitutionOaiPmh.isEnabled() && !Boolean.parseBoolean(getSelectedActivation())) {
