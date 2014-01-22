@@ -108,7 +108,11 @@ public class ManageHarvestAction extends AbstractAction {
         if(HarvesterDaemon.isActive()) {
             HarvesterDaemon.stop();
         } else {
-            HarvesterDaemon.start(processOnceADay);
+        	if (APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()){
+        		HarvesterDaemon.start(processOnceADay);
+            }else {
+            	HarvesterDaemon.start(false);
+            }
         }
         return SUCCESS;
     }
