@@ -1,12 +1,16 @@
 package eu.apenet.dashboard.harvest;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractAction;
+import eu.apenet.dashboard.actions.AutomaticHarvestingCreationAction;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -28,6 +32,7 @@ public class ManageHarvestAction extends AbstractAction {
     private Integer harvestId;
     private boolean processOnceADay = true;
     private String selectedAction;
+    private List<SelectItem> processOptions = new ArrayList<SelectItem>();
 
     public Integer getHarvestId() {
         return harvestId;
@@ -36,8 +41,17 @@ public class ManageHarvestAction extends AbstractAction {
     public void setHarvestId(Integer harvestId) {
         this.harvestId = harvestId;
     }
+    
 
-    @Override
+    public List<SelectItem> getProcessOptions() {
+		return processOptions;
+	}
+
+	public void setProcessOptions(List<SelectItem> processOptions) {
+		this.processOptions = processOptions;
+	}
+
+	@Override
     protected void buildBreadcrumbs() {
         super.buildBreadcrumbs();
         addBreadcrumb(getText("admin.harvestmanagement.title"));
@@ -54,7 +68,8 @@ public class ManageHarvestAction extends AbstractAction {
         getServletRequest().setAttribute("defaultHarvestingProcessing", APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing());
         getServletRequest().setAttribute("currentTime", DATE_TIME.format(new Date()));
         getServletRequest().setAttribute("dailyHarvesting",processOnceADay );
-        
+        processOptions.add(new SelectItem("true", "Look at the queue every day"));
+        processOptions.add(new SelectItem("false", "Look at the queue every 10 minutes"));
         return SUCCESS;
     }
 
@@ -75,6 +90,14 @@ public class ManageHarvestAction extends AbstractAction {
     		archivalInstitutionOaiPmhDAO.delete(archivalInstitutionOaiPmh);
     	}else if ("FULL".equals(selectedAction)){
     		archivalInstitutionOaiPmh.setFrom(null);
+    		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
+    	}	else if ("DELAY".equals(selectedAction)){
+    		Date newHarvestingDate = archivalInstitutionOaiPmh.getNewHarvesting();
+    		if (newHarvestingDate == null){
+    			newHarvestingDate = new Date();
+    		}
+    		newHarvestingDate = new Date(newHarvestingDate.getTime() + AutomaticHarvestingCreationAction.INTERVAL_1_MONTH);
+    		archivalInstitutionOaiPmh.setNewHarvesting(newHarvestingDate);
     		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
     	}
     	return SUCCESS;
