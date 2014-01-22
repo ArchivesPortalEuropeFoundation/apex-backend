@@ -37,7 +37,9 @@
                 <s:submit key="admin.harvestermanagement.harvester.stop" cssClass="mainButton" name="startButton" />
             </c:when>
             <c:otherwise>
+            	<c:if test="${defaultHarvestingProcessing}">
             	<s:select  name="processOnceADay" list="processOptions" listKey="value" listValue="content"></s:select>
+            	</c:if>
                 <s:submit key="admin.harvestermanagement.harvester.start" cssClass="mainButton" name="startButton" />
             </c:otherwise>
         </c:choose>
