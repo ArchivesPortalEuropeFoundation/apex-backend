@@ -30,14 +30,14 @@
         </tr>
         
     </table>
-    <s:form action="startStopHarvester" method="post">
+    <s:form action="startStopHarvester" method="post" theme="simple">
         <s:actionerror />
         <c:choose>
             <c:when test="${harvestActive}">
                 <s:submit key="admin.harvestermanagement.harvester.stop" cssClass="mainButton" name="startButton" />
             </c:when>
             <c:otherwise>
-           		<s:checkbox name="processOnceADay" key="admin.harvestermanagement.harvester.daily"/>
+            	<s:select  name="processOnceADay" list="processOptions" listKey="value" listValue="content"></s:select>
                 <s:submit key="admin.harvestermanagement.harvester.start" cssClass="mainButton" name="startButton" />
             </c:otherwise>
         </c:choose>
@@ -151,7 +151,10 @@
 												</option>
 			                                </c:otherwise>
 			                            </c:choose>
-			                            		<option value="FULL">
+												<option value="DELAY">
+													Delay one month
+												</option>
+												<option value="FULL">
 													Harvest everything
 												</option>
 			                            </select>
