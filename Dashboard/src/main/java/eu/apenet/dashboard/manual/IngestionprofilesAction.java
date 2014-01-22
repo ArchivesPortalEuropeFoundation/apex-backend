@@ -212,8 +212,11 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
             for (Ingestionprofile entry : queryResult) {
                 ingestionprofiles.add(new SelectItem(Long.toString(entry.getId()), entry.getNameProfile()));
             }
+        } else {
+            uploadedFileActions.add(new SelectItem("2", getText("ingestionprofiles.upload.convertValidatePublishEuropeana")));
         }
         ingestionprofiles.add(new SelectItem("-1", ""));
+
         profilelist = "-1";
         profileName = "";
         associatedFiletype = convertToString(XmlType.EAD_FA.getIdentifier());
