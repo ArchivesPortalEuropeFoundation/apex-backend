@@ -39,7 +39,7 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
 
 	private static final Logger LOG = Logger.getLogger(AutomaticHarvestingCreationAction.class);
 
-    private static final Long INTERVAL_1_MONTH = 2630000000L;
+    public static final Long INTERVAL_1_MONTH = 2630000000L;
     private static final Long INTERVAL_3_MONTH = 7889230000L;
     private static final Long INTERVAL_6_MONTH = 15780000000L;
 
