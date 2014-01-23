@@ -15,7 +15,10 @@ public class HarvesterException extends Exception {
 		this.requestUrl = requestUrl;
 	}
 
-
+	public HarvesterException(String requestUrl, String message) {
+		super(message);
+		this.requestUrl = requestUrl;
+	}
 	public String getRequestUrl() {
 		return requestUrl;
 	}

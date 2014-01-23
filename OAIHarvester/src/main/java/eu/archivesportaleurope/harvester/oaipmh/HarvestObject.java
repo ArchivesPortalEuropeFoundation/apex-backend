@@ -4,14 +4,43 @@ import java.util.Date;
 
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhRecord;
 
-public class HarvestResult {
+public class HarvestObject {
+	private Long id;
     private DateHarvestModel newestFileHarvested;
     private DateHarvestModel oldestFileHarvested;
     private String errors;
-    private int numberOfRecords;
+    private int numberOfRecords = 0;
+    private int numberOfRequests = 0;
+    private boolean stopHarvesting = false;
+    private String latestRecordId;
+    private Date latestChangeDate;
     
+    public HarvestObject(){
+    	
+    }
+    public HarvestObject(Long id){
+    	this.id = id;
+    }
     
-    public String getErrors() {
+    public Long getId() {
+		return id;
+	}
+
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+
+	public Date getLatestChangeDate() {
+		return latestChangeDate;
+	}
+
+
+	public void setLatestChangeDate(Date latestChangeDate) {
+		this.latestChangeDate = latestChangeDate;
+	}
+	public String getErrors() {
 		return errors;
 	}
 
@@ -23,6 +52,43 @@ public class HarvestResult {
 
 	public void setNumberOfRecords(int numberOfRecords) {
 		this.numberOfRecords = numberOfRecords;
+	}
+
+
+	public int getNumberOfRequests() {
+		return numberOfRequests;
+	}
+	public void increaseNumberOfRequests(){
+		numberOfRequests++;
+	}
+	public void increaseNumberOfRecords(){
+		numberOfRecords++;
+	}
+
+	public void setNumberOfRequests(int numberOfRequests) {
+		this.numberOfRequests = numberOfRequests;
+	}
+	
+
+
+	public String getLatestRecordId() {
+		return latestRecordId;
+	}
+
+
+	public void setLatestRecordId(String latestRecordId) {
+		this.latestRecordId = latestRecordId;
+		this.latestChangeDate = new Date();
+	}
+
+
+	public boolean isStopHarvesting() {
+		return stopHarvesting;
+	}
+
+
+	public void setStopHarvesting(boolean stopHarvesting) {
+		this.stopHarvesting = stopHarvesting;
 	}
 
 
@@ -87,4 +153,13 @@ public class HarvestResult {
         }
     }
 
+	public HarvestObject copy(){
+		HarvestObject object = new HarvestObject();
+		object.setId(id);
+		object.setLatestRecordId(latestRecordId);
+		object.setNumberOfRecords(numberOfRecords);
+		object.setNumberOfRequests(numberOfRequests);
+		object.setLatestChangeDate(latestChangeDate);
+		return object;
+	}
 }

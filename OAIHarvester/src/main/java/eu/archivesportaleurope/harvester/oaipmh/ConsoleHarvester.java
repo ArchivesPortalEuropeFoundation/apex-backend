@@ -173,7 +173,7 @@ public class ConsoleHarvester {
 				}
 				try {
 					long startTime = System.currentTimeMillis();
-					OaiPmhHarvester.runOai(baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir, oaiPmhHttpClient);
+					OaiPmhHarvester.runOai(new HarvestObject(), baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir, oaiPmhHttpClient);
 					logger.info("===============================================");
 					calcHMS(System.currentTimeMillis(), startTime);
 				} catch (HarvesterParserException hpe) {
