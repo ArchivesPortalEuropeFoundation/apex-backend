@@ -9,6 +9,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
+import eu.archivesportaleurope.harvester.oaipmh.HarvestObject;
+
 /**
  * User: Yoann Moranville
  * Date: 23/10/2013
@@ -20,6 +22,7 @@ public class HarvesterDaemon {
     private static ScheduledExecutorService scheduler;
     private static boolean harvesterProcessing = false;
     private static boolean processOnceADay = true;
+    private static HarvestObject harvestObject = null;
 
     public static synchronized void start(boolean processOnceADay) {
     	HarvesterDaemon.processOnceADay = processOnceADay;
@@ -53,8 +56,13 @@ public class HarvesterDaemon {
         }
     }
 
-    public static synchronized void stop() {
-        if (scheduler != null){
+    public static synchronized void stop(boolean killCurrentProcess) {
+    	if (killCurrentProcess){
+    		HarvestObject harvestObject = getHarvestObject();
+    		if (harvestObject != null)
+    			getHarvestObject().setStopHarvesting(true);
+    	}
+        if (HarvesterDaemon.isActive() && scheduler != null){
             scheduler.shutdownNow();
             scheduler = null;
             LOGGER.info("Harvester daemon stopped");
@@ -75,6 +83,14 @@ public class HarvesterDaemon {
 
 	public static boolean isProcessOnceADay() {
 		return processOnceADay;
+	}
+
+	public static HarvestObject getHarvestObject() {
+			return harvestObject;
+	}
+
+	public static void setHarvestObject(HarvestObject harvestObject) {
+		HarvesterDaemon.harvestObject = harvestObject;
 	}
     
 }

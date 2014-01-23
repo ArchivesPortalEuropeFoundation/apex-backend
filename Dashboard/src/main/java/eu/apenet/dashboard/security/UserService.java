@@ -26,7 +26,7 @@ import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.SentMailRegister;
 import eu.apenet.persistence.vo.User;
 import eu.apenet.persistence.vo.UserRole;
-import eu.archivesportaleurope.harvester.oaipmh.HarvestResult.DateHarvestModel;
+import eu.archivesportaleurope.harvester.oaipmh.HarvestObject.DateHarvestModel;
 
 /**
  * Service for manage users in the Dashboard
