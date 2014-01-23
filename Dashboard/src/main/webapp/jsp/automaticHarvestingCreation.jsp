@@ -2,7 +2,7 @@
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<div align="middle">
+<div >
     <s:actionerror />
 
     <c:choose>
@@ -32,22 +32,32 @@
 			                <td><c:out value="${item.newHarvesting}" /></td>
 			                <td><c:out value="${item.from}" /></td>
 			                <td><c:out value="${item.ingestionProfile}" /></td>
-			                <td  class="${item.errorCss}">
-			                	<c:if test="${item.errors}">
-			                		<a href="downloadHarvesterErrorsText.action?harvestId=${item.id}">ERRORS</a>
-			                		<c:if test="${!empty item.errorResponsePath}">
-			                			<br/><a href="downloadHarvesterErrorsXml.action?harvestId=${item.id}">OAI-PMH Response</a>
-			                		</c:if>
-			                	</c:if>
-							</td>
-			                <td>
-	                            <s:form action="automaticharvestingcreationpage3.action" method="POST" theme="simple">
-	                               <input type="hidden" name="oaiprofiles" value="${item.id}" />
-	                               <input type="hidden" name="url" value="${item.url}" />
-	                               <s:submit key="dashboard.edit.title" />
-	                            </s:form>
+
+			               
+			                	<c:choose>
+			                        <c:when test="${harvestingStarted}">
+			                           <td colspan="2"> <s:text name="label.harvesting.processing.noactions" /></td>
+			                        </c:when>
+			                        <c:otherwise>
+					                <td  class="${item.errorCss}">
+					                	<c:if test="${item.errors}">
+					                		<a href="downloadHarvesterErrorsText.action?harvestId=${item.id}">ERRORS</a>
+					                		<c:if test="${!empty item.errorResponsePath}">
+					                			<br/><a href="downloadHarvesterErrorsXml.action?harvestId=${item.id}">OAI-PMH Response</a>
+					                		</c:if>
+					                	</c:if>
+									</td>			                      
+			                         <td>
+			                            <s:form action="automaticharvestingcreationpage3.action" method="POST" theme="simple">
+			                               <input type="hidden" name="oaiprofiles" value="${item.id}" />
+			                               <input type="hidden" name="url" value="${item.url}" />
+			                               <s:submit key="dashboard.edit.title" />
+			                            </s:form>
+			                           </td>
+		                            </c:otherwise>
+	                            </c:choose>
 		
-			                </td>
+			                
 			            </tr>
 			        </c:forEach>
 			        <tr>
