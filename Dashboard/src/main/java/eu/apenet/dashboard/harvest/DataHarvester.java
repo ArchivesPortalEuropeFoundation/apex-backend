@@ -2,7 +2,6 @@ package eu.apenet.dashboard.harvest;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,8 +25,9 @@ import eu.apenet.persistence.vo.UpFile;
 import eu.apenet.persistence.vo.UploadMethod;
 import eu.apenet.persistence.vo.User;
 import eu.archivesportaleurope.harvester.oaipmh.HarvestResult;
-import eu.archivesportaleurope.harvester.oaipmh.HarvesterParserException;
 import eu.archivesportaleurope.harvester.oaipmh.OaiPmhHarvester;
+import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterConnectionException;
+import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterParserException;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
 import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
@@ -156,13 +156,14 @@ public class DataHarvester {
 			errors+= hpe.getCause().getMessage();
 			LOGGER.error("Error: " + errors);
 			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, hpe.getNotParsebleResponse());
-		}catch (SocketTimeoutException e) {
-			String errors = APEnetUtilities.generateThrowableLog(e);
-			LOGGER.error("Server time out exceeds 5 minutes: " + errors);
-			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, "Server time out exceeds 5 minutes: " +e.getMessage(), null);
+		}catch (HarvesterConnectionException e) {
+			String errors = "Url that have connection problems: '" + e.getRequestUrl() + "'\n\n";
+			errors+= e.getMessage() +" (Time out is 5 minutes)";
+			LOGGER.error(errors);
+			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null);
 		}catch (Exception e) {
 			String errors = APEnetUtilities.generateThrowableLog(e);
-			LOGGER.error("Error: " + errors);
+			LOGGER.error(errors);
 			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null);
 		} finally {
 			if (oaiPmhHttpClient != null) {
