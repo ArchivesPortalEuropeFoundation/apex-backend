@@ -17,7 +17,6 @@ import eu.apenet.dashboard.harvest.DataHarvester;
 import eu.apenet.dashboard.harvest.DisplayHarvestProfileItem;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.dashboard.security.SecurityContext;
-import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
