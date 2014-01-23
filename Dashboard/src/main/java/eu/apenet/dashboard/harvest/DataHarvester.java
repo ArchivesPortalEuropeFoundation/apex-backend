@@ -10,6 +10,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.dashboard.security.UserService;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.utils.ContentUtils;
@@ -24,9 +25,10 @@ import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.UpFile;
 import eu.apenet.persistence.vo.UploadMethod;
 import eu.apenet.persistence.vo.User;
-import eu.archivesportaleurope.harvester.oaipmh.HarvestResult;
+import eu.archivesportaleurope.harvester.oaipmh.HarvestObject;
 import eu.archivesportaleurope.harvester.oaipmh.OaiPmhHarvester;
 import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterConnectionException;
+import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterInterruptionException;
 import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterParserException;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
 import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
@@ -109,10 +111,12 @@ public class DataHarvester {
 			
 			}
 			oaiPmhHttpClient = new OaiPmhHttpClient();
-			HarvestResult harvestResult = OaiPmhHarvester.runOai(baseURL, from, until, metadataPrefix, setSpec,
+			HarvestObject harvestObject = new HarvestObject(archivalInstitutionOaiPmhId);
+			HarvesterDaemon.setHarvestObject(harvestObject);
+			OaiPmhHarvester.runOai(harvestObject, baseURL, from, until, metadataPrefix, setSpec,
 					oaiPmhParser, errorsDirectory, oaiPmhHttpClient);
-			if (harvestResult.getErrors() != null){
-				throw new OaiPmhErrorsException(harvestResult.getErrors());
+			if (harvestObject.getErrors() != null){
+				throw new OaiPmhErrorsException(harvestObject.getErrors());
 			}
 			archivalInstitutionOaiPmh.setLastHarvesting(new Date());
 			archivalInstitutionOaiPmh.setFrom(newFrom);
@@ -124,7 +128,7 @@ public class DataHarvester {
 			Properties properties = retrieveProperties(ingestionprofile);
 			LOGGER.info("Start adding files to queue");
 			File[] harvestedFiles = outputDirectory.listFiles();
-			LOGGER.info("Number of records are " + harvestResult.getNumberOfRecords() + " found files: " + harvestedFiles.length);
+			LOGGER.info("Number of records are " + harvestObject.getNumberOfRecords() + " found files: " + harvestedFiles.length);
 			UpFileDAO upFileDAO = DAOFactory.instance().getUpFileDAO();
 
 			JpaUtil.beginDatabaseTransaction();
@@ -141,20 +145,24 @@ public class DataHarvester {
 			archivalInstitutionOaiPmh.setErrorsResponsePath(null);
 			archivalInstitutionOaiPmhDAO.store(archivalInstitutionOaiPmh);
 
-			LOGGER.info("Harvest completed: harvested " + harvestResult.getNumberOfRecords() + " EAD files from \nID:"
+			LOGGER.info("Harvest completed: harvested " + harvestObject.getNumberOfRecords() + " EAD files from \nID:"
 					+ archivalInstitutionOaiPmh.getId() + "\n" + harvesterProfileLog + "\n --- Oldest file harvested: "
-					+ harvestResult.getOldestFileHarvested() + " --- Newest file harvested: "
-					+ harvestResult.getNewestFileHarvested());
-			UserService.sendEmailHarvestFinished(archivalInstitution, partner, harvestResult.getNumberOfRecords(), harvesterProfileLog,
-					harvestResult.getOldestFileHarvested(), harvestResult.getNewestFileHarvested());
+					+ harvestObject.getOldestFileHarvested() + " --- Newest file harvested: "
+					+ harvestObject.getNewestFileHarvested());
+			UserService.sendEmailHarvestFinished(archivalInstitution, partner, harvestObject.getNumberOfRecords(), harvesterProfileLog,
+					harvestObject.getOldestFileHarvested(), harvestObject.getNewestFileHarvested());
 
 		}catch (OaiPmhErrorsException oee){
 			String errors = oee.getErrors();
 			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null);
+		}catch (HarvesterInterruptionException hpe){
+			String errors = "Last url before the processing is stopped manually: '" + hpe.getRequestUrl() + "'\n\n";
+			LOGGER.info(errors);
+			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null);
 		}catch (HarvesterParserException hpe){
 			String errors = "Url that contains errors: '" + hpe.getRequestUrl() + "'\n\n";
 			errors+= hpe.getCause().getMessage();
-			LOGGER.error("Error: " + errors);
+			LOGGER.error(errors);
 			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, hpe.getNotParsebleResponse());
 		}catch (HarvesterConnectionException e) {
 			String errors = "Url that have connection problems: '" + e.getRequestUrl() + "'\n\n";
@@ -166,6 +174,7 @@ public class DataHarvester {
 			LOGGER.error(errors);
 			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null);
 		} finally {
+			HarvesterDaemon.setHarvestObject(null);
 			if (oaiPmhHttpClient != null) {
 				try {
 					oaiPmhHttpClient.close();
