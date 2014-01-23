@@ -17,6 +17,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.log4j.Logger;
 
+import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterConnectionException;
+
 public class OaiPmhHttpClient {
 	private static final int TIMEOUT = 300000;
 	private static final Logger LOGGER = Logger.getLogger(OaiPmhHttpClient.class);
@@ -30,20 +32,23 @@ public class OaiPmhHttpClient {
 			    .build();
 		httpClient = HttpClientBuilder.create().setDefaultRequestConfig(defaultRequestConfig).useSystemProperties().build();
 	}
-	public CloseableHttpResponse get(String url) throws Exception{
+	public CloseableHttpResponse get(String url) throws HarvesterConnectionException{
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("requestURL=" + url);
 		}
 		HttpGet httpGet = new HttpGet(url);
 		httpGet.setHeader("User-Agent", "Archives Portal Europe OAI-PMH Harvester/" + getVersion());
 		httpGet.setHeader("Accept-Encoding", "compress, gzip, identify");
-	
-		CloseableHttpResponse response = httpClient.execute(httpGet);
-		StatusLine statusLine= response.getStatusLine();
-		if (statusLine.getStatusCode() != HttpStatus.SC_OK) {
-			throw new IOException("HTTP response: " + statusLine.getReasonPhrase());
+		try {
+			CloseableHttpResponse response = httpClient.execute(httpGet);
+			StatusLine statusLine= response.getStatusLine();
+			if (statusLine.getStatusCode() != HttpStatus.SC_OK) {
+				throw new IOException("HTTP response: " + statusLine.getReasonPhrase());
+			}
+			return response;
+		}catch (Exception e){
+			throw new HarvesterConnectionException(url, e);
 		}
-		return response;
 	}
 	public void close() throws IOException{
 		httpClient.close();

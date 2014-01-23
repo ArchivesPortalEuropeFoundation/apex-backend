@@ -10,7 +10,7 @@ import java.util.Date;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
-import eu.archivesportaleurope.harvester.oaipmh.HarvesterParserException;
+import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterParserException;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.ResultInfo;
 import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;

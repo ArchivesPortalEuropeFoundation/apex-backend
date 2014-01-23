@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterParserException;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhRecord;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.ResultInfo;
@@ -28,6 +29,7 @@ public class OaiPmhHarvester {
 					errorDir, number);
 			boolean hasErrors = false;
 			while (resultInfo != null) {
+				number++;
 				List<String> errors = resultInfo.getErrors();
 				if (errors != null && errors.size() > 0) {
 					LOGGER.error("Found the following errors:");
@@ -50,16 +52,15 @@ public class OaiPmhHarvester {
 					if (record.isDeleted()){
 						action = "deleted";
 					}
-					LOGGER.info("Record with ID: " + record.getIdentifier() + " "+ action +" ("
-							+ DATE_TIME_FORMAT.format(record.getTimestamp()) + ")");
 					numberOfRecords++;
+					LOGGER.info("("+number+"," + numberOfRecords +"): Record with ID: " + record.getIdentifier() + " "+ action +" ("
+							+ DATE_TIME_FORMAT.format(record.getTimestamp()) + ")");
 					harvestResult.add(record);							}
 				String resumptionToken = resultInfo.getNewResumptionToken();
 				LOGGER.debug("resumptionToken: '" + resumptionToken + "'");
 				if (StringUtils.isBlank(resumptionToken)) {
 					resultInfo = null;
 				} else {
-					number++;
 					resultInfo = listRecordsSax.harvest(baseURL, resumptionToken, oaiPmhParser, errorDir, number);
 				}
 			}
