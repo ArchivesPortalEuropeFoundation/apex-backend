@@ -33,7 +33,8 @@
     <s:form action="startStopHarvester" method="post" theme="simple">
         <s:actionerror />
         <c:choose>
-            <c:when test="${harvestActive}">
+            <c:when test="${harvestActive or harvestProcessing}">
+            	<s:select  name="stopHarvesting" list="stopHarvestingProcessingOptions" listKey="value" listValue="content"></s:select>
                 <s:submit key="admin.harvestermanagement.harvester.stop" cssClass="mainButton" name="startButton" />
             </c:when>
             <c:otherwise>
@@ -44,6 +45,34 @@
             </c:otherwise>
         </c:choose>
     </s:form>
+    <br/>
+    <c:if test="${!empty harvestObject}">
+    <h2>Harvesting process status</h2>
+    <table class="defaultlayout">
+        <tr>
+            <th>ID:</th>
+            <td>${harvestObject.id}</td>
+        </tr>
+        <tr>
+            <th>Latest record ID:</th>
+            <td>${harvestObject.latestRecordId}</td>
+        </tr>
+        <tr>
+            <th>Timestamp:</th>
+            <td>${harvestObject.latestChangeDate}</td>
+        </tr>
+        <tr>
+            <th>Record processes</th>
+            <td>${harvestObject.numberOfRecords}</td>
+        </tr>
+        <tr>
+            <th>Request processed</th>
+            <td>${harvestObject.numberOfRequests}</td>
+        </tr>
+        
+    </table>   
+    <br/> 
+    </c:if>
 	<h2>First items</h2>
                 <table class="defaultlayout fullWidth">
 			        <thead>
@@ -83,6 +112,7 @@
 			        </c:forEach>
 			        </tbody>
 			    </table>
+		<br/>
     	<h2>All saved harvest processes:</h2>
                 <table class="defaultlayout fullWidth">
 			        <thead>
@@ -127,7 +157,7 @@
 			                </td>
 			                <td class="actions">
 			                    <c:choose>
-			                        <c:when test="${harvestProcessing}">
+			                        <c:when test="${harvestProcessing && !empty harvestObject && harvestObject.id == item.id}">
 			                            <s:text name="admin.harvestermanagement.harvester.processing.noactions" />
 			                        </c:when>
 			                        <c:otherwise>
