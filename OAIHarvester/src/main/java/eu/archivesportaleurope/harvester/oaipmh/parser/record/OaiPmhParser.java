@@ -70,6 +70,7 @@ public class OaiPmhParser extends AbstractOaiPmhParser {
                 }
             }
 		}
+		xmlStreamReader.close();
 		return resultInfo;
 	}
 	public Integer getMaxNumberOfRequests() {

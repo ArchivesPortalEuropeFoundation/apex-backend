@@ -8,11 +8,21 @@ public class HarvestResult {
     private DateHarvestModel newestFileHarvested;
     private DateHarvestModel oldestFileHarvested;
     private String errors;
-    
+    private int numberOfRecords;
     
     
     public String getErrors() {
 		return errors;
+	}
+
+
+	public int getNumberOfRecords() {
+		return numberOfRecords;
+	}
+
+
+	public void setNumberOfRecords(int numberOfRecords) {
+		this.numberOfRecords = numberOfRecords;
 	}
 
 

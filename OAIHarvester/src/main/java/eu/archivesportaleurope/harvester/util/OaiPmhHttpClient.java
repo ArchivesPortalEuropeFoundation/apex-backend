@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -17,10 +18,17 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.log4j.Logger;
 
 public class OaiPmhHttpClient {
+	private static final int TIMEOUT = 300000;
 	private static final Logger LOGGER = Logger.getLogger(OaiPmhHttpClient.class);
 	private CloseableHttpClient httpClient;
 	public OaiPmhHttpClient (){
-		httpClient = HttpClientBuilder.create().useSystemProperties().build();
+		RequestConfig defaultRequestConfig = RequestConfig.custom()
+			    .setSocketTimeout(TIMEOUT)
+			    .setConnectTimeout(TIMEOUT)
+			    .setConnectionRequestTimeout(TIMEOUT)
+			    .setStaleConnectionCheckEnabled(true)
+			    .build();
+		httpClient = HttpClientBuilder.create().setDefaultRequestConfig(defaultRequestConfig).useSystemProperties().build();
 	}
 	public CloseableHttpResponse get(String url) throws Exception{
 		if (LOGGER.isDebugEnabled()) {

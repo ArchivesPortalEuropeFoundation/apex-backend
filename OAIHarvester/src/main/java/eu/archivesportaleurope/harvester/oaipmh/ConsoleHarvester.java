@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -175,6 +176,9 @@ public class ConsoleHarvester {
 					logger.info("===============================================");
 					calcHMS(System.currentTimeMillis(), startTime);
 				} catch (HarvesterParserException hpe) {
+
+				} catch (SocketTimeoutException ste) {
+					logger.info("Server time out exceeds 5 minutes: " + ste.getMessage());
 
 				}
 
