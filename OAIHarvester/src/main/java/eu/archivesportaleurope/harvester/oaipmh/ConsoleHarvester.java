@@ -100,10 +100,10 @@ public class ConsoleHarvester {
 						if (metadataFormats == null || metadataFormats.isEmpty()) {
 							logger.error("No metadata formats for this URL: " + baseUrl);
 						} else {
-							metadataFormat = getInputFromOaiPmhElements("Which metadata format do you want to use?'", metadataFormats);
+							metadataFormat = getInputFromOaiPmhElements("Which metadata format do you want to use?'", metadataFormats, false);
 						}
 						List<OaiPmhElement> setsInRepository = RetrieveOaiPmhInformation.retrieveSets(baseUrl,oaiPmhHttpClient);
-						set = getInputFromOaiPmhElements("Which set do you want to use?'", setsInRepository);
+						set = getInputFromOaiPmhElements("Which set do you want to use?'", setsInRepository, true);
 						fromDate = getInputEmptyAllowed("Specify a FROM date or leave empty?(e.g. 2010-12-23)");
 						toDate = getInputEmptyAllowed("Specify a TO date or leave empty?(e.g. 2010-12-23)");
 						List<String> saveMethods = new ArrayList<String>();
@@ -142,8 +142,12 @@ public class ConsoleHarvester {
 			}
 			File baseUrlDataDir = new File(dataDir, convertToFilename(minimizeBaseUrlDataDir(baseUrl)));
 			File metaDataFormatDataDir = new File(baseUrlDataDir, convertToFilename(metadataFormat));
-			File outputDir = new File(metaDataFormatDataDir, convertToFilename(set));
-
+			File outputDir = null;
+			if (set == null){
+				outputDir = metaDataFormatDataDir;
+			}else {
+				outputDir = new File(metaDataFormatDataDir, convertToFilename(set));
+			}
 			logger.info("Location of the files to be stored:\t" + outputDir.getCanonicalPath());
 			logger.info("===============================================");
 			List<String> proceedOptions = new ArrayList<String>();
@@ -222,7 +226,6 @@ public class ConsoleHarvester {
 	}
 
 	public String getInput(String title, List<String> choices) {
-
 		String choicesLine = "";
 		for (int i = 0; i < choices.size(); i++) {
 			choicesLine += (i + 1) + "): " + choices.get(i) + "\n";
@@ -251,8 +254,10 @@ public class ConsoleHarvester {
 		return result;
 
 	}
-	public String getInputFromOaiPmhElements(String title, List<OaiPmhElement> choices) {
-
+	public String getInputFromOaiPmhElements(String title, List<OaiPmhElement> choices, boolean emptyAllowed) {
+		if (choices.size() == 0){
+			return null;
+		}
 		String choicesLine = "";
 		for (int i = 0; i < choices.size(); i++) {
 			choicesLine += (i + 1) + "): " + choices.get(i) + "\n";
@@ -265,6 +270,9 @@ public class ConsoleHarvester {
 			try {
 				BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
 				String input = bufferRead.readLine();
+				if (emptyAllowed && StringUtils.isBlank(input)){
+					return null;
+				}
 				if (StringUtils.isNumeric(input)) {
 					int i = Integer.parseInt(input) - 1;
 					if (i >= 0 && i < choices.size()) {
