@@ -2,6 +2,7 @@ package eu.apenet.dashboard.harvest;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,6 +30,7 @@ import eu.archivesportaleurope.harvester.oaipmh.HarvesterParserException;
 import eu.archivesportaleurope.harvester.oaipmh.OaiPmhHarvester;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
 import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 /**
  * User: Yoann Moranville Date: 04/12/2013
@@ -97,6 +99,15 @@ public class DataHarvester {
 		}
 		OaiPmhHttpClient oaiPmhHttpClient = null;
 		try {
+			if (archivalInstitutionOaiPmh.getErrors() != null){
+				archivalInstitutionOaiPmh.setErrors(null);
+				if (archivalInstitutionOaiPmh.getErrorsResponsePath() != null){
+					ContentUtils.deleteFile(archivalInstitutionOaiPmh.getErrorsResponsePath() , false);
+				}
+				archivalInstitutionOaiPmh.setErrorsResponsePath(null);
+				archivalInstitutionOaiPmhDAO.store(archivalInstitutionOaiPmh);
+			
+			}
 			oaiPmhHttpClient = new OaiPmhHttpClient();
 			HarvestResult harvestResult = OaiPmhHarvester.runOai(baseURL, from, until, metadataPrefix, setSpec,
 					oaiPmhParser, errorsDirectory, oaiPmhHttpClient);
@@ -108,30 +119,33 @@ public class DataHarvester {
 			if (!APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()) {
 				archivalInstitutionOaiPmh.setEnabled(false);
 			}
-
-			File[] harvestedFiles = outputDirectory.listFiles();
-			UpFileDAO upFileDAO = DAOFactory.instance().getUpFileDAO();
-
+			
 			Ingestionprofile ingestionprofile = archivalInstitutionOaiPmh.getIngestionprofile();
 			Properties properties = retrieveProperties(ingestionprofile);
+			LOGGER.info("Start adding files to queue");
+			File[] harvestedFiles = outputDirectory.listFiles();
+			LOGGER.info("Number of records are " + harvestResult.getNumberOfRecords() + " found files: " + harvestedFiles.length);
+			UpFileDAO upFileDAO = DAOFactory.instance().getUpFileDAO();
 
+			JpaUtil.beginDatabaseTransaction();
 			for (File file : harvestedFiles) {
 				UpFile upFile = createUpFile(subdirectory, file.getName(), UploadMethod.OAI_PMH,
 						archivalInstitution.getAiId(), FileType.XML);
-				upFile = upFileDAO.store(upFile);
-				EadService.useProfileAction(upFile, properties);
+				upFile = upFileDAO.insertSimple(upFile);
+				EadService.useProfileActionForHarvester(upFile, properties);
 			}
+			JpaUtil.commitDatabaseTransaction();
+			LOGGER.info("Files are added to queue");
 			archivalInstitutionOaiPmh.setNewHarvesting(newHarvestingDate);
 			archivalInstitutionOaiPmh.setErrors(null);
 			archivalInstitutionOaiPmh.setErrorsResponsePath(null);
 			archivalInstitutionOaiPmhDAO.store(archivalInstitutionOaiPmh);
 
-			int numberEadHarvested = harvestedFiles.length;
-			LOGGER.info("Harvest completed: harvested " + numberEadHarvested + " EAD files from \nID:"
+			LOGGER.info("Harvest completed: harvested " + harvestResult.getNumberOfRecords() + " EAD files from \nID:"
 					+ archivalInstitutionOaiPmh.getId() + "\n" + harvesterProfileLog + "\n --- Oldest file harvested: "
 					+ harvestResult.getOldestFileHarvested() + " --- Newest file harvested: "
 					+ harvestResult.getNewestFileHarvested());
-			UserService.sendEmailHarvestFinished(archivalInstitution, partner, numberEadHarvested, harvesterProfileLog,
+			UserService.sendEmailHarvestFinished(archivalInstitution, partner, harvestResult.getNumberOfRecords(), harvesterProfileLog,
 					harvestResult.getOldestFileHarvested(), harvestResult.getNewestFileHarvested());
 
 		}catch (OaiPmhErrorsException oee){
@@ -142,6 +156,10 @@ public class DataHarvester {
 			errors+= hpe.getCause().getMessage();
 			LOGGER.error("Error: " + errors);
 			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, hpe.getNotParsebleResponse());
+		}catch (SocketTimeoutException e) {
+			String errors = APEnetUtilities.generateThrowableLog(e);
+			LOGGER.error("Server time out exceeds 5 minutes: " + errors);
+			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, "Server time out exceeds 5 minutes: " +e.getMessage(), null);
 		}catch (Exception e) {
 			String errors = APEnetUtilities.generateThrowableLog(e);
 			LOGGER.error("Error: " + errors);
@@ -154,13 +172,20 @@ public class DataHarvester {
 					LOGGER.error("Unexcepted error occurred: " + APEnetUtilities.generateThrowableLog(io));
 				}
 			}
-			if (outputDirectory.exists()) {
-				outputDirectory.delete();
+			try {
+				File parentFile = outputDirectory.getParentFile();
+				ContentUtils.deleteFile(outputDirectory, false);
+				if (parentFile.listFiles().length == 0){
+					ContentUtils.deleteFile(parentFile, false);
+				}
+			} catch (IOException e) {
 			}
+
 		}
 	}
 
 	private void handleExceptions(User partner, String harvesterProfileLog, Date newHarvestingDate, File outputDirectory, String errors, File errorsResponseFile){
+		JpaUtil.rollbackDatabaseTransaction();
 		ArchivalInstitutionOaiPmh archivalInstitutionOaiPmhNew = DAOFactory.instance()
 				.getArchivalInstitutionOaiPmhDAO().findById(archivalInstitutionOaiPmhId);
 		if (archivalInstitutionOaiPmhNew.getErrors() != null) {
@@ -186,11 +211,6 @@ public class DataHarvester {
 		DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().store(archivalInstitutionOaiPmhNew);
 		UserService.sendEmailHarvestFailed(archivalInstitutionOaiPmhNew.getArchivalInstitution(), partner, harvesterProfileLog,
 				errors, archivalInstitutionOaiPmhNew.getErrorsResponsePath());
-
-		try {
-			ContentUtils.deleteFile(outputDirectory, false);
-		} catch (IOException e1) {
-		}
 	}
 
 	private UpFile createUpFile(String upDirPath, String filePath, String uploadMethodString, Integer aiId,
