@@ -81,7 +81,11 @@ public class OaiPmhParser extends AbstractOaiPmhParser {
 		if (!harvestObject.isGetRecordPhase()){
 			harvestObject.increaseNumberOfRecords();
 			harvestObject.setLatestRecordId(record.getIdentifier());
-			LOGGER.info("("+harvestObject.getNumberOfRequests()+"," + harvestObject.getNumberOfRecords() +"): Record with " + record );
+			if (record.getFilename() == null){
+				LOGGER.info("("+harvestObject.getNumberOfRequests()+"," + harvestObject.getNumberOfRecords() +"): ListIdentifiers with " + record );
+			}else {
+				LOGGER.info("("+harvestObject.getNumberOfRequests()+"," + harvestObject.getNumberOfRecords() +"): ListRecords with " + record );
+			}
 			harvestObject.add(record);			
 		}
 	}
