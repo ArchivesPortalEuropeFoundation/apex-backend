@@ -10,20 +10,24 @@ import javax.xml.stream.XMLStreamReader;
 
 public class OaiPmhRecordParser extends AbstractOaiPmhParser{
 	
-	public static final QName HEADER = new QName(OAI_PMH, "header");
-	public static final QName IDENTIFIER = new QName(OAI_PMH, "identifier");
-	public static final QName DATESTAMP = new QName(OAI_PMH, "datestamp");
-	public static final QName STATUS = new QName(OAI_PMH, "status");
+	
+	protected static final QName IDENTIFIER = new QName(OAI_PMH, "identifier");
+	protected static final QName DATESTAMP = new QName(OAI_PMH, "datestamp");
+	protected static final QName STATUS = new QName(OAI_PMH, "status");
 	public OaiPmhRecordParser(File outputDirectory) {
 		super(outputDirectory);
 	}
-	public OaiPmhRecord parse(XMLStreamReader xmlReader)
+	public OaiPmhRecord parse(XMLStreamReader xmlReader, QName rootElement)
 			throws Exception {
 		LinkedList<QName> path = new LinkedList<QName>();
 		OaiPmhRecord record = new OaiPmhRecord();
+		QName lastElement = null;
+		if (HEADER.equals(rootElement)){
+			record.setStatus(xmlReader.getAttributeValue(null, STATUS.getLocalPart()));	
+			add(path, rootElement);
+		}
 		boolean foundEndElement = false;
 		int event =  xmlReader.next();
-		QName lastElement = null;
 		while(!foundEndElement && event != XMLStreamConstants.END_DOCUMENT){
 			if (event == XMLStreamConstants.START_ELEMENT) {
 				lastElement = xmlReader.getName();
@@ -55,7 +59,7 @@ public class OaiPmhRecordParser extends AbstractOaiPmhParser{
 			}
 			else if (event == XMLStreamConstants.END_ELEMENT) {
 				QName elementName = xmlReader.getName();
-				if (RECORD.equals(elementName)) {
+				if (rootElement.equals(elementName)) {
 					foundEndElement = true;
 
 				} else {

@@ -30,7 +30,9 @@ public class OaiPmhParser extends AbstractOaiPmhParser {
 			if (event == XMLStreamConstants.START_ELEMENT) {
 				lastElement = xmlStreamReader.getName();
 				if (RECORD.equals(lastElement)) {
-					resultInfo.getRecords().add(oaiPmhRecordParser.parse(xmlStreamReader));
+					resultInfo.getRecords().add(oaiPmhRecordParser.parse(xmlStreamReader,RECORD));
+				}else if (HEADER.equals(lastElement)) {
+					resultInfo.getRecords().add(oaiPmhRecordParser.parse(xmlStreamReader,HEADER));
 				}else if (ERROR.equals(lastElement)) {
 					for (int i = 0; i < xmlStreamReader.getAttributeCount(); i++) {
 						if ("noRecordsMatch".equalsIgnoreCase(xmlStreamReader.getAttributeValue(i)) && "code".equalsIgnoreCase(xmlStreamReader.getAttributeLocalName(i))){
