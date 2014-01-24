@@ -9,7 +9,13 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
+import org.apache.log4j.Logger;
+
+import eu.archivesportaleurope.harvester.oaipmh.HarvestObject;
+import eu.archivesportaleurope.harvester.oaipmh.OaiPmhHarvester;
+
 public class OaiPmhParser extends AbstractOaiPmhParser {
+	private static final Logger LOGGER = Logger.getLogger(OaiPmhHarvester.class);
 	private Integer maxNumberOfRecords;
 	public OaiPmhParser(File outputDirectory, Integer maxNumberOfRecords) {
 		super(outputDirectory);
@@ -18,7 +24,7 @@ public class OaiPmhParser extends AbstractOaiPmhParser {
 	public OaiPmhParser(File outputDirectory) {
 		super(outputDirectory);
 	}
-	public ResultInfo parse(InputStream inputStream, int numberOfRequests, Calendar fromCalendar, Calendar untilCalendar) throws Exception {
+	public ResultInfo parse(HarvestObject harvestObject, InputStream inputStream, int numberOfRequests, Calendar fromCalendar, Calendar untilCalendar) throws Exception {
 		XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
 		XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(inputStream, UTF8);
 		OaiPmhRecordParser oaiPmhRecordParser = new OaiPmhRecordParser(getOutputDirectory());
@@ -30,9 +36,9 @@ public class OaiPmhParser extends AbstractOaiPmhParser {
 			if (event == XMLStreamConstants.START_ELEMENT) {
 				lastElement = xmlStreamReader.getName();
 				if (RECORD.equals(lastElement)) {
-					resultInfo.getRecords().add(oaiPmhRecordParser.parse(xmlStreamReader,RECORD, fromCalendar, untilCalendar));
+					addOrUpdateRecord(harvestObject, oaiPmhRecordParser.parse(xmlStreamReader,RECORD, fromCalendar, untilCalendar));
 				}else if (HEADER.equals(lastElement)) {
-					resultInfo.getRecords().add(oaiPmhRecordParser.parse(xmlStreamReader,HEADER, fromCalendar, untilCalendar));
+					addOrUpdateRecord(harvestObject, oaiPmhRecordParser.parse(xmlStreamReader,HEADER, fromCalendar, untilCalendar));
 				}else if (ERROR.equals(lastElement)) {
 					for (int i = 0; i < xmlStreamReader.getAttributeCount(); i++) {
 						if ("noRecordsMatch".equalsIgnoreCase(xmlStreamReader.getAttributeValue(i)) && "code".equalsIgnoreCase(xmlStreamReader.getAttributeLocalName(i))){
@@ -48,13 +54,6 @@ public class OaiPmhParser extends AbstractOaiPmhParser {
 										+ " - ");
 					}
 				} else if (RESUMPTION_TOKEN.equals(lastElement)) {
-					// for(int i = 0; i < xmlStreamReader.getAttributeCount();
-					// i++) {
-					// if(xmlStreamReader.getAttributeLocalName(i).equals("completeListSize"))
-					// {
-					// listSize = xmlStreamReader.getAttributeValue(i);
-					// }
-					// }
 				}
 			} else if (event == XMLStreamConstants.CHARACTERS || event == XMLStreamConstants.CDATA) {
 				if (!noRecordsMatch && ERROR.equals(lastElement)) {
@@ -78,5 +77,12 @@ public class OaiPmhParser extends AbstractOaiPmhParser {
 	public Integer getMaxNumberOfRecords() {
 		return maxNumberOfRecords;
 	}
-
+	public void addOrUpdateRecord(HarvestObject harvestObject, OaiPmhRecord record){
+		if (!harvestObject.isGetRecordPhase()){
+			harvestObject.increaseNumberOfRecords();
+			harvestObject.setLatestRecordId(record.getIdentifier());
+			LOGGER.info("("+harvestObject.getNumberOfRequests()+"," + harvestObject.getNumberOfRecords() +"): Record with " + record );
+			harvestObject.add(record);			
+		}
+	}
 }

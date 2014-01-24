@@ -13,6 +13,8 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.codehaus.stax2.XMLOutputFactory2;
 
+import eu.archivesportaleurope.harvester.oaipmh.HarvestObject;
+
 public class DebugOaiPmhParser extends OaiPmhParser {
 
 
@@ -21,7 +23,7 @@ public class DebugOaiPmhParser extends OaiPmhParser {
 	}
 
 	@Override
-	public ResultInfo parse(InputStream inputStream, int numberOfRequests, Calendar fromCalendar, Calendar untilCalendar) throws Exception {
+	public ResultInfo parse(HarvestObject harvestObject, InputStream inputStream, int numberOfRequests, Calendar fromCalendar, Calendar untilCalendar) throws Exception {
 		XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
 		XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(inputStream, UTF8);
 		File file = new File(getOutputDirectory(),"oai-pmh-request-" + numberOfRequests+".xml");
