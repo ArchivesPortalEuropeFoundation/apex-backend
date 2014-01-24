@@ -24,8 +24,8 @@ import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
 
 public class ConsoleHarvester {
 	private static final String TRUE = "true";
-	private static final String BASE_DIR_PARAMETER = "baseDir";
-	private static final String CONF_FILE_PARAMETER = "confFile";
+	public static final String BASE_DIR_PARAMETER = "baseDir";
+	public static final String CONF_FILE_PARAMETER = "confFile";
 	private static final String YES = "Yes";
 	private static final String SAVE_ONLY_THE_METADATA_RECORD_E_G_EAD_OR_EDM_FILES = "Save only the metadata record (e.g. EAD or EDM files)";
 	private static final String SAVE_FULL_OAI_PMH_RESPONSES = "Save full OAI-PMH responses";
@@ -41,7 +41,7 @@ public class ConsoleHarvester {
 	private boolean silent = false;
 	private Properties properties;
 
-	public ConsoleHarvester(File confDir, File dataDir, Properties properties) {
+	public ConsoleHarvester(File dataDir, Properties properties) {
 		logger = Logger.getLogger(ConsoleHarvester.class);
 		this.dataDir = dataDir;
 		this.properties = properties;
@@ -55,7 +55,6 @@ public class ConsoleHarvester {
 			baseDirString = parameters.get(BASE_DIR_PARAMETER);
 		}
 
-		File confDir = null;
 		File dataDir = null;
 		try {
 			if (parameters.containsKey(CONF_FILE_PARAMETER)) {
@@ -67,7 +66,7 @@ public class ConsoleHarvester {
 			dataDir = new File(baseDirString, "data");
 			logsDir.mkdirs();
 			dataDir.mkdirs();
-			confDir = new File(baseDir, "conf");
+			File confDir = new File(baseDir, "conf");
 			File log4jXml = new File(confDir, "log4j.xml");
 			if (log4jXml.exists()) {
 				System.setProperty("harvester.logs", logsDir.getCanonicalPath());
@@ -83,7 +82,7 @@ public class ConsoleHarvester {
 			System.err.println("Log4j not properly configured. " + e.getMessage());
 			System.exit(-1);
 		}
-		ConsoleHarvester consoleHarvester = new ConsoleHarvester(confDir, dataDir, properties);
+		ConsoleHarvester consoleHarvester = new ConsoleHarvester(dataDir, properties);
 		consoleHarvester.start();
 	}
 
@@ -176,7 +175,8 @@ public class ConsoleHarvester {
 				}
 				try {
 					long startTime = System.currentTimeMillis();
-					OaiPmhHarvester.harvestByListIdentifiers(new HarvestObject(), baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir, oaiPmhHttpClient);
+//					OaiPmhHarvester.harvestByListIdentifiers(new HarvestObject(), baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir, oaiPmhHttpClient);
+					OaiPmhHarvester.harvestByListRecords(new HarvestObject(), baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir, oaiPmhHttpClient);
 					logger.info("===============================================");
 					calcHMS(System.currentTimeMillis(), startTime);
 				} catch (HarvesterParserException hpe) {
@@ -203,7 +203,7 @@ public class ConsoleHarvester {
 		logger.info("===============================================");
 	}
 
-	private static Map<String, String> getParameters(String[] args) {
+	public static Map<String, String> getParameters(String[] args) {
 		Map<String, String> parameters = new HashMap<String, String>();
 		for (String arg : args) {
 			if (arg.startsWith("-") && arg.contains("=")) {
@@ -352,4 +352,8 @@ public class ConsoleHarvester {
 	public static String convertToFilename(String name) {
 		return name.replaceAll("[^a-zA-Z0-9\\-\\.]", "_");
 	}
+
+    public String getSet() {
+        return set;
+    }
 }

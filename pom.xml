@@ -148,6 +148,7 @@
 		<module>OAIServer</module>
 		<module>stopwords</module>
 		<module>database-mock</module>
+		<module>PortugalHarvesterConverter</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
@@ -323,6 +324,11 @@
 				<artifactId>solr-solrj</artifactId>
 				<version>4.3.0</version>
 			</dependency>
+            <dependency>
+                <groupId>org.apache.derby</groupId>
+                <artifactId>derby</artifactId>
+                <version>10.10.1.1</version>
+            </dependency>
 		</dependencies>
 	</dependencyManagement>
 	<organization>
