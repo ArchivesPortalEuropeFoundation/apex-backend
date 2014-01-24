@@ -14,7 +14,7 @@ import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhRecord;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.ResultInfo;
 import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
 import eu.archivesportaleurope.harvester.verb.ListIdentifiersVerb;
-import eu.archivesportaleurope.harvester.verb.ListRecordsSaxWriteDirectly;
+import eu.archivesportaleurope.harvester.verb.ListRecordsVerb;
 
 public class OaiPmhHarvester {
 	private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -23,8 +23,8 @@ public class OaiPmhHarvester {
 	public static void runOai(HarvestObject harvestObject, String baseURL, String from, String until, String metadataPrefix, String setSpec,
 			OaiPmhParser oaiPmhParser, File errorDir, OaiPmhHttpClient oaiPmhHttpClient) throws Exception {
 		try {
-			ListRecordsSaxWriteDirectly listRecordsSax = new ListRecordsSaxWriteDirectly(oaiPmhHttpClient);
-			ResultInfo resultInfo = listRecordsSax.harvest(baseURL, from, until, setSpec, metadataPrefix, oaiPmhParser,
+			ListRecordsVerb listRecordsVerb = new ListRecordsVerb(oaiPmhHttpClient);
+			ResultInfo resultInfo = listRecordsVerb.harvest(baseURL, from, until, setSpec, metadataPrefix, oaiPmhParser,
 					errorDir, harvestObject.getNumberOfRequests());
 			boolean hasErrors = false;
 			while (resultInfo != null && !harvestObject.isStopHarvesting()) {
@@ -61,7 +61,7 @@ public class OaiPmhHarvester {
 				if (StringUtils.isBlank(resumptionToken)) {
 					resultInfo = null;
 				} else {
-					resultInfo = listRecordsSax.harvest(baseURL, resumptionToken, oaiPmhParser, errorDir, harvestObject.getNumberOfRequests());
+					resultInfo = listRecordsVerb.harvest(baseURL, resumptionToken, oaiPmhParser, errorDir, harvestObject.getNumberOfRequests());
 				}
 			}
 			String logSuffix = "";
