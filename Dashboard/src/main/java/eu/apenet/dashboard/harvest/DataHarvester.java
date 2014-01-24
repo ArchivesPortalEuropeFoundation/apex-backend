@@ -113,7 +113,7 @@ public class DataHarvester {
 			oaiPmhHttpClient = new OaiPmhHttpClient();
 			HarvestObject harvestObject = new HarvestObject(archivalInstitutionOaiPmhId);
 			HarvesterDaemon.setHarvestObject(harvestObject);
-			OaiPmhHarvester.runOai(harvestObject, baseURL, from, until, metadataPrefix, setSpec,
+			OaiPmhHarvester.harvestByListRecords(harvestObject, baseURL, from, until, metadataPrefix, setSpec,
 					oaiPmhParser, errorsDirectory, oaiPmhHttpClient);
 			if (harvestObject.getErrors() != null){
 				throw new OaiPmhErrorsException(harvestObject.getErrors());
