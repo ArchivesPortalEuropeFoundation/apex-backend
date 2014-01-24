@@ -61,16 +61,11 @@ public abstract class AbstractListVerb {
 		if (oaiPmhParser.getMaxNumberOfRecords() != null && numberOfRecords >= oaiPmhParser.getMaxNumberOfRecords()){
 			return null;
 		}
-		String requestURL = null;
-		if (resumptionToken == null){
-			requestURL = getRequestURL(baseURL, from, until, set, metadataPrefix);
-		}else {
-			requestURL = getRequestURL(baseURL, resumptionToken);
-		}
+		String requestURL = getRequestURL();
 		CloseableHttpResponse closeableHttpResponse = client.get(requestURL);
 		try {
 			InputStream response = client.getResponseInputStream(closeableHttpResponse);
-			ResultInfo resultInfo =  oaiPmhParser.parse(response, numberOfRecords, fromCalendar, untilCalendar);
+			ResultInfo resultInfo =  oaiPmhParser.parse(harvestObject, response, numberOfRecords, fromCalendar, untilCalendar);
 			resultInfo.setRequestUrl(requestURL);
 			resumptionToken = resultInfo.getNewResumptionToken();
 			return resultInfo;
@@ -93,7 +88,14 @@ public abstract class AbstractListVerb {
 		}
 	}
 	
-    private String getRequestURL(String baseURL, String from, String until, String set, String metadataPrefix) {
+	protected String getRequestURL() throws UnsupportedEncodingException{
+		if (resumptionToken == null){
+			return getRequestURLWithParams();
+		}else {
+			return getRequestURLWithResumptionToken();
+		}
+	}
+    private String getRequestURLWithParams() {
         StringBuffer requestURL = new StringBuffer(baseURL);
         if(requestURL.indexOf("?") >= 0)
             requestURL.append("&verb=" + getVerb());
@@ -106,7 +108,7 @@ public abstract class AbstractListVerb {
         return requestURL.toString();
     }
 
-    private String getRequestURL(String baseURL, String resumptionToken) throws UnsupportedEncodingException {
+    private String getRequestURLWithResumptionToken() throws UnsupportedEncodingException {
         StringBuffer requestURL = new StringBuffer(baseURL);
         if(requestURL.indexOf("?") >= 0)
             requestURL.append("&verb=" + getVerb());
@@ -116,4 +118,13 @@ public abstract class AbstractListVerb {
         return requestURL.toString();
     }
     protected abstract String getVerb();
+
+	protected String getMetadataPrefix() {
+		return metadataPrefix;
+	}
+
+	protected String getBaseURL() {
+		return baseURL;
+	}
+    
 }
