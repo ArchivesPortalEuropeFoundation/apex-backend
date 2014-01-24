@@ -5,7 +5,10 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Calendar;
 import java.util.Date;
+
+import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -27,6 +30,8 @@ public abstract class AbstractListVerb {
 	private OaiPmhParser oaiPmhParser;
 	private File errorDirectory;
 	private String resumptionToken;
+	private Calendar fromCalendar;
+	private Calendar untilCalendar;
 	
 	public  AbstractListVerb(OaiPmhHttpClient client, String baseURL, String from, String until, String set, String metadataPrefix, OaiPmhParser oaiPmhParser, File errorDirectory){
 		this.client = client;
@@ -37,6 +42,12 @@ public abstract class AbstractListVerb {
 		this.set = set;
 		this.oaiPmhParser = oaiPmhParser;
 		this.errorDirectory = errorDirectory;
+		if (from != null && !from.equals("1970-01-01")){
+			fromCalendar = DatatypeConverter.parseDateTime(from);
+		}
+		if (until != null){
+			untilCalendar = DatatypeConverter.parseDateTime(until +"T23:59:59.999Z");
+		}
 	}
 	
 	public ResultInfo harvest(HarvestObject harvestObject)
@@ -59,7 +70,7 @@ public abstract class AbstractListVerb {
 		CloseableHttpResponse closeableHttpResponse = client.get(requestURL);
 		try {
 			InputStream response = client.getResponseInputStream(closeableHttpResponse);
-			ResultInfo resultInfo =  oaiPmhParser.parse(response, numberOfRecords);
+			ResultInfo resultInfo =  oaiPmhParser.parse(response, numberOfRecords, fromCalendar, untilCalendar);
 			resultInfo.setRequestUrl(requestURL);
 			resumptionToken = resultInfo.getNewResumptionToken();
 			return resultInfo;

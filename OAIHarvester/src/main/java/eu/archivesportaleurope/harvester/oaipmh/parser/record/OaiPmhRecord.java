@@ -1,8 +1,10 @@
 package eu.archivesportaleurope.harvester.oaipmh.parser.record;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class OaiPmhRecord {
+	private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private String identifier;
 	private String status;
 	private String filename;
@@ -40,6 +42,20 @@ public class OaiPmhRecord {
 	}
 	public void setDropped(boolean dropped) {
 		this.dropped = dropped;
+	}
+	@Override
+	public String toString() {
+		String result = "ID: " + identifier;
+		if (isDropped()){
+			result += " ignore";
+		}else if (isDeleted()){
+			result += " delete";
+		}else {
+			result += " update";
+		}
+		result += " ("+ DATE_TIME_FORMAT.format(timestamp) + ")";
+		
+		return result;
 	}
     
 }

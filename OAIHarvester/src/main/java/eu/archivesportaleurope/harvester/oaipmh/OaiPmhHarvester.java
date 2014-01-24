@@ -1,7 +1,6 @@
 package eu.archivesportaleurope.harvester.oaipmh;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -17,7 +16,6 @@ import eu.archivesportaleurope.harvester.verb.ListIdentifiersVerb;
 import eu.archivesportaleurope.harvester.verb.ListRecordsVerb;
 
 public class OaiPmhHarvester {
-	private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static final Logger LOGGER = Logger.getLogger(OaiPmhHarvester.class);
 
 	public static void harvestByListRecords(HarvestObject harvestObject, String baseURL, String from, String until, String metadataPrefix, String setSpec,
@@ -53,8 +51,7 @@ public class OaiPmhHarvester {
 					}
 					harvestObject.increaseNumberOfRecords();
 					harvestObject.setLatestRecordId(record.getIdentifier());
-					LOGGER.info("("+harvestObject.getNumberOfRequests()+"," + harvestObject.getNumberOfRecords() +"): Record with ID: " + record.getIdentifier() + " "+ action +" ("
-							+ DATE_TIME_FORMAT.format(record.getTimestamp()) + ")");
+					LOGGER.info("("+harvestObject.getNumberOfRequests()+"," + harvestObject.getNumberOfRecords() +"): Record with " + record );
 					harvestObject.add(record);							}
 				String resumptionToken = resultInfo.getNewResumptionToken();
 				LOGGER.debug("resumptionToken: '" + resumptionToken + "'");
@@ -116,8 +113,7 @@ public class OaiPmhHarvester {
 					}
 					harvestObject.increaseNumberOfRecords();
 					harvestObject.setLatestRecordId(record.getIdentifier());
-					LOGGER.info("("+harvestObject.getNumberOfRequests()+"," + harvestObject.getNumberOfRecords() +"): Record with ID: " + record.getIdentifier() + " "+ action +" ("
-							+ DATE_TIME_FORMAT.format(record.getTimestamp()) + ")");
+					LOGGER.info("("+harvestObject.getNumberOfRequests()+"," + harvestObject.getNumberOfRecords() +"): Record with " + record );
 					harvestObject.add(record);							}
 				String resumptionToken = resultInfo.getNewResumptionToken();
 				LOGGER.debug("resumptionToken: '" + resumptionToken + "'");

@@ -1,6 +1,8 @@
 package eu.archivesportaleurope.harvester.oaipmh;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhRecord;
 
@@ -14,7 +16,7 @@ public class HarvestObject {
     private boolean stopHarvesting = false;
     private String latestRecordId;
     private Date latestChangeDate;
-    
+    private List<OaiPmhRecord> records = new ArrayList<OaiPmhRecord>();
     public HarvestObject(){
     	
     }
@@ -45,6 +47,12 @@ public class HarvestObject {
 	}
 
 
+	public List<OaiPmhRecord> getRecords() {
+		return records;
+	}
+	public void setRecords(List<OaiPmhRecord> records) {
+		this.records = records;
+	}
 	public int getNumberOfRecords() {
 		return numberOfRecords;
 	}

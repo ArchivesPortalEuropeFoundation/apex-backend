@@ -2,6 +2,7 @@ package eu.archivesportaleurope.harvester.oaipmh.parser.record;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Calendar;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -9,7 +10,6 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
 public class OaiPmhParser extends AbstractOaiPmhParser {
-
 	private Integer maxNumberOfRecords;
 	public OaiPmhParser(File outputDirectory, Integer maxNumberOfRecords) {
 		super(outputDirectory);
@@ -18,7 +18,7 @@ public class OaiPmhParser extends AbstractOaiPmhParser {
 	public OaiPmhParser(File outputDirectory) {
 		super(outputDirectory);
 	}
-	public ResultInfo parse(InputStream inputStream, int numberOfRequests) throws Exception {
+	public ResultInfo parse(InputStream inputStream, int numberOfRequests, Calendar fromCalendar, Calendar untilCalendar) throws Exception {
 		XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
 		XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(inputStream, UTF8);
 		OaiPmhRecordParser oaiPmhRecordParser = new OaiPmhRecordParser(getOutputDirectory());
@@ -30,9 +30,9 @@ public class OaiPmhParser extends AbstractOaiPmhParser {
 			if (event == XMLStreamConstants.START_ELEMENT) {
 				lastElement = xmlStreamReader.getName();
 				if (RECORD.equals(lastElement)) {
-					resultInfo.getRecords().add(oaiPmhRecordParser.parse(xmlStreamReader,RECORD));
+					resultInfo.getRecords().add(oaiPmhRecordParser.parse(xmlStreamReader,RECORD, fromCalendar, untilCalendar));
 				}else if (HEADER.equals(lastElement)) {
-					resultInfo.getRecords().add(oaiPmhRecordParser.parse(xmlStreamReader,HEADER));
+					resultInfo.getRecords().add(oaiPmhRecordParser.parse(xmlStreamReader,HEADER, fromCalendar, untilCalendar));
 				}else if (ERROR.equals(lastElement)) {
 					for (int i = 0; i < xmlStreamReader.getAttributeCount(); i++) {
 						if ("noRecordsMatch".equalsIgnoreCase(xmlStreamReader.getAttributeValue(i)) && "code".equalsIgnoreCase(xmlStreamReader.getAttributeLocalName(i))){
@@ -78,6 +78,5 @@ public class OaiPmhParser extends AbstractOaiPmhParser {
 	public Integer getMaxNumberOfRecords() {
 		return maxNumberOfRecords;
 	}
-
 
 }
