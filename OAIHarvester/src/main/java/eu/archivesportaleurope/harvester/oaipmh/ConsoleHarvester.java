@@ -97,6 +97,9 @@ public class ConsoleHarvester {
 			if (properties == null) {
 				while (metadataFormat == null) {
 					baseUrl = getInput("What is the url of the OAI-PMH server?");
+					if (StringUtils.isNotBlank(baseUrl)){
+						baseUrl = baseUrl.trim();
+					}
 					try {
 						List<OaiPmhElement> metadataFormats = RetrieveOaiPmhInformation.retrieveMetadataFormats(baseUrl, oaiPmhHttpClient);
 						if (metadataFormats == null || metadataFormats.isEmpty()) {
@@ -173,7 +176,7 @@ public class ConsoleHarvester {
 				}
 				try {
 					long startTime = System.currentTimeMillis();
-					OaiPmhHarvester.runOai(new HarvestObject(), baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir, oaiPmhHttpClient);
+					OaiPmhHarvester.harvestByListIdentifiers(new HarvestObject(), baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir, oaiPmhHttpClient);
 					logger.info("===============================================");
 					calcHMS(System.currentTimeMillis(), startTime);
 				} catch (HarvesterParserException hpe) {
@@ -245,7 +248,7 @@ public class ConsoleHarvester {
 			try {
 				BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
 				String input = bufferRead.readLine();
-				if (StringUtils.isNumeric(input)) {
+				if (StringUtils.isNotBlank(input) && StringUtils.isNumeric(input)) {
 					int i = Integer.parseInt(input) - 1;
 					if (i >= 0 && i < choices.size()) {
 						result = choices.get(i);
