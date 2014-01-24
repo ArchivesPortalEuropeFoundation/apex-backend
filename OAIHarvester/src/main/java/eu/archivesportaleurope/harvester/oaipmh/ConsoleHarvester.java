@@ -257,7 +257,7 @@ public class ConsoleHarvester {
 				}
 
 			} catch (Exception e) {
-				logger.error("Unable to read input: " + e.getMessage(), e);
+				logger.error("Unable to read input: " + e.getMessage());
 			}
 		}
 
@@ -283,7 +283,7 @@ public class ConsoleHarvester {
 				if (emptyAllowed && StringUtils.isBlank(input)){
 					return null;
 				}
-				if (StringUtils.isNumeric(input)) {
+				if (StringUtils.isNotBlank(input) && StringUtils.isNumeric(input)) {
 					int i = Integer.parseInt(input) - 1;
 					if (i >= 0 && i < choices.size()) {
 						result = choices.get(i).getElement();
@@ -292,7 +292,7 @@ public class ConsoleHarvester {
 				}
 
 			} catch (Exception e) {
-				logger.error("Unable to read input: " + e.getMessage(), e);
+				logger.error("Unable to read input: " + e.getMessage());
 			}
 		}
 

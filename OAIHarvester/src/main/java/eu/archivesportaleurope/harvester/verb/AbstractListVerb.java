@@ -10,28 +10,58 @@ import java.util.Date;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
+import eu.archivesportaleurope.harvester.oaipmh.HarvestObject;
 import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterParserException;
+import eu.archivesportaleurope.harvester.oaipmh.parser.record.DebugOaiPmhParser;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.ResultInfo;
 import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
 
 public abstract class AbstractListVerb {
 	private OaiPmhHttpClient client;
+	private String baseURL;
+	private String from;
+	private String until;
+	private String set;
+	private String metadataPrefix;
+	private OaiPmhParser oaiPmhParser;
+	private File errorDirectory;
+	private String resumptionToken;
 	
-	public  AbstractListVerb(OaiPmhHttpClient client){
+	public  AbstractListVerb(OaiPmhHttpClient client, String baseURL, String from, String until, String set, String metadataPrefix, OaiPmhParser oaiPmhParser, File errorDirectory){
 		this.client = client;
+		this.baseURL = baseURL;
+		this.from = from;
+		this.until = until;
+		this.metadataPrefix = metadataPrefix;
+		this.set = set;
+		this.oaiPmhParser = oaiPmhParser;
+		this.errorDirectory = errorDirectory;
 	}
 	
-	protected ResultInfo harvest(String requestURL, OaiPmhParser oaiPmhParser, File errorDirectory, int numberOfRequests)
+	public ResultInfo harvest(HarvestObject harvestObject)
 			throws Exception {
-		if (oaiPmhParser.getMaxNumberOfRequests() != null && numberOfRequests >= oaiPmhParser.getMaxNumberOfRequests()){
+		int numberOfRecords = 0;
+		if (oaiPmhParser instanceof DebugOaiPmhParser){
+			numberOfRecords = harvestObject.getNumberOfRequests();
+		}else {
+			numberOfRecords = harvestObject.getNumberOfRecords();
+		}
+		if (oaiPmhParser.getMaxNumberOfRecords() != null && numberOfRecords >= oaiPmhParser.getMaxNumberOfRecords()){
 			return null;
+		}
+		String requestURL = null;
+		if (resumptionToken == null){
+			requestURL = getRequestURL(baseURL, from, until, set, metadataPrefix);
+		}else {
+			requestURL = getRequestURL(baseURL, resumptionToken);
 		}
 		CloseableHttpResponse closeableHttpResponse = client.get(requestURL);
 		try {
 			InputStream response = client.getResponseInputStream(closeableHttpResponse);
-			ResultInfo resultInfo =  oaiPmhParser.parse(response, numberOfRequests);
+			ResultInfo resultInfo =  oaiPmhParser.parse(response, numberOfRecords);
 			resultInfo.setRequestUrl(requestURL);
+			resumptionToken = resultInfo.getNewResumptionToken();
 			return resultInfo;
 		} catch (Exception e) {
 			File errorFile = new File(errorDirectory, (new Date()).getTime() + ".xml");
@@ -52,14 +82,6 @@ public abstract class AbstractListVerb {
 		}
 	}
 	
-	public ResultInfo harvest(String baseURL, String from, String until, String set, String metadataPrefix, OaiPmhParser oaiPmhParser, File errorDirectory, int numberOfRequests) throws Exception {
-        return harvest(getRequestURL(baseURL, from, until, set, metadataPrefix), oaiPmhParser,errorDirectory, numberOfRequests);
-    }
-
-	public ResultInfo harvest(String baseURL, String resumptionToken, OaiPmhParser oaiPmhParser,File errorDirectory, int numberOfRequests) throws Exception {
-		 return harvest(getRequestURL(baseURL, resumptionToken), oaiPmhParser, errorDirectory,numberOfRequests);
-    }
-
     private String getRequestURL(String baseURL, String from, String until, String set, String metadataPrefix) {
         StringBuffer requestURL = new StringBuffer(baseURL);
         if(requestURL.indexOf("?") >= 0)

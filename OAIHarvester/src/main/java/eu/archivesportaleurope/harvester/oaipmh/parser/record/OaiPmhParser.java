@@ -10,10 +10,10 @@ import javax.xml.stream.XMLStreamReader;
 
 public class OaiPmhParser extends AbstractOaiPmhParser {
 
-	private Integer maxNumberOfRequests;
-	public OaiPmhParser(File outputDirectory, Integer maxNumberOfRequests) {
+	private Integer maxNumberOfRecords;
+	public OaiPmhParser(File outputDirectory, Integer maxNumberOfRecords) {
 		super(outputDirectory);
-		this.maxNumberOfRequests = maxNumberOfRequests;
+		this.maxNumberOfRecords = maxNumberOfRecords;
 	}
 	public OaiPmhParser(File outputDirectory) {
 		super(outputDirectory);
@@ -75,8 +75,8 @@ public class OaiPmhParser extends AbstractOaiPmhParser {
 		xmlStreamReader.close();
 		return resultInfo;
 	}
-	public Integer getMaxNumberOfRequests() {
-		return maxNumberOfRequests;
+	public Integer getMaxNumberOfRecords() {
+		return maxNumberOfRecords;
 	}
 
 

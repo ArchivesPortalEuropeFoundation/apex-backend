@@ -20,12 +20,12 @@ public class OaiPmhHarvester {
 	private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static final Logger LOGGER = Logger.getLogger(OaiPmhHarvester.class);
 
-	public static void runOai(HarvestObject harvestObject, String baseURL, String from, String until, String metadataPrefix, String setSpec,
+	public static void harvestByListRecords(HarvestObject harvestObject, String baseURL, String from, String until, String metadataPrefix, String setSpec,
 			OaiPmhParser oaiPmhParser, File errorDir, OaiPmhHttpClient oaiPmhHttpClient) throws Exception {
 		try {
-			ListRecordsVerb listRecordsVerb = new ListRecordsVerb(oaiPmhHttpClient);
-			ResultInfo resultInfo = listRecordsVerb.harvest(baseURL, from, until, setSpec, metadataPrefix, oaiPmhParser,
-					errorDir, harvestObject.getNumberOfRequests());
+			ListRecordsVerb listRecordsVerb = new ListRecordsVerb(oaiPmhHttpClient, baseURL, from, until, setSpec, metadataPrefix, oaiPmhParser,
+					errorDir);
+			ResultInfo resultInfo = listRecordsVerb.harvest(harvestObject);
 			boolean hasErrors = false;
 			while (resultInfo != null && !harvestObject.isStopHarvesting()) {
 				harvestObject.increaseNumberOfRequests();
@@ -61,7 +61,7 @@ public class OaiPmhHarvester {
 				if (StringUtils.isBlank(resumptionToken)) {
 					resultInfo = null;
 				} else {
-					resultInfo = listRecordsVerb.harvest(baseURL, resumptionToken, oaiPmhParser, errorDir, harvestObject.getNumberOfRequests());
+					resultInfo = listRecordsVerb.harvest(harvestObject);
 				}
 			}
 			String logSuffix = "";
@@ -86,9 +86,9 @@ public class OaiPmhHarvester {
 	public static void harvestByListIdentifiers(HarvestObject harvestObject, String baseURL, String from, String until, String metadataPrefix, String setSpec,
 			OaiPmhParser oaiPmhParser, File errorDir, OaiPmhHttpClient oaiPmhHttpClient) throws Exception {
 		try {
-			ListIdentifiersVerb listIdentifiersVerb = new ListIdentifiersVerb(oaiPmhHttpClient);
-			ResultInfo resultInfo = listIdentifiersVerb.harvest(baseURL, from, until, setSpec, metadataPrefix, oaiPmhParser,
-					errorDir, harvestObject.getNumberOfRequests());
+			ListIdentifiersVerb listIdentifiersVerb = new ListIdentifiersVerb(oaiPmhHttpClient, baseURL, from, until, setSpec, metadataPrefix, oaiPmhParser,
+					errorDir);
+			ResultInfo resultInfo = listIdentifiersVerb.harvest(harvestObject);
 			boolean hasErrors = false;
 			while (resultInfo != null && !harvestObject.isStopHarvesting()) {
 				harvestObject.increaseNumberOfRequests();
@@ -124,7 +124,7 @@ public class OaiPmhHarvester {
 				if (StringUtils.isBlank(resumptionToken)) {
 					resultInfo = null;
 				} else {
-					resultInfo = listIdentifiersVerb.harvest(baseURL, resumptionToken, oaiPmhParser, errorDir, harvestObject.getNumberOfRequests());
+					resultInfo = listIdentifiersVerb.harvest(harvestObject);
 				}
 			}
 			String logSuffix = "";
