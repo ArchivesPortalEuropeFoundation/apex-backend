@@ -12,10 +12,12 @@ public class HarvestObject {
     private DateHarvestModel oldestFileHarvested;
     private String errors;
     private int numberOfRecords = 0;
+    private int numberOfGetRecords = 0;
     private int numberOfRequests = 0;
     private boolean stopHarvesting = false;
     private String latestRecordId;
     private Date latestChangeDate;
+    private boolean getRecordPhase = false;
     private List<OaiPmhRecord> records = new ArrayList<OaiPmhRecord>();
     public HarvestObject(){
     	
@@ -63,11 +65,20 @@ public class HarvestObject {
 	}
 
 
+	public int getNumberOfGetRecords() {
+		return numberOfGetRecords;
+	}
+	public void setNumberOfGetRecords(int numberOfGetRecords) {
+		this.numberOfGetRecords = numberOfGetRecords;
+	}
 	public int getNumberOfRequests() {
 		return numberOfRequests;
 	}
 	public void increaseNumberOfRequests(){
 		numberOfRequests++;
+	}
+	public void increaseNumberOfGetRecords(){
+		numberOfGetRecords++;
 	}
 	public void increaseNumberOfRecords(){
 		numberOfRecords++;
@@ -84,6 +95,12 @@ public class HarvestObject {
 	}
 
 
+	public boolean isGetRecordPhase() {
+		return getRecordPhase;
+	}
+	public void setGetRecordPhase(boolean getRecordPhase) {
+		this.getRecordPhase = getRecordPhase;
+	}
 	public void setLatestRecordId(String latestRecordId) {
 		this.latestRecordId = latestRecordId;
 		this.latestChangeDate = new Date();
@@ -130,6 +147,7 @@ public class HarvestObject {
 		this.oldestFileHarvested = oldestFileHarvested;
 	}
 	public void add(OaiPmhRecord oaiPmhRecord){
+		records.add(oaiPmhRecord);
         if(oldestFileHarvested == null && newestFileHarvested == null) {
             oldestFileHarvested = new DateHarvestModel(oaiPmhRecord.getTimestamp(), oaiPmhRecord.getIdentifier());
             newestFileHarvested = new DateHarvestModel(oaiPmhRecord.getTimestamp(), oaiPmhRecord.getIdentifier());
