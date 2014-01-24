@@ -109,7 +109,7 @@ public class OaiPmhHarvester {
 						harvestObject.increaseNumberOfGetRecords();
 						harvestObject.setLatestRecordId(record.getIdentifier());
 						ResultInfo getRecordInfo = getRecordVerb.harvest(harvestObject, record.getIdentifier());
-						LOGGER.info("("+harvestObject.getNumberOfRecords()+"," + harvestObject.getNumberOfGetRecords() +"): Get record with " + record );
+						LOGGER.info("("+harvestObject.getNumberOfRecords()+"," + harvestObject.getNumberOfGetRecords() +"): GetRecord with " + record );
 						List<String> errors = getRecordInfo.getErrors();
 						if (errors != null && errors.size() > 0) {
 							logErrors(harvestObject, getRecordInfo);
