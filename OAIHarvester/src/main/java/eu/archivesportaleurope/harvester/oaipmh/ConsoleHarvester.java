@@ -175,8 +175,8 @@ public class ConsoleHarvester {
 				}
 				try {
 					long startTime = System.currentTimeMillis();
-//					OaiPmhHarvester.harvestByListIdentifiers(new HarvestObject(), baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir, oaiPmhHttpClient);
-					OaiPmhHarvester.harvestByListRecords(new HarvestObject(), baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir, oaiPmhHttpClient);
+					OaiPmhHarvester.harvestByListIdentifiers(new HarvestObject(), baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir, oaiPmhHttpClient);
+//					OaiPmhHarvester.harvestByListRecords(new HarvestObject(), baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir, oaiPmhHttpClient);
 					logger.info("===============================================");
 					calcHMS(System.currentTimeMillis(), startTime);
 				} catch (HarvesterParserException hpe) {
