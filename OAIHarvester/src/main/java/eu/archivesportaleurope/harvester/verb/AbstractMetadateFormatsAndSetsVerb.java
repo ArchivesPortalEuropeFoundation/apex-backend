@@ -20,14 +20,14 @@ import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
  *
  * @author Yoann Moranville
  */
-public abstract class HarvesterVerbSaxMemory {
-    private static final Logger LOG = Logger.getLogger(HarvesterVerbSaxMemory.class);
+public abstract class AbstractMetadateFormatsAndSetsVerb {
+    private static final Logger LOG = Logger.getLogger(AbstractMetadateFormatsAndSetsVerb.class);
     public static final String SET = "SET";
     public static final String METADATA_FORMAT = "METADATA_FORMAT";
 
 	private OaiPmhHttpClient client;
 	
-	public  HarvesterVerbSaxMemory(OaiPmhHttpClient client){
+	public  AbstractMetadateFormatsAndSetsVerb(OaiPmhHttpClient client){
 		this.client = client;
 	}
 
