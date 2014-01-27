@@ -64,10 +64,10 @@
         </tr>
         <tr>
             <th>Record processes</th>
-            <td>${harvestObject.numberOfRecords}</td>
+            <td><c:if test="${harvestObject.getRecordPhase}">${harvestObject.numberOfGetRecords} / </c:if>${harvestObject.numberOfRecords}</td>
         </tr>
         <tr>
-            <th>Request processed</th>
+            <th>Requests processed</th>
             <td>${harvestObject.numberOfRequests}</td>
         </tr>
         
