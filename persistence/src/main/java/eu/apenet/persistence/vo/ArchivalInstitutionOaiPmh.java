@@ -24,10 +24,21 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
 	@Column(name="from_date")
 	private String from;
 	
-	private String errors;
+	@Column(name="harvesting_status")
+	@Enumerated(EnumType.STRING)
+	private OaiPmhStatus harvestingStatus;
+	
+	@Column(name="harvesting_details")
+	private String harvestingDetails;
+	
+	
+	@Column(name="list_by_identifiers")
+	private boolean harvestMethodListByIdentifiers;
 	
 	@Column(name="errors_response_path")
 	private String errorsResponsePath;
+	
+
 	
 	@Column(name="oai_pmh_set")
 	private String set;
@@ -60,6 +71,7 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
     private boolean harvestOnlyWeekend;
   
 
+
     public String getFrom() {
 		return from;
 	}
@@ -70,13 +82,25 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
 	}
 
 
-    public String getErrors() {
-		return errors;
+
+
+	public OaiPmhStatus getHarvestingStatus() {
+		return harvestingStatus;
 	}
 
 
-	public void setErrors(String errors) {
-		this.errors = errors;
+	public void setHarvestingStatus(OaiPmhStatus harvestingStatus) {
+		this.harvestingStatus = harvestingStatus;
+	}
+
+
+	public boolean isHarvestMethodListByIdentifiers() {
+		return harvestMethodListByIdentifiers;
+	}
+
+
+	public void setHarvestMethodListByIdentifiers(boolean harvestMethodListByIdentifiers) {
+		this.harvestMethodListByIdentifiers = harvestMethodListByIdentifiers;
 	}
 
 
@@ -212,6 +236,16 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
 
 	public void setNewHarvesting(Date newHarvesting) {
 		this.newHarvesting = newHarvesting;
+	}
+
+
+	public String getHarvestingDetails() {
+		return harvestingDetails;
+	}
+
+
+	public void setHarvestingDetails(String harvestingDetails) {
+		this.harvestingDetails = harvestingDetails;
 	}
     
 }
