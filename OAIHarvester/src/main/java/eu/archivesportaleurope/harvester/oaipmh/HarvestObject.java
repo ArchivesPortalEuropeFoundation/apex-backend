@@ -10,7 +10,9 @@ public class HarvestObject {
 	private Long id;
     private DateHarvestModel newestFileHarvested;
     private DateHarvestModel oldestFileHarvested;
-    private String errors;
+    private String harvestingDetails;
+    private boolean failed;
+    private boolean error;
     private int numberOfRecords = 0;
     private int numberOfGetRecords = 0;
     private int numberOfRequests = 0;
@@ -18,6 +20,7 @@ public class HarvestObject {
     private String latestRecordId;
     private Date latestChangeDate;
     private boolean getRecordPhase = false;
+    private String notParsableResponses;
     private List<OaiPmhRecord> records = new ArrayList<OaiPmhRecord>();
     public HarvestObject(){
     	
@@ -36,6 +39,21 @@ public class HarvestObject {
 	}
 
 
+	public String getHarvestingDetails() {
+		return harvestingDetails;
+	}
+	public boolean isFailed() {
+		return failed;
+	}
+	public void setFailed(boolean failed) {
+		this.failed = failed;
+	}
+	public boolean isError() {
+		return error;
+	}
+	public void setError(boolean error) {
+		this.error = error;
+	}
 	public Date getLatestChangeDate() {
 		return latestChangeDate;
 	}
@@ -44,9 +62,7 @@ public class HarvestObject {
 	public void setLatestChangeDate(Date latestChangeDate) {
 		this.latestChangeDate = latestChangeDate;
 	}
-	public String getErrors() {
-		return errors;
-	}
+
 
 
 	public List<OaiPmhRecord> getRecords() {
@@ -116,18 +132,38 @@ public class HarvestObject {
 		this.stopHarvesting = stopHarvesting;
 	}
 
-
-	public void setErrors(String errors) {
-		this.errors = errors;
-	}
-	public void addErrors(String errors) {
-		if (this.errors == null){
-			this.errors = errors + "\n";
+	public void addErrors(String errors, String notParsableResponse) {
+		error = true;
+		if (this.harvestingDetails == null){
+			this.harvestingDetails = errors + "\n";
 		}else {
-			this.errors += errors + "\n";
+			this.harvestingDetails += errors + "\n";
+		}
+		if (this.notParsableResponses == null){
+			this.notParsableResponses = notParsableResponse;
+		}else {
+			this.notParsableResponses +="|" + notParsableResponse ;
 		}
 	}
-
+	
+	public String getNotParsableResponses() {
+		return notParsableResponses;
+	}
+	public void addErrors(String errors) {
+		error = true;
+		if (this.harvestingDetails == null){
+			this.harvestingDetails = errors + "\n";
+		}else {
+			this.harvestingDetails += errors + "\n";
+		}
+	}
+	public void addWarnings(String errors) {
+		if (this.harvestingDetails == null){
+			this.harvestingDetails = errors + "\n";
+		}else {
+			this.harvestingDetails += errors + "\n";
+		}
+	}
 	public DateHarvestModel getNewestFileHarvested() {
 		return newestFileHarvested;
 	}

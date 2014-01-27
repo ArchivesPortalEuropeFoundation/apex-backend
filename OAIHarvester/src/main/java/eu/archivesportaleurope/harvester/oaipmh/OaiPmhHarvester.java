@@ -19,7 +19,7 @@ import eu.archivesportaleurope.harvester.verb.ListRecordsVerb;
 
 public class OaiPmhHarvester {
 	private static final Logger LOGGER = Logger.getLogger(OaiPmhHarvester.class);
-	private static final int MAX_NUMBER_OF_ERRORS = 3;
+	private static final int MAX_NUMBER_OF_ERRORS = 5;
 	public static void harvestByListRecords(HarvestObject harvestObject, String baseURL, String from, String until, String metadataPrefix, String setSpec,
 			OaiPmhParser oaiPmhParser, File errorDir, OaiPmhHttpClient oaiPmhHttpClient) throws Exception {
 		try {
@@ -48,6 +48,7 @@ public class OaiPmhHarvester {
 				logSuffix = "Harvesting is stopped manually.";
 			}
 			if (hasErrors) {
+				harvestObject.setFailed(true);
 				LOGGER.error(harvestObject.getNumberOfRecords() + " records harvested, but with errors. " + logSuffix);
 			} else {
 				LOGGER.info(harvestObject.getNumberOfRecords() + " records harvested successfully with no errors. " + logSuffix);
@@ -91,6 +92,7 @@ public class OaiPmhHarvester {
 				logSuffix = "Harvesting is stopped manually.";
 			}
 			if (hasErrors) {
+				harvestObject.setFailed(true);
 				LOGGER.error(harvestObject.getNumberOfRecords() + " identifiers harvested, but with errors. " + logSuffix);
 			} else {
 				LOGGER.info(harvestObject.getNumberOfRecords() + " identifiers harvested successfully with no errors. " + logSuffix);
@@ -99,12 +101,15 @@ public class OaiPmhHarvester {
 			GetRecordVerb getRecordVerb = new GetRecordVerb(oaiPmhHttpClient, baseURL, metadataPrefix, oaiPmhParser, errorDir);
 			int numberOfErrors = 0;
 			List<OaiPmhRecord> records = harvestObject.getRecords();
-			while (records.size() > 0 && numberOfErrors < MAX_NUMBER_OF_ERRORS){
+			while (records.size() > 0 && numberOfErrors <= MAX_NUMBER_OF_ERRORS){
 				
 				try {
 					OaiPmhRecord record = records.get(0);
 					if (record.isDropped() || record.isDeleted()){
 						harvestObject.increaseNumberOfGetRecords();
+						if (record.isDeleted()){
+							harvestObject.addWarnings("Record " + record + " is deleted in OAI-PMH repository. Please delete it manually in the dashboard");
+						}
 					}else {
 						harvestObject.increaseNumberOfGetRecords();
 						harvestObject.setLatestRecordId(record.getIdentifier());
@@ -120,8 +125,9 @@ public class OaiPmhHarvester {
 						}
 					}
 
+
 				}catch (HarvesterParserException hpe){
-					harvestObject.addErrors("\nUrl that contains errors: '" + resultInfo.getRequestUrl() + "'\n");
+					harvestObject.addErrors("\nUrl that contains errors: '" + hpe.getRequestUrl() + "'\n", hpe.getNotParsebleResponse().getCanonicalPath());
 					numberOfErrors++;
 					if (numberOfErrors >= MAX_NUMBER_OF_ERRORS){
 						throw hpe;
@@ -144,7 +150,7 @@ public class OaiPmhHarvester {
 			}
 		} catch (HarvesterParserException hpe) {
 			LOGGER.error("Unable to parse XML response from the OAI-PMH server, look at the XML response file at "
-					+ hpe.getNotParsebleResponse().getCanonicalPath(),hpe);
+					+ hpe.getNotParsebleResponse().getCanonicalPath());
 			throw hpe;
 		}
 	}
