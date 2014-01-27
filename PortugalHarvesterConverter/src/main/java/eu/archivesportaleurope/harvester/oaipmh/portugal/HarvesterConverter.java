@@ -12,7 +12,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
-import eu.apenet.persistence.vo.UpFile;
 import eu.archivesportaleurope.harvester.oaipmh.portugal.database.DBUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -26,8 +25,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import eu.apenet.dpt.utils.service.TransformationTool;
-import eu.apenet.persistence.vo.CLevel;
-import eu.apenet.persistence.vo.EadContent;
+import eu.archivesportaleurope.harvester.oaipmh.portugal.objects.CLevel;
+import eu.archivesportaleurope.harvester.oaipmh.portugal.objects.EadContent;
 
 /**
  * User: yoannmoranville
@@ -57,7 +56,7 @@ public class HarvesterConverter extends AbstractParser {
         dbUtil = new DBUtil();
     }
 
-    public LinkedList<UpFile> dublinCoreToEad() throws Exception{
+    public void dublinCoreToEad() throws Exception{
         LOG.info("Starting DC to EAD process (creation of all CLevels from the DC elements of the harvested files)");
         try {
             if(files == null)
@@ -177,7 +176,6 @@ public class HarvesterConverter extends AbstractParser {
             LOG.error("Error", e);
             throw new RuntimeException();
         }
-        return null;
     }
 
     public int dbToEad(String mainagencycode) throws Exception {
@@ -188,7 +186,6 @@ public class HarvesterConverter extends AbstractParser {
         int from = 0;
 
         List<CLevel> cLevels = dbUtil.retrieveNextClevels(eadContent.getEcId(), from, MAX_ELEMENTS);
-        LOG.info("Retrieved " + cLevels.size() + " clevels");
         Map<String, String> idsWithTypes = new HashMap<String, String>();
         Map<String, Long> idsWithUnitids = new HashMap<String, Long>();
         while(cLevels.size() != 0) {
@@ -354,8 +351,6 @@ public class HarvesterConverter extends AbstractParser {
                 //2. Get the node parent (never null because it is not the ROOT)
                 //3. Get the correct parent CLevel from DB
                 CLevel parentCLevel = dbUtil.retrieveCLevelByUnitid(node.getId(), eadContentId);
-                LOG.info((parentCLevel==null?"null":"not null - ") + node.getId() + " - " + eadContentId);
-                LOG.info((childCLevel==null?"null":"not null - ") + child.getId() + " - " + eadContentId);
                 Long parentCLevelId = parentCLevel.getClId();
                 //4. Insert in the correct current CLevel the ID of the correct parent CLevel in the DB
                 dbUtil.updateCLevelOther("parent_cl_id", parentCLevelId, childCLevel.getClId());

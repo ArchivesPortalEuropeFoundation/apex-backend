@@ -1,8 +1,7 @@
 package eu.archivesportaleurope.harvester.oaipmh.portugal.database;
 
-import eu.apenet.persistence.vo.CLevel;
-import eu.apenet.persistence.vo.EadContent;
-import eu.apenet.persistence.vo.FindingAid;
+import eu.archivesportaleurope.harvester.oaipmh.portugal.objects.CLevel;
+import eu.archivesportaleurope.harvester.oaipmh.portugal.objects.EadContent;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
