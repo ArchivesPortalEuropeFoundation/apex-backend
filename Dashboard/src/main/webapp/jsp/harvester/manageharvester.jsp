@@ -162,7 +162,9 @@
 			                				<c:otherwise>
 						                		<a href="downloadHarvesterErrorsText.action?harvestId=${item.id}"><apenet:resource>${item.harvestingStatus}</apenet:resource></a>
 						                		<c:if test="${!empty item.errorResponsePath}">
-						                			<br/><a href="downloadHarvesterErrorsXml.action?harvestId=${item.id}">OAI-PMH Response</a>
+						                			<c:forTokens items="${item.errorResponsePath}" delims="|" varStatus="varStatus">
+						                				<br/><a href="downloadHarvesterErrorsXml.action?harvestId=${item.id}&index=${varStatus.index}">OAI-PMH Response ${varStatus.index}</a>
+						                			</c:forTokens>
 						                		</c:if>
 											</c:otherwise>	
 			                		</c:choose>
@@ -198,6 +200,9 @@
 												</option>
 			                                </c:otherwise>
 			                            </c:choose>
+			                            		<option value="METHOD">
+													Change harvester method
+												</option>
 												<option value="DELAY">
 													Delay one month
 												</option>
