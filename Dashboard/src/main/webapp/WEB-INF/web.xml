@@ -93,7 +93,15 @@
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
-
+    
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>JSPs</web-resource-name>
+            <url-pattern>/jsp/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint/>
+    </security-constraint>
+    
     <resource-env-ref>
         <resource-env-ref-name>jdbc/APEnetDatabaseDashboard</resource-env-ref-name>
         <resource-env-ref-type>javax.sql.DataSource</resource-env-ref-type>
