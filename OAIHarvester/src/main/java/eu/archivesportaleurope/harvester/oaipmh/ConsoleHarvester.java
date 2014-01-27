@@ -29,8 +29,8 @@ public class ConsoleHarvester {
 	private static final String YES = "Yes";
 	private static final String SAVE_ONLY_THE_METADATA_RECORD_E_G_EAD_OR_EDM_FILES = "Save only the metadata record (e.g. EAD or EDM files)";
 	private static final String SAVE_FULL_OAI_PMH_RESPONSES = "Save full OAI-PMH responses";
-	private static final String HARVEST_METHOD_GETRECORDS = "Harvest by verb GetRecords";
-	private static final String HARVEST_METHOD_GET_IDENTIFIERS_GETRECORD = "Harvest by verb GetIdentifiers/GetRecord (fail safe)";
+	private static final String HARVEST_METHOD_LIST_RECORDS = "Harvest by verb ListRecords";
+	private static final String HARVEST_METHOD_LIST_IDENTIFIERS_GETRECORD = "Harvest by verb GetIdentifiers/GetRecord (fail safe)";
 	
 	private Logger logger;
 	private File dataDir;
@@ -114,10 +114,10 @@ public class ConsoleHarvester {
 						fromDate = getInputEmptyAllowed("Specify a FROM date or leave empty?(e.g. 2010-12-23)");
 						toDate = getInputEmptyAllowed("Specify a TO date or leave empty?(e.g. 2010-12-23)");
 						List<String> harvesterMethods = new ArrayList<String>();
-						harvesterMethods.add(HARVEST_METHOD_GET_IDENTIFIERS_GETRECORD);
-						harvesterMethods.add(HARVEST_METHOD_GETRECORDS);
+						harvesterMethods.add(HARVEST_METHOD_LIST_IDENTIFIERS_GETRECORD);
+						harvesterMethods.add(HARVEST_METHOD_LIST_RECORDS);
 						String harvesterMethod = getInput("What do you want to harvest?'", harvesterMethods);
-						getIdentifiersHarvestMethod = HARVEST_METHOD_GET_IDENTIFIERS_GETRECORD.equals(harvesterMethod);
+						getIdentifiersHarvestMethod = HARVEST_METHOD_LIST_IDENTIFIERS_GETRECORD.equals(harvesterMethod);
 						List<String> saveMethods = new ArrayList<String>();
 						saveMethods.add(SAVE_ONLY_THE_METADATA_RECORD_E_G_EAD_OR_EDM_FILES);
 						saveMethods.add(SAVE_FULL_OAI_PMH_RESPONSES);
@@ -151,9 +151,9 @@ public class ConsoleHarvester {
 			if (toDate != null)
 				logger.info("To date:\t\t\t\t" + toDate);
 			if (getIdentifiersHarvestMethod) {
-				logger.info("Harvest method:\t\t\t\t" + HARVEST_METHOD_GET_IDENTIFIERS_GETRECORD);
+				logger.info("Harvest method:\t\t\t\t" + HARVEST_METHOD_LIST_IDENTIFIERS_GETRECORD);
 			} else {
-				logger.info("Harvest method:\t\t\t\t" + HARVEST_METHOD_GETRECORDS);
+				logger.info("Harvest method:\t\t\t\t" + HARVEST_METHOD_LIST_RECORDS);
 			}
 			if (debug) {
 				logger.info("Store method:\t\t\t\t" + SAVE_FULL_OAI_PMH_RESPONSES);
