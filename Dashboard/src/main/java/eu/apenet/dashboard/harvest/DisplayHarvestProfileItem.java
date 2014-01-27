@@ -143,10 +143,12 @@ public class DisplayHarvestProfileItem {
 		return "";
 	}
 	public String getErrorCss(){
-		if (isErrors()){
+		if (OaiPmhStatus.FAILED.equals(status) || OaiPmhStatus.SUCCEED_WITH_ERRORS.equals(status)){
 			return "harvestProfileErrors";
+		}else if (OaiPmhStatus.SUCCEED_WITH_WARNINGS.equals(status)){
+			return "harvestProfileWarnings";
 		}
-		return "";
+		return "harvestProfileSucceed";
 	}
 
 

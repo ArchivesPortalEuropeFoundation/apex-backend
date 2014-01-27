@@ -91,6 +91,9 @@ public class ManageHarvestAction extends AbstractAction {
     	if ("NOW".equals(selectedAction)){
     		archivalInstitutionOaiPmh.setNewHarvesting(new Date());
     		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
+    	}else if ("METHOD".equals(selectedAction)){
+    		archivalInstitutionOaiPmh.setHarvestMethodListByIdentifiers(!archivalInstitutionOaiPmh.isHarvestMethodListByIdentifiers());
+    		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
     	}else if ("DISABLE".equals(selectedAction)){
     		archivalInstitutionOaiPmh.setEnabled(false);
     		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);

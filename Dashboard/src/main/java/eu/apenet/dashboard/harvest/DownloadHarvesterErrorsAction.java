@@ -22,18 +22,32 @@ public class DownloadHarvesterErrorsAction extends AbstractAction {
     public Integer getHarvestId() {
         return harvestId;
     }
+    private Integer index;
 
     public void setHarvestId(Integer harvestId) {
         this.harvestId = harvestId;
     }
-    public String downloadXml () throws IOException{
-    	if (harvestId != null){
+    
+    public Integer getIndex() {
+		return index;
+	}
+
+	public void setIndex(Integer index) {
+		this.index = index;
+	}
+
+	public String downloadXml () throws IOException{
+    	if (harvestId != null  && index != null){
     		ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().findById(harvestId.longValue());
     		if (!this.getSecurityContext().isAdmin()){
     			this.getSecurityContext().checkAuthorized(archivalInstitutionOaiPmh.getAiId());
     		}
     		if (archivalInstitutionOaiPmh.getErrorsResponsePath() != null){
-    			ContentUtils.downloadXml(getServletRequest(), getServletResponse(), new File(archivalInstitutionOaiPmh.getErrorsResponsePath()));
+    			String[] items = DataHarvester.getErrorResponsePaths(archivalInstitutionOaiPmh);
+    			if (items.length > index){
+    				ContentUtils.downloadXml(getServletRequest(), getServletResponse(), new File(items[index]));
+    			}
+    			
     			return null;
     		}
     	}

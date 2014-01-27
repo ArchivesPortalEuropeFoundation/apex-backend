@@ -100,7 +100,10 @@ public class DataHarvester {
 		try {
 			archivalInstitutionOaiPmh.setHarvestingDetails(null);
 			if (archivalInstitutionOaiPmh.getErrorsResponsePath() != null){
-				ContentUtils.deleteFile(archivalInstitutionOaiPmh.getErrorsResponsePath() , false);
+				String[] items = DataHarvester.getErrorResponsePaths(archivalInstitutionOaiPmh);
+				for (String item: items){
+					ContentUtils.deleteFile(item , false);
+				}
 			}
 			archivalInstitutionOaiPmh.setErrorsResponsePath(null);
 			archivalInstitutionOaiPmh.setHarvestingStatus(OaiPmhStatus.PROCESSING);
@@ -117,9 +120,10 @@ public class DataHarvester {
 						oaiPmhParser, errorsDirectory, oaiPmhHttpClient);			
 			}
 
-			if (harvestObject.getErrors() != null){
-				throw new OaiPmhErrorsException(harvestObject.getErrors());
+			if (harvestObject.isFailed()){
+				throw new OaiPmhErrorsException(harvestObject.getHarvestingDetails());
 			}
+			archivalInstitutionOaiPmh.setHarvestingDetails(harvestObject.getHarvestingDetails());
 			archivalInstitutionOaiPmh.setLastHarvesting(new Date());
 			archivalInstitutionOaiPmh.setFrom(newFrom);
 			if (!APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()) {
@@ -143,9 +147,15 @@ public class DataHarvester {
 			JpaUtil.commitDatabaseTransaction();
 			LOGGER.info("Files are added to queue");
 			archivalInstitutionOaiPmh.setNewHarvesting(newHarvestingDate);
-			archivalInstitutionOaiPmh.setHarvestingDetails(null);
-			archivalInstitutionOaiPmh.setErrorsResponsePath(null);
-			archivalInstitutionOaiPmh.setHarvestingStatus(OaiPmhStatus.SUCCEED);
+			archivalInstitutionOaiPmh.setHarvestingDetails(harvestObject.getHarvestingDetails());
+			archivalInstitutionOaiPmh.setErrorsResponsePath(harvestObject.getNotParsableResponses());
+			if (harvestObject.isError()){
+				archivalInstitutionOaiPmh.setHarvestingStatus(OaiPmhStatus.SUCCEED_WITH_ERRORS);
+			}else if (harvestObject.getHarvestingDetails() != null){
+				archivalInstitutionOaiPmh.setHarvestingStatus(OaiPmhStatus.SUCCEED_WITH_WARNINGS);
+			}else {
+				archivalInstitutionOaiPmh.setHarvestingStatus(OaiPmhStatus.SUCCEED);
+			}
 			archivalInstitutionOaiPmhDAO.store(archivalInstitutionOaiPmh);
 
 			LOGGER.info("Harvest completed: harvested " + harvestObject.getNumberOfRecords() + " EAD files from \nID:"
@@ -153,7 +163,7 @@ public class DataHarvester {
 					+ harvestObject.getOldestFileHarvested() + " --- Newest file harvested: "
 					+ harvestObject.getNewestFileHarvested());
 			UserService.sendEmailHarvestFinished(archivalInstitution, partner, harvestObject.getNumberOfRecords(), harvesterProfileLog,
-					harvestObject.getOldestFileHarvested(), harvestObject.getNewestFileHarvested());
+					harvestObject.getOldestFileHarvested(), harvestObject.getNewestFileHarvested(), archivalInstitutionOaiPmh.getHarvestingStatus());
 
 		}catch (OaiPmhErrorsException oee){
 			String errors = oee.getErrors();
@@ -164,7 +174,9 @@ public class DataHarvester {
 			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null);
 		}catch (HarvesterParserException hpe){
 			String errors = "Url that contains errors: '" + hpe.getRequestUrl() + "'\n\n";
-			errors+= hpe.getCause().getMessage();
+			if (hpe.getCause() != null){
+				errors+= hpe.getCause().getMessage();
+			}
 			LOGGER.error(errors);
 			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, hpe.getNotParsebleResponse());
 		}catch (HarvesterConnectionException e) {
@@ -299,5 +311,12 @@ public class DataHarvester {
 		public String getErrors(){
 			return this.errors;
 		}
+	}
+	public static String[] getErrorResponsePaths(ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh){
+		if (archivalInstitutionOaiPmh.getErrorsResponsePath() != null){
+			String[] items = archivalInstitutionOaiPmh.getErrorsResponsePath().split("\\|");
+			return items;
+		}
+		return null;
 	}
 }
