@@ -222,6 +222,8 @@ public class HarvestObject {
 		object.setNumberOfRecords(numberOfRecords);
 		object.setNumberOfRequests(numberOfRequests);
 		object.setLatestChangeDate(latestChangeDate);
+		object.setGetRecordPhase(getRecordPhase);
+		object.setNumberOfGetRecords(numberOfGetRecords);
 		return object;
 	}
 }

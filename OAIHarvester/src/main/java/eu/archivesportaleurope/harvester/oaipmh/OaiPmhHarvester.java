@@ -112,6 +112,7 @@ public class OaiPmhHarvester {
 						}
 					}else {
 						harvestObject.increaseNumberOfGetRecords();
+						harvestObject.increaseNumberOfRequests();
 						harvestObject.setLatestRecordId(record.getIdentifier());
 						ResultInfo getRecordInfo = getRecordVerb.harvest(harvestObject, record.getIdentifier());
 						LOGGER.info("("+harvestObject.getNumberOfRecords()+"," + harvestObject.getNumberOfGetRecords() +"): GR: " + record );
