@@ -30,7 +30,7 @@ public class ConsoleHarvester {
 	private static final String SAVE_ONLY_THE_METADATA_RECORD_E_G_EAD_OR_EDM_FILES = "Save only the metadata record (e.g. EAD or EDM files)";
 	private static final String SAVE_FULL_OAI_PMH_RESPONSES = "Save full OAI-PMH responses";
 	private static final String HARVEST_METHOD_LIST_RECORDS = "Harvest by verb ListRecords";
-	private static final String HARVEST_METHOD_LIST_IDENTIFIERS_GETRECORD = "Harvest by verb GetIdentifiers/GetRecord (fail safe)";
+	private static final String HARVEST_METHOD_LIST_IDENTIFIERS_GETRECORD = "Harvest by verb ListIdentifiers/GetRecord (fail safe)";
 	
 	private Logger logger;
 	private File dataDir;
