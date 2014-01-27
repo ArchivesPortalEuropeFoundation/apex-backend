@@ -1,14 +1,12 @@
 package eu.archivesportaleurope.harvester.oaipmh.portugal;
 
-import eu.archivesportaleurope.harvester.oaipmh.ConsoleHarvester;
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
-
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.util.*;
+import java.util.Properties;
+
+import org.apache.log4j.Logger;
+
+import eu.archivesportaleurope.harvester.oaipmh.ConsoleHarvester;
 
 /**
  * User: yoannmoranville
@@ -16,26 +14,22 @@ import java.util.*;
  *
  * @author yoannmoranville
  */
-public class PortugalConsoleHarvester {
+public class PortugalConsoleHarvester extends ConsoleHarvester{
     private final static Logger LOG = Logger.getLogger(PortugalConsoleHarvester.class);
 
-    public static void main(String[] args) {
-        ConsoleHarvester consoleHarvester = new ConsoleHarvester(null, null);
-        //1. Harvest files
-        ConsoleHarvester.main(args);
-        String set = consoleHarvester.getSet();
+    
+    public PortugalConsoleHarvester(File dataDir, Properties properties) {
+		super(dataDir, properties);
+	}
 
-        //2. Check parameters
-        Map<String, String> parameters = ConsoleHarvester.getParameters(args);
-        String baseDirString = ".";
-        if (parameters.containsKey(ConsoleHarvester.BASE_DIR_PARAMETER)) {
-            baseDirString = parameters.get(ConsoleHarvester.BASE_DIR_PARAMETER);
-        }
-        File dataDir = new File(baseDirString, "data");
+	@Override
+	public void start() {
+		super.start();
+        String set = getSet();
 
 
         //2. Use the DC files to import in DB
-        File resultDir = getDataDir(dataDir);
+        File resultDir = getDataDir(getDataDir());
         if(resultDir.getName().equals("DONE")) {
             resultDir = resultDir.getParentFile();
         }
@@ -52,7 +46,8 @@ public class PortugalConsoleHarvester {
             LOG.error("Error...", e);
             throw new RuntimeException(e);
         }
-    }
+	}
+
 
     private static File getDataDir(File presumedDataDir) {
         final File[] dirs = presumedDataDir.listFiles(new FileFilter() {
