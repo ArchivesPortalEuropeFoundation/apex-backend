@@ -24,12 +24,14 @@ import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
 
 public class ConsoleHarvester {
 	private static final String TRUE = "true";
-	public static final String BASE_DIR_PARAMETER = "baseDir";
-	public static final String CONF_FILE_PARAMETER = "confFile";
+	private static final String BASE_DIR_PARAMETER = "baseDir";
+	private static final String CONF_FILE_PARAMETER = "confFile";
 	private static final String YES = "Yes";
 	private static final String SAVE_ONLY_THE_METADATA_RECORD_E_G_EAD_OR_EDM_FILES = "Save only the metadata record (e.g. EAD or EDM files)";
 	private static final String SAVE_FULL_OAI_PMH_RESPONSES = "Save full OAI-PMH responses";
-
+	private static final String HARVEST_METHOD_GETRECORDS = "Harvest by verb GetRecords";
+	private static final String HARVEST_METHOD_GET_IDENTIFIERS_GETRECORD = "Harvest by verb GetIdentifiers/GetRecord (fail safe)";
+	
 	private Logger logger;
 	private File dataDir;
 	private String baseUrl;
@@ -37,6 +39,7 @@ public class ConsoleHarvester {
 	private String set;
 	private String fromDate;
 	private String toDate;
+	private boolean getIdentifiersHarvestMethod=false;
 	private boolean debug = false;
 	private boolean silent = false;
 	private Properties properties;
@@ -110,11 +113,18 @@ public class ConsoleHarvester {
 						set = getInputFromOaiPmhElements("Which set do you want to use?'", setsInRepository, true);
 						fromDate = getInputEmptyAllowed("Specify a FROM date or leave empty?(e.g. 2010-12-23)");
 						toDate = getInputEmptyAllowed("Specify a TO date or leave empty?(e.g. 2010-12-23)");
+						List<String> harvesterMethods = new ArrayList<String>();
+						harvesterMethods.add(HARVEST_METHOD_GET_IDENTIFIERS_GETRECORD);
+						harvesterMethods.add(HARVEST_METHOD_GETRECORDS);
+						String harvesterMethod = getInput("What do you want to harvest?'", harvesterMethods);
+						getIdentifiersHarvestMethod = HARVEST_METHOD_GET_IDENTIFIERS_GETRECORD.equals(harvesterMethod);
 						List<String> saveMethods = new ArrayList<String>();
 						saveMethods.add(SAVE_ONLY_THE_METADATA_RECORD_E_G_EAD_OR_EDM_FILES);
 						saveMethods.add(SAVE_FULL_OAI_PMH_RESPONSES);
 						String saveMethod = getInput("What do you want to store?'", saveMethods);
 						debug = SAVE_FULL_OAI_PMH_RESPONSES.equals(saveMethod);
+						
+
 					} catch (Exception e) {
 						logger.error("Sorry, the URL is not a correct repository URL or the repository does not contain any metadata formats...");
 					}
@@ -127,6 +137,7 @@ public class ConsoleHarvester {
 				toDate = properties.getProperty("to");
 				debug = TRUE.equals(properties.getProperty("debug"));
 				silent = TRUE.equals(properties.getProperty("silent"));
+				getIdentifiersHarvestMethod = TRUE.equals(properties.getProperty("harvest-method-getidentifiers"));
 
 			}
 			logger.info("===============================================");
@@ -139,6 +150,11 @@ public class ConsoleHarvester {
 				logger.info("From date:\t\t\t\t" + fromDate);
 			if (toDate != null)
 				logger.info("To date:\t\t\t\t" + toDate);
+			if (getIdentifiersHarvestMethod) {
+				logger.info("Harvest method:\t\t\t\t" + HARVEST_METHOD_GET_IDENTIFIERS_GETRECORD);
+			} else {
+				logger.info("Harvest method:\t\t\t\t" + HARVEST_METHOD_GETRECORDS);
+			}
 			if (debug) {
 				logger.info("Store method:\t\t\t\t" + SAVE_FULL_OAI_PMH_RESPONSES);
 			} else {
@@ -175,7 +191,11 @@ public class ConsoleHarvester {
 				}
 				try {
 					long startTime = System.currentTimeMillis();
-					OaiPmhHarvester.harvestByListIdentifiers(new HarvestObject(), baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir, oaiPmhHttpClient);
+					if (getIdentifiersHarvestMethod){
+						OaiPmhHarvester.harvestByListIdentifiers(new HarvestObject(), baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir, oaiPmhHttpClient);
+					}else {
+						OaiPmhHarvester.harvestByListRecords(new HarvestObject(), baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir, oaiPmhHttpClient);
+					}
 //					OaiPmhHarvester.harvestByListRecords(new HarvestObject(), baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir, oaiPmhHttpClient);
 					logger.info("===============================================");
 					calcHMS(System.currentTimeMillis(), startTime);
@@ -203,7 +223,7 @@ public class ConsoleHarvester {
 		logger.info("===============================================");
 	}
 
-	public static Map<String, String> getParameters(String[] args) {
+	private static Map<String, String> getParameters(String[] args) {
 		Map<String, String> parameters = new HashMap<String, String>();
 		for (String arg : args) {
 			if (arg.startsWith("-") && arg.contains("=")) {
@@ -356,4 +376,9 @@ public class ConsoleHarvester {
     public String getSet() {
         return set;
     }
+
+	protected File getDataDir() {
+		return dataDir;
+	}
+    
 }
