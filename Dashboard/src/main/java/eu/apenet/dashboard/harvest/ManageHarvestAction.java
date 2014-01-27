@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractAction;
-import eu.apenet.dashboard.actions.AutomaticHarvestingCreationAction;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.factory.DAOFactory;

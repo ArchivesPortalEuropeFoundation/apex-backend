@@ -7,6 +7,7 @@ import java.util.List;
 
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
+import eu.apenet.persistence.vo.OaiPmhStatus;
 
 public class DisplayHarvestProfileItem {
     private static final SimpleDateFormat DATE_TIME = new SimpleDateFormat("dd-MM-yyyy hh:mm");
@@ -23,12 +24,14 @@ public class DisplayHarvestProfileItem {
 	private String from;
 	private String intervalHarvesting;
 	private String ingestionProfile;
-	private boolean errors;
-	private String errorMessage;
+	private OaiPmhStatus status;
+	private String harvestingStatus;
+	private String harvestingDetails;
 	private String errorResponsePath;
     private boolean enabled;
     private boolean harvestOnlyWeekend;
     private boolean readyForHarvesting;
+    private boolean harvestMethodListByIdentifiers;
 
 	public DisplayHarvestProfileItem(ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh, Date now){
 		this.id = archivalInstitutionOaiPmh.getId();
@@ -50,8 +53,12 @@ public class DisplayHarvestProfileItem {
 		this.from = archivalInstitutionOaiPmh.getFrom();
 		this.intervalHarvesting = ContentUtils.getDaysFromMilliseconds(archivalInstitutionOaiPmh.getIntervalHarvesting());
 		this.ingestionProfile = archivalInstitutionOaiPmh.getIngestionprofile().getNameProfile();
-		this.errors = archivalInstitutionOaiPmh.getErrors() != null;
-		this.errorMessage = archivalInstitutionOaiPmh.getErrors();
+		if (archivalInstitutionOaiPmh.getHarvestingStatus() != null){
+			this.harvestingStatus = archivalInstitutionOaiPmh.getHarvestingStatus().getResourceName();
+		}
+		this.harvestMethodListByIdentifiers = archivalInstitutionOaiPmh.isHarvestMethodListByIdentifiers();
+		this.status = archivalInstitutionOaiPmh.getHarvestingStatus();
+		this.harvestingDetails = archivalInstitutionOaiPmh.getHarvestingDetails();
 		this.errorResponsePath = archivalInstitutionOaiPmh.getErrorsResponsePath();
 		this.enabled = archivalInstitutionOaiPmh.isEnabled();
 		this.harvestOnlyWeekend = archivalInstitutionOaiPmh.isHarvestOnlyWeekend();
@@ -111,7 +118,7 @@ public class DisplayHarvestProfileItem {
 	}
 
 	public boolean isErrors() {
-		return errors;
+		return OaiPmhStatus.FAILED.equals(status) || OaiPmhStatus.SUCCEED_WITH_ERRORS.equals(status) || OaiPmhStatus.SUCCEED_WITH_WARNINGS.equals(status);
 	}
 
 	public boolean isEnabled() {
@@ -142,12 +149,30 @@ public class DisplayHarvestProfileItem {
 		return "";
 	}
 
-	public String getErrorMessage() {
-		return errorMessage;
+
+
+	public static SimpleDateFormat getDateTime() {
+		return DATE_TIME;
+	}
+
+	public static SimpleDateFormat getDate() {
+		return DATE;
+	}
+
+	public String getHarvestingStatus() {
+		return harvestingStatus;
+	}
+
+	public String getHarvestingDetails() {
+		return harvestingDetails;
 	}
 
 	public String getErrorResponsePath() {
 		return errorResponsePath;
+	}
+
+	public boolean isHarvestMethodListByIdentifiers() {
+		return harvestMethodListByIdentifiers;
 	}
 
 

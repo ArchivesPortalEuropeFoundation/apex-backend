@@ -46,10 +46,10 @@ public class DownloadHarvesterErrorsAction extends AbstractAction {
     		if (!this.getSecurityContext().isAdmin()){
     			this.getSecurityContext().checkAuthorized(archivalInstitutionOaiPmh.getAiId());
     		}
-    		if (archivalInstitutionOaiPmh.getErrors() != null){
+    		if (archivalInstitutionOaiPmh.getHarvestingDetails() != null){
     			String filename = archivalInstitutionOaiPmh.getUrl() + "_" + archivalInstitutionOaiPmh.getSet() + "_" + archivalInstitutionOaiPmh.getMetadataPrefix() + ".txt";
     			PrintWriter printWriter = ContentUtils.getWriterToDownload(getServletRequest(), getServletResponse(),APEnetUtilities.convertToFilename(filename), "text/plain");
-    			printWriter.write(archivalInstitutionOaiPmh.getErrors());
+    			printWriter.write(archivalInstitutionOaiPmh.getHarvestingDetails());
     			printWriter.flush();
     			printWriter.close();
     			return null;
