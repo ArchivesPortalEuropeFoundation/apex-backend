@@ -23,6 +23,7 @@ import eu.apenet.persistence.dao.UserRoleDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Country;
+import eu.apenet.persistence.vo.OaiPmhStatus;
 import eu.apenet.persistence.vo.SentMailRegister;
 import eu.apenet.persistence.vo.User;
 import eu.apenet.persistence.vo.UserRole;
@@ -480,9 +481,9 @@ public final class UserService {
 
 	}
 
-    public static void sendEmailHarvestFinished( ArchivalInstitution archivalInstitution, User partner, int numberEadHarvested, String infoHarvestedServer, DateHarvestModel oldestFileHarvested, DateHarvestModel newestFileHarvested) {
+    public static void sendEmailHarvestFinished( ArchivalInstitution archivalInstitution, User partner, int numberEadHarvested, String infoHarvestedServer, DateHarvestModel oldestFileHarvested, DateHarvestModel newestFileHarvested, OaiPmhStatus oaiPmhStatus) {
     	if (partner != null){
-	    	EmailComposer emailComposer = new EmailComposer("emails/harvestFinished.txt", "Last harvesting process SUCCEED of your institution " + archivalInstitution.getAiname(), true, false);
+	    	EmailComposer emailComposer = new EmailComposer("emails/harvestFinished.txt", "Last harvesting process " + oaiPmhStatus.getName()+ " of your institution " + archivalInstitution.getAiname(), true, false);
 	        emailComposer.setProperty("archivalInstitution", archivalInstitution.getAiname());
 	        emailComposer.setProperty("name", partner.getName());
 	        emailComposer.setProperty("dashboardBase", APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
