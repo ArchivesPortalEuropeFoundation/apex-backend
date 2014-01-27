@@ -2,6 +2,7 @@
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="apenet" uri="http://commons.apenet.eu/tags"%>
 <div id="manageHarvester">
     <table class="defaultlayout">
         <tr>
@@ -88,7 +89,7 @@
 			                <th><s:text name="label.harvesting.from" /></th>
 			                <th>Only weekend</th>
 			                <th><s:text name="label.harvesting.userprofile" /></th>
-			                <th><s:text name="label.harvesting.errors" /></th>
+			                <th>Status</th>
 			            </tr>
 			        </thead>
 			        <tbody>
@@ -106,7 +107,7 @@
 			                <td><c:out value="${item.from}" /></td>
 			                <td><c:if test="${item.harvestOnlyWeekend}"><c:out value="${item.harvestOnlyWeekend}" /></c:if></td>
 			                <td><c:out value="${item.ingestionProfile}" /></td>
-			                <td class="${item.errorCss}"><c:if test="${item.errors}"><c:out value="${item.errors}" /></c:if></td>
+			                <td class="${item.errorCss}"><c:if test="${!empty item.harvestingStatus}"><apenet:resource>${item.harvestingStatus}</apenet:resource></c:if></td>
 
 			            </tr>
 			        </c:forEach>
@@ -126,9 +127,10 @@
 			                <th><s:text name="label.harvesting.lastHarvest" /></th>
 			                <th><s:text name="label.harvesting.newHarvest" /></th>
 			                <th><s:text name="label.harvesting.from" /></th>
+			                <th>Method</th>
 			                <th>Only weekend</th>
 			                <th><s:text name="label.harvesting.userprofile" /></th>
-			                <th><s:text name="label.harvesting.errors" /></th>
+			                <th>Status</th>
 			                <th>Actions</th>
 			            </tr>
 			        </thead>
@@ -145,15 +147,28 @@
 			                <td><c:out value="${item.lastHarvesting}" /></td>
 			                <td><c:out value="${item.newHarvesting}" /></td>
 			                <td><c:out value="${item.from}" /></td>
+			                <td>
+			                	<c:choose >
+			                		<c:when test="${item.harvestMethodListByIdentifiers}">ListIdentifers</c:when>
+			                		<c:otherwise>ListRecords</c:otherwise>
+			                	</c:choose>
+			                </td>
 			                <td><c:if test="${item.harvestOnlyWeekend}"><c:out value="${item.harvestOnlyWeekend}" /></c:if></td>
 			                <td><c:out value="${item.ingestionProfile}" /></td>
 			                <td  class="${item.errorCss}">
-			                	<c:if test="${item.errors}">
-			                		<a href="downloadHarvesterErrorsText.action?harvestId=${item.id}">ERRORS</a>
-			                		<c:if test="${!empty item.errorResponsePath}">
-			                			<br/><a href="downloadHarvesterErrorsXml.action?harvestId=${item.id}">OAI-PMH Response</a>
-			                		</c:if>
+			                	<c:if test="${!empty item.harvestingStatus}">
+			                		<c:choose>
+			                				<c:when test="${empty item.harvestingDetails}"><apenet:resource>${item.harvestingStatus}</apenet:resource></c:when>
+			                				<c:otherwise>
+						                		<a href="downloadHarvesterErrorsText.action?harvestId=${item.id}"><apenet:resource>${item.harvestingStatus}</apenet:resource></a>
+						                		<c:if test="${!empty item.errorResponsePath}">
+						                			<br/><a href="downloadHarvesterErrorsXml.action?harvestId=${item.id}">OAI-PMH Response</a>
+						                		</c:if>
+											</c:otherwise>	
+			                		</c:choose>
+
 			                	</c:if>
+			                	
 			                </td>
 			                <td class="actions">
 			                    <c:choose>

@@ -153,6 +153,17 @@
 
                         </td>
                     </tr>
+                     <tr>
+                        <td>
+                            <label for="harvesterMethods">
+                                <s:property value="getText('label.harvesting.method')"/>
+                            </label>
+                        </td>
+                        <td>
+                        	<s:select id="harvesterMethods"  name="harvesterMethod" list="harvesterMethods" listKey="value" listValue="content" theme="simple"/>
+                        </td>
+                    </tr>                   
+                    
                     <tr>
                         <td>
                             <label for="intervals">
