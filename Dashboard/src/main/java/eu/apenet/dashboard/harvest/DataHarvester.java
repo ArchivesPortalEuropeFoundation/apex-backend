@@ -61,6 +61,7 @@ public class DataHarvester {
 		if (archivalInstitutionOaiPmh.getFrom() != null) {
 			from = archivalInstitutionOaiPmh.getFrom();
 		}
+		boolean failedEarlier = OaiPmhStatus.FAILED.equals(archivalInstitutionOaiPmh.getHarvestingStatus());
 		Date currentDate = new Date();
 		Date newHarvestingDate = new Date(currentDate.getTime() + archivalInstitutionOaiPmh.getIntervalHarvesting());
 		Calendar calendar = Calendar.getInstance();
@@ -167,27 +168,27 @@ public class DataHarvester {
 
 		}catch (OaiPmhErrorsException oee){
 			String errors = oee.getErrors();
-			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null);
+			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null,failedEarlier);
 		}catch (HarvesterInterruptionException hpe){
 			String errors = "Last url before the processing is stopped manually: '" + hpe.getRequestUrl() + "'\n\n";
 			LOGGER.info(errors);
-			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null);
+			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null,failedEarlier);
 		}catch (HarvesterParserException hpe){
 			String errors = "Url that contains errors: '" + hpe.getRequestUrl() + "'\n\n";
 			if (hpe.getCause() != null){
 				errors+= hpe.getCause().getMessage();
 			}
 			LOGGER.error(errors);
-			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, hpe.getNotParsebleResponse());
+			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, hpe.getNotParsebleResponse(),failedEarlier);
 		}catch (HarvesterConnectionException e) {
 			String errors = "Url that have connection problems: '" + e.getRequestUrl() + "'\n\n";
 			errors+= e.getMessage() +" (Time out is 5 minutes)";
 			LOGGER.error(errors);
-			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null);
+			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null,failedEarlier);
 		}catch (Exception e) {
 			String errors = APEnetUtilities.generateThrowableLog(e);
 			LOGGER.error(errors);
-			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null);
+			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null,failedEarlier);
 		} finally {
 			HarvesterDaemon.setHarvestObject(null);
 			if (oaiPmhHttpClient != null) {
@@ -202,11 +203,11 @@ public class DataHarvester {
 		}
 	}
 
-	private void handleExceptions(User partner, String harvesterProfileLog, Date newHarvestingDate, File outputDirectory, String errors, File errorsResponseFile){
+	private void handleExceptions(User partner, String harvesterProfileLog, Date newHarvestingDate, File outputDirectory, String errors, File errorsResponseFile, boolean failedEarlier){
 		JpaUtil.rollbackDatabaseTransaction();
 		ArchivalInstitutionOaiPmh archivalInstitutionOaiPmhNew = DAOFactory.instance()
 				.getArchivalInstitutionOaiPmhDAO().findById(archivalInstitutionOaiPmhId);
-		if (archivalInstitutionOaiPmhNew.getHarvestingDetails() != null) {
+		if (failedEarlier) {
 			LOGGER.error("Second time harvesting failed for \nID:" + archivalInstitutionOaiPmhNew.getId() + "\n"
 					+ harvesterProfileLog);
 			archivalInstitutionOaiPmhNew.setEnabled(false);
