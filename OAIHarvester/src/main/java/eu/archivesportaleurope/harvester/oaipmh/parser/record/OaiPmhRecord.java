@@ -46,14 +46,7 @@ public class OaiPmhRecord {
 	@Override
 	public String toString() {
 		String result = "'" + identifier;
-		if (isDropped()){
-			result += "' i";
-		}else if (isDeleted()){
-			result += "' d";
-		}else {
-			result += "' u";
-		}
-		result += " ("+ DATE_FORMAT.format(timestamp) + ")";
+		result += "' ("+ DATE_FORMAT.format(timestamp) + ")";
 		
 		return result;
 	}
