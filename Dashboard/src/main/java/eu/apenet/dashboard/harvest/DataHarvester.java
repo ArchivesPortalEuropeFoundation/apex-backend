@@ -210,11 +210,13 @@ public class DataHarvester {
 			LOGGER.error("Second time harvesting failed for \nID:" + archivalInstitutionOaiPmhNew.getId() + "\n"
 					+ harvesterProfileLog);
 			archivalInstitutionOaiPmhNew.setEnabled(false);
+			archivalInstitutionOaiPmhNew.setNewHarvesting(newHarvestingDate);
 		} else {
 			LOGGER.error("First time harvesting failed for \nID:" + archivalInstitutionOaiPmhNew.getId() + "\n"
 					+ harvesterProfileLog);
+			archivalInstitutionOaiPmhNew.setNewHarvesting(new Date(newHarvestingDate.getTime() - archivalInstitutionOaiPmhNew.getIntervalHarvesting() + ArchivalInstitutionOaiPmh.INTERVAL_1_MONTH));
 		}
-		archivalInstitutionOaiPmhNew.setNewHarvesting(newHarvestingDate);
+		
 		archivalInstitutionOaiPmhNew.setHarvestingStatus(OaiPmhStatus.FAILED);
 		archivalInstitutionOaiPmhNew.setHarvestingDetails(harvesterProfileLog + "================================================\n\n" + errors);
 		if (errorsResponseFile != null){

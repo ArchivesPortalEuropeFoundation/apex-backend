@@ -111,7 +111,7 @@ public class ManageHarvestAction extends AbstractAction {
     		if (newHarvestingDate == null){
     			newHarvestingDate = new Date();
     		}
-    		newHarvestingDate = new Date(newHarvestingDate.getTime() + AutomaticHarvestingCreationAction.INTERVAL_1_MONTH);
+    		newHarvestingDate = new Date(newHarvestingDate.getTime() + ArchivalInstitutionOaiPmh.INTERVAL_1_MONTH);
     		archivalInstitutionOaiPmh.setNewHarvesting(newHarvestingDate);
     		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
     	}
