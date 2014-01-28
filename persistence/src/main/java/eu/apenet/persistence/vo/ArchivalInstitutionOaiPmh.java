@@ -9,7 +9,9 @@ import javax.persistence.*;
 @Table(name = "archival_institution_oai_pmh")
 public class ArchivalInstitutionOaiPmh implements Serializable {
 	private static final long serialVersionUID = 3915319770716474956L;
-
+    public static final Long INTERVAL_1_MONTH = 2630000000L;
+    public static final Long INTERVAL_3_MONTH = 7889230000L;
+    public static final Long INTERVAL_6_MONTH = 15780000000L;
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id")
