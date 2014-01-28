@@ -164,7 +164,7 @@ public class DataHarvester {
 					+ harvestObject.getOldestFileHarvested() + " --- Newest file harvested: "
 					+ harvestObject.getNewestFileHarvested());
 			UserService.sendEmailHarvestFinished(archivalInstitution, partner, harvestObject.getNumberOfRecords(), harvesterProfileLog,
-					harvestObject.getOldestFileHarvested(), harvestObject.getNewestFileHarvested(), archivalInstitutionOaiPmh.getHarvestingStatus());
+					harvestObject.getOldestFileHarvested(), harvestObject.getNewestFileHarvested(), archivalInstitutionOaiPmh.getHarvestingStatus(), archivalInstitutionOaiPmh.getHarvestingDetails(), archivalInstitutionOaiPmh.getErrorsResponsePath());
 
 		}catch (OaiPmhErrorsException oee){
 			String errors = oee.getErrors();
