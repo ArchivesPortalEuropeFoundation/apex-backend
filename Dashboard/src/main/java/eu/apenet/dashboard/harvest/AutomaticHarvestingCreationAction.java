@@ -38,9 +38,7 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
 
 	private static final Logger LOG = Logger.getLogger(AutomaticHarvestingCreationAction.class);
 
-    public static final Long INTERVAL_1_MONTH = 2630000000L;
-    private static final Long INTERVAL_3_MONTH = 7889230000L;
-    private static final Long INTERVAL_6_MONTH = 15780000000L;
+
 
     private Integer step;
     private Integer oaiprofiles;
@@ -142,9 +140,8 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
 	            }
             }
             intervals = new ArrayList<Interval>(3);
-            intervals.add(new Interval(1, INTERVAL_1_MONTH));
-            intervals.add(new Interval(3, INTERVAL_3_MONTH));
-            intervals.add(new Interval(6, INTERVAL_6_MONTH));
+            intervals.add(new Interval(3, ArchivalInstitutionOaiPmh.INTERVAL_3_MONTH));
+            intervals.add(new Interval(6, ArchivalInstitutionOaiPmh.INTERVAL_6_MONTH));
             harvesterMethods = new ArrayList<SelectItem>();
             harvesterMethods.add(new SelectItem("true", getText("label.harvesting.method.listidentifiers")));
             harvesterMethods.add(new SelectItem("false", getText("label.harvesting.method.listrecords")));
@@ -182,7 +179,7 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
             if(getOaiprofiles() != -1) {
                 archivalInstitutionOaiPmh = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().findById(getOaiprofiles().longValue());
                 archivalInstitutionOaiPmh.setProfileId(getSelectedIngestionProfile().longValue());
-                archivalInstitutionOaiPmh.setIntervalHarvesting(Long.parseLong(getIntervalHarvest()));
+                archivalInstitutionOaiPmh.setIntervalHarvesting(getInterval());
                 archivalInstitutionOaiPmh.setHarvestOnlyWeekend(Boolean.parseBoolean(getSelectedWeekend()));
                 archivalInstitutionOaiPmh.setHarvestMethodListByIdentifiers(isHarvesterMethod());
                 if(getSelectedActivation() != null) {
@@ -205,8 +202,8 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
                 }
             } else {
                 int archivalInstitutionId = SecurityContext.get().getSelectedInstitution().getId();
-                String intervalHarvest = getIntervalHarvest();
-                archivalInstitutionOaiPmh = new ArchivalInstitutionOaiPmh(archivalInstitutionId, getUrl(), getSelectedMetadataFormat(), getSelectedIngestionProfile().longValue(), Long.parseLong(intervalHarvest));
+                Long intervalHarvest = getInterval();
+                archivalInstitutionOaiPmh = new ArchivalInstitutionOaiPmh(archivalInstitutionId, getUrl(), getSelectedMetadataFormat(), getSelectedIngestionProfile().longValue(), intervalHarvest);
                 archivalInstitutionOaiPmh.setHarvestMethodListByIdentifiers(isHarvesterMethod());
                 archivalInstitutionOaiPmh.setHarvestOnlyWeekend(Boolean.parseBoolean(getSelectedWeekend()));
                 archivalInstitutionOaiPmh.setNewHarvesting(new Date());
@@ -236,6 +233,14 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
         }
     }
 
+    private Long getInterval(){
+        Long interval = Long.parseLong(getIntervalHarvest());
+        if (ArchivalInstitutionOaiPmh.INTERVAL_6_MONTH.equals(interval)){
+        	return interval;
+        }else {
+        	return ArchivalInstitutionOaiPmh.INTERVAL_3_MONTH;
+        }
+    }
     public Integer getStep() {
         return step;
     }
