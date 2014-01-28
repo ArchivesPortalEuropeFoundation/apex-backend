@@ -83,11 +83,11 @@ public class OaiPmhParser extends AbstractOaiPmhParser {
 			harvestObject.setLatestRecordId(record.getIdentifier());
 			String action = null;
 			if (record.isDropped()){
-				action = "' i";
+				action = "i";
 			}else if (record.isDeleted()){
-				action = "' d";
+				action = "d";
 			}else {
-				action += "' u";
+				action = "u";
 			}
 			if (record.getFilename() == null){
 				LOGGER.info("("+harvestObject.getNumberOfRequests()+"," + harvestObject.getNumberOfRecords() +"): LI(" + action + "): " + record );
