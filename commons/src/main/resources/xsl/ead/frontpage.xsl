@@ -40,9 +40,7 @@
 				</div>
 			</xsl:for-each>
 			<xsl:if test="/ead:ead/ead:eadheader/ead:filedesc/ead:publicationstmt/ead:address">
-				<div class="defaultlayout">
 					<xsl:apply-templates select="/ead:ead/ead:eadheader/ead:filedesc/ead:publicationstmt/ead:address" mode="notsearchable"/>
-				</div>
 			</xsl:if>
 
 			<xsl:for-each select="/ead:ead/ead:eadheader/ead:filedesc/ead:seriesstmt/ead:titleproper">
@@ -173,7 +171,7 @@
 		</xsl:if>
 	</xsl:template>
 	<xsl:template match="ead:did">
-		  <xsl:for-each select="ead:physdesc"> 
+	   <xsl:for-each select="ead:physdesc"> 
             <xsl:choose>
                 <xsl:when test="normalize-space(text()[1])">
                     <xsl:call-template name="physdescText" />
@@ -192,8 +190,8 @@
                         <xsl:call-template name="dimensions" />
                     </xsl:if>
                 </xsl:otherwise>
-            </xsl:choose>
-	  </xsl:for-each> 
+            </xsl:choose> 
+	   </xsl:for-each>  
 		<xsl:if test="ead:note">
 			<xsl:call-template name="note" />
 		</xsl:if>
