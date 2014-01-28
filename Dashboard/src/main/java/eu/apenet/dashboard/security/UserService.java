@@ -9,7 +9,6 @@ import org.apache.struts2.ServletActionContext;
 
 import eu.apenet.commons.infraestructure.EmailComposer;
 import eu.apenet.commons.infraestructure.Emailer;
-import eu.apenet.commons.infraestructure.EmailComposer.Priority;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.exception.DashboardAPEnetException;
 import eu.apenet.dashboard.exception.NotAuthorizedException;
@@ -481,14 +480,19 @@ public final class UserService {
 
 	}
 
-    public static void sendEmailHarvestFinished( ArchivalInstitution archivalInstitution, User partner, int numberEadHarvested, String infoHarvestedServer, DateHarvestModel oldestFileHarvested, DateHarvestModel newestFileHarvested, OaiPmhStatus oaiPmhStatus) {
+    public static void sendEmailHarvestFinished( ArchivalInstitution archivalInstitution, User partner, int numberEadHarvested, String infoHarvestedServer, DateHarvestModel oldestFileHarvested, DateHarvestModel newestFileHarvested, OaiPmhStatus oaiPmhStatus, String errors, String errorsResponsePath) {
     	if (partner != null){
-	    	EmailComposer emailComposer = new EmailComposer("emails/harvestFinished.txt", "Last harvesting process " + oaiPmhStatus.getName()+ " of your institution " + archivalInstitution.getAiname(), true, false);
-	        emailComposer.setProperty("archivalInstitution", archivalInstitution.getAiname());
+	    	EmailComposer emailComposer = null;
+	    	if (errors  == null){
+	    		emailComposer = new EmailComposer("emails/harvestFinished.txt", "Last harvesting process " + oaiPmhStatus.getName()+ " of your institution " + archivalInstitution.getAiname(), true, true);
+	    	}else {
+	    		emailComposer = new EmailComposer("emails/harvestFinishedWithWarnings.txt", "Last harvesting process " + oaiPmhStatus.getName()+ " of your institution " + archivalInstitution.getAiname(), true, true);
+	    	}
+	    	emailComposer.setProperty("archivalInstitution", archivalInstitution.getAiname());
 	        emailComposer.setProperty("name", partner.getName());
 	        emailComposer.setProperty("dashboardBase", APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
 	        emailComposer.setProperty("numberEadHarvested", numberEadHarvested+"");
-	        emailComposer.setProperty("infoHarvestedServer", infoHarvestedServer);
+	        emailComposer.setProperty("infoHarvestedServer",infoHarvestedServer.replaceAll("\n", "<br/>"));
 	        if (oldestFileHarvested != null){
 	        	emailComposer.setProperty("oldestFileHarvested", oldestFileHarvested.toString());
 	        }else {
@@ -498,7 +502,15 @@ public final class UserService {
 	        	emailComposer.setProperty("newestFileHarvested", newestFileHarvested.toString());
 	        }else {
 	        	emailComposer.setProperty("newestFileHarvested", "");
-	        }       
+	        } 
+	        if (errors != null){
+		        emailComposer.setProperty("errorMessage",errors);
+		        if (errorsResponsePath != null){
+		        	emailComposer.setProperty("errorFileMessage", "Look at the dashboard for the OAI-PMH response that contains errors<br/><br/>");
+		        }else {
+		        	emailComposer.setProperty("errorFileMessage", "");
+		        }	   
+	        }
 	        Emailer emailer = new Emailer();
         	emailer.sendMessage(partner.getEmailAddress(), null, null, null, emailComposer);
     	}
@@ -516,7 +528,6 @@ public final class UserService {
 	        }else {
 	        	emailComposer.setProperty("errorFileMessage", "");
 	        }
-	        emailComposer.setPriority(Priority.HIGH);
 	        Emailer emailer = new Emailer();
 	        if (APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()){
 	        	emailer.sendMessage(partner.getEmailAddress(), null, APEnetUtilities.getDashboardConfig().getEmailDashboardFeedbackDestiny(), null, emailComposer);
