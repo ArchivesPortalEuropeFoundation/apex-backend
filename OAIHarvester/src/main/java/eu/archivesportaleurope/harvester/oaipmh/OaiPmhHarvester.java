@@ -43,6 +43,16 @@ public class OaiPmhHarvester {
 					resultInfo = listRecordsVerb.harvest(harvestObject);
 				}
 			}
+			List<OaiPmhRecord> records = harvestObject.getRecords();
+			while (records.size() > 0 ){
+				OaiPmhRecord record = records.get(0);
+				if (record.isDropped() || record.isDeleted()){
+					if (record.isDeleted()){
+						harvestObject.addWarnings("Record " + record + " is deleted in OAI-PMH repository. Please delete it manually in the dashboard");
+					}
+				}
+				records.remove(0);
+			}
 			String logSuffix = "";
 			if (harvestObject.isStopHarvesting()){
 				logSuffix = "Harvesting is stopped manually.";
