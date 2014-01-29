@@ -37,6 +37,7 @@ public interface ArchivalInstitutionDAO extends GenericDAO<ArchivalInstitution, 
 	public ArchivalInstitution getArchivalInstitutionByInternalAlId(String identifier, Integer countryIdentifier);
 	public Long countArchivalInstitutionsWithContentIndexed();
 	public List<ArchivalInstitution> getArchivalInstitutionsGroupsByCountryId(Integer couId);
+	public List<ArchivalInstitution> getArchivalInstitutionsGroupsByCountryId(Integer couId, boolean hasParent, boolean orderAsc);
 	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdIncluded(Integer countryId,List<ArchivalInstitution> archivalInstitutionIncluded,boolean onlyWithoutPartnerIds);
 	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdUnless(Integer countryId, List<ArchivalInstitution> archivalInstitutionUnless,boolean onlyWithoutPartnerIds);
 	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdUnless(Integer countryId, Collection<String> internalAlIds,boolean onlyWithoutPartnerIds);

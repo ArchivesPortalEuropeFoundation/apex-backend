@@ -303,6 +303,7 @@
 
 	        	$("input[id^=neweadid]").each(function(){
 					var inputElement = $(this).attr("id");
+					inputElement = inputElement.replace(".", "\\.");
 		        	$("#" + inputElement).on('input', function() {
 		        		var eadid = inputElement.substring("neweadid".length, inputElement.length);
 		        		activate(eadid);
@@ -332,6 +333,11 @@
 	        }
 
 			function activate(eadid) {
+				// Replace the escaped name.
+				if (eadid.indexOf("\.") != "-1")  {
+					eadid = eadid.replace("\\.", ".");
+				}
+
 				//normal activate behavior
 				$("input#form_submit").attr("disabled","disabled");
 				document.getElementById("SaveChangesButton" + eadid).disabled=true;
@@ -339,7 +345,7 @@
 				var string = $("[id='neweadid"+eadid+"']").val();
 				if($.trim(string).length>0){
 					//begin pattern check
-					var pattern = new RegExp("^[a-zA-Z0-9\\s]+$");
+					var pattern = new RegExp("^[a-zA-Z0-9\\s\.\\-\\_]+$");
 					var result = pattern.test(string);
 					if(!result){
 						//The EADID must not include special characters

@@ -423,22 +423,40 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 
 		return results;
 	}
-	
+
 	@Override
 	public List<ArchivalInstitution> getArchivalInstitutionsGroupsByCountryId(Integer couId) {
 		long startTime = System.currentTimeMillis();
 		List<ArchivalInstitution> results = new ArrayList<ArchivalInstitution>();
-		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
-		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		if (couId != null) {
-			criteria.add(Restrictions.eq("countryId", couId));
-		}
-		criteria.add(Restrictions.eq("group",true));
+		Criteria criteria = getCriteriaByGroups(couId);
 		results = criteria.list();
 		long endTime = System.currentTimeMillis();
 		if (log.isDebugEnabled()) {
 			log.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
 		}
+		return results;
+	}
+	
+	private Criteria getCriteriaByGroups(Integer couId) {
+		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
+		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		if (couId != null) {
+			criteria.add(Restrictions.eq("countryId", couId));
+		}
+		criteria.add(Restrictions.eq("group", true));
+		return criteria;
+	}
+
+	@Override
+	public List<ArchivalInstitution> getArchivalInstitutionsGroupsByCountryId(Integer couId,boolean hasParent,boolean orderAsc) {
+		List<ArchivalInstitution> results = null;
+		Criteria criteria = getCriteriaByGroups(couId);
+		criteria.add((hasParent)?Restrictions.isNotNull("archivalInstitution.parentAiId"):Restrictions.isNull("archivalInstitution.parentAiId"));
+		if(hasParent){
+			criteria.addOrder(Order.asc("archivalInstitution.parentAiId"));
+		}
+		criteria.addOrder((orderAsc)?Order.asc("archivalInstitution.alorder"):Order.desc("archivalInstitution.alorder"));
+		results = criteria.list();
 		return results;
 	}
 

@@ -48,7 +48,7 @@
             editTarget,generateArchivalInstitutionPartPreviewALJSON,generatePreviewALTreeJSON,
             modifyStructure,showEAGPreviewAL,showLanguages,storeAlIdentifier,viewAL,institutionManagerManagement,
             displayCreateInstitutionManager,deleteInstitutionManager,changeToInstitutionManager,disableInstitutionManager,enableInstitutionManager,createInstitutionManager,downloadInstitutionsStatistics,
-			ALEditor,getALTree,getALActions,launchALActions,ALDownload,ALUpload,ALUploadForm
+			ALEditor,getALTree,getALActions,launchALActions,ALDownload,ALUpload,ALUploadForm,ALDisplayTrees
         </group>
         <group name="adminActions">
             checkEagNamespace,downloadCountriesStatistics,
@@ -58,7 +58,7 @@
             sessionManagement,deleteSession,userManagement,
             changeToCountryManager,createCountryManager,displayCreateCountryManager,disableCountryManager,enableCountryManager,deleteCountryManager,
             viewDptVersions, addVersion, deleteVersion, manageQueue, startStopQueue,deleteQueueItem,deleteAllQueueItemsWithErrors,deleteAllUnusedUploadFiles,forceSolrCommit,
-            eag2012GeoCoordinates, manageHarvest, startStopHarvester, idleHarvest, activateHarvest, startHarvest
+            eag2012GeoCoordinates, manageHarvest, startStopHarvester, idleHarvest, activateHarvest, startHarvest, changeIdentifierInDDBB
         </group>
     </groups>
     <role-mappings>
