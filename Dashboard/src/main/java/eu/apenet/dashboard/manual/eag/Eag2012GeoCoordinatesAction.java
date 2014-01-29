@@ -245,7 +245,6 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 											Iterator<Coordinates> coordinatesIt = coordinatesList.iterator();
 											while (coordinatesIt.hasNext()) {
 												Coordinates coordinatesCurrent = coordinatesIt.next();
-												System.out.println("Actual: " + coordinatesCurrent.getId());
 												double currentLatTrunc = (double) Math.round(coordinatesCurrent.getLat() * 10000000) / 10000000;
 												double currentLongTrunc = (double) Math.round(coordinatesCurrent.getLon() * 10000000) / 10000000;
 												
