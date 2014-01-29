@@ -234,7 +234,7 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 
 									double latTrunc = (double) Math.round(this.getCo_lat() * 10000000) / 10000000;
 									double longTrunc = (double) Math.round(this.getCo_lon() * 10000000) / 10000000;
-									
+
 									this.setCo_lat(latTrunc);
 									this.setCo_lon(longTrunc);
 									
@@ -242,19 +242,11 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 										//do not loop blanks and compare actual with existing
 										List<Coordinates> coordinatesList = DAOFactory.instance().getCoordinatesDAO().getCoordinates();
 										if (coordinatesList != null && !coordinatesList.isEmpty()) {
-											Iterator<Coordinates> coordinatesIt = coordinatesList.iterator();
-											while (coordinatesIt.hasNext()) {
-												Coordinates coordinatesCurrent = coordinatesIt.next();
-												double currentLatTrunc = (double) Math.round(coordinatesCurrent.getLat() * 10000000) / 10000000;
-												double currentLongTrunc = (double) Math.round(coordinatesCurrent.getLon() * 10000000) / 10000000;
-												
-												if (this.getCo_lat()==currentLatTrunc && this.getCo_lon()==currentLongTrunc){
-													this.setCo_lon(this.getCo_lon()+0.00005);
-												}
-											}
+											// Check if current coordinates exist in database.
+											while(this.loopCoord(coordinatesList));
 										}
 									}
-			
+
 									// Latitude (if exists) for the current archival institution/repository.
 									if (this.getCo_lat() != 0.0) {
 										coordinates.setLat(this.getCo_lat());
@@ -263,7 +255,7 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 									if (this.getCo_lon() != 0.0) {
 										coordinates.setLon(this.getCo_lon());
 									}
-			
+
 									// Try to add the new value to coordinates table.
 									try {
 										JpaUtil.beginDatabaseTransaction();
@@ -295,6 +287,29 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 			log.error("SAX exception with file " + strPath);
 			log.error(saxEx.getCause());
 		}
+	}
+
+	/**
+	 * Method to check if the current coordinates exist in database.
+	 *
+	 * @param coordinatesList List of elements in coordinates table.
+	 * @return Process should end (false) or start again (true).
+	 */
+	private boolean loopCoord(List<Coordinates> coordinatesList) {
+		Iterator<Coordinates> coordinatesIt = coordinatesList.iterator();
+		while (coordinatesIt.hasNext()) {
+			Coordinates coordinatesCurrent = coordinatesIt.next();
+			double currentLatTrunc = (double) Math.round(coordinatesCurrent.getLat() * 10000000) / 10000000;
+			double currentLongTrunc = (double) Math.round(coordinatesCurrent.getLon() * 10000000) / 10000000;	
+
+			if (this.getCo_lat()==currentLatTrunc && this.getCo_lon()==currentLongTrunc){
+				this.setCo_lon(this.getCo_lon()+0.00005);
+				double newLongTrunc = (double) Math.round(this.getCo_lon() * 10000000) / 10000000;
+				this.setCo_lon(newLongTrunc);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public double getCo_archId() {
