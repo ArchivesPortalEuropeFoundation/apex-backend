@@ -408,7 +408,13 @@ function changeGroup(){
 				showInformation(d.error,true);
 			}else if(v.newparents){ //get parent structure
 				var parents = new Array();
-				if($.inArray(",",v.newparents)){
+				var found;
+				if ($.browser.msie && $.browser.version == 8){   //internet explorer 8
+					found = v.newparents.indexOf(",");
+				}else{
+					found = $.inArray(",",v.newparents);
+				}
+				if(found != -1){
 					parents = v.newparents.split(",");
 				}else{
 					parents[0] = v.newparents;
