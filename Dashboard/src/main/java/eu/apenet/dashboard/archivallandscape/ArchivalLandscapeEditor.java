@@ -11,8 +11,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import eu.apenet.persistence.vo.*;
-
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.infraestructure.ArchivalInstitutionUnit;
@@ -23,10 +21,12 @@ import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
-import eu.apenet.persistence.dao.IngestionprofileDAO;
 import eu.apenet.persistence.dao.LangDAO;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.AiAlternativeName;
+import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.Country;
+import eu.apenet.persistence.vo.Lang;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
@@ -262,12 +262,14 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		ArchivalInstitution archivalInstitutionTarget = aiDao.getArchivalInstitution(aiId);
 		if(archivalInstitutionTarget!=null){
 			//if (ContentUtils.containsPublishedFiles(archivalInstitutionTarget)) {
-			if (archivalInstitutionTarget.isContainSearchableItems()) {
-				// rollback
-				JpaUtil.rollbackDatabaseTransaction();
-				buffer.append(buildNode("error",getText("al.message.error.not.possible.move")));
-				return buffer.toString();
-			}
+			
+			//In order to allow to move an institution with published content inside its own group this control will be removed
+//			if (archivalInstitutionTarget.isContainSearchableItems()) {
+//				// rollback
+//				JpaUtil.rollbackDatabaseTransaction();
+//				buffer.append(buildNode("error",getText("al.message.error.not.possible.move")));
+//				return buffer.toString();
+//			}
 
 			List<ArchivalInstitution> archivalInstitutions = null;
 			if (archivalInstitutionTarget.getParentAiId() != null) {
@@ -424,8 +426,6 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			JpaUtil.beginDatabaseTransaction();
 				ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
 				ArchivalInstitution ai = aiDao.findById(new Integer(aiId));
-            deleteHarvestingProfiles(ai.getAiId()); //#983
-            deleteIngestionProfiles(ai.getAiId()); //#983
 				//update the rest of the orders (all siblings are inconsistents)
 				int oldOrder = ai.getAlorder();
 				ArchivalInstitution parent = ai.getParent();
@@ -451,22 +451,23 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					if(ai.isGroup()){
 						Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(ai.getChildArchivalInstitutions());
 						if(children!=null && children.size()>0){
-							messenger.append(buildNode("error",getText("al.message.grouphaschildren")));
-							rollback = true;
+							// #981: Check if childrens has content.
+							if (ai.isContainSearchableItems()) {
+								messenger.append(buildNode("error",getText("al.message.grouphaschildren")));
+								rollback = true;
+							}
 						}
 					}
 					if(!rollback){
-						AiAlternativeNameDAO aiAnDao = DAOFactory.instance().getAiAlternativeNameDAO();
-						List<AiAlternativeName> alternativeNames = aiAnDao.findByAIId(ai);
-						if(alternativeNames!=null){
-							Iterator<AiAlternativeName> alternativeNamesIterator = alternativeNames.iterator();
-							while(alternativeNamesIterator.hasNext()){
-								aiAnDao.deleteSimple(alternativeNamesIterator.next()); //deleteSimple alternative name
-							}
+						// Recover each child to delete the EAG file.
+						if (ai.isGroup() 
+								&& ai.getChildArchivalInstitutions() != null
+								&& !ai.getChildArchivalInstitutions().isEmpty()) {
+							this.deleteAIChild(ai);
+						} else {
+							ArchivalLandscape.deleteContent(ai);
 						}
-
-
-						aiDao.deleteSimple(ai); //deleteSimple institution
+//						aiDao.deleteSimple(ai); //deleteSimple institution
 						messenger.append(buildNode("info",getText("al.message.institutiondeleted")));
 					}
 				}else{
@@ -482,23 +483,24 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		return messenger.toString();
 	}
 
-    private void deleteHarvestingProfiles(int aiId) {
-    	ArchivalInstitutionOaiPmhDAO dao = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
-        List<ArchivalInstitutionOaiPmh> archivalInstitutionOaiPmhs = dao.getArchivalInstitutionOaiPmhs(aiId);
-        Iterator<ArchivalInstitutionOaiPmh> it = archivalInstitutionOaiPmhs.iterator();
-        while(it.hasNext()){
-        	dao.deleteSimple(it.next());
-        }
-    }
-
-    private void deleteIngestionProfiles(int aiId) {
-    	IngestionprofileDAO profileDAO = DAOFactory.instance().getIngestionprofileDAO();
-        List<Ingestionprofile> ingestionprofiles = profileDAO.getIngestionprofiles(aiId);
-        Iterator<Ingestionprofile> it = ingestionprofiles.iterator();
-        while(it.hasNext()){
-        	profileDAO.deleteSimple(it.next());
-        }
-    }
+	/**
+	 * Method to delete each ai.
+	 *
+	 * @param ai
+	 */
+	private void deleteAIChild(ArchivalInstitution ai) {
+		if (ai.isGroup()) {
+			Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(ai.getChildArchivalInstitutions());
+			if (children != null && !children.isEmpty()) {
+				Iterator<ArchivalInstitution> childrenIt = children.iterator();
+				while (childrenIt.hasNext()) {
+					this.deleteAIChild(childrenIt.next());
+				}
+			}
+			
+		}
+		ArchivalLandscape.deleteContent(ai);
+	}
 
 	private String createArchivalInstitution(String name,String father,String type,String lang){
 		StringBuilder messenger = new StringBuilder();

@@ -3,9 +3,15 @@ package eu.apenet.dashboard.archivallandscape;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,12 +33,18 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
+import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.AbstractAction;
+import eu.apenet.dashboard.exception.DashboardAPEnetException;
 import eu.apenet.dashboard.security.SecurityContext;
+import eu.apenet.dashboard.tree.DynatreeAction;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.dashboard.utils.ZipManager;
+import eu.apenet.dpt.utils.service.DocumentValidation;
+import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.HoldingsGuideDAO;
@@ -53,11 +65,11 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
  * operations (download and upload), which are based on DDBB 
  * and not in any File storage. 
  */
-public class ArchivalLandscapeManager extends AbstractAction{
+public class ArchivalLandscapeManager extends DynatreeAction{
 	
 	private static final long serialVersionUID = 2998755137328333811L;
 
-	private final Logger log = Logger.getLogger(getClass());
+	private final static Logger log = Logger.getLogger(ArchivalLandscapeManager.class);
 	
 	private static final String AL_XMLNS = "urn:isbn:1-931666-22-9";
 	private static final String AL_XMLNS_XLINK = "http://www.w3.org/1999/xlink";
@@ -93,6 +105,13 @@ public class ArchivalLandscapeManager extends AbstractAction{
 
 	// Error when an institution has content published.
 	private static final String ERROR_CONTENT = "errorContent";
+	private static final String ERROR_CONTENT_2 = "errorContent2";
+
+	// Error when an institution has duplicated identifiers.
+	private static final String ERROR_DUPLICATE_IDENTIFIERS = "errorDuplicateIdentifiers";
+
+	// Error when the name of te institution hasn't language.
+	private static final String ERROR_LANG = "errorLang";
 
 	private static final String AL_GLOBAL_UNITTITLE = "European countries";
 
@@ -113,6 +132,18 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	private Map<String, Integer> positions;
 
 	private Set<String> institutionsWithContent;
+
+	private List<String> warnings_ead;
+
+	// Variable for the name of the institution without lang.
+	private String aiArchivalInstitutionName;
+
+	private Set<String> institutionsWithContentNotPublished;
+
+	private ArrayList<String> errors;
+
+	// Set for the duplicate identifiers.
+	private Set<String> duplicateIdentifiers;
 
 	public void setHttpFile(File httpFile){
 		this.httpFile = httpFile;
@@ -158,12 +189,58 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		this.institutionsWithContent = institutionsWithContent;
 	}
 
-	public String upload(){
-		if(this.httpFile!=null && this.httpFileFileName!=null){
+	public String getAiArchivalInstitutionName() {
+		return aiArchivalInstitutionName;
+	}
+
+	public void setAiArchivalInstitutionName(String aiArchivalInstitutionName) {
+		this.aiArchivalInstitutionName = aiArchivalInstitutionName;
+	}
+
+	public Set<String> getInstitutionsWithContentNotPublished() {
+		return this.institutionsWithContentNotPublished;
+	}
+
+	public void addInstitutionsWithContentNotPublished(String institutionsWithContentName) {
+		if (this.getInstitutionsWithContentNotPublished() == null) {
+			this.institutionsWithContentNotPublished = new LinkedHashSet<String>();
+		}
+		
+		this.getInstitutionsWithContentNotPublished().add(institutionsWithContentName);
+	}
+
+	public void setInstitutionsWithContentNotPublished(
+			Set<String> institutionsWithContentNotPublished) {
+		this.institutionsWithContentNotPublished = institutionsWithContentNotPublished;
+	}
+
+	public Set<String> getDuplicateIdentifiers() {
+		return this.duplicateIdentifiers;
+	}
+
+	public void setDuplicateIdentifiers(Set<String> duplicateIdentifiers) {
+		this.duplicateIdentifiers = duplicateIdentifiers;
+	}
+
+	public String upload() throws SAXException, APEnetException{
+		String state = ERROR;
+		try {
+			state = checkUnzipAndUpload(this.httpFile,this.httpFileFileName,true);
+		} catch (IOException e) {
+			log.error(e);
+		} 
+		return state;
+	}
+	private String checkUnzipAndUpload(File httpFile, String httpFileFileName,boolean execute) throws IOException, SAXException, APEnetException {
+		if(this.httpFile!=null && ((this.httpFileFileName!=null && execute) || (!execute))){
 			String path = this.httpFile.getAbsolutePath();
 			String format = this.httpFileFileName.substring(this.httpFileFileName.lastIndexOf(".") + 1).toLowerCase();
 			if(format.equalsIgnoreCase("xml")){
-				return ingestArchivalLandscapeXML();
+				if(execute){
+					return ingestArchivalLandscapeXML();
+				}else{
+					return displayBeforeAfterTrees();
+				}
 			}else if(format.equals("zip") && path.contains(File.separator)){ //1. unzip
 	        	path = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR;
 				String tempPath = path + "tmp" + this.httpFileFileName + new Date().getTime() + APEnetUtilities.FILESEPARATOR;	//This is the path in which the zip files are going to be unzipped
@@ -199,7 +276,11 @@ public class ArchivalLandscapeManager extends AbstractAction{
 					}
 					if(found){ //3. launch logic for AL.xml file
 						try{
-							return ingestArchivalLandscapeXML();
+							if(execute){
+								return ingestArchivalLandscapeXML();
+							}else{
+								return displayBeforeAfterTrees();
+							}
 						}catch(Exception e){
 							log.error("Error trying to manage AL uploaded",e);
 						}finally{
@@ -217,6 +298,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		}
 		return ERROR;
 	}
+
 	/**
 	 * Search xml file from File (folders) structure and
 	 * fill global this.httpFile.
@@ -278,24 +360,203 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	 * 		current system and make ingestion/update logic.
 	 * 
 	 * @return Structs2-RESPONSE
+	 * @throws APEnetException 
+	 * @throws SAXException 
 	 */
-	private String ingestArchivalLandscapeXML() {
-		String countryCode = getXMLEadidCountrycode(this.httpFile);
+	private String ingestArchivalLandscapeXML() throws SAXException, APEnetException {
 		String state = ERROR;
-		if(countryCode!=null && countryCode.equalsIgnoreCase(SecurityContext.get().getCountryIsoname())){
-//			if(this.country==null){
-				this.country = DAOFactory.instance().getCountryDAO().getCountryByCname(SecurityContext.get().getCountryName());
-//			}
-			Collection<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile);
-			if(archivalInstitutions!=null){
-				try{
-					state = checkAndUpdateFromToDDBB(archivalInstitutions);
-				}catch(Exception e){
-					log.error("Exception checking institutions with ddbb to be replaced",e);
+		Boolean firstState = ArchivalLandscape.checkIdentifiers(this.httpFile);
+		
+		if (firstState==null){
+			validateUploadedAL(this.httpFile);
+			state="errorIdentifier";
+			Iterator<String> it = this.warnings_ead.iterator();
+			while(it.hasNext()){
+				addActionMessage(it.next());
+			}
+		} else if (!firstState) {
+			this.setDuplicateIdentifiers(ArchivalLandscape.getDuplicateIdentifiers());
+			return ERROR_DUPLICATE_IDENTIFIERS;
+		} else{
+			String countryCode = getXMLEadidCountrycode(this.httpFile);
+			if(countryCode!=null && countryCode.equalsIgnoreCase(SecurityContext.get().getCountryIsoname())){
+//				if(this.country==null){
+					this.country = DAOFactory.instance().getCountryDAO().getCountryByCname(SecurityContext.get().getCountryName());
+//				}
+				Set<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile);
+				if(archivalInstitutions!=null){
+					try{
+						state = checkAndUpdateFromToDDBB(archivalInstitutions);
+					}catch(Exception e){
+						log.error("Exception checking institutions with ddbb to be replaced",e);
+					}
+				} else {
+					state = this.ERROR_LANG;
 				}
 			}
 		}
+		 return state;
+	}
+
+	private void validateUploadedAL(File file) throws SAXException, APEnetException {
+		warnings_ead = new ArrayList<String>();
+	//	boolean state = true;
+		Xsd_enum schema = Xsd_enum.XSD_EAD_SCHEMA;
+		try {
+			InputStream in = new FileInputStream(file);
+			List<SAXParseException> exceptions = DocumentValidation.xmlValidation(in, schema);
+			if (exceptions != null) {
+				StringBuilder warn;
+				//state = false;
+				for (SAXParseException exception : exceptions) {
+					warn = new StringBuilder();
+					warn.append("l.").append(exception.getLineNumber()).append(" c.")
+							.append(exception.getColumnNumber()).append(": ").append(exception.getMessage())
+							.append("<br/>");
+					warnings_ead.add(warn.toString());
+				}
+			}
+		} catch (SAXException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new APEnetException("Exception while validating an EAD file", e);
+		}
+	//	return state;
+	}
+	
+	public String displayTrees(){
+		String state = ERROR;
+		try {
+			state = checkUnzipAndUpload(this.httpFile,this.httpFileFileName,false);
+		} catch (IOException e) {
+			log.error(e);
+		} catch (SAXException e) {
+			log.error(e);
+		} catch (APEnetException e) {
+			log.error(e);
+		} 
 		return state;
+	} 
+	
+	private String displayBeforeAfterTrees() throws IOException{
+		Writer writer = null;
+		try{
+			log.debug("Building tree for Archival Institution");
+			getServletRequest().setCharacterEncoding(UTF8);
+			getServletResponse().setCharacterEncoding(UTF8);
+			getServletResponse().setContentType("application/json");
+			writer = new OutputStreamWriter(getServletResponse().getOutputStream(),UTF8);
+			//begin json part
+			writer.append("{");
+			Set<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile);
+			if(archivalInstitutions!=null){
+				writer.append("\"newtree\":");
+				writer.append(parseArchivalInstitutionsToJSON(archivalInstitutions));
+				//oldtree part, only if there are a valid new tree
+				ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
+				List<ArchivalInstitution> countryArchivalInstitutions = new LinkedList<ArchivalInstitution>(aiDao.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),true));
+				if(countryArchivalInstitutions!=null){
+					writer.append(",\"oldtree\":");
+					writer.append(parseArchivalInstitutionsToJSON(countryArchivalInstitutions));
+				}
+				//now put texts values ("question","yes","no",..)
+				writer.append(",\"question\":");
+				writer.append("\""+getText("al.message.areyousureyouwanttocontinue")+"\"");
+				writer.append(",\"yes\":");
+				writer.append("\""+getText("content.message.yes")+"\"");
+				writer.append(",\"no\":");
+				writer.append("\""+getText("content.message.no")+"\"");
+				writer.append(",\"oldtreeMessage\":");
+				writer.append("\""+getText("al.message.oldtree")+"\"");
+				writer.append(",\"newtreeMessage\":");
+				writer.append("\""+getText("al.message.newtree")+"\"");
+				writer.append(",\"status\":");
+				writer.append("\""+getText("al.message.previewisbeingdisplayed")+"\"");//Preview is being displayed bellow
+			}else{
+				writer.append("\"error\":");
+				if(this.errors!=null && this.errors.size()>0){
+					String message = "";
+					Iterator<String> it = this.errors.iterator();
+					while(it.hasNext()){
+						message += it.next();
+					}
+					writer.append("\""+message+"\"");//Preview is being displayed bellow
+				}else{
+					writer.append("\""+getText("al.message.error.badarchivallandscapedetected")+"\"");//Preview is being displayed bellow
+				}
+			}
+			writer.append("}");
+			//end json part
+			writer.flush();
+		}catch(Exception e){
+			log.error(e.getMessage(),e);
+		}finally{
+			if(writer!=null){
+				writer.close();
+			}
+		}
+		return SUCCESS;
+	}
+
+	private StringBuilder parseArchivalInstitutionsToJSON(Collection<ArchivalInstitution> archivalInstitutions) {
+		StringBuilder json = new StringBuilder();
+		json.append("[");
+		Iterator<ArchivalInstitution> itInstitutions = archivalInstitutions.iterator();
+		while(itInstitutions.hasNext()){
+			ArchivalInstitution institution = itInstitutions.next();
+			json.append(buildArchivalInstitutionJSON(institution));
+			if(itInstitutions.hasNext()){
+				json.append(",");
+			}
+		}
+		json.append("]");
+		return json;
+	}
+
+	private StringBuilder buildArchivalInstitutionJSON(ArchivalInstitution institution) {
+		StringBuilder json = new StringBuilder(); //{ "title": "Node 1", "key": "k1", "isLazy": true }
+		json.append("{");
+		String institutionName = institution.getAiname();
+		if(institutionName!=null && institutionName.length()>0){
+			if(institutionName.contains("\"")){
+				institutionName = institutionName.replace("\"","'");
+			}
+			if(institutionName.contains(",")){
+				institutionName.replace(",","%2C");
+			}
+			if(institutionName.contains("{")){
+				institutionName.replace("{","%7B");
+			}
+			if(institutionName.contains("}")){
+				institutionName.replace("}","%7D");
+			}
+			try {
+				URLEncoder.encode(institutionName,"UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				log.error("Could not be parsed by URLEncode.encode function: "+e.getMessage());
+			}
+		}
+		json.append("\"title\":\""+institutionName+"\",");
+		json.append("\"key\":\""+institution.getInternalAlId()+"\"");
+		if(institution.isGroup()){
+			json.append(",\"isLazy\":\"true\"");
+			json.append(",\"isFolder\":\"true\"");
+			List<ArchivalInstitution> children = new LinkedList<ArchivalInstitution>(institution.getChildArchivalInstitutions());
+			if(children!=null && children.size()>0){
+				json.append(",\"children\":[");
+				Iterator<ArchivalInstitution> childrenIt = children.iterator();
+				while(childrenIt.hasNext()){
+					ArchivalInstitution child = childrenIt.next();
+					json.append(buildArchivalInstitutionJSON(child));
+					if(childrenIt.hasNext()){
+						json.append(",");
+					}
+				}
+				json.append("]");
+			}
+		}
+		json.append("}");
+		return json;
 	}
 
 	/**
@@ -335,7 +596,16 @@ public class ArchivalLandscapeManager extends AbstractAction{
 
 						log.debug("Inserting process for not updated institutions");
 						//do an insert for rest file institutions
-						insertNotUpdatedInstitutions(archivalInstitutions,null);
+						String aiName = insertNotUpdatedInstitutions(archivalInstitutions,null);
+						if (aiName != null){
+							// this institution has any lang error and trans may be closed
+							state = 6;
+							log.debug("Institution has not lang");
+							validOperation = this.ERROR_LANG;//LANG_ERROR
+							JpaUtil.rollbackDatabaseTransaction();
+							this.setAiArchivalInstitutionName(aiName);
+							return validOperation;
+						}
 						log.debug("Done insert process!");
 						state = 4;
 //						//now delete all institutions which has not been updated (old institutions are not being processed)
@@ -343,12 +613,15 @@ public class ArchivalLandscapeManager extends AbstractAction{
 						this.deletedInstitutions = new ArrayList<ArchivalInstitution>(); //clean
 						boolean error = deleteSimpleUnusedInstitutions();
 						if(!error){
+							error = deleteSimpleUnusedGroups();
 							state = 5;
 							JpaUtil.commitDatabaseTransaction();
+							//finally remove deleted files from ddbb if they existed
+							state = 10;
 						}else{
 							state = 6;
-							log.debug("Invalid operation detected.");
-							validOperation = ERROR;
+							log.debug("Invalid operation detected. There could be content into some institution.");
+							validOperation = ERROR_CONTENT_2;
 							JpaUtil.rollbackDatabaseTransaction();
 						}
 					}
@@ -375,6 +648,38 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		}
 		return validOperation;
 	}
+	private boolean deleteSimpleUnusedGroups() {
+		boolean error = false;
+		log.debug("Begin delete process for old institutions.");
+		List<ArchivalInstitution> excludedInstitutions = new ArrayList<ArchivalInstitution>();
+		excludedInstitutions.addAll(this.updatedInstitutions);
+		excludedInstitutions.addAll(this.insertedInstitutions);
+		//get all institutions to be deleted from ddbb
+		List<ArchivalInstitution> institutionsToBeDeleted = this.aIDAO.getArchivalInstitutionsByCountryIdUnless(SecurityContext.get().getCountryId(),excludedInstitutions, false);
+		log.debug("Institutions to be deleted: "+institutionsToBeDeleted.size());
+		Iterator<ArchivalInstitution> deleteIt = institutionsToBeDeleted.iterator();
+		while(!error && deleteIt.hasNext()){
+			ArchivalInstitution targetToBeDeleted = deleteIt.next();
+			if(!targetToBeDeleted.isContainSearchableItems() && targetToBeDeleted.isGroup()){
+				log.debug("Deleting institution: "+targetToBeDeleted.getInternalAlId() + " " + targetToBeDeleted.getAiname() + " " + targetToBeDeleted.getAiId());
+				Set<AiAlternativeName> alternativeNames = targetToBeDeleted.getAiAlternativeNames();
+				if(alternativeNames!=null && alternativeNames.size()>0){
+					log.debug("Deleting alternative names...");
+					Iterator<AiAlternativeName> itAN = alternativeNames.iterator();
+					while(itAN.hasNext()){
+						this.aIANDAO.deleteSimple(itAN.next()); //removes each alternative name
+					}
+				}
+				if(ArchivalLandscape.deleteContent(targetToBeDeleted)){
+					//this.aIDAO.deleteSimple(targetToBeDeleted); //delete unused institution
+					this.deletedInstitutions.add(targetToBeDeleted);
+					log.debug("Deleted institution with aiId: "+targetToBeDeleted.getAiId());
+				}
+			}
+		}
+		return error;
+	}
+
 	/**
 	 * Detects and checks if some institution exists into system which algorithm
 	 * could overwrite. When it's detected an overwrite check it's launched.
@@ -418,10 +723,11 @@ public class ArchivalLandscapeManager extends AbstractAction{
 							}
 
 							// Checks if the element changed its position inside the group.
-							if (currentIngestedInstitution.getAlorder() != plainInstitution.getAlorder()) {
-								log.debug("The brothers for the current institution (" + currentIngestedInstitution.getAiname() + ") hasn't the same brothers for the institution to ingest (" + plainInstitution.getAiname() + ").");
-								error = true;
-							}
+							// disabled because to move institutions inside the same group is now allowed
+//							if (currentIngestedInstitution.getAlorder() != plainInstitution.getAlorder()) {
+//								log.debug("The brothers for the current institution (" + currentIngestedInstitution.getAiname() + ") hasn't the same brothers for the institution to ingest (" + plainInstitution.getAiname() + ").");
+//								error = true;
+//							}
 
 							if (error) {
 								valid = ERROR_CONTENT;
@@ -510,7 +816,8 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	 * param Collection<ArchivalInstitution> not updated.
 	 * @param archivalInstitutions
 	 */
-	private void insertNotUpdatedInstitutions(Collection<ArchivalInstitution> archivalInstitutions,ArchivalInstitution parent) {
+	private String insertNotUpdatedInstitutions(Collection<ArchivalInstitution> archivalInstitutions,ArchivalInstitution parent) {
+		String strOut = null;
 		if(archivalInstitutions!=null){
 			Iterator<ArchivalInstitution> itAI = archivalInstitutions.iterator();
 			while(itAI.hasNext()){
@@ -529,12 +836,19 @@ public class ArchivalLandscapeManager extends AbstractAction{
 					if(parent!=null){
 						targetToBeInserted.setParent(this.groupsInsertedIntoDDBB.get(parent.getInternalAlId()));
 					}
-					insertInstitution(targetToBeInserted); //it's the recurse method, so it's not needed call to himself (insertNotUpdatedInstitutions) 
+					try{
+						insertInstitution(targetToBeInserted); //it's the recurse method, so it's not needed call to himself (insertNotUpdatedInstitutions)
+					}catch(DashboardAPEnetException e){
+						log.debug("Institution without lang: "+e.getMessage());
+						strOut= e.getMessage();
+						return strOut;
+					}
 				}else if(targetToBeInserted.isGroup() && targetToBeInserted.getChildArchivalInstitutions()!=null && targetToBeInserted.getChildArchivalInstitutions().size()>0){ //additional check children
-					insertNotUpdatedInstitutions(targetToBeInserted.getChildArchivalInstitutions(),targetToBeInserted);
+					strOut=insertNotUpdatedInstitutions(targetToBeInserted.getChildArchivalInstitutions(),targetToBeInserted);
 				}
 			}
 		}
+		return strOut;
 	}
 	/**
 	 * Method used to delete all institutions not updated or inserted.
@@ -557,8 +871,8 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		Iterator<ArchivalInstitution> deleteIt = institutionsToBeDeleted.iterator();
 		while(!error && deleteIt.hasNext()){
 			ArchivalInstitution targetToBeDeleted = deleteIt.next();
-			if(!targetToBeDeleted.isContainSearchableItems()){
-				log.debug("Deleting institution: "+targetToBeDeleted.getInternalAlId());
+			if(!targetToBeDeleted.isContainSearchableItems() && !targetToBeDeleted.isGroup()){
+				log.debug("Deleting institution: "+targetToBeDeleted.getInternalAlId() + " " + targetToBeDeleted.getAiname() + " " + targetToBeDeleted.getAiId());
 				Set<AiAlternativeName> alternativeNames = targetToBeDeleted.getAiAlternativeNames();
 				if(alternativeNames!=null && alternativeNames.size()>0){
 					log.debug("Deleting alternative names...");
@@ -567,18 +881,23 @@ public class ArchivalLandscapeManager extends AbstractAction{
 						this.aIANDAO.deleteSimple(itAN.next()); //removes each alternative name
 					}
 				}
-
-
-				this.aIDAO.deleteSimple(targetToBeDeleted); //delete unused institution
-				this.deletedInstitutions.add(targetToBeDeleted);
-				log.debug("Deleted institution with aiId: "+targetToBeDeleted.getAiId());
-			}else{
+				if(ArchivalLandscape.deleteContent(targetToBeDeleted)){
+					//this.aIDAO.deleteSimple(targetToBeDeleted); //delete unused institution
+					this.deletedInstitutions.add(targetToBeDeleted);
+					log.debug("Deleted institution with aiId: "+targetToBeDeleted.getAiId());
+				}else{
+					log.debug("NOT Deleted institution with aiId: "+targetToBeDeleted.getAiId()+" by content not deletable.");
+					error = true;
+					this.addInstitutionsWithContentNotPublished(targetToBeDeleted.getAiname());
+				}
+			}else if(!targetToBeDeleted.isGroup()){
 				log.debug("Detected institution with content indexed, so it could not be deleted. Marked operation like invalid.");
 				error = true; //flag used to check an error for rollback
 			}
 		}
 		return error;
 	}
+
 	/**
 	 * Parse a Collection<ArchivalInstitutions> currentStructure(Group1,Institution2,Group3,Institution4):
 	 * 
@@ -739,7 +1058,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		Iterator<ArchivalInstitution> archivalInstitutionsIt = archivalInstitutions.iterator();
 		while(!found && archivalInstitutionsIt.hasNext()){
 			ArchivalInstitution archivalInstitution = archivalInstitutionsIt.next();
-			if(archivalInstitution.getInternalAlId().equals(target.getInternalAlId())){ //found
+			if(archivalInstitution.getInternalAlId()!=null && archivalInstitution.getInternalAlId().equals(target.getInternalAlId())){ //found
 				log.debug("Found institution equal: "+target.getAiname()+". Replacing node...");
 				found = true;
 				this.deletedInstitutions.add(target); //not needed for search afterwards
@@ -851,10 +1170,12 @@ public class ArchivalLandscapeManager extends AbstractAction{
 				checkDeleteArchivalInstitutions(new ArrayList<ArchivalInstitution>(possibleChildren));
 			}
 		}
-
-		this.aIDAO.deleteSimple(possibleDeletedInstitution);
-		log.debug("Deleted institution: "+possibleDeletedInstitution.getAiname());
-		this.deletedInstitutions.add(possibleDeletedInstitution);
+		if(ArchivalLandscape.deleteContent(possibleDeletedInstitution)){
+			log.debug("Deleted institution: "+possibleDeletedInstitution.getAiname());
+			this.deletedInstitutions.add(possibleDeletedInstitution);
+		}else{
+			log.debug("Not deleted institution: "+possibleDeletedInstitution.getAiname()+" by content ingested not deletable.");
+		}
 	}
 
 	/**
@@ -868,8 +1189,9 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	 * 
 	 * @param archivalInstitutions
 	 * @param parent
+	 * @throws DashboardAPEnetException 
 	 */
-	private void insertChildren(Collection<ArchivalInstitution> archivalInstitutions,ArchivalInstitution parent) {
+	private void insertChildren(Collection<ArchivalInstitution> archivalInstitutions,ArchivalInstitution parent) throws DashboardAPEnetException {
 		Iterator<ArchivalInstitution> aiIt = archivalInstitutions.iterator();
 		List<ArchivalInstitution> institutionsToBeInserted = new ArrayList<ArchivalInstitution>();
 		while(aiIt.hasNext()){
@@ -921,12 +1243,23 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	 * 
 	 * @param currentInstitution
 	 */
-	private ArchivalInstitution insertInstitution(ArchivalInstitution currentInstitution) {
+	private ArchivalInstitution insertInstitution(ArchivalInstitution currentInstitution) throws DashboardAPEnetException {
 		String internalAlId = currentInstitution.getInternalAlId();
 		if(internalAlId==null || internalAlId.isEmpty()){
 			internalAlId = ArchivalLandscapeEditor.getNewinternalIdentifier();
 			currentInstitution.setInternalAlId(internalAlId);
 		}
+		//loop file and check if lang is not null 
+		Set<AiAlternativeName> aiANSet = currentInstitution.getAiAlternativeNames();
+		Iterator<AiAlternativeName> aiANIt = aiANSet.iterator();
+		while (aiANIt.hasNext()) {
+			AiAlternativeName aiAlternativeName = aiANIt.next();
+			if (aiAlternativeName.getLang() == null) {
+				String strErr = aiAlternativeName.getAiAName();
+				throw new DashboardAPEnetException(strErr, new NullPointerException());
+			}
+		}
+		
 		ArchivalInstitution institution = this.aIDAO.insertSimple(currentInstitution);
 		if(institution!=null && institution.isGroup()){
 			if (this.groupsInsertedIntoDDBB == null) {
@@ -955,7 +1288,16 @@ public class ArchivalLandscapeManager extends AbstractAction{
 					childInstitutionToInsert.setParent(institution);
 					childInstitutionToInsert.setParentAiId(institution.getAiId());
 					log.debug("Trying to insert child institution");
-					insertInstitution(childInstitutionToInsert);
+					//1. check if institution exists, to be updated
+					ArchivalInstitution child = this.aIDAO.getArchivalInstitutionByInternalAlId(childInstitutionToInsert.getInternalAlId(),SecurityContext.get().getCountryId());
+					if(child!=null){
+						//1.2 update parent for this institution
+						child.setParent(currentInstitution);
+						child.setParentAiId(currentInstitution.getParentAiId());
+					}else{
+						//2. if not exists, create
+						insertInstitution(childInstitutionToInsert);
+					}
 				}
 			}
 		}
@@ -969,18 +1311,18 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	 * 
 	 * @param archivalInstitutionFile
 	 */
-	private Collection<ArchivalInstitution> getInstitutionsByALFile(File archivalInstitutionFile) {
-		Collection<ArchivalInstitution> archivalInstitutions = null;
+	private Set<ArchivalInstitution> getInstitutionsByALFile(File archivalInstitutionFile) {
+		Set<ArchivalInstitution> archivalInstitutions = null;
 		try {
 			XMLInputFactory factory = XMLInputFactory.newFactory();
 			XMLStreamReader r = factory.createXMLStreamReader(new FileReader(archivalInstitutionFile));
 			archivalInstitutions = getXMLArchivalInstitutionLevel(r);
 		} catch (FileNotFoundException e) {
-			log.error("File not found :: "+archivalInstitutionFile.getAbsolutePath(), e.getCause());
+			log.error("File not found :: "+archivalInstitutionFile.getAbsolutePath() + APEnetUtilities.generateThrowableLog(e));
 		} catch (XMLStreamException e) {
-			log.error("Archival Landscape reading exception", e.getCause());
+			log.error("Archival Landscape reading exception: " + APEnetUtilities.generateThrowableLog(e));
 		} catch (Exception e){
-			log.error("Exception: ", e.getCause());
+			log.error("Exception: " + APEnetUtilities.generateThrowableLog(e));
 		}
 		return archivalInstitutions;
 	}
@@ -991,9 +1333,9 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	 * 
 	 * @throws XMLStreamException
 	 */
-	private Collection<ArchivalInstitution> getXMLArchivalInstitutionLevel(XMLStreamReader r) throws XMLStreamException{
+	private Set<ArchivalInstitution> getXMLArchivalInstitutionLevel(XMLStreamReader r) throws XMLStreamException{
 		ArchivalInstitution archivalInstitution = null;
-		Set<ArchivalInstitution> archivalInstitutions = new HashSet<ArchivalInstitution>();
+		Set<ArchivalInstitution> archivalInstitutions = new LinkedHashSet<ArchivalInstitution>();
 		String level = "";
 		String id = "";
 		String alternativeNameText = null;
@@ -1107,6 +1449,24 @@ public class ArchivalLandscapeManager extends AbstractAction{
 							archivalInstitution.setCountryId(this.country.getId()); //fix for current bad Hibernate mapping
 						}else{
 							log.error("Bad xml detected, reason: not lang for alternative name");
+							this.setAiArchivalInstitutionName(alternativeNameText);
+							this.errors = new ArrayList<String>();
+							String message2 = getText("updateErrorFormatAL.error.unittitle.lang2");
+							if(message2!=null && message2.length()>0){
+								if(message2.contains("<")){
+									message2 = message2.replace("<","&#60;");
+								}if(message2.contains(">")){
+									message2 = message2.replace(">","&#62;");
+								}if(message2.contains("@")){
+									message2 = message2.replace("@","&#64;");
+								}
+							}
+							String message = "<p>&nbsp;</p>"+getText("updateErrorFormatAL.errors")  
+									+"<p>&nbsp;</p>"+getText("updateErrorFormatAL.error.unittitle.lang1")
+									+"<p>&nbsp;</p>"+alternativeNameText
+									+ "<p>&nbsp;</p>"+ message2;
+							
+							this.errors.add(message);
 							validXML = false;
 						}
 						alternativeNameText = "";
@@ -1122,7 +1482,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 					}
 			}
 		}
-		return archivalInstitutions;
+		return (validXML)?archivalInstitutions:null;
 	}
 	/**
 	 * Open a file, read it and get attribute "countrycode" from
@@ -1189,7 +1549,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 	 * @throws XMLStreamException
 	 */
 	private Set<ArchivalInstitution> getXMLArchivalInstitutionLevelChildren(XMLStreamReader r, ArchivalInstitution aiParent) throws XMLStreamException {
-		Set<ArchivalInstitution> archivalInstitutions = new HashSet<ArchivalInstitution>();
+		Set<ArchivalInstitution> archivalInstitutions = new LinkedHashSet<ArchivalInstitution>();
 		boolean validXML = true;
 		ArchivalInstitution archivalInstitution = null;
 		Integer event = null;
@@ -1228,9 +1588,14 @@ public class ArchivalLandscapeManager extends AbstractAction{
 							archivalInstitution.setParent(aiParent);
 						}else if(level!=null && level.equals(SERIES)){
 							Set<ArchivalInstitution> children = getXMLArchivalInstitutionLevelChildren(r,archivalInstitution);
-							log.debug("Children has been added with size: "+children.size()+" to institution with id: "+id);
-							archivalInstitution.setChildArchivalInstitutions(new LinkedList<ArchivalInstitution>(children));
-							update = true; //continue
+							if(children!=null){
+								log.debug("Children has been added with size: "+children.size()+" to institution with id: "+id);
+								archivalInstitution.setChildArchivalInstitutions(new LinkedList<ArchivalInstitution>(children));
+								update = true; //continue
+							}else{
+								log.debug("Detected invalid xml from getXMLArchivalInstitutionLevelChildren function");
+								validXML = false;
+							}
 						}
 					}else if(localName.equals("unittitle") && archivalInstitution!=null){
 						unittitle = ""; //clean old unittitle
@@ -1280,11 +1645,34 @@ public class ArchivalLandscapeManager extends AbstractAction{
 								lang = languages.get(i);
 							}
 						}
-						alternativeName.setLang(lang);
-						alternativeNames.add(alternativeName);
-						archivalInstitution.setAiAlternativeNames(alternativeNames);
-						archivalInstitution.setCountry(this.country);
-						archivalInstitution.setCountryId(this.country.getId()); //fix for current bad Hibernate mapping
+						if(lang!=null){
+							alternativeName.setLang(lang);
+							alternativeNames.add(alternativeName);
+							archivalInstitution.setAiAlternativeNames(alternativeNames);
+							archivalInstitution.setCountry(this.country);
+							archivalInstitution.setCountryId(this.country.getId()); //fix for current bad Hibernate mapping
+						}else{
+							log.error("ERROR: bad xml, invalid unittitle, reason: lang null or not found in server");
+							this.setAiArchivalInstitutionName(unittitle);
+							this.errors = new ArrayList<String>();
+							String message2 = getText("updateErrorFormatAL.error.unittitle.lang2");
+							if(message2!=null && message2.length()>0){
+								if(message2.contains("<")){
+									message2 = message2.replace("<","&#60;");
+								}if(message2.contains(">")){
+									message2 = message2.replace(">","&#62;");
+								}if(message2.contains("@")){
+									message2 = message2.replace("@","&#64;");
+								}
+							}
+							String message = "<p>&nbsp;</p>"+getText("updateErrorFormatAL.errors")  
+									+"<p>&nbsp;</p>"+getText("updateErrorFormatAL.error.unittitle.lang1")
+									+"<p>&nbsp;</p>"+unittitle
+									+ "<p>&nbsp;</p>"+ message2;
+							
+							this.errors.add(message);
+							validXML = false;
+						}
 						unittitle = "";
 						uLang = "";
 					}
@@ -1297,7 +1685,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 					}
 			}
 		}
-		return archivalInstitutions;
+		return (validXML)?archivalInstitutions:null;
 	}
 
 	public String download(){
