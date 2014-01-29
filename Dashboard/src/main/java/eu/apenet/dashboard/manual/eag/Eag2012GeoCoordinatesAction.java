@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -147,14 +148,14 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 											try {
 												this.setCo_lat(Double.parseDouble(latitude)); //Co_lat
 											} catch (Exception e) {
-												log.debug(strPath + " Error en " + this.getCo_name() + ": " + e.toString());
+												log.debug(strPath + " Error: " + this.getCo_name() + ": " + e.toString());
 											}
 										} else if (attributeNode.getNodeName().equalsIgnoreCase("longitude")) {
 											String longitude = attributeNode.getTextContent();
 											try {
 												this.setCo_lon(Double.parseDouble(longitude)); //Co_lon
 											} catch (Exception e) {
-												log.debug(strPath + " Error en " + this.getCo_name() + ": " + e.toString());
+												log.debug(strPath + " Error: " + this.getCo_name() + ": " + e.toString());
 											}
 										}
 									}// for L
@@ -230,6 +231,29 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 											}
 										}
 									}
+
+									double latTrunc = (double) Math.round(this.getCo_lat() * 10000000) / 10000000;
+									double longTrunc = (double) Math.round(this.getCo_lon() * 10000000) / 10000000;
+									
+									this.setCo_lat(latTrunc);
+									this.setCo_lon(longTrunc);
+									
+									if (this.getCo_lat() != 0.0 && this.getCo_lon() != 0.0) {
+										//do not loop blanks and compare actual with existing
+										List<Coordinates> coordinatesList = DAOFactory.instance().getCoordinatesDAO().getCoordinates();
+										if (coordinatesList != null && !coordinatesList.isEmpty()) {
+											Iterator<Coordinates> coordinatesIt = coordinatesList.iterator();
+											while (coordinatesIt.hasNext()) {
+												Coordinates coordinatesCurrent = coordinatesIt.next();
+												double currentLatTrunc = (double) Math.round(coordinatesCurrent.getLat() * 10000000) / 10000000;
+												double currentLongTrunc = (double) Math.round(coordinatesCurrent.getLon() * 10000000) / 10000000;
+												
+												if (this.getCo_lat()==currentLatTrunc && this.getCo_lon()==currentLongTrunc){
+													this.setCo_lon(this.getCo_lon()+0.00005);
+												}
+											}
+										}
+									}
 			
 									// Latitude (if exists) for the current archival institution/repository.
 									if (this.getCo_lat() != 0.0) {
@@ -245,6 +269,7 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 										JpaUtil.beginDatabaseTransaction();
 										coordinatesDAO.insertSimple(coordinates);
 										JpaUtil.commitDatabaseTransaction();
+										log.info("insert: " + coordinates.getNameInstitution() + " with (" + coordinates.getLat() + "," + coordinates.getLon() + ")");
 									} catch (Exception e) {
 										// Rollback current database transaction.
 										JpaUtil.rollbackDatabaseTransaction();
