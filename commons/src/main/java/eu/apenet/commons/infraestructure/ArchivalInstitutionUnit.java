@@ -223,7 +223,7 @@ public class ArchivalInstitutionUnit implements Comparable<ArchivalInstitutionUn
 	public static void retrieveFinalArchivalInstitutions(List<ArchivalInstitution> finalArchivalInstitutionList, Integer aiId, Boolean isGroup) {
 		if (isGroup) {
 			ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
-			List<ArchivalInstitution> archivalInstitutionDescendantList = archivalInstitutionDao.getArchivalInstitutionsByParentAiId(aiId);
+			List<ArchivalInstitution> archivalInstitutionDescendantList = archivalInstitutionDao.getArchivalInstitutionsByParentAiId(aiId, false);
             for (ArchivalInstitution anArchivalInstitutionDescendantList : archivalInstitutionDescendantList) {
                 if (anArchivalInstitutionDescendantList.isGroup())
                     retrieveFinalArchivalInstitutions(finalArchivalInstitutionList, anArchivalInstitutionDescendantList.getAiId(), true);

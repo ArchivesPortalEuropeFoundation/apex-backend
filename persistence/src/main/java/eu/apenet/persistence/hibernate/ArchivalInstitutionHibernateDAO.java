@@ -30,10 +30,10 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ArchivalInstitution> getArchivalInstitutionsByParentAiId(Integer parentAiId) {
+	public List<ArchivalInstitution> getArchivalInstitutionsByParentAiId(Integer parentAiId, boolean order) {
 		long startTime = System.currentTimeMillis();
 		List<ArchivalInstitution> results = new ArrayList<ArchivalInstitution>();
-		Criteria criteria = createArchivalInstitutionByParentAiIdCriteria(parentAiId);
+		Criteria criteria = createArchivalInstitutionByParentAiIdCriteria(parentAiId, order);
 		results = criteria.list();
 		long endTime = System.currentTimeMillis();
 		if (log.isDebugEnabled()) {
@@ -360,7 +360,7 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 		return results;
 	}
 
-	private Criteria createArchivalInstitutionByParentAiIdCriteria(Integer parentAiId) {
+	private Criteria createArchivalInstitutionByParentAiIdCriteria(Integer parentAiId, boolean order) {
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 
@@ -368,6 +368,10 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 			criteria.add(Restrictions.eq("archivalInstitution.parent.aiId", parentAiId.intValue()));
 		} else {
 			criteria.add(Restrictions.isNull("archivalInstitution.parent.aiId"));
+		}
+
+		if (order) {
+			criteria.addOrder(Order.asc("archivalInstitution.alorder"));
 		}
 
 		return criteria;

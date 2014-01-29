@@ -391,7 +391,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 						log.error("Exception checking institutions with ddbb to be replaced",e);
 					}
 				} else {
-					state = this.ERROR_LANG;
+					state = ERROR_LANG;
 				}
 			}
 		}
@@ -601,7 +601,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 							// this institution has any lang error and trans may be closed
 							state = 6;
 							log.debug("Institution has not lang");
-							validOperation = this.ERROR_LANG;//LANG_ERROR
+							validOperation = ERROR_LANG;//LANG_ERROR
 							JpaUtil.rollbackDatabaseTransaction();
 							this.setAiArchivalInstitutionName(aiName);
 							return validOperation;

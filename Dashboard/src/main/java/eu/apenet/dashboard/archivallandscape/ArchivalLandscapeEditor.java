@@ -267,7 +267,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 
 			List<ArchivalInstitution> archivalInstitutions = null;
 			if (archivalInstitutionTarget.getParentAiId() != null) {
-				archivalInstitutions = aiDao.getArchivalInstitutionsByParentAiId(archivalInstitutionTarget.getParentAiId());
+				archivalInstitutions = aiDao.getArchivalInstitutionsByParentAiId(archivalInstitutionTarget.getParentAiId(), false);
 			} else {
 				archivalInstitutions = aiDao.getRootArchivalInstitutionsByCountryId(archivalInstitutionTarget.getCountryId());
 			}

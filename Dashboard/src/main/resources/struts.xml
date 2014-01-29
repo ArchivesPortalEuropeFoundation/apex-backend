@@ -985,6 +985,12 @@
 			<result name="success" type="tiles">indexAdmin</result>
 			<result name="error" type="tiles">indexAdmin</result>
 		</action>
+
+        <!-- Temporary action for fix the AL order in production DDBB. -->
+        <action name="fixALOrderInDDBB" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeFixWrongDBAction">
+           <result name="success" type="tiles">indexAdmin</result>
+		   <result name="error" type="tiles">indexAdmin</result>
+        </action>
 		
 		<action name="downloadHarvesterErrorsXml" class="eu.apenet.dashboard.harvest.DownloadHarvesterErrorsAction" method="downloadXml">
             <result name="error" type="tiles">error</result>
