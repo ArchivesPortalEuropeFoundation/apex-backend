@@ -40,9 +40,7 @@
 				</div>
 			</xsl:for-each>
 			<xsl:if test="/ead:ead/ead:eadheader/ead:filedesc/ead:publicationstmt/ead:address">
-				<div class="defaultlayout">
 					<xsl:apply-templates select="/ead:ead/ead:eadheader/ead:filedesc/ead:publicationstmt/ead:address" mode="notsearchable"/>
-				</div>
 			</xsl:if>
 
 			<xsl:for-each select="/ead:ead/ead:eadheader/ead:filedesc/ead:seriesstmt/ead:titleproper">
