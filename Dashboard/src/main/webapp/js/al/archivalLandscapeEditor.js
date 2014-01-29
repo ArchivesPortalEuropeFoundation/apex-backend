@@ -169,8 +169,6 @@ function loadDownPart(node){
 				hideMoveButtons = true;
 				//change changeNodeDiv, moveUp and moveDown onclick event to show an alert for the received message
 				$("#changeNodeDiv").attr("onclick","showInformation('"+value.hasContentPublished+"',true);");
-				$("#moveUpDiv").attr("onclick","showInformation('"+value.hasContentPublished+"',true);");
-				$("#moveDownDiv").attr("onclick","showInformation('"+value.hasContentPublished+"',true);");
 			}else if(value.info){
 				showInformation(d.info);
 			}else if(value.error){
