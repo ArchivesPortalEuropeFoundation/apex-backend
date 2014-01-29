@@ -722,12 +722,6 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 								error = true;
 							}
 
-							// Checks if the element changed its position inside the group.
-							// disabled because to move institutions inside the same group is now allowed
-//							if (currentIngestedInstitution.getAlorder() != plainInstitution.getAlorder()) {
-//								log.debug("The brothers for the current institution (" + currentIngestedInstitution.getAiname() + ") hasn't the same brothers for the institution to ingest (" + plainInstitution.getAiname() + ").");
-//								error = true;
-//							}
 
 							if (error) {
 								valid = ERROR_CONTENT;

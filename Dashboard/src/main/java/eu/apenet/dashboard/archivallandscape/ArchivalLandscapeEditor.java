@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -97,7 +98,9 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 				log.debug("Archival landscape, delete process for id "+aiId+" has been launched.");
 				writer.write(deleteArchivalInstitution(aiId));
 			}else if(action.equals(GET_GROUPS)){
-				writer.write(getAllCountryGroups());
+				String aiId = getServletRequest().getParameter("aiId");
+				aiId = aiId.substring(aiId.indexOf("_")+1);
+				writer.write(getAllCountryGroups(new Integer(aiId)));
 			}else if(action.equals(CHANGE_GROUP)){
 				String aiId = getServletRequest().getParameter("aiId");
 				if(aiId!=null && aiId.contains("_")){
@@ -261,15 +264,6 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
 		ArchivalInstitution archivalInstitutionTarget = aiDao.getArchivalInstitution(aiId);
 		if(archivalInstitutionTarget!=null){
-			//if (ContentUtils.containsPublishedFiles(archivalInstitutionTarget)) {
-			
-			//In order to allow to move an institution with published content inside its own group this control will be removed
-//			if (archivalInstitutionTarget.isContainSearchableItems()) {
-//				// rollback
-//				JpaUtil.rollbackDatabaseTransaction();
-//				buffer.append(buildNode("error",getText("al.message.error.not.possible.move")));
-//				return buffer.toString();
-//			}
 
 			List<ArchivalInstitution> archivalInstitutions = null;
 			if (archivalInstitutionTarget.getParentAiId() != null) {
@@ -390,11 +384,17 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		return buildNode("newparents",parents.toString());
 	}
 
-	private String getAllCountryGroups() {
+	private String getAllCountryGroups(Integer aiId) {
 		StringBuilder institutions = new StringBuilder();
 		Integer couId = SecurityContext.get().getCountryId();
 		ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
-		List<ArchivalInstitution> archivalInstitutions = archivalInstitutionDAO.getArchivalInstitutionsGroupsByCountryId(couId);
+		//List<ArchivalInstitution> archivalInstitutions = new LinkedList<ArchivalInstitution>(archivalInstitutionDAO.getArchivalInstitutionsGroupsByCountryId(couId));
+		List<ArchivalInstitution> archivalInstitutions = new LinkedList<ArchivalInstitution>(archivalInstitutionDAO.getArchivalInstitutionsGroupsByCountryId(couId,false,true));
+		archivalInstitutions.addAll(new LinkedList<ArchivalInstitution>(archivalInstitutionDAO.getArchivalInstitutionsGroupsByCountryId(couId,true,false)));
+		ArchivalInstitution ai = null;
+		if(aiId!=null){
+			ai = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(aiId);
+		}
 		Iterator<ArchivalInstitution> it = archivalInstitutions.iterator();
 		institutions.append(START_ARRAY);
 		boolean first = true;
@@ -405,6 +405,10 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 				institutions.append(buildNode("name",aiTemp.getCountry().getCname()));
 				institutions.append(COMMA);
 				institutions.append(buildNode("key",aiTemp.getCountry().getCname()));
+				if(ai.getParent()==null){
+					institutions.append(COMMA);
+					institutions.append(buildNode("disabled","true"));
+				}
 				institutions.append(END_ARRAY);
 			}
 			institutions.append(COMMA);
@@ -413,6 +417,10 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			institutions.append(buildNode("name",aiTemp.getAiname()));
 			institutions.append(COMMA);
 			institutions.append(buildNode("key",aiTemp.getInternalAlId()));
+			if(ai!=null && (archivalGroupIsParentOf(ai,aiTemp) || aiTemp.getInternalAlId().equals(ai.getInternalAlId()) || (ai.getParent()!=null && aiTemp.getInternalAlId().equals(ai.getParent().getInternalAlId())))){
+				institutions.append(COMMA);
+				institutions.append(buildNode("disabled","true"));
+			}
 			institutions.append(END_ARRAY);
 		}
 		institutions.append(END_ARRAY);
