@@ -245,6 +245,7 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 											Iterator<Coordinates> coordinatesIt = coordinatesList.iterator();
 											while (coordinatesIt.hasNext()) {
 												Coordinates coordinatesCurrent = coordinatesIt.next();
+												System.out.println("Actual: " + coordinatesCurrent.getId());
 												double currentLatTrunc = (double) Math.round(coordinatesCurrent.getLat() * 10000000) / 10000000;
 												double currentLongTrunc = (double) Math.round(coordinatesCurrent.getLon() * 10000000) / 10000000;
 												
@@ -263,14 +264,13 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 									if (this.getCo_lon() != 0.0) {
 										coordinates.setLon(this.getCo_lon());
 									}
-									
-									
 			
 									// Try to add the new value to coordinates table.
 									try {
 										JpaUtil.beginDatabaseTransaction();
 										coordinatesDAO.insertSimple(coordinates);
 										JpaUtil.commitDatabaseTransaction();
+										log.info("insert: " + coordinates.getNameInstitution() + " with (" + coordinates.getLat() + "," + coordinates.getLon() + ")");
 									} catch (Exception e) {
 										// Rollback current database transaction.
 										JpaUtil.rollbackDatabaseTransaction();
