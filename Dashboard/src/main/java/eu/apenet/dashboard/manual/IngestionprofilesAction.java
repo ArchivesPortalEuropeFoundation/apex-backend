@@ -30,7 +30,11 @@ import org.apache.log4j.Logger;
  */
 public class IngestionprofilesAction extends AbstractInstitutionAction {
 
-    private static final String CREATIVECOMMONS_CPDM = "cpdm";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 292033613637062110L;
+	private static final String CREATIVECOMMONS_CPDM = "cpdm";
     private static final String CREATIVECOMMONS_CC0 = "cc0";
     private static final String CREATIVECOMMONS = "creativecommons";
     private static final String EUROPEANA = "europeana";
@@ -45,6 +49,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private Set<SelectItem> daoTypes = new LinkedHashSet<SelectItem>();
 
     //Collections for Europeana tab
+    private Set<SelectItem> conversiontypeSet = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> typeSet = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> yesNoSet = new LinkedHashSet<SelectItem>();
     private Set<SelectItem> inheritLanguageSet = new TreeSet<SelectItem>();
@@ -63,6 +68,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private String daoTypeCheck;
 
     //fields for Europeana tab components
+    private String conversiontype;
     private String textDataProvider;
     private String dataProviderCheck;
     private String europeanaDaoType;
@@ -82,8 +88,6 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
 
     @Override
     public String input() {
-        setUp();
-
         IngestionprofileDAO profileDAO = DAOFactory.instance().getIngestionprofileDAO();
         List<Ingestionprofile> queryResult = profileDAO.getIngestionprofiles(getAiId());
         if (queryResult != null && !queryResult.isEmpty()) {
@@ -100,12 +104,18 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
             Ingestionprofile ingestionprofile = profileDAO.findById(profilelistLong);
             profileName = ingestionprofile.getNameProfile();
             associatedFiletype = ingestionprofile.getFileType().toString();
-            uploadedFileAction = Integer.toString(ingestionprofile.getUploadAction().getId());
+            if (!convertToString(XmlType.EAD_FA.getIdentifier()).equals(associatedFiletype)
+                    && ingestionprofile.getUploadAction().getId() == 2) {
+                uploadedFileAction = "1";
+            } else {
+                uploadedFileAction = Integer.toString(ingestionprofile.getUploadAction().getId());
+            }
             existingFileAction = Integer.toString(ingestionprofile.getExistAction().getId());
             noEadidAction = Integer.toString(ingestionprofile.getNoeadidAction().getId());
             daoType = Integer.toString(ingestionprofile.getDaoType().getId());
             daoTypeCheck = Boolean.toString(ingestionprofile.getDaoTypeFromFile());
 
+            conversiontype = Boolean.toString(ingestionprofile.getEuropeanaConversionType());
             textDataProvider = ingestionprofile.getEuropeanaDataProvider();
             dataProviderCheck = Boolean.toString(ingestionprofile.getEuropeanaDataProviderFromFile());
             europeanaDaoType = Integer.toString(ingestionprofile.getEuropeanaDaoType());
@@ -125,6 +135,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
             inheritFileParent = Boolean.toString(ingestionprofile.getEuropeanaInheritElements());
             inheritOrigination = Boolean.toString(ingestionprofile.getEuropeanaInheritOrigin());
         }
+        setUp();
         return SUCCESS;
     }
 
@@ -146,6 +157,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         profile.setDaoType(IngestionprofileDefaultDaoType.getDaoType(daoType));
         profile.setDaoTypeFromFile(Boolean.parseBoolean(daoTypeCheck));
 
+        profile.setEuropeanaConversionType(Boolean.parseBoolean(conversiontype));
         profile.setEuropeanaDataProvider(textDataProvider);
         profile.setEuropeanaDataProviderFromFile(Boolean.parseBoolean(dataProviderCheck));
         if (europeanaDaoType == null || europeanaDaoType.isEmpty()) {
@@ -195,13 +207,14 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         ingestionprofiles.add(new SelectItem("-1", ""));
         profilelist = "-1";
         profileName = "";
-        associatedFiletype = XmlType.EAD_FA.getIdentifier() + "";
+        associatedFiletype = convertToString(XmlType.EAD_FA.getIdentifier());
         uploadedFileAction = "1";
         existingFileAction = "1";
         noEadidAction = "0";
         daoType = "0";
         daoTypeCheck = Boolean.toString(true);
 
+        conversiontype = "1";
         textDataProvider = getAiname();
         dataProviderCheck = Boolean.toString(true);
         europeanaDaoType = "";
@@ -228,7 +241,9 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         associatedFiletypes.add(new SelectItem(XmlType.EAD_HG.getIdentifier(), getText("content.message.hg")));
         associatedFiletypes.add(new SelectItem(XmlType.EAD_SG.getIdentifier(), getText("content.message.sg")));
         uploadedFileActions.add(new SelectItem("1", getText("ingestionprofiles.upload.convertValidatePublish")));
-        uploadedFileActions.add(new SelectItem("2", getText("ingestionprofiles.upload.convertValidatePublishEuropeana")));
+        if (convertToString(XmlType.EAD_FA.getIdentifier()).equals(associatedFiletype)) {
+            uploadedFileActions.add(new SelectItem("2", getText("ingestionprofiles.upload.convertValidatePublishEuropeana")));
+        }
         uploadedFileActions.add(new SelectItem("3", getText("ingestionprofiles.upload.convert")));
         uploadedFileActions.add(new SelectItem("4", getText("ingestionprofiles.upload.validate")));
         uploadedFileActions.add(new SelectItem("0", getText("ingestionprofiles.upload.nothing")));
@@ -244,6 +259,8 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         daoTypes.add(new SelectItem("0", getText("ingestionprofiles.dao.unspecified")));
 
         //Europeana preferences
+        conversiontypeSet.add(new SelectItem("true", "minimal conversion"));
+        conversiontypeSet.add(new SelectItem("false", "full conversion"));
         String[] isoLanguages = Locale.getISOLanguages();
         for (String language : isoLanguages) {
             String languageDescription = new Locale(language).getDisplayLanguage(Locale.ENGLISH);
@@ -325,6 +342,14 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
 
     public void setDaoTypes(Set<SelectItem> daoTypes) {
         this.daoTypes = daoTypes;
+    }
+
+    public Set<SelectItem> getConversiontypeSet() {
+        return conversiontypeSet;
+    }
+
+    public void setConversiontypeSet(Set<SelectItem> conversiontypeSet) {
+        this.conversiontypeSet = conversiontypeSet;
     }
 
     public Set<SelectItem> getTypeSet() {
@@ -439,6 +464,14 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         this.daoTypeCheck = daoTypeCheck;
     }
 
+    public String getConversiontype() {
+        return conversiontype;
+    }
+
+    public void setConversiontype(String conversiontype) {
+        this.conversiontype = conversiontype;
+    }
+
     public String getTextDataProvider() {
         return textDataProvider;
     }
@@ -534,5 +567,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     public void setInheritOrigination(String inheritOrigination) {
         this.inheritOrigination = inheritOrigination;
     }
-
+    private String convertToString(int identifier){
+    	return identifier + "";
+    }
 }

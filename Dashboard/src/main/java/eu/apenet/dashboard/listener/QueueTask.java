@@ -6,17 +6,21 @@ import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import eu.apenet.persistence.dao.UpFileDAO;
-import eu.apenet.persistence.vo.*;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
 import eu.apenet.commons.exceptions.APEnetException;
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.dao.ResumptionTokenDAO;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.QueueAction;
+import eu.apenet.persistence.vo.QueueItem;
+import eu.apenet.persistence.vo.QueuingState;
+import eu.apenet.persistence.vo.ResumptionToken;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class QueueTask implements Runnable {
@@ -91,7 +95,6 @@ public class QueueTask implements Runnable {
 		boolean itemsPublished = false;
 		QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-        UpFileDAO upFileDAO = DAOFactory.instance().getUpFileDAO();
 		boolean hasItems = true;
 		while (hasItems && !scheduler.isShutdown() && System.currentTimeMillis() < endTime) {
 			int queueId = -1;
@@ -118,7 +121,7 @@ public class QueueTask implements Runnable {
 					hasItems = true;
 				}
 			} catch (Throwable e) {
-				LOGGER.error("queueId: " + queueId + " - " + e.getMessage(), e);
+				LOGGER.error("queueId: " + queueId + " - " + APEnetUtilities.generateThrowableLog(e));
 				JpaUtil.rollbackDatabaseTransaction();
 				/*
 				 * it is unexcepted that this error occurred. put priority on 0,
@@ -130,7 +133,7 @@ public class QueueTask implements Runnable {
 					if (queueItem.getPriority() > 0) {
 						queueItem.setPriority(0);
 					}
-					queueItem.setErrors(new Date() + ". Error: " + e.getMessage() + "-" + e.getCause());
+					queueItem.setErrors(new Date() + ". Error: " + APEnetUtilities.generateThrowableLog(e));
 					queueItemDAO.updateSimple(queueItem);
 				}
 				JpaUtil.commitDatabaseTransaction();

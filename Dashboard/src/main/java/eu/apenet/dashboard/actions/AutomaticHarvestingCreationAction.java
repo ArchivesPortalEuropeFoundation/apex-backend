@@ -1,8 +1,12 @@
 package eu.apenet.dashboard.actions;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 
@@ -42,8 +46,8 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
     private Integer oaiprofiles;
     private List<ArchivalInstitutionOaiPmh> archivalInstitutionOaiPmhs;
     private String url;
-    private List<SelectItem> sets = new ArrayList<SelectItem>();;
-    private List<SelectItem> metadataFormats = new ArrayList<SelectItem>();;
+    private List<SelectItem> sets = new ArrayList<SelectItem>();
+    private List<SelectItem> metadataFormats = new ArrayList<SelectItem>();
     private List<Ingestionprofile> ingestionProfiles;
     private List<Interval> intervals;
     private String selectedSet;
@@ -139,6 +143,7 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
                 setIntervalHarvest(archivalInstitutionOaiPmh.getIntervalHarvesting().toString());
                 setSelectedActivation(Boolean.toString(archivalInstitutionOaiPmh.isEnabled()));
                 setSelectedWeekend(Boolean.toString(archivalInstitutionOaiPmh.isHarvestOnlyWeekend()));
+                setLastHarvestDate(new SimpleDateFormat("dd/MM/yyyy").format(archivalInstitutionOaiPmh.getLastHarvesting()));
             }
             return SUCCESS;
         }
@@ -173,6 +178,14 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
                         archivalInstitutionOaiPmh.setEnabled(false);
                     }
                 }
+                if(getLastHarvestDate() != null) {
+                    try {
+                        Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).parse(getLastHarvestDate());
+                        archivalInstitutionOaiPmh.setLastHarvesting(date);
+                    } catch (Exception e) {
+                        archivalInstitutionOaiPmh.setLastHarvesting(null);
+                    }
+                }
             } else {
                 int archivalInstitutionId = SecurityContext.get().getSelectedInstitution().getId();
                 String intervalHarvest = getIntervalHarvest();
@@ -183,6 +196,14 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
                 }
                 if(getSelectedActivation() != null) {
                     archivalInstitutionOaiPmh.setEnabled(Boolean.parseBoolean(getSelectedActivation()));
+                }
+                if(getLastHarvestDate() != null) {
+                    try {
+                        Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).parse(getLastHarvestDate());
+                        archivalInstitutionOaiPmh.setLastHarvesting(date);
+                    } catch (Exception e) {
+                        archivalInstitutionOaiPmh.setLastHarvesting(null);
+                    }
                 }
             }
             JpaUtil.beginDatabaseTransaction();

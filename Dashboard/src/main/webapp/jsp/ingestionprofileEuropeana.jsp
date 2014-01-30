@@ -31,8 +31,14 @@
 
 <div id="europeanaTabContent">
     <table>
-        <tr>
-            <td class="inputLabel"><s:label key="ead2ese.label.dataprovider" for="dataProvider" />:</td>
+        <tr id="conversionMode">
+            <td class="inputLabel"><s:label key="ead2ese.label.choose.conversion.type" for="conversionType" />:</td>
+            <td>
+                <s:radio id="radioConversiontype" name="conversiontype" list="conversiontypeSet" listKey="value" listValue="content" />
+            </td>
+        </tr>
+        <tr id="trDataProvider">
+            <td class="inputLabel"><s:label key="ead2ese.label.dataprovider" for="textDataProvider" />*:</td>
             <td>
                 <s:textfield id="textDataProvider" name="textDataProvider" maxLength="100"/>
                 <s:checkbox name="dataProviderCheck" id="dataProviderCheck" />
@@ -40,7 +46,7 @@
             </td>
         </tr>
         <tr id="trSelectType">
-            <td class="inputLabel"><s:label key="ead2ese.label.type" for="selectType" />:</td>
+            <td class="inputLabel"><s:label key="ead2ese.label.type" for="edmDaoType" />*:</td>
             <td><s:select id="edmDaoType" name="europeanaDaoType" list="typeSet" listKey="value" listValue="content" required="true" />
                 <s:checkbox name="europeanaDaoTypeCheck" id="daoTypeCheck" />
                 <s:label key="ead2ese.label.type.file" for="europeanaDaoType"/>
@@ -48,7 +54,7 @@
         </tr>
         <tr id="trLanguage">
             <td class="inputLabel">
-                <s:label key="ead2ese.label.language.material" for="language" />:
+                <s:label key="ead2ese.label.language.material" for="languageSelection" />*:
             </td>
             <td class="tdVertical">
                 <s:select name="languageSelection" id="languageselection" listKey="value" listValue="content" list="languages" multiple="true" required="true" />
@@ -69,7 +75,7 @@
             <c:set var="europeanaInvisible" value="style=\"display: none;\""></c:set>
         </s:else>
         <tr id="hiddenEuropeanaLicense"  ${europeanaInvisible}>
-            <td class="inputLabel"><s:label key="ead2ese.label.license.europeana" for="europeanaLicense" />:</td>
+            <td class="inputLabel"><s:label key="ead2ese.label.license.europeana" for="europeanaLicense" />*:</td>
             <td><s:select id="europeanaLicense" name="europeanaLicense" list="europeanaLicenseSet" listKey="value" listValue="content"/><s:fielderror fieldName="europeanaLicense"/>
             </td>
         </tr>

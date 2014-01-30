@@ -173,7 +173,7 @@ public class ContentUtils {
 			boolean hasEads = false;
 			Iterator<ArchivalInstitution> childIterator = archivalInstitution.getChildArchivalInstitutions().iterator();
 			while (!hasEads && childIterator.hasNext()){
-				hasEads = hasEads || containsPublishedFiles(childIterator.next());
+				hasEads = hasEads || containsEads(childIterator.next());
 			}
 			return hasEads;
 		}else {
@@ -340,7 +340,7 @@ public class ContentUtils {
 			}else if (!child.isContainSearchableItems() && parent.isContainSearchableItems()){
 				boolean containSearchableItems = false;
 				for (ArchivalInstitution tempChild: parent.getChildArchivalInstitutions()){
-					if (tempChild.getAiId() != child.getAiId()){
+					if (tempChild != null && tempChild.getAiId() != child.getAiId()){
 						containSearchableItems = containSearchableItems || tempChild.isContainSearchableItems();
 					}
 				}

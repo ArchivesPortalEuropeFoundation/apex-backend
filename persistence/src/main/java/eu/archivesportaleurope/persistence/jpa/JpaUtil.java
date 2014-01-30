@@ -16,8 +16,9 @@ import eu.apenet.persistence.exception.PersistenceException;
  *
  */
 public class JpaUtil {
+	private static final int MAX_ERROR_LINES = 2;
 
-    private static final Logger log = Logger.getLogger(JpaUtil.class);
+    private static final Logger LOGGER = Logger.getLogger(JpaUtil.class);
 
 	private static EntityManagerFactory entityManagerFactory;
 	
@@ -52,8 +53,8 @@ public class JpaUtil {
 	public static EntityManager getEntityManager() {
 		EntityManager entityManager = threadEntityManager.get();
 		if (entityManager == null) {
-			if (log.isDebugEnabled()) {
-				log.debug("Opening new Session for this thread.");
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Opening new Session for this thread.");
 			}
 			entityManager = entityManagerFactory.createEntityManager();
 			threadEntityManager.set(entityManager);
@@ -69,8 +70,8 @@ public class JpaUtil {
 		EntityManager entityManager = threadEntityManager.get();
 		threadEntityManager.remove();
 		if (entityManager != null && entityManager.isOpen()) {
-			if (log.isDebugEnabled()) {
-				log.debug("Closing Session of this thread.");
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Closing Session of this thread.");
 			}
 			entityManager.close();
 		}
@@ -84,8 +85,8 @@ public class JpaUtil {
 		EntityTransaction tx = threadTransaction.get();
 
 		if (tx == null) {
-			if (log.isDebugEnabled()) {
-				log.debug("Starting new database transaction in this thread.");
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Starting new database transaction in this thread.");
 			}
 			tx = getEntityManager().getTransaction();
 			threadTransaction.set(tx);
@@ -101,14 +102,14 @@ public class JpaUtil {
 		EntityTransaction tx = threadTransaction.get();
 		try {
 			if (tx != null &&  !tx.getRollbackOnly()) {
-				if (log.isDebugEnabled()) {
-					log.debug("Committing database transaction of this thread.");
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("Committing database transaction of this thread.");
 				}
 				tx.commit();
 			}
 			threadTransaction.remove();
 		}catch (Exception ex) {
-			log.error(ex.getMessage(), ex);
+			LOGGER.error(generateThrowableLog(ex));
 			rollbackDatabaseTransaction();
 			throw new PersistenceException(ex);
 		}
@@ -121,8 +122,8 @@ public class JpaUtil {
 		EntityTransaction tx = threadTransaction.get();
 		threadTransaction.remove();
 		if (tx != null) {
-			if (log.isDebugEnabled()) {
-				log.debug("Trying to rollback database transaction of this thread.");
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Trying to rollback database transaction of this thread.");
 			}
 			tx.rollback();
 		}
@@ -134,5 +135,31 @@ public class JpaUtil {
 	public static boolean noTransaction(){
 		return threadTransaction.get() == null;
 	}
-
+    public static String generateThrowableLog(Throwable throwable){
+    	String result = "";
+    	result+= throwable.getClass().getName()+ " " +throwable.getMessage()  + "\n";
+    	result+= generateThrowableStackTraceLog(throwable.getStackTrace());
+    	result+=generateThrowableCauseLog(throwable.getCause(), 0);
+    	return result;
+    }
+    private static String generateThrowableCauseLog(Throwable throwable, int depth){
+    	String result = "";
+    	if (throwable != null){
+    		result+= "Caused by: " +  throwable.getClass().getName()+ " " + throwable.getMessage()  +"\n";
+    		result+= generateThrowableStackTraceLog(throwable.getStackTrace());
+    		result+=generateThrowableCauseLog(throwable.getCause(), depth++);
+    	}
+    	return result;
+    }
+    private static String generateThrowableStackTraceLog(StackTraceElement[] elements){
+    	String result = "";
+    	for (int i = 0; i < MAX_ERROR_LINES && i < elements.length ;i++){
+    		StackTraceElement element = elements[i];
+    		result += "\t" + element.getClassName() + "." + element.getMethodName() + "(" + element.getFileName() + ":" + element.getLineNumber() + ")\n" ;
+    	}
+    	if (elements.length > MAX_ERROR_LINES){
+    		result += "\t... " + (elements.length -MAX_ERROR_LINES) + " more\n";
+    	}
+    	return result;
+    }
 }

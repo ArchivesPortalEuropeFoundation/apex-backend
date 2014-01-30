@@ -558,7 +558,7 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		while(!error && deleteIt.hasNext()){
 			ArchivalInstitution targetToBeDeleted = deleteIt.next();
 			if(!targetToBeDeleted.isContainSearchableItems()){
-				log.debug("Deleting institution: "+targetToBeDeleted.getInternalAlId());
+				log.debug("Deleting institution: "+targetToBeDeleted.getInternalAlId() + " " + targetToBeDeleted.getAiname() + " " + targetToBeDeleted.getAiId());
 				Set<AiAlternativeName> alternativeNames = targetToBeDeleted.getAiAlternativeNames();
 				if(alternativeNames!=null && alternativeNames.size()>0){
 					log.debug("Deleting alternative names...");
@@ -976,11 +976,11 @@ public class ArchivalLandscapeManager extends AbstractAction{
 			XMLStreamReader r = factory.createXMLStreamReader(new FileReader(archivalInstitutionFile));
 			archivalInstitutions = getXMLArchivalInstitutionLevel(r);
 		} catch (FileNotFoundException e) {
-			log.error("File not found :: "+archivalInstitutionFile.getAbsolutePath(), e.getCause());
+			log.error("File not found :: "+archivalInstitutionFile.getAbsolutePath() + APEnetUtilities.generateThrowableLog(e));
 		} catch (XMLStreamException e) {
-			log.error("Archival Landscape reading exception", e.getCause());
+			log.error("Archival Landscape reading exception: " + APEnetUtilities.generateThrowableLog(e));
 		} catch (Exception e){
-			log.error("Exception: ", e.getCause());
+			log.error("Exception: " + APEnetUtilities.generateThrowableLog(e));
 		}
 		return archivalInstitutions;
 	}

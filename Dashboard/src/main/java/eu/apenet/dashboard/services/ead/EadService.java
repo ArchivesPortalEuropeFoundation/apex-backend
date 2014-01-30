@@ -9,15 +9,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import eu.apenet.dashboard.manual.ExistingFilesChecker;
-import eu.apenet.persistence.vo.*;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.exceptions.APEnetRuntimeException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.manual.ExistingFilesChecker;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.ead.xml.XmlEadParser;
 import eu.apenet.dashboard.utils.ContentUtils;
@@ -29,8 +27,23 @@ import eu.apenet.persistence.dao.EseStateDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.Ese;
+import eu.apenet.persistence.vo.EseState;
+import eu.apenet.persistence.vo.EuropeanaState;
+import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.HoldingsGuide;
+import eu.apenet.persistence.vo.IngestionprofileDefaultDaoType;
+import eu.apenet.persistence.vo.IngestionprofileDefaultExistingFileAction;
+import eu.apenet.persistence.vo.IngestionprofileDefaultNoEadidAction;
+import eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction;
+import eu.apenet.persistence.vo.QueueAction;
+import eu.apenet.persistence.vo.QueueItem;
+import eu.apenet.persistence.vo.QueuingState;
+import eu.apenet.persistence.vo.SourceGuide;
+import eu.apenet.persistence.vo.UpFile;
+import eu.apenet.persistence.vo.ValidatedState;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
-import java.util.Map;
 
 public class EadService {
 
@@ -220,14 +233,14 @@ public class EadService {
 			QueueItem queueItem = ead.getQueueItem();
 			ead.setQueuing(QueuingState.NO);
 			eadDAO.updateSimple(ead);
-			deleteFromQueueInternal(queueItem);
+			deleteFromQueueInternal(queueItem, true);
 		}
 		JpaUtil.commitDatabaseTransaction();
 	}
 
-	private static void deleteFromQueueInternal(QueueItem queueItem) throws IOException {
+	private static void deleteFromQueueInternal(QueueItem queueItem, boolean deleteUpFile) throws IOException {
 		UpFile upFile = queueItem.getUpFile();
-		if (upFile != null) {
+		if (upFile != null && deleteUpFile) {
 			String filename = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath() + upFile.getFilename();
 			File file = new File(filename);
 			File aiDir = file.getParentFile();
@@ -237,7 +250,7 @@ public class EadService {
 			}
 		}
 		DAOFactory.instance().getQueueItemDAO().deleteSimple(queueItem);
-		if (upFile != null) {
+		if (upFile != null && deleteUpFile) {
 			DAOFactory.instance().getUpFileDAO().deleteSimple(upFile);
 		}
 	}
@@ -275,6 +288,10 @@ public class EadService {
 
 	public static void deleteFromQueue(QueueItem queueItem) throws Exception {
 		SecurityContext.get().checkAuthorizedToManageQueue();
+		deleteFromQueue(queueItem, true);
+	}
+	
+	private static void deleteFromQueue(QueueItem queueItem, boolean deleteUpFile) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		JpaUtil.beginDatabaseTransaction();
 		Ead ead = queueItem.getEad();
@@ -282,7 +299,7 @@ public class EadService {
 			ead.setQueuing(QueuingState.NO);
 			eadDAO.updateSimple(ead);
 		}
-		deleteFromQueueInternal(queueItem);
+		deleteFromQueueInternal(queueItem, deleteUpFile);
 		JpaUtil.commitDatabaseTransaction();
 	}
 
@@ -356,8 +373,8 @@ public class EadService {
                         queueItem.setUpFile(upFile);
                     }
                     String err = "eadid: " + ead.getEadid() + " - id: " + ead.getId() + " - type: " + xmlType.getName();
-                    LOGGER.error("Error occured: " + err, e);
-                    queueItem.setErrors(new Date() + " - " + err + ". Error: " + e.getMessage() + " - " + e.getCause());
+                    LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+                    queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
                     queueItem.setPriority(0);
                     queueItemDAO.store(queueItem);
                 }
@@ -407,8 +424,8 @@ public class EadService {
                     queueItemDAO.delete(queueItem);
                 } catch (Exception e) {
                     String err = "eadid: " + ead.getEadid() + " - id: " + ead.getId() + " - type: " + xmlType.getName();
-                    LOGGER.error("Error occured: " + err, e);
-                    queueItem.setErrors(new Date() + err + ". Error: " + e.getMessage() + "-" + e.getCause());
+                    LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+                    queueItem.setErrors(new Date() + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
                     ead.setQueuing(QueuingState.ERROR);
                     eadDAO.store(ead);
                     queueItem.setPriority(0);
@@ -427,11 +444,15 @@ public class EadService {
             //About EADID
             UpFile upFile = queueItem.getUpFile();
             LOGGER.info("Process queue item: " + queueItem.getId() + " " + queueItem.getAction() + ", upFile id: " + queueItem.getUpFileId() + "(" + xmlType.getName() + ")");
-
-            String eadid = ExistingFilesChecker.extractAttributeFromEad(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath() + upFile.getFilename(), "eadheader/eadid", null, true).trim();
-            if(StringUtils.isEmpty(eadid)) {
+            String upFilePath = upFile.getPath() + upFile.getFilename();
+            String eadid = ExistingFilesChecker.extractAttributeFromEad(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFilePath, "eadheader/eadid", null, true).trim();
+            if(StringUtils.isEmpty(eadid) || "empty".equals(eadid) ||  "error".equals(eadid)) {
                 if(ingestionprofileDefaultNoEadidAction.isRemove()) {
-                    deleteUpFile(upFile);
+                	LOGGER.info("File will be removed, because it does not have eadid: " + upFilePath);
+                	deleteFromQueue(queueItem, true);
+                }else {
+                	LOGGER.info("File will be processed manually later, because it does not have eadid: " + upFilePath);
+                	deleteFromQueue(queueItem, false);
                 }
             } else {
                 boolean continueTask = true;
@@ -463,14 +484,15 @@ public class EadService {
                                 queueItem.setUpFile(upFile);
                             }
                             String err = "eadid: " + ead.getEadid() + " - id: " + ead.getId() + " - type: " + xmlType.getName();
-                            LOGGER.error("Error occured: " + err, e);
-                            queueItem.setErrors(new Date() + " - " + err + ". Error: " + e.getMessage() + " - " + e.getCause());
+                            LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+                            queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
                             queueItem.setPriority(0);
                             queueItemDAO.store(queueItem);
                             continueTask = false;
                         }
                     } else if(ingestionprofileDefaultExistingFileAction.isKeep()) {
-                        deleteUpFile(upFile);
+                    	LOGGER.info("File will be removed, because there is already one with the same eadid: " + upFilePath);
+                    	deleteFromQueue(queueItem, true);
                         continueTask = false;
                     }
                 } else {
@@ -516,8 +538,8 @@ public class EadService {
                         eadDAO.store(newEad);
 
                         String err = "eadid: " + newEad.getEadid() + " - id: " + newEad.getId() + " - type: " + xmlType.getName();
-                        LOGGER.error("Error occured: " + err, e);
-                        queueItem.setErrors(new Date() + " - " + err + ". Error: " + e.getMessage() + " - " + e.getCause());
+                        LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+                        queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
                         queueItem.setPriority(0);
                         queueItemDAO.store(queueItem);
                     }
@@ -529,15 +551,6 @@ public class EadService {
 		return queueAction;
 	}
 
-    private static void deleteUpFile(UpFile upFile) throws IOException {
-        JpaUtil.beginDatabaseTransaction();
-        DAOFactory.instance().getUpFileDAO().deleteSimple(upFile);
-        JpaUtil.commitDatabaseTransaction();
-        ContentUtils.deleteFile(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath() + upFile.getFilename());
-        File uploadDir = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFile.getPath());
-        if (uploadDir.listFiles().length == 0)
-            FileUtils.forceDelete(uploadDir);
-    }
 
     private static Ead doesFileExist(UpFile upFile, String eadid, XmlType xmlType) {
         return DAOFactory.instance().getEadDAO().getEadByEadid(xmlType.getClazz(), upFile.getAiId(), eadid);
@@ -671,7 +684,7 @@ public class EadService {
 			QueueItem queueItem = ead.getQueueItem();
 			ead.setQueuing(QueuingState.NO);
 			eadDAO.updateSimple(ead);
-			deleteFromQueueInternal(queueItem);
+			deleteFromQueueInternal(queueItem, true);
 			eads.remove(size - 1);
 		}
 		JpaUtil.commitDatabaseTransaction();
@@ -779,6 +792,7 @@ public class EadService {
     	config.setContextInformationPrefix(preferences.getProperty(QueueItem.HIERARCHY_PREFIX));
     	config.setInheritElementsFromFileLevel("true".equals(preferences.getProperty(QueueItem.INHERIT_FILE)));
     	config.setInheritOrigination("true".equals(preferences.getProperty(QueueItem.INHERIT_ORIGINATION)));
+        config.setMinimalConversion("true".equals(preferences.getProperty(QueueItem.CONVERSION_TYPE)));
     	return config.getProperties();
     }
 }

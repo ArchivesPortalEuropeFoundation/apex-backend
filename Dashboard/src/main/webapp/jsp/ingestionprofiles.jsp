@@ -41,7 +41,7 @@
                 <tr>
                     <td>
                         <s:label key="ingestionprofiles.associatedFiletype" for="associatedFiletypeCb" />
-                        <s:select id="associatedFiletypeCb" name="associatedFiletype" list="associatedFiletypes" listKey="value" listValue="content" />
+                        <s:select id="associatedFiletypeCb" name="associatedFiletype" list="associatedFiletypes" listKey="value" listValue="content" onchange="changeDefaultOptionSet();" />
                     </td>
                 </tr>
             </s:if>
@@ -69,7 +69,7 @@
             <table id="saveButtonPanel">
                 <tr>
                     <td>
-                        <input type="button" id="ingestionprofilesSave" value="<s:property value='getText("ingestionprofiles.save")' />" onclick="validateAndSave('<s:property value="getText('ingestionprofiles.error.profilename')" />', '<s:property value="getText('ingestionprofiles.error.edmDaoType')" />', '<s:property value="getText('ingestionprofiles.error.language')" />');" />
+                        <input type="button" id="ingestionprofilesSave" value="<s:property value='getText("ingestionprofiles.save")' />" onclick="validateAndSave('<s:property value="getText('ingestionprofiles.error.profilename')" />', '<s:property value="getText('ingestionprofiles.error.dataprovider')" />', '<s:property value="getText('ingestionprofiles.error.edmDaoType')" />', '<s:property value="getText('ingestionprofiles.error.language')" />', '<s:property value="getText('ingestionprofiles.error.europeanalicense')" />');" />
                         <s:submit id="ingestionprofilesCancel" key="ingestionprofiles.cancel" action="cancelIngestionprofileEditing" />
                     </td>
                 </tr>

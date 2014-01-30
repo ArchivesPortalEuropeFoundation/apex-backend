@@ -1,10 +1,13 @@
 package eu.apenet.persistence.hibernate;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -22,14 +25,6 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
-//import org.hibernate.FetchMode;
-//import org.hibernate.Query;
-//import org.hibernate.criterion.Projections;
-//import org.hibernate.transform.Transformers;
-
-/**
- * @author Patricia
- */
 
 public class CountryHibernateDAO extends AbstractHibernateDAO<Country, Integer> implements CountryDAO
 {
@@ -157,5 +152,22 @@ private final Logger log = Logger.getLogger(getClass());
 	}
 	
 
+	@Override
+	public List<Country> getCountries(List<Integer> countryIds) {
+		if (countryIds != null && countryIds.size() > 0){
+			CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+			CriteriaQuery<Country> cq = criteriaBuilder.createQuery(Country.class);
+			Root<Country> from = cq.from(Country.class);
+			List<Predicate> whereClause = new ArrayList<Predicate>();
+			for (Integer countryId : countryIds) {
+				whereClause.add(criteriaBuilder.equal(from.get("id"), countryId));
+			}
+			cq.where(criteriaBuilder.or(whereClause.toArray(new Predicate[0])));
+			cq.orderBy(criteriaBuilder.asc(from.get("cname")));
+			return getEntityManager().createQuery(cq).getResultList();
+		}else {
+			return new ArrayList<Country>();
+		}
 
+	}
 }

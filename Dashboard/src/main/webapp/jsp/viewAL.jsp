@@ -62,17 +62,25 @@
 	              							
 	        				//Function to load the EAG information in the right part of the page using AJAX
 	              			onActivate: function(node) {
+	              				$("#directory-column-right-content").empty();
+        						$("#directory-column-right-content").append("<div id='waitingImage'><img src='images/waiting.gif'/></div>");
 	        					if( node.data.url ) {
-	        						$("#directory-column-right-content").empty();
-	        						$("#directory-column-right-content").append("<div id='waitingImage'><img src='images/waiting.gif'/></div>");
 	        						$("#directory-column-right-content").load(node.data.url, function() {
 	        							initEagDetails();
 	        						});
+	        					}else{   //An empty group is selected
+	        						$("#waitingImage").fadeOut("fast", function(){
+	        						  if(node.data.isFolder){
+	        							  // It's an empty group
+	        							  $("#directory-column-right-content").append("<div class='arrow_box'><p><s:text name="directory.message.noInstitutionSelected" /></p>"); 
+	        						  }else{
+	        							  //The institution hasn't an EAG
+	        							  $("#directory-column-right-content").append("<div class='arrow_box'><p><s:text name="directory.message.InstitutionSelectedWithoutEag" /></p>");
+	        						  }	  
+	        						});	
 	        					}
-	        				}
-	              							
-						});
-								
+	        				}					
+						});		
 					});	
 				</script>
 			

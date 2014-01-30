@@ -21,7 +21,11 @@
 			<table>
 				<tr>
 					<td class="expand-unitid">
-						<xsl:value-of select="ape:highlight(ead:did/ead:unitid[@type='call number'], 'unitid')" disable-output-escaping="yes" />	
+						<xsl:for-each select="ead:did/ead:unitid[@type='call number']">
+							<xsl:if test="position() = 1">
+							<xsl:value-of select="ape:highlight(., 'unitid')" disable-output-escaping="yes" />
+							</xsl:if>
+						</xsl:for-each>
 					</td>
 					<td class="expand-unittitle">
 							<xsl:for-each select="ead:did/ead:unittitle">
