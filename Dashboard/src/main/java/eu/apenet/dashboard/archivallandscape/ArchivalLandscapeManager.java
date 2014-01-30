@@ -461,6 +461,8 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 						this.errors = new ArrayList<String>();
 					}
 					this.errors.add(getText("updateErrorFormatAL.error.identifiers"));
+					StringBuilder errorsSB = buildErrorsJSON();
+					writer.append(errorsSB);
 				}else{
 					writer.append("\"newtree\":");
 					writer.append(parseArchivalInstitutionsToJSON(archivalInstitutions));
@@ -1069,6 +1071,10 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					this.addInstitutionsWithContentNotPublished(targetToBeDeleted.getAiname());
 				}
 			}else if(!targetToBeDeleted.isGroup()){
+				if(this.institutionsWithContentNotPublished==null){
+					this.institutionsWithContentNotPublished = new HashSet<String>();
+				}
+				this.institutionsWithContentNotPublished.add(targetToBeDeleted.getAiname());
 				log.debug("Detected institution with content indexed, so it could not be deleted. Marked operation like invalid.");
 				error = true; //flag used to check an error for rollback
 			}
