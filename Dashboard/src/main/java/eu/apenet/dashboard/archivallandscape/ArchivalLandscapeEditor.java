@@ -7,8 +7,6 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -28,6 +26,7 @@ import eu.apenet.persistence.vo.AiAlternativeName;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.Lang;
+
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
@@ -49,26 +48,19 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 	
 	private String countryId;
 	private List<Lang> langList;
-
-	private void buildBreadcrumb() {
-		super.buildBreadcrumbs();
-		this.addBreadcrumb(null,getText("breadcrumb.section.editArchivalLandscape"));
-	}
-
+	
 	public List<Lang> getLangList(){
 		return this.langList;
 	}
-
+	
 	@Override
 	public String execute() throws Exception {
-		buildBreadcrumb();
 		SecurityContext securityContext = SecurityContext.get();
 		Integer couId = securityContext.getCountryId();
 		this.countryId = couId.toString();
 		this.langList = DAOFactory.instance().getLangDAO().findAll();
 		Collections.sort(this.langList);
 		log.info("Archival Landscape editor for country: "+couId);
-		buildBreadcrumbs();
 		return SUCCESS;
 	}
 	
@@ -98,9 +90,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 				log.debug("Archival landscape, delete process for id "+aiId+" has been launched.");
 				writer.write(deleteArchivalInstitution(aiId));
 			}else if(action.equals(GET_GROUPS)){
-				String aiId = getServletRequest().getParameter("aiId");
-				aiId = aiId.substring(aiId.indexOf("_")+1);
-				writer.write(getAllCountryGroups(new Integer(aiId)));
+				writer.write(getAllCountryGroups());
 			}else if(action.equals(CHANGE_GROUP)){
 				String aiId = getServletRequest().getParameter("aiId");
 				if(aiId!=null && aiId.contains("_")){
@@ -264,6 +254,12 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
 		ArchivalInstitution archivalInstitutionTarget = aiDao.getArchivalInstitution(aiId);
 		if(archivalInstitutionTarget!=null){
+			if (ContentUtils.containsPublishedFiles(archivalInstitutionTarget)) {
+				// rollback
+				JpaUtil.rollbackDatabaseTransaction();
+				buffer.append(buildNode("error",getText("al.message.error.not.possible.move")));
+				return buffer.toString();
+			}
 
 			List<ArchivalInstitution> archivalInstitutions = null;
 			if (archivalInstitutionTarget.getParentAiId() != null) {
@@ -317,7 +313,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					int aloOrder = 0;
 					int oldOrder = 0;
 					if(parentArchivalInstitution!=null){
-						Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(parentArchivalInstitution.getChildArchivalInstitutions());
+						Set<ArchivalInstitution> children = parentArchivalInstitution.getChildArchivalInstitutions();
 						if(children!=null){
 							aloOrder = children.size();
 							oldOrder = archivalInstitutionTarget.getAlorder();
@@ -334,7 +330,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					archivalInstitutionTarget.setParent(parentArchivalInstitution);
 					List<ArchivalInstitution> siblings = null;
 					if(lastParent!=null){
-						Set<ArchivalInstitution> tempSiblings = new LinkedHashSet<ArchivalInstitution>(lastParent.getChildArchivalInstitutions());
+						Set<ArchivalInstitution> tempSiblings = lastParent.getChildArchivalInstitutions();
 						if(tempSiblings!=null){
 							siblings = new ArrayList<ArchivalInstitution>(tempSiblings);
 						}
@@ -345,20 +341,14 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 						Iterator<ArchivalInstitution> itSiblings = siblings.iterator();
 						while(itSiblings.hasNext()){
 							ArchivalInstitution aiTemp = itSiblings.next();
-							if(oldOrder<aiTemp.getAlorder() && aiTemp.getAiId()!=archivalInstitutionTarget.getAiId()){
+							if(oldOrder<aiTemp.getAlorder() && aiTemp.getAiId()!=archivalInstitutionTarget.getAiId() && aiTemp.getAlorder()>archivalInstitutionTarget.getAlorder()){
 								aiTemp.setAlorder(aiTemp.getAlorder()-1);
 								aiDao.updateSimple(aiTemp);
 							}
 						}
 					}
 					aiDao.updateSimple(archivalInstitutionTarget);
-					buffer.append("[");
 					buffer.append(buildNode("info",getText("al.message.groupchanged")));
-//					if(parentArchivalInstitution!=null){
-						buffer.append(COMMA);
-						buffer.append(buildParentsNode(parentArchivalInstitution));
-//					}
-					buffer.append("]");
 				}
 			}else{
 				buffer.append(buildNode("error",getText("al.message.grouptargetisparent"))); 
@@ -369,32 +359,11 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		return buffer.toString();
 	}
 
-	private String buildParentsNode(ArchivalInstitution parentArchivalInstitution) {
-		StringBuffer parents = new StringBuffer();
-		if(parentArchivalInstitution!=null){
-			parents.append("aigroup_"+parentArchivalInstitution.getAiId());
-			while(parentArchivalInstitution.getParentAiId()!=null){
-				parentArchivalInstitution = parentArchivalInstitution.getParent();
-				parents.append(",");
-				parents.append("aigroup_"+parentArchivalInstitution.getAiId());
-			}
-			parents.append(",");
-		}
-		parents.append("country_"+SecurityContext.get().getCountryId());
-		return buildNode("newparents",parents.toString());
-	}
-
-	private String getAllCountryGroups(Integer aiId) {
+	private String getAllCountryGroups() {
 		StringBuilder institutions = new StringBuilder();
 		Integer couId = SecurityContext.get().getCountryId();
 		ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
-		//List<ArchivalInstitution> archivalInstitutions = new LinkedList<ArchivalInstitution>(archivalInstitutionDAO.getArchivalInstitutionsGroupsByCountryId(couId));
-		List<ArchivalInstitution> archivalInstitutions = new LinkedList<ArchivalInstitution>(archivalInstitutionDAO.getArchivalInstitutionsGroupsByCountryId(couId,false,true));
-		archivalInstitutions.addAll(new LinkedList<ArchivalInstitution>(archivalInstitutionDAO.getArchivalInstitutionsGroupsByCountryId(couId,true,false)));
-		ArchivalInstitution ai = null;
-		if(aiId!=null){
-			ai = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(aiId);
-		}
+		List<ArchivalInstitution> archivalInstitutions = archivalInstitutionDAO.getArchivalInstitutionsGroupsByCountryId(couId);
 		Iterator<ArchivalInstitution> it = archivalInstitutions.iterator();
 		institutions.append(START_ARRAY);
 		boolean first = true;
@@ -405,10 +374,6 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 				institutions.append(buildNode("name",aiTemp.getCountry().getCname()));
 				institutions.append(COMMA);
 				institutions.append(buildNode("key",aiTemp.getCountry().getCname()));
-				if(ai.getParent()==null){
-					institutions.append(COMMA);
-					institutions.append(buildNode("disabled","true"));
-				}
 				institutions.append(END_ARRAY);
 			}
 			institutions.append(COMMA);
@@ -417,10 +382,6 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			institutions.append(buildNode("name",aiTemp.getAiname()));
 			institutions.append(COMMA);
 			institutions.append(buildNode("key",aiTemp.getInternalAlId()));
-			if(ai!=null && (archivalGroupIsParentOf(ai,aiTemp) || aiTemp.getInternalAlId().equals(ai.getInternalAlId()) || (ai.getParent()!=null && aiTemp.getInternalAlId().equals(ai.getParent().getInternalAlId())))){
-				institutions.append(COMMA);
-				institutions.append(buildNode("disabled","true"));
-			}
 			institutions.append(END_ARRAY);
 		}
 		institutions.append(END_ARRAY);
@@ -439,7 +400,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 				ArchivalInstitution parent = ai.getParent();
 				Iterator<ArchivalInstitution> childrenIt = null; 
 				if(parent!=null){
-					Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(parent.getChildArchivalInstitutions());
+					Set<ArchivalInstitution> children = parent.getChildArchivalInstitutions();
 					childrenIt = children.iterator();
 				}else{ //parent is country
 					List<ArchivalInstitution> children = aiDao.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(), true);
@@ -447,35 +408,32 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 				}
 				while(childrenIt.hasNext()){
 					ArchivalInstitution childArchivalInstitution = childrenIt.next();
-					if (childArchivalInstitution != null) {
-						if(childArchivalInstitution.getAlorder()>oldOrder){ //reduce one
-							childArchivalInstitution.setAlorder(childArchivalInstitution.getAlorder()-1);
-							aiDao.updateSimple(childArchivalInstitution); //updateSimple
-						}
+					if(childArchivalInstitution.getAlorder()>oldOrder){ //reduce one
+						childArchivalInstitution.setAlorder(childArchivalInstitution.getAlorder()-1);
+						aiDao.updateSimple(childArchivalInstitution); //updateSimple
 					}
 				}
 				boolean rollback = false;
 				if(!ContentUtils.containsEads(ai)){
 					if(ai.isGroup()){
-						Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(ai.getChildArchivalInstitutions());
+						Set<ArchivalInstitution> children = ai.getChildArchivalInstitutions();
 						if(children!=null && children.size()>0){
-							// #981: Check if childrens has content.
-							if (ai.isContainSearchableItems()) {
-								messenger.append(buildNode("error",getText("al.message.grouphaschildren")));
-								rollback = true;
-							}
+							messenger.append(buildNode("error",getText("al.message.grouphaschildren")));
+							rollback = true;
 						}
 					}
 					if(!rollback){
-						// Recover each child to delete the EAG file.
-						if (ai.isGroup() 
-								&& ai.getChildArchivalInstitutions() != null
-								&& !ai.getChildArchivalInstitutions().isEmpty()) {
-							this.deleteAIChild(ai);
-						} else {
-							ArchivalLandscape.deleteContent(ai);
+						AiAlternativeNameDAO aiAnDao = DAOFactory.instance().getAiAlternativeNameDAO();
+						List<AiAlternativeName> alternativeNames = aiAnDao.findByAIId(ai);
+						if(alternativeNames!=null){
+							Iterator<AiAlternativeName> alternativeNamesIterator = alternativeNames.iterator();
+							while(alternativeNamesIterator.hasNext()){
+								aiAnDao.deleteSimple(alternativeNamesIterator.next()); //deleteSimple alternative name
+							}
 						}
-//						aiDao.deleteSimple(ai); //deleteSimple institution
+
+
+						aiDao.deleteSimple(ai); //deleteSimple institution
 						messenger.append(buildNode("info",getText("al.message.institutiondeleted")));
 					}
 				}else{
@@ -489,25 +447,6 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 				}
 		}
 		return messenger.toString();
-	}
-
-	/**
-	 * Method to delete each ai.
-	 *
-	 * @param ai
-	 */
-	private void deleteAIChild(ArchivalInstitution ai) {
-		if (ai.isGroup()) {
-			Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(ai.getChildArchivalInstitutions());
-			if (children != null && !children.isEmpty()) {
-				Iterator<ArchivalInstitution> childrenIt = children.iterator();
-				while (childrenIt.hasNext()) {
-					this.deleteAIChild(childrenIt.next());
-				}
-			}
-			
-		}
-		ArchivalLandscape.deleteContent(ai);
 	}
 
 	private String createArchivalInstitution(String name,String father,String type,String lang){
@@ -524,7 +463,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					ArchivalInstitution parentAI = aiDao.getArchivalInstitution(new Integer(father));
 					if(parentAI!=null){
 						archivalInstitution.setParent(parentAI);
-						Set<ArchivalInstitution> parentChildren = new LinkedHashSet<ArchivalInstitution>(parentAI.getChildArchivalInstitutions());
+						Set<ArchivalInstitution> parentChildren = parentAI.getChildArchivalInstitutions();
 						if(parentChildren!=null){
 							archivalInstitution.setAlorder(parentChildren.size());
 						}
@@ -795,7 +734,9 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			ArchivalInstitution ai = archivalInstitutionDAO.getArchivalInstitution(aiId);
 			AiAlternativeName alternativeName = aiAlternativesNamesDAO.findByAIIdandLang(ai,language);
 
-			if(alternativeName!=null && alternativeName.getPrimaryName() != null && !alternativeName.getPrimaryName()){
+			if(alternativeName!=null
+					&& alternativeName.getPrimaryName() != null
+					&& !alternativeName.getPrimaryName()){
 				if(alternativeName!=null && alternativeName.getAiAName()!=null){ 
 					//name exists, so it's needed a deleteSimple operation
 					alternativeName.setAiAName(name);
@@ -803,7 +744,9 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					buffer.append(buildNode("info",getText("al.message.alternativenameremoved")));
 				}
 			}else{
-				if (alternativeName!=null && alternativeName.getPrimaryName() != null && alternativeName.getPrimaryName()) {
+				if (alternativeName!=null
+						&& alternativeName.getPrimaryName() != null
+						&& alternativeName.getPrimaryName()) {
 					buffer.append(buildNode("error",getText("al.message.cannotremovefirstalternativename")));
 				} else {
 					buffer.append(buildNode("error",getText("al.message.badalternativename")));

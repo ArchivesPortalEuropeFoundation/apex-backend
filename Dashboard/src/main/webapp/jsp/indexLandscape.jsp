@@ -28,7 +28,6 @@
                     </c:if>
 
                  </ul>
-                 <div style="width:100%; clear:both;padding:10px;"> </div>
              </div>
 
 

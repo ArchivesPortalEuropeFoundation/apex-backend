@@ -51,7 +51,7 @@ function clickExitAction(){
 	location.href="removeInvalidEAG2012.action";
 }
 
-function clickSaveAction(form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, error9, message, institutionName) {
+function clickSaveAction(form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, message, institutionName) {
 
 	// Check if almost one of the authorized name of the institution is the same as the institution's name.
 	var nameOfInstitution = checkNameOfInstitution(error8, institutionName);
@@ -79,11 +79,7 @@ function clickSaveAction(form, text1, text2, error1, error2, error3, error4, err
 		alert(error3);
 		return;
 	}
-    if (jsonDataContact===true){
-		  alert(error9);
-		  return;
-	}
-	
+
 	// Check fill mandatory fields in tab "access and services".
 	var jsonDataAccessAndServices =  checkAllAccessAndServicesTabs(text1,message);
 	if (!jsonDataAccessAndServices) {
@@ -617,15 +613,15 @@ function checkAllContactTabs(text1, message) {
 		if(jsonData.substring(jsonData.length-1)=='}'){
 			jsonData += ",";
 		}
+
 		jsonData += "'contactTable_" + i + "':";
+
 		var check = checkContactTab("_" + i, text1, message);
+
 		if (!check){
 			return false;
 		}
-        if (check===true){
-			return true;
-		}
-		
+
 		jsonData += check;
 	}
 
@@ -859,7 +855,7 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 			}
 			jsonData += "'"+$(this).attr("id")+"' : '"+$.trim($(this).attr("value"))+"'";
 		});
-        if(contactPAMandatoryElements.length>0 && j == 0){
+                if(contactPAMandatoryElements.length>0 && j == 0){
 			validationArray.push(postalAddress[j],contactPAMandatoryElements);
 		}
                 
@@ -881,13 +877,7 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 			$("table#contactTable" + currentTab + " #"+validationArray[i]+" #" + array[j]).after(pFieldError);
 		}
 	}
-    if (contactMandatoryElements.length !=0){   
-    	var position1 = $.inArray("textNameOfRepository",contactMandatoryElements);
-    	var position2 = $.inArray("selectRoleOfRepository",contactMandatoryElements);
-        if(position1!=-1 && position2!=-1){
-        	return true;
-        }
-    }
+
 	if (contactMandatoryElements.length != 0 || validationArray.length != 0 || failWebpageCheck) {
 		return false;
 	}
@@ -1814,7 +1804,7 @@ function loadRepositories(text1, text2, number) {
 	}
 }
 
-function addRepositories(text1, text2, text3, text4, text5, text6, text7, property1, property2, property3, property4, property5){
+function addRepositories(text1, text2, text3, text4, text5, text6, text7, property1, property2, property3, property4){
 	var counter = $("table[id^='contactTable_']").length;
 	var clone = $("table[id^='yourInstitutionTable_"+counter+"']").clone();
 	clone = "<table id='"+("yourInstitutionTable_"+(counter+1))+"'>"+clone.html()+"</table>";
@@ -1965,7 +1955,7 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7, proper
 		
 	}
 
-	// add name of repository to contact tab and the button Delete repository.
+	// add name of repository to contact tab.
 	$("table#contactTable_"+(counter+1)+" tr#trVisitorsAddressLabel").before("<tr>"+
 			"<td id=\"tdNameOfRepository\">"+
 				"<label for=\"textNameOfRepository\">"+text3+"<span class=\"required\">*</span>:</label>"+
@@ -1982,7 +1972,7 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7, proper
 					"<option value=\"branch\">"+text6+"</option>"+
 					"<option value=\"interim\">"+text7+"</option>"+
 				"</select>"+
-			"</td></tr>"+"<tr>"+"<td colspan=\"2\">"+"<input type=\"button\" id=\"buttonDeleteRepository\" value=\""+ property5 +"\" onclick=\"deleteRepository();\">"+"</td></tr>");
+			"</td></tr>");
 
 	//access and services
 	var opening = $("#textYIOpeningTimes").val();
@@ -2048,57 +2038,6 @@ function addRepositories(text1, text2, text3, text4, text5, text6, text7, proper
 	$("a#tab-contact").parent().trigger('click');
 	//current tab
 	$("table#yourInstitutionTable_"+(counter+1)+" input#buttonYourInstitutionTabCheck").click(clickYourInstitutionAction);
-}
-function deleteRepository(){
-	var currentTab = getCurrentTab();
-	var counter = currentTab.substring(1);
-	//Delete the selected repository
-	var numberRepositories = $("table[id^='contactTable_']").length;
-	var localId = "yourInstitutionTable_"+counter;
-	
-	$("li a#tab_"+localId).parent().remove();
-	$("table#contactTable_" + counter).remove();
-	$("table#accessAndServicesTable_" + counter).remove();    
-	$("table#descriptionTable_" + counter).remove(); 
-	if (numberRepositories==2){ //there is one repository
-		$("li a#tab_yourInstitutionTable_1").parent().remove();
-		$("ul#eag2012TabsContainer li a").each(function(){
-			var id = $(this).parent().attr("id");
-			if(id.indexOf("tab-yourInstitution")>-1 || id.indexOf("tab-identity")>-1 || id.indexOf("tab-control")>-1 || id.indexOf("tab-relations")>-1){
-				$(this).removeClass("eag2012disabled");
-			}
-		});
-		hideAndShow("tab-", "tab-yourInstitution");
-		$("table#yourInstitutionTable_1").show();
-	}else{
-		  var localId = "yourInstitutionTable_"+1;
-		  $("table#"+localId).show();
-		  $("ul#eag2012TabsContainer a[href='#tab-contact']").trigger('click');
-		  $("a#tab_"+localId).trigger('click');
-		  $("a#tab-contact").parent().trigger('click');
-			//current tab
-		  $("table#yourInstitutionTable_"+(counter+1)+" input#buttonYourInstitutionTabCheck").click(clickYourInstitutionAction);
-		  
-		  if (counter<numberRepositories){
-	        // There isn't the last repository, so I have to change the identifiers 
-		    $("ul#eag2012tabs_institution_tabs li a").each(function(i){
-                var newId = "tab_yourInstitutionTable_"+(i+1);
-                $(this).attr("id",newId);
-		    });
-		    $("table[id^='contactTable_']").each(function(i){
-		    	var newId = "contactTable_"+(i+1);
-		    	 $(this).attr("id",newId);
-		    });
-		    $("table[id^='accessAndServicesTable_']").each(function(i){
-		    	var newId = "accessAndServicesTable_"+(i+1);
-		    	 $(this).attr("id",newId);
-		    });
-		    $("table[id^='descriptionTable_']").each(function(i){
-		    	var newId = "descriptionTable_"+(i+1);
-		    	 $(this).attr("id",newId);
-		    });
-	    }
-  }
 }
 function getCurrentTab(){
 	var currentTab = "";

@@ -142,7 +142,7 @@ public class GenerateEadidResponseJSONAction extends ActionSupport implements Se
         	
         }
         else{
-        	if (neweadid.trim().isEmpty())
+        	if (neweadid.isEmpty())
     		{
     			buffer.append(START_ITEM);
     	    	buffer.append(MESSAGE + SEPARATOR + getText("content.message.EadidEmpty") + SEPARATOR);

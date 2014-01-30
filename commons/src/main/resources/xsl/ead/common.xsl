@@ -18,25 +18,16 @@
 		<xsl:value-of select="ape:highlight(., 'scopecontent')" disable-output-escaping="yes" /><xsl:text> </xsl:text>
 	</xsl:template>
 	<xsl:template match="text()" mode="title">
-		<xsl:value-of select="fn:normalize-space(ape:highlight(., 'title'))" disable-output-escaping="yes" />
+		<xsl:value-of select="ape:highlight(., 'title')" disable-output-escaping="yes" />
 	</xsl:template>
 	<xsl:template match="text()" mode="other">
 		<xsl:value-of select="ape:highlight(., 'other')" disable-output-escaping="yes" /><xsl:text> </xsl:text>
-	</xsl:template>
-	<xsl:template match="text()" mode="otherwithoutwhitespace">
-		<xsl:value-of select="ape:highlight(., 'otherwithoutwhitespace')" disable-output-escaping="yes" />
-	</xsl:template>
-	<xsl:template match="text()" mode="otherwithcoma">
-		<xsl:value-of select="fn:normalize-space(ape:highlight(., 'otherwithcoma'))" disable-output-escaping="yes" />
-		<xsl:if test="position() != last()">
-		   <xsl:text>, </xsl:text>
-		</xsl:if>
 	</xsl:template>
 	<xsl:template match="text()" mode="alterdate">
 		<xsl:value-of select="ape:highlight(., 'alterdate')" disable-output-escaping="yes" />
 	</xsl:template>	
 	<xsl:template match="text()" mode="notsearchable">
-		<xsl:value-of select="." /><xsl:text> </xsl:text>
+		<xsl:value-of select="." />
 	</xsl:template>	
 	<xsl:template match="ead:unitdate" mode="#all">
 		<xsl:apply-templates mode="#current" /><xsl:text> </xsl:text>
@@ -491,12 +482,12 @@
 		<xsl:param name="type" />
 		<xsl:choose>
 			<xsl:when test="$type = 'head'">
-				<th class="thEntry">
+				<th>
 					<xsl:apply-templates mode="#current" />
 				</th>
 			</xsl:when>
 			<xsl:otherwise>
-				<td class="tdEntry">
+				<td>
 					<xsl:apply-templates mode="#current" />
 				</td>
 			</xsl:otherwise>
@@ -549,7 +540,6 @@
 		</p>
 	</xsl:template>
 	<xsl:template match="ead:address" mode="#all">
-	  <div class="defaultlayout">	
 		<xsl:text> (</xsl:text>
 		<xsl:variable name="addressCount" select="count(ead:addressline)"></xsl:variable>
 		<xsl:for-each select="ead:addressline">
@@ -559,9 +549,9 @@
 			</xsl:if>
 		</xsl:for-each>
 		<xsl:text>)</xsl:text>
-	  </div>	
 	</xsl:template>
-	<xsl:template name="langmaterial">
+	
+		<xsl:template name="langmaterial">
 		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.language')" />
 		</h2>
@@ -588,18 +578,11 @@
 			<xsl:value-of select="ape:resource('eadcontent.physloc')" />
 		</h2>
 		<div class="ead-content">
-		  <xsl:for-each select="ead:physloc">
-		    <xsl:if test="./text()">
-			 	<xsl:if test="./@label" >
-				    <xsl:value-of select="./@label" />
-				    <xsl:text>: </xsl:text>
-			    </xsl:if>
-			  <xsl:apply-templates mode="otherwithoutwhitespace"/>
-			  <xsl:if test="position() != last() and not(./text()[position()+1=last()])">
-			      <xsl:text>, </xsl:text>
-			  </xsl:if>
-			 </xsl:if> 
-		   </xsl:for-each>
+			<xsl:if test="ead:physloc/@label">
+			    <xsl:value-of select="ead:physloc/@label" />
+			    <xsl:text>: </xsl:text>
+			</xsl:if>
+			<xsl:apply-templates select="ead:physloc"  mode="other"/>
 		</div>
 	</xsl:template>
 	<xsl:template name="materialspec">
@@ -618,7 +601,7 @@
 		</h2>
 		<div class="ead-content">
 			<xsl:for-each select="ead:physfacet">
-				<xsl:apply-templates  mode="otherwithoutwhitespace" />
+				<xsl:apply-templates  mode="other" />
 				<xsl:if test="position() != last()">
 					<xsl:text>, </xsl:text>
 				</xsl:if>
@@ -630,12 +613,7 @@
 			<xsl:value-of select="ape:resource('eadcontent.extent')" />
 		</h2>
 		<div class="ead-content">
-			<xsl:for-each select="ead:extent">
-			  <xsl:apply-templates mode="otherwithoutwhitespace"/>
-			   <xsl:if test="position() != last()">
-			      <xsl:text>, </xsl:text>
-			  </xsl:if>
-		   </xsl:for-each>	 
+			<xsl:apply-templates select="ead:extent"  mode="other"/>
 		</div>
 	</xsl:template>
 	<xsl:template name="genreform">
@@ -644,7 +622,7 @@
 		</h2>
 		<div class="ead-content">
 			<xsl:for-each select="ead:genreform">
-				<xsl:apply-templates  mode="otherwithoutwhitespace"/>
+				<xsl:apply-templates  mode="other"/>
 				<xsl:if test="position() != last()">
 					<xsl:text>, </xsl:text>
 				</xsl:if>
@@ -656,12 +634,7 @@
 			<xsl:value-of select="ape:resource('eadcontent.dimensions')" />
 		</h2>
 		<div class="ead-content">
-			<xsl:for-each select="ead:dimensions">
-				<xsl:apply-templates  mode="otherwithoutwhitespace"/>
-				<xsl:if test="position() != last()">
-					<xsl:text>, </xsl:text>
-				</xsl:if>
-			</xsl:for-each>
+			<xsl:apply-templates select="ead:dimensions"  mode="other"/>
 		</div>
 	</xsl:template>
     <xsl:template name="physdescText">
@@ -669,7 +642,7 @@
 			<xsl:value-of select="ape:resource('eadcontent.physdesc')" />
 		</h2>
 		<div class="ead-content">
-			<xsl:apply-templates mode="otherwithcoma"/>    
+			<xsl:apply-templates  mode="other"/>
 		</div>
 	</xsl:template>
 	<xsl:template name="note">
@@ -753,7 +726,6 @@
 		</h2>
 		<div class="ead-content">
 			<xsl:if test="ead:origination[@label='pre']">
-				<br/>
 				<p>
 					<b>
 						<xsl:value-of select="ape:resource('eadcontent.origination.pre')" />
@@ -766,7 +738,6 @@
 				</p>
 			</xsl:if>
 			<xsl:if test="ead:origination[@label='final']">
-				<br/>
 				<p>
 					<b>
 						<xsl:value-of select="ape:resource('eadcontent.origination.final')" />
@@ -779,7 +750,6 @@
 				</p>
 			</xsl:if>
 			<xsl:if test="ead:origination[@label='organisational unit']">
-				<br />
 				<p>
 					<b>
 						<xsl:value-of select="ape:resource('eadcontent.origination.orgunit')" />
@@ -793,7 +763,6 @@
 			</xsl:if>
 			<xsl:if
 				test="ead:origination[@label!='pre'] and ead:origination[@label!='final'] and ead:origination[@label!='organisational unit']">
-				<br />
 				<p>
 					<xsl:for-each select="ead:origination">
 						<xsl:if test="./@label!='pre' and ./@label!='final' and ./@label!='organisational unit'">
@@ -808,7 +777,6 @@
 				</p>
 			</xsl:if>
             <xsl:if test="ead:origination[not(@label)]">
-                <br/>
                 <p>
                     <xsl:for-each select="ead:origination[not(@label)]">
                         <xsl:apply-templates mode="other"/>

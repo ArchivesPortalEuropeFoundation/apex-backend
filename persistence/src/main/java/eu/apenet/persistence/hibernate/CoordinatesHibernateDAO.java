@@ -1,12 +1,7 @@
 package eu.apenet.persistence.hibernate;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
-
-import javax.persistence.Id;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
@@ -14,7 +9,6 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.Order;
 
 import eu.apenet.persistence.dao.CoordinatesDAO;
 import eu.apenet.persistence.vo.ArchivalInstitution;
@@ -46,14 +40,12 @@ public class CoordinatesHibernateDAO extends AbstractHibernateDAO<Coordinates, I
 	/**
 	 * get all repositories with all directions to build Europe landscape
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Coordinates> getCoordinates() {
 		long startTime = System.currentTimeMillis();
 		List<Coordinates> results = null;
 		Criteria criteria = getSession().createCriteria(getPersistentClass(), "coordinates");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		criteria.addOrder(Order.asc("coordinates.id"));	
 		results = criteria.list();
 		long endTime = System.currentTimeMillis();
 		if (log.isDebugEnabled()) {

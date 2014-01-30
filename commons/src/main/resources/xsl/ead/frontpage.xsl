@@ -40,7 +40,9 @@
 				</div>
 			</xsl:for-each>
 			<xsl:if test="/ead:ead/ead:eadheader/ead:filedesc/ead:publicationstmt/ead:address">
+				<div class="defaultlayout">
 					<xsl:apply-templates select="/ead:ead/ead:eadheader/ead:filedesc/ead:publicationstmt/ead:address" mode="notsearchable"/>
+				</div>
 			</xsl:if>
 
 			<xsl:for-each select="/ead:ead/ead:eadheader/ead:filedesc/ead:seriesstmt/ead:titleproper">
@@ -81,7 +83,7 @@
 							<xsl:if test="ead:materialspec">
 								<xsl:call-template name="materialspec" />
 							</xsl:if>
-							<xsl:if test="ead:physdesc">
+							<xsl:for-each select="ead:physdesc">
 								<xsl:if test="ead:physfacet">
 									<xsl:call-template name="physfacet" />
 								</xsl:if>
@@ -94,7 +96,7 @@
 								<xsl:if test="ead:dimensions">
 									<xsl:call-template name="dimensions" />
 								</xsl:if>
-							</xsl:if>	
+							</xsl:for-each>
 							<xsl:if test="ead:dao">
 								<xsl:call-template name="dao" />
 							</xsl:if>

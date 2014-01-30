@@ -84,10 +84,9 @@ function sendAlternativeNames(){
 	var text = $("input#target").val();
 	$.post("launchALActions.action",{"action":"create_alternative_name","aiId":aiId,"lang":lang,"name":text},function(d){
 		if(d.info){
-//			showInformation(d.info);
+			showInformation(d.info);
 			hideAll();
 			dynatree.reload();
-			displayNode(activeNode,d.info,true);
 		}else if(d.error){
 			showInformation(d.error,true);
 		}
@@ -169,6 +168,8 @@ function loadDownPart(node){
 				hideMoveButtons = true;
 				//change changeNodeDiv, moveUp and moveDown onclick event to show an alert for the received message
 				$("#changeNodeDiv").attr("onclick","showInformation('"+value.hasContentPublished+"',true);");
+				$("#moveUpDiv").attr("onclick","showInformation('"+value.hasContentPublished+"',true);");
+				$("#moveDownDiv").attr("onclick","showInformation('"+value.hasContentPublished+"',true);");
 			}else if(value.info){
 				showInformation(d.info);
 			}else if(value.error){
@@ -192,19 +193,15 @@ function appendNode(){
 	var language = $("#selectedLang option:selected").val();
 	if(fatherId.indexOf("_")!=-1){
 		$.post("launchALActions.action",{"action":"create","name":nodeName,"father":fatherId,"type":nodeType,"lang":language},function(e){
-			var message = "";
 			if(e.info){
-//				showInformation(e.info);
-				message = e.info;
+				showInformation(e.info);
 				dynatree.reload();
-				displayNode(activeNode,message,true);
 				hideAll();
 			}else if(e.error){
 				showInformation(e.error,true);
 			}else{
 				cleanInformation();
 				dynatree.reload();
-				displayNode(activeNode,message,true);
 				hideAll();
 			}
 		});
@@ -214,16 +211,13 @@ function appendNode(){
 function deleteNode(){
 	var dynatree = $("#archivalLandscapeEditorUp").dynatree("getTree");
 	var activeNode = dynatree.getActiveNode();
-	var parent = activeNode.getParent();
 	var aiId = activeNode.data.key;
 	if(aiId.indexOf("_")!=-1){
 		aiId = aiId.substring(aiId.indexOf("_")+1);
 		$.post("launchALActions.action",{"action":"delete","aiId":aiId},function(e){
 			var error = false;
-			var message = "";
 			if(e.info){
-//				showInformation(e.info);
-				message = e.info;
+				showInformation(e.info);
 				hideAll();
 			}else if(e.error){
 				showInformation(e.error,true);
@@ -233,44 +227,31 @@ function deleteNode(){
 			}
 			if(!error){
 				dynatree.reload();
-				displayNode(parent,message,true);
-				//showInformation(message);
 			}
 		});
 	}
 }
 
 function getGroups(){
-	var dynatree = $("#archivalLandscapeEditorUp").dynatree("getTree");
-	var activeNode = dynatree.getActiveNode();
-	var activeId = "";
-	if(activeNode){
-		activeId = activeNode.data.key;
-	}
-	$.post("launchALActions.action",{"action":"get_groups","aiId":activeId},function(d){
+	$.post("launchALActions.action",{"action":"get_groups"},function(d){
+		$("div .secondFilterSelect").remove();
 		var groupSelect = "<div class=\"secondFilterSelect\"><select id=\"groupSelect\">";
 		var groups = 0;
 		$.each(d,function(k,group){
 			optionStart = "";
 			optionEnd = "";
-			optionMiddle = "";
 			$.each(group,function(k2,v){
 				if(v.key){
-					optionStart = "<option value=\""+v.key+"\"";
+					optionStart = "<option value=\""+v.key+"\">";
 				}else if(v.name){
 					optionEnd = v.name+"</option>";
-				}else if(v.disabled){
-					optionMiddle = " disabled=\"disabled\"";
 				}
 			});
-			groupSelect += optionStart+optionMiddle+">"+optionEnd;
+			groupSelect += optionStart+optionEnd;
 			groups++;
 		});
 		groupSelect+= "</select></div>";
 		if(groups>0){
-			$("div .secondFilterSelect").each(function(){
-				$(this).remove();
-			});
 			$("#divGroupNodesContainer").show();
 			$("#changeNodeDiv").before(groupSelect);
 			$("div .secondFilterSelect").show();
@@ -288,9 +269,9 @@ function moveUp(){
 		if (d.error) {
 			showInformation(d.error,true);
 		} else {
-			hideAll();
+			showInformation(d.info);
 			dynatree.reload();
-			displayNode(activeNode,d.info,true); //in this case old parents are the same, so reuse that information
+			hideAll();
 		}
 	});
 }
@@ -303,66 +284,13 @@ function moveDown(){
 		if (d.error) {
 			showInformation(d.error,true);
 		} else{
-			hideAll();
+			if(d.info){
+				showInformation(d.info);
+			}
 			dynatree.reload();
-			displayNode(activeNode,d.info,true); //in this case old parents are the same, so reuse that information
+			hideAll();
 		}
 	});
-}
-
-function displayNode(node,message,extra){
-	var parents = new Array();
-	if(node.getParent()!=null){
-		//get parent structure
-		var currentNode = node;
-		var i = 0;
-		if(extra){
-			parents[i++] = currentNode;
-		}
-		do{
-			currentNode = currentNode.getParent();
-			parents[i++] = currentNode;
-		}while(currentNode.getParent()!=null);
-		//use parent structure to display target node
-		expandParents(parents,i-2,message,node); //review i
-	}
-}
-
-function expandParents(parents,i,message,targetNode){
-	var dynatree = $("#archivalLandscapeEditorUp").dynatree("getTree");
-	if(i>=0){
-		var key = "";
-		//could be used for dynatree_node[] and string[] keys
-		if(parents[i].data){
-			key = parents[i].data.key;
-		}else{
-			key = parents[i];
-		}
-		var target = dynatree.getNodeByKey(key);
-		if(!target){
-			setTimeout(function(){expandParents(parents,i,message,targetNode);},40);
-		}else{
-			target.expand(true);
-			expandParents(parents,i-1,message,targetNode);
-		}
-	}else{
-//		launchFinalAction();
-		setTimeout(function(){launchFinalAction(targetNode.data.key,message);},40);
-	}
-}
-
-function launchFinalAction(key,message){
-	//targetNode.select(true);
-	var dynatree = $("#archivalLandscapeEditorUp").dynatree("getTree");
-	var target = dynatree.getNodeByKey(key);
-	if(!target){
-		setTimeout(function(){launchFinalAction(key,message);},40);
-	}else{
-		target.activate(true);
-		//target.select(true);
-		//targetNode.activate(true);
-		showInformation(message);
-	}
 }
 
 function getAlternativeNames(){
@@ -405,39 +333,12 @@ function changeGroup(){
 	var currentId = activeNode.data.key;
 	var groupSelect = $("#groupSelect option:selected").val();
 	$.post("launchALActions.action",{"action":"change_group","aiId":currentId,"groupSelected":groupSelect},function(d){
-		var message = "";
-		var expanded = false;
-		$.each(d,function(k,v){
-			if(v.info){
-//				showInformation(d.info);
-				message = v.info;
-				dynatree.reload();
-				hideAll();
-			}else if(v.error){
-				showInformation(d.error,true);
-			}else if(v.newparents){ //get parent structure
-				var parents = new Array();
-				var found;
-				if ($.browser.msie && $.browser.version == 8){   //internet explorer 8
-					found = v.newparents.indexOf(",");
-				}else{
-					found = $.inArray(",",v.newparents);
-				}
-				if(found != -1){
-					parents = v.newparents.split(",");
-				}else{
-					parents[0] = v.newparents;
-				}
-				var i = parents.length-1;
-				if(i>=0){
-					expandParents(parents,i,message,activeNode); //review i
-					expanded = true;
-				}
-			}
-		});
-		
-		if(!expanded){
-			showInformation(message);
+		if(d.info){
+			showInformation(d.info);
+			dynatree.reload();
+			hideAll();
+		}else if(d.error){
+			showInformation(d.error,true);
 		}
 	});
 }
@@ -445,6 +346,7 @@ function changeGroup(){
 function recoverAlternativeName() {
 	var lang = $("select#selectedLangTranslations option:selected").val();
 	var text = "";
+
 	$("#alternativeNames option").each(function() {
 		if ($(this).val() == lang) {
 			text = $(this).text();
@@ -466,10 +368,9 @@ function deleteAlternativeNames() {
 	var text = $("input#target").val();
 	$.post("launchALActions.action",{"action":"delete_alternative_name","aiId":aiId,"lang":lang,"name":text},function(d){
 		if(d.info){
-			//showInformation(d.info);
+			showInformation(d.info);
 			hideAll();
 			dynatree.reload();
-			displayNode(activeNode,d.info,true); //in this case old parents are the same, so reuse that information
 		}else if(d.error){
 			showInformation(d.error,true);
 		}
@@ -481,9 +382,11 @@ function deleteAlternativeNames() {
 function checkPossibleAlternativeNamesActions(lang) {
 	var dynatree = $("#archivalLandscapeEditorUp").dynatree("getTree");
 	var activeNode = dynatree.getActiveNode();
+
 	$.post("getALActions.action", {nodeKey:activeNode.data.key}, function(d){
 		$.each(d, function(key, value) {
-			if (value.mainAlternativeName != "" && lang.toUpperCase() == value.mainAlternativeName) {
+			if (value.mainAlternativeName != ""
+				&& lang.toUpperCase() == value.mainAlternativeName) {	
 				$("#editTargetSubmitDiv").hide();
 				$("#deleteTargetSubmitDiv").hide();
 			} else {
@@ -491,7 +394,7 @@ function checkPossibleAlternativeNamesActions(lang) {
 				$("#deleteTargetSubmitDiv").show();
 			}
 		});
-	});
+});
 }
 
 function showInformation(information,error){

@@ -108,9 +108,10 @@
 			        			<label for="textEADID" style="font-weight: bold;"><s:property value="getText('content.message.currentEADID')"/></label> <s:property value="%{top.eadid}" />
 			        			<p><br></p>		        			
 			        			<span style="font-weight: bold;"><s:property value="getText('content.message.newEADID')"/></span> 
-
+			        				        			
 			        			<input type="text" name="arrayneweadid"
 									id="neweadid<s:property value="%{top.eadid}" />" size="30%"
+									onkeyup="activate('<s:property value="%{top.eadid}" />')" 
 									style="padding-left: 4px;" /><!--'<s:property value="%{top.eadid}" />'  $("input#neweadid" + eadid).val()-->
 								
 								<!--EAD file with repeated EADID -->
@@ -191,15 +192,16 @@
 								<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].filePath" value="<s:property value="%{top.filePath}"/>" />
 								<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].eadType" value="<s:property value="%{top.eadType}"/>" />
 								<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].eadid"	value="<s:property value="%{top.eadid}"/>" /> 
-								<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].permId"	value="<s:property value="%{top.permId}"/>" />
+								<input type="hidden"name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].permId"	value="<s:property value="%{top.permId}"/>" />
 																
 								<div id="divAddEadid<s:property value="%{#stat.index}" />"><!-- style="display:none;" -->
-
+									
 								<!--EAD file with no EADID keyup method over the textbox-->					
 								<input type="text" name="arrayneweadid"
 									id="neweadid<s:property value="%{#stat.index}" />" size="30%"
+									onkeyup="activate('<s:property value="%{#stat.index}" />')" 
 									style="padding-left: 4px;" />
-	                            
+	
 								<!--EAD file with no EADID -->
 								<input type="button" style="display: inline;"
 									id="SaveChangesButton<s:property value="%{#stat.index}" />"
@@ -300,15 +302,6 @@
 	        	});	       
 
 	        	checkActiveButtonAccept();
-
-	        	$("input[id^=neweadid]").each(function(){
-					var inputElement = $(this).attr("id");
-					inputElement = inputElement.replace(".", "\\.");
-		        	$("#" + inputElement).on('input', function() {
-		        		var eadid = inputElement.substring("neweadid".length, inputElement.length);
-		        		activate(eadid);
-		        	});
-	        	});
 	        });
 
 	        function checkActiveButtonAccept() {
@@ -331,41 +324,13 @@
 		        	$("input#form_submit").removeAttr("disabled");
 	        	}
 	        }
-
-			function activate(eadid) {
-				// Replace the escaped name.
-				if (eadid.indexOf("\.") != "-1")  {
-					eadid = eadid.replace("\\.", ".");
-				}
-
-				//normal activate behavior
-				$("input#form_submit").attr("disabled","disabled");
-				document.getElementById("SaveChangesButton" + eadid).disabled=true;
-				document.getElementById("resultChangeEADID" + eadid).style.display='none';
-				var string = $("[id='neweadid"+eadid+"']").val();
-				if($.trim(string).length>0){
-					//begin pattern check
-					var pattern = new RegExp("^[a-zA-Z0-9\\s\.\\-\\_]+$");
-					var result = pattern.test(string);
-					if(!result){
-						//The EADID must not include special characters
-						alert("<s:property value="getText('content.message.EadidWithSpecialCharacter')" />");
-
-						// Check char by char to find all the special characters.
-						var newString = "";
-						$.each(string, function(index, value){
-							if (pattern.test(value)) {
-								newString += value;
-							}
-						});
-
-						// Change the content for the correct one.
-						$("[id='neweadid"+eadid+"']").val(newString);
-					}
-				}
+        
+	        function activate(eadid) {
+	        	$("input#form_submit").attr("disabled","disabled");
 				document.getElementById("SaveChangesButton" + eadid).disabled=false;
-			}
-
+				document.getElementById("resultChangeEADID" + eadid).style.display='none';
+	        }
+	        
 	        function checkEadIdAndSubmit(){
 				//control for values of the textbox
  	        	var exit=false;
@@ -547,8 +512,7 @@
 			                }
 			                $("input[id^='neweadid']").each(function(i,value){
 			                	//for each input keep the value if it is not repeated and not empty
-			                  $(value).val($.trim($(value).val())); //remove unussed whitespaces
-			                  var textInput= $(value).val();
+			                  var textInput= $(value).val();	
 			                   if(eadidarray.length==0){
 			                     if(textInput!=""){
 						            eadidarray.push(textInput);

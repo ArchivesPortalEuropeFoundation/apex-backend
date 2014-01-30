@@ -27,8 +27,11 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
+            <add-attribute type="string" value="/js/richselect.js"/>
         </put-list-attribute>
-        <put-list-attribute name="cssfilesInternal"/>
+        <put-list-attribute name="cssfilesInternal" >
+        	<add-attribute type="string" value="/css/richselect.css"/>
+        </put-list-attribute>
 	</definition>
 
 	<definition name="DefaultLayout" template="/jsp/templates/dashboard.jsp">
@@ -321,16 +324,6 @@
 	<definition name="newUploadAL" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.alupload.title" />
 		<put-attribute name="body" value="/jsp/al/uploadAL.jsp" />
-		<put-list-attribute name="jsfilesInternal">
-			<add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
-            <add-attribute type="string" value="/js/jquery/jquery-ui.custom.min.js"/>
-	        <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
-	        <add-attribute type="string" value="/js/dynatree/jquery.dynatree.min.js"/>
-	        <add-attribute type="string" value="/js/al/archivalLandscape.js"/>
-		</put-list-attribute>
-		<put-list-attribute name="cssfilesInternal">
-            <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>
-        </put-list-attribute>
 	</definition>
 
 	<definition name="selectArchive" extends="ArchivalLandscapeLayout" >
@@ -370,40 +363,10 @@
 		<put-attribute name="body" value="/jsp/viewresult.jsp" />
 	</definition>
 
-	<definition name="uploaderroralcontentpublished" extends="ArchivalLandscapeLayout">
-		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
-		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
-		<put-attribute name="body" value="/jsp/al/uploaderrorALContentPublished.jsp" />
-	</definition>
-	
-	<definition name="uploaderroralcontentnotpublished" extends="ArchivalLandscapeLayout">
-		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
-		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
-		<put-attribute name="body" value="/jsp/al/uploaderrorALContentNotPublished.jsp" />
-	</definition>
-
 	<definition name="uploaderrorformat2" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
 		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
 		<put-attribute name="body" value="/jsp/uploaderrorformatAL.jsp" />
-	</definition>
-
-	<definition name="uploaderrorallangnull" extends="ArchivalLandscapeLayout">
-		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
-		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
-		<put-attribute name="body" value="/jsp/al/uploaderrorALlangNull.jsp" />
-	</definition>
-	
-	<definition name="uploaderroralidentifier" extends="ArchivalLandscapeLayout">
-		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
-		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
-		<put-attribute name="body" value="/jsp/al/uploaderrorALIdentifier.jsp" />
-	</definition>
-	
-	<definition name="uploaderroralduplicatedidentifier" extends="ArchivalLandscapeLayout">
-		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
-		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
-		<put-attribute name="body" value="/jsp/al/uploaderrorALDuplicateIdentifier.jsp" />
 	</definition>
 
 	<definition name="errorlandscape" extends="ArchivalLandscapeLayout">

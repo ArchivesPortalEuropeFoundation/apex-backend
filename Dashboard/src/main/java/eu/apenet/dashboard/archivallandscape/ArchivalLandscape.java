@@ -9,11 +9,9 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.Semaphore;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -26,7 +24,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -45,18 +42,13 @@ import eu.apenet.dashboard.utils.ChangeControl;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.dao.EadDAO;
-import eu.apenet.persistence.dao.EadSearchOptions;
 import eu.apenet.persistence.dao.LangDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AiAlternativeName;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Country;
-import eu.apenet.persistence.vo.FindingAid;
-import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.Lang;
 import eu.apenet.persistence.vo.SentMailRegister;
-import eu.apenet.persistence.vo.SourceGuide;
 
 /**
  * @author Jara Alvarez
@@ -75,7 +67,7 @@ public class ArchivalLandscape extends ActionSupport{
 	private ArchivalInstitution ai;
 	private ArchivalInstitution ai_parent;
 	private ArchivalInstitutionDAO aiDao;
-	private static Logger log = Logger.getLogger(ArchivalLandscape.class);
+	private final Logger log = Logger.getLogger(getClass());
 	private List<ArchivalInstitution> archivalInstitutionsToDelete= new ArrayList<ArchivalInstitution>();
 	private List<ArchivalInstitution> archivalInstitutionsToInsert= new ArrayList<ArchivalInstitution>();
 	private List<AiAlternativeName> archivalInstitutionsNameNotChanged= new ArrayList<AiAlternativeName>();
@@ -83,13 +75,13 @@ public class ArchivalLandscape extends ActionSupport{
 	private List<ArchivalInstitution> archivalInstitutionsParentNotChanged= new ArrayList<ArchivalInstitution>();
 	private List<ArchivalInstitution> archivalInstitutionsParentChanged= new ArrayList<ArchivalInstitution>();
 	private List<SentMailRegister> sentMailRegisterList = new ArrayList<SentMailRegister>();
+	
+
+
 
 	static Semaphore sem = new Semaphore(1,true) ;
     
 	public int j = 0;
-
-	// Set for the duplicate identifiers.
-	private static Set<String> duplicateIdentifiers;
 	
 	//Constructor. Set the partner logged
 	public ArchivalLandscape() {
@@ -186,22 +178,6 @@ public class ArchivalLandscape extends ActionSupport{
 	public void setArchivalInstitutionsParentChanged(
 			List<ArchivalInstitution> archivalInstitutionsParentChanged) {
 		this.archivalInstitutionsParentChanged = archivalInstitutionsParentChanged;
-	}
-
-	public static Set<String> getDuplicateIdentifiers() {
-		return ArchivalLandscape.duplicateIdentifiers;
-	}
-
-	public static void addDuplicateIdentifiers(String duplicateIdentifier) {
-		if (ArchivalLandscape.getDuplicateIdentifiers() == null) {
-			ArchivalLandscape.duplicateIdentifiers = new LinkedHashSet<String>();
-		}
-
-		ArchivalLandscape.getDuplicateIdentifiers().add(duplicateIdentifier);
-	}
-
-	public static void setDuplicateIdentifiers(Set<String> duplicateIdentifiers) {
-		ArchivalLandscape.duplicateIdentifiers = duplicateIdentifiers;
 	}
 
 	//Returns the path of the AL of each country
@@ -709,7 +685,7 @@ public class ArchivalLandscape extends ActionSupport{
 	 * @param file
 	 * @return boolean
 	 */
-	public static Boolean checkIdentifiers(File file){
+	public boolean checkIdentifiers(File file){
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -719,32 +695,20 @@ public class ArchivalLandscape extends ActionSupport{
 			NodeList listTemp = doc.getElementsByTagName("c");
 			boolean changes = false;
 			List<String> identifiers = new ArrayList<String>(); //list of unique identifiers
-			// Delete the content of "DuplicateIdentifiers".
-			ArchivalLandscape.setDuplicateIdentifiers(null);
 			for(int i=0;i<listTemp.getLength();i++){
 				Element cTemp = (Element)listTemp.item(i);
 				if(cTemp.getAttributes()!=null && cTemp.getAttributes().getNamedItem("id")==null){
-					String identifier = generateNewRandomIdentifier();
+					String identifier = "A"+System.currentTimeMillis()+"-"+(new Float(+Math.random()*1000000).toString());
 					cTemp.setAttribute("id",identifier); //This identifier can be repeated
 					changes = true;
 				}else if(cTemp.getAttributes()!=null && cTemp.getAttributes().getNamedItem("id")!=null){
 					String identifier = cTemp.getAttributes().getNamedItem("id").getNodeValue();
-					if(identifiers.contains(identifier)){ //internal identifier is repeated?
-						// Add the repeated identifiers to the set.
-						ArchivalLandscape.addDuplicateIdentifiers(identifier);
-					}else if(!isValidIdentifier(identifier)){ //is a valid identifier?
-						// return a new state for personalized layout
-						return null;
+					if(identifiers.contains(identifier)){
+						return false;
 					}
 					identifiers.add(identifier);
 				}
 			}
-
-			if (ArchivalLandscape.duplicateIdentifiers != null
-					&& !ArchivalLandscape.duplicateIdentifiers.isEmpty()) {
-				return false;
-			}
-
 			if(changes){
 				TransformerFactory tf = TransformerFactory.newInstance();
 		        Transformer transformer = tf.newTransformer();
@@ -753,24 +717,12 @@ public class ArchivalLandscape extends ActionSupport{
 		} catch (Exception e) {
 			log.error("Checking c identifiers in makeTemporal():"+e.getCause(),e);
 		}
-
 		return true;
 	}	
 
 	
-	private static String generateNewRandomIdentifier() {
-		return "A"+System.currentTimeMillis()+"-"+(new Float(+Math.random()*1000000).toString());
-	}
-	public static boolean isValidIdentifier(String identifier) {
-		if(identifier.length()>0){
-			char firstCharacter = identifier.charAt(0);
-			if(Character.isLetter(firstCharacter)){
-				return true;
-			}
-		}
-		return false;
-	}
 	//Store in the database the name of the NEW archival institutions uploaded and delete the ones removed
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public String storeArchives(File file, boolean execute) {
 		
 		String result = SUCCESS;
@@ -1036,52 +988,6 @@ public class ArchivalLandscape extends ActionSupport{
         return bResult;
 	}
 
-	protected static boolean deleteContent(ArchivalInstitution ai) {
-		boolean state = true;
-		ContentUtils cu = new ContentUtils();
-		String resultRemoveAI = "";
-        try {
-        	EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-			EadSearchOptions eadSearchOptions = new EadSearchOptions();
-			eadSearchOptions.setArchivalInstitionId(ai.getAiId());
-			eadSearchOptions.setEadClass(FindingAid.class);
-			boolean hasEads = eadDAO.existEads(eadSearchOptions);
-			if (!hasEads) {
-				eadSearchOptions.setEadClass(HoldingsGuide.class);
-				hasEads = hasEads || eadDAO.existEads(eadSearchOptions);
-			}
-			if (!hasEads) {
-				eadSearchOptions.setEadClass(SourceGuide.class);
-				hasEads = hasEads || eadDAO.existEads(eadSearchOptions);
-			}
-			if (hasEads){
-				state = !hasEads;
-			}else{
-				String path = ai.getEagPath();
-				resultRemoveAI = cu.deleteArchivalInstitution(ai,true);
-				if(path!=null && path.length()>0){ //there are files to be removed
-					log.debug("There are somethings to be removed, checking...");
-					path = path.substring(0,path.indexOf(File.separatorChar+"EAG"));
-					path = path+"_old";
-					String subDir = APEnetUtilities.getConfig().getRepoDirPath();
-					if(resultRemoveAI!=null && resultRemoveAI.equals("ok")){
-						log.debug("Delete operation was ok, deleting _old directory...");
-						FileUtils.deleteDirectory(new File(subDir+path));
-						log.debug("Done!! Finished.");
-					}else{
-						log.debug("Rollback detected, reverting _old to original path...");
-						FileUtils.moveDirectory(new File(subDir+path),new File(subDir+path.substring(0,path.length()-"_old".length())));
-						log.debug("Revert done!");
-					}
-				}else{
-					log.debug("Nothing to be removed.");
-				}
-			}
-		} catch (Exception e) {
-			log.error(e);
-		}
-        return state;
-	}
 }
 
 
