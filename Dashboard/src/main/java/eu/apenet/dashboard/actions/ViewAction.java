@@ -20,7 +20,6 @@ public class ViewAction extends AbstractInstitutionAction {
 	
 	@Override
 	protected void buildBreadcrumbs() {
-		super.buildBreadcrumbs();
 		addBreadcrumb(getText("breadcrumb.section.editUserInformation"));
 	}
 	

@@ -281,6 +281,9 @@ public class ArchivalLandscapeManager extends AbstractAction{
 		String countryCode = getXMLEadidCountrycode(this.httpFile);
 		String state = ERROR;
 		if(countryCode!=null && countryCode.equalsIgnoreCase(SecurityContext.get().getCountryIsoname())){
+//			if(this.country==null){
+				this.country = DAOFactory.instance().getCountryDAO().getCountryByCname(SecurityContext.get().getCountryName());
+//			}
 			Collection<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile);
 			if(archivalInstitutions!=null){
 				try{

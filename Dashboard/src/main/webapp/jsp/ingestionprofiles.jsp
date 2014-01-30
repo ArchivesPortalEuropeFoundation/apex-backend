@@ -35,7 +35,7 @@
                 <tr>
                     <td>
                         <s:label key="ingestionprofiles.profilename" for="profilenameTf" />
-                        <s:textfield id="profilename" name="profileName" required="true" />
+                        <s:textfield id="profilename" name="profileName" required="true" maxLength="100" />
                     </td>
                 </tr>
                 <tr>

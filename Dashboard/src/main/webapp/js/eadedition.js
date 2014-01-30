@@ -79,7 +79,8 @@ function initEadTree(fileId, xmlTypeId){
                 });
             }
         },
-        minExpandLevel: 2
+        minExpandLevel: 2,
+        generateIds: true
     });
 
 }
@@ -106,23 +107,47 @@ function initButtons(fileId,xmlTypeId){
 function saveEAD(fileId,xmlTypeId){
 	var node = $("#eadTree").dynatree("getActiveNode");
 	//get all input and selected/option info into editionElement div
-	var content = "{";
-	$("p#editionFormContainer div .editionElement").find("input").each(function(){
-		content += (content.length>1)?",":"";
-		content += $(this).attr("name")+","+"'"+$(this).val()+"'";
+	var start = "'formValues'={";
+	var content = start;
+	$("p#editionFormContainer div .editionElement").find("input").each(function() {
+		// Check if it's necessary to add the current value.
+		if ($(this).val() != undefined) {
+			content += (content.length>start.length) ? "," : "";
+			content += "'" + $(this).attr("name") + "':" + "'" + $(this).val() + "'";
+		}
 	});
-	$("p#editionFormContainer div .editionElement").find("input").each(function(){
-		content += (content.length>1)?",":"";
-		content += $(this).attr("name")+","+"'"+$(this).find("option:selected").val();
+	$("p#editionFormContainer select").each(function() {
+		// Check if it's necessary to add the current value.
+		if ($(this).find("option:selected").val() != undefined) {
+			content += (content.length>1) ? "," : "";
+			content += "'" + $(this).attr("name") + "':" + "'" + $(this).find("option:selected").val() + "'";
+		}
 	});
-	content += (content.length>1)?",":"";
-	content += "id:'"+node.data.id+"', fileId : '"+fileId+"', xmlTypeId : '"+xmlTypeId+"'}";
-	alert(content);
-	$.post("editEadXmlSaveLevel.action",content, function(data){
+	// Add "id" if exists.
+	if (node.data.id != undefined) {
+		content += ",'id':'"+node.data.id+"'";
+	}
+	// Add "key" if exists.
+	if (node.data.key != undefined) {
+		content += ",'key':'"+node.data.key+"'";
+	}
+	// Add "file id" if exists.
+	if (fileId != undefined) {
+		content += ",'fileId':'"+fileId+"'";
+	}
+	// Add "xml type Id" if exists.
+	if (xmlTypeId != undefined) {
+		content += ",'xmlTypeId':'"+xmlTypeId+"'";
+	}
+	content += "}";
+//	content += (content.length>1)?",":"";
+//	content += "'id':'"+node.data.id+"', 'fileId' : '"+fileId+"', 'xmlTypeId' : '"+xmlTypeId+"'}";
+	alert("content: " + content);
+	$.post("editEadXmlSaveLevel.action", content, function(data) {
 		var response = "Not saved";
-		if(data!=undefined && data.saved!=undefined && data.saved){
+		if(data != undefined && data.saved != undefined && data.saved){
 			response = "Saved";
 		}
-		alert(response);
+		alert("response: " + response);
 	});
 }

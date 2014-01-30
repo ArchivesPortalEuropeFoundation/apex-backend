@@ -201,7 +201,7 @@
 									id="neweadid<s:property value="%{#stat.index}" />" size="30%"
 									onkeyup="activate('<s:property value="%{#stat.index}" />')" 
 									style="padding-left: 4px;" />
-	
+	                            
 								<!--EAD file with no EADID -->
 								<input type="button" style="display: inline;"
 									id="SaveChangesButton<s:property value="%{#stat.index}" />"
@@ -326,9 +326,25 @@
 	        }
         
 	        function activate(eadid) {
-	        	$("input#form_submit").attr("disabled","disabled");
-				document.getElementById("SaveChangesButton" + eadid).disabled=false;
-				document.getElementById("resultChangeEADID" + eadid).style.display='none';
+        	    //normal activate behavior 
+        	    $("input#form_submit").attr("disabled","disabled");
+    			document.getElementById("SaveChangesButton" + eadid).disabled=true;
+    			document.getElementById("resultChangeEADID" + eadid).style.display='none';
+    			var string = $("[id='neweadid"+eadid+"']").val();
+				if($.trim(string).length>0){
+					//begin pattern check
+	                var pattern = new RegExp("^[a-zA-Z0-9\\s]+$");
+	                var result = pattern.test(string);
+	                if(!result){
+	                	//The EADID must not include special characters
+						alert("<s:property value="getText('content.message.EadidWithSpecialCharacter')" />");
+	                	var newString = string.substring(0,string.length-1);
+	                	$("[id='neweadid"+eadid+"']").val(newString);
+	                }else{
+	                	document.getElementById("SaveChangesButton" + eadid).disabled=false;
+	                }
+	                //end pattern check
+				}
 	        }
 	        
 	        function checkEadIdAndSubmit(){
@@ -512,7 +528,8 @@
 			                }
 			                $("input[id^='neweadid']").each(function(i,value){
 			                	//for each input keep the value if it is not repeated and not empty
-			                  var textInput= $(value).val();	
+			                  $(value).val($.trim($(value).val())); //remove unussed whitespaces
+			                  var textInput= $(value).val();
 			                   if(eadidarray.length==0){
 			                     if(textInput!=""){
 						            eadidarray.push(textInput);

@@ -2,8 +2,12 @@ package eu.apenet.dashboard.manual;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -35,6 +39,8 @@ public class EditParser extends AbstractParser {
     public final QName C_ELEMENT = new QName(APENET_EAD, "c");
     public final QName EAD_ELEMENT = new QName(APENET_EAD, "ead");
     private static final String UTF8 = "UTF-8";
+    // Counter to be able to parse all the values.
+    private int counter = 1;
 
     public String xmlToHtml(CLevel cLevel, EadContent eadContent) throws XMLStreamException, IOException {
         int counterDiv = 0;
@@ -93,8 +99,9 @@ public class EditParser extends AbstractParser {
                         xmlWriter.writeCharacters("#text: ");
                         xmlWriter.writeEmptyElement("input");
                         xmlWriter.writeAttribute("type", "text");
-                        xmlWriter.writeAttribute("name", lastElementName);
+                        xmlWriter.writeAttribute("name", lastElementName + "_" + this.counter);
                         xmlWriter.writeAttribute("value", xmlReader.getText());
+                        this.counter++;
                     } else {
                         xmlWriter.writeCharacters("#text: " + xmlReader.getText());
                     }
@@ -134,12 +141,24 @@ public class EditParser extends AbstractParser {
         } else {
             xmlWriter.writeEmptyElement("input");
             xmlWriter.writeAttribute("type", "text");
-            xmlWriter.writeAttribute("name", lastElementName + "_" + attrName);
+            xmlWriter.writeAttribute("name", lastElementName + "_" + attrName + "_" + this.counter);
             xmlWriter.writeAttribute("value", attrValue);
+            this.counter++;
         }
     }
 
     public String getNewXmlString(String xml, Map<String, String> formValues) throws XMLStreamException, IOException {
+    	Map<String, String> formValuesCopy = new LinkedHashMap<String, String>();
+    	if (formValues != null) {
+    		Set<String> keySet = formValues.keySet();
+    		if (keySet != null) {
+    			Iterator<String> keysIt = keySet.iterator();
+    			while (keysIt.hasNext()) {
+    				String key = keysIt.next();
+    				formValuesCopy.put(key, formValues.get(key));
+    			}
+    		}
+    	}
 
         StringWriter stringWriter = new StringWriter();
         XMLStreamWriter2 xmlWriter = ((XMLOutputFactory2) XMLOutputFactory2.newInstance()).createXMLStreamWriter(stringWriter, UTF8);
@@ -162,14 +181,14 @@ public class EditParser extends AbstractParser {
                     xmlWriter.writeStartElement(element.getPrefix(), element.getLocalPart(), element.getNamespaceURI());
                 }
                 for (int i = 0; i < xmlReader.getAttributeCount(); i++) {
-                    String changedAttr = isElementChanged(xmlReader.getAttributeLocalName(i), formValues);
+                    String changedAttr = isElementChanged(element.getLocalPart(), xmlReader.getAttributeLocalName(i), formValuesCopy);
                     if (changedAttr == null)
                         xmlWriter.writeAttribute(xmlReader.getAttributePrefix(i), xmlReader.getAttributeNamespace(i), xmlReader.getAttributeLocalName(i), xmlReader.getAttributeValue(i));
                     else
                         xmlWriter.writeAttribute(xmlReader.getAttributePrefix(i), xmlReader.getAttributeNamespace(i), xmlReader.getAttributeLocalName(i), changedAttr);
                 }
 
-                changedItem = isElementChanged(element.getLocalPart(), formValues);
+                changedItem = isElementChanged(element.getLocalPart(), null, formValuesCopy);
 
             } else if (event == XMLStreamConstants.END_ELEMENT) {
 
@@ -362,17 +381,48 @@ public class EditParser extends AbstractParser {
      * Checks if an element of the original XML is part of the submitted form
      *
      * @param xmlElementName The name of the element in the original XML
+     * @param xmlAttributeName The name of the attribute in the original XML
+     * @param formValues The map of values.
      * @return Either the value of the changed element or null if it does not exist
      */
-    public String isElementChanged(String xmlElementName, Map<String, String> formValues) {
-        for (String key : formValues.keySet()) {
-            String elementName = key;
-            if (key.contains("_"))
-                elementName = key.split("_")[1];
+    public String isElementChanged(String xmlElementName, String xmlAttributeName, Map<String, String> formValues) {
+    	// Recover the list of the keys for the current element.
+    	Set<String> keyList= new LinkedHashSet<String>();
+    	if (formValues != null) {
+    		Set<String> keySet = formValues.keySet();
+    		if (keySet != null) {
+    			Iterator<String> keysIt = keySet.iterator();
+    			while (keysIt.hasNext()) {
+    				String key = keysIt.next();
+    				String xmlKey = xmlElementName + "_";
 
-            if (xmlElementName.equals(elementName))
-                return formValues.get(key);
-        }
+    				if (xmlAttributeName != null) {
+    					xmlKey = xmlKey + xmlAttributeName + "_";
+    				}
+    				
+    				if (key.startsWith(xmlKey)) {
+    					keyList.add(key);
+    				}
+    			}
+    		}
+    	}
+
+    	// Check if exists values in the list.
+    	if (keyList != null && !keyList.isEmpty()) {
+    		String key = keyList.iterator().next();
+    		String value = formValues.get(key);
+    		formValues.remove(key);
+    		return value;
+    	}
+
+//        for (String key : formValues.keySet()) {
+//            String elementName = key;
+//            if (key.contains("_"))
+//                elementName = key.split("_")[1];
+//
+//            if (xmlElementName.equals(elementName))
+//                return formValues.get(key);
+//        }
         return null;
     }
 }

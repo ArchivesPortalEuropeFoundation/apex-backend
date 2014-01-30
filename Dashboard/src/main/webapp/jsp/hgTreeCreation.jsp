@@ -94,11 +94,6 @@
     }
 
     function createEditPanel(node, isCancelable, isAddedLevel){
-    	if(isForEadContent(node.data.key)){
-    		$("#unitid-input").removeClass("hidden").addClass("hidden");
-    	}else {
-    		$("#unitid-input").removeClass("hidden");
-    	}
         unbindAllBtn();
         logMsg("Create Edit Panel With Node: " + node.data.key);
         $("#editTitle").val("");
@@ -163,7 +158,7 @@
             if(isAddedLevel){
                 var parent = node.parent;
                 node.remove();
-                parent.render();
+                $("#tree").dynatree("getTree").activateKey(parent.data.key);
             }
             $.fn.colorbox.close();
         });

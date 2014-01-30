@@ -11,6 +11,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import eu.apenet.persistence.vo.*;
+
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.infraestructure.ArchivalInstitutionUnit;
@@ -21,12 +23,10 @@ import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
+import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
+import eu.apenet.persistence.dao.IngestionprofileDAO;
 import eu.apenet.persistence.dao.LangDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.AiAlternativeName;
-import eu.apenet.persistence.vo.ArchivalInstitution;
-import eu.apenet.persistence.vo.Country;
-import eu.apenet.persistence.vo.Lang;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
@@ -49,18 +49,25 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 	private String countryId;
 	private List<Lang> langList;
 
+	private void buildBreadcrumb() {
+		super.buildBreadcrumbs();
+		this.addBreadcrumb(null,getText("breadcrumb.section.editArchivalLandscape"));
+	}
+
 	public List<Lang> getLangList(){
 		return this.langList;
 	}
 
 	@Override
 	public String execute() throws Exception {
+		buildBreadcrumb();
 		SecurityContext securityContext = SecurityContext.get();
 		Integer couId = securityContext.getCountryId();
 		this.countryId = couId.toString();
 		this.langList = DAOFactory.instance().getLangDAO().findAll();
 		Collections.sort(this.langList);
 		log.info("Archival Landscape editor for country: "+couId);
+		buildBreadcrumbs();
 		return SUCCESS;
 	}
 	
@@ -254,7 +261,8 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
 		ArchivalInstitution archivalInstitutionTarget = aiDao.getArchivalInstitution(aiId);
 		if(archivalInstitutionTarget!=null){
-			if (ContentUtils.containsPublishedFiles(archivalInstitutionTarget)) {
+			//if (ContentUtils.containsPublishedFiles(archivalInstitutionTarget)) {
+			if (archivalInstitutionTarget.isContainSearchableItems()) {
 				// rollback
 				JpaUtil.rollbackDatabaseTransaction();
 				buffer.append(buildNode("error",getText("al.message.error.not.possible.move")));
@@ -348,7 +356,13 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 						}
 					}
 					aiDao.updateSimple(archivalInstitutionTarget);
+					buffer.append("[");
 					buffer.append(buildNode("info",getText("al.message.groupchanged")));
+//					if(parentArchivalInstitution!=null){
+						buffer.append(COMMA);
+						buffer.append(buildParentsNode(parentArchivalInstitution));
+//					}
+					buffer.append("]");
 				}
 			}else{
 				buffer.append(buildNode("error",getText("al.message.grouptargetisparent"))); 
@@ -357,6 +371,21 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		// The final commits
 		JpaUtil.commitDatabaseTransaction();
 		return buffer.toString();
+	}
+
+	private String buildParentsNode(ArchivalInstitution parentArchivalInstitution) {
+		StringBuffer parents = new StringBuffer();
+		if(parentArchivalInstitution!=null){
+			parents.append("aigroup_"+parentArchivalInstitution.getAiId());
+			while(parentArchivalInstitution.getParentAiId()!=null){
+				parentArchivalInstitution = parentArchivalInstitution.getParent();
+				parents.append(",");
+				parents.append("aigroup_"+parentArchivalInstitution.getAiId());
+			}
+			parents.append(",");
+		}
+		parents.append("country_"+SecurityContext.get().getCountryId());
+		return buildNode("newparents",parents.toString());
 	}
 
 	private String getAllCountryGroups() {
@@ -395,6 +424,8 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			JpaUtil.beginDatabaseTransaction();
 				ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
 				ArchivalInstitution ai = aiDao.findById(new Integer(aiId));
+            deleteHarvestingProfiles(ai.getAiId()); //#983
+            deleteIngestionProfiles(ai.getAiId()); //#983
 				//update the rest of the orders (all siblings are inconsistents)
 				int oldOrder = ai.getAlorder();
 				ArchivalInstitution parent = ai.getParent();
@@ -450,6 +481,24 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		}
 		return messenger.toString();
 	}
+
+    private void deleteHarvestingProfiles(int aiId) {
+    	ArchivalInstitutionOaiPmhDAO dao = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
+        List<ArchivalInstitutionOaiPmh> archivalInstitutionOaiPmhs = dao.getArchivalInstitutionOaiPmhs(aiId);
+        Iterator<ArchivalInstitutionOaiPmh> it = archivalInstitutionOaiPmhs.iterator();
+        while(it.hasNext()){
+        	dao.deleteSimple(it.next());
+        }
+    }
+
+    private void deleteIngestionProfiles(int aiId) {
+    	IngestionprofileDAO profileDAO = DAOFactory.instance().getIngestionprofileDAO();
+        List<Ingestionprofile> ingestionprofiles = profileDAO.getIngestionprofiles(aiId);
+        Iterator<Ingestionprofile> it = ingestionprofiles.iterator();
+        while(it.hasNext()){
+        	profileDAO.deleteSimple(it.next());
+        }
+    }
 
 	private String createArchivalInstitution(String name,String father,String type,String lang){
 		StringBuilder messenger = new StringBuilder();
@@ -736,9 +785,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			ArchivalInstitution ai = archivalInstitutionDAO.getArchivalInstitution(aiId);
 			AiAlternativeName alternativeName = aiAlternativesNamesDAO.findByAIIdandLang(ai,language);
 
-			if(alternativeName!=null
-					&& alternativeName.getPrimaryName() != null
-					&& !alternativeName.getPrimaryName()){
+			if(alternativeName!=null && alternativeName.getPrimaryName() != null && !alternativeName.getPrimaryName()){
 				if(alternativeName!=null && alternativeName.getAiAName()!=null){ 
 					//name exists, so it's needed a deleteSimple operation
 					alternativeName.setAiAName(name);
@@ -746,9 +793,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					buffer.append(buildNode("info",getText("al.message.alternativenameremoved")));
 				}
 			}else{
-				if (alternativeName!=null
-						&& alternativeName.getPrimaryName() != null
-						&& alternativeName.getPrimaryName()) {
+				if (alternativeName!=null && alternativeName.getPrimaryName() != null && alternativeName.getPrimaryName()) {
 					buffer.append(buildNode("error",getText("al.message.cannotremovefirstalternativename")));
 				} else {
 					buffer.append(buildNode("error",getText("al.message.badalternativename")));

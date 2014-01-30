@@ -1,6 +1,8 @@
 package eu.apenet.dashboard.actions;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
 import eu.apenet.dashboard.AbstractAction;
+import eu.apenet.dashboard.Breadcrumb;
 import eu.apenet.dashboard.security.PasswordValidator;
 import eu.apenet.dashboard.security.PasswordValidator.ValidationResult;
 import eu.apenet.dashboard.security.SecurityService.LoginResult;
@@ -39,11 +42,13 @@ public class EditAction extends AbstractAction {
 	private String rePassword;
 	private String parent;
 	public String confirmPassword;
+	private List<Breadcrumb> breadcrumbRoute;
 
 	@Override
 	protected void buildBreadcrumbs() {
-		super.buildBreadcrumbs();
-		addBreadcrumb(getText("breadcrumb.section.editUserInformation"));
+		this.breadcrumbRoute = new ArrayList<Breadcrumb>();
+		Breadcrumb breadcrumb = new Breadcrumb(null,getText("breadcrumb.section.changeAIname"));
+		this.breadcrumbRoute.add(breadcrumb);
 	}
 
 	/**
@@ -55,7 +60,7 @@ public class EditAction extends AbstractAction {
 		User userToUpdate = new User();
 		userToUpdate.setId( SecurityService.getCurrentPartner().getId());
 		boolean changePwd = false;
-
+		buildBreadcrumbs();
 		if (StringUtils.isNotBlank(this.newPassword) || StringUtils.isNotBlank(this.rePassword) || StringUtils.isNotBlank(this.currentPassword)) {
 			if (!validateChangePwd()) {
 				return INPUT;
@@ -191,6 +196,7 @@ public class EditAction extends AbstractAction {
 		
 		return result;
 	}
+	
 	@Override
 	public void validate() {
 		
@@ -233,8 +239,8 @@ public class EditAction extends AbstractAction {
 				addFieldError("secretQuestion", getText("secretQuestion.required"));
 			}
 
-		}
-		
+		}		
+		buildBreadcrumbs();
 	}
 
 	public String getEmail() {

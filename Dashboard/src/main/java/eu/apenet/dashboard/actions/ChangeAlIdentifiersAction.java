@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Preparable;
 
+import eu.apenet.dashboard.Breadcrumb;
 import eu.apenet.dashboard.archivallandscape.ChangeAlIdentifiers;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
@@ -34,6 +35,17 @@ public class ChangeAlIdentifiersAction extends ActionSupport implements Preparab
 	private Country country = new Country();
 	private String identifier;
 	private String identifierOld;
+	private List<Breadcrumb> breadcrumbRoute;
+	
+	public List<Breadcrumb> getBreadcrumbRoute(){
+		return this.breadcrumbRoute;
+	}
+
+	private void buildBreadcrumb() {
+		this.breadcrumbRoute = new ArrayList<Breadcrumb>();
+		Breadcrumb breadcrumb = new Breadcrumb(null,getText("breadcrumb.section.changeAIidentifier"));
+		this.breadcrumbRoute.add(breadcrumb);
+	}
 
 	public String getIdentifier() {
 		return identifier;
@@ -87,6 +99,7 @@ public class ChangeAlIdentifiersAction extends ActionSupport implements Preparab
 	}
 
 	public String execute()   {
+		buildBreadcrumb();
 		return SUCCESS;
 	}
 

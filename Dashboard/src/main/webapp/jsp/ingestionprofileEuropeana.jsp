@@ -34,7 +34,7 @@
         <tr>
             <td class="inputLabel"><s:label key="ead2ese.label.dataprovider" for="dataProvider" />:</td>
             <td>
-                <s:textfield id="textDataProvider" name="textDataProvider" />
+                <s:textfield id="textDataProvider" name="textDataProvider" maxLength="100"/>
                 <s:checkbox name="dataProviderCheck" id="dataProviderCheck" />
                 <s:label key="ead2ese.content.dataprovider.file" for="dataProviderCheck"/>
             </td>
@@ -82,14 +82,14 @@
         </tr>
         <tr>
             <td class="inputLabel"><s:label key="ead2ese.label.license.additional" for="licenseAdditionalInformation" />:</td>
-            <td><s:textarea id="licenseAdditionalInformation" name="licenseAdditionalInformation"/>
+            <td><s:textarea id="licenseAdditionalInformation" name="licenseAdditionalInformation" />
             </td>
         </tr>
         <tr>
             <td class="inputLabel">
                 <s:label key="ead2ese.label.hierarchy.prefix" for="hierarchyPrefix" />:
             </td>
-            <td><s:textfield id="hierarchyPrefix" name="hierarchyPrefix"></s:textfield></td>
+            <td><s:textfield id="hierarchyPrefix" name="hierarchyPrefix" maxLength="100"></s:textfield></td>
             </tr>
             <tr id="hiddenInheritFileParent">
                 <td class="inputLabel">
