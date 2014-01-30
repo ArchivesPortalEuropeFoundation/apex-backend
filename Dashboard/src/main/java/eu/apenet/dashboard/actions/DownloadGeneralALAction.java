@@ -1,12 +1,8 @@
  package eu.apenet.dashboard.actions;
 
-import java.io.File;
-
 import org.apache.log4j.Logger;
 
-import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.AbstractAction;
-import eu.apenet.dashboard.utils.ContentUtils;
 
  /**
  * User: Jara Alvarez
@@ -26,19 +22,6 @@ public class DownloadGeneralALAction extends AbstractAction {
 
 	public String execute() {
         String result=null;
-		try {
-		    String path = APEnetUtilities.getDashboardConfig().getArchivalLandscapeDirPath() + APEnetUtilities.FILESEPARATOR + "AL.xml";
-		    File file = new File  (path);
-	        if (!file.exists()) {
-	            addActionMessage(getText("content.message.errorsmall"));
-	        	result= ERROR;
-            } else {
-            	ContentUtils.downloadXml(getServletRequest(), getServletResponse(), file);
-		    }
-		} catch (Exception e){
-		    log.error(e.getMessage());
-		    result= ERROR;
-		}
 		return result;
 	}
 

@@ -1,25 +1,22 @@
 package eu.apenet.dashboard.actions;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
-
-import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.archivallandscape.InsertNodeinLA;
-import eu.apenet.persistence.dao.CouAlternativeNameDAO;
-import eu.apenet.persistence.dao.CountryDAO;
-import eu.apenet.persistence.dao.LangDAO;
-
-import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.CouAlternativeName;
-import eu.apenet.persistence.vo.Country;
-import eu.apenet.persistence.vo.Lang;
 
 import org.apache.log4j.Logger;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Preparable;
+
+import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.persistence.dao.CouAlternativeNameDAO;
+import eu.apenet.persistence.dao.CountryDAO;
+import eu.apenet.persistence.dao.LangDAO;
+import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.CouAlternativeName;
+import eu.apenet.persistence.vo.Country;
+import eu.apenet.persistence.vo.Lang;
 
 /**
  * @author Jara Alvarez
@@ -141,7 +138,6 @@ public class CreateCountryAltNamesAction extends ActionSupport implements Prepar
 					couAltNamesDAO.store(newCouAltName);
 					result = SUCCESS;
 					addActionMessage(getText("CreateCountryAltNames.AlternativeNameStored"));
-					insertNodeinAL("unittitle", country, this.languageSelected, this.getAltCountryName());				
 					
 				}catch(Exception e){
 					result=ERROR;
@@ -159,12 +155,5 @@ public class CreateCountryAltNamesAction extends ActionSupport implements Prepar
 		return result;
 	}
 	
-	public synchronized void insertNodeinAL(String node, Country cou, int language, String altName)
-	{
-		LangDAO langDao = DAOFactory.instance().getLangDAO();
-		String langIsoName = langDao.findById(language).getIsoname();
-		
-		log.debug("Inserting in the general AL the new country definition " + cou.getCname() + "...");
-		new Thread( new InsertNodeinLA(this.sem, node,cou, langIsoName, altName)).start();
-	}
+
 }	

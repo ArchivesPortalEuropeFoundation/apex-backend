@@ -148,10 +148,14 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
 
         profile.setEuropeanaDataProvider(textDataProvider);
         profile.setEuropeanaDataProviderFromFile(Boolean.parseBoolean(dataProviderCheck));
-        profile.setEuropeanaDaoType(Integer.parseInt(europeanaDaoType));
+        if (europeanaDaoType == null || europeanaDaoType.isEmpty()) {
+            profile.setEuropeanaDaoType(0);
+        } else {
+            profile.setEuropeanaDaoType(Integer.parseInt(europeanaDaoType));
+        }
         profile.setEuropeanaDaoTypeFromFile(Boolean.parseBoolean(europeanaDaoTypeCheck));
-        StringBuilder langTemp = new StringBuilder();
-        for (int i=0; i < languageSelection.size(); i++) {
+        StringBuilder langTemp = new StringBuilder("");
+        for (int i = 0; i < languageSelection.size(); i++) {
             langTemp.append(languageSelection.get(i));
             if (i < languageSelection.size() - 1) {
                 langTemp.append(" ");

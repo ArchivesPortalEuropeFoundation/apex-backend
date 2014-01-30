@@ -1,23 +1,30 @@
 package eu.apenet.dashboard.harvest;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Properties;
+
+import org.apache.log4j.Logger;
+
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.dashboard.security.UserService;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.*;
+import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
+import eu.apenet.persistence.vo.FileType;
+import eu.apenet.persistence.vo.Ingestionprofile;
+import eu.apenet.persistence.vo.QueueItem;
+import eu.apenet.persistence.vo.UpFile;
+import eu.apenet.persistence.vo.UploadMethod;
+import eu.apenet.persistence.vo.User;
+import eu.archivesportaleurope.harvester.oaipmh.HarvestResult;
+import eu.archivesportaleurope.harvester.oaipmh.OaiPmhHarvester;
+import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
-import org.apache.log4j.Logger;
-import org.oclc.oai.harvester.parser.record.OaiPmhParser;
-import org.oclc.oai.harvester.parser.record.ResultInfo;
-import org.oclc.oai.harvester.verb.ListRecordsSaxWriteDirectly;
-
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
 
 /**
  * User: Yoann Moranville
@@ -56,14 +63,22 @@ public class DataHarvester implements Runnable {
             setSpec = archivalInstitutionOaiPmh.getSet();
         }
 
+        String currentInfoArchivalInstitutionOaiPmh = archivalInstitutionOaiPmh.toString();
+
         ArchivalInstitution archivalInstitution = archivalInstitutionOaiPmh.getArchivalInstitution();
         LOGGER.info(archivalInstitution);
         String subdirectory = APEnetUtilities.FILESEPARATOR + archivalInstitution.getAiId() + APEnetUtilities.FILESEPARATOR + "oai_" + System.currentTimeMillis() + APEnetUtilities.FILESEPARATOR;
         String directory = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + subdirectory;
         File outputDirectory = new File(directory);
+        File errorsDirectory = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + "/oai_errors");
+        errorsDirectory.mkdirs();
         outputDirectory.mkdirs();
-        OaiPmhParser oaiPmhParser = new OaiPmhParser(outputDirectory);
-
+        OaiPmhParser oaiPmhParser = null;
+        if(APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()) {
+        	oaiPmhParser = new OaiPmhParser(outputDirectory);
+        }else {
+        	oaiPmhParser = new OaiPmhParser(outputDirectory,MAX_NUMBER_HARVESTED_FILES_FOR_TEST );
+        }
         Integer userId = archivalInstitution.getPartnerId();
         User partner;
         if(userId == null) {
@@ -73,7 +88,7 @@ public class DataHarvester implements Runnable {
         }
 
         try {
-            runOai(baseURL, from, until, metadataPrefix, setSpec, oaiPmhParser);
+            HarvestResult harvestResult = OaiPmhHarvester.runOai(baseURL, from, until, metadataPrefix, setSpec, oaiPmhParser, errorsDirectory);
             archivalInstitutionOaiPmh.setLastHarvesting(new Date());
             if(!APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()) {
                 archivalInstitutionOaiPmh.setEnabled(false);
@@ -93,13 +108,18 @@ public class DataHarvester implements Runnable {
 
             JpaUtil.commitDatabaseTransaction();
 
-            UserService.sendEmailHarvestFinished(true, archivalInstitution, partner);
+            int numberEadHarvested = harvestedFiles.length;
+            UserService.sendEmailHarvestFinished(true, archivalInstitution, partner, numberEadHarvested, currentInfoArchivalInstitutionOaiPmh, harvestResult.getOldestFileHarvested().toString(), harvestResult.getNewestFileHarvested().toString());
+            LOGGER.info("Harvest completed: harvested " + numberEadHarvested + " EAD files from " + currentInfoArchivalInstitutionOaiPmh + " --- Oldest file harvested: " + harvestResult.getOldestFileHarvested().toString() + " --- Newest file harvested: " + harvestResult.getNewestFileHarvested().toString());
         } catch (Exception e) {
             JpaUtil.rollbackDatabaseTransaction();
-            UserService.sendEmailHarvestFinished(false, archivalInstitution, partner);
+            UserService.sendEmailHarvestFinished(false, archivalInstitution, partner, 0, currentInfoArchivalInstitutionOaiPmh, "-", "-");
+            LOGGER.error("Harvest failed for " + currentInfoArchivalInstitutionOaiPmh);
             LOGGER.error("Harvesting failed - should we put an 'error' flag in the DB?");
         } finally {
-            outputDirectory.delete();
+            if(outputDirectory.exists()) {
+                outputDirectory.delete();
+            }
             if(!isNighlySchedule) {
                 HarvesterDaemon.setHarvesterProcessing(false);
             }
@@ -107,35 +127,6 @@ public class DataHarvester implements Runnable {
     }
 
 
-    private void runOai(String baseURL, String from, String until, String metadataPrefix, String setSpec,  OaiPmhParser oaiPmhParser) throws Exception {
-        int number = 0;
-        ListRecordsSaxWriteDirectly listRecordsSax = new ListRecordsSaxWriteDirectly();
-        ResultInfo resultInfo = listRecordsSax.harvest(baseURL, from, until, setSpec, metadataPrefix, oaiPmhParser, number);
-
-        while (resultInfo != null) {
-            List<String> errors = resultInfo.getErrors();
-            if (errors != null && errors.size() > 0) {
-                LOGGER.info("Found errors");
-                for (String item : errors) {
-                    LOGGER.info(item);
-                }
-                LOGGER.info("Error record: " + resultInfo.getIdentifier());
-                break;
-            }
-
-            String resumptionToken = resultInfo.getNewResumptionToken();
-            LOGGER.info("resumptionToken: '" + resumptionToken + "'");
-            if (resumptionToken == null || resumptionToken.length() == 0) {
-                resultInfo = null;
-            } else {
-                number++;
-                resultInfo = listRecordsSax.harvest(baseURL, resumptionToken, oaiPmhParser, number);
-                if(!APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing() && number > MAX_NUMBER_HARVESTED_FILES_FOR_TEST) {
-                    resultInfo = null;
-                }
-            }
-        }
-    }
 
     private UpFile createUpFile(String upDirPath, String filePath, String uploadMethodString, Integer aiId, FileType fileType){
         UpFile upFile = new UpFile();
@@ -172,4 +163,6 @@ public class DataHarvester implements Runnable {
         properties.setProperty(QueueItem.INHERIT_ORIGINATION, ingestionprofile.getEuropeanaInheritOrigin()+"");
         return properties;
     }
+
+
 }

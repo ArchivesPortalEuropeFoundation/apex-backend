@@ -2,6 +2,8 @@ package org.oclc.oai.harvester.app;
 
 import org.junit.Test;
 
+import eu.archivesportaleurope.harvester.oaipmh.RetrieveOaiPmhInformation;
+
 import java.lang.Exception;
 import java.lang.String;
 import java.lang.System;

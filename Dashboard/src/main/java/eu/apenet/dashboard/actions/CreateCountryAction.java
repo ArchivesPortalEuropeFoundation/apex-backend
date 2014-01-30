@@ -6,22 +6,19 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Semaphore;
 
+import org.apache.log4j.Logger;
+
+import com.opensymphony.xwork2.ActionSupport;
+
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.archivallandscape.InsertNodeinLA;
-import eu.apenet.dashboard.archivallandscape.deleteNodeinLA;
 import eu.apenet.persistence.dao.CouAlternativeNameDAO;
 import eu.apenet.persistence.dao.CountryDAO;
 import eu.apenet.persistence.dao.LangDAO;
-
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.CouAlternativeName;
 import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.Lang;
-
-import org.apache.log4j.Logger;
-
-import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * @author Jara Alvarez
@@ -175,8 +172,7 @@ public class CreateCountryAction extends ActionSupport{
 					    file.mkdir();
 			        log.debug("Directory "+this.getIsoCountryName() +" created");
 			        
-			        insertNodeinAL("dsc", newCountry, language.getId(), null);
-			        
+		        
 			        HibernateUtil.commitDatabaseTransaction();
 					result= SUCCESS;
 					addActionMessage(getText("createCountry.newCountryStored"));
@@ -194,7 +190,6 @@ public class CreateCountryAction extends ActionSupport{
 					File file = new File(pathRepo = pathRepo + this.getIsoCountryName());
 					if (file.exists())
 						file.delete();
-					deleteNodeAL(this.getEnglishCountryName());
 				}
 			}			
 		}
@@ -202,21 +197,6 @@ public class CreateCountryAction extends ActionSupport{
 			result= INPUT;
 		
 		return result;
-	}
-	
-	public synchronized void insertNodeinAL(String node, Country cou, int language, String altName)
-	{
-		LangDAO langDao = DAOFactory.instance().getLangDAO();
-		String langIsoName = langDao.findById(language).getIsoname();
-		
-		log.debug("Inserting in the general AL the new country definition " + cou.getCname() + "...");
-		new Thread( new InsertNodeinLA(this.sem, node,cou, langIsoName, altName)).start();
-	}
-	
-	public synchronized void deleteNodeAL(String couName)
-	{
-		log.debug("Deleting in the general AL the country node for " + couName + "...");
-		new Thread( new deleteNodeinLA(this.sem, couName)).start();
 	}
 
 }	

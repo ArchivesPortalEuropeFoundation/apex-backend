@@ -23,19 +23,22 @@ function hideAndShow(idPrefix, shown) {
 
 function validateAndSave(profileNameError, edmDaoError, languageError) {
     var profilename = $("#profilename").attr("value");
-    if (profilename == null || profilename == ""){
+    if (profilename == null || profilename == "") {
         alert(profileNameError);
         return;
     }
-    var edmDaoType = $("#edmDaoType").attr("value");
-    if (edmDaoType == null || edmDaoType == ""){
-        alert(edmDaoError);
-        return;
-    }
-    var languageSelection = $("#languageselection").attr("value");
-    if (languageSelection == null || languageSelection == ""){
-        alert(languageError);
-        return;
+    var upFileAction = $("#uploadedFileAction").attr("value");
+    if (upFileAction == "2"){
+        var edmDaoType = $("#edmDaoType").attr("value");
+        if (edmDaoType == null || edmDaoType == "") {
+            alert(edmDaoError);
+            return;
+        }
+        var languageSelection = $("#languageselection").attr("value");
+        if (languageSelection == null || languageSelection == "") {
+            alert(languageError);
+            return;
+        }
     }
     $('#webformIngestionprofile').submit();
 }
