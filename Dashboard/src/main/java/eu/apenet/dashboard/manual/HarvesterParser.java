@@ -173,7 +173,11 @@ public class HarvesterParser extends AbstractParser {
                         findingAidXmlWriter2.close();
                         findingAidOutputStream2.close();
 
-                        File outputFile = new File(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + ai_id + APEnetUtilities.FILESEPARATOR + "oai_" + ai_id + ".xml");
+                        String outputFileDirName = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + ai_id;
+                        File outputFileDir = new File(outputFileDirName);
+                        if(!outputFileDir.exists())
+                            outputFileDir.mkdirs();
+                        File outputFile = new File(outputFileDirName + APEnetUtilities.FILESEPARATOR + "oai_" + ai_id + ".xml");
                         TransformationTool.createTransformation(IOUtils.toInputStream(findingAidOutputStream2.toString()), outputFile, HarvesterParser.class.getResourceAsStream("/dc2c.xsl"), null, true, true, null, true, null);
 
                         Document doc = builder.parse(outputFile);
@@ -197,6 +201,8 @@ public class HarvesterParser extends AbstractParser {
                         cLevel.setXml(FileUtils.readFileToString(outputFile, UTF8));
 
                         outputFile.delete();
+                        if(outputFileDir.listFiles().length == 0)
+                            FileUtils.deleteDirectory(outputFileDir);
 
                         HibernateUtil.beginDatabaseTransaction();
                         try {
@@ -222,7 +228,7 @@ public class HarvesterParser extends AbstractParser {
             }
 
             deleteAllHarvestedFiles(files);
-            
+
             if(findingAidXmlWriter2 != null)
                 findingAidXmlWriter2.close();
             if(findingAidOutputStream2 != null)
@@ -260,7 +266,7 @@ public class HarvesterParser extends AbstractParser {
         }
         return dbToEad(eadContent, idsWithTypes, idsWithUnitids, mainagencycode, tmpDirPath);
     }
-    
+
     public int dbToEad(EadContent eadContent, Map<String, String> idsWithTypes, Map<String, Long> idsWithUnitids, String mainagencycode, String tmpDirPath) {
         LOG.info("idsWithType map size: " + idsWithTypes.size());
         idsWithTypes = sortHashMapByKey(idsWithTypes);

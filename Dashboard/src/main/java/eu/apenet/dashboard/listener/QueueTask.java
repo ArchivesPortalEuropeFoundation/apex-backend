@@ -23,7 +23,7 @@ public class QueueTask implements Runnable {
 	private static final Logger LOGGER = Logger.getLogger(QueueDaemon.class);
 	private Duration duration;
 	private Duration delay;
-	private long INTERVAL = 30000;
+	private static final long INTERVAL = 30000;
 	private final ScheduledExecutorService scheduler;
 
 	public QueueTask(ScheduledExecutorService scheduler, Duration maxDuration, Duration delay) {

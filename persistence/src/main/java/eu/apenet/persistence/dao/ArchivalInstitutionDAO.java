@@ -42,5 +42,6 @@ public interface ArchivalInstitutionDAO extends GenericDAO<ArchivalInstitution, 
 	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdUnless(Integer countryId, Collection<String> internalAlIds,boolean onlyWithoutPartnerIds);
 	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdIncluded(Integer countryId, Collection<String> internalAlIds,boolean onlyWithoutPartnerIds);
 	public List<ArchivalInstitution> getArchivalInstitutionsNoGroups(Integer countryId,Integer userId);
+	public List<ArchivalInstitution> getArchivalInstitutionsByOaiPmhSets(List<String> oaiPmhSets);
 }
 

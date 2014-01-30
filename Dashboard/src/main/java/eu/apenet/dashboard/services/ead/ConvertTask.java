@@ -84,6 +84,8 @@ public class ConvertTask extends AbstractEadTask {
 					xslMessages = TransformationTool.createTransformation(in, outputfile, xslFile, parameters, true,
 							true, null, true, counterCLevelCall, APEnetUtilities.getDashboardConfig().getSystemXslDirPath());
 					tempOutputFile.delete();
+                                        if(tempDirOutput.listFiles().length == 0)
+                                            FileUtils.deleteDirectory(tempDirOutput);
 				} else {
 					String xslFilePath = APEnetUtilities.getDashboardConfig().getXslDirPath()
 							+ APEnetUtilities.FILESEPARATOR + xslFileName;

@@ -1,6 +1,7 @@
 package eu.apenet.dashboard.harvest;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
@@ -24,6 +25,7 @@ import eu.apenet.persistence.vo.User;
 import eu.archivesportaleurope.harvester.oaipmh.HarvestResult;
 import eu.archivesportaleurope.harvester.oaipmh.OaiPmhHarvester;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
+import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 /**
@@ -34,7 +36,7 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
  */
 public class DataHarvester implements Runnable {
     private static final Logger LOGGER = Logger.getLogger(DataHarvester.class);
-    private static final int MAX_NUMBER_HARVESTED_FILES_FOR_TEST = 2; //todo: Put at 10, but for first tests, it is faster with 2
+    private static final int MAX_NUMBER_HARVESTED_FILES_FOR_TEST = 10;
 
     private long archivalInstitutionOaiPmhId;
     private boolean isNighlySchedule;
@@ -86,9 +88,10 @@ public class DataHarvester implements Runnable {
         } else {
             partner = DAOFactory.instance().getUserDAO().findById(userId);
         }
-
+        OaiPmhHttpClient oaiPmhHttpClient = null;
         try {
-            HarvestResult harvestResult = OaiPmhHarvester.runOai(baseURL, from, until, metadataPrefix, setSpec, oaiPmhParser, errorsDirectory);
+        	oaiPmhHttpClient = new OaiPmhHttpClient();
+            HarvestResult harvestResult = OaiPmhHarvester.runOai(baseURL, from, until, metadataPrefix, setSpec, oaiPmhParser, errorsDirectory, oaiPmhHttpClient);
             archivalInstitutionOaiPmh.setLastHarvesting(new Date());
             if(!APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()) {
                 archivalInstitutionOaiPmh.setEnabled(false);
@@ -117,6 +120,13 @@ public class DataHarvester implements Runnable {
             LOGGER.error("Harvest failed for " + currentInfoArchivalInstitutionOaiPmh);
             LOGGER.error("Harvesting failed - should we put an 'error' flag in the DB?");
         } finally {
+			if (oaiPmhHttpClient != null){
+				try {
+					oaiPmhHttpClient.close();
+				}catch(  IOException io){
+					LOGGER.error("Unexcepted error occurred: " + io.getMessage(), io);
+				}
+			}
             if(outputDirectory.exists()) {
                 outputDirectory.delete();
             }

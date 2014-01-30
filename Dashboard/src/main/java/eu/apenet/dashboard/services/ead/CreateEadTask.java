@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Date;
 import java.util.Properties;
 
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import org.apache.commons.io.FileUtils;
 
 import com.ctc.wstx.exc.WstxParsingException;
@@ -64,6 +65,7 @@ public class CreateEadTask extends AbstractEadTask {
 			else if (XmlType.EAD_SG.equals(xmlType))
 				newEad = new SourceGuide();
 
+			newEad.setAiId(aiId);
 			newEad.setArchivalInstitution(archivalInstitution);
 			newEad.setEadid(eadid);
 			newEad.setTitle(title);

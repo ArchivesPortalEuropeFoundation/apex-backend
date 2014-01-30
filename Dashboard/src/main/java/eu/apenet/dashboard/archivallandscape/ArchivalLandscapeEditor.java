@@ -7,6 +7,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -26,7 +27,6 @@ import eu.apenet.persistence.vo.AiAlternativeName;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.Lang;
-
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
@@ -48,11 +48,11 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 	
 	private String countryId;
 	private List<Lang> langList;
-	
+
 	public List<Lang> getLangList(){
 		return this.langList;
 	}
-	
+
 	@Override
 	public String execute() throws Exception {
 		SecurityContext securityContext = SecurityContext.get();
@@ -313,7 +313,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					int aloOrder = 0;
 					int oldOrder = 0;
 					if(parentArchivalInstitution!=null){
-						Set<ArchivalInstitution> children = parentArchivalInstitution.getChildArchivalInstitutions();
+						Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(parentArchivalInstitution.getChildArchivalInstitutions());
 						if(children!=null){
 							aloOrder = children.size();
 							oldOrder = archivalInstitutionTarget.getAlorder();
@@ -330,7 +330,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					archivalInstitutionTarget.setParent(parentArchivalInstitution);
 					List<ArchivalInstitution> siblings = null;
 					if(lastParent!=null){
-						Set<ArchivalInstitution> tempSiblings = lastParent.getChildArchivalInstitutions();
+						Set<ArchivalInstitution> tempSiblings = new LinkedHashSet<ArchivalInstitution>(lastParent.getChildArchivalInstitutions());
 						if(tempSiblings!=null){
 							siblings = new ArrayList<ArchivalInstitution>(tempSiblings);
 						}
@@ -341,7 +341,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 						Iterator<ArchivalInstitution> itSiblings = siblings.iterator();
 						while(itSiblings.hasNext()){
 							ArchivalInstitution aiTemp = itSiblings.next();
-							if(oldOrder<aiTemp.getAlorder() && aiTemp.getAiId()!=archivalInstitutionTarget.getAiId() && aiTemp.getAlorder()>archivalInstitutionTarget.getAlorder()){
+							if(oldOrder<aiTemp.getAlorder() && aiTemp.getAiId()!=archivalInstitutionTarget.getAiId()){
 								aiTemp.setAlorder(aiTemp.getAlorder()-1);
 								aiDao.updateSimple(aiTemp);
 							}
@@ -400,7 +400,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 				ArchivalInstitution parent = ai.getParent();
 				Iterator<ArchivalInstitution> childrenIt = null; 
 				if(parent!=null){
-					Set<ArchivalInstitution> children = parent.getChildArchivalInstitutions();
+					Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(parent.getChildArchivalInstitutions());
 					childrenIt = children.iterator();
 				}else{ //parent is country
 					List<ArchivalInstitution> children = aiDao.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(), true);
@@ -408,15 +408,17 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 				}
 				while(childrenIt.hasNext()){
 					ArchivalInstitution childArchivalInstitution = childrenIt.next();
-					if(childArchivalInstitution.getAlorder()>oldOrder){ //reduce one
-						childArchivalInstitution.setAlorder(childArchivalInstitution.getAlorder()-1);
-						aiDao.updateSimple(childArchivalInstitution); //updateSimple
+					if (childArchivalInstitution != null) {
+						if(childArchivalInstitution.getAlorder()>oldOrder){ //reduce one
+							childArchivalInstitution.setAlorder(childArchivalInstitution.getAlorder()-1);
+							aiDao.updateSimple(childArchivalInstitution); //updateSimple
+						}
 					}
 				}
 				boolean rollback = false;
 				if(!ContentUtils.containsEads(ai)){
 					if(ai.isGroup()){
-						Set<ArchivalInstitution> children = ai.getChildArchivalInstitutions();
+						Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(ai.getChildArchivalInstitutions());
 						if(children!=null && children.size()>0){
 							messenger.append(buildNode("error",getText("al.message.grouphaschildren")));
 							rollback = true;
@@ -463,7 +465,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					ArchivalInstitution parentAI = aiDao.getArchivalInstitution(new Integer(father));
 					if(parentAI!=null){
 						archivalInstitution.setParent(parentAI);
-						Set<ArchivalInstitution> parentChildren = parentAI.getChildArchivalInstitutions();
+						Set<ArchivalInstitution> parentChildren = new LinkedHashSet<ArchivalInstitution>(parentAI.getChildArchivalInstitutions());
 						if(parentChildren!=null){
 							archivalInstitution.setAlorder(parentChildren.size());
 						}

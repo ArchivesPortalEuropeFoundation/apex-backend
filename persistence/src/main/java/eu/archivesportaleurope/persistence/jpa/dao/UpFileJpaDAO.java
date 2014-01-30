@@ -17,15 +17,20 @@ public class UpFileJpaDAO extends AbstractHibernateDAO<UpFile, Integer> implemen
 
 	@Override
 	public List<UpFile> getNewUpFiles(Integer aiId, FileType fileType) {
-		return getNewUpFiles(aiId, fileType, MAX_FILES+1);
+		return getNewUpFiles(aiId, fileType, MAX_FILES);
 	}
+    @Override
+    public List<UpFile> getAllNewUpFiles(Integer aiId, FileType fileType) {
+        return getNewUpFiles(aiId, fileType, -1);
+    }
 	private List<UpFile> getNewUpFiles(Integer aiId, FileType fileType, int max) {
 		String query = "SELECT upFile FROM UpFile upFile WHERE upFile.aiId  = :aiId  AND upFile.fileType = :fileType AND upFile.id NOT IN (SELECT queueItem.upFileId FROM QueueItem queueItem WHERE queueItem.upFileId IS NOT NULL)";
 		TypedQuery<UpFile> typedQuery = getEntityManager().createQuery(
 				query, UpFile.class);
 		typedQuery.setParameter("aiId", aiId);
 		typedQuery.setParameter("fileType", fileType);
-		typedQuery.setMaxResults(MAX_FILES);
+        if(max > 0)
+		    typedQuery.setMaxResults(max);
 		return typedQuery.getResultList();
 	}
 	@Override

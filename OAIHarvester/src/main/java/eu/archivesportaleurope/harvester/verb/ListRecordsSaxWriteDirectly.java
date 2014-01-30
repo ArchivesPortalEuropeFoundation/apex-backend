@@ -1,11 +1,19 @@
 package eu.archivesportaleurope.harvester.verb;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.http.client.methods.CloseableHttpResponse;
+
+import eu.archivesportaleurope.harvester.oaipmh.HarvesterParserException;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.ResultInfo;
+import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
 
 /**
  * User: Yoann Moranville
@@ -13,7 +21,43 @@ import eu.archivesportaleurope.harvester.oaipmh.parser.record.ResultInfo;
  *
  * @author Yoann Moranville
  */
-public class ListRecordsSaxWriteDirectly extends HarvesterVerbSaxWriteDirectly {
+public class ListRecordsSaxWriteDirectly {
+	private OaiPmhHttpClient client;
+	
+	public  ListRecordsSaxWriteDirectly(OaiPmhHttpClient client){
+		this.client = client;
+	}
+	
+	protected ResultInfo harvest(String requestURL, OaiPmhParser oaiPmhParser, File errorDirectory, int numberOfRequests)
+			throws Exception {
+		if (oaiPmhParser.getMaxNumberOfRequests() != null && numberOfRequests >= oaiPmhParser.getMaxNumberOfRequests()){
+			return null;
+		}
+		CloseableHttpResponse closeableHttpResponse = client.get(requestURL);
+		try {
+			InputStream response = client.getResponseInputStream(closeableHttpResponse);
+			ResultInfo resultInfo =  oaiPmhParser.parse(response, numberOfRequests);
+			resultInfo.setRequestUrl(requestURL);
+			return resultInfo;
+		} catch (Exception e) {
+			File errorFile = new File(errorDirectory, (new Date()).getTime() + ".xml");
+			CloseableHttpResponse errorCloseableHttpResponse = client.get(requestURL);
+			try {
+				InputStream response = client.getResponseInputStream(errorCloseableHttpResponse);
+				FileOutputStream fileOutputStream = new FileOutputStream(errorFile);
+				IOUtils.copy(response, fileOutputStream);
+				fileOutputStream.flush();
+				fileOutputStream.close();
+			}finally {
+				errorCloseableHttpResponse.close();
+			}
+			throw new HarvesterParserException(errorFile, e);
+			
+		}finally {
+			closeableHttpResponse.close();
+		}
+	}
+	
 	public ResultInfo harvest(String baseURL, String from, String until, String set, String metadataPrefix, OaiPmhParser oaiPmhParser, File errorDirectory, int numberOfRequests) throws Exception {
         return harvest(getRequestURL(baseURL, from, until, set, metadataPrefix), oaiPmhParser,errorDirectory, numberOfRequests);
     }

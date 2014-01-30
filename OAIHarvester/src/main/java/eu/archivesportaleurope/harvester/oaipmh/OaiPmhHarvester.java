@@ -10,19 +10,20 @@ import org.apache.log4j.Logger;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhRecord;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.ResultInfo;
+import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
 import eu.archivesportaleurope.harvester.verb.ListRecordsSaxWriteDirectly;
 
 public class OaiPmhHarvester {
-	private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+	private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static final Logger LOGGER = Logger.getLogger(OaiPmhHarvester.class);
 
 	public static HarvestResult runOai(String baseURL, String from, String until, String metadataPrefix, String setSpec,
-			OaiPmhParser oaiPmhParser, File errorDir) throws Exception {
+			OaiPmhParser oaiPmhParser, File errorDir, OaiPmhHttpClient oaiPmhHttpClient) throws Exception {
 		HarvestResult harvestResult = new HarvestResult();
 		try {
 			int numberOfRecords = 0;
 			int number = 0;
-			ListRecordsSaxWriteDirectly listRecordsSax = new ListRecordsSaxWriteDirectly();
+			ListRecordsSaxWriteDirectly listRecordsSax = new ListRecordsSaxWriteDirectly(oaiPmhHttpClient);
 			ResultInfo resultInfo = listRecordsSax.harvest(baseURL, from, until, setSpec, metadataPrefix, oaiPmhParser,
 					errorDir, number);
 			boolean hasErrors = false;

@@ -127,22 +127,16 @@ public class RequestProcessor {
 	private static boolean checkListIdentifiersAndListRecords(Map<String, String> params) {
 		int size = params.size()-1;
 		if (size <= 5) {
-			if (!params.containsKey("resumptionToken") && params.containsKey("metadataPrefix")) {
+			if (!params.containsKey("resumptionToken") && params.containsKey("metadataPrefix") &&  params.containsKey("set")) {
 				switch (size) {
-				case 2:
-					return true;
 				case 3:
-					if (params.containsKey("from") || params.containsKey("until") || params.containsKey("set")) {
-						return true;
-					}
+					return true;
 				case 4:
-					if ((params.containsKey("from") && params.containsKey("until") && !params.containsKey("set"))
-							|| (params.containsKey("from") && !params.containsKey("until") && params.containsKey("set"))
-							|| (!params.containsKey("from") && params.containsKey("until") && params.containsKey("set"))) {
+					if (params.containsKey("from") || params.containsKey("until")) {
 						return true;
 					}
 				case 5:
-					if (params.containsKey("from") && params.containsKey("until") && params.containsKey("set")) {
+					if (params.containsKey("from") && params.containsKey("until") ) {
 						return true;
 					}
 				}

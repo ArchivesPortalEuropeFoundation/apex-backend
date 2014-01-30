@@ -30,6 +30,7 @@ import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
+import java.util.Map;
 
 public class EadService {
 
@@ -420,6 +421,7 @@ public class EadService {
             IngestionprofileDefaultUploadAction ingestionprofileDefaultUploadAction = IngestionprofileDefaultUploadAction.getUploadAction(preferences.getProperty(QueueItem.UPLOAD_ACTION));
             IngestionprofileDefaultExistingFileAction ingestionprofileDefaultExistingFileAction = IngestionprofileDefaultExistingFileAction.getExistingFileAction(preferences.getProperty(QueueItem.EXIST_ACTION));
             IngestionprofileDefaultDaoType ingestionprofileDefaultDaoType = IngestionprofileDefaultDaoType.getDaoType(preferences.getProperty(QueueItem.DAO_TYPE));
+            Boolean daoTypeCheck = "true".equals(preferences.getProperty(QueueItem.DAO_TYPE_CHECK));
             XmlType xmlType = XmlType.getType(Integer.parseInt(preferences.getProperty(QueueItem.XML_TYPE)));
 
             //About EADID
@@ -488,7 +490,7 @@ public class EadService {
                     } else {
                         conversionProperties.put("defaultRoleType", ingestionprofileDefaultDaoType.getDaoText());
                     }
-                    conversionProperties.put("useDefaultRoleType", true);
+                    conversionProperties.put("useDefaultRoleType", daoTypeCheck);
 
                     try {
                         if(ingestionprofileDefaultUploadAction.isConvert()) {
@@ -759,8 +761,8 @@ public class EadService {
     	config.setDataProvider(preferences.getProperty(QueueItem.DATA_PROVIDER));
     	config.setUseExistingRepository("true".equals(preferences.getProperty(QueueItem.DATA_PROVIDER_CHECK)));
     	config.setProvider("Archives Portal Europe");
-        config.setType(preferences.getProperty(QueueItem.EUROPEANA_DAO_TYPE));
-    	config.setUseExistingDaoRole("true".equals(preferences.getProperty(QueueItem.EUROPEANA_DAO_TYPE_CHECK)));
+        config.setType(IngestionprofileDefaultDaoType.getDaoType(preferences.getProperty(QueueItem.EUROPEANA_DAO_TYPE)).getDaoText());
+        config.setUseExistingDaoRole("true".equals(preferences.getProperty(QueueItem.EUROPEANA_DAO_TYPE_CHECK)));
         config.setLanguage(preferences.getProperty(QueueItem.LANGUAGES));
         config.setUseExistingLanguage("true".equals(preferences.getProperty(QueueItem.LANGUAGE_CHECK)));
     	config.setInheritLanguage(true);

@@ -28,7 +28,7 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
 
 	//Attributes
     private ManualHTTPUploader uploader_http;
-    
+
     private String httpFileFileName; 		//The uploaded file name
     private File httpFile;					//The uploaded file
     private String httpFileContentType;		//The content type of the file uploaded
@@ -37,7 +37,7 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
     private List<String> filesUploaded;		//This attribute contains all the files uploaded
 
     private List<String> warnings_eag;
-  
+
 	//Getters and Setters
     public void setHttpFileFileName(String httpFileFileName) {
 		this.httpFileFileName = httpFileFileName;
@@ -45,7 +45,7 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
 
 	public String getHttpFileFileName() {
 		return httpFileFileName;
-	} 
+	}
 
 	public void setHttpFile(File httpFile) {
 		this.httpFile = httpFile;
@@ -54,7 +54,7 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
 	public File getHttpFile() {
 		return httpFile;
 	}
-	
+
 	public void setHttpFileContentType(String httpFileContentType) {
 		this.httpFileContentType = httpFileContentType;
 	}
@@ -66,7 +66,7 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
     public List<String> getFilesNotUploaded() {
 		return filesNotUploaded;
 	}
-    
+
     public List<String> getFilesUploaded() {
 		return filesUploaded;
 	}
@@ -95,17 +95,17 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
 		String basePath = APEnetUtilities.FILESEPARATOR + alCountry + APEnetUtilities.FILESEPARATOR +
 				this.getAiId() + APEnetUtilities.FILESEPARATOR + Eag2012.EAG_PATH + APEnetUtilities.FILESEPARATOR;
 		String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;
-		
+
     	addActionMessage(getText("label.eag.eagfileselection"));
     	addActionMessage(getText("label.eag.warningeagfileuploading"));
-    	
+
     	if (new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath).exists()){
     		return "input2";
     	}
     	return SUCCESS;
-    	
+
     }
-	
+
 	/**
      * Upload a File using HTTP protocol
      * @return The code used by Struts2 dispatcher
@@ -114,7 +114,7 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
 
 		//The ai_id is retrieved from the session
     	//This code has been moved to the prepare method
-    	
+
     	//The user is uploading an EAG file, so uploadType will be EAG
     	String result = null;
     	String uploadType = "EAG";
@@ -130,7 +130,7 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
                 archivalInstitutionId = aiId;
                 uploader_http = new ManualHTTPUploader(uploadMethod);
         	    result = uploader_http.uploadFile(uploadType, this.getHttpFileFileName(), this.getHttpFile(), format, archivalInstitutionId, uploadMethod);
-        	    
+
         	    if (result.equals("success") || result.equals("success_with_url_warning")) {
         	    	this.filesNotUploaded = this.uploader_http.getFilesNotUploaded();
         	    	this.filesUploaded = this.uploader_http.getFilesUploaded();
@@ -178,7 +178,7 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
                     addActionMessage(getText("label.eag.uploadingerror.two"));
                     for (int i = 0; i < warnings_eag.size(); i++) {
 						String warning = warnings_eag.get(i).replace("<br/>", "");
-						ParseEag2012Errors parseEag2012Errors = new ParseEag2012Errors(warning,false,this); 
+						ParseEag2012Errors parseEag2012Errors = new ParseEag2012Errors(warning,false,this);
 						if (this.getActionMessages() != null && !this.getActionMessages().isEmpty()) {
 							String currentError = parseEag2012Errors.errorsValidation();
 							if (!this.getActionMessages().contains(currentError)) {
@@ -186,7 +186,7 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
 							}
 						} else {
 							tmp_warnings_eag.add(parseEag2012Errors.errorsValidation());
-						}	
+						}
                     }
                     warnings_eag = tmp_warnings_eag;
         	    	result = ERROR;
@@ -220,7 +220,7 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
         		String tempPath = basePath + Eag2012.EAG_TEMP_FILE_NAME;
         		if (new File(APEnetUtilities.getConfig().getRepoDirPath() + tempPath).exists()){
         		   result="invalideag";
-        		
+
         		}*/
         		result = INPUT;
         	}
@@ -230,7 +230,7 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
     	}
     	return ERROR;
     }
-    
+
     public String parseEag02ToEAG2012(){
     	//This method parse an old EAG to EAG2012
 		if (this.filesUploaded == null) {
@@ -240,7 +240,7 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
 		if (this.filesNotUploaded == null) {
 			this.filesNotUploaded = new ArrayList<String>();
 		}
-    	
+
     	String result = null;
     	Integer archivalInstitutionId;
 
@@ -327,6 +327,9 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
         	    }
 
         	    FileUtils.forceDelete(file);
+                    if(dirFile.list().length == 0)
+                        FileUtils.deleteDirectory(dirFile);
+
     		}
         	return result;
     	}catch(Exception e){
@@ -334,7 +337,7 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
     	}
     	return ERROR;
     }
-    
+
 	public String removeEag02(){
 		 try {
 			Integer aiId = getAiId();
@@ -350,7 +353,10 @@ public class HTTPUploadEAGAction extends AbstractInstitutionAction {
 			File file = new File(path + filename);
 			if(file!=null){
 				FileUtils.forceDelete(file);
-				return SUCCESS;	
+                                if(dirFile.list().length == 0)
+                                    FileUtils.deleteDirectory(dirFile);
+
+				return SUCCESS;
 			}
 		} catch (Exception e) {
 			LOG.error("ERROR trying to upload a file ", e);

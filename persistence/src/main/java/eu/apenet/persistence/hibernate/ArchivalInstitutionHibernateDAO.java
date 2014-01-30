@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -21,6 +22,7 @@ import org.hibernate.criterion.Restrictions;
 
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.Ead;
 
 public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<ArchivalInstitution, Integer> implements ArchivalInstitutionDAO {
 
@@ -588,4 +590,22 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 		}
 		return results;
 	}
+
+	@Override
+	public List<ArchivalInstitution> getArchivalInstitutionsByOaiPmhSets(List<String> oaiPmhSets) {
+		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<ArchivalInstitution> cq = criteriaBuilder.createQuery(ArchivalInstitution.class);
+		Root<ArchivalInstitution> from = cq.from(ArchivalInstitution.class);
+		List<Predicate> whereClause = new ArrayList<Predicate>();
+		for (String oaiPmhSet: oaiPmhSets){
+			whereClause.add(criteriaBuilder.equal(from.get("repositorycode"), oaiPmhSet));
+		}
+		cq.where(criteriaBuilder.or(whereClause.toArray(new Predicate[0])));
+		cq.select(from);
+		cq.orderBy(criteriaBuilder.asc(from.get("repositorycode")));
+		TypedQuery<ArchivalInstitution> query = getEntityManager().createQuery(cq);
+		return query.getResultList();
+	}
+	
+	
 }

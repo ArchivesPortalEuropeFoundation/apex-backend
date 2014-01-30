@@ -1,23 +1,24 @@
 package eu.apenet.dashboard.actions;
 
-import com.opensymphony.xwork2.ActionSupport;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.listener.Duration;
+import eu.apenet.commons.view.jsp.SelectItem;
+import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
 import eu.apenet.persistence.vo.Ingestionprofile;
 import eu.archivesportaleurope.harvester.oaipmh.RetrieveOaiPmhInformation;
+import eu.archivesportaleurope.harvester.parser.other.OaiPmhElement;
+import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
-
-import org.apache.log4j.Logger;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * User: Yoann Moranville
@@ -25,8 +26,13 @@ import java.util.List;
  *
  * @author Yoann Moranville
  */
-public class AutomaticHarvestingCreationAction extends ActionSupport {
-    private static final Logger LOG = Logger.getLogger(AutomaticHarvestingCreationAction.class);
+public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7566396853500559421L;
+
+	private static final Logger LOG = Logger.getLogger(AutomaticHarvestingCreationAction.class);
 
     private static final Long INTERVAL_1_MONTH = 2630000000L;
     private static final Long INTERVAL_3_MONTH = 7889230000L;
@@ -36,8 +42,8 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
     private Integer oaiprofiles;
     private List<ArchivalInstitutionOaiPmh> archivalInstitutionOaiPmhs;
     private String url;
-    private List<String> sets;
-    private List<String> metadataFormats;
+    private List<SelectItem> sets = new ArrayList<SelectItem>();;
+    private List<SelectItem> metadataFormats = new ArrayList<SelectItem>();;
     private List<Ingestionprofile> ingestionProfiles;
     private List<Interval> intervals;
     private String selectedSet;
@@ -55,14 +61,13 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
 
     public String execute() throws Exception {
         step = 0;
-        int archivalInstitutionId = SecurityContext.get().getSelectedInstitution().getId();
-        ingestionProfiles = DAOFactory.instance().getIngestionprofileDAO().getIngestionprofiles(archivalInstitutionId);
+        ingestionProfiles = DAOFactory.instance().getIngestionprofileDAO().getIngestionprofiles(getAiId());
         if(ingestionProfiles.size() < 1) {
             addActionError("You need at least one user profile created before creating an automatic OAI-PMH profile");
             return ERROR;
         }
         ArchivalInstitutionOaiPmhDAO archivalInstitutionOaiPmhDAO = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
-        archivalInstitutionOaiPmhs = archivalInstitutionOaiPmhDAO.getArchivalInstitutionOaiPmhs(archivalInstitutionId);
+        archivalInstitutionOaiPmhs = archivalInstitutionOaiPmhDAO.getArchivalInstitutionOaiPmhs(getAiId());
         return SUCCESS;
     }
 
@@ -80,30 +85,43 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
     public String page3() throws Exception {
         if(getUrl() != null) {
             step = 2;
-            int aiId = SecurityContext.get().getSelectedInstitution().getId();
-            try {
-                metadataFormats = RetrieveOaiPmhInformation.retrieveMetadataFormats(getUrl());
-                if(metadataFormats == null || metadataFormats.isEmpty())
-                    throw new APEnetException("No metadata formats for this URL: " + getUrl());
-            } catch (Exception e) {
-                addActionError("Sorry, the URL is not a correct repository URL or the repository does not contain any metadata formats...");
-                return ERROR;
-            }
-            List<String> setsInRepository = RetrieveOaiPmhInformation.retrieveSets(getUrl());
-            sets = new ArrayList<String>(setsInRepository);
-            List<ArchivalInstitutionOaiPmh> archivalInstitutionOaiPmhList = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().getArchivalInstitutionOaiPmhs(aiId);
-            ingestionProfiles = DAOFactory.instance().getIngestionprofileDAO().getIngestionprofiles(aiId);
-            if(setsInRepository != null) {
-                for(String set : setsInRepository) {
-                    for(ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh : archivalInstitutionOaiPmhList) {
-                        if(archivalInstitutionOaiPmh.getSet().equals(set) && archivalInstitutionOaiPmh.getUrl().equals(getUrl())) {
-                            sets.remove(archivalInstitutionOaiPmh.getSet());
-                        }
-                    }
-                }
-            }
-
-            if(sets.size() == 0 && setsInRepository.size() != 0 && getOaiprofiles() == -1) {
+    		OaiPmhHttpClient oaiPmhHttpClient = null;
+    		List<SelectItem> setsInRepository = null;
+    		try {
+    			oaiPmhHttpClient = new OaiPmhHttpClient();
+	            try {
+	                metadataFormats = convert(RetrieveOaiPmhInformation.retrieveMetadataFormats(getUrl(), oaiPmhHttpClient));
+	                if(metadataFormats == null || metadataFormats.isEmpty())
+	                    throw new APEnetException("No metadata formats for this URL: " + getUrl());
+	            } catch (Exception e) {
+	                addActionError("Sorry, the URL is not a correct repository URL or the repository does not contain any metadata formats...");
+	                return ERROR;
+	            }
+	            setsInRepository = convert(RetrieveOaiPmhInformation.retrieveSets(getUrl(), oaiPmhHttpClient));
+	            sets = new ArrayList<SelectItem>(setsInRepository);
+	            List<ArchivalInstitutionOaiPmh> archivalInstitutionOaiPmhList = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().getArchivalInstitutionOaiPmhs(getAiId());
+	            ingestionProfiles = DAOFactory.instance().getIngestionprofileDAO().getIngestionprofiles(getAiId());
+	            if(setsInRepository != null) {
+	                for(SelectItem set : setsInRepository) {
+	                    for(ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh : archivalInstitutionOaiPmhList) {
+	                        if(archivalInstitutionOaiPmh.getSet().equals(set.getValue()) && archivalInstitutionOaiPmh.getUrl().equals(getUrl())) {
+	                            sets.remove(archivalInstitutionOaiPmh.getSet());
+	                        }
+	                    }
+	                }
+	            }
+    		} catch (Exception e) {
+    			LOG.error("Unexcepted error occurred: " + e.getMessage());
+    		}finally {
+    			if (oaiPmhHttpClient != null){
+    				try {
+    					oaiPmhHttpClient.close();
+    				}catch(  IOException io){
+    					LOG.error("Unexcepted error occurred: " + io.getMessage(), io);
+    				}
+    			}
+    		}
+            if(setsInRepository != null && sets.size() == 0 && setsInRepository.size() != 0 && getOaiprofiles() == -1) {
                 addActionError("Sorry, all your sets are already being used in other profiles. you need to delete some profiles to continue, or edit profiles");
                 return ERROR;
             }
@@ -114,7 +132,7 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
             intervals.add(new Interval(6, INTERVAL_6_MONTH));
             if(getOaiprofiles() != -1) {
                 ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().findById(getOaiprofiles().longValue());
-                sets.add(archivalInstitutionOaiPmh.getSet());
+                sets.add(new SelectItem(archivalInstitutionOaiPmh.getSet()));
                 setSelectedSet(archivalInstitutionOaiPmh.getSet());
                 setSelectedMetadataFormat(archivalInstitutionOaiPmh.getMetadataPrefix());
                 setSelectedIngestionProfile(archivalInstitutionOaiPmh.getProfileId().intValue());
@@ -128,6 +146,13 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
         return ERROR;
     }
 
+    private List<SelectItem> convert(List<OaiPmhElement> oaiPmhElements){
+    	List<SelectItem> result = new ArrayList<SelectItem>();
+    	for (OaiPmhElement element: oaiPmhElements){
+    		result.add(new SelectItem(element.getElement(),element.toString()));
+    	}
+    	return result;
+    }
     public String saveProfile() throws Exception {
         try {
             step = 3;
@@ -195,19 +220,19 @@ public class AutomaticHarvestingCreationAction extends ActionSupport {
         this.url = url;
     }
 
-    public List<String> getSets() {
+    public List<SelectItem> getSets() {
         return sets;
     }
 
-    public void setSets(List<String> sets) {
+    public void setSets(List<SelectItem> sets) {
         this.sets = sets;
     }
 
-    public List<String> getMetadataFormats() {
+    public List<SelectItem> getMetadataFormats() {
         return metadataFormats;
     }
 
-    public void setMetadataFormats(List<String> metadataFormats) {
+    public void setMetadataFormats(List<SelectItem> metadataFormats) {
         this.metadataFormats = metadataFormats;
     }
 

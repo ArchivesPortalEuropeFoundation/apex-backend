@@ -42,7 +42,7 @@
                     </label>
                     <select name="selectedSet" id="sets">
                         <c:forEach var="set" items="${sets}">
-                            <option value="${set}"<c:if test="${selectedSet == set}"> selected="selected"</c:if>>${set}</option>
+                            <option value="${set.value}"<c:if test="${selectedSet == set.value}"> selected="selected"</c:if>>${set.content}</option>
                         </c:forEach>
                     </select>
                     <br />
@@ -52,7 +52,7 @@
                 </label>
                 <select name="selectedMetadataFormat" id="metadataFormats">
                     <c:forEach var="metadataFormat" items="${metadataFormats}">
-                        <option value="${metadataFormat}"<c:if test="${selectedMetadataFormat == metadataFormat}"> selected="selected"</c:if>>${metadataFormat}</option>
+                        <option value="${metadataFormat.value}"<c:if test="${selectedMetadataFormat == metadataFormat.value}"> selected="selected"</c:if>>${metadataFormat.content}</option>
                     </c:forEach>
                 </select>
                 <br />

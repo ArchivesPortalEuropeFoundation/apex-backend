@@ -3,6 +3,7 @@ package eu.archivesportaleurope.harvester.oaipmh;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +17,8 @@ import org.apache.log4j.xml.DOMConfigurator;
 
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.DebugOaiPmhParser;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
+import eu.archivesportaleurope.harvester.parser.other.OaiPmhElement;
+import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
 
 public class ConsoleHarvester {
 	private static final String TRUE = "true";
@@ -42,20 +45,21 @@ public class ConsoleHarvester {
 		this.properties = properties;
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		Map<String, String> parameters = getParameters(args);
 		String baseDirString = ".";
 		Properties properties = null;
 		if (parameters.containsKey(BASE_DIR_PARAMETER)) {
 			baseDirString = parameters.get(BASE_DIR_PARAMETER);
 		}
-		if (parameters.containsKey(CONF_FILE_PARAMETER)) {
-			properties = new Properties();
-			properties.load(new FileInputStream(new File(parameters.get(CONF_FILE_PARAMETER))));
-		}
+
 		File confDir = null;
 		File dataDir = null;
 		try {
+			if (parameters.containsKey(CONF_FILE_PARAMETER)) {
+				properties = new Properties();
+				properties.load(new FileInputStream(new File(parameters.get(CONF_FILE_PARAMETER))));
+			}
 			File baseDir = new File(baseDirString);
 			File logsDir = new File(baseDirString, "logs");
 			dataDir = new File(baseDirString, "data");
@@ -81,23 +85,25 @@ public class ConsoleHarvester {
 		consoleHarvester.start();
 	}
 
-	public void start() {
+	public void start(){
 		logger.info("===============================================");
 		logger.info("Start OAI-PMH Harvester " + ConsoleHarvester.getVersion());
 		logger.info("===============================================");
+		OaiPmhHttpClient oaiPmhHttpClient = null;
 		try {
+			oaiPmhHttpClient = new OaiPmhHttpClient();
 			if (properties == null) {
 				while (metadataFormat == null) {
 					baseUrl = getInput("What is the url of the OAI-PMH server?");
 					try {
-						List<String> metadataFormats = RetrieveOaiPmhInformation.retrieveMetadataFormats(baseUrl);
+						List<OaiPmhElement> metadataFormats = RetrieveOaiPmhInformation.retrieveMetadataFormats(baseUrl, oaiPmhHttpClient);
 						if (metadataFormats == null || metadataFormats.isEmpty()) {
 							logger.error("No metadata formats for this URL: " + baseUrl);
 						} else {
-							metadataFormat = getInput("Which metadata format do you want to use?'", metadataFormats);
+							metadataFormat = getInputFromOaiPmhElements("Which metadata format do you want to use?'", metadataFormats);
 						}
-						List<String> setsInRepository = RetrieveOaiPmhInformation.retrieveSets(baseUrl);
-						set = getInput("Which set do you want to use?'", setsInRepository);
+						List<OaiPmhElement> setsInRepository = RetrieveOaiPmhInformation.retrieveSets(baseUrl,oaiPmhHttpClient);
+						set = getInputFromOaiPmhElements("Which set do you want to use?'", setsInRepository);
 						fromDate = getInputEmptyAllowed("Specify a FROM date or leave empty?(e.g. 2010-12-23)");
 						toDate = getInputEmptyAllowed("Specify a TO date or leave empty?(e.g. 2010-12-23)");
 						List<String> saveMethods = new ArrayList<String>();
@@ -134,7 +140,7 @@ public class ConsoleHarvester {
 			} else {
 				logger.info("Store method:\t\t\t\t" + SAVE_ONLY_THE_METADATA_RECORD_E_G_EAD_OR_EDM_FILES);
 			}
-			File baseUrlDataDir = new File(dataDir, convertToFilename(baseUrl));
+			File baseUrlDataDir = new File(dataDir, convertToFilename(minimizeBaseUrlDataDir(baseUrl)));
 			File metaDataFormatDataDir = new File(baseUrlDataDir, convertToFilename(metadataFormat));
 			File outputDir = new File(metaDataFormatDataDir, convertToFilename(set));
 
@@ -161,7 +167,7 @@ public class ConsoleHarvester {
 				}
 				try {
 					long startTime = System.currentTimeMillis();
-					OaiPmhHarvester.runOai(baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir);
+					OaiPmhHarvester.runOai(baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir, oaiPmhHttpClient);
 					logger.info("===============================================");
 					calcHMS(System.currentTimeMillis(), startTime);
 				} catch (HarvesterParserException hpe) {
@@ -169,8 +175,16 @@ public class ConsoleHarvester {
 				}
 
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.error("Unexcepted error occurred: " + e.getMessage(), e);
+		}finally{
+			if (oaiPmhHttpClient != null){
+				try {
+					oaiPmhHttpClient.close();
+				}catch(  IOException io){
+					logger.error("Unexcepted error occurred: " + io.getMessage(), io);
+				}
+			}
 		}
 		logger.info("===============================================");
 	}
@@ -191,6 +205,11 @@ public class ConsoleHarvester {
 		return parameters;
 	}
 
+	private String minimizeBaseUrlDataDir(String url){
+	       String temp = url.replaceAll("https://", "").replaceAll("http://", "");
+	       String[] splitted = temp.split("/");
+	       return splitted[0];
+	}
 	private void calcHMS(long stopTime, long startTime) {
 		int hours, minutes, seconds;
 		int timeInSeconds = (int) ((stopTime - startTime) / 1000);
@@ -232,7 +251,36 @@ public class ConsoleHarvester {
 		return result;
 
 	}
+	public String getInputFromOaiPmhElements(String title, List<OaiPmhElement> choices) {
 
+		String choicesLine = "";
+		for (int i = 0; i < choices.size(); i++) {
+			choicesLine += (i + 1) + "): " + choices.get(i) + "\n";
+		}
+		String result = null;
+		System.out.println(title);
+		System.out.print(choicesLine);
+		while (result == null) {
+			System.out.print("\nChoose one of the following numbers (1-" + choices.size() + "): ");
+			try {
+				BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
+				String input = bufferRead.readLine();
+				if (StringUtils.isNumeric(input)) {
+					int i = Integer.parseInt(input) - 1;
+					if (i >= 0 && i < choices.size()) {
+						result = choices.get(i).getElement();
+					}
+
+				}
+
+			} catch (Exception e) {
+				logger.error("Unable to read input: " + e.getMessage(), e);
+			}
+		}
+
+		return result;
+
+	}
 	public String getInputEmptyAllowed(String title) {
 
 		String result = null;

@@ -10,19 +10,16 @@ import java.util.List;
  * @author Yoann Moranville
  */
 public class OaiPmhElements {
-    private List<String> elements;
+    private List<OaiPmhElement> elements = new ArrayList<OaiPmhElement>();
     private List<String> errors;
     private String resumptionToken;
 
-    public OaiPmhElements() {
-        this.elements = new ArrayList<String>();
-    }
 
-    public List<String> getElements() {
+    public List<OaiPmhElement> getElements() {
         return elements;
     }
 
-    public void setElements(List<String> elements) {
+    public void setElements(List<OaiPmhElement> elements) {
         this.elements = elements;
     }
 

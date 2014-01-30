@@ -580,12 +580,12 @@ public class UploadContentAction extends AbstractInstitutionAction {
     private void processWithProfile(Ingestionprofile profile) {
         Properties properties = retrieveProperties(profile);
         UpFileDAO upFileDAO = DAOFactory.instance().getUpFileDAO();
-        List<UpFile> upFiles = upFileDAO.getNewUpFiles(getAiId(), FileType.XML);
+        List<UpFile> upFiles = upFileDAO.getAllNewUpFiles(getAiId(), FileType.XML);
         for (UpFile upFile : upFiles) {
             try {
                 EadService.useProfileAction(upFile, properties);
             } catch (Exception ex) {
-                java.util.logging.Logger.getLogger(UploadContentAction.class.getName()).log(Level.SEVERE, null, ex);
+                LOG.error("Failed when adding the new up files into the queue", ex);
             }
         }
     }

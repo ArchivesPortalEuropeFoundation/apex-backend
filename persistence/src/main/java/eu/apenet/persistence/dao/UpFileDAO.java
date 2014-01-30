@@ -14,6 +14,7 @@ import eu.apenet.persistence.vo.UpFile;
 public interface UpFileDAO extends GenericDAO<UpFile, Integer> {
 	static final int MAX_FILES = 500;
 	public List<UpFile> getNewUpFiles(Integer aiId, FileType fileType);
+    public List<UpFile> getAllNewUpFiles(Integer aiId, FileType fileType);
 	public long countNewUpFiles(Integer aiId, FileType fileType);
 	public boolean hasNewUpFiles(Integer aiId, FileType fileType);
 	public List<UpFile> getUpFiles(Integer aiId);

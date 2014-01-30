@@ -29,16 +29,13 @@
 		<class>eu.apenet.persistence.vo.DptUpdate</class>
 		<class>eu.apenet.persistence.vo.Coordinates</class>
 		<class>eu.apenet.persistence.vo.EadSavedSearch</class>
-		<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
+		<shared-cache-mode>NONE</shared-cache-mode>
 		<properties>
-			<!--<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />-->
-			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL82Dialect" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
 			<property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
 			<property name="hibernate.cache.use_second_level_cache" value="false" />
 			<property name="hibernate.cache.use_query_cache" value="false" />
-			<!-- <property name = "hibernate.show_sql" value = "true" /> -->
-
+			<!--<property name="hibernate.show_sql" value="true" />-->
 		</properties>
 	</persistence-unit>
-
 </persistence>
