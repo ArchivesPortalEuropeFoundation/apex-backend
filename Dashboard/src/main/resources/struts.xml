@@ -403,7 +403,19 @@
 			</result>
 			<result name="error" type="tiles">uploaderrorformat2</result>
 			<result name="errorContent" type="tiles">uploaderroralcontentpublished</result>
+			<result name="errorContent2" type="tiles">uploaderroralcontentnotpublished</result>
+			<result name="errorIdentifier" type="tiles">uploaderroralidentifier</result>
+			<result name="errorDuplicateIdentifiers" type="tiles">uploaderroralduplicatedidentifier</result>
+			<result name="errorLang" type="tiles">uploaderrorallangnull</result>
 		</action>
+		
+		<action name="ALDisplayTrees" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="displayTrees">
+			<result name="success" type="stream">
+				<param name="inputName">outputStream</param>
+				<param name="contentType">application/json</param>
+			</result>
+		</action>
+		
 		<action name="getALTree" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="getArchivalInstitutionTree">
 			<result name="SUCCESS" type="stream">
 				<param name="inputName">outputStream</param>
@@ -435,6 +447,12 @@
             <result name="success" type="tiles">indexLandscape</result>
             <result name="input" type="tiles">changeAlIdentifiers</result>
             <result name="error" type="tiles">changeAlIdentifiers</result>
+        </action>
+        
+        <!-- Temporary action to change the AL identifiers if don't begin with a letter in DDBB -->
+        <action name="changeIdentifierInDDBB" class="eu.apenet.dashboard.archivallandscape.ChangeIdentifierInDDBBAction">
+           <result name="success" type="tiles">indexAdmin</result>
+		   <result name="error" type="tiles">indexAdmin</result>
         </action>
 
         <action name="GoDashboard" class="eu.apenet.dashboard.GoDashboardAction">
@@ -787,22 +805,11 @@
                 <param name="actionName">manageHarvest</param>
             </result>
         </action>
-        <action name="idleHarvest" class="eu.apenet.dashboard.harvest.ManageHarvestAction" method="idleHarvest">
+        <action name="manageHarvestItem" class="eu.apenet.dashboard.harvest.ManageHarvestAction" method="manageHarvestItem">
             <result name="success" type="redirectAction">
                 <param name="actionName">manageHarvest</param>
             </result>
         </action>
-        <action name="activateHarvest" class="eu.apenet.dashboard.harvest.ManageHarvestAction" method="activateHarvest">
-            <result name="success" type="redirectAction">
-                <param name="actionName">manageHarvest</param>
-            </result>
-        </action>
-        <action name="startHarvest" class="eu.apenet.dashboard.harvest.ManageHarvestAction" method="startHarvest">
-            <result name="success" type="redirectAction">
-                <param name="actionName">manageHarvest</param>
-            </result>
-        </action>
-
 
         <action name="manageQueue" class="eu.apenet.dashboard.queue.ManageQueueAction">
             <result name="success" type="tiles">manageQueue</result>
@@ -978,5 +985,12 @@
 			<result name="success" type="tiles">indexAdmin</result>
 			<result name="error" type="tiles">indexAdmin</result>
 		</action>
+		
+		<action name="downloadHarvesterErrorsXml" class="eu.apenet.dashboard.harvest.DownloadHarvesterErrorsAction" method="downloadXml">
+            <result name="error" type="tiles">error</result>
+        </action>
+        <action name="downloadHarvesterErrorsText" class="eu.apenet.dashboard.harvest.DownloadHarvesterErrorsAction" method="downloadText">
+            <result name="error" type="tiles">error</result>
+        </action>
     </package>
 </struts>

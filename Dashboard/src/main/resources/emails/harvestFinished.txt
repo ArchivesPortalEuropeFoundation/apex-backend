@@ -4,7 +4,7 @@ Dear ${name},
 The last automatic harvest of the data from '${archivalInstitution}' is finished on '${dashboardBase}'.
 You can check online to see if all went as expected.
 
-From our system point of view, ${body}
+The harvesting process was finished succesfully.
 
 Please see the following information on the harvest:
 

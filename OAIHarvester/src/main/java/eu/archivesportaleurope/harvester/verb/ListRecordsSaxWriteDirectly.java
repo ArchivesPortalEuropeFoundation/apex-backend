@@ -51,7 +51,7 @@ public class ListRecordsSaxWriteDirectly {
 			}finally {
 				errorCloseableHttpResponse.close();
 			}
-			throw new HarvesterParserException(errorFile, e);
+			throw new HarvesterParserException(requestURL, errorFile, e);
 			
 		}finally {
 			closeableHttpResponse.close();

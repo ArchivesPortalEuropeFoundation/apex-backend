@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
 public class IngestionprofilesAction extends AbstractInstitutionAction {
 
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 292033613637062110L;
 	private static final String CREATIVECOMMONS_CPDM = "cpdm";
@@ -79,8 +79,11 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     private String europeanaLicense;
     private String cc_js_result_uri;
     private String licenseAdditionalInformation;
+    private String hierarchyPrefixCheck;
     private String hierarchyPrefix;
+    private String inheritFileParentCheck;
     private String inheritFileParent;
+    private String inheritOriginationCheck;
     private String inheritOrigination;
 
     //other fields
@@ -131,8 +134,11 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
                 cc_js_result_uri = ingestionprofile.getEuropeanaLicenseDetails();
             }
             licenseAdditionalInformation = ingestionprofile.getEuropeanaAddRights();
+            hierarchyPrefixCheck = Boolean.toString(ingestionprofile.getEuropeanaHierarchyPrefixCheck());
             hierarchyPrefix = ingestionprofile.getEuropeanaHierarchyPrefix();
+            inheritFileParentCheck = Boolean.toString(ingestionprofile.getEuropeanaInheritElementsCheck());
             inheritFileParent = Boolean.toString(ingestionprofile.getEuropeanaInheritElements());
+            inheritOriginationCheck = Boolean.toString(ingestionprofile.getEuropeanaInheritOriginCheck());
             inheritOrigination = Boolean.toString(ingestionprofile.getEuropeanaInheritOrigin());
         }
         setUp();
@@ -183,8 +189,11 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
             profile.setEuropeanaLicenseDetails(cc_js_result_uri);
         }
         profile.setEuropeanaAddRights(licenseAdditionalInformation);
+        profile.setEuropeanaHierarchyPrefixCheck(Boolean.parseBoolean(hierarchyPrefixCheck));
         profile.setEuropeanaHierarchyPrefix(hierarchyPrefix);
+        profile.setEuropeanaInheritElementsCheck(Boolean.parseBoolean(inheritFileParentCheck));
         profile.setEuropeanaInheritElements(Boolean.parseBoolean(inheritFileParent));
+        profile.setEuropeanaInheritOriginCheck(Boolean.parseBoolean(inheritOriginationCheck));
         profile.setEuropeanaInheritOrigin(Boolean.parseBoolean(inheritOrigination));
         if (profilelist.equals("-1")) {
             profileDAO.store(profile);
@@ -224,8 +233,11 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         license = EUROPEANA;
         europeanaLicense = "";
         licenseAdditionalInformation = "";
+        hierarchyPrefixCheck = Boolean.toString(true);
         hierarchyPrefix = getText("ead2ese.content.hierarchy.prefix");
+        inheritFileParentCheck = Boolean.toString(true);
         inheritFileParent = Boolean.toString(false);
+        inheritOriginationCheck = Boolean.toString(true);
         inheritOrigination = Boolean.toString(false);
 
         return SUCCESS;
@@ -552,12 +564,36 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         this.licenseAdditionalInformation = licenseAdditionalInformation;
     }
 
+    public String getHierarchyPrefixCheck() {
+        return hierarchyPrefixCheck;
+    }
+
+    public void setHierarchyPrefixCheck(String hierarchyPrefixCheck) {
+        this.hierarchyPrefixCheck = hierarchyPrefixCheck;
+    }
+
+    public String getInheritFileParentCheck() {
+        return inheritFileParentCheck;
+    }
+
+    public void setInheritFileParentCheck(String inheritFileParentCheck) {
+        this.inheritFileParentCheck = inheritFileParentCheck;
+    }
+
     public String getInheritFileParent() {
         return inheritFileParent;
     }
 
     public void setInheritFileParent(String inheritFileParent) {
         this.inheritFileParent = inheritFileParent;
+    }
+
+    public String getInheritOriginationCheck() {
+        return inheritOriginationCheck;
+    }
+
+    public void setInheritOriginationCheck(String inheritOriginationCheck) {
+        this.inheritOriginationCheck = inheritOriginationCheck;
     }
 
     public String getInheritOrigination() {
@@ -567,6 +603,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
     public void setInheritOrigination(String inheritOrigination) {
         this.inheritOrigination = inheritOrigination;
     }
+
     private String convertToString(int identifier){
     	return identifier + "";
     }

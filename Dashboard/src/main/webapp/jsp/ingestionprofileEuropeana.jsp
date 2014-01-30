@@ -7,23 +7,115 @@
 
 <script type='text/javascript'>
     $(function() {
+        $("#radioConversiontypefalse").click(function() {
+            $('#hiddenHierarchyPrefix').show();
+            enableHierarchyPrefixState();
+            $('#hiddenInheritFileParent').show();
+            enableInheritFileParentCheckState();
+            $('#hiddenInheritOrigination').show();
+            enableInheritOriginationCheckState();
+        });
+
+        $("#radioConversiontypetrue").click(function() {
+            $('#hiddenHierarchyPrefix').hide();
+            disableHierarchyPrefixState($('input#hierarchyPrefixInitialValue').val());
+            $('#hiddenInheritFileParent').hide();
+            disableInheritFileParentCheckState();
+            $('#hiddenInheritOrigination').hide();
+            disableInheritOriginationCheckState();
+        });
+
         $('#licensecreativecommons').click(function() {
             $('#hiddenCreativeCommonsLicense').show();
             $('#hiddenEuropeanaLicense').hide();
         });
+
         $('#licensecc0').click(function() {
             $('#hiddenCreativeCommonsLicense').hide();
             $('#hiddenEuropeanaLicense').hide();
         });
+
         $('#licensecpdm').click(function() {
             $('#hiddenCreativeCommonsLicense').hide();
             $('#hiddenEuropeanaLicense').hide();
         });
+
         $('#licenseeuropeana').click(function() {
             $('#hiddenCreativeCommonsLicense').hide();
             $('#hiddenEuropeanaLicense').show();
         });
     });
+
+    function changeHierarchyPrefixState(value) {
+        if ($("#hierarchyPrefixCheck").attr('checked')) {
+            enableHierarchyPrefixState();
+        } else {
+            disableHierarchyPrefixState(value);
+        }
+    }
+
+    function enableHierarchyPrefixState() {
+        $("#hierarchyPrefix").removeAttr('disabled');
+    }
+
+    function disableHierarchyPrefixState(value) {
+        $("#hierarchyPrefix").attr('disabled', 'disabled');
+        $("#hierarchyPrefix").val(value);
+    }
+
+    function changeInheritFileParentCheckState() {
+        if ($("#inheritFileParentCheck").attr('checked')) {
+            enableInheritFileParentCheckState();
+        } else {
+            disableInheritFileParentCheckState();
+        }
+    }
+
+    function enableInheritFileParentCheckState() {
+        $("input[id^='inheritFileParent']").each(function() {
+            $(this).removeAttr('disabled');
+        });
+    }
+
+    function disableInheritFileParentCheckState() {
+        $("input[id^='inheritFileParent']").each(function() {
+            if ($(this).attr("id") != "inheritFileParentCheck") {
+                $(this).attr('disabled', 'disabled');
+                if ($(this).val() == "false") {
+                    $(this).attr('checked', 'checked');
+                } else {
+                    $(this).removeAttr('checked');
+                }
+            }
+        });
+    }
+
+    function changeInheritOriginationCheckState() {
+        if ($("#inheritOriginationCheck").attr('checked')) {
+            enableInheritOriginationCheckState();
+        } else {
+            disableInheritOriginationCheckState();
+        }
+    }
+
+    function enableInheritOriginationCheckState() {
+        $("input[name^='inheritOrigination']").each(function() {
+            $(this).removeAttr('disabled');
+        });
+    }
+
+    function disableInheritOriginationCheckState() {
+        $("input[name^='inheritOrigination']").each(function() {
+            if ($(this).attr("name") != "inheritOriginationCheck") {
+                $(this).attr('disabled', 'disabled');
+                if ($(this).val() == "false") {
+                    $(this).attr('checked', 'checked');
+                } else {
+                    $(this).removeAttr('checked');
+                }
+            }
+        });
+    }
 </script>
 
 <div id="headerContainer">
@@ -91,23 +183,31 @@
             <td><s:textarea id="licenseAdditionalInformation" name="licenseAdditionalInformation" />
             </td>
         </tr>
-        <tr>
+        <s:if test="conversiontype=='true'">
+            <c:set var="showMinimal" value="style=\"display: none;\""></c:set>
+        </s:if>
+        <tr id="hiddenHierarchyPrefix" ${showMinimal}>
             <td class="inputLabel">
+                <s:hidden id="hierarchyPrefixInitialValue" value="%{hierarchyPrefix}"></s:hidden>
+                <s:checkbox name="hierarchyPrefixCheck" id="hierarchyPrefixCheck" value="true" onchange="changeHierarchyPrefixState('%{hierarchyPrefix}');"></s:checkbox>
                 <s:label key="ead2ese.label.hierarchy.prefix" for="hierarchyPrefix" />:
             </td>
-            <td><s:textfield id="hierarchyPrefix" name="hierarchyPrefix" maxLength="100"></s:textfield></td>
+            <td><s:textfield id="hierarchyPrefix" name="hierarchyPrefix"></s:textfield></td>
             </tr>
-            <tr id="hiddenInheritFileParent">
-                <td class="inputLabel">
+            <tr id="hiddenInheritFileParent" ${showMinimal}>
+            <td class="inputLabel">
+                <s:checkbox name="inheritFileParentCheck" id="inheritFileParentCheck" value="true" onchange="changeInheritFileParentCheckState();"></s:checkbox>
                 <s:label key="ead2ese.label.inherit.parent" for="inheritFileParent" />:
             </td>
-            <td><s:radio name="inheritFileParent" list="yesNoSet" listKey="value" listValue="content" id="inheritFileParent"></s:radio></td>
+            <td><s:radio name="inheritFileParent" list="yesNoSet" listKey="value" listValue="content" id="inheritFileParent"></s:radio>
+                </td>
             </tr>
-            <tr id="hiddenInheritOrigination">
-                <td class="inputLabel">
+            <tr id="hiddenInheritOrigination" ${showMinimal}>
+            <td class="inputLabel">
+                <s:checkbox name="inheritOriginationCheck" id="inheritOriginationCheck" value="true" onchange="changeInheritOriginationCheckState();"></s:checkbox>
                 <s:label key="ead2ese.label.inherit.origination" for="inheritOrigination" />:
             </td>
-            <td><s:radio name="inheritOrigination" list="yesNoSet" listKey="value" listValue="content"></s:radio>
+            <td><s:radio name="inheritOrigination" list="yesNoSet" listKey="value" listValue="content" id="inheritOrigination"></s:radio>
             </td>
         </tr>
     </table>

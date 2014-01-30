@@ -568,9 +568,12 @@ public class UploadContentAction extends AbstractInstitutionAction {
         properties.setProperty(QueueItem.LICENSE, ingestionprofile.getEuropeanaLicense() + "");
         properties.setProperty(QueueItem.LICENSE_DETAILS, ingestionprofile.getEuropeanaLicenseDetails() + "");
         properties.setProperty(QueueItem.LICENSE_ADD_INFO, ingestionprofile.getEuropeanaAddRights() + "");
-        properties.setProperty(QueueItem.HIERARCHY_PREFIX, ingestionprofile.getEuropeanaHierarchyPrefix() + "");
-        properties.setProperty(QueueItem.INHERIT_FILE, ingestionprofile.getEuropeanaInheritElements() + "");
-        properties.setProperty(QueueItem.INHERIT_ORIGINATION, ingestionprofile.getEuropeanaInheritOrigin() + "");
+        properties.setProperty(QueueItem.HIERARCHY_PREFIX_CHECK, ingestionprofile.getEuropeanaHierarchyPrefixCheck()+"");
+        properties.setProperty(QueueItem.HIERARCHY_PREFIX, ingestionprofile.getEuropeanaHierarchyPrefix()+"");
+        properties.setProperty(QueueItem.INHERIT_FILE_CHECK, ingestionprofile.getEuropeanaInheritElementsCheck()+"");
+        properties.setProperty(QueueItem.INHERIT_FILE, ingestionprofile.getEuropeanaInheritElements()+"");
+        properties.setProperty(QueueItem.INHERIT_ORIGINATION_CHECK, ingestionprofile.getEuropeanaInheritOriginCheck()+"");
+        properties.setProperty(QueueItem.INHERIT_ORIGINATION, ingestionprofile.getEuropeanaInheritOrigin()+"");
         return properties;
     }
 
@@ -590,7 +593,7 @@ public class UploadContentAction extends AbstractInstitutionAction {
     }
 
     private void initializeProfileList() {
-        ingestionprofiles.add(new SelectItem("", "---Choose a profile---"));
+        ingestionprofiles.add(new SelectItem("", "---" + getText("ingestionprofiles.chooseprofile") + "---"));
         IngestionprofileDAO profileDAO = DAOFactory.instance().getIngestionprofileDAO();
         List<Ingestionprofile> queryResult = profileDAO.getIngestionprofiles(getAiId());
         if (queryResult != null && !queryResult.isEmpty()) {

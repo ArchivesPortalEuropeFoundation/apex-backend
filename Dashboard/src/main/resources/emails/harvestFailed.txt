@@ -1,0 +1,26 @@
+   <small><font face="Helvetica, Arial, sans-serif">Dear ${name},<br/>
+          <br/>
+          The last automatic harvest of the data from '${archivalInstitution}' is was not finished on '${dashboardBase}'.<br/>
+          <br/>
+          <b>The harvesting process was fails due to errors of during the harvesting process.</b><br/>
+          <br/>
+          Please see the following information on the harvest:<br/>
+          <br/>
+          ============================================
+          <br/>
+          The process fails, with the following error message:</font></small><br/>
+    <blockquote>
+      <pre>${errorMessage}</pre>
+    </blockquote>
+    <small><font face="Helvetica, Arial, sans-serif">${errorFileMessage}
+    	Harvesting process information:<br/>
+          <br>
+			${infoHarvestedServer}
+          <br/>
+          ============================================<br/>
+          <br/>
+          Best wishes,<br/>
+          Administrators of the Dashboard<br/>
+          <br/>
+          (Please do not reply to this automatically generated e-mail)
+        </font></small>

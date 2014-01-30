@@ -24,15 +24,22 @@ public class OaiPmhParser extends AbstractOaiPmhParser {
 		OaiPmhRecordParser oaiPmhRecordParser = new OaiPmhRecordParser(getOutputDirectory());
 		ResultInfo resultInfo = new ResultInfo();
 		QName lastElement = null;
+		boolean noRecordsMatch = false;
 		for (int event = xmlStreamReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlStreamReader
 				.next()) {
 			if (event == XMLStreamConstants.START_ELEMENT) {
 				lastElement = xmlStreamReader.getName();
 				if (RECORD.equals(lastElement)) {
 					resultInfo.getRecords().add(oaiPmhRecordParser.parse(xmlStreamReader));
+				}else if (ERROR.equals(lastElement)) {
+					for (int i = 0; i < xmlStreamReader.getAttributeCount(); i++) {
+						if ("noRecordsMatch".equalsIgnoreCase(xmlStreamReader.getAttributeValue(i)) && "code".equalsIgnoreCase(xmlStreamReader.getAttributeLocalName(i))){
+							noRecordsMatch = true;
+						}
+					}
 				}
 			} else if (event == XMLStreamConstants.ATTRIBUTE) {
-				if (ERROR.equals(lastElement)) {
+				if (!noRecordsMatch && ERROR.equals(lastElement)) {
 					for (int i = 0; i < xmlStreamReader.getAttributeCount(); i++) {
 						resultInfo.getErrors().add(
 								xmlStreamReader.getAttributeLocalName(i) + ": " + xmlStreamReader.getAttributeValue(i)
@@ -48,7 +55,7 @@ public class OaiPmhParser extends AbstractOaiPmhParser {
 					// }
 				}
 			} else if (event == XMLStreamConstants.CHARACTERS || event == XMLStreamConstants.CDATA) {
-				if (ERROR.equals(lastElement)) {
+				if (!noRecordsMatch && ERROR.equals(lastElement)) {
 					resultInfo.getErrors().add(xmlStreamReader.getText());
 				} else if (RESUMPTION_TOKEN.equals(lastElement)) {
 					if (resultInfo.getNewResumptionToken() == null){

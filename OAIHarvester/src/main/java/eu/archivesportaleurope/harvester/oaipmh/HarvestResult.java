@@ -7,9 +7,27 @@ import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhRecord;
 public class HarvestResult {
     private DateHarvestModel newestFileHarvested;
     private DateHarvestModel oldestFileHarvested;
+    private String errors;
     
     
-    public DateHarvestModel getNewestFileHarvested() {
+    
+    public String getErrors() {
+		return errors;
+	}
+
+
+	public void setErrors(String errors) {
+		this.errors = errors;
+	}
+	public void addErrors(String errors) {
+		if (this.errors == null){
+			this.errors = errors + "\n";
+		}else {
+			this.errors += errors + "\n";
+		}
+	}
+
+	public DateHarvestModel getNewestFileHarvested() {
 		return newestFileHarvested;
 	}
 

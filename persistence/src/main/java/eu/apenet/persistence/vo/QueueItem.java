@@ -35,8 +35,11 @@ public class QueueItem implements java.io.Serializable {
     public static final String LICENSE = "europeana.license";
     public static final String LICENSE_DETAILS = "europeana.licensedetails";
     public static final String LICENSE_ADD_INFO = "europeana.licenseaddinfo";
+    public static final String HIERARCHY_PREFIX_CHECK = "europeana.hierarchyprefixcheck";
     public static final String HIERARCHY_PREFIX = "europeana.hierarchyprefix";
+    public static final String INHERIT_FILE_CHECK = "europeana.inheritfilecheck";
     public static final String INHERIT_FILE = "europeana.inheritfile";
+    public static final String INHERIT_ORIGINATION_CHECK = "europeana.inheritoriginationcheck";
     public static final String INHERIT_ORIGINATION = "europeana.inheritorigination";
 
     /**

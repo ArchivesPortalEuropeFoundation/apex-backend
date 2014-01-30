@@ -31,10 +31,12 @@ public class OaiPmhHarvester {
 				List<String> errors = resultInfo.getErrors();
 				if (errors != null && errors.size() > 0) {
 					LOGGER.error("Found the following errors:");
+					harvestResult.addErrors("\nUrl that contains errors: '" + resultInfo.getRequestUrl() + "'\n");
 					int length = errors.size();
 					for (int i = 0; i < length; ++i) {
 						String item = errors.get(i);
 						if (StringUtils.isNotBlank(item)) {
+							harvestResult.addErrors(item);
 							LOGGER.error(item);
 						}
 

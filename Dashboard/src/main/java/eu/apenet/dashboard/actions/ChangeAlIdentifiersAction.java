@@ -9,6 +9,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Preparable;
 
 import eu.apenet.dashboard.Breadcrumb;
+import eu.apenet.dashboard.archivallandscape.ArchivalLandscape;
 import eu.apenet.dashboard.archivallandscape.ChangeAlIdentifiers;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
@@ -136,7 +137,7 @@ public class ChangeAlIdentifiersAction extends ActionSupport implements Preparab
 					{
 						addActionMessage(getText("al.message.changeIdentifier.alreadyUsed"));
 						result= INPUT;
-					}else 
+					}else if(ArchivalLandscape.isValidIdentifier(this.getIdentifier()))
 					{
 						String ddbbChanged = cAlId.changeIdentifierinDDBB(ai, this.getIdentifier());
 						if (!ddbbChanged.equals("success"))
@@ -151,6 +152,10 @@ public class ChangeAlIdentifiersAction extends ActionSupport implements Preparab
 							JpaUtil.commitDatabaseTransaction();
 							JpaUtil.closeDatabaseSession();
 						}
+					}else{
+					   //The identifier doesn't begin with a letter
+						addActionMessage(getText("al.message.changeIdentifier.errorIdentifier"));
+						result = ERROR;
 					}
 				}
 				else

@@ -17,7 +17,18 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
 
 	@Column(name="last_harvesting")
 	private Date lastHarvesting;
+	
+	@Column(name="new_harvesting")
+	private Date newHarvesting;
 
+	@Column(name="from_date")
+	private String from;
+	
+	private String errors;
+	
+	@Column(name="errors_response_path")
+	private String errorsResponsePath;
+	
 	@Column(name="oai_pmh_set")
 	private String set;
 
@@ -47,11 +58,42 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
 
     @Column(name="harvest_only_weekend")
     private boolean harvestOnlyWeekend;
+  
 
-    public ArchivalInstitutionOaiPmh() {
+    public String getFrom() {
+		return from;
+	}
+
+
+	public void setFrom(String from) {
+		this.from = from;
+	}
+
+
+    public String getErrors() {
+		return errors;
+	}
+
+
+	public void setErrors(String errors) {
+		this.errors = errors;
+	}
+
+
+	public String getErrorsResponsePath() {
+		return errorsResponsePath;
+	}
+
+
+	public void setErrorsResponsePath(String errorsResponsePath) {
+		this.errorsResponsePath = errorsResponsePath;
+	}
+
+
+	public ArchivalInstitutionOaiPmh() {
     }
 
-    public ArchivalInstitutionOaiPmh(Integer aiId, String url, String metadataPrefix, Long profileId, Long intervalHarvesting) {
+	public ArchivalInstitutionOaiPmh(Integer aiId, String url, String metadataPrefix, Long profileId, Long intervalHarvesting) {
 		this.aiId = aiId;
 		this.url = url;
         this.metadataPrefix = metadataPrefix;
@@ -61,12 +103,6 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
         this.harvestOnlyWeekend = false;
 	}
 
-    @Override
-    public String toString() {
-        return "Archival Institution: '" + archivalInstitution.getAiname() + "' - url: '" + url +  "' - set: '" + (set != null?set:"no set") +
-                "' - metadataPrefix: '" + metadataPrefix + "' - last harvesting until today: '" + (lastHarvesting!=null?lastHarvesting:"first harvest") +
-                "' - ingestion profile: '" + ingestionprofile.getNameProfile() + "' - interval of harvests: '" + intervalHarvesting + "' - enabled: '" + enabled + "' - to only harvest the week end: '" + harvestOnlyWeekend + "'";
-    }
 
     public Long getId() {
         return id;
@@ -167,4 +203,15 @@ public class ArchivalInstitutionOaiPmh implements Serializable {
     public void setHarvestOnlyWeekend(boolean harvestOnlyWeekend) {
         this.harvestOnlyWeekend = harvestOnlyWeekend;
     }
+
+
+	public Date getNewHarvesting() {
+		return newHarvesting;
+	}
+
+
+	public void setNewHarvesting(Date newHarvesting) {
+		this.newHarvesting = newHarvesting;
+	}
+    
 }
