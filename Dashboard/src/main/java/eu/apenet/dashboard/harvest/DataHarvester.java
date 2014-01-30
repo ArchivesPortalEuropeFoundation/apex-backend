@@ -10,6 +10,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.dashboard.security.UserService;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.utils.ContentUtils;
@@ -20,21 +21,21 @@ import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
 import eu.apenet.persistence.vo.FileType;
 import eu.apenet.persistence.vo.Ingestionprofile;
+import eu.apenet.persistence.vo.OaiPmhStatus;
 import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.UpFile;
 import eu.apenet.persistence.vo.UploadMethod;
 import eu.apenet.persistence.vo.User;
-import eu.archivesportaleurope.harvester.oaipmh.HarvestResult;
-import eu.archivesportaleurope.harvester.oaipmh.HarvesterParserException;
+import eu.archivesportaleurope.harvester.oaipmh.HarvestObject;
 import eu.archivesportaleurope.harvester.oaipmh.OaiPmhHarvester;
+import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterConnectionException;
+import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterInterruptionException;
+import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterParserException;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
 import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
-/**
- * User: Yoann Moranville Date: 04/12/2013
- * 
- * @author Yoann Moranville
- */
+
 public class DataHarvester {
 	private static final Logger LOGGER = Logger.getLogger(DataHarvester.class);
 	private static final int MAX_NUMBER_HARVESTED_FILES_FOR_TEST = 10;
@@ -60,6 +61,7 @@ public class DataHarvester {
 		if (archivalInstitutionOaiPmh.getFrom() != null) {
 			from = archivalInstitutionOaiPmh.getFrom();
 		}
+		boolean failedEarlier = OaiPmhStatus.FAILED.equals(archivalInstitutionOaiPmh.getHarvestingStatus());
 		Date currentDate = new Date();
 		Date newHarvestingDate = new Date(currentDate.getTime() + archivalInstitutionOaiPmh.getIntervalHarvesting());
 		Calendar calendar = Calendar.getInstance();
@@ -97,56 +99,98 @@ public class DataHarvester {
 		}
 		OaiPmhHttpClient oaiPmhHttpClient = null;
 		try {
-			oaiPmhHttpClient = new OaiPmhHttpClient();
-			HarvestResult harvestResult = OaiPmhHarvester.runOai(baseURL, from, until, metadataPrefix, setSpec,
-					oaiPmhParser, errorsDirectory, oaiPmhHttpClient);
-			if (harvestResult.getErrors() != null){
-				throw new OaiPmhErrorsException(harvestResult.getErrors());
+			archivalInstitutionOaiPmh.setHarvestingDetails(null);
+			if (archivalInstitutionOaiPmh.getErrorsResponsePath() != null){
+				String[] items = DataHarvester.getErrorResponsePaths(archivalInstitutionOaiPmh);
+				for (String item: items){
+					ContentUtils.deleteFile(item , false);
+				}
 			}
+			archivalInstitutionOaiPmh.setErrorsResponsePath(null);
+			archivalInstitutionOaiPmh.setHarvestingStatus(OaiPmhStatus.PROCESSING);
+			archivalInstitutionOaiPmhDAO.store(archivalInstitutionOaiPmh);
+
+			oaiPmhHttpClient = new OaiPmhHttpClient();
+			HarvestObject harvestObject = new HarvestObject(archivalInstitutionOaiPmhId);
+			HarvesterDaemon.setHarvestObject(harvestObject);
+			if (archivalInstitutionOaiPmh.isHarvestMethodListByIdentifiers()){
+				OaiPmhHarvester.harvestByListIdentifiers(harvestObject, baseURL, from, until, metadataPrefix, setSpec,
+						oaiPmhParser, errorsDirectory, oaiPmhHttpClient);
+			}else {
+				OaiPmhHarvester.harvestByListRecords(harvestObject, baseURL, from, until, metadataPrefix, setSpec,
+						oaiPmhParser, errorsDirectory, oaiPmhHttpClient);			
+			}
+
+			if (harvestObject.isFailed()){
+				throw new OaiPmhErrorsException(harvestObject.getHarvestingDetails());
+			}
+			archivalInstitutionOaiPmh.setHarvestingDetails(harvestObject.getHarvestingDetails());
 			archivalInstitutionOaiPmh.setLastHarvesting(new Date());
 			archivalInstitutionOaiPmh.setFrom(newFrom);
 			if (!APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()) {
 				archivalInstitutionOaiPmh.setEnabled(false);
 			}
-
-			File[] harvestedFiles = outputDirectory.listFiles();
-			UpFileDAO upFileDAO = DAOFactory.instance().getUpFileDAO();
-
+			
 			Ingestionprofile ingestionprofile = archivalInstitutionOaiPmh.getIngestionprofile();
 			Properties properties = retrieveProperties(ingestionprofile);
+			LOGGER.info("Start adding files to queue");
+			File[] harvestedFiles = outputDirectory.listFiles();
+			LOGGER.info("Number of records are " + harvestObject.getNumberOfRecords() + " found files: " + harvestedFiles.length);
+			UpFileDAO upFileDAO = DAOFactory.instance().getUpFileDAO();
 
+			JpaUtil.beginDatabaseTransaction();
 			for (File file : harvestedFiles) {
 				UpFile upFile = createUpFile(subdirectory, file.getName(), UploadMethod.OAI_PMH,
 						archivalInstitution.getAiId(), FileType.XML);
-				upFile = upFileDAO.store(upFile);
-				EadService.useProfileAction(upFile, properties);
+				upFile = upFileDAO.insertSimple(upFile);
+				EadService.useProfileActionForHarvester(upFile, properties);
 			}
+			JpaUtil.commitDatabaseTransaction();
+			LOGGER.info("Files are added to queue");
 			archivalInstitutionOaiPmh.setNewHarvesting(newHarvestingDate);
-			archivalInstitutionOaiPmh.setErrors(null);
-			archivalInstitutionOaiPmh.setErrorsResponsePath(null);
+			archivalInstitutionOaiPmh.setHarvestingDetails(harvestObject.getHarvestingDetails());
+			archivalInstitutionOaiPmh.setErrorsResponsePath(harvestObject.getNotParsableResponses());
+			if (harvestObject.isError()){
+				archivalInstitutionOaiPmh.setHarvestingStatus(OaiPmhStatus.SUCCEED_WITH_ERRORS);
+			}else if (harvestObject.getHarvestingDetails() != null){
+				archivalInstitutionOaiPmh.setHarvestingStatus(OaiPmhStatus.SUCCEED_WITH_WARNINGS);
+			}else {
+				archivalInstitutionOaiPmh.setHarvestingStatus(OaiPmhStatus.SUCCEED);
+			}
 			archivalInstitutionOaiPmhDAO.store(archivalInstitutionOaiPmh);
 
-			int numberEadHarvested = harvestedFiles.length;
-			LOGGER.info("Harvest completed: harvested " + numberEadHarvested + " EAD files from \nID:"
+			LOGGER.info("Harvest completed: harvested " + harvestObject.getNumberOfRecords() + " EAD files from \nID:"
 					+ archivalInstitutionOaiPmh.getId() + "\n" + harvesterProfileLog + "\n --- Oldest file harvested: "
-					+ harvestResult.getOldestFileHarvested() + " --- Newest file harvested: "
-					+ harvestResult.getNewestFileHarvested());
-			UserService.sendEmailHarvestFinished(archivalInstitution, partner, numberEadHarvested, harvesterProfileLog,
-					harvestResult.getOldestFileHarvested(), harvestResult.getNewestFileHarvested());
+					+ harvestObject.getOldestFileHarvested() + " --- Newest file harvested: "
+					+ harvestObject.getNewestFileHarvested());
+			UserService.sendEmailHarvestFinished(archivalInstitution, partner, harvestObject.getNumberOfRecords(), harvesterProfileLog,
+					harvestObject.getOldestFileHarvested(), harvestObject.getNewestFileHarvested(), archivalInstitutionOaiPmh.getHarvestingStatus(), archivalInstitutionOaiPmh.getHarvestingDetails(), archivalInstitutionOaiPmh.getErrorsResponsePath());
 
 		}catch (OaiPmhErrorsException oee){
 			String errors = oee.getErrors();
-			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null);
+			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null,failedEarlier);
+		}catch (HarvesterInterruptionException hpe){
+			String errors = "Last url before the processing is stopped manually: '" + hpe.getRequestUrl() + "'\n\n";
+			LOGGER.info(errors);
+			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null,failedEarlier);
 		}catch (HarvesterParserException hpe){
 			String errors = "Url that contains errors: '" + hpe.getRequestUrl() + "'\n\n";
-			errors+= hpe.getCause().getMessage();
-			LOGGER.error("Error: " + errors);
-			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, hpe.getNotParsebleResponse());
+			if (hpe.getCause() != null){
+				errors+= hpe.getCause().getMessage();
+			}
+			LOGGER.error(errors);
+			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, hpe.getNotParsebleResponse(),failedEarlier);
+		}catch (HarvesterConnectionException e) {
+			String errors = "Url that have connection problems: '" + e.getRequestUrl() + "'\n\n";
+			errors+= e.getMessage() +" (Time out is 5 minutes)";
+			LOGGER.error(errors);
+			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null,failedEarlier);
 		}catch (Exception e) {
 			String errors = APEnetUtilities.generateThrowableLog(e);
-			LOGGER.error("Error: " + errors);
-			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null);
+			LOGGER.error(errors);
+			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null,failedEarlier);
 		} finally {
+			HarvesterDaemon.setHarvestObject(null);
 			if (oaiPmhHttpClient != null) {
 				try {
 					oaiPmhHttpClient.close();
@@ -154,25 +198,28 @@ public class DataHarvester {
 					LOGGER.error("Unexcepted error occurred: " + APEnetUtilities.generateThrowableLog(io));
 				}
 			}
-			if (outputDirectory.exists()) {
-				outputDirectory.delete();
-			}
+
+
 		}
 	}
 
-	private void handleExceptions(User partner, String harvesterProfileLog, Date newHarvestingDate, File outputDirectory, String errors, File errorsResponseFile){
+	private void handleExceptions(User partner, String harvesterProfileLog, Date newHarvestingDate, File outputDirectory, String errors, File errorsResponseFile, boolean failedEarlier){
+		JpaUtil.rollbackDatabaseTransaction();
 		ArchivalInstitutionOaiPmh archivalInstitutionOaiPmhNew = DAOFactory.instance()
 				.getArchivalInstitutionOaiPmhDAO().findById(archivalInstitutionOaiPmhId);
-		if (archivalInstitutionOaiPmhNew.getErrors() != null) {
+		if (failedEarlier) {
 			LOGGER.error("Second time harvesting failed for \nID:" + archivalInstitutionOaiPmhNew.getId() + "\n"
 					+ harvesterProfileLog);
 			archivalInstitutionOaiPmhNew.setEnabled(false);
+			archivalInstitutionOaiPmhNew.setNewHarvesting(newHarvestingDate);
 		} else {
 			LOGGER.error("First time harvesting failed for \nID:" + archivalInstitutionOaiPmhNew.getId() + "\n"
 					+ harvesterProfileLog);
+			archivalInstitutionOaiPmhNew.setNewHarvesting(new Date(newHarvestingDate.getTime() - archivalInstitutionOaiPmhNew.getIntervalHarvesting() + ArchivalInstitutionOaiPmh.INTERVAL_1_MONTH));
 		}
-		archivalInstitutionOaiPmhNew.setNewHarvesting(newHarvestingDate);
-		archivalInstitutionOaiPmhNew.setErrors(harvesterProfileLog + "================================================\n\n" + errors);
+		
+		archivalInstitutionOaiPmhNew.setHarvestingStatus(OaiPmhStatus.FAILED);
+		archivalInstitutionOaiPmhNew.setHarvestingDetails(harvesterProfileLog + "================================================\n\n" + errors);
 		if (errorsResponseFile != null){
 			try {
 				archivalInstitutionOaiPmhNew.setErrorsResponsePath(errorsResponseFile.getCanonicalPath());
@@ -186,10 +233,13 @@ public class DataHarvester {
 		DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().store(archivalInstitutionOaiPmhNew);
 		UserService.sendEmailHarvestFailed(archivalInstitutionOaiPmhNew.getArchivalInstitution(), partner, harvesterProfileLog,
 				errors, archivalInstitutionOaiPmhNew.getErrorsResponsePath());
-
 		try {
+			File parentFile = outputDirectory.getParentFile();
 			ContentUtils.deleteFile(outputDirectory, false);
-		} catch (IOException e1) {
+			if (parentFile.listFiles().length == 0){
+				ContentUtils.deleteFile(parentFile, false);
+			}
+		} catch (IOException e) {
 		}
 	}
 
@@ -264,5 +314,12 @@ public class DataHarvester {
 		public String getErrors(){
 			return this.errors;
 		}
+	}
+	public static String[] getErrorResponsePaths(ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh){
+		if (archivalInstitutionOaiPmh.getErrorsResponsePath() != null){
+			String[] items = archivalInstitutionOaiPmh.getErrorsResponsePath().split("\\|");
+			return items;
+		}
+		return null;
 	}
 }

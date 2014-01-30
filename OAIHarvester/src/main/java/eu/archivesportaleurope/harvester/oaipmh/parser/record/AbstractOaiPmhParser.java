@@ -11,10 +11,12 @@ import javax.xml.stream.XMLStreamWriter;
 public abstract class AbstractOaiPmhParser {
 	protected static final String OAI_PMH = "http://www.openarchives.org/OAI/2.0/";
 	protected static final QName RECORD = new QName(OAI_PMH, "record");
+	protected static final QName LIST_IDENTIFIERS = new QName(OAI_PMH, "ListIdentifiers");
 	protected static final QName METADATA = new QName(OAI_PMH, "metadata");
 	protected static final String UTF8 = "UTF-8";
 	protected static final QName RESUMPTION_TOKEN = new QName(OAI_PMH, "resumptionToken");
 	protected static final QName ERROR = new QName(OAI_PMH, "error");
+	protected static final QName HEADER = new QName(OAI_PMH, "header");
 	private File outputDirectory;
 	public AbstractOaiPmhParser(File outputDirectory){
 		this.outputDirectory = outputDirectory;

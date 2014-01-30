@@ -12,18 +12,18 @@ import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
  *
  * @author Yoann Moranville
  */
-public class ListSetsSax extends HarvesterVerbSaxMemory {
+public class ListSetsVerb extends AbstractMetadateFormatsAndSetsVerb {
 
-    public ListSetsSax(OaiPmhHttpClient client) {
+    public ListSetsVerb(OaiPmhHttpClient client) {
 		super(client);
 	}
 
 	public OaiPmhElements run(String baseURL) throws Exception {
-        return harvest(getRequestURL(baseURL), HarvesterVerbSaxMemory.SET);
+        return harvest(getRequestURL(baseURL), AbstractMetadateFormatsAndSetsVerb.SET);
     }
 
     public OaiPmhElements run(String baseURL, String resumptionToken) throws Exception {
-        return harvest(getRequestURL(baseURL, resumptionToken), HarvesterVerbSaxMemory.SET);
+        return harvest(getRequestURL(baseURL, resumptionToken), AbstractMetadateFormatsAndSetsVerb.SET);
     }
 
     private static String getRequestURL(String baseURL) {

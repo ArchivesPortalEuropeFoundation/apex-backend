@@ -31,10 +31,10 @@ import org.apache.log4j.Logger;
 public class IngestionprofilesAction extends AbstractInstitutionAction {
 
     /**
-	 *
-	 */
-	private static final long serialVersionUID = 292033613637062110L;
-	private static final String CREATIVECOMMONS_CPDM = "cpdm";
+     *
+     */
+    private static final long serialVersionUID = 292033613637062110L;
+    private static final String CREATIVECOMMONS_CPDM = "cpdm";
     private static final String CREATIVECOMMONS_CC0 = "cc0";
     private static final String CREATIVECOMMONS = "creativecommons";
     private static final String EUROPEANA = "europeana";
@@ -212,8 +212,17 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
             for (Ingestionprofile entry : queryResult) {
                 ingestionprofiles.add(new SelectItem(Long.toString(entry.getId()), entry.getNameProfile()));
             }
+        } else {
+            uploadedFileActions.clear();
+            uploadedFileActions.add(new SelectItem("1", getText("ingestionprofiles.upload.convertValidatePublish")));
+            uploadedFileActions.add(new SelectItem("2", getText("ingestionprofiles.upload.convertValidatePublishEuropeana")));
+            uploadedFileActions.add(new SelectItem("3", getText("ingestionprofiles.upload.convert")));
+            uploadedFileActions.add(new SelectItem("4", getText("ingestionprofiles.upload.validate")));
+            uploadedFileActions.add(new SelectItem("0", getText("ingestionprofiles.upload.nothing")));
+
         }
         ingestionprofiles.add(new SelectItem("-1", ""));
+
         profilelist = "-1";
         profileName = "";
         associatedFiletype = convertToString(XmlType.EAD_FA.getIdentifier());
@@ -604,7 +613,7 @@ public class IngestionprofilesAction extends AbstractInstitutionAction {
         this.inheritOrigination = inheritOrigination;
     }
 
-    private String convertToString(int identifier){
-    	return identifier + "";
+    private String convertToString(int identifier) {
+        return identifier + "";
     }
 }

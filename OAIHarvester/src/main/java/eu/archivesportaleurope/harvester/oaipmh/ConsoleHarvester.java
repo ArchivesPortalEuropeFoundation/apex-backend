@@ -15,6 +15,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
+import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterConnectionException;
+import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterParserException;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.DebugOaiPmhParser;
 import eu.archivesportaleurope.harvester.oaipmh.parser.record.OaiPmhParser;
 import eu.archivesportaleurope.harvester.parser.other.OaiPmhElement;
@@ -27,7 +29,9 @@ public class ConsoleHarvester {
 	private static final String YES = "Yes";
 	private static final String SAVE_ONLY_THE_METADATA_RECORD_E_G_EAD_OR_EDM_FILES = "Save only the metadata record (e.g. EAD or EDM files)";
 	private static final String SAVE_FULL_OAI_PMH_RESPONSES = "Save full OAI-PMH responses";
-
+	private static final String HARVEST_METHOD_LIST_RECORDS = "Harvest by verb ListRecords";
+	private static final String HARVEST_METHOD_LIST_IDENTIFIERS_GETRECORD = "Harvest by verb ListIdentifiers/GetRecord (fail safe)";
+	
 	private Logger logger;
 	private File dataDir;
 	private String baseUrl;
@@ -35,11 +39,12 @@ public class ConsoleHarvester {
 	private String set;
 	private String fromDate;
 	private String toDate;
+	private boolean getIdentifiersHarvestMethod=false;
 	private boolean debug = false;
 	private boolean silent = false;
 	private Properties properties;
 
-	public ConsoleHarvester(File confDir, File dataDir, Properties properties) {
+	public ConsoleHarvester(File dataDir, Properties properties) {
 		logger = Logger.getLogger(ConsoleHarvester.class);
 		this.dataDir = dataDir;
 		this.properties = properties;
@@ -53,7 +58,6 @@ public class ConsoleHarvester {
 			baseDirString = parameters.get(BASE_DIR_PARAMETER);
 		}
 
-		File confDir = null;
 		File dataDir = null;
 		try {
 			if (parameters.containsKey(CONF_FILE_PARAMETER)) {
@@ -65,7 +69,7 @@ public class ConsoleHarvester {
 			dataDir = new File(baseDirString, "data");
 			logsDir.mkdirs();
 			dataDir.mkdirs();
-			confDir = new File(baseDir, "conf");
+			File confDir = new File(baseDir, "conf");
 			File log4jXml = new File(confDir, "log4j.xml");
 			if (log4jXml.exists()) {
 				System.setProperty("harvester.logs", logsDir.getCanonicalPath());
@@ -81,7 +85,7 @@ public class ConsoleHarvester {
 			System.err.println("Log4j not properly configured. " + e.getMessage());
 			System.exit(-1);
 		}
-		ConsoleHarvester consoleHarvester = new ConsoleHarvester(confDir, dataDir, properties);
+		ConsoleHarvester consoleHarvester = new ConsoleHarvester(dataDir, properties);
 		consoleHarvester.start();
 	}
 
@@ -95,22 +99,32 @@ public class ConsoleHarvester {
 			if (properties == null) {
 				while (metadataFormat == null) {
 					baseUrl = getInput("What is the url of the OAI-PMH server?");
+					if (StringUtils.isNotBlank(baseUrl)){
+						baseUrl = baseUrl.trim();
+					}
 					try {
 						List<OaiPmhElement> metadataFormats = RetrieveOaiPmhInformation.retrieveMetadataFormats(baseUrl, oaiPmhHttpClient);
 						if (metadataFormats == null || metadataFormats.isEmpty()) {
 							logger.error("No metadata formats for this URL: " + baseUrl);
 						} else {
-							metadataFormat = getInputFromOaiPmhElements("Which metadata format do you want to use?'", metadataFormats);
+							metadataFormat = getInputFromOaiPmhElements("Which metadata format do you want to use?'", metadataFormats, false);
 						}
 						List<OaiPmhElement> setsInRepository = RetrieveOaiPmhInformation.retrieveSets(baseUrl,oaiPmhHttpClient);
-						set = getInputFromOaiPmhElements("Which set do you want to use?'", setsInRepository);
+						set = getInputFromOaiPmhElements("Which set do you want to use?'", setsInRepository, true);
 						fromDate = getInputEmptyAllowed("Specify a FROM date or leave empty?(e.g. 2010-12-23)");
 						toDate = getInputEmptyAllowed("Specify a TO date or leave empty?(e.g. 2010-12-23)");
+						List<String> harvesterMethods = new ArrayList<String>();
+						harvesterMethods.add(HARVEST_METHOD_LIST_IDENTIFIERS_GETRECORD);
+						harvesterMethods.add(HARVEST_METHOD_LIST_RECORDS);
+						String harvesterMethod = getInput("What do you want to harvest?'", harvesterMethods);
+						getIdentifiersHarvestMethod = HARVEST_METHOD_LIST_IDENTIFIERS_GETRECORD.equals(harvesterMethod);
 						List<String> saveMethods = new ArrayList<String>();
 						saveMethods.add(SAVE_ONLY_THE_METADATA_RECORD_E_G_EAD_OR_EDM_FILES);
 						saveMethods.add(SAVE_FULL_OAI_PMH_RESPONSES);
 						String saveMethod = getInput("What do you want to store?'", saveMethods);
 						debug = SAVE_FULL_OAI_PMH_RESPONSES.equals(saveMethod);
+						
+
 					} catch (Exception e) {
 						logger.error("Sorry, the URL is not a correct repository URL or the repository does not contain any metadata formats...");
 					}
@@ -123,6 +137,7 @@ public class ConsoleHarvester {
 				toDate = properties.getProperty("to");
 				debug = TRUE.equals(properties.getProperty("debug"));
 				silent = TRUE.equals(properties.getProperty("silent"));
+				getIdentifiersHarvestMethod = TRUE.equals(properties.getProperty("harvest-method-getidentifiers"));
 
 			}
 			logger.info("===============================================");
@@ -135,6 +150,11 @@ public class ConsoleHarvester {
 				logger.info("From date:\t\t\t\t" + fromDate);
 			if (toDate != null)
 				logger.info("To date:\t\t\t\t" + toDate);
+			if (getIdentifiersHarvestMethod) {
+				logger.info("Harvest method:\t\t\t\t" + HARVEST_METHOD_LIST_IDENTIFIERS_GETRECORD);
+			} else {
+				logger.info("Harvest method:\t\t\t\t" + HARVEST_METHOD_LIST_RECORDS);
+			}
 			if (debug) {
 				logger.info("Store method:\t\t\t\t" + SAVE_FULL_OAI_PMH_RESPONSES);
 			} else {
@@ -142,8 +162,12 @@ public class ConsoleHarvester {
 			}
 			File baseUrlDataDir = new File(dataDir, convertToFilename(minimizeBaseUrlDataDir(baseUrl)));
 			File metaDataFormatDataDir = new File(baseUrlDataDir, convertToFilename(metadataFormat));
-			File outputDir = new File(metaDataFormatDataDir, convertToFilename(set));
-
+			File outputDir = null;
+			if (set == null){
+				outputDir = metaDataFormatDataDir;
+			}else {
+				outputDir = new File(metaDataFormatDataDir, convertToFilename(set));
+			}
 			logger.info("Location of the files to be stored:\t" + outputDir.getCanonicalPath());
 			logger.info("===============================================");
 			List<String> proceedOptions = new ArrayList<String>();
@@ -167,10 +191,19 @@ public class ConsoleHarvester {
 				}
 				try {
 					long startTime = System.currentTimeMillis();
-					OaiPmhHarvester.runOai(baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir, oaiPmhHttpClient);
+					if (getIdentifiersHarvestMethod){
+						OaiPmhHarvester.harvestByListIdentifiers(new HarvestObject(), baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir, oaiPmhHttpClient);
+					}else {
+						OaiPmhHarvester.harvestByListRecords(new HarvestObject(), baseUrl, fromDate, toDate, metadataFormat, set, oaiPmhParser, errorsDir, oaiPmhHttpClient);
+					}
 					logger.info("===============================================");
 					calcHMS(System.currentTimeMillis(), startTime);
 				} catch (HarvesterParserException hpe) {
+
+				} catch (HarvesterConnectionException ste) {
+					String errors = "Url that have connection problems: '" + ste.getRequestUrl() + "'\n\n";
+					errors+= ste.getMessage() +" (Time out is 5 minutes)";
+					logger.error(errors);
 
 				}
 
@@ -222,7 +255,6 @@ public class ConsoleHarvester {
 	}
 
 	public String getInput(String title, List<String> choices) {
-
 		String choicesLine = "";
 		for (int i = 0; i < choices.size(); i++) {
 			choicesLine += (i + 1) + "): " + choices.get(i) + "\n";
@@ -235,7 +267,7 @@ public class ConsoleHarvester {
 			try {
 				BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
 				String input = bufferRead.readLine();
-				if (StringUtils.isNumeric(input)) {
+				if (StringUtils.isNotBlank(input) && StringUtils.isNumeric(input)) {
 					int i = Integer.parseInt(input) - 1;
 					if (i >= 0 && i < choices.size()) {
 						result = choices.get(i);
@@ -244,15 +276,17 @@ public class ConsoleHarvester {
 				}
 
 			} catch (Exception e) {
-				logger.error("Unable to read input: " + e.getMessage(), e);
+				logger.error("Unable to read input: " + e.getMessage());
 			}
 		}
 
 		return result;
 
 	}
-	public String getInputFromOaiPmhElements(String title, List<OaiPmhElement> choices) {
-
+	public String getInputFromOaiPmhElements(String title, List<OaiPmhElement> choices, boolean emptyAllowed) {
+		if (choices.size() == 0){
+			return null;
+		}
 		String choicesLine = "";
 		for (int i = 0; i < choices.size(); i++) {
 			choicesLine += (i + 1) + "): " + choices.get(i) + "\n";
@@ -265,7 +299,10 @@ public class ConsoleHarvester {
 			try {
 				BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
 				String input = bufferRead.readLine();
-				if (StringUtils.isNumeric(input)) {
+				if (emptyAllowed && StringUtils.isBlank(input)){
+					return null;
+				}
+				if (StringUtils.isNotBlank(input) && StringUtils.isNumeric(input)) {
 					int i = Integer.parseInt(input) - 1;
 					if (i >= 0 && i < choices.size()) {
 						result = choices.get(i).getElement();
@@ -274,7 +311,7 @@ public class ConsoleHarvester {
 				}
 
 			} catch (Exception e) {
-				logger.error("Unable to read input: " + e.getMessage(), e);
+				logger.error("Unable to read input: " + e.getMessage());
 			}
 		}
 
@@ -334,4 +371,13 @@ public class ConsoleHarvester {
 	public static String convertToFilename(String name) {
 		return name.replaceAll("[^a-zA-Z0-9\\-\\.]", "_");
 	}
+
+    public String getSet() {
+        return set;
+    }
+
+	protected File getDataDir() {
+		return dataDir;
+	}
+    
 }

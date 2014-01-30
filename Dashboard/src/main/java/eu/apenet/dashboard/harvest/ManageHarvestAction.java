@@ -10,11 +10,11 @@ import org.apache.log4j.Logger;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractAction;
-import eu.apenet.dashboard.actions.AutomaticHarvestingCreationAction;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
+import eu.archivesportaleurope.harvester.oaipmh.HarvestObject;
 
 /**
  * User: Yoann Moranville
@@ -32,8 +32,9 @@ public class ManageHarvestAction extends AbstractAction {
     private Integer harvestId;
     private boolean processOnceADay = true;
     private String selectedAction;
+    private boolean stopHarvesting = false;
     private List<SelectItem> processOptions = new ArrayList<SelectItem>();
-
+    private List<SelectItem> stopHarvestingProcessingOptions = new ArrayList<SelectItem>();
     public Integer getHarvestId() {
         return harvestId;
     }
@@ -70,6 +71,17 @@ public class ManageHarvestAction extends AbstractAction {
         getServletRequest().setAttribute("dailyHarvesting",processOnceADay );
         processOptions.add(new SelectItem("true", "Look at the queue every day"));
         processOptions.add(new SelectItem("false", "Look at the queue every 10 minutes"));
+        stopHarvestingProcessingOptions.add(new SelectItem("false", "Wait till current harvesting process is stopped."));
+        stopHarvestingProcessingOptions.add(new SelectItem("true", "Interrupt current harvesting process and stop it."));
+        try {
+    		HarvestObject harvestObject = HarvesterDaemon.getHarvestObject();
+    		if (harvestObject != null){
+    			getServletRequest().setAttribute("harvestObject",harvestObject.copy());
+    		}
+        	
+        }catch (Exception e){
+        	
+        }
         return SUCCESS;
     }
 
@@ -78,6 +90,9 @@ public class ManageHarvestAction extends AbstractAction {
         ArchivalInstitutionOaiPmh archivalInstitutionOaiPmh = archivalInstitutionOaiPmhDAO.findById(harvestId.longValue());
     	if ("NOW".equals(selectedAction)){
     		archivalInstitutionOaiPmh.setNewHarvesting(new Date());
+    		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
+    	}else if ("METHOD".equals(selectedAction)){
+    		archivalInstitutionOaiPmh.setHarvestMethodListByIdentifiers(!archivalInstitutionOaiPmh.isHarvestMethodListByIdentifiers());
     		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
     	}else if ("DISABLE".equals(selectedAction)){
     		archivalInstitutionOaiPmh.setEnabled(false);
@@ -96,7 +111,7 @@ public class ManageHarvestAction extends AbstractAction {
     		if (newHarvestingDate == null){
     			newHarvestingDate = new Date();
     		}
-    		newHarvestingDate = new Date(newHarvestingDate.getTime() + AutomaticHarvestingCreationAction.INTERVAL_1_MONTH);
+    		newHarvestingDate = new Date(newHarvestingDate.getTime() + ArchivalInstitutionOaiPmh.INTERVAL_1_MONTH);
     		archivalInstitutionOaiPmh.setNewHarvesting(newHarvestingDate);
     		archivalInstitutionOaiPmhDAO.update(archivalInstitutionOaiPmh);
     	}
@@ -105,8 +120,8 @@ public class ManageHarvestAction extends AbstractAction {
 
 
     public String startStopHarvester() {
-        if(HarvesterDaemon.isActive()) {
-            HarvesterDaemon.stop();
+        if(HarvesterDaemon.isActive() || HarvesterDaemon.isHarvesterProcessing()) {
+            HarvesterDaemon.stop(stopHarvesting);
         } else {
         	if (APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()){
         		HarvesterDaemon.start(processOnceADay);
@@ -131,6 +146,22 @@ public class ManageHarvestAction extends AbstractAction {
 
 	public void setSelectedAction(String selectedAction) {
 		this.selectedAction = selectedAction;
+	}
+
+	public boolean isStopHarvesting() {
+		return stopHarvesting;
+	}
+
+	public void setStopHarvesting(boolean stopHarvesting) {
+		this.stopHarvesting = stopHarvesting;
+	}
+
+	public List<SelectItem> getStopHarvestingProcessingOptions() {
+		return stopHarvestingProcessingOptions;
+	}
+
+	public void setStopHarvestingProcessingOptions(List<SelectItem> stopHarvestingProcessingOptions) {
+		this.stopHarvestingProcessingOptions = stopHarvestingProcessingOptions;
 	}
 
 

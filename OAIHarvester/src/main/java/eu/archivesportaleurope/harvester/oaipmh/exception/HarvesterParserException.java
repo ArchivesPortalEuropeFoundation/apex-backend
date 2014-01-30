@@ -1,11 +1,10 @@
-package eu.archivesportaleurope.harvester.oaipmh;
+package eu.archivesportaleurope.harvester.oaipmh.exception;
 
 import java.io.File;
 
-public class HarvesterParserException extends Exception {
+public class HarvesterParserException extends HarvesterException {
 
 	private File notParsebleResponse;
-	private String requestUrl;
 	/**
 	 * 
 	 */
@@ -13,18 +12,14 @@ public class HarvesterParserException extends Exception {
 
 
 	public HarvesterParserException(String requestUrl, File notParsebleResponse, Throwable cause) {
-		super(cause);
+		super(requestUrl,cause);
 		this.notParsebleResponse = notParsebleResponse;
-		this.requestUrl = requestUrl;
 	}
 
 	public File getNotParsebleResponse() {
 		return notParsebleResponse;
 	}
 
-	public String getRequestUrl() {
-		return requestUrl;
-	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;

@@ -1,23 +1,22 @@
-Dear ${name},
-
-
-The last automatic harvest of the data from '${archivalInstitution}' is finished on '${dashboardBase}'.
-You can check online to see if all went as expected.
-
-The harvesting process was finished succesfully.
-
-Please see the following information on the harvest:
-
-============================================
-In total we harvested ${numberEadHarvested} EAD files with the server information below:
-
-${infoHarvestedServer}
-
-Oldest file harvested: ${oldestFileHarvested}
-Newest file harvested: ${newestFileHarvested}
-============================================
-
-Best wishes,
-Administrators of the Dashboard
-
-(Please do not reply to this automatically generated e-mail)
+   <small><font face="Helvetica, Arial, sans-serif">Dear ${name},<br/>
+          <br/>
+          The last automatic harvest of the data from '${archivalInstitution}' is finished on '${dashboardBase}'.<br/>
+          <br/>
+          You can check online to see if all went as expected.</br><br/>
+          <b>The harvesting process is finished succesfully.</b><br/>
+          <br/>
+          Please see the following information on the harvest:<br/>
+          <br/>
+          ============================================
+          <br/>
+         In total we harvested ${numberEadHarvested} EAD files with the server information below:<br/>
+          <br>
+			${infoHarvestedServer}
+          <br/>
+          ============================================<br/>
+          <br/>
+          Best wishes,<br/>
+          Administrators of the Dashboard<br/>
+          <br/>
+          (Please do not reply to this automatically generated e-mail)
+        </font></small>

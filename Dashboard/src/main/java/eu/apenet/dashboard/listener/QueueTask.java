@@ -39,19 +39,30 @@ public class QueueTask implements Runnable {
 
 	@Override
 	public void run() {
-		LOGGER.info("Queuing process active");
+		boolean stopped = false;
+		if (HarvesterDaemon.isHarvesterProcessing() || EadService.isHarvestingStarted()){
+			stopped = true;
+			LOGGER.info("Queuing process active, but will be stopped immediately, because of harvesting");
+		}else {
+			LOGGER.info("Queuing process active");
+		}
 		removeOldResumptionTokens();
 		long endTime = System.currentTimeMillis() + duration.getMilliseconds();
-		boolean stopped = false;
+
+		int numberOfTries = 0; 
 		while (!stopped && !scheduler.isShutdown() && System.currentTimeMillis() < endTime) {
 			if (EadService.isHarvestingStarted() || HarvesterDaemon.isHarvesterProcessing()) {
-				if (HarvesterDaemon.isHarvesterProcessing()){
+				if (numberOfTries >= 2){
+					stopped = true;
+				}
+				if (numberOfTries == 0 && HarvesterDaemon.isHarvesterProcessing()){
 					LOGGER.info("Harvesting process is started, the queue process is stopped");
 				}
-				if (EadService.isHarvestingStarted()){
+				if (numberOfTries == 0 && EadService.isHarvestingStarted()){
 					LOGGER.info("Europeana harvesting process is started, the queue process is stopped");
 				}
 				cleanUp();
+				numberOfTries++;
 			} else {
 				try {
 					QueueDaemon.setQueueProcessing(true);

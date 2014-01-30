@@ -2,23 +2,29 @@ package eu.archivesportaleurope.harvester.oaipmh.parser.record;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Calendar;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
-public class OaiPmhParser extends AbstractOaiPmhParser {
+import org.apache.log4j.Logger;
 
-	private Integer maxNumberOfRequests;
-	public OaiPmhParser(File outputDirectory, Integer maxNumberOfRequests) {
+import eu.archivesportaleurope.harvester.oaipmh.HarvestObject;
+import eu.archivesportaleurope.harvester.oaipmh.OaiPmhHarvester;
+
+public class OaiPmhParser extends AbstractOaiPmhParser {
+	private static final Logger LOGGER = Logger.getLogger(OaiPmhHarvester.class);
+	private Integer maxNumberOfRecords;
+	public OaiPmhParser(File outputDirectory, Integer maxNumberOfRecords) {
 		super(outputDirectory);
-		this.maxNumberOfRequests = maxNumberOfRequests;
+		this.maxNumberOfRecords = maxNumberOfRecords;
 	}
 	public OaiPmhParser(File outputDirectory) {
 		super(outputDirectory);
 	}
-	public ResultInfo parse(InputStream inputStream, int numberOfRequests) throws Exception {
+	public ResultInfo parse(HarvestObject harvestObject, InputStream inputStream, int numberOfRequests, Calendar fromCalendar, Calendar untilCalendar) throws Exception {
 		XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
 		XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(inputStream, UTF8);
 		OaiPmhRecordParser oaiPmhRecordParser = new OaiPmhRecordParser(getOutputDirectory());
@@ -30,7 +36,9 @@ public class OaiPmhParser extends AbstractOaiPmhParser {
 			if (event == XMLStreamConstants.START_ELEMENT) {
 				lastElement = xmlStreamReader.getName();
 				if (RECORD.equals(lastElement)) {
-					resultInfo.getRecords().add(oaiPmhRecordParser.parse(xmlStreamReader));
+					addOrUpdateRecord(harvestObject, oaiPmhRecordParser.parse(xmlStreamReader,RECORD, fromCalendar, untilCalendar));
+				}else if (HEADER.equals(lastElement)) {
+					addOrUpdateRecord(harvestObject, oaiPmhRecordParser.parse(xmlStreamReader,HEADER, fromCalendar, untilCalendar));
 				}else if (ERROR.equals(lastElement)) {
 					for (int i = 0; i < xmlStreamReader.getAttributeCount(); i++) {
 						if ("noRecordsMatch".equalsIgnoreCase(xmlStreamReader.getAttributeValue(i)) && "code".equalsIgnoreCase(xmlStreamReader.getAttributeLocalName(i))){
@@ -46,13 +54,6 @@ public class OaiPmhParser extends AbstractOaiPmhParser {
 										+ " - ");
 					}
 				} else if (RESUMPTION_TOKEN.equals(lastElement)) {
-					// for(int i = 0; i < xmlStreamReader.getAttributeCount();
-					// i++) {
-					// if(xmlStreamReader.getAttributeLocalName(i).equals("completeListSize"))
-					// {
-					// listSize = xmlStreamReader.getAttributeValue(i);
-					// }
-					// }
 				}
 			} else if (event == XMLStreamConstants.CHARACTERS || event == XMLStreamConstants.CDATA) {
 				if (!noRecordsMatch && ERROR.equals(lastElement)) {
@@ -70,11 +71,30 @@ public class OaiPmhParser extends AbstractOaiPmhParser {
                 }
             }
 		}
+		xmlStreamReader.close();
 		return resultInfo;
 	}
-	public Integer getMaxNumberOfRequests() {
-		return maxNumberOfRequests;
+	public Integer getMaxNumberOfRecords() {
+		return maxNumberOfRecords;
 	}
-
-
+	public void addOrUpdateRecord(HarvestObject harvestObject, OaiPmhRecord record){
+		if (!harvestObject.isGetRecordPhase()){
+			harvestObject.increaseNumberOfRecords();
+			harvestObject.setLatestRecordId(record.getIdentifier());
+			String action = null;
+			if (record.isDropped()){
+				action = "i";
+			}else if (record.isDeleted()){
+				action = "d";
+			}else {
+				action = "u";
+			}
+			if (record.getFilename() == null){
+				LOGGER.info("("+harvestObject.getNumberOfRequests()+"," + harvestObject.getNumberOfRecords() +"): LI(" + action + "): " + record );
+			}else {
+				LOGGER.info("("+harvestObject.getNumberOfRequests()+"," + harvestObject.getNumberOfRecords() +"): LR(" + action + "): " + record );
+			}
+			harvestObject.add(record);			
+		}
+	}
 }

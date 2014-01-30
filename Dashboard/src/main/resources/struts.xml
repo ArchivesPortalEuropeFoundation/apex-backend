@@ -941,21 +941,21 @@
             <result name="success">/jsp/ead2ese/edmpreview.jsp</result>
         </action>
 
-        <action name="automaticharvestingcreation" class="eu.apenet.dashboard.actions.AutomaticHarvestingCreationAction">
+        <action name="automaticharvestingcreation" class="eu.apenet.dashboard.harvest.AutomaticHarvestingCreationAction">
             <interceptor-ref name="changeLanguageStack"/>
             <result name="success" type="tiles">automaticharvestingcreation</result>
             <result name="error">/jsp/templates/blank.jsp</result>
         </action>
-        <action name="automaticharvestingcreationpage2" class="eu.apenet.dashboard.actions.AutomaticHarvestingCreationAction" method="page2">
+        <action name="automaticharvestingcreationpage2" class="eu.apenet.dashboard.harvest.AutomaticHarvestingCreationAction" method="page2">
             <interceptor-ref name="changeLanguageStack"/>
             <result name="success" type="tiles">automaticharvestingcreation</result>
         </action>
-        <action name="automaticharvestingcreationpage3" class="eu.apenet.dashboard.actions.AutomaticHarvestingCreationAction" method="page3">
+        <action name="automaticharvestingcreationpage3" class="eu.apenet.dashboard.harvest.AutomaticHarvestingCreationAction" method="page3">
             <interceptor-ref name="changeLanguageStack"/>
             <result name="success" type="tiles">automaticharvestingcreation</result>
             <result name="error">/jsp/templates/blank.jsp</result>
         </action>
-        <action name="automaticharvestingcreationsave" class="eu.apenet.dashboard.actions.AutomaticHarvestingCreationAction" method="saveProfile">
+        <action name="automaticharvestingcreationsave" class="eu.apenet.dashboard.harvest.AutomaticHarvestingCreationAction" method="saveProfile">
             <interceptor-ref name="changeLanguageStack"/>
             <result name="success" type="tiles">automaticharvestingcreation</result>
             <result name="error">/jsp/templates/blank.jsp</result>

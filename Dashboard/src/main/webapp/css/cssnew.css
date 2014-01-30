@@ -1154,6 +1154,16 @@ input.inputButtonSubmitAL{
     color: #808080;
     font-style: italic;
 }
+.harvestProfileSucceed {
+    color: green;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.harvestProfileWarnings {
+    color: green;
+    font-weight: bold;
+    text-transform: uppercase;
+}
 .harvestProfileErrors {
     color: #FF0000;
     font-weight: bold;

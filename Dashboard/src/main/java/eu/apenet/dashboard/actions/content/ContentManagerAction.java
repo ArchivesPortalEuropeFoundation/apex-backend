@@ -5,6 +5,7 @@ import java.util.Map;
 
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.AbstractInstitutionAction;
+import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EadSearchOptions;
@@ -207,7 +208,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 		dynamicEadSearchOptions.setEadClass(SourceGuide.class);
 		results.setHasDynamicSg(eadDAO.existEads(dynamicEadSearchOptions));
 		getServletRequest().setAttribute("results", results);
-		getServletRequest().setAttribute("harvestingStarted", EadService.isHarvestingStarted());
+		getServletRequest().setAttribute("harvestingStarted", HarvesterDaemon.isHarvesterProcessing() || EadService.isHarvestingStarted());
 		return SUCCESS;
 	}
 

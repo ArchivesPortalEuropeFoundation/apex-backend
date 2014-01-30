@@ -243,25 +243,36 @@ function deleteNode(){
 }
 
 function getGroups(){
-	$.post("launchALActions.action",{"action":"get_groups"},function(d){
-		$("div .secondFilterSelect").remove();
+	var dynatree = $("#archivalLandscapeEditorUp").dynatree("getTree");
+	var activeNode = dynatree.getActiveNode();
+	var activeId = "";
+	if(activeNode){
+		activeId = activeNode.data.key;
+	}
+	$.post("launchALActions.action",{"action":"get_groups","aiId":activeId},function(d){
 		var groupSelect = "<div class=\"secondFilterSelect\"><select id=\"groupSelect\">";
 		var groups = 0;
 		$.each(d,function(k,group){
 			optionStart = "";
 			optionEnd = "";
+			optionMiddle = "";
 			$.each(group,function(k2,v){
 				if(v.key){
-					optionStart = "<option value=\""+v.key+"\">";
+					optionStart = "<option value=\""+v.key+"\"";
 				}else if(v.name){
 					optionEnd = v.name+"</option>";
+				}else if(v.disabled){
+					optionMiddle = " disabled=\"disabled\"";
 				}
 			});
-			groupSelect += optionStart+optionEnd;
+			groupSelect += optionStart+optionMiddle+">"+optionEnd;
 			groups++;
 		});
 		groupSelect+= "</select></div>";
 		if(groups>0){
+			$("div .secondFilterSelect").each(function(){
+				$(this).remove();
+			});
 			$("#divGroupNodesContainer").show();
 			$("#changeNodeDiv").before(groupSelect);
 			$("div .secondFilterSelect").show();
@@ -475,7 +486,7 @@ function checkPossibleAlternativeNamesActions(lang) {
 				$("#deleteTargetSubmitDiv").show();
 			}
 		});
-});
+	});
 }
 
 function showInformation(information,error){

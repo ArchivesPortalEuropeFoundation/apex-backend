@@ -315,9 +315,14 @@ public class EadService {
         return ead;
 	}
 
-    public static void useProfileAction(UpFile upFile, Properties properties) throws Exception {
-        //todo: SecurityContext?
-        addToQueue(QueueAction.USE_PROFILE, properties, upFile);
+    public static void useProfileActionForHarvester(UpFile upFile, Properties preferences) throws Exception {
+        QueueItem queueItem = fillQueueItem(upFile, QueueAction.USE_PROFILE, preferences);
+        DAOFactory.instance().getQueueItemDAO().insertSimple(queueItem);
+    }
+    public static void useProfileAction(UpFile upFile, Properties preferences) throws Exception {
+    	SecurityContext.get().checkAuthorized(upFile.getAiId());
+        QueueItem queueItem = fillQueueItem(upFile, QueueAction.USE_PROFILE, preferences);
+        DAOFactory.instance().getQueueItemDAO().store(queueItem);
     }
 
 	public static QueueAction processQueueItem(QueueItem queueItem) throws Exception {
@@ -576,10 +581,7 @@ public class EadService {
 		indexqueueDao.store(queueItem);
 	}
 
-    private static void addToQueue(QueueAction queueAction, Properties preferences, UpFile upFile) throws IOException {
-        QueueItem queueItem = fillQueueItem(upFile, queueAction, preferences);
-        DAOFactory.instance().getQueueItemDAO().store(queueItem);
-    }
+
 
 	public static void addBatchToQueue(EadSearchOptions eadSearchOptions, QueueAction queueAction,
 			Properties preferences) throws IOException {

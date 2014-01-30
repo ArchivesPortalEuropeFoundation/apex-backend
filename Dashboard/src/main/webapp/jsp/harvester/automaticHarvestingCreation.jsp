@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<div align="middle">
+<%@ taglib prefix="apenet" uri="http://commons.apenet.eu/tags"%>
+<div >
     <s:actionerror />
 
     <c:choose>
@@ -32,22 +32,41 @@
 			                <td><c:out value="${item.newHarvesting}" /></td>
 			                <td><c:out value="${item.from}" /></td>
 			                <td><c:out value="${item.ingestionProfile}" /></td>
-			                <td  class="${item.errorCss}">
-			                	<c:if test="${item.errors}">
-			                		<a href="downloadHarvesterErrorsText.action?harvestId=${item.id}">ERRORS</a>
-			                		<c:if test="${!empty item.errorResponsePath}">
-			                			<br/><a href="downloadHarvesterErrorsXml.action?harvestId=${item.id}">OAI-PMH Response</a>
-			                		</c:if>
-			                	</c:if>
-							</td>
-			                <td>
-	                            <s:form action="automaticharvestingcreationpage3.action" method="POST" theme="simple">
-	                               <input type="hidden" name="oaiprofiles" value="${item.id}" />
-	                               <input type="hidden" name="url" value="${item.url}" />
-	                               <s:submit key="dashboard.edit.title" />
-	                            </s:form>
+
+			               
+			                	<c:choose>
+			                        <c:when test="${harvestingStarted}">
+			                           <td colspan="2"> <s:text name="label.harvesting.processing.noactions" /></td>
+			                        </c:when>
+			                        <c:otherwise>
+					                <td  class="${item.errorCss}">
+					                	<c:if test="${!empty item.harvestingStatus}">
+					                		<c:choose>
+					                				<c:when test="${empty item.harvestingDetails}"><apenet:resource>${item.harvestingStatus}</apenet:resource></c:when>
+					                				<c:otherwise>
+								                		<a href="downloadHarvesterErrorsText.action?harvestId=${item.id}"><apenet:resource>${item.harvestingStatus}</apenet:resource></a>
+								                		<c:if test="${!empty item.errorResponsePath}">
+								                			<c:forTokens items="${item.errorResponsePath}" delims="|" varStatus="varStatus">
+								                				<br/><a href="downloadHarvesterErrorsXml.action?harvestId=${item.id}&index=${varStatus.index}">OAI-PMH Response ${varStatus.index}</a>
+								                			</c:forTokens>
+								                		</c:if>
+													</c:otherwise>	
+					                		</c:choose>
 		
-			                </td>
+					                	</c:if>
+					                	
+					                </td>		                      
+			                         <td>
+			                            <s:form action="automaticharvestingcreationpage3.action" method="POST" theme="simple">
+			                               <input type="hidden" name="oaiprofiles" value="${item.id}" />
+			                               <input type="hidden" name="url" value="${item.url}" />
+			                               <s:submit key="dashboard.edit.title" />
+			                            </s:form>
+			                           </td>
+		                            </c:otherwise>
+	                            </c:choose>
+		
+			                
 			            </tr>
 			        </c:forEach>
 			        <tr>
@@ -143,6 +162,17 @@
 
                         </td>
                     </tr>
+                     <tr>
+                        <td>
+                            <label for="harvesterMethods">
+                                <s:property value="getText('label.harvesting.method')"/>
+                            </label>
+                        </td>
+                        <td>
+                        	<s:select id="harvesterMethods"  name="harvesterMethod" list="harvesterMethods" listKey="value" listValue="content" theme="simple"/>
+                        </td>
+                    </tr>                   
+                    
                     <tr>
                         <td>
                             <label for="intervals">

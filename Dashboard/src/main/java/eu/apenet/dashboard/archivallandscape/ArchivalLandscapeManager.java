@@ -110,6 +110,9 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	// Error when an institution has duplicated identifiers.
 	private static final String ERROR_DUPLICATE_IDENTIFIERS = "errorDuplicateIdentifiers";
 
+	// Error when the name of te institution hasn't language.
+	private static final String ERROR_LANG = "errorLang";
+
 	private static final String AL_GLOBAL_UNITTITLE = "European countries";
 
 	private List<ArchivalInstitution> totalInstitutions;
@@ -136,6 +139,8 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	private String aiArchivalInstitutionName;
 
 	private Set<String> institutionsWithContentNotPublished;
+
+	private ArrayList<String> errors;
 
 	// Set for the duplicate identifiers.
 	private Set<String> duplicateIdentifiers;
@@ -385,6 +390,8 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					}catch(Exception e){
 						log.error("Exception checking institutions with ddbb to be replaced",e);
 					}
+				} else {
+					state = this.ERROR_LANG;
 				}
 			}
 		}
@@ -467,7 +474,16 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 				writer.append("\""+getText("al.message.previewisbeingdisplayed")+"\"");//Preview is being displayed bellow
 			}else{
 				writer.append("\"error\":");
-				writer.append("\""+getText("al.message.error.badarchivallandscapedetected")+"\"");//Preview is being displayed bellow
+				if(this.errors!=null && this.errors.size()>0){
+					String message = "";
+					Iterator<String> it = this.errors.iterator();
+					while(it.hasNext()){
+						message += it.next();
+					}
+					writer.append("\""+message+"\"");//Preview is being displayed bellow
+				}else{
+					writer.append("\""+getText("al.message.error.badarchivallandscapedetected")+"\"");//Preview is being displayed bellow
+				}
 			}
 			writer.append("}");
 			//end json part
@@ -585,7 +601,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 							// this institution has any lang error and trans may be closed
 							state = 6;
 							log.debug("Institution has not lang");
-							validOperation = "errorLang";//LANG_ERROR
+							validOperation = this.ERROR_LANG;//LANG_ERROR
 							JpaUtil.rollbackDatabaseTransaction();
 							this.setAiArchivalInstitutionName(aiName);
 							return validOperation;
@@ -1432,6 +1448,24 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 							archivalInstitution.setCountryId(this.country.getId()); //fix for current bad Hibernate mapping
 						}else{
 							log.error("Bad xml detected, reason: not lang for alternative name");
+							this.setAiArchivalInstitutionName(alternativeNameText);
+							this.errors = new ArrayList<String>();
+							String message2 = getText("updateErrorFormatAL.error.unittitle.lang2");
+							if(message2!=null && message2.length()>0){
+								if(message2.contains("<")){
+									message2 = message2.replace("<","&#60;");
+								}if(message2.contains(">")){
+									message2 = message2.replace(">","&#62;");
+								}if(message2.contains("@")){
+									message2 = message2.replace("@","&#64;");
+								}
+							}
+							String message = "<p>&nbsp;</p>"+getText("updateErrorFormatAL.errors")  
+									+"<p>&nbsp;</p>"+getText("updateErrorFormatAL.error.unittitle.lang1")
+									+"<p>&nbsp;</p>"+alternativeNameText
+									+ "<p>&nbsp;</p>"+ message2;
+							
+							this.errors.add(message);
 							validXML = false;
 						}
 						alternativeNameText = "";
@@ -1553,9 +1587,14 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 							archivalInstitution.setParent(aiParent);
 						}else if(level!=null && level.equals(SERIES)){
 							Set<ArchivalInstitution> children = getXMLArchivalInstitutionLevelChildren(r,archivalInstitution);
-							log.debug("Children has been added with size: "+children.size()+" to institution with id: "+id);
-							archivalInstitution.setChildArchivalInstitutions(new LinkedList<ArchivalInstitution>(children));
-							update = true; //continue
+							if(children!=null){
+								log.debug("Children has been added with size: "+children.size()+" to institution with id: "+id);
+								archivalInstitution.setChildArchivalInstitutions(new LinkedList<ArchivalInstitution>(children));
+								update = true; //continue
+							}else{
+								log.debug("Detected invalid xml from getXMLArchivalInstitutionLevelChildren function");
+								validXML = false;
+							}
 						}
 					}else if(localName.equals("unittitle") && archivalInstitution!=null){
 						unittitle = ""; //clean old unittitle
@@ -1605,11 +1644,34 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 								lang = languages.get(i);
 							}
 						}
-						alternativeName.setLang(lang);
-						alternativeNames.add(alternativeName);
-						archivalInstitution.setAiAlternativeNames(alternativeNames);
-						archivalInstitution.setCountry(this.country);
-						archivalInstitution.setCountryId(this.country.getId()); //fix for current bad Hibernate mapping
+						if(lang!=null){
+							alternativeName.setLang(lang);
+							alternativeNames.add(alternativeName);
+							archivalInstitution.setAiAlternativeNames(alternativeNames);
+							archivalInstitution.setCountry(this.country);
+							archivalInstitution.setCountryId(this.country.getId()); //fix for current bad Hibernate mapping
+						}else{
+							log.error("ERROR: bad xml, invalid unittitle, reason: lang null or not found in server");
+							this.setAiArchivalInstitutionName(unittitle);
+							this.errors = new ArrayList<String>();
+							String message2 = getText("updateErrorFormatAL.error.unittitle.lang2");
+							if(message2!=null && message2.length()>0){
+								if(message2.contains("<")){
+									message2 = message2.replace("<","&#60;");
+								}if(message2.contains(">")){
+									message2 = message2.replace(">","&#62;");
+								}if(message2.contains("@")){
+									message2 = message2.replace("@","&#64;");
+								}
+							}
+							String message = "<p>&nbsp;</p>"+getText("updateErrorFormatAL.errors")  
+									+"<p>&nbsp;</p>"+getText("updateErrorFormatAL.error.unittitle.lang1")
+									+"<p>&nbsp;</p>"+unittitle
+									+ "<p>&nbsp;</p>"+ message2;
+							
+							this.errors.add(message);
+							validXML = false;
+						}
 						unittitle = "";
 						uLang = "";
 					}
@@ -1622,7 +1684,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					}
 			}
 		}
-		return archivalInstitutions;
+		return (validXML)?archivalInstitutions:null;
 	}
 
 	public String download(){

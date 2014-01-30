@@ -567,7 +567,7 @@
     <definition name="automaticharvestingcreation" extends="dashboardLayout" >
         <put-attribute name="title" value="dashboard.menu.automaticharvestingcreation" />
         <put-attribute name="menu" value="/jsp/indexDashboard.jsp" />
-        <put-attribute name="body" value="/jsp/automaticHarvestingCreation.jsp" />
+        <put-attribute name="body" value="/jsp/harvester/automaticHarvestingCreation.jsp" />
     </definition>
 
     <!-- END ARCHIVAL LANDSCAPE ACTIONS -->

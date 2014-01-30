@@ -38,7 +38,10 @@ public class EseHibernateDAO extends AbstractHibernateDAO<Ese, Integer> implemen
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		criteria = criteria.createAlias("ese.findingAid", "findingAid");
 		criteria.add(Restrictions.eq("findingAid.id", faId));
-		criteria.add(Restrictions.eq("findingAid.aiId", aiId));
+
+        criteria.createAlias("findingAid.archivalInstitution", "archivalInstitution");
+        criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
+
 		results = criteria.list();
 		long endTime = System.currentTimeMillis();
 		if (log.isDebugEnabled()) {

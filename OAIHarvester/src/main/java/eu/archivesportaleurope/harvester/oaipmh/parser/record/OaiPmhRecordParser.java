@@ -1,6 +1,7 @@
 package eu.archivesportaleurope.harvester.oaipmh.parser.record;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.LinkedList;
 
 import javax.xml.bind.DatatypeConverter;
@@ -10,20 +11,24 @@ import javax.xml.stream.XMLStreamReader;
 
 public class OaiPmhRecordParser extends AbstractOaiPmhParser{
 	
-	public static final QName HEADER = new QName(OAI_PMH, "header");
-	public static final QName IDENTIFIER = new QName(OAI_PMH, "identifier");
-	public static final QName DATESTAMP = new QName(OAI_PMH, "datestamp");
-	public static final QName STATUS = new QName(OAI_PMH, "status");
+	
+	protected static final QName IDENTIFIER = new QName(OAI_PMH, "identifier");
+	protected static final QName DATESTAMP = new QName(OAI_PMH, "datestamp");
+	protected static final QName STATUS = new QName(OAI_PMH, "status");
 	public OaiPmhRecordParser(File outputDirectory) {
 		super(outputDirectory);
 	}
-	public OaiPmhRecord parse(XMLStreamReader xmlReader)
+	public OaiPmhRecord parse(XMLStreamReader xmlReader, QName rootElement, Calendar fromCalendar, Calendar untilCalendar)
 			throws Exception {
 		LinkedList<QName> path = new LinkedList<QName>();
 		OaiPmhRecord record = new OaiPmhRecord();
+		QName lastElement = null;
+		if (HEADER.equals(rootElement)){
+			record.setStatus(xmlReader.getAttributeValue(null, STATUS.getLocalPart()));	
+			add(path, rootElement);
+		}
 		boolean foundEndElement = false;
 		int event =  xmlReader.next();
-		QName lastElement = null;
 		while(!foundEndElement && event != XMLStreamConstants.END_DOCUMENT){
 			if (event == XMLStreamConstants.START_ELEMENT) {
 				lastElement = xmlReader.getName();
@@ -32,8 +37,10 @@ public class OaiPmhRecordParser extends AbstractOaiPmhParser{
 							null, STATUS.getLocalPart()));
 				}
 				else if (METADATA.equals(lastElement)) {
-					OaiPmhMetadataParser parser = new OaiPmhMetadataParser(getOutputDirectory());
-					record.setFilename(parser.parse(xmlReader,record.getIdentifier()));
+					if (!record.isDropped()){
+						OaiPmhMetadataParser parser = new OaiPmhMetadataParser(getOutputDirectory());
+						record.setFilename(parser.parse(xmlReader,record.getIdentifier()));
+					}
 				}
 				add(path, lastElement);
 			}else if (event == XMLStreamConstants.CHARACTERS) {
@@ -48,14 +55,16 @@ public class OaiPmhRecordParser extends AbstractOaiPmhParser{
                             && HEADER.equals(path.get(0)) && DATESTAMP.equals(path.get(1));
                     if (match) {
                         try {
-                            record.setTimestamp(DatatypeConverter.parseDateTime(xmlReader.getText()).getTime());
+                        	Calendar current = DatatypeConverter.parseDateTime(xmlReader.getText());
+                            record.setTimestamp(current.getTime());
+                            record.setDropped(shouldDropped(current, fromCalendar, untilCalendar));
                         } catch (Exception e) {}
                     }
                 }
 			}
 			else if (event == XMLStreamConstants.END_ELEMENT) {
 				QName elementName = xmlReader.getName();
-				if (RECORD.equals(elementName)) {
+				if (rootElement.equals(elementName)) {
 					foundEndElement = true;
 
 				} else {
@@ -68,6 +77,13 @@ public class OaiPmhRecordParser extends AbstractOaiPmhParser{
 			}
 		}
 		return record;
+	}
+	private boolean shouldDropped(Calendar current, Calendar fromCalendar, Calendar untilCalendar){
+		boolean withinTimespan = true;
+		withinTimespan = withinTimespan && (fromCalendar == null || current.compareTo(fromCalendar) >= 0);
+		withinTimespan = withinTimespan && (untilCalendar == null || current.compareTo(untilCalendar) <= 0);
+		return !withinTimespan;
+		
 	}
 	private static void add(LinkedList<QName> path, QName qName) {
 		if (!RECORD.equals(qName)) {
