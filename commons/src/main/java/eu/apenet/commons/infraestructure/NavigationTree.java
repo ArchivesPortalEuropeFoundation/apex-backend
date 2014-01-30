@@ -97,7 +97,7 @@ public class NavigationTree {
 			Integer pId = Integer.parseInt(parentAiId.substring(parentAiId.lastIndexOf('_') + 1));
 			
 			ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
-			List<ArchivalInstitution> archivalInstitutionList = archivalInstitutionDao.getArchivalInstitutionsByParentAiId(pId);
+			List<ArchivalInstitution> archivalInstitutionList = archivalInstitutionDao.getArchivalInstitutionsByParentAiId(pId, false);
 
             for (ArchivalInstitution anArchivalInstitutionList : archivalInstitutionList) {
                 Integer numberOfArchivalInstitutions = 0;

@@ -407,6 +407,7 @@
 			<result name="errorIdentifier" type="tiles">uploaderroralidentifier</result>
 			<result name="errorDuplicateIdentifiers" type="tiles">uploaderroralduplicatedidentifier</result>
 			<result name="errorLang" type="tiles">uploaderrorallangnull</result>
+			<result name="errorCountry" type="tiles">uploaderroralbadcountry</result>
 		</action>
 		
 		<action name="ALDisplayTrees" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="displayTrees">
@@ -985,6 +986,12 @@
 			<result name="success" type="tiles">indexAdmin</result>
 			<result name="error" type="tiles">indexAdmin</result>
 		</action>
+
+        <!-- Temporary action for fix the AL order in production DDBB. -->
+        <action name="fixALOrderInDDBB" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeFixWrongDBAction">
+           <result name="success" type="tiles">indexAdmin</result>
+		   <result name="error" type="tiles">indexAdmin</result>
+        </action>
 		
 		<action name="downloadHarvesterErrorsXml" class="eu.apenet.dashboard.harvest.DownloadHarvesterErrorsAction" method="downloadXml">
             <result name="error" type="tiles">error</result>

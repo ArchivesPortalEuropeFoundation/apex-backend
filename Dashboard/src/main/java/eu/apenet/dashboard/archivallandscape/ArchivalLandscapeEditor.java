@@ -264,17 +264,10 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
 		ArchivalInstitution archivalInstitutionTarget = aiDao.getArchivalInstitution(aiId);
 		if(archivalInstitutionTarget!=null){
-			//if (ContentUtils.containsPublishedFiles(archivalInstitutionTarget)) {
-			if (archivalInstitutionTarget.isContainSearchableItems()) {
-				// rollback
-				JpaUtil.rollbackDatabaseTransaction();
-				buffer.append(buildNode("error",getText("al.message.error.not.possible.move")));
-				return buffer.toString();
-			}
 
 			List<ArchivalInstitution> archivalInstitutions = null;
 			if (archivalInstitutionTarget.getParentAiId() != null) {
-				archivalInstitutions = aiDao.getArchivalInstitutionsByParentAiId(archivalInstitutionTarget.getParentAiId());
+				archivalInstitutions = aiDao.getArchivalInstitutionsByParentAiId(archivalInstitutionTarget.getParentAiId(), false);
 			} else {
 				archivalInstitutions = aiDao.getRootArchivalInstitutionsByCountryId(archivalInstitutionTarget.getCountryId());
 			}
@@ -397,7 +390,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
 		//List<ArchivalInstitution> archivalInstitutions = new LinkedList<ArchivalInstitution>(archivalInstitutionDAO.getArchivalInstitutionsGroupsByCountryId(couId));
 		List<ArchivalInstitution> archivalInstitutions = new LinkedList<ArchivalInstitution>(archivalInstitutionDAO.getArchivalInstitutionsGroupsByCountryId(couId,false,true));
-		archivalInstitutions.addAll(new LinkedList<ArchivalInstitution>(archivalInstitutionDAO.getArchivalInstitutionsGroupsByCountryId(couId,true,false)));
+		archivalInstitutions.addAll(new LinkedList<ArchivalInstitution>(archivalInstitutionDAO.getArchivalInstitutionsGroupsByCountryId(couId,true,true)));
 		ArchivalInstitution ai = null;
 		if(aiId!=null){
 			ai = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitution(aiId);

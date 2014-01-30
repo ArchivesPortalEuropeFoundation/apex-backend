@@ -169,8 +169,6 @@ function loadDownPart(node){
 				hideMoveButtons = true;
 				//change changeNodeDiv, moveUp and moveDown onclick event to show an alert for the received message
 				$("#changeNodeDiv").attr("onclick","showInformation('"+value.hasContentPublished+"',true);");
-				$("#moveUpDiv").attr("onclick","showInformation('"+value.hasContentPublished+"',true);");
-				$("#moveDownDiv").attr("onclick","showInformation('"+value.hasContentPublished+"',true);");
 			}else if(value.info){
 				showInformation(d.info);
 			}else if(value.error){
@@ -419,7 +417,13 @@ function changeGroup(){
 				showInformation(d.error,true);
 			}else if(v.newparents){ //get parent structure
 				var parents = new Array();
-				if($.inArray(",",v.newparents)){
+				var found;
+				if ($.browser.msie && $.browser.version == 8){   //internet explorer 8
+					found = v.newparents.indexOf(",");
+				}else{
+					found = $.inArray(",",v.newparents);
+				}
+				if(found != -1){
 					parents = v.newparents.split(",");
 				}else{
 					parents[0] = v.newparents;
@@ -431,6 +435,7 @@ function changeGroup(){
 				}
 			}
 		});
+		
 		if(!expanded){
 			showInformation(message);
 		}
