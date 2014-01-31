@@ -664,7 +664,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 				}
 			}catch(Exception e){
 				validOperation = ERROR;
-				log.error("Some excepton comparing new AL structure with old AL structure. state: "+state + " " + APEnetUtilities.generateThrowableLog(e)));
+				log.error("Some excepton comparing new AL structure with old AL structure. state: "+state + " " + APEnetUtilities.generateThrowableLog(e));
 				if(!JpaUtil.noTransaction()){
 					JpaUtil.rollbackDatabaseTransaction();
 				}
