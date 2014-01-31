@@ -27,7 +27,6 @@ public class PortugalConsoleHarvester extends ConsoleHarvester{
 		super.start();
         String set = getSet();
 
-
         //2. Use the DC files to import in DB
         File resultDir = getDataDir(getDataDir());
         if(resultDir.getName().equals("DONE")) {

@@ -65,6 +65,9 @@ public class HarvesterConverter extends AbstractParser {
             Iterator<File> fileIterator = files.iterator();
             int fullSize = files.size();
             LOG.info("There are " + fullSize + " files");
+            if(fullSize == 0) {
+                throw new Exception("No files harvested...");
+            }
             int currentSize = 0;
 
             XMLInputFactory2 inputFactory = (XMLInputFactory2) XMLInputFactory2.newInstance();
