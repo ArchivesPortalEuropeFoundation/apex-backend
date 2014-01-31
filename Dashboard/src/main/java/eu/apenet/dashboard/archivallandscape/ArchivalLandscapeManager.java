@@ -284,13 +284,13 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 								return displayBeforeAfterTrees();
 							}
 						}catch(Exception e){
-							log.error("Error trying to manage AL uploaded",e);
+							log.error("Error trying to manage AL uploaded" + APEnetUtilities.generateThrowableLog(e));
 						}finally{
 							if(pathFile.canWrite()){ //it's a temp file, so it should be removed.
 								try {
 									FileUtils.deleteDirectory(pathFile);
 								} catch (IOException e) {
-									log.error("Error trying to delete temp AL path, directory will keep there: "+pathFile.getAbsolutePath(),e);
+									log.error("Error trying to delete temp AL path, directory will keep there: "+pathFile.getAbsolutePath());
 								}
 							}
 						}
@@ -495,7 +495,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			//end json part
 			writer.flush();
 		}catch(Exception e){
-			log.error(e.getMessage(),e);
+			log.error(e.getMessage() + APEnetUtilities.generateThrowableLog(e));
 		}finally{
 			if(writer!=null){
 				writer.close();
@@ -664,7 +664,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 				}
 			}catch(Exception e){
 				validOperation = ERROR;
-				log.error("Some excepton comparing new AL structure with old AL structure. state: "+state, e.getCause());
+				log.error("Some excepton comparing new AL structure with old AL structure. state: "+state + " " + APEnetUtilities.generateThrowableLog(e)));
 				if(!JpaUtil.noTransaction()){
 					JpaUtil.rollbackDatabaseTransaction();
 				}
@@ -1710,17 +1710,17 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			}
 			//end reading file
 		} catch (FileNotFoundException e) {
-			log.error("File not found reading eadid :: "+httpFile.getAbsolutePath(), e.getCause());
+			log.error("File not found reading eadid :: "+httpFile.getAbsolutePath());
 		} catch (XMLStreamException e) {
-			log.error("Archival Landscape exception reading eadid: ", e);
+			log.error("Archival Landscape exception reading eadid: " + APEnetUtilities.generateThrowableLog(e));
 		} catch (Exception e){
-			log.error("Exception reading eadid: ", e);
+			log.error("Exception reading eadid: " + APEnetUtilities.generateThrowableLog(e));
 		} finally {
 			if(r!=null){
 				try {
 					r.close();
 				} catch (XMLStreamException e) {
-					log.error("Archival Landscape reading exception", e.getCause());
+					log.error("Archival Landscape reading exception" + APEnetUtilities.generateThrowableLog(e));
 				}
 			}
 		}
@@ -1879,7 +1879,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 				String fileName = SecurityContext.get().getCountryIsoname().toUpperCase()+AL_FILE_NAME;
 				ContentUtils.download(getServletRequest(), getServletResponse(), new ByteArrayInputStream(xml.toByteArray()), fileName, ContentUtils.MIME_TYPE_APPLICATION_XML);
 			} catch (IOException e) {
-				log.error("Exception trying to download file with ContentUtils.downloadXML",e);
+				log.error("Exception trying to download file with ContentUtils.downloadXML"  + APEnetUtilities.generateThrowableLog(e));
 			}
 			return SUCCESS;
 		}
@@ -1920,13 +1920,13 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 				eadContent = null;
 			}
 		} catch (Exception e){
-			log.error("Unknown error into buildXMLFromDDBB",e);
+			log.error("Unknown error into buildXMLFromDDBB" + APEnetUtilities.generateThrowableLog(e));
 		}finally {
 			if(outputStream!=null){
 				try {
 					outputStream.close();
 				} catch (IOException e) {
-					log.error("Unknown error into buildXMLFromDDBB",e);
+					log.error("Unknown error into buildXMLFromDDBB" + APEnetUtilities.generateThrowableLog(e));
 				}
 			}
 		}
