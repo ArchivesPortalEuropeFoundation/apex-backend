@@ -24,7 +24,7 @@ public abstract class AbstractEagTag extends SimpleTagSupport {
 		try {
 			EagXslt.displayAiDetails(this.getJspContext().getOut(), new File(eagUrl), this.getResourceBundleSource(), this.getCurrentAIRepositorCode(), this.getRequiredAIRepositorCode());
 		} catch (SaxonApiException e) {
-			LOG.error(e.getMessage(), e);
+			LOG.error(e.getMessage());
 		}
 	}
 
