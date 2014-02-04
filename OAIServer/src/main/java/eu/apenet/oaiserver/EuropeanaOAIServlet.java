@@ -31,8 +31,7 @@ public class EuropeanaOAIServlet extends HttpServlet {
 		long startTime = System.currentTimeMillis() ;
 				
 		String url = request.getScheme()+"://"+request.getHeader("Host") + request.getContextPath() + REQUEST_SUFIX;
-		String remoteHost = request.getRemoteHost()+ ": ";
-		String logline = remoteHost + url;
+		String logline = REQUEST_SUFIX;
 		if (StringUtils.isNotBlank(request.getQueryString())){
 			logline += "?" + request.getQueryString();
 		}
