@@ -49,6 +49,9 @@ public abstract class AbstractListVerb {
 			untilCalendar = DatatypeConverter.parseDateTime(until +"T23:59:59.999Z");
 		}
 	}
+	protected boolean maxNumberOfRecordsExceed(int numberOfRecords){
+		return oaiPmhParser.getMaxNumberOfRecords() != null && numberOfRecords >= oaiPmhParser.getMaxNumberOfRecords();
+	}
 	
 	public ResultInfo harvest(HarvestObject harvestObject)
 			throws Exception {
@@ -58,7 +61,7 @@ public abstract class AbstractListVerb {
 		}else {
 			numberOfRecords = harvestObject.getNumberOfRecords();
 		}
-		if (oaiPmhParser.getMaxNumberOfRecords() != null && numberOfRecords >= oaiPmhParser.getMaxNumberOfRecords()){
+		if (maxNumberOfRecordsExceed(numberOfRecords)){
 			return null;
 		}
 		String requestURL = getRequestURL();
