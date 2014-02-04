@@ -925,8 +925,8 @@ public class ArchivalLandscape extends ActionSupport{
         return bResult;
 	}
 
-	protected static boolean deleteContent(ArchivalInstitution ai) {
-		boolean state = true;
+	protected static String deleteContent(ArchivalInstitution ai) {
+		String path = null;
 		ContentUtils cu = new ContentUtils();
 		String resultRemoveAI = "";
         try {
@@ -943,10 +943,8 @@ public class ArchivalLandscape extends ActionSupport{
 				eadSearchOptions.setEadClass(SourceGuide.class);
 				hasEads = hasEads || eadDAO.existEads(eadSearchOptions);
 			}
-			if (hasEads){
-				state = !hasEads;
-			}else{
-				String path = ai.getEagPath();
+			if(!hasEads){
+				path = ai.getEagPath();
 				resultRemoveAI = cu.deleteArchivalInstitution(ai,true);
 				if(path!=null && path.length()>0){ //there are files to be removed
 					log.debug("There are somethings to be removed, checking...");
@@ -954,9 +952,9 @@ public class ArchivalLandscape extends ActionSupport{
 					path = path+"_old";
 					String subDir = APEnetUtilities.getConfig().getRepoDirPath();
 					if(resultRemoveAI!=null && resultRemoveAI.equals("ok")){
-						log.debug("Delete operation was ok, deleting _old directory...");
-						FileUtils.deleteDirectory(new File(subDir+path));
-						log.debug("Done!! Finished.");
+//						log.debug("Delete operation was ok, deleting _old directory...");
+//						FileUtils.deleteDirectory(new File(subDir+path));
+//						log.debug("Done!! Finished.");
 					}else{
 						log.debug("Rollback detected, reverting _old to original path...");
 						FileUtils.moveDirectory(new File(subDir+path),new File(subDir+path.substring(0,path.length()-"_old".length())));
@@ -969,7 +967,7 @@ public class ArchivalLandscape extends ActionSupport{
 		} catch (Exception e) {
 			log.error( APEnetUtilities.generateThrowableLog(e));
 		}
-        return state;
+        return path;
 	}
 }
 

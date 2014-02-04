@@ -147,6 +147,8 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	// Set for the duplicate identifiers.
 	private Set<String> duplicateIdentifiers;
 
+	private Set<String> pathsToBeDeleted;
+
 	public void setHttpFile(File httpFile){
 		this.httpFile = httpFile;
 	}
@@ -587,8 +589,9 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 * 
 	 * @param archivalInstitutions
 	 * @return validOperation
+	 * @throws IOException 
 	 */
-	private String checkAndUpdateFromToDDBB(Collection<ArchivalInstitution> archivalInstitutions) {
+	private String checkAndUpdateFromToDDBB(Collection<ArchivalInstitution> archivalInstitutions) throws IOException {
 		String validOperation = SUCCESS; //flag used to rollback the process when some rule is wrong
 		Integer state = 0;
 		if(archivalInstitutions!=null){
@@ -645,11 +648,13 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 								JpaUtil.commitDatabaseTransaction();
 								//finally remove deleted files from ddbb if they existed
 								state = 10;
+								removePathsToBeDeleted();
 							}else{
 								state = 6;
 								log.debug("Invalid operation detected. There could be content into some institution.");
 								validOperation = ERROR_CONTENT_2;
 								JpaUtil.rollbackDatabaseTransaction();
+								rollbackDeletedPaths();
 							}
 						}
 					}else{ //this case is for an ingestion on empty country, only tries to store the target structure 
@@ -664,6 +669,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 				}
 			}catch(Exception e){
 				validOperation = ERROR;
+				rollbackDeletedPaths();
 				log.error("Some excepton comparing new AL structure with old AL structure. state: "+state + " " + APEnetUtilities.generateThrowableLog(e));
 				if(!JpaUtil.noTransaction()){
 					JpaUtil.rollbackDatabaseTransaction();
@@ -676,6 +682,33 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		}
 		return validOperation;
 	}
+	
+	private void removePathsToBeDeleted() throws IOException {
+		if(this.pathsToBeDeleted!=null){
+			Iterator<String> itPaths = this.pathsToBeDeleted.iterator();
+			String subDir = APEnetUtilities.getConfig().getRepoDirPath();
+			while(itPaths.hasNext()){
+				String path = itPaths.next();
+				log.debug("Delete operation was ok, deleting _old directory...");
+				FileUtils.deleteDirectory(new File(subDir+path));
+				log.debug("Done!! Finished.");
+			}
+		}
+	}
+
+	private void rollbackDeletedPaths() throws IOException {
+		if(this.pathsToBeDeleted!=null){
+			Iterator<String> itPaths = this.pathsToBeDeleted.iterator();
+			String subDir = APEnetUtilities.getConfig().getRepoDirPath();
+			while(itPaths.hasNext()){
+				String path = itPaths.next();
+				log.debug("Rollback detected, reverting _old to original path...");
+				FileUtils.moveDirectory(new File(subDir+path),new File(subDir+path.substring(0,path.length()-"_old".length())));
+				log.debug("Revert done!");
+			}
+		}
+	}
+
 	/**
 	 * Checks if some identifier is repeated.
 	 * It's used before do anything, and necessary for checks and 
@@ -779,9 +812,12 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 						this.aIANDAO.deleteSimple(itAN.next()); //removes each alternative name
 					}
 				}
-				if(ArchivalLandscape.deleteContent(targetToBeDeleted)){
+				String path = ArchivalLandscape.deleteContent(targetToBeDeleted);
+				if(path!=null){
 					//this.aIDAO.deleteSimple(targetToBeDeleted); //delete unused institution
 					this.deletedInstitutions.add(targetToBeDeleted);
+					if(this.pathsToBeDeleted==null){ this.pathsToBeDeleted = new HashSet<String>();}
+					this.pathsToBeDeleted.add(path);
 					log.debug("Deleted institution with aiId: "+targetToBeDeleted.getAiId());
 				}
 			}
@@ -1061,7 +1097,10 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 						this.aIANDAO.deleteSimple(itAN.next()); //removes each alternative name
 					}
 				}
-				if(ArchivalLandscape.deleteContent(targetToBeDeleted)){
+				String path = ArchivalLandscape.deleteContent(targetToBeDeleted);
+				if(path!=null){
+					if(this.pathsToBeDeleted==null){ this.pathsToBeDeleted = new HashSet<String>();}
+					this.pathsToBeDeleted.add(path);
 					//this.aIDAO.deleteSimple(targetToBeDeleted); //delete unused institution
 					this.deletedInstitutions.add(targetToBeDeleted);
 					log.debug("Deleted institution with aiId: "+targetToBeDeleted.getAiId());
@@ -1354,7 +1393,10 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 				checkDeleteArchivalInstitutions(new ArrayList<ArchivalInstitution>(possibleChildren));
 			}
 		}
-		if(ArchivalLandscape.deleteContent(possibleDeletedInstitution)){
+		String path = ArchivalLandscape.deleteContent(possibleDeletedInstitution);
+		if(path!=null){
+			if(this.pathsToBeDeleted==null){ this.pathsToBeDeleted = new HashSet<String>();}
+			this.pathsToBeDeleted.add(path);
 			log.debug("Deleted institution: "+possibleDeletedInstitution.getAiname());
 			this.deletedInstitutions.add(possibleDeletedInstitution);
 		}else{
