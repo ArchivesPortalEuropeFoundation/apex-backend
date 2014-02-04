@@ -951,11 +951,7 @@ public class ArchivalLandscape extends ActionSupport{
 					path = path.substring(0,path.indexOf(File.separatorChar+"EAG"));
 					path = path+"_old";
 					String subDir = APEnetUtilities.getConfig().getRepoDirPath();
-					if(resultRemoveAI!=null && resultRemoveAI.equals("ok")){
-//						log.debug("Delete operation was ok, deleting _old directory...");
-//						FileUtils.deleteDirectory(new File(subDir+path));
-//						log.debug("Done!! Finished.");
-					}else{
+					if(!(resultRemoveAI!=null && resultRemoveAI.equals("ok"))){
 						log.debug("Rollback detected, reverting _old to original path...");
 						FileUtils.moveDirectory(new File(subDir+path),new File(subDir+path.substring(0,path.length()-"_old".length())));
 						log.debug("Revert done!");
