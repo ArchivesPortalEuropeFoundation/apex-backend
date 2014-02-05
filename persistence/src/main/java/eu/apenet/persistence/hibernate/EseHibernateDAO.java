@@ -115,7 +115,7 @@ public class EseHibernateDAO extends AbstractHibernateDAO<Ese, Integer> implemen
 		} else {
 			limit = limitPerResponse + 1;
 		}
-		criteria.addOrder(Order.asc("modificationDate"));
+		criteria.addOrder(Order.desc("modificationDate"));
 		criteria.setMaxResults(limit);
 		return criteria.list();
 	}
