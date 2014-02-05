@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
@@ -114,6 +115,7 @@ public class EseHibernateDAO extends AbstractHibernateDAO<Ese, Integer> implemen
 		} else {
 			limit = limitPerResponse + 1;
 		}
+		criteria.addOrder(Order.asc("modificationDate"));
 		criteria.setMaxResults(limit);
 		return criteria.list();
 	}
