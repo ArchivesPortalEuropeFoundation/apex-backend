@@ -36,7 +36,6 @@ public class EuropeanaOAIServlet extends HttpServlet {
 		if (StringUtils.isNotBlank(request.getQueryString())){
 			logline += "?" + request.getQueryString();
 		}
-		LOGGER.info(logline);
 		response.setBufferSize(4096);
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/xml");
@@ -56,7 +55,7 @@ public class EuropeanaOAIServlet extends HttpServlet {
 		
 		outputStream.flush();
 		outputStream.close();
-		LOGGER.info("Duration: " + (System.currentTimeMillis()-startTime));
+		LOGGER.info(logline + " (" + (System.currentTimeMillis()-startTime) + ")");
 	}
 
 
