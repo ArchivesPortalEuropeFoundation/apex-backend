@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.apache.log4j.Logger;
+
 import eu.apenet.oaiserver.request.RequestProcessor;
 import eu.apenet.oaiserver.util.OAIUtils;
 import eu.apenet.persistence.vo.Ese;
@@ -14,7 +16,7 @@ import eu.apenet.persistence.vo.EseState;
 import eu.apenet.persistence.vo.ResumptionToken;
 
 public class ListIdentifiersResponse extends AbstractResponse {
-
+    private static final Logger LOGGER = Logger.getLogger(ListIdentifiersResponse.class);
 	private List<Ese> eses;
 	private ResumptionToken resumptionToken;
 
@@ -41,6 +43,11 @@ public class ListIdentifiersResponse extends AbstractResponse {
 			writer.writeTextElement("setSpec", ese.getEset());
 			writer.closeElement();
 			if (EseState.PUBLISHED.equalsIgnoreCase(ese.getEseState().getState())) {
+				if (resumptionToken == null){
+					LOGGER.info("ESE '" + ese.getOaiIdentifier() + "' LAST ITEM");
+				}else {
+					LOGGER.info("ESE '" + ese.getOaiIdentifier() + "'");
+				}
 				writeEseFile(writer, ese);
 			}
 			writer.closeElement();
