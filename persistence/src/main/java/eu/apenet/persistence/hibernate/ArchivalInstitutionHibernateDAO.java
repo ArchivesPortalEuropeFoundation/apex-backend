@@ -608,6 +608,13 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 		}
 		return results;
 	}
+	
+	@Override
+	public List<String> getArchivalInstitutionInternalIdentifiersByCountryId(Integer countryId) {
+		Criteria criteria = buildArchivalInstitutionCriteriaByCountryId(countryId, null, false, null); // archivalInstitution
+		criteria.setProjection(Projections.property("internalAlId"));
+		return criteria.list();
+	}
 
 	@Override
 	public List<ArchivalInstitution> getArchivalInstitutionsNoGroups(Integer countryId, Integer userId) {

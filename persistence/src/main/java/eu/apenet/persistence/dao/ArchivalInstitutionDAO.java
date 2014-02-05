@@ -2,6 +2,7 @@ package eu.apenet.persistence.dao;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import eu.apenet.persistence.vo.ArchivalInstitution;
 
@@ -45,5 +46,6 @@ public interface ArchivalInstitutionDAO extends GenericDAO<ArchivalInstitution, 
 	public List<ArchivalInstitution> getArchivalInstitutionsByCountryIdIncluded(Integer countryId, Collection<String> internalAlIds,boolean onlyWithoutPartnerIds);
 	public List<ArchivalInstitution> getArchivalInstitutionsNoGroups(Integer countryId,Integer userId);
 	public List<ArchivalInstitution> getArchivalInstitutionsByOaiPmhSets(List<String> oaiPmhSets);
+	public List<String> getArchivalInstitutionInternalIdentifiersByCountryId(Integer countryId);
 }
 
