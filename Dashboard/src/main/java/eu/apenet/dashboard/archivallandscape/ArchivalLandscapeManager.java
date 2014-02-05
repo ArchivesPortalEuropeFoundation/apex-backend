@@ -107,6 +107,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	private static final String ERROR_CONTENT = "errorContent";
 	private static final String ERROR_CONTENT_2 = "errorContent2";
 	private static final String ERROR_IDENTIFIERS = "errorIdentifier";
+	private static final String ERROR_NEW_IDENTIFIERS = "errorIdentifier2";
 	private static final String ERROR_COUNTRY = "errorCountry";
 
 	// Error when an institution has duplicated identifiers.
@@ -456,38 +457,50 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			writer.append("{");
 			Set<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile);
 			if(archivalInstitutions!=null){
-				boolean isValid = checkIdentifiersForArchivalInstitutionStructure(archivalInstitutions);
-				if(!isValid){
-					log.debug("Some error has been detected related to checkIdentifiers for the given structure");
+				List<String> ingestedIdentifiers = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionInternalIdentifiersByCountryId(SecurityContext.get().getCountryId());
+				boolean newIdentifiers = institutionHasNewIdentifiers(archivalInstitutions,ingestedIdentifiers);
+				if(!newIdentifiers){
+					boolean isValid = checkIdentifiersForArchivalInstitutionStructure(archivalInstitutions);
+					if(!isValid){
+						log.debug("Some error has been detected related to checkIdentifiers for the given structure");
+						if(this.errors==null){
+							this.errors = new ArrayList<String>();
+						}
+						this.errors.add(getText("updateErrorFormatAL.error.identifiers"));
+						StringBuilder errorsSB = buildErrorsJSON();
+						writer.append(errorsSB);
+					}else{
+						writer.append("\"newtree\":");
+						writer.append(parseArchivalInstitutionsToJSON(archivalInstitutions));
+						//oldtree part, only if there are a valid new tree
+						ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
+						List<ArchivalInstitution> countryArchivalInstitutions = new LinkedList<ArchivalInstitution>(aiDao.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),true));
+						if(countryArchivalInstitutions!=null){
+							writer.append(",\"oldtree\":");
+							writer.append(parseArchivalInstitutionsToJSON(countryArchivalInstitutions));
+						}
+						//now put texts values ("question","yes","no",..)
+						writer.append(",\"question\":");
+						writer.append("\""+getText("al.message.areyousureyouwanttocontinue")+"\"");
+						writer.append(",\"yes\":");
+						writer.append("\""+getText("content.message.yes")+"\"");
+						writer.append(",\"no\":");
+						writer.append("\""+getText("content.message.no")+"\"");
+						writer.append(",\"oldtreeMessage\":");
+						writer.append("\""+getText("al.message.oldtree")+"\"");
+						writer.append(",\"newtreeMessage\":");
+						writer.append("\""+getText("al.message.newtree")+"\"");
+						writer.append(",\"status\":");
+						writer.append("\""+getText("al.message.previewisbeingdisplayed")+"\"");//Preview is being displayed bellow
+					}
+				}else{
+					log.debug("Detected some new identifier, stopping the proccess and reporting to user");
 					if(this.errors==null){
 						this.errors = new ArrayList<String>();
 					}
-					this.errors.add(getText("updateErrorFormatAL.error.identifiers"));
+					this.errors.add(getText("updateErrorFormatAL.error.identifiers.new"));
 					StringBuilder errorsSB = buildErrorsJSON();
 					writer.append(errorsSB);
-				}else{
-					writer.append("\"newtree\":");
-					writer.append(parseArchivalInstitutionsToJSON(archivalInstitutions));
-					//oldtree part, only if there are a valid new tree
-					ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
-					List<ArchivalInstitution> countryArchivalInstitutions = new LinkedList<ArchivalInstitution>(aiDao.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),true));
-					if(countryArchivalInstitutions!=null){
-						writer.append(",\"oldtree\":");
-						writer.append(parseArchivalInstitutionsToJSON(countryArchivalInstitutions));
-					}
-					//now put texts values ("question","yes","no",..)
-					writer.append(",\"question\":");
-					writer.append("\""+getText("al.message.areyousureyouwanttocontinue")+"\"");
-					writer.append(",\"yes\":");
-					writer.append("\""+getText("content.message.yes")+"\"");
-					writer.append(",\"no\":");
-					writer.append("\""+getText("content.message.no")+"\"");
-					writer.append(",\"oldtreeMessage\":");
-					writer.append("\""+getText("al.message.oldtree")+"\"");
-					writer.append(",\"newtreeMessage\":");
-					writer.append("\""+getText("al.message.newtree")+"\"");
-					writer.append(",\"status\":");
-					writer.append("\""+getText("al.message.previewisbeingdisplayed")+"\"");//Preview is being displayed bellow
 				}
 			}else{
 				StringBuilder errorsSB = buildErrorsJSON();
@@ -504,6 +517,28 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			}
 		}
 		return SUCCESS;
+	}
+
+	private boolean institutionHasNewIdentifiers(Collection<ArchivalInstitution> newArchivalInstitutionStructure,List<String> ingestedIdentifiers) {
+		boolean state = false;
+		if(newArchivalInstitutionStructure!=null){
+			Iterator<ArchivalInstitution> it = newArchivalInstitutionStructure.iterator();
+			while(!state && it.hasNext()){
+				ArchivalInstitution tempAI = it.next();
+				String tempInternalIdentifier = tempAI.getInternalAlId();
+				if(!ingestedIdentifiers.contains(tempInternalIdentifier)){
+					state = true;
+				}else{
+					if(tempAI.isGroup()){
+						List<ArchivalInstitution> children = tempAI.getChildArchivalInstitutions();
+						if(children!=null && children.size()>0){
+							state = institutionHasNewIdentifiers(children,ingestedIdentifiers);
+						}
+					}
+				}
+			}
+		}
+		return state;
 	}
 
 	private StringBuilder buildErrorsJSON(){
@@ -596,75 +631,82 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		Integer state = 0;
 		if(archivalInstitutions!=null){
 			try{
-				boolean isValid = checkIdentifiersForArchivalInstitutionStructure(archivalInstitutions);
-				if(!isValid){
-					log.debug("Some error has been detected related to checkIdentifiers for the given structure");
-					validOperation = ERROR_IDENTIFIERS;
+				List<String> ingestedIdentifiers = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionInternalIdentifiersByCountryId(SecurityContext.get().getCountryId());
+				boolean newIdentifiers = institutionHasNewIdentifiers(archivalInstitutions,ingestedIdentifiers);
+				if(newIdentifiers){
+					log.debug("New identifiers have been detected, stopping and reporting to user");
+					validOperation = ERROR_NEW_IDENTIFIERS;
 				}else{
-					state = 1;
-					this.aIDAO = DAOFactory.instance().getArchivalInstitutionDAO();
-					this.aIANDAO = DAOFactory.instance().getAiAlternativeNameDAO();
-					//first gets all the current ingested institutions into DDBB
-					this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),false);
-					if(this.totalInstitutions!=null && this.totalInstitutions.size()>0){
-						log.debug("Archival landscape could not be ingested directly, there are some institutions to check. Checking...");
-						this.updatedInstitutions = new ArrayList<ArchivalInstitution>();
-						this.insertedInstitutions = new ArrayList<ArchivalInstitution>();
-						state = 2;
-						//check if some institution of the new archivalInstitutions is/are into system and has content indexed
-						validOperation = checkIfSomeInstitutionIsIngestedAndHasContentIndexed(archivalInstitutions);
-						if(validOperation.equalsIgnoreCase(SUCCESS)){
-							JpaUtil.beginDatabaseTransaction();
-							//when valid operation it's able to manage all ingested institutions/groups
-							this.deletedInstitutions = new ArrayList<ArchivalInstitution>();
-							
-							this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),true);
-							
-							checkAndUpdateArchivalInstitutions(null,archivalInstitutions); //new check
-							log.debug("Updated process has been finished successfull");
-							state = 3;
+					boolean isValid = checkIdentifiersForArchivalInstitutionStructure(archivalInstitutions);
+					if(!isValid){
+						log.debug("Some error has been detected related to checkIdentifiers for the given structure");
+						validOperation = ERROR_IDENTIFIERS;
+					}else{
+						state = 1;
+						this.aIDAO = DAOFactory.instance().getArchivalInstitutionDAO();
+						this.aIANDAO = DAOFactory.instance().getAiAlternativeNameDAO();
+						//first gets all the current ingested institutions into DDBB
+						this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),false);
+						if(this.totalInstitutions!=null && this.totalInstitutions.size()>0){
+							log.debug("Archival landscape could not be ingested directly, there are some institutions to check. Checking...");
+							this.updatedInstitutions = new ArrayList<ArchivalInstitution>();
+							this.insertedInstitutions = new ArrayList<ArchivalInstitution>();
+							state = 2;
+							//check if some institution of the new archivalInstitutions is/are into system and has content indexed
+							validOperation = checkIfSomeInstitutionIsIngestedAndHasContentIndexed(archivalInstitutions);
+							if(validOperation.equalsIgnoreCase(SUCCESS)){
+								JpaUtil.beginDatabaseTransaction();
+								//when valid operation it's able to manage all ingested institutions/groups
+								this.deletedInstitutions = new ArrayList<ArchivalInstitution>();
+								
+								this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),true);
+								
+								checkAndUpdateArchivalInstitutions(null,archivalInstitutions); //new check
+								log.debug("Updated process has been finished successfull");
+								state = 3;
 
-							log.debug("Inserting process for not updated institutions");
-							//do an insert for rest file institutions
-							String aiName = insertNotUpdatedInstitutions(archivalInstitutions,null);
-							if (aiName != null){
-								// this institution has any lang error and trans may be closed
-								state = 6;
-								log.debug("Institution has not lang");
-								validOperation = ERROR_LANG;//LANG_ERROR
-								JpaUtil.rollbackDatabaseTransaction();
-								this.setAiArchivalInstitutionName(aiName);
-								return validOperation;
+								log.debug("Inserting process for not updated institutions");
+								//do an insert for rest file institutions
+								String aiName = insertNotUpdatedInstitutions(archivalInstitutions,null);
+								if (aiName != null){
+									// this institution has any lang error and trans may be closed
+									state = 6;
+									log.debug("Institution has not lang");
+									validOperation = ERROR_LANG;//LANG_ERROR
+									JpaUtil.rollbackDatabaseTransaction();
+									this.setAiArchivalInstitutionName(aiName);
+									return validOperation;
+								}
+								log.debug("Done insert process!");
+								state = 4;
+//								//now delete all institutions which has not been updated (old institutions are not being processed)
+								//institutions to be deleted = totalDDBBinstitution - (institutionsUpdated + institutionsDeleted)
+								this.deletedInstitutions = new ArrayList<ArchivalInstitution>(); //clean
+								boolean error = deleteSimpleUnusedInstitutions();
+								if(!error){
+									error = deleteSimpleUnusedGroups();
+									state = 5;
+									JpaUtil.commitDatabaseTransaction();
+									//finally remove deleted files from ddbb if they existed
+									state = 10;
+									removePathsToBeDeleted();
+								}else{
+									state = 6;
+									log.debug("Invalid operation detected. There could be content into some institution.");
+									validOperation = ERROR_CONTENT_2;
+									JpaUtil.rollbackDatabaseTransaction();
+									rollbackDeletedPaths();
+								}
 							}
-							log.debug("Done insert process!");
-							state = 4;
-//							//now delete all institutions which has not been updated (old institutions are not being processed)
-							//institutions to be deleted = totalDDBBinstitution - (institutionsUpdated + institutionsDeleted)
-							this.deletedInstitutions = new ArrayList<ArchivalInstitution>(); //clean
-							boolean error = deleteSimpleUnusedInstitutions();
-							if(!error){
-								error = deleteSimpleUnusedGroups();
-								state = 5;
-								JpaUtil.commitDatabaseTransaction();
-								//finally remove deleted files from ddbb if they existed
-								state = 10;
-								removePathsToBeDeleted();
-							}else{
-								state = 6;
-								log.debug("Invalid operation detected. There could be content into some institution.");
-								validOperation = ERROR_CONTENT_2;
-								JpaUtil.rollbackDatabaseTransaction();
-								rollbackDeletedPaths();
-							}
+						}else{ //this case is for an ingestion on empty country, only tries to store the target structure 
+							state = 7;
+							this.insertedInstitutions = new ArrayList<ArchivalInstitution>();
+							JpaUtil.beginDatabaseTransaction();
+							state = 8;
+							insertChildren(archivalInstitutions,null); //insert institution
+							JpaUtil.commitDatabaseTransaction();
+							state = 9;
 						}
-					}else{ //this case is for an ingestion on empty country, only tries to store the target structure 
-						state = 7;
-						this.insertedInstitutions = new ArrayList<ArchivalInstitution>();
-						JpaUtil.beginDatabaseTransaction();
-						state = 8;
-						insertChildren(archivalInstitutions,null); //insert institution
-						JpaUtil.commitDatabaseTransaction();
-						state = 9;
 					}
 				}
 			}catch(Exception e){
@@ -1187,7 +1229,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 * On the one hand is used when first time is called. It tries to get all parent institutions
 	 * and next run into targets from parents to children.
 	 * On the other hand there is the recursive method, institutionUpdate, to fill all targets.
-	 * It's needed to be called each time by one institution (sibbling).
+	 * It's needed to be called each time by one institution (sibling).
 	 * 
 	 * @param target
 	 * @param archivalInstitutions
