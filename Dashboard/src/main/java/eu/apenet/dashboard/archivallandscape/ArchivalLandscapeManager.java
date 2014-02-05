@@ -854,8 +854,9 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 						this.aIANDAO.deleteSimple(itAN.next()); //removes each alternative name
 					}
 				}
+				String oldPath = targetToBeDeleted.getEagPath();
 				String path = ArchivalLandscape.deleteContent(targetToBeDeleted);
-				if(path!=null){
+				if(path!=null || oldPath==null){
 					//this.aIDAO.deleteSimple(targetToBeDeleted); //delete unused institution
 					this.deletedInstitutions.add(targetToBeDeleted);
 					if(this.pathsToBeDeleted==null){ this.pathsToBeDeleted = new HashSet<String>();}
@@ -1139,8 +1140,9 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 						this.aIANDAO.deleteSimple(itAN.next()); //removes each alternative name
 					}
 				}
+				String oldPath = targetToBeDeleted.getEagPath();
 				String path = ArchivalLandscape.deleteContent(targetToBeDeleted);
-				if(path!=null){
+				if(path!=null || oldPath==null){
 					if(this.pathsToBeDeleted==null){ this.pathsToBeDeleted = new HashSet<String>();}
 					this.pathsToBeDeleted.add(path);
 					//this.aIDAO.deleteSimple(targetToBeDeleted); //delete unused institution
@@ -1435,8 +1437,9 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 				checkDeleteArchivalInstitutions(new ArrayList<ArchivalInstitution>(possibleChildren));
 			}
 		}
+		String oldPath = possibleDeletedInstitution.getEagPath();
 		String path = ArchivalLandscape.deleteContent(possibleDeletedInstitution);
-		if(path!=null){
+		if(path!=null || oldPath==null){
 			if(this.pathsToBeDeleted==null){ this.pathsToBeDeleted = new HashSet<String>();}
 			this.pathsToBeDeleted.add(path);
 			log.debug("Deleted institution: "+possibleDeletedInstitution.getAiname());
