@@ -14,6 +14,7 @@ import javax.xml.stream.XMLStreamException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.oaiserver.request.RequestProcessor;
 import eu.apenet.oaiserver.response.XMLStreamWriterHolder;
 
@@ -46,11 +47,11 @@ public class EuropeanaOAIServlet extends HttpServlet {
 					.createXMLStreamWriter(outputStream, UTF_8));
 			RequestProcessor.process(request.getParameterMap(), url, writerHolder);
 		} catch (XMLStreamException e) {
-			LOGGER.error(e.getMessage(), e);
-			throw new ServletException(e);
+			LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+			throw new ServletException(e.getMessage());
 		} catch (FactoryConfigurationError e) {
-			LOGGER.error(e.getMessage(), e);
-			throw new ServletException(e);
+			LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+			throw new ServletException(e.getMessage());
 		}
 		
 		outputStream.flush();
