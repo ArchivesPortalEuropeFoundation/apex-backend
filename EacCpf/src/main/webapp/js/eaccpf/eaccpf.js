@@ -20,6 +20,36 @@ function hideAndShow(idPrefix, shown) {
     }
 }
 
+function loadPreviousTab(currentTab) {
+    if (currentTab == "tab-identity") {
+
+    } else if (currentTab == "tab-description") {
+        $("ul#eacCpfTabsContainer a[href='#tab-identity']").trigger('click');
+        $("#currentTab").attr("value", "tab-identity");
+    } else if (currentTab == "tab-relations") {
+        $("ul#eacCpfTabsContainer a[href='#tab-description']").trigger('click');
+        $("#currentTab").attr("value", "tab-description");
+    } else if (currentTab == "tab-control") {
+        $("ul#eacCpfTabsContainer a[href='#tab-relations']").trigger('click');
+        $("#currentTab").attr("value", "tab-relations");
+    }
+}
+
+function loadNextTab(currentTab) {
+    if (currentTab == "tab-identity") {
+        $("ul#eacCpfTabsContainer a[href='#tab-description']").trigger('click');
+        $("#currentTab").attr("value", "tab-description");
+    } else if (currentTab == "tab-description") {
+        $("ul#eacCpfTabsContainer a[href='#tab-relations']").trigger('click');
+        $("#currentTab").attr("value", "tab-relations");
+    } else if (currentTab == "tab-relations") {
+        $("ul#eacCpfTabsContainer a[href='#tab-control']").trigger('click');
+        $("#currentTab").attr("value", "tab-control");
+    } else if (currentTab == "tab-control") {
+
+    }
+}
+
 /**************************************
  * Functions for correct display of context
  * according to chosen use mode
