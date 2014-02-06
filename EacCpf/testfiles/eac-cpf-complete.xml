@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<eac-cpf xmlns="urn:isbn:1-931666-33-4" xmlns:ns2="http://www.w3.org/1999/xlink">
+    <control>
+        <recordId>4711</recordId>
+        <otherRecordId localType="original">a60</otherRecordId>
+        <otherRecordId localType="original">a61</otherRecordId>
+        <otherRecordId localType="original">a62</otherRecordId>
+        <maintenanceStatus>new</maintenanceStatus>
+        <publicationStatus>approved</publicationStatus>
+        <maintenanceAgency>
+            <agencyCode>DE-00000000001</agencyCode>
+            <agencyName>a59</agencyName>
+        </maintenanceAgency>
+        <languageDeclaration>
+            <language languageCode="cat"/>
+            <script scriptCode="Latn"/>
+        </languageDeclaration>
+        <conventionDeclaration>
+            <abbreviation>ISO 15924</abbreviation>
+            <citation/>
+        </conventionDeclaration>
+        <conventionDeclaration>
+            <abbreviation>ISO 15924</abbreviation>
+            <citation/>
+        </conventionDeclaration>
+        <conventionDeclaration>
+            <abbreviation>ISO 15924</abbreviation>
+            <citation/>
+        </conventionDeclaration>
+        <conventionDeclaration>
+            <abbreviation>ISO 15924</abbreviation>
+            <citation/>
+        </conventionDeclaration>
+        <conventionDeclaration>
+            <abbreviation>ISO 15924</abbreviation>
+            <citation/>
+        </conventionDeclaration>
+        <maintenanceHistory>
+            <maintenanceEvent>
+                <eventType>created</eventType>
+                <eventDateTime standardDateTime="2013-09-09T12:02:27"/>
+                <agentType>human</agentType>
+                <agent>a58</agent>
+            </maintenanceEvent>
+        </maintenanceHistory>
+    </control>
+    <cpfDescription>
+        <identity>
+            <entityId localType="ISIL">a06</entityId>
+            <entityId localType="a08">a07</entityId>
+            <entityType>person</entityType>
+            <nameEntry localType="authorized" xml:lang="abk">
+                <part localType="persname">a01</part>
+            </nameEntry>
+            <nameEntry localType="abbreviation" xml:lang="aar">
+                <part localType="birthname">a02</part>
+            </nameEntry>
+            <nameEntry localType="alternative" xml:lang="afr">
+                <part localType="firstname">a03</part>
+            </nameEntry>
+            <nameEntry localType="preferred" xml:lang="aka">
+                <part localType="prefix">a04</part>
+            </nameEntry>
+            <nameEntry localType="other" xml:lang="alb">
+                <part localType="suffix">a05</part>
+            </nameEntry>
+        </identity>
+        <description>
+            <existDates>
+                <dateSet>
+                    <dateRange>
+                        <fromDate standardDate="1234">1234</fromDate>
+                        <toDate standardDate="1235-06">06.1235</toDate>
+                    </dateRange>
+                    <date standardDate="1234-07-08">08.07.1234</date>
+                </dateSet>
+            </existDates>
+            <places>
+                <place>
+                    <placeEntry localType="a17" countryCode="AF" vocabularySource="a10" xml:lang="amh">a09</placeEntry>
+                    <address>
+                        <addressLine xml:lang="amh" localType="firstdem">a11</addressLine>
+                        <addressLine xml:lang="amh" localType="localentity">a12</addressLine>
+                        <addressLine xml:lang="amh" localType="postalcode">a13</addressLine>
+                        <addressLine xml:lang="amh" localType="secondem">a14</addressLine>
+                        <addressLine xml:lang="amh" localType="street">a15</addressLine>
+                        <addressLine xml:lang="amh" localType="other">a16</addressLine>
+                    </address>
+                </place>
+                <place>
+                    <placeEntry localType="a21" countryCode="BS" vocabularySource="a19" xml:lang="ara">a18</placeEntry>
+                    <address>
+                        <addressLine xml:lang="ara" localType="firstdem">a20</addressLine>
+                    </address>
+                </place>
+            </places>
+            <functions>
+                <function>
+                    <term vocabularySource="a23" xml:lang="arg">a22</term>
+                    <placeEntry countryCode="AL" xml:lang="arg">a25</placeEntry>
+                    <descriptiveNote>
+                        <p xml:lang="arg">a24</p>
+                    </descriptiveNote>
+                </function>
+            </functions>
+            <occupations>
+                <occupation>
+                    <term vocabularySource="a29" xml:lang="arm">a28</term>
+                    <placeEntry countryCode="DZ" xml:lang="arm">a31</placeEntry>
+                    <descriptiveNote>
+                        <p xml:lang="arm">a30</p>
+                    </descriptiveNote>
+                </occupation>
+            </occupations>
+            <structureOrGenealogy>
+                <p xml:lang="asm">a34</p>
+                <p xml:lang="ava">a35</p>
+            </structureOrGenealogy>
+            <biogHist>
+                <p xml:lang="ave">a36</p>
+                <p xml:lang="aym">a37</p>
+            </biogHist>
+        </description>
+        <relations>
+            <cpfRelation cpfRelationType="associative" ns2:href="a40">
+                <relationEntry localType="title" xml:lang="bam">a38</relationEntry>
+                <relationEntry localType="id" xml:lang="bam">a39</relationEntry>
+                <relationEntry localType="agencyName" xml:lang="bam">a42</relationEntry>
+                <relationEntry localType="agencyCode" xml:lang="bam">a43</relationEntry>
+                <relationEntry localType="agencyName" xml:lang="bam">a44</relationEntry>
+                <relationEntry localType="agencyCode" xml:lang="bam">a45</relationEntry>
+                <descriptiveNote>
+                    <p xml:lang="bam">a41</p>
+                </descriptiveNote>
+            </cpfRelation>
+            <cpfRelation cpfRelationType="hierarchical" ns2:href="a48">
+                <relationEntry localType="title" xml:lang="bak">a46</relationEntry>
+                <relationEntry localType="id" xml:lang="bak">a47</relationEntry>
+                <relationEntry localType="agencyName" xml:lang="bak">a50</relationEntry>
+                <relationEntry localType="agencyCode" xml:lang="bak">a51</relationEntry>
+                <descriptiveNote>
+                    <p xml:lang="bak">a49</p>
+                </descriptiveNote>
+            </cpfRelation>
+            <resourceRelation resourceRelationType="creatorOf" ns2:href="a54">
+                <relationEntry localType="title" xml:lang="baq">a52</relationEntry>
+                <relationEntry localType="id" xml:lang="baq">a53</relationEntry>
+                <relationEntry localType="agencyName" xml:lang="baq">a56</relationEntry>
+                <relationEntry localType="agencyCode" xml:lang="baq">a57</relationEntry>
+                <descriptiveNote>
+                    <p xml:lang="baq">a55</p>
+                </descriptiveNote>
+            </resourceRelation>
+        </relations>
+    </cpfDescription>
+</eac-cpf>

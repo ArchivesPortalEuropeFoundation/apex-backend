@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eac-cpf xmlns="urn:isbn:1-931666-33-4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:isbn:1-931666-33-4 ../../../../../../../../../lifs/sapmo/APEx/WP4/Standards/apeEAC-CPF/schema/apeEAC-CPF.xsd">
+	<control>
+		<recordId>MNL-OL.DVLP-NMF.PERSON.ID00000221</recordId>
+		<maintenanceStatus>new</maintenanceStatus>
+		<maintenanceAgency>
+			<agencyCode>HU-MNL-OL</agencyCode>
+			<agencyName>The National Archives of Hungary</agencyName>
+		</maintenanceAgency>
+		<languageDeclaration>
+			<language languageCode="hun">Hungarian</language>
+			<script scriptCode="Latn">Latin</script>
+		</languageDeclaration>		
+		<maintenanceHistory>
+			<maintenanceEvent>
+				<eventType>created</eventType>
+				<eventDateTime standardDateTime="2013-07-22">2013. július 22.</eventDateTime>
+				<agentType>machine</agentType>
+				<agent>MNL-OL</agent>				
+			</maintenanceEvent>
+		</maintenanceHistory>
+		<sources>
+			<source>
+				<sourceEntry>OSZK, Országos Széchényi könyvtár : CaOOAMICUS</sourceEntry>
+			</source>
+		</sources>
+	</control>
+	<cpfDescription>
+		<identity>
+			<entityId>DVLP-NMF.PERSON.ID00000221</entityId>
+			<entityType>person</entityType>
+			<nameEntry>
+				<part xml:lang="hun">Fonó Renée</part>
+			</nameEntry>
+		</identity>
+		<description>
+			<existDates>
+				<dateRange>
+					<fromDate standardDate="1908">1908</fromDate>
+					<toDate standardDate="1975">1975</toDate>
+				</dateRange>
+			</existDates>
+			<occupations>
+				<occupation><term xml:lang="hun">orvos</term></occupation>
+				<occupation><term xml:lang="hun">gyermekgyógyász</term></occupation>
+				<occupation><term xml:lang="hun">röntgenológus</term></occupation>
+			</occupations>
+		</description>
+	</cpfDescription>
+</eac-cpf>
+
