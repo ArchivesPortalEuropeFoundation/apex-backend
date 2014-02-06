@@ -1,23 +1,27 @@
 package eu.apenet.dashboard.archivallandscape;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.infraestructure.ArchivalInstitutionUnit;
 import eu.apenet.commons.infraestructure.CountryUnit;
 import eu.apenet.commons.infraestructure.NavigationTree;
 import eu.apenet.commons.infraestructure.StrutsNavigationTree;
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
@@ -49,6 +53,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 	
 	private String countryId;
 	private List<Lang> langList;
+	private Set<String> pathsToBeDeleted;
 
 	private void buildBreadcrumb() {
 		super.buildBreadcrumbs();
@@ -427,7 +432,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 		return institutions.toString();
 	}
 
-	private String deleteArchivalInstitution(String aiId) {
+	private String deleteArchivalInstitution(String aiId) throws IOException {
 		StringBuilder messenger = new StringBuilder();
 		if(aiId!=null){
 			// Store in data base the operation, the archival institutions
@@ -473,7 +478,11 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 								&& !ai.getChildArchivalInstitutions().isEmpty()) {
 							this.deleteAIChild(ai);
 						} else {
-							ArchivalLandscape.deleteContent(ai);
+							String path = ArchivalLandscape.deleteContent(ai);
+							if(path!=null){
+								if(this.pathsToBeDeleted==null){ this.pathsToBeDeleted = new HashSet<String>();}
+								this.pathsToBeDeleted.add(path);
+							}
 						}
 //						aiDao.deleteSimple(ai); //deleteSimple institution
 						messenger.append(buildNode("info",getText("al.message.institutiondeleted")));
@@ -484,11 +493,39 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 				}
 				if(!rollback){ // The final commits
 					JpaUtil.commitDatabaseTransaction();
+					removePathsToBeDeleted();
 				}else{ //undo changes
 					JpaUtil.rollbackDatabaseTransaction();
+					rollbackDeletedPaths();
 				}
 		}
 		return messenger.toString();
+	}
+	
+	private void removePathsToBeDeleted() throws IOException {
+		if(this.pathsToBeDeleted!=null){
+			Iterator<String> itPaths = this.pathsToBeDeleted.iterator();
+			String subDir = APEnetUtilities.getConfig().getRepoDirPath();
+			while(itPaths.hasNext()){
+				String path = itPaths.next();
+				log.debug("Delete operation was ok, deleting _old directory...");
+				FileUtils.deleteDirectory(new File(subDir+path));
+				log.debug("Done!! Finished.");
+			}
+		}
+	}
+	
+	private void rollbackDeletedPaths() throws IOException {
+		if(this.pathsToBeDeleted!=null){
+			Iterator<String> itPaths = this.pathsToBeDeleted.iterator();
+			String subDir = APEnetUtilities.getConfig().getRepoDirPath();
+			while(itPaths.hasNext()){
+				String path = itPaths.next();
+				log.debug("Rollback detected, reverting _old to original path...");
+				FileUtils.moveDirectory(new File(subDir+path),new File(subDir+path.substring(0,path.length()-"_old".length())));
+				log.debug("Revert done!");
+			}
+		}
 	}
 
 	/**
@@ -507,7 +544,11 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			}
 			
 		}
-		ArchivalLandscape.deleteContent(ai);
+		String path = ArchivalLandscape.deleteContent(ai);
+		if(path!=null){
+			if(this.pathsToBeDeleted==null){ this.pathsToBeDeleted = new HashSet<String>();}
+			this.pathsToBeDeleted.add(path);
+		}
 	}
 
 	private String createArchivalInstitution(String name,String father,String type,String lang){
