@@ -243,8 +243,10 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 					if (aiAName.contains("\"")) {
 						aiAName = aiAName.replaceAll("\"", "%22");
 					}
-					buffer.append(buildNode("name",aiAName));
-					buffer.append(COMMA);
+					if(aiAName!=null && !aiAName.isEmpty()) {
+						buffer.append(buildNode("name",aiAName));
+						buffer.append(COMMA);
+					}
 					buffer.append(buildNode("lang",alternativeName.getLang().getIsoname()));
 					buffer.append(END_ARRAY);
 					if(itAiAlternativeNames.hasNext()){
