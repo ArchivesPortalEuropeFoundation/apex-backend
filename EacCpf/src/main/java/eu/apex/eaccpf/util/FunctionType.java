@@ -86,50 +86,50 @@ public class FunctionType {
     public FunctionType fillDataWith(Function function) {
         if (function.getTerm() != null
                 && function.getTerm().getContent() != null
-                && !function.getTerm().getContent().isEmpty()){
+                && !function.getTerm().getContent().isEmpty()) {
             this.functionName = function.getTerm().getContent();
-            
-            if(function.getTerm().getVocabularySource() != null
-                    && !function.getTerm().getVocabularySource().isEmpty()){
+
+            if (function.getTerm().getVocabularySource() != null
+                    && !function.getTerm().getVocabularySource().isEmpty()) {
                 this.vocabLink = function.getTerm().getVocabularySource();
             }
-            if(function.getTerm().getLang() != null
-                    && !function.getTerm().getLang().isEmpty()){
+            if (function.getTerm().getLang() != null
+                    && !function.getTerm().getLang().isEmpty()) {
                 this.languageCode = function.getTerm().getLang();
             }
         }
         if (function.getDescriptiveNote() != null
                 && function.getDescriptiveNote().getP() != null
-                && !function.getDescriptiveNote().getP().isEmpty()){
+                && !function.getDescriptiveNote().getP().isEmpty()) {
             List<P> paragraphs = function.getDescriptiveNote().getP();
             for (P p : paragraphs) {
-                if(p.getContent() != null && !p.getContent().isEmpty()){
+                if (p.getContent() != null && !p.getContent().isEmpty()) {
                     this.description = p.getContent();
                 }
             }
         }
-        
+
+        this.countryCodes = new ArrayList<String>();
+        this.places = new ArrayList<String>();
         if (function.getPlaceEntry() != null
-                && !function.getPlaceEntry().isEmpty()){
-            this.countryCodes = new ArrayList<String>();
-            this.places = new ArrayList<String>();
+                && !function.getPlaceEntry().isEmpty()) {
             List<PlaceEntry> placeEntries = function.getPlaceEntry();
             for (PlaceEntry placeEntry : placeEntries) {
-                if(placeEntry.getCountryCode() != null
-                        && !placeEntry.getCountryCode().isEmpty()){
+                if (placeEntry.getCountryCode() != null
+                        && !placeEntry.getCountryCode().isEmpty()) {
                     this.countryCodes.add(placeEntry.getCountryCode());
                 } else {
                     this.countryCodes.add("");
                 }
-                if(placeEntry.getContent() != null
-                        && !placeEntry.getContent().isEmpty()){
+                if (placeEntry.getContent() != null
+                        && !placeEntry.getContent().isEmpty()) {
                     this.places.add(placeEntry.getContent());
                 }
             }
         }
-        
+
+        this.dates = new ArrayList<DateType>();
         if (function.getDateSet() != null || function.getDateRange() != null || function.getDate() != null) {
-            this.dates = new ArrayList<DateType>();
 
             if (function.getDateSet() != null
                     && function.getDateSet().getDateOrDateRange() != null

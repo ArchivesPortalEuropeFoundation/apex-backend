@@ -12,7 +12,7 @@
 
             <table id="choosetypeTable" class="tablePadding">
                 <tr>
-                    <td colspan="2" style="text-align: center;"><b>Fair warning:</b> Loading files is currently discouraged, as only the &quot;basic&quot; data will be displayed at the moment. If you are feeling curious, though... ;-)<br /><hr /></td>
+                    <td colspan="2" style="text-align: center;"><b>Note:</b> Loading files is currently discouraged, as some data (all dates; genealogies/biographies) will not be shown at the moment<br /><hr /></td>
                 </tr>
                 <tr>
                     <td>Do you want</td>

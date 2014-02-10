@@ -160,13 +160,13 @@ public class EacCpfLoader {
         }
 
         //EXIST DATES
+        this.existDates = new ArrayList<DateType>();
+
         if (this.eacCpf.getCpfDescription() != null && this.eacCpf.getCpfDescription().getDescription() != null
                 && this.eacCpf.getCpfDescription().getDescription().getExistDates() != null) {
-            this.existDates = new ArrayList<DateType>();
-
             if (this.eacCpf.getCpfDescription().getDescription().getExistDates().getDateSet() != null
                     && !this.eacCpf.getCpfDescription().getDescription().getExistDates().getDateSet().getDateOrDateRange().isEmpty()) {
-                for (int k = 0; k < this.eacCpf.getCpfDescription().getDescription().getExistDates().getDateSet().getDateOrDateRange().size(); k ++) {
+                for (int k = 0; k < this.eacCpf.getCpfDescription().getDescription().getExistDates().getDateSet().getDateOrDateRange().size(); k++) {
                     Object object = this.eacCpf.getCpfDescription().getDescription().getExistDates().getDateSet().getDateOrDateRange().get(k);
                     if (object instanceof Date) {
                         DateType dateType = new DateType(new SimpleDate(0));
@@ -194,9 +194,14 @@ public class EacCpfLoader {
         if (this.eacCpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses() != null
                 && !this.eacCpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().isEmpty()) {
             List<Object> descriptionObjects = this.eacCpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses();
+            places = new ArrayList<PlaceType>();
+            functions = new ArrayList<FunctionType>();
+            occupations = new ArrayList<OccupationType>();
+            if (genealogies == null) {
+                genealogies = new ArrayList<GenealogyType>();
+            }
 
             for (Object object : descriptionObjects) {
-                places = new ArrayList<PlaceType>();
                 if (object instanceof Places) {
                     Places placeObjects = (Places) object;
                     if (placeObjects.getPlace() != null
@@ -208,7 +213,6 @@ public class EacCpfLoader {
                     }
                 }
                 if (object instanceof Functions) {
-                    functions = new ArrayList<FunctionType>();
                     Functions functionObjects = (Functions) object;
                     if (functionObjects.getFunction() != null
                             && !functionObjects.getFunction().isEmpty()) {
@@ -219,7 +223,6 @@ public class EacCpfLoader {
                     }
                 }
                 if (object instanceof Occupations) {
-                    occupations = new ArrayList<OccupationType>();
                     Occupations occupationObjects = (Occupations) object;
                     if (occupationObjects.getOccupation() != null
                             && !occupationObjects.getOccupation().isEmpty()) {
@@ -230,9 +233,6 @@ public class EacCpfLoader {
                     }
                 }
                 if (object instanceof StructureOrGenealogy) {
-                    if (genealogies == null) {
-                        genealogies = new ArrayList<GenealogyType>();
-                    }
                     StructureOrGenealogy genealogyObject = (StructureOrGenealogy) object;
                     GenealogyType genealogyType = new GenealogyType();
                     genealogies.add(genealogyType.fillDataWith(genealogyObject));
@@ -241,9 +241,9 @@ public class EacCpfLoader {
         }
 
         //BIOGRAPHIES
+        this.biographies = new ArrayList<BiographyType>();
         if (this.eacCpf.getCpfDescription() != null && this.eacCpf.getCpfDescription().getDescription() != null
                 && this.eacCpf.getCpfDescription().getDescription().getBiogHist() != null) {
-            this.biographies = new ArrayList<BiographyType>();
 
             for (BiogHist biogHist : this.eacCpf.getCpfDescription().getDescription().getBiogHist()) {
                 BiographyType biographyType = new BiographyType();

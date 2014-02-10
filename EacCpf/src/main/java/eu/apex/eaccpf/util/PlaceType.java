@@ -117,21 +117,21 @@ public class PlaceType {
                 }
             }
         }
+        this.addressComponents = new ArrayList<String>();
+        this.addressDetails = new ArrayList<String>();
         if (place.getAddress() != null
                 && place.getAddress().getAddressLine() != null
-                && !place.getAddress().getAddressLine().isEmpty()){
-            this.addressComponents = new ArrayList<String>();
-            this.addressDetails = new ArrayList<String>();
+                && !place.getAddress().getAddressLine().isEmpty()) {
             List<AddressLine> addressLines = place.getAddress().getAddressLine();
             for (AddressLine addressLine : addressLines) {
-                if(addressLine.getLocalType() != null
-                        && !addressLine.getLocalType().isEmpty()){
+                if (addressLine.getLocalType() != null
+                        && !addressLine.getLocalType().isEmpty()) {
                     this.addressComponents.add(addressLine.getLocalType());
                 } else {
                     this.addressComponents.add("----");
                 }
-                if(addressLine.getContent() != null
-                        && !addressLine.getContent().isEmpty()){
+                if (addressLine.getContent() != null
+                        && !addressLine.getContent().isEmpty()) {
                     this.addressDetails.add(addressLine.getContent());
                 }
             }
