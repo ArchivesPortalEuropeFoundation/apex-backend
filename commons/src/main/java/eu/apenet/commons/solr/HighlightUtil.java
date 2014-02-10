@@ -39,7 +39,7 @@ public class HighlightUtil {
 		return instance;
 	}
 
-	public String highlight(String search, String html, HighlightType type) {
+	public String highlight(String search, String html, EadHighlightType type) {
 		String newText = html;
 		List<String> searchTerms = convertSearchTermToWords(search, type);
 		if (html != null) {
@@ -49,9 +49,9 @@ public class HighlightUtil {
 		return newText;
 	}
 
-	public List<String> convertSearchTermToWords(String searchTerm, HighlightType type) {
+	public List<String> convertSearchTermToWords(String searchTerm, EadHighlightType type) {
 		List<String> results = new ArrayList<String>();
-		boolean defaultType = HighlightType.DEFAULT.equals(type);
+		boolean defaultType = EadHighlightType.DEFAULT.equals(type);
 		Matcher matcher = NO_WHITESPACE_PATTERN.matcher(searchTerm);
 		while (matcher.find()) {
 			String word = matcher.group();
@@ -76,13 +76,13 @@ public class HighlightUtil {
 		
 	}
 	
-	private static String doHighlight(List<String> searchTerms, String html, HighlightType type) {
+	private static String doHighlight(List<String> searchTerms, String html, EadHighlightType type) {
 		String htmlLowercase = html.toLowerCase();
 		String newText = "";
 		int lastMatchIndex = 0;
 		int lastTagIndex = -1;
 		Pattern pattern = null;
-		if ( HighlightType.DEFAULT.equals(type)){
+		if ( EadHighlightType.DEFAULT.equals(type)){
 			pattern = WORD_PATTERN;
 		}else {
 			pattern = NO_WHITESPACE_PATTERN;

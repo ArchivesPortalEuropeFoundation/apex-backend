@@ -15,7 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.ResourceBundleSource;
-import eu.apenet.commons.solr.SolrField;
+import eu.apenet.commons.solr.EadSolrField;
 import eu.apenet.commons.xslt.EadXslt;
 
 /**
@@ -35,7 +35,7 @@ public abstract class AbstractEadTag extends SimpleTagSupport {
 	private String aiId;
 	private String type;
 	private final static Logger LOG = Logger.getLogger(AbstractEadTag.class);
-	private static final List<SolrField> DEFAULT_HIGHLIGHT_FIELDS = SolrField.getDefaults();
+	private static final List<EadSolrField> DEFAULT_HIGHLIGHT_FIELDS = EadSolrField.getDefaults();
 
 	private final static Map<String, String> xsltUrls = new HashMap<String,String>();
 	static {
@@ -47,7 +47,7 @@ public abstract class AbstractEadTag extends SimpleTagSupport {
 	
 	public final void doTag() throws JspException, IOException {
 		Source xmlSource = new StreamSource(new StringReader(xml));
-		List<SolrField> highlightFields = SolrField.getSolrFieldsByIdString(searchFieldsSelectionId);
+		List<EadSolrField> highlightFields = EadSolrField.getSolrFieldsByIdString(searchFieldsSelectionId);
 		if (highlightFields.size() == 0) {
 			highlightFields = DEFAULT_HIGHLIGHT_FIELDS;
 		}

@@ -40,11 +40,11 @@ public enum EadSolrField {
 		return null;
 	}
 
-	public HighlightType getType() {
+	public EadHighlightType getType() {
 		if (TITLE.equals(this) || SCOPECONTENT.equals(this) || OTHER.equals(this) || ALTERDATE.equals(this)) {
-			return HighlightType.DEFAULT;
+			return EadHighlightType.DEFAULT;
 		} else {
-			return HighlightType.UNITID;
+			return EadHighlightType.UNITID;
 		}
 	}
 
