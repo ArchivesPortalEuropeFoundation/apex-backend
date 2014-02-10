@@ -2,14 +2,14 @@ package eu.archivesportaleurope.commons.config;
 
 public class ApePortalConfig extends ApePortalAndDashboardConfig{
 	private String solrStopwordsUrl;
-    private String solrSearchUrl;
-    public String getSolrSearchUrl(){
-        return solrSearchUrl;
+    private String baseSolrSearchUrl;
+    public String getBaseSolrSearchUrl(){
+        return baseSolrSearchUrl;
     }
 
-	public void setSolrSearchUrl(String solrSearchUrl) {
+	public void setBaseSolrSearchUrl(String baseSolrSearchUrl) {
 		checkConfigured();
-		this.solrSearchUrl = solrSearchUrl;
+		this.baseSolrSearchUrl = baseSolrSearchUrl;
 	}
 
 	public String getSolrStopwordsUrl() {
