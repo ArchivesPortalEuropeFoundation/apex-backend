@@ -1,4 +1,4 @@
-package eu.apenet.commons.solr;
+package eu.apenet.commons.solr.eads;
 
 public enum EadHighlightType {
 	DEFAULT("default"), UNITID("unitid");

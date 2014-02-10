@@ -1,4 +1,4 @@
-package eu.apenet.commons.solr;
+package eu.apenet.commons.solr.eads;
 
 public final class EadSolrFields {
 	public final static String ID = "id";

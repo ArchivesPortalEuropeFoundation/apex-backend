@@ -1,4 +1,4 @@
-package eu.apenet.commons.solr;
+package eu.apenet.commons.solr.eads;
 
 public final class EadSolrValues {
 	public final static String HG_PREFIX = "H";

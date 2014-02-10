@@ -18,7 +18,7 @@ import net.sf.saxon.s9api.XsltTransformer;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.ResourceBundleSource;
-import eu.apenet.commons.solr.EadSolrField;
+import eu.apenet.commons.solr.eads.EadSolrField;
 import eu.apenet.commons.xslt.extensions.EadidCheckerExtension;
 import eu.apenet.commons.xslt.extensions.HighlighterExtension;
 import eu.apenet.commons.xslt.extensions.ResourcebundleExtension;

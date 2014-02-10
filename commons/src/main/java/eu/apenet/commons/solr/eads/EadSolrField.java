@@ -1,4 +1,4 @@
-package eu.apenet.commons.solr;
+package eu.apenet.commons.solr.eads;
 
 import java.util.ArrayList;
 import java.util.List;

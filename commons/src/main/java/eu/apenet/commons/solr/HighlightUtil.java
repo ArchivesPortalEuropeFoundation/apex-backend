@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import eu.apenet.commons.solr.eads.EadHighlightType;
+
 public class HighlightUtil {
 	private static final String CLASSPATH_PREFIX = "classpath:";
 	private static final String GT_TOKEN = ">";

@@ -15,8 +15,8 @@ import net.sf.saxon.value.StringValue;
 
 import org.apache.commons.lang.StringUtils;
 
-import eu.apenet.commons.solr.EadSolrField;
 import eu.apenet.commons.solr.HighlightUtil;
+import eu.apenet.commons.solr.eads.EadSolrField;
 
 public class HighlighterExtension extends ExtensionFunctionDefinition {
 	/**
