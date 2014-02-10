@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-public enum SolrField {
+public enum EadSolrField {
 	TITLE("title"), SCOPECONTENT("scopecontent"), ALTERDATE("alterdate"), OTHER("other"), UNITID("unitid"), OTHERUNITID(
 			"otherunitid");
 	private String value;
@@ -14,7 +14,7 @@ public enum SolrField {
 	private static final Integer SCOPECONTENT_SELECTION = 2;
 	private static final Integer UNITID_SELECTION = 3;
 
-	private SolrField(String value) {
+	private EadSolrField(String value) {
 		this.value = value;
 	}
 
@@ -23,7 +23,7 @@ public enum SolrField {
 		return value;
 	}
 
-	public static SolrField getSolrField(String type) {
+	public static EadSolrField getSolrField(String type) {
 		if (TITLE.toString().equalsIgnoreCase(type)) {
 			return TITLE;
 		} else if (SCOPECONTENT.toString().equalsIgnoreCase(type)) {
@@ -48,8 +48,8 @@ public enum SolrField {
 		}
 	}
 
-	public static List<SolrField> getDefaults() {
-		List<SolrField> defaults = new ArrayList<SolrField>();
+	public static List<EadSolrField> getDefaults() {
+		List<EadSolrField> defaults = new ArrayList<EadSolrField>();
 		defaults.add(TITLE);
 		defaults.add(SCOPECONTENT);
 		defaults.add(OTHER);
@@ -57,8 +57,8 @@ public enum SolrField {
 		return defaults;
 	}
 
-	public static List<SolrField> getSolrFieldsById(Integer id) {
-		List<SolrField> defaults = new ArrayList<SolrField>();
+	public static List<EadSolrField> getSolrFieldsById(Integer id) {
+		List<EadSolrField> defaults = new ArrayList<EadSolrField>();
 		if (id == null || NO_SELECTION.equals(id)) {
 //			defaults.add(TITLE);
 //			defaults.add(SCOPECONTENT);
@@ -75,7 +75,7 @@ public enum SolrField {
 		return defaults;
 	}
 
-	public static List<SolrField> getSolrFieldsByIdString(String idString){
+	public static List<EadSolrField> getSolrFieldsByIdString(String idString){
 		Integer id = null;
 		if (StringUtils.isNotBlank(idString) && StringUtils.isNumeric(idString)){
 			id = Integer.parseInt(idString);

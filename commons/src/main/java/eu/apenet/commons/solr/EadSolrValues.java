@@ -1,6 +1,6 @@
 package eu.apenet.commons.solr;
 
-public final class SolrValues {
+public final class EadSolrValues {
 	public final static String HG_PREFIX = "H";
 	public final static String FA_PREFIX = "F";
 	public final static String SG_PREFIX = "S";

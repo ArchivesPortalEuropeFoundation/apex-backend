@@ -1,6 +1,6 @@
 package eu.apenet.commons.solr;
 
-public final class SolrFields {
+public final class EadSolrFields {
 	public final static String ID = "id";
 	public final static String TITLE = "title";
 	public final static String SCOPECONTENT = "scopecontent";
