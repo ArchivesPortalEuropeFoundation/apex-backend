@@ -7,8 +7,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import eu.apenet.commons.solr.SolrFields;
-import eu.apenet.commons.solr.SolrValues;
+import eu.apenet.commons.solr.eads.EadSolrFields;
+import eu.apenet.commons.solr.eads.EadSolrValues;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead.publish.EADCounts;
@@ -46,16 +46,16 @@ public class DatabaseEadPublisher {
 		int depth = 0;
 		for (int i = ais.size() - 1; i >= 0; i--) {
 			ArchivalInstitution currentAi = ais.get(i);
-			String id = SolrValues.AI_PREFIX + currentAi.getAiId();
+			String id = EadSolrValues.AI_PREFIX + currentAi.getAiId();
 			String newFacetField = currentAi.getAiname();
 			if (currentAi.isGroup()) {
-				newFacetField += SolrPublisher.COLON + SolrValues.TYPE_GROUP;
+				newFacetField += SolrPublisher.COLON + EadSolrValues.TYPE_GROUP;
 			} else {
-				newFacetField += SolrPublisher.COLON + SolrValues.TYPE_LEAF;
+				newFacetField += SolrPublisher.COLON + EadSolrValues.TYPE_LEAF;
 			}
 			newFacetField += SolrPublisher.COLON + id;
-			fullHierarchy.put(SolrFields.AI_DYNAMIC + depth + SolrFields.DYNAMIC_STRING_SUFFIX, newFacetField);
-			fullHierarchy.put(SolrFields.AI_DYNAMIC_ID + depth + SolrFields.DYNAMIC_STRING_SUFFIX, id);
+			fullHierarchy.put(EadSolrFields.AI_DYNAMIC + depth + EadSolrFields.DYNAMIC_STRING_SUFFIX, newFacetField);
+			fullHierarchy.put(EadSolrFields.AI_DYNAMIC_ID + depth + EadSolrFields.DYNAMIC_STRING_SUFFIX, id);
 			depth++;
 		}
 

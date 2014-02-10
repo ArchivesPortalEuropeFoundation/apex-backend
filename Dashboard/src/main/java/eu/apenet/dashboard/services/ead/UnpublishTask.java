@@ -6,8 +6,8 @@ import java.util.Properties;
 import org.apache.solr.client.solrj.SolrServerException;
 
 import eu.apenet.commons.exceptions.APEnetException;
-import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.UpdateSolrServerHolder;
+import eu.apenet.commons.solr.eads.EadSolrFields;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.EadDAO;
@@ -51,6 +51,6 @@ public class UnpublishTask extends AbstractEadTask {
 
 	private static long deleteFromSolr(String eadid, int aiId) throws SolrServerException, IOException {
 		UpdateSolrServerHolder server = UpdateSolrServerHolder.getInstance();
-		return server.deleteByQuery("(" + SolrFields.AI_ID + ":" + aiId + " AND " + SolrFields.EADID + ":\"" + eadid + "\")");
+		return server.deleteByQuery("(" + EadSolrFields.AI_ID + ":" + aiId + " AND " + EadSolrFields.EADID + ":\"" + eadid + "\")");
 	}
 }

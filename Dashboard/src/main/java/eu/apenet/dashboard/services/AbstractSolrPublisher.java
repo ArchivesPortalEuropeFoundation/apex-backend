@@ -1,19 +1,27 @@
 package eu.apenet.dashboard.services;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Set;
+import java.util.Collection;
 import java.util.TimeZone;
-import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.common.SolrInputDocument;
 import org.w3c.dom.NodeList;
 
-public class AbstractSolrPublisher {
+import eu.apenet.commons.solr.UpdateSolrServerHolder;
+
+public abstract class AbstractSolrPublisher {
 	private static final Logger LOGGER = Logger.getLogger(AbstractSolrPublisher.class);
 	protected static final String WHITE_SPACE = " ";
 	public static final String COLON = ":";
+	private Collection<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
+	private int numberOfPublishedItems = 0;
+	private static final int MAX_NUMBER_OF_PENDING_DOCS = 200;
+	private long solrTime = 0l;
 	protected static String removeUnusedCharacters(String input) {
 		if (input != null) {
 			String result = input.replaceAll("[\t ]+", " ");
@@ -33,16 +41,7 @@ public class AbstractSolrPublisher {
 		return removeUnusedCharacters(result);
 	}
 
-	protected static Set<String> getTextsWithoutMultiplity(NodeList nodeList) {
-		Set<String> results = new TreeSet<String>();
-		for (int i = 0; i < nodeList.getLength(); i++) {
-			String text = removeUnusedCharacters(nodeList.item(i).getTextContent());
-			if (StringUtils.isNotBlank(text)) {
-				results.add(text.toUpperCase());
-			}
-		}
-		return results;
-	}
+
 	protected static String obtainDate(String onedate, boolean isStartDate) {
 		String year = null;
 		String month = null;
@@ -124,5 +123,34 @@ public class AbstractSolrPublisher {
 		}
 		return null;
 	}
+	protected static void add(SolrInputDocument doc, String name, String value) {
+		if (StringUtils.isNotBlank(value)) {
+			doc.addField(name, value);
+		}
+	}
 
+	protected void addSolrDocument(SolrInputDocument doc) throws SolrServerException{
+		docs.add(doc);
+		if (docs.size() == MAX_NUMBER_OF_PENDING_DOCS) {
+			solrTime += UpdateSolrServerHolder.getInstance().add(docs);
+			docs = new ArrayList<SolrInputDocument>();
+			numberOfPublishedItems += MAX_NUMBER_OF_PENDING_DOCS;
+			LOGGER.debug(getKey() + " #published: " + numberOfPublishedItems + " time: " + solrTime +"ms" );
+		}
+	}
+	public void commitSolrDocuments() throws SolrServerException{
+		if (docs.size() > 0) {
+			solrTime += UpdateSolrServerHolder.getInstance().add(docs);
+			numberOfPublishedItems += docs.size();
+			LOGGER.debug(getKey() + " #published: " + numberOfPublishedItems + " time: " + solrTime +"ms" );
+			docs = new ArrayList<SolrInputDocument>();
+		}
+	}
+	protected void rollbackSolrDocuments(String query) throws SolrServerException{
+		solrTime += UpdateSolrServerHolder.getInstance().deleteByQuery(query);
+	}
+	public long getSolrTime() {
+		return solrTime;
+	}
+	protected abstract String getKey();
 }
