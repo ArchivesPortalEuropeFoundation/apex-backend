@@ -12,7 +12,7 @@ import eu.archivesportaleurope.commons.config.ApePortalConfig;
 public class ApePortalConfigListener extends ApePortalAndDashboardConfigListener {
 
 	private static final String SOLR_STOPWORDS_URL = "SOLR_STOPWORDS_URL";
-	private static final String SOLR_SEARCH_URL = "SOLR_SEARCH_URL";
+	private static final String SOLR_SEARCH_URL = "SOLR_BASE_SEARCH_URL";
 	@Override
 	public void contextInitializedInternal(ServletContext servletContext) {
 		try {
@@ -51,7 +51,7 @@ public class ApePortalConfigListener extends ApePortalAndDashboardConfigListener
 		} else {
 			log.info(SOLR_SEARCH_URL + ": " + solrSearchUrl);
 		}
-		config.setSolrSearchUrl(solrSearchUrl);		
+		config.setBaseSolrSearchUrl(solrSearchUrl);		
 		super.init(servletContext, config);
 	}
 }
