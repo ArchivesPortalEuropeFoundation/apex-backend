@@ -480,8 +480,35 @@ public final class UserService {
 
 	}
 
-    public static void sendEmailHarvestFinished( ArchivalInstitution archivalInstitution, User partner, int numberEadHarvested, String infoHarvestedServer, DateHarvestModel oldestFileHarvested, DateHarvestModel newestFileHarvested, OaiPmhStatus oaiPmhStatus, String errors, String errorsResponsePath) {
-    	if (partner != null){
+    public static void sendEmailHarvestFinished( ArchivalInstitution archivalInstitution, int numberEadHarvested, String infoHarvestedServer, DateHarvestModel oldestFileHarvested, DateHarvestModel newestFileHarvested, OaiPmhStatus oaiPmhStatus, String errors, String errorsResponsePath) {
+		User partner = archivalInstitution.getPartner();
+		User countryManager  = DAOFactory.instance().getUserDAO().getCountryManagerOfCountry(archivalInstitution.getCountry());
+		String name = "UNKNOWN";
+		String toEmail = null;
+		String ccEmail = null;
+		String bccEmail = null;
+		if (partner != null) {
+			toEmail = partner.getEmailAddress();
+			name = partner.getName();
+		}
+		if (countryManager != null) {
+			if (partner == null){
+				toEmail = countryManager.getEmailAddress();
+				name = countryManager.getName();
+			}else {
+				ccEmail = countryManager.getEmailAddress();
+			}
+		}
+		if (toEmail == null){
+			if (APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()){
+				toEmail =  APEnetUtilities.getDashboardConfig().getEmailDashboardFeedbackDestiny();
+			}
+		}else {
+			if (APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()){
+				bccEmail =  APEnetUtilities.getDashboardConfig().getEmailDashboardFeedbackDestiny();
+			}
+		}
+		if (toEmail != null){
 	    	EmailComposer emailComposer = null;
 	    	if (errors  == null){
 	    		emailComposer = new EmailComposer("emails/harvestFinished.txt", "Last harvesting process " + oaiPmhStatus.getName()+ " of your institution " + archivalInstitution.getAiname(), true, true);
@@ -489,7 +516,7 @@ public final class UserService {
 	    		emailComposer = new EmailComposer("emails/harvestFinishedWithWarnings.txt", "Last harvesting process " + oaiPmhStatus.getName()+ " of your institution " + archivalInstitution.getAiname(), true, true);
 	    	}
 	    	emailComposer.setProperty("archivalInstitution", archivalInstitution.getAiname());
-	        emailComposer.setProperty("name", partner.getName());
+	        emailComposer.setProperty("name",name);
 	        emailComposer.setProperty("dashboardBase", APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
 	        emailComposer.setProperty("numberEadHarvested", numberEadHarvested+"");
 	        emailComposer.setProperty("infoHarvestedServer",infoHarvestedServer.replaceAll("\n", "<br/>"));
@@ -512,14 +539,41 @@ public final class UserService {
 		        }	   
 	        }
 	        Emailer emailer = new Emailer();
-        	emailer.sendMessage(partner.getEmailAddress(), null, null, null, emailComposer);
-    	}
+        	emailer.sendMessage(toEmail, ccEmail, bccEmail, null, emailComposer);
+		}
     }
-    public static void sendEmailHarvestFailed(ArchivalInstitution archivalInstitution, User partner, String infoHarvestedServer, String errors, String errorsResponsePath) {
-    	if (partner != null){
+    public static void sendEmailHarvestFailed(ArchivalInstitution archivalInstitution,  String infoHarvestedServer, String errors, String errorsResponsePath) {
+		User partner = archivalInstitution.getPartner();
+		User countryManager  = DAOFactory.instance().getUserDAO().getCountryManagerOfCountry(archivalInstitution.getCountry());
+		String name = "UNKNOWN";
+		String toEmail = null;
+		String ccEmail = null;
+		String bccEmail = null;
+		if (partner != null) {
+			toEmail = partner.getEmailAddress();
+			name = partner.getName();
+		}
+		if (countryManager != null) {
+			if (partner == null){
+				toEmail = countryManager.getEmailAddress();
+				name = countryManager.getName();
+			}else {
+				ccEmail = countryManager.getEmailAddress();
+			}
+		}
+		if (toEmail == null){
+			if (APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()){
+				toEmail =  APEnetUtilities.getDashboardConfig().getEmailDashboardFeedbackDestiny();
+			}
+		}else {
+			if (APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()){
+				bccEmail =  APEnetUtilities.getDashboardConfig().getEmailDashboardFeedbackDestiny();
+			}
+		}
+		if (toEmail != null){
 	        EmailComposer emailComposer = new EmailComposer("emails/harvestFailed.txt", "Last harvesting process FAILED of your institution " + archivalInstitution.getAiname(), true, true);
 	        emailComposer.setProperty("archivalInstitution", archivalInstitution.getAiname());
-	        emailComposer.setProperty("name", partner.getName());
+	        emailComposer.setProperty("name", name);
 	        emailComposer.setProperty("dashboardBase", APEnetUtilities.getDashboardConfig().getDomainNameMainServer());
 	        emailComposer.setProperty("infoHarvestedServer", infoHarvestedServer.replaceAll("\n", "<br/>"));
 	        emailComposer.setProperty("errorMessage",errors);
@@ -529,11 +583,7 @@ public final class UserService {
 	        	emailComposer.setProperty("errorFileMessage", "");
 	        }
 	        Emailer emailer = new Emailer();
-	        if (APEnetUtilities.getDashboardConfig().isDefaultHarvestingProcessing()){
-	        	emailer.sendMessage(partner.getEmailAddress(), null, APEnetUtilities.getDashboardConfig().getEmailDashboardFeedbackDestiny(), null, emailComposer);
-	        }else {
-	        	emailer.sendMessage(partner.getEmailAddress(), null, null, null, emailComposer);
-	        }
+	        emailer.sendMessage(toEmail, ccEmail, bccEmail, null, emailComposer);
     	}
     }
 
