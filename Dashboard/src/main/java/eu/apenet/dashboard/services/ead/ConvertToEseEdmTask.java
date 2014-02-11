@@ -1,23 +1,15 @@
 package eu.apenet.dashboard.services.ead;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-
-import org.xml.sax.SAXException;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dpt.utils.ead2ese.EseConfig;
 import eu.apenet.dpt.utils.ead2ese.EseFileUtils;
 import eu.apenet.dpt.utils.ead2ese.XMLUtil;
-import eu.apenet.dpt.utils.ead2ese.stax.ESEParser;
-import eu.apenet.dpt.utils.ead2ese.stax.RecordParser;
 import eu.apenet.dpt.utils.ese2edm.EdmConfig;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EseDAO;
@@ -75,7 +67,7 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 					File eseOutputFile = EseFileUtils.getFile(outputESEDir, eseOutputFilename);
 					eseOutputFile.getParentFile().mkdirs();
 					eseConfig.getTransformerXML2XML().transform(xmlNameRelative, apenetEad, eseOutputFile);
-					int numberOfRecords = analyzeESEXML(xmlNameRelative, eseOutputFile);
+					int numberOfRecords = XMLUtil.analyzeESEXML(eseOutputFile);
 
 					boolean update = false;
 					if (numberOfRecords > 1) {
@@ -183,22 +175,5 @@ public class ConvertToEseEdmTask extends AbstractEadTask {
 		}
 	}
 
-	private static int analyzeESEXML(String xmlNameRelative, File outputFile) throws XMLStreamException, SAXException,
-			IOException {
 
-		XMLStreamReader xmlReader = XMLUtil.getXMLStreamReader(outputFile);
-		ESEParser parser = new ESEParser();
-		RecordParser recordParser = new RecordParser();
-		parser.registerParser(recordParser);
-		// count number of records
-		parser.parse(xmlReader, null);
-		int numberOfRecords = recordParser.getNumberOfRecords();
-		if (numberOfRecords == 0) {
-			outputFile.delete();
-		} else {
-			XMLUtil.validateESE(outputFile);
-		}
-		xmlReader.close();
-		return numberOfRecords;
-	}
 }
