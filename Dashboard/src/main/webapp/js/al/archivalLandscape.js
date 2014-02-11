@@ -1,29 +1,29 @@
 $(document).ready(function(){
 	$("input#uploadActionButton").click(function(){
-		$("#checkboxPreview").hide();
-		$("label[for='checkboxPreview']").hide();
-		if($("#checkboxPreview").is(':checked')){
-			$("div#uploadPanelDiv").html("<span>uploading...</span>");
-			$("#uploadActionButton").hide();
-	        var frm = $("form#uploadALForm");
-	        var fd = new FormData(frm[0]);
-	        var xmlHttpRequest = getXmlHttpRequest();
-	        xmlHttpRequest.open(frm.attr("method"), frm.attr("action"), true);
-	        xmlHttpRequest.onreadystatechange = function() {
-	            if (xmlHttpRequest.readyState == 4) {
-	            	try{
-	            		$("div#uploadPanelDiv").html("<span>File uploaded, processing response...</span>");
-	            		var response = JSON.parse(xmlHttpRequest.responseText);
-	                	successAlUpload(response);
-	            	}catch(e){
-	            		$("div#uploadPanelDiv").html("<span>Something wrong happened.</span>");
-	            	}
-	            }
-	        };
-	        xmlHttpRequest.send(fd);
-		}else{
+//		$("#checkboxPreview").hide();
+//		$("label[for='checkboxPreview']").hide();
+//		if($("#checkboxPreview").is(':checked')){
+//			$("div#uploadPanelDiv").html("<span>uploading...</span>");
+//			$("#uploadActionButton").hide();
+//	        var frm = $("form#uploadALForm");
+//	        var fd = new FormData(frm[0]);
+//	        var xmlHttpRequest = getXmlHttpRequest();
+//	        xmlHttpRequest.open(frm.attr("method"), frm.attr("action"), true);
+//	        xmlHttpRequest.onreadystatechange = function() {
+//	            if (xmlHttpRequest.readyState == 4) {
+//	            	try{
+//	            		$("div#uploadPanelDiv").html("<span>File uploaded, processing response...</span>");
+//	            		var response = JSON.parse(xmlHttpRequest.responseText);
+//	                	successAlUpload(response);
+//	            	}catch(e){
+//	            		$("div#uploadPanelDiv").html("<span>Something wrong happened.</span>");
+//	            	}
+//	            }
+//	        };
+//	        xmlHttpRequest.send(fd);
+//		}else{
 			submitForm();
-		}
+//		}
 	});
 });
 

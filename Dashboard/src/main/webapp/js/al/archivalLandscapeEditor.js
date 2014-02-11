@@ -163,12 +163,9 @@ function loadDownPart(node){
 				//restore onclick information
 				$("#changeNodeDiv").attr("onclick","changeGroup();");
 			}else if(value.hasContentPublished!=undefined && value.hasContentPublished!="false"){
-				$("#divGroupNodesContainer").show();
+				$("#divGroupNodesContainer").hide();
 				$("div .secondFilterSelect").show();
-				getGroups();
 				hideMoveButtons = true;
-				//change changeNodeDiv, moveUp and moveDown onclick event to show an alert for the received message
-				$("#changeNodeDiv").attr("onclick","showInformation('"+value.hasContentPublished+"',true);");
 			}else if(value.info){
 				showInformation(d.info);
 			}else if(value.error){

@@ -14,6 +14,7 @@ import javax.xml.stream.XMLStreamException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.oaiserver.request.RequestProcessor;
 import eu.apenet.oaiserver.response.XMLStreamWriterHolder;
 
@@ -32,11 +33,10 @@ public class EuropeanaOAIServlet extends HttpServlet {
 				
 		String url = request.getScheme()+"://"+request.getHeader("Host") + request.getContextPath() + REQUEST_SUFIX;
 		String remoteHost = request.getRemoteHost()+ ": ";
-		String logline = remoteHost + url;
+		String logline = remoteHost + REQUEST_SUFIX;
 		if (StringUtils.isNotBlank(request.getQueryString())){
 			logline += "?" + request.getQueryString();
 		}
-		LOGGER.info(logline);
 		response.setBufferSize(4096);
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/xml");
@@ -47,16 +47,16 @@ public class EuropeanaOAIServlet extends HttpServlet {
 					.createXMLStreamWriter(outputStream, UTF_8));
 			RequestProcessor.process(request.getParameterMap(), url, writerHolder);
 		} catch (XMLStreamException e) {
-			LOGGER.error(e.getMessage(), e);
-			throw new ServletException(e);
+			LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+			throw new ServletException(e.getMessage());
 		} catch (FactoryConfigurationError e) {
-			LOGGER.error(e.getMessage(), e);
-			throw new ServletException(e);
+			LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+			throw new ServletException(e.getMessage());
 		}
 		
 		outputStream.flush();
 		outputStream.close();
-		LOGGER.info("Duration: " + (System.currentTimeMillis()-startTime));
+		LOGGER.info(logline + " (" + (System.currentTimeMillis()-startTime) + ")");
 	}
 
 

@@ -5,20 +5,11 @@
 package eu.apenet.dashboard.ead2ese;
 
 import java.io.File;
-import java.io.IOException;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.TransformerException;
 
-import org.xml.sax.SAXException;
-
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dpt.utils.ead2ese.EseConfig;
 import eu.apenet.dpt.utils.ead2ese.EseFileUtils;
-import eu.apenet.dpt.utils.ead2ese.XMLUtil;
-import eu.apenet.dpt.utils.ead2ese.stax.ESEParser;
-import eu.apenet.dpt.utils.ead2ese.stax.RecordParser;
 import eu.apenet.dpt.utils.ese2edm.EdmConfig;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -80,23 +71,6 @@ public class EAD2ESEConverter {
 
 	}
 
-	private static int  analyzeESEXML(String xmlNameRelative, File outputFile) throws XMLStreamException, SAXException, IOException {
-
-			XMLStreamReader xmlReader = XMLUtil.getXMLStreamReader(outputFile);
-			ESEParser parser = new ESEParser();
-			RecordParser recordParser = new RecordParser();
-			parser.registerParser(recordParser);
-			// count number of records
-			parser.parse(xmlReader, null);
-			int numberOfRecords = recordParser.getNumberOfRecords();
-			if (numberOfRecords == 0) {
-				outputFile.delete();
-			} else {
-				XMLUtil.validateESE(outputFile);
-			}
-
-		return numberOfRecords;
-	}
 
 
 

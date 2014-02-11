@@ -25,7 +25,6 @@ import eu.apenet.persistence.vo.OaiPmhStatus;
 import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.UpFile;
 import eu.apenet.persistence.vo.UploadMethod;
-import eu.apenet.persistence.vo.User;
 import eu.archivesportaleurope.harvester.oaipmh.HarvestObject;
 import eu.archivesportaleurope.harvester.oaipmh.OaiPmhHarvester;
 import eu.archivesportaleurope.harvester.oaipmh.exception.HarvesterConnectionException;
@@ -93,10 +92,7 @@ public class DataHarvester {
 		} else {
 			oaiPmhParser = new OaiPmhParser(outputDirectory, MAX_NUMBER_HARVESTED_FILES_FOR_TEST);
 		}
-		User partner = archivalInstitution.getPartner();
-		if (partner == null) {
-			partner = DAOFactory.instance().getUserDAO().getCountryManagerOfCountry(archivalInstitution.getCountry());
-		}
+
 		OaiPmhHttpClient oaiPmhHttpClient = null;
 		try {
 			archivalInstitutionOaiPmh.setHarvestingDetails(null);
@@ -163,32 +159,32 @@ public class DataHarvester {
 					+ archivalInstitutionOaiPmh.getId() + "\n" + harvesterProfileLog + "\n --- Oldest file harvested: "
 					+ harvestObject.getOldestFileHarvested() + " --- Newest file harvested: "
 					+ harvestObject.getNewestFileHarvested());
-			UserService.sendEmailHarvestFinished(archivalInstitution, partner, harvestObject.getNumberOfRecords(), harvesterProfileLog,
+			UserService.sendEmailHarvestFinished(archivalInstitution, harvestObject.getNumberOfRecords(), harvesterProfileLog,
 					harvestObject.getOldestFileHarvested(), harvestObject.getNewestFileHarvested(), archivalInstitutionOaiPmh.getHarvestingStatus(), archivalInstitutionOaiPmh.getHarvestingDetails(), archivalInstitutionOaiPmh.getErrorsResponsePath());
 
 		}catch (OaiPmhErrorsException oee){
 			String errors = oee.getErrors();
-			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null,failedEarlier);
+			handleExceptions(harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null,failedEarlier);
 		}catch (HarvesterInterruptionException hpe){
 			String errors = "Last url before the processing is stopped manually: '" + hpe.getRequestUrl() + "'\n\n";
 			LOGGER.info(errors);
-			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null,failedEarlier);
+			handleExceptions(harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null,failedEarlier);
 		}catch (HarvesterParserException hpe){
 			String errors = "Url that contains errors: '" + hpe.getRequestUrl() + "'\n\n";
 			if (hpe.getCause() != null){
 				errors+= hpe.getCause().getMessage();
 			}
 			LOGGER.error(errors);
-			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, hpe.getNotParsebleResponse(),failedEarlier);
+			handleExceptions(harvesterProfileLog, newHarvestingDate, outputDirectory, errors, hpe.getNotParsebleResponse(),failedEarlier);
 		}catch (HarvesterConnectionException e) {
 			String errors = "Url that have connection problems: '" + e.getRequestUrl() + "'\n\n";
 			errors+= e.getMessage() +" (Time out is 5 minutes)";
 			LOGGER.error(errors);
-			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null,failedEarlier);
+			handleExceptions( harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null,failedEarlier);
 		}catch (Exception e) {
 			String errors = APEnetUtilities.generateThrowableLog(e);
 			LOGGER.error(errors);
-			handleExceptions(partner, harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null,failedEarlier);
+			handleExceptions( harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null,failedEarlier);
 		} finally {
 			HarvesterDaemon.setHarvestObject(null);
 			if (oaiPmhHttpClient != null) {
@@ -203,7 +199,7 @@ public class DataHarvester {
 		}
 	}
 
-	private void handleExceptions(User partner, String harvesterProfileLog, Date newHarvestingDate, File outputDirectory, String errors, File errorsResponseFile, boolean failedEarlier){
+	private void handleExceptions(String harvesterProfileLog, Date newHarvestingDate, File outputDirectory, String errors, File errorsResponseFile, boolean failedEarlier){
 		JpaUtil.rollbackDatabaseTransaction();
 		ArchivalInstitutionOaiPmh archivalInstitutionOaiPmhNew = DAOFactory.instance()
 				.getArchivalInstitutionOaiPmhDAO().findById(archivalInstitutionOaiPmhId);
@@ -231,7 +227,7 @@ public class DataHarvester {
 			archivalInstitutionOaiPmhNew.setEnabled(false);
 		}
 		DAOFactory.instance().getArchivalInstitutionOaiPmhDAO().store(archivalInstitutionOaiPmhNew);
-		UserService.sendEmailHarvestFailed(archivalInstitutionOaiPmhNew.getArchivalInstitution(), partner, harvesterProfileLog,
+		UserService.sendEmailHarvestFailed(archivalInstitutionOaiPmhNew.getArchivalInstitution(), harvesterProfileLog,
 				errors, archivalInstitutionOaiPmhNew.getErrorsResponsePath());
 		try {
 			File parentFile = outputDirectory.getParentFile();

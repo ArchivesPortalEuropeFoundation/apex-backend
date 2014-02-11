@@ -399,6 +399,13 @@
 		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
 		<put-attribute name="body" value="/jsp/al/uploaderrorALIdentifier.jsp" />
 	</definition>
+	
+	<definition name="uploaderroralidentifier2" extends="ArchivalLandscapeLayout">
+		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
+		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
+		<put-attribute name="body" value="/jsp/al/uploaderrorALIdentifier2.jsp" />
+	</definition>
+	
 
 	<definition name="uploaderroralbadcountry" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.viewuploadresult.title" />

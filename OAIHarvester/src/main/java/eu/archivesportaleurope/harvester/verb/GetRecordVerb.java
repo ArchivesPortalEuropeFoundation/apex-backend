@@ -25,6 +25,12 @@ public class GetRecordVerb extends AbstractListVerb {
 		this.identifier = identifier;
 		return super.harvest(harvestObject);
 	}
+	
+
+	@Override
+	protected boolean maxNumberOfRecordsExceed(int numberOfRecords) {
+		return false;
+	}
 
 	@Override
 	public ResultInfo harvest(HarvestObject harvestObject){

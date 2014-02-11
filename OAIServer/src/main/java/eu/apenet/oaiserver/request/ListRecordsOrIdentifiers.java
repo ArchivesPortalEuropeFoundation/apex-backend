@@ -69,6 +69,7 @@ public class ListRecordsOrIdentifiers {
 			try {
 				oldResToken = DAOFactory.instance().getResumptionTokenDAO().findById(Integer.parseInt(resumptionToken));
 				if (oldResToken == null) {
+					LOG.info("ResumptionToken: " + resumptionToken + " could not be found");
 					new ErrorResponse(ErrorResponse.ErrorCode.BAD_RESUMPTION_TOKEN).generateResponse(writer, params);
 					return false;
 				} else if (oldResToken.getExpirationDate().after(new Date())) {
@@ -78,6 +79,7 @@ public class ListRecordsOrIdentifiers {
 					metadataFormat = oldResToken.getMetadataFormat();
 					start = Integer.parseInt(oldResToken.getLastRecordHarvested());
 				} else {
+					LOG.info("ResumptionToken: " + resumptionToken + " is expired");
 					new ErrorResponse(ErrorResponse.ErrorCode.BAD_RESUMPTION_TOKEN).generateResponse(writer, params);
 					return false;
 

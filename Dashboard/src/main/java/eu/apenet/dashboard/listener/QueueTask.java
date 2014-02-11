@@ -44,7 +44,7 @@ public class QueueTask implements Runnable {
 			stopped = true;
 			LOGGER.info("Queuing process active, but will be stopped immediately, because of harvesting");
 		}else {
-			LOGGER.info("Queuing process active");
+			LOGGER.debug("Queuing process active");
 		}
 		removeOldResumptionTokens();
 		long endTime = System.currentTimeMillis() + duration.getMilliseconds();
@@ -89,7 +89,7 @@ public class QueueTask implements Runnable {
 			}
 
 		}
-		LOGGER.info("Queuing process inactive");
+		LOGGER.debug("Queuing process inactive");
 		if (!scheduler.isShutdown()) {
 			scheduler.schedule(new QueueTask(scheduler, duration, delay), delay.getMilliseconds(),
 					TimeUnit.MILLISECONDS);
