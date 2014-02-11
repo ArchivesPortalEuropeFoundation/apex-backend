@@ -304,117 +304,6 @@ public class ArchivalLandscape extends ActionSupport{
         return result;
     }
 
-   //Check if the country name is translated in the 14 languages
-    private boolean checkTranslation(NodeList listUnitTitle) {
-    	
-    	int langs=22; //Check the 23 languages
-    	
-    	for (int j = 0; j < listUnitTitle.getLength(); j++)
-    	{
-    		if (listUnitTitle.item(j).hasAttributes())
-    		{
-    			NamedNodeMap attributesUnitTitle = listUnitTitle.item(j).getAttributes();
-            	Node attributeUnitTitle = attributesUnitTitle.getNamedItem("type");
-                        
-	            if ((attributeUnitTitle.getNodeValue().equals("spa") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {     	
-	            	langs--;	            	
-	            }
-	            if ((attributeUnitTitle.getNodeValue().equals("fre") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {
-	              	langs--;	              	
-	            }
-	            if ((attributeUnitTitle.getNodeValue().equals("ger") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {
-	              	langs--;	              	
-	            }
-	            if ((attributeUnitTitle.getNodeValue().equals("gre") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {
-	              	langs--;	              	
-	            }
-	            if ((attributeUnitTitle.getNodeValue().equals("pol") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {
-	              	langs--;	              	
-	            }
-	            if ((attributeUnitTitle.getNodeValue().equals("swe") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {
-	              	langs--;	             
-	            }
-	            if ((attributeUnitTitle.getNodeValue().equals("dut") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {
-	              	langs--;	              	
-	            }
-	            if ((attributeUnitTitle.getNodeValue().equals("gle") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {
-	              	langs--;	              	
-	            }
-	            if ((attributeUnitTitle.getNodeValue().equals("lav") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {
-	              	langs--;
-	            }
-	            if ((attributeUnitTitle.getNodeValue().equals("mlt") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {
-	              	langs--;
-	            }
-	            if ((attributeUnitTitle.getNodeValue().equals("por") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {
-	              	langs--;
-	            }
-	            if ((attributeUnitTitle.getNodeValue().equals("slv") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {
-	              	langs--;
-	            }
-	            if ((attributeUnitTitle.getNodeValue().equals("fin") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {
-	              	langs--;	              	
-	            }
-	            if ((attributeUnitTitle.getNodeValue().equals("bul") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {
-	              	langs--;	              	
-	            }
-	            if ((attributeUnitTitle.getNodeValue().equals("cze") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {
-	              	langs--;	              	
-	            }
-	            if ((attributeUnitTitle.getNodeValue().equals("est") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {
-	              	langs--;	              	
-	            }
-	            if ((attributeUnitTitle.getNodeValue().equals("dan") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {
-	              	langs--;	              	
-	            }
-	            if ((attributeUnitTitle.getNodeValue().equals("hun") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {
-	              	langs--;	              	
-	            }
-	            if ((attributeUnitTitle.getNodeValue().equals("ita") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {
-	              	langs--;	              	
-	            }
-	            if ((attributeUnitTitle.getNodeValue().equals("lit") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {
-	              	langs--;	              	
-	            }
-	            if ((attributeUnitTitle.getNodeValue().equals("rum") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {
-	              	langs--;	              	
-	            }
-	            if ((attributeUnitTitle.getNodeValue().equals("slo") && (!"".equals(listUnitTitle.item(j).getTextContent().trim()))))
-	            {
-	              	langs--;	              	
-	            }
-    		}
-    	}
-    	
-    	if (langs == 0)
-    		return true;
-    	else
-    	{    		
-    		log.debug("The archival landscape of the country " + this.getmyCountry() + "does not have the translations of the country in some languages");
-    		return false;
-    	}
-	}
 
     //Create the AL of the country from the node given in the parameter  
 	private Document createXML(Node item, Document doc, String path) {
@@ -751,7 +640,7 @@ public class ArchivalLandscape extends ActionSupport{
 		        transformer.transform(new DOMSource(doc), new StreamResult(file));
 			}
 		} catch (Exception e) {
-			log.error("Checking c identifiers in makeTemporal():"+e.getCause(),e);
+			log.error("Checking c identifiers in makeTemporal():"+  APEnetUtilities.generateThrowableLog(e));
 		}
 
 		return true;
@@ -981,10 +870,10 @@ public class ArchivalLandscape extends ActionSupport{
 		    alNodes.clear();
 		    ais.clear();
         }catch(IOException e)		{
-        	log.error("The file " + file.getName() + " could not be read ", e);
+        	log.error("The file " + file.getName() + " could not be read " + APEnetUtilities.generateThrowableLog(e));
         	result = "error";								
  		}catch (Exception e) {
-			log.error("Some institutions of the country " + this.getmyCountry() +" could not be stored or removed in database and repository ", e);
+			log.error("Some institutions of the country " + this.getmyCountry() +" could not be stored or removed in database and repository " + APEnetUtilities.generateThrowableLog(e));
 			result = "error";
 		}
 		return result;
@@ -1078,7 +967,7 @@ public class ArchivalLandscape extends ActionSupport{
 				}
 			}
 		} catch (Exception e) {
-			log.error(e);
+			log.error( APEnetUtilities.generateThrowableLog(e));
 		}
         return state;
 	}

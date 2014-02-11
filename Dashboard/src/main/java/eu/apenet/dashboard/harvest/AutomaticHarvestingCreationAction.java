@@ -72,7 +72,7 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
         step = 0;
         ingestionProfiles = DAOFactory.instance().getIngestionprofileDAO().getIngestionprofiles(getAiId());
         if(ingestionProfiles.size() < 1) {
-            addActionError("You need at least one user profile created before creating an automatic OAI-PMH profile");
+            addActionError(getText("label.harvesting.error.needprofile"));
             return ERROR;
         }
         ArchivalInstitutionOaiPmhDAO archivalInstitutionOaiPmhDAO = DAOFactory.instance().getArchivalInstitutionOaiPmhDAO();
@@ -107,7 +107,7 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
 		                if(metadataFormats == null || metadataFormats.isEmpty())
 		                    throw new APEnetException("No metadata formats for this URL: " + getUrl());
 		            } catch (Exception e) {
-		                addActionError("Sorry, the URL is not a correct repository URL or the repository does not contain any metadata formats...");
+		                addActionError(getText("label.harvesting.error.url"));
 		                return ERROR;
 		            }
 		            setsInRepository = convert(RetrieveOaiPmhInformation.retrieveSets(getUrl(), oaiPmhHttpClient));
@@ -135,7 +135,7 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
 	    			}
 	    		}
 	            if(setsInRepository != null && sets.size() == 0 && setsInRepository.size() != 0 && getOaiprofiles() == -1) {
-	                addActionError("Sorry, all your sets are already being used in other profiles. you need to delete some profiles to continue, or edit profiles");
+	                addActionError(getText("label.harvesting.error.allsetsused"));
 	                return ERROR;
 	            }
             }
@@ -161,7 +161,7 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
             }
             return SUCCESS;
         }
-        addActionError("Sorry, you need to input an URL.");
+        addActionError(getText("label.harvesting.error.nourl"));
         return ERROR;
     }
 
@@ -228,7 +228,7 @@ public class AutomaticHarvestingCreationAction extends AbstractInstitutionAction
             return SUCCESS;
         } catch (Exception e) {
             LOG.error("Could not save the profile...", e);
-            addActionError("Could not save your new profile, please contact an administrator.");
+            addActionError(getText("label.harvesting.error.savefailed"));
             return ERROR;
         }
     }

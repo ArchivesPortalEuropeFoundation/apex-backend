@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,8 +25,8 @@ import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
 
 public class ConsoleHarvester {
 	private static final String TRUE = "true";
-	private static final String BASE_DIR_PARAMETER = "baseDir";
-	private static final String CONF_FILE_PARAMETER = "confFile";
+	protected static final String BASE_DIR_PARAMETER = "baseDir";
+	protected static final String CONF_FILE_PARAMETER = "confFile";
 	private static final String YES = "Yes";
 	private static final String SAVE_ONLY_THE_METADATA_RECORD_E_G_EAD_OR_EDM_FILES = "Save only the metadata record (e.g. EAD or EDM files)";
 	private static final String SAVE_FULL_OAI_PMH_RESPONSES = "Save full OAI-PMH responses";
@@ -85,8 +86,23 @@ public class ConsoleHarvester {
 			System.err.println("Log4j not properly configured. " + e.getMessage());
 			System.exit(-1);
 		}
-		ConsoleHarvester consoleHarvester = new ConsoleHarvester(dataDir, properties);
-		consoleHarvester.start();
+
+
+        ConsoleHarvester consoleHarvester = null;
+        String consoleHarvesterClassName = System.getProperty("consoleHarvesterClassName");
+        if (consoleHarvesterClassName != null){
+            try {
+                Class<?> clazz = Class.forName(consoleHarvesterClassName);
+                Constructor<?> ctor = clazz.getConstructor(File.class, Properties.class);
+                consoleHarvester = (ConsoleHarvester) ctor.newInstance(new Object[] { dataDir, properties });
+            } catch (Exception e) {
+                System.err.println("Could not create the Portugal Console Harvester. " + e.getMessage());
+                System.exit(-1);
+            }
+        } else {
+            consoleHarvester = new ConsoleHarvester(dataDir, properties);
+        }
+        consoleHarvester.start();
 	}
 
 	public void start(){
@@ -222,7 +238,7 @@ public class ConsoleHarvester {
 		logger.info("===============================================");
 	}
 
-	private static Map<String, String> getParameters(String[] args) {
+	protected static Map<String, String> getParameters(String[] args) {
 		Map<String, String> parameters = new HashMap<String, String>();
 		for (String arg : args) {
 			if (arg.startsWith("-") && arg.contains("=")) {
