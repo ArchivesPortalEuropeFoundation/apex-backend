@@ -38,9 +38,13 @@
         <div id="principal">
             <div id="wrap">
                 <div id="dashboard">
-              			<div id="header"> <div id="left-header"><div id="titledashboard"><apenet:resource><tiles:getAsString name="title"/></apenet:resource></div> </div> </div>
-
-				                   
+              			<div id="header">
+	              			<a href="http://contentchecker.archivesportaleurope.net/web/guest">
+	              			  <div id="logo"></div>
+	              			</a>
+	              			<div id="left-header"></div><div class="right-header"></div>
+              			   <!-- <div id="titledashboard"><apenet:resource><tiles:getAsString name="title"/></apenet:resource></div> </div>-->
+              			 </div>              
                    <div id="menubar" >
                    		<div id="breadcrumb">
                    			<c:if test="${!empty securityContext}">

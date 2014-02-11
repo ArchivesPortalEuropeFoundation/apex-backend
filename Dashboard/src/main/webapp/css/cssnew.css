@@ -75,17 +75,33 @@ select#selectLanguage  {
 	color: #00A0DF;
 	margin-top: 45px;
 }
-
+#logo {
+	background-image: url("../images/ape/header/logo-header.png");
+	background-color:white;
+	background-repeat: no-repeat;
+    height: 120px;
+    width:320px;   
+    float:left;
+}
 #left-header {
-    background-image: url("../images/headerimage.jpg");
+    background-image: url("../images/ape/header/header_left.png");
     background-repeat: no-repeat;
     float: left;
-    height: 111px;
-    width: 1049px;
+    height: 109px;
+    width:555px; 
+}
+
+.right-header {
+	background-image: url("../images/ape/header/header_right.png");
+	background-repeat: no-repeat;
+    float: right;
+    height: 109px;
+    width: 121px;
 }
 
 #header {
-    background: url("../images/bg.jpg") repeat scroll 0 0 transparent;
+    background: url("../images/ape/header/header_bg.png");
+    background-repeat:repeat-x;
     height: 111px;
     overflow: hidden;
     width: 100%;
