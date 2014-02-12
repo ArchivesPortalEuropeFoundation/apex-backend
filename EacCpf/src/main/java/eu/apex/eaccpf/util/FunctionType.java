@@ -133,7 +133,7 @@ public class FunctionType {
 
             if (function.getDateSet() != null
                     && function.getDateSet().getDateOrDateRange() != null
-                    && function.getDateSet().getDateOrDateRange().isEmpty()) {
+                    && !function.getDateSet().getDateOrDateRange().isEmpty()) {
                 for (Object object : function.getDateSet().getDateOrDateRange()) {
                     if (object instanceof Date) {
                         DateType dateType = new DateType(new SimpleDate(0));

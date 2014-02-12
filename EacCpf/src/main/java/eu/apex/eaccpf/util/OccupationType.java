@@ -87,7 +87,7 @@ public class OccupationType {
                 && occupation.getTerm().getContent() != null
                 && !occupation.getTerm().getContent().isEmpty()){
             this.occupationName = occupation.getTerm().getContent();
-            
+
             if(occupation.getTerm().getVocabularySource() != null
                     && !occupation.getTerm().getVocabularySource().isEmpty()){
                 this.vocabLink = occupation.getTerm().getVocabularySource();
@@ -107,7 +107,7 @@ public class OccupationType {
                 }
             }
         }
-        
+
         if (occupation.getPlaceEntry() != null
                 && !occupation.getPlaceEntry().isEmpty()){
             this.countryCodes = new ArrayList<String>();
@@ -126,13 +126,13 @@ public class OccupationType {
                 }
             }
         }
-        
+
         if (occupation.getDateSet() != null || occupation.getDateRange() != null || occupation.getDate() != null) {
             this.dates = new ArrayList<DateType>();
 
             if (occupation.getDateSet() != null
                     && occupation.getDateSet().getDateOrDateRange() != null
-                    && occupation.getDateSet().getDateOrDateRange().isEmpty()) {
+                    && !occupation.getDateSet().getDateOrDateRange().isEmpty()) {
                 for (Object object : occupation.getDateSet().getDateOrDateRange()) {
                     if (object instanceof Date) {
                         DateType dateType = new DateType(new SimpleDate(0));

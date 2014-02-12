@@ -136,12 +136,12 @@ public class PlaceType {
                 }
             }
         }
-        if (place.getDateSet() != null || place.getDateRange() != null || place.getDate() != null) {
-            this.dates = new ArrayList<DateType>();
 
+        this.dates = new ArrayList<DateType>();
+        if (place.getDateSet() != null || place.getDateRange() != null || place.getDate() != null) {
             if (place.getDateSet() != null
                     && place.getDateSet().getDateOrDateRange() != null
-                    && place.getDateSet().getDateOrDateRange().isEmpty()) {
+                    && !place.getDateSet().getDateOrDateRange().isEmpty()) {
                 for (Object object : place.getDateSet().getDateOrDateRange()) {
                     if (object instanceof Date) {
                         DateType dateType = new DateType(new SimpleDate(0));
@@ -152,10 +152,12 @@ public class PlaceType {
                         this.dates.add(dateType.fillDataWith((DateRange) object));
                     }
                 }
-            } else if (place.getDate() != null) {
+            }
+            if (place.getDate() != null) {
                 DateType dateType = new DateType(new SimpleDate(0));
                 dates.add(dateType.fillDataWith(place.getDate()));
-            } else if (place.getDateRange() != null) {
+            }
+            if (place.getDateRange() != null) {
                 DateType dateType = new DateType(new SimpleDate(0), new SimpleDate(0));
                 dates.add(dateType.fillDataWith(place.getDateRange()));
             }
