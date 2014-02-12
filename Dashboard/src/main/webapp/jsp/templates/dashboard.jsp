@@ -20,6 +20,7 @@
 		<script type="text/javascript">
 		var gId = 'UA-42624055-1';
 		var hostname = window.location.hostname;
+		
 		if (hostname == "www.archivesportaleurope.net" 
 				|| hostname == "archivesportaleurope.net" 
 				|| hostname == "dashboard.archivesportaleurope.net"){
@@ -30,6 +31,17 @@
 		var _gaq = _gaq || [];
 		_gaq.push([ '_setAccount', gId ]);
 		_gaq.push([ '_trackPageview' ]);
+
+		function redirect(){
+		     var language= $("#selectLanguage").val();	
+		     var finalHref;
+             if (hostname == "contentchecker.archivesportaleurope.net"){ 
+                finalHref = "http://contentchecker.archivesportaleurope.net/" + language;	
+             }else{
+				finalHref = "http://www.archivesportaleurope.net/" + language;
+			}
+            location.href = finalHref;
+		}
 		</script>
     </head>
     <body>
@@ -39,7 +51,7 @@
             <div id="wrap">
                 <div id="dashboard">
               			<div id="header">
-	              			<a href="http://contentchecker.archivesportaleurope.net/web/guest">
+	              			<a href="#" onclick="redirect()">
 	              			  <div id="logo"></div>
 	              			</a>
 	              			<div id="left-header"></div><div class="right-header"></div>
