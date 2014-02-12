@@ -1,11 +1,11 @@
-package eu.apenet.commons.solr.eads;
+package eu.apenet.commons.solr;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-public enum EadSolrField {
+public enum SolrField {
 	TITLE("title"), SCOPECONTENT("scopecontent"), ALTERDATE("alterdate"), OTHER("other"), UNITID("unitid"), OTHERUNITID(
 			"otherunitid");
 	private String value;
@@ -14,7 +14,7 @@ public enum EadSolrField {
 	private static final Integer SCOPECONTENT_SELECTION = 2;
 	private static final Integer UNITID_SELECTION = 3;
 
-	private EadSolrField(String value) {
+	private SolrField(String value) {
 		this.value = value;
 	}
 
@@ -23,7 +23,7 @@ public enum EadSolrField {
 		return value;
 	}
 
-	public static EadSolrField getSolrField(String type) {
+	public static SolrField getSolrField(String type) {
 		if (TITLE.toString().equalsIgnoreCase(type)) {
 			return TITLE;
 		} else if (SCOPECONTENT.toString().equalsIgnoreCase(type)) {
@@ -40,16 +40,16 @@ public enum EadSolrField {
 		return null;
 	}
 
-	public EadHighlightType getType() {
+	public HighlightType getType() {
 		if (TITLE.equals(this) || SCOPECONTENT.equals(this) || OTHER.equals(this) || ALTERDATE.equals(this)) {
-			return EadHighlightType.DEFAULT;
+			return HighlightType.DEFAULT;
 		} else {
-			return EadHighlightType.UNITID;
+			return HighlightType.UNITID;
 		}
 	}
 
-	public static List<EadSolrField> getDefaults() {
-		List<EadSolrField> defaults = new ArrayList<EadSolrField>();
+	public static List<SolrField> getDefaults() {
+		List<SolrField> defaults = new ArrayList<SolrField>();
 		defaults.add(TITLE);
 		defaults.add(SCOPECONTENT);
 		defaults.add(OTHER);
@@ -57,8 +57,8 @@ public enum EadSolrField {
 		return defaults;
 	}
 
-	public static List<EadSolrField> getSolrFieldsById(Integer id) {
-		List<EadSolrField> defaults = new ArrayList<EadSolrField>();
+	public static List<SolrField> getSolrFieldsById(Integer id) {
+		List<SolrField> defaults = new ArrayList<SolrField>();
 		if (id == null || NO_SELECTION.equals(id)) {
 //			defaults.add(TITLE);
 //			defaults.add(SCOPECONTENT);
@@ -75,7 +75,7 @@ public enum EadSolrField {
 		return defaults;
 	}
 
-	public static List<EadSolrField> getSolrFieldsByIdString(String idString){
+	public static List<SolrField> getSolrFieldsByIdString(String idString){
 		Integer id = null;
 		if (StringUtils.isNotBlank(idString) && StringUtils.isNumeric(idString)){
 			id = Integer.parseInt(idString);

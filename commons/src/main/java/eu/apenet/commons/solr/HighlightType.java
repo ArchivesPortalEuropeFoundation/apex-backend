@@ -1,16 +1,16 @@
-package eu.apenet.commons.solr.eads;
+package eu.apenet.commons.solr;
 
-public enum EadHighlightType {
+public enum HighlightType {
 	DEFAULT("default"), UNITID("unitid");
 	private String name;
-	private EadHighlightType (String name){
+	private HighlightType (String name){
 		this.name = name;
 	}
 	@Override
 	public String toString() {
 		return name;
 	}
-	public static EadHighlightType getHighlightType(String type){
+	public static HighlightType getHighlightType(String type){
 		if (UNITID.toString().equalsIgnoreCase(type)){
 			return UNITID;
 		}

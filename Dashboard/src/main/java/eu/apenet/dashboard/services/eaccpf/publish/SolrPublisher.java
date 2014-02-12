@@ -24,8 +24,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import eu.apenet.commons.solr.eads.EadSolrFields;
-import eu.apenet.commons.solr.eads.EadSolrValues;
+import eu.apenet.commons.solr.SolrFields;
+import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.AbstractSolrPublisher;
 import eu.apenet.dashboard.services.eaccpf.xml.EacCpfNamespaceContext;
@@ -112,21 +112,21 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 	private void publishEacCpf(EacCpfSolrObject eacCpfSolrObject) throws MalformedURLException, SolrServerException, IOException {
 
 		SolrInputDocument doc = new SolrInputDocument();
-		add(doc, EadSolrFields.ID, eacCpfSolrObject.getRecordId());
+		add(doc, SolrFields.ID, eacCpfSolrObject.getRecordId());
 		doc.addField("names", eacCpfSolrObject.getNames());
 		doc.addField("places", eacCpfSolrObject.getPlaces());
 		doc.addField("aiRefinement", eacCpfSolrObject.getAgencyName());
 		doc.addField("placesRefinement",eacCpfSolrObject.getPlaces());
-		add(doc, EadSolrFields.START_DATE, eacCpfSolrObject.getFromDate());
-		add(doc, EadSolrFields.END_DATE, eacCpfSolrObject.getToDate());
+		add(doc, SolrFields.START_DATE, eacCpfSolrObject.getFromDate());
+		add(doc, SolrFields.END_DATE, eacCpfSolrObject.getToDate());
 		add(doc, "dateDescription", eacCpfSolrObject.getDateDescription());
 		if (StringUtils.isBlank(eacCpfSolrObject.getDateDescription())) {
-			add(doc, EadSolrFields.DATE_TYPE, EadSolrValues.DATE_TYPE_NO_DATE_SPECIFIED);
+			add(doc, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NO_DATE_SPECIFIED);
 		} else {
 			if (StringUtils.isBlank(eacCpfSolrObject.getFromDate())) {
-				add(doc, EadSolrFields.DATE_TYPE, EadSolrValues.DATE_TYPE_OTHER_DATE);
+				add(doc, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_OTHER_DATE);
 			} else {
-				add(doc, EadSolrFields.DATE_TYPE, EadSolrValues.DATE_TYPE_NORMALIZED);
+				add(doc, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NORMALIZED);
 			}
 		}
 		addSolrDocument(doc);

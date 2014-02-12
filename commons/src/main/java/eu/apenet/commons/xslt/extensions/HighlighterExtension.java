@@ -15,8 +15,8 @@ import net.sf.saxon.value.StringValue;
 
 import org.apache.commons.lang.StringUtils;
 
+import eu.apenet.commons.solr.SolrField;
 import eu.apenet.commons.solr.HighlightUtil;
-import eu.apenet.commons.solr.eads.EadSolrField;
 
 public class HighlighterExtension extends ExtensionFunctionDefinition {
 	/**
@@ -28,7 +28,7 @@ public class HighlighterExtension extends ExtensionFunctionDefinition {
 	// private static final Logger LOG = Logger.getLogger(Highlighter.class);
 	private HighlighterCall highlighterCall;
 
-	public HighlighterExtension(String solrStopwordsUrl,String searchTerms, List<EadSolrField> highlightFields) {
+	public HighlighterExtension(String solrStopwordsUrl,String searchTerms, List<SolrField> highlightFields) {
 		this.highlighterCall = new HighlighterCall(solrStopwordsUrl, searchTerms, highlightFields);
 	}
 
@@ -65,10 +65,10 @@ public class HighlighterExtension extends ExtensionFunctionDefinition {
 		private static final long serialVersionUID = 6761914863093344493L;
 		private String searchTerms;
 		private boolean hasSearchTerms;
-		private List<EadSolrField> highlightFields;
+		private List<SolrField> highlightFields;
 		private HighlightUtil highlightUtil;
 
-		public HighlighterCall(String solrStopwordsUrl, String searchTerms, List<EadSolrField> highlightFields) {
+		public HighlighterCall(String solrStopwordsUrl, String searchTerms, List<SolrField> highlightFields) {
 			this.searchTerms = searchTerms;
 			this.highlightFields = highlightFields;
 			hasSearchTerms = StringUtils.isNotBlank(searchTerms);
@@ -82,7 +82,7 @@ public class HighlighterExtension extends ExtensionFunctionDefinition {
 				if (firstArg != null) {
 					value = firstArg.getStringValue();
 					if (hasSearchTerms) {
-						EadSolrField highlightField = EadSolrField.getSolrField(arguments[1].next()
+						SolrField highlightField = SolrField.getSolrField(arguments[1].next()
 								.getStringValue());
 						if (highlightField != null && highlightFields.contains(highlightField)) {
 							value = highlightUtil.highlight(searchTerms, value, highlightField.getType());

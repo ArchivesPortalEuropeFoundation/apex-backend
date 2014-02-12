@@ -1,6 +1,6 @@
 package eu.apenet.commons.types;
 
-import eu.apenet.commons.solr.eads.EadSolrValues;
+import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
@@ -13,10 +13,10 @@ import eu.apenet.persistence.vo.SourceGuide;
  * @author Yoann Moranville
  */
 public enum XmlType {
-    EAD_FA(0, "Finding Aid", FindingAid.class, "fa", EadSolrValues.FA_PREFIX),
-    EAD_HG(1, "Holdings Guide", HoldingsGuide.class, "hg", EadSolrValues.HG_PREFIX),
+    EAD_FA(0, "Finding Aid", FindingAid.class, "fa", SolrValues.FA_PREFIX),
+    EAD_HG(1, "Holdings Guide", HoldingsGuide.class, "hg", SolrValues.HG_PREFIX),
     EAC_CPF(2, "EAC-CPF", null, "ec", null),
-    EAD_SG(3, "Source Guide", SourceGuide.class, "sg", EadSolrValues.SG_PREFIX);
+    EAD_SG(3, "Source Guide", SourceGuide.class, "sg", SolrValues.SG_PREFIX);
 
     private final String resourceName;
     private final int identifier;

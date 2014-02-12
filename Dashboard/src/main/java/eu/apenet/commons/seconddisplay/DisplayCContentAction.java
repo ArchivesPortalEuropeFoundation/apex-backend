@@ -15,7 +15,7 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 
 import com.opensymphony.xwork2.ActionSupport;
 
-import eu.apenet.commons.solr.eads.EadSolrValues;
+import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.CLevel;
@@ -73,7 +73,7 @@ public class DisplayCContentAction extends ActionSupport implements ServletReque
 
     public String execute(){
 		if (StringUtils.isNotBlank(id)){
-			if (id.startsWith(EadSolrValues.C_LEVEL_PREFIX)){
+			if (id.startsWith(SolrValues.C_LEVEL_PREFIX)){
 				id = id.substring(1);
 			}
 			Long idLong = new Long(id);

@@ -15,8 +15,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import eu.apenet.commons.solr.eads.EadHighlightType;
-
 public class HighlightUtil {
 	private static final String CLASSPATH_PREFIX = "classpath:";
 	private static final String GT_TOKEN = ">";
@@ -41,7 +39,7 @@ public class HighlightUtil {
 		return instance;
 	}
 
-	public String highlight(String search, String html, EadHighlightType type) {
+	public String highlight(String search, String html, HighlightType type) {
 		String newText = html;
 		List<String> searchTerms = convertSearchTermToWords(search, type);
 		if (html != null) {
@@ -51,9 +49,9 @@ public class HighlightUtil {
 		return newText;
 	}
 
-	public List<String> convertSearchTermToWords(String searchTerm, EadHighlightType type) {
+	public List<String> convertSearchTermToWords(String searchTerm, HighlightType type) {
 		List<String> results = new ArrayList<String>();
-		boolean defaultType = EadHighlightType.DEFAULT.equals(type);
+		boolean defaultType = HighlightType.DEFAULT.equals(type);
 		Matcher matcher = NO_WHITESPACE_PATTERN.matcher(searchTerm);
 		while (matcher.find()) {
 			String word = matcher.group();
@@ -78,13 +76,13 @@ public class HighlightUtil {
 		
 	}
 	
-	private static String doHighlight(List<String> searchTerms, String html, EadHighlightType type) {
+	private static String doHighlight(List<String> searchTerms, String html, HighlightType type) {
 		String htmlLowercase = html.toLowerCase();
 		String newText = "";
 		int lastMatchIndex = 0;
 		int lastTagIndex = -1;
 		Pattern pattern = null;
-		if ( EadHighlightType.DEFAULT.equals(type)){
+		if ( HighlightType.DEFAULT.equals(type)){
 			pattern = WORD_PATTERN;
 		}else {
 			pattern = NO_WHITESPACE_PATTERN;

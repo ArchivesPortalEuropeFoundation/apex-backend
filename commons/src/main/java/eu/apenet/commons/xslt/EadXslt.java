@@ -18,7 +18,7 @@ import net.sf.saxon.s9api.XsltTransformer;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.ResourceBundleSource;
-import eu.apenet.commons.solr.eads.EadSolrField;
+import eu.apenet.commons.solr.SolrField;
 import eu.apenet.commons.xslt.extensions.EadidCheckerExtension;
 import eu.apenet.commons.xslt.extensions.HighlighterExtension;
 import eu.apenet.commons.xslt.extensions.ResourcebundleExtension;
@@ -27,7 +27,7 @@ public final class EadXslt {
     private static final Logger LOG = Logger.getLogger(EadXslt.class);
 
     
-	private static XsltExecutable getXsltExecutable(String xslUrl, String searchTerms, List<EadSolrField> highlightFields, ResourceBundleSource resourceBundleSource, Integer aiId, boolean isPreview, String solrStopwordsUrl) throws SaxonApiException{
+	private static XsltExecutable getXsltExecutable(String xslUrl, String searchTerms, List<SolrField> highlightFields, ResourceBundleSource resourceBundleSource, Integer aiId, boolean isPreview, String solrStopwordsUrl) throws SaxonApiException{
         ClassLoader classLoader = (ClassLoader) Thread.currentThread().getContextClassLoader();
         Source xsltSource = new StreamSource(classLoader.getResourceAsStream(xslUrl));	
         Processor processor = new Processor(false);
@@ -42,7 +42,7 @@ public final class EadXslt {
         return compiler.compile(xsltSource);
 	}
 
-    public static void convertEadToHtml(String xslUrl, Writer writer, Source xmlSource, String searchTerms, List<EadSolrField> highlightFields, ResourceBundleSource resourceBundleSource,String secondDisplayUrl, Integer aiId,boolean isPreview, String solrStopwordsUrl) throws SaxonApiException{
+    public static void convertEadToHtml(String xslUrl, Writer writer, Source xmlSource, String searchTerms, List<SolrField> highlightFields, ResourceBundleSource resourceBundleSource,String secondDisplayUrl, Integer aiId,boolean isPreview, String solrStopwordsUrl) throws SaxonApiException{
     	XsltExecutable executable = getXsltExecutable(xslUrl, searchTerms, highlightFields,resourceBundleSource, aiId, isPreview, solrStopwordsUrl);
         XsltTransformer transformer = executable.load();
         transformer.setParameter(new QName("eadcontent.extref.prefix"), new XdmAtomicValue(secondDisplayUrl));
