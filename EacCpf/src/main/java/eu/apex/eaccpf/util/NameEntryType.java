@@ -81,13 +81,13 @@ public class NameEntryType {
                 && !nameEntry.getPart().get(0).getContent().isEmpty()) {
             this.setName(nameEntry.getPart().get(0).getContent());
         }
+
+        this.dates = new ArrayList<DateType>();
         if (nameEntry.getUseDates() != null) {
             if (nameEntry.getUseDates().getDateSet() != null || nameEntry.getUseDates().getDateRange() != null || nameEntry.getUseDates().getDate() != null) {
-                this.dates = new ArrayList<DateType>();
-
                 if (nameEntry.getUseDates().getDateSet() != null
                         && nameEntry.getUseDates().getDateSet().getDateOrDateRange() != null
-                        && nameEntry.getUseDates().getDateSet().getDateOrDateRange().isEmpty()) {
+                        && !nameEntry.getUseDates().getDateSet().getDateOrDateRange().isEmpty()) {
                     for (Object object : nameEntry.getUseDates().getDateSet().getDateOrDateRange()) {
                         if (object instanceof Date) {
                             DateType dateType = new DateType(new SimpleDate(0));

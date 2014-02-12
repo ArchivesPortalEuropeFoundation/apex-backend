@@ -66,18 +66,18 @@
                     </td>
                 </tr>
                 <s:if test="%{#current.dates.size() > 0}">
-                    <s:iterator var="currentDateRow" value="#current.dates" status="status">
-                        <tr id="trDate_text_<s:property value="#status.index + 1" />">
+                    <s:iterator var="currentDateRow" value="#current.dates" status="status2">
+                        <tr id="trDate_text_<s:property value="#status2.index + 1" />">
                             <td>Date<s:if test="#currentDateRow.dateContent2 != null"> range from</s:if></td>
                                 <td>
-                                    <input type="text" id="date_1" name="dateExistenceTable_date_1_<s:property value="#status.index + 1" />" value="<s:property value="#currentDateRow.dateContent1" />" <s:if test="%{#currentDateRow.standardDate1.year == 0000}">disabled="disabled" </s:if>onblur="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'));"><br />
-                                <input type="checkbox" id="date_unknown_1" name="dateExistenceTable_date_unknown_1_<s:property value="#status.index + 1" />" <s:if test="%{#currentDateRow.standardDate1.year == 0000}">checked="checked" </s:if>onchange="toggleDateTextfields($(this));" /><label for="date_unknown_1">unknown</label>
+                                    <input type="text" id="date_1" name="identityPersonName_<s:property value="#status.index + 1" />_date_1_<s:property value="#status2.index + 1" />" value="<s:property value="#currentDateRow.dateContent1" />" <s:if test="%{#currentDateRow.standardDate1.year == 0000}">disabled="disabled" </s:if>onblur="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'));"><br />
+                                <input type="checkbox" id="date_unknown_1" name="identityPersonName_<s:property value="#status.index + 1" />_date_unknown_1_<s:property value="#status2.index + 1" />" <s:if test="%{#currentDateRow.standardDate1.year == 0000}">checked="checked" </s:if>onchange="toggleDateTextfields($(this));" /><label for="date_unknown_1">unknown</label>
                                 </td>
                             <s:if test="#currentDateRow.dateContent2 != null or #currentDateRow.standardDate2 != null">
                                 <td>to</td>
                                 <td>
-                                    <input type="text" id="date_2" name="dateExistenceTable_date_2_<s:property value="#status.index + 1" />" value="<s:property value="#currentDateRow.dateContent2" />" <s:if test="%{#currentDateRow.standardDate2.year == 2999}">disabled="disabled" </s:if>onblur="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'));"><br />
-                                    <input type="checkbox" id="date_unknown_2" name="dateExistenceTable_date_unknown_2_<s:property value="#status.index + 1" />" <s:if test="%{#currentDateRow.standardDate2.year == 2999}">checked="checked" </s:if>onchange="toggleDateTextfields($(this));" /><label for="date_unknown_2">unknown</label>
+                                    <input type="text" id="date_2" name="identityPersonName_<s:property value="#status.index + 1" />_date_2_<s:property value="#status2.index + 1" />" value="<s:property value="#currentDateRow.dateContent2" />" <s:if test="%{#currentDateRow.standardDate2.year == 2999}">disabled="disabled" </s:if>onblur="parseDateToISO($(this).attr('value'), $(this).parent().parent().parent().parent().attr('id'), $(this).parent().parent().attr('id'), $(this).attr('id'));"><br />
+                                    <input type="checkbox" id="date_unknown_2" name="identityPersonName_<s:property value="#status.index + 1" />_date_unknown_2_<s:property value="#status2.index + 1" />" <s:if test="%{#currentDateRow.standardDate2.year == 2999}">checked="checked" </s:if>onchange="toggleDateTextfields($(this));" /><label for="date_unknown_2">unknown</label>
                                     </td>
                             </s:if>
                             <s:else>
@@ -85,16 +85,16 @@
                                 <td></td>
                             </s:else>
                         </tr>
-                        <tr id="trDate_iso_<s:property value="#status.index + 1" />">
+                        <tr id="trDate_iso_<s:property value="#status2.index + 1" />">
                             <td>(ISO date<s:if test="#currentDateRow.standardDate2 != null">s</s:if>; optional)</td>
-                            <td><input type="text" title="YYYY" id="date_1_Year" name="dateExistenceTable_date_1_Year_<s:property value="#status.index + 1" />" size="4" maxlength="4" <s:if test="%{#currentDateRow.standardDate1.year == 0000}">disabled="disabled" </s:if> value="<s:property value="#currentDateRow.standardDate1.year" />" /> &ndash;
-                                <input type="text" title="MM" id="date_1_Month" name="dateExistenceTable_date_1_Month_<s:property value="#status.index + 1" />" size="2" maxlength="2" <s:if test="%{#currentDateRow.standardDate1.year == 0000}">disabled="disabled" </s:if> <s:if test="%{#currentDateRow.standardDate1.month != 0}">value="<s:property value="#currentDateRow.standardDate1.month" />"</s:if> /> &ndash;
-                                <input type="text" title="DD" id="date_1_Day" name="dateExistenceTable_date_1_Day_<s:property value="#status.index + 1" />" size="2" maxlength="2" <s:if test="%{#currentDateRow.standardDate1.year == 0000}">disabled="disabled" </s:if> <s:if test="%{#currentDateRow.standardDate1.day != 0}">value="<s:property value="#currentDateRow.standardDate1.day" />"</s:if> /></td>
+                            <td><input type="text" title="YYYY" id="date_1_Year" name="identityPersonName_<s:property value="#status.index + 1" />_date_1_Year_<s:property value="#status2.index + 1" />" size="4" maxlength="4" <s:if test="%{#currentDateRow.standardDate1.year == 0000}">disabled="disabled" </s:if> value="<s:property value="#currentDateRow.standardDate1.year" />" /> &ndash;
+                                <input type="text" title="MM" id="date_1_Month" name="identityPersonName_<s:property value="#status.index + 1" />_date_1_Month_<s:property value="#status2.index + 1" />" size="2" maxlength="2" <s:if test="%{#currentDateRow.standardDate1.year == 0000}">disabled="disabled" </s:if> <s:if test="%{#currentDateRow.standardDate1.month != 0}">value="<s:property value="#currentDateRow.standardDate1.month" />"</s:if> /> &ndash;
+                                <input type="text" title="DD" id="date_1_Day" name="identityPersonName_<s:property value="#status.index + 1" />_date_1_Day_<s:property value="#status2.index + 1" />" size="2" maxlength="2" <s:if test="%{#currentDateRow.standardDate1.year == 0000}">disabled="disabled" </s:if> <s:if test="%{#currentDateRow.standardDate1.day != 0}">value="<s:property value="#currentDateRow.standardDate1.day" />"</s:if> /></td>
                                 <s:if test="#currentDateRow.standardDate2 != null">
                                 <td></td>
-                                <td><input type="text" title="YYYY" id="date_2_Year" name="dateExistenceTable_date_2_Year_<s:property value="#status.index + 1" />" size="4" maxlength="4" <s:if test="%{#currentDateRow.standardDate2.year == 2999}">disabled="disabled" </s:if> value="<s:property value="#currentDateRow.standardDate2.year" />" /> &ndash;
-                                    <input type="text" title="MM" id="date_2_Month" name="dateExistenceTable_date_2_Month_<s:property value="#status.index + 1" />" size="2" maxlength="2" <s:if test="%{#currentDateRow.standardDate2.year == 2999}">disabled="disabled" </s:if> <s:if test="%{#currentDateRow.standardDate2.month != 0}">value="<s:property value="#currentDateRow.standardDate2.month" />"</s:if> /> &ndash;
-                                    <input type="text" title="DD" id="date_2_Day" name="dateExistenceTable_date_2_Day_<s:property value="#status.index + 1" />" size="2" maxlength="2" <s:if test="%{#currentDateRow.standardDate2.year == 2999}">disabled="disabled" </s:if> <s:if test="%{#currentDateRow.standardDate2.day != 0}">value="<s:property value="#currentDateRow.standardDate2.day" />"</s:if> /></td>
+                                <td><input type="text" title="YYYY" id="date_2_Year" name="identityPersonName_<s:property value="#status.index + 1" />_date_2_Year_<s:property value="#status2.index + 1" />" size="4" maxlength="4" <s:if test="%{#currentDateRow.standardDate2.year == 2999}">disabled="disabled" </s:if> value="<s:property value="#currentDateRow.standardDate2.year" />" /> &ndash;
+                                    <input type="text" title="MM" id="date_2_Month" name="identityPersonName_<s:property value="#status.index + 1" />_date_2_Month_<s:property value="#status2.index + 1" />" size="2" maxlength="2" <s:if test="%{#currentDateRow.standardDate2.year == 2999}">disabled="disabled" </s:if> <s:if test="%{#currentDateRow.standardDate2.month != 0}">value="<s:property value="#currentDateRow.standardDate2.month" />"</s:if> /> &ndash;
+                                    <input type="text" title="DD" id="date_2_Day" name="identityPersonName_<s:property value="#status.index + 1" />_date_2_Day_<s:property value="#status2.index + 1" />" size="2" maxlength="2" <s:if test="%{#currentDateRow.standardDate2.year == 2999}">disabled="disabled" </s:if> <s:if test="%{#currentDateRow.standardDate2.day != 0}">value="<s:property value="#currentDateRow.standardDate2.day" />"</s:if> /></td>
                                 </s:if>
                                 <s:else>
                                 <td></td>
@@ -110,7 +110,12 @@
                             <input type="radio" name="dateOrDateRangeName" value='<s:property value="#dateType.key"/>' onclick="addDateOrDateRangeName($(this).parent().parent().parent().parent().attr('id'))"><s:property value="#dateType.value"/>&nbsp;&nbsp;&nbsp;
                         </s:iterator>
                     </td>
-                    <td><input type="hidden" id="identityPersonName_<s:property value="#status.index + 1" />_rows" name="identityPersonName_<s:property value="#status.index + 1" />_rows" value="0" /></td>
+                    <s:if test="%{#current.dates.size() > 0}">
+                        <td><input type="hidden" id="identityPersonName_<s:property value="#status.index + 1" />_rows" name="identityPersonName_<s:property value="#status.index + 1" />_rows" value="<s:property value="#current.dates.size()" />" /></td>
+                        </s:if>
+                        <s:else>
+                        <td><input type="hidden" id="identityPersonName_<s:property value="#status.index + 1" />_rows" name="identityPersonName_<s:property value="#status.index + 1" />_rows" value="0" /></td>
+                        </s:else>
                     <td></td>
                 </tr>
             </table>
