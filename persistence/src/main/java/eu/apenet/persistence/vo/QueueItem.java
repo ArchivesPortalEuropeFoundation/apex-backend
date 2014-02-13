@@ -59,6 +59,9 @@ public class QueueItem implements java.io.Serializable {
 	@JoinColumn(name = "sg_id")
 	private SourceGuide sourceGuide;
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "eac_id")
+	private EacCpf eac;
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "uf_id")
 	private UpFile upFile;
 	@Column(name = "uf_id", updatable = false, insertable = false)
@@ -105,6 +108,14 @@ public class QueueItem implements java.io.Serializable {
 
 	public void setSourceGuide(SourceGuide sourceGuide) {
 		this.sourceGuide = sourceGuide;
+	}
+	
+	public EacCpf getEac() {
+		return eac;
+	}
+
+	public void setEac(EacCpf eac) {
+		this.eac = eac;
 	}
 
 	public Date getQueueDate() {

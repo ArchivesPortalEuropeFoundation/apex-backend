@@ -281,7 +281,8 @@ public class ExistingFilesChecker {
 
                     ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
                     ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.archivalInstitutionId);
-                    cpfContent.setArchivalInstitution(archivalInstitution);
+                    // TODO: Pending upload #761.
+//                    cpfContent.setArchivalInstitution(archivalInstitution);
 
                     cpfContent.setXml(FileUtils.readFileToString(new File(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName()), "utf-8"));
 

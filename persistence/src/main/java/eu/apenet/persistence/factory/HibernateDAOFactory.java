@@ -9,6 +9,7 @@ import eu.apenet.persistence.dao.CouAlternativeNameDAO;
 import eu.apenet.persistence.dao.CountryDAO;
 import eu.apenet.persistence.dao.CpfContentDAO;
 import eu.apenet.persistence.dao.DptUpdateDAO;
+import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.dao.EadContentDAO;
 import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.EadSavedSearchDAO;
@@ -35,6 +36,7 @@ import eu.apenet.persistence.hibernate.CouAlternativeNameHibernateDAO;
 import eu.apenet.persistence.hibernate.CountryHibernateDAO;
 import eu.apenet.persistence.hibernate.CpfContentHibernateDAO;
 import eu.apenet.persistence.hibernate.DptUpdateHibernateDAO;
+import eu.apenet.persistence.hibernate.EacCpfHibernateDAO;
 import eu.apenet.persistence.hibernate.EadContentHibernateDAO;
 import eu.apenet.persistence.hibernate.EadHibernateDAO;
 import eu.apenet.persistence.hibernate.EseHibernateDAO;
@@ -204,4 +206,9 @@ public class HibernateDAOFactory extends DAOFactory {
     public EadSavedSearchDAO getEadSavedSearchDAO() {
         return (EadSavedSearchDAO) instantiateDAO(EadSavedSearchJpaDAO.class);
     }
+    
+    @Override
+	public EacCpfDAO getEacCpfDAO() {
+		return (EacCpfDAO) instantiateDAO(EacCpfHibernateDAO.class);
+	}
 }

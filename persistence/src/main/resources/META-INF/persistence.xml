@@ -29,6 +29,7 @@
 		<class>eu.apenet.persistence.vo.DptUpdate</class>
 		<class>eu.apenet.persistence.vo.Coordinates</class>
 		<class>eu.apenet.persistence.vo.EadSavedSearch</class>
+		<class>eu.apenet.persistence.vo.EacCpf</class>
 		<shared-cache-mode>NONE</shared-cache-mode>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
