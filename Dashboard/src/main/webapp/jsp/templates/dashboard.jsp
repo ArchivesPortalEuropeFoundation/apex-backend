@@ -36,9 +36,9 @@
 		     var language= $("#selectLanguage").val();	
 		     var finalHref;
              if (hostname == "contentchecker.archivesportaleurope.net"){ 
-                finalHref = "http://contentchecker.archivesportaleurope.net/" + language;	
+                finalHref = "http://contentchecker.archivesportaleurope.net/" + language + "/home";	
              }else{
-				finalHref = "http://www.archivesportaleurope.net/" + language;
+				finalHref = "http://www.archivesportaleurope.net/" + language + "/home";
 			}
             location.href = finalHref;
 		}
