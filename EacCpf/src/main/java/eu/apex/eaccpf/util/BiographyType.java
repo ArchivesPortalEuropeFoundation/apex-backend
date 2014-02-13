@@ -33,23 +33,14 @@ public class BiographyType {
         this.languageCode = languageCode;
     }
 
-    public BiographyType fillDataWith(BiogHist biogHist) {
-        if (biogHist.getChronListOrPOrCitation() != null
-                && biogHist.getChronListOrPOrCitation().isEmpty()) {
-            List<Object> paragraph = biogHist.getChronListOrPOrCitation();
-            for (Object object : paragraph) {
-                if (object instanceof P) {
-                    P p = (P) object;
-                    if (p.getLang() != null
-                            && !p.getLang().isEmpty()) {
-                        this.languageCode = p.getLang();
-                    }
-                    if (p.getContent()!= null
-                            && !p.getContent().isEmpty()) {
-                        this.paragraph = p.getContent();
-                    }
-                }
-            }
+    public BiographyType fillDataWith(P p) {
+        if (p.getLang() != null
+                && !p.getLang().isEmpty()) {
+            this.languageCode = p.getLang();
+        }
+        if (p.getContent() != null
+                && !p.getContent().isEmpty()) {
+            this.paragraph = p.getContent();
         }
         return this;
     }

@@ -197,9 +197,8 @@ public class EacCpfLoader {
             places = new ArrayList<PlaceType>();
             functions = new ArrayList<FunctionType>();
             occupations = new ArrayList<OccupationType>();
-            if (genealogies == null) {
-                genealogies = new ArrayList<GenealogyType>();
-            }
+            genealogies = new ArrayList<GenealogyType>();
+            biographies = new ArrayList<BiographyType>();
 
             for (Object object : descriptionObjects) {
                 if (object instanceof Places) {
@@ -233,21 +232,35 @@ public class EacCpfLoader {
                     }
                 }
                 if (object instanceof StructureOrGenealogy) {
-                    StructureOrGenealogy genealogyObject = (StructureOrGenealogy) object;
-                    GenealogyType genealogyType = new GenealogyType();
-                    genealogies.add(genealogyType.fillDataWith(genealogyObject));
+                    if (((StructureOrGenealogy) object).getMDiscursiveSet() != null
+                            && !((StructureOrGenealogy) object).getMDiscursiveSet().isEmpty()) {
+                        List<Object> paragraphs = ((StructureOrGenealogy) object).getMDiscursiveSet();
+                        for (Object paragraph : paragraphs) {
+                            if (paragraph instanceof P) {
+                                GenealogyType genealogyType = new GenealogyType();
+                                genealogies.add(genealogyType.fillDataWith((P) paragraph));
+                            }
+                        }
+                    }
                 }
             }
         }
 
         //BIOGRAPHIES
-        this.biographies = new ArrayList<BiographyType>();
         if (this.eacCpf.getCpfDescription() != null && this.eacCpf.getCpfDescription().getDescription() != null
                 && this.eacCpf.getCpfDescription().getDescription().getBiogHist() != null) {
 
             for (BiogHist biogHist : this.eacCpf.getCpfDescription().getDescription().getBiogHist()) {
-                BiographyType biographyType = new BiographyType();
-                biographies.add(biographyType.fillDataWith(biogHist));
+                if (biogHist.getChronListOrPOrCitation() != null
+                        && !biogHist.getChronListOrPOrCitation().isEmpty()) {
+                    List<Object> paragraphs = biogHist.getChronListOrPOrCitation();
+                    for (Object paragraph : paragraphs) {
+                        if (paragraph instanceof P) {
+                            BiographyType biographyType = new BiographyType();
+                            biographies.add(biographyType.fillDataWith((P) paragraph));
+                        }
+                    }
+                }
             }
         }
     }
