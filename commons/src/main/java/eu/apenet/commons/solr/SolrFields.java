@@ -58,6 +58,7 @@ public final class SolrFields {
 	public final static String EAC_CPF_PLACES = "places";
 	public final static String EAC_CPF_DATE_DESCRIPTION = "dateDescription";
 	public final static String EAC_CPF_FACET_OCCUPATION = "occupationFacet";
+	public final static String EAC_CPF_OCCUPATION = "occupation";
 	public final static String EAC_CPF_FACET_PLACES = "placesFacet";	
 	public final static String EAC_CPF_DESCRIPTION = "description";
 	
