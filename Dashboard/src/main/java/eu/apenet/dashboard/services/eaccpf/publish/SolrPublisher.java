@@ -73,6 +73,7 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 
 	public void parse(File file) throws Exception{
 		LOGGER.info(file.getName());
+		String country = file.getParentFile().getName();
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);		
 		DocumentBuilder builder = factory.newDocumentBuilder();
@@ -111,6 +112,7 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 		toDate = (String) toDateNormalExpression.evaluate(descriptionNode, XPathConstants.STRING);
 		eacCpfSolrObject.setFromDate(obtainDate(fromDate, true));
 		eacCpfSolrObject.setToDate(obtainDate(toDate, false));
+		eacCpfSolrObject.setCountry(country);
 		publishEacCpf(eacCpfSolrObject);
 
 	}
@@ -123,6 +125,7 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 		doc.addField(SolrFields.EAC_CPF_NAMES, eacCpfSolrObject.getNames());
 		doc.addField(SolrFields.EAC_CPF_PLACES, eacCpfSolrObject.getPlaces());
 		doc.addField(SolrFields.AI, eacCpfSolrObject.getAgencyName());
+		doc.addField(SolrFields.COUNTRY, eacCpfSolrObject.getCountry());
 		doc.addField(SolrFields.EAC_CPF_FACET_PLACES,eacCpfSolrObject.getPlaces());
 		doc.addField(SolrFields.EAC_CPF_FACET_OCCUPATION,eacCpfSolrObject.getOccupations());
 		doc.addField(SolrFields.EAC_CPF_OCCUPATION,eacCpfSolrObject.getOccupations());

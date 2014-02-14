@@ -6,6 +6,7 @@ public class EacCpfSolrObject {
 	private String recordId;
 	private String agencyCode;
 	private String agencyName; 
+	private String country;
 	private Set<String> names;
 	private Set<String> places;
 	private String description;
@@ -74,6 +75,12 @@ public class EacCpfSolrObject {
 	}
 	public void setOccupations(Set<String> occupations) {
 		this.occupations = occupations;
+	}
+	public String getCountry() {
+		return country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
 	}
 
 }
