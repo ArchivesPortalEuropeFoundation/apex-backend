@@ -80,7 +80,7 @@
 	  <field name="places" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="description" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="dateDescription" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
-	  
+	  <field name="occupation" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="placesFacet" type="string" indexed="true" stored="true" multiValued="true"  required="false"/>
 	  <field name="country" type="string" indexed="true" stored="true" required="false"/>
 	  <field name="ai" type="string" indexed="true" stored="true" required="false"/>
@@ -104,7 +104,6 @@
    <copyField source="names" dest="spell"/>
 	<copyField source="places" dest="spell"/>
 	<copyField source="description" dest="spell"/>
-		<copyField source="occupation" dest="spell"/>
-				<copyField source="dateDescription" dest="spell"/>
-	names places description occupation dateDescription
+	<copyField source="occupation" dest="spell"/>
+	<copyField source="dateDescription" dest="spell"/>
   </schema>

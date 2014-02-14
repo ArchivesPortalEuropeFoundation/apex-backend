@@ -137,7 +137,7 @@
 				id,names,places,description,occupation,dateDescription
 			</str>
 			<str name="q.alt">*:*</str>
-			<str name="hl.fl">names</str>
+			<str name="hl.fl">names places description occupation dateDescription</str>
 			<str name="hl.fragmenter">regex</str>
 			<str name="spellcheck.onlyMorePopular">true</str>
 			<str name="spellcheck.extendedResults">false</str>
