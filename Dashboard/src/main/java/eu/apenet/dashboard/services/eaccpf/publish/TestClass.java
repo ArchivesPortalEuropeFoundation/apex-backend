@@ -19,7 +19,7 @@ public class TestClass {
 
 	}
 	public static void parse(File file ,SolrPublisher solrPublisher) throws Exception{
-		if (file.isDirectory()){
+		if (file.isDirectory() && !file.getName().equalsIgnoreCase("hungary")){
 			for (File child : file.listFiles()){
 				parse(child, solrPublisher);
 

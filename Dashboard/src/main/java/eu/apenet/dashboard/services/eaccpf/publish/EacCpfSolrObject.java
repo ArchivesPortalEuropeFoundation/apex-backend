@@ -8,6 +8,8 @@ public class EacCpfSolrObject {
 	private String agencyName; 
 	private Set<String> names;
 	private Set<String> places;
+	private String description;
+	private Set<String> occupations;
 	private String dateDescription;
 	private String fromDate;
 	private String toDate;
@@ -60,6 +62,18 @@ public class EacCpfSolrObject {
 	}
 	public void setToDate(String toDate) {
 		this.toDate = toDate;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public Set<String> getOccupations() {
+		return occupations;
+	}
+	public void setOccupations(Set<String> occupations) {
+		this.occupations = occupations;
 	}
 
 }
