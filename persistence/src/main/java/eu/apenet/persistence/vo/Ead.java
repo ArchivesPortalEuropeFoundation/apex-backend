@@ -1,10 +1,8 @@
 package eu.apenet.persistence.vo;
 
-import java.io.Serializable;
-import java.util.Date;
 import java.util.Set;
 
-public abstract class Ead  implements Serializable{
+public abstract class Ead  extends AbstractContent{
 	/**
 	 * 
 	 */
@@ -12,22 +10,9 @@ public abstract class Ead  implements Serializable{
 
 
 
-
-	public abstract Integer getId();
-	public abstract void setId(Integer id);
-//	public abstract FileState getFileState() ;
-//	public abstract void setFileState(FileState fileState);
-	public abstract UploadMethod getUploadMethod();
-	public abstract void setUploadMethod(UploadMethod uploadMethod);
-	public abstract ArchivalInstitution getArchivalInstitution();
-	public abstract void setArchivalInstitution(ArchivalInstitution archivalInstitution) ;
-	public abstract String getTitle();
-	public abstract void setTitle(String title);
-	public abstract Date getUploadDate();
-	public abstract void setUploadDate(Date uploadDate);
-	public abstract Date getPublishDate();
-	public abstract void setPublishDate(Date publishDate);
+	@Deprecated
 	public abstract String getPathApenetead();
+	@Deprecated
 	public abstract void setPathApenetead(String pathApenetead);
 	public abstract String getEadid();
 	public abstract void setEadid(String eadid);
@@ -37,17 +22,7 @@ public abstract class Ead  implements Serializable{
 	public abstract void setTotalNumberOfUnits(Long totalNumberOfUnits) ;
 	public abstract Long getTotalNumberOfUnitsWithDao();
 	public abstract void setTotalNumberOfUnitsWithDao(Long totalNumberOfUnitsWithDao);
-	public abstract boolean isPublished();
-	public abstract void setPublished(boolean searchable);
-	public abstract ValidatedState getValidated();
-	public abstract void setValidated(ValidatedState validated);
-	public abstract boolean isConverted();
-	public abstract void setConverted(boolean converted);
-	public abstract QueuingState getQueuing();
-	public abstract void setQueuing(QueuingState queingState);	
-    @Deprecated
-	public abstract Set<QueueItem> getQueuesItems();
-	public abstract void setQueueItems(Set<QueueItem> indexQueues);
+
 	public abstract Set<Warnings> getWarningses();
 	public abstract void setWarningses(Set<Warnings> warningses);
     @Deprecated
@@ -62,14 +37,26 @@ public abstract class Ead  implements Serializable{
             return null;
         return set.iterator().next();
     }
-    public QueueItem getQueueItem() {
-        Set<QueueItem> set = getQueuesItems();
-        if(set == null || set.isEmpty())
-            return null;
-        return set.iterator().next();
-    }
-	public abstract Integer getAiId();
-	public abstract void setAiId(Integer aiId) ;
+
+
+	@Override
+	public String getPath() {
+		return getPathApenetead();
+	}
+	@Override
+	public void setPath(String pathApenetead) {
+		setPath(pathApenetead);
+		
+	}
+	@Override
+	public String getIdentifier() {
+		return getEadid();
+	}
+	@Override
+	public void setIdentifier(String identifier) {
+		setEadid(identifier);
+		
+	}
 	@Override
 	public String toString() {
 		return this.getEadClass().getSimpleName() + " - (" + getEadid() + "," + getId() + ") ";
