@@ -77,13 +77,15 @@
   <fields>
       <field name="id" type="string" indexed="true" stored="true" required="true"/>	
 	  <field name="names" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
-	  <field name="places" type="string" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
+	  <field name="places" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
+	  <field name="description" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="dateDescription" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  
-	  <field name="placesRefinement" type="string" indexed="true" stored="true" multiValued="true"  required="false"/>
-	  <field name="countryRefinement" type="string" indexed="true" stored="true" required="false"/>
-	  <field name="aiRefinement" type="string" indexed="true" stored="true" required="false"/>
-	  	
+	  <field name="placesFacet" type="string" indexed="true" stored="true" multiValued="true"  required="false"/>
+	  <field name="country" type="string" indexed="true" stored="true" required="false"/>
+	  <field name="ai" type="string" indexed="true" stored="true" required="false"/>
+	  <field name="occupationFacet" type="string" indexed="true"  multiValued="true" stored="true" required="false"/>
+
 
       <field name="startdate" type="date" indexed="true" stored="true" required="false"/>
 	  <field name="enddate" type="date" indexed="true" stored="true" required="false"/>
@@ -100,5 +102,9 @@
   
    
    <copyField source="names" dest="spell"/>
-
+	<copyField source="places" dest="spell"/>
+	<copyField source="description" dest="spell"/>
+		<copyField source="occupation" dest="spell"/>
+				<copyField source="dateDescription" dest="spell"/>
+	names places description occupation dateDescription
   </schema>

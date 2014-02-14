@@ -131,10 +131,10 @@
 			<str name="echoParams">explicit</str>
 			<float name="tie">0.01</float>
 			<str name="qf">
-				names,places,dateDescription
+				names places description occupation dateDescription
 			</str>
 			<str name="fl">
-				id,names,places,dateDescription
+				id,names,places,description,occupation,dateDescription
 			</str>
 			<str name="q.alt">*:*</str>
 			<str name="hl.fl">names</str>
