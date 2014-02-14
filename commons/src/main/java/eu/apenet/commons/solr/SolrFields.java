@@ -50,5 +50,17 @@ public final class SolrFields {
 	public final static String FA_DYNAMIC_NAME = "F0"+ DYNAMIC_STRING_SUFFIX;
 	public final static String HG_DYNAMIC_NAME = "H0"+ DYNAMIC_STRING_SUFFIX;
 	public final static String SG_DYNAMIC_NAME = "S0"+ DYNAMIC_STRING_SUFFIX;
+
+	/*
+	 * EAC-CPF
+	 */
+	public final static String EAC_CPF_NAMES = "names";
+	public final static String EAC_CPF_PLACES = "places";
+	public final static String EAC_CPF_DATE_DESCRIPTION = "dateDescription";
+	public final static String EAC_CPF_FACET_OCCUPATION = "occupationFacet";
+	public final static String EAC_CPF_FACET_PLACES = "placesFacet";	
+	public final static String EAC_CPF_DESCRIPTION = "description";
+	
 }
+
 
