@@ -105,9 +105,11 @@ public class DisplayCContentAction extends ActionSupport implements ServletReque
                 Locale locale = getLocale();
                 if (locale == null) {
                     request.setAttribute("localizedCountryName", country.getCname());
+                    request.setAttribute("locale", "en");
                 } else {
                     String language = getLocale().getLanguage();
                     request.setAttribute("localizedCountryName", DAOFactory.instance().getCouAlternativeNameDAO().getLocalizedCountry(country.getIsoname(), language));
+                    request.setAttribute("locale", locale.getLanguage());
                 }
             }
 		}

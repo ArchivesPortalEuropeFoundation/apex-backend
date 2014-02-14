@@ -131,12 +131,22 @@
 	function resizePage() {
 		$("#frames").height($(window).height() - $("#header").height());
 	}
+	function redirect(country){
+	    var hostname = window.location.hostname;	
+	    var finalHref;
+        if (hostname == "contentchecker.archivesportaleurope.net"){ 
+           finalHref = "http://contentchecker.archivesportaleurope.net/"+ country + "/home";	
+        }else{
+			finalHref = "http://www.archivesportaleurope.net/" + country + "/home";
+		}
+       location.href = finalHref;
+	}
 </script>
 </head>
 <body>
 	<div id="wrapper">
 		<div id="header">
-			<a href="http://contentchecker.archivesportaleurope.net/web/guest"><div id="logo"></div></a>
+			<a href="#" onclick="redirect('${locale}')"><div id="logo"></div></a>
 			<div class="left-header"></div>
 			<div class="right-header"></div>
 		</div>
