@@ -125,6 +125,7 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 		doc.addField(SolrFields.AI, eacCpfSolrObject.getAgencyName());
 		doc.addField(SolrFields.EAC_CPF_FACET_PLACES,eacCpfSolrObject.getPlaces());
 		doc.addField(SolrFields.EAC_CPF_FACET_OCCUPATION,eacCpfSolrObject.getOccupations());
+		doc.addField(SolrFields.EAC_CPF_OCCUPATION,eacCpfSolrObject.getOccupations());
 		add(doc, SolrFields.EAC_CPF_DESCRIPTION,eacCpfSolrObject.getDescription());
 		add(doc, SolrFields.START_DATE, eacCpfSolrObject.getFromDate());
 		add(doc, SolrFields.END_DATE, eacCpfSolrObject.getToDate());
