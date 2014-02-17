@@ -34,7 +34,6 @@ import eu.apenet.persistence.hibernate.CoordinatesHibernateDAO;
 import eu.apenet.persistence.hibernate.CouAlternativeNameHibernateDAO;
 import eu.apenet.persistence.hibernate.CountryHibernateDAO;
 import eu.apenet.persistence.hibernate.DptUpdateHibernateDAO;
-import eu.apenet.persistence.hibernate.EacCpfHibernateDAO;
 import eu.apenet.persistence.hibernate.EadContentHibernateDAO;
 import eu.apenet.persistence.hibernate.EadHibernateDAO;
 import eu.apenet.persistence.hibernate.EseHibernateDAO;
@@ -50,6 +49,7 @@ import eu.apenet.persistence.hibernate.UserHibernateDAO;
 import eu.apenet.persistence.hibernate.UserRoleHibernateDAO;
 import eu.apenet.persistence.hibernate.WarningsHibernateDAO;
 import eu.archivesportaleurope.persistence.jpa.dao.ArchivalInstitutionOaiPmhJpaDAO;
+import eu.archivesportaleurope.persistence.jpa.dao.EacCpfJpaDAO;
 import eu.archivesportaleurope.persistence.jpa.dao.EadSavedSearchJpaDAO;
 import eu.archivesportaleurope.persistence.jpa.dao.HgSgFaRelationJpaDAO;
 import eu.archivesportaleurope.persistence.jpa.dao.IngestionprofileJpaDAO;
@@ -203,6 +203,6 @@ public class HibernateDAOFactory extends DAOFactory {
     
     @Override
 	public EacCpfDAO getEacCpfDAO() {
-		return (EacCpfDAO) instantiateDAO(EacCpfHibernateDAO.class);
+		return (EacCpfDAO) instantiateDAO(EacCpfJpaDAO.class);
 	}
 }
