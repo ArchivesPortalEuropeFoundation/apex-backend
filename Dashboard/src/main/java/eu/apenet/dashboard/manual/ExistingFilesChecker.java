@@ -40,18 +40,16 @@ import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.util.XmlChecker;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.dao.CpfContentDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.ArchivalInstitution;
-import eu.apenet.persistence.vo.CpfContent;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FileType;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
 import eu.apenet.persistence.vo.UpFile;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 /**
  * User: Eloy García
@@ -272,32 +270,25 @@ public class ExistingFilesChecker {
                     if(StringUtils.isBlank(cpfId)){
                         throw new APEnetException("recordId is empty in the file " + fileUnit.getFileName() + ", so we remove everything");
                     }
-                    CpfContentDAO cpfContentDAO = DAOFactory.instance().getCpfContentDAO();
-                    if(cpfContentDAO.doesCpfExists(cpfId) != null)
-                        return "exists";
-
-                    CpfContent cpfContent = new CpfContent();
-                    cpfContent.setCpfId(cpfId);
 
                     ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
                     ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.archivalInstitutionId);
                     // TODO: Pending upload #761.
 //                    cpfContent.setArchivalInstitution(archivalInstitution);
 
-                    cpfContent.setXml(FileUtils.readFileToString(new File(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName()), "utf-8"));
 
-                    HibernateUtil.beginDatabaseTransaction();
-                    cpfContentDAO.insertSimple(cpfContent);
+                    //JpaUtil.beginDatabaseTransaction();
 
                     String dirCpf = repoPath + archivalInstitutionCountry + APEnetUtilities.FILESEPARATOR + archivalInstitutionId + APEnetUtilities.FILESEPARATOR + "CPF";
                     if(!new File(dirCpf).exists())
                         new File(dirCpf).mkdir();
                     insertFileToTempFiles(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), dirCpf + APEnetUtilities.FILESEPARATOR + fileUnit.getFileName(), fileUnit.getFilePath());
+                    //JpaUtil.commitDatabaseTransaction();
                     LOG.info("The CPF file " + fileUnit.getFileName() + " has been stored in the REPO directory");
                 } catch (Exception e) {
                     new File(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName()).delete();
                     LOG.error("The EAC-CPF could not be stored in cpfContent table [Database Rollback]. Error:" + e.getMessage(), e);
-                    HibernateUtil.rollbackDatabaseTransaction();
+                    //JpaUtil.rollbackDatabaseTransaction();
                     return "error";
                 } finally {
                     try {
@@ -307,7 +298,7 @@ public class ExistingFilesChecker {
                         LOG.error("We could not erase the file from the temp database");
                     }
                 }
-                HibernateUtil.commitDatabaseTransaction();
+                
                 return "no exists";
             } else if(xmlType == XmlType.EAD_SG || xmlType == XmlType.EAD_FA || xmlType == XmlType.EAD_HG) {
                 if(eadid.equals(STATUS_EMPTY)){ //eadid is empty
@@ -693,15 +684,15 @@ public class ExistingFilesChecker {
 	// This method removes the entry which has ufId as the primary key from up_files table
 	private void deleteFileFromDDBB(Integer ufId) throws APEnetException {
 		try {
-			HibernateUtil.beginDatabaseTransaction();
+			JpaUtil.beginDatabaseTransaction();
 
             UpFile upFile = upFileDao.findById(ufId);
 			upFileDao.deleteSimple(upFile);
 
-			HibernateUtil.commitDatabaseTransaction();
+			JpaUtil.commitDatabaseTransaction();
 		} catch (Exception e) {
 			LOG.error("The file uploaded with ID = '" + ufId.toString() + "' couldn't be removed from up_file table [Database Rollback]. Error: " + e.getMessage());
-			HibernateUtil.rollbackDatabaseTransaction();
+			JpaUtil.rollbackDatabaseTransaction();
 			throw new APEnetException("Error deleting file from up_file table", e);
 		}
 	}
