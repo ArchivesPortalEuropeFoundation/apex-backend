@@ -15,10 +15,10 @@ import eu.apenet.persistence.dao.CouAlternativeNameDAO;
 import eu.apenet.persistence.dao.CountryDAO;
 import eu.apenet.persistence.dao.LangDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.hibernate.HibernateUtil;
 import eu.apenet.persistence.vo.CouAlternativeName;
 import eu.apenet.persistence.vo.Country;
 import eu.apenet.persistence.vo.Lang;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 /**
  * @author Jara Alvarez
@@ -150,7 +150,7 @@ public class CreateCountryAction extends ActionSupport{
 				
 				if ((countryDAO.getCountryByCname(this.getEnglishCountryName().trim()) == null)) 
 				{
-					HibernateUtil.beginDatabaseTransaction();
+					JpaUtil.beginDatabaseTransaction();
                     Country newCountry = new Country();
 					newCountry.setCname(this.getEnglishCountryName().toUpperCase());
                     if(tempLocale != null) {
@@ -173,7 +173,7 @@ public class CreateCountryAction extends ActionSupport{
 			        log.debug("Directory "+this.getIsoCountryName() +" created");
 			        
 		        
-			        HibernateUtil.commitDatabaseTransaction();
+			        JpaUtil.commitDatabaseTransaction();
 					result= SUCCESS;
 					addActionMessage(getText("createCountry.newCountryStored"));
 				}else
@@ -186,7 +186,7 @@ public class CreateCountryAction extends ActionSupport{
 				result = ERROR;				
 			}finally{
 				if (result.equals(ERROR)){
-					HibernateUtil.rollbackDatabaseTransaction();
+					JpaUtil.rollbackDatabaseTransaction();
 					File file = new File(pathRepo = pathRepo + this.getIsoCountryName());
 					if (file.exists())
 						file.delete();
