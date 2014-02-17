@@ -13,6 +13,7 @@ import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Restrictions;
 
 import eu.apenet.persistence.dao.GenericAbstractDAO;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import eu.archivesportaleurope.persistence.jpa.dao.AbstractJpaDAO;
 /**
  * 
@@ -94,7 +95,7 @@ public abstract class AbstractHibernateDAO <T, ID extends Serializable> extends 
 
 
 	protected Session getSession() {
-		return HibernateUtil.getDatabaseSession();
+		return (Session) JpaUtil.getEntityManager().getDelegate();
 	}
 
 }
