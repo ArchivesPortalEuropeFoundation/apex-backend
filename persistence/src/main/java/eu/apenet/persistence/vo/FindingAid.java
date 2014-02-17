@@ -163,7 +163,7 @@ public class FindingAid extends Ead {
 		this.published = searchable;
 	}
 
-	public Set<QueueItem> getQueuesItems() {
+	public Set<QueueItem> getQueueItems() {
 		return queueItems;
 	}
 

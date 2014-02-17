@@ -35,12 +35,12 @@ public abstract class AbstractContent  implements Serializable {
 	public abstract QueuingState getQueuing();
 	public abstract void setQueuing(QueuingState queingState);	
     @Deprecated
-	public abstract Set<QueueItem> getQueuesItems();
+	public abstract Set<QueueItem> getQueueItems();
 	public abstract void setQueueItems(Set<QueueItem> indexQueues);
 	public abstract Integer getAiId();
 	public abstract void setAiId(Integer aiId) ;
     public QueueItem getQueueItem() {
-        Set<QueueItem> set = getQueuesItems();
+        Set<QueueItem> set = getQueueItems();
         if(set == null || set.isEmpty())
             return null;
         return set.iterator().next();

@@ -163,7 +163,7 @@ public class SourceGuide extends Ead {
 
 	
 	
-	public Set<QueueItem> getQueuesItems() {
+	public Set<QueueItem> getQueueItems() {
 		return queueItems;
 	}
 

@@ -161,7 +161,7 @@ public class HoldingsGuide extends Ead {
 
 	
 	
-	public Set<QueueItem> getQueuesItems() {
+	public Set<QueueItem> getQueueItems() {
 		return queueItems;
 	}
 

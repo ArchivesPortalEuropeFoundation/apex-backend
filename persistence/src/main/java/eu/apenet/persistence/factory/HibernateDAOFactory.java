@@ -7,7 +7,6 @@ import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.dao.CoordinatesDAO;
 import eu.apenet.persistence.dao.CouAlternativeNameDAO;
 import eu.apenet.persistence.dao.CountryDAO;
-import eu.apenet.persistence.dao.CpfContentDAO;
 import eu.apenet.persistence.dao.DptUpdateDAO;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.dao.EadContentDAO;
@@ -34,7 +33,6 @@ import eu.apenet.persistence.hibernate.CLevelHibernateDAO;
 import eu.apenet.persistence.hibernate.CoordinatesHibernateDAO;
 import eu.apenet.persistence.hibernate.CouAlternativeNameHibernateDAO;
 import eu.apenet.persistence.hibernate.CountryHibernateDAO;
-import eu.apenet.persistence.hibernate.CpfContentHibernateDAO;
 import eu.apenet.persistence.hibernate.DptUpdateHibernateDAO;
 import eu.apenet.persistence.hibernate.EacCpfHibernateDAO;
 import eu.apenet.persistence.hibernate.EadContentHibernateDAO;
@@ -149,10 +147,6 @@ public class HibernateDAOFactory extends DAOFactory {
 		return (CouAlternativeNameDAO) instantiateDAO(CouAlternativeNameHibernateDAO.class);
 	}
 
-    @Override
-	public CpfContentDAO getCpfContentDAO(){
-		return (CpfContentDAO) instantiateDAO(CpfContentHibernateDAO.class);
-	}
 
     @Override
     public DptUpdateDAO getDptUpdateDAO(){
