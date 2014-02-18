@@ -188,10 +188,10 @@ public class EditEadAction extends AjaxControllerAbstractAction {
                 if(cLevel != null)
                     obj.put("xml", new EditParser().xmlToHtml(cLevel, null));
             } else if(fileId != null && fileId != -1 && xmlType != null){
-                EadContent eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFileId(fileId, xmlType.getClazz());
+                EadContent eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFileId(fileId, (Class<? extends Ead>) xmlType.getClazz());
                 if(eadContent != null)
                     obj.put("xml", new EditParser().xmlToHtml(null, eadContent));
-            } 
+            }
             writer.append(obj.toString());
             writer.close();
         } catch (Exception e){
@@ -314,7 +314,7 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 
     /**
      * Method to recover and add the correct values to the map "formValues".
-     * This is derived from issue 180 and bug in Struts2 (see: 
+     * This is derived from issue 180 and bug in Struts2 (see:
      * https://issues.apache.org/jira/browse/WW-4176).
      */
     private String recoverMapFormValues() {
@@ -622,7 +622,7 @@ public class EditEadAction extends AjaxControllerAbstractAction {
             eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFindingAidId(faId.intValue());
         } else if (xmlType == XmlType.EAD_HG){
         	if(hgId==null && fileId!=null){ //in case that hgId is null the target value is into fileId
-        		hgId = fileId.longValue(); 
+        		hgId = fileId.longValue();
         	}
             holdingsGuide = DAOFactory.instance().getHoldingsGuideDAO().findById(hgId.intValue());
             archivalInstitution = holdingsGuide.getArchivalInstitution();

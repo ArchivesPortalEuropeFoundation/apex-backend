@@ -31,11 +31,11 @@ import eu.apenet.persistence.vo.EadContent;
  * Servlet implementation class TopCLevelsServlet
  */
 public class GenerateTreeJSONAction extends ActionSupport implements ServletRequestAware, ServletResponseAware {
-	
+
 	private static final String END_ITEM_WITH_COMMA = "},";
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 3891790469632078308L;
 
@@ -135,10 +135,10 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 				performanceLogParameters += ",parentId=" + parentId;
 				long localStartTime = System.currentTimeMillis();
 				List<CLevel> clevels = clevelDAO.findChildCLevels(parentId, orderId, max);
-				
+
 //				if (!MORE_VALUE_BEFORE.equalsIgnoreCase(more)){
 //					totalNumberOfCLevels = clevelDAO.countChildCLevels(parentId);
-//					
+//
 //				}
 				databaseTimeCost += System.currentTimeMillis() - localStartTime;
 				StringBuilder result = generateCLevelJSON(clevels, path, isWithUrl);
@@ -182,7 +182,7 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 				performanceLogParameters += ",solrId=" + solrId;
 				long localStartTime = System.currentTimeMillis();
 				CLevel clevel = clevelDAO.findById(solrId);
-//				
+//
 //				if (clevel.getParentClId() == null){
 //					totalNumberOfCLevels = clevelDAO.countTopCLevels(clevel.getEcId());
 //				}else {
@@ -245,8 +245,8 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
             	ChangeDynamicTask changeDynamicTask = new ChangeDynamicTask();
             	changeDynamicTask.execute(ead, null);
 
-            	// Try to recover the new content of the dynamic EAD. 
-    			eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFileId(fileId, xmlType.getClazz());
+            	// Try to recover the new content of the dynamic EAD.
+    			eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFileId(fileId, (Class<? extends Ead>) xmlType.getClazz());
 
     			if (eadContent == null) {
                 	throw new APEnetException(getText("generateTreeJSON.APEnetException.no.correct.FA"));
@@ -262,7 +262,7 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 		return null;
     }
 
-	private StringBuilder generateRootJSON(EadContent eadContent, StringBuilder childBuffer, String path, 
+	private StringBuilder generateRootJSON(EadContent eadContent, StringBuilder childBuffer, String path,
 			boolean expand, boolean isWithPreface, String xmlTypeIdString) {
 		StringBuilder buffer = new StringBuilder();
 		buffer.append(START_ARRAY);
@@ -337,7 +337,7 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 			if (orderId < 0){
 				max = clevel.getOrderId();
 				orderId = 0;
-				
+
 			}
 			buffer.append(" \"" + orderId + "\" ");
 			buffer.append(COMMA);
@@ -345,7 +345,7 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 			buffer.append(" \"" + max + "\" ");
 			buffer.append(END_ITEM);
 			buffer.append(COMMA);
-		
+
 		}
 	}
 	private void addAfter(StringBuilder buffer, CLevel clevel){
@@ -368,7 +368,7 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 			buffer.append(FOLDER_LAZY);
 			buffer.append(END_ITEM_WITH_RETURN);
 		}
-	
+
 	}
 	private StringBuilder generateJSONWithSelectedItem(CLevel clevel, String path, boolean isWithUrl, String xmlTypeIdString) {
 		StringBuilder buffer = new StringBuilder();
@@ -462,21 +462,21 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 		buffer.append("\"title\":");
 		//String fullTitle = DisplayUtils.encodeHtml(title);
 		String smallTitle = DisplayUtils.encodeHtml(title, MAX_NUMBER_OF_CHARACTERS);
-		
+
 		if (smallTitle == null || smallTitle.trim().length() == 0) {
 			// title = "-- empty --";
 			smallTitle = getText("advancedsearch.text.notitle");
 			buffer.append(" \"" + smallTitle + "\"");
 			buffer.append(COMMA);
 			buffer.append("\"addClass\":");
-			buffer.append(" \"notitle\"");	
-			
-			
+			buffer.append(" \"notitle\"");
+
+
 		}else {
 			smallTitle = smallTitle.replaceAll("[\n\t\r]", "");
 			buffer.append(" \"" + smallTitle + "\"");
 		}
-		
+
 
 	}
 	private void addTitle(StringBuilder buffer, CLevel clevel) {
@@ -488,7 +488,7 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 		buffer.append(faId);
 		buffer.append("\" ");
     }
-	
+
 	private static void addMoreTitle(StringBuilder buffer, String title) {
 		buffer.append("\"addClass\":");
 		buffer.append(" \"more\"");
@@ -500,7 +500,7 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 		buffer.append("\"" +fullTitle + "\"");
 
 	}
-	
+
 
 
 	private static void addCContentUrl(StringBuilder buffer, Long clId, String path) {
@@ -543,18 +543,18 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
 				buffer.append(FOLDER_WITH_CHILDREN);
 				long localStartTime = System.currentTimeMillis();
 				CLevelDAO clevelDAO = DAOFactory.instance().getCLevelDAO();
-				
+
 				List<CLevel> children  = clevelDAO.findChildCLevels(clevel.getClId(), ZERO, MAX_NUMBER_OF_CLEVELS);
 				databaseTimeCost += System.currentTimeMillis() - localStartTime;
 				buffer.append(generateChildCLevelJSON(children, path, isWithUrl));
 			}
 		}
 	}
-	
+
 	private static void addMore(StringBuilder buffer, String type) {
 		buffer.append("\"more\":");
 		buffer.append(" \"" + type+  "\"");
-	
+
 	}
 
 }

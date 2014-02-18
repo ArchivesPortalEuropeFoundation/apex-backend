@@ -29,7 +29,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 	protected static final String CONTENT_MESSAGE_ERROR = "content.message.fatalerror";
 	protected static final String SUCCESS_AJAX = "success_ajax";
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4513310293148562803L;
 	private Map<String, String> typeList = new LinkedHashMap<String, String>();
@@ -88,6 +88,8 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 				getText("content.message." + XmlType.EAD_HG.getResourceName()));
 		typeList.put(XmlType.EAD_SG.getIdentifier() + "",
 				getText("content.message." + XmlType.EAD_SG.getResourceName()));
+                typeList.put(XmlType.EAC_CPF.getIdentifier() + "",
+                        getText("content.message." + XmlType.EAC_CPF.getResourceName()));
 		searchTermsFieldList.put("", getText("content.message.all"));
 		searchTermsFieldList.put("eadid", getText("content.message.id"));
 		searchTermsFieldList.put("title", getText("content.message.title"));
@@ -176,7 +178,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 			publishedSearchOptions.setPublished(true);
 			results.setTotalPublishedUnits(eadDAO.countUnits(publishedSearchOptions));
 		}
-		if (eadSearchOptions.getEadClass().equals(FindingAid.class)) {
+		if (eadSearchOptions.getContentClass().equals(FindingAid.class)) {
 			/*
 			 * statistics for total delivered daos
 			 */
@@ -199,13 +201,13 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 			}
 
 		}
-		
+
 		EadSearchOptions dynamicEadSearchOptions = new EadSearchOptions();
 		dynamicEadSearchOptions.setPublished(false);
 		dynamicEadSearchOptions.setDynamic(true);
-		dynamicEadSearchOptions.setEadClass(HoldingsGuide.class);
+		dynamicEadSearchOptions.setContentClass(HoldingsGuide.class);
 		results.setHasDynamicHg(eadDAO.existEads(dynamicEadSearchOptions));
-		dynamicEadSearchOptions.setEadClass(SourceGuide.class);
+		dynamicEadSearchOptions.setContentClass(SourceGuide.class);
 		results.setHasDynamicSg(eadDAO.existEads(dynamicEadSearchOptions));
 		getServletRequest().setAttribute("results", results);
 		getServletRequest().setAttribute("harvestingStarted", HarvesterDaemon.isHarvesterProcessing() || EadService.isHarvestingStarted());
@@ -214,7 +216,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 
 	@Override
 	public String execute() throws Exception {
-		EadSearchOptions eadSearchOptions = null;;
+		EadSearchOptions eadSearchOptions = null;
 		if (updateSearchResults){
 			eadSearchOptions = (EadSearchOptions) getServletRequest().getSession().getAttribute(EAD_SEARCH_OPTIONS);
 			if (eadSearchOptions == null){
@@ -255,14 +257,14 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 					europeanaStatus[i] = eadSearchOptions.getEuropeana().get(i).toString();
 				}
 			}
-			
+
 			if (eadSearchOptions.getQueuing().size() > 0) {
 				queuingStatus = new String[eadSearchOptions.getQueuing().size()];
 				for (int i = 0; i < eadSearchOptions.getQueuing().size(); i++) {
 					queuingStatus[i] = eadSearchOptions.getQueuing().get(i).toString();
 				}
 			}
-			xmlTypeId = XmlType.getType(eadSearchOptions.getEadClass()).getIdentifier() + "";
+			xmlTypeId = XmlType.getType(eadSearchOptions.getContentClass()).getIdentifier() + "";
 			searchTerms = eadSearchOptions.getSearchTerms();
 			orderByField = eadSearchOptions.getOrderByField();
 			orderByAscending = eadSearchOptions.isOrderByAscending();
@@ -271,7 +273,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 			resultPerPage = eadSearchOptions.getPageSize();
 			eadSearchOptions.setArchivalInstitionId(getAiId());
 		}
-		
+
 		return eadSearchOptions;
 	}
 
@@ -308,7 +310,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 		}
 		eadSearchOptions.setSearchTerms(searchTerms);
 		eadSearchOptions.setSearchTermsField(searchTermsField);
-		eadSearchOptions.setEadClass(XmlType.getType(Integer.parseInt(xmlTypeId)).getClazz());
+		eadSearchOptions.setContentClass(XmlType.getType(Integer.parseInt(xmlTypeId)).getClazz());
 		return eadSearchOptions;
 	}
 

@@ -53,13 +53,13 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
         eadSearchOptions.setArchivalInstitionId(getAiId());
 		eadSearchOptions.setPublished(false);
 		eadSearchOptions.setDynamic(true);
-		eadSearchOptions.setEadClass(HoldingsGuide.class);
+		eadSearchOptions.setContentClass(HoldingsGuide.class);
 		List<Ead> temp = eadDAO.getEads(eadSearchOptions);
 		for (Ead ead :temp){
 			dynamicHgSgs.add(new SelectItem(ead.getEadContent().getEcId() +"", ead.getTitle()));
 			
 		}
-		eadSearchOptions.setEadClass(SourceGuide.class);
+		eadSearchOptions.setContentClass(SourceGuide.class);
 		temp = eadDAO.getEads(eadSearchOptions);
 		for (Ead ead :temp){
 			dynamicHgSgs.add(new SelectItem(ead.getEadContent().getEcId() +"", ead.getTitle()));

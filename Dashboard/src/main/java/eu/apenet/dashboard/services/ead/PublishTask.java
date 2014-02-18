@@ -28,7 +28,7 @@ public class PublishTask extends AbstractEadTask {
 				 * there is something wrong
 				 */
 				EadContentDAO eadContentDAO = DAOFactory.instance().getEadContentDAO();
-				List<EadContent> eadContents = eadContentDAO.getEadContentsByFileId(ead.getId(), XmlType.getEadType(ead).getClazz());
+				List<EadContent> eadContents = eadContentDAO.getEadContentsByFileId(ead.getId(), (Class<? extends Ead>) XmlType.getEadType(ead).getClazz());
 				if (eadContents.size() > 1) {
 					eadContentDAO.delete(eadContents);
 					ead.getEadContents().clear();

@@ -42,11 +42,11 @@ public class MaintenanceTask extends Thread {
 				queuingStates.add(QueuingState.ERROR);
 				eadSearchOptions.setQueuing(queuingStates);
 				try {
-					eadSearchOptions.setEadClass(HoldingsGuide.class);
+					eadSearchOptions.setContentClass(HoldingsGuide.class);
 					EadService.updateEverything(eadSearchOptions, QueueAction.PUBLISH);
-					eadSearchOptions.setEadClass(SourceGuide.class);
+					eadSearchOptions.setContentClass(SourceGuide.class);
 					EadService.updateEverything(eadSearchOptions, QueueAction.PUBLISH);
-					eadSearchOptions.setEadClass(FindingAid.class);
+					eadSearchOptions.setContentClass(FindingAid.class);
 					EadService.updateEverything(eadSearchOptions, QueueAction.PUBLISH);
 				} catch (IOException e) {
 					LOGGER.error("unexpected error occurs: " + e.getMessage(), e);
@@ -60,9 +60,9 @@ public class MaintenanceTask extends Thread {
 				queuingStates.add(QueuingState.ERROR);
 				eadSearchOptions.setQueuing(queuingStates);
 				try {
-					eadSearchOptions.setEadClass(HoldingsGuide.class);
+					eadSearchOptions.setContentClass(HoldingsGuide.class);
 					EadService.updateEverything(eadSearchOptions, QueueAction.REPUBLISH);
-					eadSearchOptions.setEadClass(SourceGuide.class);
+					eadSearchOptions.setContentClass(SourceGuide.class);
 					EadService.updateEverything(eadSearchOptions, QueueAction.REPUBLISH);
 				} catch (IOException e) {
 					LOGGER.error("unexpected error occurs: " + e.getMessage(), e);
@@ -75,11 +75,11 @@ public class MaintenanceTask extends Thread {
 				queuingStates.add(QueuingState.ERROR);
 				eadSearchOptions.setQueuing(queuingStates);
 				try {
-					eadSearchOptions.setEadClass(HoldingsGuide.class);
+					eadSearchOptions.setContentClass(HoldingsGuide.class);
 					EadService.updateEverything(eadSearchOptions, QueueAction.DELETE);
-					eadSearchOptions.setEadClass(SourceGuide.class);
+					eadSearchOptions.setContentClass(SourceGuide.class);
 					EadService.updateEverything(eadSearchOptions, QueueAction.DELETE);
-					eadSearchOptions.setEadClass(FindingAid.class);
+					eadSearchOptions.setContentClass(FindingAid.class);
 					EadService.updateEverything(eadSearchOptions, QueueAction.DELETE);
 				} catch (IOException e) {
 					LOGGER.error("unexpected error occurs: " + e.getMessage(), e);

@@ -558,7 +558,7 @@ public class EadService {
 
 
     private static Ead doesFileExist(UpFile upFile, String eadid, XmlType xmlType) {
-        return DAOFactory.instance().getEadDAO().getEadByEadid(xmlType.getClazz(), upFile.getAiId(), eadid);
+        return DAOFactory.instance().getEadDAO().getEadByEadid((Class<? extends Ead>) xmlType.getClazz(), upFile.getAiId(), eadid);
     }
 
 	private static void addToQueue(Ead ead, QueueAction queueAction, Properties preferences, UpFile upFile)
@@ -634,7 +634,7 @@ public class EadService {
 		QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		long itemsLeft = eadDAO.countEads(eadSearchOptions);
-		LOGGER.info(itemsLeft + " " + eadSearchOptions.getEadClass().getSimpleName() + " left to add to queue");
+		LOGGER.info(itemsLeft + " " + eadSearchOptions.getContentClass().getSimpleName() + " left to add to queue");
 		while (itemsLeft > 0) {
 			JpaUtil.beginDatabaseTransaction();
 			List<Ead> eads = eadDAO.getEads(eadSearchOptions);
@@ -652,7 +652,7 @@ public class EadService {
 			}
 			JpaUtil.commitDatabaseTransaction();
 			itemsLeft = eadDAO.countEads(eadSearchOptions);
-			LOGGER.info(itemsLeft + " " + eadSearchOptions.getEadClass().getSimpleName() + " left to add to queue");
+			LOGGER.info(itemsLeft + " " + eadSearchOptions.getContentClass().getSimpleName() + " left to add to queue");
 
 		}
 
@@ -661,7 +661,7 @@ public class EadService {
 	public static void deleteBatchFromQueue(List<Integer> ids, Integer aiId, XmlType xmlType) throws IOException {
 		EadSearchOptions eadSearchOptions = new EadSearchOptions();
 		eadSearchOptions.setPageSize(0);
-		eadSearchOptions.setEadClass(xmlType.getClazz());
+		eadSearchOptions.setContentClass(xmlType.getClazz());
 		eadSearchOptions.setArchivalInstitionId(aiId);
 		if (ids != null && ids.size() > 0) {
 			eadSearchOptions.setIds(ids);
@@ -696,7 +696,7 @@ public class EadService {
 			Properties preferences) throws IOException {
 		EadSearchOptions eadSearchOptions = new EadSearchOptions();
 		eadSearchOptions.setPageSize(0);
-		eadSearchOptions.setEadClass(xmlType.getClazz());
+		eadSearchOptions.setContentClass(xmlType.getClazz());
 		eadSearchOptions.setArchivalInstitionId(aiId);
 		if (ids != null && ids.size() > 0) {
 			eadSearchOptions.setIds(ids);

@@ -46,7 +46,7 @@ public class LinkingService {
 		if (hgOrSg instanceof HoldingsGuide || hgOrSg instanceof SourceGuide) {
 			EadSearchOptions eadSearchOptions = new EadSearchOptions();
 			eadSearchOptions.setArchivalInstitionId(hgOrSg.getAiId());
-			eadSearchOptions.setEadClass(FindingAid.class);
+			eadSearchOptions.setContentClass(FindingAid.class);
 			eadSearchOptions.setEadid(clevel.getHrefEadid());
 			eadSearchOptions.setLinkedWithEadClass(hgOrSg.getEadClass());
 			eadSearchOptions.setLinkedId(hgOrSg.getId());
@@ -102,7 +102,7 @@ public class LinkingService {
 
 	public static boolean addAllFindingaidsToHgOrSg(EadSearchOptions eadSearchOptions, Long ecId, Long parentCLevelId, String prefixMethod, String titleMethod) {
 		EadSearchOptions eadSearchOptionsNew = new EadSearchOptions();
-		eadSearchOptionsNew.setEadClass(FindingAid.class);		
+		eadSearchOptionsNew.setContentClass(FindingAid.class);		
 		eadSearchOptionsNew.setArchivalInstitionId(eadSearchOptions.getArchivalInstitionId());
 		eadSearchOptionsNew.setOrderByAscending(eadSearchOptions.isOrderByAscending());
 		eadSearchOptionsNew.setOrderByField(eadSearchOptions.getOrderByField());
@@ -252,7 +252,7 @@ public class LinkingService {
 	}
 	public static List<Ead> getAllFindingaidsToLinkToHgOrSg( EadSearchOptions eadSearchOptions, Long ecId) {
 		EadSearchOptions eadSearchOptionsNew = new EadSearchOptions();
-		eadSearchOptionsNew.setEadClass(FindingAid.class);		
+		eadSearchOptionsNew.setContentClass(FindingAid.class);		
 		eadSearchOptionsNew.setArchivalInstitionId(eadSearchOptions.getArchivalInstitionId());
 		eadSearchOptionsNew.setOrderByAscending(eadSearchOptions.isOrderByAscending());
 		eadSearchOptionsNew.setOrderByField(eadSearchOptions.getOrderByField());
@@ -260,7 +260,7 @@ public class LinkingService {
 	}
 	public static long countAllFindingaidsToLinkToHgOrSg( EadSearchOptions eadSearchOptions, Long ecId) {
 		EadSearchOptions eadSearchOptionsNew = new EadSearchOptions();
-		eadSearchOptionsNew.setEadClass(FindingAid.class);		
+		eadSearchOptionsNew.setContentClass(FindingAid.class);		
 		eadSearchOptionsNew.setArchivalInstitionId(eadSearchOptions.getArchivalInstitionId());
 		eadSearchOptionsNew.setOrderByAscending(eadSearchOptions.isOrderByAscending());
 		eadSearchOptionsNew.setOrderByField(eadSearchOptions.getOrderByField());

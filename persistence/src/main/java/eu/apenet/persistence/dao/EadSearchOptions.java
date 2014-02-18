@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
@@ -13,7 +14,7 @@ import eu.apenet.persistence.vo.ValidatedState;
 
 public class EadSearchOptions implements Serializable{
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 7670523402797168198L;
 	private int pageNumber = 1;
@@ -24,7 +25,7 @@ public class EadSearchOptions implements Serializable{
 	private String searchTermsField;
 	private String orderByField = "id";
 	private boolean orderByAscending = true;
-	private Class<? extends Ead> eadClass = FindingAid.class;
+	private Class<? extends AbstractContent> contentClass = FindingAid.class;
 	private Integer archivalInstitionId = null;
 	private Boolean published = null;
 	private Boolean converted = null;
@@ -38,7 +39,7 @@ public class EadSearchOptions implements Serializable{
 	private List<QueuingState> queuing = new ArrayList<QueuingState>();
 	private List<Integer> ids = new ArrayList<Integer>();
 	public EadSearchOptions(){
-		
+
 	}
 	public EadSearchOptions(EadSearchOptions eadSearchOptions){
 		this.pageNumber = eadSearchOptions.getPageNumber();
@@ -48,7 +49,7 @@ public class EadSearchOptions implements Serializable{
 		this.searchTermsField = eadSearchOptions.getSearchTermsField();
 		this.orderByField = eadSearchOptions.getOrderByField();
 		this.orderByAscending = eadSearchOptions.isOrderByAscending();
-		this.eadClass = eadSearchOptions.getEadClass();
+		this.contentClass = eadSearchOptions.getContentClass();
 		this.archivalInstitionId = eadSearchOptions.getArchivalInstitionId();
 		this.published = eadSearchOptions.getPublished();
 		this.converted = eadSearchOptions.getConverted();
@@ -74,11 +75,11 @@ public class EadSearchOptions implements Serializable{
 
 
 
-	public Class<? extends Ead> getEadClass() {
-		return eadClass;
+	public Class<? extends AbstractContent> getContentClass() {
+		return contentClass;
 	}
-	public void setEadClass(Class<? extends Ead> eadClass) {
-		this.eadClass = eadClass;
+	public void setContentClass(Class<? extends AbstractContent> contentClass) {
+		this.contentClass = contentClass;
 	}
 	public int getPageNumber() {
 		return pageNumber;
@@ -190,7 +191,7 @@ public class EadSearchOptions implements Serializable{
 		ids.add(id);
 	}
 
-	
+
 	public long getFirstResult() {
 		return firstResult;
 	}
@@ -247,5 +248,5 @@ public class EadSearchOptions implements Serializable{
 	public void setEadid(String eadid) {
 		this.eadid = eadid;
 	}
-	
+
 }

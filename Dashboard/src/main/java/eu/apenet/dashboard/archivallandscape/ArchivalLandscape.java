@@ -933,14 +933,14 @@ public class ArchivalLandscape extends ActionSupport{
         	EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 			EadSearchOptions eadSearchOptions = new EadSearchOptions();
 			eadSearchOptions.setArchivalInstitionId(ai.getAiId());
-			eadSearchOptions.setEadClass(FindingAid.class);
+			eadSearchOptions.setContentClass(FindingAid.class);
 			boolean hasEads = eadDAO.existEads(eadSearchOptions);
 			if (!hasEads) {
-				eadSearchOptions.setEadClass(HoldingsGuide.class);
+				eadSearchOptions.setContentClass(HoldingsGuide.class);
 				hasEads = hasEads || eadDAO.existEads(eadSearchOptions);
 			}
 			if (!hasEads) {
-				eadSearchOptions.setEadClass(SourceGuide.class);
+				eadSearchOptions.setContentClass(SourceGuide.class);
 				hasEads = hasEads || eadDAO.existEads(eadSearchOptions);
 			}
 			if(!hasEads){

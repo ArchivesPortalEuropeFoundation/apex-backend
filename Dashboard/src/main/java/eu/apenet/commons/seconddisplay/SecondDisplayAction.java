@@ -20,7 +20,7 @@ import eu.apenet.persistence.vo.Ead;
 
 public class SecondDisplayAction extends ActionSupport implements ServletRequestAware {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -9187683291100651008L;
 	protected final Logger logger = Logger.getLogger(this.getClass());
@@ -119,7 +119,7 @@ public class SecondDisplayAction extends ActionSupport implements ServletRequest
 				if (StringUtils.isNotBlank(aiId) && StringUtils.isNumeric(aiId)) {
 					if (StringUtils.isNotBlank(eadid)) {
 						ead = DAOFactory.instance().getEadDAO()
-								.getEadByEadid(xmlType.getClazz(), Integer.parseInt(aiId), eadid);
+								.getEadByEadid((Class<? extends Ead>) xmlType.getClazz(), Integer.parseInt(aiId), eadid);
 					}
 
 				} else if (StringUtils.isNotBlank(id) && StringUtils.isNumeric(id)) {

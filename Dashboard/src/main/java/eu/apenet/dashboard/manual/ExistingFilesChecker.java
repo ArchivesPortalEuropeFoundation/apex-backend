@@ -113,7 +113,7 @@ public class ExistingFilesChecker {
 			fileUnit.setFileName(aListXml.getFilename());
 			fileUnit.setFilePath(aListXml.getPath());
 			fileUnit.setFileType(aListXml.getFileType());
-			
+
 			//It is necessary to check if the XML file uploaded is a Finding Aid or a Holdings Guide
             try {
 			    eadType = extractAttributeFromEad(this.uploadedFilesPath + aListXml.getPath() + aListXml.getFilename(), "archdesc", "type", true);
@@ -132,7 +132,7 @@ public class ExistingFilesChecker {
 				//The XML is not an APEnet EAD
 				eadType = "Undefined";
 			}
-			
+
 			fileUnit.setEadType(eadType);
 			fileUnit.setEadid("");
 			fileUnit.setPermId(null);
@@ -162,7 +162,7 @@ public class ExistingFilesChecker {
 	// If the file doesn't exist, then it will store it in the System (file
 	// system and database)
 	public String checkFile(FileUnit fileUnit, XmlType xmlType) {
-        
+
 		Boolean dataBaseCommitError = false;
 		additionalErrors = "";
 		String result = "no exists";
@@ -182,16 +182,16 @@ public class ExistingFilesChecker {
 				// and remove it from /mnt/tmp/up/ folder
 				// It is necessary to remove the entry from up_file table
 				LOG.info("The file " + fileUnit.getFileName() + " is an XSL file and it will be stored in the repository");
-				
+
 				try {
 
 					this.deleteFileFromDDBB(fileUnit.getFileId());
-					
+
 				} catch (Exception e) {
 					dataBaseCommitError = true;
-					
+
 				}
-				
+
 				if (!dataBaseCommitError) {
 					try {
 						insertFileToTempFiles(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), this.repoPath
@@ -200,8 +200,8 @@ public class ExistingFilesChecker {
                                 + APEnetUtilities.FILESEPARATOR + fileUnit.getFileName(), fileUnit.getFilePath());
 					} catch (APEnetException e) {
 						LOG.error("The file " + fileUnit.getFileName() + " could not be removed from the up repository or stored in the temporal repository");
-					}	
-				}				
+					}
+				}
 			}
 
 		} else {
@@ -298,7 +298,7 @@ public class ExistingFilesChecker {
                         LOG.error("We could not erase the file from the temp database");
                     }
                 }
-                
+
                 return "no exists";
             } else if(xmlType == XmlType.EAD_SG || xmlType == XmlType.EAD_FA || xmlType == XmlType.EAD_HG) {
                 if(eadid.equals(STATUS_EMPTY)){ //eadid is empty
@@ -329,7 +329,7 @@ public class ExistingFilesChecker {
                 } else {
                     // It is necessary to check if the eadid is already in the Table for the current Archival Institution
                     Integer identifier;
-                    if((identifier = DAOFactory.instance().getEadDAO().isEadidUsed(eadid, archivalInstitutionId, xmlType.getClazz())) != null){
+                    if((identifier = DAOFactory.instance().getEadDAO().isEadidUsed(eadid, archivalInstitutionId, (Class<? extends Ead>) xmlType.getClazz())) != null){
                         // The EADID already exists
                         LOG.warn("Eadid '" + eadid + "' is already existing with id '" + identifier + "' in the table of '" + xmlType.getName() + "'");
                         fileUnit.setEadid(eadid);
@@ -405,7 +405,7 @@ public class ExistingFilesChecker {
             String[] pathElements = element.split("/");
             int lenghtPath = pathElements.length;
             int pointerPath = 0;
-            
+
             LOG.debug("Checking EAD file, looking for element " + element + ", and attribute " + ((attribute==null)?"null":attribute) + ", path begins with " + pathElements[0]);
             while (!abort && input.hasNext()) {
                 switch (input.getEventType()) {
@@ -429,7 +429,7 @@ public class ExistingFilesChecker {
                                     LOG.debug("Returning error");
                                     return "error";
                                 }
-                                
+
                                 //TODO: Here add the check of empty element by Patricia and call the function with extractAttributeFromEad([path], "eadid", null, true);
                                 if (input.getLocalName().equals("eadid"))
                                 {
@@ -476,7 +476,7 @@ public class ExistingFilesChecker {
                                 isInsidePath = false;
                         }
                         if(!isInsidePath && wasInsidePath)
-                            abort = true;    
+                            abort = true;
 						break;
                 }
                 if (input.hasNext())
@@ -519,7 +519,7 @@ public class ExistingFilesChecker {
         }
         return "ok";
 	}
-	
+
 	public String overwriteAnswer(FileUnit fileUnit){
 		// The user has decided to overwrite the file
 		if (fileUnit.getFileType().equals("xsl")) {
@@ -537,17 +537,17 @@ public class ExistingFilesChecker {
 			if (fileUnit.getEadType().equals(XmlType.EAD_FA.getName()) || fileUnit.getEadType().equals(XmlType.EAD_HG.getName()) || fileUnit.getEadType().equals(XmlType.EAD_SG.getName())) {
                 try {
                 	XmlType xmlType = XmlType.getType(fileUnit.getEadType());
-                	Ead eadToOverwrite = DAOFactory.instance().getEadDAO().getEadByEadid(xmlType.getClazz(), archivalInstitutionId, fileUnit.getEadid());
+                	Ead eadToOverwrite = DAOFactory.instance().getEadDAO().getEadByEadid((Class<? extends Ead>) xmlType.getClazz(), archivalInstitutionId, fileUnit.getEadid());
                 	EadService.overwrite(eadToOverwrite, upFileDao.findById(fileUnit.getFileId()));
                     //overwrite(fileUnit);
                 } catch (Exception e) {
                     return "error";
                 }
 			}
-		} 
+		}
 		return "ok";
 	}
-	
+
 	// This method overwrite (or not) a file in the Dashboard for a user
 	// If everything is ok then it returns "ok" but if it was a problem, then it
 	// returns "error"
@@ -581,7 +581,7 @@ public class ExistingFilesChecker {
 	            	isConverted = false;
 	            }
 				/**/
-	        	
+
                 if (eadType.equals(XmlType.EAD_FA.getName()) || eadType.equals(XmlType.EAD_HG.getName()) || eadType.equals(XmlType.EAD_SG.getName())) {
                     if (eadid.equals(STATUS_ERROR) || "".equals(eadid)) {
                         // It is necessary to remove the file from /mnt/tmp/up folder
@@ -607,7 +607,7 @@ public class ExistingFilesChecker {
                     } else {
                         // It is necessary to check if the eadid is already in Finding Aid Table for the current Archival Institution
                         XmlType xmlType = XmlType.getType(eadType);
-                        Integer eadIdentifier = DAOFactory.instance().getEadDAO().isEadidUsed(eadid, archivalInstitutionId, xmlType.getClazz());
+                        Integer eadIdentifier = DAOFactory.instance().getEadDAO().isEadidUsed(eadid, archivalInstitutionId, (Class<? extends Ead>) xmlType.getClazz());
                         if(eadIdentifier != null) {
                             // The EAD already exists
                             fileUnit.setEadid(eadid);
@@ -623,7 +623,7 @@ public class ExistingFilesChecker {
                             // It is necessary to move the file to /mnt/tmp/tmp/ and remove it from /mnt/tmp/up/ folder
                             // It is necessary to insert an entry in finding_aid table
                             // It is necessary to remove the entry from up_file table
-                        	
+
                             //Ead ead = instantiateCorrectEadType(xmlType);
                             try {
                             	EadService.create(xmlType, upFileDao.findById(fileUnit.getFileId()), archivalInstitutionId);
@@ -639,7 +639,7 @@ public class ExistingFilesChecker {
                         }
                     }
                 }
-			} else if (savechangesEADIDanswer.equals("KO")) { 
+			} else if (savechangesEADIDanswer.equals("KO")) {
 				//In this case, the change of the EADID has failed.
 				//Then, the file will be accessible to Change the EADID in next access to Dashboard.
 				LOG.error("The EAD " + fileUnit.getFileName() +" has not been changed correctly");
@@ -647,12 +647,12 @@ public class ExistingFilesChecker {
 					result= overwriteAnswer(fileUnit);
 				} else if (canceloverwriteanswer.equals("Cancel")){
 					result= cancelAnswer(fileUnit);
-				}				
+				}
 			}
 		}
         return result;
 	}
-		
+
 	public Boolean deleteFile(String path) throws IOException {
 		File srcFile = new File(path);
         FileUtils.forceDelete(srcFile);
@@ -696,7 +696,7 @@ public class ExistingFilesChecker {
 			throw new APEnetException("Error deleting file from up_file table", e);
 		}
 	}
-	
+
 
 
     private String changeEadidUsingDOM(FileUnit fileUnit, String neweadid) {

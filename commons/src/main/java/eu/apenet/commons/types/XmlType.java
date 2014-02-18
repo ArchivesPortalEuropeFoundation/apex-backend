@@ -1,7 +1,8 @@
 package eu.apenet.commons.types;
 
 import eu.apenet.commons.solr.SolrValues;
-import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.AbstractContent;
+import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
@@ -15,16 +16,16 @@ import eu.apenet.persistence.vo.SourceGuide;
 public enum XmlType {
     EAD_FA(0, "Finding Aid", FindingAid.class, "fa", SolrValues.FA_PREFIX),
     EAD_HG(1, "Holdings Guide", HoldingsGuide.class, "hg", SolrValues.HG_PREFIX),
-    EAC_CPF(2, "EAC-CPF", null, "ec", null),
+    EAC_CPF(2, "EAC-CPF", EacCpf.class, "ec", null),
     EAD_SG(3, "Source Guide", SourceGuide.class, "sg", SolrValues.SG_PREFIX);
 
     private final String resourceName;
     private final int identifier;
     private final String name;
-    private final Class<? extends Ead> clazz;
+    private final Class<? extends AbstractContent> clazz;
     private final String solrPrefix;
 
-    XmlType(int identifier, String name, Class<? extends Ead> clazz, String resourceName, String solrPrefix){
+    XmlType(int identifier, String name, Class<? extends AbstractContent> clazz, String resourceName, String solrPrefix){
         this.identifier = identifier;
         this.name = name;
         this.clazz = clazz;
@@ -40,10 +41,10 @@ public enum XmlType {
         return identifier;
     }
 
-    public Class<? extends Ead> getClazz() {
+    public Class<? extends AbstractContent> getClazz() {
         return clazz;
     }
-    public static XmlType getType(Class<? extends Ead> clazz){
+    public static XmlType getType(Class<? extends AbstractContent> clazz){
         for(XmlType type : XmlType.values()){
             if(type.getClazz() != null && type.getClazz().equals(clazz))
                 return type;
@@ -79,13 +80,15 @@ public enum XmlType {
         return null;
     }
 
-    public static XmlType getEadType(Ead ead){
-        if(ead instanceof FindingAid)
+    public static XmlType getEadType(AbstractContent content){
+        if(content instanceof FindingAid)
             return XmlType.EAD_FA;
-        if(ead instanceof HoldingsGuide)
+        if(content instanceof HoldingsGuide)
             return XmlType.EAD_HG;
-        if(ead instanceof SourceGuide)
+        if(content instanceof SourceGuide)
             return XmlType.EAD_SG;
+        if(content instanceof EacCpf)
+            return XmlType.EAC_CPF;
         return null;
     }
 

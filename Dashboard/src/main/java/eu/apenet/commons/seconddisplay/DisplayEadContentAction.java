@@ -11,13 +11,14 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
 
 import java.util.Locale;
 
 
 /**
- * 
+ *
  * This is a index page
  * @author bverhoef
  *
@@ -27,13 +28,13 @@ public class DisplayEadContentAction extends ActionSupport implements ServletReq
     private static final Logger LOG = Logger.getLogger(DisplayEadContentAction.class);
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 5126707833256227612L;
 
 	private String fileId;
 	private String xmlTypeId;
-	
+
 	private String xml;
 	private String contextPath;
 
@@ -58,7 +59,7 @@ public class DisplayEadContentAction extends ActionSupport implements ServletReq
     public String execute(){
         Integer fileIdInteger = new Integer(fileId);
         XmlType xmlType = XmlType.getType(new Integer(xmlTypeId));
-        EadContent eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFileId(fileIdInteger, xmlType.getClazz());
+        EadContent eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFileId(fileIdInteger, (Class<? extends Ead>) xmlType.getClazz());
         request.setAttribute("eadContent", eadContent);
 
         if(request.getParameter("print") != null) {
@@ -100,10 +101,10 @@ public class DisplayEadContentAction extends ActionSupport implements ServletReq
 	@Override
 	public void setServletRequest(HttpServletRequest request) {
 		this.request = request;
-		
+
 	}
 
- 
 
- 
+
+
 }

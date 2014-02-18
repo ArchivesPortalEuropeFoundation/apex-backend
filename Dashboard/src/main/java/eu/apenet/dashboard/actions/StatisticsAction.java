@@ -104,21 +104,21 @@ public class StatisticsAction extends AbstractAction {
 			searchOptions.setArchivalInstitionId(archivalInstitution.getAiId());
 			searchOptions.setPublished(true);
 			// holdings guides
-			searchOptions.setEadClass(HoldingsGuide.class);
+			searchOptions.setContentClass(HoldingsGuide.class);
 			institutionStatistics.holdingsguide = convertLong(eadDAO.countEads(searchOptions));
 			if (institutionStatistics.holdingsguide > 0){
 				institutionStatistics.daos = convertLong(eadDAO.countDaos(searchOptions));
 				institutionStatistics.units = convertLong(eadDAO.countUnits(searchOptions));
 			}
 			// source guides
-			searchOptions.setEadClass(SourceGuide.class);
+			searchOptions.setContentClass(SourceGuide.class);
 			institutionStatistics.sourceguide = convertLong(eadDAO.countEads(searchOptions));
 			if (institutionStatistics.sourceguide > 0){
 				institutionStatistics.daos += convertLong(eadDAO.countDaos(searchOptions));
 				institutionStatistics.units += convertLong(eadDAO.countUnits(searchOptions));
 			}
 			// findingaids
-			searchOptions.setEadClass(FindingAid.class);
+			searchOptions.setContentClass(FindingAid.class);
 			institutionStatistics.findingaids = convertLong(eadDAO.countEads(searchOptions));
 			if (institutionStatistics.findingaids > 0){
 				institutionStatistics.daos = convertLong(eadDAO.countDaos(searchOptions));

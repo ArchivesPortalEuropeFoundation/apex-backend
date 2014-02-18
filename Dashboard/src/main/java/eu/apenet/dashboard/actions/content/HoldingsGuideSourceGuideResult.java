@@ -14,12 +14,12 @@ public class HoldingsGuideSourceGuideResult extends EadResult {
 	public HoldingsGuideSourceGuideResult(Ead ead) {
 		super(ead);
 		if (this.isPublished() || this.isDynamic()){
-			Class<? extends Ead> clazz = XmlType.getEadType(ead).getClazz();
+			Class<? extends Ead> clazz = (Class<? extends Ead>) XmlType.getEadType(ead).getClazz();
 			CLevelDAO clevelDAO = DAOFactory.instance().getCLevelDAO();
 			HgSgFaRelationDAO hgSgFaRelationDAO = DAOFactory.instance().getHgSgFaRelationDAO();
 			possibleFindingAidsLinked = clevelDAO.countPossibleLinkedCLevels(ead.getId(), clazz);
 			findingAidsLinkedAndPublished = hgSgFaRelationDAO.countHgSgFaRelations(ead.getId(), clazz, true);
-			findingAidsLinked = hgSgFaRelationDAO.countHgSgFaRelations(ead.getId(), clazz, null);            		
+			findingAidsLinked = hgSgFaRelationDAO.countHgSgFaRelations(ead.getId(), clazz, null);
 		}
   	}
 	public long getPossibleFindingAidsLinked() {
