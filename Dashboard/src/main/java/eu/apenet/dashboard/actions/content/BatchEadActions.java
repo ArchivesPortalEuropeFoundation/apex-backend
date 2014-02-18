@@ -5,7 +5,7 @@ import java.util.Properties;
 
 import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
 import eu.apenet.dashboard.services.ead.EadService;
-import eu.apenet.persistence.dao.EadSearchOptions;
+import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.vo.QueueAction;
 
 public class BatchEadActions extends AbstractEadActions {
@@ -93,7 +93,7 @@ public class BatchEadActions extends AbstractEadActions {
 				return ERROR;
 			}
 			else if (SEARCHED_ITEMS.equals(batchItems)) {
-				EadSearchOptions eadSearchOptions = (EadSearchOptions) getServletRequest().getSession().getAttribute(
+				ContentSearchOptions eadSearchOptions = (ContentSearchOptions) getServletRequest().getSession().getAttribute(
 						ContentManagerAction.EAD_SEARCH_OPTIONS);
 				EadService.deleteBatchFromQueue(eadSearchOptions);
 				return SUCCESS;
@@ -128,7 +128,7 @@ public class BatchEadActions extends AbstractEadActions {
 				addActionError(getText("content.message.noSelected"));
 				return ERROR;
 			}else if (SEARCHED_ITEMS.equals(batchItems)) {
-				EadSearchOptions eadSearchOptions = (EadSearchOptions) getServletRequest().getSession().getAttribute(
+				ContentSearchOptions eadSearchOptions = (ContentSearchOptions) getServletRequest().getSession().getAttribute(
 						ContentManagerAction.EAD_SEARCH_OPTIONS);
 				EadService.addBatchToQueue(eadSearchOptions, queueAction, properties);
 				return SUCCESS;

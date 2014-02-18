@@ -8,7 +8,7 @@ import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.EadDAO;
-import eu.apenet.persistence.dao.EadSearchOptions;
+import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
@@ -143,7 +143,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 	public String input() throws Exception {
         prepareJspLists();
         EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-		EadSearchOptions eadSearchOptions = initFromExistingEadSearchOptions();
+		ContentSearchOptions eadSearchOptions = initFromExistingEadSearchOptions();
 		if (eadSearchOptions == null) {
 			eadSearchOptions = createNewEadSearchOptions();
 			getServletRequest().getSession().setAttribute(EAD_SEARCH_OPTIONS, eadSearchOptions);
@@ -156,7 +156,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 		 * statistics for total converted files
 		 */
 		if (eadSearchOptions.getConverted() == null || eadSearchOptions.getConverted() == true) {
-			EadSearchOptions convertedSearchOptions = new EadSearchOptions(eadSearchOptions);
+			ContentSearchOptions convertedSearchOptions = new ContentSearchOptions(eadSearchOptions);
 			convertedSearchOptions.setConverted(true);
 			results.setTotalConvertedFiles(eadDAO.countEads(convertedSearchOptions));
 		}
@@ -165,7 +165,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 		 */
 		if (eadSearchOptions.getValidated().size() == 0
 				|| eadSearchOptions.getValidated().contains(ValidatedState.VALIDATED)) {
-			EadSearchOptions validatedSearchOptions = new EadSearchOptions(eadSearchOptions);
+			ContentSearchOptions validatedSearchOptions = new ContentSearchOptions(eadSearchOptions);
 			if (validatedSearchOptions.getValidated().size() == 0)
 				validatedSearchOptions.setValidated(ValidatedState.VALIDATED);
 			results.setTotalValidatedFiles(eadDAO.countEads(validatedSearchOptions));
@@ -174,7 +174,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 		 * statistics for total published units
 		 */
 		if (eadSearchOptions.getPublished() == null || eadSearchOptions.getPublished() == true) {
-			EadSearchOptions publishedSearchOptions = new EadSearchOptions(eadSearchOptions);
+			ContentSearchOptions publishedSearchOptions = new ContentSearchOptions(eadSearchOptions);
 			publishedSearchOptions.setPublished(true);
 			results.setTotalPublishedUnits(eadDAO.countUnits(publishedSearchOptions));
 		}
@@ -184,7 +184,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 			 */
 			if (eadSearchOptions.getEuropeana().size() == 0
 					|| eadSearchOptions.getEuropeana().contains(EuropeanaState.DELIVERED)) {
-				EadSearchOptions europeanaSearchOptions = new EadSearchOptions(eadSearchOptions);
+				ContentSearchOptions europeanaSearchOptions = new ContentSearchOptions(eadSearchOptions);
 				europeanaSearchOptions.setEuropeana(EuropeanaState.DELIVERED);
 				results.setTotalChosDeliveredToEuropeana(eadDAO.countChos(europeanaSearchOptions));
 			}
@@ -193,7 +193,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 			 */
 			if (eadSearchOptions.getEuropeana().size() == 0
 					|| eadSearchOptions.getEuropeana().contains(EuropeanaState.CONVERTED)) {
-				EadSearchOptions europeanaSearchOptions = new EadSearchOptions(eadSearchOptions);
+				ContentSearchOptions europeanaSearchOptions = new ContentSearchOptions(eadSearchOptions);
 				europeanaSearchOptions.getEuropeana().clear();
 				europeanaSearchOptions.getEuropeana().add(EuropeanaState.CONVERTED);
 				europeanaSearchOptions.getEuropeana().add(EuropeanaState.DELIVERED);
@@ -202,7 +202,7 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 
 		}
 
-		EadSearchOptions dynamicEadSearchOptions = new EadSearchOptions();
+		ContentSearchOptions dynamicEadSearchOptions = new ContentSearchOptions();
 		dynamicEadSearchOptions.setPublished(false);
 		dynamicEadSearchOptions.setDynamic(true);
 		dynamicEadSearchOptions.setContentClass(HoldingsGuide.class);
@@ -216,9 +216,9 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 
 	@Override
 	public String execute() throws Exception {
-		EadSearchOptions eadSearchOptions = null;
+		ContentSearchOptions eadSearchOptions = null;
 		if (updateSearchResults){
-			eadSearchOptions = (EadSearchOptions) getServletRequest().getSession().getAttribute(EAD_SEARCH_OPTIONS);
+			eadSearchOptions = (ContentSearchOptions) getServletRequest().getSession().getAttribute(EAD_SEARCH_OPTIONS);
 			if (eadSearchOptions == null){
 				eadSearchOptions = createNewEadSearchOptions();
 			}
@@ -233,8 +233,8 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 		return input();
 	}
 
-	private EadSearchOptions initFromExistingEadSearchOptions() {
-		EadSearchOptions eadSearchOptions = (EadSearchOptions) getServletRequest().getSession().getAttribute(EAD_SEARCH_OPTIONS);
+	private ContentSearchOptions initFromExistingEadSearchOptions() {
+		ContentSearchOptions eadSearchOptions = (ContentSearchOptions) getServletRequest().getSession().getAttribute(EAD_SEARCH_OPTIONS);
 		if (eadSearchOptions != null) {
 			if (eadSearchOptions.getConverted() != null) {
 				convertedStatus = new String[] { eadSearchOptions.getConverted().toString() };
@@ -277,8 +277,8 @@ public class ContentManagerAction extends AbstractInstitutionAction{
 		return eadSearchOptions;
 	}
 
-	private EadSearchOptions createNewEadSearchOptions() {
-		EadSearchOptions eadSearchOptions = new EadSearchOptions();
+	private ContentSearchOptions createNewEadSearchOptions() {
+		ContentSearchOptions eadSearchOptions = new ContentSearchOptions();
 		eadSearchOptions.setPageNumber(pageNumber);
 		eadSearchOptions.setPageSize(resultPerPage);
 		eadSearchOptions.setOrderByAscending(orderByAscending);

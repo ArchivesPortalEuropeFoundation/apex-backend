@@ -25,7 +25,7 @@ import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dpt.utils.ead2ese.EseConfig;
 import eu.apenet.dpt.utils.ead2ese.EseFileUtils;
 import eu.apenet.dpt.utils.util.Ead2EseInformation;
-import eu.apenet.persistence.dao.EadSearchOptions;
+import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FindingAid;
@@ -230,7 +230,7 @@ public class ConvertAction extends AbstractInstitutionAction {
 				}
 
 			} else if (BatchEadActions.SEARCHED_ITEMS.equals(batchItems)) {
-				EadSearchOptions eadSearchOptions = (EadSearchOptions)getServletRequest().getSession()
+				ContentSearchOptions eadSearchOptions = (ContentSearchOptions)getServletRequest().getSession()
 						.getAttribute(ContentManagerAction.EAD_SEARCH_OPTIONS);
 				EadService.addBatchToQueue(eadSearchOptions, QueueAction.CONVERT_TO_ESE_EDM,config.getProperties());
 				return SUCCESS;

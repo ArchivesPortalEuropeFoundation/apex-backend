@@ -46,7 +46,7 @@ import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.EadDAO;
-import eu.apenet.persistence.dao.EadSearchOptions;
+import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.LangDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AiAlternativeName;
@@ -931,7 +931,7 @@ public class ArchivalLandscape extends ActionSupport{
 		String resultRemoveAI = "";
         try {
         	EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-			EadSearchOptions eadSearchOptions = new EadSearchOptions();
+			ContentSearchOptions eadSearchOptions = new ContentSearchOptions();
 			eadSearchOptions.setArchivalInstitionId(ai.getAiId());
 			eadSearchOptions.setContentClass(FindingAid.class);
 			boolean hasEads = eadDAO.existEads(eadSearchOptions);

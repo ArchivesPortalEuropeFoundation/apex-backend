@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead.EadService;
-import eu.apenet.persistence.dao.EadSearchOptions;
+import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.QueueAction;
@@ -32,7 +32,7 @@ public class MaintenanceTask extends Thread {
 
 		LOGGER.info("Start maintenance mode");
 		try {
-			EadSearchOptions eadSearchOptions = new EadSearchOptions();
+			ContentSearchOptions eadSearchOptions = new ContentSearchOptions();
 			eadSearchOptions.setPageSize(MAX_AMOUNT);
 			if (REPUBLISH_ALL.equals(APEnetUtilities.getDashboardConfig().getMaintenanceAction())) {
 				LOGGER.info("Execute command: " + REPUBLISH_ALL);

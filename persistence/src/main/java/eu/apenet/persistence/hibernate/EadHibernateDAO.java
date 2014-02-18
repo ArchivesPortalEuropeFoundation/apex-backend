@@ -17,7 +17,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import eu.apenet.persistence.dao.EadDAO;
-import eu.apenet.persistence.dao.EadSearchOptions;
+import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
@@ -46,7 +46,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 	}
 
 	@Override
-	public List<Ead> getEads(EadSearchOptions eadSearchOptions) {
+	public List<Ead> getEads(ContentSearchOptions eadSearchOptions) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Ead> cq = criteriaBuilder.createQuery(Ead.class);
 		Root<? extends Ead> from = (Root<? extends Ead>) cq.from(eadSearchOptions.getContentClass());
@@ -77,7 +77,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 	}
 
 	@Override
-	public boolean existEads(EadSearchOptions eadSearchOptions) {
+	public boolean existEads(ContentSearchOptions eadSearchOptions) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Ead> cq = criteriaBuilder.createQuery(Ead.class);
 		Root<? extends Ead> from = (Root<? extends Ead>) cq.from(eadSearchOptions.getContentClass());
@@ -90,7 +90,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 	}
 
 	@Override
-	public Long countEads(EadSearchOptions eadSearchOptions) {
+	public Long countEads(ContentSearchOptions eadSearchOptions) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
 		Root<? extends Ead> from = (Root<? extends Ead>) cq.from(eadSearchOptions.getContentClass());
@@ -101,7 +101,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 	}
 
 	@Override
-	public Long countUnits(EadSearchOptions eadSearchOptions) {
+	public Long countUnits(ContentSearchOptions eadSearchOptions) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
 		Root<? extends Ead> from = (Root<? extends Ead>) cq.from(eadSearchOptions.getContentClass());
@@ -113,7 +113,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 	}
 
 	@Override
-	public Long countDaos(EadSearchOptions eadSearchOptions) {
+	public Long countDaos(ContentSearchOptions eadSearchOptions) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
 		Root<? extends Ead> from = (Root<? extends Ead>) cq.from(eadSearchOptions.getContentClass());
@@ -124,7 +124,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		return getEntityManager().createQuery(cq).getSingleResult();
 	}
 	@Override
-	public Long countChos(EadSearchOptions eadSearchOptions) {
+	public Long countChos(ContentSearchOptions eadSearchOptions) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
 		Root<? extends Ead> from = (Root<? extends Ead>) cq.from(eadSearchOptions.getContentClass());
@@ -134,7 +134,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 
 		return getEntityManager().createQuery(cq).getSingleResult();
 	}
-	private Predicate buildWhere(Root<? extends Ead> from, CriteriaQuery<?> cq, EadSearchOptions eadSearchOptions) {
+	private Predicate buildWhere(Root<? extends Ead> from, CriteriaQuery<?> cq, ContentSearchOptions eadSearchOptions) {
 		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		List<Predicate> whereClause = new ArrayList<Predicate>();
 		if (eadSearchOptions.getIds() != null && eadSearchOptions.getIds().size() > 0) {

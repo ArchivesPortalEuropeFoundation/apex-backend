@@ -34,7 +34,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
 import eu.apenet.persistence.dao.EadDAO;
-import eu.apenet.persistence.dao.EadSearchOptions;
+import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.SentMailRegisterDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -147,7 +147,7 @@ public class ContentUtils {
 			return hasEads;
 		} else {
 			EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-			EadSearchOptions eadSearchOptions = new EadSearchOptions();
+			ContentSearchOptions eadSearchOptions = new ContentSearchOptions();
 			eadSearchOptions.setArchivalInstitionId(archivalInstitution.getAiId());
 			eadSearchOptions.setPublishedToAll(true);
 			eadSearchOptions.setContentClass(FindingAid.class);
@@ -182,7 +182,7 @@ public class ContentUtils {
 			return hasEads;
 		} else {
 			EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-			EadSearchOptions eadSearchOptions = new EadSearchOptions();
+			ContentSearchOptions eadSearchOptions = new ContentSearchOptions();
 			eadSearchOptions.setArchivalInstitionId(archivalInstitution.getAiId());
 			eadSearchOptions.setContentClass(FindingAid.class);
 			boolean hasEads = eadDAO.existEads(eadSearchOptions);
@@ -206,7 +206,7 @@ public class ContentUtils {
 
 		try {
 			EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-			EadSearchOptions eadSearchOptions = new EadSearchOptions();
+			ContentSearchOptions eadSearchOptions = new ContentSearchOptions();
 			eadSearchOptions.setArchivalInstitionId(ai.getAiId());
 			eadSearchOptions.setContentClass(FindingAid.class);
 			boolean hasEads = eadDAO.existEads(eadSearchOptions);
@@ -385,7 +385,7 @@ public class ContentUtils {
 				updateContainsSearchableItemsInNewAiGroups(ai);
 			} else {
 				EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-				EadSearchOptions eadSearchOptions = new EadSearchOptions();
+				ContentSearchOptions eadSearchOptions = new ContentSearchOptions();
 				eadSearchOptions.setArchivalInstitionId(ai.getAiId());
 				eadSearchOptions.setPublished(true);
 				eadSearchOptions.setContentClass(FindingAid.class);

@@ -12,7 +12,7 @@ import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.ValidatedState;
 
-public class EadSearchOptions implements Serializable{
+public class ContentSearchOptions implements Serializable{
 	/**
 	 *
 	 */
@@ -38,10 +38,10 @@ public class EadSearchOptions implements Serializable{
 	private List<EuropeanaState> europeana = new ArrayList<EuropeanaState>();
 	private List<QueuingState> queuing = new ArrayList<QueuingState>();
 	private List<Integer> ids = new ArrayList<Integer>();
-	public EadSearchOptions(){
+	public ContentSearchOptions(){
 
 	}
-	public EadSearchOptions(EadSearchOptions eadSearchOptions){
+	public ContentSearchOptions(ContentSearchOptions eadSearchOptions){
 		this.pageNumber = eadSearchOptions.getPageNumber();
 		this.pageSize = eadSearchOptions.getPageSize();
 		this.firstResult = eadSearchOptions.getFirstResult();

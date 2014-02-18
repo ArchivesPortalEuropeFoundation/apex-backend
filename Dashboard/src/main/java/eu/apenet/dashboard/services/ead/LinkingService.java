@@ -26,7 +26,7 @@ import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.ead.xml.EADNamespaceContext;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.persistence.dao.CLevelDAO;
-import eu.apenet.persistence.dao.EadSearchOptions;
+import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
@@ -44,7 +44,7 @@ public class LinkingService {
     public static final String TITLE_TITLEPROPER = "titleproper";
 	public static boolean linkWithoutCommit(Ead hgOrSg, CLevel clevel) {
 		if (hgOrSg instanceof HoldingsGuide || hgOrSg instanceof SourceGuide) {
-			EadSearchOptions eadSearchOptions = new EadSearchOptions();
+			ContentSearchOptions eadSearchOptions = new ContentSearchOptions();
 			eadSearchOptions.setArchivalInstitionId(hgOrSg.getAiId());
 			eadSearchOptions.setContentClass(FindingAid.class);
 			eadSearchOptions.setEadid(clevel.getHrefEadid());
@@ -100,29 +100,29 @@ public class LinkingService {
 	}
 
 
-	public static boolean addAllFindingaidsToHgOrSg(EadSearchOptions eadSearchOptions, Long ecId, Long parentCLevelId, String prefixMethod, String titleMethod) {
-		EadSearchOptions eadSearchOptionsNew = new EadSearchOptions();
+	public static boolean addAllFindingaidsToHgOrSg(ContentSearchOptions eadSearchOptions, Long ecId, Long parentCLevelId, String prefixMethod, String titleMethod) {
+		ContentSearchOptions eadSearchOptionsNew = new ContentSearchOptions();
 		eadSearchOptionsNew.setContentClass(FindingAid.class);		
 		eadSearchOptionsNew.setArchivalInstitionId(eadSearchOptions.getArchivalInstitionId());
 		eadSearchOptionsNew.setOrderByAscending(eadSearchOptions.isOrderByAscending());
 		eadSearchOptionsNew.setOrderByField(eadSearchOptions.getOrderByField());
 		return addFindingaidsToHgOrSgInternal(eadSearchOptionsNew,ecId, parentCLevelId, prefixMethod, titleMethod);
 	}
-	public static boolean addFindingaidsToHgOrSg(EadSearchOptions eadSearchOptions, Integer id,  Long ecId, Long parentCLevelId, String prefixMethod, String titleMethod) {
-		EadSearchOptions eadSearchOptionsNew = new EadSearchOptions(eadSearchOptions);
+	public static boolean addFindingaidsToHgOrSg(ContentSearchOptions eadSearchOptions, Integer id,  Long ecId, Long parentCLevelId, String prefixMethod, String titleMethod) {
+		ContentSearchOptions eadSearchOptionsNew = new ContentSearchOptions(eadSearchOptions);
 		eadSearchOptionsNew.setId(id);
 		return addFindingaidsToHgOrSgInternal(eadSearchOptionsNew, ecId, parentCLevelId, prefixMethod, titleMethod);
 	}
-	public static boolean addFindingaidsToHgOrSg(EadSearchOptions eadSearchOptions, List<Integer> ids,  Long ecId, Long parentCLevelId, String prefixMethod, String titleMethod) {
-		EadSearchOptions eadSearchOptionsNew = new EadSearchOptions(eadSearchOptions);
+	public static boolean addFindingaidsToHgOrSg(ContentSearchOptions eadSearchOptions, List<Integer> ids,  Long ecId, Long parentCLevelId, String prefixMethod, String titleMethod) {
+		ContentSearchOptions eadSearchOptionsNew = new ContentSearchOptions(eadSearchOptions);
 		eadSearchOptionsNew.setIds(ids);
 		return addFindingaidsToHgOrSgInternal(eadSearchOptionsNew, ecId, parentCLevelId, prefixMethod, titleMethod);
 	}
-	public static boolean addFindingaidsToHgOrSg(EadSearchOptions eadSearchOptions, Long ecId, Long parentCLevelId, String prefixMethod, String titleMethod) {
-		return addFindingaidsToHgOrSgInternal(new EadSearchOptions(eadSearchOptions), ecId, parentCLevelId, prefixMethod, titleMethod);
+	public static boolean addFindingaidsToHgOrSg(ContentSearchOptions eadSearchOptions, Long ecId, Long parentCLevelId, String prefixMethod, String titleMethod) {
+		return addFindingaidsToHgOrSgInternal(new ContentSearchOptions(eadSearchOptions), ecId, parentCLevelId, prefixMethod, titleMethod);
 	}
 
-	private static boolean addFindingaidsToHgOrSgInternal(EadSearchOptions eadSearchOptions, Long ecId, Long parentCLevelId, String prefixMethod, String titleMethod) {
+	private static boolean addFindingaidsToHgOrSgInternal(ContentSearchOptions eadSearchOptions, Long ecId, Long parentCLevelId, String prefixMethod, String titleMethod) {
 		EadContent eadContent = DAOFactory.instance().getEadContentDAO().findById(ecId);
 		Ead hgOrSg = eadContent.getEad();
 		SecurityContext.get().checkAuthorized(hgOrSg);
@@ -198,37 +198,37 @@ public class LinkingService {
 			return false;
 		}
 	}
-	public static List<Ead> getFindingaidsToLinkToHgOrSg(EadSearchOptions eadSearchOptions, Long ecId) {
-		return getFindingaidsToLinkToHgOrSgInternal(new EadSearchOptions(eadSearchOptions), ecId);
+	public static List<Ead> getFindingaidsToLinkToHgOrSg(ContentSearchOptions eadSearchOptions, Long ecId) {
+		return getFindingaidsToLinkToHgOrSgInternal(new ContentSearchOptions(eadSearchOptions), ecId);
 	}
-	public static long countFindingaidsToLinkToHgOrSg(EadSearchOptions eadSearchOptions, Long ecId) {
-		return countFindingaidsToLinkToHgOrSgInternal(new EadSearchOptions(eadSearchOptions), ecId);
+	public static long countFindingaidsToLinkToHgOrSg(ContentSearchOptions eadSearchOptions, Long ecId) {
+		return countFindingaidsToLinkToHgOrSgInternal(new ContentSearchOptions(eadSearchOptions), ecId);
 
 	}
 	
-	public static List<Ead> getFindingaidsToLinkToHgOrSg(EadSearchOptions eadSearchOptions, List<Integer> ids, Long ecId) {
-		EadSearchOptions eadSearchOptionsNew = new EadSearchOptions(eadSearchOptions);
+	public static List<Ead> getFindingaidsToLinkToHgOrSg(ContentSearchOptions eadSearchOptions, List<Integer> ids, Long ecId) {
+		ContentSearchOptions eadSearchOptionsNew = new ContentSearchOptions(eadSearchOptions);
 		eadSearchOptionsNew.setIds(ids);
 		return getFindingaidsToLinkToHgOrSgInternal(eadSearchOptionsNew, ecId);
 	}
-	public static long countFindingaidsToLinkToHgOrSg(EadSearchOptions eadSearchOptions, List<Integer> ids, Long ecId) {
-		EadSearchOptions eadSearchOptionsNew = new EadSearchOptions(eadSearchOptions);
+	public static long countFindingaidsToLinkToHgOrSg(ContentSearchOptions eadSearchOptions, List<Integer> ids, Long ecId) {
+		ContentSearchOptions eadSearchOptionsNew = new ContentSearchOptions(eadSearchOptions);
 		eadSearchOptionsNew.setIds(ids);
 		return countFindingaidsToLinkToHgOrSgInternal(eadSearchOptionsNew, ecId);
 
 	}
-	public static List<Ead> getFindingaidsToLinkToHgOrSg(EadSearchOptions eadSearchOptions, Integer id, Long ecId) {
-		EadSearchOptions eadSearchOptionsNew = new EadSearchOptions(eadSearchOptions);
+	public static List<Ead> getFindingaidsToLinkToHgOrSg(ContentSearchOptions eadSearchOptions, Integer id, Long ecId) {
+		ContentSearchOptions eadSearchOptionsNew = new ContentSearchOptions(eadSearchOptions);
 		eadSearchOptionsNew.setId(id);
 		return getFindingaidsToLinkToHgOrSgInternal(eadSearchOptionsNew, ecId);
 	}
-	public static long countFindingaidsToLinkToHgOrSg(EadSearchOptions eadSearchOptions, Integer id, Long ecId) {
-		EadSearchOptions eadSearchOptionsNew = new EadSearchOptions(eadSearchOptions);
+	public static long countFindingaidsToLinkToHgOrSg(ContentSearchOptions eadSearchOptions, Integer id, Long ecId) {
+		ContentSearchOptions eadSearchOptionsNew = new ContentSearchOptions(eadSearchOptions);
 		eadSearchOptionsNew.setId(id);
 		return countFindingaidsToLinkToHgOrSgInternal(eadSearchOptionsNew, ecId);
 
 	}
-	private static List<Ead> getFindingaidsToLinkToHgOrSgInternal(EadSearchOptions eadSearchOptions, Long ecId) {
+	private static List<Ead> getFindingaidsToLinkToHgOrSgInternal(ContentSearchOptions eadSearchOptions, Long ecId) {
 		EadContent eadContent = DAOFactory.instance().getEadContentDAO().findById(ecId);
 		Ead hgOrSg = eadContent.getEad();
 		SecurityContext.get().checkAuthorized(hgOrSg);
@@ -239,7 +239,7 @@ public class LinkingService {
 		eadSearchOptions.setPageNumber(1);
 		return DAOFactory.instance().getEadDAO().getEads(eadSearchOptions);
 	}
-	private static long countFindingaidsToLinkToHgOrSgInternal(EadSearchOptions eadSearchOptions, Long ecId) {
+	private static long countFindingaidsToLinkToHgOrSgInternal(ContentSearchOptions eadSearchOptions, Long ecId) {
 		EadContent eadContent = DAOFactory.instance().getEadContentDAO().findById(ecId);
 		Ead hgOrSg = eadContent.getEad();
 		SecurityContext.get().checkAuthorized(hgOrSg);
@@ -250,16 +250,16 @@ public class LinkingService {
 		return DAOFactory.instance().getEadDAO().countEads(eadSearchOptions);
 
 	}
-	public static List<Ead> getAllFindingaidsToLinkToHgOrSg( EadSearchOptions eadSearchOptions, Long ecId) {
-		EadSearchOptions eadSearchOptionsNew = new EadSearchOptions();
+	public static List<Ead> getAllFindingaidsToLinkToHgOrSg( ContentSearchOptions eadSearchOptions, Long ecId) {
+		ContentSearchOptions eadSearchOptionsNew = new ContentSearchOptions();
 		eadSearchOptionsNew.setContentClass(FindingAid.class);		
 		eadSearchOptionsNew.setArchivalInstitionId(eadSearchOptions.getArchivalInstitionId());
 		eadSearchOptionsNew.setOrderByAscending(eadSearchOptions.isOrderByAscending());
 		eadSearchOptionsNew.setOrderByField(eadSearchOptions.getOrderByField());
 		return getFindingaidsToLinkToHgOrSgInternal(eadSearchOptionsNew, ecId);
 	}
-	public static long countAllFindingaidsToLinkToHgOrSg( EadSearchOptions eadSearchOptions, Long ecId) {
-		EadSearchOptions eadSearchOptionsNew = new EadSearchOptions();
+	public static long countAllFindingaidsToLinkToHgOrSg( ContentSearchOptions eadSearchOptions, Long ecId) {
+		ContentSearchOptions eadSearchOptionsNew = new ContentSearchOptions();
 		eadSearchOptionsNew.setContentClass(FindingAid.class);		
 		eadSearchOptionsNew.setArchivalInstitionId(eadSearchOptions.getArchivalInstitionId());
 		eadSearchOptionsNew.setOrderByAscending(eadSearchOptions.isOrderByAscending());

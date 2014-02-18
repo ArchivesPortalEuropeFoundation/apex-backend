@@ -18,7 +18,7 @@ import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
 import eu.apenet.dashboard.services.ead.LinkingService;
 import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.dao.EadDAO;
-import eu.apenet.persistence.dao.EadSearchOptions;
+import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
@@ -49,7 +49,7 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 		titleMethodSet.add(new SelectItem(LinkingService.TITLE_TITLEPROPER, getText("dashboard.hgcreation.titleproper")));
 
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-		EadSearchOptions eadSearchOptions = new EadSearchOptions();
+		ContentSearchOptions eadSearchOptions = new ContentSearchOptions();
         eadSearchOptions.setArchivalInstitionId(getAiId());
 		eadSearchOptions.setPublished(false);
 		eadSearchOptions.setDynamic(true);
@@ -102,7 +102,7 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 		if (StringUtils.isNotBlank(parentCLevelId)){
 			parentCLevelIdLong = Long.parseLong(parentCLevelId);
 		}
-		EadSearchOptions eadSearchOptions = (EadSearchOptions)getServletRequest().getSession()
+		ContentSearchOptions eadSearchOptions = (ContentSearchOptions)getServletRequest().getSession()
 				.getAttribute(ContentManagerAction.EAD_SEARCH_OPTIONS);
 		if (StringUtils.isBlank(batchItems)){
 			LinkingService.addFindingaidsToHgOrSg(eadSearchOptions,Integer.parseInt(id), ecIdLong, parentCLevelIdLong, selectPrefixMethod, titleMethod);
@@ -134,7 +134,7 @@ public class LinkToHgSgAction  extends AbstractInstitutionAction{
 		Long ecIdLong = Long.parseLong(ecId);
 		List<Ead> findingAids = null;
 		long totalNumberOfFindingAids = 0;
-		EadSearchOptions eadSearchOptions = (EadSearchOptions)getServletRequest().getSession()
+		ContentSearchOptions eadSearchOptions = (ContentSearchOptions)getServletRequest().getSession()
 				.getAttribute(ContentManagerAction.EAD_SEARCH_OPTIONS);
 		if (StringUtils.isBlank(batchItems)){
 			findingAids = LinkingService.getFindingaidsToLinkToHgOrSg(eadSearchOptions,Integer.parseInt(id), ecIdLong);

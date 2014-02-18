@@ -19,7 +19,7 @@ import eu.apenet.commons.ResourceBundleSource;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.commons.utils.XMLUtils;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.dao.EadSearchOptions;
+import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
@@ -877,7 +877,7 @@ public class APEnetEAG {
 
 		
 			
-			EadSearchOptions eadSearchOptions = new EadSearchOptions();
+			ContentSearchOptions eadSearchOptions = new ContentSearchOptions();
 			eadSearchOptions.setContentClass(HoldingsGuide.class);
 			eadSearchOptions.setArchivalInstitionId(aiId);
 			eadSearchOptions.setPublished(true);

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.apenet.commons.types.XmlType;
-import eu.apenet.persistence.dao.EadSearchOptions;
+import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.vo.Ead;
 
 public class ContentManagerResults {
@@ -18,10 +18,10 @@ public class ContentManagerResults {
 	private Long totalChosDeliveredToEuropeana = 0l;
 	private boolean hasDynamicHg = false;
 	private boolean hasDynamicSg = false;
-	private EadSearchOptions eadSearchOptions;
+	private ContentSearchOptions eadSearchOptions;
 	private XmlType xmlType;
 	
-	public ContentManagerResults (EadSearchOptions eadSearchOptions){
+	public ContentManagerResults (ContentSearchOptions eadSearchOptions){
 		this.eadSearchOptions = eadSearchOptions;
 		xmlType = XmlType.getType(eadSearchOptions.getContentClass());
 	}
@@ -45,11 +45,11 @@ public class ContentManagerResults {
 		}
 	}
 
-	public EadSearchOptions getEadSearchOptions() {
+	public ContentSearchOptions getEadSearchOptions() {
 		return eadSearchOptions;
 	}
 
-	public void setEadSearchOptions(EadSearchOptions eadSearchOptions) {
+	public void setEadSearchOptions(ContentSearchOptions eadSearchOptions) {
 		this.eadSearchOptions = eadSearchOptions;
 	}
 

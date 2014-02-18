@@ -19,7 +19,7 @@ import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.CountryDAO;
 import eu.apenet.persistence.dao.EadDAO;
-import eu.apenet.persistence.dao.EadSearchOptions;
+import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Country;
@@ -100,7 +100,7 @@ public class StatisticsAction extends AbstractAction {
 			institutionStatistics.repositoryCode = archivalInstitution.getRepositorycode();
 			EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 			//
-			EadSearchOptions searchOptions = new EadSearchOptions();
+			ContentSearchOptions searchOptions = new ContentSearchOptions();
 			searchOptions.setArchivalInstitionId(archivalInstitution.getAiId());
 			searchOptions.setPublished(true);
 			// holdings guides

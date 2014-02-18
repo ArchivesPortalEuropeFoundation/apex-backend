@@ -10,17 +10,17 @@ public interface EadDAO extends GenericDAO<Ead, Integer> {
 
 	public Integer isEadidUsed(String eadid, Integer aiId, Class<? extends Ead> clazz);
 
-	public List<Ead> getEads(EadSearchOptions eadSearchOptions);
+	public List<Ead> getEads(ContentSearchOptions eadSearchOptions);
 
-	public Long countEads(EadSearchOptions eadSearchOptions);
+	public Long countEads(ContentSearchOptions eadSearchOptions);
 
-	public boolean existEads(EadSearchOptions eadSearchOptions);
+	public boolean existEads(ContentSearchOptions eadSearchOptions);
 
-	public Long countUnits(EadSearchOptions eadSearchOptions);
+	public Long countUnits(ContentSearchOptions eadSearchOptions);
 
-	public Long countDaos(EadSearchOptions eadSearchOptions);
+	public Long countDaos(ContentSearchOptions eadSearchOptions);
 	
-	public Long countChos(EadSearchOptions eadSearchOptions);
+	public Long countChos(ContentSearchOptions eadSearchOptions);
 
 	List<Ead> getEadsByAiId(Class<? extends Ead> clazz, Integer aiId);
 

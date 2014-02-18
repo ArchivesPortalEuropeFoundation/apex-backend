@@ -5,7 +5,7 @@ import java.util.List;
 
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.dao.EadSearchOptions;
+import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.LangDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AiAlternativeName;
@@ -207,7 +207,7 @@ public class ArchivalInstitutionUnit implements Comparable<ArchivalInstitutionUn
 
 	//This method obtains all the holdings guide indexed related to an Archival Institution
 	public static List<HoldingsGuideUnit> getHoldingsGuide (Integer aiId){
-		EadSearchOptions eadSearchOptions = new EadSearchOptions();
+		ContentSearchOptions eadSearchOptions = new ContentSearchOptions();
 		eadSearchOptions.setArchivalInstitionId(aiId);
 		eadSearchOptions.setPublished(true);
 		eadSearchOptions.setContentClass(HoldingsGuide.class);

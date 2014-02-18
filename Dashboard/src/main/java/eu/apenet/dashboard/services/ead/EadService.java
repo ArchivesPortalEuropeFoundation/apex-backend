@@ -21,7 +21,7 @@ import eu.apenet.dashboard.services.ead.xml.XmlEadParser;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.dpt.utils.ead2ese.EseConfig;
 import eu.apenet.persistence.dao.EadDAO;
-import eu.apenet.persistence.dao.EadSearchOptions;
+import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.EseDAO;
 import eu.apenet.persistence.dao.EseStateDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
@@ -583,7 +583,7 @@ public class EadService {
 
 
 
-	public static void addBatchToQueue(EadSearchOptions eadSearchOptions, QueueAction queueAction,
+	public static void addBatchToQueue(ContentSearchOptions eadSearchOptions, QueueAction queueAction,
 			Properties preferences) throws IOException {
 		SecurityContext.get().checkAuthorized(eadSearchOptions.getArchivalInstitionId());
 		QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
@@ -630,7 +630,7 @@ public class EadService {
 		JpaUtil.commitDatabaseTransaction();
 	}
 
-	public static void updateEverything(EadSearchOptions eadSearchOptions, QueueAction queueAction) throws IOException {
+	public static void updateEverything(ContentSearchOptions eadSearchOptions, QueueAction queueAction) throws IOException {
 		QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		long itemsLeft = eadDAO.countEads(eadSearchOptions);
@@ -659,7 +659,7 @@ public class EadService {
 	}
 
 	public static void deleteBatchFromQueue(List<Integer> ids, Integer aiId, XmlType xmlType) throws IOException {
-		EadSearchOptions eadSearchOptions = new EadSearchOptions();
+		ContentSearchOptions eadSearchOptions = new ContentSearchOptions();
 		eadSearchOptions.setPageSize(0);
 		eadSearchOptions.setContentClass(xmlType.getClazz());
 		eadSearchOptions.setArchivalInstitionId(aiId);
@@ -670,7 +670,7 @@ public class EadService {
 
 	}
 
-	public static void deleteBatchFromQueue(EadSearchOptions eadSearchOptions) throws IOException {
+	public static void deleteBatchFromQueue(ContentSearchOptions eadSearchOptions) throws IOException {
 		SecurityContext.get().checkAuthorized(eadSearchOptions.getArchivalInstitionId());
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		eadSearchOptions.setPageSize(0);
@@ -694,7 +694,7 @@ public class EadService {
 
 	public static void addBatchToQueue(List<Integer> ids, Integer aiId, XmlType xmlType, QueueAction queueAction,
 			Properties preferences) throws IOException {
-		EadSearchOptions eadSearchOptions = new EadSearchOptions();
+		ContentSearchOptions eadSearchOptions = new ContentSearchOptions();
 		eadSearchOptions.setPageSize(0);
 		eadSearchOptions.setContentClass(xmlType.getClazz());
 		eadSearchOptions.setArchivalInstitionId(aiId);
