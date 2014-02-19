@@ -283,16 +283,6 @@
         </action>
 
 
-        <action name="displayCpfInformation" class="eu.apenet.dashboard.tree.DisplayCpfContentAction">
-            <result name="success">/jsp/eadcontent/cpfdetails.jsp</result>
-        </action>
-
-        <action name="hasCpfReady" class="eu.apenet.dashboard.tree.DisplayCpfContentAction" method="hasCpfReady">
-            <result type="stream">
-                <param name="inputName">outputStream</param>
-                <param name="contentType">application/json</param>
-            </result>
-        </action>
 
 
         <action name="download" class="eu.apenet.dashboard.actions.content.EadActions" method="download">
