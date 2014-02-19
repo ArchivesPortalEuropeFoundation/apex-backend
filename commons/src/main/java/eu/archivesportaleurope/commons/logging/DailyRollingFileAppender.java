@@ -153,9 +153,9 @@ public class DailyRollingFileAppender extends FileAppender {
   */
   private String scheduledFilename;
   /**
-  There is one backup file by default.
+  There is 7 backup file by default.
    */
-  protected int  maxBackupIndex  = 14;
+  protected int  maxBackupIndex  = 7;
   /**
      The next time we estimate a rollover should occur. */
   private long nextCheck = System.currentTimeMillis () - 1;
@@ -495,9 +495,10 @@ class FileDateComparator implements Comparator<File> {
 	}
 	private String getName(File file){
 		String fileName = file.getName();
+		fileName = fileName.substring(filePrefix.length());
 		if (fileName.endsWith(GZ)){
 			fileName = fileName.substring(0, fileName.lastIndexOf(GZ));
-			fileName = fileName.substring(filePrefix.length());
+			
 		}
 		return fileName;
 	}
