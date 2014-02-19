@@ -38,37 +38,39 @@ public class ContentSearchOptions implements Serializable{
 	private List<EuropeanaState> europeana = new ArrayList<EuropeanaState>();
 	private List<QueuingState> queuing = new ArrayList<QueuingState>();
 	private List<Integer> ids = new ArrayList<Integer>();
-	public ContentSearchOptions(){
+
+        public ContentSearchOptions(){
 
 	}
-	public ContentSearchOptions(ContentSearchOptions eadSearchOptions){
-		this.pageNumber = eadSearchOptions.getPageNumber();
-		this.pageSize = eadSearchOptions.getPageSize();
-		this.firstResult = eadSearchOptions.getFirstResult();
-		this.searchTerms = eadSearchOptions.getSearchTerms();
-		this.searchTermsField = eadSearchOptions.getSearchTermsField();
-		this.orderByField = eadSearchOptions.getOrderByField();
-		this.orderByAscending = eadSearchOptions.isOrderByAscending();
-		this.contentClass = eadSearchOptions.getContentClass();
-		this.archivalInstitionId = eadSearchOptions.getArchivalInstitionId();
-		this.published = eadSearchOptions.getPublished();
-		this.converted = eadSearchOptions.getConverted();
-		this.publishedToAll = eadSearchOptions.getPublishedToAll();
-		this.linked = eadSearchOptions.getLinked();
-		this.linkedId = eadSearchOptions.getLinkedId();
-		this.linkedWithEadClass = eadSearchOptions.getLinkedWithEadClass();
-		this.eadid = eadSearchOptions.getEadid();
-		this.dynamic = eadSearchOptions.getDynamic();
-		for (ValidatedState validatedState: eadSearchOptions.getValidated()){
+
+        public ContentSearchOptions(ContentSearchOptions contentSearchOptions){
+		this.pageNumber = contentSearchOptions.getPageNumber();
+		this.pageSize = contentSearchOptions.getPageSize();
+		this.firstResult = contentSearchOptions.getFirstResult();
+		this.searchTerms = contentSearchOptions.getSearchTerms();
+		this.searchTermsField = contentSearchOptions.getSearchTermsField();
+		this.orderByField = contentSearchOptions.getOrderByField();
+		this.orderByAscending = contentSearchOptions.isOrderByAscending();
+		this.contentClass = contentSearchOptions.getContentClass();
+		this.archivalInstitionId = contentSearchOptions.getArchivalInstitionId();
+		this.published = contentSearchOptions.getPublished();
+		this.converted = contentSearchOptions.getConverted();
+		this.publishedToAll = contentSearchOptions.getPublishedToAll();
+		this.linked = contentSearchOptions.getLinked();
+		this.linkedId = contentSearchOptions.getLinkedId();
+		this.linkedWithEadClass = contentSearchOptions.getLinkedWithEadClass();
+		this.eadid = contentSearchOptions.getEadid();
+		this.dynamic = contentSearchOptions.getDynamic();
+		for (ValidatedState validatedState: contentSearchOptions.getValidated()){
 			validated.add(validatedState);
 		}
-		for (EuropeanaState europeanaState: eadSearchOptions.getEuropeana()){
+		for (EuropeanaState europeanaState: contentSearchOptions.getEuropeana()){
 			europeana.add(europeanaState);
 		}
-		for (QueuingState queuingState: eadSearchOptions.getQueuing()){
+		for (QueuingState queuingState: contentSearchOptions.getQueuing()){
 			queuing.add(queuingState);
 		}
-		for (Integer id: eadSearchOptions.getIds()){
+		for (Integer id: contentSearchOptions.getIds()){
 			ids.add(id);
 		}
 	}
