@@ -190,22 +190,20 @@ public class HarvesterConverter extends AbstractParser {
 
         List<CLevel> cLevelsFonds = dbUtil.retrieveAllFonds(eadContent.getEcId());
 
-
-        LinkedHashMap<String, String> idsWithTypes;
         LinkedHashMap<String, Long> idsWithUnitids;
         LOG.info("Size of cLevelsFonds: " + cLevelsFonds.size());
         for(CLevel cLevel : cLevelsFonds) {
-            idsWithTypes = new LinkedHashMap<String, String>();
+            LOG.info("====");
             idsWithUnitids = new LinkedHashMap<String, Long>();
             //Create ONE FA per fonds!!!
             List<CLevel> childrenOfFonds = dbUtil.retrieveChildrenOfFonds(cLevel.getUnitid());
             LOG.info("Size of childrenOfFonds: " + childrenOfFonds.size());
             for(CLevel child : childrenOfFonds) {
-                idsWithTypes.put(child.getUnitid(), child.getLevel());
                 idsWithUnitids.put(child.getUnitid(), child.getClId());
             }
-            dbToEad(cLevel.getUnitid(), eadContent, idsWithTypes, idsWithUnitids, mainagencycode);
+            dbToEad(cLevel.getUnitid(), eadContent, idsWithUnitids, mainagencycode);
         }
+        LOG.info("====");
         return cLevelsFonds.size();
     }
 
@@ -230,8 +228,7 @@ public class HarvesterConverter extends AbstractParser {
 //        return dbToEad(eadContent, idsWithTypes, idsWithUnitids, mainagencycode);
 //    }
 
-    public int dbToEad(String fondsUnitid, EadContent eadContent, LinkedHashMap<String, String> unitidsWithLevel, LinkedHashMap<String, Long> unitidsWithId, String mainagencycode) throws Exception {
-        LOG.info("unitidsWithId map size: " + unitidsWithId.size());
+    public int dbToEad(String fondsUnitid, EadContent eadContent, LinkedHashMap<String, Long> unitidsWithId, String mainagencycode) throws Exception {
 //        printList_simple(unitidsWithId);
         unitidsWithId = sortHashMapByKey(unitidsWithId);
 //        LOG.info("idsWithType map size after sorting: " + unitidsWithLevel.size());
