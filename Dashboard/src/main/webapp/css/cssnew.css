@@ -1192,3 +1192,7 @@ td.actions {
 td.actions input {
     font-size: 11px;
 }
+
+#processingInfoTable{
+	vertical-align: middle;
+}
