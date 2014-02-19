@@ -12,9 +12,6 @@
 
             <table id="choosetypeTable" class="tablePadding">
                 <tr>
-                    <td colspan="2" style="text-align: center;"><b>Note:</b> Loaded files will not show genealogies/biographies at the moment<br /><hr /></td>
-                </tr>
-                <tr>
                     <td>Do you want</td>
                     <td><s:radio id="useMode" name="useMode" list="useModeList" listKey="key" listValue="value" onchange="loadUseModeContext();"/></td>
                 </tr>
