@@ -43,7 +43,7 @@ public class HarvesterTask implements Runnable {
 				HarvesterDaemon.setHarvesterProcessing(true);
 				processHarvester(endTime);
 			} catch (Throwable e) {
-				LOGGER.error("Stopping processing for a while: " + e.getMessage(), e);
+				LOGGER.error("Stopping processing for a while: " + APEnetUtilities.generateThrowableLog(e));
 				try {
 					JpaUtil.rollbackDatabaseTransaction();
 				} catch (Exception de) {
