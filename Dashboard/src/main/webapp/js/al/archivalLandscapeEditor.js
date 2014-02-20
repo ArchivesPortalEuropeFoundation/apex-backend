@@ -17,7 +17,6 @@ function loadUpPart(context,titleDT,countryId){
    			},
    			onLazyRead: function(node){
 				hideAll();
-				createColorboxForProcessing();
    				node.appendAjax({
    					url: context+"/getALTree.action",
    					data: {nodeId: node.data.key}
@@ -25,6 +24,7 @@ function loadUpPart(context,titleDT,countryId){
    				cleanInformation();
    			},
    			onActivate: function(node) {
+				hideAll();
    				$("#divForm").show();
 				loadDownPart(node);
 				cleanInformation();
@@ -129,6 +129,7 @@ function alternativeNameSelected(){
 }
 
 function loadDownPart(node){
+	createColorboxForProcessing();
 	$.post("getALActions.action",{nodeKey:node.data.key},function(e){
 		hideAll();
 		$("#alternativeNames").remove();
