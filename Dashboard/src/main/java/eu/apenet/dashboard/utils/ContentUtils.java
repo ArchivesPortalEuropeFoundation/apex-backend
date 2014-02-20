@@ -299,10 +299,10 @@ public class ContentUtils {
 			}
 			return result;
 		} catch (IOException e) {
-			LOGGER.error("The file " + filePath + " could not be removed: " + e.getMessage(), e);
+			LOGGER.error("The file " + filePath + " could not be removed: " + APEnetUtilities.generateThrowableLog(e));
 			return Action.ERROR;
 		} catch (Exception ex) {
-			LOGGER.error("The institution " + ai.getAiId() + " could not be removed from database ", ex);
+			LOGGER.error("The institution " + ai.getAiId() + " could not be removed from database " + APEnetUtilities.generateThrowableLog(ex));
 			return Action.ERROR;
 		}
 	}
