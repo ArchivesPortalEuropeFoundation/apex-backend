@@ -1,5 +1,6 @@
 package eu.apenet.dashboard.actions.content;
 
+import eu.apenet.dashboard.actions.content.ead.EadContentManagerResults;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

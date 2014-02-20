@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package eu.apenet.dashboard.actions.content.eaccpf;
 
-package eu.apenet.dashboard.actions.content;
-
+import eu.apenet.dashboard.actions.content.ContentManagerResults;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.vo.EacCpf;
 import java.util.ArrayList;
@@ -15,7 +15,8 @@ import java.util.List;
  *
  * @author papp
  */
-public class EacCpfContentManagerResults extends ContentManagerResults{
+public class EacCpfContentManagerResults extends ContentManagerResults {
+
     private List<EacCpfResult> eacCpfResults = new ArrayList<EacCpfResult>();
 
     public EacCpfContentManagerResults(ContentSearchOptions eadSearchOptions) {

@@ -19,7 +19,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
-import eu.apenet.dashboard.actions.content.BatchEadActions;
+import eu.apenet.dashboard.actions.content.ead.BatchEadActions;
 import eu.apenet.dashboard.actions.content.ContentManagerAction;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dpt.utils.ead2ese.EseConfig;

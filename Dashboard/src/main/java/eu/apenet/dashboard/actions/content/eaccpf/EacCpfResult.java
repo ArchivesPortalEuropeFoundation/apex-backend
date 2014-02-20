@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.apenet.dashboard.actions.content;
+package eu.apenet.dashboard.actions.content.eaccpf;
 
-import static eu.apenet.dashboard.actions.content.TypeResult.MAX_TITLE;
+import eu.apenet.dashboard.actions.content.TypeResult;
 import eu.apenet.persistence.vo.*;
 
 /**

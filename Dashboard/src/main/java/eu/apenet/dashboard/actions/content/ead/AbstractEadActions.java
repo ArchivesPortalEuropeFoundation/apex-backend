@@ -1,4 +1,4 @@
-package eu.apenet.dashboard.actions.content;
+package eu.apenet.dashboard.actions.content.ead;
 
 import java.util.Properties;
 

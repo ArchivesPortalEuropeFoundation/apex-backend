@@ -1,4 +1,4 @@
-package eu.apenet.dashboard.actions.content;
+package eu.apenet.dashboard.actions.content.ead;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -15,6 +15,7 @@ import org.xml.sax.SAXException;
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
 import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
+import eu.apenet.dashboard.actions.content.ContentManagerAction;
 import eu.apenet.dashboard.services.ead.LinkingService;
 import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.dao.EadDAO;

@@ -1,9 +1,10 @@
-package eu.apenet.dashboard.actions.content;
+package eu.apenet.dashboard.actions.content.ead;
 
 import java.util.List;
 import java.util.Properties;
 
 import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
+import eu.apenet.dashboard.actions.content.ContentManagerAction;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.vo.QueueAction;

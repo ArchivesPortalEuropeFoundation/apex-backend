@@ -1,9 +1,10 @@
-package eu.apenet.dashboard.actions.content;
+package eu.apenet.dashboard.actions.content.ead;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import eu.apenet.commons.types.XmlType;
+import eu.apenet.dashboard.actions.content.ContentManagerResults;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.vo.Ead;
 

@@ -1,5 +1,6 @@
-package eu.apenet.dashboard.actions.content;
+package eu.apenet.dashboard.actions.content.ead;
 
+import eu.apenet.dashboard.actions.content.TypeResult;
 import eu.apenet.persistence.vo.*;
 
 public class EadResult extends TypeResult {
