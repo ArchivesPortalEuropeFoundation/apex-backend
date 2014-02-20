@@ -16,6 +16,8 @@ function loadUpPart(context,titleDT,countryId){
    				data: {couId: countryId}
    			},
    			onLazyRead: function(node){
+				hideAll();
+				createColorboxForProcessing();
    				node.appendAjax({
    					url: context+"/getALTree.action",
    					data: {nodeId: node.data.key}
@@ -177,6 +179,7 @@ function loadDownPart(node){
 			$("#moveUpDiv").attr("onclick","moveUp();");
 			$("#moveDownDiv").attr("onclick","moveDown();");
 		}
+		deleteColorboxForProcessing();
 	});
 }
 
