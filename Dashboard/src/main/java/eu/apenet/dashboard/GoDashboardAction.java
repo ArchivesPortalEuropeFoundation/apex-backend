@@ -1,5 +1,10 @@
 package eu.apenet.dashboard;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -64,6 +69,20 @@ public class GoDashboardAction extends AbstractAction {
 			log.debug("Reading archival institutions from DDBB");
 			boolean countryManager = SecurityContext.get().isCountryManager();
 			this.archives = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionsNoGroups(countryId,(countryManager)?null:SecurityContext.get().getPartnerId());
+			if(this.archives!=null && this.archives.size()>0){
+				//parse for characters like &amp; which now are shown not like final character, only html characters
+				Iterator<ArchivalInstitution> it = this.archives.iterator();
+				List<ArchivalInstitution> newList = new LinkedList<ArchivalInstitution>();
+				while(it.hasNext()){
+					ArchivalInstitution tempArchivalInstitution = it.next();
+					String aiName = tempArchivalInstitution.getAiname();
+					aiName = URLDecoder.decode(aiName,"UTF-8");
+					aiName = aiName.replaceAll("&amp;","&");
+					tempArchivalInstitution.setAiname(aiName);
+					newList.add(tempArchivalInstitution);
+				}
+				this.archives = newList;
+			}
 			return SUCCESS;
 		}
     	return ERROR;
