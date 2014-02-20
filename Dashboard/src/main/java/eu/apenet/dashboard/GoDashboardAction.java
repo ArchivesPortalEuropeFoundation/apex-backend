@@ -1,8 +1,6 @@
 package eu.apenet.dashboard;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
