@@ -1679,8 +1679,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 								alternativeLangText = r.getAttributeValue(i).trim()
 								    .replaceAll("[\\s+&&[^\\n]]+"," ") //1. reduce all non-newline whitespaces to a unique space
 								    .replaceAll("(?m)^\\s+|\\s$","") //2. remove spaces from start or end of the lines
-								    .replaceAll("\\n+"," ") //3. remove all newlines, compress it in a unique line
-									.replaceAll("&","&amp;");
+								    .replaceAll("\\n+"," "); //3. remove all newlines, compress it in a unique line
 							}
 						}
 					}
@@ -1754,8 +1753,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 						alternativeNameText += r.getText().trim()
 						    .replaceAll("[\\s+&&[^\\n]]+"," ")//1. reduce all non-newline whitespaces to a unique space
 						    .replaceAll("(?m)^\\s+|\\s$","")//2. remove spaces from start or end of the lines
-						    .replaceAll("\\n+"," ")//3. remove all newlines, compress it in a unique line
-							.replaceAll("&","&amp;");
+						    .replaceAll("\\n+"," ");//3. remove all newlines, compress it in a unique line
 					}
 			}
 		}
@@ -1880,8 +1878,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 							if(r.getAttributeLocalName(i)!=null && r.getAttributeLocalName(i).trim().equals("type")){
 								uLang = r.getAttributeValue(i).trim().replaceAll("[\\s+&&[^\\n]]+"," ") //1. reduce all non-newline whitespaces to a unique space
 								    .replaceAll("(?m)^\\s+|\\s$","") //2. remove spaces from start or end of the lines
-								    .replaceAll("\\n+"," ") //3. remove all newlines, compress it in a unique line
-									.replaceAll("&","&amp;");
+								    .replaceAll("\\n+"," "); //3. remove all newlines, compress it in a unique line
 							}
 						}
 					}
@@ -1959,8 +1956,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					if(!r.isWhiteSpace() && unittitle!=null && archivalInstitution!=null){
 						unittitle += r.getText().trim().replaceAll("[\\s+&&[^\\n]]+"," ")//1. reduce all non-newline whitespaces to a unique space
 						    .replaceAll("(?m)^\\s+|\\s$","")//2. remove spaces from start or end of the lines
-						    .replaceAll("\\n+"," ")//3. remove all newlines, compress it in a unique line
-							.replaceAll("&","&amp;");
+						    .replaceAll("\\n+"," "); //3. remove all newlines, compress it in a unique line
 					}
 			}
 		}
@@ -2187,15 +2183,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 				didNode.append("<unittitle");
 				didNode.append(" encodinganalog=\""+AL_GLOBAL_ENCODINGANALOG+"\"");
 				didNode.append(" type=\""+key.toLowerCase()+"\">");
-				String aName = mainAlternativeName.get(key);
-				//related to issue #1079
-				if(aName.contains("&amp;")){
-					aName = aName.replaceAll("&amp;","&");
-				}
-				if(aName.contains("&")){
-					aName = aName.replaceAll("&","&amp;");
-				}
-				didNode.append(aName);
+				didNode.append(mainAlternativeName.get(key));
 				didNode.append("</unittitle>");
 			}
 			if(alternativeNames!=null && alternativeNames.size()>0){
@@ -2209,15 +2197,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					didNode.append("<unittitle");
 					didNode.append(" encodinganalog=\""+AL_GLOBAL_ENCODINGANALOG+"\"");
 					didNode.append(" type=\""+key.toLowerCase()+"\">");
-					String aName = alternativeNames.get(key);
-					//same case like main alternative name, see comment over here (mainAlternativeName)
-					if(aName.contains("&amp;")){
-						aName = aName.replaceAll("&amp;","&");
-					}
-					if(aName.contains("&")){
-						aName = aName.replaceAll("&","&amp;");
-					}
-					didNode.append(aName);
+					didNode.append(alternativeNames.get(key));
 					didNode.append("</unittitle>");
 				}
 //				didNode.append("\n"+tabs+"\t");
