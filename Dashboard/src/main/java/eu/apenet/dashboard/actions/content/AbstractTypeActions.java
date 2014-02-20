@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package eu.apenet.dashboard.actions.content;
 
 import eu.apenet.commons.types.XmlType;
@@ -18,11 +17,13 @@ import org.apache.log4j.Logger;
  * @author papp
  */
 public abstract class AbstractTypeActions extends AbstractInstitutionAction {
+
     protected static final String CONVERT_VALIDATE_PUBLISH = "convert_validate_publish";
     protected static final String CONVERT_VALIDATE = "convert_validate";
     protected static final String DELETE = "delete";
     protected static final String UNPUBLISH = "unpublish";
     protected static final String PUBLISH = "publish";
+    protected static final String VALIDATE = "validate";
     protected static final String CONVERT = "convert";
     protected static final String DELETE_ESE_EDM = "deleteEseEdm";
     protected static final String DELETE_FROM_QUEUE = "deleteFromQueue";
