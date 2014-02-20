@@ -27,16 +27,21 @@ public class EacCpf extends AbstractContent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(name = "name_entry")
+    private String nameEntry;
+    @Column(name = "upload_date")
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date uploadDate;
+    @Column(name = "path_cpf")
+    private String path;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "um_id")
+    private UploadMethod uploadMethod;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ai_id")
     private ArchivalInstitution archivalInstitution;
     @Column(name = "ai_id", updatable = false, insertable = false)
     private Integer aiId;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "um_id")
-    private UploadMethod uploadMethod;
-    private String title;
-    private String path;
     private boolean published = false;
     private boolean converted = false;
     private ValidatedState validated = ValidatedState.NOT_VALIDATED;
@@ -45,13 +50,10 @@ public class EacCpf extends AbstractContent {
     private long resourceRelations = 0l;
     private long functionRelations = 0l;
     private QueuingState queuing = QueuingState.NO;
-    @Column(name = "upload_date")
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date uploadDate;
     @Column(name = "publish_date")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date publishDate;
-    @Column(name = "identifier", nullable = false)
+    @Column(name = "cpf_id", nullable = false)
     private String identifier;
 
     @OneToMany(mappedBy = "eacCpf")
@@ -98,13 +100,13 @@ public class EacCpf extends AbstractContent {
     }
 
     @Override
-    public String getTitle() {
-        return title;
+    public String getNameEntry() {
+        return nameEntry;
     }
 
     @Override
-    public void setTitle(String title) {
-        this.title = title;
+    public void setNameEntry(String nameEntry) {
+        this.nameEntry = nameEntry;
     }
 
     @Override
