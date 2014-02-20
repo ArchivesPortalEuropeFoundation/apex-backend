@@ -731,9 +731,11 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			String subDir = APEnetUtilities.getConfig().getRepoDirPath();
 			while(itPaths.hasNext()){
 				String path = itPaths.next();
-				log.debug("Delete operation was ok, deleting _old directory...");
-				FileUtils.deleteDirectory(new File(subDir+path));
-				log.debug("Done!! Finished.");
+				if (path != null && path.length() > 0) {
+					log.debug("Delete operation was ok, deleting _old directory...");
+					FileUtils.deleteDirectory(new File(subDir+path));
+					log.debug("Done!! Finished.");
+				}
 			}
 		}
 	}
@@ -744,9 +746,11 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			String subDir = APEnetUtilities.getConfig().getRepoDirPath();
 			while(itPaths.hasNext()){
 				String path = itPaths.next();
-				log.debug("Rollback detected, reverting _old to original path...");
-				FileUtils.moveDirectory(new File(subDir+path),new File(subDir+path.substring(0,path.length()-"_old".length())));
-				log.debug("Revert done!");
+				if (path != null && path.length() > 0) {
+					log.debug("Rollback detected, reverting _old to original path...");
+					FileUtils.moveDirectory(new File(subDir+path),new File(subDir+path.substring(0,path.length()-"_old".length())));
+					log.debug("Revert done!");
+				}
 			}
 		}
 	}

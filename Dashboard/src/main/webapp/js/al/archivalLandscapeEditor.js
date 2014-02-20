@@ -16,6 +16,7 @@ function loadUpPart(context,titleDT,countryId){
    				data: {couId: countryId}
    			},
    			onLazyRead: function(node){
+				hideAll();
    				node.appendAjax({
    					url: context+"/getALTree.action",
    					data: {nodeId: node.data.key}
@@ -23,6 +24,7 @@ function loadUpPart(context,titleDT,countryId){
    				cleanInformation();
    			},
    			onActivate: function(node) {
+				hideAll();
    				$("#divForm").show();
 				loadDownPart(node);
 				cleanInformation();
@@ -127,6 +129,7 @@ function alternativeNameSelected(){
 }
 
 function loadDownPart(node){
+	createColorboxForProcessing();
 	$.post("getALActions.action",{nodeKey:node.data.key},function(e){
 		hideAll();
 		$("#alternativeNames").remove();
@@ -177,6 +180,7 @@ function loadDownPart(node){
 			$("#moveUpDiv").attr("onclick","moveUp();");
 			$("#moveDownDiv").attr("onclick","moveDown();");
 		}
+		deleteColorboxForProcessing();
 	});
 }
 
@@ -209,6 +213,8 @@ function appendNode(){
 }
 
 function deleteNode(){
+	// Show colorbox.
+	createColorboxForProcessing();
 	var dynatree = $("#archivalLandscapeEditorUp").dynatree("getTree");
 	var activeNode = dynatree.getActiveNode();
 	var parent = activeNode.getParent();
@@ -229,6 +235,8 @@ function deleteNode(){
 				cleanInformation();
 			}
 			if(!error){
+				// Close colorbox.
+				deleteColorboxForProcessing();
 				dynatree.reload();
 				displayNode(parent,message,true);
 				//showInformation(message);
@@ -505,4 +513,49 @@ function showInformation(information,error){
 
 function cleanInformation(){
 	$("#informationDiv").fadeOut("slow");
+}
+
+/**
+ * Function to display the processing information.
+ */
+function createColorboxForProcessing() {
+	// Create colorbox.
+	$.colorbox({html:function(){
+			var htmlCode = $("#processingInfoDiv").html();
+			return htmlCode;
+		},
+		overlayClose:false, // Prevent close the colorbox when clicks on window.
+		escKey:false, // Prevent close the colorbox when hit escape key.
+		innerWidth:"150px",
+		innerHeight:"36px",
+		initialWidth:"0px",
+		initialHeight:"0px"
+	});
+
+	// Remove the close button from colorbox.
+	$("#cboxClose").remove();
+
+	// Prevent reload page.
+	$(document).on("keydown", disableReload);
+}
+
+/**
+ * Function to prevent reload the page using F5.
+ */
+function disableReload(e) {
+	if (((e.which || e.keyCode) == 116)
+			|| (((e.ctrlKey && e.which) || (e.ctrlKey && e.keyCode)) == 82)) {
+		e.preventDefault();
+	}
+};
+
+/**
+ * Function to close the processing information.
+ */
+function deleteColorboxForProcessing() {
+	// Close colorbox.
+	$.fn.colorbox.close();
+
+	// Enable the page reload using F5.
+	$(document).off("keydown", disableReload)
 }

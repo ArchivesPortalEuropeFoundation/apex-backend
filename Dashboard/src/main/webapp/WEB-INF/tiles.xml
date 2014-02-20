@@ -307,9 +307,11 @@
 	        <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
 	        <add-attribute type="string" value="/js/dynatree/jquery.dynatree.min.js"/>
 	        <add-attribute type="string" value="/js/al/archivalLandscapeEditor.js"/>
+	        <add-attribute type="string" value="/js/colorbox/jquery.colorbox-min.js"/>
 		</put-list-attribute>
 		<put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>
+            <add-attribute type="string" value="/css/colorbox.css"/>
         </put-list-attribute>
 	</definition>
 
