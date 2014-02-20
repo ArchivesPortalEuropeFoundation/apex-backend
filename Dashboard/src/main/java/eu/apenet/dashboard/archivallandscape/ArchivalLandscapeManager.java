@@ -1972,9 +1972,9 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			} catch (IOException e) {
 				log.error("Exception trying to download file with ContentUtils.downloadXML"  + APEnetUtilities.generateThrowableLog(e));
 			}
-			return SUCCESS;
+			;
 		}
-		return ERROR;
+		return null;
 	}
 
 	private ByteArrayOutputStream buildXMlFromDDBB() {
