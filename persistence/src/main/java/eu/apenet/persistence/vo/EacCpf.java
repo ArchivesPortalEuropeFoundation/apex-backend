@@ -28,7 +28,7 @@ public class EacCpf extends AbstractContent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(name = "name_entry")
-    private String nameEntry;
+    private String title;
     @Column(name = "upload_date")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date uploadDate;
@@ -100,13 +100,13 @@ public class EacCpf extends AbstractContent {
     }
 
     @Override
-    public String getNameEntry() {
-        return nameEntry;
+    public String getTitle() {
+        return title;
     }
 
     @Override
-    public void setNameEntry(String nameEntry) {
-        this.nameEntry = nameEntry;
+    public void setTitle(String nameEntry) {
+        this.title = nameEntry;
     }
 
     @Override
