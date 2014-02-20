@@ -267,8 +267,8 @@ public class ContentUtils {
 						+ ai.getAiId());
 				DAOFactory.instance().getArchivalInstitutionDAO().deleteSimple(ai);
 				LOGGER.debug("Storing the operation 'remove AI' in p_operation entity ");
-				storeOperation("Remove AI"); // TODO: roll back of this
-												// operation
+				storeOperation("Remove AI named: " + ai.getAiname() + " with id: " + ai.getAiId()); // TODO: roll back of this
+																									// operation
 			}
 
 			// Rename the files in tmp folder
