@@ -1,7 +1,9 @@
 package eu.apenet.dashboard.actions.content.ead;
 
+import eu.apenet.dashboard.actions.ajax.AjaxControllerAbstractAction;
 import eu.apenet.dashboard.actions.content.AbstractTypeActions;
 import java.util.Properties;
+import javax.servlet.http.HttpSession;
 
 public abstract class AbstractEadActions extends AbstractTypeActions {
 
@@ -57,4 +59,22 @@ public abstract class AbstractEadActions extends AbstractTypeActions {
     public abstract String changeToDynamic();
 
     public abstract String changeToStatic();
+
+    @Override
+    protected Properties getConversionParameters() {
+        Properties parameters = new Properties();
+        HttpSession session = getServletRequest().getSession();
+        String option_default = (String) session.getAttribute(AjaxControllerAbstractAction.OPTIONS_DEFAULT);
+        String option_use_existing = (String) session.getAttribute(AjaxControllerAbstractAction.OPTIONS_USE_EXISTING);
+        boolean option_use_existing_bool = true;
+        if (option_use_existing != null) {
+            option_use_existing_bool = !Boolean.parseBoolean(option_use_existing);
+        }
+        if (option_default == null) {
+            option_default = "UNSPECIFIED";
+        }
+        parameters.put("defaultRoleType", option_default);
+        parameters.put("useDefaultRoleType", Boolean.toString(option_use_existing_bool));
+        return parameters;
+    }
 }

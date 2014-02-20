@@ -53,22 +53,7 @@ public abstract class AbstractTypeActions extends AbstractInstitutionAction {
         this.action = action;
     }
 
-    protected Properties getConversionParameters() {
-        Properties parameters = new Properties();
-        HttpSession session = getServletRequest().getSession();
-        String option_default = (String) session.getAttribute(AjaxControllerAbstractAction.OPTIONS_DEFAULT);
-        String option_use_existing = (String) session.getAttribute(AjaxControllerAbstractAction.OPTIONS_USE_EXISTING);
-        boolean option_use_existing_bool = true;
-        if (option_use_existing != null) {
-            option_use_existing_bool = !Boolean.parseBoolean(option_use_existing);
-        }
-        if (option_default == null) {
-            option_default = "UNSPECIFIED";
-        }
-        parameters.put("defaultRoleType", option_default);
-        parameters.put("useDefaultRoleType", Boolean.toString(option_use_existing_bool));
-        return parameters;
-    }
+    protected abstract Properties getConversionParameters();
 
     protected XmlType getXmlType() {
         return XmlType.getType(xmlTypeId);
