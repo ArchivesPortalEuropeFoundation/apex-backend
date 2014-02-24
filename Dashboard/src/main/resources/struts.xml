@@ -226,11 +226,11 @@
         </action>
 
 
-        <action name="eadActions" class="eu.apenet.dashboard.actions.content.EadActions">
+        <action name="eadActions" class="eu.apenet.dashboard.actions.content.ead.EadActions">
             <result name="success">/jsp/ajax/success.jsp</result>
             <result name="error">/jsp/ajax/error.jsp</result>
         </action>
-        <action name="batchEadActions" class="eu.apenet.dashboard.actions.content.BatchEadActions">
+        <action name="batchEadActions" class="eu.apenet.dashboard.actions.content.ead.BatchEadActions">
             <result name="success">/jsp/ajax/success.jsp</result>
             <result name="error">/jsp/ajax/error.jsp</result>
         </action>
@@ -400,14 +400,14 @@
 			<result name="errorLang" type="tiles">uploaderrorallangnull</result>
 			<result name="errorCountry" type="tiles">uploaderroralbadcountry</result>
 		</action>
-		
+
 		<action name="ALDisplayTrees" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="displayTrees">
 			<result name="success" type="stream">
 				<param name="inputName">outputStream</param>
 				<param name="contentType">application/json</param>
 			</result>
 		</action>
-		
+
 		<action name="getALTree" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="getArchivalInstitutionTree">
 			<result name="SUCCESS" type="stream">
 				<param name="inputName">outputStream</param>
@@ -440,7 +440,7 @@
             <result name="input" type="tiles">changeAlIdentifiers</result>
             <result name="error" type="tiles">changeAlIdentifiers</result>
         </action>
-        
+
         <!-- Temporary action to change the AL identifiers if don't begin with a letter in DDBB -->
         <action name="changeIdentifierInDDBB" class="eu.apenet.dashboard.archivallandscape.ChangeIdentifierInDDBBAction">
            <result name="success" type="tiles">indexAdmin</result>
@@ -983,7 +983,7 @@
            <result name="success" type="tiles">indexAdmin</result>
 		   <result name="error" type="tiles">indexAdmin</result>
         </action>
-		
+
 		<action name="downloadHarvesterErrorsXml" class="eu.apenet.dashboard.harvest.DownloadHarvesterErrorsAction" method="downloadXml">
             <result name="error" type="tiles">error</result>
         </action>
