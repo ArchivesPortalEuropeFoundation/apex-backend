@@ -564,7 +564,7 @@
             </result>
         </action>
 
-        <action name="displayLinkToHgSg" class="eu.apenet.dashboard.actions.content.LinkToHgSgAction" method="input" >
+        <action name="displayLinkToHgSg" class="eu.apenet.dashboard.actions.content.ead.LinkToHgSgAction" method="input" >
             <result name="success" type="tiles">content.linktohgsg</result>
             <result name="input" type="tiles">content.linktohgsg</result>
             <result name="errorLinkHgSg" type="redirectAction">
@@ -573,11 +573,11 @@
             </result>
         </action>
 
-        <action name="displayLinkToHgSgAjax" class="eu.apenet.dashboard.actions.content.LinkToHgSgAction" method="retrieveClevels" >
+        <action name="displayLinkToHgSgAjax" class="eu.apenet.dashboard.actions.content.ead.LinkToHgSgAction" method="retrieveClevels" >
             <result name="success">/jsp/contentmanager/linktohgsg-ajax.jsp</result>
         </action>
 
-        <action name="linkToHgSg" class="eu.apenet.dashboard.actions.content.LinkToHgSgAction">
+        <action name="linkToHgSg" class="eu.apenet.dashboard.actions.content.ead.LinkToHgSgAction">
             <result name="input" type="tiles">content.linktohgsg</result>
             <result name="success" type="redirectAction">
                 <param name="actionName">contentmanager</param>
