@@ -285,7 +285,7 @@
 
 
 
-        <action name="download" class="eu.apenet.dashboard.actions.content.EadActions" method="download">
+        <action name="download" class="eu.apenet.dashboard.actions.content.ead.EadActions" method="download">
 
         </action>
 
@@ -652,7 +652,7 @@
             </result>
         </action>
 
-        <action name="downloadHgSgStatistics" class="eu.apenet.dashboard.actions.content.EadActions" method="downloadHgSgStatistics">
+        <action name="downloadHgSgStatistics" class="eu.apenet.dashboard.actions.content.ead.EadActions" method="downloadHgSgStatistics">
             <result name="error" type="tiles">error</result>
         </action>
         <action name="downloadInstitutionsStatistics" class="eu.apenet.dashboard.actions.StatisticsAction" method="downloadInstitutionsStatistics">
