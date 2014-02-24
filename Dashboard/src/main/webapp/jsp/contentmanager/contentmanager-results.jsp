@@ -6,8 +6,9 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        initResultsHandlers();
-    });
+        //${securityContext.refresh_interval} is defined in SecurityContext.java to store in session the refresh timeout.
+        initResultsHandlers(${securityContext.refresh_interval});
+	});
 </script>
 
 <div id="batchBlock">
@@ -109,21 +110,8 @@
                     <option value="nonRefresh">
                         <s:text name="content.message.nonRefresh"/>
                     </option>
-                    <option value="5">
-                        5
-                        <s:text name="content.message.secondsRefresh"/>
-                    </option>
-                    <option value="10">
-                        10
-                        <s:text name="content.message.secondsRefresh"/>
-                    </option>
-                    <option value="15">
-                        15
-                        <s:text name="content.message.secondsRefresh"/>
-                    </option>
-                    <option value="20">
-                        20
-                        <s:text name="content.message.secondsRefresh"/>
+                    <option value="refresh">
+                        <s:text name="content.message.refresh"/>
                     </option>
                 </select>
             </div>

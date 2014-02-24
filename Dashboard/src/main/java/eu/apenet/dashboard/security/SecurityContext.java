@@ -30,6 +30,7 @@ public final class SecurityContext implements HttpSessionBindingListener{
 	private String name;
 	private Integer partnerId;
 	private Integer countryId = null;
+	private Integer refresh_interval=5;
 	private String countryName = "UNKNOWN";
 	private String countryIsoname;
 	private List<Integer> aiIds = new ArrayList<Integer>();
@@ -59,6 +60,8 @@ public final class SecurityContext implements HttpSessionBindingListener{
 		partnerId = partner.getId();
 		emailAddress = partner.getEmailAddress();
 		name = partner.getFirstName() + " " + partner.getLastName();
+		// used in globalRefresh_interval to store refresh interval in the session
+		refresh_interval=this.getRefresh_interval();
 	}
 
 	public Integer getPartnerId() {
@@ -260,5 +263,13 @@ public final class SecurityContext implements HttpSessionBindingListener{
 		if (!webdav){
 			SecurityContextContainer.deleteSecurityContext(this);
 		}
+	}
+
+	public Integer getRefresh_interval() {
+		return refresh_interval;
+	}
+
+	public void setRefresh_interval(Integer refresh_interval) {
+		this.refresh_interval = refresh_interval;
 	}
 }

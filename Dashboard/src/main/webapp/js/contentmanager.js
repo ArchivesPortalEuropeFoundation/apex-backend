@@ -1,3 +1,5 @@
+var globalRefresh_interval, globalIndex;
+
 function initContentManager() {
     clearFAsFromSession();
     hideOrShowSelectAllFAsWindow();
@@ -72,21 +74,13 @@ function initSubpage() {
 
 function select_all()
 {
-	//$('#batchSelectedAction').show();
-	//$('#batchActionButton').show();
 	$("#selectAll").click();
 }
 function select_none()
 {
-	//$('#batchSelectedAction').hide();
-	//$('#batchActionButton').hide();
 	$("#selectNone").click();
 }
 function enable_features(){
-	/*if ($(this).is(":selected")) {
-		$('#batchSelectedAction').show();
-		$('#batchActionButton').show();;
-	}*/
 }
 
 function performEadAction(action, id, type) {
@@ -149,7 +143,7 @@ function performBatchEadAction() {
 					message = data.substring("error".length+1);
 				}
 				alert(message);
-			}		
+			}
 			updateCurrentSearchResults(updateForm);
 		});
 	}
@@ -168,21 +162,24 @@ function performNewSearch() {
 function getUpdateCurrentSearchResultsForm() {
 	return $("#updateCurrentSearch").serialize();
 }
+
 function updateCurrentSearchResults(formData) {
     hideOrShowSelectAllFAsWindow();
+    
 	if (formData == null) {
 		formData = getUpdateCurrentSearchResultsForm();
 	}
+
 	//check reload part
 	var index = $("select#refreshInterval").prop("selectedIndex");
-	var seconds = $("select#refreshInterval").val();
+	var seconds = globalRefresh_interval;
 	$("#ead-results-container").html("<div class='icon_waiting'></div>");
 	$.post("updateContentmanager.action", formData, function(data) {
 		$("#ead-results-container").html(data);
 		initSubpage();
-		$("select#refreshInterval option").eq(index).prop("selected",true);
+		$("select#refreshInterval option").eq(globalIndex).prop("selected",true);
 		if(index!=0){ //reloads if different
-			refreshIntervalFunc(index);
+			refreshIntervalFunc(globalIndex);
 		}
 	});
 }
@@ -197,10 +194,19 @@ function updatePageNumber(url) {
 	$("#updateCurrentSearch_pageNumber").attr("value", pageNumber);
 	updateCurrentSearchResults();
 }
-function initResultsHandlers() {
+
+/***
+ * 
+ * @param refresh_interval defined in SecurityContext.java, this var stores in the session the timeout refresh, 5 secs by default.
+ */
+function initResultsHandlers(refresh_interval) { 
+	globalRefresh_interval = refresh_interval;
 	$("#updateCurrentSearch_resultPerPage").change(function(event) {
 		$("#updateCurrentSearch_pageNumber").attr("value", "1");
-		updateCurrentSearchResults();
+		//do not update wrong the timeout, if there is an active refresh, do not refresh again and again.
+		if (globalIndex!=1){
+			updateCurrentSearchResults();
+		}
 	});
     createColorboxForConversionOptions();
 }
@@ -266,10 +272,11 @@ function prepareSubmitAndCancelBtns() {
 }
 function refreshIntervalFunc(lastIndex) {
 	var list = $("select#refreshInterval");
-	var index=list.prop("selectedIndex");
-	var valueOption=list.val();
+	var index=lastIndex;// keeps the last index
+	globalIndex = index;
+	var valueOption=globalRefresh_interval;
 	if (index!=0){
-		var action = "reloadBottom("+(index)+","+valueOption+");";
+		var action = "reloadBottom("+(index)+","+globalRefresh_interval+");";
 		if($.isNumeric(lastIndex) && index===lastIndex){
 			setTimeout(action,valueOption*1000);
 		}
