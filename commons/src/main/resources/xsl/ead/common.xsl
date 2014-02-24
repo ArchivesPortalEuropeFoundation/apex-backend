@@ -635,10 +635,14 @@
 		<div class="ead-content">
 		  <xsl:for-each select="ead:extent">
 			  <xsl:apply-templates mode="otherwithoutwhitespace"/>
+			  <xsl:if test="./@unit">
+			     <xsl:text> </xsl:text>
+		         <xsl:value-of select="./@unit"/>
+		      </xsl:if>
 			   <xsl:if test="position() != last()">
 			      <xsl:text>, </xsl:text>
 			  </xsl:if>
-		   </xsl:for-each>	 
+		   </xsl:for-each>			 
 		</div>
 	</xsl:template>
 	<xsl:template name="genreform">
