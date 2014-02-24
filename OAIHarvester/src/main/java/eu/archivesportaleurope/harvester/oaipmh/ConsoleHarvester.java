@@ -109,7 +109,7 @@ public class ConsoleHarvester {
 		logger.info("===============================================");
 		logger.info("Start OAI-PMH Harvester " + ConsoleHarvester.getVersion());
 		logger.info("===============================================");
-		logger.info("Developed by Archives Portal Europe");
+		logger.info("Copyright by Archives Portal Europe");
 		logger.info("Visit our website http://www.archivesportaleurope.net");
 		logger.info("===============================================");
 		OaiPmhHttpClient oaiPmhHttpClient = null;
@@ -241,7 +241,7 @@ public class ConsoleHarvester {
 		logger.info("===============================================");
 		logger.info("OAI-PMH Harvester " + ConsoleHarvester.getVersion() + " finished");		
 		logger.info("===============================================");
-		logger.info("Developed by Archives Portal Europe");
+		logger.info("Copyright by Archives Portal Europe");
 		logger.info("Visit our website http://www.archivesportaleurope.net");
 		logger.info("===============================================");
 	}
