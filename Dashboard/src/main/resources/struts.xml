@@ -223,6 +223,7 @@
 
         <action name="updateContentmanager" class="eu.apenet.dashboard.actions.content.ContentManagerAction">
             <result name="success">/jsp/contentmanager/contentmanager-results.jsp</result>
+            <result name="success-eaccpf">/jsp/contentmanager/contentmanager-eaccpf-results.jsp</result>
         </action>
 
 

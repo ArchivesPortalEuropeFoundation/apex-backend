@@ -153,126 +153,10 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         }
 
         if (xmlTypeId.equals(XmlType.EAC_CPF.getIdentifier() + "")) {
-            EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
-            EacCpfContentManagerResults results = new EacCpfContentManagerResults(contentSearchOptions);
-            results.setEacCpfs(eacCpfDAO.getEacCpfs(contentSearchOptions));
-            results.setTotalNumberOfResults(eacCpfDAO.countEacCpfs(contentSearchOptions));
-            /*
-             * statistics for number of converted files
-             */
-            if (contentSearchOptions.getConverted() == null || contentSearchOptions.getConverted() == true) {
-                ContentSearchOptions convertedSearchOptions = new ContentSearchOptions(contentSearchOptions);
-                convertedSearchOptions.setConverted(true);
-                results.setTotalConvertedFiles(eacCpfDAO.countEacCpfs(convertedSearchOptions));
-            }
-            /*
-             * statistics for number of validated files
-             */
-            if (contentSearchOptions.getValidated().isEmpty()
-                    || contentSearchOptions.getValidated().contains(ValidatedState.VALIDATED)) {
-                ContentSearchOptions validatedSearchOptions = new ContentSearchOptions(contentSearchOptions);
-                if (validatedSearchOptions.getValidated().isEmpty()) {
-                    validatedSearchOptions.setValidated(ValidatedState.VALIDATED);
-                }
-                results.setTotalValidatedFiles(eacCpfDAO.countEacCpfs(validatedSearchOptions));
-            }
-            /*
-             * statistics for number of published files
-             */
-            if (contentSearchOptions.getPublished() == null || contentSearchOptions.getPublished() == true) {
-                ContentSearchOptions publishedSearchOptions = new ContentSearchOptions(contentSearchOptions);
-                publishedSearchOptions.setPublished(true);
-                results.setTotalPublishedUnits(eacCpfDAO.countEacCpfs(publishedSearchOptions));
-            }
-            /*
-             * statistics for number of files delivered to Europeana
-             */
-            if (contentSearchOptions.getEuropeana().isEmpty()
-                    || contentSearchOptions.getEuropeana().contains(EuropeanaState.DELIVERED)) {
-                ContentSearchOptions europeanaSearchOptions = new ContentSearchOptions(contentSearchOptions);
-                europeanaSearchOptions.setEuropeana(EuropeanaState.DELIVERED);
-                results.setTotalChosDeliveredToEuropeana(eacCpfDAO.countEacCpfs(europeanaSearchOptions));
-            }
-            /*
-             * statistics for number of files converted to EDM
-             */
-            if (contentSearchOptions.getEuropeana().isEmpty()
-                    || contentSearchOptions.getEuropeana().contains(EuropeanaState.CONVERTED)) {
-                ContentSearchOptions europeanaSearchOptions = new ContentSearchOptions(contentSearchOptions);
-                europeanaSearchOptions.getEuropeana().clear();
-                europeanaSearchOptions.getEuropeana().add(EuropeanaState.CONVERTED);
-                europeanaSearchOptions.getEuropeana().add(EuropeanaState.DELIVERED);
-                results.setTotalChos(eacCpfDAO.countEacCpfs(europeanaSearchOptions));
-            }
-            getServletRequest().setAttribute("results", results);
-//            getServletRequest().setAttribute("harvestingStarted", HarvesterDaemon.isHarvesterProcessing() || EadService.isHarvestingStarted());
+            return processEacCpf(contentSearchOptions);
         } else {
-            EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-            EadContentManagerResults results = new EadContentManagerResults(contentSearchOptions);
-            results.setEads(eadDAO.getEads(contentSearchOptions));
-            results.setTotalNumberOfResults(eadDAO.countEads(contentSearchOptions));
-            /*
-             * statistics for total converted files
-             */
-            if (contentSearchOptions.getConverted() == null || contentSearchOptions.getConverted() == true) {
-                ContentSearchOptions convertedSearchOptions = new ContentSearchOptions(contentSearchOptions);
-                convertedSearchOptions.setConverted(true);
-                results.setTotalConvertedFiles(eadDAO.countEads(convertedSearchOptions));
-            }
-            /*
-             * statistics for total validated files
-             */
-            if (contentSearchOptions.getValidated().isEmpty()
-                    || contentSearchOptions.getValidated().contains(ValidatedState.VALIDATED)) {
-                ContentSearchOptions validatedSearchOptions = new ContentSearchOptions(contentSearchOptions);
-                if (validatedSearchOptions.getValidated().isEmpty()) {
-                    validatedSearchOptions.setValidated(ValidatedState.VALIDATED);
-                }
-                results.setTotalValidatedFiles(eadDAO.countEads(validatedSearchOptions));
-            }
-            /*
-             * statistics for total published units
-             */
-            if (contentSearchOptions.getPublished() == null || contentSearchOptions.getPublished() == true) {
-                ContentSearchOptions publishedSearchOptions = new ContentSearchOptions(contentSearchOptions);
-                publishedSearchOptions.setPublished(true);
-                results.setTotalPublishedUnits(eadDAO.countUnits(publishedSearchOptions));
-            }
-            if (contentSearchOptions.getContentClass().equals(FindingAid.class)) {
-                /*
-                 * statistics for total delivered daos
-                 */
-                if (contentSearchOptions.getEuropeana().isEmpty()
-                        || contentSearchOptions.getEuropeana().contains(EuropeanaState.DELIVERED)) {
-                    ContentSearchOptions europeanaSearchOptions = new ContentSearchOptions(contentSearchOptions);
-                    europeanaSearchOptions.setEuropeana(EuropeanaState.DELIVERED);
-                    results.setTotalChosDeliveredToEuropeana(eadDAO.countChos(europeanaSearchOptions));
-                }
-                /*
-                 * statistics for total converted daos
-                 */
-                if (contentSearchOptions.getEuropeana().isEmpty()
-                        || contentSearchOptions.getEuropeana().contains(EuropeanaState.CONVERTED)) {
-                    ContentSearchOptions europeanaSearchOptions = new ContentSearchOptions(contentSearchOptions);
-                    europeanaSearchOptions.getEuropeana().clear();
-                    europeanaSearchOptions.getEuropeana().add(EuropeanaState.CONVERTED);
-                    europeanaSearchOptions.getEuropeana().add(EuropeanaState.DELIVERED);
-                    results.setTotalChos(eadDAO.countChos(europeanaSearchOptions));
-                }
-
-            }
-
-            ContentSearchOptions dynamicEadSearchOptions = new ContentSearchOptions();
-            dynamicEadSearchOptions.setPublished(false);
-            dynamicEadSearchOptions.setDynamic(true);
-            dynamicEadSearchOptions.setContentClass(HoldingsGuide.class);
-            results.setHasDynamicHg(eadDAO.existEads(dynamicEadSearchOptions));
-            dynamicEadSearchOptions.setContentClass(SourceGuide.class);
-            results.setHasDynamicSg(eadDAO.existEads(dynamicEadSearchOptions));
-            getServletRequest().setAttribute("results", results);
-            getServletRequest().setAttribute("harvestingStarted", HarvesterDaemon.isHarvesterProcessing() || EadService.isHarvestingStarted());
+            return processEad(contentSearchOptions);
         }
-        return SUCCESS;
     }
 
     @Override
@@ -373,6 +257,131 @@ public class ContentManagerAction extends AbstractInstitutionAction {
         contentSearchOptions.setSearchTermsField(searchTermsField);
         contentSearchOptions.setContentClass(XmlType.getType(Integer.parseInt(xmlTypeId)).getClazz());
         return contentSearchOptions;
+    }
+
+        private String processEad(ContentSearchOptions contentSearchOptions) {
+        EadDAO eadDAO = DAOFactory.instance().getEadDAO();
+        EadContentManagerResults results = new EadContentManagerResults(contentSearchOptions);
+        results.setEads(eadDAO.getEads(contentSearchOptions));
+        results.setTotalNumberOfResults(eadDAO.countEads(contentSearchOptions));
+        /*
+        * statistics for total converted files
+        */
+        if (contentSearchOptions.getConverted() == null || contentSearchOptions.getConverted() == true) {
+            ContentSearchOptions convertedSearchOptions = new ContentSearchOptions(contentSearchOptions);
+            convertedSearchOptions.setConverted(true);
+            results.setTotalConvertedFiles(eadDAO.countEads(convertedSearchOptions));
+        }
+        /*
+        * statistics for total validated files
+        */
+        if (contentSearchOptions.getValidated().isEmpty()
+                || contentSearchOptions.getValidated().contains(ValidatedState.VALIDATED)) {
+            ContentSearchOptions validatedSearchOptions = new ContentSearchOptions(contentSearchOptions);
+            if (validatedSearchOptions.getValidated().isEmpty()) {
+                validatedSearchOptions.setValidated(ValidatedState.VALIDATED);
+            }
+            results.setTotalValidatedFiles(eadDAO.countEads(validatedSearchOptions));
+        }
+        /*
+        * statistics for total published units
+        */
+        if (contentSearchOptions.getPublished() == null || contentSearchOptions.getPublished() == true) {
+            ContentSearchOptions publishedSearchOptions = new ContentSearchOptions(contentSearchOptions);
+            publishedSearchOptions.setPublished(true);
+            results.setTotalPublishedUnits(eadDAO.countUnits(publishedSearchOptions));
+        }
+        if (contentSearchOptions.getContentClass().equals(FindingAid.class)) {
+            /*
+            * statistics for total delivered daos
+            */
+            if (contentSearchOptions.getEuropeana().isEmpty()
+                    || contentSearchOptions.getEuropeana().contains(EuropeanaState.DELIVERED)) {
+                ContentSearchOptions europeanaSearchOptions = new ContentSearchOptions(contentSearchOptions);
+                europeanaSearchOptions.setEuropeana(EuropeanaState.DELIVERED);
+                results.setTotalChosDeliveredToEuropeana(eadDAO.countChos(europeanaSearchOptions));
+            }
+            /*
+            * statistics for total converted daos
+            */
+            if (contentSearchOptions.getEuropeana().isEmpty()
+                    || contentSearchOptions.getEuropeana().contains(EuropeanaState.CONVERTED)) {
+                ContentSearchOptions europeanaSearchOptions = new ContentSearchOptions(contentSearchOptions);
+                europeanaSearchOptions.getEuropeana().clear();
+                europeanaSearchOptions.getEuropeana().add(EuropeanaState.CONVERTED);
+                europeanaSearchOptions.getEuropeana().add(EuropeanaState.DELIVERED);
+                results.setTotalChos(eadDAO.countChos(europeanaSearchOptions));
+            }
+
+        }
+
+        ContentSearchOptions dynamicEadSearchOptions = new ContentSearchOptions();
+        dynamicEadSearchOptions.setPublished(false);
+        dynamicEadSearchOptions.setDynamic(true);
+        dynamicEadSearchOptions.setContentClass(HoldingsGuide.class);
+        results.setHasDynamicHg(eadDAO.existEads(dynamicEadSearchOptions));
+        dynamicEadSearchOptions.setContentClass(SourceGuide.class);
+        results.setHasDynamicSg(eadDAO.existEads(dynamicEadSearchOptions));
+        getServletRequest().setAttribute("results", results);
+        getServletRequest().setAttribute("harvestingStarted", HarvesterDaemon.isHarvesterProcessing() || EadService.isHarvestingStarted());
+        return SUCCESS;
+    }
+
+    private String processEacCpf(ContentSearchOptions contentSearchOptions) {
+        EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
+        EacCpfContentManagerResults results = new EacCpfContentManagerResults(contentSearchOptions);
+        results.setEacCpfs(eacCpfDAO.getEacCpfs(contentSearchOptions));
+        results.setTotalNumberOfResults(eacCpfDAO.countEacCpfs(contentSearchOptions));
+        /*
+        * statistics for number of converted files
+        */
+        if (contentSearchOptions.getConverted() == null || contentSearchOptions.getConverted() == true) {
+            ContentSearchOptions convertedSearchOptions = new ContentSearchOptions(contentSearchOptions);
+            convertedSearchOptions.setConverted(true);
+            results.setTotalConvertedFiles(eacCpfDAO.countEacCpfs(convertedSearchOptions));
+        }
+        /*
+        * statistics for number of validated files
+        */
+        if (contentSearchOptions.getValidated().isEmpty()
+                || contentSearchOptions.getValidated().contains(ValidatedState.VALIDATED)) {
+            ContentSearchOptions validatedSearchOptions = new ContentSearchOptions(contentSearchOptions);
+            if (validatedSearchOptions.getValidated().isEmpty()) {
+                validatedSearchOptions.setValidated(ValidatedState.VALIDATED);
+            }
+            results.setTotalValidatedFiles(eacCpfDAO.countEacCpfs(validatedSearchOptions));
+        }
+        /*
+        * statistics for number of published files
+        */
+        if (contentSearchOptions.getPublished() == null || contentSearchOptions.getPublished() == true) {
+            ContentSearchOptions publishedSearchOptions = new ContentSearchOptions(contentSearchOptions);
+            publishedSearchOptions.setPublished(true);
+            results.setTotalPublishedUnits(eacCpfDAO.countEacCpfs(publishedSearchOptions));
+        }
+        /*
+        * statistics for number of files delivered to Europeana
+        */
+        if (contentSearchOptions.getEuropeana().isEmpty()
+                || contentSearchOptions.getEuropeana().contains(EuropeanaState.DELIVERED)) {
+            ContentSearchOptions europeanaSearchOptions = new ContentSearchOptions(contentSearchOptions);
+            europeanaSearchOptions.setEuropeana(EuropeanaState.DELIVERED);
+            results.setTotalChosDeliveredToEuropeana(eacCpfDAO.countEacCpfs(europeanaSearchOptions));
+        }
+        /*
+        * statistics for number of files converted to EDM
+        */
+        if (contentSearchOptions.getEuropeana().isEmpty()
+                || contentSearchOptions.getEuropeana().contains(EuropeanaState.CONVERTED)) {
+            ContentSearchOptions europeanaSearchOptions = new ContentSearchOptions(contentSearchOptions);
+            europeanaSearchOptions.getEuropeana().clear();
+            europeanaSearchOptions.getEuropeana().add(EuropeanaState.CONVERTED);
+            europeanaSearchOptions.getEuropeana().add(EuropeanaState.DELIVERED);
+            results.setTotalChos(eacCpfDAO.countEacCpfs(europeanaSearchOptions));
+        }
+        getServletRequest().setAttribute("results", results);
+//            getServletRequest().setAttribute("harvestingStarted", HarvesterDaemon.isHarvesterProcessing() || EadService.isHarvestingStarted());
+        return "success-eaccpf";
     }
 
     public Map<String, String> getConvertedStatusList() {

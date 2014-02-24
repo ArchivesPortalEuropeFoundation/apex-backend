@@ -14,9 +14,12 @@ import eu.apenet.persistence.vo.*;
  */
 public class EacCpfResult extends TypeResult {
 
+    private String identifier;
     private long cpfRelations;
     private long resourceRelations;
     private long functionRelations;
+    private boolean convertedToEseEdm;
+    private boolean deliveredToEuropeana;
 
     public EacCpfResult(EacCpf eacCpf) {
         this.id = eacCpf.getId();
@@ -30,11 +33,62 @@ public class EacCpfResult extends TypeResult {
         this.published = eacCpf.isPublished();
         this.validated = ValidatedState.VALIDATED.equals(eacCpf.getValidated());
         this.validatedFatalError = ValidatedState.FATAL_ERROR.equals(eacCpf.getValidated());
+        this.convertedToEseEdm = EuropeanaState.CONVERTED.equals(eacCpf.getEuropeana());
+        this.deliveredToEuropeana = EuropeanaState.DELIVERED.equals(eacCpf.getEuropeana());
         this.queueReady = QueuingState.READY.equals(eacCpf.getQueuing());
         this.queueError = QueuingState.ERROR.equals(eacCpf.getQueuing());
         this.queueProcessing = QueuingState.BUSY.equals(eacCpf.getQueuing());
         if ((!QueuingState.NO.equals(eacCpf.getQueuing()) && eacCpf.getQueueItem() != null)) {
             queueAction = eacCpf.getQueueItem().getAction();
+        }
+        this.identifier = eacCpf.getIdentifier();
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+
+    public String getIndexedText() {
+        if (published) {
+            return CONTENT_MESSAGE_YES;
+        } else {
+            return CONTENT_MESSAGE_NO;
+        }
+    }
+
+    public String getEseEdmText() {
+        if (convertedToEseEdm) {
+            return CONTENT_MESSAGE_YES;
+        } else {
+            return CONTENT_MESSAGE_NO;
+        }
+    }
+
+    public String getEseEdmCssClass() {
+        if (convertedToEseEdm || deliveredToEuropeana) {
+            return STATUS_OK;
+        } else {
+            return STATUS_NO;
+        }
+    }
+
+    public String getEuropeanaText() {
+        if (deliveredToEuropeana) {
+            return "content.message.europeana.delivered";
+        } else {
+            return CONTENT_MESSAGE_NO;
+        }
+    }
+
+    public String getEuropeanaCssClass() {
+        if (deliveredToEuropeana) {
+            return STATUS_OK;
+        } else {
+            return STATUS_NO;
         }
     }
 
@@ -60,5 +114,21 @@ public class EacCpfResult extends TypeResult {
 
     public void setFunctionRelations(long functionRelations) {
         this.functionRelations = functionRelations;
+    }
+
+    public boolean isConvertedToEseEdm() {
+        return convertedToEseEdm;
+    }
+
+    public void setConvertedToEseEdm(boolean convertedToEseEdm) {
+        this.convertedToEseEdm = convertedToEseEdm;
+    }
+
+    public boolean isDeliveredToEuropeana() {
+        return deliveredToEuropeana;
+    }
+
+    public void setDeliveredToEuropeana(boolean deliveredToEuropeana) {
+        this.deliveredToEuropeana = deliveredToEuropeana;
     }
 }
