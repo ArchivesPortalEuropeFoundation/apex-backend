@@ -267,7 +267,7 @@ public class ContentUtils {
 						+ ai.getAiId());
 				DAOFactory.instance().getArchivalInstitutionDAO().deleteSimple(ai);
 				LOGGER.debug("Storing the operation 'remove AI' in p_operation entity ");
-				storeOperation("Remove AI named: " + ai.getAiname() + " with id: " + ai.getAiId()); // TODO: roll back of this
+				LOGGER.info("Remove AI named: " + ai.getAiname() + " with id: " + ai.getAiId()); // TODO: roll back of this
 																									// operation
 			}
 
@@ -299,27 +299,15 @@ public class ContentUtils {
 			}
 			return result;
 		} catch (IOException e) {
-			LOGGER.error("The file " + filePath + " could not be removed: " + e.getMessage(), e);
+			LOGGER.error("The file " + filePath + " could not be removed: " + APEnetUtilities.generateThrowableLog(e));
 			return Action.ERROR;
 		} catch (Exception ex) {
-			LOGGER.error("The institution " + ai.getAiId() + " could not be removed from database ", ex);
+			LOGGER.error("The institution " + ai.getAiId() + " could not be removed from database " + APEnetUtilities.generateThrowableLog(ex));
 			return Action.ERROR;
 		}
 	}
 
-	// This method deletes an ead from the Index using its identifier eadid
-	// without commit
-	/*
-	 * public static void deleteFromIndexWithoutCommit(String eadid, int aiId)
-	 * throws SolrServerException, IOException{ UpdateSolrServerHolder server =
-	 * UpdateSolrServerHolder.getInstance(); server.deleteByQuery("(" +
-	 * SolrFields.AI_ID + ":" + aiId + " AND " + SolrFields.EADID + ":\"" +
-	 * eadid + "\")"); }
-	 */
 
-	public void storeOperation(String op) {
-		ChangeControl.logOperation(op);
-	}
 
 	public static void changeSearchable(Ead ead, boolean searchable) {
 		changeContainsSearchableItems(ead.getArchivalInstitution(), searchable);
