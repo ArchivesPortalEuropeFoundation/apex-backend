@@ -53,7 +53,7 @@ public class EacCpf extends AbstractContent {
     @Column(name = "publish_date")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date publishDate;
-    @Column(name = "cpf_id", nullable = false)
+    @Column(nullable = false)
     private String identifier;
 
     @OneToMany(mappedBy = "eacCpf")
