@@ -235,10 +235,10 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 											geocoder = new Geocoder(this.getGoogle_maps_clientId(), this.getGoogle_maps_clientKey());
 											log.debug("geocoder defined with clientID: " + this.getGoogle_maps_clientId() + " & clientKey: " + this.getGoogle_maps_clientKey());
 										} catch (InvalidKeyException e) {
-											log.error(e.getMessage(), e);
+											log.error(e.getMessage());
 											geocoder = null;
 										} catch (IllegalArgumentException iae) {
-											log.error(iae.getMessage(), iae);
+											log.error(iae.getMessage());
 											geocoder = null;
 										}
 
