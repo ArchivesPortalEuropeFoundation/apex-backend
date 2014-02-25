@@ -121,8 +121,8 @@
                             </span></th>
                         <th><s:text name="content.message.id" />
                 <div class="arrows">
-                    <a class="order" href="javascript:changeOrder('eadid','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
-                    <a class="order" href="javascript:changeOrder('eadid','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
+                    <a class="order" href="javascript:changeOrder('identifier','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
+                    <a class="order" href="javascript:changeOrder('identifier','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
                 </div>
                 </th>
                 <th><s:text name="content.message.title" />
@@ -153,24 +153,22 @@
                 </th>
                 <th><s:text name="content.message.published" />
                 <div class="arrows">
-                    <a class="order" href="javascript:changeOrder('totalNumberOfUnits','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
-                    <a class="order" href="javascript:changeOrder('totalNumberOfUnits','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
+                    <a class="order" href="javascript:changeOrder('published','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
+                    <a class="order" href="javascript:changeOrder('published','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
                 </div>
                 </th>
                 <th><s:text name="content.message.relations" /></th>
                 <th><s:text name="content.message.eseedm" />
-                <div class="arrows">
-                    <a class="order" href="javascript:changeOrder('totalNumberOfChos','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
-                    <a class="order" href="javascript:changeOrder('totalNumberOfChos','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
-                </div>
+<%--                <div class="arrows">
+                    <a class="order" href="javascript:changeOrder('convertedToEseEdm','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
+                    <a class="order" href="javascript:changeOrder('convertedToEseEdm','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
+                </div>--%>
                 </th>
                 <th>
                     <s:text name="content.message.europeana" />
                 <div class="arrows">
-                    <a class="order"
-                       href="javascript:changeOrder('europeana','true')"><img class="noStyle" src="images/expand/arrow-down.gif"
-                                                                           alt="down" /></a> <a class="order" href="javascript:changeOrder('europeana','false')"><img class="noStyle"
-                                                                                                               src="images/expand/arrow-up.gif" alt="up" /></a>
+                    <a class="order" href="javascript:changeOrder('europeana','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
+                    <a class="order" href="javascript:changeOrder('europeana','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
                 </div>
                 </th>
                 <th><s:text name="content.message.queue" />
@@ -253,17 +251,14 @@
                                             <option value="_blank|preview.action">
                                                 <s:text name="content.message.preview" />
                                             </option>
-                                            <c:if test="${not eacCpfResult.dynamic}">
-                                                <option value="_self|download.action">
-                                                    <s:text name="content.message.download" />
-                                                </option>
-                                            </c:if>
+                                            <option value="_self|download.action">
+                                                <s:text name="content.message.download" />
+                                            </option>
                                         </c:if>
                                         <c:if test="${eacCpfResult.containWarnings}">
                                             <option value="colorbox|showwarnings.action?iswarning=true">
                                                 <s:text name="content.message.showerror" />
                                             </option>
-
                                         </c:if>
                                         <c:if test="${eacCpfResult.published}">
                                             <option value="action|unpublish">
@@ -271,7 +266,7 @@
                                             </option>
                                         </c:if>
                                         <c:if
-                                            test="${eacCpfResult.validated and not eacCpfResult.convertedToEseEdm and not eacCpfResult.deliveredToEuropeana and not eacCpfResult.noEuropeanaCandidate}">
+                                            test="${eacCpfResult.validated and not eacCpfResult.convertedToEseEdm and not eacCpfResult.deliveredToEuropeana}">
                                             <option value="_self|displayEseConvert.action">
                                                 <s:text name="content.message.convert.ese" />
                                             </option>
