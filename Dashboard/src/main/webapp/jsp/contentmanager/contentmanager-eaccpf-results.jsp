@@ -157,6 +157,7 @@
                     <a class="order" href="javascript:changeOrder('totalNumberOfUnits','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
                 </div>
                 </th>
+                <th><s:text name="content.message.relations" /></th>
                 <th><s:text name="content.message.eseedm" />
                 <div class="arrows">
                     <a class="order" href="javascript:changeOrder('totalNumberOfChos','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
@@ -192,6 +193,7 @@
                         <td class="${eacCpfResult.convertedCssClass}"><apenet:resource>${eacCpfResult.convertedText}</apenet:resource></td>
                         <td class="${eacCpfResult.validatedCssClass}"><apenet:resource>${eacCpfResult.validatedText}</apenet:resource></td>
                         <td class="${eacCpfResult.indexedCssClass}"><apenet:resource>${eacCpfResult.indexedText}</apenet:resource></td>
+                        <td><apenet:resource>${eacCpfResult.cpfRelations} / ${eacCpfResult.resourceRelations} / ${eacCpfResult.functionRelations}</apenet:resource></td>
                         <td class="${eacCpfResult.eseEdmCssClass}"><apenet:resource>${eacCpfResult.eseEdmText}</apenet:resource>
                         <td class="${eacCpfResult.europeanaCssClass}"><apenet:resource>${eacCpfResult.europeanaText}</apenet:resource></td>
                         <td class="${eacCpfResult.queueCssClass}">
@@ -308,6 +310,7 @@
                     <td>${results.totalConvertedFiles}</td>
                     <td>${results.totalValidatedFiles}</td>
                     <td>${results.totalPublishedUnits}</td>
+                    <td>&nbsp;</td>
                     <td>${results.totalChos}</td>
                     <td>${results.totalChosDeliveredToEuropeana}</td>
                     <td>&nbsp;</td>
