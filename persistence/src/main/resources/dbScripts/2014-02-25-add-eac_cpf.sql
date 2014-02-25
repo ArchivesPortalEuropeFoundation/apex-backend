@@ -18,7 +18,7 @@ CREATE TABLE eac_cpf (
     europeana smallint DEFAULT 0,
     queuing smallint DEFAULT 0,
     publish_date timestamp without time zone,
-    identifier character varying(255) NOT NULL,
+    cpf_id character varying(255) NOT NULL,
     CONSTRAINT eac_cpf_pkey PRIMARY KEY (id),
     CONSTRAINT eac_cpf_ai_id_fkey FOREIGN KEY (ai_id)
         REFERENCES archival_institution (id) MATCH SIMPLE
