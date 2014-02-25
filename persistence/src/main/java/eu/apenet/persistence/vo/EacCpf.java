@@ -27,12 +27,10 @@ public class EacCpf extends AbstractContent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "name_entry")
     private String title;
     @Column(name = "upload_date")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date uploadDate;
-    @Column(name = "path_cpf")
     private String path;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "um_id")
