@@ -4109,7 +4109,8 @@ function nameOfInstitutionChanged(text, institutionName){
 function checkNameOfInstitution(text, institutionName) {
 	// Check if value for the field "Name of the institution",  in tab "Your Institution", is the same as
 	// the current institution name.
-	if (institutionName != escapeDoubleQuote(escapeApostrophe($("#textYINameOfTheInstitution")))) {
+	institutionName=escapeAmpersand(institutionName);
+	if (institutionName != escapeAmpersand(escapeDoubleQuote(escapeApostrophe($("#textYINameOfTheInstitution"))))) {
 		// Check if any of the values for the field "Name of the institution", in tab "Identity", is the same as
 		// the current institution name.
 		var exists = false;
@@ -4125,7 +4126,20 @@ function checkNameOfInstitution(text, institutionName) {
 	}
 	return true;
 }
-
+function escapeAmpersand(name){
+	//this function replace the character "&" to "&amp;" 
+	var ampersand = name;
+	var result = "";
+	var index = ampersand.indexOf("&");
+	while(index != -1){
+		 ampersand = ampersand.replace("&amp;","&").replace("&","&amp;");
+		 result = result + ampersand.substring(0, index+1);
+		 ampersand = ampersand.substring(index+1,ampersand.length);
+		 index = ampersand.indexOf("&");
+	 }
+	result = result + ampersand;
+	return result;
+}
 function nameOfInstitutionLanguageChanged(){
 	$("#noti_languageList").attr("value", $("#selectYINOTISelectLanguage").val());
 }

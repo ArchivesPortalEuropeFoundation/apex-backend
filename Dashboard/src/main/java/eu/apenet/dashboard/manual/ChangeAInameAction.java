@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -132,7 +134,12 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 
 		ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
 		ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.getAiId());
-		this.name = archivalInstitution.getAiname();
+		String aiName = archivalInstitution.getAiname();
+		aiName = URLDecoder.decode(aiName,"UTF-8");
+		aiName = aiName.replaceAll("&amp;","&");
+		archivalInstitution.setAiname(aiName);
+		this.name = aiName;
+		//this.name = archivalInstitution.getAiname();
 		if (ContentUtils.containsPublishedFiles(archivalInstitution)){
 			addActionError(getText("label.ai.changeainame.published.eads"));
 		}
@@ -179,9 +186,9 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				path_copyEAG = path_copyEAG + "_copy.xml";
 				
 				/// UPDATE DATABASE ///
-				an.setAiAName(this.newname);
-				ai.setAiname(this.newname);
-				ai.setAutform(this.newname);
+				an.setAiAName(this.newname.replaceAll("&", "&amp;"));
+				ai.setAiname(this.newname.replaceAll("&", "&amp;"));
+				ai.setAutform(this.newname.replaceAll("&", "&amp;"));
 				andao.updateSimple(an);
 				aidao.updateSimple(ai);
 
@@ -190,7 +197,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 					Iterator<Coordinates> coIt = coords.iterator();
 					while(coIt.hasNext()){
 						Coordinates coordinates = coIt.next();
-						coordinates.setNameInstitution(this.newname);
+						coordinates.setNameInstitution(this.newname.replaceAll("&", "&amp;"));
 						codao.updateSimple(coordinates);
 					}
 				}
@@ -221,7 +228,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 					Node nodeAutform = nodeAutList.item(j);
 					if (nodeAutform.getTextContent().equals(this.name)
 							&& !autformChanged){
-						nodeAutform.setTextContent(this.newname);
+						nodeAutform.setTextContent(this.newname.replaceAll("&amp;", "&"));
 						autformChanged = true;
 						LOG.debug("<autform> in EAG has been modified correctly");
 					}

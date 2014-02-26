@@ -187,7 +187,7 @@ public abstract class ManualUploader {
         File tempDir = new File(tempPath);
         this.filesNotUploaded = new ArrayList<String>();
         this.filesUploaded = new ArrayList<String>();
-        if (uploadType.equals("EAD")) {
+        if ((uploadType.equals("EAD"))) {
 
     		// Uncomment this line if xsl and xslt files are permitted again
             //if (contentType.equals("zip") || contentType.equals("xml") || contentType.equals("xsl") || contentType.equals("xslt")){
@@ -340,7 +340,7 @@ public abstract class ManualUploader {
                 log.error(SecurityContext.get() + "The file AL could not be uploaded. Some errors occurrs in process");
                 result = "input";
             }
-
+      
         } else {
             //HTTP EAG upload
             path = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR + archivalInstitutionId.toString() + APEnetUtilities.FILESEPARATOR;
@@ -364,7 +364,8 @@ public abstract class ManualUploader {
                         List<String> autformValueList = eag.lookingForwardAllElementContent("/eag/archguide/identity/autform");
                         boolean exists = false;
                         for (int i = 0; !exists && i < autformValueList.size(); i++) {
-                            if (institutionName.equalsIgnoreCase(autformValueList.get(i))) {
+                        	String autformValue = autformValueList.get(i).replaceAll("&amp;", "&").replaceAll("&","&amp;");
+                            if (institutionName.equalsIgnoreCase(autformValue)) {
                                 exists = true;
                             }
                         }
