@@ -14,6 +14,7 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 import com.opensymphony.xwork2.ActionSupport;
 
 import eu.apenet.persistence.dao.EadDAO;
+import eu.apenet.persistence.dao.FindingAidDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.FindingAid;
@@ -122,6 +123,32 @@ public class GenerateEadidResponseJSONAction extends ActionSupport implements Se
 		return null;
 		
 	}
+			
+	public String executeWithoutFile() {
+		System.err.println();
+		// Try to check the new EADID when the users edit an EAD file already ingested.
+		try {
+			request.setCharacterEncoding(UTF8);
+			response.setCharacterEncoding(UTF8);
+			response.setContentType("application/json");
+			Writer writer = new OutputStreamWriter(response.getOutputStream(), UTF8);
+			FindingAidDAO findingAidDAO = DAOFactory.instance().getFindingAidDAO();
+			this.ai_id = findingAidDAO.findById(this.getFileId()).getAiId();
+			
+			String m = checkNewEADID().toString();
+			writer.write(m);
+			
+			writer.close();
+
+			writer = null;
+			
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+
+		return null;
+	}
+
 	public StringBuffer checkNewEADID()
 	{	
 		StringBuffer buffer = new StringBuffer();

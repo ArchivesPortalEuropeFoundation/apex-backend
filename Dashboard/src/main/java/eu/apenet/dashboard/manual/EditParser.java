@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,6 +25,7 @@ import org.codehaus.stax2.XMLStreamWriter2;
 
 import eu.apenet.dashboard.actions.ajax.EditEadAction;
 import eu.apenet.dashboard.services.ead.xml.AbstractParser;
+import eu.apenet.dpt.utils.util.LanguageIsoList;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.EadContent;
@@ -35,14 +37,275 @@ import eu.apenet.persistence.vo.EadContent;
  * @author Yoann Moranville
  */
 public class EditParser extends AbstractParser {
-    private static final Logger LOG = Logger.getLogger(EditParser.class);
+    /**
+	 * Serializable.
+	 */
+	private static final long serialVersionUID = -8781964452841026355L;
+	private static final Logger LOG = Logger.getLogger(EditParser.class);
     public final QName C_ELEMENT = new QName(APENET_EAD, "c");
     public final QName EAD_ELEMENT = new QName(APENET_EAD, "ead");
     private static final String UTF8 = "UTF-8";
-    // Counter to be able to parse all the values.
+    // Counters to be able to parse all the values.
+    // General counter.
     private int counter = 1;
+    // Counter for attibute "@normal" in element <unitdate>.
+    private int counterUnitdate = 1;
+    // Counter for element <titleproper>.
+    private int counterTitleproper = 1;
+    // Counter for element <language>.
+    private int counterLanguage = 1;
+    // Counter for attibute "@langcode" in element <language>.
+    private int counterLangcode = 1;
 
-    public String xmlToHtml(CLevel cLevel, EadContent eadContent) throws XMLStreamException, IOException {
+    // Name of the elements and attributes.
+    // Name of element <titlestmt>.
+	private static final String TITLESTMT = "titlestmt";
+    // Name of element "<titleproper>".
+	private static final String TITLEPROPER = "titleproper";
+    // Name of attibute "@normal" in element <unitdate>.
+	private static final String NORMAL = "normal";
+    // Name of element <unitdate>.
+	private static final String UNITDATE = "unitdate";
+	// Name of element <langmaterial>.
+	private static final String LANGMATERIAL = "langmaterial";
+	// Name of element <langusage>.
+	private static final String LANGUSAGE = "langusage";
+	// Name of element <language>.
+	private static final String LANGUAGE = "language";
+    // Name of attibute "@langcode" in element <language>.
+	private static final String LANGCODE = "langcode";
+    // Name of attibute "@scriptcode" in element <language>.
+	private static final String SCRIPTCODE = "scriptcode";
+    // Name of id for attibute "@normal" in element <unitdate>.
+	private static final String UNITDATE_NORMAL = "unitdate_normal";
+    // Name of id for attibute "@langcode" in element <language>.
+	private static final String LANGUAGE_LANGCODE = "language_langcode";
+
+	// Defaul value of attribute @scriptcode.
+	private static final String SCRIPTCODE_VALUE = "Latn";
+	// Defaul value of namespaceURI for element <language>.
+	private static final String LANGUAGE_NAMESPACE_URI = "urn:isbn:1-931666-22-9";
+
+	// Variables to check if exists (or no) the necessary elements and attributes. 
+	// Element <unitdate>.
+	private boolean unitdateLocated = false;
+	// Attribute @normal in element <unitdate>.
+	private boolean normalLocated = false;
+	// Element <titlestmt>.
+	private boolean titlestmtLocated = false;
+	// Element <titleproper>.
+	private boolean titleproperLocated = false;
+	// Element <langmaterial> or <langusage>.
+	private boolean languageSectionLocated = false;
+	// Element <language>.
+	private boolean languageLocated = false;
+	// Attriute @lagcode in element <language>.
+	private boolean langcodeLocated = false;
+
+	// Variables to check if the value is added.
+	// Element <titleproper>.
+	private boolean titleproperValueAdded = false;
+
+	// Map with the values.
+	private Map<String, String> formValues;
+
+    /**
+	 * @return the counter
+	 */
+	public int getCounter() {
+		return this.counter;
+	}
+
+	/**
+	 * @param counter the counter to set
+	 */
+	public void setCounter(int counter) {
+		this.counter = counter;
+	}
+
+    /**
+	 * @return the counterUnitdate
+	 */
+	public int getCounterUnitdate() {
+		return this.counterUnitdate;
+	}
+
+	/**
+	 * @param counterUnitdate the counterUnitdate to set
+	 */
+	public void setCounterUnitdate(int counterUnitdate) {
+		this.counterUnitdate = counterUnitdate;
+	}
+
+    /**
+	 * @return the counterTitleproper
+	 */
+	public int getCounterTitleproper() {
+		return this.counterTitleproper;
+	}
+
+	/**
+	 * @param counterTitleproper the counterTitleproper to set
+	 */
+	public void setCounterTitleproper(int counterTitleproper) {
+		this.counterTitleproper = counterTitleproper;
+	}
+
+	/**
+	 * @return the counterLanguage
+	 */
+	public int getCounterLanguage() {
+		return this.counterLanguage;
+	}
+
+	/**
+	 * @param counterLanguage the counterLanguage to set
+	 */
+	public void setCounterLanguage(int counterLanguage) {
+		this.counterLanguage = counterLanguage;
+	}
+
+	/**
+	 * @return the counterLangcode
+	 */
+	public int getCounterLangcode() {
+		return this.counterLangcode;
+	}
+
+	/**
+	 * @param counterLangcode the counterLangcode to set
+	 */
+	public void setCounterLangcode(int counterLangcode) {
+		this.counterLangcode = counterLangcode;
+	}
+
+	/**
+	 * @return the unitdateLocated
+	 */
+	public boolean isUnitdateLocated() {
+		return this.unitdateLocated;
+	}
+
+	/**
+	 * @param unitdateLocated the unitdateLocated to set
+	 */
+	public void setUnitdateLocated(boolean unitdateLocated) {
+		this.unitdateLocated = unitdateLocated;
+	}
+
+	/**
+	 * @return the normalLocated
+	 */
+	public boolean isNormalLocated() {
+		return this.normalLocated;
+	}
+
+	/**
+	 * @param normalLocated the normalLocated to set
+	 */
+	public void setNormalLocated(boolean normalLocated) {
+		this.normalLocated = normalLocated;
+	}
+
+	/**
+	 * @return the titlestmtLocated
+	 */
+	public boolean isTitlestmtLocated() {
+		return this.titlestmtLocated;
+	}
+
+	/**
+	 * @param titlestmtLocated the titlestmtLocated to set
+	 */
+	public void setTitlestmtLocated(boolean titlestmtLocated) {
+		this.titlestmtLocated = titlestmtLocated;
+	}
+
+	/**
+	 * @return the titleproperLocated
+	 */
+	public boolean isTitleproperLocated() {
+		return this.titleproperLocated;
+	}
+
+	/**
+	 * @param titleproperLocated the titleproperLocated to set
+	 */
+	public void setTitleproperLocated(boolean titleproperLocated) {
+		this.titleproperLocated = titleproperLocated;
+	}
+
+	/**
+	 * @return the titleproperValueAdded
+	 */
+	public boolean isTitleproperValueAdded() {
+		return this.titleproperValueAdded;
+	}
+
+	/**
+	 * @param titleproperValueAdded the titleproperValueAdded to set
+	 */
+	public void setTitleproperValueAdded(boolean titleproperValueAdded) {
+		this.titleproperValueAdded = titleproperValueAdded;
+	}
+
+	/**
+	 * @return the languageSectionLocated
+	 */
+	public boolean isLanguageSectionLocated() {
+		return this.languageSectionLocated;
+	}
+
+	/**
+	 * @param languageSectionLocated the languageSectionLocated to set
+	 */
+	public void setLanguageSectionLocated(boolean languageSectionLocated) {
+		this.languageSectionLocated = languageSectionLocated;
+	}
+
+	/**
+	 * @return the languageLocated
+	 */
+	public boolean isLanguageLocated() {
+		return this.languageLocated;
+	}
+
+	/**
+	 * @param languageLocated the languageLocated to set
+	 */
+	public void setLanguageLocated(boolean languageLocated) {
+		this.languageLocated = languageLocated;
+	}
+
+	/**
+	 * @return the langcodeLocated
+	 */
+	public boolean isLangcodeLocated() {
+		return this.langcodeLocated;
+	}
+
+	/**
+	 * @param langcodeLocated the langcodeLocated to set
+	 */
+	public void setLangcodeLocated(boolean langcodeLocated) {
+		this.langcodeLocated = langcodeLocated;
+	}
+
+	/**
+	 * @return the formValues
+	 */
+	public Map<String, String> getFormValues() {
+		return this.formValues;
+	}
+
+	/**
+	 * @param formValues the formValues to set
+	 */
+	public void setFormValues(Map<String, String> formValues) {
+		this.formValues = formValues;
+	}
+
+	public String xmlToHtml(CLevel cLevel, EadContent eadContent) throws XMLStreamException, IOException {
         int counterDiv = 0;
         String xml = "";
         if (cLevel != null)
@@ -59,6 +322,7 @@ public class EditParser extends AbstractParser {
             if (event == XMLStreamConstants.START_ELEMENT) {
 
                 lastElementName = xmlReader.getLocalName();
+            	this.checkAttributes(lastElementName, null);
 
                 if (EditEadAction.UndisplayableFields.isDisplayable(lastElementName)) {
                     LOG.debug("Open div for '" + lastElementName + "'");
@@ -69,6 +333,7 @@ public class EditParser extends AbstractParser {
                     xmlWriter.writeEmptyElement("br");
                     for (int i = 0; i < xmlReader.getAttributeCount(); i++) {
                         if (EditEadAction.UndisplayableFields.isDisplayable(xmlReader.getAttributeLocalName(i))) {
+                        	this.checkAttributes(lastElementName, xmlReader.getAttributeLocalName(i));
                             if (EditEadAction.EditableFields.isEditable(lastElementName + "_" + xmlReader.getAttributeLocalName(i))) {
                                 xmlWriter.writeStartElement("span");
                                 xmlWriter.writeCharacters("@" + xmlReader.getAttributeLocalName(i) + ": ");
@@ -90,7 +355,22 @@ public class EditParser extends AbstractParser {
                 if (counterDiv > 1) {
                     LOG.debug("Close div for '" + lastElementName + "'");
                     counterDiv--;
+
+                    // Checks the element to close.
+                    if (lastElementName != null) {
+                    	this.checkEndElement(lastElementName, xmlWriter);
+                    } else  if (xmlReader.getLocalName() != null) {
+                    	this.checkEndElement(xmlReader.getLocalName(), xmlWriter);
+                    }
+
                     xmlWriter.writeEndElement();
+
+                    // Reset the located elements.
+                    if (lastElementName != null) {
+                    	this.resetElementsLocated(lastElementName);
+                    } else  if (xmlReader.getLocalName() != null) {
+                    	this.resetElementsLocated(xmlReader.getLocalName());
+                    }
                 }
                 lastElementName = null;
             } else if (event == XMLStreamConstants.CHARACTERS) {
@@ -99,11 +379,26 @@ public class EditParser extends AbstractParser {
                         xmlWriter.writeCharacters("#text: ");
                         xmlWriter.writeEmptyElement("input");
                         xmlWriter.writeAttribute("type", "text");
-                        xmlWriter.writeAttribute("name", lastElementName + "_" + this.counter);
                         xmlWriter.writeAttribute("value", xmlReader.getText());
-                        this.counter++;
+                        if (this.isUnitdateLocated()) {
+	                        xmlWriter.writeAttribute("name", lastElementName + "_" + this.getCounterUnitdate());
+	                        this.setCounterUnitdate(this.getCounterUnitdate() + 1);
+                        } else if (this.isTitleproperLocated()) {
+	                        xmlWriter.writeAttribute("name", lastElementName + "_" + this.getCounterTitleproper());
+	                        this.setCounterTitleproper(this.getCounterTitleproper() + 1);
+                        } else if (this.isLanguageLocated()) {
+	                        xmlWriter.writeAttribute("name", lastElementName + "_" + this.getCounterLanguage() + "_" + this.getCounterLangcode());
+                        } else {
+	                        xmlWriter.writeAttribute("name", lastElementName + "_" + this.getCounter());
+	                        this.setCounter(this.getCounter() + 1);
+                        }
                     } else {
                         xmlWriter.writeCharacters("#text: " + xmlReader.getText());
+                    }
+
+                    // Set the value of the element "titleproper" as set.
+                    if (EditParser.TITLEPROPER.equalsIgnoreCase(lastElementName)) {
+                    	this.setTitleproperValueAdded(true);
                     }
                 }
 
@@ -138,12 +433,47 @@ public class EditParser extends AbstractParser {
             }
 
             xmlWriter.writeEndElement();
+        } else if (EditParser.LANGCODE.equalsIgnoreCase(attrName)
+        		&& EditParser.LANGUAGE.equalsIgnoreCase(lastElementName)) {
+        	// Write the select for the possible language codes.
+            xmlWriter.writeStartElement("select");
+            xmlWriter.writeAttribute("name", lastElementName + "_" + attrName + "_" + this.getCounterLanguage() + "_" + this.getCounterLangcode());
+
+            // Add empty value to the language select.
+            xmlWriter.writeStartElement("option");
+            xmlWriter.writeAttribute("value", "none");
+            xmlWriter.writeCharacters("---");
+            xmlWriter.writeEndElement();
+
+            List<String> languagesList = LanguageIsoList.getLanguageIsoList();
+            for (String language : languagesList) {
+                xmlWriter.writeStartElement("option");
+                String langCode = LanguageIsoList.getIsoCode(language);
+                xmlWriter.writeAttribute("value", langCode);
+                // Checks if the current element is the selected one.
+                if (attrValue.equals(langCode)) {
+                	xmlWriter.writeAttribute("selected", "selected");
+                }
+                xmlWriter.writeCharacters(LanguageIsoList.getIsoCode(language));
+                xmlWriter.writeEndElement();
+            }
+            xmlWriter.writeEndElement();
         } else {
             xmlWriter.writeEmptyElement("input");
             xmlWriter.writeAttribute("type", "text");
-            xmlWriter.writeAttribute("name", lastElementName + "_" + attrName + "_" + this.counter);
             xmlWriter.writeAttribute("value", attrValue);
-            this.counter++;
+            if (this.isUnitdateLocated()) {
+            	xmlWriter.writeAttribute("name", lastElementName + "_" + attrName + "_" + this.getCounterUnitdate());
+                this.setCounterUnitdate(this.getCounterUnitdate() + 1);
+            } else if (this.isTitleproperLocated()) {
+                	xmlWriter.writeAttribute("name", lastElementName + "_" + attrName + "_" + this.getCounterTitleproper());
+                    this.setCounterTitleproper(this.getCounterTitleproper() + 1);
+            } else if (this.isLanguageLocated()) {
+            	xmlWriter.writeAttribute("name", lastElementName + "_" + attrName + "_" + this.getCounterLanguage() + "_" + this.getCounterLangcode());
+            } else {
+            	xmlWriter.writeAttribute("name", lastElementName + "_" + attrName + "_" + this.getCounter());
+                this.setCounter(this.getCounter() + 1);
+            }
         }
     }
 
@@ -160,6 +490,9 @@ public class EditParser extends AbstractParser {
     		}
     	}
 
+    	// Set the copy to the global map.
+    	this.setFormValues(formValuesCopy);
+
         StringWriter stringWriter = new StringWriter();
         XMLStreamWriter2 xmlWriter = ((XMLOutputFactory2) XMLOutputFactory2.newInstance()).createXMLStreamWriter(stringWriter, UTF8);
         XMLStreamReader2 xmlReader = (XMLStreamReader2) ((XMLInputFactory2) XMLInputFactory2.newInstance()).createXMLStreamReader(IOUtils.toInputStream(xml, UTF8), UTF8);
@@ -172,6 +505,9 @@ public class EditParser extends AbstractParser {
                 changedItem = null;
 
                 QName element = xmlReader.getName();
+
+                this.checkAttributes(xmlReader.getLocalName(), null);
+
                 if (element.equals(C_ELEMENT) || element.equals(EAD_ELEMENT)) {
                     xmlWriter.writeStartElement(element.getPrefix(), element.getLocalPart(), element.getNamespaceURI());
                     xmlWriter.writeDefaultNamespace(APENET_EAD);
@@ -181,16 +517,35 @@ public class EditParser extends AbstractParser {
                     xmlWriter.writeStartElement(element.getPrefix(), element.getLocalPart(), element.getNamespaceURI());
                 }
                 for (int i = 0; i < xmlReader.getAttributeCount(); i++) {
-                    String changedAttr = isElementChanged(element.getLocalPart(), xmlReader.getAttributeLocalName(i), formValuesCopy);
+                	this.checkAttributes(xmlReader.getLocalName(), xmlReader.getAttributeLocalName(i));
+                    String changedAttr = isElementChanged(element.getLocalPart(), xmlReader.getAttributeLocalName(i));
                     if (changedAttr == null)
                         xmlWriter.writeAttribute(xmlReader.getAttributePrefix(i), xmlReader.getAttributeNamespace(i), xmlReader.getAttributeLocalName(i), xmlReader.getAttributeValue(i));
                     else
                         xmlWriter.writeAttribute(xmlReader.getAttributePrefix(i), xmlReader.getAttributeNamespace(i), xmlReader.getAttributeLocalName(i), changedAttr);
                 }
 
-                changedItem = isElementChanged(element.getLocalPart(), null, formValuesCopy);
+                // Checks if added "normal" attribute in element "unitdate".
+                if (this.isUnitdateLocated() && !this.isNormalLocated()) {
+                	String newAttribute = this.isElementChanged(element.getLocalPart(), EditParser.NORMAL);
+                	if (newAttribute != null) {
+                		xmlWriter.writeAttribute("", "", EditParser.NORMAL, newAttribute);
+                	}
+                }
+
+                changedItem = isElementChanged(element.getLocalPart(), null);
 
             } else if (event == XMLStreamConstants.END_ELEMENT) {
+
+                if (EditParser.LANGMATERIAL.equalsIgnoreCase(xmlReader.getLocalName())
+                		|| EditParser.LANGUSAGE.equalsIgnoreCase(xmlReader.getLocalName())) {
+                	// Checks if its necessary add new values.
+                	if (this.getFormValues() != null) {
+                		this.checkAddedLanguages(xmlWriter, xmlReader);
+                	}
+                }
+            	// Reset the located elements.
+                this.resetElementsLocated(xmlReader.getLocalName());
 
                 writeEndElement(xmlReader, xmlWriter);
 
@@ -214,7 +569,6 @@ public class EditParser extends AbstractParser {
 
             }
         }
-
 
         xmlWriter.flush();
         xmlWriter.close();
@@ -314,57 +668,11 @@ public class EditParser extends AbstractParser {
             }
         }
 
-
         xmlWriter.flush();
         xmlWriter.close();
         xmlReader.close();
         return stringWriter.toString();
     }
-
-//    public String cLevelXmlToEadXml(String cLevelXml){
-//
-//        StringWriter stringWriter = new StringWriter();
-//
-//        XMLInputFactory2 xmlif = ((XMLInputFactory2) XMLInputFactory2.newInstance());
-//        xmlif.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, Boolean.FALSE);
-//        xmlif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
-//        xmlif.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
-//        xmlif.setProperty(XMLInputFactory.IS_COALESCING, Boolean.FALSE);
-//        try {
-//            XMLStreamReader2 xmlReader = (XMLStreamReader2) xmlif.createXMLStreamReader(IOUtils.toInputStream(cLevelXml, UTF8), UTF8);
-//            XMLStreamWriter2 xmlWriter = ((XMLOutputFactory2) XMLOutputFactory2.newInstance()).createXMLStreamWriter(stringWriter, UTF8);
-//
-//            for (int event = xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
-//                if (event == XMLStreamConstants.START_ELEMENT) {
-//                    if(xmlReader.getName().equals(C_ELEMENT)){
-//                        writeEAD(xmlWriter);
-//                        xmlWriter.writeStartElement("eadheader");
-//                        xmlWriter.writeAttribute("countryencoding", "iso3166-1");
-//                        xmlWriter.writeAttribute("dateencoding", "iso8601");
-//                        xmlWriter.writeAttribute("langencoding", "iso639-2b");
-//                        xmlWriter.writeAttribute("repositoryencoding", "iso15511");
-//                        xmlWriter.writeAttribute("scriptencoding", "iso15924");
-//                        xmlWriter.writeAttribute("relatedencoding", "MARC21");
-//                        xmlWriter.writeStartElement("eadid");
-//                        xmlWriter.writeAttribute("countrycode", "PT");
-//                        xmlWriter.writeAttribute("mainagencycode", "TEST");
-//
-//                    }
-//                } else if (event == XMLStreamConstants.END_ELEMENT) {
-//
-//                } else if (event == XMLStreamConstants.CHARACTERS) {
-//
-//                } else if (event == XMLStreamConstants.CDATA) {
-//
-//                }
-//            }
-//
-//        } catch (Exception e) {
-//            LOG.error("Error", e);
-//        }
-//
-//        return null;
-//    }
 
     private void createTag(XMLStreamWriter2 writer, String element, String value) throws XMLStreamException {
         LOG.info("We create element: " + element);
@@ -382,14 +690,13 @@ public class EditParser extends AbstractParser {
      *
      * @param xmlElementName The name of the element in the original XML
      * @param xmlAttributeName The name of the attribute in the original XML
-     * @param formValues The map of values.
      * @return Either the value of the changed element or null if it does not exist
      */
-    public String isElementChanged(String xmlElementName, String xmlAttributeName, Map<String, String> formValues) {
+    public String isElementChanged(String xmlElementName, String xmlAttributeName) {
     	// Recover the list of the keys for the current element.
     	Set<String> keyList= new LinkedHashSet<String>();
-    	if (formValues != null) {
-    		Set<String> keySet = formValues.keySet();
+    	if (this.getFormValues() != null) {
+    		Set<String> keySet = this.getFormValues().keySet();
     		if (keySet != null) {
     			Iterator<String> keysIt = keySet.iterator();
     			while (keysIt.hasNext()) {
@@ -401,28 +708,276 @@ public class EditParser extends AbstractParser {
     				}
     				
     				if (key.startsWith(xmlKey)) {
-    					keyList.add(key);
+    					// Checks if the current element is "unitdate" and has attribute "normal".
+    					if (EditParser.UNITDATE.equalsIgnoreCase(xmlElementName)) {
+    						if (xmlAttributeName != null
+    								&& EditParser.NORMAL.equalsIgnoreCase(xmlAttributeName)) {
+    							// recover the proper key for the current unitdate element.
+    							if (key.endsWith("_" + this.getCounterUnitdate())) {
+        							keyList.add(key);
+    							}
+    						}
+    					} else if (EditParser.TITLEPROPER.equalsIgnoreCase(xmlElementName)) {
+    						// Check if the current element is "titleproper" and recover the
+    						// proper key for the current titleproper element.
+    							if (key.endsWith("_" + this.getCounterTitleproper())) {
+        							keyList.add(key);
+    							}
+						} else if (EditParser.LANGUAGE.equalsIgnoreCase(xmlElementName)) {
+							// Checks if the current element is "language" and has attribute "langcode".
+							if (xmlAttributeName != null
+    								&& EditParser.LANGCODE.equalsIgnoreCase(xmlAttributeName)) {
+    							// recover the proper key for the current langcode attribute.
+    							if (key.endsWith("_" + this.getCounterLanguage() + "_" + this.getCounterLangcode())) {
+        							keyList.add(key);
+    							}
+							} else if (xmlAttributeName == null
+									&& key.endsWith("_" + this.getCounterLanguage() + "_" + this.getCounterLangcode())
+									&& !key.startsWith(EditParser.LANGUAGE_LANGCODE)) {
+								keyList.add(key);
+							}
+    					} else {
+    						keyList.add(key);
+    					}
     				}
     			}
     		}
     	}
 
+    	// Updates counterUnitdate if necessary.
+    	if (EditParser.UNITDATE.equalsIgnoreCase(xmlElementName)) {
+			if (xmlAttributeName != null
+					&& EditParser.NORMAL.equalsIgnoreCase(xmlAttributeName)) {
+				this.setCounterUnitdate(this.getCounterUnitdate() + 1);
+			}
+    	}
+
+    	// Updates counterTitleproper if necessary.
+    	if (EditParser.TITLEPROPER.equalsIgnoreCase(xmlElementName)
+    			&& xmlAttributeName == null) {
+			this.setCounterTitleproper(this.getCounterTitleproper() + 1);
+    	}
+
     	// Check if exists values in the list.
     	if (keyList != null && !keyList.isEmpty()) {
     		String key = keyList.iterator().next();
-    		String value = formValues.get(key);
-    		formValues.remove(key);
+    		String value = this.getFormValues().get(key);
+    		this.getFormValues().remove(key);
     		return value;
     	}
 
-//        for (String key : formValues.keySet()) {
-//            String elementName = key;
-//            if (key.contains("_"))
-//                elementName = key.split("_")[1];
-//
-//            if (xmlElementName.equals(elementName))
-//                return formValues.get(key);
-//        }
         return null;
+    }
+
+    /**
+     * Method to check the attribute name to enable or disable the "add attribute" button.
+     *
+     * @param elementName Name of the current element.
+     * @param attributeName Name of the current attribute for the element.
+     */
+    private void checkAttributes(String elementName, String attributeName) {
+    	LOG.debug("Check attribute " + attributeName + ", for element " + elementName);
+    	// Check if the current element is "unitdate".
+    	if (EditParser.UNITDATE.equalsIgnoreCase(elementName)) {
+    		LOG.debug("Located element " + elementName);
+    		this.setUnitdateLocated(true);
+    	}
+
+    	// Check if the current element is "unitdate" and contains attribute "normal".
+    	if (EditParser.UNITDATE.equalsIgnoreCase(elementName)
+    			&& EditParser.NORMAL.equalsIgnoreCase(attributeName)) {
+    		LOG.debug("Located attribute " + attributeName + ", for element " + elementName);
+    		this.setNormalLocated(true);
+    	}
+
+    	// Check if the current element is "titlestmt".
+    	if (EditParser.TITLESTMT.equalsIgnoreCase(elementName)) {
+    		LOG.debug("Located element " + elementName);
+    		this.setTitlestmtLocated(true);
+    	}
+
+    	// Check if the current element is "titleproper".
+    	if (EditParser.TITLEPROPER.equalsIgnoreCase(elementName)) {
+    		LOG.debug("Located element " + elementName);
+    		this.setTitleproperLocated(true);
+    	}
+
+    	// Check if current element is "langmaterial" or "langusage".
+    	if (EditParser.LANGMATERIAL.equalsIgnoreCase(elementName)
+    			|| EditParser.LANGUSAGE.equalsIgnoreCase(elementName)) {
+    		LOG.debug("Located element " + elementName);
+    		this.setLanguageSectionLocated(true);
+    	}
+
+    	// Check if the current element is "language".
+    	if (EditParser.LANGUAGE.equalsIgnoreCase(elementName)) {
+    		LOG.debug("Located element " + elementName);
+    		this.setLanguageLocated(true);
+    	}
+
+    	// Check if the current element is "language" and contains attribute "langcode".
+    	if (EditParser.LANGUAGE.equalsIgnoreCase(elementName)
+    			&& EditParser.LANGCODE.equalsIgnoreCase(attributeName)) {
+    		LOG.debug("Located attribute " + attributeName + ", for element " + elementName);
+    		this.setLangcodeLocated(true);
+    	}
+    }
+
+    /**
+     * Method to reset the located elements when necessary.
+     *
+     * @param elementName Name of the current element.
+     */
+    private void resetElementsLocated(String elementName) {
+    	// Reset located element <unitdate>.
+    	if (EditParser.UNITDATE.equalsIgnoreCase(elementName)) {
+        	LOG.debug("Reset located element: " + elementName);
+    		this.setUnitdateLocated(false);
+    	}
+    	// Reset located attribute @normal inside element <unitdate>.
+    	if (this.isUnitdateLocated()
+    			&& EditParser.NORMAL.equalsIgnoreCase(elementName)) {
+        	LOG.debug("Reset located element: " + elementName);
+    		this.setNormalLocated(false);
+    	}
+    	// Reset located element <titlestmt>.
+    	if (EditParser.TITLESTMT.equalsIgnoreCase(elementName)) {
+        	LOG.debug("Reset located element: " + elementName);
+    		this.setTitlestmtLocated(false);
+    	}
+    	// Reset located element <titleproper>.
+    	if (EditParser.TITLEPROPER.equalsIgnoreCase(elementName)) {
+        	LOG.debug("Reset located element: " + elementName);
+    		this.setTitleproperLocated(false);
+    	}
+    	// Reset located element <langmaterial> and <langusage>.
+    	if (EditParser.LANGMATERIAL.equalsIgnoreCase(elementName)
+    			|| EditParser.LANGUSAGE.equalsIgnoreCase(elementName)) {
+        	LOG.debug("Reset located element: " + elementName);
+    		this.setLanguageSectionLocated(false);
+    		this.setCounterLanguage(this.getCounterLanguage() + 1);
+    		this.setCounterLangcode(1);
+    	}
+    	// Reset located attribute @langcode inside element <language>.
+    	if (this.isLanguageLocated()
+    			&& EditParser.LANGCODE.equalsIgnoreCase(elementName)) {
+        	LOG.debug("Reset located element: " + elementName);
+    		this.setLangcodeLocated(false);
+    	}
+    	// Reset located element <language>.
+    	if (EditParser.LANGUAGE.equalsIgnoreCase(elementName)) {
+        	LOG.debug("Reset located element: " + elementName);
+    		this.setLanguageLocated(false);
+    		this.setCounterLangcode(this.getCounterLangcode() + 1);
+    	}
+    }
+
+    /**
+     * Method to check the close tags and add the appropriate buttons when necessary.
+     *
+     * @param elementName Name of the current close tag.
+     * @throws XMLStreamException Exception processing XML.
+     */
+    private void checkEndElement(String elementName, XMLStreamWriter2 xmlWriter) throws XMLStreamException {
+    	// Checks if the close element is "titleproper".
+    	if (EditParser.TITLEPROPER.equalsIgnoreCase(elementName)) {
+    		// Check if it is necessary to add input text for "titleproper" element.
+    		if (!this.titleproperValueAdded) {
+    			LOG.debug("Element to add is " + EditParser.TITLEPROPER + ".");
+    			xmlWriter.writeCharacters("#text: ");
+    			xmlWriter.writeEmptyElement("input");
+    			xmlWriter.writeAttribute("type", "text");
+    			xmlWriter.writeAttribute("name", EditParser.TITLEPROPER + "_" + this.getCounterTitleproper());
+    			xmlWriter.writeAttribute("value", "");
+    			this.setCounterTitleproper(this.getCounterTitleproper() + 1);
+    		}
+			// Put the button to add more "titleproper" elements.
+//			LOG.debug("Element to close is " + EditParser.TITLEPROPER + ".");
+//
+//			LOG.debug("Element to add is " + EditParser.TITLEPROPER + ".");
+//            xmlWriter.writeEmptyElement("br");
+//			xmlWriter.writeEmptyElement("input");
+//			xmlWriter.writeAttribute("type", "button");
+//			xmlWriter.writeAttribute("name", "btn_" + EditParser.TITLEPROPER + "_" + this.getCounterTitleproper());
+//			xmlWriter.writeAttribute("value", getText("dashboard.editead.btn.addElement") + " " + getText("dashboard.editead.btn.elementTitleproper"));
+//			this.setCounterTitleproper(this.getCounterTitleproper() + 1);
+
+//			this.writeCorrectButton(elementName, xmlWriter);
+    	}
+    	// Checks if the close element is "unitdate".
+    	if (EditParser.UNITDATE.equalsIgnoreCase(elementName)
+    			&& !this.isNormalLocated()) {
+	    	// Element to close is "unitdate".
+			// Check if it is necessary to add button for "normal" attribute to
+    		// "unitdate" element.
+			LOG.debug("Element to close is " + EditParser.UNITDATE + ".");
+
+			LOG.debug("Attribute to add is " + EditParser.NORMAL + " in element " + EditParser.UNITDATE + ".");
+            xmlWriter.writeEmptyElement("br");
+			xmlWriter.writeEmptyElement("input");
+			xmlWriter.writeAttribute("type", "button");
+			xmlWriter.writeAttribute("name", "btn_" + EditParser.UNITDATE_NORMAL + "_" + this.getCounterUnitdate());
+			xmlWriter.writeAttribute("value", getText("dashboard.editead.btn.addAttribute") + " " + getText("dashboard.editead.btn.attributeNormal"));
+			this.setCounterUnitdate(this.getCounterUnitdate() + 1);
+    	}
+    	// Checks if the close element is "langmaterial" or "langusage".
+    	if (EditParser.LANGMATERIAL.equalsIgnoreCase(elementName)
+    			|| EditParser.LANGUSAGE.equalsIgnoreCase(elementName)) {
+	    	// Element to close is "langmaterial" or "langusage". Add button to add more "language" elements
+			LOG.debug("Element to close is " +elementName + ".");
+			xmlWriter.writeEmptyElement("input");
+			xmlWriter.writeAttribute("type", "button");
+			xmlWriter.writeAttribute("name", "btn_" + EditParser.LANGUAGE + "_" + this.getCounterLanguage() + "_" + this.getCounterLangcode());
+			xmlWriter.writeAttribute("value", getText("dashboard.editead.btn.addElement") + " " + getText("dashboard.editead.btn.elementLanguage"));
+			this.setCounterLangcode(this.getCounterLangcode() + 1);
+    	}
+    }
+
+    /**
+     * Method to check if there is new language added for the current section.
+     *
+     * @param xmlWriter
+     * @param xmlReader
+     * @throws XMLStreamException 
+     */
+    private void checkAddedLanguages(XMLStreamWriter2 xmlWriter, XMLStreamReader2 xmlReader) throws XMLStreamException {
+    	List<String> keysList = new LinkedList<String>();
+    	// Recover the existing keys in the map.
+    	Set<String> keySet = this.getFormValues().keySet();
+		if (keySet != null) {
+			Iterator<String> keysIt = keySet.iterator();
+			while (keysIt.hasNext()) {
+				String key = keysIt.next();
+				String langKey = EditParser.LANGUAGE + "_" + this.getCounterLanguage();
+
+				if (key.startsWith(langKey)) {
+					keysList.add(key);
+				}
+			}
+		}
+
+		if (keysList != null && !keysList.isEmpty()) {
+			// Is needed to add new language.
+			for (int i = 0; i < keysList.size(); i++) {
+				String languageKey = keysList.get(i);
+				String languageValue = this.getFormValues().get(languageKey);
+				String langcodeKey = languageKey.substring(0, (languageKey.indexOf("_") + 1)) + EditParser.LANGCODE + languageKey.substring(languageKey.indexOf("_"));
+				String langcodeValue = this.getFormValues().get(langcodeKey);
+
+				if (languageValue != null && !languageValue.isEmpty()
+						&& langcodeValue != null && !langcodeValue.isEmpty()) {
+					// Add the element.
+					xmlWriter.writeStartElement("", EditParser.LANGUAGE, EditParser.LANGUAGE_NAMESPACE_URI);
+					xmlWriter.writeAttribute("", "", EditParser.LANGCODE, langcodeValue);
+					xmlWriter.writeAttribute("", "", EditParser.SCRIPTCODE, SCRIPTCODE_VALUE);
+					xmlWriter.writeCharacters(languageValue);
+					writeEndElement(xmlReader, xmlWriter);
+				}
+
+				// Finally removes the entry in the map.
+				this.getFormValues().remove(languageKey);
+				this.getFormValues().remove(langcodeValue);
+			}
+		}
     }
 }

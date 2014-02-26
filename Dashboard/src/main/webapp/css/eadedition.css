@@ -26,3 +26,13 @@
 #eadEdition input[type="text"] {
     width:300px;
 }
+
+p.alertMessage {
+	color: red;
+	padding-top: 5px;
+	font-weight: bold;
+}
+
+.controls {
+	margin-bottom: 15px;
+}

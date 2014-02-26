@@ -3,9 +3,12 @@ package eu.apenet.dashboard.actions.ajax;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,7 +37,6 @@ import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
-import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.ValidatedState;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
@@ -45,27 +47,33 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
  * @author Yoann Moranville
  */
 public class EditEadAction extends AjaxControllerAbstractAction {
-
 	private static final long serialVersionUID = 4831971826309950250L;
+    // Log.
+    private final Logger log = Logger.getLogger(EditEadAction.class);
 
-    // Constants for the names.
-	private static final String FORM_NAME = "'formValues'"; // Name of the map with all the values.
-	private static final String C_IDENTIFIER = "c_identifier"; // Name of element <c>.
-	private static final String C_LEVEL = "c_level"; // Name of element <c>.
-	private static final String C_LEVEL_ID = "id"; // Type of XML.
+	// Constants for the names of only editable elements.
+//	private static final String ARCHDESC_LEVEL = "archdesc_level"; // Name of attibute "@level" in element <archdesc>.
+	private static final String C_LEVEL = "c_level"; // Name of attibute "@level" in element <c>.
+	private static final String TITLEPROPER = "titleproper"; // Name of element <titleproper>.
+
+	// Constants for the names of editable and appendable elements.
 	private static final String EADID = "eadid"; // Name of element <eadid>.
+	private static final String EADID_COUNTRYCODE = "eadid_countrycode"; // Name of attibute "@countrycode" in element <eadid>.
+	private static final String EADID_MAINAGENCYCODE = "eadid_mainagencycode"; // Name of attibute "@mainagencycode" in element <eadid>.
+	private static final String LANGUAGE = "language"; // Name of element <language>.
+	private static final String LANGUAGE_LANGCODE = "language_langcode"; // Name of attibute "@langcode" in element <language>.
+	private static final String UNITDATE_NORMAL = "unitdate_normal"; // Name of attibute "@normal" in element <unitdate>.
+
+	// Constants for the names of the buttons for the appendable elements.
+	private static final String BTN_UNITDATE_NORMAL = "btn_unitdate_normal"; // Name of the button to add attibute "@normal" in element <unitdate>.
+
+	// Constants for the names used.
+	private static final String C_LEVEL_ID = "id"; // Type of XML.
 	private static final String FILEID = "fileId"; // Key for the identifier of the EAD in DB.
-	private static final String P_ELEMENT = "p"; // Name of element <p>.
-	private static final String UNITDATE = "unitdate"; // Name of element <unitdate>.
-	private static final String UNITDATE_NORMAL = "unitdate_normal"; // Name of element <unitdate_normal>.
-	private static final String UNITID = "unitid"; // Name of element <unitid>.
-	private static final String UNITTITLE = "unittitle"; // Name of element <unittitle>.
-	private static final String UNITTITLE_TYPE = "unittitle_type"; // Name of element <unittitle_type>.
+	private static final String FORM_NAME = "'formValues'"; // Name of the map with all the values.
 	private static final String XMLTYPEID = "xmlTypeId"; // Type of XML.
 
-    // Log.
-    private final Logger log = Logger.getLogger(getClass());
-
+	// Variables.
 	private Long id;
 	private Long faId;
 	private Long hgId;
@@ -74,10 +82,7 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 	private Map<String, String> formValues;
 	private String type;
 
-	@Override
-	public String execute() {
-		return SUCCESS;
-	}
+	/* GETTERS & SETTERS. */
 
 	public Long getId() {
 		return this.id;
@@ -134,6 +139,24 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 
 	public void setFileId(Integer fileId) {
 		this.fileId = fileId;
+	}
+
+	/**
+	 * Override the method to build the correct breadcrumb.
+	 */
+	@Override
+	protected void buildBreadcrumbs() {
+		super.buildBreadcrumbs();
+		addBreadcrumb("contentmanager.action", getText("breadcrumb.section.contentmanager"));
+		addBreadcrumb(getText("breadcrumb.section.editionofEAD"));
+	}
+
+	/**
+	 * Override the method to execute the action.
+	 */
+	@Override
+	public String execute() {
+		return SUCCESS;
 	}
 
 	public String createDbEntries(){
@@ -205,6 +228,11 @@ public class EditEadAction extends AjaxControllerAbstractAction {
     }
 
     //todo before production: Sanitize user input
+    /**
+     * Method to check the data in the form and save it. 
+     * 
+     * @return The result of the process.
+     */
     public String saveXmlData() {
         Writer writer = null;
         try {
@@ -213,11 +241,16 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 
         	// Check if its necessary to recover formValues.
         	if (this.getFormValues() == null || this.getFormValues().isEmpty()) {
+        		log.debug("Trying to recover the editable values.");
         		if (this.recoverMapFormValues().equalsIgnoreCase(Action.ERROR)) {
         			try {
                         if(writer != null){
-                            writer.append(new JSONObject().put("saved", false).toString());
+                        	JSONObject jsonObject = new JSONObject();
+                        	jsonObject.put("saved", false);
+                        	jsonObject.put("savedText", getText("dashboard.editead.errorNoChanges"));
+                            writer.append(jsonObject.toString());
                             writer.close();
+                            return null;
                         }
                     } catch (Exception ex){
                         LOG.error("Could not send the JSON to the page...");
@@ -226,80 +259,95 @@ public class EditEadAction extends AjaxControllerAbstractAction {
         	}
 
         	boolean dataChanged = false;
+        	// Save the previous values in order to revert if an error occurs.
+        	String initialXML = "";
+        	String level = "";
+        	String eadid = "";
 
             if(this.getId() != null){
                 CLevel cLevel = DAOFactory.instance().getCLevelDAO().findById(this.getId());
+                initialXML = cLevel.getXml();
+                level = cLevel.getLevel();
                 String newXml = new EditParser().getNewXmlString(cLevel.getXml(), this.getFormValues());
                 cLevel.setXml(newXml);
 
-                //Check if unittitle and @level have been changed
-                if(!StringUtils.isEmpty(this.getFormValues().get(EditEadAction.UNITTITLE))){
-                    if(!this.getFormValues().get(EditEadAction.UNITTITLE).equals(cLevel.getUnittitle())) {
-                        cLevel.setUnittitle(this.getFormValues().get(EditEadAction.UNITTITLE));
-                    	dataChanged = true;
-                    }
-                }
+                // Check if <c@level> has been changed.
                 if(!StringUtils.isEmpty(this.getFormValues().get(EditEadAction.C_LEVEL))){
                     if(!this.getFormValues().get(EditEadAction.C_LEVEL).equals(cLevel.getLevel())) {
                         cLevel.setLevel(this.getFormValues().get(EditEadAction.C_LEVEL));
                 		dataChanged = true;
                     }
                 }
+                if (!newXml.equalsIgnoreCase(initialXML)) {
+                    dataChanged = true;
+                }
                 JpaUtil.beginDatabaseTransaction();
                 DAOFactory.instance().getCLevelDAO().update(cLevel);
                 JpaUtil.commitDatabaseTransaction();
             } else if(xmlType == XmlType.EAD_FA){
                 EadContent eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFindingAidId(this.getFaId().intValue());
+                initialXML = eadContent.getXml();
+                eadid = eadContent.getEadid();
                 String newXml = new EditParser().getNewXmlString(eadContent.getXml(), this.getFormValues());
                 eadContent.setXml(newXml);
-                //Check if eadid and unittitle have been changed
+                //Check if <eadid> has been changed.
                 if(!StringUtils.isEmpty(this.getFormValues().get(EditEadAction.EADID))){
                     if(!this.getFormValues().get(EditEadAction.EADID).equals(eadContent.getEadid())) {
                         eadContent.setEadid(this.getFormValues().get(EditEadAction.EADID));
                         dataChanged = true;
                     }
                 }
-                if(!StringUtils.isEmpty(this.getFormValues().get(EditEadAction.UNITTITLE))){
-                    if(!this.getFormValues().get(EditEadAction.UNITTITLE).equals(eadContent.getUnittitle())) {
-                        eadContent.setUnittitle(this.getFormValues().get(EditEadAction.UNITTITLE));
-                        dataChanged = true;
-                    }
+                if (!newXml.equalsIgnoreCase(initialXML)) {
+                    dataChanged = true;
                 }
                 JpaUtil.beginDatabaseTransaction();
                 DAOFactory.instance().getEadContentDAO().update(eadContent);
                 JpaUtil.commitDatabaseTransaction();
             }
-            // TODO: Commented this part due to comment in revision 1596:
-            // "IssueID 693: HG and SG should not be editable."
-//            else if(xmlType == XmlType.EAD_HG){
-//                EadContent eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByHoldingsGuideId(hgId.intValue());
-//                String newXml = new EditParser().getNewXmlString(eadContent.getXml(), formValues);
-//                eadContent.setXml(newXml);
-//                //Check if eadid and unittitle have been changed
-//                if(!StringUtils.isEmpty(formValues.get(EditEadAction.EADID))){
-//                    if(!formValues.get(EditEadAction.EADID).equals(eadContent.getEadid()))
-//                        eadContent.setEadid(formValues.get(EditEadAction.EADID));
-//                }
-//                if(!StringUtils.isEmpty(formValues.get(EditEadAction.UNITTITLE))){
-//                    if(!formValues.get(EditEadAction.UNITTITLE).equals(eadContent.getUnittitle()))
-//                        eadContent.setUnittitle(formValues.get(EditEadAction.UNITTITLE));
-//                }
-//                JpaUtil.beginDatabaseTransaction();
-//                DAOFactory.instance().getEadContentDAO().update(eadContent);
-//                JpaUtil.commitDatabaseTransaction();
-//            }
 
             // Try to persist the changes in file (if needed).
+            JSONObject jsonObject = new JSONObject();
             if (dataChanged) {
-            	this.saveAllXmlData();
+            	if (Action.ERROR.equalsIgnoreCase(this.saveAllXmlData())) {
+					// Revert the changes.
+					JpaUtil.beginDatabaseTransaction();
+					if(this.getId() != null){
+						CLevel cLevel = DAOFactory.instance().getCLevelDAO().findById(this.getId());
+						cLevel.setXml(initialXML);
+						cLevel.setLevel(level);
+	
+						DAOFactory.instance().getCLevelDAO().update(cLevel);
+					} else if(xmlType == XmlType.EAD_FA){
+						EadContent eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFindingAidId(this.getFaId().intValue());
+						eadContent.setXml(initialXML);
+						eadContent.setEadid(eadid);
+
+						DAOFactory.instance().getEadContentDAO().update(eadContent);
+					}
+
+					JpaUtil.commitDatabaseTransaction();
+
+                	jsonObject.put("saved", false);
+                	jsonObject.put("savedText", getText("dashboard.editead.errorNoChanges"));
+            	} else {
+                    jsonObject.put("saved", true);
+                    jsonObject.put("savedText", getText("dashboard.editead.correctSaved"));
+            		
+            	}
+            } else {
+            	jsonObject.put("saved", true);
+                jsonObject.put("savedText", getText("dashboard.editead.notChanged"));
             }
 
-            writer.append(new JSONObject().put("saved", true).toString());
+            writer.append(jsonObject.toString());
             writer.close();
         } catch (Exception e){
             try {
                 if(writer != null){
-                    writer.append(new JSONObject().put("saved", false).toString());
+                	JSONObject jsonObject = new JSONObject();
+                	jsonObject.put("saved", false);
+                	jsonObject.put("savedText", getText("dashboard.editead.errorSavingToDatabase"));
+                	writer.append(jsonObject.toString());
                     writer.close();
                 }
             } catch (Exception ex){
@@ -331,15 +379,15 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 			Set<String> xmlTypeSet = new LinkedHashSet<String>();
 			Set<String> idSet = new LinkedHashSet<String>();
 			Set<String> faIdSet = new LinkedHashSet<String>();
-			Set<String> eadIdSet = new LinkedHashSet<String>();
-			Set<String> unitidSet = new LinkedHashSet<String>();
-			Set<String> unittitleSet = new LinkedHashSet<String>();
-			Set<String> unittitleTypeSet = new LinkedHashSet<String>();
-			Set<String> unitdateSet = new LinkedHashSet<String>();
-			Set<String> unitdateNormalSet = new LinkedHashSet<String>();
+//			Set<String> archdescLevelSet = new LinkedHashSet<String>();
 			Set<String> cLevelSet = new LinkedHashSet<String>();
-			Set<String> cIdentifierSet = new LinkedHashSet<String>();
-			Set<String> pSet = new LinkedHashSet<String>();
+			Set<String> eadIdSet = new LinkedHashSet<String>();
+			Set<String> eadIdCountryCodeSet = new LinkedHashSet<String>();
+			Set<String> eadIdMainAgencyCodeSet = new LinkedHashSet<String>();
+			Set<String> languageSet = new LinkedHashSet<String>();
+			Set<String> languageLangCodeSet = new LinkedHashSet<String>();
+			Set<String> titleProperSet = new LinkedHashSet<String>();
+			Set<String> unitDateNormalSet = new LinkedHashSet<String>();
 
 			Iterator<String> keysIt = jsonObject.keys();
 
@@ -347,39 +395,58 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 			while (keysIt.hasNext()) {
 				String key = keysIt.next();
 				if (key.startsWith(EditEadAction.XMLTYPEID)) {
+					// Keys for the type of the XML.
 					xmlTypeSet.add(key);
 				} else if (key.startsWith(EditEadAction.C_LEVEL_ID)) {
+					// Keys for the identifier of the c-level.
 					idSet.add(key);
 				} else if (key.startsWith(EditEadAction.FILEID)) {
+					// Keys for the identifier of the finding aid.
 					faIdSet.add(key);
-				} else if (key.startsWith(EditEadAction.EADID)) {
-					eadIdSet.add(key);
-				} else if (key.startsWith(EditEadAction.UNITID)) {
-					unitidSet.add(key);
-				} else if (key.startsWith(EditEadAction.UNITTITLE)) {
-					if (key.startsWith(EditEadAction.UNITTITLE_TYPE)) {
-						unittitleTypeSet.add(key);
-					} else {
-						unittitleSet.add(key);
-					}
-				} else if (key.startsWith(EditEadAction.UNITDATE)) {
-					if (key.startsWith(EditEadAction.UNITDATE_NORMAL)) {
-						unitdateNormalSet.add(key);
-					} else {
-						unitdateSet.add(key);
-					}
+//				} else if (key.startsWith(EditEadAction.ARCHDESC_LEVEL)) {
+//					// Keys for <archdesc@level>.
+//					archdescLevelSet.add(key);
 				} else if (key.startsWith(EditEadAction.C_LEVEL)) {
+					// Keys for <c@level>.
 					cLevelSet.add(key);
-				} else if (key.startsWith(EditEadAction.C_IDENTIFIER)) {
-					cIdentifierSet.add(key);
-				} else if (key.startsWith(EditEadAction.P_ELEMENT)) {
-					pSet.add(key);
+				} else if (key.startsWith(EditEadAction.EADID_COUNTRYCODE)) {
+					// Keys for <eadid@countrycode>.
+					eadIdCountryCodeSet.add(key);
+				} else if (key.startsWith(EditEadAction.EADID_MAINAGENCYCODE)) {
+					// Keys for <eadid@mainagencycode>.
+					eadIdMainAgencyCodeSet.add(key);
+				} else if (key.startsWith(EditEadAction.EADID)) {
+					// Keys for <eadid@text>.
+					eadIdSet.add(key);
+				} else if (key.startsWith(EditEadAction.LANGUAGE_LANGCODE)) {
+					// Keys for <language@langcode>.
+					languageLangCodeSet.add(key);
+				} else if (key.startsWith(EditEadAction.LANGUAGE)) {
+					// Keys for <language>.
+					languageSet.add(key);
+				} else if (key.startsWith(EditEadAction.TITLEPROPER)) {
+					// Keys for <titleproper>.
+					titleProperSet.add(key);
+				} else if (key.startsWith(EditEadAction.UNITDATE_NORMAL)
+						|| key.startsWith(EditEadAction.BTN_UNITDATE_NORMAL)) {
+					// Keys for <unitdate@normal>.
+					unitDateNormalSet.add(key);
 				}
 			}
 
+			// Ensure the elements are ordered in the lists.
+//			archdescLevelSet = this.ensureOrder(archdescLevelSet);
+			cLevelSet = this.ensureOrder(cLevelSet);
+			eadIdSet = this.ensureOrder(eadIdSet);
+			eadIdCountryCodeSet = this.ensureOrder(eadIdCountryCodeSet);
+			eadIdMainAgencyCodeSet = this.ensureOrder(eadIdMainAgencyCodeSet);
+			languageSet = this.ensureOrderLanguage(languageSet);
+			languageLangCodeSet = this.ensureOrderLanguage(languageLangCodeSet);
+			titleProperSet = this.ensureOrder(titleProperSet);
+			unitDateNormalSet = this.ensureOrder(unitDateNormalSet);
+
 			String value = "";
 			String key = "";
-			int count = 0;
 
 			// Check if is setted the value of the "xmlTypeId".
 			if (xmlTypeSet != null && !xmlTypeSet.isEmpty()) {
@@ -430,139 +497,17 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 				}
 			}
 
-			// Check if exists value for element "<eadid>".
-			if (eadIdSet != null && !eadIdSet.isEmpty()) {
-				count = 0;
-				key = eadIdSet.iterator().next();
-				value = jsonObject.getString(key);
-				if (value != null) {
-					count++;
-					this.getFormValues().put(EditEadAction.EADID + "_" + count, value);
-					this.log.debug("Recovered the EADID (" + value + ").");
-				}
-			}
+			// Add the rest of elements in the lists to the values map.
+//			this.addValuesToMap(jsonObject, archdescLevelSet);
+			this.addValuesToMap(jsonObject, cLevelSet);
+			this.addValuesToMap(jsonObject, eadIdSet);
+			this.addValuesToMap(jsonObject, eadIdCountryCodeSet);
+			this.addValuesToMap(jsonObject, eadIdMainAgencyCodeSet);
+			this.addValuesToMap(jsonObject, languageSet);
+			this.addValuesToMap(jsonObject, languageLangCodeSet);
+			this.addValuesToMap(jsonObject, titleProperSet);
+			this.addValuesToMap(jsonObject, unitDateNormalSet);
 
-			// Check if exists value for element "<unitid>".
-			if (unitidSet != null && !unitidSet.isEmpty()) {
-				count = 0;
-				Iterator<String> unitidIt = unitidSet.iterator();
-				while (unitidIt.hasNext()) {
-					key = unitidIt.next();
-					value = jsonObject.getString(key);
-					if (value != null) {
-						count++;
-						this.getFormValues().put(EditEadAction.UNITID + "_" + count, value);
-						this.log.debug("Recovered the new value for element <unitid> (" + value + ").");
-					}
-				}
-			}
-
-			// Check if exists value for element "<unittitle>".
-			if (unittitleSet != null && !unittitleSet.isEmpty()) {
-				count = 0;
-				Iterator<String> unittitleIt = unittitleSet.iterator();
-				while (unittitleIt.hasNext()) {
-					key = unittitleIt.next();
-					value = jsonObject.getString(key);
-					if (value != null) {
-						count++;
-						this.getFormValues().put(EditEadAction.UNITTITLE + "_" + count, value);
-						this.log.debug("Recovered the new value for element <unittitle> (" + value + ").");
-					}
-				}
-			}
-
-			// Check if exists value for element "<unittitle>" attribute "type".
-			if (unittitleTypeSet != null && !unittitleTypeSet.isEmpty()) {
-				count = 0;
-				Iterator<String> unittitleTypeIt = unittitleTypeSet.iterator();
-				while (unittitleTypeIt.hasNext()) {
-					key = unittitleTypeIt.next();
-					value = jsonObject.getString(key);
-					if (value != null) {
-						count++;
-						this.getFormValues().put(EditEadAction.UNITTITLE_TYPE + "_" + count, value);
-						this.log.debug("Recovered the new value for element <unittitle> attribute type (" + value + ").");
-					}
-				}
-			}
-
-			// Check if exists value for element "<unitdate>".
-			if (unitdateSet != null && !unitdateSet.isEmpty()) {
-				count = 0;
-				Iterator<String> unitdateIt = unitdateSet.iterator();
-				while (unitdateIt.hasNext()) {
-					key = unitdateIt.next();
-					value = jsonObject.getString(key);
-					if (value != null) {
-						count++;
-						this.getFormValues().put(EditEadAction.UNITDATE + "_" + count, value);
-						this.log.debug("Recovered the new value for element <unitdate> (" + value + ").");
-					}
-				}
-			}
-
-			// Check if exists value for element "<unitdate>" attribute "normal".
-			if (unitdateNormalSet != null && !unitdateNormalSet.isEmpty()) {
-				count = 0;
-				Iterator<String> unitdateNormalIt = unitdateNormalSet.iterator();
-				while (unitdateNormalIt.hasNext()) {
-					key = unitdateNormalIt.next();
-					value = jsonObject.getString(key);
-					if (value != null) {
-						count++;
-						this.getFormValues().put(EditEadAction.UNITDATE_NORMAL + "_" + count, value);
-						this.log.debug("Recovered the new value for element <unitdate> attribute normal (" + value + ").");
-					}
-				}
-			}
-
-			// Check if exists value for element "<c>" attribute "level".
-			if (cLevelSet != null && !cLevelSet.isEmpty()) {
-				count = 0;
-				Iterator<String> cLevelIt = cLevelSet.iterator();
-				while (cLevelIt.hasNext()) {
-					key = cLevelIt.next();
-					value = jsonObject.getString(key);
-					if (value != null) {
-						count++;
-						this.getFormValues().put(EditEadAction.C_LEVEL + "_" + count, value);
-						this.log.debug("Recovered the new value for element <c>  attribute level (" + value + ").");
-					}
-				}
-			}
-
-			// Check if exists value for element "<c>" attribute "id".
-			if (cIdentifierSet != null && !cIdentifierSet.isEmpty()) {
-				count = 0;
-				Iterator<String> cIdentifierIt = cIdentifierSet.iterator();
-				while (cIdentifierIt.hasNext()) {
-					key = cIdentifierIt.next();
-					value = jsonObject.getString(key);
-					if (value != null) {
-						count++;
-						this.getFormValues().put(EditEadAction.C_IDENTIFIER + "_" + count, value);
-						this.log.debug("Recovered the new value for element <c>  attribute id (" + value + ").");
-					}
-				}
-			}
-
-			// Check if exists value for element "<p>".
-			if (pSet != null && !pSet.isEmpty()) {
-				count = 0;
-				Iterator<String> pIt = pSet.iterator();
-				while (pIt.hasNext()) {
-					key = pIt.next();
-					value = jsonObject.getString(key);
-					if (value != null) {
-						count++;
-						this.getFormValues().put(EditEadAction.P_ELEMENT + "_" + count, value);
-						this.log.debug("Recovered the new value for element <p> (" + value + ").");
-					}
-				}
-			}
-
-    		System.out.println(requestedData);
     		this.log.debug("Ending process to recover values.");
 		} catch (JSONException e) {
 			this.log.error("Error processing JSON to recover form values.");
@@ -573,6 +518,143 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 		}
 
 		return result;
+    }
+
+    /**
+     * Method to ensure the elements in the set are correctly ordered.
+     *
+     * @param elementSet Set of elements.
+     * @return Ordered set of elements.
+     */
+    private Set<String> ensureOrder(Set<String> elementSet) {
+    	log.debug("Starting the process to order the list.");
+    	// New set with values correctly ordered.
+    	Set<String> orderedSet = new LinkedHashSet<String>();
+
+    	if (elementSet != null && !elementSet.isEmpty()) {
+    		List<String> elementList = new ArrayList<String>(elementSet);
+    		int size = elementList.size();
+    		// Process the list.
+    		for (int i = 0; i < size; i++) {
+    			String current = elementList.get(0);
+    			String compare;
+    			if (elementList.size() > 1) {
+    				// Compare the elements in the list with the current one.
+    				for (int j = 1; j < elementList.size(); j++) {
+        				compare = elementList.get(j);
+
+        				int currentValue = Integer.parseInt(current.substring((current.lastIndexOf("_") + 1)));
+        				int compareValue = Integer.parseInt(compare.substring((compare.lastIndexOf("_") + 1)));
+        				// Replace the element if necessary.
+        				if (currentValue > compareValue) {
+        					log.debug("Replace current (" + current + ") with: " + compare);
+        					current = compare;
+        				}    					
+    				}
+    				// Remove the element from the list.
+    				elementList.remove(current);
+    			}
+    			// Add the element to the ordered set.
+    			orderedSet.add(current);
+    		}
+    	}
+
+    	log.debug("Ending the process to order the list.");
+    	return orderedSet;
+    }
+
+    /**
+     * Method to ensure the elements in the language sets are correctly ordered.
+     *
+     * @param elementSet Set of elements.
+     * @return Ordered set of elements.
+     */
+    private Set<String> ensureOrderLanguage(Set<String> elementSet) {
+    	log.debug("Starting the process to order the language list.");
+    	// New set with values correctly ordered.
+    	Set<String> orderedSet = new LinkedHashSet<String>();
+
+    	if (elementSet != null && !elementSet.isEmpty()) {
+    		List<String> elementList = new ArrayList<String>(elementSet);
+    		int size = elementList.size();
+
+    		if (size > 1) {
+    			Map<Integer, Set<String>> valuesMap = new LinkedHashMap<Integer, Set<String>>();
+				// Add the elements to the map.
+				for (int i = 0; i < size; i++) {
+					String currentElement = elementList.get(i);
+					String tempCurrentElement = currentElement.substring(0, currentElement.lastIndexOf("_"));
+    				int currentValue = Integer.parseInt(tempCurrentElement.substring((tempCurrentElement.lastIndexOf("_") + 1)));
+
+					// Add the current element to the map.
+					if (!valuesMap.isEmpty()) {
+						Set<String> stringSet = valuesMap.get(currentValue);
+						if (stringSet == null) {
+							stringSet = new LinkedHashSet<String>();
+						}
+						stringSet.add(currentElement);
+						valuesMap.put(currentValue, stringSet);
+					} else {
+						Set<String> stringSet = new LinkedHashSet<String>();
+						stringSet.add(currentElement);
+						valuesMap.put(currentValue, stringSet);
+					}
+				}
+
+				// The map has the values ordered by location.
+				// Process the entries of the map.
+				if (valuesMap != null && !valuesMap.isEmpty()) {
+					Set<Integer> mapKeysSet = valuesMap.keySet();
+					Iterator<Integer> mapKeysIt = mapKeysSet.iterator();
+					while (mapKeysIt.hasNext()) {
+						Integer currentKey = mapKeysIt.next();
+						Set<String> currentSet = valuesMap.get(currentKey);
+						if (currentSet != null && !currentSet.isEmpty()) {
+							currentSet = this.ensureOrder(new HashSet<String>(currentSet));
+						}
+						valuesMap.put(currentKey, currentSet);
+					}
+
+					// The map has the values ordered by location and ordered inside the location.
+					// Recover the values of the map and add to the final ordered set.
+					List<Integer> mapKeysList = new LinkedList<Integer>(mapKeysSet);
+					Collections.sort(mapKeysList);
+					for (int i = 0; i < mapKeysList.size(); i++) {
+						Iterator<String> currentValues = valuesMap.get(mapKeysList.get(i)).iterator();
+						while (currentValues.hasNext()) {
+							orderedSet.add(currentValues.next());
+						}
+					}
+				}
+    		} else {
+    			orderedSet.add(elementList.get(0));
+    		}
+    	}
+
+    	log.debug("Ending the process to order the list.");
+    	return orderedSet;
+    }
+
+    /**
+     * Method to add the entries in FormValues map from the values in jsonObject usign
+     * the keys in elementSet.
+     *
+     * @param jsonObject Object to recover the values using the keys passed in elementSet.
+     * @param elementSet Ordered set of elements.
+     * @throws JSONException Exception processing JSONObject.
+     */
+    private void addValuesToMap(JSONObject jsonObject, Set<String> elementSet) throws JSONException {
+    	if (elementSet != null && !elementSet.isEmpty()) {
+			Iterator<String> elementIt = elementSet.iterator();
+			while (elementIt.hasNext()) {
+				String key = elementIt.next();
+				String value = jsonObject.getString(key);
+				if (value != null) {
+					this.getFormValues().put(key, value);
+					this.log.debug("Recovered the new value (" + value + ") with key: \"" + key + "\".");
+				}
+			}
+		}
     }
 
     /**
@@ -607,9 +689,8 @@ public class EditEadAction extends AjaxControllerAbstractAction {
     }
 
     public String saveAllXmlData(){
-
+    	String result = Action.ERROR;
         ArchivalInstitution archivalInstitution = null;
-        HoldingsGuide holdingsGuide = null;
         FindingAid findingAid = null;
         EadContent eadContent = null;
         XmlType xmlType = XmlType.getType(xmlTypeId);
@@ -620,13 +701,8 @@ public class EditEadAction extends AjaxControllerAbstractAction {
             findingAid = DAOFactory.instance().getFindingAidDAO().findById(faId.intValue());
             archivalInstitution = findingAid.getArchivalInstitution();
             eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFindingAidId(faId.intValue());
-        } else if (xmlType == XmlType.EAD_HG){
-        	if(hgId==null && fileId!=null){ //in case that hgId is null the target value is into fileId
-        		hgId = fileId.longValue(); 
-        	}
-            holdingsGuide = DAOFactory.instance().getHoldingsGuideDAO().findById(hgId.intValue());
-            archivalInstitution = holdingsGuide.getArchivalInstitution();
-            eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByHoldingsGuideId(hgId.intValue());
+        } else {
+        	return result;
         }
 
         Writer writer = null;
@@ -636,34 +712,31 @@ public class EditEadAction extends AjaxControllerAbstractAction {
             try {
                 writer = openOutputWriter();
                 String filePath;
-                if(findingAid != null) {
-                    filePath = APEnetUtilities.getConfig().getRepoDirPath() + findingAid.getPathApenetead();
-                } else {
-                    filePath = APEnetUtilities.getConfig().getRepoDirPath() + holdingsGuide.getPathApenetead();
-                }
+                filePath = APEnetUtilities.getConfig().getRepoDirPath() + findingAid.getPathApenetead();
+
                 LOG.trace("FilePath of the FA/HG (faId: " + faId + ", hgId: " + hgId + ") that we are saving after editing: " + filePath);
 
                 ReconstructEadFile.reconstructEadFile(eadContent, filePath);
 
                 JpaUtil.beginDatabaseTransaction();
-                if(findingAid != null){
-                    if(ValidatedState.VALIDATED.equals(findingAid.getValidated()))
-                        findingAid.setValidated(ValidatedState.NOT_VALIDATED);
-                    	findingAid.setDynamic(false);
-                } else {
-                    if(ValidatedState.VALIDATED.equals(holdingsGuide.getValidated()))
-                    	holdingsGuide.setValidated(ValidatedState.NOT_VALIDATED);
-                    	holdingsGuide.setDynamic(false);
+                if(ValidatedState.VALIDATED.equals(findingAid.getValidated())) {
+                    findingAid.setValidated(ValidatedState.NOT_VALIDATED);
+                	findingAid.setDynamic(false);
                 }
                 JpaUtil.commitDatabaseTransaction();
 
-                writer.append(new JSONObject().put("saved", true).toString());
-                writer.close();
+                result = Action.SUCCESS;
+
+//                writer.append(new JSONObject().put("saved", true).toString());
+//                writer.close();
             } catch (Exception e){
                 LOG.error("ERROR", e);
                 try {
                     if(writer != null){
-                        writer.append(new JSONObject().put("saved", false).toString());
+                    	JSONObject jsonObject = new JSONObject();
+                    	jsonObject.put("saved", false);
+                    	jsonObject.put("savedText", getText("dashboard.editead.errorSavingToXML"));
+                    	writer.append(jsonObject.toString());
                         writer.close();
                     }
                 } catch (Exception ex){
@@ -673,7 +746,7 @@ public class EditEadAction extends AjaxControllerAbstractAction {
         } catch (NotAuthorizedException e){
             LOG.error("Not authorized...", e);
         }
-        return null;
+        return result;
     }
 
     public String getPossibleFieldEntries(){
@@ -870,15 +943,15 @@ public class EditEadAction extends AjaxControllerAbstractAction {
      * Fields that are Editable on this Edit page
      */
     public enum EditableFields {
-        UNITTITLE(EditEadAction.UNITTITLE),
-        UNITID(EditEadAction.UNITID),
-        UNITDATE(EditEadAction.UNITDATE),
-        TYPE(EditEadAction.UNITTITLE_TYPE),
-        NORMAL(EditEadAction.UNITDATE_NORMAL),
-        P(EditEadAction.P_ELEMENT),
-        C_LEVEL(EditEadAction.C_LEVEL),
-        EADID(EditEadAction.EADID),
-        IDENTIFIER(EditEadAction.C_IDENTIFIER);
+    	TITLEPROPER(EditEadAction.TITLEPROPER),
+//    	ARCHDESC_LEVEL(EditEadAction.ARCHDESC_LEVEL),
+    	C_LEVEL(EditEadAction.C_LEVEL),
+    	EADID(EditEadAction.EADID),
+    	EADID_COUNTRYCODE(EditEadAction.EADID_COUNTRYCODE),
+    	EADID_MAINAGENCYCODE(EditEadAction.EADID_MAINAGENCYCODE),
+    	LANGUAGE(EditEadAction.LANGUAGE),
+    	LANGUAGE_LANGCODE(EditEadAction.LANGUAGE_LANGCODE),
+    	UNITDATE_NORMAL(EditEadAction.UNITDATE_NORMAL);
 
         String name;
         EditableFields(String name){

@@ -293,7 +293,7 @@
 											</option>
 										</c:if>
 										<c:if test="${eadResult.editable}">
-											<option value="_blank|editEad.action">
+											<option value="_self|editEad.action">
 												<s:text name="label.edit" />
 											</option>
 										</c:if>
@@ -350,19 +350,19 @@
 												</option>
 											</c:if>
 											<c:if test="${eadResult.convertedToEseEdm}">
-                                                                                            <option value="_blank|previewEdm.action">
-                                                                                                <s:text name="content.message.preview.ese" />
-                                                                                            </option>
-                                                                                        </c:if>
-                                                                                        <c:if test="${eadResult.hasEseEdmFiles}">
+												<option value="_blank|previewEdm.action">
+													<s:text name="content.message.preview.ese" />
+												</option>
+											</c:if>
+											<c:if test="${eadResult.hasEseEdmFiles}">
 												<option value="_self|downloadEse.action">
 													<s:text name="content.message.download.ese" />
 												</option>
 											</c:if>
 											<c:if test="${eadResult.convertedToEseEdm}">
-                                                                                            <option value="action|deleteEseEdm">
-                                                                                                <s:text name="content.message.delete.ese" />
-                                                                                            </option>
+												<option value="action|deleteEseEdm">
+													<s:text name="content.message.delete.ese" />
+												</option>
 											</c:if>
 
 											<c:if test="${eadResult.deliveredToEuropeana}">

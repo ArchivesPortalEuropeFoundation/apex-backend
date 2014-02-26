@@ -21,8 +21,7 @@ import org.codehaus.stax2.XMLStreamWriter2;
  * @author Yoann Moranville
  */
 public class EadCreator extends AbstractParser {
-
-    private static final String UTF8 = "UTF-8";
+	private static final String UTF8 = "UTF-8";
     private static final QName DSC_ELEMENT = new QName(APENET_EAD, "dsc");
     private static final QName ARCHDESC_ELEMENT = new QName(APENET_EAD, "archdesc");
     private static final Logger LOG = Logger.getLogger(EadCreator.class);

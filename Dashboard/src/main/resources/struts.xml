@@ -216,6 +216,13 @@
             </result>
         </action>
 
+        <action name="generateEadidResponseJSONWhenEdit" class="eu.apenet.dashboard.actions.ajax.GenerateEadidResponseJSONAction" method="executeWithoutFile">
+            <result name="SUCCESS" type="stream">
+                <!-- <param name="inputName">outputStream</param> -->
+                <param name="contentType">application/json</param>
+            </result>
+        </action>
+
         <action name="contentmanager" class="eu.apenet.dashboard.actions.content.ContentManagerAction" method="input">
             <result name="success" type="tiles">contentmanager</result>
             <result name="success_ajax">/jsp/contentmanager/contentmanager-results.jsp</result>

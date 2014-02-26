@@ -81,7 +81,6 @@ public class FindingAidResult extends EadResult {
 	}
 
 	public boolean isEditable(){
-//		return false;
 		return isValidated() && !isPublished() && !(convertedToEseEdm || deliveredToEuropeana);
 	}
 

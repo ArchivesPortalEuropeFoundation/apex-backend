@@ -4,8 +4,18 @@
 <c:set var="fileId" value="${param['id']}"/>
 <c:set var="xmlTypeId" value="${param['xmlTypeId']}"/>
 <script type="text/javascript">
+	var messageSpecialChars = "<s:property value="getText('content.message.EadidWithSpecialCharacter')" />";
+	var messageEmptyEADID = "<s:property value="getText('content.message.EadidEmpty')" />";
+	var messageEmptyWhenSave = "<s:property value="getText('dashboard.editead.errorEmptyMandatoryField')" />";
+	var messageNormalWithSpecialChars = "<s:property value="getText('dashboard.editead.errorNormalWithSpecialCharacter')" />";
+	var messageNormalCorrecVal = "<s:property value="getText('dashboard.editead.errorCorrectValues')" />";
+	var messageEmptyNormal = "<s:property value="getText('dashboard.editead.errorEmptyNormal')" />";
+	var messageNotCorrectDate = "<s:property value="getText('dashboard.editead.errorInDate')" />";
+	var messageEmptyTitleproper = "<s:property value="getText('dashboard.editead.errorEmptyTitleproper')" />";
+	var messageEmptyPreviousLang = "<s:property value="getText('dashboard.editead.errorPreviousLanguageEmpty')" />";
+
 	$(document).ready(function() {
-		initEadTree("${fileId}", "${xmlTypeId}");
+		initEadTree("${fileId}", "${xmlTypeId}", messageSpecialChars, messageEmptyEADID, messageEmptyWhenSave, messageNormalWithSpecialChars, messageNormalCorrecVal, messageEmptyNormal, messageNotCorrectDate, messageEmptyTitleproper, messageEmptyPreviousLang);
 	});
 </script>
 <div id="eadEdition">
@@ -18,10 +28,10 @@
 		
 		            <p id="editionFormContainer">
                     </p>
-                    <div id="controls" class="hidden">
-                   			<input id="deleteButton" type="submit" name="deleteButton" value="<s:property value="getText('content.message.delete')" />"/>
-                   			<input id="saveEADButton" type="button" name="saveEADButton" value="<s:property value="getText('dashboard.hgcreation.sbm.btn.save')" />" />
-                    </div>
+                    <s:form method="POST" theme="simple" id="controls" cssClass="controls">
+               			<input id="saveEADButton" type="button" name="saveEADButton" value="<s:property value="getText('dashboard.hgcreation.sbm.btn.save')" />" />
+               			<s:submit action="contentmanager" key="dashboard.editead.btn.cancel" id="cancelEADButton" name="cancelEADButton" />
+                    </s:form>
 		</div>
 	</div>
 </div>

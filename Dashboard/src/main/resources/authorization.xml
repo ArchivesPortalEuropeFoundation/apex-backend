@@ -24,7 +24,7 @@
             removeInvalidEAG2012,
 
             <!-- Edition of EAD -->
-            editEad, editEadCreateDbEntries, editEadXml, editEadXmlSaveLevel, editEadXmlSaveAll, editEadXmlDeleteEntries, editEadGetFields, editEadAddField,
+            editEad, editEadCreateDbEntries, editEadXml, editEadXmlSaveLevel, editEadXmlSaveAll, editEadXmlDeleteEntries, editEadGetFields, editEadAddField, generateEadidResponseJSONWhenEdit,
 
             <!-- edit ingestionprofiles -->
             ingestionprofiles, addIngestionprofile, storeIngestionprofile, cancelIngestionprofileEditing,
