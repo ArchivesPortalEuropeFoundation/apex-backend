@@ -81,18 +81,38 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 
 	// Methods
 	public String execute() throws Exception {
-		log.debug("Start process to fill Coordinates table.");
-		ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
-		List<ArchivalInstitution> archivalInstitution = archivalInstitutionDao.findAll();
-		
-		for (int i = 0; i < archivalInstitution.size(); i++) {
-			this.insertCoordinates(archivalInstitution.get(i));
-			try {
-				Thread.sleep(250);
-			} catch (InterruptedException e) {
-				log.error("Error trying to sleep thread for action 'eag2012GeoCoordinates' at iteration: " + (i + 1));
+		try {
+			log.debug("Start process to fill Coordinates table.");
+			// Delete all previous content in the table "Coordinates".
+			CoordinatesDAO coordinatesDAO = DAOFactory.instance().getCoordinatesDAO();
+			List<Coordinates> coordinatesList = coordinatesDAO.getCoordinates();
+			if (coordinatesList != null && !coordinatesList.isEmpty()) {
+				for (int i = 0; i < coordinatesList.size(); i++) {
+					Coordinates coordinates = coordinatesList.get(i);
+					log.debug("Deleting coordinates for: " + coordinates.getNameInstitution());
+					JpaUtil.beginDatabaseTransaction();
+					coordinatesDAO.deleteSimple(coordinates);
+					JpaUtil.commitDatabaseTransaction();
+				}
 			}
-		}// for I
+
+			// Loads the lists of institutions.
+			ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
+			List<ArchivalInstitution> archivalInstitution = archivalInstitutionDao.findAll();
+			
+			for (int i = 0; i < archivalInstitution.size(); i++) {
+				log.debug("Process institution " + i + " of " + archivalInstitution.size());
+				this.insertCoordinates(archivalInstitution.get(i));
+				try {
+					Thread.sleep(250);
+				} catch (InterruptedException e) {
+					log.error("Error trying to sleep thread for action 'eag2012GeoCoordinates' at iteration: " + (i + 1));
+				}
+			}// for I
+		} catch (Exception e) {
+			log.error("End process to fill Coordinates table with errors. " + e.getMessage());
+			return ERROR;
+		}
 		log.debug("End process to fill Coordinates table.");
 		return SUCCESS;
 	}
@@ -103,6 +123,7 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 	 * @param archivalInstitution Archival institution to recover the EAG file.
 	 */
 	public void insertCoordinates(final ArchivalInstitution archivalInstitution) {
+		log.debug("Processing institution: " + archivalInstitution.getAiname() + "(" + archivalInstitution.getAiId() + ")");
 		String strPath = "";
 		try {
 			if (archivalInstitution.getEagPath() != null) {
