@@ -102,7 +102,7 @@ select#selectLanguage  {
 #header {
     background: url("../images/ape/header/header_bg.png");
     background-repeat:repeat-x;
-    height: 111px;
+    height: 120px;
     overflow: hidden;
     width: 100%;
 }
