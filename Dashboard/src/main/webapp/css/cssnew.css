@@ -141,6 +141,7 @@ select#selectLanguage  {
 	text-align: left;
 	border-bottom: 2px solid #79B7E7;
 	margin-bottom: 5px;
+	margin-top: 5px;
 }
 
 #main {
