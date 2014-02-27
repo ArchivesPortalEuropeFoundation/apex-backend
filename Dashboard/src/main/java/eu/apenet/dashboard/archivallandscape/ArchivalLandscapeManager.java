@@ -36,6 +36,8 @@ import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import com.ctc.wstx.exc.WstxLazyException;
+
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.exception.DashboardAPEnetException;
@@ -109,6 +111,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	private static final String ERROR_IDENTIFIERS = "errorIdentifier";
 	private static final String ERROR_NEW_IDENTIFIERS = "errorIdentifier2";
 	private static final String ERROR_COUNTRY = "errorCountry";
+	private static final String ERROR_INVALID_CHARS = "errorInvalidChars";
 
 	// Error when an institution has duplicated identifiers.
 	private static final String ERROR_DUPLICATE_IDENTIFIERS = "errorDuplicateIdentifiers";
@@ -149,6 +152,8 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	private Set<String> duplicateIdentifiers;
 
 	private Set<String> pathsToBeDeleted;
+
+	private boolean invalidChars = false;
 
 	public void setHttpFile(File httpFile){
 		this.httpFile = httpFile;
@@ -225,6 +230,14 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 
 	public void setDuplicateIdentifiers(Set<String> duplicateIdentifiers) {
 		this.duplicateIdentifiers = duplicateIdentifiers;
+	}
+
+	public boolean isInvalidChars() {
+		return this.invalidChars;
+	}
+
+	public void setInvalidChars(boolean invalidChars) {
+		this.invalidChars = invalidChars;
 	}
 
 	public String upload() throws SAXException, APEnetException{
@@ -395,6 +408,8 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					}catch(Exception e){
 						log.error("Exception checking institutions with ddbb to be replaced",e);
 					}
+				} else if (this.isInvalidChars()) {
+					state = ERROR_INVALID_CHARS;
 				} else {
 					state = ERROR_LANG;
 				}
@@ -1596,7 +1611,10 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			log.error("File not found :: "+archivalInstitutionFile.getAbsolutePath() + APEnetUtilities.generateThrowableLog(e));
 		} catch (XMLStreamException e) {
 			log.error("Archival Landscape reading exception: " + APEnetUtilities.generateThrowableLog(e));
-		} catch (Exception e){
+		} catch (WstxLazyException e){
+			log.error("Unexpected character into xml: ",e);
+			this.setInvalidChars(true);
+		}catch (Exception e){
 			log.error("Exception: " + APEnetUtilities.generateThrowableLog(e));
 		}
 		return archivalInstitutions;
