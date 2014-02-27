@@ -34,6 +34,7 @@ import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.UpFile;
 import eu.apenet.persistence.vo.UploadMethod;
 import eu.apenet.persistence.vo.Ingestionprofile;
+import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import java.util.LinkedHashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -344,7 +345,6 @@ public class UploadContentAction extends AbstractInstitutionAction {
                 String fileType = filePath.substring(filePath.lastIndexOf(".") + 1);
                 uploader_ftp.getFile(client, filePath, aiId);
                 if (fileType.equals("xml")) {
-                    filesUploaded.add(filePath);
                     createDBentry(filePath, "FTP");
                 } else if (fileType.equals("zip")) {
                     String filename = filePath.substring(0, filePath.lastIndexOf("."));
@@ -364,9 +364,6 @@ public class UploadContentAction extends AbstractInstitutionAction {
                     zipManager.unzip(storeFilePath + filename + ".zip");
                     String[] files = unzipZipDirFile.list(new SuffixFileFilter("xml"));
 
-                    /**
-                     * *
-                     */
                     for (String file : files) {
                         File srcFile = new File(unzipZipPath + file);
                         File destFile = new File(storeFilePath + file);
@@ -378,16 +375,7 @@ public class UploadContentAction extends AbstractInstitutionAction {
                                 log.error(e.getMessage());
                             }
                         } else {
-                            try {
-                                FileUtils.copyFile(srcFile, destFile);
-                                FileUtils.forceDelete(srcFile);
-                                filesUploaded.add(file);
-
-                                createDBentry(file, "FTP");
-
-                            } catch (IOException e) {
-                                log.error(e.getMessage());
-                            }
+                            createDBentry(file, "FTP", srcFile, destFile);
                         }
                     }
                     /**
@@ -426,23 +414,49 @@ public class UploadContentAction extends AbstractInstitutionAction {
      * @param uploadMethodString Depending if the file has been harvest or downloaded from an FTP server
      */
     private void createDBentry(String filePath, String uploadMethodString) {
-        Integer aiId = getAiId();
-        UpFile upFile = new UpFile();
+        createDBentry(filePath, uploadMethodString, null, null);
+    }
 
-        UpFileDAO upFileDao = DAOFactory.instance().getUpFileDAO();
-        upFile.setPath(APEnetUtilities.FILESEPARATOR + aiId + APEnetUtilities.FILESEPARATOR);
+        private void createDBentry(String filePath, String uploadMethodString, File srcFile, File destFile) {
+        try {
+            // Moving the file
+            // Insert file uploaded into up_file table
+            JpaUtil.beginDatabaseTransaction();
 
-        UploadMethodDAO uploadMethodDao = DAOFactory.instance().getUploadMethodDAO();
-        UploadMethod uploadMethod = uploadMethodDao.getUploadMethodByMethod(uploadMethodString);
-        upFile.setUploadMethod(uploadMethod);
-        upFile.setAiId(aiId);
+            UpFile upFile = new UpFile();
+            UploadMethodDAO uploadMethodDao = DAOFactory.instance().getUploadMethodDAO();
+            UploadMethod uploadMethod = uploadMethodDao.getUploadMethodByMethod(uploadMethodString);
+            upFile.setUploadMethod(uploadMethod);
+            upFile.setAiId(getAiId());
+            upFile.setFileType(FileType.XML);
+            upFile.setPath(APEnetUtilities.FILESEPARATOR + getAiId() + APEnetUtilities.FILESEPARATOR);
+            upFile.setFilename(filePath);
 
-        upFile.setFileType(FileType.XML);
+            DAOFactory.instance().getUpFileDAO().insertSimple(upFile);
 
-        upFile.setFilename(filePath);
-        upFileDao.store(upFile);
+            // If method deals with files from a ZIP, move these from temporary location as given in method header
+            if(srcFile != null && destFile != null){
+                log.info("Moving file " + srcFile.getAbsolutePath() + " to " + destFile.getAbsolutePath());
+                FileUtils.moveFile(srcFile, destFile);
+                filesUploaded.add(filePath);
+            }
 
-        processWithProfile(upFile);
+            JpaUtil.commitDatabaseTransaction();
+
+            //If profile was added to upload, directly add file to queue in order to avoid delays for user
+            processWithProfile(upFile);
+        } catch (Exception e) {
+            log.error("Error inserting the file " + filePath + " in up_table (the user was uploading this file to the Dashboard) or error storing the file in temporal up repository [Database and FileSystem Rollback]. Error: " + e.getMessage());
+            JpaUtil.rollbackDatabaseTransaction();
+            // FileSystem Rollback //todo: For Inteco: Shouldn't it be destFile to be erased if it exists?
+            if (srcFile.exists()) {
+                try {
+                    FileUtils.forceDelete(srcFile);
+                } catch (IOException e1) {
+                    log.error("It was not possible to remove the file " + srcFile.getAbsolutePath() + ". Error: " + e1.getMessage());
+                }
+            }
+        }
     }
 
     /**
