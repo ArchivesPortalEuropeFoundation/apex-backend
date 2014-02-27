@@ -28,6 +28,10 @@
 	</xsl:template>
 	<xsl:template match="text()" mode="otherwithcoma">
 		<xsl:value-of select="fn:normalize-space(ape:highlight(., 'otherwithcoma'))" disable-output-escaping="yes" />
+		<!-- Extent option -->
+		<xsl:if test="string-length(../@unit)>0">
+			<xsl:text> (</xsl:text><xsl:value-of select="../@unit"/><xsl:text>)</xsl:text>
+		</xsl:if>	
 		<xsl:if test="position() != last()">
 		   <xsl:text>, </xsl:text>
 		</xsl:if>
@@ -628,19 +632,19 @@
 			</xsl:for-each>
 		</div>
 	</xsl:template>
+	<!-- Extent option -->
 	<xsl:template name="extent">
 		<h2>
 			<xsl:value-of select="ape:resource('eadcontent.extent')" />
 		</h2>
 		<div class="ead-content">
 		  <xsl:for-each select="ead:extent">
-			  <xsl:apply-templates mode="otherwithoutwhitespace"/>
-			  <xsl:if test="./@unit">
-			     <xsl:text> </xsl:text>
-		         <xsl:value-of select="./@unit"/>
-		      </xsl:if>
-			   <xsl:if test="position() != last()">
-			      <xsl:text>, </xsl:text>
+			<xsl:apply-templates mode="otherwithoutwhitespace"/>
+			<xsl:if test="./@unit"> 
+				<xsl:text> (</xsl:text><xsl:value-of select="./@unit"/><xsl:text>)</xsl:text>
+			</xsl:if>
+			<xsl:if test="position() != last()">
+				<xsl:text>, </xsl:text>
 			  </xsl:if>
 		   </xsl:for-each>			 
 		</div>
@@ -1048,12 +1052,19 @@
 		</div>
 	</xsl:template>
 	
+	<!-- Extent option -->
 	<xsl:template match="ead:extent">
-	    <xsl:value-of select="ape:highlight(., 'other')" disable-output-escaping="yes" /><xsl:if test="./@unit"><xsl:text> (</xsl:text><xsl:value-of select="./@unit"/>)</xsl:if>
+	    <xsl:value-of select="ape:highlight(., 'other')" disable-output-escaping="yes" />
+	    <xsl:if test="./@unit">
+	    	<xsl:text> (</xsl:text><xsl:value-of select="./@unit"/><xsl:text>)</xsl:text>
+	    </xsl:if>
 	</xsl:template>
 	
 	<xsl:template match="ead:dimensions">
-	    <xsl:value-of select="ape:highlight(., 'other')" disable-output-escaping="yes" /><xsl:if test="./@unit"><xsl:text> (</xsl:text><xsl:value-of select="./@unit"/>)</xsl:if>
+	    <xsl:value-of select="ape:highlight(., 'other')" disable-output-escaping="yes" />
+	    <xsl:if test="./@unit">
+	    	<xsl:text> (</xsl:text><xsl:value-of select="./@unit"/><xsl:text>)</xsl:text>
+	    </xsl:if>
 	</xsl:template>
 	
     <xsl:template match="ead:physfacet">
