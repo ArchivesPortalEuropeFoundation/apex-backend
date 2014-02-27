@@ -378,10 +378,12 @@ public class UploadContentAction extends AbstractInstitutionAction {
                             createDBentry(file, "FTP", srcFile, destFile);
                         }
                     }
-                    /**
-                     * *
-                     */
-
+                    try {
+                        FileUtils.forceDelete(unzipZipDirFile);
+                        FileUtils.forceDelete(new File(storeFilePath + filename + ".zip"));
+                    } catch (IOException e) {
+                        log.error(e.getMessage());
+                    }
                 }
             } catch (IOException e) {
                 filesNotUploaded.add(filePath);
