@@ -8,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.InvalidKeyException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -57,9 +56,6 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 	private String co_country;   // Institution or repository address (country).
 	private double co_lat;		// Institution or repository latitude.
 	private double co_lon;		// Institution or repository longitude.
-
-	private String google_maps_clientId = "";	// clientID used to build geocoder = new Geocoder(clientId,clientKey)
-	private String google_maps_clientKey = "";	// clientID used to build geocoder = new Geocoder(clientId,clientKey)
 	
 	/**
 	 * 
@@ -251,41 +247,19 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 											|| this.getCo_lon() == 0.0) {
 
 										// Try to recover the coordinates to bound.
-										Geocoder geocoder = null;
-										try {
-											geocoder = new Geocoder(this.getGoogle_maps_clientId(), this.getGoogle_maps_clientKey());
-											log.debug("geocoder defined with clientID: " + this.getGoogle_maps_clientId() + " & clientKey: " + this.getGoogle_maps_clientKey());
-										} catch (InvalidKeyException e) {
-											log.error(e.getMessage());
-											geocoder = null;
-										} catch (IllegalArgumentException iae) {
-											log.error(iae.getMessage());
-											geocoder = null;
-										}
+										Geocoder geocoder = new Geocoder();
 
 										String address = this.getCo_street() + ", " + this.getCo_postalCity() + ", " + this.getCo_country();
 										GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(address).getGeocoderRequest();
-										GeocodeResponse geocoderResponse;
-
-										if (geocoder == null) {
-											log.debug("geocoder defined without clientID and/or clientKey");
-											geocoder = new Geocoder();
-											geocoderResponse = geocoder.geocode(geocoderRequest);
-										} else if (geocoder.geocode(geocoderRequest) == null) {
-											log.debug("geocoder defined with non valid clientID and/or clientKey");
-											geocoder = new Geocoder();
-											geocoderResponse = geocoder.geocode(geocoderRequest);
-										} else {
-											geocoderResponse = geocoder.geocode(geocoderRequest);
-										}
+										GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
 
 										if (geocoderResponse.getStatus().equals(GeocoderStatus.OK)) {
 											List<GeocoderResult> geocoderResultList = geocoderResponse.getResults();
-			
+
 											// Always recover the first result.
 											if (geocoderResultList.size() > 0) {
 												GeocoderResult geocoderResult = geocoderResultList.get(0);
-			
+
 												// get Geometry Object
 												GeocoderGeometry geocoderGeometry = geocoderResult.getGeometry();
 												// get Location Object
@@ -431,21 +405,4 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 	public void setCo_lon(double co_lon) {
 		this.co_lon = co_lon;
 	}
-
-	public String getGoogle_maps_clientId() {
-		return google_maps_clientId;
-	}
-
-	public void setGoogle_maps_clientId(String google_maps_clientId) {
-		this.google_maps_clientId = google_maps_clientId;
-	}
-
-	public String getGoogle_maps_clientKey() {
-		return google_maps_clientKey;
-	}
-
-	public void setGoogle_maps_clientKey(String google_maps_clientKey) {
-		this.google_maps_clientKey = google_maps_clientKey;
-	}
-
 }
