@@ -1,4 +1,4 @@
-var globalRefresh_interval, globalIndex;
+var globalRefresh_interval, globalIndex, globalRefresh;
 
 function initContentManager() {
     clearFAsFromSession();
@@ -84,6 +84,14 @@ function enable_features(){
 }
 
 function performEadAction(action, id, type) {
+	
+	//If the select option refresh equals to refresh, then, set it to not refresh, perform action and later set it again to refresh
+	var originalStatus=globalIndex;
+	if(globalIndex!=0){
+		reloadRefresh(false);
+	}
+	
+	
 	var actionSplitted = action.split("|");
 	var windowType = actionSplitted[0];
 	var actionOrUrl = actionSplitted[1];
@@ -96,7 +104,13 @@ function performEadAction(action, id, type) {
 			xmlTypeId : type,
 			action : actionOrUrl
 		}, function(data) {
+					
 			updateCurrentSearchResults(updateForm);
+			
+			if (originalStatus==1){
+				reloadRefresh(true);
+			}
+			
 		});
 	} else {
 		var parameters = "id=" + id + "&xmlTypeId=" + type;
@@ -120,6 +134,12 @@ function performEadAction(action, id, type) {
 
 }
 function performBatchEadAction() {
+	//If the select option refresh equals to refresh, then, set it to not refresh, perform action and later set it again to refresh
+	var originalStatus=globalIndex;
+	if(globalIndex!=0){
+		reloadRefresh(false);
+	}
+
 	var formData = $("#batchActionsForm").serializeArray();
 	var updateForm = getUpdateCurrentSearchResultsForm();
 	var json = {};
@@ -144,7 +164,11 @@ function performBatchEadAction() {
 				}
 				alert(message);
 			}
+			
 			updateCurrentSearchResults(updateForm);
+			if (originalStatus==1){
+				reloadRefresh(true);
+			}			
 		});
 	}
 }
@@ -178,11 +202,13 @@ function updateCurrentSearchResults(formData) {
 		$("#ead-results-container").html(data);
 		initSubpage();
 		$("select#refreshInterval option").eq(globalIndex).prop("selected",true);
+		
 		if(index!=0){ //reloads if different
-			refreshIntervalFunc(globalIndex);
-		}
+			refreshIntervalFunc(globalIndex, false);
+		}		
 	});
 }
+
 function changeOrder(fieldValue, fieldSorting) {
 	$("#updateCurrentSearch_orderByField").attr("value", fieldValue);
 	$("#updateCurrentSearch_orderByAscending").attr("value", fieldSorting);
@@ -270,21 +296,45 @@ function prepareSubmitAndCancelBtns() {
         $.fn.colorbox.close();
     });
 }
-function refreshIntervalFunc(lastIndex) {
+function refreshIntervalFunc(lastIndex, execute) {
 	var list = $("select#refreshInterval");
 	var index=lastIndex;// keeps the last index
 	globalIndex = index;
 	var valueOption=globalRefresh_interval;
 	if (index!=0){
+		if (execute) {
+			globalRefresh = true;
+		}
 		var action = "reloadBottom("+(index)+","+globalRefresh_interval+");";
 		if($.isNumeric(lastIndex) && index===lastIndex){
-			setTimeout(action,valueOption*1000);
+			setTimeout(action,globalRefresh_interval*1000);
 		}
+	} else {
+		globalRefresh = false;
 	}
 }
 function reloadBottom(index,seconds) {
 	var selectedIndex = $("select#refreshInterval").prop("selectedIndex");
-	if(index==selectedIndex){
+	if(index==selectedIndex && globalRefresh){ //
 		updateCurrentSearchResults();
+	} else  if (globalIndex != 0) {
+		globalRefresh = true;
+	}
+}
+
+
+/***
+ * This function sets refresh intervals to refresh or non refresh depending of the value 
+ * @param value If true the select option will refresh, if false will not.
+ */
+function reloadRefresh(value){
+	if (value){
+		//set to refresh
+		$("select#refreshInterval").prop('selectedIndex', '1');
+		refreshIntervalFunc(1, false);
+	}
+	else{
+		//set to do not refresh
+		refreshIntervalFunc(0, false);
 	}
 }

@@ -106,7 +106,7 @@
             <div id="eadRefreshInterval">
                 <label class="bold" id="pageSizeLabel" for="updateCurrentSearch_resultPerPage"><s:text
                         name="content.message.refreshInterval" />: </label>
-                <select  id= "refreshInterval" name="refreshInterval" onchange="javascript:refreshIntervalFunc($(this).prop('selectedIndex'));">
+                <select  id= "refreshInterval" name="refreshInterval" onchange="javascript:refreshIntervalFunc($(this).prop('selectedIndex'), true);">
                     <option value="nonRefresh">
                         <s:text name="content.message.nonRefresh"/>
                     </option>
