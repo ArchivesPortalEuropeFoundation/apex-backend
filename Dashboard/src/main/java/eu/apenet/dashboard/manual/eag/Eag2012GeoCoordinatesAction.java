@@ -51,7 +51,9 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 	// Attributes for Coordinates
 	private double co_archId;	// Archival institution ID.
 	private String co_name;		// Institution or repository name.
-	private String co_address;	// Institution or repository address (street, municipalityPostalcode, country).
+	private String co_street;   // Institution or repository address (street).
+	private String co_postalCity;   // Institution or repository address (municipalityPostalcode).
+	private String co_country;   // Institution or repository address (country).
 	private double co_lat;		// Institution or repository latitude.
 	private double co_lon;		// Institution or repository longitude.
 
@@ -66,25 +68,47 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 	public Eag2012GeoCoordinatesAction() {
 		this.setCo_archId(0.0);
 		this.setCo_name("");
-		this.setCo_address("");
+		this.setCo_street("");
+		this.setCo_postalCity("");
+		this.setCo_country("");
 		this.setCo_lat(0.0);
 		this.setCo_lon(0.0);
 	}
 
 	// Methods
 	public String execute() throws Exception {
-		log.debug("Start process to fill Coordinates table.");
-		ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
-		List<ArchivalInstitution> archivalInstitution = archivalInstitutionDao.findAll();
-		
-		for (int i = 0; i < archivalInstitution.size(); i++) {
-			this.insertCoordinates(archivalInstitution.get(i));
-			try {
-				Thread.sleep(250);
-			} catch (InterruptedException e) {
-				log.error("Error trying to sleep thread for action 'eag2012GeoCoordinates' at iteration: " + (i + 1));
+		try {
+			log.debug("Start process to fill Coordinates table.");
+			// Delete all previous content in the table "Coordinates".
+			CoordinatesDAO coordinatesDAO = DAOFactory.instance().getCoordinatesDAO();
+			List<Coordinates> coordinatesList = coordinatesDAO.getCoordinates();
+			if (coordinatesList != null && !coordinatesList.isEmpty()) {
+				for (int i = 0; i < coordinatesList.size(); i++) {
+					Coordinates coordinates = coordinatesList.get(i);
+					log.debug("Deleting coordinates for: " + coordinates.getNameInstitution());
+					JpaUtil.beginDatabaseTransaction();
+					coordinatesDAO.deleteSimple(coordinates);
+					JpaUtil.commitDatabaseTransaction();
+				}
 			}
-		}// for I
+
+			// Loads the lists of institutions.
+			ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
+			List<ArchivalInstitution> archivalInstitution = archivalInstitutionDao.findAll();
+			
+			for (int i = 0; i < archivalInstitution.size(); i++) {
+				log.debug("Process institution " + i + " of " + archivalInstitution.size());
+				this.insertCoordinates(archivalInstitution.get(i));
+				try {
+					Thread.sleep(250);
+				} catch (InterruptedException e) {
+					log.error("Error trying to sleep thread for action 'eag2012GeoCoordinates' at iteration: " + (i + 1));
+				}
+			}// for I
+		} catch (Exception e) {
+			log.error("End process to fill Coordinates table with errors. " + e.getMessage());
+			return ERROR;
+		}
 		log.debug("End process to fill Coordinates table.");
 		return SUCCESS;
 	}
@@ -95,6 +119,7 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 	 * @param archivalInstitution Archival institution to recover the EAG file.
 	 */
 	public void insertCoordinates(final ArchivalInstitution archivalInstitution) {
+		log.debug("Processing institution: " + archivalInstitution.getAiname() + "(" + archivalInstitution.getAiId() + ")");
 		String strPath = "";
 		try {
 			if (archivalInstitution.getEagPath() != null) {
@@ -123,7 +148,10 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 							boolean isNameRecovered = false;
 							boolean isLocationRecovered = false;
 							this.setCo_name("");
-							this.setCo_address("");
+							//this.setCo_address("");
+							this.setCo_street("");
+							this.setCo_postalCity("");
+							this.setCo_country("");
 							this.setCo_lat(0.0);
 							this.setCo_lon(0.0);
 							for (int k=0; k< repositoryChildsList.getLength() && (!isNameRecovered || !isLocationRecovered); k++) {
@@ -183,7 +211,9 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 												country = visitorsAddressChildNode.getTextContent().trim();
 											}
 										}// for L
-										this.setCo_address(street + ", " + municipalityPostalcode + ", " + country); //setCo_address	
+										this.setCo_street(street); //setCo_street
+										this.setCo_postalCity(municipalityPostalcode); //setCo_postalCity
+										this.setCo_country(country); //setCo_country
 										if (isStreetRecovered || isMunicipalityRecovered) {
 											isLocationRecovered = true;
 										}
@@ -206,14 +236,19 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 									coordinates.setArchivalInstitution(archivalInstitution);
 									// Name of the current archival institution/repository.
 									coordinates.setNameInstitution(this.getCo_name());
-									// Address for the current archival institution/repository.
-									coordinates.setAddress(this.getCo_address());
+									// street for the current archival institution/repository.
+									coordinates.setStreet(this.getCo_street());
+									// municipalityPostalCode for the current archival institution/repository.
+									coordinates.setPostalCity(this.getCo_postalCity());
+									//country for the current archival institution/repository.
+									coordinates.setCountry(this.getCo_country());
 			
 									// Check the coordinates or recover it if necessary.
 									if (this.getCo_lat() == 0.0
 											|| this.getCo_lon() == 0.0) {
 										Geocoder geocoder = new Geocoder();
-										GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(this.getCo_address()).getGeocoderRequest();
+										String address = this.getCo_street() + ", " + this.getCo_postalCity() + ", " + this.getCo_country();
+										GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(address).getGeocoderRequest();
 										GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
 										if (geocoderResponse.getStatus().equals(GeocoderStatus.OK)) {
 											List<GeocoderResult> geocoderResultList = geocoderResponse.getResults();
@@ -328,12 +363,28 @@ public class Eag2012GeoCoordinatesAction extends AbstractInstitutionAction {
 		this.co_name = co_name;
 	}
 
-	public String getCo_address() {
-		return co_address;
+	public String getCo_street() {
+		return co_street;
 	}
 
-	public void setCo_address(String co_address) {
-		this.co_address = co_address;
+	public void setCo_street(String co_street) {
+		this.co_street = co_street;
+	}
+
+	public String getCo_postalCity() {
+		return co_postalCity;
+	}
+
+	public void setCo_postalCity(String co_postalCity) {
+		this.co_postalCity = co_postalCity;
+	}
+
+	public String getCo_country() {
+		return co_country;
+	}
+
+	public void setCo_country(String co_country) {
+		this.co_country = co_country;
 	}
 
 	public double getCo_lat() {

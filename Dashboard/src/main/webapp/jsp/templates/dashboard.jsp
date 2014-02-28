@@ -20,6 +20,7 @@
 		<script type="text/javascript">
 		var gId = 'UA-42624055-1';
 		var hostname = window.location.hostname;
+		
 		if (hostname == "www.archivesportaleurope.net" 
 				|| hostname == "archivesportaleurope.net" 
 				|| hostname == "dashboard.archivesportaleurope.net"){
@@ -30,6 +31,17 @@
 		var _gaq = _gaq || [];
 		_gaq.push([ '_setAccount', gId ]);
 		_gaq.push([ '_trackPageview' ]);
+
+		function redirect(){
+		     var language= $("#selectLanguage").val();	
+		     var finalHref;
+             if (hostname == "contentchecker.archivesportaleurope.net"){ 
+                finalHref = "http://contentchecker.archivesportaleurope.net/" + language + "/home";	
+             }else{
+				finalHref = "http://www.archivesportaleurope.net/" + language + "/home";
+			}
+            location.href = finalHref;
+		}
 		</script>
     </head>
     <body>
@@ -38,9 +50,13 @@
         <div id="principal">
             <div id="wrap">
                 <div id="dashboard">
-              			<div id="header"> <div id="left-header"><div id="titledashboard"><apenet:resource><tiles:getAsString name="title"/></apenet:resource></div> </div> </div>
-
-				                   
+              			<div id="header">
+	              			<a href="#" onclick="redirect()">
+	              			  <div id="logo"></div>
+	              			</a>
+	              			<div id="left-header"></div><div class="right-header"></div>
+              			   <!-- <div id="titledashboard"><apenet:resource><tiles:getAsString name="title"/></apenet:resource></div> </div>-->
+              			 </div>              
                    <div id="menubar" >
                    		<div id="breadcrumb">
                    			<c:if test="${!empty securityContext}">

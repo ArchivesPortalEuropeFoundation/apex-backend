@@ -30,8 +30,12 @@ public class Coordinates implements java.io.Serializable {
 	private int aiId;
 	@Column(name = "name_institution", nullable = false)
 	private String nameInstitution;
-	@Column(name = "address", nullable = false)
-	private String address;
+	@Column(name = "street", nullable = false)
+	private String street;
+	@Column(name = "postalcity", nullable = false)
+	private String postalCity;
+	@Column(name = "country", nullable = false)
+	private String country;
 	@Column(name = "lat", precision = 131089, scale = 0)
 	private double lat;
 	@Column(name = "lon", precision = 131089, scale = 0)
@@ -41,20 +45,25 @@ public class Coordinates implements java.io.Serializable {
 	}
 
 	public Coordinates(int id, ArchivalInstitution archivalInstitution,
-			String nameInstitution, String address) {
+			String nameInstitution, String street, String postalcity, String country) {
 		this.id = id;
 		this.archivalInstitution = archivalInstitution;
 		this.nameInstitution = nameInstitution;
-		this.address = address;
+		this.street = street;
+		this.postalCity = postalcity;
+		this.country = country;
 	}
 
 	public Coordinates(int id, ArchivalInstitution archivalInstitution,
-			String nameInstitution, String address, double lat,
+			String nameInstitution, String street, String postalcity, String country, double lat,
 			double lon) {
 		this.id = id;
 		this.archivalInstitution = archivalInstitution;
 		this.nameInstitution = nameInstitution;
-		this.address = address;
+		//this.address = address;
+		this.street = street;
+		this.postalCity = postalcity;
+		this.country = country;
 		this.lat = lat;
 		this.lon = lon;
 	}
@@ -83,12 +92,28 @@ public class Coordinates implements java.io.Serializable {
 		this.nameInstitution = nameInstitution;
 	}
 
-	public String getAddress() {
-		return this.address;
+	public String getStreet() {
+		return street;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setStreet(String street) {
+		this.street = street;
+	}
+
+	public String getPostalCity() {
+		return postalCity;
+	}
+
+	public void setPostalCity(String postalCity) {
+		this.postalCity = postalCity;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
 	}
 
 	public double getLat() {

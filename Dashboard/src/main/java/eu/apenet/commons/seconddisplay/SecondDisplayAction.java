@@ -151,11 +151,13 @@ public class SecondDisplayAction extends ActionSupport implements ServletRequest
 			Locale locale = getLocale();
 			if (locale == null) {
 				request.setAttribute("localizedCountryName", country.getCname());
+				request.setAttribute("locale", "en");
 			} else {
 				String language = getLocale().getLanguage();
 				CouAlternativeNameDAO couAlternativeDAO = DAOFactory.instance().getCouAlternativeNameDAO();
 				request.setAttribute("localizedCountryName",
 						couAlternativeDAO.getLocalizedCountry(country.getIsoname(), language));
+				request.setAttribute("locale", locale.getLanguage());
 			}
 			return SUCCESS;
 		} catch (Exception e) {
