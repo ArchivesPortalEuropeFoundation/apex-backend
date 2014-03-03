@@ -2182,13 +2182,17 @@ function addYIFurtherWebsOfTheInstitution(text1){
 	}else{
 		clone.find("#textYIWebpage").attr("id","textYIWebpage_"+(count+1));
 	}
-	clone.attr("id","trButtonYIWebpage_"+(count+1));
+	
 	clone.find("[id^='selectTextYILangWebpage']").attr("id","selectTextYILangWebpage_"+(count+1));
+	clone.find("[id^='selectTextYILangWebpage']").attr("value","none"); 
+	clone.find("[id^='textYIWebpage']").attr("value","");
+	clone.attr("id","trButtonYIWebpage_"+(count+1));
+	
 	clone2 = $(target2).clone();
 	clone2.find("[id^='textYIWebpageLinkTitle']").attr("id","textYIWebpageLinkTitle_"+(count+1));
-	clone.find("[id^='selectTextYILangWebpage']").attr("value","none");
 	clone2.find("[id^='textYIWebpageLinkTitle']").attr("value","");
 	clone2.attr("id","trButtonYILangWebpage_"+(count+1));
+		
 	if(wrongField){
 		alert(text1);
 	}else{
@@ -2887,9 +2891,11 @@ function addFurtherWebsOfTheInstitution(text1){
 	clone.find("[for^='textContactWebOfTheInstitution']").attr("for","textContactWebOfTheInstitution_"+(count+1));
 	clone.find("[id^='textContactWebOfTheInstitution']").attr("id","textContactWebOfTheInstitution_"+(count+1));
 	clone.find("[id^='textContactWebOfTheInstitution']").attr("value","");
+	
 	clone.find("[for^='selectWebpageLanguageOfTheInstitution']").attr("for","selectWebpageLanguageOfTheInstitution_"+(count+1));
 	clone.find("[id^='selectWebpageLanguageOfTheInstitution']").attr("id","selectWebpageLanguageOfTheInstitution_"+(count+1));
 	clone.find("[id^='selectWebpageLanguageOfTheInstitution']").attr("value","none");
+	
 	clone.find("[id^='undefined_w_required']").remove();
 	
 	clone2.attr("id","trLanguageWebpageOfTheInstitution_"+(count+1));
