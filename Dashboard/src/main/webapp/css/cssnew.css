@@ -593,6 +593,7 @@ input[type=password] {
 
 input[type=password].small {
 	width: 200px;
+	text-align: left;
 }
 
 input[type=password].large {
