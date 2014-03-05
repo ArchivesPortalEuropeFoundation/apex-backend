@@ -18,6 +18,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 
 import eu.apenet.dashboard.exception.NotAuthorizedException;
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.User;
 import eu.apenet.persistence.vo.UserRole;
@@ -25,7 +26,7 @@ import eu.apenet.persistence.vo.UserRole;
 public final class SecurityContext implements HttpSessionBindingListener{
 	private static final Logger LOGGER = Logger.getLogger(SecurityContext.class);
 	protected static final String VAR_SECURITY_CONTEXT = "var-security-context";
-	protected static final String VAR_SECURITY_CONTEXT_WEBDAV = "var-security-context-webdav";	
+	protected static final String VAR_SECURITY_CONTEXT_WEBDAV = "var-security-context-webdav";
 	private String emailAddress;
 	private String name;
 	private Integer partnerId;
@@ -75,7 +76,7 @@ public final class SecurityContext implements HttpSessionBindingListener{
 	public List<Integer> getAiIds() {
 		return aiIds;
 	}
-	
+
 
 	public boolean isWebdav() {
 		return webdav;
@@ -201,7 +202,7 @@ public final class SecurityContext implements HttpSessionBindingListener{
 		}
 		if (authorized){
 			selectedInstitution = new SelectedArchivalInstitution(archivalInstitution.getAiId(),
-					archivalInstitution.getAiname());			
+					archivalInstitution.getAiname());
 		}
 	}
 
@@ -212,6 +213,11 @@ public final class SecurityContext implements HttpSessionBindingListener{
 	public void checkAuthorized(Ead ead) {
 		checkAuthorized(ead.getAiId());
 	}
+
+        public void checkAuthorized(EacCpf eacCpf) {
+            checkAuthorized(eacCpf.getAiId());
+        }
+
 	public void checkAuthorizedToManageQueue() {
 		if (!isAdmin()){
 			throw new NotAuthorizedException("To index from queue you need to be admin");
