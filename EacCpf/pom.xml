@@ -12,6 +12,7 @@
     <name>EacCpf</name>
 
     <build>
+    	<finalName>EacCpf</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
