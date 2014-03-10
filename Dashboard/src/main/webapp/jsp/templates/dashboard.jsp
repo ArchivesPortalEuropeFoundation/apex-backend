@@ -8,11 +8,13 @@
 <tiles:useAttribute id="cssInternal" name="cssfilesInternal" classname="java.util.List" />
 <tiles:useAttribute id="jsInternal" name="jsfilesInternal" classname="java.util.List" />
 <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
+    <head>	
+    	
+
       <meta content="text/html; charset=UTF-8;" http-equiv="content-type" />
       <meta name="Description" content="APENET" />
       <meta name="Keywords" content="archives portal europe, apenet, europeana" />
-      <title><apenet:resource><tiles:getAsString name="title"/></apenet:resource></title>
+      <title id="myTitle"><apenet:resource><tiles:getAsString name="title"/></apenet:resource></title>
       <link rel="stylesheet" href="${pageContext.request.contextPath}/css/global.css" type="text/css"/>
       <link rel="stylesheet" href="${pageContext.request.contextPath}<tiles:getAsString name="maincss"/>" type="text/css"/>
       <c:forEach var="item" items="${jsInternal}"><script src="${pageContext.request.contextPath}${item}" type="text/javascript"></script></c:forEach>
@@ -50,6 +52,8 @@
         <div id="principal">
             <div id="wrap">
                 <div id="dashboard">
+	                	<div id="browser" style="background-color: yellow; text-align: center; text-anchor: inherit;"> 
+						</div>
               			<div id="header">
 	              			<a href="#" onclick="redirect()">
 	              			  <div id="logo"></div>
@@ -145,33 +149,66 @@
                 
             </div>
              <div id="footernavbar">
-                    <div id="footerCatInner">
-                        <ul>
-							<li><a id="food1" href="#" title="Navigation guide"><s:property value="getText('label.footer.navigationguide')"/> | </a></li>
-                            <li><a id="food2" href="termsOfUse.action" title="<s:property value="getText('terms.use.title')"/>"><s:property value="getText('label.footer.termsofuse')"/> | </a></li>
-                            <li><a id="food3" href="#" title="Site map"><s:property value="getText('label.footer.sitemap')"/> | </a></li>
-                          	<li><a id="food4" href="contact.action" title="Contact"><s:property value="getText('label.footer.contact')"/></a></li>  
-                        </ul>
-                    </div>
-                    <div id="footerSupportText"><s:text name="footer.support"/></div>
-                    <div id="footerSupportLogos"><img  src="images/ictpsp_logo.gif"/><img  src="images/eu_logo.gif"/></div>
-
-                </div>
-            
+                   <div id="footerCatInner">
+                       <ul>
+						<li><a id="food1" href="#" title="Navigation guide"><s:property value="getText('label.footer.navigationguide')"/> | </a></li>
+                           <li><a id="food2" href="termsOfUse.action" title="<s:property value="getText('terms.use.title')"/>"><s:property value="getText('label.footer.termsofuse')"/> | </a></li>
+                           <li><a id="food3" href="#" title="Site map"><s:property value="getText('label.footer.sitemap')"/> | </a></li>
+                         	<li><a id="food4" href="contact.action" title="Contact"><s:property value="getText('label.footer.contact')"/></a></li>  
+                       </ul>
+                   </div>
+                   <div id="footerSupportText"><s:text name="footer.support"/></div>
+                   <div id="footerSupportLogos"><img  src="images/ictpsp_logo.gif"/><img  src="images/eu_logo.gif"/></div>
+               </div>            
         </div>
 
-       
-	<script type="text/javascript">
-	(function() {
-		var ga = document.createElement('script');
-		ga.type = 'text/javascript';
-		ga.async = true;
-		ga.src = ('https:' == document.location.protocol ? 'https://ssl'
-				: 'http://www')
-				+ '.google-analytics.com/ga.js';
-		var s = document.getElementsByTagName('script')[0];
-		s.parentNode.insertBefore(ga, s);
-	})();
-	</script>
+		<script type="text/javascript">
+		(function() {
+			var ga = document.createElement('script');
+			ga.type = 'text/javascript';
+			ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl'
+					: 'http://www')
+					+ '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0];
+			s.parentNode.insertBefore(ga, s);
+		})();
+		</script>
+		
+		<script language="JavaScript">
+		   	$(document).ready(function(){
+				var alertMsg="";
+				
+				/* jQuery version */
+				var version = parseInt($.browser.version, 10);
+
+				var isMsie =/MSIE/.test(navigator.userAgent) && /Microsoft Internet Explorer/.test(navigator.appName);
+				if (!isMsie) 
+					isMsie =/Trident/.test(navigator.userAgent) && /Netscape/.test(navigator.appName);
+				var isMozilla = /Firefox/.test(navigator.userAgent);
+				var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+				var isSafari = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
+
+				/* Browsers we can test */
+				if (isChrome) {
+					/* To detect Chrome version in second display */
+					window.navigator.appVersion.match(/Chrome\/(.*?) /)[1];
+					var test = parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10);
+					if (test<23) 
+						alertMsg = "<s:property value="getText('header.browser')" />";
+				}
+				else if (isSafari && version<533) 
+					alertMsg = "<s:property value="getText('header.browser')" />";
+				else if (isMsie && version<8) 
+					alertMsg = "<s:property value="getText('header.browser')" />";
+				else if (isMozilla && version<17) 
+					alertMsg = "<s:property value="getText('header.browser')" />"; 
+
+				/* Show result */     	
+				if (alertMsg!=""){
+		   			$("#browser").text(alertMsg);
+		   		}
+		   	});
+		</script>
     </body>
 </html>                
