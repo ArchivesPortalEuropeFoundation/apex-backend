@@ -46,11 +46,11 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
     private String additionalError;
     private final static String OVERWRITE = "Overwrite";
     private final static String CANCEL = "Cancel";
-    private final static String CHANGE = "Change EADID";
+    private final static String CHANGE = "Change ID";
     private final static String ADD = "Add EADID";
     private final static String OK = "OK";//
     private final static String KO = "KO";//
-
+    
 	private String eadid;
     private String neweadid;
     private String[] arrayneweadid;
@@ -261,6 +261,7 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 		typeSet.add(new SelectItem("0", getText("content.message.fa")));
 		typeSet.add(new SelectItem("1", getText("content.message.hg")));
 		typeSet.add(new SelectItem("3", getText("content.message.sg")));
+		typeSet.add(new SelectItem("2", getText("content.message.cpf")));
     }
 	@Override
 	protected void buildBreadcrumbs() {
@@ -292,7 +293,7 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 			//existingChangeEADIDAnswers contains the result of changing the EADID. OK or KO
 			String typeAnswer = null;
 			typeAnswer = existingFiles.get(i).getEadType();
-			if (!this.existingFilesAnswers[i].equals("Change EADID")) { //todo: What is this check for??
+			if (!this.existingFilesAnswers[i].equals("Change ID")) { //todo: What is this check for??
 				//String initial[] = {"KO"};
 				//this.setExistingChangeEADIDAnswers(initial);
 				//System.out.print(this.existingChangeEADIDAnswers[i].toString());

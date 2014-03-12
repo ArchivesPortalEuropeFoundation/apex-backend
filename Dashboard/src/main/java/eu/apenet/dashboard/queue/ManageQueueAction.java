@@ -15,7 +15,8 @@ import eu.apenet.dashboard.listener.QueueDaemon;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.AbstractContent;
+
 import eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction;
 import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.QueueItem;
@@ -71,9 +72,9 @@ public class ManageQueueAction  extends AbstractAction{
 			displayItem.setErrors(queueItem.getErrors());
 			try {
 				if (queueItem.getEad() != null){
-					Ead ead = queueItem.getEad();
-					displayItem.setEadidOrFilename(ead.getEadid());
-					displayItem.setArchivalInstitution(ead.getArchivalInstitution().getAiname());
+					AbstractContent content = queueItem.getEad();
+					displayItem.setEadidOrFilename(content.getIdentifier());
+					displayItem.setArchivalInstitution(content.getArchivalInstitution().getAiname());
 				}else if (queueItem.getUpFile() != null){
 					UpFile upFile = queueItem.getUpFile();
 					displayItem.setEadidOrFilename(upFile.getPath() + upFile.getFilename());

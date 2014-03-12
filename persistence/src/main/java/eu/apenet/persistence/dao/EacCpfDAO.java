@@ -1,5 +1,4 @@
 package eu.apenet.persistence.dao;
-
 import eu.apenet.persistence.vo.EacCpf;
 import java.util.List;
 
@@ -12,4 +11,8 @@ public interface EacCpfDAO extends GenericDAO<EacCpf, Integer> {
     public List<EacCpf> getEacCpfs(ContentSearchOptions contentSearchOptions);
 
     public long countEacCpfs(ContentSearchOptions contentSearchOptions);
+    
+    public Integer isEacCpfIdUsed(String identifier, Integer aiId, Class<? extends EacCpf> clazz);
+    
+    public EacCpf getEacCpfById(Integer aiId, String cpfId);
 }

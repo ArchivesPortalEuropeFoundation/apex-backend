@@ -294,7 +294,7 @@ public class EadService {
 	private static void deleteFromQueue(QueueItem queueItem, boolean deleteUpFile) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		JpaUtil.beginDatabaseTransaction();
-		Ead ead = queueItem.getEad();
+		Ead ead = (Ead) queueItem.getEad();
 		if (ead != null) {
 			ead.setQueuing(QueuingState.NO);
 			eadDAO.updateSimple(ead);
@@ -335,7 +335,7 @@ public class EadService {
         }
 
         if (!queueAction.isUseProfileAction()) {
-            Ead ead = queueItem.getEad();
+            Ead ead = (Ead) queueItem.getEad();
             XmlType xmlType = XmlType.getEadType(ead);
             LOGGER.info("Process queue item: " + queueItem.getId() + " " + queueItem.getAction() + " " + ead.getEadid()
                     + "(" + xmlType.getName() + ")");
@@ -450,7 +450,7 @@ public class EadService {
             UpFile upFile = queueItem.getUpFile();
             LOGGER.info("Process queue item: " + queueItem.getId() + " " + queueItem.getAction() + ", upFile id: " + queueItem.getUpFileId() + "(" + xmlType.getName() + ")");
             String upFilePath = upFile.getPath() + upFile.getFilename();
-            String eadid = ExistingFilesChecker.extractAttributeFromEad(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFilePath, "eadheader/eadid", null, true).trim();
+            String eadid = ExistingFilesChecker.extractAttributeFromXML(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFilePath, "eadheader/eadid", null, true, false).trim();
             if(StringUtils.isEmpty(eadid) || "empty".equals(eadid) ||  "error".equals(eadid)) {
                 if(ingestionprofileDefaultNoEadidAction.isRemove()) {
                 	LOGGER.info("File will be removed, because it does not have eadid: " + upFilePath);

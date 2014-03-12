@@ -72,6 +72,10 @@ public class QueueItemHibernateDAO extends AbstractHibernateDAO<QueueItem, Integ
 				if ((iqList.get(i).getSourceGuide() != null)
 						&& (iqList.get(i).getSourceGuide().getArchivalInstitution().getAiId() == aiId))
 					return true;
+				if ((iqList.get(i).getEacCpf() != null)
+						&& (iqList.get(i).getEacCpf().getArchivalInstitution().getAiId() == aiId))
+					return true;
+				
 			}
 		}
 		return false;

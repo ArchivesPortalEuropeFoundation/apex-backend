@@ -12,15 +12,24 @@ import org.apache.solr.client.solrj.SolrServerException;
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead.EadService;
+import eu.apenet.dashboard.services.eaccpf.EacCpfService;
+import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.dao.EadDAO;
+import eu.apenet.persistence.dao.GenericDAO;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.dao.ResumptionTokenDAO;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.AbstractContent;
+import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.Ead;
+import eu.apenet.persistence.vo.EadContent;
+import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.QueueItem;
 import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.ResumptionToken;
+import eu.apenet.persistence.vo.SourceGuide;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 public class QueueTask implements Runnable {
@@ -110,7 +119,6 @@ public class QueueTask implements Runnable {
 	public boolean processQueue(long endTime) throws Exception {
 		boolean itemsPublished = false;
 		QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
-		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		boolean hasItems = true;
 		while (hasItems && !scheduler.isShutdown() && System.currentTimeMillis() < endTime) {
 			int queueId = -1;
@@ -126,15 +134,33 @@ public class QueueTask implements Runnable {
 					hasItems = false;
 				} else {
 					queueId = queueItem.getId();
-					Ead ead = queueItem.getEad();
-                    if(ead != null) {
-                        ead.setQueuing(QueuingState.BUSY);
-                        eadDAO.updateSimple(ead);
+					AbstractContent content = queueItem.getEad();
+                    if(content != null) {
+                        content.setQueuing(QueuingState.BUSY);
+                        if(content instanceof Ead){
+                        	if(content instanceof FindingAid){
+                        		DAOFactory.instance().getFindingAidDAO().updateSimple((FindingAid)content);
+                        	}else if(content instanceof HoldingsGuide){
+                        		DAOFactory.instance().getHoldingsGuideDAO().updateSimple((HoldingsGuide)content);
+                        	}else if(content instanceof SourceGuide){
+                        		DAOFactory.instance().getEadDAO().updateSimple((SourceGuide)content);
+                        	}
+                        }else if(content instanceof EacCpf){
+                        	DAOFactory.instance().getEacCpfDAO().updateSimple((EacCpf)content);
+                        }
                         JpaUtil.commitDatabaseTransaction();
                     }
-					QueueAction queueAction = EadService.processQueueItem(queueItem);
-					itemsPublished = itemsPublished || queueAction.isPublishAction();
-					hasItems = true;
+                    
+                    QueueAction queueAction;
+                    if (content instanceof Ead){
+					   queueAction = EadService.processQueueItem(queueItem);
+					   itemsPublished = itemsPublished || queueAction.isPublishAction();
+					   hasItems = true;
+                    }else if (content instanceof EacCpf){
+                    	queueAction = EacCpfService.processQueueItem(queueItem);
+                    	itemsPublished = itemsPublished || queueAction.isPublishAction();
+    					hasItems = true;
+                    }
 				}
 			} catch (Throwable e) {
 				LOGGER.error("queueId: " + queueId + " - " + APEnetUtilities.generateThrowableLog(e));

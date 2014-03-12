@@ -2,6 +2,8 @@ package eu.apenet.dashboard.manual;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -11,6 +13,9 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -34,15 +39,18 @@ import com.ctc.wstx.exc.WstxParsingException;
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.services.eaccpf.EacCpfService;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.util.XmlChecker;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
+import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FileType;
 import eu.apenet.persistence.vo.FindingAid;
@@ -116,7 +124,11 @@ public class ExistingFilesChecker {
 
 			//It is necessary to check if the XML file uploaded is a Finding Aid or a Holdings Guide
             try {
-			    eadType = extractAttributeFromEad(this.uploadedFilesPath + aListXml.getPath() + aListXml.getFilename(), "archdesc", "type", true);
+            	if (isElementContent(this.uploadedFilesPath + aListXml.getPath() + aListXml.getFilename(), "eac-cpf")){ //we can upload EAC-CPF file
+                	eadType = "eac-cpf";
+            	}else{
+			       eadType = extractAttributeFromXML(this.uploadedFilesPath + aListXml.getPath() + aListXml.getFilename(), "archdesc", "type", true, false);
+            	}
             } catch (WstxParsingException e){
                 //We get the exception just after - so nothing to do here.
             }
@@ -127,6 +139,9 @@ public class ExistingFilesChecker {
 			else if (eadType.equals("holdings_guide")) {
 				eadType = XmlType.EAD_HG.getName();
 				fileUnit.setEadTypeId(XmlType.EAD_HG.getIdentifier());
+			}else if (eadType.equals("eac-cpf")){
+				eadType = XmlType.EAC_CPF.getName();
+				fileUnit.setEadTypeId(XmlType.EAC_CPF.getIdentifier());
 			}
 			else {
 				//The XML is not an APEnet EAD
@@ -153,6 +168,36 @@ public class ExistingFilesChecker {
 			existingNewXslFilesUploaded.add(fileUnit);
 		}
 
+	}
+	
+	public static boolean isElementContent(String uploadedFilesPath, String target) {
+		// Check if the file to upload is an EAC-CPF file
+    	boolean found = false;
+    	XMLInputFactory factory = XMLInputFactory.newFactory();
+    	XMLStreamReader r = null;
+		try {
+			r = factory.createXMLStreamReader(new FileReader(uploadedFilesPath));
+			while(!found && r.hasNext()){
+				Integer event = r.next();
+				if(event == XMLStreamConstants.START_ELEMENT){
+					String name = r.getLocalName();
+					found = (name!=null && name.equals(target));
+				}
+			}
+		} catch (FileNotFoundException e) {
+			LOG.error("The path: "+uploadedFilesPath+" is not found", e);
+		} catch (XMLStreamException e) {
+			LOG.error("The file: "+uploadedFilesPath+" has a wrong structure", e);
+		} finally{
+			if(r!=null){
+				try {
+					r.close();
+				} catch (XMLStreamException e) {
+					LOG.error(e.getMessage(), e);
+				}
+			}
+		}
+		return found;
 	}
 
 	// This method checks if the file is already stored in the Dashboard
@@ -204,11 +249,15 @@ public class ExistingFilesChecker {
 				}
 			}
 
-		} else {
+		} else if(xmlType == XmlType.EAC_CPF){
+  		   LOG.info("We try to insert an EAC-CPF file");
+  		   result=insertEacCpfFile(fileUnit, xmlType);
+  		   
+  	     }else{
 			// The file has XML format
 			String eadid = "";
             try {
-                eadid = extractAttributeFromEad(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/eadid", null, true).trim();
+                eadid = extractAttributeFromXML(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/eadid", null, true, false).trim();
 
                 // Check if EADID contains not valid characters.
                 String patternStrign = "^[a-zA-Z0-9\\.\\-_\\s]+$";
@@ -230,7 +279,7 @@ public class ExistingFilesChecker {
 
                     // Change the invalid EADID in the file.
                     LOG.debug("Try to change the EADID in the file.");
-                    changeEadidUsingDOM(fileUnit, eadid);
+                    changeIdentifierUsingDOM(fileUnit, eadid, false);
                 }
             } catch (WstxParsingException e){
                 LOG.error("File was not correct XML, cause: " + e.getMessage());
@@ -245,7 +294,7 @@ public class ExistingFilesChecker {
 
 			boolean isConverted;
             try {
-                isConverted = Boolean.valueOf(extractAttributeFromEad(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/revisiondesc/change/item", null, false));
+                isConverted = Boolean.valueOf(extractAttributeFromXML(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/revisiondesc/change/item", null, false, false));
             } catch (Exception e){
                 if(e instanceof WstxParsingException){
                     eadid = "error";
@@ -254,53 +303,7 @@ public class ExistingFilesChecker {
 				LOG.info("The file " + fileUnit.getFileName() + " was tried to be converted but failed");
             	isConverted = false;
             }
-
-            if(xmlType == XmlType.EAC_CPF){
-                LOG.info("We try to insert an EAC-CPF file");
-
-                try {
-                    LOG.info("Validating the EAC-CPF file we just uploaded");
-                    List<SAXParseException> exceptions = DocumentValidation.xmlValidation(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), Xsd_enum.XSD_EAC_SCHEMA);
-                    if(exceptions != null){
-                        fileUnit.setErrorInformation("The file " + fileUnit.getFileName() + " is not valid with EAC-CPF");
-                        throw new APEnetException("The file " + fileUnit.getFileName() + " is not valid with EAC-CPF");
-                    }
-
-                    String cpfId = extractAttributeFromEad(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eac-cpf/control/recordId", null, true);
-                    if(StringUtils.isBlank(cpfId)){
-                        throw new APEnetException("recordId is empty in the file " + fileUnit.getFileName() + ", so we remove everything");
-                    }
-
-                    ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
-                    ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.archivalInstitutionId);
-                    // TODO: Pending upload #761.
-//                    cpfContent.setArchivalInstitution(archivalInstitution);
-
-
-                    //JpaUtil.beginDatabaseTransaction();
-
-                    String dirCpf = repoPath + archivalInstitutionCountry + APEnetUtilities.FILESEPARATOR + archivalInstitutionId + APEnetUtilities.FILESEPARATOR + "CPF";
-                    if(!new File(dirCpf).exists())
-                        new File(dirCpf).mkdir();
-                    insertFileToTempFiles(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), dirCpf + APEnetUtilities.FILESEPARATOR + fileUnit.getFileName(), fileUnit.getFilePath());
-                    //JpaUtil.commitDatabaseTransaction();
-                    LOG.info("The CPF file " + fileUnit.getFileName() + " has been stored in the REPO directory");
-                } catch (Exception e) {
-                    new File(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName()).delete();
-                    LOG.error("The EAC-CPF could not be stored in cpfContent table [Database Rollback]. Error:" + e.getMessage(), e);
-                    //JpaUtil.rollbackDatabaseTransaction();
-                    return "error";
-                } finally {
-                    try {
-                        LOG.info("Erase from temp database");
-                        deleteFileFromDDBB(fileUnit.getFileId());
-                    } catch (Exception ex) {
-                        LOG.error("We could not erase the file from the temp database");
-                    }
-                }
-
-                return "no exists";
-            } else if(xmlType == XmlType.EAD_SG || xmlType == XmlType.EAD_FA || xmlType == XmlType.EAD_HG) {
+            if(xmlType == XmlType.EAD_SG || xmlType == XmlType.EAD_FA || xmlType == XmlType.EAD_HG) {
                 if(eadid.equals(STATUS_EMPTY)){ //eadid is empty
                     fileUnit.setEadType(xmlType.getName());
                     result = STATUS_EMPTY;
@@ -355,8 +358,112 @@ public class ExistingFilesChecker {
 		}
 		return result;
 	}
+    
+	/**
+	 * Insert an EAC-CPF file in the dashboard
+	 * @param fileUnit
+	 * @param xmlType
+	 * @return STATUS_EMPTY if the identifier of the eac-cpf file is empty, STATUS_EXISTS if exist in the system, STATUS_NO_EXIST if no exist and STATUS_ERROR in other case
+	 */
+	private String insertEacCpfFile(FileUnit fileUnit, XmlType xmlType) {
+    	//This method insert an EAC-CPF file in the dashboard
+	   Boolean dataBaseCommitError = false;
+	   String result = STATUS_NO_EXIST;		
+	   EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
+	   UpFile upFile = upFileDao.findById(fileUnit.getFileId());
+	   String cpfId;
+	   try {
+			cpfId = extractAttributeFromXML(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eac-cpf/control/recordId", null, true, true);
+			String patternString = "^[a-zA-Z0-9\\.\\-_\\s]+$";
+	        Pattern pattern = Pattern.compile(patternString);
+	        Matcher matcher = pattern.matcher(cpfId);
+	        if (!matcher.find()) {
+	        	// If not, recover an identifier with valid characters.
+	            LOG.error("The identifier contains special characters: " + cpfId);
+	            String newIdentifier = "";
+	            for (int i = 0; i < cpfId.length(); i++) {
+	            	if (String.valueOf(cpfId.charAt(i)).matches(patternString)) {
+	            		newIdentifier += String.valueOf(cpfId.charAt(i));
+	            	} else {
+	            		newIdentifier += "_";
+	            	}
+	            }
+	            LOG.debug("New identifier (without special characters): " + newIdentifier);
+	            cpfId = newIdentifier;
 
-    public String instantiateCorrectDirPath(XmlType xmlType) {
+	            // Change the invalid identifier in the file.
+	            LOG.debug("Try to change the identifier in the file.");
+	            changeIdentifierUsingDOM(fileUnit, cpfId , true);
+	        }
+	        String err;
+            if((err = XmlChecker.isXmlParseable(new File(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName()))) != null){
+            	cpfId = "error";
+                LOG.error("File was not correct XML.");
+                additionalErrors += "File was not correct XML. Impossible to parse it. Please check if file is XML. Error: " + err;
+            }
+            boolean isConverted;
+            try {
+                isConverted = Boolean.valueOf(extractAttributeFromXML(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eac-cpf/control/maintenanceHistory/maintenanceEvent/eventDescription", null, false, true));
+            } catch (Exception e){
+                if(e instanceof WstxParsingException){
+                    cpfId = "error";
+                    additionalErrors = e.getMessage();
+                }
+				LOG.info("The file " + fileUnit.getFileName() + " was tried to be converted but failed");
+            	isConverted = false;
+            }
+			if (cpfId.equals(STATUS_EMPTY)){ //cpfId is empty
+				fileUnit.setEadType(XmlType.EAC_CPF.getName());
+                return STATUS_EMPTY;
+			}else if(StringUtils.isBlank(cpfId) || cpfId.equals(STATUS_ERROR)){
+	            LOG.info("recordId is empty in the file " + fileUnit.getFileName() + ", so we remove everything");
+	            try {
+	                deleteFileFromDDBB(fileUnit.getFileId());
+	            } catch (Exception ex) {
+	                LOG.error("We could not erase the file from the temp database");
+	                dataBaseCommitError=true;
+	            }
+	            if (!dataBaseCommitError) {
+                    try {
+                        File file = new File(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName());
+                        if (file.exists())
+                            FileUtils.forceDelete(file);
+
+                        File uploadDir = new File(uploadedFilesPath + fileUnit.getFilePath());
+                        if (uploadDir.listFiles().length == 0) // There aren't any file in the directory, so it should be removed
+                            FileUtils.forceDelete(uploadDir);
+                    } catch (IOException ex) {
+                        LOG.error("The file " + fileUnit.getFileName() + " could not be removed: " + ex.getMessage(), ex);
+                    }
+                }
+	            result = STATUS_ERROR;
+	        }else{
+	        	Integer identifier = eacCpfDAO.isEacCpfIdUsed(cpfId, archivalInstitutionId,(Class<? extends EacCpf>) xmlType.getClazz());
+	        	if(identifier != null){ //The cpf_id is already stored in the table
+	        
+            	// The cpfId already exists
+                LOG.warn("EAC-CPF identifier '" + cpfId + "' is already existing with id '" + identifier + "' in the table of eac_cpf'");
+                fileUnit.setEadid(cpfId);
+                fileUnit.setPermId(identifier.intValue());
+                result = STATUS_EXISTS;
+                }else{
+	            	try {
+	                	EacCpfService.create(XmlType.EAC_CPF, upFile, archivalInstitutionId);
+	                } catch (Exception e) {
+	                    LOG.error("The " + XmlType.EAC_CPF.getName() + " which recordId is " + cpfId + " could not be stored in the table [Database Rollback]. Error:" + e.getMessage(),e);
+	                    dataBaseCommitError = true;
+	                }
+	            	result = STATUS_NO_EXIST;
+               }
+	        }
+		} catch (WstxParsingException e1) {
+				LOG.error("File was not correct XML, cause: " + e1.getMessage());
+				additionalErrors += e1.getMessage();
+		}
+	    return result;	
+	}
+	
+	public String instantiateCorrectDirPath(XmlType xmlType) {
         String startPath = APEnetUtilities.FILESEPARATOR + archivalInstitutionCountry + APEnetUtilities.FILESEPARATOR + archivalInstitutionId + APEnetUtilities.FILESEPARATOR;
         if(xmlType == XmlType.EAD_FA){
             return startPath + "FA" + APEnetUtilities.FILESEPARATOR;
@@ -379,9 +486,9 @@ public class ExistingFilesChecker {
         return null;
     }
 
-	public static String extractAttributeFromEad(String path, String element, String attribute, boolean isReturningFirstInstance) throws WstxParsingException {
-        final String CONVERTED_FLAG = "Converted_APEnet_EAD_version_";
-        final String CONVERTED_FLAG_NEW = "Converted_apeEAD_version_";
+	public static String extractAttributeFromXML(String path, String element, String attribute, boolean isReturningFirstInstance, boolean eacCpf) throws WstxParsingException {
+        final String CONVERTED_FLAG;
+        final String CONVERTED_FLAG_NEW;
         XMLStreamReader2 input = null;
 	    InputStream sfile = null;
         XMLInputFactory2 xmlif = (XMLInputFactory2) XMLInputFactory2.newInstance();
@@ -390,7 +497,13 @@ public class ExistingFilesChecker {
         xmlif.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
         xmlif.setProperty(XMLInputFactory.IS_COALESCING, Boolean.FALSE);
         xmlif.configureForSpeed();
-
+        if (eacCpf){
+        	CONVERTED_FLAG = "Converted_apeEAC-CPF_version_";
+        	CONVERTED_FLAG_NEW = "Converted_apeEAC-CPF_version_";
+        }else{
+        	CONVERTED_FLAG = "Converted_APEnet_EAD_version_";
+        	CONVERTED_FLAG_NEW = "Converted_apeEAD_version_";
+        }
         try {
             sfile = new FileInputStream(path);
             input = (XMLStreamReader2) xmlif.createXMLStreamReader(sfile);
@@ -399,14 +512,15 @@ public class ExistingFilesChecker {
             boolean isInsideElement = false;
             boolean isInsidePath = false;
             boolean wasInsidePath = false;
+            boolean eventType = false;
+            boolean derived = false;
 		    String importantData = "";
 
-            //element = "revisiondesc/change/item" or "eadid"
             String[] pathElements = element.split("/");
             int lenghtPath = pathElements.length;
             int pointerPath = 0;
 
-            LOG.debug("Checking EAD file, looking for element " + element + ", and attribute " + ((attribute==null)?"null":attribute) + ", path begins with " + pathElements[0]);
+            LOG.debug("Checking file, looking for element " + element + ", and attribute " + ((attribute==null)?"null":attribute) + ", path begins with " + pathElements[0]);
             while (!abort && input.hasNext()) {
                 switch (input.getEventType()) {
 					case XMLEvent.START_DOCUMENT:
@@ -431,7 +545,7 @@ public class ExistingFilesChecker {
                                 }
 
                                 //TODO: Here add the check of empty element by Patricia and call the function with extractAttributeFromEad([path], "eadid", null, true);
-                                if (input.getLocalName().equals("eadid"))
+                                if (input.getLocalName().equals("eadid") || input.getLocalName().equals("recordId"))
                                 {
                                 	if (input.isEmptyElement())
                                 	{
@@ -442,8 +556,14 @@ public class ExistingFilesChecker {
                             }
                             pointerPath++;
                         }
+                        if(input.getLocalName().equalsIgnoreCase("eventType") && eacCpf){
+                        	eventType = true;
+                        }
 						break;
 					case XMLEvent.CHARACTERS:
+						if (eventType && input.getText().equalsIgnoreCase("derived")){
+							derived = true;
+						}
 						if (isInsideElement) {
 							importantData = input.getText();
 							if(importantData!=null && (importantData.isEmpty() || importantData.trim()
@@ -453,8 +573,10 @@ public class ExistingFilesChecker {
 									.length()==0)){
 								return "empty";
 							}
-							if (importantData.startsWith(CONVERTED_FLAG) || importantData.startsWith(CONVERTED_FLAG_NEW))
+							if (((importantData.startsWith(CONVERTED_FLAG) || importantData.startsWith(CONVERTED_FLAG_NEW)) && !eacCpf)
+							    || ((importantData.startsWith(CONVERTED_FLAG) || importantData.startsWith(CONVERTED_FLAG_NEW)) && eacCpf && derived)){
 								return "true";
+							}
 							else if(isReturningFirstInstance)
                                 return importantData;
 						}
@@ -533,12 +655,17 @@ public class ExistingFilesChecker {
                 return "error";
             }
 		} else {
-			// The file is an EAD
-			if (fileUnit.getEadType().equals(XmlType.EAD_FA.getName()) || fileUnit.getEadType().equals(XmlType.EAD_HG.getName()) || fileUnit.getEadType().equals(XmlType.EAD_SG.getName())) {
+			// The file is an EAD or EAC-CPF
+			if (fileUnit.getEadType().equals(XmlType.EAD_FA.getName()) || fileUnit.getEadType().equals(XmlType.EAD_HG.getName()) || fileUnit.getEadType().equals(XmlType.EAD_SG.getName()) || fileUnit.getEadType().equals(XmlType.EAC_CPF.getName())) {
                 try {
                 	XmlType xmlType = XmlType.getType(fileUnit.getEadType());
-                	Ead eadToOverwrite = DAOFactory.instance().getEadDAO().getEadByEadid((Class<? extends Ead>) xmlType.getClazz(), archivalInstitutionId, fileUnit.getEadid());
-                	EadService.overwrite(eadToOverwrite, upFileDao.findById(fileUnit.getFileId()));
+                	if (xmlType == XmlType.EAC_CPF){
+                		EacCpf eacToOverwrite = DAOFactory.instance().getEacCpfDAO().getEacCpfById(archivalInstitutionId,fileUnit.getEadid());
+                		EacCpfService.overwrite(eacToOverwrite, upFileDao.findById(fileUnit.getFileId()));
+                	}else{
+	                	Ead eadToOverwrite = DAOFactory.instance().getEadDAO().getEadByEadid((Class<? extends Ead>) xmlType.getClazz(), archivalInstitutionId, fileUnit.getEadid());
+	                	EadService.overwrite(eadToOverwrite, upFileDao.findById(fileUnit.getFileId()));
+                	}
                     //overwrite(fileUnit);
                 } catch (Exception e) {
                     return "error";
@@ -551,9 +678,10 @@ public class ExistingFilesChecker {
 	// This method overwrite (or not) a file in the Dashboard for a user
 	// If everything is ok then it returns "ok" but if it was a problem, then it
 	// returns "error"
-	public String overwriteFile(FileUnit fileUnit, String answer,String savechangesEADIDanswer, String canceloverwriteanswer,String eadType, String neweadid) {
+	public String overwriteFile(FileUnit fileUnit, String answer, String savechangesIDanswer, String canceloverwriteanswer,String fileType, String newIdentifier) {
 		String result = "ok";
 		Boolean dataBaseCommitError = false;
+		
 		if (answer.equalsIgnoreCase("Cancel")) {
 			result=cancelAnswer(fileUnit);
 		} else if (answer.equalsIgnoreCase("overwrite")) {
@@ -561,20 +689,24 @@ public class ExistingFilesChecker {
 		} else {
 		    //Change EADID
 			//Check the content of savechangesEADIDanswer OK or KO.
-			if ((savechangesEADIDanswer.equals("OK")) || (canceloverwriteanswer.equals("Overwrite"))) {
+			if ((savechangesIDanswer.equals("OK")) || (canceloverwriteanswer.equals("Overwrite"))) {
 	            //Change into the XML the EADID
 	            //There is not any FA with this new EADID.
 	        	//Edit the file and update the eadid for the new.
 	        	//1st obtain the file's url.
 
-                String eadid = changeEadidUsingDOM(fileUnit, neweadid);
+                String identifier = changeIdentifierUsingDOM(fileUnit, newIdentifier, fileType.equals(XmlType.EAC_CPF.getName()));
 
 	    		boolean isConverted;
 	            try {
-	                isConverted = Boolean.valueOf(extractAttributeFromEad(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/revisiondesc/change/item", null, false));
+	            	if(fileType.equals(XmlType.EAC_CPF.getName())){
+	                   isConverted = Boolean.valueOf(extractAttributeFromXML(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eac-cpf/control/maintenanceHistory/maintenanceEvent/eventDescription", null, false, true));
+	            	}else{
+	            	   isConverted = Boolean.valueOf(extractAttributeFromXML(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/revisiondesc/change/item", null, false, false));
+	            	}
 	            } catch (Exception e){
 	                if(e instanceof WstxParsingException){
-	                    eadid = STATUS_ERROR;
+	                	identifier = STATUS_ERROR;
 	                    additionalErrors = e.getMessage();
 	                }
 					LOG.info("The file " + fileUnit.getFileName() + " was tryed to be converted but failed");
@@ -582,10 +714,10 @@ public class ExistingFilesChecker {
 	            }
 				/**/
 
-                if (eadType.equals(XmlType.EAD_FA.getName()) || eadType.equals(XmlType.EAD_HG.getName()) || eadType.equals(XmlType.EAD_SG.getName())) {
-                    if (eadid.equals(STATUS_ERROR) || "".equals(eadid)) {
+                if (fileType.equals(XmlType.EAD_FA.getName()) || fileType.equals(XmlType.EAD_HG.getName()) || fileType.equals(XmlType.EAD_SG.getName()) || fileType.equals(XmlType.EAC_CPF.getName())) {
+                    if (identifier.equals(STATUS_ERROR) || "".equals(identifier)) {
                         // It is necessary to remove the file from /mnt/tmp/up folder
-                        LOG.info("The EAD " + fileUnit.getFileName() + " doesn't have a proper format: it doesn't have eadid or it has several");
+                        LOG.info("The file " + fileUnit.getFileName() + " doesn't have a proper format: it doesn't have eadid or it has several");
                         File file = new File(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName());
                         File uploadDir = new File(uploadedFilesPath + fileUnit.getFilePath());
                         try {
@@ -605,31 +737,40 @@ public class ExistingFilesChecker {
                         }
                         return STATUS_ERROR;
                     } else {
-                        // It is necessary to check if the eadid is already in Finding Aid Table for the current Archival Institution
-                        XmlType xmlType = XmlType.getType(eadType);
-                        Integer eadIdentifier = DAOFactory.instance().getEadDAO().isEadidUsed(eadid, archivalInstitutionId, (Class<? extends Ead>) xmlType.getClazz());
-                        if(eadIdentifier != null) {
-                            // The EAD already exists
-                            fileUnit.setEadid(eadid);
-                            fileUnit.setPermId(eadIdentifier);
-                            if ((xmlType == XmlType.EAD_FA) && canceloverwriteanswer.equals("Overwrite")) { //todo: Why only for FA?
-                                overwriteFile(fileUnit, "Overwrite", savechangesEADIDanswer, canceloverwriteanswer, eadType, neweadid);
+                        // It is necessary to check if the identifier is already in Finding Aid Table or eac-cpf Table for the current Archival Institution
+                        XmlType xmlType = XmlType.getType(fileType);
+                        Integer fileIdentifier;
+                        if (xmlType == XmlType.EAC_CPF){
+                        	fileIdentifier = DAOFactory.instance().getEacCpfDAO().isEacCpfIdUsed(identifier, archivalInstitutionId, (Class<? extends EacCpf>) xmlType.getClazz());
+                        	
+                        }else{
+                            fileIdentifier = DAOFactory.instance().getEadDAO().isEadidUsed(identifier, archivalInstitutionId, (Class<? extends Ead>) xmlType.getClazz());
+                        }
+                        if(fileIdentifier != null) {
+                            // The ID already exists
+                            fileUnit.setEadid(identifier);
+                            fileUnit.setPermId(fileIdentifier);
+                            if ((xmlType == XmlType.EAD_FA) || (xmlType==XmlType.EAC_CPF) && canceloverwriteanswer.equals("Overwrite")) { //todo: Why only for FA?
+                                overwriteFile(fileUnit, "Overwrite", savechangesIDanswer, canceloverwriteanswer, fileType, newIdentifier);
                             } else {
-                                LOG.error("eadid '" + eadid + "' is already existing in the table with id '" + eadIdentifier + "'");
+                                LOG.error("identifier '" + identifier + "' is already existing in the table with id '" + fileIdentifier + "'");
                                 return STATUS_EXISTS;
                             }
                         } else {
-                            // The EAD doesn't exist
+                            // The EAD or EAC-CPF doesn't exist
                             // It is necessary to move the file to /mnt/tmp/tmp/ and remove it from /mnt/tmp/up/ folder
-                            // It is necessary to insert an entry in finding_aid table
+                            // It is necessary to insert an entry in finding_aid table or eac-cpf table
                             // It is necessary to remove the entry from up_file table
 
                             //Ead ead = instantiateCorrectEadType(xmlType);
                             try {
-                            	EadService.create(xmlType, upFileDao.findById(fileUnit.getFileId()), archivalInstitutionId);
-
+                            	if (fileType.equals(XmlType.EAC_CPF.getName())){
+                            	   EacCpfService.create(xmlType, upFileDao.findById(fileUnit.getFileId()), archivalInstitutionId);	
+                            	}else{
+                            	   EadService.create(xmlType, upFileDao.findById(fileUnit.getFileId()), archivalInstitutionId);
+                            	}
                             } catch (Exception e) {
-                                LOG.error("The EAD which eadid is '" + eadid + "' could not be stored in table [Database Rollback]. Error:" + e.getMessage());
+                                LOG.error("The file which identifier is '" + identifier + "' could not be stored in table [Database Rollback]. Error:" + e.getMessage());
 
                                 dataBaseCommitError = true;
                             } finally {
@@ -639,10 +780,10 @@ public class ExistingFilesChecker {
                         }
                     }
                 }
-			} else if (savechangesEADIDanswer.equals("KO")) {
+			} else if (savechangesIDanswer.equals("KO")) {
 				//In this case, the change of the EADID has failed.
 				//Then, the file will be accessible to Change the EADID in next access to Dashboard.
-				LOG.error("The EAD " + fileUnit.getFileName() +" has not been changed correctly");
+				LOG.error("The file " + fileUnit.getFileName() +" has not been changed correctly");
 				if (canceloverwriteanswer.equals("Overwrite")){
 					result= overwriteAnswer(fileUnit);
 				} else if (canceloverwriteanswer.equals("Cancel")){
@@ -697,9 +838,8 @@ public class ExistingFilesChecker {
 		}
 	}
 
-
-
-    private String changeEadidUsingDOM(FileUnit fileUnit, String neweadid) {
+    
+    private String changeIdentifierUsingDOM(FileUnit fileUnit, String newIdentifier, boolean eac) {
         UpFileDAO upFileDao = DAOFactory.instance().getUpFileDAO();
         UpFile upfile = upFileDao.findById(fileUnit.getFileId());
 
@@ -711,21 +851,30 @@ public class ExistingFilesChecker {
         factory.setNamespaceAware(true);
         factory.setIgnoringElementContentWhitespace(true);
 
-        String oldeadid = "";
+        String oldIdentifier = "";
 
         try{
-            oldeadid = this.extractAttributeFromEad(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/eadid", null, true).trim();
-            DocumentBuilder builder = factory.newDocumentBuilder();
+        	if (eac){
+        	  oldIdentifier = this.extractAttributeFromXML(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eac-cpf/control/recordId", null, true, true).trim();
+        	}else{
+        	  oldIdentifier = this.extractAttributeFromXML(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/eadid", null, true, false).trim();
+        	}
+        	DocumentBuilder builder = factory.newDocumentBuilder();
             InputStream in = new FileInputStream(filePath);
             Document doc = builder.parse(in);
             doc.getDocumentElement().normalize();
-            NodeList eadidList = doc.getElementsByTagName("eadid");
-            Node eadidNode = eadidList.item(0);
-            String currenteadid = eadidNode.getTextContent();
-            if (!currenteadid.equals(neweadid)&&(!neweadid.isEmpty())) {
-                LOG.info("Changing the eadid into the file");
-                eadidNode.setTextContent(neweadid);
-                String newfilepath=filePath.replace(".xml", "") + neweadid + ".xml";
+            NodeList nodeList;
+            if (eac){
+               nodeList = doc.getElementsByTagName("recordId");
+            }else{
+	           nodeList = doc.getElementsByTagName("eadid");	            
+            }
+            Node node = nodeList.item(0);
+            String currentIdentifier = node.getTextContent();
+            if (!currentIdentifier.equals(newIdentifier)&&(!newIdentifier.isEmpty())) {
+                LOG.info("Changing the identifier into the file");
+                node.setTextContent(newIdentifier);
+                String newfilepath=filePath.replace(".xml", "") + newIdentifier + ".xml";
                 //fileUnit.setFileName(newfileName);
                 Result result1 = new StreamResult(new File(filePath));
                 Source source = new DOMSource(doc);
@@ -740,8 +889,8 @@ public class ExistingFilesChecker {
 
                 //if renaming process fails, the original file will have the original eadid identifier again.
                 if (!success) {
-                    LOG.info("Removing the new eadid into the original file because of fail renaming process");
-                    eadidNode.setTextContent(oldeadid);
+                    LOG.info("Removing the new identifier into the original file because of fail renaming process");
+                    node.setTextContent(oldIdentifier);
                     Result result2 = new StreamResult(new File(filePath));
                     Source source2 = new DOMSource(doc);
                     Transformer transformer2;
@@ -750,13 +899,13 @@ public class ExistingFilesChecker {
                     return STATUS_ERROR;
                 } else {
                     String oldfname=upfile.getFilename();
-                    String newfname= oldfname.replace(".xml", "") + neweadid + ".xml";
+                    String newfname= oldfname.replace(".xml", "") + newIdentifier + ".xml";
                     upfile.setFilename(newfname);
                     upFileDao.update(upfile);
 
                     fileUnit.setFileName(newfname);
-                    fileUnit.setEadid(neweadid);
-                    return neweadid;
+                    fileUnit.setEadid(newIdentifier);
+                    return newIdentifier;
                 }
             }
         } catch (Exception ex) {
@@ -764,5 +913,4 @@ public class ExistingFilesChecker {
         }
         return "";
     }
-
 }

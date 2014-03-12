@@ -388,7 +388,7 @@
 	        	}); 
 	        	
 	        	if (!exit){
-		        	if(changes.length>0 && $("select#existingFilesAnswers option:selected").val()=="Change EADID"){
+		        	if(changes.length>0 && $("select#existingFilesAnswers option:selected").val()=="Change ID"){
 		        		var strOut='<s:property value='getText("content.message.UserHasNotCheckedAvailability")'/>' + filesWithErrors;
 		        		alert(strOut);
 		        	}else{
@@ -464,7 +464,7 @@
 				} //end Add
 				else if (method=="Change") {
 					//files with existing EADID
-					if (textvalue == "Change EADID") {
+					if (textvalue == "Change ID") {
 		        		var divname="divGeneralChangeEadid" + eadid;
 						document.getElementById(divname).style.display='inline';
 						document.getElementById(buttonid).style.display='inline';

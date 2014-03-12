@@ -35,24 +35,24 @@ public class CreateEadTask extends AbstractEadTask {
 			
 			boolean isConverted;
 			try {
-				isConverted = Boolean.valueOf(ExistingFilesChecker.extractAttributeFromEad(
-						uploadedFilesPath + upFile.getPath() + upFile.getFilename(), "eadheader/revisiondesc/change/item", null, false));
+				isConverted = Boolean.valueOf(ExistingFilesChecker.extractAttributeFromXML(
+						uploadedFilesPath + upFile.getPath() + upFile.getFilename(), "eadheader/revisiondesc/change/item", null, false, false));
 			} catch (Exception e) {
 				isConverted = false;
 			}
 
 			String title;
 			try {
-				title = ExistingFilesChecker.extractAttributeFromEad(uploadedFilesPath + upFile.getPath() + upFile.getFilename(),
-						"eadheader/filedesc/titlestmt/titleproper", null, true).trim();
+				title = ExistingFilesChecker.extractAttributeFromXML(uploadedFilesPath + upFile.getPath() + upFile.getFilename(),
+						"eadheader/filedesc/titlestmt/titleproper", null, true, false).trim();
 			} catch (WstxParsingException e) {
 				title = "";
 			}
 
 			String eadid = "";
 			try {
-				eadid = ExistingFilesChecker.extractAttributeFromEad(uploadedFilesPath + upFile.getPath() + upFile.getFilename(),
-						"eadheader/eadid", null, true).trim();
+				eadid = ExistingFilesChecker.extractAttributeFromXML(uploadedFilesPath + upFile.getPath() + upFile.getFilename(),
+						"eadheader/eadid", null, true, false).trim();
 			} catch (WstxParsingException e) {
 			}
 			ArchivalInstitution archivalInstitution = DAOFactory.instance().getArchivalInstitutionDAO().findById(aiId);
