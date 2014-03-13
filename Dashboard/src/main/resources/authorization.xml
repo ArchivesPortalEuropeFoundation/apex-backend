@@ -53,8 +53,9 @@
         <group name="adminActions">
             checkEagNamespace,downloadCountriesStatistics,
             createCountry,createLanguage,downloadGeneralAL,goCountryAccount,
-            insertAlternativeCountryNames,
-            storeAlternativeCountryNames,storeCountry,storeLanguage,viewAdmin,
+            <!-- insertAlternativeCountryNames, -->
+            <!-- storeAlternativeCountryNames, -->
+            storeCountry,storeLanguage,viewAdmin,
             sessionManagement,deleteSession,userManagement,
             changeToCountryManager,createCountryManager,displayCreateCountryManager,disableCountryManager,enableCountryManager,deleteCountryManager,
             viewDptVersions, addVersion, deleteVersion, manageQueue, startStopQueue,deleteQueueItem,deleteAllQueueItemsWithErrors,deleteAllUnusedUploadFiles,forceSolrCommit,

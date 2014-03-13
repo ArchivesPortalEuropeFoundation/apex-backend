@@ -82,7 +82,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
     private String parallelNameOfInstitution;
     private String parallelNameOfInstitutionLanguage;
 
-
+    private String CountryOfTheInstitution;
 	private String repositoridCountryCode;
 	private String otherRepositorIdValue;
 	private String recordIdValue;
@@ -272,6 +272,20 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	public void setContinentOfInstitutionMap(
 			Map<String, String> continentOfInstitutionMap) {
 		this.continentOfInstitutionMap = continentOfInstitutionMap;
+	}
+
+	/**
+	 * @return the CountryOfTheInstitution
+	 */
+	public String getCountryOfTheInstitution() {
+		return CountryOfTheInstitution;
+	}
+
+	/**
+	 * @param countryOfTheInstitution the CountryOfTheInstitution to set
+	 */
+	public void setCountryOfTheInstitution(String countryOfTheInstitution) {
+		CountryOfTheInstitution = countryOfTheInstitution;
 	}
 
 	/**
@@ -954,7 +968,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 //		this.loader.setLocalentity(getDistrictOfTheInstitution());
 //		this.loader.setSecondem(getCountyOfTheInstitution());
 //		this.loader.setFirstdem(getRegionOfTheInstitution());
-//		this.loader.setCountry(getCountryOfTheInstitution());
+		this.loader.setCountry(getCountryOfTheInstitution());
 //		this.loader.setLatitude(getLatitudeOfTheInstitution());
 //		this.loader.setLongitude(getLongitudeOfTheInstitution());
 //		this.loader.setTelephone(getTelephoneOfTheInstitution());
