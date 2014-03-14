@@ -53,8 +53,6 @@
         <group name="adminActions">
             checkEagNamespace,downloadCountriesStatistics,
             createCountry,createLanguage,downloadGeneralAL,goCountryAccount,
-            <!-- insertAlternativeCountryNames, -->
-            <!-- storeAlternativeCountryNames, -->
             storeCountry,storeLanguage,viewAdmin,
             sessionManagement,deleteSession,userManagement,
             changeToCountryManager,createCountryManager,displayCreateCountryManager,disableCountryManager,enableCountryManager,deleteCountryManager,

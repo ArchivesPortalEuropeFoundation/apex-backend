@@ -763,18 +763,6 @@
             <result name="input" type="tiles">countryCreation</result>
             <result name="error" type="tiles">blank</result>
         </action>
-        <!-- <action name="insertAlternativeCountryNames" class="eu.apenet.dashboard.actions.CreateCountryAltNamesAction" >
-            <interceptor-ref name="changeLanguageStack"/>
-            <result name="success" type="tiles">countryAltNames</result>
-            <result name="input" type="tiles">countryAltNames</result>
-            <result name="error" type="tiles">blank</result>
-        </action>
-        <action name="storeAlternativeCountryNames" class="eu.apenet.dashboard.actions.CreateCountryAltNamesAction" method="insertAlternativeCountryNames">
-            <interceptor-ref name="changeLanguageStack"/>
-            <result name="success" type="tiles">blank</result>
-            <result name="input" type="tiles">countryAltNames</result>
-            <result name="error" type="tiles">blank</result>
-        </action> -->
         <action name="createLanguage" class="eu.apenet.dashboard.actions.CreateLanguageAction">
             <interceptor-ref name="changeLanguageStack"/>
             <result name="success" type="tiles">languageNames</result>
