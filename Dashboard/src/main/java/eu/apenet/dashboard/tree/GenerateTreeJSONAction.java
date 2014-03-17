@@ -246,7 +246,7 @@ public class GenerateTreeJSONAction extends ActionSupport implements ServletRequ
             	changeDynamicTask.execute(ead, null);
 
             	// Try to recover the new content of the dynamic EAD.
-    			eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFileId(fileId, (Class<? extends Ead>) xmlType.getClazz());
+    			eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFileId(fileId, xmlType.getEadClazz());
 
     			if (eadContent == null) {
                 	throw new APEnetException(getText("generateTreeJSON.APEnetException.no.correct.FA"));

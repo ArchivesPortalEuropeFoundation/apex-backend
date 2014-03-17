@@ -336,7 +336,7 @@ public class EadService {
 
         if (!queueAction.isUseProfileAction()) {
             Ead ead = queueItem.getEad();
-            XmlType xmlType = XmlType.getEadType(ead);
+            XmlType xmlType = XmlType.getContentType(ead);
             LOGGER.info("Process queue item: " + queueItem.getId() + " " + queueItem.getAction() + " " + ead.getEadid()
                     + "(" + xmlType.getName() + ")");
 
@@ -558,7 +558,7 @@ public class EadService {
 
 
     private static Ead doesFileExist(UpFile upFile, String eadid, XmlType xmlType) {
-        return DAOFactory.instance().getEadDAO().getEadByEadid((Class<? extends Ead>) xmlType.getClazz(), upFile.getAiId(), eadid);
+        return DAOFactory.instance().getEadDAO().getEadByEadid(xmlType.getEadClazz(), upFile.getAiId(), eadid);
     }
 
 	private static void addToQueue(Ead ead, QueueAction queueAction, Properties preferences, UpFile upFile)

@@ -204,12 +204,12 @@ public class EadActions extends AbstractEadActions {
         OutputStream outputStream = ContentUtils.getOutputStreamToDownload(this.getServletRequest(),
                 getServletResponse(), name, "application/vnd.oasis.opendocument.spreadsheet");
         HgSgStatisticsDocumentWriter documentWriter = new HgSgStatisticsDocumentWriter();
-        List<CLevel> cLevels = clevelDAO.getNotLinkedCLevels(id, (Class<? extends Ead>) getXmlType().getClazz());
+        List<CLevel> cLevels = clevelDAO.getNotLinkedCLevels(id, getXmlType().getEadClazz());
         for (CLevel cLevel : cLevels) {
             HgSgStatistics hgSgStatistics = getCLevelStatistics(cLevel);
             documentWriter.addStatistics(hgSgStatistics);
         }
-        List<HgSgFaRelation> hgSgFaRelations = hgSgFaRelationDAO.getHgSgFaRelations(id, (Class<? extends Ead>) getXmlType().getClazz(), false);
+        List<HgSgFaRelation> hgSgFaRelations = hgSgFaRelationDAO.getHgSgFaRelations(id, getXmlType().getEadClazz(), false);
         for (HgSgFaRelation hgSgFaRelation : hgSgFaRelations) {
             CLevel cLevel = hgSgFaRelation.getHgSgClevel();
             FindingAid findingAid = hgSgFaRelation.getFindingAid();

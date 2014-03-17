@@ -61,7 +61,7 @@ public class DatabaseEadPublisher {
 
 		EADCounts eadCounts = new EADCounts();
 		SolrPublisher solrPublisher = new SolrPublisher(ead);
-		Class<? extends Ead> clazz = (Class<? extends Ead>) XmlType.getEadType(ead).getClazz();
+		Class<? extends Ead> clazz = XmlType.getContentType(ead).getEadClazz();
 		try {
 			if (ead instanceof SourceGuide || ead instanceof HoldingsGuide){
 				JpaUtil.beginDatabaseTransaction();

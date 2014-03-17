@@ -119,7 +119,7 @@ public class SecondDisplayAction extends ActionSupport implements ServletRequest
 				if (StringUtils.isNotBlank(aiId) && StringUtils.isNumeric(aiId)) {
 					if (StringUtils.isNotBlank(eadid)) {
 						ead = DAOFactory.instance().getEadDAO()
-								.getEadByEadid((Class<? extends Ead>) xmlType.getClazz(), Integer.parseInt(aiId), eadid);
+								.getEadByEadid(xmlType.getEadClazz(), Integer.parseInt(aiId), eadid);
 					}
 
 				} else if (StringUtils.isNotBlank(id) && StringUtils.isNumeric(id)) {
@@ -144,7 +144,7 @@ public class SecondDisplayAction extends ActionSupport implements ServletRequest
 				}
 			}
 			request.setAttribute("ead", ead);
-			request.setAttribute("xmlTypeId", XmlType.getEadType(ead).getIdentifier());
+			request.setAttribute("xmlTypeId", XmlType.getContentType(ead).getIdentifier());
 			request.setAttribute("archivalInstitution", archivalInstitution);
 			Country country = archivalInstitution.getCountry();
 			request.setAttribute("countryImageName", "header_" + StringUtils.lowerCase(country.getIsoname()) + ".png");

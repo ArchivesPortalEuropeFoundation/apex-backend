@@ -169,7 +169,7 @@ public class ExistingFilesChecker {
 		}
 
 	}
-	
+
 	public static boolean isElementContent(String uploadedFilesPath, String target) {
 		// Check if the file to upload is an EAC-CPF file
     	boolean found = false;
@@ -252,7 +252,7 @@ public class ExistingFilesChecker {
 		} else if(xmlType == XmlType.EAC_CPF){
   		   LOG.info("We try to insert an EAC-CPF file");
   		   result=insertEacCpfFile(fileUnit, xmlType);
-  		   
+
   	     }else{
 			// The file has XML format
 			String eadid = "";
@@ -332,7 +332,7 @@ public class ExistingFilesChecker {
                 } else {
                     // It is necessary to check if the eadid is already in the Table for the current Archival Institution
                     Integer identifier;
-                    if((identifier = DAOFactory.instance().getEadDAO().isEadidUsed(eadid, archivalInstitutionId, (Class<? extends Ead>) xmlType.getClazz())) != null){
+                    if((identifier = DAOFactory.instance().getEadDAO().isEadidUsed(eadid, archivalInstitutionId, xmlType.getEadClazz())) != null){
                         // The EADID already exists
                         LOG.warn("Eadid '" + eadid + "' is already existing with id '" + identifier + "' in the table of '" + xmlType.getName() + "'");
                         fileUnit.setEadid(eadid);
@@ -358,7 +358,7 @@ public class ExistingFilesChecker {
 		}
 		return result;
 	}
-    
+
 	/**
 	 * Insert an EAC-CPF file in the dashboard
 	 * @param fileUnit
@@ -368,7 +368,7 @@ public class ExistingFilesChecker {
 	private String insertEacCpfFile(FileUnit fileUnit, XmlType xmlType) {
     	//This method insert an EAC-CPF file in the dashboard
 	   Boolean dataBaseCommitError = false;
-	   String result = STATUS_NO_EXIST;		
+	   String result = STATUS_NO_EXIST;
 	   EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
 	   UpFile upFile = upFileDao.findById(fileUnit.getFileId());
 	   String cpfId;
@@ -438,9 +438,9 @@ public class ExistingFilesChecker {
                 }
 	            result = STATUS_ERROR;
 	        }else{
-	        	Integer identifier = eacCpfDAO.isEacCpfIdUsed(cpfId, archivalInstitutionId,(Class<? extends EacCpf>) xmlType.getClazz());
+	        	Integer identifier = eacCpfDAO.isEacCpfIdUsed(cpfId, archivalInstitutionId, EacCpf.class);
 	        	if(identifier != null){ //The cpf_id is already stored in the table
-	        
+
             	// The cpfId already exists
                 LOG.warn("EAC-CPF identifier '" + cpfId + "' is already existing with id '" + identifier + "' in the table of eac_cpf'");
                 fileUnit.setEadid(cpfId);
@@ -460,9 +460,9 @@ public class ExistingFilesChecker {
 				LOG.error("File was not correct XML, cause: " + e1.getMessage());
 				additionalErrors += e1.getMessage();
 		}
-	    return result;	
+	    return result;
 	}
-	
+
 	public String instantiateCorrectDirPath(XmlType xmlType) {
         String startPath = APEnetUtilities.FILESEPARATOR + archivalInstitutionCountry + APEnetUtilities.FILESEPARATOR + archivalInstitutionId + APEnetUtilities.FILESEPARATOR;
         if(xmlType == XmlType.EAD_FA){
@@ -663,7 +663,7 @@ public class ExistingFilesChecker {
                 		EacCpf eacToOverwrite = DAOFactory.instance().getEacCpfDAO().getEacCpfById(archivalInstitutionId,fileUnit.getEadid());
                 		EacCpfService.overwrite(eacToOverwrite, upFileDao.findById(fileUnit.getFileId()));
                 	}else{
-	                	Ead eadToOverwrite = DAOFactory.instance().getEadDAO().getEadByEadid((Class<? extends Ead>) xmlType.getClazz(), archivalInstitutionId, fileUnit.getEadid());
+	                	Ead eadToOverwrite = DAOFactory.instance().getEadDAO().getEadByEadid(xmlType.getEadClazz(), archivalInstitutionId, fileUnit.getEadid());
 	                	EadService.overwrite(eadToOverwrite, upFileDao.findById(fileUnit.getFileId()));
                 	}
                     //overwrite(fileUnit);
@@ -681,7 +681,7 @@ public class ExistingFilesChecker {
 	public String overwriteFile(FileUnit fileUnit, String answer, String savechangesIDanswer, String canceloverwriteanswer,String fileType, String newIdentifier) {
 		String result = "ok";
 		Boolean dataBaseCommitError = false;
-		
+
 		if (answer.equalsIgnoreCase("Cancel")) {
 			result=cancelAnswer(fileUnit);
 		} else if (answer.equalsIgnoreCase("overwrite")) {
@@ -741,10 +741,10 @@ public class ExistingFilesChecker {
                         XmlType xmlType = XmlType.getType(fileType);
                         Integer fileIdentifier;
                         if (xmlType == XmlType.EAC_CPF){
-                        	fileIdentifier = DAOFactory.instance().getEacCpfDAO().isEacCpfIdUsed(identifier, archivalInstitutionId, (Class<? extends EacCpf>) xmlType.getClazz());
-                        	
+                        	fileIdentifier = DAOFactory.instance().getEacCpfDAO().isEacCpfIdUsed(identifier, archivalInstitutionId, EacCpf.class);
+
                         }else{
-                            fileIdentifier = DAOFactory.instance().getEadDAO().isEadidUsed(identifier, archivalInstitutionId, (Class<? extends Ead>) xmlType.getClazz());
+                            fileIdentifier = DAOFactory.instance().getEadDAO().isEadidUsed(identifier, archivalInstitutionId, xmlType.getEadClazz());
                         }
                         if(fileIdentifier != null) {
                             // The ID already exists
@@ -765,7 +765,7 @@ public class ExistingFilesChecker {
                             //Ead ead = instantiateCorrectEadType(xmlType);
                             try {
                             	if (fileType.equals(XmlType.EAC_CPF.getName())){
-                            	   EacCpfService.create(xmlType, upFileDao.findById(fileUnit.getFileId()), archivalInstitutionId);	
+                            	   EacCpfService.create(xmlType, upFileDao.findById(fileUnit.getFileId()), archivalInstitutionId);
                             	}else{
                             	   EadService.create(xmlType, upFileDao.findById(fileUnit.getFileId()), archivalInstitutionId);
                             	}
@@ -838,7 +838,7 @@ public class ExistingFilesChecker {
 		}
 	}
 
-    
+
     private String changeIdentifierUsingDOM(FileUnit fileUnit, String newIdentifier, boolean eac) {
         UpFileDAO upFileDao = DAOFactory.instance().getUpFileDAO();
         UpFile upfile = upFileDao.findById(fileUnit.getFileId());
@@ -867,7 +867,7 @@ public class ExistingFilesChecker {
             if (eac){
                nodeList = doc.getElementsByTagName("recordId");
             }else{
-	           nodeList = doc.getElementsByTagName("eadid");	            
+	           nodeList = doc.getElementsByTagName("eadid");
             }
             Node node = nodeList.item(0);
             String currentIdentifier = node.getTextContent();

@@ -25,7 +25,7 @@ public abstract class AbstractEadTask {
 	}
 	
 	protected void logAction(Ead ead, Exception e) {
-		XmlType xmlType = XmlType.getEadType(ead);
+		XmlType xmlType = XmlType.getContentType(ead);
 		String successString = "succeed";
 		if (e != null) {
 			successString = "failed";
@@ -33,12 +33,12 @@ public abstract class AbstractEadTask {
 		logger.info("Ead " + ead.getEadid() + "(" + xmlType.getName() + "): " + getActionName() + " - " + successString);
 	}
 	protected void logAction(Ead ead, long milliseconds) {
-		XmlType xmlType = XmlType.getEadType(ead);
+		XmlType xmlType = XmlType.getContentType(ead);
 		String successString = "succeed";
 		logger.info("Ead " + ead.getEadid() + "(" + xmlType.getName() + "): " + getActionName() + " - " + successString + " - " + milliseconds +"ms");
 	}
 	protected void logSolrAction(Ead ead, String message,long solrMilliseconds, long milliseconds) {
-		XmlType xmlType = XmlType.getEadType(ead);
+		XmlType xmlType = XmlType.getContentType(ead);
 		String successString = "succeed";
 		logger.info("Ead " + ead.getEadid() + "(" + xmlType.getName() + "): " + getActionName() + " - " + message + " - " + successString + " - s:" + solrMilliseconds +"ms" + " - o:" + milliseconds +"ms");
 	}

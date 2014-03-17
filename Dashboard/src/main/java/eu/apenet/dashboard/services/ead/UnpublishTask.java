@@ -30,7 +30,7 @@ public class UnpublishTask extends AbstractEadTask {
 			try {
 				long startTime = System.currentTimeMillis();
 				EadDAO eadDAO = DAOFactory.instance().getEadDAO();
-				XmlType xmlType = XmlType.getEadType(ead);
+				XmlType xmlType = XmlType.getContentType(ead);
 				logger.debug("Removing the EAD (" + xmlType.getName() + ") with eadid '" + ead.getEadid()
 						+ "' from the index");
 				long solrTime = deleteFromSolr(ead.getEadid(), ead.getAiId());

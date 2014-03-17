@@ -59,7 +59,7 @@ public class DisplayEadContentAction extends ActionSupport implements ServletReq
     public String execute(){
         Integer fileIdInteger = new Integer(fileId);
         XmlType xmlType = XmlType.getType(new Integer(xmlTypeId));
-        EadContent eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFileId(fileIdInteger, (Class<? extends Ead>) xmlType.getClazz());
+        EadContent eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFileId(fileIdInteger, xmlType.getEadClazz());
         request.setAttribute("eadContent", eadContent);
 
         if(request.getParameter("print") != null) {

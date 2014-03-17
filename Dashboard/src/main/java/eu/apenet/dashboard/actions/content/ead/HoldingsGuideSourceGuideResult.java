@@ -14,7 +14,7 @@ public class HoldingsGuideSourceGuideResult extends EadResult {
 	public HoldingsGuideSourceGuideResult(Ead ead) {
 		super(ead);
 		if (this.isPublished() || this.isDynamic()){
-			Class<? extends Ead> clazz = (Class<? extends Ead>) XmlType.getEadType(ead).getClazz();
+			Class<? extends Ead> clazz = XmlType.getContentType(ead).getEadClazz();
 			CLevelDAO clevelDAO = DAOFactory.instance().getCLevelDAO();
 			HgSgFaRelationDAO hgSgFaRelationDAO = DAOFactory.instance().getHgSgFaRelationDAO();
 			possibleFindingAidsLinked = clevelDAO.countPossibleLinkedCLevels(ead.getId(), clazz);

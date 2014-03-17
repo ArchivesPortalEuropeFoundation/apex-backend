@@ -188,7 +188,7 @@ public class EditEadAction extends AjaxControllerAbstractAction {
                 if(cLevel != null)
                     obj.put("xml", new EditParser().xmlToHtml(cLevel, null));
             } else if(fileId != null && fileId != -1 && xmlType != null){
-                EadContent eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFileId(fileId, (Class<? extends Ead>) xmlType.getClazz());
+                EadContent eadContent = DAOFactory.instance().getEadContentDAO().getEadContentByFileId(fileId, xmlType.getEadClazz());
                 if(eadContent != null)
                     obj.put("xml", new EditParser().xmlToHtml(null, eadContent));
             }

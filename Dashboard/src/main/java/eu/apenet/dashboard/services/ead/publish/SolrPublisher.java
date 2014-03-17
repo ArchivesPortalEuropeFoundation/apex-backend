@@ -152,7 +152,7 @@ public class SolrPublisher extends AbstractSolrPublisher{
 
 	public SolrPublisher(Ead ead) {
 		this.ead = ead;
-		xmlType = XmlType.getEadType(ead);
+		xmlType = XmlType.getContentType(ead);
 		eadDao = DAOFactory.instance().getEadDAO();
 	}
 

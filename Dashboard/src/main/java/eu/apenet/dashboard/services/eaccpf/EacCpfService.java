@@ -158,7 +158,7 @@ public class EacCpfService {
 
         if (!queueAction.isUseProfileAction()) {
             EacCpf eac = queueItem.getEacCpf();
-            XmlType xmlType = XmlType.getEadType(eac);
+            XmlType xmlType = XmlType.getContentType(eac);
             LOGGER.info("Process queue item: " + queueItem.getId() + " " + queueItem.getAction() + " " + eac.getIdentifier()
                     + "(" + xmlType.getName() + ")");
 

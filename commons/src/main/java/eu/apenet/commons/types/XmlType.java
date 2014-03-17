@@ -3,6 +3,7 @@ package eu.apenet.commons.types;
 import eu.apenet.commons.solr.SolrValues;
 import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.EacCpf;
+import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SourceGuide;
@@ -44,6 +45,7 @@ public enum XmlType {
     public Class<? extends AbstractContent> getClazz() {
         return clazz;
     }
+
     public static XmlType getType(Class<? extends AbstractContent> clazz){
         for(XmlType type : XmlType.values()){
             if(type.getClazz() != null && type.getClazz().equals(clazz))
@@ -51,6 +53,7 @@ public enum XmlType {
         }
         return null;
     }
+
     public static XmlType getType(int identifier){
         for(XmlType type : XmlType.values()){
             if(type.getIdentifier() == identifier)
@@ -58,6 +61,7 @@ public enum XmlType {
         }
         return null;
     }
+
     public static XmlType getTypeBySolrPrefix(String solrPrefix){
         for(XmlType type : XmlType.values()){
             if(type.getSolrPrefix() != null && type.getSolrPrefix().equals(solrPrefix))
@@ -65,6 +69,7 @@ public enum XmlType {
         }
         return null;
     }
+
     public static XmlType getTypeByResourceName(String resourceName){
         for(XmlType type : XmlType.values()){
             if(type.getResourceName() != null && type.getResourceName().equalsIgnoreCase(resourceName))
@@ -72,6 +77,7 @@ public enum XmlType {
         }
         return null;
     }
+
     public static XmlType getType(String name){
         for(XmlType type : XmlType.values()){
             if(type.getName().equals(name))
@@ -80,7 +86,7 @@ public enum XmlType {
         return null;
     }
 
-    public static XmlType getEadType(AbstractContent content){
+    public static XmlType getContentType(AbstractContent content){
         if(content instanceof FindingAid)
             return XmlType.EAD_FA;
         if(content instanceof HoldingsGuide)
@@ -92,12 +98,22 @@ public enum XmlType {
         return null;
     }
 
-	public String getResourceName() {
-		return resourceName;
-	}
+    public Class<? extends Ead> getEadClazz() {
+        if (this.identifier == 0)
+            return FindingAid.class;
+        if (this.identifier == 1)
+            return HoldingsGuide.class;
+        if (this.identifier == 3)
+            return SourceGuide.class;
+        return null;
+    }
 
-	public String getSolrPrefix() {
-		return solrPrefix;
-	}
+    public String getResourceName() {
+        return resourceName;
+    }
+
+    public String getSolrPrefix() {
+        return solrPrefix;
+    }
 
 }
