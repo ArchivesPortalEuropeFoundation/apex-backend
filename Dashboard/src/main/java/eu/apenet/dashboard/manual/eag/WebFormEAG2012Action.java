@@ -12,6 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -39,9 +40,14 @@ import eu.apenet.dpt.utils.eag2012.namespace.EagNamespaceMapper;
 import eu.apenet.dpt.utils.util.LanguageIsoList;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.CoordinatesDAO;
+import eu.apenet.persistence.dao.CountryDAO;
+import eu.apenet.persistence.dao.LangDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Coordinates;
+import eu.apenet.persistence.vo.CouAlternativeName;
+import eu.apenet.persistence.vo.Country;
+import eu.apenet.persistence.vo.Lang;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
 /**
@@ -968,7 +974,8 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 //		this.loader.setLocalentity(getDistrictOfTheInstitution());
 //		this.loader.setSecondem(getCountyOfTheInstitution());
 //		this.loader.setFirstdem(getRegionOfTheInstitution());
-		this.loader.setCountry(getCountryOfTheInstitution());
+//		this.loader.setCountry(getCountryOfTheInstitution());
+		this.loader.setCountry(getCountryNameOfTheInstitution(getCountryCode()));
 //		this.loader.setLatitude(getLatitudeOfTheInstitution());
 //		this.loader.setLongitude(getLongitudeOfTheInstitution());
 //		this.loader.setTelephone(getTelephoneOfTheInstitution());
@@ -7135,5 +7142,53 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 
 		Eag2012GeoCoordinatesAction eag2012GeoCoordinatesAction = new Eag2012GeoCoordinatesAction();
 		eag2012GeoCoordinatesAction.insertCoordinates(archivalInstitution);
+	}
+
+	/**
+	 * Method to recover the name of the country in the country language.
+	 * If the information is not available the method returns the country name
+	 * in English.
+	 *
+	 * @param countryCode The current country code.
+	 * @return
+	 */
+	private String getCountryNameOfTheInstitution(String countryCode) {
+		String countryName = "";
+		CountryDAO countryDAO = DAOFactory.instance().getCountryDAO();
+		List<Country> countryList = countryDAO.getCountries(countryCode);
+		if (countryList != null && !countryList.isEmpty()) {
+			Country country = countryList.get(0);
+			Set<CouAlternativeName> couAlternativeNameSet = country.getCouAlternativeNames();		
+			//Get the country name in the language of the country
+			LangDAO langDAO = DAOFactory.instance().getLangDAO();
+			Lang lang = langDAO.getLangByIso2Name(countryCode);
+			countryName = iterate(lang, couAlternativeNameSet);
+			if (countryName == null || countryName.isEmpty()) {
+				// Recover the name of the country in English.
+				lang = langDAO.getLangByIso2Name("EN");
+				countryName = iterate(lang, couAlternativeNameSet);
+			}
+		}
+		return countryName;
+	}
+
+	/**
+	 * Iterate the list of countries to get the country in its own language
+	 * @param lang angDAO.getLangByIso2Name(countryCode)
+	 * @param couAlternativeNameSet ountry.getCouAlternativeNames()
+	 * @return countryName
+	 */
+	private String iterate(Lang lang, Set<CouAlternativeName> couAlternativeNameSet) {
+		String result = "";
+		Iterator<CouAlternativeName> couAlternativeNameIt = couAlternativeNameSet.iterator();
+		boolean found = false;
+		while (!found && couAlternativeNameIt.hasNext()) {
+			CouAlternativeName couAlternativeName = couAlternativeNameIt.next();
+			if (couAlternativeName.getLang().getId() == lang.getId()) {
+				result = couAlternativeName.getCouAnName();
+				found = true;
+			}
+		}
+		return result;
 	}
 }

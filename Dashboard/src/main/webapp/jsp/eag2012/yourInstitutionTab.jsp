@@ -273,7 +273,7 @@
 					<label for="textYICountry"><s:property value="getText('eag2012.commons.country')"/><span class="required">*</span>:</label>
 				</td>
 				<td>
-					<textarea id="textYICountry" onchange="countryOfInstitutionChanged($(this).parent().parent().parent().parent());"></textarea>
+					<textarea id="textYICountry" onchange="countryOfInstitutionChanged($(this).parent().parent().parent().parent());">${loader.country}</textarea>
 				</td>
 				<td colspan="2">
 				</td>

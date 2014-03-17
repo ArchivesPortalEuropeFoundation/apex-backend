@@ -46,6 +46,7 @@ function hideAndShow(idPrefix,shown){
 		}
 	}
 }
+
 function clickExitAction(){
 	//exit the form without save
 	location.href="removeInvalidEAG2012.action";
@@ -4939,4 +4940,14 @@ function disableCoordinates(){
 
 $(document).ready(function(){
 	disableCoordinates();      	
-}); 
+});
+
+/**
+ * Function that copy the country name from "Your Institution" table to "Contact"
+ * table if it's necesary.
+ */
+function copyCountryName() {
+	if ($("table#contactTable_1 #textContactCountryOfTheInstitution").attr("value") == "") {
+		$("table#contactTable_1 #textContactCountryOfTheInstitution").attr("value",$("table#yiTableVisitorsAddress_1 textarea#textYICountry").attr("value"));
+	}
+}

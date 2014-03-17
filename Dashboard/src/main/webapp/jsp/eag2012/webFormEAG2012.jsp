@@ -40,6 +40,7 @@
 			<script type="text/javascript">
 				$(document).ready(function(){
 					hideAndShow("tab-","tab-yourInstitution");
+					copyCountryName();
 					$("#currentTab").attr("value","tab-yourInstitution");
 					$("a[href^='#tab-']").click(function(){
 							hideAndShow("tab-",$(this).attr("href").substring(1));

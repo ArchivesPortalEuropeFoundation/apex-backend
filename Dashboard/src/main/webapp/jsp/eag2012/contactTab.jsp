@@ -739,7 +739,7 @@
 					<label for="textContactCountryOfTheInstitution"><s:property value="getText('eag2012.commons.country')" /><span class="required">*</span>:</label>
 				</td>
 				<td>
-					<textarea id="textContactCountryOfTheInstitution" onchange="contactCountryOfInstitutionChanged($(this).parent().parent().parent().parent());" disabled="disabled"></textarea>
+					<textarea id="textContactCountryOfTheInstitution" onchange="contactCountryOfInstitutionChanged($(this).parent().parent().parent().parent());" disabled="disabled">${loader.country}</textarea>
 				</td>
 				<td colspan="2">
 				</td>
