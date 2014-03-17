@@ -71,8 +71,8 @@ public class ManageQueueAction  extends AbstractAction{
 			displayItem.setPriority(queueItem.getPriority());
 			displayItem.setErrors(queueItem.getErrors());
 			try {
-				if (queueItem.getEad() != null){
-					AbstractContent content = queueItem.getEad();
+				if (queueItem.getAbstractContent() != null){
+					AbstractContent content = queueItem.getAbstractContent();
 					displayItem.setEadidOrFilename(content.getIdentifier());
 					displayItem.setArchivalInstitution(content.getArchivalInstitution().getAiname());
 				}else if (queueItem.getUpFile() != null){

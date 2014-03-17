@@ -294,7 +294,7 @@ public class EadService {
 	private static void deleteFromQueue(QueueItem queueItem, boolean deleteUpFile) throws Exception {
 		EadDAO eadDAO = DAOFactory.instance().getEadDAO();
 		JpaUtil.beginDatabaseTransaction();
-		Ead ead = (Ead) queueItem.getEad();
+		Ead ead = queueItem.getEad();
 		if (ead != null) {
 			ead.setQueuing(QueuingState.NO);
 			eadDAO.updateSimple(ead);
@@ -335,7 +335,7 @@ public class EadService {
         }
 
         if (!queueAction.isUseProfileAction()) {
-            Ead ead = (Ead) queueItem.getEad();
+            Ead ead = queueItem.getEad();
             XmlType xmlType = XmlType.getEadType(ead);
             LOGGER.info("Process queue item: " + queueItem.getId() + " " + queueItem.getAction() + " " + ead.getEadid()
                     + "(" + xmlType.getName() + ")");

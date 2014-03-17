@@ -134,7 +134,7 @@ public class QueueTask implements Runnable {
 					hasItems = false;
 				} else {
 					queueId = queueItem.getId();
-					AbstractContent content = queueItem.getEad();
+					AbstractContent content = queueItem.getAbstractContent();
                     if(content != null) {
                         content.setQueuing(QueuingState.BUSY);
                         if(content instanceof Ead){
