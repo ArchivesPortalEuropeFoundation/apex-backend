@@ -160,7 +160,7 @@ public class QueueItem implements java.io.Serializable {
 		this.preferences = preferences;
 	}
 
-	public AbstractContent getEad(){
+	public AbstractContent getAbstractContent(){
 		if (this.findingAid != null) {
 			return this.findingAid;
 		} else if (this.holdingsGuide != null) {
@@ -168,10 +168,19 @@ public class QueueItem implements java.io.Serializable {
 		} else if (this.sourceGuide != null){
 			return this.sourceGuide;
 		}
-		return this.eacCpf;
+		return this.eacCpf;		
 	}
-	
-	public void setEad(AbstractContent content) {
+	public Ead getEad(){
+		if (this.findingAid != null) {
+			return this.findingAid;
+		} else if (this.holdingsGuide != null) {
+			return this.holdingsGuide;
+		} else if (this.sourceGuide != null){
+			return this.sourceGuide;
+		}
+		return null;
+	}
+	public void setAbstractContent(AbstractContent content) {
 		if (content == null) {
 			this.findingAid = null;
 			this.holdingsGuide = null;
@@ -186,6 +195,21 @@ public class QueueItem implements java.io.Serializable {
 				this.sourceGuide = (SourceGuide)content;
 			} 
 			this.eacCpf = (EacCpf)content;
+		}
+	}	
+	public void setEad(Ead ead) {
+		if (ead == null) {
+			this.findingAid = null;
+			this.holdingsGuide = null;
+			this.sourceGuide = null;
+		} else {
+			if (ead instanceof FindingAid) {
+				this.findingAid = (FindingAid) ead;
+			} else if (ead instanceof HoldingsGuide) {
+				this.holdingsGuide = (HoldingsGuide) ead;
+			} else if (ead instanceof SourceGuide) {
+				this.sourceGuide = (SourceGuide)ead;
+			} 
 		}
 	}
 
