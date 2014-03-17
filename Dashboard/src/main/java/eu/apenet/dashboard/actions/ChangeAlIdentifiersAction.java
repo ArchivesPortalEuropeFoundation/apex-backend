@@ -114,23 +114,7 @@ public class ChangeAlIdentifiersAction extends ActionSupport implements Preparab
 		this.setCountry(countryDao.findById(SecurityContext.get().getCountryId()));
 		ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
 		
-		this.institutionList = aiDao.getGroupsAndArchivalInstitutionsByCountryId(this.getCountry().getId(),"alorder", true ); 
-		if(this.institutionList!=null && this.institutionList.size()>0){
-			//parse for characters like &amp; which now are shown not like final character, only html characters
-			Iterator<ArchivalInstitution> it = this.institutionList.iterator();
-			List<ArchivalInstitution> newList = new LinkedList<ArchivalInstitution>();
-			while(it.hasNext()){
-				ArchivalInstitution tempArchivalInstitution = it.next();
-				String aiName = tempArchivalInstitution.getAiname();
-				aiName = URLDecoder.decode(aiName,"UTF-8");
-				aiName = aiName.replaceAll("&amp;","&");
-				tempArchivalInstitution.setAiname(aiName);
-				newList.add(tempArchivalInstitution);
-			}
-			this.institutionList = newList;
-		}
-        this.setInstitutionList(this.institutionList);
-	//	this.setInstitutionList(aiDao.getGroupsAndArchivalInstitutionsByCountryId(this.getCountry().getId(),"alorder", true ));
+		this.setInstitutionList(aiDao.getGroupsAndArchivalInstitutionsByCountryId(this.getCountry().getId(),"alorder", true ));
 	}
 
 	public String storeIdentifier(){

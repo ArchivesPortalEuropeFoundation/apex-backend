@@ -934,7 +934,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		{
 			nameOfInstitution = getNameOfInstitution();
 		} else {
-			nameOfInstitution = getInitialAutformValue().replaceAll("&amp;", "&"); 
+			nameOfInstitution = getInitialAutformValue();
 		}
 		this.loader.setInitialAutform(getInitialAutformValue());
 		this.loader.setId(getAiId());

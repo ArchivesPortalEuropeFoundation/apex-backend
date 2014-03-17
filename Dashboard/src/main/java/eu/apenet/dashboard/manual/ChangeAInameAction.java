@@ -134,12 +134,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 
 		ArchivalInstitutionDAO archivalInstitutionDao = DAOFactory.instance().getArchivalInstitutionDAO();
 		ArchivalInstitution archivalInstitution = archivalInstitutionDao.findById(this.getAiId());
-		String aiName = archivalInstitution.getAiname();
-		aiName = URLDecoder.decode(aiName,"UTF-8");
-		aiName = aiName.replaceAll("&amp;","&");
-		archivalInstitution.setAiname(aiName);
-		this.name = aiName;
-		//this.name = archivalInstitution.getAiname();
+		this.name = archivalInstitution.getAiname();
 		if (ContentUtils.containsPublishedFiles(archivalInstitution)){
 			addActionError(getText("label.ai.changeainame.published.eads"));
 		}
@@ -186,9 +181,9 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 				path_copyEAG = path_copyEAG + "_copy.xml";
 				
 				/// UPDATE DATABASE ///
-				an.setAiAName(this.newname.replaceAll("&", "&amp;"));
-				ai.setAiname(this.newname.replaceAll("&", "&amp;"));
-				ai.setAutform(this.newname.replaceAll("&", "&amp;"));
+				an.setAiAName(this.newname);
+				ai.setAiname(this.newname);
+				ai.setAutform(this.newname);
 				andao.updateSimple(an);
 				aidao.updateSimple(ai);
 
@@ -197,7 +192,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 					Iterator<Coordinates> coIt = coords.iterator();
 					while(coIt.hasNext()){
 						Coordinates coordinates = coIt.next();
-						coordinates.setNameInstitution(this.newname.replaceAll("&", "&amp;"));
+						coordinates.setNameInstitution(this.newname);
 						codao.updateSimple(coordinates);
 					}
 				}
@@ -228,7 +223,7 @@ public class ChangeAInameAction extends AbstractInstitutionAction {
 					Node nodeAutform = nodeAutList.item(j);
 					if (nodeAutform.getTextContent().equals(this.name)
 							&& !autformChanged){
-						nodeAutform.setTextContent(this.newname.replaceAll("&amp;", "&"));
+						nodeAutform.setTextContent(this.newname);
 						autformChanged = true;
 						LOG.debug("<autform> in EAG has been modified correctly");
 					}

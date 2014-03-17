@@ -174,8 +174,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 			JpaUtil.beginDatabaseTransaction();
 			name = name.replaceAll("[\\s+&&[^\\n]]+"," ") //1. reduce all non-newline whitespaces to a unique space
 				    .replaceAll("(?m)^\\s+|\\s$","") //2. remove spaces from start or end of the lines
-				    .replaceAll("\\n+"," ") //3. remove all newlines, compress it in a unique line
-					.replaceAll("&","&amp;");
+				    .replaceAll("\\n+"," "); //3. remove all newlines, compress it in a unique line
 			AiAlternativeNameDAO aiAlternativesNamesDAO = DAOFactory.instance().getAiAlternativeNameDAO();
 			ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
 			LangDAO langDAO = DAOFactory.instance().getLangDAO();
@@ -565,8 +564,7 @@ public class ArchivalLandscapeEditor extends ArchivalLandscapeDynatreeAction {
 				ArchivalInstitution archivalInstitution = new ArchivalInstitution();
 				name = name.replaceAll("[\\s+&&[^\\n]]+"," ") //1. reduce all non-newline whitespaces to a unique space
 					    .replaceAll("(?m)^\\s+|\\s$","") //2. remove spaces from start or end of the lines
-					    .replaceAll("\\n+"," ") //3. remove all newlines, compress it in a unique line
-						.replaceAll("&","&amp;");
+					    .replaceAll("\\n+"," ");//3. remove all newlines, compress it in a unique line
 				archivalInstitution.setAiname(name);
 				boolean group = (type.equals(SERIE));
 				archivalInstitution.setGroup(group);

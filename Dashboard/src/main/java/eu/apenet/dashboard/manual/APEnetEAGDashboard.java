@@ -232,7 +232,7 @@ public class APEnetEAGDashboard{
 		// It is necessary to build the path
 		this.setEagPath(sourcePath);
 		this.setId(this.extractAttributeFromEag("control/recordId", null, true));
-		this.setName(this.extractAttributeFromEag("archguide/identity/autform", null, true).replaceAll("&amp;", "&").replaceAll("&", "&amp;"));
+		this.setName(this.extractAttributeFromEag("archguide/identity/autform", null, true));
 		
 		// It is necessary to check if this EAG has been updated before for
 		// another archival institution
@@ -631,14 +631,14 @@ public class APEnetEAGDashboard{
 						break;
 					case XMLEvent.CHARACTERS:
 						if (addText) {
-							importantData = input.getText().replaceAll("&", "&amp;");
+							importantData = input.getText();
 							if (importantData.startsWith(CONVERTED_FLAG)) {
 								log.debug("Returning true");
 								resultList.add("true");
 								return resultList;
 							} else {
-								log.debug("Adding " + input.getText().replaceAll("&", "&amp;"));
-								resultList.add(input.getText().replaceAll("&", "&amp;"));
+								log.debug("Adding " + input.getText());
+								resultList.add(input.getText());
 							}
 							addText = false;
 						}

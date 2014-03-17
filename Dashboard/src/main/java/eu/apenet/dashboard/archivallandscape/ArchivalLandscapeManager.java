@@ -1697,8 +1697,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 								alternativeLangText = r.getAttributeValue(i).trim()
 								    .replaceAll("[\\s+&&[^\\n]]+"," ") //1. reduce all non-newline whitespaces to a unique space
 								    .replaceAll("(?m)^\\s+|\\s$","") //2. remove spaces from start or end of the lines
-								    .replaceAll("\\n+"," ") //3. remove all newlines, compress it in a unique line
-									.replaceAll("&","&amp;");
+								    .replaceAll("\\n+"," "); //3. remove all newlines, compress it in a unique line
 							}
 						}
 					}
@@ -1772,8 +1771,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 						alternativeNameText += r.getText().trim()
 						    .replaceAll("[\\s+&&[^\\n]]+"," ")//1. reduce all non-newline whitespaces to a unique space
 						    .replaceAll("(?m)^\\s+|\\s$","")//2. remove spaces from start or end of the lines
-						    .replaceAll("\\n+"," ")//3. remove all newlines, compress it in a unique line
-							.replaceAll("&","&amp;");
+						    .replaceAll("\\n+"," ");//3. remove all newlines, compress it in a unique line
 					}
 			}
 		}
@@ -1898,8 +1896,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 							if(r.getAttributeLocalName(i)!=null && r.getAttributeLocalName(i).trim().equals("type")){
 								uLang = r.getAttributeValue(i).trim().replaceAll("[\\s+&&[^\\n]]+"," ") //1. reduce all non-newline whitespaces to a unique space
 								    .replaceAll("(?m)^\\s+|\\s$","") //2. remove spaces from start or end of the lines
-								    .replaceAll("\\n+"," ") //3. remove all newlines, compress it in a unique line
-									.replaceAll("&","&amp;");
+								    .replaceAll("\\n+"," "); //3. remove all newlines, compress it in a unique line
 							}
 						}
 					}
@@ -1977,8 +1974,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					if(!r.isWhiteSpace() && unittitle!=null && archivalInstitution!=null){
 						unittitle += r.getText().trim().replaceAll("[\\s+&&[^\\n]]+"," ")//1. reduce all non-newline whitespaces to a unique space
 						    .replaceAll("(?m)^\\s+|\\s$","")//2. remove spaces from start or end of the lines
-						    .replaceAll("\\n+"," ")//3. remove all newlines, compress it in a unique line
-							.replaceAll("&","&amp;");
+						    .replaceAll("\\n+"," ");//3. remove all newlines, compress it in a unique line
 					}
 			}
 		}
