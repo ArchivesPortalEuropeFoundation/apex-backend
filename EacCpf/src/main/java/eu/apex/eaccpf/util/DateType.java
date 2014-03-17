@@ -4,8 +4,8 @@
  */
 package eu.apex.eaccpf.util;
 
-import eu.apex.eaccpf.data.Date;
-import eu.apex.eaccpf.data.DateRange;
+import eu.apenet.dpt.utils.eaccpf.Date;
+import eu.apenet.dpt.utils.eaccpf.DateRange;
 
 /**
  *

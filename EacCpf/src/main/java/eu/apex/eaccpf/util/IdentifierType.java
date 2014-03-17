@@ -4,7 +4,7 @@
  */
 package eu.apex.eaccpf.util;
 
-import eu.apex.eaccpf.data.EntityId;
+import eu.apenet.dpt.utils.eaccpf.EntityId;
 
 /**
  *

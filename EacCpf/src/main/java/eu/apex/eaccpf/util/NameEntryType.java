@@ -4,11 +4,11 @@
  */
 package eu.apex.eaccpf.util;
 
-import eu.apex.eaccpf.data.Date;
-import eu.apex.eaccpf.data.DateRange;
-import eu.apex.eaccpf.data.Identity;
-import eu.apex.eaccpf.data.NameEntry;
-import eu.apex.eaccpf.data.NameEntryParallel;
+import eu.apenet.dpt.utils.eaccpf.Date;
+import eu.apenet.dpt.utils.eaccpf.DateRange;
+import eu.apenet.dpt.utils.eaccpf.Identity;
+import eu.apenet.dpt.utils.eaccpf.NameEntry;
+import eu.apenet.dpt.utils.eaccpf.NameEntryParallel;
 import java.util.ArrayList;
 import java.util.List;
 

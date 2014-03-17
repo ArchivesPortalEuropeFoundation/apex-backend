@@ -4,9 +4,9 @@
  */
 package eu.apex.eaccpf.util;
 
-import eu.apex.eaccpf.data.BiogHist;
-import eu.apex.eaccpf.data.P;
-import eu.apex.eaccpf.data.StructureOrGenealogy;
+import eu.apenet.dpt.utils.eaccpf.BiogHist;
+import eu.apenet.dpt.utils.eaccpf.P;
+import eu.apenet.dpt.utils.eaccpf.StructureOrGenealogy;
 import java.util.List;
 
 /**

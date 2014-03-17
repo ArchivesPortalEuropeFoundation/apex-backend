@@ -4,10 +4,10 @@
  */
 package eu.apex.eaccpf.util;
 
-import eu.apex.eaccpf.data.CpfRelation;
-import eu.apex.eaccpf.data.RelationEntry;
-import eu.apex.eaccpf.data.FunctionRelation;
-import eu.apex.eaccpf.data.ResourceRelation;
+import eu.apenet.dpt.utils.eaccpf.CpfRelation;
+import eu.apenet.dpt.utils.eaccpf.RelationEntry;
+import eu.apenet.dpt.utils.eaccpf.FunctionRelation;
+import eu.apenet.dpt.utils.eaccpf.ResourceRelation;
 import java.util.ArrayList;
 import java.util.List;
 

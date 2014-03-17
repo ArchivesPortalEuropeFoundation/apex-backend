@@ -5,7 +5,7 @@
 package eu.apex.eaccpf.actions;
 
 import eu.apex.eaccpf.CreateEacCpf;
-import eu.apex.eaccpf.data.EacCpf;
+import eu.apenet.dpt.utils.eaccpf.EacCpf;
 import eu.apex.eaccpf.util.ContentUtils;
 import java.util.Enumeration;
 import javax.xml.bind.JAXBContext;

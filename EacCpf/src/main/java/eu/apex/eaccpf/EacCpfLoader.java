@@ -4,7 +4,26 @@
  */
 package eu.apex.eaccpf;
 
-import eu.apex.eaccpf.data.*;
+import eu.apenet.dpt.utils.eaccpf.Places;
+import eu.apenet.dpt.utils.eaccpf.EacCpf;
+import eu.apenet.dpt.utils.eaccpf.CpfRelation;
+import eu.apenet.dpt.utils.eaccpf.EntityId;
+import eu.apenet.dpt.utils.eaccpf.Occupations;
+import eu.apenet.dpt.utils.eaccpf.StructureOrGenealogy;
+import eu.apenet.dpt.utils.eaccpf.OtherRecordId;
+import eu.apenet.dpt.utils.eaccpf.FunctionRelation;
+import eu.apenet.dpt.utils.eaccpf.Date;
+import eu.apenet.dpt.utils.eaccpf.Functions;
+import eu.apenet.dpt.utils.eaccpf.P;
+import eu.apenet.dpt.utils.eaccpf.ResourceRelation;
+import eu.apenet.dpt.utils.eaccpf.Function;
+import eu.apenet.dpt.utils.eaccpf.Occupation;
+import eu.apenet.dpt.utils.eaccpf.Identity;
+import eu.apenet.dpt.utils.eaccpf.NameEntryParallel;
+import eu.apenet.dpt.utils.eaccpf.BiogHist;
+import eu.apenet.dpt.utils.eaccpf.Place;
+import eu.apenet.dpt.utils.eaccpf.DateRange;
+import eu.apenet.dpt.utils.eaccpf.NameEntry;
 import eu.apex.eaccpf.util.BiographyType;
 import eu.apex.eaccpf.util.DateType;
 import eu.apex.eaccpf.util.FunctionType;

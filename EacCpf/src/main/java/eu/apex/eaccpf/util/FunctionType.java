@@ -4,11 +4,11 @@
  */
 package eu.apex.eaccpf.util;
 
-import eu.apex.eaccpf.data.Date;
-import eu.apex.eaccpf.data.DateRange;
-import eu.apex.eaccpf.data.Function;
-import eu.apex.eaccpf.data.P;
-import eu.apex.eaccpf.data.PlaceEntry;
+import eu.apenet.dpt.utils.eaccpf.Date;
+import eu.apenet.dpt.utils.eaccpf.DateRange;
+import eu.apenet.dpt.utils.eaccpf.Function;
+import eu.apenet.dpt.utils.eaccpf.P;
+import eu.apenet.dpt.utils.eaccpf.PlaceEntry;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
