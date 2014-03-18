@@ -37,6 +37,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import com.ctc.wstx.exc.WstxLazyException;
+import com.ctc.wstx.exc.WstxUnexpectedCharException;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
@@ -1609,6 +1610,9 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			archivalInstitutions = getXMLArchivalInstitutionLevel(r);
 		} catch (FileNotFoundException e) {
 			log.error("File not found :: "+archivalInstitutionFile.getAbsolutePath() + APEnetUtilities.generateThrowableLog(e));
+		} catch (WstxUnexpectedCharException e){
+			log.error("Unexpected character into xml: ",e);
+			this.setInvalidChars(true);
 		} catch (XMLStreamException e) {
 			log.error("Archival Landscape reading exception: " + APEnetUtilities.generateThrowableLog(e));
 		} catch (WstxLazyException e){
