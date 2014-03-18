@@ -364,7 +364,8 @@ public abstract class ManualUploader {
                         List<String> autformValueList = eag.lookingForwardAllElementContent("/eag/archguide/identity/autform");
                         boolean exists = false;
                         for (int i = 0; !exists && i < autformValueList.size(); i++) {
-                        	String autformValue = autformValueList.get(i).replaceAll("&amp;", "&").replaceAll("&","&amp;");
+                        	String autformValue = autformValueList.get(i);
+                        //	String autformValue = autformValueList.get(i).replaceAll("&amp;", "&").replaceAll("&","&amp;");
                             if (institutionName.equalsIgnoreCase(autformValue)) {
                                 exists = true;
                             }
