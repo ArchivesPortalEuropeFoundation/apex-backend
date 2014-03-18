@@ -194,10 +194,10 @@
                     </s:iterator>
                 </td>
                     <s:if test="%{#current.dates.size() > 0}">
-                        <td><input type="hidden" id="placeTable_<s:property value="#status.index + 1" />_rows" name="functionTable_<s:property value="#status.index + 1" />_rows" value="<s:property value="#current.dates.size()" />" /></td>
+                        <td><input type="hidden" id="placeTable_1_rows" name="placeTable_1_rows" value="<s:property value="#current.dates.size()" />" /></td>
                         </s:if>
                         <s:else>
-                        <td><input type="hidden" id="placeTable_<s:property value="#status.index + 1" />_rows" name="functionTable_<s:property value="#status.index + 1" />_rows" value="0" /></td>
+                        <td><input type="hidden" id="placeTable_1_rows" name="placeTable_1_rows" value="0" /></td>
                         </s:else>
                 <td></td>
             </tr>
