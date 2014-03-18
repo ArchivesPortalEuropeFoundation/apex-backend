@@ -14,6 +14,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
+            <add-attribute type="string" value="/js/browsers.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal"/>
 	</definition>
@@ -27,6 +28,7 @@
 		<put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
+            <add-attribute type="string" value="/js/browsers.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal"/>
 	</definition>
@@ -39,6 +41,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
+            <add-attribute type="string" value="/js/browsers.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal"/>
 	</definition>
@@ -53,6 +56,7 @@
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
             <add-attribute type="string" value="/js/help.js"/>
+            <add-attribute type="string" value="/js/browsers.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal"/>
 	</definition>
@@ -63,20 +67,36 @@
 	<definition name="index" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.title" />
 		<put-attribute name="body" value="/jsp/templates/blank.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
 	<definition name="eagfirstcreation" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.eagcreation.title" />
 		<put-attribute name="menu" value="/jsp/indexEAGCreation.jsp" />
 		<put-attribute name="body" value="/jsp/templates/blank.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
 	<definition name="eagsuccesscreated" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.eagwebform.title" />
 		<put-attribute name="body" value="/jsp/templates/blank.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
 	<definition name="webformeag" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.eagwebform.title" />
 		<put-attribute name="menu" value="/jsp/indexEAGCreation.jsp" />
 		<put-attribute name="body" value="/jsp/webformeag.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
 
 	<definition name="webFormEAG2012" extends="dashboardLayout">
@@ -87,7 +107,8 @@
 			<add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 			<add-attribute type="string" value="/js/eag2012/eag2012.js"/>
 			<add-attribute type="string" value="/js/breadcrumb.js"/>
-        </put-list-attribute>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
 	<definition name="webFormEAG2012WithoutCreate" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.eagwebform.title" />
@@ -97,6 +118,7 @@
 			<add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 			<add-attribute type="string" value="/js/eag2012/eag2012.js"/>
 			<add-attribute type="string" value="/js/breadcrumb.js"/>
+			<add-attribute type="string" value="/js/browsers.js"/>
         </put-list-attribute>
 	</definition>
 	<definition name="webFormEAG2012WithMenu" extends="dashboardLayout">
@@ -107,17 +129,26 @@
 			<add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 			<add-attribute type="string" value="/js/eag2012/eag2012.js"/>
 			<add-attribute type="string" value="/js/breadcrumb.js"/>
+			<add-attribute type="string" value="/js/browsers.js"/>
         </put-list-attribute>
 	</definition>
 
 	<definition name="webformeagwithmenu" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.eagwebform.title" />
 		<put-attribute name="body" value="/jsp/webformeag.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
 
 	<definition name="webformainame" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.ainamewebform.title" />
 		<put-attribute name="body" value="/jsp/webformainame.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
 
 	<!-- <definition name="webformainamesuccess" extends="dashboardLayout">
@@ -129,52 +160,96 @@
 	<definition name="uploadsimpleeagerror" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.simpleeaguploaderror.title" />
 		<put-attribute name="body" value="/jsp/uploadsimpleeagerror.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
 	<definition name="httpuploadeag" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.eagupload.title" />
 		<put-attribute name="menu" value="/jsp/indexEAGCreation.jsp" />
 		<put-attribute name="body" value="/jsp/httpuploadeag.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
 	<definition name="httpuploadeagwithtempeag" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.eagupload.title" />
 		<put-attribute name="menu" value="/jsp/eag2012/indexEAG2012Upload.jsp" />
 		<put-attribute name="body" value="/jsp/httpuploadwithTempEag.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
 	<definition name="httpuploadeagwithmenu" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.eagupload.title" />
 		<put-attribute name="body" value="/jsp/httpuploadeagwithmenu.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
 	<definition name="uploadeagerrors" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.eaguploaderror.title" />
 		<put-attribute name="menu" value="/jsp/indexEAGCreation.jsp" />
 		<put-attribute name="body" value="/jsp/uploadeagerrors.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
 	<definition name="uploadeagerrorswithtempeag" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.eaguploaderror.title" />
 		<put-attribute name="menu" value="/jsp/eag2012/indexEAG2012Upload.jsp" />
 		<put-attribute name="body" value="/jsp/uploadeagerrors.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
 		<definition name="uploadeagerrorswithmenu" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.eaguploaderror.title" />
 		<put-attribute name="body" value="/jsp/uploadeagerrors.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
 	<definition name="uploadeagold" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.eagupload.title" />
 		<put-attribute name="menu" value="/jsp/indexEAGCreation.jsp" />
 		<put-attribute name="body" value="/jsp/uploadeagold.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
 	<definition name="uploadeagoldwithtempeag" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.eagupload.title" />
 		<put-attribute name="menu" value="/jsp/eag2012/indexEAG2012Upload.jsp" />
 		<put-attribute name="body" value="/jsp/uploadeagoldwithTempEag.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
 	<definition name="contentproviderinf" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.contentproviderinf.title" />
 		<put-attribute name="body" value="/jsp/contentproviderinf.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
 	<definition name="error" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.errorpage.title" />
 		<put-attribute name="body" value="/jsp/error.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
 	<definition name="checkexistingfiles" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.checkexistingfiles.title" />
@@ -182,6 +257,7 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
+            <add-attribute type="string" value="/js/browsers.js"/>
         </put-list-attribute>
 	</definition>
 	<definition name="checkuploadedfiles" extends="dashboardLayout">
@@ -190,9 +266,9 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
+            <add-attribute type="string" value="/js/browsers.js"/>
         </put-list-attribute>
 	</definition>
-
 	<definition name="contentmanager" extends="DefaultLayout">
 		<put-attribute name="title" value="dashboard.contentmanager.title" />
 		<put-attribute name="body" value="/jsp/contentmanager/contentmanager.jsp" />
@@ -203,13 +279,13 @@
             <add-attribute type="string" value="/js/colorbox/jquery.colorbox-min.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
             <add-attribute type="string" value="/js/contentmanager.js"/>
+            <add-attribute type="string" value="/js/browsers.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/css/colorbox.css"/>
             <add-attribute type="string" value="/css/contentmanager.css"/>
         </put-list-attribute>
 	</definition>
-
 	<definition name="uploadcontent" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.uploadcontent.title" />
 		<put-attribute name="body" value="/jsp/uploadcontent.jsp" />
@@ -217,6 +293,7 @@
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/httpupload.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
+            <add-attribute type="string" value="/js/browsers.js"/>
         </put-list-attribute>
 	</definition>
     <definition name="successprofileupload" extends="dashboardLayout">
@@ -226,9 +303,9 @@
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/httpupload.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
+            <add-attribute type="string" value="/js/browsers.js"/>
         </put-list-attribute>
     </definition>
-
 	<definition name="viewftpfiles" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.viewftpfiles.title" />
 		<put-attribute name="body" value="/jsp/viewftpfiles.jsp" />
@@ -238,6 +315,7 @@
 	        <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
 	        <add-attribute type="string" value="/js/dynatree/jquery.dynatree.min.js"/>
             <add-attribute type="string" value="/js/help.js"/>
+            <add-attribute type="string" value="/js/browsers.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>
@@ -246,14 +324,26 @@
     <definition name="viewresult" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
 		<put-attribute name="body" value="/jsp/viewresult.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
     <definition name="uploaderrorexisting" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
 		<put-attribute name="body" value="/jsp/uploaderrorexisting.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
     <definition name="uploaderrorformat" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
 		<put-attribute name="body" value="/jsp/uploaderrorformat.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
     <definition name="viewHarvest" extends="dashboardLayout">
 		<put-attribute name="title" value="dashboard.viewharvest.title" />
@@ -262,6 +352,7 @@
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
 	        <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
             <add-attribute type="string" value="/js/help.js"/>
+            <add-attribute type="string" value="/js/browsers.js"/>
         </put-list-attribute>
 	</definition>
         <definition name="ingestionprofilesMain" extends="dashboardLayout">
@@ -272,6 +363,7 @@
                 <add-attribute type="string" value="/js/httpupload.js"/>
                 <add-attribute type="string" value="/js/breadcrumb.js"/>
                 <add-attribute type="string" value="/js/ingestionprofile.js"/>
+                <add-attribute type="string" value="/js/browsers.js"/>
             </put-list-attribute>
         </definition>
 				<!-- END DASHBOARD ACTIONS -->
@@ -280,8 +372,11 @@
 	<definition name="indexLandscape" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.title" />
 		<put-attribute name="body" value="/jsp/templates/blank.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
-
 	<definition name="viewAL" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.alview.title" />
 		<put-attribute name="body" value="/jsp/viewAL.jsp" />
@@ -291,13 +386,13 @@
 	        <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
 	        <add-attribute type="string" value="/js/dynatree/jquery.dynatree.min.js"/>
 	        <add-attribute type="string" value="/js/directory.js"/>
+	        <add-attribute type="string" value="/js/browsers.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>
             <add-attribute type="string" value="/css/custom-portlet-directory.css"/>
         </put-list-attribute>
 	</definition>
-
 	<definition name="newEditAL" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.aledit.title" />
 		<put-attribute name="body" value="/jsp/al/indexEditAL.jsp" />
@@ -308,18 +403,17 @@
 	        <add-attribute type="string" value="/js/dynatree/jquery.dynatree.min.js"/>
 	        <add-attribute type="string" value="/js/al/archivalLandscapeEditor.js"/>
 	        <add-attribute type="string" value="/js/colorbox/jquery.colorbox-min.js"/>
+	        <add-attribute type="string" value="/js/browsers.js"/>
 		</put-list-attribute>
 		<put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>
             <add-attribute type="string" value="/css/colorbox.css"/>
         </put-list-attribute>
 	</definition>
-
 	<!--<definition name="editArchivalLandscape" extends="ArchivalLandscapeLayout">-->
         <!--<put-attribute name="title" value="dashboard.aledit.title" />-->
         <!--<put-attribute name="body" value="/jsp/editArchivalLandscape.jsp" />-->
     <!--</definition>-->
-
 	<definition name="newUploadAL" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.alupload.title" />
 		<put-attribute name="body" value="/jsp/al/uploadAL.jsp" />
@@ -329,120 +423,176 @@
 	        <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
 	        <add-attribute type="string" value="/js/dynatree/jquery.dynatree.min.js"/>
 	        <add-attribute type="string" value="/js/al/archivalLandscape.js"/>
+	        <add-attribute type="string" value="/js/browsers.js"/>
 		</put-list-attribute>
 		<put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>
         </put-list-attribute>
 	</definition>
-
 	<definition name="selectArchive" extends="ArchivalLandscapeLayout" >
 		<put-attribute name="title" value="dashboard.archiveselection.title" />
 		<put-attribute name="body" value="/jsp/institutionSelection.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
-
 	<definition name="ALnotFound" extends="ArchivalLandscapeLayout" >
 		<put-attribute name="title" value="dashboard.alnotfound.title" />
 		<put-attribute name="body" value="/jsp/ALnotFound.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
-
 	<definition name="ALnotExists" extends="ArchivalLandscapeLayout" >
 		<put-attribute name="title" value="dashboard.alnotexists.title" />
 		<put-attribute name="body" value="/jsp/ALnotExists.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
-
-
 	<definition name="changeInstitutionManager" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.changeinstitutionmanager.title" />
 		<put-attribute name="body" value="/jsp/changeInstitutionManager.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
  	</definition>
-
 	<definition name="view" extends="ArchivalLandscapeLayout" >
 		<put-attribute name="title" value="dashboard.view.title" />
 		<put-attribute name="body" value="/jsp/view.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
-
 	<definition name="edit" extends="DefaultLayout" >
 		<put-attribute name="title" value="dashboard.edit.title" />
 		<put-attribute name="body" value="/jsp/edit.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
-
 	<definition name="viewresult2" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
 		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
 		<put-attribute name="body" value="/jsp/viewresult.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
-
 	<definition name="uploaderroralcontentpublished" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
 		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
 		<put-attribute name="body" value="/jsp/al/uploaderrorALContentPublished.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
-	
 	<definition name="uploaderroralcontentnotpublished" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
 		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
 		<put-attribute name="body" value="/jsp/al/uploaderrorALContentNotPublished.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
-
 	<definition name="uploaderrorformat2" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
 		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
 		<put-attribute name="body" value="/jsp/uploaderrorformatAL.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
-
 	<definition name="uploaderrorallangnull" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
 		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
 		<put-attribute name="body" value="/jsp/al/uploaderrorALlangNull.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
-	
 	<definition name="uploaderroralidentifier" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
 		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
 		<put-attribute name="body" value="/jsp/al/uploaderrorALIdentifier.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
-	
 	<definition name="uploaderroralidentifier2" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
 		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
 		<put-attribute name="body" value="/jsp/al/uploaderrorALIdentifier2.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
-	
-
 	<definition name="uploaderroralbadcountry" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
 		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
 		<put-attribute name="body" value="/jsp/al/uploaderrorBadCountry.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
-	
 	<definition name="uploaderroralduplicatedidentifier" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
 		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
 		<put-attribute name="body" value="/jsp/al/uploaderrorALDuplicateIdentifier.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
-
 	<definition name="errorlandscape" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.errorpage.title" />
 		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
 		<put-attribute name="body" value="/jsp/error.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
-
 	<definition name="ALnotFoundByInstitutionManager" extends="DefaultLayout" >
 		<put-attribute name="title" value="dashboard.alnotfound.title" />
 		<put-attribute name="menu" value="/jsp/templates/blank.jsp" />
 		<put-attribute name="body" value="/jsp/ALnotFoundByInstitutionManager.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
-
 	<definition name="ALnotExistsByInstitutionManager" extends="DefaultLayout" >
 		<put-attribute name="title" value="dashboard.alnotexists.title" />
 		<put-attribute name="menu" value="/jsp/templates/blank.jsp" />
 		<put-attribute name="body" value="/jsp/ALnotFoundByInstitutionManager.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
-
 	<definition name="changeAlIdentifiers" extends="ArchivalLandscapeLayout" >
 		<put-attribute name="title" value="dashboard.changealidentifiers.title" />
 		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
 		<put-attribute name="body" value="/jsp/changeAlIdentifiers.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
 
 			<!-- END ARCHIVAL LANDSCAPE ACTIONS -->
@@ -451,71 +601,107 @@
 	<definition name="login" extends="DefaultLayout" >
 		<put-attribute name="title" value="dashboard.login.title" />
 		<put-attribute name="body" value="/jsp/login.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
-
 	<definition name="forgetPwd" extends="DefaultLayout" >
 		<put-attribute name="title" value="dashboard.forgetpwd.title" />
 		<put-attribute name="body" value="/jsp/forgetPwd.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
-
-
 	<definition name="success" extends="DefaultLayout" >
 		<put-attribute name="title" value="dashboard.sucess.title" />
 		<put-attribute name="body" value="/jsp/success.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
 	</definition>
-
 	<!-- Moved up to ARCHIVAL LANDSCAPE ACTIONS
 	<definition name="view" extends="dashboardLayout" >
 		<put-attribute name="title" value="DASHBOARD - View" />
 		<put-attribute name="body" value="/jsp/view.jsp" />
 	</definition>
-
     <definition name="edit" extends="dashboardLayout" >
             <put-attribute name="title" value="DASHBOARD - Edit" />
             <put-attribute name="body" value="/jsp/edit.jsp" />
     </definition>-->
-
     <definition name="changeForgetPwd" extends="DefaultLayout" >
         <put-attribute name="title" value="dashboard.changeforgetpwd.title" />
         <put-attribute name="body" value="/jsp/changeForgetPwd.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
-
     <definition name="sslrequired" extends="DefaultLayout" >
         <put-attribute name="title" value="dashboard.sslrequired.title" />
         <put-attribute name="body" value="/jsp/sslrequired.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
-
     <definition name="exception" extends="DefaultLayout" >
         <put-attribute name="title" value="dashboard.exception.title" />
         <put-attribute name="body" value="/jsp/exception.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
-
     <definition name="contact" extends="DefaultLayout" >
         <put-attribute name="title" value="dashboard.contact.title" />
         <put-attribute name="body" value="/jsp/contact.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
-
     <definition name="termsOfUse" extends="DefaultLayout" >
         <put-attribute name="title" value="dashboard.termsofuse.title" />
         <put-attribute name="body" value="/jsp/termsOfUse.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
-
     <definition name="error-500" extends="DefaultLayout" >
         <put-attribute name="title" value="dashboard.error-500.title" />
         <put-attribute name="body" value="/jsp/errors/500.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
-
     <definition name="error-404" extends="DefaultLayout" >
         <put-attribute name="title" value="dashboard.error-404.title" />
         <put-attribute name="body" value="/jsp/errors/404.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
     <definition name="error-403" extends="DefaultLayout" >
         <put-attribute name="title" value="authorization.required.title" />
         <put-attribute name="body" value="/jsp/errors/403.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
     <definition name="startpage" extends="DefaultLayout">
         <put-attribute name="title" value="dashboard.startpage.title"/>
         <put-attribute name="body" value="/jsp/startpage.jsp"/>
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
     <!-- END LOGIN ACTIONS -->
 
@@ -531,6 +717,7 @@
             <add-attribute type="string" value="/js/jquery/splitter.js"/>
             <add-attribute type="string" value="/js/dynatree/jquery.dynatree.js"/>
             <add-attribute type="string" value="/js/eadedition.js"/>
+            <add-attribute type="string" value="/js/browsers.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>
@@ -546,6 +733,7 @@
             <add-attribute type="string" value="/js/jquery/jquery-ui-1.8.9.custom.min.js"/>
             <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
             <add-attribute type="string" value="/js/breadcrumb.js"/>
+            <add-attribute type="string" value="/js/browsers.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/css/creativecommons.css"/>
@@ -557,10 +745,9 @@
         <put-list-attribute name="jsfilesInternal">
             <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
             <add-attribute type="string" value="/js/linktohgsg.js"/>
+            <add-attribute type="string" value="/js/browsers.js"/>
         </put-list-attribute>
-
     </definition>
-
     <definition name="hgTreeCreation" extends="DefaultLayout">
         <put-attribute name="title" value="dashboard.hgCreation.title"/>
         <put-attribute name="body" value="/jsp/hgTreeCreation.jsp" />
@@ -571,6 +758,7 @@
             <add-attribute type="string" value="/js/dynatree/jquery.dynatree.js"/>
             <add-attribute type="string" value="/js/colorbox/jquery.colorbox-min.js"/>
             <add-attribute type="string" value="/js/hgSgTreeCreation.js"/>
+            <add-attribute type="string" value="/js/browsers.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>
@@ -578,11 +766,14 @@
             <add-attribute type="string" value="/css/hgSgTreeCreation.css"/>
         </put-list-attribute>
     </definition>
-
     <definition name="automaticharvestingcreation" extends="dashboardLayout" >
         <put-attribute name="title" value="dashboard.menu.automaticharvestingcreation" />
         <put-attribute name="menu" value="/jsp/indexDashboard.jsp" />
         <put-attribute name="body" value="/jsp/harvester/automaticHarvestingCreation.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
 
     <!-- END ARCHIVAL LANDSCAPE ACTIONS -->
@@ -591,57 +782,111 @@
     <definition name="indexAdmin" extends="AdminLayout">
         <put-attribute name="title" value="dashboard.title" />
         <put-attribute name="body" value="/jsp/templates/blank.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
     <definition name="countryCreation" extends="AdminLayout" >
         <put-attribute name="title" value="dashboard.countrycreation.title" />
         <put-attribute name="body" value="/jsp/createCountry.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
-
     <definition name="countryAltNames" extends="AdminLayout" >
         <put-attribute name="title" value="dashbaord.countryaltnames.title" />
         <put-attribute name="body" value="/jsp/createAltCountryNames.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
     <definition name="languageNames" extends="AdminLayout" >
         <put-attribute name="title" value="dashboard.languagenames.title" />
         <put-attribute name="body" value="/jsp/createLang.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
     <definition name="blank" extends="AdminLayout" >
         <put-attribute name="body" value="/jsp/templates/blank.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
-
     <definition name="filesFailed" extends="AdminLayout" >
         <put-attribute name="body" value="/jsp/queue/filesFailed.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
     <definition name="manageQueue" extends="AdminLayout" >
         <put-attribute name="title" value="admin.queuemanagement.title" />
         <put-attribute name="body" value="/jsp/queue/managequeue.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
     <definition name="manageHarvest" extends="DefaultLayout" >
         <put-attribute name="title" value="admin.harvestmanagement.title" />
         <put-attribute name="body" value="/jsp/harvester/manageharvester.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
     <definition name="sessionManagement" extends="DefaultLayout" >
         <put-attribute name="title" value="dashboard.sessionmanagement.title" />
         <put-attribute name="body" value="/jsp/security/sessionmanagement.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
     <definition name="userManagement" extends="DefaultLayout" >
         <put-attribute name="title" value="usermanagement.title" />
         <put-attribute name="body" value="/jsp/security/usermanagement.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
     <definition name="institutionManagerManagement" extends="DefaultLayout" >
         <put-attribute name="title" value="usermanagement.institution.title" />
         <put-attribute name="body" value="/jsp/security/im-management.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
     <definition name="createCountryManager" extends="DefaultLayout" >
         <put-attribute name="title" value="usermanagement.create.countrymanager" />
         <put-attribute name="body" value="/jsp/security/createCountryManager.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
     <definition name="createInstitutionManager" extends="DefaultLayout" >
         <put-attribute name="title" value="usermanagement.create.institutionmanager" />
         <put-attribute name="body" value="/jsp/security/createInstitutionManager.jsp" />
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
     <definition name="dptVersion" extends="DefaultLayout">
         <put-attribute name="title" value="dptversion.title"/>
         <put-attribute name="body" value="/jsp/dptversion.jsp"/>
+        <put-list-attribute name="jsfilesInternal">
+            <add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+		    <add-attribute type="string" value="/js/browsers.js"/>
+		</put-list-attribute>
     </definition>
 </tiles-definitions>

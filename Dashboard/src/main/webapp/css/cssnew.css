@@ -1214,3 +1214,10 @@ td.actions input {
 #processingInfoTable{
 	vertical-align: middle;
 }
+
+#browser{
+	background-color: yellow; 
+	text-align: center; 
+	text-anchor: inherit;
+	color: #000000;
+}

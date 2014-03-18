@@ -9,17 +9,15 @@
 <tiles:useAttribute id="jsInternal" name="jsfilesInternal" classname="java.util.List" />
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>	
-    	
-
-      <meta content="text/html; charset=UTF-8;" http-equiv="content-type" />
-      <meta name="Description" content="APENET" />
-      <meta name="Keywords" content="archives portal europe, apenet, europeana" />
-      <title id="myTitle"><apenet:resource><tiles:getAsString name="title"/></apenet:resource></title>
-      <link rel="stylesheet" href="${pageContext.request.contextPath}/css/global.css" type="text/css"/>
-      <link rel="stylesheet" href="${pageContext.request.contextPath}<tiles:getAsString name="maincss"/>" type="text/css"/>
-      <c:forEach var="item" items="${jsInternal}"><script src="${pageContext.request.contextPath}${item}" type="text/javascript"></script></c:forEach>
-      <c:forEach var="item" items="${cssInternal}"><link rel="stylesheet" href="${pageContext.request.contextPath}${item}" type="text/css" /></c:forEach>
-		<script type="text/javascript">
+    <meta content="text/html; charset=UTF-8;" http-equiv="content-type" />
+    <meta name="Description" content="APENET" />
+    <meta name="Keywords" content="archives portal europe, apenet, europeana" />
+    <title id="myTitle"><apenet:resource><tiles:getAsString name="title"/></apenet:resource></title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/global.css" type="text/css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}<tiles:getAsString name="maincss"/>" type="text/css"/>
+    <c:forEach var="item" items="${jsInternal}"><script src="${pageContext.request.contextPath}${item}" type="text/javascript"></script></c:forEach>
+    <c:forEach var="item" items="${cssInternal}"><link rel="stylesheet" href="${pageContext.request.contextPath}${item}" type="text/css" /></c:forEach>
+	<script type="text/javascript">
 		var gId = 'UA-42624055-1';
 		var hostname = window.location.hostname;
 		
@@ -44,7 +42,7 @@
 			}
             location.href = finalHref;
 		}
-		</script>
+	</script>
     </head>
     <body>
     <dashboard:securityContext var="securityContext" />
@@ -52,8 +50,7 @@
         <div id="principal">
             <div id="wrap">
                 <div id="dashboard">
-	                	<div id="browser" style="background-color: yellow; text-align: center; text-anchor: inherit;"> 
-						</div>
+	                	<div id="browser"></div>
               			<div id="header">
 	              			<a href="#" onclick="redirect()">
 	              			  <div id="logo"></div>
@@ -175,40 +172,10 @@
 		})();
 		</script>
 		
-		<script language="JavaScript">
-		   	$(document).ready(function(){
-				var alertMsg="";
-				
-				/* jQuery version */
-				var version = parseInt($.browser.version, 10);
-
-				var isMsie =/MSIE/.test(navigator.userAgent) && /Microsoft Internet Explorer/.test(navigator.appName);
-				if (!isMsie) 
-					isMsie =/Trident/.test(navigator.userAgent) && /Netscape/.test(navigator.appName);
-				var isMozilla = /Firefox/.test(navigator.userAgent);
-				var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-				var isSafari = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
-
-				/* Browsers we can test */
-				if (isChrome) {
-					/* To detect Chrome version in second display */
-					window.navigator.appVersion.match(/Chrome\/(.*?) /)[1];
-					var test = parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10);
-					if (test<23) 
-						alertMsg = "<s:property value="getText('header.browser')" />";
-				}
-				else if (isSafari && version<533) 
-					alertMsg = "<s:property value="getText('header.browser')" />";
-				else if (isMsie && version<8) 
-					alertMsg = "<s:property value="getText('header.browser')" />";
-				else if (isMozilla && version<17) 
-					alertMsg = "<s:property value="getText('header.browser')" />"; 
-
-				/* Show result */     	
-				if (alertMsg!=""){
-		   			$("#browser").text(alertMsg);
-		   		}
-		   	});
+		<script type="text/javascript">
+			var msg = "<s:property value="getText('header.browser')" />";
+			$(document).ready(checkBrowser(msg));
 		</script>
+		
     </body>
 </html>                

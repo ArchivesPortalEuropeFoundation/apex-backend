@@ -33,9 +33,11 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery/jquery-ui-1.8.14.custom.min.js"></script>
 <script src='${pageContext.request.contextPath}/js/jquery/jquery.cookie.js' type='text/javascript'></script>
 <script src='${pageContext.request.contextPath}/js/dynatree/jquery.dynatree.js' type='text/javascript'></script>
+<script src='${pageContext.request.contextPath}/js/browsers.js' type='text/javascript'></script>
 <link href='${pageContext.request.contextPath}/js/dynatree/skin/ui.dynatree.css' rel='stylesheet' type='text/css' />
 <link href='${pageContext.request.contextPath}/css/secondDisplay.css' rel='stylesheet' type="text/css" />
 <link href='${pageContext.request.contextPath}/css/global.css' rel='stylesheet' type="text/css" />
+<link href='${pageContext.request.contextPath}/css/cssnew.css' rel='stylesheet' type="text/css" />
 <script type='text/javascript'>
 	$(function() {
 		// --- Initialize sample trees
@@ -142,48 +144,10 @@
        location.href = finalHref;
 	}
 </script>
-
-<script language="JavaScript">
-   	$(document).ready(function(){
-		var alertMsg="";
-		
-		/* jQuery version */
-		var version = parseInt($.browser.version, 10);
-
-		var isMsie =/MSIE/.test(navigator.userAgent) && /Microsoft Internet Explorer/.test(navigator.appName);
-		if (!isMsie) 
-			isMsie =/Trident/.test(navigator.userAgent) && /Netscape/.test(navigator.appName);
-		var isMozilla = /Firefox/.test(navigator.userAgent);
-		var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-		var isSafari = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
-			
-		/* Browsers we can test */
-		if (isChrome) {
-			/* To detect Chrome version in second display */
-			window.navigator.appVersion.match(/Chrome\/(.*?) /)[1];
-			var test = parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10);
-			if (test<23) 
-				alertMsg = "<s:property value="getText('header.browser')" />";
-		}
-		else if (isSafari && version<533) 
-			alertMsg = "<s:property value="getText('header.browser')" />";
-		else if (isMsie && version<8) 
-			alertMsg = "<s:property value="getText('header.browser')" />";
-		else if (isMozilla && version<17) 
-			alertMsg = "<s:property value="getText('header.browser')" />"; 
-
-		/* Show result */     	
-		if (alertMsg!=""){
-   			$("#browser").text(alertMsg);
-   		}
-   	});
-</script>
-	
 </head>
 <body>
 	<div id="wrapper">
-       	<div id="browser" style="background-color: yellow; text-align: center; text-anchor: inherit;"> 
-		</div>
+       	<div id="browser"></div>
 		<div id="header">
 			<a href="#" onclick="redirect('${locale}')"><div id="logo"></div></a>
 			<div class="left-header"></div>
@@ -202,6 +166,9 @@
 			</div>
 		</div>
 	</div>
-	
+	<script type="text/javascript">
+		var msg = "<s:property value="getText('header.browser')" />";
+		$(document).ready(checkBrowser(msg));
+	</script>
 </body>
 </html>
