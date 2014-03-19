@@ -1,3 +1,1 @@
-﻿UPDATE lang
-   SET lname='ESTONIAN'
- WHERE lname = 'ESTONIA';
+UPDATE lang SET lname='ESTONIAN' WHERE lname = 'ESTONIA';
