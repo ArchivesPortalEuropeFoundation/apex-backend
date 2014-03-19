@@ -1,5 +1,12 @@
 @CHARSET "UTF-8";
 
+body {
+    color: #333333;
+font: 0.85em Arial,sans-serif;
+text-align : center;
+background : #fff;
+}
+
 #validationEAG2012ErrorsDiv, #validationEAG2012Errors {
     border: none;
     width: 100%;

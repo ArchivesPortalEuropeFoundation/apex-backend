@@ -6,6 +6,7 @@ package eu.apex.eaccpf.actions;
 
 import com.opensymphony.xwork2.ActionSupport;
 import eu.apex.eaccpf.util.MapEntry;
+import java.util.LinkedHashSet;
 import java.util.TreeMap;
 import java.util.Locale;
 import java.util.Map;
@@ -25,8 +26,7 @@ import org.apache.struts2.util.ServletContextAware;
  */
 public abstract class EacCpfAction extends ActionSupport implements ServletRequestAware, ServletResponseAware, ServletContextAware {
 
-    private Set<MapEntry> useModeList = new TreeSet<MapEntry>();
-    private Set<MapEntry> cpfTypeList = new TreeSet<MapEntry>();
+    private Set<MapEntry> cpfTypeList = new LinkedHashSet<MapEntry>();
     private Set<MapEntry> languages = new TreeSet<MapEntry>();
     private Map<String, String> dateOrDateRange = new TreeMap<String, String>();
     private Set<MapEntry> countryList = new TreeSet<MapEntry>();
@@ -47,7 +47,6 @@ public abstract class EacCpfAction extends ActionSupport implements ServletReque
     private String apeId;
 
     public EacCpfAction() {
-        setUpUseModeList();
         setUpCpfTypeList();
         setUpLanguages();
         setUpDateOrDateRange();
@@ -99,11 +98,6 @@ public abstract class EacCpfAction extends ActionSupport implements ServletReque
             String languageDescription = locale.getDisplayLanguage(Locale.ENGLISH);
             languages.add(new MapEntry(languageCode, languageDescription));
         }
-    }
-
-    private void setUpUseModeList() {
-        useModeList.add(new MapEntry("new", "to create a new EAC-CPF instance?"));
-        useModeList.add(new MapEntry("load", "to load an existing one for editing?"));
     }
 
     private void setUpCpfTypeList() {
@@ -204,14 +198,6 @@ public abstract class EacCpfAction extends ActionSupport implements ServletReque
         addressComponentTypeList.add("localentity");
         addressComponentTypeList.add("street");
         addressComponentTypeList.add("other");
-    }
-
-    public Set<MapEntry> getUseModeList() {
-        return useModeList;
-    }
-
-    public void setUseModeList(Set<MapEntry> useModeList) {
-        this.useModeList = useModeList;
     }
 
     public Set<MapEntry> getCpfTypeList() {

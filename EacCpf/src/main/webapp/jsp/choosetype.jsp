@@ -5,30 +5,23 @@
 
 
 <div id="eacCpfDiv">
+    <h1>Create a file for record creators (apeEAC-CPF)</h1>
     <s:form id="webformChooseMode" name="webformChooseMode" method="POST" enctype="multipart/form-data" action="edit.action" theme="simple">
         <div id="container" class="container">
             <div id="headerContainer">
             </div>
 
             <table id="choosetypeTable" class="tablePadding">
-                <tr>
-                    <td>Do you want</td>
-                    <td><s:radio id="useMode" name="useMode" list="useModeList" listKey="key" listValue="value" onchange="loadUseModeContext();"/></td>
-                </tr>
-                <tr id="newType" class="area">
-                    <td>Please specify, if you want to describe</td>
+                <tr id="newType">
+                    <td><b>Please specify, if you want to describe*</b></td>
                     <td><s:radio id="new" name="cpfType" list="cpfTypeList" listKey="key" listValue="value" value="defaultCpfType"/></td>
                 </tr>
-                <tr id="newLanguage" class="area">
-                    <td>Please set the default language and script for this file (this can be individually changed for each item later)</td>
-                    <td><s:select id="new" name="defaultLanguage" list="languages" listKey="key" listValue="value" />&nbsp;&nbsp;&nbsp;&nbsp;
-                    <s:select id="new" name="defaultScript" list="scriptList" listKey="key" listValue="value" /></td>
+                <tr>
+                    <td colspan="2">Please set the default language and script for this file (this can be individually changed for each item later)</td>
                 </tr>
-                <tr id="load" class="area">
-                    <td>Please select a file to load</td>
-                    <td>
-                        <s:file theme="simple" name="upload" label="File"/>
-                    </td>
+                <tr id="newLanguage">
+                    <td>Language&nbsp;&nbsp;&nbsp;<s:select id="new" name="defaultLanguage" list="languages" listKey="key" listValue="value" /></td>
+                    <td>Script&nbsp;&nbsp;&nbsp;<s:select id="new" name="defaultScript" list="scriptList" listKey="key" listValue="value" /></td>
                 </tr>
             </table>
         </div>
@@ -36,5 +29,6 @@
             <input type="button" class="rightButton" id="buttonGo" value="Go" onclick='clickGoAction()' />
         </table>
         <input type="hidden" id="currentTr" value="" />
+        <input type="hidden" id="useMode" name="useMode" value="new" />
     </s:form>
 </div>
