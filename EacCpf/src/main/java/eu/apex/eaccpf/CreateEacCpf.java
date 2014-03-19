@@ -4,61 +4,7 @@
  */
 package eu.apex.eaccpf;
 
-import eu.apenet.dpt.utils.eaccpf.Address;
-import eu.apenet.dpt.utils.eaccpf.CpfRelation;
-import eu.apenet.dpt.utils.eaccpf.ExistDates;
-import eu.apenet.dpt.utils.eaccpf.ConventionDeclaration;
-import eu.apenet.dpt.utils.eaccpf.StructureOrGenealogy;
-import eu.apenet.dpt.utils.eaccpf.LanguageDeclaration;
-import eu.apenet.dpt.utils.eaccpf.OtherRecordId;
-import eu.apenet.dpt.utils.eaccpf.DateSet;
-import eu.apenet.dpt.utils.eaccpf.FromDate;
-import eu.apenet.dpt.utils.eaccpf.Agent;
-import eu.apenet.dpt.utils.eaccpf.MaintenanceEvent;
-import eu.apenet.dpt.utils.eaccpf.Script;
-import eu.apenet.dpt.utils.eaccpf.Description;
-import eu.apenet.dpt.utils.eaccpf.Occupation;
-import eu.apenet.dpt.utils.eaccpf.RecordId;
-import eu.apenet.dpt.utils.eaccpf.EntityType;
-import eu.apenet.dpt.utils.eaccpf.PublicationStatus;
-import eu.apenet.dpt.utils.eaccpf.Place;
-import eu.apenet.dpt.utils.eaccpf.DateRange;
-import eu.apenet.dpt.utils.eaccpf.Control;
-import eu.apenet.dpt.utils.eaccpf.AgencyName;
-import eu.apenet.dpt.utils.eaccpf.EntityId;
-import eu.apenet.dpt.utils.eaccpf.Occupations;
-import eu.apenet.dpt.utils.eaccpf.Relations;
-import eu.apenet.dpt.utils.eaccpf.AgentType;
-import eu.apenet.dpt.utils.eaccpf.AgencyCode;
-import eu.apenet.dpt.utils.eaccpf.EventDateTime;
-import eu.apenet.dpt.utils.eaccpf.Function;
-import eu.apenet.dpt.utils.eaccpf.MaintenanceAgency;
-import eu.apenet.dpt.utils.eaccpf.CpfDescription;
-import eu.apenet.dpt.utils.eaccpf.Identity;
-import eu.apenet.dpt.utils.eaccpf.Part;
-import eu.apenet.dpt.utils.eaccpf.Places;
-import eu.apenet.dpt.utils.eaccpf.Abbreviation;
-import eu.apenet.dpt.utils.eaccpf.Date;
-import eu.apenet.dpt.utils.eaccpf.Citation;
-import eu.apenet.dpt.utils.eaccpf.RelationEntry;
-import eu.apenet.dpt.utils.eaccpf.Language;
-import eu.apenet.dpt.utils.eaccpf.PlaceEntry;
-import eu.apenet.dpt.utils.eaccpf.NameEntryParallel;
-import eu.apenet.dpt.utils.eaccpf.MaintenanceStatus;
-import eu.apenet.dpt.utils.eaccpf.ToDate;
-import eu.apenet.dpt.utils.eaccpf.BiogHist;
-import eu.apenet.dpt.utils.eaccpf.UseDates;
-import eu.apenet.dpt.utils.eaccpf.Term;
-import eu.apenet.dpt.utils.eaccpf.NameEntry;
-import eu.apenet.dpt.utils.eaccpf.EacCpf;
-import eu.apenet.dpt.utils.eaccpf.FunctionRelation;
-import eu.apenet.dpt.utils.eaccpf.EventType;
-import eu.apenet.dpt.utils.eaccpf.Functions;
-import eu.apenet.dpt.utils.eaccpf.MaintenanceHistory;
-import eu.apenet.dpt.utils.eaccpf.P;
-import eu.apenet.dpt.utils.eaccpf.ResourceRelation;
-import eu.apenet.dpt.utils.eaccpf.DescriptiveNote;
-import eu.apenet.dpt.utils.eaccpf.AddressLine;
+import eu.apenet.dpt.utils.eaccpf.*;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
@@ -181,33 +127,16 @@ public class CreateEacCpf {
         }
 
         // eacCpf/control/conventionDeclaration items
-        ConventionDeclaration conventionDeclaration = new ConventionDeclaration();
-        Abbreviation abbreviation = new Abbreviation();
+        String[] conventionValues = {"ISO 639-2b", "ISO 3166-1", "ISO 8601", "ISO 15511", "ISO 15924"};
+        for (String conventionValue : conventionValues) {
+            ConventionDeclaration conventionDeclaration = new ConventionDeclaration();
+            Abbreviation abbreviation = new Abbreviation();
 
-        abbreviation.setValue("ISO 639-2b");
-        conventionDeclaration.setAbbreviation(abbreviation);
-        conventionDeclaration.setCitation(new Citation());
-        control.getConventionDeclaration().add(conventionDeclaration);
-
-        abbreviation.setValue("ISO 3166-1");
-        conventionDeclaration.setAbbreviation(abbreviation);
-        conventionDeclaration.setCitation(new Citation());
-        control.getConventionDeclaration().add(conventionDeclaration);
-
-        abbreviation.setValue("ISO 8601");
-        conventionDeclaration.setAbbreviation(abbreviation);
-        conventionDeclaration.setCitation(new Citation());
-        control.getConventionDeclaration().add(conventionDeclaration);
-
-        abbreviation.setValue("ISO 15511");
-        conventionDeclaration.setAbbreviation(abbreviation);
-        conventionDeclaration.setCitation(new Citation());
-        control.getConventionDeclaration().add(conventionDeclaration);
-
-        abbreviation.setValue("ISO 15924");
-        conventionDeclaration.setAbbreviation(abbreviation);
-        conventionDeclaration.setCitation(new Citation());
-        control.getConventionDeclaration().add(conventionDeclaration);
+            abbreviation.setValue(conventionValue);
+            conventionDeclaration.setAbbreviation(abbreviation);
+            conventionDeclaration.setCitation(new Citation());
+            control.getConventionDeclaration().add(conventionDeclaration);
+        }
 
         // eacCpf/control/maintenanceHistory
         boolean exists = true;
@@ -393,11 +322,10 @@ public class CreateEacCpf {
         }
 
         /*
-        If there are more than one autorized and/or alternative forms,
-        wrap these in a <nameEntryParallel> element.
-        Then add the remaining name forms to the list.
+         If there are more than one autorized and/or alternative forms,
+         wrap these in a <nameEntryParallel> element.
+         Then add the remaining name forms to the list.
          */
-
         //Determine quantities
         int counterAuth = 0;
         int counterAlt = 0;
