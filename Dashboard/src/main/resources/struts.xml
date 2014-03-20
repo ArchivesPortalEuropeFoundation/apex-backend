@@ -218,7 +218,9 @@
 
         <action name="contentmanager" class="eu.apenet.dashboard.actions.content.ContentManagerAction" method="input">
             <result name="success" type="tiles">contentmanager</result>
+            <!-- Do we still need the ajax result, because it seems to be used nowhere? -->
             <result name="success_ajax">/jsp/contentmanager/contentmanager-results.jsp</result>
+            <result name="success-eaccpf" type="tiles">contentmanager</result>
         </action>
 
         <action name="updateContentmanager" class="eu.apenet.dashboard.actions.content.ContentManagerAction">

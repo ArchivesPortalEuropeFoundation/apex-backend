@@ -55,12 +55,12 @@
 				<tr>
 					<th></th>
 					<td> </td>
-					<td colspan="5"><s:textfield name="searchTerms" /> 
+					<td colspan="5"><s:textfield name="searchTerms" />
 						<s:select cssClass="small left"	list="searchTermsFieldList" name="searchTermsField" />
 						<input type="submit" id="searchButton" value="<s:text name="content.message.search" />" class="mainButton"/>
 					</td>
 				</tr>
-			</table> 
+			</table>
 		</s:form>
 	</div>
 	<c:if test="${harvestingStarted}">
@@ -72,9 +72,14 @@
 		<div id="ead-results-container">
 			<c:choose>
 				<c:when test="${results.totalNumberOfResults > 0 }">
-
-					<jsp:include page="contentmanager-results.jsp" />
-
+                                    <c:choose>
+                                        <c:when test="${xmlTypeId == '2'}">
+                                            <jsp:include page="contentmanager-eaccpf-results.jsp" />
+                                        </c:when>
+                                        <c:otherwise>
+                                            <jsp:include page="contentmanager-results.jsp" />
+                                        </c:otherwise>
+                                    </c:choose>
 				</c:when>
 				<c:otherwise>
 					<div id="noresults"><s:text name="content.message.noresults" /></div>
