@@ -1,53 +1,61 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags"%>	
-		
-		<s:if test="filesSuccessful.size()>0 || filesWithEmptyEadid.size()>0 || filesWithErrors.size()>0 || existingFiles.size()>0 || filesBlocked.size()>0">
-			<form id="overwriteexistingfiles" method="post">					
-			<s:if test="filesSuccessful.size()>0" >				
-				<div id="filesSuccessful" class="uploadedfiles_div">
-					<div id="text_filesSuccessful">
-	        			<p class="uploadedfiles_title">
-	        				<img id="filesSuccessfulHCimage" src="images/expand/menos.gif"/> 
-	        				<s:property value="getText('content.message.titlesuccessfulfiles')" />
-	        			</p>
-	        			<hr/>
-	        		</div>
-					<div id="content_filesSuccessful" style="display:inline;">				
-						<s:property value="getText('content.message.filessuccessful')" />
-				  		<br>
-				  		<br>
-				  		<br>
-				  		<s:iterator value="filesSuccessful" status="stat">
-	                        <span id="filesSuccessfulId<s:property value="#stat.index"/>" class="linkText">
-							    <s:property value="%{(#stat.index+1) + '- ' + top.fileName}"/>
-	                        </span>
-	                        <br/><br/>
-	       				</s:iterator>
-	       			</div>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags"%>
+
+<s:if
+	test="filesSuccessful.size()>0 || filesWithEmptyEadid.size()>0 || filesWithErrors.size()>0 || existingFiles.size()>0 || filesBlocked.size()>0">
+	<form id="overwriteexistingfiles" method="post">
+		<s:if test="filesSuccessful.size()>0">
+			<div id="filesSuccessful" class="uploadedfiles_div">
+				<div id="text_filesSuccessful">
+					<p class="uploadedfiles_title">
+						<img id="filesSuccessfulHCimage" src="images/expand/menos.gif" />
+						<s:property
+							value="getText('content.message.titlesuccessfulfiles')" />
+					</p>
+					<hr />
 				</div>
-				<br>
-			</s:if>
-			<s:if test="filesWithErrors.size()>0" >
-				<div id="filesWithErrors" class="uploadedfiles_div">
+				<div id="content_filesSuccessful" style="display: inline;">
+					<s:property value="getText('content.message.filessuccessful')" />
+					<br> <br> <br>
+					<s:iterator value="filesSuccessful" status="stat">
+						<span id="filesSuccessfulId<s:property value="#stat.index"/>"
+							class="linkText"> <s:property
+								value="%{(#stat.index+1) + '- ' + top.fileName}" />
+						</span>
+						<br />
+						<br />
+					</s:iterator>
+				</div>
+			</div>
+			<br>
+		</s:if>
+		<s:if test="filesWithErrors.size()>0">
+			<div id="filesWithErrors" class="uploadedfiles_div">
 				<div id="text_filesWithErrors">
-	        	<p class="uploadedfiles_title">
-	        	<img id="filesWithErrorsHCimage" src="images/expand/menos.gif"/> 
-	        		<s:property value="getText('content.message.titlefileswitherrors')" />
-	        	</p><hr/></div>
-	        		<div id="content_filesWithErrors" style="display:inline;">							
-					<s:property value="getText('content.message.fileswitherrors')" /> 
-			  		<br>
-			  		<br>
-			  		<br>
-			  		<s:iterator value="filesWithErrors" status="stat">
-                        <span id="warnId<s:property value="#stat.index"/>" class="linkText">
-						    <s:property value="%{(#stat.index+1) + '- ' + top.fileName}"/><s:if test="top.errorInformation != null"> (<s:property value="getText('label.moreinf')" />)</s:if>
-                        </span>
-                        <s:if test="top.errorInformation != null">
-                            <div id="warnErrorId<s:property value="#stat.index"/>" style="display:none;" class="warnErrorId">
-                                 <s:property value="%{top.errorInformation}"/>
-                            </div>
-                            <script type="text/javascript">
+					<p class="uploadedfiles_title">
+						<img id="filesWithErrorsHCimage" src="images/expand/menos.gif" />
+						<s:property
+							value="getText('content.message.titlefileswitherrors')" />
+					</p>
+					<hr />
+				</div>
+				<div id="content_filesWithErrors" style="display: inline;">
+					<s:property value="getText('content.message.fileswitherrors')" />
+					<br> <br> <br>
+					<s:iterator value="filesWithErrors" status="stat">
+						<span id="warnId<s:property value="#stat.index"/>"
+							class="linkText"> <s:property
+								value="%{(#stat.index+1) + '- ' + top.fileName}" />
+							<s:if test="top.errorInformation != null"> (<s:property
+									value="getText('label.moreinf')" />)</s:if>
+						</span>
+						<s:if test="top.errorInformation != null">
+							<div id="warnErrorId<s:property value="#stat.index"/>"
+								style="display: none;" class="warnErrorId">
+								<s:property value="%{top.errorInformation}" />
+							</div>
+							<script type="text/javascript">
                                 $('#warnId<s:property value="#stat.index"/>').click(function() {
                                     if ($('#warnErrorId<s:property value="#stat.index"/>').is(":visible")){
                                         $(".warnErrorId").hide();
@@ -57,126 +65,182 @@
                                     }
                                 });
                             </script>
-                        </s:if>
-                        <br/><br/>
-       				</s:iterator>
-       				</div>
-       				</div>
-			</s:if>					
-			<s:if test="existingFiles.size()>0" >
-	        	<div id ="filesWithEADIDrepeated" class="uploadedfiles_div">
-	        	<div id="text_filesWithEADIDrepeated">
-	        	<p class="uploadedfiles_title">
-	        	<img id="firstHCimage" src="images/expand/menos.gif"/> 
-	        		<s:property value="getText('content.message.titlefileswitheadidrepeated')" />	        		
-	        	</p><hr/></div>
-	        	
-	        	<div id="content_filesWithEADIDrepeated" style="display:inline;">
-	        	<s:property value="getText('content.message.filesalreadyindashboard')" />
-	        	<br>
-	            	<s:property value="getText('content.message.filesremovingwarning')" />
-	            	
-					<br><p></p></br>
+						</s:if>
+						<br />
+						<br />
+					</s:iterator>
+				</div>
+			</div>
+		</s:if>
+		<s:if test="existingFiles.size()>0">
+			<div id="filesWithEADIDrepeated" class="uploadedfiles_div">
+				<div id="text_filesWithEADIDrepeated">
+					<p class="uploadedfiles_title">
+						<img id="firstHCimage" src="images/expand/menos.gif" />
+						<s:property
+							value="getText('content.message.titlefileswitheadidrepeated')" />
+					</p>
+					<hr />
+				</div>
 
-	            	<s:iterator value="existingFiles" status="stat">
-	            	
-	            	<br><p></p></br>
-	            	     				
-							<div id="titleListRepeated<s:property value="%{top.eadid}" />" style="text-align:left; display:inline;width:100%;">
-		        				<label style="text-align:left;"><s:property value="%{(#stat.index+1) + '- ' + '(' + top.eadType + ') ' + top.fileName}"/></label>
-		        				<div id="right<s:property value="%{top.eadid}" />" style="float:right;" >
-			        				<select  id="existingFilesAnswers" onchange="changeEADID(this, '${top.eadid}', 'Change');" name="existingFilesAnswers" style="display:inline;">
-										<s:iterator value="existingFilesChoice" var="action"> 
-											<option value="<s:property value="#action.key" />"><s:property value="#action.value" /></option>
-										</s:iterator>
-		        					</select>
-		        				</div>
-		        			</div>
-		        			<div id="divGeneralChangeEadid<s:property value="%{top.eadid}" />">
-		        			
-	        				<s:hidden name="existingFiles[%{#stat.index}].fileId" value="%{top.fileId}"></s:hidden>
-		       				<s:hidden name="existingFiles[%{#stat.index}].fileType" value="%{top.fileType}"></s:hidden>
-		       				<s:hidden name="existingFiles[%{#stat.index}].fileName" value="%{top.fileName}"></s:hidden>
-		       				<s:hidden name="existingFiles[%{#stat.index}].filePath" value="%{top.filePath}"></s:hidden>
-		       				<s:hidden name="existingFiles[%{#stat.index}].eadType" value="%{top.eadType}"></s:hidden>
-		       				<s:hidden name="existingFiles[%{#stat.index}].eadid" value="%{top.eadid}"></s:hidden>
-		       				<s:hidden name="existingFiles[%{#stat.index}].permId" value="%{top.permId}"></s:hidden>
-		       						       				
-	        				<div id="divChangeEadid<s:property value="%{top.eadid}" />" style="display:none;">		        				
-								<p style="text-align: center; font-weight:bold;"><s:property value="getText('content.message.changeEADID')"/></p><hr/>
-								<p><br></p>
-			        			<label for="textEADID" style="font-weight: bold;"><s:property value="getText('content.message.currentEADID')"/></label> <s:property value="%{top.eadid}" />
-			        			<p><br></p>		        			
-			        			<span style="font-weight: bold;"><s:property value="getText('content.message.newEADID')"/></span> 
+				<div id="content_filesWithEADIDrepeated" style="display: inline;">
+					<s:property
+						value="getText('content.message.filesalreadyindashboard')" />
+					<br>
+					<s:property value="getText('content.message.filesremovingwarning')" />
 
-			        			<input type="text" name="arrayneweadid"
+					<br>
+					<p></p>
+					</br>
+
+					<s:iterator value="existingFiles" status="stat">
+
+						<br>
+						<p></p>
+						</br>
+
+						<div id="titleListRepeated<s:property value="%{top.eadid}" />"
+							style="text-align: left; display: inline; width: 100%;">
+							<label style="text-align: left;"><s:property
+									value="%{(#stat.index+1) + '- ' + '(' + top.eadType + ') ' + top.fileName}" /></label>
+							<div id="right<s:property value="%{top.eadid}" />"
+								style="float: right;">
+								<select id="existingFilesAnswers"
+									onchange="changeEADID(this, '${top.eadid}', 'Change');"
+									name="existingFilesAnswers" style="display: inline;">
+									<s:iterator value="existingFilesChoice" var="action">
+										<option value="<s:property value="#action.key" />">
+											<s:property value="#action.value" />
+										</option>
+									</s:iterator>
+								</select>
+							</div>
+						</div>
+						<div id="divGeneralChangeEadid<s:property value="%{top.eadid}" />">
+
+							<s:hidden name="existingFiles[%{#stat.index}].fileId"
+								value="%{top.fileId}"></s:hidden>
+							<s:hidden name="existingFiles[%{#stat.index}].fileType"
+								value="%{top.fileType}"></s:hidden>
+							<s:hidden name="existingFiles[%{#stat.index}].fileName"
+								value="%{top.fileName}"></s:hidden>
+							<s:hidden name="existingFiles[%{#stat.index}].filePath"
+								value="%{top.filePath}"></s:hidden>
+							<s:hidden name="existingFiles[%{#stat.index}].eadType"
+								value="%{top.eadType}"></s:hidden>
+							<s:hidden name="existingFiles[%{#stat.index}].eadid"
+								value="%{top.eadid}"></s:hidden>
+							<s:hidden name="existingFiles[%{#stat.index}].permId"
+								value="%{top.permId}"></s:hidden>
+
+							<div id="divChangeEadid<s:property value="%{top.eadid}" />"
+								style="display: none;">
+								<p style="text-align: center; font-weight: bold;">
+									<s:property value="getText('content.message.changeEADID')" />
+								</p>
+								<hr />
+								<p>
+									<br>
+								</p>
+								<label for="textEADID" style="font-weight: bold;"><s:property
+										value="getText('content.message.currentEADID')" /></label>
+								<s:property value="%{top.eadid}" />
+								<p>
+									<br>
+								</p>
+								<span style="font-weight: bold;"><s:property
+										value="getText('content.message.newEADID')" /></span> <input
+									type="text" name="arrayneweadid"
 									id="neweadid<s:property value="%{top.eadid}" />" size="30%"
-									style="padding-left: 4px;" /><!--'<s:property value="%{top.eadid}" />'  $("input#neweadid" + eadid).val()-->
-								
+									style="padding-left: 4px;" />
+
 								<!--EAD file with repeated EADID -->
 								<input type="button"
 									id="SaveChangesButton<s:property value="%{top.eadid}" />"
 									name="SaveChangesButton<s:property value="%{top.eadid}" />"
-									onclick="getAndCheckEADIDavailability('<s:property value="%{#stat.index}" />','<s:property value='%{top.eadid}' />','<s:property value="%{top.fileId}" />')" 
+									onclick="getAndCheckEADIDavailability('<s:property value="%{#stat.index}" />','<s:property value='%{top.eadid}' />','<s:property value="%{top.fileId}" />')"
 									value="<s:property value="getText('content.message.checkbutton')"/>"
 									disabled="disabled" />
-															
-			        		</div>
-			        			<p></p>
-									<label id="resultChangeEADID<s:property value="%{top.eadid}" />"></label>									
-									<select list="existingEADIDAnswersChoice" name="existingChangeEADIDAnswers" id="existingChangeEADIDAnswers<s:property value="%{top.eadid}" />" style="display:none;">
-										<option value="KO">KO</option>		
-									</select>
-									<br>
-									<div id="divCancelOverwriteEADID<s:property value="%{top.eadid}" />" style="display:none;">
-										<label><s:property value="getText('content.message.OverwriteCancelEadid')"/></label>
-										<select onchange="var iddivneweadid= 'neweadid' + '%{top.eadid}'; var neweadid= document.getElementById(iddivneweadid).value;CancelOverwriteExistingEADID(this, '%{top.eadid}', neweadid);" name="existingCancelOverwriteEADIDAnswers">
-											<s:iterator value="existingFilesChoiceOverwriteCancelEADID" var="actionEFCOCEADID"> 
-												<option value="<s:property value="#actionEFCOCEADID.key" />"><s:property value="#actionEFCOCEADID.value" /></option>
-											</s:iterator>
-										</select>
-									</div>												        			
-		        			</div>
-		        			<p></p>
-	            	</s:iterator>
-	            	</div>
-	            </div>
-	             <br>	           
-	        </s:if>
-	        <s:if  test="filesWithEmptyEadid.size()>0" >
-				<div id="filesWithEmptyEadid" class="uploadedfiles_div">
-				<div id="text_filesWithEmptyEadid">
-				<p class="uploadedfiles_title">
-					<img id="secondHCimage" src="images/expand/menos.gif"/>
-					<s:property value="getText('content.message.titlefileswithemptyeadid')" />
-				</p>
-				<hr/>
+
+							</div>
+							<p></p>
+							<label id="resultChangeEADID<s:property value="%{top.eadid}" />"></label>
+							<select list="existingEADIDAnswersChoice"
+								name="existingChangeEADIDAnswers"
+								id="existingChangeEADIDAnswers<s:property value="%{top.eadid}" />"
+								style="display: none;">
+								<option value="KO">KO</option>
+							</select> <br>
+							<div
+								id="divCancelOverwriteEADID<s:property value="%{top.eadid}" />"
+								style="display: none;">
+								<label><s:property
+										value="getText('content.message.OverwriteCancelEadid')" /></label> <select
+									onchange="var iddivneweadid= 'neweadid' + '%{top.eadid}'; var neweadid= document.getElementById(iddivneweadid).value;CancelOverwriteExistingEADID(this, '%{top.eadid}', neweadid);"
+									name="existingCancelOverwriteEADIDAnswers">
+									<s:iterator value="existingFilesChoiceOverwriteCancelEADID"
+										var="actionEFCOCEADID">
+										<option value="<s:property value="#actionEFCOCEADID.key" />">
+											<s:property value="#actionEFCOCEADID.value" />
+										</option>
+									</s:iterator>
+								</select>
+							</div>
+						</div>
+						<p></p>
+					</s:iterator>
 				</div>
-					
-					<div id="content_filesWithEmptyEadid" style="display:inline;">
-						<s:property value="getText('content.message.fileswithempyeadid')" />
-			  			
-			  			<br><p></p></br>
-			  					  		
-			  		<s:iterator value="filesWithEmptyEadid" status="stat">                                                	        			
-							
-							<br><p></p></br>
-							        											
-		        			<div id="titleListEmpty<s:property value="%{#stat.index}" />" style="text-align:left; display:inline;width:100%;">
-		        				<label style="text-align:left;"><s:property value="%{(#stat.index+1) + '- ' + '(' + top.eadType + ') ' + top.fileName}"/></label>
-		        				<div id="right<s:property value="%{#stat.index}" />" style="position:relative; top: -15px;" align="right">
-		        					
-		        					<select  id="existingFilesAnswers" onchange="changeEADID(this, '<s:property value="%{#stat.index}" />', 'Add');" name="existingFilesAnswers" style="display:inline;">
-										<s:iterator value="existingFilesChoiceAddEADID" var="action">
+			</div>
+			<br>
+		</s:if>
+		<s:if test="filesWithEmptyEadid.size()>0">
+			<div id="filesWithEmptyEadid" class="uploadedfiles_div">
+				<div id="text_filesWithEmptyEadid">
+					<p class="uploadedfiles_title">
+						<img id="secondHCimage" src="images/expand/menos.gif" />
+						<s:property
+							value="getText('content.message.titlefileswithemptyeadid')" />
+					</p>
+					<hr />
+				</div>
+
+				<div id="content_filesWithEmptyEadid">
+					<s:property value="getText('content.message.fileswithempyeadid')" />
+
+					<br>
+					<p></p>
+					</br>
+
+					<s:iterator value="filesWithEmptyEadid" status="stat">
+
+						<br>
+						<p></p>
+						</br>
+
+						<div id="titleListEmpty<s:property value="%{#stat.index}" />"
+							style="text-align: left; display: inline; width: 100%;">
+							<label style="text-align: left;"><s:property
+									value="%{(#stat.index+1) + '- ' + '(' + top.eadType + ') ' + top.fileName}" /></label>
+							<div id="right<s:property value="%{#stat.index}" />"
+								style="position: relative; top: -15px;" align="right">
+
+								<select id="existingFilesAnswers"
+									onchange="changeEADID(this, '<s:property value="%{#stat.index}" />', 'Add');"
+									name="existingFilesAnswers" style="display: inline;">
+									<s:iterator value="existingFilesChoiceAddEADID" var="action">
 										<s:set name="tempVar">Add EADID</s:set>
-											<option value="<s:property value="#action.key" />"<s:if test="%{#action.key==#tempVar}" > selected=selected </s:if>><s:property value="#action.value" /></option>
-										</s:iterator>
-		        					</select>
-		        					        					
-		        				</div>
-		        			</div> 
-		        			
-			        		<div id="divGeneralAddEadid<s:property value="%{#stat.index}" />" style="display:inline;">
+										<option value="<s:property value="#action.key" />"
+											<s:if test="%{#action.key==#tempVar}" > selected=selected </s:if>>
+											<s:property value="#action.value" />
+										</option>
+									</s:iterator>
+								</select>
+
+							</div>
+						</div>
+
+						<div id="divGeneralAddEadid<s:property value="%{#stat.index}" />"
+							style="display: inline;">
 
 							<p style="text-align: center; font-weight: bold;">
 								<s:property value="getText('content.message.addEADID')" />
@@ -184,22 +248,37 @@
 							<hr>
 							<p>
 								<br>
-							</p>	  
-								<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].fileId" value="<s:property value="%{top.fileId}"/>" /> 
-								<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].fileType" value="<s:property value="%{top.fileType}"/>" /> 
-								<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].fileName" value="<s:property value="%{top.fileName}"/>" /> 
-								<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].filePath" value="<s:property value="%{top.filePath}"/>" />
-								<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].eadType" value="<s:property value="%{top.eadType}"/>" />
-								<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].eadid"	value="<s:property value="%{top.eadid}"/>" /> 
-								<input type="hidden" name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].permId"	value="<s:property value="%{top.permId}"/>" />
-																
-								<div id="divAddEadid<s:property value="%{#stat.index}" />"><!-- style="display:none;" -->
+							</p>
+							<input type="hidden"
+								name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].fileId"
+								value="<s:property value="%{top.fileId}"/>" /> <input
+								type="hidden"
+								name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].fileType"
+								value="<s:property value="%{top.fileType}"/>" /> <input
+								type="hidden"
+								name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].fileName"
+								value="<s:property value="%{top.fileName}"/>" /> <input
+								type="hidden"
+								name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].filePath"
+								value="<s:property value="%{top.filePath}"/>" /> <input
+								type="hidden"
+								name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].eadType"
+								value="<s:property value="%{top.eadType}"/>" /> <input
+								type="hidden"
+								name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].eadid"
+								value="<s:property value="%{top.eadid}"/>" /> <input
+								type="hidden"
+								name="filesWithEmptyEadid[<s:property value="%{#stat.index}"/>].permId"
+								value="<s:property value="%{top.permId}"/>" />
 
-								<!--EAD file with no EADID keyup method over the textbox-->					
+							<div id="divAddEadid<s:property value="%{#stat.index}" />">
+								<!-- style="display:none;" -->
+
+								<!--EAD file with no EADID keyup method over the textbox-->
 								<input type="text" name="arrayneweadid"
 									id="neweadid<s:property value="%{#stat.index}" />" size="30%"
 									style="padding-left: 4px;" />
-	                            
+
 								<!--EAD file with no EADID -->
 								<input type="button" style="display: inline;"
 									id="SaveChangesButton<s:property value="%{#stat.index}" />"
@@ -208,85 +287,111 @@
 									value="<s:property value="getText('content.message.checkbutton')"/>" />
 							</div>
 							<p></p>
-								<label
-									id="resultChangeEADID<s:property value="%{#stat.index}" />"></label> <select list="existingEADIDAnswersChoice"
-									name="existingChangeEADIDAnswers"
-									style="display: none;"
-									id="existingChangeEADIDAnswers<s:property value="%{#stat.index}" />"> 
-									<option value="KO">KO</option>
+							<label
+								id="resultChangeEADID<s:property value="%{#stat.index}" />"></label>
+							<select list="existingEADIDAnswersChoice"
+								name="existingChangeEADIDAnswers" style="display: none;"
+								id="existingChangeEADIDAnswers<s:property value="%{#stat.index}" />">
+								<option value="KO">KO</option>
+							</select> <br>
+
+							<div
+								id="divCancelOverwriteEADID<s:property value="%{#stat.index}" />"
+								style="display: none;">
+								<label><s:property
+										value="getText('content.message.OverwriteCancelEadid')" /></label> <select
+									onchange="var iddivneweadid= 'neweadid' + '%{#stat.index}'; var neweadid= document.getElementById(iddivneweadid).value;CancelOverwriteExistingEADID(this, '%{#stat.index}', neweadid);"
+									name="existingCancelOverwriteEADIDAnswers">
+									<s:iterator value="existingFilesChoiceOverwriteCancelEADID"
+										var="actionEFCOCEADID">
+										<option value="<s:property value="#actionEFCOCEADID.key" />">
+											<s:property value="#actionEFCOCEADID.value" />
+										</option>
+									</s:iterator>
 								</select> <br>
-																
-								<div id="divCancelOverwriteEADID<s:property value="%{#stat.index}" />" style="display:none;">
-										<label><s:property value="getText('content.message.OverwriteCancelEadid')"/></label>
-										<select onchange="var iddivneweadid= 'neweadid' + '%{#stat.index}'; var neweadid= document.getElementById(iddivneweadid).value;CancelOverwriteExistingEADID(this, '%{#stat.index}', neweadid);" name="existingCancelOverwriteEADIDAnswers">
-											<s:iterator value="existingFilesChoiceOverwriteCancelEADID" var="actionEFCOCEADID"> 
-												<option value="<s:property value="#actionEFCOCEADID.key" />"><s:property value="#actionEFCOCEADID.value" /></option>
-											</s:iterator>
-										</select>
-										<br>
-									</div>	<br>
-		        			</div>
-       				</s:iterator> 
-       				</div>      				
+							</div>
+							<br>
+						</div>
+					</s:iterator>
 				</div>
-				<br>
-			</s:if>
-			<s:if test="filesBlocked.size()>0">
-				<div id="filesBlocked" class="uploadedfiles_div">
-					<div id="text_filesBlocked">
-	        			<p class="uploadedfiles_title">
-	        				<img id="filesBlockedHCimage" src="images/expand/menos.gif"/> 
-	        				<s:property value="getText('content.message.titlefilesblocked')" />
-	        			</p>
-							<hr>
-							<p>
-								<br>
-							</p>
-	        		</div>
-				
-					<div id="content_filesBlocked" style="display:inline;">				
-						<s:property value="getText('content.message.filesblocked.explanation')" />
-				  		<br>
-				  		<br>
-				  		<br>
-				  		<div id="titleListBlocked" style="text-align:left; display:inline;">
-					  		<s:iterator value="filesBlocked" status="stat">
-				  			    <input type="hidden" name="filesBlocked[<s:property value="%{#stat.index}"/>].fileId" value="<s:property value="%{top.fileId}"/>" />
-			       				<input type="hidden" name="filesBlocked[<s:property value="%{#stat.index}"/>].fileType" value="<s:property value="%{top.fileType}"/>" />
-			       				<input type="hidden" name="filesBlocked[<s:property value="%{#stat.index}"/>].fileName" value="<s:property value="%{top.fileName}"/>" />
-			       				<input type="hidden" name="filesBlocked[<s:property value="%{#stat.index}"/>].filePath" value="<s:property value="%{top.filePath}"/>" />
-			       				<input type="hidden" name="filesBlocked[<s:property value="%{#stat.index}"/>].eadType" value="<s:property value="%{top.eadType}"/>" />
-			       				<input type="hidden" name="filesBlocked[<s:property value="%{#stat.index}"/>].eadid" value="<s:property value="%{top.eadid}"/>" />
-			       				<input type="hidden" name="filesBlocked[<s:property value="%{#stat.index}"/>].permId" value="<s:property value="%{top.permId}"/>" />
-					  		
-								<s:property value="%{(#stat.index+1) + '- ' + top.fileName}"/>
-		                        <br/><br/>
-		       				</s:iterator>
-				  		</div>
-	       			</div>
-				</div>
-			</s:if>
-			<!--  <input type="button" class="mainButton" id="form_submit" value="<s:property value='getText("label.accept")' />" name="form_submit" onclick="checkEadIdAndSubmit()" />-->
-			 <input type="button" class="mainButton" id="form_submit" value="<s:property value='getText("label.accept")' />" name="form_submit" onclick="checkEadIdAndSubmit()" disabled="disabled" /> 
-			<s:if  test="filesWithEmptyEadid.size()>0 || existingFiles.size()>0" >
-			</s:if>
-			  <br>  <br>  <br>  <br>				
-		</form>
+			</div>
+			<br>
 		</s:if>
-		<s:else>
-				
-	        	<div id="existingFilesList">
-	        		<s:property value="getText('content.continue.contentmanager')"/>	            	
-	 			<br>
-	        	</div>
-	        	<br>
-	        	<br>
-				<form id="content" method="get">
-					<s:submit theme="simple" key="content.continue.contentmanager" action="contentmanager"/>
-					
-				</form>
-	     </s:else>
-	        <script type="text/javascript">
+		<s:if test="filesBlocked.size()>0">
+			<div id="filesBlocked" class="uploadedfiles_div">
+				<div id="text_filesBlocked">
+					<p class="uploadedfiles_title">
+						<img id="filesBlockedHCimage" src="images/expand/menos.gif" />
+						<s:property value="getText('content.message.titlefilesblocked')" />
+					</p>
+					<hr>
+					<p>
+						<br>
+					</p>
+				</div>
+
+				<div id="content_filesBlocked" style="display: inline;">
+					<s:property
+						value="getText('content.message.filesblocked.explanation')" />
+					<br> <br> <br>
+					<div id="titleListBlocked"
+						style="text-align: left; display: inline;">
+						<s:iterator value="filesBlocked" status="stat">
+							<input type="hidden"
+								name="filesBlocked[<s:property value="%{#stat.index}"/>].fileId"
+								value="<s:property value="%{top.fileId}"/>" />
+							<input type="hidden"
+								name="filesBlocked[<s:property value="%{#stat.index}"/>].fileType"
+								value="<s:property value="%{top.fileType}"/>" />
+							<input type="hidden"
+								name="filesBlocked[<s:property value="%{#stat.index}"/>].fileName"
+								value="<s:property value="%{top.fileName}"/>" />
+							<input type="hidden"
+								name="filesBlocked[<s:property value="%{#stat.index}"/>].filePath"
+								value="<s:property value="%{top.filePath}"/>" />
+							<input type="hidden"
+								name="filesBlocked[<s:property value="%{#stat.index}"/>].eadType"
+								value="<s:property value="%{top.eadType}"/>" />
+							<input type="hidden"
+								name="filesBlocked[<s:property value="%{#stat.index}"/>].eadid"
+								value="<s:property value="%{top.eadid}"/>" />
+							<input type="hidden"
+								name="filesBlocked[<s:property value="%{#stat.index}"/>].permId"
+								value="<s:property value="%{top.permId}"/>" />
+
+							<s:property value="%{(#stat.index+1) + '- ' + top.fileName}" />
+							<br />
+							<br />
+						</s:iterator>
+					</div>
+				</div>
+			</div>
+		</s:if>
+		<!--  <input type="button" class="mainButton" id="form_submit" value="<s:property value='getText("label.accept")' />" name="form_submit" onclick="checkEadIdAndSubmit()" />-->
+		<input type="button" class="mainButton" id="form_submit"
+			value="<s:property value='getText("label.accept")' />"
+			name="form_submit" onclick="checkEadIdAndSubmit()"
+			disabled="disabled" />
+		<s:if test="filesWithEmptyEadid.size()>0 || existingFiles.size()>0">
+		</s:if>
+		<br> <br> <br> <br>
+	</form>
+</s:if>
+<s:else>
+
+	<div id="existingFilesList">
+		<s:property value="getText('content.continue.contentmanager')" />
+		<br>
+	</div>
+	<br>
+	<br>
+	<form id="content" method="get">
+		<s:submit theme="simple" key="content.continue.contentmanager"
+			action="contentmanager" />
+
+	</form>
+</s:else>
+<script type="text/javascript">
 	        $(document).ready(function(){
 	        	
 	        	changes = new Array();
@@ -687,5 +792,5 @@
 				}
 			});
 
-			</script>		
-<div style="margin-bottom:30px;"></div>
+			</script>
+<div style="margin-bottom: 30px;"></div>
