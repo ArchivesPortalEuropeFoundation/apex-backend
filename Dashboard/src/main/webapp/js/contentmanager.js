@@ -1,7 +1,7 @@
 var globalRefresh_interval, globalIndex, globalRefresh;
 
 function initContentManager() {
-    clearFAsFromSession();
+    clearFilesFromSession();
     hideOrShowSelectAllFAsWindow();
 	initSearchOptions();
 	initSubpage();
@@ -41,13 +41,17 @@ function initSubpage() {
 		performBatchEadAction();
 	});
 	$("#clearAll").bind("click", function(value) {
-		clearFAsFromSession();
+		clearFilesFromSession();
 	});
-	$("#selectAllFAs").bind("click", function(value) {
+	$("#selectAllFiles").bind("click", function(value) {
+            if($("input[name=xmlTypeId]:checked").val() == '2'){
+                addAllEacCpfsInSession();
+            } else {
 		addAllFAsInSession();
+            }
 	});
 	$(".checkboxSave").bind("click", function() {
-		addOneFA($(this).val());
+		addOneFile($(this).val());
 	});
 	$("#selectAll").bind("click", function() {
 		var ids = new Array();
@@ -57,7 +61,7 @@ function initSubpage() {
 				ids.push(this.value);
 			}
 		});
-		addFewFAs(ids);
+		addFewFiles(ids);
 	});
 	$("#selectNone").bind("click", function() {
 		var ids = new Array();
@@ -67,7 +71,7 @@ function initSubpage() {
 				ids.push(this.value);
 			}
 		});
-		addFewFAs(ids);
+		addFewFiles(ids);
 	});
 	count();
 }
@@ -84,14 +88,14 @@ function enable_features(){
 }
 
 function performEadAction(action, id, type) {
-	
+
 	//If the select option refresh equals to refresh, then, set it to not refresh, perform action and later set it again to refresh
 	var originalStatus=globalIndex;
 	if(globalIndex!=0){
 		reloadRefresh(false);
 	}
-	
-	
+
+
 	var actionSplitted = action.split("|");
 	var windowType = actionSplitted[0];
 	var actionOrUrl = actionSplitted[1];
@@ -104,13 +108,13 @@ function performEadAction(action, id, type) {
 			xmlTypeId : type,
 			action : actionOrUrl
 		}, function(data) {
-					
+
 			updateCurrentSearchResults(updateForm);
-			
+
 			if (originalStatus==1){
 				reloadRefresh(true);
 			}
-			
+
 		});
 	} else {
 		var parameters = "id=" + id + "&xmlTypeId=" + type;
@@ -164,11 +168,11 @@ function performBatchEadAction() {
 				}
 				alert(message);
 			}
-			
+
 			updateCurrentSearchResults(updateForm);
 			if (originalStatus==1){
 				reloadRefresh(true);
-			}			
+			}
 		});
 	}
 }
@@ -189,7 +193,7 @@ function getUpdateCurrentSearchResultsForm() {
 
 function updateCurrentSearchResults(formData) {
     hideOrShowSelectAllFAsWindow();
-    
+
 	if (formData == null) {
 		formData = getUpdateCurrentSearchResultsForm();
 	}
@@ -202,10 +206,10 @@ function updateCurrentSearchResults(formData) {
 		$("#ead-results-container").html(data);
 		initSubpage();
 		$("select#refreshInterval option").eq(globalIndex).prop("selected",true);
-		
+
 		if(index!=0){ //reloads if different
 			refreshIntervalFunc(globalIndex, false);
-		}		
+		}
 	});
 }
 
@@ -222,10 +226,10 @@ function updatePageNumber(url) {
 }
 
 /***
- * 
+ *
  * @param refresh_interval defined in SecurityContext.java, this var stores in the session the timeout refresh, 5 secs by default.
  */
-function initResultsHandlers(refresh_interval) { 
+function initResultsHandlers(refresh_interval) {
 	globalRefresh_interval = refresh_interval;
 	$("#updateCurrentSearch_resultPerPage").change(function(event) {
 		$("#updateCurrentSearch_pageNumber").attr("value", "1");
@@ -324,7 +328,7 @@ function reloadBottom(index,seconds) {
 
 
 /***
- * This function sets refresh intervals to refresh or non refresh depending of the value 
+ * This function sets refresh intervals to refresh or non refresh depending of the value
  * @param value If true the select option will refresh, if false will not.
  */
 function reloadRefresh(value){

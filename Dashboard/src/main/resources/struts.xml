@@ -666,26 +666,32 @@
             <result name="error" type="tiles">error</result>
         </action>
 
-        <!-- Actions used for selection of finding aids in content manager -->
-        <action name="addOneFA" class="eu.apenet.dashboard.actions.ajax.SelectFindingAidsAction" method="addOneFA2Session">
+        <!-- Actions used for selection of files in content manager -->
+        <action name="addOneFile" class="eu.apenet.dashboard.actions.ajax.SelectFilesAction" method="addOneFile2Session">
             <result type="stream">
                 <param name="inputName">outputStream</param>
                 <param name="contentType">application/json</param>
             </result>
         </action>
-        <action name="clearFAsFromSession" class="eu.apenet.dashboard.actions.ajax.SelectFindingAidsAction" method="clearFAsFromSession">
+        <action name="clearFilesFromSession" class="eu.apenet.dashboard.actions.ajax.SelectFilesAction" method="clearFilesFromSession">
             <result type="stream">
                 <param name="inputName">outputStream</param>
                 <param name="contentType">application/json</param>
             </result>
         </action>
-        <action name="addAllFAsInSession" class="eu.apenet.dashboard.actions.ajax.SelectFindingAidsAction" method="addAllFAsInSession">
+        <action name="addAllFAsInSession" class="eu.apenet.dashboard.actions.ajax.SelectFilesAction" method="addAllFAsInSession">
             <result type="stream">
                 <param name="inputName">outputStream</param>
                 <param name="contentType">application/json</param>
             </result>
         </action>
-        <action name="getFAsFromSession" class="eu.apenet.dashboard.actions.ajax.SelectFindingAidsAction" method="getFAsFromSession">
+        <action name="addAllEacCpfsInSession" class="eu.apenet.dashboard.actions.ajax.SelectFilesAction" method="addAllEacCpfsInSession">
+            <result type="stream">
+                <param name="inputName">outputStream</param>
+                <param name="contentType">application/json</param>
+            </result>
+        </action>
+        <action name="getFilesFromSession" class="eu.apenet.dashboard.actions.ajax.SelectFilesAction" method="getFilesFromSession">
             <result type="stream">
                 <param name="inputName">outputStream</param>
                 <param name="contentType">application/json</param>

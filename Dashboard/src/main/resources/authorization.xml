@@ -33,7 +33,7 @@
             generateEadidResponseJSON, connectFTP, updateFtp, saveFtpFiles,
 
             batchActionAjax, AjaxConversionControllerAction,
-            addOneFA, clearFAsFromSession, getFAsFromSession, addAllFAsInSession, checkCurrentConversionOptions, saveConversionOptions,
+            addOneFile, clearFilesFromSession, getFilesFromSession, addAllFAsInSession, addAllEacCpfsFromSession, checkCurrentConversionOptions, saveConversionOptions,
 
             hasCpfReady, displayCpfInformation,
 

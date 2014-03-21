@@ -36,8 +36,8 @@ function printCount(listId){
         $("#sizeFiles").html(nb + " selected file");
     }
 }
-function addOneFA(id){
-    var loadUrl = "addOneFA.action";
+function addOneFile(id){
+    var loadUrl = "addOneFile.action";
     var data = {id: id};
     $.post(loadUrl, data, function(databack) {
         if(databack != null){
@@ -49,8 +49,8 @@ function addOneFA(id){
         }
     },'json');
 }
-function addFewFAs(ids){
-    var loadUrl = "addOneFA.action";
+function addFewFiles(ids){
+    var loadUrl = "addOneFile.action";
     var somedata_assoc = $.param({'ids': ids}, true);
     $.post(loadUrl, somedata_assoc, function(databack) {
         if(databack != null){
@@ -62,9 +62,9 @@ function addFewFAs(ids){
         }
     },'json');
 }
-function clearFAsFromSession(){
+function clearFilesFromSession(){
     $("#files").html("");
-    var loadUrl = "clearFAsFromSession.action";
+    var loadUrl = "clearFilesFromSession.action";
     $.post(loadUrl, null, function(databack) {
         if(databack != null){
             uncheckAllCheckboxes();
@@ -79,6 +79,24 @@ function clearFAsFromSession(){
 function addAllFAsInSession(){
     $("#files").html("");
     var loadUrl = "addAllFAsInSession.action";
+    $.post(loadUrl, null, function(databack) {
+        if(databack != null){
+            $("input:checkbox[name=check]").each(function(){
+                if(!$(this).is(":checked")) {
+                    $(this).attr('checked','checked');
+                }
+            });
+            if(databack.listId != null) {
+                printCount(databack.listId);
+            } else {
+                count(contextPath);
+            }
+        }
+    },'json');
+}
+function addAllEacCpfsInSession(){
+    $("#files").html("");
+    var loadUrl = "addAllEacCpfsInSession.action";
     $.post(loadUrl, null, function(databack) {
         if(databack != null){
             $("input:checkbox[name=check]").each(function(){

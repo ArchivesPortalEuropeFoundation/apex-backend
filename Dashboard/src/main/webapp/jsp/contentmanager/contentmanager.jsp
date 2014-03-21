@@ -13,7 +13,7 @@
 	<div id="listFiles">
 		<div id="listFilesActions">
 			<span id="clearAll" class="linkList leftSide">[<s:text name="content.message.clearall" />]
-			</span> <span id="selectAllFAs" class="linkList leftSide">[<s:text name="content.message.selectall" />]
+			</span> <span id="selectAllFiles" class="linkList leftSide">[<s:text name="content.message.selectall" />]
 			</span>
 		</div>
 		<div id="sizeFiles"></div>

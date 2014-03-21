@@ -1,7 +1,9 @@
 package eu.apenet.dashboard.actions.ajax;
 
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.FindingAid;
+import java.io.IOException;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 
@@ -10,6 +12,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import org.json.JSONException;
 
 /**
  * User: Yoann Moranville
@@ -17,16 +20,16 @@ import java.util.List;
  *
  * @author Yoann Moranville
  */
-public class SelectFindingAidsAction extends AjaxControllerAbstractAction {
+public class SelectFilesAction extends AjaxControllerAbstractAction {
     private String id;
     private List<String> ids;
 
-    public String addOneFA2Session() {
+    public String addOneFile2Session() {
         Writer writer = null;
         try {
             writer = openOutputWriter();
 
-            List<Integer> listId = getIdentifierSelectedFAs();
+            List<Integer> listId = getIdentifierSelectedFiles();
 
             if(!StringUtils.isEmpty(id)) {
                 Integer idInt = Integer.parseInt(id);
@@ -44,7 +47,7 @@ public class SelectFindingAidsAction extends AjaxControllerAbstractAction {
                 }
             }
 
-            setIdentifierSelectedFAs(listId);
+            setIdentifierSelectedFiles(listId);
 
             writer.append(new JSONObject().put("correct", true).put("listId", listId).toString());
             writer.close();
@@ -61,14 +64,14 @@ public class SelectFindingAidsAction extends AjaxControllerAbstractAction {
         return null;
     }
 
-    public String clearFAsFromSession() {
+    public String clearFilesFromSession() {
         Writer writer = null;
         try {
             writer = openOutputWriter();
 
-            setIdentifierSelectedFAs(new ArrayList<Integer>());
+            setIdentifierSelectedFiles(new ArrayList<Integer>());
 
-            writer.append(new JSONObject().put("correct", true).put("listId", getIdentifierSelectedFAs()).toString());
+            writer.append(new JSONObject().put("correct", true).put("listId", getIdentifierSelectedFiles()).toString());
             writer.close();
         } catch (Exception e){
             try {
@@ -90,9 +93,9 @@ public class SelectFindingAidsAction extends AjaxControllerAbstractAction {
 
             int aiId = getAiId();
             List<Integer> allFaIds = DAOFactory.instance().getEadDAO().getAllIds(FindingAid.class, aiId);
-            setIdentifierSelectedFAs(allFaIds);
+            setIdentifierSelectedFiles(allFaIds);
 
-            writer.append(new JSONObject().put("correct", true).put("listId", getIdentifierSelectedFAs()).toString());
+            writer.append(new JSONObject().put("correct", true).put("listId", getIdentifierSelectedFiles()).toString());
             writer.close();
         } catch (Exception e){
             try {
@@ -107,16 +110,51 @@ public class SelectFindingAidsAction extends AjaxControllerAbstractAction {
         return null;
     }
 
-    public String getFAsFromSession() {
+    public String addAllEacCpfsInSession() {
         Writer writer = null;
         try {
             writer = openOutputWriter();
 
-            writer.append(new JSONObject().put("correct", true).put("listId", getIdentifierSelectedFAs()).toString());
+            int aiId = getAiId();
+            List<Integer> allEacCpfIds = DAOFactory.instance().getEacCpfDAO().getAllIds(EacCpf.class, aiId);
+            setIdentifierSelectedFiles(allEacCpfIds);
+
+            writer.append(new JSONObject().put("correct", true).put("listId", getIdentifierSelectedFiles()).toString());
+            writer.close();
+        } catch (IOException e){
+            try {
+                LOG.error("Error saving the ID", e);
+                if(writer != null){
+                    writer.append(new JSONObject().put("correct", false).toString());
+                    writer.close();
+                }
+            } catch (JSONException ex){
+            } catch (IOException ex) {
+            }
+        } catch (JSONException e) {
+            try {
+                LOG.error("Error saving the ID", e);
+                if(writer != null){
+                    writer.append(new JSONObject().put("correct", false).toString());
+                    writer.close();
+                }
+            } catch (JSONException ex){
+            } catch (IOException ex) {
+            }
+        }
+        return null;
+    }
+
+    public String getFilesFromSession() {
+        Writer writer = null;
+        try {
+            writer = openOutputWriter();
+
+            writer.append(new JSONObject().put("correct", true).put("listId", getIdentifierSelectedFiles()).toString());
             writer.close();
         } catch (Exception e){
             try {
-                LOG.error("Error getting the FA IDs", e);
+                LOG.error("Error getting the file IDs", e);
                 if(writer != null){
                     writer.append(new JSONObject().put("correct", false).toString());
                     writer.close();
@@ -128,7 +166,7 @@ public class SelectFindingAidsAction extends AjaxControllerAbstractAction {
     }
 
     @SuppressWarnings("unchecked")
-    public List<Integer> getIdentifierSelectedFAs(){
+    public List<Integer> getIdentifierSelectedFiles(){
         HttpSession session = getServletRequest().getSession();
         if(session.getAttribute(LIST_IDS) != null)
             return (List<Integer>) session.getAttribute(LIST_IDS);
@@ -136,7 +174,7 @@ public class SelectFindingAidsAction extends AjaxControllerAbstractAction {
     }
 
     @SuppressWarnings("unchecked")
-    public void setIdentifierSelectedFAs(List<Integer> listId){
+    public void setIdentifierSelectedFiles(List<Integer> listId){
         HttpSession session = getServletRequest().getSession();
         session.setAttribute(LIST_IDS, listId);
     }
