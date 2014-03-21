@@ -174,29 +174,42 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
 
         return criteriaBuilder.and(whereClause.toArray(new Predicate[0]));
     }
-    
+
     @Override
-	public Integer isEacCpfIdUsed(String identifier, Integer aiId, Class<? extends EacCpf> clazz) {
-		Criteria criteria = getSession().createCriteria(clazz, "eac").setProjection(Projections.property("id"));
-		criteria.createAlias("eac.archivalInstitution", "archivalInstitution");
-		criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
-		criteria.add(Restrictions.eq("identifier", identifier));
-		List<Integer> result = criteria.list();
-		if (result.size() > 0)
-			return result.get(0);
-		return null;
-	}
+    public Integer isEacCpfIdUsed(String identifier, Integer aiId, Class<? extends EacCpf> clazz) {
+        Criteria criteria = getSession().createCriteria(clazz, "eac").setProjection(Projections.property("id"));
+        criteria.createAlias("eac.archivalInstitution", "archivalInstitution");
+        criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
+        criteria.add(Restrictions.eq("identifier", identifier));
+        List<Integer> result = criteria.list();
+        if (result.size() > 0) {
+            return result.get(0);
+        }
+        return null;
+    }
+
     @SuppressWarnings("unchecked")
-	@Override
-	public EacCpf getEacCpfById(Integer aiId, String identifier) {
-		Criteria criteria = getSession().createCriteria(getPersistentClass(), "eac");
-		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		criteria = criteria.createAlias("eac.archivalInstitution", "archivalInstitution");
-		criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
-		criteria.add(Restrictions.eq("identifier", identifier));
-		List<EacCpf> list = criteria.list();
-		if (list.size() > 0)
-			return list.get(0);
-		return null;
-	}
+    @Override
+    public EacCpf getEacCpfById(Integer aiId, String identifier) {
+        Criteria criteria = getSession().createCriteria(getPersistentClass(), "eac");
+        criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        criteria = criteria.createAlias("eac.archivalInstitution", "archivalInstitution");
+        criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
+        criteria.add(Restrictions.eq("identifier", identifier));
+        List<EacCpf> list = criteria.list();
+        if (list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public List<Integer> getAllIds(Class<EacCpf> clazz, int aiId) {
+        Criteria criteria = getSession().createCriteria(clazz, "eac");
+        criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        criteria = criteria.createAlias("eac.archivalInstitution", "archivalInstitution");
+        criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
+        criteria.setProjection(Projections.property("id"));
+        return criteria.list();
+    }
 }
