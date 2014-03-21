@@ -21,16 +21,14 @@ import org.apache.log4j.Logger;
 
 import eu.apenet.commons.utils.APEnetUtilities;
 
-import eu.apenet.dashboard.services.eaccpf.DeleteTask;
-
 import eu.apenet.persistence.vo.UpFile;
 
 public class EacCpfService {
 
-	protected static final Logger LOGGER = Logger.getLogger(EacCpfService.class);
-	private static final long NOT_USED_TIME = 60*60*24*7;
+    protected static final Logger LOGGER = Logger.getLogger(EacCpfService.class);
+    private static final long NOT_USED_TIME = 60 * 60 * 24 * 7;
 
-	public static void convertValidatePublish(Integer id, Properties properties) {
+    public static void convertValidatePublish(Integer id, Properties properties) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -39,12 +37,12 @@ public class EacCpfService {
     }
 
     public static void convert(Integer id, Properties properties) throws Exception {
-		EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
-		EacCpf eacCpf = eacCpfDAO.findById(id, XmlType.EAC_CPF.getClazz());
-		SecurityContext.get().checkAuthorized(eacCpf);
-		if (ConvertTask.valid(eacCpf)) {
-			addToQueue(eacCpf, QueueAction.CONVERT, properties);
-		}
+        EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
+        EacCpf eacCpf = eacCpfDAO.findById(id, XmlType.EAC_CPF.getClazz());
+        SecurityContext.get().checkAuthorized(eacCpf);
+        if (ConvertTask.valid(eacCpf)) {
+            addToQueue(eacCpf, QueueAction.CONVERT, properties);
+        }
     }
 
     public static void validate(Integer id) {
@@ -59,8 +57,11 @@ public class EacCpfService {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public static void delete(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public static void delete(Integer id) throws Exception {
+        EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
+        EacCpf eacCpf = eacCpfDAO.findById(id);
+        SecurityContext.get().checkAuthorized(eacCpf);
+        addToQueue(eacCpf, QueueAction.DELETE, null);
     }
 
     public static void deleteEdm(Integer id) {
@@ -82,13 +83,13 @@ public class EacCpfService {
     public static File download(Integer id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     public static EacCpf create(XmlType xmlType, UpFile upFile, Integer aiId) throws Exception {
-		SecurityContext.get().checkAuthorized(aiId);
-		EacCpf eac = new CreateEacCpfTask().execute(xmlType, upFile, aiId);
-		DAOFactory.instance().getUpFileDAO().delete(upFile);
+        SecurityContext.get().checkAuthorized(aiId);
+        EacCpf eac = new CreateEacCpfTask().execute(xmlType, upFile, aiId);
+        DAOFactory.instance().getUpFileDAO().delete(upFile);
         return eac;
-	}
+    }
 
     private static void addToQueue(EacCpf eacCpf, QueueAction queueAction, Properties preferences) throws IOException {
         QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
@@ -130,27 +131,27 @@ public class EacCpfService {
         stringWriter.close();
         return result;
     }
-    
+
     public static void overwrite(EacCpf oldEac, UpFile upFile) throws Exception {
-		SecurityContext.get().checkAuthorized(oldEac);
-		addToQueue(oldEac, QueueAction.OVERWRITE, null, upFile);
-	}
-    
+        SecurityContext.get().checkAuthorized(oldEac);
+        addToQueue(oldEac, QueueAction.OVERWRITE, null, upFile);
+    }
+
     private static void addToQueue(EacCpf eac, QueueAction queueAction, Properties preferences, UpFile upFile)
-			throws IOException {
-		QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
-		EacCpfDAO eacDAO = DAOFactory.instance().getEacCpfDAO();
-		eac.setQueuing(QueuingState.READY);
-		eacDAO.store(eac);
-		QueueItem queueItem = fillQueueItem(eac, queueAction, preferences);
-		queueItem.setUpFile(upFile);
-		indexqueueDao.store(queueItem);
-	}
-    
-    public static QueueAction processQueueItem(QueueItem queueItem) throws Exception {
-		QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
+            throws IOException {
+        QueueItemDAO indexqueueDao = DAOFactory.instance().getQueueItemDAO();
         EacCpfDAO eacDAO = DAOFactory.instance().getEacCpfDAO();
-		QueueAction queueAction = queueItem.getAction();
+        eac.setQueuing(QueuingState.READY);
+        eacDAO.store(eac);
+        QueueItem queueItem = fillQueueItem(eac, queueAction, preferences);
+        queueItem.setUpFile(upFile);
+        indexqueueDao.store(queueItem);
+    }
+
+    public static QueueAction processQueueItem(QueueItem queueItem) throws Exception {
+        QueueItemDAO queueItemDAO = DAOFactory.instance().getQueueItemDAO();
+        EacCpfDAO eacDAO = DAOFactory.instance().getEacCpfDAO();
+        QueueAction queueAction = queueItem.getAction();
         Properties preferences = null;
         if (queueItem.getPreferences() != null) {
             preferences = readProperties(queueItem.getPreferences());
@@ -180,7 +181,11 @@ public class EacCpfService {
                         DAOFactory.instance().getUpFileDAO().delete(upFile);
                         upFileDeleted = true;
                     } else if (queueAction.isDeleteAction()) {
-                        //TODO
+//                        new DeleteFromEuropeanaTask().execute(eac, preferences);
+//                        new DeleteEseEdmTask().execute(eac, preferences);
+//                        new UnpublishTask().execute(eac, preferences);
+                        new DeleteTask().execute(eac, preferences);
+                        eacDeleted = true;
                     }
                     queueItemDAO.delete(queueItem);
                 } catch (Exception e) {
@@ -198,24 +203,35 @@ public class EacCpfService {
                     queueItem.setPriority(0);
                     queueItemDAO.store(queueItem);
                 }
-            }else {
-            	//TODO: Here are other actions of the queue
-                
+//            } else {
+//                try {
+//                    if (queueAction.isConvertAction()) {
+//                        new ConvertTask().execute(eac, preferences);
+//                    }
+//                } catch (Exception e) {
+//                    String err = "identifier: " + eac.getIdentifier() + " - id: " + eac.getId() + " - type: " + xmlType.getName();
+//                    LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+//                    queueItem.setErrors(new Date() + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
+//                    eac.setQueuing(QueuingState.ERROR);
+//                    eacDAO.store(eac);
+//                    queueItem.setPriority(0);
+//                    queueItemDAO.store(queueItem);
+//                }
             }
         } else { //USE_PROFILE
             //TODO. Not defined yet
 
         }
-		LOGGER.info("Process queue item finished");
+        LOGGER.info("Process queue item finished");
 
-		return queueAction;
-	}
-    
+        return queueAction;
+    }
+
     public static Properties readProperties(String string) throws IOException {
-		StringReader stringReader = new StringReader(string);
-		Properties properties = new Properties();
-		properties.load(stringReader);
-		stringReader.close();
-		return properties;
-	}
+        StringReader stringReader = new StringReader(string);
+        Properties properties = new Properties();
+        properties.load(stringReader);
+        stringReader.close();
+        return properties;
+    }
 }
