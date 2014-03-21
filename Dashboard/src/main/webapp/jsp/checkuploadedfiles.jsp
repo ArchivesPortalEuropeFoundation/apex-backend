@@ -218,7 +218,7 @@
 						</br>
 
 						<div id="titleListEmpty<s:property value="%{#stat.index}" />"
-							style="text-align: left; display: inline; width: 100%;">
+							style="text-align: left;  width: 100%;">
 							<label style="text-align: left;"><s:property
 									value="%{(#stat.index+1) + '- ' + '(' + top.eadType + ') ' + top.fileName}" /></label>
 							<div id="right<s:property value="%{#stat.index}" />"
@@ -432,6 +432,16 @@
 	        		}
 	        	});
 
+	        	/* avoid showing wrong controls when maximize/minimize */
+	        	$("div#filesWithEADIDrepeated select[id^='existingFilesAnswers']").each(function(){
+	        		if ($(this).val() != "Change ID") {
+	        			var titleListRepeatedId = $(this).parent().parent().attr("id");
+						var EaDiD  = titleListRepeatedId.substring(17,titleListRepeatedId.length);
+						var divgeneralname= "divChangeEadid" + EaDiD;
+						document.getElementById(divgeneralname).style.display='none';
+	        		}
+	        	});
+
 	        	if (isOverwrite && !existsAdd) {
 		        	$("input#form_submit").removeAttr("disabled");
 	        	}
@@ -574,7 +584,7 @@
 						document.getElementById(divname).style.display='inline';
 						document.getElementById(buttonid).style.display='inline';
 						var divgeneralname= "divChangeEadid" + eadid;
-						document.getElementById(divgeneralname).style.display='inline';
+						document.getElementById(divgeneralname).style.display='';
 						var textboxid = "neweadid" + eadid;
 						document.getElementById(textboxid).focus();
 						// Disable accept button.
@@ -734,7 +744,7 @@
 				var neweadid= document.getElementById(iddivneweadid).value;
 				checkEADIDavailability(eadid,neweadid,fileId);
 			}
-			
+
 			$('#text_filesSuccessful').click(function(){
 				if($('#content_filesSuccessful').is(':hidden')){
 					$('#content_filesSuccessful').show('slow');
@@ -760,6 +770,8 @@
 					$("div[id^='divChangeEadid']").show('slow');
 					$('#content_filesWithEADIDrepeated').show('slow');
 					$('#firstHCimage').attr("src","images/expand/menos.gif");
+					/* Control which value has the select option */
+					checkActiveButtonAccept();
 				}else{
 					$("div[id^='titleListRepeated']").hide('slow');
 					$("div[id^='divChangeEadid']").hide('slow');
