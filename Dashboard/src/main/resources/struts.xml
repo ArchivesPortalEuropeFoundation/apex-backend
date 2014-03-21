@@ -238,6 +238,15 @@
             <result name="error">/jsp/ajax/error.jsp</result>
         </action>
 
+        <action name="eacCpfActions" class="eu.apenet.dashboard.actions.content.eaccpf.EacCpfActions">
+            <result name="success">/jsp/ajax/success.jsp</result>
+            <result name="error">/jsp/ajax/error.jsp</result>
+        </action>
+<!--        <action name="batchEacCpfActions" class="eu.apenet.dashboard.actions.content.eaccpf.BatchEacCpfActions">
+            <result name="success">/jsp/ajax/success.jsp</result>
+            <result name="error">/jsp/ajax/error.jsp</result>
+        </action> -->
+
         <!-- This action does not use tiles because the data in the jsp is plain text -->
         <action name="showwarnings" class="eu.apenet.dashboard.manual.ShowWarningsAction">
             <result name="success">/jsp/warnings.jsp</result>

@@ -31,7 +31,7 @@ function initSubpage() {
 	$(".actions input").click(
 			function(event) {
 				event.preventDefault();
-				performEadAction(
+				performContentAction(
 						$(this).parent().find(".selectedAction").val(), $(this)
 								.parent().parent().find(".checkboxSave").val(),
 						$("#updateCurrentSearch_xmlTypeId").val());
@@ -87,7 +87,7 @@ function select_none()
 function enable_features(){
 }
 
-function performEadAction(action, id, type) {
+function performContentAction(action, id, type) {
 
 	//If the select option refresh equals to refresh, then, set it to not refresh, perform action and later set it again to refresh
 	var originalStatus=globalIndex;
@@ -101,7 +101,12 @@ function performEadAction(action, id, type) {
 	var actionOrUrl = actionSplitted[1];
 	if ("action" == windowType) {
 		var updateForm = getUpdateCurrentSearchResultsForm();
-		var actionUrl = "eadActions.action";
+		var actionUrl;
+                if (type == "2"){
+                    actionUrl = "eacCpfActions.action";
+                } else {
+                    actionUrl = "eadActions.action";
+                }
 		$("#ead-results-container").html("<div class='icon_waiting'></div>");
 		$.post(actionUrl, {
 			id : id,
