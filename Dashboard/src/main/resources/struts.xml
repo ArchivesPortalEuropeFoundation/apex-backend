@@ -402,6 +402,7 @@
 			<result name="errorDuplicateIdentifiers" type="tiles">uploaderroralduplicatedidentifier</result>
 			<result name="errorLang" type="tiles">uploaderrorallangnull</result>
 			<result name="errorCountry" type="tiles">uploaderroralbadcountry</result>
+			<result name="errorInvalidChars" type="tiles">uploaderroralinvalidchar</result>
 		</action>
 
 		<action name="ALDisplayTrees" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="displayTrees">
