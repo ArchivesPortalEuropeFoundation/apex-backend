@@ -35,7 +35,7 @@ public class HarvesterTask implements Runnable {
 
 	@Override
 	public void run() {
-		LOGGER.info("Harvester process active");
+		LOGGER.debug("Harvester process active");
 		long endTime = System.currentTimeMillis() + duration.getMilliseconds();
 		boolean stopped = false;
 		while (!stopped && !scheduler.isShutdown() && System.currentTimeMillis() < endTime) {
@@ -62,7 +62,7 @@ public class HarvesterTask implements Runnable {
 				stopped = true;
 			}
 		}
-		LOGGER.info("Harvester process inactive");
+		LOGGER.debug("Harvester process inactive");
 		if (!scheduler.isShutdown()) {
 			scheduler.schedule(new HarvesterTask(scheduler, duration, delay), delay.getMilliseconds(),
 					TimeUnit.MILLISECONDS);
