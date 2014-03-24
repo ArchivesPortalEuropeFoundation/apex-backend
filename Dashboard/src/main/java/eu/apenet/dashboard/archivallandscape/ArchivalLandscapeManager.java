@@ -8,10 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.XMLConstants;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -37,7 +32,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import com.ctc.wstx.exc.WstxLazyException;
-import com.ctc.wstx.exc.WstxUnexpectedCharException;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
@@ -50,13 +44,10 @@ import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
-import eu.apenet.persistence.dao.HoldingsGuideDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AiAlternativeName;
 import eu.apenet.persistence.vo.ArchivalInstitution;
-import eu.apenet.persistence.vo.CouAlternativeName;
 import eu.apenet.persistence.vo.Country;
-import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.Lang;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
@@ -74,43 +65,12 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 
 	private final static Logger log = Logger.getLogger(ArchivalLandscapeManager.class);
 	
-	private static final String AL_XMLNS = "urn:isbn:1-931666-22-9";
-	private static final String AL_XMLNS_XLINK = "http://www.w3.org/1999/xlink";
-	private static final String AL_XMLNS_XSI = XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI; //"http://www.w3.org/2001/XMLSchema-instance";
-	private static final String AL_AUDIENCE = "external";
-	private static final String AL_XSI_SCHEMALOCATION = "urn:isbn:1-931666-22-9 ead.xsd";
-	private static final String AL_EADHEADER_COUNTRYENCODING = "iso3166-1";
-	private static final String AL_EADHEADER_DATAENCODING = "iso8601";
-	private static final String AL_EADHEADER_LANGENCODING = "iso639-2b";
-	private static final String AL_EADHEADER_RELATEDENCODING = "MARC21";
-	private static final String AL_EADHEADER_REPOSITORYENCODING = "iso15511";
-	private static final String AL_EADHEADER_SCRIPTENCODING = "iso15924";
-	private static final String AL_EADID_IDENTIFIER = "ape_archival_landscape";
-	private static final String AL_EADID_MAINAGENCYCODE = "-APEnet";
-	private static final String AL_EADID_PREFIX = "AL-";
-	private static final String AL_TITLEPROPER_ENCODINGANALOG = "245";
-	private static final String AL_TITLEPROPER_TYPE = "eng";
-	private static final String AL_TITLEPROPER = "Archives Portal Europe - Archival Landscape";
-	private static final String AL_GLOBAL_ENCODINGANALOG = "3.1.4";
-	private static final String AL_RELATEDENCODING = "ISAD(G)v2";
-	private static final String AL_ARCHDESC_TYPE = "inventory"; //probably could be "archival_landscape" value like other ALs
-	private static final String AI_DSC_TYPE = "othertype";
-	private static final String COUNTRYCODE = "countrycode";
-	
-	private static final String EADID = "eadid";
-	
 	private static final String AL_FILE_NAME = "AL.xml";
 	
-	private static final String LEVEL = "level";
-	private static final String FONDS = "fonds";
-	private static final String SERIES = "series";
-	private static final String FILE = "file";
-
 	// Error when an institution has content published.
 	private static final String ERROR_CONTENT = "errorContent";
 	private static final String ERROR_CONTENT_2 = "errorContent2";
 	private static final String ERROR_IDENTIFIERS = "errorIdentifier";
-	private static final String ERROR_NEW_IDENTIFIERS = "errorIdentifier2";
 	private static final String ERROR_COUNTRY = "errorCountry";
 	private static final String ERROR_INVALID_CHARS = "errorInvalidChars";
 
@@ -120,11 +80,11 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	// Error when the name of te institution hasn't language.
 	private static final String ERROR_LANG = "errorLang";
 
-	private static final String AL_GLOBAL_UNITTITLE = "European countries";
+	private static final String INVALID = "invalid";
 
 	private List<ArchivalInstitution> totalInstitutions;
 	private Map<String,ArchivalInstitution> groupsInsertedIntoDDBB;
-	private List<ArchivalInstitution> updatedInstitutions;
+	private List<String>  ingestedIdentifiersClone;
 	private List<ArchivalInstitution> deletedInstitutions;
 	private List<ArchivalInstitution> notChangedInstitutions;
 	private List<ArchivalInstitution> insertedInstitutions;
@@ -147,7 +107,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 
 	private Set<String> institutionsWithContentNotPublished;
 
-	private ArrayList<String> errors;
+	private List<String> errors;
 
 	// Set for the duplicate identifiers.
 	private Set<String> duplicateIdentifiers;
@@ -156,28 +116,84 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 
 	private boolean invalidChars = false;
 
+	private Map<ArchivalInstitution, ArchivalInstitution> relatedInstitutionsByName; //Map which store old and new institution related by Map<old_ArchivalInstitution_key> -> new_ArchivalInstitution_value  
+	private List<ArchivalInstitution> oldRelatedInstitutions; //old institutions related by name - it's used into jsp
+	private List<ArchivalInstitution> newRelatedInstitutions; //new institutions related by name - it's used into jsp
+	private List<ArchivalInstitution> updatedInstitutions; //institutions updated, f.i. parent has changed - it's used into jsp
+	private List<ArchivalInstitution> institutionsToBeDeleted; //institutions which dissapears from file - it's used into jsp
+	private List<ArchivalInstitution> newInstitutionsFile; //institutions to be inserted - it's used into jsp
+	private List<ArchivalInstitution> oldSameIdentifierInstitutionsFile; //old institutions with same identifier - it's used into jsp
+	private List<ArchivalInstitution> newSameIdentifierInstitutionsFile; //new institutions with same identifier - it's used into jsp
+	private List<ArchivalInstitution> oldEmptyIdentifierInstitutionsFile; //old institutions with empty identifier - it's used into jsp
+	private List<ArchivalInstitution> newEmptyIdentifierInstitutionsFile; //new institutions with empty identifier - it's used into jsp
+	
+	public List<ArchivalInstitution> getUpdatedInstitutions() {
+		return this.updatedInstitutions;
+	}
+
+	public List<ArchivalInstitution> getOldRelatedInstitutions() {
+		return this.oldRelatedInstitutions;
+	}
+
+	public void setOldRelatedInstitutions(List<ArchivalInstitution> oldRelatedInstitutions) {
+		this.oldRelatedInstitutions = oldRelatedInstitutions;
+	}
+
+	public List<ArchivalInstitution> getNewRelatedInstitutions() {
+		return this.newRelatedInstitutions;
+	}
+
+	public void setNewRelatedInstitutions(
+			List<ArchivalInstitution> newRelatedInstitutions) {
+		this.newRelatedInstitutions = newRelatedInstitutions;
+	}
+	
+	public List<String> getIngestedIdentifiersClone() {
+		return this.ingestedIdentifiersClone;
+	}
+
+	public List<ArchivalInstitution> getNewInstitutionsFile() {
+		return this.newInstitutionsFile;
+	}
+
+	public List<ArchivalInstitution> getInstitutionsToBeDeleted() {
+		return this.institutionsToBeDeleted;
+	}
+
+	public List<ArchivalInstitution> getOldSameIdentifierInstitutionsFile() {
+		return this.oldSameIdentifierInstitutionsFile;
+	}
+
+	public List<ArchivalInstitution> getNewSameIdentifierInstitutionsFile() {
+		return this.newSameIdentifierInstitutionsFile;
+	}
+
+	public List<ArchivalInstitution> getOldEmptyIdentifierInstitutionsFile() {
+		return this.oldEmptyIdentifierInstitutionsFile;
+	}
+
+	public List<ArchivalInstitution> getNewEmptyIdentifierInstitutionsFile() {
+		return this.newEmptyIdentifierInstitutionsFile;
+	}
+	
 	public void setHttpFile(File httpFile){
 		this.httpFile = httpFile;
 	}
 	
 	public List<ArchivalInstitution> getTotalInstitutions() {
-		return totalInstitutions;
-	}
-
-	public List<ArchivalInstitution> getUpdatedInstitutions() {
-		return updatedInstitutions;
+		return this.totalInstitutions;
 	}
 
 	public List<ArchivalInstitution> getDeletedInstitutions() {
-		return deletedInstitutions;
+		return this.deletedInstitutions;
 	}
 
 	public List<ArchivalInstitution> getNotChangedInstitutions() {
-		return notChangedInstitutions;
+		return this.notChangedInstitutions;
 	}
 
 	public List<ArchivalInstitution> getInsertedInstitutions() {
-		return insertedInstitutions;
+		return this.insertedInstitutions;
 	}
 
 	public void setHttpFileFileName(String httpFileFileName) {
@@ -201,7 +217,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	public String getAiArchivalInstitutionName() {
-		return aiArchivalInstitutionName;
+		return this.aiArchivalInstitutionName;
 	}
 
 	public void setAiArchivalInstitutionName(String aiArchivalInstitutionName) {
@@ -241,25 +257,62 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		this.invalidChars = invalidChars;
 	}
 
+	/**
+	 * Upload main action
+	 * @return Struts.STATE
+	 * @throws SAXException
+	 * @throws APEnetException
+	 */
 	public String upload() throws SAXException, APEnetException{
 		String state = ERROR;
+		String httpFileFileName = SecurityContext.get().getCountryIsoname().toUpperCase() + "AL.xml";
+		File httpFile = new File(APEnetUtilities.getConfig().getRepoDirPath() + 
+				File.separatorChar +SecurityContext.get().getCountryIsoname().toUpperCase() +
+				File.separatorChar + "AL"+ File.separatorChar +
+				httpFileFileName);
 		try {
-			state = checkUnzipAndUpload(this.httpFile,this.httpFileFileName,true);
+			if(this.httpFile==null && this.httpFileFileName==null){
+				//use temp file
+				fillMainFiles();
+				if(!this.httpFile.exists()){
+					this.httpFile = null;
+					this.httpFileFileName = null;
+				}
+			}
+			state = checkUnzipAndUpload();
 		} catch (IOException e) {
 			log.error(e);
+		} finally {
+			if(state!=null && this.httpFile!=null){
+				try {
+					if(httpFile.exists()){
+						httpFile.delete(); //deletes possibles old files
+					}
+					if(!state.equals(ERROR)){
+						FileUtils.moveFile(this.httpFile, httpFile); //copy to be used in the next oction
+					}
+				} catch (IOException e) {
+					log.error("Error trying to remove old file: "+httpFile.getPath()+", country: "+SecurityContext.get().getCountryIsoname(),e);
+				}
+			}
 		} 
 		return state;
 	}
-	private String checkUnzipAndUpload(File httpFile, String httpFileFileName,boolean execute) throws IOException, SAXException, APEnetException {
-		if(this.httpFile!=null && ((this.httpFileFileName!=null && execute) || (!execute))){
+	/**
+	 * Main launcher of logic.
+	 * Unzip and call checks for ingest process.
+	 * @return Struts.STATE
+	 * @throws IOException
+	 * @throws SAXException
+	 * @throws APEnetException
+	 */
+	private String checkUnzipAndUpload() throws IOException, SAXException, APEnetException {
+		boolean error = false;
+		if(this.httpFile!=null && this.httpFileFileName!=null){
 			String path = this.httpFile.getAbsolutePath();
 			String format = this.httpFileFileName.substring(this.httpFileFileName.lastIndexOf(".") + 1).toLowerCase();
 			if(format.equalsIgnoreCase("xml")){
-				if(execute){
-					return ingestArchivalLandscapeXML();
-				}else{
-					return displayBeforeAfterTrees();
-				}
+				return checkOverwrite();
 			}else if(format.equals("zip") && path.contains(File.separator)){ //1. unzip
 	        	path = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + APEnetUtilities.FILESEPARATOR;
 				String tempPath = path + "tmp" + this.httpFileFileName + new Date().getTime() + APEnetUtilities.FILESEPARATOR;	//This is the path in which the zip files are going to be unzipped
@@ -295,17 +348,16 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					}
 					if(found){ //3. launch logic for AL.xml file
 						try{
-							if(execute){
-								return ingestArchivalLandscapeXML();
-							}else{
-								return displayBeforeAfterTrees();
-							}
+							return checkOverwrite();
 						}catch(Exception e){
 							log.error("Error trying to manage AL uploaded" + APEnetUtilities.generateThrowableLog(e));
+							error = true;
 						}finally{
 							if(pathFile.canWrite()){ //it's a temp file, so it should be removed.
 								try {
-									FileUtils.deleteDirectory(pathFile);
+									if(error){
+										FileUtils.deleteDirectory(pathFile);
+									}
 								} catch (IOException e) {
 									log.error("Error trying to delete temp AL path, directory will keep there: "+pathFile.getAbsolutePath());
 								}
@@ -316,6 +368,451 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			}
 		}
 		return ERROR;
+	}
+	/**
+	 * Checks if there is needed an overwrite, if not continues 
+	 * with the normal process (old new implementation).
+	 * @return Struts.STATE
+	 */
+	private String checkOverwrite() {
+		String state = INPUT;
+
+		// Checks the country for the current file.
+		if (this.httpFile == null) {
+			this.fillMainFiles();
+		}
+		if (!this.checkCountryCode()) {
+			return ERROR_COUNTRY;
+		}
+
+		ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
+		List<ArchivalInstitution> archivalInstitutions = aiDao.getArchivalInstitutionsByCountryId(SecurityContext.get().getCountryId());
+		if(archivalInstitutions==null || archivalInstitutions.size()==0){
+			state = SUCCESS;
+			try {
+				state = ingestArchivalLandscapeXML();
+			} catch (Exception e) {
+				state = ERROR;
+				log.error("Exception catched calling ingestArchivalLandscapeXML() method",e);
+			}
+		}
+		return state;
+	}
+	/**
+	 * Cancel (clean) action.
+	 * @return Structs.STATE
+	 */
+	public String cancelOverwrite(){
+		String state = SUCCESS;
+		//fill main files to be used
+		fillMainFiles();
+		if(this.httpFile!=null && this.httpFile.exists()){
+			int clearState = 0;
+			this.httpFile.delete();
+			clearState = 1;
+			if(clearState>0){
+				this.httpFile = new File(this.httpFile.getAbsolutePath()+".tmp");
+				if(this.httpFile!=null && this.httpFile.exists()){
+					this.httpFile.delete();
+					clearState = 2;
+				}
+			}
+		}
+		return state;
+	}
+
+	private void fillMainFiles() {
+		this.httpFileFileName = SecurityContext.get().getCountryIsoname().toUpperCase() + "AL.xml";
+		this.httpFile = new File(APEnetUtilities.getConfig().getRepoDirPath() + 
+			File.separatorChar +SecurityContext.get().getCountryIsoname().toUpperCase() +
+			File.separatorChar + "AL"+ File.separatorChar +
+			this.httpFileFileName);
+	}
+
+	public String checkReportAndIngestLogic() throws SAXException, APEnetException {
+		String state = INVALID;
+		//fill main files to be used
+		fillMainFiles();
+		if(rightXml()){
+			//return ingestArchivalLandscapeXML();
+			return reportAction();
+		}
+		return state;
+	}
+	/**
+	 * Launch all validations.
+	 * 
+	 * @return boolean.RIGHT
+	 */
+	private boolean rightXml(){
+		boolean right = true;
+		//validate xml structure
+		try {
+			validateUploadedAL(this.httpFile);
+		} catch (SAXException e) {
+			right = false;
+			log.error("Error in SAX format: ",e);
+		} catch (APEnetException e) {
+			right = false;
+			log.error(e);
+		}
+		if(this.warnings_ead!=null && this.warnings_ead.size()>0){
+			right = false;
+			Iterator<String> itWarnings = this.warnings_ead.iterator();
+			while(itWarnings.hasNext()){
+				addActionError(itWarnings.next());
+			}
+		}
+		if(right){
+			//validate country code
+			if(this.checkCountryCode()) {
+				//validate indexed institutions
+				Collection<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile);
+				Collection<String> internalIdentifiers = ArchivalLandscapeUtils.checkIdentifiersForArchivalInstitutionStructure(archivalInstitutions);
+				if(internalIdentifiers!=null){ //check result
+					String result = checkIfSomeInstitutionIsIngestedAndHasContentIndexed(archivalInstitutions);
+					boolean noContentIndexed = result!=null && result.equals(SUCCESS);
+					if(!noContentIndexed){ //checks names for institutions that has content indexed, if they are not into the file -> then "no valid"
+						ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
+						List<ArchivalInstitution> indexedInstitutions = aiDao.getArchivalInstitutionsWithSearchableItems(SecurityContext.get().getCountryId(), null);
+						right = checkIndexedInstitutions(indexedInstitutions,archivalInstitutions);
+					}
+				}
+				right = right && internalIdentifiers!=null;
+			}else{
+				right = false;
+			}
+		}
+		return right;
+	}
+
+	/**
+	 * Checks if the AL uploaded is for the current country.
+	 *
+	 * @return boolean
+	 */
+	private boolean checkCountryCode() {
+		boolean right = false;
+		String countryCode = ArchivalLandscapeUtils.getXMLEadidCountrycode(this.httpFile);
+		if(countryCode!=null && countryCode.equalsIgnoreCase(SecurityContext.get().getCountryIsoname())){
+			right = true;
+		}
+
+		return right;
+	}
+
+	/**
+	 * Checks two structures, indexed institutions with target structure.
+	 * The first structure is plain (probably obtained by DDBB query)
+	 * The second structure is in a tree way (probably obtained by a file parsed to an structured no plain) 
+	 * @param indexedInstitutions
+	 * @param archivalFileInstitutions
+	 * @return Boolean - is right structure
+	 */
+	private boolean checkIndexedInstitutions(List<ArchivalInstitution> indexedInstitutions,Collection<ArchivalInstitution> archivalFileInstitutions) {
+		boolean exit = false;
+		if(this.relatedInstitutionsByName==null){ //used recursively, needs a check 
+			this.relatedInstitutionsByName = new HashMap<ArchivalInstitution,ArchivalInstitution>();
+		}
+		Iterator<ArchivalInstitution> itIndexedInstitutions = indexedInstitutions.iterator();
+		while(!exit && itIndexedInstitutions.hasNext()){ //check by each institution indexed
+			ArchivalInstitution indexedInstitution = itIndexedInstitutions.next();
+			boolean found = false;
+			Iterator<ArchivalInstitution> archivalFileInstitutionsIterator = archivalFileInstitutions.iterator();
+			String indexedName = indexedInstitution.getAiname();
+			while(!found && archivalFileInstitutionsIterator.hasNext()){
+				ArchivalInstitution iteratedInstitution = archivalFileInstitutionsIterator.next();
+				String name = iteratedInstitution.getAiname();
+				if(name.equalsIgnoreCase(indexedName)){
+					this.relatedInstitutionsByName.put(indexedInstitution, iteratedInstitution);
+					found = true;
+				}else if(iteratedInstitution.isGroup()){ //check childrens
+					found = checkChildrenIndexedInstitutionRecursive(iteratedInstitution.getChildArchivalInstitutions(),indexedInstitution);
+					//found = this.relatedInstitutionsByName.containsKey(indexedInstitution); //it's replaced by returning state, TODO: check if it's valid in all cases
+				}
+			}
+			exit = !found; //all institutions must be founded, if not exit and return state
+		}
+		return (!exit && (indexedInstitutions!=null && this.relatedInstitutionsByName.size()==indexedInstitutions.size())); //found all institutions indexed (yes = true, no = false)
+	}
+	/**
+	 * Check for checkIndexedInstitutions - recursive. 
+	 * It should be called by checkIndexedInstitutions.
+	 * 
+	 * @param childArchivalInstitutions
+	 * @param indexedInstitution
+	 */
+	private boolean checkChildrenIndexedInstitutionRecursive(List<ArchivalInstitution> childArchivalInstitutions,ArchivalInstitution indexedInstitution) {
+		boolean found = false;
+		if(childArchivalInstitutions!=null){
+			Iterator<ArchivalInstitution> itChildren = childArchivalInstitutions.iterator();
+			while(!found && itChildren.hasNext()){
+				ArchivalInstitution iteratedInstitution = itChildren.next();
+				String name = iteratedInstitution.getAiname();
+				String indexedName = indexedInstitution.getAiname();
+				if(name.equalsIgnoreCase(indexedName)){
+					this.relatedInstitutionsByName.put(indexedInstitution, iteratedInstitution);
+					found = true;
+				}else if(iteratedInstitution.isGroup()){ //check childrens
+					checkChildrenIndexedInstitutionRecursive(iteratedInstitution.getChildArchivalInstitutions(),indexedInstitution);
+					found = this.relatedInstitutionsByName.containsKey(indexedInstitution);
+				}
+			}
+		}
+		return found;
+	}
+	/**
+	 * Action which displays the report from temporal file 
+	 * while it's not being uploaded.
+	 * @return Struts.STATE
+	 */
+	public String reportAction(){
+		if(this.httpFile==null){
+			fillMainFiles();
+		}
+		Collection<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile);
+		return displayReport(archivalInstitutions);
+	}
+	
+	/**
+	 * Action which displays three list, inserts, updates and deleted
+	 * @param archivalInstitutions
+	 * @return String <=> (Action.INPUT)
+	 */
+	private String displayReport(Collection<ArchivalInstitution> archivalInstitutions){
+		//all ingested identifiers, to be used for checks if there are deletes
+		ArchivalInstitutionDAO dao = DAOFactory.instance().getArchivalInstitutionDAO();
+		List<String> ingestedIdentifiers = dao.getArchivalInstitutionInternalIdentifiersByCountryId(SecurityContext.get().getCountryId());
+		List<ArchivalInstitution> ingestedInstitutions = dao.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),false);
+		//new inserts (by institutions identifiers)
+		boolean newIdentifiers = institutionHasNewIdentifiers(archivalInstitutions,ingestedIdentifiers);
+		List<String> fileIdentifiers = ArchivalLandscapeUtils.getIdentifiersFromArchivalInstitutionStructure(archivalInstitutions);
+		List<ArchivalInstitution> institutionsOutOfFileByIdentifier = null;
+		if(newIdentifiers){
+			institutionsOutOfFileByIdentifier = dao.getArchivalInstitutionsByCountryIdUnless(SecurityContext.get().getCountryId(), fileIdentifiers, false);
+			//TODO tries to match up institutionsOutOfFile by name
+			this.relatedInstitutionsByName = null;
+			//next use institutions
+			checkIndexedInstitutions(institutionsOutOfFileByIdentifier,archivalInstitutions);
+//			this.apparentlyNewInstitutions = ArchivalLandscapeUtils.getExcludedInstitutions(archivalInstitutions,ingestedIdentifiers);
+		}
+		this.newInstitutionsFile = ArchivalLandscapeUtils.parseCollectionToPlainList(archivalInstitutions); //parse structure to a plain list to be displayed into jsp by an iterator
+		//clean institutions from file 
+		//this.fileIdentifiersClone.removeAll(ingestedInstitutions);
+		Iterator<ArchivalInstitution> itFiles = this.newInstitutionsFile.iterator();
+		List<ArchivalInstitution> tempListIdentifiersClone = new ArrayList<ArchivalInstitution>(this.newInstitutionsFile);
+		while(itFiles.hasNext()){
+			ArchivalInstitution institutionFile = itFiles.next();
+			boolean found = false;
+			Iterator<ArchivalInstitution> itIngestedInstitutions = ingestedInstitutions.iterator();
+			while(!found && itIngestedInstitutions.hasNext()){
+				ArchivalInstitution ingestedInstitution = itIngestedInstitutions.next();
+				if(ingestedInstitution.getInternalAlId().equals(institutionFile.getInternalAlId())){
+					tempListIdentifiersClone.remove(institutionFile);
+					found = true;
+				}
+			}
+			if(this.oldRelatedInstitutions!=null){
+				Iterator<ArchivalInstitution> itOldRelatedInstitutions = this.oldRelatedInstitutions.iterator();
+				//only get into if !found
+				while(!found && itOldRelatedInstitutions.hasNext()){
+					ArchivalInstitution relatedByNameInstitution = itOldRelatedInstitutions.next();
+					if(relatedByNameInstitution.getInternalAlId().equals(institutionFile.getInternalAlId())){
+						tempListIdentifiersClone.remove(institutionFile);
+						found = true;
+					}
+				}
+			}
+		}
+
+		// Same identifiers.
+		this.oldSameIdentifierInstitutionsFile = new ArrayList<ArchivalInstitution>();
+		if (archivalInstitutions != null) {
+			Map<String,List<ArchivalInstitution>> institutionsSameIDMap = ArchivalLandscapeUtils.getInstitutionsWithSameIdentifierFromArchivalInstitutionStructure(archivalInstitutions);
+			if (institutionsSameIDMap != null && !institutionsSameIDMap.isEmpty()) {
+				Iterator<String> keysIt = institutionsSameIDMap.keySet().iterator();
+				while (keysIt.hasNext()) {
+					String key = keysIt.next();
+					if(key!=null && !key.isEmpty()){
+						this.oldSameIdentifierInstitutionsFile.addAll(institutionsSameIDMap.get(key));
+					}
+				}
+			}
+			// Assign the new list the values of the old list.
+			this.newSameIdentifierInstitutionsFile = new ArrayList<ArchivalInstitution>(this.oldSameIdentifierInstitutionsFile);
+			// Remove institutions from the new institutions list.
+			this.newInstitutionsFile.removeAll(this.oldSameIdentifierInstitutionsFile);
+			tempListIdentifiersClone.removeAll(this.oldSameIdentifierInstitutionsFile);
+		}
+
+		// Empty identifiers.
+		this.oldEmptyIdentifierInstitutionsFile = new ArrayList<ArchivalInstitution>();
+		if (archivalInstitutions != null) {
+			this.oldEmptyIdentifierInstitutionsFile = (List<ArchivalInstitution>) ArchivalLandscapeUtils.getInstitutionsWithEmptyIdFromArchivalInstitutionStructure(archivalInstitutions);
+
+			// Assign the new list the values of the old list.
+			this.newEmptyIdentifierInstitutionsFile = new ArrayList<ArchivalInstitution>(this.oldEmptyIdentifierInstitutionsFile);
+
+			// Remove institutions from the new institutions list.
+			this.newInstitutionsFile.removeAll(this.oldEmptyIdentifierInstitutionsFile);
+			tempListIdentifiersClone.removeAll(this.oldEmptyIdentifierInstitutionsFile);
+		}
+
+		//updates
+		this.updatedInstitutions = new ArrayList<ArchivalInstitution>();
+		if(ingestedInstitutions!=null){
+			Iterator<ArchivalInstitution> ingestedInstitutionIt = ingestedInstitutions.iterator();
+			while(ingestedInstitutionIt.hasNext()){
+				ArchivalInstitution ingestedInstitution = ingestedInstitutionIt.next();
+				ArchivalInstitution archivalInstitution = ArchivalLandscapeUtils.getInstitutionFromArchivalInstitutionStructure(ingestedInstitution,archivalInstitutions);
+				if(archivalInstitution!=null){ //if null there is not updated possible
+					//check parents, if they are the same
+					if(!ArchivalLandscapeUtils.checkIfTwoInstitutionsHasTheSameParents(ingestedInstitution,archivalInstitution)){
+						this.updatedInstitutions.add(archivalInstitution);
+					}
+				}
+			}
+		}
+		List<String> oldIdentifiers = new ArrayList<String>();
+		List<String> newListIdentifiers = new ArrayList<String>();
+		List<ArchivalInstitution> newListInstitutions = new ArrayList<ArchivalInstitution>();
+		List<String> updateIdentifiers = new ArrayList<String>();
+		this.oldRelatedInstitutions = new LinkedList<ArchivalInstitution>();
+		if(this.relatedInstitutionsByName!=null && this.relatedInstitutionsByName.size()>0){
+			this.newRelatedInstitutions = new LinkedList<ArchivalInstitution>();
+			Iterator<ArchivalInstitution> keysIt = this.relatedInstitutionsByName.keySet().iterator();
+			while(keysIt.hasNext()){
+				ArchivalInstitution keyInstitution = keysIt.next();
+				// Check if the current Archival institutions has the same name that one in the
+				// same identifiers or empty identifiers lists.
+				boolean add = true;
+				if (this.oldSameIdentifierInstitutionsFile != null && !this.oldSameIdentifierInstitutionsFile.isEmpty()) {
+					Iterator<ArchivalInstitution> keysSameIdIt = new ArrayList<ArchivalInstitution>(this.oldSameIdentifierInstitutionsFile).iterator();
+					while (add && keysSameIdIt.hasNext()) {
+						ArchivalInstitution sameIdInstitution = keysSameIdIt.next();
+						if (sameIdInstitution.getAiname().equals(keyInstitution.getAiname())) {
+							tempListIdentifiersClone.remove(sameIdInstitution);
+							add = false;
+						}
+					}
+				}
+				if (add && this.oldEmptyIdentifierInstitutionsFile != null && !this.oldEmptyIdentifierInstitutionsFile.isEmpty()) {
+					Iterator<ArchivalInstitution> keysEmptyIdIt = new ArrayList<ArchivalInstitution>(this.oldEmptyIdentifierInstitutionsFile).iterator();
+					while (add && keysEmptyIdIt.hasNext()) {
+						ArchivalInstitution emptyIdInstitution = keysEmptyIdIt.next();
+						if (emptyIdInstitution.getAiname().equals(keyInstitution.getAiname())) {
+							tempListIdentifiersClone.remove(emptyIdInstitution);
+							add = false;
+						}
+					}
+				}
+
+				if (add) {
+					this.oldRelatedInstitutions.add(keyInstitution);
+					//update list
+					String index = keyInstitution.getInternalAlId();
+					updateIdentifiers.add(index);
+					//end update list
+					oldIdentifiers.add(keyInstitution.getInternalAlId());
+					ArchivalInstitution valueInstitution = this.relatedInstitutionsByName.get(keyInstitution);
+					newListIdentifiers.add(valueInstitution.getInternalAlId());
+					newListInstitutions.add(valueInstitution);
+					this.newRelatedInstitutions.add(valueInstitution);
+					//updates insert list, removing related institution which contains inserts and updates with same names
+					Iterator<ArchivalInstitution> itList = tempListIdentifiersClone.iterator();
+					boolean found = false;
+					while(!found && itList.hasNext()){
+						ArchivalInstitution tempInsti = itList.next();
+						if(tempInsti.getInternalAlId().equals(valueInstitution.getInternalAlId())){
+							found = true;
+							tempListIdentifiersClone.remove(tempInsti);
+						}
+					}
+				}
+			}
+			this.newInstitutionsFile.removeAll(newListIdentifiers);
+		}
+
+		this.newInstitutionsFile = tempListIdentifiersClone; //insert list
+		//deletes
+		boolean deletes = ( (ingestedIdentifiers.size()>fileIdentifiers.size() && 
+					(this.oldSameIdentifierInstitutionsFile==null || this.oldSameIdentifierInstitutionsFile.size()==0)) ||
+					
+				(this.oldSameIdentifierInstitutionsFile!=null && this.oldSameIdentifierInstitutionsFile.size()>0 ) ||
+				(this.relatedInstitutionsByName!=null && this.relatedInstitutionsByName.size()>0) ||
+				(this.oldEmptyIdentifierInstitutionsFile!=null && this.oldEmptyIdentifierInstitutionsFile.size()>0)
+			);
+		if(deletes){
+			this.institutionsToBeDeleted = new ArrayList<ArchivalInstitution>();
+			List<ArchivalInstitution> institutionsDetected = new ArrayList<ArchivalInstitution>();
+			Iterator<ArchivalInstitution> itIngestedInstitutions = ingestedInstitutions.iterator();
+			while(itIngestedInstitutions.hasNext()){
+				ArchivalInstitution tempInstitution = itIngestedInstitutions.next();
+				Iterator<ArchivalInstitution> itFileArchivalInstitutions = archivalInstitutions.iterator();
+				boolean found = false;
+				if(fileIdentifiers.contains(tempInstitution.getInternalAlId()) || 
+						tempInstitution.getInternalAlId()==null ||
+						tempInstitution.getInternalAlId().trim().isEmpty()){
+					institutionsDetected.add(tempInstitution);
+				}else{
+					while(!found && itFileArchivalInstitutions.hasNext()){
+						ArchivalInstitution currentInstitution = itFileArchivalInstitutions.next();
+						String currentIdentifier = currentInstitution.getInternalAlId();
+						if(tempInstitution.getInternalAlId().equals(currentIdentifier)){
+							institutionsDetected.add(currentInstitution);
+							found = true;
+						}
+					}
+				}
+			}
+			itIngestedInstitutions = ingestedInstitutions.iterator();
+			List<ArchivalInstitution> cloneIngestedInstitutions = new ArrayList<ArchivalInstitution>(ingestedInstitutions);
+			while(itIngestedInstitutions.hasNext()){
+				ArchivalInstitution ingestedInstitution = itIngestedInstitutions.next();
+				boolean found = false;
+				Iterator<ArchivalInstitution> targetInstitutionsIt = institutionsDetected.iterator();
+				while(!found && targetInstitutionsIt.hasNext()){
+					ArchivalInstitution targetInstitution = targetInstitutionsIt.next();
+					String targetInternalIdentifier = targetInstitution.getInternalAlId();
+					if(ingestedInstitution.getInternalAlId().equals(targetInternalIdentifier)){
+						cloneIngestedInstitutions.remove(ingestedInstitution);
+						found = true;
+					}
+				}
+			}
+
+			// Check if the temp list contains an institution with same name that one in the
+			// same identifiers or empty identifiers lists.
+			if (cloneIngestedInstitutions != null) {
+				Iterator<ArchivalInstitution> keyInstitutionIt = new ArrayList<ArchivalInstitution>(cloneIngestedInstitutions).iterator();
+				while (keyInstitutionIt.hasNext()) {
+					ArchivalInstitution keyInstitution = keyInstitutionIt.next();
+					boolean found = false;
+					Iterator<ArchivalInstitution> keysSameIdIt = new ArrayList<ArchivalInstitution>(this.oldSameIdentifierInstitutionsFile).iterator();
+					while (!found && keysSameIdIt.hasNext()) {
+						ArchivalInstitution sameIdInstitution = keysSameIdIt.next();
+						if (sameIdInstitution.getAiname().equals(keyInstitution.getAiname())) {
+							cloneIngestedInstitutions.remove(keyInstitution);
+							found = true;
+						}
+					}
+					if (!found) {
+						Iterator<ArchivalInstitution> keysEmptyIdIt = new ArrayList<ArchivalInstitution>(this.oldEmptyIdentifierInstitutionsFile).iterator();
+						while (!found && keysEmptyIdIt.hasNext()) {
+							ArchivalInstitution emptyIdInstitution = keysEmptyIdIt.next();
+							if (emptyIdInstitution.getAiname().equals(keyInstitution.getAiname())) {
+								cloneIngestedInstitutions.remove(keysEmptyIdIt);
+								found = true;
+							}
+						}
+					}
+				}
+			}
+			this.institutionsToBeDeleted = cloneIngestedInstitutions;
+			this.institutionsToBeDeleted.removeAll(this.oldRelatedInstitutions);
+		}
+
+		return INPUT;
 	}
 
 	/**
@@ -342,35 +839,6 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		return found;
 	}
 	/**
-	 * Called into parseCollectionToPlainList method.
-	 * Functionality is very similar, but the different is the argument parent.
-	 * 
-	 * Parent is used to get all children and call to himself by recursive-way if needed.
-	 * 
-	 * @param parent
-	 * @return List<ArchivalInstition> plainArchivalInstitutions
-	 */
-	private List<ArchivalInstitution> checkChild(ArchivalInstitution parent){
-		List<ArchivalInstitution> archivalInstitutionList = new ArrayList<ArchivalInstitution>();
-		log.debug("children check for parent: "+parent.getAiname());
-		Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(parent.getChildArchivalInstitutions());
-		Iterator<ArchivalInstitution> itChildren = children.iterator();
-		while(itChildren.hasNext()){
-			ArchivalInstitution institution = itChildren.next();
-			if(institution.isGroup()){
-				log.debug("Group: "+institution.getAiname()+" parent: "+parent.getAiname());
-				if(institution.getChildArchivalInstitutions()!=null && institution.getChildArchivalInstitutions().size()>0){
-					archivalInstitutionList.addAll(checkChild(institution)); //recursive call
-				}
-			}else{
-				log.debug("Institution: "+institution.getAiname()+" parent: "+parent.getAiname());
-			}
-			institution.setParentAiId((institution.getParent()!=null)?institution.getParent().getAiId():null); //parent_ai_id fix for bad hibernate mapping
-			archivalInstitutionList.add(institution);
-		}
-		return archivalInstitutionList;
-	}
-	/**
 	 * Main function called to ingest all content.
 	 * 
 	 * This function is explited in two parts:
@@ -382,8 +850,11 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 * @throws APEnetException 
 	 * @throws SAXException 
 	 */
-	private String ingestArchivalLandscapeXML() throws SAXException, APEnetException {
+	public String ingestArchivalLandscapeXML() throws SAXException, APEnetException {
 		String state = ERROR;
+		if (this.httpFile == null) {
+			this.fillMainFiles();
+		}
 		Boolean firstState = ArchivalLandscape.checkIdentifiers(this.httpFile);
 		
 		if (firstState==null){
@@ -397,7 +868,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			this.setDuplicateIdentifiers(ArchivalLandscape.getDuplicateIdentifiers());
 			return ERROR_DUPLICATE_IDENTIFIERS;
 		} else{
-			String countryCode = getXMLEadidCountrycode(this.httpFile);
+			String countryCode = ArchivalLandscapeUtils.getXMLEadidCountrycode(this.httpFile);
 			if(countryCode!=null && countryCode.equalsIgnoreCase(SecurityContext.get().getCountryIsoname())){
 //				if(this.country==null){
 					this.country = DAOFactory.instance().getCountryDAO().getCountryByCname(SecurityContext.get().getCountryName());
@@ -405,7 +876,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 				Set<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile);
 				if(archivalInstitutions!=null){
 					try{
-						state = checkAndUpdateFromToDDBB(archivalInstitutions);
+						state = checkAndUpdateFromToDDBB(archivalInstitutions,true);
 					}catch(Exception e){
 						log.error("Exception checking institutions with ddbb to be replaced",e);
 					}
@@ -447,94 +918,6 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	//	return state;
 	}
 	
-	public String displayTrees(){
-		String state = ERROR;
-		try {
-			state = checkUnzipAndUpload(this.httpFile,this.httpFileFileName,false);
-		} catch (IOException e) {
-			log.error(e);
-		} catch (SAXException e) {
-			log.error(e);
-		} catch (APEnetException e) {
-			log.error(e);
-		} 
-		return state;
-	} 
-	
-	private String displayBeforeAfterTrees() throws IOException{
-		Writer writer = null;
-		try{
-			log.debug("Building tree for Archival Institution");
-			getServletRequest().setCharacterEncoding(UTF8);
-			getServletResponse().setCharacterEncoding(UTF8);
-			getServletResponse().setContentType("application/json");
-			writer = new OutputStreamWriter(getServletResponse().getOutputStream(),UTF8);
-			//begin json part
-			writer.append("{");
-			Set<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile);
-			if(archivalInstitutions!=null){
-				List<String> ingestedIdentifiers = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionInternalIdentifiersByCountryId(SecurityContext.get().getCountryId());
-				boolean newIdentifiers = institutionHasNewIdentifiers(archivalInstitutions,ingestedIdentifiers);
-				if(!newIdentifiers){
-					boolean isValid = checkIdentifiersForArchivalInstitutionStructure(archivalInstitutions);
-					if(!isValid){
-						log.debug("Some error has been detected related to checkIdentifiers for the given structure");
-						if(this.errors==null){
-							this.errors = new ArrayList<String>();
-						}
-						this.errors.add(getText("updateErrorFormatAL.error.identifiers"));
-						StringBuilder errorsSB = buildErrorsJSON();
-						writer.append(errorsSB);
-					}else{
-						writer.append("\"newtree\":");
-						writer.append(parseArchivalInstitutionsToJSON(archivalInstitutions));
-						//oldtree part, only if there are a valid new tree
-						ArchivalInstitutionDAO aiDao = DAOFactory.instance().getArchivalInstitutionDAO();
-						List<ArchivalInstitution> countryArchivalInstitutions = new LinkedList<ArchivalInstitution>(aiDao.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),true));
-						if(countryArchivalInstitutions!=null){
-							writer.append(",\"oldtree\":");
-							writer.append(parseArchivalInstitutionsToJSON(countryArchivalInstitutions));
-						}
-						//now put texts values ("question","yes","no",..)
-						writer.append(",\"question\":");
-						writer.append("\""+getText("al.message.areyousureyouwanttocontinue")+"\"");
-						writer.append(",\"yes\":");
-						writer.append("\""+getText("content.message.yes")+"\"");
-						writer.append(",\"no\":");
-						writer.append("\""+getText("content.message.no")+"\"");
-						writer.append(",\"oldtreeMessage\":");
-						writer.append("\""+getText("al.message.oldtree")+"\"");
-						writer.append(",\"newtreeMessage\":");
-						writer.append("\""+getText("al.message.newtree")+"\"");
-						writer.append(",\"status\":");
-						writer.append("\""+getText("al.message.previewisbeingdisplayed")+"\"");//Preview is being displayed bellow
-					}
-				}else{
-					log.debug("Detected some new identifier, stopping the proccess and reporting to user");
-					if(this.errors==null){
-						this.errors = new ArrayList<String>();
-					}
-					this.errors.add(getText("updateErrorFormatAL.error.identifiers.new"));
-					StringBuilder errorsSB = buildErrorsJSON();
-					writer.append(errorsSB);
-				}
-			}else{
-				StringBuilder errorsSB = buildErrorsJSON();
-				writer.append(errorsSB);
-			}
-			writer.append("}");
-			//end json part
-			writer.flush();
-		}catch(Exception e){
-			log.error(e.getMessage() + APEnetUtilities.generateThrowableLog(e));
-		}finally{
-			if(writer!=null){
-				writer.close();
-			}
-		}
-		return SUCCESS;
-	}
-
 	private boolean institutionHasNewIdentifiers(Collection<ArchivalInstitution> newArchivalInstitutionStructure,List<String> ingestedIdentifiers) {
 		boolean state = false;
 		if(newArchivalInstitutionStructure!=null){
@@ -556,84 +939,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		}
 		return state;
 	}
-
-	private StringBuilder buildErrorsJSON(){
-		StringBuilder writer = new StringBuilder();
-		writer.append("\"error\":");
-		if(this.errors!=null && this.errors.size()>0){
-			String message = "";
-			Iterator<String> it = this.errors.iterator();
-			while(it.hasNext()){
-				message += it.next();
-			}
-			writer.append("\""+message+"\"");//Preview is being displayed bellow
-		}else{
-			writer.append("\""+getText("al.message.error.badarchivallandscapedetected")+"\"");//Preview is being displayed bellow
-		}
-		return writer;
-	}
-
-	private StringBuilder parseArchivalInstitutionsToJSON(Collection<ArchivalInstitution> archivalInstitutions) {
-		StringBuilder json = new StringBuilder();
-		json.append("[");
-		Iterator<ArchivalInstitution> itInstitutions = archivalInstitutions.iterator();
-		while(itInstitutions.hasNext()){
-			ArchivalInstitution institution = itInstitutions.next();
-			json.append(buildArchivalInstitutionJSON(institution));
-			if(itInstitutions.hasNext()){
-				json.append(",");
-			}
-		}
-		json.append("]");
-		return json;
-	}
-
-	private StringBuilder buildArchivalInstitutionJSON(ArchivalInstitution institution) {
-		StringBuilder json = new StringBuilder(); //{ "title": "Node 1", "key": "k1", "isLazy": true }
-		json.append("{");
-		String institutionName = institution.getAiname();
-		if(institutionName!=null && institutionName.length()>0){
-			if(institutionName.contains("\"")){
-				institutionName = institutionName.replace("\"","'");
-			}
-			if(institutionName.contains(",")){
-				institutionName.replace(",","%2C");
-			}
-			if(institutionName.contains("{")){
-				institutionName.replace("{","%7B");
-			}
-			if(institutionName.contains("}")){
-				institutionName.replace("}","%7D");
-			}
-			try {
-				URLEncoder.encode(institutionName,"UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				log.error("Could not be parsed by URLEncode.encode function: "+e.getMessage());
-			}
-		}
-		json.append("\"title\":\""+institutionName+"\",");
-		json.append("\"key\":\""+institution.getInternalAlId()+"\"");
-		if(institution.isGroup()){
-			json.append(",\"isLazy\":\"true\"");
-			json.append(",\"isFolder\":\"true\"");
-			List<ArchivalInstitution> children = new LinkedList<ArchivalInstitution>(institution.getChildArchivalInstitutions());
-			if(children!=null && children.size()>0){
-				json.append(",\"children\":[");
-				Iterator<ArchivalInstitution> childrenIt = children.iterator();
-				while(childrenIt.hasNext()){
-					ArchivalInstitution child = childrenIt.next();
-					json.append(buildArchivalInstitutionJSON(child));
-					if(childrenIt.hasNext()){
-						json.append(",");
-					}
-				}
-				json.append("]");
-			}
-		}
-		json.append("}");
-		return json;
-	}
-
+	
 	/**
 	 * Checks and work with an archival_institution structure.
 	 * Tries to insert, update and delete institutions.
@@ -642,61 +948,58 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 * @return validOperation
 	 * @throws IOException 
 	 */
-	private String checkAndUpdateFromToDDBB(Collection<ArchivalInstitution> archivalInstitutions) throws IOException {
+	public String checkAndUpdateFromToDDBB(Collection<ArchivalInstitution> archivalInstitutions,boolean useddbb) throws IOException {
 		String validOperation = SUCCESS; //flag used to rollback the process when some rule is wrong
 		Integer state = 0;
 		if(archivalInstitutions!=null){
 			try{
-				List<String> ingestedIdentifiers = DAOFactory.instance().getArchivalInstitutionDAO().getArchivalInstitutionInternalIdentifiersByCountryId(SecurityContext.get().getCountryId());
-				boolean newIdentifiers = institutionHasNewIdentifiers(archivalInstitutions,ingestedIdentifiers);
-				if(newIdentifiers){
-					log.debug("New identifiers have been detected, stopping and reporting to user");
-					validOperation = ERROR_NEW_IDENTIFIERS;
+				Collection<String> internalIdentifiers = ArchivalLandscapeUtils.checkIdentifiersForArchivalInstitutionStructure(archivalInstitutions);
+				boolean isValid = internalIdentifiers!=null;
+				if(!isValid && useddbb){
+					log.debug("Some error has been detected related to checkIdentifiers for the given structure");
+					validOperation = ERROR_IDENTIFIERS;
 				}else{
-					boolean isValid = checkIdentifiersForArchivalInstitutionStructure(archivalInstitutions);
-					if(!isValid){
-						log.debug("Some error has been detected related to checkIdentifiers for the given structure");
-						validOperation = ERROR_IDENTIFIERS;
-					}else{
-						state = 1;
-						this.aIDAO = DAOFactory.instance().getArchivalInstitutionDAO();
-						this.aIANDAO = DAOFactory.instance().getAiAlternativeNameDAO();
-						//first gets all the current ingested institutions into DDBB
-						this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),false);
-						if(this.totalInstitutions!=null && this.totalInstitutions.size()>0){
-							log.debug("Archival landscape could not be ingested directly, there are some institutions to check. Checking...");
-							this.updatedInstitutions = new ArrayList<ArchivalInstitution>();
-							this.insertedInstitutions = new ArrayList<ArchivalInstitution>();
-							state = 2;
-							//check if some institution of the new archivalInstitutions is/are into system and has content indexed
-							validOperation = checkIfSomeInstitutionIsIngestedAndHasContentIndexed(archivalInstitutions);
-							if(validOperation.equalsIgnoreCase(SUCCESS)){
+					state = 1;
+					this.aIDAO = DAOFactory.instance().getArchivalInstitutionDAO();
+					this.aIANDAO = DAOFactory.instance().getAiAlternativeNameDAO();
+					//first gets all the current ingested institutions into DDBB
+					this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),false);
+					if(this.totalInstitutions!=null && this.totalInstitutions.size()>0){
+						log.debug("Archival landscape could not be ingested directly, there are some institutions to check. Checking...");
+						this.updatedInstitutions = new ArrayList<ArchivalInstitution>();
+						this.insertedInstitutions = new ArrayList<ArchivalInstitution>();
+						state = 2;
+						//check if some institution of the new archivalInstitutions is/are into system and has content indexed
+						validOperation = checkIfSomeInstitutionIsIngestedAndHasContentIndexed(archivalInstitutions);
+						if((validOperation.equalsIgnoreCase(SUCCESS) && useddbb) || (!useddbb)){
+							if(useddbb){
 								JpaUtil.beginDatabaseTransaction();
-								//when valid operation it's able to manage all ingested institutions/groups
-								this.deletedInstitutions = new ArrayList<ArchivalInstitution>();
-								
-								this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),true);
-								
-								checkAndUpdateArchivalInstitutions(null,archivalInstitutions); //new check
-								log.debug("Updated process has been finished successfull");
-								state = 3;
+							}
+							//when valid operation it's able to manage all ingested institutions/groups
+							this.deletedInstitutions = new ArrayList<ArchivalInstitution>();
+							
+							this.totalInstitutions = this.aIDAO.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),true);
+							checkAndUpdateArchivalInstitutions(null,archivalInstitutions,useddbb); //new check
+							log.debug("Updated process has been finished successfull");
+							state = 3;
 
-								log.debug("Inserting process for not updated institutions");
-								//do an insert for rest file institutions
-								String aiName = insertNotUpdatedInstitutions(archivalInstitutions,null);
-								if (aiName != null){
-									// this institution has any lang error and trans may be closed
-									state = 6;
-									log.debug("Institution has not lang");
-									validOperation = ERROR_LANG;//LANG_ERROR
-									JpaUtil.rollbackDatabaseTransaction();
-									this.setAiArchivalInstitutionName(aiName);
-									return validOperation;
-								}
-								log.debug("Done insert process!");
-								state = 4;
-//								//now delete all institutions which has not been updated (old institutions are not being processed)
-								//institutions to be deleted = totalDDBBinstitution - (institutionsUpdated + institutionsDeleted)
+							log.debug("Inserting process for not updated institutions");
+							//do an insert for rest file institutions
+							String aiName = insertNotUpdatedInstitutions(archivalInstitutions,null,useddbb);
+							if (aiName != null){
+								// this institution has any lang error and trans may be closed
+								state = 6;
+								log.debug("Institution has not lang");
+								validOperation = ERROR_LANG;//LANG_ERROR
+								JpaUtil.rollbackDatabaseTransaction();
+								this.setAiArchivalInstitutionName(aiName);
+								return validOperation;
+							}
+							log.debug("Done insert process!");
+							state = 4;
+							//now delete all institutions which has not been updated (old institutions are not being processed)
+							//institutions to be deleted = totalDDBBinstitution - (institutionsUpdated + institutionsDeleted)
+							if(useddbb){
 								this.deletedInstitutions = new ArrayList<ArchivalInstitution>(); //clean
 								boolean error = deleteSimpleUnusedInstitutions();
 								if(!error){
@@ -706,6 +1009,13 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 									//finally remove deleted files from ddbb if they existed
 									state = 10;
 									removePathsToBeDeleted();
+									//updates possible eag autform values
+									if(this.updatedInstitutions!=null){
+										Iterator<ArchivalInstitution> itUpdatedInstitutions = this.updatedInstitutions.iterator();
+										while(itUpdatedInstitutions.hasNext()){
+											ArchivalLandscapeUtils.insertUpdateEagWithArchivalLandscapeName(itUpdatedInstitutions.next());
+										}
+									}
 								}else{
 									state = 6;
 									log.debug("Invalid operation detected. There could be content into some institution.");
@@ -714,15 +1024,15 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 									rollbackDeletedPaths();
 								}
 							}
-						}else{ //this case is for an ingestion on empty country, only tries to store the target structure 
-							state = 7;
-							this.insertedInstitutions = new ArrayList<ArchivalInstitution>();
-							JpaUtil.beginDatabaseTransaction();
-							state = 8;
-							insertChildren(archivalInstitutions,null); //insert institution
-							JpaUtil.commitDatabaseTransaction();
-							state = 9;
 						}
+					}else{ //this case is for an ingestion on empty country, only tries to store the target structure 
+						state = 7;
+						this.insertedInstitutions = new ArrayList<ArchivalInstitution>();
+						JpaUtil.beginDatabaseTransaction();
+						state = 8;
+						insertChildren(archivalInstitutions,null,useddbb); //insert institution
+						JpaUtil.commitDatabaseTransaction();
+						state = 9;
 					}
 				}
 			}catch(Exception e){
@@ -769,83 +1079,6 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 				}
 			}
 		}
-	}
-
-	/**
-	 * Checks if some identifier is repeated.
-	 * It's used before do anything, and necessary for checks and 
-	 * discriminate states with archival institution edition.
-	 * @param archivalInstitutions
-	 * @return state<boolean>
-	 */
-	private boolean checkIdentifiersForArchivalInstitutionStructure(Collection<ArchivalInstitution> archivalInstitutions) {
-		boolean state = false;
-		if(archivalInstitutions!=null){
-			state = true; //at least for this moment
-			Set<String> internalIdentifiers = new HashSet<String>();
-			Iterator<ArchivalInstitution> it = archivalInstitutions.iterator();
-			while(it.hasNext() && state){
-				ArchivalInstitution tempAI = it.next();
-				String tempInternalIdentifier = tempAI.getInternalAlId();
-				if(internalIdentifiers.contains(tempInternalIdentifier)){
-					state = false;
-				}else{
-					internalIdentifiers.add(tempInternalIdentifier);
-					if(tempAI.isGroup()){
-						List<ArchivalInstitution> children = tempAI.getChildArchivalInstitutions();
-						if(children!=null && children.size()>0){
-							Iterator<ArchivalInstitution> itChildren = children.iterator();
-							while(state && itChildren.hasNext()){
-								ArchivalInstitution child = itChildren.next();
-								Set<String> childrenToAppend = checkIdentifiersForArchivalInstitutionChild(child,internalIdentifiers);
-								if(childrenToAppend!=null){
-									internalIdentifiers.addAll(childrenToAppend);
-								}else{
-									state = false;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		return state;
-	}
-	/**
-	 * Recursive method for checkIdentifiersForArchivalInstitutionStructure.
-	 * It returns null when repeated identifier is detected.
-	 */
-	private Set<String> checkIdentifiersForArchivalInstitutionChild(ArchivalInstitution child,Set<String> internalIdentifiersParents) {
-		Set<String> internalIdentifiers = new HashSet<String>();
-		if(child!=null){
-			String tempInternalIdentifier = child.getInternalAlId();
-			if(internalIdentifiersParents!=null){
-				if(!internalIdentifiersParents.contains(tempInternalIdentifier)){
-					internalIdentifiersParents.add(tempInternalIdentifier);
-					if(child.isGroup()){
-						List<ArchivalInstitution> children = child.getChildArchivalInstitutions();
-						if(children!=null && children.size()>0){
-							Iterator<ArchivalInstitution> it = children.iterator();
-							while(it.hasNext()){
-								ArchivalInstitution tempInstitution = it.next();
-								Set<String> tempIdentifiersToBeUsedInRecursiveFunction = internalIdentifiersParents;
-								tempIdentifiersToBeUsedInRecursiveFunction.addAll(internalIdentifiers);
-								Set<String> tempInternalIdentifiers = checkIdentifiersForArchivalInstitutionChild(tempInstitution,tempIdentifiersToBeUsedInRecursiveFunction);
-								tempIdentifiersToBeUsedInRecursiveFunction = null;
-								if(tempInternalIdentifiers!=null){
-									internalIdentifiers.addAll(tempInternalIdentifiers);
-								}else{
-									return null;
-								}
-							}
-						}
-					}
-				}else{
-					return null;
-				}
-			}
-		}
-		return internalIdentifiers;
 	}
 
 	private boolean deleteSimpleUnusedGroups() {
@@ -914,7 +1147,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 				Iterator<ArchivalInstitution> aiParentAIIt = parentAIList.iterator();
 				while (aiParentAIIt.hasNext()) {
 					ArchivalInstitution currentAI = aiParentAIIt.next();
-					institutionsToBeDeleted.addAll(this.orderChildsGroups(currentAI, archivalInstitutionList));
+					institutionsToBeDeleted.addAll(ArchivalLandscapeUtils.orderChildsGroups(currentAI, archivalInstitutionList));
 					institutionsToBeDeleted.add(currentAI);
 				}
 			} else {
@@ -927,42 +1160,12 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					}
 					
 					if (aiForChild.isGroup() && aiForChild.getParent() == null) {
-						institutionsToBeDeleted.addAll(this.orderChildsGroups(aiForChild, archivalInstitutionList));
+						institutionsToBeDeleted.addAll(ArchivalLandscapeUtils.orderChildsGroups(aiForChild, archivalInstitutionList));
 					}
 				}
 			}
 		}
 		return new ArrayList<ArchivalInstitution>(institutionsToBeDeleted);
-	}
-
-	/**
-	 * Method to order the child groups.
-	 *
-	 * @param archivalInstitution Current parent.
-	 * @param initialAIToBeDeleted List of ai to be deleted.
-	 * @return List of childs.
-	 */
-	private List<ArchivalInstitution> orderChildsGroups(ArchivalInstitution archivalInstitution, List<ArchivalInstitution> initialAIToBeDeleted) {
-		List<ArchivalInstitution> orderedChildList = new ArrayList<ArchivalInstitution>();
-		// Checks if institution is group.
-		if (archivalInstitution.isGroup()) {
-			List<ArchivalInstitution> childAIList = archivalInstitution.getChildArchivalInstitutions();
-			if (childAIList != null && !childAIList.isEmpty()) {
-				Iterator<ArchivalInstitution> childAIIt = childAIList.iterator();
-				while (childAIIt.hasNext()) {
-					ArchivalInstitution currentAI = childAIIt.next();
-					if (currentAI.isGroup()) {
-						orderedChildList.addAll(this.orderChildsGroups(currentAI, initialAIToBeDeleted));
-						if (initialAIToBeDeleted.contains(currentAI)) {
-							orderedChildList.add(currentAI);
-						}
-					}
-					
-				}
-			}
-		}
-		
-		return orderedChildList;
 	}
 
 	/**
@@ -975,7 +1178,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	private String checkIfSomeInstitutionIsIngestedAndHasContentIndexed(Collection<ArchivalInstitution> archivalInstitutions) {
 		String valid = SUCCESS;
 //		boolean exit = false;
-		List<ArchivalInstitution> archivalInstitutionsPlainList = parseCollectionToPlainList(archivalInstitutions); //parse archivalInstitutions structure to plain identifiers list structure
+		List<ArchivalInstitution> archivalInstitutionsPlainList = ArchivalLandscapeUtils.parseCollectionToPlainList(archivalInstitutions); //parse archivalInstitutions structure to plain identifiers list structure
 		if(this.totalInstitutions!=null && this.totalInstitutions.size()>0){
 			Iterator<ArchivalInstitution> itTotalInstitutions = this.totalInstitutions.iterator(); //DDBB ingested institutions
 			//first looper, total institutions ingested into DDBB
@@ -1000,8 +1203,8 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 							}
 
 							// Checks if the element changed its position inside AL hierarchy.
-							String pathToCurrentIngestedInstitution = buildParentsNode(currentIngestedInstitution);
-							String pathToPlainInstitution = buildParentsNode(plainInstitution);
+							String pathToCurrentIngestedInstitution = ArchivalLandscapeUtils.buildParentsNode(currentIngestedInstitution);
+							String pathToPlainInstitution = ArchivalLandscapeUtils.buildParentsNode(plainInstitution);
 							if (!pathToCurrentIngestedInstitution.equals(pathToPlainInstitution)) {
 								log.debug("The path for the current institution (" + pathToCurrentIngestedInstitution + ") hasn't the same name as the path for the institution to ingest (" + pathToPlainInstitution + ").");
 								error = true;
@@ -1069,33 +1272,11 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
-	 * Method to construct the path from the current element to the root level.
-	 *
-	 * @param parentArchivalInstitution Element to construct the path.
-	 * @return Path from the current element to root level.
-	 */
-	private String buildParentsNode(ArchivalInstitution parentArchivalInstitution) {
-		StringBuffer parents = new StringBuffer();
-		if(parentArchivalInstitution!=null){
-			log.debug("Building hierarchy for current element: " + parentArchivalInstitution.getAiname());
-			parents.append(parentArchivalInstitution.getInternalAlId());
-			while(parentArchivalInstitution.getParentAiId()!=null){
-				parentArchivalInstitution = parentArchivalInstitution.getParent();
-				parents.append(",");
-				parents.append(parentArchivalInstitution.getInternalAlId());
-			}
-			parents.append(",");
-		}
-		parents.append(SecurityContext.get().getCountryId());
-		return parents.toString();
-	}
-
-	/**
 	 * Insert not updated institutions. It should be the rest of the 
 	 * param Collection<ArchivalInstitution> not updated.
 	 * @param archivalInstitutions
 	 */
-	private String insertNotUpdatedInstitutions(Collection<ArchivalInstitution> archivalInstitutions,ArchivalInstitution parent) {
+	private String insertNotUpdatedInstitutions(Collection<ArchivalInstitution> archivalInstitutions,ArchivalInstitution parent,boolean useddbb) {
 		String strOut = null;
 		if(archivalInstitutions!=null){
 			Iterator<ArchivalInstitution> itAI = archivalInstitutions.iterator();
@@ -1116,14 +1297,14 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 						targetToBeInserted.setParent(this.groupsInsertedIntoDDBB.get(parent.getInternalAlId()));
 					}
 					try{
-						insertInstitution(targetToBeInserted); //it's the recurse method, so it's not needed call to himself (insertNotUpdatedInstitutions)
+						insertInstitution(targetToBeInserted,useddbb); //it's the recurse method, so it's not needed call to himself (insertNotUpdatedInstitutions)
 					}catch(DashboardAPEnetException e){
 						log.debug("Institution without lang: "+e.getMessage());
 						strOut= e.getMessage();
 						return strOut;
 					}
 				}else if(targetToBeInserted.isGroup() && targetToBeInserted.getChildArchivalInstitutions()!=null && targetToBeInserted.getChildArchivalInstitutions().size()>0){ //additional check children
-					strOut=insertNotUpdatedInstitutions(targetToBeInserted.getChildArchivalInstitutions(),targetToBeInserted);
+					strOut=insertNotUpdatedInstitutions(targetToBeInserted.getChildArchivalInstitutions(),targetToBeInserted,useddbb);
 				}
 			}
 		}
@@ -1186,45 +1367,6 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	/**
-	 * Parse a Collection<ArchivalInstitutions> currentStructure(Group1,Institution2,Group3,Institution4):
-	 * 
-	 * 1. - Group1
-	 * 1.1 - Group1.1
-	 * 1.1.1 - Institution1.1.1
-	 * 2. - Institution2
-	 * 3. - Group3
-	 * 3.1 - Institution3.1
-	 * 4. Institution4
-	 * 
-	 * to a plain List<ArchivalInstitution> allInstitutions:
-	 * 
-	 * (Group1,Group1.1,Institution1.1.1,Institution2,Group3,Institution3.1,Institution4).
-	 * 
-	 * @param archivalInstitutions
-	 * @return List<ArchivalInstitution>
-	 */
-	private List<ArchivalInstitution> parseCollectionToPlainList(Collection<ArchivalInstitution> archivalInstitutions) {
-		List<ArchivalInstitution> archivalInstitutionsPlainList = new ArrayList<ArchivalInstitution>();
-		if(archivalInstitutions!=null){
-			Iterator<ArchivalInstitution> it = archivalInstitutions.iterator();
-			while(it.hasNext()){
-				ArchivalInstitution institution = it.next();
-				if(institution.isGroup()){
-					log.debug("Group: "+institution.getAiname());
-					if(institution.getChildArchivalInstitutions()!=null){
-						archivalInstitutionsPlainList.addAll(checkChild(institution)); //call to get plain children
-					}
-				}else{
-					log.debug("Institution: "+institution.getAiname());
-				}
-				institution.setParentAiId((institution.getParent()!=null)?institution.getParent().getAiId():null); //parent_ai_id fix for bad hibernate mapping
-				archivalInstitutionsPlainList.add(institution);
-			}
-		}
-		return archivalInstitutionsPlainList;
-	}
-
-	/**
 	 * Checks if it's needed some delete operation.
 	 * 
 	 * @param currentIngestedArchivalInstitutions
@@ -1255,9 +1397,10 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 * 
 	 * @param target
 	 * @param archivalInstitutions
+	 * @param useddbb 
 	 * @return boolean (found or not)
 	 */
-	private boolean checkAndUpdateArchivalInstitutions(ArchivalInstitution target,Collection<ArchivalInstitution> archivalInstitutions) {
+	private boolean checkAndUpdateArchivalInstitutions(ArchivalInstitution target,Collection<ArchivalInstitution> archivalInstitutions, boolean useddbb) {
 		boolean found = false;
 		if(this.positions==null){
 			this.positions = new HashMap<String,Integer>();
@@ -1282,10 +1425,10 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					}
 					//2. start by parents institutions
 					log.debug("Checking root parents with size: "+parentInstitution.size());
-					found = checkParents(parentInstitution,archivalInstitutions);
+					found = checkParents(parentInstitution,archivalInstitutions,useddbb);
 				}
 			}else{ //search institution into all archivalInstitutions-tree
-				found = institutionUpdate(archivalInstitutions,target); //process to check recursively
+				found = institutionUpdate(archivalInstitutions,target,useddbb); //process to check recursively
 			}
 		}catch(Exception e){
 			log.error("Some bad happened trying to update institution",e);
@@ -1294,76 +1437,6 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 	
 	/**
-	 * Recursive function to check root parents and all his children when
-	 * target parent institution has other institutions pending of.
-	 * 
-	 * Returns boolean, if target institution is updated or not.
-	 * 
-	 * @param parentInstitutions
-	 * @param archivalInstitutions
-	 */
-	private boolean checkParents(List<ArchivalInstitution> parentInstitutions,Collection<ArchivalInstitution> archivalInstitutions) {
-		boolean found = false;
-		Iterator<ArchivalInstitution> itParentInstitution = parentInstitutions.iterator();
-		int correction = 0;
-		while(itParentInstitution.hasNext()){
-			ArchivalInstitution currentParent = itParentInstitution.next();
-			if(currentParent!=null){
-				log.debug("Checking parent: "+currentParent.getAiname());
-				//check parent
-				currentParent.setAlorder(currentParent.getAlorder()-correction);
-				found = institutionUpdate(archivalInstitutions,currentParent); //process to check recursively
-				log.debug("Check done, found: "+found);
-				//check child structure
-				if(currentParent.isGroup()){
-					//check each children first
-					Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(currentParent.getChildArchivalInstitutions());
-					if(children!=null && children.size()>0){
-						log.debug("Checking children with size: "+children.size());
-						checkParents(new ArrayList<ArchivalInstitution>(children),archivalInstitutions);
-					}
-				}
-			}else{
-				correction++;
-			}
-		}
-		return found;
-	}
-
-	/**
-	 * This function update an institution when it's found.
-	 * When it's found List<ArchivalInstitution> this.deletedInstitutions is updated
-	 * and the current founded institution is appended to this list.
-	 * 
-	 * It returns a boolean if the target Archival Institution is found or not.
-	 * 
-	 * @param archivalInstitutions
-	 * @param target
-	 */
-	private boolean institutionUpdate(Collection<ArchivalInstitution> archivalInstitutions, ArchivalInstitution target) {
-		boolean found = false;
-		Iterator<ArchivalInstitution> archivalInstitutionsIt = archivalInstitutions.iterator();
-		while(!found && archivalInstitutionsIt.hasNext()){
-			ArchivalInstitution archivalInstitution = archivalInstitutionsIt.next();
-			if(archivalInstitution.getInternalAlId()!=null && archivalInstitution.getInternalAlId().equals(target.getInternalAlId())){ //found
-				log.debug("Found institution equal: "+target.getAiname()+". Replacing node...");
-				found = true;
-				this.deletedInstitutions.add(target); //not needed for search afterwards
-				replaceNode(target,archivalInstitution); //replace node
-				log.debug("Replace done for institution: "+target.getAiname());
-			}else if(archivalInstitution.isGroup()){//not found
-				Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(archivalInstitution.getChildArchivalInstitutions());
-				if(children!=null && children.size()>0){
-					log.debug("Checking children with size: "+children.size());
-					found = institutionUpdate(children,target); //search into his children (not target, only archivalInstitutions provided).
-				}
-			}else{
-				log.debug("Institution not found. Checked institution: "+archivalInstitution.getAiname());
-			}
-		}
-		return found;
-	}
-	/**
 	 * Update the current node with the new information.
 	 * Institutions - Alternative Names are being updating.
 	 * If institution has children they are not being updated.
@@ -1371,7 +1444,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 * @param oldDDBBInstitution
 	 * @param updatedInstitution
 	 */
-	private boolean replaceNode(ArchivalInstitution oldDDBBInstitution,ArchivalInstitution updatedInstitution) {
+	protected boolean replaceNode(ArchivalInstitution oldDDBBInstitution,ArchivalInstitution updatedInstitution) {
 		boolean state = true;
 		//1. update institution information
 		oldDDBBInstitution.setAlorder(updatedInstitution.getAlorder());
@@ -1433,6 +1506,80 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		this.updatedInstitutions.add(oldDDBBInstitution);
 		return state;
 	}
+	
+	/**
+	 * Recursive function to check root parents and all his children when
+	 * target parent institution has other institutions pending of.
+	 * 
+	 * Returns boolean, if target institution is updated or not.
+	 * 
+	 * @param parentInstitutions
+	 * @param archivalInstitutions
+	 * @param useddbb 
+	 */
+	private boolean checkParents(List<ArchivalInstitution> parentInstitutions,Collection<ArchivalInstitution> archivalInstitutions, boolean useddbb) {
+		boolean found = false;
+		Iterator<ArchivalInstitution> itParentInstitution = parentInstitutions.iterator();
+		int correction = 0;
+		while(itParentInstitution.hasNext()){
+			ArchivalInstitution currentParent = itParentInstitution.next();
+			if(currentParent!=null){
+				log.debug("Checking parent: "+currentParent.getAiname());
+				//check parent
+				currentParent.setAlorder(currentParent.getAlorder()-correction);
+				found = institutionUpdate(archivalInstitutions,currentParent,useddbb); //process to check recursively
+				log.debug("Check done, found: "+found);
+				//check child structure
+				if(currentParent.isGroup()){
+					//check each children first
+					Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(currentParent.getChildArchivalInstitutions());
+					if(children!=null && children.size()>0){
+						log.debug("Checking children with size: "+children.size());
+						checkParents(new ArrayList<ArchivalInstitution>(children),archivalInstitutions,useddbb);
+					}
+				}
+			}else{
+				correction++;
+			}
+		}
+		return found;
+	}
+	
+	/**
+	 * This function update an institution when it's found.
+	 * When it's found List<ArchivalInstitution> this.deletedInstitutions is updated
+	 * and the current founded institution is appended to this list.
+	 * 
+	 * It returns a boolean if the target Archival Institution is found or not.
+	 * 
+	 * @param archivalInstitutions
+	 * @param target
+	 */
+	private boolean institutionUpdate(Collection<ArchivalInstitution> archivalInstitutions, ArchivalInstitution target,boolean useddbb) {
+		boolean found = false;
+		Iterator<ArchivalInstitution> archivalInstitutionsIt = archivalInstitutions.iterator();
+		while(!found && archivalInstitutionsIt.hasNext()){
+			ArchivalInstitution archivalInstitution = archivalInstitutionsIt.next();
+			if(archivalInstitution.getInternalAlId()!=null && archivalInstitution.getInternalAlId().equals(target.getInternalAlId())){ //found
+				log.debug("Found institution equal: "+target.getAiname()+". Replacing node...");
+				found = true;
+				this.deletedInstitutions.add(target); //not needed for search afterwards
+				if(useddbb){
+					replaceNode(target,archivalInstitution); //replace node
+				}
+				log.debug("Replace done for institution: "+target.getAiname());
+			}else if(archivalInstitution.isGroup()){//not found
+				Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(archivalInstitution.getChildArchivalInstitutions());
+				if(children!=null && children.size()>0){
+					log.debug("Checking children with size: "+children.size());
+					found = institutionUpdate(children,target,useddbb); //search into his children (not target, only archivalInstitutions provided).
+				}
+			}else{
+				log.debug("Institution not found. Checked institution: "+archivalInstitution.getAiname());
+			}
+		}
+		return found;
+	}
 
 	/**
 	 * Deletes a simple institution (this method doesn't 
@@ -1482,7 +1629,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 * @param parent
 	 * @throws DashboardAPEnetException 
 	 */
-	private void insertChildren(Collection<ArchivalInstitution> archivalInstitutions,ArchivalInstitution parent) throws DashboardAPEnetException {
+	private void insertChildren(Collection<ArchivalInstitution> archivalInstitutions,ArchivalInstitution parent,boolean useddbb) throws DashboardAPEnetException {
 		Iterator<ArchivalInstitution> aiIt = archivalInstitutions.iterator();
 		List<ArchivalInstitution> institutionsToBeInserted = new ArrayList<ArchivalInstitution>();
 		while(aiIt.hasNext()){
@@ -1508,12 +1655,12 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					}
 					this.insertedInstitutions.add(currentInstitution);
 					log.debug("Inserted parent "+currentInstitution.getInternalAlId()+" with id:"+childParent.getAiId()+" which contain children");
-					insertChildren(institutionChildren,childParent);
+					insertChildren(institutionChildren,childParent,useddbb);
 				}else{
-					insertInstitution(currentInstitution);
+					insertInstitution(currentInstitution,useddbb);
 				}
 			}else{
-				insertInstitution(currentInstitution);
+				insertInstitution(currentInstitution,useddbb);
 			}
 		}
 		if(institutionsToBeInserted.size()>0){
@@ -1534,7 +1681,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 * 
 	 * @param currentInstitution
 	 */
-	private ArchivalInstitution insertInstitution(ArchivalInstitution currentInstitution) throws DashboardAPEnetException {
+	private ArchivalInstitution insertInstitution(ArchivalInstitution currentInstitution,boolean useddbb) throws DashboardAPEnetException {
 		String internalAlId = currentInstitution.getInternalAlId();
 		if(internalAlId==null || internalAlId.isEmpty()){
 			internalAlId = ArchivalLandscapeEditor.getNewinternalIdentifier();
@@ -1550,8 +1697,10 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 				throw new DashboardAPEnetException(strErr, new NullPointerException());
 			}
 		}
-		
-		ArchivalInstitution institution = this.aIDAO.insertSimple(currentInstitution);
+		ArchivalInstitution institution = currentInstitution;
+		if(useddbb){
+			institution = this.aIDAO.insertSimple(currentInstitution);
+		}
 		if(institution!=null && institution.isGroup()){
 			if (this.groupsInsertedIntoDDBB == null) {
 				this.groupsInsertedIntoDDBB = new HashMap<String,ArchivalInstitution>();
@@ -1559,15 +1708,17 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			this.groupsInsertedIntoDDBB.put(institution.getInternalAlId(),institution);
 		}
 		//alternative names logic
-		Set<AiAlternativeName> alternativeNames = currentInstitution.getAiAlternativeNames();
-		if(alternativeNames!=null){
-			Iterator<AiAlternativeName> alternativeNamesIt = alternativeNames.iterator();
-			while(alternativeNamesIt.hasNext()){
-				AiAlternativeName alternativeName = alternativeNamesIt.next();
-				alternativeName.setArchivalInstitution(institution);
-				alternativeName.setPrimaryName(alternativeName.getPrimaryName()!=null?alternativeName.getPrimaryName():false);
-				this.aIANDAO.insertSimple(alternativeName);
-				log.debug("Inserted alternative name: "+alternativeName.getAiAName());
+		if(useddbb){
+			Set<AiAlternativeName> alternativeNames = currentInstitution.getAiAlternativeNames();
+			if(alternativeNames!=null){
+				Iterator<AiAlternativeName> alternativeNamesIt = alternativeNames.iterator();
+				while(alternativeNamesIt.hasNext()){
+					AiAlternativeName alternativeName = alternativeNamesIt.next();
+					alternativeName.setArchivalInstitution(institution);
+					alternativeName.setPrimaryName(alternativeName.getPrimaryName()!=null?alternativeName.getPrimaryName():false);
+					this.aIANDAO.insertSimple(alternativeName);
+					log.debug("Inserted alternative name: "+alternativeName.getAiAName());
+				}
 			}
 		}
 		if(currentInstitution.isGroup()){
@@ -1587,7 +1738,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 						child.setParentAiId(currentInstitution.getParentAiId());
 					}else{
 						//2. if not exists, create
-						insertInstitution(childInstitutionToInsert);
+						insertInstitution(childInstitutionToInsert,useddbb);
 					}
 				}
 			}
@@ -1602,7 +1753,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 * 
 	 * @param archivalInstitutionFile
 	 */
-	private Set<ArchivalInstitution> getInstitutionsByALFile(File archivalInstitutionFile) {
+	public Set<ArchivalInstitution> getInstitutionsByALFile(File archivalInstitutionFile) {
 		Set<ArchivalInstitution> archivalInstitutions = null;
 		try {
 			XMLInputFactory factory = XMLInputFactory.newFactory();
@@ -1610,9 +1761,6 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			archivalInstitutions = getXMLArchivalInstitutionLevel(r);
 		} catch (FileNotFoundException e) {
 			log.error("File not found :: "+archivalInstitutionFile.getAbsolutePath() + APEnetUtilities.generateThrowableLog(e));
-		} catch (WstxUnexpectedCharException e){
-			log.error("Unexpected character into xml: ",e);
-			this.setInvalidChars(true);
 		} catch (XMLStreamException e) {
 			log.error("Archival Landscape reading exception: " + APEnetUtilities.generateThrowableLog(e));
 		} catch (WstxLazyException e){
@@ -1652,7 +1800,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					String localName = r.getLocalName().trim();
 					if(localName.equals("c")){
 						//fill children
-						if(openLevel && level!=null && level.equals(SERIES)){
+						if(openLevel && level!=null && level.equals(ArchivalLandscapeUtils.SERIES)){
 							Set<ArchivalInstitution> children = getXMLArchivalInstitutionLevelChildren(r,archivalInstitution);
 							if(children!=null){
 								archivalInstitution.setChildArchivalInstitutions(new LinkedList<ArchivalInstitution>(children));
@@ -1673,16 +1821,16 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 							for (int i = 0; i < r.getAttributeCount(); i++) {
 								if(r.getAttributeLocalName(i)!=null && r.getAttributeLocalName(i).trim().equals("id")){
 									id = r.getAttributeValue(i).trim();
-								}else if (r.getAttributeLocalName(i).trim().equals(LEVEL)) {
+								}else if (r.getAttributeLocalName(i).trim().equals(ArchivalLandscapeUtils.LEVEL)) {
 									level = r.getAttributeValue(i).trim();
 								}
 							}
-							if(!level.equals(FONDS)){
+							if(!level.equals(ArchivalLandscapeUtils.FONDS)){
 								if(!openLevel){
 									openLevel = true;
 									archivalInstitution.setAlorder(archivalInstitutions.size());
-									archivalInstitution.setGroup(level.equals(SERIES));
-									archivalInstitution.setInternalAlId((id!=null && id.length()>0)?id:null);
+									archivalInstitution.setGroup(level.equals(ArchivalLandscapeUtils.SERIES));
+									archivalInstitution.setInternalAlId((id!=null && id.length()>0)?id:"");
 								}else{ //c level only could be opened into fonts or serial levels
 									log.error("Bad sintaxys detected on xml, one C open tag should not be in some place");
 									validXML = false;
@@ -1708,7 +1856,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					break;
 				case XMLStreamConstants.END_ELEMENT:
 					if(r.getLocalName().trim().equals("c")){
-						if(!level.equals(FONDS)){ //fond level mustn't be used like an institution, it's a country
+						if(!level.equals(ArchivalLandscapeUtils.FONDS)){ //fond level mustn't be used like an institution, it's a country
 							archivalInstitutions.add(archivalInstitution); //first level
 							openLevel = false;
 						}
@@ -1781,64 +1929,6 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		}
 		return (validXML)?archivalInstitutions:null;
 	}
-	/**
-	 * Open a file, read it and get attribute "countrycode" from
-	 * eadid node.
-	 * 
-	 * @param httpFile
-	 * @return countryCode-String
-	 */
-	private String getXMLEadidCountrycode(File httpFile){
-		String response = "";
-		XMLStreamReader r = null;
-		try {
-			XMLInputFactory factory = XMLInputFactory.newFactory();
-			r = factory.createXMLStreamReader(new FileReader(httpFile));
-			//start reading file
-			boolean exit = false;
-			boolean found = false;
-			while(!exit && r.hasNext()){
-				int event = r.next();
-				switch (event) {
-					case XMLStreamConstants.START_ELEMENT:
-						//check if tag equals eadid
-						if(r.getLocalName().equalsIgnoreCase(EADID)){
-							//read attribute countrycode and put it into response
-							int count = r.getAttributeCount();
-							for(int i=0;!exit && i<count;i++){
-								String attributeName = r.getAttributeLocalName(i);
-								if(attributeName!=null && attributeName.equalsIgnoreCase(COUNTRYCODE)){
-									response = r.getAttributeValue(i);
-									exit = true;
-								}
-							}
-						}
-						break;
-					case XMLStreamConstants.END_ELEMENT:
-						if(found){
-							exit = true;
-						}
-						break;
-				}
-			}
-			//end reading file
-		} catch (FileNotFoundException e) {
-			log.error("File not found reading eadid :: "+httpFile.getAbsolutePath());
-		} catch (XMLStreamException e) {
-			log.error("Archival Landscape exception reading eadid: " + APEnetUtilities.generateThrowableLog(e));
-		} catch (Exception e){
-			log.error("Exception reading eadid: " + APEnetUtilities.generateThrowableLog(e));
-		} finally {
-			if(r!=null){
-				try {
-					r.close();
-				} catch (XMLStreamException e) {
-					log.error("Archival Landscape reading exception" + APEnetUtilities.generateThrowableLog(e));
-				}
-			}
-		}
-		return response;
-	}
 	
 	/**
 	 * Method which get all the series children, it's used to obtain recursive
@@ -1872,18 +1962,19 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 							counter++;
 							opened = true;
 							archivalInstitution = new ArchivalInstitution();
+							id = level = "";
 							for (int i = 0; i < r.getAttributeCount(); i++) {
 								if(r.getAttributeLocalName(i)!=null && r.getAttributeLocalName(i).trim().equals("id")){
 									id = r.getAttributeValue(i).trim();
-								}else if (r.getAttributeLocalName(i).trim().equals(LEVEL)) {
+								}else if (r.getAttributeLocalName(i).trim().equals(ArchivalLandscapeUtils.LEVEL)) {
 									level = r.getAttributeValue(i).trim();
 								}
 							}
 							archivalInstitution.setInternalAlId(id);
-							archivalInstitution.setGroup((level!=null && level.equals(SERIES)));
+							archivalInstitution.setGroup((level!=null && level.equals(ArchivalLandscapeUtils.SERIES)));
 							archivalInstitution.setAlorder(archivalInstitutions.size());
 							archivalInstitution.setParent(aiParent);
-						}else if(level!=null && level.equals(SERIES)){
+						}else if(level!=null && level.equals(ArchivalLandscapeUtils.SERIES)){
 							Set<ArchivalInstitution> children = getXMLArchivalInstitutionLevelChildren(r,archivalInstitution);
 							if(children!=null){
 								log.debug("Children has been added with size: "+children.size()+" to institution with id: "+id);
@@ -1909,7 +2000,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					if(r.getLocalName().trim().equals("c")){
 						opened = false; //close detected
 						log.debug("closing institution with id:"+id+" and level:"+level);
-						if(!level.equals(FONDS)){ //fond level haven't be used like an institution, it's a country
+						if(!level.equals(ArchivalLandscapeUtils.FONDS)){ //fond level haven't be used like an institution, it's a country
 							archivalInstitutions.add(archivalInstitution); //first level
 							counter--;
 						}
@@ -1986,7 +2077,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	}
 
 	public String download(){
-		ByteArrayOutputStream xml = buildXMlFromDDBB();
+		ByteArrayOutputStream xml = ArchivalLandscapeUtils.buildXMlFromDDBB(getSecurityContext().getCountryName());
 		if(xml!=null){
 			try {
 				String fileName = SecurityContext.get().getCountryIsoname().toUpperCase()+AL_FILE_NAME;
@@ -1997,314 +2088,6 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			;
 		}
 		return null;
-	}
-
-	private ByteArrayOutputStream buildXMlFromDDBB() {
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//		EadCreator eadCreator = null;
-		try {
-//			eadCreator = new EadCreator(outputStream); //TODO, fix EadCreator before use it
-			StringBuilder eadContent = new StringBuilder();
-			String countryName = getSecurityContext().getCountryName();
-			if(countryName!=null){
-				eadContent.append(openingXmlHeader());
-				eadContent.append(openEadNode());
-				
-					eadContent.append(openEadHeader());
-						eadContent.append(buildEadId());
-						eadContent.append(buildFiledesc());
-					eadContent.append(closeEadHeader());
-					
-					eadContent.append(openArchDesc());
-						eadContent.append("\n\t\t\t<did>");
-							eadContent.append("\n\t\t\t\t<unittitle");
-							eadContent.append(" encodinganalog=\""+AL_GLOBAL_ENCODINGANALOG+"\"");
-							eadContent.append(" type=\"eng\">");
-							eadContent.append(AL_GLOBAL_UNITTITLE);
-							eadContent.append("</unittitle>");
-						eadContent.append("\n\t\t\t</did>");
-						eadContent.append(openDsc());
-							eadContent.append(buildCLevel(countryName,0)); //each archival institution is a C level
-						eadContent.append(closeDsc());
-					eadContent.append(closeArchDesc());
-					
-				eadContent.append(closeEadNode());
-				outputStream.write(eadContent.toString().getBytes());
-				eadContent = null;
-			}
-		} catch (Exception e){
-			log.error("Unknown error into buildXMLFromDDBB" + APEnetUtilities.generateThrowableLog(e));
-		}finally {
-			if(outputStream!=null){
-				try {
-					outputStream.close();
-				} catch (IOException e) {
-					log.error("Unknown error into buildXMLFromDDBB" + APEnetUtilities.generateThrowableLog(e));
-				}
-			}
-		}
-		return outputStream;
-	}
-
-	private String openingXmlHeader() {
-		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-	}
-
-	private String closeArchDesc() {
-		return "\n\t</archdesc>";
-	}
-
-	private StringBuilder openArchDesc() {
-		StringBuilder archDesc = new StringBuilder();
-		archDesc.append("\n\t");
-		archDesc.append("<archdesc");
-		archDesc.append(" encodinganalog=\""+AL_GLOBAL_ENCODINGANALOG+"\"");
-		archDesc.append(" level=\"fonds\"");
-		archDesc.append(" relatedencoding=\""+AL_RELATEDENCODING+"\"");
-		archDesc.append(" type=\""+AL_ARCHDESC_TYPE+"\">");
-		return archDesc;
-	}
-
-	private StringBuilder buildCLevel(Object parameter, int level) {
-		StringBuilder cLevel = new StringBuilder();
-		cLevel.append("\n");
-		String tabs = "";
-		for(int i=-3;i<level;i++){ //first level has 3 \t, so starts in that place
-			tabs += "\t";
-		}
-		cLevel.append(tabs);
-		if(parameter instanceof ArchivalInstitution){ //institution part, normal behavior, next cases
-			ArchivalInstitution archivalInstitution = (ArchivalInstitution)parameter;
-			if(archivalInstitution!=null){
-				cLevel.append(buildInstitutionCLevel(archivalInstitution,tabs,level));
-			}
-		}else if(parameter instanceof String){ //country part, first case
-			cLevel.append(buildFondsCLevel(parameter,tabs));
-		}
-		return cLevel;
-	}
-
-	private StringBuilder buildFondsCLevel(Object parameter, String tabs) {
-		StringBuilder cLevel = new StringBuilder();
-		cLevel.append("<c level=\""+FONDS+"\">");
-		Country country = DAOFactory.instance().getCountryDAO().getCountryByCname(parameter.toString());
-		Set<CouAlternativeName> couAlternativeNames = country.getCouAlternativeNames();
-		if(couAlternativeNames!=null){
-			Map<String,String> alternativeNames = new HashMap<String,String>();
-			Iterator<CouAlternativeName> iteratorCouAlternativeNames = couAlternativeNames.iterator();
-			while(iteratorCouAlternativeNames.hasNext()){
-				CouAlternativeName couAlternativeName = iteratorCouAlternativeNames.next();
-				String lang = couAlternativeName.getLang().getIsoname().toLowerCase(); //TODO, parse to 3_char_isoname
-				alternativeNames.put(lang,couAlternativeName.getCouAnName());
-			}
-			cLevel.append(buildDidNode(null,alternativeNames,tabs));
-		}
-		ArchivalInstitutionDAO archivalInstitutionDAO = DAOFactory.instance().getArchivalInstitutionDAO();
-		List<ArchivalInstitution> listCountryArchivalInstitutions = archivalInstitutionDAO.getArchivalInstitutionsByCountryIdForAL(country.getId(),true);
-		if(listCountryArchivalInstitutions!=null){
-			Iterator<ArchivalInstitution> itArchivalInstitutions = listCountryArchivalInstitutions.iterator();
-			while(itArchivalInstitutions.hasNext()){
-				cLevel.append(buildCLevel(itArchivalInstitutions.next(),2));
-			}
-		}
-		cLevel.append("\n"+tabs);
-		cLevel.append("</c>");
-		return cLevel;
-	}
-
-	private StringBuilder buildInstitutionCLevel(ArchivalInstitution archivalInstitution,String tabs,Integer level) {
-		StringBuilder cLevel = new StringBuilder();
-		cLevel.append("<c");
-		if(archivalInstitution.getInternalAlId()!=null && !archivalInstitution.getInternalAlId().isEmpty()){
-			cLevel.append(" id=\""+archivalInstitution.getInternalAlId()+"\"");
-		}
-		if(archivalInstitution.isGroup()){
-			cLevel.append(" level=\""+SERIES+"\">");
-		}else{
-			cLevel.append(" level=\""+FILE+"\">");
-		}
-		Set<AiAlternativeName> aiAlternativeNames = archivalInstitution.getAiAlternativeNames();
-		if(aiAlternativeNames!=null){
-			Map<String,String> alternativeNames = new HashMap<String,String>();
-			Map<String,String> mainAlternativeName = new HashMap<String,String>();
-			Iterator<AiAlternativeName> itAlternativeNames = aiAlternativeNames.iterator();
-			while(itAlternativeNames.hasNext()){
-				AiAlternativeName alternativeName = itAlternativeNames.next();
-				if(!alternativeName.getPrimaryName()){
-					alternativeNames.put(alternativeName.getLang().getIsoname(),alternativeName.getAiAName());
-				}else{
-					mainAlternativeName.put(alternativeName.getLang().getIsoname(),alternativeName.getAiAName());
-				}
-			}
-			cLevel.append(buildDidNode(alternativeNames,mainAlternativeName,tabs));
-		}
-		Set<ArchivalInstitution> children = new LinkedHashSet<ArchivalInstitution>(archivalInstitution.getChildArchivalInstitutions());
-		if(children!=null){
-			Iterator<ArchivalInstitution> itChildren = children.iterator();
-			while(itChildren.hasNext()){
-				cLevel.append(buildCLevel(itChildren.next(),level+1));
-			}
-		}
-		//put HG link if exists
-		HoldingsGuideDAO hgDao = DAOFactory.instance().getHoldingsGuideDAO();
-		HoldingsGuide exampleHG = new HoldingsGuide();
-		exampleHG.setAiId(archivalInstitution.getAiId());
-		List<HoldingsGuide> hgList = hgDao.getHoldingsGuidesByArchivalInstitutionId(archivalInstitution.getAiId());
-		if(hgList!=null && hgList.size()>0){
-			Iterator<HoldingsGuide> itHg = hgList.iterator();
-			while(itHg.hasNext()){
-				cLevel.append(buildOtherfindaid(itHg.next(),tabs));
-			}
-		}
-		cLevel.append("\n"+tabs);
-		cLevel.append("</c>");
-		return cLevel;
-	}
-
-	private StringBuilder buildOtherfindaid(HoldingsGuide holdingsGuide,String tabs) {
-		StringBuilder otherfindaid = new StringBuilder();
-		if(holdingsGuide!=null){
-			otherfindaid.append("\n"+tabs);
-			otherfindaid.append("<otherfindaid");
-			otherfindaid.append(" encodinganalog=\""+AL_GLOBAL_ENCODINGANALOG+"\"");
-			otherfindaid.append(">");
-			otherfindaid.append("\n"+tabs+"\t");
-			otherfindaid.append("<p>");
-			otherfindaid.append("\n"+tabs+"\t\t");
-			otherfindaid.append("<extref");
-			otherfindaid.append(" xlink:href=\""+holdingsGuide.getEadid()+"\" />");
-			otherfindaid.append("\n"+tabs+"\t");
-			otherfindaid.append("</p>");
-			otherfindaid.append("\n"+tabs);
-			otherfindaid.append("</otherfindaid>");
-		}
-		return otherfindaid;
-	}
-
-	private String closeDsc() {
-		return "\n\t\t</dsc>";
-	}
-
-	private StringBuilder openDsc() {
-		StringBuilder openedDsc = new StringBuilder();
-		openedDsc.append("\n\t\t<dsc");
-		openedDsc.append(" type=\""+AI_DSC_TYPE+"\">");
-		return openedDsc;
-	}
-
-	private StringBuilder buildDidNode(Map<String, String> alternativeNames, Map<String, String> mainAlternativeName, String tabs) {
-		StringBuilder didNode = new StringBuilder();
-		//first make main alternative name, which it's the institution name
-		if(mainAlternativeName!=null){
-			didNode.append("\n"+tabs+"\t");
-			didNode.append("<did>");
-			Iterator<String> keyIterator = mainAlternativeName.keySet().iterator(); //should be only one
-			while(keyIterator.hasNext()){ //this should only have one unique
-				String key = keyIterator.next();
-				didNode.append("\n"+tabs+"\t\t");
-				didNode.append("<unittitle");
-				didNode.append(" encodinganalog=\""+AL_GLOBAL_ENCODINGANALOG+"\"");
-				didNode.append(" type=\""+key.toLowerCase()+"\">");
-				String aName = mainAlternativeName.get(key);
-				//related to issue #1079
-				if(aName.contains("&amp;")){
-					aName = aName.replaceAll("&amp;","&");
-				}
-				if(aName.contains("&")){
-					aName = aName.replaceAll("&","&amp;");
-				}
-				didNode.append(aName);
-				didNode.append("</unittitle>");
-			}
-			if(alternativeNames!=null && alternativeNames.size()>0){
-//				didNode.append("\n"+tabs+"\t");
-//				didNode.append("<did>");
-				//next make all alternative names
-				Iterator<String> alternativeNamesIterator = alternativeNames.keySet().iterator();
-				while(alternativeNamesIterator.hasNext()){
-					String key = alternativeNamesIterator.next();
-					didNode.append("\n"+tabs+"\t\t");
-					didNode.append("<unittitle");
-					didNode.append(" encodinganalog=\""+AL_GLOBAL_ENCODINGANALOG+"\"");
-					didNode.append(" type=\""+key.toLowerCase()+"\">");
-					String aName = alternativeNames.get(key);
-					//same case like main alternative name, see comment over here (mainAlternativeName)
-					if(aName.contains("&amp;")){
-						aName = aName.replaceAll("&amp;","&");
-					}
-					if(aName.contains("&")){
-						aName = aName.replaceAll("&","&amp;");
-					}
-					didNode.append(aName);
-					didNode.append("</unittitle>");
-				}
-//				didNode.append("\n"+tabs+"\t");
-//				didNode.append("</did>");
-			}
-			didNode.append("\n"+tabs+"\t");
-			didNode.append("</did>");
-		}
-		return didNode;
-	}
-
-	private String closeEadHeader() {
-		return "\n\t</eadheader>";
-	}
-
-	private StringBuilder buildFiledesc() {
-		StringBuilder filedesc = new StringBuilder();
-		filedesc.append("\n\t\t<filedesc>");
-			filedesc.append("\n\t\t\t<titlestmt>");
-				filedesc.append("\n\t\t\t\t<titleproper");
-				filedesc.append(" encodinganalog=\""+AL_TITLEPROPER_ENCODINGANALOG+"\"");
-				filedesc.append(" type=\""+AL_TITLEPROPER_TYPE+"\">");
-				filedesc.append(AL_TITLEPROPER);
-				filedesc.append("</titleproper>");
-			filedesc.append("\n\t\t\t</titlestmt>");
-		filedesc.append("\n\t\t</filedesc>");
-		return filedesc;
-	}
-
-	private StringBuilder buildEadId() {
-		String countryCode = SecurityContext.get().getCountryIsoname();
-		StringBuilder eadId = new StringBuilder();
-		eadId.append("\n\t\t<eadid");
-		eadId.append(" countrycode=\""+countryCode+"\"");
-		eadId.append(" identifier=\""+AL_EADID_IDENTIFIER+"\"");
-		eadId.append(" mainagencycode=\""+countryCode+AL_EADID_MAINAGENCYCODE+"\"");
-		eadId.append(">");
-		eadId.append(AL_EADID_PREFIX+countryCode);
-		eadId.append("</eadid>");
-		return eadId;
-	}
-
-	private StringBuilder openEadHeader() {
-		StringBuilder eadHeader = new StringBuilder();
-		eadHeader.append("\n\t<eadheader");
-		eadHeader.append(" countryencoding=\""+AL_EADHEADER_COUNTRYENCODING+"\"");
-		eadHeader.append(" dateencoding=\""+AL_EADHEADER_DATAENCODING+"\"");
-		eadHeader.append(" langencoding=\""+AL_EADHEADER_LANGENCODING+"\"");
-		eadHeader.append(" relatedencoding=\""+AL_EADHEADER_RELATEDENCODING+"\"");
-		eadHeader.append(" repositoryencoding=\""+AL_EADHEADER_REPOSITORYENCODING+"\"");
-		eadHeader.append(" scriptencoding=\""+AL_EADHEADER_SCRIPTENCODING+"\"");
-		eadHeader.append(">");
-		return eadHeader;
-	}
-
-	private String closeEadNode() {
-		return "\n</ead>";
-	}
-
-	private StringBuilder openEadNode() {
-		StringBuilder eadNode = new StringBuilder();
-		eadNode.append("<ead");
-		eadNode.append(" xmlns=\""+AL_XMLNS+"\"");
-		eadNode.append(" xmlns:xlink=\""+AL_XMLNS_XLINK+"\"");
-		eadNode.append(" xmlns:xsi=\""+AL_XMLNS_XSI+"\"");
-		eadNode.append(" audience=\""+AL_AUDIENCE+"\"");
-		eadNode.append(" xsi:schemaLocation=\""+AL_XSI_SCHEMALOCATION+"\"");
-		eadNode.append(">\n");
-		return eadNode;
 	}
 
 } 

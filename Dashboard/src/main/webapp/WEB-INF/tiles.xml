@@ -334,6 +334,13 @@
             <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>
         </put-list-attribute>
 	</definition>
+	
+	<definition name="overwriteAL" extends="ArchivalLandscapeLayout">
+		<put-attribute name="title" value="dashboard.alupload.title" />
+		<put-attribute name="body" value="/jsp/al/overwriteALoption.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+		</put-list-attribute>
+	</definition>
 
 	<definition name="selectArchive" extends="ArchivalLandscapeLayout" >
 		<put-attribute name="title" value="dashboard.archiveselection.title" />
@@ -401,13 +408,7 @@
 		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
 		<put-attribute name="body" value="/jsp/al/uploaderrorALIdentifier.jsp" />
 	</definition>
-	
-	<definition name="uploaderroralidentifier2" extends="ArchivalLandscapeLayout">
-		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
-		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
-		<put-attribute name="body" value="/jsp/al/uploaderrorALIdentifier2.jsp" />
-	</definition>
-	
+
 	<definition name="uploaderroralinvalidchar" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
 		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
@@ -448,6 +449,19 @@
 		<put-attribute name="title" value="dashboard.changealidentifiers.title" />
 		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
 		<put-attribute name="body" value="/jsp/changeAlIdentifiers.jsp" />
+	</definition>
+	
+	<definition name="ALReport" extends="ArchivalLandscapeLayout" >
+		<put-attribute name="title" value="dashboard.changealidentifiers.title" />
+		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
+		<put-attribute name="body" value="/jsp/al/alReport.jsp" />
+		<put-list-attribute name="jsfilesInternal">
+			<add-attribute type="string" value="/js/jquery/jquery-1.8.2.min.js"/>
+	        <add-attribute type="string" value="/js/al/archivalLandscape.js"/>
+		</put-list-attribute>
+		<put-list-attribute name="cssfilesInternal">
+			<add-attribute type="string" value="/css/al/archivalLandscape.css"/>
+		</put-list-attribute>
 	</definition>
 
 			<!-- END ARCHIVAL LANDSCAPE ACTIONS -->
