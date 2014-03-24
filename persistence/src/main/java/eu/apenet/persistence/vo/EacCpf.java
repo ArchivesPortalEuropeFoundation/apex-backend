@@ -3,6 +3,7 @@ package eu.apenet.persistence.vo;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -56,6 +57,8 @@ public class EacCpf extends AbstractContent {
 
     @OneToMany(mappedBy = "eacCpf")
     private Set<QueueItem> queueItems = new HashSet<QueueItem>(0);
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "eacCpf")
+    private Set<Warnings> warningses = new HashSet<Warnings>(0);
 
     @Override
     public Integer getId() {
@@ -227,5 +230,15 @@ public class EacCpf extends AbstractContent {
     @Override
     public void setQueueItems(Set<QueueItem> queueItems) {
         this.queueItems = queueItems;
+    }
+
+    @Override
+    public Set<Warnings> getWarningses() {
+        return warningses;
+    }
+
+    @Override
+    public void setWarningses(Set<Warnings> warningses) {
+        this.warningses = warningses;
     }
 }

@@ -19,7 +19,7 @@ import javax.persistence.Transient;
 @Table(name = "warnings")
 public class Warnings implements java.io.Serializable {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4346259413192033999L;
 	@Id
@@ -38,6 +38,9 @@ public class Warnings implements java.io.Serializable {
 	@Column(name = "abstract")
 	private String abstract_;
 	private Boolean iswarning;
+        @ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="ec_id")
+	private EacCpf eacCpf;
 
 	public Warnings() {
 	}
@@ -146,4 +149,12 @@ public class Warnings implements java.io.Serializable {
 			}
 		}
 	}
+
+    public EacCpf getEacCpf() {
+        return eacCpf;
+    }
+
+    public void setEacCpf(EacCpf eacCpf) {
+        this.eacCpf = eacCpf;
+    }
 }

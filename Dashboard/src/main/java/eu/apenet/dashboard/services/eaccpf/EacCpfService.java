@@ -203,20 +203,23 @@ public class EacCpfService {
                     queueItem.setPriority(0);
                     queueItemDAO.store(queueItem);
                 }
-//            } else {
-//                try {
-//                    if (queueAction.isConvertAction()) {
-//                        new ConvertTask().execute(eac, preferences);
-//                    }
-//                } catch (Exception e) {
-//                    String err = "identifier: " + eac.getIdentifier() + " - id: " + eac.getId() + " - type: " + xmlType.getName();
-//                    LOGGER.error(APEnetUtilities.generateThrowableLog(e));
-//                    queueItem.setErrors(new Date() + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
-//                    eac.setQueuing(QueuingState.ERROR);
-//                    eacDAO.store(eac);
-//                    queueItem.setPriority(0);
-//                    queueItemDAO.store(queueItem);
-//                }
+            } else {
+                try {
+                    if (queueAction.isConvertAction()) {
+                        new ConvertTask().execute(eac, preferences);
+                    }
+                    eac.setQueuing(QueuingState.NO);
+                    eacDAO.store(eac);
+                    queueItemDAO.delete(queueItem);
+                } catch (Exception e) {
+                    String err = "identifier: " + eac.getIdentifier() + " - id: " + eac.getId() + " - type: " + xmlType.getName();
+                    LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+                    queueItem.setErrors(new Date() + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
+                    eac.setQueuing(QueuingState.ERROR);
+                    eacDAO.store(eac);
+                    queueItem.setPriority(0);
+                    queueItemDAO.store(queueItem);
+                }
             }
         } else { //USE_PROFILE
             //TODO. Not defined yet

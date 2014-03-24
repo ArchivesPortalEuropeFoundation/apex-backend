@@ -22,9 +22,6 @@ public abstract class Ead  extends AbstractContent{
 	public abstract void setTotalNumberOfUnits(Long totalNumberOfUnits) ;
 	public abstract Long getTotalNumberOfUnitsWithDao();
 	public abstract void setTotalNumberOfUnitsWithDao(Long totalNumberOfUnitsWithDao);
-
-	public abstract Set<Warnings> getWarningses();
-	public abstract void setWarningses(Set<Warnings> warningses);
     @Deprecated
 	public abstract Set<EadContent> getEadContents() ;
 	public abstract void setEadContents(Set<EadContent> eadContents) ;

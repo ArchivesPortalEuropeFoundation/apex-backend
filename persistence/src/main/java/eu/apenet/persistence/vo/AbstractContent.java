@@ -7,7 +7,7 @@ import java.util.Set;
 public abstract class AbstractContent  implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 3522597311166738909L;
 	public abstract Integer getId();
@@ -33,7 +33,7 @@ public abstract class AbstractContent  implements Serializable {
 	public abstract boolean isConverted();
 	public abstract void setConverted(boolean converted);
 	public abstract QueuingState getQueuing();
-	public abstract void setQueuing(QueuingState queingState);	
+	public abstract void setQueuing(QueuingState queingState);
     @Deprecated
 	public abstract Set<QueueItem> getQueueItems();
 	public abstract void setQueueItems(Set<QueueItem> indexQueues);
@@ -45,4 +45,6 @@ public abstract class AbstractContent  implements Serializable {
             return null;
         return set.iterator().next();
     }
+    public abstract Set<Warnings> getWarningses();
+    public abstract void setWarningses(Set<Warnings> warningses);
 }
