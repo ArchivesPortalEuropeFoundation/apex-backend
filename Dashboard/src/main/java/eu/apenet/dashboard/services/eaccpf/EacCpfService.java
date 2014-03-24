@@ -1,5 +1,6 @@
 package eu.apenet.dashboard.services.eaccpf;
 
+import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.persistence.dao.EacCpfDAO;
@@ -45,8 +46,13 @@ public class EacCpfService {
         }
     }
 
-    public static void validate(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public static void validate(Integer id) throws Exception {
+        EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
+        EacCpf eacCpf = eacCpfDAO.findById(id, XmlType.EAC_CPF.getClazz());
+        SecurityContext.get().checkAuthorized(eacCpf);
+        if (ValidateTask.valid(eacCpf)) {
+            addToQueue(eacCpf, QueueAction.VALIDATE, null);
+        }
     }
 
     public static void publish(Integer id) {
@@ -205,13 +211,19 @@ public class EacCpfService {
                 }
             } else {
                 try {
+                    if (queueAction.isValidateAction()) {
+                        new ValidateTask().execute(eac, preferences);
+                    }
                     if (queueAction.isConvertAction()) {
                         new ConvertTask().execute(eac, preferences);
+                    }
+                    if (queueAction.isValidateAction()) {
+                        new ValidateTask().execute(eac, preferences);
                     }
                     eac.setQueuing(QueuingState.NO);
                     eacDAO.store(eac);
                     queueItemDAO.delete(queueItem);
-                } catch (Exception e) {
+                } catch (APEnetException e) {
                     String err = "identifier: " + eac.getIdentifier() + " - id: " + eac.getId() + " - type: " + xmlType.getName();
                     LOGGER.error(APEnetUtilities.generateThrowableLog(e));
                     queueItem.setErrors(new Date() + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
