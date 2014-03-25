@@ -7,7 +7,6 @@ package eu.apenet.dashboard.actions.content.eaccpf;
 
 import static com.opensymphony.xwork2.Action.ERROR;
 import static com.opensymphony.xwork2.Action.SUCCESS;
-import eu.apenet.dashboard.actions.content.AbstractTypeActions;
 import eu.apenet.dashboard.services.eaccpf.EacCpfService;
 import eu.apenet.dashboard.utils.ContentUtils;
 import java.io.File;
@@ -18,7 +17,7 @@ import java.util.Properties;
  *
  * @author papp
  */
-public class EacCpfActions extends AbstractTypeActions {
+public class EacCpfActions extends AbstractEacCpfActions {
 
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private Integer id;
@@ -32,34 +31,7 @@ public class EacCpfActions extends AbstractTypeActions {
     }
 
     @Override
-    public String execute() throws Exception {
-        if (VALIDATE.equals(action)) {
-            return validateEacCpf();
-        } else if (CONVERT.equals(action)) {
-            return convertEacCpf(getConversionParameters());
-        } else if (PUBLISH.equals(action)) {
-            return publishEacCpf();
-        } else if (UNPUBLISH.equals(action)) {
-            return unpublishEacCpf();
-        } else if (DELETE.equals(action)) {
-            return deleteEacCpf();
-        } else if (CONVERT_VALIDATE.equals(action)) {
-            return convertValidateEacCpf(getConversionParameters());
-        } else if (CONVERT_VALIDATE_PUBLISH.equals(action)) {
-            return convertValidatePublishEacCpf(getConversionParameters());
-        } else if (DELETE_ESE_EDM.equals(action)) {
-            return deleteEseEdm();
-        } else if (DELETE_FROM_EUROPEANA.equals(action)) {
-            return deleteFromEuropeana();
-        } else if (DELIVER_TO_EUROPEANA.equals(action)) {
-            return deliverToEuropeana();
-        } else if (DELETE_FROM_QUEUE.equals(action)) {
-            return deleteFromQueue();
-        }
-        return ERROR;
-    }
-
-    private String convertValidatePublishEacCpf(Properties properties) {
+    public String convertValidatePublishEacCpf(Properties properties) {
         try {
             EacCpfService.convertValidatePublish(id, properties);
             return SUCCESS;
@@ -69,7 +41,8 @@ public class EacCpfActions extends AbstractTypeActions {
         }
     }
 
-    private String convertValidateEacCpf(Properties properties) {
+    @Override
+    public String convertValidateEacCpf(Properties properties) {
         try {
             EacCpfService.convertValidate(id, properties);
             return SUCCESS;
@@ -79,7 +52,8 @@ public class EacCpfActions extends AbstractTypeActions {
         }
     }
 
-    private String convertEacCpf(Properties properties) {
+    @Override
+    public String convertEacCpf(Properties properties) {
         try {
             EacCpfService.convert(id, properties);
             return SUCCESS;
@@ -89,7 +63,8 @@ public class EacCpfActions extends AbstractTypeActions {
         }
     }
 
-    private String validateEacCpf() {
+    @Override
+    public String validateEacCpf() {
         try {
             EacCpfService.validate(id);
             return SUCCESS;
@@ -99,7 +74,8 @@ public class EacCpfActions extends AbstractTypeActions {
         }
     }
 
-    private String publishEacCpf() {
+    @Override
+    public String publishEacCpf() {
         try {
             EacCpfService.publish(id);
             return SUCCESS;
@@ -109,7 +85,8 @@ public class EacCpfActions extends AbstractTypeActions {
         }
     }
 
-    private String unpublishEacCpf() {
+    @Override
+    public String unpublishEacCpf() {
         try {
             EacCpfService.unpublish(id);
             return SUCCESS;
@@ -119,7 +96,8 @@ public class EacCpfActions extends AbstractTypeActions {
         }
     }
 
-    private String deleteEacCpf() {
+    @Override
+    public String deleteEacCpf() {
         try {
             EacCpfService.delete(id);
             return SUCCESS;
@@ -182,24 +160,6 @@ public class EacCpfActions extends AbstractTypeActions {
         }
 
         return null;
-    }
-
-    @Override
-    protected Properties getConversionParameters() {
-        Properties parameters = new Properties();
-//        HttpSession session = getServletRequest().getSession();
-//        String option_default = (String) session.getAttribute(AjaxControllerAbstractAction.OPTIONS_DEFAULT);
-//        String option_use_existing = (String) session.getAttribute(AjaxControllerAbstractAction.OPTIONS_USE_EXISTING);
-//        boolean option_use_existing_bool = true;
-//        if (option_use_existing != null) {
-//            option_use_existing_bool = !Boolean.parseBoolean(option_use_existing);
-//        }
-//        if (option_default == null) {
-//            option_default = "UNSPECIFIED";
-//        }
-//        parameters.put("defaultRoleType", option_default);
-//        parameters.put("useDefaultRoleType", Boolean.toString(option_use_existing_bool));
-        return parameters;
     }
 
 }

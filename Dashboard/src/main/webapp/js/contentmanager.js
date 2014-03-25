@@ -38,7 +38,7 @@ function initSubpage() {
 			});
 	$("#batchActionButton").click(function(event) {
 		event.preventDefault();
-		performBatchEadAction();
+		performBatchContentAction($("#updateCurrentSearch_xmlTypeId").val());
 	});
 	$("#clearAll").bind("click", function(value) {
 		clearFilesFromSession();
@@ -142,7 +142,7 @@ function performContentAction(action, id, type) {
 	}
 
 }
-function performBatchEadAction() {
+function performBatchContentAction(type) {
 	//If the select option refresh equals to refresh, then, set it to not refresh, perform action and later set it again to refresh
 	var originalStatus=globalIndex;
 	if(globalIndex!=0){
@@ -151,7 +151,13 @@ function performBatchEadAction() {
 
 	var formData = $("#batchActionsForm").serializeArray();
 	var updateForm = getUpdateCurrentSearchResultsForm();
-	var json = {};
+	var actionUrl;
+        if (type == "2"){
+            actionUrl = "batchEacCpfActions.action";
+        } else {
+            actionUrl = "batchEadActions.action";
+        }
+        var json = {};
 	for (i in formData) {
 		json[formData[i].name] = formData[i].value;
 	}
@@ -165,7 +171,7 @@ function performBatchEadAction() {
 				json['action'] + ".action?batchItems=" + json['batchItems'],
 				"_self");
 	} else {
-		$.post("batchEadActions.action", formData, function(data) {
+		$.post(actionUrl, formData, function(data) {
 			if(data.indexOf("error")>-1){
 				var message = data;
 				if(message.length>"error".length){
