@@ -166,16 +166,26 @@
 	width: 25%;
 	padding-top: 15px;
 }
+
 #ingestionprofiles td label {
 	width: 25%;
 }
+
 #ingestionprofilesCancel {
-	/*float:right;
-	margin-right: 20px;
-	margin-bottom: 5px;*/
+    background: url("../images/otherbutton.gif") repeat-x scroll right top white;
+    background-color: #E9F3FA;
+    border: 1px solid #00A0DF;
+    border-radius: 15px 15px 15px 15px;
+    color: #006CB0;
+    display: inline;
+    font-weight: bold;
+    letter-spacing: 0.8px;
+    padding: 3px 5px;
+    text-align: center;
+    vertical-align: top;
 }
+
 #ingestionprofilesSave {
-	/*float:right;*/
 	margin-right: 20px;
 	margin-bottom: 5px;
 }
