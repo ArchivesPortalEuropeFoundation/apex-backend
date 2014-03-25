@@ -4,16 +4,14 @@ import java.util.Collection;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.ConcurrentUpdateSolrServer;
+import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.common.SolrInputDocument;
 
 import eu.apenet.commons.utils.APEnetUtilities;
 
 public class UpdateSolrServerHolder {
-	private static final int QUEUE_SIZE = 200;
-	private static final int MAX_THREADS = 2;
 	private static final Logger LOGGER = Logger.getLogger(UpdateSolrServerHolder.class);
-	private ConcurrentUpdateSolrServer solrServer;
+	private HttpSolrServer solrServer;
 	private static UpdateSolrServerHolder instance;
 	private String solrIndexUrl;
 
@@ -77,11 +75,13 @@ public class UpdateSolrServerHolder {
 	}
 
 
-	private ConcurrentUpdateSolrServer initSolrServer() {
+	private HttpSolrServer initSolrServer() {
 		try {
-			LOGGER.debug("Create new solr client");
-			solrIndexUrl = APEnetUtilities.getDashboardConfig().getSolrIndexUrl();
-			solrServer = new ConcurrentUpdateSolrServer(solrIndexUrl, QUEUE_SIZE, MAX_THREADS);
+			if (solrServer == null){
+				LOGGER.debug("Create new solr client");
+				solrIndexUrl = APEnetUtilities.getDashboardConfig().getSolrIndexUrl();
+				solrServer = new HttpSolrServer(solrIndexUrl);
+			}
 		} catch (Exception e) {
 			LOGGER.error("Solr server " + solrIndexUrl + " is not available", e);
 		}
