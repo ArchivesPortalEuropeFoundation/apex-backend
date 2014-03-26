@@ -239,6 +239,7 @@ function addOnchangeInput() {
 			$("div#divRecheckIdentifiers").show();
 			$("div#divCancelEdition").removeClass("hidden");
 			$("div#divCancelEdition").show();
+			$("div#divContinueUpload").hide();
 		});
 	});
 
@@ -249,6 +250,7 @@ function addOnchangeInput() {
 			$("div#divRecheckIdentifiers").show();
 			$("div#divCancelEdition").removeClass("hidden");
 			$("div#divCancelEdition").show();
+			$("div#divContinueUpload").hide();
 		});
 	});
 
@@ -259,6 +261,7 @@ function addOnchangeInput() {
 			$("div#divRecheckIdentifiers").show();
 			$("div#divCancelEdition").removeClass("hidden");
 			$("div#divCancelEdition").show();
+			$("div#divContinueUpload").hide();
 		});
 	});
 }

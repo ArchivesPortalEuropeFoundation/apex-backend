@@ -467,7 +467,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			//validate country code
 			if(this.checkCountryCode()) {
 				//validate indexed institutions
-				Collection<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile);
+				Collection<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile,false);
 				Collection<String> internalIdentifiers = ArchivalLandscapeUtils.checkIdentifiersForArchivalInstitutionStructure(archivalInstitutions);
 				if(internalIdentifiers!=null){ //check result
 					String result = checkIfSomeInstitutionIsIngestedAndHasContentIndexed(archivalInstitutions);
@@ -570,7 +570,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		if(this.httpFile==null){
 			fillMainFiles();
 		}
-		Collection<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile);
+		Collection<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile,false);
 		return displayReport(archivalInstitutions);
 	}
 	
@@ -873,7 +873,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 //				if(this.country==null){
 					this.country = DAOFactory.instance().getCountryDAO().getCountryByCname(SecurityContext.get().getCountryName());
 //				}
-				Set<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile);
+				Set<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile,true);
 				if(archivalInstitutions!=null){
 					try{
 						state = checkAndUpdateFromToDDBB(archivalInstitutions,true);
@@ -1753,12 +1753,12 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 * 
 	 * @param archivalInstitutionFile
 	 */
-	public Set<ArchivalInstitution> getInstitutionsByALFile(File archivalInstitutionFile) {
+	public Set<ArchivalInstitution> getInstitutionsByALFile(File archivalInstitutionFile,boolean checkLang) {
 		Set<ArchivalInstitution> archivalInstitutions = null;
 		try {
 			XMLInputFactory factory = XMLInputFactory.newFactory();
 			XMLStreamReader r = factory.createXMLStreamReader(new FileReader(archivalInstitutionFile));
-			archivalInstitutions = getXMLArchivalInstitutionLevel(r);
+			archivalInstitutions = getXMLArchivalInstitutionLevel(r,checkLang);
 		} catch (FileNotFoundException e) {
 			log.error("File not found :: "+archivalInstitutionFile.getAbsolutePath() + APEnetUtilities.generateThrowableLog(e));
 		} catch (XMLStreamException e) {
@@ -1778,7 +1778,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 * 
 	 * @throws XMLStreamException
 	 */
-	private Set<ArchivalInstitution> getXMLArchivalInstitutionLevel(XMLStreamReader r) throws XMLStreamException{
+	private Set<ArchivalInstitution> getXMLArchivalInstitutionLevel(XMLStreamReader r,boolean checkLang) throws XMLStreamException{
 		ArchivalInstitution archivalInstitution = null;
 		Set<ArchivalInstitution> archivalInstitutions = new LinkedHashSet<ArchivalInstitution>();
 		String level = "";
@@ -1801,7 +1801,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					if(localName.equals("c")){
 						//fill children
 						if(openLevel && level!=null && level.equals(ArchivalLandscapeUtils.SERIES)){
-							Set<ArchivalInstitution> children = getXMLArchivalInstitutionLevelChildren(r,archivalInstitution);
+							Set<ArchivalInstitution> children = getXMLArchivalInstitutionLevelChildren(r,archivalInstitution,checkLang);
 							if(children!=null){
 								archivalInstitution.setChildArchivalInstitutions(new LinkedList<ArchivalInstitution>(children));
 								log.debug("Children with size: "+children.size()+" has been added to institution(group) "+archivalInstitution.getAiname());
@@ -1892,7 +1892,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 							alternativeName.setLang(lang);
 							archivalInstitution.setCountry(this.country);
 							archivalInstitution.setCountryId(this.country.getId()); //fix for current bad Hibernate mapping
-						}else{
+						}else if(checkLang){
 							log.error("Bad xml detected, reason: not lang for alternative name");
 							this.setAiArchivalInstitutionName(alternativeNameText);
 							this.errors = new ArrayList<String>();
@@ -1935,7 +1935,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	 * institution series children. 
 	 * @throws XMLStreamException
 	 */
-	private Set<ArchivalInstitution> getXMLArchivalInstitutionLevelChildren(XMLStreamReader r, ArchivalInstitution aiParent) throws XMLStreamException {
+	private Set<ArchivalInstitution> getXMLArchivalInstitutionLevelChildren(XMLStreamReader r, ArchivalInstitution aiParent,boolean checkLang) throws XMLStreamException {
 		Set<ArchivalInstitution> archivalInstitutions = new LinkedHashSet<ArchivalInstitution>();
 		boolean validXML = true;
 		ArchivalInstitution archivalInstitution = null;
@@ -1975,7 +1975,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 							archivalInstitution.setAlorder(archivalInstitutions.size());
 							archivalInstitution.setParent(aiParent);
 						}else if(level!=null && level.equals(ArchivalLandscapeUtils.SERIES)){
-							Set<ArchivalInstitution> children = getXMLArchivalInstitutionLevelChildren(r,archivalInstitution);
+							Set<ArchivalInstitution> children = getXMLArchivalInstitutionLevelChildren(r,archivalInstitution,checkLang);
 							if(children!=null){
 								log.debug("Children has been added with size: "+children.size()+" to institution with id: "+id);
 								archivalInstitution.setChildArchivalInstitutions(new LinkedList<ArchivalInstitution>(children));
@@ -2039,7 +2039,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 							archivalInstitution.setAiAlternativeNames(alternativeNames);
 							archivalInstitution.setCountry(this.country);
 							archivalInstitution.setCountryId(this.country.getId()); //fix for current bad Hibernate mapping
-						}else{
+						}else if(checkLang){
 							log.error("ERROR: bad xml, invalid unittitle, reason: lang null or not found in server");
 							this.setAiArchivalInstitutionName(unittitle);
 							this.errors = new ArrayList<String>();

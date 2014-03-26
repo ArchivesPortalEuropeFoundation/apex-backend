@@ -56,7 +56,7 @@ public class ArchivalLandscapeXMLEditor extends AbstractAction {
 				File.separatorChar +SecurityContext.get().getCountryIsoname().toUpperCase() +
 				File.separatorChar + "AL"+ File.separatorChar + httpFileFileName);
 			ArchivalLandscapeManager archivalLandscapeManager = new ArchivalLandscapeManager();
-			archivalInstitutionList = archivalLandscapeManager.getInstitutionsByALFile(httpFile);
+			archivalInstitutionList = archivalLandscapeManager.getInstitutionsByALFile(httpFile,false);
 		}
 		//altered identifiers part
 		if(this.oldSameNameInstitution!=null && this.newSameNameInstitution!=null){
