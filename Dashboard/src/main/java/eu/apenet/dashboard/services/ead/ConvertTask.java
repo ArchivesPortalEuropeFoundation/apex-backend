@@ -36,7 +36,7 @@ public class ConvertTask extends AbstractEadTask {
 	protected void execute(Ead ead, Properties properties) throws APEnetException {
 		if (valid(ead)) {
 			CounterCLevelCall counterCLevelCall = null;
-			String xslFileName = "default.xsl";
+			String xslFileName = "default-apeEAD.xsl";
 			ArchivalInstitution archivalInstitution = ead.getArchivalInstitution();
 			String mainagencycode = archivalInstitution.getRepositorycode();
             Map<String, String> parameters = getConversionProperties(properties);
@@ -61,7 +61,7 @@ public class ConvertTask extends AbstractEadTask {
 				File outputfile;
 				String tempDirOutputPath = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath()
 						+ APEnetUtilities.FILESEPARATOR + archivalInstitution.getAiId() + APEnetUtilities.FILESEPARATOR;
-				if (xslFileName == null || xslFileName.equals("default.xsl")) {
+				if (xslFileName == null || xslFileName.equals("default-apeEAD.xsl")) {
 					String tempOutputFilePath = tempDirOutputPath + "convert_" + ead.getId() + "_.xml";
 					File tempDirOutput = new File(tempDirOutputPath);
 					if (!tempDirOutput.exists()) {
@@ -77,7 +77,7 @@ public class ConvertTask extends AbstractEadTask {
 							true, null, true, null, APEnetUtilities.getDashboardConfig().getSystemXslDirPath());
 
 					File xslFile = new File(APEnetUtilities.getDashboardConfig().getSystemXslDirPath()
-							+ APEnetUtilities.FILESEPARATOR + "default.xsl");
+							+ APEnetUtilities.FILESEPARATOR + "default-apeEAD.xsl");
 
 					in = new FileInputStream(tempOutputFile);
 					outputfile = new File(tempDirOutputPath + "converted_" + file.getName());
