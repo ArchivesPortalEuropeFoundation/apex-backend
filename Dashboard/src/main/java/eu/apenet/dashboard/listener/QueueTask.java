@@ -6,23 +6,21 @@ import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import javax.persistence.PersistenceException;
+
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
-import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.services.eaccpf.EacCpfService;
-import eu.apenet.persistence.dao.EacCpfDAO;
-import eu.apenet.persistence.dao.EadDAO;
-import eu.apenet.persistence.dao.GenericDAO;
+import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.dao.ResumptionTokenDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.Ead;
-import eu.apenet.persistence.vo.EadContent;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.QueueAction;
@@ -76,8 +74,11 @@ public class QueueTask implements Runnable {
 				try {
 					QueueDaemon.setQueueProcessing(true);
 					processQueue(endTime);
-				} catch (Throwable e) {
-					LOGGER.error("Stopping processing for a while :" + e.getMessage(), e);
+				}catch (PersistenceException e) {
+					LOGGER.fatal("Database exception, the queue processing will be stopped.");
+					QueueDaemon.stop();
+				}catch (Throwable e) {
+					LOGGER.error("Stopping processing for a while :" + APEnetUtilities.generateThrowableLog(e));
 					try {
 						JpaUtil.rollbackDatabaseTransaction();
 					} catch (Exception de) {
@@ -162,7 +163,10 @@ public class QueueTask implements Runnable {
     					hasItems = true;
                     }
 				}
-			} catch (Throwable e) {
+			} catch (PersistenceException e) {
+				LOGGER.error("queueId: " + queueId + " - " + APEnetUtilities.generateThrowableLog(e));
+				throw e;
+			}catch (Throwable e) {
 				LOGGER.error("queueId: " + queueId + " - " + APEnetUtilities.generateThrowableLog(e));
 				JpaUtil.rollbackDatabaseTransaction();
 				/*
