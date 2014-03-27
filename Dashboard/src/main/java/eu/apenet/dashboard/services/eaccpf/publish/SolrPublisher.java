@@ -121,7 +121,7 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 	private void publishEacCpf(EacCpfSolrObject eacCpfSolrObject) throws MalformedURLException, SolrServerException, IOException {
 
 		SolrInputDocument doc = new SolrInputDocument();
-		doc.addField(SolrFields.ID, eacCpfSolrObject.getId());
+		doc.addField(SolrFields.ID, eacCpfSolrObject.getEacCpf().getId());
 		add(doc, SolrFields.EAC_CPF_RECORD_ID, eacCpfSolrObject.getRecordId());
 		doc.addField(SolrFields.EAC_CPF_NAMES, eacCpfSolrObject.getNames());
 		doc.addField(SolrFields.EAC_CPF_PLACES, eacCpfSolrObject.getPlaces());
