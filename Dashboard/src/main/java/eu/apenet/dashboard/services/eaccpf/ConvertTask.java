@@ -67,7 +67,10 @@ public class ConvertTask extends AbstractEacCpfTask {
                 File outputfile;
                 String tempDirOutputPath = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath()
                         + APEnetUtilities.FILESEPARATOR + archivalInstitution.getAiId() + APEnetUtilities.FILESEPARATOR;
-
+                File outputpath = new File(tempDirOutputPath);
+                if (!outputpath.exists()) {
+                    FileUtils.forceMkdir(outputpath);
+                }
                 String xslFilePath = APEnetUtilities.getDashboardConfig().getXslDirPath()
                         + APEnetUtilities.FILESEPARATOR + "system" + APEnetUtilities.FILESEPARATOR + xslFileName;
                 in = new FileInputStream(file);
@@ -118,6 +121,9 @@ public class ConvertTask extends AbstractEacCpfTask {
                 outputfile.delete();
                 eacCpf = DAOFactory.instance().getEacCpfDAO().store(eacCpf);
                 logAction(eacCpf);
+                if (outputpath.listFiles().length == 0) { // There aren't any file in the directory, so it should be removed
+                    FileUtils.forceDelete(outputpath);
+                }
             } catch (IOException e) {
                 logAction(eacCpf, e);
                 throw new APEnetException(this.getActionName() + " " + e.getMessage(), e);
@@ -139,8 +145,9 @@ public class ConvertTask extends AbstractEacCpfTask {
     }
 
     private Map<String, String> getConversionProperties(Properties properties) {
-        if(properties == null)
+        if (properties == null) {
             return new HashMap<String, String>();
+        }
         Map<String, String> parameters = new HashMap<String, String>();
         return parameters;
     }
