@@ -285,6 +285,9 @@ public class EacCpfService {
                     if (queueAction.isValidateAction()) {
                         new ValidateTask().execute(eac, preferences);
                     }
+                    if (queueAction.isPublishAction()) {
+                        new PublishTask().execute(eac, preferences);
+                    }
                     eac.setQueuing(QueuingState.NO);
                     eacDAO.store(eac);
                     queueItemDAO.delete(queueItem);
