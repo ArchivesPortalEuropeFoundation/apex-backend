@@ -39,7 +39,7 @@ public class Warnings implements java.io.Serializable {
 	private String abstract_;
 	private Boolean iswarning;
         @ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="ec_id")
+	@JoinColumn(name="eac_id")
 	private EacCpf eacCpf;
 
 	public Warnings() {
