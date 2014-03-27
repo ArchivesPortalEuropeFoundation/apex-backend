@@ -35,6 +35,8 @@
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
       </analyzer>
     </fieldType> 
+    <fieldType name="facetText" class="solr.TextField" positionIncrementGap="100">
+    </fieldType>
     <fieldType name="unitidType" class="solr.TextField" positionIncrementGap="100">
 	    <analyzer type="index">
 	      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
@@ -81,11 +83,16 @@
 	  <field name="description" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="dateDescription" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="occupation" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
-	  <field name="placesFacet" type="string" indexed="true" stored="true" multiValued="true"  required="false"/>
+	  <field name="placesFacet" type="facetText" indexed="true" stored="true" multiValued="true"  required="false" />
 	  <field name="country" type="string" indexed="true" stored="true" required="false"/>
 	  <field name="ai" type="string" indexed="true" stored="true" required="false"/>
-	  <field name="occupationFacet" type="string" indexed="true"  multiValued="true" stored="true" required="false"/>
+	  <field name="occupationFacet" type="facetText" indexed="true"  multiValued="true" stored="true" required="false"/>
+	  <field name="countryId" type="int" indexed="true" stored="false" required="false"/>
+	  <field name="aiId" type="int" indexed="true" stored="false" required="false"/>	  
+	  <field name="language" type="string" indexed="true" stored="true" required="false"/>
 
+      <field name="recordIdSort" type="sorting" indexed="true" stored="false" required="false" omitNorms="true"/>	
+	  <field name="recordId" type="unitidType" indexed="true" stored="true" required="false"/>
 
       <field name="startdate" type="date" indexed="true" stored="true" required="false"/>
 	  <field name="enddate" type="date" indexed="true" stored="true" required="false"/>
