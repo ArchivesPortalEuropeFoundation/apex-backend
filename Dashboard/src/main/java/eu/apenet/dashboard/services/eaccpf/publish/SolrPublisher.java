@@ -26,12 +26,14 @@ import org.xml.sax.InputSource;
 
 import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
+import eu.apenet.commons.solr.UpdateSolrServerHolder;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.AbstractSolrPublisher;
 import eu.apenet.dashboard.services.eaccpf.xml.EacCpfNamespaceContext;
+import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.apenet.persistence.vo.EacCpf;
 
 public class SolrPublisher  extends AbstractSolrPublisher{
-
 
 
 	private static final Logger LOGGER = Logger.getLogger(SolrPublisher.class);
@@ -71,15 +73,14 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 		}
 	}
 
-	public void parse(File file) throws Exception{
-		LOGGER.info(file.getName());
-		String country = file.getParentFile().getName();
+	public void publish(EacCpf eacCpf) throws Exception{
+		File file = new File (APEnetUtilities.getDashboardConfig().getRepoDirPath() + eacCpf.getPath());
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);		
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document doc = builder.parse(new InputSource(new FileReader(file)));
 		doc.getDocumentElement().normalize();
-		EacCpfSolrObject eacCpfSolrObject = new EacCpfSolrObject();
+		EacCpfSolrObject eacCpfSolrObject = new EacCpfSolrObject(eacCpf);
 		eacCpfSolrObject.setRecordId((String) recordIdExpression.evaluate(doc, XPathConstants.STRING));
 		eacCpfSolrObject.setAgencyCode((String) agencyCodeExpression.evaluate(doc, XPathConstants.STRING));
 		eacCpfSolrObject.setAgencyName(removeUnusedCharacters((String) agencyNameExpression.evaluate(doc, XPathConstants.STRING)));
@@ -112,7 +113,6 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 		toDate = (String) toDateNormalExpression.evaluate(descriptionNode, XPathConstants.STRING);
 		eacCpfSolrObject.setFromDate(obtainDate(fromDate, true));
 		eacCpfSolrObject.setToDate(obtainDate(toDate, false));
-		eacCpfSolrObject.setCountry(country);
 		publishEacCpf(eacCpfSolrObject);
 
 	}
@@ -121,7 +121,8 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 	private void publishEacCpf(EacCpfSolrObject eacCpfSolrObject) throws MalformedURLException, SolrServerException, IOException {
 
 		SolrInputDocument doc = new SolrInputDocument();
-		add(doc, SolrFields.ID, eacCpfSolrObject.getRecordId());
+		doc.addField(SolrFields.ID, eacCpfSolrObject.getId());
+		add(doc, SolrFields.EAC_CPF_RECORD_ID, eacCpfSolrObject.getRecordId());
 		doc.addField(SolrFields.EAC_CPF_NAMES, eacCpfSolrObject.getNames());
 		doc.addField(SolrFields.EAC_CPF_PLACES, eacCpfSolrObject.getPlaces());
 		doc.addField(SolrFields.AI, eacCpfSolrObject.getAgencyName());
@@ -142,7 +143,18 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 				add(doc, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NORMALIZED);
 			}
 		}
+		ArchivalInstitution archivalInstitution = eacCpfSolrObject.getEacCpf().getArchivalInstitution();
+		add(doc, SolrFields.COUNTRY, archivalInstitution.getCountry().getCname().replace(" ", "_") + COLON + SolrValues.TYPE_GROUP + COLON + archivalInstitution.getCountry().getId());
+		doc.addField(SolrFields.COUNTRY_ID, archivalInstitution.getCountry().getId());
+		//add(doc, SolrFields.LANGUAGE, language);
+		//add(doc, SolrFields.LANGMATERIAL, langmaterial);
+		// deprecated
+		add(doc, SolrFields.AI, archivalInstitution.getAiname() + COLON + archivalInstitution.getAiId());
+		doc.addField(SolrFields.AI_ID, archivalInstitution.getAiId());
 		addSolrDocument(doc);
+	}
+	public void deleteEverything() throws SolrServerException{
+		rollbackSolrDocuments("*:*");
 	}
 	@Override
 	protected String getKey() {
@@ -154,9 +166,17 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			String text = removeUnusedCharacters(nodeList.item(i).getTextContent());
 			if (StringUtils.isNotBlank(text)) {
+				int index = text.indexOf('(');
+				if (index > 0){
+					text  = text.substring(0, index).trim();
+				}
 				results.add(text);
 			}
 		}
 		return results;
+	}
+	public long unpublish(EacCpf eacCpf) throws SolrServerException, IOException {
+		UpdateSolrServerHolder server = UpdateSolrServerHolder.getInstance();
+		return server.deleteByQuery("(" + SolrFields.AI_ID + ":" + eacCpf.getAiId() + " AND " + SolrFields.ID + ":\"" + eacCpf.getId() + "\")");
 	}
 }

@@ -2,7 +2,10 @@ package eu.apenet.dashboard.services.eaccpf.publish;
 
 import java.util.Set;
 
+import eu.apenet.persistence.vo.EacCpf;
+
 public class EacCpfSolrObject {
+	private Long id;
 	private String recordId;
 	private String agencyCode;
 	private String agencyName; 
@@ -15,6 +18,16 @@ public class EacCpfSolrObject {
 	private String fromDate;
 	private String toDate;
 	
+	private EacCpf eacCpf;
+	public EacCpfSolrObject ( EacCpf eacCpf){
+		this.eacCpf = eacCpf;
+	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	public String getRecordId() {
 		return recordId;
 	}
@@ -81,6 +94,12 @@ public class EacCpfSolrObject {
 	}
 	public void setCountry(String country) {
 		this.country = country;
+	}
+	public EacCpf getEacCpf() {
+		return eacCpf;
+	}
+	public void setEacCpf(EacCpf eacCpf) {
+		this.eacCpf = eacCpf;
 	}
 
 }

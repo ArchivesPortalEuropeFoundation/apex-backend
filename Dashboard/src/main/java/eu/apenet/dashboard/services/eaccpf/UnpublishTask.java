@@ -13,6 +13,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.UpdateSolrServerHolder;
+import eu.apenet.dashboard.services.eaccpf.publish.SolrPublisher;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -41,7 +42,7 @@ class UnpublishTask extends AbstractEacCpfTask {
 				long startTime = System.currentTimeMillis();
 				EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
 				logger.debug("Removing the EacCpf with id '" + eacCpf.getIdentifier()+ "' from the index");
-				long solrTime = deleteFromSolr(eacCpf.getId(), eacCpf.getAiId());
+				long solrTime = new SolrPublisher().unpublish(eacCpf);
 				JpaUtil.beginDatabaseTransaction();
 				ContentUtils.changeSearchable(eacCpf, false);
 				eacCpfDAO.insertSimple(eacCpf);
@@ -54,8 +55,4 @@ class UnpublishTask extends AbstractEacCpfTask {
 		}
 	}
 
-	private static long deleteFromSolr(Integer id, int aiId) throws SolrServerException, IOException {
-		UpdateSolrServerHolder server = UpdateSolrServerHolder.getInstance();
-		return server.deleteByQuery("(" + SolrFields.AI_ID + ":" + aiId + " AND " + SolrFields.ID + ":\"" + id + "\")");
-	}
 }
