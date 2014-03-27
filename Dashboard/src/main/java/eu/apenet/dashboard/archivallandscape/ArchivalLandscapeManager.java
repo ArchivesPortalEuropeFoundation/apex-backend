@@ -735,82 +735,73 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 
 		this.newInstitutionsFile = tempListIdentifiersClone; //insert list
 		//deletes
-		boolean deletes = ( (ingestedIdentifiers.size()>fileIdentifiers.size() && 
-					(this.oldSameIdentifierInstitutionsFile==null || this.oldSameIdentifierInstitutionsFile.size()==0)) ||
-					
-				(this.oldSameIdentifierInstitutionsFile!=null && this.oldSameIdentifierInstitutionsFile.size()>0 ) ||
-				(this.relatedInstitutionsByName!=null && this.relatedInstitutionsByName.size()>0) ||
-				(this.oldEmptyIdentifierInstitutionsFile!=null && this.oldEmptyIdentifierInstitutionsFile.size()>0)
-			);
-		if(deletes){
-			this.institutionsToBeDeleted = new ArrayList<ArchivalInstitution>();
-			List<ArchivalInstitution> institutionsDetected = new ArrayList<ArchivalInstitution>();
-			Iterator<ArchivalInstitution> itIngestedInstitutions = ingestedInstitutions.iterator();
-			while(itIngestedInstitutions.hasNext()){
-				ArchivalInstitution tempInstitution = itIngestedInstitutions.next();
-				Iterator<ArchivalInstitution> itFileArchivalInstitutions = archivalInstitutions.iterator();
-				boolean found = false;
-				if(fileIdentifiers.contains(tempInstitution.getInternalAlId()) || 
-						tempInstitution.getInternalAlId()==null ||
-						tempInstitution.getInternalAlId().trim().isEmpty()){
-					institutionsDetected.add(tempInstitution);
-				}else{
-					while(!found && itFileArchivalInstitutions.hasNext()){
-						ArchivalInstitution currentInstitution = itFileArchivalInstitutions.next();
-						String currentIdentifier = currentInstitution.getInternalAlId();
-						if(tempInstitution.getInternalAlId().equals(currentIdentifier)){
-							institutionsDetected.add(currentInstitution);
-							found = true;
-						}
-					}
-				}
-			}
-			itIngestedInstitutions = ingestedInstitutions.iterator();
-			List<ArchivalInstitution> cloneIngestedInstitutions = new ArrayList<ArchivalInstitution>(ingestedInstitutions);
-			while(itIngestedInstitutions.hasNext()){
-				ArchivalInstitution ingestedInstitution = itIngestedInstitutions.next();
-				boolean found = false;
-				Iterator<ArchivalInstitution> targetInstitutionsIt = institutionsDetected.iterator();
-				while(!found && targetInstitutionsIt.hasNext()){
-					ArchivalInstitution targetInstitution = targetInstitutionsIt.next();
-					String targetInternalIdentifier = targetInstitution.getInternalAlId();
-					if(ingestedInstitution.getInternalAlId().equals(targetInternalIdentifier)){
-						cloneIngestedInstitutions.remove(ingestedInstitution);
+		this.institutionsToBeDeleted = new ArrayList<ArchivalInstitution>();
+		List<ArchivalInstitution> institutionsDetected = new ArrayList<ArchivalInstitution>();
+		Iterator<ArchivalInstitution> itIngestedInstitutions = ingestedInstitutions.iterator();
+		while(itIngestedInstitutions.hasNext()){
+			ArchivalInstitution tempInstitution = itIngestedInstitutions.next();
+			Iterator<ArchivalInstitution> itFileArchivalInstitutions = archivalInstitutions.iterator();
+			boolean found = false;
+			if(fileIdentifiers.contains(tempInstitution.getInternalAlId()) || 
+					tempInstitution.getInternalAlId()==null ||
+					tempInstitution.getInternalAlId().trim().isEmpty()){
+				institutionsDetected.add(tempInstitution);
+			}else{
+				while(!found && itFileArchivalInstitutions.hasNext()){
+					ArchivalInstitution currentInstitution = itFileArchivalInstitutions.next();
+					String currentIdentifier = currentInstitution.getInternalAlId();
+					if(tempInstitution.getInternalAlId().equals(currentIdentifier)){
+						institutionsDetected.add(currentInstitution);
 						found = true;
 					}
 				}
 			}
+		}
+		itIngestedInstitutions = ingestedInstitutions.iterator();
+		List<ArchivalInstitution> cloneIngestedInstitutions = new ArrayList<ArchivalInstitution>(ingestedInstitutions);
+		while(itIngestedInstitutions.hasNext()){
+			ArchivalInstitution ingestedInstitution = itIngestedInstitutions.next();
+			boolean found = false;
+			Iterator<ArchivalInstitution> targetInstitutionsIt = institutionsDetected.iterator();
+			while(!found && targetInstitutionsIt.hasNext()){
+				ArchivalInstitution targetInstitution = targetInstitutionsIt.next();
+				String targetInternalIdentifier = targetInstitution.getInternalAlId();
+				if(ingestedInstitution.getInternalAlId().equals(targetInternalIdentifier)){
+					cloneIngestedInstitutions.remove(ingestedInstitution);
+					found = true;
+				}
+			}
+		}
 
-			// Check if the temp list contains an institution with same name that one in the
-			// same identifiers or empty identifiers lists.
-			if (cloneIngestedInstitutions != null) {
-				Iterator<ArchivalInstitution> keyInstitutionIt = new ArrayList<ArchivalInstitution>(cloneIngestedInstitutions).iterator();
-				while (keyInstitutionIt.hasNext()) {
-					ArchivalInstitution keyInstitution = keyInstitutionIt.next();
-					boolean found = false;
-					Iterator<ArchivalInstitution> keysSameIdIt = new ArrayList<ArchivalInstitution>(this.oldSameIdentifierInstitutionsFile).iterator();
-					while (!found && keysSameIdIt.hasNext()) {
-						ArchivalInstitution sameIdInstitution = keysSameIdIt.next();
-						if (sameIdInstitution.getAiname().equals(keyInstitution.getAiname())) {
-							cloneIngestedInstitutions.remove(keyInstitution);
-							found = true;
-						}
+		// Check if the temp list contains an institution with same name that one in the
+		// same identifiers or empty identifiers lists.
+		if (cloneIngestedInstitutions != null) {
+			Iterator<ArchivalInstitution> keyInstitutionIt = new ArrayList<ArchivalInstitution>(cloneIngestedInstitutions).iterator();
+			while (keyInstitutionIt.hasNext()) {
+				ArchivalInstitution keyInstitution = keyInstitutionIt.next();
+				boolean found = false;
+				Iterator<ArchivalInstitution> keysSameIdIt = new ArrayList<ArchivalInstitution>(this.oldSameIdentifierInstitutionsFile).iterator();
+				while (!found && keysSameIdIt.hasNext()) {
+					ArchivalInstitution sameIdInstitution = keysSameIdIt.next();
+					if (sameIdInstitution.getAiname().equals(keyInstitution.getAiname())) {
+						cloneIngestedInstitutions.remove(keyInstitution);
+						found = true;
 					}
-					if (!found) {
-						Iterator<ArchivalInstitution> keysEmptyIdIt = new ArrayList<ArchivalInstitution>(this.oldEmptyIdentifierInstitutionsFile).iterator();
-						while (!found && keysEmptyIdIt.hasNext()) {
-							ArchivalInstitution emptyIdInstitution = keysEmptyIdIt.next();
-							if (emptyIdInstitution.getAiname().equals(keyInstitution.getAiname())) {
-								cloneIngestedInstitutions.remove(keysEmptyIdIt);
-								found = true;
-							}
+				}
+				if (!found) {
+					Iterator<ArchivalInstitution> keysEmptyIdIt = new ArrayList<ArchivalInstitution>(this.oldEmptyIdentifierInstitutionsFile).iterator();
+					while (!found && keysEmptyIdIt.hasNext()) {
+						ArchivalInstitution emptyIdInstitution = keysEmptyIdIt.next();
+						if (emptyIdInstitution.getAiname().equals(keyInstitution.getAiname())) {
+							cloneIngestedInstitutions.remove(keysEmptyIdIt);
+							found = true;
 						}
 					}
 				}
 			}
-			this.institutionsToBeDeleted = cloneIngestedInstitutions;
-			this.institutionsToBeDeleted.removeAll(this.oldRelatedInstitutions);
 		}
+		this.institutionsToBeDeleted = cloneIngestedInstitutions;
+		this.institutionsToBeDeleted.removeAll(this.oldRelatedInstitutions);
 
 		return INPUT;
 	}
