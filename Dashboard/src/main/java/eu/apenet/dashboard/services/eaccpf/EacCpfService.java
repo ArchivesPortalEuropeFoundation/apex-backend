@@ -254,7 +254,7 @@ public class EacCpfService {
                     } else if (queueAction.isDeleteAction()) {
 //                        new DeleteFromEuropeanaTask().execute(eac, preferences);
 //                        new DeleteEseEdmTask().execute(eac, preferences);
-//                        new UnpublishTask().execute(eac, preferences);
+                        new UnpublishTask().execute(eac, preferences);
                         new DeleteTask().execute(eac, preferences);
                         eacDeleted = true;
                     }
