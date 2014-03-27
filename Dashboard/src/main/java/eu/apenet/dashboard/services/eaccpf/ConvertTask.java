@@ -117,6 +117,7 @@ public class ConvertTask extends AbstractEacCpfTask {
 
                 eacCpf.setConverted(true);
                 logger.debug("Converted file takes name of original file.");
+                in.close();
                 FileUtils.copyFile(outputfile, file);
                 outputfile.delete();
                 eacCpf = DAOFactory.instance().getEacCpfDAO().store(eacCpf);
