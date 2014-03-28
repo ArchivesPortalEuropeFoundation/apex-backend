@@ -214,6 +214,8 @@
 			<div>&nbsp;</div>
 			<s:property value="getText('al.message.noChanges')" />
 			<div>&nbsp;</div>
+			<s:property value="httpFileFileName" />
+			<div>&nbsp;</div>
 			<s:property value="getText('a.message.overwritefile.question')" />
 			<div>&nbsp;</div>
 		</div>

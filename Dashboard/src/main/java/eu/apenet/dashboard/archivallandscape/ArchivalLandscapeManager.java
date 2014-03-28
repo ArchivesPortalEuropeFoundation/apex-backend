@@ -197,6 +197,10 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		return this.insertedInstitutions;
 	}
 
+	public String getHttpFileFileName() {
+		return this.httpFileFileName;
+	}
+
 	public void setHttpFileFileName(String httpFileFileName) {
 		this.httpFileFileName = httpFileFileName;
 	}
