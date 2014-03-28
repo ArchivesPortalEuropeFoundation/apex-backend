@@ -248,10 +248,10 @@
                                             </option>
                                         </c:if>
                                         <c:if test="${eacCpfResult.validated}">
-                                            <option value="_blank|preview.action">
+<%--                                            <option value="_blank|preview.action">
                                                 <s:text name="content.message.preview" />
-                                            </option>
-                                            <option value="_self|download.action">
+                                            </option>--%>
+                                            <option value="_self|downloadEacCpf.action">
                                                 <s:text name="content.message.download" />
                                             </option>
                                         </c:if>
@@ -265,7 +265,7 @@
                                                 <s:text name="content.message.unpublish" />
                                             </option>
                                         </c:if>
-                                        <c:if
+                                        <%--<c:if
                                             test="${eacCpfResult.validated and not eacCpfResult.convertedToEseEdm and not eacCpfResult.deliveredToEuropeana}">
                                             <option value="_self|displayEseConvert.action">
                                                 <s:text name="content.message.convert.ese" />
@@ -289,7 +289,7 @@
                                             <option value="action|deleteFromEuropeana">
                                                 <s:text name="content.message.delete.europeana" />
                                             </option>
-                                        </c:if>
+                                        </c:if>--%>
                                         <option value="action|delete">
                                             <s:text name="content.message.delete" />
                                         </option>

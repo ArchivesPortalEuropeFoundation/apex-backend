@@ -294,17 +294,13 @@
             </result>
         </action>
 
-
-
-
         <action name="download" class="eu.apenet.dashboard.actions.content.ead.EadActions" method="download">
 
         </action>
 
+        <action name="downloadEacCpf" class="eu.apenet.dashboard.actions.content.eaccpf.EacCpfActions" method="download">
 
-
-
-
+        </action>
 
         <!--Upload: Main page -->
         <action name="upload" class="eu.apenet.dashboard.manual.UploadContentAction">
