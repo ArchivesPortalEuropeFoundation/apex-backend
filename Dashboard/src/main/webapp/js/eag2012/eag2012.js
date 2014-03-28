@@ -1524,45 +1524,6 @@ function yiAddVisitorsAddressTranslation(text1) {
 	}
 }
 
-function yiAddPostalAddressIfDifferent(text1, text2, text3, text4,control) {
-	$("#buttonAddPostalAddressIfDifferent").hide();
-   // var control = true;
-	var select = '<select id="selectYIPASelectLanguage" onchange="postalAddressLanguageChanged($(this).parent().parent().parent().parent());" >'+$("#selectYIPNOTISelectLanguage").html()+'</select>';
-
-	$("table#yiTableOthers").before('<table id="yiTablePostalAddress_1" class=\"tablePadding\">'+
-		'<tr id="yiPostalAddressLabel">'+
-			'<td id="postalAddressLabel" colspan="4">'+text1+
-			'</td>'+
-		'</tr>'+
-		'<tr id="yiPostalAddressStreet">'+
-			'<td>'+
-				'<label for="textYIPAStreet">'+text3+'<span class="required">*</span>:</label>'+
-			'</td>'+
-			'<td>'+
-				'<textarea id="textYIPAStreet" onchange="postalAddressStreetChanged($(this).parent().parent().parent().parent());"></textarea>'+
-			'</td>'+
-			'<td id="yiPostalAddressLanguage" class="labelLeft">'+
-				'<label for="selectYIPASelectLanguage">'+text2+':</label>'+
-			'</td>'+
-			'<td>'+select+
-			'</td>'+
-		'</tr>'+
-		'<tr id="yiPostalAddressCity">'+
-			'<td>'+
-				'<label for="textYIPACity">'+text4+'<span class="required">*</span>:</label>'+
-			'</td>'+
-			'<td>'+
-				'<textarea id="textYIPACity" onchange="postalAddressCityChanged($(this).parent().parent().parent().parent());"></textarea>'+
-			'</td>'+
-		'</tr></table>');
-
-	$("table#yiTableOthers tr#yiPostalAddressTranslation").show();
-	if(!control){
-		control=true;
-		contactAddPostalAddressIfDifferent(text1, text2, text3, text4,control);
-	}
-}
-
 function yiAddPostalAddressTranslation(text1) {
 	var counter = $("table[id^='yiTablePostalAddress_']").length;
 	var street = $("table#yiTablePostalAddress_"+counter+" textarea#textYIPAStreet").attr("value");
@@ -2771,7 +2732,6 @@ function contactAddPostalAddressIfDifferent(property1, property2, property3, pro
 	$("table#contactTable"+currentTab+" table#contactTablePostalAddress_1 #selectContactLanguagePostalAddress").attr("value","none");
 	if(!control && currentTab == "_1"){
 		control=true;
-		yiAddPostalAddressIfDifferent(property1, property2, property3, property4,control);
 	}
 }
 
@@ -4939,7 +4899,7 @@ function disableCoordinates(){
 }
 
 $(document).ready(function(){
-	disableCoordinates();      	
+	disableCoordinates();
 });
 
 /**
@@ -4950,4 +4910,31 @@ function copyCountryName() {
 	if ($("table#contactTable_1 #textContactCountryOfTheInstitution").attr("value") == "") {
 		$("table#contactTable_1 #textContactCountryOfTheInstitution").attr("value",$("table#yiTableVisitorsAddress_1 textarea#textYICountry").attr("value"));
 	}
+}
+
+
+function selectTypeOfInstitutionOptionsIntoYITab(){
+	$("#selectTypeOfTheInstitution option").each(function(){
+		var value = $(this).val();
+		if(value!=undefined && value.length>0){
+			if($(this).is(':selected')){
+				$("select#textYISelectParallelNameOfTheInstitution option[value='"+value+"']").attr("selected","true");
+			}else{
+				$("select#textYISelectParallelNameOfTheInstitution option[value='"+value+"']").removeAttr("selected");
+			}
+		}
+	});
+}
+
+function selectTypeOfInstitutionOptionsIntoIdTab(){
+	$("#textYISelectParallelNameOfTheInstitution option").each(function(){
+		var value = $(this).val();
+		if(value!=undefined && value.length>0){
+			if($(this).is(':selected')){
+				$("select#selectTypeOfTheInstitution option[value='"+value+"']").attr("selected","true");
+			}else{
+				$("select#selectTypeOfTheInstitution option[value='"+value+"']").removeAttr("selected");
+			}
+		}
+	});
 }

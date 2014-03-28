@@ -135,6 +135,24 @@
 				</select>
 			</td>
 		</tr>
+		<tr>
+			<td>
+				<label for="textYISelectParallelNameOfTheInstitution"><s:property value="getText('eag2012.identity.selectType')" />:</label>
+			</td>
+			<td>
+				<select id="textYISelectParallelNameOfTheInstitution" size="4" multiple="multiple" class="selectControlTab" onclick="selectTypeOfInstitutionOptionsIntoIdTab()">
+					<s:iterator value="typeOfInstitutionList" var="type"> 
+						<option value="<s:property value="#type.key" />"
+							<s:set var="isSelected" value="false"/>
+							<s:iterator var="current" value="loader.repositoryType" status="status">
+								<s:if test="#type.key == #current"> selected="selected"</s:if>
+							</s:iterator> ><s:property value="#type.value" /></option>
+					</s:iterator>
+				</select>
+			</td>
+			<td colspan="2">
+			</td>
+		</tr>
 	</table>
 
 	<s:if test="%{loader.yiNumberOfVisitorsAddress.size() > 0}">
@@ -312,88 +330,7 @@
 		</tr>
 	</table>
 
-	<s:if test="%{loader.yiNumberOfPostalAddress.size() > 0}">
-		<s:set var="counter" value="0"/>
-		<s:iterator var="current" value="loader.yiNumberOfPostalAddress" status="status">
-			<table id="yiTablePostalAddress_<s:property value="%{#status.index + 1}" />" class="tablePadding">
-				<tr id="yiPostalAddressLabel">
-					<td id="postalAddressLabel" colspan="4">
-						<s:property value="getText('eag2012.commons.postalAddress')" />
-					</td>
-				</tr>
-	
-				<tr id="yiPostalAddressStreet">
-					<td>
-						<s:if test="%{#status.index == 0}">
-							<label for="textYIPAStreet"><s:property value="getText('eag2012.commons.street')" /><span class="required">*</span>:</label>
-						</s:if>
-						<s:else>
-							<label for="textYIPAStreet"><s:property value="getText('eag2012.commons.street')" />:</label>
-						</s:else>
-					</td>
-					<td>
-						<textarea id="textYIPAStreet" onchange="postalAddressStreetChanged($(this).parent().parent().parent().parent());"><s:property value="loader.yiStreetPostal[#counter]" /></textarea>	
-					</td>
-					<td id="yiPostalAddressLanguage" class="labelLeft">
-						<label for="selectYIPASelectLanguage"><s:property value="getText('eag2012.commons.selectLanguage')" />:</label>
-					</td>
-					<td>
-						<select id="selectYIPASelectLanguage" onchange="postalAddressLanguageChanged($(this).parent().parent().parent().parent());">
-							<s:iterator value="languageList" var="language"> 
-								<option value="<s:property value="#language.key" />"
-									<s:if test="%{#language.key == loader.yiStreetPostalLang[#counter]}" > selected=selected </s:if>>
-									<s:property value="#language.value" />
-								</option>
-							</s:iterator>	
-						</select>
-					</td>
-				</tr>
-	
-				<tr id="yiPostalAddressCity">
-					<td>
-						<s:if test="%{#status.index == 0}">
-							<label for="textYIPACity"><s:property value="getText('eag2012.commons.cityTownWithPostalcode')" /><span class="required">*</span>:</label>
-						</s:if>
-						<s:else>
-							<label for="textYIPACity"><s:property value="getText('eag2012.commons.cityTownWithPostalcode')" />:</label>
-						</s:else>
-					</td>
-					<td>
-						<textarea id="textYIPACity" onchange="postalAddressCityChanged($(this).parent().parent().parent().parent());"><s:property value="loader.yiMunicipalityPostalcodePostal[#counter]" /></textarea>
-					</td>
-					<td colspan="2">
-					</td>
-				</tr>
-			</table>
-			<s:set var="counter" value="%{#counter + 1}"/>
-		</s:iterator>
-	</s:if>
-
 	<table id="yiTableOthers" class="tablePadding">
-		<tr>
-			<td colspan="4">
-				<s:if test="%{loader.yiNumberOfPostalAddress.size() > 0}">
-					<input type="button" id="buttonAddPostalAddressIfDifferent" value="<s:property value="getText('eag2012.commons.addPostalAddress')"/>" onclick="yiAddPostalAddressIfDifferent('<s:property value="getText('eag2012.commons.postalAddress')" />', '<s:property value="getText('eag2012.commons.selectLanguage')" />', '<s:property value="getText('eag2012.commons.street')" />', '<s:property value="getText('eag2012.commons.cityTownWithPostalcode')" />')" style="display:none;" />
-				</s:if>
-				<s:else>
-					<input type="button" id="buttonAddPostalAddressIfDifferent" value="<s:property value="getText('eag2012.commons.addPostalAddress')"/>" onclick="yiAddPostalAddressIfDifferent('<s:property value="getText('eag2012.commons.postalAddress')" />', '<s:property value="getText('eag2012.commons.selectLanguage')" />', '<s:property value="getText('eag2012.commons.street')" />', '<s:property value="getText('eag2012.commons.cityTownWithPostalcode')" />')" />
-				</s:else>
-			</td>
-		</tr>
-
-		<s:if test="%{loader.yiNumberOfPostalAddress.size() > 0}">
-			<tr id="yiPostalAddressTranslation">
-		</s:if>
-		<s:else>
-			<tr id="yiPostalAddressTranslation" style="display:none;">
-		</s:else>
-			<td colspan="2">
-				<input type="button" id="buttonAddPostalAddressTranslation" value="<s:property value="getText('eag2012.commons.addPostalTranslationAddress')"/>" onclick="yiAddPostalAddressTranslation('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
-			</td>
-			<td colspan="2">
-			</td>
-		</tr>
-
 		<tr>
 			<td>
 				<label for="selectYIContinent" ><s:property value="getText('eag2012.options.continent')"/><span class="required">*</span>:</label>
@@ -741,95 +678,6 @@
 			</td>
 		</tr>
 
-		<s:if test="%{loader.yiClosing.size() > 0}">
-			<s:set var="counter" value="0"/>
-			<s:iterator var="current" value="loader.yiClosing" status="status">
-				<s:if test="%{#status.index == 0}">
-					<tr id="fieldClosingDates">
-				</s:if>
-				<s:else>
-					<tr id="fieldClosingDates_<s:property value="%{#status.index + 1}" />">
-				</s:else>
-					<td>
-						<s:if test="%{#status.index == 0}">
-							<label for="yourInstitutionClosingDates" ><s:property value="getText('eag2012.commons.closingDates')"/>:</label>
-						</s:if>
-						<s:else>
-							<label for="yourInstitutionClosingDates_<s:property value="%{#status.index + 1}" />" ><s:property value="getText('eag2012.commons.closingDates')"/>:</label>
-						</s:else>
-					</td>
-					<td>
-						<s:if test="%{#status.index == 0}">
-							<textarea id="yourInstitutionClosingDates" onchange="closingHoursOfInstitutionChanged($(this));"><s:property value="#current" /></textarea>
-						</s:if>
-						<s:else>
-							<textarea id="yourInstitutionClosingDates_<s:property value="%{#status.index + 1}" />" onchange="closingHoursOfInstitutionChanged($(this));"><s:property value="#current" /></textarea>
-						</s:else>
-					</td>
-					<td class="labelLeft">
-						<s:if test="%{#status.index == 0}">
-							<label for="selectTextYIClosingTimes"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-						</s:if>
-						<s:else>
-							<label for="selectTextYIClosingTimes_<s:property value="%{#status.index + 1}" />"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-						</s:else>
-					</td>
-					<td>
-						<s:if test="%{#status.index == 0}">
-							<select id="selectTextYIClosingTimes" onchange="duplicateClosingTimesLanguage($(this));" >
-						</s:if>
-						<s:else>
-							<select id="selectTextYIClosingTimes_<s:property value="%{#status.index + 1}" />" onchange="duplicateClosingTimesLanguage($(this));">
-						</s:else>
-							<s:iterator value="languageList" var="language"> 
-								<option value="<s:property value="#language.key" />"
-									<s:if test="%{#language.key == loader.yiClosingLang[#counter]}" > selected=selected </s:if>>
-									<s:property value="#language.value" />
-								</option>
-							</s:iterator>
-						</select>
-					</td>
-				</tr>
-				<s:set var="counter" value="%{#counter + 1}"/>
-			</s:iterator>
-
-			<tr id="trYIbuttonAddClosingDates">
-				<td id="tdASAddClosingDates" colspan="2">
-					<input type="button" id="buttonASAddClosingDates"  value="<s:property value='getText("eag2012.commons.addClosingDates")' />" onclick="yIAddClosingDates2('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
-				</td>
-				<td colspan="2">
-				</td>
-			</tr>
-		</s:if>
-		<s:else>
-			<tr id="fieldClosingDates">
-				<td>
-					<label for="yourInstitutionClosingDates"><s:property value="getText('eag2012.commons.closingDates')"/>:</label>
-				</td>
-				<td>
-					<textarea id="yourInstitutionClosingDates" onchange="closingHoursOfInstitutionChanged($(this));"></textarea>
-				</td>
-				<td class="labelLeft">
-					<label for="selectTextYIClosingTimes"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-				</td>
-				<td>
-					<select id="selectTextYIClosingTimes" onchange="duplicateClosingTimesLanguage($(this));">
-						<s:iterator value="languageList" var="language"> 
-							<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
-						</s:iterator>
-					</select>
-				</td>
-			</tr>
-
-			<tr id="trYIbuttonAddClosingDates">
-				<td id="tdASAddClosingDates" colspan="2">
-					<input type="button" id="buttonASAddClosingDates"  value="<s:property value='getText("eag2012.commons.addClosingDates")' />" onclick="yIAddClosingDates2('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
-				</td>
-				<td colspan="2">
-				</td>
-			</tr>
-		</s:else>
-
 		<s:if test="%{loader.yiRestaccess.size() > 0}">
 			<tr>
 				<td>
@@ -1065,131 +913,6 @@
 				<td colspan="2"> </td>
 				<td colspan="2" class="labelLeft">
 					<input type="button" id="buttonAddFutherInformationOnExistingFacilities2" style="display:none;" value="<s:property value="getText('eag2012.yourinstitution.addInfoOnExistingFacilities')"/>" onclick="yiAddFutherInformationOnExistingFacilities2('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
-				</td>
-			</tr>
-		</s:else>
-
-		<s:if test="%{loader.yiResourceRelationHref.size() > 0}">
-			<s:set var="counter" value="0"/>
-			<s:iterator var="current" value="loader.yiResourceRelationHref" status="status">
-				<s:if test="%{#status.index == 0}">
-					<tr id="trYIReferencetoHoldingsguide">
-				</s:if>
-				<s:else>
-					<tr id="trYIReferencetoHoldingsguide_<s:property value="%{#status.index + 1}" />">
-				</s:else>
-					<td>
-						<s:if test="%{#status.index == 0}">
-							<label for="textReferencetoyourinstitutionsholdingsguide" ><s:property value="getText('eag2012.yourinstitution.linkToHoldingsGuide')"/>:</label>
-						</s:if>
-						<s:else>
-							<label for="textReferencetoyourinstitutionsholdingsguide_<s:property value="%{#status.index + 1}" />" ><s:property value="getText('eag2012.yourinstitution.linkToHoldingsGuide')"/>:</label>
-						</s:else>
-					</td>
-					<td>
-						<s:if test="%{#status.index == 0}">
-							<textarea id="textReferencetoyourinstitutionsholdingsguide" onchange="linkToYourHolndingsGuideChanged($(this));"><s:property value="#current" /></textarea>
-						</s:if>
-						<s:else>
-							<textarea id="textReferencetoyourinstitutionsholdingsguide_<s:property value="%{#status.index + 1}" />" onchange="linkToYourHolndingsGuideChanged($(this));"><s:property value="#current" /></textarea>
-						</s:else>
-					</td>
-					<td class="labelLeft">
-						<s:if test="%{#status.index == 0}">
-							<label for="textYIHoldingsGuideLinkTitle"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
-						</s:if>
-						<s:else>
-							<label for="textYIHoldingsGuideLinkTitle_<s:property value="%{#status.index + 1}" />"><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
-						</s:else>
-					</td>
-					<td>
-						<s:if test="%{#status.index == 0}">
-							<textarea id="textYIHoldingsGuideLinkTitle" onchange="linkToYourHolndingsGuideTitleChanged($(this));"><s:property value="loader.yiResourceRelationrelationEntry[#counter]" /></textarea>
-						</s:if>
-						<s:else>
-							<textarea id="textYIHoldingsGuideLinkTitle_<s:property value="%{#status.index + 1}" />" onchange="linkToYourHolndingsGuideTitleChanged($(this));"><s:property value="loader.yiResourceRelationrelationEntry[#counter]" /></textarea>
-						</s:else>
-					</td>
-				</tr>
-
-				<s:if test="%{#status.index == 0}">
-					<tr id="trYIReferenceto2Holdingsguide"><%-- waiting for ticket decision #543 --%>
-				</s:if>
-				<s:else>
-					<tr id="trYIReferenceto2Holdingsguide_<s:property value="%{#status.index + 1}" />"><%-- waiting for ticket decision #543 --%>
-				</s:else>
-					<td colspan="2">
-					</td>
-					<td class="labelLeft">
-						<s:if test="%{#status.index == 0}">
-							<label for="selectYIReferencetoHoldingsguide"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-						</s:if>
-						<s:else>
-							<label for="selectYIReferencetoHoldingsguide_<s:property value="%{#status.index + 1}" />"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-						</s:else>
-					</td>
-					<td>
-						<s:if test="%{#status.index == 0}">
-							<select id="selectYIReferencetoHoldingsguide" onchange="selectYIReferencetoHoldingsguideChange($(this));">
-						</s:if>
-						<s:else>
-							<select id="selectYIReferencetoHoldingsguide_<s:property value="%{#status.index + 1}" />" onchange="selectYIReferencetoHoldingsguideChange($(this));" >
-						</s:else>
-							<s:iterator value="languageList" var="language"> 
-								<option value="<s:property value="#language.key" />"
-									<s:if test="%{#language.key == loader.yiResourceRelationLang[#counter]}" > selected=selected </s:if>>
-									<s:property value="#language.value" />
-								</option>
-							</s:iterator>
-						</select>
-					</td>
-				</tr><%-- waiting for ticket decision #543 --%>
-				<s:set var="counter" value="%{#counter + 1}"/>
-			</s:iterator>
-
-			<tr>
-				<td colspan="2">
-				</td>
-				<td colspan="2" class="labelLeft">
-					<input type="button" id="buttonAddReferencetoyourinstitutionsholdingsguide" value="<s:property value="getText('eag2012.commons.addNewResourceRelation')"/>" onclick="yiAddReferencetoyourinstitutionsholdingsguide('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
-				</td>
-			</tr>
-		</s:if>
-		<s:else>
-			<tr id="trYIReferencetoHoldingsguide">
-				<td>
-					<label for="textReferencetoyourinstitutionsholdingsguide" ><s:property value="getText('eag2012.yourinstitution.linkToHoldingsGuide')"/>:</label>
-				</td>
-				<td>
-					<textarea id="textReferencetoyourinstitutionsholdingsguide" onchange="linkToYourHolndingsGuideChanged($(this));"></textarea>
-				</td>
-				<td class="labelLeft">
-					<label for="textYIHoldingsGuideLinkTitle" ><s:property value="getText('eag2012.commons.linkTitle')"/>:</label>
-				</td>
-				<td>
-					<textarea type="text" id="textYIHoldingsGuideLinkTitle" onchange="linkToYourHolndingsGuideTitleChanged($(this));" ></textarea>
-				</td>
-			</tr>
-
-			<tr id="trYIReferenceto2Holdingsguide" ><%-- waiting for ticket decision #543 --%>
-				<td colspan="2"></td>
-				<td class="labelLeft">
-					<label for="selectYIReferencetoHoldingsguide"><s:property value="getText('eag2012.commons.selectLanguage')"/>:</label>
-				</td>
-				<td>
-					<select id="selectYIReferencetoHoldingsguide" onchange="selectYIReferencetoHoldingsguideChange($(this));">
-						<s:iterator value="languageList" var="language"> 
-							<option value="<s:property value="#language.key" />"><s:property value="#language.value" /></option>
-						</s:iterator>
-					</select>
-				</td>
-			</tr>
-
-			<tr><%-- waiting for ticket decision #543 --%>
-				<td colspan="2">
-				</td>
-				<td colspan="2" class="labelLeft">
-					<input type="button" id="buttonAddReferencetoyourinstitutionsholdingsguide" value="<s:property value="getText('eag2012.commons.addNewResourceRelation')"/>" onclick="yiAddReferencetoyourinstitutionsholdingsguide('<s:property value="getText('eag2012.commons.pleaseFillData')" />');" />
 				</td>
 			</tr>
 		</s:else>

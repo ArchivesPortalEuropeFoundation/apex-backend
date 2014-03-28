@@ -289,18 +289,13 @@
 				<label for="textSelectTypeOfTheInstitution"><s:property value="getText('eag2012.identity.selectType')" />:</label>
 			</td>
 			<td>
-				<select id="selectTypeOfTheInstitution" multiple="multiple" size="4">
+				<select id="selectTypeOfTheInstitution" multiple="multiple" size="4" onclick="selectTypeOfInstitutionOptionsIntoYITab();">
 					<s:iterator value="typeOfInstitutionList" var="type"> 
 						<option value="<s:property value="#type.key" />"
 							<s:set var="isSelected" value="false"/>
 							<s:iterator var="current" value="loader.repositoryType" status="status">
-								<s:if test="%{#type.key == #current}">
-									<s:set var="isSelected" value="true"/>
-								</s:if>
-							</s:iterator>
-							<s:if test="%{#isSelected}" > selected=selected </s:if>>
-							<s:property value="#type.value" />
-						</option>
+								<s:if test="#type.key == #current"> selected="selected"</s:if>
+							</s:iterator> ><s:property value="#type.value" /></option>
 					</s:iterator>
 				</select>
 			</td>
