@@ -32,6 +32,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import com.ctc.wstx.exc.WstxLazyException;
+import com.ctc.wstx.exc.WstxUnexpectedCharException;
 
 import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
@@ -571,7 +572,12 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			fillMainFiles();
 		}
 		Collection<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile,false);
-		return displayReport(archivalInstitutions);
+		if(archivalInstitutions!=null){
+			return displayReport(archivalInstitutions);
+		}else if (this.isInvalidChars()) {
+			return ERROR_INVALID_CHARS;
+		}
+		return ERROR;
 	}
 	
 	/**
@@ -1752,12 +1758,15 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 			archivalInstitutions = getXMLArchivalInstitutionLevel(r,checkLang);
 		} catch (FileNotFoundException e) {
 			log.error("File not found :: "+archivalInstitutionFile.getAbsolutePath() + APEnetUtilities.generateThrowableLog(e));
+		} catch(WstxUnexpectedCharException e) {
+			log.error("Unexpected character into xml: ",e);
+			this.setInvalidChars(true);
 		} catch (XMLStreamException e) {
 			log.error("Archival Landscape reading exception: " + APEnetUtilities.generateThrowableLog(e));
 		} catch (WstxLazyException e){
 			log.error("Unexpected character into xml: ",e);
 			this.setInvalidChars(true);
-		}catch (Exception e){
+		} catch (Exception e){
 			log.error("Exception: " + APEnetUtilities.generateThrowableLog(e));
 		}
 		return archivalInstitutions;
