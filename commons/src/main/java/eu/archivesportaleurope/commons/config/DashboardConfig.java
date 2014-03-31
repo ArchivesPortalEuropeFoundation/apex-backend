@@ -13,7 +13,7 @@ public class DashboardConfig extends ApePortalAndDashboardConfig{
     private String domainNameMainServer;
     
 	private String europeanaDirPath;
-    private String solrIndexUrl;
+    private String baseSolrIndexUrl;
 	private String emailDashboardFeedbackDestiny;   
     private String xslDirPath;
     private XPathFactory xpathFactory;
@@ -42,13 +42,13 @@ public class DashboardConfig extends ApePortalAndDashboardConfig{
 	}
 
 
-	public String getSolrIndexUrl() {
-		return solrIndexUrl;
+	public String getBaseSolrIndexUrl() {
+		return baseSolrIndexUrl;
 	}
 
-	public void setSolrIndexUrl(String solrIndexUrl) {
+	public void setBaseSolrIndexUrl(String baseSolrIndexUrl) {
 		checkConfigured();
-		this.solrIndexUrl = solrIndexUrl;
+		this.baseSolrIndexUrl = baseSolrIndexUrl;
 	}
 
     public String getXslDirPath(){
