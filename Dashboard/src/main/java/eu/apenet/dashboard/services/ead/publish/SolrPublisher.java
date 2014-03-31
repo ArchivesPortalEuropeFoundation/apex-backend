@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -26,9 +24,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import eu.apenet.commons.solr.AbstractSolrServerHolder;
+import eu.apenet.commons.solr.EadSolrServerHolder;
 import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
-import eu.apenet.commons.solr.UpdateSolrServerHolder;
 import eu.apenet.commons.types.XmlType;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.AbstractSolrPublisher;
@@ -483,6 +482,11 @@ public class SolrPublisher extends AbstractSolrPublisher{
 	@Override
 	protected String getKey() {
 		return this.eadidstring;
+	}
+
+	@Override
+	protected AbstractSolrServerHolder getSolrServerHolder() {
+		return EadSolrServerHolder.getInstance();
 	}
 
 }
