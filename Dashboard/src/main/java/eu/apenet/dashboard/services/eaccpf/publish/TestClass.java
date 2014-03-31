@@ -8,14 +8,14 @@ import eu.archivesportaleurope.commons.config.DashboardConfig;
 public class TestClass {
 
 	public static void main(String[] args) throws Exception{
-		DashboardConfig config = new DashboardConfig();
-		config.setSolrIndexUrl("http://localhost:8080/solr/eac-cpfs");
-		config.finalizeConfigPhase();
-		APEnetUtilities.setConfig(config);
-		SolrPublisher solrPublisher = new SolrPublisher();
-		File dir = new File("/home/bverhoef/Downloads/EAC-CPF");
-		parse(dir, solrPublisher);
-		solrPublisher.commitSolrDocuments();
+//		DashboardConfig config = new DashboardConfig();
+//		config.setSolrIndexUrl("http://localhost:8080/solr/eac-cpfs");
+//		config.finalizeConfigPhase();
+//		APEnetUtilities.setConfig(config);
+//		SolrPublisher solrPublisher = new SolrPublisher();
+//		File dir = new File("/home/bverhoef/Downloads/EAC-CPF");
+//		parse(dir, solrPublisher);
+//		solrPublisher.commitSolrDocuments();
 
 	}
 	public static void parse(File file ,SolrPublisher solrPublisher) throws Exception{
