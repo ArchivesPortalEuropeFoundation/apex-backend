@@ -12,7 +12,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrInputDocument;
 import org.w3c.dom.NodeList;
 
-import eu.apenet.commons.solr.UpdateSolrServerHolder;
+import eu.apenet.commons.solr.AbstractSolrServerHolder;
 
 public abstract class AbstractSolrPublisher {
 	private static final Logger LOGGER = Logger.getLogger(AbstractSolrPublisher.class);
@@ -132,7 +132,7 @@ public abstract class AbstractSolrPublisher {
 	protected void addSolrDocument(SolrInputDocument doc) throws SolrServerException{
 		docs.add(doc);
 		if (docs.size() == MAX_NUMBER_OF_PENDING_DOCS) {
-			solrTime += UpdateSolrServerHolder.getInstance().add(docs);
+			solrTime += getSolrServerHolder().add(docs);
 			docs = new ArrayList<SolrInputDocument>();
 			numberOfPublishedItems += MAX_NUMBER_OF_PENDING_DOCS;
 			LOGGER.debug(getKey() + " #published: " + numberOfPublishedItems + " time: " + solrTime +"ms" );
@@ -140,17 +140,18 @@ public abstract class AbstractSolrPublisher {
 	}
 	public void commitSolrDocuments() throws SolrServerException{
 		if (docs.size() > 0) {
-			solrTime += UpdateSolrServerHolder.getInstance().add(docs);
+			solrTime += getSolrServerHolder().add(docs);
 			numberOfPublishedItems += docs.size();
 			LOGGER.debug(getKey() + " #published: " + numberOfPublishedItems + " time: " + solrTime +"ms" );
 			docs = new ArrayList<SolrInputDocument>();
 		}
 	}
 	protected void rollbackSolrDocuments(String query) throws SolrServerException{
-		solrTime += UpdateSolrServerHolder.getInstance().deleteByQuery(query);
+		solrTime += getSolrServerHolder().deleteByQuery(query);
 	}
 	public long getSolrTime() {
 		return solrTime;
 	}
 	protected abstract String getKey();
+	protected abstract AbstractSolrServerHolder getSolrServerHolder();
 }
