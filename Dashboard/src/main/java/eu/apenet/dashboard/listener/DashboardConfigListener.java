@@ -15,7 +15,7 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 	private static final String EMAIL_DASHBOARD_FEEDBACK_DESTINY = "EMAIL_DASHBOARD_FEEDBACK_DESTINY";
 	private static final String EUROPEANA_DIR_PATH = "EUROPEANA_DIR_PATH";
 	private static final String EUROPEANA_DIR_PATH_DEFAULT = "/ape/data/europeana/";
-	private static final String SOLR_INDEX_URL = "SOLR_INDEX_URL";
+	private static final String SOLR_BASE_INDEX_URL = "SOLR_BASE_INDEX_URL";
 	private static final String XSL_DIR_PATH = "XSL_DIR_PATH";
 	private static final String XSL_DIR_PATH_DEFAULT = "/ape/data/xsl/";
 	private static final String TMP_DIR_PATH = "TMP_DIR_PATH";
@@ -74,13 +74,13 @@ public class DashboardConfigListener extends ApePortalAndDashboardConfigListener
 		/*
 		 * solr indexing
 		 */
-		String solrIndexUrl = servletContext.getInitParameter(SOLR_INDEX_URL);
+		String solrIndexUrl = servletContext.getInitParameter(SOLR_BASE_INDEX_URL);
 		if (StringUtils.isBlank(solrIndexUrl)) {
-			log.warn("No " + SOLR_INDEX_URL + " specified.");
+			log.warn("No " + SOLR_BASE_INDEX_URL + " specified.");
 		} else {
-			log.info(SOLR_INDEX_URL + ": " + solrIndexUrl);
+			log.info(SOLR_BASE_INDEX_URL + ": " + solrIndexUrl);
 		}
-		config.setSolrIndexUrl(solrIndexUrl);
+		config.setBaseSolrIndexUrl(solrIndexUrl);
 		
 		String xslDirPath = servletContext.getInitParameter(XSL_DIR_PATH);
 		if (StringUtils.isBlank(xslDirPath)) {
