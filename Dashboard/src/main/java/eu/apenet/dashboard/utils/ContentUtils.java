@@ -33,15 +33,15 @@ import eu.apenet.commons.exceptions.APEnetException;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.persistence.dao.AiAlternativeNameDAO;
 import eu.apenet.persistence.dao.ArchivalInstitutionOaiPmhDAO;
-import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.ContentSearchOptions;
+import eu.apenet.persistence.dao.EadDAO;
 import eu.apenet.persistence.dao.SentMailRegisterDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
+import eu.apenet.persistence.vo.AbstractContent;
 import eu.apenet.persistence.vo.AiAlternativeName;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.ArchivalInstitutionOaiPmh;
-import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.SentMailRegister;
@@ -321,10 +321,10 @@ public class ContentUtils {
 		ChangeControl.logOperation(op);
 	}
 
-	public static void changeSearchable(Ead ead, boolean searchable) {
-		changeContainsSearchableItems(ead.getArchivalInstitution(), searchable);
-		ead.setPublished(searchable);
-		ead.setPublishDate(new Date());
+	public static void changeSearchable(AbstractContent abstractContent, boolean searchable) {
+		changeContainsSearchableItems(abstractContent.getArchivalInstitution(), searchable);
+		abstractContent.setPublished(searchable);
+		abstractContent.setPublishDate(new Date());
 
 	}
 
