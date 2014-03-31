@@ -172,27 +172,44 @@
 }
 
 #ingestionprofilesCancel {
-    background: url("../images/otherbutton.gif") repeat-x scroll right top white;
-    background-color: #E9F3FA;
-    border: 1px solid #00A0DF;
-    border-radius: 15px 15px 15px 15px;
-    color: #006CB0;
-    display: inline;
-    font-weight: bold;
-    letter-spacing: 0.8px;
-    padding: 3px 5px;
-    text-align: center;
-    vertical-align: top;
+	background: url("../images/otherbutton.gif") repeat-x scroll right top #FFFFFF;
+	border: 1px solid #00A0DF;
+	color: #00384D;
+	margin-left: 5px;
+	margin-top: 5px;
+	border-radius: 3px 3px 3px 3px;
+	font-weight: bold;
+	overflow: visible;
+	padding: 5px;
+	text-shadow: 1px 1px #FFFFFF;
+	width: auto;
+	cursor: pointer;
+	line-height: normal;
+	vertical-align: baseline;
 }
 
 #ingestionprofilesSave {
 	margin-right: 20px;
 	margin-bottom: 5px;
+	background: url("../images/mainbutton.png") repeat-x scroll right top #FFFFFF;
+    border: 1px solid #00A0DF;
+    color: #00384D;
+    margin-left: 5px;
+    margin-top: 5px;
+    border-radius: 3px 3px 3px 3px;
+    font-weight: bold;
+    overflow: visible;
+    padding: 5px;
+    text-shadow: 1px 1px #FFFFFF;
+    width: auto;
+    cursor: pointer;
+    line-height: normal;
+    vertical-align: baseline;
 }
 
 #ingestionprofiles input {
 	font-family: "Arial",sans-serif;
-	font-size: 12px;
+	font-size: 12px; 
 }
 
 #ingestionprofiles select {
