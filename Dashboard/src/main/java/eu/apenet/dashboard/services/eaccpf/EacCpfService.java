@@ -254,7 +254,7 @@ public class EacCpfService {
                     } else if (queueAction.isDeleteAction()) {
 //                        new DeleteFromEuropeanaTask().execute(eac, preferences);
 //                        new DeleteEseEdmTask().execute(eac, preferences);
-                        //new UnpublishTask().execute(eac, preferences);
+                        new UnpublishTask().execute(eac, preferences);
                         new DeleteTask().execute(eac, preferences);
                         eacDeleted = true;
                     }
@@ -286,7 +286,7 @@ public class EacCpfService {
                         new ValidateTask().execute(eac, preferences);
                     }
                     if (queueAction.isPublishAction()) {
-                       // new PublishTask().execute(eac, preferences);
+                        new PublishTask().execute(eac, preferences);
                     }
                     eac.setQueuing(QueuingState.NO);
                     eacDAO.store(eac);
