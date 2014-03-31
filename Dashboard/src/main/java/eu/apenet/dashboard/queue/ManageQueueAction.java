@@ -8,7 +8,8 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import eu.apenet.commons.solr.UpdateSolrServerHolder;
+import eu.apenet.commons.solr.EacCpfSolrServerHolder;
+import eu.apenet.commons.solr.EadSolrServerHolder;
 import eu.apenet.dashboard.AbstractAction;
 import eu.apenet.dashboard.listener.HarvesterDaemon;
 import eu.apenet.dashboard.listener.QueueDaemon;
@@ -16,7 +17,6 @@ import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.persistence.dao.QueueItemDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.AbstractContent;
-
 import eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction;
 import eu.apenet.persistence.vo.QueueAction;
 import eu.apenet.persistence.vo.QueueItem;
@@ -119,7 +119,11 @@ public class ManageQueueAction  extends AbstractAction{
 	
 	public String forceSolrCommit() throws Exception{
 		try {
-			UpdateSolrServerHolder.getInstance().hardCommit();
+			LOGGER.info("Start hard commit solr cores");
+			EacCpfSolrServerHolder.getInstance().hardCommit();
+			LOGGER.info("EAC-CPF hard commit finished");
+			EadSolrServerHolder.getInstance().hardCommit();
+			LOGGER.info("EAD hard commit finished");
 		} catch (Exception de) {
 			LOGGER.error(de.getMessage(),de);
 		}
