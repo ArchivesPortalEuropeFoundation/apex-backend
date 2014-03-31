@@ -49,7 +49,7 @@
             editTarget,generateArchivalInstitutionPartPreviewALJSON,generatePreviewALTreeJSON,
             modifyStructure,showEAGPreviewAL,showLanguages,storeAlIdentifier,viewAL,institutionManagerManagement,
             displayCreateInstitutionManager,deleteInstitutionManager,changeToInstitutionManager,disableInstitutionManager,enableInstitutionManager,createInstitutionManager,downloadInstitutionsStatistics,
-			ALEditor,getALTree,getALActions,launchALActions,ALDownload,ALUpload,ALUploadForm,ALDisplayTrees
+			ALEditor,getALTree,getALActions,launchALActions,ALDownload,ALUpload,ALUploadForm,ALCancelOverwrite,ALOverwrite,ALReport,ALRecheckIdentifiers, ALContinueUpload
         </group>
         <group name="adminActions">
             checkEagNamespace,downloadCountriesStatistics,

@@ -544,7 +544,7 @@ public abstract class ManualUploader {
         this.filesUploaded = new ArrayList<String>();
 
         try {
-            File sfile = new File(tmpDirectory + fileName);
+            File sfile = new File(pathFile + fileName);
             //Change the database without commit
             String resultStore = a.storeArchives(sfile, execute);
 
@@ -562,7 +562,7 @@ public abstract class ManualUploader {
                 }
                 File theFile = new File(fullFileName);
                 //theFile.delete();
-                theFile.renameTo(new File(a.getmyPath(a.getmyCountry()) + a.getmyCountry() + "AL_old.xml"));
+                //theFile.renameTo(new File(a.getmyPath(a.getmyCountry()) + a.getmyCountry() + "AL_old.xml"));
 
                 FileUtils.copyFile(sfile, new File(fullFileName));
                 //theFile.renameTo(new File(a.getmyPath(a.getmyCountry()) + a.getmyCountry() + "AL.xml"));
@@ -588,12 +588,12 @@ public abstract class ManualUploader {
                         }
                     }
                 }
-                File theFile = new File(fullFileName);
+                //File theFile = new File(fullFileName);
                 //theFile.delete();
-                theFile.renameTo(new File(a.getmyPath(a.getmyCountry()) + a.getmyCountry() + "AL_old.xml"));
+                //theFile.renameTo(new File(a.getmyPath(a.getmyCountry()) + a.getmyCountry() + "AL_old.xml"));
 
-                FileUtils.copyFile(sfile, new File(fullFileName));
-                theFile.renameTo(new File(a.getmyPath(a.getmyCountry()) + a.getmyCountry() + "AL.xml"));
+                //FileUtils.copyFile(sfile, new File(fullFileName));
+                //theFile.renameTo(new File(a.getmyPath(a.getmyCountry()) + a.getmyCountry() + "AL.xml"));
                 File tmpDir = new File(tmpDirectory);
                 if (fileName != null) {
                     this.filesUploaded.add(fileName);

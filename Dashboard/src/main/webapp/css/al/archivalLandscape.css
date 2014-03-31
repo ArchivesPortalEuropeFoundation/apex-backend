@@ -1,0 +1,59 @@
+.middleDiv {
+	width:50%;
+	float:left;
+}
+
+.fullDiv {
+	width:100%;
+	float:left;
+}
+
+.readOnlyInput {
+	background-color: #EEEEEE;
+	color: #A6A6A6;
+	cursor: default;
+}
+
+.readOnlyInput:focus {
+	background-color: #EEEEEE;
+	color: #A6A6A6;
+	cursor: default;
+	border: 1px solid #999999;
+}
+
+.alDivAction {
+	background-color: #E9F3FA;
+	border: 1px solid #00A0DF;
+	border-radius: 15px 15px 15px 15px;
+	color: #006CB0;
+	cursor: pointer;
+	float: left;
+	font-weight: bold;
+	height: auto;
+	letter-spacing: 0.8px;
+	margin: 5px 5px 0;
+	padding: 3px 5px;
+	text-align: center;
+	vertical-align: top;
+	width: auto;
+}
+
+.alDivAction:hover {
+	background-color: #BAE0FC;
+	color: #00384D;
+}
+
+.alDivSummary {
+	color: #000000;
+	font-size: 0.75em;
+	font-weight: bold;
+	text-align: left;
+}
+
+.alDivShowHide {
+	color: #000000;
+	cursor: pointer;
+	font-size: 0.75em;
+	font-weight: bold;
+	text-align: left;
+}

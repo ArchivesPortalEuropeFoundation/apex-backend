@@ -64,7 +64,7 @@ import eu.apenet.persistence.vo.SourceGuide;
 public class ArchivalLandscape extends ActionSupport{
 
     /**
-	 * 
+	 * Serializable.
 	 */
 	private static final long serialVersionUID = 7141674075748597835L;
 	//private Integer partnerId; 
@@ -207,8 +207,8 @@ public class ArchivalLandscape extends ActionSupport{
 	//Returns the path of the AL of each country
 	public String getmyPath(String country) {
 
-		String path = APEnetUtilities.getConfig().getRepoDirPath() + APEnetUtilities.FILESEPARATOR;
-		path = path + country + APEnetUtilities.FILESEPARATOR + "AL" + APEnetUtilities.FILESEPARATOR;
+		String path = APEnetUtilities.getConfig().getRepoDirPath() + File.separatorChar;
+		path = path + country + File.separatorChar + "AL" + File.separatorChar;
 		
 		File file=new File(path);
         if(!file.exists())
