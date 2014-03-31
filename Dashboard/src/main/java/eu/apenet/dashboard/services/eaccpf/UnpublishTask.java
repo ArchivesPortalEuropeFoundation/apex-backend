@@ -5,14 +5,9 @@
  */
 package eu.apenet.dashboard.services.eaccpf;
 
-import java.io.IOException;
 import java.util.Properties;
 
-import org.apache.solr.client.solrj.SolrServerException;
-
 import eu.apenet.commons.exceptions.APEnetException;
-import eu.apenet.commons.solr.SolrFields;
-import eu.apenet.commons.solr.UpdateSolrServerHolder;
 import eu.apenet.dashboard.services.eaccpf.publish.SolrPublisher;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.EacCpfDAO;
