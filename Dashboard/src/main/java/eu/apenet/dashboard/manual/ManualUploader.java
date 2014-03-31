@@ -36,6 +36,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.opensymphony.xwork2.ActionSupport;
+import eu.apenet.dashboard.services.eaccpf.EacCpfService;
 import eu.apenet.dashboard.services.ead.EadService;
 import java.util.Properties;
 
@@ -736,7 +737,11 @@ public abstract class ManualUploader {
     private void processWithProfile(UpFile upFile, Ingestionprofile profile) {
         Properties properties = retrieveProperties(profile);
         try {
-            EadService.useProfileAction(upFile, properties);
+            if(profile.getFileType() == 2){
+                EacCpfService.useProfileAction(upFile, properties);
+            } else {
+                EadService.useProfileAction(upFile, properties);
+            }
         } catch (Exception ex) {
             log.error("Failed when adding the new up files into the queue", ex);
         }

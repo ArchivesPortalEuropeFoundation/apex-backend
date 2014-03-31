@@ -23,6 +23,7 @@ import com.opensymphony.xwork2.ActionContext;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.commons.view.jsp.SelectItem;
 import eu.apenet.dashboard.AbstractInstitutionAction;
+import eu.apenet.dashboard.services.eaccpf.EacCpfService;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.utils.ZipManager;
 import eu.apenet.persistence.dao.UpFileDAO;
@@ -600,7 +601,11 @@ public class UploadContentAction extends AbstractInstitutionAction {
             if (profile != null) {
                 Properties properties = retrieveProperties(profile);
                 try {
-                    EadService.useProfileAction(upFile, properties);
+                    if(profile.getFileType() == 2){
+                        EacCpfService.useProfileAction(upFile, properties);
+                    } else {
+                        EadService.useProfileAction(upFile, properties);
+                    }
                 } catch (Exception ex) {
                     LOG.error("Failed when adding the new up files into the queue", ex);
                 }

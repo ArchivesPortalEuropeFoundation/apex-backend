@@ -21,15 +21,20 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import eu.apenet.commons.utils.APEnetUtilities;
+import eu.apenet.dashboard.manual.ExistingFilesChecker;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.vo.EuropeanaState;
+import eu.apenet.persistence.vo.IngestionprofileDefaultExistingFileAction;
+import eu.apenet.persistence.vo.IngestionprofileDefaultNoEadidAction;
+import eu.apenet.persistence.vo.IngestionprofileDefaultUploadAction;
 
 import eu.apenet.persistence.vo.UpFile;
 import eu.apenet.persistence.vo.ValidatedState;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang.StringUtils;
 
 public class EacCpfService {
 
@@ -160,6 +165,12 @@ public class EacCpfService {
         EacCpf eac = new CreateEacCpfTask().execute(xmlType, upFile, aiId);
         DAOFactory.instance().getUpFileDAO().delete(upFile);
         return eac;
+    }
+
+    public static void useProfileAction(UpFile upFile, Properties preferences) throws Exception {
+        SecurityContext.get().checkAuthorized(upFile.getAiId());
+        QueueItem queueItem = fillQueueItem(upFile, QueueAction.USE_PROFILE, preferences);
+        DAOFactory.instance().getQueueItemDAO().store(queueItem);
     }
 
     private static void addToQueue(EacCpf eacCpf, QueueAction queueAction, Properties preferences) throws IOException {
@@ -302,11 +313,112 @@ public class EacCpfService {
                 }
             }
         } else { //USE_PROFILE
-            //TODO. Not defined yet
+            IngestionprofileDefaultNoEadidAction ingestionprofileDefaultNoEadidAction = IngestionprofileDefaultNoEadidAction.getExistingFileAction(preferences.getProperty(QueueItem.NO_EADID_ACTION));
+            IngestionprofileDefaultUploadAction ingestionprofileDefaultUploadAction = IngestionprofileDefaultUploadAction.getUploadAction(preferences.getProperty(QueueItem.UPLOAD_ACTION));
+            IngestionprofileDefaultExistingFileAction ingestionprofileDefaultExistingFileAction = IngestionprofileDefaultExistingFileAction.getExistingFileAction(preferences.getProperty(QueueItem.EXIST_ACTION));
+            Boolean daoTypeCheck = "true".equals(preferences.getProperty(QueueItem.DAO_TYPE_CHECK));
+            XmlType xmlType = XmlType.getType(Integer.parseInt(preferences.getProperty(QueueItem.XML_TYPE)));
 
+            //About existing eac-cpf identifier
+            UpFile upFile = queueItem.getUpFile();
+            LOGGER.info("Process queue item: " + queueItem.getId() + " " + queueItem.getAction() + ", upFile id: " + queueItem.getUpFileId() + "(" + xmlType.getName() + ")");
+            String upFilePath = upFile.getPath() + upFile.getFilename();
+            String identifier = ExistingFilesChecker.extractAttributeFromXML(APEnetUtilities.getDashboardConfig().getTempAndUpDirPath() + upFilePath, "eac-cpf/control/recordId", null, true, false).trim();
+            if (StringUtils.isEmpty(identifier) || "empty".equals(identifier) || "error".equals(identifier)) {
+                if (ingestionprofileDefaultNoEadidAction.isRemove()) {
+                    LOGGER.info("File will be removed, because it does not have eadid: " + upFilePath);
+                    deleteFromQueue(queueItem, true);
+                } else {
+                    LOGGER.info("File will be processed manually later, because it does not have eadid: " + upFilePath);
+                    deleteFromQueue(queueItem, false);
+                }
+            } else {
+                boolean continueTask = true;
+                EacCpf eacCpf;
+                EacCpf newEacCpf = null;
+                if ((eacCpf = doesFileExist(upFile, identifier, xmlType)) != null) {
+                    if (ingestionprofileDefaultExistingFileAction.isOverwrite()) {
+                        boolean eadDeleted = false;
+                        try {
+                            queueItem.setEad(null);
+                            queueItem.setUpFile(null);
+                            queueItemDAO.store(queueItem);
+
+                            Integer aiId = eacCpf.getAiId();
+//                            new DeleteFromEuropeanaTask().execute(eacCpf, preferences);
+//                            new DeleteEseEdmTask().execute(eacCpf, preferences);
+                            new UnpublishTask().execute(eacCpf, preferences);
+                            new DeleteTask().execute(eacCpf, preferences);
+                            eadDeleted = true;
+                            newEacCpf = new CreateEacCpfTask().execute(xmlType, upFile, aiId);
+                            DAOFactory.instance().getUpFileDAO().delete(upFile);
+                        } catch (Exception e) {
+                            if (!eadDeleted) {
+                                queueItem.setEacCpf(eacCpf);
+                                eacCpf.setQueuing(QueuingState.ERROR);
+                                eacDAO.store(eacCpf);
+                            }
+                            queueItem.setUpFile(upFile);
+                            String err = "recordId: " + eacCpf.getIdentifier() + " - id: " + eacCpf.getId() + " - type: " + xmlType.getName();
+                            LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+                            queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
+                            queueItem.setPriority(0);
+                            queueItemDAO.store(queueItem);
+                            continueTask = false;
+                        }
+                    } else if (ingestionprofileDefaultExistingFileAction.isKeep()) {
+                        LOGGER.info("File will be removed, because there is already one with the same eadid: " + upFilePath);
+                        deleteFromQueue(queueItem, true);
+                        continueTask = false;
+                    }
+                } else {
+                    newEacCpf = new CreateEacCpfTask().execute(xmlType, upFile, upFile.getAiId());
+                    queueItem.setUpFile(null);
+                    queueItemDAO.store(queueItem);
+                    DAOFactory.instance().getUpFileDAO().delete(upFile);
+                }
+
+                if (continueTask) {
+                    newEacCpf.setQueuing(QueuingState.BUSY);
+                    eacDAO.store(newEacCpf);
+
+                    Properties conversionProperties = new Properties();
+                    conversionProperties.put("defaultRoleType", "UNSPECIFIED");
+                    conversionProperties.put("useDefaultRoleType", daoTypeCheck);
+
+                    try {
+                        if (ingestionprofileDefaultUploadAction.isConvert()) {
+                            new ConvertTask().execute(newEacCpf, conversionProperties);
+                        } else if (ingestionprofileDefaultUploadAction.isValidate()) {
+                            new ValidateTask().execute(newEacCpf);
+                        } else if (ingestionprofileDefaultUploadAction.isConvertValidatePublish() || ingestionprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
+                            new ValidateTask().execute(newEacCpf);
+                            new ConvertTask().execute(newEacCpf, conversionProperties);
+                            new ValidateTask().execute(newEacCpf);
+                            new PublishTask().execute(newEacCpf);
+//                            if (ingestionprofileDefaultUploadAction.isConvertValidatePublishEuropeana()) {
+//                                Properties europeanaProperties = createEuropeanaProperties(preferences);
+//                                new ConvertToEseEdmTask().execute(newEacCpf, europeanaProperties);
+//                                new DeliverToEuropeanaTask().execute(newEacCpf);
+//                            }
+                        }
+                        newEacCpf.setQueuing(QueuingState.NO);
+                        eacDAO.store(newEacCpf);
+                        queueItemDAO.delete(queueItem);
+                    } catch (Exception e) {
+                        newEacCpf.setQueuing(QueuingState.ERROR);
+                        eacDAO.store(newEacCpf);
+
+                        String err = "recordId: " + newEacCpf.getIdentifier() + " - id: " + newEacCpf.getId() + " - type: " + xmlType.getName();
+                        LOGGER.error(APEnetUtilities.generateThrowableLog(e));
+                        queueItem.setErrors(new Date() + " - " + err + ". Error: " + APEnetUtilities.generateThrowableLog(e));
+                        queueItem.setPriority(0);
+                        queueItemDAO.store(queueItem);
+                    }
+                }
+            }
         }
         LOGGER.info("Process queue item finished");
-
         return queueAction;
     }
 
@@ -406,5 +518,31 @@ public class EacCpfService {
             eacCpfs.remove(size - 1);
         }
         JpaUtil.commitDatabaseTransaction();
+    }
+
+    private static QueueItem fillQueueItem(UpFile upFile, QueueAction queueAction, Properties preferences) throws IOException {
+        return fillQueueItem(upFile, queueAction, preferences, 1000);
+    }
+
+    private static QueueItem fillQueueItem(UpFile upFile, QueueAction queueAction, Properties preferences, int basePriority) throws IOException {
+        QueueItem queueItem = new QueueItem();
+        queueItem.setQueueDate(new Date());
+        queueItem.setAction(queueAction);
+        if (preferences != null) {
+            queueItem.setPreferences(writeProperties(preferences));
+        }
+
+        queueItem.setUpFile(upFile);
+
+        queueItem.setPriority(basePriority);
+        return queueItem;
+    }
+
+    private static void deleteFromQueue(QueueItem queueItem, boolean b) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private static EacCpf doesFileExist(UpFile upFile, String identifier, XmlType xmlType) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
