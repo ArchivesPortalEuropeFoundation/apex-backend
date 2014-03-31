@@ -26,7 +26,7 @@ public class TestClass {
 			}
 		}else if (file.getName().endsWith(".xml")){
 			try {
-				solrPublisher.parse(file);
+				//solrPublisher.parse(file);
 			}catch (Exception e){
 				System.out.println(file.getCanonicalPath()+ " " + e.getMessage());
 			}
