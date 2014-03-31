@@ -149,6 +149,7 @@ public abstract class AbstractSolrPublisher {
 	protected void rollbackSolrDocuments(String query) throws SolrServerException{
 		solrTime += getSolrServerHolder().deleteByQuery(query);
 	}
+
 	public long getSolrTime() {
 		return solrTime;
 	}

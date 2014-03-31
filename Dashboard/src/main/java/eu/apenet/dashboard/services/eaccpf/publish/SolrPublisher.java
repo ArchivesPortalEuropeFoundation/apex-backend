@@ -24,9 +24,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import eu.apenet.commons.solr.AbstractSolrServerHolder;
+import eu.apenet.commons.solr.EacCpfSolrServerHolder;
 import eu.apenet.commons.solr.SolrFields;
 import eu.apenet.commons.solr.SolrValues;
-import eu.apenet.commons.solr.UpdateSolrServerHolder;
 import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.AbstractSolrPublisher;
 import eu.apenet.dashboard.services.eaccpf.xml.EacCpfNamespaceContext;
@@ -175,8 +176,13 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 		}
 		return results;
 	}
+
+
+	@Override
+	protected AbstractSolrServerHolder getSolrServerHolder() {
+		return EacCpfSolrServerHolder.getInstance();
+	}
 	public long unpublish(EacCpf eacCpf) throws SolrServerException, IOException {
-		UpdateSolrServerHolder server = UpdateSolrServerHolder.getInstance();
-		return server.deleteByQuery("(" + SolrFields.AI_ID + ":" + eacCpf.getAiId() + " AND " + SolrFields.ID + ":\"" + eacCpf.getId() + "\")");
+		return getSolrServerHolder().deleteByQuery("(" + SolrFields.AI_ID + ":" + eacCpf.getAiId() + " AND " + SolrFields.ID + ":\"" + eacCpf.getId() + "\")");
 	}
 }
