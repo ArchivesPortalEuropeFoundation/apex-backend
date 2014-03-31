@@ -126,8 +126,6 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 		add(doc, SolrFields.EAC_CPF_RECORD_ID, eacCpfSolrObject.getRecordId());
 		doc.addField(SolrFields.EAC_CPF_NAMES, eacCpfSolrObject.getNames());
 		doc.addField(SolrFields.EAC_CPF_PLACES, eacCpfSolrObject.getPlaces());
-		doc.addField(SolrFields.AI, eacCpfSolrObject.getAgencyName());
-		doc.addField(SolrFields.COUNTRY, eacCpfSolrObject.getCountry());
 		doc.addField(SolrFields.EAC_CPF_FACET_PLACES,eacCpfSolrObject.getPlaces());
 		doc.addField(SolrFields.EAC_CPF_FACET_OCCUPATION,eacCpfSolrObject.getOccupations());
 		doc.addField(SolrFields.EAC_CPF_OCCUPATION,eacCpfSolrObject.getOccupations());
