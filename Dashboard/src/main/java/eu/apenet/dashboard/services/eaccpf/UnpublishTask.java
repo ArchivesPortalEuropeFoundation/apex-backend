@@ -19,7 +19,7 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
  *
  * @author papp
  */
-class UnpublishTask extends AbstractEacCpfTask {
+public class UnpublishTask extends AbstractEacCpfTask {
 
     @Override
     protected String getActionName() {

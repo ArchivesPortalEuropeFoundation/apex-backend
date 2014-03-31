@@ -20,7 +20,7 @@ import eu.archivesportaleurope.persistence.jpa.JpaUtil;
  *
  * @author papp
  */
-class PublishTask extends AbstractEacCpfTask{
+public class PublishTask extends AbstractEacCpfTask{
     @Override
     protected void execute(EacCpf eacCpf, Properties properties) throws Exception {
 		if (valid(eacCpf)) {
