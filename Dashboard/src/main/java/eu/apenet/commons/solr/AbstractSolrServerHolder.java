@@ -4,31 +4,15 @@ import java.util.Collection;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.ConcurrentUpdateSolrServer;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.common.SolrInputDocument;
 
-import eu.apenet.commons.utils.APEnetUtilities;
+public abstract class AbstractSolrServerHolder {
 
-public class UpdateSolrServerHolder {
-	private static final int QUEUE_SIZE = 200;
-	private static final int MAX_THREADS = 2;
-	private static final Logger LOGGER = Logger.getLogger(UpdateSolrServerHolder.class);
+	private final static Logger LOGGER = Logger.getLogger(AbstractSolrServerHolder.class);
+	protected abstract String getSolrUrl();
 	private HttpSolrServer solrServer;
-	private static UpdateSolrServerHolder instance;
-	private String solrIndexUrl;
-
-	private UpdateSolrServerHolder() {
-
-	}
-
-	public static UpdateSolrServerHolder getInstance() {
-		if (instance == null) {
-			instance = new UpdateSolrServerHolder();
-		}
-		return instance;
-	}
-
+	
 	public boolean isAvailable() {
 		initSolrServer();
 		return solrServer != null;
@@ -44,7 +28,7 @@ public class UpdateSolrServerHolder {
 				throw new SolrServerException("Could not execute query: " + query, e);
 			}
 		} else {
-			throw new SolrServerException("Solr server " + solrIndexUrl + " is not available");
+			throw new SolrServerException("Solr server " + getSolrUrl() + " is not available");
 		}
 	}
 
@@ -58,7 +42,7 @@ public class UpdateSolrServerHolder {
 				throw new SolrServerException("Could not add documents", e);
 			}
 		} else {
-			throw new SolrServerException("Solr server " + solrIndexUrl + " is not available");
+			throw new SolrServerException("Solr server " + getSolrUrl() + " is not available");
 		}
 	}
 
@@ -73,22 +57,20 @@ public class UpdateSolrServerHolder {
 				throw new SolrServerException("Could not commit", e);
 			}
 		} else {
-			throw new SolrServerException("Solr server " + solrIndexUrl + " is not available");
+			throw new SolrServerException("Solr server " + getSolrUrl() + " is not available");
 		}
 	}
-
-
 	private HttpSolrServer initSolrServer() {
 		try {
 			if (solrServer == null) {
-				LOGGER.debug("Create new solr client");
-				solrIndexUrl = APEnetUtilities.getDashboardConfig().getSolrIndexUrl();
-				solrServer = new HttpSolrServer(solrIndexUrl);
+				LOGGER.debug("Create new solr client: " + getSolrUrl());
+				solrServer = new HttpSolrServer(getSolrUrl());
 			}
 		} catch (Exception e) {
-			LOGGER.error("Solr server " + solrIndexUrl + " is not available", e);
+			LOGGER.error("Solr server " + getSolrUrl() + " is not available", e);
 		}
 		return solrServer;
 	}
+
 
 }
