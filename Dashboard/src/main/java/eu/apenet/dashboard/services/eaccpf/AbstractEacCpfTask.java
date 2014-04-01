@@ -20,7 +20,7 @@ public abstract class AbstractEacCpfTask {
 
     protected Logger logger = Logger.getLogger(getClass());
 
-    protected void execute(EacCpf eacCpf) throws Exception {
+    public void execute(EacCpf eacCpf) throws Exception {
         execute(eacCpf, new Properties());
     }
 
