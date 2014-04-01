@@ -27,27 +27,20 @@ public enum SolrField {
 	}
 
 	public static SolrField getSolrField(String type) {
-		if (TITLE.toString().equalsIgnoreCase(type)) {
-			return TITLE;
-		} else if (SCOPECONTENT.toString().equalsIgnoreCase(type)) {
-			return SCOPECONTENT;
-		} else if (OTHER.toString().equalsIgnoreCase(type)) {
-			return OTHER;
-		} else if (UNITID.toString().equalsIgnoreCase(type)) {
-			return UNITID;
-		} else if (OTHERUNITID.toString().equalsIgnoreCase(type)) {
-			return OTHERUNITID;
-		} else if (ALTERDATE.toString().equalsIgnoreCase(type)) {
-			return ALTERDATE;
-		}
+        for(SolrField solrField : SolrField.values()){
+            if(solrField.toString().equalsIgnoreCase(type)){
+            	return solrField;
+            }
+         
+        }
 		return null;
 	}
 
 	public HighlightType getType() {
-		if (TITLE.equals(this) || SCOPECONTENT.equals(this) || OTHER.equals(this) || ALTERDATE.equals(this)) {
-			return HighlightType.DEFAULT;
-		} else {
+		if (UNITID.equals(this) || OTHERUNITID.equals(this) || EAC_CPF_RECORD_ID.equals(this)){
 			return HighlightType.UNITID;
+		}else {
+			return HighlightType.DEFAULT;
 		}
 	}
 
