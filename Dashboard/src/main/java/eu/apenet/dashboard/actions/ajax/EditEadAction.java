@@ -81,6 +81,7 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 	private int xmlTypeId;
 	private Map<String, String> formValues;
 	private String type;
+	private String chagedEADID;
 
 	/* GETTERS & SETTERS. */
 
@@ -135,6 +136,20 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 
 	public Integer getFileId() {
 		return this.fileId;
+	}
+
+	/**
+	 * @return the chagedEADID
+	 */
+	public String getChagedEADID() {
+		return this.chagedEADID;
+	}
+
+	/**
+	 * @param chagedEADID the chagedEADID to set
+	 */
+	public void setChagedEADID(String chagedEADID) {
+		this.chagedEADID = chagedEADID;
 	}
 
 	public void setFileId(Integer fileId) {
@@ -291,11 +306,13 @@ public class EditEadAction extends AjaxControllerAbstractAction {
                 String newXml = new EditParser().getNewXmlString(eadContent.getXml(), this.getFormValues());
                 eadContent.setXml(newXml);
                 //Check if <eadid> has been changed.
-                if(!StringUtils.isEmpty(this.getFormValues().get(EditEadAction.EADID))){
-                    if(!this.getFormValues().get(EditEadAction.EADID).equals(eadContent.getEadid())) {
-                        eadContent.setEadid(this.getFormValues().get(EditEadAction.EADID));
-                        dataChanged = true;
-                    }
+                if (this.getChagedEADID() != null && !this.getChagedEADID().isEmpty()) {
+                	if (!this.getChagedEADID().equals(eadid)) {
+    					eadContent.setEadid(this.getChagedEADID());
+    					FindingAid findingAid = DAOFactory.instance().getFindingAidDAO().findById(this.getFaId().intValue());
+    					findingAid.setEadid(this.getChagedEADID());
+    					dataChanged = true;
+                	}
                 }
                 if (!newXml.equalsIgnoreCase(initialXML)) {
                     dataChanged = true;
@@ -507,6 +524,14 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 			this.addValuesToMap(jsonObject, languageLangCodeSet);
 			this.addValuesToMap(jsonObject, titleProperSet);
 			this.addValuesToMap(jsonObject, unitDateNormalSet);
+
+			// Recover the value of the EADID.
+			if (eadIdSet != null && !eadIdSet.isEmpty()) {
+				Iterator<String> eadIdIt = eadIdSet.iterator();
+				if (eadIdIt.hasNext()) {
+					this.setChagedEADID(jsonObject.getString(eadIdIt.next()));
+				}
+			}
 
     		this.log.debug("Ending process to recover values.");
 		} catch (JSONException e) {
