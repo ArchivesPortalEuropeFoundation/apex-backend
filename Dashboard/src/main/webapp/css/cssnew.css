@@ -581,7 +581,7 @@ margin-left:310px;
 }
 
 input[type="submit"].mainButton {
-	background: url("../images/mainbutton.png") repeat-x scroll right top
+	background: url("../images/mainbutton.jpg") repeat-x scroll right top
 		#FFFFFF;
 	color: #00384d;
 	font-weight: bold;
@@ -1052,14 +1052,24 @@ input.inputButtonSubmitAL{
 }*/
 #content_div_table th{
     font-size:8pt;
-	padding-left:2px;
-	padding-right:2px;	
+ 	padding-left:2px;
+	padding-right:2px;	 
 	overflow:hidden;
 }
+
+/* #content_div_table #thFA01{
+	width: 4.49%;
+}
+
+#content_div_table #thFA02{
+	width: 10%;
+} */
+
 #content_div_table td, table.defaultlayout td, table.defaultlayout th{
 	font-size:8pt;
 	padding-left:2px;
 	padding-right:2px;
+	word-wrap:break-word;
 }
 #content_div_table td, table.defaultlayout td{
 	 border: 1px solid #DBDBDB;

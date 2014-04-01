@@ -551,7 +551,7 @@ input:focus {
 	font-weight: bold;
 }*/
 input[type="submit"].mainButton {
-	background: url("../images/mainbutton.png") repeat-x scroll right top
+	background: url("../images/mainbutton.jpg") repeat-x scroll right top
 		#FFFFFF;
 	color: #00384d;
 	font-weight: bold;
