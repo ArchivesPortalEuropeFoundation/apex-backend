@@ -54,14 +54,21 @@ public final class SolrFields {
 	/*
 	 * EAC-CPF
 	 */
+
 	public final static String EAC_CPF_RECORD_ID = "recordId";
-	public final static String EAC_CPF_SORTABLE_RECORD_ID = "recordIdSort";
+	public final static String EAC_CPF_ENTITY_ID = "entityId";
+	public final static String EAC_CPF_FACET_ENTITY_TYPE = "entityTypeFacet";
 	public final static String EAC_CPF_NAMES = "names";
 	public final static String EAC_CPF_PLACES = "places";
 	public final static String EAC_CPF_DATE_DESCRIPTION = "dateDescription";
-	public final static String EAC_CPF_FACET_OCCUPATION = "occupationFacet";
+
 	public final static String EAC_CPF_OCCUPATION = "occupation";
+	public final static String EAC_CPF_FUNCTION = "function";
+	public final static String EAC_CPF_MANDATE = "mandate";	
 	public final static String EAC_CPF_FACET_PLACES = "placesFacet";	
+	public final static String EAC_CPF_FACET_OCCUPATION = "occupationFacet";
+	public final static String EAC_CPF_FACET_FUNCTION = "functionFacet";
+	public final static String EAC_CPF_FACET_MANDATE = "mandateFacet";
 	public final static String EAC_CPF_DESCRIPTION = "description";
 	
 }
