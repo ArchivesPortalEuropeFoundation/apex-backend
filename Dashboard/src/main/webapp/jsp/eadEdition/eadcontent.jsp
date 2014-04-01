@@ -4,7 +4,6 @@
 <c:set var="fileId" value="${param['id']}"/>
 <c:set var="xmlTypeId" value="${param['xmlTypeId']}"/>
 <script type="text/javascript">
-	var messageSpecialChars = "<s:property value="getText('content.message.EadidWithSpecialCharacter')" />";
 	var messageEmptyEADID = "<s:property value="getText('content.message.EadidEmpty')" />";
 	var messageEmptyWhenSave = "<s:property value="getText('dashboard.editead.errorEmptyMandatoryField')" />";
 	var messageNormalWithSpecialChars = "<s:property value="getText('dashboard.editead.errorNormalWithSpecialCharacter')" />";
@@ -13,9 +12,12 @@
 	var messageNotCorrectDate = "<s:property value="getText('dashboard.editead.errorInDate')" />";
 	var messageEmptyTitleproper = "<s:property value="getText('dashboard.editead.errorEmptyTitleproper')" />";
 	var messageEmptyPreviousLang = "<s:property value="getText('dashboard.editead.errorPreviousLanguageEmpty')" />";
+	var messageInvalidCountrycode = "<s:property value="getText('dashboard.editead.errorInvalidCountrycode')" />";
+	var messageEmptyCountrycode = "<s:property value="getText('dashboard.editead.errorEmptyCountrycode')" />";
+	var messageEmptyMainagencycode = "<s:property value="getText('dashboard.editead.errorEmptyMainagencycode')" />";
 
 	$(document).ready(function() {
-		initEadTree("${fileId}", "${xmlTypeId}", messageSpecialChars, messageEmptyEADID, messageEmptyWhenSave, messageNormalWithSpecialChars, messageNormalCorrecVal, messageEmptyNormal, messageNotCorrectDate, messageEmptyTitleproper, messageEmptyPreviousLang);
+		initEadTree("${fileId}", "${xmlTypeId}", messageEmptyEADID, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageNormalWithSpecialChars, messageNormalCorrecVal, messageEmptyNormal, messageNotCorrectDate, messageEmptyTitleproper, messageEmptyPreviousLang);
 	});
 </script>
 <div id="eadEdition">
@@ -25,13 +27,32 @@
 		</div>
 		<div id="splitter" class="pane"></div>
 		<div id="right-pane" class="pane">
-		
-		            <p id="editionFormContainer">
-                    </p>
-                    <s:form method="POST" theme="simple" id="controls" cssClass="controls">
-               			<input id="saveEADButton" type="button" name="saveEADButton" value="<s:property value="getText('dashboard.hgcreation.sbm.btn.save')" />" />
-               			<s:submit action="contentmanager" key="dashboard.editead.btn.cancel" id="cancelEADButton" name="cancelEADButton" />
-                    </s:form>
+			<div id="informationDiv"></div>
+
+			<p id="editionFormContainer">
+			</p>
+
+			<s:form method="POST" theme="simple" id="controls" cssClass="controls">
+				<input id="saveEADButton" type="button" name="saveEADButton" value="<s:property value="getText('dashboard.hgcreation.sbm.btn.save')" />" />
+				<s:submit action="contentmanager" key="dashboard.editead.btn.cancel" id="cancelEADButton" name="cancelEADButton" />
+			</s:form>
+		</div>
+	</div>
+
+	<div class="hidden">
+		<div id="processingInfoDiv">
+			<table id="processingInfoTable">
+				<tr>
+					<td>
+						<img id="processingInfoImg" src="images/colorbox/loading.gif" />
+					</td>
+					<td>
+						<label class="bold" id="processingInfoLabel" for="processingInfoImg">
+							<s:text name="al.message.processing" />
+						</label>
+					</td>
+				</tr>
+			</table>
 		</div>
 	</div>
 </div>

@@ -5,7 +5,7 @@ function initEadEdition(){
 //	alert("yes");
 }
 
-function initEadTree(fileId, xmlTypeId, messageSpecialChars, messageEmptyEADID, messageEmptyWhenSave, messageNormalWithSpecialChars, messageNormalCorrecVal, messageEmptyNormal, messageNotCorrectDate, messageEmptyTitleproper, messageEmptyPreviousLang){
+function initEadTree(fileId, xmlTypeId, messageEmptyEADID, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageNormalWithSpecialChars, messageNormalCorrecVal, messageEmptyNormal, messageNotCorrectDate, messageEmptyTitleproper, messageEmptyPreviousLang){
 	globalMessageNormalWithSpecialChars = messageNormalWithSpecialChars;
 	globalMessageNormalCorrecVal = messageNormalCorrecVal;
 	globalMessageEmptyNormal = messageEmptyNormal;
@@ -32,13 +32,16 @@ function initEadTree(fileId, xmlTypeId, messageSpecialChars, messageEmptyEADID, 
             else
                 correctId = -1;
             if(dtnode.data.more == null){
+            	createColorboxForProcessing();
                 $.post("editEadXml.action", {id: correctId, fileId: fileId, xmlTypeId: xmlTypeId}, function(databack){
                     if(databack.xml) {
                         $("#editionFormContainer").html(databack.xml);
-                        executeActionsWhenLoadXML(fileId,xmlTypeId, messageEmptyWhenSave, messageEmptyEADID, messageEmptyNormal, messageNotCorrectDate, messageSpecialChars, messageNormalWithSpecialChars, messageNormalCorrecVal, messageEmptyTitleproper);
+                        executeActionsWhenLoadXML(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyEADID, messageEmptyNormal, messageNotCorrectDate, messageNormalWithSpecialChars, messageNormalCorrecVal, messageEmptyTitleproper);
                     }
+                    deleteColorboxForProcessing();
                 }, "json");
             }
+            cleanInformation();
         },
 
         onLazyRead: function(dtnode){
@@ -82,7 +85,11 @@ function initEadTree(fileId, xmlTypeId, messageSpecialChars, messageEmptyEADID, 
 
                 });
             }
+            cleanInformation();
         },
+		onSelect: function(select,node){
+			node.select(select);
+		},
         minExpandLevel: 2,
         generateIds: true
     });
@@ -92,11 +99,15 @@ function initEadTree(fileId, xmlTypeId, messageSpecialChars, messageEmptyEADID, 
  * Function to execute all the necessary actions when a new XML (part of EAD file)
  * is loaded.
  */
-function executeActionsWhenLoadXML(fileId,xmlTypeId, messageEmptyWhenSave, messageEmptyEADID, messageEmptyNormal, messageNotCorrectDate, messageSpecialChars, messageNormalWithSpecialChars, messageNormalCorrecVal, messageEmptyTitleproper) {
+function executeActionsWhenLoadXML(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyEADID, messageEmptyNormal, messageNotCorrectDate, messageNormalWithSpecialChars, messageNormalCorrecVal, messageEmptyTitleproper) {
 	// Initialize the buttons panel.
-    initButtons(fileId,xmlTypeId, messageEmptyWhenSave, messageEmptyEADID, messageEmptyNormal, messageNotCorrectDate, messageEmptyTitleproper);
+    initButtons(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyEADID, messageEmptyNormal, messageNotCorrectDate, messageEmptyTitleproper);
+    // Checks the value of the countrycode when is modified.
+    checkCountryCodeValue(messageEmptyCountrycode);
+    // Checks the value of the mainagencycode when is modified.
+    checkMainagencycodeValue(messageEmptyMainagencycode);
     // Checks the value of the EADID when is modified.
-    checkEADIDValue(messageSpecialChars, messageEmptyEADID);
+    checkEADIDValue(messageEmptyEADID);
     // Checks the value of the attribute normal when is modified.
     checkNormalValue(messageNormalWithSpecialChars, messageNormalCorrecVal, messageEmptyNormal);
     // Checks the value of the element titleproper.
@@ -105,53 +116,41 @@ function executeActionsWhenLoadXML(fileId,xmlTypeId, messageEmptyWhenSave, messa
     addOnclickActionToButtons();
 }
 
-function initButtons(fileId,xmlTypeId, messageEmptyWhenSave, messageEmptyEADID, messageEmptyNormal, messageNotCorrectDate, messageEmptyTitleproper){
-	$("#controls").show();
+function initButtons(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyEADID, messageEmptyNormal, messageNotCorrectDate, messageEmptyTitleproper){
+	if ($("#controls").is(':hidden')) {
+		$("#controls").show();
 
-	// Action for button delete.
-	$("#deleteButton").click(function(event){
-		confirmed = confirm('dashboard.hgcreation.areyousuredeletechildren');
-		//event.preventDefault();
-
-	    if(confirmed){
-	        var node = $("#eadTree").dynatree("getActiveNode");
-	        $.post("deleteLevelHG.action", {id: node.data.id}, function(databack){
-	            if(databack.success){
-	                var parent = node.parent;
-	                node.remove();
-	                parent.render();
-	                $("#editionFormContainer").html("");
-	            	$("#controls").hide();
-	            }
-	        });
-	    }
-	});
-
-	// Action for button save.
-    $("#saveEADButton").click(function(){
-    	saveEAD(fileId,xmlTypeId, messageEmptyWhenSave, messageEmptyEADID, messageEmptyNormal, messageNotCorrectDate, messageEmptyTitleproper);
-    });
+		// Action for button save.
+	    $("#saveEADButton").click(function(){
+	    	cleanInformation();
+	    	saveEAD(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyEADID, messageEmptyNormal, messageNotCorrectDate, messageEmptyTitleproper);
+	    });
+	}
 }
 
-function saveEAD(fileId,xmlTypeId, messageEmptyWhenSave, messageEmptyEADID, messageEmptyNormal, messageNotCorrectDate, messageEmptyTitleproper){
+function saveEAD(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyEADID, messageEmptyNormal, messageNotCorrectDate, messageEmptyTitleproper){
 	// Remove the previous alerts.
 	removeAlerts();
 
 	// Checks all the information inserted.
-	if (!checkAllData(fileId, messageEmptyEADID, messageEmptyWhenSave, messageEmptyNormal, messageNotCorrectDate, messageNormalCorrecVal, messageEmptyTitleproper)) {
+	if (!checkAllData(fileId, messageEmptyEADID, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyNormal, messageNotCorrectDate, messageNormalCorrecVal, messageEmptyTitleproper)) {
 		return;
 	}
 
 	// Try to save the data.
 	var node = $("#eadTree").dynatree("getActiveNode");
 	//get all input and selected/option info into editionElement div
-	var start = "'formValues'={";
+	var start = "{";
 	var content = start;
 	$("p#editionFormContainer div .editionElement").find("input").each(function() {
 		// Check if it's necessary to add the current value.
 		if ($(this).val() != undefined) {
 			content += (content.length>start.length) ? "," : "";
-			content += "'" + $(this).attr("name") + "':" + "'" + $(this).val() + "'";
+			var value = $(this).val();
+			while (value.indexOf("'") != -1) {
+				value = value.replace(/'/g, "%27");
+			}
+			content += "'" + $(this).attr("name") + "':" + "'" + value + "'";
 		}
 	});
 	$("p#editionFormContainer select").each(function() {
@@ -165,6 +164,11 @@ function saveEAD(fileId,xmlTypeId, messageEmptyWhenSave, messageEmptyEADID, mess
 			}
 		}
 	});
+
+	// Hide elements ans show processing info.
+	$("p#editionFormContainer").hide();
+	createColorboxForProcessing();
+
 	// Add "id" if exists.
 	if (node.data.id != undefined) {
 		content += ",'id':'"+node.data.id+"'";
@@ -183,13 +187,28 @@ function saveEAD(fileId,xmlTypeId, messageEmptyWhenSave, messageEmptyEADID, mess
 	}
 	content += "}";
 
+	var dynatree = $("#eadTree").dynatree("getTree");
+
+	// Hide the content.
+	$("p#editionFormContainer").hide();
+	// Hide the buttons.
+	$("#controls").hide();
+
+	content = encodeURIComponent(content);
+	content = "'formValues'=" + content;
 
 	$.post("editEadXmlSaveLevel.action", content, function(data) {
 		//savedText
 		if (data != undefined
-				&& data.saved != undefined /*&& data.saved*/
-				&& data.savedText != undefined) {
-			alert(data.savedText);
+				&& data.saved != undefined) {
+			if (data.saved) {
+				dynatree.reload();
+				displayNode(node, data.savedText);
+			} else {
+				showInformation(data.savedText, true);
+			}
+		} else {
+			showInformation("", true);
 		}
 	});
 }
@@ -198,6 +217,10 @@ function saveEAD(fileId,xmlTypeId, messageEmptyWhenSave, messageEmptyEADID, mess
  * Function to remove all the previous displayed alerts.
  */
 function removeAlerts(){
+	// Remove countrycode alerts.
+	$("p#alertCountryCode").remove();
+	// Remove mainagencycode alerts.
+	$("p#alertMainagencyname").remove();
 	// Remove EADID alerts.
 	$("p#alertEADID").remove();
 	// Remove titleproper alerts.
@@ -214,35 +237,48 @@ function removeAlerts(){
  * Function that loads all the methods to check if the values inserted are correct ones.
  *
  * @param fileId
- * @param messageEmpty
+ * @param messageEmptyEADID
  * @param messageEmptyWhenSave
+ * @param messageInvalidCountrycode
+ * @param messageEmptyCountrycode
+ * @param messageEmptyMainagencycode
  * @param messageEmptyNormal
  * @param messageNotCorrectDate
  * @param messageNormalCorrecVal
  * @param messageEmptyTitleproper
- * @returns {Boolean}
+ * @returns
  */
-function checkAllData(fileId, messageEmptyEADID, messageEmptyWhenSave, messageEmptyNormal, messageNotCorrectDate, messageNormalCorrecVal, messageEmptyTitleproper) {
+function checkAllData(fileId, messageEmptyEADID, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyNormal, messageNotCorrectDate, messageNormalCorrecVal, messageEmptyTitleproper) {
 	var result = true;
 
-	// First of all, checks if the EADID is not empty.
+	// First, checks if the countrycode is valid.
+	if (!isValidCountryCode(messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, result)) {
+		result = false;
+	}
+
+	// Second, checks if the mainagencycode is not empty.
+	if(isEmptyMainagencycode(messageEmptyMainagencycode, result)) {
+		result = false;
+	}
+
+	// Third, checks if the EADID is not empty.
 	if (isEmptyEADID(messageEmptyWhenSave, messageEmptyEADID, result)) {
 		result = false;
 	}
 
-	// Second, checks the availability of the new EADID.
+	// Fourth, checks the availability of the new EADID.
 	if (result) {
 		if (!isNewEADIDavailable(fileId)) {
 			result = false;
 		}
 	}
 
-	// Third, checks if all elements "titleproper" has content.
+	// Fifth, checks if all elements "titleproper" has content.
 	if (isEmptyTitleproper(messageEmptyWhenSave, messageEmptyTitleproper, result)) {
 		result = false;
 	}
 
-	// Fourth, checks if all the attributes "normal" has content.
+	// Sixth , checks if all the attributes "normal" has content.
 	// And checks if all the attributes "normal" has correct content.
 	if (isEmptyNormal(messageEmptyWhenSave, messageEmptyNormal, result)) {
 		result = false;
@@ -250,6 +286,84 @@ function checkAllData(fileId, messageEmptyEADID, messageEmptyWhenSave, messageEm
 		result = false;
 	}
 
+	return result;
+}
+
+/**
+ * Function to check if countrycode is valid.
+ *
+ * @param messageEmptyWhenSave
+ * @param messageInvalidCountrycode
+ * @param messageEmptyCountrycode
+ * @param showAlert
+ * @returns {Boolean}
+ */
+function isValidCountryCode(messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, showAlert) {
+	var result = true;
+	$("input[name^='eadid_countrycode']").each(function(){
+		var name = $(this).attr("name");
+		var value = $.trim($("input[name="+ name + "]").val());
+		if(value.length <= 0) {
+			if (showAlert) {
+				alert(messageEmptyWhenSave);
+			}
+			result = false;
+			$("input[name=" + name + "]").after("<p id=\"alertCountryCode\" class=\"alertMessage\">" + messageEmptyCountrycode + "</p>");
+			$("input[name=" + name + "]").val(value);
+			$('html, body').stop().animate({
+		        'scrollTop': $("p#editionFormContainer").offset().top
+		    }, 900, 'swing', function () {
+		    	//logAction("scroll moved to: ", $("#eagDetails").offset().top);
+		    });
+		} else {
+			//begin pattern check
+			var pattern = new RegExp("(AF|AX|AL|DZ|AS|AD|AO|AI|AQ|AG|AR|AM|AW|AU|AT|AZ|BS|BH|BD|BB|BY|BE|BZ|BJ|BM|BT|BO|BA|BW|BV|BR|IO|BN|BG|BF|BI|KH|CM|CA|CV|KY|CF|TD|CL|CN|CX|CC|CO|KM|CG|CD|CK|CR|CI|HR|CU|CY|CZ|DK|DJ|DM|DO|EC|EG|SV|GQ|ER|EE|ET|FK|FO|FJ|FI|FR|GF|PF|TF|GA|GM|GE|DE|GH|GI|GR|GL|GD|GP|GU|GT|GN|GW|GY|HT|HM|VA|HN|HK|HU|IS|IN|ID|IR|IQ|IE|IL|IT|JM|JP|JO|KZ|KE|KI|KP|KR|KW|KG|LA|LV|LB|LS|LR|LY|LI|LT|LU|MO|MK|MG|MW|MY|MV|ML|MT|MH|MQ|MR|MU|YT|MX|FM|MD|MC|MN|MS|MA|MZ|MM|NA|NR|NP|NL|AN|NC|NZ|NI|NE|NG|NU|NF|MP|NO|OM|PK|PW|PS|PA|PG|PY|PE|PH|PN|PL|PT|PR|QA|RE|RO|RU|RW|SH|KN|LC|PM|VC|WS|SM|ST|SA|SN|CS|SC|SL|SG|SK|SI|SB|SO|ZA|GS|ES|LK|SD|SR|SJ|SZ|SE|CH|SY|TW|TJ|TZ|TH|TL|TG|TK|TO|TT|TN|TR|TM|TC|TV|UG|UA|AE|GB|US|UM|UY|UZ|VU|VE|VN|VG|VI|WF|EH|YE|ZM|ZW|RS|ME|EU)+$");
+			var resultTest = pattern.test(value);
+			if(!resultTest){
+				if (showAlert) {
+					alert(messageInvalidCountrycode);
+				}
+				result = false;
+				$("input[name=" + name + "]").after("<p id=\"alertCountryCode\" class=\"alertMessage\">" + messageInvalidCountrycode + "</p>");
+				$("input[name=" + name + "]").val(value);
+				$('html, body').stop().animate({
+			        'scrollTop': $("p#editionFormContainer").offset().top
+			    }, 900, 'swing', function () {
+			    	//logAction("scroll moved to: ", $("#eagDetails").offset().top);
+			    });
+			}
+		}
+	});
+
+	return result;
+} 
+
+/**
+ * Function to check if mainagencycode is empty.
+ *
+ * @param messageEmptyMainagencycode
+ * @param showAlert
+ * @returns {Boolean}
+ */
+function isEmptyMainagencycode(messageEmptyMainagencycode, showAlert) {
+	var result = false;
+	$("input[name^='eadid_mainagencycode']").each(function(){
+		var name = $(this).attr("name");
+		var value = $.trim($("input[name="+ name + "]").val());
+		if(value.length <= 0) {
+			if (showAlert) {
+				alert(messageEmptyWhenSave);
+			}
+			result = true;
+			$("input[name=" + name + "]").after("<p id=\"alertMainagencyname\" class=\"alertMessage\">" + messageEmptyMainagencycode + "</p>");
+			$("input[name=" + name + "]").val(value);
+			$('html, body').stop().animate({
+		        'scrollTop': $("p#editionFormContainer").offset().top
+		    }, 900, 'swing', function () {
+		    	//logAction("scroll moved to: ", $("#eagDetails").offset().top);
+		    });
+		}
+	});
 	return result;
 }
 
@@ -330,12 +444,46 @@ function isNewEADIDavailable(fileId) {
 }
 
 /**
+ * Function to check the correct value of the "countrycode" field.
+ *
+ * @param messageEmptyCountrycode
+ */
+function checkCountryCodeValue(messageEmptyCountrycode) {
+	$("input[name^='eadid_countrycode']").each(function(){
+		var name = $(this).attr("name");
+		$("input[name="+ name + "]").on('input', function() {
+			$("p#alertCountryCode").remove();
+            cleanInformation();
+
+			var value = $("input[name="+ name + "]").val();
+			if(value.length == 0) {
+				alert(messageEmptyCountrycode);
+			}
+    	});
+	});
+}
+
+function checkMainagencycodeValue(messageEmptyMainagencycode) {
+	$("input[name^='eadid_mainagencycode']").each(function(){
+		var name = $(this).attr("name");
+		$("input[name="+ name + "]").on('input', function() {
+			$("p#alertMainagencyname").remove();
+            cleanInformation();
+
+			var value = $("input[name="+ name + "]").val();
+			if(value.length == 0) {
+				alert(messageEmptyMainagencycode);
+			}
+    	});
+	});
+}
+
+/**
  * Function to check the correct value of the "EADID" field.
  *
- * @param messageSpecialChars
  * @param messageEmptyEADID
  */
-function checkEADIDValue(messageSpecialChars, messageEmptyEADID) {
+function checkEADIDValue(messageEmptyEADID) {
 	$("input[name^='eadid']").each(function(){
 		var name = $(this).attr("name");
 		var firstIndex = name.indexOf("_");
@@ -344,27 +492,10 @@ function checkEADIDValue(messageSpecialChars, messageEmptyEADID) {
 		if (firstIndex == lastIndex) {
 			$("input[name="+ name + "]").on('input', function() {
 				$("p#alertEADID").remove();
+	            cleanInformation();
+
 				var value = $("input[name="+ name + "]").val();
-				if(value.length > 0) {
-					//begin pattern check
-					var pattern = new RegExp("^[a-zA-Z0-9\\s\.\\-\\_]+$");
-					var resultTest = pattern.test(value);
-					if(!resultTest){
-						//The EADID must not include special characters.
-						alert(messageSpecialChars);
-
-						// Check char by char to find all the special characters.
-						var newString = "";
-						$.each(value, function(index, value){
-							if (pattern.test(value)) {
-								newString += value;
-							}
-						});
-
-						// Change the content for the correct one.
-						$("input[name="+ name + "]").val(newString);
-					}
-				} else {
+				if(value.length == 0) {
 					alert(messageEmptyEADID);
 				}
         	});
@@ -389,6 +520,7 @@ function checkNormalValue(messageNormalWithSpecialChars, messageNormalCorrecVal,
 		$("input[name="+ name + "]").on('input', function() {
 			var position = name.substring(name.lastIndexOf("_"));
 			$("p#alertNormal" + position).remove();
+            cleanInformation();
 
 			var value = $("input[name="+ name + "]").val();
 			if(value.length > 0) {
@@ -496,9 +628,25 @@ function isCorrectNormal(messageNotCorrectDate, messageNormalCorrecVal, showAler
 	$("input[name^='unitdate_normal']").each(function(){
 		var name = $(this).attr("name");
 		var value = $.trim($("input[name="+ name + "]").val());
-		// Regular expression to check the date.
-		var pattern = new RegExp("(-?(0|1|2)([0-9]{3})(((01|02|03|04|05|06|07|08|09|10|11|12)((0[1-9])|((1|2)[0-9])|(3[0-1])))|-((01|02|03|04|05|06|07|08|09|10|11|12)(-((0[1-9])|((1|2)[0-9])|(3[0-1])))?))?)(/-?(0|1|2)([0-9]{3})(((01|02|03|04|05|06|07|08|09|10|11|12)((0[1-9])|((1|2)[0-9])|(3[0-1])))|-((01|02|03|04|05|06|07|08|09|10|11|12)(-((0[1-9])|((1|2)[0-9])|(3[0-1])))?))?)?");
-		if (!value.match(pattern)) {
+		// Regular expressions to check the date.
+		var patterYear = new RegExp("(0|1|2)([0-9]{3})");
+		var patterYearMonth = new RegExp("(0|1|2)([0-9]{3})-(01|02|03|04|05|06|07|08|09|10|11|12)");
+		var patterYearMonthDay = new RegExp("(0|1|2)([0-9]{3})-(01|02|03|04|05|06|07|08|09|10|11|12)-((0[1-9])|((1|2)[0-9])|(3[0-1]))");
+
+		var date = value.split("-");
+		var matches;
+
+		if (date.length == 1) {
+			matches = value.match(patterYear);
+		} else if (date.length == 2) {
+			matches = value.match(patterYearMonth);
+		} else if (date.length == 3) {
+			matches = value.match(patterYearMonthDay);
+		} else {
+			matches = false;
+		}
+
+		if (!matches) {
 			var position = name.substring(name.lastIndexOf("_"));
 			$("input[name=" + name + "]").after("<p id=\"alertNormal" + position + "\" class=\"alertMessage\">" + messageNormalCorrecVal + "</p>");
 			$("input[name=" + name + "]").val(value);
@@ -529,6 +677,7 @@ function checkTitleproperValue(messageEmptyTitleproper) {
 		$("input[name="+ name + "]").on('input', function() {
 			var position = name.substring(name.lastIndexOf("_"));
 			$("p#alertTitleproper" + position).remove();
+            cleanInformation();
 
 			var value = $("input[name="+ name + "]").val();
 			if(value.length == 0) {
@@ -548,10 +697,12 @@ function addOnclickActionToButtons() {
 		if (name.indexOf("_normal_") != -1) {
 			$(this).on('click', function(){
 				addNormalAttribute(name);
+	            cleanInformation();
 			});
 		} else if (name.indexOf("_language_") != -1) {
 			$(this).on('click', function(){
 				addLanguageElement(name);
+	            cleanInformation();
 			});
 		}
 	});
@@ -647,4 +798,157 @@ function isPreviousLanguageFilled(name) {
 	});
 
 	return result;
+}
+
+/**
+ * Function to display the previous selected node after reload the tree. 
+ *
+ * @param node
+ * @param message
+ */
+function displayNode(node, message) {
+	var parents = new Array();
+	if (node.getParent() != null) {
+		//get parent structure
+		var currentNode = node;
+		var i = 0;
+		parents[i++] = currentNode;
+		do{
+			currentNode = currentNode.getParent();
+			parents[i++] = currentNode;
+		} while (currentNode.getParent() != null);
+		//use parent structure to display target node
+		expandParents(parents, i-2, message, node); //review i
+	}
+}
+
+/**
+ * Funtion that expands the parents of the selected node.
+ *
+ * @param parents
+ * @param i
+ * @param message
+ * @param targetNode
+ */
+function expandParents(parents, i, message, targetNode) {
+	var dynatree = $("#eadTree").dynatree("getTree");
+	if (i >= 0) {
+		var key = "";
+		//could be used for dynatree_node[] and string[] keys
+		if (parents[i].data) {
+			key = parents[i].data.key;
+		} else {
+			key = parents[i];
+		}
+		var target = dynatree.getNodeByKey(key);
+		if (!target) {
+			setTimeout(function(){expandParents(parents, i, message, targetNode);},40);
+		} else {
+			target.expand(true);
+			expandParents(parents, i-1, message, targetNode);
+		}
+	} else {
+//		launchFinalAction();
+		setTimeout(function(){launchFinalAction(targetNode.data.key, message);},40);
+	}
+}
+
+/**
+ * Function to check if is the moment of display the result message.
+ *
+ * @param key
+ * @param message
+ */
+function launchFinalAction(key, message) {
+	//targetNode.select(true);
+	var dynatree = $("#eadTree").dynatree("getTree");
+	var target = dynatree.getNodeByKey(key);
+	if (!target) {
+		setTimeout(function(){launchFinalAction(key, message);},40);
+	} else {
+		target.activate(true);
+		//target.select(true);
+		//targetNode.activate(true);
+		showInformation(message);
+	}
+}
+
+/**
+ * Function to display the result message.
+ *
+ * @param information
+ * @param error
+ */
+function showInformation(information, error) {
+	var message = "<span";
+	if (error) {
+		message += " style=\"color:red;font-weight:bold;\"";
+	} else {
+		message += " style=\"color:green;\"";
+	}
+	message += ">"+information+"</span>";
+	$("#informationDiv").html(message);
+	$("#informationDiv").fadeIn("slow");
+
+	// Show elements ans hide processing info.
+	$("p#editionFormContainer").show();
+	$("#controls").show();
+	if (error) {
+		// Show the content.
+		$("p#editionFormContainer").show();
+		deleteColorboxForProcessing();
+	}
+}
+
+/**
+ * Function to remove the result message.
+ */
+function cleanInformation(){
+	$("#informationDiv").fadeOut("slow");
+}
+
+/**
+ * Function to display the processing information.
+ */
+function createColorboxForProcessing() {
+	// Create colorbox.
+	$.colorbox({html:function(){
+			var htmlCode = $("#processingInfoDiv").html();
+			return htmlCode;
+		},
+		overlayClose:false, // Prevent close the colorbox when clicks on window.
+		escKey:false, // Prevent close the colorbox when hit escape key.
+		innerWidth:"150px",
+		innerHeight:"36px",
+		initialWidth:"0px",
+		initialHeight:"0px"
+	});
+
+	// Remove the close button from colorbox.
+	$("#cboxClose").remove();
+
+	// Prevent reload page.
+	$(document).on("keydown", disableReload);
+}
+
+/**
+ * Function to prevent reload the page using F5.
+ * @param e
+ */
+function disableReload(e) {
+	if (((e.which || e.keyCode) == 116)
+			|| (((e.ctrlKey && e.which) || (e.ctrlKey && e.keyCode)) == 82)) {
+		e.preventDefault();
+	}
+};
+
+/**
+ * Function to close the processing information.
+ */
+function deleteColorboxForProcessing() {
+	// Close colorbox.
+	$.fn.colorbox.close();
+
+	// Enable the page reload using F5.
+	$(document).off("keydown", disableReload)
 }

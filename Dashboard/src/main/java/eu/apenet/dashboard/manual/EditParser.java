@@ -76,6 +76,8 @@ public class EditParser extends AbstractParser {
 	private static final String LANGCODE = "langcode";
     // Name of attibute "@scriptcode" in element <language>.
 	private static final String SCRIPTCODE = "scriptcode";
+    // Name of attibute "@level" in element <c>.
+	private static final String LEVEL = "level";
     // Name of id for attibute "@normal" in element <unitdate>.
 	private static final String UNITDATE_NORMAL = "unitdate_normal";
     // Name of id for attibute "@langcode" in element <language>.
@@ -478,17 +480,7 @@ public class EditParser extends AbstractParser {
     }
 
     public String getNewXmlString(String xml, Map<String, String> formValues) throws XMLStreamException, IOException {
-    	Map<String, String> formValuesCopy = new LinkedHashMap<String, String>();
-    	if (formValues != null) {
-    		Set<String> keySet = formValues.keySet();
-    		if (keySet != null) {
-    			Iterator<String> keysIt = keySet.iterator();
-    			while (keysIt.hasNext()) {
-    				String key = keysIt.next();
-    				formValuesCopy.put(key, formValues.get(key));
-    			}
-    		}
-    	}
+    	Map<String, String> formValuesCopy = new LinkedHashMap<String, String>(formValues);
 
     	// Set the copy to the global map.
     	this.setFormValues(formValuesCopy);
@@ -704,7 +696,11 @@ public class EditParser extends AbstractParser {
     				String xmlKey = xmlElementName + "_";
 
     				if (xmlAttributeName != null) {
-    					xmlKey = xmlKey + xmlAttributeName + "_";
+    					if (xmlAttributeName.equalsIgnoreCase(EditParser.LEVEL)) {
+    						xmlKey = xmlKey + xmlAttributeName;
+    					} else {
+    						xmlKey = xmlKey + xmlAttributeName + "_";
+    					}
     				}
     				
     				if (key.startsWith(xmlKey)) {
@@ -763,6 +759,9 @@ public class EditParser extends AbstractParser {
     		String key = keyList.iterator().next();
     		String value = this.getFormValues().get(key);
     		this.getFormValues().remove(key);
+    		if (value.contains("%27")) { 
+    			value = value.replaceAll("%27", "'");
+    		}
     		return value;
     	}
 
