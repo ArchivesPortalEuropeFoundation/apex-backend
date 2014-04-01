@@ -80,17 +80,17 @@
       <field name="id" type="string" indexed="true" stored="true" required="true"/>	
 	  <field name="names" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="places" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
-	  <field name="mandate" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
-	  <field name="function" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
+	  <field name="mandates" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
+	  <field name="functions" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="description" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="dateDescription" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
-	  <field name="occupation" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
+	  <field name="occupations" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="placesFacet" type="facetText" indexed="true" stored="true" multiValued="true"  required="false" />
 	  <field name="country" type="string" indexed="true" stored="true" required="false"/>
 	  <field name="ai" type="string" indexed="true" stored="true" required="false"/>
-	  <field name="occupationFacet" type="facetText" indexed="true"  multiValued="true" stored="true" required="false"/>
-	  <field name="mandateFacet" type="facetText" indexed="true"  multiValued="true" stored="true" required="false"/>
-	  <field name="functionFacet" type="facetText" indexed="true"  multiValued="true" stored="true" required="false"/>	  
+	  <field name="occupationsFacet" type="facetText" indexed="true"  multiValued="true" stored="true" required="false"/>
+	  <field name="mandatesFacet" type="facetText" indexed="true"  multiValued="true" stored="true" required="false"/>
+	  <field name="functionsFacet" type="facetText" indexed="true"  multiValued="true" stored="true" required="false"/>	  
 
 	  <field name="countryId" type="int" indexed="true" stored="false" required="false"/>
 	  <field name="aiId" type="int" indexed="true" stored="false" required="false"/>	  
@@ -116,13 +116,13 @@
     <copyField source="names" dest="spell"/>
 	<copyField source="places" dest="spell"/>
 	<copyField source="description" dest="spell"/>
-	<copyField source="occupation" dest="spell"/>
-	<copyField source="mandate" dest="spell"/>	
-	<copyField source="function" dest="spell"/>		
+	<copyField source="occupations" dest="spell"/>
+	<copyField source="mandates" dest="spell"/>	
+	<copyField source="functions" dest="spell"/>		
 	<copyField source="dateDescription" dest="spell"/>
 	
 	<copyField source="places" dest="placesFacet"/>
-	<copyField source="occupation" dest="occupationFacet"/>
-	<copyField source="mandate" dest="mandateFacet"/>	
-	<copyField source="function" dest="functionFacet"/>			
+	<copyField source="occupations" dest="occupationsFacet"/>
+	<copyField source="mandates" dest="mandatesFacet"/>	
+	<copyField source="functions" dest="functionsFacet"/>			
   </schema>
