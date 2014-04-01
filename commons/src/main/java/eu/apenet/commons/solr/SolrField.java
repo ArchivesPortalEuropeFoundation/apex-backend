@@ -6,8 +6,11 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 public enum SolrField {
-	TITLE("title"), SCOPECONTENT("scopecontent"), ALTERDATE("alterdate"), OTHER("other"), UNITID("unitid"), OTHERUNITID(
-			"otherunitid");
+	TITLE(SolrFields.TITLE), SCOPECONTENT(SolrFields.SCOPECONTENT), ALTERDATE(SolrFields.ALTERDATE), OTHER(SolrFields.OTHER), UNITID(SolrFields.UNITID), OTHERUNITID(
+			SolrFields.OTHERUNITID), 
+			EAC_CPF_NAMES(SolrFields.EAC_CPF_NAMES), EAC_CPF_PLACES(SolrFields.EAC_CPF_PLACES), EAC_CPF_OCCUPATION(SolrFields.EAC_CPF_OCCUPATION), 
+			EAC_CPF_FUNCTION(SolrFields.EAC_CPF_FUNCTION), EAC_CPF_MANDATE(SolrFields.EAC_CPF_MANDATE), EAC_CPF_RECORD_ID(SolrFields.EAC_CPF_RECORD_ID);
+
 	private String value;
 	private static final Integer NO_SELECTION = 0;
 	private static final Integer TITLE_SELECTION = 1;
