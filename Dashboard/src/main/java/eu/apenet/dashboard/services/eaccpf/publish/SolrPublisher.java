@@ -45,6 +45,7 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 	private static XPathExpression agencyCodeExpression;
 	private static XPathExpression agencyNameExpression;
 	private static XPathExpression nameExpression;
+	private static XPathExpression nameParallelExpression;
 	private static XPathExpression placeExpression;
 	private static XPathExpression descriptionExpression;
 	private static XPathExpression fromDateExpression;
@@ -53,6 +54,11 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 	private static XPathExpression toDateNormalExpression;
 	private static XPathExpression occupationExpression;
 	private static XPathExpression bioghistExpression;
+	private static XPathExpression languageExpression;
+	private static XPathExpression entityTypeExpression;
+	private static XPathExpression entityIdExpression;
+	private static XPathExpression mandateExpression;	
+	private static XPathExpression functionExpression;	
 	private String recordId;
 	static {
 		try {
@@ -61,6 +67,7 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 			agencyCodeExpression = XPATH.compile("/eac:eac-cpf/eac:control/eac:maintenanceAgency/eac:agencyCode");
 			agencyNameExpression = XPATH.compile("/eac:eac-cpf/eac:control/eac:maintenanceAgency/eac:agencyName");
 			nameExpression = XPATH.compile("/eac:eac-cpf/eac:cpfDescription/eac:identity/eac:nameEntry/eac:part");
+			nameParallelExpression = XPATH.compile("/eac:eac-cpf/eac:cpfDescription/eac:identity/eac:nameEntryParallel/eac:nameEntry/eac:part");
 			descriptionExpression = XPATH.compile("/eac:eac-cpf/eac:cpfDescription/eac:description");
 			placeExpression = XPATH.compile("./eac:places/eac:place/eac:placeEntry");
 			fromDateExpression = XPATH.compile("./eac:existDates/eac:dateRange/eac:fromDate");
@@ -69,6 +76,11 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 			toDateNormalExpression = XPATH.compile("./eac:existDates/eac:dateRange/eac:toDate/@standardDate");
 			occupationExpression = XPATH.compile("./eac:occupations/eac:occupation/eac:term");
 			bioghistExpression = XPATH.compile("./eac:biogHist//text()");
+			languageExpression = XPATH.compile("/eac:eac-cpf/eac:control/eac:languageDeclaration/eac:language/@languageCode");
+			entityTypeExpression = XPATH.compile("/eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityType");
+			entityIdExpression = XPATH.compile("/eac:eac-cpf/eac:cpfDescription/eac:identity/eac:entityId");
+			mandateExpression =  XPATH.compile("./eac:mandates/eac:mandate/eac:term");
+			functionExpression = XPATH.compile("./eac:functions/eac:function/eac:term");			
 		} catch (XPathExpressionException e) {
 			LOGGER.info(e.getMessage(), e);
 		}
@@ -83,13 +95,26 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 		doc.getDocumentElement().normalize();
 		EacCpfSolrObject eacCpfSolrObject = new EacCpfSolrObject(eacCpf);
 		eacCpfSolrObject.setRecordId((String) recordIdExpression.evaluate(doc, XPathConstants.STRING));
+		NodeList entityIdNodeList = (NodeList) entityIdExpression.evaluate(doc, XPathConstants.NODESET);
+		eacCpfSolrObject.setEntityIds(getTextsWithoutMultiplity(entityIdNodeList));
+		eacCpfSolrObject.setEntityType((String) entityTypeExpression.evaluate(doc, XPathConstants.STRING));
+		eacCpfSolrObject.setLanguage((String) languageExpression.evaluate(doc, XPathConstants.STRING));
 		eacCpfSolrObject.setAgencyCode((String) agencyCodeExpression.evaluate(doc, XPathConstants.STRING));
 		eacCpfSolrObject.setAgencyName(removeUnusedCharacters((String) agencyNameExpression.evaluate(doc, XPathConstants.STRING)));
 		Node descriptionNode = (Node) descriptionExpression.evaluate(doc, XPathConstants.NODE);
 		NodeList nameNodeList = (NodeList) nameExpression.evaluate(descriptionNode, XPathConstants.NODESET);
 		eacCpfSolrObject.setNames(getTextsWithoutMultiplity(nameNodeList));
+		if (eacCpfSolrObject.getNames().size() ==0){
+			nameNodeList = (NodeList) nameParallelExpression.evaluate(descriptionNode, XPathConstants.NODESET);
+			eacCpfSolrObject.setNames(getTextsWithoutMultiplity(nameNodeList));
+		}
 		NodeList placesNodeList = (NodeList) placeExpression.evaluate(descriptionNode, XPathConstants.NODESET);
 		eacCpfSolrObject.setPlaces(getTextsWithoutMultiplity(placesNodeList));
+		
+		NodeList functionsNodeList = (NodeList) functionExpression.evaluate(descriptionNode, XPathConstants.NODESET);
+		eacCpfSolrObject.setFunctions(getTextsWithoutMultiplity(functionsNodeList));
+		NodeList mandatesNodeList = (NodeList) mandateExpression.evaluate(descriptionNode, XPathConstants.NODESET);
+		eacCpfSolrObject.setMandates(getTextsWithoutMultiplity(mandatesNodeList));
 		NodeList occupationsNodeList = (NodeList) occupationExpression.evaluate(descriptionNode, XPathConstants.NODESET);
 		
 		eacCpfSolrObject.setOccupations(getTextsWithoutMultiplity(occupationsNodeList));
@@ -123,12 +148,14 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 
 		SolrInputDocument doc = new SolrInputDocument();
 		doc.addField(SolrFields.ID, eacCpfSolrObject.getEacCpf().getId());
-		add(doc, SolrFields.EAC_CPF_RECORD_ID, eacCpfSolrObject.getRecordId());
+		add(doc,SolrFields.EAC_CPF_RECORD_ID, eacCpfSolrObject.getRecordId());
+		addLowerCase(doc,SolrFields.EAC_CPF_FACET_ENTITY_TYPE, eacCpfSolrObject.getEntityType());
+		doc.addField(SolrFields.EAC_CPF_ENTITY_ID, eacCpfSolrObject.getEntityIds());
 		doc.addField(SolrFields.EAC_CPF_NAMES, eacCpfSolrObject.getNames());
 		doc.addField(SolrFields.EAC_CPF_PLACES, eacCpfSolrObject.getPlaces());
-		doc.addField(SolrFields.EAC_CPF_FACET_PLACES,eacCpfSolrObject.getPlaces());
-		doc.addField(SolrFields.EAC_CPF_FACET_OCCUPATION,eacCpfSolrObject.getOccupations());
 		doc.addField(SolrFields.EAC_CPF_OCCUPATION,eacCpfSolrObject.getOccupations());
+		doc.addField(SolrFields.EAC_CPF_FACET_FUNCTION, eacCpfSolrObject.getFunctions());
+		doc.addField(SolrFields.EAC_CPF_FACET_MANDATE,eacCpfSolrObject.getMandates());		
 		add(doc, SolrFields.EAC_CPF_DESCRIPTION,eacCpfSolrObject.getDescription());
 		add(doc, SolrFields.START_DATE, eacCpfSolrObject.getFromDate());
 		add(doc, SolrFields.END_DATE, eacCpfSolrObject.getToDate());
@@ -145,9 +172,8 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 		ArchivalInstitution archivalInstitution = eacCpfSolrObject.getEacCpf().getArchivalInstitution();
 		add(doc, SolrFields.COUNTRY, archivalInstitution.getCountry().getCname().replace(" ", "_") + COLON + SolrValues.TYPE_GROUP + COLON + archivalInstitution.getCountry().getId());
 		doc.addField(SolrFields.COUNTRY_ID, archivalInstitution.getCountry().getId());
-		//add(doc, SolrFields.LANGUAGE, language);
-		//add(doc, SolrFields.LANGMATERIAL, langmaterial);
-		// deprecated
+		add(doc, SolrFields.LANGUAGE, eacCpfSolrObject.getLanguage());
+
 		add(doc, SolrFields.AI, archivalInstitution.getAiname() + COLON + archivalInstitution.getAiId());
 		doc.addField(SolrFields.AI_ID, archivalInstitution.getAiId());
 		addSolrDocument(doc);

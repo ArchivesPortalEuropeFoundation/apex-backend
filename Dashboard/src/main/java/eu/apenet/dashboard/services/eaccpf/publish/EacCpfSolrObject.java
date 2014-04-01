@@ -6,17 +6,23 @@ import eu.apenet.persistence.vo.EacCpf;
 
 public class EacCpfSolrObject {
 	private Long id;
-	private String recordId;
+	private String language;
 	private String agencyCode;
 	private String agencyName; 
 	private String country;
 	private Set<String> names;
 	private Set<String> places;
+	private Set<String> functions;
+	private Set<String> mandates;	
 	private String description;
 	private Set<String> occupations;
 	private String dateDescription;
 	private String fromDate;
 	private String toDate;
+	private Set<String> entityIds;
+	private String recordId;
+	private String entityType;
+	
 	
 	private EacCpf eacCpf;
 	public EacCpfSolrObject ( EacCpf eacCpf){
@@ -28,11 +34,12 @@ public class EacCpfSolrObject {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getRecordId() {
-		return recordId;
+
+	public String getLanguage() {
+		return language;
 	}
-	public void setRecordId(String recordId) {
-		this.recordId = recordId;
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 	public String getAgencyCode() {
 		return agencyCode;
@@ -100,6 +107,38 @@ public class EacCpfSolrObject {
 	}
 	public void setEacCpf(EacCpf eacCpf) {
 		this.eacCpf = eacCpf;
+	}
+
+
+	public Set<String> getEntityIds() {
+		return entityIds;
+	}
+	public void setEntityIds(Set<String> entityIds) {
+		this.entityIds = entityIds;
+	}
+	public String getEntityType() {
+		return entityType;
+	}
+	public void setEntityType(String entityType) {
+		this.entityType = entityType;
+	}
+	public String getRecordId() {
+		return recordId;
+	}
+	public void setRecordId(String recordId) {
+		this.recordId = recordId;
+	}
+	public Set<String> getFunctions() {
+		return functions;
+	}
+	public void setFunctions(Set<String> functions) {
+		this.functions = functions;
+	}
+	public Set<String> getMandates() {
+		return mandates;
+	}
+	public void setMandates(Set<String> mandates) {
+		this.mandates = mandates;
 	}
 
 }
