@@ -128,6 +128,11 @@ public abstract class AbstractSolrPublisher {
 			doc.addField(name, value);
 		}
 	}
+	protected static void addLowerCase(SolrInputDocument doc, String name, String value) {
+		if (StringUtils.isNotBlank(value)) {
+			doc.addField(name, value.toLowerCase());
+		}
+	}
 
 	protected void addSolrDocument(SolrInputDocument doc) throws SolrServerException{
 		docs.add(doc);
