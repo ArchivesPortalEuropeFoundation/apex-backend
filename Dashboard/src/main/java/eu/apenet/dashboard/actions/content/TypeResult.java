@@ -6,9 +6,7 @@
 
 package eu.apenet.dashboard.actions.content;
 
-import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.QueueAction;
-import eu.apenet.persistence.vo.Warnings;
 import java.text.SimpleDateFormat;
 
 /**

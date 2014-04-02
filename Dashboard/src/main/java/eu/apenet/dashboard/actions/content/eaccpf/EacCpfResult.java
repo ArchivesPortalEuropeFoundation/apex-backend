@@ -42,6 +42,8 @@ public class EacCpfResult extends TypeResult {
             queueAction = eacCpf.getQueueItem().getAction();
         }
         this.identifier = eacCpf.getIdentifier();
+        this.containWarnings = eacCpf.getWarningses().size() > 0;
+        this.containValidationErrors = containValidationErrors(eacCpf);
     }
 
     public String getIdentifier() {
@@ -130,5 +132,14 @@ public class EacCpfResult extends TypeResult {
 
     public void setDeliveredToEuropeana(boolean deliveredToEuropeana) {
         this.deliveredToEuropeana = deliveredToEuropeana;
+    }
+
+    private boolean containValidationErrors(EacCpf eacCpf) {
+        for (Warnings warnings : eacCpf.getWarningses()) {
+            if (!warnings.getIswarning()) {
+                return true;
+            }
+        }
+        return false;
     }
 }
