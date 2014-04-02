@@ -65,8 +65,6 @@ select#selectLanguage  {
 
 #titledashboard {
 	float: left;
-	
-	/*width : 50%;*/
 	width: 50%;
 	height: auto;
 	font-weight: bold;
@@ -108,9 +106,7 @@ select#selectLanguage  {
 }
 #idioma {
 	position: relative;
-	/*float : left;*/
 	float: inherit;
-	/*width : 50%;*/
 	width: 10%;
 	height: auto;
 	top: 10px;
@@ -680,22 +676,18 @@ h2 {
 	float: right;
 	height: 450px;
 	width: 40%;
-	/*width:35%;*/
 	font-family: Arial, sans-serif;
 	font-size: 10pt;
 	color: #000;
 	font-weight: normal;
 	margin-right: 5px;
-	/*margin-right: 33px;*/
 	margin-left: -8px;
 }
 
 .scrollbar {
 	overflow-x: hidden;
-	/*height: 480px;*/
 	height: 450px;
 	overflow-y: auto;
-	/*width: 420px;*/
 	clip: auto;
 	margin-left: -65px;
 	padding-right: 10px;
@@ -805,7 +797,6 @@ input#submitDeleteTarget{
 	border-radius:15px 15px 15px 15px;
 	background-color: #E9F3FA;
     color: #006CB0;
-  /*  border:0px;*/
     margin-top:5px;
     margin-bottom:30px;
     margin-left:250px;
@@ -1037,19 +1028,30 @@ input.inputButtonSubmitAL{
 	z-index: 10000;
 }
 
-#content_div_table table, table.defaultlayout {
+table, table.defaultlayout {
 	border-collapse: collapse;
 	border:none;    
-	text-align: center;
+	text-align: left;	
 }
+
+#content_div_table table {
+	table-layout:fixed;
+    width:100%;
+    text-align: center;
+    width: auto;
+}
+
+#newSearchForm table {
+	border-collapse: collapse;
+	border:none;    
+	text-align: left;	
+}
+
 .arrows{
 	float:left;
 	width:100%;
 }
-/*.text{
-	float:left;
-	width:100%;
-}*/
+
 #content_div_table th{
     font-size:8pt;
  	padding-left:2px;
@@ -1057,19 +1059,12 @@ input.inputButtonSubmitAL{
 	overflow:hidden;
 }
 
-/* #content_div_table #thFA01{
-	width: 4.49%;
-}
 
-#content_div_table #thFA02{
-	width: 10%;
-} */
 
 #content_div_table td, table.defaultlayout td, table.defaultlayout th{
 	font-size:8pt;
 	padding-left:2px;
 	padding-right:2px;
-	word-wrap:break-word;
 }
 #content_div_table td, table.defaultlayout td{
 	 border: 1px solid #DBDBDB;
@@ -1079,6 +1074,7 @@ input.inputButtonSubmitAL{
 	 border: 1px solid white;
 	 background-color: #DBDBDB;
 	 vertical-align: top;
+	 word-wrap: break-word;
 }
 #content_div_table input[type="submit"], , table.defaultlayout input[type="submit"] {
 	padding:0px;
@@ -1088,6 +1084,7 @@ input.inputButtonSubmitAL{
 #content_div_table td.nocenter{
 	text-align: left;
 	padding-right:15px;
+	word-wrap: break-word;
 }
 #content_div_table td.title{
 	text-align: left;
@@ -1095,7 +1092,7 @@ input.inputButtonSubmitAL{
 }
 #content_div_table td.actions{
 	text-align: left;
-	width:300px;
+	/* width:300px; */
 	padding-top:2px;
 	padding-bottom:2px;
 }
