@@ -1,12 +1,6 @@
-var globalMessageNormalWithSpecialChars, globalMessageNormalCorrecVal, globalMessageEmptyNormal, globalMessageEmptyPreviousLang;
+var globalMessageNormalCorrecVal, globalMessageEmptyNormal, globalMessageEmptyPreviousLang;
 
-function initEadEdition(){
-//	initEadTree();
-//	alert("yes");
-}
-
-function initEadTree(fileId, xmlTypeId, messageEmptyEADID, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageNormalWithSpecialChars, messageNormalCorrecVal, messageEmptyNormal, messageNotCorrectDate, messageEmptyTitleproper, messageEmptyPreviousLang){
-	globalMessageNormalWithSpecialChars = messageNormalWithSpecialChars;
+function initEadTree(fileId, xmlTypeId, messageEmptyEADID, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageNormalCorrecVal, messageEmptyNormal, messageEmptyTitleproper, messageEmptyPreviousLang, messagePleaseSaveChanges){
 	globalMessageNormalCorrecVal = messageNormalCorrecVal;
 	globalMessageEmptyNormal = messageEmptyNormal;
 	globalMessageEmptyPreviousLang = messageEmptyPreviousLang;
@@ -36,12 +30,20 @@ function initEadTree(fileId, xmlTypeId, messageEmptyEADID, messageEmptyWhenSave,
                 $.post("editEadXml.action", {id: correctId, fileId: fileId, xmlTypeId: xmlTypeId}, function(databack){
                     if(databack.xml) {
                         $("#editionFormContainer").html(databack.xml);
-                        executeActionsWhenLoadXML(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyEADID, messageEmptyNormal, messageNotCorrectDate, messageNormalWithSpecialChars, messageNormalCorrecVal, messageEmptyTitleproper);
+                        executeActionsWhenLoadXML(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyEADID, messageEmptyNormal, messageNormalCorrecVal, messageEmptyTitleproper);
                     }
                     deleteColorboxForProcessing();
                 }, "json");
             }
             cleanInformation();
+        },
+
+        onClick: function(dtnode, event) {
+        	var value = $("input#changed").val();
+        	if (value == "true") {
+        		alert(messagePleaseSaveChanges);
+        		return false;
+        	}
         },
 
         onLazyRead: function(dtnode){
@@ -99,9 +101,9 @@ function initEadTree(fileId, xmlTypeId, messageEmptyEADID, messageEmptyWhenSave,
  * Function to execute all the necessary actions when a new XML (part of EAD file)
  * is loaded.
  */
-function executeActionsWhenLoadXML(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyEADID, messageEmptyNormal, messageNotCorrectDate, messageNormalWithSpecialChars, messageNormalCorrecVal, messageEmptyTitleproper) {
+function executeActionsWhenLoadXML(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyEADID, messageEmptyNormal, messageNormalCorrecVal, messageEmptyTitleproper) {
 	// Initialize the buttons panel.
-    initButtons(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyEADID, messageEmptyNormal, messageNotCorrectDate, messageEmptyTitleproper);
+    initButtons(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyEADID, messageEmptyNormal, messageEmptyTitleproper);
     // Checks the value of the countrycode when is modified.
     checkCountryCodeValue(messageEmptyCountrycode);
     // Checks the value of the mainagencycode when is modified.
@@ -109,31 +111,33 @@ function executeActionsWhenLoadXML(fileId,xmlTypeId, messageEmptyWhenSave, messa
     // Checks the value of the EADID when is modified.
     checkEADIDValue(messageEmptyEADID);
     // Checks the value of the attribute normal when is modified.
-    checkNormalValue(messageNormalWithSpecialChars, messageNormalCorrecVal, messageEmptyNormal);
+    checkNormalValue(messageNormalCorrecVal, messageEmptyNormal);
     // Checks the value of the element titleproper.
     checkTitleproperValue(messageEmptyTitleproper);
     // Checks if needed to add "onclick" actions.
     addOnclickActionToButtons();
+    // Add on change value to inputs and selects.
+    addOnChangeValue();
 }
 
-function initButtons(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyEADID, messageEmptyNormal, messageNotCorrectDate, messageEmptyTitleproper){
+function initButtons(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyEADID, messageEmptyNormal, messageEmptyTitleproper){
 	if ($("#controls").is(':hidden')) {
 		$("#controls").show();
 
 		// Action for button save.
 	    $("#saveEADButton").click(function(){
 	    	cleanInformation();
-	    	saveEAD(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyEADID, messageEmptyNormal, messageNotCorrectDate, messageEmptyTitleproper);
+	    	saveEAD(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyEADID, messageEmptyNormal, messageEmptyTitleproper);
 	    });
 	}
 }
 
-function saveEAD(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyEADID, messageEmptyNormal, messageNotCorrectDate, messageEmptyTitleproper){
+function saveEAD(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyEADID, messageEmptyNormal, messageEmptyTitleproper){
 	// Remove the previous alerts.
 	removeAlerts();
 
 	// Checks all the information inserted.
-	if (!checkAllData(fileId, messageEmptyEADID, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyNormal, messageNotCorrectDate, messageNormalCorrecVal, messageEmptyTitleproper)) {
+	if (!checkAllData(fileId, messageEmptyEADID, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyNormal, messageNormalCorrecVal, messageEmptyTitleproper)) {
 		return;
 	}
 
@@ -204,6 +208,7 @@ function saveEAD(fileId,xmlTypeId, messageEmptyWhenSave, messageInvalidCountryco
 			if (data.saved) {
 				dynatree.reload();
 				displayNode(node, data.savedText);
+				$("div#right-pane input#changed").val("false");
 			} else {
 				showInformation(data.savedText, true);
 			}
@@ -243,12 +248,11 @@ function removeAlerts(){
  * @param messageEmptyCountrycode
  * @param messageEmptyMainagencycode
  * @param messageEmptyNormal
- * @param messageNotCorrectDate
  * @param messageNormalCorrecVal
  * @param messageEmptyTitleproper
  * @returns
  */
-function checkAllData(fileId, messageEmptyEADID, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyNormal, messageNotCorrectDate, messageNormalCorrecVal, messageEmptyTitleproper) {
+function checkAllData(fileId, messageEmptyEADID, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageEmptyNormal, messageNormalCorrecVal, messageEmptyTitleproper) {
 	var result = true;
 
 	// First, checks if the countrycode is valid.
@@ -282,7 +286,7 @@ function checkAllData(fileId, messageEmptyEADID, messageEmptyWhenSave, messageIn
 	// And checks if all the attributes "normal" has correct content.
 	if (isEmptyNormal(messageEmptyWhenSave, messageEmptyNormal, result)) {
 		result = false;
-	} else if (isCorrectNormal(messageNotCorrectDate, messageNormalCorrecVal, result)) {
+	} else if (isCorrectNormal(messageNormalCorrecVal, result)) {
 		result = false;
 	}
 
@@ -510,11 +514,10 @@ function checkEADIDValue(messageEmptyEADID) {
 /**
  * Function to check the correct value of the attribute "normal" in element "unitdate".
  *
- * @param messageNormalWithSpecialChars
  * @param messageNormalCorrecVal
  * @param messageEmptyNormal
  */
-function checkNormalValue(messageNormalWithSpecialChars, messageNormalCorrecVal, messageEmptyNormal) {
+function checkNormalValue(messageNormalCorrecVal, messageEmptyNormal) {
 	$("input[name^='unitdate_normal']").each(function(){
 		var name = $(this).attr("name");
 		$("input[name="+ name + "]").on('input', function() {
@@ -529,7 +532,7 @@ function checkNormalValue(messageNormalWithSpecialChars, messageNormalCorrecVal,
 				var resultTest = pattern.test(value);
 				if(!resultTest){
 					//The attribute must not include special characters.
-					alert(messageNormalWithSpecialChars + " " + messageNormalCorrecVal);
+					alert(messageNormalCorrecVal);
 
 					// Check char by char to find all the special characters.
 					var newString = "";
@@ -618,20 +621,19 @@ function isEmptyNormal(messageEmptyWhenSave, messageEmptyNormal, showAlert) {
 /**
  * Function to check if attrubute normal is well formed.
  *
- * @param messageNotCorrectDate
  * @param messageNormalCorrecVal
  * @param showAlert
  * @returns {Boolean}
  */
-function isCorrectNormal(messageNotCorrectDate, messageNormalCorrecVal, showAlert) {
+function isCorrectNormal(messageNormalCorrecVal, showAlert) {
 	var result = false;
 	$("input[name^='unitdate_normal']").each(function(){
 		var name = $(this).attr("name");
 		var value = $.trim($("input[name="+ name + "]").val());
 		// Regular expressions to check the date.
-		var patterYear = new RegExp("(0|1|2)([0-9]{3})");
-		var patterYearMonth = new RegExp("(0|1|2)([0-9]{3})-(01|02|03|04|05|06|07|08|09|10|11|12)");
-		var patterYearMonthDay = new RegExp("(0|1|2)([0-9]{3})-(01|02|03|04|05|06|07|08|09|10|11|12)-((0[1-9])|((1|2)[0-9])|(3[0-1]))");
+		var patterYear = new RegExp("^(0|1|2)([0-9]{3})$");
+		var patterYearMonth = new RegExp("^(0|1|2)([0-9]{3})-(01|02|03|04|05|06|07|08|09|10|11|12)$");
+		var patterYearMonthDay = new RegExp("^(0|1|2)([0-9]{3})-(01|02|03|04|05|06|07|08|09|10|11|12)-((0[1-9])|((1|2)[0-9])|(3[0-1]))$");
 
 		var date = value.split("-");
 		var matches;
@@ -652,7 +654,7 @@ function isCorrectNormal(messageNotCorrectDate, messageNormalCorrecVal, showAler
 			$("input[name=" + name + "]").val(value);
 			if (!result) {
 				if (showAlert) {
-					alert(messageNotCorrectDate + " " + messageNormalCorrecVal);
+					alert(messageNormalCorrecVal);
 					$('html, body').stop().animate({
 				        'scrollTop': $("input[name=" + name + "]").offset().top - 30
 				    }, 900, 'swing', function () {
@@ -719,7 +721,7 @@ function addNormalAttribute(name) {
 	$("input[name='" + name + "']").before("<span>@normal: <input type=\"text\" value=\"\" name=\"" + inputName + "\"></span>");
 	$("input[name='" + name + "']").remove();
 	// Call the funtions that checks the correct value of the attribute "normal" in element "unitdate".
-	checkNormalValue(globalMessageNormalWithSpecialChars, globalMessageNormalCorrecVal, globalMessageEmptyNormal);
+	checkNormalValue(globalMessageNormalCorrecVal, globalMessageEmptyNormal);
 }
 
 /**
@@ -798,6 +800,17 @@ function isPreviousLanguageFilled(name) {
 	});
 
 	return result;
+}
+
+/**
+ * Function to checks the changes in all inputs and selects.
+ */
+function addOnChangeValue() {
+	$("p#editionFormContainer :input").each(function(){
+		$(this).on('input', function() {
+			$("div#right-pane input#changed").val("true");
+		});
+	});
 }
 
 /**

@@ -44,6 +44,7 @@ public class EditParser extends AbstractParser {
 	private static final Logger LOG = Logger.getLogger(EditParser.class);
     public final QName C_ELEMENT = new QName(APENET_EAD, "c");
     public final QName EAD_ELEMENT = new QName(APENET_EAD, "ead");
+    public final QName LANGUAGE_ELEMENT = new QName(APENET_EAD, "language");
     private static final String UTF8 = "UTF-8";
     // Counters to be able to parse all the values.
     // General counter.
@@ -110,6 +111,9 @@ public class EditParser extends AbstractParser {
 
 	// Map with the values.
 	private Map<String, String> formValues;
+
+	// The text value of the element.
+	private String changedItem;
 
     /**
 	 * @return the counter
@@ -307,6 +311,20 @@ public class EditParser extends AbstractParser {
 		this.formValues = formValues;
 	}
 
+	/**
+	 * @return the changedItem
+	 */
+	public String getChangedItem() {
+		return this.changedItem;
+	}
+
+	/**
+	 * @param changedItem the changedItem to set
+	 */
+	public void setChangedItem(String changedItem) {
+		this.changedItem = changedItem;
+	}
+
 	public String xmlToHtml(CLevel cLevel, EadContent eadContent) throws XMLStreamException, IOException {
         int counterDiv = 0;
         String xml = "";
@@ -489,12 +507,14 @@ public class EditParser extends AbstractParser {
         XMLStreamWriter2 xmlWriter = ((XMLOutputFactory2) XMLOutputFactory2.newInstance()).createXMLStreamWriter(stringWriter, UTF8);
         XMLStreamReader2 xmlReader = (XMLStreamReader2) ((XMLInputFactory2) XMLInputFactory2.newInstance()).createXMLStreamReader(IOUtils.toInputStream(xml, UTF8), UTF8);
 
-        String changedItem = null;
+        this.setChangedItem(null);
+        boolean isLanguage = true;
 
         for (int event = xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
             if (event == XMLStreamConstants.START_ELEMENT) {
 
-                changedItem = null;
+            	this.setChangedItem(null);
+                isLanguage = true;
 
                 QName element = xmlReader.getName();
 
@@ -505,28 +525,13 @@ public class EditParser extends AbstractParser {
                     xmlWriter.writeDefaultNamespace(APENET_EAD);
                     xmlWriter.writeNamespace("xlink", XLINK);
                     xmlWriter.writeNamespace("xsi", XSI);
+                    this.addContent(xmlReader, xmlWriter, element);
+                } else  if (element.equals(this.LANGUAGE_ELEMENT)) {
+                	isLanguage = this.checkCurrentLanguage(xmlWriter, xmlReader, element);
                 } else {
                     xmlWriter.writeStartElement(element.getPrefix(), element.getLocalPart(), element.getNamespaceURI());
+                    this.addContent(xmlReader, xmlWriter, element);
                 }
-                for (int i = 0; i < xmlReader.getAttributeCount(); i++) {
-                	this.checkAttributes(xmlReader.getLocalName(), xmlReader.getAttributeLocalName(i));
-                    String changedAttr = isElementChanged(element.getLocalPart(), xmlReader.getAttributeLocalName(i));
-                    if (changedAttr == null)
-                        xmlWriter.writeAttribute(xmlReader.getAttributePrefix(i), xmlReader.getAttributeNamespace(i), xmlReader.getAttributeLocalName(i), xmlReader.getAttributeValue(i));
-                    else
-                        xmlWriter.writeAttribute(xmlReader.getAttributePrefix(i), xmlReader.getAttributeNamespace(i), xmlReader.getAttributeLocalName(i), changedAttr);
-                }
-
-                // Checks if added "normal" attribute in element "unitdate".
-                if (this.isUnitdateLocated() && !this.isNormalLocated()) {
-                	String newAttribute = this.isElementChanged(element.getLocalPart(), EditParser.NORMAL);
-                	if (newAttribute != null) {
-                		xmlWriter.writeAttribute("", "", EditParser.NORMAL, newAttribute);
-                	}
-                }
-
-                changedItem = isElementChanged(element.getLocalPart(), null);
-
             } else if (event == XMLStreamConstants.END_ELEMENT) {
 
                 if (EditParser.LANGMATERIAL.equalsIgnoreCase(xmlReader.getLocalName())
@@ -539,26 +544,28 @@ public class EditParser extends AbstractParser {
             	// Reset the located elements.
                 this.resetElementsLocated(xmlReader.getLocalName());
 
-                writeEndElement(xmlReader, xmlWriter);
-
+                if (isLanguage) {
+                	writeEndElement(xmlReader, xmlWriter);
+                }
+                isLanguage = true;
             } else if (event == XMLStreamConstants.CHARACTERS) {
+            	if (isLanguage) {
+	                if (this.getChangedItem() == null)
+	                    xmlWriter.writeCharacters(xmlReader.getText());
+	                else
+	                    xmlWriter.writeCharacters(this.getChangedItem());
+            	}
 
-                if (changedItem == null)
-                    xmlWriter.writeCharacters(xmlReader.getText());
-                else
-                    xmlWriter.writeCharacters(changedItem);
-
-                changedItem = null;
-
+            	this.setChangedItem(null);
             } else if (event == XMLStreamConstants.CDATA) {
+            	if (isLanguage) {
+	                if (this.getChangedItem() == null)
+	                    xmlWriter.writeCData(xmlReader.getText());
+	                else
+	                    xmlWriter.writeCData(this.getChangedItem());
+            	}
 
-                if (changedItem == null)
-                    xmlWriter.writeCData(xmlReader.getText());
-                else
-                    xmlWriter.writeCData(changedItem);
-
-                changedItem = null;
-
+            	this.setChangedItem(null);
             }
         }
 
@@ -568,7 +575,61 @@ public class EditParser extends AbstractParser {
         return stringWriter.toString();
     }
 
-    public String addInLevel(EditEadAction.AddableFields field, String xml, String value) throws XMLStreamException, IOException {
+    private void addContent(XMLStreamReader2 xmlReader,
+			XMLStreamWriter2 xmlWriter, QName element) throws XMLStreamException {
+        for (int i = 0; i < xmlReader.getAttributeCount(); i++) {
+        	this.checkAttributes(xmlReader.getLocalName(), xmlReader.getAttributeLocalName(i));
+            String changedAttr = isElementChanged(element.getLocalPart(), xmlReader.getAttributeLocalName(i));
+            if (changedAttr == null)
+                xmlWriter.writeAttribute(xmlReader.getAttributePrefix(i), xmlReader.getAttributeNamespace(i), xmlReader.getAttributeLocalName(i), xmlReader.getAttributeValue(i));
+            else
+                xmlWriter.writeAttribute(xmlReader.getAttributePrefix(i), xmlReader.getAttributeNamespace(i), xmlReader.getAttributeLocalName(i), changedAttr);
+        }
+
+        // Checks if added "normal" attribute in element "unitdate".
+        if (this.isUnitdateLocated() && !this.isNormalLocated()) {
+        	String newAttribute = this.isElementChanged(element.getLocalPart(), EditParser.NORMAL);
+        	if (newAttribute != null) {
+        		xmlWriter.writeAttribute("", "", EditParser.NORMAL, newAttribute);
+        	}
+        }
+
+        this.setChangedItem(isElementChanged(element.getLocalPart(), null));
+	}
+
+	/**
+     * Method to check if the current language element should be maintained,
+     * changed or removed.
+     *
+     * @param xmlWriter
+     * @param xmlReader
+     * @param element
+     * @return
+     * @throws XMLStreamException
+     */
+    private boolean checkCurrentLanguage(XMLStreamWriter2 xmlWriter,
+			XMLStreamReader2 xmlReader, QName element) throws XMLStreamException {
+    	boolean result = false;
+		// Checks the value of the element.
+    	String elementValue = isElementChanged(element.getLocalPart(), null);
+		if (elementValue != null
+				&& !elementValue.trim().isEmpty()) {
+				xmlWriter.writeStartElement(element.getPrefix(), element.getLocalPart(), element.getNamespaceURI());
+	        for (int i = 0; i < xmlReader.getAttributeCount(); i++) {
+	        	this.checkAttributes(xmlReader.getLocalName(), xmlReader.getAttributeLocalName(i));
+	            String changedAttr = isElementChanged(element.getLocalPart(), xmlReader.getAttributeLocalName(i));
+	            if (changedAttr == null)
+	                xmlWriter.writeAttribute(xmlReader.getAttributePrefix(i), xmlReader.getAttributeNamespace(i), xmlReader.getAttributeLocalName(i), xmlReader.getAttributeValue(i));
+	            else
+	                xmlWriter.writeAttribute(xmlReader.getAttributePrefix(i), xmlReader.getAttributeNamespace(i), xmlReader.getAttributeLocalName(i), changedAttr);
+	        }
+	        this.setChangedItem(elementValue);
+	        result = true;
+		}
+		return result;
+	}
+
+	public String addInLevel(EditEadAction.AddableFields field, String xml, String value) throws XMLStreamException, IOException {
         LOG.info("We are adding '" + value + "' for the key '" + field.getName() + "'");
 
         StringWriter stringWriter = new StringWriter();

@@ -6,18 +6,17 @@
 <script type="text/javascript">
 	var messageEmptyEADID = "<s:property value="getText('content.message.EadidEmpty')" />";
 	var messageEmptyWhenSave = "<s:property value="getText('dashboard.editead.errorEmptyMandatoryField')" />";
-	var messageNormalWithSpecialChars = "<s:property value="getText('dashboard.editead.errorNormalWithSpecialCharacter')" />";
 	var messageNormalCorrecVal = "<s:property value="getText('dashboard.editead.errorCorrectValues')" />";
 	var messageEmptyNormal = "<s:property value="getText('dashboard.editead.errorEmptyNormal')" />";
-	var messageNotCorrectDate = "<s:property value="getText('dashboard.editead.errorInDate')" />";
 	var messageEmptyTitleproper = "<s:property value="getText('dashboard.editead.errorEmptyTitleproper')" />";
 	var messageEmptyPreviousLang = "<s:property value="getText('dashboard.editead.errorPreviousLanguageEmpty')" />";
 	var messageInvalidCountrycode = "<s:property value="getText('dashboard.editead.errorInvalidCountrycode')" />";
 	var messageEmptyCountrycode = "<s:property value="getText('dashboard.editead.errorEmptyCountrycode')" />";
 	var messageEmptyMainagencycode = "<s:property value="getText('dashboard.editead.errorEmptyMainagencycode')" />";
+	var messagePleaseSaveChanges = "<s:property value="getText('dashboard.editead.errorPleaseSaveChanges')" />";
 
 	$(document).ready(function() {
-		initEadTree("${fileId}", "${xmlTypeId}", messageEmptyEADID, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageNormalWithSpecialChars, messageNormalCorrecVal, messageEmptyNormal, messageNotCorrectDate, messageEmptyTitleproper, messageEmptyPreviousLang);
+		initEadTree("${fileId}", "${xmlTypeId}", messageEmptyEADID, messageEmptyWhenSave, messageInvalidCountrycode, messageEmptyCountrycode, messageEmptyMainagencycode, messageNormalCorrecVal, messageEmptyNormal, messageEmptyTitleproper, messageEmptyPreviousLang, messagePleaseSaveChanges);
 	});
 </script>
 <div id="eadEdition">
@@ -28,6 +27,7 @@
 		<div id="splitter" class="pane"></div>
 		<div id="right-pane" class="pane">
 			<div id="informationDiv"></div>
+			<input type="hidden" id="changed" value="false" />
 
 			<p id="editionFormContainer">
 			</p>
