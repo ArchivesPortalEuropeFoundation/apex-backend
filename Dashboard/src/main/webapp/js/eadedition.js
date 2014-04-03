@@ -528,7 +528,7 @@ function checkNormalValue(messageNormalCorrecVal, messageEmptyNormal) {
 			var value = $("input[name="+ name + "]").val();
 			if(value.length > 0) {
 				//begin pattern check
-				var pattern = new RegExp("^[0-9\\-]+$");
+				var pattern = new RegExp("^[0-9/\\-]+$");
 				var resultTest = pattern.test(value);
 				if(!resultTest){
 					//The attribute must not include special characters.
@@ -632,6 +632,7 @@ function isCorrectNormal(messageNormalCorrecVal, showAlert) {
 		var value = $.trim($("input[name="+ name + "]").val());
 		// Regular expressions to check the date.
 		var patterYear = new RegExp("^(0|1|2)([0-9]{3})$");
+		var patterYears = new RegExp("^(0|1|2)([0-9]{3})/(0|1|2)([0-9]{3})$");
 		var patterYearMonth = new RegExp("^(0|1|2)([0-9]{3})-(01|02|03|04|05|06|07|08|09|10|11|12)$");
 		var patterYearMonthDay = new RegExp("^(0|1|2)([0-9]{3})-(01|02|03|04|05|06|07|08|09|10|11|12)-((0[1-9])|((1|2)[0-9])|(3[0-1]))$");
 
@@ -639,7 +640,11 @@ function isCorrectNormal(messageNormalCorrecVal, showAlert) {
 		var matches;
 
 		if (date.length == 1) {
-			matches = value.match(patterYear);
+			if (value.indexOf("/") != -1) {
+				matches = value.match(patterYears);
+			} else {
+				matches = value.match(patterYear);
+			}
 		} else if (date.length == 2) {
 			matches = value.match(patterYearMonth);
 		} else if (date.length == 3) {
@@ -699,11 +704,13 @@ function addOnclickActionToButtons() {
 		if (name.indexOf("_normal_") != -1) {
 			$(this).on('click', function(){
 				addNormalAttribute(name);
+				$("div#right-pane input#changed").val("true");
 	            cleanInformation();
 			});
 		} else if (name.indexOf("_language_") != -1) {
 			$(this).on('click', function(){
 				addLanguageElement(name);
+				$("div#right-pane input#changed").val("true");
 	            cleanInformation();
 			});
 		}
@@ -808,6 +815,16 @@ function isPreviousLanguageFilled(name) {
 function addOnChangeValue() {
 	$("p#editionFormContainer :input").each(function(){
 		$(this).on('input', function() {
+			$("div#right-pane input#changed").val("true");
+		});
+	});
+	$("p#editionFormContainer select[name^='language_langcode']").each(function(){
+		$(this).on('change', function() {
+			$("div#right-pane input#changed").val("true");
+		});
+	});
+	$("p#editionFormContainer select[name^='c_level']").each(function(){
+		$(this).on('change', function() {
 			$("div#right-pane input#changed").val("true");
 		});
 	});
