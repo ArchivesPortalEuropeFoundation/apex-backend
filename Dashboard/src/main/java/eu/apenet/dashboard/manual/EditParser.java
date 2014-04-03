@@ -84,10 +84,12 @@ public class EditParser extends AbstractParser {
     // Name of id for attibute "@langcode" in element <language>.
 	private static final String LANGUAGE_LANGCODE = "language_langcode";
 
-	// Defaul value of attribute @scriptcode.
+	// Default value of attribute @scriptcode.
 	private static final String SCRIPTCODE_VALUE = "Latn";
-	// Defaul value of namespaceURI for element <language>.
+	// Default value of namespaceURI for element <language>.
 	private static final String LANGUAGE_NAMESPACE_URI = "urn:isbn:1-931666-22-9";
+	// Default value of attribue @langcode.
+	private static final String LANGCODE_VALUE = "none";
 
 	// Variables to check if exists (or no) the necessary elements and attributes. 
 	// Element <unitdate>.
@@ -461,7 +463,7 @@ public class EditParser extends AbstractParser {
 
             // Add empty value to the language select.
             xmlWriter.writeStartElement("option");
-            xmlWriter.writeAttribute("value", "none");
+            xmlWriter.writeAttribute("value", EditParser.LANGCODE_VALUE);
             xmlWriter.writeCharacters("---");
             xmlWriter.writeEndElement();
 
@@ -1025,7 +1027,8 @@ public class EditParser extends AbstractParser {
 				String langcodeValue = this.getFormValues().get(langcodeKey);
 
 				if (languageValue != null && !languageValue.isEmpty()
-						&& langcodeValue != null && !langcodeValue.isEmpty()) {
+						&& langcodeValue != null && !langcodeValue.isEmpty()
+						&& !langcodeValue.equalsIgnoreCase(EditParser.LANGCODE_VALUE)) {
 					// Add the element.
 					xmlWriter.writeStartElement("", EditParser.LANGUAGE, EditParser.LANGUAGE_NAMESPACE_URI);
 					xmlWriter.writeAttribute("", "", EditParser.LANGCODE, langcodeValue);
