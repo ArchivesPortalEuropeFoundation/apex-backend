@@ -211,6 +211,29 @@ public class ExistingFilesChecker {
 			String eadid = "";
             try {
                 eadid = extractAttributeFromEad(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/eadid", null, true).trim();
+
+                // Check if EADID contains not valid characters.
+                String patternStrign = "^[a-zA-Z0-9\\.\\-_\\s]+$";
+                Pattern pattern = Pattern.compile(patternStrign);
+                Matcher matcher = pattern.matcher(eadid);
+                if (!matcher.find()) {
+                	// If not, recover an EADID with valid characters.
+                    LOG.error("The EADID contains special characters: " + eadid);
+                    String newEADID = "";
+                    for (int i = 0; i < eadid.length(); i++) {
+                    	if (String.valueOf(eadid.charAt(i)).matches(patternStrign)) {
+                    		newEADID += String.valueOf(eadid.charAt(i));
+                    	} else {
+                    		newEADID += "_";
+                    	}
+                    }
+                    LOG.debug("New EADID (without special characters): " + newEADID);
+                    eadid = newEADID;
+
+                    // Change the invalid EADID in the file.
+                    LOG.debug("Try to change the EADID in the file.");
+                    changeEadidUsingDOM(fileUnit, eadid);
+                }
             } catch (WstxParsingException e){
                 LOG.error("File was not correct XML, cause: " + e.getMessage());
                 additionalErrors += e.getMessage();
