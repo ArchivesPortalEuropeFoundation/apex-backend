@@ -164,12 +164,13 @@
 			<xsl:otherwise>
 				<xsl:choose>
 					<xsl:when test="ape:linked($href) = 'indexed'">
+						<xsl:variable name="encodedHref" select="ape:encodeSpecialCharacters($href)" />
 						<div class="linkButton">
 							<xsl:choose>
 								<xsl:when test="./@xlink:title and text()">
 									<xsl:variable name="title" select="./@xlink:title" />
 									<xsl:variable name="initTitle" select="ape:resource('seconddisplay.view.fa')" />
-									<a href="{$prefix}/{$href}" target="{$href}" title="{$initTitle} '{$title}'">
+									<a href="{$prefix}/{$encodedHref}" target="{$encodedHref}" title="{$initTitle} '{$title}'">
 										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
 										<xsl:text> '</xsl:text>
 										<xsl:value-of select="text()" />
@@ -178,7 +179,7 @@
 									</a>
 								</xsl:when>
 								<xsl:when test="./@xlink:title">
-									<a href="{$prefix}/{$href}" target="{$href}">
+									<a href="{$prefix}/{$encodedHref}" target="{$encodedHref}">
 										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
 										<xsl:text> '</xsl:text>
 										<xsl:value-of select="./@xlink:title" />
@@ -187,7 +188,7 @@
 									</a>
 								</xsl:when>
 								<xsl:when test="text()">
-									<a href="{$prefix}/{$href}" target="{$href}">
+									<a href="{$prefix}/{$encodedHref}" target="{$encodedHref}">
 										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
 										<xsl:text> '</xsl:text>
 										<xsl:value-of select="text()" />
@@ -196,7 +197,7 @@
 									</a>
 								</xsl:when>
 								<xsl:otherwise>
-									<a href="{$prefix}/{$href}" target="{$href}">
+									<a href="{$prefix}/{$encodedHref}" target="{$encodedHref}">
 										<xsl:value-of select="ape:resource('seconddisplay.view.fa')" />
 										<span class="icon_new_window"><xsl:text> </xsl:text></span>
 									</a>
