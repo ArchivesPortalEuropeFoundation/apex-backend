@@ -5,7 +5,14 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
-public abstract class AbstractParser {
+import com.opensymphony.xwork2.ActionSupport;
+
+public abstract class AbstractParser extends ActionSupport {
+	/**
+	 * Serializable.
+	 */
+	private static final long serialVersionUID = 8139023272088479058L;
+
 	public static final String APENET_EAD = "urn:isbn:1-931666-22-9";
 	public static final String XLINK = "http://www.w3.org/1999/xlink";
 	public static final String XSI = "http://www.w3.org/2001/XMLSchema-instance";

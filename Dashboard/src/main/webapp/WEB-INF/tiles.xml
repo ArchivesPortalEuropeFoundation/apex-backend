@@ -737,11 +737,13 @@
             <add-attribute type="string" value="/js/jquery/jquery.cookie.js"/>
             <add-attribute type="string" value="/js/jquery/splitter.js"/>
             <add-attribute type="string" value="/js/dynatree/jquery.dynatree.js"/>
+            <add-attribute type="string" value="/js/colorbox/jquery.colorbox-min.js"/>
             <add-attribute type="string" value="/js/eadedition.js"/>
             <add-attribute type="string" value="/js/browsers.js"/>
         </put-list-attribute>
         <put-list-attribute name="cssfilesInternal">
             <add-attribute type="string" value="/js/dynatree/skin/ui.dynatree.css"/>
+            <add-attribute type="string" value="/css/colorbox.css"/>
             <add-attribute type="string" value="/css/eadedition.css"/>
         </put-list-attribute>
     </definition>

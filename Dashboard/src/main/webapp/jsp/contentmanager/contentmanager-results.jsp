@@ -297,7 +297,7 @@
                                             </option>
                                         </c:if>
                                         <c:if test="${eadResult.editable}">
-                                            <option value="_blank|editEad.action">
+                                            <option value="_self|editEad.action">
                                                 <s:text name="label.edit" />
                                             </option>
                                         </c:if>

@@ -216,6 +216,13 @@
             </result>
         </action>
 
+        <action name="generateEadidResponseJSONWhenEdit" class="eu.apenet.dashboard.actions.ajax.GenerateEadidResponseJSONAction" method="executeWithoutFile">
+            <result name="SUCCESS" type="stream">
+                <!-- <param name="inputName">outputStream</param> -->
+                <param name="contentType">application/json</param>
+            </result>
+        </action>
+
         <action name="contentmanager" class="eu.apenet.dashboard.actions.content.ContentManagerAction" method="input">
             <result name="success" type="tiles">contentmanager</result>
             <!-- Do we still need the ajax result, because it seems to be used nowhere? -->
