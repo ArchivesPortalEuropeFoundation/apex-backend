@@ -799,8 +799,26 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 					while (!found && keysEmptyIdIt.hasNext()) {
 						ArchivalInstitution emptyIdInstitution = keysEmptyIdIt.next();
 						if (emptyIdInstitution.getAiname().equals(keyInstitution.getAiname())) {
-							cloneIngestedInstitutions.remove(keysEmptyIdIt);
+							cloneIngestedInstitutions.remove(keyInstitution);
 							found = true;
+						}
+					}
+					if(!found){
+						Iterator<ArchivalInstitution> keysNewInstitutionIt = new ArrayList<ArchivalInstitution>(this.newInstitutionsFile).iterator();
+						while (!found && keysNewInstitutionIt.hasNext()) {
+							ArchivalInstitution newInstitution = keysNewInstitutionIt.next();
+							if (newInstitution.getAiname().equals(keyInstitution.getAiname())) { 
+								//it suppose that are duplicated into delete and insert, so they are related by name
+								//they must be removed from both list and inserted into related institutions
+								cloneIngestedInstitutions.remove(keyInstitution);
+								this.newInstitutionsFile.remove(newInstitution);
+//								this.oldRelatedInstitutions.add(keyInstitution);
+								if(this.newRelatedInstitutions==null){
+									this.newRelatedInstitutions = new ArrayList<ArchivalInstitution>();
+								}
+								this.newRelatedInstitutions.add(newInstitution);
+								found = true;
+							}
 						}
 					}
 				}
