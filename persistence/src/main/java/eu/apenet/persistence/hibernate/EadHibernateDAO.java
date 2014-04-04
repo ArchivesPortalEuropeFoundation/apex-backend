@@ -26,6 +26,7 @@ import eu.apenet.persistence.vo.HoldingsGuide;
 import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.SourceGuide;
 import eu.apenet.persistence.vo.ValidatedState;
+import eu.archivesportaleurope.util.ApeUtil;
 
 public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implements EadDAO {
 
@@ -36,7 +37,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		Criteria criteria = getSession().createCriteria(clazz, "ead").setProjection(Projections.property("id"));
 		criteria.createAlias("ead.archivalInstitution", "archivalInstitution");
 		criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
-		criteria.add(Restrictions.eq("eadid", eadid));
+		criteria.add(Restrictions.eq("eadid", ApeUtil.decodeSpecialCharacters(eadid)));
 		criteria.add(Restrictions.eq("published", true));
 		criteria.setMaxResults(1);
 		List<Integer> result = criteria.list();
@@ -157,7 +158,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 			whereClause.add(criteriaBuilder.equal(from.get("dynamic"), eadSearchOptions.getDynamic()));
 		}
 		if (StringUtils.isNotBlank(eadSearchOptions.getEadid())) {
-			whereClause.add(criteriaBuilder.equal(from.get("eadid"), eadSearchOptions.getEadid()));
+			whereClause.add(criteriaBuilder.equal(from.get("eadid"), ApeUtil.decodeSpecialCharacters(eadSearchOptions.getEadid())));
 		}
 		if (eadSearchOptions.getValidated().size() > 0) {
 			List<Predicate> validatedPredicated = new ArrayList<Predicate>();
@@ -253,7 +254,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		Criteria criteria = getSession().createCriteria(clazz, "ead").setProjection(Projections.property("id"));
 		criteria.createAlias("ead.archivalInstitution", "archivalInstitution");
 		criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
-		criteria.add(Restrictions.eq("eadid", eadid));
+		criteria.add(Restrictions.eq("eadid", ApeUtil.decodeSpecialCharacters(eadid)));
 		List<Integer> result = criteria.list();
 		if (result.size() > 0)
 			return result.get(0);
@@ -279,7 +280,7 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		criteria = criteria.createAlias("ead.archivalInstitution", "archivalInstitution");
 		criteria.add(Restrictions.eq("archivalInstitution.aiId", aiId));
-		criteria.add(Restrictions.eq("eadid", eadid));
+		criteria.add(Restrictions.eq("eadid", ApeUtil.decodeSpecialCharacters(eadid)));
 		List<Ead> list = criteria.list();
 		if (list.size() > 0)
 			return list.get(0);
@@ -291,8 +292,8 @@ public class EadHibernateDAO extends AbstractHibernateDAO<Ead, Integer> implemen
 		Criteria criteria = getSession().createCriteria(clazz, "ead");
 		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		criteria = criteria.createAlias("ead.archivalInstitution", "archivalInstitution");
-		criteria.add(Restrictions.eq("archivalInstitution.repositorycode", repositorycode));
-		criteria.add(Restrictions.eq("eadid", eadid));
+		criteria.add(Restrictions.eq("archivalInstitution.repositorycode", ApeUtil.decodeRepositoryCode(repositorycode)));
+		criteria.add(Restrictions.eq("eadid", ApeUtil.decodeSpecialCharacters(eadid)));
 		criteria.setMaxResults(1);
 		List<Ead> list = criteria.list();
 		if (list.size() > 0)

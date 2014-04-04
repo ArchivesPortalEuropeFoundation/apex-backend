@@ -8,6 +8,7 @@ import javax.persistence.Persistence;
 import org.apache.log4j.Logger;
 
 import eu.apenet.persistence.exception.PersistenceException;
+import eu.archivesportaleurope.util.ApeUtil;
 
 /**
  * Basic Hibernate utility class
@@ -16,9 +17,8 @@ import eu.apenet.persistence.exception.PersistenceException;
  *
  */
 public class JpaUtil {
-	private static final int MAX_ERROR_LINES = 2;
 
-    private static final Logger LOGGER = Logger.getLogger(JpaUtil.class);
+	private static final Logger LOGGER = Logger.getLogger(JpaUtil.class);
 
 	private static EntityManagerFactory entityManagerFactory;
 	
@@ -109,7 +109,7 @@ public class JpaUtil {
 			}
 			threadTransaction.remove();
 		}catch (Exception ex) {
-			LOGGER.error(generateThrowableLog(ex));
+			LOGGER.error(ApeUtil.generateThrowableLog(ex));
 			rollbackDatabaseTransaction();
 			throw new PersistenceException(ex);
 		}
@@ -135,31 +135,5 @@ public class JpaUtil {
 	public static boolean noTransaction(){
 		return threadTransaction.get() == null;
 	}
-    public static String generateThrowableLog(Throwable throwable){
-    	String result = "";
-    	result+= throwable.getClass().getName()+ " " +throwable.getMessage()  + "\n";
-    	result+= generateThrowableStackTraceLog(throwable.getStackTrace());
-    	result+=generateThrowableCauseLog(throwable.getCause(), 0);
-    	return result;
-    }
-    private static String generateThrowableCauseLog(Throwable throwable, int depth){
-    	String result = "";
-    	if (throwable != null){
-    		result+= "Caused by: " +  throwable.getClass().getName()+ " " + throwable.getMessage()  +"\n";
-    		result+= generateThrowableStackTraceLog(throwable.getStackTrace());
-    		result+=generateThrowableCauseLog(throwable.getCause(), depth++);
-    	}
-    	return result;
-    }
-    private static String generateThrowableStackTraceLog(StackTraceElement[] elements){
-    	String result = "";
-    	for (int i = 0; i < MAX_ERROR_LINES && i < elements.length ;i++){
-    		StackTraceElement element = elements[i];
-    		result += "\t" + element.getClassName() + "." + element.getMethodName() + "(" + element.getFileName() + ":" + element.getLineNumber() + ")\n" ;
-    	}
-    	if (elements.length > MAX_ERROR_LINES){
-    		result += "\t... " + (elements.length -MAX_ERROR_LINES) + " more\n";
-    	}
-    	return result;
-    }
+
 }

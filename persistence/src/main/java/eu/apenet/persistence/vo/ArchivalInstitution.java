@@ -20,6 +20,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import eu.archivesportaleurope.util.ApeUtil;
+
 
 @Entity
 @Table(name = "archival_institution")
@@ -133,11 +135,8 @@ public class ArchivalInstitution implements java.io.Serializable {
 		this.eagPath = eagPath;
 	}
 
-	public String getRepositorycodeForUrl() {
-		if (this.repositorycode != null){
-			return repositorycode.replace('/', '_');
-		}
-		return this.repositorycode;
+	public String getEncodedRepositorycode(){
+		return ApeUtil.encodeRepositoryCode(this.repositorycode);
 	}
 
 	public void setRepositorycode(String repositorycode) {

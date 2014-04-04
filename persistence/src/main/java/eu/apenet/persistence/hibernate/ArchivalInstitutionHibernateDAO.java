@@ -22,6 +22,7 @@ import org.hibernate.criterion.Restrictions;
 
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.vo.ArchivalInstitution;
+import eu.archivesportaleurope.util.ApeUtil;
 
 public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<ArchivalInstitution, Integer> implements
 		ArchivalInstitutionDAO {
@@ -397,16 +398,12 @@ public class ArchivalInstitutionHibernateDAO extends AbstractHibernateDAO<Archiv
 
 	@SuppressWarnings("unchecked")
 	public List<ArchivalInstitution> getArchivalInstitutionsByRepositorycode(String repositorycode) {
-		long startTime = System.currentTimeMillis();
-		List<ArchivalInstitution> results = new ArrayList<ArchivalInstitution>();
-		Criteria criteria = createArchivalInstitutionsByRepositorycodeCriteria(repositorycode);
-		results = criteria.list();
-		long endTime = System.currentTimeMillis();
-		if (log.isDebugEnabled()) {
-			log.debug("query took " + (endTime - startTime) + " ms to read " + results.size() + " objects");
+		Criteria criteria = getSession().createCriteria(getPersistentClass(), "archivalInstitution");
+		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		if (repositorycode != null) {
+			criteria.add(Restrictions.eq("repositorycode", ApeUtil.decodeRepositoryCode(repositorycode)));
 		}
-
-		return results;
+		return criteria.list();
 	}
 
 	private Criteria createArchivalInstitutionsByRepositorycodeCriteria(String repositorycode) {

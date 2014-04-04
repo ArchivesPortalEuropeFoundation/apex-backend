@@ -10,6 +10,7 @@ import eu.archivesportaleurope.commons.config.ApeConfig;
 import eu.archivesportaleurope.commons.config.ApePortalAndDashboardConfig;
 import eu.archivesportaleurope.commons.config.ApePortalConfig;
 import eu.archivesportaleurope.commons.config.DashboardConfig;
+import eu.archivesportaleurope.util.ApeUtil;
 
 /**
  * User: Yoann Moranville
@@ -112,81 +113,8 @@ public class APEnetUtilities {
     	LOG.error(generateThrowableLog(throwable));
     }
     public static String generateThrowableLog(Throwable throwable){
-    	String result = "";
-    	result+= throwable.getClass().getName()+ " " +throwable.getMessage()  + "\n";
-    	result+= generateThrowableStackTraceLog(throwable.getStackTrace());
-    	result+=generateThrowableCauseLog(throwable.getCause(), 0);
-    	return result;
+    	return ApeUtil.generateThrowableLog(throwable);
     }
-    private static String generateThrowableCauseLog(Throwable throwable, int depth){
-    	String result = "";
-    	if (throwable != null){
-    		result+= "Caused by: " +  throwable.getClass().getName()+ " " + throwable.getMessage()  +"\n";
-    		result+= generateThrowableStackTraceLog(throwable.getStackTrace());
-    		result+=generateThrowableCauseLog(throwable.getCause(), depth++);
-    	}
-    	return result;
-    }
-    private static String generateThrowableStackTraceLog(StackTraceElement[] elements){
-    	String result = "";
-    	for (int i = 0; i < MAX_ERROR_LINES && i < elements.length ;i++){
-    		StackTraceElement element = elements[i];
-    		result += "\t" + element.getClassName() + "." + element.getMethodName() + "(" + element.getFileName() + ":" + element.getLineNumber() + ")\n" ;
-    	}
-    	if (elements.length > MAX_ERROR_LINES){
-    		result += "\t... " + (elements.length -MAX_ERROR_LINES) + " more\n";
-    	}
-    	return result;
-    }
-    public static String removeSpecialUrlCharactersFromUrlPart(String urlPart) {
-    	if (urlPart != null){
-	        String result = urlPart.replaceAll(":", "_COLON_");
-	        //result = result.replaceAll("*", "_ASTERISK_"); 
-	        result = result.replaceAll("=", "_COMP_");	
-	        result = result.replaceAll("/", "_SLASH_");
-	        result = result.replaceAll("\\", "_BSLASH_");
-	        //result = result.replaceAll("[", "_LSQBRKT_");
-	        //result = result.replaceAll("]", "_RSQBRKT_");
-	        //result = result.replaceAll("+", "_PLUS_");
-	        result = result.replaceAll("%", "_PERCENT_");
-	        result = result.replaceAll("@", "_ATCHAR_");
-	        result = result.replaceAll("$", "_DOLLAR_");
-	        //result = result.replaceAll("#", "_HASH_");
-	        //result = result.replaceAll("^", "_CFLEX_");
-	        result = result.replaceAll("&", "_AMP_");
-	        result = result.replaceAll("(", "_LRDBRKT_");
-	        result = result.replaceAll(")", "_RRDBRKT_");
-	        result = result.replaceAll("!", "_EXCLMARK_");
-	        result = result.replaceAll("~", "_TILDE_");
-	        return result;
-    	}else {
-    		return null;
-    	}
-    }
+ 
 
-    public static String restoreSpecialUrlCharactersInUrlPart(String urlPart) {
-    	if (urlPart != null){
-	        String result =  urlPart.replaceAll("_COLON_", ":");
-	        //result = result.replaceAll("_ASTERISK_", "*"); 
-	        result = result.replaceAll("_COMP_", "=");	        
-	        result = result.replaceAll("_SLASH_", "/");
-	        result = result.replaceAll("_BSLASH_", "\\");
-	        //result = result.replaceAll("_LSQBRKT_", "[");
-	        //result = result.replaceAll("_RSQBRKT_", "]");
-	        //result = result.replaceAll("_PLUS_", "+");
-	        result = result.replaceAll("_PERCENT_", "%");
-	        result = result.replaceAll("_ATCHAR_", "@");
-	        result = result.replaceAll("_DOLLAR_", "$");
-	        //result = result.replaceAll("_HASH_", "#");
-	        //result = result.replaceAll("_CFLEX_", "^");
-	        result = result.replaceAll("_AMP_", "&");
-	        result = result.replaceAll("_LRDBRKT_", "(");
-	        result = result.replaceAll("_RRDBRKT_", ")");
-	        result = result.replaceAll("_EXCLMARK_", "!");
-	        result = result.replaceAll("_TILDE_", "~");
-	        return result.trim();
-    	}else {
-    		return null;
-    	}
-    }
 }

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+import eu.archivesportaleurope.util.ApeUtil;
+
 public abstract class Ead  implements Serializable{
 	/**
 	 * 
@@ -85,6 +87,9 @@ public abstract class Ead  implements Serializable{
 			return Ead.class;
 		}
 		
+	}
+	public String getEncodedEadid(){
+		return ApeUtil.encodeSpecialCharacters(getEadid());
 	}
     
 }
