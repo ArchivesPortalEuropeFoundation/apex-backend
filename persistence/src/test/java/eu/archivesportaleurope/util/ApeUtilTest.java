@@ -6,6 +6,9 @@ import org.junit.Test;
 
 public class ApeUtilTest {
 
+	private static final String INPUT_ENCODED = "_COLON__ASTERISK__COMP__SLASH__BSLASH__LSQBRKT__RSQBRKT__PLUS__PERCENT__ATCHAR__AMP__DOLLAR__HASH__CFLEX__LRDBRKT__RRDBRKT__EXCLMARK__TILDE_";
+	private static final String INPUT = ":*=/\\[]+%@&$#^()!~";
+
 	@Test
 	public void testEncodeRepositoryCode() {
 		assertEquals("NA_HI", ApeUtil.encodeRepositoryCode("NA/HI"));
@@ -18,12 +21,13 @@ public class ApeUtilTest {
 
 	@Test
 	public void testEncodeSpecialCharacters() {
-		assertEquals("_COLON__COMP__SLASH__BSLASH__PERCENT__ATCHAR__AMP__DOLLAR__LRDBRKT__RRDBRKT__EXCLMARK__TILDE_", ApeUtil.encodeSpecialCharacters(":=/\\%@&$()!~"));
+
+		assertEquals(INPUT_ENCODED, ApeUtil.encodeSpecialCharacters(INPUT));
 	}
 
 	@Test
 	public void testDecodeSpecialCharacters() {
-		assertEquals(":=/\\%@&$()!~", ApeUtil.decodeSpecialCharacters("_COLON__COMP__SLASH__BSLASH__PERCENT__ATCHAR__AMP__DOLLAR__LRDBRKT__RRDBRKT__EXCLMARK__TILDE_") );
+		assertEquals(INPUT, ApeUtil.decodeSpecialCharacters(INPUT_ENCODED) );
 	}
 
 }

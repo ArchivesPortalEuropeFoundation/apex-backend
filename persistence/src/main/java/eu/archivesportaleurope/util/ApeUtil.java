@@ -45,18 +45,18 @@ public class ApeUtil {
     public static String encodeSpecialCharacters(String urlPart) {
     	if (urlPart != null){
 	        String result = urlPart.replaceAll(":", "_COLON_");
-	        //result = result.replaceAll("*", "_ASTERISK_"); 
+	        result = result.replaceAll("\\*", "_ASTERISK_"); 
 	        result = result.replaceAll("=", "_COMP_");	
 	        result = result.replaceAll("/", "_SLASH_");
 	        result = result.replaceAll("\\\\", "_BSLASH_");
-	        //result = result.replaceAll("[", "_LSQBRKT_");
-	        //result = result.replaceAll("]", "_RSQBRKT_");
-	        //result = result.replaceAll("+", "_PLUS_");
+	        result = result.replaceAll("\\[", "_LSQBRKT_");
+	        result = result.replaceAll("\\]", "_RSQBRKT_");
+	        result = result.replaceAll("\\+", "_PLUS_");
 	        result = result.replaceAll("%", "_PERCENT_");
 	        result = result.replaceAll("@", "_ATCHAR_");
 	        result = result.replaceAll("\\$", "_DOLLAR_");
-	        //result = result.replaceAll("#", "_HASH_");
-	        //result = result.replaceAll("^", "_CFLEX_");
+	        result = result.replaceAll("#", "_HASH_");
+	        result = result.replaceAll("\\^", "_CFLEX_");
 	        result = result.replaceAll("&", "_AMP_");
 	        result = result.replaceAll("\\(", "_LRDBRKT_");
 	        result = result.replaceAll("\\)", "_RRDBRKT_");
@@ -71,18 +71,18 @@ public class ApeUtil {
     public static String decodeSpecialCharacters(String urlPart) {
     	if (urlPart != null){
 	        String result =  urlPart.replaceAll("_COLON_", ":");
-	        //result = result.replaceAll("_ASTERISK_", "*"); 
+	        result = result.replaceAll("_ASTERISK_", "*"); 
 	        result = result.replaceAll("_COMP_", "=");	        
 	        result = result.replaceAll("_SLASH_", "/");
 	        result = result.replaceAll("_BSLASH_", "\\\\");
-	        //result = result.replaceAll("_LSQBRKT_", "[");
-	        //result = result.replaceAll("_RSQBRKT_", "]");
-	        //result = result.replaceAll("_PLUS_", "+");
+	        result = result.replaceAll("_LSQBRKT_", "[");
+	        result = result.replaceAll("_RSQBRKT_", "]");
+	        result = result.replaceAll("_PLUS_", "+");
 	        result = result.replaceAll("_PERCENT_", "%");
 	        result = result.replaceAll("_ATCHAR_", "@");
 	        result = result.replaceAll("_DOLLAR_", "\\$");
-	        //result = result.replaceAll("_HASH_", "#");
-	        //result = result.replaceAll("_CFLEX_", "^");
+	        result = result.replaceAll("_HASH_", "#");
+	        result = result.replaceAll("_CFLEX_", "^");
 	        result = result.replaceAll("_AMP_", "&");
 	        result = result.replaceAll("_LRDBRKT_", "(");
 	        result = result.replaceAll("_RRDBRKT_", ")");
