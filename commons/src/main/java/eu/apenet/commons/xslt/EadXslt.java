@@ -22,6 +22,7 @@ import eu.apenet.commons.solr.SolrField;
 import eu.apenet.commons.xslt.extensions.EadidCheckerExtension;
 import eu.apenet.commons.xslt.extensions.HighlighterExtension;
 import eu.apenet.commons.xslt.extensions.ResourcebundleExtension;
+import eu.apenet.commons.xslt.extensions.SpecialCharactersEncoderExtension;
 
 public final class EadXslt {
     private static final Logger LOG = Logger.getLogger(EadXslt.class);
@@ -37,6 +38,7 @@ public final class EadXslt {
         processor.registerExtensionFunction(highLighter);
         processor.registerExtensionFunction(resourcebundleRetriever);
         processor.registerExtensionFunction(eadidChecker);
+        processor.registerExtensionFunction(new SpecialCharactersEncoderExtension());
         XsltCompiler compiler = processor.newXsltCompiler();
         compiler.setURIResolver(new ClasspathURIResolver(xslUrl));
         return compiler.compile(xsltSource);
