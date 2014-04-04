@@ -8,6 +8,7 @@
     $(document).ready(function() {
         //${securityContext.refresh_interval} is defined in SecurityContext.java to store in session the refresh timeout.
         initResultsHandlers(${securityContext.refresh_interval});
+        drawColumns(false, false, false, true);
 	});
 </script>
 
@@ -103,86 +104,86 @@
             <table>
                 <thead>
                     <tr>
-                        <th><s:text name="content.message.select.label" /><br /> <span class="linkList" id="selectAll">[<s:text
+                        <th id="thLabel"><s:text name="content.message.select.label" /><br /> <span class="linkList" id="selectAll">[<s:text
                                     name="content.message.select.all" />]
                             </span> - <span class="linkList" id="selectNone">[<s:text name="content.message.select.none" />]
                             </span></th>
-                        <th><s:text name="content.message.id" />
+                        <th id="thId"><s:text name="content.message.id" />
                 <div class="arrows">
                     <a class="order" href="javascript:changeOrder('identifier','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
                     <a class="order" href="javascript:changeOrder('identifier','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
                 </div>
                 </th>
-                <th><s:text name="content.message.name" />
+                <th id="thName"><s:text name="content.message.name" />
                 <div class="arrows">
                     <a class="order" href="javascript:changeOrder('title','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
                     <a class="order" href="javascript:changeOrder('title','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
                 </div>
                 </th>
-                <th><s:text name="content.message.date" />
+                <th id="thDate"><s:text name="content.message.date" />
                 <div class="arrows">
                     <a class="order" href="javascript:changeOrder('uploadDate','true')"><img class="noStyle" src="images/expand/arrow-down.gif"
                                                                                              alt="down" /></a> <a class="order" href="javascript:changeOrder('uploadDate','false')"><img class="noStyle"
                                                                                                                 src="images/expand/arrow-up.gif" alt="up" /></a>
                 </div>
                 </th>
-                <th><s:text name="content.message.converted" />
+                <th id="thConverted"><s:text name="content.message.converted" />
                 <div class="arrows">
                     <a class="order" href="javascript:changeOrder('converted','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
                     <a class="order" href="javascript:changeOrder('converted','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
                 </div>
                 <br /> <a href="#conversionOptsDiv" class="link_right" id="conversionOpts"><s:text name="content.message.conversion.options" /></a>
                 </th>
-                <th><s:text name="content.message.validated" />
+                <th id="thValidated"><s:text name="content.message.validated" />
                 <div class="arrows">
                     <a class="order" href="javascript:changeOrder('validated','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
                     <a class="order" href="javascript:changeOrder('validated','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
                 </div>
                 </th>
-                <th><s:text name="content.message.published" />
+                <th id="thPublished"><s:text name="content.message.published" />
                 <div class="arrows">
                     <a class="order" href="javascript:changeOrder('published','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
                     <a class="order" href="javascript:changeOrder('published','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
                 </div>
                 </th>
-                <th><s:text name="content.message.relations" /></th>
-                <th><s:text name="content.message.eseedm" />
+                <th id="thRelations"><s:text name="content.message.relations" /></th>
+                <th id="thEdm"><s:text name="content.message.eseedm" />
 <%--                <div class="arrows">
                     <a class="order" href="javascript:changeOrder('convertedToEseEdm','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
                     <a class="order" href="javascript:changeOrder('convertedToEseEdm','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
                 </div>--%>
                 </th>
-                <th>
+                <th id="thEuropeana">
                     <s:text name="content.message.europeana" />
                 <div class="arrows">
                     <a class="order" href="javascript:changeOrder('europeana','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
                     <a class="order" href="javascript:changeOrder('europeana','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
                 </div>
                 </th>
-                <th><s:text name="content.message.queue" />
+                <th id="thQueue"><s:text name="content.message.queue" />
                 <div class="arrows">
                     <a class="order" href="javascript:changeOrder('queuing','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> <a class="order"
                                                                                                                                                                   href="javascript:changeOrder('queuing','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" />
                     </a>
                 </div>
                 </th>
-                <th><s:text name="content.message.actions" /></th>
+                <th id="thActions"><s:text name="content.message.actions" /></th>
                 </tr>
                 </thead>
                 <c:forEach var="eacCpfResult" items="${results.eacCpfResults}">
                     <tr class="${eacCpfResult.cssClass}">
-                        <td><input class="checkboxSave" type="checkbox" name="check" id="check_${eacCpfResult.id}"
+                        <td id="tdLabel_${eadResult.id}"><input class="checkboxSave" type="checkbox" name="check" id="check_${eacCpfResult.id}"
                                    value="${eacCpfResult.id}" onclick="enable_features"/></td>
-                        <td class="nocenter">${eacCpfResult.identifier}</td>
-                        <td><span class="title">${eacCpfResult.title}</span></td>
-                        <td>${eacCpfResult.date}</td>
-                        <td class="${eacCpfResult.convertedCssClass}"><apenet:resource>${eacCpfResult.convertedText}</apenet:resource></td>
-                        <td class="${eacCpfResult.validatedCssClass}"><apenet:resource>${eacCpfResult.validatedText}</apenet:resource></td>
-                        <td class="${eacCpfResult.indexedCssClass}"><apenet:resource>${eacCpfResult.indexedText}</apenet:resource></td>
-                        <td><apenet:resource>${eacCpfResult.cpfRelations} / ${eacCpfResult.resourceRelations} / ${eacCpfResult.functionRelations}</apenet:resource></td>
-                        <td class="${eacCpfResult.eseEdmCssClass}"><apenet:resource>${eacCpfResult.eseEdmText}</apenet:resource>
-                        <td class="${eacCpfResult.europeanaCssClass}"><apenet:resource>${eacCpfResult.europeanaText}</apenet:resource></td>
-                        <td class="${eacCpfResult.queueCssClass}">
+                        <td id="tdId_${eadResult.id}" class="nocenter">${eacCpfResult.identifier}</td>
+                        <td id="tdName_${eadResult.id}" class="nocenter"><span class="title">${eacCpfResult.title}</span></td>
+                        <td id="tdDate_${eadResult.id}">${eacCpfResult.date}</td>
+                        <td id="tdConverted_${eadResult.id}" class="${eacCpfResult.convertedCssClass}"><apenet:resource>${eacCpfResult.convertedText}</apenet:resource></td>
+                        <td id="tdValidated_${eadResult.id}" class="${eacCpfResult.validatedCssClass}"><apenet:resource>${eacCpfResult.validatedText}</apenet:resource></td>
+                        <td id="tdPublished_${eadResult.id}" class="${eacCpfResult.indexedCssClass}"><apenet:resource>${eacCpfResult.indexedText}</apenet:resource></td>
+                        <td id="tdRelations_${eadResult.id}"><apenet:resource>${eacCpfResult.cpfRelations} / ${eacCpfResult.resourceRelations} / ${eacCpfResult.functionRelations}</apenet:resource></td>
+                        <td id="tdEdm_${eadResult.id}" class="${eacCpfResult.eseEdmCssClass}"><apenet:resource>${eacCpfResult.eseEdmText}</apenet:resource>
+                        <td id="tdEuropeana_${eadResult.id}" class="${eacCpfResult.europeanaCssClass}"><apenet:resource>${eacCpfResult.europeanaText}</apenet:resource></td>
+                        <td id="tdQueue_${eadResult.id}" class="${eacCpfResult.queueCssClass}">
                             <c:if test="${eacCpfResult.queueReady or eacCpfResult.queueProcessing or eacCpfResult.queueError}">
                                 <c:if test="${eacCpfResult.queueError}">
                                     <s:text name="content.message.error" />:
@@ -191,7 +192,7 @@
                             </c:if>
                         </td>
 
-                        <td class="actions">
+                        <td id="tdActions_${eadResult.id}" class="actions">
                             <c:choose>
                                 <c:when test="${eacCpfResult.queueReady}">
                                     <select class="selectedAction" name="selectedAction">

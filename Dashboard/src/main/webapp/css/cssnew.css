@@ -1035,10 +1035,10 @@ table, table.defaultlayout {
 }
 
 #content_div_table table {
-	table-layout:fixed;
-    width:100%;
+	/* table-layout:fixed; */
+    /* width:100%; */
     text-align: center;
-    width: auto;
+   /*  width: auto; */
 }
 
 #newSearchForm table {
@@ -1057,9 +1057,8 @@ table, table.defaultlayout {
  	padding-left:2px;
 	padding-right:2px;	 
 	overflow:hidden;
+	word-wrap: break-word;
 }
-
-
 
 #content_div_table td, table.defaultlayout td, table.defaultlayout th{
 	font-size:8pt;
@@ -1088,7 +1087,7 @@ table, table.defaultlayout {
 }
 #content_div_table td.title{
 	text-align: left;
-	width:200px;
+	/* width:200px; */
 }
 #content_div_table td.actions{
 	text-align: left;

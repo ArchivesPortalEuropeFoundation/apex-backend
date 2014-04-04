@@ -8,6 +8,7 @@
     $(document).ready(function() {
         //${securityContext.refresh_interval} is defined in SecurityContext.java to store in session the refresh timeout.
         initResultsHandlers(${securityContext.refresh_interval});
+        drawColumns(${results.findingAid}, ${results.holdingsGuide}, ${results.sourceGuide}, false);
 	});
 </script>
 
@@ -125,32 +126,32 @@
             <table>
                 <thead>
                     <tr>
-                        <th>
+                        <th id="thLabel">
                         	<s:text name="content.message.select.label" /><br /> <span class="linkList" id="selectAll">[<s:text name="content.message.select.all" />]
                             </span> - <span class="linkList" id="selectNone">[<s:text name="content.message.select.none" />]</span>
                        	</th>
-                        <th>
+                        <th id="thId">
 	                        <s:text name="content.message.id" />
 			                <div class="arrows">
 			                    <a class="order" href="javascript:changeOrder('eadid','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
 			                    <a class="order" href="javascript:changeOrder('eadid','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
 			                </div>
 		                </th>
-		                <th>
+		                <th id="thTitle">
 			                <s:text name="content.message.title" />
 			                <div class="arrows">
 			                    <a class="order" href="javascript:changeOrder('title','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
 			                    <a class="order" href="javascript:changeOrder('title','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
 			                </div>
 		                </th>
-		                <th>
+		                <th id="thDate">
 			                <s:text name="content.message.date" />
 			                <div class="arrows">
 			                    <a class="order" href="javascript:changeOrder('uploadDate','true')">
 			                    <img class="noStyle" src="images/expand/arrow-down.gif"	 alt="down" /></a> <a class="order" href="javascript:changeOrder('uploadDate','false')"><img class="noStyle"                                                                                      src="images/expand/arrow-up.gif" alt="up" /></a>
 			                </div>
 		                </th>
-		                <th>
+		                <th id="thConverted">
 			                <s:text name="content.message.converted" />
 			                <div class="arrows">
 			                    <a class="order" href="javascript:changeOrder('converted','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
@@ -158,14 +159,14 @@
 			                </div>
 			                <br/> <a href="#conversionOptsDiv" class="link_right" id="conversionOpts"><s:text name="content.message.conversion.options" /></a>
 		                </th>
-		                <th>
+		                <th id="thValidated">
 			                <s:text name="content.message.validated" />
 			                <div class="arrows">
 			                    <a class="order" href="javascript:changeOrder('validated','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
 			                    <a class="order" href="javascript:changeOrder('validated','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
 			                </div>
 		                </th>
-		                <th>
+		                <th id="thPublished">
 			                <s:text name="content.message.published" />
 			                <div class="arrows">
 			                    <a class="order" href="javascript:changeOrder('totalNumberOfUnits','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
@@ -174,17 +175,17 @@
                 		</th>
 	               		<c:choose>
 		                    <c:when test="${results.findingAid}">
-		                        <th>
+		                        <th id="thHoldings">
 		                        	<s:text name="content.message.holdings" />
 		                        </th>
-		                        <th>
+		                        <th id="thEdm">
 		                        	<s:text name="content.message.eseedm" />
 			                        <div class="arrows">
 			                            <a class="order" href="javascript:changeOrder('totalNumberOfChos','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a>
 			                            <a class="order" href="javascript:changeOrder('totalNumberOfChos','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
 			                        </div>
 		                        </th>
-		                        <th>
+		                        <th id="thEuropeana">
 		                            <s:text name="content.message.europeana" />
 			                        <div class="arrows">
 			                            <a class="order" href="javascript:changeOrder('europeana','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> 
@@ -193,67 +194,70 @@
 		                        </th>
 		                    </c:when>
 		                    <c:when test="${results.holdingsGuide or results.sourceGuide}">
-		                        <th style="width: 6%;">
+		                        <th id="thDynamic">
 		                        	<s:text name="content.message.dynamic" />
 		                        </th>
-		                        <th style="width: 6%;">
+		                        <th id="thLynked">
 		                        	<s:text name="content.message.linked" />
 		                        </th>
 	                        </c:when>
 	                    </c:choose>
-		                <th>
+		                <th id="thQueue">
 			                <s:text name="content.message.queue" />
 			                <div class="arrows">
 			                    <a class="order" href="javascript:changeOrder('queuing','true')"><img class="noStyle" src="images/expand/arrow-down.gif" alt="down" /></a> 
 			                    <a class="order" href="javascript:changeOrder('queuing','false')"><img class="noStyle" src="images/expand/arrow-up.gif" alt="up" /></a>
 			                </div>
 		                </th>
-	                	<th>
+	                	<th id="thActions">
 	                		<s:text name="content.message.actions" />
 	               		</th>
                 </tr>
                 </thead>
                 <c:forEach var="eadResult" items="${results.eadResults}">
                     <tr class="${eadResult.cssClass}">
-                        <td><input class="checkboxSave" type="checkbox" name="check" id="check_${eadResult.id}"
-                                   value="${eadResult.id}" onclick="enable_features"/></td>
-                        <td class="nocenter">${eadResult.eadid}</td>
-                        <td><span class="title">${eadResult.title}</span></td>
-                        <td>${eadResult.date}</td>
-                        <td class="${eadResult.convertedCssClass}"><apenet:resource>${eadResult.convertedText}</apenet:resource></td>
-                        <td class="${eadResult.validatedCssClass}"><apenet:resource>${eadResult.validatedText}</apenet:resource></td>
-                        <td class="${eadResult.indexedCssClass}"><c:choose>
-                                <c:when test="${eadResult.published}">${eadResult.units}</c:when>
+                        <td id="tdLabel_${eadResult.id}"><input class="checkboxSave" type="checkbox" name="check" id="check_${eadResult.id}" value="${eadResult.id}" onclick="enable_features"/></td>
+                        <td id="tdId_${eadResult.id}" class="nocenter">${eadResult.eadid}</td>
+                        <td id="tdTitle_${eadResult.id}" class="nocenter">
+                        	<span class="title">${eadResult.title}</span>
+                        </td>
+                        <td id="tdDate_${eadResult.id}">${eadResult.date}</td>
+                        <td id="tdConverted_${eadResult.id}" class="${eadResult.convertedCssClass}"><apenet:resource>${eadResult.convertedText}</apenet:resource></td>
+                        <td id="tdValidated_${eadResult.id}" class="${eadResult.validatedCssClass}"><apenet:resource>${eadResult.validatedText}</apenet:resource></td>
+                        <td id="tdPublished_${eadResult.id}" class="${eadResult.indexedCssClass}">
+                        	<c:choose>
+                                <c:when test="${eadResult.published}">
+                                	${eadResult.units}
+                                </c:when>
                                 <c:otherwise>
                                     <apenet:resource>${eadResult.indexedText}</apenet:resource>
                                 </c:otherwise>
-                            </c:choose></td>
-                            <c:choose>
-                                <c:when test="${results.findingAid}">
-                                <td>${eadResult.holdingsGuideTitle}</td>
-                                <td class="${eadResult.eseEdmCssClass}"><c:choose>
+                            </c:choose>
+						</td>
+						<c:choose>
+							<c:when test="${results.findingAid}">
+                                <td id="tdHoldings_${eadResult.id}">${eadResult.holdingsGuideTitle}</td>
+                                <td id="tdEdm_${eadResult.id}" class="${eadResult.eseEdmCssClass}"><c:choose>
                                         <c:when
                                             test="${(eadResult.convertedToEseEdm or eadResult.deliveredToEuropeana) and eadResult.totalNumberOfChos > 0}">${eadResult.totalNumberOfChos}</c:when>
                                         <c:otherwise>
                                             <apenet:resource>${eadResult.eseEdmText}</apenet:resource>
                                         </c:otherwise>
                                     </c:choose></td>
-                                <td class="${eadResult.europeanaCssClass}"><apenet:resource>${eadResult.europeanaText}</apenet:resource></td>
+                                <td id="tdEuropeana_${eadResult.id}" class="${eadResult.europeanaCssClass}"><apenet:resource>${eadResult.europeanaText}</apenet:resource></td>
                             </c:when>
                             <c:when test="${results.holdingsGuide or results.sourceGuide}">
-                                <td class="${eadResult.dynamicCssClass}"><apenet:resource>${eadResult.dynamicText}</apenet:resource></td>
-                                <td class="${eadResult.linkedCssClass}" title="<s:text name='content.message.linked.tooltip' />"><c:if test="${eadResult.published or eadResult.dynamic}">${eadResult.findingAidsLinkedAndPublished}/${eadResult.findingAidsLinked}/${eadResult.possibleFindingAidsLinked}</c:if></td>
+                                <td id="tdDynamic_${eadResult.id}" class="${eadResult.dynamicCssClass}"><apenet:resource>${eadResult.dynamicText}</apenet:resource></td>
+                                <td id="tdLynked_${eadResult.id}" class="${eadResult.linkedCssClass}" title="<s:text name='content.message.linked.tooltip' />"><c:if test="${eadResult.published or eadResult.dynamic}">${eadResult.findingAidsLinkedAndPublished}/${eadResult.findingAidsLinked}/${eadResult.possibleFindingAidsLinked}</c:if></td>
                             </c:when>
-
                         </c:choose>
-                        <td class="${eadResult.queueCssClass}"><c:if
-                                test="${eadResult.queueReady or eadResult.queueProcessing or eadResult.queueError}">
-                                <c:if test="${eadResult.queueError}">
-                                    <s:text name="content.message.error" />:</c:if>
+                        <td id="tdQueue_${eadResult.id}" class="${eadResult.queueCssClass}">
+                        	<c:if test="${eadResult.queueReady or eadResult.queueProcessing or eadResult.queueError}">
+                                <c:if test="${eadResult.queueError}"><s:text name="content.message.error" />:</c:if>
                                 <apenet:resource>${eadResult.queueAction.resourceName }</apenet:resource>
-                            </c:if></td>
-
-                        <td class="actions"><c:choose>
+                            </c:if>
+						</td>
+                        <td id="tdActions_${eadResult.id}" class="actions"><c:choose>
                                 <c:when test="${eadResult.queueReady}">
                                     <select class="selectedAction" name="selectedAction">
                                         <option value="action|deleteFromQueue">

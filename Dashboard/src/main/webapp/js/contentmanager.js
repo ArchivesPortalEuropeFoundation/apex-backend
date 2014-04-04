@@ -353,3 +353,160 @@ function reloadRefresh(value){
 		refreshIntervalFunc(0, false);
 	}
 }
+
+function drawColumns(fa, hg, sg, eac){
+	
+	var width = document.getElementById("ead-results-header").offsetWidth;
+	var small = Math.round(width*0.05);
+	var id = Math.round(width*0.10);
+	var title = Math.round(width*0.30);
+	var actions = Math.round(width*0.15);
+	//eaccpf
+	var name = Math.round(width*0.25);
+	var relations = Math.round(width*0.10);
+
+	$("#thLabel").width(small);
+	$("#thLabel" ).css( "maxWidth", (small) + "px" );
+	$("table [id^='tdLabel_']").each(function() {
+		$(this).width(small);
+		$(this).css( "maxWidth", (small) + "px" );
+	});
+	
+	$("#thId").width(id);
+	$("#thId" ).css( "maxWidth", (id) + "px" );
+	$("table [id^='tdId_']").each(function() {
+		$(this).width(id);
+		$(this).css( "maxWidth", (id) + "px" );
+	});
+	
+	$("#thDate").width(small);
+	$("#thDate" ).css( "maxWidth", (small) + "px" );
+	$("table [id^='tdDate_']").each(function() {
+		$(this).width(small);
+		$(this).css( "maxWidth", (small) + "px" );
+	});
+	
+	$("#thConverted").width(small);
+	$("#thConverted" ).css( "maxWidth", (small) + "px" );
+	$("table [id^='tdConverted_']").each(function() {
+		$(this).width(small);
+		$(this).css( "maxWidth", (small) + "px" );
+	});
+	
+	$("#thValidated").width(small);
+	$("#thValidated" ).css( "maxWidth", (small) + "px" );
+	$("table [id^='tdValidated_']").each(function() {
+		$(this).width(small);
+		$(this).css( "maxWidth", (small) + "px" );
+	});
+	
+	$("#thPublished").width(small);
+	$("#thPublished" ).css( "maxWidth", (small) + "px" );
+	$("table [id^='tdPublished_']").each(function() {
+		$(this).width(small);
+		$(this).css( "maxWidth", (small) + "px" );
+	});
+	
+	$("#thQueue").width(small);
+	$("#thQueue" ).css( "maxWidth", (small) + "px" );
+	$("table [id^='tdQueue_']").each(function() {
+		$(this).width(small);
+		$(this).css( "maxWidth", (small) + "px" );
+	});
+	
+	$("#thActions").width(actions);
+	$("#thActions" ).css( "maxWidth", (actions) + "px" );
+	$("table [id^='tdActions_']").each(function() {
+		$(this).width(actions);
+		$(this).css( "maxWidth", (actions) + "px" );
+	});
+	
+	//	FA				HG/SG			EACCPF
+	//	Title			Title			Name
+	//	Holdings		Dynamic			Relations
+	//	Edm				Lynked		
+	//	Europeana
+	
+	if(hg || sg){
+		$("#thTitle").width(title);
+		$("#thTitle" ).css( "maxWidth", (title) + "px" );
+		$("table [id^='tdTitle_']").each(function() {
+			$(this).width(title);
+			$(this).css( "maxWidth", (title) + "px" );
+		});
+
+		$("#thDynamic").width(small*1.5);
+		$("#thDynamic" ).css( "maxWidth", (small*1.5) + "px" );
+		$("table [id^='tdDynamic_']").each(function() {
+			$(this).width(small*1.5);
+			$(this).css( "maxWidth", (small*1.5) + "px" );
+		});
+		
+		$("#thLynked").width(small*1.5);
+		$("#thLynked" ).css( "maxWidth", (small*1.5) + "px" );
+		$("table [id^='tdLynked_']").each(function() {
+			$(this).width(small*1.5);
+			$(this).css( "maxWidth", (small*1.5) + "px" );
+		});
+	}else if (fa){	
+		$("#thTitle").width(title);
+		$("#thTitle" ).css( "maxWidth", (title) + "px" );
+		$("table [id^='tdTitle_']").each(function() {
+			$(this).width(title);
+			$(this).css( "maxWidth", (title) + "px" );
+		});
+
+		$("#thHoldings").width(small);
+		$("#thHoldings" ).css( "maxWidth", (small) + "px" );
+		$("table [id^='tdHoldings_']").each(function() {
+			$(this).width(small);
+			$(this).css( "maxWidth", (small) + "px" );
+		});
+		
+		$("#thEdm").width(small);
+		$("#thEdm" ).css( "maxWidth", (small) + "px" );
+		$("table [id^='tdEdm_']").each(function() {
+			$(this).width(small);
+			$(this).css( "maxWidth", (small) + "px" );
+		});
+		
+		$("#thEuropeana").width(small);
+		$("#thEuropeana" ).css( "maxWidth", (small) + "px" );
+		$("table [id^='tdEuropeana_']").each(function() {
+			$(this).width(small);
+			$(this).css( "maxWidth", (small) + "px" );
+		});
+	}
+	else{
+		//eaccpf
+		$("#thName").width(name);
+		$("#thName" ).css( "maxWidth", (name) + "px" );
+		$("table [id^='tdName_']").each(function() {
+			$(this).width(name);
+			$(this).css( "maxWidth", (name) + "px" );
+		});
+
+		$("#thRelations").width(relations);
+		$("#thRelations" ).css( "maxWidth", (relations) + "px" );
+		$("table [id^='tdRelations_']").each(function() {
+			$(this).width(relations);
+			$(this).css( "maxWidth", (relations) + "px" );
+		});
+		
+		$("#thEdm").width(small);
+		$("#thEdm" ).css( "maxWidth", (small) + "px" );
+		$("table [id^='tdEdm_']").each(function() {
+			$(this).width(small);
+			$(this).css( "maxWidth", (small) + "px" );
+		});
+		
+		$("#thEuropeana").width(small);
+		$("#thEuropeana" ).css( "maxWidth", (small) + "px" );
+		$("table [id^='tdEuropeana_']").each(function() {
+			$(this).width(small);
+			$(this).css( "maxWidth", (small) + "px" );
+		});
+	}
+
+	
+}

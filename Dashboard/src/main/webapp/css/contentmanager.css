@@ -78,7 +78,7 @@
 }
 
 #contentmanager #content_div_table  .title {
-	width: 100%;
+	/* width: 100% */;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	text-align: left;
@@ -105,7 +105,7 @@
 
 #contentmanager #content_div_table td.actions select {
 	font-size: 11px;
-	width: 100%;
+	/* width: 100%; */
 }
 
 #contentmanager #content_div_table td.actions input {
