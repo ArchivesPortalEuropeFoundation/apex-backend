@@ -12,9 +12,9 @@
 				<xsl:value-of select="/ead:ead/ead:archdesc/ead:did/ead:unitid" />
 			</div>
 			<xsl:for-each select="/ead:ead/ead:archdesc/ead:did/ead:unittitle">
-				<div class="titleproper">
+				<h1 class="titleproper">
 					<xsl:apply-templates mode="title"/>
-				</div>
+				</h1>
 			</xsl:for-each>
 			<xsl:for-each select="/ead:ead/ead:eadheader/ead:filedesc/ead:titlestmt/ead:subtitle">
 				<div class="subtitle">
