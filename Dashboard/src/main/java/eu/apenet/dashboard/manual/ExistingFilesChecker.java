@@ -5,8 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -211,29 +209,6 @@ public class ExistingFilesChecker {
 			String eadid = "";
             try {
                 eadid = extractAttributeFromEad(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/eadid", null, true).trim();
-
-                // Check if EADID contains not valid characters.
-                String patternStrign = "^[a-zA-Z0-9\\.\\-_\\s]+$";
-                Pattern pattern = Pattern.compile(patternStrign);
-                Matcher matcher = pattern.matcher(eadid);
-                if (!matcher.find()) {
-                	// If not, recover an EADID with valid characters.
-                    LOG.error("The EADID contains special characters: " + eadid);
-                    String newEADID = "";
-                    for (int i = 0; i < eadid.length(); i++) {
-                    	if (String.valueOf(eadid.charAt(i)).matches(patternStrign)) {
-                    		newEADID += String.valueOf(eadid.charAt(i));
-                    	} else {
-                    		newEADID += "_";
-                    	}
-                    }
-                    LOG.debug("New EADID (without special characters): " + newEADID);
-                    eadid = newEADID;
-
-                    // Change the invalid EADID in the file.
-                    LOG.debug("Try to change the EADID in the file.");
-                    changeEadidUsingDOM(fileUnit, eadid);
-                }
             } catch (WstxParsingException e){
                 LOG.error("File was not correct XML, cause: " + e.getMessage());
                 additionalErrors += e.getMessage();
@@ -707,70 +682,91 @@ public class ExistingFilesChecker {
 	
 
 
-    private String changeEadidUsingDOM(FileUnit fileUnit, String neweadid) {
-        UpFileDAO upFileDao = DAOFactory.instance().getUpFileDAO();
-        UpFile upfile = upFileDao.findById(fileUnit.getFileId());
+	private String changeEadidUsingDOM(FileUnit fileUnit, String neweadid) {
+		// Recovers the current uploaded file.
+		UpFileDAO upFileDao = DAOFactory.instance().getUpFileDAO();
+		UpFile upfile = upFileDao.findById(fileUnit.getFileId());
+		String path = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath();
+		String filePath = path + upfile.getPath() + upfile.getFilename();
+		String oldFilePath = filePath.replace(".xml", "_old.xml");
+		File file = new File(filePath);
+        File oldFile = new File(oldFilePath);
 
-        String path = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath();
-        String filePath = path + upfile.getPath() + upfile.getFilename();
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		// Creates the DOM object.
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setValidating(false);
+		factory.setNamespaceAware(true);
+		factory.setIgnoringElementContentWhitespace(true);
 
-        factory.setValidating(false);
-        factory.setNamespaceAware(true);
-        factory.setIgnoringElementContentWhitespace(true);
+		// Try to recover the current EADID in the file.
+		String oldeadid = "";
+		Node eadidNode = null;
+		Document doc = null;
+		try {
+			oldeadid = this.extractAttributeFromEad(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/eadid", null, true).trim();
 
-        String oldeadid = "";
+			// Creates a copy of the current uploaded file.
+			FileUtils.copyFile(file, oldFile);
 
-        try{
-            oldeadid = this.extractAttributeFromEad(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/eadid", null, true).trim();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            InputStream in = new FileInputStream(filePath);
-            Document doc = builder.parse(in);
-            doc.getDocumentElement().normalize();
-            NodeList eadidList = doc.getElementsByTagName("eadid");
-            Node eadidNode = eadidList.item(0);
-            String currenteadid = eadidNode.getTextContent();
-            if (!currenteadid.equals(neweadid)&&(!neweadid.isEmpty())) {
-                LOG.info("Changing the eadid into the file");
-                eadidNode.setTextContent(neweadid);
-                String newfilepath=filePath.replace(".xml", "") + neweadid + ".xml";
-                //fileUnit.setFileName(newfileName);
-                Result result1 = new StreamResult(new File(filePath));
-                Source source = new DOMSource(doc);
-                Transformer transformer;
-                transformer = TransformerFactory.newInstance().newTransformer();
-                transformer.transform(source, result1);
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			InputStream in = new FileInputStream(filePath);
+			doc = builder.parse(in);
+			doc.getDocumentElement().normalize();
+			NodeList eadidList = doc.getElementsByTagName("eadid");
+			eadidNode = eadidList.item(0);
+			String currenteadid = eadidNode.getTextContent();
 
-                //Rename file
-                File oldFile = new File(filePath);
-                File newFile = new File(newfilepath);
-                Boolean success= oldFile.renameTo(newFile);
+			// Escape char '&' in the neweadid.
+			if(neweadid.contains("&amp;")){
+				neweadid = neweadid.replaceAll("&amp;","&");
+			}
+			if(neweadid.contains("&")){
+				neweadid = neweadid.replaceAll("&","&amp;");
+			}
 
-                //if renaming process fails, the original file will have the original eadid identifier again.
-                if (!success) {
-                    LOG.info("Removing the new eadid into the original file because of fail renaming process");
-                    eadidNode.setTextContent(oldeadid);
-                    Result result2 = new StreamResult(new File(filePath));
-                    Source source2 = new DOMSource(doc);
-                    Transformer transformer2;
-                    transformer2 = TransformerFactory.newInstance().newTransformer();
-                    transformer2.transform(source2, result2);
-                    return STATUS_ERROR;
-                } else {
-                    String oldfname=upfile.getFilename();
-                    String newfname= oldfname.replace(".xml", "") + neweadid + ".xml";
-                    upfile.setFilename(newfname);
-                    upFileDao.update(upfile);
+			// Checks if the currenteadid is the same as the neweadid.
+			if (!currenteadid.equals(neweadid)&&(!neweadid.isEmpty())) {
+				LOG.info("Changing the eadid into the file");
+				eadidNode.setTextContent(neweadid);
+				Result result1 = new StreamResult(new File(filePath));
+				Source source = new DOMSource(doc);
+				Transformer transformer;
+				transformer = TransformerFactory.newInstance().newTransformer();
+				transformer.transform(source, result1);
 
-                    fileUnit.setFileName(newfname);
-                    fileUnit.setEadid(neweadid);
-                    return neweadid;
-                }
-            }
-        } catch (Exception ex) {
-            LOG.error("overwrite: " + ex.getMessage());
-        }
-        return "";
+				// Save the information and delete the old file.
+				fileUnit.setEadid(neweadid);
+				FileUtils.forceDelete(oldFile);
+				
+				return neweadid;
+			}
+		} catch (Exception ex) {
+			LOG.error("overwrite: " + ex.getMessage());
+			// Some error occurred, trying to revert the changes.
+			boolean rollback = false;
+			if (oldeadid!= null && !oldeadid.isEmpty() && eadidNode != null && doc != null) {
+				LOG.info("Removing the new eadid into the original file because of fail renaming process");
+				eadidNode.setTextContent(oldeadid);
+				Result result2 = new StreamResult(new File(filePath));
+				Source source2 = new DOMSource(doc);
+				Transformer transformer2;
+				try {
+					transformer2 = TransformerFactory.newInstance().newTransformer();
+					transformer2.transform(source2, result2);
+					rollback = true;
+				} catch (Exception e) {
+					LOG.error("undo-overwrite: " + e.getMessage());
+				}
+			}
+
+			if (oldFile.exists()) {
+				oldFile.renameTo(file);
+			}
+			if (rollback) {
+				return STATUS_ERROR;
+			}
+		}
+		return "";
     }
 
 }
