@@ -307,7 +307,7 @@
 					inputElement = inputElement.replace(".", "\\.");
 		        	$("#" + inputElement).on('input', function() {
 		        		var eadid = inputElement.substring("neweadidRepeated".length, inputElement.length);
-		        		activate(eadid);
+		        		activate(eadid, true);
 		        	});
 	        	});
 
@@ -316,7 +316,7 @@
 					inputElement = inputElement.replace(".", "\\.");
 		        	$("#" + inputElement).on('input', function() {
 		        		var eadid = inputElement.substring("neweadidEmpty".length, inputElement.length);
-		        		activate(eadid);
+		        		activate(eadid, false);
 		        	});
 	        	});
 	        });
@@ -342,11 +342,22 @@
 	        	}
 	        }
 
-			function activate(eadid) {
+			function activate(eadid, isRepeated) {
 				// Replace the escaped name.
 				if (eadid.indexOf("\.") != "-1")  {
 					eadid = eadid.replace("\\.", ".");
 				}
+
+				var name = "";
+				// Activate button check.
+				if (isRepeated) {
+					name = "Repeated";
+				} else {
+					name = "Empty";
+				}
+
+				document.getElementById("resultChangeEADID" + name + eadid).style.display='none';
+				document.getElementById("SaveChangesButton" + name + eadid).disabled=false;
 
 				//normal activate behavior
 				$("input#form_submit").attr("disabled","disabled");
