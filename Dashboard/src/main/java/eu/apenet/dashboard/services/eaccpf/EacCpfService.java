@@ -554,6 +554,6 @@ public class EacCpfService {
     }
 
     private static EacCpf doesFileExist(UpFile upFile, String identifier) {
-        return DAOFactory.instance().getEacCpfDAO().getEacCpfByIdentifier(upFile.getAiId(), identifier);
+        return DAOFactory.instance().getEacCpfDAO().getEacCpfByIdentifier(upFile.getAiId() + "", identifier);
     }
 }
