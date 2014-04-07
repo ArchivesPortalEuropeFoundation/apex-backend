@@ -257,6 +257,9 @@ public class EacCpfService {
 
                     if (queueAction.isOverwriteAction()) {
                         Integer aiId = eac.getAiId();
+//                        new DeleteFromEuropeanaTask().execute(eac, preferences);
+//                        new DeleteEseEdmTask().execute(eac, preferences);
+                        new UnpublishTask().execute(eac, preferences);
                         new DeleteTask().execute(eac, preferences);
                         eacDeleted = true;
                         new CreateEacCpfTask().execute(xmlType, upFile, aiId);
