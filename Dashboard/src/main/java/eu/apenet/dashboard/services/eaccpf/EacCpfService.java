@@ -339,7 +339,7 @@ public class EacCpfService {
                 boolean continueTask = true;
                 EacCpf eacCpf;
                 EacCpf newEacCpf = null;
-                if ((eacCpf = doesFileExist(upFile, identifier, xmlType)) != null) {
+                if ((eacCpf = doesFileExist(upFile, identifier)) != null) {
                     if (ingestionprofileDefaultExistingFileAction.isOverwrite()) {
                         boolean eadDeleted = false;
                         try {
@@ -541,11 +541,19 @@ public class EacCpfService {
         return queueItem;
     }
 
-    private static void deleteFromQueue(QueueItem queueItem, boolean b) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private static void deleteFromQueue(QueueItem queueItem, boolean deleteUpFile) throws IOException {
+        EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
+        JpaUtil.beginDatabaseTransaction();
+        EacCpf eacCpf = queueItem.getEacCpf();
+        if (eacCpf != null) {
+            eacCpf.setQueuing(QueuingState.NO);
+            eacCpfDAO.updateSimple(eacCpf);
+        }
+        deleteFromQueueInternal(queueItem, deleteUpFile);
+        JpaUtil.commitDatabaseTransaction();
     }
 
-    private static EacCpf doesFileExist(UpFile upFile, String identifier, XmlType xmlType) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private static EacCpf doesFileExist(UpFile upFile, String identifier) {
+        return DAOFactory.instance().getEacCpfDAO().getEacCpfByIdentifier(upFile.getAiId(), identifier);
     }
 }
