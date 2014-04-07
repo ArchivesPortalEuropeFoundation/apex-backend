@@ -812,7 +812,7 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 								//they must be removed from both list and inserted into related institutions
 								cloneIngestedInstitutions.remove(keyInstitution);
 								this.newInstitutionsFile.remove(newInstitution);
-//								this.oldRelatedInstitutions.add(keyInstitution);
+								this.oldRelatedInstitutions.add(keyInstitution);
 								if(this.newRelatedInstitutions==null){
 									this.newRelatedInstitutions = new ArrayList<ArchivalInstitution>();
 								}
