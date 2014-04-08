@@ -40,18 +40,34 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
 
     @SuppressWarnings("unchecked")
     @Override
-    public EacCpf getEacCpfByIdentifier(String aiId, String identifier) {
-		Criteria criteria = getSession().createCriteria(EacCpf.class, "eacCpf");
-		criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		criteria = criteria.createAlias("eacCpf.archivalInstitution", "archivalInstitution");
-		criteria.add(Restrictions.eq("archivalInstitution.repositorycode", aiId));
-		criteria.add(Restrictions.eq("identifier", identifier));
-		criteria.setMaxResults(1);
-		List<EacCpf> list = criteria.list();
-		if (list.size() > 0)
-			return list.get(0);
-		return null;
-	}
+    public EacCpf getEacCpfByIdentifier(Integer aiId, String identifier) {
+        TypedQuery<EacCpf> query = getEntityManager().createQuery(
+                "SELECT id FROM EacCpf eacCpf WHERE eacCpf.aiId = :aiId AND eacCpf.identifier  = :identifier ", EacCpf.class);
+        query.setParameter("identifier", identifier);
+        query.setParameter("aiId", aiId);
+        query.setMaxResults(1);
+        List<EacCpf> list = query.getResultList();
+        if (list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public EacCpf getEacCpfByIdentifier(String repositorycode, String identifier) {
+        Criteria criteria = getSession().createCriteria(EacCpf.class, "eacCpf");
+        criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        criteria = criteria.createAlias("eacCpf.archivalInstitution", "archivalInstitution");
+        criteria.add(Restrictions.eq("archivalInstitution.repositorycode", repositorycode));
+        criteria.add(Restrictions.eq("identifier", identifier));
+        criteria.setMaxResults(1);
+        List<EacCpf> list = criteria.list();
+        if (list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
 
     @Override
     public List<EacCpf> getEacCpfs(ContentSearchOptions contentSearchOptions) {

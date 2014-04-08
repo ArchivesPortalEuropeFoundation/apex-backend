@@ -6,7 +6,9 @@ public interface EacCpfDAO extends GenericDAO<EacCpf, Integer> {
 
     public boolean existEacCpf(String identifier);
 
-    public EacCpf getEacCpfByIdentifier(String aiId, String identifier);
+    public EacCpf getEacCpfByIdentifier(Integer aiId, String identifier);
+
+    public EacCpf getEacCpfByIdentifier(String repositorycode, String identifier);
 
     public List<EacCpf> getEacCpfs(ContentSearchOptions contentSearchOptions);
 
