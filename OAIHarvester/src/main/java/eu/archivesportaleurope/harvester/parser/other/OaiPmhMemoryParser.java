@@ -1,13 +1,10 @@
 package eu.archivesportaleurope.harvester.parser.other;
 
-import org.apache.log4j.Logger;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.apache.log4j.Logger;
 
 /**
  * User: Yoann Moranville

@@ -4,11 +4,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
-
-import org.codehaus.stax2.XMLOutputFactory2;
 
 public class OaiPmhMetadataParser extends AbstractOaiPmhParser{
 	
@@ -23,7 +22,7 @@ public class OaiPmhMetadataParser extends AbstractOaiPmhParser{
 			file.delete();
 		}
 		FileOutputStream fileOutputStream = new FileOutputStream(file);
-		XMLStreamWriter xmlWriter =  XMLOutputFactory2.newInstance().createXMLStreamWriter(fileOutputStream, UTF8);
+		XMLStreamWriter xmlWriter =  XMLOutputFactory.newInstance().createXMLStreamWriter(fileOutputStream, UTF8);
 		boolean foundEndElement = false;
 		int event =  xmlReader.next();
 		boolean firstElement = true;

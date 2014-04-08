@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.util.Calendar;
 
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
@@ -13,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import eu.archivesportaleurope.harvester.oaipmh.HarvestObject;
 import eu.archivesportaleurope.harvester.oaipmh.OaiPmhHarvester;
+import eu.archivesportaleurope.harvester.util.StreamUtil;
 
 public class OaiPmhParser extends AbstractOaiPmhParser {
 	private static final Logger LOGGER = Logger.getLogger(OaiPmhHarvester.class);
@@ -25,8 +25,7 @@ public class OaiPmhParser extends AbstractOaiPmhParser {
 		super(outputDirectory);
 	}
 	public ResultInfo parse(HarvestObject harvestObject, InputStream inputStream, int numberOfRequests, Calendar fromCalendar, Calendar untilCalendar) throws Exception {
-		XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-		XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(inputStream, UTF8);
+		XMLStreamReader xmlStreamReader = StreamUtil.getXMLStreamReader(inputStream);
 		OaiPmhRecordParser oaiPmhRecordParser = new OaiPmhRecordParser(getOutputDirectory());
 		ResultInfo resultInfo = new ResultInfo();
 		QName lastElement = null;

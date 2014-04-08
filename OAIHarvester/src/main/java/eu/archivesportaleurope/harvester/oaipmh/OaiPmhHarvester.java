@@ -139,6 +139,7 @@ public class OaiPmhHarvester {
 
 				}catch (HarvesterParserException hpe){
 					harvestObject.addErrors("\nUrl that contains errors: '" + hpe.getRequestUrl() + "'\n", hpe.getNotParsebleResponse().getCanonicalPath());
+					LOGGER.error(hpe.getMessage());
 					numberOfErrors++;
 					if (numberOfErrors >= MAX_NUMBER_OF_ERRORS){
 						throw hpe;
@@ -161,7 +162,7 @@ public class OaiPmhHarvester {
 			}
 		} catch (HarvesterParserException hpe) {
 			LOGGER.error("Unable to parse XML response from the OAI-PMH server, look at the XML response file at "
-					+ hpe.getNotParsebleResponse().getCanonicalPath());
+					+ hpe.getNotParsebleResponse().getCanonicalPath() + " (" + hpe.getMessage() + ")",hpe);
 			throw hpe;
 		}
 	}
