@@ -78,9 +78,9 @@ public class JpaFilter implements Filter {
 
     private void logError(Throwable e){
     	if (logStackTraces){
-    		log.error(JpaUtil.generateThrowableLog(e));
+    		log.error(e.getMessage(),e);
     	}else {
-    		log.error(e.getMessage());
+    		log.error(JpaUtil.generateThrowableLog(e));
     	}
     }
 
