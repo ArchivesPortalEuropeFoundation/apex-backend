@@ -509,49 +509,31 @@
 
 	</xsl:template>
 	<xsl:template match="ead:corpname" mode="#all">
-		<p>
-			<xsl:apply-templates mode="#current" />
-		</p>
+			<br/><xsl:apply-templates mode="#current" />
 	</xsl:template>
 	<xsl:template match="ead:persname" mode="#all">
-		<p>
-			<xsl:apply-templates mode="#current" />
-		</p>
+			<br/><xsl:apply-templates mode="#current" />
 	</xsl:template>
 	<xsl:template match="ead:famname" mode="#all">
-		<p>
-			<xsl:apply-templates mode="#current" />
-		</p>
+			<br/><xsl:apply-templates mode="#current" />
 	</xsl:template>
 	<xsl:template match="ead:name" mode="#all">
-		<p>
-			<xsl:apply-templates mode="#current" />
-		</p>
+			<br/><xsl:apply-templates mode="#current" />
 	</xsl:template>
 	<xsl:template match="ead:geogname" mode="#all">
-		<p>
-			<xsl:apply-templates mode="#current" />
-		</p>
+			<br/><xsl:apply-templates mode="#current" />
 	</xsl:template>
 	<xsl:template match="ead:function" mode="#all">
-		<p>
-			<xsl:apply-templates mode="#current" />
-		</p>
+			<br/><xsl:apply-templates mode="#current" />
 	</xsl:template>
 	<xsl:template match="ead:title" mode="#all">
-		<p>
-			<xsl:apply-templates mode="#current" />
-		</p>
+			<br/><xsl:apply-templates mode="#current" />
 	</xsl:template>
 	<xsl:template match="ead:subject" mode="#all">
-		<p>
-			<xsl:apply-templates mode="#current" />
-		</p>
+			<br/><xsl:apply-templates mode="#current" />
 	</xsl:template>
 	<xsl:template match="ead:occupation" mode="#all">
-		<p>
-			<xsl:apply-templates mode="#current" />
-		</p>
+			<br/><xsl:apply-templates mode="#current" />
 	</xsl:template>
 	<xsl:template match="ead:address" mode="#all">
 	  <div class="defaultlayout">	
@@ -765,68 +747,40 @@
 		</h2>
 	   	<div class="ead-content"> 
 			<xsl:if test="ead:origination[@label='pre']">
-			 	<br/>
-				<p> 
-					<b>
-						<xsl:value-of select="ape:resource('eadcontent.origination.pre')" />
-						:
-					</b>
-				 	<br />
-					<xsl:for-each select="ead:origination[@label='pre']">
-						<xsl:apply-templates  mode="other"/>
-					</xsl:for-each>
-					
-				</p>
+				<br/>
+				<b><xsl:value-of select="ape:resource('eadcontent.origination.pre')" />:</b>
+				<xsl:for-each select="ead:origination[@label='pre']">
+					<xsl:apply-templates  mode="other"/>
+				</xsl:for-each>
 			</xsl:if>
 			<xsl:if test="ead:origination[@label='final']">
-			  	<br/>
-				<p>
-					<b>
-						<xsl:value-of select="ape:resource('eadcontent.origination.final')" />
-						:
-					</b>
-				 	<br /> 
-					<xsl:for-each select="ead:origination[@label='final']">
-						<xsl:apply-templates  mode="other"/>
-					</xsl:for-each>
-				</p>
+				<br/>
+				<b><xsl:value-of select="ape:resource('eadcontent.origination.final')" />:</b>
+				<xsl:for-each select="ead:origination[@label='final']">
+					<xsl:apply-templates  mode="other"/>
+				</xsl:for-each>
 			</xsl:if>
 			<xsl:if test="ead:origination[@label='organisational unit']">
-				<br />
-				<p>
-					<b>
-						<xsl:value-of select="ape:resource('eadcontent.origination.orgunit')" />
-						:
-					</b>
-				    <br /> 
-					<xsl:for-each select="ead:origination[@label='organisational unit']">
-						<xsl:apply-templates  mode="other"/>
-					</xsl:for-each>
-				</p>
+				<br/>
+				<b><xsl:value-of select="ape:resource('eadcontent.origination.orgunit')" />:</b>
+				<xsl:for-each select="ead:origination[@label='organisational unit']">
+					<xsl:apply-templates  mode="other"/>
+				</xsl:for-each>
 			</xsl:if>
-			<xsl:if
-				test="ead:origination[@label!='pre'] and ead:origination[@label!='final'] and ead:origination[@label!='organisational unit']">
-				<br />
-				<p>
-					<xsl:for-each select="ead:origination">
-						<xsl:if test="./@label!='pre' and ./@label!='final' and ./@label!='organisational unit'">
-							<b>
-								<xsl:value-of select="./@label" />
-								:
-							</b>
-							<br />
-							<xsl:apply-templates mode="other"/>
-						</xsl:if>
-					</xsl:for-each>
-				</p>
+			<xsl:if test="ead:origination[@label!='pre'] and ead:origination[@label!='final'] and ead:origination[@label!='organisational unit']">
+				<xsl:for-each select="ead:origination">
+					<xsl:if test="./@label!='pre' and ./@label!='final' and ./@label!='organisational unit'">
+						<br/>
+						<b><xsl:value-of select="./@label" /></b>
+						<xsl:apply-templates mode="other"/>
+					</xsl:if>
+				</xsl:for-each>
 			</xsl:if>
             <xsl:if test="ead:origination[not(@label)]">
-                 <br/>
-                 <p>  
-                  <xsl:for-each select="ead:origination[not(@label)]">
-                        <xsl:apply-templates mode="other"/>
-                  </xsl:for-each>
-                 </p>
+				<xsl:if test="ead:origination[@label]"><br/></xsl:if>
+                	<xsl:for-each select="ead:origination[not(@label)]">
+               			<xsl:apply-templates mode="other"/>
+                  	</xsl:for-each>
             </xsl:if>
 	   	</div>
 	</xsl:template>
@@ -1038,6 +992,9 @@
 		<div class="ead-content">
 			<xsl:for-each select="ead:controlaccess">
 				<xsl:apply-templates mode="other" />
+				<xsl:if test="position() != last()">
+				   <xsl:text>, </xsl:text>
+				</xsl:if>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
