@@ -12,6 +12,7 @@ import javax.servlet.ServletResponse;
 import org.apache.log4j.Logger;
 
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
+import eu.archivesportaleurope.util.ApeUtil;
 
 /**
  * Filter for closing and committing transactions
@@ -80,7 +81,7 @@ public class JpaFilter implements Filter {
     	if (logStackTraces){
     		log.error(e.getMessage(),e);
     	}else {
-    		log.error(JpaUtil.generateThrowableLog(e));
+    		log.error(ApeUtil.generateThrowableLog(e));
     	}
     }
 
