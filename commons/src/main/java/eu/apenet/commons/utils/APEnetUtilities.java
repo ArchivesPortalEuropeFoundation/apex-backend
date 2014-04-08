@@ -10,6 +10,7 @@ import eu.archivesportaleurope.commons.config.ApeConfig;
 import eu.archivesportaleurope.commons.config.ApePortalAndDashboardConfig;
 import eu.archivesportaleurope.commons.config.ApePortalConfig;
 import eu.archivesportaleurope.commons.config.DashboardConfig;
+import eu.archivesportaleurope.util.ApeUtil;
 
 /**
  * User: Yoann Moranville
@@ -112,30 +113,8 @@ public class APEnetUtilities {
     	LOG.error(generateThrowableLog(throwable));
     }
     public static String generateThrowableLog(Throwable throwable){
-    	String result = "";
-    	result+= throwable.getClass().getName()+ " " +throwable.getMessage()  + "\n";
-    	result+= generateThrowableStackTraceLog(throwable.getStackTrace());
-    	result+=generateThrowableCauseLog(throwable.getCause(), 0);
-    	return result;
+    	return ApeUtil.generateThrowableLog(throwable);
     }
-    private static String generateThrowableCauseLog(Throwable throwable, int depth){
-    	String result = "";
-    	if (throwable != null){
-    		result+= "Caused by: " +  throwable.getClass().getName()+ " " + throwable.getMessage()  +"\n";
-    		result+= generateThrowableStackTraceLog(throwable.getStackTrace());
-    		result+=generateThrowableCauseLog(throwable.getCause(), depth++);
-    	}
-    	return result;
-    }
-    private static String generateThrowableStackTraceLog(StackTraceElement[] elements){
-    	String result = "";
-    	for (int i = 0; i < MAX_ERROR_LINES && i < elements.length ;i++){
-    		StackTraceElement element = elements[i];
-    		result += "\t" + element.getClassName() + "." + element.getMethodName() + "(" + element.getFileName() + ":" + element.getLineNumber() + ")\n" ;
-    	}
-    	if (elements.length > MAX_ERROR_LINES){
-    		result += "\t... " + (elements.length -MAX_ERROR_LINES) + " more\n";
-    	}
-    	return result;
-    }
+ 
+
 }
