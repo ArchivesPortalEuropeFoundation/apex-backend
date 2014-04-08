@@ -6,14 +6,12 @@ import java.io.InputStream;
 import java.util.Calendar;
 
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
-import org.codehaus.stax2.XMLOutputFactory2;
-
 import eu.archivesportaleurope.harvester.oaipmh.HarvestObject;
+import eu.archivesportaleurope.harvester.util.StreamUtil;
 
 public class DebugOaiPmhParser extends OaiPmhParser {
 
@@ -24,14 +22,13 @@ public class DebugOaiPmhParser extends OaiPmhParser {
 
 	@Override
 	public ResultInfo parse(HarvestObject harvestObject, InputStream inputStream, int numberOfRequests, Calendar fromCalendar, Calendar untilCalendar) throws Exception {
-		XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-		XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(inputStream, UTF8);
+		XMLStreamReader xmlStreamReader = StreamUtil.getXMLStreamReader(inputStream);
 		File file = new File(getOutputDirectory(),"oai-pmh-request-" + numberOfRequests+".xml");
 		if (file.exists()){
 			file.delete();
 		}
 		FileOutputStream fileOutputStream = new FileOutputStream(file);
-		XMLStreamWriter xmlWriter =  XMLOutputFactory2.newInstance().createXMLStreamWriter(fileOutputStream, UTF8);
+		XMLStreamWriter xmlWriter =  StreamUtil.getXMLStreamWriter(fileOutputStream);
 		ResultInfo resultInfo = new ResultInfo();
 		QName lastElement = null;
 		for (int event = xmlStreamReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlStreamReader
