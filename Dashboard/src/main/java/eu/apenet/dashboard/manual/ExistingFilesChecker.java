@@ -7,8 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -32,7 +30,6 @@ import org.codehaus.stax2.XMLStreamReader2;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXParseException;
 
 import com.ctc.wstx.exc.WstxParsingException;
 
@@ -42,14 +39,11 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.eaccpf.EacCpfService;
 import eu.apenet.dashboard.services.ead.EadService;
 import eu.apenet.dashboard.utils.ContentUtils;
-import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.util.XmlChecker;
-import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.persistence.dao.ArchivalInstitutionDAO;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.dao.UpFileDAO;
 import eu.apenet.persistence.factory.DAOFactory;
-import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.FileType;
@@ -258,29 +252,6 @@ public class ExistingFilesChecker {
 			String eadid = "";
             try {
                 eadid = extractAttributeFromXML(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/eadid", null, true, false).trim();
-
-                // Check if EADID contains not valid characters.
-                String patternStrign = "^[a-zA-Z0-9\\.\\-_\\s]+$";
-                Pattern pattern = Pattern.compile(patternStrign);
-                Matcher matcher = pattern.matcher(eadid);
-                if (!matcher.find()) {
-                	// If not, recover an EADID with valid characters.
-                    LOG.error("The EADID contains special characters: " + eadid);
-                    String newEADID = "";
-                    for (int i = 0; i < eadid.length(); i++) {
-                    	if (String.valueOf(eadid.charAt(i)).matches(patternStrign)) {
-                    		newEADID += String.valueOf(eadid.charAt(i));
-                    	} else {
-                    		newEADID += "_";
-                    	}
-                    }
-                    LOG.debug("New EADID (without special characters): " + newEADID);
-                    eadid = newEADID;
-
-                    // Change the invalid EADID in the file.
-                    LOG.debug("Try to change the EADID in the file.");
-                    changeIdentifierUsingDOM(fileUnit, eadid, false);
-                }
             } catch (WstxParsingException e){
                 LOG.error("File was not correct XML, cause: " + e.getMessage());
                 additionalErrors += e.getMessage();
@@ -374,27 +345,7 @@ public class ExistingFilesChecker {
 	   String cpfId;
 	   try {
 			cpfId = extractAttributeFromXML(uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eac-cpf/control/recordId", null, true, true);
-			String patternString = "^[a-zA-Z0-9\\.\\-_\\s]+$";
-	        Pattern pattern = Pattern.compile(patternString);
-	        Matcher matcher = pattern.matcher(cpfId);
-	        if (!matcher.find()) {
-	        	// If not, recover an identifier with valid characters.
-	            LOG.error("The identifier contains special characters: " + cpfId);
-	            String newIdentifier = "";
-	            for (int i = 0; i < cpfId.length(); i++) {
-	            	if (String.valueOf(cpfId.charAt(i)).matches(patternString)) {
-	            		newIdentifier += String.valueOf(cpfId.charAt(i));
-	            	} else {
-	            		newIdentifier += "_";
-	            	}
-	            }
-	            LOG.debug("New identifier (without special characters): " + newIdentifier);
-	            cpfId = newIdentifier;
 
-	            // Change the invalid identifier in the file.
-	            LOG.debug("Try to change the identifier in the file.");
-	            changeIdentifierUsingDOM(fileUnit, cpfId , true);
-	        }
 	        String err;
             if((err = XmlChecker.isXmlParseable(new File(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName()))) != null){
             	cpfId = "error";
@@ -839,78 +790,101 @@ public class ExistingFilesChecker {
 	}
 
 
-    private String changeIdentifierUsingDOM(FileUnit fileUnit, String newIdentifier, boolean eac) {
-        UpFileDAO upFileDao = DAOFactory.instance().getUpFileDAO();
-        UpFile upfile = upFileDao.findById(fileUnit.getFileId());
+	private String changeIdentifierUsingDOM(FileUnit fileUnit, String newIdentifier, boolean eac) {
+		// Recovers the current uploaded file.
+		UpFileDAO upFileDao = DAOFactory.instance().getUpFileDAO();
+		UpFile upfile = upFileDao.findById(fileUnit.getFileId());
+		String path = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath();
+		String filePath = path + upfile.getPath() + upfile.getFilename();
+		String oldFilePath = filePath.replace(".xml", "_old.xml");
+		File file = new File(filePath);
+        File oldFile = new File(oldFilePath);
 
-        String path = APEnetUtilities.getDashboardConfig().getTempAndUpDirPath();
-        String filePath = path + upfile.getPath() + upfile.getFilename();
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		// Creates the DOM object.
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setValidating(false);
+		factory.setNamespaceAware(true);
+		factory.setIgnoringElementContentWhitespace(true);
 
-        factory.setValidating(false);
-        factory.setNamespaceAware(true);
-        factory.setIgnoringElementContentWhitespace(true);
+		// Try to recover the current EADID in the file.
+		String oldIdentifier = "";
+		Node identifierNode = null;
+		Document doc = null;
 
-        String oldIdentifier = "";
+		try {
+			if (eac){
+				oldIdentifier = this.extractAttributeFromXML(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eac-cpf/control/recordId", null, true, true).trim();
+			}else{
+				oldIdentifier = this.extractAttributeFromXML(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/eadid", null, true, false).trim();
+			}
 
-        try{
-        	if (eac){
-        	  oldIdentifier = this.extractAttributeFromXML(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eac-cpf/control/recordId", null, true, true).trim();
-        	}else{
-        	  oldIdentifier = this.extractAttributeFromXML(this.uploadedFilesPath + fileUnit.getFilePath() + fileUnit.getFileName(), "eadheader/eadid", null, true, false).trim();
-        	}
-        	DocumentBuilder builder = factory.newDocumentBuilder();
-            InputStream in = new FileInputStream(filePath);
-            Document doc = builder.parse(in);
-            doc.getDocumentElement().normalize();
-            NodeList nodeList;
-            if (eac){
-               nodeList = doc.getElementsByTagName("recordId");
-            }else{
-	           nodeList = doc.getElementsByTagName("eadid");
-            }
-            Node node = nodeList.item(0);
-            String currentIdentifier = node.getTextContent();
-            if (!currentIdentifier.equals(newIdentifier)&&(!newIdentifier.isEmpty())) {
-                LOG.info("Changing the identifier into the file");
-                node.setTextContent(newIdentifier);
-                String newfilepath=filePath.replace(".xml", "") + newIdentifier + ".xml";
-                //fileUnit.setFileName(newfileName);
-                Result result1 = new StreamResult(new File(filePath));
-                Source source = new DOMSource(doc);
-                Transformer transformer;
-                transformer = TransformerFactory.newInstance().newTransformer();
-                transformer.transform(source, result1);
+			// Creates a copy of the current uploaded file.
+			FileUtils.copyFile(file, oldFile);
 
-                //Rename file
-                File oldFile = new File(filePath);
-                File newFile = new File(newfilepath);
-                Boolean success= oldFile.renameTo(newFile);
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			InputStream in = new FileInputStream(filePath);
+			doc = builder.parse(in);
+			doc.getDocumentElement().normalize();
+			NodeList nodeList;
+			if (eac) {
+				nodeList = doc.getElementsByTagName("recordId");
+			} else {
+				nodeList = doc.getElementsByTagName("eadid");
+			}
+			identifierNode = nodeList.item(0);
+			String currentIdentifier = identifierNode.getTextContent();
 
-                //if renaming process fails, the original file will have the original eadid identifier again.
-                if (!success) {
-                    LOG.info("Removing the new identifier into the original file because of fail renaming process");
-                    node.setTextContent(oldIdentifier);
-                    Result result2 = new StreamResult(new File(filePath));
-                    Source source2 = new DOMSource(doc);
-                    Transformer transformer2;
-                    transformer2 = TransformerFactory.newInstance().newTransformer();
-                    transformer2.transform(source2, result2);
-                    return STATUS_ERROR;
-                } else {
-                    String oldfname=upfile.getFilename();
-                    String newfname= oldfname.replace(".xml", "") + newIdentifier + ".xml";
-                    upfile.setFilename(newfname);
-                    upFileDao.update(upfile);
+			// Escape char '&' in the newIdentifier.
+			if(newIdentifier.contains("&amp;")){
+				newIdentifier = newIdentifier.replaceAll("&amp;","&");
+			}
+			if(newIdentifier.contains("&")){
+				newIdentifier = newIdentifier.replaceAll("&","&amp;");
+			}
 
-                    fileUnit.setFileName(newfname);
-                    fileUnit.setEadid(newIdentifier);
-                    return newIdentifier;
-                }
-            }
-        } catch (Exception ex) {
-            LOG.error("overwrite: " + ex.getMessage());
-        }
-        return "";
+			// Checks if the currenteadid is the same as the newIdentifier.
+			if (!currentIdentifier.equals(newIdentifier)&&(!newIdentifier.isEmpty())) {
+				LOG.info("Changing the identifier into the file");
+				identifierNode.setTextContent(newIdentifier);
+				Result result1 = new StreamResult(new File(filePath));
+				Source source = new DOMSource(doc);
+				Transformer transformer;
+				transformer = TransformerFactory.newInstance().newTransformer();
+				transformer.transform(source, result1);
+
+				// Save the information and delete the old file.
+				fileUnit.setEadid(newIdentifier);
+				FileUtils.forceDelete(oldFile);
+
+				return newIdentifier;
+			}
+		} catch (Exception ex) {
+			LOG.error("overwrite: " + ex.getMessage());
+			// Some error occurred, trying to revert the changes.
+			boolean rollback = false;
+			if (oldIdentifier!= null && !oldIdentifier.isEmpty() && identifierNode != null && doc != null) {
+				LOG.info("Removing the new identifier into the original file because of fail renaming process");
+				identifierNode.setTextContent(oldIdentifier);
+				Result result2 = new StreamResult(new File(filePath));
+				Source source2 = new DOMSource(doc);
+				Transformer transformer2;
+				try {
+					transformer2 = TransformerFactory.newInstance().newTransformer();
+					transformer2.transform(source2, result2);
+					rollback = true;
+				} catch (Exception e) {
+					LOG.error("undo-overwrite: " + e.getMessage());
+				}
+			}
+
+			if (oldFile.exists()) {
+				oldFile.renameTo(file);
+			}
+			if (rollback) {
+				return STATUS_ERROR;
+			}
+		}
+		return "";
     }
+
 }

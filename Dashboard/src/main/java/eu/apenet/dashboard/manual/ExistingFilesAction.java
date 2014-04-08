@@ -40,7 +40,8 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 	private Map<String, String> existingFilesChoiceOverwriteCancelEADID; //This list contains all the possible actions a user can do when the EADID is repeated and he doesn't want to add a new one.
 	private Map<String, String> existingEADIDAnswersChoice; //This list contains all the possible answer that the action of saving the change of EADID has returned.
     private String[] filesTypeAnswers; //This array contains all the answers typed by the user regarding to the decision about if a file is a Finding Aid or a Holdings Guide
-    private String[] existingChangeEADIDAnswers; //This array contains all the answers typed by the user regarding to the decision about if a file is a Finding Aid or a Holdings Guide
+    private String[] existingChangeEADIDAnswersRepeated; //This array contains all the answers typed by the user regarding to the decision about if a file is a Finding Aid or a Holdings Guide
+    private String[] existingChangeEADIDAnswersEmpty; //This array contains all the answers typed by the user regarding to the decision about if a file is a Finding Aid or a Holdings Guide
     private String[] existingCancelOverwriteEADIDAnswers;
     private String[] existingFilesAnswers; //This array contains all the answers typed by the user regarding to the actions to carry out with the existing files
     private String additionalError;
@@ -50,7 +51,7 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
     private final static String ADD = "Add EADID";
     private final static String OK = "OK";//
     private final static String KO = "KO";//
-    
+
 	private String eadid;
     private String neweadid;
     private String[] arrayneweadid;
@@ -155,12 +156,20 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 		this.existingCancelOverwriteEADIDAnswers = existingCancelOverwriteEADIDAnswers;
 	}
 
-	public String[] getExistingChangeEADIDAnswers() {
-		return existingChangeEADIDAnswers;
+	public String[] getExistingChangeEADIDAnswersRepeated() {
+		return this.existingChangeEADIDAnswersRepeated;
 	}
 
-	public void setExistingChangeEADIDAnswers(String[] existingChangeEADIDAnswers) {
-		this.existingChangeEADIDAnswers = existingChangeEADIDAnswers;
+	public void setExistingChangeEADIDAnswersRepeated(String[] existingChangeEADIDAnswersRepeated) {
+		this.existingChangeEADIDAnswersRepeated = existingChangeEADIDAnswersRepeated;
+	}
+
+	public String[] getExistingChangeEADIDAnswersEmpty() {
+		return this.existingChangeEADIDAnswersEmpty;
+	}
+
+	public void setExistingChangeEADIDAnswersEmpty(String[] existingChangeEADIDAnswersEmpty) {
+		this.existingChangeEADIDAnswersEmpty = existingChangeEADIDAnswersEmpty;
 	}
 
 	public List<FileUnit> getExistingNewXmlFilesUploaded() {
@@ -298,7 +307,7 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 				//this.setExistingChangeEADIDAnswers(initial);
 				//System.out.print(this.existingChangeEADIDAnswers[i].toString());
 			}
-			if (checker.overwriteFile(this.existingFiles.get(i), this.existingFilesAnswers[i], this.existingChangeEADIDAnswers[i], this.existingCancelOverwriteEADIDAnswers[i], typeAnswer, arrayneweadid[i]).equals("error")) {
+			if (checker.overwriteFile(this.existingFiles.get(i), this.existingFilesAnswers[i], this.existingChangeEADIDAnswersRepeated[i], this.existingCancelOverwriteEADIDAnswers[i], typeAnswer, arrayneweadid[i]).equals("error")) {
 				//The file has not been correctly uploaded
 				this.filesNotUploaded.add(this.existingFiles.get(i));
 			}
@@ -325,7 +334,7 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 			typeAnswer = filesWithEmptyEadid.get(j).getEadType();
 
 			//existingChangeEADIDAnswers contains the result of changing the EADID. OK or KO
-			if (checker.overwriteFile(this.filesWithEmptyEadid.get(j), this.existingFilesAnswers[k], this.existingChangeEADIDAnswers[k], this.existingCancelOverwriteEADIDAnswers[k], typeAnswer, arrayneweadid[k]).equals("error")) {
+			if (checker.overwriteFile(this.filesWithEmptyEadid.get(j), this.existingFilesAnswers[k], this.existingChangeEADIDAnswersEmpty[j], this.existingCancelOverwriteEADIDAnswers[k], typeAnswer, arrayneweadid[k]).equals("error")) {
 				//The file has not been correctly uploaded
 				this.filesNotUploaded.add(this.filesWithEmptyEadid.get(j));
 			}
@@ -354,7 +363,7 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 			//existingChangeEADIDAnswers contains the result of changing the EADID. OK or KO
 			String typeAnswer = null;
 			typeAnswer = existingFiles.get(i).getEadType();
-			if (checker.overwriteFile(this.existingFiles.get(i), "Cancel", this.existingChangeEADIDAnswers[i], this.existingCancelOverwriteEADIDAnswers[i], typeAnswer, arrayneweadid[i]).equals("error")) {
+			if (checker.overwriteFile(this.existingFiles.get(i), "Cancel", this.existingChangeEADIDAnswersRepeated[i], this.existingCancelOverwriteEADIDAnswers[i], typeAnswer, arrayneweadid[i]).equals("error")) {
 				//The file has not been correctly uploaded
 				this.filesNotUploaded.add(this.existingFiles.get(i));
 			}
@@ -380,7 +389,7 @@ public class ExistingFilesAction extends AbstractInstitutionAction {
 			typeAnswer = filesWithEmptyEadid.get(j).getEadType();
 			
 			//existingChangeEADIDAnswers contains the result of changing the EADID. OK or KO
-			if (checker.overwriteFile(this.filesWithEmptyEadid.get(j), this.existingFilesAnswers[k], this.existingChangeEADIDAnswers[k], this.existingCancelOverwriteEADIDAnswers[k], typeAnswer, arrayneweadid[k]).equals("error")) {
+			if (checker.overwriteFile(this.filesWithEmptyEadid.get(j), this.existingFilesAnswers[k], this.existingChangeEADIDAnswersEmpty[j], this.existingCancelOverwriteEADIDAnswers[k], typeAnswer, arrayneweadid[k]).equals("error")) {
 				//The file has not been correctly uploaded
 				this.filesNotUploaded.add(this.filesWithEmptyEadid.get(j));
 			}
