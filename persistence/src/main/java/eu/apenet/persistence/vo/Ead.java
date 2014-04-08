@@ -2,6 +2,8 @@ package eu.apenet.persistence.vo;
 
 import java.util.Set;
 
+import eu.archivesportaleurope.util.ApeUtil;
+
 public abstract class Ead  extends AbstractContent{
 	/**
 	 * 
