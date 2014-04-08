@@ -32,7 +32,6 @@ public class ConsoleHarvester {
 	private static final String SAVE_FULL_OAI_PMH_RESPONSES = "Save full OAI-PMH responses";
 	private static final String HARVEST_METHOD_LIST_RECORDS = "Harvest by verb ListRecords";
 	private static final String HARVEST_METHOD_LIST_IDENTIFIERS_GETRECORD = "Harvest by verb ListIdentifiers/GetRecord (fail safe)";
-	
 	private Logger logger;
 	private File dataDir;
 	private File outputDir;
@@ -44,6 +43,9 @@ public class ConsoleHarvester {
 	private boolean getIdentifiersHarvestMethod=false;
 	private boolean debug = false;
 	private boolean silent = false;
+	private String proxyServer;
+	private String proxyUsername;
+	private String proxyPassword;
 	private Properties properties;
 
 	public ConsoleHarvester(File dataDir, Properties properties) {
@@ -115,12 +117,37 @@ public class ConsoleHarvester {
 		logger.info("===============================================");
 		OaiPmhHttpClient oaiPmhHttpClient = null;
 		try {
-			oaiPmhHttpClient = new OaiPmhHttpClient();
-			if (properties == null) {
+			if (properties != null){
+				proxyServer = properties.getProperty("proxy.server");
+				proxyUsername = properties.getProperty("proxy.username");
+				proxyPassword = properties.getProperty("proxy.password");
+				baseUrl = properties.getProperty("oai-pmh.url");
+				metadataFormat = properties.getProperty("metadata-format");
+				set = properties.getProperty("set");
+				fromDate = properties.getProperty("from");
+				toDate = properties.getProperty("to");
+				debug = TRUE.equals(properties.getProperty("debug"));
+				silent = TRUE.equals(properties.getProperty("silent"));
+				getIdentifiersHarvestMethod = TRUE.equals(properties.getProperty("harvest-method-getidentifiers"));
+			}
+			if (StringUtils.isNotBlank(proxyServer)){
+				oaiPmhHttpClient = new OaiPmhHttpClient(proxyServer, proxyUsername, proxyPassword);
+			}else {
+				oaiPmhHttpClient = new OaiPmhHttpClient();
+			}
+			if (!silent) {
 				while (metadataFormat == null) {
-					baseUrl = getInput("What is the url of the OAI-PMH server?");
+					baseUrl = getInput("What is the url of the OAI-PMH server?", baseUrl);
 					if (StringUtils.isNotBlank(baseUrl)){
 						baseUrl = baseUrl.trim();
+					}
+					proxyServer = getInputEmptyAllowed("Specify proxy server or leave empty?(e.g. http://proxyserver:8080)", proxyServer);
+					if (StringUtils.isNotBlank(proxyServer)){
+						proxyUsername = getInputEmptyAllowed("Specify username or leave empty?(DOMAIN/username or username)", proxyUsername);
+						proxyPassword = getPasswordEmptyAllowed("Specify password or leave empty?", proxyPassword);
+						oaiPmhHttpClient = new OaiPmhHttpClient(proxyServer, proxyUsername, proxyPassword);
+					}else {
+						oaiPmhHttpClient = new OaiPmhHttpClient();
 					}
 					try {
 						List<OaiPmhElement> metadataFormats = RetrieveOaiPmhInformation.retrieveMetadataFormats(baseUrl, oaiPmhHttpClient);
@@ -131,8 +158,8 @@ public class ConsoleHarvester {
 						}
 						List<OaiPmhElement> setsInRepository = RetrieveOaiPmhInformation.retrieveSets(baseUrl,oaiPmhHttpClient);
 						set = getInputFromOaiPmhElements("Which set do you want to use?'", setsInRepository, true);
-						fromDate = getInputEmptyAllowed("Specify a FROM date or leave empty?(e.g. 2010-12-23)");
-						toDate = getInputEmptyAllowed("Specify a TO date or leave empty?(e.g. 2010-12-23)");
+						fromDate = getInputEmptyAllowed("Specify a FROM date or leave empty?(e.g. 2010-12-23)", fromDate);
+						toDate = getInputEmptyAllowed("Specify a TO date or leave empty?(e.g. 2010-12-23)", toDate);
 						List<String> harvesterMethods = new ArrayList<String>();
 						harvesterMethods.add(HARVEST_METHOD_LIST_IDENTIFIERS_GETRECORD);
 						harvesterMethods.add(HARVEST_METHOD_LIST_RECORDS);
@@ -145,24 +172,27 @@ public class ConsoleHarvester {
 						debug = SAVE_FULL_OAI_PMH_RESPONSES.equals(saveMethod);
 						
 
-					} catch (Exception e) {
-						logger.error("Sorry, the URL is not a correct repository URL or the repository does not contain any metadata formats...");
+					}catch (HarvesterConnectionException e) {
+						baseUrl = null;
+						proxyServer = null;
+						logger.error("Unable to connect to the URL: " + e.getCause().getMessage(),e);
+					}catch (Exception e) {
+						baseUrl = null;
+						proxyServer = null;
+						logger.error("Sorry, the URL is not a correct repository URL or the repository does not contain any metadata formats...", e);
 					}
 				}
-			} else {
-				baseUrl = properties.getProperty("oai-pmh.url");
-				metadataFormat = properties.getProperty("metadata-format");
-				set = properties.getProperty("set");
-				fromDate = properties.getProperty("from");
-				toDate = properties.getProperty("to");
-				debug = TRUE.equals(properties.getProperty("debug"));
-				silent = TRUE.equals(properties.getProperty("silent"));
-				getIdentifiersHarvestMethod = TRUE.equals(properties.getProperty("harvest-method-getidentifiers"));
-
 			}
 			logger.info("===============================================");
 			logger.info("Summary of OAI-PMH Harvester parameters");
 			logger.info("===============================================");
+			if (StringUtils.isNotBlank(proxyServer)){
+				if (StringUtils.isNotBlank(proxyUsername) && StringUtils.isNotBlank(proxyPassword)){
+					logger.info("Proxy server with authentication:\t\t" + proxyServer);
+				}else {
+					logger.info("Proxy server:\t\t" + proxyServer);
+				}
+			}
 			logger.info("Url of the OAI-PMH server:\t\t" + baseUrl);
 			logger.info("Metadata format:\t\t\t" + metadataFormat);
 			logger.info("Set:\t\t\t\t\t" + set);
@@ -343,8 +373,11 @@ public class ConsoleHarvester {
 		return result;
 
 	}
-	public String getInputEmptyAllowed(String title) {
-
+	public String getInputEmptyAllowed(String title, String defaultValue) {
+		if (defaultValue != null){
+			System.out.println(title + "[" + defaultValue + "]");
+			return defaultValue;
+		}
 		String result = null;
 		System.out.println(title);
 		try {
@@ -363,8 +396,33 @@ public class ConsoleHarvester {
 
 	}
 
-	public String getInput(String title) {
+	public String getPasswordEmptyAllowed(String title, String defaultValue) {
+		if (defaultValue != null){
+			System.out.println(title + "[************]");
+			return defaultValue;
+		}
+		String result = null;
+		System.out.println(title);
+		try {
+			BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
+			String input = bufferRead.readLine();
+			if (StringUtils.isNotBlank(input)) {
+				result = input;
 
+			}
+
+		} catch (Exception e) {
+			logger.error("Unable to read input: " + e.getMessage(), e);
+		}
+
+		return result;
+
+	}
+	public String getInput(String title, String defaultValue) {
+		if (StringUtils.isNotBlank(defaultValue)){
+			System.out.println(title + "[" + defaultValue + "]");
+			return defaultValue;
+		}
 		String result = null;
 		while (result == null) {
 			System.out.println(title);
@@ -373,7 +431,6 @@ public class ConsoleHarvester {
 				String input = bufferRead.readLine();
 				if (StringUtils.isNotBlank(input)) {
 					result = input;
-
 				}
 
 			} catch (Exception e) {
