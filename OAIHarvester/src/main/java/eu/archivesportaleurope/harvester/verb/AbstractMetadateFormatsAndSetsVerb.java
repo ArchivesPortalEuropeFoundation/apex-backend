@@ -2,9 +2,6 @@ package eu.archivesportaleurope.harvester.verb;
 
 import java.io.InputStream;
 
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
-
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.log4j.Logger;
 
@@ -13,6 +10,7 @@ import eu.archivesportaleurope.harvester.parser.other.OaiPmhMemoryParser;
 import eu.archivesportaleurope.harvester.parser.other.metadata.OaiPmhMetadataFormatParser;
 import eu.archivesportaleurope.harvester.parser.other.set.OaiPmhSetParser;
 import eu.archivesportaleurope.harvester.util.OaiPmhHttpClient;
+import eu.archivesportaleurope.harvester.util.StreamUtil;
 
 /**
  * User: Yoann Moranville
@@ -44,10 +42,7 @@ public abstract class AbstractMetadateFormatsAndSetsVerb {
 	        } else {
 	            oaiPmhMemoryParser = new OaiPmhSetParser();
 	        }
-
-	        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-	        XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(response, "UTF-8");
-	        OaiPmhElements results=  oaiPmhMemoryParser.parse(xmlStreamReader);
+	        OaiPmhElements results=  oaiPmhMemoryParser.parse(StreamUtil.getXMLStreamReader(response));
 	        return results;
 		}finally {
 			closeableHttpResponse.close();
