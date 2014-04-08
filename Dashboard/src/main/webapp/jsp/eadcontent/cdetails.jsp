@@ -42,7 +42,7 @@
 			title="<s:text name="label.print" />" />
 	</div>
 	<div id="eadDisplayPortlet">
-		<dashboard:ead type="cdetails" xml="${c.xml}" secondDisplayUrl="${pageContext.request.contextPath}/preview.action?xmlTypeId=0&aiId=${aiId}" aiId="${aiId}" />
+		<dashboard:ead type="cdetails" xml="${c.xml}" secondDisplayUrl="${pageContext.request.contextPath}/preview.action?xmlTypeId=0&aiId=${c.eadContent.ead.aiId}" aiId="${c.eadContent.ead.aiId}" />
 		<c:if test="${not c.leaf}">
 		<div id="children" class="box">
 			<div class="boxtitle">
