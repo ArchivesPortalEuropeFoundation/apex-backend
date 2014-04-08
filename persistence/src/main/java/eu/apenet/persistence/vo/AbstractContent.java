@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+import eu.archivesportaleurope.util.ApeUtil;
+
 public abstract class AbstractContent  implements Serializable {
 
 	/**
@@ -47,4 +49,7 @@ public abstract class AbstractContent  implements Serializable {
     }
     public abstract Set<Warnings> getWarningses();
     public abstract void setWarningses(Set<Warnings> warningses);
+	public String getEncodedIdentifier(){
+		return ApeUtil.encodeSpecialCharacters(getIdentifier());
+	}
 }

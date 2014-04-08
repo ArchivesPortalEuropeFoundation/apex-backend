@@ -72,8 +72,5 @@ public abstract class Ead  extends AbstractContent{
 		}
 		
 	}
-	public String getEncodedEadid(){
-		return ApeUtil.encodeSpecialCharacters(getEadid());
-	}
     
 }
