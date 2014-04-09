@@ -52,78 +52,142 @@ function clickExitAction(){
 	location.href="removeInvalidEAG2012.action";
 }
 
+function navigateToCurrentRepoTab(href){
+	var errorFieldText = $(".fieldRequired");
+	var parent = errorFieldText.parent();
+	var counter = 10;
+	while(parent.prop("tagName").toUpperCase()!='TABLE' && counter>0){
+		parent = parent.parent();
+		counter--;
+	}
+	var id = parent.attr("id");
+	var repoTab = 0;
+	if(id.lastIndexOf("_")+1){
+		repoTab = id.substring(id.lastIndexOf("_")+1);
+	}
+	if(repoTab>0){
+		$("#tab_yourInstitutionTable_"+repoTab).trigger('click');
+		$("#tab_yourInstitutionTable_"+repoTab+" a[href='"+href+"']").trigger('click');
+	}else{
+		$("#tab_yourInstitutionTable_1 a[href='"+href+"']").trigger('click');
+	}
+}
+
 function clickSaveAction(form, text1, text2, error1, error2, error3, error4, error5, error6, error7, error8, error9, message, institutionName) {
-
-	// Check if almost one of the authorized name of the institution is the same as the institution's name.
-	var nameOfInstitution = checkNameOfInstitution(error8, institutionName);
-	if (!nameOfInstitution) {
-		return;
+	//first check in which tab are the user, validate current tab and next the others
+	var selectedHref = "";
+	var tabsToCheck = new Array();
+	$(".eag2012currenttab").each(function(){
+		var href = $(this).attr("href");
+		if(href.match("tab-")){
+			selectedHref = tabsToCheck.push(href);
+		}
+	});
+	tabsToCheck.push(selectedHref);
+	$("li[id^='tab-'] a").each(function(){
+		var href = $(this).attr("href");
+		if(href.match("tab-")){
+			tabsToCheck.push(href);
+		}
+	});
+	var jsonDataYourInstitution,jsonDataIdentity,jsonDataContact,jsonDataAccessAndServices,jsonDataDescription,jsonDataControl;
+	jsonDataYourInstitution = jsonDataIdentity = jsonDataContact = jsonDataAccessAndServices = jsonDataDescription = jsonDataControl = "";
+	var exit = false;
+	for(var i=0;!exit && i<tabsToCheck.length;i++){
+		var href = tabsToCheck[i];
+		switch(href){
+			case "#tab-yourInstitution":
+				// Check fill mandatory fields in tab "your institution".
+				var jsonDataYourInstitution = clickYourInstitutionAction(text1,message);
+				if (!jsonDataYourInstitution) {
+					alert(error1);
+					$("#tab_yourInstitutionTable_1").trigger('click');
+					exit = true;
+				}
+				break;
+			case "#tab-identity":
+				// Check fill mandatory fields in tab "identity".
+				var jsonDataIdentity = clickIdentityAction(text1);
+				if (!jsonDataIdentity) {
+					alert(error2);
+					$("#tab_yourInstitutionTable_1").trigger('click');
+					$("#tab_yourInstitutionTable_1 a[href='#tab-identity']").trigger('click');
+					exit = true;
+				}
+				break;
+			case "#tab-contact":
+				// Check fill mandatory fields in tab "contact".
+				var jsonDataContact = checkAllContactTabs(text1,message);
+				if (!jsonDataContact) {
+					alert(error3);
+					navigateToCurrentRepoTab(href);
+					exit = true;
+				}
+				if (jsonDataContact===true){
+					  alert(error9);
+					  navigateToCurrentRepoTab(href);
+					  exit = true;
+				}
+				break;
+			case "#tab-accessAndServices":
+				// Check fill mandatory fields in tab "access and services".
+				var jsonDataAccessAndServices = checkAllAccessAndServicesTabs(text1,message);
+				if (!jsonDataAccessAndServices) {
+					alert(error4);
+					navigateToCurrentRepoTab(href);
+					exit = true;
+				}
+				break;
+			case "#tab-description":
+				// Check fill mandatory fields in tab "description".
+				var jsonDataDescription = checkAllDescriptionTabs(text1);
+				if (!jsonDataDescription) {
+					alert(error5);
+					navigateToCurrentRepoTab(href);
+					exit = true;
+				}
+				break;
+			case "#tab-control":
+				// Check fill mandatory fields in tab "control".
+				var jsonDataControl = clickControlAction(text1);
+				if(!jsonDataControl){
+					alert(error6);
+					$("#tab_yourInstitutionTable_1").trigger('click');
+					$("#tab_yourInstitutionTable_1 a[href='#tab-control']").trigger('click');
+					exit = true;
+				}
+				break;
+			case "#tab-relations":
+				// Check fill mandatory fields in tab "relations".
+				var jsonDataRelations = clickRelationsAction(text1,message);
+				if (!jsonDataRelations) {
+					alert(error7);
+					$("#tab_yourInstitutionTable_1").trigger('click');
+					$("#tab_yourInstitutionTable_1 a[href='#tab-relations']").trigger('click');
+					exit = true;
+				}
+				break;
+		}
 	}
+	if(!exit){
+		// Check if almost one of the authorized name of the institution is the same as the institution's name.
+		var nameOfInstitution = checkNameOfInstitution(error8, institutionName);
+		if (!nameOfInstitution) {
+			return;
+		}
 
-	// Check fill mandatory fields in tab "your institution".
-	var jsonDataYourInstitution =  clickYourInstitutionAction(text1,message);
-	if (!jsonDataYourInstitution) {
-		alert(error1);
-		return;
-	}
+		// Create final json object.
+		var jsonData =  "{'yourInstitution':" + jsonDataYourInstitution + "," +
+		"'identity':" + jsonDataIdentity + "," +
+		"'contact':" + jsonDataContact + "," +
+		"'accessAndServices':" + jsonDataAccessAndServices + "," +
+		"'description':" + jsonDataDescription + "," +
+		"'control':" + jsonDataControl + "," +
+		"'relations':" + jsonDataRelations + "}";
 
-	// Check fill mandatory fields in tab "identity".
-	var jsonDataIdentity =  clickIdentityAction(text1);
-	if (!jsonDataIdentity) {
-		alert(error2);
-		return;
+		$('#webformeag2012').append('<textarea name="form" style="display: none;">'+jsonData+'</textarea>');
+		$('#webformeag2012').submit();
 	}
-
-	// Check fill mandatory fields in tab "contact".
-	var jsonDataContact =  checkAllContactTabs(text1,message);
-	if (!jsonDataContact) {
-		alert(error3);
-		return;
-	}
-	if (jsonDataContact===true){
-		  alert(error9);
-		  return;
-	}
-	
-	// Check fill mandatory fields in tab "access and services".
-	var jsonDataAccessAndServices =  checkAllAccessAndServicesTabs(text1,message);
-	if (!jsonDataAccessAndServices) {
-		alert(error4);
-		return;
-	}
-
-	// Check fill mandatory fields in tab "description".
-	var jsonDataDescription =  checkAllDescriptionTabs(text1);
-	if (!jsonDataDescription) {
-		alert(error5);
-		return;
-	}
-
-	// Check fill mandatory fields in tab "control".
-	var jsonDataControl =  clickControlAction(text1);
-	if (!jsonDataControl) {
-		alert(error6);
-		return;
-	}
-
-	// Check fill mandatory fields in tab "relations".
-	var jsonDataRelations =  clickRelationsAction(text1,message);
-	if (!jsonDataRelations) {
-		alert(error7);
-		return;
-	}
-
-	// Create final json object.
-	var jsonData =  "{'yourInstitution':" + jsonDataYourInstitution + "," +
-	"'identity':" + jsonDataIdentity + "," +
-	"'contact':" + jsonDataContact + "," +
-	"'accessAndServices':" + jsonDataAccessAndServices + "," +
-	"'description':" + jsonDataDescription + "," +
-	"'control':" + jsonDataControl + "," +
-	"'relations':" + jsonDataRelations + "}";
-
-	$('#webformeag2012').append('<textarea name="form" style="display: none;">'+jsonData+'</textarea>');
-	$('#webformeag2012').submit();
 }
 
 function deleteChecks() {
@@ -156,8 +220,7 @@ var clickYourInstitutionAction = function(text1,messageRightWeb){
 	deleteChecks();
 
 	// Mandatory elements
-	var yiMandatoryElements = new Array("textYIInstitutionCountryCode", "textYIIdentifierOfTheInstitution",
-	                           "textYINameOfTheInstitution");
+	var yiMandatoryElements = new Array("textYIInstitutionCountryCode","textYIIdentifierOfTheInstitution","textYINameOfTheInstitution");
 
 	var jsonData = "{";
 	// Common part.
@@ -749,43 +812,49 @@ function checkContactTab(currentTab, text1, messageWebpage) {
 		jsonData += "'"+visitorsAddress[j]+"':{";
 		//input type text
 		$("table#contactTable" + currentTab + " table#"+visitorsAddress[j]+" input[type='text']").each(function(){
-			if(jsonData.charAt(jsonData.length-1)!=':'
-				&& jsonData.charAt(jsonData.length-1)!='{'){
-				if(jsonData.substring(jsonData.length-1)!=','){
-					jsonData += ",";
+//			if(!$(this).is(":disabled") && !$(this).prop("disabled")){
+				if(jsonData.charAt(jsonData.length-1)!=':'
+					&& jsonData.charAt(jsonData.length-1)!='{'){
+					if(jsonData.substring(jsonData.length-1)!=','){
+						jsonData += ",";
+					}
 				}
-			}
-			if ($(this).parent().parent().parent().parent().parent().parent().parent().parent().parent().attr("id").indexOf("divTempContainter") == -1) {
-				jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
-			}
+				if ($(this).parent().parent().parent().parent().parent().parent().parent().parent().parent().attr("id").indexOf("divTempContainter") == -1) {
+					jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
+				}
 
-			// Check fill mandatory fields.
-			if ($.trim($(this).attr("value")) != '' && j == 0) {
-				var position = $.inArray($(this).attr("id"),contactVAMandatoryElements);
-				if (position != -1) {
-					contactVAMandatoryElements.splice(position, 1);
+				// Check fill mandatory fields.
+				if ($.trim($(this).attr("value")) != '' && j == 0) {
+					var position = $.inArray($(this).attr("id"),contactVAMandatoryElements);
+					if (position != -1) {
+						contactVAMandatoryElements.splice(position, 1);
+					}
 				}
-			}
+//			}
 		});
 		//textarea
 		$("table#contactTable" + currentTab + " table#"+visitorsAddress[j]+" textarea").each(function(){
-			if(jsonData.charAt(jsonData.length-1)!=':'
-				&& jsonData.charAt(jsonData.length-1)!='{'){
-				if(jsonData.substring(jsonData.length-1)!=','){
-					jsonData += ",";
+			if(($(this).is(":disabled") || $(this).prop("disabled")) && $.inArray($(this).attr("id"),contactVAMandatoryElements)){
+				contactVAMandatoryElements.splice(position, $.inArray($(this).attr("id"),contactVAMandatoryElements));
+			}
+				if(jsonData.charAt(jsonData.length-1)!=':'
+					&& jsonData.charAt(jsonData.length-1)!='{'){
+					if(jsonData.substring(jsonData.length-1)!=','){
+						jsonData += ",";
+					}
 				}
-			}
-			if ($(this).parent().parent().parent().parent().parent().parent().parent().parent().parent().attr("id").indexOf("divTempContainter") == -1) {
-				jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
-			}
+				if ($(this).parent().parent().parent().parent().parent().parent().parent().parent().parent().attr("id").indexOf("divTempContainter") == -1) {
+					jsonData += "'"+$(this).attr("id")+"' : '"+$.trim(escapeApostrophe($(this)))+"'";
+				}
 
-			// Check fill mandatory fields.
-			if ($.trim($(this).attr("value")) != '' && j == 0) {
-				var position = $.inArray($(this).attr("id"),contactVAMandatoryElements);
-				if (position != -1) {
-					contactVAMandatoryElements.splice(position, 1);
+				// Check fill mandatory fields.
+				if ($.trim($(this).attr("value")) != '' && j == 0) {
+					var position = $.inArray($(this).attr("id"),contactVAMandatoryElements);
+					if (position != -1) {
+						contactVAMandatoryElements.splice(position, 1);
+					}
 				}
-			}
+//			}
 		});
 		//select options selected
 		$("table#contactTable" + currentTab + " table#"+visitorsAddress[j]+" select").each(function(){
