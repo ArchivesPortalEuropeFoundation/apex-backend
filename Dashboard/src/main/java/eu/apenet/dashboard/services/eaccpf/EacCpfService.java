@@ -302,6 +302,25 @@ public class EacCpfService {
                     if (queueAction.isPublishAction()) {
                         new PublishTask().execute(eac, preferences);
                     }
+                    if (queueAction.isRePublishAction()) {
+                        new UnpublishTask().execute(eac, preferences);
+                        new PublishTask().execute(eac, preferences);
+                    }
+//                    if (queueAction.isConvertToEseEdmAction()) {
+//                        new ConvertToEseEdmTask().execute(eac, preferences);
+//                    }
+                    if (queueAction.isUnpublishAction()) {
+                        new UnpublishTask().execute(eac, preferences);
+                    }
+//                    if (queueAction.isDeleteFromEuropeanaAction()) {
+//                        new DeleteFromEuropeanaTask().execute(eac, preferences);
+//                    }
+//                    if (queueAction.isDeleteEseEdmAction()) {
+//                        new DeleteEseEdmTask().execute(eac, preferences);
+//                    }
+//                    if (queueAction.isDeliverToEuropeanaAction()) {
+//                        new DeliverToEuropeanaTask().execute(eac, preferences);
+//                    }
                     eac.setQueuing(QueuingState.NO);
                     eacDAO.store(eac);
                     queueItemDAO.delete(queueItem);

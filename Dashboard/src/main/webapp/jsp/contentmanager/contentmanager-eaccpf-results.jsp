@@ -172,18 +172,18 @@
                 </thead>
                 <c:forEach var="eacCpfResult" items="${results.eacCpfResults}">
                     <tr class="${eacCpfResult.cssClass}">
-                        <td id="tdLabel_${eadResult.id}"><input class="checkboxSave" type="checkbox" name="check" id="check_${eacCpfResult.id}"
+                        <td id="tdLabel_${eacCpfResult.id}"><input class="checkboxSave" type="checkbox" name="check" id="check_${eacCpfResult.id}"
                                    value="${eacCpfResult.id}" onclick="enable_features"/></td>
-                        <td id="tdId_${eadResult.id}" class="nocenter">${eacCpfResult.identifier}</td>
-                        <td id="tdName_${eadResult.id}" class="nocenter"><span class="title">${eacCpfResult.title}</span></td>
-                        <td id="tdDate_${eadResult.id}">${eacCpfResult.date}</td>
-                        <td id="tdConverted_${eadResult.id}" class="${eacCpfResult.convertedCssClass}"><apenet:resource>${eacCpfResult.convertedText}</apenet:resource></td>
-                        <td id="tdValidated_${eadResult.id}" class="${eacCpfResult.validatedCssClass}"><apenet:resource>${eacCpfResult.validatedText}</apenet:resource></td>
-                        <td id="tdPublished_${eadResult.id}" class="${eacCpfResult.indexedCssClass}"><apenet:resource>${eacCpfResult.indexedText}</apenet:resource></td>
-                        <td id="tdRelations_${eadResult.id}"><apenet:resource>${eacCpfResult.cpfRelations} / ${eacCpfResult.resourceRelations} / ${eacCpfResult.functionRelations}</apenet:resource></td>
-                        <td id="tdEdm_${eadResult.id}" class="${eacCpfResult.eseEdmCssClass}"><apenet:resource>${eacCpfResult.eseEdmText}</apenet:resource>
-                        <td id="tdEuropeana_${eadResult.id}" class="${eacCpfResult.europeanaCssClass}"><apenet:resource>${eacCpfResult.europeanaText}</apenet:resource></td>
-                        <td id="tdQueue_${eadResult.id}" class="${eacCpfResult.queueCssClass}">
+                        <td id="tdId_${eacCpfResult.id}" class="nocenter">${eacCpfResult.identifier}</td>
+                        <td id="tdName_${eacCpfResult.id}" class="nocenter"><span class="title">${eacCpfResult.title}</span></td>
+                        <td id="tdDate_${eacCpfResult.id}">${eacCpfResult.date}</td>
+                        <td id="tdConverted_${eacCpfResult.id}" class="${eacCpfResult.convertedCssClass}"><apenet:resource>${eacCpfResult.convertedText}</apenet:resource></td>
+                        <td id="tdValidated_${eacCpfResult.id}" class="${eacCpfResult.validatedCssClass}"><apenet:resource>${eacCpfResult.validatedText}</apenet:resource></td>
+                        <td id="tdPublished_${eacCpfResult.id}" class="${eacCpfResult.indexedCssClass}"><apenet:resource>${eacCpfResult.indexedText}</apenet:resource></td>
+                        <td id="tdRelations_${eacCpfResult.id}"><apenet:resource>${eacCpfResult.cpfRelations} / ${eacCpfResult.resourceRelations} / ${eacCpfResult.functionRelations}</apenet:resource></td>
+                        <td id="tdEdm_${eacCpfResult.id}" class="${eacCpfResult.eseEdmCssClass}"><apenet:resource>${eacCpfResult.eseEdmText}</apenet:resource>
+                        <td id="tdEuropeana_${eacCpfResult.id}" class="${eacCpfResult.europeanaCssClass}"><apenet:resource>${eacCpfResult.europeanaText}</apenet:resource></td>
+                        <td id="tdQueue_${eacCpfResult.id}" class="${eacCpfResult.queueCssClass}">
                             <c:if test="${eacCpfResult.queueReady or eacCpfResult.queueProcessing or eacCpfResult.queueError}">
                                 <c:if test="${eacCpfResult.queueError}">
                                     <s:text name="content.message.error" />:
@@ -192,7 +192,7 @@
                             </c:if>
                         </td>
 
-                        <td id="tdActions_${eadResult.id}" class="actions">
+                        <td id="tdActions_${eacCpfResult.id}" class="actions">
                             <c:choose>
                                 <c:when test="${eacCpfResult.queueReady}">
                                     <select class="selectedAction" name="selectedAction">
@@ -232,7 +232,7 @@
                                             </option>
                                         </c:if>
                                         <c:if test="${eacCpfResult.editable}">
-                                            <option value="_blank|editEad.action">
+                                            <option value="_blank|editEacCpf.action">
                                                 <s:text name="label.edit" />
                                             </option>
                                         </c:if>

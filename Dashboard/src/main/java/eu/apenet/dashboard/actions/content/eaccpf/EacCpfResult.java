@@ -142,4 +142,9 @@ public class EacCpfResult extends TypeResult {
         }
         return false;
     }
+
+    @Override
+    public boolean isEditable() {
+        return isValidated() && !isPublished() && !(convertedToEseEdm || deliveredToEuropeana);
+    }
 }
