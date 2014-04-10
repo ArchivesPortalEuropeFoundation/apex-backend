@@ -70,22 +70,6 @@ public class ArchivalLandscapeUtils {
 	
 	private static Logger log = Logger.getLogger(ArchivalLandscapeUtils.class);
 	
-	public static boolean insertUpdateEagWithArchivalLandscapeName(ArchivalInstitution archivalLandscape){
-		boolean updated = false;
-		if(archivalLandscape!=null && archivalLandscape.getEagPath()!=null && !archivalLandscape.getEagPath().isEmpty()){
-			String path = APEnetUtilities.getConfig().getRepoDirPath()+archivalLandscape.getEagPath();
-			File eagFile = new File(path);
-			if(eagFile.exists()){
-				try {
-					updated = Eag2012.checkAndFixAutform(archivalLandscape,path);
-				} catch (Exception e) {
-					log.error("Archival Landscape change name exception",e);
-				} 
-			}
-		}
-		return updated;
-	}
-	
 	protected static boolean checkIfTwoInstitutionsHasTheSameParents(ArchivalInstitution ingestedInstitution,ArchivalInstitution archivalInstitution) {
 		boolean state = false;
 		if(ingestedInstitution!=null && archivalInstitution!=null 

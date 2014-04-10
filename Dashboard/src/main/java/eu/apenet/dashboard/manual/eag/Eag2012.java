@@ -2192,42 +2192,6 @@ public class Eag2012 {
         return changed;
 	}
 	
-	public static boolean checkAndFixAutform(ArchivalInstitution archivalInstitution,String fullFilePath) throws TransformerException, ParserConfigurationException, SAXException, IOException{
-		boolean changed = false;
-		if(archivalInstitution!=null && fullFilePath!=null){
-			APEnetEAGDashboard eag = new APEnetEAGDashboard(archivalInstitution.getAiId(),fullFilePath);
-	        eag.setEagPath(fullFilePath);
-			DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
-			dbfac.setNamespaceAware(true);
-	        DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
-			Document tempDoc = docBuilder.parse(fullFilePath);
-			NodeList autformNodes = tempDoc.getElementsByTagName("autform");
-			if(autformNodes!=null){
-				for(int i=0;i<autformNodes.getLength() && !changed;i++){ //must only be one but...
-					Element currentNode = (Element) autformNodes.item(i);
-					currentNode.setTextContent(archivalInstitution.getAiname());
-					changed = true;
-				}
-			}
-			if(!changed){ //structure: //eag/archguide/identity/autform
-				//not found, so needs to be created. 
-				//It could happens in production with old eag02 bad formated by a bad conversion
-				NodeList identities = tempDoc.getElementsByTagName("identity");
-				if(identities!=null && identities.getLength()>0){
-					Node node = tempDoc.createElement("autform");
-					node.setNodeValue(archivalInstitution.getAiname());
-					
-				}
-			}
-			if(changed){
-				TransformerFactory tf = TransformerFactory.newInstance(); // Save changes
-				Transformer transformer = tf.newTransformer();
-				transformer.transform(new DOMSource(tempDoc), new StreamResult(new File(fullFilePath)));
-			}
-		}
-        return changed;
-	}
-	
 	/**
 	 * Generates a ISO-code based on internal archivalInstitutionId. 
 	 * This ISO-code should be unique for each institution.

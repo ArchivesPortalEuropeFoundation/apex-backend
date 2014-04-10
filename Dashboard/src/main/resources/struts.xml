@@ -460,6 +460,7 @@
 		<action name="ALReport" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeManager" method="reportAction">
 			<result name="input" type="tiles">ALReport</result>
 			<result name="errorInvalidChars" type="tiles">uploaderroralinvalidchar</result>
+			<result name="changedNames" type="tiles">uploaderroralinvalidnames</result>
 		</action>
 
 		<action name="getALActions" class="eu.apenet.dashboard.archivallandscape.ArchivalLandscapeEditor" method="getArchivalInstitutionPossibleActions">

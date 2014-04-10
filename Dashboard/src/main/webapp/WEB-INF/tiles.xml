@@ -546,6 +546,12 @@
 		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
 		<put-attribute name="body" value="/jsp/al/uploaderrorALInvalidChar.jsp" />
 	</definition>
+	
+	<definition name="uploaderroralinvalidnames" extends="ArchivalLandscapeLayout">
+		<put-attribute name="title" value="dashboard.viewuploadresult.title" />
+		<put-attribute name="menu" value="/jsp/indexLandscape.jsp" />
+		<put-attribute name="body" value="/jsp/al/uploaderrorALInvalidNames.jsp" />
+	</definition>
 
 	<definition name="uploaderroralbadcountry" extends="ArchivalLandscapeLayout">
 		<put-attribute name="title" value="dashboard.viewuploadresult.title" />

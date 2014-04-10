@@ -74,13 +74,11 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 	private static final String ERROR_IDENTIFIERS = "errorIdentifier";
 	private static final String ERROR_COUNTRY = "errorCountry";
 	private static final String ERROR_INVALID_CHARS = "errorInvalidChars";
-
 	// Error when an institution has duplicated identifiers.
 	private static final String ERROR_DUPLICATE_IDENTIFIERS = "errorDuplicateIdentifiers";
-
+	private static final String ERROR_NAMES_CHANGED = "changedNames";
 	// Error when the name of te institution hasn't language.
 	private static final String ERROR_LANG = "errorLang";
-
 	private static final String INVALID = "invalid";
 
 	private List<ArchivalInstitution> totalInstitutions;
@@ -573,13 +571,47 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 		}
 		Collection<ArchivalInstitution> archivalInstitutions = getInstitutionsByALFile(this.httpFile,false);
 		if(archivalInstitutions!=null){
-			return displayReport(archivalInstitutions);
+			if(!institutionNamesHaveChanged(archivalInstitutions)){
+				return displayReport(archivalInstitutions);
+			}else{
+				return ERROR_NAMES_CHANGED;
+			}
 		}else if (this.isInvalidChars()) {
 			return ERROR_INVALID_CHARS;
 		}
 		return ERROR;
 	}
-	
+	/**
+	 * Compare, if possible identify an institution. 
+	 * When method is able to detect that exits two institutions with the same identifier, it 
+	 * compares the name, and if some institution detected has different name is rejected.
+	 * 
+	 * @param archivalInstitutions
+	 * @return state (rejected or not)
+	 */
+	private boolean institutionNamesHaveChanged(Collection<ArchivalInstitution> archivalInstitutions) {
+		ArchivalInstitutionDAO dao = DAOFactory.instance().getArchivalInstitutionDAO();
+		List<ArchivalInstitution> ingestedInstitutions = dao.getArchivalInstitutionsByCountryIdForAL(SecurityContext.get().getCountryId(),false);
+		archivalInstitutions = ArchivalLandscapeUtils.parseCollectionToPlainList(archivalInstitutions);
+		Iterator<ArchivalInstitution> itIngestedInstitutions = ingestedInstitutions.iterator();
+		boolean state = true; //manage all are right
+		while(state && itIngestedInstitutions.hasNext()){
+			ArchivalInstitution targetInstitution = itIngestedInstitutions.next();
+			Iterator<ArchivalInstitution> itArchivalStructure = archivalInstitutions.iterator();
+			boolean found = false;
+			while(!found && itArchivalStructure.hasNext()){
+				ArchivalInstitution archivalInstitutionsComparable = itArchivalStructure.next();
+				if(archivalInstitutionsComparable.getInternalAlId().equals(targetInstitution.getInternalAlId()) && !archivalInstitutionsComparable.isGroup()){
+					found = true;
+					if(!archivalInstitutionsComparable.getAiname().equals(targetInstitution.getAiname())){
+						state = false;
+					}
+				}
+			}
+		}
+		return !state;
+	}
+
 	/**
 	 * Action which displays three list, inserts, updates and deleted
 	 * @param archivalInstitutions
@@ -1024,13 +1056,6 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 									//finally remove deleted files from ddbb if they existed
 									state = 10;
 									removePathsToBeDeleted();
-									//updates possible eag autform values
-									if(this.updatedInstitutions!=null){
-										Iterator<ArchivalInstitution> itUpdatedInstitutions = this.updatedInstitutions.iterator();
-										while(itUpdatedInstitutions.hasNext()){
-											ArchivalLandscapeUtils.insertUpdateEagWithArchivalLandscapeName(itUpdatedInstitutions.next());
-										}
-									}
 								}else{
 									state = 6;
 									log.debug("Invalid operation detected. There could be content into some institution.");
@@ -1107,7 +1132,6 @@ public class ArchivalLandscapeManager extends DynatreeAction{
 
 		// Order the groups to be ale to delete them correctly.
 		institutionsToBeDeleted = this.orderGroups(institutionsToBeDeleted);
-
 		log.debug("Institutions to be deleted: "+institutionsToBeDeleted.size());
 		Iterator<ArchivalInstitution> deleteIt = institutionsToBeDeleted.iterator();
 		while(!error && deleteIt.hasNext()){
