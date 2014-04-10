@@ -170,10 +170,7 @@ public class DataHarvester {
 			LOGGER.info(errors);
 			handleExceptions(harvesterProfileLog, newHarvestingDate, outputDirectory, errors, null,failedEarlier);
 		}catch (HarvesterParserException hpe){
-			String errors = "Url that contains errors: '" + hpe.getRequestUrl() + "'\n\n";
-			if (hpe.getCause() != null){
-				errors+= hpe.getCause().getMessage();
-			}
+			String errors = "Url that contains errors: '" + hpe.getRequestUrl() + "'\n\n" + hpe.getMessage()+"\n\nPlease download the OAI-PMH response from the Dashboard for analysis.";
 			LOGGER.error(errors);
 			handleExceptions(harvesterProfileLog, newHarvestingDate, outputDirectory, errors, hpe.getNotParsebleResponse(),failedEarlier);
 		}catch (HarvesterConnectionException e) {
