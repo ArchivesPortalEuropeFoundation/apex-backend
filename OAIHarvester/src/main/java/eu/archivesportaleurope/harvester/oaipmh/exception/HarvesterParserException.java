@@ -25,5 +25,14 @@ public class HarvesterParserException extends HarvesterException {
 		return serialVersionUID;
 	}
 
+	@Override
+	public String getMessage() {
+		if (this.getCause() != null){
+			return "PARSE ERROR: " + this.getCause().getMessage();
+		}
+		return "";
+	}
+
+	
 	
 }
