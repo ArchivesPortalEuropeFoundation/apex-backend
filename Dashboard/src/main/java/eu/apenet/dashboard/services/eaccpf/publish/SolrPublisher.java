@@ -94,7 +94,7 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 		Document doc = builder.parse(new InputSource(new FileReader(file)));
 		doc.getDocumentElement().normalize();
 		EacCpfSolrObject eacCpfSolrObject = new EacCpfSolrObject(eacCpf);
-		eacCpfSolrObject.setRecordId((String) recordIdExpression.evaluate(doc, XPathConstants.STRING));
+		eacCpfSolrObject.setRecordId((eacCpf.getIdentifier()));
 		NodeList entityIdNodeList = (NodeList) entityIdExpression.evaluate(doc, XPathConstants.NODESET);
 		eacCpfSolrObject.setEntityIds(getTextsWithoutMultiplity(entityIdNodeList));
 		eacCpfSolrObject.setEntityType((String) entityTypeExpression.evaluate(doc, XPathConstants.STRING));
