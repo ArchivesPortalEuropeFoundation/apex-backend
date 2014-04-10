@@ -1028,15 +1028,15 @@ input.inputButtonSubmitAL{
 	z-index: 10000;
 }
 
-table, table.defaultlayout {
+table.defaultlayout {
 	border-collapse: collapse;
 	border:none;    
-	text-align: left;	
+	text-align: center;
 }
 
 #content_div_table table {
-	/* table-layout:fixed; */
-    /* width:100%; */
+	border-collapse: collapse;
+	border:none;    
     text-align: center;
    /*  width: auto; */
 }
