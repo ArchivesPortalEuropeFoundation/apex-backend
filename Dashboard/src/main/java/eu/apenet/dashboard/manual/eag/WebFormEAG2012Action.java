@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -7150,7 +7151,7 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 	 * in English.
 	 *
 	 * @param countryCode The current country code.
-	 * @return
+	 * @return The countryName
 	 */
 	private String getCountryNameOfTheInstitution(String countryCode) {
 		String countryName = "";
@@ -7159,14 +7160,42 @@ public class WebFormEAG2012Action extends AbstractInstitutionAction {
 		if (countryList != null && !countryList.isEmpty()) {
 			Country country = countryList.get(0);
 			Set<CouAlternativeName> couAlternativeNameSet = country.getCouAlternativeNames();		
-			//Get the country name in the language of the country
-			LangDAO langDAO = DAOFactory.instance().getLangDAO();
-			Lang lang = langDAO.getLangByIso2Name(countryCode);
-			countryName = iterate(lang, couAlternativeNameSet);
-			if (countryName == null || countryName.isEmpty()) {
-				// Recover the name of the country in English.
-				lang = langDAO.getLangByIso2Name("EN");
-				countryName = iterate(lang, couAlternativeNameSet);
+			//check if there is a valid list or a empty one
+			if(couAlternativeNameSet != null){
+				//Get the country name in the language of the country
+				LangDAO langDAO = DAOFactory.instance().getLangDAO();
+				Locale[] locale = Locale.getAvailableLocales();
+				Lang lang=null;
+
+				if (locale!=null){
+					List<Locale> localeList = new LinkedList<Locale>();
+					for (int i = 0; i < locale.length; i++) {
+						if(locale[i].getCountry().equalsIgnoreCase(countryCode)){
+							localeList.add(locale[i]);
+						}
+			        }
+					if(localeList!=null && !localeList.isEmpty()){
+						Iterator<Locale> localeIt = localeList.iterator();					
+						boolean found = false;
+						while (!found && localeIt.hasNext()) {
+							Locale local = localeIt.next();
+							String langCode = local.getLanguage();
+							
+							lang = langDAO.getLangByIso2Name(langCode);
+							if (lang!=null){
+								countryName = iterate(lang, couAlternativeNameSet);
+								if (countryName != null && !countryName.isEmpty()) {
+									found=true;
+								}
+							}
+						}
+					}
+				}
+
+				if(countryName.isEmpty()){
+					lang = langDAO.getLangByIso2Name("EN");
+					countryName = iterate(lang, couAlternativeNameSet);
+				}
 			}
 		}
 		return countryName;
