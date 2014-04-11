@@ -48,10 +48,14 @@
 		<level value="info" />
 		<appender-ref ref="securityFile" /> 
 	</logger>
-		<logger name="eu.apenet.dashboard.services.ead.publish.SolrPublisher">
+	<logger name="eu.apenet.dashboard.services.ead.publish.SolrPublisher">
 		<level value="debug" />
 		<appender-ref ref="solr" /> 
 	</logger>
+	<logger name="eu.apenet.dashboard.services.eaccpf.publish.SolrPublisher">
+		<level value="debug" />
+		<appender-ref ref="solr" /> 
+	</logger>	
 	<logger name="eu">
 		<level value="info" />
 		<appender-ref ref="file" /> 
