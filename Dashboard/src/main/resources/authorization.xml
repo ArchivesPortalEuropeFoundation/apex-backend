@@ -57,7 +57,7 @@
             storeCountry,storeLanguage,viewAdmin,
             sessionManagement,deleteSession,userManagement,
             changeToCountryManager,createCountryManager,displayCreateCountryManager,disableCountryManager,enableCountryManager,deleteCountryManager,
-            viewDptVersions, addVersion, deleteVersion, manageQueue, startStopQueue,deleteQueueItem,deleteAllQueueItemsWithErrors,deleteAllUnusedUploadFiles,forceSolrCommit,
+            viewDptVersions, addVersion, deleteVersion, manageQueue, startStopQueue,manageQueueItem,deleteAllQueueItemsWithErrors,deleteAllUnusedUploadFiles,forceSolrCommit,
             manageHarvest, startStopHarvester, manageHarvestItem,
             eag2012GeoCoordinates, changeIdentifierInDDBB, fixALOrderInDDBB
         </group>

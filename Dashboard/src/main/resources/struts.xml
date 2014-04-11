@@ -867,6 +867,11 @@
                 <param name="actionName">manageQueue</param>
             </result>
         </action>
+        <action name="manageQueueItem" class="eu.apenet.dashboard.queue.ManageQueueAction" method="manageQueueItem">
+            <result name="success" type="redirectAction">
+                <param name="actionName">manageQueue</param>
+            </result>
+        </action>        
         <action name="deleteAllQueueItemsWithErrors" class="eu.apenet.dashboard.queue.ManageQueueAction" method="deleteAllQueueItemsWithErrors">
             <result name="success" type="redirectAction">
                 <param name="actionName">manageQueue</param>
