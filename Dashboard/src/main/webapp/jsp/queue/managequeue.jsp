@@ -59,59 +59,141 @@
 	<s:form action="forceSolrCommit" theme="simple" method="post">
 		<s:submit value="Force Solr commit"></s:submit>
 	</s:form>
-	
-	<h2>First items:</h2>
-	<table class="defaultlayout">
-		<thead>
-			<tr>
+	<c:if test="${!empty firstItems}">
+		<h2>First items:</h2>
+		<table class="defaultlayout">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>EADID/Filename</th>
+					<th><s:text name="admin.queuemanagement.institution.name" /></th>
+					<th><s:text name="admin.queuemanagement.queue.action" /></th>
+					<th><s:text name="admin.queuemanagement.queue.priority" /></th>
+					<th><s:text name="admin.queuemanagement.queue.actions" /></th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="item" items="${firstItems}">
+					<tr>
+						<td><c:out value="${item.id}" /></td>
+						<td><c:out value="${item.eadidOrFilename}" /></td>
+						<td><c:out value="${item.archivalInstitution}" /></td>
+						<td><c:out value="${item.action}" /></td>
+						<td><c:out value="${item.priority}" /></td>
+						<td><c:if test="${not queueActive and not queueProcessing}">
+			                        <s:form action="manageQueueItem" theme="simple">
+			                        	<input type="hidden" name="queueItemId" value="${item.id}" />
+			                        	<select class="selectedAction" name="selectedAction">
+												<option value="DISABLE">
+													<s:text name="admin.queuemanagement.disable" />
+												</option>			                        	                          
+		                                		<option value="HIGHEST">
+													<s:text name="admin.queuemanagement.highest" />
+												</option>
+		                                		<option value="LOWEST">
+													<s:text name="admin.queuemanagement.lowest" />
+												</option>												
+			                                	<option value="DELETE">
+													<s:text name="admin.queuemanagement.delete" />
+												</option>												
+					                            </select>
+			                            	<input type="submit" value="<s:text name="content.message.go" />" />	
+			                            </s:form>						
+						</c:if></td>					
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+	</c:if>
+	<c:if test="${!empty disabledItems}">
+	<h2>Disabled items:</h2>
+		<table class="defaultlayout">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>EADID/Filename</th>
+					<th><s:text name="admin.queuemanagement.institution.name" /></th>
+					<th><s:text name="admin.queuemanagement.queue.action" /></th>
+					<th><s:text name="admin.queuemanagement.queue.priority" /></th>
+					<th><s:text name="admin.queuemanagement.queue.actions" /></th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="item" items="${disabledItems}">
+					<tr>
+						<td><c:out value="${item.id}" /></td>
+						<td><c:out value="${item.eadidOrFilename}" /></td>
+						<td><c:out value="${item.archivalInstitution}" /></td>
+						<td><c:out value="${item.action}" /></td>
+						<td><c:out value="${item.priority}" /></td>
+						<td><s:form action="manageQueueItem" theme="simple">
+			                        	<input type="hidden" name="queueItemId" value="${item.id}" />
+			                        	<select class="selectedAction" name="selectedAction">
+												<option value="ENABLE">
+													<s:text name="admin.queuemanagement.enable" />
+												</option>			                        	                          
+		                                		<option value="HIGHEST">
+													<s:text name="admin.queuemanagement.highest" />
+												</option>
+		                                		<option value="LOWEST">
+													<s:text name="admin.queuemanagement.lowest" />
+												</option>												
+
+			                                	<option value="DELETE">
+													<s:text name="admin.queuemanagement.delete" />
+												</option>												
+					                            </select>
+			                            	<input type="submit" value="<s:text name="content.message.go" />" />	
+			                            </s:form></td>					
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+	</c:if>
+	<c:if test="${!empty itemsWithErrors}">	
+		<h2>Items in the queue with errors:</h2>
+		<table class="defaultlayout">
+			<thead>
 				<th>ID</th>
 				<th>EADID/Filename</th>
 				<th><s:text name="admin.queuemanagement.institution.name" /></th>
 				<th><s:text name="admin.queuemanagement.queue.action" /></th>
 				<th><s:text name="admin.queuemanagement.queue.priority" /></th>
-			</tr>
-		</thead>
-		<tbody>
-			<c:forEach var="item" items="${firstItems}">
-				<tr>
-					<td><c:out value="${item.id}" /></td>
-					<td><c:out value="${item.eadidOrFilename}" /></td>
-					<td><c:out value="${item.archivalInstitution}" /></td>
-					<td><c:out value="${item.action}" /></td>
-					<td><c:out value="${item.priority}" /></td>
-				</tr>
-			</c:forEach>
-		</tbody>
-	</table>
-	<h2>Items in the queue with errors:</h2>
-	<table class="defaultlayout">
-		<thead>
-			<th>ID</th>
-			<th>EADID/Filename</th>
-			<th><s:text name="admin.queuemanagement.institution.name" /></th>
-			<th><s:text name="admin.queuemanagement.queue.action" /></th>
-			<th><s:text name="admin.queuemanagement.queue.priority" /></th>
-			<th><s:text name="admin.queuemanagement.queue.actions" /></th>
-			<th><s:text name="admin.queuemanagement.queue.errors" /></th>
-
-		</thead>
-		<tbody>
-			<c:forEach var="item" items="${itemsWithErrors}">
-				<tr>
-					<td><c:out value="${item.id}" /></td>
-					<td><c:out value="${item.eadidOrFilename}" /></td>
-					<td><c:out value="${item.archivalInstitution}" /></td>
-					<td><c:out value="${item.action}" /></td>
-					<td><c:out value="${item.priority}" /></td>
-					<td><s:form action="deleteQueueItem" theme="simple">
-							<input type="hidden" name="queueItemId" value="${item.id}" />
-							<s:submit key="content.message.delete.queue"></s:submit>
-						</s:form></td>
-					<td><c:out value="${item.errors}" /></td>
-
-				</tr>
-			</c:forEach>
-		</tbody>
-	</table>
-
+				<th><s:text name="admin.queuemanagement.queue.actions" /></th>
+				<th><s:text name="admin.queuemanagement.queue.errors" /></th>
+	
+			</thead>
+			<tbody>
+				<c:forEach var="item" items="${itemsWithErrors}">
+					<tr>
+						<td><c:out value="${item.id}" /></td>
+						<td><c:out value="${item.eadidOrFilename}" /></td>
+						<td><c:out value="${item.archivalInstitution}" /></td>
+						<td><c:out value="${item.action}" /></td>
+						<td><c:out value="${item.priority}" /></td>
+						<td><s:form action="manageQueueItem" theme="simple">
+			                        	<input type="hidden" name="queueItemId" value="${item.id}" />
+			                        	<select class="selectedAction" name="selectedAction">
+			                                	<option value="DELETE">
+													<s:text name="admin.queuemanagement.delete" />
+												</option>			                        	
+												<option value="ENABLE">
+													<s:text name="admin.queuemanagement.enable" />
+												</option>			                        	                          
+		                                		<option value="HIGHEST">
+													<s:text name="admin.queuemanagement.highest" />
+												</option>
+		                                		<option value="LOWEST">
+													<s:text name="admin.queuemanagement.lowest" />
+												</option>																								
+					                            </select>
+			                            	<input type="submit" value="<s:text name="content.message.go" />" />	
+			                            </s:form></td>
+						<td><c:out value="${item.errors}" /></td>
+	
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+	</c:if>
 </div>
