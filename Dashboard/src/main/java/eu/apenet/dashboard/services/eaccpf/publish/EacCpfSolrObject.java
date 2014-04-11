@@ -21,7 +21,9 @@ public class EacCpfSolrObject {
 	private String toDate;
 	private Set<String> entityIds;
 	private String recordId;
+	private String other;
 	private String entityType;
+	
 	
 	
 	private EacCpf eacCpf;
@@ -139,6 +141,12 @@ public class EacCpfSolrObject {
 	}
 	public void setMandates(Set<String> mandates) {
 		this.mandates = mandates;
+	}
+	public String getOther() {
+		return other;
+	}
+	public void setOther(String other) {
+		this.other = other;
 	}
 
 }
