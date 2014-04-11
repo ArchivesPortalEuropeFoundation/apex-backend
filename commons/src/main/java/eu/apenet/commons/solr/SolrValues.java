@@ -1,6 +1,9 @@
 package eu.apenet.commons.solr;
 
+import org.apache.commons.lang.StringUtils;
+
 public final class SolrValues {
+	public static final String ESCAPING_CHARACTER= "\\\\";
 	public final static String HG_PREFIX = "H";
 	public final static String FA_PREFIX = "F";
 	public final static String SG_PREFIX = "S";
@@ -20,4 +23,29 @@ public final class SolrValues {
 	public final static String EAC_CPF_FACET_ENTITY_TYPE_FAMILY = "family";
 	public final static String EAC_CPF_FACET_ENTITY_TYPE_PERSON = "person";
 	public final static String EAC_CPF_FACET_ENTITY_TYPE_CORPORATE_BODY = "corporatebody";
+	
+		public static String escapeSolrCharacters(String value){
+		if (StringUtils.isNotBlank(value)){
+			value = value.replaceAll(ESCAPING_CHARACTER, ESCAPING_CHARACTER + ESCAPING_CHARACTER);
+			value = value.replaceAll("-", ESCAPING_CHARACTER + "-");
+			value = value.replaceAll("\\+", ESCAPING_CHARACTER + "+");
+			value = value.replaceAll("&&", ESCAPING_CHARACTER + "&&");	
+			value = value.replaceAll("\\|\\|", ESCAPING_CHARACTER + "||");		
+			value = value.replaceAll("!", ESCAPING_CHARACTER + "!");
+			value = value.replaceAll("\\(", ESCAPING_CHARACTER + "(");	
+			value = value.replaceAll("\\)", ESCAPING_CHARACTER + ")");
+			value = value.replaceAll("\\{", ESCAPING_CHARACTER + "{");	
+			value = value.replaceAll("\\}", ESCAPING_CHARACTER + "}");	
+			value = value.replaceAll("\\[", ESCAPING_CHARACTER + "[");	
+			value = value.replaceAll("\\]", ESCAPING_CHARACTER + "]");	
+			value = value.replaceAll("\\^", ESCAPING_CHARACTER + "^");	
+			value = value.replaceAll("\"", ESCAPING_CHARACTER + "\"");	
+			value = value.replaceAll("~", ESCAPING_CHARACTER + "~");
+			value = value.replaceAll("\\*", ESCAPING_CHARACTER + "*");
+			value = value.replaceAll("\\?", ESCAPING_CHARACTER + "?");
+			value = value.replaceAll(":", ESCAPING_CHARACTER + ":");
+
+		}
+		return value;
+	}
 }
