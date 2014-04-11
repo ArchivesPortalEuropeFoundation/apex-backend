@@ -134,7 +134,7 @@
 				names places description occupations dateDescription
 			</str>
 			<str name="fl">
-				id,names,places,description,occupations,dateDescription,country,ai
+				id,names,places,description,occupations,dateDescription,country,ai,recordId
 			</str>
 			<str name="q.alt">*:*</str>
 			<str name="hl.fl">names places description occupations dateDescription</str>

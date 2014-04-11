@@ -95,7 +95,7 @@
 	  <field name="countryId" type="int" indexed="true" stored="false" required="false"/>
 	  <field name="aiId" type="int" indexed="true" stored="false" required="false"/>	  
 	  <field name="language" type="languageText" indexed="true" stored="true" required="false"/>
-	  <field name="recordId" type="unitidType" indexed="true" stored="true" required="false"/>
+	  <field name="recordId" type="unitidType" indexed="true" stored="true" required="true"/>
 	  <field name="entityId" type="unitidType" indexed="true" stored="true" required="false"  multiValued="true"/>
 	  <field name="entityTypeFacet" type="facetText" indexed="true" stored="true" required="false"/>
 
