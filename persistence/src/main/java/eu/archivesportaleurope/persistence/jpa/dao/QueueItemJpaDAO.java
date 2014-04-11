@@ -1,4 +1,4 @@
-package eu.apenet.persistence.hibernate;
+package eu.archivesportaleurope.persistence.jpa.dao;
 
 import java.util.List;
 
@@ -7,9 +7,10 @@ import javax.persistence.TypedQuery;
 import org.apache.log4j.Logger;
 
 import eu.apenet.persistence.dao.QueueItemDAO;
+import eu.apenet.persistence.hibernate.AbstractHibernateDAO;
 import eu.apenet.persistence.vo.QueueItem;
 
-public class QueueItemHibernateDAO extends AbstractHibernateDAO<QueueItem, Integer> implements QueueItemDAO {
+public class QueueItemJpaDAO extends AbstractHibernateDAO<QueueItem, Integer> implements QueueItemDAO {
 
 	private final Logger log = Logger.getLogger(getClass());
 
@@ -56,6 +57,7 @@ public class QueueItemHibernateDAO extends AbstractHibernateDAO<QueueItem, Integ
 				.createQuery(
 						"SELECT queueItem FROM QueueItem queueItem WHERE priority = 0 AND errors IS NOT NULL ORDER BY priority desc, id asc",
 						QueueItem.class);
+		query.setMaxResults(50);
 		return query.getResultList();
 	}
 
