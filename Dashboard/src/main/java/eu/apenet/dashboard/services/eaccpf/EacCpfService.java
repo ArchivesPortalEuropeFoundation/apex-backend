@@ -196,11 +196,9 @@ public class EacCpfService {
         int priority = basePriority;
         queueItem.setEacCpf(eacCpf);
 
-        if (queueAction.isConvertAction() || queueAction.isValidateAction() || queueAction.isPublishAction()) {
-            priority += 25;
-        } else if (queueAction.isDeleteAction() || queueAction.isOverwriteAction()) {
-            priority += 50;
-        }
+		if (queueAction.isDeleteAction() || queueAction.isUnpublishAction() || queueAction.isDeleteFromEuropeanaAction() || queueAction.isDeleteEseEdmAction()) {
+			priority += 150;
+		}
         queueItem.setPriority(priority);
         return queueItem;
     }

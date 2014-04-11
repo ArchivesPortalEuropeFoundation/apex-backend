@@ -93,7 +93,7 @@ public class EadService {
 	public static File download(Integer id, XmlType xmlType) {
 		Ead ead = DAOFactory.instance().getEadDAO().findById(id, xmlType.getClazz());
 		SecurityContext.get().checkAuthorized(ead);
-		String path = APEnetUtilities.getConfig().getRepoDirPath() + ead.getPathApenetead();
+		String path = APEnetUtilities.getConfig().getRepoDirPath() + ead.getPath();
 		try {
 			File file = new File(path);
 			if (file.exists())
@@ -744,10 +744,8 @@ public class EadService {
 			queueItem.setSourceGuide((SourceGuide) ead);
 			priority += 50;
 		}
-		if (queueAction.isConvertAction() || queueAction.isValidateAction() || queueAction.isPublishAction()) {
-			priority += 25;
-		} else if (queueAction.isDeleteAction() || queueAction.isOverwriteAction()) {
-			priority += 50;
+		if (queueAction.isDeleteAction() || queueAction.isUnpublishAction() || queueAction.isDeleteFromEuropeanaAction() || queueAction.isDeleteEseEdmAction()) {
+			priority += 150;
 		}
 		queueItem.setPriority(priority);
 		return queueItem;
