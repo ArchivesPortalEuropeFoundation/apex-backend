@@ -26,45 +26,27 @@ import org.apache.struts2.util.ServletContextAware;
  */
 public abstract class EacCpfAction extends ActionSupport implements ServletRequestAware, ServletResponseAware, ServletContextAware {
 
-    private Set<MapEntry> cpfTypeList = new LinkedHashSet<MapEntry>();
     private Set<MapEntry> languages = new TreeSet<MapEntry>();
-    private Map<String, String> dateOrDateRange = new TreeMap<String, String>();
-    private Set<MapEntry> countryList = new TreeSet<MapEntry>();
     private Map<String, String> scriptList = new TreeMap<String, String>();
-    private Set<String> formNameList = new TreeSet<String>();
-    private Set<String> componentNameList = new TreeSet<String>();
-    private Set<String> cpfRelationTypeList = new TreeSet<String>();
-    private Set<String> resRelationTypeList = new TreeSet<String>();
-    private Set<String> fncRelationTypeList = new TreeSet<String>();
-    private Set<String> addressComponentTypeList = new TreeSet<String>();
-    private static final String EMPTY_KEY = "";
-    private static final String EMPTY_VALUE = "----";
+
+    protected static final String CORPORATE_BODY = "corporateBody";
+    protected static final String FAMILY = "family";
+    protected static final String PERSON = "person";
+    protected static final String EMPTY_KEY = "";
+    protected static final String EMPTY_VALUE = "----";
     private HttpServletRequest request;
     private HttpServletResponse response;
     private ServletContext servletContext;
 
-    private String cpfType;
     private String apeId;
 
     public EacCpfAction() {
-        setUpCpfTypeList();
-        setUpLanguages();
-        setUpDateOrDateRange();
-        setUpCountryList();
-        setUpScriptList();
-        setUpFormOfNameList();
-        setUpComponentNameList();
-        setUpCpfRelationTypeList();
-        setUpResRelationTypeList();
-        setUpFncRelationTypeList();
-        setUpAddressComponentTypeList();
-
         Random random = new Random();
         long fakeId = random.nextLong();
         this.apeId = Long.toString(fakeId);
     }
 
-    private void setUpLanguages() {
+    protected void setUpLanguages() {
         //Base variable for setting up the list
         String[] isoLanguages = Locale.getISOLanguages();
 
@@ -100,29 +82,7 @@ public abstract class EacCpfAction extends ActionSupport implements ServletReque
         }
     }
 
-    private void setUpCpfTypeList() {
-        cpfTypeList.add(new MapEntry("person", "a person"));
-        cpfTypeList.add(new MapEntry("corporateBody", "a corporate body"));
-        cpfTypeList.add(new MapEntry("family", "a family"));
-    }
-
-    private void setUpDateOrDateRange() {
-        dateOrDateRange.put("date", "a single date");
-        dateOrDateRange.put("dateRange", "or a date range");
-    }
-
-    private void setUpCountryList() {
-        // Add empty map entry
-        countryList.add(new MapEntry(EMPTY_KEY, EMPTY_VALUE));
-        // Add countries
-        String[] locales = Locale.getISOCountries();
-        for (String countryCode : locales) {
-            Locale obj = new Locale("", countryCode);
-            countryList.add(new MapEntry(obj.getCountry(), obj.getDisplayCountry(Locale.ENGLISH)));
-        }
-    }
-
-    private void setUpScriptList() {
+     protected void setUpScriptList() {
         // Add empty list entry
         scriptList.put(EMPTY_KEY, EMPTY_VALUE);
 
@@ -135,79 +95,6 @@ public abstract class EacCpfAction extends ActionSupport implements ServletReque
         scriptList.put("Latn", "Latin");
     }
 
-    private void setUpFormOfNameList() {
-        formNameList.add("authorized");
-        formNameList.add("alternative");
-        formNameList.add("preferred");
-        formNameList.add("abbreviation");
-        formNameList.add("other");
-    }
-
-    private void setUpComponentNameList() {
-        componentNameList.add("persname");
-        componentNameList.add("surname");
-        componentNameList.add("firstname");
-        componentNameList.add("birthname");
-        componentNameList.add("patronymic");
-        componentNameList.add("title");
-        componentNameList.add("prefix");
-        componentNameList.add("suffix");
-        componentNameList.add("alias");
-    }
-
-    private void setUpCpfRelationTypeList() {
-        // Add empty list entry
-        cpfRelationTypeList.add(EMPTY_VALUE);
-
-        cpfRelationTypeList.add("identity");
-        cpfRelationTypeList.add("hierarchical");
-        cpfRelationTypeList.add("hierarchical-parent");
-        cpfRelationTypeList.add("hierarchical-child");
-        cpfRelationTypeList.add("temporal");
-        cpfRelationTypeList.add("temporal-earlier");
-        cpfRelationTypeList.add("temporal-later");
-        cpfRelationTypeList.add("family");
-        cpfRelationTypeList.add("associative");
-    }
-
-    private void setUpResRelationTypeList() {
-        // Add empty list entry
-        resRelationTypeList.add(EMPTY_VALUE);
-
-        resRelationTypeList.add("creatorOf");
-        resRelationTypeList.add("subjectOf");
-        resRelationTypeList.add("other");
-    }
-
-    private void setUpFncRelationTypeList() {
-        // Add empty list entry
-        fncRelationTypeList.add(EMPTY_VALUE);
-
-        fncRelationTypeList.add("controls");
-        fncRelationTypeList.add("owns");
-        fncRelationTypeList.add("performs");
-    }
-
-    private void setUpAddressComponentTypeList() {
-        // Add empty list entry
-        addressComponentTypeList.add(EMPTY_VALUE);
-
-        addressComponentTypeList.add("firstdem");
-        addressComponentTypeList.add("secondem");
-        addressComponentTypeList.add("postalcode");
-        addressComponentTypeList.add("localentity");
-        addressComponentTypeList.add("street");
-        addressComponentTypeList.add("other");
-    }
-
-    public Set<MapEntry> getCpfTypeList() {
-        return cpfTypeList;
-    }
-
-    public void setCpfTypeList(Set<MapEntry> cpfTypeList) {
-        this.cpfTypeList = cpfTypeList;
-    }
-
     public Set<MapEntry> getLanguages() {
         return languages;
     }
@@ -216,92 +103,12 @@ public abstract class EacCpfAction extends ActionSupport implements ServletReque
         this.languages = languages;
     }
 
-    public Map<String, String> getDateOrDateRange() {
-        return dateOrDateRange;
-    }
-
-    public void setDateOrDateRange(Map<String, String> dateOrDateRange) {
-        this.dateOrDateRange = dateOrDateRange;
-    }
-
-    public Set<MapEntry> getCountryList() {
-        return countryList;
-    }
-
-    public void setCountryList(Set<MapEntry> countryList) {
-        this.countryList = countryList;
-    }
-
     public Map<String, String> getScriptList() {
         return scriptList;
     }
 
     public void setScriptList(Map<String, String> scriptList) {
         this.scriptList = scriptList;
-    }
-
-    public Set<String> getFormOfNameList() {
-        return formNameList;
-    }
-
-    public void setFormOfNameList(Set<String> formOfNameList) {
-        this.formNameList = formOfNameList;
-    }
-
-    public Set<String> getComponentOfNameList() {
-        return componentNameList;
-    }
-
-    public void setComponentOfNameList(Set<String> componentOfNameList) {
-        this.componentNameList = componentOfNameList;
-    }
-
-    public Set<String> getFormNameList() {
-        return formNameList;
-    }
-
-    public void setFormNameList(Set<String> formNameList) {
-        this.formNameList = formNameList;
-    }
-
-    public Set<String> getComponentNameList() {
-        return componentNameList;
-    }
-
-    public void setComponentNameList(Set<String> componentNameList) {
-        this.componentNameList = componentNameList;
-    }
-
-    public Set<String> getCpfRelationTypeList() {
-        return cpfRelationTypeList;
-    }
-
-    public void setCpfRelationTypeList(Set<String> cpfRelationTypeList) {
-        this.cpfRelationTypeList = cpfRelationTypeList;
-    }
-
-    public Set<String> getResRelationTypeList() {
-        return resRelationTypeList;
-    }
-
-    public void setResRelationTypeList(Set<String> resRelationTypeList) {
-        this.resRelationTypeList = resRelationTypeList;
-    }
-
-    public Set<String> getFncRelationTypeList() {
-        return fncRelationTypeList;
-    }
-
-    public void setFncRelationTypeList(Set<String> fncRelationTypeList) {
-        this.fncRelationTypeList = fncRelationTypeList;
-    }
-
-    public Set<String> getAddressComponentTypeList() {
-        return addressComponentTypeList;
-    }
-
-    public void setAddressComponentTypeList(Set<String> addressComponentTypeList) {
-        this.addressComponentTypeList = addressComponentTypeList;
     }
 
     public ServletContext getServletContext() {
@@ -330,14 +137,6 @@ public abstract class EacCpfAction extends ActionSupport implements ServletReque
     @Override
     public final void setServletResponse(HttpServletResponse response) {
         this.response = response;
-    }
-
-    public String getCpfType() {
-        return cpfType;
-    }
-
-    public void setCpfType(String cpfType) {
-        this.cpfType = cpfType;
     }
 
     public String getDefaultCpfType() {

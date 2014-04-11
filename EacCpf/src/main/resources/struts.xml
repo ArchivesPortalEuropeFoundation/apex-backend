@@ -14,7 +14,7 @@
             <result name="success" type="tiles">index</result>
         </action>
 
-        <action name="edit" class="eu.apex.eaccpf.actions.IndexAction">
+        <action name="edit" class="eu.apex.eaccpf.actions.LoadFormAction">
             <result name="success" type="tiles">edit</result>
             <result name="input" type="tiles">index</result>
         </action>

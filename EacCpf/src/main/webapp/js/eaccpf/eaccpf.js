@@ -83,10 +83,6 @@ function clickSaveAction(text, chooseTypeError, identityError, descriptionError,
     if (identityValidation !== "ok") {
         return;
     }
-    var descriptionValidation = checkDescriptionTab();
-    if (descriptionValidation !== "ok") {
-        return;
-    }
     $('#webformEacCpf').submit();
 }
 
@@ -109,21 +105,27 @@ function deleteChecks() {
 var checkIdentityTab = function() {
     var personName = $("table#identityPersonName_1 input#textPersonName").attr("value");
     if (personName == null || personName == "") {
-        alertEmptyFields("Please enter at least one entity name in the 'Identity' tab!");
+        alertEmptyFields("Please enter at least one entity name!");
         return;
     }
-    return "ok";
-}
-
-var checkDescriptionTab = function() {
-    var counter = $("table#dateExistenceTable tr[id^='trDate_']").length;
-    if (counter == 0) {
-        alertEmptyFields("Please enter at least one date or date range in the 'Description' tab!");
-        return;
+    var date1 = $("table#dateExistenceTable input#date_1']").attr("value");
+    var date2 = $("table#dateExistenceTable input#date_2']").attr("value");
+    if (date1 == null || date1 == "") {
+        if (date2 == null || date2 == "") {
+            alertEmptyFields("Please enter at least one complete date or date range!");
+            return;
+        } else {
+            alertEmptyFields("Please fill in the start date of the range or use a single date!");
+            return;
+        }
+    } else {
+        if (date2 == null || date2 == "") {
+            alertEmptyFields("Please fill in the end date of the range or use a single date!");
+            return;
+        }
     }
-
     return "ok";
-}
+};
 
 function checkWebpages(target, message) {
     var checkFails = false;
@@ -320,10 +322,9 @@ function toggleDateTextfields(checkbox) {
  * Identity tab functions
  **************************************/
 
-function addDateOrDateRangeName(tableName) {
+function addDateOrDateRangeName(buttonClicked, tableName) {
     var counter = $("table#" + tableName + " tr[id^='trDate_text_']").length;
-    var state = $("input[name='dateOrDateRangeName']:checked").val();
-    if (state == "date") {
+    if (buttonClicked == "addNameDate") {
         if (counter == 0) {
             insertDateAfter(tableName, "tr#trPersonName_2", counter + 1);
         } else {
@@ -340,7 +341,7 @@ function addDateOrDateRangeName(tableName) {
             }
         }
     }
-    if (state == "dateRange") {
+    if (buttonClicked == "addNameDateRange") {
         if (counter == 0) {
             insertDateRangeAfter(tableName, "tr#trPersonName_2", counter + 1);
         } else {
@@ -421,10 +422,9 @@ function addPersonId() {
     $("table#identityPersonId_" + (counter + 1) + " input#textPersonTypeId").attr("name", "textPersonTypeId_" + (counter + 1));
 }
 
-function addDateOrDateRangeDescription() {
+function addDateOrDateRangeExistence(buttonClicked) {
     var counter = $("table#dateExistenceTable tr[id^='trDate_text_']").length;
-    var state = $("input[name='dateOrDateRangeDescription']:checked").val();
-    if (state == "date") {
+    if (buttonClicked == "addExistDate") {
         if (counter == 0) {
             insertDateAfter("dateExistenceTable", "tr#trDateExistenceTableHeader", counter + 1);
         } else {
@@ -441,7 +441,7 @@ function addDateOrDateRangeDescription() {
             }
         }
     }
-    if (state == "dateRange") {
+    if (buttonClicked == "addExistDateRange") {
         if (counter == 0) {
             insertDateRangeAfter("dateExistenceTable", "tr#trDateExistenceTableHeader", counter + 1);
         } else {

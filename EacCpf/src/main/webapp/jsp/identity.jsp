@@ -6,35 +6,13 @@
 
 <div id="identityTabContent">
     <input type="hidden" name="cpfType" value='<s:property value="cpfType" />' />
-    <table class="tablePadding">
-        <s:if test='%{useMode == "load"}'>
-            <tr>
-                <td>The file loaded is:</td>
-                <td>
-                    <b><s:property value="uploadFileName" /></b>
-                </td>
-                <td></td>
-                <td></td>
-            </tr>
-        </s:if>
-        <tr>
-            <td>The described entity in this file is a:</td>
-            <td>
-                <b><s:if test='%{useMode == "new"}'>
-                        <s:property value="cpfType" />
-                    </s:if>
-                    <s:else>
-                        ${loader.entityType}
-                    </s:else>
-                </b>
-            </td>
-            <td></td>
-            <td></td>
-        </tr>
-    </table>
+    <h2 class="tablePadding">Description of a <s:property value="cpfType" /></h2>
     <s:if test="%{loader.nameEntries.size() > 0}">
         <s:iterator var="current" value="loader.nameEntries" status="status">
             <table id="identityPersonName_<s:property value="#status.index + 1" />" class="tablePadding">
+                <tr>
+                    <th class="sectionHeader" colspan="4">Name</th>
+                </tr>
                 <tr id="trPersonName_1">
                     <td><label for="textPersonName">Full name or part of name*</label></td>
                     <td><input type="text" id="textPersonName" name="textPersonName_<s:property value="#status.index + 1" />" required="required" value="<s:property value="#current.name" />" /></td>
@@ -104,13 +82,10 @@
                     </s:iterator>
                 </s:if>
                 <tr>
-                    <td>Add</td>
-                    <td>
-                        <s:iterator value="dateOrDateRange" var="dateType">
-                            <input type="radio" name="dateOrDateRangeName" value='<s:property value="#dateType.key"/>' onclick="addDateOrDateRangeName($(this).parent().parent().parent().parent().attr('id'))"><s:property value="#dateType.value"/>&nbsp;&nbsp;&nbsp;
-                        </s:iterator>
-                    </td>
-                    <s:if test="%{#current.dates.size() > 0}">
+                    <td>Add dates of use for the name:</td>
+                    <td><input type="button" value="Add single date" id="addNameDate" onclick="addDateOrDateRangeName(this.id, $(this).parent().parent().parent().parent().attr('id'))" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="button" value="Add date range" id="addNameDateRange" onclick="addDateOrDateRangeName(this.id, $(this).parent().parent().parent().parent().attr('id'))" /></td>
+                        <s:if test="%{#current.dates.size() > 0}">
                         <td><input type="hidden" id="identityPersonName_<s:property value="#status.index + 1" />_rows" name="identityPersonName_<s:property value="#status.index + 1" />_rows" value="<s:property value="#current.dates.size()" />" /></td>
                         </s:if>
                         <s:else>
@@ -123,6 +98,9 @@
     </s:if>
     <s:else>
         <table id="identityPersonName_1" class="tablePadding">
+            <tr>
+                <th class="sectionHeader" colspan="4">Name</th>
+            </tr>
             <tr id="trPersonName_1">
                 <td><label for="textPersonName">Full name or part of name*</label></td>
                 <td><input type="text" id="textPersonName" name="textPersonName_1" required="required" /></td>
@@ -154,12 +132,9 @@
                 </td>
             </tr>
             <tr>
-                <td>Add</td>
-                <td>
-                    <s:iterator value="dateOrDateRange" var="dateType">
-                        <input type="radio" name="dateOrDateRangeName" value='<s:property value="#dateType.key"/>' onclick="addDateOrDateRangeName($(this).parent().parent().parent().parent().attr('id'))"><s:property value="#dateType.value"/>&nbsp;&nbsp;&nbsp;
-                    </s:iterator>
-                </td>
+                <td>Add dates of use for the name:</td>
+                <td><input type="button" value="Add single date" id="addNameDate" onclick="addDateOrDateRangeName(this.id, $(this).parent().parent().parent().parent().attr('id'))" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="button" value="Add date range" id="addNameDateRange" onclick="addDateOrDateRangeName(this.id, $(this).parent().parent().parent().parent().attr('id'))" /></td>
                 <td><input type="hidden" id="identityPersonName_1_rows" name="identityPersonName_1_rows" value="0" /></td>
                 <td></td>
             </tr>
@@ -175,6 +150,9 @@
     <s:if test="%{loader.identifiers.size() > 0}">
         <s:iterator var="current" value="loader.identifiers" status="status">
             <table id="identityPersonId_<s:property value="#status.index + 1" />" class="tablePadding">
+                <tr>
+                    <th class="sectionHeader" colspan="4">Identifier</th>
+                </tr>
                 <tr id="trPersonId">
                     <td>Identifier of the person</td>
                     <td><input type="text" id="textPersonId" name="textPersonId_<s:property value="#status.index + 1" />" value="<s:property value="#current.identifier" />"/></td>
@@ -186,6 +164,9 @@
     </s:if>
     <s:else>
         <table id="identityPersonId_1" class="tablePadding">
+            <tr>
+                <th class="sectionHeader" colspan="4">Identifier</th>
+            </tr>
             <tr id="trPersonId">
                 <td>Identifier of the person</td>
                 <td><input type="text" id="textPersonId" name="textPersonId_1"/></td>
@@ -203,7 +184,7 @@
     </table>
     <table id="dateExistenceTable" class="tablePadding">
         <tr id="trDateExistenceTableHeader">
-            <th colspan="4">Date(s) of existence*</th>
+            <th class="sectionHeader" colspan="4">Date(s) of existence*</th>
         </tr>
         <s:if test="%{loader.existDates.size() > 0}">
             <s:iterator var="current" value="loader.existDates" status="status">
@@ -274,13 +255,9 @@
     </table>
     <table id="dateExistenceButtonPanel" class="tablePadding">
         <tr>
-            <td>Add</td>
-            <td>
-                <s:iterator value="dateOrDateRange" var="dateType">
-                    <input type="radio" name="dateOrDateRangeDescription" value='<s:property value="#dateType.key"/>' onclick="addDateOrDateRangeDescription();"><s:property value="#dateType.value"/>&nbsp;&nbsp;&nbsp;
-                </s:iterator>
-            </td>
-            <s:if test="%{loader.existDates.size() > 0}">
+            <td><input type="button" value="Add single date" id="addExistDate" onclick="addDateOrDateRangeExistence(this.id)" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="button" value="Add date range" id="addExistDateRange" onclick="addDateOrDateRangeExistence(this.id)" /></td>
+                <s:if test="%{loader.existDates.size() > 0}">
                 <td><input type="hidden" id="dateExistenceTable_rows" name="dateExistenceTable_rows" value="<s:property value="loader.existDates.size()" />" /></td>
                 </s:if>
                 <s:else>

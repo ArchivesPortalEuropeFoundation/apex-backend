@@ -9,7 +9,7 @@
         <s:iterator var="current" value="loader.cpfRelations" status="status">
             <table id="cpfRelationsTable_<s:property value="#status.index + 1" />" class="tablePadding">
                 <tr>
-                    <th id="thCpfRelTableHeader" colspan="4">CPF relation <s:property value="#status.index + 1" /></th>
+                    <th class="sectionHeader" colspan="4">CPF relation <s:property value="#status.index + 1" /></th>
                 </tr>
                 <tr>
                     <td>Name</td>
@@ -77,7 +77,7 @@
     <s:else>
         <table id="cpfRelationsTable_1" class="tablePadding">
             <tr>
-                <th id="thCpfRelTableHeader" colspan="4">CPF relation 1</th>
+                <th class="sectionHeader" colspan="4">CPF relation 1</th>
             </tr>
             <tr>
                 <td>Name</td>
@@ -135,7 +135,7 @@
         <s:iterator var="current" value="loader.resRelations" status="status">
             <table id="resRelationsTable_<s:property value="#status.index + 1" />" class="tablePadding">
                 <tr>
-                    <th id="thResRelTableHeader" colspan="4">Resource relation <s:property value="#status.index + 1" /></th>
+                    <th class="sectionHeader" colspan="4">Resource relation <s:property value="#status.index + 1" /></th>
                 </tr>
                 <tr>
                     <td>Name</td>
@@ -203,7 +203,7 @@
     <s:else>
         <table id="resRelationsTable_1" class="tablePadding">
             <tr>
-                <th id="thResRelTableHeader" colspan="4">Resource relation 1</th>
+                <th class="sectionHeader" colspan="4">Resource relation 1</th>
             </tr>
             <tr>
                 <td>Name</td>
@@ -261,7 +261,7 @@
         <s:iterator var="current" value="loader.fncRelations" status="status">
             <table id="fncRelationsTable_<s:property value="#status.index + 1" />" class="tablePadding">
                 <tr>
-                    <th id="thFncRelTableHeader" colspan="4">Function relation <s:property value="#status.index + 1" /></th>
+                    <th class="sectionHeader" colspan="4">Function relation <s:property value="#status.index + 1" /></th>
                 </tr>
                 <tr>
                     <td>Name</td>
@@ -329,7 +329,7 @@
     <s:else>
         <table id="fncRelationsTable_1" class="tablePadding">
             <tr>
-                <th id="thFncRelTableHeader" colspan="4">Function relation 1</th>
+                <th class="sectionHeader" colspan="4">Function relation 1</th>
             </tr>
             <tr>
                 <td>Name</td>

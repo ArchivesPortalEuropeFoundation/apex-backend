@@ -8,7 +8,7 @@
         <s:iterator var="current" value="loader.places" status="status">
             <table id="placeTable_<s:property value="#status.index + 1" />" class="tablePadding">
                 <tr>
-                    <th id="thPlaceTableHeader" colspan="4">Place <s:property value="#status.index + 1" /></th>
+                    <th class="sectionHeader" colspan="4">Place <s:property value="#status.index + 1" /></th>
                 </tr>
                 <tr>
                     <td>Place</td>
@@ -64,7 +64,7 @@
                         <td><input type="text" id="addressDetails" name="placeTable_<s:property value="#status.index + 1" />_addressDetails_1" /></td>
                         <td>Component</td>
                         <td>
-                            <select id="addressComponent" name="placeTable_<s:property value="#status.index + 1" />_addressComponent_1" onchange="">
+                            <select id="addressComponent" name="placeTable_<s:property value="#status.index + 1" />_addressComponent_1">
                                 <s:iterator value="addressComponentTypeList" var="list">
                                     <option value='<s:property value="#list"/>'><s:property value="#list"/></option>
                                 </s:iterator>
@@ -78,7 +78,13 @@
                 </tr>
                 <tr id="trPlaceRole">
                     <td>Role of the place</td>
-                    <td><input type="text" id="placeRole" name="placeRole_<s:property value="#status.index + 1" />" value="<s:property value="#current.role" />" /></td>
+                    <td>
+                        <select id="placeRole" name="placeRole_<s:property value="#status.index + 1" />" value="<s:property value="#current.role" />">
+                            <s:iterator value="placeEntryList" var="list">
+                                <option value='<s:property value="#list.key"/>' <s:if test='%{#list.key == #current.role}'>selected="selected"</s:if>><s:property value="#list.value"/></option>
+                            </s:iterator>
+                        </select>
+                    </td>
                     <td colspan="2"></td>
                 </tr>
                 <s:if test="%{#current.dates.size() > 0}">
@@ -135,7 +141,7 @@
     <s:else>
         <table id="placeTable_1" class="tablePadding">
             <tr>
-                <th id="thPlaceTableHeader" colspan="4">Place 1</th>
+                <th class="sectionHeader" colspan="4">Place 1</th>
             </tr>
             <tr>
                 <td>Place</td>
@@ -183,7 +189,13 @@
             </tr>
             <tr id="trPlaceRole">
                 <td>Role of the place</td>
-                <td><input type="text" id="placeRole" name="placeRole_1" /></td>
+                <td>
+                    <select id="placeRole" name="placeRole_<s:property value="#status.index + 1" />" value="<s:property value="#current.role" />">
+                        <s:iterator value="placeEntryList" var="list">
+                            <option value='<s:property value="#list.key"/>'><s:property value="#list.value"/></option>
+                        </s:iterator>
+                    </select>
+                </td>
                 <td colspan="2"></td>
             </tr>
             <tr>
@@ -193,12 +205,12 @@
                         <input type="radio" name="dateOrDateRangePlace" value='<s:property value="#dateType.key"/>' onclick="addDateOrDateRangePlace($(this).parent().parent().parent().parent().attr('id'))"><s:property value="#dateType.value"/>&nbsp;&nbsp;&nbsp;
                     </s:iterator>
                 </td>
-                    <s:if test="%{#current.dates.size() > 0}">
-                        <td><input type="hidden" id="placeTable_1_rows" name="placeTable_1_rows" value="<s:property value="#current.dates.size()" />" /></td>
-                        </s:if>
-                        <s:else>
-                        <td><input type="hidden" id="placeTable_1_rows" name="placeTable_1_rows" value="0" /></td>
-                        </s:else>
+                <s:if test="%{#current.dates.size() > 0}">
+                    <td><input type="hidden" id="placeTable_1_rows" name="placeTable_1_rows" value="<s:property value="#current.dates.size()" />" /></td>
+                    </s:if>
+                    <s:else>
+                    <td><input type="hidden" id="placeTable_1_rows" name="placeTable_1_rows" value="0" /></td>
+                    </s:else>
                 <td></td>
             </tr>
         </table>
@@ -212,7 +224,7 @@
         <s:iterator var="current" value="loader.functions" status="status">
             <table id="functionTable_<s:property value="#status.index + 1" />" class="tablePadding">
                 <tr>
-                    <th id="thFunctionTableHeader" colspan="4">Function <s:property value="#status.index + 1" /></th>
+                    <th class="sectionHeader" colspan="4">Function <s:property value="#status.index + 1" /></th>
                 </tr>
                 <tr>
                     <td>Function</td>
@@ -331,7 +343,7 @@
     <s:else>
         <table id="functionTable_1" class="tablePadding">
             <tr>
-                <th id="thFunctionTableHeader" colspan="4">Function 1</th>
+                <th class="sectionHeader" colspan="4">Function 1</th>
             </tr>
             <tr>
                 <td>Function</td>
@@ -390,7 +402,7 @@
         <s:iterator var="current" value="loader.occupations" status="status">
             <table id="occupationTable_<s:property value="#status.index + 1" />" class="tablePadding">
                 <tr>
-                    <th id="thOccupationTableHeader" colspan="4">Occupation <s:property value="#status.index + 1" /></th>
+                    <th class="sectionHeader" colspan="4">Occupation <s:property value="#status.index + 1" /></th>
                 </tr>
                 <tr>
                     <td>Occupation</td>
@@ -510,7 +522,7 @@
     <s:else>
         <table id="occupationTable_1" class="tablePadding">
             <tr>
-                <th id="thOccupationTableHeader" colspan="4">Occupation 1</th>
+                <th class="sectionHeader" colspan="4">Occupation 1</th>
             </tr>
             <tr>
                 <td>Occupation</td>
@@ -568,7 +580,7 @@
     </table>
     <table class="tablePadding">
         <tr>
-            <th id="thGenealogyHeader">Genealogy</th>
+            <th class="sectionHeader">Genealogy</th>
         </tr>
     </table>
     <s:if test="%{loader.genealogies.size() > 0}">
@@ -612,7 +624,7 @@
     </table>
     <table class="tablePadding">
         <tr>
-            <th id="thBiographyHeader">Biography</th>
+            <th class="sectionHeader">Biography</th>
         </tr>
     </table>
     <s:if test="%{loader.biographies.size() > 0}">

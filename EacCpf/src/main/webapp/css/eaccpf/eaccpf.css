@@ -226,11 +226,8 @@ background : #fff;
     margin-top: 15px;
 }
 
-#eacCpfDiv #thPlaceTableHeader, #thFunctionTableHeader, #thOccupationTableHeader, #thGenealogyHeader, #thBiographyHeader, #thCpfRelTableHeader, #thResRelTableHeader {
+.sectionHeader {
     font-weight: bold;
-}
-
-#thPlaceTableHeader, #thFunctionTableHeader, #thOccupationTableHeader, #thGenealogyHeader, #thBiographyHeader, #thCpfRelTableHeader, #thResRelTableHeader {
     border-bottom: 1px solid #00a0df;
 }
 
