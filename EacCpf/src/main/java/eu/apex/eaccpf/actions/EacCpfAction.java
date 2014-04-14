@@ -6,7 +6,6 @@ package eu.apex.eaccpf.actions;
 
 import com.opensymphony.xwork2.ActionSupport;
 import eu.apex.eaccpf.util.MapEntry;
-import java.util.LinkedHashSet;
 import java.util.TreeMap;
 import java.util.Locale;
 import java.util.Map;

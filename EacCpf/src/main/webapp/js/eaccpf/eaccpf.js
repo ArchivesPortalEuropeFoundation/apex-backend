@@ -230,12 +230,12 @@ function parseDateToISO(content, table, row, date) {
     var counterRow = row.split('_');
     var counterDate = date.split('_');
 //Normal ISO pattern
-    var PATTERN_ISO = /(-?(0|1|2)([0-9]{3})(((01|02|03|04|05|06|07|08|09|10|11|12)((0[1-9])|((1|2)[0-9])|(3[0-1])))|-((01|02|03|04|05|06|07|08|09|10|11|12)(-((0[1-9])|((1|2)[0-9])|(3[0-1])))?))?)/;
+    var PATTERN_ISO = /(-?(0|1|2)([0-9]{3})(((01|02|03|04|05|06|07|08|09|10|11|12|1|2|3|4|5|6|7|8|9)(01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|1|2|3|4|5|6|7|8|9))|-((01|02|03|04|05|06|07|08|09|10|11|12|1|2|3|4|5|6|7|8|9)(-(01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|1|2|3|4|5|6|7|8|9))?))?)/;
     //01.01.1985
-    var PATTERN_DD_MM_YYYY = /([0-9]{2})[\.\/]([0-9]{2})[\.\/]([0-9]{4})/;
+    var PATTERN_DD_MM_YYYY = /((0?[1-9])|((1|2)[0-9])|(3[0-1]))[\.\/](1|2|3|4|5|6|7|8|9|01|02|03|04|05|06|07|08|09|10|11|12)[\.\/]([0-9]{4})/;
     var PATTERN_YYYYMM = /(0|1|2)([0-9]{3})([0-9]{2})/;
     //1985.01.01
-    var PATTERN_YYYY_MM_DD = /([0-9]{4})\.([0-9]{2})\.([0-9]{2})/;
+    var PATTERN_YYYY_MM_DD = /([0-9]{4})\.(1|2|3|4|5|6|7|8|9|01|02|03|04|05|06|07|08|09|10|11|12)\.(01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|1|2|3|4|5|6|7|8|9)/;
     //01011985
     var PATTERN_DDMMYYYY = /((0[1-9])|((1|2)[0-9])|(3[0-1]))(01|02|03|04|05|06|07|08|09|10|11|12)((0|1|2)([0-9]{3}))/;
     //19850101
@@ -256,13 +256,13 @@ function parseDateToISO(content, table, row, date) {
         if (!PATTERN_SECONDCHECK.test(content) == true) {
             result = PATTERN_ISO.exec(content);
             $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Year").attr("value", result[2] + result[3]);
-            if (result[13] != null) {
-                $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Month").attr("value", result[13]);
+            if (result[9] != null) {
+                $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Month").attr("value", addTrailingZero(result[9]));
             } else {
                 $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Month").removeAttr("value");
             }
-            if (result[15] != null) {
-                $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Day").attr("value", result[15]);
+            if (result[11] != null) {
+                $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Day").attr("value", addTrailingZero(result[11]));
             } else {
                 $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Day").removeAttr("value");
             }
@@ -270,48 +270,66 @@ function parseDateToISO(content, table, row, date) {
     }
     if (PATTERN_DD_MM_YYYY.test(content) == true) {
         result = PATTERN_DD_MM_YYYY.exec(content);
-        $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Year").attr("value", result[3]);
-        $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Month").attr("value", result[2]);
-        $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Day").attr("value", result[1]);
+        $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Year").attr("value", result[7]);
+        $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Month").attr("value", addTrailingZero(result[6]));
+        $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Day").attr("value", addTrailingZero(result[1]));
     }
     if (PATTERN_YYYYMM.test(content) == true) {
         result = PATTERN_YYYYMM.exec(content);
         $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Year").attr("value", result[1] + result[2]);
-        $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Month").attr("value", result[3]);
+        $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Month").attr("value", addTrailingZero(result[3]));
         $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Day").removeAttr("value");
     }
     if (PATTERN_YYYY_MM_DD.test(content) == true) {
         result = PATTERN_YYYY_MM_DD.exec(content);
         if (999 < result[1] < 3000) {
             $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Year").attr("value", result[1]);
-            $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Month").attr("value", result[2]);
-            $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Day").attr("value", result[3]);
+            $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Month").attr("value", addTrailingZero(result[2]));
+            $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Day").attr("value", addTrailingZero(result[3]));
         }
     }
     if (PATTERN_DDMMYYYY.test(content) == true) {
         result = PATTERN_DDMMYYYY.exec(content);
         $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Year").attr("value", result[7]);
-        $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Month").attr("value", result[6]);
-        $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Day").attr("value", result[1]);
+        $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Month").attr("value", addTrailingZero(result[6]));
+        $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Day").attr("value", addTrailingZero(result[1]));
     }
     if (PATTERN_YYYYMMDD.test(content) == true) {
         result = PATTERN_YYYYMMDD.exec(content);
         $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Year").attr("value", result[1]);
-        $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Month").attr("value", result[4]);
-        $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Day").attr("value", result[5]);
+        $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Month").attr("value", addTrailingZero(result[4]));
+        $("table#" + table + " tr#trDate_iso_" + counterRow[2] + " input#date_" + counterDate[1] + "_Day").attr("value", addTrailingZero(result[5]));
     }
+}
+
+function addTrailingZero(value){
+    if(value < 10 && !(/^0/).test(value)){
+        return "0" + value;
+    } else return value;
 }
 
 function toggleDateTextfields(checkbox) {
     var counterDate = $(checkbox).attr("name").split('_');
     var tableName = $(checkbox).parent().parent().parent().parent().attr("id");
     if ($(checkbox).is(":checked") == true) {
+        $('table#' + tableName + ' tr#trDate_text_' + counterDate[counterDate.length - 1] + ' input#date_' + counterDate[counterDate.length - 2]).attr("value", "unknown");
         $('table#' + tableName + ' tr#trDate_text_' + counterDate[counterDate.length - 1] + ' input#date_' + counterDate[counterDate.length - 2]).attr("disabled", "disabled");
+        if ($(checkbox).attr("id") == "date_unknown_1") {
+            $('table#' + tableName + ' tr#trDate_iso_' + counterDate[counterDate.length - 1] + ' input#date_1_Year').attr("value", "0000");
+        } else if ($(checkbox).attr("id") == "date_unknown_2") {
+            $('table#' + tableName + ' tr#trDate_iso_' + counterDate[counterDate.length - 1] + ' input#date_2_Year').attr("value", "2999");
+        }
         $('table#' + tableName + ' tr#trDate_iso_' + counterDate[counterDate.length - 1] + ' input[id^="date_' + counterDate[counterDate.length - 2] + '_"]').each(function() {
             $(this).attr("disabled", "disabled");
         });
     } else {
+        $('table#' + tableName + ' tr#trDate_text_' + counterDate[counterDate.length - 1] + ' input#date_' + counterDate[counterDate.length - 2]).attr("value", "");
         $('table#' + tableName + ' tr#trDate_text_' + counterDate[counterDate.length - 1] + ' input#date_' + counterDate[counterDate.length - 2]).removeAttr("disabled");
+        if ($(checkbox).attr("id") == "date_unknown_1") {
+            $('table#' + tableName + ' tr#trDate_iso_' + counterDate[counterDate.length - 1] + ' input#date_1_Year').attr("value", "");
+        } else if ($(checkbox).attr("id") == "date_unknown_2") {
+            $('table#' + tableName + ' tr#trDate_iso_' + counterDate[counterDate.length - 1] + ' input#date_2_Year').attr("value", "");
+        }
         $('table#' + tableName + ' tr#trDate_iso_' + counterDate[counterDate.length - 1] + ' input[id^="date_' + counterDate[counterDate.length - 2] + '_"]').each(function() {
             $(this).removeAttr("disabled");
         });

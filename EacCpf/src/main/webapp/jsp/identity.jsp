@@ -6,7 +6,7 @@
 
 <div id="identityTabContent">
     <input type="hidden" name="cpfType" value='<s:property value="cpfType" />' />
-    <h2 class="tablePadding">Description of a <s:property value="cpfType" /></h2>
+    <h2 class="tablePadding"><s:property value="cpfTypeDescriptionText" /></h2>
     <s:if test="%{loader.nameEntries.size() > 0}">
         <s:iterator var="current" value="loader.nameEntries" status="status">
             <table id="identityPersonName_<s:property value="#status.index + 1" />" class="tablePadding">
@@ -14,9 +14,9 @@
                     <th class="sectionHeader" colspan="4">Name</th>
                 </tr>
                 <tr id="trPersonName_1">
-                    <td><label for="textPersonName">Full name or part of name*</label></td>
+                    <td><label for="textPersonName">Full name or part of name:*</label></td>
                     <td><input type="text" id="textPersonName" name="textPersonName_<s:property value="#status.index + 1" />" required="required" value="<s:property value="#current.name" />" /></td>
-                    <td><label for="identityNameLanguage">Select a language</label></td>
+                    <td><label for="identityNameLanguage">Select a language:</label></td>
                     <td>
                         <select id="identityNameLanguage" name="identityNameLanguage_<s:property value="#status.index + 1" />">
                             <s:iterator value="languages" var="language">
@@ -26,7 +26,7 @@
                     </td>
                 </tr>
                 <tr id="trPersonName_2">
-                    <td><label for="identityFormOfName">Form of the name</label></td>
+                    <td><label for="identityFormOfName">Form of the name:</label></td>
                     <td>
                         <select id="identityFormOfName" name="identityFormOfName_<s:property value="#status.index + 1" />" required="required">
                             <s:iterator value="formNameList" var="formNames">
@@ -34,7 +34,7 @@
                             </s:iterator>
                         </select>
                     </td>
-                    <td><label for="identityComponentOfName">Component of the name</label></td>
+                    <td><label for="identityComponentOfName">Component of the name:</label></td>
                     <td>
                         <select id="identityComponentOfName" name="identityComponentOfName_<s:property value="#status.index + 1" />" required="required">
                             <s:iterator value="componentNameList" var="compNames">
@@ -102,9 +102,9 @@
                 <th class="sectionHeader" colspan="4">Name</th>
             </tr>
             <tr id="trPersonName_1">
-                <td><label for="textPersonName">Full name or part of name*</label></td>
+                <td><label for="textPersonName">Full name or part of name:*</label></td>
                 <td><input type="text" id="textPersonName" name="textPersonName_1" required="required" /></td>
-                <td><label for="identityNameLanguage">Select a language</label></td>
+                <td><label for="identityNameLanguage">Select a language:</label></td>
                 <td>
                     <select id="identityNameLanguage" name="identityNameLanguage_1">
                         <s:iterator value="languages" var="language">
@@ -114,7 +114,7 @@
                 </td>
             </tr>
             <tr id="trPersonName_2">
-                <td><label for="identityFormOfName">Form of the name</label></td>
+                <td><label for="identityFormOfName">Form of the name:</label></td>
                 <td>
                     <select id="identityFormOfName" name="identityFormOfName_1" required="required">
                         <s:iterator value="formNameList" var="formNames">
@@ -122,7 +122,7 @@
                         </s:iterator>
                     </select>
                 </td>
-                <td><label for="identityComponentOfName">Component of the name</label></td>
+                <td><label for="identityComponentOfName">Component of the name:</label></td>
                 <td>
                     <select id="identityComponentOfName" name="identityComponentOfName_1" required="required">
                         <s:iterator value="componentNameList" var="compNames">
@@ -154,9 +154,9 @@
                     <th class="sectionHeader" colspan="4">Identifier</th>
                 </tr>
                 <tr id="trPersonId">
-                    <td>Identifier of the person</td>
+                    <td><s:property value="cpfTypeIdentifierText" />:</td>
                     <td><input type="text" id="textPersonId" name="textPersonId_<s:property value="#status.index + 1" />" value="<s:property value="#current.identifier" />"/></td>
-                    <td>Type of the identifier</td>
+                    <td>Type of the identifier:</td>
                     <td><input type="text" id="textPersonTypeId" name="textPersonTypeId_<s:property value="#status.index + 1" />" value="<s:property value="#current.identifierType" />"/></td>
                 </tr>
             </table>
@@ -168,9 +168,9 @@
                 <th class="sectionHeader" colspan="4">Identifier</th>
             </tr>
             <tr id="trPersonId">
-                <td>Identifier of the person</td>
+                <td><s:property value="cpfTypeIdentifierText" />:</td>
                 <td><input type="text" id="textPersonId" name="textPersonId_1"/></td>
-                <td>Type of the identifier</td>
+                <td>Type of the identifier:</td>
                 <td><input type="text" id="textPersonTypeId" name="textPersonTypeId_1"/></td>
             </tr>
         </table>

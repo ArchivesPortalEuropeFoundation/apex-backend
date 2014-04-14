@@ -39,9 +39,9 @@ public class LoadFormAction extends EacCpfAction {
     private Set<MapEntry> fncRelationTypeList = new LinkedHashSet<MapEntry>();
 
     private String cpfType;
+    private String cpfTypeDescriptionText;
+    private String cpfTypeIdentifierText;
     private File upload;
-    private String uploadContentType;
-    private String uploadFileName;
     private String content;
     private EacCpfLoader loader;
     private String useMode;
@@ -62,6 +62,19 @@ public class LoadFormAction extends EacCpfAction {
             int fakeId = random.nextInt(1000000000);
             this.loader.setRecordId(Integer.toString(fakeId));
             this.loader.setAgencyCode("EU-00000000001");
+        }
+        if (cpfType.equals(EacCpfAction.PERSON)){
+            cpfTypeDescriptionText = "Description of a person";
+            cpfTypeIdentifierText = "Identifier of the person";
+        } else if (cpfType.equals(EacCpfAction.CORPORATE_BODY)){
+            cpfTypeDescriptionText = "Description of a corporate body";
+            cpfTypeIdentifierText = "Identifier of the corporate body";
+        } else if (cpfType.equals(EacCpfAction.FAMILY)){
+            cpfTypeDescriptionText = "Description of a family";
+            cpfTypeIdentifierText = "Identifier of the family";
+        } else {
+            cpfTypeDescriptionText = "";
+            cpfTypeIdentifierText = "";
         }
         if (this.loader.getIdentifiers() == null) {
             this.loader.setIdentifiers(new ArrayList<IdentifierType>());
@@ -343,24 +356,8 @@ public class LoadFormAction extends EacCpfAction {
         this.upload = file;
     }
 
-    public void setUploadContentType(String contentType) {
-        this.uploadContentType = contentType;
-    }
-
-    public void setUploadFileName(String filename) {
-        this.uploadFileName = filename;
-    }
-
     public File getUpload() {
         return upload;
-    }
-
-    public String getUploadContentType() {
-        return uploadContentType;
-    }
-
-    public String getUploadFileName() {
-        return uploadFileName;
     }
 
     public EacCpfLoader getLoader() {
@@ -385,5 +382,13 @@ public class LoadFormAction extends EacCpfAction {
 
     public String getDefaultScript() {
         return defaultScript;
+    }
+
+    public String getCpfTypeDescriptionText() {
+        return cpfTypeDescriptionText;
+    }
+
+    public String getCpfTypeIdentifierText() {
+        return cpfTypeIdentifierText;
     }
 }
