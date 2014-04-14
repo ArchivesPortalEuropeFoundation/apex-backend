@@ -43,9 +43,6 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 	public static final DecimalFormat NUMBERFORMAT = new DecimalFormat("00000000");
 
 	private final static XPath XPATH = APEnetUtilities.getDashboardConfig().getXpathFactory().newXPath();
-	private static XPathExpression recordIdExpression;
-	private static XPathExpression agencyCodeExpression;
-	private static XPathExpression agencyNameExpression;
 	private static XPathExpression nameExpression;
 	private static XPathExpression nameParallelExpression;
 	private static XPathExpression placeExpression;
@@ -53,6 +50,8 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 	private static XPathExpression descriptionExpression;
 	private static XPathExpression fromDateExpression;
 	private static XPathExpression toDateExpression;
+	private static XPathExpression oneDateExpression;
+	private static XPathExpression oneDateNormalExpression;
 	private static XPathExpression fromDateNormalExpression;
 	private static XPathExpression toDateNormalExpression;
 	private static XPathExpression occupationExpression;
@@ -75,15 +74,17 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 	private static XPathExpression placeRoleExpression;
 	private static XPathExpression placeAddressLineExpression;
 	private static XPathExpression relationsExpression;
+	private static XPathExpression alternativeSetExpression;
 	private static XPathExpression otherPlaceEntryExpression;
 	private static XPathExpression otherRelationEntryExpression;	
+	private static XPathExpression otherComponentEntryExpression;
+	private static XPathExpression countArchivalMaterialRelationsExpression;
+	private static XPathExpression countNameRelationsExpression;
+	private static XPathExpression institutionsRelationsExpression;
 	private String recordId;
 	static {
 		try {
 			XPATH.setNamespaceContext(new EacCpfNamespaceContext());
-			recordIdExpression = XPATH.compile("/eac:eac-cpf/eac:control/eac:recordId");
-			agencyCodeExpression = XPATH.compile("/eac:eac-cpf/eac:control/eac:maintenanceAgency/eac:agencyCode");
-			agencyNameExpression = XPATH.compile("/eac:eac-cpf/eac:control/eac:maintenanceAgency/eac:agencyName");
 			cpfDescriptionExpression =  XPATH.compile("/eac:eac-cpf/eac:cpfDescription");
 			nameExpression = XPATH.compile("./eac:identity/eac:nameEntry/eac:part");
 			nameParallelExpression = XPATH.compile("./eac:identity/eac:nameEntryParallel/eac:nameEntry/eac:part");
@@ -92,6 +93,8 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 			placeExpression = XPATH.compile("./eac:places/eac:place/eac:placeEntry");
 			fromDateExpression = XPATH.compile("./eac:existDates/eac:dateRange/eac:fromDate");
 			toDateExpression = XPATH.compile("./eac:existDates/eac:dateRange/eac:toDate");
+			oneDateExpression = XPATH.compile("./eac:existDates/eac:date");
+			oneDateNormalExpression = XPATH.compile("./eac:existDates/eac:date/@standardDate");
 			fromDateNormalExpression = XPATH.compile("./eac:existDates/eac:dateRange/eac:fromDate/@standardDate");
 			toDateNormalExpression = XPATH.compile("./eac:existDates/eac:dateRange/eac:toDate/@standardDate");
 			occupationExpression = XPATH.compile("./eac:occupations/eac:occupation/eac:term");
@@ -114,17 +117,23 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 			placeAddressLineExpression = XPATH.compile("./places/place/address/addressline");
 			otherPlaceEntryExpression = XPATH.compile("//eac:placeEntry");
 			otherRelationEntryExpression = XPATH.compile("//eac:relationEntry");
+			otherComponentEntryExpression = XPATH.compile("//eac:componentEntry");
+			alternativeSetExpression = XPATH.compile("./eac:alternativeSet");
+			countArchivalMaterialRelationsExpression = XPATH.compile("count(//eac:resourceRelation)");
+			countNameRelationsExpression = XPATH.compile("count(//eac:cpfRelation[not(@cpfRelationType='identity')])");
+			institutionsRelationsExpression = XPATH.compile("//eac:resourceRelation/eac:relationEntry[@localType='agencyCode']");
+
 		} catch (XPathExpressionException e) {
 			LOGGER.info(e.getMessage(), e);
 		}
 	}
 
-	private String getContent(List<XPathExpression> expressions, Node baseNode) throws XPathExpressionException{
+	private StringBuilder getContent(List<XPathExpression> expressions, Node baseNode) throws XPathExpressionException{
 		StringBuilder stringBuilder = new StringBuilder();
 		for (XPathExpression expression: expressions){
-			stringBuilder.append(getText((NodeList)expression.evaluate(baseNode, XPathConstants.NODESET)));
+			stringBuilder.append(getText((NodeList)expression.evaluate(baseNode, XPathConstants.NODESET))+ WHITE_SPACE);
 		}
-		return stringBuilder.toString();
+		return stringBuilder;
 	}
 	
 	public void publish(EacCpf eacCpf) throws Exception{
@@ -136,12 +145,11 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 		doc.getDocumentElement().normalize();
 		EacCpfSolrObject eacCpfSolrObject = new EacCpfSolrObject(eacCpf);
 		eacCpfSolrObject.setRecordId((eacCpf.getIdentifier()));
+		recordId = eacCpf.getIdentifier();
 		NodeList entityIdNodeList = (NodeList) entityIdExpression.evaluate(doc, XPathConstants.NODESET);
-		eacCpfSolrObject.setEntityIds(getTextsWithoutMultiplity(entityIdNodeList));
+		eacCpfSolrObject.setEntityIds(getTextsWithoutMultiplity(entityIdNodeList,false));
 		eacCpfSolrObject.setEntityType((String) entityTypeExpression.evaluate(doc, XPathConstants.STRING));
 		eacCpfSolrObject.setLanguage((String) languageExpression.evaluate(doc, XPathConstants.STRING));
-		eacCpfSolrObject.setAgencyCode(eacCpf.getArchivalInstitution().getRepositorycode());
-		eacCpfSolrObject.setAgencyName(removeUnusedCharacters((String) agencyNameExpression.evaluate(doc, XPathConstants.STRING)));
 		Node cpfDescriptionNode = (Node) cpfDescriptionExpression.evaluate(doc, XPathConstants.NODE);
 		parseCpfDescription(eacCpfSolrObject, cpfDescriptionNode);
 		publishEacCpf(eacCpfSolrObject);
@@ -150,21 +158,21 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 	private void parseCpfDescription(EacCpfSolrObject eacCpfSolrObject, Node cpfDescriptionNode) throws XPathExpressionException{
 		Node descriptionNode = (Node) descriptionExpression.evaluate(cpfDescriptionNode, XPathConstants.NODE);
 		NodeList nameNodeList = (NodeList) nameExpression.evaluate(descriptionNode, XPathConstants.NODESET);
-		eacCpfSolrObject.setNames(getTextsWithoutMultiplity(nameNodeList));
+		eacCpfSolrObject.setNames(getTextsWithoutMultiplity(nameNodeList, true));
 		if (eacCpfSolrObject.getNames().size() ==0){
 			nameNodeList = (NodeList) nameParallelExpression.evaluate(descriptionNode, XPathConstants.NODESET);
-			eacCpfSolrObject.setNames(getTextsWithoutMultiplity(nameNodeList));
+			eacCpfSolrObject.setNames(getTextsWithoutMultiplity(nameNodeList, true));
 		}
 		NodeList placesNodeList = (NodeList) placeExpression.evaluate(descriptionNode, XPathConstants.NODESET);
-		eacCpfSolrObject.setPlaces(getTextsWithoutMultiplity(placesNodeList));
+		eacCpfSolrObject.setPlaces(getTextsWithoutMultiplity(placesNodeList, true));
 		
 		NodeList functionsNodeList = (NodeList) functionExpression.evaluate(descriptionNode, XPathConstants.NODESET);
-		eacCpfSolrObject.setFunctions(getTextsWithoutMultiplity(functionsNodeList));
+		eacCpfSolrObject.setFunctions(getTextsWithoutMultiplity(functionsNodeList, true));
 		NodeList mandatesNodeList = (NodeList) mandateExpression.evaluate(descriptionNode, XPathConstants.NODESET);
-		eacCpfSolrObject.setMandates(getTextsWithoutMultiplity(mandatesNodeList));
+		eacCpfSolrObject.setMandates(getTextsWithoutMultiplity(mandatesNodeList, true));
 		NodeList occupationsNodeList = (NodeList) occupationExpression.evaluate(descriptionNode, XPathConstants.NODESET);
 		
-		eacCpfSolrObject.setOccupations(getTextsWithoutMultiplity(occupationsNodeList));
+		eacCpfSolrObject.setOccupations(getTextsWithoutMultiplity(occupationsNodeList, true));
 		List<XPathExpression> descriptionExpressions = new ArrayList<XPathExpression>();
 		descriptionExpressions.add(bioghistExpression);
 		descriptionExpressions.add(generalContextExpression);
@@ -177,32 +185,52 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 		descriptionExpressions.add(localDescriptionPlaceEntryExpression);
 		descriptionExpressions.add(placeRoleExpression);		
 		descriptionExpressions.add(placeAddressLineExpression);	
-		eacCpfSolrObject.setDescription(getContent(descriptionExpressions, descriptionNode));
+		descriptionExpressions.add(occupationPlaceEntryExpression);	
+		eacCpfSolrObject.setDescription(getContent(descriptionExpressions, descriptionNode).toString());
 		Node relationsNode = (Node) relationsExpression.evaluate(cpfDescriptionNode, XPathConstants.NODE);
 		List<XPathExpression> otherExpressions = new ArrayList<XPathExpression>();
 		otherExpressions.add(descriptiveNoteExpression);
 		otherExpressions.add(otherPlaceEntryExpression);
 		otherExpressions.add(otherRelationEntryExpression);
-
-		eacCpfSolrObject.setOther(getContent(otherExpressions, relationsNode));
-		String fromDate = removeUnusedCharacters((String) fromDateExpression.evaluate(descriptionNode, XPathConstants.STRING));
-		String toDate = removeUnusedCharacters((String) toDateExpression.evaluate(descriptionNode, XPathConstants.STRING));
-		String dateDescription = null;
-		if (StringUtils.isNotBlank(fromDate)){
-			dateDescription = fromDate;
-		}
-		if (StringUtils.isNotBlank(toDate)){
-			if (dateDescription == null){
-				dateDescription = toDate;
-			}else {
-				dateDescription += " - " + toDate;
+		StringBuilder other = getContent(otherExpressions, relationsNode);
+		otherExpressions.clear();
+		Node alternativeSetNode = (Node) alternativeSetExpression.evaluate(cpfDescriptionNode, XPathConstants.NODE);
+		otherExpressions.add(descriptiveNoteExpression);
+		otherExpressions.add(otherComponentEntryExpression);
+		other.append(getContent(otherExpressions, alternativeSetNode));
+		eacCpfSolrObject.setOther(other.toString());
+		String oneDate = removeUnusedCharacters((String) oneDateExpression.evaluate(descriptionNode, XPathConstants.STRING));
+		String oneDateNormal = removeUnusedCharacters((String) oneDateNormalExpression.evaluate(descriptionNode, XPathConstants.STRING));
+		if (StringUtils.isBlank(oneDate) && StringUtils.isBlank(oneDateNormal)){
+			String fromDate = removeUnusedCharacters((String) fromDateExpression.evaluate(descriptionNode, XPathConstants.STRING));
+			String toDate = removeUnusedCharacters((String) toDateExpression.evaluate(descriptionNode, XPathConstants.STRING));
+			String dateDescription = null;
+			if (StringUtils.isNotBlank(fromDate)){
+				dateDescription = fromDate;
 			}
+			if (StringUtils.isNotBlank(toDate)){
+				if (dateDescription == null){
+					dateDescription = toDate;
+				}else {
+					dateDescription += " - " + toDate;
+				}
+			}
+			eacCpfSolrObject.setDateDescription(dateDescription);
+			fromDate = (String) fromDateNormalExpression.evaluate(descriptionNode, XPathConstants.STRING);
+			toDate = (String) toDateNormalExpression.evaluate(descriptionNode, XPathConstants.STRING);
+			eacCpfSolrObject.setFromDate(obtainDate(fromDate, true));
+			eacCpfSolrObject.setToDate(obtainDate(toDate, false));		
+		}else {
+			eacCpfSolrObject.setDateDescription(oneDate);
+			eacCpfSolrObject.setFromDate(obtainDate(oneDateNormal, true));
+			eacCpfSolrObject.setToDate(obtainDate(oneDateNormal, false));		
 		}
-		eacCpfSolrObject.setDateDescription(dateDescription);
-		fromDate = (String) fromDateNormalExpression.evaluate(descriptionNode, XPathConstants.STRING);
-		toDate = (String) toDateNormalExpression.evaluate(descriptionNode, XPathConstants.STRING);
-		eacCpfSolrObject.setFromDate(obtainDate(fromDate, true));
-		eacCpfSolrObject.setToDate(obtainDate(toDate, false));
+
+		eacCpfSolrObject.setNumberOfArchivalMaterialRelations(((Double) countArchivalMaterialRelationsExpression.evaluate(relationsNode, XPathConstants.NUMBER)).intValue());
+		eacCpfSolrObject.setNumberOfNameRelations(((Double) countNameRelationsExpression.evaluate(relationsNode, XPathConstants.NUMBER)).intValue());
+		Set<String> institutions = getTextsWithoutMultiplity((NodeList) institutionsRelationsExpression.evaluate(relationsNode, XPathConstants.NODESET), false);
+		eacCpfSolrObject.setNumberOfInstitutionsRelations(institutions.size());
+
 	}
 
 	private void publishEacCpf(EacCpfSolrObject eacCpfSolrObject) throws MalformedURLException, SolrServerException, IOException {
@@ -237,6 +265,11 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 
 		add(doc, SolrFields.AI, archivalInstitution.getAiname() + COLON + archivalInstitution.getAiId());
 		doc.addField(SolrFields.AI_ID, archivalInstitution.getAiId());
+		add(doc, SolrFields.OTHER,eacCpfSolrObject.getOther());
+		doc.addField(SolrFields.EAC_CPF_AGENCY_CODE, archivalInstitution.getRepositorycode());
+		doc.addField(SolrFields.EAC_CPF_NUMBER_OF_MATERIAL_RELATIONS, eacCpfSolrObject.getNumberOfArchivalMaterialRelations());
+		doc.addField(SolrFields.EAC_CPF_NUMBER_OF_NAME_RELATIONS, eacCpfSolrObject.getNumberOfNameRelations());
+		doc.addField(SolrFields.EAC_CPF_NUMBER_OF_INSTITUTIONS_RELATIONS, eacCpfSolrObject.getNumberOfInstitutionsRelations());
 		addSolrDocument(doc);
 	}
 	public void deleteEverything() throws SolrServerException{
@@ -247,14 +280,17 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 		return recordId;
 	}
 
-	protected static Set<String> getTextsWithoutMultiplity(NodeList nodeList) {
+
+	protected static Set<String> getTextsWithoutMultiplity(NodeList nodeList, boolean strip) {
 		Set<String> results = new LinkedHashSet<String>();
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			String text = removeUnusedCharacters(nodeList.item(i).getTextContent());
 			if (StringUtils.isNotBlank(text)) {
-				int index = text.indexOf('(');
-				if (index > 0){
-					text  = text.substring(0, index).trim();
+				if (strip){
+					int index = text.indexOf('(');
+					if (index > 0){
+						text  = text.substring(0, index).trim();
+					}
 				}
 				results.add(text);
 			}
