@@ -56,6 +56,7 @@ public final class SolrFields {
 	 */
 
 	public final static String EAC_CPF_RECORD_ID = "recordId";
+	public final static String EAC_CPF_AGENCY_CODE = "agencyCode";
 	public final static String EAC_CPF_ENTITY_ID = "entityId";
 	public final static String EAC_CPF_NAMES = "names";
 	public final static String EAC_CPF_PLACES = "places";
@@ -71,7 +72,10 @@ public final class SolrFields {
 	public final static String EAC_CPF_FACET_FUNCTION = "functionsFacet";
 	public final static String EAC_CPF_FACET_MANDATE = "mandatesFacet";
 	public final static String EAC_CPF_DESCRIPTION = "description";
-	
+	public final static String EAC_CPF_NUMBER_OF_MATERIAL_RELATIONS = "numberOfArchivalMaterialRelations";
+	public final static String EAC_CPF_NUMBER_OF_NAME_RELATIONS = "numberOfNameRelations";
+	public final static String EAC_CPF_NUMBER_OF_INSTITUTIONS_RELATIONS = "numberOfInstitutions";
+
 }
 
 
