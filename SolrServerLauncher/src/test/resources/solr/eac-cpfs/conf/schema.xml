@@ -83,6 +83,7 @@
 	  <field name="mandates" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="functions" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="description" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
+	  <field name="other" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="dateDescription" type="text" indexed="true" stored="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="occupations" type="text" indexed="true" stored="true" multiValued="true" required="false" termVectors="true" termPositions="true" termOffsets="true" />
 	  <field name="placesFacet" type="facetText" indexed="true" stored="true" multiValued="true"  required="false" />
@@ -91,19 +92,26 @@
 	  <field name="occupationsFacet" type="facetText" indexed="true"  multiValued="true" stored="true" required="false"/>
 	  <field name="mandatesFacet" type="facetText" indexed="true"  multiValued="true" stored="true" required="false"/>
 	  <field name="functionsFacet" type="facetText" indexed="true"  multiValued="true" stored="true" required="false"/>	  
-
-	  <field name="countryId" type="int" indexed="true" stored="false" required="false"/>
-	  <field name="aiId" type="int" indexed="true" stored="false" required="false"/>	  
-	  <field name="language" type="languageText" indexed="true" stored="true" required="false"/>
-	  <field name="recordId" type="unitidType" indexed="true" stored="true" required="true"/>
 	  <field name="entityId" type="unitidType" indexed="true" stored="true" required="false"  multiValued="true"/>
 	  <field name="entityTypeFacet" type="facetText" indexed="true" stored="true" required="false"/>
+	  <field name="language" type="languageText" indexed="true" stored="true" required="false"/>
+	  
+
+
 
       <field name="startdate" type="date" indexed="true" stored="true" required="false"/>
 	  <field name="enddate" type="date" indexed="true" stored="true" required="false"/>
 
 	  <field name="dateType" type="string" indexed="true" stored="true" required="false"/>
- 
+	  <field name="numberOfArchivalMaterialRelations" type="int" indexed="false" stored="true" required="false"/>
+	  <field name="numberOfNameRelations" type="int" indexed="false" stored="true" required="false"/>
+	  <field name="numberOfInstitutions" type="int" indexed="false" stored="true" required="false"/>
+	  
+ 	  <field name="countryId" type="int" indexed="true" stored="false" required="false"/>
+	  <field name="aiId" type="int" indexed="true" stored="false" required="false"/>	  
+	  <field name="recordId" type="string" indexed="false" stored="true" required="true"/>
+	  <field name="agencyCode" type="string" indexed="false" stored="true" required="true"/>
+	  	  
 	  <field name="timestamp" type="date" indexed="true" stored="true" default="NOW" multiValued="false"/>
 	  <field name="spell" type="textSpell" indexed="true" stored="true" multiValued="true" termVectors="true" termPositions="true" termOffsets="true" />
 
@@ -116,6 +124,7 @@
     <copyField source="names" dest="spell"/>
 	<copyField source="places" dest="spell"/>
 	<copyField source="description" dest="spell"/>
+	<copyField source="other" dest="spell"/>
 	<copyField source="occupations" dest="spell"/>
 	<copyField source="mandates" dest="spell"/>	
 	<copyField source="functions" dest="spell"/>		
