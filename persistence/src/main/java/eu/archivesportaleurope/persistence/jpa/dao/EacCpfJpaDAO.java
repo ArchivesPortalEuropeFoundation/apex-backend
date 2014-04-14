@@ -1,49 +1,47 @@
 package eu.archivesportaleurope.persistence.jpa.dao;
 
-import eu.apenet.persistence.dao.ContentSearchOptions;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 
+import eu.apenet.persistence.dao.ContentSearchOptions;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.hibernate.AbstractHibernateDAO;
 import eu.apenet.persistence.vo.EacCpf;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.QueuingState;
 import eu.apenet.persistence.vo.ValidatedState;
-import java.util.ArrayList;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import eu.archivesportaleurope.util.ApeUtil;
 
 public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implements EacCpfDAO {
 
     private final Logger log = Logger.getLogger(EacCpfJpaDAO.class);
 
     @Override
-    @SuppressWarnings("unchecked")
     public boolean existEacCpf(String identifier) {
         TypedQuery<EacCpf> query = getEntityManager().createQuery(
                 "SELECT id FROM EacCpf eacCpf WHERE eacCpf.identifier = :identifier ", EacCpf.class);
-        query.setParameter("identifier", identifier);
+        query.setParameter("identifier", ApeUtil.decodeSpecialCharacters(identifier));
         query.setMaxResults(1);
         return query.getResultList().size() > 0;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public EacCpf getEacCpfByIdentifier(Integer aiId, String identifier) {
         TypedQuery<EacCpf> query = getEntityManager().createQuery(
                 "SELECT id FROM EacCpf eacCpf WHERE eacCpf.aiId = :aiId AND eacCpf.identifier  = :identifier ", EacCpf.class);
-        query.setParameter("identifier", identifier);
+        query.setParameter("identifier", ApeUtil.decodeSpecialCharacters(identifier));
         query.setParameter("aiId", aiId);
         query.setMaxResults(1);
         List<EacCpf> list = query.getResultList();
@@ -59,8 +57,8 @@ public class EacCpfJpaDAO extends AbstractHibernateDAO<EacCpf, Integer> implemen
         Criteria criteria = getSession().createCriteria(EacCpf.class, "eacCpf");
         criteria = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         criteria = criteria.createAlias("eacCpf.archivalInstitution", "archivalInstitution");
-        criteria.add(Restrictions.eq("archivalInstitution.repositorycode", repositorycode));
-        criteria.add(Restrictions.eq("identifier", identifier));
+        criteria.add(Restrictions.eq("archivalInstitution.repositorycode", ApeUtil.decodeRepositoryCode(repositorycode)));
+        criteria.add(Restrictions.eq("identifier", ApeUtil.decodeSpecialCharacters(identifier)));
         criteria.setMaxResults(1);
         List<EacCpf> list = criteria.list();
         if (list.size() > 0) {
