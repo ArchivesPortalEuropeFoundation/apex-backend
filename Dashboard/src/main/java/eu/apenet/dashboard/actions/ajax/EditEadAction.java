@@ -30,6 +30,7 @@ import eu.apenet.dashboard.manual.EditParser;
 import eu.apenet.dashboard.security.SecurityContext;
 import eu.apenet.dashboard.services.ead.xml.ReconstructEadFile;
 import eu.apenet.dashboard.services.ead.xml.XmlEadParser;
+import eu.apenet.persistence.dao.HgSgFaRelationDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.CLevel;
@@ -37,6 +38,7 @@ import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
 import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
+import eu.apenet.persistence.vo.HgSgFaRelation;
 import eu.apenet.persistence.vo.ValidatedState;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
 
@@ -311,6 +313,15 @@ public class EditEadAction extends AjaxControllerAbstractAction {
     					eadContent.setEadid(this.getChagedEADID());
     					FindingAid findingAid = DAOFactory.instance().getFindingAidDAO().findById(this.getFaId().intValue());
     					findingAid.setEadid(this.getChagedEADID());
+
+    					// Check if the current EAD is related with a HG or SG.
+    					Set<HgSgFaRelation> hgSgFaRelationsSet = findingAid.getHgSgFaRelations();
+    					if (hgSgFaRelationsSet != null
+    							&& !hgSgFaRelationsSet.isEmpty()) {
+    						HgSgFaRelationDAO hgSgFaRelationDAO = DAOFactory.instance().getHgSgFaRelationDAO();
+							hgSgFaRelationDAO.delete(hgSgFaRelationsSet);
+    					}
+
     					dataChanged = true;
                 	}
                 }
