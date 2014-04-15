@@ -138,6 +138,7 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 	
 	public void publish(EacCpf eacCpf) throws Exception{
 		File file = new File (APEnetUtilities.getDashboardConfig().getRepoDirPath() + eacCpf.getPath());
+		System.out.println(file.getAbsolutePath());
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);		
 		DocumentBuilder builder = factory.newDocumentBuilder();
@@ -157,10 +158,10 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 	}
 	private void parseCpfDescription(EacCpfSolrObject eacCpfSolrObject, Node cpfDescriptionNode) throws XPathExpressionException{
 		Node descriptionNode = (Node) descriptionExpression.evaluate(cpfDescriptionNode, XPathConstants.NODE);
-		NodeList nameNodeList = (NodeList) nameExpression.evaluate(descriptionNode, XPathConstants.NODESET);
+		NodeList nameNodeList = (NodeList) nameExpression.evaluate(cpfDescriptionNode, XPathConstants.NODESET);
 		eacCpfSolrObject.setNames(getTextsWithoutMultiplity(nameNodeList, true));
 		if (eacCpfSolrObject.getNames().size() ==0){
-			nameNodeList = (NodeList) nameParallelExpression.evaluate(descriptionNode, XPathConstants.NODESET);
+			nameNodeList = (NodeList) nameParallelExpression.evaluate(cpfDescriptionNode, XPathConstants.NODESET);
 			eacCpfSolrObject.setNames(getTextsWithoutMultiplity(nameNodeList, true));
 		}
 		NodeList placesNodeList = (NodeList) placeExpression.evaluate(descriptionNode, XPathConstants.NODESET);
