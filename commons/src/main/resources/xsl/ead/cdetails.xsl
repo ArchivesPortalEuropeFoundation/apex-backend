@@ -19,9 +19,9 @@
 			</xsl:if>
 		</xsl:for-each>
 		<xsl:for-each select="/ead:c/ead:did/ead:unittitle">
-			<div class="titleproper">
+			<h1 class="titleproper">
 				<xsl:apply-templates mode="title" />
-			</div>
+			</h1>
 		</xsl:for-each>
 
 		<div class="subtitle">
