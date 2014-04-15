@@ -9,7 +9,7 @@ public enum SolrField {
 	TITLE(SolrFields.TITLE), SCOPECONTENT(SolrFields.SCOPECONTENT), ALTERDATE(SolrFields.ALTERDATE), OTHER(SolrFields.OTHER), UNITID(SolrFields.UNITID), OTHERUNITID(
 			SolrFields.OTHERUNITID), 
 			EAC_CPF_NAMES(SolrFields.EAC_CPF_NAMES), EAC_CPF_PLACES(SolrFields.EAC_CPF_PLACES), EAC_CPF_OCCUPATION(SolrFields.EAC_CPF_OCCUPATION), 
-			EAC_CPF_FUNCTION(SolrFields.EAC_CPF_FUNCTION), EAC_CPF_MANDATE(SolrFields.EAC_CPF_MANDATE), EAC_CPF_RECORD_ID(SolrFields.EAC_CPF_RECORD_ID);
+			EAC_CPF_FUNCTION(SolrFields.EAC_CPF_FUNCTION), EAC_CPF_MANDATE(SolrFields.EAC_CPF_MANDATE), EAC_CPF_ENTITY_ID(SolrFields.EAC_CPF_ENTITY_ID);
 
 	private String value;
 	private static final Integer NO_SELECTION = 0;
@@ -37,7 +37,7 @@ public enum SolrField {
 	}
 
 	public HighlightType getType() {
-		if (UNITID.equals(this) || OTHERUNITID.equals(this) || EAC_CPF_RECORD_ID.equals(this)){
+		if (UNITID.equals(this) || OTHERUNITID.equals(this) || EAC_CPF_ENTITY_ID.equals(this)){
 			return HighlightType.UNITID;
 		}else {
 			return HighlightType.DEFAULT;
