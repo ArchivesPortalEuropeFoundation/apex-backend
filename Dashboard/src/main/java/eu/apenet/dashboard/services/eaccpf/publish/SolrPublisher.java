@@ -138,7 +138,6 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 	
 	public void publish(EacCpf eacCpf) throws Exception{
 		File file = new File (APEnetUtilities.getDashboardConfig().getRepoDirPath() + eacCpf.getPath());
-		System.out.println(file.getAbsolutePath());
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);		
 		DocumentBuilder builder = factory.newDocumentBuilder();
