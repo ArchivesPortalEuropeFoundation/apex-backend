@@ -146,7 +146,6 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 		EacCpfSolrObject eacCpfSolrObject = new EacCpfSolrObject(eacCpf);
 		eacCpfSolrObject.setRecordId((eacCpf.getIdentifier()));
 		recordId = eacCpf.getIdentifier();
-
 		eacCpfSolrObject.setLanguage((String) languageExpression.evaluate(doc, XPathConstants.STRING));
 		Node cpfDescriptionNode = (Node) cpfDescriptionExpression.evaluate(doc, XPathConstants.NODE);
 		NodeList entityIdNodeList = (NodeList) entityIdExpression.evaluate(cpfDescriptionNode, XPathConstants.NODESET);
