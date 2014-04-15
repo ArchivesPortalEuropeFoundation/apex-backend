@@ -147,11 +147,12 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 		EacCpfSolrObject eacCpfSolrObject = new EacCpfSolrObject(eacCpf);
 		eacCpfSolrObject.setRecordId((eacCpf.getIdentifier()));
 		recordId = eacCpf.getIdentifier();
-		NodeList entityIdNodeList = (NodeList) entityIdExpression.evaluate(doc, XPathConstants.NODESET);
-		eacCpfSolrObject.setEntityIds(getTextsWithoutMultiplity(entityIdNodeList,false));
-		eacCpfSolrObject.setEntityType((String) entityTypeExpression.evaluate(doc, XPathConstants.STRING));
+
 		eacCpfSolrObject.setLanguage((String) languageExpression.evaluate(doc, XPathConstants.STRING));
 		Node cpfDescriptionNode = (Node) cpfDescriptionExpression.evaluate(doc, XPathConstants.NODE);
+		NodeList entityIdNodeList = (NodeList) entityIdExpression.evaluate(cpfDescriptionNode, XPathConstants.NODESET);
+		eacCpfSolrObject.setEntityIds(getTextsWithoutMultiplity(entityIdNodeList,false));
+		eacCpfSolrObject.setEntityType((String) entityTypeExpression.evaluate(cpfDescriptionNode, XPathConstants.STRING));
 		parseCpfDescription(eacCpfSolrObject, cpfDescriptionNode);
 		publishEacCpf(eacCpfSolrObject);
 
