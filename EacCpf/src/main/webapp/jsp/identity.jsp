@@ -132,7 +132,7 @@
                 </td>
             </tr>
             <tr>
-                <td>Add dates of use for the name:</td>
+                <td><label>Add dates of use for the name:</label></td>
                 <td><input type="button" value="Add single date" id="addNameDate" onclick="addDateOrDateRangeName(this.id, $(this).parent().parent().parent().parent().attr('id'))" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <input type="button" value="Add date range" id="addNameDateRange" onclick="addDateOrDateRangeName(this.id, $(this).parent().parent().parent().parent().attr('id'))" /></td>
                 <td><input type="hidden" id="identityPersonName_1_rows" name="identityPersonName_1_rows" value="0" /></td>

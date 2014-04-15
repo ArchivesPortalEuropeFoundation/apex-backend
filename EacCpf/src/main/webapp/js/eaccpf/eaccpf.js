@@ -108,10 +108,10 @@ var checkIdentityTab = function() {
         alertEmptyFields("Please enter at least one entity name!");
         return;
     }
-    var date1 = $("table#dateExistenceTable input#date_1']").attr("value");
-    var date2 = $("table#dateExistenceTable input#date_2']").attr("value");
+    var date1 = $("table#dateExistenceTable tr#trDate_text_1 input#date_1").attr("value");
+    var date2 = $("table#dateExistenceTable tr#trDate_text_1 input#date_2").attr("value");
     if (date1 == null || date1 == "") {
-        if (date2 == null || date2 == "") {
+        if (date2 == "") {
             alertEmptyFields("Please enter at least one complete date or date range!");
             return;
         } else {
@@ -119,7 +119,7 @@ var checkIdentityTab = function() {
             return;
         }
     } else {
-        if (date2 == null || date2 == "") {
+        if (date2 == "") {
             alertEmptyFields("Please fill in the end date of the range or use a single date!");
             return;
         }
@@ -507,10 +507,9 @@ function addAddressComponent(tableName) {
     });
 }
 
-function addDateOrDateRangePlace(tableName) {
+function addDateOrDateRangePlace(buttonClicked, tableName) {
     var counter = $("table#" + tableName + " tr[id^='trDate_text_']").length;
-    var state = $("input[name='dateOrDateRangePlace']:checked").val();
-    if (state == "date") {
+    if (buttonClicked == "addPlaceDate") {
         if (counter == 0) {
             insertDateAfter(tableName, "tr#trPlaceRole", counter + 1);
         } else {
@@ -527,7 +526,7 @@ function addDateOrDateRangePlace(tableName) {
             }
         }
     }
-    if (state == "dateRange") {
+    if (buttonClicked == "addPlaceDateRange") {
         if (counter == 0) {
             insertDateRangeAfter(tableName, "tr#trPlaceRole", counter + 1);
         } else {
@@ -626,10 +625,9 @@ function addPlaceFunction(tableName) {
     });
 }
 
-function addDateOrDateRangeFunction(tableName) {
+function addDateOrDateRangeFunction(buttonClicked, tableName) {
     var counter = $("table#" + tableName + " tr[id^='trDate_text_']").length;
-    var state = $("input[name='dateOrDateRangeFunction']:checked").val();
-    if (state == "date") {
+    if (buttonClicked == "addFunctionDate") {
         if (counter == 0) {
             insertDateAfter(tableName, "tr#trPlaceFunctionButton", counter + 1);
         } else {
@@ -646,7 +644,7 @@ function addDateOrDateRangeFunction(tableName) {
             }
         }
     }
-    if (state == "dateRange") {
+    if (buttonClicked == "addFunctionDateRange") {
         if (counter == 0) {
             insertDateRangeAfter(tableName, "tr#trPlaceFunctionButton", counter + 1);
         } else {
@@ -746,10 +744,9 @@ function addPlaceOccupation(tableName) {
     });
 }
 
-function addDateOrDateRangeOccupation(tableName) {
+function addDateOrDateRangeOccupation(buttonClicked, tableName) {
     var counter = $("table#" + tableName + " tr[id^='trDate_text_']").length;
-    var state = $("input[name='dateOrDateRangeOccupation']:checked").val();
-    if (state == "date") {
+    if (buttonClicked == "addOccupationDate") {
         if (counter == 0) {
             insertDateAfter(tableName, "tr#trPlaceOccupationButton", counter + 1);
         } else {
@@ -766,7 +763,7 @@ function addDateOrDateRangeOccupation(tableName) {
             }
         }
     }
-    if (state == "dateRange") {
+    if (buttonClicked == "addOccupationDateRange") {
         if (counter == 0) {
             insertDateRangeAfter(tableName, "tr#trPlaceOccupationButton", counter + 1);
         } else {
