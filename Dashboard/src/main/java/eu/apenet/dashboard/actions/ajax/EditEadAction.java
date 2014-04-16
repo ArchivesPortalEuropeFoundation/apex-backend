@@ -28,6 +28,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.exception.NotAuthorizedException;
 import eu.apenet.dashboard.manual.EditParser;
 import eu.apenet.dashboard.security.SecurityContext;
+import eu.apenet.dashboard.services.ead.LinkingService;
 import eu.apenet.dashboard.services.ead.xml.ReconstructEadFile;
 import eu.apenet.dashboard.services.ead.xml.XmlEadParser;
 import eu.apenet.persistence.dao.HgSgFaRelationDAO;
@@ -315,12 +316,17 @@ public class EditEadAction extends AjaxControllerAbstractAction {
     					findingAid.setEadid(this.getChagedEADID());
 
     					// Check if the current EAD is related with a HG or SG.
+    					// Try to remove the relation between FA and HG or SG.
     					Set<HgSgFaRelation> hgSgFaRelationsSet = findingAid.getHgSgFaRelations();
     					if (hgSgFaRelationsSet != null
     							&& !hgSgFaRelationsSet.isEmpty()) {
     						HgSgFaRelationDAO hgSgFaRelationDAO = DAOFactory.instance().getHgSgFaRelationDAO();
 							hgSgFaRelationDAO.delete(hgSgFaRelationsSet);
     					}
+
+    					// Try to add the relation between FA and HG or SG.
+    					Ead ead = (Ead) findingAid;
+    					LinkingService.linkWithHgOrSg(ead);
 
     					dataChanged = true;
                 	}
@@ -540,7 +546,11 @@ public class EditEadAction extends AjaxControllerAbstractAction {
 			if (eadIdSet != null && !eadIdSet.isEmpty()) {
 				Iterator<String> eadIdIt = eadIdSet.iterator();
 				if (eadIdIt.hasNext()) {
-					this.setChagedEADID(jsonObject.getString(eadIdIt.next()));
+					String eadIdValue = jsonObject.getString(eadIdIt.next());
+		    		if (eadIdValue.contains("%27")) { 
+		    			eadIdValue = eadIdValue.replaceAll("%27", "'");
+		    		}
+					this.setChagedEADID(eadIdValue);
 				}
 			}
 
