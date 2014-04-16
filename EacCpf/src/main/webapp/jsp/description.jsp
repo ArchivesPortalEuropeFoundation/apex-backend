@@ -50,7 +50,7 @@
                                     <td>
                                         <select id="addressComponent" name="placeTable_<s:property value="#status.index + 1" />_addressComponent_<s:property value="#status2.index + 1" />" onchange="">
                                             <s:iterator value="addressComponentTypeList" var="list">
-                                                <option value='<s:property value="#list"/>' <s:if test='%{#list == #currentAddressComponent}'>selected="selected"</s:if>><s:property value="#list"/></option>
+                                                <option value='<s:property value="#list.key"/>' <s:if test='%{#list.key == #currentAddressComponent}'>selected="selected"</s:if>><s:property value="#list.value"/></option>
                                             </s:iterator>
                                         </select>
                                     </td>
@@ -67,7 +67,7 @@
                         <td>
                             <select id="addressComponent" name="placeTable_<s:property value="#status.index + 1" />_addressComponent_1">
                                 <s:iterator value="addressComponentTypeList" var="list">
-                                    <option value='<s:property value="#list"/>'><s:property value="#list"/></option>
+                                    <option value='<s:property value="#list.key"/>'><s:property value="#list.value"/></option>
                                 </s:iterator>
                             </select>
                         </td>
@@ -78,9 +78,9 @@
                     <td colspan="3"></td>
                 </tr>
                 <tr id="trPlaceRole">
-                    <td><label for="placeRole">Role of the place:</label></td>
+                    <td><label for="placeRole_<s:property value="#status.index + 1" />">Role of the place:</label></td>
                     <td>
-                        <select id="placeRole" name="placeRole_<s:property value="#status.index + 1" />" value="<s:property value="#current.role" />">
+                        <select id="placeRole_<s:property value="#status.index + 1" />" name="placeRole_<s:property value="#status.index + 1" />" value="<s:property value="#current.role" />">
                             <s:iterator value="placeEntryList" var="list">
                                 <option value='<s:property value="#list.key"/>' <s:if test='%{#list.key == #current.role}'>selected="selected"</s:if>><s:property value="#list.value"/></option>
                             </s:iterator>
@@ -176,7 +176,7 @@
                 <td>
                     <select id="addressComponent" name="placeTable_1_addressComponent_1" onchange="">
                         <s:iterator value="addressComponentTypeList" var="list">
-                            <option value='<s:property value="#list"/>'><s:property value="#list"/></option>
+                            <option value='<s:property value="#list.key"/>'><s:property value="#list.value"/></option>
                         </s:iterator>
                     </select>
                 </td>
@@ -186,9 +186,9 @@
                 <td colspan="3"></td>
             </tr>
             <tr id="trPlaceRole">
-                <td><label for="placeRole">Role of the place:</label></td>
+                <td><label for="placeRole_1">Role of the place:</label></td>
                 <td>
-                    <select id="placeRole" name="placeRole_<s:property value="#status.index + 1" />" value="<s:property value="#current.role" />">
+                    <select id="placeRole_1" name="placeRole_1">
                         <s:iterator value="placeEntryList" var="list">
                             <option value='<s:property value="#list.key"/>'><s:property value="#list.value"/></option>
                         </s:iterator>

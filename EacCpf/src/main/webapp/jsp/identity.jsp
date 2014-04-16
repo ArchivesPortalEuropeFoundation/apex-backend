@@ -30,7 +30,7 @@
                     <td>
                         <select id="identityFormOfName" name="identityFormOfName_<s:property value="#status.index + 1" />" required="required">
                             <s:iterator value="formNameList" var="formNames">
-                                <option value='<s:property value="#formNames"/>' <s:if test='%{#formNames==#current.form}'>selected="selected"</s:if>><s:property value="#formNames"/></option>
+                                <option value='<s:property value="#formNames.key"/>' <s:if test='%{#formNames.key==#current.form}'>selected="selected"</s:if>><s:property value="#formNames.value"/></option>
                             </s:iterator>
                         </select>
                     </td>
@@ -38,7 +38,7 @@
                     <td>
                         <select id="identityComponentOfName" name="identityComponentOfName_<s:property value="#status.index + 1" />" required="required">
                             <s:iterator value="componentNameList" var="compNames">
-                                <option value='<s:property value="#compNames"/>' <s:if test='%{#compNames==#current.component}'>selected="selected"</s:if>><s:property value="#compNames"/></option>
+                                <option value='<s:property value="#compNames.key"/>' <s:if test='%{#compNames.key==#current.component}'>selected="selected"</s:if>><s:property value="#compNames.value"/></option>
                             </s:iterator>
                         </select>
                     </td>
@@ -118,7 +118,7 @@
                 <td>
                     <select id="identityFormOfName" name="identityFormOfName_1" required="required">
                         <s:iterator value="formNameList" var="formNames">
-                            <option value='<s:property value="#formNames"/>' <s:if test='%{#formNames=="authorized"}'>selected="selected"</s:if>><s:property value="#formNames"/></option>
+                            <option value='<s:property value="#formNames.key"/>' <s:if test='%{#formNames.key=="authorized"}'>selected="selected"</s:if>><s:property value="#formNames.value"/></option>
                         </s:iterator>
                     </select>
                 </td>
@@ -126,7 +126,7 @@
                 <td>
                     <select id="identityComponentOfName" name="identityComponentOfName_1" required="required">
                         <s:iterator value="componentNameList" var="compNames">
-                            <option value='<s:property value="#compNames"/>' <s:if test='%{#compNames=="persname"}'>selected="selected"</s:if>><s:property value="#compNames"/></option>
+                            <option value='<s:property value="#compNames.key"/>' <s:if test='%{#compNames.key=="persname"}'>selected="selected"</s:if>><s:property value="#compNames.value"/></option>
                         </s:iterator>
                     </select>
                 </td>

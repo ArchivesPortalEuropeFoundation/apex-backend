@@ -391,6 +391,15 @@ function addNameForm(text1, defaultLanguage) {
     clone = "<table id='" + ("identityPersonName_" + (counter + 1)) + "' class=\"tablePadding\">" + clone.html() + "</table>";
     $("table[id^='identityPersonName_" + counter + "']").after(clone);
     $('<hr />').insertAfter($("table[id^='identityPersonName_" + counter + "']"));
+    //Remove superfluous date rows
+    var idCounter = $("table#identityPersonName_" + (counter + 1) + " tr[id^='trDate_']").length;
+    if (idCounter > 0) {
+        idCounter = idCounter / 2;
+        for (var i = idCounter; i > 0; i--) {
+            $("table#identityPersonName_" + (counter + 1) + " tr#trDate_text_" + i).remove();
+            $("table#identityPersonName_" + (counter + 1) + " tr#trDate_iso_" + i).remove();
+        }
+    }
     //Set correct names
     $("table#identityPersonName_" + (counter + 1) + " tr#trPersonName_1 input#textPersonName").removeAttr("name");
     $("table#identityPersonName_" + (counter + 1) + " tr#trPersonName_1 input#textPersonName").attr("name", "textPersonName_" + (counter + 1));
@@ -416,6 +425,7 @@ function addNameForm(text1, defaultLanguage) {
     }
     $("table#identityPersonName_" + (counter + 1) + " tr#trPersonName_2 select#identityFormOfName").attr("value", "authorized");
     $("table#identityPersonName_" + (counter + 1) + " tr#trPersonName_2 select#identityComponentOfName").attr("value", "persname");
+    $("table#identityPersonName_" + (counter + 1) + " input#identityPersonName_" + (counter + 1) + "_rows").attr("value", 0);
 }
 
 function addPersonId() {
@@ -543,7 +553,7 @@ function addDateOrDateRangePlace(buttonClicked, tableName) {
             }
         }
     }
-    $("input#" + tableName + "_rows").val($("table#" + tableName + " tr[id^='trDate_text_']").length);
+    $("table#" + tableName + " input#" + tableName + "_rows").val($("table#" + tableName + " tr[id^='trDate_text_']").length);
 }
 
 function addPlace(defaultLanguage) {
@@ -559,20 +569,23 @@ function addPlace(defaultLanguage) {
     $("table[id^='placeTable_" + counter + "']").after(clone);
     // rename header of clone
     $("table#placeTable_" + (counter + 1) + " th#thPlaceTableHeader").html("Place " + (counter + 1));
-    // delete superfluous rows
+    // delete superfluous address component rows
     var idCounter = $("table#placeTable_" + (counter + 1) + " tr[id^='trAddressComponent_']").length;
     if (idCounter > 1) {
         for (var i = idCounter; i > 1; i--) {
             $("table#placeTable_" + (counter + 1) + " tr#trAddressComponent_" + i).remove();
         }
     }
+    // delete superfluous date rows
     idCounter = $("table#placeTable_" + (counter + 1) + " tr[id^='trDate_']").length;
     if (idCounter > 0) {
+        idCounter = idCounter / 2;
         for (var i = idCounter; i > 0; i--) {
-            $("table#placeTable_" + (counter + 1) + " tr#trDate_" + i).remove();
+            $("table#placeTable_" + (counter + 1) + " tr#trDate_text_" + i).remove();
+            $("table#placeTable_" + (counter + 1) + " tr#trDate_iso_" + i).remove();
         }
     }
-// Reset parameters
+    // Reset parameters
     $("table#placeTable_" + (counter + 1) + " input[type='text']").each(function() {
         $(this).val(""); // Clean all input_text.
         $(this).removeAttr("name"); //remove old name
@@ -677,20 +690,23 @@ function addFunction(defaultLanguage) {
     $("table[id^='functionTable_" + counter + "']").after(clone);
     // rename header of clone
     $("table#functionTable_" + (counter + 1) + " th#thFunctionTableHeader").html("Function " + (counter + 1));
-    // delete superfluous rows
+    // delete superfluous place rows
     var idCounter = $("table#functionTable_" + (counter + 1) + " tr[id^='trPlaceFunction_']").length;
     if (idCounter > 1) {
         for (var i = idCounter; i > 1; i--) {
             $("table#functionTable_" + (counter + 1) + " tr#trPlaceFunction_" + i).remove();
         }
     }
+    // delete superfluous date rows
     idCounter = $("table#functionTable_" + (counter + 1) + " tr[id^='trDate_']").length;
     if (idCounter > 0) {
+        idCounter = idCounter / 2;
         for (var i = idCounter; i > 0; i--) {
-            $("table#functionTable_" + (counter + 1) + " tr#trDate_" + i).remove();
+            $("table#functionTable_" + (counter + 1) + " tr#trDate_text_" + i).remove();
+            $("table#functionTable_" + (counter + 1) + " tr#trDate_iso_" + i).remove();
         }
     }
-// Reset parameters
+    // Reset parameters
     $("table#functionTable_" + (counter + 1) + " input[type='text']").each(function() {
         $(this).val(""); // Clean all input_text.
         $(this).removeAttr("name");
@@ -796,20 +812,23 @@ function addOccupation(defaultLanguage) {
     $("table[id^='occupationTable_" + counter + "']").after(clone);
     // rename header of clone
     $("table#occupationTable_" + (counter + 1) + " th#thOccupationTableHeader").html("Occupation " + (counter + 1));
-    // delete superfluous rows
+    // delete superfluous place rows
     var idCounter = $("table#occupationTable_" + (counter + 1) + " tr[id^='trPlaceOccupation_']").length;
     if (idCounter > 1) {
         for (var i = idCounter; i > 1; i--) {
             $("table#occupationTable_" + (counter + 1) + " tr#trPlaceOccupation_" + i).remove();
         }
     }
+    // delete superfluous date rows
     idCounter = $("table#occupationTable_" + (counter + 1) + " tr[id^='trDate_']").length;
     if (idCounter > 0) {
+        idCounter = idCounter / 2;
         for (var i = idCounter; i > 0; i--) {
-            $("table#occupationTable_" + (counter + 1) + " tr#trDate_" + i).remove();
+            $("table#occupationTable_" + (counter + 1) + " tr#trDate_text_" + i).remove();
+            $("table#occupationTable_" + (counter + 1) + " tr#trDate_iso_" + i).remove();
         }
     }
-// Reset parameters
+    // Reset parameters
     $("table#occupationTable_" + (counter + 1) + " input[type='text']").each(function() {
         $(this).val(""); // Clean all input_text.
         $(this).removeAttr("name");
