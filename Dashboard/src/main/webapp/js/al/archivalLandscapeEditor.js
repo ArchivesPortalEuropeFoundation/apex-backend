@@ -23,6 +23,12 @@ function loadUpPart(context,titleDT,countryId){
    				});
    				cleanInformation();
    			},
+   			onClick: function(node){
+   				hideAll();
+   				$("#divForm").show();
+				loadDownPart(node);
+				cleanInformation();
+   			},
    			onActivate: function(node) {
 				hideAll();
    				$("#divForm").show();
