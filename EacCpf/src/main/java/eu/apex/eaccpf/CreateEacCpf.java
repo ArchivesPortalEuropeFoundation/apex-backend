@@ -248,12 +248,13 @@ public class CreateEacCpf {
 
         // /eacCpf/cpfDescription/identity/nameEntry
         tableCounter = 1;
-        parameterName1 = "textPersonName_";
+        rowCounter = 1;
+        parameterName1 = "_part_";
         parameterName2 = "identityNameLanguage_";
         parameterName3 = "identityFormOfName_";
-        parameterName4 = "identityComponentOfName_";
+        parameterName4 = "_comp_";
 
-        while (parameters.containsKey(parameterName1 + tableCounter) || (String[]) parameters.get(parameterName1 + tableCounter) != null) {
+        while (parameters.containsKey("identityPersonName_" + tableCounter + parameterName1 + rowCounter) || (String[]) parameters.get("identityPersonName_" + tableCounter + parameterName1 + rowCounter) != null) {
             Identity.NameEntry nameEntry = new Identity.NameEntry();
             if (parameters.containsKey(parameterName2 + tableCounter) || (String[]) parameters.get(parameterName2 + tableCounter) != null) {
                 parameterContent = (String[]) parameters.get(parameterName2 + tableCounter);
@@ -269,16 +270,21 @@ public class CreateEacCpf {
             }
 
             // /eacCpf/cpfDescription/identity/nameEntry/part
-            Part part = new Part();
-            parameterContent = (String[]) parameters.get(parameterName4 + tableCounter);
-            if (parameterContent.length == 1) {
-                part.setLocalType(parameterContent[0]);
+            while ((String[]) parameters.get("identityPersonName_" + tableCounter + parameterName1 + rowCounter) != null || parameters.containsKey("identityPersonName_" + tableCounter + parameterName1 + rowCounter)) {
+                if (!((String[]) parameters.get("identityPersonName_" + tableCounter + parameterName1 + rowCounter))[0].isEmpty()) {
+                    Part part = new Part();
+                    parameterContent = (String[]) parameters.get("identityPersonName_" + tableCounter + parameterName4 + rowCounter);
+                    if (parameterContent.length == 1) {
+                        part.setLocalType(parameterContent[0]);
+                    }
+                    parameterContent = (String[]) parameters.get("identityPersonName_" + tableCounter + parameterName1 + rowCounter);
+                    if (parameterContent.length == 1) {
+                        part.setContent(parameterContent[0]);
+                    }
+                    nameEntry.getPart().add(part);
+                }
+                rowCounter++;
             }
-            parameterContent = (String[]) parameters.get(parameterName1 + tableCounter);
-            if (parameterContent.length == 1) {
-                part.setContent(parameterContent[0]);
-            }
-            nameEntry.getPart().add(part);
 
             //add any dates
             rowCounter = 1;
@@ -321,54 +327,54 @@ public class CreateEacCpf {
             tableCounter++;
         }
 
-        /*
-         If there are more than one autorized and/or alternative forms,
-         wrap these in a <nameEntryParallel> element.
-         Then add the remaining name forms to the list.
-         */
-        //Determine quantities
-        int counterAuth = 0;
-        int counterAlt = 0;
-        for (Identity.NameEntry nameEntry : nameEntries) {
-            if (nameEntry.getLocalType().equals("authorized")) {
-                counterAuth++;
-            }
-            if (nameEntry.getLocalType().equals("alternative")) {
-                counterAlt++;
-            }
-        }
-        //Separate multiple authorized forms
-        if (counterAuth > 1) {
-            LinkedList<Identity.NameEntry> authForms = new LinkedList<Identity.NameEntry>();
-            NameEntryParallel nameEntryParallel = new NameEntryParallel();
-            for (Identity.NameEntry iNameEntry : nameEntries) {
-                if (iNameEntry.getLocalType().equals("authorized")) {
-                    NameEntry nameEntry = new NameEntry();
-                    nameEntry.setLang(iNameEntry.getLang());
-                    nameEntry.getPart().addAll(iNameEntry.getPart());
-                    nameEntryParallel.getContent().add(nameEntry);
-                    authForms.add(iNameEntry);
-                }
-            }
-            nameEntryParallel.setLocalType("authorized");
-            identity.getNameEntryParallelOrNameEntry().add(nameEntryParallel);
-            nameEntries.removeAll(authForms);
-        }
-        //Separate multiple alternative forms
-        if (counterAlt > 1) {
-            LinkedList<Identity.NameEntry> altForms = new LinkedList<Identity.NameEntry>();
-            for (Identity.NameEntry nameEntry : nameEntries) {
-                if (nameEntry.getLocalType().equals("alternative")) {
-                    altForms.add(nameEntry);
-                }
-            }
-            NameEntryParallel nameEntryParallel = new NameEntryParallel();
-            nameEntryParallel.getContent().addAll(altForms);
-            nameEntryParallel.setLocalType("alternative");
-            identity.getNameEntryParallelOrNameEntry().add(nameEntryParallel);
-            nameEntries.removeAll(altForms);
-        }
-        //Add remaining forms
+//        /*
+//         If there are more than one autorized and/or alternative forms,
+//         wrap these in a <nameEntryParallel> element.
+//         Then add the remaining name forms to the list.
+//         */
+//        //Determine quantities
+//        int counterAuth = 0;
+//        int counterAlt = 0;
+//        for (Identity.NameEntry nameEntry : nameEntries) {
+//            if (nameEntry.getLocalType().equals("authorized")) {
+//                counterAuth++;
+//            }
+//            if (nameEntry.getLocalType().equals("alternative")) {
+//                counterAlt++;
+//            }
+//        }
+//        //Separate multiple authorized forms
+//        if (counterAuth > 1) {
+//            LinkedList<Identity.NameEntry> authForms = new LinkedList<Identity.NameEntry>();
+//            NameEntryParallel nameEntryParallel = new NameEntryParallel();
+//            for (Identity.NameEntry iNameEntry : nameEntries) {
+//                if (iNameEntry.getLocalType().equals("authorized")) {
+//                    NameEntry nameEntry = new NameEntry();
+//                    nameEntry.setLang(iNameEntry.getLang());
+//                    nameEntry.getPart().addAll(iNameEntry.getPart());
+//                    nameEntryParallel.getContent().add(nameEntry);
+//                    authForms.add(iNameEntry);
+//                }
+//            }
+//            nameEntryParallel.setLocalType("authorized");
+//            identity.getNameEntryParallelOrNameEntry().add(nameEntryParallel);
+//            nameEntries.removeAll(authForms);
+//        }
+//        //Separate multiple alternative forms
+//        if (counterAlt > 1) {
+//            LinkedList<Identity.NameEntry> altForms = new LinkedList<Identity.NameEntry>();
+//            for (Identity.NameEntry nameEntry : nameEntries) {
+//                if (nameEntry.getLocalType().equals("alternative")) {
+//                    altForms.add(nameEntry);
+//                }
+//            }
+//            NameEntryParallel nameEntryParallel = new NameEntryParallel();
+//            nameEntryParallel.getContent().addAll(altForms);
+//            nameEntryParallel.setLocalType("alternative");
+//            identity.getNameEntryParallelOrNameEntry().add(nameEntryParallel);
+//            nameEntries.removeAll(altForms);
+//        }
+//        //Add remaining forms
         identity.getNameEntryParallelOrNameEntry().addAll(nameEntries);
 
         return identity;

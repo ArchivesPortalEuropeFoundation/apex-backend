@@ -340,18 +340,45 @@ function toggleDateTextfields(checkbox) {
  * Identity tab functions
  **************************************/
 
+function addPartName(tableName) {
+    var counter = $("table#" + tableName + " tr[id^='trNamePart_']").length;
+    var part = $("table#" + tableName + " tr#trNamePart_" + counter + " input#textPersonName").attr("value");
+    if (part == null || part == "") {
+        alertEmptyFields("Please enter the (part of the) name before adding another set of fields!");
+        return;
+    }
+
+    var clone = $("table#" + tableName + " tr[id^='trNamePart_" + counter + "']").clone();
+    clone = "<tr id='" + ("trNamePart_" + (counter + 1)) + "'>" + clone.html() + "</tr>";
+    $("table#" + tableName + " tr[id^='trNamePart_" + counter + "']").after(clone);
+    // Reset parameters
+    if(counter == 1){
+        $("table#" + tableName + " tr#trNamePart_" + (counter + 1) + " label[for='textPersonName']").text("Part of name:");
+    }
+    $("table#" + tableName + " tr#trNamePart_" + (counter + 1) + " input[type='text']").each(function() {
+        $(this).val(""); // Clean all input_text.
+        $(this).removeAttr("name");
+        $(this).attr("name", tableName + "_part_" + (counter + 1));
+    });
+    $("table#" + tableName + " tr#trNamePart_" + (counter + 1) + " select").each(function() {
+        $(this).attr("value", ""); // Reset dropdown boxes.
+        $(this).removeAttr("name");
+        $(this).attr("name", tableName + "_comp_" + (counter + 1));
+    });
+}
+
 function addDateOrDateRangeName(buttonClicked, tableName) {
     var counter = $("table#" + tableName + " tr[id^='trDate_text_']").length;
     if (buttonClicked == "addNameDate") {
         if (counter == 0) {
-            insertDateAfter(tableName, "tr#trPersonName_2", counter + 1);
+            insertDateAfter(tableName, "tr#trNameForm", counter + 1);
         } else {
             if (dateRowNotEmpty(tableName, "tr#trDate_text_" + counter)) {
                 insertDateAfter(tableName, "tr#trDate_iso_" + counter, counter + 1);
             } else {
                 if (counter == 1) {
                     $("table#" + tableName + " tr#trDate_iso_" + counter).remove();
-                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateAfter(tableName, "tr#trPersonName_2", counter));
+                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateAfter(tableName, "tr#trNameForm", counter));
                 } else {
                     $("table#" + tableName + " tr#trDate_iso_" + counter).remove();
                     $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateAfter(tableName, "tr#trDate_iso_" + (counter - 1), counter));
@@ -361,14 +388,14 @@ function addDateOrDateRangeName(buttonClicked, tableName) {
     }
     if (buttonClicked == "addNameDateRange") {
         if (counter == 0) {
-            insertDateRangeAfter(tableName, "tr#trPersonName_2", counter + 1);
+            insertDateRangeAfter(tableName, "tr#trNameForm", counter + 1);
         } else {
             if (dateRowNotEmpty(tableName, "tr#trDate_text_" + counter)) {
                 insertDateRangeAfter(tableName, "tr#trDate_iso_" + counter, counter + 1);
             } else {
                 if (counter == 1) {
                     $("table#" + tableName + " tr#trDate_iso_" + counter).remove();
-                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter(tableName, "tr#trPersonName_2", counter));
+                    $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter(tableName, "tr#trNameForm", counter));
                 } else {
                     $("table#" + tableName + " tr#trDate_iso_" + counter).remove();
                     $("table#" + tableName + " tr#trDate_text_" + counter).replaceWith(insertDateRangeAfter(tableName, "tr#trDate_iso_" + (counter - 1), counter));
@@ -391,6 +418,14 @@ function addNameForm(text1, defaultLanguage) {
     clone = "<table id='" + ("identityPersonName_" + (counter + 1)) + "' class=\"tablePadding\">" + clone.html() + "</table>";
     $("table[id^='identityPersonName_" + counter + "']").after(clone);
     $('<hr />').insertAfter($("table[id^='identityPersonName_" + counter + "']"));
+
+    // delete superfluous name part rows
+    var idCounter = $("table#identityPersonName_" + (counter + 1) + " tr[id^='trNamePart_']").length;
+    if (idCounter > 1) {
+        for (var i = idCounter; i > 1; i--) {
+            $("table#identityPersonName_" + (counter + 1) + " tr#trNamePart_" + i).remove();
+        }
+    }
     //Remove superfluous date rows
     var idCounter = $("table#identityPersonName_" + (counter + 1) + " tr[id^='trDate_']").length;
     if (idCounter > 0) {
@@ -401,14 +436,14 @@ function addNameForm(text1, defaultLanguage) {
         }
     }
     //Set correct names
-    $("table#identityPersonName_" + (counter + 1) + " tr#trPersonName_1 input#textPersonName").removeAttr("name");
-    $("table#identityPersonName_" + (counter + 1) + " tr#trPersonName_1 input#textPersonName").attr("name", "textPersonName_" + (counter + 1));
-    $("table#identityPersonName_" + (counter + 1) + " tr#trPersonName_1 select#identityNameLanguage").removeAttr("name");
-    $("table#identityPersonName_" + (counter + 1) + " tr#trPersonName_1 select#identityNameLanguage").attr("name", "identityNameLanguage_" + (counter + 1));
-    $("table#identityPersonName_" + (counter + 1) + " tr#trPersonName_2 select#identityFormOfName").removeAttr("name");
-    $("table#identityPersonName_" + (counter + 1) + " tr#trPersonName_2 select#identityFormOfName").attr("name", "identityFormOfName_" + (counter + 1));
-    $("table#identityPersonName_" + (counter + 1) + " tr#trPersonName_2 select#identityComponentOfName").removeAttr("name");
-    $("table#identityPersonName_" + (counter + 1) + " tr#trPersonName_2 select#identityComponentOfName").attr("name", "identityComponentOfName_" + (counter + 1));
+    $("table#identityPersonName_" + (counter + 1) + " tr#trNamePart_1 input#textPersonName").removeAttr("name");
+    $("table#identityPersonName_" + (counter + 1) + " tr#trNamePart_1 input#textPersonName").attr("name", "identityPersonName_" + (counter + 1) + "_part_1");
+    $("table#identityPersonName_" + (counter + 1) + " tr#trNameForm select#identityNameLanguage").removeAttr("name");
+    $("table#identityPersonName_" + (counter + 1) + " tr#trNameForm select#identityNameLanguage").attr("name", "identityNameLanguage_" + (counter + 1));
+    $("table#identityPersonName_" + (counter + 1) + " tr#trNameForm select#identityFormOfName").removeAttr("name");
+    $("table#identityPersonName_" + (counter + 1) + " tr#trNameForm select#identityFormOfName").attr("name", "identityFormOfName_" + (counter + 1));
+    $("table#identityPersonName_" + (counter + 1) + " tr#trNamePart_1 select#identityComponentOfName").removeAttr("name");
+    $("table#identityPersonName_" + (counter + 1) + " tr#trNamePart_1 select#identityComponentOfName").attr("name", "identityPersonName_" + (counter + 1) + "_comp_1");
     $("table#identityPersonName_" + (counter + 1) + " input#identityPersonName_" + counter + "_rows").removeAttr("name");
     $("table#identityPersonName_" + (counter + 1) + " input#identityPersonName_" + counter + "_rows").attr("name", "identityPersonName_" + (counter + 1) + "_rows");
     $("table#identityPersonName_" + (counter + 1) + " input[name^='identityPersonName_" + (counter + 1) + "_rows']").removeAttr("id");
@@ -419,12 +454,12 @@ function addNameForm(text1, defaultLanguage) {
         $(this).val(""); // Clean all input_text.
     });
     if (defaultLanguage != null) {
-        $("table#identityPersonName_" + (counter + 1) + " tr#trPersonName_1 select#identityNameLanguage").attr("value", defaultLanguage);
+        $("table#identityPersonName_" + (counter + 1) + " tr#trNameForm select#identityNameLanguage").attr("value", defaultLanguage);
     } else {
-        $("table#identityPersonName_" + (counter + 1) + " tr#trPersonName_1 select#identityNameLanguage").attr("value", "");
+        $("table#identityPersonName_" + (counter + 1) + " tr#trNameForm select#identityNameLanguage").attr("value", "");
     }
-    $("table#identityPersonName_" + (counter + 1) + " tr#trPersonName_2 select#identityFormOfName").attr("value", "authorized");
-    $("table#identityPersonName_" + (counter + 1) + " tr#trPersonName_2 select#identityComponentOfName").attr("value", "persname");
+    $("table#identityPersonName_" + (counter + 1) + " tr#trNameForm select#identityFormOfName").attr("value", "authorized");
+    $("table#identityPersonName_" + (counter + 1) + " tr#trNamePart_1 select#identityComponentOfName").attr("value", "persname");
     $("table#identityPersonName_" + (counter + 1) + " input#identityPersonName_" + (counter + 1) + "_rows").attr("value", 0);
 }
 

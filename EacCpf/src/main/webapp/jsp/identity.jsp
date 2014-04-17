@@ -13,19 +13,19 @@
                 <tr>
                     <th class="sectionHeader" colspan="4">Name</th>
                 </tr>
-                <tr id="trPersonName_1">
+                <tr id="trNamePart_1">
                     <td><label for="textPersonName">Full name or part of name:*</label></td>
-                    <td><input type="text" id="textPersonName" name="textPersonName_<s:property value="#status.index + 1" />" required="required" value="<s:property value="#current.name" />" /></td>
-                    <td><label for="identityNameLanguage">Select a language:</label></td>
+                    <td><input type="text" id="textPersonName" name="identityPersonName_<s:property value="#status.index + 1" />_part_1" required="required" value="<s:property value="#current.name" />" /></td>
+                    <td><label for="identityComponentOfName">Component of the name:</label></td>
                     <td>
-                        <select id="identityNameLanguage" name="identityNameLanguage_<s:property value="#status.index + 1" />">
-                            <s:iterator value="languages" var="language">
-                                <option value='<s:property value="#language.key"/>' <s:if test='%{#language.key==#current.language}'>selected="selected"</s:if>><s:property value="#language.value"/></option>
+                        <select id="identityComponentOfName" name="identityPersonName_<s:property value="#status.index + 1" />_comp_1" required="required">
+                            <s:iterator value="componentNameList" var="compNames">
+                                <option value='<s:property value="#compNames.key"/>' <s:if test='%{#compNames.key==#current.component}'>selected="selected"</s:if>><s:property value="#compNames.value"/></option>
                             </s:iterator>
                         </select>
                     </td>
                 </tr>
-                <tr id="trPersonName_2">
+                <tr id="trNameForm">
                     <td><label for="identityFormOfName">Form of the name:</label></td>
                     <td>
                         <select id="identityFormOfName" name="identityFormOfName_<s:property value="#status.index + 1" />" required="required">
@@ -34,11 +34,11 @@
                             </s:iterator>
                         </select>
                     </td>
-                    <td><label for="identityComponentOfName">Component of the name:</label></td>
+                    <td><label for="identityNameLanguage">Select a language:</label></td>
                     <td>
-                        <select id="identityComponentOfName" name="identityComponentOfName_<s:property value="#status.index + 1" />" required="required">
-                            <s:iterator value="componentNameList" var="compNames">
-                                <option value='<s:property value="#compNames.key"/>' <s:if test='%{#compNames.key==#current.component}'>selected="selected"</s:if>><s:property value="#compNames.value"/></option>
+                        <select id="identityNameLanguage" name="identityNameLanguage_<s:property value="#status.index + 1" />">
+                            <s:iterator value="languages" var="language">
+                                <option value='<s:property value="#language.key"/>' <s:if test='%{#language.key==#current.language}'>selected="selected"</s:if>><s:property value="#language.value"/></option>
                             </s:iterator>
                         </select>
                     </td>
@@ -101,32 +101,36 @@
             <tr>
                 <th class="sectionHeader" colspan="4">Name</th>
             </tr>
-            <tr id="trPersonName_1">
+            <tr id="trNamePart_1">
                 <td><label for="textPersonName">Full name or part of name:*</label></td>
-                <td><input type="text" id="textPersonName" name="textPersonName_1" required="required" /></td>
-                <td><label for="identityNameLanguage">Select a language:</label></td>
+                <td><input type="text" id="textPersonName" name="identityPersonName_1_part_1" /></td>
+                <td><label for="identityComponentOfName">Component of the name:</label></td>
                 <td>
-                    <select id="identityNameLanguage" name="identityNameLanguage_1">
-                        <s:iterator value="languages" var="language">
-                            <option value='<s:property value="#language.key"/>' <s:if test='%{#language.key==defaultLanguage}'>selected="selected"</s:if>><s:property value="#language.value"/></option>
+                    <select id="identityComponentOfName" name="identityPersonName_1_comp_1">
+                        <s:iterator value="componentNameList" var="compNames">
+                            <option value='<s:property value="#compNames.key"/>' <s:if test='%{#compNames.key=="persname"}'>selected="selected"</s:if>><s:property value="#compNames.value"/></option>
                         </s:iterator>
                     </select>
                 </td>
             </tr>
-            <tr id="trPersonName_2">
+            <tr>
+                <td><input type="button" value="Add another part" id="addAddressComponentButton" onclick="addPartName($(this).parent().parent().parent().parent().attr('id'));" /></td>
+                <td colspan="3"></td>
+            </tr>
+            <tr id="trNameForm">
                 <td><label for="identityFormOfName">Form of the name:</label></td>
                 <td>
-                    <select id="identityFormOfName" name="identityFormOfName_1" required="required">
+                    <select id="identityFormOfName" name="identityFormOfName_1">
                         <s:iterator value="formNameList" var="formNames">
                             <option value='<s:property value="#formNames.key"/>' <s:if test='%{#formNames.key=="authorized"}'>selected="selected"</s:if>><s:property value="#formNames.value"/></option>
                         </s:iterator>
                     </select>
                 </td>
-                <td><label for="identityComponentOfName">Component of the name:</label></td>
+                <td><label for="identityNameLanguage">Select a language:</label></td>
                 <td>
-                    <select id="identityComponentOfName" name="identityComponentOfName_1" required="required">
-                        <s:iterator value="componentNameList" var="compNames">
-                            <option value='<s:property value="#compNames.key"/>' <s:if test='%{#compNames.key=="persname"}'>selected="selected"</s:if>><s:property value="#compNames.value"/></option>
+                    <select id="identityNameLanguage" name="identityNameLanguage_1">
+                        <s:iterator value="languages" var="language">
+                            <option value='<s:property value="#language.key"/>' <s:if test='%{#language.key==defaultLanguage}'>selected="selected"</s:if>><s:property value="#language.value"/></option>
                         </s:iterator>
                     </select>
                 </td>
