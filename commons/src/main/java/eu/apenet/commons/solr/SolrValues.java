@@ -19,7 +19,9 @@ public final class SolrValues {
 	public final static String DATE_TYPE_NO_DATE_SPECIFIED = "nodate";
 	public final static String DATE_TYPE_OTHER_DATE = "otherdate";
 	public final static String DATE_TYPE_NORMALIZED = "normal";
-
+	public final static String DATE_TYPE_NORMALIZED_NO_STARTDATE = "nostartdate";
+	public final static String DATE_TYPE_NORMALIZED_NO_ENDDATE = "noenddate";
+	
 	public final static String EAC_CPF_FACET_ENTITY_TYPE_FAMILY = "family";
 	public final static String EAC_CPF_FACET_ENTITY_TYPE_PERSON = "person";
 	public final static String EAC_CPF_FACET_ENTITY_TYPE_CORPORATE_BODY = "corporatebody";
