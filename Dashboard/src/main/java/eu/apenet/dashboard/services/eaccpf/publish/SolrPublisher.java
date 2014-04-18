@@ -218,12 +218,32 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 			eacCpfSolrObject.setDateDescription(dateDescription);
 			fromDate = (String) fromDateNormalExpression.evaluate(descriptionNode, XPathConstants.STRING);
 			toDate = (String) toDateNormalExpression.evaluate(descriptionNode, XPathConstants.STRING);
+			if ("0001".equals(fromDate)){
+				fromDate = null;
+				eacCpfSolrObject.setFromDateExist(false);
+			}else {
+				eacCpfSolrObject.setFromDateExist(true);
+			}
+			if ("2099".equals(toDate)){
+				toDate = null;
+				eacCpfSolrObject.setToDateExist(false);
+			}else {
+				eacCpfSolrObject.setToDateExist(true);
+			}
+			if (toDate == null && fromDate != null){
+				toDate = fromDate;
+			}
+			if (fromDate == null && toDate != null){
+				fromDate = toDate;
+			}
 			eacCpfSolrObject.setFromDate(obtainDate(fromDate, true));
-			eacCpfSolrObject.setToDate(obtainDate(toDate, false));		
+			eacCpfSolrObject.setToDate(obtainDate(toDate, false));
 		}else {
 			eacCpfSolrObject.setDateDescription(oneDate);
 			eacCpfSolrObject.setFromDate(obtainDate(oneDateNormal, true));
 			eacCpfSolrObject.setToDate(obtainDate(oneDateNormal, false));		
+			eacCpfSolrObject.setFromDateExist(true);
+			eacCpfSolrObject.setToDateExist(true);
 		}
 
 		eacCpfSolrObject.setNumberOfArchivalMaterialRelations(((Double) countArchivalMaterialRelationsExpression.evaluate(relationsNode, XPathConstants.NUMBER)).intValue());
@@ -252,10 +272,16 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 		if (StringUtils.isBlank(eacCpfSolrObject.getDateDescription())) {
 			add(doc, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NO_DATE_SPECIFIED);
 		} else {
-			if (StringUtils.isBlank(eacCpfSolrObject.getFromDate())) {
+			if (StringUtils.isBlank(eacCpfSolrObject.getFromDate()) && StringUtils.isBlank(eacCpfSolrObject.getToDate())) {
 				add(doc, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_OTHER_DATE);
 			} else {
-				add(doc, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NORMALIZED);
+				if (!eacCpfSolrObject.isToDateExist()){
+					add(doc, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NORMALIZED_NO_ENDDATE);
+				}else if (!eacCpfSolrObject.isFromDateExist()){
+					add(doc, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NORMALIZED_NO_STARTDATE);
+				}else {
+					add(doc, SolrFields.DATE_TYPE, SolrValues.DATE_TYPE_NORMALIZED);
+				}
 			}
 		}
 		ArchivalInstitution archivalInstitution = eacCpfSolrObject.getEacCpf().getArchivalInstitution();

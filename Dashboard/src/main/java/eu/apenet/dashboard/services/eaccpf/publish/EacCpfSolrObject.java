@@ -15,6 +15,8 @@ public class EacCpfSolrObject {
 	private String dateDescription;
 	private String fromDate;
 	private String toDate;
+	private boolean fromDateExist;
+	private boolean toDateExist;
 	private Set<String> entityIds;
 	private String recordId;
 	private String other;
@@ -137,6 +139,22 @@ public class EacCpfSolrObject {
 	}
 	public String getRecordId() {
 		return recordId;
+	}
+
+	public boolean isFromDateExist() {
+		return fromDateExist;
+	}
+
+	public boolean isToDateExist() {
+		return toDateExist;
+	}
+
+	public void setFromDateExist(boolean fromDateExist) {
+		this.fromDateExist = fromDateExist;
+	}
+
+	public void setToDateExist(boolean toDateExist) {
+		this.toDateExist = toDateExist;
 	}
 
 
