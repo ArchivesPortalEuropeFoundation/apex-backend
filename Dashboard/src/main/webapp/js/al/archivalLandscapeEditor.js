@@ -23,24 +23,23 @@ function loadUpPart(context,titleDT,countryId){
    				});
    				cleanInformation();
    			},
-   			onClick: function(node){
+   			onClick: function(node,event){
+   				node.activate(true);
    				hideAll();
    				$("#divForm").show();
 				loadDownPart(node);
 				cleanInformation();
    			},
-   			onActivate: function(node) {
-				hideAll();
-   				$("#divForm").show();
-				loadDownPart(node);
-				cleanInformation();
-			},
 			onDeactivate: function(node) {
 				$("#divForm").hide(); /*loadDownPart(node.data.key);*/
 				cleanInformation();
 			},
 			onSelect: function(select,node){
 				node.select(select);
+				hideAll();
+   				$("#divForm").show();
+				loadDownPart(node);
+				cleanInformation();
 			}
 		});
 	});	
@@ -135,6 +134,7 @@ function alternativeNameSelected(){
 }
 
 function loadDownPart(node){
+	node.activate(true); // in this way current node is stored to be returned on $.dynatree("getTree").getActiveNode();
 	createColorboxForProcessing();
 	$.post("getALActions.action",{nodeKey:node.data.key},function(e){
 		hideAll();
@@ -150,15 +150,17 @@ function loadDownPart(node){
 			}else if(value.showMoveDeleteActions=="true"){
 				$("#editorActions").show();
 				var node = $("#archivalLandscapeEditorUp").dynatree("getTree").getActiveNode();
-				if(node.getPrevSibling()){
-					$("#moveUpDiv").show();
-				}else{
-					$("#moveUpDiv").hide();
-				}
-				if(node.getNextSibling()){
-					$("#moveDownDiv").show();
-				}else{
-					$("#moveDownDiv").hide();
+				if(node){
+					if(node.getPrevSibling()){
+						$("#moveUpDiv").show();
+					}else{
+						$("#moveUpDiv").hide();
+					}
+					if(node.getNextSibling()){
+						$("#moveDownDiv").show();
+					}else{
+						$("#moveDownDiv").hide();
+					}
 				}
 			}else if(value.showDeleteAction=="true"){
 				$("#deleteDiv").show();
@@ -363,15 +365,12 @@ function expandParents(parents,i,message,targetNode){
 }
 
 function launchFinalAction(key,message){
-	//targetNode.select(true);
 	var dynatree = $("#archivalLandscapeEditorUp").dynatree("getTree");
 	var target = dynatree.getNodeByKey(key);
 	if(!target){
 		setTimeout(function(){launchFinalAction(key,message);},40);
 	}else{
-		target.activate(true);
-		//target.select(true);
-		//targetNode.activate(true);
+		target.select(true);
 		showInformation(message);
 	}
 }
@@ -525,8 +524,12 @@ function cleanInformation(){
  * Function to display the processing information.
  */
 function createColorboxForProcessing() {
+	$("#colorbox_load_finished").each(function(){
+		$(this).remove();
+	});
 	// Create colorbox.
-	$.colorbox({html:function(){
+	$(document).colorbox({
+		html:function(){
 			var htmlCode = $("#processingInfoDiv").html();
 			return htmlCode;
 		},
@@ -535,9 +538,20 @@ function createColorboxForProcessing() {
 		innerWidth:"150px",
 		innerHeight:"36px",
 		initialWidth:"0px",
-		initialHeight:"0px"
-	});
+		initialHeight:"0px",
+		open:true,
+		onLoad:function(){
+			$("#colorbox").show();
+			$("#cboxOverlay").show();
 
+		},
+		onComplete: function(){
+			if(!$("#colorbox_load_finished").length){
+				$("#processingInfoDiv").append("<input type=\"hidden\" id=\"colorbox_load_finished\" value=\"true\" />");
+			}
+        }
+	});
+	
 	// Remove the close button from colorbox.
 	$("#cboxClose").remove();
 
@@ -559,9 +573,20 @@ function disableReload(e) {
  * Function to close the processing information.
  */
 function deleteColorboxForProcessing() {
-	// Close colorbox.
-	$.fn.colorbox.close();
-
-	// Enable the page reload using F5.
-	$(document).off("keydown", disableReload)
+	if($("input#colorbox_load_finished").length){
+		//removes flag
+		$("#colorbox_load_finished").each(function(){
+			$(this).remove();
+		});
+		// Close colorbox.
+		$.colorbox.close();
+//		$.fn.colorbox.close();
+		// Enable the page reload using F5.
+		$(document).off("keydown", disableReload);
+		// assure colobox is deleted
+//		$("#colorbox").remove();
+//		$("#cboxOverlay").remove();
+	}else{
+		setTimeout(function(){deleteColorboxForProcessing();},500);
+	}
 }
