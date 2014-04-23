@@ -131,13 +131,13 @@
 			<str name="echoParams">explicit</str>
 			<float name="tie">0.01</float>
 			<str name="qf">
-				names^1.3 description other^0.5 places^0.7 mandates^0.7 functions^0.7 occupations^0.7 dateDescription
+				name^1.3 otherNames repositories^0.9 places^0.7 description^0.5 other^0.5
 			</str>
 			<str name="fl">
-				id,names,dateDescription,country,ai,agencyCode,entityTypeFacet,recordId,numberOfArchivalMaterialRelations,numberOfNameRelations,numberOfInstitutions,startdate,enddate
+				id,names,otherNames,repositories,places,repositoryCode
 			</str>
 			<str name="q.alt">*:*</str>
-			<str name="hl.fl">names places mandates description other functions occupations dateDescription</str>
+			<str name="hl.fl">names otherNames repositories places description other</str>
 			<str name="hl.fragmenter">regex</str>
 			<str name="spellcheck.onlyMorePopular">true</str>
 			<str name="spellcheck.extendedResults">false</str>
