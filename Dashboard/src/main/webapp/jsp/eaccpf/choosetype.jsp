@@ -6,7 +6,7 @@
 
 <div id="eacCpfDiv">
     <h1>Create a file for record creators (apeEAC-CPF)</h1>
-    <s:form id="webformChooseMode" name="webformChooseMode" method="POST" enctype="multipart/form-data" action="edit.action" theme="simple">
+    <s:form id="webformChooseMode" name="webformChooseMode" method="POST" enctype="multipart/form-data" action="editEacCpf.action" theme="simple">
         <div id="container" class="container">
             <div id="headerContainer">
             </div>
@@ -26,9 +26,13 @@
             </table>
         </div>
         <table id="goButtonPanel">
-            <input type="button" class="rightButton" id="buttonGo" value="Go" onclick='clickGoAction()' />
+            <tr>
+                <td></td>
+                <td></td>
+                <td><input type="button" class="rightButton" id="buttonGo" value="Go" onclick='clickGoAction()' /></td>
+                <td><input type="button" id="buttonExit" value="Exit form" onclick='clickExitAction();' /></td>
+            </tr>
         </table>
         <input type="hidden" id="currentTr" value="" />
-        <input type="hidden" id="useMode" name="useMode" value="new" />
     </s:form>
 </div>

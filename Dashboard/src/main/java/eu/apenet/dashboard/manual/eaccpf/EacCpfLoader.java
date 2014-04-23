@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.apex.eaccpf;
+package eu.apenet.dashboard.manual.eaccpf;
 
 import eu.apenet.dpt.utils.eaccpf.Places;
 import eu.apenet.dpt.utils.eaccpf.EacCpf;
@@ -24,16 +24,16 @@ import eu.apenet.dpt.utils.eaccpf.BiogHist;
 import eu.apenet.dpt.utils.eaccpf.Place;
 import eu.apenet.dpt.utils.eaccpf.DateRange;
 import eu.apenet.dpt.utils.eaccpf.NameEntry;
-import eu.apex.eaccpf.util.BiographyType;
-import eu.apex.eaccpf.util.DateType;
-import eu.apex.eaccpf.util.FunctionType;
-import eu.apex.eaccpf.util.GenealogyType;
-import eu.apex.eaccpf.util.IdentifierType;
-import eu.apex.eaccpf.util.NameEntryType;
-import eu.apex.eaccpf.util.OccupationType;
-import eu.apex.eaccpf.util.PlaceType;
-import eu.apex.eaccpf.util.RelationType;
-import eu.apex.eaccpf.util.SimpleDate;
+import eu.apenet.dashboard.manual.eaccpf.util.BiographyType;
+import eu.apenet.dashboard.manual.eaccpf.util.DateType;
+import eu.apenet.dashboard.manual.eaccpf.util.FunctionType;
+import eu.apenet.dashboard.manual.eaccpf.util.GenealogyType;
+import eu.apenet.dashboard.manual.eaccpf.util.IdentifierType;
+import eu.apenet.dashboard.manual.eaccpf.util.NameEntryType;
+import eu.apenet.dashboard.manual.eaccpf.util.OccupationType;
+import eu.apenet.dashboard.manual.eaccpf.util.PlaceType;
+import eu.apenet.dashboard.manual.eaccpf.util.RelationType;
+import eu.apenet.dashboard.manual.eaccpf.util.SimpleDate;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

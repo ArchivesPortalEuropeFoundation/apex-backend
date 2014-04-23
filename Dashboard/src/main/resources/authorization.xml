@@ -14,7 +14,7 @@
             batchAction, previewEdm, htmlPreview,
             displayConvertEseBatch, startConvertEseBatch,
             generateTreeJSONWithoutPreface, downloadHgSgStatistics,displayLinkToHgSg,displayLinkToHgSgAjax,linkToHgSg,
-            eacCpfActions, batchEacCpfActions, downloadEacCpf, 
+            eacCpfActions, batchEacCpfActions, downloadEacCpf,
 
             GoDashboard, dashboardHome, GoDashboardByInstitutionManager,
 
@@ -23,6 +23,9 @@
             eaghttpupload,eaghttpuploadwithtempeag, generaterepositorguidePossibleHGTitlePartJSON, generateInformationMessageJSON, uploadowneagwithmenu,
             eagcorrectlyuploaded, createeag2012withmenu, storeEAG2012, editWebFormEAG2012, eagoldhttpupload, eagoldnothttpupload, eagoldhttpuploadwithtempeag,
             removeInvalidEAG2012,
+
+            <!-- EAC-CPF -->
+            indexEacCpf, editEacCpf, storeEacCpf,
 
             <!-- Edition of EAD -->
             editEad, editEadCreateDbEntries, editEadXml, editEadXmlSaveLevel, editEadXmlSaveAll, editEadXmlDeleteEntries, editEadGetFields, editEadAddField, generateEadidResponseJSONWhenEdit,

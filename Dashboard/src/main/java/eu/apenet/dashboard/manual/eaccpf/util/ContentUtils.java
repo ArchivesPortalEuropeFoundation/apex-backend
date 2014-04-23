@@ -1,4 +1,4 @@
-package eu.apex.eaccpf.util;
+package eu.apenet.dashboard.manual.eaccpf.util;
 
 import java.io.File;
 import java.io.FileInputStream;

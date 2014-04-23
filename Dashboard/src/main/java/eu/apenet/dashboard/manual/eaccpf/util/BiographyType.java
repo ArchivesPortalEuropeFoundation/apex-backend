@@ -2,18 +2,17 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.apex.eaccpf.util;
+package eu.apenet.dashboard.manual.eaccpf.util;
 
 import eu.apenet.dpt.utils.eaccpf.BiogHist;
 import eu.apenet.dpt.utils.eaccpf.P;
-import eu.apenet.dpt.utils.eaccpf.StructureOrGenealogy;
 import java.util.List;
 
 /**
  *
  * @author papp
  */
-public class GenealogyType {
+public class BiographyType {
 
     private String paragraph;
     private String languageCode;
@@ -34,7 +33,7 @@ public class GenealogyType {
         this.languageCode = languageCode;
     }
 
-    public GenealogyType fillDataWith(P p) {
+    public BiographyType fillDataWith(P p) {
         if (p.getLang() != null
                 && !p.getLang().isEmpty()) {
             this.languageCode = p.getLang();

@@ -871,7 +871,7 @@
             <result name="success" type="redirectAction">
                 <param name="actionName">manageQueue</param>
             </result>
-        </action>        
+        </action>
         <action name="deleteAllQueueItemsWithErrors" class="eu.apenet.dashboard.queue.ManageQueueAction" method="deleteAllQueueItemsWithErrors">
             <result name="success" type="redirectAction">
                 <param name="actionName">manageQueue</param>
@@ -1044,6 +1044,20 @@
         </action>
         <action name="downloadHarvesterErrorsText" class="eu.apenet.dashboard.harvest.DownloadHarvesterErrorsAction" method="downloadText">
             <result name="error" type="tiles">error</result>
+        </action>
+
+        <!-- EAC-CPF actions -->
+        <action name="indexEacCpf" class="eu.apenet.dashboard.manual.eaccpf.actions.IndexAction">
+            <result name="success" type="tiles">indexEacCpf</result>
+        </action>
+
+        <action name="editEacCpf" class="eu.apenet.dashboard.manual.eaccpf.actions.LoadFormAction">
+            <result name="success" type="tiles">editEacCpf</result>
+            <result name="input" type="tiles">indexEacCpf</result>
+        </action>
+
+        <action name="storeEacCpf" class="eu.apenet.dashboard.manual.eaccpf.actions.StoreEacCpfAction">
+            
         </action>
     </package>
 </struts>

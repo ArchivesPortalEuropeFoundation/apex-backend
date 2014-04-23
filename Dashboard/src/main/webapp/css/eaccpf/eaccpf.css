@@ -1,0 +1,334 @@
+@CHARSET "UTF-8";
+
+body {
+    color: #333333;
+font: 0.85em Arial,sans-serif;
+text-align : center;
+background : #fff;
+}
+
+#validationEAG2012ErrorsDiv, #validationEAG2012Errors {
+    border: none;
+    width: 100%;
+    color: red;
+    padding-top: 5px;
+    font-weight: bold;
+}
+
+#eacCpfDiv .tab_header {
+    border: 1px solid #79B7E7;
+    border-top-right-radius: 5px;
+    border-bottom: none;
+    clear: both;
+    float: left;
+    width: 100%;
+    height: 24px;
+}
+
+#eacCpfTabs {
+    float: left;
+    width: 100%;
+    line-height: normal;
+}
+
+#eacCpfTabsContainer {
+    width: 100%;
+}
+#eacCpfTabsContainer li{
+    background: none repeat scroll 0 0 #E9F3FA;
+    border-top-right-radius: 5px;
+    color: #CCCCCC;
+    float: left;
+    margin: 0 0 -1px;
+    overflow: hidden;
+    padding: 0;
+    position: relative;
+}
+#headerContainer {
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: url("../../images/eag2012/tabbg.jpg") repeat scroll 0 0 #99CCFF;
+    border-color: #79B7E7 #79B7E7 -moz-use-text-color;
+    border-style: solid solid none;
+    border-top-right-radius: 25px;
+    border-width: 1px 1px 0;
+    clear: both;
+    float: left;
+    height: 24px;
+    width: 100%;
+    margin-left: -1px;
+    margin-top: -1px;
+}
+
+#container {
+    border-color: #00A0DF #00A0DF -moz-use-text-color;
+    border-style: solid solid none;
+    border-top-right-radius: 25px;
+    border-width: 1px;
+    border-bottom: 1px solid #00A0DF;
+    border-top: 1px solid #00A0DF;
+    border-left: 1px solid #00A0DF;
+    border-right: 1px solid #00A0DF;
+    float: left;
+    width: 97%;
+}
+
+#eacCpfTabs ul {
+    margin: 0;
+    padding: 0;
+    list-style: none outside none;
+    height: 24px;
+}
+
+#eacCpfTabs li {
+    float: left;
+    padding: 0;
+    border: 1px solid #00A0DF;
+    border-bottom: hidden;
+    font-weight: bold;
+    color: #000000;
+    -moz-border-radius-topleft: 5px;
+    -webkit-border-top-left-radius: 5px;
+    -khtml-border-top-left-radius: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    background-color: #E9F3FA;
+}
+
+#eacCpfTabs li:hover {
+    background-color: #FFFFFF;
+    font-weight: bold;
+    color: #000000;
+    -moz-border-radius-topleft: 5px;
+    -webkit-border-top-left-radius: 5px;
+    -khtml-border-top-left-radius: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+#eacCpfTabs li a {
+    padding: 3px 10px 3px 10px;
+    display: block;
+    text-decoration: none;
+    color: #000000;
+    font-weight: bold;
+    background-color: #E9F3FA;
+    -moz-border-radius-topleft: 5px;
+    -webkit-border-top-left-radius: 5px;
+    -khtml-border-top-left-radius: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+#eacCpfTabs li a:hover {
+    background-color: #FFFFFF;
+    font-weight: bold;
+    color: #4D8BCB;
+    -moz-border-radius-topleft: 5px;
+    -webkit-border-top-left-radius: 5px;
+    -khtml-border-top-left-radius: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+#eacCpfTabs li a:active {
+    background: url("../../images/eag2012/tabbg.jpg") repeat scroll 0 0 #99CCFF;
+    padding: 3px 10px;
+    -moz-border-radius-topleft: 5px;
+    -webkit-border-top-left-radius: 5px;
+    -khtml-border-top-left-radius: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+#eacCpfTabs li a:after,.eacCpfCurrenttab {
+    background: url("../../images/eag2012/tabbg.jpg") repeat scroll 0 0 #99CCFF;
+    padding: 3px 10px;
+    color: #000000;
+    -moz-border-radius-topleft: 5px;
+    -webkit-border-top-left-radius: 5px;
+    -khtml-border-top-left-radius: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+#eacCpfTabs .eacCpfCurrenttab:hover {
+    background: url("../../images/eag2012/tabbg.jpg") repeat scroll 0 0 #99CCFF;
+    padding: 3px 10px;
+    color: #000000;
+    -moz-border-radius-topleft: 5px;
+    -webkit-border-top-left-radius: 5px;
+    -khtml-border-top-left-radius: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+
+#eacCpfDiv table {
+    float: left;
+    width: 100%;
+}
+
+.tablePadding {
+    padding-right: 18px;
+    padding-left: 18px;
+}
+
+#eacCpfDiv td,th {
+    width: 25%;
+    padding-top: 15px;
+}
+
+#eacCpfDiv td label {
+    width: 25%;
+}
+#buttonSaveEacCpf {
+    float:right;
+    margin-right: 20px;
+    margin-bottom: 5px;
+}
+
+#eacCpfDiv input {
+    font-family: "Arial",sans-serif;
+    font-size: 12px;
+}
+
+#eacCpfDiv select {
+    font-family: "Arial",sans-serif;
+    font-size: 12px;
+    color: black;
+    width: 209px;
+}
+
+#eacCpfDiv .longButton {
+    float: left;
+    width: 70%;
+}
+
+#eacCpfDiv .longButtonL {
+    float: left;
+    width: 90%;
+}
+
+#eacCpfDiv .middleText {
+    float: left;
+    width: 50%;
+}
+
+#eacCpfDiv .rightButton {
+    float: right;
+}
+
+#eacCpfDiv .marginTop {
+    margin-top: 15px;
+}
+
+.sectionHeader {
+    font-weight: bold;
+    border-bottom: 1px solid #00a0df;
+}
+
+textarea {
+    height: 100px;
+    width: available;
+    font-weight: bold;
+}
+
+input[type="button"] {
+    text-align: center;
+    font-weight: bold;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border-radius: 15px;
+    display: inline-block;
+    vertical-align: top;
+    letter-spacing: 0.8px;
+    color: #006CB0;
+    background-color: #E9F3FA;
+    border: 1px solid #00A0DF;
+}
+
+input[type="button"]:hover {
+    color: #00384D;
+    background-color: #BAE0FC;
+    border-radius: 15px;
+}
+
+input[type="button"]:disabled {
+    color: #A4AFB6;
+    background-color: #E8E6E2;
+    border-radius: 15px;
+    cursor: auto;
+}
+
+#buttonAddFutherInformationOnExistingFacilities, #buttonAddFutherInformationOnExistingFacilities2, #buttonAddReferencetoyourinstitutionsholdingsguide {
+    display: inline-block;
+    vertical-align: top;
+    white-space:normal;
+    line-height:normal;
+}
+
+#buttonAccessAndServiceTabPrevious, #buttonContactTabPrevious, #buttonControlTabPrevious,
+#buttonDescriptionTabPrevious, #buttonIdentityTabPrevious, #buttonRelationsTabPrevious,
+#buttonYourInstitutionTabPrevious {
+    margin-right: 10px;
+}
+
+input[type="text"] {
+    width: 200px;
+    padding-left: 6px;
+    font-weight: bold;
+    color: black;
+}
+
+#date_1_Year, #date_2_Year{
+    width: 40px;
+}
+
+input#date_1_Month, input#date_2_Month, input#date_1_Day, input#date_2_Day {
+    width: 20px;
+}
+
+#bodyt {
+    margin-left: 36%;
+    width: 65%;
+}
+
+#eacCpfTabs .eacCpfdisabled {
+    background: #FFFFFF;
+    cursor: default;
+    color: #a4afb6;
+}
+
+#eacCpfTabs .eacCpfdisabled:hover {
+    background: #FFFFFF;
+    cursor: default;
+    color: #a4afb6;
+}
+
+p.fieldRequired {
+    color: red;
+    padding-top: 5px;
+    font-weight: bold;
+}
+
+.labelLeft {
+    padding-left: 20px;
+    width: 25%;
+}
+
+hr.tablePadding {
+    color: #00A0DF;
+    background-color: #00A0DF;
+    width: auto;
+    height: 1px;
+}
+
+.area{
+    display:none;
+}

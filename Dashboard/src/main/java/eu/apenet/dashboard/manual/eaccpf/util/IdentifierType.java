@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.apex.eaccpf.util;
+package eu.apenet.dashboard.manual.eaccpf.util;
 
 import eu.apenet.dpt.utils.eaccpf.EntityId;
 

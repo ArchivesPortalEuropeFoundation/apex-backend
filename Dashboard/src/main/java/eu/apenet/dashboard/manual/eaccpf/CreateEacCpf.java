@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.apex.eaccpf;
+package eu.apenet.dashboard.manual.eaccpf;
 
 import eu.apenet.dpt.utils.eaccpf.*;
 import java.text.SimpleDateFormat;
@@ -53,7 +53,7 @@ public class CreateEacCpf {
         } else {
             Random random = new Random();
             int fakeId = random.nextInt(1000000000);
-            control.getRecordId().setValue(Integer.toString(fakeId));
+            control.getRecordId().setValue("eac_" + Integer.toString(fakeId));
         }
 
         // eacCpf/control/otherRecordId
@@ -255,18 +255,13 @@ public class CreateEacCpf {
         parameterName4 = "_comp_";
 
         while (parameters.containsKey("identityPersonName_" + tableCounter + parameterName1 + rowCounter) || (String[]) parameters.get("identityPersonName_" + tableCounter + parameterName1 + rowCounter) != null) {
+
             Identity.NameEntry nameEntry = new Identity.NameEntry();
-            if (parameters.containsKey(parameterName2 + tableCounter) || (String[]) parameters.get(parameterName2 + tableCounter) != null) {
-                parameterContent = (String[]) parameters.get(parameterName2 + tableCounter);
-                if (parameterContent.length == 1) {
-                    if (!parameterContent[0].equals("")) {
-                        nameEntry.setLang(parameterContent[0]);
-                    }
-                }
-            }
             parameterContent = (String[]) parameters.get(parameterName3 + tableCounter);
             if (parameterContent.length == 1) {
-                nameEntry.setLocalType(parameterContent[0]);
+                if (!parameterContent[0].equals("")) {
+                    nameEntry.setLocalType(parameterContent[0]);
+                }
             }
 
             // /eacCpf/cpfDescription/identity/nameEntry/part
@@ -280,6 +275,14 @@ public class CreateEacCpf {
                     parameterContent = (String[]) parameters.get("identityPersonName_" + tableCounter + parameterName1 + rowCounter);
                     if (parameterContent.length == 1) {
                         part.setContent(parameterContent[0]);
+                    }
+                    if (parameters.containsKey(parameterName2 + tableCounter) || (String[]) parameters.get(parameterName2 + tableCounter) != null) {
+                        parameterContent = (String[]) parameters.get(parameterName2 + tableCounter);
+                        if (parameterContent.length == 1) {
+                            if (!parameterContent[0].equals("")) {
+                                part.setLang(parameterContent[0]);
+                            }
+                        }
                     }
                     nameEntry.getPart().add(part);
                 }
@@ -1306,7 +1309,7 @@ public class CreateEacCpf {
             fromDate.setStandardDate(standardDate.toString());
             fromDate.setContent(((String[]) parameters.get(date1text + rowCounter))[0]);
         } else {
-            fromDate.setStandardDate("0000");
+            fromDate.setStandardDate("0001");
             fromDate.setContent("unknown");
         }
         dateRange.setFromDate(fromDate);
@@ -1328,7 +1331,7 @@ public class CreateEacCpf {
             toDate.setStandardDate(standardDate.toString());
             toDate.setContent(((String[]) parameters.get(date2text + rowCounter))[0]);
         } else {
-            toDate.setStandardDate("2999");
+            toDate.setStandardDate("2099");
             toDate.setContent("unknown");
         }
         dateRange.setToDate(toDate);
@@ -1364,7 +1367,7 @@ public class CreateEacCpf {
             date.setStandardDate(standardDate.toString());
             date.setContent(((String[]) parameters.get(date1text + rowCounter))[0]);
         } else {
-            date.setStandardDate("0000");
+            date.setStandardDate("0001");
             date.setContent("unknown");
         }
         return date;
