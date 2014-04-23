@@ -24,7 +24,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead.publish.EADCounts;
 import eu.apenet.dashboard.services.ead.publish.LevelInfo;
 import eu.apenet.dashboard.services.ead.publish.PublishData;
-import eu.apenet.dashboard.services.ead.publish.SolrPublisher;
+import eu.apenet.dashboard.services.ead.publish.EadSolrPublisher;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.Ead;
 import eu.apenet.persistence.vo.EadContent;
@@ -52,12 +52,12 @@ public class XmlEadParser extends AbstractParser {
     public static long parseEadAndPublish(Ead ead) throws Exception {
         EadContent oldEadContent = ead.getEadContent();
         if (oldEadContent == null){
-        	return parse(ead, new SolrPublisher(ead));
+        	return parse(ead, new EadSolrPublisher(ead));
         }
         return 0l;
     }
 
-	private static long parse(Ead ead, SolrPublisher solrPublisher) throws Exception {
+	private static long parse(Ead ead, EadSolrPublisher solrPublisher) throws Exception {
 		int cOrderId = 0;
 		EadContent eadContent = new EadContent();
         if (solrPublisher != null)
@@ -95,11 +95,11 @@ public class XmlEadParser extends AbstractParser {
 				String id = SolrValues.AI_PREFIX + currentAi.getAiId();
 				String newFacetField = currentAi.getAiname();
 				if (currentAi.isGroup()) {
-					newFacetField += SolrPublisher.COLON + SolrValues.TYPE_GROUP;
+					newFacetField += EadSolrPublisher.COLON + SolrValues.TYPE_GROUP;
 				} else {
-					newFacetField += SolrPublisher.COLON + SolrValues.TYPE_LEAF;
+					newFacetField += EadSolrPublisher.COLON + SolrValues.TYPE_LEAF;
 				}
-				newFacetField += SolrPublisher.COLON + id;
+				newFacetField += EadSolrPublisher.COLON + id;
 				fullHierarchy.put(SolrFields.AI_DYNAMIC + depth + SolrFields.DYNAMIC_STRING_SUFFIX, newFacetField);
 				fullHierarchy.put(SolrFields.AI_DYNAMIC_ID + depth + SolrFields.DYNAMIC_STRING_SUFFIX, id);
 				depth++;

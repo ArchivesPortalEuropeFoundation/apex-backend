@@ -8,7 +8,7 @@ import eu.apenet.dashboard.services.ead.LinkingService;
 import eu.apenet.dashboard.services.ead.publish.EADCounts;
 import eu.apenet.dashboard.services.ead.publish.LevelInfo;
 import eu.apenet.dashboard.services.ead.publish.PublishData;
-import eu.apenet.dashboard.services.ead.publish.SolrPublisher;
+import eu.apenet.dashboard.services.ead.publish.EadSolrPublisher;
 import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.CLevel;
@@ -20,7 +20,7 @@ public class DatabaseCLevelPublisher {
 	private static final int NUMBER_OF_CLEVEL_ONCE = 1;
 
 	public static EADCounts publish(CLevel clevel, Long eadContentId,
-			Ead ead, SolrPublisher solrPublisher, List<LevelInfo> upperLevelUnittitles, Map<String, Object> fullHierarchy)
+			Ead ead, EadSolrPublisher solrPublisher, List<LevelInfo> upperLevelUnittitles, Map<String, Object> fullHierarchy)
 			throws Exception {
 		CLevelDAO clevelDAO = DAOFactory.instance().getCLevelDAO();
 		List<LevelInfo> unittitles = new ArrayList<LevelInfo>();

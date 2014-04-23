@@ -15,7 +15,7 @@ import eu.apenet.dashboard.services.ead.LinkingService;
 import eu.apenet.dashboard.services.ead.publish.EADCounts;
 import eu.apenet.dashboard.services.ead.publish.LevelInfo;
 import eu.apenet.dashboard.services.ead.publish.PublishData;
-import eu.apenet.dashboard.services.ead.publish.SolrPublisher;
+import eu.apenet.dashboard.services.ead.publish.EadSolrPublisher;
 import eu.apenet.persistence.vo.CLevel;
 import eu.apenet.persistence.vo.Ead;
 import eu.archivesportaleurope.persistence.jpa.JpaUtil;
@@ -34,7 +34,7 @@ public class XmlCLevelParser extends AbstractParser {
 
 
 	public static EADCounts parse(XMLStreamReader xmlReader, Long eadContentId,
-			Long parentId, int orderId, Ead ead, SolrPublisher solrPublisher, List<LevelInfo> upperLevelUnittitles, Map<String, Object> fullHierarchy)
+			Long parentId, int orderId, Ead ead, EadSolrPublisher solrPublisher, List<LevelInfo> upperLevelUnittitles, Map<String, Object> fullHierarchy)
 			throws Exception {
 		// QName elementName = xmlReader.getName();
 		LinkedList<QName> path = new LinkedList<QName>();

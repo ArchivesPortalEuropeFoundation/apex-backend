@@ -14,7 +14,7 @@ import eu.apenet.commons.utils.APEnetUtilities;
 import eu.apenet.dashboard.services.ead.publish.EADCounts;
 import eu.apenet.dashboard.services.ead.publish.LevelInfo;
 import eu.apenet.dashboard.services.ead.publish.PublishData;
-import eu.apenet.dashboard.services.ead.publish.SolrPublisher;
+import eu.apenet.dashboard.services.ead.publish.EadSolrPublisher;
 import eu.apenet.persistence.dao.CLevelDAO;
 import eu.apenet.persistence.factory.DAOFactory;
 import eu.apenet.persistence.vo.ArchivalInstitution;
@@ -49,18 +49,18 @@ public class DatabaseEadPublisher {
 			String id = SolrValues.AI_PREFIX + currentAi.getAiId();
 			String newFacetField = currentAi.getAiname();
 			if (currentAi.isGroup()) {
-				newFacetField += SolrPublisher.COLON + SolrValues.TYPE_GROUP;
+				newFacetField += EadSolrPublisher.COLON + SolrValues.TYPE_GROUP;
 			} else {
-				newFacetField += SolrPublisher.COLON + SolrValues.TYPE_LEAF;
+				newFacetField += EadSolrPublisher.COLON + SolrValues.TYPE_LEAF;
 			}
-			newFacetField += SolrPublisher.COLON + id;
+			newFacetField += EadSolrPublisher.COLON + id;
 			fullHierarchy.put(SolrFields.AI_DYNAMIC + depth + SolrFields.DYNAMIC_STRING_SUFFIX, newFacetField);
 			fullHierarchy.put(SolrFields.AI_DYNAMIC_ID + depth + SolrFields.DYNAMIC_STRING_SUFFIX, id);
 			depth++;
 		}
 
 		EADCounts eadCounts = new EADCounts();
-		SolrPublisher solrPublisher = new SolrPublisher(ead);
+		EadSolrPublisher solrPublisher = new EadSolrPublisher(ead);
 		Class<? extends Ead> clazz = XmlType.getContentType(ead).getEadClazz();
 		try {
 			if (ead instanceof SourceGuide || ead instanceof HoldingsGuide){

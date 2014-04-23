@@ -43,11 +43,11 @@ import eu.apenet.persistence.vo.EuropeanaState;
 import eu.apenet.persistence.vo.FindingAid;
 import eu.apenet.persistence.vo.Warnings;
 
-public class SolrPublisher extends AbstractSolrPublisher{
+public class EadSolrPublisher extends AbstractSolrPublisher{
 
 	private static final String LEVEL_CLEVEL = "clevel";
 	private static final String LEVEL_ARCHDESC = "archdesc";
-	private static final Logger LOG = Logger.getLogger(SolrPublisher.class);
+	private static final Logger LOG = Logger.getLogger(EadSolrPublisher.class);
 	public static final DecimalFormat NUMBERFORMAT = new DecimalFormat("00000000");
 
 	private String language;
@@ -149,7 +149,7 @@ public class SolrPublisher extends AbstractSolrPublisher{
 		}
 	}
 
-	public SolrPublisher(Ead ead) {
+	public EadSolrPublisher(Ead ead) {
 		this.ead = ead;
 		xmlType = XmlType.getContentType(ead);
 		eadDao = DAOFactory.instance().getEadDAO();
