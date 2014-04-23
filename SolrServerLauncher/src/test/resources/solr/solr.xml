@@ -50,5 +50,6 @@
   <cores adminPath="/admin/cores" defaultCoreName="eads">
     <core name="eads" instanceDir="eads" />
     <core name="eac-cpfs" instanceDir="eac-cpfs" />
+    <core name="eags" instanceDir="eags" />
   </cores>
 </solr>
