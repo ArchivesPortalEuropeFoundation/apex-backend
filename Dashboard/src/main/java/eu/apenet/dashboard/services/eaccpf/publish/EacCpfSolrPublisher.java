@@ -36,10 +36,10 @@ import eu.apenet.dashboard.services.eaccpf.xml.EacCpfNamespaceContext;
 import eu.apenet.persistence.vo.ArchivalInstitution;
 import eu.apenet.persistence.vo.EacCpf;
 
-public class SolrPublisher  extends AbstractSolrPublisher{
+public class EacCpfSolrPublisher  extends AbstractSolrPublisher{
 
 
-	private static final Logger LOGGER = Logger.getLogger(SolrPublisher.class);
+	private static final Logger LOGGER = Logger.getLogger(EacCpfSolrPublisher.class);
 	public static final DecimalFormat NUMBERFORMAT = new DecimalFormat("00000000");
 
 	private final static XPath XPATH = APEnetUtilities.getDashboardConfig().getXpathFactory().newXPath();
@@ -298,9 +298,7 @@ public class SolrPublisher  extends AbstractSolrPublisher{
 		doc.addField(SolrFields.EAC_CPF_NUMBER_OF_INSTITUTIONS_RELATIONS, eacCpfSolrObject.getNumberOfInstitutionsRelations());
 		addSolrDocument(doc);
 	}
-	public void deleteEverything() throws SolrServerException{
-		rollbackSolrDocuments("*:*");
-	}
+
 	@Override
 	protected String getKey() {
 		return recordId;

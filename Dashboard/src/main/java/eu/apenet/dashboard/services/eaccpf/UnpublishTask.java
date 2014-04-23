@@ -8,7 +8,7 @@ package eu.apenet.dashboard.services.eaccpf;
 import java.util.Properties;
 
 import eu.apenet.commons.exceptions.APEnetException;
-import eu.apenet.dashboard.services.eaccpf.publish.SolrPublisher;
+import eu.apenet.dashboard.services.eaccpf.publish.EacCpfSolrPublisher;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -37,7 +37,7 @@ public class UnpublishTask extends AbstractEacCpfTask {
 				long startTime = System.currentTimeMillis();
 				EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
 				logger.debug("Removing the EacCpf with id '" + eacCpf.getIdentifier()+ "' from the index");
-				long solrTime = new SolrPublisher().unpublish(eacCpf);
+				long solrTime = new EacCpfSolrPublisher().unpublish(eacCpf);
 				JpaUtil.beginDatabaseTransaction();
 				ContentUtils.changeSearchable(eacCpf, false);
 				eacCpfDAO.insertSimple(eacCpf);

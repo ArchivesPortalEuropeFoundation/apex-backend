@@ -8,7 +8,7 @@ package eu.apenet.dashboard.services.eaccpf;
 import java.util.Properties;
 
 import eu.apenet.commons.exceptions.APEnetException;
-import eu.apenet.dashboard.services.eaccpf.publish.SolrPublisher;
+import eu.apenet.dashboard.services.eaccpf.publish.EacCpfSolrPublisher;
 import eu.apenet.dashboard.utils.ContentUtils;
 import eu.apenet.persistence.dao.EacCpfDAO;
 import eu.apenet.persistence.factory.DAOFactory;
@@ -24,7 +24,7 @@ public class PublishTask extends AbstractEacCpfTask{
     @Override
     protected void execute(EacCpf eacCpf, Properties properties) throws Exception {
 		if (valid(eacCpf)) {
-			SolrPublisher solrPublisher = new SolrPublisher();
+			EacCpfSolrPublisher solrPublisher = new EacCpfSolrPublisher();
 			try {
 				long startTime = System.currentTimeMillis();
 				EacCpfDAO eacCpfDAO = DAOFactory.instance().getEacCpfDAO();
